@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "jsx": "react",
+        "importHelpers": true,
+        "lib": [ "es2015", "dom" ],
+    }
+}
