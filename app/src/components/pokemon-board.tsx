@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PokemonPiece } from "../pokemon-piece";
+import { PokemonPiece } from "../models/pokemon-piece";
 
 const Tile: React.FunctionComponent<{ piece: PokemonPiece }> = (props) => {
     return (

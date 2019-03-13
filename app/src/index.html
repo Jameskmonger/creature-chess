@@ -70,10 +70,10 @@
 
         .tile img {
             position: absolute;
-            top: 6px;
-            left: 14px;
-            width: 100px;
-            height: 100px;
+            top: 12px;
+            left: 20px;
+            width: 88px;
+            height: 88px;
         }
 
         .tile {
@@ -81,6 +81,7 @@
             height: 128px;
             display: inline-block;
             position: relative;
+            user-select: none;
         }
 
         .tile.dark {
@@ -89,6 +90,10 @@
 
         .tile.light {
             background: #c7f1e1;
+        }
+
+        .tile:hover {
+            background: yellow;
         }
 
         .tile-row {

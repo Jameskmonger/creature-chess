@@ -5,7 +5,7 @@
 	"description": "Pokemon auto chess front end",
 	"main": "index.js",
 	"scripts": {
-		"build": "webpack && npm run copy-images",
+		"build": "webpack",
 		"copy-images": "cpy \"./images/**/*\" \"./bin/\" --parents",
 		"start": "http-server ./bin -p 8090"
 	},
