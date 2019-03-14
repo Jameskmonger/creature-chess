@@ -14,7 +14,16 @@ export const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boar
     const tiles = [];
 
     for (let x = 0; x < boardSize; x++) {
-        tiles.push(<Tile key={`tile-${x}`} piece={pieces[x]} dark={isTileDark(x, y)} />);
+
+        const piece = pieces.filter(p => p.position[0] === x)[0];
+
+        tiles.push(
+            <Tile 
+                key={`tile-${x}`} 
+                piece={piece} 
+                dark={isTileDark(x, y)} 
+            />
+        );
     }
 
     return <div className="tile-row">{tiles}</div>;

@@ -5,16 +5,23 @@ import { TileRow } from './tileRow';
 const boardSize = 8;
 
 interface BoardProps {
-    pieces: PokemonPiece[][]
+    pieces: PokemonPiece[]
 }
 
 const Board: React.FunctionComponent<BoardProps> = ({ pieces }) => {
     const tileRows = [];
 
     for (let y = 0; y < boardSize; y++) {
-        const rowPieces = pieces[y];
+        const rowPieces = pieces.filter(p => p.position[1] === y);
 
-        tileRows.push(<TileRow key={`tile-row-${y}`} y={y} pieces={rowPieces} boardSize={boardSize} />);
+        tileRows.push(
+            <TileRow 
+                key={`tile-row-${y}`} 
+                y={y} 
+                pieces={rowPieces} 
+                boardSize={boardSize}
+            />
+        );
     }
 
     return (
