@@ -33,12 +33,10 @@ const boxTarget: DropTargetSpec<TileProps> = {
     }
 };
 
-function collect(connect: DropTargetConnector, monitor: DropTargetMonitor) {
-    return {
-        connectDropTarget: connect.dropTarget(),
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop()
-    };
-}
+const collect = (connect: DropTargetConnector, monitor: DropTargetMonitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
+});
 
 export const Tile = DropTarget<TileProps>(typeof TileUnconnected, boxTarget, collect)(TileUnconnected);

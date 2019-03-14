@@ -45,11 +45,9 @@ const itemSource = {
     }
 };
 
-function collect(connect: DragSourceConnector, monitor: DragSourceMonitor) {
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    };
-}
+const collect = (connect: DragSourceConnector, monitor: DragSourceMonitor) => ({
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+});
 
 export const Piece = DragSource<PieceProps>(typeof PieceUnconnected, itemSource, collect)(PieceUnconnected);
