@@ -8,7 +8,10 @@ interface BoardProps {
     pieces: PokemonPiece[]
 }
 
-const Board: React.FunctionComponent<BoardProps> = ({ pieces }) => {
+const Board: React.FunctionComponent<BoardProps> = (props) => {
+
+    const [pieces, setPieces] = React.useState(props.pieces);
+
     const tileRows = [];
 
     for (let y = 0; y < boardSize; y++) {
