@@ -3,13 +3,12 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
 import { PokemonPiece, PiecePosition, isSamePiece } from "../models/pokemon-piece";
-import { TileRow } from './tileRow';
-
+import { TileRows } from './tileRows';
 
 const boardSize = 8;
 
 interface BoardProps {
-    pieces: PokemonPiece[]
+    pieces: PokemonPiece[];
 }
 
 const BoardUnconnected: React.FunctionComponent<BoardProps> = (props) => {
@@ -22,28 +21,12 @@ const BoardUnconnected: React.FunctionComponent<BoardProps> = (props) => {
             : p));
     };
 
-    const tileRows = [];
-
-    for (let y = 0; y < boardSize; y++) {
-        const rowPieces = pieces.filter(p => p.position[1] === y);
-
-        const moveRowPiece = (p: PokemonPiece, col: number) => movePiece(p, [col, y]);
-
-        tileRows.push(
-            <TileRow 
-                key={`tile-row-${y}`} 
-                y={y} 
-                pieces={rowPieces} 
-                boardSize={boardSize}
-                movePiece={moveRowPiece}
-            />
-        );
-    }
-
     return (
-        <div className="chessboard">
-            {tileRows}
-        </div>
+        <TileRows 
+            boardSize={boardSize}
+            movePiece={movePiece}
+            pieces={pieces}
+        />
     );
 };
 
