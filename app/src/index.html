@@ -70,10 +70,10 @@
 
         .tile img {
             position: absolute;
-            top: 12px;
-            left: 20px;
-            width: 88px;
-            height: 88px;
+            top: 8px;
+            left: 24px;
+            width: 80px;
+            height: 80px;
         }
 
         .tile {
@@ -92,12 +92,40 @@
             background: #c7f1e1;
         }
 
-        .tile:hover {
-            background: yellow;
-        }
-
         .tile-row {
             line-height: 0;
+        }
+
+        .healthbar {
+            height: 20px;
+            width: 100px;
+            background: #636363;
+            margin: 0 auto;
+            border: 2px solid black;
+        }
+
+        .info {
+            bottom: 10px;
+            position: absolute;
+            width: 100%;
+        }
+
+        .piece {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .fill {
+            height: 100%;
+        }
+
+        .healthbar.friendly .fill {
+            background: #20b720;
+        }
+
+        .healthbar.enemy .fill {
+            background: #e60d0d;
         }
     </style>
 </head>
