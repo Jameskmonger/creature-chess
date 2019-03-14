@@ -1,0 +1,23 @@
+.tile {
+    width: $tile-size;
+    height: $tile-size;
+    display: inline-block;
+    user-select: none;
+
+    &.dark {
+        background: $dark-tile;
+    }
+
+    &.light {
+        background: $light-tile;
+    }
+
+    img {
+        position: absolute;
+        top: 6px;
+        left: ($tile-size - $sprite-size) / 2;
+
+        width: $sprite-size;
+        height: $sprite-size;
+    }
+}

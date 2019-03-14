@@ -1,0 +1,19 @@
+.healthbar {
+    height: $healthbar-height;
+    width: 90%;
+    background: $healthbar-background;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+    .fill {
+        height: 100%;
+    }
+
+    &.friendly .fill {
+        background: $friendly-healthbar-color;
+    }
+
+    &.enemy .fill {
+        background: $enemy-healthbar-color;
+    }
+}

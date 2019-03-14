@@ -1,78 +1,9 @@
 @import "reset";
+@import "globals/variables";
+@import "globals/colors";
 
-$tile_size: 90px;
-$sprite_size: 60px;
-$healthbar_height: 12px;
-$friendly_healthbar_color: #20b720;
-$enemy_healthbar_color: #e60d0d;
-
-.board-container {
-    position: relative;
-}
-
-.board-container .chessboard {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.tile-row {
-    line-height: 0;
-}
-
-.tile {
-    width: $tile_size;
-    height: $tile_size;
-    display: inline-block;
-    position: relative;
-    user-select: none;
-
-    &.dark {
-        background: #75C779;
-    }
-
-    &.light {
-        background: #c7f1e1;
-    }
-
-    img {
-        position: absolute;
-        top: 6px;
-        left: ($tile_size - $sprite_size) / 2;
-
-        width: $sprite_size;
-        height: $sprite_size;
-    }
-}
-
-.healthbar {
-    height: $healthbar_height;
-    width: 90%;
-    background: #636363;
-    margin: 0 auto;
-    box-sizing: border-box;
-
-    .fill {
-        height: 100%;
-    }
-
-    &.friendly .fill {
-        background: $friendly_healthbar_color;
-    }
-
-    &.enemy .fill {
-        background: $enemy_healthbar_color;
-    }
-}
-
-.info {
-    bottom: 10px;
-    position: absolute;
-    width: 100%;
-}
-
-.piece {
-    position: relative;
-    height: 100%;
-    width: 100%;
-}
+@import "components/tile";
+@import "components/tile-row";
+@import "components/piece";
+@import "components/healthbar";
+@import "components/info";
