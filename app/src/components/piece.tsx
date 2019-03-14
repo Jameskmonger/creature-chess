@@ -1,14 +1,29 @@
 import * as React from "react";
+import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
+
 import { PokemonPiece } from "../models/pokemon-piece";
 
 const getPercentage = (current: number, max: number) => {
     return Math.floor((current / max) * 100) + "%";
 };
 
-export const Piece: React.FunctionComponent<{ piece: PokemonPiece }> = (props) => {
-    const { facingAway, pokemonId, friendly, currentHealth, maxHealth } = props.piece;
+interface PieceProps {
+    piece: PokemonPiece;
+}
 
-    return (
+interface DragSourceProps {
+    connectDragSource: ConnectDragSource;
+    isDragging: boolean;
+}
+
+export const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = ({ 
+    piece,
+    connectDragSource
+}) => {
+
+    const { facingAway, pokemonId, friendly, currentHealth, maxHealth } = piece;
+
+    return connectDragSource(
         <div className="piece">
             <img src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
 
@@ -20,3 +35,21 @@ export const Piece: React.FunctionComponent<{ piece: PokemonPiece }> = (props) =
         </div>
     );
 };
+
+const itemSource = {
+    beginDrag(props: PieceProps) {
+        return props.piece;
+    },
+    isDragging(props: PieceProps, monitor: DragSourceMonitor) {
+        return props.piece === monitor.getItem();
+    }
+};
+
+function collect(connect: DragSourceConnector, monitor: DragSourceMonitor) {
+    return {
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    };
+}
+
+export const Piece = DragSource<PieceProps>(typeof PieceUnconnected, itemSource, collect)(PieceUnconnected);

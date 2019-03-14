@@ -9,3 +9,10 @@ export interface PokemonPiece {
     maxHealth: number;
     currentHealth: number;
 }
+
+export const isSamePiece = (a: PokemonPiece, b: PokemonPiece) =>
+    a.pokemonId === b.pokemonId
+    && a.facingAway === b.facingAway
+    && a.friendly === b.friendly
+    && a.position[0] === b.position[0]
+    && a.position[1] === b.position[1];
