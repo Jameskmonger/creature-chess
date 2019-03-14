@@ -4,7 +4,7 @@ import { Piece } from "./piece";
 
 const isTileDark = (x, y) => ((y ^ x) & 1) !== 0;
 
-const gridSize = 8;
+const boardSize = 8;
 
 const Tile: React.FunctionComponent<{ dark: boolean, piece: PokemonPiece }> = (props) => {
     return (
@@ -20,7 +20,7 @@ const Tile: React.FunctionComponent<{ dark: boolean, piece: PokemonPiece }> = (p
 const TileRow: React.FunctionComponent<{ y: number, pieces: PokemonPiece[] }> = (props) => {
     const tiles = [];
 
-    for (let x = 0; x < gridSize; x++) {
+    for (let x = 0; x < boardSize; x++) {
         tiles.push(<Tile key={`tile-${x}`} piece={props.pieces[x]} dark={isTileDark(x, props.y)} />);
     }
 
@@ -30,7 +30,7 @@ const TileRow: React.FunctionComponent<{ y: number, pieces: PokemonPiece[] }> = 
 const Board: React.FunctionComponent<{ pieces: PokemonPiece[][] }> = (props) => {
     const tileRows = [];
 
-    for (let y = 0; y < gridSize; y++) {
+    for (let y = 0; y < boardSize; y++) {
         const rowPieces = props.pieces[y];
 
         tileRows.push(<TileRow key={`tile-row-${y}`} y={y} pieces={rowPieces} />);
