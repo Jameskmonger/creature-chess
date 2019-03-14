@@ -1,0 +1,71 @@
+@import "reset";
+
+.board-container {
+    position: relative;
+}
+
+.board-container .chessboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.tile img {
+    position: absolute;
+    top: 8px;
+    left: 24px;
+    width: 80px;
+    height: 80px;
+}
+
+.tile {
+    width: 128px;
+    height: 128px;
+    display: inline-block;
+    position: relative;
+    user-select: none;
+}
+
+.tile.dark {
+    background: #75C779;
+}
+
+.tile.light {
+    background: #c7f1e1;
+}
+
+.tile-row {
+    line-height: 0;
+}
+
+.healthbar {
+    height: 20px;
+    width: 100px;
+    background: #636363;
+    margin: 0 auto;
+    border: 2px solid black;
+}
+
+.info {
+    bottom: 10px;
+    position: absolute;
+    width: 100%;
+}
+
+.piece {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.fill {
+    height: 100%;
+}
+
+.healthbar.friendly .fill {
+    background: #20b720;
+}
+
+.healthbar.enemy .fill {
+    background: #e60d0d;
+}

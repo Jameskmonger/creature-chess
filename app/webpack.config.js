@@ -1,5 +1,6 @@
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const outDir = path.resolve(__dirname, "bin");
 
@@ -14,6 +15,10 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: "awesome-typescript-loader",
                 exclude: /node_modules/
+            },
+            {
+                test: /\.scss$/,
+                use: [ { loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader" ]
             }
         ]
     },
@@ -30,6 +35,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: "./src/index.html"
+        }),
+        new MiniCssExtractPlugin({
+            filename: "app.css"
         })
     ]
 };

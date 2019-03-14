@@ -3,6 +3,8 @@ import * as ReactDOM from "react-dom";
 import { Board } from "./components/board";
 import { PokemonPiece } from "./models/pokemon-piece";
 
+import "./style/index.scss";
+
 const makeEnemy = (pokemonId: number) => ({ pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 80 });
 const makeFriendly = (pokemonId: number) => ({ pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 80 });
 
