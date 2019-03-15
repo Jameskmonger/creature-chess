@@ -73,7 +73,7 @@ export class Game extends React.Component<{}, GameState> {
 
     private startRound = async () => {
         const turnDurationMs = 100;
-        let pieces = cloneDeep(this.state.pieces);
+        let pieces = this.state.pieces;
         while (!Game.isATeamDefeated(pieces)) {
             await delay(turnDurationMs);
             pieces = simulateTurn(pieces);
