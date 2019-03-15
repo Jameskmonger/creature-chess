@@ -36,7 +36,7 @@ export const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourcePr
     );
 };
 
-const itemSource = {
+const selectedPiece = {
     beginDrag(props: PieceProps) {
         return props.piece;
     },
