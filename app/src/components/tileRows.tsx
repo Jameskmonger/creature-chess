@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { PokemonPiece, PiecePosition } from '../models/pokemon-piece';
-import { TileRow } from './tileRow';
+import { PokemonPiece, PiecePosition } from "../models/pokemon-piece";
+import { TileRow } from "./tileRow";
 
 interface TileRowsProps {
     boardSize: number;
@@ -36,6 +36,6 @@ const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, movePiece
             {tileRows}
         </div>
     );
-}
+};
 
 export { TileRows };
