@@ -25,10 +25,12 @@ const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = 
 
     return connectDragSource(
         <div className="piece">
-            <img src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
+            <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
 
             <div className="info">
                 <div className={`healthbar ${friendly ? "friendly" : "enemy"}`}>
+                    // need to figure out how we handle setting the healthbar
+                    // tslint:disable-next-line:jsx-ban-props
                     <div className="fill" style={{ width: getPercentage(currentHealth, maxHealth) }} />
                 </div>
             </div>
