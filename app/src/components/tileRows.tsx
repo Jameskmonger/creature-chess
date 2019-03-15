@@ -17,6 +17,7 @@ export const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, mo
         const rowPieces = pieces.filter(p => p.position[1] === y);
 
         const moveRowPiece = (p: PokemonPiece, col: number) => movePiece(p, [col, y]);
+        const isFriendlyRow = y >= boardSize / 2;
 
         tileRows.push(
             <TileRow 
@@ -25,6 +26,7 @@ export const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, mo
                 pieces={rowPieces} 
                 boardSize={boardSize}
                 movePiece={moveRowPiece}
+                friendly={isFriendlyRow}
             />
         );
     }

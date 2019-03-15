@@ -7,6 +7,7 @@ import { Piece } from './piece';
 interface TileProps {
     dark: boolean,
     piece: PokemonPiece,
+    friendly: boolean;
     movePiece: (piece: PokemonPiece) => void;
 }
 
@@ -29,7 +30,7 @@ const boxTarget: DropTargetSpec<TileProps> = {
         props.movePiece(monitor.getItem());
     },
     canDrop(props: TileProps, monitor: DropTargetMonitor) {
-        return true;
+        return props.friendly;
     }
 };
 
