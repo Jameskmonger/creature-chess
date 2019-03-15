@@ -2,13 +2,17 @@ import * as React from "react";
 import delay from "delay";
 import { PokemonPiece, PiecePosition, isSamePiece } from "../models/pokemon-piece";
 import { Board } from "./board";
-import { simulateTurn } from '../models/fighting-turn-simulator';
+import { simulateTurn } from "../models/fighting-turn-simulator";
 
 const makeEnemy = (pokemonId: number, position: PiecePosition) =>
     ({ pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 80, position });
 
 const makeFriendly = (pokemonId: number, position: PiecePosition) =>
     ({ pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 80, position });
+
+const isATeamDefeated = (pieces: PokemonPiece[]) => {
+    return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
+};
 
 interface GameState {
     pieces: PokemonPiece[];
@@ -51,7 +55,7 @@ export class Game extends React.Component<{}, GameState> {
         );
     }
 
-    private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {
+   private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {
         this.setState(({ pieces }) => {
             const updatedPieces = pieces.map(p =>
                 isSamePiece(p, piece)
@@ -68,14 +72,10 @@ export class Game extends React.Component<{}, GameState> {
     private startRound = async () => {
         const turnDurationMs = 100;
         let pieces = this.state.pieces;
-        while (!Game.isATeamDefeated(pieces)) {
+        while (!isATeamDefeated(pieces)) {
             await delay(turnDurationMs);
             pieces = simulateTurn(pieces);
             this.setState({ pieces });
         }
-    }
-
-    private static isATeamDefeated = (pieces: PokemonPiece[]) => {
-        return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
     }
 }

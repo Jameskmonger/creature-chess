@@ -1,6 +1,6 @@
-import { PokemonPiece } from './pokemon-piece';
+import { PokemonPiece } from "./pokemon-piece";
 import { sample } from "lodash";
-import { attack } from './attack';
+import { attack } from "./attack";
 
 export const simulateTurn = (pieces: PokemonPiece[]) => {
     const updatedPieces = [...pieces];
@@ -9,10 +9,10 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
         if (!defender) {
             return updatedPieces;
         }
-        
+
         const updatedFighters = attack(attacker, defender);
         updatedPieces[index] = updatedFighters.attacker;
         updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
     });
     return updatedPieces;
-}
+};
