@@ -12,7 +12,7 @@ interface TileRowProps {
 
 const isTileDark = (x, y) => ((y ^ x) & 1) !== 0;
 
-export const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boardSize, movePiece, friendly }) => {
+const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boardSize, movePiece, friendly }) => {
     const tiles = [];
 
     for (let x = 0; x < boardSize; x++) {
@@ -21,9 +21,9 @@ export const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boar
         const moveColumnPiece = (p: PokemonPiece) => movePiece(p, x);
 
         tiles.push(
-            <Tile 
-                key={`tile-${x}`} 
-                piece={piece} 
+            <Tile
+                key={`tile-${x}`}
+                piece={piece}
                 dark={isTileDark(x, y)}
                 movePiece={moveColumnPiece}
                 friendly={friendly}
@@ -33,3 +33,5 @@ export const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boar
 
     return <div className="tile-row">{tiles}</div>;
 };
+
+export { TileRow };

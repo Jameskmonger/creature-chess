@@ -17,7 +17,7 @@ export interface DropTargetProps {
     canDrop: boolean;
 }
 
-export const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({ dark, piece, connectDropTarget }) => connectDropTarget(
+const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({ dark, piece, connectDropTarget }) => connectDropTarget(
     <div className={`tile ${dark ? "dark" : "light"}`}>
         {
             piece && <Piece piece={piece} />
@@ -40,4 +40,9 @@ const collect = (connect: DropTargetConnector, monitor: DropTargetMonitor) => ({
     canDrop: monitor.canDrop()
 });
 
-export const Tile = DropTarget<TileProps>(typeof TileUnconnected, boxTarget, collect)(TileUnconnected);
+const Tile = DropTarget<TileProps>(typeof TileUnconnected, boxTarget, collect)(TileUnconnected);
+
+export {
+    TileUnconnected,
+    Tile
+};
