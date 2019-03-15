@@ -16,7 +16,7 @@ interface DragSourceProps {
     isDragging: boolean;
 }
 
-export const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = ({ 
+const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = ({
     piece,
     connectDragSource
 }) => {
@@ -53,4 +53,9 @@ const collect = (connect: DragSourceConnector, monitor: DragSourceMonitor) => ({
     isDragging: monitor.isDragging()
 });
 
-export const Piece = DragSource<PieceProps>(typeof PieceUnconnected, selectedPiece, collect)(PieceUnconnected);
+const Piece = DragSource<PieceProps>(typeof PieceUnconnected, selectedPiece, collect)(PieceUnconnected);
+
+export {
+    PieceUnconnected,
+    Piece
+};

@@ -9,7 +9,7 @@ interface TileRowsProps {
     pieces: PokemonPiece[];
 }
 
-export const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, movePiece, pieces }) => {
+const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, movePiece, pieces }) => {
 
     const tileRows = [];
 
@@ -20,10 +20,10 @@ export const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, mo
         const isFriendlyRow = y >= boardSize / 2;
 
         tileRows.push(
-            <TileRow 
-                key={`tile-row-${y}`} 
-                y={y} 
-                pieces={rowPieces} 
+            <TileRow
+                key={`tile-row-${y}`}
+                y={y}
+                pieces={rowPieces}
                 boardSize={boardSize}
                 movePiece={moveRowPiece}
                 friendly={isFriendlyRow}
@@ -37,3 +37,5 @@ export const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, mo
         </div>
     );
 }
+
+export { TileRows };
