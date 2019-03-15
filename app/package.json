@@ -7,11 +7,13 @@
 	"scripts": {
 		"build": "webpack",
 		"copy-images": "cpy \"./images/**/*\" \"./bin/\" --parents",
-		"start": "http-server ./bin -p 8090"
+		"start": "http-server ./bin -p 8090",
+		"test": "alsatian \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\""
 	},
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"alsatian": "^2.4.0",
 		"awesome-typescript-loader": "^5.2.1",
 		"cpy-cli": "^2.0.0",
 		"css-loader": "^2.1.1",
