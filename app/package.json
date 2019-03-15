@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "webpack",
 		"copy-images": "cpy \"./images/**/*\" \"./bin/\" --parents",
-		"start": "http-server ./bin -p 8090",
+		"start": "webpack-dev-server",
 		"test": "alsatian \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\"",
 		"lint:sass": "stylelint \"**/*.scss\"",
 		"lint:ts": "tslint -c tslint.json \"./src/**/*.{ts,tsx}\"",
