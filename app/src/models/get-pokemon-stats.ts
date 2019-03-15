@@ -1,11 +1,4 @@
 import { PokemonType } from "./pokemon-type";
+import { pokemonStats } from "./pokemon-stats";
 
-export const getPokemonStats = (pokemonId: number) => ({
-    hp: 50,
-    attack: Math.random() * 100,
-    defense: Math.random() * 100,
-    speed: Math.random() * 100,
-    specialAttack: 120,
-    specialDefense: 70,
-    type: PokemonType.Normal
-});
+export const getPokemonStats = (pokemonId: number) => pokemonStats.find(p => p.id === pokemonId).stats;
