@@ -42,6 +42,9 @@ const selectedPiece = {
     },
     isDragging(props: PieceProps, monitor: DragSourceMonitor) {
         return props.piece === monitor.getItem();
+    },
+    canDrag(props: PieceProps, monitor: DragSourceMonitor) {
+        return props.piece.friendly;
     }
 };
 
