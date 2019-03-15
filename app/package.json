@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "webpack",
 		"copy-images": "cpy \"./images/**/*\" \"./bin/\" --parents",
-		"start": "http-server ./bin -p 8090",
+		"start": "webpack-dev-server",
 		"test:run": "ts-node --files run-tests.ts",
 		"test:rundebug": "ts-node --files run-tests.ts ci",
 		"test": "npm run test:run",
