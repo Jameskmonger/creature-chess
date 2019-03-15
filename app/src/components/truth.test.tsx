@@ -1,4 +1,4 @@
-import { AsyncTest, Expect, SpyOn, Test, TestCase, TestFixture } from "alsatian";
+import { Expect, Test, TestFixture } from "alsatian";
 
 @TestFixture("Truth")
 export class TruthTests {
