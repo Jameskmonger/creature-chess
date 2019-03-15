@@ -25,7 +25,7 @@ const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = 
 
     return connectDragSource(
         <div className="piece">
-            <img src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
+            <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
 
             <div className="info">
                 <div className={`healthbar ${friendly ? "friendly" : "enemy"}`}>

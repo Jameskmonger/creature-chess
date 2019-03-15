@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const outDir = path.resolve(__dirname, "bin");
 
@@ -43,6 +44,9 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "app.css"
+        }),
+        new StyleLintPlugin({
+            files: "**/*.scss"
         })
     ]
 };

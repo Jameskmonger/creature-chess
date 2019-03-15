@@ -1,7 +1,7 @@
 .tile {
+    display: inline-block;
     width: $tile-size;
     height: $tile-size;
-    display: inline-block;
     user-select: none;
 
     &.dark {
@@ -12,7 +12,7 @@
         background: $light-tile;
     }
 
-    img {
+    .image {
         position: absolute;
         top: 6px;
         left: ($tile-size - $sprite-size) / 2;
