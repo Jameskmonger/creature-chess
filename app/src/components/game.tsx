@@ -3,7 +3,6 @@ import delay from "delay";
 import { PokemonPiece, PiecePosition, isSamePiece } from "../models/pokemon-piece";
 import { Board } from "./board";
 import { simulateTurn } from '../models/fighting-turn-simulator';
-import { cloneDeep } from 'lodash';
 
 const makeEnemy = (pokemonId: number, position: PiecePosition) =>
     ({ pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 80, position });
