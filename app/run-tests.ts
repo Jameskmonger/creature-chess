@@ -17,7 +17,10 @@ const testType = process.argv[2];
 const testSet = TestSet.create();
 
 // add your tests
-testSet.addTestsFromFiles("./test/**/*.test.js");
+testSet.addTestsFromFiles([
+    "./src/**/*.test.ts",
+    "./src/**/*.test.tsx"
+]);
 
 // create a test runner
 const testRunner = new TestRunner();

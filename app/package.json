@@ -6,12 +6,11 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "webpack",
-		"build:test": "rm -rf test && tsc -p ./tsconfig.test.json",
 		"copy-images": "cpy \"./images/**/*\" \"./bin/\" --parents",
 		"start": "http-server ./bin -p 8090",
-		"test:run": "cross-env NODE_ENV=test ts-node --files run-tests.ts",
-		"test:rundebug": "cross-env NODE_ENV=test ts-node --files run-tests.ts ci",
-		"test": "npm run build:test && npm run test:run"
+		"test:run": "ts-node --files run-tests.ts",
+		"test:rundebug": "ts-node --files run-tests.ts ci",
+		"test": "npm run test:run"
 	},
 	"author": "",
 	"license": "ISC",
@@ -22,7 +21,6 @@
 		"alsatian": "2.4.0",
 		"awesome-typescript-loader": "^5.2.1",
 		"cpy-cli": "^2.0.0",
-		"cross-env": "^5.2.0",
 		"css-loader": "^2.1.1",
 		"enzyme": "^3.9.0",
 		"enzyme-adapter-react-16": "^1.10.0",
