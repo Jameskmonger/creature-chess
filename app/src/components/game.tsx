@@ -1,6 +1,9 @@
 import * as React from "react";
+import delay from "delay";
 import { PokemonPiece, PiecePosition, isSamePiece } from "../models/pokemon-piece";
 import { Board } from "./board";
+import { simulateTurn } from '../models/fighting-turn-simulator';
+import { cloneDeep } from 'lodash';
 
 const makeEnemy = (pokemonId: number, position: PiecePosition) =>
     ({ pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 80, position });
@@ -49,6 +52,7 @@ export class Game extends React.Component<{}, GameState> {
         return (
             <div className="board-container">
                 <Board pieces={pieces} onMovePiece={this.onMovePiece} />
+                <button onClick={(this.startRound)}>Fight!</button>
             </div>
         );
     }
@@ -65,5 +69,19 @@ export class Game extends React.Component<{}, GameState> {
                 pieces: updatedPieces
             };
         });
+    }
+
+    private startRound = async () => {
+        const turnDurationMs = 100;
+        let pieces = cloneDeep(this.state.pieces);
+        while (!Game.isATeamDefeated(pieces)) {
+            await delay(turnDurationMs);
+            pieces = simulateTurn(pieces);
+            this.setState({ pieces });
+        }
+    }
+
+    private static isATeamDefeated = (pieces: PokemonPiece[]) => {
+        return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
     }
 }
