@@ -13,15 +13,10 @@ interface GameState {
 }
 
 export class Game extends React.Component<{}, GameState> {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            pieces: []
-        };
-
-        this.onMovePiece = this.onMovePiece.bind(this);
-    }
+    public state = {
+        pieces: []
+    };
 
     public componentDidMount() {
         const pieces: PokemonPiece[] = [
@@ -53,7 +48,7 @@ export class Game extends React.Component<{}, GameState> {
         );
     }
 
-    private onMovePiece(piece: PokemonPiece, position: PiecePosition) {
+    private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {
         this.setState(({ pieces }) => {
             const updatedPieces = pieces.map(p =>
                 isSamePiece(p, piece)
