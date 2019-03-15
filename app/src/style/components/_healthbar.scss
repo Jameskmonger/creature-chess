@@ -1,9 +1,9 @@
 .healthbar {
-    height: $healthbar-height;
     width: 90%;
-    background: $healthbar-background;
-    margin: 0 auto;
+    height: $healthbar-height;
     box-sizing: border-box;
+    margin: 0 auto;
+    background: $healthbar-background;
 
     .fill {
         height: 100%;
