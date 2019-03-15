@@ -3,6 +3,11 @@ import { getPokemonStats } from "./get-pokemon-stats";
 import { getTypeAttackBonus } from "./get-type-attack-bonus";
 
 export const attack = (attacker: PokemonPiece, defender: PokemonPiece) => {
+    if (attacker.currentHealth === 0) {
+        // Dead Pokémon don't attack
+        return { attacker, defender };
+    }
+
     const attackerStats = getPokemonStats(attacker.pokemonId);
     const defenderStats = getPokemonStats(defender.pokemonId);
     const attackBonus = getTypeAttackBonus(attackerStats.type, defenderStats.type);
