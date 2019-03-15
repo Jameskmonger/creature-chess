@@ -1,12 +1,12 @@
 import * as React from "react";
 import { ConnectDropTarget, DropTarget, DropTargetConnector, DropTargetMonitor, DropTargetSpec } from "react-dnd";
 
-import { PokemonPiece } from '../models/pokemon-piece';
-import { Piece } from './piece';
+import { PokemonPiece } from "../models/pokemon-piece";
+import { Piece } from "./piece";
 
 interface TileProps {
-    dark: boolean,
-    piece: PokemonPiece,
+    dark: boolean;
+    piece: PokemonPiece;
     friendly: boolean;
     movePiece: (piece: PokemonPiece) => void;
 }
@@ -19,9 +19,7 @@ export interface DropTargetProps {
 
 const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({ dark, piece, connectDropTarget }) => connectDropTarget(
     <div className={`tile ${dark ? "dark" : "light"}`}>
-        {
-            piece && <Piece piece={piece} />
-        }
+        {piece && <Piece piece={piece} />}
     </div>
 );
 
