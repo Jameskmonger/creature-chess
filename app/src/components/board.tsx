@@ -1,27 +1,33 @@
 import * as React from "react";
-import { PokemonPiece } from "../models/pokemon-piece";
-import { TileRow } from './tileRow';
+import { DragDropContext } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
+
+import { PokemonPiece, PiecePosition, isSamePiece } from "../models/pokemon-piece";
+import { TileRows } from './tileRows';
 
 const boardSize = 8;
 
 interface BoardProps {
-    pieces: PokemonPiece[][]
+    pieces: PokemonPiece[];
 }
 
-const Board: React.FunctionComponent<BoardProps> = ({ pieces }) => {
-    const tileRows = [];
+const BoardUnconnected: React.FunctionComponent<BoardProps> = (props) => {
 
-    for (let y = 0; y < boardSize; y++) {
-        const rowPieces = pieces[y];
+    const [pieces, setPieces] = React.useState(props.pieces);
 
-        tileRows.push(<TileRow key={`tile-row-${y}`} y={y} pieces={rowPieces} boardSize={boardSize} />);
-    }
+    const movePiece = (piece: PokemonPiece, position: PiecePosition) => {
+        setPieces(pieces.map(p => isSamePiece(p, piece)
+            ? { ...p, position }
+            : p));
+    };
 
     return (
-        <div className="chessboard">
-            {tileRows}
-        </div>
+        <TileRows 
+            boardSize={boardSize}
+            movePiece={movePiece}
+            pieces={pieces}
+        />
     );
 };
 
-export { Board };
+export const Board = DragDropContext(HTML5Backend)(BoardUnconnected);

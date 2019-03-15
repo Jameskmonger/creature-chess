@@ -5,16 +5,30 @@ import { Tile } from './tile';
 interface TileRowProps {
     y: number,
     pieces: PokemonPiece[],
-    boardSize: number
+    boardSize: number,
+    movePiece: (piece: PokemonPiece, col: number) => void;
+    friendly: boolean;
 }
 
 const isTileDark = (x, y) => ((y ^ x) & 1) !== 0;
 
-export const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boardSize }) => {
+export const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boardSize, movePiece, friendly }) => {
     const tiles = [];
 
     for (let x = 0; x < boardSize; x++) {
-        tiles.push(<Tile key={`tile-${x}`} piece={pieces[x]} dark={isTileDark(x, y)} />);
+
+        const piece = pieces.filter(p => p.position[0] === x)[0];
+        const moveColumnPiece = (p: PokemonPiece) => movePiece(p, x);
+
+        tiles.push(
+            <Tile 
+                key={`tile-${x}`} 
+                piece={piece} 
+                dark={isTileDark(x, y)}
+                movePiece={moveColumnPiece}
+                friendly={friendly}
+            />
+        );
     }
 
     return <div className="tile-row">{tiles}</div>;
