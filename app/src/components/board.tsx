@@ -3,7 +3,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
 import { PokemonPiece, PiecePosition } from "../models/pokemon-piece";
-import { TileRows } from './tileRows';
+import { TileRows } from "./tileRows";
 
 const boardSize = 8;
 

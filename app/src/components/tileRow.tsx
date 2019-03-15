@@ -1,15 +1,16 @@
 import * as React from "react";
-import { PokemonPiece } from '../models/pokemon-piece';
-import { Tile } from './tile';
+import { PokemonPiece } from "../models/pokemon-piece";
+import { Tile } from "./tile";
 
 interface TileRowProps {
-    y: number,
-    pieces: PokemonPiece[],
-    boardSize: number,
+    y: number;
+    pieces: PokemonPiece[];
+    boardSize: number;
     movePiece: (piece: PokemonPiece, col: number) => void;
     friendly: boolean;
 }
 
+// tslint:disable-next-line:no-bitwise
 const isTileDark = (x, y) => ((y ^ x) & 1) !== 0;
 
 const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boardSize, movePiece, friendly }) => {

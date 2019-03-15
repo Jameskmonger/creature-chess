@@ -7,7 +7,9 @@
 	"scripts": {
 		"build": "webpack",
 		"copy-images": "cpy \"./images/**/*\" \"./bin/\" --parents",
-		"start": "http-server ./bin -p 8090"
+		"start": "http-server ./bin -p 8090",
+		"lint:ts": "tslint -c tslint.json \"./src/**/*.{ts,tsx}\"",
+		"lint": "npm run lint:ts"
 	},
 	"author": "",
 	"license": "ISC",
@@ -18,8 +20,11 @@
 		"html-webpack-plugin": "^3.2.0",
 		"http-server": "^0.11.1",
 		"mini-css-extract-plugin": "^0.5.0",
+		"neworbit-tslint-config": "^4.0.0",
 		"node-sass": "^4.11.0",
 		"sass-loader": "^7.1.0",
+		"tslint": "^5.14.0",
+		"tslint-loader": "^3.5.4",
 		"typescript": "^3.3.3333",
 		"webpack": "^4.29.6",
 		"webpack-cli": "^3.2.3"
