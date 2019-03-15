@@ -48,5 +48,11 @@ module.exports = {
         new StyleLintPlugin({
             files: "**/*.scss"
         })
-    ]
+    ],
+
+    "devServer": {
+        contentBase: outDir,
+        compress: true,
+        port: 8090
+    }
 };
