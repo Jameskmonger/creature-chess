@@ -10,7 +10,7 @@
     &.attack-up {
         @keyframes attack-up {
             0% { top: 0; }
-            50% { top: -$attack-movement-distance; }
+            50% { top: calc(#{$attack-movement-distance} * -1); }
             100% { top: 0; }
         }
         animation-name: attack-up;
@@ -40,7 +40,7 @@
     &.attack-left {
         @keyframes attack-left {
             0% { left: 0; }
-            50% { left: -$attack-movement-distance; }
+            50% { left: calc(#{$attack-movement-distance} * -1); }
             100% { left: 0; }
         }
         animation-name: attack-left;
