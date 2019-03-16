@@ -50,6 +50,7 @@
 		"@types/react": "^16.8.7",
 		"@types/react-dom": "^16.8.2",
 		"delay": "^4.1.0",
+		"javascript-astar": "^0.4.1",
 		"lodash": "^4.17.11",
 		"react": "^16.8.4",
 		"react-dnd": "^7.3.2",

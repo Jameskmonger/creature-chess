@@ -1,6 +1,22 @@
 import { PokemonType } from "./pokemon-type";
 
-export const pokemonStats = [
+interface PokemonDefinition {
+    id: number;
+    name: string;
+    stats: PokemonStats;
+}
+
+export interface PokemonStats {
+    hp: number;
+    attack: number;
+    defense: number;
+    speed: number;
+    specialAttack: number;
+    specialDefense: number;
+    type: PokemonType;
+}
+
+export const pokemonStats: PokemonDefinition[] = [
     {
         id: 1,
         name: "Bulbasaur",

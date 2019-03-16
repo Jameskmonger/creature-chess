@@ -54,5 +54,11 @@ module.exports = {
         contentBase: outDir,
         compress: true,
         port: 8090
+    },
+
+    optimization: {
+        splitChunks: {
+            chunks: "all"
+        }
     }
 };
