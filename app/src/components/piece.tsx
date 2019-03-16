@@ -17,19 +17,18 @@ interface DragSourceProps {
 }
 
 interface State {
-    attackAnimationInProgress: boolean;
-    hitAnimationInProgress: boolean;
+    currentAnimations: string[];
 }
 
 class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
-    public state = { attackAnimationInProgress: false, hitAnimationInProgress: false };
+    public state = { currentAnimations: [] };
 
     public render() {
         const { piece, connectDragSource} = this.props;
         const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
 
         return connectDragSource(
-            <div className={`piece ${this.getAnimationClasses()}`} onAnimationEnd={this.onAnimationEnd}>
+            <div className={`piece ${this.state.currentAnimations.join(" ")}`} onAnimationEnd={this.onAnimationEnd}>
                 <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
 
                 <div className="info">
@@ -48,27 +47,22 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
 
     public componentDidUpdate(oldProps: PieceProps) {
         if (!oldProps.piece.attacking && this.props.piece.attacking) {
-            this.setState({ attackAnimationInProgress: true });
+            this.runAnimation("attack");
         }
 
         if (!oldProps.piece.hit && this.props.piece.hit) {
-            this.setState({ hitAnimationInProgress: true });
+            this.runAnimation("hit");
         }
+    }
+
+    private runAnimation = (animationName: string) => {
+        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, animationName ] })));
     }
 
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
-        switch (event.animationName) {
-            case "attack":
-                this.setState({ attackAnimationInProgress: false });
-                break;
-            case "hit":
-                this.setState({ hitAnimationInProgress: false });
-                break;
-            default:
-        }
+        const { animationName } = event;
+        this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a !== animationName) ] }));
     }
-
-    private getAnimationClasses = () => `${this.state.attackAnimationInProgress ? "attacking" : ""} ${this.state.hitAnimationInProgress ? "hit" : ""}`;
 }
 
 const selectedPiece = {
