@@ -8,7 +8,10 @@ export interface PokemonPiece {
     position: PiecePosition;
     maxHealth: number;
     currentHealth: number;
+    coolDown: number;
 }
+
+export const initialCoolDown = 1000;
 
 export const isSamePiece = (a: PokemonPiece, b: PokemonPiece) =>
     a.pokemonId === b.pokemonId

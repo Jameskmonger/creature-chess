@@ -1,0 +1,12 @@
+.cooldownbar {
+    width: 90%;
+    height: $cooldownbar-height;
+    box-sizing: border-box;
+    margin: 0 auto;
+    background: $healthbar-background;
+
+    .fill {
+        height: 100%;
+        background: $cooldownbar-color;
+    }
+}

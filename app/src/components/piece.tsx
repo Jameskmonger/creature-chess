@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
 
-import { PokemonPiece } from "../models/pokemon-piece";
+import { PokemonPiece, initialCoolDown } from "../models/pokemon-piece";
 
 const getPercentage = (current: number, max: number) => {
     return Math.floor((current / max) * 100) + "%";
@@ -21,7 +21,7 @@ const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = 
     connectDragSource
 }) => {
 
-    const { facingAway, pokemonId, friendly, currentHealth, maxHealth } = piece;
+    const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
 
     return connectDragSource(
         <div className="piece">
@@ -31,6 +31,10 @@ const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = 
                 <div className={`healthbar ${friendly ? "friendly" : "enemy"}`}>
                     {/* tslint:disable-next-line:jsx-ban-props */}
                     <div className="fill" style={{ width: getPercentage(currentHealth, maxHealth) }} />
+                </div>
+                <div className="cooldownbar">
+                    {/* tslint:disable-next-line:jsx-ban-props */}
+                    <div className="fill" style={{ width: getPercentage(coolDown, initialCoolDown) }} />
                 </div>
             </div>
         </div>

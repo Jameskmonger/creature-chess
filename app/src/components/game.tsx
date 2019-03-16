@@ -1,14 +1,14 @@
 import * as React from "react";
 import delay from "delay";
-import { PokemonPiece, PiecePosition, isSamePiece } from "../models/pokemon-piece";
+import { PokemonPiece, PiecePosition, isSamePiece, initialCoolDown } from "../models/pokemon-piece";
 import { Board } from "./board";
 import { simulateTurn } from "../models/fighting-turn-simulator";
 
 const makeEnemy = (pokemonId: number, position: PiecePosition) =>
-    ({ pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 80, position });
+    ({ pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
 
 const makeFriendly = (pokemonId: number, position: PiecePosition) =>
-    ({ pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 80, position });
+    ({ pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -70,7 +70,7 @@ export class Game extends React.Component<{}, GameState> {
     }
 
     private startRound = async () => {
-        const turnDurationMs = 100;
+        const turnDurationMs = 10;
         let pieces = this.state.pieces;
         while (!isATeamDefeated(pieces)) {
             await delay(turnDurationMs);
