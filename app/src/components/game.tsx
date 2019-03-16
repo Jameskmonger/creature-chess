@@ -7,11 +7,13 @@ import { Bench } from "./bench";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
+let count = 0;
+
 const makeEnemy = (pokemonId: number, position: PiecePosition) =>
-    ({ pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
+    ({ id: count++, pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
 
 const makeFriendly = (pokemonId: number, position: PiecePosition) =>
-    ({ pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
+    ({ id: count++, pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -26,7 +28,7 @@ interface GameState {
 
 class GameUnconnected extends React.Component<{}, GameState> {
 
-    public state = {
+    public state: GameState = {
         pieces: [],
         benchPieces: []
     };
@@ -93,6 +95,8 @@ class GameUnconnected extends React.Component<{}, GameState> {
             pieces = simulateTurn(pieces);
             this.setState({ pieces });
         }
+
+        this.setState({ pieces: pieces.map(piece => ({ ...piece, celebrating: true }))});
     }
 }
 

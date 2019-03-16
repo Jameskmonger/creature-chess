@@ -2,10 +2,13 @@ import * as React from "react";
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
 
 import { PokemonPiece, initialCoolDown } from "../models/pokemon-piece";
+import { assign, keys } from "lodash";
 
 const getPercentage = (current: number, max: number) => {
     return Math.floor((current / max) * 100) + "%";
 };
+
+const dyingAnimation = "dying";
 
 interface PieceProps {
     piece: PokemonPiece;
@@ -16,19 +19,35 @@ interface DragSourceProps {
     isDragging: boolean;
 }
 
+interface Animation {
+    name: string;
+    variables?: { [key: string]: string | number };
+}
+
 interface State {
-    currentAnimations: string[];
+    currentAnimations: Animation[];
+    dead: boolean;
 }
 
 class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
-    public state = { currentAnimations: [] };
+    public state = { currentAnimations: [], dead: this.props.piece.currentHealth === 0 };
 
     public render() {
+        if (this.state.dead) {
+            return null;
+        }
+
         const { piece, connectDragSource} = this.props;
         const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
+        const { currentAnimations } = this.state;
 
         return connectDragSource(
-            <div className={`piece ${this.state.currentAnimations.join(" ")}`} onAnimationEnd={this.onAnimationEnd}>
+            <div
+                className={`piece ${currentAnimations.map(a => a.name).join(" ")}`}
+                // tslint:disable-next-line: jsx-ban-props
+                style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
+                onAnimationEnd={this.onAnimationEnd}
+            >
                 <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
 
                 <div className="info">
@@ -46,22 +65,34 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 
     public componentDidUpdate(oldProps: PieceProps) {
-        if (!oldProps.piece.attacking && this.props.piece.attacking) {
-            this.runAnimation(`attack-${this.props.piece.attacking.direction}`);
+        const { attacking, hit, celebrating, currentHealth } = this.props.piece;
+        if (!oldProps.piece.attacking && attacking) {
+            this.runAnimation({ name: `attack-${attacking.direction}`, variables: { attackPower: attacking.damage } });
         }
 
-        if (!oldProps.piece.hit && this.props.piece.hit) {
-            this.runAnimation("hit");
+        if (!oldProps.piece.hit && hit) {
+            this.runAnimation({ name: "hit", variables: { hitPower: hit.damage } });
+        }
+
+        if (!oldProps.piece.celebrating && celebrating) {
+            this.runAnimation({ name: "celebrate" });
+        }
+
+        if (oldProps.piece.currentHealth > 0 && currentHealth === 0) {
+            this.runAnimation({ name: dyingAnimation });
         }
     }
 
-    private runAnimation = (animationName: string) => {
-        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, animationName ] })));
+    private runAnimation = (animation: Animation) => {
+        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, animation ] })));
     }
 
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
         const { animationName } = event;
-        this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a !== animationName) ] }));
+        this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a.name !== animationName) ] }));
+        if (animationName === dyingAnimation) {
+            this.setState({ dead: true });
+        }
     }
 }
 
@@ -83,6 +114,11 @@ const collect = (connect: DragSourceConnector, monitor: DragSourceMonitor) => ({
 });
 
 const Piece = DragSource<PieceProps>(typeof PieceUnconnected, selectedPiece, collect)(PieceUnconnected);
+
+const getAnimationCssVariables = (animations: Animation[]) => {
+    const variables = assign({}, ...animations.filter(a => a.variables).map(a => a.variables));
+    return assign({}, ...keys(variables).map(key => ({ [`--${key}`]: variables[key] })));
+};
 
 export {
     PieceUnconnected,

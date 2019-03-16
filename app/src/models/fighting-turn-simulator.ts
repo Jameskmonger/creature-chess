@@ -22,7 +22,7 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
         const defenderStats = getPokemonStats(attacker.pokemonId);
 
         if (!defender) {
-            const newPosition = getNewPiecePosition(attacker, updatedPieces);
+            const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => p.currentHealth > 0));
 
             if (newPosition !== null) {
                 attacker.position = newPosition;
