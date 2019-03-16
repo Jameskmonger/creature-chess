@@ -63,9 +63,9 @@
     &.celebrate {
         $celebrate-movement-distance: 20px;
         @keyframes celebrate {
-            25% { transform: translate($celebrate-movement-distance, -$celebrate-movement-distance); }
-            50% { transform: translate(0, 0); }
-            75% { transform: translate(-$celebrate-movement-distance, -$celebrate-movement-distance); }
+            25% { transform: translate($celebrate-movement-distance, -$celebrate-movement-distance) skewX(-20deg); }
+            50% { transform: translate(0, 0) skewX(0); }
+            75% { transform: translate(-$celebrate-movement-distance, -$celebrate-movement-distance) skewX(20deg); }
         }
         animation-name: celebrate;
         animation-duration: 1000ms;
