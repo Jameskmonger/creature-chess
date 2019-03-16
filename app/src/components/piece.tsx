@@ -29,6 +29,7 @@ const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = 
 
             <div className="info">
                 <div className={`healthbar ${friendly ? "friendly" : "enemy"}`}>
+                    {/* tslint:disable-next-line:jsx-ban-props */}
                     <div className="fill" style={{ width: getPercentage(currentHealth, maxHealth) }} />
                 </div>
             </div>
