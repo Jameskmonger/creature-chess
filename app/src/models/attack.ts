@@ -5,10 +5,12 @@ import { Direction } from "./direction";
 
 export interface AttackDetails {
     direction: Direction;
+    damage: number;
 }
 
 export interface HitDetails {
     direction: Direction;
+    damage: number;
 }
 
 export const attack = (attacker: PokemonPiece, defender: PokemonPiece) => {
@@ -28,8 +30,8 @@ export const attack = (attacker: PokemonPiece, defender: PokemonPiece) => {
     const newDefenderHealth = Math.max(defender.currentHealth - damage, 0);
 
     return {
-        attacker: { ...attacker, coolDown: initialCoolDown, attacking: { direction: getRelativeDirection(attacker, defender) } },
-        defender: { ...defender, currentHealth: newDefenderHealth, hit: { direction: getRelativeDirection(defender, attacker) } }
+        attacker: { ...attacker, coolDown: initialCoolDown, attacking: { direction: getRelativeDirection(attacker, defender), damage } },
+        defender: { ...defender, currentHealth: newDefenderHealth, hit: { direction: getRelativeDirection(defender, attacker), damage } }
     };
 };
 
