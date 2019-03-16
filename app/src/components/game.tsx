@@ -22,7 +22,7 @@ interface GameState {
 
 export class Game extends React.Component<{}, GameState> {
 
-    public state = {
+    public state: GameState = {
         pieces: []
     };
 
@@ -79,5 +79,7 @@ export class Game extends React.Component<{}, GameState> {
             pieces = simulateTurn(pieces);
             this.setState({ pieces });
         }
+
+        this.setState({ pieces: pieces.map(piece => ({ ...piece, celebrating: true }))});
     }
 }

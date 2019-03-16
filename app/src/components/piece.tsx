@@ -65,7 +65,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 
     public componentDidUpdate(oldProps: PieceProps) {
-        const { attacking, hit } = this.props.piece;
+        const { attacking, hit, celebrating, currentHealth } = this.props.piece;
         if (!oldProps.piece.attacking && attacking) {
             this.runAnimation({ name: `attack-${attacking.direction}`, variables: { attackPower: attacking.damage } });
         }
@@ -74,8 +74,12 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
             this.runAnimation({ name: "hit", variables: { hitPower: hit.damage } });
         }
 
-        if (oldProps.piece.currentHealth > 0 && this.props.piece.currentHealth === 0) {
+        if (oldProps.piece.currentHealth > 0 && currentHealth === 0) {
             this.runAnimation({ name: dyingAnimation });
+        }
+
+        if (!oldProps.piece.celebrating && celebrating) {
+            this.runAnimation({ name: "celebrate" });
         }
     }
 

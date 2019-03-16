@@ -9,6 +9,7 @@ export interface PokemonPiece {
     friendly: boolean;
     attacking?: AttackDetails;
     hit?: HitDetails;
+    celebrating?: boolean;
 
     position: PiecePosition;
     maxHealth: number;
