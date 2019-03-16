@@ -4,6 +4,7 @@
     height: 100%;
 
     $attack-movement-distance: 10px;
+    $attack-duration: 200ms;
 
     &.attack-up {
         @keyframes attack-up {
@@ -12,7 +13,7 @@
             100% { top: 0; }
         }
         animation-name: attack-up;
-        animation-duration: 200ms;
+        animation-duration: $attack-duration;
     }
 
     &.attack-right {
@@ -22,7 +23,7 @@
             100% { left: 0; }
         }
         animation-name: attack-right;
-        animation-duration: 200ms;
+        animation-duration: $attack-duration;
     }
 
     &.attack-down {
@@ -32,7 +33,7 @@
             100% { top: 0; }
         }
         animation-name: attack-down;
-        animation-duration: 200ms;
+        animation-duration: $attack-duration;
     }
 
     &.attack-left {
@@ -42,14 +43,15 @@
             100% { left: 0; }
         }
         animation-name: attack-left;
-        animation-duration: 200ms;
+        animation-duration: $attack-duration;
     }
 
     &.hit {
+        $hit-rotation: 5deg;
         @keyframes hit {
             0% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
+            25% { transform: rotate(-$hit-rotation); }
+            75% { transform: rotate($hit-rotation); }
             100% { transform: rotate(0deg); }
         }
         animation-name: hit;
