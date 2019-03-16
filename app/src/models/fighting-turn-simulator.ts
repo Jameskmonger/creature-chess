@@ -1,6 +1,7 @@
-import { PokemonPiece } from "./pokemon-piece";
+import { PokemonPiece, initialCoolDown as initialCoolDown } from "./pokemon-piece";
 import { attack } from "./attack";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
+import { getPokemonStats } from "./get-pokemon-stats";
 
 export const simulateTurn = (pieces: PokemonPiece[]) => {
     const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: false, hit: false }));
@@ -10,19 +11,27 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
             return;
         }
 
+        const attackerStats = getPokemonStats(attacker.pokemonId);
+        if (attacker.coolDown > 0) {
+            attacker.coolDown -= attackerStats.speed;
+
+            return;
+        }
+
         const defender = getAttackableEnemy(attacker, updatedPieces);
 
         if (!defender) {
             const newPosition = getNewPiecePosition(attacker, updatedPieces);
 
             if (newPosition !== null) {
-                updatedPieces[index].position = newPosition;
+                attacker.position = newPosition;
+                attacker.coolDown = initialCoolDown;
             }
 
             return;
         }
 
-        const updatedFighters = attack(attacker, defender);
+        const updatedFighters = attack(attacker, attackerStats, defender);
         updatedPieces[index] = updatedFighters.attacker;
         updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
     });
