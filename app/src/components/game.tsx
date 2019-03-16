@@ -37,15 +37,15 @@ class GameUnconnected extends React.Component<{}, GameState> {
             makeEnemy(15, [1, 0]),
             makeEnemy(123, [4, 0]),
             makeEnemy(58, [5, 0]),
-            makeEnemy(6, [2, 1]),
+            makeEnemy(6, [4, 3]),
             makeEnemy(11, [3, 1]),
 
             makeFriendly(129, [1, 6]),
             makeFriendly(62, [2, 6]),
-            makeFriendly(9, [6, 6]),
+            makeFriendly(9, [4, 4]),
             makeFriendly(70, [7, 6]),
-            makeFriendly(67, [2, 7]),
-            makeFriendly(89, [5, 7]),
+            makeFriendly(67, [3, 3]),
+            makeFriendly(89, [5, 3])
         ];
 
         const benchPieces: PokemonPiece[] = [
@@ -86,7 +86,7 @@ class GameUnconnected extends React.Component<{}, GameState> {
     }
 
     private startRound = async () => {
-        const turnDurationMs = 10;
+        const turnDurationMs = 50;
         let pieces = this.state.pieces;
         while (!isATeamDefeated(pieces)) {
             await delay(turnDurationMs);

@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "*": ["types/*"]
+        },
         "experimentalDecorators": true,
         "module": "commonjs",
         "moduleResolution": "node",
