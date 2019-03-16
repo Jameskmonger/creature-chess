@@ -19,7 +19,7 @@ export interface DropTargetProps {
 
 const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({ dark, pieces, connectDropTarget }) => connectDropTarget(
     <div className={`tile ${dark ? "dark" : "light"}`}>
-        {pieces.map(piece => <Piece piece={piece} key={piece.pokemonId} />)}
+        {pieces.map(piece => <Piece piece={piece} key={piece.id} />)}
     </div>
 );
 
