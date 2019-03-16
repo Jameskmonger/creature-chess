@@ -1,6 +1,6 @@
 import { PokemonPiece, initialCoolDown } from "./pokemon-piece";
-import { getPokemonStats } from "./get-pokemon-stats";
 import { getTypeAttackBonus } from "./get-type-attack-bonus";
+import { PokemonStats } from "./pokemon-stats";
 import { Direction } from "./direction";
 
 export interface AttackDetails {
@@ -11,18 +11,12 @@ export interface HitDetails {
     direction: Direction;
 }
 
-export const attack = (attacker: PokemonPiece, defender: PokemonPiece) => {
+export const attack = (attacker: PokemonPiece, attackerStats: PokemonStats, defender: PokemonPiece, defenderStats: PokemonStats) => {
     if (attacker.currentHealth === 0) {
         // Dead Pokémon don't attack
         return { attacker, defender };
     }
 
-    const attackerStats = getPokemonStats(attacker.pokemonId);
-    if (attacker.coolDown > 0) {
-        return { attacker: { ...attacker, coolDown: attacker.coolDown - attackerStats.speed }, defender };
-    }
-
-    const defenderStats = getPokemonStats(defender.pokemonId);
     const attackBonus = getTypeAttackBonus(attackerStats.type, defenderStats.type);
     const damage = (attackerStats.attack / defenderStats.defense) * attackBonus * 10;
     const newDefenderHealth = Math.max(defender.currentHealth - damage, 0);

@@ -38,7 +38,7 @@ export class Game extends React.Component<{}, GameState> {
             makeFriendly(9, [4, 4]),
             makeFriendly(70, [7, 6]),
             makeFriendly(67, [3, 3]),
-            makeFriendly(89, [5, 3]),
+            makeFriendly(89, [5, 3])
         ];
 
         this.setState({ pieces });
