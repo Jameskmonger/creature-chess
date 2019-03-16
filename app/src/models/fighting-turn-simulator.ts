@@ -37,5 +37,5 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
         updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
     });
 
-    return updatedPieces;
+    return updatedPieces.filter(p => p.currentHealth > 0);
 };
