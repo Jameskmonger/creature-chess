@@ -1,11 +1,12 @@
 import { PokemonPiece } from "./pokemon-piece";
-import { sample } from "lodash";
 import { attack } from "./attack";
+import { getAttackableEnemy } from "./movement";
 
 export const simulateTurn = (pieces: PokemonPiece[]) => {
     const updatedPieces = [...pieces];
     updatedPieces.forEach((attacker, index) => {
-        const defender = sample(updatedPieces.filter(p => p.friendly !== attacker.friendly && p.currentHealth > 0));
+        const defender = getAttackableEnemy(attacker, updatedPieces);
+
         if (!defender) {
             return updatedPieces;
         }
