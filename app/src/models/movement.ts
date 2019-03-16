@@ -1,4 +1,5 @@
 import { PokemonPiece } from "./pokemon-piece";
+import { getNextPiecePosition } from "./pathfinding";
 
 const getLivingEnemies = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
     return pieces.filter(other => other.friendly !== piece.friendly && other.currentHealth > 0);
@@ -26,6 +27,10 @@ export const getAttackableEnemy = (piece: PokemonPiece, others: PokemonPiece[]) 
 const getTargetPiece = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
     const enemies = getLivingEnemies(piece, pieces);
 
+    if (enemies.length === 0) {
+        return null;
+    }
+
     const enemyDeltas = enemies.map(enemy => ({
         enemy,
         delta: getDelta(piece, enemy)
@@ -40,7 +45,9 @@ const getTargetPiece = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
 export const getNewPiecePosition = (piece: PokemonPiece, pieces: PokemonPiece[]): [ number, number ] => {
     const target = getTargetPiece(piece, pieces);
 
+    if (target === null) {
+        return null;
+    }
 
-
-    return null;
+    return getNextPiecePosition(piece, target, pieces);
 };
