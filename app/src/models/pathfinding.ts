@@ -22,7 +22,7 @@ const createEmptyWeightGrid = () => {
 const createWeightGrid = (start: [ number, number ], pieces: PokemonPiece[]) => {
     const grid = createEmptyWeightGrid();
 
-    pieces.forEach(piece => {
+    pieces.filter(p => p.currentHealth > 0).forEach(piece => {
         const [x, y] = piece.position;
 
         grid[x][y] = 0;

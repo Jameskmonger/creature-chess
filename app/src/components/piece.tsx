@@ -7,6 +7,8 @@ const getPercentage = (current: number, max: number) => {
     return Math.floor((current / max) * 100) + "%";
 };
 
+const dyingAnimation = "dying";
+
 interface PieceProps {
     piece: PokemonPiece;
 }
@@ -18,12 +20,17 @@ interface DragSourceProps {
 
 interface State {
     currentAnimations: string[];
+    dead: boolean;
 }
 
 class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
-    public state = { currentAnimations: [] };
+    public state = { currentAnimations: [], dead: this.props.piece.currentHealth === 0 };
 
     public render() {
+        if (this.state.dead) {
+            return null;
+        }
+
         const { piece, connectDragSource} = this.props;
         const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
 
@@ -53,6 +60,10 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
         if (!oldProps.piece.hit && this.props.piece.hit) {
             this.runAnimation("hit");
         }
+
+        if (oldProps.piece.currentHealth > 0 && this.props.piece.currentHealth === 0) {
+            this.runAnimation(dyingAnimation);
+        }
     }
 
     private runAnimation = (animationName: string) => {
@@ -62,6 +73,9 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
         const { animationName } = event;
         this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a !== animationName) ] }));
+        if (animationName === dyingAnimation) {
+            this.setState({ dead: true });
+        }
     }
 }
 

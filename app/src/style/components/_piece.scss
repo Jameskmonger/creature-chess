@@ -57,4 +57,12 @@
         animation-name: hit;
         animation-duration: 200ms;
     }
+
+    &.dying {
+        @keyframes dying {
+            100% { transform: scale(0); }
+        }
+        animation-name: dying;
+        animation-duration: 1000ms;
+    }
 }
