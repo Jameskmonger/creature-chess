@@ -1,10 +1,10 @@
-import { PokemonPiece, initialCoolDown as initialCoolDown } from "./pokemon-piece";
+import { PokemonPiece, initialCoolDown } from "./pokemon-piece";
 import { attack } from "./attack";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getPokemonStats } from "./get-pokemon-stats";
 
 export const simulateTurn = (pieces: PokemonPiece[]) => {
-    const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: false, hit: false }));
+    const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: null, hit: null }));
 
     updatedPieces.forEach((attacker, index) => {
         if (attacker.currentHealth === 0) {

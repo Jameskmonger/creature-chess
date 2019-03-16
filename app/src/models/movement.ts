@@ -19,7 +19,6 @@ const isAdjacent = (a: PokemonPiece) => {
         return (deltaX + deltaY === 1);
     };
 };
-
 export const getAttackableEnemy = (piece: PokemonPiece, others: PokemonPiece[]) => {
     return getLivingEnemies(piece, others).find(isAdjacent(piece)) || null;
 };
