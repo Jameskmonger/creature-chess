@@ -18,5 +18,5 @@ export const attack = (attacker: PokemonPiece, defender: PokemonPiece) => {
     const damage = (attackerStats.attack / defenderStats.defense) * attackBonus * 10;
     const newDefenderHealth = Math.max(defender.currentHealth - damage, 0);
 
-    return { attacker: { ...attacker, coolDown: initialCoolDown }, defender: { ...defender, currentHealth: newDefenderHealth } };
+    return { attacker: { ...attacker, coolDown: initialCoolDown, attacking: true }, defender: { ...defender, currentHealth: newDefenderHealth, hit: true } };
 };
