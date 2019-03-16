@@ -9,7 +9,7 @@ interface BoardProps {
     onMovePiece: (piece: PokemonPiece, position: PiecePosition) => void;
 }
 
-export const Board: React.FunctionComponent<BoardProps> = ({ boardSize, onMovePiece, pieces }) => {
+const Board: React.FunctionComponent<BoardProps> = ({ boardSize, onMovePiece, pieces }) => {
     return (
         <TileRows
             boardSize={boardSize}
@@ -17,4 +17,8 @@ export const Board: React.FunctionComponent<BoardProps> = ({ boardSize, onMovePi
             pieces={pieces}
         />
     );
+};
+
+export {
+    Board
 };

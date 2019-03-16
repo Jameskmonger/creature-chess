@@ -7,7 +7,7 @@ interface BenchProps {
     pieces: PokemonPiece[];
 }
 
-export const Bench: React.FunctionComponent<BenchProps> = ({ boardSize, pieces }) => {
+const Bench: React.FunctionComponent<BenchProps> = ({ boardSize, pieces }) => {
     const tiles = [];
 
     for (let x = 0; x < boardSize; x++) {
@@ -24,4 +24,8 @@ export const Bench: React.FunctionComponent<BenchProps> = ({ boardSize, pieces }
     return (
         <div className="tile-row">{tiles}</div>
     );
+};
+
+export {
+    Bench
 };

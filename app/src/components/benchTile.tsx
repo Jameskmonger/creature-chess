@@ -6,8 +6,12 @@ interface BenchTileProps {
     piece: PokemonPiece;
 }
 
-export const BenchTile: React.FunctionComponent<BenchTileProps> = ({ piece }) => (
+const BenchTile: React.FunctionComponent<BenchTileProps> = ({ piece }) => (
     <div className={`tile bench`}>
         {piece && <Piece piece={piece} />}
     </div>
 );
+
+export {
+    BenchTile
+};

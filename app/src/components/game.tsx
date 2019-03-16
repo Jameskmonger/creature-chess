@@ -96,4 +96,8 @@ class GameUnconnected extends React.Component<{}, GameState> {
     }
 }
 
-export const Game = DragDropContext(HTML5Backend)(GameUnconnected);
+const Game = DragDropContext(HTML5Backend)(GameUnconnected);
+
+export {
+    Game
+};
