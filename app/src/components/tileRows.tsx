@@ -32,9 +32,9 @@ const TileRows: React.FunctionComponent<TileRowsProps> = ({ boardSize, movePiece
     }
 
     return (
-        <div className="chessboard">
+        <>
             {tileRows}
-        </div>
+        </>
     );
 };
 
