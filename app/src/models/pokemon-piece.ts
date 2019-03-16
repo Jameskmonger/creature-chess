@@ -4,6 +4,8 @@ export interface PokemonPiece {
     pokemonId: number;
     facingAway: boolean;
     friendly: boolean;
+    attacking?: boolean;
+    hit?: boolean;
 
     position: PiecePosition;
     maxHealth: number;
