@@ -1,11 +1,13 @@
+import { AttackDetails, HitDetails } from "./attack";
+
 export type PiecePosition = [number, number];
 
 export interface PokemonPiece {
     pokemonId: number;
     facingAway: boolean;
     friendly: boolean;
-    attacking?: boolean;
-    hit?: boolean;
+    attacking?: AttackDetails;
+    hit?: HitDetails;
 
     position: PiecePosition;
     maxHealth: number;

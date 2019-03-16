@@ -47,7 +47,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
 
     public componentDidUpdate(oldProps: PieceProps) {
         if (!oldProps.piece.attacking && this.props.piece.attacking) {
-            this.runAnimation("attack");
+            this.runAnimation(`attack-${this.props.piece.attacking.direction}`);
         }
 
         if (!oldProps.piece.hit && this.props.piece.hit) {
