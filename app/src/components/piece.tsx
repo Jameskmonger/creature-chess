@@ -8,6 +8,8 @@ const getPercentage = (current: number, max: number) => {
     return Math.floor((current / max) * 100) + "%";
 };
 
+const dyingAnimation = "dying";
+
 interface PieceProps {
     piece: PokemonPiece;
 }
@@ -24,12 +26,17 @@ interface Animation {
 
 interface State {
     currentAnimations: Animation[];
+    dead: boolean;
 }
 
 class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
-    public state: State = { currentAnimations: [] };
+    public state = { currentAnimations: [], dead: this.props.piece.currentHealth === 0 };
 
     public render() {
+        if (this.state.dead) {
+            return null;
+        }
+
         const { piece, connectDragSource} = this.props;
         const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
         const { currentAnimations } = this.state;
@@ -58,7 +65,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 
     public componentDidUpdate(oldProps: PieceProps) {
-        const { attacking, hit, celebrating } = this.props.piece;
+        const { attacking, hit, celebrating, currentHealth } = this.props.piece;
         if (!oldProps.piece.attacking && attacking) {
             this.runAnimation({ name: `attack-${attacking.direction}`, variables: { attackPower: attacking.damage } });
         }
@@ -70,6 +77,10 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
         if (!oldProps.piece.celebrating && celebrating) {
             this.runAnimation({ name: "celebrate" });
         }
+
+        if (oldProps.piece.currentHealth > 0 && currentHealth === 0) {
+            this.runAnimation({ name: dyingAnimation });
+        }
     }
 
     private runAnimation = (animation: Animation) => {
@@ -79,6 +90,9 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
         const { animationName } = event;
         this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a.name !== animationName) ] }));
+        if (animationName === dyingAnimation) {
+            this.setState({ dead: true });
+        }
     }
 }
 

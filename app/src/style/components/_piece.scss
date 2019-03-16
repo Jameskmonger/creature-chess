@@ -72,4 +72,13 @@
         animation-timing-function: linear;
         animation-iteration-count: infinite;
     }
+
+    &.dying {
+        @keyframes dying {
+            100% { transform: scale(0); }
+        }
+        animation-name: dying;
+        animation-duration: 1000ms;
+        animation-iteration-count: 1;
+    }
 }

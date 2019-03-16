@@ -6,7 +6,7 @@ import { Piece } from "./piece";
 
 interface TileProps {
     dark: boolean;
-    piece: PokemonPiece;
+    pieces: PokemonPiece[];
     friendly: boolean;
     movePiece: (piece: PokemonPiece) => void;
 }
@@ -17,9 +17,9 @@ export interface DropTargetProps {
     canDrop: boolean;
 }
 
-const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({ dark, piece, connectDropTarget }) => connectDropTarget(
+const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({ dark, pieces, connectDropTarget }) => connectDropTarget(
     <div className={`tile ${dark ? "dark" : "light"}`}>
-        {piece && <Piece piece={piece} />}
+        {pieces.map(piece => <Piece piece={piece} key={piece.id} />)}
     </div>
 );
 

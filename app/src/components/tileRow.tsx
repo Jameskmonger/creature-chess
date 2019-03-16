@@ -18,13 +18,13 @@ const TileRow: React.FunctionComponent<TileRowProps> = ({ y, pieces, boardSize, 
 
     for (let x = 0; x < boardSize; x++) {
 
-        const piece = pieces.filter(p => p.position[0] === x)[0];
+        const tilePieces = pieces.filter(p => p.position[0] === x);
         const moveColumnPiece = (p: PokemonPiece) => movePiece(p, x);
 
         tiles.push(
             <Tile
                 key={`tile-${x}`}
-                piece={piece}
+                pieces={tilePieces}
                 dark={isTileDark(x, y)}
                 movePiece={moveColumnPiece}
                 friendly={friendly}
