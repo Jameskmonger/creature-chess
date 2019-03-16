@@ -50,7 +50,7 @@ module.exports = {
         })
     ],
 
-    "devServer": {
+    devServer: {
         contentBase: outDir,
         compress: true,
         port: 8090
