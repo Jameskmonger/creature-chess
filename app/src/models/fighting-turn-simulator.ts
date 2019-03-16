@@ -3,7 +3,7 @@ import { attack } from "./attack";
 import { getAttackableEnemy } from "./movement";
 
 export const simulateTurn = (pieces: PokemonPiece[]) => {
-    const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: false, hit: false }));
+    const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: null, hit: null }));
     updatedPieces.forEach((attacker, index) => {
         const defender = getAttackableEnemy(attacker, updatedPieces);
 

@@ -3,13 +3,45 @@
     width: 100%;
     height: 100%;
 
-    &.attack {
-        @keyframes attack {
+    $attack-movement-distance: 10px;
+
+    &.attack-up {
+        @keyframes attack-up {
+            0% { top: 0; }
+            50% { top: -$attack-movement-distance; }
+            100% { top: 0; }
+        }
+        animation-name: attack-up;
+        animation-duration: 200ms;
+    }
+
+    &.attack-right {
+        @keyframes attack-right {
             0% { left: 0; }
-            50% { left: 10px; }
+            50% { left: $attack-movement-distance; }
             100% { left: 0; }
         }
-        animation-name: attack;
+        animation-name: attack-right;
+        animation-duration: 200ms;
+    }
+
+    &.attack-down {
+        @keyframes attack-down {
+            0% { top: 0; }
+            50% { top: $attack-movement-distance; }
+            100% { top: 0; }
+        }
+        animation-name: attack-down;
+        animation-duration: 200ms;
+    }
+
+    &.attack-left {
+        @keyframes attack-left {
+            0% { left: 0; }
+            50% { left: -$attack-movement-distance; }
+            100% { left: 0; }
+        }
+        animation-name: attack-left;
         animation-duration: 200ms;
     }
 
