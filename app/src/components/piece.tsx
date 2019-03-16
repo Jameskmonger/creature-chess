@@ -16,30 +16,54 @@ interface DragSourceProps {
     isDragging: boolean;
 }
 
-const PieceUnconnected: React.FunctionComponent<PieceProps & DragSourceProps> = ({
-    piece,
-    connectDragSource
-}) => {
+interface State {
+    currentAnimations: string[];
+}
 
-    const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
+class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
+    public state = { currentAnimations: [] };
 
-    return connectDragSource(
-        <div className="piece">
-            <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
+    public render() {
+        const { piece, connectDragSource} = this.props;
+        const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
 
-            <div className="info">
-                <div className={`healthbar ${friendly ? "friendly" : "enemy"}`}>
-                    {/* tslint:disable-next-line:jsx-ban-props */}
-                    <div className="fill" style={{ width: getPercentage(currentHealth, maxHealth) }} />
-                </div>
-                <div className="cooldownbar">
-                    {/* tslint:disable-next-line:jsx-ban-props */}
-                    <div className="fill" style={{ width: getPercentage(coolDown, initialCoolDown) }} />
+        return connectDragSource(
+            <div className={`piece ${this.state.currentAnimations.join(" ")}`} onAnimationEnd={this.onAnimationEnd}>
+                <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
+
+                <div className="info">
+                    <div className={`healthbar ${friendly ? "friendly" : "enemy"}`}>
+                        {/* tslint:disable-next-line:jsx-ban-props */}
+                        <div className="fill" style={{ width: getPercentage(currentHealth, maxHealth) }} />
+                    </div>
+                    <div className="cooldownbar">
+                        {/* tslint:disable-next-line:jsx-ban-props */}
+                        <div className="fill" style={{ width: getPercentage(coolDown, initialCoolDown) }} />
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-};
+        );
+    }
+
+    public componentDidUpdate(oldProps: PieceProps) {
+        if (!oldProps.piece.attacking && this.props.piece.attacking) {
+            this.runAnimation("attack");
+        }
+
+        if (!oldProps.piece.hit && this.props.piece.hit) {
+            this.runAnimation("hit");
+        }
+    }
+
+    private runAnimation = (animationName: string) => {
+        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, animationName ] })));
+    }
+
+    private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
+        const { animationName } = event;
+        this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a !== animationName) ] }));
+    }
+}
 
 const selectedPiece = {
     beginDrag(props: PieceProps) {

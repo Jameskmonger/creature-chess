@@ -70,7 +70,7 @@ export class Game extends React.Component<{}, GameState> {
     }
 
     private startRound = async () => {
-        const turnDurationMs = 10;
+        const turnDurationMs = 50;
         let pieces = this.state.pieces;
         while (!isATeamDefeated(pieces)) {
             await delay(turnDurationMs);
