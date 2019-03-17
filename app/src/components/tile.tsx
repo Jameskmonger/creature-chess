@@ -28,7 +28,7 @@ const boxTarget: DropTargetSpec<TileProps> = {
         props.movePiece(monitor.getItem());
     },
     canDrop(props: TileProps, monitor: DropTargetMonitor) {
-        return props.friendly;
+        return props.friendly && props.pieces.length === 0;
     }
 };
 
