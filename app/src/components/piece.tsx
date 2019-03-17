@@ -65,7 +65,20 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 
     public componentDidUpdate(oldProps: PieceProps) {
-        const { attacking, hit, celebrating, currentHealth } = this.props.piece;
+        this.runAnimations(oldProps);
+    }
+
+    public componentDidMount() {
+        const { moving, attacking, hit, celebrating, ...piece } = this.props.piece;
+        this.runAnimations({ ...this.props, piece });
+    }
+
+    private runAnimations = (oldProps: PieceProps) => {
+        const { moving, attacking, hit, celebrating, currentHealth } = this.props.piece;
+        if (!oldProps.piece.moving && moving) {
+            this.runAnimation({ name: `move-${moving.direction}` });
+        }
+
         if (!oldProps.piece.attacking && attacking) {
             this.runAnimation({ name: `attack-${attacking.direction}`, variables: { attackPower: attacking.damage } });
         }

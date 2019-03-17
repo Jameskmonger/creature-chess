@@ -3,6 +3,44 @@
     width: 100%;
     height: 100%;
 
+    $move-duration: 300ms;
+
+    &.move-up {
+        @keyframes move-up {
+            0% { top: $tile-size; }
+            100% { top: 0; }
+        }
+        animation-name: move-up;
+        animation-duration: $move-duration;
+    }
+
+    &.move-right {
+        @keyframes move-right {
+            0% { left: -$tile-size; }
+            100% { left: 0; }
+        }
+        animation-name: move-right;
+        animation-duration: $move-duration;
+    }
+
+    &.move-down {
+        @keyframes move-down {
+            0% { top: -$tile-size; }
+            100% { top: 0; }
+        }
+        animation-name: move-down;
+        animation-duration: $move-duration;
+    }
+
+    &.move-left {
+        @keyframes move-left {
+            0% { left: $tile-size; }
+            100% { left: 0; }
+        }
+        animation-name: move-left;
+        animation-duration: $move-duration;
+    }
+
     $attack-movement-distance-multiplier: 3px;
     $attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
     $attack-duration: 200ms;
