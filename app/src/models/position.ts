@@ -31,20 +31,20 @@ export const getAdjacentPositions = (piece: PokemonPiece) => {
 
 /**
  * Returns the relative direction of position b from the perspective of position a
- * @param a The position to find the direction relative from
- * @param b The position to find the direction relative to
+ * @param from The position to find the direction relative from
+ * @param to The position to find the direction relative to
  */
-export const getRelativeDirection = (a: PiecePosition, b: PiecePosition) => {
-    if (a[0] < b[0]) {
+export const getRelativeDirection = (from: PiecePosition, to: PiecePosition) => {
+    if (from[0] < to[0]) {
         return Direction.Right;
     }
-    if (a[0] > b[0]) {
+    if (from[0] > to[0]) {
         return Direction.Left;
     }
-    if (a[1] < b[1]) {
+    if (from[1] < to[1]) {
         return Direction.Down;
     }
-    if (a[1] > b[1]) {
+    if (from[1] > to[1]) {
         return Direction.Up;
     }
     return Direction.Unknown;
