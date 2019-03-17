@@ -102,7 +102,6 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
 
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
         const { animationName } = event;
-        console.log(animationName);
         this.setState(prevState => ({ ...prevState, currentAnimation: null }));
         if (animationName === dyingAnimation) {
             this.setState({ dead: true });
