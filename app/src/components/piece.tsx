@@ -47,7 +47,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
 
         return connectDragSource(
             <div
-                className={`piece ${currentAnimation && currentAnimation.name}`}
+                className={`piece ${(currentAnimation && currentAnimation.name) || ""}`}
                 // tslint:disable-next-line: jsx-ban-props
                 style={getAnimationCssVariables(currentAnimation)}
                 onAnimationEnd={this.onAnimationEnd}
