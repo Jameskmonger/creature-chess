@@ -4,6 +4,7 @@ interface PokemonDefinition {
     id: number;
     name: string;
     stats: PokemonStats;
+    cost?: number;
 }
 
 export interface PokemonStats {
@@ -28,7 +29,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 65,
             specialDefense: 65,
             type: PokemonType.Grass
-        }
+        },
+        cost: 1
     },
     {
         id: 2,
@@ -67,7 +69,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 60,
             specialDefense: 50,
             type: PokemonType.Fire
-        }
+        },
+        cost: 1
     },
     {
         id: 5,
