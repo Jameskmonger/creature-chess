@@ -21,7 +21,11 @@ interface DragSourceProps {
 
 interface Animation {
     name: string;
-    variables?: { [key: string]: string | number };
+    variables?: AnimationVariables;
+}
+
+interface AnimationVariables {
+    [key: string]: string | number;
 }
 
 interface State {
@@ -65,31 +69,47 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 
     public componentDidUpdate(oldProps: PieceProps) {
-        const { attacking, hit, celebrating, currentHealth } = this.props.piece;
+        this.runAnimations(oldProps);
+    }
+
+    public componentDidMount() {
+        const { moving, attacking, hit, celebrating, ...piece } = this.props.piece;
+        this.runAnimations({ ...this.props, piece });
+    }
+
+    private runAnimations = (oldProps: PieceProps) => {
+        const { moving, attacking, hit, celebrating, currentHealth } = this.props.piece;
+        if (!oldProps.piece.moving && moving) {
+            this.runAnimation(`move-${moving.direction}`);
+        }
+
         if (!oldProps.piece.attacking && attacking) {
-            this.runAnimation({ name: `attack-${attacking.direction}`, variables: { attackPower: attacking.damage } });
+            this.runAnimation(`attack-${attacking.direction}`, { attackPower: attacking.damage });
         }
 
         if (!oldProps.piece.hit && hit) {
-            this.runAnimation({ name: "hit", variables: { hitPower: hit.damage } });
+            this.runAnimation("hit", { hitPower: hit.damage });
         }
 
         if (!oldProps.piece.celebrating && celebrating) {
-            this.runAnimation({ name: "celebrate" });
+            this.runAnimation("celebrate");
         }
 
         if (oldProps.piece.currentHealth > 0 && currentHealth === 0) {
-            this.runAnimation({ name: dyingAnimation });
+            this.runAnimation(dyingAnimation);
         }
     }
 
-    private runAnimation = (animation: Animation) => {
-        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, animation ] })));
+    private runAnimation = (name: string, variables?: AnimationVariables) => {
+        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, { name, variables } ] })));
     }
 
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
         const { animationName } = event;
-        this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a.name !== animationName) ] }));
+        this.setState(prevState => ({
+            ...prevState,
+            currentAnimations: [ ...prevState.currentAnimations.filter(a => a.name !== animationName && !a.name.startsWith("move-")) ]
+        }));
         if (animationName === dyingAnimation) {
             this.setState({ dead: true });
         }

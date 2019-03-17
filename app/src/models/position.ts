@@ -1,5 +1,13 @@
 import { GRID_SIZE } from "./constants";
-import { PokemonPiece } from "./pokemon-piece";
+import { PokemonPiece, PiecePosition } from "./pokemon-piece";
+
+export enum Direction {
+    Up = "up",
+    Right = "right",
+    Down = "down",
+    Left = "left",
+    Unknown = "unknown"
+}
 
 const isInsideGrid = (position: [ number, number ]) => {
     const [ x, y ] = position;
@@ -19,4 +27,25 @@ export const getAdjacentPositions = (piece: PokemonPiece) => {
 
     // filter out any that are outside the grid
     return positions.filter(isInsideGrid);
+};
+
+/**
+ * Returns the relative direction of position b from the perspective of position a
+ * @param from The position to find the direction relative from
+ * @param to The position to find the direction relative to
+ */
+export const getRelativeDirection = (from: PiecePosition, to: PiecePosition) => {
+    if (from[0] < to[0]) {
+        return Direction.Right;
+    }
+    if (from[0] > to[0]) {
+        return Direction.Left;
+    }
+    if (from[1] < to[1]) {
+        return Direction.Down;
+    }
+    if (from[1] > to[1]) {
+        return Direction.Up;
+    }
+    return Direction.Unknown;
 };

@@ -1,6 +1,20 @@
-import { AttackDetails, HitDetails } from "./attack";
+import { Direction } from "./position";
 
 export type PiecePosition = [number, number];
+
+export interface AttackDetails {
+    direction: Direction;
+    damage: number;
+}
+
+export interface HitDetails {
+    direction: Direction;
+    damage: number;
+}
+
+export interface MovementDetails {
+    direction: Direction;
+}
 
 export interface PokemonPiece {
     id: number;
@@ -9,6 +23,7 @@ export interface PokemonPiece {
     friendly: boolean;
     attacking?: AttackDetails;
     hit?: HitDetails;
+    moving?: MovementDetails;
     celebrating?: boolean;
 
     position: PiecePosition;
