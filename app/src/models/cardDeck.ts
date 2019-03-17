@@ -1,4 +1,5 @@
 import { pokemonStats } from "./pokemon-stats";
+import { shuffle } from "lodash";
 
 interface PokemonCard {
     id: number;
@@ -39,19 +40,6 @@ export class CardDeck {
     }
 
     public shuffle() {
-        let currentIndex = this.deck.length;
-        let temporaryValue;
-        let randomIndex;
-
-        while (0 !== currentIndex) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            temporaryValue = this.deck[currentIndex];
-            this.deck[currentIndex] = this.deck[randomIndex];
-            this.deck[randomIndex] = temporaryValue;
-        }
-
-        return this.deck;
+        return shuffle(this.deck);
     }
 }
