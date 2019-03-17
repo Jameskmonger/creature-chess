@@ -15,9 +15,9 @@ export class SubjectTests {
     @Test("deck should have correct distinct types of pokemon")
     public CorrectPokemonInDeck() {
         const cardDeck = new CardDeck();
-        const distinctPokemon = uniq(cardDeck.deck
+        const uniquePokemon = uniq(cardDeck.deck
             .map(d => d.name));
 
-        Expect(distinctPokemon).toEqual(["Bulbasaur", "Charmander"]);
+        Expect(uniquePokemon).toEqual(["Bulbasaur", "Charmander"]);
     }
 }
