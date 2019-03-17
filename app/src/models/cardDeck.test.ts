@@ -1,9 +1,6 @@
 import { Expect, Test, TestFixture } from "alsatian";
 import { CardDeck } from "./cardDeck";
-
-const distinct = (value, index, self) => {
-    return self.indexOf(value) === index;
-};
+import { uniq } from "lodash";
 
 @TestFixture("Card deck tests")
 export class SubjectTests {
@@ -18,9 +15,8 @@ export class SubjectTests {
     @Test("deck should have correct distinct types of pokemon")
     public CorrectPokemonInDeck() {
         const cardDeck = new CardDeck();
-        const distinctPokemon = cardDeck.deck
-            .map(d => d.name)
-            .filter(distinct);
+        const distinctPokemon = uniq(cardDeck.deck
+            .map(d => d.name));
 
         Expect(distinctPokemon).toEqual(["Bulbasaur", "Charmander"]);
     }
