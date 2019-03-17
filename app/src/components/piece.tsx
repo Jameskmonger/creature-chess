@@ -25,12 +25,12 @@ interface Animation {
 }
 
 interface State {
-    currentAnimations: Animation[];
+    currentAnimation: Animation;
     dead: boolean;
 }
 
 class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
-    public state = { currentAnimations: [], dead: this.props.piece.currentHealth === 0 };
+    public state = { currentAnimation: null, dead: this.props.piece.currentHealth === 0 };
 
     public render() {
         if (this.state.dead) {
@@ -39,13 +39,13 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
 
         const { piece, connectDragSource} = this.props;
         const { facingAway, pokemonId, friendly, currentHealth, maxHealth, coolDown } = piece;
-        const { currentAnimations } = this.state;
+        const { currentAnimation } = this.state;
 
         return connectDragSource(
             <div
-                className={`piece ${currentAnimations.map(a => a.name).join(" ")}`}
+                className={`piece ${currentAnimation && currentAnimation.name}`}
                 // tslint:disable-next-line: jsx-ban-props
-                style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
+                style={getAnimationCssVariables(currentAnimation)}
                 onAnimationEnd={this.onAnimationEnd}
             >
                 <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
@@ -97,12 +97,13 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 
     private runAnimation = (animation: Animation) => {
-        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, animation ] })));
+        this.setState((prevState => ({ ...prevState, currentAnimation: animation })));
     }
 
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
         const { animationName } = event;
-        this.setState(prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations.filter(a => a.name !== animationName) ] }));
+        console.log(animationName);
+        this.setState(prevState => ({ ...prevState, currentAnimation: null }));
         if (animationName === dyingAnimation) {
             this.setState({ dead: true });
         }
@@ -128,8 +129,12 @@ const collect = (connect: DragSourceConnector, monitor: DragSourceMonitor) => ({
 
 const Piece = DragSource<PieceProps>(typeof PieceUnconnected, selectedPiece, collect)(PieceUnconnected);
 
-const getAnimationCssVariables = (animations: Animation[]) => {
-    const variables = assign({}, ...animations.filter(a => a.variables).map(a => a.variables));
+const getAnimationCssVariables = (animation: Animation) => {
+    if (!animation) {
+        return;
+    }
+
+    const variables = animation.variables;
     return assign({}, ...keys(variables).map(key => ({ [`--${key}`]: variables[key] })));
 };
 
