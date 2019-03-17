@@ -22,7 +22,6 @@ export class SubjectTests {
             .map(d => d.name)
             .filter(distinct);
 
-        Expect(distinctPokemon[0]).toBe("Bulbasaur");
-        Expect(distinctPokemon[1]).toBe("Charmander");
+        Expect(distinctPokemon).toEqual(["Bulbasaur", "Charmander"]);
     }
 }
