@@ -1,5 +1,5 @@
-import { deckReducer } from "../reducers/deckReducer";
+import { deck } from "../reducers/deckReducer";
 
 export const reducers = {
-    deckReducer
+    deck
 };

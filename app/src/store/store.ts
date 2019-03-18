@@ -1,13 +1,15 @@
 import { createStore, combineReducers } from "redux";
-import { PokemonCard } from "../models/cardDeck";
 import { reducers } from "../reducers";
+import { PokemonCard } from "../models/cardDeck";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 interface AppState {
-    deckReducer: PokemonCard[];
+    deck: PokemonCard[];
 }
 
 export const store = createStore<AppState, any, void, void>(
     combineReducers<AppState>({
-        ...reducers
-    })
+        ...reducers,
+    }),
+    composeWithDevTools<any, any>()
 );
