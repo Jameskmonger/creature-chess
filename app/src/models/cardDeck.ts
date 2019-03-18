@@ -1,7 +1,7 @@
 import { pokemonStats } from "./pokemon-stats";
 import { shuffle } from "lodash";
 
-interface PokemonCard {
+export interface PokemonCard {
     id: number;
     cost: number;
     name: string;

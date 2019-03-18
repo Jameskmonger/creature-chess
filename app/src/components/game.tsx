@@ -6,6 +6,9 @@ import { simulateTurn } from "../models/fighting-turn-simulator";
 import { Bench } from "./bench";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
+import { CardDeck, PokemonCard } from "../models/cardDeck";
+import { CardSelector } from "./cardSelector";
+import { shuffle } from "lodash";
 
 let count = 0;
 
@@ -24,13 +27,15 @@ const boardSize = 8;
 interface GameState {
     pieces: PokemonPiece[];
     benchPieces: PokemonPiece[];
+    cards: PokemonCard[];
 }
 
 class GameUnconnected extends React.Component<{}, GameState> {
 
     public state: GameState = {
         pieces: [],
-        benchPieces: []
+        benchPieces: [],
+        cards: new CardDeck().shuffle()
     };
 
     public componentDidMount() {
@@ -60,7 +65,7 @@ class GameUnconnected extends React.Component<{}, GameState> {
     }
 
     public render() {
-        const { pieces, benchPieces } = this.state;
+        const { pieces, benchPieces, cards } = this.state;
 
         return (
             <div className="board-container">
@@ -68,12 +73,21 @@ class GameUnconnected extends React.Component<{}, GameState> {
                     <Board boardSize={boardSize} pieces={pieces} onMovePiece={this.onMovePiece} />
                     <Bench boardSize={boardSize} pieces={benchPieces} />
                 </div>
+                <CardSelector cards={cards} onShuffle={this.onShuffle} />
                 <button onClick={(this.startRound)}>Fight!</button>
             </div>
         );
     }
 
-   private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {
+    private onShuffle = () => {
+        this.setState(prevState => {
+            return {
+                cards: shuffle(prevState.cards)
+            };
+        });
+    }
+
+    private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {
         this.setState(({ pieces }) => {
             const updatedPieces = pieces.map(p =>
                 isSamePiece(p, piece)
