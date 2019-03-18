@@ -73,14 +73,18 @@ class GameUnconnected extends React.Component<{}, GameState> {
                     <Board boardSize={boardSize} pieces={pieces} onMovePiece={this.onMovePiece} />
                     <Bench boardSize={boardSize} pieces={benchPieces} />
                 </div>
-                <CardSelector cards={cards} shuffle={this.shuffle} />
+                <CardSelector cards={cards} onShuffle={this.onShuffle} />
                 <button onClick={(this.startRound)}>Fight!</button>
             </div>
         );
     }
 
-    private shuffle = (cards: PokemonCard[]) => {
-        this.setState({ cards: shuffle(cards) });
+    private onShuffle = () => {
+        this.setState(prevState => {
+            return {
+                cards: shuffle(prevState.cards)
+            };
+        });
     }
 
     private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {

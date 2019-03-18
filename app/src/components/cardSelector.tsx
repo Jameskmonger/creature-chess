@@ -5,26 +5,22 @@ import { Card } from "./card";
 
 interface CardSelectorProps {
     cards: PokemonCard[];
-    shuffle: (cards: PokemonCard[]) => void;
+    onShuffle: () => void;
 }
 
 class CardSelector extends React.Component<CardSelectorProps> {
 
     public render() {
-        const { cards } = this.props;
+        const { cards, onShuffle } = this.props;
         const topCards = take(cards, 5);
 
         return (
             <div className="card-select">
-                {topCards.map((card, index) => <Card key={index} pokemonId={card.id} cost={card.cost} name={card.name} />)}
+                {topCards.map((card, index) => <Card key={`${index}-${card.id}`} pokemonId={card.id} cost={card.cost} name={card.name} />)}
 
-                <button onClick={this.shuffle}>Roll</button>
+                <button onClick={onShuffle}>Roll</button>
             </div>
         );
-    }
-
-    private shuffle = () => {
-        this.props.shuffle(this.props.cards);
     }
 }
 
