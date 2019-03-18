@@ -21,6 +21,9 @@
 		"@types/enzyme": "^3.9.0",
 		"@types/enzyme-adapter-react-16": "^1.0.5",
 		"@types/node": "^11.11.3",
+		"@types/react-redux": "^7.0.4",
+		"@types/redux": "^3.6.0",
+		"@types/redux-thunk": "^2.1.0",
 		"alsatian": "2.4.0",
 		"awesome-typescript-loader": "^5.2.1",
 		"cpy-cli": "^2.0.0",
@@ -57,6 +60,9 @@
 		"react-dnd": "^7.3.2",
 		"react-dnd-html5-backend": "^7.2.0",
 		"react-dom": "^16.8.4",
+		"react-redux": "^6.0.1",
+		"redux": "^4.0.1",
+		"redux-thunk": "^2.3.0",
 		"tap-bark": "^1.0.0"
 	}
 }

@@ -1,0 +1,2 @@
+export const GET_DECK_SUCCESS = "GET_DECK_SUCCESS";
+export type GET_DECK_SUCCESS = typeof GET_DECK_SUCCESS;
