@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { PokemonPiece, PiecePosition } from "../../shared/pokemon-piece";
+import { PokemonPiece, PiecePosition } from "@common/pokemon-piece";
 import { TileRow } from "./tileRow";
 
 interface TileRowsProps {

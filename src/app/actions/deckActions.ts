@@ -1,5 +1,5 @@
 import { GET_DECK_SUCCESS } from "../actiontypes/deckActiontypes";
-import { PokemonCard } from "../../shared/cardDeck";
+import { PokemonCard } from "@common/cardDeck";
 
 export type DeckAction = { type: GET_DECK_SUCCESS, payload: PokemonCard[] };
 

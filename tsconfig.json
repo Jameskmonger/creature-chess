@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "*": ["types/*"]
+            "@common/*": ["./src/shared/*"]
         },
         "experimentalDecorators": true,
         "module": "commonjs",

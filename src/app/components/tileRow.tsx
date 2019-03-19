@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PokemonPiece } from "../../shared/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { Tile } from "./tile";
 
 interface TileRowProps {

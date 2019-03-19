@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 
 const outDir = path.resolve(__dirname, "public");
 
@@ -30,6 +31,9 @@ module.exports = {
     },
 
     resolve: {
+        plugins: [
+            new TsConfigPathsPlugin()
+        ],
         extensions: [".tsx", ".ts", ".js"]
     },
 
