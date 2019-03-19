@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
 
-import { PokemonPiece, initialCoolDown } from "../models/pokemon-piece";
+import { PokemonPiece, initialCoolDown } from "../../shared/pokemon-piece";
 import { assign, keys } from "lodash";
 
 const getPercentage = (current: number, max: number) => {

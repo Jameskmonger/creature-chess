@@ -1,12 +1,12 @@
 import * as React from "react";
 import delay from "delay";
-import { PokemonPiece, PiecePosition, isSamePiece, initialCoolDown } from "../models/pokemon-piece";
+import { PokemonPiece, PiecePosition, isSamePiece, initialCoolDown } from "../../shared/pokemon-piece";
 import { Board } from "./board";
-import { simulateTurn } from "../models/fighting-turn-simulator";
+import { simulateTurn } from "../../shared/fighting-turn-simulator";
 import { Bench } from "./bench";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { CardDeck, PokemonCard } from "../models/cardDeck";
+import { CardDeck, PokemonCard } from "../../shared/cardDeck";
 import { CardSelector } from "./cardSelector";
 import { shuffle } from "lodash";
 

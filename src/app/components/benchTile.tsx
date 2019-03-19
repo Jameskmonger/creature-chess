@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PokemonPiece } from "../models/pokemon-piece";
+import { PokemonPiece } from "../../shared/pokemon-piece";
 import { Piece } from "./piece";
 
 interface BenchTileProps {

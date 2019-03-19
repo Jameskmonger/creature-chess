@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PokemonCard } from "../models/cardDeck";
+import { PokemonCard } from "../../shared/cardDeck";
 import { take } from "lodash";
 import { Card } from "./card";
 

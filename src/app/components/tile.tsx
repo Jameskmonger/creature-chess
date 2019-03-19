@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ConnectDropTarget, DropTarget, DropTargetConnector, DropTargetMonitor, DropTargetSpec } from "react-dnd";
 
-import { PokemonPiece } from "../models/pokemon-piece";
+import { PokemonPiece } from "../../shared/pokemon-piece";
 import { Piece } from "./piece";
 
 interface TileProps {
