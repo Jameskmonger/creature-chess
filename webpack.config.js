@@ -2,13 +2,14 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 
-const outDir = path.resolve(__dirname, "bin");
+const outDir = path.resolve(__dirname, "public");
 
 module.exports = {
     mode: "development",
 
-    entry: "./src/index.tsx",
+    entry: "./src/app/index.tsx",
 
     module: {
         rules: [
@@ -30,6 +31,9 @@ module.exports = {
     },
 
     resolve: {
+        plugins: [
+            new TsConfigPathsPlugin()
+        ],
         extensions: [".tsx", ".ts", ".js"]
     },
 
@@ -40,7 +44,7 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.html"
+            template: "./src/app/index.html"
         }),
         new MiniCssExtractPlugin({
             filename: "app.css"

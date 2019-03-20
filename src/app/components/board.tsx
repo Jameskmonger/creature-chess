@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { PokemonPiece, PiecePosition } from "../models/pokemon-piece";
+import { PokemonPiece, PiecePosition } from "@common/pokemon-piece";
 import { TileRows } from "./tileRows";
 
 interface BoardProps {
