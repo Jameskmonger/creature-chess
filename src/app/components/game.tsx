@@ -86,7 +86,7 @@ class GameUnconnected extends React.Component<{}, GameState> {
     }
 
     private onShuffle = () => {
-        this.socket.emit("shuffleCards");
+        this.socket.emit("refreshCards");
     }
 
     private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {

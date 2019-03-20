@@ -16,9 +16,10 @@ server.on("connection", socket => {
         player.cards[cardIndex] = null;
     });
 
-    socket.on("shuffleCards", () => {
-        console.log("shuffling cards");
+    socket.on("refreshCards", () => {
+        console.log("refreshing cards");
         console.log("IDs before are: " + JSON.stringify(player.cards.map(p => p.id)));
+
         // prevent any race conditions
         const playerCards = player.cards;
         player.cards = [];
