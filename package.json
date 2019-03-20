@@ -56,6 +56,7 @@
 		"@types/react": "^16.8.7",
 		"@types/react-dom": "^16.8.2",
 		"@types/socket.io": "^2.1.2",
+		"@types/socket.io-client": "^1.4.32",
 		"delay": "^4.1.0",
 		"javascript-astar": "^0.4.1",
 		"lodash": "^4.17.11",
@@ -68,6 +69,7 @@
 		"redux-devtools-extension": "^2.13.8",
 		"redux-saga": "^1.0.2",
 		"socket.io": "^2.2.0",
+		"socket.io-client": "^2.2.0",
 		"tap-bark": "^1.0.0"
 	}
 }
