@@ -6,7 +6,7 @@ import { simulateTurn } from "@common/fighting-turn-simulator";
 import { Bench } from "./bench";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { PokemonCard } from "@common/cardDeck";
+import { PokemonCard } from "@common";
 import { CardSelector } from "./cardSelector";
 import { shuffle } from "lodash";
 import io = require("socket.io-client");

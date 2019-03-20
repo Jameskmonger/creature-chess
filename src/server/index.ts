@@ -1,6 +1,6 @@
 // tslint:disable:no-console
 import io = require("socket.io");
-import { CardDeck } from "../shared/cardDeck";
+import { CardDeck } from "./cardDeck";
 import { Player } from "./player";
 
 const server = io.listen(3000);

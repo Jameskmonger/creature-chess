@@ -1,4 +1,4 @@
-import { PokemonCard } from "@common/cardDeck";
+import { PokemonCard } from "@common";
 import { DeckAction } from "../actions/deckActions";
 
 export function deck(state: PokemonCard[] = [], action: DeckAction) {

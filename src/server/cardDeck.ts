@@ -1,11 +1,6 @@
-import { pokemonStats } from "./pokemon-stats";
 import { shuffle } from "lodash";
-
-export interface PokemonCard {
-    id: number;
-    cost: number;
-    name: string;
-}
+import { pokemonStats } from "../shared/pokemon-stats";
+import { PokemonCard } from "../shared/pokemon-card";
 
 export class CardDeck {
     public deck: PokemonCard[];
