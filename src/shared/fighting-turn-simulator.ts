@@ -20,7 +20,6 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
         }
 
         const defender = getAttackableEnemy(attacker, updatedPieces);
-        const defenderStats = getPokemonStats(attacker.pokemonId);
 
         if (!defender) {
             const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => p.currentHealth > 0));
@@ -34,6 +33,7 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
             return;
         }
 
+        const defenderStats = getPokemonStats(defender.pokemonId);
         const updatedFighters = attack(attacker, attackerStats, defender, defenderStats);
         updatedPieces[index] = updatedFighters.attacker;
         updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
