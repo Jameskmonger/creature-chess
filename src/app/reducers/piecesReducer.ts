@@ -21,9 +21,15 @@ export const pieces: Reducer<PokemonPiece[], PiecesAction> = (state = initialSta
 const piece: Reducer<PokemonPiece, PiecesAction> = (state, action) => {
     switch (action.type) {
         case PIECE_SELECTED:
-                return { ...state, selected: state.id === action.payload.id };
+            if (state.id === action.payload.id) {
+                return { ...state, selected: true };
+            }
+            if (state.selected && state.id !== action.payload.id) {
+                return { ...state, selected: false };
+            }
+            return state;
         case PIECE_MOVED:
-            if (isSamePiece(state, action.payload.piece)) {
+            if (state.id === action.payload.piece.id) {
                 return { ...state, position: action.payload.position };
             }
             return state;
