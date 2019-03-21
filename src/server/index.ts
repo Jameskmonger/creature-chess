@@ -2,14 +2,36 @@
 import io = require("socket.io");
 import { CardDeck } from "./cardDeck";
 import { Player } from "./player";
+import { makeFriendly, makeEnemy } from "../shared/pokemon-piece";
 
 const server = io.listen(3000);
 
 const deck = new CardDeck();
 
+const opponent: Player = {
+    cards: deck.take(5),
+    board: [
+        makeEnemy(77, [0, 0]),
+        makeEnemy(15, [1, 0]),
+        makeEnemy(123, [4, 0]),
+        makeEnemy(58, [5, 0]),
+        makeEnemy(6, [4, 3]),
+        makeEnemy(11, [3, 1]),
+    ]
+};
+
 server.on("connection", socket => {
     const player: Player = {
-        cards: deck.take(5)
+        cards: deck.take(5),
+        board: [
+            makeFriendly(129, [1, 6]),
+            makeFriendly(62, [2, 6]),
+            makeFriendly(9, [4, 4]),
+            makeFriendly(70, [7, 6]),
+            makeFriendly(67, [3, 4]),
+            makeFriendly(89, [5, 4])
+        ],
+        opponent
     };
 
     socket.on("purchaseCard", (cardIndex: number) => {
@@ -34,4 +56,8 @@ server.on("connection", socket => {
     });
 
     socket.emit("cardsUpdate", player.cards);
+    socket.emit("boardUpdate", {
+        friendly: player.board,
+        opponent: player.opponent.board
+    });
 });

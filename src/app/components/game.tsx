@@ -42,17 +42,22 @@ class GameUnconnected extends React.Component<Props, GameState> {
     private socket = io("http://localhost:3000");
 
     public componentDidMount() {
-        const { pieces } = this.props;
         const benchPieces: PokemonPiece[] = [
             makeFriendly(9, [8, 2]),
             makeFriendly(70, [8, 5]),
             makeFriendly(67, [8, 6])
         ];
 
-        this.setState({ pieces, benchPieces });
+        this.setState({ benchPieces });
 
         this.socket.on("cardsUpdate", (cards: PokemonCard[]) => {
             this.setState({ cards });
+        });
+
+        this.socket.on("boardUpdate", (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {
+            const pieces = [ ...packet.friendly, ...packet.opponent ];
+
+            this.setState({ pieces });
         });
     }
 
