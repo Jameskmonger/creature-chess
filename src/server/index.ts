@@ -29,7 +29,11 @@ server.on("connection", socket => {
             makeFriendly(9, [4, 4]),
             makeFriendly(70, [7, 6]),
             makeFriendly(67, [3, 4]),
-            makeFriendly(89, [5, 4])
+            makeFriendly(89, [5, 4]),
+
+            makeFriendly(9, [8, 2], true),
+            makeFriendly(70, [8, 5], true),
+            makeFriendly(67, [8, 6], true)
         ],
         opponent
     };

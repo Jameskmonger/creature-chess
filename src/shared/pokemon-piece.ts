@@ -27,6 +27,7 @@ export interface PokemonPiece {
     moving?: MovementDetails;
     celebrating?: boolean;
 
+    benched: boolean;
     position: PiecePosition;
     maxHealth: number;
     currentHealth: number;
@@ -44,8 +45,26 @@ export const isSamePiece = (a: PokemonPiece, b: PokemonPiece) =>
 
 let count = 0;
 
-export const makeEnemy = (pokemonId: number, position: PiecePosition) =>
-    ({ id: count++, pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
+export const makeEnemy = (pokemonId: number, position: PiecePosition, benched: boolean = false) => ({
+    id: count++,
+    pokemonId,
+    facingAway: false,
+    friendly: false,
+    maxHealth: 100,
+    currentHealth: 100,
+    position,
+    coolDown: initialCoolDown,
+    benched
+});
 
-export const makeFriendly = (pokemonId: number, position: PiecePosition) =>
-    ({ id: count++, pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
+export const makeFriendly = (pokemonId: number, position: PiecePosition, benched: boolean = false) => ({
+    id: count++,
+    pokemonId,
+    facingAway: true,
+    friendly: true,
+    maxHealth: 100,
+    currentHealth: 100,
+    position,
+    coolDown: initialCoolDown,
+    benched
+});

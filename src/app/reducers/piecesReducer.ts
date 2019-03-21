@@ -24,7 +24,7 @@ const piece: Reducer<PokemonPiece, PiecesAction> = (state, action) => {
                 return { ...state, selected: state.id === action.payload.id };
         case PIECE_MOVED:
             if (isSamePiece(state, action.payload.piece)) {
-                return { ...state, position: action.payload.position };
+                return { ...state, benched: action.payload.benched, position: action.payload.position };
             }
             return state;
         default:

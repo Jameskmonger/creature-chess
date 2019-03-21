@@ -48,7 +48,8 @@ export class FightingTurnSimulatorTests {
         attacking: null,
         celebrating: null,
         hit: null,
-        moving: null
+        moving: null,
+        benched: false
     })
 
     private getDefender = (): PokemonPiece => ({
@@ -63,6 +64,7 @@ export class FightingTurnSimulatorTests {
         attacking: null,
         celebrating: null,
         hit: null,
-        moving: null
+        moving: null,
+        benched: false
     })
 }
