@@ -1,6 +1,6 @@
 import * as React from "react";
 import delay from "delay";
-import { PokemonPiece, PiecePosition, isSamePiece, initialCoolDown } from "@common/pokemon-piece";
+import { PokemonPiece, PiecePosition, isSamePiece, initialCoolDown, makeFriendly } from "@common/pokemon-piece";
 import { Board } from "./board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { Bench } from "./bench";
@@ -10,14 +10,9 @@ import { PokemonCard } from "@common";
 import { CardSelector } from "./cardSelector";
 import { shuffle } from "lodash";
 import io = require("socket.io-client");
-
-let count = 0;
-
-const makeEnemy = (pokemonId: number, position: PiecePosition) =>
-    ({ id: count++, pokemonId, facingAway: false, friendly: false, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
-
-const makeFriendly = (pokemonId: number, position: PiecePosition) =>
-    ({ id: count++, pokemonId, facingAway: true, friendly: true, maxHealth: 100, currentHealth: 100, position, coolDown: initialCoolDown });
+import { MapStateToProps, connect } from "react-redux";
+import { AppState } from "../store/store";
+import { SelectedPieceInfo } from "./selectedPieceInfo";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -25,13 +20,19 @@ const isATeamDefeated = (pieces: PokemonPiece[]) => {
 
 const boardSize = 8;
 
+interface StateProps {
+    pieces: PokemonPiece[];
+}
+
+type Props = StateProps;
+
 interface GameState {
     pieces: PokemonPiece[];
     benchPieces: PokemonPiece[];
     cards: PokemonCard[];
 }
 
-class GameUnconnected extends React.Component<{}, GameState> {
+class GameUnconnected extends React.Component<Props, GameState> {
     public state: GameState = {
         pieces: [],
         benchPieces: [],
@@ -41,22 +42,7 @@ class GameUnconnected extends React.Component<{}, GameState> {
     private socket = io("http://localhost:3000");
 
     public componentDidMount() {
-        const pieces: PokemonPiece[] = [
-            makeEnemy(77, [0, 0]),
-            makeEnemy(15, [1, 0]),
-            makeEnemy(123, [4, 0]),
-            makeEnemy(58, [5, 0]),
-            makeEnemy(6, [4, 3]),
-            makeEnemy(11, [3, 1]),
-
-            makeFriendly(129, [1, 6]),
-            makeFriendly(62, [2, 6]),
-            makeFriendly(9, [4, 4]),
-            makeFriendly(70, [7, 6]),
-            makeFriendly(67, [3, 3]),
-            makeFriendly(89, [5, 3])
-        ];
-
+        const { pieces } = this.props;
         const benchPieces: PokemonPiece[] = [
             makeFriendly(9, [8, 2]),
             makeFriendly(70, [8, 5]),
@@ -79,6 +65,7 @@ class GameUnconnected extends React.Component<{}, GameState> {
                     <Board boardSize={boardSize} pieces={pieces} onMovePiece={this.onMovePiece} />
                     <Bench boardSize={boardSize} pieces={benchPieces} />
                 </div>
+                <SelectedPieceInfo />
                 <CardSelector cards={cards} onShuffle={this.onShuffle} />
                 <button onClick={(this.startRound)}>Fight!</button>
             </div>
@@ -116,7 +103,13 @@ class GameUnconnected extends React.Component<{}, GameState> {
     }
 }
 
-const Game = DragDropContext(HTML5Backend)(GameUnconnected);
+const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
+    pieces: state.pieces
+});
+
+const GameConnectedToStore = connect(mapStateToProps)(GameUnconnected);
+
+const Game = DragDropContext(HTML5Backend)(GameConnectedToStore);
 
 export {
     Game

@@ -1,0 +1,2 @@
+export const PIECE_SELECTED = "PIECE_SELECTED";
+export type PIECE_SELECTED = typeof PIECE_SELECTED;
