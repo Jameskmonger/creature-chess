@@ -102,7 +102,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 });
 
 const mapDispatchToProps: MapDispatchToProps<GameDispatchProps, {}> = dispatch => ({
-    onPiecesUpdated: (pieces: PokemonPiece[]) => piecesUpdated(pieces)
+    onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces))
 });
 
 const Game = compose(
