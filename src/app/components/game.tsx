@@ -65,12 +65,11 @@ class GameUnconnected extends React.Component<Props, GameState> {
 
     public render() {
         const { benchPieces, cards } = this.state;
-        const { pieces } = this.props;
 
         return (
             <div className="board-container">
                 <div className="chessboard">
-                    <Board boardSize={boardSize} pieces={pieces} />
+                    <Board boardSize={boardSize} />
                     <Bench boardSize={boardSize} pieces={benchPieces} />
                 </div>
                 <SelectedPieceInfo />

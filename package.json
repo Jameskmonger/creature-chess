@@ -70,6 +70,7 @@
 		"redux": "^4.0.1",
 		"redux-devtools-extension": "^2.13.8",
 		"redux-saga": "^1.0.2",
+		"reselect": "^4.0.0",
 		"socket.io": "^2.2.0",
 		"socket.io-client": "^2.2.0",
 		"tap-bark": "^1.0.0"
