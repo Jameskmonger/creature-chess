@@ -149,7 +149,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 20,
             specialDefense: 20,
             type: PokemonType.Bug
-        }
+        },
+        cost: 1
     },
     {
         id: 11,
@@ -228,7 +229,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 35,
             specialDefense: 35,
             type: PokemonType.Flying
-        }
+        },
+        cost: 2
     },
     {
         id: 17,
@@ -293,7 +295,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 31,
             specialDefense: 31,
             type: PokemonType.Flying
-        }
+        },
+        cost: 2
     },
     {
         id: 22,
@@ -345,7 +348,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 50,
             specialDefense: 50,
             type: PokemonType.Electric
-        }
+        },
+        cost: 2
     },
     {
         id: 26,
@@ -371,7 +375,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 20,
             specialDefense: 30,
             type: PokemonType.Ground
-        }
+        },
+        cost: 2
     },
     {
         id: 28,
@@ -501,7 +506,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 50,
             specialDefense: 65,
             type: PokemonType.Fire
-        }
+        },
+        cost: 4
     },
     {
         id: 38,
@@ -527,7 +533,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 45,
             specialDefense: 25,
             type: PokemonType.Normal
-        }
+        },
+        cost: 4
     },
     {
         id: 40,
@@ -553,7 +560,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 30,
             specialDefense: 40,
             type: PokemonType.Flying
-        }
+        },
+        cost: 2
     },
     {
         id: 42,
@@ -579,7 +587,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 75,
             specialDefense: 65,
             type: PokemonType.Grass
-        }
+        },
+        cost: 2
     },
     {
         id: 44,
@@ -670,7 +679,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 35,
             specialDefense: 45,
             type: PokemonType.Ground
-        }
+        },
+        cost: 2
     },
     {
         id: 51,
@@ -840,7 +850,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 105,
             specialDefense: 55,
             type: PokemonType.Psychic
-        }
+        },
+        cost: 4
     },
     {
         id: 64,
@@ -879,7 +890,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 35,
             specialDefense: 35,
             type: PokemonType.Fighting
-        }
+        },
+        cost: 3
     },
     {
         id: 67,
@@ -984,7 +996,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 30,
             specialDefense: 30,
             type: PokemonType.Rock
-        }
+        },
+        cost: 1
     },
     {
         id: 75,
@@ -1023,7 +1036,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 65,
             specialDefense: 65,
             type: PokemonType.Fire
-        }
+        },
+        cost: 4
     },
     {
         id: 78,
@@ -1075,7 +1089,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 95,
             specialDefense: 55,
             type: PokemonType.Electric
-        }
+        },
+        cost: 1
     },
     {
         id: 82,
@@ -1166,7 +1181,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 40,
             specialDefense: 50,
             type: PokemonType.Poison
-        }
+        },
+        cost: 3
     },
     {
         id: 89,
@@ -1270,7 +1286,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 43,
             specialDefense: 90,
             type: PokemonType.Psychic
-        }
+        },
+        cost: 5
     },
     {
         id: 97,
@@ -1322,7 +1339,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 55,
             specialDefense: 55,
             type: PokemonType.Electric
-        }
+        },
+        cost: 2
     },
     {
         id: 101,
@@ -1400,7 +1418,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 35,
             specialDefense: 110,
             type: PokemonType.Fighting
-        }
+        },
+        cost: 3
     },
     {
         id: 107,
@@ -1413,7 +1432,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 35,
             specialDefense: 110,
             type: PokemonType.Fighting
-        }
+        },
+        cost: 3
     },
     {
         id: 108,
@@ -1439,7 +1459,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 60,
             specialDefense: 45,
             type: PokemonType.Poison
-        }
+        },
+        cost: 2
     },
     {
         id: 110,
@@ -1621,7 +1642,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 55,
             specialDefense: 80,
             type: PokemonType.Bug
-        }
+        },
+        cost: 4
     },
     {
         id: 124,
@@ -1647,7 +1669,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 95,
             specialDefense: 85,
             type: PokemonType.Electric
-        }
+        },
+        cost: 2
     },
     {
         id: 126,
@@ -1692,14 +1715,15 @@ export const pokemonStats: PokemonDefinition[] = [
         id: 129,
         name: "Magikarp",
         stats: {
-            hp: 20,
-            attack: 10,
+            hp: 80,
+            attack: 1,
             defense: 55,
             speed: 80,
             specialAttack: 15,
             specialDefense: 20,
             type: PokemonType.Water
-        }
+        },
+        cost: 4
     },
     {
         id: 130,
@@ -1868,7 +1892,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 60,
             specialDefense: 75,
             type: PokemonType.Flying
-        }
+        },
+        cost: 4
     },
     {
         id: 143,
@@ -1933,7 +1958,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 50,
             specialDefense: 50,
             type: PokemonType.Normal
-        }
+        },
+        cost: 4
     },
     {
         id: 148,
