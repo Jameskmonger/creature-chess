@@ -1,18 +1,19 @@
 import * as React from "react";
+import { compose } from "recompose";
 import delay from "delay";
-import { PokemonPiece, PiecePosition, isSamePiece, initialCoolDown, makeFriendly } from "@common/pokemon-piece";
+import { PokemonPiece, makeFriendly } from "@common/pokemon-piece";
 import { Board } from "./board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
-import { Bench } from "./bench";
+import { Bench } from "./bench/bench";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { PokemonCard } from "@common";
 import { CardSelector } from "./cardSelector";
-import { shuffle } from "lodash";
 import io = require("socket.io-client");
-import { MapStateToProps, connect } from "react-redux";
+import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/store";
 import { SelectedPieceInfo } from "./selectedPieceInfo";
+import { piecesUpdated } from "../actions/pieceActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -24,17 +25,19 @@ interface StateProps {
     pieces: PokemonPiece[];
 }
 
-type Props = StateProps;
+interface GameDispatchProps {
+    onPiecesUpdated: (pieces: PokemonPiece[]) => void;
+}
+
+type Props = StateProps & GameDispatchProps;
 
 interface GameState {
-    pieces: PokemonPiece[];
     benchPieces: PokemonPiece[];
     cards: PokemonCard[];
 }
 
 class GameUnconnected extends React.Component<Props, GameState> {
     public state: GameState = {
-        pieces: [],
         benchPieces: [],
         cards: []
     };
@@ -56,18 +59,18 @@ class GameUnconnected extends React.Component<Props, GameState> {
 
         this.socket.on("boardUpdate", (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {
             const pieces = [ ...packet.friendly, ...packet.opponent ];
-
-            this.setState({ pieces });
+            this.props.onPiecesUpdated(pieces);
         });
     }
 
     public render() {
-        const { pieces, benchPieces, cards } = this.state;
+        const { benchPieces, cards } = this.state;
+        const { pieces } = this.props;
 
         return (
             <div className="board-container">
                 <div className="chessboard">
-                    <Board boardSize={boardSize} pieces={pieces} onMovePiece={this.onMovePiece} />
+                    <Board boardSize={boardSize} pieces={pieces} />
                     <Bench boardSize={boardSize} pieces={benchPieces} />
                 </div>
                 <SelectedPieceInfo />
@@ -81,30 +84,16 @@ class GameUnconnected extends React.Component<Props, GameState> {
         this.socket.emit("refreshCards");
     }
 
-    private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {
-        this.setState(({ pieces }) => {
-            const updatedPieces = pieces.map(p =>
-                isSamePiece(p, piece)
-                ? { ...p, position }
-                : p
-            );
-
-            return {
-                pieces: updatedPieces
-            };
-        });
-    }
-
     private startRound = async () => {
         const turnDurationMs = 50;
-        let pieces = this.state.pieces;
+        let pieces = this.props.pieces;
         while (!isATeamDefeated(pieces)) {
             await delay(turnDurationMs);
             pieces = simulateTurn(pieces);
-            this.setState({ pieces });
+            this.props.onPiecesUpdated(pieces);
         }
 
-        this.setState({ pieces: pieces.map(piece => ({ ...piece, celebrating: true }))});
+        this.props.onPiecesUpdated(pieces.map(piece => ({ ...piece, celebrating: true })));
     }
 }
 
@@ -112,9 +101,14 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
     pieces: state.pieces
 });
 
-const GameConnectedToStore = connect(mapStateToProps)(GameUnconnected);
+const mapDispatchToProps: MapDispatchToProps<GameDispatchProps, {}> = dispatch => ({
+    onPiecesUpdated: (pieces: PokemonPiece[]) => piecesUpdated(pieces)
+});
 
-const Game = DragDropContext(HTML5Backend)(GameConnectedToStore);
+const Game = compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    DragDropContext(HTML5Backend)
+)(GameUnconnected);
 
 export {
     Game

@@ -1,15 +1,24 @@
 import * as React from "react";
+import { compose } from "recompose";
 import { ConnectDropTarget, DropTarget, DropTargetConnector, DropTargetMonitor, DropTargetSpec } from "react-dnd";
+import { MapDispatchToProps, connect } from "react-redux";
 
-import { PokemonPiece } from "@common/pokemon-piece";
+import { PokemonPiece, PiecePosition } from "@common/pokemon-piece";
 import { Piece } from "./piece";
+import { pieceMoved } from "../actions/pieceActions";
 
-interface TileProps {
+interface TileOwnProps {
     dark: boolean;
     pieces: PokemonPiece[];
     friendly: boolean;
-    movePiece: (piece: PokemonPiece) => void;
+    position: PiecePosition;
 }
+
+interface TileDispatchProps {
+    onMovePiece: (piece: PokemonPiece) => void;
+}
+
+type TileProps = TileOwnProps & TileDispatchProps;
 
 export interface DropTargetProps {
     connectDropTarget: ConnectDropTarget;
@@ -25,20 +34,27 @@ const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({
 
 const boxTarget: DropTargetSpec<TileProps> = {
     drop(props: TileProps, monitor: DropTargetMonitor) {
-        props.movePiece(monitor.getItem());
+        props.onMovePiece(monitor.getItem());
     },
     canDrop(props: TileProps, monitor: DropTargetMonitor) {
         return props.friendly && props.pieces.length === 0;
     }
 };
 
-const collect = (connect: DropTargetConnector, monitor: DropTargetMonitor) => ({
-    connectDropTarget: connect.dropTarget(),
+const collect = (connector: DropTargetConnector, monitor: DropTargetMonitor) => ({
+    connectDropTarget: connector.dropTarget(),
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop()
 });
 
-const Tile = DropTarget<TileProps>(typeof TileUnconnected, boxTarget, collect)(TileUnconnected);
+const mapDispatchToProps: MapDispatchToProps<TileDispatchProps, TileOwnProps> = (dispatch, { position }) => ({
+    onMovePiece: (piece: PokemonPiece) => dispatch(pieceMoved(piece, position))
+});
+
+const Tile = compose<TileProps, TileOwnProps>(
+    connect(null, mapDispatchToProps),
+    DropTarget<TileProps>(typeof TileUnconnected, boxTarget, collect)
+)(TileUnconnected);
 
 export {
     TileUnconnected,
