@@ -1,14 +1,11 @@
 import * as React from "react";
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
-
+import { compose } from "recompose";
 import { PokemonPiece, initialCoolDown } from "@common/pokemon-piece";
-import { assign, keys } from "lodash";
 import { connect, MapDispatchToProps } from "react-redux";
 import { pieceSelected } from "../actions/pieceActions";
-
-const getPercentage = (current: number, max: number) => {
-    return Math.floor((current / max) * 100) + "%";
-};
+import { ProgressBar } from "./progressBar";
+import { getAnimationCssVariables, AnimationVariables, Animation } from "./animation";
 
 const dyingAnimation = "dying";
 
@@ -27,22 +24,16 @@ interface DragSourceProps {
     isDragging: boolean;
 }
 
-interface Animation {
-    name: string;
-    variables?: AnimationVariables;
-}
-
-interface AnimationVariables {
-    [key: string]: string | number;
-}
-
 interface State {
     currentAnimations: Animation[];
     dead: boolean;
 }
 
 class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
-    public state = { currentAnimations: [], dead: this.props.piece.currentHealth === 0 };
+    public state = {
+        currentAnimations: [],
+        dead: this.props.piece.currentHealth === 0
+    };
 
     public render() {
         if (this.state.dead) {
@@ -64,14 +55,16 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
                 <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
 
                 <div className="info">
-                    <div className={`healthbar ${friendly ? "friendly" : "enemy"}`}>
-                        {/* tslint:disable-next-line:jsx-ban-props */}
-                        <div className="fill" style={{ width: getPercentage(currentHealth, maxHealth) }} />
-                    </div>
-                    <div className="cooldownbar">
-                        {/* tslint:disable-next-line:jsx-ban-props */}
-                        <div className="fill" style={{ width: getPercentage(coolDown, initialCoolDown) }} />
-                    </div>
+                    <ProgressBar
+                        className={`healthbar ${friendly ? "friendly" : "enemy"}`}
+                        current={currentHealth}
+                        max={maxHealth}
+                    />
+                    <ProgressBar
+                        className="cooldownbar"
+                        current={coolDown}
+                        max={initialCoolDown}
+                    />
                 </div>
             </div>
         );
@@ -110,7 +103,10 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 
     private runAnimation = (name: string, variables?: AnimationVariables) => {
-        this.setState((prevState => ({ ...prevState, currentAnimations: [ ...prevState.currentAnimations, { name, variables } ] })));
+        this.setState(prevState => ({
+            ...prevState,
+            currentAnimations: [ ...prevState.currentAnimations, { name, variables } ]
+        }));
     }
 
     private onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
@@ -146,14 +142,10 @@ const mapDispatchToProps: MapDispatchToProps<PieceDispatchProps, PieceOwnProps> 
     onPieceSelected: () => dispatch(pieceSelected(ownProps.piece))
 });
 
-const PieceConnectedToStore = connect(null, mapDispatchToProps)(PieceUnconnected);
-
-const Piece = DragSource<PieceOwnProps>(typeof PieceConnectedToStore, selectedPiece, collect)(PieceConnectedToStore);
-
-const getAnimationCssVariables = (animations: Animation[]) => {
-    const variables = assign({}, ...animations.filter(a => a.variables).map(a => a.variables));
-    return assign({}, ...keys(variables).map(key => ({ [`--${key}`]: variables[key] })));
-};
+const Piece = compose<PieceProps, PieceOwnProps>(
+    connect(null, mapDispatchToProps),
+    DragSource<PieceOwnProps>(typeof PieceUnconnected, selectedPiece, collect)
+)(PieceUnconnected);
 
 export {
     PieceUnconnected,

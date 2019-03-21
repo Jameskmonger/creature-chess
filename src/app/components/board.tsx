@@ -1,20 +1,15 @@
 import * as React from "react";
 
-import { PokemonPiece, PiecePosition } from "@common/pokemon-piece";
 import { TileRows } from "./tileRows";
 
 interface BoardProps {
     boardSize: number;
-    pieces: PokemonPiece[];
-    onMovePiece: (piece: PokemonPiece, position: PiecePosition) => void;
 }
 
-const Board: React.FunctionComponent<BoardProps> = ({ boardSize, onMovePiece, pieces }) => {
+const Board: React.FunctionComponent<BoardProps> = ({ boardSize }) => {
     return (
         <TileRows
             boardSize={boardSize}
-            movePiece={onMovePiece}
-            pieces={pieces}
         />
     );
 };
