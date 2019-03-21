@@ -6,9 +6,10 @@ import { simulateTurn } from "@common/fighting-turn-simulator";
 import { Bench } from "./bench";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { CardDeck, PokemonCard } from "@common/cardDeck";
+import { PokemonCard } from "@common";
 import { CardSelector } from "./cardSelector";
 import { shuffle } from "lodash";
+import io = require("socket.io-client");
 import { MapStateToProps, connect } from "react-redux";
 import { AppState } from "../store/store";
 import { SelectedPieceInfo } from "./selectedPieceInfo";
@@ -32,12 +33,13 @@ interface GameState {
 }
 
 class GameUnconnected extends React.Component<Props, GameState> {
-
     public state: GameState = {
         pieces: [],
         benchPieces: [],
-        cards: new CardDeck().shuffle()
+        cards: []
     };
+
+    private socket = io("http://localhost:3000");
 
     public componentDidMount() {
         const { pieces } = this.props;
@@ -48,6 +50,10 @@ class GameUnconnected extends React.Component<Props, GameState> {
         ];
 
         this.setState({ pieces, benchPieces });
+
+        this.socket.on("cardsUpdate", (cards: PokemonCard[]) => {
+            this.setState({ cards });
+        });
     }
 
     public render() {
@@ -67,11 +73,7 @@ class GameUnconnected extends React.Component<Props, GameState> {
     }
 
     private onShuffle = () => {
-        this.setState(prevState => {
-            return {
-                cards: shuffle(prevState.cards)
-            };
-        });
+        this.socket.emit("refreshCards");
     }
 
     private onMovePiece = (piece: PokemonPiece, position: PiecePosition) => {

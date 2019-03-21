@@ -30,7 +30,7 @@ export const pokemonStats: PokemonDefinition[] = [
             specialDefense: 65,
             type: PokemonType.Grass
         },
-        cost: 1
+        cost: 3
     },
     {
         id: 2,
@@ -70,7 +70,7 @@ export const pokemonStats: PokemonDefinition[] = [
             specialDefense: 50,
             type: PokemonType.Fire
         },
-        cost: 1
+        cost: 3
     },
     {
         id: 5,
@@ -109,7 +109,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 50,
             specialDefense: 64,
             type: PokemonType.Water
-        }
+        },
+        cost: 3
     },
     {
         id: 8,
@@ -187,7 +188,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 20,
             specialDefense: 20,
             type: PokemonType.Bug
-        }
+        },
+        cost: 1
     },
     {
         id: 14,
@@ -798,7 +800,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 40,
             specialDefense: 40,
             type: PokemonType.Psychic
-        }
+        },
+        cost: 2
     },
     {
         id: 61,
@@ -915,7 +918,8 @@ export const pokemonStats: PokemonDefinition[] = [
             specialAttack: 70,
             specialDefense: 30,
             type: PokemonType.Grass
-        }
+        },
+        cost: 1
     },
     {
         id: 70,

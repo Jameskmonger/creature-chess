@@ -1,6 +1,6 @@
 import { createStore, combineReducers } from "redux";
 import { reducers } from "../reducers";
-import { PokemonCard } from "@common/cardDeck";
+import { PokemonCard } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PokemonPiece } from "@common/pokemon-piece";
 
