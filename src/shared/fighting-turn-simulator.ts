@@ -1,7 +1,7 @@
 import { PokemonPiece, initialCoolDown } from "./pokemon-piece";
 import { attack } from "./attack";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
-import { getPokemonStats } from "./get-pokemon-stats";
+import { getPokemonStats } from "./pokemon-details";
 import { getRelativeDirection } from "./position";
 
 export const simulateTurn = (pieces: PokemonPiece[]) => {

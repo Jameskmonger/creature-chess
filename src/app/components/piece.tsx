@@ -3,6 +3,8 @@ import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor }
 
 import { PokemonPiece, initialCoolDown } from "@common/pokemon-piece";
 import { assign, keys } from "lodash";
+import { connect, MapDispatchToProps } from "react-redux";
+import { pieceSelected } from "../actions/pieceActions";
 
 const getPercentage = (current: number, max: number) => {
     return Math.floor((current / max) * 100) + "%";
@@ -10,9 +12,15 @@ const getPercentage = (current: number, max: number) => {
 
 const dyingAnimation = "dying";
 
-interface PieceProps {
+interface PieceOwnProps {
     piece: PokemonPiece;
 }
+
+interface PieceDispatchProps {
+    onPieceSelected: () => void;
+}
+
+type PieceProps = PieceOwnProps & PieceDispatchProps;
 
 interface DragSourceProps {
     connectDragSource: ConnectDragSource;
@@ -51,6 +59,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
                 // tslint:disable-next-line: jsx-ban-props
                 style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
                 onAnimationEnd={this.onAnimationEnd}
+                onClick={this.props.onPieceSelected}
             >
                 <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
 
@@ -128,12 +137,18 @@ const selectedPiece = {
     }
 };
 
-const collect = (connect: DragSourceConnector, monitor: DragSourceMonitor) => ({
-    connectDragSource: connect.dragSource(),
+const collect = (connectToDragSource: DragSourceConnector, monitor: DragSourceMonitor) => ({
+    connectDragSource: connectToDragSource.dragSource(),
     isDragging: monitor.isDragging()
 });
 
-const Piece = DragSource<PieceProps>(typeof PieceUnconnected, selectedPiece, collect)(PieceUnconnected);
+const mapDispatchToProps: MapDispatchToProps<PieceDispatchProps, PieceOwnProps> = (dispatch, ownProps) => ({
+    onPieceSelected: () => dispatch(pieceSelected(ownProps.piece))
+});
+
+const PieceConnectedToStore = connect(null, mapDispatchToProps)(PieceUnconnected);
+
+const Piece = DragSource<PieceOwnProps>(typeof PieceConnectedToStore, selectedPiece, collect)(PieceConnectedToStore);
 
 const getAnimationCssVariables = (animations: Animation[]) => {
     const variables = assign({}, ...animations.filter(a => a.variables).map(a => a.variables));
