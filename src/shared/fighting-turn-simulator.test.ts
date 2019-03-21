@@ -2,7 +2,7 @@ import { TestFixture, Test, SpyOn, Expect, Setup } from "alsatian";
 import * as attackModule from "./attack";
 import { simulateTurn } from "./fighting-turn-simulator";
 import { PokemonPiece } from "./pokemon-piece";
-import { getPokemonStats } from "./get-pokemon-stats";
+import { getPokemonStats } from "./pokemon-details";
 
 @TestFixture("fighting-turn-simulator")
 export class FightingTurnSimulatorTests {
