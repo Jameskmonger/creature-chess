@@ -20,7 +20,7 @@ export class NetworkHandler {
     public receiveConnection(socket: SocketIO.Socket) {
         const player = this.gameHandler.createPlayer();
 
-        this.gameHandler.addOutgoingPacketListener(
+        this.gameHandler.setOutgoingPacketListener(
             player,
             (opcode: OutgoingPacketOpcodes, data: any) => {
                 socket.emit(opcode, data);

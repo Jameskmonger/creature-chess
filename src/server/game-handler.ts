@@ -7,7 +7,7 @@ type OutgoingPacketListener = (opcode: OutgoingPacketOpcodes, data: any) => void
 
 export class GameHandler {
     private deck = new CardDeck();
-    private outgoingPacketListeners = new Map<Player, OutgoingPacketListener[]>();
+    private outgoingPacketListeners = new Map<Player, OutgoingPacketListener>();
 
     public createPlayer() {
         const opponent: Player = {
@@ -35,21 +35,11 @@ export class GameHandler {
             opponent
         };
 
-        this.outgoingPacketListeners.set(player, []);
-
         return player;
     }
 
-    public addOutgoingPacketListener(player: Player, listener: OutgoingPacketListener) {
-        const listeners = this.outgoingPacketListeners.get(player);
-
-        this.outgoingPacketListeners.set(
-            player,
-            [
-                ...listeners,
-                listener
-            ]
-        );
+    public setOutgoingPacketListener(player: Player, listener: OutgoingPacketListener) {
+        this.outgoingPacketListeners.set(player, listener);
     }
 
     public onPlayerSetupComplete(player: Player) {
@@ -78,10 +68,12 @@ export class GameHandler {
     }
 
     private sendPacket(player: Player, opcode: OutgoingPacketOpcodes, data: any) {
-        const listeners = this.outgoingPacketListeners.get(player);
+        const listener = this.outgoingPacketListeners.get(player);
 
-        listeners.forEach(listener => {
-            listener(opcode, data);
-        });
+        if (listener === undefined) {
+            return;
+        }
+
+        listener(opcode, data);
     }
 }
