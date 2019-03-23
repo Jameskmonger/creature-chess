@@ -2,6 +2,9 @@
 @import "globals/variables";
 @import "globals/colors";
 
+@import "components/game";
+@import "components/card";
+@import "components/card-selector";
 @import "components/chessboard";
 @import "components/tile";
 @import "components/tile-row";

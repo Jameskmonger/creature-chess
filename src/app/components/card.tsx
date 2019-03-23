@@ -7,7 +7,7 @@ interface CardProps {
 }
 
 const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name }) => (
-    <div>
+    <div className="card">
         <img className="image" src={`/images/front/${pokemonId}.png`} />
         <div>{name}</div>
         <div>$ {cost}</div>
