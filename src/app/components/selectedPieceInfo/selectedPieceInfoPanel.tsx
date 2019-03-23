@@ -10,7 +10,7 @@ interface Props {
 
 const SelectedPieceInfoPanelUnconnected: React.FunctionComponent<Props> = (props) => (
     <div>
-        {props.piece && <SelectedPieceInfo piece={props.piece} />}
+        {props.piece && <SelectedPieceInfo />}
     </div>
 );
 
@@ -20,4 +20,4 @@ const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
 
 const SelectedPieceInfoPanel = connect(mapStateToProps)(SelectedPieceInfoPanelUnconnected);
 
-export { SelectedPieceInfoPanel as SelectedPieceInfo };
+export { SelectedPieceInfoPanel };

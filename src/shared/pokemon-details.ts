@@ -5,3 +5,5 @@ export const getPokemonDefinition = (pokemonId: number) => pokemonStats.find(p =
 export const getPokemonStats = (pokemonId: number) => getPokemonDefinition(pokemonId).stats;
 
 export const getPokemonName = (pokemonId: number) => getPokemonDefinition(pokemonId).name;
+
+export const getRequiredQuantityToEvolve = (pokemonId: number) => 3;
