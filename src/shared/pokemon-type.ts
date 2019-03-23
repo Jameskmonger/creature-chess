@@ -1,15 +1,15 @@
 export enum PokemonType {
-    Bug,
-    Electric,
-    Fighting,
-    Fire,
-    Flying,
-    Ghost,
-    Grass,
-    Ground,
-    Normal,
-    Poison,
-    Psychic,
-    Rock,
-    Water
+    Bug = "Bug",
+    Electric = "Electric",
+    Fighting = "Fighting",
+    Fire = "Fire",
+    Flying = "Flying",
+    Ghost = "Ghost",
+    Grass = "Grass",
+    Ground = "Ground",
+    Normal = "Normal",
+    Poison = "Poison",
+    Psychic = "Psychic",
+    Rock = "Rock",
+    Water = "Water"
 }

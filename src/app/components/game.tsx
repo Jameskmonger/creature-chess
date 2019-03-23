@@ -12,7 +12,7 @@ import { CardSelector } from "./cardSelector";
 import io = require("socket.io-client");
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/store";
-import { SelectedPieceInfo } from "./selectedPieceInfo";
+import { SelectedPieceInfo } from "./selectedPieceInfo/selectedPieceInfoPanel";
 import { piecesUpdated } from "../actions/pieceActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { PokemonImage } from "./pokemonImage";
 
 interface CardProps {
     pokemonId: number;
@@ -8,7 +9,7 @@ interface CardProps {
 
 const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name }) => (
     <div>
-        <img className="image" src={`/images/front/${pokemonId}.png`} />
+        <PokemonImage pokemonId={pokemonId} />
         <div>{name}</div>
         <div>$ {cost}</div>
     </div>
