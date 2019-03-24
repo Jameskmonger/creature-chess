@@ -73,16 +73,12 @@ class GameUnconnected extends React.Component<Props, GameState> {
                         <Board boardSize={boardSize} />
                         <Bench boardSize={boardSize} pieces={benchPieces} />
                     </div>
-                    <SelectedPieceInfo />
+                    <SelectedPieceInfoPanel />
                 </div>
                 <div className="shop-container">
                     <CardSelector cards={cards} onShuffle={this.onShuffle} />
                     <button onClick={(this.startRound)}>Fight!</button>
                 </div>
-
-                <SelectedPieceInfoPanel />
-                <CardSelector cards={cards} onShuffle={this.onShuffle} />
-                <button onClick={(this.startRound)}>Fight!</button>
             </div>
         );
     }
