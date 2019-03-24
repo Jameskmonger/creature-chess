@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, MapDispatchToProps } from "react-redux";
-import { joinGame } from "../../actions/lobbyAction";
+import { joinGame } from "../../actions/lobbyActions";
 
 interface DispatchProps {
     onJoinGame: (name: string) => void;

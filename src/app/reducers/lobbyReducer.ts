@@ -1,5 +1,5 @@
 import { LobbyState } from "../store/store";
-import { LobbyAction } from "../actions/lobbyAction";
+import { LobbyAction } from "../actions/lobbyActions";
 import { JOIN_GAME } from "../actiontypes/lobbyActionTypes";
 
 export function lobby(state: LobbyState = { inLobby: true }, action: LobbyAction) {
