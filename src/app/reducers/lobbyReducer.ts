@@ -1,10 +1,10 @@
 import { LobbyState } from "../store/store";
 import { LobbyAction } from "../actions/lobbyAction";
-import { JOIN_LOBBY } from "../actiontypes/lobbyActionTypes";
+import { JOIN_GAME } from "../actiontypes/lobbyActionTypes";
 
 export function lobby(state: LobbyState = { inLobby: true }, action: LobbyAction) {
     switch (action.type) {
-        case JOIN_LOBBY:
+        case JOIN_GAME:
             return {
                 inLobby: false
             };

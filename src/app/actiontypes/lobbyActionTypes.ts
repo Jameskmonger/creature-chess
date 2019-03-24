@@ -1,2 +1,2 @@
-export const JOIN_LOBBY = "JOIN_LOBBY";
-export type JOIN_LOBBY = typeof JOIN_LOBBY;
+export const JOIN_GAME = "JOIN_GAME";
+export type JOIN_GAME = typeof JOIN_GAME;

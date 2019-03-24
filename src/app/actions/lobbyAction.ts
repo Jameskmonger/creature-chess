@@ -1,9 +1,9 @@
-import { JOIN_LOBBY } from "../actiontypes/lobbyActionTypes";
+import { JOIN_GAME } from "../actiontypes/lobbyActionTypes";
 
-export type LobbyAction = ({ type: JOIN_LOBBY, payload: { name: string } });
+export type LobbyAction = ({ type: JOIN_GAME, payload: { name: string } });
 
-export const joinLobby = (name: string) => ({
-    type: JOIN_LOBBY,
+export const joinGame = (name: string) => ({
+    type: JOIN_GAME,
     payload: {
         name
     }
