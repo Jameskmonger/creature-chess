@@ -23,7 +23,7 @@ export const pieceSelector = createSelector(
     (pieces, position) => pieces.filter(piecePositionFilter(position))
 );
 
-export const benchPieceSelector = createSelector(
+export const benchedPieceSelector = createSelector(
     benchedPiecesSelector,
     positionSelector,
     (pieces, position) => pieces.filter(piecePositionFilter(position))
