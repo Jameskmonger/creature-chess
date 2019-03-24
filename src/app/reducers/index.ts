@@ -1,7 +1,9 @@
-import { deck } from "../reducers/deckReducer";
+import { deck } from "./deckReducer";
 import { pieces } from "./piecesReducer";
+import { lobby } from "./lobbyReducer";
 
 export const reducers = {
     deck,
-    pieces
+    pieces,
+    lobby
 };
