@@ -26,8 +26,8 @@ export class GameHandler {
             cards: this.deck.take(5),
             board: [
                 makeFriendly(129, [1, 6]),
-                makeFriendly(62, [2, 6]),
-                makeFriendly(9, [4, 4]),
+                makeFriendly(129, [2, 6]),
+                makeFriendly(129, [4, 4]),
                 makeFriendly(70, [7, 6]),
                 makeFriendly(67, [3, 4]),
                 makeFriendly(89, [5, 4])
