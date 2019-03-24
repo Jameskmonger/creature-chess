@@ -1,20 +1,27 @@
 import * as React from "react";
-import { MapStateToProps, connect } from "react-redux";
-import { Game } from "./stages/game-stage";
-import { AppState, LobbyState } from "../store/store";
+import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
+import { GameStage } from "./stages/game-stage";
+import { AppState } from "../store/store";
+import { LobbyStage } from "./stages/lobby-stage";
 
 interface Props {
-    lobby: LobbyState;
+    inLobby: boolean;
 }
 
-class GameContainerUnconnected extends React.Component<{}, {}> {
+class GameContainerUnconnected extends React.Component<Props, {}> {
     public render() {
-        return <Game />;
+        const { inLobby } = this.props;
+
+        if (inLobby) {
+            return <LobbyStage />;
+        }
+
+        return <GameStage />;
     }
 }
 
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    lobby: state.lobby
+    inLobby: state.lobby.inLobby
 });
 
 const GameContainer = connect(mapStateToProps)(GameContainerUnconnected);

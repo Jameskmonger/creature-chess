@@ -114,5 +114,5 @@ const GameStage = compose(
 )(GameStageUnconnected);
 
 export {
-    GameStage as Game
+    GameStage
 };
