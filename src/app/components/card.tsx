@@ -1,5 +1,6 @@
 import * as React from "react";
 import { PokemonImage } from "./pokemonImage";
+import { getPokemonStats } from "@common/pokemon-details";
 
 interface CardProps {
     pokemonId: number;
@@ -8,7 +9,7 @@ interface CardProps {
 }
 
 const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name }) => (
-    <div className="card">
+    <div className={`card ${getPokemonStats(pokemonId).type.toLowerCase()}`}>
         <PokemonImage pokemonId={pokemonId} />
         <div>{name}</div>
         <div>$ {cost}</div>
