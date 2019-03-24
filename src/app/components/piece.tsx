@@ -6,6 +6,7 @@ import { connect, MapDispatchToProps } from "react-redux";
 import { pieceSelected } from "../actions/pieceActions";
 import { ProgressBar } from "./progressBar";
 import { getAnimationCssVariables, AnimationVariables, Animation } from "./animation";
+import { PokemonImage } from "./pokemonImage";
 
 const dyingAnimation = "dying";
 
@@ -52,7 +53,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
                 onAnimationEnd={this.onAnimationEnd}
                 onClick={this.props.onPieceSelected}
             >
-                <img className="image" src={`/images/${facingAway ? "back" : "front"}/${pokemonId}.png`} />
+                <PokemonImage pokemonId={pokemonId} facing={facingAway ? "back" : "front"} />
 
                 <div className="info">
                     <ProgressBar

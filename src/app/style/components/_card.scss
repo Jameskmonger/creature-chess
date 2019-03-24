@@ -1,0 +1,78 @@
+.card {
+    $shadow-size: 0.1rem;
+    $shadow-blur-radius: 0.5rem;
+
+    max-width: 90px;
+    padding: $spacer;
+    text-align: center;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.5rem;
+    flex: 1;
+    box-shadow: $shadow-size $shadow-size $shadow-blur-radius #808080;
+
+    &.bug {
+        background-color: $bug-color;
+        border-color: darken($bug-color, 50);
+    }
+
+    &.electric {
+        background-color: $electric-color;
+        border-color: darken($electric-color, 50);
+    }
+
+    &.fighting {
+        background-color: $fighting-color;
+        border-color: darken($fighting-color, 50);
+    }
+
+    &.fire {
+        background-color: $fire-color;
+        border-color: darken($fire-color, 50);
+    }
+
+    &.flying {
+        background-color: $flying-color;
+        border-color: darken($flying-color, 50);
+    }
+
+    &.ghost {
+        background-color: $ghost-color;
+        border-color: darken($ghost-color, 50);
+    }
+
+    &.grass {
+        background-color: $grass-color;
+        border-color: darken($grass-color, 50);
+    }
+
+    &.ground {
+        background-color: $ground-color;
+        border-color: darken($ground-color, 50);
+    }
+
+    &.normal {
+        background-color: $normal-color;
+        border-color: darken($normal-color, 50);
+    }
+
+    &.poison {
+        background-color: $poison-color;
+        border-color: darken($poison-color, 50);
+    }
+
+    &.psychic {
+        background-color: $psychic-color;
+        border-color: darken($psychic-color, 50);
+    }
+
+    &.rock {
+        background-color: $rock-color;
+        border-color: darken($rock-color, 50);
+    }
+
+    &.water {
+        background-color: $water-color;
+        border-color: darken($water-color, 50);
+    }
+}

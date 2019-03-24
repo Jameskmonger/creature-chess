@@ -15,7 +15,7 @@ class CardSelector extends React.Component<CardSelectorProps> {
         const topCards = take(cards, 5);
 
         return (
-            <div className="card-select">
+            <div className="card-selector">
                 {topCards.map((card, index) => <Card key={`${index}-${card.id}`} pokemonId={card.id} cost={card.cost} name={card.name} />)}
 
                 <button onClick={onShuffle}>Roll</button>

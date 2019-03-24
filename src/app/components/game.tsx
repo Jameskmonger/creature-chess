@@ -12,7 +12,7 @@ import { CardSelector } from "./cardSelector";
 import io = require("socket.io-client");
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/store";
-import { SelectedPieceInfo } from "./selectedPieceInfo";
+import { SelectedPieceInfoPanel } from "./selectedPieceInfo/selectedPieceInfoPanel";
 import { piecesUpdated } from "../actions/pieceActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
@@ -67,14 +67,18 @@ class GameUnconnected extends React.Component<Props, GameState> {
         const { benchPieces, cards } = this.state;
 
         return (
-            <div className="board-container">
-                <div className="chessboard">
-                    <Board boardSize={boardSize} />
-                    <Bench boardSize={boardSize} pieces={benchPieces} />
+            <div className="game">
+                <div className="board-container">
+                    <div className="chessboard">
+                        <Board boardSize={boardSize} />
+                        <Bench boardSize={boardSize} pieces={benchPieces} />
+                    </div>
+                    <SelectedPieceInfoPanel />
                 </div>
-                <SelectedPieceInfo />
-                <CardSelector cards={cards} onShuffle={this.onShuffle} />
-                <button onClick={(this.startRound)}>Fight!</button>
+                <div className="shop-container">
+                    <CardSelector cards={cards} onShuffle={this.onShuffle} />
+                    <button onClick={(this.startRound)}>Fight!</button>
+                </div>
             </div>
         );
     }

@@ -1,0 +1,13 @@
+.game {
+    display: flex;
+    flex-direction: column;
+    padding: $spacer;
+
+    .board-container {
+        display: flex;
+    }
+
+    .shop-container {
+        display: flex;
+    }
+}
