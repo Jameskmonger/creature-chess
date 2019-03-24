@@ -2,6 +2,7 @@ import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
 import { makeEnemy, makeFriendly } from "../shared/pokemon-piece";
 import { OutgoingPacketOpcodes } from "./network-handler";
+import { createRandomOpponentBoard } from "./opponents/random-opponent";
 
 type OutgoingPacketListener = (opcode: OutgoingPacketOpcodes, data: any) => void;
 
@@ -12,14 +13,7 @@ export class GameHandler {
     public createPlayer() {
         const opponent: Player = {
             cards: this.deck.take(5),
-            board: [
-                makeEnemy(77, [0, 0]),
-                makeEnemy(15, [1, 0]),
-                makeEnemy(123, [4, 0]),
-                makeEnemy(58, [5, 0]),
-                makeEnemy(6, [4, 3]),
-                makeEnemy(11, [3, 1]),
-            ]
+            board: createRandomOpponentBoard()
         };
 
         const player: Player = {
