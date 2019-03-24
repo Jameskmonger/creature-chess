@@ -4,18 +4,19 @@ import { PIECE_SELECTED, PIECE_MOVED, PIECES_UPDATED } from "../actiontypes/piec
 export type PiecesAction =
     ({ type: PIECE_SELECTED, payload: PokemonPiece })
   | ({ type: PIECES_UPDATED, payload: PokemonPiece[] })
-  | ({ type: PIECE_MOVED, payload: { piece: PokemonPiece, position: PiecePosition } });
+  | ({ type: PIECE_MOVED, payload: { piece: PokemonPiece, position: PiecePosition, benched: boolean } });
 
 export const pieceSelected = (payload: PokemonPiece) => ({
     type: PIECE_SELECTED,
     payload
 });
 
-export const pieceMoved = (piece: PokemonPiece, position: PiecePosition) => ({
+export const pieceMoved = (piece: PokemonPiece, position: PiecePosition, benched: boolean = false) => ({
     type: PIECE_MOVED,
     payload: {
         piece,
-        position
+        position,
+        benched
     }
 });
 
