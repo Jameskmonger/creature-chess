@@ -32,5 +32,6 @@ const testPiece: PokemonPiece = {
     id: 12,
     maxHealth: 100,
     pokemonId: 32,
-    position: [3, 6]
+    position: [3, 6],
+    benched: false
 };
