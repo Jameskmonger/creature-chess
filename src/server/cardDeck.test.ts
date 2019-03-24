@@ -23,8 +23,42 @@ export class CardDeckTests {
     public CorrectPokemonInDeck() {
         const cardDeck = new CardDeck();
         const uniquePokemon = uniq(cardDeck.deck
-            .map(d => d.name));
+            .map(d => d.name)
+            .sort());
 
-        Expect(uniquePokemon).toEqual(["Weedle", "Bulbasaur", "Bellsprout", "Squirtle", "Charmander", "Poliwag"]);
+        Expect(uniquePokemon).toEqual([
+            "Abra",
+            "Aerodactyl",
+            "Bellsprout",
+            "Bulbasaur",
+            "Caterpie",
+            "Charmander",
+            "Diglett",
+            "Dratini",
+            "Drowzee",
+            "Electabuzz",
+            "Geodude",
+            "Grimer",
+            "Hitmonchan",
+            "Hitmonlee",
+            "Jigglypuff",
+            "Koffing",
+            "Machop",
+            "Magikarp",
+            "Magnemite",
+            "Oddish",
+            "Pidgey",
+            "Pikachu",
+            "Poliwag",
+            "Ponyta",
+            "Sandshrew",
+            "Scyther",
+            "Spearow",
+            "Squirtle",
+            "Voltorb",
+            "Vulpix",
+            "Weedle",
+            "Zubat"
+        ]);
     }
 }
