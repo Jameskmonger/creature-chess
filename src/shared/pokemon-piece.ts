@@ -1,6 +1,4 @@
-import { Direction } from "./position";
-
-export type PiecePosition = [number, number];
+import { Direction, TileCoordinates, createTileCoordinates } from "./position";
 
 export interface AttackDetails {
     direction: Direction;
@@ -28,7 +26,7 @@ export interface PokemonPiece {
     celebrating?: boolean;
 
     benched: boolean;
-    position: PiecePosition;
+    position: TileCoordinates;
     maxHealth: number;
     currentHealth: number;
     coolDown: number;
@@ -40,31 +38,31 @@ export const isSamePiece = (a: PokemonPiece, b: PokemonPiece) =>
     a.pokemonId === b.pokemonId
     && a.facingAway === b.facingAway
     && a.friendly === b.friendly
-    && a.position[0] === b.position[0]
-    && a.position[1] === b.position[1];
+    && a.position.x === b.position.x
+    && a.position.y === b.position.y;
 
 let count = 0;
 
-export const makeEnemy = (pokemonId: number, position: PiecePosition, benched: boolean = false) => ({
+export const makeEnemy = (pokemonId: number, position: [number, number], benched: boolean = false): PokemonPiece => ({
     id: count++,
     pokemonId,
     facingAway: false,
     friendly: false,
     maxHealth: 100,
     currentHealth: 100,
-    position,
+    position: createTileCoordinates(...position),
     coolDown: initialCoolDown,
     benched
 });
 
-export const makeFriendly = (pokemonId: number, position: PiecePosition, benched: boolean = false) => ({
+export const makeFriendly = (pokemonId: number, position: [number, number], benched: boolean = false): PokemonPiece => ({
     id: count++,
     pokemonId,
     facingAway: true,
     friendly: true,
     maxHealth: 100,
     currentHealth: 100,
-    position,
+    position: createTileCoordinates(...position),
     coolDown: initialCoolDown,
     benched
 });

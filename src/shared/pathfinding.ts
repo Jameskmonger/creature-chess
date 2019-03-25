@@ -1,7 +1,7 @@
 import { astar, Graph } from "javascript-astar";
 import { PokemonPiece } from "./pokemon-piece";
 import { GRID_SIZE } from "./constants";
-import { getAdjacentPositions } from "./position";
+import { getAdjacentPositions, TileCoordinates } from "./position";
 
 const createEmptyWeightGrid = () => {
     const grid: number[][] = [];
@@ -19,35 +19,30 @@ const createEmptyWeightGrid = () => {
     return grid;
 };
 
-const createWeightGrid = (start: [ number, number ], pieces: PokemonPiece[]) => {
+const createWeightGrid = (start: TileCoordinates, pieces: PokemonPiece[]) => {
     const grid = createEmptyWeightGrid();
 
     pieces.forEach(piece => {
-        const [x, y] = piece.position;
+        const { x, y } = piece.position;
 
         grid[x][y] = 0;
     });
 
-    const [ startX, startY ] = start;
-
-    grid[startX][startY] = 1;
+    grid[start.x][start.y] = 1;
 
     return grid;
 };
 
 const findPath = (
     pieces: PokemonPiece[],
-    start: [ number, number ],
-    end: [ number, number ]
+    start: TileCoordinates,
+    end: TileCoordinates
 ) => {
     const weights = createWeightGrid(start, pieces);
     const graph = new Graph(weights);
 
-    const [ startX, startY ] = start;
-    const [ endX, endY ] = end;
-
-    const startGraphItem = graph.grid[startX][startY];
-    const endGraphItem = graph.grid[endX][endY];
+    const startGraphItem = graph.grid[start.x][start.y];
+    const endGraphItem = graph.grid[end.x][end.y];
 
     const path = astar.search(graph, startGraphItem, endGraphItem);
     const firstPathNode = path[0];
@@ -56,7 +51,7 @@ const findPath = (
         return null;
     }
 
-    const firstStep: [ number, number ] = [ firstPathNode.x, firstPathNode.y ];
+    const firstStep: TileCoordinates = firstPathNode;
 
     return {
         stepCount: path.length,
@@ -64,7 +59,7 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (piece: PokemonPiece, target: PokemonPiece, pieces: PokemonPiece[]): [ number, number ] => {
+export const getNextPiecePosition = (piece: PokemonPiece, target: PokemonPiece, pieces: PokemonPiece[]): TileCoordinates => {
     const targetTiles = getAdjacentPositions(target);
     const paths = targetTiles.map(pos => findPath(pieces, piece.position, pos)).filter(path => path !== null);
 

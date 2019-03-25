@@ -1,11 +1,12 @@
 import { createSelector } from "reselect";
 
-import { PiecePosition, PokemonPiece } from "@common/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { AppState } from "../store/store";
+import { TileCoordinates } from "@common/position";
 
 const piecesSelector = (state: AppState) => state.pieces;
-const positionSelector = (state: AppState, props: { position: PiecePosition }) => props.position;
-const piecePositionFilter = (position: PiecePosition) => (p: PokemonPiece): boolean => p.position[0] === position[0] && p.position[1] === position[1];
+const positionSelector = (state: AppState, props: { position: TileCoordinates }) => props.position;
+const piecePositionFilter = (position: TileCoordinates) => (p: PokemonPiece): boolean => p.position.x === position.x && p.position.y === position.y;
 
 const benchedPiecesSelector = createSelector(
     piecesSelector,

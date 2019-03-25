@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Tile } from "./tile";
+import { createTileCoordinates } from "@common/position";
 
 interface TileRowProps {
     y: number;
@@ -20,7 +21,7 @@ const TileRow: React.FunctionComponent<TileRowProps> = ({ y, boardSize, friendly
                 key={`tile-${x}`}
                 dark={isTileDark(x, y)}
                 friendly={friendly}
-                position={[x, y]}
+                position={createTileCoordinates(x, y)}
             />
         );
     }
