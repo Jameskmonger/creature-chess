@@ -1,19 +1,19 @@
 import * as React from "react";
 import { compose } from "recompose";
 import delay from "delay";
-import { PokemonPiece, makeFriendly } from "@common/pokemon-piece";
-import { Board } from "./board";
-import { simulateTurn } from "@common/fighting-turn-simulator";
-import { Bench } from "./bench/bench";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { PokemonCard } from "@common";
-import { CardSelector } from "./cardSelector";
 import io = require("socket.io-client");
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { AppState } from "../store/store";
-import { SelectedPieceInfoPanel } from "./selectedPieceInfo/selectedPieceInfoPanel";
-import { piecesUpdated } from "../actions/pieceActions";
+import { PokemonCard } from "@common";
+import { PokemonPiece, makeFriendly } from "@common/pokemon-piece";
+import { Board } from "../board";
+import { simulateTurn } from "@common/fighting-turn-simulator";
+import { Bench } from "../bench/bench";
+import { CardSelector } from "../cardSelector";
+import { AppState } from "../../store/store";
+import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
+import { piecesUpdated } from "../../actions/pieceActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -25,19 +25,19 @@ interface StateProps {
     pieces: PokemonPiece[];
 }
 
-interface GameDispatchProps {
+interface GameStageDispatchProps {
     onPiecesUpdated: (pieces: PokemonPiece[]) => void;
 }
 
-type Props = StateProps & GameDispatchProps;
+type Props = StateProps & GameStageDispatchProps;
 
-interface GameState {
+interface GameStageState {
     benchPieces: PokemonPiece[];
     cards: PokemonCard[];
 }
 
-class GameUnconnected extends React.Component<Props, GameState> {
-    public state: GameState = {
+class GameStageUnconnected extends React.Component<Props, GameStageState> {
+    public state: GameStageState = {
         benchPieces: [],
         cards: []
     };
@@ -104,15 +104,15 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
     pieces: state.pieces
 });
 
-const mapDispatchToProps: MapDispatchToProps<GameDispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({
     onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces))
 });
 
-const Game = compose(
+const GameStage = compose(
     connect(mapStateToProps, mapDispatchToProps),
     DragDropContext(HTML5Backend)
-)(GameUnconnected);
+)(GameStageUnconnected);
 
 export {
-    Game
+    GameStage
 };

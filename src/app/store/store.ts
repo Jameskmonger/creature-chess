@@ -4,9 +4,14 @@ import { PokemonCard } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PokemonPiece } from "@common/pokemon-piece";
 
+export interface LobbyState {
+    inLobby: boolean;
+}
+
 export interface AppState {
     deck: PokemonCard[];
     pieces: PokemonPiece[];
+    lobby: LobbyState;
 }
 
 export const store = createStore<AppState, any, void, void>(
