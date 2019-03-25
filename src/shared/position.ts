@@ -1,5 +1,9 @@
 import { GRID_SIZE } from "./constants";
-import { PokemonPiece, PiecePosition } from "./pokemon-piece";
+import { PokemonPiece } from "./pokemon-piece";
+
+export type TileCoordinates = { x: number, y: number };
+
+export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
 
 export enum Direction {
     Up = "up",
@@ -9,20 +13,20 @@ export enum Direction {
     Unknown = "unknown"
 }
 
-const isInsideGrid = (position: [ number, number ]) => {
-    const [ x, y ] = position;
+const isInsideGrid = (position: TileCoordinates) => {
+    const { x, y } = position;
 
     return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
 };
 
 export const getAdjacentPositions = (piece: PokemonPiece) => {
-    const [ pieceX, pieceY ] = piece.position;
+    const { x, y } = piece.position;
 
-    const positions: [ number, number ][] = [
-        [ pieceX, pieceY - 1 ],
-        [ pieceX - 1, pieceY ],
-        [ pieceX + 1, pieceY ],
-        [ pieceX, pieceY + 1 ]
+    const positions: TileCoordinates[] = [
+        createTileCoordinates(x, y - 1),
+        createTileCoordinates(x - 1, y),
+        createTileCoordinates(x + 1, y),
+        createTileCoordinates(x, y + 1)
     ];
 
     // filter out any that are outside the grid
@@ -34,17 +38,17 @@ export const getAdjacentPositions = (piece: PokemonPiece) => {
  * @param from The position to find the direction relative from
  * @param to The position to find the direction relative to
  */
-export const getRelativeDirection = (from: PiecePosition, to: PiecePosition) => {
-    if (from[0] < to[0]) {
+export const getRelativeDirection = (from: TileCoordinates, to: TileCoordinates) => {
+    if (from.x < to.x) {
         return Direction.Right;
     }
-    if (from[0] > to[0]) {
+    if (from.x > to.x) {
         return Direction.Left;
     }
-    if (from[1] < to[1]) {
+    if (from.y < to.y) {
         return Direction.Down;
     }
-    if (from[1] > to[1]) {
+    if (from.y > to.y) {
         return Direction.Up;
     }
     return Direction.Unknown;
