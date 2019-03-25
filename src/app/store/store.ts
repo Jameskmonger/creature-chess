@@ -1,8 +1,9 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { reducers } from "../reducers";
 import { PokemonCard } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PokemonPiece } from "@common/pokemon-piece";
+import createSagaMiddleware from "redux-saga";
 
 export interface LobbyState {
     inLobby: boolean;
@@ -14,9 +15,14 @@ export interface AppState {
     lobby: LobbyState;
 }
 
-export const store = createStore<AppState, any, void, void>(
+const sagaMiddleware = createSagaMiddleware();
+
+export const store = createStore(
     combineReducers<AppState>({
         ...reducers,
     }),
-    composeWithDevTools<any, any>()
+    compose(
+        applyMiddleware(sagaMiddleware),
+        composeWithDevTools<any, any>()
+    )
 );
