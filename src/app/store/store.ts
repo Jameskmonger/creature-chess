@@ -4,6 +4,7 @@ import { PokemonCard } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PokemonPiece } from "@common/pokemon-piece";
 import createSagaMiddleware from "redux-saga";
+import { rootSaga } from "../sagas";
 
 export interface LobbyState {
     inLobby: boolean;
@@ -26,3 +27,5 @@ export const store = createStore(
         composeWithDevTools<any, any>()
     )
 );
+
+sagaMiddleware.run(rootSaga);

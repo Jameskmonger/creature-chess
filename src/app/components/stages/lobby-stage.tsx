@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, MapDispatchToProps } from "react-redux";
-import { joinGame } from "../../actions/lobbyActions";
+import { joinGameAction } from "../../actions/lobbyActions";
 
 interface DispatchProps {
     onJoinGame: (name: string) => void;
@@ -25,7 +25,7 @@ class LobbyStageUnconnected extends React.Component<Props> {
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onJoinGame: (name: string) => dispatch(joinGame(name))
+    onJoinGame: (name: string) => dispatch(joinGameAction(name))
 });
 
 const LobbyStage = connect(null, mapDispatchToProps)(LobbyStageUnconnected);

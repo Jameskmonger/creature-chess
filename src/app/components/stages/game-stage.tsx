@@ -100,6 +100,13 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
     }
 }
 
+export const joinGame = () => {
+    const socket = io("http://localhost:3000");
+    socket.emit("joinGame", "Player", (joined: boolean) => {
+        // do stuff
+    });
+};
+
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
     pieces: state.pieces
 });
