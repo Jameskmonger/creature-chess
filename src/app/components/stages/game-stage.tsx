@@ -99,6 +99,8 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
                             }
                         ]}
                     />
+
+                    <CardSelector cards={cards} onShuffle={this.onShuffle} />
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
@@ -107,7 +109,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
                     </div>
                 </div>
                 <div className="column">
-
+                    <SelectedPieceInfoPanel />
                 </div>
             </div>
         );

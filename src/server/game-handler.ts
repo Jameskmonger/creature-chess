@@ -53,6 +53,8 @@ export class GameHandler {
     }
 
     public onPlayerRefreshCards(player: Player) {
+        console.log("player refreshed cards");
+
         // prevent any race conditions
         const playerCards = player.cards;
         player.cards = [];
