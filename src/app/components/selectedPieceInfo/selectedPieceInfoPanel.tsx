@@ -9,11 +9,19 @@ interface Props {
     piece: PokemonPiece;
 }
 
-const SelectedPieceInfoPanelUnconnected: React.FunctionComponent<Props> = (props) => (
-    <div className={`selected-piece-info-panel card ${props.piece ? getPokemonStats(props.piece.pokemonId).type.toLowerCase() : ""}`}>
-        {props.piece && <SelectedPieceInfo />}
-    </div>
-);
+const SelectedPieceInfoPanelUnconnected: React.FunctionComponent<Props> = (props) => {
+    const { piece } = props;
+
+    if (piece === undefined) {
+        return null;
+    }
+
+    return (
+        <div className={`selected-piece-info-panel card ${getPokemonStats(props.piece.pokemonId).type.toLowerCase()}`}>
+            <SelectedPieceInfo />
+        </div>
+    );
+};
 
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
     piece: state.pieces.find(piece => piece.selected)

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { PokemonCard } from "@common";
 import { take } from "lodash";
-import { Card } from "./card";
+import { Card, RerollCard } from "./card";
 
 interface CardSelectorProps {
     cards: PokemonCard[];
@@ -16,9 +16,11 @@ class CardSelector extends React.Component<CardSelectorProps> {
 
         return (
             <div className="card-selector">
-                {topCards.map((card, index) => <Card key={`${index}-${card.id}`} pokemonId={card.id} cost={card.cost} name={card.name} />)}
+                <div className="cards">
+                    {topCards.map((card, index) => <Card key={`${index}-${card.id}`} pokemonId={card.id} cost={card.cost} name={card.name} />)}
 
-                <button onClick={onShuffle}>Roll</button>
+                    <RerollCard onClick={onShuffle} />
+                </div>
             </div>
         );
     }

@@ -12,10 +12,18 @@ const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name }) => 
     <div className={`card ${getPokemonStats(pokemonId).type.toLowerCase()}`}>
         <PokemonImage pokemonId={pokemonId} />
         <div>{name}</div>
-        <div>$ {cost}</div>
+        <div>${cost}</div>
     </div>
 );
 
+interface RerollCardProps {
+    onClick: () => void;
+}
+
+const RerollCard: React.FunctionComponent<RerollCardProps> = ({ onClick }) => (
+    <div className="card reroll" onClick={onClick}>Reroll</div>
+);
+
 export {
-    Card
+    Card, RerollCard
 };

@@ -1,78 +1,75 @@
 .card {
-    $shadow-size: 0.1rem;
-    $shadow-blur-radius: 0.5rem;
-
-    max-width: 90px;
-    padding: $spacer;
+    display: inline-block;
+    width: 48%;
+    box-sizing: border-box;
+    padding: 0.5em 0;
+    margin-bottom: 1rem;
+    font-family: Arial, sans-serif;
+    color: $card-name;
     text-align: center;
+    cursor: pointer;
+    user-select: none;
     border-style: solid;
-    border-width: 1px;
-    border-radius: 0.5rem;
-    flex: 1;
-    box-shadow: $shadow-size $shadow-size $shadow-blur-radius #808080;
+    border-width: 3px;
+
+    &:nth-child(even) {
+        margin-left: 4%;
+    }
+
+    &.reroll {
+        background: $reroll-color;
+        border-color: $reroll-color;
+    }
 
     &.bug {
-        background-color: $bug-color;
-        border-color: darken($bug-color, 50);
+        border-color: $bug-color;
     }
 
     &.electric {
-        background-color: $electric-color;
-        border-color: darken($electric-color, 50);
+        border-color: $electric-color;
     }
 
     &.fighting {
-        background-color: $fighting-color;
-        border-color: darken($fighting-color, 50);
+        border-color: $fighting-color;
     }
 
     &.fire {
-        background-color: $fire-color;
-        border-color: darken($fire-color, 50);
+        border-color: $fire-color;
     }
 
     &.flying {
-        background-color: $flying-color;
-        border-color: darken($flying-color, 50);
+        border-color: $flying-color;
     }
 
     &.ghost {
-        background-color: $ghost-color;
-        border-color: darken($ghost-color, 50);
+        border-color: $ghost-color;
     }
 
     &.grass {
-        background-color: $grass-color;
-        border-color: darken($grass-color, 50);
+        border-color: $grass-color;
     }
 
     &.ground {
-        background-color: $ground-color;
-        border-color: darken($ground-color, 50);
+        border-color: $ground-color;
     }
 
     &.normal {
-        background-color: $normal-color;
-        border-color: darken($normal-color, 50);
+        border-color: $normal-color;
     }
 
     &.poison {
-        background-color: $poison-color;
-        border-color: darken($poison-color, 50);
+        border-color: $poison-color;
     }
 
     &.psychic {
-        background-color: $psychic-color;
-        border-color: darken($psychic-color, 50);
+        border-color: $psychic-color;
     }
 
     &.rock {
-        background-color: $rock-color;
-        border-color: darken($rock-color, 50);
+        border-color: $rock-color;
     }
 
     &.water {
-        background-color: $water-color;
-        border-color: darken($water-color, 50);
+        border-color: $water-color;
     }
 }

@@ -1,10 +1,18 @@
 .game {
     display: flex;
-    flex-direction: column;
-    padding: $spacer;
+    flex-direction: row;
+    overflow-y: hidden;
+    background: $game-background;
+
+    .column {
+        flex: 1;
+        box-sizing: border-box;
+        padding: $spacer;
+    }
 
     .board-container {
         display: flex;
+        flex-grow: 0;
     }
 
     .shop-container {
