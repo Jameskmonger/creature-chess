@@ -66,9 +66,14 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
     public render() {
         const { benchPieces, cards } = this.state;
 
+        const boardContainerStyle = {
+            height: window.innerHeight + "px",
+            width: ((window.innerHeight / 9) * 8) + "px"
+        };
+
         return (
             <div className="game">
-                <div className="board-container">
+                <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
                         <Board boardSize={boardSize} />
                         <Bench boardSize={boardSize} pieces={benchPieces} />
