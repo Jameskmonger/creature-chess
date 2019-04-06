@@ -3,7 +3,7 @@ import { getNextPiecePosition } from "./pathfinding";
 import { TileCoordinates } from "./position";
 
 const getLivingEnemies = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
-    return pieces.filter(other => other.friendly !== piece.friendly && other.currentHealth > 0);
+    return pieces.filter(other => other.friendly !== piece.friendly && other.currentHealth > 0 && !other.benched);
 };
 
 const getDelta = (a: PokemonPiece, b: PokemonPiece) => {
