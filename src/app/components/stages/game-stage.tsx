@@ -109,6 +109,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
                     </div>
                 </div>
                 <div className="column">
+                    <button onClick={(this.startRound)}>Fight!</button>
                     <SelectedPieceInfoPanel />
                 </div>
             </div>
