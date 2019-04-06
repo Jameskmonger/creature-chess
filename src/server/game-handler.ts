@@ -1,16 +1,21 @@
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
 import { makeEnemy, makeFriendly } from "../shared/pokemon-piece";
-import { OutgoingPacketOpcodes } from "./network-handler";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
-
-type OutgoingPacketListener = (opcode: OutgoingPacketOpcodes, data: any) => void;
+import { Connection, IncomingPacketOpcodes, OutgoingPacketOpcodes } from "./connection";
 
 export class GameHandler {
     private deck = new CardDeck();
-    private outgoingPacketListeners = new Map<Player, OutgoingPacketListener>();
 
-    public createPlayer() {
+    public registerConnection(connection: Connection) {
+        connection.onReceivePacket(IncomingPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
+            this.onPlayerPurchaseCard(connection, cardIndex);
+        });
+
+        connection.onReceivePacket(IncomingPacketOpcodes.REFRESH_CARDS, () => {
+            this.onPlayerRefreshCards(connection);
+        });
+
         const opponent: Player = {
             cards: this.deck.take(5),
             board: createRandomOpponentBoard()
@@ -33,27 +38,41 @@ export class GameHandler {
             opponent
         };
 
-        return player;
+        connection.setPlayer(player);
+
+        this.onPlayerSetupComplete(connection);
     }
 
-    public setOutgoingPacketListener(player: Player, listener: OutgoingPacketListener) {
-        this.outgoingPacketListeners.set(player, listener);
-    }
+    public onPlayerSetupComplete(connection: Connection) {
+        const player = connection.getPlayer();
 
-    public onPlayerSetupComplete(player: Player) {
-        this.sendPacket(player, OutgoingPacketOpcodes.CARDS_UPDATE, player.cards);
-        this.sendPacket(player, OutgoingPacketOpcodes.BOARD_UPDATE, {
+        if (!player) {
+            return;
+        }
+
+        connection.sendPacket(OutgoingPacketOpcodes.CARDS_UPDATE, player.cards);
+        connection.sendPacket(OutgoingPacketOpcodes.BOARD_UPDATE, {
             friendly: player.board,
             opponent: player.opponent.board
         });
     }
 
-    public onPlayerPurchaseCard(player: Player, cardIndex: number) {
+    public onPlayerPurchaseCard(connection: Connection, cardIndex: number) {
+        const player = connection.getPlayer();
+
+        if (!player) {
+            return;
+        }
+
         player.cards[cardIndex] = null;
     }
 
-    public onPlayerRefreshCards(player: Player) {
-        console.log("player refreshed cards");
+    public onPlayerRefreshCards(connection: Connection) {
+        const player = connection.getPlayer();
+
+        if (!player) {
+            return;
+        }
 
         // prevent any race conditions
         const playerCards = player.cards;
@@ -64,16 +83,6 @@ export class GameHandler {
 
         player.cards = this.deck.take(5);
 
-        this.sendPacket(player, OutgoingPacketOpcodes.CARDS_UPDATE, player.cards);
-    }
-
-    private sendPacket(player: Player, opcode: OutgoingPacketOpcodes, data: any) {
-        const listener = this.outgoingPacketListeners.get(player);
-
-        if (listener === undefined) {
-            return;
-        }
-
-        listener(opcode, data);
+        connection.sendPacket(OutgoingPacketOpcodes.CARDS_UPDATE, player.cards);
     }
 }
