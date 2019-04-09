@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Player } from "@common";
+import { PlayerListPlayer } from "@common";
 import { PlayerListItem } from "./playerListItem";
 
-const PlayerList: React.FunctionComponent<{ players: Player[] }> = props => {
+const PlayerList: React.FunctionComponent<{ players: PlayerListPlayer[] }> = props => {
     const players = props.players.sort((a, b) => b.health - a.health);
 
     return (
