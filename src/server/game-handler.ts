@@ -43,7 +43,7 @@ export class GameHandler {
         this.onPlayerSetupComplete(connection);
     }
 
-    public onPlayerSetupComplete(connection: Connection) {
+    private onPlayerSetupComplete(connection: Connection) {
         const player = connection.getPlayer();
 
         if (!player) {
@@ -57,7 +57,7 @@ export class GameHandler {
         });
     }
 
-    public onPlayerPurchaseCard(connection: Connection, cardIndex: number) {
+    private onPlayerPurchaseCard(connection: Connection, cardIndex: number) {
         const player = connection.getPlayer();
 
         if (!player) {
@@ -67,7 +67,7 @@ export class GameHandler {
         player.cards[cardIndex] = null;
     }
 
-    public onPlayerRefreshCards(connection: Connection) {
+    private onPlayerRefreshCards(connection: Connection) {
         const player = connection.getPlayer();
 
         if (!player) {
