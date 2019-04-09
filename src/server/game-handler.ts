@@ -26,11 +26,11 @@ export class GameHandler {
     }
 
     private acceptConnection(connection: Connection, name: string) {
-        const opponent = new Player(null);
+        const opponent = new Player(null, "Opponent");
         opponent.setCards(this.deck.take(5));
         opponent.setBoard(createRandomOpponentBoard());
 
-        const player = new Player(connection);
+        const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
         player.setBoard([
             makeFriendly(129, [1, 6]),
@@ -54,8 +54,10 @@ export class GameHandler {
             this.onPlayerRefreshCards(player);
         });
 
+        this.players.push(opponent);
         this.players.push(player);
 
+        player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();
     }

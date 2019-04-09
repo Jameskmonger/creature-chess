@@ -4,7 +4,8 @@ import { Player } from "./player";
 
 export enum OutgoingPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
-    BOARD_UPDATE = "boardUpdate"
+    BOARD_UPDATE = "boardUpdate",
+    PLAYER_LIST_UPDATE = "playerListUpdate"
 }
 
 export enum IncomingPacketOpcodes {

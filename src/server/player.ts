@@ -3,13 +3,15 @@ import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection, OutgoingPacketOpcodes } from "./connection";
 
 export class Player {
+    public readonly name: string;
     private connection: Connection;
     private cards: PokemonCard[];
     private board: PokemonPiece[];
     private opponent?: Player;
 
-    constructor(connection: Connection) {
+    constructor(connection: Connection, name: string) {
         this.connection = connection;
+        this.name = name;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -45,6 +47,17 @@ export class Player {
             friendly: this.board,
             opponent: this.opponent.board
         });
+    }
+
+    public sendPlayerListUpdate(players: Player[]) {
+        const playerList = players.map(p => {
+            return {
+                name: p.name,
+                health: 100
+            };
+        });
+
+        this.sendPacket(OutgoingPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
     }
 
     private sendPacket(opcode: OutgoingPacketOpcodes, ...data: any[]) {
