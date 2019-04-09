@@ -62,6 +62,12 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
             const pieces = [...packet.friendly, ...packet.opponent];
             this.props.onPiecesUpdated(pieces);
         });
+
+        setTimeout(() => {
+            this.socket.emit("joinGame", "James", (joined: boolean) => {
+                console.log("Joined: " + joined);
+            });
+        }, 100);
     }
 
     public render() {
