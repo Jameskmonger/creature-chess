@@ -1,8 +1,9 @@
-import { PokemonCard } from "../shared";
+import { PokemonCard, PlayerListPlayer } from "@common";
 import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection, OutgoingPacketOpcodes } from "./connection";
 
 export class Player {
+    public readonly id: string;
     public readonly name: string;
     private connection: Connection;
     private cards: PokemonCard[];
@@ -11,6 +12,7 @@ export class Player {
 
     constructor(connection: Connection, name: string) {
         this.connection = connection;
+        this.id = Math.random().toString(36).replace(/[^a-z]+/g, "");
         this.name = name;
 
         if (connection !== null) {
@@ -50,8 +52,9 @@ export class Player {
     }
 
     public sendPlayerListUpdate(players: Player[]) {
-        const playerList = players.map(p => {
+        const playerList: PlayerListPlayer[] = players.map(p => {
             return {
+                id: p.id,
                 name: p.name,
                 health: 100
             };
