@@ -87,30 +87,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
         return (
             <div className="game">
                 <div className="column">
-                    <PlayerList
-                        players={[
-                            {
-                                id: "1",
-                                name: "Owen",
-                                health: 100
-                            },
-                            {
-                                id: "3",
-                                name: "James",
-                                health: 65
-                            },
-                            {
-                                id: "4",
-                                name: "Tom",
-                                health: 83
-                            },
-                            {
-                                id: "2",
-                                name: "Henry",
-                                health: 22
-                            }
-                        ]}
-                    />
+                    <PlayerList />
 
                     <CardSelector cards={cards} onShuffle={this.onShuffle} />
                 </div>
