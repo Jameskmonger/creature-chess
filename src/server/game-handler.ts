@@ -33,7 +33,6 @@ export class GameHandler {
         });
 
         connection.onReceivePacket(IncomingPacketOpcodes.REFRESH_CARDS, () => {
-            console.log("refreshing cards");
             this.onPlayerRefreshCards(player);
         });
 
