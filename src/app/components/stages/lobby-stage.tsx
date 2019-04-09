@@ -11,11 +11,14 @@ type Props = DispatchProps;
 class LobbyStageUnconnected extends React.Component<Props> {
     public render() {
         return (
-            <>
-                <p>You are currently in the lobby.</p>
+            <div className="lobby">
+                <div className="join-game">
+                    <h2 className="title">Pokemon Auto Chess</h2>
 
-                <button onClick={this.onJoinGameClick}>Join Game</button>
-            </>
+                    <input placeholder="Your name" className="name-input" />
+                    <button onClick={this.onJoinGameClick} className="join-button">Join Game</button>
+                </div>
+            </div>
         );
     }
 
