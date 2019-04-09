@@ -8,81 +8,54 @@ export class GameHandler {
     private deck = new CardDeck();
 
     public registerConnection(connection: Connection) {
+        const opponent = new Player(null);
+        opponent.setCards(this.deck.take(5));
+        opponent.setBoard(createRandomOpponentBoard());
+
+        const player = new Player(connection);
+        player.setCards(this.deck.take(5));
+        player.setBoard([
+            makeFriendly(129, [1, 6]),
+            makeFriendly(129, [2, 6]),
+            makeFriendly(129, [4, 4]),
+            makeFriendly(70, [7, 6]),
+            makeFriendly(67, [3, 4]),
+            makeFriendly(89, [5, 4]),
+
+            makeFriendly(9, [8, 2], true),
+            makeFriendly(70, [8, 5], true),
+            makeFriendly(67, [8, 6], true)
+        ]);
+        player.setOpponent(opponent);
+
         connection.onReceivePacket(IncomingPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
-            this.onPlayerPurchaseCard(connection, cardIndex);
+            this.onPlayerPurchaseCard(player, cardIndex);
         });
 
         connection.onReceivePacket(IncomingPacketOpcodes.REFRESH_CARDS, () => {
-            this.onPlayerRefreshCards(connection);
+            console.log("refreshing cards");
+            this.onPlayerRefreshCards(player);
         });
 
-        const opponent: Player = {
-            cards: this.deck.take(5),
-            board: createRandomOpponentBoard()
-        };
-
-        const player: Player = {
-            cards: this.deck.take(5),
-            board: [
-                makeFriendly(129, [1, 6]),
-                makeFriendly(129, [2, 6]),
-                makeFriendly(129, [4, 4]),
-                makeFriendly(70, [7, 6]),
-                makeFriendly(67, [3, 4]),
-                makeFriendly(89, [5, 4]),
-
-                makeFriendly(9, [8, 2], true),
-                makeFriendly(70, [8, 5], true),
-                makeFriendly(67, [8, 6], true)
-            ],
-            opponent
-        };
-
-        connection.setPlayer(player);
-
-        this.onPlayerSetupComplete(connection);
+        player.sendCardsUpdate();
+        player.sendBoardUpdate();
     }
 
-    private onPlayerSetupComplete(connection: Connection) {
-        const player = connection.getPlayer();
-
-        if (!player) {
-            return;
-        }
-
-        connection.sendPacket(OutgoingPacketOpcodes.CARDS_UPDATE, player.cards);
-        connection.sendPacket(OutgoingPacketOpcodes.BOARD_UPDATE, {
-            friendly: player.board,
-            opponent: player.opponent.board
-        });
+    private onPlayerPurchaseCard(player: Player, cardIndex: number) {
+        player.deleteCard(cardIndex);
     }
 
-    private onPlayerPurchaseCard(connection: Connection, cardIndex: number) {
-        const player = connection.getPlayer();
-
-        if (!player) {
-            return;
-        }
-
-        player.cards[cardIndex] = null;
-    }
-
-    private onPlayerRefreshCards(connection: Connection) {
-        const player = connection.getPlayer();
-
-        if (!player) {
-            return;
-        }
-
+    private onPlayerRefreshCards(player: Player) {
         // prevent any race conditions
-        const playerCards = player.cards;
-        player.cards = [];
+        const playerCards = player.getCards();
+        player.setCards([]);
 
         this.deck.add(playerCards);
         this.deck.shuffle();
 
-        player.cards = this.deck.take(5);
+        const newCards = this.deck.take(5);
+        player.setCards(newCards);
 
-        connection.sendPacket(OutgoingPacketOpcodes.CARDS_UPDATE, player.cards);
+        player.sendCardsUpdate();
     }
 }
