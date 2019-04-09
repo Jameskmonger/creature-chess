@@ -6,8 +6,26 @@ import { Connection, IncomingPacketOpcodes, OutgoingPacketOpcodes } from "./conn
 
 export class GameHandler {
     private deck = new CardDeck();
+    private players: any[] = [];
 
     public registerConnection(connection: Connection) {
+        connection.onReceivePacket(IncomingPacketOpcodes.JOIN_GAME, (name: string, response: (joined: boolean) => void) => {
+            this.onJoinGame(connection, name, response);
+        });
+    }
+
+    private onJoinGame(connection: Connection, name: string, response: (joined: boolean) => void) {
+        if (this.players.length >= 1) {
+            // can't join game
+            response(false);
+            return;
+        }
+
+        response(true);
+        this.acceptConnection(connection, name);
+    }
+
+    private acceptConnection(connection: Connection, name: string) {
         const opponent = new Player(null);
         opponent.setCards(this.deck.take(5));
         opponent.setBoard(createRandomOpponentBoard());
@@ -35,6 +53,8 @@ export class GameHandler {
         connection.onReceivePacket(IncomingPacketOpcodes.REFRESH_CARDS, () => {
             this.onPlayerRefreshCards(player);
         });
+
+        this.players.push(player);
 
         player.sendCardsUpdate();
         player.sendBoardUpdate();

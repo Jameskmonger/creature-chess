@@ -8,6 +8,7 @@ export enum OutgoingPacketOpcodes {
 }
 
 export enum IncomingPacketOpcodes {
+    JOIN_GAME = "joinGame",
     PURCHASE_CARD = "purchaseCard",
     REFRESH_CARDS = "refreshCards"
 }
