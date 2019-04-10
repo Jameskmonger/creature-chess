@@ -4,10 +4,12 @@ import { Player } from "./player";
 
 export enum OutgoingPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
-    BOARD_UPDATE = "boardUpdate"
+    BOARD_UPDATE = "boardUpdate",
+    PLAYER_LIST_UPDATE = "playerListUpdate"
 }
 
 export enum IncomingPacketOpcodes {
+    JOIN_GAME = "joinGame",
     PURCHASE_CARD = "purchaseCard",
     REFRESH_CARDS = "refreshCards"
 }
@@ -16,13 +18,10 @@ type IncomingPacketListener = (...args: any[]) => void;
 
 export class Connection {
     private socket: Socket;
-    private packetListeners: Map<IncomingPacketOpcodes, IncomingPacketListener[]>;
     private player: Player;
 
     constructor(socket: Socket) {
         this.socket = socket;
-
-        this.packetListeners = new Map<IncomingPacketOpcodes, IncomingPacketListener[]>();
     }
 
     public setPlayer(player: Player) {
@@ -34,12 +33,7 @@ export class Connection {
     }
 
     public onReceivePacket(opcode: IncomingPacketOpcodes, listener: IncomingPacketListener) {
-        const listeners = this.packetListeners.get(opcode) || [];
-
-        this.packetListeners.set(opcode, [
-            ...listeners,
-            listener
-        ]);
+        this.socket.on(opcode, listener);
     }
 
     public sendPacket(opcode: OutgoingPacketOpcodes, ...data: any[]) {

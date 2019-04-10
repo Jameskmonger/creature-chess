@@ -5,7 +5,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import io = require("socket.io-client");
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { PokemonCard } from "@common";
+import { PokemonCard, PlayerListPlayer } from "@common";
 import { PokemonPiece, makeFriendly } from "@common/pokemon-piece";
 import { Board } from "../board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
@@ -15,6 +15,7 @@ import { AppState } from "../../store/store";
 import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { piecesUpdated } from "../../actions/pieceActions";
 import { PlayerList } from "../playerList/playerList";
+import { playerListUpdated } from "../../actions/playerListActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -28,6 +29,7 @@ interface StateProps {
 
 interface GameStageDispatchProps {
     onPiecesUpdated: (pieces: PokemonPiece[]) => void;
+    onPlayerListUpdated: (players: PlayerListPlayer[]) => void;
 }
 
 type Props = StateProps & GameStageDispatchProps;
@@ -62,6 +64,16 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
             const pieces = [...packet.friendly, ...packet.opponent];
             this.props.onPiecesUpdated(pieces);
         });
+
+        this.socket.on("playerListUpdate", (players: PlayerListPlayer[]) => {
+            this.props.onPlayerListUpdated(players);
+        });
+
+        setTimeout(() => {
+            this.socket.emit("joinGame", "James", (joined: boolean) => {
+                console.log("Joined: " + joined);
+            });
+        }, 100);
     }
 
     public render() {
@@ -75,30 +87,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
         return (
             <div className="game">
                 <div className="column">
-                    <PlayerList
-                        players={[
-                            {
-                                id: "1",
-                                name: "Owen",
-                                health: 100
-                            },
-                            {
-                                id: "3",
-                                name: "James",
-                                health: 65
-                            },
-                            {
-                                id: "4",
-                                name: "Tom",
-                                health: 83
-                            },
-                            {
-                                id: "2",
-                                name: "Henry",
-                                health: 22
-                            }
-                        ]}
-                    />
+                    <PlayerList />
 
                     <CardSelector cards={cards} onShuffle={this.onShuffle} />
                 </div>
@@ -138,7 +127,8 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 });
 
 const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({
-    onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces))
+    onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces)),
+    onPlayerListUpdated: (players: PlayerListPlayer[]) => dispatch(playerListUpdated(players))
 });
 
 const GameStage = compose(

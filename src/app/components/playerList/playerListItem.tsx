@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Player } from "@common";
+import { PlayerListPlayer } from "@common";
 import { ProgressBar } from "../progressBar";
 
-const PlayerListItem: React.FunctionComponent<{ player: Player }> = props => {
+const PlayerListItem: React.FunctionComponent<{ player: PlayerListPlayer }> = props => {
     return (
         <div className="player-list-item">
             <span className="name">{props.player.name}</span>
