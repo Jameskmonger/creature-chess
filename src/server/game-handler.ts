@@ -25,6 +25,8 @@ export class GameHandler {
     }
 
     private acceptConnection(connection: Connection, name: string) {
+        console.log(`${name} has joined the game`);
+
         const opponent = new Player(null, "Opponent");
         opponent.setCards(this.deck.take(5));
         opponent.setBoard(createRandomOpponentBoard());

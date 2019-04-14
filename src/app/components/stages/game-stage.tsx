@@ -44,8 +44,6 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
         cards: []
     };
 
-    private socket = io("http://localhost:3000");
-
     public componentDidMount() {
         const benchPieces: PokemonPiece[] = [
             makeFriendly(9, [8, 2]),
@@ -55,6 +53,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
 
         this.setState({ benchPieces });
 
+        /*
         this.socket.on("cardsUpdate", (cards: PokemonCard[]) => {
             this.setState({ cards });
         });
@@ -67,6 +66,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
         this.socket.on("playerListUpdate", (players: PlayerListPlayer[]) => {
             this.props.onPlayerListUpdated(players);
         });
+        */
     }
 
     public render() {
@@ -99,7 +99,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
     }
 
     private onShuffle = () => {
-        this.socket.emit("refreshCards");
+        //this.socket.emit("refreshCards");
     }
 
     private startRound = async () => {
