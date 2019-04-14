@@ -2,30 +2,31 @@ import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
 import { makeEnemy, makeFriendly } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
-import { Connection, IncomingPacketOpcodes, OutgoingPacketOpcodes } from "./connection";
+import { Connection } from "./connection";
+import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
 
 export class GameHandler {
     private deck = new CardDeck();
     private players: any[] = [];
 
     public registerConnection(connection: Connection) {
-        connection.onReceivePacket(IncomingPacketOpcodes.JOIN_GAME, (name: string, response: (joined: boolean) => void) => {
-            this.onJoinGame(connection, name, response);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, (name: string) => {
+            this.onJoinGame(connection, name);
         });
     }
 
-    private onJoinGame(connection: Connection, name: string, response: (joined: boolean) => void) {
+    private onJoinGame(connection: Connection, name: string) {
         if (this.players.length >= 1) {
             // can't join game
-            response(false);
             return;
         }
 
-        response(true);
         this.acceptConnection(connection, name);
     }
 
     private acceptConnection(connection: Connection, name: string) {
+        console.log(`${name} has joined the game`);
+
         const opponent = new Player(null, "Opponent");
         opponent.setCards(this.deck.take(5));
         opponent.setBoard(createRandomOpponentBoard());
@@ -40,23 +41,24 @@ export class GameHandler {
             makeFriendly(67, [3, 4]),
             makeFriendly(89, [5, 4]),
 
-            makeFriendly(9, [8, 2], true),
-            makeFriendly(70, [8, 5], true),
-            makeFriendly(67, [8, 6], true)
+            makeFriendly(9, [2, 8], true),
+            makeFriendly(70, [5, 8], true),
+            makeFriendly(67, [6, 8], true)
         ]);
         player.setOpponent(opponent);
 
-        connection.onReceivePacket(IncomingPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
+        connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             this.onPlayerPurchaseCard(player, cardIndex);
         });
 
-        connection.onReceivePacket(IncomingPacketOpcodes.REFRESH_CARDS, () => {
+        connection.onReceivePacket(ClientToServerPacketOpcodes.REFRESH_CARDS, () => {
             this.onPlayerRefreshCards(player);
         });
 
         this.players.push(opponent);
         this.players.push(player);
 
+        player.sendJoinedGame();
         player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();

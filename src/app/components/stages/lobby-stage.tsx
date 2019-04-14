@@ -1,16 +1,17 @@
 import * as React from "react";
-import { connect, MapDispatchToProps } from "react-redux";
-import { joinGame } from "../../actions/lobbyActions";
+import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import { joinGameAction } from "../../actions/lobbyActions";
+import { AppState } from "../../store/store";
 
 interface DispatchProps {
     onJoinGame: (name: string) => void;
 }
 
 interface LobbyStageProps {
-    name: string;
+    loading: boolean;
 }
 
-type Props = DispatchProps;
+type Props = LobbyStageProps & DispatchProps;
 
 class LobbyStageUnconnected extends React.Component<Props> {
     public state = {
@@ -18,6 +19,18 @@ class LobbyStageUnconnected extends React.Component<Props> {
     };
 
     public render() {
+        if (this.props.loading) {
+            return (
+                <div className="lobby">
+                    <div className="join-game">
+                        <h2 className="title">Pokemon Auto Chess</h2>
+
+                        <p>Loading game...</p>
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className="lobby">
                 <div className="join-game">
@@ -46,11 +59,15 @@ class LobbyStageUnconnected extends React.Component<Props> {
     }
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onJoinGame: (name: string) => dispatch(joinGame(name))
+const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state => ({
+    loading: state.lobby.loading
 });
 
-const LobbyStage = connect(null, mapDispatchToProps)(LobbyStageUnconnected);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+    onJoinGame: (name: string) => dispatch(joinGameAction(name))
+});
+
+const LobbyStage = connect(mapStateToProps, mapDispatchToProps)(LobbyStageUnconnected);
 
 export {
     LobbyStage

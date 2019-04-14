@@ -3,10 +3,9 @@ import { compose } from "recompose";
 import delay from "delay";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import io = require("socket.io-client");
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { PokemonCard, PlayerListPlayer } from "@common";
-import { PokemonPiece, makeFriendly } from "@common/pokemon-piece";
+import { PokemonCard } from "@common";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { Board } from "../board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { Bench } from "../bench/bench";
@@ -15,7 +14,8 @@ import { AppState } from "../../store/store";
 import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { piecesUpdated } from "../../actions/pieceActions";
 import { PlayerList } from "../playerList/playerList";
-import { playerListUpdated } from "../../actions/playerListActions";
+import { ClientToServerPacketOpcodes } from "../../../shared/packet-opcodes";
+import { sendPacket } from "../../actions/networkActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -25,63 +25,21 @@ const boardSize = 8;
 
 interface StateProps {
     pieces: PokemonPiece[];
+    cards: PokemonCard[];
 }
 
 interface GameStageDispatchProps {
     onPiecesUpdated: (pieces: PokemonPiece[]) => void;
-    onPlayerListUpdated: (players: PlayerListPlayer[]) => void;
+    onShuffle: () => void;
 }
 
 type Props = StateProps & GameStageDispatchProps;
 
-interface GameStageState {
-    benchPieces: PokemonPiece[];
-    cards: PokemonCard[];
-}
-
-class GameStageUnconnected extends React.Component<Props, GameStageState> {
-    public state: GameStageState = {
-        benchPieces: [],
-        cards: []
-    };
-
-    private socket = io("http://localhost:3000");
-
-    public componentDidMount() {
-        const benchPieces: PokemonPiece[] = [
-            makeFriendly(9, [8, 2]),
-            makeFriendly(70, [8, 5]),
-            makeFriendly(67, [8, 6])
-        ];
-
-        this.setState({ benchPieces });
-
-        this.socket.on("cardsUpdate", (cards: PokemonCard[]) => {
-            this.setState({ cards });
-        });
-
-        this.socket.on("boardUpdate", (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {
-            const pieces = [...packet.friendly, ...packet.opponent];
-            this.props.onPiecesUpdated(pieces);
-        });
-
-        this.socket.on("playerListUpdate", (players: PlayerListPlayer[]) => {
-            this.props.onPlayerListUpdated(players);
-        });
-
-        setTimeout(() => {
-            this.socket.emit("joinGame", "James", (joined: boolean) => {
-                console.log("Joined: " + joined);
-            });
-        }, 100);
-    }
-
+class GameStageUnconnected extends React.Component<Props> {
     public render() {
-        const { benchPieces, cards } = this.state;
-
         const boardContainerStyle = {
             height: window.innerHeight + "px",
-            width: ((window.innerHeight / 9) * 8) + "px"
+            width: ((window.innerHeight / (boardSize + 1)) * boardSize) + "px"
         };
 
         return (
@@ -89,12 +47,12 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
                 <div className="column">
                     <PlayerList />
 
-                    <CardSelector cards={cards} onShuffle={this.onShuffle} />
+                    <CardSelector cards={this.props.cards} onShuffle={this.props.onShuffle} />
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
                         <Board boardSize={boardSize} />
-                        <Bench boardSize={boardSize} pieces={benchPieces} />
+                        <Bench boardSize={boardSize} />
                     </div>
                 </div>
                 <div className="column">
@@ -103,10 +61,6 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
                 </div>
             </div>
         );
-    }
-
-    private onShuffle = () => {
-        this.socket.emit("refreshCards");
     }
 
     private startRound = async () => {
@@ -123,12 +77,13 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
-    pieces: state.pieces
+    pieces: state.pieces,
+    cards: state.cards
 });
 
 const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({
     onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces)),
-    onPlayerListUpdated: (players: PlayerListPlayer[]) => dispatch(playerListUpdated(players))
+    onShuffle: () => dispatch(sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS))
 });
 
 const GameStage = compose(

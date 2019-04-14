@@ -1,18 +1,6 @@
-import { EventEmitter } from "events";
 import { Socket } from "socket.io";
 import { Player } from "./player";
-
-export enum OutgoingPacketOpcodes {
-    CARDS_UPDATE = "cardsUpdate",
-    BOARD_UPDATE = "boardUpdate",
-    PLAYER_LIST_UPDATE = "playerListUpdate"
-}
-
-export enum IncomingPacketOpcodes {
-    JOIN_GAME = "joinGame",
-    PURCHASE_CARD = "purchaseCard",
-    REFRESH_CARDS = "refreshCards"
-}
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
 
 type IncomingPacketListener = (...args: any[]) => void;
 
@@ -32,11 +20,11 @@ export class Connection {
         return this.player;
     }
 
-    public onReceivePacket(opcode: IncomingPacketOpcodes, listener: IncomingPacketListener) {
+    public onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {
         this.socket.on(opcode, listener);
     }
 
-    public sendPacket(opcode: OutgoingPacketOpcodes, ...data: any[]) {
+    public sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
         this.socket.emit(opcode, ...data);
     }
 }

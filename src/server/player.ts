@@ -1,6 +1,7 @@
 import { PokemonCard, PlayerListPlayer } from "@common";
 import { PokemonPiece } from "../shared/pokemon-piece";
-import { Connection, OutgoingPacketOpcodes } from "./connection";
+import { Connection } from "./connection";
+import { ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
 
 export class Player {
     public readonly id: string;
@@ -40,12 +41,16 @@ export class Player {
         this.opponent = opponent;
     }
 
+    public sendJoinedGame() {
+        this.sendPacket(ServerToClientPacketOpcodes.JOINED_GAME);
+    }
+
     public sendCardsUpdate() {
-        this.sendPacket(OutgoingPacketOpcodes.CARDS_UPDATE, this.cards);
+        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards);
     }
 
     public sendBoardUpdate() {
-        this.sendPacket(OutgoingPacketOpcodes.BOARD_UPDATE, {
+        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, {
             friendly: this.board,
             opponent: this.opponent.board
         });
@@ -60,10 +65,10 @@ export class Player {
             };
         });
 
-        this.sendPacket(OutgoingPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
+        this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
     }
 
-    private sendPacket(opcode: OutgoingPacketOpcodes, ...data: any[]) {
+    private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
         this.connection.sendPacket(opcode, ...data);
     }
 }

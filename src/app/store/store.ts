@@ -1,11 +1,14 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { reducers } from "../reducers";
 import { PokemonCard, PlayerListPlayer } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PokemonPiece } from "@common/pokemon-piece";
+import createSagaMiddleware from "redux-saga";
+import { rootSaga } from "../sagas";
 
 export interface LobbyState {
     inLobby: boolean;
+    loading: boolean;
 }
 
 export interface AppState {
@@ -13,11 +16,21 @@ export interface AppState {
     pieces: PokemonPiece[];
     lobby: LobbyState;
     playerList: PlayerListPlayer[];
+    cards: PokemonCard[];
 }
 
-export const store = createStore<AppState, any, void, void>(
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(
     combineReducers<AppState>({
         ...reducers,
     }),
-    composeWithDevTools<any, any>()
+    compose(
+        applyMiddleware(sagaMiddleware),
+        composeWithDevTools<any, any>()
+    )
 );
+
+sagaMiddleware.run(rootSaga);
+
+export { store };
