@@ -3,7 +3,6 @@ import { compose } from "recompose";
 import delay from "delay";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import io = require("socket.io-client");
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { PokemonCard } from "@common";
 import { PokemonPiece, makeFriendly } from "@common/pokemon-piece";
