@@ -3,6 +3,7 @@ import { all, fork, take, call, put } from "@redux-saga/core/effects";
 import { joinGameAction, joinCompleteAction } from "../actions/lobbyActions";
 import { eventChannel } from "redux-saga";
 import { sendPacket } from "../actions/networkActions";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../shared/packet-opcodes";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -16,7 +17,7 @@ const getSocket = () => {
 
 const subscribe = (socket: SocketIOClient.Socket) => {
     return eventChannel(emit => {
-        socket.on("joinedGame", () => {
+        socket.on(ServerToClientPacketOpcodes.JOINED_GAME, () => {
             console.log("received joined game");
             emit(joinCompleteAction());
         });
@@ -51,7 +52,7 @@ const flow = function*() {
         const { payload } = yield take(joinGameAction);
         const socket = yield call(getSocket);
         console.log("joining with " + payload.name);
-        socket.emit("joinGame", { username: payload.name });
+        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, { username: payload.name });
 
         yield fork(handleIO, socket);
     }

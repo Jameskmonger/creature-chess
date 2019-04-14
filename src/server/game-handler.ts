@@ -2,14 +2,15 @@ import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
 import { makeEnemy, makeFriendly } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
-import { Connection, IncomingPacketOpcodes, OutgoingPacketOpcodes } from "./connection";
+import { Connection } from "./connection";
+import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
 
 export class GameHandler {
     private deck = new CardDeck();
     private players: any[] = [];
 
     public registerConnection(connection: Connection) {
-        connection.onReceivePacket(IncomingPacketOpcodes.JOIN_GAME, (name: string, response: (joined: boolean) => void) => {
+        connection.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, (name: string, response: (joined: boolean) => void) => {
             this.onJoinGame(connection, name, response);
         });
     }
@@ -46,11 +47,11 @@ export class GameHandler {
         ]);
         player.setOpponent(opponent);
 
-        connection.onReceivePacket(IncomingPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
+        connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             this.onPlayerPurchaseCard(player, cardIndex);
         });
 
-        connection.onReceivePacket(IncomingPacketOpcodes.REFRESH_CARDS, () => {
+        connection.onReceivePacket(ClientToServerPacketOpcodes.REFRESH_CARDS, () => {
             this.onPlayerRefreshCards(player);
         });
 
