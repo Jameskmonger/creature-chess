@@ -67,12 +67,6 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
         this.socket.on("playerListUpdate", (players: PlayerListPlayer[]) => {
             this.props.onPlayerListUpdated(players);
         });
-
-        setTimeout(() => {
-            this.socket.emit("joinGame", "James", (joined: boolean) => {
-                console.log("Joined: " + joined);
-            });
-        }, 100);
     }
 
     public render() {

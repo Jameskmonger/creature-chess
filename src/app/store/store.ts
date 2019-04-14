@@ -8,6 +8,7 @@ import { rootSaga } from "../sagas";
 
 export interface LobbyState {
     inLobby: boolean;
+    loading: boolean;
 }
 
 export interface AppState {
