@@ -6,8 +6,9 @@ import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
 import { JOIN_GAME } from "../actiontypes/lobbyActionTypes";
 import { piecesUpdated } from "../actions/pieceActions";
-import { PlayerListPlayer, PokemonPiece } from "../../shared";
+import { PlayerListPlayer, PokemonPiece, PokemonCard } from "../../shared";
 import { playerListUpdated } from "../actions/playerListActions";
+import { cardsUpdated } from "../actions/cardActions";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -32,6 +33,10 @@ const subscribe = (socket: SocketIOClient.Socket) => {
 
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {
             emit(playerListUpdated(players));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: PokemonCard[]) => {
+            emit(cardsUpdated(cards));
         });
 
         // tslint:disable-next-line:no-empty

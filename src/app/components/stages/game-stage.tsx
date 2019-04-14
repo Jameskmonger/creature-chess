@@ -4,8 +4,8 @@ import delay from "delay";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { PokemonCard, PlayerListPlayer } from "@common";
-import { PokemonPiece, makeFriendly } from "@common/pokemon-piece";
+import { PokemonCard } from "@common";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { Board } from "../board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { Bench } from "../bench/bench";
@@ -25,6 +25,7 @@ const boardSize = 8;
 
 interface StateProps {
     pieces: PokemonPiece[];
+    cards: PokemonCard[];
 }
 
 interface GameStageDispatchProps {
@@ -34,26 +35,8 @@ interface GameStageDispatchProps {
 
 type Props = StateProps & GameStageDispatchProps;
 
-interface GameStageState {
-    cards: PokemonCard[];
-}
-
-class GameStageUnconnected extends React.Component<Props, GameStageState> {
-    public state: GameStageState = {
-        cards: []
-    };
-
-    public componentDidMount() {
-        /*
-        this.socket.on("cardsUpdate", (cards: PokemonCard[]) => {
-            this.setState({ cards });
-        });
-        */
-    }
-
+class GameStageUnconnected extends React.Component<Props> {
     public render() {
-        const { cards } = this.state;
-
         const boardContainerStyle = {
             height: window.innerHeight + "px",
             width: ((window.innerHeight / (boardSize + 1)) * boardSize) + "px"
@@ -64,7 +47,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
                 <div className="column">
                     <PlayerList />
 
-                    <CardSelector cards={cards} onShuffle={this.onShuffle} />
+                    <CardSelector cards={this.props.cards} onShuffle={this.onShuffle} />
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
@@ -98,7 +81,8 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
-    pieces: state.pieces
+    pieces: state.pieces,
+    cards: state.cards
 });
 
 const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({

@@ -16,6 +16,7 @@ export interface AppState {
     pieces: PokemonPiece[];
     lobby: LobbyState;
     playerList: PlayerListPlayer[];
+    cards: PokemonCard[];
 }
 
 const sagaMiddleware = createSagaMiddleware();
