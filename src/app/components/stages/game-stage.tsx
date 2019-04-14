@@ -35,25 +35,15 @@ interface GameStageDispatchProps {
 type Props = StateProps & GameStageDispatchProps;
 
 interface GameStageState {
-    benchPieces: PokemonPiece[];
     cards: PokemonCard[];
 }
 
 class GameStageUnconnected extends React.Component<Props, GameStageState> {
     public state: GameStageState = {
-        benchPieces: [],
         cards: []
     };
 
     public componentDidMount() {
-        const benchPieces: PokemonPiece[] = [
-            makeFriendly(9, [8, 2]),
-            makeFriendly(70, [8, 5]),
-            makeFriendly(67, [8, 6])
-        ];
-
-        this.setState({ benchPieces });
-
         /*
         this.socket.on("cardsUpdate", (cards: PokemonCard[]) => {
             this.setState({ cards });
@@ -62,11 +52,11 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
     }
 
     public render() {
-        const { benchPieces, cards } = this.state;
+        const { cards } = this.state;
 
         const boardContainerStyle = {
             height: window.innerHeight + "px",
-            width: ((window.innerHeight / 9) * 8) + "px"
+            width: ((window.innerHeight / (boardSize + 1)) * boardSize) + "px"
         };
 
         return (
@@ -79,7 +69,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
                         <Board boardSize={boardSize} />
-                        <Bench boardSize={boardSize} pieces={benchPieces} />
+                        <Bench boardSize={boardSize} />
                     </div>
                 </div>
                 <div className="column">
