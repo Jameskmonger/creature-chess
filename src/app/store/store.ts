@@ -18,7 +18,7 @@ export interface AppState {
 
 const sagaMiddleware = createSagaMiddleware();
 
-export const store = createStore(
+const store = createStore(
     combineReducers<AppState>({
         ...reducers,
     }),
@@ -29,3 +29,5 @@ export const store = createStore(
 );
 
 sagaMiddleware.run(rootSaga);
+
+export { sagaMiddleware };
