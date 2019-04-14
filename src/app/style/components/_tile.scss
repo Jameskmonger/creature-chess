@@ -1,7 +1,7 @@
 .tile {
     display: inline-block;
-    width: $tile-size;
-    height: $tile-size;
+    width: percentage(1 / 8);
+    height: 100%;
     user-select: none;
 
     &.dark {

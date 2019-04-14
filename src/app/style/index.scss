@@ -2,7 +2,9 @@
 @import "globals/variables";
 @import "globals/colors";
 
+@import "components/app";
 @import "components/game";
+@import "components/lobby";
 @import "components/card";
 @import "components/card-selector";
 @import "components/chessboard";
@@ -13,3 +15,4 @@
 @import "components/healthbar";
 @import "components/cooldownbar";
 @import "components/info";
+@import "components/player-list";

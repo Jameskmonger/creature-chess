@@ -1,0 +1,20 @@
+.lobby {
+    display: flex;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+
+    align-items: center;
+    justify-content: center;
+
+    .title {
+        margin-bottom: 0.5em;
+        font-size: 2em;
+        text-align: center;
+    }
+
+    .name-input,
+    .join-button {
+        font-size: 1.4em;
+    }
+}

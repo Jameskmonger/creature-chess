@@ -8,7 +8,7 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
     const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
 
     updatedPieces.forEach((attacker, index) => {
-        if (attacker.currentHealth === 0) {
+        if (attacker.benched || attacker.currentHealth === 0) {
             return;
         }
 
@@ -22,7 +22,7 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
         const defender = getAttackableEnemy(attacker, updatedPieces);
 
         if (!defender) {
-            const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => p.currentHealth > 0));
+            const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => !p.benched && p.currentHealth > 0));
 
             if (newPosition !== null) {
                 attacker.moving = { direction: getRelativeDirection(attacker.position, newPosition) };

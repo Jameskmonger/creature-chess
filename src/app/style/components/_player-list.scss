@@ -1,0 +1,27 @@
+.player-list {
+    margin-bottom: 1rem;
+}
+
+.player-list-item {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.6rem;
+    background: $player-list-background;
+
+    &:not(:last-child) {
+        margin-bottom: 0.8rem;
+    }
+
+    .name {
+        font-family: Arial, sans-serif;
+        font-weight: 700;
+        color: $player-list-name;
+        text-transform: uppercase;
+    }
+
+    .healthbar {
+        display: block;
+        width: 100%;
+        margin-top: 0.4em;
+    }
+}

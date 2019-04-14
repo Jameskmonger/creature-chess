@@ -1,14 +1,15 @@
 import { PokemonPiece } from "./pokemon-piece";
 import { getNextPiecePosition } from "./pathfinding";
+import { TileCoordinates } from "./position";
 
 const getLivingEnemies = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
-    return pieces.filter(other => other.friendly !== piece.friendly && other.currentHealth > 0);
+    return pieces.filter(other => other.friendly !== piece.friendly && other.currentHealth > 0 && !other.benched);
 };
 
 const getDelta = (a: PokemonPiece, b: PokemonPiece) => {
     return {
-        x: Math.abs(a.position[0] - b.position[0]),
-        y: Math.abs(a.position[1] - b.position[1])
+        x: Math.abs(a.position.x - b.position.x),
+        y: Math.abs(a.position.y - b.position.y)
     };
 };
 
@@ -41,7 +42,7 @@ const getTargetPiece = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
     return enemyDeltas[0].enemy;
 };
 
-export const getNewPiecePosition = (piece: PokemonPiece, pieces: PokemonPiece[]): [ number, number ] => {
+export const getNewPiecePosition = (piece: PokemonPiece, pieces: PokemonPiece[]): TileCoordinates => {
     const target = getTargetPiece(piece, pieces);
 
     if (target === null) {

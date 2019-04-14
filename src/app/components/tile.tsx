@@ -3,16 +3,17 @@ import { compose } from "recompose";
 import { ConnectDropTarget, DropTarget, DropTargetConnector, DropTargetMonitor, DropTargetSpec } from "react-dnd";
 import { MapDispatchToProps, connect, MapStateToProps } from "react-redux";
 
-import { PokemonPiece, PiecePosition } from "@common/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { Piece } from "./piece";
 import { pieceMoved } from "../actions/pieceActions";
 import { AppState } from "../store/store";
 import { pieceSelector } from "../selectors/pieceSelectors";
+import { TileCoordinates } from "@common/position";
 
 interface TileOwnProps {
     dark: boolean;
     friendly: boolean;
-    position: PiecePosition;
+    position: TileCoordinates;
 }
 
 interface TileStateProps {

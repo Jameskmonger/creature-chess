@@ -1,4 +1,4 @@
-import { PokemonPiece, isSamePiece } from "@common/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { PiecesAction } from "../actions/pieceActions";
 import { PIECE_SELECTED, PIECE_MOVED, PIECES_UPDATED } from "../actiontypes/pieceActionTypes";
 import { Reducer } from "react";
