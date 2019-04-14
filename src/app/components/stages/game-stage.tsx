@@ -14,7 +14,8 @@ import { AppState } from "../../store/store";
 import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { piecesUpdated } from "../../actions/pieceActions";
 import { PlayerList } from "../playerList/playerList";
-import { playerListUpdated } from "../../actions/playerListActions";
+import { ClientToServerPacketOpcodes } from "../../../shared/packet-opcodes";
+import { sendPacket } from "../../actions/networkActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
@@ -28,7 +29,7 @@ interface StateProps {
 
 interface GameStageDispatchProps {
     onPiecesUpdated: (pieces: PokemonPiece[]) => void;
-    onPlayerListUpdated: (players: PlayerListPlayer[]) => void;
+    sendPacket: (opcode: ClientToServerPacketOpcodes, data?: any) => void;
 }
 
 type Props = StateProps & GameStageDispatchProps;
@@ -56,15 +57,6 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
         /*
         this.socket.on("cardsUpdate", (cards: PokemonCard[]) => {
             this.setState({ cards });
-        });
-
-        this.socket.on("boardUpdate", (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {
-            const pieces = [...packet.friendly, ...packet.opponent];
-            this.props.onPiecesUpdated(pieces);
-        });
-
-        this.socket.on("playerListUpdate", (players: PlayerListPlayer[]) => {
-            this.props.onPlayerListUpdated(players);
         });
         */
     }
@@ -99,7 +91,7 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
     }
 
     private onShuffle = () => {
-        //this.socket.emit("refreshCards");
+        this.props.sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS);
     }
 
     private startRound = async () => {
@@ -115,20 +107,13 @@ class GameStageUnconnected extends React.Component<Props, GameStageState> {
     }
 }
 
-export const joinGame = () => {
-    const socket = io("http://localhost:3000");
-    socket.emit("joinGame", "Player", (joined: boolean) => {
-        // do stuff
-    });
-};
-
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
     pieces: state.pieces
 });
 
 const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({
     onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces)),
-    onPlayerListUpdated: (players: PlayerListPlayer[]) => dispatch(playerListUpdated(players))
+    sendPacket: (opcode: ClientToServerPacketOpcodes, data?: any) => dispatch(sendPacket(opcode, data))
 });
 
 const GameStage = compose(

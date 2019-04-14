@@ -5,6 +5,9 @@ import { eventChannel } from "redux-saga";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../shared/packet-opcodes";
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
 import { JOIN_GAME } from "../actiontypes/lobbyActionTypes";
+import { piecesUpdated } from "../actions/pieceActions";
+import { PlayerListPlayer, PokemonPiece } from "../../shared";
+import { playerListUpdated } from "../actions/playerListActions";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -20,6 +23,15 @@ const subscribe = (socket: SocketIOClient.Socket) => {
     return eventChannel(emit => {
         socket.on(ServerToClientPacketOpcodes.JOINED_GAME, () => {
             emit(joinCompleteAction());
+        });
+
+        socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {
+            const pieces = [...packet.friendly, ...packet.opponent];
+            emit(piecesUpdated(pieces));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {
+            emit(playerListUpdated(players));
         });
 
         // tslint:disable-next-line:no-empty
