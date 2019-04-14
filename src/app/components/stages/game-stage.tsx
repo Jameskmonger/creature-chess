@@ -30,7 +30,7 @@ interface StateProps {
 
 interface GameStageDispatchProps {
     onPiecesUpdated: (pieces: PokemonPiece[]) => void;
-    sendPacket: (opcode: ClientToServerPacketOpcodes, data?: any) => void;
+    onShuffle: () => void;
 }
 
 type Props = StateProps & GameStageDispatchProps;
@@ -47,7 +47,7 @@ class GameStageUnconnected extends React.Component<Props> {
                 <div className="column">
                     <PlayerList />
 
-                    <CardSelector cards={this.props.cards} onShuffle={this.onShuffle} />
+                    <CardSelector cards={this.props.cards} onShuffle={this.props.onShuffle} />
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
@@ -61,10 +61,6 @@ class GameStageUnconnected extends React.Component<Props> {
                 </div>
             </div>
         );
-    }
-
-    private onShuffle = () => {
-        this.props.sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS);
     }
 
     private startRound = async () => {
@@ -87,7 +83,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 
 const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({
     onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces)),
-    sendPacket: (opcode: ClientToServerPacketOpcodes, data?: any) => dispatch(sendPacket(opcode, data))
+    onShuffle: () => dispatch(sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS))
 });
 
 const GameStage = compose(
