@@ -8,24 +8,18 @@ const piecesSelector = (state: AppState) => state.pieces;
 const positionSelector = (state: AppState, props: { position: TileCoordinates }) => props.position;
 const piecePositionFilter = (position: TileCoordinates) => (p: PokemonPiece): boolean => p.position.x === position.x && p.position.y === position.y;
 
-const benchedPiecesSelector = createSelector(
-    piecesSelector,
-    (pieces) => pieces.filter(p => p.benched)
-);
-
-const unBenchedPiecesSelector = createSelector(
+const unbenchedPiecesSelector = createSelector(
     piecesSelector,
     (pieces) => pieces.filter(p => !p.benched)
 );
 
-export const pieceSelector = createSelector(
-    unBenchedPiecesSelector,
-    positionSelector,
-    (pieces, position) => pieces.filter(piecePositionFilter(position))
+export const benchedPiecesSelector = createSelector(
+    piecesSelector,
+    (pieces) => pieces.filter(p => p.benched)
 );
 
-export const benchedPieceSelector = createSelector(
-    benchedPiecesSelector,
+export const pieceSelector = createSelector(
+    unbenchedPiecesSelector,
     positionSelector,
     (pieces, position) => pieces.filter(piecePositionFilter(position))
 );

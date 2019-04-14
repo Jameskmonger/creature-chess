@@ -3,6 +3,7 @@ import { PokemonPiece } from "@common/pokemon-piece";
 import { BenchTile } from "./benchTile";
 import { AppState } from "../../store/store";
 import { MapStateToProps, connect } from "react-redux";
+import { benchedPiecesSelector } from "../../selectors/pieceSelectors";
 
 interface BenchOwnProps {
     boardSize: number;
@@ -35,7 +36,7 @@ const BenchUnconnected: React.FunctionComponent<BenchProps> = ({ boardSize, piec
 };
 
 const mapStateToProps: MapStateToProps<BenchStateProps, {}, AppState> = state => ({
-    pieces: state.pieces.filter(p => p.benched)
+    pieces: benchedPiecesSelector(state)
 });
 
 const Bench = connect(mapStateToProps)(BenchUnconnected);
