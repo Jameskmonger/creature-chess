@@ -41,6 +41,10 @@ export class Player {
         this.opponent = opponent;
     }
 
+    public sendJoinedGame() {
+        this.sendPacket(ServerToClientPacketOpcodes.JOINED_GAME);
+    }
+
     public sendCardsUpdate() {
         this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards);
     }

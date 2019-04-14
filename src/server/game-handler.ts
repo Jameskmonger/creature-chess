@@ -10,19 +10,17 @@ export class GameHandler {
     private players: any[] = [];
 
     public registerConnection(connection: Connection) {
-        connection.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, (name: string, response: (joined: boolean) => void) => {
-            this.onJoinGame(connection, name, response);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, (name: string) => {
+            this.onJoinGame(connection, name);
         });
     }
 
-    private onJoinGame(connection: Connection, name: string, response: (joined: boolean) => void) {
+    private onJoinGame(connection: Connection, name: string) {
         if (this.players.length >= 1) {
             // can't join game
-            response(false);
             return;
         }
 
-        response(true);
         this.acceptConnection(connection, name);
     }
 
@@ -58,6 +56,7 @@ export class GameHandler {
         this.players.push(opponent);
         this.players.push(player);
 
+        player.sendJoinedGame();
         player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();
