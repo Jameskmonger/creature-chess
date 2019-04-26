@@ -6,7 +6,7 @@ import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
 import { JOIN_GAME } from "../actiontypes/lobbyActionTypes";
 import { piecesUpdated } from "../actions/pieceActions";
-import { PlayerListPlayer, PokemonPiece, PokemonCard } from "../../shared";
+import { PlayerListPlayer, PokemonPiece, PokemonCard, GameState } from "../../shared";
 import { playerListUpdated } from "../actions/playerListActions";
 import { cardsUpdated } from "../actions/cardActions";
 
@@ -23,20 +23,28 @@ const getSocket = () => {
 const subscribe = (socket: SocketIOClient.Socket) => {
     return eventChannel(emit => {
         socket.on(ServerToClientPacketOpcodes.JOINED_GAME, () => {
+            console.log("[JOINED_GAME]");
             emit(joinCompleteAction());
         });
 
         socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {
+            console.log("[BOARD_UPDATE]", packet);
             const pieces = [...packet.friendly, ...packet.opponent];
             emit(piecesUpdated(pieces));
         });
 
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {
+            console.log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListUpdated(players));
         });
 
         socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: PokemonCard[]) => {
+            console.log("[CARDS_UPDATE]", cards);
             emit(cardsUpdated(cards));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: { state: GameState, data?: null | ({ seed: number }) }) => {
+            console.log("[STATE_UPDATE]", packet);
         });
 
         // tslint:disable-next-line:no-empty

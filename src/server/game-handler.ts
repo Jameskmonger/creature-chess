@@ -98,11 +98,13 @@ export class GameHandler {
         this.state = state;
 
         if (this.state !== GameState.PLAYING) {
+            console.log(`Entering state ${GameState[state]}`);
             this.sendStateUpdate();
             return;
         }
 
         const newSeed = this.seedProvider.refreshSeed();
+        console.log(`Entering state ${GameState[state]} (with seed ${newSeed})`);
         this.sendStateUpdate({ seed: newSeed });
     }
 
