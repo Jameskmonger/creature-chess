@@ -1,3 +1,4 @@
+import uuid = require("uuid/v4");
 import { PokemonCard, PlayerListPlayer } from "@common";
 import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
@@ -13,7 +14,7 @@ export class Player {
 
     constructor(connection: Connection, name: string) {
         this.connection = connection;
-        this.id = Math.random().toString(36).replace(/[^a-z]+/g, "");
+        this.id = uuid();
         this.name = name;
 
         if (connection !== null) {
@@ -42,7 +43,7 @@ export class Player {
     }
 
     public sendJoinedGame() {
-        this.sendPacket(ServerToClientPacketOpcodes.JOINED_GAME);
+        this.sendPacket(ServerToClientPacketOpcodes.JOINED_GAME, this.id);
     }
 
     public sendCardsUpdate() {

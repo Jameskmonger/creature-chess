@@ -3,3 +3,4 @@ export { GameState } from "./game-state";
 export { Player } from "./player";
 export { PlayerListPlayer } from "./player-list-player";
 export { PokemonPiece } from "./pokemon-piece";
+export { getTotalHealthByTeam } from "./get-total-health-by-team";

@@ -37,12 +37,12 @@ export class FightingTurnSimulatorTests {
     }
 
     private getAttacker = (): PokemonPiece => ({
-        id: 1,
+        id: "43bfaeb0-931d-460b-b0ef-32e209f55821",
+        ownerId: "c73363e4-1747-4d9e-9a06-3028fc44b38c",
         pokemonId: 11,
         coolDown: 0,
         currentHealth: 50,
         facingAway: true,
-        friendly: true,
         maxHealth: 100,
         position: { x: 0, y: 1 },
         attacking: null,
@@ -53,12 +53,12 @@ export class FightingTurnSimulatorTests {
     })
 
     private getDefender = (): PokemonPiece => ({
-        id: 2,
+        id: "c5dad43c-4529-441e-84dc-e00c3db61c99",
+        ownerId: "527ef449-9150-44bb-905e-f5ae92fb69aa",
         pokemonId: 12,
         coolDown: 1000,
         currentHealth: 50,
         facingAway: true,
-        friendly: false,
         maxHealth: 100,
         position: { x: 0, y: 1 },
         attacking: null,

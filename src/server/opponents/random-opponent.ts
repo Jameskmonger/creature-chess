@@ -3,8 +3,8 @@ import { createBoard as createFireBugBoard } from "./fire-bug";
 
 const createBoardFunctions = [ createElectricNormalBoard, createFireBugBoard ];
 
-export const createRandomOpponentBoard = () => {
+export const createRandomOpponentBoard = (ownerId: string) => {
     const pointer = Math.floor(Math.random() * createBoardFunctions.length);
 
-    return createBoardFunctions[pointer]();
+    return createBoardFunctions[pointer](ownerId);
 };

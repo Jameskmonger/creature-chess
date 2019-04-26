@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameAction } from "../../actions/lobbyActions";
+import { joinGameAction } from "../../actions/gameActions";
 import { AppState } from "../../store/store";
 
 interface DispatchProps {
@@ -60,7 +60,7 @@ class LobbyStageUnconnected extends React.Component<Props> {
 }
 
 const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state => ({
-    loading: state.lobby.loading
+    loading: state.game.loading
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

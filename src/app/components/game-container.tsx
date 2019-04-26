@@ -21,7 +21,7 @@ class GameContainerUnconnected extends React.Component<Props, {}> {
 }
 
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    inLobby: state.lobby.inLobby
+    inLobby: state.game.localPlayerId === null
 });
 
 const GameContainer = connect(mapStateToProps)(GameContainerUnconnected);

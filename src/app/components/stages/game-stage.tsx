@@ -4,8 +4,7 @@ import delay from "delay";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { PokemonCard } from "@common";
-import { PokemonPiece } from "@common/pokemon-piece";
+import { PokemonCard, getTotalHealthByTeam, PokemonPiece } from "@common";
 import { Board } from "../board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { Bench } from "../bench/bench";
@@ -18,7 +17,9 @@ import { ClientToServerPacketOpcodes } from "../../../shared/packet-opcodes";
 import { sendPacket } from "../../actions/networkActions";
 
 const isATeamDefeated = (pieces: PokemonPiece[]) => {
-    return !(pieces.some(p => p.friendly && p.currentHealth > 0) && pieces.some(p => !p.friendly && p.currentHealth > 0));
+    const healthByTeam = getTotalHealthByTeam(pieces);
+
+    return healthByTeam.some(x => x.totalHealth === 0);
 };
 
 const boardSize = 8;

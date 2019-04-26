@@ -6,15 +6,15 @@ import { PokemonPiece } from "@common/pokemon-piece";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "../sagas";
 
-export interface LobbyState {
-    inLobby: boolean;
+export interface GameState {
+    localPlayerId: string;
     loading: boolean;
 }
 
 export interface AppState {
     deck: PokemonCard[];
     pieces: PokemonPiece[];
-    lobby: LobbyState;
+    game: GameState;
     playerList: PlayerListPlayer[];
     cards: PokemonCard[];
 }
