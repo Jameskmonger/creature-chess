@@ -2,7 +2,8 @@ export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
     BOARD_UPDATE = "boardUpdate",
     PLAYER_LIST_UPDATE = "playerListUpdate",
-    JOINED_GAME = "joinedGame"
+    JOINED_GAME = "joinedGame",
+    STATE_UPDATE = "stateUpdate"
 }
 
 export enum ClientToServerPacketOpcodes {

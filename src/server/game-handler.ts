@@ -4,10 +4,20 @@ import { makeEnemy, makeFriendly } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
+import { GameState } from "../shared";
+import { SeedProvider } from "./seed-provider";
+
+const MAX_PLAYER_COUNT = 2;
+const STATE_LENGTHS = {
+    [GameState.PREPARING]: 5_000,
+    [GameState.READY]: 1_000
+};
 
 export class GameHandler {
     private deck = new CardDeck();
-    private players: any[] = [];
+    private players: Player[] = [];
+    private state = GameState.WAITING;
+    private seedProvider = new SeedProvider();
 
     public registerConnection(connection: Connection) {
         connection.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, (name: string) => {
@@ -16,7 +26,7 @@ export class GameHandler {
     }
 
     private onJoinGame(connection: Connection, name: string) {
-        if (this.players.length >= 1) {
+        if (this.state !== GameState.WAITING || this.players.length === MAX_PLAYER_COUNT) {
             // can't join game
             return;
         }
@@ -62,6 +72,38 @@ export class GameHandler {
         player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();
+
+        if (this.players.length === MAX_PLAYER_COUNT) {
+            this.startGame();
+        }
+    }
+
+    private startGame() {
+        this.updateState(GameState.PREPARING);
+
+        setTimeout(() => {
+            this.updateState(GameState.READY);
+
+            setTimeout(() => {
+                this.updateState(GameState.PLAYING);
+            }, STATE_LENGTHS[GameState.READY]);
+        }, STATE_LENGTHS[GameState.PREPARING]);
+    }
+
+    private sendStateUpdate(data?: null | ({ seed: number })) {
+        this.players.forEach(p => p.sendStateUpdate(this.state, data));
+    }
+
+    private updateState(state: GameState) {
+        this.state = state;
+
+        if (this.state !== GameState.PLAYING) {
+            this.sendStateUpdate();
+            return;
+        }
+
+        const newSeed = this.seedProvider.refreshSeed();
+        this.sendStateUpdate({ seed: newSeed });
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {
