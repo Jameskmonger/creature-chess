@@ -76,6 +76,11 @@ export class Player {
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
+        // allow for bot players
+        if (this.connection === null) {
+            return;
+        }
+
         this.connection.sendPacket(opcode, ...data);
     }
 }
