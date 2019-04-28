@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getPokemonDefinition, getRequiredQuantityToEvolve } from "@common/pokemon-details";
+import { getPokemonDefinition, getRequiredQuantityToEvolve } from "@common";
 import { PokemonPiece } from "@common/pokemon-piece";
 import { SelectedPieceDetail } from "./selectedPieceDetail";
 import { PokemonImage } from "../pokemonImage";

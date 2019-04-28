@@ -1,7 +1,12 @@
 import { Expect, Test, TestFixture } from "alsatian";
 import { CardDeck } from "./cardDeck";
-import { pokemonStats } from "../shared/pokemon-stats";
 import { uniq } from "lodash";
+
+const COST_1_POKEMON = 5;
+const COST_2_POKEMON = 11;
+const COST_3_POKEMON = 7;
+const COST_4_POKEMON = 8;
+const COST_5_POKEMON = 1;
 
 @TestFixture("Card deck tests")
 export class CardDeckTests {
@@ -10,13 +15,9 @@ export class CardDeckTests {
     public DeckCreatedCorrectly() {
         const cardDeck = new CardDeck();
 
-        const cost1Cards = pokemonStats.filter(p => p.cost === 1).length * 45;
-        const cost2Cards = pokemonStats.filter(p => p.cost === 2).length * 30;
-        const cost3Cards = pokemonStats.filter(p => p.cost === 3).length * 25;
-        const cost4Cards = pokemonStats.filter(p => p.cost === 4).length * 15;
-        const cost5Cards = pokemonStats.filter(p => p.cost === 5).length * 10;
+        const totalPokemonCost = COST_1_POKEMON + COST_2_POKEMON + COST_3_POKEMON + COST_4_POKEMON + COST_5_POKEMON;
 
-        Expect(cardDeck.deck.length).toBe(cost1Cards + cost2Cards + cost3Cards + cost4Cards + cost5Cards);
+        Expect(cardDeck.deck.length).toBe(totalPokemonCost);
     }
 
     @Test("deck should have correct distinct types of pokemon")

@@ -1,6 +1,6 @@
 import { shuffle } from "lodash";
-import { pokemonStats } from "../shared/pokemon-stats";
 import { PokemonCard } from "../shared/pokemon-card";
+import { getAllDefinitions } from "../shared";
 
 export class CardDeck {
     public deck: PokemonCard[];
@@ -17,7 +17,7 @@ export class CardDeck {
         const cards: PokemonCard[] = [];
 
         for (const value of cardValues) {
-            const costPokemon = pokemonStats.filter(p => p.cost !== null && p.cost === value.cost);
+            const costPokemon = getAllDefinitions().filter(p => p.cost !== null && p.cost === value.cost);
 
             for (const pokemon of costPokemon) {
                 for (let count = 0; count < value.quantity; count++) {
