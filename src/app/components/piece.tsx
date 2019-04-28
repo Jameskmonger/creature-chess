@@ -8,6 +8,7 @@ import { ProgressBar } from "./progressBar";
 import { getAnimationCssVariables, AnimationVariables, Animation } from "./animation";
 import { PokemonImage } from "./pokemonImage";
 import { AppState } from "../store/store";
+import { localPlayerIdSelector } from "../selectors/gameSelector";
 
 const dyingAnimation = "dying";
 
@@ -149,7 +150,7 @@ const collect = (connectToDragSource: DragSourceConnector, monitor: DragSourceMo
 });
 
 const mapStateToProps: MapStateToProps<PieceStateProps, {}, AppState> = state => ({
-    localPlayerId: state.game.localPlayerId
+    localPlayerId: localPlayerIdSelector(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<PieceDispatchProps, PieceOwnProps> = (dispatch, ownProps) => ({

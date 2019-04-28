@@ -3,6 +3,7 @@ import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { GameStage } from "./stages/game-stage";
 import { AppState } from "../store/store";
 import { LobbyStage } from "./stages/lobby-stage";
+import { localPlayerIdSelector } from "../selectors/gameSelector";
 
 interface Props {
     inLobby: boolean;
@@ -21,7 +22,7 @@ class GameContainerUnconnected extends React.Component<Props, {}> {
 }
 
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    inLobby: state.game.localPlayerId === null
+    inLobby: localPlayerIdSelector(state) === null
 });
 
 const GameContainer = connect(mapStateToProps)(GameContainerUnconnected);
