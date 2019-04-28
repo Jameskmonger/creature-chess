@@ -1,5 +1,9 @@
 .info {
     position: absolute;
-    bottom: 10px;
+    bottom: 0;
     width: 100%;
+    box-sizing: border-box;
+    margin-right: auto;
+    margin-left: auto;
+    border: 2px solid $info-border-color;
 }
