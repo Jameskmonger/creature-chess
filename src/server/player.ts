@@ -1,9 +1,8 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, PlayerListPlayer, GameState } from "@common";
+import { PokemonCard, PlayerListPlayer, GameState } from "../shared";
 import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
-import { GameStateUpdate } from "../shared/game-state";
 
 export class Player {
     public readonly id: string;
@@ -70,11 +69,21 @@ export class Player {
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
     }
 
-    public sendStateUpdate(state: GameState, data?: null | GameStateUpdate) {
+    public sendStateUpdate(state: GameState, seed?: number) {
+        const data = this.getStateUpdateData(state, seed);
+
         this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, {
             state,
             data
         });
+    }
+
+    private getStateUpdateData(state: GameState, seed?: number) {
+        if (state === GameState.PLAYING) {
+            return { seed };
+        }
+
+        return undefined;
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {

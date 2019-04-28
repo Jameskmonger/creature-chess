@@ -91,8 +91,8 @@ export class GameHandler {
         }, STATE_LENGTHS[GameState.PREPARING]);
     }
 
-    private sendStateUpdate(data?: null | GameStateUpdate) {
-        this.players.forEach(p => p.sendStateUpdate(this.state, data));
+    private sendStateUpdate(seed?: number) {
+        this.players.forEach(p => p.sendStateUpdate(this.state, seed));
     }
 
     private updateState(state: GameState) {
@@ -106,7 +106,7 @@ export class GameHandler {
 
         const newSeed = this.seedProvider.refreshSeed();
         console.log(`Entering state ${GameState[state]} (with seed ${newSeed})`);
-        this.sendStateUpdate({ seed: newSeed });
+        this.sendStateUpdate(newSeed);
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {
