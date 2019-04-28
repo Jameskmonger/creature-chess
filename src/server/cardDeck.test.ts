@@ -1,28 +1,46 @@
 import { Expect, Test, TestFixture } from "alsatian";
 import { CardDeck } from "./cardDeck";
 import { uniq } from "lodash";
+import { PokemonDefinition, getAllDefinitions } from "../shared/pokemon-stats";
+import { PokemonType } from "../shared/pokemon-type";
 
-const COST_1_POKEMON = 5;
-const COST_2_POKEMON = 11;
-const COST_3_POKEMON = 7;
-const COST_4_POKEMON = 8;
-const COST_5_POKEMON = 1;
+const makeDefinition = (cost: number): PokemonDefinition => {
+    return {
+        cost,
+
+        id: 0,
+        name: "",
+        stats: {
+            hp: 0,
+            attack: 0,
+            defense: 0,
+            speed: 0,
+            specialAttack: 0,
+            specialDefense: 0,
+            type: PokemonType.Normal
+        }
+    };
+};
 
 @TestFixture("Card deck tests")
 export class CardDeckTests {
 
     @Test("deck should have correct number of cards")
     public DeckCreatedCorrectly() {
-        const cardDeck = new CardDeck();
+        const cardDeck = new CardDeck([
+            makeDefinition(1),
+            makeDefinition(2),
+            makeDefinition(3),
+            makeDefinition(4),
+            makeDefinition(5)
+        ]);
 
-        const totalPokemonCost = COST_1_POKEMON + COST_2_POKEMON + COST_3_POKEMON + COST_4_POKEMON + COST_5_POKEMON;
-
-        Expect(cardDeck.deck.length).toBe(totalPokemonCost);
+        Expect(cardDeck.deck.length).toBe(45 + 30 + 25 + 15 + 10);
     }
 
     @Test("deck should have correct distinct types of pokemon")
     public CorrectPokemonInDeck() {
-        const cardDeck = new CardDeck();
+        const cardDeck = new CardDeck(getAllDefinitions());
         const uniquePokemon = uniq(cardDeck.deck
             .map(d => d.name)
             .sort());

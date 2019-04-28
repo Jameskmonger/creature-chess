@@ -1,6 +1,6 @@
 import { PokemonType } from "./pokemon-type";
 
-interface PokemonDefinition {
+export interface PokemonDefinition {
     id: number;
     name: string;
     stats: PokemonStats;

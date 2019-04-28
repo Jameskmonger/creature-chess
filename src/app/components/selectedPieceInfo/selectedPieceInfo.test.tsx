@@ -3,7 +3,7 @@ import { TestFixture, Test, TestCase, SpyOn, Expect } from "alsatian";
 import { shallow } from "enzyme";
 import { SelectedPieceInfo } from "./selectedPieceInfo";
 import { PokemonPiece } from "@common/pokemon-piece";
-import * as PokemonDetails from "@common/pokemon-details";
+import * as Common from "@common";
 import { CombinePiecesButton } from "./combinePiecesButton";
 
 @TestFixture("SelectedPieceInfo component")
@@ -16,7 +16,7 @@ export class SelectedPieceInfoTests {
     @TestCase(53, null, false)
     @TestCase(53, undefined, false)
     public CombineDisplayedWhenAppropriate(numberOwned: number, numberRequired: number, shouldRenderCombineButton: boolean) {
-        SpyOn(PokemonDetails, "getRequiredQuantityToEvolve").andReturn(numberRequired);
+        SpyOn(Common, "getRequiredQuantityToEvolve").andReturn(numberRequired);
 
         const sut = shallow(<SelectedPieceInfo.WrappedComponent numberOwned={numberOwned} piece={testPiece} />);
 

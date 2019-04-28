@@ -4,7 +4,7 @@ import { createPokemon } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
-import { GameState } from "../shared";
+import { GameState, getAllDefinitions } from "../shared";
 import { SeedProvider } from "./seed-provider";
 
 const MAX_PLAYER_COUNT = 2;
@@ -14,7 +14,7 @@ const STATE_LENGTHS = {
 };
 
 export class GameHandler {
-    private deck = new CardDeck();
+    private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
     private state = GameState.WAITING;
     private seedProvider = new SeedProvider();
