@@ -1,11 +1,11 @@
-import { makeEnemy } from "../../shared/pokemon-piece";
+import { createPokemon } from "../../shared/pokemon-piece";
 
-export const createBoard = () => {
+export const createBoard = (ownerId: string) => {
     return [
-        makeEnemy(25, [1, 3]),
-        makeEnemy(82, [2, 3]),
-        makeEnemy(101, [3, 3]),
-        makeEnemy(125, [4, 3]),
-        makeEnemy(41, [7, 0])
+        createPokemon(ownerId, 25, [1, 3]),
+        createPokemon(ownerId, 82, [2, 3]),
+        createPokemon(ownerId, 101, [3, 3]),
+        createPokemon(ownerId, 125, [4, 3]),
+        createPokemon(ownerId, 41, [7, 0])
     ];
 };

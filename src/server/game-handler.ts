@@ -1,6 +1,6 @@
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
-import { makeEnemy, makeFriendly } from "../shared/pokemon-piece";
+import { createPokemon } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
@@ -39,21 +39,21 @@ export class GameHandler {
 
         const opponent = new Player(null, "Opponent");
         opponent.setCards(this.deck.take(5));
-        opponent.setBoard(createRandomOpponentBoard());
+        opponent.setBoard(createRandomOpponentBoard(opponent.id));
 
         const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
         player.setBoard([
-            makeFriendly(129, [1, 6]),
-            makeFriendly(129, [2, 6]),
-            makeFriendly(129, [4, 4]),
-            makeFriendly(70, [7, 6]),
-            makeFriendly(67, [3, 4]),
-            makeFriendly(89, [5, 4]),
+            createPokemon(player.id, 129, [1, 6]),
+            createPokemon(player.id, 129, [2, 6]),
+            createPokemon(player.id, 129, [4, 4]),
+            createPokemon(player.id, 70, [7, 6]),
+            createPokemon(player.id, 67, [3, 4]),
+            createPokemon(player.id, 89, [5, 4]),
 
-            makeFriendly(9, [2, 8], true),
-            makeFriendly(70, [5, 8], true),
-            makeFriendly(67, [6, 8], true)
+            createPokemon(player.id, 9, [2, 8], true),
+            createPokemon(player.id, 70, [5, 8], true),
+            createPokemon(player.id, 67, [6, 8], true)
         ]);
         player.setOpponent(opponent);
 

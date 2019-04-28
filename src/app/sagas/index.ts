@@ -1,10 +1,10 @@
 import io = require("socket.io-client");
 import { fork, take, call, put } from "@redux-saga/core/effects";
-import { joinCompleteAction } from "../actions/lobbyActions";
+import { joinCompleteAction } from "../actions/gameActions";
 import { eventChannel } from "redux-saga";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../shared/packet-opcodes";
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
-import { JOIN_GAME } from "../actiontypes/lobbyActionTypes";
+import { JOIN_GAME } from "../actiontypes/gameActionTypes";
 import { piecesUpdated } from "../actions/pieceActions";
 import { PlayerListPlayer, PokemonPiece, PokemonCard, GameState } from "../../shared";
 import { playerListUpdated } from "../actions/playerListActions";
@@ -22,9 +22,9 @@ const getSocket = () => {
 
 const subscribe = (socket: SocketIOClient.Socket) => {
     return eventChannel(emit => {
-        socket.on(ServerToClientPacketOpcodes.JOINED_GAME, () => {
+        socket.on(ServerToClientPacketOpcodes.JOINED_GAME, (id: string) => {
             console.log("[JOINED_GAME]");
-            emit(joinCompleteAction());
+            emit(joinCompleteAction(id));
         });
 
         socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {

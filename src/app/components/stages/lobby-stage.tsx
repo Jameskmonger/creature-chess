@@ -1,7 +1,8 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameAction } from "../../actions/lobbyActions";
+import { joinGameAction } from "../../actions/gameActions";
 import { AppState } from "../../store/store";
+import { loadingSelector } from "../../selectors/gameSelector";
 
 interface DispatchProps {
     onJoinGame: (name: string) => void;
@@ -60,7 +61,7 @@ class LobbyStageUnconnected extends React.Component<Props> {
 }
 
 const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state => ({
-    loading: state.lobby.loading
+    loading: loadingSelector(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

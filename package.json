@@ -58,6 +58,7 @@
 		"@types/recompose": "^0.30.5",
 		"@types/socket.io": "^2.1.2",
 		"@types/socket.io-client": "^1.4.32",
+		"@types/uuid": "^3.4.4",
 		"delay": "^4.1.0",
 		"javascript-astar": "^0.4.1",
 		"lodash": "^4.17.11",
@@ -73,6 +74,7 @@
 		"reselect": "^4.0.0",
 		"socket.io": "^2.2.0",
 		"socket.io-client": "^2.2.0",
-		"tap-bark": "^1.0.0"
+		"tap-bark": "^1.0.0",
+		"uuid": "^3.3.2"
 	}
 }
