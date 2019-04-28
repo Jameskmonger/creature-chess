@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getPokemonDefinition, getRequiredQuantityToEvolve } from "@common/pokemon-details";
+import { getPokemonDefinition, getRequiredQuantityToEvolve } from "@common";
 import { PokemonPiece } from "@common/pokemon-piece";
 import { SelectedPieceDetail } from "./selectedPieceDetail";
 import { PokemonImage } from "../pokemonImage";
@@ -32,10 +32,11 @@ const SelectedPieceInfoUnconnected: React.FunctionComponent<Props> = (props) => 
 
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => {
     const piece = state.pieces.find(p => p.selected);
+
     const numberOwned = state.pieces.filter(p => p.pokemonId === piece.pokemonId && p.ownerId === state.game.localPlayerId).length;
     return { piece, numberOwned };
 };
 
 const SelectedPieceInfo = connect(mapStateToProps)(SelectedPieceInfoUnconnected);
 
-export { SelectedPieceInfo };
+export { SelectedPieceInfoUnconnected, SelectedPieceInfo };

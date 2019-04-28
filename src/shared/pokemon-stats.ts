@@ -1,6 +1,6 @@
 import { PokemonType } from "./pokemon-type";
 
-interface PokemonDefinition {
+export interface PokemonDefinition {
     id: number;
     name: string;
     stats: PokemonStats;
@@ -17,7 +17,15 @@ export interface PokemonStats {
     type: PokemonType;
 }
 
-export const pokemonStats: PokemonDefinition[] = [
+const pokemonMap = new Map<number, PokemonDefinition>();
+
+const mapPokemon = (pokemonDefinition: PokemonDefinition[]) => {
+    pokemonDefinition.forEach(p => {
+        pokemonMap.set(p.id, p);
+    });
+};
+
+mapPokemon([
     {
         id: 1,
         name: "Bulbasaur",
@@ -2013,4 +2021,9 @@ export const pokemonStats: PokemonDefinition[] = [
             type: PokemonType.Psychic
         }
     }
-];
+]);
+
+const pokemonArray = Array.from(pokemonMap.values());
+
+export const getPokemonDefinition = (id: number) => pokemonMap.get(id);
+export const getAllDefinitions = () => pokemonArray;
