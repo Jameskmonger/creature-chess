@@ -3,6 +3,7 @@ import { PokemonCard, PlayerListPlayer, GameState } from "@common";
 import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
+import { GameStateUpdate } from "../shared/game-state";
 
 export class Player {
     public readonly id: string;
@@ -69,7 +70,7 @@ export class Player {
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
     }
 
-    public sendStateUpdate(state: GameState, data?: null | ({ seed: number })) {
+    public sendStateUpdate(state: GameState, data?: null | GameStateUpdate) {
         this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, {
             state,
             data

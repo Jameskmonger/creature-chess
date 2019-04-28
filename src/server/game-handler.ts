@@ -6,6 +6,7 @@ import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
 import { GameState, getAllDefinitions } from "../shared";
 import { SeedProvider } from "./seed-provider";
+import { GameStateUpdate } from "../shared/game-state";
 
 const MAX_PLAYER_COUNT = 2;
 const STATE_LENGTHS = {
@@ -90,7 +91,7 @@ export class GameHandler {
         }, STATE_LENGTHS[GameState.PREPARING]);
     }
 
-    private sendStateUpdate(data?: null | ({ seed: number })) {
+    private sendStateUpdate(data?: null | GameStateUpdate) {
         this.players.forEach(p => p.sendStateUpdate(this.state, data));
     }
 

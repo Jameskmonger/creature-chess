@@ -9,6 +9,7 @@ import { piecesUpdated } from "../actions/pieceActions";
 import { PlayerListPlayer, PokemonPiece, PokemonCard, GameState } from "../../shared";
 import { playerListUpdated } from "../actions/playerListActions";
 import { cardsUpdated } from "../actions/cardActions";
+import { GameStateUpdate } from "../../shared/game-state";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -43,7 +44,7 @@ const subscribe = (socket: SocketIOClient.Socket) => {
             emit(cardsUpdated(cards));
         });
 
-        socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: { state: GameState, data?: null | ({ seed: number }) }) => {
+        socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: { state: GameState, data?: null | GameStateUpdate }) => {
             console.log("[STATE_UPDATE]", packet);
         });
 
