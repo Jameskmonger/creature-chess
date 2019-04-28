@@ -5,6 +5,7 @@
 	"description": "Pokemon auto chess",
 	"main": "index.js",
 	"scripts": {
+		"build": "npm run build:server && npm run build:app",
 		"build:app": "webpack",
 		"start:app": "webpack-dev-server",
 		"build:server": "tsc -p ./tsconfig.server.json",
