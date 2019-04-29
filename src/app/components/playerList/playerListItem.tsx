@@ -2,9 +2,16 @@ import * as React from "react";
 import { PlayerListPlayer } from "@common";
 import { ProgressBar } from "../progressBar";
 
-const PlayerListItem: React.FunctionComponent<{ player: PlayerListPlayer }> = props => {
+interface Props {
+    player: PlayerListPlayer;
+    isOpponent: boolean;
+}
+
+const PlayerListItem: React.FunctionComponent<Props> = props => {
+    const className = `player-list-item ${props.isOpponent ? " opponent" : ""}`;
+
     return (
-        <div className="player-list-item">
+        <div className={className}>
             <span className="name">{props.player.name}</span>
 
             <ProgressBar

@@ -8,6 +8,10 @@
     padding: 0.6rem;
     background: $player-list-background;
 
+    &.opponent {
+        border: 5px solid $player-list-background-opponent;
+    }
+
     &:not(:last-child) {
         margin-bottom: 0.8rem;
     }

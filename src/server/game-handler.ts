@@ -56,7 +56,9 @@ export class GameHandler {
             createPokemon(player.id, 70, [5, 8], true),
             createPokemon(player.id, 67, [6, 8], true)
         ]);
+
         player.setOpponent(opponent);
+        opponent.setOpponent(player);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             this.onPlayerPurchaseCard(player, cardIndex);
