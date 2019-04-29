@@ -1,6 +1,6 @@
 import io = require("socket.io-client");
 import { fork, take, call, put } from "@redux-saga/core/effects";
-import { joinCompleteAction } from "../actions/gameActions";
+import { joinCompleteAction, gameStatePlayingAction } from "../actions/gameActions";
 import { eventChannel } from "redux-saga";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../shared/packet-opcodes";
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
@@ -9,6 +9,7 @@ import { piecesUpdated } from "../actions/pieceActions";
 import { PlayerListPlayer, PokemonPiece, PokemonCard, GameState } from "../../shared";
 import { playerListUpdated } from "../actions/playerListActions";
 import { cardsUpdated } from "../actions/cardActions";
+import { GameStateUpdate, PlayingStateUpdate } from "../../shared/game-state";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -43,8 +44,13 @@ const subscribe = (socket: SocketIOClient.Socket) => {
             emit(cardsUpdated(cards));
         });
 
-        socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: { state: GameState, data?: null | ({ seed: number }) }) => {
+        socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: { state: GameState, data?: null | GameStateUpdate }) => {
             console.log("[STATE_UPDATE]", packet);
+
+            if (packet.state === GameState.PLAYING) {
+                const opponentId = (packet.data as PlayingStateUpdate).opponentId;
+                emit(gameStatePlayingAction(opponentId));
+            }
         });
 
         // tslint:disable-next-line:no-empty

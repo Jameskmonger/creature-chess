@@ -6,6 +6,7 @@ import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
 import { GameState, getAllDefinitions } from "../shared";
 import { SeedProvider } from "./seed-provider";
+import { GameStateUpdate } from "../shared/game-state";
 
 const MAX_PLAYER_COUNT = 2;
 const STATE_LENGTHS = {
@@ -55,7 +56,9 @@ export class GameHandler {
             createPokemon(player.id, 70, [5, 8], true),
             createPokemon(player.id, 67, [6, 8], true)
         ]);
+
         player.setOpponent(opponent);
+        opponent.setOpponent(player);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             this.onPlayerPurchaseCard(player, cardIndex);
@@ -90,8 +93,8 @@ export class GameHandler {
         }, STATE_LENGTHS[GameState.PREPARING]);
     }
 
-    private sendStateUpdate(data?: null | ({ seed: number })) {
-        this.players.forEach(p => p.sendStateUpdate(this.state, data));
+    private sendStateUpdate(seed?: number) {
+        this.players.forEach(p => p.sendStateUpdate(this.state, seed));
     }
 
     private updateState(state: GameState) {
@@ -105,7 +108,7 @@ export class GameHandler {
 
         const newSeed = this.seedProvider.refreshSeed();
         console.log(`Entering state ${GameState[state]} (with seed ${newSeed})`);
-        this.sendStateUpdate({ seed: newSeed });
+        this.sendStateUpdate(newSeed);
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {

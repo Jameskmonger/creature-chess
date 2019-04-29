@@ -8,6 +8,7 @@ import { rootSaga } from "../sagas";
 
 export interface GameState {
     localPlayerId: string;
+    opponentId: string;
     loading: boolean;
 }
 
