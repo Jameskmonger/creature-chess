@@ -12,6 +12,11 @@
     border-style: solid;
     border-width: 3px;
 
+    .image {
+        width: 64px;
+        height: 64px;
+    }
+
     &:nth-child(even) {
         margin-left: 4%;
     }
