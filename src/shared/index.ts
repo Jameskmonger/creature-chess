@@ -7,3 +7,6 @@ export { getTotalHealthByTeam } from "./get-total-health-by-team";
 
 export { getPokemonDefinition, getAllDefinitions } from "./pokemon-stats";
 export { getRequiredQuantityToEvolve } from "./pokemon-details";
+
+import * as Constants from "./constants";
+export { Constants };
