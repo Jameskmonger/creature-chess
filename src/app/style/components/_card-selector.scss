@@ -4,6 +4,11 @@
         align-items: flex-start;
         flex-wrap: wrap;
         width: 100%;
+
+        .not-buyable {
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
     }
 
     .balance {

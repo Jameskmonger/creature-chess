@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PokemonCard } from "@common";
+import { PokemonCard, Constants } from "@common";
 import { take } from "lodash";
 import { Card, RerollCard } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
@@ -23,15 +23,8 @@ type Props = StateProps & DispatchProps;
 const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
     const { cards, money, onShuffle, onPurchaseCard } = props;
 
-    const onCardClick = (card: PokemonCard, index: number) => {
-        return () => {
-            // not enough money
-            if (money < card.cost) {
-                return;
-            }
-
-            onPurchaseCard(index);
-        };
+    const onCardClick = (index: number) => {
+        return () => onPurchaseCard(index);
     };
 
     const createCard = (card: PokemonCard, index: number) => (
@@ -40,7 +33,8 @@ const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
             pokemonId={card.id}
             cost={card.cost}
             name={card.name}
-            onClick={onCardClick(card, index)}
+            buyable={money >= card.cost}
+            onClick={onCardClick(index)}
         />
     );
 
@@ -50,7 +44,7 @@ const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
             <div className="cards">
                 {cards.map(createCard)}
 
-                <RerollCard onClick={onShuffle} />
+                <RerollCard onClick={onShuffle} buyable={money >= Constants.REROLL_COST} />
             </div>
         </div>
     );
