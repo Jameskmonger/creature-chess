@@ -1,3 +1,4 @@
+import delay from "delay";
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
 import { createPokemon } from "../shared/pokemon-piece";
@@ -74,16 +75,16 @@ export class GameHandler {
         }
     }
 
-    private startGame() {
+    private async startGame() {
         this.updateState(GameState.PREPARING);
 
-        setTimeout(() => {
-            this.updateState(GameState.READY);
+        await delay(Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
 
-            setTimeout(() => {
-                this.updateState(GameState.PLAYING);
-            }, Constants.STATE_LENGTHS[GameState.READY] * 1000);
-        }, Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
+        this.updateState(GameState.READY);
+
+        await delay(Constants.STATE_LENGTHS[GameState.READY] * 1000);
+
+        this.updateState(GameState.PLAYING);
     }
 
     private sendStateUpdate(seed?: number) {
