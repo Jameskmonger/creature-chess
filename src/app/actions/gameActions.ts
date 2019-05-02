@@ -3,7 +3,7 @@ import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING } from "../actiontypes/gam
 export type GameAction =
     ({ type: JOIN_GAME, payload: { name: string } })
     | ({ type: JOIN_COMPLETE, payload: { id: string } })
-    | ({ type: GAME_STATE_PLAYING, payload: { opponentId: string }});
+    | ({ type: GAME_STATE_PLAYING, payload: { opponentId: string } });
 
 export const joinGameAction = (name: string) => ({
     type: JOIN_GAME,

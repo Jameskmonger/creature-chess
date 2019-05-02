@@ -6,10 +6,11 @@ import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
 import { JOIN_GAME } from "../actiontypes/gameActionTypes";
 import { piecesUpdated } from "../actions/pieceActions";
-import { PlayerListPlayer, PokemonPiece, PokemonCard, GameState } from "../../shared";
+import { PlayerListPlayer, PokemonPiece, PokemonCard, GameState, Constants } from "../../shared";
 import { playerListUpdated } from "../actions/playerListActions";
 import { cardsUpdated } from "../actions/cardActions";
 import { GameStateUpdate, PlayingStateUpdate } from "../../shared/game-state";
+import { toast } from "react-toastify";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -19,6 +20,16 @@ const getSocket = () => {
             resolve(socket);
         });
     });
+};
+
+const getStateMessage = (state: GameState) => {
+    if (state === GameState.PLAYING) {
+        return "Playing!";
+    }
+
+    const stateLength = Constants.STATE_LENGTHS[state];
+
+    return `${GameState[state]}, ${stateLength} seconds`;
 };
 
 const subscribe = (socket: SocketIOClient.Socket) => {
@@ -51,6 +62,16 @@ const subscribe = (socket: SocketIOClient.Socket) => {
                 const opponentId = (packet.data as PlayingStateUpdate).opponentId;
                 emit(gameStatePlayingAction(opponentId));
             }
+
+            const message = getStateMessage(packet.state);
+
+            toast(message, {
+                autoClose: 2500,
+                draggable: false,
+                pauseOnHover: false,
+                pauseOnFocusLoss: false,
+                hideProgressBar: true
+            });
         });
 
         // tslint:disable-next-line:no-empty

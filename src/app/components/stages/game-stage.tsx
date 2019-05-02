@@ -4,6 +4,7 @@ import delay from "delay";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 import { PokemonCard, getTotalHealthByTeam, PokemonPiece } from "@common";
 import { Board } from "../board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
@@ -45,6 +46,8 @@ class GameStageUnconnected extends React.Component<Props> {
 
         return (
             <div className="game">
+                <ToastContainer />
+
                 <div className="column">
                     <PlayerList />
 
