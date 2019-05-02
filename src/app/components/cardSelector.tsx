@@ -14,19 +14,40 @@ interface StateProps {
 
 interface DispatchProps {
     onShuffle: () => void;
+    onPurchaseCard: (index: number) => void;
 }
 
 type Props = StateProps & DispatchProps;
 
 const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
-    const { cards, onShuffle, money } = props;
-    const topCards = take(cards, 5);
+    const { cards, money, onShuffle, onPurchaseCard } = props;
+
+    const onCardClick = (card: PokemonCard, index: number) => {
+        return () => {
+            // not enough money
+            if (money < card.cost) {
+                return;
+            }
+
+            onPurchaseCard(index);
+        };
+    };
+
+    const createCard = (card: PokemonCard, index: number) => (
+        <Card
+            key={`${index}-${card.id}`}
+            pokemonId={card.id}
+            cost={card.cost}
+            name={card.name}
+            onClick={onCardClick(card, index)}
+        />
+    );
 
     return (
         <div className="card-selector">
             <div className="balance">Balance: ${money}</div>
             <div className="cards">
-                {topCards.map((card, index) => <Card key={`${index}-${card.id}`} pokemonId={card.id} cost={card.cost} name={card.name} />)}
+                {cards.map(createCard)}
 
                 <RerollCard onClick={onShuffle} />
             </div>
@@ -40,7 +61,8 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onShuffle: () => dispatch(sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS))
+    onShuffle: () => dispatch(sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS)),
+    onPurchaseCard: (index: number) => dispatch(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, index))
 });
 
 const CardSelector = connect(mapStateToProps, mapDispatchToProps)(CardSelectorUnconnected);

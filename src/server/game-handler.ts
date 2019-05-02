@@ -55,10 +55,14 @@ export class GameHandler {
         opponent.setOpponent(player);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
+            console.log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
+
             this.onPlayerPurchaseCard(player, cardIndex);
         });
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.REFRESH_CARDS, () => {
+            console.log(`[${player.name}] REFRESH_CARDS`);
+
             this.onPlayerRefreshCards(player);
         });
 

@@ -6,10 +6,11 @@ interface CardProps {
     pokemonId: number;
     cost: number;
     name: string;
+    onClick: () => void;
 }
 
-const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name }) => (
-    <div className={`card ${getPokemonStats(pokemonId).type.toLowerCase()}`}>
+const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name, onClick }) => (
+    <div className={`card ${getPokemonStats(pokemonId).type.toLowerCase()}`} onClick={onClick}>
         <PokemonImage pokemonId={pokemonId} />
         <div>{name}</div>
         <div>${cost}</div>
