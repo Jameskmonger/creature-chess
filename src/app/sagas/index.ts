@@ -95,7 +95,7 @@ const read = function*(socket) {
 const write = function*(socket) {
     while (true) {
         const { payload } = yield take(SEND_PACKET);
-        socket.emit(payload.opcode, payload.data);
+        socket.emit(payload.opcode, ...payload.data);
     }
 };
 

@@ -6,6 +6,7 @@ import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/store";
 import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
 import { sendPacket } from "../actions/networkActions";
+import { refreshCards, purchaseCard } from "../actions/cardActions";
 
 interface StateProps {
     cards: PokemonCard[];
@@ -61,8 +62,8 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onShuffle: () => dispatch(sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS)),
-    onPurchaseCard: (index: number) => dispatch(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, index))
+    onShuffle: () => dispatch(refreshCards()),
+    onPurchaseCard: (index: number) => dispatch(purchaseCard(index))
 });
 
 const CardSelector = connect(mapStateToProps, mapDispatchToProps)(CardSelectorUnconnected);
