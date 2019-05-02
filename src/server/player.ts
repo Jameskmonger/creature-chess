@@ -18,7 +18,7 @@ export class Player {
         this.connection = connection;
         this.id = uuid();
         this.name = name;
-        this.money = 5;
+        this.money = 3;
 
         if (connection !== null) {
             connection.setPlayer(this);
