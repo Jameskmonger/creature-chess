@@ -1,6 +1,6 @@
 import io = require("socket.io-client");
 import { fork, take, call, put } from "@redux-saga/core/effects";
-import { joinCompleteAction, gameStatePlayingAction } from "../actions/gameActions";
+import { joinCompleteAction, gameStatePlayingAction, moneyUpdateAction } from "../actions/gameActions";
 import { eventChannel } from "redux-saga";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../shared/packet-opcodes";
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
@@ -53,6 +53,11 @@ const subscribe = (socket: SocketIOClient.Socket) => {
         socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: PokemonCard[]) => {
             console.log("[CARDS_UPDATE]", cards);
             emit(cardsUpdated(cards));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.MONEY_UPDATE, (money: number) => {
+            console.log("[MONEY_UPDATE]", money);
+            emit(moneyUpdateAction(money));
         });
 
         socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: { state: GameState, data?: null | GameStateUpdate }) => {

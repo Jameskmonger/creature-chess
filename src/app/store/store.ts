@@ -10,6 +10,7 @@ export interface GameState {
     localPlayerId: string;
     opponentId: string;
     loading: boolean;
+    money: number;
 }
 
 export interface AppState {

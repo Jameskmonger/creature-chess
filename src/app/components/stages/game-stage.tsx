@@ -28,6 +28,7 @@ const boardSize = 8;
 interface StateProps {
     pieces: PokemonPiece[];
     cards: PokemonCard[];
+    money: number;
 }
 
 interface GameStageDispatchProps {
@@ -51,7 +52,11 @@ class GameStageUnconnected extends React.Component<Props> {
                 <div className="column">
                     <PlayerList />
 
-                    <CardSelector cards={this.props.cards} onShuffle={this.props.onShuffle} />
+                    <CardSelector
+                        cards={this.props.cards}
+                        onShuffle={this.props.onShuffle}
+                        money={this.props.money}
+                    />
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
@@ -82,7 +87,8 @@ class GameStageUnconnected extends React.Component<Props> {
 
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
     pieces: state.pieces,
-    cards: state.cards
+    cards: state.cards,
+    money: state.game.money
 });
 
 const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({
