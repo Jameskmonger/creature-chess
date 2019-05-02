@@ -3,7 +3,7 @@ import { PokemonCard, Constants } from "@common";
 import { Card, RerollCard } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/store";
-import { refreshCards, purchaseCard } from "../actions/cardActions";
+import { rerollCards, purchaseCard } from "../actions/cardActions";
 
 interface StateProps {
     cards: PokemonCard[];
@@ -11,14 +11,14 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    onShuffle: () => void;
+    onReroll: () => void;
     onPurchaseCard: (index: number) => void;
 }
 
 type Props = StateProps & DispatchProps;
 
 const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
-    const { cards, money, onShuffle, onPurchaseCard } = props;
+    const { cards, money, onReroll, onPurchaseCard } = props;
 
     const onCardClick = (index: number) => {
         return () => onPurchaseCard(index);
@@ -47,7 +47,7 @@ const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
             <div className="cards">
                 {cards.map(createCard)}
 
-                <RerollCard onClick={onShuffle} buyable={money >= Constants.REROLL_COST} />
+                <RerollCard onClick={onReroll} buyable={money >= Constants.REROLL_COST} />
             </div>
         </div>
     );
@@ -59,7 +59,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onShuffle: () => dispatch(refreshCards()),
+    onReroll: () => dispatch(rerollCards()),
     onPurchaseCard: (index: number) => dispatch(purchaseCard(index))
 });
 

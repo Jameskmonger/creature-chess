@@ -10,6 +10,6 @@ export const cardsUpdated = (payload: PokemonCard[]) => ({
     payload
 });
 
-export const refreshCards = () => sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS);
+export const rerollCards = () => sendPacket(ClientToServerPacketOpcodes.REROLL_CARDS);
 
 export const purchaseCard = (index: number) => sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, index);

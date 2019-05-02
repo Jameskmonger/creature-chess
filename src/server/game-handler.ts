@@ -60,10 +60,10 @@ export class GameHandler {
             this.onPlayerPurchaseCard(player, cardIndex);
         });
 
-        connection.onReceivePacket(ClientToServerPacketOpcodes.REFRESH_CARDS, () => {
-            console.log(`[${player.name}] REFRESH_CARDS`);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, () => {
+            console.log(`[${player.name}] REROLL_CARDS`);
 
-            this.onPlayerRefreshCards(player);
+            this.onPlayerRerollCards(player);
         });
 
         this.players.push(opponent);
@@ -132,7 +132,7 @@ export class GameHandler {
         player.sendBoardUpdate();
     }
 
-    private onPlayerRefreshCards(player: Player) {
+    private onPlayerRerollCards(player: Player) {
         const money = player.getMoney();
 
         // not enough money
