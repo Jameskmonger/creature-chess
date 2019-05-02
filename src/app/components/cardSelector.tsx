@@ -1,11 +1,8 @@
 import * as React from "react";
 import { PokemonCard, Constants } from "@common";
-import { take } from "lodash";
 import { Card, RerollCard } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/store";
-import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
-import { sendPacket } from "../actions/networkActions";
 import { refreshCards, purchaseCard } from "../actions/cardActions";
 
 interface StateProps {
@@ -27,16 +24,22 @@ const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
         return () => onPurchaseCard(index);
     };
 
-    const createCard = (card: PokemonCard, index: number) => (
-        <Card
-            key={`${index}-${card.id}`}
-            pokemonId={card.id}
-            cost={card.cost}
-            name={card.name}
-            buyable={money >= card.cost}
-            onClick={onCardClick(index)}
-        />
-    );
+    const createCard = (card: PokemonCard, index: number) => {
+        if (card === null) {
+            return null;
+        }
+
+        return (
+            <Card
+                key={`${index}-${card.id}`}
+                pokemonId={card.id}
+                cost={card.cost}
+                name={card.name}
+                buyable={money >= card.cost}
+                onClick={onCardClick(index)}
+            />
+        );
+    };
 
     return (
         <div className="card-selector">

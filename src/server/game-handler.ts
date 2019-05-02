@@ -111,7 +111,19 @@ export class GameHandler {
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {
+        const card = player.getCardAtIndex(cardIndex);
+        const money = player.getMoney();
+
+        // not enough money
+        if (!card || money < card.cost) {
+            return;
+        }
+
+        player.setMoney(money - card.cost);
         player.deleteCard(cardIndex);
+
+        player.sendCardsUpdate();
+        player.sendMoneyUpdate();
     }
 
     private onPlayerRefreshCards(player: Player) {

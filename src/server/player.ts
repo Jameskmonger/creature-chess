@@ -33,6 +33,10 @@ export class Player {
         return this.cards;
     }
 
+    public getCardAtIndex(index: number) {
+        return this.cards[index];
+    }
+
     public deleteCard(index: number) {
         this.cards[index] = null;
     }
@@ -43,6 +47,14 @@ export class Player {
 
     public setOpponent(opponent: Player) {
         this.opponent = opponent;
+    }
+
+    public getMoney() {
+        return this.money;
+    }
+
+    public setMoney(money: number) {
+        this.money = money;
     }
 
     public sendJoinedGame() {
