@@ -69,6 +69,7 @@ export class GameHandler {
         player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();
+        player.sendMoneyUpdate();
 
         if (this.players.length === Constants.MAX_PLAYER_COUNT) {
             this.startGame();

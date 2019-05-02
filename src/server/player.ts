@@ -12,11 +12,13 @@ export class Player {
     private cards: PokemonCard[];
     private board: PokemonPiece[];
     private opponent?: Player;
+    private money: number;
 
     constructor(connection: Connection, name: string) {
         this.connection = connection;
         this.id = uuid();
         this.name = name;
+        this.money = 5;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -56,6 +58,10 @@ export class Player {
             friendly: this.board,
             opponent: this.opponent.board
         });
+    }
+
+    public sendMoneyUpdate() {
+        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
     }
 
     public sendPlayerListUpdate(players: Player[]) {
