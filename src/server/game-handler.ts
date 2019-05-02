@@ -111,11 +111,12 @@ export class GameHandler {
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {
+        const slot = player.getFirstEmptyBenchSlot();
         const card = player.getCardAtIndex(cardIndex);
         const money = player.getMoney();
 
-        // not enough money
-        if (!card || money < card.cost) {
+        // no empty slot, bad card, or not enough money
+        if (slot === null || !card || money < card.cost) {
             return;
         }
 
@@ -124,9 +125,21 @@ export class GameHandler {
 
         player.sendCardsUpdate();
         player.sendMoneyUpdate();
+
+        const piece = createPokemon(player.id, card.id, [ slot, 8 ], true);
+        player.addPiece(piece);
+
+        player.sendBoardUpdate();
     }
 
     private onPlayerRefreshCards(player: Player) {
+        const money = player.getMoney();
+
+        // not enough money
+        if (money < Constants.REROLL_COST) {
+            return;
+        }
+
         // prevent any race conditions
         const playerCards = player.getCards();
         player.setCards([]);
@@ -137,6 +150,9 @@ export class GameHandler {
         const newCards = this.deck.take(5);
         player.setCards(newCards);
 
+        player.setMoney(money - Constants.REROLL_COST);
+
+        player.sendMoneyUpdate();
         player.sendCardsUpdate();
     }
 }

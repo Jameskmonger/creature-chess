@@ -1,5 +1,5 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, PlayerListPlayer, GameState } from "../shared";
+import { PokemonCard, PlayerListPlayer, GameState, Constants } from "../shared";
 import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
@@ -18,7 +18,7 @@ export class Player {
         this.connection = connection;
         this.id = uuid();
         this.name = name;
-        this.money = 3;
+        this.money = 50;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -43,6 +43,10 @@ export class Player {
 
     public setBoard(board: PokemonPiece[]) {
         this.board = board;
+    }
+
+    public addPiece(piece: PokemonPiece) {
+        this.board.push(piece);
     }
 
     public setOpponent(opponent: Player) {
@@ -95,6 +99,18 @@ export class Player {
             state,
             data
         });
+    }
+
+    public getFirstEmptyBenchSlot() {
+        for (let x = 0; x < Constants.GRID_SIZE; x++) {
+            const benchedPiece = this.board.some(p => p.position.x === x && (p.benched || p.position.y === Constants.GRID_SIZE));
+
+            if (!benchedPiece) {
+                return x;
+            }
+        }
+
+        return null;
     }
 
     private getStateUpdateData(state: GameState, seed?: number): GameStateUpdate {
