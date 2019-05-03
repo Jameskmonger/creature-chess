@@ -27,13 +27,10 @@ const boardSize = 8;
 
 interface StateProps {
     pieces: PokemonPiece[];
-    cards: PokemonCard[];
-    money: number;
 }
 
 interface GameStageDispatchProps {
     onPiecesUpdated: (pieces: PokemonPiece[]) => void;
-    onShuffle: () => void;
 }
 
 type Props = StateProps & GameStageDispatchProps;
@@ -52,11 +49,7 @@ class GameStageUnconnected extends React.Component<Props> {
                 <div className="column">
                     <PlayerList />
 
-                    <CardSelector
-                        cards={this.props.cards}
-                        onShuffle={this.props.onShuffle}
-                        money={this.props.money}
-                    />
+                    <CardSelector />
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
@@ -86,14 +79,11 @@ class GameStageUnconnected extends React.Component<Props> {
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
-    pieces: state.pieces,
-    cards: state.cards,
-    money: state.game.money
+    pieces: state.pieces
 });
 
 const mapDispatchToProps: MapDispatchToProps<GameStageDispatchProps, {}> = dispatch => ({
-    onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces)),
-    onShuffle: () => dispatch(sendPacket(ClientToServerPacketOpcodes.REFRESH_CARDS))
+    onPiecesUpdated: (pieces: PokemonPiece[]) => dispatch(piecesUpdated(pieces))
 });
 
 const GameStage = compose(

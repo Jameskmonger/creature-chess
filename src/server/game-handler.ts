@@ -55,11 +55,15 @@ export class GameHandler {
         opponent.setOpponent(player);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
+            console.log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
+
             this.onPlayerPurchaseCard(player, cardIndex);
         });
 
-        connection.onReceivePacket(ClientToServerPacketOpcodes.REFRESH_CARDS, () => {
-            this.onPlayerRefreshCards(player);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, () => {
+            console.log(`[${player.name}] REROLL_CARDS`);
+
+            this.onPlayerRerollCards(player);
         });
 
         this.players.push(opponent);
@@ -107,10 +111,46 @@ export class GameHandler {
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {
+        const slot = player.getFirstEmptyBenchSlot();
+        const card = player.getCardAtIndex(cardIndex);
+        const money = player.getMoney();
+
+        if (slot === null) {
+            console.log(`${player.name} attempted to buy a card but has no empty slot`);
+            return;
+        }
+
+        if (!card) {
+            console.log(`${player.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
+            return;
+        }
+
+        if (money < card.cost) {
+            console.log(`${player.name} attempted to buy card costing $${card.cost} but only had $${money}`);
+            return;
+        }
+
+        player.setMoney(money - card.cost);
         player.deleteCard(cardIndex);
+
+        player.sendCardsUpdate();
+        player.sendMoneyUpdate();
+
+        const piece = createPokemon(player.id, card.id, [ slot, 8 ], true);
+        player.addPiece(piece);
+
+        player.sendBoardUpdate();
     }
 
-    private onPlayerRefreshCards(player: Player) {
+    private onPlayerRerollCards(player: Player) {
+        const money = player.getMoney();
+
+        // not enough money
+        if (money < Constants.REROLL_COST) {
+            console.log(`${player.name} attempted to reroll costing $${Constants.REROLL_COST} but only had $${money}`);
+            return;
+        }
+
         // prevent any race conditions
         const playerCards = player.getCards();
         player.setCards([]);
@@ -121,6 +161,9 @@ export class GameHandler {
         const newCards = this.deck.take(5);
         player.setCards(newCards);
 
+        player.setMoney(money - Constants.REROLL_COST);
+
+        player.sendMoneyUpdate();
         player.sendCardsUpdate();
     }
 }

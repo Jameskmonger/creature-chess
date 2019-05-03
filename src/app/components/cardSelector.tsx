@@ -1,32 +1,69 @@
 import * as React from "react";
-import { PokemonCard } from "@common";
-import { take } from "lodash";
+import { PokemonCard, Constants } from "@common";
 import { Card, RerollCard } from "./card";
+import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
+import { AppState } from "../store/store";
+import { rerollCards, purchaseCard } from "../actions/cardActions";
 
-interface CardSelectorProps {
+interface StateProps {
     cards: PokemonCard[];
     money: number;
-    onShuffle: () => void;
 }
 
-class CardSelector extends React.Component<CardSelectorProps> {
+interface DispatchProps {
+    onReroll: () => void;
+    onPurchaseCard: (index: number) => void;
+}
 
-    public render() {
-        const { cards, onShuffle, money } = this.props;
-        const topCards = take(cards, 5);
+type Props = StateProps & DispatchProps;
+
+const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
+    const { cards, money, onReroll, onPurchaseCard } = props;
+
+    const onCardClick = (index: number) => {
+        return () => onPurchaseCard(index);
+    };
+
+    const createCard = (card: PokemonCard, index: number) => {
+        if (card === null) {
+            return null;
+        }
 
         return (
-            <div className="card-selector">
-                <div className="balance">Balance: ${money}</div>
-                <div className="cards">
-                    {topCards.map((card, index) => <Card key={`${index}-${card.id}`} pokemonId={card.id} cost={card.cost} name={card.name} />)}
-
-                    <RerollCard onClick={onShuffle} />
-                </div>
-            </div>
+            <Card
+                key={`${index}-${card.id}`}
+                pokemonId={card.id}
+                cost={card.cost}
+                name={card.name}
+                buyable={money >= card.cost}
+                onClick={onCardClick(index)}
+            />
         );
-    }
-}
+    };
+
+    return (
+        <div className="card-selector">
+            <div className="balance">Balance: ${money}</div>
+            <div className="cards">
+                <RerollCard onClick={onReroll} buyable={money >= Constants.REROLL_COST} />
+
+                {cards.map(createCard)}
+            </div>
+        </div>
+    );
+};
+
+const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
+    cards: state.cards,
+    money: state.game.money
+});
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+    onReroll: () => dispatch(rerollCards()),
+    onPurchaseCard: (index: number) => dispatch(purchaseCard(index))
+});
+
+const CardSelector = connect(mapStateToProps, mapDispatchToProps)(CardSelectorUnconnected);
 
 export {
     CardSelector

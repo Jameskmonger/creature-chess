@@ -6,3 +6,4 @@ export const STATE_LENGTHS = {
     [GameState.PREPARING]: 10,
     [GameState.READY]: 3
 };
+export const REROLL_COST = 2;
