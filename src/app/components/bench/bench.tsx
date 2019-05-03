@@ -4,22 +4,17 @@ import { BenchTile } from "./benchTile";
 import { AppState } from "../../store/store";
 import { MapStateToProps, connect } from "react-redux";
 import { benchedPiecesSelector } from "../../selectors/pieceSelectors";
+import { Constants } from "../../../shared";
 
-interface BenchOwnProps {
-    boardSize: number;
-}
-
-interface BenchStateProps {
+interface BenchProps {
 
     pieces: PokemonPiece[];
 }
 
-type BenchProps = BenchOwnProps & BenchStateProps;
-
-const BenchUnconnected: React.FunctionComponent<BenchProps> = ({ boardSize, pieces }) => {
+const BenchUnconnected: React.FunctionComponent<BenchProps> = ({ pieces }) => {
     const tiles = [];
 
-    for (let x = 0; x < boardSize; x++) {
+    for (let x = 0; x < Constants.GRID_SIZE; x++) {
         const piece = pieces.find(p => p.position.x === x && p.benched);
 
         tiles.push(
@@ -35,7 +30,7 @@ const BenchUnconnected: React.FunctionComponent<BenchProps> = ({ boardSize, piec
     );
 };
 
-const mapStateToProps: MapStateToProps<BenchStateProps, {}, AppState> = state => ({
+const mapStateToProps: MapStateToProps<BenchProps, {}, AppState> = state => ({
     pieces: benchedPiecesSelector(state)
 });
 
