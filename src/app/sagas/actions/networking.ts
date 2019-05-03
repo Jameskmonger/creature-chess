@@ -4,7 +4,7 @@ import { call, takeEvery, put, take, fork } from "@redux-saga/core/effects";
 import { Socket } from "../types";
 import { GameStateUpdate, PlayingStateUpdate } from "../../../shared/game-state";
 import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes } from "../../../shared/packet-opcodes";
-import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants } from "../../../shared";
+import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants, BenchPokemonPiece } from "../../../shared";
 import { joinCompleteAction, moneyUpdateAction, gameStatePlayingAction, gameStateUpdate } from "../../actions/gameActions";
 import { NetworkAction } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
@@ -12,6 +12,7 @@ import { piecesUpdated } from "../../actions/pieceActions";
 import { playerListUpdated } from "../../actions/playerListActions";
 import { cardsUpdated } from "../../actions/cardActions";
 import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
+import { benchPiecesUpdated } from "../../actions/benchPieceActions";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -34,6 +35,11 @@ const subscribe = (socket: Socket) => {
             console.log("[BOARD_UPDATE]", packet);
             const pieces = [...packet.friendly, ...packet.opponent];
             emit(piecesUpdated(pieces));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: BenchPokemonPiece[] }) => {
+            console.log("[BENCH_UPDATE]", packet);
+            emit(benchPiecesUpdated(packet.pieces));
         });
 
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {

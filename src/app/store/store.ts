@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { reducers } from "../reducers";
 import { PokemonCard, PlayerListPlayer } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { PokemonPiece } from "@common/pokemon-piece";
+import { PokemonPiece, BenchPokemonPiece } from "@common/pokemon-piece";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "../sagas";
 
@@ -16,6 +16,7 @@ export interface GameState {
 export interface AppState {
     deck: PokemonCard[];
     pieces: PokemonPiece[];
+    benchPieces: BenchPokemonPiece[];
     game: GameState;
     playerList: PlayerListPlayer[];
     cards: PokemonCard[];

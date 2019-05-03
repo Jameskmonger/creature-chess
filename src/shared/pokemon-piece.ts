@@ -34,6 +34,15 @@ export interface PokemonPiece {
     coolDown: number;
 }
 
+export interface BenchPokemonPiece {
+    id: string;
+    ownerId: string;
+
+    pokemonId: number;
+    facingAway: boolean;
+    selected?: boolean;
+}
+
 export const initialCoolDown = 1000;
 
 export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number], benched: boolean = false): PokemonPiece => ({
