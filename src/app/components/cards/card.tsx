@@ -1,7 +1,6 @@
 import * as React from "react";
-import { PokemonImage } from "./pokemonImage";
+import { PokemonImage } from "../pokemonImage";
 import { getPokemonStats } from "@common/pokemon-details";
-import { Constants } from "@common";
 
 interface CardProps {
     pokemonId: number;
@@ -23,20 +22,6 @@ const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name, buyab
     );
 };
 
-interface RerollCardProps {
-    buyable: boolean;
-    onClick: () => void;
-}
-
-const RerollCard: React.FunctionComponent<RerollCardProps> = ({ buyable, onClick }) => (
-    <div
-        className={`card reroll${buyable ? "" : " not-buyable"}`}
-        onClick={buyable ? onClick : undefined}
-    >
-        Reroll (${Constants.REROLL_COST})
-    </div>
-);
-
 export {
-    Card, RerollCard
+    Card
 };

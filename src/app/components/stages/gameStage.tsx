@@ -1,3 +1,4 @@
+// tslint:disable:jsx-ban-props
 import * as React from "react";
 import { compose } from "recompose";
 import { DragDropContext } from "react-dnd";
@@ -7,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { PokemonCard, getTotalHealthByTeam, PokemonPiece, Constants } from "@common";
 import { Board } from "../board/board";
 import { Bench } from "../bench/bench";
-import { CardSelector } from "../cardSelector";
+import { CardShop } from "../cards/cardShop";
 import { AppState } from "../../store/store";
 import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { PlayerList } from "../playerList/playerList";
@@ -30,7 +31,7 @@ class GameStageUnconnected extends React.Component<Props> {
                 <div className="column">
                     <PlayerList />
 
-                    <CardSelector />
+                    <CardShop />
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
