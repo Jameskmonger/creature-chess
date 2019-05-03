@@ -7,5 +7,8 @@ export type JOIN_GAME = typeof JOIN_GAME;
 export const GAME_STATE_PLAYING = "GAME_STATE_PLAYING";
 export type GAME_STATE_PLAYING = typeof GAME_STATE_PLAYING;
 
+export const GAME_STATE_UPDATE = "GAME_STATE_UPDATE";
+export type GAME_STATE_UPDATE = typeof GAME_STATE_UPDATE;
+
 export const MONEY_UPDATE = "MONEY_UPDATE";
 export type MONEY_UPDATE = typeof MONEY_UPDATE;
