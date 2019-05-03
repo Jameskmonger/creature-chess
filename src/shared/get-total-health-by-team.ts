@@ -17,7 +17,8 @@ const groupBy = <TItem, TKey>(list: TItem[], keyGetter: (item: TItem) => TKey) =
 };
 
 export const getTotalHealthByTeam = (pieces: PokemonPiece[]) => {
-    const grouped = groupBy(pieces, p => p.ownerId);
+    const unbenched = pieces.filter(p => p.benched === false);
+    const grouped = groupBy(unbenched, p => p.ownerId);
 
     return grouped.map(([ key, values ]) => {
         return {
