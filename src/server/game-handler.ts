@@ -115,8 +115,18 @@ export class GameHandler {
         const card = player.getCardAtIndex(cardIndex);
         const money = player.getMoney();
 
-        // no empty slot, bad card, or not enough money
-        if (slot === null || !card || money < card.cost) {
+        if (slot === null) {
+            console.log(`${player.name} attempted to buy a card but has no empty slot`);
+            return;
+        }
+
+        if (!card) {
+            console.log(`${player.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
+            return;
+        }
+
+        if (money < card.cost) {
+            console.log(`${player.name} attempted to buy card costing $${card.cost} but only had $${money}`);
             return;
         }
 
@@ -137,6 +147,7 @@ export class GameHandler {
 
         // not enough money
         if (money < Constants.REROLL_COST) {
+            console.log(`${player.name} attempted to reroll costing $${Constants.REROLL_COST} but only had $${money}`);
             return;
         }
 
