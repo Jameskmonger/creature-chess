@@ -3,12 +3,12 @@ import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor }
 import { compose } from "recompose";
 import { PokemonPiece, initialCoolDown } from "@common/pokemon-piece";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { pieceSelected } from "../actions/pieceActions";
-import { ProgressBar } from "./progressBar";
-import { getAnimationCssVariables, AnimationVariables, Animation } from "./animation";
-import { PokemonImage } from "./pokemonImage";
-import { AppState } from "../store/store";
-import { localPlayerIdSelector } from "../selectors/gameSelector";
+import { pieceSelected } from "../../actions/pieceActions";
+import { ProgressBar } from "../progressBar";
+import { getAnimationCssVariables, AnimationVariables, Animation } from "../animation";
+import { PokemonImage } from "../pokemonImage";
+import { AppState } from "../../store/store";
+import { localPlayerIdSelector } from "../../selectors/gameSelector";
 
 const dyingAnimation = "dying";
 

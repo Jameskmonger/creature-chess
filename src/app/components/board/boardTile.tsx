@@ -3,7 +3,7 @@ import { compose } from "recompose";
 import { MapDispatchToProps, connect, MapStateToProps } from "react-redux";
 
 import { PokemonPiece } from "@common/pokemon-piece";
-import { Piece } from "../piece";
+import { Piece } from "./piece";
 import { pieceMoved } from "../../actions/pieceActions";
 import { AppState } from "../../store/store";
 import { pieceSelector } from "../../selectors/pieceSelectors";
@@ -24,7 +24,7 @@ interface BoardTileDispatchProps {
     onMovePiece: (piece: PokemonPiece) => void;
 }
 
-export type BoardTileProps = BoardTileOwnProps & BoardTileStateProps & BoardTileDispatchProps;
+type BoardTileProps = BoardTileOwnProps & BoardTileStateProps & BoardTileDispatchProps;
 
 const BoardTileUnconnected: React.FunctionComponent<BoardTileProps & DropTargetProps> = ({ dark, pieces, connectDropTarget }) => connectDropTarget(
     <div className={`tile ${dark ? "dark" : "light"}`}>
@@ -46,6 +46,7 @@ const BoardTile = compose<BoardTileProps, BoardTileOwnProps>(
 )(BoardTileUnconnected);
 
 export {
+    BoardTileProps,
     BoardTileUnconnected,
     BoardTile
 };

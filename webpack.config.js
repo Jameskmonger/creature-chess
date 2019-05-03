@@ -8,6 +8,7 @@ const outDir = path.resolve(__dirname, "public");
 
 module.exports = {
     mode: "development",
+    devtool: false,
 
     entry: "./src/app/index.tsx",
 

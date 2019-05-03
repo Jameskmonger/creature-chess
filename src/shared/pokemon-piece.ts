@@ -26,8 +26,6 @@ export interface PokemonPiece {
     hit?: HitDetails;
     moving?: MovementDetails;
     celebrating?: boolean;
-
-    benched: boolean;
     position: TileCoordinates;
     maxHealth: number;
     currentHealth: number;
@@ -38,14 +36,15 @@ export interface BenchPokemonPiece {
     id: string;
     ownerId: string;
 
+    slot: number;
+
     pokemonId: number;
-    facingAway: boolean;
     selected?: boolean;
 }
 
 export const initialCoolDown = 1000;
 
-export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number], benched: boolean = false): PokemonPiece => ({
+export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): PokemonPiece => ({
     id: uuid(),
     ownerId,
     pokemonId,
@@ -53,6 +52,12 @@ export const createPokemon = (ownerId: string, pokemonId: number, position: [num
     maxHealth: 100,
     currentHealth: 100,
     position: createTileCoordinates(...position),
-    coolDown: initialCoolDown,
-    benched
+    coolDown: initialCoolDown
+});
+
+export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => ({
+    id: uuid(),
+    ownerId,
+    pokemonId,
+    slot
 });

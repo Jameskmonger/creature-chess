@@ -1,14 +1,14 @@
 import * as React from "react";
-import { PokemonPiece } from "@common/pokemon-piece";
-import { Piece } from "../piece";
+import { BenchPokemonPiece } from "@common/pokemon-piece";
+import { BenchPiece } from "./benchPiece";
 
 interface BenchTileProps {
-    piece: PokemonPiece;
+    piece: BenchPokemonPiece;
 }
 
 const BenchTile: React.FunctionComponent<BenchTileProps> = ({ piece }) => (
     <div className={`tile bench`}>
-        {piece && <Piece piece={piece} />}
+        {piece && <BenchPiece piece={piece} />}
     </div>
 );
 

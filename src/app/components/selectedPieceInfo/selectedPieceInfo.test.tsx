@@ -32,6 +32,5 @@ const testPiece: PokemonPiece = {
     ownerId: "267a057b-3a1b-4c9f-81ae-1045cba77086",
     maxHealth: 100,
     pokemonId: 32,
-    position: { x: 3, y: 6 },
-    benched: false
+    position: { x: 3, y: 6 }
 };
