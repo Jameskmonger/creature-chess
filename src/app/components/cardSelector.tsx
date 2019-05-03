@@ -45,9 +45,9 @@ const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
         <div className="card-selector">
             <div className="balance">Balance: ${money}</div>
             <div className="cards">
-                {cards.map(createCard)}
-
                 <RerollCard onClick={onReroll} buyable={money >= Constants.REROLL_COST} />
+
+                {cards.map(createCard)}
             </div>
         </div>
     );
