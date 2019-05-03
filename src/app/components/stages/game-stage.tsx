@@ -5,7 +5,7 @@ import HTML5Backend from "react-dnd-html5-backend";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { PokemonCard, getTotalHealthByTeam, PokemonPiece, Constants } from "@common";
-import { Board } from "../board";
+import { Board } from "../board/board";
 import { Bench } from "../bench/bench";
 import { CardSelector } from "../cardSelector";
 import { AppState } from "../../store/store";
