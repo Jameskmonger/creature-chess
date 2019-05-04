@@ -15,7 +15,6 @@ export interface GameState {
 }
 
 export interface AppState {
-    deck: PokemonCard[];
     pieces: PokemonPiece[];
     benchPieces: PokemonPiece[];
     game: GameState;
