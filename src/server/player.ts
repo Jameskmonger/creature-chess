@@ -22,7 +22,7 @@ export class Player {
         this.cards = [];
         this.board = [];
         this.bench = [];
-        this.money = 50;
+        this.money = 0;
 
         if (connection !== null) {
             connection.setPlayer(this);

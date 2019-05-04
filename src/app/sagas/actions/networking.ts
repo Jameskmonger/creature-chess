@@ -62,10 +62,10 @@ const subscribe = (socket: Socket) => {
 
             if (packet.state === GameState.PLAYING) {
                 const opponentId = (packet.data as PlayingStateUpdate).opponentId;
-                //emit(gameStatePlayingAction(opponentId));
+                emit(gameStatePlayingAction(opponentId));
             }
 
-            //emit(gameStateUpdate(packet.state));
+            emit(gameStateUpdate(packet.state));
         });
 
         // tslint:disable-next-line:no-empty

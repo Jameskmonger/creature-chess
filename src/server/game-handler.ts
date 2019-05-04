@@ -1,13 +1,12 @@
 import delay from "delay";
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
-import { createPokemon, PokemonPiece, createBenchPokemon } from "../shared/pokemon-piece";
+import { createBenchPokemon } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
 import { GameState, getAllDefinitions, Constants } from "../shared";
 import { SeedProvider } from "./seed-provider";
-import uuid = require("uuid");
 
 export class GameHandler {
     private deck = new CardDeck(getAllDefinitions());
@@ -39,19 +38,7 @@ export class GameHandler {
 
         const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
-        player.setBoard([
-            createPokemon(player.id, 129, [1, 6]),
-            createPokemon(player.id, 129, [2, 6]),
-            createPokemon(player.id, 129, [4, 4]),
-            createPokemon(player.id, 70, [7, 6]),
-            createPokemon(player.id, 67, [3, 4]),
-            createPokemon(player.id, 89, [5, 4])
-        ]);
-        player.setBench([
-            createBenchPokemon(player.id, 9, 2),
-            createBenchPokemon(player.id, 70, 5),
-            createBenchPokemon(player.id, 67, 6),
-        ]);
+        player.setMoney(50);
 
         player.setOpponent(opponent);
         opponent.setOpponent(player);
