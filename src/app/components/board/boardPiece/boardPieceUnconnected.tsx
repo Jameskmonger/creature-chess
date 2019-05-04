@@ -1,44 +1,18 @@
 import * as React from "react";
-import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
-import { compose } from "recompose";
-import { PokemonPiece, initialCoolDown } from "@common/pokemon-piece";
-import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { pieceSelected } from "../../actions/pieceActions";
-import { ProgressBar } from "../progressBar";
-import { getAnimationCssVariables, AnimationVariables, Animation } from "../animation";
-import { PokemonImage } from "../pokemonImage";
-import { AppState } from "../../store/store";
-import { localPlayerIdSelector } from "../../selectors/gameSelector";
+import { initialCoolDown } from "@common/pokemon-piece";
+import { ProgressBar } from "../../progressBar";
+import { getAnimationCssVariables, AnimationVariables, Animation } from "../../animation";
+import { PokemonImage } from "../../pokemonImage";
+import { BoardPieceProps, DragSourceProps, isFriendly } from "./boardPieceProps";
 
 const dyingAnimation = "dying";
-
-interface PieceOwnProps {
-    piece: PokemonPiece;
-}
-
-interface PieceStateProps {
-    localPlayerId: string;
-}
-
-interface PieceDispatchProps {
-    onPieceSelected: () => void;
-}
-
-type PieceProps = PieceOwnProps & PieceStateProps & PieceDispatchProps;
-
-interface DragSourceProps {
-    connectDragSource: ConnectDragSource;
-    isDragging: boolean;
-}
 
 interface State {
     currentAnimations: Animation[];
     dead: boolean;
 }
 
-const isFriendly = (props: PieceProps) => props.localPlayerId === props.piece.ownerId;
-
-class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, State> {
+class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSourceProps, State> {
     public state = {
         currentAnimations: [],
         dead: this.props.piece.currentHealth === 0
@@ -81,7 +55,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
         );
     }
 
-    public componentDidUpdate(oldProps: PieceProps) {
+    public componentDidUpdate(oldProps: BoardPieceProps) {
         this.runAnimations(oldProps);
     }
 
@@ -90,7 +64,7 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
         this.runAnimations({ ...this.props, piece });
     }
 
-    private runAnimations = (oldProps: PieceProps) => {
+    private runAnimations = (oldProps: BoardPieceProps) => {
         const { moving, attacking, hit, celebrating, currentHealth } = this.props.piece;
         if (!oldProps.piece.moving && moving) {
             this.runAnimation(`move-${moving.direction}`);
@@ -132,37 +106,6 @@ class PieceUnconnected extends React.Component<PieceProps & DragSourceProps, Sta
     }
 }
 
-const selectedPiece = {
-    beginDrag(props: PieceProps) {
-        return props.piece;
-    },
-    isDragging(props: PieceProps, monitor: DragSourceMonitor) {
-        return props.piece === monitor.getItem();
-    },
-    canDrag(props: PieceProps, monitor: DragSourceMonitor) {
-        return isFriendly(props);
-    }
-};
-
-const collect = (connectToDragSource: DragSourceConnector, monitor: DragSourceMonitor) => ({
-    connectDragSource: connectToDragSource.dragSource(),
-    isDragging: monitor.isDragging()
-});
-
-const mapStateToProps: MapStateToProps<PieceStateProps, {}, AppState> = state => ({
-    localPlayerId: localPlayerIdSelector(state)
-});
-
-const mapDispatchToProps: MapDispatchToProps<PieceDispatchProps, PieceOwnProps> = (dispatch, ownProps) => ({
-    onPieceSelected: () => dispatch(pieceSelected(ownProps.piece))
-});
-
-const Piece = compose<PieceProps, PieceOwnProps>(
-    connect(mapStateToProps, mapDispatchToProps),
-    DragSource<PieceOwnProps>(typeof PieceUnconnected, selectedPiece, collect)
-)(PieceUnconnected);
-
 export {
-    PieceUnconnected,
-    Piece
+    BoardPieceUnconnected
 };
