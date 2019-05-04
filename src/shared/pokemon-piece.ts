@@ -47,9 +47,4 @@ export const createPokemon = (ownerId: string, pokemonId: number, position: [num
     coolDown: initialCoolDown
 });
 
-export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => ({
-    id: uuid(),
-    ownerId,
-    pokemonId,
-    position: createTileCoordinates(null, slot)
-});
+export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => createPokemon(ownerId, pokemonId, [ slot, null ]);
