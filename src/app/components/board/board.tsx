@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { BoardRow } from "./boardRow";
-import { Constants } from "../../../shared";
+import { Constants } from "@common";
 
 const Board: React.FunctionComponent = props => {
     const rows = [];

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createTileCoordinates, TileType } from "@common/position";
-import { Tile } from "../tile/tile";
-import { BenchPiece } from "./benchPiece/benchPiece";
-import { PokemonPiece } from "../../../shared";
+import { Tile } from "./tile";
+import { BenchPiece } from "../benchPiece/benchPiece";
+import { PokemonPiece } from "@common";
 
 interface BenchTileProps {
     slot: number;

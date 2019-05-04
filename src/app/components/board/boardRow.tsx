@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createTileCoordinates } from "@common/position";
-import { Constants } from "../../../shared";
-import { BoardTile } from "./boardTile";
+import { Constants } from "@common";
+import { BoardTile } from "./tile/boardTile";
 
 interface TileRowProps {
     y: number;

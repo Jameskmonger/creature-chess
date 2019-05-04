@@ -1,7 +1,7 @@
 import { DropTargetSpec, DropTargetMonitor, DropTargetConnector, DropTarget } from "react-dnd";
 import { TileUnconnected } from "./tileUnconnected";
 import { TileProps } from "./tileProps";
-import { TileCoordinates } from "../../../shared/position";
+import { TileCoordinates } from "@common/position";
 
 const benchOrFriendly = ({ y }: TileCoordinates) => y === null || y > 3;
 

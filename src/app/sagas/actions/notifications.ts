@@ -1,7 +1,7 @@
 import { take, takeEvery } from "@redux-saga/core/effects";
 import { toast } from "react-toastify";
 import { GAME_STATE_UPDATE } from "../../actiontypes/gameActionTypes";
-import { GameState, Constants } from "../../../shared";
+import { GameState, Constants } from "@common";
 import { ActionWithPayload } from "../types";
 
 const getStateMessage = (state: GameState) => {

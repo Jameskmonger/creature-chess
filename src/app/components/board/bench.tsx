@@ -1,6 +1,6 @@
 import * as React from "react";
-import { BenchTile } from "./benchTile";
-import { Constants } from "../../../shared";
+import { BenchTile } from "./tile/benchTile";
+import { Constants } from "@common";
 
 const Bench: React.FunctionComponent = () => {
     const tiles = [];
