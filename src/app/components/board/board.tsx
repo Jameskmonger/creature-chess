@@ -13,7 +13,6 @@ const Board: React.FunctionComponent = props => {
             <BoardRow
                 key={`tile-row-${y}`}
                 y={y}
-                friendly={isFriendlyRow}
             />
         );
     }
