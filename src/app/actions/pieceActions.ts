@@ -1,11 +1,12 @@
 import { PokemonPiece } from "@common/pokemon-piece";
-import { PIECE_SELECTED, PIECE_MOVED_TO_BOARD, PIECES_UPDATED } from "../actiontypes/pieceActionTypes";
+import { PIECE_SELECTED, PIECE_MOVED_TO_BOARD, PIECES_UPDATED, PIECE_MOVED_TO_BENCH } from "../actiontypes/pieceActionTypes";
 import { TileCoordinates } from "@common/position";
 
 export type PiecesAction =
     ({ type: PIECE_SELECTED, payload: PokemonPiece })
   | ({ type: PIECES_UPDATED, payload: PokemonPiece[] })
-  | ({ type: PIECE_MOVED_TO_BOARD, payload: { piece: PokemonPiece, position: TileCoordinates } });
+  | ({ type: PIECE_MOVED_TO_BOARD, payload: { piece: PokemonPiece, position: TileCoordinates } })
+  | ({ type: PIECE_MOVED_TO_BENCH, payload: { piece: PokemonPiece, slot: number } });
 
 export const pieceSelected = (payload: PokemonPiece) => ({
     type: PIECE_SELECTED,
