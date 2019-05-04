@@ -20,7 +20,6 @@ export interface PokemonPiece {
     ownerId: string;
     pokemonId: number;
     position: TileCoordinates;
-    selected?: boolean;
 
     facingAway: boolean;
     attacking?: AttackDetails;
