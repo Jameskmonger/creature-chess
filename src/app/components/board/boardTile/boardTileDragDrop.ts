@@ -1,17 +1,12 @@
-import { DropTargetSpec, DropTargetMonitor, DropTargetConnector, DropTarget, ConnectDropTarget } from "react-dnd";
-import { BoardTileProps, BoardTileUnconnected } from "./boardTile";
-
-export interface DropTargetProps {
-    connectDropTarget: ConnectDropTarget;
-    isOver: boolean;
-    canDrop: boolean;
-}
+import { DropTargetSpec, DropTargetMonitor, DropTargetConnector, DropTarget } from "react-dnd";
+import { BoardTileUnconnected } from "./boardTileUnconnected";
+import { BoardTileProps } from "./boardTileProps";
 
 const boxTarget: DropTargetSpec<BoardTileProps> = {
     drop(props: BoardTileProps, monitor: DropTargetMonitor) {
         props.onMovePiece(monitor.getItem());
     },
-    canDrop(props: BoardTileProps, monitor: DropTargetMonitor) {
+    canDrop(props: BoardTileProps) {
         return props.friendly && props.pieces.length === 0;
     }
 };

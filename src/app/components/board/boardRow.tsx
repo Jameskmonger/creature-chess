@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BoardTile } from "./boardTile";
+import { BoardTile } from "./boardTile/boardTile";
 import { createTileCoordinates } from "@common/position";
 import { Constants } from "../../../shared";
 
