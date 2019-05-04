@@ -1,6 +1,6 @@
 import * as React from "react";
 import { PokemonPiece } from "@common/pokemon-piece";
-import { BenchPiece } from "./benchPiece";
+import { BenchPiece } from "./benchPiece/benchPiece";
 
 interface BenchTileProps {
     piece: PokemonPiece;

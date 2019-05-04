@@ -17,4 +17,4 @@ const collect = (connector: DropTargetConnector, monitor: DropTargetMonitor) => 
     canDrop: monitor.canDrop()
 });
 
-export const dropTarget = DropTarget<BoardTileProps>(typeof BoardTileUnconnected, boxTarget, collect);
+export const boardTileDropTarget = DropTarget<BoardTileProps>(typeof BoardTileUnconnected, boxTarget, collect);

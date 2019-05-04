@@ -5,7 +5,7 @@ import { PokemonPiece } from "@common/pokemon-piece";
 import { pieceMovedToBoard } from "../../../actions/pieceActions";
 import { AppState } from "../../../store/store";
 import { pieceSelector } from "../../../selectors/pieceSelectors";
-import { dropTarget } from "./boardTileDragDrop";
+import { boardTileDropTarget } from "./boardTileDragDrop";
 import { BoardTileProps, BoardTileOwnProps, BoardTileStateProps, BoardTileDispatchProps } from "./boardTileProps";
 import { BoardTileUnconnected } from "./boardTileUnconnected";
 
@@ -19,7 +19,7 @@ const mapDispatchToProps: MapDispatchToProps<BoardTileDispatchProps, BoardTileOw
 
 const BoardTile = compose<BoardTileProps, BoardTileOwnProps>(
     connect(mapStateToProps, mapDispatchToProps),
-    dropTarget
+    boardTileDropTarget
 )(BoardTileUnconnected);
 
 export {

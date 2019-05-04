@@ -4,7 +4,7 @@ import { pieceSelected } from "../../../actions/pieceActions";
 import { AppState } from "../../../store/store";
 import { localPlayerIdSelector } from "../../../selectors/gameSelector";
 import { BoardPieceProps, BoardPieceStateProps, BoardPieceDispatchProps, BoardPieceOwnProps } from "../boardPiece/boardPieceProps";
-import { dragSource } from "./boardPieceDragDrop";
+import { boardPieceDragSource } from "./boardPieceDragDrop";
 import { BoardPieceUnconnected } from "./boardPieceUnconnected";
 
 const mapStateToProps: MapStateToProps<BoardPieceStateProps, {}, AppState> = state => ({
@@ -17,7 +17,7 @@ const mapDispatchToProps: MapDispatchToProps<BoardPieceDispatchProps, BoardPiece
 
 const BoardPiece = compose<BoardPieceProps, BoardPieceOwnProps>(
     connect(mapStateToProps, mapDispatchToProps),
-    dragSource
+    boardPieceDragSource
 )(BoardPieceUnconnected);
 
 export {

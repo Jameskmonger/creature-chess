@@ -3,7 +3,8 @@ import { initialCoolDown } from "@common/pokemon-piece";
 import { ProgressBar } from "../../progressBar";
 import { getAnimationCssVariables, AnimationVariables, Animation } from "../../animation";
 import { PokemonImage } from "../../pokemonImage";
-import { BoardPieceProps, DragSourceProps, isFriendly } from "./boardPieceProps";
+import { BoardPieceProps, isFriendly } from "./boardPieceProps";
+import { DragSourceProps } from "../../draggable/drag-source-props";
 
 const dyingAnimation = "dying";
 

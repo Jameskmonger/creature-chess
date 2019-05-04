@@ -19,4 +19,4 @@ const collect = (connectToDragSource: DragSourceConnector, monitor: DragSourceMo
     isDragging: monitor.isDragging()
 });
 
-export const dragSource = DragSource<BoardPieceOwnProps>(typeof BoardPieceUnconnected, selectedPiece, collect);
+export const boardPieceDragSource = DragSource<BoardPieceOwnProps>(typeof BoardPieceUnconnected, selectedPiece, collect);
