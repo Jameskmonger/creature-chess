@@ -2,7 +2,7 @@ import * as React from "react";
 import { TestFixture, Test, TestCase, SpyOn, Expect } from "alsatian";
 import { shallow } from "enzyme";
 import { SelectedPieceInfo } from "./selectedPieceInfo";
-import { PokemonPiece } from "@common/pokemon-piece";
+import { BoardPokemonPiece } from "@common/pokemon-piece";
 import * as Common from "@common";
 import { CombinePiecesButton } from "./combinePiecesButton";
 
@@ -24,7 +24,7 @@ export class SelectedPieceInfoTests {
     }
 }
 
-const testPiece: PokemonPiece = {
+const testPiece: BoardPokemonPiece = {
     coolDown: 1000,
     currentHealth: 100,
     facingAway: true,

@@ -1,7 +1,7 @@
 import delay from "delay";
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
-import { createPokemon, BenchPokemonPiece, createBenchPokemon } from "../shared/pokemon-piece";
+import { createPokemon, PokemonPiece, createBenchPokemon } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";

@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import { PokemonCard, PlayerListPlayer, GameState, Constants } from "../shared";
-import { PokemonPiece, BenchPokemonPiece } from "../shared/pokemon-piece";
+import { BoardPokemonPiece, PokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
 import { GameStateUpdate } from "../shared/game-state";
@@ -10,8 +10,8 @@ export class Player {
     public readonly name: string;
     private connection: Connection;
     private cards: PokemonCard[];
-    private board: PokemonPiece[];
-    private bench: BenchPokemonPiece[];
+    private board: BoardPokemonPiece[];
+    private bench: PokemonPiece[];
     private opponent?: Player;
     private money: number;
 
@@ -45,15 +45,15 @@ export class Player {
         this.cards[index] = null;
     }
 
-    public setBoard(board: PokemonPiece[]) {
+    public setBoard(board: BoardPokemonPiece[]) {
         this.board = board;
     }
 
-    public setBench(bench: BenchPokemonPiece[]) {
+    public setBench(bench: PokemonPiece[]) {
         this.bench = bench;
     }
 
-    public addBenchPiece(piece: BenchPokemonPiece) {
+    public addBenchPiece(piece: PokemonPiece) {
         this.bench.push(piece);
     }
 
@@ -117,7 +117,7 @@ export class Player {
 
     public getFirstEmptyBenchSlot() {
         for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
-            const piece = this.bench.some(p => p.slot === slot);
+            const piece = this.bench.some(p => p.position.x === slot);
 
             if (!piece) {
                 return slot;

@@ -18,40 +18,32 @@ export interface MovementDetails {
 export interface PokemonPiece {
     id: string;
     ownerId: string;
-
     pokemonId: number;
-    facingAway: boolean;
+    position: TileCoordinates;
     selected?: boolean;
+}
+
+export interface BoardPokemonPiece extends PokemonPiece {
+    facingAway: boolean;
     attacking?: AttackDetails;
     hit?: HitDetails;
     moving?: MovementDetails;
     celebrating?: boolean;
-    position: TileCoordinates;
     maxHealth: number;
     currentHealth: number;
     coolDown: number;
 }
 
-export interface BenchPokemonPiece {
-    id: string;
-    ownerId: string;
-
-    slot: number;
-
-    pokemonId: number;
-    selected?: boolean;
-}
-
 export const initialCoolDown = 1000;
 
-export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): PokemonPiece => ({
+export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): BoardPokemonPiece => ({
     id: uuid(),
     ownerId,
     pokemonId,
+    position: createTileCoordinates(...position),
     facingAway: true,
     maxHealth: 100,
     currentHealth: 100,
-    position: createTileCoordinates(...position),
     coolDown: initialCoolDown
 });
 
@@ -59,5 +51,5 @@ export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: num
     id: uuid(),
     ownerId,
     pokemonId,
-    slot
+    position: createTileCoordinates(null, slot)
 });

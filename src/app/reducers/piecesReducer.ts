@@ -1,11 +1,11 @@
-import { PokemonPiece } from "@common/pokemon-piece";
+import { BoardPokemonPiece } from "@common/pokemon-piece";
 import { PiecesAction } from "../actions/pieceActions";
 import { PIECE_SELECTED, PIECE_MOVED, PIECES_UPDATED } from "../actiontypes/pieceActionTypes";
 import { Reducer } from "react";
 
 const initialState = [];
 
-export const pieces: Reducer<PokemonPiece[], PiecesAction> = (state = initialState, action) => {
+export const pieces: Reducer<BoardPokemonPiece[], PiecesAction> = (state = initialState, action) => {
     switch (action.type) {
         case PIECES_UPDATED:
             return action.payload;
@@ -18,7 +18,7 @@ export const pieces: Reducer<PokemonPiece[], PiecesAction> = (state = initialSta
     }
 };
 
-const piece: Reducer<PokemonPiece, PiecesAction> = (state, action) => {
+const piece: Reducer<BoardPokemonPiece, PiecesAction> = (state, action) => {
     switch (action.type) {
         case PIECE_SELECTED:
             if (state.id === action.payload.id) {

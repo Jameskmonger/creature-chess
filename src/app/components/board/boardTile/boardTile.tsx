@@ -1,7 +1,7 @@
 import { compose } from "recompose";
 import { MapDispatchToProps, connect, MapStateToProps } from "react-redux";
 
-import { PokemonPiece } from "@common/pokemon-piece";
+import { BoardPokemonPiece } from "@common/pokemon-piece";
 import { pieceMoved } from "../../../actions/pieceActions";
 import { AppState } from "../../../store/store";
 import { pieceSelector } from "../../../selectors/pieceSelectors";
@@ -14,7 +14,7 @@ const mapStateToProps: MapStateToProps<BoardTileStateProps, BoardTileOwnProps, A
 });
 
 const mapDispatchToProps: MapDispatchToProps<BoardTileDispatchProps, BoardTileOwnProps> = (dispatch, { position }) => ({
-    onMovePiece: (piece: PokemonPiece) => dispatch(pieceMoved(piece, position))
+    onMovePiece: (piece: BoardPokemonPiece) => dispatch(pieceMoved(piece, position))
 });
 
 const BoardTile = compose<BoardTileProps, BoardTileOwnProps>(

@@ -1,30 +1,30 @@
-import { PokemonPiece } from "./pokemon-piece";
+import { BoardPokemonPiece } from "./pokemon-piece";
 import { getNextPiecePosition } from "./pathfinding";
 import { TileCoordinates } from "./position";
 
-const getLivingEnemies = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
+const getLivingEnemies = (piece: BoardPokemonPiece, pieces: BoardPokemonPiece[]) => {
     return pieces.filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
 };
 
-const getDelta = (a: PokemonPiece, b: PokemonPiece) => {
+const getDelta = (a: BoardPokemonPiece, b: BoardPokemonPiece) => {
     return {
         x: Math.abs(a.position.x - b.position.x),
         y: Math.abs(a.position.y - b.position.y)
     };
 };
 
-const isAdjacent = (a: PokemonPiece) => {
-    return (b: PokemonPiece) => {
+const isAdjacent = (a: BoardPokemonPiece) => {
+    return (b: BoardPokemonPiece) => {
         const { x: deltaX, y: deltaY } = getDelta(a, b);
 
         return (deltaX + deltaY === 1);
     };
 };
-export const getAttackableEnemy = (piece: PokemonPiece, others: PokemonPiece[]) => {
+export const getAttackableEnemy = (piece: BoardPokemonPiece, others: BoardPokemonPiece[]) => {
     return getLivingEnemies(piece, others).find(isAdjacent(piece)) || null;
 };
 
-const getTargetPiece = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
+const getTargetPiece = (piece: BoardPokemonPiece, pieces: BoardPokemonPiece[]) => {
     const enemies = getLivingEnemies(piece, pieces);
 
     if (enemies.length === 0) {
@@ -42,7 +42,7 @@ const getTargetPiece = (piece: PokemonPiece, pieces: PokemonPiece[]) => {
     return enemyDeltas[0].enemy;
 };
 
-export const getNewPiecePosition = (piece: PokemonPiece, pieces: PokemonPiece[]): TileCoordinates => {
+export const getNewPiecePosition = (piece: BoardPokemonPiece, pieces: BoardPokemonPiece[]): TileCoordinates => {
     const target = getTargetPiece(piece, pieces);
 
     if (target === null) {

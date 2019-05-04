@@ -1,13 +1,13 @@
 import * as React from "react";
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
 import { compose } from "recompose";
-import { BenchPokemonPiece } from "@common/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { connect, MapDispatchToProps } from "react-redux";
 import { PokemonImage } from "../pokemonImage";
 import { benchPieceSelected } from "../../actions/benchPieceActions";
 
 interface BenchPieceProps {
-    piece: BenchPokemonPiece;
+    piece: PokemonPiece;
 }
 
 interface BenchPieceDispatchProps {
