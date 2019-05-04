@@ -1,12 +1,12 @@
 import { compose } from "recompose";
 import { connect, MapDispatchToProps } from "react-redux";
-import { benchPieceSelected } from "../../../actions/benchPieceActions";
 import { Props, BenchPieceDispatchProps, BenchPieceProps } from "./benchPieceProps";
 import { benchPieceDragSource } from "./benchPieceDragDrop";
 import { BenchPieceUnconnected } from "./benchPieceUnconnected";
+import { pieceSelectedAction } from "../../../actions/gameActions";
 
 const mapDispatchToProps: MapDispatchToProps<BenchPieceDispatchProps, BenchPieceProps> = (dispatch, ownProps) => ({
-    onPieceSelected: () => dispatch(benchPieceSelected(ownProps.piece))
+    onPieceSelected: () => dispatch(pieceSelectedAction(ownProps.piece))
 });
 
 const BenchPiece = compose<Props, BenchPieceProps>(

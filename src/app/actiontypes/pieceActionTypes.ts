@@ -1,6 +1,3 @@
-export const PIECE_SELECTED = "PIECE_SELECTED";
-export type PIECE_SELECTED = typeof PIECE_SELECTED;
-
 export const PIECE_MOVED_TO_BOARD = "PIECE_MOVED_TO_BOARD";
 export type PIECE_MOVED_TO_BOARD = typeof PIECE_MOVED_TO_BOARD;
 

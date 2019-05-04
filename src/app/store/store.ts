@@ -11,6 +11,7 @@ export interface GameState {
     opponentId: string;
     loading: boolean;
     money: number;
+    selectedPiece: PokemonPiece;
 }
 
 export interface AppState {
