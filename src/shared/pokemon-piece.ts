@@ -48,3 +48,26 @@ export const createPokemon = (ownerId: string, pokemonId: number, position: [num
 });
 
 export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => createPokemon(ownerId, pokemonId, [ slot, null ]);
+
+export const moveOrAddPiece = <T extends PokemonPiece>(allPieces: T[], target: T) => {
+    const result: T[] = [];
+    let targetAdded = false;
+
+    for (const p of allPieces) {
+        // if this isn't the target just push it
+        if (p.id !== target.id) {
+            result.push(p);
+            continue;
+        }
+
+        // otherwise add the target
+        result.push(target);
+        targetAdded = true;
+    }
+
+    if (targetAdded === false) {
+        result.push(target);
+    }
+
+    return result;
+};

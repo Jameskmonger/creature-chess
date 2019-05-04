@@ -1,7 +1,8 @@
-import { BoardPokemonPiece } from "@common/pokemon-piece";
+import { BoardPokemonPiece, moveOrAddPiece } from "@common/pokemon-piece";
 import { PiecesAction } from "../actions/pieceActions";
-import { PIECE_SELECTED, PIECE_MOVED, PIECES_UPDATED } from "../actiontypes/pieceActionTypes";
+import { PIECE_SELECTED, PIECE_MOVED_TO_BOARD, PIECES_UPDATED } from "../actiontypes/pieceActionTypes";
 import { Reducer } from "react";
+import { PokemonPiece } from "../../shared";
 
 const initialState = [];
 
@@ -9,8 +10,14 @@ export const pieces: Reducer<BoardPokemonPiece[], PiecesAction> = (state = initi
     switch (action.type) {
         case PIECES_UPDATED:
             return action.payload;
+        case PIECE_MOVED_TO_BOARD:
+            const target = {
+                ...action.payload.piece,
+                position: action.payload.position
+            };
+
+            return moveOrAddPiece(state, target);
         case PIECE_SELECTED:
-        case PIECE_MOVED:
             return state.map(s => piece(s, action));
         default: {
             return state;
@@ -26,11 +33,6 @@ const piece: Reducer<BoardPokemonPiece, PiecesAction> = (state, action) => {
             }
             if (state.selected && state.id !== action.payload.id) {
                 return { ...state, selected: false };
-            }
-            return state;
-        case PIECE_MOVED:
-            if (state.id === action.payload.piece.id) {
-                return { ...state, position: action.payload.position };
             }
             return state;
         default:
