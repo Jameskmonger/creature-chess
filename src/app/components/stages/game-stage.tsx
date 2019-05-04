@@ -5,7 +5,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
-import { PokemonCard, getTotalHealthByTeam, PokemonPiece } from "@common";
+import { PokemonCard, getTotalHealthByTeam, PokemonPiece, Constants } from "@common";
 import { Board } from "../board";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { Bench } from "../bench/bench";
@@ -23,8 +23,6 @@ const isATeamDefeated = (pieces: PokemonPiece[]) => {
     return healthByTeam.some(x => x.totalHealth === 0);
 };
 
-const boardSize = 8;
-
 interface StateProps {
     pieces: PokemonPiece[];
 }
@@ -39,7 +37,7 @@ class GameStageUnconnected extends React.Component<Props> {
     public render() {
         const boardContainerStyle = {
             height: window.innerHeight + "px",
-            width: ((window.innerHeight / (boardSize + 1)) * boardSize) + "px"
+            width: ((window.innerHeight / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE) + "px"
         };
 
         return (
@@ -53,8 +51,8 @@ class GameStageUnconnected extends React.Component<Props> {
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
-                        <Board boardSize={boardSize} />
-                        <Bench boardSize={boardSize} />
+                        <Board />
+                        <Bench />
                     </div>
                 </div>
                 <div className="column">
