@@ -1,12 +1,12 @@
 import * as React from "react";
-import { BoardPokemonPiece } from "@common/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { connect, MapStateToProps } from "react-redux";
 import { AppState } from "../../store/store";
 import { SelectedPieceInfo } from "./selectedPieceInfo";
 import { getPokemonStats } from "@common/pokemon-details";
 
 interface Props {
-    piece: BoardPokemonPiece;
+    piece: PokemonPiece;
 }
 
 const SelectedPieceInfoPanelUnconnected: React.FunctionComponent<Props> = (props) => {

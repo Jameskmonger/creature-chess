@@ -1,9 +1,9 @@
-import { BoardPokemonPiece, initialCoolDown } from "./pokemon-piece";
+import { PokemonPiece, initialCoolDown } from "./pokemon-piece";
 import { getTypeAttackBonus } from "./get-type-attack-bonus";
 import { PokemonStats } from "./pokemon-stats";
 import { getRelativeDirection } from "./position";
 
-export const attack = (attacker: BoardPokemonPiece, attackerStats: PokemonStats, defender: BoardPokemonPiece, defenderStats: PokemonStats) => {
+export const attack = (attacker: PokemonPiece, attackerStats: PokemonStats, defender: PokemonPiece, defenderStats: PokemonStats) => {
     if (attacker.currentHealth === 0) {
         // Dead Pokémon don't attack
         return { attacker, defender };

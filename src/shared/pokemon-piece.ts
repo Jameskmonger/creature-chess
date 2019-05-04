@@ -21,9 +21,7 @@ export interface PokemonPiece {
     pokemonId: number;
     position: TileCoordinates;
     selected?: boolean;
-}
 
-export interface BoardPokemonPiece extends PokemonPiece {
     facingAway: boolean;
     attacking?: AttackDetails;
     hit?: HitDetails;
@@ -36,7 +34,7 @@ export interface BoardPokemonPiece extends PokemonPiece {
 
 export const initialCoolDown = 1000;
 
-export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): BoardPokemonPiece => ({
+export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): PokemonPiece => ({
     id: uuid(),
     ownerId,
     pokemonId,

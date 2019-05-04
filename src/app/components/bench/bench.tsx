@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BoardPokemonPiece, PokemonPiece } from "@common/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { BenchTile } from "./benchTile";
 import { AppState } from "../../store/store";
 import { MapStateToProps, connect } from "react-redux";

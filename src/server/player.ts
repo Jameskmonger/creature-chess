@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import { PokemonCard, PlayerListPlayer, GameState, Constants } from "../shared";
-import { BoardPokemonPiece, PokemonPiece } from "../shared/pokemon-piece";
+import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
 import { GameStateUpdate } from "../shared/game-state";
@@ -10,7 +10,7 @@ export class Player {
     public readonly name: string;
     private connection: Connection;
     private cards: PokemonCard[];
-    private board: BoardPokemonPiece[];
+    private board: PokemonPiece[];
     private bench: PokemonPiece[];
     private opponent?: Player;
     private money: number;
@@ -45,7 +45,7 @@ export class Player {
         this.cards[index] = null;
     }
 
-    public setBoard(board: BoardPokemonPiece[]) {
+    public setBoard(board: PokemonPiece[]) {
         this.board = board;
     }
 

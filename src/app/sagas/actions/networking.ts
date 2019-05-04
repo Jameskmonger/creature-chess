@@ -4,7 +4,7 @@ import { call, takeEvery, put, take, fork } from "@redux-saga/core/effects";
 import { Socket } from "../types";
 import { GameStateUpdate, PlayingStateUpdate } from "../../../shared/game-state";
 import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes } from "../../../shared/packet-opcodes";
-import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants, BenchPokemonPiece } from "../../../shared";
+import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants } from "../../../shared";
 import { joinCompleteAction, moneyUpdateAction, gameStatePlayingAction, gameStateUpdate } from "../../actions/gameActions";
 import { NetworkAction } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
@@ -37,7 +37,7 @@ const subscribe = (socket: Socket) => {
             emit(piecesUpdated(pieces));
         });
 
-        socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: BenchPokemonPiece[] }) => {
+        socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
             console.log("[BENCH_UPDATE]", packet);
             emit(benchPiecesUpdated(packet.pieces));
         });

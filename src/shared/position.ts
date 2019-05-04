@@ -1,5 +1,5 @@
 import { GRID_SIZE } from "./constants";
-import { BoardPokemonPiece } from "./pokemon-piece";
+import { PokemonPiece } from "./pokemon-piece";
 
 export type TileCoordinates = { x: number, y: number };
 
@@ -19,7 +19,7 @@ const isInsideGrid = (position: TileCoordinates) => {
     return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
 };
 
-export const getAdjacentPositions = (piece: BoardPokemonPiece) => {
+export const getAdjacentPositions = (piece: PokemonPiece) => {
     const { x, y } = piece.position;
 
     const positions: TileCoordinates[] = [

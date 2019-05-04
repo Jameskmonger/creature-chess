@@ -2,7 +2,7 @@ export { PokemonCard } from "./pokemon-card";
 export { GameState } from "./game-state";
 export { Player } from "./player";
 export { PlayerListPlayer } from "./player-list-player";
-export { BoardPokemonPiece as PokemonPiece, PokemonPiece as BenchPokemonPiece } from "./pokemon-piece";
+export { PokemonPiece } from "./pokemon-piece";
 export { getTotalHealthByTeam } from "./get-total-health-by-team";
 
 export { getPokemonDefinition, getAllDefinitions } from "./pokemon-stats";

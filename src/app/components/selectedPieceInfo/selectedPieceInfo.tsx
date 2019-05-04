@@ -1,6 +1,6 @@
 import * as React from "react";
 import { getPokemonDefinition, getRequiredQuantityToEvolve } from "@common";
-import { BoardPokemonPiece } from "@common/pokemon-piece";
+import { PokemonPiece } from "@common/pokemon-piece";
 import { SelectedPieceDetail } from "./selectedPieceDetail";
 import { PokemonImage } from "../pokemonImage";
 import { MapStateToProps, connect } from "react-redux";
@@ -8,7 +8,7 @@ import { AppState } from "src/app/store/store";
 import { CombinePiecesButton } from "./combinePiecesButton";
 
 interface Props {
-    piece: BoardPokemonPiece;
+    piece: PokemonPiece;
     numberOwned: number;
 }
 
