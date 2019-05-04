@@ -1,6 +1,6 @@
 import * as React from "react";
 import { PokemonImage } from "../../pokemonImage";
-import { DragSourceProps } from "../../draggable/drag-source-props";
+import { DragSourceProps } from "../draggable/drag-source-props";
 import { Props } from "./benchPieceProps";
 
 export class BenchPieceUnconnected extends React.Component<Props & DragSourceProps> {

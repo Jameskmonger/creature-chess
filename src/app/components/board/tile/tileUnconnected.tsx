@@ -1,8 +1,7 @@
 import * as React from "react";
 
 import { TileProps } from "./tileProps";
-import { BoardPiece } from "../boardPiece/boardPiece";
-import { DropTargetProps } from "../../draggable/drop-target-props";
+import { DropTargetProps } from "../draggable/drop-target-props";
 import { TileCoordinates, TileType } from "@common/position";
 
 // tslint:disable-next-line:no-bitwise
