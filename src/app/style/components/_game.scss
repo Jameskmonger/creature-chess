@@ -1,17 +1,39 @@
 .game {
     display: flex;
-    flex-direction: row;
+    padding: $spacer;
     overflow-y: hidden;
 
-    .column {
-        flex: 1;
-        box-sizing: border-box;
-        padding: $spacer;
+    &.landscape {
+        flex-direction: row;
+
+        .column {
+            &:not(:first-child) {
+                padding-left: $spacer;
+            }
+        }
     }
 
-    .board-container {
-        display: flex;
-        flex-grow: 0;
+    &.portrait {
+        flex-direction: column;
+
+        .column {
+            &:not(:first-child) {
+                padding-top: $spacer;
+            }
+        }
+    }
+
+    .column {
+        &.board-container {
+            display: flex;
+            margin: 0 auto;
+            flex-grow: 0;
+        }
+
+        &:not(.board-container) {
+            flex: 1;
+            box-sizing: border-box;
+        }
     }
 
     .shop-container {

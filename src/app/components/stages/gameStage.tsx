@@ -13,48 +13,101 @@ import { AppState } from "../../store/store";
 import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { PlayerList } from "../playerList/playerList";
 
-interface Props {
-    pieces: PokemonPiece[];
+import Media from "react-media";
+
+const getWidthFromHeight = (height: number) =>
+    ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
+const getHeightFromWidth = (width: number) =>
+    ((width / Constants.GRID_SIZE) * (Constants.GRID_SIZE + 1));
+
+interface GameStageProps {
+    width: number;
+    height: number;
 }
 
-class GameStageUnconnected extends React.Component<Props> {
+class GameStageUnconnected extends React.Component<GameStageProps> {
     public render() {
+        const { width, height } = this.props;
+        const portrait = width < height;
+
+        const boardMargin = 15;
+        const marginDelta = boardMargin * 3.1;
+
         const boardContainerStyle = {
-            height: window.innerHeight + "px",
-            width: ((window.innerHeight / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE) + "px"
+            height:
+                portrait
+                    ? (getHeightFromWidth(width) - marginDelta) + "px"
+                    : (height - marginDelta) + "px",
+            width:
+                portrait
+                    ? (width - marginDelta) + "px"
+                    : (getWidthFromHeight(height) - marginDelta) + "px"
         };
 
         return (
-            <div className="game">
+            <>
                 <ToastContainer />
 
-                <div className="column">
-                    <PlayerList />
+                <Media query="(orientation: landscape) and (min-width: 1200px)">
+                    <div className="game landscape">
+                        <div className="column">
+                            <PlayerList />
 
-                    <CardShop />
-                </div>
-                <div className="board-container" style={boardContainerStyle}>
-                    <div className="chessboard">
-                        <Board />
-                        <Bench />
+                            <SelectedPieceInfoPanel />
+                        </div>
+                        <div className="column board-container" style={boardContainerStyle}>
+                            <div className="chessboard">
+                                <Board />
+                                <Bench />
+                            </div>
+                        </div>
+                        <div className="column">
+                            <CardShop />
+                        </div>
                     </div>
-                </div>
-                <div className="column">
-                    <SelectedPieceInfoPanel />
-                </div>
-            </div>
+                </Media>
+
+                <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 1000px)">
+                    <div className="game landscape">
+                        <div className="column board-container" style={boardContainerStyle}>
+                            <div className="chessboard">
+                                <Board />
+                                <Bench />
+                            </div>
+                        </div>
+                        <div className="column">
+                            <SelectedPieceInfoPanel />
+
+                            <PlayerList />
+
+                            <CardShop />
+                        </div>
+                    </div>
+                </Media>
+
+                <Media query="(orientation: portrait), (max-width: 999px)">
+                    <div className="game portrait">
+                        <div className="column board-container" style={boardContainerStyle}>
+                            <div className="chessboard">
+                                <Board />
+                                <Bench />
+                            </div>
+                        </div>
+                        <div className="column">
+                            <SelectedPieceInfoPanel />
+
+                            <PlayerList />
+
+                            <CardShop />
+                        </div>
+                    </div>
+                </Media>
+            </>
         );
     }
 }
 
-const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    pieces: state.pieces
-});
-
-const GameStage = compose(
-    connect(mapStateToProps),
-    DragDropContext(HTML5Backend)
-)(GameStageUnconnected);
+const GameStage = DragDropContext(HTML5Backend)(GameStageUnconnected);
 
 export {
     GameStage

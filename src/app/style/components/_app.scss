@@ -1,5 +1,9 @@
+/* stylelint-disable */
+body {
+/* stylelint-enable */
+    background: $game-background;
+}
+
 .approot {
     width: 100%;
-    height: 100vh;
-    background: $game-background;
 }
