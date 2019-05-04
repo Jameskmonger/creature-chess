@@ -1,15 +1,13 @@
 import * as React from "react";
 
 import { TileRows } from "./tileRows";
+import { Constants } from "../../shared";
 
-interface BoardProps {
-    boardSize: number;
-}
 
-const Board: React.FunctionComponent<BoardProps> = ({ boardSize }) => {
+const Board: React.FunctionComponent = props => {
     return (
         <TileRows
-            boardSize={boardSize}
+            boardSize={Constants.GRID_SIZE}
         />
     );
 };

@@ -2,17 +2,15 @@ import * as React from "react";
 import { compose } from "recompose";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { MapStateToProps, connect } from "react-redux";
-import { ToastContainer } from "react-toastify";
-import { PokemonPiece } from "@common";
+import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import { PokemonCard, getTotalHealthByTeam, PokemonPiece, Constants } from "@common";
 import { Board } from "../board";
 import { Bench } from "../bench/bench";
 import { CardSelector } from "../cardSelector";
 import { AppState } from "../../store/store";
 import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { PlayerList } from "../playerList/playerList";
-
-const boardSize = 8;
 
 interface Props {
     pieces: PokemonPiece[];
@@ -22,7 +20,7 @@ class GameStageUnconnected extends React.Component<Props> {
     public render() {
         const boardContainerStyle = {
             height: window.innerHeight + "px",
-            width: ((window.innerHeight / (boardSize + 1)) * boardSize) + "px"
+            width: ((window.innerHeight / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE) + "px"
         };
 
         return (
@@ -36,8 +34,8 @@ class GameStageUnconnected extends React.Component<Props> {
                 </div>
                 <div className="board-container" style={boardContainerStyle}>
                     <div className="chessboard">
-                        <Board boardSize={boardSize} />
-                        <Bench boardSize={boardSize} />
+                        <Board />
+                        <Bench />
                     </div>
                 </div>
                 <div className="column">
