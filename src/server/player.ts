@@ -96,12 +96,6 @@ export class Player {
         });
     }
 
-    public sendBenchUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: this.bench
-        });
-    }
-
     public sendMoneyUpdate() {
         this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
     }
