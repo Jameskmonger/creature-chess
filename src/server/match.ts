@@ -1,5 +1,6 @@
 import { Player } from "./player";
 import { PokemonPiece } from "../shared";
+import { rotatePiecePosition } from "../shared/pokemon-piece";
 
 export class Match {
     private home: Player;
@@ -28,9 +29,9 @@ export class Match {
     }
 
     private mapAwayPiece(piece: PokemonPiece) {
-        return {
+        return rotatePiecePosition({
             ...piece,
             facingAway: false
-        };
+        });
     }
 }
