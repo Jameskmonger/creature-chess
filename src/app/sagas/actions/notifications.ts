@@ -1,29 +1,33 @@
-import { take, takeEvery } from "@redux-saga/core/effects";
+import { take, takeEvery, takeLatest, call, put, all, fork, delay } from "@redux-saga/core/effects";
 import { toast } from "react-toastify";
-import { GAME_STATE_UPDATE } from "../../actiontypes/gameActionTypes";
+import { GAME_STATE_UPDATE, BANNER_UPDATED } from "../../actiontypes/gameActionTypes";
 import { GameState, Constants } from "@common";
 import { ActionWithPayload } from "../types";
+import { countdown } from "../utils/countdown";
+import { bannerUpdatedAction } from "../../actions/gameActions";
 
-const getStateMessage = (state: GameState) => {
-    if (state === GameState.PLAYING) {
-        return "Playing!";
-    }
+const sendNotifications = function*() {
+    yield takeLatest<ActionWithPayload<{ state: GameState }>>(GAME_STATE_UPDATE, function*(action) {
+        const stateLength = Constants.STATE_LENGTHS[action.payload.state];
 
-    const stateLength = Constants.STATE_LENGTHS[state];
+        const channel = yield call(countdown, stateLength);
+        yield takeEvery(channel, function*(secs) {
+            yield put(bannerUpdatedAction(`${GameState[action.payload.state]}, ${secs} seconds`));
+        });
+    });
+};
 
-    return `${GameState[state]}, ${stateLength} seconds`;
+const clearNotifications = function*() {
+    yield takeLatest(BANNER_UPDATED, function*(action) {
+        yield delay(2500);
+
+        yield put(bannerUpdatedAction(null));
+    });
 };
 
 export const notifications = function*() {
-    yield takeEvery<ActionWithPayload<{ state: GameState }>>(GAME_STATE_UPDATE, action => {
-        const message = getStateMessage(action.payload.state);
-
-        toast(message, {
-            autoClose: 2500,
-            draggable: false,
-            pauseOnHover: false,
-            pauseOnFocusLoss: false,
-            hideProgressBar: true
-        });
-    });
+    yield all([
+        yield fork(sendNotifications),
+        yield fork(clearNotifications)
+    ]);
 };

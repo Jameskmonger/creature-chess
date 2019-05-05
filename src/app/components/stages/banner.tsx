@@ -7,6 +7,10 @@ interface BannerProps {
 }
 
 const BannerUnconnected: React.FunctionComponent<BannerProps> = ({ message }) => {
+    if (message === null) {
+        return null;
+    }
+
     return <div className="banner">{message}</div>;
 };
 
