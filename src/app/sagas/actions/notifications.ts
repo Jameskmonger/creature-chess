@@ -1,5 +1,4 @@
-import { take, takeEvery, takeLatest, call, put, all, fork, delay } from "@redux-saga/core/effects";
-import { toast } from "react-toastify";
+import { takeEvery, takeLatest, call, put, all, fork, delay } from "@redux-saga/core/effects";
 import { GAME_STATE_UPDATE, BANNER_UPDATED } from "../../actiontypes/gameActionTypes";
 import { GameState, Constants } from "@common";
 import { ActionWithPayload } from "../types";
@@ -18,7 +17,7 @@ const sendNotifications = function*() {
 };
 
 const clearNotifications = function*() {
-    yield takeLatest(BANNER_UPDATED, function*(action) {
+    yield takeLatest(BANNER_UPDATED, function*() {
         yield delay(2500);
 
         yield put(bannerUpdatedAction(null));
