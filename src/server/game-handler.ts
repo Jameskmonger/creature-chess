@@ -2,7 +2,6 @@ import delay from "delay";
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
 import { createBenchPokemon } from "../shared/pokemon-piece";
-import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes, MovePiecePacket } from "../shared/packet-opcodes";
 import { GameState, getAllDefinitions, Constants } from "../shared";
@@ -36,10 +35,6 @@ export class GameHandler {
     private acceptConnection(connection: Connection, name: string) {
         console.log(`${name} has joined the game`);
 
-        const opponent = new Player(null, "Opponent");
-        opponent.setCards(this.deck.take(5));
-        opponent.setBoard(createRandomOpponentBoard(opponent.id));
-
         const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
         player.setMoney(50);
@@ -68,11 +63,11 @@ export class GameHandler {
             player.movePieceToBoard(packet);
         });
 
-        this.players.push(opponent);
         this.players.push(player);
 
+        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+
         player.sendJoinedGame();
-        player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();
         player.sendBenchUpdate();
