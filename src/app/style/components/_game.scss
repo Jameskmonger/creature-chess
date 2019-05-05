@@ -6,7 +6,7 @@
     &.landscape {
         flex-direction: row;
 
-        .column {
+        .group {
             &:not(:first-child) {
                 padding-left: $spacer;
             }
@@ -16,24 +16,26 @@
     &.portrait {
         flex-direction: column;
 
-        .column {
+        .group {
             &:not(:first-child) {
                 padding-top: $spacer;
             }
         }
     }
 
-    .column {
-        &.board-container {
-            display: flex;
-            margin: 0 auto;
-            flex-grow: 0;
-        }
+    .group {
+        flex: 1;
+        box-sizing: border-box;
+    }
 
-        &:not(.board-container) {
-            flex: 1;
-            box-sizing: border-box;
-        }
+    .board-container {
+        display: flex;
+        margin: 0 auto;
+        flex-grow: 0;
+        /* stylelint-disable */
+        flex-shrink: initial;
+        flex-basis: initial;
+        /* stylelint-enable */
     }
 
     .shop-container {

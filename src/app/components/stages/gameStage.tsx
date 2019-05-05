@@ -50,18 +50,18 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                 <Media query="(orientation: landscape) and (min-width: 1200px)">
                     <div className="game landscape">
-                        <div className="column">
+                        <div className="group">
                             <PlayerList />
 
                             <SelectedPieceInfoPanel />
                         </div>
-                        <div className="column board-container" style={boardContainerStyle}>
+                        <div className="group board-container" style={boardContainerStyle}>
                             <div className="chessboard">
                                 <Board />
                                 <Bench />
                             </div>
                         </div>
-                        <div className="column">
+                        <div className="group">
                             <CardShop />
                         </div>
                     </div>
@@ -69,13 +69,13 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                 <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 1000px)">
                     <div className="game landscape">
-                        <div className="column board-container" style={boardContainerStyle}>
+                        <div className="group board-container" style={boardContainerStyle}>
                             <div className="chessboard">
                                 <Board />
                                 <Bench />
                             </div>
                         </div>
-                        <div className="column">
+                        <div className="group">
                             <SelectedPieceInfoPanel />
 
                             <PlayerList />
@@ -87,13 +87,13 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                 <Media query="(orientation: portrait), (max-width: 999px)">
                     <div className="game portrait">
-                        <div className="column board-container" style={boardContainerStyle}>
+                        <div className="group board-container" style={boardContainerStyle}>
                             <div className="chessboard">
                                 <Board />
                                 <Bench />
                             </div>
                         </div>
-                        <div className="column">
+                        <div className="group">
                             <SelectedPieceInfoPanel />
 
                             <PlayerList />
