@@ -16,6 +16,7 @@ export class Player {
     private opponent?: Player;
     private money: number;
     private health: number;
+    private match: Match;
 
     constructor(connection: Connection, name: string) {
         this.connection = connection;
@@ -26,6 +27,7 @@ export class Player {
         this.bench = [];
         this.money = 0;
         this.health = 100;
+        this.match = null;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -70,6 +72,10 @@ export class Player {
 
     public setMoney(money: number) {
         this.money = money;
+    }
+
+    public getHealth() {
+        return this.health;
     }
 
     public movePieceToBench(packet: MovePiecePacket) {
@@ -138,17 +144,19 @@ export class Player {
     }
 
     public sendPreparingPhaseUpdate() {
+        this.match = null;
+
         const packet: PhaseUpdatePacket = {
             phase: GameState.PREPARING,
             payload: {
-                pieces: []
+                pieces: this.board
             }
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
     }
 
-    public sendPlayingPhaseUpdate(seed: number) {
+    public async sendPlayingPhaseUpdate(seed: number) {
         const packet: PhaseUpdatePacket = {
             phase: GameState.PLAYING,
             payload: {
@@ -157,17 +165,23 @@ export class Player {
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+
+        const results = await this.match.fight(seed);
+
+        console.log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
+
+        this.health -= results.survivingAwayTeam.length;
     }
 
     public sendReadyPhaseUpdate(opponent: Player) {
         this.opponent = opponent;
 
-        const match = new Match(this, opponent);
+        this.match = new Match(this, opponent);
 
         const packet: PhaseUpdatePacket = {
             phase: GameState.READY,
             payload: {
-                pieces: match.getBoard(),
+                pieces: this.match.getBoard(),
                 opponentId: this.opponent.id
             }
         };

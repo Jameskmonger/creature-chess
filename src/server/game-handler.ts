@@ -65,7 +65,7 @@ export class GameHandler {
 
         this.players.push(player);
 
-        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+        this.updatePlayerLists();
 
         player.sendJoinedGame();
         player.sendCardsUpdate();
@@ -79,18 +79,23 @@ export class GameHandler {
     }
 
     private async startGame() {
-        this.startPreparingPhase();
+        while (this.players.filter(p => p.getHealth() > 0).length > 1) {
+            this.startPreparingPhase();
 
-        await delay(Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
+            await delay(Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
 
-        this.startReadyPhase();
+            this.startReadyPhase();
 
-        await delay(Constants.STATE_LENGTHS[GameState.READY] * 1000);
+            await delay(Constants.STATE_LENGTHS[GameState.READY] * 1000);
 
-        this.startPlayingPhase();
+            this.startPlayingPhase();
+        }
+
     }
 
     private startPreparingPhase() {
+        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+
         console.log(`Entering phase ${GameState.PREPARING}`);
 
         this.state = GameState.PREPARING;
@@ -111,14 +116,26 @@ export class GameHandler {
         });
     }
 
-    private startPlayingPhase() {
+    private async startPlayingPhase() {
         this.state = GameState.PLAYING;
 
         const newSeed = this.seedProvider.refreshSeed();
 
         console.log(`Entering phase ${GameState.PLAYING} (with seed ${newSeed})`);
 
-        this.players.forEach(p => p.sendPlayingPhaseUpdate(newSeed));
+        const promises = this.players.map(p =>
+            p.sendPlayingPhaseUpdate(newSeed)
+                .then(() => this.updatePlayerLists())
+        );
+
+        await Promise.all([
+            delay(20_000),
+            Promise.all(promises)
+        ]);
+    }
+
+    private updatePlayerLists() {
+        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {
