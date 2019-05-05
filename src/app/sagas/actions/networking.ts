@@ -1,18 +1,19 @@
 import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
-import { call, takeEvery, put, take, fork } from "@redux-saga/core/effects";
-import { Socket } from "../types";
+import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
+import { Socket, ActionWithPayload } from "../types";
 import { GameStateUpdate, PlayingStateUpdate } from "@common/game-state";
 import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
 import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants } from "@common";
 import { joinCompleteAction, moneyUpdateAction, gameStatePlayingAction, gameStateUpdate } from "../../actions/gameActions";
-import { NetworkAction } from "../../actions/networkActions";
+import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { piecesUpdated } from "../../actions/pieceActions";
 import { playerListUpdated } from "../../actions/playerListActions";
 import { cardsUpdated } from "../../actions/cardActions";
 import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
 import { benchPiecesUpdated } from "../../actions/benchPieceActions";
+import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -73,7 +74,7 @@ const subscribe = (socket: Socket) => {
     });
 };
 
-const read = function*(socket: Socket) {
+const readPacketsToActions = function*(socket: Socket) {
     const channel = yield call(subscribe, socket);
 
     yield takeEvery(channel, function*(action) {
@@ -81,7 +82,18 @@ const read = function*(socket: Socket) {
     });
 };
 
-const write = function*(socket: Socket) {
+const writeActionsToPackets = function*() {
+    yield all([
+        takeEvery(REROLL_CARDS, function*() {
+            yield put(sendPacket(ClientToServerPacketOpcodes.REROLL_CARDS));
+        }),
+        takeEvery<ActionWithPayload<{ index: number }>>(PURCHASE_CARD, function*(action) {
+            yield put(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, action.payload.index));
+        })
+    ]);
+};
+
+const writePacketsToSocket = function*(socket: Socket) {
     yield takeEvery<NetworkAction>(SEND_PACKET, ({ payload }) => {
         socket.emit(payload.opcode, ...payload.data);
     });
@@ -93,6 +105,7 @@ export const networking = function*() {
 
     socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, payload.name);
 
-    yield fork(read, socket);
-    yield fork(write, socket);
+    yield fork(readPacketsToActions, socket);
+    yield fork(writeActionsToPackets);
+    yield fork(writePacketsToSocket, socket);
 };
