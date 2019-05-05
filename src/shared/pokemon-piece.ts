@@ -44,6 +44,8 @@ export const createPokemon = (ownerId: string, pokemonId: number, position: [num
     coolDown: initialCoolDown
 });
 
+export const clonePokemonPiece = (piece: PokemonPiece) => createPokemon(piece.ownerId, piece.pokemonId, [piece.position.x, piece.position.y]);
+
 export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => createPokemon(ownerId, pokemonId, [ slot, null ]);
 
 export const moveOrAddPiece = <T extends PokemonPiece>(allPieces: T[], target: T) => {

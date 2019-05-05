@@ -1,9 +1,10 @@
 import uuid = require("uuid/v4");
 import { PokemonCard, PlayerListPlayer, GameState, Constants } from "../shared";
-import { PokemonPiece } from "../shared/pokemon-piece";
+import { PokemonPiece, clonePokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, BoardUpatePacket } from "../shared/packet-opcodes";
 import { TileCoordinates } from "../shared/position";
+import { Match } from "./match";
 
 export class Player {
     public readonly id: string;
@@ -49,16 +50,16 @@ export class Player {
         this.board = board;
     }
 
+    public clone() {
+        return this.board.map(p => clonePokemonPiece(p));
+    }
+
     public setBench(bench: PokemonPiece[]) {
         this.bench = bench;
     }
 
     public addBenchPiece(piece: PokemonPiece) {
         this.bench.push(piece);
-    }
-
-    public setOpponent(opponent: Player) {
-        this.opponent = opponent;
     }
 
     public getMoney() {
@@ -156,11 +157,15 @@ export class Player {
         this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
     }
 
-    public sendReadyPhaseUpdate() {
+    public sendReadyPhaseUpdate(opponent: Player) {
+        this.opponent = opponent;
+
+        const match = new Match(this, opponent);
+
         const packet: PhaseUpdatePacket = {
             phase: GameState.READY,
             payload: {
-                pieces: [],
+                pieces: match.getBoard(),
                 opponentId: this.opponent.id
             }
         };

@@ -8,6 +8,10 @@ import { ClientToServerPacketOpcodes, MovePiecePacket } from "../shared/packet-o
 import { GameState, getAllDefinitions, Constants } from "../shared";
 import { SeedProvider } from "./seed-provider";
 
+const randomFromArray = <T>(array: T[]) => {
+    return array[Math.floor(Math.random() * array.length)];
+};
+
 export class GameHandler {
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
@@ -39,9 +43,6 @@ export class GameHandler {
         const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
         player.setMoney(50);
-
-        player.setOpponent(opponent);
-        opponent.setOpponent(player);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             console.log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
@@ -107,7 +108,12 @@ export class GameHandler {
 
         this.state = GameState.READY;
 
-        this.players.forEach(p => p.sendReadyPhaseUpdate());
+        this.players.forEach(p => {
+            const others = this.players.filter(other => other.id !== p.id);
+            const opponent = randomFromArray(others);
+
+            p.sendReadyPhaseUpdate(opponent);
+        });
     }
 
     private startPlayingPhase() {
