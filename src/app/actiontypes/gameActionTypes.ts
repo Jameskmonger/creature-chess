@@ -15,3 +15,6 @@ export type MONEY_UPDATE = typeof MONEY_UPDATE;
 
 export const PIECE_SELECTED = "PIECE_SELECTED";
 export type PIECE_SELECTED = typeof PIECE_SELECTED;
+
+export const BANNER_UPDATED = "BANNER_UPDATED";
+export type BANNER_UPDATED = typeof BANNER_UPDATED;

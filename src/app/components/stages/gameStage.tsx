@@ -62,7 +62,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Bench />
                             </div>
 
-                            <Banner message="Preparing: 30 seconds" />
+                            <Banner />
                         </div>
                         <div className="group">
                             <CardShop />
@@ -78,7 +78,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Bench />
                             </div>
 
-                            <Banner message="Preparing: 30 seconds" />
+                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
@@ -98,7 +98,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Bench />
                             </div>
 
-                            <Banner message="Preparing: 30 seconds" />
+                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />

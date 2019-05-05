@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING, MONEY_UPDATE, PIECE_SELECTED } from "../actiontypes/gameActionTypes";
+import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING, MONEY_UPDATE, PIECE_SELECTED, BANNER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store/store";
 
 const initialState: GameState = {
@@ -7,7 +7,8 @@ const initialState: GameState = {
     opponentId: null,
     loading: false,
     money: 0,
-    selectedPiece: null
+    selectedPiece: null,
+    bannerMessage: null
 };
 
 export function game(state: GameState = initialState, action: GameAction) {
@@ -38,6 +39,11 @@ export function game(state: GameState = initialState, action: GameAction) {
             return {
                 ...state,
                 selectedPiece: action.payload.piece
+            };
+        case BANNER_UPDATED:
+            return {
+                ...state,
+                bannerMessage: action.payload.message
             };
         default:
             return state;
