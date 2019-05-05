@@ -23,15 +23,25 @@ const SelectedPieceInfoPanelUnconnected: React.FunctionComponent<Props> = (props
     const requiredQuantityToEvolve = getRequiredQuantityToEvolve(id);
 
     return (
-        <div className={`selected-piece-info-panel card ${getPokemonStats(props.piece.pokemonId).type.toLowerCase()}`}>
+        <div className={`selected-piece-info-panel ${getPokemonStats(props.piece.pokemonId).type.toLowerCase()}`}>
             <PokemonImage pokemonId={id} />
-            <SelectedPieceDetail label="Name" value={name} />
+
+            <h3 className="name">{name}</h3>
+            <h4 className="type">{stats.type}</h4>
+
             <SelectedPieceDetail label="HP" value={stats.hp} />
             <SelectedPieceDetail label="Attack" value={stats.attack} />
             <SelectedPieceDetail label="Defence" value={stats.defense} />
-            <SelectedPieceDetail label="Type" value={stats.type} />
-            <SelectedPieceDetail label="Owned" value={props.numberOwned} />
-            {requiredQuantityToEvolve && props.numberOwned >= requiredQuantityToEvolve && <CombinePiecesButton />}
+
+            <div className="owned">
+                <span>{props.numberOwned} owned</span>
+            </div>
+
+            {
+                requiredQuantityToEvolve
+                && props.numberOwned >= requiredQuantityToEvolve
+                && <CombinePiecesButton />
+            }
         </div>
     );
 };
