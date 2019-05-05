@@ -14,6 +14,7 @@ import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPa
 import { PlayerList } from "../playerList/playerList";
 
 import Media from "react-media";
+import { Banner } from "./banner";
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -60,6 +61,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Banner message="Preparing: 30 seconds" />
                         </div>
                         <div className="group">
                             <CardShop />
@@ -74,6 +77,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Banner message="Preparing: 30 seconds" />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
@@ -92,6 +97,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Banner message="Preparing: 30 seconds" />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
