@@ -19,10 +19,9 @@
 
     .image {
         position: absolute;
-        top: 6px;
-        left: ($tile-size - $sprite-size) / 2;
-
-        width: $sprite-size;
-        height: $sprite-size;
+        top: 0;
+        left: 9%;
+        width: 82%;
+        height: 82%;
     }
 }
