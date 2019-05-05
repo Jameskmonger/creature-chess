@@ -1,3 +1,6 @@
+import { string } from "prop-types";
+import { TileCoordinates } from "./position";
+
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
     BOARD_UPDATE = "boardUpdate",
@@ -11,5 +14,13 @@ export enum ServerToClientPacketOpcodes {
 export enum ClientToServerPacketOpcodes {
     JOIN_GAME = "joinGame",
     PURCHASE_CARD = "purchaseCard",
-    REROLL_CARDS = "rerollCards"
+    REROLL_CARDS = "rerollCards",
+    MOVE_PIECE_TO_BENCH = "movePieceToBench",
+    MOVE_PIECE_TO_BOARD = "movePieceToBoard"
+}
+
+export interface MovePiecePacket {
+    id: string;
+    from: TileCoordinates;
+    to: TileCoordinates;
 }

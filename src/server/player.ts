@@ -2,8 +2,9 @@ import uuid = require("uuid/v4");
 import { PokemonCard, PlayerListPlayer, GameState, Constants } from "../shared";
 import { PokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
-import { ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
+import { ServerToClientPacketOpcodes, MovePiecePacket } from "../shared/packet-opcodes";
 import { GameStateUpdate } from "../shared/game-state";
+import { TileCoordinates } from "../shared/position";
 
 export class Player {
     public readonly id: string;
@@ -67,6 +68,30 @@ export class Player {
 
     public setMoney(money: number) {
         this.money = money;
+    }
+
+    public movePieceToBench(packet: MovePiecePacket) {
+        const piece = this.popPieceIfExists(packet.id, packet.from);
+
+        if (piece === null) {
+            console.log(`Could not find piece ID ${packet.id}`);
+            return;
+        }
+
+        piece.position = packet.to;
+        this.bench.push(piece);
+    }
+
+    public movePieceToBoard(packet: MovePiecePacket) {
+        const piece = this.popPieceIfExists(packet.id, packet.from);
+
+        if (piece === null) {
+            console.log(`Could not find piece ID ${packet.id}`);
+            return;
+        }
+
+        piece.position = packet.to;
+        this.board.push(piece);
     }
 
     public sendJoinedGame() {
@@ -151,5 +176,25 @@ export class Player {
         }
 
         this.connection.sendPacket(opcode, ...data);
+    }
+
+    private popPieceIfExists(id: string, { x, y }: TileCoordinates) {
+        const fromBench = y === null;
+        const origin = fromBench ? this.bench : this.board;
+
+        const index = origin.findIndex(p =>
+            p.id === id
+            && p.position.x === x
+            && p.position.y === y);
+
+        if (index === -1) {
+            return null;
+        }
+
+        const piece = origin[index];
+
+        origin.splice(index, 1);
+
+        return piece;
     }
 }

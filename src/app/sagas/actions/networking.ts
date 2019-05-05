@@ -3,7 +3,7 @@ import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../types";
 import { GameStateUpdate, PlayingStateUpdate } from "@common/game-state";
-import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
+import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes, MovePiecePacket } from "@common/packet-opcodes";
 import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants } from "@common";
 import { joinCompleteAction, moneyUpdateAction, gameStatePlayingAction, gameStateUpdate } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
@@ -14,6 +14,8 @@ import { cardsUpdated } from "../../actions/cardActions";
 import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
 import { benchPiecesUpdated } from "../../actions/benchPieceActions";
 import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
+import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "../../actiontypes/pieceActionTypes";
+import { TileCoordinates, createTileCoordinates } from "../../../shared/position";
 
 const getSocket = () => {
     const socket = io("http://localhost:3000");
@@ -84,12 +86,42 @@ const readPacketsToActions = function*(socket: Socket) {
 
 const writeActionsToPackets = function*() {
     yield all([
-        takeEvery(REROLL_CARDS, function*() {
-            yield put(sendPacket(ClientToServerPacketOpcodes.REROLL_CARDS));
-        }),
-        takeEvery<ActionWithPayload<{ index: number }>>(PURCHASE_CARD, function*(action) {
-            yield put(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, action.payload.index));
-        })
+        takeEvery(
+            REROLL_CARDS,
+            function*() {
+                yield put(sendPacket(ClientToServerPacketOpcodes.REROLL_CARDS));
+            }
+        ),
+        takeEvery<ActionWithPayload<{ index: number }>>(
+            PURCHASE_CARD,
+            function*({ payload }) {
+                yield put(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, payload.index));
+            }
+        ),
+        takeEvery<ActionWithPayload<{ piece: PokemonPiece, position: TileCoordinates }>>(
+            PIECE_MOVED_TO_BOARD,
+            function*({ payload }) {
+                const packet: MovePiecePacket = {
+                    id: payload.piece.id,
+                    from: payload.piece.position,
+                    to: payload.position
+                };
+
+                yield put(sendPacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, packet));
+            }
+        ),
+        takeEvery<ActionWithPayload<{ piece: PokemonPiece, slot: number }>>(
+            PIECE_MOVED_TO_BENCH,
+            function*({ payload }) {
+                const packet: MovePiecePacket = {
+                    id: payload.piece.id,
+                    from: payload.piece.position,
+                    to: createTileCoordinates(payload.slot, null)
+                };
+
+                yield put(sendPacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, packet));
+            }
+        )
     ]);
 };
 
