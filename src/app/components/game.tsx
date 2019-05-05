@@ -9,15 +9,51 @@ interface Props {
     inLobby: boolean;
 }
 
-class GameUnconnected extends React.Component<Props, {}> {
+interface State {
+    width: number;
+    height: number;
+}
+
+class GameUnconnected extends React.Component<Props, State> {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            width: window.innerWidth,
+            height: window.innerHeight
+        };
+
+        this.updateDimensions = this.updateDimensions.bind(this);
+    }
+
     public render() {
         const { inLobby } = this.props;
+        const { width, height } = this.state;
 
-        if (inLobby) {
-            return <LobbyStage />;
-        }
+        return (
+            <>
+                {
+                    inLobby
+                        ? <LobbyStage />
+                        : <GameStage width={width} height={height} />
+                }
+            </>
+        );
+    }
 
-        return <GameStage />;
+    public componentDidMount() {
+        window.addEventListener("resize", this.updateDimensions);
+    }
+
+    public componentWillUnmount() {
+        window.removeEventListener("resize", this.updateDimensions);
+    }
+
+    private updateDimensions() {
+        this.setState({
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
     }
 }
 

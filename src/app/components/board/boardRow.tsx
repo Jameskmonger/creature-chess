@@ -1,14 +1,11 @@
 import * as React from "react";
 import { createTileCoordinates } from "@common/position";
-import { Constants } from "../../../shared";
+import { Constants } from "@common";
 import { BoardTile } from "./tile/boardTile";
 
 interface TileRowProps {
     y: number;
 }
-
-// tslint:disable-next-line:no-bitwise
-const isTileDark = (x, y) => ((y ^ x) & 1) !== 0;
 
 const BoardRow: React.FunctionComponent<TileRowProps> = ({ y }) => {
     const tiles = [];

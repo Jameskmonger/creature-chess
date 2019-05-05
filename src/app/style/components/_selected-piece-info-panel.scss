@@ -1,3 +1,81 @@
 .selected-piece-info-panel {
     width: 100%;
+    box-sizing: border-box;
+    padding: 1em 0;
+    margin-bottom: 1rem;
+    font-family: Arial, sans-serif;
+    color: $card-name;
+    text-align: center;
+    border-style: solid;
+    border-width: 3px;
+
+    .image {
+        width: 64px;
+        height: 64px;
+    }
+
+    .name {
+        font-size: 1.2em;
+    }
+
+    .type {
+        margin-bottom: 0.5rem;
+        font-style: italic;
+    }
+
+    .owned {
+        margin-top: 0.5rem;
+    }
+
+    &.bug {
+        border-color: $bug-color;
+    }
+
+    &.electric {
+        border-color: $electric-color;
+    }
+
+    &.fighting {
+        border-color: $fighting-color;
+    }
+
+    &.fire {
+        border-color: $fire-color;
+    }
+
+    &.flying {
+        border-color: $flying-color;
+    }
+
+    &.ghost {
+        border-color: $ghost-color;
+    }
+
+    &.grass {
+        border-color: $grass-color;
+    }
+
+    &.ground {
+        border-color: $ground-color;
+    }
+
+    &.normal {
+        border-color: $normal-color;
+    }
+
+    &.poison {
+        border-color: $poison-color;
+    }
+
+    &.psychic {
+        border-color: $psychic-color;
+    }
+
+    &.rock {
+        border-color: $rock-color;
+    }
+
+    &.water {
+        border-color: $water-color;
+    }
 }

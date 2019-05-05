@@ -1,17 +1,41 @@
 .game {
     display: flex;
-    flex-direction: row;
+    padding: $spacer;
     overflow-y: hidden;
 
-    .column {
+    &.landscape {
+        flex-direction: row;
+
+        .group {
+            &:not(:first-child) {
+                padding-left: $spacer;
+            }
+        }
+    }
+
+    &.portrait {
+        flex-direction: column;
+
+        .group {
+            &:not(:first-child) {
+                padding-top: $spacer;
+            }
+        }
+    }
+
+    .group {
         flex: 1;
         box-sizing: border-box;
-        padding: $spacer;
     }
 
     .board-container {
         display: flex;
+        margin: 0 auto;
         flex-grow: 0;
+        /* stylelint-disable */
+        flex-shrink: initial;
+        flex-basis: initial;
+        /* stylelint-enable */
     }
 
     .shop-container {
