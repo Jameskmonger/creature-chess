@@ -15,6 +15,7 @@ export class Player {
     private bench: PokemonPiece[];
     private opponent?: Player;
     private money: number;
+    private health: number;
 
     constructor(connection: Connection, name: string) {
         this.connection = connection;
@@ -24,6 +25,7 @@ export class Player {
         this.board = [];
         this.bench = [];
         this.money = 0;
+        this.health = 100;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -128,7 +130,7 @@ export class Player {
             return {
                 id: p.id,
                 name: p.name,
-                health: 100
+                health: p.health
             };
         });
 
