@@ -1,7 +1,7 @@
 import delay from "delay";
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
-import { createPokemon } from "../shared/pokemon-piece";
+import { createBenchPokemon } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
@@ -38,18 +38,7 @@ export class GameHandler {
 
         const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
-        player.setBoard([
-            createPokemon(player.id, 129, [1, 6]),
-            createPokemon(player.id, 129, [2, 6]),
-            createPokemon(player.id, 129, [4, 4]),
-            createPokemon(player.id, 70, [7, 6]),
-            createPokemon(player.id, 67, [3, 4]),
-            createPokemon(player.id, 89, [5, 4]),
-
-            createPokemon(player.id, 9, [2, 8], true),
-            createPokemon(player.id, 70, [5, 8], true),
-            createPokemon(player.id, 67, [6, 8], true)
-        ]);
+        player.setMoney(50);
 
         player.setOpponent(opponent);
         opponent.setOpponent(player);
@@ -73,6 +62,7 @@ export class GameHandler {
         player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();
+        player.sendBenchUpdate();
         player.sendMoneyUpdate();
 
         if (this.players.length === Constants.MAX_PLAYER_COUNT) {
@@ -136,10 +126,11 @@ export class GameHandler {
         player.sendCardsUpdate();
         player.sendMoneyUpdate();
 
-        const piece = createPokemon(player.id, card.id, [ slot, 8 ], true);
-        player.addPiece(piece);
+        const piece = createBenchPokemon(player.id, card.id, slot);
 
-        player.sendBoardUpdate();
+        player.addBenchPiece(piece);
+
+        player.sendBenchUpdate();
     }
 
     private onPlayerRerollCards(player: Player) {

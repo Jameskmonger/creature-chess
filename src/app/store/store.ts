@@ -11,11 +11,12 @@ export interface GameState {
     opponentId: string;
     loading: boolean;
     money: number;
+    selectedPiece: PokemonPiece;
 }
 
 export interface AppState {
-    deck: PokemonCard[];
     pieces: PokemonPiece[];
+    benchPieces: PokemonPiece[];
     game: GameState;
     playerList: PlayerListPlayer[];
     cards: PokemonCard[];

@@ -1,12 +1,13 @@
-import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING, MONEY_UPDATE, GAME_STATE_UPDATE } from "../actiontypes/gameActionTypes";
-import { GameState } from "../../shared";
+import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING, MONEY_UPDATE, GAME_STATE_UPDATE, PIECE_SELECTED } from "../actiontypes/gameActionTypes";
+import { GameState, PokemonPiece } from "../../shared";
 
 export type GameAction =
     ({ type: JOIN_GAME, payload: { name: string } })
     | ({ type: JOIN_COMPLETE, payload: { id: string } })
     | ({ type: GAME_STATE_UPDATE, payload: { state: GameState } })
     | ({ type: GAME_STATE_PLAYING, payload: { opponentId: string } })
-    | ({ type: MONEY_UPDATE, payload: { money: number } });
+    | ({ type: MONEY_UPDATE, payload: { money: number } })
+    | ({ type: PIECE_SELECTED, payload: { piece: PokemonPiece }});
 
 export const joinGameAction = (name: string) => ({
     type: JOIN_GAME,
@@ -40,5 +41,12 @@ export const moneyUpdateAction = (money: number) => ({
     type: MONEY_UPDATE,
     payload: {
         money
+    }
+});
+
+export const pieceSelectedAction = (piece: PokemonPiece) => ({
+    type: PIECE_SELECTED,
+    payload: {
+        piece
     }
 });

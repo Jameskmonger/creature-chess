@@ -53,3 +53,8 @@ export const getRelativeDirection = (from: TileCoordinates, to: TileCoordinates)
     }
     return Direction.Unknown;
 };
+
+export enum TileType {
+    BOARD,
+    BENCH
+}

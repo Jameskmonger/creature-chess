@@ -11,6 +11,7 @@ export class Player {
     private connection: Connection;
     private cards: PokemonCard[];
     private board: PokemonPiece[];
+    private bench: PokemonPiece[];
     private opponent?: Player;
     private money: number;
 
@@ -18,7 +19,10 @@ export class Player {
         this.connection = connection;
         this.id = uuid();
         this.name = name;
-        this.money = 50;
+        this.cards = [];
+        this.board = [];
+        this.bench = [];
+        this.money = 0;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -45,8 +49,12 @@ export class Player {
         this.board = board;
     }
 
-    public addPiece(piece: PokemonPiece) {
-        this.board.push(piece);
+    public setBench(bench: PokemonPiece[]) {
+        this.bench = bench;
+    }
+
+    public addBenchPiece(piece: PokemonPiece) {
+        this.bench.push(piece);
     }
 
     public setOpponent(opponent: Player) {
@@ -76,6 +84,12 @@ export class Player {
         });
     }
 
+    public sendBenchUpdate() {
+        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
+            pieces: this.bench
+        });
+    }
+
     public sendMoneyUpdate() {
         this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
     }
@@ -102,11 +116,11 @@ export class Player {
     }
 
     public getFirstEmptyBenchSlot() {
-        for (let x = 0; x < Constants.GRID_SIZE; x++) {
-            const benchedPiece = this.board.some(p => p.position.x === x && (p.benched || p.position.y === Constants.GRID_SIZE));
+        for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
+            const piece = this.bench.some(p => p.position.x === slot);
 
-            if (!benchedPiece) {
-                return x;
+            if (!piece) {
+                return slot;
             }
         }
 

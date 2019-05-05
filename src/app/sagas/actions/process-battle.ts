@@ -3,9 +3,9 @@ import { take, call, put, select, takeEvery } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import { GAME_STATE_PLAYING } from "../../actiontypes/gameActionTypes";
 import { piecesUpdated } from "../../actions/pieceActions";
-import { PokemonPiece } from "../../../shared";
-import { isATeamDefeated } from "../../../shared/is-a-team-defeated";
-import { simulateTurn } from "../../../shared/fighting-turn-simulator";
+import { PokemonPiece } from "@common";
+import { isATeamDefeated } from "@common/is-a-team-defeated";
+import { simulateTurn } from "@common/fighting-turn-simulator";
 import { AppState } from "../../store/store";
 
 const startBattle = (startPieces: PokemonPiece[]) => {

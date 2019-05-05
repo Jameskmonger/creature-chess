@@ -1,12 +1,13 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING, MONEY_UPDATE } from "../actiontypes/gameActionTypes";
+import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING, MONEY_UPDATE, PIECE_SELECTED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store/store";
 
 const initialState: GameState = {
     localPlayerId: null,
     opponentId: null,
     loading: false,
-    money: 0
+    money: 0,
+    selectedPiece: null
 };
 
 export function game(state: GameState = initialState, action: GameAction) {
@@ -32,6 +33,11 @@ export function game(state: GameState = initialState, action: GameAction) {
             return {
                 ...state,
                 money: action.payload.money
+            };
+        case PIECE_SELECTED:
+            return {
+                ...state,
+                selectedPiece: action.payload.piece
             };
         default:
             return state;
