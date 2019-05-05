@@ -4,7 +4,7 @@ import { CardDeck } from "./cardDeck";
 import { createBenchPokemon } from "../shared/pokemon-piece";
 import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
-import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
+import { ClientToServerPacketOpcodes, MovePiecePacket } from "../shared/packet-opcodes";
 import { GameState, getAllDefinitions, Constants } from "../shared";
 import { SeedProvider } from "./seed-provider";
 
@@ -53,6 +53,18 @@ export class GameHandler {
             console.log(`[${player.name}] REROLL_CARDS`);
 
             this.onPlayerRerollCards(player);
+        });
+
+        connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, (packet: MovePiecePacket) => {
+            console.log(`[${player.name}] MOVE_PIECE_TO_BENCH`);
+
+            player.movePieceToBench(packet);
+        });
+
+        connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, (packet: MovePiecePacket) => {
+            console.log(`[${player.name}] MOVE_PIECE_TO_BOARD`);
+
+            player.movePieceToBoard(packet);
         });
 
         this.players.push(opponent);

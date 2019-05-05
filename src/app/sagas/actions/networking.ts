@@ -3,7 +3,7 @@ import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../types";
 import { GameStateUpdate, PlayingStateUpdate } from "@common/game-state";
-import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
+import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes, MovePiecePacket } from "@common/packet-opcodes";
 import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants } from "@common";
 import { joinCompleteAction, moneyUpdateAction, gameStatePlayingAction, gameStateUpdate } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
@@ -101,7 +101,7 @@ const writeActionsToPackets = function*() {
         takeEvery<ActionWithPayload<{ piece: PokemonPiece, position: TileCoordinates }>>(
             PIECE_MOVED_TO_BOARD,
             function*({ payload }) {
-                const packet = {
+                const packet: MovePiecePacket = {
                     id: payload.piece.id,
                     from: payload.piece.position,
                     to: payload.position
@@ -113,7 +113,7 @@ const writeActionsToPackets = function*() {
         takeEvery<ActionWithPayload<{ piece: PokemonPiece, slot: number }>>(
             PIECE_MOVED_TO_BENCH,
             function*({ payload }) {
-                const packet = {
+                const packet: MovePiecePacket = {
                     id: payload.piece.id,
                     from: payload.piece.position,
                     to: createTileCoordinates(payload.slot, null)
