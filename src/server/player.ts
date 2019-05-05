@@ -79,8 +79,20 @@ export class Player {
 
     public sendBoardUpdate() {
         this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, {
-            friendly: this.board,
-            opponent: this.opponent.board
+            friendly: this.board.map(piece => ({
+                ...piece,
+                facingAway: true
+            })),
+            opponent: this.opponent.board.map(piece => ({
+                ...piece,
+                facingAway: false
+            }))
+        });
+    }
+
+    public sendBenchUpdate() {
+        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
+            pieces: this.bench
         });
     }
 

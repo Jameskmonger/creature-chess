@@ -108,3 +108,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 }
 
 const GameStage = DragDropContext(HTML5Backend)(GameStageUnconnected);
+
+export {
+    GameStage
+};
