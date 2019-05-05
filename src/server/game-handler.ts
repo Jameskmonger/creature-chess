@@ -83,33 +83,41 @@ export class GameHandler {
     }
 
     private async startGame() {
-        this.updateState(GameState.PREPARING);
+        this.startPreparingPhase();
 
         await delay(Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
 
-        this.updateState(GameState.READY);
+        this.startReadyPhase();
 
         await delay(Constants.STATE_LENGTHS[GameState.READY] * 1000);
 
-        this.updateState(GameState.PLAYING);
+        this.startPlayingPhase();
     }
 
-    private sendStateUpdate(seed?: number) {
-        this.players.forEach(p => p.sendStateUpdate(this.state, seed));
+    private startPreparingPhase() {
+        console.log(`Entering phase ${GameState.PREPARING}`);
+
+        this.state = GameState.PREPARING;
+
+        this.players.forEach(p => p.sendPreparingPhaseUpdate());
     }
 
-    private updateState(state: GameState) {
-        this.state = state;
+    private startReadyPhase() {
+        console.log(`Entering phase ${GameState.READY}`);
 
-        if (this.state !== GameState.PLAYING) {
-            console.log(`Entering state ${GameState[state]}`);
-            this.sendStateUpdate();
-            return;
-        }
+        this.state = GameState.READY;
+
+        this.players.forEach(p => p.sendReadyPhaseUpdate());
+    }
+
+    private startPlayingPhase() {
+        this.state = GameState.PLAYING;
 
         const newSeed = this.seedProvider.refreshSeed();
-        console.log(`Entering state ${GameState[state]} (with seed ${newSeed})`);
-        this.sendStateUpdate(newSeed);
+
+        console.log(`Entering phase ${GameState.PLAYING} (with seed ${newSeed})`);
+
+        this.players.forEach(p => p.sendPlayingPhaseUpdate(newSeed));
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {

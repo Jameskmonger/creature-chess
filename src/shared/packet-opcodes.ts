@@ -1,5 +1,7 @@
 import { string } from "prop-types";
 import { TileCoordinates } from "./position";
+import { PokemonPiece } from "./pokemon-piece";
+import { GameState } from "./game-state";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -24,3 +26,12 @@ export interface MovePiecePacket {
     from: TileCoordinates;
     to: TileCoordinates;
 }
+
+export type BoardUpatePacket = {
+    pieces: PokemonPiece[];
+};
+
+export type PhaseUpdatePacket
+    = ({ phase: GameState.PREPARING, payload: { pieces: PokemonPiece[] } })
+        | ({ phase: GameState.READY, payload: { pieces: PokemonPiece[], opponentId: string }})
+        | ({ phase: GameState.PLAYING, payload: { seed: number } });
