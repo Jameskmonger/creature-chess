@@ -1,9 +1,10 @@
 import * as React from "react";
 import { PokemonCard, Constants } from "@common";
-import { Card, RerollCard } from "./card";
+import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { AppState } from "../store/store";
-import { rerollCards, purchaseCard } from "../actions/cardActions";
+import { AppState } from "../../store/store";
+import { rerollCards, purchaseCard } from "../../actions/cardActions";
+import { RerollCard } from "./rerollCard";
 
 interface StateProps {
     cards: PokemonCard[];
@@ -17,7 +18,7 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps;
 
-const CardSelectorUnconnected: React.FunctionComponent<Props> = props => {
+const CardShopUnconnected: React.FunctionComponent<Props> = props => {
     const { cards, money, onReroll, onPurchaseCard } = props;
 
     const onCardClick = (index: number) => {
@@ -63,8 +64,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     onPurchaseCard: (index: number) => dispatch(purchaseCard(index))
 });
 
-const CardSelector = connect(mapStateToProps, mapDispatchToProps)(CardSelectorUnconnected);
+const CardShop = connect(mapStateToProps, mapDispatchToProps)(CardShopUnconnected);
 
 export {
-    CardSelector
+    CardShop
 };
