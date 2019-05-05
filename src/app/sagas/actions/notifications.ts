@@ -9,6 +9,10 @@ const sendNotifications = function*() {
     yield takeLatest<ActionWithPayload<{ state: GameState }>>(GAME_STATE_UPDATE, function*(action) {
         const stateLength = Constants.STATE_LENGTHS[action.payload.state];
 
+        if (stateLength) {
+            yield put(bannerUpdatedAction(`${GameState[action.payload.state]}, ${stateLength} seconds`));
+        }
+
         const channel = yield call(countdown, stateLength);
         yield takeEvery(channel, function*(secs) {
             yield put(bannerUpdatedAction(`${GameState[action.payload.state]}, ${secs} seconds`));
