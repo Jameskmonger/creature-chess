@@ -1,19 +1,16 @@
 // tslint:disable:jsx-ban-props
 import * as React from "react";
-import { compose } from "recompose";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { MapStateToProps, connect } from "react-redux";
-import { ToastContainer } from "react-toastify";
-import { PokemonPiece, Constants } from "@common";
+import { Constants } from "@common";
 import { Board } from "../board/board";
 import { Bench } from "../board/bench";
 import { CardShop } from "../cards/cardShop";
-import { AppState } from "../../store/store";
 import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { PlayerList } from "../playerList/playerList";
 
 import Media from "react-media";
+import { Banner } from "./banner";
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -46,8 +43,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
         return (
             <>
-                <ToastContainer />
-
                 <Media query="(orientation: landscape) and (min-width: 1200px)">
                     <div className="game landscape">
                         <div className="group">
@@ -60,6 +55,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Banner />
                         </div>
                         <div className="group">
                             <CardShop />
@@ -74,6 +71,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
@@ -92,6 +91,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
