@@ -10,7 +10,7 @@ import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPa
 import { PlayerList } from "../playerList/playerList";
 
 import Media from "react-media";
-import { Banner } from "./banner";
+import { PhaseInfo } from "../phase-info";
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -46,6 +46,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                 <Media query="(orientation: landscape) and (min-width: 1200px)">
                     <div className="game landscape">
                         <div className="group">
+                            <PhaseInfo />
+
                             <PlayerList />
 
                             <SelectedPieceInfoPanel />
@@ -55,8 +57,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
-
-                            <Banner />
                         </div>
                         <div className="group">
                             <CardShop />
@@ -71,11 +71,11 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
-
-                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
+
+                            <PhaseInfo />
 
                             <PlayerList />
 
@@ -91,11 +91,11 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
-
-                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
+
+                            <PhaseInfo />
 
                             <PlayerList />
 

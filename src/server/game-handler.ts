@@ -94,7 +94,7 @@ export class GameHandler {
 
             await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
 
-            this.startPlayingPhase();
+            await this.startPlayingPhase();
         }
 
     }
@@ -135,9 +135,11 @@ export class GameHandler {
         );
 
         await Promise.all([
-            delay(20_000),
+            delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
             Promise.all(promises)
         ]);
+
+        log("Playing phase complete");
     }
 
     private updatePlayerLists() {

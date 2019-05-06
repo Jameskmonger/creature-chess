@@ -37,21 +37,17 @@
         flex-shrink: initial;
         flex-basis: initial;
         /* stylelint-enable */
-
-        .banner {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            padding: 2.5em 0;
-            font-family: Arial, sans-serif;
-            font-size: 1.8em;
-            color: $banner-text;
-            text-align: center;
-            background: $banner-background;
-        }
     }
 
     .shop-container {
         display: flex;
+    }
+
+    .phase-info {
+        margin-bottom: 0.6em;
+        font-family: Arial, sans-serif;
+        font-size: 1.2em;
+        color: #fff;
+        text-align: center;
     }
 }
