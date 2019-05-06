@@ -32,12 +32,26 @@ const startBattle = (startPieces: PokemonPiece[]) => {
     });
 };
 
+const isPlayingGamePhaseUpdate = action =>
+        action.type === GAME_PHASE_UPDATE
+        && (action as GamePhaseUpdateAction).payload.phase === GamePhase.PLAYING;
+
+const isPreparingGamePhaseUpdate = action =>
+        action.type === GAME_PHASE_UPDATE
+        && (action as GamePhaseUpdateAction).payload.phase === GamePhase.PREPARING;
+
 export const processBattle = function*() {
     yield takeLatest<GamePhaseUpdateAction>(
-        action =>
-            action.type === GAME_PHASE_UPDATE
-            && (action as GamePhaseUpdateAction).payload.phase === GamePhase.PLAYING,
-        function*() {
+        action => isPlayingGamePhaseUpdate(action) || isPreparingGamePhaseUpdate(action),
+        function*(action) {
+            if (isPreparingGamePhaseUpdate(action)) {
+                // don't do anything, just cancel the old one
+                const pieces = (action.payload.payload as any).pieces;
+
+                yield put(piecesUpdated(pieces));
+                return;
+            }
+
             const state: AppState = yield select();
 
             const battleChannel = yield call(startBattle, state.pieces);
