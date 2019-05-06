@@ -45,8 +45,7 @@ export class GameHandler {
         log(`${name} has joined the game`);
 
         const player = new Player(connection, name);
-        player.setCards(this.deck.take(5));
-        player.setMoney(50);
+        player.setMoney(3);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
@@ -77,10 +76,6 @@ export class GameHandler {
         this.updatePlayerLists();
 
         player.sendJoinedGame();
-        player.sendCardsUpdate();
-        player.sendBoardUpdate();
-        player.sendBenchUpdate();
-        player.sendMoneyUpdate();
 
         if (this.players.length === this.GAME_SIZE) {
             this.startGame();
@@ -169,14 +164,9 @@ export class GameHandler {
         player.setMoney(money - card.cost);
         player.deleteCard(cardIndex);
 
-        player.sendCardsUpdate();
-        player.sendMoneyUpdate();
-
         const piece = createBenchPokemon(player.id, card.id, slot);
 
         player.addBenchPiece(piece);
-
-        player.sendBenchUpdate();
     }
 
     private onPlayerRerollCards(player: Player) {
@@ -190,7 +180,7 @@ export class GameHandler {
 
         // prevent any race conditions
         const playerCards = player.getCards();
-        player.setCards([]);
+        player.setCards([], false);
 
         this.deck.add(playerCards);
         this.deck.shuffle();
@@ -199,8 +189,5 @@ export class GameHandler {
         player.setCards(newCards);
 
         player.setMoney(money - Constants.REROLL_COST);
-
-        player.sendMoneyUpdate();
-        player.sendCardsUpdate();
     }
 }

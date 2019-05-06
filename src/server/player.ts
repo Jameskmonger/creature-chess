@@ -33,10 +33,19 @@ export class Player {
         if (connection !== null) {
             connection.setPlayer(this);
         }
+
+        this.sendCardsUpdate();
+        this.sendBoardUpdate();
+        this.sendBenchUpdate();
+        this.sendMoneyUpdate();
     }
 
-    public setCards(cards: PokemonCard[]) {
+    public setCards(cards: PokemonCard[], update: boolean = true) {
         this.cards = cards;
+
+        if (update) {
+            this.sendCardsUpdate();
+        }
     }
 
     public getCards() {
@@ -49,6 +58,8 @@ export class Player {
 
     public deleteCard(index: number) {
         this.cards[index] = null;
+
+        this.sendCardsUpdate();
     }
 
     public setBoard(board: PokemonPiece[]) {
@@ -59,12 +70,10 @@ export class Player {
         return this.board.map(p => clonePokemonPiece(p));
     }
 
-    public setBench(bench: PokemonPiece[]) {
-        this.bench = bench;
-    }
-
     public addBenchPiece(piece: PokemonPiece) {
         this.bench.push(piece);
+
+        this.sendBenchUpdate();
     }
 
     public getMoney() {
@@ -73,6 +82,8 @@ export class Player {
 
     public setMoney(money: number) {
         this.money = money;
+
+        this.sendMoneyUpdate();
     }
 
     public getHealth() {
@@ -105,31 +116,6 @@ export class Player {
 
     public sendJoinedGame() {
         this.sendPacket(ServerToClientPacketOpcodes.JOINED_GAME, this.id);
-    }
-
-    public sendCardsUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards);
-    }
-
-    public sendBoardUpdate() {
-        const packet: BoardUpatePacket = {
-            pieces: this.board.map(piece => ({
-                ...piece,
-                facingAway: true
-            }))
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
-    }
-
-    public sendBenchUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: this.bench
-        });
-    }
-
-    public sendMoneyUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
     }
 
     public sendPlayerListUpdate(players: Player[]) {
@@ -200,6 +186,31 @@ export class Player {
         }
 
         return null;
+    }
+
+    private sendCardsUpdate() {
+        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards);
+    }
+
+    private sendBoardUpdate() {
+        const packet: BoardUpatePacket = {
+            pieces: this.board.map(piece => ({
+                ...piece,
+                facingAway: true
+            }))
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
+    }
+
+    private sendBenchUpdate() {
+        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
+            pieces: this.bench
+        });
+    }
+
+    private sendMoneyUpdate() {
+        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
