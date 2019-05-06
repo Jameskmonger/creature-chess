@@ -1,4 +1,4 @@
-import { JOIN_COMPLETE, JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PIECE_SELECTED, BANNER_UPDATED } from "../actiontypes/gameActionTypes";
+import { JOIN_COMPLETE, JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PIECE_SELECTED, BANNER_UPDATED, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GamePhase, PokemonPiece } from "../../shared";
 import { PhaseUpdatePacket } from "../../shared/packet-opcodes";
 
@@ -10,7 +10,8 @@ export type GameAction =
     | GamePhaseUpdateAction
     | ({ type: MONEY_UPDATE, payload: { money: number } })
     | ({ type: PIECE_SELECTED, payload: { piece: PokemonPiece }})
-    | ({ type: BANNER_UPDATED, payload: { message: string }});
+    | ({ type: BANNER_UPDATED, payload: { message: string }})
+    | ({ type: PHASE_TIMER_UPDATED, payload: { time: number }});
 
 export const joinGameAction = (serverIP: string, name: string) => ({
     type: JOIN_GAME,
@@ -50,5 +51,12 @@ export const bannerUpdatedAction = (message: string) => ({
     type: BANNER_UPDATED,
     payload: {
         message
+    }
+});
+
+export const phaseTimerUpdated = (time: number) => ({
+    type: PHASE_TIMER_UPDATED,
+    payload: {
+        time
     }
 });

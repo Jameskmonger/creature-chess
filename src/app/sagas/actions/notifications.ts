@@ -3,20 +3,21 @@ import { GAME_PHASE_UPDATE, BANNER_UPDATED } from "../../actiontypes/gameActionT
 import { GamePhase, Constants } from "@common";
 import { ActionWithPayload } from "../types";
 import { countdown } from "../utils/countdown";
-import { bannerUpdatedAction, GamePhaseUpdateAction } from "../../actions/gameActions";
+import { bannerUpdatedAction, GamePhaseUpdateAction, phaseTimerUpdated } from "../../actions/gameActions";
 
 const sendNotifications = function*() {
     yield takeLatest<GamePhaseUpdateAction>(GAME_PHASE_UPDATE, function*(action) {
         const phaseLength = Constants.PHASE_LENGTHS[action.payload.phase];
 
         if (phaseLength) {
-            yield put(bannerUpdatedAction(`${GamePhase[action.payload.phase]}, ${phaseLength} seconds`));
-        }
+            yield put(phaseTimerUpdated(phaseLength));
 
-        const channel = yield call(countdown, phaseLength);
-        yield takeEvery(channel, function*(secs) {
-            yield put(bannerUpdatedAction(`${GamePhase[action.payload.phase]}, ${secs} seconds`));
-        });
+            const channel = yield call(countdown, phaseLength);
+
+            yield takeEvery(channel, function*(secs: number) {
+                yield put(phaseTimerUpdated(secs));
+            });
+        }
     });
 };
 
