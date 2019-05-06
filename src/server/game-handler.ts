@@ -30,8 +30,11 @@ export class GameHandler {
     }
 
     private onJoinGame(connection: Connection, name: string) {
-        if (this.phase !== GamePhase.WAITING || this.players.length === this.GAME_SIZE) {
+        if (!name
+            || this.phase !== GamePhase.WAITING
+            || this.players.length === this.GAME_SIZE) {
             // can't join game
+            // todo: don't just hang the connection here, disconnect properly
             return;
         }
 
