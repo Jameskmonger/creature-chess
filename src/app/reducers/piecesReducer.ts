@@ -3,7 +3,7 @@ import { PiecesAction } from "../actions/pieceActions";
 import { PIECE_MOVED_TO_BOARD, PIECES_UPDATED, PIECE_MOVED_TO_BENCH } from "../actiontypes/pieceActionTypes";
 import { Reducer } from "react";
 import { GAME_STATE_UPDATE } from "../actiontypes/gameActionTypes";
-import { GameState } from "../../shared";
+import { GamePhase } from "../../shared";
 
 const initialState = [];
 
@@ -21,7 +21,7 @@ export const pieces: Reducer<PokemonPiece[], PiecesAction> = (state = initialSta
         case PIECE_MOVED_TO_BENCH:
             return state.filter(s => s.id !== action.payload.piece.id);
         case GAME_STATE_UPDATE: {
-            if (action.payload.phase === GameState.READY) {
+            if (action.payload.phase === GamePhase.READY) {
                 return action.payload.payload.pieces;
             }
 

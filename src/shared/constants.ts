@@ -1,8 +1,8 @@
-import { GameState } from "./game-state";
+import { GamePhase } from "./game-phase";
 
 export const GRID_SIZE = 8;
 export const STATE_LENGTHS = {
-    [GameState.PREPARING]: 30,
-    [GameState.READY]: 5
+    [GamePhase.PREPARING]: 30,
+    [GamePhase.READY]: 5
 };
 export const REROLL_COST = 2;

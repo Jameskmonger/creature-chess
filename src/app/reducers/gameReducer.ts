@@ -1,7 +1,7 @@
 import { GameAction } from "../actions/gameActions";
 import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, BANNER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store/store";
-import { GameState as GamePhase } from "../../shared";
+import { GamePhase } from "../../shared";
 
 const initialState: GameState = {
     localPlayerId: null,

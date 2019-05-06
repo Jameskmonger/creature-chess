@@ -1,6 +1,6 @@
 import { takeEvery, takeLatest, call, put, all, fork, delay } from "@redux-saga/core/effects";
 import { GAME_STATE_UPDATE, BANNER_UPDATED } from "../../actiontypes/gameActionTypes";
-import { GameState, Constants } from "@common";
+import { GamePhase, Constants } from "@common";
 import { ActionWithPayload } from "../types";
 import { countdown } from "../utils/countdown";
 import { bannerUpdatedAction, GamePhaseUpdateAction } from "../../actions/gameActions";
@@ -10,12 +10,12 @@ const sendNotifications = function*() {
         const stateLength = Constants.STATE_LENGTHS[action.payload.phase];
 
         if (stateLength) {
-            yield put(bannerUpdatedAction(`${GameState[action.payload.phase]}, ${stateLength} seconds`));
+            yield put(bannerUpdatedAction(`${GamePhase[action.payload.phase]}, ${stateLength} seconds`));
         }
 
         const channel = yield call(countdown, stateLength);
         yield takeEvery(channel, function*(secs) {
-            yield put(bannerUpdatedAction(`${GameState[action.payload.phase]}, ${secs} seconds`));
+            yield put(bannerUpdatedAction(`${GamePhase[action.payload.phase]}, ${secs} seconds`));
         });
     });
 };
