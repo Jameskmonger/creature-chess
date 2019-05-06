@@ -103,7 +103,7 @@ export class GameHandler {
     }
 
     private startPreparingPhase() {
-        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+        this.updatePlayerLists();
 
         log(`Entering phase ${GamePhase.PREPARING}`);
 
@@ -132,10 +132,7 @@ export class GameHandler {
 
         log(`Entering phase ${GamePhase.PLAYING} (with seed ${newSeed})`);
 
-        const promises = this.players.map(p =>
-            p.sendPlayingPhaseUpdate(newSeed)
-                .then(() => this.updatePlayerLists())
-        );
+        const promises = this.players.map(p => p.sendPlayingPhaseUpdate(newSeed));
 
         await Promise.all([
             delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
