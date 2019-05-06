@@ -1,16 +1,22 @@
 import { compose } from "recompose";
-import { connect, MapDispatchToProps } from "react-redux";
-import { Props, BenchPieceDispatchProps, BenchPieceProps } from "./benchPieceProps";
+import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import { Props, BenchPieceDispatchProps, BenchPieceProps, BenchPieceStateProps } from "./benchPieceProps";
 import { benchPieceDragSource } from "./benchPieceDragDrop";
 import { BenchPieceUnconnected } from "./benchPieceUnconnected";
 import { pieceSelectedAction } from "../../../actions/gameActions";
+import { AppState } from "../../../store/store";
+import { GamePhase } from "../../../../shared";
+
+const mapStateToProps: MapStateToProps<BenchPieceStateProps, {}, AppState> = (state) => ({
+    canDrag: state.game.phase === GamePhase.PREPARING
+});
 
 const mapDispatchToProps: MapDispatchToProps<BenchPieceDispatchProps, BenchPieceProps> = (dispatch, ownProps) => ({
     onPieceSelected: () => dispatch(pieceSelectedAction(ownProps.piece))
 });
 
 const BenchPiece = compose<Props, BenchPieceProps>(
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     benchPieceDragSource
 )(BenchPieceUnconnected);
 
