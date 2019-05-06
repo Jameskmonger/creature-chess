@@ -35,7 +35,7 @@ const startBattle = (startPieces: PokemonPiece[]) => {
 export const processBattle = function*() {
     yield takeLatest<GamePhaseUpdateAction>(
         action =>
-            action.type === "GAME_STATE_UPDATE"
+            action.type === GAME_PHASE_UPDATE
             && (action as GamePhaseUpdateAction).payload.phase === GamePhase.PLAYING,
         function*() {
             const state: AppState = yield select();
