@@ -6,6 +6,7 @@ import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes, MovePiecePacket } from "../shared/packet-opcodes";
 import { GameState, getAllDefinitions, Constants } from "../shared";
 import { SeedProvider } from "./seed-provider";
+import { log } from "./log";
 
 const randomFromArray = <T>(array: T[]) => {
     return array[Math.floor(Math.random() * array.length)];
@@ -38,32 +39,32 @@ export class GameHandler {
     }
 
     private acceptConnection(connection: Connection, name: string) {
-        console.log(`${name} has joined the game`);
+        log(`${name} has joined the game`);
 
         const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
         player.setMoney(50);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
-            console.log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
+            log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
 
             this.onPlayerPurchaseCard(player, cardIndex);
         });
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, () => {
-            console.log(`[${player.name}] REROLL_CARDS`);
+            log(`[${player.name}] REROLL_CARDS`);
 
             this.onPlayerRerollCards(player);
         });
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, (packet: MovePiecePacket) => {
-            console.log(`[${player.name}] MOVE_PIECE_TO_BENCH`);
+            log(`[${player.name}] MOVE_PIECE_TO_BENCH`);
 
             player.movePieceToBench(packet);
         });
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, (packet: MovePiecePacket) => {
-            console.log(`[${player.name}] MOVE_PIECE_TO_BOARD`);
+            log(`[${player.name}] MOVE_PIECE_TO_BOARD`);
 
             player.movePieceToBoard(packet);
         });
@@ -101,7 +102,7 @@ export class GameHandler {
     private startPreparingPhase() {
         this.players.forEach(p => p.sendPlayerListUpdate(this.players));
 
-        console.log(`Entering phase ${GameState.PREPARING}`);
+        log(`Entering phase ${GameState.PREPARING}`);
 
         this.state = GameState.PREPARING;
 
@@ -109,7 +110,7 @@ export class GameHandler {
     }
 
     private startReadyPhase() {
-        console.log(`Entering phase ${GameState.READY}`);
+        log(`Entering phase ${GameState.READY}`);
 
         this.state = GameState.READY;
 
@@ -126,7 +127,7 @@ export class GameHandler {
 
         const newSeed = this.seedProvider.refreshSeed();
 
-        console.log(`Entering phase ${GameState.PLAYING} (with seed ${newSeed})`);
+        log(`Entering phase ${GameState.PLAYING} (with seed ${newSeed})`);
 
         const promises = this.players.map(p =>
             p.sendPlayingPhaseUpdate(newSeed)
@@ -149,17 +150,17 @@ export class GameHandler {
         const money = player.getMoney();
 
         if (slot === null) {
-            console.log(`${player.name} attempted to buy a card but has no empty slot`);
+            log(`${player.name} attempted to buy a card but has no empty slot`);
             return;
         }
 
         if (!card) {
-            console.log(`${player.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
+            log(`${player.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
             return;
         }
 
         if (money < card.cost) {
-            console.log(`${player.name} attempted to buy card costing $${card.cost} but only had $${money}`);
+            log(`${player.name} attempted to buy card costing $${card.cost} but only had $${money}`);
             return;
         }
 
@@ -181,7 +182,7 @@ export class GameHandler {
 
         // not enough money
         if (money < Constants.REROLL_COST) {
-            console.log(`${player.name} attempted to reroll costing $${Constants.REROLL_COST} but only had $${money}`);
+            log(`${player.name} attempted to reroll costing $${Constants.REROLL_COST} but only had $${money}`);
             return;
         }
 
