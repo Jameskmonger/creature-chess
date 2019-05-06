@@ -45,8 +45,7 @@ export class GameHandler {
         log(`${name} has joined the game`);
 
         const player = new Player(connection, name);
-        player.setCards(this.deck.take(5));
-        player.setMoney(50);
+        player.setMoney(3);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
@@ -77,10 +76,6 @@ export class GameHandler {
         this.updatePlayerLists();
 
         player.sendJoinedGame();
-        player.sendCardsUpdate();
-        player.sendBoardUpdate();
-        player.sendBenchUpdate();
-        player.sendMoneyUpdate();
 
         if (this.players.length === this.GAME_SIZE) {
             this.startGame();
@@ -104,6 +99,7 @@ export class GameHandler {
 
     private startPreparingPhase() {
         this.updatePlayerLists();
+        this.players.forEach(p => this.rerollPlayerCards(p));
 
         log(`Entering phase ${GamePhase.PREPARING}`);
 
@@ -134,10 +130,19 @@ export class GameHandler {
 
         const promises = this.players.map(p => p.sendPlayingPhaseUpdate(newSeed));
 
-        await Promise.all([
+        const [_, results] = await Promise.all([
             delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
             Promise.all(promises)
         ]);
+
+        results.forEach(r => {
+            const win = r.home.length > r.away.length;
+            const money = r.player.getMoney();
+
+            log(`- Awarded a ${win ? "win" : "loss"} to ${r.player.name}`);
+
+            r.player.setMoney(money + (win ? 6 : 3));
+        });
 
         log("Playing phase complete");
     }
@@ -169,14 +174,9 @@ export class GameHandler {
         player.setMoney(money - card.cost);
         player.deleteCard(cardIndex);
 
-        player.sendCardsUpdate();
-        player.sendMoneyUpdate();
-
         const piece = createBenchPokemon(player.id, card.id, slot);
 
         player.addBenchPiece(piece);
-
-        player.sendBenchUpdate();
     }
 
     private onPlayerRerollCards(player: Player) {
@@ -188,19 +188,20 @@ export class GameHandler {
             return;
         }
 
+        this.rerollPlayerCards(player);
+
+        player.setMoney(money - Constants.REROLL_COST);
+    }
+
+    private rerollPlayerCards(player: Player) {
         // prevent any race conditions
         const playerCards = player.getCards();
-        player.setCards([]);
+        player.setCards([], false);
 
         this.deck.add(playerCards);
         this.deck.shuffle();
 
         const newCards = this.deck.take(5);
         player.setCards(newCards);
-
-        player.setMoney(money - Constants.REROLL_COST);
-
-        player.sendMoneyUpdate();
-        player.sendCardsUpdate();
     }
 }
