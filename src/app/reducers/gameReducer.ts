@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_COMPLETE, JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, BANNER_UPDATED, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
+import { JOIN_COMPLETE, JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store/store";
 import { GamePhase } from "../../shared";
 
@@ -9,7 +9,6 @@ const initialState: GameState = {
     loading: false,
     money: 0,
     selectedPiece: null,
-    bannerMessage: null,
     phase: GamePhase.WAITING,
     phaseTimer: null
 };
@@ -55,11 +54,6 @@ export function game(state: GameState = initialState, action: GameAction) {
             return {
                 ...state,
                 selectedPiece: action.payload.piece
-            };
-        case BANNER_UPDATED:
-            return {
-                ...state,
-                bannerMessage: action.payload.message
             };
         default:
             return state;

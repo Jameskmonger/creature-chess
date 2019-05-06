@@ -10,7 +10,6 @@ import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPa
 import { PlayerList } from "../playerList/playerList";
 
 import Media from "react-media";
-import { Banner } from "./banner";
 import { PhaseInfo } from "../phase-info";
 
 const getWidthFromHeight = (height: number) =>
@@ -58,8 +57,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
-
-                            <Banner />
                         </div>
                         <div className="group">
                             <CardShop />
@@ -74,8 +71,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
-
-                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />
@@ -96,8 +91,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
-
-                            <Banner />
                         </div>
                         <div className="group">
                             <SelectedPieceInfoPanel />

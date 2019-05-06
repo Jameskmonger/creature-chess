@@ -14,7 +14,6 @@ export interface GameState {
     loading: boolean;
     money: number;
     selectedPiece: PokemonPiece;
-    bannerMessage: string;
 }
 
 export interface AppState {
