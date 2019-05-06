@@ -4,7 +4,7 @@ import { CardDeck } from "./cardDeck";
 import { createBenchPokemon } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes, MovePiecePacket } from "../shared/packet-opcodes";
-import { GameState, getAllDefinitions, Constants } from "../shared";
+import { GamePhase, getAllDefinitions, Constants } from "../shared";
 import { SeedProvider } from "./seed-provider";
 import { log } from "./log";
 
@@ -15,7 +15,7 @@ const randomFromArray = <T>(array: T[]) => {
 export class GameHandler {
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
-    private state = GameState.WAITING;
+    private phase = GamePhase.WAITING;
     private seedProvider = new SeedProvider();
     private GAME_SIZE: number;
 
@@ -30,7 +30,7 @@ export class GameHandler {
     }
 
     private onJoinGame(connection: Connection, name: string) {
-        if (this.state !== GameState.WAITING || this.players.length === this.GAME_SIZE) {
+        if (this.phase !== GamePhase.WAITING || this.players.length === this.GAME_SIZE) {
             // can't join game
             return;
         }
@@ -88,11 +88,11 @@ export class GameHandler {
         while (this.players.filter(p => p.getHealth() > 0).length > 1) {
             this.startPreparingPhase();
 
-            await delay(Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
+            await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
 
             this.startReadyPhase();
 
-            await delay(Constants.STATE_LENGTHS[GameState.READY] * 1000);
+            await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
 
             this.startPlayingPhase();
         }
@@ -102,17 +102,17 @@ export class GameHandler {
     private startPreparingPhase() {
         this.players.forEach(p => p.sendPlayerListUpdate(this.players));
 
-        log(`Entering phase ${GameState.PREPARING}`);
+        log(`Entering phase ${GamePhase.PREPARING}`);
 
-        this.state = GameState.PREPARING;
+        this.phase = GamePhase.PREPARING;
 
         this.players.forEach(p => p.sendPreparingPhaseUpdate());
     }
 
     private startReadyPhase() {
-        log(`Entering phase ${GameState.READY}`);
+        log(`Entering phase ${GamePhase.READY}`);
 
-        this.state = GameState.READY;
+        this.phase = GamePhase.READY;
 
         this.players.forEach(p => {
             const others = this.players.filter(other => other.id !== p.id);
@@ -123,11 +123,11 @@ export class GameHandler {
     }
 
     private async startPlayingPhase() {
-        this.state = GameState.PLAYING;
+        this.phase = GamePhase.PLAYING;
 
         const newSeed = this.seedProvider.refreshSeed();
 
-        log(`Entering phase ${GameState.PLAYING} (with seed ${newSeed})`);
+        log(`Entering phase ${GamePhase.PLAYING} (with seed ${newSeed})`);
 
         const promises = this.players.map(p =>
             p.sendPlayingPhaseUpdate(newSeed)

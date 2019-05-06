@@ -1,7 +1,7 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, BANNER_UPDATED } from "../actiontypes/gameActionTypes";
+import { JOIN_COMPLETE, JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, BANNER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store/store";
-import { GameState as GamePhase } from "../../shared";
+import { GamePhase } from "../../shared";
 
 const initialState: GameState = {
     localPlayerId: null,
@@ -26,7 +26,7 @@ export function game(state: GameState = initialState, action: GameAction) {
                 loading: false,
                 localPlayerId: action.payload.id
             };
-        case GAME_STATE_UPDATE:
+        case GAME_PHASE_UPDATE:
             if (action.payload.phase === GamePhase.READY) {
                 return {
                     ...state,

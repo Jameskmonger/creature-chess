@@ -1,7 +1,7 @@
 import { string } from "prop-types";
 import { TileCoordinates } from "./position";
 import { PokemonPiece } from "./pokemon-piece";
-import { GameState } from "./game-state";
+import { GamePhase } from "./game-phase";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -9,7 +9,7 @@ export enum ServerToClientPacketOpcodes {
     BENCH_UPDATE = "benchUpdate",
     PLAYER_LIST_UPDATE = "playerListUpdate",
     JOINED_GAME = "joinedGame",
-    STATE_UPDATE = "stateUpdate",
+    PHASE_UPDATE = "phaseUpdate",
     MONEY_UPDATE = "moneyUpdate"
 }
 
@@ -32,6 +32,6 @@ export type BoardUpatePacket = {
 };
 
 export type PhaseUpdatePacket
-    = ({ phase: GameState.PREPARING, payload: { pieces: PokemonPiece[] } })
-        | ({ phase: GameState.READY, payload: { pieces: PokemonPiece[], opponentId: string }})
-        | ({ phase: GameState.PLAYING, payload: { seed: number } });
+    = ({ phase: GamePhase.PREPARING, payload: { pieces: PokemonPiece[] } })
+        | ({ phase: GamePhase.READY, payload: { pieces: PokemonPiece[], opponentId: string }})
+        | ({ phase: GamePhase.PLAYING, payload: { seed: number } });

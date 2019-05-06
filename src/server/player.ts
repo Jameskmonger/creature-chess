@@ -1,5 +1,5 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, PlayerListPlayer, GameState, Constants } from "../shared";
+import { PokemonCard, PlayerListPlayer, GamePhase, Constants } from "../shared";
 import { PokemonPiece, clonePokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, BoardUpatePacket } from "../shared/packet-opcodes";
@@ -148,24 +148,24 @@ export class Player {
         this.match = null;
 
         const packet: PhaseUpdatePacket = {
-            phase: GameState.PREPARING,
+            phase: GamePhase.PREPARING,
             payload: {
                 pieces: this.board
             }
         };
 
-        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     public async sendPlayingPhaseUpdate(seed: number) {
         const packet: PhaseUpdatePacket = {
-            phase: GameState.PLAYING,
+            phase: GamePhase.PLAYING,
             payload: {
                 seed
             }
         };
 
-        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
 
         const results = await this.match.fight(seed);
 
@@ -180,14 +180,14 @@ export class Player {
         this.match = new Match(this, opponent);
 
         const packet: PhaseUpdatePacket = {
-            phase: GameState.READY,
+            phase: GamePhase.READY,
             payload: {
                 pieces: this.match.getBoard(),
                 opponentId: this.opponent.id
             }
         };
 
-        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     public getFirstEmptyBenchSlot() {
