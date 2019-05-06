@@ -5,7 +5,7 @@ import { AppState } from "../../store/store";
 import { loadingSelector } from "../../selectors/gameSelector";
 
 interface DispatchProps {
-    onJoinGame: (name: string) => void;
+    onJoinGame: (serverIP: string, name: string) => void;
 }
 
 interface LobbyStageProps {
@@ -14,9 +14,15 @@ interface LobbyStageProps {
 
 type Props = LobbyStageProps & DispatchProps;
 
-class LobbyStageUnconnected extends React.Component<Props> {
+interface LobbyStageState {
+    name: string;
+    serverIP: string;
+}
+
+class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     public state = {
-        name: ""
+        name: "",
+        serverIP: "http://localhost:3000"
     };
 
     public render() {
@@ -43,6 +49,18 @@ class LobbyStageUnconnected extends React.Component<Props> {
                         placeholder="Your name"
                         className="name-input"
                     />
+
+                    <br />
+
+                    <input
+                        value={this.state.serverIP}
+                        onChange={this.onServerIPChange}
+                        placeholder="Server IP"
+                        className="name-input"
+                    />
+
+                    <br />
+
                     <button onClick={this.onJoinGameClick} className="join-button">Join Game</button>
                 </div>
             </div>
@@ -55,8 +73,14 @@ class LobbyStageUnconnected extends React.Component<Props> {
         });
     }
 
+    private onServerIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            serverIP: event.target.value
+        });
+    }
+
     private onJoinGameClick = () => {
-        this.props.onJoinGame(this.state.name);
+        this.props.onJoinGame(this.state.serverIP, this.state.name);
     }
 }
 
@@ -65,7 +89,7 @@ const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state =>
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onJoinGame: (name: string) => dispatch(joinGameAction(name))
+    onJoinGame: (serverIP: string, name: string) => dispatch(joinGameAction(serverIP, name))
 });
 
 const LobbyStage = connect(mapStateToProps, mapDispatchToProps)(LobbyStageUnconnected);

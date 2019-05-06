@@ -16,8 +16,8 @@ import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "../../actiontypes/pieceActionTypes";
 import { TileCoordinates, createTileCoordinates } from "../../../shared/position";
 
-const getSocket = () => {
-    const socket = io("http://localhost:3000");
+const getSocket = (serverIP: string) => {
+    const socket = io(serverIP);
 
     return new Promise<Socket>(resolve => {
         socket.on("connect", () => {
@@ -127,7 +127,7 @@ const writePacketsToSocket = function*(socket: Socket) {
 
 export const networking = function*() {
     const { payload } = yield take(JOIN_GAME);
-    const socket: Socket = yield call(getSocket);
+    const socket: Socket = yield call(getSocket, payload.serverIP);
 
     socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, payload.name);
 
