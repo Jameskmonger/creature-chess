@@ -21,7 +21,10 @@ export const pieces: Reducer<PokemonPiece[], PiecesAction> = (state = initialSta
         case PIECE_MOVED_TO_BENCH:
             return state.filter(s => s.id !== action.payload.piece.id);
         case GAME_PHASE_UPDATE: {
-            if (action.payload.phase === GamePhase.READY) {
+            if (
+                action.payload.phase === GamePhase.PREPARING
+                || action.payload.phase === GamePhase.READY
+            ) {
                 return action.payload.payload.pieces;
             }
 
