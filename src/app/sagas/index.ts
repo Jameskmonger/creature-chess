@@ -1,12 +1,12 @@
 import { fork, all } from "@redux-saga/core/effects";
 import { networking } from "./actions/networking";
-import { notifications } from "./actions/notifications";
+import { phaseTimer } from "./actions/phaseTimer";
 import { processBattle } from "./actions/process-battle";
 
 export const rootSaga = function*() {
     yield all([
         yield fork(networking),
-        yield fork(notifications),
+        yield fork(phaseTimer),
         yield fork(processBattle)
     ]);
 };

@@ -1,11 +1,10 @@
-import { takeEvery, takeLatest, call, put, all, fork, delay } from "@redux-saga/core/effects";
+import { takeEvery, takeLatest, call, put } from "@redux-saga/core/effects";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
-import { GamePhase, Constants } from "@common";
-import { ActionWithPayload } from "../types";
+import { Constants } from "@common";
 import { countdown } from "../utils/countdown";
 import { GamePhaseUpdateAction, phaseTimerUpdated } from "../../actions/gameActions";
 
-const sendNotifications = function*() {
+export const phaseTimer = function*() {
     yield takeLatest<GamePhaseUpdateAction>(GAME_PHASE_UPDATE, function*(action) {
         const phaseLength = Constants.PHASE_LENGTHS[action.payload.phase];
 
@@ -19,10 +18,4 @@ const sendNotifications = function*() {
             });
         }
     });
-};
-
-export const notifications = function*() {
-    yield all([
-        yield fork(sendNotifications)
-    ]);
 };
