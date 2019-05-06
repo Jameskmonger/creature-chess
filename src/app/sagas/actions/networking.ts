@@ -15,6 +15,7 @@ import { benchPiecesUpdated } from "../../actions/benchPieceActions";
 import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "../../actiontypes/pieceActionTypes";
 import { TileCoordinates, createTileCoordinates } from "../../../shared/position";
+import { log } from "../../log";
 
 const getSocket = (serverIP: string) => {
     const socket = io(serverIP);
@@ -29,38 +30,38 @@ const getSocket = (serverIP: string) => {
 const subscribe = (socket: Socket) => {
     return eventChannel(emit => {
         socket.on(ServerToClientPacketOpcodes.JOINED_GAME, (id: string) => {
-            console.log("[JOINED_GAME]");
+            log("[JOINED_GAME]");
             emit(joinCompleteAction(id));
         });
 
         socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
-            console.log("[BOARD_UPDATE]", packet);
+            log("[BOARD_UPDATE]", packet);
 
             emit(piecesUpdated(packet.pieces));
         });
 
         socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
-            console.log("[BENCH_UPDATE]", packet);
+            log("[BENCH_UPDATE]", packet);
             emit(benchPiecesUpdated(packet.pieces));
         });
 
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {
-            console.log("[PLAYER_LIST_UPDATE]", players);
+            log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListUpdated(players));
         });
 
         socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: PokemonCard[]) => {
-            console.log("[CARDS_UPDATE]", cards);
+            log("[CARDS_UPDATE]", cards);
             emit(cardsUpdated(cards));
         });
 
         socket.on(ServerToClientPacketOpcodes.MONEY_UPDATE, (money: number) => {
-            console.log("[MONEY_UPDATE]", money);
+            log("[MONEY_UPDATE]", money);
             emit(moneyUpdateAction(money));
         });
 
         socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: PhaseUpdatePacket) => {
-            console.log("[STATE_UPDATE]", packet);
+            log("[STATE_UPDATE]", packet);
 
             emit(gameStateUpdate(packet));
         });

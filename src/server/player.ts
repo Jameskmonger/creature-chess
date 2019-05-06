@@ -5,6 +5,7 @@ import { Connection } from "./connection";
 import { ServerToClientPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, BoardUpatePacket } from "../shared/packet-opcodes";
 import { TileCoordinates } from "../shared/position";
 import { Match } from "./match";
+import { log } from "./log";
 
 export class Player {
     public readonly id: string;
@@ -82,7 +83,7 @@ export class Player {
         const piece = this.popPieceIfExists(packet.id, packet.from);
 
         if (piece === null) {
-            console.log(`Could not find piece ID ${packet.id}`);
+            log(`Could not find piece ID ${packet.id}`);
             return;
         }
 
@@ -94,7 +95,7 @@ export class Player {
         const piece = this.popPieceIfExists(packet.id, packet.from);
 
         if (piece === null) {
-            console.log(`Could not find piece ID ${packet.id}`);
+            log(`Could not find piece ID ${packet.id}`);
             return;
         }
 
@@ -168,7 +169,7 @@ export class Player {
 
         const results = await this.match.fight(seed);
 
-        console.log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
+        log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 
         this.health -= results.survivingAwayTeam.length;
     }
