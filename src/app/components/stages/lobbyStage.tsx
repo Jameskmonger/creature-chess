@@ -80,6 +80,10 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     }
 
     private onJoinGameClick = () => {
+        if (!this.state.serverIP || !this.state.name) {
+            return;
+        }
+
         this.props.onJoinGame(this.state.serverIP, this.state.name);
     }
 }

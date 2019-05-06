@@ -1,16 +1,16 @@
 import { DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
-import { BenchPieceProps } from "./benchPieceProps";
+import { Props } from "./benchPieceProps";
 import { BenchPieceUnconnected } from "./benchPieceUnconnected";
 
 const selectedPiece = {
-    beginDrag(props: BenchPieceProps) {
+    beginDrag(props: Props) {
         return props.piece;
     },
-    isDragging(props: BenchPieceProps, monitor: DragSourceMonitor) {
+    isDragging(props: Props, monitor: DragSourceMonitor) {
         return props.piece === monitor.getItem();
     },
-    canDrag() {
-        return true;
+    canDrag(props: Props) {
+        return props.canDrag;
     }
 };
 
@@ -19,4 +19,4 @@ const collect = (connectToDragSource: DragSourceConnector, monitor: DragSourceMo
     isDragging: monitor.isDragging()
 });
 
-export const benchPieceDragSource = DragSource<BenchPieceProps>(typeof BenchPieceUnconnected, selectedPiece, collect);
+export const benchPieceDragSource = DragSource<Props>(typeof BenchPieceUnconnected, selectedPiece, collect);

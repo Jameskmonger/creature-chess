@@ -30,8 +30,11 @@ export class GameHandler {
     }
 
     private onJoinGame(connection: Connection, name: string) {
-        if (this.phase !== GamePhase.WAITING || this.players.length === this.GAME_SIZE) {
+        if (!name
+            || this.phase !== GamePhase.WAITING
+            || this.players.length === this.GAME_SIZE) {
             // can't join game
+            // todo: don't just hang the connection here, disconnect properly
             return;
         }
 
@@ -100,7 +103,7 @@ export class GameHandler {
     }
 
     private startPreparingPhase() {
-        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+        this.updatePlayerLists();
 
         log(`Entering phase ${GamePhase.PREPARING}`);
 
@@ -129,10 +132,7 @@ export class GameHandler {
 
         log(`Entering phase ${GamePhase.PLAYING} (with seed ${newSeed})`);
 
-        const promises = this.players.map(p =>
-            p.sendPlayingPhaseUpdate(newSeed)
-                .then(() => this.updatePlayerLists())
-        );
+        const promises = this.players.map(p => p.sendPlayingPhaseUpdate(newSeed));
 
         await Promise.all([
             delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),

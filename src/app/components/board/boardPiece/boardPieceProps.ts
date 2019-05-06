@@ -6,6 +6,7 @@ export interface BoardPieceOwnProps {
 
 export interface BoardPieceStateProps {
     localPlayerId: string;
+    canDrag: boolean;
 }
 
 export interface BoardPieceDispatchProps {

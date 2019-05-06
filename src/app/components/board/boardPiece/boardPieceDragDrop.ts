@@ -10,7 +10,7 @@ const selectedPiece = {
         return props.piece === monitor.getItem();
     },
     canDrag(props: BoardPieceProps, monitor: DragSourceMonitor) {
-        return isFriendly(props);
+        return props.canDrag && isFriendly(props);
     }
 };
 
