@@ -15,7 +15,7 @@ const randomFromArray = <T>(array: T[]) => {
 export class GameHandler {
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
-    private state = GamePhase.WAITING;
+    private phase = GamePhase.WAITING;
     private seedProvider = new SeedProvider();
     private GAME_SIZE: number;
 
@@ -30,7 +30,7 @@ export class GameHandler {
     }
 
     private onJoinGame(connection: Connection, name: string) {
-        if (this.state !== GamePhase.WAITING || this.players.length === this.GAME_SIZE) {
+        if (this.phase !== GamePhase.WAITING || this.players.length === this.GAME_SIZE) {
             // can't join game
             return;
         }
@@ -88,11 +88,11 @@ export class GameHandler {
         while (this.players.filter(p => p.getHealth() > 0).length > 1) {
             this.startPreparingPhase();
 
-            await delay(Constants.STATE_LENGTHS[GamePhase.PREPARING] * 1000);
+            await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
 
             this.startReadyPhase();
 
-            await delay(Constants.STATE_LENGTHS[GamePhase.READY] * 1000);
+            await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
 
             this.startPlayingPhase();
         }
@@ -104,7 +104,7 @@ export class GameHandler {
 
         log(`Entering phase ${GamePhase.PREPARING}`);
 
-        this.state = GamePhase.PREPARING;
+        this.phase = GamePhase.PREPARING;
 
         this.players.forEach(p => p.sendPreparingPhaseUpdate());
     }
@@ -112,7 +112,7 @@ export class GameHandler {
     private startReadyPhase() {
         log(`Entering phase ${GamePhase.READY}`);
 
-        this.state = GamePhase.READY;
+        this.phase = GamePhase.READY;
 
         this.players.forEach(p => {
             const others = this.players.filter(other => other.id !== p.id);
@@ -123,7 +123,7 @@ export class GameHandler {
     }
 
     private async startPlayingPhase() {
-        this.state = GamePhase.PLAYING;
+        this.phase = GamePhase.PLAYING;
 
         const newSeed = this.seedProvider.refreshSeed();
 

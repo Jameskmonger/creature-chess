@@ -9,7 +9,7 @@ export enum ServerToClientPacketOpcodes {
     BENCH_UPDATE = "benchUpdate",
     PLAYER_LIST_UPDATE = "playerListUpdate",
     JOINED_GAME = "joinedGame",
-    STATE_UPDATE = "stateUpdate",
+    PHASE_UPDATE = "phaseUpdate",
     MONEY_UPDATE = "moneyUpdate"
 }
 

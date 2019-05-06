@@ -154,7 +154,7 @@ export class Player {
             }
         };
 
-        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     public async sendPlayingPhaseUpdate(seed: number) {
@@ -165,7 +165,7 @@ export class Player {
             }
         };
 
-        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
 
         const results = await this.match.fight(seed);
 
@@ -187,7 +187,7 @@ export class Player {
             }
         };
 
-        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     public getFirstEmptyBenchSlot() {
