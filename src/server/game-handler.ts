@@ -99,6 +99,7 @@ export class GameHandler {
 
     private startPreparingPhase() {
         this.updatePlayerLists();
+        this.players.forEach(p => this.rerollPlayerCards(p));
 
         log(`Entering phase ${GamePhase.PREPARING}`);
 
@@ -129,7 +130,7 @@ export class GameHandler {
 
         const promises = this.players.map(p => p.sendPlayingPhaseUpdate(newSeed));
 
-        const [ _, results] = await Promise.all([
+        const [_, results] = await Promise.all([
             delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
             Promise.all(promises)
         ]);
@@ -187,6 +188,12 @@ export class GameHandler {
             return;
         }
 
+        this.rerollPlayerCards(player);
+
+        player.setMoney(money - Constants.REROLL_COST);
+    }
+
+    private rerollPlayerCards(player: Player) {
         // prevent any race conditions
         const playerCards = player.getCards();
         player.setCards([], false);
@@ -196,7 +203,5 @@ export class GameHandler {
 
         const newCards = this.deck.take(5);
         player.setCards(newCards);
-
-        player.setMoney(money - Constants.REROLL_COST);
     }
 }
