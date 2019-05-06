@@ -5,17 +5,18 @@ import { PhaseUpdatePacket } from "../../shared/packet-opcodes";
 export type GamePhaseUpdateAction = ({ type: GAME_STATE_UPDATE, payload: PhaseUpdatePacket });
 
 export type GameAction =
-    ({ type: JOIN_GAME, payload: { name: string } })
+    ({ type: JOIN_GAME, payload: { serverIP: string, name: string } })
     | ({ type: JOIN_COMPLETE, payload: { id: string } })
     | GamePhaseUpdateAction
     | ({ type: MONEY_UPDATE, payload: { money: number } })
     | ({ type: PIECE_SELECTED, payload: { piece: PokemonPiece }})
     | ({ type: BANNER_UPDATED, payload: { message: string }});
 
-export const joinGameAction = (name: string) => ({
+export const joinGameAction = (serverIP: string, name: string) => ({
     type: JOIN_GAME,
     payload: {
-        name
+        name,
+        serverIP
     }
 });
 

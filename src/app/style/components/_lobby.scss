@@ -17,4 +17,45 @@
     .join-button {
         font-size: 1.4em;
     }
+
+    .join-game input {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.2em 0.4em;
+        color: #fff;
+        background: none;
+        border-style: solid;
+        /* stylelint-disable */
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        /* stylelint-enable */
+        border-bottom: 2px solid #b13e53;
+
+        /* stylelint-disable */
+        &::placeholder {
+        /* stylelint-enable */
+            font-style: italic;
+            color: #aaa;
+        }
+    }
+
+    .join-game {
+        padding: 2em 5em;
+        margin-top: 3em;
+        text-align: center;
+        background: #566c86;
+    }
+
+    .join-button {
+        padding: 0.8em 2em;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        background: #b13e53;
+        /* stylelint-disable */
+        border: none;
+        /* stylelint-enable */
+    }
 }
