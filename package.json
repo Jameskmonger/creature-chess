@@ -10,7 +10,7 @@
 		"build:app": "webpack",
 		"start:app": "webpack-dev-server",
 		"build:server": "tsc -p ./tsconfig.server.json",
-		"start:server": "nodemon",
+		"start:server": "nodemon 3000 2",
 		"copy-images": "cpy \"./images/**/*\" \"./public/\" --parents",
 		"test:run": "ts-node --files run-tests.ts",
 		"test:rundebug": "ts-node --files run-tests.ts ci",
