@@ -1,11 +1,13 @@
-import { JOIN_COMPLETE, JOIN_GAME, GAME_STATE_PLAYING, MONEY_UPDATE, GAME_STATE_UPDATE, PIECE_SELECTED, BANNER_UPDATED } from "../actiontypes/gameActionTypes";
+import { JOIN_COMPLETE, JOIN_GAME, MONEY_UPDATE, GAME_STATE_UPDATE, PIECE_SELECTED, BANNER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState, PokemonPiece } from "../../shared";
+import { PhaseUpdatePacket } from "../../shared/packet-opcodes";
+
+export type GamePhaseUpdateAction = ({ type: GAME_STATE_UPDATE, payload: PhaseUpdatePacket });
 
 export type GameAction =
     ({ type: JOIN_GAME, payload: { name: string } })
     | ({ type: JOIN_COMPLETE, payload: { id: string } })
-    | ({ type: GAME_STATE_UPDATE, payload: { state: GameState } })
-    | ({ type: GAME_STATE_PLAYING, payload: { opponentId: string } })
+    | GamePhaseUpdateAction
     | ({ type: MONEY_UPDATE, payload: { money: number } })
     | ({ type: PIECE_SELECTED, payload: { piece: PokemonPiece }})
     | ({ type: BANNER_UPDATED, payload: { message: string }});
@@ -24,18 +26,9 @@ export const joinCompleteAction = (id: string) => ({
     }
 });
 
-export const gameStatePlayingAction = (opponentId: string) => ({
-    type: GAME_STATE_PLAYING,
-    payload: {
-        opponentId
-    }
-});
-
-export const gameStateUpdate = (state: GameState) => ({
+export const gameStateUpdate = (packet: PhaseUpdatePacket) => ({
     type: GAME_STATE_UPDATE,
-    payload: {
-        state
-    }
+    payload: packet
 });
 
 export const moneyUpdateAction = (money: number) => ({

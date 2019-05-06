@@ -4,10 +4,3 @@ export enum GameState {
     READY,
     PLAYING
 }
-
-export interface PlayingStateUpdate {
-    seed: number;
-    opponentId: string;
-}
-
-export type GameStateUpdate = PlayingStateUpdate;

@@ -3,26 +3,26 @@ import { GAME_STATE_UPDATE, BANNER_UPDATED } from "../../actiontypes/gameActionT
 import { GameState, Constants } from "@common";
 import { ActionWithPayload } from "../types";
 import { countdown } from "../utils/countdown";
-import { bannerUpdatedAction } from "../../actions/gameActions";
+import { bannerUpdatedAction, GamePhaseUpdateAction } from "../../actions/gameActions";
 
 const sendNotifications = function*() {
-    yield takeLatest<ActionWithPayload<{ state: GameState }>>(GAME_STATE_UPDATE, function*(action) {
-        const stateLength = Constants.STATE_LENGTHS[action.payload.state];
+    yield takeLatest<GamePhaseUpdateAction>(GAME_STATE_UPDATE, function*(action) {
+        const stateLength = Constants.STATE_LENGTHS[action.payload.phase];
 
         if (stateLength) {
-            yield put(bannerUpdatedAction(`${GameState[action.payload.state]}, ${stateLength} seconds`));
+            yield put(bannerUpdatedAction(`${GameState[action.payload.phase]}, ${stateLength} seconds`));
         }
 
         const channel = yield call(countdown, stateLength);
         yield takeEvery(channel, function*(secs) {
-            yield put(bannerUpdatedAction(`${GameState[action.payload.state]}, ${secs} seconds`));
+            yield put(bannerUpdatedAction(`${GameState[action.payload.phase]}, ${secs} seconds`));
         });
     });
 };
 
 const clearNotifications = function*() {
     yield takeLatest(BANNER_UPDATED, function*() {
-        yield delay(2500);
+        yield delay(1000);
 
         yield put(bannerUpdatedAction(null));
     });

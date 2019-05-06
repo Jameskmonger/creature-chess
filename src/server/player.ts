@@ -1,10 +1,10 @@
 import uuid = require("uuid/v4");
 import { PokemonCard, PlayerListPlayer, GameState, Constants } from "../shared";
-import { PokemonPiece } from "../shared/pokemon-piece";
+import { PokemonPiece, clonePokemonPiece } from "../shared/pokemon-piece";
 import { Connection } from "./connection";
-import { ServerToClientPacketOpcodes, MovePiecePacket } from "../shared/packet-opcodes";
-import { GameStateUpdate } from "../shared/game-state";
+import { ServerToClientPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, BoardUpatePacket } from "../shared/packet-opcodes";
 import { TileCoordinates } from "../shared/position";
+import { Match } from "./match";
 
 export class Player {
     public readonly id: string;
@@ -15,6 +15,8 @@ export class Player {
     private bench: PokemonPiece[];
     private opponent?: Player;
     private money: number;
+    private health: number;
+    private match: Match;
 
     constructor(connection: Connection, name: string) {
         this.connection = connection;
@@ -24,6 +26,8 @@ export class Player {
         this.board = [];
         this.bench = [];
         this.money = 0;
+        this.health = 100;
+        this.match = null;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -50,6 +54,10 @@ export class Player {
         this.board = board;
     }
 
+    public clone() {
+        return this.board.map(p => clonePokemonPiece(p));
+    }
+
     public setBench(bench: PokemonPiece[]) {
         this.bench = bench;
     }
@@ -58,16 +66,16 @@ export class Player {
         this.bench.push(piece);
     }
 
-    public setOpponent(opponent: Player) {
-        this.opponent = opponent;
-    }
-
     public getMoney() {
         return this.money;
     }
 
     public setMoney(money: number) {
         this.money = money;
+    }
+
+    public getHealth() {
+        return this.health;
     }
 
     public movePieceToBench(packet: MovePiecePacket) {
@@ -103,16 +111,14 @@ export class Player {
     }
 
     public sendBoardUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, {
-            friendly: this.board.map(piece => ({
+        const packet: BoardUpatePacket = {
+            pieces: this.board.map(piece => ({
                 ...piece,
                 facingAway: true
-            })),
-            opponent: this.opponent.board.map(piece => ({
-                ...piece,
-                facingAway: false
             }))
-        });
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
     }
 
     public sendBenchUpdate() {
@@ -130,20 +136,57 @@ export class Player {
             return {
                 id: p.id,
                 name: p.name,
-                health: 100
+                health: p.health
             };
         });
 
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
     }
 
-    public sendStateUpdate(state: GameState, seed?: number) {
-        const data = this.getStateUpdateData(state, seed);
+    public sendPreparingPhaseUpdate() {
+        this.match = null;
 
-        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, {
-            state,
-            data
-        });
+        const packet: PhaseUpdatePacket = {
+            phase: GameState.PREPARING,
+            payload: {
+                pieces: this.board
+            }
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+    }
+
+    public async sendPlayingPhaseUpdate(seed: number) {
+        const packet: PhaseUpdatePacket = {
+            phase: GameState.PLAYING,
+            payload: {
+                seed
+            }
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
+
+        const results = await this.match.fight(seed);
+
+        console.log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
+
+        this.health -= results.survivingAwayTeam.length;
+    }
+
+    public sendReadyPhaseUpdate(opponent: Player) {
+        this.opponent = opponent;
+
+        this.match = new Match(this, opponent);
+
+        const packet: PhaseUpdatePacket = {
+            phase: GameState.READY,
+            payload: {
+                pieces: this.match.getBoard(),
+                opponentId: this.opponent.id
+            }
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.STATE_UPDATE, packet);
     }
 
     public getFirstEmptyBenchSlot() {
@@ -156,17 +199,6 @@ export class Player {
         }
 
         return null;
-    }
-
-    private getStateUpdateData(state: GameState, seed?: number): GameStateUpdate {
-        if (state === GameState.PLAYING) {
-            return {
-                seed,
-                opponentId: this.opponent.id
-            };
-        }
-
-        return undefined;
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {

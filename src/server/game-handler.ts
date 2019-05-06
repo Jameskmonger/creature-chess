@@ -2,11 +2,14 @@ import delay from "delay";
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
 import { createBenchPokemon } from "../shared/pokemon-piece";
-import { createRandomOpponentBoard } from "./opponents/random-opponent";
 import { Connection } from "./connection";
 import { ClientToServerPacketOpcodes, MovePiecePacket } from "../shared/packet-opcodes";
 import { GameState, getAllDefinitions, Constants } from "../shared";
 import { SeedProvider } from "./seed-provider";
+
+const randomFromArray = <T>(array: T[]) => {
+    return array[Math.floor(Math.random() * array.length)];
+};
 
 export class GameHandler {
     private deck = new CardDeck(getAllDefinitions());
@@ -32,16 +35,9 @@ export class GameHandler {
     private acceptConnection(connection: Connection, name: string) {
         console.log(`${name} has joined the game`);
 
-        const opponent = new Player(null, "Opponent");
-        opponent.setCards(this.deck.take(5));
-        opponent.setBoard(createRandomOpponentBoard(opponent.id));
-
         const player = new Player(connection, name);
         player.setCards(this.deck.take(5));
         player.setMoney(50);
-
-        player.setOpponent(opponent);
-        opponent.setOpponent(player);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, (cardIndex: number) => {
             console.log(`[${player.name}] PURCHASE_CARD (${cardIndex})`);
@@ -67,11 +63,11 @@ export class GameHandler {
             player.movePieceToBoard(packet);
         });
 
-        this.players.push(opponent);
         this.players.push(player);
 
+        this.updatePlayerLists();
+
         player.sendJoinedGame();
-        player.sendPlayerListUpdate(this.players);
         player.sendCardsUpdate();
         player.sendBoardUpdate();
         player.sendBenchUpdate();
@@ -83,33 +79,63 @@ export class GameHandler {
     }
 
     private async startGame() {
-        this.updateState(GameState.PREPARING);
+        while (this.players.filter(p => p.getHealth() > 0).length > 1) {
+            this.startPreparingPhase();
 
-        await delay(Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
+            await delay(Constants.STATE_LENGTHS[GameState.PREPARING] * 1000);
 
-        this.updateState(GameState.READY);
+            this.startReadyPhase();
 
-        await delay(Constants.STATE_LENGTHS[GameState.READY] * 1000);
+            await delay(Constants.STATE_LENGTHS[GameState.READY] * 1000);
 
-        this.updateState(GameState.PLAYING);
-    }
-
-    private sendStateUpdate(seed?: number) {
-        this.players.forEach(p => p.sendStateUpdate(this.state, seed));
-    }
-
-    private updateState(state: GameState) {
-        this.state = state;
-
-        if (this.state !== GameState.PLAYING) {
-            console.log(`Entering state ${GameState[state]}`);
-            this.sendStateUpdate();
-            return;
+            this.startPlayingPhase();
         }
 
+    }
+
+    private startPreparingPhase() {
+        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+
+        console.log(`Entering phase ${GameState.PREPARING}`);
+
+        this.state = GameState.PREPARING;
+
+        this.players.forEach(p => p.sendPreparingPhaseUpdate());
+    }
+
+    private startReadyPhase() {
+        console.log(`Entering phase ${GameState.READY}`);
+
+        this.state = GameState.READY;
+
+        this.players.forEach(p => {
+            const others = this.players.filter(other => other.id !== p.id);
+            const opponent = randomFromArray(others);
+
+            p.sendReadyPhaseUpdate(opponent);
+        });
+    }
+
+    private async startPlayingPhase() {
+        this.state = GameState.PLAYING;
+
         const newSeed = this.seedProvider.refreshSeed();
-        console.log(`Entering state ${GameState[state]} (with seed ${newSeed})`);
-        this.sendStateUpdate(newSeed);
+
+        console.log(`Entering phase ${GameState.PLAYING} (with seed ${newSeed})`);
+
+        const promises = this.players.map(p =>
+            p.sendPlayingPhaseUpdate(newSeed)
+                .then(() => this.updatePlayerLists())
+        );
+
+        await Promise.all([
+            delay(20_000),
+            Promise.all(promises)
+        ]);
+    }
+
+    private updatePlayerLists() {
+        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
     }
 
     private onPlayerPurchaseCard(player: Player, cardIndex: number) {

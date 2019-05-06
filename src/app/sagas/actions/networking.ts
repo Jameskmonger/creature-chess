@@ -2,10 +2,9 @@ import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../types";
-import { GameStateUpdate, PlayingStateUpdate } from "@common/game-state";
-import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes, MovePiecePacket } from "@common/packet-opcodes";
+import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes, MovePiecePacket, PhaseUpdatePacket } from "@common/packet-opcodes";
 import { PokemonPiece, PlayerListPlayer, PokemonCard, GameState, Constants } from "@common";
-import { joinCompleteAction, moneyUpdateAction, gameStatePlayingAction, gameStateUpdate } from "../../actions/gameActions";
+import { joinCompleteAction, moneyUpdateAction, gameStateUpdate } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { piecesUpdated } from "../../actions/pieceActions";
@@ -34,10 +33,10 @@ const subscribe = (socket: Socket) => {
             emit(joinCompleteAction(id));
         });
 
-        socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { friendly: PokemonPiece[], opponent: PokemonPiece[] }) => {
+        socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
             console.log("[BOARD_UPDATE]", packet);
-            const pieces = [...packet.friendly, ...packet.opponent];
-            emit(piecesUpdated(pieces));
+
+            emit(piecesUpdated(packet.pieces));
         });
 
         socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
@@ -60,15 +59,10 @@ const subscribe = (socket: Socket) => {
             emit(moneyUpdateAction(money));
         });
 
-        socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: { state: GameState, data?: null | GameStateUpdate }) => {
+        socket.on(ServerToClientPacketOpcodes.STATE_UPDATE, (packet: PhaseUpdatePacket) => {
             console.log("[STATE_UPDATE]", packet);
 
-            if (packet.state === GameState.PLAYING) {
-                const opponentId = (packet.data as PlayingStateUpdate).opponentId;
-                emit(gameStatePlayingAction(opponentId));
-            }
-
-            emit(gameStateUpdate(packet.state));
+            emit(gameStateUpdate(packet));
         });
 
         // tslint:disable-next-line:no-empty

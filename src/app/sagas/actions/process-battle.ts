@@ -1,12 +1,14 @@
 import delay from "delay";
-import { take, call, put, select, takeEvery } from "@redux-saga/core/effects";
+import { take, call, put, select, takeEvery, takeLatest } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
-import { GAME_STATE_PLAYING } from "../../actiontypes/gameActionTypes";
 import { piecesUpdated } from "../../actions/pieceActions";
-import { PokemonPiece } from "@common";
+import { PokemonPiece, GameState } from "@common";
 import { isATeamDefeated } from "@common/is-a-team-defeated";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { AppState } from "../../store/store";
+import { GAME_STATE_UPDATE } from "../../actiontypes/gameActionTypes";
+import { PhaseUpdatePacket } from "../../../shared/packet-opcodes";
+import { GamePhaseUpdateAction } from "../../actions/gameActions";
 
 const startBattle = (startPieces: PokemonPiece[]) => {
     return eventChannel(emit => {
@@ -31,13 +33,18 @@ const startBattle = (startPieces: PokemonPiece[]) => {
 };
 
 export const processBattle = function*() {
-    yield take(GAME_STATE_PLAYING);
+    yield takeLatest<GamePhaseUpdateAction>(
+        action =>
+            action.type === "GAME_STATE_UPDATE"
+            && (action as GamePhaseUpdateAction).payload.phase === GameState.PLAYING,
+        function*() {
+            const state: AppState = yield select();
 
-    const state: AppState = yield select();
+            const battleChannel = yield call(startBattle, state.pieces);
 
-    const battleChannel = yield call(startBattle, state.pieces);
-
-    yield takeEvery(battleChannel, function*(newPieces: PokemonPiece[]) {
-        yield put(piecesUpdated(newPieces));
-    });
+            yield takeEvery(battleChannel, function*(newPieces: PokemonPiece[]) {
+                yield put(piecesUpdated(newPieces));
+            });
+        }
+    );
 };

@@ -1,5 +1,6 @@
 import uuid = require("uuid/v4");
 import { Direction, TileCoordinates, createTileCoordinates } from "./position";
+import { GRID_SIZE } from "./constants";
 
 export interface AttackDetails {
     direction: Direction;
@@ -44,6 +45,8 @@ export const createPokemon = (ownerId: string, pokemonId: number, position: [num
     coolDown: initialCoolDown
 });
 
+export const clonePokemonPiece = (piece: PokemonPiece) => createPokemon(piece.ownerId, piece.pokemonId, [piece.position.x, piece.position.y]);
+
 export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => createPokemon(ownerId, pokemonId, [ slot, null ]);
 
 export const moveOrAddPiece = <T extends PokemonPiece>(allPieces: T[], target: T) => {
@@ -67,4 +70,10 @@ export const moveOrAddPiece = <T extends PokemonPiece>(allPieces: T[], target: T
     }
 
     return result;
+};
+
+export const rotatePiecePosition = (piece: PokemonPiece) => {
+    piece.position.x = GRID_SIZE - 1 - piece.position.x;
+    piece.position.y = GRID_SIZE - 1 - piece.position.y;
+    return piece;
 };
