@@ -16,6 +16,11 @@ export class GameHandler {
     private players: Player[] = [];
     private state = GameState.WAITING;
     private seedProvider = new SeedProvider();
+    private GAME_SIZE: number;
+
+    constructor(gameSize: number) {
+        this.GAME_SIZE = gameSize;
+    }
 
     public registerConnection(connection: Connection) {
         connection.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, (name: string) => {
@@ -24,7 +29,7 @@ export class GameHandler {
     }
 
     private onJoinGame(connection: Connection, name: string) {
-        if (this.state !== GameState.WAITING || this.players.length === Constants.MAX_PLAYER_COUNT) {
+        if (this.state !== GameState.WAITING || this.players.length === this.GAME_SIZE) {
             // can't join game
             return;
         }
@@ -73,7 +78,7 @@ export class GameHandler {
         player.sendBenchUpdate();
         player.sendMoneyUpdate();
 
-        if (this.players.length === Constants.MAX_PLAYER_COUNT) {
+        if (this.players.length === this.GAME_SIZE) {
             this.startGame();
         }
     }
