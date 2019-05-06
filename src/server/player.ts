@@ -158,6 +158,12 @@ export class Player {
         log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 
         this.health -= results.survivingAwayTeam.length;
+
+        return {
+            player: this,
+            home: results.survivingHomeTeam,
+            away: results.survivingAwayTeam
+        };
     }
 
     public sendReadyPhaseUpdate(opponent: Player) {

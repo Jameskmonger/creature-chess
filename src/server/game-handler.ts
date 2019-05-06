@@ -129,10 +129,19 @@ export class GameHandler {
 
         const promises = this.players.map(p => p.sendPlayingPhaseUpdate(newSeed));
 
-        await Promise.all([
+        const [ _, results] = await Promise.all([
             delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
             Promise.all(promises)
         ]);
+
+        results.forEach(r => {
+            const win = r.home.length > r.away.length;
+            const money = r.player.getMoney();
+
+            log(`- Awarded a ${win ? "win" : "loss"} to ${r.player.name}`);
+
+            r.player.setMoney(money + (win ? 6 : 3));
+        });
 
         log("Playing phase complete");
     }
