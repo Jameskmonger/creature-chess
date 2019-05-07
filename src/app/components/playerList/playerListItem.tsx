@@ -5,10 +5,11 @@ import { ProgressBar } from "../progressBar";
 interface Props {
     player: PlayerListPlayer;
     isOpponent: boolean;
+    isLocal: boolean;
 }
 
 const PlayerListItem: React.FunctionComponent<Props> = props => {
-    const className = `player-list-item ${props.isOpponent ? " opponent" : ""}`;
+    const className = `player-list-item ${props.isLocal ? " local" : ""} ${props.isOpponent ? " opponent" : ""}`;
 
     return (
         <div className={className}>

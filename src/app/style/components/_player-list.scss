@@ -23,6 +23,13 @@
         text-transform: uppercase;
     }
 
+    &.local {
+        .name {
+            font-style: italic;
+            color: $player-list-name-local;
+        }
+    }
+
     .healthbar {
         display: block;
         width: 100%;
