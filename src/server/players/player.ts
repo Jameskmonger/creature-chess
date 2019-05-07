@@ -1,11 +1,11 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants } from "../shared";
-import { PokemonPiece, clonePokemonPiece } from "../shared/pokemon-piece";
+import { PokemonCard, PlayerListPlayer, GamePhase, Constants } from "../../shared";
+import { PokemonPiece, clonePokemonPiece } from "../../shared/pokemon-piece";
 import { Connection } from "./connection";
-import { ServerToClientPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, BoardUpatePacket } from "../shared/packet-opcodes";
-import { TileCoordinates } from "../shared/position";
-import { Match } from "./match";
-import { log } from "./log";
+import { ServerToClientPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, BoardUpatePacket } from "../../shared/packet-opcodes";
+import { TileCoordinates } from "../../shared/position";
+import { Match } from "../match";
+import { log } from "../log";
 
 export class Player {
     public readonly id: string;

@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { Player } from "./player";
-import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../shared/packet-opcodes";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes } from "../../shared/packet-opcodes";
 
 type IncomingPacketListener = (...args: any[]) => void;
 

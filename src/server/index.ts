@@ -1,6 +1,4 @@
-import io = require("socket.io");
-import { GameHandler } from "./game-handler";
-import { Connection } from "./connection";
+import { Server } from "./server";
 import { log } from "./log";
 
 if (process.argv[2] === undefined || process.argv[3] === undefined) {
@@ -8,7 +6,7 @@ if (process.argv[2] === undefined || process.argv[3] === undefined) {
     process.exit(1);
 }
 
-const port = process.argv[2];
+const port = parseInt(process.argv[2], 10);
 const gameSize = parseInt(process.argv[3], 10);
 
 log("");
@@ -17,14 +15,5 @@ log("   PORT: " + port);
 log("   GAME_SIZE: " + gameSize);
 log("");
 
-const server = io.listen(port);
-
-log("Server listening on port " + port);
-
-const gameHandler = new GameHandler(gameSize);
-
-server.on("connection", socket => {
-    const connection = new Connection(socket);
-
-    gameHandler.registerConnection(connection);
-});
+const server = new Server(gameSize);
+server.listen(port);
