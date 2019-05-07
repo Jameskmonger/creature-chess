@@ -1,3 +1,4 @@
+import io = require("socket.io");
 import delay from "delay";
 import { Player } from "./player";
 import { CardDeck } from "./cardDeck";
@@ -12,7 +13,7 @@ const randomFromArray = <T>(array: T[]) => {
     return array[Math.floor(Math.random() * array.length)];
 };
 
-export class GameHandler {
+export class Server {
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
     private phase = GamePhase.WAITING;
@@ -23,7 +24,17 @@ export class GameHandler {
         this.GAME_SIZE = gameSize;
     }
 
-    public registerConnection(connection: Connection) {
+    public listen(port: number) {
+        const server = io.listen(port);
+
+        log("Server listening on port " + port);
+
+        server.on("connection", this.receiveConnection);
+    }
+
+    public receiveConnection = (socket: io.Socket) => {
+        const connection = new Connection(socket);
+
         connection.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, (name: string) => {
             this.onJoinGame(connection, name);
         });
