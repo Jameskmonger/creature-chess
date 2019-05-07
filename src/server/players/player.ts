@@ -18,7 +18,7 @@ export class Player {
     private cards: PokemonCard[] = [];
     private board: PokemonPiece[] = [];
     private bench: PokemonPiece[] = [];
-    private money: number = 0;
+    private money: number = 3;
     private health: number = 100;
     private match: Match = null;
     private opponent?: Player = null;
