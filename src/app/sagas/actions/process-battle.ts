@@ -2,25 +2,46 @@ import delay from "delay";
 import { take, call, put, select, takeEvery, takeLatest } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import { piecesUpdated } from "../../actions/pieceActions";
-import { PokemonPiece, GamePhase } from "@common";
+import { PokemonPiece, GamePhase, Constants } from "@common";
 import { isATeamDefeated } from "@common/is-a-team-defeated";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { AppState } from "../../store/store";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
 import { PhaseUpdatePacket } from "../../../shared/packet-opcodes";
 import { GamePhaseUpdateAction } from "../../actions/gameActions";
+import { log } from "../../log";
 
-const startBattle = (startPieces: PokemonPiece[]) => {
+const startBattle = (startPieces: PokemonPiece[], maxTurns: number) => {
     return eventChannel(emit => {
         let shouldStop = false;
         let pieces = startPieces;
-        const turnDurationMs = 50;
 
         const run = async () => {
-            while (shouldStop === false && isATeamDefeated(pieces) === false) {
-                await delay(turnDurationMs);
+            let turnCount = 0;
+
+            while (true) {
+                const defeated = isATeamDefeated(pieces);
+
+                if (shouldStop) {
+                    log(`Fight ended at turn ${turnCount} due to cancellation`);
+                    break;
+                }
+
+                if (defeated) {
+                    log(`Fight ended at turn ${turnCount}`);
+                    break;
+                }
+
+                if (turnCount >= maxTurns) {
+                    log(`Fight timed out at turn ${turnCount}`);
+                    break;
+                }
+
                 pieces = simulateTurn(pieces);
                 emit(pieces);
+
+                await delay(Constants.TURN_DURATION_MS);
+                turnCount++;
             }
         };
 
@@ -54,7 +75,7 @@ export const processBattle = function*() {
 
             const state: AppState = yield select();
 
-            const battleChannel = yield call(startBattle, state.pieces);
+            const battleChannel = yield call(startBattle, state.pieces, Constants.TURNS_IN_BATTLE);
 
             yield takeEvery(battleChannel, function*(newPieces: PokemonPiece[]) {
                 yield put(piecesUpdated(newPieces));

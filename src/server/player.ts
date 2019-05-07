@@ -175,7 +175,7 @@ export class Player {
 
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
 
-        const results = await this.match.fight(seed);
+        const results = await this.match.fight(seed, Constants.TURNS_IN_BATTLE);
 
         log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 

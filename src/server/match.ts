@@ -1,9 +1,10 @@
 import delay from "delay";
 import { Player } from "./player";
-import { PokemonPiece } from "../shared";
+import { PokemonPiece, Constants } from "../shared";
 import { rotatePiecePosition } from "../shared/pokemon-piece";
 import { isATeamDefeated } from "../shared/is-a-team-defeated";
 import { simulateTurn } from "../shared/fighting-turn-simulator";
+import { log } from "./log";
 
 export interface MatchResults {
     survivingHomeTeam: PokemonPiece[];
@@ -29,10 +30,27 @@ export class Match {
         return this.board;
     }
 
-    public fight(seed: number): Promise<MatchResults> {
+    public fight(seed: number, maxTurns: number): Promise<MatchResults> {
+        const fightName = `${this.home.name} v ${this.away.name}`;
+
         return new Promise<MatchResults>(resolve => {
-            while (isATeamDefeated(this.board) === false) {
+            let turn = 0;
+
+            while (true) {
+                const defeated = isATeamDefeated(this.board);
+
+                if (defeated) {
+                    log(`Fight '${fightName}' ended at turn ${turn}`);
+                    break;
+                }
+
+                if (turn >= maxTurns) {
+                    log(`Fight '${fightName}' timed out at turn ${turn}`);
+                    break;
+                }
+
                 this.board = simulateTurn(this.board);
+                turn++;
             }
 
             resolve(this.getCurrentResults());
