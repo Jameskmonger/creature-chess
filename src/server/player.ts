@@ -157,7 +157,7 @@ export class Player {
 
         log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 
-        this.health -= results.survivingAwayTeam.length * 3;
+        this.subtractHealth(results.survivingAwayTeam.length * 3);
 
         return {
             player: this,
@@ -217,6 +217,16 @@ export class Player {
 
     private sendMoneyUpdate() {
         this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
+    }
+
+    private subtractHealth(value: number) {
+        const newValue = this.health - value;
+
+        if (newValue < 0) {
+            this.health = 0;
+        } else {
+            this.health = newValue;
+        }
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
