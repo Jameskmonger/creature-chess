@@ -28,11 +28,21 @@ export function game(state: GameState = initialState, action: GameAction) {
                 localPlayerId: action.payload.id
             };
         case GAME_PHASE_UPDATE:
+            // set opponent id when entering ready phase
             if (action.payload.phase === GamePhase.READY) {
                 return {
                     ...state,
                     phase: action.payload.phase,
                     opponentId: action.payload.payload.opponentId
+                };
+            }
+
+            // clear opponent id when entering preparing phase
+            if (action.payload.phase === GamePhase.PREPARING) {
+                return {
+                    ...state,
+                    phase: action.payload.phase,
+                    opponentId: null
                 };
             }
 
