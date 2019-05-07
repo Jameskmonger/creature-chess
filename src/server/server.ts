@@ -9,8 +9,6 @@ import { PlayerContainer } from "./players/playerContainer";
 
 export class Server {
     private deck = new CardDeck(getAllDefinitions());
-    private players: Player[] = [];
-    private phase = GamePhase.WAITING;
     private seedProvider = new SeedProvider();
     private playerContainer: PlayerContainer;
     private GAME_SIZE: number;
@@ -32,47 +30,38 @@ export class Server {
     }
 
     private startGame = async () => {
-        while (this.players.filter(p => p.isAlive()).length > 1) {
-            this.startPreparingPhase();
+        while (this.playerContainer.playersAlive()) {
+            await this.runPreparingPhase();
 
-            await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
+            await this.runReadyPhase();
 
-            this.startReadyPhase();
-
-            await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
-
-            await this.startPlayingPhase();
+            await this.runPlayingPhase();
         }
 
         this.playerContainer.updatePlayerLists();
     }
 
-    private startPreparingPhase() {
-        log(`Entering phase ${GamePhase.PREPARING}`);
-
-        this.phase = GamePhase.PREPARING;
-        this.playerContainer.inWaitingPhase = false;
+    private async runPreparingPhase() {
+        log(`Entering phase ${GamePhase[GamePhase.PREPARING]}`);
 
         this.playerContainer.startPreparingPhase();
+
+        await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
     }
 
-    private startReadyPhase() {
-        log(`Entering phase ${GamePhase.READY}`);
-
-        this.phase = GamePhase.READY;
+    private async runReadyPhase() {
+        log(`Entering phase ${GamePhase[GamePhase.READY]}`);
 
         this.playerContainer.startReadyPhase();
+
+        await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
     }
 
-    private async startPlayingPhase() {
-        this.phase = GamePhase.PLAYING;
-
+    private async runPlayingPhase() {
         const newSeed = this.seedProvider.refreshSeed();
 
-        log(`Entering phase ${GamePhase.PLAYING} (with seed ${newSeed})`);
+        log(`Entering phase ${GamePhase[GamePhase.PLAYING]} (with seed ${newSeed})`);
 
         await this.playerContainer.startPlayingPhase(newSeed);
-
-        log("Playing phase complete");
     }
 }

@@ -13,16 +13,18 @@ const randomFromArray = <T>(array: T[]) => {
 };
 
 export class PlayerContainer {
-    public inWaitingPhase: boolean = true;
     private GAME_SIZE: number;
     private deck: CardDeck;
     private players: Player[];
 
+    private acceptingPlayers: boolean;
     private onLobbyFullListeners: (() => void)[];
 
     constructor(gameSize: number, deck: CardDeck) {
         this.GAME_SIZE = gameSize;
+        this.deck = deck;
         this.players = [];
+        this.acceptingPlayers = true;
 
         this.onLobbyFullListeners = [];
     }
@@ -37,6 +39,8 @@ export class PlayerContainer {
 
     public onLobbyFull(fn: () => void) {
         this.onLobbyFullListeners.push(fn);
+
+        this.emitLobbyFullIfRequired();
     }
 
     public updatePlayerLists() {
@@ -90,10 +94,14 @@ export class PlayerContainer {
         });
     }
 
+    public playersAlive() {
+        return this.players.some(p => p.isAlive());
+    }
+
     private onJoinGame(connection: Connection) {
         return (name: string) => {
             if (!name
-                || this.inWaitingPhase === false
+                || this.acceptingPlayers === false
                 || this.players.length === this.GAME_SIZE) {
                 // can't join game
                 // todo: don't just hang the connection here, disconnect properly
@@ -154,6 +162,7 @@ export class PlayerContainer {
 
     private emitLobbyFullIfRequired() {
         if (this.players.length === this.GAME_SIZE) {
+            this.acceptingPlayers = false;
             this.onLobbyFullListeners.forEach(fn => fn());
         }
     }
