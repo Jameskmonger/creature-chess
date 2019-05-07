@@ -30,9 +30,8 @@ const store = createStore(
     combineReducers<AppState>({
         ...reducers,
     }),
-    compose(
-        applyMiddleware(sagaMiddleware),
-        composeWithDevTools<any, any>()
+    composeWithDevTools(
+        applyMiddleware(sagaMiddleware)
     )
 );
 
