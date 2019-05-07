@@ -46,7 +46,7 @@ export const processBattle = function*() {
         function*(action) {
             if (isPreparingGamePhaseUpdate(action)) {
                 // don't do anything, just cancel the old one
-                const pieces = (action.payload.payload as any).pieces;
+                const pieces = (action.payload as any).payload.pieces;
 
                 yield put(piecesUpdated(pieces));
                 return;

@@ -1,11 +1,15 @@
 import { shuffle } from "lodash";
 import { PokemonCard } from "../shared/pokemon-card";
 import { PokemonDefinition } from "../shared/pokemon-stats";
+import { PokemonPiece } from "../shared";
 
 export class CardDeck {
     public deck: PokemonCard[];
+    private definitions: PokemonDefinition[];
 
     constructor(definitions: PokemonDefinition[]) {
+        this.definitions = definitions;
+
         const cardValues = [
             { cost: 1, quantity: 45 },
             { cost: 2, quantity: 30 },
@@ -14,25 +18,19 @@ export class CardDeck {
             { cost: 5, quantity: 10 }
         ];
 
-        const cards: PokemonCard[] = [];
+        this.deck = [];
 
         for (const value of cardValues) {
             const costPokemon = definitions.filter(p => p.cost !== null && p.cost === value.cost);
 
             for (const pokemon of costPokemon) {
                 for (let count = 0; count < value.quantity; count++) {
-                    const card: PokemonCard = {
-                        id: pokemon.id,
-                        cost: value.cost,
-                        name: pokemon.name
-                    };
-
-                    cards.push(card);
+                    this.addDefinition(pokemon);
                 }
             }
         }
 
-        this.deck = shuffle(cards);
+        this.deck = shuffle(this.deck);
     }
 
     public take(count: number) {
@@ -57,7 +55,23 @@ export class CardDeck {
         this.deck = shuffle(this.deck);
     }
 
+    public addPiece(piece: PokemonPiece) {
+        const definition = this.definitions.find(p => p.id === piece.pokemonId);
+
+        this.addDefinition(definition);
+    }
+
     public shuffle() {
         this.deck = shuffle(this.deck);
+    }
+
+    private addDefinition(pokemon: PokemonDefinition) {
+        const card: PokemonCard = {
+            id: pokemon.id,
+            cost: pokemon.cost,
+            name: pokemon.name
+        };
+
+        this.deck.push(card);
     }
 }

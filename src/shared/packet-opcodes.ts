@@ -1,4 +1,3 @@
-import { string } from "prop-types";
 import { TileCoordinates } from "./position";
 import { PokemonPiece } from "./pokemon-piece";
 import { GamePhase } from "./game-phase";
@@ -34,4 +33,5 @@ export type BoardUpatePacket = {
 export type PhaseUpdatePacket
     = ({ phase: GamePhase.PREPARING, payload: { pieces: PokemonPiece[] } })
         | ({ phase: GamePhase.READY, payload: { pieces: PokemonPiece[], opponentId: string }})
-        | ({ phase: GamePhase.PLAYING, payload: { seed: number } });
+        | ({ phase: GamePhase.PLAYING, payload: { seed: number } })
+        | ({ phase: GamePhase.DEAD });

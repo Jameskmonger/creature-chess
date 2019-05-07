@@ -13,6 +13,10 @@ const PhaseInfoUnconnected: React.FunctionComponent<Props> = ({ phase, phaseTime
         return <div className="phase-info">Waiting for players</div>;
     }
 
+    if (phase === GamePhase.DEAD) {
+        return <div className="phase-info">You are dead</div>;
+    }
+
     return <div className="phase-info">{GamePhase[phase]} - {phaseTimer}</div>;
 };
 

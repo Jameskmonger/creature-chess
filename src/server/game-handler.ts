@@ -83,7 +83,7 @@ export class GameHandler {
     }
 
     private async startGame() {
-        while (this.players.filter(p => p.getHealth() > 0).length > 1) {
+        while (this.players.filter(p => p.isAlive()).length > 1) {
             this.startPreparingPhase();
 
             await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
@@ -95,17 +95,48 @@ export class GameHandler {
             await this.startPlayingPhase();
         }
 
+        this.updatePlayerLists();
+
+        this.players.forEach(p => {
+            if (p.isAlive() === false) {
+                this.cleanUpPlayer(p);
+
+                return;
+            }
+        });
     }
 
     private startPreparingPhase() {
-        this.updatePlayerLists();
-        this.players.forEach(p => this.rerollPlayerCards(p));
-
         log(`Entering phase ${GamePhase.PREPARING}`);
 
         this.phase = GamePhase.PREPARING;
 
-        this.players.forEach(p => p.sendPreparingPhaseUpdate());
+        this.updatePlayerLists();
+
+        this.players.forEach(p => {
+            if (p.isAlive() === false) {
+                this.cleanUpPlayer(p);
+
+                return;
+            }
+
+            this.rerollPlayerCards(p);
+
+            p.sendPreparingPhaseUpdate();
+        });
+    }
+
+    private cleanUpPlayer(p: Player) {
+        if (p.hasBeenCleanedUp()) {
+            return;
+        }
+
+        log(`${p.name} has died`);
+
+        p.sendDeathUpdate();
+        this.addPlayerCardsToDeck(p, true);
+        this.addPlayerBoardToDeck(p);
+        p.setCleanedUp(true);
     }
 
     private startReadyPhase() {
@@ -114,7 +145,11 @@ export class GameHandler {
         this.phase = GamePhase.READY;
 
         this.players.forEach(p => {
-            const others = this.players.filter(other => other.id !== p.id);
+            if (p.isAlive() === false) {
+                return;
+            }
+
+            const others = this.players.filter(other => other.isAlive() && other.id !== p.id);
             const opponent = randomFromArray(others);
 
             p.sendReadyPhaseUpdate(opponent);
@@ -128,7 +163,7 @@ export class GameHandler {
 
         log(`Entering phase ${GamePhase.PLAYING} (with seed ${newSeed})`);
 
-        const promises = this.players.map(p => p.sendPlayingPhaseUpdate(newSeed));
+        const promises = this.players.filter(p => p.isAlive()).map(p => p.sendPlayingPhaseUpdate(newSeed));
 
         const [_, results] = await Promise.all([
             delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
@@ -194,14 +229,30 @@ export class GameHandler {
     }
 
     private rerollPlayerCards(player: Player) {
-        // prevent any race conditions
-        const playerCards = player.getCards();
-        player.setCards([], false);
-
-        this.deck.add(playerCards);
-        this.deck.shuffle();
+        this.addPlayerCardsToDeck(player, false);
 
         const newCards = this.deck.take(5);
         player.setCards(newCards);
+    }
+
+    private addPlayerCardsToDeck(player: Player, updatePlayer: boolean) {
+        const playerCards = player.getCards();
+        player.setCards([], updatePlayer);
+
+        this.deck.add(playerCards);
+        this.deck.shuffle();
+    }
+
+    private addPlayerBoardToDeck(player: Player) {
+        const board = player.getBoard();
+        const bench = player.getBench();
+
+        player.setBoard([]);
+        player.setBench([]);
+
+        board.forEach(p => this.deck.addPiece(p));
+        bench.forEach(p => this.deck.addPiece(p));
+
+        this.deck.shuffle();
     }
 }
