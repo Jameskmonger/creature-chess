@@ -2,5 +2,6 @@ export enum GamePhase {
     WAITING,
     PREPARING,
     READY,
-    PLAYING
+    PLAYING,
+    DEAD
 }

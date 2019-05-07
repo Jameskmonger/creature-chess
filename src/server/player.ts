@@ -18,6 +18,7 @@ export class Player {
     private money: number;
     private health: number;
     private match: Match;
+    private cleanedUp: boolean;
 
     constructor(connection: Connection, name: string) {
         this.connection = connection;
@@ -29,6 +30,7 @@ export class Player {
         this.money = 0;
         this.health = 100;
         this.match = null;
+        this.cleanedUp = false;
 
         if (connection !== null) {
             connection.setPlayer(this);
@@ -64,6 +66,22 @@ export class Player {
 
     public setBoard(board: PokemonPiece[]) {
         this.board = board;
+
+        this.sendBoardUpdate();
+    }
+
+    public getBoard() {
+        return this.board;
+    }
+
+    public setBench(bench: PokemonPiece[]) {
+        this.bench = bench;
+
+        this.sendBenchUpdate();
+    }
+
+    public getBench() {
+        return this.bench;
     }
 
     public clone() {
@@ -88,6 +106,10 @@ export class Player {
 
     public getHealth() {
         return this.health;
+    }
+
+    public isAlive() {
+        return this.health > 0;
     }
 
     public movePieceToBench(packet: MovePiecePacket) {
@@ -157,7 +179,7 @@ export class Player {
 
         log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 
-        this.health -= results.survivingAwayTeam.length * 3;
+        this.subtractHealth(results.survivingAwayTeam.length * 3);
 
         return {
             player: this,
@@ -194,6 +216,22 @@ export class Player {
         return null;
     }
 
+    public hasBeenCleanedUp() {
+        return this.cleanedUp;
+    }
+
+    public setCleanedUp(cleanedUp: boolean) {
+        return this.cleanedUp = cleanedUp;
+    }
+
+    public sendDeathUpdate() {
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.DEAD
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+    }
+
     private sendCardsUpdate() {
         this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards);
     }
@@ -217,6 +255,16 @@ export class Player {
 
     private sendMoneyUpdate() {
         this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
+    }
+
+    private subtractHealth(value: number) {
+        const newValue = this.health - value;
+
+        if (newValue < 0) {
+            this.health = 0;
+        } else {
+            this.health = newValue;
+        }
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
