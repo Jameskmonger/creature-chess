@@ -1,6 +1,4 @@
-
 import { Server } from "./server";
-import { Connection } from "./connection";
 import { log } from "./log";
 
 if (process.argv[2] === undefined || process.argv[3] === undefined) {

@@ -1,5 +1,5 @@
 import delay from "delay";
-import { Player } from "./player";
+import { Player } from "./players/player";
 import { PokemonPiece, Constants } from "../shared";
 import { rotatePiecePosition } from "../shared/pokemon-piece";
 import { isATeamDefeated } from "../shared/is-a-team-defeated";
