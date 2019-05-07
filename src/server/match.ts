@@ -21,8 +21,8 @@ export class Match {
         this.away = away;
 
         this.board = [
-            ...this.home.clone().map(this.mapHomePiece),
-            ...this.away.clone().map(this.mapAwayPiece)
+            ...this.home.cloneBoard().map(this.mapHomePiece),
+            ...this.away.cloneBoard().map(this.mapAwayPiece)
         ];
     }
 
