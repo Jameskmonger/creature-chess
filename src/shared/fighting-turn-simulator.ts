@@ -3,6 +3,7 @@ import { attack } from "./attack";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getPokemonStats } from "./pokemon-details";
 import { getRelativeDirection } from "./position";
+import { isATeamDefeated } from "./is-a-team-defeated";
 
 export const simulateTurn = (pieces: PokemonPiece[]) => {
     const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
@@ -38,6 +39,10 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
         updatedPieces[index] = updatedFighters.attacker;
         updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
     });
+
+    if (isATeamDefeated(updatedPieces)) {
+        updatedPieces.forEach(p => p.celebrating = true);
+    }
 
     return updatedPieces;
 };
