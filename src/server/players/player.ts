@@ -328,6 +328,8 @@ export class Player {
         // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
         const pieceCost = getPokemonDefinition(piece.pokemonId).cost || 6;
         this.addMoney(pieceCost);
+        this.deck.addPiece(piece);
+        this.deck.shuffle();
     }
 
     private onRerollCards = () => {
