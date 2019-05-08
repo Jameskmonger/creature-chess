@@ -45,8 +45,6 @@ export class Player {
         this.name = name;
         this.deck = deck;
 
-        this.bench.push(createBenchPokemon(this.id, 50, 0));
-
         connection.setPlayer(this);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.onPurchaseCard);

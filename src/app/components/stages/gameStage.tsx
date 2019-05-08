@@ -1,8 +1,6 @@
 // tslint:disable:jsx-ban-props
 import * as React from "react";
 import { DragDropContext } from "react-dnd";
-import HTML5Backend from "react-dnd-html5-backend";
-import TouchBackend from "react-dnd-touch-backend";
 import MultiBackend from "react-dnd-multi-backend";
 import HTML5toTouch from "react-dnd-multi-backend/lib/HTML5toTouch";
 
@@ -20,11 +18,6 @@ const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
 const getHeightFromWidth = (width: number) =>
     ((width / Constants.GRID_SIZE) * (Constants.GRID_SIZE + 1));
-
-const isHTML5DragDropSupported = () => {
-    const div = document.createElement("div");
-    return ("draggable" in div) || ("ondragstart" in div && "ondrop" in div);
-};
 
 interface GameStageProps {
     width: number;
