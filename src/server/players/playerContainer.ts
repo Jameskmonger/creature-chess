@@ -38,7 +38,7 @@ export class PlayerContainer {
         }
     }
 
-    public updatePlayerLists() {
+    public updatePlayerLists = () => {
         this.players.forEach(p => p.sendPlayerListUpdate(this.players));
     }
 
