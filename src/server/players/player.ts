@@ -298,6 +298,11 @@ export class Player {
     }
 
     private onRerollCards = () => {
+        if (this.isAlive() === false) {
+            log(`${this.name} attempted to reroll, but they are dead`);
+            return;
+        }
+
         const money = this.money;
 
         // not enough money
