@@ -2,6 +2,7 @@
 import * as React from "react";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
+import TouchBackend from "react-dnd-touch-backend";
 import { Constants } from "@common";
 import { Board } from "../board/board";
 import { Bench } from "../board/bench";
@@ -16,6 +17,11 @@ const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
 const getHeightFromWidth = (width: number) =>
     ((width / Constants.GRID_SIZE) * (Constants.GRID_SIZE + 1));
+
+const isHTML5DragDropSupported = () => {
+    const div = document.createElement("div");
+    return ("draggable" in div) || ("ondragstart" in div && "ondrop" in div);
+};
 
 interface GameStageProps {
     width: number;
@@ -108,7 +114,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
     }
 }
 
-const GameStage = DragDropContext(HTML5Backend)(GameStageUnconnected);
+const GameStage = DragDropContext(isHTML5DragDropSupported() ? HTML5Backend : TouchBackend)(GameStageUnconnected);
 
 export {
     GameStage
