@@ -1,6 +1,7 @@
 import uuid = require("uuid/v4");
 import { Direction, TileCoordinates, createTileCoordinates } from "./position";
 import { GRID_SIZE } from "./constants";
+import { getPokemonStats } from './pokemon-details';
 
 export interface AttackDetails {
     direction: Direction;
@@ -34,16 +35,19 @@ export interface PokemonPiece {
 
 export const initialCoolDown = 1000;
 
-export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): PokemonPiece => ({
-    id: uuid(),
-    ownerId,
-    pokemonId,
-    position: createTileCoordinates(...position),
-    facingAway: true,
-    maxHealth: 100,
-    currentHealth: 100,
-    coolDown: initialCoolDown
-});
+export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): PokemonPiece => {
+    const stats = getPokemonStats(pokemonId);
+    return {
+        id: uuid(),
+        ownerId,
+        pokemonId,
+        position: createTileCoordinates(...position),
+        facingAway: true,
+        maxHealth: stats.hp,
+        currentHealth: stats.hp,
+        coolDown: initialCoolDown
+    };
+};
 
 export const clonePokemonPiece = (piece: PokemonPiece) => createPokemon(piece.ownerId, piece.pokemonId, [piece.position.x, piece.position.y]);
 
