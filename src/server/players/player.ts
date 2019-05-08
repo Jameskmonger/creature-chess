@@ -161,7 +161,7 @@ export class Player {
 
         const total = base + winBonus + streakBonus;
 
-        log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, streak bonus: ${streakBonus})`);
+        log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, (${this.streak.amount}) streak bonus: ${streakBonus})`);
 
         return total;
     }
@@ -260,6 +260,7 @@ export class Player {
 
         if (newValue === 0 && oldValue !== 0) {
             // player has just died
+            this.addCardsToDeck();
             this.addPiecesToDeck();
             this.sendDeathUpdate();
         }
@@ -297,6 +298,11 @@ export class Player {
     }
 
     private onRerollCards = () => {
+        if (this.isAlive() === false) {
+            log(`${this.name} attempted to reroll, but they are dead`);
+            return;
+        }
+
         const money = this.money;
 
         // not enough money
@@ -345,6 +351,15 @@ export class Player {
         bench.forEach(p => this.deck.addPiece(p));
 
         this.deck.shuffle();
+    }
+
+    private addCardsToDeck() {
+        const cards = this.cards;
+
+        this.deck.add(cards);
+        this.deck.shuffle();
+
+        this.setCards([]);
     }
 
     private popPieceIfExists(id: string, { x, y }: TileCoordinates) {
