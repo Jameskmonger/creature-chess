@@ -1,40 +1,44 @@
 import uuid = require("uuid/v4");
+import delay from "delay";
 import { PokemonCard, PlayerListPlayer, GamePhase, Constants } from "../../shared";
-import { PokemonPiece, clonePokemonPiece } from "../../shared/pokemon-piece";
+import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "../../shared/pokemon-piece";
 import { Connection } from "./connection";
-import { ServerToClientPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, BoardUpatePacket } from "../../shared/packet-opcodes";
+import { MovePiecePacket, ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
 import { TileCoordinates } from "../../shared/position";
 import { Match } from "../match";
 import { log } from "../log";
+import { CardDeck } from "../cardDeck";
 
 export class Player {
     public readonly id: string;
     public readonly name: string;
     private connection: Connection;
-    private cards: PokemonCard[];
-    private board: PokemonPiece[];
-    private bench: PokemonPiece[];
-    private opponent?: Player;
-    private money: number;
-    private health: number;
-    private match: Match;
-    private cleanedUp: boolean;
+    private deck: CardDeck;
 
-    constructor(connection: Connection, name: string) {
+    private cards: PokemonCard[] = [];
+    private board: PokemonPiece[] = [];
+    private bench: PokemonPiece[] = [];
+    private money: number = 3;
+    private health: number = 100;
+    private match: Match = null;
+    private opponent?: Player = null;
+
+    private onHealthUpdateListeners: ((health: number) => void)[] = [];
+
+    constructor(connection: Connection, name: string, deck: CardDeck) {
         this.connection = connection;
         this.id = uuid();
         this.name = name;
-        this.cards = [];
-        this.board = [];
-        this.bench = [];
-        this.money = 0;
-        this.health = 100;
-        this.match = null;
-        this.cleanedUp = false;
+        this.deck = deck;
 
-        if (connection !== null) {
-            connection.setPlayer(this);
-        }
+        connection.setPlayer(this);
+
+        connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.onPurchaseCard);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.onRerollCards);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
+
+        connection.sendJoinedGameUpdate(this.id);
 
         this.sendCardsUpdate();
         this.sendBoardUpdate();
@@ -42,102 +46,16 @@ export class Player {
         this.sendMoneyUpdate();
     }
 
-    public setCards(cards: PokemonCard[], update: boolean = true) {
-        this.cards = cards;
-
-        if (update) {
-            this.sendCardsUpdate();
-        }
-    }
-
-    public getCards() {
-        return this.cards;
-    }
-
-    public getCardAtIndex(index: number) {
-        return this.cards[index];
-    }
-
-    public deleteCard(index: number) {
-        this.cards[index] = null;
-
-        this.sendCardsUpdate();
-    }
-
-    public setBoard(board: PokemonPiece[]) {
-        this.board = board;
-
-        this.sendBoardUpdate();
-    }
-
-    public getBoard() {
-        return this.board;
-    }
-
-    public setBench(bench: PokemonPiece[]) {
-        this.bench = bench;
-
-        this.sendBenchUpdate();
-    }
-
-    public getBench() {
-        return this.bench;
-    }
-
-    public clone() {
+    public cloneBoard() {
         return this.board.map(p => clonePokemonPiece(p));
     }
 
-    public addBenchPiece(piece: PokemonPiece) {
-        this.bench.push(piece);
-
-        this.sendBenchUpdate();
-    }
-
-    public getMoney() {
-        return this.money;
-    }
-
-    public setMoney(money: number) {
-        this.money = money;
-
-        this.sendMoneyUpdate();
-    }
-
-    public getHealth() {
-        return this.health;
+    public onHealthUpdate(fn: (health: number) => void) {
+        this.onHealthUpdateListeners.push(fn);
     }
 
     public isAlive() {
         return this.health > 0;
-    }
-
-    public movePieceToBench(packet: MovePiecePacket) {
-        const piece = this.popPieceIfExists(packet.id, packet.from);
-
-        if (piece === null) {
-            log(`Could not find piece ID ${packet.id}`);
-            return;
-        }
-
-        piece.position = packet.to;
-        this.bench.push(piece);
-    }
-
-    public movePieceToBoard(packet: MovePiecePacket) {
-        const piece = this.popPieceIfExists(packet.id, packet.from);
-
-        if (piece === null) {
-            log(`Could not find piece ID ${packet.id}`);
-            return;
-        }
-
-        piece.position = packet.to;
-        this.board.push(piece);
-    }
-
-    public sendJoinedGame() {
-        this.sendPacket(ServerToClientPacketOpcodes.JOINED_GAME, this.id);
     }
 
     public sendPlayerListUpdate(players: Player[]) {
@@ -149,43 +67,32 @@ export class Player {
             };
         });
 
-        this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
+        this.connection.sendPlayerListUpdate(playerList);
     }
 
     public sendPreparingPhaseUpdate() {
         this.match = null;
 
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.PREPARING,
-            payload: {
-                pieces: this.board
-            }
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+        this.connection.sendPreparingPhaseUpdate(this.board);
     }
 
-    public async sendPlayingPhaseUpdate(seed: number) {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.PLAYING,
-            payload: {
-                seed
-            }
-        };
+    public async runPlayingPhase(seed: number) {
+        this.connection.sendPlayingPhaseUpdate(seed);
 
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-
-        const results = await this.match.fight(seed, Constants.TURNS_IN_BATTLE);
+        const [, results] = await Promise.all([
+            delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
+            this.match.fight(seed, Constants.TURNS_IN_BATTLE)
+        ]);
 
         log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 
         this.subtractHealth(results.survivingAwayTeam.length * 3);
 
-        return {
-            player: this,
-            home: results.survivingHomeTeam,
-            away: results.survivingAwayTeam
-        };
+        const win = results.survivingHomeTeam.length > results.survivingAwayTeam.length;
+
+        log(`- Awarded a ${win ? "win" : "loss"} to ${this.name}`);
+
+        this.addMoney(win ? 6 : 3);
     }
 
     public sendReadyPhaseUpdate(opponent: Player) {
@@ -193,18 +100,32 @@ export class Player {
 
         this.match = new Match(this, opponent);
 
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.READY,
-            payload: {
-                pieces: this.match.getBoard(),
-                opponentId: this.opponent.id
-            }
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+        this.connection.sendReadyPhaseUpdate(this.match.getBoard(), this.opponent.id);
     }
 
-    public getFirstEmptyBenchSlot() {
+    public rerollCards() {
+        const cards = this.cards;
+
+        this.deck.add(cards);
+        this.deck.shuffle();
+
+        const newCards = this.deck.take(5);
+        this.setCards(newCards);
+    }
+
+    private addBenchPiece(piece: PokemonPiece) {
+        this.bench.push(piece);
+
+        this.sendBenchUpdate();
+    }
+
+    private setMoney(money: number) {
+        this.money = money;
+
+        this.sendMoneyUpdate();
+    }
+
+    private getFirstEmptyBenchSlot() {
         for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
             const piece = this.bench.some(p => p.position.x === slot);
 
@@ -216,64 +137,161 @@ export class Player {
         return null;
     }
 
-    public hasBeenCleanedUp() {
-        return this.cleanedUp;
+    private setCards(cards: PokemonCard[], update: boolean = true) {
+        this.cards = cards;
+
+        if (update) {
+            this.sendCardsUpdate();
+        }
     }
 
-    public setCleanedUp(cleanedUp: boolean) {
-        return this.cleanedUp = cleanedUp;
+    private getCardAtIndex(index: number) {
+        return this.cards[index];
     }
 
-    public sendDeathUpdate() {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.DEAD
-        };
+    private deleteCard(index: number) {
+        this.cards[index] = null;
 
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+        this.sendCardsUpdate();
+    }
+
+    private setBoard(board: PokemonPiece[]) {
+        this.board = board;
+
+        this.sendBoardUpdate();
+    }
+
+    private setBench(bench: PokemonPiece[]) {
+        this.bench = bench;
+
+        this.sendBenchUpdate();
+    }
+
+    private addMoney(money: number) {
+        this.setMoney(this.money + money);
+    }
+
+    private sendDeathUpdate() {
+        this.connection.sendDeadPhaseUpdate();
     }
 
     private sendCardsUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards);
+        this.connection.sendCardsUpdate(this.cards);
     }
 
     private sendBoardUpdate() {
-        const packet: BoardUpatePacket = {
-            pieces: this.board.map(piece => ({
-                ...piece,
-                facingAway: true
-            }))
-        };
+        // turn all local pieces to face away
+        const turnedPieces = this.board.map(piece => ({
+            ...piece,
+            facingAway: true
+        }));
 
-        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
+        this.connection.sendBoardUpdate(turnedPieces);
     }
 
     private sendBenchUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: this.bench
-        });
+        this.connection.sendBenchUpdate(this.bench);
     }
 
     private sendMoneyUpdate() {
-        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, this.money);
+        this.connection.sendMoneyUpdate(this.money);
     }
 
     private subtractHealth(value: number) {
-        const newValue = this.health - value;
+        const oldValue = this.health;
 
-        if (newValue < 0) {
-            this.health = 0;
-        } else {
-            this.health = newValue;
+        let newValue = this.health - value;
+        newValue = (newValue < 0) ? 0 : newValue;
+
+        this.health = newValue;
+
+        if (newValue === 0 && oldValue !== 0) {
+            // player has just died
+            this.addPiecesToDeck();
+            this.sendDeathUpdate();
         }
+
+        this.onHealthUpdateListeners.forEach(fn => fn(this.health));
     }
 
-    private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
-        // allow for bot players
-        if (this.connection === null) {
+    private onPurchaseCard = (cardIndex: number) => {
+        const slot = this.getFirstEmptyBenchSlot();
+        const card = this.getCardAtIndex(cardIndex);
+
+        if (slot === null) {
+            log(`${this.name} attempted to buy a card but has no empty slot`);
             return;
         }
 
-        this.connection.sendPacket(opcode, ...data);
+        if (!card) {
+            log(`${this.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
+            return;
+        }
+
+        const money = this.money;
+
+        if (money < card.cost) {
+            log(`${this.name} attempted to buy card costing $${card.cost} but only had $${this}`);
+            return;
+        }
+
+        this.setMoney(money - card.cost);
+        this.deleteCard(cardIndex);
+
+        const piece = createBenchPokemon(this.id, card.id, slot);
+
+        this.addBenchPiece(piece);
+    }
+
+    private onRerollCards = () => {
+        const money = this.money;
+
+        // not enough money
+        if (money < Constants.REROLL_COST) {
+            log(`${this.name} attempted to reroll costing $${Constants.REROLL_COST} but only had $${money}`);
+            return;
+        }
+
+        this.rerollCards();
+
+        this.setMoney(money - Constants.REROLL_COST);
+    }
+
+    private movePieceToBench = (packet: MovePiecePacket) => {
+        const piece = this.popPieceIfExists(packet.id, packet.from);
+
+        if (piece === null) {
+            log(`Could not find piece ID ${packet.id}`);
+            return;
+        }
+
+        piece.position = packet.to;
+        this.bench.push(piece);
+    }
+
+    private movePieceToBoard = (packet: MovePiecePacket) => {
+        const piece = this.popPieceIfExists(packet.id, packet.from);
+
+        if (piece === null) {
+            log(`Could not find piece ID ${packet.id}`);
+            return;
+        }
+
+        piece.position = packet.to;
+        this.board.push(piece);
+    }
+
+    private addPiecesToDeck() {
+        const board = this.board;
+        const bench = this.bench;
+
+        this.setBoard([]);
+        this.setBench([]);
+
+        board.forEach(p => this.deck.addPiece(p));
+        bench.forEach(p => this.deck.addPiece(p));
+
+        this.deck.shuffle();
     }
 
     private popPieceIfExists(id: string, { x, y }: TileCoordinates) {
