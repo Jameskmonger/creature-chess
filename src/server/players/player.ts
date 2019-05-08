@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import delay from "delay";
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants } from "../../shared";
+import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition } from "../../shared";
 import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "../../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { MovePiecePacket, ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
@@ -48,6 +48,7 @@ export class Player {
         connection.setPlayer(this);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.onPurchaseCard);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.onSellPiece);
         connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.onRerollCards);
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
@@ -170,6 +171,26 @@ export class Player {
         this.bench.push(piece);
 
         this.sendBenchUpdate();
+    }
+
+    private ownsPiece = (pieceId: string) => {
+        return this.board.concat(this.bench).some(p => p.id === pieceId);
+    }
+
+    private removePiece(pieceId: string) {
+        const boardPiece = this.board.find(p => p.id === pieceId);
+        const benchPiece = this.bench.find(p => p.id === pieceId);
+        if (boardPiece) {
+            this.board.splice(this.board.indexOf(boardPiece), 1);
+            this.sendBoardUpdate();
+            return boardPiece;
+        }
+
+        if (benchPiece) {
+            this.bench.splice(this.bench.indexOf(benchPiece), 1);
+            this.sendBenchUpdate();
+            return benchPiece;
+        }
     }
 
     private setMoney(money: number) {
@@ -295,6 +316,18 @@ export class Player {
         const piece = createBenchPokemon(this.id, card.id, slot);
 
         this.addBenchPiece(piece);
+    }
+
+    private onSellPiece = (pieceId: string) => {
+        if (!this.ownsPiece(pieceId)) {
+            log(`${this.name} attempted to sell piece with id ${pieceId} but did not own it`);
+            return;
+        }
+
+        const piece = this.removePiece(pieceId);
+        // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
+        const pieceCost = getPokemonDefinition(piece.pokemonId).cost || 6;
+        this.addMoney(pieceCost);
     }
 
     private onRerollCards = () => {
