@@ -9,6 +9,16 @@ import { Match } from "../match";
 import { log } from "../log";
 import { CardDeck } from "../cardDeck";
 
+enum StreakType {
+    WIN,
+    LOSS
+}
+
+interface StreakDetails {
+    type: StreakType;
+    amount: number;
+}
+
 export class Player {
     public readonly id: string;
     public readonly name: string;
@@ -21,6 +31,10 @@ export class Player {
     private money: number = 3;
     private health: number = 100;
     private match: Match = null;
+    private streak = {
+        type: StreakType.WIN,
+        amount: 0
+    };
     private opponent?: Player = null;
 
     private onHealthUpdateListeners: ((health: number) => void)[] = [];
@@ -92,7 +106,9 @@ export class Player {
 
         log(`- Awarded a ${win ? "win" : "loss"} to ${this.name}`);
 
-        this.addMoney(win ? 6 : 3);
+        const money = this.getMoneyForMatch(win);
+
+        this.addMoney(money);
     }
 
     public sendReadyPhaseUpdate(opponent: Player) {
@@ -111,6 +127,43 @@ export class Player {
 
         const newCards = this.deck.take(5);
         this.setCards(newCards);
+    }
+
+    private getNewStreakBonus(win: boolean) {
+        const type = win ? StreakType.WIN : StreakType.LOSS;
+
+        if (this.streak.type !== type) {
+            this.streak.type = type;
+            this.streak.amount = 0;
+        }
+
+        this.streak.amount++;
+
+        if (this.streak.amount >= 9) {
+            return 3;
+        }
+
+        if (this.streak.amount >= 6) {
+            return 2;
+        }
+
+        if (this.streak.amount >= 3) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    private getMoneyForMatch(win: boolean) {
+        const base = 3;
+        const winBonus = win ? 1 : 0;
+        const streakBonus = this.getNewStreakBonus(win);
+
+        const total = base + winBonus + streakBonus;
+
+        log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, streak bonus: ${streakBonus})`);
+
+        return total;
     }
 
     private addBenchPiece(piece: PokemonPiece) {
