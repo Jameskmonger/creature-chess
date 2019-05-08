@@ -74,7 +74,7 @@ export class PlayerContainer {
     }
 
     private onJoinGame(connection: Connection) {
-        return (name: string) => {
+        return (name: string, response: (id: string) => void) => {
             if (!name
                 || this.acceptingPlayers === false
                 || this.players.length === this.GAME_SIZE) {
@@ -86,6 +86,9 @@ export class PlayerContainer {
             log(`${name} has joined the game`);
 
             const player = new Player(connection, name, this.deck);
+
+            response(player.id);
+
             player.onHealthUpdate(this.updatePlayerLists);
 
             this.players.push(player);

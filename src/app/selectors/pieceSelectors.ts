@@ -3,6 +3,7 @@ import { createSelector } from "reselect";
 import { PokemonPiece } from "@common/pokemon-piece";
 import { AppState } from "../store/store";
 import { TileCoordinates, TileType } from "@common/position";
+import { localPlayerIdSelector } from "./gameSelector";
 
 const piecesSelector = (state: AppState, props: { type: TileType }) =>
     props.type === TileType.BOARD ? state.pieces : state.benchPieces;
@@ -18,3 +19,9 @@ export const tilePieceSelector = createSelector(
     positionSelector,
     (pieces, position) => pieces.filter(piecePositionFilter(position))
 );
+
+export const ownedPieceSelector = (state: AppState) => {
+    const playerId = localPlayerIdSelector(state);
+
+    return state.pieces.filter(p => p.ownerId === playerId);
+};

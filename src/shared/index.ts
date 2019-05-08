@@ -9,3 +9,5 @@ export { getRequiredQuantityToEvolve } from "./pokemon-details";
 
 import * as Constants from "./constants";
 export { Constants };
+
+export { getXpToNextLevel } from "./get-xp-for-level";
