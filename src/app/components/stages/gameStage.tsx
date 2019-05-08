@@ -3,6 +3,9 @@ import * as React from "react";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import TouchBackend from "react-dnd-touch-backend";
+import MultiBackend from "react-dnd-multi-backend";
+import HTML5toTouch from "react-dnd-multi-backend/lib/HTML5toTouch";
+
 import { Constants } from "@common";
 import { Board } from "../board/board";
 import { Bench } from "../board/bench";
@@ -114,7 +117,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
     }
 }
 
-const GameStage = DragDropContext(isHTML5DragDropSupported() ? HTML5Backend : TouchBackend)(GameStageUnconnected);
+const GameStage = DragDropContext(MultiBackend(HTML5toTouch))(GameStageUnconnected);
 
 export {
     GameStage
