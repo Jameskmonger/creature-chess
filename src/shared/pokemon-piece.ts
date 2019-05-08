@@ -1,7 +1,7 @@
 import uuid = require("uuid/v4");
 import { Direction, TileCoordinates, createTileCoordinates } from "./position";
 import { GRID_SIZE } from "./constants";
-import { getPokemonStats } from './pokemon-details';
+import { getPokemonStats } from "./pokemon-details";
 
 export interface AttackDetails {
     direction: Direction;

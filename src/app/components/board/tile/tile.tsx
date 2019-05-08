@@ -3,7 +3,7 @@ import { MapDispatchToProps, connect, MapStateToProps } from "react-redux";
 
 import { PokemonPiece } from "@common/pokemon-piece";
 import { AppState } from "../../../store/store";
-import { tilePieceSelector } from "../../../selectors/pieceSelectors";
+import { tilePieceSelector, ownedPieceSelector } from "../../../selectors/pieceSelectors";
 import { tileDropTarget } from "./tileDragDrop";
 import { TileProps, TileOwnProps, TileStateProps, TileDispatchProps } from "./tileProps";
 import { TileUnconnected } from "./tileUnconnected";

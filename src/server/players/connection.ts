@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { Player } from "./player";
-import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket } from "../../shared/packet-opcodes";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "../../shared/packet-opcodes";
 import { PlayerListPlayer, PokemonPiece, GamePhase, PokemonCard } from "../../shared";
 
 type IncomingPacketListener = (...args: any[]) => void;
@@ -25,12 +25,17 @@ export class Connection {
         this.socket.on(opcode, listener);
     }
 
-    public onJoinGame(callback: (name: string) => void) {
-        this.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, callback);
+    public onJoinGame(handler: (name: string, callback: (id: string) => void) => void) {
+        this.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, handler);
     }
 
-    public sendJoinedGameUpdate(id: string) {
-        this.sendPacket(ServerToClientPacketOpcodes.JOINED_GAME, id);
+    public sendLevelUpdate(level: number, xp: number) {
+        const packet: LevelUpdatePacket = {
+            level,
+            xp
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.LEVEL_UPDATE, packet);
     }
 
     public sendBoardUpdate(board: PokemonPiece[]) {

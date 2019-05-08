@@ -11,6 +11,7 @@ import { PlayerList } from "../playerList/playerList";
 
 import Media from "react-media";
 import { PhaseInfo } from "../phase-info";
+import { Profile } from "../profile/profile";
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -59,6 +60,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             </div>
                         </div>
                         <div className="group">
+                            <Profile />
                             <CardShop />
                         </div>
                     </div>
@@ -76,6 +78,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             <SelectedPieceInfoPanel />
 
                             <PhaseInfo />
+
+                            <Profile />
 
                             <PlayerList />
 
@@ -96,6 +100,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             <SelectedPieceInfoPanel />
 
                             <PhaseInfo />
+
+                            <Profile />
 
                             <PlayerList />
 

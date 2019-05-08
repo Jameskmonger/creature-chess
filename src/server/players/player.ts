@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import delay from "delay";
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants } from "../../shared";
+import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getXpToNextLevel } from "../../shared";
 import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "../../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { MovePiecePacket, ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
@@ -28,13 +28,15 @@ export class Player {
     private cards: PokemonCard[] = [];
     private board: PokemonPiece[] = [];
     private bench: PokemonPiece[] = [];
-    private money: number = 3;
+    private money: number = 20;
     private health: number = 100;
     private match: Match = null;
     private streak = {
         type: StreakType.WIN,
         amount: 0
     };
+    private level: number = 1;
+    private xp: number = 0;
     private opponent?: Player = null;
 
     private onHealthUpdateListeners: ((health: number) => void)[] = [];
@@ -51,8 +53,7 @@ export class Player {
         connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.onRerollCards);
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
-
-        connection.sendJoinedGameUpdate(this.id);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.onBuyXp);
 
         this.sendCardsUpdate();
         this.sendBoardUpdate();
@@ -109,6 +110,8 @@ export class Player {
         const money = this.getMoneyForMatch(win);
 
         this.addMoney(money);
+
+        this.addXp(1);
     }
 
     public sendReadyPhaseUpdate(opponent: Player) {
@@ -127,6 +130,22 @@ export class Player {
 
         const newCards = this.deck.take(5);
         this.setCards(newCards);
+    }
+
+    private addXp(amount: number) {
+        for (let i = 0; i < amount; i++) {
+            const toNextLevel = getXpToNextLevel(this.level);
+            const newXp = this.xp + 1;
+
+            if (newXp === toNextLevel) {
+                this.xp = 0;
+                this.level++;
+            } else {
+                this.xp = newXp;
+            }
+        }
+
+        this.connection.sendLevelUpdate(this.level, this.xp);
     }
 
     private getNewStreakBonus(win: boolean) {
@@ -295,6 +314,25 @@ export class Player {
         const piece = createBenchPokemon(this.id, card.id, slot);
 
         this.addBenchPiece(piece);
+    }
+
+    private onBuyXp = () => {
+        if (this.isAlive() === false) {
+            log(`${this.name} attempted to buy xp, but they are dead`);
+            return;
+        }
+
+        const money = this.money;
+
+        // not enough money
+        if (money < Constants.BUY_XP_COST) {
+            log(`${this.name} attempted to buy xp costing $${Constants.BUY_XP_COST} but only had $${money}`);
+            return;
+        }
+
+        this.addXp(Constants.BUY_XP_AMOUNT);
+
+        this.setMoney(money - Constants.BUY_XP_COST);
     }
 
     private onRerollCards = () => {

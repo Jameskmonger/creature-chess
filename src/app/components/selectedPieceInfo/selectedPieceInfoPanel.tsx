@@ -7,6 +7,7 @@ import { MapStateToProps, connect } from "react-redux";
 import { AppState } from "src/app/store/store";
 import { CombinePiecesButton } from "./combinePiecesButton";
 import { getPokemonStats } from "@common/pokemon-details";
+import { localPlayerIdSelector } from "../../selectors/gameSelector";
 
 interface Props {
     piece: PokemonPiece;
@@ -56,8 +57,10 @@ const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => {
         };
     }
 
+    const playerId = localPlayerIdSelector(state);
+
     const numberOnBoard = state.pieces
-        .filter(p => p.pokemonId === piece.pokemonId && p.ownerId === state.game.localPlayerId).length;
+        .filter(p => p.pokemonId === piece.pokemonId && p.ownerId === playerId).length;
 
     const numberOnBench = state.benchPieces
         .filter(p => p.pokemonId === piece.pokemonId).length;

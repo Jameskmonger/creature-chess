@@ -1,10 +1,10 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_COMPLETE, JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store/store";
 import { GamePhase } from "../../shared";
+import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 
 const initialState: GameState = {
-    localPlayerId: null,
     opponentId: null,
     loading: false,
     money: 0,
@@ -18,14 +18,12 @@ export function game(state: GameState = initialState, action: GameAction) {
         case JOIN_GAME:
             return {
                 ...state,
-                loading: true,
-                localPlayerId: null
+                loading: true
             };
         case JOIN_COMPLETE:
             return {
                 ...state,
-                loading: false,
-                localPlayerId: action.payload.id
+                loading: false
             };
         case GAME_PHASE_UPDATE:
             // set opponent id when entering ready phase
