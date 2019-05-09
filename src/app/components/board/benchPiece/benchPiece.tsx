@@ -5,10 +5,9 @@ import { benchPieceDragSource } from "./benchPieceDragDrop";
 import { BenchPieceUnconnected } from "./benchPieceUnconnected";
 import { pieceSelectedAction } from "../../../actions/gameActions";
 import { AppState } from "../../../store/store";
-import { GamePhase } from "../../../../shared";
 
 const mapStateToProps: MapStateToProps<BenchPieceStateProps, {}, AppState> = (state) => ({
-    canDrag: state.game.phase === GamePhase.PREPARING
+    canDrag: true
 });
 
 const mapDispatchToProps: MapDispatchToProps<BenchPieceDispatchProps, BenchPieceProps> = (dispatch, ownProps) => ({
