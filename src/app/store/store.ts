@@ -5,6 +5,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { PokemonPiece } from "@common/pokemon-piece";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "../sagas";
+import { FeedMessage } from "@common/feed-message";
 
 export interface GameState {
     phase: GamePhase;
@@ -29,6 +30,7 @@ export interface AppState {
     playerList: PlayerListPlayer[];
     cards: PokemonCard[];
     localPlayer: LocalPlayerState;
+    feedMessages: FeedMessage[];
 }
 
 const sagaMiddleware = createSagaMiddleware();

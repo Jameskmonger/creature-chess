@@ -1,6 +1,7 @@
 import { TileCoordinates } from "./position";
 import { PokemonPiece } from "./pokemon-piece";
 import { GamePhase } from "./game-phase";
+import { FeedMessage } from "./feed-message";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -9,7 +10,8 @@ export enum ServerToClientPacketOpcodes {
     PLAYER_LIST_UPDATE = "playerListUpdate",
     PHASE_UPDATE = "phaseUpdate",
     MONEY_UPDATE = "moneyUpdate",
-    LEVEL_UPDATE = "levelUpdate"
+    LEVEL_UPDATE = "levelUpdate",
+    NEW_FEED_MESSAGE = "newFeedMessage"
 }
 
 export enum ClientToServerPacketOpcodes {

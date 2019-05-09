@@ -2,6 +2,7 @@ import { Socket } from "socket.io";
 import { Player } from "./player";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "../../shared/packet-opcodes";
 import { PlayerListPlayer, PokemonPiece, GamePhase, PokemonCard } from "../../shared";
+import { FeedMessage } from "@common/feed-message";
 
 type IncomingPacketListener = (...args: any[]) => void;
 
@@ -104,6 +105,10 @@ export class Connection {
 
     public sendCardsUpdate(cards: PokemonCard[]) {
         this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
+    }
+
+    public sendNewFeedMessage(message: FeedMessage) {
+        this.sendPacket(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, message);
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {

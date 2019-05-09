@@ -8,6 +8,7 @@ import { TileCoordinates } from "../../shared/position";
 import { Match } from "../match";
 import { log } from "../log";
 import { CardDeck } from "../cardDeck";
+import { FeedMessage } from "@common/feed-message";
 
 enum StreakType {
     WIN,
@@ -101,7 +102,8 @@ export class Player {
 
         log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 
-        this.subtractHealth(results.survivingAwayTeam.length * 3);
+        const damage = results.survivingAwayTeam.length * 3;
+        this.subtractHealth(damage);
 
         const win = results.survivingHomeTeam.length > results.survivingAwayTeam.length;
 
@@ -112,6 +114,8 @@ export class Player {
         this.addMoney(money);
 
         this.addXp(1);
+
+        return { player: this, opponent: this.opponent, win, damage };
     }
 
     public sendReadyPhaseUpdate(opponent: Player) {
@@ -120,6 +124,10 @@ export class Player {
         this.match = new Match(this, opponent);
 
         this.connection.sendReadyPhaseUpdate(this.match.getBoard(), this.opponent.id);
+    }
+
+    public sendNewFeedMessage(message: FeedMessage) {
+        this.connection.sendNewFeedMessage(message);
     }
 
     public rerollCards() {

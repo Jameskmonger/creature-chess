@@ -18,6 +18,8 @@ import { TileCoordinates, createTileCoordinates } from "../../../shared/position
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
 import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
+import { newFeedMessage } from "src/app/actions/feedActions";
+import { FeedMessage } from "@common/feed-message";
 
 const getSocket = (serverIP: string) => {
     const socket = io(serverIP);
@@ -75,6 +77,12 @@ const subscribe = (socket: Socket) => {
             log("[LEVEL_UPDATE]", packet);
 
             emit(localPlayerLevelUpdate(packet.level, packet.xp));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, (packet: FeedMessage) => {
+            log("[NEW_FEED_MESSAGE]", packet);
+
+            emit(newFeedMessage(packet));
         });
 
         // tslint:disable-next-line:no-empty

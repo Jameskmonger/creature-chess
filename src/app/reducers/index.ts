@@ -5,6 +5,7 @@ import { playerList } from "./playerListReducer";
 import { cards } from "./cardsReducer";
 import { game } from "./gameReducer";
 import { localPlayer } from "./localPlayerReducer";
+import { feedMessages } from "./feedMessagesReducer";
 
 export const reducers = {
     deck,
@@ -13,5 +14,6 @@ export const reducers = {
     playerList,
     cards,
     game,
-    localPlayer
+    localPlayer,
+    feedMessages
 };
