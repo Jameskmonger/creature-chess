@@ -4,4 +4,5 @@ export interface DropTargetProps {
     connectDropTarget: ConnectDropTarget;
     isOver: boolean;
     canDrop: boolean;
+    isDragging: boolean;
 }

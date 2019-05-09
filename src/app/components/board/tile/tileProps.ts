@@ -1,4 +1,4 @@
-import { PokemonPiece } from "@common";
+import { PokemonPiece, GamePhase } from "@common";
 import { TileCoordinates, TileType } from "@common/position";
 
 export interface TileOwnProps {
@@ -9,6 +9,8 @@ export interface TileOwnProps {
 
 export interface TileStateProps {
     pieces: PokemonPiece[];
+    gamePhase: GamePhase;
+    belowPieceLimit: boolean;
 }
 
 export interface TileDispatchProps {

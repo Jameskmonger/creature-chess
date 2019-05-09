@@ -14,11 +14,6 @@ enum StreakType {
     LOSS
 }
 
-interface StreakDetails {
-    type: StreakType;
-    amount: number;
-}
-
 export class Player {
     public readonly id: string;
     public readonly name: string;
