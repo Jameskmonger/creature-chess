@@ -1,6 +1,6 @@
 import { PokemonPiece } from "@common/pokemon-piece";
 import { BENCH_PIECE_MOVED, BENCH_PIECES_UPDATED } from "../actiontypes/benchPieceActionTypes";
-import { TileCoordinates } from "../../shared/position";
+import { TileCoordinates } from "@common/position";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "../actiontypes/pieceActionTypes";
 
 export type BenchPiecesAction =

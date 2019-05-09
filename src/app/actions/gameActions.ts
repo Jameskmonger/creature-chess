@@ -1,6 +1,6 @@
 import { JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PIECE_SELECTED, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
-import { PokemonPiece } from "../../shared";
-import { PhaseUpdatePacket } from "../../shared/packet-opcodes";
+import { PokemonPiece } from "@common";
+import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 
 export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: PhaseUpdatePacket });

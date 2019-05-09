@@ -2,8 +2,8 @@ import { PokemonPiece, moveOrAddPiece } from "@common/pokemon-piece";
 import { BenchPiecesAction } from "../actions/benchPieceActions";
 import { BENCH_PIECE_MOVED, BENCH_PIECES_UPDATED } from "../actiontypes/benchPieceActionTypes";
 import { Reducer } from "react";
+import { createTileCoordinates } from "@common/position";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "../actiontypes/pieceActionTypes";
-import { createTileCoordinates } from "../../shared/position";
 
 const initialState = [];
 

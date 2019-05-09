@@ -1,7 +1,7 @@
 import { GameAction } from "../actions/gameActions";
 import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PIECE_SELECTED, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store/store";
-import { GamePhase } from "../../shared";
+import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 
 const initialState: GameState = {
