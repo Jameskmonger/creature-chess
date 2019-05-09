@@ -14,7 +14,7 @@ import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
 import { benchPiecesUpdated } from "../../actions/benchPieceActions";
 import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "../../actiontypes/pieceActionTypes";
-import { TileCoordinates, createTileCoordinates } from "../../../shared/position";
+import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
 import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";

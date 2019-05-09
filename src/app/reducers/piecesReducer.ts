@@ -3,7 +3,7 @@ import { PiecesAction } from "../actions/pieceActions";
 import { PIECE_MOVED_TO_BOARD, PIECES_UPDATED, PIECE_MOVED_TO_BENCH } from "../actiontypes/pieceActionTypes";
 import { Reducer } from "react";
 import { GAME_PHASE_UPDATE } from "../actiontypes/gameActionTypes";
-import { GamePhase } from "../../shared";
+import { GamePhase } from "@common";
 
 const initialState = [];
 
