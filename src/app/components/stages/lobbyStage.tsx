@@ -22,7 +22,7 @@ interface LobbyStageState {
 class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     public state = {
         name: "",
-        serverIP: "http://localhost:3000"
+        serverIP: `http://${window.location.hostname}:3000`
     };
 
     public render() {
