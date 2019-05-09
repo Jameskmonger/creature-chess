@@ -6,3 +6,6 @@ export type PIECE_MOVED_TO_BENCH = typeof PIECE_MOVED_TO_BENCH;
 
 export const PIECES_UPDATED = "PIECES_UPDATED";
 export type PIECES_UPDATED = typeof PIECES_UPDATED;
+
+export const SELL_PIECE = "SELL_PIECE";
+export type SELL_PIECE = typeof SELL_PIECE;

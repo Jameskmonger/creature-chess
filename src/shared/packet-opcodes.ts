@@ -15,6 +15,7 @@ export enum ServerToClientPacketOpcodes {
 export enum ClientToServerPacketOpcodes {
     JOIN_GAME = "joinGame",
     PURCHASE_CARD = "purchaseCard",
+    SELL_PIECE = "sellPiece",
     REROLL_CARDS = "rerollCards",
     MOVE_PIECE_TO_BENCH = "movePieceToBench",
     MOVE_PIECE_TO_BOARD = "movePieceToBoard",
