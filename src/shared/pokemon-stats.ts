@@ -1901,7 +1901,7 @@ mapPokemon([
             specialDefense: 75,
             type: PokemonType.Flying
         },
-        cost: 4
+        cost: 5
     },
     {
         id: 143,
