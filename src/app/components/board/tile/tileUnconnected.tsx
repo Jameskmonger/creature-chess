@@ -15,11 +15,25 @@ const getClassName = (tileType: TileType, position: TileCoordinates) => {
     return isBoardTileDark(position) ? "dark" : "light";
 };
 
-const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = ({ type, pieces, position, renderPiece, connectDropTarget }) => connectDropTarget(
-    <div className={`tile ${getClassName(type, position)}`}>
-        {pieces.map(renderPiece)}
-    </div>
-);
+const getOverlayClassName = (isDragging: boolean, canDrop: boolean) => {
+    if (isDragging && canDrop === false) {
+        return "overlay not-allowed";
+    }
+
+    return "overlay";
+};
+
+const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (props) => {
+    const { type, pieces, position, renderPiece, connectDropTarget, isDragging, canDrop } = props;
+
+    return connectDropTarget(
+        <div className={`tile ${getClassName(type, position)}`}>
+            {pieces.map(renderPiece)}
+
+            <div className={`${getOverlayClassName(isDragging, canDrop)}`} />
+        </div>
+    );
+};
 
 export {
     TileUnconnected

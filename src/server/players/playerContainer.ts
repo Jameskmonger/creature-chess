@@ -1,6 +1,5 @@
 import io = require("socket.io");
 import { Connection } from "./connection";
-import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
 import { log } from "../log";
 import { Player } from "./player";
 import { CardDeck } from "../cardDeck";

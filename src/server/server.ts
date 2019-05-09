@@ -2,7 +2,7 @@ import io = require("socket.io");
 import delay from "delay";
 import { Player } from "./players/player";
 import { CardDeck } from "./cardDeck";
-import { GamePhase, getAllDefinitions, Constants } from "../shared";
+import { GamePhase, getAllDefinitions, Constants } from "@common";
 import { SeedProvider } from "./seed-provider";
 import { log } from "./log";
 import { PlayerContainer } from "./players/playerContainer";

@@ -7,7 +7,6 @@ import { isATeamDefeated } from "@common/is-a-team-defeated";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { AppState } from "../../store/store";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
-import { PhaseUpdatePacket } from "../../../shared/packet-opcodes";
 import { GamePhaseUpdateAction } from "../../actions/gameActions";
 import { log } from "../../log";
 

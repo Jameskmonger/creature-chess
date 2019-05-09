@@ -1,9 +1,8 @@
-import delay from "delay";
 import { Player } from "./players/player";
-import { PokemonPiece, Constants } from "../shared";
-import { rotatePiecePosition } from "../shared/pokemon-piece";
-import { isATeamDefeated } from "../shared/is-a-team-defeated";
-import { simulateTurn } from "../shared/fighting-turn-simulator";
+import { PokemonPiece } from "@common";
+import { rotatePiecePosition } from "@common/pokemon-piece";
+import { isATeamDefeated } from "@common/is-a-team-defeated";
+import { simulateTurn } from "@common/fighting-turn-simulator";
 import { log } from "./log";
 
 export interface MatchResults {

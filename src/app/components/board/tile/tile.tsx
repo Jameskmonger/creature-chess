@@ -10,7 +10,9 @@ import { TileUnconnected } from "./tileUnconnected";
 import { pieceMoved } from "../../../actions/pieceActions";
 
 const mapStateToProps: MapStateToProps<TileStateProps, TileOwnProps, AppState> = (state, ownProps) => ({
-    pieces: tilePieceSelector(state, ownProps)
+    pieces: tilePieceSelector(state, ownProps),
+    gamePhase: state.game.phase,
+    belowPieceLimit: ownedPieceSelector(state).length < state.localPlayer.level
 });
 
 const mapDispatchToProps: MapDispatchToProps<TileDispatchProps, TileOwnProps> = (dispatch, { type, position }) => ({

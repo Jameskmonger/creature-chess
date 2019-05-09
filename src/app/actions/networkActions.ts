@@ -1,5 +1,5 @@
 import { SEND_PACKET } from "../actiontypes/networkActionTypes";
-import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
+import { ClientToServerPacketOpcodes } from "@common/packet-opcodes";
 
 export type NetworkAction = ({ type: SEND_PACKET, payload: { opcode: ClientToServerPacketOpcodes, data?: any } });
 

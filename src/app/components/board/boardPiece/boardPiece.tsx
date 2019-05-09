@@ -6,7 +6,7 @@ import { BoardPieceProps, BoardPieceStateProps, BoardPieceDispatchProps, BoardPi
 import { boardPieceDragSource } from "./boardPieceDragDrop";
 import { BoardPieceUnconnected } from "./boardPieceUnconnected";
 import { pieceSelectedAction } from "../../../actions/gameActions";
-import { GamePhase } from "../../../../shared";
+import { GamePhase } from "@common";
 
 const mapStateToProps: MapStateToProps<BoardPieceStateProps, {}, AppState> = state => ({
     canDrag: state.game.phase === GamePhase.PREPARING,

@@ -1,22 +1,18 @@
 import uuid = require("uuid/v4");
 import delay from "delay";
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel } from "../../shared";
-import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "../../shared/pokemon-piece";
+import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel } from "@common";
+import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "@common/pokemon-piece";
 import { Connection } from "./connection";
-import { MovePiecePacket, ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
-import { TileCoordinates } from "../../shared/position";
+import { MovePiecePacket, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
+import { TileCoordinates } from "@common/position";
 import { Match } from "../match";
 import { log } from "../log";
 import { CardDeck } from "../cardDeck";
+import { canDropPiece } from "@common/board";
 
 enum StreakType {
     WIN,
     LOSS
-}
-
-interface StreakDetails {
-    type: StreakType;
-    amount: number;
 }
 
 export class Player {
@@ -38,6 +34,7 @@ export class Player {
     private level: number = 1;
     private xp: number = 0;
     private opponent?: Player = null;
+    private gamePhase = GamePhase.WAITING;
 
     private onHealthUpdateListeners: ((health: number) => void)[] = [];
 
@@ -88,11 +85,14 @@ export class Player {
 
     public sendPreparingPhaseUpdate() {
         this.match = null;
+        this.gamePhase = GamePhase.PREPARING;
 
         this.connection.sendPreparingPhaseUpdate(this.board);
     }
 
     public async runPlayingPhase(seed: number) {
+        this.gamePhase = GamePhase.PLAYING;
+
         this.connection.sendPlayingPhaseUpdate(seed);
 
         const [, results] = await Promise.all([
@@ -117,6 +117,7 @@ export class Player {
 
     public sendReadyPhaseUpdate(opponent: Player) {
         this.opponent = opponent;
+        this.gamePhase = GamePhase.READY;
 
         this.match = new Match(this, opponent);
 
@@ -249,6 +250,8 @@ export class Player {
     }
 
     private sendDeathUpdate() {
+        this.gamePhase = GamePhase.DEAD;
+
         this.connection.sendDeadPhaseUpdate();
     }
 
@@ -381,6 +384,14 @@ export class Player {
             return;
         }
 
+        const tilePieces = this.bench.filter(p => p.position.x === packet.to.x);
+        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
+
+        if (canDrop === false) {
+            log(`Could not drop piece`);
+            return;
+        }
+
         piece.position = packet.to;
         this.bench.push(piece);
     }
@@ -390,6 +401,14 @@ export class Player {
 
         if (piece === null) {
             log(`Could not find piece ID ${packet.id}`);
+            return;
+        }
+
+        const tilePieces = this.board.filter(p => p.position.x === packet.to.x && p.position.y === packet.to.y);
+        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
+
+        if (canDrop === false) {
+            log(`Could not drop piece`);
             return;
         }
 
@@ -436,5 +455,9 @@ export class Player {
         origin.splice(index, 1);
 
         return piece;
+    }
+
+    private belowPieceLimit() {
+        return this.board.length < this.level;
     }
 }

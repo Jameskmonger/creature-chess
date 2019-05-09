@@ -1,7 +1,7 @@
 import { shuffle } from "lodash";
-import { PokemonCard } from "../shared/pokemon-card";
-import { PokemonDefinition } from "../shared/pokemon-stats";
-import { PokemonPiece } from "../shared";
+import { PokemonCard } from "@common/pokemon-card";
+import { PokemonDefinition } from "@common/pokemon-stats";
+import { PokemonPiece } from "@common";
 
 export class CardDeck {
     public deck: PokemonCard[];

@@ -1,8 +1,8 @@
 import { Expect, Test, TestFixture } from "alsatian";
 import { CardDeck } from "./cardDeck";
 import { uniq } from "lodash";
-import { PokemonDefinition, getAllDefinitions } from "../shared/pokemon-stats";
-import { PokemonType } from "../shared/pokemon-type";
+import { PokemonDefinition, getAllDefinitions } from "@common/pokemon-stats";
+import { PokemonType } from "@common/pokemon-type";
 
 const makeDefinition = (cost: number): PokemonDefinition => {
     return {
