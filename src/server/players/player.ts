@@ -358,8 +358,6 @@ export class Player {
     }
 
     private movePieceToBench = (packet: MovePiecePacket) => {
-        log(`move piece to bench`);
-
         const piece = this.popPieceIfExists(packet.id, packet.from);
 
         if (piece === null) {
