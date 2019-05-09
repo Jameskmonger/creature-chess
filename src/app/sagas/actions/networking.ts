@@ -18,7 +18,7 @@ import { TileCoordinates, createTileCoordinates } from "../../../shared/position
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
 import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
-import { newFeedMessage } from "src/app/actions/feedActions";
+import { newFeedMessage } from "../../actions/feedActions";
 import { FeedMessage } from "@common/feed-message";
 
 const getSocket = (serverIP: string) => {
