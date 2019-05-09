@@ -1,0 +1,71 @@
+.profile {
+    padding: 0.6rem;
+    margin-bottom: 0.6rem;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background: #566c86;
+
+    .name {
+        font-weight: 700;
+        color: #ffcd75;
+        text-transform: uppercase;
+    }
+
+    .item {
+        margin-bottom: 0.4em;
+    }
+
+    .level {
+        font-weight: 700;
+    }
+
+    .pieces {
+        font-style: italic;
+    }
+
+    .xp-progress {
+        position: relative;
+        width: 70%;
+        height: 2em;
+        box-sizing: border-box;
+        margin: 0 auto;
+        background: #636363;
+
+        .fill {
+            height: 100%;
+            box-sizing: border-box;
+            padding-left: 1em;
+            background: #ffcd75;
+        }
+
+        .contents {
+            position: absolute;
+            top: 0;
+            right: 0.5em;
+            font-weight: 700;
+            line-height: 2em;
+            color: #1a1c2c;
+        }
+    }
+
+    .level-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0.8em 0;
+    }
+
+    .buy-xp {
+        width: 30%;
+        box-sizing: border-box;
+        padding: 0.4em 1.2em;
+        margin-left: 1em;
+        font-size: 1.1em;
+        color: #fff;
+        cursor: pointer;
+        background: #1a1c2c;
+        // stylelint-disable-next-line
+        border: none;
+    }
+}

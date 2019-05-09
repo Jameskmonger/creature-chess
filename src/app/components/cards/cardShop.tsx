@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PokemonCard, Constants } from "@common";
+import { PokemonCard, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../../store/store";
@@ -9,6 +9,7 @@ import { RerollCard } from "./rerollCard";
 interface StateProps {
     cards: PokemonCard[];
     money: number;
+    canUseShop: boolean;
 }
 
 interface DispatchProps {
@@ -19,7 +20,7 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps;
 
 const CardShopUnconnected: React.FunctionComponent<Props> = props => {
-    const { cards, money, onReroll, onPurchaseCard } = props;
+    const { cards, money, onReroll, onPurchaseCard, canUseShop } = props;
 
     const onCardClick = (index: number) => {
         return () => onPurchaseCard(index);
@@ -42,6 +43,10 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         );
     };
 
+    if (canUseShop === false) {
+        return null;
+    }
+
     return (
         <div className="card-selector">
             <div className="balance">Balance: ${money}</div>
@@ -56,7 +61,8 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
 
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
     cards: state.cards,
-    money: state.game.money
+    money: state.game.money,
+    canUseShop: state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

@@ -7,9 +7,9 @@ export enum ServerToClientPacketOpcodes {
     BOARD_UPDATE = "boardUpdate",
     BENCH_UPDATE = "benchUpdate",
     PLAYER_LIST_UPDATE = "playerListUpdate",
-    JOINED_GAME = "joinedGame",
     PHASE_UPDATE = "phaseUpdate",
-    MONEY_UPDATE = "moneyUpdate"
+    MONEY_UPDATE = "moneyUpdate",
+    LEVEL_UPDATE = "levelUpdate"
 }
 
 export enum ClientToServerPacketOpcodes {
@@ -18,7 +18,8 @@ export enum ClientToServerPacketOpcodes {
     SELL_PIECE = "sellPiece",
     REROLL_CARDS = "rerollCards",
     MOVE_PIECE_TO_BENCH = "movePieceToBench",
-    MOVE_PIECE_TO_BOARD = "movePieceToBoard"
+    MOVE_PIECE_TO_BOARD = "movePieceToBoard",
+    BUY_XP = "buyXp"
 }
 
 export interface MovePiecePacket {
@@ -30,6 +31,11 @@ export interface MovePiecePacket {
 export type BoardUpatePacket = {
     pieces: PokemonPiece[];
 };
+
+export interface LevelUpdatePacket {
+    level: number;
+    xp: number;
+}
 
 export type PhaseUpdatePacket
     = ({ phase: GamePhase.PREPARING, payload: { pieces: PokemonPiece[] } })

@@ -9,11 +9,17 @@ import { rootSaga } from "../sagas";
 export interface GameState {
     phase: GamePhase;
     phaseTimer: number;
-    localPlayerId: string;
     opponentId: string;
     loading: boolean;
     money: number;
     selectedPiece: PokemonPiece;
+}
+
+export interface LocalPlayerState {
+    id: string;
+    name: string;
+    level: number;
+    xp: number;
 }
 
 export interface AppState {
@@ -22,6 +28,7 @@ export interface AppState {
     game: GameState;
     playerList: PlayerListPlayer[];
     cards: PokemonCard[];
+    localPlayer: LocalPlayerState;
 }
 
 const sagaMiddleware = createSagaMiddleware();

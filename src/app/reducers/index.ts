@@ -4,6 +4,7 @@ import { benchPieces } from "./benchPiecesReducer";
 import { playerList } from "./playerListReducer";
 import { cards } from "./cardsReducer";
 import { game } from "./gameReducer";
+import { localPlayer } from "./localPlayerReducer";
 
 export const reducers = {
     deck,
@@ -11,5 +12,6 @@ export const reducers = {
     benchPieces,
     playerList,
     cards,
-    game
+    game,
+    localPlayer
 };
