@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FeedMessage } from "@common/feed-message";
 import { connect, MapStateToProps } from "react-redux";
-import { AppState } from "src/app/store/store";
+import { AppState } from "../../store/store";
 
 interface FeedStateProps {
     messages: FeedMessage[];
