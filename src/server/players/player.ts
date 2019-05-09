@@ -196,22 +196,6 @@ export class Player {
         return this.board.concat(this.bench).some(p => p.id === pieceId);
     }
 
-    private removePiece(pieceId: string) {
-        const boardPiece = this.board.find(p => p.id === pieceId);
-        const benchPiece = this.bench.find(p => p.id === pieceId);
-        if (boardPiece) {
-            this.board.splice(this.board.indexOf(boardPiece), 1);
-            this.sendBoardUpdate();
-            return boardPiece;
-        }
-
-        if (benchPiece) {
-            this.bench.splice(this.bench.indexOf(benchPiece), 1);
-            this.sendBenchUpdate();
-            return benchPiece;
-        }
-    }
-
     private setMoney(money: number) {
         this.money = money;
 
@@ -343,14 +327,14 @@ export class Player {
             return;
         }
 
-        const piece = this.removePiece(pieceId);
+        const piece = this.popPieceIfExists(pieceId);
         // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
         const pieceCost = getPokemonDefinition(piece.pokemonId).cost || 6;
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
         this.deck.shuffle();
     }
-    
+
     private onBuyXp = () => {
         if (this.isAlive() === false) {
             log(`${this.name} attempted to buy xp, but they are dead`);
@@ -435,14 +419,13 @@ export class Player {
         this.setCards([]);
     }
 
-    private popPieceIfExists(id: string, { x, y }: TileCoordinates) {
-        const fromBench = y === null;
+    private popPieceIfExists(id: string, coordinates?: TileCoordinates) {
+        const fromBench = this.bench.some(p => p.id === id);
         const origin = fromBench ? this.bench : this.board;
 
         const index = origin.findIndex(p =>
             p.id === id
-            && p.position.x === x
-            && p.position.y === y);
+            && (!coordinates || (p.position.x === coordinates.x && p.position.y === coordinates.y)));
 
         if (index === -1) {
             return null;
