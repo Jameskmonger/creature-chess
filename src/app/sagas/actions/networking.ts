@@ -13,7 +13,7 @@ import { cardsUpdated } from "../../actions/cardActions";
 import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
 import { benchPiecesUpdated } from "../../actions/benchPieceActions";
 import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
-import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "../../actiontypes/pieceActionTypes";
+import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "../../actiontypes/pieceActionTypes";
 import { TileCoordinates, createTileCoordinates } from "../../../shared/position";
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
@@ -108,6 +108,12 @@ const writeActionsToPackets = function*() {
             PURCHASE_CARD,
             function*({ payload }) {
                 yield put(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, payload.index));
+            }
+        ),
+        takeEvery<ActionWithPayload<{ pieceId: string }>>(
+            SELL_PIECE,
+            function*({ payload }) {
+                yield put(sendPacket(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId));
             }
         ),
         takeEvery<ActionWithPayload<{ piece: PokemonPiece, position: TileCoordinates }>>(

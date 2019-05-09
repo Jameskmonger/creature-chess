@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import delay from "delay";
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getXpToNextLevel } from "../../shared";
+import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel } from "../../shared";
 import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "../../shared/pokemon-piece";
 import { Connection } from "./connection";
 import { MovePiecePacket, ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
@@ -50,6 +50,7 @@ export class Player {
         connection.setPlayer(this);
 
         connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.onPurchaseCard);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.onSellPiece);
         connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.onRerollCards);
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
@@ -191,6 +192,10 @@ export class Player {
         this.sendBenchUpdate();
     }
 
+    private ownsPiece = (pieceId: string) => {
+        return this.board.concat(this.bench).some(p => p.id === pieceId);
+    }
+
     private setMoney(money: number) {
         this.money = money;
 
@@ -316,6 +321,20 @@ export class Player {
         this.addBenchPiece(piece);
     }
 
+    private onSellPiece = (pieceId: string) => {
+        if (!this.ownsPiece(pieceId)) {
+            log(`${this.name} attempted to sell piece with id ${pieceId} but did not own it`);
+            return;
+        }
+
+        const piece = this.popPieceIfExists(pieceId);
+        // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
+        const pieceCost = getPokemonDefinition(piece.pokemonId).cost || 6;
+        this.addMoney(pieceCost);
+        this.deck.addPiece(piece);
+        this.deck.shuffle();
+    }
+
     private onBuyXp = () => {
         if (this.isAlive() === false) {
             log(`${this.name} attempted to buy xp, but they are dead`);
@@ -400,14 +419,13 @@ export class Player {
         this.setCards([]);
     }
 
-    private popPieceIfExists(id: string, { x, y }: TileCoordinates) {
-        const fromBench = y === null;
+    private popPieceIfExists(id: string, coordinates?: TileCoordinates) {
+        const fromBench = this.bench.some(p => p.id === id);
         const origin = fromBench ? this.bench : this.board;
 
         const index = origin.findIndex(p =>
             p.id === id
-            && p.position.x === x
-            && p.position.y === y);
+            && (!coordinates || (p.position.x === coordinates.x && p.position.y === coordinates.y)));
 
         if (index === -1) {
             return null;
