@@ -20,6 +20,7 @@ import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localP
 import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
 import { newFeedMessage } from "../../actions/feedActions";
 import { FeedMessage } from "@common/feed-message";
+import { SEND_CHAT_MESSAGE } from "../../actiontypes/chatActionTypes";
 
 const getSocket = (serverIP: string) => {
     const socket = io(serverIP);
@@ -146,6 +147,12 @@ const writeActionsToPackets = function*() {
                 };
 
                 yield put(sendPacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, packet));
+            }
+        ),
+        takeEvery<ActionWithPayload<{ message: string }>>(
+            SEND_CHAT_MESSAGE,
+            function*({ payload }) {
+                yield put(sendPacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message));
             }
         )
     ]);

@@ -1,7 +1,6 @@
 import { TileCoordinates } from "./position";
 import { PokemonPiece } from "./pokemon-piece";
 import { GamePhase } from "./game-phase";
-import { FeedMessage } from "./feed-message";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -21,7 +20,8 @@ export enum ClientToServerPacketOpcodes {
     REROLL_CARDS = "rerollCards",
     MOVE_PIECE_TO_BENCH = "movePieceToBench",
     MOVE_PIECE_TO_BOARD = "movePieceToBoard",
-    BUY_XP = "buyXp"
+    BUY_XP = "buyXp",
+    SEND_CHAT_MESSAGE = "sendChatMessage"
 }
 
 export interface MovePiecePacket {

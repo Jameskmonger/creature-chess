@@ -100,6 +100,7 @@ export class PlayerContainer {
             response(player.id);
 
             player.onHealthUpdate(this.updatePlayerLists);
+            player.onSendChatMessage(message => this.sendChatMessage(player, message));
 
             this.players.push(player);
 
@@ -112,7 +113,11 @@ export class PlayerContainer {
         };
     }
 
-    private sendFeedMessageToAllPlayers(message: FeedMessage) {
-        this.players.forEach(p => p.sendNewFeedMessage(message));
+    private sendChatMessage = (sender: Player, message: string) => {
+        this.sendFeedMessageToAllPlayers({ id: uuid(), text: message }, [sender.id]);
+    }
+
+    private sendFeedMessageToAllPlayers(message: FeedMessage, exceptPlayerIds: string[] = []) {
+        this.players.filter(p => exceptPlayerIds.indexOf(p.id) === -1).forEach(p => p.sendNewFeedMessage(message));
     }
 }

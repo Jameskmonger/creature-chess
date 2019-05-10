@@ -2,6 +2,7 @@ import * as React from "react";
 import { FeedMessage } from "@common/feed-message";
 import { connect, MapStateToProps } from "react-redux";
 import { AppState } from "../../store/store";
+import { ChatInput } from "../chat/chatInput";
 
 interface FeedStateProps {
     messages: FeedMessage[];
@@ -9,6 +10,7 @@ interface FeedStateProps {
 
 const FeedUnconnected: React.FunctionComponent<FeedStateProps> = (props) => (
     <div className="feed">
+        <ChatInput />
         {props.messages.map(message =>
             <p key={message.id}>{message.text}</p>
         )}
