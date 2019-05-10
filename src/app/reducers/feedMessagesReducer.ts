@@ -10,7 +10,7 @@ export const feedMessages = (state: FeedMessage[] = [], action: FeedAction | Cha
         case NEW_FEED_MESSAGE:
             return [action.payload, ...state];
         case SEND_CHAT_MESSAGE:
-            return [{ id: uuid(), text: action.payload.message }, ...state];
+            return [{ id: uuid(), ownMessage: true, text: action.payload.message }, ...state];
         default:
             return state;
     }

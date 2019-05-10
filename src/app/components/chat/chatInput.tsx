@@ -21,7 +21,7 @@ const ChatInputUnconnected: React.FunctionComponent<ChatInputProps> = (props) =>
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="chat-input">
             <input value={message} onChange={onChange} />
             <button>Send</button>
         </form>

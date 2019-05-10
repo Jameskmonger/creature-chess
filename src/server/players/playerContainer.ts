@@ -114,7 +114,7 @@ export class PlayerContainer {
     }
 
     private sendChatMessage = (sender: Player, message: string) => {
-        this.sendFeedMessageToAllPlayers({ id: uuid(), text: message }, [sender.id]);
+        this.sendFeedMessageToAllPlayers({ id: uuid(), fromId: sender.id, text: message }, [sender.id]);
     }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage, exceptPlayerIds: string[] = []) {
