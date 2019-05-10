@@ -74,6 +74,7 @@
 		"react-dnd-multi-backend": "^3.2.1",
 		"react-dnd-touch-backend": "^0.8.1",
 		"react-dom": "^16.8.4",
+		"react-icons": "^3.7.0",
 		"react-media": "^1.9.2",
 		"react-redux": "^6.0.1",
 		"recompose": "^0.30.0",

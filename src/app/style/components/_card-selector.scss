@@ -4,18 +4,29 @@
         align-items: flex-start;
         flex-wrap: wrap;
         width: 100%;
-
-        .not-buyable {
-            cursor: not-allowed;
-            filter: grayscale(100%);
-        }
     }
 
     .balance {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-bottom: 0.8em;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 1.2em;
         color: $balance;
         text-align: center;
+
+        .item:not(:last-child) {
+            margin-right: 1em;
+        }
+    }
+
+    .reroll-icon {
+        display: block;
+        cursor: pointer;
+
+        &.not-buyable {
+            cursor: not-allowed;
+        }
     }
 }

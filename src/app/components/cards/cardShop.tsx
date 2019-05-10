@@ -1,10 +1,10 @@
 import * as React from "react";
+import { FaSyncAlt } from "react-icons/fa";
 import { PokemonCard, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../../store/store";
 import { rerollCards, purchaseCard } from "../../actions/cardActions";
-import { RerollCard } from "./rerollCard";
 
 interface StateProps {
     cards: PokemonCard[];
@@ -47,12 +47,23 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         return null;
     }
 
+    const rerollBuyable = money >= Constants.REROLL_COST;
+
     return (
         <div className="card-selector">
-            <div className="balance">Balance: ${money}</div>
+            <div className="balance">
+                <span className="item">Balance</span>
+                <span className="item">${money}</span>
+                <span className="item">&nbsp;|&nbsp;</span>
+                <span className="item">
+                    <FaSyncAlt
+                        onClick={rerollBuyable ? onReroll : undefined}
+                        className={`reroll-icon${rerollBuyable ? "" : " not-buyable"}`}
+                    />
+                </span>
+                <span className="item">(${Constants.REROLL_COST})</span>
+            </div>
             <div className="cards">
-                <RerollCard onClick={onReroll} buyable={money >= Constants.REROLL_COST} />
-
                 {cards.map(createCard)}
             </div>
         </div>
