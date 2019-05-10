@@ -1,6 +1,5 @@
 .tile {
     position: relative;
-    z-index: $tile-z-index;
     display: inline-block;
     width: percentage(1 / 8);
     height: 100%;
