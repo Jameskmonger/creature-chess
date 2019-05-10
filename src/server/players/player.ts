@@ -38,6 +38,7 @@ export class Player {
     private gamePhase = GamePhase.WAITING;
 
     private onHealthUpdateListeners: ((health: number) => void)[] = [];
+    private onSendChatMessageListeners: ((message: string) => void)[] = [];
 
     constructor(connection: Connection, name: string, deck: CardDeck) {
         this.connection = connection;
@@ -53,6 +54,7 @@ export class Player {
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
         connection.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.onBuyXp);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
 
         this.sendCardsUpdate();
         this.sendBoardUpdate();
@@ -66,6 +68,10 @@ export class Player {
 
     public onHealthUpdate(fn: (health: number) => void) {
         this.onHealthUpdateListeners.push(fn);
+    }
+
+    public onSendChatMessage(fn: (message: string) => void) {
+        this.onSendChatMessageListeners.push(fn);
     }
 
     public isAlive() {
@@ -382,6 +388,10 @@ export class Player {
         this.rerollCards();
 
         this.setMoney(money - Constants.REROLL_COST);
+    }
+
+    private sendChatMessage = (message: string) => {
+        this.onSendChatMessageListeners.forEach(fn => fn(message));
     }
 
     private movePieceToBench = (packet: MovePiecePacket) => {
