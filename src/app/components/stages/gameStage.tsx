@@ -54,7 +54,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <PlayerList />
 
-                            <Profile />
+                            <Feed />
 
                             <SelectedPieceInfoPanel />
                         </div>
@@ -66,7 +66,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                         </div>
                         <div className="group">
                             <CardShop />
-                            <Feed />
+
+                            <Profile />
                         </div>
                     </div>
                 </Media>
