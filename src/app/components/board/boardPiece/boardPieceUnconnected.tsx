@@ -36,7 +36,6 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
                 // tslint:disable-next-line: jsx-ban-props
                 style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
                 onAnimationEnd={this.onAnimationEnd}
-                onClick={this.props.onPieceSelected}
             >
                 <PokemonImage pokemonId={pokemonId} facing={facingAway ? "back" : "front"} />
 
