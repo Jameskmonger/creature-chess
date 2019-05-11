@@ -64,7 +64,12 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
                 <span className="item">(${Constants.REROLL_COST})</span>
             </div>
             <div className="cards">
-                {cards.map(createCard)}
+                <div className="shop">
+                    {cards.map(createCard)}
+                </div>
+                <div className="drag-to-sell">
+                    <span className="drag-to-sell-text">Drag here to sell</span>
+                </div>
             </div>
         </div>
     );

@@ -1,24 +1,30 @@
 .card {
     display: inline-block;
-    width: 48%;
     box-sizing: border-box;
-    padding: 0.5em 0;
+    padding: 0.2em 1em;
     margin-bottom: 1rem;
     font-family: Arial, sans-serif;
-    color: $card-name;
+    color: #fff;
     text-align: center;
     cursor: pointer;
     user-select: none;
     border-style: solid;
-    border-width: 3px;
+    border-width: 2px;
 
     .image {
-        width: 64px;
-        height: 64px;
+        width: $card-image-size;
+        height: $card-image-size;
     }
 
-    &:nth-child(even) {
-        margin-left: 4%;
+    .header {
+        display: flex;
+    }
+
+    .price {
+        height: $card-image-size;
+        margin-right: 0.2em;
+        font-size: 2em;
+        line-height: $card-image-size;
     }
 
     &.reroll {

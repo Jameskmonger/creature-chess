@@ -1,9 +1,36 @@
 .card-selector {
     .cards {
         display: flex;
-        align-items: flex-start;
-        flex-wrap: wrap;
         width: 100%;
+
+        .drag-to-sell {
+            position: relative;
+            box-sizing: border-box;
+            flex: 1;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+            text-align: center;
+            background: #fff;
+            border: 2px solid #ccc;
+            opacity: 0.6;
+        }
+
+        .drag-to-sell-text {
+            position: absolute;
+            top: 35%;
+            left: 8%;
+            display: block;
+            width: 80%;
+            font-family: Arial, sans-serif;
+            font-size: 3em;
+            color: #717171;
+            transform: rotate(15deg);
+        }
+    }
+
+    .shop {
+        display: flex;
+        flex-direction: column;
     }
 
     .balance {

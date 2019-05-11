@@ -15,9 +15,16 @@ const Card: React.FunctionComponent<CardProps> = ({ pokemonId, cost, name, buyab
 
     return (
         <div className={className} onClick={buyable ? onClick : undefined}>
-            <PokemonImage pokemonId={pokemonId} />
+            <div className="header">
+                <div>
+                    <span className="price">${cost}</span>
+                </div>
+                <div>
+                    <PokemonImage pokemonId={pokemonId} />
+                </div>
+            </div>
+
             <div>{name}</div>
-            <div>${cost}</div>
         </div>
     );
 };
