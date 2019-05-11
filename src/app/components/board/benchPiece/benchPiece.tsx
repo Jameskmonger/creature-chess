@@ -1,6 +1,6 @@
 import { compose } from "recompose";
-import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { Props, BenchPieceDispatchProps, BenchPieceProps, BenchPieceStateProps } from "./benchPieceProps";
+import { connect, MapStateToProps } from "react-redux";
+import { Props, BenchPieceProps, BenchPieceStateProps } from "./benchPieceProps";
 import { benchPieceDragSource } from "./benchPieceDragDrop";
 import { BenchPieceUnconnected } from "./benchPieceUnconnected";
 import { AppState } from "../../../store/store";
