@@ -3,9 +3,39 @@
     margin-bottom: 0.6rem;
     font-family: Arial, sans-serif;
     color: #fff;
-    background: #566c86;
+    background: $feed-background-color;
 
     .chat-input {
+        display: flex;
         margin-bottom: 0.6rem;
+
+        .text-input {
+            flex-grow: 1;
+            padding: 0.4em;
+            color: #fff;
+            background: $game-background;
+            border: 0;
+        }
+
+        .send-button {
+            padding: 0.4em;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            background: $send-chat-message-button-color;
+            border: 0;
+        }
+    }
+
+    .message-sender {
+        font-weight: 700;
+    }
+
+    .player-chat-message {
+        color: $player-chat-message-color;
+    }
+
+    .info-feed-message {
+        color: $info-feed-message-color;
     }
 }

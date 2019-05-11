@@ -12,7 +12,10 @@ const FeedUnconnected: React.FunctionComponent<FeedStateProps> = (props) => (
     <div className="feed">
         <ChatInput />
         {props.messages.map(message =>
-            <p key={message.id}>{message.fromName && `${message.fromName}: `}{message.text}</p>
+            <p key={message.id}>
+                <span className="message-sender">{message.fromName && `${message.fromName}: `}</span>
+                <span className={message.fromName ? "player-chat-message" : "info-feed-message"}>{message.text}</span>
+            </p>
         )}
     </div>
 );
