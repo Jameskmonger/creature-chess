@@ -1,9 +1,38 @@
 .card-selector {
     .cards {
         display: flex;
-        align-items: flex-start;
-        flex-wrap: wrap;
         width: 100%;
+
+        .drop-to-sell {
+            position: relative;
+            min-height: 10rem;
+            box-sizing: border-box;
+            flex: 1;
+            margin-bottom: 1rem;
+            margin-left: 0.5rem;
+            overflow: hidden;
+            text-align: center;
+            background: #fff;
+            border: 2px solid #ccc;
+            opacity: 0.6;
+        }
+
+        .drop-to-sell-text {
+            position: absolute;
+            top: 35%;
+            left: 8%;
+            display: block;
+            width: 80%;
+            font-family: Arial, sans-serif;
+            font-size: 3em;
+            color: #717171;
+            transform: rotate(15deg);
+        }
+    }
+
+    .shop {
+        display: flex;
+        flex-direction: column;
     }
 
     .balance {

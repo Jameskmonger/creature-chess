@@ -54,6 +54,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <PlayerList />
 
+                            <Feed />
+
                             <SelectedPieceInfoPanel />
                         </div>
                         <div className="group board-container" style={boardContainerStyle}>
@@ -63,14 +65,14 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             </div>
                         </div>
                         <div className="group">
-                            <Profile />
                             <CardShop />
-                            <Feed />
+
+                            <Profile />
                         </div>
                     </div>
                 </Media>
 
-                <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 1000px)">
+                <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)">
                     <div className="game landscape">
                         <div className="group board-container" style={boardContainerStyle}>
                             <div className="chessboard">
@@ -83,18 +85,18 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <PhaseInfo />
 
+                            <CardShop />
+
                             <Profile />
 
                             <PlayerList />
-
-                            <CardShop />
 
                             <Feed />
                         </div>
                     </div>
                 </Media>
 
-                <Media query="(orientation: portrait), (max-width: 999px)">
+                <Media query="(orientation: portrait), (max-width: 599px)">
                     <div className="game portrait">
                         <div className="group board-container" style={boardContainerStyle}>
                             <div className="chessboard">
@@ -107,11 +109,11 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <PhaseInfo />
 
+                            <CardShop />
+
                             <Profile />
 
                             <PlayerList />
-
-                            <CardShop />
 
                             <Feed />
                         </div>

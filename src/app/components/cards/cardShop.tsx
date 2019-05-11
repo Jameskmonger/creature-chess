@@ -5,6 +5,7 @@ import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../../store/store";
 import { rerollCards, purchaseCard } from "../../actions/cardActions";
+import { DropToSell } from "./dropToSell/dropToSell";
 
 interface StateProps {
     cards: PokemonCard[];
@@ -64,7 +65,10 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
                 <span className="item">(${Constants.REROLL_COST})</span>
             </div>
             <div className="cards">
-                {cards.map(createCard)}
+                <div className="shop">
+                    {cards.map(createCard)}
+                </div>
+                <DropToSell />
             </div>
         </div>
     );

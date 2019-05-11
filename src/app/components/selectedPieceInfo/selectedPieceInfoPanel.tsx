@@ -7,7 +7,6 @@ import { MapStateToProps, connect } from "react-redux";
 import { AppState } from "src/app/store/store";
 import { CombinePiecesButton } from "./combinePiecesButton";
 import { getPokemonStats } from "@common/pokemon-details";
-import { SellPieceButton } from "./sellPieceButton";
 import { localPlayerIdSelector } from "../../selectors/gameSelector";
 
 interface Props {
@@ -43,10 +42,6 @@ const SelectedPieceInfoPanelUnconnected: React.FunctionComponent<Props> = (props
                 requiredQuantityToEvolve
                 && props.numberOwned >= requiredQuantityToEvolve
                 && <CombinePiecesButton />
-            }
-            {
-                props.numberOwned > 0 &&
-                <SellPieceButton piece={props.piece} />
             }
         </div>
     );
