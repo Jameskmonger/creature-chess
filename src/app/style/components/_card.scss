@@ -1,7 +1,7 @@
 .card {
     display: inline-block;
     box-sizing: border-box;
-    padding: 0.2em 1em;
+    padding: 0 0.4em 0.4em;
     margin-bottom: 1rem;
     font-family: Arial, sans-serif;
     color: #fff;
@@ -10,6 +10,7 @@
     user-select: none;
     border-style: solid;
     border-width: 2px;
+    border-right-width: 2.5em;
 
     .image {
         width: $card-image-size;
