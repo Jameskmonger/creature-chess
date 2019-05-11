@@ -3,19 +3,21 @@
         display: flex;
         width: 100%;
 
-        .drag-to-sell {
+        .drop-to-sell {
             position: relative;
+            min-height: 10rem;
             box-sizing: border-box;
             flex: 1;
             margin-bottom: 1rem;
             margin-left: 1rem;
+            overflow: hidden;
             text-align: center;
             background: #fff;
             border: 2px solid #ccc;
             opacity: 0.6;
         }
 
-        .drag-to-sell-text {
+        .drop-to-sell-text {
             position: absolute;
             top: 35%;
             left: 8%;

@@ -4,7 +4,7 @@ import { ProgressBar } from "../../progressBar";
 import { getAnimationCssVariables, AnimationVariables, Animation } from "../../animation";
 import { PokemonImage } from "../../pokemonImage";
 import { BoardPieceProps, isFriendly } from "./boardPieceProps";
-import { DragSourceProps } from "../draggable/drag-source-props";
+import { DragSourceProps } from "../../draggable/drag-source-props";
 
 const dyingAnimation = "dying";
 

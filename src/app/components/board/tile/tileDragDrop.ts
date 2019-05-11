@@ -1,7 +1,7 @@
 import { DropTargetSpec, DropTargetMonitor, DropTargetConnector, DropTarget } from "react-dnd";
 import { TileUnconnected } from "./tileUnconnected";
 import { TileProps } from "./tileProps";
-import { DropTargetProps } from "../draggable/drop-target-props";
+import { DropTargetProps } from "../../draggable/drop-target-props";
 import { PokemonPiece } from "@common";
 import { canDropPiece } from "@common/board";
 
