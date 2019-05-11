@@ -8,7 +8,6 @@ import { Constants } from "@common";
 import { Board } from "../board/board";
 import { Bench } from "../board/bench";
 import { CardShop } from "../cards/cardShop";
-import { SelectedPieceInfoPanel } from "../selectedPieceInfo/selectedPieceInfoPanel";
 import { PlayerList } from "../playerList/playerList";
 
 import Media from "react-media";
@@ -55,8 +54,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             <PlayerList />
 
                             <Feed />
-
-                            <SelectedPieceInfoPanel />
                         </div>
                         <div className="group board-container" style={boardContainerStyle}>
                             <div className="chessboard">
@@ -81,8 +78,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             </div>
                         </div>
                         <div className="group">
-                            <SelectedPieceInfoPanel />
-
                             <PhaseInfo />
 
                             <CardShop />
@@ -105,8 +100,6 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             </div>
                         </div>
                         <div className="group">
-                            <SelectedPieceInfoPanel />
-
                             <PhaseInfo />
 
                             <CardShop />
