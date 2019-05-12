@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import delay from "delay";
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel } from "@common";
+import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
 import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "@common/pokemon-piece";
 import { Connection } from "./connection";
 import { MovePiecePacket, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
@@ -333,7 +333,20 @@ export class Player {
         this.setMoney(money - card.cost);
         this.deleteCard(cardIndex);
 
-        const piece = createBenchPokemon(this.id, card.id, slot);
+        const pieceDefinition = getPokemonDefinition(card.id);
+        const instancesOfPieceOwnedOnBench = this.bench.filter(p => p.pokemonId === card.id);
+        const instancesOfPieceOwnedOnBoard = this.board.filter(p => p.pokemonId === card.id);
+        const instancesOfPieceOwned = instancesOfPieceOwnedOnBench.concat(instancesOfPieceOwnedOnBoard);
+        const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(card.id);
+
+        if (shouldEvolve) {
+            instancesOfPieceOwned.forEach(p => this.popPieceIfExists(p.id));
+            if (instancesOfPieceOwnedOnBoard.length > 0) {
+                this.sendBoardUpdate();
+            }
+        }
+
+        const piece = createBenchPokemon(this.id, shouldEvolve ? pieceDefinition.evolvedFormId : card.id, slot);
 
         this.addBenchPiece(piece);
     }
