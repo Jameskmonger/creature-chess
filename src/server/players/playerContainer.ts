@@ -5,6 +5,8 @@ import { Player } from "./player";
 import { CardDeck } from "../cardDeck";
 import uuid = require("uuid");
 import { FeedMessage } from "@common/feed-message";
+import { Constants, GamePhase } from "../../shared";
+import delay from "delay";
 
 const randomFromArray = <T>(array: T[]) => {
     return array[Math.floor(Math.random() * array.length)];
@@ -65,7 +67,10 @@ export class PlayerContainer {
     }
 
     public async startPlayingPhase(seed: number) {
-        const promises = this.players.filter(p => p.isAlive()).map(p => p.runPlayingPhase(seed));
+        const maxTimeMs = Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000;
+        const battleTimeout = delay(maxTimeMs);
+
+        const promises = this.players.filter(p => p.isAlive()).map(p => p.runPlayingPhase(seed, battleTimeout));
 
         const results = await Promise.all(promises);
 

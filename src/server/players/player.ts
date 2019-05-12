@@ -55,6 +55,7 @@ export class Player {
         connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
         connection.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.onBuyXp);
         connection.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
+        connection.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.onFinishMatch);
 
         this.sendCardsUpdate();
         this.sendBoardUpdate();
@@ -97,15 +98,14 @@ export class Player {
         this.connection.sendPreparingPhaseUpdate(this.board);
     }
 
-    public async runPlayingPhase(seed: number) {
+    public async runPlayingPhase(seed: number, battleTimeout: Promise<void>) {
         this.gamePhase = GamePhase.PLAYING;
 
         this.connection.sendPlayingPhaseUpdate(seed);
 
-        const [, results] = await Promise.all([
-            delay(Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000),
-            this.match.fight(seed, Constants.TURNS_IN_BATTLE)
-        ]);
+        const maxTurns = Constants.TURNS_IN_BATTLE;
+
+        const results = await this.match.fight(seed, battleTimeout, maxTurns);
 
         log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
 
@@ -405,6 +405,14 @@ export class Player {
 
     private sendChatMessage = (message: string) => {
         this.onSendChatMessageListeners.forEach(fn => fn(message));
+    }
+
+    private onFinishMatch = () => {
+        if (this.match === null) {
+            return;
+        }
+
+        this.match.onClientFinishMatch();
     }
 
     private movePieceToBench = (packet: MovePiecePacket) => {
