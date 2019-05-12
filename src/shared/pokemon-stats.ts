@@ -5,6 +5,7 @@ export interface PokemonDefinition {
     name: string;
     stats: PokemonStats;
     cost?: number;
+    evolvedFormId?: number;
 }
 
 export interface PokemonStats {
@@ -38,7 +39,8 @@ mapPokemon([
             specialDefense: 65,
             type: PokemonType.Grass
         },
-        cost: 3
+        cost: 3,
+        evolvedFormId: 2
     },
     {
         id: 2,
@@ -51,7 +53,8 @@ mapPokemon([
             specialAttack: 80,
             specialDefense: 80,
             type: PokemonType.Grass
-        }
+        },
+        evolvedFormId: 3
     },
     {
         id: 3,
@@ -78,7 +81,8 @@ mapPokemon([
             specialDefense: 50,
             type: PokemonType.Fire
         },
-        cost: 3
+        cost: 3,
+        evolvedFormId: 5
     },
     {
         id: 5,
@@ -91,7 +95,8 @@ mapPokemon([
             specialAttack: 80,
             specialDefense: 65,
             type: PokemonType.Fire
-        }
+        },
+        evolvedFormId: 6
     },
     {
         id: 6,
@@ -118,7 +123,8 @@ mapPokemon([
             specialDefense: 64,
             type: PokemonType.Water
         },
-        cost: 3
+        cost: 3,
+        evolvedFormId: 8
     },
     {
         id: 8,
@@ -131,7 +137,8 @@ mapPokemon([
             specialAttack: 65,
             specialDefense: 80,
             type: PokemonType.Water
-        }
+        },
+        evolvedFormId: 9
     },
     {
         id: 9,
@@ -158,7 +165,8 @@ mapPokemon([
             specialDefense: 20,
             type: PokemonType.Bug
         },
-        cost: 1
+        cost: 1,
+        evolvedFormId: 11
     },
     {
         id: 11,
@@ -171,7 +179,8 @@ mapPokemon([
             specialAttack: 25,
             specialDefense: 25,
             type: PokemonType.Bug
-        }
+        },
+        evolvedFormId: 12
     },
     {
         id: 12,
@@ -198,7 +207,8 @@ mapPokemon([
             specialDefense: 20,
             type: PokemonType.Bug
         },
-        cost: 1
+        cost: 1,
+        evolvedFormId: 14
     },
     {
         id: 14,
@@ -211,7 +221,8 @@ mapPokemon([
             specialAttack: 25,
             specialDefense: 25,
             type: PokemonType.Bug
-        }
+        },
+        evolvedFormId: 15
     },
     {
         id: 15,
@@ -238,7 +249,8 @@ mapPokemon([
             specialDefense: 35,
             type: PokemonType.Flying
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 17
     },
     {
         id: 17,
@@ -251,7 +263,8 @@ mapPokemon([
             specialAttack: 50,
             specialDefense: 50,
             type: PokemonType.Flying
-        }
+        },
+        evolvedFormId: 18
     },
     {
         id: 18,
@@ -277,7 +290,8 @@ mapPokemon([
             specialAttack: 25,
             specialDefense: 35,
             type: PokemonType.Normal
-        }
+        },
+        evolvedFormId: 20
     },
     {
         id: 20,
@@ -304,7 +318,8 @@ mapPokemon([
             specialDefense: 31,
             type: PokemonType.Flying
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 22
     },
     {
         id: 22,
@@ -330,7 +345,8 @@ mapPokemon([
             specialAttack: 40,
             specialDefense: 54,
             type: PokemonType.Poison
-        }
+        },
+        evolvedFormId: 24
     },
     {
         id: 24,
@@ -357,7 +373,8 @@ mapPokemon([
             specialDefense: 50,
             type: PokemonType.Electric
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 26
     },
     {
         id: 26,
@@ -384,7 +401,8 @@ mapPokemon([
             specialDefense: 30,
             type: PokemonType.Ground
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 28
     },
     {
         id: 28,
@@ -410,7 +428,8 @@ mapPokemon([
             specialAttack: 40,
             specialDefense: 40,
             type: PokemonType.Poison
-        }
+        },
+        evolvedFormId: 30
     },
     {
         id: 30,
@@ -423,7 +442,8 @@ mapPokemon([
             specialAttack: 55,
             specialDefense: 55,
             type: PokemonType.Poison
-        }
+        },
+        evolvedFormId: 31
     },
     {
         id: 31,
@@ -449,7 +469,8 @@ mapPokemon([
             specialAttack: 40,
             specialDefense: 40,
             type: PokemonType.Poison
-        }
+        },
+        evolvedFormId: 33
     },
     {
         id: 33,
@@ -462,7 +483,8 @@ mapPokemon([
             specialAttack: 55,
             specialDefense: 55,
             type: PokemonType.Poison
-        }
+        },
+        evolvedFormId: 34
     },
     {
         id: 34,
@@ -488,7 +510,8 @@ mapPokemon([
             specialAttack: 60,
             specialDefense: 65,
             type: PokemonType.Normal
-        }
+        },
+        evolvedFormId: 36
     },
     {
         id: 36,
@@ -515,7 +538,8 @@ mapPokemon([
             specialDefense: 65,
             type: PokemonType.Fire
         },
-        cost: 4
+        cost: 4,
+        evolvedFormId: 38
     },
     {
         id: 38,
@@ -542,7 +566,8 @@ mapPokemon([
             specialDefense: 25,
             type: PokemonType.Normal
         },
-        cost: 4
+        cost: 4,
+        evolvedFormId: 40
     },
     {
         id: 40,
@@ -569,7 +594,8 @@ mapPokemon([
             specialDefense: 40,
             type: PokemonType.Flying
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 42
     },
     {
         id: 42,
@@ -596,7 +622,8 @@ mapPokemon([
             specialDefense: 65,
             type: PokemonType.Grass
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 44
     },
     {
         id: 44,
@@ -609,7 +636,8 @@ mapPokemon([
             specialAttack: 85,
             specialDefense: 75,
             type: PokemonType.Grass
-        }
+        },
+        evolvedFormId: 45
     },
     {
         id: 45,
@@ -635,7 +663,8 @@ mapPokemon([
             specialAttack: 45,
             specialDefense: 55,
             type: PokemonType.Grass
-        }
+        },
+        evolvedFormId: 47
     },
     {
         id: 47,
@@ -661,7 +690,8 @@ mapPokemon([
             specialAttack: 40,
             specialDefense: 55,
             type: PokemonType.Bug
-        }
+        },
+        evolvedFormId: 49
     },
     {
         id: 49,
@@ -688,7 +718,8 @@ mapPokemon([
             specialDefense: 45,
             type: PokemonType.Ground
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 51
     },
     {
         id: 51,
@@ -714,7 +745,8 @@ mapPokemon([
             specialAttack: 40,
             specialDefense: 40,
             type: PokemonType.Normal
-        }
+        },
+        evolvedFormId: 53
     },
     {
         id: 53,
@@ -740,7 +772,8 @@ mapPokemon([
             specialAttack: 65,
             specialDefense: 50,
             type: PokemonType.Psychic
-        }
+        },
+        evolvedFormId: 55
     },
     {
         id: 55,
@@ -766,7 +799,8 @@ mapPokemon([
             specialAttack: 35,
             specialDefense: 45,
             type: PokemonType.Fighting
-        }
+        },
+        evolvedFormId: 57
     },
     {
         id: 57,
@@ -792,7 +826,8 @@ mapPokemon([
             specialAttack: 70,
             specialDefense: 50,
             type: PokemonType.Fire
-        }
+        },
+        evolvedFormId: 59
     },
     {
         id: 59,
@@ -819,7 +854,8 @@ mapPokemon([
             specialDefense: 40,
             type: PokemonType.Psychic
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 61
     },
     {
         id: 61,
@@ -832,7 +868,8 @@ mapPokemon([
             specialAttack: 50,
             specialDefense: 50,
             type: PokemonType.Psychic
-        }
+        },
+        evolvedFormId: 62
     },
     {
         id: 62,
@@ -859,7 +896,8 @@ mapPokemon([
             specialDefense: 55,
             type: PokemonType.Psychic
         },
-        cost: 4
+        cost: 4,
+        evolvedFormId: 64
     },
     {
         id: 64,
@@ -872,7 +910,8 @@ mapPokemon([
             specialAttack: 120,
             specialDefense: 70,
             type: PokemonType.Psychic
-        }
+        },
+        evolvedFormId: 65
     },
     {
         id: 65,
@@ -899,7 +938,8 @@ mapPokemon([
             specialDefense: 35,
             type: PokemonType.Fighting
         },
-        cost: 3
+        cost: 3,
+        evolvedFormId: 67
     },
     {
         id: 67,
@@ -912,7 +952,8 @@ mapPokemon([
             specialAttack: 50,
             specialDefense: 60,
             type: PokemonType.Fighting
-        }
+        },
+        evolvedFormId: 68
     },
     {
         id: 68,
@@ -939,7 +980,8 @@ mapPokemon([
             specialDefense: 30,
             type: PokemonType.Grass
         },
-        cost: 1
+        cost: 1,
+        evolvedFormId: 70
     },
     {
         id: 70,
@@ -952,7 +994,8 @@ mapPokemon([
             specialAttack: 85,
             specialDefense: 45,
             type: PokemonType.Grass
-        }
+        },
+        evolvedFormId: 71
     },
     {
         id: 71,
@@ -978,7 +1021,8 @@ mapPokemon([
             specialAttack: 50,
             specialDefense: 100,
             type: PokemonType.Water
-        }
+        },
+        evolvedFormId: 72
     },
     {
         id: 73,
@@ -1005,7 +1049,8 @@ mapPokemon([
             specialDefense: 30,
             type: PokemonType.Rock
         },
-        cost: 1
+        cost: 1,
+        evolvedFormId: 75
     },
     {
         id: 75,
@@ -1018,7 +1063,8 @@ mapPokemon([
             specialAttack: 45,
             specialDefense: 45,
             type: PokemonType.Rock
-        }
+        },
+        evolvedFormId: 76
     },
     {
         id: 76,
@@ -1045,7 +1091,8 @@ mapPokemon([
             specialDefense: 65,
             type: PokemonType.Fire
         },
-        cost: 4
+        cost: 4,
+        evolvedFormId: 78
     },
     {
         id: 78,
@@ -1071,7 +1118,8 @@ mapPokemon([
             specialAttack: 40,
             specialDefense: 40,
             type: PokemonType.Psychic
-        }
+        },
+        evolvedFormId: 80
     },
     {
         id: 80,
@@ -1098,7 +1146,8 @@ mapPokemon([
             specialDefense: 55,
             type: PokemonType.Electric
         },
-        cost: 1
+        cost: 1,
+        evolvedFormId: 82
     },
     {
         id: 82,
@@ -1137,7 +1186,8 @@ mapPokemon([
             specialAttack: 35,
             specialDefense: 35,
             type: PokemonType.Flying
-        }
+        },
+        evolvedFormId: 85
     },
     {
         id: 85,
@@ -1163,7 +1213,8 @@ mapPokemon([
             specialAttack: 45,
             specialDefense: 70,
             type: PokemonType.Water
-        }
+        },
+        evolvedFormId: 87
     },
     {
         id: 87,
@@ -1190,7 +1241,8 @@ mapPokemon([
             specialDefense: 50,
             type: PokemonType.Poison
         },
-        cost: 3
+        cost: 3,
+        evolvedFormId: 89
     },
     {
         id: 89,
@@ -1216,7 +1268,8 @@ mapPokemon([
             specialAttack: 45,
             specialDefense: 25,
             type: PokemonType.Water
-        }
+        },
+        evolvedFormId: 91
     },
     {
         id: 91,
@@ -1242,7 +1295,8 @@ mapPokemon([
             specialAttack: 100,
             specialDefense: 35,
             type: PokemonType.Ghost
-        }
+        },
+        evolvedFormId: 93
     },
     {
         id: 93,
@@ -1255,7 +1309,8 @@ mapPokemon([
             specialAttack: 115,
             specialDefense: 55,
             type: PokemonType.Ghost
-        }
+        },
+        evolvedFormId: 94
     },
     {
         id: 94,
@@ -1295,7 +1350,8 @@ mapPokemon([
             specialDefense: 90,
             type: PokemonType.Psychic
         },
-        cost: 5
+        cost: 5,
+        evolvedFormId: 97
     },
     {
         id: 97,
@@ -1321,7 +1377,8 @@ mapPokemon([
             specialAttack: 25,
             specialDefense: 25,
             type: PokemonType.Water
-        }
+        },
+        evolvedFormId: 99
     },
     {
         id: 99,
@@ -1348,7 +1405,8 @@ mapPokemon([
             specialDefense: 55,
             type: PokemonType.Electric
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 101
     },
     {
         id: 101,
@@ -1374,7 +1432,8 @@ mapPokemon([
             specialAttack: 60,
             specialDefense: 45,
             type: PokemonType.Psychic
-        }
+        },
+        evolvedFormId: 103
     },
     {
         id: 103,
@@ -1400,7 +1459,8 @@ mapPokemon([
             specialAttack: 40,
             specialDefense: 50,
             type: PokemonType.Ground
-        }
+        },
+        evolvedFormId: 105
     },
     {
         id: 105,
@@ -1468,7 +1528,8 @@ mapPokemon([
             specialDefense: 45,
             type: PokemonType.Poison
         },
-        cost: 2
+        cost: 2,
+        evolvedFormId: 110
     },
     {
         id: 110,
@@ -1494,7 +1555,8 @@ mapPokemon([
             specialAttack: 30,
             specialDefense: 30,
             type: PokemonType.Ground
-        }
+        },
+        evolvedFormId: 112
     },
     {
         id: 112,
@@ -1559,7 +1621,8 @@ mapPokemon([
             specialAttack: 70,
             specialDefense: 25,
             type: PokemonType.Water
-        }
+        },
+        evolvedFormId: 117
     },
     {
         id: 117,
@@ -1586,6 +1649,8 @@ mapPokemon([
             specialDefense: 50,
             type: PokemonType.Water
         }
+        ,
+        evolvedFormId: 119
     },
     {
         id: 119,
@@ -1611,7 +1676,8 @@ mapPokemon([
             specialAttack: 70,
             specialDefense: 55,
             type: PokemonType.Water
-        }
+        },
+        evolvedFormId: 121
     },
     {
         id: 121,
@@ -1731,7 +1797,8 @@ mapPokemon([
             specialDefense: 20,
             type: PokemonType.Water
         },
-        cost: 4
+        cost: 4,
+        evolvedFormId: 130
     },
     {
         id: 130,
@@ -1783,7 +1850,8 @@ mapPokemon([
             specialAttack: 45,
             specialDefense: 65,
             type: PokemonType.Normal
-        }
+        },
+        evolvedFormId: -1 // This will have to work differently
     },
     {
         id: 134,
@@ -1848,7 +1916,8 @@ mapPokemon([
             specialAttack: 90,
             specialDefense: 55,
             type: PokemonType.Rock
-        }
+        },
+        evolvedFormId: 139
     },
     {
         id: 139,
@@ -1874,7 +1943,8 @@ mapPokemon([
             specialAttack: 55,
             specialDefense: 45,
             type: PokemonType.Rock
-        }
+        },
+        evolvedFormId: 141
     },
     {
         id: 141,
@@ -1967,7 +2037,8 @@ mapPokemon([
             specialDefense: 50,
             type: PokemonType.Normal
         },
-        cost: 4
+        cost: 4,
+        evolvedFormId: 148
     },
     {
         id: 148,
@@ -1980,7 +2051,8 @@ mapPokemon([
             specialAttack: 70,
             specialDefense: 70,
             type: PokemonType.Normal
-        }
+        },
+        evolvedFormId: 149
     },
     {
         id: 149,

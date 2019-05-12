@@ -1,7 +1,7 @@
-import { shuffle } from "lodash";
+import { shuffle, flatten } from "lodash";
 import { PokemonCard } from "@common/pokemon-card";
 import { PokemonDefinition } from "@common/pokemon-stats";
-import { PokemonPiece } from "@common";
+import { PokemonPiece, getRequiredQuantityToEvolve } from "@common";
 
 export class CardDeck {
     public deck: PokemonCard[];
@@ -57,8 +57,9 @@ export class CardDeck {
 
     public addPiece(piece: PokemonPiece) {
         const definition = this.definitions.find(p => p.id === piece.pokemonId);
+        const preEvolvedDefinitions = this.getDefinitionsUsedToEvolveToDefinition(definition);
 
-        this.addDefinition(definition);
+        preEvolvedDefinitions.forEach(preEvolvedDefinition => this.addDefinition(preEvolvedDefinition));
     }
 
     public shuffle() {
@@ -73,5 +74,15 @@ export class CardDeck {
         };
 
         this.deck.push(card);
+    }
+
+    private getDefinitionsUsedToEvolveToDefinition(definition: PokemonDefinition): PokemonDefinition[] {
+        const preEvolvedFormDefinition = this.definitions.find(p => p.evolvedFormId === definition.id);
+        if (!!preEvolvedFormDefinition) {
+            const preEvolvedDefinitions = Array(getRequiredQuantityToEvolve(preEvolvedFormDefinition.id)).fill(preEvolvedFormDefinition);
+            return flatten(preEvolvedDefinitions.map(this.getDefinitionsUsedToEvolveToDefinition));
+        }
+
+        return [definition];
     }
 }
