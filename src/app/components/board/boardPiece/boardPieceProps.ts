@@ -9,10 +9,6 @@ export interface BoardPieceStateProps {
     canDrag: boolean;
 }
 
-export interface BoardPieceDispatchProps {
-    onPieceSelected: () => void;
-}
-
 export const isFriendly = (props: BoardPieceProps) => props.localPlayerId === props.piece.ownerId;
 
-export type BoardPieceProps = BoardPieceOwnProps & BoardPieceStateProps & BoardPieceDispatchProps;
+export type BoardPieceProps = BoardPieceOwnProps & BoardPieceStateProps;

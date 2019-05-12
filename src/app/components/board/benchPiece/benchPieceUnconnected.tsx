@@ -9,10 +9,7 @@ export class BenchPieceUnconnected extends React.Component<Props & DragSourcePro
         const { pokemonId } = piece;
 
         return connectDragSource(
-            <div
-                className="piece"
-                onClick={this.props.onPieceSelected}
-            >
+            <div className="piece">
                 <PokemonImage pokemonId={pokemonId} />
             </div>
         );

@@ -7,8 +7,5 @@ export type GAME_PHASE_UPDATE = typeof GAME_PHASE_UPDATE;
 export const MONEY_UPDATE = "MONEY_UPDATE";
 export type MONEY_UPDATE = typeof MONEY_UPDATE;
 
-export const PIECE_SELECTED = "PIECE_SELECTED";
-export type PIECE_SELECTED = typeof PIECE_SELECTED;
-
 export const PHASE_TIMER_UPDATED = "PHASE_TIMER_UPDATED";
 export type PHASE_TIMER_UPDATED = typeof PHASE_TIMER_UPDATED;
