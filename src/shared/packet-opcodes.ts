@@ -21,7 +21,8 @@ export enum ClientToServerPacketOpcodes {
     MOVE_PIECE_TO_BENCH = "movePieceToBench",
     MOVE_PIECE_TO_BOARD = "movePieceToBoard",
     BUY_XP = "buyXp",
-    SEND_CHAT_MESSAGE = "sendChatMessage"
+    SEND_CHAT_MESSAGE = "sendChatMessage",
+    FINISH_MATCH = "finishMatch"
 }
 
 export interface MovePiecePacket {

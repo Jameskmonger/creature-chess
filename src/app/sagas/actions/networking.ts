@@ -21,6 +21,7 @@ import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
 import { newFeedMessage } from "../../actions/feedActions";
 import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../actiontypes/chatActionTypes";
+import { BATTLE_FINISHED } from "./process-battle";
 
 const getSocket = (serverIP: string) => {
     const socket = io(serverIP);
@@ -101,6 +102,12 @@ const readPacketsToActions = function*(socket: Socket) {
 
 const writeActionsToPackets = function*() {
     yield all([
+        takeEvery(
+            BATTLE_FINISHED,
+            function*() {
+                yield put(sendPacket(ClientToServerPacketOpcodes.FINISH_MATCH));
+            }
+        ),
         takeEvery(
             REROLL_CARDS,
             function*() {
