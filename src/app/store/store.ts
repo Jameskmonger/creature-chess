@@ -23,8 +23,8 @@ export interface LocalPlayerState {
 }
 
 export interface AppState {
-    pieces: PokemonPiece[];
-    benchPieces: PokemonPiece[];
+    board: PokemonPiece[];
+    bench: PokemonPiece[];
     game: GameState;
     playerList: PlayerListPlayer[];
     cards: PokemonCard[];

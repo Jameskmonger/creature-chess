@@ -1,7 +1,7 @@
 import { PokemonPiece } from "@common/pokemon-piece";
-import { BENCH_PIECE_MOVED, BENCH_PIECES_UPDATED } from "../actiontypes/benchPieceActionTypes";
 import { TileCoordinates } from "@common/position";
-import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "../actiontypes/pieceActionTypes";
+import { BENCH_PIECE_MOVED, BENCH_PIECES_UPDATED } from "./benchActionTypes";
+import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "./boardActionTypes";
 
 export type BenchPiecesAction =
     ({ type: BENCH_PIECES_UPDATED, payload: PokemonPiece[] })

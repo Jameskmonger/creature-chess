@@ -1,7 +1,7 @@
 import delay from "delay";
 import { take, call, put, select, takeEvery, takeLatest, delay as delayEffect } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
-import { piecesUpdated } from "../../actions/pieceActions";
+import { BoardActions } from "@common/board";
 import { PokemonPiece, GamePhase, Constants } from "@common";
 import { isATeamDefeated } from "@common/is-a-team-defeated";
 import { simulateTurn } from "@common/fighting-turn-simulator";
@@ -78,34 +78,32 @@ const startBattle = (startPieces: PokemonPiece[], maxTurns: number) => {
     });
 };
 
-const isPlayingGamePhaseUpdate = action =>
-        action.type === GAME_PHASE_UPDATE
-        && (action as GamePhaseUpdateAction).payload.phase === GamePhase.PLAYING;
-
-const isPreparingGamePhaseUpdate = action =>
-        action.type === GAME_PHASE_UPDATE
-        && (action as GamePhaseUpdateAction).payload.phase === GamePhase.PREPARING;
+const isGamePhaseUpdate = (phase: GamePhase, action: GamePhaseUpdateAction) =>
+    action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;
 
 export const processBattle = function*() {
     yield takeLatest<GamePhaseUpdateAction>(
-        action => isPlayingGamePhaseUpdate(action) || isPreparingGamePhaseUpdate(action),
+        action =>
+            isGamePhaseUpdate(GamePhase.PLAYING, action)
+            || isGamePhaseUpdate(GamePhase.PREPARING, action)
+            || isGamePhaseUpdate(GamePhase.READY, action),
         function*(action) {
-            if (isPreparingGamePhaseUpdate(action)) {
+            if (isGamePhaseUpdate(GamePhase.PREPARING, action) || isGamePhaseUpdate(GamePhase.READY, action)) {
                 // don't do anything, just cancel the old one
                 const pieces = (action.payload as any).payload.pieces;
 
-                yield put(piecesUpdated(pieces));
+                yield put(BoardActions.piecesUpdated(pieces));
                 return;
             }
 
             const state: AppState = yield select();
 
-            const battleChannel = yield call(startBattle, state.pieces, Constants.TURNS_IN_BATTLE);
+            const battleChannel = yield call(startBattle, state.board, Constants.TURNS_IN_BATTLE);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleAction) {
                 switch (battleAction.type) {
                     case BATTLE_TURN:
-                        yield put(piecesUpdated(battleAction.payload.pieces));
+                        yield put(BoardActions.piecesUpdated(battleAction.payload.pieces));
                     case BATTLE_FINISHED:
                         yield delayEffect(2000); // wait 2 seconds so it's not too jumpy
                         yield put(battleAction);

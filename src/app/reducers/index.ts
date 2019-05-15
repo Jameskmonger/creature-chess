@@ -1,6 +1,5 @@
 import { deck } from "./deckReducer";
-import { pieces } from "./piecesReducer";
-import { benchPieces } from "./benchPiecesReducer";
+import { boardReducer as board, benchReducer as bench } from "@common/board";
 import { playerList } from "./playerListReducer";
 import { cards } from "./cardsReducer";
 import { game } from "./gameReducer";
@@ -9,8 +8,8 @@ import { feedMessages } from "./feedMessagesReducer";
 
 export const reducers = {
     deck,
-    pieces,
-    benchPieces,
+    board,
+    bench,
     playerList,
     cards,
     game,
