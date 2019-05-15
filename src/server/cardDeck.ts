@@ -80,7 +80,7 @@ export class CardDeck {
         const preEvolvedFormDefinition = this.definitions.find(p => p.evolvedFormId === definition.id);
         if (!!preEvolvedFormDefinition) {
             const preEvolvedDefinitions = Array(getRequiredQuantityToEvolve(preEvolvedFormDefinition.id)).fill(preEvolvedFormDefinition);
-            return flatten(preEvolvedDefinitions.map(this.getDefinitionsUsedToEvolveToDefinition));
+            return flatten(preEvolvedDefinitions.map(d => this.getDefinitionsUsedToEvolveToDefinition(d)));
         }
 
         return [definition];
