@@ -8,6 +8,7 @@ import { FeedMessage } from "@common/feed-message";
 import { Constants, GamePhase } from "../../shared";
 import delay from "delay";
 import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
+import { Bot } from "./bot";
 
 const randomFromArray = <T>(array: T[]) => {
     return array[Math.floor(Math.random() * array.length)];
@@ -85,6 +86,10 @@ export class PlayerContainer {
 
     public playersAlive() {
         return this.players.some(p => p.isAlive());
+    }
+
+    public addBot(index: number) {
+        this.players.push(new Bot(`[BOT] Bot #${index}`, this.deck));
     }
 
     private onJoinGame(socket: io.Socket) {

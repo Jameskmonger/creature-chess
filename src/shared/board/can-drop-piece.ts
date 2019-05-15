@@ -1,8 +1,5 @@
 import { PokemonPiece, GamePhase } from "@common";
-import { TileCoordinates } from "@common/position";
-
-const inBench = ({ y }: TileCoordinates) => y === null;
-const inFriendlyBoard = ({ y }: TileCoordinates) => y > 3;
+import { TileCoordinates, inBench, inFriendlyBoard } from "@common/position";
 
 export const canDropPiece = (piece: PokemonPiece, target: TileCoordinates, tilePieces: PokemonPiece[], gamePhase: GamePhase, belowPieceLimit: boolean) => {
     const targetIsBench = inBench(target);

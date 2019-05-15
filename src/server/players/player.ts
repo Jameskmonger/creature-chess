@@ -23,13 +23,13 @@ export abstract class Player {
     protected board: PokemonPiece[] = [];
     protected bench: PokemonPiece[] = [];
     protected money: number = 3;
+    protected level: number = 1;
     private deck: CardDeck;
     private match: Match = null;
     private streak = {
         type: StreakType.WIN,
         amount: 0
     };
-    private level: number = 1;
     private xp: number = 0;
     private opponent?: Player = null;
     private gamePhase = GamePhase.WAITING;
@@ -133,6 +133,10 @@ export abstract class Player {
     protected abstract onEnterPlayingPhase(seed: number);
 
     protected abstract onEnterDeadPhase();
+
+    protected belowPieceLimit() {
+        return this.board.length < this.level;
+    }
 
     protected onPurchaseCard = (cardIndex: number) => {
         const slot = this.getFirstEmptyBenchSlot();
@@ -468,9 +472,5 @@ export abstract class Player {
         origin.splice(index, 1);
 
         return piece;
-    }
-
-    private belowPieceLimit() {
-        return this.board.length < this.level;
     }
 }

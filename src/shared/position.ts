@@ -58,3 +58,7 @@ export enum TileType {
     BOARD,
     BENCH
 }
+
+export const inBench = ({ y }: TileCoordinates) => y === null;
+// TODO: Make this use Constants.GRID_SIZE
+export const inFriendlyBoard = ({ y }: TileCoordinates) => y > 3;
