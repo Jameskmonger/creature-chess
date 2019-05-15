@@ -3,34 +3,34 @@ import { Player } from "./player";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
 import { PlayerListPlayer, PokemonPiece, GamePhase, PokemonCard } from "@common";
 import { FeedMessage } from "@common/feed-message";
+import { CardDeck } from "../cardDeck";
 
 type IncomingPacketListener = (...args: any[]) => void;
 
-export class Connection {
+export class Connection extends Player {
     private socket: Socket;
-    private player: Player;
 
-    constructor(socket: Socket) {
+    constructor(socket: Socket, name: string, deck: CardDeck) {
+        super(name, deck);
+
         this.socket = socket;
+
+        this.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.onPurchaseCard);
+        this.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.onSellPiece);
+        this.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.onRerollCards);
+        this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
+        this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
+        this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.onBuyXp);
+        this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
+        this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.onFinishMatch);
+
+        this.onSetCards(this.cards);
+        this.onSetBoard(this.board);
+        this.onSetBench(this.bench);
+        this.onSetMoney(this.money);
     }
 
-    public setPlayer(player: Player) {
-        this.player = player;
-    }
-
-    public getPlayer() {
-        return this.player;
-    }
-
-    public onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {
-        this.socket.on(opcode, listener);
-    }
-
-    public onJoinGame(handler: (name: string, callback: (id: string) => void) => void) {
-        this.onReceivePacket(ClientToServerPacketOpcodes.JOIN_GAME, handler);
-    }
-
-    public sendLevelUpdate(level: number, xp: number) {
+    public onLevelUpdate(level: number, xp: number) {
         const packet: LevelUpdatePacket = {
             level,
             xp
@@ -39,29 +39,7 @@ export class Connection {
         this.sendPacket(ServerToClientPacketOpcodes.LEVEL_UPDATE, packet);
     }
 
-    public sendBoardUpdate(board: PokemonPiece[]) {
-        const packet: BoardUpatePacket = {
-            pieces: board
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
-    }
-
-    public sendBenchUpdate(bench: PokemonPiece[]) {
-        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: bench
-        });
-    }
-
-    public sendMoneyUpdate(money: number) {
-        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, money);
-    }
-
-    public sendPlayerListUpdate(players: PlayerListPlayer[]) {
-        this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
-    }
-
-    public sendPreparingPhaseUpdate(board: PokemonPiece[]) {
+    public onEnterPreparingPhase(board: PokemonPiece[]) {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.PREPARING,
             payload: {
@@ -72,7 +50,7 @@ export class Connection {
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    public sendReadyPhaseUpdate(board: PokemonPiece[], opponentId: string) {
+    public onEnterReadyPhase(board: PokemonPiece[], opponentId: string) {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.READY,
             payload: {
@@ -84,7 +62,7 @@ export class Connection {
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    public sendPlayingPhaseUpdate(seed: number) {
+    public onEnterPlayingPhase(seed: number) {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.PLAYING,
             payload: {
@@ -95,7 +73,7 @@ export class Connection {
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    public sendDeadPhaseUpdate() {
+    public onEnterDeadPhase() {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.DEAD
         };
@@ -103,12 +81,46 @@ export class Connection {
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    public sendCardsUpdate(cards: PokemonCard[]) {
-        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
+    public onNewFeedMessage(message: FeedMessage) {
+        this.sendPacket(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, message);
     }
 
-    public sendNewFeedMessage(message: FeedMessage) {
-        this.sendPacket(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, message);
+    public onPlayerListUpdate(players: Player[]) {
+        const playerList: PlayerListPlayer[] = players.map(p => {
+            return {
+                id: p.id,
+                name: p.name,
+                health: p.health
+            };
+        });
+
+        this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
+    }
+
+    protected onSetBoard(newValue: PokemonPiece[]) {
+        const packet: BoardUpatePacket = {
+            pieces: newValue
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
+    }
+
+    protected onSetBench(newValue: PokemonPiece[]) {
+        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
+            pieces: newValue
+        });
+    }
+
+    protected onSetMoney(newValue: number) {
+        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, newValue);
+    }
+
+    protected onSetCards(newValue: PokemonCard[]) {
+        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, newValue);
+    }
+
+    private onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {
+        this.socket.on(opcode, listener);
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {

@@ -7,6 +7,7 @@ import uuid = require("uuid");
 import { FeedMessage } from "@common/feed-message";
 import { Constants, GamePhase } from "../../shared";
 import delay from "delay";
+import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
 
 const randomFromArray = <T>(array: T[]) => {
     return array[Math.floor(Math.random() * array.length)];
@@ -28,9 +29,7 @@ export class PlayerContainer {
     public receiveConnection = (socket: io.Socket) => {
         log("Connection received");
 
-        const connection = new Connection(socket);
-
-        connection.onJoinGame(this.onJoinGame(connection));
+        socket.on(ClientToServerPacketOpcodes.JOIN_GAME, this.onJoinGame(socket));
     }
 
     public onLobbyFull(fn: () => void) {
@@ -42,7 +41,7 @@ export class PlayerContainer {
     }
 
     public updatePlayerLists = () => {
-        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+        this.players.forEach(p => p.onPlayerListUpdate(this.players));
     }
 
     public startPreparingPhase() {
@@ -88,7 +87,7 @@ export class PlayerContainer {
         return this.players.some(p => p.isAlive());
     }
 
-    private onJoinGame(connection: Connection) {
+    private onJoinGame(socket: io.Socket) {
         return (name: string, response: (id: string) => void) => {
             if (!name
                 || this.acceptingPlayers === false
@@ -100,7 +99,7 @@ export class PlayerContainer {
 
             log(`${name} has joined the game`);
 
-            const player = new Player(connection, name, this.deck);
+            const player = new Connection(socket, name, this.deck);
 
             response(player.id);
 
@@ -123,6 +122,6 @@ export class PlayerContainer {
     }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage, exceptPlayerIds: string[] = []) {
-        this.players.filter(p => exceptPlayerIds.indexOf(p.id) === -1).forEach(p => p.sendNewFeedMessage(message));
+        this.players.filter(p => exceptPlayerIds.indexOf(p.id) === -1).forEach(p => p.onNewFeedMessage(message));
     }
 }
