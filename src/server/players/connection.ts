@@ -24,7 +24,7 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
 
-        this.wallet.onChange(this.sendMoneyUpdate);
+        this.money.onChange(this.sendMoneyUpdate);
         this.cards.onChange(this.sendCardsUpdate);
         this.board.onChange(this.sendBoardUpdate);
         this.bench.onChange(this.sendBenchUpdate);

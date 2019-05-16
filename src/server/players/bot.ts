@@ -54,7 +54,7 @@ export class Bot extends Player {
         if (
             this.belowPieceLimitIncludingBench() === false
             || card === null
-            || this.wallet.getValue() < card.cost
+            || this.money.getValue() < card.cost
         ) {
             return false;
         }

@@ -28,7 +28,7 @@ export abstract class Player {
     public readonly name: string;
     public health: number = 100;
 
-    protected wallet = new Observable(3);
+    protected money = new Observable(3);
     protected cards = new Observable<PokemonCard[]>([]);
     protected board = new ObservableWithReducer<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new ObservableWithReducer<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
@@ -153,14 +153,14 @@ export abstract class Player {
             return;
         }
 
-        const money = this.wallet.getValue();
+        const money = this.money.getValue();
 
         if (money < card.cost) {
             log(`${this.name} attempted to buy card costing $${card.cost} but only had $${money}`);
             return;
         }
 
-        this.wallet.setValue(money - card.cost);
+        this.money.setValue(money - card.cost);
         this.deleteCard(cardIndex);
 
         const pieceDefinition = getPokemonDefinition(card.id);
@@ -195,7 +195,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.wallet.getValue();
+        const money = this.money.getValue();
 
         // not enough money
         if (money < Constants.BUY_XP_COST) {
@@ -205,7 +205,7 @@ export abstract class Player {
 
         this.addXp(Constants.BUY_XP_AMOUNT);
 
-        this.wallet.setValue(money - Constants.BUY_XP_COST);
+        this.money.setValue(money - Constants.BUY_XP_COST);
     }
 
     protected rerollCards = () => {
@@ -214,7 +214,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.wallet.getValue();
+        const money = this.money.getValue();
 
         // not enough money
         if (money < Constants.REROLL_COST) {
@@ -224,7 +224,7 @@ export abstract class Player {
 
         this.takeNewCardsFromDeck();
 
-        this.wallet.setValue(money - Constants.REROLL_COST);
+        this.money.setValue(money - Constants.REROLL_COST);
     }
 
     protected sendChatMessage = (message: string) => {
@@ -381,9 +381,9 @@ export abstract class Player {
     }
 
     private addMoney(money: number) {
-        const currentMoney = this.wallet.getValue();
+        const currentMoney = this.money.getValue();
 
-        this.wallet.setValue(currentMoney + money);
+        this.money.setValue(currentMoney + money);
     }
 
     private deleteCard(indexToDelete: number) {
