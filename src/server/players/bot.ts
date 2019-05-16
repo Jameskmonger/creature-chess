@@ -16,7 +16,7 @@ export class Bot extends Player {
 
         for (const { index } of cardCosts) {
             if (this.shouldBuyCard(index)) {
-                this.onPurchaseCard(index);
+                this.purchaseCard(index);
                 break;
             }
         }
@@ -39,7 +39,7 @@ export class Bot extends Player {
     }
 
     protected onEnterPlayingPhase(seed: number) {
-        this.onFinishMatch();
+        this.finishMatch();
     }
 
     protected onSetBoard(newValue: PokemonPiece[]) { /* nothing required, we're a bot */ }

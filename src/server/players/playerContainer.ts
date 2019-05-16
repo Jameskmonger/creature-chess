@@ -67,7 +67,7 @@ export class PlayerContainer {
         this.players
             .filter(p => p.isAlive())
             .forEach(p => {
-                p.rerollCards();
+                p.takeNewCardsFromDeck();
 
                 p.sendPreparingPhaseUpdate();
             });

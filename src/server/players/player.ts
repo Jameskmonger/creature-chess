@@ -102,7 +102,7 @@ export abstract class Player {
         this.onEnterReadyPhase(this.match.getBoard(), this.opponent.id);
     }
 
-    public rerollCards() {
+    public takeNewCardsFromDeck() {
         const cards = this.cards;
 
         this.deck.add(cards);
@@ -138,7 +138,7 @@ export abstract class Player {
         return this.board.length < this.level;
     }
 
-    protected onPurchaseCard = (cardIndex: number) => {
+    protected purchaseCard = (cardIndex: number) => {
         const slot = this.getFirstEmptyBenchSlot();
         const card = this.getCardAtIndex(cardIndex);
 
@@ -180,7 +180,7 @@ export abstract class Player {
         this.addBenchPiece(piece);
     }
 
-    protected onSellPiece = (pieceId: string) => {
+    protected sellPiece = (pieceId: string) => {
         if (!this.ownsPiece(pieceId)) {
             log(`${this.name} attempted to sell piece with id ${pieceId} but did not own it`);
             return;
@@ -194,7 +194,7 @@ export abstract class Player {
         this.deck.shuffle();
     }
 
-    protected onBuyXp = () => {
+    protected buyXp = () => {
         if (this.isAlive() === false) {
             log(`${this.name} attempted to buy xp, but they are dead`);
             return;
@@ -213,7 +213,7 @@ export abstract class Player {
         this.setMoney(money - Constants.BUY_XP_COST);
     }
 
-    protected onRerollCards = () => {
+    protected rerollCards = () => {
         if (this.isAlive() === false) {
             log(`${this.name} attempted to reroll, but they are dead`);
             return;
@@ -227,7 +227,7 @@ export abstract class Player {
             return;
         }
 
-        this.rerollCards();
+        this.takeNewCardsFromDeck();
 
         this.setMoney(money - Constants.REROLL_COST);
     }
@@ -236,7 +236,7 @@ export abstract class Player {
         this.onSendChatMessageListeners.forEach(fn => fn(message));
     }
 
-    protected onFinishMatch = () => {
+    protected finishMatch = () => {
         if (this.match === null) {
             return;
         }

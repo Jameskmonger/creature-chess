@@ -15,14 +15,14 @@ export class Connection extends Player {
 
         this.socket = socket;
 
-        this.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.onPurchaseCard);
-        this.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.onSellPiece);
-        this.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.onRerollCards);
+        this.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.purchaseCard);
+        this.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.sellPiece);
+        this.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.rerollCards);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
-        this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.onBuyXp);
+        this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
         this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
-        this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.onFinishMatch);
+        this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
 
         this.onSetCards(this.cards);
         this.onSetBoard(this.board);
