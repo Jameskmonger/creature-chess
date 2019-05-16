@@ -10,6 +10,7 @@ import { FeedMessage } from "@common/feed-message";
 import { canDropPiece } from "@common/board";
 import { EventEmitter } from "events";
 import { PokemonDefinition } from "../../shared/pokemon-stats";
+import { Observable } from "../observable";
 
 enum StreakType {
     WIN,
@@ -26,10 +27,11 @@ export abstract class Player {
     public readonly name: string;
     public health: number = 100;
 
-    protected cards: PokemonCard[] = [];
+    protected wallet = new Observable(3);
+
+    protected cards = new Observable<PokemonCard[]>([]);
     protected board: PokemonPiece[] = [];
     protected bench: PokemonPiece[] = [];
-    protected money: number = 3;
     protected level: number = 1;
 
     private events = new EventEmitter();
@@ -110,13 +112,13 @@ export abstract class Player {
     }
 
     public takeNewCardsFromDeck() {
-        const cards = this.cards;
+        const cards = this.cards.getValue();
 
         this.deck.add(cards);
         this.deck.shuffle();
 
         const newCards = this.deck.take(5);
-        this.setCards(newCards);
+        this.cards.setValue(newCards);
     }
 
     public abstract onPlayerListUpdate(players: Player[]);
@@ -126,10 +128,6 @@ export abstract class Player {
     protected abstract onSetBoard(newValue: PokemonPiece[]);
 
     protected abstract onSetBench(newValue: PokemonPiece[]);
-
-    protected abstract onSetMoney(newValue: number);
-
-    protected abstract onSetCards(newValue: PokemonCard[]);
 
     protected abstract onLevelUpdate(level: number, xp: number);
 
@@ -159,14 +157,14 @@ export abstract class Player {
             return;
         }
 
-        const money = this.money;
+        const money = this.wallet.getValue();
 
         if (money < card.cost) {
-            log(`${this.name} attempted to buy card costing $${card.cost} but only had $${this}`);
+            log(`${this.name} attempted to buy card costing $${card.cost} but only had $${money}`);
             return;
         }
 
-        this.setMoney(money - card.cost);
+        this.wallet.setValue(money - card.cost);
         this.deleteCard(cardIndex);
 
         const pieceDefinition = getPokemonDefinition(card.id);
@@ -175,24 +173,6 @@ export abstract class Player {
         const piece = createBenchPokemon(this.id, definitionIdToAdd, slot);
 
         this.addBenchPiece(piece);
-    }
-
-    private handleEvolution = (pieceDefinition: PokemonDefinition) => {
-        const instancesOfPieceOwnedOnBench = this.bench.filter(p => p.pokemonId === pieceDefinition.id);
-        const instancesOfPieceOwnedOnBoard = this.board.filter(p => p.pokemonId === pieceDefinition.id);
-        const instancesOfPieceOwned = instancesOfPieceOwnedOnBench.concat(instancesOfPieceOwnedOnBoard);
-        const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(pieceDefinition.id);
-
-        if (shouldEvolve) {
-            instancesOfPieceOwned.forEach(p => this.popPieceIfExists(p.id));
-            if (instancesOfPieceOwnedOnBoard.length > 0) {
-                this.sendBoardUpdate();
-            }
-
-            return this.handleEvolution(getPokemonDefinition(pieceDefinition.evolvedFormId));
-        }
-
-        return pieceDefinition.id;
     }
 
     protected sellPiece = (pieceId: string) => {
@@ -215,7 +195,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.money;
+        const money = this.wallet.getValue();
 
         // not enough money
         if (money < Constants.BUY_XP_COST) {
@@ -225,7 +205,7 @@ export abstract class Player {
 
         this.addXp(Constants.BUY_XP_AMOUNT);
 
-        this.setMoney(money - Constants.BUY_XP_COST);
+        this.wallet.setValue(money - Constants.BUY_XP_COST);
     }
 
     protected rerollCards = () => {
@@ -234,7 +214,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.money;
+        const money = this.wallet.getValue();
 
         // not enough money
         if (money < Constants.REROLL_COST) {
@@ -244,7 +224,7 @@ export abstract class Player {
 
         this.takeNewCardsFromDeck();
 
-        this.setMoney(money - Constants.REROLL_COST);
+        this.wallet.setValue(money - Constants.REROLL_COST);
     }
 
     protected sendChatMessage = (message: string) => {
@@ -297,6 +277,24 @@ export abstract class Player {
 
         piece.position = packet.to;
         this.board.push(piece);
+    }
+
+    private handleEvolution = (pieceDefinition: PokemonDefinition) => {
+        const instancesOfPieceOwnedOnBench = this.bench.filter(p => p.pokemonId === pieceDefinition.id);
+        const instancesOfPieceOwnedOnBoard = this.board.filter(p => p.pokemonId === pieceDefinition.id);
+        const instancesOfPieceOwned = instancesOfPieceOwnedOnBench.concat(instancesOfPieceOwnedOnBoard);
+        const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(pieceDefinition.id);
+
+        if (shouldEvolve) {
+            instancesOfPieceOwned.forEach(p => this.popPieceIfExists(p.id));
+            if (instancesOfPieceOwnedOnBoard.length > 0) {
+                this.sendBoardUpdate();
+            }
+
+            return this.handleEvolution(getPokemonDefinition(pieceDefinition.evolvedFormId));
+        }
+
+        return pieceDefinition.id;
     }
 
     private addXp(amount: number) {
@@ -390,28 +388,17 @@ export abstract class Player {
         this.onSetBench(bench);
     }
 
-    private setMoney(money: number) {
-        this.money = money;
-
-        this.onSetMoney(money);
-    }
-
     private addMoney(money: number) {
-        this.setMoney(this.money + money);
+        const currentMoney = this.wallet.getValue();
+
+        this.wallet.setValue(currentMoney + money);
     }
 
-    private setCards(cards: PokemonCard[], update: boolean = true) {
-        this.cards = cards;
+    private deleteCard(indexToDelete: number) {
+        const newValue = this.cards.getValue()
+            .map((card, index) => index === indexToDelete ? null : card);
 
-        if (update) {
-            this.onSetCards(cards);
-        }
-    }
-
-    private deleteCard(index: number) {
-        this.cards[index] = null;
-
-        this.onSetCards(this.cards);
+        this.cards.setValue(newValue);
     }
 
     private sendDeathUpdate() {
@@ -462,12 +449,12 @@ export abstract class Player {
     }
 
     private addCardsToDeck() {
-        const cards = this.cards;
+        const cards = this.cards.getValue();
 
         this.deck.add(cards);
         this.deck.shuffle();
 
-        this.setCards([]);
+        this.cards.setValue([]);
     }
 
     private popPieceIfExists(id: string, coordinates?: TileCoordinates) {

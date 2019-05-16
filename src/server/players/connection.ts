@@ -24,10 +24,11 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
 
-        this.onSetCards(this.cards);
+        this.wallet.onChange(this.sendMoneyUpdate);
+        this.cards.onChange(this.sendCardsUpdate);
+
         this.onSetBoard(this.board);
         this.onSetBench(this.bench);
-        this.onSetMoney(this.money);
     }
 
     public onLevelUpdate(level: number, xp: number) {
@@ -111,19 +112,19 @@ export class Connection extends Player {
         });
     }
 
-    protected onSetMoney(newValue: number) {
-        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, newValue);
-    }
-
-    protected onSetCards(newValue: PokemonCard[]) {
-        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, newValue);
-    }
-
     private onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {
         this.socket.on(opcode, listener);
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
         this.socket.emit(opcode, ...data);
+    }
+
+    private sendMoneyUpdate = (newValue: number) => {
+        this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, newValue);
+    }
+
+    private sendCardsUpdate = (newValue: PokemonCard[]) => {
+        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, newValue);
     }
 }

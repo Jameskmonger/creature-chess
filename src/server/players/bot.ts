@@ -11,7 +11,7 @@ export class Bot extends Player {
     public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }
 
     protected onEnterPreparingPhase(board: PokemonPiece[]) {
-        const cardCosts = this.cards.map(({ cost }, index) => ({ cost, index }));
+        const cardCosts = this.cards.getValue().map(({ cost }, index) => ({ cost, index }));
         cardCosts.sort((a, b) => b.cost - a.cost);
 
         for (const { index } of cardCosts) {
@@ -46,8 +46,6 @@ export class Bot extends Player {
 
     protected onSetBench(newValue: PokemonPiece[]) { /* nothing required, we're a bot */ }
 
-    protected onSetMoney(newValue: number) { /* nothing required, we're a bot */ }
-
     protected onSetCards(newValue: PokemonCard[]) { /* nothing required, we're a bot */ }
 
     protected onLevelUpdate(level: number, xp: number) { /* nothing required, we're a bot */ }
@@ -62,7 +60,7 @@ export class Bot extends Player {
         if (
             this.belowPieceLimitIncludingBench() === false
             || card === null
-            || this.money < card.cost
+            || this.wallet.getValue() < card.cost
         ) {
             return false;
         }
