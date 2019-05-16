@@ -14,6 +14,24 @@ const randomFromArray = <T>(array: T[]) => {
     return array[Math.floor(Math.random() * array.length)];
 };
 
+const BOT_NAMES = [
+    "Duke Horacio",
+    "Father Aereck",
+    "Prince Ali",
+    "Fred the Farmer",
+    "King Roald",
+    "Wise Old Man",
+    "Thessalia",
+    "Johnny the Beard",
+    "Delrith",
+    "Cap'n Izzy No-Beard",
+    "Sir Amik Varze",
+    "Party Pete",
+    "Make-over mage",
+    "Aggie",
+    "Evil Dave"
+];
+
 export class PlayerContainer {
     private GAME_SIZE: number;
     private deck: CardDeck;
@@ -88,8 +106,11 @@ export class PlayerContainer {
         return this.players.some(p => p.isAlive());
     }
 
-    public addBot(index: number) {
-        this.players.push(new Bot(`[BOT] Bot #${index}`, this.deck));
+    public addBot() {
+        const availableNames = BOT_NAMES.filter(n => this.players.map(p => p.name).includes(n) === false);
+        const name = randomFromArray(availableNames);
+
+        this.players.push(new Bot(`[BOT] ${name}`, this.deck));
     }
 
     private onJoinGame(socket: io.Socket) {

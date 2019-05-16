@@ -19,7 +19,7 @@ export class Server {
         this.playerContainer = new PlayerContainer(this.GAME_SIZE, this.deck);
 
         for (let i = 0; i < botCount; i++) {
-            this.playerContainer.addBot(i);
+            this.playerContainer.addBot();
         }
     }
 
