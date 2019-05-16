@@ -22,7 +22,7 @@ export class Bot extends Player {
         }
 
         // put pieces on the board until it's full (or we're out of pieces)
-        while (this.belowPieceLimit() && this.bench.length !== 0) {
+        while (this.belowPieceLimit() && this.bench.getValue().length !== 0) {
             const firstBenchPiece = this.getFirstBenchPiece();
             const firstEmptyPosition = this.getFirstEmptyPosition();
 
@@ -42,12 +42,6 @@ export class Bot extends Player {
         this.finishMatch();
     }
 
-    protected onSetBoard(newValue: PokemonPiece[]) { /* nothing required, we're a bot */ }
-
-    protected onSetBench(newValue: PokemonPiece[]) { /* nothing required, we're a bot */ }
-
-    protected onSetCards(newValue: PokemonCard[]) { /* nothing required, we're a bot */ }
-
     protected onLevelUpdate(level: number, xp: number) { /* nothing required, we're a bot */ }
 
     protected onEnterReadyPhase(board: PokemonPiece[], opponentId: string) { /* nothing required, we're a bot */ }
@@ -55,7 +49,7 @@ export class Bot extends Player {
     protected onEnterDeadPhase() { /* nothing required, we're a bot */ }
 
     private shouldBuyCard(index: number) {
-        const card = this.cards[index];
+        const card = this.cards.getValue()[index];
 
         if (
             this.belowPieceLimitIncludingBench() === false
@@ -74,12 +68,14 @@ export class Bot extends Player {
     }
 
     private belowPieceLimitIncludingBench() {
-        return (this.board.length + this.bench.length) < this.level;
+        return (this.board.getValue().length + this.bench.getValue().length) < this.level;
     }
 
     private getFirstBenchPiece() {
+        const benchPieces = this.bench.getValue();
+
         for (let x = 0; x < Constants.GRID_SIZE; x++) {
-            const piece = this.bench.find(p => p.position.x === x);
+            const piece = benchPieces.find(p => p.position.x === x);
 
             if (piece !== undefined) {
                 return piece;
@@ -90,9 +86,11 @@ export class Bot extends Player {
     }
 
     private getFirstEmptyPosition() {
+        const boardPieces = this.board.getValue();
+
         for (let y = 4; y < Constants.GRID_SIZE; y++) {
             for (const x of PREFERRED_COLUMN_ORDER) {
-                const boardPiece = this.board.find(p => p.position.x === x && p.position.y === y);
+                const boardPiece = boardPieces.find(p => p.position.x === x && p.position.y === y);
 
                 if (boardPiece === undefined) {
                     return createTileCoordinates(x, y);

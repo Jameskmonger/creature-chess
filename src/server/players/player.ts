@@ -28,10 +28,9 @@ export abstract class Player {
     public health: number = 100;
 
     protected wallet = new Observable(3);
-
     protected cards = new Observable<PokemonCard[]>([]);
-    protected board: PokemonPiece[] = [];
-    protected bench: PokemonPiece[] = [];
+    protected board = new Observable<PokemonPiece[]>([]);
+    protected bench = new Observable<PokemonPiece[]>([]);
     protected level: number = 1;
 
     private events = new EventEmitter();
@@ -53,7 +52,7 @@ export abstract class Player {
     }
 
     public cloneBoard() {
-        return this.board.map(p => clonePokemonPiece(p));
+        return this.board.getValue().map(p => clonePokemonPiece(p));
     }
 
     public onHealthUpdate(fn: (health: number) => void) {
@@ -72,7 +71,7 @@ export abstract class Player {
         this.match = null;
         this.gamePhase = GamePhase.PREPARING;
 
-        this.onEnterPreparingPhase(this.board);
+        this.onEnterPreparingPhase(this.board.getValue());
     }
 
     public async runPlayingPhase(seed: number, battleTimeout: Promise<void>) {
@@ -125,10 +124,6 @@ export abstract class Player {
 
     public abstract onNewFeedMessage(message: FeedMessage);
 
-    protected abstract onSetBoard(newValue: PokemonPiece[]);
-
-    protected abstract onSetBench(newValue: PokemonPiece[]);
-
     protected abstract onLevelUpdate(level: number, xp: number);
 
     protected abstract onEnterPreparingPhase(board: PokemonPiece[]);
@@ -140,7 +135,7 @@ export abstract class Player {
     protected abstract onEnterDeadPhase();
 
     protected belowPieceLimit() {
-        return this.board.length < this.level;
+        return this.board.getValue().length < this.level;
     }
 
     protected purchaseCard = (cardIndex: number) => {
@@ -247,7 +242,7 @@ export abstract class Player {
             return;
         }
 
-        const tilePieces = this.bench.filter(p => p.position.x === packet.to.x);
+        const tilePieces = this.bench.getValue().filter(p => p.position.x === packet.to.x);
         const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
@@ -256,7 +251,8 @@ export abstract class Player {
         }
 
         piece.position = packet.to;
-        this.bench.push(piece);
+
+        this.addBenchPiece(piece);
     }
 
     protected movePieceToBoard = (packet: MovePiecePacket) => {
@@ -267,7 +263,7 @@ export abstract class Player {
             return;
         }
 
-        const tilePieces = this.board.filter(p => p.position.x === packet.to.x && p.position.y === packet.to.y);
+        const tilePieces = this.board.getValue().filter(p => p.position.x === packet.to.x && p.position.y === packet.to.y);
         const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
@@ -276,20 +272,19 @@ export abstract class Player {
         }
 
         piece.position = packet.to;
-        this.board.push(piece);
+
+        const newBoard = [ ...this.board.getValue(), piece ];
+        this.board.setValue(newBoard);
     }
 
     private handleEvolution = (pieceDefinition: PokemonDefinition) => {
-        const instancesOfPieceOwnedOnBench = this.bench.filter(p => p.pokemonId === pieceDefinition.id);
-        const instancesOfPieceOwnedOnBoard = this.board.filter(p => p.pokemonId === pieceDefinition.id);
+        const instancesOfPieceOwnedOnBench = this.bench.getValue().filter(p => p.pokemonId === pieceDefinition.id);
+        const instancesOfPieceOwnedOnBoard = this.board.getValue().filter(p => p.pokemonId === pieceDefinition.id);
         const instancesOfPieceOwned = instancesOfPieceOwnedOnBench.concat(instancesOfPieceOwnedOnBoard);
         const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(pieceDefinition.id);
 
         if (shouldEvolve) {
             instancesOfPieceOwned.forEach(p => this.popPieceIfExists(p.id));
-            if (instancesOfPieceOwnedOnBoard.length > 0) {
-                this.sendBoardUpdate();
-            }
 
             return this.handleEvolution(getPokemonDefinition(pieceDefinition.evolvedFormId));
         }
@@ -351,18 +346,17 @@ export abstract class Player {
     }
 
     private addBenchPiece(piece: PokemonPiece) {
-        this.bench.push(piece);
-
-        this.onSetBench(this.bench);
+        const newBench = [ ...this.bench.getValue(), piece ];
+        this.bench.setValue(newBench);
     }
 
     private ownsPiece = (pieceId: string) => {
-        return this.board.concat(this.bench).some(p => p.id === pieceId);
+        return this.board.getValue().some(p => p.id === pieceId) || this.bench.getValue().some(p => p.id === pieceId);
     }
 
     private getFirstEmptyBenchSlot() {
         for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
-            const piece = this.bench.some(p => p.position.x === slot);
+            const piece = this.bench.getValue().some(p => p.position.x === slot);
 
             if (!piece) {
                 return slot;
@@ -373,19 +367,7 @@ export abstract class Player {
     }
 
     private getCardAtIndex(index: number) {
-        return this.cards[index];
-    }
-
-    private setBoard(board: PokemonPiece[]) {
-        this.board = board;
-
-        this.onSetBoard(board);
-    }
-
-    private setBench(bench: PokemonPiece[]) {
-        this.bench = bench;
-
-        this.onSetBench(bench);
+        return this.cards.getValue()[index];
     }
 
     private addMoney(money: number) {
@@ -407,16 +389,6 @@ export abstract class Player {
         this.onEnterDeadPhase();
     }
 
-    private sendBoardUpdate() {
-        // turn all local pieces to face away
-        const turnedPieces = this.board.map(piece => ({
-            ...piece,
-            facingAway: true
-        }));
-
-        this.onSetBoard(turnedPieces);
-    }
-
     private subtractHealth(value: number) {
         const oldValue = this.health;
 
@@ -436,14 +408,14 @@ export abstract class Player {
     }
 
     private addPiecesToDeck() {
-        const board = this.board;
-        const bench = this.bench;
+        const boardPieces = this.board.getValue();
+        const benchPieces = this.board.getValue();
 
-        this.setBoard([]);
-        this.setBench([]);
+        boardPieces.forEach(p => this.deck.addPiece(p));
+        benchPieces.forEach(p => this.deck.addPiece(p));
 
-        board.forEach(p => this.deck.addPiece(p));
-        bench.forEach(p => this.deck.addPiece(p));
+        this.board.setValue([]);
+        this.bench.setValue([]);
 
         this.deck.shuffle();
     }
@@ -458,10 +430,11 @@ export abstract class Player {
     }
 
     private popPieceIfExists(id: string, coordinates?: TileCoordinates) {
-        const fromBench = this.bench.some(p => p.id === id);
+        const fromBench = this.bench.getValue().some(p => p.id === id);
         const origin = fromBench ? this.bench : this.board;
+        const originPieces = origin.getValue();
 
-        const index = origin.findIndex(p =>
+        const index = originPieces.findIndex(p =>
             p.id === id
             && (!coordinates || (p.position.x === coordinates.x && p.position.y === coordinates.y)));
 
@@ -469,9 +442,10 @@ export abstract class Player {
             return null;
         }
 
-        const piece = origin[index];
+        const piece = originPieces[index];
 
-        origin.splice(index, 1);
+        const newValue = originPieces.filter(p => p.id !== piece.id);
+        origin.setValue(newValue);
 
         return piece;
     }

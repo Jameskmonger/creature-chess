@@ -26,9 +26,8 @@ export class Connection extends Player {
 
         this.wallet.onChange(this.sendMoneyUpdate);
         this.cards.onChange(this.sendCardsUpdate);
-
-        this.onSetBoard(this.board);
-        this.onSetBench(this.bench);
+        this.board.onChange(this.sendBoardUpdate);
+        this.bench.onChange(this.sendBenchUpdate);
     }
 
     public onLevelUpdate(level: number, xp: number) {
@@ -98,20 +97,6 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
     }
 
-    protected onSetBoard(newValue: PokemonPiece[]) {
-        const packet: BoardUpatePacket = {
-            pieces: newValue
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
-    }
-
-    protected onSetBench(newValue: PokemonPiece[]) {
-        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: newValue
-        });
-    }
-
     private onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {
         this.socket.on(opcode, listener);
     }
@@ -126,5 +111,24 @@ export class Connection extends Player {
 
     private sendCardsUpdate = (newValue: PokemonCard[]) => {
         this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, newValue);
+    }
+
+    private sendBoardUpdate = (newValue: PokemonPiece[]) => {
+        const turnedPieces = newValue.map(piece => ({
+            ...piece,
+            facingAway: true
+        }));
+
+        const packet: BoardUpatePacket = {
+            pieces: turnedPieces
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
+    }
+
+    private sendBenchUpdate = (newValue: PokemonPiece[]) => {
+        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
+            pieces: newValue
+        });
     }
 }
