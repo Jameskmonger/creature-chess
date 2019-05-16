@@ -8,10 +8,16 @@ import { log } from "../log";
 import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
 import { canDropPiece } from "@common/board";
+import { EventEmitter } from "events";
 
 enum StreakType {
     WIN,
     LOSS
+}
+
+enum PlayerEvent {
+    UPDATE_HEALTH = "UPDATE_HEALTH",
+    SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE"
 }
 
 export abstract class Player {
@@ -24,6 +30,9 @@ export abstract class Player {
     protected bench: PokemonPiece[] = [];
     protected money: number = 3;
     protected level: number = 1;
+
+    private events = new EventEmitter();
+
     private deck: CardDeck;
     private match: Match = null;
     private streak = {
@@ -33,9 +42,6 @@ export abstract class Player {
     private xp: number = 0;
     private opponent?: Player = null;
     private gamePhase = GamePhase.WAITING;
-
-    private onHealthUpdateListeners: ((health: number) => void)[] = [];
-    private onSendChatMessageListeners: ((message: string) => void)[] = [];
 
     constructor(name: string, deck: CardDeck) {
         this.id = uuid();
@@ -48,11 +54,11 @@ export abstract class Player {
     }
 
     public onHealthUpdate(fn: (health: number) => void) {
-        this.onHealthUpdateListeners.push(fn);
+        this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
     }
 
     public onSendChatMessage(fn: (message: string) => void) {
-        this.onSendChatMessageListeners.push(fn);
+        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
     }
 
     public isAlive() {
@@ -233,7 +239,7 @@ export abstract class Player {
     }
 
     protected sendChatMessage = (message: string) => {
-        this.onSendChatMessageListeners.forEach(fn => fn(message));
+        this.events.emit(PlayerEvent.SEND_CHAT_MESSAGE, message);
     }
 
     protected finishMatch = () => {
@@ -430,7 +436,7 @@ export abstract class Player {
             this.sendDeathUpdate();
         }
 
-        this.onHealthUpdateListeners.forEach(fn => fn(this.health));
+        this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
 
     private addPiecesToDeck() {
