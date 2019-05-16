@@ -2,15 +2,16 @@ import uuid = require("uuid/v4");
 import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
 import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "@common/pokemon-piece";
 import { MovePiecePacket, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
-import { TileCoordinates } from "@common/position";
+import { TileCoordinates, TileType, createTileCoordinates } from "@common/position";
 import { Match } from "../match";
 import { log } from "../log";
 import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
-import { canDropPiece } from "@common/board";
+import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions } from "@common/board";
 import { EventEmitter } from "events";
 import { PokemonDefinition } from "../../shared/pokemon-stats";
-import { Observable } from "../observable";
+import { Observable } from "../observable/observable";
+import { ObservableWithReducer } from "../observable/observableWithReducer";
 
 enum StreakType {
     WIN,
@@ -29,8 +30,8 @@ export abstract class Player {
 
     protected wallet = new Observable(3);
     protected cards = new Observable<PokemonCard[]>([]);
-    protected board = new Observable<PokemonPiece[]>([]);
-    protected bench = new Observable<PokemonPiece[]>([]);
+    protected board = new ObservableWithReducer<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
+    protected bench = new ObservableWithReducer<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level: number = 1;
 
     private events = new EventEmitter();
@@ -167,21 +168,25 @@ export abstract class Player {
 
         const piece = createBenchPokemon(this.id, definitionIdToAdd, slot);
 
-        this.addBenchPiece(piece);
+        this.bench.dispatch(BoardActions.pieceMoved(piece, createTileCoordinates(slot, null), TileType.BENCH));
     }
 
     protected sellPiece = (pieceId: string) => {
-        if (!this.ownsPiece(pieceId)) {
+        const piece = this.findPiece(pieceId);
+
+        if (piece === null) {
             log(`${this.name} attempted to sell piece with id ${pieceId} but did not own it`);
             return;
         }
 
-        const piece = this.popPieceIfExists(pieceId);
         // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
         const pieceCost = getPokemonDefinition(piece.pokemonId).cost || 6;
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
         this.deck.shuffle();
+
+        this.bench.dispatch(BoardActions.sellPiece(pieceId));
+        this.board.dispatch(BoardActions.sellPiece(pieceId));
     }
 
     protected buyXp = () => {
@@ -235,31 +240,42 @@ export abstract class Player {
     }
 
     protected movePieceToBench = (packet: MovePiecePacket) => {
-        const piece = this.popPieceIfExists(packet.id, packet.from);
+        const piece = this.findPiece(packet.id);
 
         if (piece === null) {
             log(`Could not find piece ID ${packet.id}`);
             return;
         }
 
-        const tilePieces = this.bench.getValue().filter(p => p.position.x === packet.to.x);
-        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
+        if (piece.position.x !== packet.from.x || piece.position.y !== packet.from.y) {
+            log(`Position mismatch for piece ID ${packet.id}`);
+            return;
+        }
+
+        const benchTilePieces = this.bench.getValue().filter(p => p.position.x === packet.to.x);
+        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);
             return;
         }
 
-        piece.position = packet.to;
+        const action = BoardActions.pieceMoved(piece, packet.to, TileType.BENCH);
 
-        this.addBenchPiece(piece);
+        this.bench.dispatch(action);
+        this.board.dispatch(action);
     }
 
     protected movePieceToBoard = (packet: MovePiecePacket) => {
-        const piece = this.popPieceIfExists(packet.id, packet.from);
+        const piece = this.findPiece(packet.id);
 
         if (piece === null) {
             log(`Could not find piece ID ${packet.id}`);
+            return;
+        }
+
+        if (piece.position.x !== packet.from.x || piece.position.y !== packet.from.y) {
+            log(`Position mismatch for piece ID ${packet.id}`);
             return;
         }
 
@@ -271,10 +287,10 @@ export abstract class Player {
             return;
         }
 
-        piece.position = packet.to;
+        const action = BoardActions.pieceMoved(piece, packet.to, TileType.BOARD);
 
-        const newBoard = [ ...this.board.getValue(), piece ];
-        this.board.setValue(newBoard);
+        this.bench.dispatch(action);
+        this.board.dispatch(action);
     }
 
     private handleEvolution = (pieceDefinition: PokemonDefinition) => {
@@ -284,7 +300,10 @@ export abstract class Player {
         const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(pieceDefinition.id);
 
         if (shouldEvolve) {
-            instancesOfPieceOwned.forEach(p => this.popPieceIfExists(p.id));
+            instancesOfPieceOwned.forEach(p => {
+                this.bench.dispatch(BoardActions.sellPiece(p.id));
+                this.board.dispatch(BoardActions.sellPiece(p.id));
+            });
 
             return this.handleEvolution(getPokemonDefinition(pieceDefinition.evolvedFormId));
         }
@@ -343,15 +362,6 @@ export abstract class Player {
         log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, (${this.streak.amount}) streak bonus: ${streakBonus})`);
 
         return total;
-    }
-
-    private addBenchPiece(piece: PokemonPiece) {
-        const newBench = [ ...this.bench.getValue(), piece ];
-        this.bench.setValue(newBench);
-    }
-
-    private ownsPiece = (pieceId: string) => {
-        return this.board.getValue().some(p => p.id === pieceId) || this.bench.getValue().some(p => p.id === pieceId);
     }
 
     private getFirstEmptyBenchSlot() {
@@ -429,24 +439,11 @@ export abstract class Player {
         this.cards.setValue([]);
     }
 
-    private popPieceIfExists(id: string, coordinates?: TileCoordinates) {
-        const fromBench = this.bench.getValue().some(p => p.id === id);
-        const origin = fromBench ? this.bench : this.board;
-        const originPieces = origin.getValue();
-
-        const index = originPieces.findIndex(p =>
-            p.id === id
-            && (!coordinates || (p.position.x === coordinates.x && p.position.y === coordinates.y)));
-
-        if (index === -1) {
-            return null;
-        }
-
-        const piece = originPieces[index];
-
-        const newValue = originPieces.filter(p => p.id !== piece.id);
-        origin.setValue(newValue);
-
-        return piece;
+    private findPiece(id: string) {
+        return (
+            this.board.getValue().find(p => p.id === id)
+            || this.bench.getValue().find(p => p.id === id)
+            || null
+        );
     }
 }

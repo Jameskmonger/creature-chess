@@ -127,12 +127,12 @@ export class PlayerContainer {
 
             const player = new Connection(socket, name, this.deck);
 
-            response(player.id);
-
             player.onHealthUpdate(this.updatePlayerLists);
             player.onSendChatMessage(this.sendChatMessage(player));
 
             this.players.push(player);
+
+            response(player.id);
 
             this.updatePlayerLists();
 
