@@ -10,6 +10,7 @@ import { log } from "../log";
 import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
 import { canDropPiece } from "@common/board";
+import { PokemonDefinition } from "../../shared/pokemon-stats";
 
 enum StreakType {
     WIN,
@@ -334,21 +335,29 @@ export class Player {
         this.deleteCard(cardIndex);
 
         const pieceDefinition = getPokemonDefinition(card.id);
-        const instancesOfPieceOwnedOnBench = this.bench.filter(p => p.pokemonId === card.id);
-        const instancesOfPieceOwnedOnBoard = this.board.filter(p => p.pokemonId === card.id);
+        const definitionIdToAdd = this.handleEvolution(pieceDefinition);
+
+        const piece = createBenchPokemon(this.id, definitionIdToAdd, slot);
+
+        this.addBenchPiece(piece);
+    }
+
+    private handleEvolution = (pieceDefinition: PokemonDefinition) => {
+        const instancesOfPieceOwnedOnBench = this.bench.filter(p => p.pokemonId === pieceDefinition.id);
+        const instancesOfPieceOwnedOnBoard = this.board.filter(p => p.pokemonId === pieceDefinition.id);
         const instancesOfPieceOwned = instancesOfPieceOwnedOnBench.concat(instancesOfPieceOwnedOnBoard);
-        const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(card.id);
+        const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(pieceDefinition.id);
 
         if (shouldEvolve) {
             instancesOfPieceOwned.forEach(p => this.popPieceIfExists(p.id));
             if (instancesOfPieceOwnedOnBoard.length > 0) {
                 this.sendBoardUpdate();
             }
+
+            return this.handleEvolution(getPokemonDefinition(pieceDefinition.evolvedFormId));
         }
 
-        const piece = createBenchPokemon(this.id, shouldEvolve ? pieceDefinition.evolvedFormId : card.id, slot);
-
-        this.addBenchPiece(piece);
+        return pieceDefinition.id;
     }
 
     private onSellPiece = (pieceId: string) => {
