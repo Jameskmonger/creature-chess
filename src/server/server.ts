@@ -13,16 +13,20 @@ export class Server {
     private playerContainer: PlayerContainer;
     private GAME_SIZE: number;
 
-    constructor(gameSize: number) {
+    constructor(gameSize: number, botCount: number) {
         this.GAME_SIZE = gameSize;
+
+        this.playerContainer = new PlayerContainer(this.GAME_SIZE, this.deck);
+
+        for (let i = 0; i < botCount; i++) {
+            this.playerContainer.addBot();
+        }
     }
 
     public listen(port: number) {
         const server = io.listen(port);
 
         log("Server listening on port " + port);
-
-        this.playerContainer = new PlayerContainer(this.GAME_SIZE, this.deck);
 
         this.playerContainer.onLobbyFull(this.startGame);
 

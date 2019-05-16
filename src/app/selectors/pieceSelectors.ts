@@ -6,7 +6,7 @@ import { TileCoordinates, TileType } from "@common/position";
 import { localPlayerIdSelector } from "./gameSelector";
 
 const piecesSelector = (state: AppState, props: { type: TileType }) =>
-    props.type === TileType.BOARD ? state.pieces : state.benchPieces;
+    props.type === TileType.BOARD ? state.board : state.bench;
 const positionSelector = (state: AppState, props: { position: TileCoordinates }) => props.position;
 
 const piecePositionFilter =
@@ -23,5 +23,5 @@ export const tilePieceSelector = createSelector(
 export const ownedPieceSelector = (state: AppState) => {
     const playerId = localPlayerIdSelector(state);
 
-    return state.pieces.filter(p => p.ownerId === playerId);
+    return state.board.filter(p => p.ownerId === playerId);
 };

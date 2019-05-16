@@ -7,14 +7,12 @@ import { PokemonPiece, PlayerListPlayer, PokemonCard } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
-import { piecesUpdated } from "../../actions/pieceActions";
+import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
 import { playerListUpdated } from "../../actions/playerListActions";
 import { cardsUpdated } from "../../actions/cardActions";
 import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
-import { benchPiecesUpdated } from "../../actions/benchPieceActions";
 import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
-import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "../../actiontypes/pieceActionTypes";
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
 import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
@@ -46,12 +44,12 @@ const subscribe = (socket: Socket) => {
         socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
             log("[BOARD_UPDATE]", packet);
 
-            emit(piecesUpdated(packet.pieces));
+            emit(BoardActions.piecesUpdated(packet.pieces));
         });
 
         socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
             log("[BENCH_UPDATE]", packet);
-            emit(benchPiecesUpdated(packet.pieces));
+            emit(BenchActions.benchPiecesUpdated(packet.pieces));
         });
 
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {
@@ -127,13 +125,13 @@ const writeActionsToPackets = function*() {
             }
         ),
         takeEvery<ActionWithPayload<{ pieceId: string }>>(
-            SELL_PIECE,
+            BoardActionTypes.SELL_PIECE,
             function*({ payload }) {
                 yield put(sendPacket(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId));
             }
         ),
         takeEvery<ActionWithPayload<{ piece: PokemonPiece, position: TileCoordinates }>>(
-            PIECE_MOVED_TO_BOARD,
+            BoardActionTypes.PIECE_MOVED_TO_BOARD,
             function*({ payload }) {
                 const packet: MovePiecePacket = {
                     id: payload.piece.id,
@@ -145,7 +143,7 @@ const writeActionsToPackets = function*() {
             }
         ),
         takeEvery<ActionWithPayload<{ piece: PokemonPiece, slot: number }>>(
-            PIECE_MOVED_TO_BENCH,
+            BoardActionTypes.PIECE_MOVED_TO_BENCH,
             function*({ payload }) {
                 const packet: MovePiecePacket = {
                     id: payload.piece.id,

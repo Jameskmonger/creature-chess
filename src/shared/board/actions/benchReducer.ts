@@ -1,13 +1,13 @@
-import { PokemonPiece, moveOrAddPiece } from "@common/pokemon-piece";
-import { BenchPiecesAction } from "../actions/benchPieceActions";
-import { BENCH_PIECE_MOVED, BENCH_PIECES_UPDATED } from "../actiontypes/benchPieceActionTypes";
 import { Reducer } from "react";
+import { PokemonPiece, moveOrAddPiece } from "@common/pokemon-piece";
 import { createTileCoordinates } from "@common/position";
-import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "../actiontypes/pieceActionTypes";
+import { BenchPiecesAction } from "./benchActions";
+import { BENCH_PIECE_MOVED, BENCH_PIECES_UPDATED } from "./benchActionTypes";
+import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "./boardActionTypes";
 
 const initialState = [];
 
-export const benchPieces: Reducer<PokemonPiece[], BenchPiecesAction> = (state = initialState, action) => {
+export const benchReducer: Reducer<PokemonPiece[], BenchPiecesAction> = (state = initialState, action) => {
     switch (action.type) {
         case BENCH_PIECES_UPDATED:
             return action.payload;

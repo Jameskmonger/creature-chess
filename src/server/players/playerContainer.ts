@@ -7,10 +7,30 @@ import uuid = require("uuid");
 import { FeedMessage } from "@common/feed-message";
 import { Constants, GamePhase } from "../../shared";
 import delay from "delay";
+import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
+import { Bot } from "./bot";
 
 const randomFromArray = <T>(array: T[]) => {
     return array[Math.floor(Math.random() * array.length)];
 };
+
+const BOT_NAMES = [
+    "Duke Horacio",
+    "Father Aereck",
+    "Prince Ali",
+    "Fred the Farmer",
+    "King Roald",
+    "Wise Old Man",
+    "Thessalia",
+    "Johnny the Beard",
+    "Delrith",
+    "Cap'n Izzy No-Beard",
+    "Sir Amik Varze",
+    "Party Pete",
+    "Make-over mage",
+    "Aggie",
+    "Evil Dave"
+];
 
 export class PlayerContainer {
     private GAME_SIZE: number;
@@ -28,9 +48,7 @@ export class PlayerContainer {
     public receiveConnection = (socket: io.Socket) => {
         log("Connection received");
 
-        const connection = new Connection(socket);
-
-        connection.onJoinGame(this.onJoinGame(connection));
+        socket.on(ClientToServerPacketOpcodes.JOIN_GAME, this.onJoinGame(socket));
     }
 
     public onLobbyFull(fn: () => void) {
@@ -42,14 +60,14 @@ export class PlayerContainer {
     }
 
     public updatePlayerLists = () => {
-        this.players.forEach(p => p.sendPlayerListUpdate(this.players));
+        this.players.forEach(p => p.onPlayerListUpdate(this.players));
     }
 
     public startPreparingPhase() {
         this.players
             .filter(p => p.isAlive())
             .forEach(p => {
-                p.rerollCards();
+                p.takeNewCardsFromDeck();
 
                 p.sendPreparingPhaseUpdate();
             });
@@ -88,7 +106,14 @@ export class PlayerContainer {
         return this.players.some(p => p.isAlive());
     }
 
-    private onJoinGame(connection: Connection) {
+    public addBot() {
+        const availableNames = BOT_NAMES.filter(n => this.players.map(p => p.name).includes(n) === false);
+        const name = randomFromArray(availableNames);
+
+        this.players.push(new Bot(`[BOT] ${name}`, this.deck));
+    }
+
+    private onJoinGame(socket: io.Socket) {
         return (name: string, response: (id: string) => void) => {
             if (!name
                 || this.acceptingPlayers === false
@@ -100,12 +125,12 @@ export class PlayerContainer {
 
             log(`${name} has joined the game`);
 
-            const player = new Player(connection, name, this.deck);
+            const player = new Connection(socket, name, this.deck);
 
             response(player.id);
 
             player.onHealthUpdate(this.updatePlayerLists);
-            player.onSendChatMessage(message => this.sendChatMessage(player, message));
+            player.onSendChatMessage(this.sendChatMessage(player));
 
             this.players.push(player);
 
@@ -118,11 +143,12 @@ export class PlayerContainer {
         };
     }
 
-    private sendChatMessage = (sender: Player, message: string) => {
-        this.sendFeedMessageToAllPlayers({ id: uuid(), fromId: sender.id, text: message }, [sender.id]);
-    }
+    private sendChatMessage = (sender: Player) =>
+        (message: string) => {
+            this.sendFeedMessageToAllPlayers({ id: uuid(), fromId: sender.id, text: message }, [sender.id]);
+        }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage, exceptPlayerIds: string[] = []) {
-        this.players.filter(p => exceptPlayerIds.indexOf(p.id) === -1).forEach(p => p.sendNewFeedMessage(message));
+        this.players.filter(p => exceptPlayerIds.indexOf(p.id) === -1).forEach(p => p.onNewFeedMessage(message));
     }
 }

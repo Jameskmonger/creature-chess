@@ -1,8 +1,6 @@
 import uuid = require("uuid/v4");
-import delay from "delay";
 import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
 import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "@common/pokemon-piece";
-import { Connection } from "./connection";
 import { MovePiecePacket, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
 import { TileCoordinates } from "@common/position";
 import { Match } from "../match";
@@ -10,6 +8,7 @@ import { log } from "../log";
 import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
 import { canDropPiece } from "@common/board";
+import { EventEmitter } from "events";
 import { PokemonDefinition } from "../../shared/pokemon-stats";
 
 enum StreakType {
@@ -17,51 +16,38 @@ enum StreakType {
     LOSS
 }
 
-export class Player {
+enum PlayerEvent {
+    UPDATE_HEALTH = "UPDATE_HEALTH",
+    SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE"
+}
+
+export abstract class Player {
     public readonly id: string;
     public readonly name: string;
-    private connection: Connection;
-    private deck: CardDeck;
+    public health: number = 100;
 
-    private cards: PokemonCard[] = [];
-    private board: PokemonPiece[] = [];
-    private bench: PokemonPiece[] = [];
-    private money: number = 3;
-    private health: number = 100;
+    protected cards: PokemonCard[] = [];
+    protected board: PokemonPiece[] = [];
+    protected bench: PokemonPiece[] = [];
+    protected money: number = 3;
+    protected level: number = 1;
+
+    private events = new EventEmitter();
+
+    private deck: CardDeck;
     private match: Match = null;
     private streak = {
         type: StreakType.WIN,
         amount: 0
     };
-    private level: number = 1;
     private xp: number = 0;
     private opponent?: Player = null;
     private gamePhase = GamePhase.WAITING;
 
-    private onHealthUpdateListeners: ((health: number) => void)[] = [];
-    private onSendChatMessageListeners: ((message: string) => void)[] = [];
-
-    constructor(connection: Connection, name: string, deck: CardDeck) {
-        this.connection = connection;
+    constructor(name: string, deck: CardDeck) {
         this.id = uuid();
         this.name = name;
         this.deck = deck;
-
-        connection.setPlayer(this);
-
-        connection.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.onPurchaseCard);
-        connection.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.onSellPiece);
-        connection.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.onRerollCards);
-        connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
-        connection.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
-        connection.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.onBuyXp);
-        connection.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
-        connection.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.onFinishMatch);
-
-        this.sendCardsUpdate();
-        this.sendBoardUpdate();
-        this.sendBenchUpdate();
-        this.sendMoneyUpdate();
     }
 
     public cloneBoard() {
@@ -69,40 +55,28 @@ export class Player {
     }
 
     public onHealthUpdate(fn: (health: number) => void) {
-        this.onHealthUpdateListeners.push(fn);
+        this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
     }
 
     public onSendChatMessage(fn: (message: string) => void) {
-        this.onSendChatMessageListeners.push(fn);
+        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
     }
 
     public isAlive() {
         return this.health > 0;
     }
 
-    public sendPlayerListUpdate(players: Player[]) {
-        const playerList: PlayerListPlayer[] = players.map(p => {
-            return {
-                id: p.id,
-                name: p.name,
-                health: p.health
-            };
-        });
-
-        this.connection.sendPlayerListUpdate(playerList);
-    }
-
     public sendPreparingPhaseUpdate() {
         this.match = null;
         this.gamePhase = GamePhase.PREPARING;
 
-        this.connection.sendPreparingPhaseUpdate(this.board);
+        this.onEnterPreparingPhase(this.board);
     }
 
     public async runPlayingPhase(seed: number, battleTimeout: Promise<void>) {
         this.gamePhase = GamePhase.PLAYING;
 
-        this.connection.sendPlayingPhaseUpdate(seed);
+        this.onEnterPlayingPhase(seed);
 
         const maxTurns = Constants.TURNS_IN_BATTLE;
 
@@ -132,14 +106,10 @@ export class Player {
 
         this.match = new Match(this, opponent);
 
-        this.connection.sendReadyPhaseUpdate(this.match.getBoard(), this.opponent.id);
+        this.onEnterReadyPhase(this.match.getBoard(), this.opponent.id);
     }
 
-    public sendNewFeedMessage(message: FeedMessage) {
-        this.connection.sendNewFeedMessage(message);
-    }
-
-    public rerollCards() {
+    public takeNewCardsFromDeck() {
         const cards = this.cards;
 
         this.deck.add(cards);
@@ -149,168 +119,33 @@ export class Player {
         this.setCards(newCards);
     }
 
-    private addXp(amount: number) {
-        for (let i = 0; i < amount; i++) {
-            const toNextLevel = getXpToNextLevel(this.level);
-            const newXp = this.xp + 1;
+    public abstract onPlayerListUpdate(players: Player[]);
 
-            if (newXp === toNextLevel) {
-                this.xp = 0;
-                this.level++;
-            } else {
-                this.xp = newXp;
-            }
-        }
+    public abstract onNewFeedMessage(message: FeedMessage);
 
-        this.connection.sendLevelUpdate(this.level, this.xp);
+    protected abstract onSetBoard(newValue: PokemonPiece[]);
+
+    protected abstract onSetBench(newValue: PokemonPiece[]);
+
+    protected abstract onSetMoney(newValue: number);
+
+    protected abstract onSetCards(newValue: PokemonCard[]);
+
+    protected abstract onLevelUpdate(level: number, xp: number);
+
+    protected abstract onEnterPreparingPhase(board: PokemonPiece[]);
+
+    protected abstract onEnterReadyPhase(board: PokemonPiece[], opponentId: string);
+
+    protected abstract onEnterPlayingPhase(seed: number);
+
+    protected abstract onEnterDeadPhase();
+
+    protected belowPieceLimit() {
+        return this.board.length < this.level;
     }
 
-    private getNewStreakBonus(win: boolean) {
-        const type = win ? StreakType.WIN : StreakType.LOSS;
-
-        if (this.streak.type !== type) {
-            this.streak.type = type;
-            this.streak.amount = 0;
-        }
-
-        this.streak.amount++;
-
-        if (this.streak.amount >= 9) {
-            return 3;
-        }
-
-        if (this.streak.amount >= 6) {
-            return 2;
-        }
-
-        if (this.streak.amount >= 3) {
-            return 1;
-        }
-
-        return 0;
-    }
-
-    private getMoneyForMatch(win: boolean) {
-        const base = 3;
-        const winBonus = win ? 1 : 0;
-        const streakBonus = this.getNewStreakBonus(win);
-
-        const total = base + winBonus + streakBonus;
-
-        log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, (${this.streak.amount}) streak bonus: ${streakBonus})`);
-
-        return total;
-    }
-
-    private addBenchPiece(piece: PokemonPiece) {
-        this.bench.push(piece);
-
-        this.sendBenchUpdate();
-    }
-
-    private ownsPiece = (pieceId: string) => {
-        return this.board.concat(this.bench).some(p => p.id === pieceId);
-    }
-
-    private setMoney(money: number) {
-        this.money = money;
-
-        this.sendMoneyUpdate();
-    }
-
-    private getFirstEmptyBenchSlot() {
-        for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
-            const piece = this.bench.some(p => p.position.x === slot);
-
-            if (!piece) {
-                return slot;
-            }
-        }
-
-        return null;
-    }
-
-    private setCards(cards: PokemonCard[], update: boolean = true) {
-        this.cards = cards;
-
-        if (update) {
-            this.sendCardsUpdate();
-        }
-    }
-
-    private getCardAtIndex(index: number) {
-        return this.cards[index];
-    }
-
-    private deleteCard(index: number) {
-        this.cards[index] = null;
-
-        this.sendCardsUpdate();
-    }
-
-    private setBoard(board: PokemonPiece[]) {
-        this.board = board;
-
-        this.sendBoardUpdate();
-    }
-
-    private setBench(bench: PokemonPiece[]) {
-        this.bench = bench;
-
-        this.sendBenchUpdate();
-    }
-
-    private addMoney(money: number) {
-        this.setMoney(this.money + money);
-    }
-
-    private sendDeathUpdate() {
-        this.gamePhase = GamePhase.DEAD;
-
-        this.connection.sendDeadPhaseUpdate();
-    }
-
-    private sendCardsUpdate() {
-        this.connection.sendCardsUpdate(this.cards);
-    }
-
-    private sendBoardUpdate() {
-        // turn all local pieces to face away
-        const turnedPieces = this.board.map(piece => ({
-            ...piece,
-            facingAway: true
-        }));
-
-        this.connection.sendBoardUpdate(turnedPieces);
-    }
-
-    private sendBenchUpdate() {
-        this.connection.sendBenchUpdate(this.bench);
-    }
-
-    private sendMoneyUpdate() {
-        this.connection.sendMoneyUpdate(this.money);
-    }
-
-    private subtractHealth(value: number) {
-        const oldValue = this.health;
-
-        let newValue = this.health - value;
-        newValue = (newValue < 0) ? 0 : newValue;
-
-        this.health = newValue;
-
-        if (newValue === 0 && oldValue !== 0) {
-            // player has just died
-            this.addCardsToDeck();
-            this.addPiecesToDeck();
-            this.sendDeathUpdate();
-        }
-
-        this.onHealthUpdateListeners.forEach(fn => fn(this.health));
-    }
-
-    private onPurchaseCard = (cardIndex: number) => {
+    protected purchaseCard = (cardIndex: number) => {
         const slot = this.getFirstEmptyBenchSlot();
         const card = this.getCardAtIndex(cardIndex);
 
@@ -360,7 +195,7 @@ export class Player {
         return pieceDefinition.id;
     }
 
-    private onSellPiece = (pieceId: string) => {
+    protected sellPiece = (pieceId: string) => {
         if (!this.ownsPiece(pieceId)) {
             log(`${this.name} attempted to sell piece with id ${pieceId} but did not own it`);
             return;
@@ -374,7 +209,7 @@ export class Player {
         this.deck.shuffle();
     }
 
-    private onBuyXp = () => {
+    protected buyXp = () => {
         if (this.isAlive() === false) {
             log(`${this.name} attempted to buy xp, but they are dead`);
             return;
@@ -393,7 +228,7 @@ export class Player {
         this.setMoney(money - Constants.BUY_XP_COST);
     }
 
-    private onRerollCards = () => {
+    protected rerollCards = () => {
         if (this.isAlive() === false) {
             log(`${this.name} attempted to reroll, but they are dead`);
             return;
@@ -407,16 +242,16 @@ export class Player {
             return;
         }
 
-        this.rerollCards();
+        this.takeNewCardsFromDeck();
 
         this.setMoney(money - Constants.REROLL_COST);
     }
 
-    private sendChatMessage = (message: string) => {
-        this.onSendChatMessageListeners.forEach(fn => fn(message));
+    protected sendChatMessage = (message: string) => {
+        this.events.emit(PlayerEvent.SEND_CHAT_MESSAGE, message);
     }
 
-    private onFinishMatch = () => {
+    protected finishMatch = () => {
         if (this.match === null) {
             return;
         }
@@ -424,7 +259,7 @@ export class Player {
         this.match.onClientFinishMatch();
     }
 
-    private movePieceToBench = (packet: MovePiecePacket) => {
+    protected movePieceToBench = (packet: MovePiecePacket) => {
         const piece = this.popPieceIfExists(packet.id, packet.from);
 
         if (piece === null) {
@@ -444,7 +279,7 @@ export class Player {
         this.bench.push(piece);
     }
 
-    private movePieceToBoard = (packet: MovePiecePacket) => {
+    protected movePieceToBoard = (packet: MovePiecePacket) => {
         const piece = this.popPieceIfExists(packet.id, packet.from);
 
         if (piece === null) {
@@ -462,6 +297,155 @@ export class Player {
 
         piece.position = packet.to;
         this.board.push(piece);
+    }
+
+    private addXp(amount: number) {
+        for (let i = 0; i < amount; i++) {
+            const toNextLevel = getXpToNextLevel(this.level);
+            const newXp = this.xp + 1;
+
+            if (newXp === toNextLevel) {
+                this.xp = 0;
+                this.level++;
+            } else {
+                this.xp = newXp;
+            }
+        }
+
+        this.onLevelUpdate(this.level, this.xp);
+    }
+
+    private getNewStreakBonus(win: boolean) {
+        const type = win ? StreakType.WIN : StreakType.LOSS;
+
+        if (this.streak.type !== type) {
+            this.streak.type = type;
+            this.streak.amount = 0;
+        }
+
+        this.streak.amount++;
+
+        if (this.streak.amount >= 9) {
+            return 3;
+        }
+
+        if (this.streak.amount >= 6) {
+            return 2;
+        }
+
+        if (this.streak.amount >= 3) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    private getMoneyForMatch(win: boolean) {
+        const base = 3;
+        const winBonus = win ? 1 : 0;
+        const streakBonus = this.getNewStreakBonus(win);
+
+        const total = base + winBonus + streakBonus;
+
+        log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, (${this.streak.amount}) streak bonus: ${streakBonus})`);
+
+        return total;
+    }
+
+    private addBenchPiece(piece: PokemonPiece) {
+        this.bench.push(piece);
+
+        this.onSetBench(this.bench);
+    }
+
+    private ownsPiece = (pieceId: string) => {
+        return this.board.concat(this.bench).some(p => p.id === pieceId);
+    }
+
+    private getFirstEmptyBenchSlot() {
+        for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
+            const piece = this.bench.some(p => p.position.x === slot);
+
+            if (!piece) {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
+    private getCardAtIndex(index: number) {
+        return this.cards[index];
+    }
+
+    private setBoard(board: PokemonPiece[]) {
+        this.board = board;
+
+        this.onSetBoard(board);
+    }
+
+    private setBench(bench: PokemonPiece[]) {
+        this.bench = bench;
+
+        this.onSetBench(bench);
+    }
+
+    private setMoney(money: number) {
+        this.money = money;
+
+        this.onSetMoney(money);
+    }
+
+    private addMoney(money: number) {
+        this.setMoney(this.money + money);
+    }
+
+    private setCards(cards: PokemonCard[], update: boolean = true) {
+        this.cards = cards;
+
+        if (update) {
+            this.onSetCards(cards);
+        }
+    }
+
+    private deleteCard(index: number) {
+        this.cards[index] = null;
+
+        this.onSetCards(this.cards);
+    }
+
+    private sendDeathUpdate() {
+        this.gamePhase = GamePhase.DEAD;
+
+        this.onEnterDeadPhase();
+    }
+
+    private sendBoardUpdate() {
+        // turn all local pieces to face away
+        const turnedPieces = this.board.map(piece => ({
+            ...piece,
+            facingAway: true
+        }));
+
+        this.onSetBoard(turnedPieces);
+    }
+
+    private subtractHealth(value: number) {
+        const oldValue = this.health;
+
+        let newValue = this.health - value;
+        newValue = (newValue < 0) ? 0 : newValue;
+
+        this.health = newValue;
+
+        if (newValue === 0 && oldValue !== 0) {
+            // player has just died
+            this.addCardsToDeck();
+            this.addPiecesToDeck();
+            this.sendDeathUpdate();
+        }
+
+        this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
 
     private addPiecesToDeck() {
@@ -503,9 +487,5 @@ export class Player {
         origin.splice(index, 1);
 
         return piece;
-    }
-
-    private belowPieceLimit() {
-        return this.board.length < this.level;
     }
 }
