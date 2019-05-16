@@ -3,6 +3,8 @@ import { FeedMessage } from "@common/feed-message";
 import { Player } from "./player";
 import { createTileCoordinates } from "../../shared/position";
 
+const PREFERRED_COLUMN_ORDER = [ 3, 4, 2, 5, 1, 6, 0, 7 ];
+
 export class Bot extends Player {
     public onPlayerListUpdate(players: Player[]) { /* nothing required, we're a bot */ }
 
@@ -86,7 +88,7 @@ export class Bot extends Player {
 
     private getFirstEmptyPosition() {
         for (let y = 4; y < Constants.GRID_SIZE; y++) {
-            for (let x = 0; x < Constants.GRID_SIZE; x++) {
+            for (const x of PREFERRED_COLUMN_ORDER) {
                 const boardPiece = this.board.find(p => p.position.x === x && p.position.y === y);
 
                 if (boardPiece === undefined) {
