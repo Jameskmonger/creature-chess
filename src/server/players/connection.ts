@@ -14,9 +14,12 @@ export class Connection extends Player {
 
         this.socket = socket;
 
-        //this.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.purchaseCard);
+        this.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.purchaseCard);
         this.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.sellPiece);
-        this.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.rerollCards);
+        this.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, () => {
+            this.rerollCards();
+            this.sendCardsUpdate(this.cards.getValue());
+        });
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
         this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
@@ -24,7 +27,6 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
 
         this.money.onChange(this.sendMoneyUpdate);
-        this.cards.onChange(this.sendCardsUpdate);
         this.board.onChange(this.sendBoardUpdate);
         this.bench.onChange(this.sendBenchUpdate);
         this.level.onChange(this.sendLevelUpdate);
@@ -63,6 +65,7 @@ export class Connection extends Player {
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+        this.sendCardsUpdate(this.cards.getValue());
     }
 
     protected onEnterReadyPhase() {

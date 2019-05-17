@@ -4,8 +4,7 @@ import { PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
 import { AppState } from "../../store/store";
 import { GamePhase } from "@common";
 import { createPieceFromCard } from "@common/pokemon-piece";
-import { getFirstEmptyBenchSlot, BoardActions } from "@common/board";
-import { createTileCoordinates, TileType } from "@common/position";
+import { getFirstEmptyBenchSlot, BenchActions } from "@common/board";
 import { moneyUpdateAction } from "../../actions/gameActions";
 
 export const cardShop = function*() {
@@ -41,7 +40,7 @@ export const cardShop = function*() {
             const piece = createPieceFromCard(localPlayerId, card, slot);
             const remainingCards = state.cards.map(c => c === card ? null : c);
 
-            yield put(BoardActions.pieceMoved(piece, createTileCoordinates(slot, null), TileType.BENCH));
+            yield put(BenchActions.benchPieceAdded(piece));
             yield put(moneyUpdateAction(money - card.cost));
             yield put(cardsUpdated(remainingCards));
         }

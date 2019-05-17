@@ -170,7 +170,7 @@ export abstract class Player {
         this.deleteCard(cardIndex);
 
         const piece = createPieceFromCard(this.id, card, slot);
-        const action = BoardActions.pieceMoved(piece, createTileCoordinates(slot, null), TileType.BENCH);
+        const action = BenchActions.benchPieceAdded(piece);
 
         this.bench.dispatch(action);
     }
