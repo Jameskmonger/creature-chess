@@ -10,45 +10,43 @@ import { OpponentProvider } from "./opponentProvider";
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
 
 export class Bot extends Player {
-    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
-        super(gamePhaseObservable, opponentProvider, deck, name);
-
-        this.gamePhaseObservable.onChange(newValue => {
-            if (newValue === GamePhase.PREPARING) {
-                const cardCosts = this.cards.getValue().map(({ cost }, index) => ({ cost, index }));
-                cardCosts.sort((a, b) => b.cost - a.cost);
-
-                for (const { index } of cardCosts) {
-                    if (this.shouldBuyCard(index)) {
-                        this.purchaseCard(index);
-                        break;
-                    }
-                }
-
-                // put pieces on the board until it's full (or we're out of pieces)
-                while (this.belowPieceLimit() && this.bench.getValue().length !== 0) {
-                    const firstBenchPiece = this.getFirstBenchPiece();
-                    const firstEmptyPosition = this.getFirstEmptyPosition();
-
-                    if (firstBenchPiece === null || firstEmptyPosition === null) {
-                        break;
-                    }
-
-                    this.movePieceToBoard({
-                        id: firstBenchPiece.id,
-                        from: firstBenchPiece.position,
-                        to: firstEmptyPosition
-                    });
-                }
-            } else if (newValue === GamePhase.PLAYING) {
-                this.finishMatch();
-            }
-        });
-    }
-
     public onPlayerListUpdate(players: Player[]) { /* nothing required, we're a bot */ }
 
     public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }
+
+    protected onEnterPreparingPhase() {
+        const cardCosts = this.cards.getValue().map(({ cost }, index) => ({ cost, index }));
+        cardCosts.sort((a, b) => b.cost - a.cost);
+
+        for (const { index } of cardCosts) {
+            if (this.shouldBuyCard(index)) {
+                this.purchaseCard(index);
+                break;
+            }
+        }
+
+        // put pieces on the board until it's full (or we're out of pieces)
+        while (this.belowPieceLimit() && this.bench.getValue().length !== 0) {
+            const firstBenchPiece = this.getFirstBenchPiece();
+            const firstEmptyPosition = this.getFirstEmptyPosition();
+
+            if (firstBenchPiece === null || firstEmptyPosition === null) {
+                break;
+            }
+
+            this.movePieceToBoard({
+                id: firstBenchPiece.id,
+                from: firstBenchPiece.position,
+                to: firstEmptyPosition
+            });
+        }
+    }
+
+    protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
+
+    protected onEnterPlayingPhase() {
+        this.finishMatch();
+    }
 
     protected onLevelUpdate(level: number, xp: number) { /* nothing required, we're a bot */ }
 

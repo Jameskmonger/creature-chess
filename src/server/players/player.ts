@@ -34,10 +34,7 @@ export abstract class Player {
     protected board = new ObservableWithReducer<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new ObservableWithReducer<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level: number = 1;
-    protected gamePhaseObservable: Observable<GamePhase>;
     protected match: Match = null;
-
-    private opponentProvider: OpponentProvider;
 
     private events = new EventEmitter();
 
@@ -47,47 +44,44 @@ export abstract class Player {
         amount: 0
     };
     private xp: number = 0;
+    private gamePhase: GamePhase = GamePhase.WAITING;
 
-    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
+    constructor(name: string) {
         this.id = uuid();
-        this.gamePhaseObservable = gamePhaseObservable;
-        this.opponentProvider = opponentProvider;
         this.name = name;
+    }
+
+    public setDeck(deck: CardDeck) {
         this.deck = deck;
-
-        this.gamePhaseObservable.onChange(newValue => {
-            if (this.isAlive() === false) {
-                return;
-            }
-
-            if (newValue === GamePhase.PREPARING) {
-                this.takeNewCardsFromDeck();
-            } else if (newValue === GamePhase.READY) {
-                const opponent = this.opponentProvider.getOpponent(this.id);
-
-                this.match = new Match(this, opponent);
-            }
-        });
     }
 
-    public cloneBoard() {
-        return this.board.getValue().map(p => clonePokemonPiece(p));
+    public enterPreparingPhase() {
+        this.gamePhase = GamePhase.PREPARING;
+
+        if (this.isAlive()) {
+            this.takeNewCardsFromDeck();
+        }
+
+        this.onEnterPreparingPhase();
     }
 
-    public onHealthUpdate(fn: (health: number) => void) {
-        this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
-    }
+    public enterReadyPhase(opponentProvider: OpponentProvider) {
+        this.gamePhase = GamePhase.READY;
 
-    public onSendChatMessage(fn: (message: string) => void) {
-        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
-    }
+        if (this.isAlive()) {
+            const opponent = opponentProvider.getOpponent(this.id);
 
-    public isAlive() {
-        return this.health > 0;
+            this.match = new Match(this, opponent);
+        }
+
+        this.onEnterReadyPhase();
     }
 
     public async fightMatch(battleTimeout: Promise<void>) {
+        this.gamePhase = GamePhase.PLAYING;
         const maxTurns = Constants.TURNS_IN_BATTLE;
+
+        this.onEnterPlayingPhase();
 
         const results = await this.match.fight(battleTimeout, maxTurns);
 
@@ -109,6 +103,22 @@ export abstract class Player {
         return { player: this, opponent: this.match.away, win, damage };
     }
 
+    public cloneBoard() {
+        return this.board.getValue().map(p => clonePokemonPiece(p));
+    }
+
+    public onHealthUpdate(fn: (health: number) => void) {
+        this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
+    }
+
+    public onSendChatMessage(fn: (message: string) => void) {
+        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
+    }
+
+    public isAlive() {
+        return this.health > 0;
+    }
+
     public takeNewCardsFromDeck() {
         const cards = this.cards.getValue();
 
@@ -124,6 +134,12 @@ export abstract class Player {
     public abstract onNewFeedMessage(message: FeedMessage);
 
     protected abstract onLevelUpdate(level: number, xp: number);
+
+    protected abstract onEnterPreparingPhase();
+
+    protected abstract onEnterReadyPhase();
+
+    protected abstract onEnterPlayingPhase();
 
     protected abstract onDeath();
 
@@ -245,7 +261,7 @@ export abstract class Player {
         }
 
         const benchTilePieces = this.bench.getValue().filter(p => p.position.x === packet.to.x);
-        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhaseObservable.getValue(), this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);
@@ -272,7 +288,7 @@ export abstract class Player {
         }
 
         const tilePieces = this.board.getValue().filter(p => p.position.x === packet.to.x && p.position.y === packet.to.y);
-        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhaseObservable.getValue(), this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);

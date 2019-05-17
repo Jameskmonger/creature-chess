@@ -44,9 +44,9 @@ export class Server {
             log("Connection received");
 
             socket.on(ClientToServerPacketOpcodes.JOIN_GAME, (name: string, response: (id: string) => void) => {
-                const player = this.game.addPlayer((gamePhaseObservable, opponentProvider, deck) => {
-                    return new Connection(socket, gamePhaseObservable, opponentProvider, deck, name);
-                });
+                const player = new Connection(socket, name);
+
+                this.game.addPlayer(player);
 
                 response(player.id);
             });
@@ -61,8 +61,6 @@ export class Server {
             ? `Bot Player #${playerNames.length}`
             : randomFromArray(availableNames);
 
-        this.game.addPlayer((gamePhaseObservable, opponentProvider, deck) => {
-            return new Bot(gamePhaseObservable, opponentProvider, deck, `[BOT] ${name}`);
-        });
+        this.game.addPlayer(new Bot(`[BOT] ${name}`));
     }
 }

@@ -12,8 +12,8 @@ type IncomingPacketListener = (...args: any[]) => void;
 export class Connection extends Player {
     private socket: Socket;
 
-    constructor(socket: Socket, gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
-        super(gamePhaseObservable, opponentProvider, deck, name);
+    constructor(socket: Socket, name: string) {
+        super(name);
 
         this.socket = socket;
 
@@ -25,19 +25,6 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
         this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
-
-        this.gamePhaseObservable.onChange(newValue => {
-            switch (newValue) {
-                case GamePhase.PREPARING:
-                    return this.sendPreparingPhaseUpdate();
-                case GamePhase.READY:
-                    return this.sendReadyPhaseUpdate();
-                case GamePhase.PLAYING:
-                    return this.sendPlayingPhaseUpdate();
-                default:
-                    return;
-            }
-        });
 
         this.money.onChange(this.sendMoneyUpdate);
         this.cards.onChange(this.sendCardsUpdate);
@@ -78,6 +65,37 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
     }
 
+    protected onEnterPreparingPhase() {
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.PREPARING,
+            payload: {
+                pieces: this.board.getValue()
+            }
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+    }
+
+    protected onEnterReadyPhase() {
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.READY,
+            payload: {
+                pieces: this.match.getBoard(),
+                opponentId: this.match.away.id
+            }
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+    }
+
+    protected onEnterPlayingPhase() {
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.PLAYING
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+    }
+
     private onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {
         this.socket.on(opcode, listener);
     }
@@ -111,36 +129,5 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
             pieces: newValue
         });
-    }
-
-    private sendPreparingPhaseUpdate = () => {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.PREPARING,
-            payload: {
-                pieces: this.board.getValue()
-            }
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-    }
-
-    private sendReadyPhaseUpdate = () => {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.READY,
-            payload: {
-                pieces: this.match.getBoard(),
-                opponentId: this.match.away.id
-            }
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-    }
-
-    private sendPlayingPhaseUpdate = () => {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.PLAYING
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 }
