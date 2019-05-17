@@ -29,7 +29,7 @@ export abstract class Player {
     public readonly name: string;
     public health: number = 100;
 
-    protected money = new Observable(1000);
+    protected money = new Observable(3);
     protected cards = new Observable<PokemonCard[]>([]);
     protected board = new Store<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new Store<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
