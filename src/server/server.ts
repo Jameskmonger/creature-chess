@@ -44,9 +44,9 @@ export class Server {
             log("Connection received");
 
             socket.on(ClientToServerPacketOpcodes.JOIN_GAME, (name: string, response: (id: string) => void) => {
-                const player = this.game.addPlayer((gamePhaseObservable, opponentProvider, deck) => {
-                    return new Connection(socket, gamePhaseObservable, opponentProvider, deck, name);
-                });
+                const player = new Connection(socket, name);
+
+                this.game.addPlayer(player);
 
                 response(player.id);
             });
@@ -55,11 +55,12 @@ export class Server {
 
     private addBot() {
         const playerNames = this.game.getPlayers().map(p => p.name);
-        const availableNames = BOT_NAMES.filter(n => playerNames.includes(n) === false);
-        const name = randomFromArray(availableNames);
+        const availableNames = BOT_NAMES.filter(n => playerNames.includes(`[BOT] ${n}`) === false);
 
-        this.game.addPlayer((gamePhaseObservable, opponentProvider, deck) => {
-            return new Bot(gamePhaseObservable, opponentProvider, deck, `[BOT] ${name}`);
-        });
+        const name = availableNames.length === 0
+            ? `Bot Player #${playerNames.length}`
+            : randomFromArray(availableNames);
+
+        this.game.addPlayer(new Bot(`[BOT] ${name}`));
     }
 }

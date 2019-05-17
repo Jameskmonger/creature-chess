@@ -1,3 +1,4 @@
+import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
 import { PokemonCard } from "@common/pokemon-card";
 import { PokemonDefinition } from "@common/pokemon-stats";
@@ -66,11 +67,12 @@ export class CardDeck {
         this.deck = shuffle(this.deck);
     }
 
-    private addDefinition(pokemon: PokemonDefinition) {
+    private addDefinition(definition: PokemonDefinition) {
         const card: PokemonCard = {
-            id: pokemon.id,
-            cost: pokemon.cost,
-            name: pokemon.name
+            id: uuid(),
+            definitionId: definition.id,
+            cost: definition.cost,
+            name: definition.name
         };
 
         this.deck.push(card);

@@ -1,17 +1,17 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
-import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "@common/pokemon-piece";
-import { MovePiecePacket, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
-import { TileCoordinates, TileType, createTileCoordinates } from "@common/position";
+import { PokemonCard, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
+import { PokemonPiece, clonePokemonPiece, createPokemon, createPieceFromCard } from "@common/pokemon-piece";
+import { MovePiecePacket } from "@common/packet-opcodes";
+import { TileType, createTileCoordinates } from "@common/position";
 import { Match } from "../match";
 import { log } from "../log";
 import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
-import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions } from "@common/board";
+import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { EventEmitter } from "events";
-import { PokemonDefinition } from "../../shared/pokemon-stats";
+import { PokemonDefinition, getPieceCost } from "../../shared/pokemon-stats";
 import { Observable } from "../observable/observable";
-import { ObservableWithReducer } from "../observable/observableWithReducer";
+import { Store } from "../observable/store";
 import { OpponentProvider } from "./opponentProvider";
 
 enum StreakType {
@@ -31,13 +31,10 @@ export abstract class Player {
 
     protected money = new Observable(3);
     protected cards = new Observable<PokemonCard[]>([]);
-    protected board = new ObservableWithReducer<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
-    protected bench = new ObservableWithReducer<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
-    protected level: number = 1;
-    protected gamePhaseObservable: Observable<GamePhase>;
+    protected board = new Store<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
+    protected bench = new Store<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
+    protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
-
-    private opponentProvider: OpponentProvider;
 
     private events = new EventEmitter();
 
@@ -46,48 +43,44 @@ export abstract class Player {
         type: StreakType.WIN,
         amount: 0
     };
-    private xp: number = 0;
+    private gamePhase: GamePhase = GamePhase.WAITING;
 
-    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
+    constructor(name: string) {
         this.id = uuid();
-        this.gamePhaseObservable = gamePhaseObservable;
-        this.opponentProvider = opponentProvider;
         this.name = name;
+    }
+
+    public setDeck(deck: CardDeck) {
         this.deck = deck;
-
-        this.gamePhaseObservable.onChange(newValue => {
-            if (this.isAlive() === false) {
-                return;
-            }
-
-            if (newValue === GamePhase.PREPARING) {
-                this.takeNewCardsFromDeck();
-            } else if (newValue === GamePhase.READY) {
-                const opponent = this.opponentProvider.getOpponent(this.id);
-
-                this.match = new Match(this, opponent);
-            }
-        });
     }
 
-    public cloneBoard() {
-        return this.board.getValue().map(p => clonePokemonPiece(p));
+    public enterPreparingPhase() {
+        this.gamePhase = GamePhase.PREPARING;
+
+        if (this.isAlive()) {
+            this.takeNewCardsFromDeck();
+        }
+
+        this.onEnterPreparingPhase();
     }
 
-    public onHealthUpdate(fn: (health: number) => void) {
-        this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
-    }
+    public enterReadyPhase(opponentProvider: OpponentProvider) {
+        this.gamePhase = GamePhase.READY;
 
-    public onSendChatMessage(fn: (message: string) => void) {
-        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
-    }
+        if (this.isAlive()) {
+            const opponent = opponentProvider.getOpponent(this.id);
 
-    public isAlive() {
-        return this.health > 0;
+            this.match = new Match(this, opponent);
+        }
+
+        this.onEnterReadyPhase();
     }
 
     public async fightMatch(battleTimeout: Promise<void>) {
+        this.gamePhase = GamePhase.PLAYING;
         const maxTurns = Constants.TURNS_IN_BATTLE;
+
+        this.onEnterPlayingPhase();
 
         const results = await this.match.fight(battleTimeout, maxTurns);
 
@@ -109,6 +102,22 @@ export abstract class Player {
         return { player: this, opponent: this.match.away, win, damage };
     }
 
+    public cloneBoard() {
+        return this.board.getValue().map(p => clonePokemonPiece(p));
+    }
+
+    public onHealthUpdate(fn: (health: number) => void) {
+        this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
+    }
+
+    public onSendChatMessage(fn: (message: string) => void) {
+        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
+    }
+
+    public isAlive() {
+        return this.health > 0;
+    }
+
     public takeNewCardsFromDeck() {
         const cards = this.cards.getValue();
 
@@ -123,22 +132,27 @@ export abstract class Player {
 
     public abstract onNewFeedMessage(message: FeedMessage);
 
-    protected abstract onLevelUpdate(level: number, xp: number);
+    protected abstract onEnterPreparingPhase();
+
+    protected abstract onEnterReadyPhase();
+
+    protected abstract onEnterPlayingPhase();
 
     protected abstract onDeath();
 
     protected belowPieceLimit() {
-        return this.board.getValue().length < this.level;
+        return this.board.getValue().length < this.level.getValue().level;
     }
 
     protected purchaseCard = (cardIndex: number) => {
-        const slot = this.getFirstEmptyBenchSlot();
-        const card = this.getCardAtIndex(cardIndex);
+        const slot = getFirstEmptyBenchSlot(this.bench.getValue());
 
         if (slot === null) {
             log(`${this.name} attempted to buy a card but has no empty slot`);
             return;
         }
+
+        const card = this.getCardAtIndex(cardIndex);
 
         if (!card) {
             log(`${this.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
@@ -155,12 +169,9 @@ export abstract class Player {
         this.money.setValue(money - card.cost);
         this.deleteCard(cardIndex);
 
-        const pieceDefinition = getPokemonDefinition(card.id);
-        const definitionIdToAdd = this.handleEvolution(pieceDefinition);
+        const piece = createPieceFromCard(this.id, card, slot);
 
-        const piece = createBenchPokemon(this.id, definitionIdToAdd, slot);
-
-        this.bench.dispatch(BoardActions.pieceMoved(piece, createTileCoordinates(slot, null), TileType.BENCH));
+        this.addPieceToBench(piece);
     }
 
     protected sellPiece = (pieceId: string) => {
@@ -171,8 +182,7 @@ export abstract class Player {
             return;
         }
 
-        // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
-        const pieceCost = getPokemonDefinition(piece.pokemonId).cost || 6;
+        const pieceCost = getPieceCost(piece.pokemonId);
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
         this.deck.shuffle();
@@ -245,7 +255,7 @@ export abstract class Player {
         }
 
         const benchTilePieces = this.bench.getValue().filter(p => p.position.x === packet.to.x);
-        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhaseObservable.getValue(), this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);
@@ -272,7 +282,7 @@ export abstract class Player {
         }
 
         const tilePieces = this.board.getValue().filter(p => p.position.x === packet.to.x && p.position.y === packet.to.y);
-        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhaseObservable.getValue(), this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);
@@ -285,38 +295,58 @@ export abstract class Player {
         this.board.dispatch(action);
     }
 
-    private handleEvolution = (pieceDefinition: PokemonDefinition) => {
-        const instancesOfPieceOwnedOnBench = this.bench.getValue().filter(p => p.pokemonId === pieceDefinition.id);
-        const instancesOfPieceOwnedOnBoard = this.board.getValue().filter(p => p.pokemonId === pieceDefinition.id);
-        const instancesOfPieceOwned = instancesOfPieceOwnedOnBench.concat(instancesOfPieceOwnedOnBoard);
-        const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(pieceDefinition.id);
+    private addPieceToBench(piece: PokemonPiece) {
+        const action = BenchActions.benchPieceAdded(piece);
 
-        if (shouldEvolve) {
-            instancesOfPieceOwned.forEach(p => {
-                this.bench.dispatch(BoardActions.sellPiece(p.id));
-                this.board.dispatch(BoardActions.sellPiece(p.id));
-            });
+        this.bench.dispatch(action);
 
-            return this.handleEvolution(getPokemonDefinition(pieceDefinition.evolvedFormId));
+        this.checkForEvolutions(piece);
+    }
+
+    private checkForEvolutions(piece: PokemonPiece) {
+        const { evolvedFormId } = getPokemonDefinition(piece.pokemonId);
+
+        if (!evolvedFormId) {
+            return;
         }
 
-        return pieceDefinition.id;
+        const board = this.board.getValue();
+        const bench = this.bench.getValue();
+
+        const benchOthers = bench.filter(p => p.pokemonId !== piece.pokemonId);
+        const boardOthers = board.filter(p => p.pokemonId !== piece.pokemonId);
+
+        const totalInstances = (bench.length - benchOthers.length) + (board.length - boardOthers.length);
+
+        if (totalInstances < getRequiredQuantityToEvolve(piece.pokemonId)) {
+            return;
+        }
+
+        this.board.dispatch(BoardActions.piecesUpdated(boardOthers));
+        this.bench.dispatch(BenchActions.benchPiecesUpdated(benchOthers));
+
+        const slot = getFirstEmptyBenchSlot(benchOthers);
+
+        const newPiece = createPokemon(this.id, evolvedFormId, [slot, null], piece.id);
+        this.addPieceToBench(newPiece);
     }
 
     private addXp(amount: number) {
+        let { level, xp } = this.level.getValue();
+
         for (let i = 0; i < amount; i++) {
-            const toNextLevel = getXpToNextLevel(this.level);
-            const newXp = this.xp + 1;
+            const toNextLevel = getXpToNextLevel(level);
+            const newXp = xp + 1;
 
             if (newXp === toNextLevel) {
-                this.xp = 0;
-                this.level++;
+                xp = 0;
+                level++;
             } else {
-                this.xp = newXp;
+                xp = newXp;
             }
         }
 
-        this.onLevelUpdate(this.level, this.xp);
+        this.level.setValue({ level, xp });
     }
 
     private getNewStreakBonus(win: boolean) {
@@ -354,18 +384,6 @@ export abstract class Player {
         log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, (${this.streak.amount}) streak bonus: ${streakBonus})`);
 
         return total;
-    }
-
-    private getFirstEmptyBenchSlot() {
-        for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
-            const piece = this.bench.getValue().some(p => p.position.x === slot);
-
-            if (!piece) {
-                return slot;
-            }
-        }
-
-        return null;
     }
 
     private getCardAtIndex(index: number) {
@@ -410,8 +428,8 @@ export abstract class Player {
         boardPieces.forEach(p => this.deck.addPiece(p));
         benchPieces.forEach(p => this.deck.addPiece(p));
 
-        this.board.setValue([]);
-        this.bench.setValue([]);
+        this.board.dispatch(BoardActions.piecesUpdated([]));
+        this.bench.dispatch(BenchActions.benchPiecesUpdated([]));
 
         this.deck.shuffle();
     }

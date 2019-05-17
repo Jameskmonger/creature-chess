@@ -2,7 +2,7 @@ import { Reducer } from "react";
 import { PokemonPiece, moveOrAddPiece } from "@common/pokemon-piece";
 import { createTileCoordinates } from "@common/position";
 import { BenchPiecesAction } from "./benchActions";
-import { BENCH_PIECES_UPDATED } from "./benchActionTypes";
+import { BENCH_PIECES_UPDATED, BENCH_PIECE_ADDED } from "./benchActionTypes";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "./boardActionTypes";
 
 const initialState = [];
@@ -11,6 +11,8 @@ export const benchReducer: Reducer<PokemonPiece[], BenchPiecesAction> = (state =
     switch (action.type) {
         case BENCH_PIECES_UPDATED:
             return action.payload;
+        case BENCH_PIECE_ADDED:
+            return [...state, action.payload.piece];
         case PIECE_MOVED_TO_BENCH:
             const target = {
                 ...action.payload.piece,

@@ -1,16 +1,15 @@
 import uuid = require("uuid");
 import delay from "delay";
-import { Observable } from "./observable/observable";
-import { GamePhase, Constants, getAllDefinitions } from "../shared";
+import { GamePhase, Constants, getAllDefinitions } from "@common";
+import { FeedMessage } from "@common/feed-message";
 import { Player } from "./players/player";
 import { OpponentProvider } from "./players/opponentProvider";
 import { CardDeck } from "./cardDeck";
 import { log } from "./log";
-import { FeedMessage } from "../shared/feed-message";
 
 export class Game {
     private GAME_SIZE: number;
-    private phase = new Observable(GamePhase.WAITING);
+    private phase = GamePhase.WAITING;
     private opponentProvider = new OpponentProvider();
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
@@ -25,19 +24,23 @@ export class Game {
     }
 
     public canAddPlayer() {
-        return this.players.length < this.GAME_SIZE && this.phase.getValue() === GamePhase.WAITING;
+        return this.players.length < this.GAME_SIZE && this.phase === GamePhase.WAITING;
     }
 
-    public addPlayer(factory: (phase: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck) => Player) {
+    public addPlayer(player: Player) {
         if (this.canAddPlayer() === false) {
             return;
         }
 
-        const player = factory(this.phase, this.opponentProvider, this.deck);
-
         player.onHealthUpdate(this.updatePlayerLists);
+        player.onSendChatMessage(message => this.sendFeedMessageToAllPlayers({
+            id: uuid(),
+            text: message,
+            fromId: player.id
+        }, [player.id]));
 
         this.players.push(player);
+        player.setDeck(this.deck);
         this.updatePlayerLists();
 
         setTimeout(() => {
@@ -64,7 +67,9 @@ export class Game {
     private async runPreparingPhase() {
         log(`Entering phase ${GamePhase[GamePhase.PREPARING]}`);
 
-        this.phase.setValue(GamePhase.PREPARING);
+        this.phase = GamePhase.PREPARING;
+
+        this.players.forEach(p => p.enterPreparingPhase());
 
         await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
     }
@@ -72,7 +77,9 @@ export class Game {
     private async runReadyPhase() {
         log(`Entering phase ${GamePhase[GamePhase.READY]}`);
 
-        this.phase.setValue(GamePhase.READY);
+        this.phase = GamePhase.READY;
+
+        this.players.forEach(p => p.enterReadyPhase(this.opponentProvider));
 
         await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
     }
@@ -80,7 +87,7 @@ export class Game {
     private async runPlayingPhase() {
         log(`Entering phase ${GamePhase[GamePhase.PLAYING]}`);
 
-        this.phase.setValue(GamePhase.PLAYING);
+        this.phase = GamePhase.PLAYING;
 
         await this.fightBattles();
     }

@@ -2,6 +2,7 @@ import uuid = require("uuid/v4");
 import { Direction, TileCoordinates, createTileCoordinates } from "./position";
 import { GRID_SIZE } from "./constants";
 import { getPokemonStats } from "./pokemon-details";
+import { PokemonCard } from "./pokemon-card";
 
 export interface AttackDetails {
     direction: Direction;
@@ -35,10 +36,10 @@ export interface PokemonPiece {
 
 export const initialCoolDown = 1000;
 
-export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): PokemonPiece => {
+export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number], id?: string): PokemonPiece => {
     const stats = getPokemonStats(pokemonId);
     return {
-        id: uuid(),
+        id: id || uuid(),
         ownerId,
         pokemonId,
         position: createTileCoordinates(...position),
@@ -49,9 +50,10 @@ export const createPokemon = (ownerId: string, pokemonId: number, position: [num
     };
 };
 
-export const clonePokemonPiece = (piece: PokemonPiece) => createPokemon(piece.ownerId, piece.pokemonId, [piece.position.x, piece.position.y]);
+export const createPieceFromCard = (ownerId: string, card: PokemonCard, slot: number) =>
+    createPokemon(ownerId, card.definitionId, [ slot, null ], card.id);
 
-export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => createPokemon(ownerId, pokemonId, [ slot, null ]);
+export const clonePokemonPiece = (piece: PokemonPiece) => createPokemon(piece.ownerId, piece.pokemonId, [piece.position.x, piece.position.y]);
 
 export const moveOrAddPiece = <T extends PokemonPiece>(allPieces: T[], target: T) => {
     const result: T[] = [];

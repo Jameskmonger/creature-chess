@@ -1,56 +1,49 @@
-import { PokemonPiece, PokemonCard, Constants, GamePhase } from "@common";
+import { Constants } from "@common";
 import { FeedMessage } from "@common/feed-message";
+import { createTileCoordinates } from "@common/position";
 import { Player } from "./player";
-import { createTileCoordinates } from "../../shared/position";
-import { CardDeck } from "../cardDeck";
-import { Observable } from "../observable/observable";
-import { OpponentProvider } from "./opponentProvider";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
 
 export class Bot extends Player {
-    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
-        super(gamePhaseObservable, opponentProvider, deck, name);
-
-        this.gamePhaseObservable.onChange(newValue => {
-            if (newValue === GamePhase.PREPARING) {
-                const cardCosts = this.cards.getValue().map(({ cost }, index) => ({ cost, index }));
-                cardCosts.sort((a, b) => b.cost - a.cost);
-
-                for (const { index } of cardCosts) {
-                    if (this.shouldBuyCard(index)) {
-                        this.purchaseCard(index);
-                        break;
-                    }
-                }
-
-                // put pieces on the board until it's full (or we're out of pieces)
-                while (this.belowPieceLimit() && this.bench.getValue().length !== 0) {
-                    const firstBenchPiece = this.getFirstBenchPiece();
-                    const firstEmptyPosition = this.getFirstEmptyPosition();
-
-                    if (firstBenchPiece === null || firstEmptyPosition === null) {
-                        break;
-                    }
-
-                    this.movePieceToBoard({
-                        id: firstBenchPiece.id,
-                        from: firstBenchPiece.position,
-                        to: firstEmptyPosition
-                    });
-                }
-            } else if (newValue === GamePhase.PLAYING) {
-                this.finishMatch();
-            }
-        });
-    }
-
     public onPlayerListUpdate(players: Player[]) { /* nothing required, we're a bot */ }
 
     public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }
 
-    protected onLevelUpdate(level: number, xp: number) { /* nothing required, we're a bot */ }
+    protected onEnterPreparingPhase() {
+        const cardCosts = this.cards.getValue().map(({ cost }, index) => ({ cost, index }));
+        cardCosts.sort((a, b) => b.cost - a.cost);
+
+        for (const { index } of cardCosts) {
+            if (this.shouldBuyCard(index)) {
+                this.purchaseCard(index);
+                break;
+            }
+        }
+
+        // put pieces on the board until it's full (or we're out of pieces)
+        while (this.belowPieceLimit() && this.bench.getValue().length !== 0) {
+            const firstBenchPiece = this.getFirstBenchPiece();
+            const firstEmptyPosition = this.getFirstEmptyPosition();
+
+            if (firstBenchPiece === null || firstEmptyPosition === null) {
+                break;
+            }
+
+            this.movePieceToBoard({
+                id: firstBenchPiece.id,
+                from: firstBenchPiece.position,
+                to: firstEmptyPosition
+            });
+        }
+    }
+
+    protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
+
+    protected onEnterPlayingPhase() {
+        this.finishMatch();
+    }
 
     protected onDeath() { /* nothing required, we're a bot */ }
 
@@ -66,7 +59,7 @@ export class Bot extends Player {
         }
 
         // bots shouldn't buy magikarp until they can wait to combine it
-        if (card.id === 129) {
+        if (card.definitionId === 129) {
             return false;
         }
 
@@ -74,7 +67,7 @@ export class Bot extends Player {
     }
 
     private belowPieceLimitIncludingBench() {
-        return (this.board.getValue().length + this.bench.getValue().length) < this.level;
+        return (this.board.getValue().length + this.bench.getValue().length) < this.level.getValue().level;
     }
 
     private getFirstBenchPiece() {
