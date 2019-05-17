@@ -34,6 +34,11 @@ export class Game {
         }
 
         player.onHealthUpdate(this.updatePlayerLists);
+        player.onSendChatMessage(message => this.sendFeedMessageToAllPlayers({
+            id: uuid(),
+            text: message,
+            fromId: player.id
+        }, [player.id]));
 
         this.players.push(player);
         player.setDeck(this.deck);
