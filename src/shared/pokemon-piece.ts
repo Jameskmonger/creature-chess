@@ -35,10 +35,10 @@ export interface PokemonPiece {
 
 export const initialCoolDown = 1000;
 
-export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number]): PokemonPiece => {
+export const createPokemon = (ownerId: string, pokemonId: number, position: [number, number], id?: string): PokemonPiece => {
     const stats = getPokemonStats(pokemonId);
     return {
-        id: uuid(),
+        id: id || uuid(),
         ownerId,
         pokemonId,
         position: createTileCoordinates(...position),
@@ -50,8 +50,6 @@ export const createPokemon = (ownerId: string, pokemonId: number, position: [num
 };
 
 export const clonePokemonPiece = (piece: PokemonPiece) => createPokemon(piece.ownerId, piece.pokemonId, [piece.position.x, piece.position.y]);
-
-export const createBenchPokemon = (ownerId: string, pokemonId: number, slot: number) => createPokemon(ownerId, pokemonId, [ slot, null ]);
 
 export const moveOrAddPiece = <T extends PokemonPiece>(allPieces: T[], target: T) => {
     const result: T[] = [];

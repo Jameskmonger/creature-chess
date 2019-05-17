@@ -59,7 +59,7 @@ export class Bot extends Player {
         }
 
         // bots shouldn't buy magikarp until they can wait to combine it
-        if (card.id === 129) {
+        if (card.definitionId === 129) {
             return false;
         }
 

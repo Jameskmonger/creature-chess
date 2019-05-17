@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import { PokemonCard, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
-import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "@common/pokemon-piece";
+import { PokemonPiece, clonePokemonPiece, createPokemon } from "@common/pokemon-piece";
 import { MovePiecePacket } from "@common/packet-opcodes";
 import { TileType, createTileCoordinates } from "@common/position";
 import { Match } from "../match";
@@ -168,12 +168,10 @@ export abstract class Player {
         this.money.setValue(money - card.cost);
         this.deleteCard(cardIndex);
 
-        const pieceDefinition = getPokemonDefinition(card.id);
-        const definitionIdToAdd = this.handleEvolution(pieceDefinition);
+        const piece = this.createPieceFromCard(card, slot);
+        const action = BoardActions.pieceMoved(piece, createTileCoordinates(slot, null), TileType.BENCH);
 
-        const piece = createBenchPokemon(this.id, definitionIdToAdd, slot);
-
-        this.bench.dispatch(BoardActions.pieceMoved(piece, createTileCoordinates(slot, null), TileType.BENCH));
+        this.bench.dispatch(action);
     }
 
     protected sellPiece = (pieceId: string) => {
@@ -310,7 +308,9 @@ export abstract class Player {
                 this.board.dispatch(BoardActions.sellPiece(p.id));
             });
 
-            return this.handleEvolution(getPokemonDefinition(pieceDefinition.evolvedFormId));
+            const definition = getPokemonDefinition(pieceDefinition.evolvedFormId);
+
+            return this.handleEvolution(definition);
         }
 
         return pieceDefinition.id;
@@ -446,5 +446,9 @@ export abstract class Player {
             || this.bench.getValue().find(p => p.id === id)
             || null
         );
+    }
+
+    private createPieceFromCard(card: PokemonCard, slot: number) {
+        return createPokemon(this.id, card.definitionId, [ slot, null ], card.id);
     }
 }
