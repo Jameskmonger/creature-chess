@@ -2100,4 +2100,5 @@ const pokemonArray = Array.from(pokemonMap.values());
 export const getPokemonDefinition = (id: number) => pokemonMap.get(id);
 export const getAllDefinitions = () => pokemonArray;
 
+// When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
 export const getPieceCost = (id: number) => getPokemonDefinition(id).cost || 6;

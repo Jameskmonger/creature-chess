@@ -182,7 +182,6 @@ export abstract class Player {
             return;
         }
 
-        // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
         const pieceCost = getPieceCost(piece.pokemonId);
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
