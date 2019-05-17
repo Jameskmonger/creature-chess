@@ -8,4 +8,4 @@ import * as BoardActions from "./actions/boardActions";
 import * as BoardActionTypes from "./actions/boardActionTypes";
 import * as BenchActions from "./actions/benchActions";
 import * as BenchActionTypes from "./actions/benchActionTypes";
-export { BoardActions, BoardActionTypes, BenchActions };
+export { BoardActions, BoardActionTypes, BenchActions, BenchActionTypes };

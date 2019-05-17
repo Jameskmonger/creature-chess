@@ -2099,3 +2099,5 @@ const pokemonArray = Array.from(pokemonMap.values());
 
 export const getPokemonDefinition = (id: number) => pokemonMap.get(id);
 export const getAllDefinitions = () => pokemonArray;
+
+export const getPieceCost = (id: number) => getPokemonDefinition(id).cost || 6;

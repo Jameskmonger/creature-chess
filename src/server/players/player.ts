@@ -9,7 +9,7 @@ import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
 import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { EventEmitter } from "events";
-import { PokemonDefinition } from "../../shared/pokemon-stats";
+import { PokemonDefinition, getPieceCost } from "../../shared/pokemon-stats";
 import { Observable } from "../observable/observable";
 import { Store } from "../observable/store";
 import { OpponentProvider } from "./opponentProvider";
@@ -29,7 +29,7 @@ export abstract class Player {
     public readonly name: string;
     public health: number = 100;
 
-    protected money = new Observable(3);
+    protected money = new Observable(1000);
     protected cards = new Observable<PokemonCard[]>([]);
     protected board = new Store<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new Store<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
@@ -170,9 +170,8 @@ export abstract class Player {
         this.deleteCard(cardIndex);
 
         const piece = createPieceFromCard(this.id, card, slot);
-        const action = BenchActions.benchPieceAdded(piece);
 
-        this.bench.dispatch(action);
+        this.addPieceToBench(piece);
     }
 
     protected sellPiece = (pieceId: string) => {
@@ -184,7 +183,7 @@ export abstract class Player {
         }
 
         // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
-        const pieceCost = getPokemonDefinition(piece.pokemonId).cost || 6;
+        const pieceCost = getPieceCost(piece.pokemonId);
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
         this.deck.shuffle();
@@ -297,24 +296,40 @@ export abstract class Player {
         this.board.dispatch(action);
     }
 
-    private handleEvolution = (pieceDefinition: PokemonDefinition) => {
-        const instancesOfPieceOwnedOnBench = this.bench.getValue().filter(p => p.pokemonId === pieceDefinition.id);
-        const instancesOfPieceOwnedOnBoard = this.board.getValue().filter(p => p.pokemonId === pieceDefinition.id);
-        const instancesOfPieceOwned = instancesOfPieceOwnedOnBench.concat(instancesOfPieceOwnedOnBoard);
-        const shouldEvolve = !!pieceDefinition.evolvedFormId && instancesOfPieceOwned.length + 1 >= getRequiredQuantityToEvolve(pieceDefinition.id);
+    private addPieceToBench(piece: PokemonPiece) {
+        const action = BenchActions.benchPieceAdded(piece);
 
-        if (shouldEvolve) {
-            instancesOfPieceOwned.forEach(p => {
-                this.bench.dispatch(BoardActions.sellPiece(p.id));
-                this.board.dispatch(BoardActions.sellPiece(p.id));
-            });
+        this.bench.dispatch(action);
 
-            const definition = getPokemonDefinition(pieceDefinition.evolvedFormId);
+        this.checkForEvolutions(piece);
+    }
 
-            return this.handleEvolution(definition);
+    private checkForEvolutions(piece: PokemonPiece) {
+        const { evolvedFormId } = getPokemonDefinition(piece.pokemonId);
+
+        if (!evolvedFormId) {
+            return;
         }
 
-        return pieceDefinition.id;
+        const board = this.board.getValue();
+        const bench = this.bench.getValue();
+
+        const benchOthers = bench.filter(p => p.pokemonId !== piece.pokemonId);
+        const boardOthers = board.filter(p => p.pokemonId !== piece.pokemonId);
+
+        const totalInstances = (bench.length - benchOthers.length) + (board.length - boardOthers.length);
+
+        if (totalInstances < getRequiredQuantityToEvolve(piece.pokemonId)) {
+            return;
+        }
+
+        this.board.dispatch(BoardActions.piecesUpdated(boardOthers));
+        this.bench.dispatch(BenchActions.benchPiecesUpdated(benchOthers));
+
+        const slot = getFirstEmptyBenchSlot(benchOthers);
+
+        const newPiece = createPokemon(this.id, evolvedFormId, [slot, null], piece.id);
+        this.addPieceToBench(newPiece);
     }
 
     private addXp(amount: number) {

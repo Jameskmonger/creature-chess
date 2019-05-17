@@ -4,7 +4,7 @@ import { BENCH_PIECES_UPDATED, BENCH_PIECE_ADDED } from "./benchActionTypes";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "./boardActionTypes";
 
 type BenchPiecesUpdatedAction = ({ type: BENCH_PIECES_UPDATED, payload: PokemonPiece[] });
-type BenchPieceAddedAction = ({ type: BENCH_PIECE_ADDED, payload: { piece: PokemonPiece }});
+export type BenchPieceAddedAction = ({ type: BENCH_PIECE_ADDED, payload: { piece: PokemonPiece }});
 
 export type BenchPiecesAction =
   BenchPiecesUpdatedAction

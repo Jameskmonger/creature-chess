@@ -4,6 +4,7 @@ import { phaseTimer } from "./actions/phaseTimer";
 import { processBattle } from "./actions/process-battle";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { cardShop } from "./actions/cardShop";
+import { evolution } from "./actions/evolution";
 
 export const rootSaga = function*() {
     yield all([
@@ -11,6 +12,7 @@ export const rootSaga = function*() {
         yield fork(phaseTimer),
         yield fork(processBattle),
         yield fork(preventAccidentalClose),
-        yield fork(cardShop)
+        yield fork(cardShop),
+        yield fork(evolution)
     ]);
 };

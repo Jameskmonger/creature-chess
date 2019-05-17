@@ -2,7 +2,7 @@ import { GamePhase } from "./game-phase";
 
 export const GRID_SIZE = 8;
 export const PHASE_LENGTHS = {
-    [GamePhase.PREPARING]: 10,
+    [GamePhase.PREPARING]: 30,
     [GamePhase.READY]: 1,
     [GamePhase.PLAYING]: 30
 };
