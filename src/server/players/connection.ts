@@ -30,15 +30,7 @@ export class Connection extends Player {
         this.cards.onChange(this.sendCardsUpdate);
         this.board.onChange(this.sendBoardUpdate);
         this.bench.onChange(this.sendBenchUpdate);
-    }
-
-    public onLevelUpdate(level: number, xp: number) {
-        const packet: LevelUpdatePacket = {
-            level,
-            xp
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.LEVEL_UPDATE, packet);
+        this.level.onChange(this.sendLevelUpdate);
     }
 
     public onDeath() {
@@ -129,5 +121,14 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
             pieces: newValue
         });
+    }
+
+    private sendLevelUpdate = ({ level, xp }: { level: number, xp: number }) => {
+        const packet: LevelUpdatePacket = {
+            level,
+            xp
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.LEVEL_UPDATE, packet);
     }
 }

@@ -48,8 +48,6 @@ export class Bot extends Player {
         this.finishMatch();
     }
 
-    protected onLevelUpdate(level: number, xp: number) { /* nothing required, we're a bot */ }
-
     protected onDeath() { /* nothing required, we're a bot */ }
 
     private shouldBuyCard(index: number) {
@@ -72,7 +70,7 @@ export class Bot extends Player {
     }
 
     private belowPieceLimitIncludingBench() {
-        return (this.board.getValue().length + this.bench.getValue().length) < this.level;
+        return (this.board.getValue().length + this.bench.getValue().length) < this.level.getValue().level;
     }
 
     private getFirstBenchPiece() {

@@ -33,7 +33,7 @@ export abstract class Player {
     protected cards = new Observable<PokemonCard[]>([]);
     protected board = new ObservableWithReducer<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new ObservableWithReducer<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
-    protected level: number = 1;
+    protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
 
     private events = new EventEmitter();
@@ -43,7 +43,6 @@ export abstract class Player {
         type: StreakType.WIN,
         amount: 0
     };
-    private xp: number = 0;
     private gamePhase: GamePhase = GamePhase.WAITING;
 
     constructor(name: string) {
@@ -133,8 +132,6 @@ export abstract class Player {
 
     public abstract onNewFeedMessage(message: FeedMessage);
 
-    protected abstract onLevelUpdate(level: number, xp: number);
-
     protected abstract onEnterPreparingPhase();
 
     protected abstract onEnterReadyPhase();
@@ -144,7 +141,7 @@ export abstract class Player {
     protected abstract onDeath();
 
     protected belowPieceLimit() {
-        return this.board.getValue().length < this.level;
+        return this.board.getValue().length < this.level.getValue().level;
     }
 
     protected purchaseCard = (cardIndex: number) => {
@@ -320,19 +317,21 @@ export abstract class Player {
     }
 
     private addXp(amount: number) {
+        let { level, xp } = this.level.getValue();
+
         for (let i = 0; i < amount; i++) {
-            const toNextLevel = getXpToNextLevel(this.level);
-            const newXp = this.xp + 1;
+            const toNextLevel = getXpToNextLevel(level);
+            const newXp = xp + 1;
 
             if (newXp === toNextLevel) {
-                this.xp = 0;
-                this.level++;
+                xp = 0;
+                level++;
             } else {
-                this.xp = newXp;
+                xp = newXp;
             }
         }
 
-        this.onLevelUpdate(this.level, this.xp);
+        this.level.setValue({ level, xp });
     }
 
     private getNewStreakBonus(win: boolean) {
