@@ -1,10 +1,7 @@
-import { PokemonPiece, PokemonCard, Constants, GamePhase } from "@common";
+import { Constants } from "@common";
 import { FeedMessage } from "@common/feed-message";
+import { createTileCoordinates } from "@common/position";
 import { Player } from "./player";
-import { createTileCoordinates } from "../../shared/position";
-import { CardDeck } from "../cardDeck";
-import { Observable } from "../observable/observable";
-import { OpponentProvider } from "./opponentProvider";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];

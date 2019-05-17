@@ -1,8 +1,8 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, PlayerListPlayer, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
+import { PokemonCard, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
 import { PokemonPiece, clonePokemonPiece, createBenchPokemon } from "@common/pokemon-piece";
-import { MovePiecePacket, ClientToServerPacketOpcodes } from "@common/packet-opcodes";
-import { TileCoordinates, TileType, createTileCoordinates } from "@common/position";
+import { MovePiecePacket } from "@common/packet-opcodes";
+import { TileType, createTileCoordinates } from "@common/position";
 import { Match } from "../match";
 import { log } from "../log";
 import { CardDeck } from "../cardDeck";

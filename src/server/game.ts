@@ -1,12 +1,11 @@
 import uuid = require("uuid");
 import delay from "delay";
-import { Observable } from "./observable/observable";
-import { GamePhase, Constants, getAllDefinitions } from "../shared";
+import { GamePhase, Constants, getAllDefinitions } from "@common";
+import { FeedMessage } from "@common/feed-message";
 import { Player } from "./players/player";
 import { OpponentProvider } from "./players/opponentProvider";
 import { CardDeck } from "./cardDeck";
 import { log } from "./log";
-import { FeedMessage } from "../shared/feed-message";
 
 export class Game {
     private GAME_SIZE: number;

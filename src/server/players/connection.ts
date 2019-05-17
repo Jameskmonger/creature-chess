@@ -3,9 +3,6 @@ import { Player } from "./player";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
 import { PlayerListPlayer, PokemonPiece, GamePhase, PokemonCard } from "@common";
 import { FeedMessage } from "@common/feed-message";
-import { CardDeck } from "../cardDeck";
-import { Observable } from "../observable/observable";
-import { OpponentProvider } from "./opponentProvider";
 
 type IncomingPacketListener = (...args: any[]) => void;
 
