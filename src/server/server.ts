@@ -55,8 +55,11 @@ export class Server {
 
     private addBot() {
         const playerNames = this.game.getPlayers().map(p => p.name);
-        const availableNames = BOT_NAMES.filter(n => playerNames.includes(n) === false);
-        const name = randomFromArray(availableNames);
+        const availableNames = BOT_NAMES.filter(n => playerNames.includes(`[BOT] ${n}`) === false);
+
+        const name = availableNames.length === 0
+            ? `Bot Player #${playerNames.length}`
+            : randomFromArray(availableNames);
 
         this.game.addPlayer((gamePhaseObservable, opponentProvider, deck) => {
             return new Bot(gamePhaseObservable, opponentProvider, deck, `[BOT] ${name}`);
