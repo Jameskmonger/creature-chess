@@ -3,7 +3,7 @@ import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../types";
 import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
-import { PokemonPiece, PlayerListPlayer, PokemonCard } from "@common";
+import { PokemonPiece, PlayerListPlayer, Models } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
@@ -57,7 +57,7 @@ const subscribe = (socket: Socket) => {
             emit(playerListUpdated(players));
         });
 
-        socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: PokemonCard[]) => {
+        socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: Models.Card[]) => {
             log("[CARDS_UPDATE]", cards);
             emit(cardsUpdated(cards));
         });

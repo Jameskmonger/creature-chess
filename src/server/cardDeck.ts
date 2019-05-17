@@ -1,11 +1,10 @@
 import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
-import { PokemonCard } from "@common/pokemon-card";
 import { PokemonDefinition } from "@common/pokemon-stats";
-import { PokemonPiece, getRequiredQuantityToEvolve } from "@common";
+import { PokemonPiece, getRequiredQuantityToEvolve, Models } from "@common";
 
 export class CardDeck {
-    public deck: PokemonCard[];
+    public deck: Models.Card[];
     private definitions: PokemonDefinition[];
 
     constructor(definitions: PokemonDefinition[]) {
@@ -35,7 +34,7 @@ export class CardDeck {
     }
 
     public take(count: number) {
-        const output: PokemonCard[] = [];
+        const output: Models.Card[] = [];
 
         for (let i = 0; i < count; i++) {
             const popped = this.deck.pop();
@@ -46,7 +45,7 @@ export class CardDeck {
         return output;
     }
 
-    public add(cards: PokemonCard[]) {
+    public add(cards: Models.Card[]) {
         const cardsToAdd = cards.filter(card => card !== null);
 
         for (const card of cardsToAdd) {
@@ -68,7 +67,7 @@ export class CardDeck {
     }
 
     private addDefinition(definition: PokemonDefinition) {
-        const card: PokemonCard = {
+        const card: Models.Card = {
             id: uuid(),
             definitionId: definition.id,
             cost: definition.cost,

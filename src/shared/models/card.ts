@@ -1,4 +1,4 @@
-export interface PokemonCard {
+export interface Card {
     id: string;
     definitionId: number;
     cost: number;

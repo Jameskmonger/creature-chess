@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { reducers } from "../reducers";
-import { PokemonCard, PlayerListPlayer, GamePhase } from "@common";
+import { Models, PlayerListPlayer, GamePhase } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PokemonPiece } from "@common/pokemon-piece";
 import createSagaMiddleware from "redux-saga";
@@ -27,7 +27,7 @@ export interface AppState {
     bench: PokemonPiece[];
     game: GameState;
     playerList: PlayerListPlayer[];
-    cards: PokemonCard[];
+    cards: Models.Card[];
     localPlayer: LocalPlayerState;
     feedMessages: FeedMessage[];
 }

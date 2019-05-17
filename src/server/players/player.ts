@@ -1,5 +1,5 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
+import { Models, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
 import { PokemonPiece, clonePokemonPiece, createPokemon, createPieceFromCard } from "@common/pokemon-piece";
 import { MovePiecePacket } from "@common/packet-opcodes";
 import { TileType, createTileCoordinates } from "@common/position";
@@ -30,7 +30,7 @@ export abstract class Player {
     public health: number = 100;
 
     protected money = new Observable(3);
-    protected cards = new Observable<PokemonCard[]>([]);
+    protected cards = new Observable<Models.Card[]>([]);
     protected board = new Store<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new Store<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level = new Observable({ level: 1, xp: 0 });
