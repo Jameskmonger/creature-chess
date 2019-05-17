@@ -17,7 +17,7 @@ export class Bot extends Player {
 
         for (const { index } of cardCosts) {
             if (this.shouldBuyCard(index)) {
-                this.purchaseCard(index);
+                this.buyCard(index);
                 break;
             }
         }

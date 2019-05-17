@@ -11,7 +11,7 @@ import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
 import { playerListUpdated } from "../../actions/playerListActions";
 import { cardsUpdated } from "../../actions/cardActions";
 import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
-import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
+import { REROLL_CARDS, BUY_CARD } from "../../actiontypes/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
@@ -109,7 +109,7 @@ const writeActionsToPackets = function*() {
         takeEvery(
             REROLL_CARDS,
             function*() {
-                yield put(sendPacket(ClientToServerPacketOpcodes.REROLL_CARDS));
+                yield put(sendPacket(ClientToServerPacketOpcodes.BUY_REROLL));
             }
         ),
         takeEvery(
@@ -119,9 +119,9 @@ const writeActionsToPackets = function*() {
             }
         ),
         takeEvery<ActionWithPayload<{ index: number }>>(
-            PURCHASE_CARD,
+            BUY_CARD,
             function*({ payload }) {
-                yield put(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, payload.index));
+                yield put(sendPacket(ClientToServerPacketOpcodes.BUY_CARD, payload.index));
             }
         ),
         takeEvery<ActionWithPayload<{ pieceId: string }>>(
