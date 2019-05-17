@@ -12,8 +12,8 @@ type IncomingPacketListener = (...args: any[]) => void;
 export class Connection extends Player {
     private socket: Socket;
 
-    constructor(socket: Socket, gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, name: string, deck: CardDeck) {
-        super(gamePhaseObservable, opponentProvider, name, deck);
+    constructor(socket: Socket, gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
+        super(gamePhaseObservable, opponentProvider, deck, name);
 
         this.socket = socket;
 

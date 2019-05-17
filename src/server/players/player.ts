@@ -48,7 +48,7 @@ export abstract class Player {
     };
     private xp: number = 0;
 
-    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, name: string, deck: CardDeck) {
+    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
         this.id = uuid();
         this.gamePhaseObservable = gamePhaseObservable;
         this.opponentProvider = opponentProvider;

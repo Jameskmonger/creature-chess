@@ -1,27 +1,37 @@
 import io = require("socket.io");
-import delay from "delay";
-import { Player } from "./players/player";
-import { CardDeck } from "./cardDeck";
-import { GamePhase, getAllDefinitions, Constants } from "@common";
 import { log } from "./log";
-import { PlayerContainer } from "./players/playerContainer";
-import { Observable } from "./observable/observable";
+import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
+import { Game } from "./game";
+import { Connection } from "./players/connection";
+import { Bot } from "./players/bot";
+import { randomFromArray } from "./random-from-array";
+
+const BOT_NAMES = [
+    "Duke Horacio",
+    "Father Aereck",
+    "Prince Ali",
+    "Fred the Farmer",
+    "King Roald",
+    "Wise Old Man",
+    "Thessalia",
+    "Johnny the Beard",
+    "Delrith",
+    "Cap'n Izzy No-Beard",
+    "Sir Amik Varze",
+    "Party Pete",
+    "Make-over mage",
+    "Aggie",
+    "Evil Dave"
+];
 
 export class Server {
-    private deck = new CardDeck(getAllDefinitions());
-    private playerContainer: PlayerContainer;
-    private gamePhaseObservable = new Observable(GamePhase.WAITING);
-    private GAME_SIZE: number;
+    private game: Game;
 
     constructor(gameSize: number, botCount: number) {
-        this.GAME_SIZE = gameSize;
-
-        this.gamePhaseObservable.setMaxListeners(this.GAME_SIZE * 2);
-
-        this.playerContainer = new PlayerContainer(this.gamePhaseObservable, this.GAME_SIZE, this.deck);
+        this.game = new Game(gameSize);
 
         for (let i = 0; i < botCount; i++) {
-            this.playerContainer.addBot();
+            this.addBot();
         }
     }
 
@@ -30,44 +40,26 @@ export class Server {
 
         log("Server listening on port " + port);
 
-        this.playerContainer.onLobbyFull(this.startGame);
+        server.on("connection", (socket: io.Socket) => {
+            log("Connection received");
 
-        server.on("connection", this.playerContainer.receiveConnection);
+            socket.on(ClientToServerPacketOpcodes.JOIN_GAME, (name: string, response: (id: string) => void) => {
+                const player = this.game.addPlayer((gamePhaseObservable, opponentProvider, deck) => {
+                    return new Connection(socket, gamePhaseObservable, opponentProvider, deck, name);
+                });
+
+                response(player.id);
+            });
+        });
     }
 
-    private startGame = async () => {
-        while (this.playerContainer.playersAlive()) {
-            await this.runPreparingPhase();
+    private addBot() {
+        const playerNames = this.game.getPlayers().map(p => p.name);
+        const availableNames = BOT_NAMES.filter(n => playerNames.includes(n) === false);
+        const name = randomFromArray(availableNames);
 
-            await this.runReadyPhase();
-
-            await this.runPlayingPhase();
-        }
-
-        this.playerContainer.updatePlayerLists();
-    }
-
-    private async runPreparingPhase() {
-        log(`Entering phase ${GamePhase[GamePhase.PREPARING]}`);
-
-        this.gamePhaseObservable.setValue(GamePhase.PREPARING);
-
-        await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
-    }
-
-    private async runReadyPhase() {
-        log(`Entering phase ${GamePhase[GamePhase.READY]}`);
-
-        this.gamePhaseObservable.setValue(GamePhase.READY);
-
-        await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
-    }
-
-    private async runPlayingPhase() {
-        log(`Entering phase ${GamePhase[GamePhase.PLAYING]}`);
-
-        this.gamePhaseObservable.setValue(GamePhase.PLAYING);
-
-        await this.playerContainer.startPlayingPhase();
+        this.game.addPlayer((gamePhaseObservable, opponentProvider, deck) => {
+            return new Bot(gamePhaseObservable, opponentProvider, deck, `[BOT] ${name}`);
+        });
     }
 }

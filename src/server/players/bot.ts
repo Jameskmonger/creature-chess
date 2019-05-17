@@ -10,8 +10,8 @@ import { OpponentProvider } from "./opponentProvider";
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
 
 export class Bot extends Player {
-    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, name: string, deck: CardDeck) {
-        super(gamePhaseObservable, opponentProvider, name, deck);
+    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, deck: CardDeck, name: string) {
+        super(gamePhaseObservable, opponentProvider, deck, name);
 
         this.gamePhaseObservable.onChange(newValue => {
             if (newValue === GamePhase.PREPARING) {
