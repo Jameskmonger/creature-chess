@@ -18,7 +18,7 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.sellPiece);
         this.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, () => {
             this.rerollCards();
-            this.sendCardsUpdate(this.cards.getValue());
+            this.sendCardsUpdate();
         });
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
@@ -27,8 +27,6 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
 
         this.money.onChange(this.sendMoneyUpdate);
-        this.board.onChange(this.sendBoardUpdate);
-        this.bench.onChange(this.sendBenchUpdate);
         this.level.onChange(this.sendLevelUpdate);
     }
 
@@ -65,7 +63,9 @@ export class Connection extends Player {
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-        this.sendCardsUpdate(this.cards.getValue());
+        this.sendBoardUpdate();
+        this.sendBenchUpdate();
+        this.sendCardsUpdate();
     }
 
     protected onEnterReadyPhase() {
@@ -100,12 +100,12 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.MONEY_UPDATE, newValue);
     }
 
-    private sendCardsUpdate = (newValue: PokemonCard[]) => {
-        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, newValue);
+    private sendCardsUpdate = () => {
+        this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards.getValue());
     }
 
-    private sendBoardUpdate = (newValue: PokemonPiece[]) => {
-        const turnedPieces = newValue.map(piece => ({
+    private sendBoardUpdate = () => {
+        const turnedPieces = this.board.getValue().map(piece => ({
             ...piece,
             facingAway: true
         }));
@@ -117,9 +117,9 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
     }
 
-    private sendBenchUpdate = (newValue: PokemonPiece[]) => {
+    private sendBenchUpdate = () => {
         this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: newValue
+            pieces: this.bench.getValue()
         });
     }
 

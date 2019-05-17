@@ -11,7 +11,7 @@ import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, g
 import { EventEmitter } from "events";
 import { PokemonDefinition } from "../../shared/pokemon-stats";
 import { Observable } from "../observable/observable";
-import { ObservableWithReducer } from "../observable/observableWithReducer";
+import { Store } from "../observable/store";
 import { OpponentProvider } from "./opponentProvider";
 
 enum StreakType {
@@ -31,8 +31,8 @@ export abstract class Player {
 
     protected money = new Observable(3);
     protected cards = new Observable<PokemonCard[]>([]);
-    protected board = new ObservableWithReducer<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
-    protected bench = new ObservableWithReducer<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
+    protected board = new Store<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
+    protected bench = new Store<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
 
@@ -414,8 +414,8 @@ export abstract class Player {
         boardPieces.forEach(p => this.deck.addPiece(p));
         benchPieces.forEach(p => this.deck.addPiece(p));
 
-        this.board.setValue([]);
-        this.bench.setValue([]);
+        this.board.dispatch(BoardActions.piecesUpdated([]));
+        this.bench.dispatch(BenchActions.benchPiecesUpdated([]));
 
         this.deck.shuffle();
     }
