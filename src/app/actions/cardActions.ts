@@ -1,12 +1,12 @@
 import { PokemonCard } from "@common";
-import { CARDS_UPDATED, REROLL_CARDS, PURCHASE_CARD } from "../actiontypes/cardActionTypes";
+import { CARDS_UPDATED, REROLL_CARDS, BUY_CARD } from "../actiontypes/cardActionTypes";
 
-export type PurchaseCardAction = ({ type: PURCHASE_CARD, payload: { index: number }});
+export type BuyCardAction = ({ type: BUY_CARD, payload: { index: number }});
 
 export type CardAction =
     ({ type: CARDS_UPDATED, payload: PokemonCard[] })
     | ({ type: REROLL_CARDS })
-    | PurchaseCardAction;
+    | BuyCardAction;
 
 export const cardsUpdated = (payload: PokemonCard[]) => ({
     type: CARDS_UPDATED,
@@ -17,8 +17,8 @@ export const rerollCards = () => ({
     type: REROLL_CARDS
 });
 
-export const purchaseCard = (index: number) => ({
-    type: PURCHASE_CARD,
+export const buyCard = (index: number) => ({
+    type: BUY_CARD,
     payload: {
         index
     }
