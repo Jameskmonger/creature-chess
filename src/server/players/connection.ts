@@ -14,7 +14,7 @@ export class Connection extends Player {
 
         this.socket = socket;
 
-        this.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.purchaseCard);
+        //this.onReceivePacket(ClientToServerPacketOpcodes.PURCHASE_CARD, this.purchaseCard);
         this.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.sellPiece);
         this.onReceivePacket(ClientToServerPacketOpcodes.REROLL_CARDS, this.rerollCards);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);

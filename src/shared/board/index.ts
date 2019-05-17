@@ -1,4 +1,5 @@
 export { canDropPiece } from "./can-drop-piece";
+export { getFirstEmptyBenchSlot } from "./get-first-empty-bench-slot";
 
 export { boardReducer } from "./actions/boardReducer";
 export { benchReducer } from "./actions/benchReducer";

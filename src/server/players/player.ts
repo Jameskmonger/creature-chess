@@ -1,13 +1,13 @@
 import uuid = require("uuid/v4");
 import { PokemonCard, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
-import { PokemonPiece, clonePokemonPiece, createPokemon } from "@common/pokemon-piece";
+import { PokemonPiece, clonePokemonPiece, createPokemon, createPieceFromCard } from "@common/pokemon-piece";
 import { MovePiecePacket } from "@common/packet-opcodes";
 import { TileType, createTileCoordinates } from "@common/position";
 import { Match } from "../match";
 import { log } from "../log";
 import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
-import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions } from "@common/board";
+import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { EventEmitter } from "events";
 import { PokemonDefinition } from "../../shared/pokemon-stats";
 import { Observable } from "../observable/observable";
@@ -145,13 +145,14 @@ export abstract class Player {
     }
 
     protected purchaseCard = (cardIndex: number) => {
-        const slot = this.getFirstEmptyBenchSlot();
-        const card = this.getCardAtIndex(cardIndex);
+        const slot = getFirstEmptyBenchSlot(this.bench.getValue());
 
         if (slot === null) {
             log(`${this.name} attempted to buy a card but has no empty slot`);
             return;
         }
+
+        const card = this.getCardAtIndex(cardIndex);
 
         if (!card) {
             log(`${this.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
@@ -168,7 +169,7 @@ export abstract class Player {
         this.money.setValue(money - card.cost);
         this.deleteCard(cardIndex);
 
-        const piece = this.createPieceFromCard(card, slot);
+        const piece = createPieceFromCard(this.id, card, slot);
         const action = BoardActions.pieceMoved(piece, createTileCoordinates(slot, null), TileType.BENCH);
 
         this.bench.dispatch(action);
@@ -371,18 +372,6 @@ export abstract class Player {
         return total;
     }
 
-    private getFirstEmptyBenchSlot() {
-        for (let slot = 0; slot < Constants.GRID_SIZE; slot++) {
-            const piece = this.bench.getValue().some(p => p.position.x === slot);
-
-            if (!piece) {
-                return slot;
-            }
-        }
-
-        return null;
-    }
-
     private getCardAtIndex(index: number) {
         return this.cards.getValue()[index];
     }
@@ -446,9 +435,5 @@ export abstract class Player {
             || this.bench.getValue().find(p => p.id === id)
             || null
         );
-    }
-
-    private createPieceFromCard(card: PokemonCard, slot: number) {
-        return createPokemon(this.id, card.definitionId, [ slot, null ], card.id);
     }
 }
