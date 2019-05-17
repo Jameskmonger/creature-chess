@@ -58,7 +58,7 @@ export abstract class Player {
         this.gamePhase = GamePhase.PREPARING;
 
         if (this.isAlive()) {
-            this.takeNewCardsFromDeck();
+            this.rerollCards();
         }
 
         this.onEnterPreparingPhase();
@@ -118,7 +118,7 @@ export abstract class Player {
         return this.health > 0;
     }
 
-    public takeNewCardsFromDeck() {
+    public rerollCards() {
         const cards = this.cards.getValue();
 
         this.deck.add(cards);
@@ -144,7 +144,7 @@ export abstract class Player {
         return this.board.getValue().length < this.level.getValue().level;
     }
 
-    protected purchaseCard = (cardIndex: number) => {
+    protected buyCard = (cardIndex: number) => {
         const slot = getFirstEmptyBenchSlot(this.bench.getValue());
 
         if (slot === null) {
@@ -210,7 +210,7 @@ export abstract class Player {
         this.money.setValue(money - Constants.BUY_XP_COST);
     }
 
-    protected rerollCards = () => {
+    protected buyReroll = () => {
         if (this.isAlive() === false) {
             log(`${this.name} attempted to reroll, but they are dead`);
             return;
@@ -224,7 +224,7 @@ export abstract class Player {
             return;
         }
 
-        this.takeNewCardsFromDeck();
+        this.rerollCards();
 
         this.money.setValue(money - Constants.REROLL_COST);
     }

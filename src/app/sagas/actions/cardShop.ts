@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { PurchaseCardAction, cardsUpdated } from "../../actions/cardActions";
-import { PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
+import { BuyCardAction, cardsUpdated } from "../../actions/cardActions";
+import { BUY_CARD } from "../../actiontypes/cardActionTypes";
 import { AppState } from "../../store/store";
 import { GamePhase } from "@common";
 import { createPieceFromCard } from "@common/pokemon-piece";
@@ -8,8 +8,8 @@ import { getFirstEmptyBenchSlot, BenchActions } from "@common/board";
 import { moneyUpdateAction } from "../../actions/gameActions";
 
 export const cardShop = function*() {
-    yield takeEvery<PurchaseCardAction>(
-        PURCHASE_CARD,
+    yield takeEvery<BuyCardAction>(
+        BUY_CARD,
         function*(action) {
             const state: AppState = yield select();
 
