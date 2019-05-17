@@ -43,5 +43,5 @@ export interface LevelUpdatePacket {
 export type PhaseUpdatePacket
     = ({ phase: GamePhase.PREPARING, payload: { pieces: PokemonPiece[] } })
         | ({ phase: GamePhase.READY, payload: { pieces: PokemonPiece[], opponentId: string }})
-        | ({ phase: GamePhase.PLAYING, payload: { seed: number } })
+        | ({ phase: GamePhase.PLAYING })
         | ({ phase: GamePhase.DEAD });

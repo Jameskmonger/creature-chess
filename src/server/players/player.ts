@@ -12,6 +12,7 @@ import { EventEmitter } from "events";
 import { PokemonDefinition } from "../../shared/pokemon-stats";
 import { Observable } from "../observable/observable";
 import { ObservableWithReducer } from "../observable/observableWithReducer";
+import { OpponentProvider } from "./opponentProvider";
 
 enum StreakType {
     WIN,
@@ -33,23 +34,40 @@ export abstract class Player {
     protected board = new ObservableWithReducer<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new ObservableWithReducer<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level: number = 1;
+    protected gamePhaseObservable: Observable<GamePhase>;
+    protected match: Match = null;
+
+    private opponentProvider: OpponentProvider;
 
     private events = new EventEmitter();
 
     private deck: CardDeck;
-    private match: Match = null;
     private streak = {
         type: StreakType.WIN,
         amount: 0
     };
     private xp: number = 0;
-    private opponent?: Player = null;
-    private gamePhase = GamePhase.WAITING;
 
-    constructor(name: string, deck: CardDeck) {
+    constructor(gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, name: string, deck: CardDeck) {
         this.id = uuid();
+        this.gamePhaseObservable = gamePhaseObservable;
+        this.opponentProvider = opponentProvider;
         this.name = name;
         this.deck = deck;
+
+        this.gamePhaseObservable.onChange(newValue => {
+            if (this.isAlive() === false) {
+                return;
+            }
+
+            if (newValue === GamePhase.PREPARING) {
+                this.takeNewCardsFromDeck();
+            } else if (newValue === GamePhase.READY) {
+                const opponent = this.opponentProvider.getOpponent(this.id);
+
+                this.match = new Match(this, opponent);
+            }
+        });
     }
 
     public cloneBoard() {
@@ -68,23 +86,12 @@ export abstract class Player {
         return this.health > 0;
     }
 
-    public sendPreparingPhaseUpdate() {
-        this.match = null;
-        this.gamePhase = GamePhase.PREPARING;
-
-        this.onEnterPreparingPhase(this.board.getValue());
-    }
-
-    public async runPlayingPhase(seed: number, battleTimeout: Promise<void>) {
-        this.gamePhase = GamePhase.PLAYING;
-
-        this.onEnterPlayingPhase(seed);
-
+    public async fightMatch(battleTimeout: Promise<void>) {
         const maxTurns = Constants.TURNS_IN_BATTLE;
 
-        const results = await this.match.fight(seed, battleTimeout, maxTurns);
+        const results = await this.match.fight(battleTimeout, maxTurns);
 
-        log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.opponent.name}`);
+        log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.match.away.name}`);
 
         const damage = results.survivingAwayTeam.length * 3;
         this.subtractHealth(damage);
@@ -99,16 +106,7 @@ export abstract class Player {
 
         this.addXp(1);
 
-        return { player: this, opponent: this.opponent, win, damage };
-    }
-
-    public sendReadyPhaseUpdate(opponent: Player) {
-        this.opponent = opponent;
-        this.gamePhase = GamePhase.READY;
-
-        this.match = new Match(this, opponent);
-
-        this.onEnterReadyPhase(this.match.getBoard(), this.opponent.id);
+        return { player: this, opponent: this.match.away, win, damage };
     }
 
     public takeNewCardsFromDeck() {
@@ -127,13 +125,7 @@ export abstract class Player {
 
     protected abstract onLevelUpdate(level: number, xp: number);
 
-    protected abstract onEnterPreparingPhase(board: PokemonPiece[]);
-
-    protected abstract onEnterReadyPhase(board: PokemonPiece[], opponentId: string);
-
-    protected abstract onEnterPlayingPhase(seed: number);
-
-    protected abstract onEnterDeadPhase();
+    protected abstract onDeath();
 
     protected belowPieceLimit() {
         return this.board.getValue().length < this.level;
@@ -253,7 +245,7 @@ export abstract class Player {
         }
 
         const benchTilePieces = this.bench.getValue().filter(p => p.position.x === packet.to.x);
-        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhase, this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhaseObservable.getValue(), this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);
@@ -280,7 +272,7 @@ export abstract class Player {
         }
 
         const tilePieces = this.board.getValue().filter(p => p.position.x === packet.to.x && p.position.y === packet.to.y);
-        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhaseObservable.getValue(), this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);
@@ -393,12 +385,6 @@ export abstract class Player {
         this.cards.setValue(newValue);
     }
 
-    private sendDeathUpdate() {
-        this.gamePhase = GamePhase.DEAD;
-
-        this.onEnterDeadPhase();
-    }
-
     private subtractHealth(value: number) {
         const oldValue = this.health;
 
@@ -411,7 +397,7 @@ export abstract class Player {
             // player has just died
             this.addCardsToDeck();
             this.addPiecesToDeck();
-            this.sendDeathUpdate();
+            this.onDeath();
         }
 
         this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);

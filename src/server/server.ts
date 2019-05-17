@@ -3,20 +3,22 @@ import delay from "delay";
 import { Player } from "./players/player";
 import { CardDeck } from "./cardDeck";
 import { GamePhase, getAllDefinitions, Constants } from "@common";
-import { SeedProvider } from "./seed-provider";
 import { log } from "./log";
 import { PlayerContainer } from "./players/playerContainer";
+import { Observable } from "./observable/observable";
 
 export class Server {
     private deck = new CardDeck(getAllDefinitions());
-    private seedProvider = new SeedProvider();
     private playerContainer: PlayerContainer;
+    private gamePhaseObservable = new Observable(GamePhase.WAITING);
     private GAME_SIZE: number;
 
     constructor(gameSize: number, botCount: number) {
         this.GAME_SIZE = gameSize;
 
-        this.playerContainer = new PlayerContainer(this.GAME_SIZE, this.deck);
+        this.gamePhaseObservable.setMaxListeners(this.GAME_SIZE * 2);
+
+        this.playerContainer = new PlayerContainer(this.gamePhaseObservable, this.GAME_SIZE, this.deck);
 
         for (let i = 0; i < botCount; i++) {
             this.playerContainer.addBot();
@@ -48,7 +50,7 @@ export class Server {
     private async runPreparingPhase() {
         log(`Entering phase ${GamePhase[GamePhase.PREPARING]}`);
 
-        this.playerContainer.startPreparingPhase();
+        this.gamePhaseObservable.setValue(GamePhase.PREPARING);
 
         await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
     }
@@ -56,16 +58,16 @@ export class Server {
     private async runReadyPhase() {
         log(`Entering phase ${GamePhase[GamePhase.READY]}`);
 
-        this.playerContainer.startReadyPhase();
+        this.gamePhaseObservable.setValue(GamePhase.READY);
 
         await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
     }
 
     private async runPlayingPhase() {
-        const newSeed = this.seedProvider.refreshSeed();
+        log(`Entering phase ${GamePhase[GamePhase.PLAYING]}`);
 
-        log(`Entering phase ${GamePhase[GamePhase.PLAYING]} (with seed ${newSeed})`);
+        this.gamePhaseObservable.setValue(GamePhase.PLAYING);
 
-        await this.playerContainer.startPlayingPhase(newSeed);
+        await this.playerContainer.startPlayingPhase();
     }
 }

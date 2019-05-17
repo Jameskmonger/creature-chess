@@ -9,10 +9,9 @@ import { Constants, GamePhase } from "../../shared";
 import delay from "delay";
 import { ClientToServerPacketOpcodes } from "../../shared/packet-opcodes";
 import { Bot } from "./bot";
-
-const randomFromArray = <T>(array: T[]) => {
-    return array[Math.floor(Math.random() * array.length)];
-};
+import { randomFromArray } from "../random-from-array";
+import { Observable } from "../observable/observable";
+import { OpponentProvider } from "./opponentProvider";
 
 const BOT_NAMES = [
     "Duke Horacio",
@@ -33,6 +32,8 @@ const BOT_NAMES = [
 ];
 
 export class PlayerContainer {
+    private gamePhaseObservable: Observable<GamePhase>;
+    private opponentProvider: OpponentProvider;
     private GAME_SIZE: number;
     private deck: CardDeck;
 
@@ -40,9 +41,13 @@ export class PlayerContainer {
     private acceptingPlayers: boolean = true;
     private onLobbyFullListeners: (() => void)[] = [];
 
-    constructor(gameSize: number, deck: CardDeck) {
+    constructor(gamePhaseObservable: Observable<GamePhase>, gameSize: number, deck: CardDeck) {
+        this.gamePhaseObservable = gamePhaseObservable;
         this.GAME_SIZE = gameSize;
         this.deck = deck;
+
+        this.opponentProvider = new OpponentProvider();
+        this.opponentProvider.setPlayers(this.players);
     }
 
     public receiveConnection = (socket: io.Socket) => {
@@ -63,32 +68,11 @@ export class PlayerContainer {
         this.players.forEach(p => p.onPlayerListUpdate(this.players));
     }
 
-    public startPreparingPhase() {
-        this.players
-            .filter(p => p.isAlive())
-            .forEach(p => {
-                p.takeNewCardsFromDeck();
-
-                p.sendPreparingPhaseUpdate();
-            });
-    }
-
-    public startReadyPhase() {
-        this.players
-            .filter(p => p.isAlive())
-            .forEach(p => {
-                const others = this.players.filter(other => other.isAlive() && other.id !== p.id);
-                const opponent = randomFromArray(others);
-
-                p.sendReadyPhaseUpdate(opponent);
-            });
-    }
-
-    public async startPlayingPhase(seed: number) {
+    public async startPlayingPhase() {
         const maxTimeMs = Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000;
         const battleTimeout = delay(maxTimeMs);
 
-        const promises = this.players.filter(p => p.isAlive()).map(p => p.runPlayingPhase(seed, battleTimeout));
+        const promises = this.players.filter(p => p.isAlive()).map(p => p.fightMatch(battleTimeout));
 
         const results = await Promise.all(promises);
 
@@ -110,7 +94,11 @@ export class PlayerContainer {
         const availableNames = BOT_NAMES.filter(n => this.players.map(p => p.name).includes(n) === false);
         const name = randomFromArray(availableNames);
 
-        this.players.push(new Bot(`[BOT] ${name}`, this.deck));
+        const bot = new Bot(this.gamePhaseObservable, this.opponentProvider, `[BOT] ${name}`, this.deck);
+
+        bot.onHealthUpdate(this.updatePlayerLists);
+
+        this.players.push(bot);
     }
 
     private onJoinGame(socket: io.Socket) {
@@ -125,7 +113,7 @@ export class PlayerContainer {
 
             log(`${name} has joined the game`);
 
-            const player = new Connection(socket, name, this.deck);
+            const player = new Connection(socket, this.gamePhaseObservable, this.opponentProvider, name, this.deck);
 
             player.onHealthUpdate(this.updatePlayerLists);
             player.onSendChatMessage(this.sendChatMessage(player));

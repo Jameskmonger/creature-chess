@@ -4,14 +4,16 @@ import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePa
 import { PlayerListPlayer, PokemonPiece, GamePhase, PokemonCard } from "@common";
 import { FeedMessage } from "@common/feed-message";
 import { CardDeck } from "../cardDeck";
+import { Observable } from "../observable/observable";
+import { OpponentProvider } from "./opponentProvider";
 
 type IncomingPacketListener = (...args: any[]) => void;
 
 export class Connection extends Player {
     private socket: Socket;
 
-    constructor(socket: Socket, name: string, deck: CardDeck) {
-        super(name, deck);
+    constructor(socket: Socket, gamePhaseObservable: Observable<GamePhase>, opponentProvider: OpponentProvider, name: string, deck: CardDeck) {
+        super(gamePhaseObservable, opponentProvider, name, deck);
 
         this.socket = socket;
 
@@ -23,6 +25,19 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
         this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
+
+        this.gamePhaseObservable.onChange(newValue => {
+            switch (newValue) {
+                case GamePhase.PREPARING:
+                    return this.sendPreparingPhaseUpdate();
+                case GamePhase.READY:
+                    return this.sendReadyPhaseUpdate();
+                case GamePhase.PLAYING:
+                    return this.sendPlayingPhaseUpdate();
+                default:
+                    return;
+            }
+        });
 
         this.money.onChange(this.sendMoneyUpdate);
         this.cards.onChange(this.sendCardsUpdate);
@@ -39,41 +54,7 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.LEVEL_UPDATE, packet);
     }
 
-    public onEnterPreparingPhase(board: PokemonPiece[]) {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.PREPARING,
-            payload: {
-                pieces: board
-            }
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-    }
-
-    public onEnterReadyPhase(board: PokemonPiece[], opponentId: string) {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.READY,
-            payload: {
-                pieces: board,
-                opponentId
-            }
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-    }
-
-    public onEnterPlayingPhase(seed: number) {
-        const packet: PhaseUpdatePacket = {
-            phase: GamePhase.PLAYING,
-            payload: {
-                seed
-            }
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-    }
-
-    public onEnterDeadPhase() {
+    public onDeath() {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.DEAD
         };
@@ -130,5 +111,36 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
             pieces: newValue
         });
+    }
+
+    private sendPreparingPhaseUpdate = () => {
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.PREPARING,
+            payload: {
+                pieces: this.board.getValue()
+            }
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+    }
+
+    private sendReadyPhaseUpdate = () => {
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.READY,
+            payload: {
+                pieces: this.match.getBoard(),
+                opponentId: this.match.away.id
+            }
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+    }
+
+    private sendPlayingPhaseUpdate = () => {
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.PLAYING
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 }

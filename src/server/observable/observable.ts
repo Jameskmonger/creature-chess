@@ -32,4 +32,8 @@ export class Observable<T> {
     public getValue() {
         return this.value;
     }
+
+    public setMaxListeners(count: number) {
+        this.events.setMaxListeners(count);
+    }
 }

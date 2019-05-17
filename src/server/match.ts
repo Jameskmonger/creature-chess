@@ -13,9 +13,9 @@ export interface MatchResults {
 }
 
 export class Match {
+    public readonly home: Player;
+    public readonly away: Player;
     private id: string;
-    private home: Player;
-    private away: Player;
     private board: PokemonPiece[];
 
     private clientFinishedMatch: Promise<void>;
@@ -44,7 +44,7 @@ export class Match {
         return this.board;
     }
 
-    public async fight(seed: number, battleTimeout: Promise<void>, maxTurns: number): Promise<MatchResults> {
+    public async fight(battleTimeout: Promise<void>, maxTurns: number): Promise<MatchResults> {
         const fightName = `${this.home.name} v ${this.away.name}`;
         let turnCount = 0;
 
