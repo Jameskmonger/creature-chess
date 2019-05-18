@@ -25,6 +25,8 @@ const BOT_NAMES = [
     "Evil Dave"
 ];
 
+const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
+
 export class Server {
     private games = new Map<string, Game>();
 
@@ -49,6 +51,14 @@ export class Server {
                 response: (response: JoinGameResponse) => void
             ) => {
                 if (inGame) {
+                    return;
+                }
+
+                if (name.match(NAME_REGEX) === null) {
+                    response({
+                        error: "Invalid characters in name",
+                        response: null
+                    });
                     return;
                 }
 
@@ -97,6 +107,14 @@ export class Server {
                     return;
                 }
 
+                if (name.match(NAME_REGEX) === null) {
+                    response({
+                        error: "Invalid characters in name",
+                        response: null
+                    });
+                    return;
+                }
+
                 if (playerCount < 2) {
                     response({
                         error: "Player count too low",
@@ -113,7 +131,7 @@ export class Server {
                     return;
                 }
 
-                const gameId = uuid().split("-")[0];
+                const gameId = uuid().substring(0, 6);
                 const game = new Game(playerCount);
                 this.games.set(gameId, game);
                 log(`Game '${gameId}' created for ${playerCount} players`);
