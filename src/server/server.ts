@@ -1,10 +1,10 @@
 import io = require("socket.io");
-import { log } from "./log";
-import { ClientToServerPacketOpcodes } from "../shared/packet-opcodes";
-import { Game } from "./game";
-import { Connection } from "./players/connection";
-import { Bot } from "./players/bot";
-import { randomFromArray } from "./random-from-array";
+import { log } from "@common/log";
+import { ClientToServerPacketOpcodes } from "@common/packet-opcodes";
+import { Game } from "@common/game/game";
+import { Connection } from "./connection";
+import { Bot } from "@common/game/bot";
+import { randomFromArray } from "@common/random-from-array";
 
 const BOT_NAMES = [
     "Duke Horacio",

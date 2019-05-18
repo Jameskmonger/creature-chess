@@ -1,18 +1,22 @@
 import uuid = require("uuid/v4");
-import { Models, GamePhase, Constants, getXpToNextLevel } from "@common";
-import { getDefinition, getRequiredQuantityToEvolve, getPieceCost } from "@common/models/creatureDefinition";
-import { clonePiece, createPiece, createPieceFromCard } from "@common/piece-utils";
-import { MovePiecePacket } from "@common/packet-opcodes";
-import { TileType, createTileCoordinates } from "@common/position";
-import { Match } from "../match";
+import { getDefinition, getRequiredQuantityToEvolve, getPieceCost } from "../models/creatureDefinition";
+import { clonePiece, createPiece, createPieceFromCard } from "../piece-utils";
+import { MovePiecePacket } from "../packet-opcodes";
+import { TileType, createTileCoordinates } from "../position";
+import { Match } from "./match";
 import { log } from "../log";
-import { CardDeck } from "../cardDeck";
-import { FeedMessage } from "@common/feed-message";
-import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
+import { CardDeck } from "../cardShop/cardDeck";
+import { FeedMessage } from "../feed-message";
+import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "../board";
 import { EventEmitter } from "events";
 import { Observable } from "../observable/observable";
 import { Store } from "../observable/store";
 import { OpponentProvider } from "./opponentProvider";
+import { Card } from "../models/card";
+import { Piece } from "../models/piece";
+import { GamePhase } from "../game-phase";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE } from "../constants";
+import { getXpToNextLevel } from "../get-xp-for-level";
 
 enum StreakType {
     WIN,
@@ -31,9 +35,9 @@ export abstract class Player {
     public health: number = 100;
 
     protected money = new Observable(3);
-    protected cards = new Observable<Models.Card[]>([]);
-    protected board = new Store<Models.Piece[], BoardActions.BoardAction>([], boardReducer);
-    protected bench = new Store<Models.Piece[], BenchActions.BenchPiecesAction>([], benchReducer);
+    protected cards = new Observable<Card[]>([]);
+    protected board = new Store<Piece[], BoardActions.BoardAction>([], boardReducer);
+    protected bench = new Store<Piece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
 
@@ -76,11 +80,10 @@ export abstract class Player {
 
     public async fightMatch(battleTimeout: Promise<void>) {
         this.gamePhase = GamePhase.PLAYING;
-        const maxTurns = Constants.TURNS_IN_BATTLE;
 
         this.onEnterPlayingPhase();
 
-        const results = await this.match.fight(battleTimeout, maxTurns);
+        const results = await this.match.fight(battleTimeout, TURNS_IN_BATTLE);
 
         const damage = results.away.length * 3;
         this.subtractHealth(damage);
@@ -195,14 +198,14 @@ export abstract class Player {
         const money = this.money.getValue();
 
         // not enough money
-        if (money < Constants.BUY_XP_COST) {
-            log(`${this.name} attempted to buy xp costing $${Constants.BUY_XP_COST} but only had $${money}`);
+        if (money < BUY_XP_COST) {
+            log(`${this.name} attempted to buy xp costing $${BUY_XP_COST} but only had $${money}`);
             return;
         }
 
-        this.addXp(Constants.BUY_XP_AMOUNT);
+        this.addXp(BUY_XP_AMOUNT);
 
-        this.money.setValue(money - Constants.BUY_XP_COST);
+        this.money.setValue(money - BUY_XP_COST);
     }
 
     protected buyReroll = () => {
@@ -214,14 +217,14 @@ export abstract class Player {
         const money = this.money.getValue();
 
         // not enough money
-        if (money < Constants.REROLL_COST) {
-            log(`${this.name} attempted to reroll costing $${Constants.REROLL_COST} but only had $${money}`);
+        if (money < REROLL_COST) {
+            log(`${this.name} attempted to reroll costing $${REROLL_COST} but only had $${money}`);
             return;
         }
 
         this.rerollCards();
 
-        this.money.setValue(money - Constants.REROLL_COST);
+        this.money.setValue(money - REROLL_COST);
     }
 
     protected sendChatMessage = (message: string) => {
@@ -313,7 +316,7 @@ export abstract class Player {
         this.addXp(1);
     }
 
-    private addPieceToBench(piece: Models.Piece) {
+    private addPieceToBench(piece: Piece) {
         const action = BenchActions.benchPieceAdded(piece);
 
         this.bench.dispatch(action);
@@ -321,7 +324,7 @@ export abstract class Player {
         this.checkForEvolutions(piece);
     }
 
-    private checkForEvolutions(piece: Models.Piece) {
+    private checkForEvolutions(piece: Piece) {
         const { evolvedFormId } = getDefinition(piece.definitionId);
 
         if (!evolvedFormId) {

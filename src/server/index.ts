@@ -1,5 +1,5 @@
 import { Server } from "./server";
-import { log } from "./log";
+import { log } from "@common/log";
 
 if (process.argv[2] === undefined || process.argv[3] === undefined || process.argv[4] === undefined) {
     log("Arguments: [port] [gameSize] [botCount]");

@@ -1,12 +1,13 @@
 import uuid = require("uuid");
 import delay from "delay";
-import { GamePhase, Constants } from "@common";
-import { FeedMessage, FeedMessageType } from "@common/feed-message";
-import { Player } from "./players/player";
-import { OpponentProvider } from "./players/opponentProvider";
-import { CardDeck } from "./cardDeck";
-import { log } from "./log";
-import { getAllDefinitions } from "@common/models/creatureDefinition";
+import { GamePhase } from "../game-phase";
+import { FeedMessage, FeedMessageType } from "../feed-message";
+import { Player } from "./player";
+import { OpponentProvider } from "./opponentProvider";
+import { CardDeck } from "../cardShop/cardDeck";
+import { log } from "../log";
+import { getAllDefinitions } from "../models/creatureDefinition";
+import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
 
 export class Game {
     private GAME_SIZE: number;
@@ -86,7 +87,7 @@ export class Game {
 
         this.players.forEach(p => p.enterPreparingPhase());
 
-        await delay(Constants.PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
+        await delay(PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
     }
 
     private async runReadyPhase() {
@@ -96,7 +97,7 @@ export class Game {
 
         this.players.forEach(p => p.enterReadyPhase(this.opponentProvider));
 
-        await delay(Constants.PHASE_LENGTHS[GamePhase.READY] * 1000);
+        await delay(PHASE_LENGTHS[GamePhase.READY] * 1000);
     }
 
     private async runPlayingPhase() {
@@ -108,14 +109,14 @@ export class Game {
     }
 
     private async fightBattles() {
-        const maxTimeMs = Constants.PHASE_LENGTHS[GamePhase.PLAYING] * 1000;
+        const maxTimeMs = PHASE_LENGTHS[GamePhase.PLAYING] * 1000;
         const battleTimeout = delay(maxTimeMs);
 
         const promises = this.players.filter(p => p.isAlive()).map(p => p.fightMatch(battleTimeout));
 
         await Promise.all(promises);
 
-        await delay(Constants.CELEBRATION_TIME); // celebration time
+        await delay(CELEBRATION_TIME); // celebration time
     }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage) {
