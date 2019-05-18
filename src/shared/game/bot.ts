@@ -1,7 +1,7 @@
-import { Constants } from "@common";
-import { FeedMessage } from "@common/feed-message";
-import { createTileCoordinates } from "@common/position";
+import { FeedMessage } from "../feed-message";
+import { createTileCoordinates } from "../position";
 import { Player } from "./player";
+import { GRID_SIZE } from "../constants";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
@@ -73,7 +73,7 @@ export class Bot extends Player {
     private getFirstBenchPiece() {
         const benchPieces = this.bench.getValue();
 
-        for (let x = 0; x < Constants.GRID_SIZE; x++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
             const piece = benchPieces.find(p => p.position.x === x);
 
             if (piece !== undefined) {
@@ -87,7 +87,7 @@ export class Bot extends Player {
     private getFirstEmptyPosition() {
         const boardPieces = this.board.getValue();
 
-        for (let y = 4; y < Constants.GRID_SIZE; y++) {
+        for (let y = 4; y < GRID_SIZE; y++) {
             for (const x of PREFERRED_COLUMN_ORDER) {
                 const boardPiece = boardPieces.find(p => p.position.x === x && p.position.y === y);
 

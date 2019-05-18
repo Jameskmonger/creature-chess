@@ -1,22 +1,23 @@
 import delay from "delay";
-import { Player } from "./players/player";
-import { Models, Constants } from "@common";
-import { rotatePiecePosition } from "@common/piece-utils";
-import { isATeamDefeated } from "@common/is-a-team-defeated";
-import { simulateTurn } from "@common/fighting-turn-simulator";
-import { log } from "./log";
+import { Player } from "./player";
+import { rotatePiecePosition } from "../piece-utils";
+import { isATeamDefeated } from "../is-a-team-defeated";
+import { simulateTurn } from "../fighting-turn-simulator";
+import { log } from "../log";
 import uuid = require("uuid");
+import { Piece } from "../models/piece";
+import { TURN_DURATION_MS } from "../constants";
 
 export interface MatchResults {
-    home: Models.Piece[];
-    away: Models.Piece[];
+    home: Piece[];
+    away: Piece[];
 }
 
 export class Match {
     public readonly home: Player;
     public readonly away: Player;
     private id: string;
-    private board: Models.Piece[];
+    private board: Piece[];
     private results: MatchResults;
 
     private clientFinishedMatch: Promise<void>;
@@ -72,7 +73,7 @@ export class Match {
 
         const surviving = this.board.filter(p => p.currentHealth > 0);
 
-        const minTimePassed = delay(turnCount * Constants.TURN_DURATION_MS);
+        const minTimePassed = delay(turnCount * TURN_DURATION_MS);
 
         await Promise.race([
             battleTimeout,
@@ -87,14 +88,14 @@ export class Match {
         return this.results;
     }
 
-    private mapHomePiece(piece: Models.Piece) {
+    private mapHomePiece(piece: Piece) {
         return {
             ...piece,
             facingAway: true
         };
     }
 
-    private mapAwayPiece(piece: Models.Piece) {
+    private mapAwayPiece(piece: Piece) {
         return rotatePiecePosition({
             ...piece,
             facingAway: false

@@ -1,10 +1,11 @@
 import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
-import { CreatureDefinition, getRequiredQuantityToEvolve } from "@common/models/creatureDefinition";
-import { Models } from "@common";
+import { CreatureDefinition, getRequiredQuantityToEvolve } from "../models/creatureDefinition";
+import { Card } from "../models/card";
+import { Piece } from "../models/piece";
 
 export class CardDeck {
-    public deck: Models.Card[];
+    public deck: Card[];
     private definitions: CreatureDefinition[];
 
     constructor(definitions: CreatureDefinition[]) {
@@ -34,7 +35,7 @@ export class CardDeck {
     }
 
     public take(count: number) {
-        const output: Models.Card[] = [];
+        const output: Card[] = [];
 
         for (let i = 0; i < count; i++) {
             const popped = this.deck.pop();
@@ -45,7 +46,7 @@ export class CardDeck {
         return output;
     }
 
-    public add(cards: Models.Card[]) {
+    public add(cards: Card[]) {
         const cardsToAdd = cards.filter(card => card !== null);
 
         for (const card of cardsToAdd) {
@@ -55,7 +56,7 @@ export class CardDeck {
         this.deck = shuffle(this.deck);
     }
 
-    public addPiece(piece: Models.Piece) {
+    public addPiece(piece: Piece) {
         const definition = this.definitions.find(p => p.id === piece.definitionId);
         const preEvolvedDefinitions = this.getDefinitionsUsedToEvolveToDefinition(definition);
 
@@ -67,7 +68,7 @@ export class CardDeck {
     }
 
     private addDefinition(definition: CreatureDefinition) {
-        const card: Models.Card = {
+        const card: Card = {
             id: uuid(),
             definitionId: definition.id,
             cost: definition.cost,
