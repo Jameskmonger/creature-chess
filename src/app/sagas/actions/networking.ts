@@ -19,7 +19,7 @@ import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
 import { newFeedMessage } from "../../actions/feedActions";
 import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../actiontypes/chatActionTypes";
-import { BATTLE_FINISHED } from "./process-battle";
+import { BATTLE_FINISHED } from "./processBattle";
 
 const getSocket = (serverIP: string) => {
     const socket = io(serverIP);
