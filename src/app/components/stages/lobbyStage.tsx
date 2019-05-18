@@ -1,11 +1,12 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameAction } from "../../actions/gameActions";
+import { joinGameAction, createGameAction } from "../../actions/gameActions";
 import { AppState } from "../../store/store";
 import { loadingSelector } from "../../selectors/gameSelector";
 
 interface DispatchProps {
-    onJoinGame: (serverIP: string, name: string) => void;
+    onJoinGame: (serverIP: string, name: string, gameId: string) => void;
+    onCreateGame: (serverIP: string, name: string, playerCount: number, botCount: number) => void;
 }
 
 interface LobbyStageProps {
@@ -16,12 +17,18 @@ type Props = LobbyStageProps & DispatchProps;
 
 interface LobbyStageState {
     name: string;
+    botCount: string;
+    playerCount: string;
+    gameId: string;
     serverIP: string;
 }
 
 class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     public state = {
         name: "",
+        playerCount: "8",
+        botCount: "0",
+        gameId: "",
         serverIP: `http://${window.location.hostname}:3000`
     };
 
@@ -53,17 +60,26 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                     <div className="join-options">
                         <div className="option">
                             <input
-                                value={"18asd83"}
-                                placeholder="Lobby ID"
+                                value={this.state.playerCount}
+                                onChange={this.onPlayerCountChange}
+                                placeholder="Player count"
                                 className="option-input"
                             />
 
-                            <button onClick={this.onJoinGameClick} className="option-button create-button">Create Game</button>
+                            <input
+                                value={this.state.botCount}
+                                onChange={this.onBotCountChange}
+                                placeholder="Bot count"
+                                className="option-input"
+                            />
+
+                            <button onClick={this.onCreateGameClick} className="option-button create-button">Create Game</button>
                         </div>
                         <div className="option">
                             <input
-                                value={"18asd83"}
-                                placeholder="Lobby ID"
+                                value={this.state.gameId}
+                                onChange={this.onGameIdChange}
+                                placeholder="Game ID"
                                 className="option-input"
                             />
 
@@ -87,6 +103,24 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         });
     }
 
+    private onPlayerCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            playerCount: event.target.value
+        });
+    }
+
+    private onBotCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            botCount: event.target.value
+        });
+    }
+
+    private onGameIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            gameId: event.target.value
+        });
+    }
+
     private onServerIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             serverIP: event.target.value
@@ -94,11 +128,27 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     }
 
     private onJoinGameClick = () => {
-        if (!this.state.serverIP || !this.state.name) {
+        if (!this.state.serverIP || !this.state.name || !this.state.gameId) {
             return;
         }
 
-        this.props.onJoinGame(this.state.serverIP, this.state.name);
+        this.props.onJoinGame(this.state.serverIP, this.state.name, this.state.gameId);
+    }
+
+    private onCreateGameClick = () => {
+        if (
+            !this.state.serverIP
+            || !this.state.name
+            || isNaN(this.state.playerCount as any)
+            || isNaN(this.state.botCount as any)
+        ) {
+            return;
+        }
+
+        const playerCount = parseInt(this.state.playerCount, 10);
+        const botCount = parseInt(this.state.playerCount, 10);
+
+        this.props.onCreateGame(this.state.serverIP, this.state.name, playerCount, botCount);
     }
 }
 
@@ -107,7 +157,8 @@ const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state =>
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onJoinGame: (serverIP: string, name: string) => dispatch(joinGameAction(serverIP, name))
+    onCreateGame: (serverIP: string, name: string, playerCount: number, botCount: number) => dispatch(createGameAction(serverIP, name, playerCount, botCount)),
+    onJoinGame: (serverIP: string, name: string, gameId: string) => dispatch(joinGameAction(serverIP, name, gameId))
 });
 
 const LobbyStage = connect(mapStateToProps, mapDispatchToProps)(LobbyStageUnconnected);

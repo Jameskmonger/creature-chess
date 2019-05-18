@@ -1,6 +1,9 @@
 export const JOIN_GAME = "JOIN_GAME";
 export type JOIN_GAME = typeof JOIN_GAME;
 
+export const CREATE_GAME = "CREATE_GAME";
+export type CREATE_GAME = typeof CREATE_GAME;
+
 export const GAME_PHASE_UPDATE = "GAME_PHASE_UPDATE";
 export type GAME_PHASE_UPDATE = typeof GAME_PHASE_UPDATE;
 
