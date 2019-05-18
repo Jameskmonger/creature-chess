@@ -146,7 +146,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         }
 
         const playerCount = parseInt(this.state.playerCount, 10);
-        const botCount = parseInt(this.state.playerCount, 10);
+        const botCount = parseInt(this.state.botCount, 10);
 
         this.props.onCreateGame(this.state.serverIP, this.state.name, playerCount, botCount);
     }

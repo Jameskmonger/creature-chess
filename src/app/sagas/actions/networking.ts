@@ -38,9 +38,9 @@ const getSocket = (serverIP: string) => {
     });
 };
 
-const joinGame = (socket: Socket, name: string) => {
+const joinGame = (socket: Socket, name: string, gameId: string) => {
     return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, (response: JoinGameResponse) => {
+        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, (response: JoinGameResponse) => {
             resolve(response);
         });
     });
@@ -192,7 +192,7 @@ export const networking = function*() {
 
     const { error, response }: JoinGameResponse =
         (action.type === JOIN_GAME)
-        ? yield call(joinGame, socket, action.payload.name)
+        ? yield call(joinGame, socket, action.payload.name, action.payload.gameId)
         : yield call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
 
     if (error) {
