@@ -1,7 +1,7 @@
 import uuid = require("uuid");
 import delay from "delay";
 import { GamePhase, Constants } from "@common";
-import { FeedMessage } from "@common/feed-message";
+import { FeedMessage, FeedMessageType } from "@common/feed-message";
 import { Player } from "./players/player";
 import { OpponentProvider } from "./players/opponentProvider";
 import { CardDeck } from "./cardDeck";
@@ -34,14 +34,21 @@ export class Game {
         }
 
         player.onHealthUpdate(this.updatePlayerLists);
+
         player.onSendChatMessage(message => this.sendFeedMessageToAllPlayers({
-            id: uuid(),
-            text: message,
-            fromId: player.id
+            type: FeedMessageType.CHAT,
+            payload: {
+                id: uuid(),
+                text: message,
+                fromId: player.id
+            }
         }, [player.id]));
-        player.onFinishMatch(({ home, away, homeScore, awayScore }) => {
-            const resultMessageText = `${home} (${homeScore}) - (${awayScore}) ${away}`;
-            this.sendFeedMessageToAllPlayers({ text: resultMessageText, id: uuid() });
+
+        player.onFinishMatch(results => {
+            this.sendFeedMessageToAllPlayers({
+                type: FeedMessageType.BATTLE,
+                payload: results
+            });
         });
 
         this.players.push(player);
