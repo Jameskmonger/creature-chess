@@ -27,8 +27,8 @@ interface LobbyStageState {
 class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     public state = {
         name: "",
-        playerCount: "8",
-        botCount: "0",
+        playerCount: "",
+        botCount: "",
         gameId: "",
         serverIP: `http://${window.location.hostname}:3000`
     };
