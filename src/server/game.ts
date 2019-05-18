@@ -114,6 +114,8 @@ export class Game {
         const promises = this.players.filter(p => p.isAlive()).map(p => p.fightMatch(battleTimeout));
 
         await Promise.all(promises);
+
+        await delay(Constants.CELEBRATION_TIME); // celebration time
     }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage) {
