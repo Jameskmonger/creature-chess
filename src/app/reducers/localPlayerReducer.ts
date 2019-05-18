@@ -13,7 +13,7 @@ export function localPlayer(state: LocalPlayerState = initialState, action: Loca
     switch (action.type) {
         case JOIN_COMPLETE:
             return {
-                id: action.payload.id,
+                id: action.payload.playerId,
                 name: action.payload.name,
                 level: 1,
                 xp: 0

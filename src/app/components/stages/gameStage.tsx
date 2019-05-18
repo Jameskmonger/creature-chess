@@ -11,9 +11,10 @@ import { CardShop } from "../cards/cardShop";
 import { PlayerList } from "../playerList/playerList";
 
 import Media from "react-media";
-import { PhaseInfo } from "../phase-info";
+import { PhaseInfo } from "../phaseInfo";
 import { Profile } from "../profile/profile";
 import { Feed } from "../feed/feed";
+import { GameId } from "../gameId";
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -53,6 +54,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <PlayerList />
 
+                            <GameId />
+
                             <Feed />
                         </div>
                         <div className="group board-container" style={boardContainerStyle}>
@@ -86,6 +89,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <PlayerList />
 
+                            <GameId />
+
                             <Feed />
                         </div>
                     </div>
@@ -107,6 +112,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             <Profile />
 
                             <PlayerList />
+
+                            <GameId />
 
                             <Feed />
                         </div>

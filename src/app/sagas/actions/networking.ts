@@ -2,15 +2,22 @@ import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../types";
-import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
+import {
+    ServerToClientPacketOpcodes,
+    ClientToServerPacketOpcodes,
+    MovePiecePacket,
+    PhaseUpdatePacket,
+    LevelUpdatePacket,
+    JoinGameResponse
+} from "@common/packet-opcodes";
 import { Models, PlayerListPlayer } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate } from "../../actions/gameActions";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
 import { playerListUpdated } from "../../actions/playerListActions";
 import { cardsUpdated } from "../../actions/cardActions";
-import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
+import { JOIN_GAME, CREATE_GAME } from "../../actiontypes/gameActionTypes";
 import { REROLL_CARDS, BUY_CARD } from "../../actiontypes/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../log";
@@ -31,10 +38,18 @@ const getSocket = (serverIP: string) => {
     });
 };
 
-const joinGame = (socket: Socket, name: string) => {
-    return new Promise<string>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, (id: string) => {
-            resolve(id);
+const joinGame = (socket: Socket, name: string, gameId: string) => {
+    return new Promise<JoinGameResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, (response: JoinGameResponse) => {
+            resolve(response);
+        });
+    });
+};
+
+const createGame = (socket: Socket, name: string, playerCount: number, botCount: number) => {
+    return new Promise<JoinGameResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, playerCount, botCount, (response: JoinGameResponse) => {
+            resolve(response);
         });
     });
 };
@@ -170,13 +185,28 @@ const writePacketsToSocket = function*(socket: Socket) {
 };
 
 export const networking = function*() {
-    const { payload } = yield take(JOIN_GAME);
-    const socket: Socket = yield call(getSocket, payload.serverIP);
+    let action: (JoinGameAction | CreateGameAction) = yield take([JOIN_GAME, CREATE_GAME]);
+    const socket: Socket = yield call(getSocket, action.payload.serverIP);
 
     yield fork(readPacketsToActions, socket);
 
-    const id: string = yield call(joinGame, socket, payload.name);
-    yield put(joinCompleteAction(id, payload.name));
+    while (true) {
+        const { error, response }: JoinGameResponse =
+            (action.type === JOIN_GAME)
+                ? yield call(joinGame, socket, action.payload.name, action.payload.gameId)
+                : yield call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
+
+        if (!error) {
+            yield put(joinCompleteAction({
+                ...response,
+                name: action.payload.name
+            }));
+            break;
+        }
+
+        yield put(joinGameError(error));
+        action = yield take([JOIN_GAME, CREATE_GAME]);
+    }
 
     yield fork(writeActionsToPackets);
     yield fork(writePacketsToSocket, socket);
