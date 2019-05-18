@@ -1,12 +1,13 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameAction, createGameAction } from "../../actions/gameActions";
+import { joinGameAction, createGameAction, joinGameError } from "../../actions/gameActions";
 import { AppState } from "../../store/store";
 import { loadingSelector } from "../../selectors/gameSelector";
 
 interface DispatchProps {
     onJoinGame: (serverIP: string, name: string, gameId: string) => void;
     onCreateGame: (serverIP: string, name: string, playerCount: number, botCount: number) => void;
+    setError: (error: string) => void;
 }
 
 interface LobbyStageProps {
@@ -134,7 +135,18 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     }
 
     private onJoinGameClick = () => {
-        if (!this.state.serverIP || !this.state.name || !this.state.gameId) {
+        if (!this.state.serverIP) {
+            this.props.setError("Server IP field empty");
+            return;
+        }
+
+        if (!this.state.gameId) {
+            this.props.setError("Game ID field empty");
+            return;
+        }
+
+        if (!this.state.name) {
+            this.props.setError("Name field empty");
             return;
         }
 
@@ -142,12 +154,23 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     }
 
     private onCreateGameClick = () => {
-        if (
-            !this.state.serverIP
-            || !this.state.name
-            || isNaN(this.state.playerCount as any)
-            || isNaN(this.state.botCount as any)
-        ) {
+        if (!this.state.serverIP) {
+            this.props.setError("Server IP field empty");
+            return;
+        }
+
+        if (!this.state.name) {
+            this.props.setError("Name field empty");
+            return;
+        }
+
+        if (!this.state.playerCount || isNaN(this.state.playerCount as any)) {
+            this.props.setError("Non-numeric player count");
+            return;
+        }
+
+        if (!this.state.botCount || isNaN(this.state.botCount as any)) {
+            this.props.setError("Non-numeric bot count");
             return;
         }
 
@@ -165,7 +188,8 @@ const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state =>
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     onCreateGame: (serverIP: string, name: string, playerCount: number, botCount: number) => dispatch(createGameAction(serverIP, name, playerCount, botCount)),
-    onJoinGame: (serverIP: string, name: string, gameId: string) => dispatch(joinGameAction(serverIP, name, gameId))
+    onJoinGame: (serverIP: string, name: string, gameId: string) => dispatch(joinGameAction(serverIP, name, gameId)),
+    setError: (error: string) => dispatch(joinGameError(error))
 });
 
 const LobbyStage = connect(mapStateToProps, mapDispatchToProps)(LobbyStageUnconnected);
