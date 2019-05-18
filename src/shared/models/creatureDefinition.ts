@@ -27,7 +27,7 @@ const mapDefinitions = (definition: CreatureDefinition[]) => {
     });
 };
 
-mapDefinitions(definitions);
+mapDefinitions(definitions as unknown as CreatureDefinition[]);
 
 const definitionArray = Array.from(definitionMap.values());
 
