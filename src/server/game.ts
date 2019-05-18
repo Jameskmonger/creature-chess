@@ -39,6 +39,10 @@ export class Game {
             text: message,
             fromId: player.id
         }, [player.id]));
+        player.onFinishMatch(({ home, away, homeScore, awayScore }) => {
+            const resultMessageText = `${home} (${homeScore}) - (${awayScore}) ${away}`;
+            this.sendFeedMessageToAllPlayers({ text: resultMessageText, id: uuid() });
+        });
 
         this.players.push(player);
         player.setDeck(this.deck);
@@ -99,16 +103,7 @@ export class Game {
 
         const promises = this.players.filter(p => p.isAlive()).map(p => p.fightMatch(battleTimeout));
 
-        const results = await Promise.all(promises);
-
-        results.forEach(({player, opponent, win, damage}) => {
-            const resultMessageText = `${player.name} ${win ? "beat" : "lost to"} ${opponent.name}`;
-            this.sendFeedMessageToAllPlayers({ text: resultMessageText, id: uuid() });
-            if (damage) {
-                const damageMessageText = `${player.name} was hit for ${damage}`;
-                this.sendFeedMessageToAllPlayers({ text: damageMessageText, id: uuid() });
-            }
-        });
+        await Promise.all(promises);
     }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage, exceptPlayerIds: string[] = []) {

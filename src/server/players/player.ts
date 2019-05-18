@@ -21,7 +21,8 @@ enum StreakType {
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
-    SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE"
+    SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
+    FINISH_MATCH = "FINISH_MATCH"
 }
 
 export abstract class Player {
@@ -57,10 +58,7 @@ export abstract class Player {
     public enterPreparingPhase() {
         this.gamePhase = GamePhase.PREPARING;
 
-        if (this.isAlive()) {
-            this.rerollCards();
-        }
-
+        this.giveMatchRewards();
         this.onEnterPreparingPhase();
     }
 
@@ -84,22 +82,15 @@ export abstract class Player {
 
         const results = await this.match.fight(battleTimeout, maxTurns);
 
-        log(`results: ${this.name} ${results.survivingHomeTeam.length} v ${results.survivingAwayTeam.length} ${this.match.away.name}`);
-
-        const damage = results.survivingAwayTeam.length * 3;
+        const damage = results.away.length * 3;
         this.subtractHealth(damage);
 
-        const win = results.survivingHomeTeam.length > results.survivingAwayTeam.length;
-
-        log(`- Awarded a ${win ? "win" : "loss"} to ${this.name}`);
-
-        const money = this.getMoneyForMatch(win);
-
-        this.addMoney(money);
-
-        this.addXp(1);
-
-        return { player: this, opponent: this.match.away, win, damage };
+        this.events.emit(PlayerEvent.FINISH_MATCH, {
+            home: this.name,
+            away: this.match.away.name,
+            homeScore: results.home.length,
+            awayScore: results.away.length
+        });
     }
 
     public cloneBoard() {
@@ -112,6 +103,10 @@ export abstract class Player {
 
     public onSendChatMessage(fn: (message: string) => void) {
         this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
+    }
+
+    public onFinishMatch(fn: (results: { home: string, away: string, homeScore: number, awayScore: number }) => void) {
+        this.events.on(PlayerEvent.FINISH_MATCH, fn);
     }
 
     public isAlive() {
@@ -293,6 +288,29 @@ export abstract class Player {
 
         this.bench.dispatch(action);
         this.board.dispatch(action);
+    }
+
+    private giveMatchRewards() {
+        if (this.isAlive() === false) {
+            return;
+        }
+
+        this.rerollCards();
+
+        if (this.match === null) {
+            return;
+        }
+
+        const results = this.match.getResults();
+        this.match = null;
+
+        const win = results.home.length > results.away.length;
+
+        const money = this.getMoneyForMatch(win);
+
+        this.addMoney(money);
+
+        this.addXp(1);
     }
 
     private addPieceToBench(piece: Models.Piece) {
