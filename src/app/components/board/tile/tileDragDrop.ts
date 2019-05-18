@@ -2,7 +2,7 @@ import { DropTargetSpec, DropTargetMonitor, DropTargetConnector, DropTarget } fr
 import { TileUnconnected } from "./tileUnconnected";
 import { TileProps } from "./tileProps";
 import { DropTargetProps } from "../../draggable/drop-target-props";
-import { PokemonPiece } from "@common";
+import { Models } from "@common";
 import { canDropPiece } from "@common/board";
 
 const boxTarget: DropTargetSpec<TileProps> = {
@@ -10,7 +10,7 @@ const boxTarget: DropTargetSpec<TileProps> = {
         props.onMovePiece(monitor.getItem());
     },
     canDrop(props: TileProps, monitor: DropTargetMonitor) {
-        const item: PokemonPiece = monitor.getItem();
+        const item: Models.Piece = monitor.getItem();
 
         return canDropPiece(item, props.position, props.pieces, props.gamePhase, props.belowPieceLimit);
     }

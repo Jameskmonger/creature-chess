@@ -2,7 +2,7 @@ import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BenchActions, BenchActionTypes, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { AppState } from "../../store/store";
 import { getPokemonDefinition, getRequiredQuantityToEvolve } from "@common";
-import { createPokemon } from "../../../shared/pokemon-piece";
+import { createPiece } from "@common/piece-utils";
 
 export const evolution = function*() {
     yield takeEvery<BenchActions.BenchPieceAddedAction>(
@@ -34,7 +34,7 @@ export const evolution = function*() {
 
             const slot = getFirstEmptyBenchSlot(benchOthers);
 
-            const newPiece = createPokemon(state.localPlayer.id, evolvedFormId, [slot, null], piece.id);
+            const newPiece = createPiece(state.localPlayer.id, evolvedFormId, [slot, null], piece.id);
             yield put(BenchActions.benchPieceAdded(newPiece));
         }
     );

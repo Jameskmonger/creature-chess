@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 
-import { PokemonPiece } from "@common/pokemon-piece";
+import { Models } from "@common";
 import { AppState } from "../store/store";
 import { TileCoordinates, TileType } from "@common/position";
 import { localPlayerIdSelector } from "./gameSelector";
@@ -11,7 +11,7 @@ const positionSelector = (state: AppState, props: { position: TileCoordinates })
 
 const piecePositionFilter =
     (position: TileCoordinates) =>
-        (p: PokemonPiece) =>
+        (p: Models.Piece) =>
             p.position.x === position.x && p.position.y === position.y;
 
 export const tilePieceSelector = createSelector(

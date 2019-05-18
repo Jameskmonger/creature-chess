@@ -1,10 +1,10 @@
 import * as React from "react";
-import { initialCoolDown } from "@common/pokemon-piece";
 import { ProgressBar } from "../../progressBar";
 import { getAnimationCssVariables, AnimationVariables, Animation } from "../../animation";
 import { PokemonImage } from "../../pokemonImage";
 import { BoardPieceProps, isFriendly } from "./boardPieceProps";
 import { DragSourceProps } from "../../draggable/drag-source-props";
+import { Constants } from "../../../../shared";
 
 const dyingAnimation = "dying";
 
@@ -48,7 +48,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
                     <ProgressBar
                         className="cooldownbar"
                         current={coolDown}
-                        max={initialCoolDown}
+                        max={Constants.INITIAL_COOLDOWN}
                     />
                 </div>
             </div>

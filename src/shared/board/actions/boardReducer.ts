@@ -1,11 +1,12 @@
 import { Reducer } from "react";
-import { PokemonPiece, moveOrAddPiece } from "@common/pokemon-piece";
+import { Models } from "@common";
+import { moveOrAddPiece } from "@common/piece-utils";
 import { BoardAction } from "./boardActions";
 import { PIECE_MOVED_TO_BOARD, PIECES_UPDATED, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "./boardActionTypes";
 
 const initialState = [];
 
-export const boardReducer: Reducer<PokemonPiece[], BoardAction> = (state = initialState, action) => {
+export const boardReducer: Reducer<Models.Piece[], BoardAction> = (state = initialState, action) => {
     switch (action.type) {
         case PIECES_UPDATED:
             return action.payload.pieces;

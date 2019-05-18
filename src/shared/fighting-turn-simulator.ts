@@ -1,12 +1,13 @@
-import { PokemonPiece, initialCoolDown } from "./pokemon-piece";
 import { attack } from "./attack";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getPokemonStats } from "./pokemon-details";
 import { getRelativeDirection } from "./position";
 import { isATeamDefeated } from "./is-a-team-defeated";
+import { Piece } from "./models";
+import { INITIAL_COOLDOWN } from "./constants";
 
-export const simulateTurn = (pieces: PokemonPiece[]) => {
-    const updatedPieces: PokemonPiece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
+export const simulateTurn = (pieces: Piece[]) => {
+    const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
 
     updatedPieces.forEach((attacker, index) => {
         if (attacker.currentHealth === 0) {
@@ -28,7 +29,7 @@ export const simulateTurn = (pieces: PokemonPiece[]) => {
             if (newPosition !== null) {
                 attacker.moving = { direction: getRelativeDirection(attacker.position, newPosition) };
                 attacker.position = newPosition;
-                attacker.coolDown = initialCoolDown;
+                attacker.coolDown = INITIAL_COOLDOWN;
             }
 
             return;

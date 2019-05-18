@@ -1,7 +1,7 @@
 import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
 import { PokemonDefinition } from "@common/pokemon-stats";
-import { PokemonPiece, getRequiredQuantityToEvolve, Models } from "@common";
+import { Models, getRequiredQuantityToEvolve } from "@common";
 
 export class CardDeck {
     public deck: Models.Card[];
@@ -55,7 +55,7 @@ export class CardDeck {
         this.deck = shuffle(this.deck);
     }
 
-    public addPiece(piece: PokemonPiece) {
+    public addPiece(piece: Models.Piece) {
         const definition = this.definitions.find(p => p.id === piece.pokemonId);
         const preEvolvedDefinitions = this.getDefinitionsUsedToEvolveToDefinition(definition);
 

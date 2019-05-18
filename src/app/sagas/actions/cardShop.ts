@@ -3,7 +3,7 @@ import { BuyCardAction, cardsUpdated } from "../../actions/cardActions";
 import { BUY_CARD } from "../../actiontypes/cardActionTypes";
 import { AppState } from "../../store/store";
 import { GamePhase } from "@common";
-import { createPieceFromCard } from "@common/pokemon-piece";
+import { createPieceFromCard } from "@common/piece-utils";
 import { getFirstEmptyBenchSlot, BenchActions } from "@common/board";
 import { moneyUpdateAction } from "../../actions/gameActions";
 

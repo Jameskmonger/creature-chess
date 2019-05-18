@@ -1,5 +1,4 @@
 import { JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED } from "../actiontypes/gameActionTypes";
-import { PokemonPiece } from "@common";
 import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 

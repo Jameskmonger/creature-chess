@@ -1,7 +1,7 @@
 import { astar, Graph } from "javascript-astar";
-import { PokemonPiece } from "./pokemon-piece";
 import { GRID_SIZE } from "./constants";
 import { getAdjacentPositions, TileCoordinates } from "./position";
+import { Piece } from "./models";
 
 const createEmptyWeightGrid = () => {
     const grid: number[][] = [];
@@ -19,7 +19,7 @@ const createEmptyWeightGrid = () => {
     return grid;
 };
 
-const createWeightGrid = (start: TileCoordinates, pieces: PokemonPiece[]) => {
+const createWeightGrid = (start: TileCoordinates, pieces: Piece[]) => {
     const grid = createEmptyWeightGrid();
 
     pieces.forEach(piece => {
@@ -34,7 +34,7 @@ const createWeightGrid = (start: TileCoordinates, pieces: PokemonPiece[]) => {
 };
 
 const findPath = (
-    pieces: PokemonPiece[],
+    pieces: Piece[],
     start: TileCoordinates,
     end: TileCoordinates
 ) => {
@@ -59,7 +59,7 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (piece: PokemonPiece, target: PokemonPiece, pieces: PokemonPiece[]): TileCoordinates => {
+export const getNextPiecePosition = (piece: Piece, target: Piece, pieces: Piece[]): TileCoordinates => {
     const targetTiles = getAdjacentPositions(target);
     const paths = targetTiles.map(pos => findPath(pieces, piece.position, pos)).filter(path => path !== null);
 

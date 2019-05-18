@@ -1,22 +1,22 @@
 import delay from "delay";
 import { Player } from "./players/player";
-import { PokemonPiece, Constants } from "@common";
-import { rotatePiecePosition } from "@common/pokemon-piece";
+import { Models, Constants } from "@common";
+import { rotatePiecePosition } from "@common/piece-utils";
 import { isATeamDefeated } from "@common/is-a-team-defeated";
 import { simulateTurn } from "@common/fighting-turn-simulator";
 import { log } from "./log";
 import uuid = require("uuid");
 
 export interface MatchResults {
-    survivingHomeTeam: PokemonPiece[];
-    survivingAwayTeam: PokemonPiece[];
+    survivingHomeTeam: Models.Piece[];
+    survivingAwayTeam: Models.Piece[];
 }
 
 export class Match {
     public readonly home: Player;
     public readonly away: Player;
     private id: string;
-    private board: PokemonPiece[];
+    private board: Models.Piece[];
 
     private clientFinishedMatch: Promise<void>;
     private resolveClientFinishMatch: () => void;
@@ -80,14 +80,14 @@ export class Match {
         };
     }
 
-    private mapHomePiece(piece: PokemonPiece) {
+    private mapHomePiece(piece: Models.Piece) {
         return {
             ...piece,
             facingAway: true
         };
     }
 
-    private mapAwayPiece(piece: PokemonPiece) {
+    private mapAwayPiece(piece: Models.Piece) {
         return rotatePiecePosition({
             ...piece,
             facingAway: false
