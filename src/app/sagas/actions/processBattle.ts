@@ -42,6 +42,8 @@ const startBattle = (startPieces: Models.Piece[], maxTurns: number) => {
             let turnCount = 0;
 
             while (true) {
+                await delay(Constants.TURN_DURATION_MS);
+
                 const defeated = isATeamDefeated(pieces);
 
                 if (shouldStop) {
@@ -64,8 +66,6 @@ const startBattle = (startPieces: Models.Piece[], maxTurns: number) => {
 
                 pieces = simulateTurn(pieces);
                 emit(turnAction(pieces));
-
-                await delay(Constants.TURN_DURATION_MS);
                 turnCount++;
             }
         };
