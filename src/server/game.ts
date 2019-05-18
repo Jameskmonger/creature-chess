@@ -35,17 +35,20 @@ export class Game {
 
         player.onHealthUpdate(this.updatePlayerLists);
 
-        player.onSendChatMessage(message => this.sendFeedMessageToAllPlayers({
-            type: FeedMessageType.CHAT,
-            payload: {
+        player.onSendChatMessage(message => {
+            this.sendFeedMessageToAllPlayers({
                 id: uuid(),
-                text: message,
-                fromId: player.id
-            }
-        }, [player.id]));
+                type: FeedMessageType.CHAT,
+                payload: {
+                    text: message,
+                    fromId: player.id
+                }
+            });
+        });
 
         player.onFinishMatch(results => {
             this.sendFeedMessageToAllPlayers({
+                id: uuid(),
                 type: FeedMessageType.BATTLE,
                 payload: results
             });
@@ -113,8 +116,8 @@ export class Game {
         await Promise.all(promises);
     }
 
-    private sendFeedMessageToAllPlayers(message: FeedMessage, exceptPlayerIds: string[] = []) {
-        this.players.filter(p => exceptPlayerIds.indexOf(p.id) === -1).forEach(p => p.onNewFeedMessage(message));
+    private sendFeedMessageToAllPlayers(message: FeedMessage) {
+        this.players.forEach(p => p.onNewFeedMessage(message));
     }
 
     private updatePlayerLists = () => {
