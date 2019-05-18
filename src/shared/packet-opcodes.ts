@@ -15,6 +15,7 @@ export enum ServerToClientPacketOpcodes {
 
 export enum ClientToServerPacketOpcodes {
     JOIN_GAME = "joinGame",
+    CREATE_GAME = "createGame",
     BUY_CARD = "buyCard",
     SELL_PIECE = "sellPiece",
     BUY_REROLL = "rerollCards",
@@ -42,6 +43,14 @@ export interface LevelUpdatePacket {
 
 export type PhaseUpdatePacket
     = ({ phase: GamePhase.PREPARING, payload: { pieces: Piece[] } })
-        | ({ phase: GamePhase.READY, payload: { pieces: Piece[], opponentId: string }})
-        | ({ phase: GamePhase.PLAYING })
-        | ({ phase: GamePhase.DEAD });
+    | ({ phase: GamePhase.READY, payload: { pieces: Piece[], opponentId: string } })
+    | ({ phase: GamePhase.PLAYING })
+    | ({ phase: GamePhase.DEAD });
+
+export interface JoinGameResponse {
+    error?: string;
+    response?: {
+        playerId: string;
+        gameId: string;
+    };
+}

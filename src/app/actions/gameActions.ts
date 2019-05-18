@@ -2,8 +2,8 @@ import { JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE
 import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 
-type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, name: string, gameId: string } });
-type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string, playerCount: number, botCount: number } });
+export type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, name: string, gameId: string } });
+export type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string, playerCount: number, botCount: number } });
 export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: PhaseUpdatePacket });
 
 export type GameAction =
