@@ -88,4 +88,12 @@
     .join-button {
         background: $join-lobby-button;
     }
+
+    .error {
+        padding: 1em 0.5em;
+        margin-bottom: 1em;
+        color: #db2828;
+        background-color: #ffe8e6;
+        box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
+    }
 }

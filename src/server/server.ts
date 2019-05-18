@@ -48,7 +48,6 @@ export class Server {
                 gameId: string,
                 response: (response: JoinGameResponse) => void
             ) => {
-                console.log("Join game received");
                 if (inGame) {
                     return;
                 }
@@ -94,13 +93,11 @@ export class Server {
                 botCount: number,
                 response: (response: JoinGameResponse) => void
             ) => {
-                console.log("Create game received");
                 if (inGame) {
                     return;
                 }
 
                 if (playerCount < 2) {
-                    console.log(`Player count ${playerCount} too low`);
                     response({
                         error: "Player count too low",
                         response: null
@@ -109,7 +106,6 @@ export class Server {
                 }
 
                 if (botCount > (playerCount - 1)) {
-                    console.log(`Bot count ${botCount} too high (player count is ${playerCount})`);
                     response({
                         error: "Bot count too high",
                         response: null

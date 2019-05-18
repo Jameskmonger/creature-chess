@@ -11,6 +11,7 @@ interface DispatchProps {
 
 interface LobbyStageProps {
     loading: boolean;
+    error: string;
 }
 
 type Props = LobbyStageProps & DispatchProps;
@@ -87,6 +88,11 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                         </div>
                     </div>
 
+                    {
+                        this.props.error
+                        && <div className="error"><p>{this.props.error}</p></div>
+                    }
+
                     <input
                         value={this.state.serverIP}
                         onChange={this.onServerIPChange}
@@ -153,7 +159,8 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
 }
 
 const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state => ({
-    loading: loadingSelector(state)
+    loading: loadingSelector(state),
+    error: state.game.lobbyError
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

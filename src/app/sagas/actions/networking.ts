@@ -11,7 +11,7 @@ import {
     JoinGameResponse
 } from "@common/packet-opcodes";
 import { Models, PlayerListPlayer } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction } from "../../actions/gameActions";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
@@ -105,49 +105,49 @@ const subscribe = (socket: Socket) => {
     });
 };
 
-const readPacketsToActions = function*(socket: Socket) {
+const readPacketsToActions = function* (socket: Socket) {
     const channel = yield call(subscribe, socket);
 
-    yield takeEvery(channel, function*(action) {
+    yield takeEvery(channel, function* (action) {
         yield put(action);
     });
 };
 
-const writeActionsToPackets = function*() {
+const writeActionsToPackets = function* () {
     yield all([
         takeEvery(
             BATTLE_FINISHED,
-            function*() {
+            function* () {
                 yield put(sendPacket(ClientToServerPacketOpcodes.FINISH_MATCH));
             }
         ),
         takeEvery(
             REROLL_CARDS,
-            function*() {
+            function* () {
                 yield put(sendPacket(ClientToServerPacketOpcodes.BUY_REROLL));
             }
         ),
         takeEvery(
             BUY_XP,
-            function*() {
+            function* () {
                 yield put(sendPacket(ClientToServerPacketOpcodes.BUY_XP));
             }
         ),
         takeEvery<ActionWithPayload<{ index: number }>>(
             BUY_CARD,
-            function*({ payload }) {
+            function* ({ payload }) {
                 yield put(sendPacket(ClientToServerPacketOpcodes.BUY_CARD, payload.index));
             }
         ),
         takeEvery<ActionWithPayload<{ pieceId: string }>>(
             BoardActionTypes.SELL_PIECE,
-            function*({ payload }) {
+            function* ({ payload }) {
                 yield put(sendPacket(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId));
             }
         ),
         takeEvery<ActionWithPayload<{ piece: Models.Piece, position: TileCoordinates }>>(
             BoardActionTypes.PIECE_MOVED_TO_BOARD,
-            function*({ payload }) {
+            function* ({ payload }) {
                 const packet: MovePiecePacket = {
                     id: payload.piece.id,
                     from: payload.piece.position,
@@ -159,7 +159,7 @@ const writeActionsToPackets = function*() {
         ),
         takeEvery<ActionWithPayload<{ piece: Models.Piece, slot: number }>>(
             BoardActionTypes.PIECE_MOVED_TO_BENCH,
-            function*({ payload }) {
+            function* ({ payload }) {
                 const packet: MovePiecePacket = {
                     id: payload.piece.id,
                     from: payload.piece.position,
@@ -171,36 +171,39 @@ const writeActionsToPackets = function*() {
         ),
         takeEvery<ActionWithPayload<{ message: string }>>(
             SEND_CHAT_MESSAGE,
-            function*({ payload }) {
+            function* ({ payload }) {
                 yield put(sendPacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message));
             }
         )
     ]);
 };
 
-const writePacketsToSocket = function*(socket: Socket) {
+const writePacketsToSocket = function* (socket: Socket) {
     yield takeEvery<NetworkAction>(SEND_PACKET, ({ payload }) => {
         socket.emit(payload.opcode, ...payload.data);
     });
 };
 
-export const networking = function*() {
-    const action: (JoinGameAction | CreateGameAction) = yield take([ JOIN_GAME, CREATE_GAME ]);
+export const networking = function* () {
+    let action: (JoinGameAction | CreateGameAction) = yield take([JOIN_GAME, CREATE_GAME]);
     const socket: Socket = yield call(getSocket, action.payload.serverIP);
 
     yield fork(readPacketsToActions, socket);
 
-    const { error, response }: JoinGameResponse =
-        (action.type === JOIN_GAME)
-        ? yield call(joinGame, socket, action.payload.name, action.payload.gameId)
-        : yield call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
+    while (true) {
+        const { error, response }: JoinGameResponse =
+            (action.type === JOIN_GAME)
+                ? yield call(joinGame, socket, action.payload.name, action.payload.gameId)
+                : yield call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
 
-    if (error) {
+        if (!error) {
+            yield put(joinCompleteAction(response.playerId, response.gameId));
+            break;
+        }
 
-        return;
+        yield put(joinGameError(error));
+        action = yield take([JOIN_GAME, CREATE_GAME]);
     }
-
-    yield put(joinCompleteAction(response.playerId, response.gameId));
 
     yield fork(writeActionsToPackets);
     yield fork(writePacketsToSocket, socket);

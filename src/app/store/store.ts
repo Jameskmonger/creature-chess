@@ -11,6 +11,7 @@ export interface GameState {
     phaseTimer: number;
     opponentId: string;
     loading: boolean;
+    lobbyError: string;
     money: number;
 }
 
