@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FaSyncAlt } from "react-icons/fa";
-import { PokemonCard, Constants, GamePhase } from "@common";
+import { Models, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../../store/store";
@@ -8,7 +8,7 @@ import { rerollCards, buyCard } from "../../actions/cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 
 interface StateProps {
-    cards: PokemonCard[];
+    cards: Models.Card[];
     money: number;
     canUseShop: boolean;
 }
@@ -27,7 +27,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         return () => onBuyCard(index);
     };
 
-    const createCard = (card: PokemonCard, index: number) => {
+    const createCard = (card: Models.Card, index: number) => {
         if (card === null) {
             return null;
         }
@@ -35,7 +35,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         return (
             <Card
                 key={`${index}-${card.definitionId}`}
-                pokemonId={card.definitionId}
+                definitionId={card.definitionId}
                 cost={card.cost}
                 name={card.name}
                 buyable={money >= card.cost}

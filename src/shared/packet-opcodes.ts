@@ -1,6 +1,6 @@
 import { TileCoordinates } from "./position";
-import { PokemonPiece } from "./pokemon-piece";
 import { GamePhase } from "./game-phase";
+import { Piece } from "./models";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -32,7 +32,7 @@ export interface MovePiecePacket {
 }
 
 export type BoardUpatePacket = {
-    pieces: PokemonPiece[];
+    pieces: Piece[];
 };
 
 export interface LevelUpdatePacket {
@@ -41,7 +41,7 @@ export interface LevelUpdatePacket {
 }
 
 export type PhaseUpdatePacket
-    = ({ phase: GamePhase.PREPARING, payload: { pieces: PokemonPiece[] } })
-        | ({ phase: GamePhase.READY, payload: { pieces: PokemonPiece[], opponentId: string }})
+    = ({ phase: GamePhase.PREPARING, payload: { pieces: Piece[] } })
+        | ({ phase: GamePhase.READY, payload: { pieces: Piece[], opponentId: string }})
         | ({ phase: GamePhase.PLAYING })
         | ({ phase: GamePhase.DEAD });

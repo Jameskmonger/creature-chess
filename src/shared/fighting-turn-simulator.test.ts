@@ -1,8 +1,8 @@
 import { TestFixture, Test, SpyOn, Expect, Setup } from "alsatian";
 import * as attackModule from "./attack";
 import { simulateTurn } from "./fighting-turn-simulator";
-import { PokemonPiece } from "./pokemon-piece";
-import { getPokemonStats } from "./pokemon-details";
+import { Piece } from "./models";
+import { getStats } from "./models/creatureDefinition";
 
 @TestFixture("fighting-turn-simulator")
 export class FightingTurnSimulatorTests {
@@ -10,9 +10,9 @@ export class FightingTurnSimulatorTests {
     @Test("if piece can attack, attack is called with attacker, defender and stats for each")
     public attackCalledWithCorrectArgs() {
         const attacker = this.getAttacker();
-        const attackerStats = getPokemonStats(attacker.pokemonId);
+        const attackerStats = getStats(attacker.definitionId);
         const defender = this.getDefender();
-        const defenderStats = getPokemonStats(defender.pokemonId);
+        const defenderStats = getStats(defender.definitionId);
         const attackSpy = SpyOn(attackModule, "attack");
 
         simulateTurn([attacker, defender]);
@@ -36,10 +36,10 @@ export class FightingTurnSimulatorTests {
         Expect(result).toEqual([updatedAttacker, updatedDefender]);
     }
 
-    private getAttacker = (): PokemonPiece => ({
+    private getAttacker = (): Piece => ({
         id: "43bfaeb0-931d-460b-b0ef-32e209f55821",
         ownerId: "c73363e4-1747-4d9e-9a06-3028fc44b38c",
-        pokemonId: 11,
+        definitionId: 11,
         coolDown: 0,
         currentHealth: 50,
         facingAway: true,
@@ -51,10 +51,10 @@ export class FightingTurnSimulatorTests {
         moving: null
     })
 
-    private getDefender = (): PokemonPiece => ({
+    private getDefender = (): Piece => ({
         id: "c5dad43c-4529-441e-84dc-e00c3db61c99",
         ownerId: "527ef449-9150-44bb-905e-f5ae92fb69aa",
-        pokemonId: 12,
+        definitionId: 12,
         coolDown: 1000,
         currentHealth: 50,
         facingAway: true,

@@ -1,11 +1,12 @@
 import uuid = require("uuid");
 import delay from "delay";
-import { GamePhase, Constants, getAllDefinitions } from "@common";
+import { GamePhase, Constants } from "@common";
 import { FeedMessage } from "@common/feed-message";
 import { Player } from "./players/player";
 import { OpponentProvider } from "./players/opponentProvider";
 import { CardDeck } from "./cardDeck";
 import { log } from "./log";
+import { getAllDefinitions } from "@common/models/creatureDefinition";
 
 export class Game {
     private GAME_SIZE: number;

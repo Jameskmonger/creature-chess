@@ -13,3 +13,5 @@ export const BUY_XP_AMOUNT = 4;
 
 export const TURN_DURATION_MS = 50;
 export const TURNS_IN_BATTLE = Math.floor((PHASE_LENGTHS[GamePhase.PLAYING] * 1000) / TURN_DURATION_MS);
+
+export const INITIAL_COOLDOWN = 1000;

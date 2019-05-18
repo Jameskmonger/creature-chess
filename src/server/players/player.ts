@@ -1,6 +1,7 @@
 import uuid = require("uuid/v4");
-import { PokemonCard, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
-import { PokemonPiece, clonePokemonPiece, createPokemon, createPieceFromCard } from "@common/pokemon-piece";
+import { Models, GamePhase, Constants, getXpToNextLevel } from "@common";
+import { getDefinition, getRequiredQuantityToEvolve, getPieceCost } from "@common/models/creatureDefinition";
+import { clonePiece, createPiece, createPieceFromCard } from "@common/piece-utils";
 import { MovePiecePacket } from "@common/packet-opcodes";
 import { TileType, createTileCoordinates } from "@common/position";
 import { Match } from "../match";
@@ -9,7 +10,6 @@ import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
 import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { EventEmitter } from "events";
-import { PokemonDefinition, getPieceCost } from "../../shared/pokemon-stats";
 import { Observable } from "../observable/observable";
 import { Store } from "../observable/store";
 import { OpponentProvider } from "./opponentProvider";
@@ -30,9 +30,9 @@ export abstract class Player {
     public health: number = 100;
 
     protected money = new Observable(3);
-    protected cards = new Observable<PokemonCard[]>([]);
-    protected board = new Store<PokemonPiece[], BoardActions.BoardAction>([], boardReducer);
-    protected bench = new Store<PokemonPiece[], BenchActions.BenchPiecesAction>([], benchReducer);
+    protected cards = new Observable<Models.Card[]>([]);
+    protected board = new Store<Models.Piece[], BoardActions.BoardAction>([], boardReducer);
+    protected bench = new Store<Models.Piece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
 
@@ -103,7 +103,7 @@ export abstract class Player {
     }
 
     public cloneBoard() {
-        return this.board.getValue().map(p => clonePokemonPiece(p));
+        return this.board.getValue().map(p => clonePiece(p));
     }
 
     public onHealthUpdate(fn: (health: number) => void) {
@@ -182,7 +182,7 @@ export abstract class Player {
             return;
         }
 
-        const pieceCost = getPieceCost(piece.pokemonId);
+        const pieceCost = getPieceCost(piece.definitionId);
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
         this.deck.shuffle();
@@ -295,7 +295,7 @@ export abstract class Player {
         this.board.dispatch(action);
     }
 
-    private addPieceToBench(piece: PokemonPiece) {
+    private addPieceToBench(piece: Models.Piece) {
         const action = BenchActions.benchPieceAdded(piece);
 
         this.bench.dispatch(action);
@@ -303,8 +303,8 @@ export abstract class Player {
         this.checkForEvolutions(piece);
     }
 
-    private checkForEvolutions(piece: PokemonPiece) {
-        const { evolvedFormId } = getPokemonDefinition(piece.pokemonId);
+    private checkForEvolutions(piece: Models.Piece) {
+        const { evolvedFormId } = getDefinition(piece.definitionId);
 
         if (!evolvedFormId) {
             return;
@@ -313,12 +313,12 @@ export abstract class Player {
         const board = this.board.getValue();
         const bench = this.bench.getValue();
 
-        const benchOthers = bench.filter(p => p.pokemonId !== piece.pokemonId);
-        const boardOthers = board.filter(p => p.pokemonId !== piece.pokemonId);
+        const benchOthers = bench.filter(p => p.definitionId !== piece.definitionId);
+        const boardOthers = board.filter(p => p.definitionId !== piece.definitionId);
 
         const totalInstances = (bench.length - benchOthers.length) + (board.length - boardOthers.length);
 
-        if (totalInstances < getRequiredQuantityToEvolve(piece.pokemonId)) {
+        if (totalInstances < getRequiredQuantityToEvolve(piece.definitionId)) {
             return;
         }
 
@@ -327,7 +327,7 @@ export abstract class Player {
 
         const slot = getFirstEmptyBenchSlot(benchOthers);
 
-        const newPiece = createPokemon(this.id, evolvedFormId, [slot, null], piece.id);
+        const newPiece = createPiece(this.id, evolvedFormId, [slot, null], piece.id);
         this.addPieceToBench(newPiece);
     }
 

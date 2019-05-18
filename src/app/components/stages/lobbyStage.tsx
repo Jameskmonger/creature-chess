@@ -30,7 +30,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
             return (
                 <div className="lobby">
                     <div className="join-game">
-                        <h2 className="title">Pokemon Auto Chess</h2>
+                        <h2 className="title">Creature Chess</h2>
 
                         <p>Loading game...</p>
                     </div>
@@ -41,7 +41,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         return (
             <div className="lobby">
                 <div className="join-game">
-                    <h2 className="title">Pokemon Auto Chess</h2>
+                    <h2 className="title">Creature Chess</h2>
 
                     <input
                         value={this.state.name}

@@ -1,8 +1,8 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BenchActions, BenchActionTypes, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { AppState } from "../../store/store";
-import { getPokemonDefinition, getRequiredQuantityToEvolve } from "@common";
-import { createPokemon } from "../../../shared/pokemon-piece";
+import { getDefinition, getRequiredQuantityToEvolve } from "@common/models/creatureDefinition";
+import { createPiece } from "@common/piece-utils";
 
 export const evolution = function*() {
     yield takeEvery<BenchActions.BenchPieceAddedAction>(
@@ -12,7 +12,7 @@ export const evolution = function*() {
 
             const state: AppState = yield select();
 
-            const { evolvedFormId } = getPokemonDefinition(piece.pokemonId);
+            const { evolvedFormId } = getDefinition(piece.definitionId);
 
             if (!evolvedFormId) {
                 return;
@@ -20,12 +20,12 @@ export const evolution = function*() {
 
             const localBoard = state.board.filter(p => p.ownerId === state.localPlayer.id);
 
-            const benchOthers = state.bench.filter(p => p.pokemonId !== piece.pokemonId);
-            const boardOthers = localBoard.filter(p => p.pokemonId !== piece.pokemonId);
+            const benchOthers = state.bench.filter(p => p.definitionId !== piece.definitionId);
+            const boardOthers = localBoard.filter(p => p.definitionId !== piece.definitionId);
 
             const totalInstances = (state.bench.length - benchOthers.length) + (localBoard.length - boardOthers.length);
 
-            if (totalInstances < getRequiredQuantityToEvolve(piece.pokemonId)) {
+            if (totalInstances < getRequiredQuantityToEvolve(piece.definitionId)) {
                 return;
             }
 
@@ -34,7 +34,7 @@ export const evolution = function*() {
 
             const slot = getFirstEmptyBenchSlot(benchOthers);
 
-            const newPiece = createPokemon(state.localPlayer.id, evolvedFormId, [slot, null], piece.id);
+            const newPiece = createPiece(state.localPlayer.id, evolvedFormId, [slot, null], piece.id);
             yield put(BenchActions.benchPieceAdded(newPiece));
         }
     );
