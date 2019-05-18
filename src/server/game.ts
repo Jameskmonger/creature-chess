@@ -1,7 +1,7 @@
 import uuid = require("uuid");
 import delay from "delay";
 import { GamePhase, Constants } from "@common";
-import { FeedMessage } from "@common/feed-message";
+import { FeedMessage, FeedMessageType } from "@common/feed-message";
 import { Player } from "./players/player";
 import { OpponentProvider } from "./players/opponentProvider";
 import { CardDeck } from "./cardDeck";
@@ -34,11 +34,25 @@ export class Game {
         }
 
         player.onHealthUpdate(this.updatePlayerLists);
-        player.onSendChatMessage(message => this.sendFeedMessageToAllPlayers({
-            id: uuid(),
-            text: message,
-            fromId: player.id
-        }, [player.id]));
+
+        player.onSendChatMessage(message => {
+            this.sendFeedMessageToAllPlayers({
+                id: uuid(),
+                type: FeedMessageType.CHAT,
+                payload: {
+                    text: message,
+                    fromId: player.id
+                }
+            });
+        });
+
+        player.onFinishMatch(results => {
+            this.sendFeedMessageToAllPlayers({
+                id: uuid(),
+                type: FeedMessageType.BATTLE,
+                payload: results
+            });
+        });
 
         this.players.push(player);
         player.setDeck(this.deck);
@@ -99,20 +113,13 @@ export class Game {
 
         const promises = this.players.filter(p => p.isAlive()).map(p => p.fightMatch(battleTimeout));
 
-        const results = await Promise.all(promises);
+        await Promise.all(promises);
 
-        results.forEach(({player, opponent, win, damage}) => {
-            const resultMessageText = `${player.name} ${win ? "beat" : "lost to"} ${opponent.name}`;
-            this.sendFeedMessageToAllPlayers({ text: resultMessageText, id: uuid() });
-            if (damage) {
-                const damageMessageText = `${player.name} was hit for ${damage}`;
-                this.sendFeedMessageToAllPlayers({ text: damageMessageText, id: uuid() });
-            }
-        });
+        await delay(Constants.CELEBRATION_TIME); // celebration time
     }
 
-    private sendFeedMessageToAllPlayers(message: FeedMessage, exceptPlayerIds: string[] = []) {
-        this.players.filter(p => exceptPlayerIds.indexOf(p.id) === -1).forEach(p => p.onNewFeedMessage(message));
+    private sendFeedMessageToAllPlayers(message: FeedMessage) {
+        this.players.forEach(p => p.onNewFeedMessage(message));
     }
 
     private updatePlayerLists = () => {

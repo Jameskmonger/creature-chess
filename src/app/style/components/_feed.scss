@@ -27,15 +27,34 @@
         }
     }
 
-    .message-sender {
-        font-weight: 700;
+    .chat-feed-message {
+        .sender {
+            font-weight: 700;
+        }
+
+        .message {
+            color: $player-chat-message-color;
+        }
     }
 
-    .player-chat-message {
-        color: $player-chat-message-color;
-    }
+    .battle-feed-message {
+        padding: 0.3em 0;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+        text-align: center;
+        background: $match-results-background;
 
-    .info-feed-message {
-        color: $info-feed-message-color;
+        .score {
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .vs {
+            color: #b6b6b6;
+        }
+
+        .player-name {
+            color: #e1e1e1;
+        }
     }
 }

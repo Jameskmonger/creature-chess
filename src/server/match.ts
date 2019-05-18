@@ -8,8 +8,8 @@ import { log } from "./log";
 import uuid = require("uuid");
 
 export interface MatchResults {
-    survivingHomeTeam: Models.Piece[];
-    survivingAwayTeam: Models.Piece[];
+    home: Models.Piece[];
+    away: Models.Piece[];
 }
 
 export class Match {
@@ -17,6 +17,7 @@ export class Match {
     public readonly away: Player;
     private id: string;
     private board: Models.Piece[];
+    private results: MatchResults;
 
     private clientFinishedMatch: Promise<void>;
     private resolveClientFinishMatch: () => void;
@@ -42,6 +43,10 @@ export class Match {
 
     public getBoard() {
         return this.board;
+    }
+
+    public getResults() {
+        return this.results;
     }
 
     public async fight(battleTimeout: Promise<void>, maxTurns: number): Promise<MatchResults> {
@@ -74,10 +79,12 @@ export class Match {
             Promise.all([ minTimePassed, this.clientFinishedMatch ])
         ]);
 
-        return {
-            survivingHomeTeam: surviving.filter(p => p.ownerId === this.home.id),
-            survivingAwayTeam: surviving.filter(p => p.ownerId === this.away.id)
+        this.results = {
+            home: surviving.filter(p => p.ownerId === this.home.id),
+            away: surviving.filter(p => p.ownerId === this.away.id)
         };
+
+        return this.results;
     }
 
     private mapHomePiece(piece: Models.Piece) {
