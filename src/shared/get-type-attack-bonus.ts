@@ -1,223 +1,223 @@
-import { PokemonType } from "./pokemon-type";
+import { CreatureType } from "./models/creatureType";
 
-export const getTypeAttackBonus = (attackType: PokemonType, defenceType: PokemonType) => {
-    if (attackType === PokemonType.Normal) {
-        if (defenceType === PokemonType.Rock) {
+export const getTypeAttackBonus = (attackType: CreatureType, defenceType: CreatureType) => {
+    if (attackType === CreatureType.Normal) {
+        if (defenceType === CreatureType.Rock) {
             return 0.5;
         }
 
-        if (defenceType === PokemonType.Ghost) {
+        if (defenceType === CreatureType.Ghost) {
             return 0;
         }
     }
 
-    if (attackType === PokemonType.Fire) {
+    if (attackType === CreatureType.Fire) {
         if (
-            defenceType === PokemonType.Fire
-            || defenceType === PokemonType.Water
-            || defenceType === PokemonType.Rock
+            defenceType === CreatureType.Fire
+            || defenceType === CreatureType.Water
+            || defenceType === CreatureType.Rock
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Grass
-            || defenceType === PokemonType.Bug
+            defenceType === CreatureType.Grass
+            || defenceType === CreatureType.Bug
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Water) {
+    if (attackType === CreatureType.Water) {
         if (
-            defenceType === PokemonType.Water
-            || defenceType === PokemonType.Grass
+            defenceType === CreatureType.Water
+            || defenceType === CreatureType.Grass
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Fire
-            || defenceType === PokemonType.Ground
-            || defenceType === PokemonType.Rock
+            defenceType === CreatureType.Fire
+            || defenceType === CreatureType.Ground
+            || defenceType === CreatureType.Rock
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Electric) {
+    if (attackType === CreatureType.Electric) {
         if (
-            defenceType === PokemonType.Electric
-            || defenceType === PokemonType.Grass
+            defenceType === CreatureType.Electric
+            || defenceType === CreatureType.Grass
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Water
-            || defenceType === PokemonType.Flying
+            defenceType === CreatureType.Water
+            || defenceType === CreatureType.Flying
         ) {
             return 2;
         }
 
-        if (defenceType === PokemonType.Ground) {
+        if (defenceType === CreatureType.Ground) {
             return 0;
         }
     }
 
-    if (attackType === PokemonType.Grass) {
+    if (attackType === CreatureType.Grass) {
         if (
-            defenceType === PokemonType.Fire
-            || defenceType === PokemonType.Grass
-            || defenceType === PokemonType.Poison
-            || defenceType === PokemonType.Flying
-            || defenceType === PokemonType.Bug
+            defenceType === CreatureType.Fire
+            || defenceType === CreatureType.Grass
+            || defenceType === CreatureType.Poison
+            || defenceType === CreatureType.Flying
+            || defenceType === CreatureType.Bug
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Water
-            || defenceType === PokemonType.Ground
-            || defenceType === PokemonType.Rock
+            defenceType === CreatureType.Water
+            || defenceType === CreatureType.Ground
+            || defenceType === CreatureType.Rock
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Fighting) {
+    if (attackType === CreatureType.Fighting) {
         if (
-            defenceType === PokemonType.Poison
-            || defenceType === PokemonType.Flying
-            || defenceType === PokemonType.Psychic
-            || defenceType === PokemonType.Bug
+            defenceType === CreatureType.Poison
+            || defenceType === CreatureType.Flying
+            || defenceType === CreatureType.Psychic
+            || defenceType === CreatureType.Bug
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Normal
-            || defenceType === PokemonType.Rock
+            defenceType === CreatureType.Normal
+            || defenceType === CreatureType.Rock
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Poison) {
+    if (attackType === CreatureType.Poison) {
         if (
-            defenceType === PokemonType.Poison
-            || defenceType === PokemonType.Ground
-            || defenceType === PokemonType.Rock
-            || defenceType === PokemonType.Ghost
+            defenceType === CreatureType.Poison
+            || defenceType === CreatureType.Ground
+            || defenceType === CreatureType.Rock
+            || defenceType === CreatureType.Ghost
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Grass
-            || defenceType === PokemonType.Bug
+            defenceType === CreatureType.Grass
+            || defenceType === CreatureType.Bug
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Ground) {
+    if (attackType === CreatureType.Ground) {
         if (
-            defenceType === PokemonType.Grass
-            || defenceType === PokemonType.Bug
+            defenceType === CreatureType.Grass
+            || defenceType === CreatureType.Bug
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Fire
-            || defenceType === PokemonType.Electric
-            || defenceType === PokemonType.Poison
-            || defenceType === PokemonType.Rock
+            defenceType === CreatureType.Fire
+            || defenceType === CreatureType.Electric
+            || defenceType === CreatureType.Poison
+            || defenceType === CreatureType.Rock
         ) {
             return 2;
         }
 
-        if (defenceType === PokemonType.Flying) {
+        if (defenceType === CreatureType.Flying) {
             return 0;
         }
     }
 
-    if (attackType === PokemonType.Flying) {
+    if (attackType === CreatureType.Flying) {
         if (
-            defenceType === PokemonType.Electric
-            || defenceType === PokemonType.Rock
+            defenceType === CreatureType.Electric
+            || defenceType === CreatureType.Rock
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Grass
-            || defenceType === PokemonType.Fighting
-            || defenceType === PokemonType.Bug
+            defenceType === CreatureType.Grass
+            || defenceType === CreatureType.Fighting
+            || defenceType === CreatureType.Bug
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Psychic) {
-        if (defenceType === PokemonType.Electric) {
+    if (attackType === CreatureType.Psychic) {
+        if (defenceType === CreatureType.Electric) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Fighting
-            || defenceType === PokemonType.Poison
+            defenceType === CreatureType.Fighting
+            || defenceType === CreatureType.Poison
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Bug) {
+    if (attackType === CreatureType.Bug) {
         if (
-            defenceType === PokemonType.Fire
-            || defenceType === PokemonType.Fighting
-            || defenceType === PokemonType.Flying
-            || defenceType === PokemonType.Ghost
-        ) {
-            return 0.5;
-        }
-
-        if (
-            defenceType === PokemonType.Grass
-            || defenceType === PokemonType.Poison
-            || defenceType === PokemonType.Psychic
-        ) {
-            return 2;
-        }
-    }
-
-    if (attackType === PokemonType.Rock) {
-        if (
-            defenceType === PokemonType.Fighting
-            || defenceType === PokemonType.Ground
+            defenceType === CreatureType.Fire
+            || defenceType === CreatureType.Fighting
+            || defenceType === CreatureType.Flying
+            || defenceType === CreatureType.Ghost
         ) {
             return 0.5;
         }
 
         if (
-            defenceType === PokemonType.Fire
-            || defenceType === PokemonType.Flying
-            || defenceType === PokemonType.Bug
+            defenceType === CreatureType.Grass
+            || defenceType === CreatureType.Poison
+            || defenceType === CreatureType.Psychic
         ) {
             return 2;
         }
     }
 
-    if (attackType === PokemonType.Ghost) {
+    if (attackType === CreatureType.Rock) {
         if (
-            defenceType === PokemonType.Normal
-            || defenceType === PokemonType.Psychic
+            defenceType === CreatureType.Fighting
+            || defenceType === CreatureType.Ground
+        ) {
+            return 0.5;
+        }
+
+        if (
+            defenceType === CreatureType.Fire
+            || defenceType === CreatureType.Flying
+            || defenceType === CreatureType.Bug
+        ) {
+            return 2;
+        }
+    }
+
+    if (attackType === CreatureType.Ghost) {
+        if (
+            defenceType === CreatureType.Normal
+            || defenceType === CreatureType.Psychic
         ) {
             return 0;
         }
 
-        if (defenceType === PokemonType.Ghost) {
+        if (defenceType === CreatureType.Ghost) {
             return 2;
         }
     }

@@ -1,10 +1,10 @@
 import { Expect, Test, TestFixture } from "alsatian";
 import { CardDeck } from "./cardDeck";
 import { uniq } from "lodash";
-import { PokemonDefinition, getAllDefinitions } from "@common/pokemon-stats";
-import { PokemonType } from "@common/pokemon-type";
+import { CreatureDefinition, getAllDefinitions } from "@common/models/creatureDefinition.ts";
+import { CreatureType } from "@common/models/creatureType";
 
-const makeDefinition = (cost: number): PokemonDefinition => {
+const makeDefinition = (cost: number): CreatureDefinition => {
     return {
         cost,
 
@@ -17,7 +17,7 @@ const makeDefinition = (cost: number): PokemonDefinition => {
             speed: 0,
             specialAttack: 0,
             specialDefense: 0,
-            type: PokemonType.Normal
+            type: CreatureType.Normal
         }
     };
 };

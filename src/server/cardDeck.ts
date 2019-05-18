@@ -1,13 +1,13 @@
 import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
-import { PokemonDefinition } from "@common/pokemon-stats";
+import { CreatureDefinition } from "@common/models/creatureDefinition.ts";
 import { Models, getRequiredQuantityToEvolve } from "@common";
 
 export class CardDeck {
     public deck: Models.Card[];
-    private definitions: PokemonDefinition[];
+    private definitions: CreatureDefinition[];
 
-    constructor(definitions: PokemonDefinition[]) {
+    constructor(definitions: CreatureDefinition[]) {
         this.definitions = definitions;
 
         const cardValues = [
@@ -66,7 +66,7 @@ export class CardDeck {
         this.deck = shuffle(this.deck);
     }
 
-    private addDefinition(definition: PokemonDefinition) {
+    private addDefinition(definition: CreatureDefinition) {
         const card: Models.Card = {
             id: uuid(),
             definitionId: definition.id,
@@ -77,7 +77,7 @@ export class CardDeck {
         this.deck.push(card);
     }
 
-    private getDefinitionsUsedToEvolveToDefinition(definition: PokemonDefinition): PokemonDefinition[] {
+    private getDefinitionsUsedToEvolveToDefinition(definition: CreatureDefinition): CreatureDefinition[] {
         const preEvolvedFormDefinition = this.definitions.find(p => p.evolvedFormId === definition.id);
         if (!!preEvolvedFormDefinition) {
             const preEvolvedDefinitions = Array(getRequiredQuantityToEvolve(preEvolvedFormDefinition.id)).fill(preEvolvedFormDefinition);

@@ -9,7 +9,7 @@ import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
 import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { EventEmitter } from "events";
-import { PokemonDefinition, getPieceCost } from "../../shared/pokemon-stats";
+import { CreatureDefinition, getPieceCost } from "../../shared/models/creatureDefinition";
 import { Observable } from "../observable/observable";
 import { Store } from "../observable/store";
 import { OpponentProvider } from "./opponentProvider";

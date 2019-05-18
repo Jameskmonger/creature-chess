@@ -2,7 +2,7 @@ export { GamePhase } from "./game-phase";
 export { PlayerListPlayer } from "./player-list-player";
 export { getTotalHealthByTeam } from "./get-total-health-by-team";
 
-export { getPokemonDefinition, getAllDefinitions } from "./pokemon-stats";
+export { getDefinition as getPokemonDefinition, getAllDefinitions } from "./models/creatureDefinition";
 export { getRequiredQuantityToEvolve } from "./pokemon-details";
 
 import * as Constants from "./constants";

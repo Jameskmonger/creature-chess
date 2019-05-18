@@ -1,7 +1,7 @@
-import { getPokemonDefinition } from "./pokemon-stats";
+import { getDefinition } from "./models/creatureDefinition";
 
-export const getPokemonStats = (pokemonId: number) => getPokemonDefinition(pokemonId).stats;
+export const getPokemonStats = (pokemonId: number) => getDefinition(pokemonId).stats;
 
-export const getPokemonName = (pokemonId: number) => getPokemonDefinition(pokemonId).name;
+export const getPokemonName = (pokemonId: number) => getDefinition(pokemonId).name;
 
 export const getRequiredQuantityToEvolve = (pokemonId: number) => 3;

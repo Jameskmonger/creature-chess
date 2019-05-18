@@ -1,10 +1,10 @@
 import { getTypeAttackBonus } from "./get-type-attack-bonus";
-import { PokemonStats } from "./pokemon-stats";
+import { CreatureStats } from "./models/creatureDefinition";
 import { getRelativeDirection } from "./position";
 import { Piece } from "./models";
 import { INITIAL_COOLDOWN } from "./constants";
 
-export const attack = (attacker: Piece, attackerStats: PokemonStats, defender: Piece, defenderStats: PokemonStats) => {
+export const attack = (attacker: Piece, attackerStats: CreatureStats, defender: Piece, defenderStats: CreatureStats) => {
     if (attacker.currentHealth === 0) {
         // Dead Pokémon don't attack
         return { attacker, defender };

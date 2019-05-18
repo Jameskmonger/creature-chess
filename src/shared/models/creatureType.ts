@@ -1,4 +1,4 @@
-export enum PokemonType {
+export enum CreatureType {
     Bug = "Bug",
     Electric = "Electric",
     Fighting = "Fighting",
