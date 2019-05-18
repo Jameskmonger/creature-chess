@@ -35,7 +35,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         return (
             <Card
                 key={`${index}-${card.definitionId}`}
-                pokemonId={card.definitionId}
+                definitionId={card.definitionId}
                 cost={card.cost}
                 name={card.name}
                 buyable={money >= card.cost}

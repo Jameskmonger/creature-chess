@@ -1,7 +1,7 @@
 import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
-import { CreatureDefinition } from "@common/models/creatureDefinition.ts";
-import { Models, getRequiredQuantityToEvolve } from "@common";
+import { CreatureDefinition, getRequiredQuantityToEvolve } from "@common/models/creatureDefinition";
+import { Models } from "@common";
 
 export class CardDeck {
     public deck: Models.Card[];
@@ -21,11 +21,11 @@ export class CardDeck {
         this.deck = [];
 
         for (const value of cardValues) {
-            const costPokemon = definitions.filter(p => p.cost !== null && p.cost === value.cost);
+            const costDefinitions = definitions.filter(p => p.cost !== null && p.cost === value.cost);
 
-            for (const pokemon of costPokemon) {
+            for (const definition of costDefinitions) {
                 for (let count = 0; count < value.quantity; count++) {
-                    this.addDefinition(pokemon);
+                    this.addDefinition(definition);
                 }
             }
         }
@@ -56,7 +56,7 @@ export class CardDeck {
     }
 
     public addPiece(piece: Models.Piece) {
-        const definition = this.definitions.find(p => p.id === piece.pokemonId);
+        const definition = this.definitions.find(p => p.id === piece.definitionId);
         const preEvolvedDefinitions = this.getDefinitionsUsedToEvolveToDefinition(definition);
 
         preEvolvedDefinitions.forEach(preEvolvedDefinition => this.addDefinition(preEvolvedDefinition));

@@ -1,8 +1,8 @@
 {
 	"private": true,
-	"name": "pokemon-auto-chess",
+	"name": "creature-chess",
 	"version": "1.0.0",
-	"description": "Pokemon auto chess",
+	"description": "Creature Chess",
 	"main": "index.js",
 	"scripts": {
 		"build": "npm run build:server && npm run build:app",

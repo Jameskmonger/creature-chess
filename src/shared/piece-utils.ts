@@ -1,15 +1,15 @@
 import uuid = require("uuid/v4");
 import { createTileCoordinates } from "./position";
 import { GRID_SIZE, INITIAL_COOLDOWN } from "./constants";
-import { getPokemonStats } from "./pokemon-details";
+import { getStats } from "./models/creatureDefinition";
 import { Card, Piece } from "./models";
 
-export const createPiece = (ownerId: string, pokemonId: number, position: [number, number], id?: string): Piece => {
-    const stats = getPokemonStats(pokemonId);
+export const createPiece = (ownerId: string, definitionId: number, position: [number, number], id?: string): Piece => {
+    const stats = getStats(definitionId);
     return {
         id: id || uuid(),
         ownerId,
-        pokemonId,
+        definitionId,
         position: createTileCoordinates(...position),
         facingAway: true,
         maxHealth: stats.hp,
@@ -21,7 +21,7 @@ export const createPiece = (ownerId: string, pokemonId: number, position: [numbe
 export const createPieceFromCard = (ownerId: string, card: Card, slot: number) =>
     createPiece(ownerId, card.definitionId, [ slot, null ], card.id);
 
-export const clonePiece = (piece: Piece) => createPiece(piece.ownerId, piece.pokemonId, [piece.position.x, piece.position.y]);
+export const clonePiece = (piece: Piece) => createPiece(piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y]);
 
 export const moveOrAddPiece = <T extends Piece>(allPieces: T[], target: T) => {
     const result: T[] = [];

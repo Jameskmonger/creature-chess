@@ -27,7 +27,7 @@ const mapDefinitions = (definition: CreatureDefinition[]) => {
     });
 };
 
-mapDefinitions(definitions as unknown as CreatureDefinition[]);
+mapDefinitions(definitions);
 
 const definitionArray = Array.from(definitionMap.values());
 
@@ -36,3 +36,7 @@ export const getAllDefinitions = () => definitionArray;
 
 // When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
 export const getPieceCost = (id: number) => getDefinition(id).cost || 6;
+
+export const getStats = (id: number) => getDefinition(id).stats;
+
+export const getRequiredQuantityToEvolve = (id: number) => 3;

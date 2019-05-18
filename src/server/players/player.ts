@@ -1,5 +1,6 @@
 import uuid = require("uuid/v4");
-import { Models, GamePhase, Constants, getPokemonDefinition, getXpToNextLevel, getRequiredQuantityToEvolve } from "@common";
+import { Models, GamePhase, Constants, getXpToNextLevel } from "@common";
+import { getDefinition, getRequiredQuantityToEvolve, getPieceCost } from "@common/models/creatureDefinition";
 import { clonePiece, createPiece, createPieceFromCard } from "@common/piece-utils";
 import { MovePiecePacket } from "@common/packet-opcodes";
 import { TileType, createTileCoordinates } from "@common/position";
@@ -9,7 +10,6 @@ import { CardDeck } from "../cardDeck";
 import { FeedMessage } from "@common/feed-message";
 import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { EventEmitter } from "events";
-import { CreatureDefinition, getPieceCost } from "../../shared/models/creatureDefinition";
 import { Observable } from "../observable/observable";
 import { Store } from "../observable/store";
 import { OpponentProvider } from "./opponentProvider";
@@ -182,7 +182,7 @@ export abstract class Player {
             return;
         }
 
-        const pieceCost = getPieceCost(piece.pokemonId);
+        const pieceCost = getPieceCost(piece.definitionId);
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
         this.deck.shuffle();
@@ -304,7 +304,7 @@ export abstract class Player {
     }
 
     private checkForEvolutions(piece: Models.Piece) {
-        const { evolvedFormId } = getPokemonDefinition(piece.pokemonId);
+        const { evolvedFormId } = getDefinition(piece.definitionId);
 
         if (!evolvedFormId) {
             return;
@@ -313,12 +313,12 @@ export abstract class Player {
         const board = this.board.getValue();
         const bench = this.bench.getValue();
 
-        const benchOthers = bench.filter(p => p.pokemonId !== piece.pokemonId);
-        const boardOthers = board.filter(p => p.pokemonId !== piece.pokemonId);
+        const benchOthers = bench.filter(p => p.definitionId !== piece.definitionId);
+        const boardOthers = board.filter(p => p.definitionId !== piece.definitionId);
 
         const totalInstances = (bench.length - benchOthers.length) + (board.length - boardOthers.length);
 
-        if (totalInstances < getRequiredQuantityToEvolve(piece.pokemonId)) {
+        if (totalInstances < getRequiredQuantityToEvolve(piece.definitionId)) {
             return;
         }
 

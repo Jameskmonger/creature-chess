@@ -1,16 +1,16 @@
 import * as React from "react";
-import { PokemonImage } from "../../pokemonImage";
+import { CreatureImage } from "../../creatureImage";
 import { DragSourceProps } from "../../draggable/drag-source-props";
 import { Props } from "./benchPieceProps";
 
 export class BenchPieceUnconnected extends React.Component<Props & DragSourceProps> {
     public render() {
         const { piece, connectDragSource} = this.props;
-        const { pokemonId } = piece;
+        const { definitionId } = piece;
 
         return connectDragSource(
             <div className="piece">
-                <PokemonImage pokemonId={pokemonId} />
+                <CreatureImage definitionId={definitionId} />
             </div>
         );
     }

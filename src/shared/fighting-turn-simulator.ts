@@ -1,6 +1,6 @@
 import { attack } from "./attack";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
-import { getPokemonStats } from "./pokemon-details";
+import { getStats } from "./models/creatureDefinition";
 import { getRelativeDirection } from "./position";
 import { isATeamDefeated } from "./is-a-team-defeated";
 import { Piece } from "./models";
@@ -14,7 +14,7 @@ export const simulateTurn = (pieces: Piece[]) => {
             return;
         }
 
-        const attackerStats = getPokemonStats(attacker.pokemonId);
+        const attackerStats = getStats(attacker.definitionId);
         if (attacker.coolDown > 0) {
             attacker.coolDown -= attackerStats.speed;
 
@@ -35,7 +35,7 @@ export const simulateTurn = (pieces: Piece[]) => {
             return;
         }
 
-        const defenderStats = getPokemonStats(defender.pokemonId);
+        const defenderStats = getStats(defender.definitionId);
         const updatedFighters = attack(attacker, attackerStats, defender, defenderStats);
         updatedPieces[index] = updatedFighters.attacker;
         updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;

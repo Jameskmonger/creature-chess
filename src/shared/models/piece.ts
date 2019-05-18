@@ -17,7 +17,7 @@ export interface MovementDetails {
 export interface Piece {
     id: string;
     ownerId: string;
-    pokemonId: number;
+    definitionId: number;
     position: TileCoordinates;
 
     facingAway: boolean;

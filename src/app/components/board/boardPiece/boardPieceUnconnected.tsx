@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ProgressBar } from "../../progressBar";
 import { getAnimationCssVariables, AnimationVariables, Animation } from "../../animation";
-import { PokemonImage } from "../../pokemonImage";
+import { CreatureImage } from "../../creatureImage";
 import { BoardPieceProps, isFriendly } from "./boardPieceProps";
 import { DragSourceProps } from "../../draggable/drag-source-props";
 import { Constants } from "../../../../shared";
@@ -25,7 +25,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
         }
 
         const { piece, connectDragSource} = this.props;
-        const { facingAway, pokemonId, currentHealth, maxHealth, coolDown } = piece;
+        const { facingAway, definitionId, currentHealth, maxHealth, coolDown } = piece;
         const { currentAnimations } = this.state;
 
         const friendly = isFriendly(this.props);
@@ -37,7 +37,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
                 style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
                 onAnimationEnd={this.onAnimationEnd}
             >
-                <PokemonImage pokemonId={pokemonId} facing={facingAway ? "back" : "front"} />
+                <CreatureImage definitionId={definitionId} facing={facingAway ? "back" : "front"} />
 
                 <div className="info">
                     <ProgressBar
