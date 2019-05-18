@@ -9,8 +9,15 @@ import { log } from "../log";
 import { getAllDefinitions } from "../models/creatureDefinition";
 import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
 
+const startStopwatch = () => process.hrtime();
+const stopwatch = (start: [number, number]) => {
+    const end = process.hrtime(start);
+    return Math.round((end[0] * 1000) + (end[1] / 1000000));
+};
+
 export class Game {
     private GAME_SIZE: number;
+    private round = 0;
     private phase = GamePhase.WAITING;
     private opponentProvider = new OpponentProvider();
     private deck = new CardDeck(getAllDefinitions());
@@ -59,16 +66,22 @@ export class Game {
         player.setDeck(this.deck);
         this.updatePlayerLists();
 
-        setTimeout(() => {
-            if (this.players.length === this.GAME_SIZE) {
+        if (this.players.length === this.GAME_SIZE) {
+            setTimeout(() => {
                 this.startGame();
-            }
-        }, 100);
+            });
+        }
 
         return player;
     }
 
     private startGame = async () => {
+        if (this.phase !== GamePhase.WAITING) {
+            return;
+        }
+
+        const startTime = startStopwatch();
+
         while (this.players.filter(p => p.isAlive()).length >= 2) {
             await this.runPreparingPhase();
 
@@ -77,11 +90,17 @@ export class Game {
             await this.runPlayingPhase();
         }
 
+        const duration = stopwatch(startTime);
+
+        log(`Match complete in ${(duration)} ms (${this.round} rounds)`);
+
         this.updatePlayerLists();
     }
 
     private async runPreparingPhase() {
-        log(`Entering phase ${GamePhase[GamePhase.PREPARING]}`);
+        this.round++;
+
+        log(`Entering phase ${GamePhase[GamePhase.PREPARING]} (round ${this.round})`);
 
         this.phase = GamePhase.PREPARING;
 
