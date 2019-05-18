@@ -50,18 +50,32 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                         className="name-input"
                     />
 
-                    <br />
+                    <div className="join-options">
+                        <div className="option">
+                            <input
+                                value={"18asd83"}
+                                placeholder="Lobby ID"
+                                className="option-input"
+                            />
+
+                            <button onClick={this.onJoinGameClick} className="option-button create-button">Create Game</button>
+                        </div>
+                        <div className="option">
+                            <input
+                                value={"18asd83"}
+                                placeholder="Lobby ID"
+                                className="option-input"
+                            />
+
+                            <button onClick={this.onJoinGameClick} className="option-button join-button">Join Game</button>
+                        </div>
+                    </div>
 
                     <input
                         value={this.state.serverIP}
                         onChange={this.onServerIPChange}
                         placeholder="Server IP"
-                        className="name-input"
                     />
-
-                    <br />
-
-                    <button onClick={this.onJoinGameClick} className="join-button">Join Game</button>
                 </div>
             </div>
         );
