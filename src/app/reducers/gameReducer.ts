@@ -5,6 +5,7 @@ import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 
 const initialState: GameState = {
+    gameId: null,
     opponentId: null,
     loading: false,
     lobbyError: null,
@@ -31,7 +32,8 @@ export function game(state: GameState = initialState, action: GameAction) {
             return {
                 ...state,
                 loading: false,
-                lobbyError: null
+                lobbyError: null,
+                gameId: action.payload.gameId
             };
         case GAME_PHASE_UPDATE:
             // set opponent id when entering ready phase

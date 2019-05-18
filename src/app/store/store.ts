@@ -7,6 +7,7 @@ import { rootSaga } from "../sagas";
 import { FeedMessage } from "@common/feed-message";
 
 export interface GameState {
+    gameId: string;
     phase: GamePhase;
     phaseTimer: number;
     opponentId: string;
