@@ -105,7 +105,7 @@ export abstract class Player {
 
         const results = await this.match.fight(battleTimeout, TURNS_IN_BATTLE);
 
-        const damage = results.away.length * 3;
+        const damage = results.away.length * 8;
         this.subtractHealth(damage);
 
         this.events.emit(PlayerEvent.FINISH_MATCH, {
@@ -122,6 +122,8 @@ export abstract class Player {
 
     public onHealthUpdate(fn: (health: number) => void) {
         this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
+
+        fn(this.health);
     }
 
     public onSendChatMessage(fn: (message: string) => void) {

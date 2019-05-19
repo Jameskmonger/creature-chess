@@ -11,12 +11,19 @@ interface Props {
     localPlayerId: string;
 }
 
-const PlayerListUnconnected: React.FunctionComponent<Props> = props => {
-    const players = props.players.sort((a, b) => b.health - a.health);
-
+const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localPlayerId, opponentId }) => {
     return (
         <div className="player-list">
-            {players.map(p => <PlayerListItem key={p.id} player={p} isLocal={p.id === props.localPlayerId} isOpponent={p.id === props.opponentId} />)}
+            {
+                players.map(p =>
+                    <PlayerListItem
+                        key={p.id}
+                        player={p}
+                        isLocal={p.id === localPlayerId}
+                        isOpponent={p.id === opponentId}
+                    />
+                )
+            }
         </div>
     );
 };
