@@ -2,12 +2,12 @@
     padding: 0.6rem;
     margin-bottom: 0.6rem;
     font-family: Arial, sans-serif;
-    color: #fff;
-    background: #566c86;
+    color: $profile-text;
+    background: $profile-background;
 
     .name {
         font-weight: 700;
-        color: #ffcd75;
+        color: $profile-player-name;
         text-transform: uppercase;
     }
 
@@ -29,13 +29,13 @@
         height: 2em;
         box-sizing: border-box;
         margin: 0 auto;
-        background: #636363;
+        background: $xp-bar-background;
 
         .fill {
             height: 100%;
             box-sizing: border-box;
             padding-left: 1em;
-            background: #ffcd75;
+            background: $xp-bar-fill;
         }
 
         .contents {
@@ -44,7 +44,7 @@
             right: 0.5em;
             font-weight: 700;
             line-height: 2em;
-            color: #1a1c2c;
+            color: $xp-bar-text;
         }
     }
 
@@ -62,9 +62,9 @@
         padding: 0.4em 1.2em;
         margin-left: 1em;
         font-size: 1.1em;
-        color: #fff;
+        color: $buy-xp-button-text;
         cursor: pointer;
-        background: #1a1c2c;
+        background: $buy-xp-button;
         // stylelint-disable-next-line
         border: none;
     }
@@ -74,9 +74,9 @@
         box-sizing: border-box;
         padding: 0.4em 1.2em;
         font-size: 1.1em;
-        color: #000;
+        color: $ready-up-button-text;
         cursor: pointer;
-        background: #38b764;
+        background: $ready-up-button;
         // stylelint-disable-next-line
         border: none;
     }
