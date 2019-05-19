@@ -263,6 +263,8 @@ export abstract class Player {
             return;
         }
 
+        log(`${this.name} readied up`);
+
         this.resolveReadyUpPromise();
     }
 

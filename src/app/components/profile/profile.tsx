@@ -41,6 +41,8 @@ const ProfileUnconnected: React.FunctionComponent<ProfileProps> = ({ name, level
                 <ProgressBar className="xp-progress" current={xp} max={xpForNextLevel} renderContents={renderProgressBar} />
                 <button onClick={onBuyXp} className="buy-xp">Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})</button>
             </div>
+
+            <button className="ready-up">Ready Up</button>
         </div>
     );
 };

@@ -68,4 +68,16 @@
         // stylelint-disable-next-line
         border: none;
     }
+
+    .ready-up {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.4em 1.2em;
+        font-size: 1.1em;
+        color: #000;
+        cursor: pointer;
+        background: #38b764;
+        // stylelint-disable-next-line
+        border: none;
+    }
 }
