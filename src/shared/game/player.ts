@@ -76,6 +76,10 @@ export abstract class Player {
         this.giveMatchRewards();
         this.onEnterPreparingPhase();
 
+        if (this.isAlive() === false) {
+            return;
+        }
+
         await this.readyUpPromise;
     }
 

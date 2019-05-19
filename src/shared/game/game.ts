@@ -118,9 +118,12 @@ export class Game {
 
         this.phase = GamePhase.PREPARING;
 
-        this.players.forEach(p => p.enterPreparingPhase());
+        const promises = this.players.map(p => p.enterPreparingPhase());
 
-        await delay(PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
+        await Promise.race([
+            Promise.all(promises),
+            delay(PHASE_LENGTHS[GamePhase.PREPARING] * 1000)
+        ]);
     }
 
     private async runReadyPhase() {
