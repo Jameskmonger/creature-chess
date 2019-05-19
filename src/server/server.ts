@@ -81,6 +81,8 @@ export class Server {
             const player = new Connection(socket, name);
 
             game.addPlayer(player);
+            game.onFinish(() => socket.disconnect());
+
             inGame = true;
 
             response({
@@ -130,6 +132,7 @@ export class Server {
 
             const player = new Connection(socket, name);
             game.addPlayer(player);
+            game.onFinish(() => socket.disconnect());
 
             inGame = true;
 
@@ -150,9 +153,13 @@ export class Server {
 
     private createGame(playerCount: number) {
         const gameId = uuid().substring(0, 6);
+
         const game = new Game(playerCount);
+        game.onFinish(() => this.games.delete(gameId));
+
         this.games.set(gameId, game);
         log(`Game '${gameId}' created for ${playerCount} players`);
+
         return {
             game,
             gameId
