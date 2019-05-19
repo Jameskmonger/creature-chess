@@ -37,6 +37,8 @@ export class Bot extends Player {
                 to: firstEmptyPosition
             });
         }
+
+        this.readyUp();
     }
 
     protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
