@@ -19,16 +19,18 @@ export class PlayerList {
         const playerListPlayer: PlayerListPlayer = {
             id: player.id,
             name: player.name,
-            health: player.health
+            health: player.health,
+            ready: player.ready
         };
 
         this.players.push(playerListPlayer);
 
-        player.onHealthUpdate(this.updatePlayerHealth(player));
+        player.onHealthUpdate(this.updatePlayer(player));
+        player.onReadyUpdate(this.updatePlayer(player));
     }
 
-    private updatePlayerHealth(player: Player) {
-        return (health: number) => {
+    private updatePlayer(player: Player) {
+        return () => {
             const index = this.players.findIndex(p => p.id === player.id);
 
             if (index === -1) {
@@ -37,11 +39,17 @@ export class PlayerList {
 
             this.players.splice(index, 1);
 
-            if (health === 0) {
+            if (player.health === 0) {
+                // don't re-add player to dead list
+                if (this.deadPlayers.some(p => p.id === player.id)) {
+                    return;
+                }
+
                 this.deadPlayers.unshift({
                     id: player.id,
                     name: player.name,
-                    health
+                    health: player.health,
+                    ready: null
                 });
 
                 this.emitUpdate();
@@ -52,7 +60,8 @@ export class PlayerList {
             this.players.push({
                 id: player.id,
                 name: player.name,
-                health
+                health: player.health,
+                ready: player.ready
             });
 
             this.players.sort((a, b) => b.health - a.health);

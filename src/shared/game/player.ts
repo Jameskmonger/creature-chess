@@ -27,13 +27,15 @@ enum StreakType {
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
     SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
-    FINISH_MATCH = "FINISH_MATCH"
+    FINISH_MATCH = "FINISH_MATCH",
+    UPDATE_READY = "UPDATE_READY"
 }
 
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
     public health: number = 100;
+    public ready = false;
 
     protected money = new Observable(3);
     protected cards = new Observable<Card[]>([]);
@@ -88,6 +90,7 @@ export abstract class Player {
         this.gamePhase = GamePhase.READY;
         this.readyUpPromise = null;
         this.resolveReadyUpPromise = null;
+        this.ready = false;
 
         if (this.isAlive()) {
             const opponent = opponentProvider.getOpponent(this.id);
@@ -105,7 +108,7 @@ export abstract class Player {
 
         const results = await this.match.fight(battleTimeout, TURNS_IN_BATTLE);
 
-        const damage = results.away.length * 8;
+        const damage = results.away.length * 3;
         this.subtractHealth(damage);
 
         this.events.emit(PlayerEvent.FINISH_MATCH, {
@@ -124,6 +127,12 @@ export abstract class Player {
         this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
 
         fn(this.health);
+    }
+
+    public onReadyUpdate(fn: (ready: boolean) => void) {
+        this.events.on(PlayerEvent.UPDATE_READY, fn);
+
+        fn(this.ready);
     }
 
     public onSendChatMessage(fn: (message: string) => void) {
@@ -262,11 +271,13 @@ export abstract class Player {
     }
 
     protected readyUp = () => {
-        if (this.readyUpPromise === null || this.resolveReadyUpPromise === null) {
+        if (this.ready) {
             return;
         }
 
         log(`${this.name} readied up`);
+
+        this.setReady(true);
 
         this.resolveReadyUpPromise();
     }
@@ -502,5 +513,10 @@ export abstract class Player {
             || this.bench.getValue().find(p => p.id === id)
             || null
         );
+    }
+
+    private setReady(ready: boolean) {
+        this.ready = ready;
+        this.events.emit(PlayerEvent.UPDATE_READY, this.ready);
     }
 }

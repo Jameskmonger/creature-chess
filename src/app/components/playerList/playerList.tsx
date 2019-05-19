@@ -1,4 +1,5 @@
 import * as React from "react";
+import { GamePhase } from "@common";
 import { PlayerListPlayer } from "@common/models";
 import { PlayerListItem } from "./playerListItem";
 import { connect, MapStateToProps } from "react-redux";
@@ -9,9 +10,10 @@ interface Props {
     players: PlayerListPlayer[];
     opponentId: string;
     localPlayerId: string;
+    showReadyIndicators: boolean;
 }
 
-const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localPlayerId, opponentId }) => {
+const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localPlayerId, opponentId, showReadyIndicators }) => {
     return (
         <div className="player-list">
             {
@@ -21,6 +23,7 @@ const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localP
                         player={p}
                         isLocal={p.id === localPlayerId}
                         isOpponent={p.id === opponentId}
+                        ready={showReadyIndicators ? p.ready : null}
                     />
                 )
             }
@@ -31,7 +34,8 @@ const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localP
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
     players: state.playerList,
     opponentId: opponentIdSelector(state),
-    localPlayerId: localPlayerIdSelector(state)
+    localPlayerId: localPlayerIdSelector(state),
+    showReadyIndicators: state.game.phase === GamePhase.PREPARING
 });
 
 const PlayerList = connect(mapStateToProps)(PlayerListUnconnected);

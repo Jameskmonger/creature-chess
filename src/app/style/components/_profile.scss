@@ -81,4 +81,23 @@
         // stylelint-disable-next-line
         border: none;
     }
+
+    .row {
+        // stylelint-disable-next-line
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .ready-indicator {
+        width: 1em;
+        height: 1em;
+
+        .ready {
+            background: $ready-indicator;
+        }
+
+        .not-ready {
+            background: $not-ready-indicator;
+        }
+    }
 }
