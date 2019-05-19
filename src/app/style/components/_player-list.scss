@@ -35,4 +35,23 @@
         width: 100%;
         margin-top: 0.4em;
     }
+
+    .row {
+        // stylelint-disable-next-line
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .ready-indicator {
+        width: 1em;
+        height: 1em;
+
+        &.ready {
+            background: $ready-indicator;
+        }
+
+        &.not-ready {
+            background: $not-ready-indicator;
+        }
+    }
 }
