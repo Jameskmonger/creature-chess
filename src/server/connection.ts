@@ -23,6 +23,7 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
         this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
+        this.onReceivePacket(ClientToServerPacketOpcodes.READY_UP, this.readyUp);
         this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
 

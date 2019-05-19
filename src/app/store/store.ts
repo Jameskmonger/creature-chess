@@ -21,6 +21,7 @@ export interface LocalPlayerState {
     name: string;
     level: number;
     xp: number;
+    ready: boolean;
 }
 
 export interface AppState {

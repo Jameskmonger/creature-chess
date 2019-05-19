@@ -22,7 +22,7 @@ import { REROLL_CARDS, BUY_CARD } from "../../actiontypes/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
-import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
+import { BUY_XP, READY_UP } from "../../actiontypes/localPlayerActionTypes";
 import { newFeedMessage } from "../../actions/feedActions";
 import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../actiontypes/chatActionTypes";
@@ -131,6 +131,12 @@ const writeActionsToPackets = function*() {
             BUY_XP,
             function*() {
                 yield put(sendPacket(ClientToServerPacketOpcodes.BUY_XP));
+            }
+        ),
+        takeEvery(
+            READY_UP,
+            function*() {
+                yield put(sendPacket(ClientToServerPacketOpcodes.READY_UP));
             }
         ),
         takeEvery<ActionWithPayload<{ index: number }>>(
