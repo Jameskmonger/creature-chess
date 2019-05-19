@@ -50,6 +50,9 @@ export abstract class Player {
     };
     private gamePhase: GamePhase = GamePhase.WAITING;
 
+    private readyUpPromise: Promise<void> = null;
+    private resolveReadyUpPromise: () => void = null;
+
     constructor(name: string) {
         this.id = uuid();
         this.name = name;
@@ -63,15 +66,23 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public enterPreparingPhase() {
+    public async enterPreparingPhase() {
         this.gamePhase = GamePhase.PREPARING;
+
+        this.readyUpPromise = new Promise(resolve => {
+            this.resolveReadyUpPromise = resolve;
+        });
 
         this.giveMatchRewards();
         this.onEnterPreparingPhase();
+
+        await this.readyUpPromise;
     }
 
     public enterReadyPhase(opponentProvider: OpponentProvider) {
         this.gamePhase = GamePhase.READY;
+        this.readyUpPromise = null;
+        this.resolveReadyUpPromise = null;
 
         if (this.isAlive()) {
             const opponent = opponentProvider.getOpponent(this.id);
@@ -241,6 +252,14 @@ export abstract class Player {
         }
 
         this.match.onClientFinishMatch();
+    }
+
+    protected readyUp = () => {
+        if (this.readyUpPromise === null || this.resolveReadyUpPromise === null) {
+            return;
+        }
+
+        this.resolveReadyUpPromise();
     }
 
     protected movePieceToBench = (packet: MovePiecePacket) => {
