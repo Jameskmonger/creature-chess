@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PlayerListPlayer } from "@common";
+import { PlayerListPlayer } from "@common/models";
 import { ProgressBar } from "../progressBar";
 
 interface Props {

@@ -17,6 +17,7 @@ import { Piece } from "../models/piece";
 import { GamePhase } from "../game-phase";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE } from "../constants";
 import { getXpToNextLevel } from "../get-xp-for-level";
+import { PlayerListPlayer } from "../models/player-list-player";
 
 enum StreakType {
     WIN,
@@ -145,7 +146,7 @@ export abstract class Player {
         this.cards.setValue(newCards);
     }
 
-    public abstract onPlayerListUpdate(players: Player[]);
+    public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
 
     public abstract onNewFeedMessage(message: FeedMessage);
 

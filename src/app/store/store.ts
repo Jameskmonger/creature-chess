@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { reducers } from "../reducers";
-import { Models, PlayerListPlayer, GamePhase } from "@common";
+import { Models, GamePhase } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "../sagas";
@@ -28,7 +28,7 @@ export interface AppState {
     board: Models.Piece[];
     bench: Models.Piece[];
     game: GameState;
-    playerList: PlayerListPlayer[];
+    playerList: Models.PlayerListPlayer[];
     cards: Models.Card[];
     localPlayer: LocalPlayerState;
     feedMessages: FeedMessage[];

@@ -10,7 +10,7 @@ import {
     LevelUpdatePacket,
     JoinGameResponse
 } from "@common/packet-opcodes";
-import { Models, PlayerListPlayer } from "@common";
+import { Models } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
@@ -67,7 +67,7 @@ const subscribe = (socket: Socket) => {
             emit(BenchActions.benchPiecesUpdated(packet.pieces));
         });
 
-        socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {
+        socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: Models.PlayerListPlayer[]) => {
             log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListUpdated(players));
         });

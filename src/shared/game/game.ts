@@ -9,6 +9,7 @@ import { log } from "../log";
 import { getAllDefinitions } from "../models/creatureDefinition";
 import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
 import { EventEmitter } from "events";
+import { PlayerListPlayer } from "../models/player-list-player";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -160,6 +161,14 @@ export class Game {
     }
 
     private updatePlayerLists = () => {
-        this.players.forEach(p => p.onPlayerListUpdate(this.players));
+        const playerList: PlayerListPlayer[] = this.players.map(p => {
+            return {
+                id: p.id,
+                name: p.name,
+                health: p.health
+            };
+        });
+
+        this.players.forEach(p => p.onPlayerListUpdate(playerList));
     }
 }

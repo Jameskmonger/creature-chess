@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
-import { PlayerListPlayer, GamePhase } from "@common";
+import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
 
 type IncomingPacketListener = (...args: any[]) => void;
@@ -49,16 +49,8 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, message);
     }
 
-    public onPlayerListUpdate(players: Player[]) {
-        const playerList: PlayerListPlayer[] = players.map(p => {
-            return {
-                id: p.id,
-                name: p.name,
-                health: p.health
-            };
-        });
-
-        this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, playerList);
+    public onPlayerListUpdate(players: Models.PlayerListPlayer[]) {
+        this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
     }
 
     protected onEnterPreparingPhase() {

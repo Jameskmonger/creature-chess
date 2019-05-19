@@ -1,4 +1,4 @@
-import { PlayerListPlayer } from "@common";
+import { PlayerListPlayer } from "@common/models";
 import { PLAYER_LIST_UPDATED } from "../actiontypes/playerListActionTypes";
 
 export type PlayerListAction = ({ type: PLAYER_LIST_UPDATED, payload: PlayerListPlayer[] });
