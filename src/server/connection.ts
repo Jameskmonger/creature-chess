@@ -30,6 +30,12 @@ export class Connection extends Player {
         this.level.onChange(this.sendLevelUpdate);
     }
 
+    public onFinishGame() {
+        super.onFinishGame();
+
+        // TODO: send game finished packet here, display scoreboard etc
+    }
+
     public onDeath() {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.DEAD

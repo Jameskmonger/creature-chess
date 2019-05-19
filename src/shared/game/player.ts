@@ -55,6 +55,10 @@ export abstract class Player {
         this.name = name;
     }
 
+    public onFinishGame() {
+        this.events.removeAllListeners();
+    }
+
     public setDeck(deck: CardDeck) {
         this.deck = deck;
     }

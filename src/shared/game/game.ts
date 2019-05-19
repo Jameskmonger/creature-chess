@@ -8,12 +8,17 @@ import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
 import { getAllDefinitions } from "../models/creatureDefinition";
 import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
+import { EventEmitter } from "events";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
     const end = process.hrtime(start);
     return Math.round((end[0] * 1000) + (end[1] / 1000000));
 };
+
+enum GameEvents {
+    FINISH_GAME = "FINISH_GAME"
+}
 
 export class Game {
     private GAME_SIZE: number;
@@ -22,10 +27,15 @@ export class Game {
     private opponentProvider = new OpponentProvider();
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
+    private events = new EventEmitter();
 
     constructor(gameSize: number) {
         this.GAME_SIZE = gameSize;
         this.opponentProvider.setPlayers(this.players);
+    }
+
+    public onFinish(fn: () => void) {
+        this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
     public getPlayers() {
@@ -95,6 +105,10 @@ export class Game {
         log(`Match complete in ${(duration)} ms (${this.round} rounds)`);
 
         this.updatePlayerLists();
+
+        this.players.forEach(p => p.onFinishGame());
+
+        this.events.emit(GameEvents.FINISH_GAME);
     }
 
     private async runPreparingPhase() {

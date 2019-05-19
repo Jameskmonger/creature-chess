@@ -43,121 +43,137 @@ export class Server {
 
         let inGame = false;
 
-        socket.on(
-            ClientToServerPacketOpcodes.JOIN_GAME,
-            (
-                name: string,
-                gameId: string,
-                response: (response: JoinGameResponse) => void
-            ) => {
-                if (inGame) {
-                    return;
-                }
-
-                if (name.match(NAME_REGEX) === null) {
-                    response({
-                        error: "Invalid characters in name",
-                        response: null
-                    });
-                    return;
-                }
-
-                const game = this.getGameForId(gameId);
-
-                if (game === null) {
-                    response({
-                        error: "Game not found",
-                        response: null
-                    });
-                    return;
-                }
-
-                if (game.canAddPlayer() === false) {
-                    response({
-                        error: "Game is not joinable",
-                        response: null
-                    });
-                    return;
-                }
-
-                const player = new Connection(socket, name);
-
-                game.addPlayer(player);
-                inGame = true;
-
-                response({
-                    error: null,
-                    response: {
-                        playerId: player.id,
-                        gameId
-                    }
-                });
+        const onJoinGame = (
+            name: string,
+            gameId: string,
+            response: (response: JoinGameResponse) => void
+        ) => {
+            if (inGame) {
+                return;
             }
-        );
 
-        socket.on(
-            ClientToServerPacketOpcodes.CREATE_GAME,
-            (
-                name: string,
-                playerCount: number,
-                botCount: number,
-                response: (response: JoinGameResponse) => void
-            ) => {
-                if (inGame) {
-                    return;
-                }
-
-                if (name.match(NAME_REGEX) === null) {
-                    response({
-                        error: "Invalid characters in name",
-                        response: null
-                    });
-                    return;
-                }
-
-                if (playerCount < 2) {
-                    response({
-                        error: "Player count too low",
-                        response: null
-                    });
-                    return;
-                }
-
-                if (botCount > (playerCount - 1)) {
-                    response({
-                        error: "Bot count too high",
-                        response: null
-                    });
-                    return;
-                }
-
-                const gameId = uuid().substring(0, 6);
-                const game = new Game(playerCount);
-                this.games.set(gameId, game);
-                log(`Game '${gameId}' created for ${playerCount} players`);
-
-                const player = new Connection(socket, name);
-
-                game.addPlayer(player);
-                inGame = true;
-
-                for (let i = 0; i < botCount; i++) {
-                    this.addBot(game);
-                }
-
+            if (name.match(NAME_REGEX) === null) {
                 response({
-                    error: null,
-                    response: {
-                        playerId: player.id,
-                        gameId
-                    }
+                    error: "Invalid characters in name",
+                    response: null
                 });
+                return;
             }
-        );
+
+            const game = this.getGameForId(gameId);
+
+            if (game === null) {
+                response({
+                    error: "Game not found",
+                    response: null
+                });
+                return;
+            }
+
+            if (game.canAddPlayer() === false) {
+                response({
+                    error: "Game is not joinable",
+                    response: null
+                });
+                return;
+            }
+
+            const player = new Connection(socket, name);
+
+            game.addPlayer(player);
+            game.onFinish(() => socket.disconnect());
+
+            inGame = true;
+
+            response({
+                error: null,
+                response: {
+                    playerId: player.id,
+                    gameId
+                }
+            });
+        };
+
+        const onCreateGame = (
+            name: string,
+            playerCount: number,
+            botCount: number,
+            response: (response: JoinGameResponse) => void
+        ) => {
+            if (inGame) {
+                return;
+            }
+
+            if (name.match(NAME_REGEX) === null) {
+                response({
+                    error: "Invalid characters in name",
+                    response: null
+                });
+                return;
+            }
+
+            if (playerCount < 2) {
+                response({
+                    error: "Player count too low",
+                    response: null
+                });
+                return;
+            }
+
+            if (botCount > (playerCount - 1)) {
+                response({
+                    error: "Bot count too high",
+                    response: null
+                });
+                return;
+            }
+
+            const { game, gameId } = this.createGame(playerCount);
+
+            const player = new Connection(socket, name);
+            game.addPlayer(player);
+            game.onFinish(() => socket.disconnect());
+
+            inGame = true;
+
+            this.addBots(game, botCount);
+
+            response({
+                error: null,
+                response: {
+                    playerId: player.id,
+                    gameId
+                }
+            });
+        };
+
+        socket.on(ClientToServerPacketOpcodes.JOIN_GAME, onJoinGame);
+        socket.on(ClientToServerPacketOpcodes.CREATE_GAME, onCreateGame);
+    }
+
+    private createGame(playerCount: number) {
+        const gameId = uuid().substring(0, 6);
+
+        const game = new Game(playerCount);
+        game.onFinish(() => this.games.delete(gameId));
+
+        this.games.set(gameId, game);
+        log(`Game '${gameId}' created for ${playerCount} players`);
+
+        return {
+            game,
+            gameId
+        };
     }
 
     private getGameForId(gameId: string) {
         return this.games.get(gameId) || null;
+    }
+
+    private addBots(game: Game, botCount: number) {
+        for (let i = 0; i < botCount; i++) {
+            this.addBot(game);
+        }
     }
 
     private addBot(game: Game) {
