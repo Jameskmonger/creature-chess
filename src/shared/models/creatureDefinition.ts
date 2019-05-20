@@ -194,6 +194,45 @@ mapDefinitions([
             specialDefense: 80,
             type: CreatureType.Bug
         }
+    },
+    {
+        id: 13,
+        name: "Shitdog",
+        stats: {
+            hp: 40,
+            attack: 35,
+            defense: 30,
+            speed: 50,
+            specialAttack: 20,
+            specialDefense: 20,
+            type: CreatureType.Bug
+        }
+    },
+    {
+        id: 14,
+        name: "Stripedog",
+        stats: {
+            hp: 45,
+            attack: 25,
+            defense: 50,
+            speed: 35,
+            specialAttack: 25,
+            specialDefense: 25,
+            type: CreatureType.Bug
+        }
+    },
+    {
+        id: 15,
+        name: "Gundog",
+        stats: {
+            hp: 65,
+            attack: 90,
+            defense: 40,
+            speed: 75,
+            specialAttack: 45,
+            specialDefense: 80,
+            type: CreatureType.Bug
+        }
     }
 ]);
 
