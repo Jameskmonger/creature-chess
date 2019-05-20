@@ -376,6 +376,10 @@ export abstract class Player {
         this.board.dispatch(action);
     }
 
+    protected getLevel() {
+        return this.level.getValue().level;
+    }
+
     private addPieceToBench(piece: Piece) {
         const action = BenchActions.benchPieceAdded(piece);
 

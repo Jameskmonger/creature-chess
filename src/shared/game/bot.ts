@@ -18,10 +18,12 @@ export class Bot extends Player {
         const cardCosts = this.cards.getValue().map((card, index) => ({ card, index }));
         cardCosts.sort((a, b) => this.compareCards(a.card, b.card));
 
-        for (const { index } of cardCosts) {
+        for (const { card, index } of cardCosts) {
             if (this.shouldBuyCard(index)) {
                 this.buyCard(index);
-                break;
+
+                const definition = getDefinition(card.definitionId);
+                this.sendChatMessage(`I just bought a ${definition.name}`);
             }
         }
 
@@ -101,7 +103,7 @@ export class Bot extends Player {
         const card = this.cards.getValue()[index];
 
         if (
-            this.belowPieceLimitIncludingBench() === false
+            this.bench.getValue().length >= GRID_SIZE
             || card === null
             || this.money.getValue() < card.cost
         ) {
@@ -114,10 +116,6 @@ export class Bot extends Player {
         }
 
         return true;
-    }
-
-    private belowPieceLimitIncludingBench() {
-        return (this.board.getValue().length + this.bench.getValue().length) < this.level.getValue().level;
     }
 
     private getFirstBenchPiece() {
