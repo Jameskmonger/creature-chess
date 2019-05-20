@@ -80,12 +80,14 @@ export class Bot extends Player {
 
     private getSameCardCount(definitionId: number) {
         const board = this.board.getValue();
+        const bench = this.bench.getValue();
 
         let count = 0;
         let currentDefinitionId = definitionId;
 
         while (currentDefinitionId) {
             count += board.filter(p => p.definitionId === currentDefinitionId).length;
+            count += bench.filter(p => p.definitionId === currentDefinitionId).length;
 
             const definition = getDefinition(currentDefinitionId);
 
