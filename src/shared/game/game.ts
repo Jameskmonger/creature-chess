@@ -11,6 +11,7 @@ import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
 import { EventEmitter } from "events";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { PlayerList } from "./playerList";
+import { MatchRewarder } from "../match/matchRewarder";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -27,6 +28,7 @@ export class Game {
     private round = 0;
     private phase = GamePhase.WAITING;
     private opponentProvider = new OpponentProvider();
+    private matchRewarder = new MatchRewarder();
     private playerList = new PlayerList();
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
@@ -154,6 +156,8 @@ export class Game {
         await Promise.all(promises);
 
         await delay(CELEBRATION_TIME); // celebration time
+
+        this.players.forEach(p => p.giveMatchRewards(this.matchRewarder));
     }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage) {

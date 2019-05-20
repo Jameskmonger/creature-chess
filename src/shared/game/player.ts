@@ -3,7 +3,7 @@ import { getDefinition, getRequiredQuantityToEvolve, getPieceCost } from "../mod
 import { clonePiece, createPiece, createPieceFromCard } from "../piece-utils";
 import { MovePiecePacket } from "../packet-opcodes";
 import { TileType, createTileCoordinates } from "../position";
-import { Match } from "./match";
+import { Match } from "../match/match";
 import { log } from "../log";
 import { CardDeck } from "../cardShop/cardDeck";
 import { FeedMessage } from "../feed-message";
@@ -18,8 +18,9 @@ import { GamePhase } from "../game-phase";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE } from "../constants";
 import { getXpToNextLevel } from "../get-xp-for-level";
 import { PlayerListPlayer } from "../models/player-list-player";
+import { MatchRewarder } from "../match/matchRewarder";
 
-enum StreakType {
+export enum StreakType {
     WIN,
     LOSS
 }
@@ -36,6 +37,10 @@ export abstract class Player {
     public readonly name: string;
     public health: number = 100;
     public ready = false;
+    public readonly streak = {
+        type: StreakType.WIN,
+        amount: 0
+    };
 
     protected money = new Observable(3);
     protected cards = new Observable<Card[]>([]);
@@ -47,10 +52,6 @@ export abstract class Player {
     private events = new EventEmitter();
 
     private deck: CardDeck;
-    private streak = {
-        type: StreakType.WIN,
-        amount: 0
-    };
     private gamePhase: GamePhase = GamePhase.WAITING;
 
     private readyUpPromise: Promise<void> = null;
@@ -59,6 +60,30 @@ export abstract class Player {
     constructor(name: string) {
         this.id = uuid();
         this.name = name;
+    }
+
+    public addXp(amount: number) {
+        let { level, xp } = this.level.getValue();
+
+        for (let i = 0; i < amount; i++) {
+            const toNextLevel = getXpToNextLevel(level);
+            const newXp = xp + 1;
+
+            if (newXp === toNextLevel) {
+                xp = 0;
+                level++;
+            } else {
+                xp = newXp;
+            }
+        }
+
+        this.level.setValue({ level, xp });
+    }
+
+    public addMoney(money: number) {
+        const currentMoney = this.money.getValue();
+
+        this.money.setValue(currentMoney + money);
     }
 
     public onFinishGame() {
@@ -76,7 +101,8 @@ export abstract class Player {
             this.resolveReadyUpPromise = resolve;
         });
 
-        this.giveMatchRewards();
+        this.rerollCards();
+
         this.onEnterPreparingPhase();
 
         if (this.isAlive() === false) {
@@ -84,6 +110,16 @@ export abstract class Player {
         }
 
         await this.readyUpPromise;
+    }
+
+    public giveMatchRewards(matchRewarder: MatchRewarder) {
+        if (!this.match) {
+            return;
+        }
+
+        matchRewarder.giveRewards(this.match);
+
+        this.match = null;
     }
 
     public enterReadyPhase(opponentProvider: OpponentProvider) {
@@ -96,9 +132,9 @@ export abstract class Player {
             const opponent = opponentProvider.getOpponent(this.id);
 
             this.match = new Match(this, opponent);
-        }
 
-        this.onEnterReadyPhase();
+            this.onEnterReadyPhase();
+        }
     }
 
     public async fightMatch(battleTimeout: Promise<void>) {
@@ -148,6 +184,10 @@ export abstract class Player {
     }
 
     public rerollCards() {
+        if (this.isAlive() === false) {
+            return;
+        }
+
         const cards = this.cards.getValue();
 
         this.deck.add(cards);
@@ -336,29 +376,6 @@ export abstract class Player {
         this.board.dispatch(action);
     }
 
-    private giveMatchRewards() {
-        if (this.isAlive() === false) {
-            return;
-        }
-
-        this.rerollCards();
-
-        if (this.match === null) {
-            return;
-        }
-
-        const results = this.match.getResults();
-        this.match = null;
-
-        const win = results.home.length > results.away.length;
-
-        const money = this.getMoneyForMatch(win);
-
-        this.addMoney(money);
-
-        this.addXp(1);
-    }
-
     private addPieceToBench(piece: Piece) {
         const action = BenchActions.benchPieceAdded(piece);
 
@@ -395,69 +412,8 @@ export abstract class Player {
         this.addPieceToBench(newPiece);
     }
 
-    private addXp(amount: number) {
-        let { level, xp } = this.level.getValue();
-
-        for (let i = 0; i < amount; i++) {
-            const toNextLevel = getXpToNextLevel(level);
-            const newXp = xp + 1;
-
-            if (newXp === toNextLevel) {
-                xp = 0;
-                level++;
-            } else {
-                xp = newXp;
-            }
-        }
-
-        this.level.setValue({ level, xp });
-    }
-
-    private getNewStreakBonus(win: boolean) {
-        const type = win ? StreakType.WIN : StreakType.LOSS;
-
-        if (this.streak.type !== type) {
-            this.streak.type = type;
-            this.streak.amount = 0;
-        }
-
-        this.streak.amount++;
-
-        if (this.streak.amount >= 9) {
-            return 3;
-        }
-
-        if (this.streak.amount >= 6) {
-            return 2;
-        }
-
-        if (this.streak.amount >= 3) {
-            return 1;
-        }
-
-        return 0;
-    }
-
-    private getMoneyForMatch(win: boolean) {
-        const base = 3;
-        const winBonus = win ? 1 : 0;
-        const streakBonus = this.getNewStreakBonus(win);
-
-        const total = base + winBonus + streakBonus;
-
-        log(`${this.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, (${this.streak.amount}) streak bonus: ${streakBonus})`);
-
-        return total;
-    }
-
     private getCardAtIndex(index: number) {
         return this.cards.getValue()[index];
-    }
-
-    private addMoney(money: number) {
-        const currentMoney = this.money.getValue();
-
-        this.money.setValue(currentMoney + money);
     }
 
     private deleteCard(indexToDelete: number) {

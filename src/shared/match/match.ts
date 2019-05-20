@@ -1,17 +1,13 @@
 import delay from "delay";
-import { Player } from "./player";
+import uuid = require("uuid");
+import { Player } from "../game/player";
 import { rotatePiecePosition } from "../piece-utils";
 import { isATeamDefeated } from "../is-a-team-defeated";
 import { simulateTurn } from "../fighting-turn-simulator";
 import { log } from "../log";
-import uuid = require("uuid");
 import { Piece } from "../models/piece";
 import { TURN_DURATION_MS } from "../constants";
-
-export interface MatchResults {
-    home: Piece[];
-    away: Piece[];
-}
+import { MatchResults } from "./matchResults";
 
 export class Match {
     public readonly home: Player;
