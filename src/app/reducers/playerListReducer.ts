@@ -1,4 +1,4 @@
-import { PlayerListPlayer } from "@common";
+import { PlayerListPlayer } from "@common/models";
 import { PlayerListAction } from "../actions/playerListActions";
 import { PLAYER_LIST_UPDATED } from "../actiontypes/playerListActionTypes";
 

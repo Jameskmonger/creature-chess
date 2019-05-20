@@ -1,20 +1,20 @@
-import { PokemonPiece, GamePhase } from "@common";
+import { Models, GamePhase } from "@common";
 import { TileCoordinates, TileType } from "@common/position";
 
 export interface TileOwnProps {
     type: TileType;
     position: TileCoordinates;
-    renderPiece: (piece: PokemonPiece) => JSX.Element;
+    renderPiece: (piece: Models.Piece) => JSX.Element;
 }
 
 export interface TileStateProps {
-    pieces: PokemonPiece[];
+    pieces: Models.Piece[];
     gamePhase: GamePhase;
     belowPieceLimit: boolean;
 }
 
 export interface TileDispatchProps {
-    onMovePiece: (piece: PokemonPiece) => void;
+    onMovePiece: (piece: Models.Piece) => void;
 }
 
 export type TileProps = TileOwnProps & TileStateProps & TileDispatchProps;

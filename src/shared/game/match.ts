@@ -1,22 +1,24 @@
 import delay from "delay";
-import { Player } from "./players/player";
-import { PokemonPiece, Constants } from "@common";
-import { rotatePiecePosition } from "@common/pokemon-piece";
-import { isATeamDefeated } from "@common/is-a-team-defeated";
-import { simulateTurn } from "@common/fighting-turn-simulator";
-import { log } from "./log";
+import { Player } from "./player";
+import { rotatePiecePosition } from "../piece-utils";
+import { isATeamDefeated } from "../is-a-team-defeated";
+import { simulateTurn } from "../fighting-turn-simulator";
+import { log } from "../log";
 import uuid = require("uuid");
+import { Piece } from "../models/piece";
+import { TURN_DURATION_MS } from "../constants";
 
 export interface MatchResults {
-    survivingHomeTeam: PokemonPiece[];
-    survivingAwayTeam: PokemonPiece[];
+    home: Piece[];
+    away: Piece[];
 }
 
 export class Match {
     public readonly home: Player;
     public readonly away: Player;
     private id: string;
-    private board: PokemonPiece[];
+    private board: Piece[];
+    private results: MatchResults;
 
     private clientFinishedMatch: Promise<void>;
     private resolveClientFinishMatch: () => void;
@@ -44,6 +46,10 @@ export class Match {
         return this.board;
     }
 
+    public getResults() {
+        return this.results;
+    }
+
     public async fight(battleTimeout: Promise<void>, maxTurns: number): Promise<MatchResults> {
         const fightName = `${this.home.name} v ${this.away.name}`;
         let turnCount = 0;
@@ -67,27 +73,29 @@ export class Match {
 
         const surviving = this.board.filter(p => p.currentHealth > 0);
 
-        const minTimePassed = delay(turnCount * Constants.TURN_DURATION_MS);
+        const minTimePassed = delay(turnCount * TURN_DURATION_MS);
 
         await Promise.race([
             battleTimeout,
             Promise.all([ minTimePassed, this.clientFinishedMatch ])
         ]);
 
-        return {
-            survivingHomeTeam: surviving.filter(p => p.ownerId === this.home.id),
-            survivingAwayTeam: surviving.filter(p => p.ownerId === this.away.id)
+        this.results = {
+            home: surviving.filter(p => p.ownerId === this.home.id),
+            away: surviving.filter(p => p.ownerId === this.away.id)
         };
+
+        return this.results;
     }
 
-    private mapHomePiece(piece: PokemonPiece) {
+    private mapHomePiece(piece: Piece) {
         return {
             ...piece,
             facingAway: true
         };
     }
 
-    private mapAwayPiece(piece: PokemonPiece) {
+    private mapAwayPiece(piece: Piece) {
         return rotatePiecePosition({
             ...piece,
             facingAway: false

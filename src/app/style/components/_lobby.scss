@@ -13,8 +13,7 @@
         text-align: center;
     }
 
-    .name-input,
-    .join-button {
+    .name-input {
         font-size: 1.4em;
     }
 
@@ -31,7 +30,7 @@
         border-left: none;
         border-right: none;
         /* stylelint-enable */
-        border-bottom: 2px solid #b13e53;
+        border-bottom: 2px solid $join-lobby-button;
 
         /* stylelint-disable */
         &::placeholder {
@@ -48,14 +47,53 @@
         background: #566c86;
     }
 
+    .join-options {
+        display: flex;
+    }
+
+    .option:first-child {
+        padding-right: 1em;
+        margin-right: 1em;
+        border-right: 2px solid $create-lobby-button;
+    }
+
+    .option {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+
+        .option-input {
+            margin-bottom: 1rem;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .option-button {
+            padding: 0.8em 2em;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            /* stylelint-disable */
+            border: none;
+            /* stylelint-enable */
+        }
+    }
+
+    .create-button {
+        background: $create-lobby-button;
+    }
+
     .join-button {
-        padding: 0.8em 2em;
-        font-weight: 700;
-        color: #fff;
-        cursor: pointer;
-        background: #b13e53;
-        /* stylelint-disable */
-        border: none;
-        /* stylelint-enable */
+        background: $join-lobby-button;
+    }
+
+    .error {
+        padding: 1em 0.5em;
+        margin-bottom: 1em;
+        color: #db2828;
+        background-color: #ffe8e6;
+        box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
     }
 }

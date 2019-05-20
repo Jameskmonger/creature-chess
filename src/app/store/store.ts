@@ -1,17 +1,18 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { reducers } from "../reducers";
-import { PokemonCard, PlayerListPlayer, GamePhase } from "@common";
+import { Models, GamePhase } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { PokemonPiece } from "@common/pokemon-piece";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "../sagas";
 import { FeedMessage } from "@common/feed-message";
 
 export interface GameState {
+    gameId: string;
     phase: GamePhase;
     phaseTimer: number;
     opponentId: string;
     loading: boolean;
+    lobbyError: string;
     money: number;
 }
 
@@ -20,14 +21,15 @@ export interface LocalPlayerState {
     name: string;
     level: number;
     xp: number;
+    ready: boolean;
 }
 
 export interface AppState {
-    board: PokemonPiece[];
-    bench: PokemonPiece[];
+    board: Models.Piece[];
+    bench: Models.Piece[];
     game: GameState;
-    playerList: PlayerListPlayer[];
-    cards: PokemonCard[];
+    playerList: Models.PlayerListPlayer[];
+    cards: Models.Card[];
     localPlayer: LocalPlayerState;
     feedMessages: FeedMessage[];
 }

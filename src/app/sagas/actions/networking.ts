@@ -2,24 +2,31 @@ import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../types";
-import { ServerToClientPacketOpcodes, ClientToServerPacketOpcodes, MovePiecePacket, PhaseUpdatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
-import { PokemonPiece, PlayerListPlayer, PokemonCard } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate } from "../../actions/gameActions";
+import {
+    ServerToClientPacketOpcodes,
+    ClientToServerPacketOpcodes,
+    MovePiecePacket,
+    PhaseUpdatePacket,
+    LevelUpdatePacket,
+    JoinGameResponse
+} from "@common/packet-opcodes";
+import { Models } from "@common";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
 import { playerListUpdated } from "../../actions/playerListActions";
 import { cardsUpdated } from "../../actions/cardActions";
-import { JOIN_GAME } from "../../actiontypes/gameActionTypes";
-import { REROLL_CARDS, PURCHASE_CARD } from "../../actiontypes/cardActionTypes";
+import { JOIN_GAME, CREATE_GAME } from "../../actiontypes/gameActionTypes";
+import { REROLL_CARDS, BUY_CARD } from "../../actiontypes/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../log";
 import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
-import { BUY_XP } from "../../actiontypes/localPlayerActionTypes";
+import { BUY_XP, READY_UP } from "../../actiontypes/localPlayerActionTypes";
 import { newFeedMessage } from "../../actions/feedActions";
 import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../actiontypes/chatActionTypes";
-import { BATTLE_FINISHED } from "./process-battle";
+import { BATTLE_FINISHED } from "./processBattle";
 
 const getSocket = (serverIP: string) => {
     const socket = io(serverIP);
@@ -31,33 +38,41 @@ const getSocket = (serverIP: string) => {
     });
 };
 
-const joinGame = (socket: Socket, name: string) => {
-    return new Promise<string>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, (id: string) => {
-            resolve(id);
+const joinGame = (socket: Socket, name: string, gameId: string) => {
+    return new Promise<JoinGameResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, (response: JoinGameResponse) => {
+            resolve(response);
+        });
+    });
+};
+
+const createGame = (socket: Socket, name: string, playerCount: number, botCount: number) => {
+    return new Promise<JoinGameResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, playerCount, botCount, (response: JoinGameResponse) => {
+            resolve(response);
         });
     });
 };
 
 const subscribe = (socket: Socket) => {
     return eventChannel(emit => {
-        socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
+        socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { pieces: Models.Piece[] }) => {
             log("[BOARD_UPDATE]", packet);
 
             emit(BoardActions.piecesUpdated(packet.pieces));
         });
 
-        socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: PokemonPiece[] }) => {
+        socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: Models.Piece[] }) => {
             log("[BENCH_UPDATE]", packet);
             emit(BenchActions.benchPiecesUpdated(packet.pieces));
         });
 
-        socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: PlayerListPlayer[]) => {
+        socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: Models.PlayerListPlayer[]) => {
             log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListUpdated(players));
         });
 
-        socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: PokemonCard[]) => {
+        socket.on(ServerToClientPacketOpcodes.CARDS_UPDATE, (cards: Models.Card[]) => {
             log("[CARDS_UPDATE]", cards);
             emit(cardsUpdated(cards));
         });
@@ -109,7 +124,7 @@ const writeActionsToPackets = function*() {
         takeEvery(
             REROLL_CARDS,
             function*() {
-                yield put(sendPacket(ClientToServerPacketOpcodes.REROLL_CARDS));
+                yield put(sendPacket(ClientToServerPacketOpcodes.BUY_REROLL));
             }
         ),
         takeEvery(
@@ -118,10 +133,16 @@ const writeActionsToPackets = function*() {
                 yield put(sendPacket(ClientToServerPacketOpcodes.BUY_XP));
             }
         ),
+        takeEvery(
+            READY_UP,
+            function*() {
+                yield put(sendPacket(ClientToServerPacketOpcodes.READY_UP));
+            }
+        ),
         takeEvery<ActionWithPayload<{ index: number }>>(
-            PURCHASE_CARD,
+            BUY_CARD,
             function*({ payload }) {
-                yield put(sendPacket(ClientToServerPacketOpcodes.PURCHASE_CARD, payload.index));
+                yield put(sendPacket(ClientToServerPacketOpcodes.BUY_CARD, payload.index));
             }
         ),
         takeEvery<ActionWithPayload<{ pieceId: string }>>(
@@ -130,7 +151,7 @@ const writeActionsToPackets = function*() {
                 yield put(sendPacket(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId));
             }
         ),
-        takeEvery<ActionWithPayload<{ piece: PokemonPiece, position: TileCoordinates }>>(
+        takeEvery<ActionWithPayload<{ piece: Models.Piece, position: TileCoordinates }>>(
             BoardActionTypes.PIECE_MOVED_TO_BOARD,
             function*({ payload }) {
                 const packet: MovePiecePacket = {
@@ -142,7 +163,7 @@ const writeActionsToPackets = function*() {
                 yield put(sendPacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, packet));
             }
         ),
-        takeEvery<ActionWithPayload<{ piece: PokemonPiece, slot: number }>>(
+        takeEvery<ActionWithPayload<{ piece: Models.Piece, slot: number }>>(
             BoardActionTypes.PIECE_MOVED_TO_BENCH,
             function*({ payload }) {
                 const packet: MovePiecePacket = {
@@ -170,13 +191,28 @@ const writePacketsToSocket = function*(socket: Socket) {
 };
 
 export const networking = function*() {
-    const { payload } = yield take(JOIN_GAME);
-    const socket: Socket = yield call(getSocket, payload.serverIP);
+    let action: (JoinGameAction | CreateGameAction) = yield take([JOIN_GAME, CREATE_GAME]);
+    const socket: Socket = yield call(getSocket, action.payload.serverIP);
 
     yield fork(readPacketsToActions, socket);
 
-    const id: string = yield call(joinGame, socket, payload.name);
-    yield put(joinCompleteAction(id, payload.name));
+    while (true) {
+        const { error, response }: JoinGameResponse =
+            (action.type === JOIN_GAME)
+                ? yield call(joinGame, socket, action.payload.name, action.payload.gameId)
+                : yield call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
+
+        if (!error) {
+            yield put(joinCompleteAction({
+                ...response,
+                name: action.payload.name
+            }));
+            break;
+        }
+
+        yield put(joinGameError(error));
+        action = yield take([JOIN_GAME, CREATE_GAME]);
+    }
 
     yield fork(writeActionsToPackets);
     yield fork(writePacketsToSocket, socket);

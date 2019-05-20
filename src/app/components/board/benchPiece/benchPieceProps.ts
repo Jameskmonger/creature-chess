@@ -1,7 +1,7 @@
-import { PokemonPiece } from "@common";
+import { Models } from "@common";
 
 export interface BenchPieceProps {
-    piece: PokemonPiece;
+    piece: Models.Piece;
 }
 
 export interface BenchPieceStateProps {

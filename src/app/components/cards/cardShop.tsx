@@ -1,41 +1,41 @@
 import * as React from "react";
 import { FaSyncAlt } from "react-icons/fa";
-import { PokemonCard, Constants, GamePhase } from "@common";
+import { Models, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../../store/store";
-import { rerollCards, purchaseCard } from "../../actions/cardActions";
+import { rerollCards, buyCard } from "../../actions/cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 
 interface StateProps {
-    cards: PokemonCard[];
+    cards: Models.Card[];
     money: number;
     canUseShop: boolean;
 }
 
 interface DispatchProps {
     onReroll: () => void;
-    onPurchaseCard: (index: number) => void;
+    onBuyCard: (index: number) => void;
 }
 
 type Props = StateProps & DispatchProps;
 
 const CardShopUnconnected: React.FunctionComponent<Props> = props => {
-    const { cards, money, onReroll, onPurchaseCard, canUseShop } = props;
+    const { cards, money, onReroll, onBuyCard, canUseShop } = props;
 
     const onCardClick = (index: number) => {
-        return () => onPurchaseCard(index);
+        return () => onBuyCard(index);
     };
 
-    const createCard = (card: PokemonCard, index: number) => {
+    const createCard = (card: Models.Card, index: number) => {
         if (card === null) {
             return null;
         }
 
         return (
             <Card
-                key={`${index}-${card.id}`}
-                pokemonId={card.id}
+                key={`${index}-${card.definitionId}`}
+                definitionId={card.definitionId}
                 cost={card.cost}
                 name={card.name}
                 buyable={money >= card.cost}
@@ -82,7 +82,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     onReroll: () => dispatch(rerollCards()),
-    onPurchaseCard: (index: number) => dispatch(purchaseCard(index))
+    onBuyCard: (index: number) => dispatch(buyCard(index))
 });
 
 const CardShop = connect(mapStateToProps, mapDispatchToProps)(CardShopUnconnected);

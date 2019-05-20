@@ -1,13 +1,14 @@
+import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
-import { PokemonCard } from "@common/pokemon-card";
-import { PokemonDefinition } from "@common/pokemon-stats";
-import { PokemonPiece, getRequiredQuantityToEvolve } from "@common";
+import { CreatureDefinition, getRequiredQuantityToEvolve } from "../models/creatureDefinition";
+import { Card } from "../models/card";
+import { Piece } from "../models/piece";
 
 export class CardDeck {
-    public deck: PokemonCard[];
-    private definitions: PokemonDefinition[];
+    public deck: Card[];
+    private definitions: CreatureDefinition[];
 
-    constructor(definitions: PokemonDefinition[]) {
+    constructor(definitions: CreatureDefinition[]) {
         this.definitions = definitions;
 
         const cardValues = [
@@ -21,11 +22,11 @@ export class CardDeck {
         this.deck = [];
 
         for (const value of cardValues) {
-            const costPokemon = definitions.filter(p => p.cost !== null && p.cost === value.cost);
+            const costDefinitions = definitions.filter(p => p.cost !== null && p.cost === value.cost);
 
-            for (const pokemon of costPokemon) {
+            for (const definition of costDefinitions) {
                 for (let count = 0; count < value.quantity; count++) {
-                    this.addDefinition(pokemon);
+                    this.addDefinition(definition);
                 }
             }
         }
@@ -34,7 +35,7 @@ export class CardDeck {
     }
 
     public take(count: number) {
-        const output: PokemonCard[] = [];
+        const output: Card[] = [];
 
         for (let i = 0; i < count; i++) {
             const popped = this.deck.pop();
@@ -45,7 +46,7 @@ export class CardDeck {
         return output;
     }
 
-    public add(cards: PokemonCard[]) {
+    public add(cards: Card[]) {
         const cardsToAdd = cards.filter(card => card !== null);
 
         for (const card of cardsToAdd) {
@@ -55,8 +56,8 @@ export class CardDeck {
         this.deck = shuffle(this.deck);
     }
 
-    public addPiece(piece: PokemonPiece) {
-        const definition = this.definitions.find(p => p.id === piece.pokemonId);
+    public addPiece(piece: Piece) {
+        const definition = this.definitions.find(p => p.id === piece.definitionId);
         const preEvolvedDefinitions = this.getDefinitionsUsedToEvolveToDefinition(definition);
 
         preEvolvedDefinitions.forEach(preEvolvedDefinition => this.addDefinition(preEvolvedDefinition));
@@ -66,17 +67,18 @@ export class CardDeck {
         this.deck = shuffle(this.deck);
     }
 
-    private addDefinition(pokemon: PokemonDefinition) {
-        const card: PokemonCard = {
-            id: pokemon.id,
-            cost: pokemon.cost,
-            name: pokemon.name
+    private addDefinition(definition: CreatureDefinition) {
+        const card: Card = {
+            id: uuid(),
+            definitionId: definition.id,
+            cost: definition.cost,
+            name: definition.name
         };
 
         this.deck.push(card);
     }
 
-    private getDefinitionsUsedToEvolveToDefinition(definition: PokemonDefinition): PokemonDefinition[] {
+    private getDefinitionsUsedToEvolveToDefinition(definition: CreatureDefinition): CreatureDefinition[] {
         const preEvolvedFormDefinition = this.definitions.find(p => p.evolvedFormId === definition.id);
         if (!!preEvolvedFormDefinition) {
             const preEvolvedDefinitions = Array(getRequiredQuantityToEvolve(preEvolvedFormDefinition.id)).fill(preEvolvedFormDefinition);

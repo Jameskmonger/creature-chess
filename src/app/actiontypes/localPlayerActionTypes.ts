@@ -6,3 +6,6 @@ export type LEVEL_UPDATE = typeof LEVEL_UPDATE;
 
 export const BUY_XP = "BUY_XP";
 export type BUY_XP = typeof BUY_XP;
+
+export const READY_UP = "READY_UP";
+export type READY_UP = typeof READY_UP;

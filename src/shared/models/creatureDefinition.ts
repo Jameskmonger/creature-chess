@@ -1,32 +1,32 @@
-import { PokemonType } from "./pokemon-type";
+import { CreatureType } from "./creatureType";
 
-export interface PokemonDefinition {
+export interface CreatureDefinition {
     id: number;
     name: string;
-    stats: PokemonStats;
+    stats: CreatureStats;
     cost?: number;
     evolvedFormId?: number;
 }
 
-export interface PokemonStats {
+export interface CreatureStats {
     hp: number;
     attack: number;
     defense: number;
     speed: number;
     specialAttack: number;
     specialDefense: number;
-    type: PokemonType;
+    type: CreatureType;
 }
 
-const pokemonMap = new Map<number, PokemonDefinition>();
+const definitionMap = new Map<number, CreatureDefinition>();
 
-const mapPokemon = (pokemonDefinition: PokemonDefinition[]) => {
-    pokemonDefinition.forEach(p => {
-        pokemonMap.set(p.id, p);
+const mapDefinitions = (definition: CreatureDefinition[]) => {
+    definition.forEach(p => {
+        definitionMap.set(p.id, p);
     });
 };
 
-mapPokemon([
+mapDefinitions([
     {
         id: 1,
         name: "Bish",
@@ -37,7 +37,7 @@ mapPokemon([
             speed: 45,
             specialAttack: 65,
             specialDefense: 65,
-            type: PokemonType.Grass
+            type: CreatureType.Grass
         },
         cost: 3,
         evolvedFormId: 2
@@ -52,7 +52,7 @@ mapPokemon([
             speed: 60,
             specialAttack: 80,
             specialDefense: 80,
-            type: PokemonType.Grass
+            type: CreatureType.Grass
         },
         evolvedFormId: 3
     },
@@ -66,7 +66,7 @@ mapPokemon([
             speed: 80,
             specialAttack: 100,
             specialDefense: 100,
-            type: PokemonType.Grass
+            type: CreatureType.Grass
         }
     },
     {
@@ -79,7 +79,7 @@ mapPokemon([
             speed: 65,
             specialAttack: 60,
             specialDefense: 50,
-            type: PokemonType.Fire
+            type: CreatureType.Fire
         },
         cost: 3,
         evolvedFormId: 5
@@ -94,7 +94,7 @@ mapPokemon([
             speed: 80,
             specialAttack: 80,
             specialDefense: 65,
-            type: PokemonType.Fire
+            type: CreatureType.Fire
         },
         evolvedFormId: 6
     },
@@ -108,7 +108,7 @@ mapPokemon([
             speed: 100,
             specialAttack: 109,
             specialDefense: 85,
-            type: PokemonType.Fire
+            type: CreatureType.Fire
         }
     },
     {
@@ -121,7 +121,7 @@ mapPokemon([
             speed: 43,
             specialAttack: 50,
             specialDefense: 64,
-            type: PokemonType.Water
+            type: CreatureType.Water
         },
         cost: 3,
         evolvedFormId: 8
@@ -136,7 +136,7 @@ mapPokemon([
             speed: 58,
             specialAttack: 65,
             specialDefense: 80,
-            type: PokemonType.Water
+            type: CreatureType.Water
         },
         evolvedFormId: 9
     },
@@ -150,7 +150,7 @@ mapPokemon([
             speed: 78,
             specialAttack: 85,
             specialDefense: 105,
-            type: PokemonType.Water
+            type: CreatureType.Water
         }
     },
     {
@@ -163,7 +163,7 @@ mapPokemon([
             speed: 45,
             specialAttack: 20,
             specialDefense: 20,
-            type: PokemonType.Bug
+            type: CreatureType.Bug
         },
         cost: 1,
         evolvedFormId: 11
@@ -178,7 +178,7 @@ mapPokemon([
             speed: 30,
             specialAttack: 25,
             specialDefense: 25,
-            type: PokemonType.Bug
+            type: CreatureType.Bug
         },
         evolvedFormId: 12
     },
@@ -192,12 +192,19 @@ mapPokemon([
             speed: 70,
             specialAttack: 90,
             specialDefense: 80,
-            type: PokemonType.Bug
+            type: CreatureType.Bug
         }
     }
 ]);
 
-const pokemonArray = Array.from(pokemonMap.values());
+const definitionArray = Array.from(definitionMap.values());
 
-export const getPokemonDefinition = (id: number) => pokemonMap.get(id);
-export const getAllDefinitions = () => pokemonArray;
+export const getDefinition = (id: number) => definitionMap.get(id);
+export const getAllDefinitions = () => definitionArray;
+
+// When pieces are combined, non-basic pieces do not currently have a cost, so use  placeholder value of $6
+export const getPieceCost = (id: number) => getDefinition(id).cost || 6;
+
+export const getStats = (id: number) => getDefinition(id).stats;
+
+export const getRequiredQuantityToEvolve = (id: number) => 3;

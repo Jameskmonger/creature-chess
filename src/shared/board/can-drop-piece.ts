@@ -1,7 +1,7 @@
-import { PokemonPiece, GamePhase } from "@common";
+import { Models, GamePhase } from "@common";
 import { TileCoordinates, inBench, inFriendlyBoard } from "@common/position";
 
-export const canDropPiece = (piece: PokemonPiece, target: TileCoordinates, tilePieces: PokemonPiece[], gamePhase: GamePhase, belowPieceLimit: boolean) => {
+export const canDropPiece = (piece: Models.Piece, target: TileCoordinates, tilePieces: Models.Piece[], gamePhase: GamePhase, belowPieceLimit: boolean) => {
     const targetIsBench = inBench(target);
     const benchToBenchMove = targetIsBench && inBench(piece.position);
 

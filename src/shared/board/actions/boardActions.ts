@@ -1,18 +1,18 @@
-import { PokemonPiece } from "@common/pokemon-piece";
+import { Models } from "@common";
 import { PIECE_MOVED_TO_BOARD, PIECES_UPDATED, PIECE_MOVED_TO_BENCH, SELL_PIECE } from "./boardActionTypes";
 import { TileCoordinates, TileType } from "@common/position";
 
-type PieceMovedToBoardAction = ({ type: PIECE_MOVED_TO_BOARD, payload: { piece: PokemonPiece, position: TileCoordinates } });
-type PieceMovedToBenchAction = ({ type: PIECE_MOVED_TO_BENCH, payload: { piece: PokemonPiece, slot: number } });
+type PieceMovedToBoardAction = ({ type: PIECE_MOVED_TO_BOARD, payload: { piece: Models.Piece, position: TileCoordinates } });
+type PieceMovedToBenchAction = ({ type: PIECE_MOVED_TO_BENCH, payload: { piece: Models.Piece, slot: number } });
 type SellPieceAction = ({ type: SELL_PIECE, payload: { pieceId: string } });
 
 export type BoardAction =
-    ({ type: PIECES_UPDATED, payload: { pieces: PokemonPiece[] } })
+    ({ type: PIECES_UPDATED, payload: { pieces: Models.Piece[] } })
     | PieceMovedToBoardAction
     | PieceMovedToBenchAction
     | SellPieceAction;
 
-export const pieceMoved = (piece: PokemonPiece, position: TileCoordinates, tileType: TileType): PieceMovedToBoardAction | PieceMovedToBenchAction => {
+export const pieceMoved = (piece: Models.Piece, position: TileCoordinates, tileType: TileType): PieceMovedToBoardAction | PieceMovedToBenchAction => {
     if (tileType === TileType.BOARD) {
         return {
             type: PIECE_MOVED_TO_BOARD,
@@ -32,7 +32,7 @@ export const pieceMoved = (piece: PokemonPiece, position: TileCoordinates, tileT
     };
 };
 
-export const piecesUpdated = (pieces: PokemonPiece[]): BoardAction => ({
+export const piecesUpdated = (pieces: Models.Piece[]): BoardAction => ({
     type: PIECES_UPDATED,
     payload: {
         pieces

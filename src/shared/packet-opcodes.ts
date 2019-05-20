@@ -1,6 +1,6 @@
 import { TileCoordinates } from "./position";
-import { PokemonPiece } from "./pokemon-piece";
 import { GamePhase } from "./game-phase";
+import { Piece } from "./models";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -15,14 +15,16 @@ export enum ServerToClientPacketOpcodes {
 
 export enum ClientToServerPacketOpcodes {
     JOIN_GAME = "joinGame",
-    PURCHASE_CARD = "purchaseCard",
+    CREATE_GAME = "createGame",
+    BUY_CARD = "buyCard",
     SELL_PIECE = "sellPiece",
-    REROLL_CARDS = "rerollCards",
+    BUY_REROLL = "rerollCards",
     MOVE_PIECE_TO_BENCH = "movePieceToBench",
     MOVE_PIECE_TO_BOARD = "movePieceToBoard",
     BUY_XP = "buyXp",
     SEND_CHAT_MESSAGE = "sendChatMessage",
-    FINISH_MATCH = "finishMatch"
+    FINISH_MATCH = "finishMatch",
+    READY_UP = "readyUp"
 }
 
 export interface MovePiecePacket {
@@ -32,7 +34,7 @@ export interface MovePiecePacket {
 }
 
 export type BoardUpatePacket = {
-    pieces: PokemonPiece[];
+    pieces: Piece[];
 };
 
 export interface LevelUpdatePacket {
@@ -41,7 +43,15 @@ export interface LevelUpdatePacket {
 }
 
 export type PhaseUpdatePacket
-    = ({ phase: GamePhase.PREPARING, payload: { pieces: PokemonPiece[] } })
-        | ({ phase: GamePhase.READY, payload: { pieces: PokemonPiece[], opponentId: string }})
-        | ({ phase: GamePhase.PLAYING })
-        | ({ phase: GamePhase.DEAD });
+    = ({ phase: GamePhase.PREPARING, payload: { pieces: Piece[] } })
+    | ({ phase: GamePhase.READY, payload: { pieces: Piece[], opponentId: string } })
+    | ({ phase: GamePhase.PLAYING })
+    | ({ phase: GamePhase.DEAD });
+
+export interface JoinGameResponse {
+    error?: string;
+    response?: {
+        playerId: string;
+        gameId: string;
+    };
+}
