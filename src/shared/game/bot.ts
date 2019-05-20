@@ -21,9 +21,6 @@ export class Bot extends Player {
         for (const { card, index } of cardCosts) {
             if (this.shouldBuyCard(index)) {
                 this.buyCard(index);
-
-                const definition = getDefinition(card.definitionId);
-                this.sendChatMessage(`I just bought a ${definition.name}`);
             }
         }
 
