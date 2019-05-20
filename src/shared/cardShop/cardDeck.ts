@@ -12,11 +12,11 @@ export class CardDeck {
         this.definitions = definitions;
 
         const cardValues = [
-            { cost: 1, quantity: 45 },
-            { cost: 2, quantity: 30 },
-            { cost: 3, quantity: 25 },
-            { cost: 4, quantity: 15 },
-            { cost: 5, quantity: 10 }
+            { cost: 1, quantity: 450 },
+            { cost: 2, quantity: 300 },
+            { cost: 3, quantity: 250 },
+            { cost: 4, quantity: 150 },
+            { cost: 5, quantity: 100 }
         ];
 
         this.deck = [];

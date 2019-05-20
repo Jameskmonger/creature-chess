@@ -206,7 +206,9 @@ mapDefinitions([
             specialAttack: 20,
             specialDefense: 20,
             type: CreatureType.Bug
-        }
+        },
+        cost: 1,
+        evolvedFormId: 14
     },
     {
         id: 14,
@@ -219,7 +221,8 @@ mapDefinitions([
             specialAttack: 25,
             specialDefense: 25,
             type: CreatureType.Bug
-        }
+        },
+        evolvedFormId: 15
     },
     {
         id: 15,
