@@ -11,7 +11,7 @@
 		"start:app": "npm run build:app && http-server ./public -p 8090",
 		"dev:app": "webpack-dev-server",
 		"build:server": "tsc -p ./tsconfig.server.json",
-		"start:server": "nodemon 3000 4 3",
+		"start:server": "nodemon 3000",
 		"copy-images": "cpy \"./images/**/*\" \"./public/\" --parents",
 		"test:run": "ts-node --files run-tests.ts",
 		"test:rundebug": "ts-node --files run-tests.ts ci",

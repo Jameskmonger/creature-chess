@@ -2,12 +2,13 @@ import { FeedMessage } from "../feed-message";
 import { createTileCoordinates } from "../position";
 import { Player } from "./player";
 import { GRID_SIZE } from "../constants";
+import { PlayerListPlayer } from "../models/player-list-player";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
 
 export class Bot extends Player {
-    public onPlayerListUpdate(players: Player[]) { /* nothing required, we're a bot */ }
+    public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
 
     public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }
 
@@ -37,6 +38,8 @@ export class Bot extends Player {
                 to: firstEmptyPosition
             });
         }
+
+        this.readyUp();
     }
 
     protected onEnterReadyPhase() { /* nothing required, we're a bot */ }

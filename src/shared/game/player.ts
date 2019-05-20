@@ -17,6 +17,7 @@ import { Piece } from "../models/piece";
 import { GamePhase } from "../game-phase";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE } from "../constants";
 import { getXpToNextLevel } from "../get-xp-for-level";
+import { PlayerListPlayer } from "../models/player-list-player";
 
 enum StreakType {
     WIN,
@@ -26,13 +27,15 @@ enum StreakType {
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
     SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
-    FINISH_MATCH = "FINISH_MATCH"
+    FINISH_MATCH = "FINISH_MATCH",
+    UPDATE_READY = "UPDATE_READY"
 }
 
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
     public health: number = 100;
+    public ready = false;
 
     protected money = new Observable(3);
     protected cards = new Observable<Card[]>([]);
@@ -50,6 +53,9 @@ export abstract class Player {
     };
     private gamePhase: GamePhase = GamePhase.WAITING;
 
+    private readyUpPromise: Promise<void> = null;
+    private resolveReadyUpPromise: () => void = null;
+
     constructor(name: string) {
         this.id = uuid();
         this.name = name;
@@ -63,15 +69,28 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public enterPreparingPhase() {
+    public async enterPreparingPhase() {
         this.gamePhase = GamePhase.PREPARING;
+
+        this.readyUpPromise = new Promise(resolve => {
+            this.resolveReadyUpPromise = resolve;
+        });
 
         this.giveMatchRewards();
         this.onEnterPreparingPhase();
+
+        if (this.isAlive() === false) {
+            return;
+        }
+
+        await this.readyUpPromise;
     }
 
     public enterReadyPhase(opponentProvider: OpponentProvider) {
         this.gamePhase = GamePhase.READY;
+        this.readyUpPromise = null;
+        this.resolveReadyUpPromise = null;
+        this.ready = false;
 
         if (this.isAlive()) {
             const opponent = opponentProvider.getOpponent(this.id);
@@ -106,6 +125,14 @@ export abstract class Player {
 
     public onHealthUpdate(fn: (health: number) => void) {
         this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
+
+        fn(this.health);
+    }
+
+    public onReadyUpdate(fn: (ready: boolean) => void) {
+        this.events.on(PlayerEvent.UPDATE_READY, fn);
+
+        fn(this.ready);
     }
 
     public onSendChatMessage(fn: (message: string) => void) {
@@ -130,7 +157,7 @@ export abstract class Player {
         this.cards.setValue(newCards);
     }
 
-    public abstract onPlayerListUpdate(players: Player[]);
+    public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
 
     public abstract onNewFeedMessage(message: FeedMessage);
 
@@ -241,6 +268,18 @@ export abstract class Player {
         }
 
         this.match.onClientFinishMatch();
+    }
+
+    protected readyUp = () => {
+        if (this.ready) {
+            return;
+        }
+
+        log(`${this.name} readied up`);
+
+        this.setReady(true);
+
+        this.resolveReadyUpPromise();
     }
 
     protected movePieceToBench = (packet: MovePiecePacket) => {
@@ -474,5 +513,10 @@ export abstract class Player {
             || this.bench.getValue().find(p => p.id === id)
             || null
         );
+    }
+
+    private setReady(ready: boolean) {
+        this.ready = ready;
+        this.events.emit(PlayerEvent.UPDATE_READY, this.ready);
     }
 }

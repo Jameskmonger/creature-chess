@@ -23,7 +23,8 @@ export enum ClientToServerPacketOpcodes {
     MOVE_PIECE_TO_BOARD = "movePieceToBoard",
     BUY_XP = "buyXp",
     SEND_CHAT_MESSAGE = "sendChatMessage",
-    FINISH_MATCH = "finishMatch"
+    FINISH_MATCH = "finishMatch",
+    READY_UP = "readyUp"
 }
 
 export interface MovePiecePacket {

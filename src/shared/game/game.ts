@@ -9,6 +9,8 @@ import { log } from "../log";
 import { getAllDefinitions } from "../models/creatureDefinition";
 import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
 import { EventEmitter } from "events";
+import { PlayerListPlayer } from "../models/player-list-player";
+import { PlayerList } from "./playerList";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -25,6 +27,7 @@ export class Game {
     private round = 0;
     private phase = GamePhase.WAITING;
     private opponentProvider = new OpponentProvider();
+    private playerList = new PlayerList();
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
     private events = new EventEmitter();
@@ -32,6 +35,8 @@ export class Game {
     constructor(gameSize: number) {
         this.GAME_SIZE = gameSize;
         this.opponentProvider.setPlayers(this.players);
+
+        this.playerList.onUpdate(playerList => this.players.forEach(p => p.onPlayerListUpdate(playerList)));
     }
 
     public onFinish(fn: () => void) {
@@ -50,8 +55,6 @@ export class Game {
         if (this.canAddPlayer() === false) {
             return;
         }
-
-        player.onHealthUpdate(this.updatePlayerLists);
 
         player.onSendChatMessage(message => {
             this.sendFeedMessageToAllPlayers({
@@ -73,8 +76,8 @@ export class Game {
         });
 
         this.players.push(player);
+        this.playerList.addPlayer(player);
         player.setDeck(this.deck);
-        this.updatePlayerLists();
 
         if (this.players.length === this.GAME_SIZE) {
             setTimeout(() => {
@@ -104,8 +107,6 @@ export class Game {
 
         log(`Match complete in ${(duration)} ms (${this.round} rounds)`);
 
-        this.updatePlayerLists();
-
         this.players.forEach(p => p.onFinishGame());
 
         this.events.emit(GameEvents.FINISH_GAME);
@@ -118,9 +119,12 @@ export class Game {
 
         this.phase = GamePhase.PREPARING;
 
-        this.players.forEach(p => p.enterPreparingPhase());
+        const promises = this.players.map(p => p.enterPreparingPhase());
 
-        await delay(PHASE_LENGTHS[GamePhase.PREPARING] * 1000);
+        await Promise.race([
+            Promise.all(promises),
+            delay(PHASE_LENGTHS[GamePhase.PREPARING] * 1000)
+        ]);
     }
 
     private async runReadyPhase() {
@@ -154,9 +158,5 @@ export class Game {
 
     private sendFeedMessageToAllPlayers(message: FeedMessage) {
         this.players.forEach(p => p.onNewFeedMessage(message));
-    }
-
-    private updatePlayerLists = () => {
-        this.players.forEach(p => p.onPlayerListUpdate(this.players));
     }
 }
