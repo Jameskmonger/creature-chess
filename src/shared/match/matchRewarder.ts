@@ -2,11 +2,7 @@ import { Match } from "./match";
 import { Player, StreakType } from "../game/player";
 import { log } from "../log";
 
-export interface MatchRewarder {
-    giveRewards(match: Match);
-}
-
-export class StandardMatchRewarder implements MatchRewarder {
+export class MatchRewarder {
     public giveRewards(match: Match) {
         const homePlayer = match.home;
 

@@ -94,7 +94,7 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public async enterPreparingPhase(matchRewarder: MatchRewarder) {
+    public async enterPreparingPhase() {
         this.gamePhase = GamePhase.PREPARING;
 
         this.readyUpPromise = new Promise(resolve => {
@@ -103,10 +103,6 @@ export abstract class Player {
 
         this.rerollCards();
 
-        if (this.match) {
-            matchRewarder.giveRewards(this.match);
-        }
-
         this.onEnterPreparingPhase();
 
         if (this.isAlive() === false) {
@@ -114,6 +110,16 @@ export abstract class Player {
         }
 
         await this.readyUpPromise;
+    }
+
+    public giveMatchRewards(matchRewarder: MatchRewarder) {
+        if (!this.match) {
+            return;
+        }
+
+        matchRewarder.giveRewards(this.match);
+
+        this.match = null;
     }
 
     public enterReadyPhase(opponentProvider: OpponentProvider) {
@@ -126,9 +132,9 @@ export abstract class Player {
             const opponent = opponentProvider.getOpponent(this.id);
 
             this.match = new Match(this, opponent);
-        }
 
-        this.onEnterReadyPhase();
+            this.onEnterReadyPhase();
+        }
     }
 
     public async fightMatch(battleTimeout: Promise<void>) {
