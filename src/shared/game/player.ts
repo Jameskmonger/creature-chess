@@ -3,7 +3,7 @@ import { getDefinition, getRequiredQuantityToEvolve, getPieceCost } from "../mod
 import { clonePiece, createPiece, createPieceFromCard } from "../piece-utils";
 import { MovePiecePacket } from "../packet-opcodes";
 import { TileType, createTileCoordinates } from "../position";
-import { Match } from "./match";
+import { Match } from "../match/match";
 import { log } from "../log";
 import { CardDeck } from "../cardShop/cardDeck";
 import { FeedMessage } from "../feed-message";
