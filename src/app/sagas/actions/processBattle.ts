@@ -4,7 +4,7 @@ import { eventChannel } from "redux-saga";
 import { BoardActions } from "@common/board";
 import { Models, GamePhase, Constants } from "@common";
 import { isATeamDefeated } from "@common/is-a-team-defeated";
-import { simulateTurn } from "@common/fighting-turn-simulator";
+import { simulateTurn } from "@common/match/combat/fighting-turn-simulator";
 import { AppState } from "../../store/store";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
 import { GamePhaseUpdateAction } from "../../actions/gameActions";

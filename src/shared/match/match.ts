@@ -3,7 +3,7 @@ import uuid = require("uuid");
 import { Player } from "../game/player";
 import { rotatePiecePosition } from "../piece-utils";
 import { isATeamDefeated } from "../is-a-team-defeated";
-import { simulateTurn } from "../fighting-turn-simulator";
+import { simulateTurn } from "./combat/fighting-turn-simulator";
 import { log } from "../log";
 import { Piece } from "../models/piece";
 import { TURN_DURATION_MS } from "../constants";

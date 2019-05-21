@@ -1,7 +1,7 @@
 import { astar, Graph } from "javascript-astar";
-import { GRID_SIZE } from "./constants";
-import { getAdjacentPositions, TileCoordinates } from "./position";
-import { Piece } from "./models";
+import { GRID_SIZE } from "../../constants";
+import { getAdjacentPositions, TileCoordinates } from "../../position";
+import { Piece } from "../../models";
 
 const createEmptyWeightGrid = () => {
     const grid: number[][] = [];

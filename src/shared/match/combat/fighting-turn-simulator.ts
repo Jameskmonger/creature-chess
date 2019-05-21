@@ -1,10 +1,10 @@
 import { attack } from "./attack";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
-import { getStats } from "./models/creatureDefinition";
-import { getRelativeDirection } from "./position";
-import { isATeamDefeated } from "./is-a-team-defeated";
-import { Piece } from "./models";
-import { INITIAL_COOLDOWN } from "./constants";
+import { getStats } from "../../models/creatureDefinition";
+import { getRelativeDirection } from "../../position";
+import { isATeamDefeated } from "../../is-a-team-defeated";
+import { Piece } from "../../models";
+import { INITIAL_COOLDOWN } from "../../constants";
 
 export const simulateTurn = (pieces: Piece[]) => {
     const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
