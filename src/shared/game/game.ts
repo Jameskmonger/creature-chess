@@ -12,6 +12,7 @@ import { EventEmitter } from "events";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { PlayerList } from "./playerList";
 import { MatchRewarder } from "../match/matchRewarder";
+import { TurnSimulator } from "../match/combat/turnSimulator";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -30,6 +31,7 @@ export class Game {
     private opponentProvider = new OpponentProvider();
     private matchRewarder = new MatchRewarder();
     private playerList = new PlayerList();
+    private turnSimulator = new TurnSimulator();
     private deck = new CardDeck(getAllDefinitions());
     private players: Player[] = [];
     private events = new EventEmitter();
@@ -134,7 +136,7 @@ export class Game {
 
         this.phase = GamePhase.READY;
 
-        this.players.forEach(p => p.enterReadyPhase(this.opponentProvider));
+        this.players.forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider));
 
         await delay(PHASE_LENGTHS[GamePhase.READY] * 1000);
     }

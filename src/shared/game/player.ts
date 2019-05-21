@@ -19,6 +19,7 @@ import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE } from "../con
 import { getXpToNextLevel } from "../get-xp-for-level";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { MatchRewarder } from "../match/matchRewarder";
+import { TurnSimulator } from "../match/combat/turnSimulator";
 
 export enum StreakType {
     WIN,
@@ -122,7 +123,7 @@ export abstract class Player {
         this.match = null;
     }
 
-    public enterReadyPhase(opponentProvider: OpponentProvider) {
+    public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider) {
         this.gamePhase = GamePhase.READY;
         this.readyUpPromise = null;
         this.resolveReadyUpPromise = null;
@@ -131,7 +132,7 @@ export abstract class Player {
         if (this.isAlive()) {
             const opponent = opponentProvider.getOpponent(this.id);
 
-            this.match = new Match(this, opponent);
+            this.match = new Match(turnSimulator, this, opponent);
 
             this.onEnterReadyPhase();
         }
@@ -417,10 +418,6 @@ export abstract class Player {
 
         const newPiece = createPiece(this.id, evolvedFormId, [slot, null], piece.id);
         this.addPieceToBench(newPiece);
-    }
-
-    private getLevel() {
-        return this.level.getValue().level;
     }
 
     private getCardAtIndex(index: number) {
