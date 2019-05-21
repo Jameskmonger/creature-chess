@@ -193,7 +193,7 @@ export abstract class Player {
         this.deck.add(cards);
         this.deck.shuffle();
 
-        const newCards = this.deck.take(5);
+        const newCards = this.deck.take(this.getLevel(), 5);
         this.cards.setValue(newCards);
     }
 
@@ -413,6 +413,10 @@ export abstract class Player {
 
         const newPiece = createPiece(this.id, evolvedFormId, [slot, null], piece.id);
         this.addPieceToBench(newPiece);
+    }
+
+    private getLevel() {
+        return this.level.getValue().level;
     }
 
     private getCardAtIndex(index: number) {
