@@ -12,6 +12,9 @@ const ChatInputUnconnected: React.FunctionComponent<ChatInputProps> = (props) =>
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!message) {
+            return;
+        }
         props.onSend(message);
         setMessage("");
     };

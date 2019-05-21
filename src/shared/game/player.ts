@@ -299,6 +299,9 @@ export abstract class Player {
     }
 
     protected sendChatMessage = (message: string) => {
+        if (!message) {
+            return;
+        }
         this.events.emit(PlayerEvent.SEND_CHAT_MESSAGE, message);
     }
 
