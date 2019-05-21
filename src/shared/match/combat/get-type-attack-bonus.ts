@@ -1,4 +1,4 @@
-import { CreatureType } from "./models/creatureType";
+import { CreatureType } from "../../models/creatureType";
 
 export const getTypeAttackBonus = (attackType: CreatureType, defenceType: CreatureType) => {
     if (attackType === CreatureType.Normal) {
