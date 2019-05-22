@@ -264,7 +264,7 @@ mapDefinitions([
             specialDefense: 60,
             type: CreatureType.Fire
         },
-        evolvedFormId: 6
+        evolvedFormId: 18
     },
     {
         id: 18,
