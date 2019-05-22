@@ -43,11 +43,11 @@ export abstract class Player {
         amount: 0
     };
 
-    protected money = new Observable(3);
+    protected money = new Observable(50);
     protected cards = new Observable<Card[]>([]);
     protected board = new Store<Piece[], BoardActions.BoardAction>([], boardReducer);
     protected bench = new Store<Piece[], BenchActions.BenchPiecesAction>([], benchReducer);
-    protected level = new Observable({ level: 1, xp: 0 });
+    protected level = new Observable({ level: 5, xp: 0 });
     protected match: Match = null;
 
     private events = new EventEmitter();
