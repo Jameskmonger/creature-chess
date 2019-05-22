@@ -236,6 +236,48 @@ mapDefinitions([
             specialDefense: 80,
             type: CreatureType.Bug
         }
+    },
+    {
+        id: 16,
+        name: "Kindling",
+        stats: {
+            hp: 37,
+            attack: 53,
+            defense: 42,
+            speed: 68,
+            specialAttack: 61,
+            specialDefense: 49,
+            type: CreatureType.Fire
+        },
+        cost: 3,
+        evolvedFormId: 17
+    },
+    {
+        id: 17,
+        name: "Tinderlizard",
+        stats: {
+            hp: 59,
+            attack: 66,
+            defense: 71,
+            speed: 81,
+            specialAttack: 75,
+            specialDefense: 60,
+            type: CreatureType.Fire
+        },
+        evolvedFormId: 6
+    },
+    {
+        id: 18,
+        name: "Lightersaur",
+        stats: {
+            hp: 81,
+            attack: 87,
+            defense: 79,
+            speed: 120,
+            specialAttack: 101,
+            specialDefense: 82,
+            type: CreatureType.Fire
+        }
     }
 ]);
 
