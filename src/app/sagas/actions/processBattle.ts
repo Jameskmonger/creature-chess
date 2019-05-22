@@ -4,11 +4,11 @@ import { eventChannel } from "redux-saga";
 import { BoardActions } from "@common/board";
 import { Models, GamePhase, Constants } from "@common";
 import { isATeamDefeated } from "@common/is-a-team-defeated";
-import { simulateTurn } from "@common/fighting-turn-simulator";
 import { AppState } from "../../store/store";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
 import { GamePhaseUpdateAction } from "../../actions/gameActions";
 import { log } from "../../log";
+import { TurnSimulator } from "@common/match/combat/turnSimulator";
 
 enum BattleActionType {
     TURN,
@@ -33,7 +33,7 @@ const turnAction = (pieces: Models.Piece[]): BattleTurnAction => ({
 
 const finishAction = (): BattleFinishAction => ({ type: BATTLE_FINISHED });
 
-const startBattle = (startPieces: Models.Piece[], maxTurns: number) => {
+const startBattle = (turnSimulator: TurnSimulator, startPieces: Models.Piece[], maxTurns: number) => {
     return eventChannel<BattleAction>(emit => {
         let shouldStop = false;
         let pieces = startPieces;
@@ -64,7 +64,7 @@ const startBattle = (startPieces: Models.Piece[], maxTurns: number) => {
                     break;
                 }
 
-                pieces = simulateTurn(pieces);
+                pieces = turnSimulator.simulateTurn(pieces);
                 emit(turnAction(pieces));
                 turnCount++;
             }
@@ -98,7 +98,8 @@ export const processBattle = function*() {
 
             const state: AppState = yield select();
 
-            const battleChannel = yield call(startBattle, state.board, Constants.TURNS_IN_BATTLE);
+            const turnSimulator = new TurnSimulator();
+            const battleChannel = yield call(startBattle, turnSimulator, state.board, Constants.TURNS_IN_BATTLE);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleAction) {
                 switch (battleAction.type) {

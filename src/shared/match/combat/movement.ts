@@ -1,6 +1,6 @@
-import { Piece } from "./models";
+import { Piece } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
-import { TileCoordinates } from "./position";
+import { TileCoordinates } from "../../position";
 
 const getLivingEnemies = (piece: Piece, pieces: Piece[]) => {
     return pieces.filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);

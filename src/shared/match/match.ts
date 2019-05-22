@@ -3,15 +3,16 @@ import uuid = require("uuid");
 import { Player } from "../game/player";
 import { rotatePiecePosition } from "../piece-utils";
 import { isATeamDefeated } from "../is-a-team-defeated";
-import { simulateTurn } from "../fighting-turn-simulator";
 import { log } from "../log";
 import { Piece } from "../models/piece";
 import { TURN_DURATION_MS } from "../constants";
 import { MatchResults } from "./matchResults";
+import { TurnSimulator } from "./combat/turnSimulator";
 
 export class Match {
     public readonly home: Player;
     public readonly away: Player;
+    private readonly turnSimulator: TurnSimulator;
     private id: string;
     private board: Piece[];
     private results: MatchResults;
@@ -19,7 +20,8 @@ export class Match {
     private clientFinishedMatch: Promise<void>;
     private resolveClientFinishMatch: () => void;
 
-    constructor(home: Player, away: Player) {
+    constructor(turnSimulator: TurnSimulator, home: Player, away: Player) {
+        this.turnSimulator = turnSimulator;
         this.id = uuid();
         this.home = home;
         this.away = away;
@@ -63,7 +65,7 @@ export class Match {
                 break;
             }
 
-            this.board = simulateTurn(this.board);
+            this.board = this.turnSimulator.simulateTurn(this.board);
             turnCount++;
         }
 
