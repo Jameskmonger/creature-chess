@@ -292,7 +292,7 @@ mapDefinitions([
             type: CreatureType.Ground
         },
         cost: 2,
-        evolvedFormId: 30
+        evolvedFormId: 20
     },
     {
         id: 20,
@@ -306,7 +306,7 @@ mapDefinitions([
             specialDefense: 55,
             type: CreatureType.Ground
         },
-        evolvedFormId: 31
+        evolvedFormId: 21
     },
     {
         id: 21,
