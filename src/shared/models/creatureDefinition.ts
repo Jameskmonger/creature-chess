@@ -320,6 +320,48 @@ mapDefinitions([
             specialDefense: 85,
             type: CreatureType.Ground
         }
+    },
+    {
+        id: 22,
+        name: "Mouselet",
+        stats: {
+            hp: 55,
+            attack: 52,
+            defense: 47,
+            speed: 40,
+            specialAttack: 40,
+            specialDefense: 40,
+            type: CreatureType.Ground
+        },
+        cost: 2,
+        evolvedFormId: 23
+    },
+    {
+        id: 23,
+        name: "Mousio",
+        stats: {
+            hp: 70,
+            attack: 67,
+            defense: 62,
+            speed: 55,
+            specialAttack: 55,
+            specialDefense: 55,
+            type: CreatureType.Ground
+        },
+        evolvedFormId: 24
+    },
+    {
+        id: 24,
+        name: "Sirmouse",
+        stats: {
+            hp: 90,
+            attack: 87,
+            defense: 92,
+            speed: 75,
+            specialAttack: 75,
+            specialDefense: 85,
+            type: CreatureType.Ground
+        }
     }
 ]);
 
