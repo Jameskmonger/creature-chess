@@ -278,6 +278,48 @@ mapDefinitions([
             specialDefense: 82,
             type: CreatureType.Fire
         }
+    },
+    {
+        id: 19,
+        name: "Vermina",
+        stats: {
+            hp: 55,
+            attack: 47,
+            defense: 52,
+            speed: 41,
+            specialAttack: 40,
+            specialDefense: 40,
+            type: CreatureType.Ground
+        },
+        cost: 2,
+        evolvedFormId: 20
+    },
+    {
+        id: 20,
+        name: "Vermirat",
+        stats: {
+            hp: 70,
+            attack: 62,
+            defense: 67,
+            speed: 56,
+            specialAttack: 55,
+            specialDefense: 55,
+            type: CreatureType.Ground
+        },
+        evolvedFormId: 21
+    },
+    {
+        id: 21,
+        name: "Verminion",
+        stats: {
+            hp: 90,
+            attack: 92,
+            defense: 87,
+            speed: 76,
+            specialAttack: 75,
+            specialDefense: 85,
+            type: CreatureType.Ground
+        }
     }
 ]);
 
