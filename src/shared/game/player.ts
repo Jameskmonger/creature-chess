@@ -59,7 +59,6 @@ export abstract class Player {
     private readyUpPromise: Promise<void> = null;
     private resolveReadyUpPromise: () => void = null;
 
-
     constructor(name: string) {
         this.id = uuid();
         this.name = name;
@@ -399,17 +398,17 @@ export abstract class Player {
     }
 
     private checkForEvolutions(piece: Piece) {
-        const { stages } = this.definitionProvider.get(piece.definitionId);
+        const definition = this.definitionProvider.get(piece.definitionId);
 
         const nextStageIndex = piece.stage + 1;
-        const nextStage = stages[nextStageIndex];
+        const nextStage = definition.stages[nextStageIndex];
 
         if (!nextStage) {
             return;
         }
 
-        const pieceIsMatching = (p: Piece) => p.id !== piece.id && p.definitionId === piece.definitionId;
-        const getMatchingPieces = (pieces: Piece[]) => pieces.filter(pieceIsMatching);
+        const pieceIsMatching = (p: Piece) => p.definitionId === piece.definitionId && p.stage === piece.stage;
+        const getMatchingPieces = (pieces: Piece[]) => pieces.filter(p => p.id !== piece.id && pieceIsMatching(p));
 
         const board = this.board.getValue();
         const bench = this.bench.getValue();
@@ -423,8 +422,8 @@ export abstract class Player {
             return;
         }
 
-        const newBoard = board.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
-        const newBench = bench.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
+        const newBoard = board.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
+        const newBench = bench.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
 
         const slot = getFirstEmptyBenchSlot(newBench);
 
@@ -439,6 +438,7 @@ export abstract class Player {
 
         // TODO: use a saga here so it can use the same code as the front end
         this.bench.dispatch(BenchActions.benchPieceAdded(newPiece));
+
         this.checkForEvolutions(newPiece);
     }
 

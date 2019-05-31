@@ -25,8 +25,8 @@ export const evolution = function*() {
                 return;
             }
 
-            const pieceIsMatching = (p: Piece) => p.id !== piece.id && p.definitionId === piece.definitionId;
-            const getMatchingPieces = (pieces: Piece[]) => pieces.filter(pieceIsMatching);
+            const pieceIsMatching = (p: Piece) => p.definitionId === piece.definitionId && p.stage === piece.stage;
+            const getMatchingPieces = (pieces: Piece[]) => pieces.filter(p => p.id !== piece.id && pieceIsMatching(p));
 
             const matchingBoardPieces = getMatchingPieces(state.board);
             const matchingBenchPieces = getMatchingPieces(state.bench);
@@ -37,8 +37,8 @@ export const evolution = function*() {
                 return;
             }
 
-            const newBoard = state.board.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
-            const newBench = state.bench.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
+            const newBoard = state.board.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
+            const newBench = state.bench.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
 
             const slot = getFirstEmptyBenchSlot(newBench);
 

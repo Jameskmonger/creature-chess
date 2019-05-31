@@ -4,7 +4,14 @@ import { GRID_SIZE, INITIAL_COOLDOWN } from "./constants";
 import { DefinitionProvider } from "./game/definitionProvider";
 import { Card, Piece } from "./models";
 
-export const createPiece = (definitionProvider: DefinitionProvider, ownerId: string, definitionId: number, position: [number, number], id?: string): Piece => {
+export const createPiece = (
+    definitionProvider: DefinitionProvider,
+    ownerId: string,
+    definitionId: number,
+    position: [number, number],
+    id?: string,
+    stage: number = 0
+): Piece => {
     const stats = definitionProvider.get(definitionId).stages[0];
     return {
         id: id || uuid(),
@@ -15,16 +22,16 @@ export const createPiece = (definitionProvider: DefinitionProvider, ownerId: str
         maxHealth: stats.hp,
         currentHealth: stats.hp,
         coolDown: INITIAL_COOLDOWN,
-        stage: 0
+        stage
     };
 };
 
 export const createPieceFromCard = (definitionProvider: DefinitionProvider, ownerId: string, card: Card, slot: number) =>
-    createPiece(definitionProvider, ownerId, card.definitionId, [ slot, null ], card.id);
+    createPiece(definitionProvider, ownerId, card.definitionId, [slot, null], card.id);
 
 export const clonePiece =
     (definitionProvider: DefinitionProvider, piece: Piece) =>
-        createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y]);
+        createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y], piece.id, piece.stage);
 
 export const moveOrAddPiece = <T extends Piece>(allPieces: T[], target: T) => {
     const result: T[] = [];
