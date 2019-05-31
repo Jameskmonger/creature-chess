@@ -1,15 +1,6 @@
 export enum CreatureType {
-    Bug = "Bug",
-    Electric = "Electric",
-    Fighting = "Fighting",
+    Forest = "Forest",
     Fire = "Fire",
-    Flying = "Flying",
-    Ghost = "Ghost",
-    Grass = "Grass",
-    Ground = "Ground",
-    Normal = "Normal",
-    Poison = "Poison",
-    Psychic = "Psychic",
-    Rock = "Rock",
-    Water = "Water"
+    Water = "Water",
+    Stone = "Stone"
 }

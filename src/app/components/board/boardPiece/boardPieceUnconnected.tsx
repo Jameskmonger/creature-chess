@@ -37,7 +37,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
                 style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
                 onAnimationEnd={this.onAnimationEnd}
             >
-                <CreatureImage definitionId={definitionId} facing={facingAway ? "back" : "front"} />
+                <CreatureImage definitionId={definitionId} stage={piece.stage} facing={facingAway ? "back" : "front"} />
 
                 <div className="info">
                     <ProgressBar

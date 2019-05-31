@@ -6,13 +6,13 @@ import { Player } from "./player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
-import { getAllDefinitions } from "../models/creatureDefinition";
 import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
 import { EventEmitter } from "events";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { PlayerList } from "./playerList";
 import { MatchRewarder } from "../match/matchRewarder";
 import { TurnSimulator } from "../match/combat/turnSimulator";
+import { DefinitionProvider } from "./definitionProvider";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -31,14 +31,18 @@ export class Game {
     private opponentProvider = new OpponentProvider();
     private matchRewarder = new MatchRewarder();
     private playerList = new PlayerList();
-    private turnSimulator = new TurnSimulator();
-    private deck = new CardDeck(getAllDefinitions());
+    private turnSimulator: TurnSimulator;
+    private definitionProvider = new DefinitionProvider();
     private players: Player[] = [];
     private events = new EventEmitter();
+    private deck: CardDeck;
 
     constructor(gameSize: number) {
         this.GAME_SIZE = gameSize;
         this.opponentProvider.setPlayers(this.players);
+
+        this.deck = new CardDeck(this.definitionProvider.getAll());
+        this.turnSimulator = new TurnSimulator(this.definitionProvider);
 
         this.playerList.onUpdate(playerList => this.players.forEach(p => p.onPlayerListUpdate(playerList)));
     }
@@ -82,6 +86,7 @@ export class Game {
         this.players.push(player);
         this.playerList.addPlayer(player);
         player.setDeck(this.deck);
+        player.setDefinitionProvider(this.definitionProvider);
 
         if (this.players.length === this.GAME_SIZE) {
             setTimeout(() => {

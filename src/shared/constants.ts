@@ -16,3 +16,5 @@ export const TURNS_IN_BATTLE = Math.floor((PHASE_LENGTHS[GamePhase.PLAYING] * 10
 
 export const INITIAL_COOLDOWN = 1000;
 export const CELEBRATION_TIME = 3000;
+
+export const PIECES_TO_EVOLVE = 3;

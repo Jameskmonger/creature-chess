@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CreatureImage } from "../creatureImage";
-import { getStats } from "@common/models/creatureDefinition";
+import { DefinitionProvider } from "@common/game/definitionProvider";
 
 interface CardProps {
     definitionId: number;
@@ -10,8 +10,10 @@ interface CardProps {
     onClick: () => void;
 }
 
+const definitionProvider = new DefinitionProvider();
+
 const Card: React.FunctionComponent<CardProps> = ({ definitionId, cost, name, buyable, onClick }) => {
-    const className = `card ${getStats(definitionId).type.toLowerCase()}${buyable ? "" : " not-buyable"}`;
+    const className = `card ${definitionProvider.get(definitionId).type.toLowerCase()}${buyable ? "" : " not-buyable"}`;
 
     return (
         <div className={className} onClick={buyable ? onClick : undefined}>
@@ -20,7 +22,7 @@ const Card: React.FunctionComponent<CardProps> = ({ definitionId, cost, name, bu
                     <span className="price">${cost}</span>
                 </div>
                 <div>
-                    <CreatureImage definitionId={definitionId} />
+                    <CreatureImage definitionId={definitionId} stage={0} />
                 </div>
             </div>
 

@@ -18,6 +18,7 @@ export interface Piece {
     id: string;
     ownerId: string;
     definitionId: number;
+    stage: number;
     position: TileCoordinates;
 
     facingAway: boolean;
