@@ -4,7 +4,6 @@ import { Player } from "./player";
 import { GRID_SIZE } from "../constants";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { Card, Piece } from "../models";
-import { getDefinition, getPieceCost } from "../models/creatureDefinition";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
@@ -152,7 +151,7 @@ export class Bot extends Player {
     }
 
     private getPieceView = (piece: Piece): PieceView => {
-        const cost = getPieceCost(piece.definitionId);
+        const { cost } = this.definitionProvider.get(piece.definitionId);
         const amountOwned = this.getSameCardCount(piece.definitionId);
 
         return {
@@ -191,19 +190,8 @@ export class Bot extends Player {
         const board = this.board.getValue();
         const bench = this.bench.getValue();
 
-        let count = 0;
-        let currentDefinitionId = definitionId;
-
-        while (currentDefinitionId) {
-            count += board.filter(p => p.definitionId === currentDefinitionId).length;
-            count += bench.filter(p => p.definitionId === currentDefinitionId).length;
-
-            const definition = getDefinition(currentDefinitionId);
-
-            currentDefinitionId = definition.evolvedFormId;
-        }
-
-        return count;
+        return board.filter(p => p.definitionId === definitionId).length
+            + bench.filter(p => p.definitionId === definitionId).length;
     }
 
     private getFirstBenchPiece() {

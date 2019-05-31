@@ -6,6 +6,9 @@ import { GamePhase } from "@common";
 import { createPieceFromCard } from "@common/piece-utils";
 import { getFirstEmptyBenchSlot, BenchActions } from "@common/board";
 import { moneyUpdateAction } from "../../actions/gameActions";
+import { DefinitionProvider } from "@common/game/definitionProvider";
+
+const definitionProvider = new DefinitionProvider();
 
 export const cardShop = function*() {
     yield takeEvery<BuyCardAction>(
@@ -37,7 +40,7 @@ export const cardShop = function*() {
 
             const localPlayerId = state.localPlayer.id;
 
-            const piece = createPieceFromCard(localPlayerId, card, slot);
+            const piece = createPieceFromCard(definitionProvider, localPlayerId, card, slot);
             const remainingCards = state.cards.map(c => c === card ? null : c);
 
             yield put(BenchActions.benchPieceAdded(piece));

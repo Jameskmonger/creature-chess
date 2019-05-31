@@ -1,9 +1,10 @@
 import uuid = require("uuid/v4");
 import { shuffle, flatten } from "lodash";
-import { CreatureDefinition, getRequiredQuantityToEvolve } from "../models/creatureDefinition";
+import { CreatureDefinition } from "../models/creatureDefinition";
 import { Card } from "../models/card";
 import { Piece } from "../models/piece";
 import { Player } from "../game/player";
+import { PIECES_TO_EVOLVE } from "../constants";
 
 const CARD_COST_CHANCES = [
     [100, 70, 60, 50, 40, 33, 30, 24, 22, 19],
@@ -72,9 +73,12 @@ export class CardDeck {
 
     public addPiece(piece: Piece) {
         const definition = this.definitions.find(p => p.id === piece.definitionId);
-        const preEvolvedDefinitions = this.getDefinitionsUsedToEvolveToDefinition(definition);
 
-        preEvolvedDefinitions.forEach(preEvolvedDefinition => this.addDefinition(preEvolvedDefinition));
+        const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
+
+        for (let i = 0; i < cardCount; i++) {
+            this.addDefinition(definition);
+        }
 
         this.shuffle();
     }
@@ -119,15 +123,5 @@ export class CardDeck {
         };
 
         this.deck[definition.cost].push(card);
-    }
-
-    private getDefinitionsUsedToEvolveToDefinition(definition: CreatureDefinition): CreatureDefinition[] {
-        const preEvolvedFormDefinition = this.definitions.find(p => p.evolvedFormId === definition.id);
-        if (!!preEvolvedFormDefinition) {
-            const preEvolvedDefinitions = Array(getRequiredQuantityToEvolve(preEvolvedFormDefinition.id)).fill(preEvolvedFormDefinition);
-            return flatten(preEvolvedDefinitions.map(d => this.getDefinitionsUsedToEvolveToDefinition(d)));
-        }
-
-        return [definition];
     }
 }

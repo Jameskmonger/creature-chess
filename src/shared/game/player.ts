@@ -1,5 +1,4 @@
 import uuid = require("uuid/v4");
-import { getDefinition, getRequiredQuantityToEvolve, getPieceCost } from "../models/creatureDefinition";
 import { clonePiece, createPiece, createPieceFromCard } from "../piece-utils";
 import { MovePiecePacket } from "../packet-opcodes";
 import { TileType, createTileCoordinates } from "../position";
@@ -15,11 +14,12 @@ import { OpponentProvider } from "./opponentProvider";
 import { Card } from "../models/card";
 import { Piece } from "../models/piece";
 import { GamePhase } from "../game-phase";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE } from "../constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE, PIECES_TO_EVOLVE } from "../constants";
 import { getXpToNextLevel } from "../get-xp-for-level";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { MatchRewarder } from "../match/matchRewarder";
 import { TurnSimulator } from "../match/combat/turnSimulator";
+import { DefinitionProvider } from "./definitionProvider";
 
 export enum StreakType {
     WIN,
@@ -49,6 +49,7 @@ export abstract class Player {
     protected bench = new Store<Piece[], BenchActions.BenchPiecesAction>([], benchReducer);
     protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
+    protected definitionProvider: DefinitionProvider;
 
     private events = new EventEmitter();
 
@@ -58,9 +59,14 @@ export abstract class Player {
     private readyUpPromise: Promise<void> = null;
     private resolveReadyUpPromise: () => void = null;
 
+
     constructor(name: string) {
         this.id = uuid();
         this.name = name;
+    }
+
+    public setDefinitionProvider(definitionProvider: DefinitionProvider) {
+        this.definitionProvider = definitionProvider;
     }
 
     public addXp(amount: number) {
@@ -157,7 +163,7 @@ export abstract class Player {
     }
 
     public cloneBoard() {
-        return this.board.getValue().map(p => clonePiece(p));
+        return this.board.getValue().map(p => clonePiece(this.definitionProvider, p));
     }
 
     public onHealthUpdate(fn: (health: number) => void) {
@@ -239,7 +245,7 @@ export abstract class Player {
         this.money.setValue(money - card.cost);
         this.deleteCard(cardIndex);
 
-        const piece = createPieceFromCard(this.id, card, slot);
+        const piece = createPieceFromCard(this.definitionProvider, this.id, card, slot);
 
         this.addPieceToBench(piece);
     }
@@ -252,7 +258,7 @@ export abstract class Player {
             return;
         }
 
-        const pieceCost = getPieceCost(piece.definitionId);
+        const pieceCost = this.definitionProvider.get(piece.definitionId).cost;
         this.addMoney(pieceCost);
         this.deck.addPiece(piece);
         this.deck.shuffle();
@@ -393,31 +399,47 @@ export abstract class Player {
     }
 
     private checkForEvolutions(piece: Piece) {
-        const { evolvedFormId } = getDefinition(piece.definitionId);
+        const { stages } = this.definitionProvider.get(piece.definitionId);
 
-        if (!evolvedFormId) {
+        const nextStageIndex = piece.stage + 1;
+        const nextStage = stages[nextStageIndex];
+
+        if (!nextStage) {
             return;
         }
+
+        const pieceIsMatching = (p: Piece) => p.id !== piece.id && p.definitionId === piece.definitionId;
+        const getMatchingPieces = (pieces: Piece[]) => pieces.filter(pieceIsMatching);
 
         const board = this.board.getValue();
         const bench = this.bench.getValue();
 
-        const benchOthers = bench.filter(p => p.definitionId !== piece.definitionId);
-        const boardOthers = board.filter(p => p.definitionId !== piece.definitionId);
+        const matchingBoardPieces = getMatchingPieces(board);
+        const matchingBenchPieces = getMatchingPieces(bench);
 
-        const totalInstances = (bench.length - benchOthers.length) + (board.length - boardOthers.length);
+        const totalInstances = matchingBoardPieces.length + matchingBenchPieces.length + 1;
 
-        if (totalInstances < getRequiredQuantityToEvolve(piece.definitionId)) {
+        if (totalInstances < PIECES_TO_EVOLVE) {
             return;
         }
 
-        this.board.dispatch(BoardActions.piecesUpdated(boardOthers));
-        this.bench.dispatch(BenchActions.benchPiecesUpdated(benchOthers));
+        const newBoard = board.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
+        const newBench = bench.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
 
-        const slot = getFirstEmptyBenchSlot(benchOthers);
+        const slot = getFirstEmptyBenchSlot(newBench);
 
-        const newPiece = createPiece(this.id, evolvedFormId, [slot, null], piece.id);
-        this.addPieceToBench(newPiece);
+        const newPiece = {
+            ...piece,
+            stage: nextStageIndex,
+            position: createTileCoordinates(slot, null)
+        };
+
+        this.board.dispatch(BoardActions.piecesUpdated(newBoard));
+        this.bench.dispatch(BenchActions.benchPiecesUpdated(newBench));
+
+        // TODO: use a saga here so it can use the same code as the front end
+        this.bench.dispatch(BenchActions.benchPieceAdded(newPiece));
+        this.checkForEvolutions(newPiece);
     }
 
     private getCardAtIndex(index: number) {

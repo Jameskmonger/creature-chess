@@ -6,11 +6,11 @@ import { Props } from "./benchPieceProps";
 export class BenchPieceUnconnected extends React.Component<Props & DragSourceProps> {
     public render() {
         const { piece, connectDragSource} = this.props;
-        const { definitionId } = piece;
+        const { definitionId, stage } = piece;
 
         return connectDragSource(
             <div className="piece">
-                <CreatureImage definitionId={definitionId} />
+                <CreatureImage definitionId={definitionId} stage={stage} />
             </div>
         );
     }

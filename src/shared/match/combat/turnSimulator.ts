@@ -1,12 +1,26 @@
 import { Piece } from "../../models";
-import { getStats, CreatureStats } from "../../models/creatureDefinition";
+import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getRelativeDirection } from "../../position";
 import { INITIAL_COOLDOWN } from "../../constants";
 import { isATeamDefeated } from "../../is-a-team-defeated";
 import { getTypeAttackBonus } from "./get-type-attack-bonus";
+import { DefinitionProvider } from "../../game/definitionProvider";
+import { CreatureType } from "../../models/creatureType";
+
+interface PieceCombatInfo {
+    piece: Piece;
+    stats: CreatureStats;
+    type: CreatureType;
+}
 
 export class TurnSimulator {
+    private definitionProvider: DefinitionProvider;
+
+    constructor(definitionProvider: DefinitionProvider) {
+        this.definitionProvider = definitionProvider;
+    }
+
     public simulateTurn(pieces: Piece[]) {
         const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
 
@@ -15,9 +29,9 @@ export class TurnSimulator {
                 return;
             }
 
-            const attackerStats = getStats(attacker.definitionId);
+            const attackerCombatInfo = this.getPieceCombatInfo(attacker);
             if (attacker.coolDown > 0) {
-                attacker.coolDown -= attackerStats.speed;
+                attacker.coolDown -= attackerCombatInfo.stats.speed;
 
                 return;
             }
@@ -36,8 +50,8 @@ export class TurnSimulator {
                 return;
             }
 
-            const defenderStats = getStats(defender.definitionId);
-            const updatedFighters = this.attack(attacker, attackerStats, defender, defenderStats);
+            const defenderCombatInfo = this.getPieceCombatInfo(defender);
+            const updatedFighters = this.attack(attackerCombatInfo, defenderCombatInfo);
             updatedPieces[index] = updatedFighters.attacker;
             updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
         });
@@ -49,19 +63,46 @@ export class TurnSimulator {
         return updatedPieces;
     }
 
-    private attack(attacker: Piece, attackerStats: CreatureStats, defender: Piece, defenderStats: CreatureStats) {
-        if (attacker.currentHealth === 0) {
-            // Dead Pokémon don't attack
-            return { attacker, defender };
-        }
-
-        const attackBonus = getTypeAttackBonus(attackerStats.type, defenderStats.type);
-        const damage = (attackerStats.attack / defenderStats.defense) * attackBonus * 10;
-        const newDefenderHealth = Math.max(defender.currentHealth - damage, 0);
+    private getPieceCombatInfo(piece: Piece) {
+        const definition = this.definitionProvider.get(piece.definitionId);
 
         return {
-            attacker: { ...attacker, coolDown: INITIAL_COOLDOWN, attacking: { direction: getRelativeDirection(attacker.position, defender.position), damage } },
-            defender: { ...defender, currentHealth: newDefenderHealth, hit: { direction: getRelativeDirection(defender.position, attacker.position), damage } }
+            piece,
+            stats: definition.stages[piece.stage],
+            type: definition.type
+        };
+    }
+
+    private attack(attacker: PieceCombatInfo, defender: PieceCombatInfo) {
+        if (attacker.piece.currentHealth === 0) {
+            // Dead Pokémon don't attack
+            return {
+                attacker: attacker.piece,
+                defender: defender.piece
+            };
+        }
+
+        const attackBonus = getTypeAttackBonus(attacker.type, defender.type);
+        const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 10;
+        const newDefenderHealth = Math.max(defender.piece.currentHealth - damage, 0);
+
+        return {
+            attacker: {
+                ...attacker.piece,
+                coolDown: INITIAL_COOLDOWN,
+                attacking: {
+                    direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
+                    damage
+                }
+            },
+            defender: {
+                ...defender.piece,
+                currentHealth: newDefenderHealth,
+                hit: {
+                    direction: getRelativeDirection(defender.piece.position, attacker.piece.position),
+                    damage
+                }
+            }
         };
     }
 }

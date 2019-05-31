@@ -9,6 +9,7 @@ import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
 import { GamePhaseUpdateAction } from "../../actions/gameActions";
 import { log } from "../../log";
 import { TurnSimulator } from "@common/match/combat/turnSimulator";
+import { DefinitionProvider } from "@common/game/definitionProvider";
 
 enum BattleActionType {
     TURN,
@@ -81,6 +82,8 @@ const startBattle = (turnSimulator: TurnSimulator, startPieces: Models.Piece[], 
 const isGamePhaseUpdate = (phase: GamePhase, action: GamePhaseUpdateAction) =>
     action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;
 
+const turnSimulator = new TurnSimulator(new DefinitionProvider());
+
 export const processBattle = function*() {
     yield takeLatest<GamePhaseUpdateAction>(
         action =>
@@ -98,7 +101,6 @@ export const processBattle = function*() {
 
             const state: AppState = yield select();
 
-            const turnSimulator = new TurnSimulator();
             const battleChannel = yield call(startBattle, turnSimulator, state.board, Constants.TURNS_IN_BATTLE);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleAction) {

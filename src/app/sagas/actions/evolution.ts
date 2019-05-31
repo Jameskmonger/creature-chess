@@ -1,8 +1,12 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BenchActions, BenchActionTypes, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
 import { AppState } from "../../store/store";
-import { getDefinition, getRequiredQuantityToEvolve } from "@common/models/creatureDefinition";
-import { createPiece } from "@common/piece-utils";
+import { PIECES_TO_EVOLVE } from "@common/constants";
+import { Piece } from "@common/models";
+import { DefinitionProvider } from "@common/game/definitionProvider";
+import { createTileCoordinates } from "@common/position";
+
+const definitionProvider = new DefinitionProvider();
 
 export const evolution = function*() {
     yield takeEvery<BenchActions.BenchPieceAddedAction>(
@@ -12,29 +16,40 @@ export const evolution = function*() {
 
             const state: AppState = yield select();
 
-            const { evolvedFormId } = getDefinition(piece.definitionId);
+            const { stages } = definitionProvider.get(piece.definitionId);
 
-            if (!evolvedFormId) {
+            const nextStageIndex = piece.stage + 1;
+            const nextStage = stages[nextStageIndex];
+
+            if (!nextStage) {
                 return;
             }
 
-            const localBoard = state.board.filter(p => p.ownerId === state.localPlayer.id);
+            const pieceIsMatching = (p: Piece) => p.id !== piece.id && p.definitionId === piece.definitionId;
+            const getMatchingPieces = (pieces: Piece[]) => pieces.filter(pieceIsMatching);
 
-            const benchOthers = state.bench.filter(p => p.definitionId !== piece.definitionId);
-            const boardOthers = localBoard.filter(p => p.definitionId !== piece.definitionId);
+            const matchingBoardPieces = getMatchingPieces(state.board);
+            const matchingBenchPieces = getMatchingPieces(state.bench);
 
-            const totalInstances = (state.bench.length - benchOthers.length) + (localBoard.length - boardOthers.length);
+            const totalInstances = matchingBoardPieces.length + matchingBenchPieces.length + 1;
 
-            if (totalInstances < getRequiredQuantityToEvolve(piece.definitionId)) {
+            if (totalInstances < PIECES_TO_EVOLVE) {
                 return;
             }
 
-            yield put(BoardActions.piecesUpdated(boardOthers));
-            yield put(BenchActions.benchPiecesUpdated(benchOthers));
+            const newBoard = state.board.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
+            const newBench = state.bench.filter(p => p.id !== piece.id && p.definitionId !== piece.definitionId);
 
-            const slot = getFirstEmptyBenchSlot(benchOthers);
+            const slot = getFirstEmptyBenchSlot(newBench);
 
-            const newPiece = createPiece(state.localPlayer.id, evolvedFormId, [slot, null], piece.id);
+            const newPiece = {
+                ...piece,
+                stage: nextStageIndex,
+                position: createTileCoordinates(slot, null)
+            };
+
+            yield put(BoardActions.piecesUpdated(newBoard));
+            yield put(BenchActions.benchPiecesUpdated(newBench));
             yield put(BenchActions.benchPieceAdded(newPiece));
         }
     );
