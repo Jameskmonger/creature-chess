@@ -24,11 +24,7 @@ export const evolution = function*<TState extends { bench: Piece[], board: Piece
             const nextStageIndex = piece.stage + 1;
             const nextStage = stages[nextStageIndex];
 
-            console.log("Evolution saga firing");
-
             if (!nextStage) {
-                console.log("No evolution required");
-
                 return;
             }
 
