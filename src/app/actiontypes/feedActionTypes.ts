@@ -1,2 +1,0 @@
-export const NEW_FEED_MESSAGE = "NEW_FEED_MESSAGE";
-export type NEW_FEED_MESSAGE = typeof NEW_FEED_MESSAGE;
