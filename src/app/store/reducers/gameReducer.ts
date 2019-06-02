@@ -11,7 +11,8 @@ const initialState: GameState = {
     lobbyError: null,
     money: 0,
     phase: GamePhase.WAITING,
-    phaseTimer: null
+    phaseTimer: null,
+    round: null
 };
 
 export function game(state: GameState = initialState, action: GameAction) {
@@ -50,6 +51,7 @@ export function game(state: GameState = initialState, action: GameAction) {
                 return {
                     ...state,
                     phase: action.payload.phase,
+                    round: action.payload.payload.round,
                     opponentId: null
                 };
             }

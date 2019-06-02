@@ -128,7 +128,7 @@ export class Game {
 
         this.phase = GamePhase.PREPARING;
 
-        const promises = this.players.map(p => p.enterPreparingPhase());
+        const promises = this.players.map(p => p.enterPreparingPhase(this.round));
 
         await Promise.race([
             Promise.all(promises),

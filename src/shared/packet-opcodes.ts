@@ -43,7 +43,7 @@ export interface LevelUpdatePacket {
 }
 
 export type PhaseUpdatePacket
-    = ({ phase: GamePhase.PREPARING, payload: { pieces: Piece[] } })
+    = ({ phase: GamePhase.PREPARING, payload: { pieces: Piece[], round: number } })
     | ({ phase: GamePhase.READY, payload: { pieces: Piece[], opponentId: string } })
     | ({ phase: GamePhase.PLAYING })
     | ({ phase: GamePhase.DEAD });
