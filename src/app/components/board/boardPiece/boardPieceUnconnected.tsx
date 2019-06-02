@@ -57,6 +57,10 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
 
     public componentDidUpdate(oldProps: BoardPieceProps) {
         this.runAnimations(oldProps);
+
+        if (this.state.dead && this.props.piece.currentHealth > 0) {
+            this.setState({ dead: false });
+        }
     }
 
     public componentDidMount() {
@@ -80,6 +84,8 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
 
         if (!oldProps.piece.celebrating && celebrating) {
             this.runAnimation("celebrate");
+        } else if (oldProps.piece.celebrating && !celebrating) {
+            this.stopCelebrateAnimation();
         }
 
         if (oldProps.piece.currentHealth > 0 && currentHealth === 0) {
@@ -91,6 +97,13 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
         this.setState(prevState => ({
             ...prevState,
             currentAnimations: [ ...prevState.currentAnimations, { name, variables } ]
+        }));
+    }
+
+    private stopCelebrateAnimation() {
+        this.setState(prevState => ({
+            ...prevState,
+            currentAnimations: prevState.currentAnimations.filter(a => a.name !== "celebrate")
         }));
     }
 

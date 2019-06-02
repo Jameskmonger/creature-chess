@@ -1,5 +1,5 @@
 import { PlayerListPlayer } from "../models";
-import { Player } from "./player";
+import { Player } from "./player/player";
 import { EventEmitter } from "events";
 
 enum PlayerListEvents {

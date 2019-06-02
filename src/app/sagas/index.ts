@@ -4,7 +4,7 @@ import { phaseTimer } from "./actions/phaseTimer";
 import { processBattle } from "./actions/processBattle";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { cardShop } from "./actions/cardShop";
-import { evolution } from "./actions/evolution";
+import { evolution } from "@common/board/sagas/evolution";
 
 export const rootSaga = function*() {
     yield all([

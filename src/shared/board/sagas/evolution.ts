@@ -1,6 +1,9 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { BenchActions, BenchActionTypes, BoardActions, getFirstEmptyBenchSlot } from "@common/board";
-import { AppState } from "../../store/store";
+import { getFirstEmptyBenchSlot } from "../get-first-empty-bench-slot";
+import * as BoardActions from "../actions/boardActions";
+import * as BenchActions from "../actions/benchActions";
+import * as BenchActionTypes from "../actions/benchActionTypes";
+
 import { PIECES_TO_EVOLVE } from "@common/constants";
 import { Piece } from "@common/models";
 import { DefinitionProvider } from "@common/game/definitionProvider";
@@ -8,13 +11,13 @@ import { createTileCoordinates } from "@common/position";
 
 const definitionProvider = new DefinitionProvider();
 
-export const evolution = function*() {
+export const evolution = function*<TState extends { bench: Piece[], board: Piece[] }>() {
     yield takeEvery<BenchActions.BenchPieceAddedAction>(
         BenchActionTypes.BENCH_PIECE_ADDED,
         function*(action) {
             const piece = action.payload.piece;
 
-            const state: AppState = yield select();
+            const { bench, board }: TState = yield select();
 
             const { stages } = definitionProvider.get(piece.definitionId);
 
@@ -28,8 +31,8 @@ export const evolution = function*() {
             const pieceIsMatching = (p: Piece) => p.definitionId === piece.definitionId && p.stage === piece.stage;
             const getMatchingPieces = (pieces: Piece[]) => pieces.filter(p => p.id !== piece.id && pieceIsMatching(p));
 
-            const matchingBoardPieces = getMatchingPieces(state.board);
-            const matchingBenchPieces = getMatchingPieces(state.bench);
+            const matchingBoardPieces = getMatchingPieces(board);
+            const matchingBenchPieces = getMatchingPieces(bench);
 
             const totalInstances = matchingBoardPieces.length + matchingBenchPieces.length + 1;
 
@@ -37,8 +40,8 @@ export const evolution = function*() {
                 return;
             }
 
-            const newBoard = state.board.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
-            const newBench = state.bench.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
+            const newBoard = board.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
+            const newBench = bench.filter(p => p.id !== piece.id && pieceIsMatching(p) === false);
 
             const slot = getFirstEmptyBenchSlot(newBench);
 

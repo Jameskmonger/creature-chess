@@ -2,7 +2,7 @@ import uuid = require("uuid");
 import delay from "delay";
 import { GamePhase } from "../game-phase";
 import { FeedMessage, FeedMessageType } from "../feed-message";
-import { Player } from "./player";
+import { Player } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";

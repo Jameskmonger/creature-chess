@@ -3,7 +3,7 @@ import { shuffle, flatten } from "lodash";
 import { CreatureDefinition } from "../models/creatureDefinition";
 import { Card } from "../models/card";
 import { Piece } from "../models/piece";
-import { Player } from "../game/player";
+import { Player } from "../game/player/player";
 import { PIECES_TO_EVOLVE } from "../constants";
 
 const CARD_COST_CHANCES = [

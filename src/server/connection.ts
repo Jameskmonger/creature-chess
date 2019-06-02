@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Player } from "@common/game/player";
+import { Player } from "@common/game/player/player";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
@@ -57,7 +57,7 @@ export class Connection extends Player {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.PREPARING,
             payload: {
-                pieces: this.board.getValue()
+                pieces: this.getBoard()
             }
         };
 
@@ -104,7 +104,7 @@ export class Connection extends Player {
     }
 
     private sendBoardUpdate = () => {
-        const turnedPieces = this.board.getValue().map(piece => ({
+        const turnedPieces = this.getBoard().map(piece => ({
             ...piece,
             facingAway: true
         }));
@@ -118,7 +118,7 @@ export class Connection extends Player {
 
     private sendBenchUpdate = () => {
         this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: this.bench.getValue()
+            pieces: this.getBench()
         });
     }
 

@@ -4,7 +4,7 @@ import { log } from "@common/log";
 import { ClientToServerPacketOpcodes, JoinGameResponse } from "@common/packet-opcodes";
 import { Game } from "@common/game/game";
 import { Connection } from "./connection";
-import { Bot } from "@common/game/bot";
+import { Bot } from "@common/game/player/bot";
 import { randomFromArray } from "@common/random-from-array";
 
 const BOT_NAMES = [
