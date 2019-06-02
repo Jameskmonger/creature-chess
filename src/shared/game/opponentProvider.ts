@@ -1,4 +1,4 @@
-import { Player } from "./player";
+import { Player } from "./player/player";
 import { randomFromArray } from "../random-from-array";
 
 export class OpponentProvider {

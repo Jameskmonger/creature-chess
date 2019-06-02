@@ -1,5 +1,5 @@
 import { Match } from "./match";
-import { Player, StreakType } from "../game/player";
+import { Player, StreakType } from "../game/player/player";
 import { log } from "../log";
 
 export class MatchRewarder {

@@ -1,6 +1,6 @@
 import delay from "delay";
 import uuid = require("uuid");
-import { Player } from "../game/player";
+import { Player } from "../game/player/player";
 import { rotatePiecePosition } from "../piece-utils";
 import { isATeamDefeated } from "../is-a-team-defeated";
 import { log } from "../log";

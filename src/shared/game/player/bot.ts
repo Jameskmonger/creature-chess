@@ -1,9 +1,9 @@
-import { FeedMessage } from "../feed-message";
-import { createTileCoordinates } from "../position";
+import { FeedMessage } from "../../feed-message";
+import { createTileCoordinates } from "../../position";
 import { Player } from "./player";
-import { GRID_SIZE } from "../constants";
-import { PlayerListPlayer } from "../models/player-list-player";
-import { Card, Piece } from "../models";
+import { GRID_SIZE } from "../../constants";
+import { PlayerListPlayer } from "../../models/player-list-player";
+import { Card, Piece } from "../../models";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
@@ -112,7 +112,7 @@ export class Bot extends Player {
     }
 
     private getTotalPieceCount() {
-        return this.board.getValue().length + this.bench.getValue().length;
+        return this.getBoard().length + this.getBench().length;
     }
 
     private getCardViews(): CardView[] {
@@ -126,8 +126,8 @@ export class Bot extends Player {
     }
 
     private getPieceViews(): PieceView[] {
-        const board = this.board.getValue();
-        const bench = this.bench.getValue();
+        const board = this.getBoard();
+        const bench = this.getBench();
 
         const pieces = [...board, ...bench];
 
@@ -187,15 +187,15 @@ export class Bot extends Player {
     }
 
     private getSameCardCount(definitionId: number) {
-        const board = this.board.getValue();
-        const bench = this.bench.getValue();
+        const board = this.getBoard();
+        const bench = this.getBench();
 
         return board.filter(p => p.definitionId === definitionId).length
             + bench.filter(p => p.definitionId === definitionId).length;
     }
 
     private getFirstBenchPiece() {
-        const benchPieces = this.bench.getValue();
+        const benchPieces = this.getBench();
 
         for (let x = 0; x < GRID_SIZE; x++) {
             const piece = benchPieces.find(p => p.position.x === x);
@@ -209,7 +209,7 @@ export class Bot extends Player {
     }
 
     private getFirstEmptyPosition() {
-        const boardPieces = this.board.getValue();
+        const boardPieces = this.getBoard();
 
         for (let y = 4; y < GRID_SIZE; y++) {
             for (const x of PREFERRED_COLUMN_ORDER) {
