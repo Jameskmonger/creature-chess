@@ -14,6 +14,7 @@ export interface GameState {
     loading: boolean;
     lobbyError: string;
     money: number;
+    round: number | null;
 }
 
 export interface LocalPlayerState {

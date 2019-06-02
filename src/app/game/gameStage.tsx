@@ -15,6 +15,7 @@ import { PhaseInfo } from "../components/phaseInfo";
 import { Profile } from "../components/profile";
 import { Feed } from "../feed/feed";
 import { GameId } from "../components/gameId";
+import { RoundIndicator } from "../components/roundIndicator";
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -50,6 +51,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                 <Media query="(orientation: landscape) and (min-width: 1200px)">
                     <div className="game landscape">
                         <div className="group">
+                            <RoundIndicator />
+
                             <PhaseInfo />
 
                             <PlayerList />
@@ -81,6 +84,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             </div>
                         </div>
                         <div className="group">
+                            <RoundIndicator />
+
                             <PhaseInfo />
 
                             <CardShop />
@@ -105,6 +110,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             </div>
                         </div>
                         <div className="group">
+                            <RoundIndicator />
+
                             <PhaseInfo />
 
                             <CardShop />

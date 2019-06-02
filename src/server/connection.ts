@@ -53,10 +53,11 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
     }
 
-    protected onEnterPreparingPhase() {
+    protected onEnterPreparingPhase(round: number) {
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.PREPARING,
             payload: {
+                round,
                 pieces: this.getBoard()
             }
         };

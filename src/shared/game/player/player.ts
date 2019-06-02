@@ -101,7 +101,7 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public async enterPreparingPhase() {
+    public async enterPreparingPhase(round: number) {
         this.gamePhase = GamePhase.PREPARING;
 
         this.readyUpPromise = new Promise(resolve => {
@@ -110,7 +110,7 @@ export abstract class Player {
 
         this.rerollCards();
 
-        this.onEnterPreparingPhase();
+        this.onEnterPreparingPhase(round);
 
         if (this.isAlive() === false) {
             return;
@@ -208,7 +208,7 @@ export abstract class Player {
 
     public abstract onNewFeedMessage(message: FeedMessage);
 
-    protected abstract onEnterPreparingPhase();
+    protected abstract onEnterPreparingPhase(round: number);
 
     protected abstract onEnterReadyPhase();
 
