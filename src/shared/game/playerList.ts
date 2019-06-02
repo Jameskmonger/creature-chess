@@ -20,13 +20,16 @@ export class PlayerList {
             id: player.id,
             name: player.name,
             health: player.health,
-            ready: player.ready
+            ready: player.ready,
+            streakType: player.streak.type,
+            streakAmount: player.streak.amount
         };
 
         this.players.push(playerListPlayer);
 
         player.onHealthUpdate(this.updatePlayer(player));
         player.onReadyUpdate(this.updatePlayer(player));
+        player.onStreakUpdate(this.updatePlayer(player));
     }
 
     private updatePlayer(player: Player) {
@@ -49,7 +52,9 @@ export class PlayerList {
                     id: player.id,
                     name: player.name,
                     health: player.health,
-                    ready: null
+                    ready: null,
+                    streakType: null,
+                    streakAmount: null
                 });
 
                 this.emitUpdate();
@@ -61,7 +66,9 @@ export class PlayerList {
                 id: player.id,
                 name: player.name,
                 health: player.health,
-                ready: player.ready
+                ready: player.ready,
+                streakType: player.streak.type,
+                streakAmount: player.streak.amount
             });
 
             this.players.sort((a, b) => b.health - a.health);

@@ -24,6 +24,8 @@ const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localP
                         isLocal={p.id === localPlayerId}
                         isOpponent={p.id === opponentId}
                         ready={showReadyIndicators ? p.ready : null}
+                        streakType={p.streakType}
+                        streakAmount={p.streakAmount}
                     />
                 )
             }

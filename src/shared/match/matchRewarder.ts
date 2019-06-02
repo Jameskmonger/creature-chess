@@ -1,5 +1,5 @@
 import { Match } from "./match";
-import { Player, StreakType } from "../game/player/player";
+import { Player } from "../game/player/player";
 import { log } from "../log";
 
 export class MatchRewarder {
@@ -34,14 +34,7 @@ export class MatchRewarder {
     }
 
     private getNewStreakBonus(player: Player, win: boolean) {
-        const type = win ? StreakType.WIN : StreakType.LOSS;
-
-        if (player.streak.type !== type) {
-            player.streak.type = type;
-            player.streak.amount = 0;
-        }
-
-        player.streak.amount++;
+        player.adjustStreak(win);
 
         if (player.streak.amount >= 9) {
             return 3;
