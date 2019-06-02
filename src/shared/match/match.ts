@@ -1,5 +1,9 @@
 import delay from "delay";
 import uuid = require("uuid");
+import pDefer = require("p-defer");
+import { fork, all, takeEvery } from "@redux-saga/core/effects";
+import { createStore, combineReducers, applyMiddleware, Store } from "redux";
+import createSagaMiddleware from "redux-saga";
 import { Player } from "../game/player/player";
 import { rotatePiecePosition } from "../piece-utils";
 import { isATeamDefeated } from "../is-a-team-defeated";
@@ -8,75 +12,64 @@ import { Piece } from "../models/piece";
 import { TURN_DURATION_MS } from "../constants";
 import { MatchResults } from "./matchResults";
 import { TurnSimulator } from "./combat/turnSimulator";
+import { battle, startBattle } from "./combat/battleSaga";
+import { boardReducer, BoardActions } from "../board";
+import { BattleAction, BATTLE_FINISHED } from "./combat/battleEventChannel";
+
+interface MatchState {
+    board: Piece[];
+}
 
 export class Match {
     public readonly home: Player;
     public readonly away: Player;
     private readonly turnSimulator: TurnSimulator;
     private id: string;
-    private board: Piece[];
+    private store: Store<MatchState>;
     private results: MatchResults;
 
-    private clientFinishedMatch: Promise<void>;
-    private resolveClientFinishMatch: () => void;
+    private serverFinishedMatch = pDefer();
+    private clientFinishedMatch = pDefer();
 
     constructor(turnSimulator: TurnSimulator, home: Player, away: Player) {
         this.turnSimulator = turnSimulator;
         this.id = uuid();
         this.home = home;
         this.away = away;
+        this.store = this.createStore();
 
-        this.board = [
+        const initialBoard = [
             ...this.home.cloneBoard().map(this.mapHomePiece),
             ...this.away.cloneBoard().map(this.mapAwayPiece)
         ];
 
-        this.clientFinishedMatch = new Promise(resolve => {
-            this.resolveClientFinishMatch = resolve;
-        });
+        this.store.dispatch(BoardActions.piecesUpdated(initialBoard));
     }
 
     public onClientFinishMatch() {
-        this.resolveClientFinishMatch();
+        this.clientFinishedMatch.resolve();
     }
 
     public getBoard() {
-        return this.board;
+        return this.store.getState().board;
     }
 
     public getResults() {
         return this.results;
     }
 
-    public async fight(battleTimeout: Promise<void>, maxTurns: number): Promise<MatchResults> {
-        const fightName = `${this.home.name} v ${this.away.name}`;
-        let turnCount = 0;
-
-        while (true) {
-            const defeated = isATeamDefeated(this.board);
-
-            if (defeated) {
-                log(`Fight '${fightName}' ended at turn ${turnCount}`);
-                break;
-            }
-
-            if (turnCount >= maxTurns) {
-                log(`Fight '${fightName}' timed out at turn ${turnCount}`);
-                break;
-            }
-
-            this.board = this.turnSimulator.simulateTurn(this.board);
-            turnCount++;
-        }
-
-        const surviving = this.board.filter(p => p.currentHealth > 0);
-
-        const minTimePassed = delay(turnCount * TURN_DURATION_MS);
+    public async fight(battleTimeout: Promise<void>): Promise<MatchResults> {
+        this.store.dispatch(startBattle());
 
         await Promise.race([
             battleTimeout,
-            Promise.all([ minTimePassed, this.clientFinishedMatch ])
+            Promise.all([ this.serverFinishedMatch.promise, this.clientFinishedMatch.promise ])
         ]);
+
+        log(`${this.home.name} v ${this.away.name} finished`);
+
+        const finalBoard = this.store.getState().board;
+        const surviving = finalBoard.filter(p => p.currentHealth > 0);
 
         this.results = {
             home: surviving.filter(p => p.ownerId === this.home.id),
@@ -84,6 +77,39 @@ export class Match {
         };
 
         return this.results;
+    }
+
+    private createStore() {
+        // required to preserve inside the generator
+        const thisMatchInstance = this;
+        const rootSaga = function*() {
+            yield all([
+                yield fork(battle, thisMatchInstance.turnSimulator),
+                yield takeEvery<BattleAction>(
+                    BATTLE_FINISHED,
+                    function*() {
+                        thisMatchInstance.onServerFinishMatch();
+                    }
+                )
+            ]);
+        };
+
+        const sagaMiddleware = createSagaMiddleware();
+
+        const store = createStore(
+            combineReducers<MatchState>({
+                board: boardReducer
+            }),
+            applyMiddleware(sagaMiddleware)
+        );
+
+        sagaMiddleware.run(rootSaga);
+
+        return store;
+    }
+
+    private onServerFinishMatch() {
+        this.serverFinishedMatch.resolve();
     }
 
     private mapHomePiece(piece: Piece) {
