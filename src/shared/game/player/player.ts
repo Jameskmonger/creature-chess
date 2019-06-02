@@ -20,17 +20,19 @@ import { MatchRewarder } from "../../match/matchRewarder";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { PlayerBoard } from "./playerBoard";
-
-export enum StreakType {
-    WIN,
-    LOSS
-}
+import { StreakType } from "../../models/streakType";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
     SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
     FINISH_MATCH = "FINISH_MATCH",
-    UPDATE_READY = "UPDATE_READY"
+    UPDATE_READY = "UPDATE_READY",
+    UPDATE_STREAK = "UPDATE_STREAK"
+}
+
+interface StreakInfo {
+    type: StreakType;
+    amount: number;
 }
 
 export abstract class Player {
@@ -38,7 +40,7 @@ export abstract class Player {
     public readonly name: string;
     public health: number = 100;
     public ready = false;
-    public readonly streak = {
+    public readonly streak: StreakInfo = {
         type: StreakType.WIN,
         amount: 0
     };
@@ -178,6 +180,12 @@ export abstract class Player {
         fn(this.ready);
     }
 
+    public onStreakUpdate(fn: (streak: StreakInfo) => void) {
+        this.events.on(PlayerEvent.UPDATE_STREAK, fn);
+
+        fn(this.streak);
+    }
+
     public onSendChatMessage(fn: (message: string) => void) {
         this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
     }
@@ -202,6 +210,19 @@ export abstract class Player {
 
         const newCards = this.deck.take(this.getLevel(), 5);
         this.cards.setValue(newCards);
+    }
+
+    public adjustStreak(win: boolean) {
+        const type = win ? StreakType.WIN : StreakType.LOSS;
+
+        if (this.streak.type !== type) {
+            this.streak.type = type;
+            this.streak.amount = 0;
+        }
+
+        this.streak.amount++;
+
+        this.events.emit(PlayerEvent.UPDATE_STREAK, this.streak);
     }
 
     public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);

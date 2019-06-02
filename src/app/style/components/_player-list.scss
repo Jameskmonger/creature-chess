@@ -45,6 +45,7 @@
     .ready-indicator {
         width: 1em;
         height: 1em;
+        margin-left: 0.5em;
 
         &.ready {
             background: $ready-indicator;
@@ -52,6 +53,27 @@
 
         &.not-ready {
             background: $not-ready-indicator;
+        }
+    }
+
+    .badges {
+        // stylelint-disable-next-line
+        display: flex;
+    }
+
+    .streak-indicator {
+        box-sizing: border-box;
+        padding: 0 0.4em;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        border-radius: 50%;
+
+        &.win {
+            background: $win-streak;
+        }
+
+        &.lose {
+            background: $lose-streak;
         }
     }
 }
