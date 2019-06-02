@@ -1,18 +1,22 @@
 import { fork, all } from "@redux-saga/core/effects";
 import { networking } from "./actions/networking";
 import { phaseTimer } from "./actions/phaseTimer";
-import { processBattle } from "./actions/processBattle";
+import { gamePhase } from "./actions/gamePhase";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { cardShop } from "./actions/cardShop";
 import { evolution } from "@common/board/sagas/evolution";
+import { battle } from "@common/match/combat/battleSaga";
+import { TurnSimulator } from "@common/match/combat/turnSimulator";
+import { DefinitionProvider } from "@common/game/definitionProvider";
 
 export const rootSaga = function*() {
     yield all([
         yield fork(networking),
         yield fork(phaseTimer),
-        yield fork(processBattle),
+        yield fork(gamePhase),
         yield fork(preventAccidentalClose),
         yield fork(cardShop),
-        yield fork(evolution)
+        yield fork(evolution),
+        yield fork(battle, new TurnSimulator(new DefinitionProvider()))
     ]);
 };

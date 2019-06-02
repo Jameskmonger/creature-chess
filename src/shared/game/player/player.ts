@@ -149,7 +149,7 @@ export abstract class Player {
 
         this.onEnterPlayingPhase();
 
-        const results = await this.match.fight(battleTimeout, TURNS_IN_BATTLE);
+        const results = await this.match.fight(battleTimeout);
 
         const damage = results.away.length * 3;
         this.subtractHealth(damage);
