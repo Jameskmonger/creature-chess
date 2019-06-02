@@ -1,0 +1,2 @@
+export const SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE";
+export type SEND_CHAT_MESSAGE = typeof SEND_CHAT_MESSAGE;

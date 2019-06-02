@@ -1,9 +1,9 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
-import { reducers } from "../reducers";
+import { reducers } from "./reducers";
 import { Models, GamePhase } from "@common";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
-import { rootSaga } from "../sagas";
+import { rootSaga } from "./sagas";
 import { FeedMessage } from "@common/feed-message";
 
 export interface GameState {
