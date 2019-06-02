@@ -6,8 +6,10 @@ type PieceMovedToBoardAction = ({ type: PIECE_MOVED_TO_BOARD, payload: { piece: 
 type PieceMovedToBenchAction = ({ type: PIECE_MOVED_TO_BENCH, payload: { piece: Models.Piece, slot: number } });
 type SellPieceAction = ({ type: SELL_PIECE, payload: { pieceId: string } });
 
+export type PiecesUpdatedAction = ({ type: PIECES_UPDATED, payload: { pieces: Models.Piece[] } });
+
 export type BoardAction =
-    ({ type: PIECES_UPDATED, payload: { pieces: Models.Piece[] } })
+    PiecesUpdatedAction
     | PieceMovedToBoardAction
     | PieceMovedToBenchAction
     | SellPieceAction;
@@ -32,7 +34,7 @@ export const pieceMoved = (piece: Models.Piece, position: TileCoordinates, tileT
     };
 };
 
-export const piecesUpdated = (pieces: Models.Piece[]): BoardAction => ({
+export const piecesUpdated = (pieces: Models.Piece[]): PiecesUpdatedAction => ({
     type: PIECES_UPDATED,
     payload: {
         pieces

@@ -68,6 +68,7 @@
 		"delay": "^4.1.0",
 		"javascript-astar": "^0.4.1",
 		"lodash": "^4.17.11",
+		"p-defer": "^2.1.0",
 		"react": "^16.8.4",
 		"react-dnd": "^7.3.2",
 		"react-dnd-html5-backend": "^7.4.4",
