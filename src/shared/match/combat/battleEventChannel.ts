@@ -1,4 +1,4 @@
-import delay from "delay";
+import present = require("present");
 import { eventChannel } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
 import { Piece } from "../../models/piece";
@@ -17,6 +17,28 @@ export type BattleAction = PiecesUpdatedAction | BattleFinishAction;
 
 const finishAction = (): BattleFinishAction => ({ type: BATTLE_FINISHED });
 
+const duration = (ms: number) => {
+    const startTime = present();
+
+    return {
+        remaining: () => {
+            return new Promise(resolve => {
+                const endTime = present();
+                const timePassed = endTime - startTime;
+
+                const remaining = Math.max(ms - timePassed, 0);
+
+                if (remaining === 0) {
+                    resolve();
+                    return;
+                }
+
+                setTimeout(() => resolve(), remaining);
+            });
+        }
+    };
+};
+
 export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: number, startPieces: Piece[], maxTurns: number) => {
     return eventChannel<BattleAction>(emit => {
         let shouldStop = false;
@@ -26,8 +48,6 @@ export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: n
             let turnCount = 0;
 
             while (true) {
-                await delay(turnDuration);
-
                 const defeated = isATeamDefeated(pieces);
 
                 if (shouldStop) {
@@ -48,9 +68,13 @@ export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: n
                     break;
                 }
 
+                const turnTimer = duration(turnDuration);
+
                 pieces = turnSimulator.simulateTurn(pieces);
                 emit(BoardActions.piecesUpdated(pieces));
                 turnCount++;
+
+                await turnTimer.remaining();
             }
         };
 
