@@ -45,4 +45,6 @@ for (let g = 0; g < GAME_COUNT; g++) {
     }
 }
 
+console.log("Starting benchmark");
+
 benchmarkStart = present();
