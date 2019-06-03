@@ -1,4 +1,3 @@
-import delay from "delay";
 import uuid = require("uuid");
 import pDefer = require("p-defer");
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
@@ -6,10 +5,8 @@ import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { Player } from "../game/player/player";
 import { rotatePiecePosition } from "../piece-utils";
-import { isATeamDefeated } from "../is-a-team-defeated";
 import { log } from "../log";
 import { Piece } from "../models/piece";
-import { TURN_DURATION_MS } from "../constants";
 import { MatchResults } from "./matchResults";
 import { TurnSimulator } from "./combat/turnSimulator";
 import { battle, startBattle } from "./combat/battleSaga";
