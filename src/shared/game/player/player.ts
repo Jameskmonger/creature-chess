@@ -170,6 +170,8 @@ export abstract class Player {
             homeScore: results.home.length,
             awayScore: results.away.length
         });
+
+        this.board.applyDamagePerTurn(results.home);
     }
 
     public cloneBoard() {

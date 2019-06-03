@@ -6,6 +6,20 @@
 
     $move-duration: 300ms;
 
+    .damage-per-turn {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 0.1em 0;
+        font-family: Arial, sans-serif;
+        font-size: 0.7em;
+        font-weight: 700;
+        line-height: 1em;
+        color: #ffff21;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
     &.move-up {
         @keyframes move-up {
             0% { top: $tile-size; }

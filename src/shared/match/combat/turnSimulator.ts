@@ -93,7 +93,8 @@ export class TurnSimulator {
                 attacking: {
                     direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
                     damage
-                }
+                },
+                totalDamage: attacker.piece.totalDamage + damage
             },
             defender: {
                 ...defender.piece,

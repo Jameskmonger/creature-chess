@@ -39,6 +39,8 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
             >
                 <CreatureImage definitionId={definitionId} stage={piece.stage} facing={facingAway ? "back" : "front"} />
 
+                <div className="damage-per-turn">{piece.damagePerTurn.toFixed(0)} dpt</div>
+
                 <div className="info">
                     <ProgressBar
                         className={`healthbar ${friendly ? "friendly" : "enemy"}`}

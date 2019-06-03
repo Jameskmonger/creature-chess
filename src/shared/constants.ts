@@ -18,3 +18,4 @@ export const PIECES_TO_EVOLVE = 3;
 
 export const DEFAULT_TURN_COUNT = 600;
 export const DEFAULT_TURN_DURATION = 50;
+export const DAMAGE_RATIO = 100;

@@ -12,6 +12,7 @@ import { TurnSimulator } from "./combat/turnSimulator";
 import { battle, startBattle } from "./combat/battleSaga";
 import { boardReducer, BoardActions } from "../board";
 import { BattleAction, BATTLE_FINISHED } from "./combat/battleEventChannel";
+import { DAMAGE_RATIO } from "../constants";
 
 interface MatchState {
     board: Piece[];
@@ -89,8 +90,8 @@ export class Match {
                 yield fork(battle, _this.turnSimulator, _this.turnCount, _this.turnDuration),
                 yield takeEvery<BattleAction>(
                     BATTLE_FINISHED,
-                    function*() {
-                        _this.onServerFinishMatch();
+                    function*(action) {
+                        _this.onServerFinishMatch((action.payload as any).turns);
                     }
                 )
             ]);
@@ -110,8 +111,22 @@ export class Match {
         return store;
     }
 
-    private onServerFinishMatch() {
+    private onServerFinishMatch(turns: number) {
         this.serverFinishedMatch.resolve();
+
+        const safeTurnCount = turns >= 1 ? turns : 1;
+        const newBoard = this.getBoard().map(p => {
+            if (p.ownerId !== this.home.id) {
+                return p;
+            }
+
+            return {
+                ...p,
+                damagePerTurn: (p.totalDamage * DAMAGE_RATIO) / safeTurnCount
+            };
+        });
+
+        this.store.dispatch(BoardActions.piecesUpdated(newBoard));
     }
 
     private mapHomePiece(piece: Piece) {

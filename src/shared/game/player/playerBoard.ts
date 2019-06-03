@@ -71,4 +71,21 @@ export class PlayerBoard {
         this.store.dispatch(BoardActions.piecesUpdated([]));
         this.store.dispatch(BenchActions.benchPiecesUpdated([]));
     }
+
+    public applyDamagePerTurn(template: Piece[]) {
+        const applied = this.getBoard().map(p => {
+            const matching = template.find(r => r.id === p.id);
+
+            if (!matching) {
+                return p;
+            }
+
+            return {
+                ...p,
+                damagePerTurn: matching.damagePerTurn
+            };
+        });
+
+        this.store.dispatch(BoardActions.piecesUpdated(applied));
+    }
 }
