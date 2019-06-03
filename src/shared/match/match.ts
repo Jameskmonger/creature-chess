@@ -21,6 +21,8 @@ export class Match {
     public readonly home: Player;
     public readonly away: Player;
     private readonly turnSimulator: TurnSimulator;
+    private readonly turnCount: number;
+    private readonly turnDuration: number;
     private id: string;
     private store: Store<MatchState>;
     private results: MatchResults;
@@ -28,11 +30,13 @@ export class Match {
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
 
-    constructor(turnSimulator: TurnSimulator, home: Player, away: Player) {
+    constructor(turnSimulator: TurnSimulator, turnCount: number, turnDuration: number, home: Player, away: Player) {
         this.turnSimulator = turnSimulator;
         this.id = uuid();
         this.home = home;
         this.away = away;
+        this.turnCount = turnCount;
+        this.turnDuration = turnDuration;
         this.store = this.createStore();
 
         const initialBoard = [
@@ -78,14 +82,15 @@ export class Match {
 
     private createStore() {
         // required to preserve inside the generator
-        const thisMatchInstance = this;
+        // tslint:disable-next-line:variable-name
+        const _this = this;
         const rootSaga = function*() {
             yield all([
-                yield fork(battle, thisMatchInstance.turnSimulator),
+                yield fork(battle, _this.turnSimulator, _this.turnCount, _this.turnDuration),
                 yield takeEvery<BattleAction>(
                     BATTLE_FINISHED,
                     function*() {
-                        thisMatchInstance.onServerFinishMatch();
+                        _this.onServerFinishMatch();
                     }
                 )
             ]);

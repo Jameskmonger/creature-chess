@@ -6,7 +6,7 @@ import { Player } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
-import { PHASE_LENGTHS, CELEBRATION_TIME } from "../constants";
+import { PHASE_LENGTHS, CELEBRATION_TIME, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "../constants";
 import { EventEmitter } from "events";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { PlayerList } from "./playerList";
@@ -24,7 +24,22 @@ enum GameEvents {
     FINISH_GAME = "FINISH_GAME"
 }
 
+interface PhaseLengths {
+    [GamePhase.PREPARING]?: number;
+    [GamePhase.READY]?: number;
+    [GamePhase.PLAYING]?: number;
+}
+
+const defaultPhaseLengths: PhaseLengths = {
+    [GamePhase.PREPARING]: 30,
+    [GamePhase.READY]: 5,
+    [GamePhase.PLAYING]: 30
+};
+
 export class Game {
+    private phaseLengths: PhaseLengths;
+    private turnCount: number;
+    private turnDuration: number;
     private GAME_SIZE: number;
     private round = 0;
     private phase = GamePhase.WAITING;
@@ -37,8 +52,11 @@ export class Game {
     private events = new EventEmitter();
     private deck: CardDeck;
 
-    constructor(gameSize: number) {
+    constructor(gameSize: number, phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
         this.GAME_SIZE = gameSize;
+        this.phaseLengths = { ...defaultPhaseLengths, ...phaseLengths };
+        this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
+        this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
         this.opponentProvider.setPlayers(this.players);
 
         this.deck = new CardDeck(this.definitionProvider.getAll());
@@ -47,7 +65,7 @@ export class Game {
         this.playerList.onUpdate(playerList => this.players.forEach(p => p.onPlayerListUpdate(playerList)));
     }
 
-    public onFinish(fn: () => void) {
+    public onFinish(fn: (rounds: number, winner: Player) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
@@ -87,6 +105,8 @@ export class Game {
         this.playerList.addPlayer(player);
         player.setDeck(this.deck);
         player.setDefinitionProvider(this.definitionProvider);
+        player.setTurnCount(this.turnCount);
+        player.setTurnDuration(this.turnDuration);
 
         if (this.players.length === this.GAME_SIZE) {
             setTimeout(() => {
@@ -116,9 +136,11 @@ export class Game {
 
         log(`Match complete in ${(duration)} ms (${this.round} rounds)`);
 
+        const winner = this.players.find(p => p.isAlive());
+
         this.players.forEach(p => p.onFinishGame());
 
-        this.events.emit(GameEvents.FINISH_GAME);
+        this.events.emit(GameEvents.FINISH_GAME, this.round, winner);
     }
 
     private async runPreparingPhase() {
@@ -132,7 +154,7 @@ export class Game {
 
         await Promise.race([
             Promise.all(promises),
-            delay(PHASE_LENGTHS[GamePhase.PREPARING] * 1000)
+            delay(this.phaseLengths[GamePhase.PREPARING] * 1000)
         ]);
     }
 
@@ -143,7 +165,7 @@ export class Game {
 
         this.players.forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider));
 
-        await delay(PHASE_LENGTHS[GamePhase.READY] * 1000);
+        await delay(this.phaseLengths[GamePhase.READY] * 1000);
     }
 
     private async runPlayingPhase() {
@@ -155,7 +177,7 @@ export class Game {
     }
 
     private async fightBattles() {
-        const maxTimeMs = PHASE_LENGTHS[GamePhase.PLAYING] * 1000;
+        const maxTimeMs = this.phaseLengths[GamePhase.PLAYING] * 1000;
         const battleTimeout = delay(maxTimeMs);
 
         const promises = this.players.filter(p => p.isAlive()).map(p => p.fightMatch(battleTimeout));

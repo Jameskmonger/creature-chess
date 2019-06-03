@@ -1,19 +1,17 @@
 import uuid = require("uuid/v4");
-import { clonePiece, createPiece, createPieceFromCard } from "../../piece-utils";
+import { clonePiece, createPieceFromCard } from "../../piece-utils";
 import { MovePiecePacket } from "../../packet-opcodes";
-import { TileType, createTileCoordinates } from "../../position";
 import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { FeedMessage } from "../../feed-message";
-import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "../../board";
+import { canDropPiece, getFirstEmptyBenchSlot } from "../../board";
 import { EventEmitter } from "events";
 import { Observable } from "../../observable/observable";
-import { Store } from "../../observable/store";
 import { OpponentProvider } from "../opponentProvider";
 import { Card } from "../../models/card";
 import { GamePhase } from "../../game-phase";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, TURNS_IN_BATTLE, PIECES_TO_EVOLVE } from "../../constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "../../constants";
 import { getXpToNextLevel } from "../../get-xp-for-level";
 import { PlayerListPlayer } from "../../models/player-list-player";
 import { MatchRewarder } from "../../match/matchRewarder";
@@ -61,6 +59,8 @@ export abstract class Player {
     private resolveReadyUpPromise: () => void = null;
 
     private board = new PlayerBoard();
+    private turnCount: number;
+    private turnDuration: number;
 
     constructor(name: string) {
         this.id = uuid();
@@ -69,6 +69,14 @@ export abstract class Player {
 
     public setDefinitionProvider(definitionProvider: DefinitionProvider) {
         this.definitionProvider = definitionProvider;
+    }
+
+    public setTurnCount(turnCount: number) {
+        this.turnCount = turnCount;
+    }
+
+    public setTurnDuration(turnDuration: number) {
+        this.turnDuration = turnDuration;
     }
 
     public addXp(amount: number) {
@@ -140,7 +148,7 @@ export abstract class Player {
         if (this.isAlive()) {
             const opponent = opponentProvider.getOpponent(this.id);
 
-            this.match = new Match(turnSimulator, this, opponent);
+            this.match = new Match(turnSimulator, this.turnCount, this.turnDuration, this, opponent);
 
             this.onEnterReadyPhase();
         }

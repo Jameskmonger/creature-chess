@@ -11,10 +11,10 @@ export const REROLL_COST = 2;
 export const BUY_XP_COST = 5;
 export const BUY_XP_AMOUNT = 4;
 
-export const TURN_DURATION_MS = 50;
-export const TURNS_IN_BATTLE = Math.floor((PHASE_LENGTHS[GamePhase.PLAYING] * 1000) / TURN_DURATION_MS);
-
 export const INITIAL_COOLDOWN = 1000;
 export const CELEBRATION_TIME = 3000;
 
 export const PIECES_TO_EVOLVE = 3;
+
+export const DEFAULT_TURN_COUNT = 600;
+export const DEFAULT_TURN_DURATION = 50;
