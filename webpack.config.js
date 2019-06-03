@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 
 const outDir = path.resolve(__dirname, "public");
 
@@ -26,11 +27,11 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: [ { loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader" ]
+                use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader"]
             },
             {
                 test: /\.css$/,
-                use: [ { loader: MiniCssExtractPlugin.loader }, "css-loader" ]
+                use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"]
             }
         ]
     },
@@ -56,6 +57,17 @@ module.exports = {
         }),
         new StyleLintPlugin({
             files: "**/*.scss"
+        }),
+        new CircularDependencyPlugin({
+            // exclude detection of files based on a RegExp
+            exclude: /a\.js|node_modules/,
+            // add errors to webpack instead of warnings
+            failOnError: true,
+            // allow import cycles that include an asyncronous import,
+            // e.g. via import(/* webpackMode: "weak" */ './file.js')
+            allowAsyncCycles: false,
+            // set the current working directory for displaying module paths
+            cwd: process.cwd(),
         })
     ],
 

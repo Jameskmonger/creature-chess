@@ -2,7 +2,7 @@ import present = require("present");
 import { eventChannel } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
 import { Piece } from "../../models/piece";
-import { log } from "../../../app/log";
+import { log } from "../../log";
 import { isATeamDefeated } from "../../is-a-team-defeated";
 import { BoardActions } from "../../board";
 import { PiecesUpdatedAction } from "../../board/actions/boardActions";
