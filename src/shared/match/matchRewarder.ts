@@ -31,9 +31,15 @@ export class MatchRewarder {
         const winBonus = win ? 1 : 0;
         const streakBonus = this.getNewStreakBonus(player, win);
 
-        const total = base + winBonus + streakBonus;
+        const interest = Math.min(Math.floor(player.getMoney() / 10), 5);
 
-        log(`${player.name} just earned $${total} (base: ${base}, win bonus: ${winBonus}, (${player.streak.amount}) streak bonus: ${streakBonus})`);
+        const total = base + winBonus + streakBonus + interest;
+
+        log(`${player.name} just earned $${total}`);
+        log(` - base: ${base}`);
+        log(` - win bonus: ${winBonus}`);
+        log(` - streak (${player.streak.amount}) bonus: ${streakBonus}`);
+        log(` - interest: ${interest}`);
 
         return total;
     }

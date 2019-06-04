@@ -103,6 +103,10 @@ export abstract class Player {
         this.money.setValue(currentMoney + money);
     }
 
+    public getMoney() {
+        return this.money.getValue();
+    }
+
     public onFinishGame() {
         this.events.removeAllListeners();
     }
