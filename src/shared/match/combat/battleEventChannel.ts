@@ -12,10 +12,10 @@ export type BATTLE_TURN = typeof BATTLE_TURN;
 export const BATTLE_FINISHED = "BATTLE_FINISHED";
 export type BATTLE_FINISHED = typeof BATTLE_FINISHED;
 
-type BattleFinishAction = ({ type: BATTLE_FINISHED });
+type BattleFinishAction = ({ type: BATTLE_FINISHED, payload: { turns: number } });
 export type BattleAction = PiecesUpdatedAction | BattleFinishAction;
 
-const finishAction = (): BattleFinishAction => ({ type: BATTLE_FINISHED });
+const finishAction = (turns: number): BattleFinishAction => ({ type: BATTLE_FINISHED, payload: { turns } });
 
 const duration = (ms: number) => {
     const startTime = present();
@@ -52,27 +52,26 @@ export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: n
 
                 if (shouldStop) {
                     log(`Fight ended at turn ${turnCount} due to cancellation`);
-                    emit(finishAction());
+                    emit(finishAction(turnCount));
                     break;
                 }
 
                 if (defeated) {
                     log(`Fight ended at turn ${turnCount}`);
-                    emit(finishAction());
+                    emit(finishAction(turnCount));
                     break;
                 }
 
                 if (turnCount >= maxTurns) {
                     log(`Fight timed out at turn ${turnCount}`);
-                    emit(finishAction());
+                    emit(finishAction(turnCount));
                     break;
                 }
 
                 const turnTimer = duration(turnDuration);
 
-                pieces = turnSimulator.simulateTurn(pieces);
+                pieces = turnSimulator.simulateTurn(++turnCount, pieces);
                 emit(BoardActions.piecesUpdated(pieces));
-                turnCount++;
 
                 await turnTimer.remaining();
             }

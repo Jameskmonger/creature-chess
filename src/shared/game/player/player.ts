@@ -159,17 +159,24 @@ export abstract class Player {
 
         this.onEnterPlayingPhase();
 
-        const results = await this.match.fight(battleTimeout);
+        const finalMatchBoard = await this.match.fight(battleTimeout);
 
-        const damage = results.away.length * 3;
+        const surviving = {
+            home: finalMatchBoard.filter(p => p.currentHealth > 0 && p.ownerId === this.id),
+            away: finalMatchBoard.filter(p => p.currentHealth > 0 && p.ownerId !== this.id)
+        };
+
+        const damage = surviving.away.length * 3;
         this.subtractHealth(damage);
 
         this.events.emit(PlayerEvent.FINISH_MATCH, {
             home: this.name,
             away: this.match.away.name,
-            homeScore: results.home.length,
-            awayScore: results.away.length
+            homeScore: surviving.home.length,
+            awayScore: surviving.away.length
         });
+
+        this.board.applyDamagePerTurn(finalMatchBoard);
     }
 
     public cloneBoard() {

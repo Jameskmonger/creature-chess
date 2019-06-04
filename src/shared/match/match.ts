@@ -7,7 +7,6 @@ import { Player } from "../game/player/player";
 import { rotatePiecePosition } from "../piece-utils";
 import { log } from "../log";
 import { Piece } from "../models/piece";
-import { MatchResults } from "./matchResults";
 import { TurnSimulator } from "./combat/turnSimulator";
 import { battle, startBattle } from "./combat/battleSaga";
 import { boardReducer, BoardActions } from "../board";
@@ -25,7 +24,7 @@ export class Match {
     private readonly turnDuration: number;
     private id: string;
     private store: Store<MatchState>;
-    private results: MatchResults;
+    private finalBoard: Piece[];
 
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
@@ -55,11 +54,11 @@ export class Match {
         return this.store.getState().board;
     }
 
-    public getResults() {
-        return this.results;
+    public getFinalBoard() {
+        return this.finalBoard;
     }
 
-    public async fight(battleTimeout: Promise<void>): Promise<MatchResults> {
+    public async fight(battleTimeout: Promise<void>) {
         this.store.dispatch(startBattle());
 
         await Promise.race([
@@ -69,15 +68,8 @@ export class Match {
 
         log(`${this.home.name} v ${this.away.name} finished`);
 
-        const finalBoard = this.store.getState().board;
-        const surviving = finalBoard.filter(p => p.currentHealth > 0);
-
-        this.results = {
-            home: surviving.filter(p => p.ownerId === this.home.id),
-            away: surviving.filter(p => p.ownerId === this.away.id)
-        };
-
-        return this.results;
+        this.finalBoard = this.store.getState().board;
+        return this.finalBoard;
     }
 
     private createStore() {

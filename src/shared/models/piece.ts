@@ -29,4 +29,6 @@ export interface Piece {
     maxHealth: number;
     currentHealth: number;
     coolDown: number;
+
+    damagePerTurn: number | null;
 }
