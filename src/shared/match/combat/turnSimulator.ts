@@ -2,7 +2,7 @@ import { Piece } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getRelativeDirection } from "../../position";
-import { INITIAL_COOLDOWN } from "../../constants";
+import { INITIAL_COOLDOWN, DAMAGE_RATIO } from "../../constants";
 import { isATeamDefeated } from "../../is-a-team-defeated";
 import { getTypeAttackBonus } from "./get-type-attack-bonus";
 import { DefinitionProvider } from "../../game/definitionProvider";
@@ -21,7 +21,7 @@ export class TurnSimulator {
         this.definitionProvider = definitionProvider;
     }
 
-    public simulateTurn(pieces: Piece[]) {
+    public simulateTurn(turnCount: number, pieces: Piece[]) {
         const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
 
         updatedPieces.forEach((attacker, index) => {
@@ -51,7 +51,7 @@ export class TurnSimulator {
             }
 
             const defenderCombatInfo = this.getPieceCombatInfo(defender);
-            const updatedFighters = this.attack(attackerCombatInfo, defenderCombatInfo);
+            const updatedFighters = this.attack(turnCount, attackerCombatInfo, defenderCombatInfo);
             updatedPieces[index] = updatedFighters.attacker;
             updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
         });
@@ -73,7 +73,7 @@ export class TurnSimulator {
         };
     }
 
-    private attack(attacker: PieceCombatInfo, defender: PieceCombatInfo) {
+    private attack(turnCount: number, attacker: PieceCombatInfo, defender: PieceCombatInfo) {
         if (attacker.piece.currentHealth === 0) {
             // Dead Pokémon don't attack
             return {
@@ -86,6 +86,8 @@ export class TurnSimulator {
         const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 10;
         const newDefenderHealth = Math.max(defender.piece.currentHealth - damage, 0);
 
+        const totalDamage = attacker.piece.damagePerTurn * turnCount;
+
         return {
             attacker: {
                 ...attacker.piece,
@@ -94,7 +96,7 @@ export class TurnSimulator {
                     direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
                     damage
                 },
-                totalDamage: attacker.piece.totalDamage + damage
+                damagePerTurn: (totalDamage + (damage * DAMAGE_RATIO)) / turnCount
             },
             defender: {
                 ...defender.piece,

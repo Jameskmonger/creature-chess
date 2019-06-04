@@ -30,6 +30,5 @@ export interface Piece {
     currentHealth: number;
     coolDown: number;
 
-    totalDamage: number;
-    damagePerTurn: number;
+    damagePerTurn: number | null;
 }

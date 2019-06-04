@@ -24,7 +24,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
             return null;
         }
 
-        const { piece, connectDragSource} = this.props;
+        const { piece, connectDragSource, showDamagePerTurn, showHealthbar } = this.props;
         const { facingAway, definitionId, currentHealth, maxHealth, coolDown } = piece;
         const { currentAnimations } = this.state;
 
@@ -39,20 +39,29 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
             >
                 <CreatureImage definitionId={definitionId} stage={piece.stage} facing={facingAway ? "back" : "front"} />
 
-                <div className="damage-per-turn">{piece.damagePerTurn.toFixed(0)} dpt</div>
+                {
+                    showDamagePerTurn
+                    && piece.damagePerTurn !== null
+                    && <div className="damage-per-turn">{piece.damagePerTurn.toFixed(0)} dpt</div>
+                }
 
-                <div className="info">
-                    <ProgressBar
-                        className={`healthbar ${friendly ? "friendly" : "enemy"}`}
-                        current={currentHealth}
-                        max={maxHealth}
-                    />
-                    <ProgressBar
-                        className="cooldownbar"
-                        current={coolDown}
-                        max={Constants.INITIAL_COOLDOWN}
-                    />
-                </div>
+                {
+                    showHealthbar
+                    && (
+                        <div className="info">
+                            <ProgressBar
+                                className={`healthbar ${friendly ? "friendly" : "enemy"}`}
+                                current={currentHealth}
+                                max={maxHealth}
+                            />
+                            <ProgressBar
+                                className="cooldownbar"
+                                current={coolDown}
+                                max={Constants.INITIAL_COOLDOWN}
+                            />
+                        </div>
+                    )
+                }
             </div>
         );
     }
@@ -98,7 +107,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
     private runAnimation = (name: string, variables?: AnimationVariables) => {
         this.setState(prevState => ({
             ...prevState,
-            currentAnimations: [ ...prevState.currentAnimations, { name, variables } ]
+            currentAnimations: [...prevState.currentAnimations, { name, variables }]
         }));
     }
 
@@ -113,7 +122,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
         const { animationName } = event;
         this.setState(prevState => ({
             ...prevState,
-            currentAnimations: [ ...prevState.currentAnimations.filter(a => a.name !== animationName && !a.name.startsWith("move-")) ]
+            currentAnimations: [...prevState.currentAnimations.filter(a => a.name !== animationName && !a.name.startsWith("move-"))]
         }));
         if (animationName === dyingAnimation) {
             this.setState({ dead: true });

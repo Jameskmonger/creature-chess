@@ -7,6 +7,8 @@ export interface BoardPieceOwnProps {
 export interface BoardPieceStateProps {
     localPlayerId: string;
     canDrag: boolean;
+    showDamagePerTurn: boolean;
+    showHealthbar: boolean;
 }
 
 export const isFriendly = (props: BoardPieceProps) => props.localPlayerId === props.piece.ownerId;

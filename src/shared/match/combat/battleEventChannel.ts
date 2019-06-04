@@ -70,9 +70,8 @@ export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: n
 
                 const turnTimer = duration(turnDuration);
 
-                pieces = turnSimulator.simulateTurn(pieces);
+                pieces = turnSimulator.simulateTurn(++turnCount, pieces);
                 emit(BoardActions.piecesUpdated(pieces));
-                turnCount++;
 
                 await turnTimer.remaining();
             }

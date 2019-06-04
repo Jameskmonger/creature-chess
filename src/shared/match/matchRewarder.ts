@@ -10,9 +10,14 @@ export class MatchRewarder {
             return;
         }
 
-        const results = match.getResults();
+        const results = match.getFinalBoard();
 
-        const win = results.home.length > results.away.length;
+        const surviving = {
+            home: results.filter(p => p.currentHealth > 0 && p.ownerId === homePlayer.id),
+            away: results.filter(p => p.currentHealth > 0 && p.ownerId !== homePlayer.id)
+        };
+
+        const win = surviving.home.length > surviving.away.length;
 
         const money = this.getMoneyForMatch(homePlayer, win);
 
