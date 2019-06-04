@@ -3,6 +3,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { joinGameAction, createGameAction, joinGameError } from "../store/actions/gameActions";
 import { AppState } from "../store/store";
 import { loadingSelector } from "../store/gameSelector";
+import { MAX_NAME_LENGTH } from "@common/constants";
 
 interface DispatchProps {
     onJoinGame: (serverIP: string, name: string, gameId: string) => void;
@@ -55,6 +56,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                     <input
                         value={this.state.name}
                         onChange={this.onNameChange}
+                        maxLength={MAX_NAME_LENGTH}
                         placeholder="Your name"
                         className="name-input"
                     />
@@ -147,6 +149,11 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
 
         if (!this.state.name) {
             this.props.setError("Name field empty");
+            return;
+        }
+
+        if (this.state.name.length > MAX_NAME_LENGTH) {
+            this.props.setError(`Name too long. Max ${MAX_NAME_LENGTH} characters`);
             return;
         }
 

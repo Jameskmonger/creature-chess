@@ -6,6 +6,7 @@ import { Game } from "@common/game/game";
 import { Connection } from "./connection";
 import { Bot } from "@common/game/player/bot";
 import { randomFromArray } from "@common/random-from-array";
+import { MAX_NAME_LENGTH } from "@common/constants";
 
 const BOT_NAMES = [
     "Duke Horacio",
@@ -107,6 +108,14 @@ export class Server {
             if (name.match(NAME_REGEX) === null) {
                 response({
                     error: "Invalid characters in name",
+                    response: null
+                });
+                return;
+            }
+
+            if (name.length > MAX_NAME_LENGTH) {
+                response({
+                    error: "Name too long",
                     response: null
                 });
                 return;
