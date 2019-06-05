@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE } from "../actiontypes/gameActionTypes";
 import { GameState } from "../store";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
@@ -12,7 +12,8 @@ const initialState: GameState = {
     money: 0,
     phase: GamePhase.WAITING,
     phaseTimer: null,
-    round: null
+    round: null,
+    debug: false
 };
 
 export function game(state: GameState = initialState, action: GameAction) {
@@ -70,6 +71,12 @@ export function game(state: GameState = initialState, action: GameAction) {
                 ...state,
                 money: action.payload.money
             };
+        case ENABLE_DEBUG_MODE: {
+            return {
+                ...state,
+                debug: true
+            };
+        }
         default:
             return state;
     }

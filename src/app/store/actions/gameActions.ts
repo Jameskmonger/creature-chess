@@ -1,4 +1,4 @@
-import { JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE } from "../actiontypes/gameActionTypes";
 import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 
@@ -14,7 +14,8 @@ export type GameAction =
     | ({ type: MONEY_UPDATE, payload: { money: number } })
     | ({ type: PHASE_TIMER_UPDATED, payload: { time: number }})
     | JoinCompleteAction
-    | GamePhaseUpdateAction;
+    | GamePhaseUpdateAction
+    | ({ type: ENABLE_DEBUG_MODE });
 
 export const joinGameAction = (serverIP: string, name: string, gameId: string): JoinGameAction => ({
     type: JOIN_GAME,
@@ -59,4 +60,8 @@ export const phaseTimerUpdated = (time: number) => ({
     payload: {
         time
     }
+});
+
+export const enableDebugMode = () => ({
+    type: ENABLE_DEBUG_MODE
 });
