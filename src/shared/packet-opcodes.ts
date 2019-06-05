@@ -1,11 +1,9 @@
 import { TileCoordinates } from "./position";
 import { GamePhase } from "./game-phase";
-import { Piece } from "./models";
+import { Piece, Card } from "./models";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
-    BOARD_UPDATE = "boardUpdate",
-    BENCH_UPDATE = "benchUpdate",
     PLAYER_LIST_UPDATE = "playerListUpdate",
     PHASE_UPDATE = "phaseUpdate",
     MONEY_UPDATE = "moneyUpdate",
@@ -42,8 +40,15 @@ export interface LevelUpdatePacket {
     xp: number;
 }
 
+interface PreparingPhasePacket {
+    round: number;
+    pieces: Piece[];
+    bench: Piece[];
+    cards: Card[];
+}
+
 export type PhaseUpdatePacket
-    = ({ phase: GamePhase.PREPARING, payload: { pieces: Piece[], round: number } })
+    = ({ phase: GamePhase.PREPARING, payload: PreparingPhasePacket })
     | ({ phase: GamePhase.READY, payload: { pieces: Piece[], opponentId: string } })
     | ({ phase: GamePhase.PLAYING })
     | ({ phase: GamePhase.DEAD });

@@ -56,17 +56,6 @@ const createGame = (socket: Socket, name: string, playerCount: number, botCount:
 
 const subscribe = (socket: Socket) => {
     return eventChannel(emit => {
-        socket.on(ServerToClientPacketOpcodes.BOARD_UPDATE, (packet: { pieces: Models.Piece[] }) => {
-            log("[BOARD_UPDATE]", packet);
-
-            emit(BoardActions.piecesUpdated(packet.pieces));
-        });
-
-        socket.on(ServerToClientPacketOpcodes.BENCH_UPDATE, (packet: { pieces: Models.Piece[] }) => {
-            log("[BENCH_UPDATE]", packet);
-            emit(BenchActions.benchPiecesUpdated(packet.pieces));
-        });
-
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: Models.PlayerListPlayer[]) => {
             log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListUpdated(players));

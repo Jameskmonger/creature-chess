@@ -1,9 +1,10 @@
 import { put, takeEvery, all } from "@redux-saga/core/effects";
-import { BoardActions } from "@common/board";
+import { BoardActions, BenchActions } from "@common/board";
 import { GamePhase } from "@common";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
 import { GamePhaseUpdateAction } from "../../actions/gameActions";
 import { startBattle } from "@common/match/combat/battleSaga";
+import { cardsUpdated } from "../../../cardShop/cardActions";
 
 const isGamePhaseUpdate = (phase: GamePhase) =>
     (action: GamePhaseUpdateAction) => action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;
@@ -11,7 +12,17 @@ const isGamePhaseUpdate = (phase: GamePhase) =>
 export const gamePhase = function*() {
     yield all([
         yield takeEvery<GamePhaseUpdateAction>(
-            [ isGamePhaseUpdate(GamePhase.PREPARING), isGamePhaseUpdate(GamePhase.READY) ],
+            isGamePhaseUpdate(GamePhase.PREPARING),
+            function*(action) {
+                const payload = (action.payload as any).payload;
+
+                yield put(BoardActions.piecesUpdated(payload.pieces));
+                yield put(BenchActions.benchPiecesUpdated(payload.bench));
+                yield put(cardsUpdated(payload.cards));
+            }
+        ),
+        yield takeEvery<GamePhaseUpdateAction>(
+            isGamePhaseUpdate(GamePhase.READY),
             function*(action) {
                 const pieces = (action.payload as any).payload.pieces;
 

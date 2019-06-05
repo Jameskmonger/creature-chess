@@ -54,18 +54,22 @@ export class Connection extends Player {
     }
 
     protected onEnterPreparingPhase(round: number) {
+        const turnedBoard = this.getBoard().map(piece => ({
+            ...piece,
+            facingAway: true
+        }));
+
         const packet: PhaseUpdatePacket = {
             phase: GamePhase.PREPARING,
             payload: {
                 round,
-                pieces: this.getBoard()
+                pieces: turnedBoard,
+                bench: this.getBench(),
+                cards: this.cards.getValue()
             }
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-        this.sendBoardUpdate();
-        this.sendBenchUpdate();
-        this.sendCardsUpdate();
     }
 
     protected onEnterReadyPhase() {
@@ -102,25 +106,6 @@ export class Connection extends Player {
 
     private sendCardsUpdate = () => {
         this.sendPacket(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards.getValue());
-    }
-
-    private sendBoardUpdate = () => {
-        const turnedPieces = this.getBoard().map(piece => ({
-            ...piece,
-            facingAway: true
-        }));
-
-        const packet: BoardUpatePacket = {
-            pieces: turnedPieces
-        };
-
-        this.sendPacket(ServerToClientPacketOpcodes.BOARD_UPDATE, packet);
-    }
-
-    private sendBenchUpdate = () => {
-        this.sendPacket(ServerToClientPacketOpcodes.BENCH_UPDATE, {
-            pieces: this.getBench()
-        });
     }
 
     private sendLevelUpdate = ({ level, xp }: { level: number, xp: number }) => {
