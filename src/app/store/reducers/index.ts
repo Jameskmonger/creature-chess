@@ -1,4 +1,4 @@
-import { boardReducer as board, benchReducer as bench, evolutionLockedReducer as evolutionLocked } from "@common/board";
+import { boardReducer as board, benchReducer as bench } from "@common/board";
 import { playerList } from "../../playerList/playerListReducer";
 import { cards } from "../../cardShop/cardsReducer";
 import { game } from "./gameReducer";
@@ -12,6 +12,5 @@ export const reducers = {
     cards,
     game,
     localPlayer,
-    feedMessages,
-    evolutionLocked
+    feedMessages
 };

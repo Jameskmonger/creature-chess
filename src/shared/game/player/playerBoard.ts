@@ -6,12 +6,11 @@ import { evolutionSagaFactory } from "../../board/sagas/evolution";
 import { Piece } from "../../models/piece";
 import { boardReducer, BenchActions, benchReducer, BoardActions } from "../../board";
 import { TileCoordinates, TileType } from "../../position";
-import { evolutionLockedReducer, LockEvolutionActions } from "../../board/actions/evolutionLockedReducer";
+import { LockEvolutionActions } from "../../board/actions/evolutionLocked";
 
 interface BoardState {
     board: Piece[];
     bench: Piece[];
-    evolutionLocked: boolean;
 }
 
 const createBoardStore = () => {
@@ -26,8 +25,7 @@ const createBoardStore = () => {
     const store = createStore(
         combineReducers<BoardState>({
             board: boardReducer,
-            bench: benchReducer,
-            evolutionLocked: evolutionLockedReducer
+            bench: benchReducer
         }),
         applyMiddleware(sagaMiddleware)
     );

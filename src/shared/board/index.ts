@@ -3,7 +3,7 @@ export { getFirstEmptyBenchSlot } from "./get-first-empty-bench-slot";
 
 export { boardReducer } from "./actions/boardReducer";
 export { benchReducer } from "./actions/benchReducer";
-export { evolutionLockedReducer, LockEvolutionActions } from "./actions/evolutionLockedReducer";
+export { LockEvolutionActions } from "./actions/evolutionLocked";
 
 import * as BoardActions from "./actions/boardActions";
 import * as BoardActionTypes from "./actions/boardActionTypes";

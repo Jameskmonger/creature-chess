@@ -24,7 +24,6 @@ export interface LocalPlayerState {
 export interface AppState {
     board: Models.Piece[];
     bench: Models.Piece[];
-    evolutionLocked: boolean;
     game: GameState;
     playerList: Models.PlayerListPlayer[];
     cards: Models.Card[];
