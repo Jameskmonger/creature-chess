@@ -1,21 +1,23 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { fork, all } from "@redux-saga/core/effects";
-import { evolution } from "../../board/sagas/evolution";
+import { evolutionSagaFactory } from "../../board/sagas/evolution";
 
 import { Piece } from "../../models/piece";
-import { canDropPiece, boardReducer, BenchActions, benchReducer, BoardActions, getFirstEmptyBenchSlot } from "../../board";
+import { boardReducer, BenchActions, benchReducer, BoardActions } from "../../board";
 import { TileCoordinates, TileType } from "../../position";
+import { evolutionLockedReducer, LockEvolutionActions } from "../../board/actions/evolutionLockedReducer";
 
 interface BoardState {
     board: Piece[];
     bench: Piece[];
+    evolutionLocked: boolean;
 }
 
 const createBoardStore = () => {
     const rootSaga = function*() {
         yield all([
-            yield fork(evolution)
+            yield fork(evolutionSagaFactory<BoardState>())
         ]);
     };
 
@@ -24,7 +26,8 @@ const createBoardStore = () => {
     const store = createStore(
         combineReducers<BoardState>({
             board: boardReducer,
-            bench: benchReducer
+            bench: benchReducer,
+            evolutionLocked: evolutionLockedReducer
         }),
         applyMiddleware(sagaMiddleware)
     );
@@ -87,5 +90,13 @@ export class PlayerBoard {
         });
 
         this.store.dispatch(BoardActions.piecesUpdated(applied));
+    }
+
+    public lockEvolution() {
+        this.store.dispatch(LockEvolutionActions.lockEvolutionAction());
+    }
+
+    public unlockEvolution() {
+        this.store.dispatch(LockEvolutionActions.unlockEvolutionAction());
     }
 }

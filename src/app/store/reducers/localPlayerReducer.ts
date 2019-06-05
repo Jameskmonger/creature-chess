@@ -1,4 +1,4 @@
-import { LocalPlayerState } from "../store";
+import { LocalPlayerState } from "../state";
 import { LocalPlayerAction } from "../actions/localPlayerActions";
 import { JOIN_COMPLETE, LEVEL_UPDATE, READY_UP } from "../actiontypes/localPlayerActionTypes";
 import { GamePhaseUpdateAction } from "../actions/gameActions";

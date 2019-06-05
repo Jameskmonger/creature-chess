@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FeedMessage, BattleFeedMessage, ChatFeedMessage, FeedMessageType } from "@common/feed-message";
 import { connect, MapStateToProps } from "react-redux";
-import { AppState } from "../store/store";
+import { AppState } from "../store/state";
 import { ChatInput } from "../chat/chatInput";
 
 interface FeedStateProps {

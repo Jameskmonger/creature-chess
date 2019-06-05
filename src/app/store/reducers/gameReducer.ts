@@ -1,6 +1,6 @@
 import { GameAction } from "../actions/gameActions";
 import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE } from "../actiontypes/gameActionTypes";
-import { GameState } from "../store";
+import { GameState } from "../state";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 

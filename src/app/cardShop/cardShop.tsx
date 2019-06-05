@@ -3,7 +3,7 @@ import { FaSyncAlt } from "react-icons/fa";
 import { Models, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { AppState } from "../store/store";
+import { AppState } from "../store/state";
 import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 
