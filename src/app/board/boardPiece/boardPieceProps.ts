@@ -9,6 +9,7 @@ export interface BoardPieceStateProps {
     canDrag: boolean;
     showDamagePerTurn: boolean;
     showHealthbar: boolean;
+    animate: boolean;
 }
 
 export const isFriendly = (props: BoardPieceProps) => props.localPlayerId === props.piece.ownerId;

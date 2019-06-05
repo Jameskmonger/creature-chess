@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameAction, createGameAction, joinGameError } from "../store/actions/gameActions";
+import { joinGameAction, createGameAction, joinGameError, enableDebugMode } from "../store/actions/gameActions";
 import { AppState } from "../store/store";
 import { loadingSelector } from "../store/gameSelector";
 import { MAX_NAME_LENGTH } from "@common/constants";
@@ -8,6 +8,7 @@ import { MAX_NAME_LENGTH } from "@common/constants";
 interface DispatchProps {
     onJoinGame: (serverIP: string, name: string, gameId: string) => void;
     onCreateGame: (serverIP: string, name: string, playerCount: number, botCount: number) => void;
+    enableDebugMode: () => void;
     setError: (error: string) => void;
 }
 
@@ -24,6 +25,7 @@ interface LobbyStageState {
     playerCount: string;
     gameId: string;
     serverIP: string;
+    debugModeClickCount: number;
 }
 
 class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
@@ -32,15 +34,21 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         playerCount: "",
         botCount: "",
         gameId: "",
-        serverIP: `http://${window.location.hostname}:3000`
+        serverIP: `http://${window.location.hostname}:3000`,
+        debugModeClickCount: 0
     };
 
     public render() {
+        const title =
+            this.state.debugModeClickCount === 3
+            ? <h2 className="title">Creature Chess <span className="debug-mode">(Debug Mode)</span></h2>
+            : <h2 className="title" onClick={this.onTitleClick}>Creature Chess</h2>;
+
         if (this.props.loading) {
             return (
                 <div className="lobby">
                     <div className="join-game">
-                        <h2 className="title">Creature Chess</h2>
+                        {title}
 
                         <p>Loading game...</p>
                     </div>
@@ -51,7 +59,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         return (
             <div className="lobby">
                 <div className="join-game">
-                    <h2 className="title">Creature Chess</h2>
+                    {title}
 
                     <input
                         value={this.state.name}
@@ -104,6 +112,22 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                 </div>
             </div>
         );
+    }
+
+    private onTitleClick = () => {
+        if (this.state.debugModeClickCount === 3) {
+            return;
+        }
+
+        this.setState(prevState => ({
+            debugModeClickCount: prevState.debugModeClickCount + 1
+        }), () => {
+            if (this.state.debugModeClickCount !== 3) {
+                return;
+            }
+
+            this.props.enableDebugMode();
+        });
     }
 
     private onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,6 +220,7 @@ const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state =>
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     onCreateGame: (serverIP: string, name: string, playerCount: number, botCount: number) => dispatch(createGameAction(serverIP, name, playerCount, botCount)),
     onJoinGame: (serverIP: string, name: string, gameId: string) => dispatch(joinGameAction(serverIP, name, gameId)),
+    enableDebugMode: () => dispatch(enableDebugMode()),
     setError: (error: string) => dispatch(joinGameError(error))
 });
 

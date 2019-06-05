@@ -11,6 +11,7 @@ const mapStateToProps: MapStateToProps<BoardPieceStateProps, {}, AppState> = sta
     canDrag: state.game.phase === GamePhase.PREPARING,
     showDamagePerTurn: state.game.phase === GamePhase.PREPARING,
     showHealthbar: state.game.phase === GamePhase.READY || state.game.phase === GamePhase.PLAYING,
+    animate: state.game.debug === false,
     localPlayerId: localPlayerIdSelector(state)
 });
 
