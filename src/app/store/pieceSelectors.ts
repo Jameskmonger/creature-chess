@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 
 import { Models } from "@common";
-import { AppState } from "./store";
+import { AppState } from "./state";
 import { TileCoordinates, TileType } from "@common/position";
 import { localPlayerIdSelector } from "./gameSelector";
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { GameStage } from "./gameStage";
-import { AppState } from "../store/store";
+import { AppState } from "../store/state";
 import { LobbyStage } from "./lobbyStage";
 import { localPlayerIdSelector } from "../store/gameSelector";
 

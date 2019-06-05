@@ -123,6 +123,7 @@ export abstract class Player {
         });
 
         this.rerollCards();
+        this.board.unlockEvolution();
 
         this.onEnterPreparingPhase(round);
 
@@ -150,6 +151,8 @@ export abstract class Player {
         this.ready = false;
 
         if (this.isAlive()) {
+            this.board.lockEvolution();
+
             const opponent = opponentProvider.getOpponent(this.id);
 
             this.match = new Match(turnSimulator, this.turnCount, this.turnDuration, this, opponent);

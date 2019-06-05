@@ -4,11 +4,12 @@ import { phaseTimer } from "./actions/phaseTimer";
 import { gamePhase } from "./actions/gamePhase";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { cardShop } from "./actions/cardShop";
-import { evolution } from "@common/board/sagas/evolution";
+import { evolutionSagaFactory } from "@common/board/sagas/evolution";
 import { battle } from "@common/match/combat/battleSaga";
 import { TurnSimulator } from "@common/match/combat/turnSimulator";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@common/constants";
+import { AppState } from "../state";
 
 export const rootSaga = function*() {
     yield all([
@@ -17,7 +18,7 @@ export const rootSaga = function*() {
         yield fork(gamePhase),
         yield fork(preventAccidentalClose),
         yield fork(cardShop),
-        yield fork(evolution),
+        yield fork(evolutionSagaFactory<AppState>()),
         yield fork(battle, new TurnSimulator(new DefinitionProvider()), DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION)
     ]);
 };

@@ -3,7 +3,7 @@ import { MapDispatchToProps, connect, MapStateToProps } from "react-redux";
 
 import { Models } from "@common";
 import { BoardActions } from "@common/board";
-import { AppState } from "../../store/store";
+import { AppState } from "../../store/state";
 import { tilePieceSelector, ownedPieceSelector } from "../../store/pieceSelectors";
 import { tileDropTarget } from "./tileDragDrop";
 import { TileProps, TileOwnProps, TileStateProps, TileDispatchProps } from "./tileProps";

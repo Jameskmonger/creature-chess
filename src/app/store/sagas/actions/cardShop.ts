@@ -1,7 +1,7 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, cardsUpdated } from "../../../cardShop/cardActions";
 import { BUY_CARD } from "../../../cardShop/cardActionTypes";
-import { AppState } from "../../store";
+import { AppState } from "../../state";
 import { GamePhase } from "@common";
 import { createPieceFromCard } from "@common/piece-utils";
 import { getFirstEmptyBenchSlot, BenchActions } from "@common/board";

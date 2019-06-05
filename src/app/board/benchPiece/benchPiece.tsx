@@ -3,7 +3,7 @@ import { connect, MapStateToProps } from "react-redux";
 import { Props, BenchPieceProps, BenchPieceStateProps } from "./benchPieceProps";
 import { benchPieceDragSource } from "./benchPieceDragDrop";
 import { BenchPieceUnconnected } from "./benchPieceUnconnected";
-import { AppState } from "../../store/store";
+import { AppState } from "../../store/state";
 
 const mapStateToProps: MapStateToProps<BenchPieceStateProps, {}, AppState> = (state) => ({
     canDrag: true
