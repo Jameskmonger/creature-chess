@@ -10,9 +10,12 @@ import { PHASE_LENGTHS, CELEBRATION_TIME, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURAT
 import { EventEmitter } from "events";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { PlayerList } from "./playerList";
-import { MatchRewarder } from "../match/matchRewarder";
 import { TurnSimulator } from "../match/combat/turnSimulator";
 import { DefinitionProvider } from "./definitionProvider";
+import { EventManager } from "./events/eventManager";
+import { matchRewards } from "./plugins/matchRewards";
+import { playerHealth } from "./plugins/playerHealth";
+import { resetPlayer } from "./plugins/resetPlayer";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -44,13 +47,13 @@ export class Game {
     private round = 0;
     private phase = GamePhase.WAITING;
     private opponentProvider = new OpponentProvider();
-    private matchRewarder = new MatchRewarder();
     private playerList = new PlayerList();
     private turnSimulator: TurnSimulator;
     private definitionProvider = new DefinitionProvider();
     private players: Player[] = [];
     private events = new EventEmitter();
     private deck: CardDeck;
+    private eventManager = new EventManager();
 
     constructor(gameSize: number, phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
         this.GAME_SIZE = gameSize;
@@ -63,6 +66,8 @@ export class Game {
         this.turnSimulator = new TurnSimulator(this.definitionProvider);
 
         this.playerList.onUpdate(playerList => this.players.forEach(p => p.onPlayerListUpdate(playerList)));
+
+        this.registerPlugins();
     }
 
     public onFinish(fn: (rounds: number, winner: Player) => void) {
@@ -94,10 +99,22 @@ export class Game {
         });
 
         player.onFinishMatch(results => {
+            this.eventManager.getTriggers().playerFinishMatch({
+                ...results,
+                player
+            });
+        });
+
+        player.onFinishMatch(results => {
             this.sendFeedMessageToAllPlayers({
                 id: uuid(),
                 type: FeedMessageType.BATTLE,
-                payload: results
+                payload: {
+                    home: player.name,
+                    away: results.opponentName,
+                    homeScore: results.homeScore,
+                    awayScore: results.awayScore
+                }
             });
         });
 
@@ -150,6 +167,8 @@ export class Game {
 
         this.phase = GamePhase.PREPARING;
 
+        this.eventManager.getTriggers().enterPreparingPhase(this.players);
+
         const promises = this.players.map(p => p.enterPreparingPhase(this.round));
 
         await Promise.race([
@@ -186,10 +205,16 @@ export class Game {
 
         await delay(CELEBRATION_TIME); // celebration time
 
-        this.players.forEach(p => p.giveMatchRewards(this.matchRewarder));
+        this.eventManager.getTriggers().finishRound(this.players);
     }
 
     private sendFeedMessageToAllPlayers(message: FeedMessage) {
         this.players.forEach(p => p.onNewFeedMessage(message));
+    }
+
+    private registerPlugins() {
+        matchRewards(this.eventManager);
+        playerHealth(this.eventManager);
+        resetPlayer(this.eventManager);
     }
 }

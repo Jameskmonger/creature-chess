@@ -14,7 +14,6 @@ import { GamePhase } from "../../game-phase";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "../../constants";
 import { getXpToNextLevel } from "../../get-xp-for-level";
 import { PlayerListPlayer } from "../../models/player-list-player";
-import { MatchRewarder } from "../../match/matchRewarder";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { PlayerBoard } from "./playerBoard";
@@ -79,6 +78,10 @@ export abstract class Player {
         this.turnDuration = turnDuration;
     }
 
+    public getMatch() {
+        return this.match;
+    }
+
     public addXp(amount: number) {
         let { level, xp } = this.level.getValue();
 
@@ -134,13 +137,7 @@ export abstract class Player {
         await this.readyUpPromise;
     }
 
-    public giveMatchRewards(matchRewarder: MatchRewarder) {
-        if (!this.match) {
-            return;
-        }
-
-        matchRewarder.giveRewards(this.match);
-
+    public reset() {
         this.match = null;
     }
 
@@ -173,12 +170,8 @@ export abstract class Player {
             away: finalMatchBoard.filter(p => p.currentHealth > 0 && p.ownerId !== this.id)
         };
 
-        const damage = surviving.away.length * 3;
-        this.subtractHealth(damage);
-
         this.events.emit(PlayerEvent.FINISH_MATCH, {
-            home: this.name,
-            away: this.match.away.name,
+            opponentName: this.match.away.name,
             homeScore: surviving.home.length,
             awayScore: surviving.away.length
         });
@@ -212,7 +205,7 @@ export abstract class Player {
         this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
     }
 
-    public onFinishMatch(fn: (results: { home: string, away: string, homeScore: number, awayScore: number }) => void) {
+    public onFinishMatch(fn: (results: { opponentName: string, homeScore: number, awayScore: number }) => void) {
         this.events.on(PlayerEvent.FINISH_MATCH, fn);
     }
 
@@ -245,6 +238,24 @@ export abstract class Player {
         this.streak.amount++;
 
         this.events.emit(PlayerEvent.UPDATE_STREAK, this.streak);
+    }
+
+    public subtractHealth(value: number) {
+        const oldValue = this.health;
+
+        let newValue = this.health - value;
+        newValue = (newValue < 0) ? 0 : newValue;
+
+        this.health = newValue;
+
+        if (newValue === 0 && oldValue !== 0) {
+            // player has just died
+            this.addCardsToDeck();
+            this.addPiecesToDeck();
+            this.onDeath();
+        }
+
+        this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
 
     public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
@@ -443,24 +454,6 @@ export abstract class Player {
             .map((card, index) => index === indexToDelete ? null : card);
 
         this.cards.setValue(newValue);
-    }
-
-    private subtractHealth(value: number) {
-        const oldValue = this.health;
-
-        let newValue = this.health - value;
-        newValue = (newValue < 0) ? 0 : newValue;
-
-        this.health = newValue;
-
-        if (newValue === 0 && oldValue !== 0) {
-            // player has just died
-            this.addCardsToDeck();
-            this.addPiecesToDeck();
-            this.onDeath();
-        }
-
-        this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
 
     private addPiecesToDeck() {
