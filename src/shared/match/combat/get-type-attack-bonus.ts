@@ -1,57 +1,39 @@
 import { CreatureType } from "../../models/creatureType";
 
+// overcome / generated are Tuxemon language
+const typeInteractions = {
+    [CreatureType.Earth]: {
+        generatedBy: CreatureType.Fire,
+        overcomeBy: CreatureType.Wood
+    },
+    [CreatureType.Metal]: {
+        generatedBy: CreatureType.Earth,
+        overcomeBy: CreatureType.Fire
+    },
+    [CreatureType.Water]: {
+        generatedBy: CreatureType.Metal,
+        overcomeBy: CreatureType.Earth
+    },
+    [CreatureType.Wood]: {
+        generatedBy: CreatureType.Water,
+        overcomeBy: CreatureType.Metal
+    },
+    [CreatureType.Fire]: {
+        generatedBy: CreatureType.Wood,
+        overcomeBy: CreatureType.Water
+    }
+};
+
 export const getTypeAttackBonus = (attackType: CreatureType, defenceType: CreatureType) => {
-    if (attackType === CreatureType.Fire) {
-        if (
-            defenceType === CreatureType.Fire
-            || defenceType === CreatureType.Water
-            || defenceType === CreatureType.Stone
-        ) {
-            return 0.5;
-        }
+    // an attack is weak against the element that it Generates and strong against the element that it Overcomes.
+    const defenderInteractions = typeInteractions[defenceType];
 
-        if (
-            defenceType === CreatureType.Forest
-        ) {
-            return 2;
-        }
+    if (defenderInteractions.generatedBy === attackType) {
+        return 0.5;
     }
 
-    if (attackType === CreatureType.Water) {
-        if (
-            defenceType === CreatureType.Water
-            || defenceType === CreatureType.Forest
-        ) {
-            return 0.5;
-        }
-
-        if (
-            defenceType === CreatureType.Fire
-            || defenceType === CreatureType.Stone
-        ) {
-            return 2;
-        }
-    }
-
-    if (attackType === CreatureType.Forest) {
-        if (
-            defenceType === CreatureType.Fire
-            || defenceType === CreatureType.Forest
-        ) {
-            return 0.5;
-        }
-
-        if (
-            defenceType === CreatureType.Water
-            || defenceType === CreatureType.Stone
-        ) {
-            return 2;
-        }
-    }
-    if (attackType === CreatureType.Stone) {
-        if (defenceType === CreatureType.Fire) {
-            return 2;
-        }
+    if (defenderInteractions.overcomeBy === attackType) {
+        return 2;
     }
 
     return 1;
