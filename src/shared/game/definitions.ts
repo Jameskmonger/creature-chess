@@ -1,211 +1,290 @@
 import { CreatureType } from "../models/creatureType";
+import { CreatureDefinition } from "../models/creatureDefinition";
 
-export const definitions = [
+export const definitions: CreatureDefinition[] = [
     {
         id: 1,
-        name: "Bish",
-        cost: 3,
-        type: CreatureType.Forest,
+        name: "Rockat",
+        cost: 2,
+        type: CreatureType.Earth,
         stages: [
             {
+                hp: 20,
+                attack: 15,
+                defense: 30,
+                speed: 20
+            },
+            {
                 hp: 30,
-                attack: 50,
-                defense: 50,
+                attack: 22,
+                defense: 33,
                 speed: 30
             },
             {
-                hp: 40,
-                attack: 60,
-                defense: 60,
-                speed: 40
-            },
-            {
-                hp: 50,
-                attack: 70,
-                defense: 70,
-                speed: 50
+                hp: 35,
+                attack: 28,
+                defense: 35,
+                speed: 36
             }
         ]
     },
     {
         id: 2,
-        name: "Tedi",
-        cost: 3,
-        type: CreatureType.Fire,
+        name: "Grintrock",
+        cost: 4,
+        type: CreatureType.Earth,
         stages: [
             {
                 hp: 30,
-                attack: 50,
-                defense: 50,
-                speed: 30
+                attack: 12,
+                defense: 35,
+                speed: 10
             },
             {
                 hp: 40,
-                attack: 60,
-                defense: 60,
-                speed: 40
+                attack: 18,
+                defense: 38,
+                speed: 20
             },
             {
-                hp: 50,
-                attack: 70,
-                defense: 70,
-                speed: 50
+                hp: 55,
+                attack: 32,
+                defense: 45,
+                speed: 24
             }
         ]
     },
     {
         id: 3,
-        name: "Ballboy",
+        name: "Heronquak",
         cost: 3,
         type: CreatureType.Water,
         stages: [
             {
+                hp: 20,
+                attack: 15,
+                defense: 10,
+                speed: 35
+            },
+            {
                 hp: 30,
-                attack: 50,
-                defense: 50,
+                attack: 21,
+                defense: 14,
+                speed: 45
+            },
+            {
+                hp: 55,
+                attack: 33,
+                defense: 20,
                 speed: 30
-            },
-            {
-                hp: 40,
-                attack: 60,
-                defense: 60,
-                speed: 40
-            },
-            {
-                hp: 50,
-                attack: 70,
-                defense: 70,
-                speed: 50
             }
         ]
     },
     {
         id: 4,
-        name: "Pipsicle",
-        cost: 1,
-        type: CreatureType.Forest,
+        name: "Bigfin",
+        cost: 4,
+        type: CreatureType.Water,
         stages: [
             {
                 hp: 30,
-                attack: 10,
-                defense: 30,
-                speed: 40
+                attack: 25,
+                defense: 20,
+                speed: 20
             },
             {
                 hp: 40,
-                attack: 25,
-                defense: 40,
-                speed: 55
+                attack: 32,
+                defense: 24,
+                speed: 24
             },
             {
-                hp: 100,
-                attack: 20,
-                defense: 100,
-                speed: 20
+                hp: 40,
+                attack: 52,
+                defense: 26,
+                speed: 30
             }
         ]
     },
     {
         id: 5,
-        name: "Shitdog",
-        cost: 1,
-        type: CreatureType.Forest,
+        name: "Bamboon",
+        cost: 2,
+        type: CreatureType.Wood,
         stages: [
             {
-                hp: 20,
-                attack: 30,
-                defense: 25,
-                speed: 30
+                hp: 12,
+                attack: 16,
+                defense: 10,
+                speed: 28
             },
             {
-                hp: 25,
-                attack: 40,
-                defense: 35,
-                speed: 30
+                hp: 18,
+                attack: 22,
+                defense: 16,
+                speed: 34
             },
             {
-                hp: 40,
-                attack: 70,
-                defense: 40,
-                speed: 80
+                hp: 24,
+                attack: 25,
+                defense: 22,
+                speed: 38
             }
         ]
     },
     {
         id: 6,
-        name: "Kindling",
-        cost: 3,
-        type: CreatureType.Fire,
+        name: "Gectile",
+        cost: 4,
+        type: CreatureType.Wood,
         stages: [
             {
+                hp: 20,
+                attack: 15,
+                defense: 10,
+                speed: 35
+            },
+            {
                 hp: 30,
-                attack: 50,
-                defense: 50,
+                attack: 21,
+                defense: 14,
+                speed: 45
+            },
+            {
+                hp: 55,
+                attack: 33,
+                defense: 20,
                 speed: 30
-            },
-            {
-                hp: 40,
-                attack: 60,
-                defense: 60,
-                speed: 40
-            },
-            {
-                hp: 50,
-                attack: 70,
-                defense: 70,
-                speed: 50
             }
         ]
     },
     {
         id: 7,
-        name: "Vermina",
+        name: "Arthrobolt",
         cost: 2,
-        type: CreatureType.Forest,
+        type: CreatureType.Metal,
         stages: [
             {
                 hp: 20,
-                attack: 40,
+                attack: 10,
+                defense: 16,
+                speed: 14
+            },
+            {
+                hp: 26,
+                attack: 16,
+                defense: 22,
+                speed: 17
+            },
+            {
+                hp: 35,
+                attack: 25,
                 defense: 20,
-                speed: 40
-            },
-            {
-                hp: 30,
-                attack: 50,
-                defense: 30,
-                speed: 55
-            },
-            {
-                hp: 40,
-                attack: 90,
-                defense: 30,
-                speed: 90
+                speed: 25
             }
         ]
     },
     {
         id: 8,
-        name: "Mouselet",
-        cost: 2,
-        type: CreatureType.Forest,
+        name: "Bugnin",
+        cost: 4,
+        type: CreatureType.Metal,
         stages: [
             {
-                hp: 40,
-                attack: 25,
-                defense: 40,
-                speed: 25
+                hp: 20,
+                attack: 9,
+                defense: 30,
+                speed: 20
             },
             {
-                hp: 55,
-                attack: 35,
-                defense: 55,
+                hp: 30,
+                attack: 12,
+                defense: 33,
+                speed: 30
+            },
+            {
+                hp: 35,
+                attack: 38,
+                defense: 35,
+                speed: 36
+            }
+        ]
+    },
+    {
+        id: 9,
+        name: "Cardinale",
+        cost: 2,
+        type: CreatureType.Fire,
+        stages: [
+            {
+                hp: 12,
+                attack: 16,
+                defense: 10,
+                speed: 28
+            },
+            {
+                hp: 18,
+                attack: 22,
+                defense: 16,
+                speed: 34
+            },
+            {
+                hp: 24,
+                attack: 25,
+                defense: 20,
+                speed: 38
+            }
+        ]
+    },
+    {
+        id: 10,
+        name: "Agnidon",
+        cost: 4,
+        type: CreatureType.Fire,
+        stages: [
+            {
+                hp: 20,
+                attack: 15,
+                defense: 10,
                 speed: 35
             },
             {
-                hp: 70,
-                attack: 50,
-                defense: 90,
-                speed: 40
+                hp: 30,
+                attack: 21,
+                defense: 14,
+                speed: 45
+            },
+            {
+                hp: 55,
+                attack: 33,
+                defense: 20,
+                speed: 30
+            }
+        ]
+    },
+    {
+        id: 11,
+        name: "Viviteel",
+        cost: 5,
+        type: CreatureType.Metal,
+        stages: [
+            {
+                hp: 30,
+                attack: 27,
+                defense: 25,
+                speed: 35
+            },
+            {
+                hp: 36,
+                attack: 35,
+                defense: 32,
+                speed: 41
+            },
+            {
+                hp: 42,
+                attack: 42,
+                defense: 39,
+                speed: 47
             }
         ]
     }

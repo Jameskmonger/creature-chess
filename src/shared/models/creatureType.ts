@@ -1,6 +1,7 @@
 export enum CreatureType {
-    Forest = "Forest",
-    Fire = "Fire",
+    Wood = "Wood",
+    Earth = "Earth",
     Water = "Water",
-    Stone = "Stone"
+    Fire = "Fire",
+    Metal = "Metal"
 }
