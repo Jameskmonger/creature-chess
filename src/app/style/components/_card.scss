@@ -37,15 +37,19 @@
         border-color: $fire-color;
     }
 
-    &.forest {
-        border-color: $forest-color;
+    &.wood {
+        border-color: $wood-color;
     }
 
-    &.stone {
-        border-color: $stone-color;
+    &.earth {
+        border-color: $earth-color;
     }
 
     &.water {
         border-color: $water-color;
+    }
+
+    &.metal {
+        border-color: $metal-color;
     }
 }
