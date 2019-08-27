@@ -34,15 +34,15 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         playerCount: "",
         botCount: "",
         gameId: "",
-        serverIP: `http://${window.location.hostname}:3000`,
+        serverIP: `http://137.116.251.94:3000`,
         debugModeClickCount: 0
     };
 
     public render() {
         const title =
             this.state.debugModeClickCount === 3
-            ? <h2 className="title">Creature Chess <span className="debug-mode">(Debug Mode)</span></h2>
-            : <h2 className="title" onClick={this.onTitleClick}>Creature Chess</h2>;
+                ? <h2 className="title">Creature Chess <span className="debug-mode">(Debug Mode)</span></h2>
+                : <h2 className="title" onClick={this.onTitleClick}>Creature Chess</h2>;
 
         if (this.props.loading) {
             return (
@@ -104,11 +104,16 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                         && <div className="error"><p>{this.props.error}</p></div>
                     }
 
-                    <input
-                        value={this.state.serverIP}
-                        onChange={this.onServerIPChange}
-                        placeholder="Server IP"
-                    />
+                    {
+                        this.state.debugModeClickCount === 3
+                        && (
+                            <input
+                                value={this.state.serverIP}
+                                onChange={this.onServerIPChange}
+                                placeholder="Server IP"
+                            />
+                        )
+                    }
                 </div>
             </div>
         );
@@ -155,6 +160,10 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     }
 
     private onServerIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (this.state.debugModeClickCount !== 3) {
+            return;
+        }
+
         this.setState({
             serverIP: event.target.value
         });
