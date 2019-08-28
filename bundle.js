@@ -2376,7 +2376,8 @@ var feedActions_1 = __webpack_require__(/*! ../../../feed/feedActions */ "./src/
 var chatActionTypes_1 = __webpack_require__(/*! ../../../chat/chatActionTypes */ "./src/app/chat/chatActionTypes.ts");
 var battleEventChannel_1 = __webpack_require__(/*! @common/match/combat/battleEventChannel */ "./src/shared/match/combat/battleEventChannel.ts");
 var getSocket = function (serverIP) {
-    var socket = io(serverIP);
+    // force to websocket for now until CORS is sorted
+    var socket = io(serverIP, { transports: ["websocket"] });
     return new Promise(function (resolve) {
         socket.on("connect", function () {
             resolve(socket);
