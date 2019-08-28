@@ -1007,7 +1007,7 @@ exports.__esModule = true;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var CreatureImage = function (_a) {
     var facing = _a.facing, definitionId = _a.definitionId, stage = _a.stage;
-    return (React.createElement("img", { className: "image", src: "/images/" + (facing || "front") + "/" + definitionId + "_" + stage + ".png" }));
+    return (React.createElement("img", { className: "image", src: "images/" + (facing || "front") + "/" + definitionId + "_" + stage + ".png" }));
 };
 exports.CreatureImage = CreatureImage;
 
