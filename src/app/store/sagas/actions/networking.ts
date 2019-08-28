@@ -29,7 +29,8 @@ import { SEND_CHAT_MESSAGE } from "../../../chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 
 const getSocket = (serverIP: string) => {
-    const socket = io(serverIP);
+    // force to websocket for now until CORS is sorted
+    const socket = io(serverIP, { transports: [ "websocket" ] });
 
     return new Promise<Socket>(resolve => {
         socket.on("connect", () => {
