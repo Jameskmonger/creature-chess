@@ -3,7 +3,7 @@
 COMMIT_DETAILS=`git log -n 1 --pretty=oneline`
 ORIGIN_URL=`git remote get-url origin`
 
-git clone -b gh-pages ./ ./gh-pages
+git clone -b gh-pages $ORIGIN_URL ./gh-pages
 
 rm -rf ./gh-pages/*
 
@@ -16,7 +16,7 @@ cd ./gh-pages/
 
 git remote set-url origin $ORIGIN_URL
 git add -A
-git commit -m "Automated GitHub pages build ($COMMITDETAILS)"
+git commit -m "Automated GitHub pages build (${COMMIT_DETAILS})"
 git push origin gh-pages
 
 cd ../
