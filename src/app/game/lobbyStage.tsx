@@ -34,7 +34,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         playerCount: "",
         botCount: "",
         gameId: "",
-        serverIP: `http://137.116.251.94:3000`,
+        serverIP: `https://cc-server.jamesmonger.com`,
         debugModeClickCount: 0
     };
 
