@@ -5,10 +5,7 @@ ORIGIN_URL=`git remote get-url origin`
 
 git clone -b gh-pages $ORIGIN_URL ./gh-pages
 
-rm -rf ./gh-pages/*
-
 npm run build:app
-npm run copy-images
 
 cp -a ./public/. ./gh-pages/
 
