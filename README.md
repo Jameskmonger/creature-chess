@@ -2,6 +2,44 @@
 
 An open-source auto chess game written in TypeScript using React and Node.
 
+# Playing
+
+To try the game, head to [jameskmonger.github.io/creature-chess/](https://jameskmonger.github.io/creature-chess/).
+
+This is just on a tiny server for demo purposes so it might not work all the time - please [get in touch](mailto:jameskmonger@hotmail.co.uk) if you have a better server that we can use :heart:
+
+## Getting into a game
+
+### Joining a lobby
+
+Enter your name, fill in "Game ID" with the ID of a game in progress (e.g. `bf90b4`) and click "Join Game".
+
+### Creating a lobby
+
+Enter your name, fill in "Player count" and "Bot count" and click "Create Game".
+
+Bots will be added and the game will start when the lobby is full (up to Player count - bots included).
+
+There will be a "Game ID" displayed (e.g. `bf90b4`) - share this with people who want to join your lobby.
+
+If you want to play with 3 friends, for example, in an 8 player game, you would set "Player count" to 8, and "Bot count" to 4, and then give all your friends the Game ID.
+
+## How to play - basics
+
+Every round you get some money (this is affected by win/loss streak). Use that money to buy pieces from the shop on the left, and put them on the board.
+
+You can only have X pieces on the board, where X is your level. You gain 1 xp per round, or you can buy more xp for money to level up faster.
+
+When you have 3 of the same piece, they will combine into an upgraded piece. Each piece has 3 levels, so in total you need to buy 9 pieces from the shop to make a top-level creature.
+
+If you lose a match, you lose 3hp for every remaining opponent piece. You lose when your hp reaches 0. The last person alive wins.
+
+---
+
+# Developing
+
+We welcome help in all areas: creating new pieces, adding new features, fixing bugs, balancing combat, improving performance, and anything else you can think of.
+
 ## Prerequesites
 
 - You need [Node.js](https://nodejs.org/en/) and npm to run Creature Chess. The Node.js installer will install both of these - Node.js version 10 is recommended.
