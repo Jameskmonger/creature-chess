@@ -72,6 +72,16 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                     <div className="join-options">
                         <div className="option">
                             <input
+                                value={this.state.gameId}
+                                onChange={this.onGameIdChange}
+                                placeholder="Game ID"
+                                className="option-input"
+                            />
+
+                            <button onClick={this.onJoinGameClick} className="option-button join-button">Join Game</button>
+                        </div>
+                        <div className="option">
+                            <input
                                 value={this.state.playerCount}
                                 onChange={this.onPlayerCountChange}
                                 placeholder="Player count"
@@ -86,16 +96,6 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                             />
 
                             <button onClick={this.onCreateGameClick} className="option-button create-button">Create Game</button>
-                        </div>
-                        <div className="option">
-                            <input
-                                value={this.state.gameId}
-                                onChange={this.onGameIdChange}
-                                placeholder="Game ID"
-                                className="option-input"
-                            />
-
-                            <button onClick={this.onJoinGameClick} className="option-button join-button">Join Game</button>
                         </div>
                     </div>
 
