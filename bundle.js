@@ -1443,7 +1443,9 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                             React.createElement(bench_1.Bench, null))),
                     React.createElement("div", { className: "group" },
                         React.createElement(cardShop_1.CardShop, null),
-                        React.createElement(profile_1.Profile, null)))),
+                        React.createElement(profile_1.Profile, null),
+                        React.createElement("div", { className: "github-link" },
+                            React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub"))))),
             React.createElement(react_media_1["default"], { query: "(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)" },
                 React.createElement("div", { className: "game landscape" },
                     React.createElement("div", { className: "group board-container", style: boardContainerStyle },
@@ -1457,6 +1459,8 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                         React.createElement(profile_1.Profile, null),
                         React.createElement(playerList_1.PlayerList, null),
                         React.createElement(gameId_1.GameId, null),
+                        React.createElement("div", { className: "github-link" },
+                            React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub")),
                         React.createElement(feed_1.Feed, null)))),
             React.createElement(react_media_1["default"], { query: "(orientation: portrait), (max-width: 599px)" },
                 React.createElement("div", { className: "game portrait" },
@@ -1471,6 +1475,8 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                         React.createElement(profile_1.Profile, null),
                         React.createElement(playerList_1.PlayerList, null),
                         React.createElement(gameId_1.GameId, null),
+                        React.createElement("div", { className: "github-link" },
+                            React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub")),
                         React.createElement(feed_1.Feed, null))))));
     };
     return GameStageUnconnected;
@@ -1587,7 +1593,15 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 return;
             }
             var playerCount = parseInt(_this.state.playerCount, 10);
+            if (playerCount > constants_1.MAX_PLAYERS_IN_GAME) {
+                _this.props.setError("Sorry, there is a maximum of " + constants_1.MAX_PLAYERS_IN_GAME + " players per game");
+                return;
+            }
             var botCount = parseInt(_this.state.botCount, 10);
+            if (botCount >= playerCount) {
+                _this.props.setError("You must leave at least 1 free slot for a player");
+                return;
+            }
             _this.props.onCreateGame(_this.state.serverIP, _this.state.name, playerCount, botCount);
         };
         return _this;
@@ -1610,17 +1624,19 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 React.createElement("input", { value: this.state.name, onChange: this.onNameChange, maxLength: constants_1.MAX_NAME_LENGTH, placeholder: "Your name", className: "name-input" }),
                 React.createElement("div", { className: "join-options" },
                     React.createElement("div", { className: "option" },
+                        React.createElement("input", { value: this.state.gameId, onChange: this.onGameIdChange, placeholder: "Game ID", className: "option-input" }),
+                        React.createElement("button", { onClick: this.onJoinGameClick, className: "option-button join-button" }, "Join Game")),
+                    React.createElement("div", { className: "option" },
                         React.createElement("input", { value: this.state.playerCount, onChange: this.onPlayerCountChange, placeholder: "Player count", className: "option-input" }),
                         React.createElement("input", { value: this.state.botCount, onChange: this.onBotCountChange, placeholder: "Bot count", className: "option-input" }),
-                        React.createElement("button", { onClick: this.onCreateGameClick, className: "option-button create-button" }, "Create Game")),
-                    React.createElement("div", { className: "option" },
-                        React.createElement("input", { value: this.state.gameId, onChange: this.onGameIdChange, placeholder: "Game ID", className: "option-input" }),
-                        React.createElement("button", { onClick: this.onJoinGameClick, className: "option-button join-button" }, "Join Game"))),
+                        React.createElement("button", { onClick: this.onCreateGameClick, className: "option-button create-button" }, "Create Game"))),
                 this.props.error
                     && React.createElement("div", { className: "error" },
                         React.createElement("p", null, this.props.error)),
                 this.state.debugModeClickCount === 3
-                    && (React.createElement("input", { value: this.state.serverIP, onChange: this.onServerIPChange, placeholder: "Server IP" })))));
+                    && (React.createElement("input", { value: this.state.serverIP, onChange: this.onServerIPChange, placeholder: "Server IP" }))),
+            React.createElement("div", { className: "github-link" },
+                React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub"))));
     };
     return LobbyStageUnconnected;
 }(React.Component));
@@ -3285,6 +3301,7 @@ exports.DEFAULT_TURN_COUNT = 600;
 exports.DEFAULT_TURN_DURATION = 50;
 exports.DAMAGE_RATIO = 10;
 exports.MAX_NAME_LENGTH = 16;
+exports.MAX_PLAYERS_IN_GAME = 8;
 
 
 /***/ }),
