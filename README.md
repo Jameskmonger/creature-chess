@@ -39,6 +39,15 @@ $ npm run dev:server
 $ npm run dev:client
 ```
 
+## Special thanks :heart:
+
+- **[thyde1](https://github.com/thyde1)**: combat and animation
+- **[hisuwh](https://github.com/hisuwh)**: drag and drop
+- **[OwenPattison](https://github.com/OwenPattison)**: deck of cards, implementing Redux
+- **[BaronBeans](https://github.com/BaronBeans)**: bug fixes and server setup
+
+Also special thanks to **[CalumGreen](https://github.com/CalumGreen)**, **[ollymonger](https://github.com/ollymonger)** and Jack for their play testing.
+
 ## License
 
 Creature Chess is licensed under the [MIT License](LICENSE.md).
