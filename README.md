@@ -50,6 +50,6 @@ Also special thanks to **[CalumGreen](https://github.com/CalumGreen)**, **[ollym
 
 ## License
 
-Creature Chess is licensed under the [MIT License](LICENSE.md).
+Creature Chess is licensed under the [MIT License](LICENSE).
 
 All creature sprites are from Tuxemon and are licensed under the [CC BY-SA 3.0 license](https://creativecommons.org/licenses/by-sa/3.0/).
