@@ -71,6 +71,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             <CardShop />
 
                             <Profile />
+
+                            <div className="github-link"><a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
                         </div>
                     </div>
                 </Media>
@@ -95,6 +97,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             <PlayerList />
 
                             <GameId />
+
+                            <div className="github-link"><a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
 
                             <Feed />
                         </div>
@@ -121,6 +125,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                             <PlayerList />
 
                             <GameId />
+
+                            <div className="github-link"><a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
 
                             <Feed />
                         </div>
