@@ -115,6 +115,8 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                         )
                     }
                 </div>
+
+                <div className="github-link"><a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
             </div>
         );
     }
