@@ -20,3 +20,5 @@ export const DEFAULT_TURN_COUNT = 600;
 export const DEFAULT_TURN_DURATION = 50;
 export const DAMAGE_RATIO = 10;
 export const MAX_NAME_LENGTH = 16;
+
+export const MAX_PLAYERS_IN_GAME = 8;
