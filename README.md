@@ -2,29 +2,41 @@
 
 An open-source auto chess game written in TypeScript using React and Node.
 
-## Setup
+## Prerequesites
 
-### Installation
+- You need [Node.js](https://nodejs.org/en/) and npm to run Creature Chess. The Node.js installer will install both of these - Node.js version 10 is recommended.
+- Install dependencies with `npm install`.
+
+## Running
+
+When the game is running, you will be able to access it at localhost:8090 in your browser.
+
+To run both the server and the client at the same time (recommended), you can use the command:
 
 ```shell
-$ npm install
+$ npm start
 ```
 
-### Running
+### Advanced
 
-You must first copy the images to the `/public/` folder with `npm run copy-images`
+If you want to run the server or client individually, you can use these two commands
 
 ```shell
-# run server and client
-$ npm start
-
-# run server and client individually
+# run the server individually
 $ npm run start:server
-$ npm run start:app
 
-# run server and client in dev mode (restart on code changes)
+# run the client individually
+$ npm run start:client
+```
+
+You can also run the server and client in development mode, where changes to the source code will result in the system restarting.
+
+```shell
+# run the server in dev mode
 $ npm run dev:server
-$ npm run dev:app
+
+# run the client in dev mode
+$ npm run dev:client
 ```
 
 ## License
