@@ -6,7 +6,7 @@ import { Game } from "@common/game/game";
 import { Connection } from "./connection";
 import { Bot } from "@common/game/player/bot";
 import { randomFromArray } from "@common/random-from-array";
-import { MAX_NAME_LENGTH } from "@common/constants";
+import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
 
 const BOT_NAMES = [
     "Duke Horacio",
@@ -116,6 +116,14 @@ export class Server {
             if (name.length > MAX_NAME_LENGTH) {
                 response({
                     error: "Name too long",
+                    response: null
+                });
+                return;
+            }
+
+            if (playerCount < MAX_PLAYERS_IN_GAME) {
+                response({
+                    error: "Player count too high",
                     response: null
                 });
                 return;

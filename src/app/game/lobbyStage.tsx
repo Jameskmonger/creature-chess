@@ -3,7 +3,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { joinGameAction, createGameAction, joinGameError, enableDebugMode } from "../store/actions/gameActions";
 import { AppState } from "../store/state";
 import { loadingSelector } from "../store/gameSelector";
-import { MAX_NAME_LENGTH } from "@common/constants";
+import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
 
 interface DispatchProps {
     onJoinGame: (serverIP: string, name: string, gameId: string) => void;
@@ -215,7 +215,18 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         }
 
         const playerCount = parseInt(this.state.playerCount, 10);
+
+        if (playerCount > MAX_PLAYERS_IN_GAME) {
+            this.props.setError(`Sorry, there is a maximum of ${MAX_PLAYERS_IN_GAME} players per game`);
+            return;
+        }
+
         const botCount = parseInt(this.state.botCount, 10);
+
+        if (botCount >= playerCount) {
+            this.props.setError("You must leave at least 1 free slot for a player");
+            return;
+        }
 
         this.props.onCreateGame(this.state.serverIP, this.state.name, playerCount, botCount);
     }
