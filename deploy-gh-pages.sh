@@ -1,5 +1,15 @@
 #!/bin/bash
 
+echo
+echo "Have you copied the Google Analytics code into src/app/index.html, if required? [Y/N]"
+read yn
+echo
+
+if [ $yn != 'Y' ] && [ $yn != 'y' ]; then
+    echo "Copy the code!"
+    exit
+fi
+
 COMMIT_DETAILS=`git log -n 1 --pretty=oneline`
 ORIGIN_URL=`git remote get-url origin`
 
