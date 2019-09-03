@@ -1,4 +1,5 @@
 import uuid = require("uuid/v4");
+import pDefer = require("p-defer");
 import { clonePiece, createPieceFromCard } from "../../piece-utils";
 import { MovePiecePacket } from "../../packet-opcodes";
 import { Match } from "../../match/match";
@@ -54,8 +55,7 @@ export abstract class Player {
     private deck: CardDeck;
     private gamePhase: GamePhase = GamePhase.WAITING;
 
-    private readyUpPromise: Promise<void> = null;
-    private resolveReadyUpPromise: () => void = null;
+    private readyUpDeferred: pDefer.DeferredPromise<void>;
 
     private board = new PlayerBoard();
     private turnCount: number;
@@ -121,9 +121,7 @@ export abstract class Player {
     public async enterPreparingPhase(round: number) {
         this.gamePhase = GamePhase.PREPARING;
 
-        this.readyUpPromise = new Promise(resolve => {
-            this.resolveReadyUpPromise = resolve;
-        });
+        this.readyUpDeferred = pDefer();
 
         this.rerollCards();
         this.board.unlockEvolution();
@@ -134,7 +132,7 @@ export abstract class Player {
             return;
         }
 
-        await this.readyUpPromise;
+        await this.readyUpDeferred.promise;
     }
 
     public reset() {
@@ -143,8 +141,7 @@ export abstract class Player {
 
     public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider) {
         this.gamePhase = GamePhase.READY;
-        this.readyUpPromise = null;
-        this.resolveReadyUpPromise = null;
+        this.readyUpDeferred = null;
         this.ready = false;
 
         if (this.isAlive()) {
@@ -382,7 +379,7 @@ export abstract class Player {
     }
 
     protected readyUp = () => {
-        if (this.ready) {
+        if (this.ready || this.readyUpDeferred === null) {
             return;
         }
 
@@ -390,7 +387,7 @@ export abstract class Player {
 
         this.setReady(true);
 
-        this.resolveReadyUpPromise();
+        this.readyUpDeferred.resolve();
     }
 
     protected movePieceToBench = (packet: MovePiecePacket) => {
