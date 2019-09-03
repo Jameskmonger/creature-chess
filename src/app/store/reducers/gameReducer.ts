@@ -8,7 +8,7 @@ const initialState: GameState = {
     gameId: null,
     opponentId: null,
     loading: false,
-    lobbyError: null,
+    menuError: null,
     money: 0,
     phase: GamePhase.WAITING,
     phaseTimer: null,
@@ -29,13 +29,13 @@ export function game(state: GameState = initialState, action: GameAction) {
             return {
                 ...state,
                 loading: false,
-                lobbyError: action.payload.error
+                menuError: action.payload.error
             };
         case JOIN_COMPLETE:
             return {
                 ...state,
                 loading: false,
-                lobbyError: null,
+                menuError: null,
                 gameId: action.payload.gameId
             };
         case GAME_PHASE_UPDATE:

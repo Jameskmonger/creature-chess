@@ -7,7 +7,7 @@ export interface GameState {
     phaseTimer: number;
     opponentId: string;
     loading: boolean;
-    lobbyError: string;
+    menuError: string;
     money: number;
     round: number | null;
     debug: boolean;

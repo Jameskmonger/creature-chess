@@ -2,11 +2,11 @@ import * as React from "react";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { GameStage } from "./gameStage";
 import { AppState } from "../store/state";
-import { LobbyStage } from "./lobbyStage";
+import { MenuStage } from "./menuStage";
 import { localPlayerIdSelector } from "../store/gameSelector";
 
 interface Props {
-    inLobby: boolean;
+    inMenu: boolean;
 }
 
 interface State {
@@ -27,14 +27,14 @@ class GameUnconnected extends React.Component<Props, State> {
     }
 
     public render() {
-        const { inLobby } = this.props;
+        const { inMenu } = this.props;
         const { width, height } = this.state;
 
         return (
             <>
                 {
-                    inLobby
-                        ? <LobbyStage />
+                    inMenu
+                        ? <MenuStage />
                         : <GameStage width={width} height={height} />
                 }
             </>
@@ -58,7 +58,7 @@ class GameUnconnected extends React.Component<Props, State> {
 }
 
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    inLobby: localPlayerIdSelector(state) === null
+    inMenu: localPlayerIdSelector(state) === null
 });
 
 const Game = connect(mapStateToProps)(GameUnconnected);

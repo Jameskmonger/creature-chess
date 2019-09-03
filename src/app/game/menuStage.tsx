@@ -13,14 +13,14 @@ interface DispatchProps {
     setError: (error: string) => void;
 }
 
-interface LobbyStageProps {
+interface MenuStageProps {
     loading: boolean;
     error: string;
 }
 
-type Props = LobbyStageProps & DispatchProps;
+type Props = MenuStageProps & DispatchProps;
 
-interface LobbyStageState {
+interface MenuStageState {
     name: string;
     botCount: string;
     playerCount: string;
@@ -29,7 +29,7 @@ interface LobbyStageState {
     debugModeClickCount: number;
 }
 
-class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
+class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
     public state = {
         name: "",
         playerCount: "",
@@ -47,7 +47,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
 
         if (this.props.loading) {
             return (
-                <div className="lobby">
+                <div className="menu">
                     <div className="join-game">
                         {title}
 
@@ -58,7 +58,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
         }
 
         return (
-            <div className="lobby">
+            <div className="menu">
                 <div className="join-game">
                     {title}
 
@@ -267,9 +267,9 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
     }
 }
 
-const mapStateToProps: MapStateToProps<LobbyStageProps, {}, AppState> = state => ({
+const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => ({
     loading: loadingSelector(state),
-    error: state.game.lobbyError
+    error: state.game.menuError
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
@@ -280,8 +280,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     setError: (error: string) => dispatch(joinGameError(error))
 });
 
-const LobbyStage = connect(mapStateToProps, mapDispatchToProps)(LobbyStageUnconnected);
+const MenuStage = connect(mapStateToProps, mapDispatchToProps)(MenuStageUnconnected);
 
 export {
-    LobbyStage
+    MenuStage
 };
