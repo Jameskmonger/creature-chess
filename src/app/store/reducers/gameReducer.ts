@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, PLAY_SOLO } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
@@ -18,6 +18,7 @@ const initialState: GameState = {
 
 export function game(state: GameState = initialState, action: GameAction) {
     switch (action.type) {
+        case PLAY_SOLO:
         case JOIN_GAME:
         case CREATE_GAME:
             return {

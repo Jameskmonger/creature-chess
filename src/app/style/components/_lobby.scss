@@ -61,13 +61,14 @@
         display: flex;
     }
 
-    .option:first-child {
+    .option:not(:last-child) {
         padding-right: 1em;
         margin-right: 1em;
         border-right: 2px solid $create-lobby-button;
     }
 
     .option {
+        flex: 1 1 0;
         padding-top: 1rem;
         padding-bottom: 1rem;
         margin-top: 1rem;
@@ -81,6 +82,7 @@
 
         .option-button {
             padding: 0.8em 2em;
+            margin-bottom: 0.5em;
             font-size: 1.4rem;
             font-weight: 700;
             color: #fff;
@@ -88,15 +90,21 @@
             /* stylelint-disable */
             border: none;
             /* stylelint-enable */
+
+            &.primary {
+                background: $join-lobby-button;
+            }
+
+            &.secondary {
+                background: $create-lobby-button;
+            }
         }
-    }
 
-    .create-button {
-        background: $create-lobby-button;
-    }
-
-    .join-button {
-        background: $join-lobby-button;
+        .description {
+            margin-bottom: 0.4em;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
     }
 
     .error {

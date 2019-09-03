@@ -1,14 +1,16 @@
-import { JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE } from "../actiontypes/gameActionTypes";
+import { PLAY_SOLO, JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE } from "../actiontypes/gameActionTypes";
 import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 
+export type PlaySoloAction = ({ type: PLAY_SOLO, payload: { serverIP: string, name: string }});
 export type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, name: string, gameId: string } });
 export type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string, playerCount: number, botCount: number } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string }});
 export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: PhaseUpdatePacket });
 
 export type GameAction =
-    JoinGameAction
+    PlaySoloAction
+    | JoinGameAction
     | CreateGameAction
     | JoinErrorAction
     | ({ type: MONEY_UPDATE, payload: { money: number } })
@@ -16,6 +18,14 @@ export type GameAction =
     | JoinCompleteAction
     | GamePhaseUpdateAction
     | ({ type: ENABLE_DEBUG_MODE });
+
+export const playSoloAction = (serverIP: string, name: string): PlaySoloAction => ({
+    type: PLAY_SOLO,
+    payload: {
+        name,
+        serverIP
+    }
+});
 
 export const joinGameAction = (serverIP: string, name: string, gameId: string): JoinGameAction => ({
     type: JOIN_GAME,
