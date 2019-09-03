@@ -44,6 +44,42 @@ export class Server {
 
         let inGame = false;
 
+        const onPlaySolo = (
+            name: string,
+            response: (response: JoinGameResponse) => void
+        ) => {
+            console.log("play solo received");
+            if (inGame) {
+                return;
+            }
+            
+            if (name.match(NAME_REGEX) === null) {
+                response({
+                    error: "Invalid characters in name",
+                    response: null
+                });
+                return;
+            }
+
+            const { game, gameId } = this.createGame(8);
+
+            const player = new Connection(socket, name);
+            game.addPlayer(player);
+            game.onFinish(() => socket.disconnect());
+
+            inGame = true;
+
+            this.addBots(game, 7);
+
+            response({
+                error: null,
+                response: {
+                    playerId: player.id,
+                    gameId
+                }
+            });
+        }
+
         const onJoinGame = (
             name: string,
             gameId: string,
@@ -121,7 +157,7 @@ export class Server {
                 return;
             }
 
-            if (playerCount < MAX_PLAYERS_IN_GAME) {
+            if (playerCount > MAX_PLAYERS_IN_GAME) {
                 response({
                     error: "Player count too high",
                     response: null
@@ -164,6 +200,7 @@ export class Server {
             });
         };
 
+        socket.on(ClientToServerPacketOpcodes.PLAY_SOLO, onPlaySolo);
         socket.on(ClientToServerPacketOpcodes.JOIN_GAME, onJoinGame);
         socket.on(ClientToServerPacketOpcodes.CREATE_GAME, onCreateGame);
     }
