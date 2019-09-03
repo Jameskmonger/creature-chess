@@ -141,11 +141,12 @@ body {
     background: #566c86; }
   .lobby .join-options {
     display: flex; }
-  .lobby .option:first-child {
+  .lobby .option:not(:last-child) {
     padding-right: 1em;
     margin-right: 1em;
     border-right: 2px solid #626262; }
   .lobby .option {
+    flex: 1 1 0;
     padding-top: 1rem;
     padding-bottom: 1rem;
     margin-top: 1rem;
@@ -156,6 +157,7 @@ body {
       text-align: center; }
     .lobby .option .option-button {
       padding: 0.8em 2em;
+      margin-bottom: 0.5em;
       font-size: 1.4rem;
       font-weight: 700;
       color: #fff;
@@ -163,10 +165,14 @@ body {
       /* stylelint-disable */
       border: none;
       /* stylelint-enable */ }
-  .lobby .create-button {
-    background: #626262; }
-  .lobby .join-button {
-    background: #b13e53; }
+      .lobby .option .option-button.primary {
+        background: #b13e53; }
+      .lobby .option .option-button.secondary {
+        background: #626262; }
+    .lobby .option .description {
+      margin-bottom: 0.4em;
+      font-size: 0.8rem;
+      font-style: italic; }
   .lobby .error {
     padding: 1em 0.5em;
     margin-bottom: 1em;

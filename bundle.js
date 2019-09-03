@@ -1556,6 +1556,21 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 serverIP: event.target.value
             });
         };
+        _this.onPlaySoloClick = function () {
+            if (!_this.state.serverIP) {
+                _this.props.setError("Server IP field empty");
+                return;
+            }
+            if (!_this.state.name) {
+                _this.props.setError("Name field empty");
+                return;
+            }
+            if (_this.state.name.length > constants_1.MAX_NAME_LENGTH) {
+                _this.props.setError("Name too long. Max " + constants_1.MAX_NAME_LENGTH + " characters");
+                return;
+            }
+            _this.props.onPlaySolo(_this.state.serverIP, _this.state.name);
+        };
         _this.onJoinGameClick = function () {
             if (!_this.state.serverIP) {
                 _this.props.setError("Server IP field empty");
@@ -1588,7 +1603,7 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 _this.props.setError("Non-numeric player count");
                 return;
             }
-            if (!_this.state.botCount || isNaN(_this.state.botCount)) {
+            if (_this.state.botCount && isNaN(_this.state.botCount)) {
                 _this.props.setError("Non-numeric bot count");
                 return;
             }
@@ -1597,7 +1612,7 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 _this.props.setError("Sorry, there is a maximum of " + constants_1.MAX_PLAYERS_IN_GAME + " players per game");
                 return;
             }
-            var botCount = parseInt(_this.state.botCount, 10);
+            var botCount = parseInt(_this.state.botCount, 10) || 0;
             if (botCount >= playerCount) {
                 _this.props.setError("You must leave at least 1 free slot for a player");
                 return;
@@ -1621,15 +1636,22 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
         return (React.createElement("div", { className: "lobby" },
             React.createElement("div", { className: "join-game" },
                 title,
+                React.createElement("p", null, "Enter your name and select one of the options below to start playing"),
                 React.createElement("input", { value: this.state.name, onChange: this.onNameChange, maxLength: constants_1.MAX_NAME_LENGTH, placeholder: "Your name", className: "name-input" }),
                 React.createElement("div", { className: "join-options" },
                     React.createElement("div", { className: "option" },
+                        React.createElement("button", { onClick: this.onPlaySoloClick, className: "option-button primary" }, "Play Solo"),
+                        React.createElement("p", { className: "description" }, "Play a standard game against 7 bots")),
+                    React.createElement("div", { className: "option" },
                         React.createElement("input", { value: this.state.gameId, onChange: this.onGameIdChange, placeholder: "Game ID", className: "option-input" }),
-                        React.createElement("button", { onClick: this.onJoinGameClick, className: "option-button join-button" }, "Join Game")),
+                        React.createElement("button", { onClick: this.onJoinGameClick, className: "option-button primary" }, "Join Game"),
+                        React.createElement("p", { className: "description" }, "Join a specific game")),
                     React.createElement("div", { className: "option" },
                         React.createElement("input", { value: this.state.playerCount, onChange: this.onPlayerCountChange, placeholder: "Player count", className: "option-input" }),
-                        React.createElement("input", { value: this.state.botCount, onChange: this.onBotCountChange, placeholder: "Bot count", className: "option-input" }),
-                        React.createElement("button", { onClick: this.onCreateGameClick, className: "option-button create-button" }, "Create Game"))),
+                        React.createElement("input", { value: this.state.botCount, onChange: this.onBotCountChange, placeholder: "Bot count (optional)", className: "option-input" }),
+                        React.createElement("button", { onClick: this.onCreateGameClick, className: "option-button secondary" }, "Create Game"),
+                        React.createElement("p", { className: "description" }, "Create a game that others can join."),
+                        React.createElement("p", { className: "description" }, "Bots are included in the player count"))),
                 this.props.error
                     && React.createElement("div", { className: "error" },
                         React.createElement("p", null, this.props.error)),
@@ -1645,6 +1667,7 @@ var mapStateToProps = function (state) { return ({
     error: state.game.lobbyError
 }); };
 var mapDispatchToProps = function (dispatch) { return ({
+    onPlaySolo: function (serverIP, name) { return dispatch(gameActions_1.playSoloAction(serverIP, name)); },
     onCreateGame: function (serverIP, name, playerCount, botCount) { return dispatch(gameActions_1.createGameAction(serverIP, name, playerCount, botCount)); },
     onJoinGame: function (serverIP, name, gameId) { return dispatch(gameActions_1.joinGameAction(serverIP, name, gameId)); },
     enableDebugMode: function () { return dispatch(gameActions_1.enableDebugMode()); },
@@ -1845,6 +1868,13 @@ exports.playerList = playerList;
 
 exports.__esModule = true;
 var gameActionTypes_1 = __webpack_require__(/*! ../actiontypes/gameActionTypes */ "./src/app/store/actiontypes/gameActionTypes.ts");
+exports.playSoloAction = function (serverIP, name) { return ({
+    type: gameActionTypes_1.PLAY_SOLO,
+    payload: {
+        name: name,
+        serverIP: serverIP
+    }
+}); };
 exports.joinGameAction = function (serverIP, name, gameId) { return ({
     type: gameActionTypes_1.JOIN_GAME,
     payload: {
@@ -1961,6 +1991,7 @@ exports.sendPacket = function (opcode) {
 "use strict";
 
 exports.__esModule = true;
+exports.PLAY_SOLO = "PLAY_SOLO";
 exports.JOIN_GAME = "JOIN_GAME";
 exports.CREATE_GAME = "CREATE_GAME";
 exports.JOIN_ERROR = "JOIN_ERROR";
@@ -2081,6 +2112,7 @@ var initialState = {
 function game(state, action) {
     if (state === void 0) { state = initialState; }
     switch (action.type) {
+        case gameActionTypes_1.PLAY_SOLO:
         case gameActionTypes_1.JOIN_GAME:
         case gameActionTypes_1.CREATE_GAME:
             return tslib_1.__assign({}, state, { loading: true });
@@ -2400,6 +2432,13 @@ var getSocket = function (serverIP) {
         });
     });
 };
+var playSolo = function (socket, name) {
+    return new Promise(function (resolve) {
+        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.PLAY_SOLO, name, function (response) {
+            resolve(response);
+        });
+    });
+};
 var joinGame = function (socket, name, gameId) {
     return new Promise(function (resolve) {
         socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, function (response) {
@@ -2600,51 +2639,54 @@ var writePacketsToSocket = function (socket) {
         }
     });
 };
+var getResponseForAction = function (socket, action) {
+    if (action.type === gameActionTypes_1.JOIN_GAME) {
+        return effects_1.call(joinGame, socket, action.payload.name, action.payload.gameId);
+    }
+    if (action.type === gameActionTypes_1.PLAY_SOLO) {
+        return effects_1.call(playSolo, socket, action.payload.name);
+    }
+    if (action.type === gameActionTypes_1.CREATE_GAME) {
+        return effects_1.call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
+    }
+};
 exports.networking = function () {
-    var action, socket, _a, error, response, _b;
-    return tslib_1.__generator(this, function (_c) {
-        switch (_c.label) {
-            case 0: return [4 /*yield*/, effects_1.take([gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
+    var action, socket, _a, error, response;
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, effects_1.take([gameActionTypes_1.PLAY_SOLO, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
             case 1:
-                action = _c.sent();
+                action = _b.sent();
                 return [4 /*yield*/, effects_1.call(getSocket, action.payload.serverIP)];
             case 2:
-                socket = _c.sent();
+                socket = _b.sent();
                 return [4 /*yield*/, effects_1.fork(readPacketsToActions, socket)];
             case 3:
-                _c.sent();
-                _c.label = 4;
+                _b.sent();
+                _b.label = 4;
             case 4:
                 if (false) {}
-                if (!(action.type === gameActionTypes_1.JOIN_GAME)) return [3 /*break*/, 6];
-                return [4 /*yield*/, effects_1.call(joinGame, socket, action.payload.name, action.payload.gameId)];
+                return [4 /*yield*/, getResponseForAction(socket, action)];
             case 5:
-                _b = _c.sent();
-                return [3 /*break*/, 8];
-            case 6: return [4 /*yield*/, effects_1.call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount)];
-            case 7:
-                _b = _c.sent();
-                _c.label = 8;
-            case 8:
-                _a = _b, error = _a.error, response = _a.response;
-                if (!!error) return [3 /*break*/, 10];
+                _a = _b.sent(), error = _a.error, response = _a.response;
+                if (!!error) return [3 /*break*/, 7];
                 return [4 /*yield*/, effects_1.put(localPlayerActions_1.joinCompleteAction(tslib_1.__assign({}, response, { name: action.payload.name })))];
+            case 6:
+                _b.sent();
+                return [3 /*break*/, 10];
+            case 7: return [4 /*yield*/, effects_1.put(gameActions_1.joinGameError(error))];
+            case 8:
+                _b.sent();
+                return [4 /*yield*/, effects_1.take([gameActionTypes_1.PLAY_SOLO, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
             case 9:
-                _c.sent();
-                return [3 /*break*/, 13];
-            case 10: return [4 /*yield*/, effects_1.put(gameActions_1.joinGameError(error))];
-            case 11:
-                _c.sent();
-                return [4 /*yield*/, effects_1.take([gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
-            case 12:
-                action = _c.sent();
+                action = _b.sent();
                 return [3 /*break*/, 4];
-            case 13: return [4 /*yield*/, effects_1.fork(writeActionsToPackets)];
-            case 14:
-                _c.sent();
+            case 10: return [4 /*yield*/, effects_1.fork(writeActionsToPackets)];
+            case 11:
+                _b.sent();
                 return [4 /*yield*/, effects_1.fork(writePacketsToSocket, socket)];
-            case 15:
-                _c.sent();
+            case 12:
+                _b.sent();
                 return [2 /*return*/];
         }
     });
@@ -4285,6 +4327,7 @@ var ServerToClientPacketOpcodes;
 })(ServerToClientPacketOpcodes = exports.ServerToClientPacketOpcodes || (exports.ServerToClientPacketOpcodes = {}));
 var ClientToServerPacketOpcodes;
 (function (ClientToServerPacketOpcodes) {
+    ClientToServerPacketOpcodes["PLAY_SOLO"] = "playSolo";
     ClientToServerPacketOpcodes["JOIN_GAME"] = "joinGame";
     ClientToServerPacketOpcodes["CREATE_GAME"] = "createGame";
     ClientToServerPacketOpcodes["BUY_CARD"] = "buyCard";
