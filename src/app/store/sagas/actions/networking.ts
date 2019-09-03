@@ -55,9 +55,9 @@ const joinGame = (socket: Socket, name: string, gameId: string) => {
     });
 };
 
-const createGame = (socket: Socket, name: string, playerCount: number, botCount: number) => {
+const createGame = (socket: Socket, name: string) => {
     return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, playerCount, botCount, (response: JoinGameResponse) => {
+        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, (response: JoinGameResponse) => {
             resolve(response);
         });
     });
@@ -198,7 +198,7 @@ const getResponseForAction = (socket: Socket, action: PlaySoloAction | JoinGameA
     }
 
     if (action.type === CREATE_GAME) {
-        return call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
+        return call(createGame, socket, action.payload.name);
     }
 };
 

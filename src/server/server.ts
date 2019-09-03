@@ -60,7 +60,7 @@ export class Server {
                 return;
             }
 
-            const { game, gameId } = this.createGame(8);
+            const { game, gameId } = this.createGame();
 
             const player = new Connection(socket, name);
             game.addPlayer(player);
@@ -132,8 +132,6 @@ export class Server {
 
         const onCreateGame = (
             name: string,
-            playerCount: number,
-            botCount: number,
             response: (response: JoinGameResponse) => void
         ) => {
             if (inGame) {
@@ -156,31 +154,7 @@ export class Server {
                 return;
             }
 
-            if (playerCount > MAX_PLAYERS_IN_GAME) {
-                response({
-                    error: "Player count too high",
-                    response: null
-                });
-                return;
-            }
-
-            if (playerCount < 2) {
-                response({
-                    error: "Player count too low",
-                    response: null
-                });
-                return;
-            }
-
-            if (botCount > (playerCount - 1)) {
-                response({
-                    error: "Bot count too high",
-                    response: null
-                });
-                return;
-            }
-
-            const { game, gameId } = this.createGame(playerCount);
+            const { game, gameId } = this.createGame();
 
             const player = new Connection(socket, name);
             game.addPlayer(player);
@@ -188,7 +162,7 @@ export class Server {
 
             inGame = true;
 
-            this.addBots(game, botCount);
+            this.addBots(game, 0);
 
             response({
                 error: null,
@@ -204,14 +178,14 @@ export class Server {
         socket.on(ClientToServerPacketOpcodes.CREATE_GAME, onCreateGame);
     }
 
-    private createGame(playerCount: number) {
+    private createGame() {
         const gameId = uuid().substring(0, 6);
 
-        const game = new Game(playerCount);
+        const game = new Game(8);
         game.onFinish(() => this.games.delete(gameId));
 
         this.games.set(gameId, game);
-        log(`Game '${gameId}' created for ${playerCount} players`);
+        log(`Game '${gameId}' created for 8 players`);
 
         return {
             game,

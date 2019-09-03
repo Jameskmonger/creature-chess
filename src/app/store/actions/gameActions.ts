@@ -4,7 +4,7 @@ import { JoinCompleteAction } from "./localPlayerActions";
 
 export type PlaySoloAction = ({ type: PLAY_SOLO, payload: { serverIP: string, name: string }});
 export type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, name: string, gameId: string } });
-export type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string, playerCount: number, botCount: number } });
+export type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string }});
 export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: PhaseUpdatePacket });
 
@@ -36,13 +36,11 @@ export const joinGameAction = (serverIP: string, name: string, gameId: string): 
     }
 });
 
-export const createGameAction = (serverIP: string, name: string, playerCount: number, botCount: number): CreateGameAction => ({
+export const createGameAction = (serverIP: string, name: string): CreateGameAction => ({
     type: CREATE_GAME,
     payload: {
         name,
-        serverIP,
-        playerCount,
-        botCount
+        serverIP
     }
 });
 
