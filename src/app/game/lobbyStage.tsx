@@ -101,7 +101,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                             <input
                                 value={this.state.botCount}
                                 onChange={this.onBotCountChange}
-                                placeholder="Bot count"
+                                placeholder="Bot count (optional)"
                                 className="option-input"
                             />
 
@@ -244,7 +244,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
             return;
         }
 
-        if (!this.state.botCount || isNaN(this.state.botCount as any)) {
+        if (this.state.botCount && isNaN(this.state.botCount as any)) {
             this.props.setError("Non-numeric bot count");
             return;
         }
@@ -256,7 +256,7 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
             return;
         }
 
-        const botCount = parseInt(this.state.botCount, 10);
+        const botCount = parseInt(this.state.botCount, 10) || 0;
 
         if (botCount >= playerCount) {
             this.props.setError("You must leave at least 1 free slot for a player");
