@@ -1445,6 +1445,8 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                         React.createElement(cardShop_1.CardShop, null),
                         React.createElement(profile_1.Profile, null),
                         React.createElement("div", { className: "github-link" },
+                            React.createElement("a", { href: "https://reddit.com/r/creaturechess/" }, "/r/CreatureChess"),
+                            " - ",
                             React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub"))))),
             React.createElement(react_media_1["default"], { query: "(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)" },
                 React.createElement("div", { className: "game landscape" },
@@ -1460,6 +1462,8 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                         React.createElement(playerList_1.PlayerList, null),
                         React.createElement(gameId_1.GameId, null),
                         React.createElement("div", { className: "github-link" },
+                            React.createElement("a", { href: "https://reddit.com/r/creaturechess/" }, "/r/CreatureChess"),
+                            " - ",
                             React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub")),
                         React.createElement(feed_1.Feed, null)))),
             React.createElement(react_media_1["default"], { query: "(orientation: portrait), (max-width: 599px)" },
@@ -1476,6 +1480,8 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                         React.createElement(playerList_1.PlayerList, null),
                         React.createElement(gameId_1.GameId, null),
                         React.createElement("div", { className: "github-link" },
+                            React.createElement("a", { href: "https://reddit.com/r/creaturechess/" }, "/r/CreatureChess"),
+                            " - ",
                             React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub")),
                         React.createElement(feed_1.Feed, null))))));
     };
@@ -1658,6 +1664,8 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 this.state.debugModeClickCount === 3
                     && (React.createElement("input", { value: this.state.serverIP, onChange: this.onServerIPChange, placeholder: "Server IP" }))),
             React.createElement("div", { className: "github-link" },
+                React.createElement("a", { href: "https://reddit.com/r/creaturechess/" }, "/r/CreatureChess"),
+                " - ",
                 React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub"))));
     };
     return LobbyStageUnconnected;
