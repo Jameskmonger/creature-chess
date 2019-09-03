@@ -12,6 +12,7 @@ export enum ServerToClientPacketOpcodes {
 }
 
 export enum ClientToServerPacketOpcodes {
+    PLAY_SOLO = "playSolo",
     JOIN_GAME = "joinGame",
     CREATE_GAME = "createGame",
     BUY_CARD = "buyCard",

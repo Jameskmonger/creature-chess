@@ -1,3 +1,6 @@
+export const PLAY_SOLO = "PLAY_SOLO";
+export type PLAY_SOLO = typeof PLAY_SOLO;
+
 export const JOIN_GAME = "JOIN_GAME";
 export type JOIN_GAME = typeof JOIN_GAME;
 
