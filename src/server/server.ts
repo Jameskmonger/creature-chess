@@ -44,7 +44,7 @@ export class Server {
 
         let inGame = false;
 
-        const onPlaySolo = (
+        const onFindGame = (
             name: string,
             response: (response: JoinGameResponse) => void
         ) => {
@@ -173,7 +173,7 @@ export class Server {
             });
         };
 
-        socket.on(ClientToServerPacketOpcodes.PLAY_SOLO, onPlaySolo);
+        socket.on(ClientToServerPacketOpcodes.FIND_GAME, onFindGame);
         socket.on(ClientToServerPacketOpcodes.JOIN_GAME, onJoinGame);
         socket.on(ClientToServerPacketOpcodes.CREATE_GAME, onCreateGame);
     }

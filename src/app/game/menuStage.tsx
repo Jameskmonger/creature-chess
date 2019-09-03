@@ -1,12 +1,12 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameAction, createGameAction, joinGameError, enableDebugMode, playSoloAction } from "../store/actions/gameActions";
+import { joinGameAction, createGameAction, joinGameError, enableDebugMode, findGameAction } from "../store/actions/gameActions";
 import { AppState } from "../store/state";
 import { loadingSelector } from "../store/gameSelector";
 import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
 
 interface DispatchProps {
-    onPlaySolo: (serverIP: string, name: string) => void;
+    onFindGame: (serverIP: string, name: string) => void;
     onJoinGame: (serverIP: string, name: string, gameId: string) => void;
     onCreateGame: (serverIP: string, name: string) => void;
     enableDebugMode: () => void;
@@ -169,7 +169,7 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
             return;
         }
 
-        this.props.onPlaySolo(this.state.serverIP, this.state.name);
+        this.props.onFindGame(this.state.serverIP, this.state.name);
     }
 
     private onJoinGameClick = () => {
@@ -217,7 +217,7 @@ const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => 
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onPlaySolo: (serverIP: string, name: string) => dispatch(playSoloAction(serverIP, name)),
+    onFindGame: (serverIP: string, name: string) => dispatch(findGameAction(serverIP, name)),
     onCreateGame: (serverIP: string, name: string) => dispatch(createGameAction(serverIP, name)),
     onJoinGame: (serverIP: string, name: string, gameId: string) => dispatch(joinGameAction(serverIP, name, gameId)),
     enableDebugMode: () => dispatch(enableDebugMode()),
