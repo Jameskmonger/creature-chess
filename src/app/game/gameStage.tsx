@@ -72,7 +72,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <Profile />
 
-                            <div className="github-link"><a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+                            <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
                         </div>
                     </div>
                 </Media>
@@ -98,7 +98,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <GameId />
 
-                            <div className="github-link"><a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+                            <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
 
                             <Feed />
                         </div>
@@ -126,7 +126,7 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <GameId />
 
-                            <div className="github-link"><a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+                            <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
 
                             <Feed />
                         </div>
