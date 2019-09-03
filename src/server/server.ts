@@ -48,7 +48,6 @@ export class Server {
             name: string,
             response: (response: JoinGameResponse) => void
         ) => {
-            console.log("play solo received");
             if (inGame) {
                 return;
             }
