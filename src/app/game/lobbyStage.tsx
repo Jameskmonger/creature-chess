@@ -61,6 +61,8 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
                 <div className="join-game">
                     {title}
 
+                    <p>Enter your name and select one of the options below to start playing</p>
+
                     <input
                         value={this.state.name}
                         onChange={this.onNameChange}
@@ -71,31 +73,19 @@ class LobbyStageUnconnected extends React.Component<Props, LobbyStageState> {
 
                     <div className="join-options">
                         <div className="option">
-                            <input
-                                value={this.state.gameId}
-                                onChange={this.onGameIdChange}
-                                placeholder="Game ID"
-                                className="option-input"
-                            />
+                            <button onClick={this.onJoinGameClick} className="option-button primary">Play Solo</button>
 
-                            <button onClick={this.onJoinGameClick} className="option-button join-button">Join Game</button>
+                            <p className="description">Play a standard game against 7 bots</p> 
                         </div>
                         <div className="option">
-                            <input
-                                value={this.state.playerCount}
-                                onChange={this.onPlayerCountChange}
-                                placeholder="Player count"
-                                className="option-input"
-                            />
+                            <button onClick={this.onJoinGameClick} className="option-button primary">Join Game</button>
 
-                            <input
-                                value={this.state.botCount}
-                                onChange={this.onBotCountChange}
-                                placeholder="Bot count"
-                                className="option-input"
-                            />
+                            <p className="description">Join a specific game</p>
+                        </div>
+                        <div className="option">
+                            <button onClick={this.onCreateGameClick} className="option-button secondary">Create Game</button>
 
-                            <button onClick={this.onCreateGameClick} className="option-button create-button">Create Game</button>
+                            <p className="description">Create a game that others can join</p>
                         </div>
                     </div>
 
