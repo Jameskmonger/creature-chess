@@ -9,7 +9,8 @@ import {
     PhaseUpdatePacket,
     LevelUpdatePacket,
     JoinLobbyResponse,
-    LobbyPlayerUpdatePacket
+    LobbyPlayerUpdatePacket,
+    StartGamePacket
 } from "@common/packet-opcodes";
 import { Models } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction } from "../../actions/gameActions";
@@ -104,6 +105,12 @@ const subscribe = (socket: Socket) => {
             log("[LOBBY_PLAYER_UPDATE]", packet);
 
             emit(updateLobbyPlayerAction(packet.index, packet.player));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.START_GAME, (packet: StartGamePacket) => {
+            log("[START_GAME]", packet);
+
+            emit(joinCompleteAction({ playerId: packet.localPlayerId, gameId: packet.gameId, name: packet.name}));
         });
 
         // tslint:disable-next-line:no-empty

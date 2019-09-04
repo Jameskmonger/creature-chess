@@ -53,7 +53,7 @@ export class Lobby {
         }
     }
 
-    public onStartGame(fn: (players: Player[]) => void) {
+    public onStartGame(fn: () => void) {
         this.events.on(LobbyEvents.START_GAME, fn);
     }
 
@@ -110,7 +110,7 @@ export class Lobby {
         }
 
         this.gameStarted = true;
-        this.events.emit(LobbyEvents.START_GAME, this.players);
+        this.events.emit(LobbyEvents.START_GAME);
     }
 
     private addBot() {

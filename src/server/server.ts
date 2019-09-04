@@ -36,7 +36,7 @@ export class Server {
             if (inLobby) {
                 return;
             }
-            
+
             if (name.match(NAME_REGEX) === null) {
                 response({
                     error: "Invalid characters in name",
@@ -186,18 +186,30 @@ export class Server {
     private createLobby(player: Player, isPublic: boolean) {
         const lobby = new Lobby(this.lobbyIdGenerator, player, isPublic);
 
-        lobby.onStartGame(players => {
-            log(`Lobby '${lobby.id}' has started`);
-            log(`players are: ${players.map(p => p.name).join(", ")}`)
-
-            this.lobbies.delete(lobby.id);
-        });
+        lobby.onStartGame(this.startGame(lobby));
 
         this.lobbies.set(lobby.id, lobby);
 
         log(`Lobby '${lobby.id}' created`);
-        
+
         return lobby;
+    }
+
+    private startGame(lobby: Lobby) {
+        return () => {
+            const players = lobby.getPlayers();
+
+            log(`Lobby '${lobby.id}' has started with the following players:`);
+            log(`    ${players.map(p => p.name).join(", ")}`);
+
+            const game = new Game(players.length);
+
+            players.forEach(p => {
+                game.addPlayer(p);
+            });
+
+            this.lobbies.delete(lobby.id);
+        };
     }
 
     private getLobbyForId(id: string) {

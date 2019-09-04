@@ -31,6 +31,8 @@ type CardPieceView = CardView | PieceView;
 export class Bot extends Player {
     public readonly isBot: boolean = true;
 
+    public onStartGame() { /* nothing required, we're a bot */ }
+
     public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
 
     public onNewFeedMessage(message: FeedMessage) { }

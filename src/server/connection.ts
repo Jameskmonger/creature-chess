@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket, StartGamePacket } from "@common/packet-opcodes";
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
 import { LobbyPlayer } from '@common/models';
@@ -31,6 +31,16 @@ export class Connection extends Player {
 
         this.money.onChange(this.sendMoneyUpdate);
         this.level.onChange(this.sendLevelUpdate);
+    }
+
+    public onStartGame() {
+        const packet: StartGamePacket = {
+            localPlayerId: this.id,
+            name: this.name,
+            gameId: "" // currently unused, will be used for spectator mode
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.START_GAME, packet);
     }
 
     public onFinishGame() {

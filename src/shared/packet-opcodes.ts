@@ -9,7 +9,8 @@ export enum ServerToClientPacketOpcodes {
     MONEY_UPDATE = "moneyUpdate",
     LEVEL_UPDATE = "levelUpdate",
     NEW_FEED_MESSAGE = "newFeedMessage",
-    LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate"
+    LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate",
+    START_GAME = "START_GAME"
 }
 
 export enum ClientToServerPacketOpcodes {
@@ -25,6 +26,12 @@ export enum ClientToServerPacketOpcodes {
     SEND_CHAT_MESSAGE = "sendChatMessage",
     FINISH_MATCH = "finishMatch",
     READY_UP = "readyUp"
+}
+
+export interface StartGamePacket {
+    gameId: string;
+    localPlayerId: string;
+    name: string;
 }
 
 export interface MovePiecePacket {
