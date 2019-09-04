@@ -1,12 +1,14 @@
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket, StartGamePacket } from "@common/packet-opcodes";
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
+import { LobbyPlayer } from '@common/models';
 
 type IncomingPacketListener = (...args: any[]) => void;
 
 export class Connection extends Player {
+    public readonly isBot: boolean = false;
     private socket: Socket;
 
     constructor(socket: Socket, name: string) {
@@ -20,6 +22,7 @@ export class Connection extends Player {
             this.buyReroll();
             this.sendCardsUpdate();
         });
+        this.onReceivePacket(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
         this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
@@ -29,6 +32,16 @@ export class Connection extends Player {
 
         this.money.onChange(this.sendMoneyUpdate);
         this.level.onChange(this.sendLevelUpdate);
+    }
+
+    public onStartGame() {
+        const packet: StartGamePacket = {
+            localPlayerId: this.id,
+            name: this.name,
+            gameId: "" // currently unused, will be used for spectator mode
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.START_GAME, packet);
     }
 
     public onFinishGame() {
@@ -51,6 +64,15 @@ export class Connection extends Player {
 
     public onPlayerListUpdate(players: Models.PlayerListPlayer[]) {
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
+    }
+
+    public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
+        const packet: LobbyPlayerUpdatePacket = {
+            index,
+            player
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, packet);
     }
 
     protected onEnterPreparingPhase(round: number) {

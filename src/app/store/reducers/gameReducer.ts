@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, PLAY_SOLO } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
@@ -8,7 +8,7 @@ const initialState: GameState = {
     gameId: null,
     opponentId: null,
     loading: false,
-    lobbyError: null,
+    menuError: null,
     money: 0,
     phase: GamePhase.WAITING,
     phaseTimer: null,
@@ -18,7 +18,7 @@ const initialState: GameState = {
 
 export function game(state: GameState = initialState, action: GameAction) {
     switch (action.type) {
-        case PLAY_SOLO:
+        case FIND_GAME:
         case JOIN_GAME:
         case CREATE_GAME:
             return {
@@ -29,13 +29,13 @@ export function game(state: GameState = initialState, action: GameAction) {
             return {
                 ...state,
                 loading: false,
-                lobbyError: action.payload.error
+                menuError: action.payload.error
             };
         case JOIN_COMPLETE:
             return {
                 ...state,
                 loading: false,
-                lobbyError: null,
+                menuError: null,
                 gameId: action.payload.gameId
             };
         case GAME_PHASE_UPDATE:

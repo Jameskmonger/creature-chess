@@ -1,117 +1,76 @@
+.player {
+    padding: 0.4em 1em;
+    margin-bottom: 0.4em;
+    font-weight: 700;
+    text-align: left;
+    background: #59616b;
+}
+
 .lobby {
     display: flex;
     flex-direction: column;
     height: 100%;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
-
     align-items: center;
     justify-content: center;
+}
 
-    .title {
-        margin-bottom: 0.5em;
-        font-size: 2em;
-        text-align: center;
-        cursor: pointer;
-        user-select: none;
+.lobby-info {
+    display: flex;
+    padding: 2em 5em;
+    margin-top: 3em;
+    text-align: center;
+    background: #566c86;
+}
 
-        .debug-mode {
-            font-size: 0.7em;
-            font-style: italic;
-            font-weight: 700;
-            color: #b3b3b3;
-        }
+.players {
+    flex: 1 0 0;
+}
+
+.text {
+    flex: 1 0 0;
+    margin-left: 1em;
+}
+
+.player.bot {
+    font-style: italic;
+    color: #d0d0d0;
+}
+
+.lobby-id {
+    margin-bottom: 1em;
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+.timeRemaining {
+    padding: 0.5em 0.6em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    background: #333;
+
+    .time {
+        font-weight: 700;
     }
+}
 
-    .name-input {
-        font-size: 1.4em;
-    }
+.host {
+    margin-left: 1em;
+    font-size: 0.7em;
+    font-weight: 700;
+    color: $lobby-host-color;
+    text-transform: uppercase;
+}
 
-    .join-game input {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0.2em 0.4em;
-        color: #fff;
-        background: none;
-        border-style: solid;
-        /* stylelint-disable */
-        border-top: none;
-        border-left: none;
-        border-right: none;
-        /* stylelint-enable */
-        border-bottom: 2px solid $join-lobby-button;
+.start-game {
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    font-size: 1.2em;
+    color: #000;
+    cursor: pointer;
+    background: $lobby-host-color;
 
-        /* stylelint-disable */
-        &::placeholder {
-        /* stylelint-enable */
-            font-style: italic;
-            color: #aaa;
-        }
-    }
-
-    .join-game {
-        padding: 2em 5em;
-        margin-top: 3em;
-        text-align: center;
-        background: #566c86;
-    }
-
-    .join-options {
-        display: flex;
-    }
-
-    .option:not(:last-child) {
-        padding-right: 1em;
-        margin-right: 1em;
-        border-right: 2px solid $create-lobby-button;
-    }
-
-    .option {
-        flex: 1 1 0;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-
-        .option-input {
-            margin-bottom: 1rem;
-            font-size: 1.4em;
-            text-align: center;
-        }
-
-        .option-button {
-            padding: 0.8em 2em;
-            margin-bottom: 0.5em;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            /* stylelint-disable */
-            border: none;
-            /* stylelint-enable */
-
-            &.primary {
-                background: $join-lobby-button;
-            }
-
-            &.secondary {
-                background: $create-lobby-button;
-            }
-        }
-
-        .description {
-            margin-bottom: 0.4em;
-            font-size: 0.8rem;
-            font-style: italic;
-        }
-    }
-
-    .error {
-        padding: 1em 0.5em;
-        margin-bottom: 1em;
-        color: #db2828;
-        background-color: #ffe8e6;
-        box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
-    }
+    /* stylelint-disable-next-line */
+    border: none;
 }

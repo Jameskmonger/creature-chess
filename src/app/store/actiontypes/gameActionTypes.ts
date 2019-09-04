@@ -1,5 +1,5 @@
-export const PLAY_SOLO = "PLAY_SOLO";
-export type PLAY_SOLO = typeof PLAY_SOLO;
+export const FIND_GAME = "FIND_GAME";
+export type FIND_GAME = typeof FIND_GAME;
 
 export const JOIN_GAME = "JOIN_GAME";
 export type JOIN_GAME = typeof JOIN_GAME;

@@ -126,6 +126,7 @@ export class Game {
         player.setTurnDuration(this.turnDuration);
 
         if (this.players.length === this.GAME_SIZE) {
+            // execute at the end of the execution queue
             setTimeout(() => {
                 this.startGame();
             });
@@ -140,6 +141,8 @@ export class Game {
         }
 
         const startTime = startStopwatch();
+
+        this.players.forEach(p => p.onStartGame());
 
         while (this.players.filter(p => p.isAlive()).length >= 2) {
             await this.runPreparingPhase();

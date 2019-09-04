@@ -4,6 +4,7 @@ import { cards } from "../../cardShop/cardsReducer";
 import { game } from "./gameReducer";
 import { localPlayer } from "./localPlayerReducer";
 import { feedMessages } from "../../feed/feedMessagesReducer";
+import { lobby } from "./lobbyReducer";
 
 export const reducers = {
     board,
@@ -12,5 +13,6 @@ export const reducers = {
     cards,
     game,
     localPlayer,
-    feedMessages
+    feedMessages,
+    lobby
 };

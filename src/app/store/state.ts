@@ -1,5 +1,6 @@
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
+import { LobbyPlayer } from '@common/models';
 
 export interface GameState {
     gameId: string;
@@ -7,7 +8,7 @@ export interface GameState {
     phaseTimer: number;
     opponentId: string;
     loading: boolean;
-    lobbyError: string;
+    menuError: string;
     money: number;
     round: number | null;
     debug: boolean;
@@ -29,4 +30,13 @@ export interface AppState {
     cards: Models.Card[];
     localPlayer: LocalPlayerState;
     feedMessages: FeedMessage[];
+    lobby: LobbyState;
+}
+
+export interface LobbyState {
+    localPlayerId: string;
+    lobbyId: string;
+    players: LobbyPlayer[];
+    secondsRemaining: number;
+    isHost: boolean;
 }

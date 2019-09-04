@@ -8,16 +8,18 @@ import {
     MovePiecePacket,
     PhaseUpdatePacket,
     LevelUpdatePacket,
-    JoinGameResponse
+    JoinLobbyResponse,
+    LobbyPlayerUpdatePacket,
+    StartGamePacket
 } from "@common/packet-opcodes";
 import { Models } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, PlaySoloAction } from "../../actions/gameActions";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
 import { playerListUpdated } from "../../../playerList/playerListActions";
 import { cardsUpdated } from "../../../cardShop/cardActions";
-import { PLAY_SOLO, JOIN_GAME, CREATE_GAME } from "../../actiontypes/gameActionTypes";
+import { FIND_GAME, JOIN_GAME, CREATE_GAME } from "../../actiontypes/gameActionTypes";
 import { REROLL_CARDS, BUY_CARD } from "../../../cardShop/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../../log";
@@ -27,6 +29,8 @@ import { newFeedMessage } from "../../../feed/feedActions";
 import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../../chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
+import { joinLobbyAction, updateLobbyPlayerAction } from '../../actions/lobbyActions';
+import { START_LOBBY_GAME } from '../../actiontypes/lobbyActionTypes';
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -39,25 +43,25 @@ const getSocket = (serverIP: string) => {
     });
 };
 
-const playSolo = (socket: Socket, name: string) => {
-    return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.PLAY_SOLO, name, (response: JoinGameResponse) => {
+const findGame = (socket: Socket, name: string) => {
+    return new Promise<JoinLobbyResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.FIND_GAME, name, (response: JoinLobbyResponse) => {
             resolve(response);
         });
     });
 };
 
 const joinGame = (socket: Socket, name: string, gameId: string) => {
-    return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, (response: JoinGameResponse) => {
+    return new Promise<JoinLobbyResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, (response: JoinLobbyResponse) => {
             resolve(response);
         });
     });
 };
 
-const createGame = (socket: Socket, name: string, playerCount: number, botCount: number) => {
-    return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, playerCount, botCount, (response: JoinGameResponse) => {
+const createGame = (socket: Socket, name: string) => {
+    return new Promise<JoinLobbyResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, (response: JoinLobbyResponse) => {
             resolve(response);
         });
     });
@@ -96,6 +100,18 @@ const subscribe = (socket: Socket) => {
             log("[NEW_FEED_MESSAGE]", packet);
 
             emit(newFeedMessage(packet));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, (packet: LobbyPlayerUpdatePacket) => {
+            log("[LOBBY_PLAYER_UPDATE]", packet);
+
+            emit(updateLobbyPlayerAction(packet.index, packet.player));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.START_GAME, (packet: StartGamePacket) => {
+            log("[START_GAME]", packet);
+
+            emit(joinCompleteAction({ playerId: packet.localPlayerId, gameId: packet.gameId, name: packet.name}));
         });
 
         // tslint:disable-next-line:no-empty
@@ -178,6 +194,12 @@ const writeActionsToPackets = function*() {
             function*({ payload }) {
                 yield put(sendPacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message));
             }
+        ),
+        takeEvery(
+            START_LOBBY_GAME,
+            function*() {
+                yield put(sendPacket(ClientToServerPacketOpcodes.START_LOBBY_GAME));
+            }
         )
     ]);
 };
@@ -188,40 +210,43 @@ const writePacketsToSocket = function*(socket: Socket) {
     });
 };
 
-const getResponseForAction = (socket: Socket, action: PlaySoloAction | JoinGameAction | CreateGameAction) => {
+const getResponseForAction = (socket: Socket, action: FindGameAction | JoinGameAction | CreateGameAction) => {
     if (action.type === JOIN_GAME) {
         return call(joinGame, socket, action.payload.name, action.payload.gameId);
     }
 
-    if (action.type === PLAY_SOLO) {
-        return call(playSolo, socket, action.payload.name);
+    if (action.type === FIND_GAME) {
+        return call(findGame, socket, action.payload.name);
     }
 
     if (action.type === CREATE_GAME) {
-        return call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
+        return call(createGame, socket, action.payload.name);
     }
 };
 
 export const networking = function*() {
-    let action: (PlaySoloAction | JoinGameAction | CreateGameAction)
-        = yield take([PLAY_SOLO, JOIN_GAME, CREATE_GAME]);
+    let action: (FindGameAction | JoinGameAction | CreateGameAction)
+        = yield take([FIND_GAME, JOIN_GAME, CREATE_GAME]);
     const socket: Socket = yield call(getSocket, action.payload.serverIP);
 
     yield fork(readPacketsToActions, socket);
 
     while (true) {
-        const { error, response }: JoinGameResponse = yield getResponseForAction(socket, action);
+        const { error, response }: JoinLobbyResponse = yield getResponseForAction(socket, action);
 
         if (!error) {
-            yield put(joinCompleteAction({
-                ...response,
-                name: action.payload.name
-            }));
+            yield put(joinLobbyAction(
+                response.playerId,
+                response.lobbyId,
+                response.players,
+                response.startTimestamp,
+                response.isHost
+            ));
             break;
         }
 
         yield put(joinGameError(error));
-        action = yield take([PLAY_SOLO, JOIN_GAME, CREATE_GAME]);
+        action = yield take([FIND_GAME, JOIN_GAME, CREATE_GAME]);
     }
 
     yield fork(writeActionsToPackets);

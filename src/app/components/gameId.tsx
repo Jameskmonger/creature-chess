@@ -7,7 +7,8 @@ interface Props {
 }
 
 const GameIdUnconnected: React.FunctionComponent<Props> = ({ gameId }) => {
-    return <div className="game-id">Game ID: {gameId}</div>;
+    // currently unused, will be used for spectator mode
+    return null; // <div className="game-id">Game ID: {gameId}</div>;
 };
 
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({

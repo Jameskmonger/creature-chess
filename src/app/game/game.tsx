@@ -1,12 +1,18 @@
 import * as React from "react";
-import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
+import { MapStateToProps, connect } from "react-redux";
 import { GameStage } from "./gameStage";
 import { AppState } from "../store/state";
-import { LobbyStage } from "./lobbyStage";
-import { localPlayerIdSelector } from "../store/gameSelector";
+import { MenuStage } from "./menuStage";
+import { LobbyStage } from './lobbyStage';
+
+enum GameState {
+    MENU = 0,
+    LOBBY = 1,
+    GAME = 2
+}
 
 interface Props {
-    inLobby: boolean;
+    gameState: GameState;
 }
 
 interface State {
@@ -15,7 +21,7 @@ interface State {
 }
 
 class GameUnconnected extends React.Component<Props, State> {
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
@@ -27,18 +33,19 @@ class GameUnconnected extends React.Component<Props, State> {
     }
 
     public render() {
-        const { inLobby } = this.props;
-        const { width, height } = this.state;
+        const { gameState } = this.props;
 
-        return (
-            <>
-                {
-                    inLobby
-                        ? <LobbyStage />
-                        : <GameStage width={width} height={height} />
-                }
-            </>
-        );
+        if (gameState === GameState.GAME) {
+            const { width, height } = this.state;
+
+            return <GameStage width={width} height={height} />;
+        }
+
+        if (gameState === GameState.LOBBY) {            
+            return <LobbyStage />;
+        }
+
+        return <MenuStage />;
     }
 
     public componentDidMount() {
@@ -57,8 +64,20 @@ class GameUnconnected extends React.Component<Props, State> {
     }
 }
 
+const gameStateSelector = (state: AppState) => {
+    if (state.localPlayer.id !== null) {
+        return GameState.GAME;
+    }
+
+    if (state.lobby.lobbyId !== null) {
+        return GameState.LOBBY;
+    }
+
+    return GameState.MENU;
+};
+
 const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    inLobby: localPlayerIdSelector(state) === null
+    gameState: gameStateSelector(state)
 });
 
 const Game = connect(mapStateToProps)(GameUnconnected);

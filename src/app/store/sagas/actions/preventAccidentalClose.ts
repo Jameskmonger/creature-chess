@@ -5,5 +5,5 @@ export const preventAccidentalClose = function*() {
     yield take(JOIN_COMPLETE);
 
     // display an "Are you sure you want to leave this page?" dialog
-    window.onbeforeunload = () => false;
+    window.onbeforeunload = () => "Are you sure you want to leave this page? There is currently no way to rejoin a game";
 };

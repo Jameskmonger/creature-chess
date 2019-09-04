@@ -10,19 +10,11 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 
 ## Getting into a game
 
-### Joining a lobby
+To join a random public game, press "Find Game".
 
-Enter your name, fill in "Game ID" with the ID of a game in progress (e.g. `bf90b4`) and click "Join Game".
+If you want to join a specific lobby (e.g. one your friends are in), enter the ID (e.g. `bf90b4`) and click "Join Game".
 
-### Creating a lobby
-
-Enter your name, fill in "Player count" and "Bot count" and click "Create Game".
-
-Bots will be added and the game will start when the lobby is full (up to Player count - bots included).
-
-There will be a "Game ID" displayed (e.g. `bf90b4`) - share this with people who want to join your lobby.
-
-If you want to play with 3 friends, for example, in an 8 player game, you would set "Player count" to 8, and "Bot count" to 4, and then give all your friends the Game ID.
+You can create a private lobby by clicking "Create Private Lobby".
 
 ## How to play - basics
 
