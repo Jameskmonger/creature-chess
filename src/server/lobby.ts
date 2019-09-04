@@ -40,7 +40,9 @@ export class Lobby {
         this.id = idGenerator.generateId();
 
         this.players = [ initialPlayer ];
-        this.hostId = this.players[0].id;
+        this.hostId = initialPlayer.id;
+        initialPlayer.onStartLobbyGame(this.startGame);
+
         for (let i = 0; i < MAX_PLAYERS_IN_GAME - 1; i++) {
             this.addBot();
         }
@@ -51,7 +53,7 @@ export class Lobby {
         if (this.isPublic) {
             const waitTimeMs = LOBBY_WAIT_TIME_SECONDS * 1000;
             this.gameStartTime = Date.now() + waitTimeMs;
-            setTimeout(() => this.startGame(), waitTimeMs);
+            setTimeout(this.startGame, waitTimeMs);
         }
     }
 
@@ -113,7 +115,7 @@ export class Lobby {
         return this.players.filter(p => p.isBot === false).length;
     }
 
-    private startGame() {
+    private startGame = () => {
         if (this.gameStarted) {
             throw Error("Tried to start already-started game");
         }

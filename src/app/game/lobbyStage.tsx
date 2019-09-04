@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppState } from '../store/state';
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from '@common/constants';
 import { LobbyPlayer } from '@common/models';
+import { startLobbyGame } from '../store/actions/lobbyActions';
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
@@ -60,7 +61,12 @@ const LobbyStage: React.FunctionComponent = () => {
 
                     {
                         isHost && !isPublic
-                        && <button className="start-game">Start Game</button>
+                        && (
+                            <button
+                                className="start-game"
+                                onClick={() => dispatch(startLobbyGame())}
+                            >Start Game</button>
+                        )
                     }
 
                     {

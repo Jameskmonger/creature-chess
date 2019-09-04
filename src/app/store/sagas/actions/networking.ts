@@ -30,6 +30,7 @@ import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../../chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 import { joinLobbyAction, updateLobbyPlayerAction } from '../../actions/lobbyActions';
+import { START_LOBBY_GAME } from '../../actiontypes/lobbyActionTypes';
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -192,6 +193,12 @@ const writeActionsToPackets = function*() {
             SEND_CHAT_MESSAGE,
             function*({ payload }) {
                 yield put(sendPacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message));
+            }
+        ),
+        takeEvery(
+            START_LOBBY_GAME,
+            function*() {
+                yield put(sendPacket(ClientToServerPacketOpcodes.START_LOBBY_GAME));
             }
         )
     ]);

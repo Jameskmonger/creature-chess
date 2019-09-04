@@ -22,6 +22,7 @@ export class Connection extends Player {
             this.buyReroll();
             this.sendCardsUpdate();
         });
+        this.onReceivePacket(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
         this.onReceivePacket(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
         this.onReceivePacket(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);

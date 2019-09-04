@@ -26,7 +26,8 @@ enum PlayerEvent {
     SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
     FINISH_MATCH = "FINISH_MATCH",
     UPDATE_READY = "UPDATE_READY",
-    UPDATE_STREAK = "UPDATE_STREAK"
+    UPDATE_STREAK = "UPDATE_STREAK",
+    START_LOBBY_GAME = "START_LOBBY_GAME" 
 }
 
 interface StreakInfo {
@@ -183,6 +184,10 @@ export abstract class Player {
         return this.getBoard().map(p => clonePiece(this.definitionProvider, p));
     }
 
+    public onStartLobbyGame(fn: () => void) {
+        this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
+    }
+
     public onHealthUpdate(fn: (health: number) => void) {
         this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
 
@@ -284,6 +289,10 @@ export abstract class Player {
 
     protected belowPieceLimit() {
         return this.getBoard().length < this.level.getValue().level;
+    }
+
+    protected startLobbyGame = () => {
+        this.events.emit(PlayerEvent.START_LOBBY_GAME);
     }
 
     protected buyCard = (cardIndex: number) => {

@@ -25,7 +25,8 @@ export enum ClientToServerPacketOpcodes {
     BUY_XP = "buyXp",
     SEND_CHAT_MESSAGE = "sendChatMessage",
     FINISH_MATCH = "finishMatch",
-    READY_UP = "readyUp"
+    READY_UP = "readyUp",
+    START_LOBBY_GAME = "startLobbyGame"
 }
 
 export interface StartGamePacket {
