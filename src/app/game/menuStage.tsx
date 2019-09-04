@@ -87,7 +87,7 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                             <p className="description">Join a specific game</p>
                         </div>
                         <div className="option">
-                            <button onClick={this.onCreateGameClick} className="option-button secondary">Create Game</button>
+                            <button onClick={this.onCreateGameClick} className="option-button secondary">Create Private Game</button>
 
                             <p className="description">Create a private game that others can join</p>
                         </div>
