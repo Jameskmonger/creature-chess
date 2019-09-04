@@ -72,7 +72,7 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                         <div className="option">
                             <button onClick={this.onFindGameClick} className="option-button primary">Find Game</button>
 
-                            <p className="description">Automatically find a public game for you</p> 
+                            <p className="description">Automatically find a public game for you</p>
                         </div>
                         <div className="option">
                             <input
@@ -108,6 +108,21 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                             />
                         )
                     }
+                </div>
+
+                <div className="how-to-play">
+                    <div className="header">How to play</div>
+                    <div className="content">
+                        <p>This game is a strategy game where you have to arrange pieces on a chess board</p>
+                        <p>Every turn, these pieces will be matched against an opponent's board, to fight to the winner</p>
+                        <p>Losing will decrease your health bar, when you reach 0 health you will be knocked out</p>
+                        <p>&nbsp;</p>
+                        <p>You can buy pieces from the shop on the right - this refreshes every turn</p>
+                        <p>When you have 3 identical pieces, they will combine and upgrade - each piece has 3 levels</p>
+                        <p>There is also an XP shop, where you can buy XP to level up and place more pieces on the board</p>
+                        <p>&nbsp;</p>
+                        <p>Good luck!</p>
+                    </div>
                 </div>
 
                 <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
