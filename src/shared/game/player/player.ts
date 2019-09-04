@@ -19,6 +19,7 @@ import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { PlayerBoard } from "./playerBoard";
 import { StreakType } from "../../models/streakType";
+import { LobbyPlayer } from '@common/models';
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -260,6 +261,8 @@ export abstract class Player {
     public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
 
     public abstract onNewFeedMessage(message: FeedMessage);
+    
+    public abstract onLobbyPlayerUpdate(index: number, player: LobbyPlayer);
 
     protected abstract onEnterPreparingPhase(round: number);
 

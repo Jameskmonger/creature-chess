@@ -167,7 +167,7 @@ export class Server {
     }
 
     private findPublicLobby() {
-        for (const lobbyId in this.lobbies) {
+        for (const lobbyId of this.lobbies.keys()) {
             const lobby = this.lobbies.get(lobbyId);
 
             if (lobby.isPublic === false || lobby.canJoin() === false) {

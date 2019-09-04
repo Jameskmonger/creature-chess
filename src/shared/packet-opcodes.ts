@@ -8,7 +8,8 @@ export enum ServerToClientPacketOpcodes {
     PHASE_UPDATE = "phaseUpdate",
     MONEY_UPDATE = "moneyUpdate",
     LEVEL_UPDATE = "levelUpdate",
-    NEW_FEED_MESSAGE = "newFeedMessage"
+    NEW_FEED_MESSAGE = "newFeedMessage",
+    LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate"
 }
 
 export enum ClientToServerPacketOpcodes {
@@ -39,6 +40,11 @@ export type BoardUpatePacket = {
 export interface LevelUpdatePacket {
     level: number;
     xp: number;
+}
+
+export interface LobbyPlayerUpdatePacket {
+    index: number;
+    player: LobbyPlayer;
 }
 
 interface PreparingPhasePacket {

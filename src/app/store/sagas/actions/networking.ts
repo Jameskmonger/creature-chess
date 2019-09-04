@@ -8,7 +8,8 @@ import {
     MovePiecePacket,
     PhaseUpdatePacket,
     LevelUpdatePacket,
-    JoinLobbyResponse
+    JoinLobbyResponse,
+    LobbyPlayerUpdatePacket
 } from "@common/packet-opcodes";
 import { Models } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction } from "../../actions/gameActions";
@@ -27,7 +28,7 @@ import { newFeedMessage } from "../../../feed/feedActions";
 import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../../chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
-import { joinLobbyAction } from '../../actions/lobbyActions';
+import { joinLobbyAction, updateLobbyPlayerAction } from '../../actions/lobbyActions';
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -97,6 +98,12 @@ const subscribe = (socket: Socket) => {
             log("[NEW_FEED_MESSAGE]", packet);
 
             emit(newFeedMessage(packet));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, (packet: LobbyPlayerUpdatePacket) => {
+            log("[LOBBY_PLAYER_UPDATE]", packet);
+
+            emit(updateLobbyPlayerAction(packet.index, packet.player));
         });
 
         // tslint:disable-next-line:no-empty

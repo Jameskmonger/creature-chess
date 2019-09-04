@@ -1,8 +1,9 @@
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket } from "@common/packet-opcodes";
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
+import { LobbyPlayer } from '@common/models';
 
 type IncomingPacketListener = (...args: any[]) => void;
 
@@ -52,6 +53,15 @@ export class Connection extends Player {
 
     public onPlayerListUpdate(players: Models.PlayerListPlayer[]) {
         this.sendPacket(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
+    }
+
+    public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
+        const packet: LobbyPlayerUpdatePacket = {
+            index,
+            player
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, packet);
     }
 
     protected onEnterPreparingPhase(round: number) {

@@ -62,13 +62,29 @@ export class Lobby {
             throw Error("Too many players in lobby");
         }
 
+        let playerChangedIndex = null;
+
+        // add the player
         for (let i = 0; i < this.players.length; i++) {
             // skip real players
             if (this.players[i].isBot === false) {
                 continue;
             }
 
+            playerChangedIndex = i;
             this.players[i] = player;
+            break;
+        }
+
+        // notify other players
+        for (let i = 0; i < this.players.length; i++) {
+            // skip the player we just added
+            if (this.players[i] === player) {
+                continue;
+            }
+
+            const lobbyPlayer = ({ id: player.id, name: player.name, isBot: player.isBot });
+            this.players[i].onLobbyPlayerUpdate(playerChangedIndex, lobbyPlayer);
         }
 
         if (this.getRealPlayerCount() === MAX_PLAYERS_IN_GAME) {
