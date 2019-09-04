@@ -111,7 +111,7 @@ export class Lobby {
         return this.players.slice(0);
     }
 
-    private getRealPlayerCount() {
+    public getRealPlayerCount() {
         return this.players.filter(p => p.isBot === false).length;
     }
 

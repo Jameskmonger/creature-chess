@@ -179,17 +179,12 @@ export class Server {
     }
 
     private findPublicLobby() {
-        for (const lobbyId of this.lobbies.keys()) {
-            const lobby = this.lobbies.get(lobbyId);
+        const lobbies = Array.from(this.lobbies.values())
+            .filter(lobby => lobby.isPublic && lobby.canJoin());
 
-            if (lobby.isPublic === false || lobby.canJoin() === false) {
-                continue;
-            }
-
-            return lobby;
-        }
-
-        return null;
+        lobbies.sort((a, b) => b.getRealPlayerCount() - a.getRealPlayerCount());
+        
+        return lobbies[0];
     }
 
     private createLobby(player: Player, isPublic: boolean) {
