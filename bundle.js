@@ -423,11 +423,11 @@ var BoardPieceUnconnected = /** @class */ (function (_super) {
             if (_this.props.animate === false) {
                 return;
             }
-            _this.setState(function (prevState) { return (tslib_1.__assign({}, prevState, { currentAnimations: prevState.currentAnimations.concat([{ name: name, variables: variables }]) })); });
+            _this.setState(function (prevState) { return (tslib_1.__assign({}, prevState, { currentAnimations: tslib_1.__spread(prevState.currentAnimations, [{ name: name, variables: variables }]) })); });
         };
         _this.onAnimationEnd = function (event) {
             var animationName = event.animationName;
-            _this.setState(function (prevState) { return (tslib_1.__assign({}, prevState, { currentAnimations: prevState.currentAnimations.filter(function (a) { return a.name !== animationName && !a.name.startsWith("move-"); }).slice() })); });
+            _this.setState(function (prevState) { return (tslib_1.__assign({}, prevState, { currentAnimations: tslib_1.__spread(prevState.currentAnimations.filter(function (a) { return a.name !== animationName && !a.name.startsWith("move-"); })) })); });
             if (animationName === dyingAnimation) {
                 _this.setState({ dead: true });
             }
@@ -943,11 +943,12 @@ exports.sendChatMessage = function (message) { return ({
 "use strict";
 
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var chatActions_1 = __webpack_require__(/*! ./chatActions */ "./src/app/chat/chatActions.ts");
 var ChatInputUnconnected = function (props) {
-    var _a = React.useState(""), message = _a[0], setMessage = _a[1];
+    var _a = tslib_1.__read(React.useState(""), 2), message = _a[0], setMessage = _a[1];
     var onSubmit = function (event) {
         event.preventDefault();
         if (!message) {
@@ -982,10 +983,11 @@ exports.ChatInput = ChatInput;
 "use strict";
 
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var lodash_1 = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 exports.getAnimationCssVariables = function (animations) {
-    var variables = lodash_1.assign.apply(void 0, [{}].concat(animations.filter(function (a) { return a.variables; }).map(function (a) { return a.variables; })));
-    return lodash_1.assign.apply(void 0, [{}].concat(lodash_1.keys(variables).map(function (key) {
+    var variables = lodash_1.assign.apply(void 0, tslib_1.__spread([{}], animations.filter(function (a) { return a.variables; }).map(function (a) { return a.variables; })));
+    return lodash_1.assign.apply(void 0, tslib_1.__spread([{}], lodash_1.keys(variables).map(function (key) {
         var _a;
         return (_a = {}, _a["--" + key] = variables[key], _a);
     })));
@@ -1024,13 +1026,11 @@ exports.CreatureImage = CreatureImage;
 "use strict";
 
 exports.__esModule = true;
-var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var GameIdUnconnected = function (_a) {
     var gameId = _a.gameId;
-    return React.createElement("div", { className: "game-id" },
-        "Game ID: ",
-        gameId);
+    // currently unused, will be used for spectator mode
+    return null; // <div className="game-id">Game ID: {gameId}</div>;
 };
 var mapStateToProps = function (state) { return ({
     gameId: state.game.gameId
@@ -1298,6 +1298,7 @@ exports.newFeedMessage = function (payload) { return ({
 "use strict";
 
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var feed_message_1 = __webpack_require__(/*! @common/feed-message */ "./src/shared/feed-message.ts");
 var feedActionTypes_1 = __webpack_require__(/*! ./feedActionTypes */ "./src/app/feed/feedActionTypes.ts");
 var gameActionTypes_1 = __webpack_require__(/*! ../store/actiontypes/gameActionTypes */ "./src/app/store/actiontypes/gameActionTypes.ts");
@@ -1306,7 +1307,7 @@ exports.feedMessages = function (state, action) {
     if (state === void 0) { state = []; }
     switch (action.type) {
         case feedActionTypes_1.NEW_FEED_MESSAGE:
-            return [action.payload].concat(state);
+            return tslib_1.__spread([action.payload], state);
         case gameActionTypes_1.GAME_PHASE_UPDATE:
             if (action.payload.phase !== shared_1.GamePhase.READY) {
                 return state;
@@ -1334,8 +1335,14 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var gameStage_1 = __webpack_require__(/*! ./gameStage */ "./src/app/game/gameStage.tsx");
+var menuStage_1 = __webpack_require__(/*! ./menuStage */ "./src/app/game/menuStage.tsx");
 var lobbyStage_1 = __webpack_require__(/*! ./lobbyStage */ "./src/app/game/lobbyStage.tsx");
-var gameSelector_1 = __webpack_require__(/*! ../store/gameSelector */ "./src/app/store/gameSelector.ts");
+var GameState;
+(function (GameState) {
+    GameState[GameState["MENU"] = 0] = "MENU";
+    GameState[GameState["LOBBY"] = 1] = "LOBBY";
+    GameState[GameState["GAME"] = 2] = "GAME";
+})(GameState || (GameState = {}));
 var GameUnconnected = /** @class */ (function (_super) {
     tslib_1.__extends(GameUnconnected, _super);
     function GameUnconnected(props) {
@@ -1348,11 +1355,15 @@ var GameUnconnected = /** @class */ (function (_super) {
         return _this;
     }
     GameUnconnected.prototype.render = function () {
-        var inLobby = this.props.inLobby;
-        var _a = this.state, width = _a.width, height = _a.height;
-        return (React.createElement(React.Fragment, null, inLobby
-            ? React.createElement(lobbyStage_1.LobbyStage, null)
-            : React.createElement(gameStage_1.GameStage, { width: width, height: height })));
+        var gameState = this.props.gameState;
+        if (gameState === GameState.GAME) {
+            var _a = this.state, width = _a.width, height = _a.height;
+            return React.createElement(gameStage_1.GameStage, { width: width, height: height });
+        }
+        if (gameState === GameState.LOBBY) {
+            return React.createElement(lobbyStage_1.LobbyStage, null);
+        }
+        return React.createElement(menuStage_1.MenuStage, null);
     };
     GameUnconnected.prototype.componentDidMount = function () {
         window.addEventListener("resize", this.updateDimensions);
@@ -1368,8 +1379,17 @@ var GameUnconnected = /** @class */ (function (_super) {
     };
     return GameUnconnected;
 }(React.Component));
+var gameStateSelector = function (state) {
+    if (state.localPlayer.id !== null) {
+        return GameState.GAME;
+    }
+    if (state.lobby.lobbyId !== null) {
+        return GameState.LOBBY;
+    }
+    return GameState.MENU;
+};
 var mapStateToProps = function (state) { return ({
-    inLobby: gameSelector_1.localPlayerIdSelector(state) === null
+    gameState: gameStateSelector(state)
 }); };
 var Game = react_redux_1.connect(mapStateToProps)(GameUnconnected);
 exports.Game = Game;
@@ -1503,20 +1523,91 @@ exports.GameStage = GameStage;
 "use strict";
 
 exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var constants_1 = __webpack_require__(/*! @common/constants */ "./src/shared/constants.ts");
+var lobbyActions_1 = __webpack_require__(/*! ../store/actions/lobbyActions */ "./src/app/store/actions/lobbyActions.ts");
+var padNumberToTwo = function (val) { return val < 10 ? "0" + val : val.toString(); };
+var TimeRemaining = function (_a) {
+    var totalSecondsRemaining = _a.totalSecondsRemaining;
+    if (totalSecondsRemaining === null) {
+        return null;
+    }
+    var minutesRemaining = Math.floor(totalSecondsRemaining / 60);
+    var secondsRemaining = Math.ceil(totalSecondsRemaining % 60);
+    var time = minutesRemaining + ":" + padNumberToTwo(secondsRemaining);
+    return (React.createElement("div", { className: "timeRemaining" },
+        "Game starting in ",
+        React.createElement("span", { className: "time" }, time)));
+};
+var LobbyStage = function () {
+    var dispatch = react_redux_1.useDispatch();
+    var lobbyId = react_redux_1.useSelector(function (state) { return state.lobby.lobbyId; });
+    if (lobbyId === null) {
+        return React.createElement("div", null, "An error occured, please refresh your page");
+    }
+    var localPlayerId = react_redux_1.useSelector(function (state) { return state.lobby.localPlayerId; });
+    var players = react_redux_1.useSelector(function (state) { return state.lobby.players; });
+    var totalSecondsRemaining = react_redux_1.useSelector(function (state) { return state.lobby.secondsRemaining; });
+    var isHost = react_redux_1.useSelector(function (state) { return state.lobby.isHost; });
+    var isPublic = totalSecondsRemaining !== null;
+    return (React.createElement("div", { className: "lobby" },
+        React.createElement("div", { className: "lobby-info" },
+            React.createElement("div", { className: "players" }, players.map(function (p) { return (React.createElement("div", { className: "player" + (p.isBot ? " bot" : "") },
+                React.createElement("span", null, p.name),
+                p.isHost && React.createElement("span", { className: "host" }, "Host"))); })),
+            React.createElement("div", { className: "text" },
+                React.createElement(TimeRemaining, { totalSecondsRemaining: totalSecondsRemaining }),
+                React.createElement("h2", { className: "lobby-id" },
+                    "Lobby ID: ",
+                    lobbyId),
+                isHost && !isPublic
+                    && (React.createElement("button", { className: "start-game", onClick: function () { return dispatch(lobbyActions_1.startLobbyGame()); } }, "Start Game")),
+                isPublic
+                    && (React.createElement("p", null,
+                        "The game will start ",
+                        constants_1.LOBBY_WAIT_TIME,
+                        " seconds after the lobby is created, or immediately when there are ",
+                        constants_1.MAX_PLAYERS_IN_GAME,
+                        " players")),
+                !isPublic
+                    && (React.createElement("p", null,
+                        isHost ? "You" : "The host",
+                        " can choose when to start the game, or it will start immediately when there are ",
+                        constants_1.MAX_PLAYERS_IN_GAME,
+                        " players")))),
+        React.createElement("div", { className: "github-link" },
+            React.createElement("a", { href: "https://reddit.com/r/creaturechess/" }, "/r/CreatureChess"),
+            " - ",
+            React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub"))));
+};
+exports.LobbyStage = LobbyStage;
+
+
+/***/ }),
+
+/***/ "./src/app/game/menuStage.tsx":
+/*!************************************!*\
+  !*** ./src/app/game/menuStage.tsx ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var gameActions_1 = __webpack_require__(/*! ../store/actions/gameActions */ "./src/app/store/actions/gameActions.ts");
 var gameSelector_1 = __webpack_require__(/*! ../store/gameSelector */ "./src/app/store/gameSelector.ts");
 var constants_1 = __webpack_require__(/*! @common/constants */ "./src/shared/constants.ts");
-var LobbyStageUnconnected = /** @class */ (function (_super) {
-    tslib_1.__extends(LobbyStageUnconnected, _super);
-    function LobbyStageUnconnected() {
+var MenuStageUnconnected = /** @class */ (function (_super) {
+    tslib_1.__extends(MenuStageUnconnected, _super);
+    function MenuStageUnconnected() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.state = {
             name: "",
-            playerCount: "",
-            botCount: "",
             gameId: "",
             serverIP: "https://cc-server.jamesmonger.com",
             debugModeClickCount: 0
@@ -1539,16 +1630,6 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 name: event.target.value
             });
         };
-        _this.onPlayerCountChange = function (event) {
-            _this.setState({
-                playerCount: event.target.value
-            });
-        };
-        _this.onBotCountChange = function (event) {
-            _this.setState({
-                botCount: event.target.value
-            });
-        };
         _this.onGameIdChange = function (event) {
             _this.setState({
                 gameId: event.target.value
@@ -1562,7 +1643,7 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 serverIP: event.target.value
             });
         };
-        _this.onPlaySoloClick = function () {
+        _this.onFindGameClick = function () {
             if (!_this.state.serverIP) {
                 _this.props.setError("Server IP field empty");
                 return;
@@ -1575,7 +1656,7 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 _this.props.setError("Name too long. Max " + constants_1.MAX_NAME_LENGTH + " characters");
                 return;
             }
-            _this.props.onPlaySolo(_this.state.serverIP, _this.state.name);
+            _this.props.onFindGame(_this.state.serverIP, _this.state.name);
         };
         _this.onJoinGameClick = function () {
             if (!_this.state.serverIP) {
@@ -1605,59 +1686,38 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 _this.props.setError("Name field empty");
                 return;
             }
-            if (!_this.state.playerCount || isNaN(_this.state.playerCount)) {
-                _this.props.setError("Non-numeric player count");
-                return;
-            }
-            if (_this.state.botCount && isNaN(_this.state.botCount)) {
-                _this.props.setError("Non-numeric bot count");
-                return;
-            }
-            var playerCount = parseInt(_this.state.playerCount, 10);
-            if (playerCount > constants_1.MAX_PLAYERS_IN_GAME) {
-                _this.props.setError("Sorry, there is a maximum of " + constants_1.MAX_PLAYERS_IN_GAME + " players per game");
-                return;
-            }
-            var botCount = parseInt(_this.state.botCount, 10) || 0;
-            if (botCount >= playerCount) {
-                _this.props.setError("You must leave at least 1 free slot for a player");
-                return;
-            }
-            _this.props.onCreateGame(_this.state.serverIP, _this.state.name, playerCount, botCount);
+            _this.props.onCreateGame(_this.state.serverIP, _this.state.name);
         };
         return _this;
     }
-    LobbyStageUnconnected.prototype.render = function () {
+    MenuStageUnconnected.prototype.render = function () {
         var title = this.state.debugModeClickCount === 3
             ? React.createElement("h2", { className: "title" },
                 "Creature Chess ",
                 React.createElement("span", { className: "debug-mode" }, "(Debug Mode)"))
             : React.createElement("h2", { className: "title", onClick: this.onTitleClick }, "Creature Chess");
         if (this.props.loading) {
-            return (React.createElement("div", { className: "lobby" },
+            return (React.createElement("div", { className: "menu" },
                 React.createElement("div", { className: "join-game" },
                     title,
                     React.createElement("p", null, "Loading game..."))));
         }
-        return (React.createElement("div", { className: "lobby" },
+        return (React.createElement("div", { className: "menu" },
             React.createElement("div", { className: "join-game" },
                 title,
                 React.createElement("p", null, "Enter your name and select one of the options below to start playing"),
                 React.createElement("input", { value: this.state.name, onChange: this.onNameChange, maxLength: constants_1.MAX_NAME_LENGTH, placeholder: "Your name", className: "name-input" }),
                 React.createElement("div", { className: "join-options" },
                     React.createElement("div", { className: "option" },
-                        React.createElement("button", { onClick: this.onPlaySoloClick, className: "option-button primary" }, "Play Solo"),
-                        React.createElement("p", { className: "description" }, "Play a standard game against 7 bots")),
+                        React.createElement("button", { onClick: this.onFindGameClick, className: "option-button primary" }, "Find Game"),
+                        React.createElement("p", { className: "description" }, "Automatically find a public game for you")),
                     React.createElement("div", { className: "option" },
                         React.createElement("input", { value: this.state.gameId, onChange: this.onGameIdChange, placeholder: "Game ID", className: "option-input" }),
                         React.createElement("button", { onClick: this.onJoinGameClick, className: "option-button primary" }, "Join Game"),
                         React.createElement("p", { className: "description" }, "Join a specific game")),
                     React.createElement("div", { className: "option" },
-                        React.createElement("input", { value: this.state.playerCount, onChange: this.onPlayerCountChange, placeholder: "Player count", className: "option-input" }),
-                        React.createElement("input", { value: this.state.botCount, onChange: this.onBotCountChange, placeholder: "Bot count (optional)", className: "option-input" }),
-                        React.createElement("button", { onClick: this.onCreateGameClick, className: "option-button secondary" }, "Create Game"),
-                        React.createElement("p", { className: "description" }, "Create a game that others can join."),
-                        React.createElement("p", { className: "description" }, "Bots are included in the player count"))),
+                        React.createElement("button", { onClick: this.onCreateGameClick, className: "option-button secondary" }, "Create Private Game"),
+                        React.createElement("p", { className: "description" }, "Create a private game that others can join"))),
                 this.props.error
                     && React.createElement("div", { className: "error" },
                         React.createElement("p", null, this.props.error)),
@@ -1668,21 +1728,21 @@ var LobbyStageUnconnected = /** @class */ (function (_super) {
                 " - ",
                 React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub"))));
     };
-    return LobbyStageUnconnected;
+    return MenuStageUnconnected;
 }(React.Component));
 var mapStateToProps = function (state) { return ({
     loading: gameSelector_1.loadingSelector(state),
-    error: state.game.lobbyError
+    error: state.game.menuError
 }); };
 var mapDispatchToProps = function (dispatch) { return ({
-    onPlaySolo: function (serverIP, name) { return dispatch(gameActions_1.playSoloAction(serverIP, name)); },
-    onCreateGame: function (serverIP, name, playerCount, botCount) { return dispatch(gameActions_1.createGameAction(serverIP, name, playerCount, botCount)); },
+    onFindGame: function (serverIP, name) { return dispatch(gameActions_1.findGameAction(serverIP, name)); },
+    onCreateGame: function (serverIP, name) { return dispatch(gameActions_1.createGameAction(serverIP, name)); },
     onJoinGame: function (serverIP, name, gameId) { return dispatch(gameActions_1.joinGameAction(serverIP, name, gameId)); },
     enableDebugMode: function () { return dispatch(gameActions_1.enableDebugMode()); },
     setError: function (error) { return dispatch(gameActions_1.joinGameError(error)); }
 }); };
-var LobbyStage = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(LobbyStageUnconnected);
-exports.LobbyStage = LobbyStage;
+var MenuStage = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(MenuStageUnconnected);
+exports.MenuStage = MenuStage;
 
 
 /***/ }),
@@ -1719,13 +1779,14 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store_1.sto
 "use strict";
 
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 // tslint:disable:no-console
 exports.log = function (message) {
     var optionalParams = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         optionalParams[_i - 1] = arguments[_i];
     }
-    return console.log.apply(console, [message].concat(optionalParams));
+    return console.log.apply(console, tslib_1.__spread([message], optionalParams));
 };
 
 
@@ -1876,8 +1937,8 @@ exports.playerList = playerList;
 
 exports.__esModule = true;
 var gameActionTypes_1 = __webpack_require__(/*! ../actiontypes/gameActionTypes */ "./src/app/store/actiontypes/gameActionTypes.ts");
-exports.playSoloAction = function (serverIP, name) { return ({
-    type: gameActionTypes_1.PLAY_SOLO,
+exports.findGameAction = function (serverIP, name) { return ({
+    type: gameActionTypes_1.FIND_GAME,
     payload: {
         name: name,
         serverIP: serverIP
@@ -1891,13 +1952,11 @@ exports.joinGameAction = function (serverIP, name, gameId) { return ({
         gameId: gameId
     }
 }); };
-exports.createGameAction = function (serverIP, name, playerCount, botCount) { return ({
+exports.createGameAction = function (serverIP, name) { return ({
     type: gameActionTypes_1.CREATE_GAME,
     payload: {
         name: name,
-        serverIP: serverIP,
-        playerCount: playerCount,
-        botCount: botCount
+        serverIP: serverIP
     }
 }); };
 exports.joinGameError = function (error) { return ({
@@ -1925,6 +1984,45 @@ exports.phaseTimerUpdated = function (time) { return ({
 exports.enableDebugMode = function () { return ({
     type: gameActionTypes_1.ENABLE_DEBUG_MODE
 }); };
+
+
+/***/ }),
+
+/***/ "./src/app/store/actions/lobbyActions.ts":
+/*!***********************************************!*\
+  !*** ./src/app/store/actions/lobbyActions.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var lobbyActionTypes_1 = __webpack_require__(/*! ../actiontypes/lobbyActionTypes */ "./src/app/store/actiontypes/lobbyActionTypes.ts");
+exports.joinLobbyAction = function (localPlayerId, lobbyId, players, startTimestamp, isHost) { return ({
+    type: lobbyActionTypes_1.JOIN_LOBBY,
+    payload: {
+        localPlayerId: localPlayerId,
+        lobbyId: lobbyId,
+        players: players,
+        startTimestamp: startTimestamp,
+        isHost: isHost
+    }
+}); };
+exports.updateLobbyPlayerAction = function (index, player) { return ({
+    type: lobbyActionTypes_1.UPDATE_LOBBY_PLAYER,
+    payload: {
+        index: index,
+        player: player
+    }
+}); };
+exports.updateLobbySecondsRemaining = function (secondsRemaining) { return ({
+    type: lobbyActionTypes_1.UPDATE_LOBBY_SECONDS_REMAINING,
+    payload: {
+        secondsRemaining: secondsRemaining
+    }
+}); };
+exports.startLobbyGame = function () { return ({ type: lobbyActionTypes_1.START_LOBBY_GAME }); };
 
 
 /***/ }),
@@ -1999,7 +2097,7 @@ exports.sendPacket = function (opcode) {
 "use strict";
 
 exports.__esModule = true;
-exports.PLAY_SOLO = "PLAY_SOLO";
+exports.FIND_GAME = "FIND_GAME";
 exports.JOIN_GAME = "JOIN_GAME";
 exports.CREATE_GAME = "CREATE_GAME";
 exports.JOIN_ERROR = "JOIN_ERROR";
@@ -2007,6 +2105,24 @@ exports.GAME_PHASE_UPDATE = "GAME_PHASE_UPDATE";
 exports.MONEY_UPDATE = "MONEY_UPDATE";
 exports.PHASE_TIMER_UPDATED = "PHASE_TIMER_UPDATED";
 exports.ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
+
+
+/***/ }),
+
+/***/ "./src/app/store/actiontypes/lobbyActionTypes.ts":
+/*!*******************************************************!*\
+  !*** ./src/app/store/actiontypes/lobbyActionTypes.ts ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.JOIN_LOBBY = "JOIN_LOBBY";
+exports.UPDATE_LOBBY_PLAYER = "UPDATE_LOBBY_PLAYER";
+exports.UPDATE_LOBBY_SECONDS_REMAINING = "UPDATE_LOBBY_SECONDS_REMAINING";
+exports.START_LOBBY_GAME = "START_LOBBY_GAME";
 
 
 /***/ }),
@@ -2110,7 +2226,7 @@ var initialState = {
     gameId: null,
     opponentId: null,
     loading: false,
-    lobbyError: null,
+    menuError: null,
     money: 0,
     phase: _common_1.GamePhase.WAITING,
     phaseTimer: null,
@@ -2120,14 +2236,14 @@ var initialState = {
 function game(state, action) {
     if (state === void 0) { state = initialState; }
     switch (action.type) {
-        case gameActionTypes_1.PLAY_SOLO:
+        case gameActionTypes_1.FIND_GAME:
         case gameActionTypes_1.JOIN_GAME:
         case gameActionTypes_1.CREATE_GAME:
             return tslib_1.__assign({}, state, { loading: true });
         case gameActionTypes_1.JOIN_ERROR:
-            return tslib_1.__assign({}, state, { loading: false, lobbyError: action.payload.error });
+            return tslib_1.__assign({}, state, { loading: false, menuError: action.payload.error });
         case localPlayerActionTypes_1.JOIN_COMPLETE:
-            return tslib_1.__assign({}, state, { loading: false, lobbyError: null, gameId: action.payload.gameId });
+            return tslib_1.__assign({}, state, { loading: false, menuError: null, gameId: action.payload.gameId });
         case gameActionTypes_1.GAME_PHASE_UPDATE:
             // set opponent id when entering ready phase
             if (action.payload.phase === _common_1.GamePhase.READY) {
@@ -2170,6 +2286,7 @@ var cardsReducer_1 = __webpack_require__(/*! ../../cardShop/cardsReducer */ "./s
 var gameReducer_1 = __webpack_require__(/*! ./gameReducer */ "./src/app/store/reducers/gameReducer.ts");
 var localPlayerReducer_1 = __webpack_require__(/*! ./localPlayerReducer */ "./src/app/store/reducers/localPlayerReducer.ts");
 var feedMessagesReducer_1 = __webpack_require__(/*! ../../feed/feedMessagesReducer */ "./src/app/feed/feedMessagesReducer.ts");
+var lobbyReducer_1 = __webpack_require__(/*! ./lobbyReducer */ "./src/app/store/reducers/lobbyReducer.ts");
 exports.reducers = {
     board: board_1.boardReducer,
     bench: board_1.benchReducer,
@@ -2177,8 +2294,49 @@ exports.reducers = {
     cards: cardsReducer_1.cards,
     game: gameReducer_1.game,
     localPlayer: localPlayerReducer_1.localPlayer,
-    feedMessages: feedMessagesReducer_1.feedMessages
+    feedMessages: feedMessagesReducer_1.feedMessages,
+    lobby: lobbyReducer_1.lobby
 };
+
+
+/***/ }),
+
+/***/ "./src/app/store/reducers/lobbyReducer.ts":
+/*!************************************************!*\
+  !*** ./src/app/store/reducers/lobbyReducer.ts ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var lobbyActionTypes_1 = __webpack_require__(/*! ../actiontypes/lobbyActionTypes */ "./src/app/store/actiontypes/lobbyActionTypes.ts");
+var initialState = {
+    lobbyId: null,
+    localPlayerId: null,
+    players: [],
+    secondsRemaining: null,
+    isHost: false
+};
+function lobby(state, action) {
+    if (state === void 0) { state = initialState; }
+    switch (action.type) {
+        case lobbyActionTypes_1.JOIN_LOBBY:
+            return tslib_1.__assign({}, state, { lobbyId: action.payload.lobbyId, localPlayerId: action.payload.localPlayerId, players: action.payload.players, isHost: action.payload.isHost });
+        case lobbyActionTypes_1.UPDATE_LOBBY_SECONDS_REMAINING:
+            return tslib_1.__assign({}, state, { secondsRemaining: action.payload.secondsRemaining });
+        case lobbyActionTypes_1.UPDATE_LOBBY_PLAYER:
+            var cloned = tslib_1.__assign({}, state, { players: tslib_1.__spread(state.players) });
+            cloned.players[action.payload.index] = action.payload.player;
+            return cloned;
+        default:
+            return state;
+    }
+}
+exports.lobby = lobby;
+;
 
 
 /***/ }),
@@ -2401,6 +2559,65 @@ exports.gamePhase = function () {
 
 /***/ }),
 
+/***/ "./src/app/store/sagas/actions/lobbyTimer.ts":
+/*!***************************************************!*\
+  !*** ./src/app/store/sagas/actions/lobbyTimer.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var effects_1 = __webpack_require__(/*! @redux-saga/core/effects */ "./node_modules/@redux-saga/core/dist/redux-saga-effects.esm.js");
+var countdown_1 = __webpack_require__(/*! ../utils/countdown */ "./src/app/store/sagas/utils/countdown.ts");
+var lobbyActions_1 = __webpack_require__(/*! ../../actions/lobbyActions */ "./src/app/store/actions/lobbyActions.ts");
+var lobbyActionTypes_1 = __webpack_require__(/*! ../../actiontypes/lobbyActionTypes */ "./src/app/store/actiontypes/lobbyActionTypes.ts");
+exports.lobbyTimer = function () {
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.takeLatest(lobbyActionTypes_1.JOIN_LOBBY, function (action) {
+                    var startTimestamp, secondsRemaining, channel;
+                    return tslib_1.__generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                startTimestamp = action.payload.startTimestamp;
+                                if (!(startTimestamp !== null)) return [3 /*break*/, 4];
+                                secondsRemaining = (startTimestamp - Date.now()) / 1000;
+                                return [4 /*yield*/, effects_1.put(lobbyActions_1.updateLobbySecondsRemaining(secondsRemaining))];
+                            case 1:
+                                _a.sent();
+                                return [4 /*yield*/, effects_1.call(countdown_1.countdown, secondsRemaining)];
+                            case 2:
+                                channel = _a.sent();
+                                return [4 /*yield*/, effects_1.takeEvery(channel, function (secs) {
+                                        return tslib_1.__generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0: return [4 /*yield*/, effects_1.put(lobbyActions_1.updateLobbySecondsRemaining(secs))];
+                                                case 1:
+                                                    _a.sent();
+                                                    return [2 /*return*/];
+                                            }
+                                        });
+                                    })];
+                            case 3:
+                                _a.sent();
+                                _a.label = 4;
+                            case 4: return [2 /*return*/];
+                        }
+                    });
+                })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+};
+
+
+/***/ }),
+
 /***/ "./src/app/store/sagas/actions/networking.ts":
 /*!***************************************************!*\
   !*** ./src/app/store/sagas/actions/networking.ts ***!
@@ -2431,6 +2648,8 @@ var localPlayerActionTypes_1 = __webpack_require__(/*! ../../actiontypes/localPl
 var feedActions_1 = __webpack_require__(/*! ../../../feed/feedActions */ "./src/app/feed/feedActions.ts");
 var chatActionTypes_1 = __webpack_require__(/*! ../../../chat/chatActionTypes */ "./src/app/chat/chatActionTypes.ts");
 var battleEventChannel_1 = __webpack_require__(/*! @common/match/combat/battleEventChannel */ "./src/shared/match/combat/battleEventChannel.ts");
+var lobbyActions_1 = __webpack_require__(/*! ../../actions/lobbyActions */ "./src/app/store/actions/lobbyActions.ts");
+var lobbyActionTypes_1 = __webpack_require__(/*! ../../actiontypes/lobbyActionTypes */ "./src/app/store/actiontypes/lobbyActionTypes.ts");
 var getSocket = function (serverIP) {
     // force to websocket for now until CORS is sorted
     var socket = io(serverIP, { transports: ["websocket"] });
@@ -2440,9 +2659,9 @@ var getSocket = function (serverIP) {
         });
     });
 };
-var playSolo = function (socket, name) {
+var findGame = function (socket, name) {
     return new Promise(function (resolve) {
-        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.PLAY_SOLO, name, function (response) {
+        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.FIND_GAME, name, function (response) {
             resolve(response);
         });
     });
@@ -2454,9 +2673,9 @@ var joinGame = function (socket, name, gameId) {
         });
     });
 };
-var createGame = function (socket, name, playerCount, botCount) {
+var createGame = function (socket, name) {
     return new Promise(function (resolve) {
-        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.CREATE_GAME, name, playerCount, botCount, function (response) {
+        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.CREATE_GAME, name, function (response) {
             resolve(response);
         });
     });
@@ -2486,6 +2705,14 @@ var subscribe = function (socket) {
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, function (packet) {
             log_1.log("[NEW_FEED_MESSAGE]", packet);
             emit(feedActions_1.newFeedMessage(packet));
+        });
+        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, function (packet) {
+            log_1.log("[LOBBY_PLAYER_UPDATE]", packet);
+            emit(lobbyActions_1.updateLobbyPlayerAction(packet.index, packet.player));
+        });
+        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.START_GAME, function (packet) {
+            log_1.log("[START_GAME]", packet);
+            emit(localPlayerActions_1.joinCompleteAction({ playerId: packet.localPlayerId, gameId: packet.gameId, name: packet.name }));
         });
         // tslint:disable-next-line:no-empty
         return function () { };
@@ -2626,6 +2853,16 @@ var writeActionsToPackets = function () {
                                     return [2 /*return*/];
                             }
                         });
+                    }),
+                    effects_1.takeEvery(lobbyActionTypes_1.START_LOBBY_GAME, function () {
+                        return tslib_1.__generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.START_LOBBY_GAME))];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
                     })
                 ])];
             case 1:
@@ -2639,7 +2876,7 @@ var writePacketsToSocket = function (socket) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, effects_1.takeEvery(networkActionTypes_1.SEND_PACKET, function (_a) {
                     var payload = _a.payload;
-                    socket.emit.apply(socket, [payload.opcode].concat(payload.data));
+                    socket.emit.apply(socket, tslib_1.__spread([payload.opcode], payload.data));
                 })];
             case 1:
                 _a.sent();
@@ -2651,18 +2888,18 @@ var getResponseForAction = function (socket, action) {
     if (action.type === gameActionTypes_1.JOIN_GAME) {
         return effects_1.call(joinGame, socket, action.payload.name, action.payload.gameId);
     }
-    if (action.type === gameActionTypes_1.PLAY_SOLO) {
-        return effects_1.call(playSolo, socket, action.payload.name);
+    if (action.type === gameActionTypes_1.FIND_GAME) {
+        return effects_1.call(findGame, socket, action.payload.name);
     }
     if (action.type === gameActionTypes_1.CREATE_GAME) {
-        return effects_1.call(createGame, socket, action.payload.name, action.payload.playerCount, action.payload.botCount);
+        return effects_1.call(createGame, socket, action.payload.name);
     }
 };
 exports.networking = function () {
     var action, socket, _a, error, response;
     return tslib_1.__generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, effects_1.take([gameActionTypes_1.PLAY_SOLO, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
+            case 0: return [4 /*yield*/, effects_1.take([gameActionTypes_1.FIND_GAME, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
             case 1:
                 action = _b.sent();
                 return [4 /*yield*/, effects_1.call(getSocket, action.payload.serverIP)];
@@ -2678,14 +2915,14 @@ exports.networking = function () {
             case 5:
                 _a = _b.sent(), error = _a.error, response = _a.response;
                 if (!!error) return [3 /*break*/, 7];
-                return [4 /*yield*/, effects_1.put(localPlayerActions_1.joinCompleteAction(tslib_1.__assign({}, response, { name: action.payload.name })))];
+                return [4 /*yield*/, effects_1.put(lobbyActions_1.joinLobbyAction(response.playerId, response.lobbyId, response.players, response.startTimestamp, response.isHost))];
             case 6:
                 _b.sent();
                 return [3 /*break*/, 10];
             case 7: return [4 /*yield*/, effects_1.put(gameActions_1.joinGameError(error))];
             case 8:
                 _b.sent();
-                return [4 /*yield*/, effects_1.take([gameActionTypes_1.PLAY_SOLO, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
+                return [4 /*yield*/, effects_1.take([gameActionTypes_1.FIND_GAME, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
             case 9:
                 action = _b.sent();
                 return [3 /*break*/, 4];
@@ -2782,7 +3019,7 @@ exports.preventAccidentalClose = function () {
             case 1:
                 _a.sent();
                 // display an "Are you sure you want to leave this page?" dialog
-                window.onbeforeunload = function () { return false; };
+                window.onbeforeunload = function () { return "Are you sure you want to leave this page? There is currently no way to rejoin a game"; };
                 return [2 /*return*/];
         }
     });
@@ -2813,6 +3050,7 @@ var battleSaga_1 = __webpack_require__(/*! @common/match/combat/battleSaga */ ".
 var turnSimulator_1 = __webpack_require__(/*! @common/match/combat/turnSimulator */ "./src/shared/match/combat/turnSimulator.ts");
 var definitionProvider_1 = __webpack_require__(/*! @common/game/definitionProvider */ "./src/shared/game/definitionProvider.ts");
 var constants_1 = __webpack_require__(/*! @common/constants */ "./src/shared/constants.ts");
+var lobbyTimer_1 = __webpack_require__(/*! ./actions/lobbyTimer */ "./src/app/store/sagas/actions/lobbyTimer.ts");
 exports.rootSaga = function () {
     var _a, _b;
     return tslib_1.__generator(this, function (_c) {
@@ -2829,31 +3067,36 @@ exports.rootSaga = function () {
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(gamePhase_1.gamePhase)];
+                return [4 /*yield*/, effects_1.fork(lobbyTimer_1.lobbyTimer)];
             case 3:
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(preventAccidentalClose_1.preventAccidentalClose)];
+                return [4 /*yield*/, effects_1.fork(gamePhase_1.gamePhase)];
             case 4:
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(cardShop_1.cardShop)];
+                return [4 /*yield*/, effects_1.fork(preventAccidentalClose_1.preventAccidentalClose)];
             case 5:
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(evolution_1.evolutionSagaFactory())];
+                return [4 /*yield*/, effects_1.fork(cardShop_1.cardShop)];
             case 6:
                 _b = _b.concat([
                     _c.sent()
                 ]);
+                return [4 /*yield*/, effects_1.fork(evolution_1.evolutionSagaFactory())];
+            case 7:
+                _b = _b.concat([
+                    _c.sent()
+                ]);
                 return [4 /*yield*/, effects_1.fork(battleSaga_1.battle, new turnSimulator_1.TurnSimulator(new definitionProvider_1.DefinitionProvider()), constants_1.DEFAULT_TURN_COUNT, constants_1.DEFAULT_TURN_DURATION)];
-            case 7: return [4 /*yield*/, _a.apply(void 0, [_b.concat([
+            case 8: return [4 /*yield*/, _a.apply(void 0, [_b.concat([
                         _c.sent()
                     ])])];
-            case 8:
+            case 9:
                 _c.sent();
                 return [2 /*return*/];
         }
@@ -2993,7 +3236,7 @@ exports.benchReducer = function (state, action) {
         case benchActionTypes_1.BENCH_PIECES_UPDATED:
             return action.payload;
         case benchActionTypes_1.BENCH_PIECE_ADDED:
-            return state.concat([action.payload.piece]);
+            return tslib_1.__spread(state, [action.payload.piece]);
         case boardActionTypes_1.PIECE_MOVED_TO_BENCH:
             var target = tslib_1.__assign({}, action.payload.piece, { position: position_1.createTileCoordinates(action.payload.slot, null) });
             return piece_utils_1.moveOrAddPiece(state, target);
@@ -3352,6 +3595,7 @@ exports.DEFAULT_TURN_DURATION = 50;
 exports.DAMAGE_RATIO = 10;
 exports.MAX_NAME_LENGTH = 16;
 exports.MAX_PLAYERS_IN_GAME = 8;
+exports.LOBBY_WAIT_TIME = 60;
 
 
 /***/ }),
@@ -3742,6 +3986,7 @@ exports.definitions = [
 "use strict";
 
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var groupBy = function (list, keyGetter) {
     var map = new Map();
     list.forEach(function (item) {
@@ -3759,7 +4004,7 @@ var groupBy = function (list, keyGetter) {
 exports.getTotalHealthByTeam = function (pieces) {
     var grouped = groupBy(pieces, function (p) { return p.ownerId; });
     return grouped.map(function (_a) {
-        var key = _a[0], values = _a[1];
+        var _b = tslib_1.__read(_a, 2), key = _b[0], values = _b[1];
         return {
             ownerId: key,
             totalHealth: values.reduce(function (acc, cur) { return acc + cur.currentHealth; }, 0)
@@ -4332,10 +4577,12 @@ var ServerToClientPacketOpcodes;
     ServerToClientPacketOpcodes["MONEY_UPDATE"] = "moneyUpdate";
     ServerToClientPacketOpcodes["LEVEL_UPDATE"] = "levelUpdate";
     ServerToClientPacketOpcodes["NEW_FEED_MESSAGE"] = "newFeedMessage";
+    ServerToClientPacketOpcodes["LOBBY_PLAYER_UPDATE"] = "lobbyPlayerUpdate";
+    ServerToClientPacketOpcodes["START_GAME"] = "START_GAME";
 })(ServerToClientPacketOpcodes = exports.ServerToClientPacketOpcodes || (exports.ServerToClientPacketOpcodes = {}));
 var ClientToServerPacketOpcodes;
 (function (ClientToServerPacketOpcodes) {
-    ClientToServerPacketOpcodes["PLAY_SOLO"] = "playSolo";
+    ClientToServerPacketOpcodes["FIND_GAME"] = "findGame";
     ClientToServerPacketOpcodes["JOIN_GAME"] = "joinGame";
     ClientToServerPacketOpcodes["CREATE_GAME"] = "createGame";
     ClientToServerPacketOpcodes["BUY_CARD"] = "buyCard";
@@ -4347,6 +4594,7 @@ var ClientToServerPacketOpcodes;
     ClientToServerPacketOpcodes["SEND_CHAT_MESSAGE"] = "sendChatMessage";
     ClientToServerPacketOpcodes["FINISH_MATCH"] = "finishMatch";
     ClientToServerPacketOpcodes["READY_UP"] = "readyUp";
+    ClientToServerPacketOpcodes["START_LOBBY_GAME"] = "startLobbyGame";
 })(ClientToServerPacketOpcodes = exports.ClientToServerPacketOpcodes || (exports.ClientToServerPacketOpcodes = {}));
 
 
@@ -4362,6 +4610,7 @@ var ClientToServerPacketOpcodes;
 "use strict";
 
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var uuid = __webpack_require__(/*! uuid/v4 */ "./node_modules/uuid/v4.js");
 var position_1 = __webpack_require__(/*! ./position */ "./src/shared/position.ts");
 var constants_1 = __webpack_require__(/*! ./constants */ "./src/shared/constants.ts");
@@ -4372,7 +4621,7 @@ exports.createPiece = function (definitionProvider, ownerId, definitionId, posit
         id: id || uuid(),
         ownerId: ownerId,
         definitionId: definitionId,
-        position: position_1.createTileCoordinates.apply(void 0, position),
+        position: position_1.createTileCoordinates.apply(void 0, tslib_1.__spread(position)),
         facingAway: true,
         maxHealth: stats.hp,
         currentHealth: stats.hp,
@@ -4388,18 +4637,28 @@ exports.clonePiece = function (definitionProvider, piece) {
     return exports.createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y], 0, piece.id, piece.stage);
 };
 exports.moveOrAddPiece = function (allPieces, target) {
+    var e_1, _a;
     var result = [];
     var targetAdded = false;
-    for (var _i = 0, allPieces_1 = allPieces; _i < allPieces_1.length; _i++) {
-        var p = allPieces_1[_i];
-        // if this isn't the target just push it
-        if (p.id !== target.id) {
-            result.push(p);
-            continue;
+    try {
+        for (var allPieces_1 = tslib_1.__values(allPieces), allPieces_1_1 = allPieces_1.next(); !allPieces_1_1.done; allPieces_1_1 = allPieces_1.next()) {
+            var p = allPieces_1_1.value;
+            // if this isn't the target just push it
+            if (p.id !== target.id) {
+                result.push(p);
+                continue;
+            }
+            // otherwise add the target
+            result.push(target);
+            targetAdded = true;
         }
-        // otherwise add the target
-        result.push(target);
-        targetAdded = true;
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (allPieces_1_1 && !allPieces_1_1.done && (_a = allPieces_1["return"])) _a.call(allPieces_1);
+        }
+        finally { if (e_1) throw e_1.error; }
     }
     if (targetAdded === false) {
         result.push(target);

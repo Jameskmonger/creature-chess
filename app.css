@@ -94,7 +94,7 @@ body {
     text-align: center;
     text-transform: uppercase; }
 
-.lobby {
+.menu {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -102,20 +102,20 @@ body {
   color: #fff;
   align-items: center;
   justify-content: center; }
-  .lobby .title {
+  .menu .title {
     margin-bottom: 0.5em;
     font-size: 2em;
     text-align: center;
     cursor: pointer;
     user-select: none; }
-    .lobby .title .debug-mode {
+    .menu .title .debug-mode {
       font-size: 0.7em;
       font-style: italic;
       font-weight: 700;
       color: #b3b3b3; }
-  .lobby .name-input {
+  .menu .name-input {
     font-size: 1.4em; }
-  .lobby .join-game input {
+  .menu .join-game input {
     display: block;
     width: 100%;
     box-sizing: border-box;
@@ -130,32 +130,32 @@ body {
     /* stylelint-enable */
     border-bottom: 2px solid #b13e53;
     /* stylelint-disable */ }
-    .lobby .join-game input::placeholder {
+    .menu .join-game input::placeholder {
       /* stylelint-enable */
       font-style: italic;
       color: #aaa; }
-  .lobby .join-game {
+  .menu .join-game {
     padding: 2em 5em;
     margin-top: 3em;
     text-align: center;
     background: #566c86; }
-  .lobby .join-options {
+  .menu .join-options {
     display: flex; }
-  .lobby .option:not(:last-child) {
+  .menu .option:not(:last-child) {
     padding-right: 1em;
     margin-right: 1em;
     border-right: 2px solid #626262; }
-  .lobby .option {
+  .menu .option {
     flex: 1 1 0;
     padding-top: 1rem;
     padding-bottom: 1rem;
     margin-top: 1rem;
     margin-bottom: 1rem; }
-    .lobby .option .option-input {
+    .menu .option .option-input {
       margin-bottom: 1rem;
       font-size: 1.4em;
       text-align: center; }
-    .lobby .option .option-button {
+    .menu .option .option-button {
       padding: 0.8em 2em;
       margin-bottom: 0.5em;
       font-size: 1.4rem;
@@ -165,15 +165,15 @@ body {
       /* stylelint-disable */
       border: none;
       /* stylelint-enable */ }
-      .lobby .option .option-button.primary {
+      .menu .option .option-button.primary {
         background: #b13e53; }
-      .lobby .option .option-button.secondary {
+      .menu .option .option-button.secondary {
         background: #626262; }
-    .lobby .option .description {
+    .menu .option .description {
       margin-bottom: 0.4em;
       font-size: 0.8rem;
       font-style: italic; }
-  .lobby .error {
+  .menu .error {
     padding: 1em 0.5em;
     margin-bottom: 1em;
     color: #db2828;
@@ -637,4 +637,68 @@ body {
     font-size: 0.8em;
     font-style: italic;
     color: #fff; }
+
+.player {
+  padding: 0.4em 1em;
+  margin-bottom: 0.4em;
+  font-weight: 700;
+  text-align: left;
+  background: #59616b; }
+
+.lobby {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
+  align-items: center;
+  justify-content: center; }
+
+.lobby-info {
+  display: flex;
+  padding: 2em 5em;
+  margin-top: 3em;
+  text-align: center;
+  background: #566c86; }
+
+.players {
+  flex: 1 0 0; }
+
+.text {
+  flex: 1 0 0;
+  margin-left: 1em; }
+
+.player.bot {
+  font-style: italic;
+  color: #d0d0d0; }
+
+.lobby-id {
+  margin-bottom: 1em;
+  font-size: 1.6em;
+  font-weight: 700; }
+
+.timeRemaining {
+  padding: 0.5em 0.6em;
+  margin-bottom: 1em;
+  text-transform: uppercase;
+  background: #333; }
+  .timeRemaining .time {
+    font-weight: 700; }
+
+.host {
+  margin-left: 1em;
+  font-size: 0.7em;
+  font-weight: 700;
+  color: #ffd700;
+  text-transform: uppercase; }
+
+.start-game {
+  padding: 0.5em 1em;
+  margin-bottom: 1em;
+  font-size: 1.2em;
+  color: #000;
+  cursor: pointer;
+  background: #ffd700;
+  /* stylelint-disable-next-line */
+  border: none; }
 
