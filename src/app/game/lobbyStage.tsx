@@ -22,6 +22,8 @@ const LobbyStage: React.FunctionComponent = () => {
                     }
                 </div>
                 <div className="text">
+                    <h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
+
                     <p>The game will start {LOBBY_WAIT_TIME} seconds after the lobby is created,</p>
                     <p>or immediately when there are {MAX_PLAYERS_IN_GAME} players</p>
                 </div>
