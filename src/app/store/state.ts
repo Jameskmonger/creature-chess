@@ -29,4 +29,11 @@ export interface AppState {
     cards: Models.Card[];
     localPlayer: LocalPlayerState;
     feedMessages: FeedMessage[];
+    lobby: LobbyState;
+}
+
+export interface LobbyState {
+    localPlayerId: string;
+    lobbyId: string;
+    players: ({ id: string, name: string })[]
 }
