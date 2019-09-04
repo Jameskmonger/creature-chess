@@ -27,6 +27,7 @@ import { newFeedMessage } from "../../../feed/feedActions";
 import { FeedMessage } from "@common/feed-message";
 import { SEND_CHAT_MESSAGE } from "../../../chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
+import { joinLobbyAction } from '../../actions/lobbyActions';
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -213,11 +214,7 @@ export const networking = function*() {
         const { error, response }: JoinLobbyResponse = yield getResponseForAction(socket, action);
 
         if (!error) {
-            yield put(joinCompleteAction({
-                playerId: response.playerId,
-                gameId: response.lobbyId,
-                name: action.payload.name
-            }));
+            yield put(joinLobbyAction(response.playerId, response.lobbyId, response.players));
             break;
         }
 

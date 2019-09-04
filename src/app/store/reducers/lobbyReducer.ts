@@ -26,5 +26,7 @@ export function lobby(
             cloned.players[action.payload.index] = action.payload.player;
 
             return cloned;
+        default:
+            return state;
     }
 };

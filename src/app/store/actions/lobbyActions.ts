@@ -18,3 +18,20 @@ export type UpdateLobbyPlayerAction = ({
 });
 
 export type LobbyAction = JoinLobbyAction | UpdateLobbyPlayerAction;
+
+export const joinLobbyAction = (localPlayerId: string, lobbyId: string, players: ({ id: string, name: string })[]) => ({
+    type: JOIN_LOBBY,
+    payload: {
+        localPlayerId,
+        lobbyId,
+        players
+    }
+});
+
+export const updateLobbyPlayerAction = (index: number, player: { id: string, name: string }) => ({
+    type: UPDATE_LOBBY_PLAYER,
+    payload: {
+        index,
+        player
+    }
+});
