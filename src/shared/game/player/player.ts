@@ -19,13 +19,15 @@ import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { PlayerBoard } from "./playerBoard";
 import { StreakType } from "../../models/streakType";
+import { LobbyPlayer } from '@common/models';
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
     SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
     FINISH_MATCH = "FINISH_MATCH",
     UPDATE_READY = "UPDATE_READY",
-    UPDATE_STREAK = "UPDATE_STREAK"
+    UPDATE_STREAK = "UPDATE_STREAK",
+    START_LOBBY_GAME = "START_LOBBY_GAME" 
 }
 
 interface StreakInfo {
@@ -49,6 +51,8 @@ export abstract class Player {
     protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
+
+    public abstract readonly isBot: boolean;
 
     private events = new EventEmitter();
 
@@ -180,6 +184,10 @@ export abstract class Player {
         return this.getBoard().map(p => clonePiece(this.definitionProvider, p));
     }
 
+    public onStartLobbyGame(fn: () => void) {
+        this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
+    }
+
     public onHealthUpdate(fn: (health: number) => void) {
         this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
 
@@ -255,9 +263,13 @@ export abstract class Player {
         this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
 
+    public abstract onStartGame();
+
     public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
 
     public abstract onNewFeedMessage(message: FeedMessage);
+    
+    public abstract onLobbyPlayerUpdate(index: number, player: LobbyPlayer);
 
     protected abstract onEnterPreparingPhase(round: number);
 
@@ -277,6 +289,10 @@ export abstract class Player {
 
     protected belowPieceLimit() {
         return this.getBoard().length < this.level.getValue().level;
+    }
+
+    protected startLobbyGame = () => {
+        this.events.emit(PlayerEvent.START_LOBBY_GAME);
     }
 
     protected buyCard = (cardIndex: number) => {

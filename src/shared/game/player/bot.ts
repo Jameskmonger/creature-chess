@@ -3,7 +3,7 @@ import { createTileCoordinates } from "../../position";
 import { Player } from "./player";
 import { GRID_SIZE } from "../../constants";
 import { PlayerListPlayer } from "../../models/player-list-player";
-import { Card, Piece } from "../../models";
+import { Card, Piece, LobbyPlayer } from "../../models";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
@@ -29,9 +29,17 @@ interface PieceView {
 type CardPieceView = CardView | PieceView;
 
 export class Bot extends Player {
+    public readonly isBot: boolean = true;
+
+    public onStartGame() { /* nothing required, we're a bot */ }
+
     public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
 
-    public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }
+    public onNewFeedMessage(message: FeedMessage) { }
+
+    public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
+        /* nothing required, we're a bot */
+    }
 
     protected onEnterPreparingPhase() {
         this.buyBestPieces();

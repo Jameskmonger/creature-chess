@@ -1,6 +1,6 @@
 import { TileCoordinates } from "./position";
 import { GamePhase } from "./game-phase";
-import { Piece, Card } from "./models";
+import { Piece, Card, LobbyPlayer } from "./models";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -8,11 +8,13 @@ export enum ServerToClientPacketOpcodes {
     PHASE_UPDATE = "phaseUpdate",
     MONEY_UPDATE = "moneyUpdate",
     LEVEL_UPDATE = "levelUpdate",
-    NEW_FEED_MESSAGE = "newFeedMessage"
+    NEW_FEED_MESSAGE = "newFeedMessage",
+    LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate",
+    START_GAME = "START_GAME"
 }
 
 export enum ClientToServerPacketOpcodes {
-    PLAY_SOLO = "playSolo",
+    FIND_GAME = "findGame",
     JOIN_GAME = "joinGame",
     CREATE_GAME = "createGame",
     BUY_CARD = "buyCard",
@@ -23,7 +25,14 @@ export enum ClientToServerPacketOpcodes {
     BUY_XP = "buyXp",
     SEND_CHAT_MESSAGE = "sendChatMessage",
     FINISH_MATCH = "finishMatch",
-    READY_UP = "readyUp"
+    READY_UP = "readyUp",
+    START_LOBBY_GAME = "startLobbyGame"
+}
+
+export interface StartGamePacket {
+    gameId: string;
+    localPlayerId: string;
+    name: string;
 }
 
 export interface MovePiecePacket {
@@ -41,6 +50,11 @@ export interface LevelUpdatePacket {
     xp: number;
 }
 
+export interface LobbyPlayerUpdatePacket {
+    index: number;
+    player: LobbyPlayer;
+}
+
 interface PreparingPhasePacket {
     round: number;
     pieces: Piece[];
@@ -54,10 +68,13 @@ export type PhaseUpdatePacket
     | ({ phase: GamePhase.PLAYING })
     | ({ phase: GamePhase.DEAD });
 
-export interface JoinGameResponse {
+export interface JoinLobbyResponse {
     error?: string;
     response?: {
         playerId: string;
-        gameId: string;
+        lobbyId: string;
+        players: LobbyPlayer[];
+        startTimestamp: number;
+        isHost: boolean;
     };
 }
