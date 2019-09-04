@@ -232,7 +232,8 @@ export const networking = function*() {
                 response.playerId,
                 response.lobbyId,
                 response.players,
-                response.startTimestamp
+                response.startTimestamp,
+                response.isHost
             ));
             break;
         }

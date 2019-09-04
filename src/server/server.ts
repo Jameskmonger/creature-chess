@@ -63,7 +63,8 @@ export class Server {
                     playerId: player.id,
                     lobbyId: lobby.id,
                     players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime
+                    startTimestamp: lobby.gameStartTime,
+                    isHost: player.id === lobby.hostId
                 }
             });
         }
@@ -115,7 +116,8 @@ export class Server {
                     playerId: player.id,
                     lobbyId: lobby.id,
                     players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime
+                    startTimestamp: lobby.gameStartTime,
+                    isHost: player.id === lobby.hostId
                 }
             });
         };
@@ -155,7 +157,8 @@ export class Server {
                     playerId: player.id,
                     lobbyId: lobby.id,
                     players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime
+                    startTimestamp: lobby.gameStartTime,
+                    isHost: player.id === lobby.hostId
                 }
             });
         };
@@ -166,7 +169,13 @@ export class Server {
     }
 
     private getLobbyPlayers(lobby: Lobby): LobbyPlayer[] {
-        return lobby.getPlayers().map(p => ({ id: p.id, name: p.name, isBot: p.isBot }));
+        return lobby.getPlayers().map((p, index) => ({
+            id: p.id,
+            name: p.name,
+            isBot: p.isBot,
+            // first player is always host, but no host in public lobby
+            isHost: lobby.isPublic ? false : (index === 0)
+        }));
     }
 
     private findPublicLobby() {

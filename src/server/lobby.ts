@@ -30,6 +30,7 @@ export class Lobby {
     public readonly id: string;
     public readonly isPublic: boolean;
     public readonly gameStartTime: number = null;
+    public readonly hostId: string;
 
     private players: Player[];
     private events = new EventEmitter();
@@ -39,6 +40,7 @@ export class Lobby {
         this.id = idGenerator.generateId();
 
         this.players = [ initialPlayer ];
+        this.hostId = this.players[0].id;
         for (let i = 0; i < MAX_PLAYERS_IN_GAME - 1; i++) {
             this.addBot();
         }
@@ -87,7 +89,14 @@ export class Lobby {
                 continue;
             }
 
-            const lobbyPlayer = ({ id: player.id, name: player.name, isBot: player.isBot });
+            const lobbyPlayer = ({ 
+                id: player.id, 
+                name: player.name,
+                isBot: player.isBot,
+
+                // only first player can be host so no point trying to calculate it for a just-added player
+                isHost: false
+            });
             this.players[i].onLobbyPlayerUpdate(playerChangedIndex, lobbyPlayer);
         }
 

@@ -6,7 +6,8 @@ const initialState: LobbyState = {
     lobbyId: null,
     localPlayerId: null,
     players: [],
-    secondsRemaining: null
+    secondsRemaining: null,
+    isHost: false
 };
 
 export function lobby(
@@ -19,7 +20,8 @@ export function lobby(
                 ...state,
                 lobbyId: action.payload.lobbyId,
                 localPlayerId: action.payload.localPlayerId,
-                players: action.payload.players
+                players: action.payload.players,
+                isHost: action.payload.isHost
             };
         case UPDATE_LOBBY_SECONDS_REMAINING:
             return {

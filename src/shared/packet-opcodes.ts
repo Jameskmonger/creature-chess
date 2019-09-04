@@ -74,5 +74,6 @@ export interface JoinLobbyResponse {
         lobbyId: string;
         players: LobbyPlayer[];
         startTimestamp: number;
+        isHost: boolean;
     };
 }

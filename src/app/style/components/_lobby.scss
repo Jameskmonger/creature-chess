@@ -54,3 +54,23 @@
         font-weight: 700;
     }
 }
+
+.host {
+    margin-left: 1em;
+    font-size: 0.7em;
+    font-weight: 700;
+    color: $lobby-host-color;
+    text-transform: uppercase;
+}
+
+.start-game {
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    font-size: 1.2em;
+    color: #000;
+    cursor: pointer;
+    background: $lobby-host-color;
+
+    /* stylelint-disable-next-line */
+    border: none;
+}

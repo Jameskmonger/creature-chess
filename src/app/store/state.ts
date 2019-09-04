@@ -38,4 +38,5 @@ export interface LobbyState {
     lobbyId: string;
     players: LobbyPlayer[];
     secondsRemaining: number;
+    isHost: boolean;
 }
