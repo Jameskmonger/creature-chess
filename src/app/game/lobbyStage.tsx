@@ -6,6 +6,23 @@ import { LobbyPlayer } from '@common/models';
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
+const TimeRemaining: React.FunctionComponent<{ totalSecondsRemaining: number }> = ({ totalSecondsRemaining }) => {
+    if (totalSecondsRemaining === null) {
+        return null;
+    }
+
+    const minutesRemaining = Math.floor(totalSecondsRemaining / 60);
+    const secondsRemaining = Math.ceil(totalSecondsRemaining % 60);
+
+    const time = `${minutesRemaining}:${padNumberToTwo(secondsRemaining)}`;
+
+    return (
+        <div className="timeRemaining">
+            Game starting in <span className="time">{time}</span>
+        </div>
+    );
+};
+
 const LobbyStage: React.FunctionComponent = () => {
     const lobbyId = useSelector<AppState, string>(state => state.lobby.lobbyId);
     const localPlayerId = useSelector<AppState, string>(state => state.lobby.localPlayerId);
@@ -15,11 +32,6 @@ const LobbyStage: React.FunctionComponent = () => {
     if (lobbyId === null) {
         return <div>An error occured, please refresh your page</div>;
     }
-
-    const minutesRemaining = Math.floor(totalSecondsRemaining / 60);
-    const secondsRemaining = Math.ceil(totalSecondsRemaining % 60);
-
-    const time = `${minutesRemaining}:${padNumberToTwo(secondsRemaining)}`;
 
     return (
         <div className="lobby">
@@ -34,9 +46,7 @@ const LobbyStage: React.FunctionComponent = () => {
                     }
                 </div>
                 <div className="text">
-                    <div className="timeRemaining">
-                        Game starting in <span className="time">{time}</span>
-                    </div>
+                    <TimeRemaining totalSecondsRemaining={totalSecondsRemaining} />
 
                     <h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
 
