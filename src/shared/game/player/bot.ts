@@ -29,6 +29,8 @@ interface PieceView {
 type CardPieceView = CardView | PieceView;
 
 export class Bot extends Player {
+    public readonly isBot: boolean = true;
+
     public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
 
     public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }

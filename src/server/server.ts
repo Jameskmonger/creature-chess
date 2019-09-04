@@ -1,35 +1,19 @@
 import io = require("socket.io");
 import uuid = require("uuid/v4");
 import { log } from "@common/log";
-import { ClientToServerPacketOpcodes, JoinGameResponse } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, JoinLobbyResponse } from "@common/packet-opcodes";
 import { Game } from "@common/game/game";
 import { Connection } from "./connection";
-import { Bot } from "@common/game/player/bot";
-import { randomFromArray } from "@common/random-from-array";
 import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
-
-const BOT_NAMES = [
-    "Duke Horacio",
-    "Father Aereck",
-    "Prince Ali",
-    "Fred the Farmer",
-    "King Roald",
-    "Wise Old Man",
-    "Thessalia",
-    "Johnny the Beard",
-    "Delrith",
-    "Cap'n Izzy No-Beard",
-    "Sir Amik Varze",
-    "Party Pete",
-    "Make-over mage",
-    "Aggie",
-    "Evil Dave"
-];
+import { Lobby } from './lobby';
+import { Player } from '@common/game';
+import { IdGenerator } from './id-generator';
 
 const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
 
 export class Server {
-    private games = new Map<string, Game>();
+    private lobbies = new Map<string, Lobby>();
+    private lobbyIdGenerator = new IdGenerator();
 
     public listen(port: number) {
         const server = io.listen(port);
@@ -42,13 +26,13 @@ export class Server {
     private receiveConnection = (socket: io.Socket) => {
         log("Connection received");
 
-        let inGame = false;
+        let inLobby = false;
 
         const onFindGame = (
             name: string,
-            response: (response: JoinGameResponse) => void
+            response: (response: JoinLobbyResponse) => void
         ) => {
-            if (inGame) {
+            if (inLobby) {
                 return;
             }
             
@@ -60,31 +44,34 @@ export class Server {
                 return;
             }
 
-            const { game, gameId } = this.createGame();
-
             const player = new Connection(socket, name);
-            game.addPlayer(player);
-            game.onFinish(() => socket.disconnect());
 
-            inGame = true;
+            let lobby = this.findPublicLobby();
 
-            this.addBots(game, 7);
+            if (lobby) {
+                lobby.addPlayer(player);
+            } else {
+                lobby = this.createLobby(player, true);
+            }
+
+            inLobby = true;
 
             response({
                 error: null,
                 response: {
                     playerId: player.id,
-                    gameId
+                    lobbyId: lobby.id,
+                    players: lobby.getPlayers().map(p => ({ id: p.id, name: p.name }))
                 }
             });
         }
 
         const onJoinGame = (
             name: string,
-            gameId: string,
-            response: (response: JoinGameResponse) => void
+            lobbyId: string,
+            response: (response: JoinLobbyResponse) => void
         ) => {
-            if (inGame) {
+            if (inLobby) {
                 return;
             }
 
@@ -96,9 +83,9 @@ export class Server {
                 return;
             }
 
-            const game = this.getGameForId(gameId);
+            const lobby = this.getLobbyForId(lobbyId);
 
-            if (game === null) {
+            if (lobby === null) {
                 response({
                     error: "Game not found",
                     response: null
@@ -106,7 +93,7 @@ export class Server {
                 return;
             }
 
-            if (game.canAddPlayer() === false) {
+            if (lobby.canJoin() === false) {
                 response({
                     error: "Game is not joinable",
                     response: null
@@ -116,25 +103,25 @@ export class Server {
 
             const player = new Connection(socket, name);
 
-            game.addPlayer(player);
-            game.onFinish(() => socket.disconnect());
+            lobby.addPlayer(player);
 
-            inGame = true;
+            inLobby = true;
 
             response({
                 error: null,
                 response: {
                     playerId: player.id,
-                    gameId
+                    lobbyId: lobby.id,
+                    players: lobby.getPlayers().map(p => ({ id: p.id, name: p.name }))
                 }
             });
         };
 
         const onCreateGame = (
             name: string,
-            response: (response: JoinGameResponse) => void
+            response: (response: JoinLobbyResponse) => void
         ) => {
-            if (inGame) {
+            if (inLobby) {
                 return;
             }
 
@@ -154,21 +141,17 @@ export class Server {
                 return;
             }
 
-            const { game, gameId } = this.createGame();
-
             const player = new Connection(socket, name);
-            game.addPlayer(player);
-            game.onFinish(() => socket.disconnect());
+            const lobby = this.createLobby(player, false);
 
-            inGame = true;
-
-            this.addBots(game, 0);
+            inLobby = true;
 
             response({
                 error: null,
                 response: {
                     playerId: player.id,
-                    gameId
+                    lobbyId: lobby.id,
+                    players: lobby.getPlayers().map(p => ({ id: p.id, name: p.name }))
                 }
             });
         };
@@ -178,39 +161,36 @@ export class Server {
         socket.on(ClientToServerPacketOpcodes.CREATE_GAME, onCreateGame);
     }
 
-    private createGame() {
-        const gameId = uuid().substring(0, 6);
+    private findPublicLobby() {
+        for (const lobbyId in this.lobbies) {
+            const lobby = this.lobbies.get(lobbyId);
 
-        const game = new Game(8);
-        game.onFinish(() => this.games.delete(gameId));
+            if (lobby.isPublic === false || lobby.canJoin() === false) {
+                continue;
+            }
 
-        this.games.set(gameId, game);
-        log(`Game '${gameId}' created for 8 players`);
-
-        return {
-            game,
-            gameId
-        };
-    }
-
-    private getGameForId(gameId: string) {
-        return this.games.get(gameId) || null;
-    }
-
-    private addBots(game: Game, botCount: number) {
-        for (let i = 0; i < botCount; i++) {
-            this.addBot(game);
+            return lobby;
         }
+
+        return null;
     }
 
-    private addBot(game: Game) {
-        const playerNames = game.getPlayers().map(p => p.name);
-        const availableNames = BOT_NAMES.filter(n => playerNames.includes(`[BOT] ${n}`) === false);
+    private createLobby(player: Player, isPublic: boolean) {
+        const lobby = new Lobby(this.lobbyIdGenerator, player, isPublic);
 
-        const name = availableNames.length === 0
-            ? `Bot Player #${playerNames.length}`
-            : randomFromArray(availableNames);
+        lobby.onStartGame(players => {
 
-        game.addPlayer(new Bot(`[BOT] ${name}`));
+            this.lobbies.delete(lobby.id);
+        });
+
+        this.lobbies.set(lobby.id, lobby);
+
+        log(`Lobby '${lobby.id}' created`);
+        
+        return lobby;
+    }
+
+    private getLobbyForId(id: string) {
+        return this.lobbies.get(id) || null;
     }
 }

@@ -50,6 +50,8 @@ export abstract class Player {
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
 
+    public abstract readonly isBot: boolean;
+
     private events = new EventEmitter();
 
     private deck: CardDeck;

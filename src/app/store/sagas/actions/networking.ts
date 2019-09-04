@@ -8,7 +8,7 @@ import {
     MovePiecePacket,
     PhaseUpdatePacket,
     LevelUpdatePacket,
-    JoinGameResponse
+    JoinLobbyResponse
 } from "@common/packet-opcodes";
 import { Models } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction } from "../../actions/gameActions";
@@ -40,24 +40,24 @@ const getSocket = (serverIP: string) => {
 };
 
 const findGame = (socket: Socket, name: string) => {
-    return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.FIND_GAME, name, (response: JoinGameResponse) => {
+    return new Promise<JoinLobbyResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.FIND_GAME, name, (response: JoinLobbyResponse) => {
             resolve(response);
         });
     });
 };
 
 const joinGame = (socket: Socket, name: string, gameId: string) => {
-    return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, (response: JoinGameResponse) => {
+    return new Promise<JoinLobbyResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, (response: JoinLobbyResponse) => {
             resolve(response);
         });
     });
 };
 
 const createGame = (socket: Socket, name: string) => {
-    return new Promise<JoinGameResponse>(resolve => {
-        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, (response: JoinGameResponse) => {
+    return new Promise<JoinLobbyResponse>(resolve => {
+        socket.emit(ClientToServerPacketOpcodes.CREATE_GAME, name, (response: JoinLobbyResponse) => {
             resolve(response);
         });
     });
@@ -210,11 +210,12 @@ export const networking = function*() {
     yield fork(readPacketsToActions, socket);
 
     while (true) {
-        const { error, response }: JoinGameResponse = yield getResponseForAction(socket, action);
+        const { error, response }: JoinLobbyResponse = yield getResponseForAction(socket, action);
 
         if (!error) {
             yield put(joinCompleteAction({
-                ...response,
+                playerId: response.playerId,
+                gameId: response.lobbyId,
                 name: action.payload.name
             }));
             break;

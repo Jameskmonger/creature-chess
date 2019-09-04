@@ -54,10 +54,11 @@ export type PhaseUpdatePacket
     | ({ phase: GamePhase.PLAYING })
     | ({ phase: GamePhase.DEAD });
 
-export interface JoinGameResponse {
+export interface JoinLobbyResponse {
     error?: string;
     response?: {
         playerId: string;
-        gameId: string;
+        lobbyId: string;
+        players: ({ id: string, name: string })[]
     };
 }

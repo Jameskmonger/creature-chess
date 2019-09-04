@@ -7,6 +7,7 @@ import { FeedMessage } from "@common/feed-message";
 type IncomingPacketListener = (...args: any[]) => void;
 
 export class Connection extends Player {
+    public readonly isBot: boolean = false;
     private socket: Socket;
 
     constructor(socket: Socket, name: string) {
