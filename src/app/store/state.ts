@@ -1,5 +1,6 @@
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
+import { LobbyPlayer } from '@common/models';
 
 export interface GameState {
     gameId: string;
@@ -35,5 +36,5 @@ export interface AppState {
 export interface LobbyState {
     localPlayerId: string;
     lobbyId: string;
-    players: ({ id: string, name: string })[]
+    players: LobbyPlayer[]
 }

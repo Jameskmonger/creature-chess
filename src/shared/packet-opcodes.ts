@@ -1,6 +1,6 @@
 import { TileCoordinates } from "./position";
 import { GamePhase } from "./game-phase";
-import { Piece, Card } from "./models";
+import { Piece, Card, LobbyPlayer } from "./models";
 
 export enum ServerToClientPacketOpcodes {
     CARDS_UPDATE = "cardsUpdate",
@@ -59,6 +59,6 @@ export interface JoinLobbyResponse {
     response?: {
         playerId: string;
         lobbyId: string;
-        players: ({ id: string, name: string })[]
+        players: LobbyPlayer[]
     };
 }

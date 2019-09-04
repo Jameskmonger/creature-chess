@@ -2,11 +2,12 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from '../store/state';
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from '@common/constants';
+import { LobbyPlayer } from '@common/models';
 
 const LobbyStage: React.FunctionComponent = () => {
     const lobbyId = useSelector<AppState, string>(state => state.lobby.lobbyId);
     const localPlayerId = useSelector<AppState, string>(state => state.lobby.localPlayerId);
-    const players = useSelector<AppState, ({ id: string, name: string })[]>(state => state.lobby.players);
+    const players = useSelector<AppState, LobbyPlayer[]>(state => state.lobby.players);
 
     return (
         <div className="lobby">
@@ -14,7 +15,7 @@ const LobbyStage: React.FunctionComponent = () => {
                 <div className="players">
                     {
                         players.map(p => (
-                            <div className="player">
+                            <div className={`player${p.isBot ? " bot" : ""}`}>
                                 <span>{p.name}</span>
                             </div>
                         ))

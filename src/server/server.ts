@@ -8,6 +8,7 @@ import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
 import { Lobby } from './lobby';
 import { Player } from '@common/game';
 import { IdGenerator } from './id-generator';
+import { LobbyPlayer } from '@common/models';
 
 const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
 
@@ -61,7 +62,7 @@ export class Server {
                 response: {
                     playerId: player.id,
                     lobbyId: lobby.id,
-                    players: lobby.getPlayers().map(p => ({ id: p.id, name: p.name }))
+                    players: this.getLobbyPlayers(lobby)
                 }
             });
         }
@@ -112,7 +113,7 @@ export class Server {
                 response: {
                     playerId: player.id,
                     lobbyId: lobby.id,
-                    players: lobby.getPlayers().map(p => ({ id: p.id, name: p.name }))
+                    players: this.getLobbyPlayers(lobby)
                 }
             });
         };
@@ -151,7 +152,7 @@ export class Server {
                 response: {
                     playerId: player.id,
                     lobbyId: lobby.id,
-                    players: lobby.getPlayers().map(p => ({ id: p.id, name: p.name }))
+                    players: this.getLobbyPlayers(lobby)
                 }
             });
         };
@@ -159,6 +160,10 @@ export class Server {
         socket.on(ClientToServerPacketOpcodes.FIND_GAME, onFindGame);
         socket.on(ClientToServerPacketOpcodes.JOIN_GAME, onJoinGame);
         socket.on(ClientToServerPacketOpcodes.CREATE_GAME, onCreateGame);
+    }
+
+    private getLobbyPlayers(lobby: Lobby): LobbyPlayer[] {
+        return lobby.getPlayers().map(p => ({ id: p.id, name: p.name, isBot: p.isBot }));
     }
 
     private findPublicLobby() {
