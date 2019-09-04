@@ -62,7 +62,8 @@ export class Server {
                 response: {
                     playerId: player.id,
                     lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby)
+                    players: this.getLobbyPlayers(lobby),
+                    startTimestamp: lobby.gameStartTime
                 }
             });
         }
@@ -113,7 +114,8 @@ export class Server {
                 response: {
                     playerId: player.id,
                     lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby)
+                    players: this.getLobbyPlayers(lobby),
+                    startTimestamp: lobby.gameStartTime
                 }
             });
         };
@@ -152,7 +154,8 @@ export class Server {
                 response: {
                     playerId: player.id,
                     lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby)
+                    players: this.getLobbyPlayers(lobby),
+                    startTimestamp: lobby.gameStartTime
                 }
             });
         };

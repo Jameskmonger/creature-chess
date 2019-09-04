@@ -6,7 +6,8 @@ export type JoinLobbyAction = ({
     payload: {
         localPlayerId: string;
         lobbyId: string;
-        players: LobbyPlayer[]
+        players: LobbyPlayer[];
+        startTimestamp: number;
     }
 });
 
@@ -20,16 +21,17 @@ export type UpdateLobbyPlayerAction = ({
 
 export type LobbyAction = JoinLobbyAction | UpdateLobbyPlayerAction;
 
-export const joinLobbyAction = (localPlayerId: string, lobbyId: string, players: (LobbyPlayer)[]) => ({
+export const joinLobbyAction = (localPlayerId: string, lobbyId: string, players: LobbyPlayer[], startTimestamp: number): JoinLobbyAction => ({
     type: JOIN_LOBBY,
     payload: {
         localPlayerId,
         lobbyId,
-        players
+        players,
+        startTimestamp
     }
 });
 
-export const updateLobbyPlayerAction = (index: number, player: LobbyPlayer) => ({
+export const updateLobbyPlayerAction = (index: number, player: LobbyPlayer): UpdateLobbyPlayerAction => ({
     type: UPDATE_LOBBY_PLAYER,
     payload: {
         index,

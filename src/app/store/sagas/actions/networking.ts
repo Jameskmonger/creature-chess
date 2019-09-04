@@ -221,7 +221,12 @@ export const networking = function*() {
         const { error, response }: JoinLobbyResponse = yield getResponseForAction(socket, action);
 
         if (!error) {
-            yield put(joinLobbyAction(response.playerId, response.lobbyId, response.players));
+            yield put(joinLobbyAction(
+                response.playerId,
+                response.lobbyId,
+                response.players,
+                response.startTimestamp
+            ));
             break;
         }
 

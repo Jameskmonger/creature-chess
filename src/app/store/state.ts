@@ -36,5 +36,6 @@ export interface AppState {
 export interface LobbyState {
     localPlayerId: string;
     lobbyId: string;
-    players: LobbyPlayer[]
+    players: LobbyPlayer[];
+    secondsRemaining: number;
 }

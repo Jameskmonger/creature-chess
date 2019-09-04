@@ -65,6 +65,7 @@ export interface JoinLobbyResponse {
     response?: {
         playerId: string;
         lobbyId: string;
-        players: LobbyPlayer[]
+        players: LobbyPlayer[];
+        startTimestamp: number;
     };
 }

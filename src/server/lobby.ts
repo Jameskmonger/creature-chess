@@ -29,6 +29,8 @@ enum LobbyEvents {
 export class Lobby {
     public readonly id: string;
     public readonly isPublic: boolean;
+    public readonly gameStartTime: number = null;
+
     private players: Player[];
     private events = new EventEmitter();
     private gameStarted: boolean = false;
@@ -45,7 +47,9 @@ export class Lobby {
 
         // start public games automatically
         if (this.isPublic) {
-            setTimeout(() => this.startGame(), LOBBY_WAIT_TIME_SECONDS * 1000);
+            const waitTimeMs = LOBBY_WAIT_TIME_SECONDS * 1000;
+            this.gameStartTime = Date.now() + waitTimeMs;
+            setTimeout(() => this.startGame(), waitTimeMs);
         }
     }
 

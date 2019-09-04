@@ -30,7 +30,7 @@
 
 .text {
     flex: 1 0 0;
-    padding: 1em;
+    margin-left: 1em;
 }
 
 .player.bot {
@@ -42,4 +42,15 @@
     margin-bottom: 1em;
     font-size: 1.6em;
     font-weight: 700;
+}
+
+.timeRemaining {
+    padding: 0.5em 0.6em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    background: #333;
+
+    .time {
+        font-weight: 700;
+    }
 }
