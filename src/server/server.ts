@@ -184,6 +184,8 @@ export class Server {
         const lobby = new Lobby(this.lobbyIdGenerator, player, isPublic);
 
         lobby.onStartGame(players => {
+            log(`Lobby '${lobby.id}' has started`);
+            log(`players are: ${players.map(p => p.name).join(", ")}`)
 
             this.lobbies.delete(lobby.id);
         });
