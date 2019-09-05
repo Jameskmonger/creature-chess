@@ -154,6 +154,33 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/app/board/announcement.tsx":
+/*!****************************************!*\
+  !*** ./src/app/board/announcement.tsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var Announcement = function () {
+    var mainAnnouncement = react_redux_1.useSelector(function (state) { return state.game.mainAnnouncement; });
+    var subAnnouncement = react_redux_1.useSelector(function (state) { return state.game.subAnnouncement; });
+    if (!mainAnnouncement) {
+        return null;
+    }
+    return (React.createElement("div", { className: "announcement" },
+        subAnnouncement && React.createElement("h3", { className: "sub" }, subAnnouncement),
+        React.createElement("h2", { className: "main" }, mainAnnouncement)));
+};
+exports.Announcement = Announcement;
+
+
+/***/ }),
+
 /***/ "./src/app/board/bench.tsx":
 /*!*********************************!*\
   !*** ./src/app/board/bench.tsx ***!
@@ -1424,6 +1451,7 @@ var profile_1 = __webpack_require__(/*! ../components/profile */ "./src/app/comp
 var feed_1 = __webpack_require__(/*! ../feed/feed */ "./src/app/feed/feed.tsx");
 var gameId_1 = __webpack_require__(/*! ../components/gameId */ "./src/app/components/gameId.tsx");
 var roundIndicator_1 = __webpack_require__(/*! ../components/roundIndicator */ "./src/app/components/roundIndicator.tsx");
+var announcement_1 = __webpack_require__(/*! ../board/announcement */ "./src/app/board/announcement.tsx");
 var getWidthFromHeight = function (height) {
     return ((height / (_common_1.Constants.GRID_SIZE + 1)) * _common_1.Constants.GRID_SIZE);
 };
@@ -1460,7 +1488,8 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                     React.createElement("div", { className: "group board-container", style: boardContainerStyle },
                         React.createElement("div", { className: "chessboard" },
                             React.createElement(board_1.Board, null),
-                            React.createElement(bench_1.Bench, null))),
+                            React.createElement(bench_1.Bench, null)),
+                        React.createElement(announcement_1.Announcement, null)),
                     React.createElement("div", { className: "group" },
                         React.createElement(cardShop_1.CardShop, null),
                         React.createElement(profile_1.Profile, null),
@@ -1602,6 +1631,7 @@ var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react
 var gameActions_1 = __webpack_require__(/*! ../store/actions/gameActions */ "./src/app/store/actions/gameActions.ts");
 var gameSelector_1 = __webpack_require__(/*! ../store/gameSelector */ "./src/app/store/gameSelector.ts");
 var constants_1 = __webpack_require__(/*! @common/constants */ "./src/shared/constants.ts");
+var get_url_parameter_1 = __webpack_require__(/*! ../get-url-parameter */ "./src/app/get-url-parameter.ts");
 var MenuStageUnconnected = /** @class */ (function (_super) {
     tslib_1.__extends(MenuStageUnconnected, _super);
     function MenuStageUnconnected() {
@@ -1609,7 +1639,7 @@ var MenuStageUnconnected = /** @class */ (function (_super) {
         _this.state = {
             name: "",
             gameId: "",
-            serverIP: "https://cc-server.jamesmonger.com",
+            serverIP: "",
             debugModeClickCount: 0
         };
         _this.onTitleClick = function () {
@@ -1690,6 +1720,12 @@ var MenuStageUnconnected = /** @class */ (function (_super) {
         };
         return _this;
     }
+    MenuStageUnconnected.prototype.componentDidMount = function () {
+        var serverParam = get_url_parameter_1.getUrlParameter("server");
+        this.setState({
+            serverIP: serverParam || "https://cc-server.jamesmonger.com"
+        });
+    };
     MenuStageUnconnected.prototype.render = function () {
         var title = this.state.debugModeClickCount === 3
             ? React.createElement("h2", { className: "title" },
@@ -1755,6 +1791,31 @@ var mapDispatchToProps = function (dispatch) { return ({
 }); };
 var MenuStage = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(MenuStageUnconnected);
 exports.MenuStage = MenuStage;
+
+
+/***/ }),
+
+/***/ "./src/app/get-url-parameter.ts":
+/*!**************************************!*\
+  !*** ./src/app/get-url-parameter.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+// this doesn't handle boolean parameters e.g. foo.com?bool
+// getUrlParameter("bool") and getUrlParameter("nonexistent") both return ""
+exports.getUrlParameter = function (name) {
+    var sanitizedName = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + sanitizedName + "=([^&#]*)");
+    var results = regex.exec(window.location.search);
+    if (results === null) {
+        return "";
+    }
+    return decodeURIComponent(results[1].replace(/\+/g, " "));
+};
 
 
 /***/ }),
@@ -1996,6 +2057,15 @@ exports.phaseTimerUpdated = function (time) { return ({
 exports.enableDebugMode = function () { return ({
     type: gameActionTypes_1.ENABLE_DEBUG_MODE
 }); };
+exports.updateAnnouncement = function (main, sub) { return ({
+    type: gameActionTypes_1.UPDATE_ANNOUNCEMENT,
+    payload: {
+        main: main, sub: sub
+    }
+}); };
+exports.clearAnnouncement = function () { return ({
+    type: gameActionTypes_1.CLEAR_ANNOUNCEMENT
+}); };
 
 
 /***/ }),
@@ -2117,6 +2187,8 @@ exports.GAME_PHASE_UPDATE = "GAME_PHASE_UPDATE";
 exports.MONEY_UPDATE = "MONEY_UPDATE";
 exports.PHASE_TIMER_UPDATED = "PHASE_TIMER_UPDATED";
 exports.ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
+exports.UPDATE_ANNOUNCEMENT = "UPDATE_ANNOUNCEMENT";
+exports.CLEAR_ANNOUNCEMENT = "CLEAR_ANNOUNCEMENT";
 
 
 /***/ }),
@@ -2243,7 +2315,9 @@ var initialState = {
     phase: _common_1.GamePhase.WAITING,
     phaseTimer: null,
     round: null,
-    debug: false
+    debug: false,
+    mainAnnouncement: null,
+    subAnnouncement: null
 };
 function game(state, action) {
     if (state === void 0) { state = initialState; }
@@ -2272,6 +2346,12 @@ function game(state, action) {
             return tslib_1.__assign({}, state, { money: action.payload.money });
         case gameActionTypes_1.ENABLE_DEBUG_MODE: {
             return tslib_1.__assign({}, state, { debug: true });
+        }
+        case gameActionTypes_1.UPDATE_ANNOUNCEMENT: {
+            return tslib_1.__assign({}, state, { mainAnnouncement: action.payload.main, subAnnouncement: action.payload.sub });
+        }
+        case gameActionTypes_1.CLEAR_ANNOUNCEMENT: {
+            return tslib_1.__assign({}, state, { mainAnnouncement: null, subAnnouncement: null });
         }
         default:
             return state;
@@ -2399,6 +2479,62 @@ function localPlayer(state, action) {
     }
 }
 exports.localPlayer = localPlayer;
+
+
+/***/ }),
+
+/***/ "./src/app/store/sagas/actions/announcement.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/store/sagas/actions/announcement.ts ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var effects_1 = __webpack_require__(/*! @redux-saga/core/effects */ "./node_modules/@redux-saga/core/dist/redux-saga-effects.esm.js");
+var gameActionTypes_1 = __webpack_require__(/*! ../../actiontypes/gameActionTypes */ "./src/app/store/actiontypes/gameActionTypes.ts");
+var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
+var gameActions_1 = __webpack_require__(/*! ../../actions/gameActions */ "./src/app/store/actions/gameActions.ts");
+exports.announcement = function () {
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.takeLatest(gameActionTypes_1.GAME_PHASE_UPDATE, function (action) {
+                    var state, opponentId_1, opponent;
+                    return tslib_1.__generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!(action.payload.phase === _common_1.GamePhase.READY)) return [3 /*break*/, 3];
+                                return [4 /*yield*/, effects_1.select()];
+                            case 1:
+                                state = _a.sent();
+                                opponentId_1 = action.payload.payload.opponentId;
+                                opponent = state.playerList.find(function (p) { return p.id === opponentId_1; });
+                                if (!opponent) {
+                                    return [2 /*return*/];
+                                }
+                                return [4 /*yield*/, effects_1.put(gameActions_1.updateAnnouncement(opponent.name, "Now Playing"))];
+                            case 2:
+                                _a.sent();
+                                return [3 /*break*/, 5];
+                            case 3:
+                                if (!(action.payload.phase === _common_1.GamePhase.PLAYING)) return [3 /*break*/, 5];
+                                return [4 /*yield*/, effects_1.put(gameActions_1.clearAnnouncement())];
+                            case 4:
+                                _a.sent();
+                                _a.label = 5;
+                            case 5: return [2 /*return*/];
+                        }
+                    });
+                })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+};
 
 
 /***/ }),
@@ -3063,6 +3199,7 @@ var turnSimulator_1 = __webpack_require__(/*! @common/match/combat/turnSimulator
 var definitionProvider_1 = __webpack_require__(/*! @common/game/definitionProvider */ "./src/shared/game/definitionProvider.ts");
 var constants_1 = __webpack_require__(/*! @common/constants */ "./src/shared/constants.ts");
 var lobbyTimer_1 = __webpack_require__(/*! ./actions/lobbyTimer */ "./src/app/store/sagas/actions/lobbyTimer.ts");
+var announcement_1 = __webpack_require__(/*! ./actions/announcement */ "./src/app/store/sagas/actions/announcement.ts");
 exports.rootSaga = function () {
     var _a, _b;
     return tslib_1.__generator(this, function (_c) {
@@ -3084,31 +3221,36 @@ exports.rootSaga = function () {
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(gamePhase_1.gamePhase)];
+                return [4 /*yield*/, effects_1.fork(announcement_1.announcement)];
             case 4:
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(preventAccidentalClose_1.preventAccidentalClose)];
+                return [4 /*yield*/, effects_1.fork(gamePhase_1.gamePhase)];
             case 5:
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(cardShop_1.cardShop)];
+                return [4 /*yield*/, effects_1.fork(preventAccidentalClose_1.preventAccidentalClose)];
             case 6:
                 _b = _b.concat([
                     _c.sent()
                 ]);
-                return [4 /*yield*/, effects_1.fork(evolution_1.evolutionSagaFactory())];
+                return [4 /*yield*/, effects_1.fork(cardShop_1.cardShop)];
             case 7:
                 _b = _b.concat([
                     _c.sent()
                 ]);
+                return [4 /*yield*/, effects_1.fork(evolution_1.evolutionSagaFactory())];
+            case 8:
+                _b = _b.concat([
+                    _c.sent()
+                ]);
                 return [4 /*yield*/, effects_1.fork(battleSaga_1.battle, new turnSimulator_1.TurnSimulator(new definitionProvider_1.DefinitionProvider()), constants_1.DEFAULT_TURN_COUNT, constants_1.DEFAULT_TURN_DURATION)];
-            case 8: return [4 /*yield*/, _a.apply(void 0, [_b.concat([
+            case 9: return [4 /*yield*/, _a.apply(void 0, [_b.concat([
                         _c.sent()
                     ])])];
-            case 9:
+            case 10:
                 _c.sent();
                 return [2 /*return*/];
         }
