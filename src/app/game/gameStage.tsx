@@ -87,6 +87,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Announcement />
                         </div>
                         <div className="group">
                             <RoundIndicator />
@@ -115,6 +117,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+
+                            <Announcement />
                         </div>
                         <div className="group">
                             <RoundIndicator />
