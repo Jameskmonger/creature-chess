@@ -16,6 +16,7 @@ import { Profile } from "../components/profile";
 import { Feed } from "../feed/feed";
 import { GameId } from "../components/gameId";
 import { RoundIndicator } from "../components/roundIndicator";
+import { Announcement } from '../board/announcement';
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -66,6 +67,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
                                 <Board />
                                 <Bench />
                             </div>
+                            
+                            <Announcement />
                         </div>
                         <div className="group">
                             <CardShop />

@@ -6,6 +6,7 @@ import { Piece } from "../models/piece";
 import { Player } from "../game/player/player";
 import { PIECES_TO_EVOLVE } from "../constants";
 
+// CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [
     [100, 70, 60, 50, 40, 33, 30, 24, 22, 19],
     [0, 30, 35, 35, 35, 30, 30, 30, 30, 25],
