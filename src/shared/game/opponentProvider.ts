@@ -1,15 +1,45 @@
+import { shuffle } from "lodash";
 import { Player } from "./player/player";
 import { randomFromArray } from "../random-from-array";
+import { log } from '@common/log';
 
 export class OpponentProvider {
-    private players: Player[] = [];
+    private players: Player[];
+    private remainingRotations: number[];
+    private rotation: number;
+
+    public updateRotation() {
+        const chosen = randomFromArray(this.remainingRotations);
+
+        this.remainingRotations = this.remainingRotations.filter(i => i !== chosen);
+
+        this.rotation = chosen;
+
+        log("Now using rotation " + chosen);
+    }
 
     public setPlayers(players: Player[]) {
         this.players = players;
+        
+        this.generateRotations();
     }
 
     public getOpponent(localPlayerId: string) {
-        const others = this.players.filter(other => other.isAlive() && other.id !== localPlayerId);
-        return randomFromArray(others);
+        const index = this.players.findIndex(p => p.id === localPlayerId);
+
+        return this.players[(index + this.rotation) % this.players.length];
+    }
+
+    private generateRotations() {
+        const rotations = [];
+
+        // a 3 player game will have rotations: [ 1, 2 ]
+        for (let i = 1; i < this.players.length; i++) {
+            rotations.push(i);
+        }
+
+        this.remainingRotations = shuffle(rotations);
+
+        this.updateRotation();
     }
 }

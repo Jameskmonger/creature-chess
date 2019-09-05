@@ -45,6 +45,7 @@ export class Game {
     private turnDuration: number;
     private GAME_SIZE: number;
     private round = 0;
+    private lastLivingPlayerCount: number;
     private phase = GamePhase.WAITING;
     private opponentProvider = new OpponentProvider();
     private playerList = new PlayerList();
@@ -61,6 +62,7 @@ export class Game {
         this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
         this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
         this.opponentProvider.setPlayers(this.players);
+        this.lastLivingPlayerCount = this.players.filter(p => p.isAlive).length;
 
         this.deck = new CardDeck(this.definitionProvider.getAll());
         this.turnSimulator = new TurnSimulator(this.definitionProvider);
@@ -166,6 +168,8 @@ export class Game {
     private async runPreparingPhase() {
         this.round++;
 
+        this.updateLivingPlayers();
+
         log(`Entering phase ${GamePhase[GamePhase.PREPARING]} (round ${this.round})`);
 
         this.phase = GamePhase.PREPARING;
@@ -178,6 +182,16 @@ export class Game {
             Promise.all(promises),
             delay(this.phaseLengths[GamePhase.PREPARING] * 1000)
         ]);
+    }
+
+    private updateLivingPlayers() {
+        const livingPlayers = this.players.filter(p => p.isAlive);
+        const livingPlayerCount = livingPlayers.length;
+
+        if (livingPlayerCount !== this.lastLivingPlayerCount) {
+            this.opponentProvider.setPlayers(livingPlayers);
+            this.lastLivingPlayerCount = livingPlayerCount;
+        }
     }
 
     private async runReadyPhase() {
@@ -194,6 +208,8 @@ export class Game {
         log(`Entering phase ${GamePhase[GamePhase.PLAYING]}`);
 
         this.phase = GamePhase.PLAYING;
+
+        this.opponentProvider.updateRotation();
 
         await this.fightBattles();
     }
