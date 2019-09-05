@@ -74,15 +74,18 @@ export class Bot extends Player {
                 continue;
             }
 
-            const moneyAfterSelling = this.money.getValue() + worstPiece.cost;
+            const currentMoney = this.money.getValue();
+            const moneyAfterSelling = currentMoney + worstPiece.cost;
 
             // if we still can't afford, move to the next card
             if (moneyAfterSelling < card.cost) {
                 continue;
             }
 
+            const canCurrentlyAfford = currentMoney >= worstPiece.cost;
+            
             // sell a piece to make room
-            if (this.atPieceLimit()) {
+            if (this.atPieceLimit() || !canCurrentlyAfford) {
                 this.sellPiece(worstPiece.id);
             }
 
