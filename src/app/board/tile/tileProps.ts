@@ -11,6 +11,7 @@ export interface TileStateProps {
     pieces: Models.Piece[];
     gamePhase: GamePhase;
     belowPieceLimit: boolean;
+    selectedPieceId: string;
 }
 
 export interface TileDispatchProps {

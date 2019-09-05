@@ -8,4 +8,8 @@ export interface BenchPieceStateProps {
     canDrag: boolean;
 }
 
-export type Props = BenchPieceProps & BenchPieceStateProps;
+export interface BenchPieceDispatchProps {
+    onBeginDrag: () => void;
+}
+
+export type Props = BenchPieceProps & BenchPieceStateProps & BenchPieceDispatchProps;

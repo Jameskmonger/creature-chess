@@ -3,6 +3,8 @@ import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE
 import { GameState } from "../state";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
+import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE } from '../actiontypes/boardActionTypes';
+import { BeginDragPieceAction } from '../actions/boardActions';
 
 const initialState: GameState = {
     gameId: null,
@@ -15,10 +17,11 @@ const initialState: GameState = {
     round: null,
     debug: false,
     mainAnnouncement: null,
-    subAnnouncement: null
+    subAnnouncement: null,
+    selectedPieceId: null
 };
 
-export function game(state: GameState = initialState, action: GameAction) {
+export function game(state: GameState = initialState, action: GameAction | BeginDragPieceAction) {
     switch (action.type) {
         case FIND_GAME:
         case JOIN_GAME:
@@ -92,6 +95,13 @@ export function game(state: GameState = initialState, action: GameAction) {
                 ...state,
                 mainAnnouncement: null,
                 subAnnouncement: null
+            };
+        }
+        case BEGIN_DRAG_BENCH_PIECE:
+        case BEGIN_DRAG_BOARD_PIECE: {
+            return {
+                ...state,
+                selectedPieceId: null
             };
         }
         default:

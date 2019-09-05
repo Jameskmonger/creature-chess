@@ -15,6 +15,8 @@ export interface GameState {
 
     mainAnnouncement: string;
     subAnnouncement: string;
+
+    selectedPieceId: string;
 }
 
 export interface LocalPlayerState {
