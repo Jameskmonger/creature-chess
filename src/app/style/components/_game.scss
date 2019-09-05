@@ -15,7 +15,7 @@
 
         .group {
             &:not(:first-child) {
-                padding-left: $spacer;
+                margin-left: $spacer;
             }
         }
     }
@@ -25,7 +25,7 @@
 
         .group {
             &:not(:first-child) {
-                padding-top: $spacer;
+                margin-top: $spacer;
             }
         }
     }
@@ -44,6 +44,28 @@
         flex-shrink: initial;
         flex-basis: initial;
         /* stylelint-enable */
+    }
+
+    .announcement {
+        position: absolute;
+        width: 100%;
+        padding: 2em 0;
+        margin-top: 2em;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.8);
+
+        .sub {
+            font-size: 1.2em;
+            color: #eee;
+        }
+
+        .main {
+            margin-top: 0.1em;
+            font-size: 2em;
+            font-weight: 700;
+        }
     }
 
     .shop-container {

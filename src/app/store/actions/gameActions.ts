@@ -1,4 +1,4 @@
-import { FIND_GAME, JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE } from "../actiontypes/gameActionTypes";
+import { FIND_GAME, JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT } from "../actiontypes/gameActionTypes";
 import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 
@@ -7,6 +7,8 @@ export type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, na
 export type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string }});
 export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: PhaseUpdatePacket });
+export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string }});
+export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 
 export type GameAction =
     FindGameAction
@@ -17,7 +19,9 @@ export type GameAction =
     | ({ type: PHASE_TIMER_UPDATED, payload: { time: number }})
     | JoinCompleteAction
     | GamePhaseUpdateAction
-    | ({ type: ENABLE_DEBUG_MODE });
+    | ({ type: ENABLE_DEBUG_MODE })
+    | AnnouncementUpdateAction
+    | AnnouncementClearAction;
 
 export const findGameAction = (serverIP: string, name: string): FindGameAction => ({
     type: FIND_GAME,
@@ -72,4 +76,15 @@ export const phaseTimerUpdated = (time: number) => ({
 
 export const enableDebugMode = () => ({
     type: ENABLE_DEBUG_MODE
+});
+
+export const updateAnnouncement = (main: string, sub?: string): AnnouncementUpdateAction => ({
+    type: UPDATE_ANNOUNCEMENT,
+    payload: {
+        main, sub
+    }
+});
+
+export const clearAnnouncement = (): AnnouncementClearAction => ({
+    type: CLEAR_ANNOUNCEMENT
 });

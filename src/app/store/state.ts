@@ -12,6 +12,9 @@ export interface GameState {
     money: number;
     round: number | null;
     debug: boolean;
+
+    mainAnnouncement: string;
+    subAnnouncement: string;
 }
 
 export interface LocalPlayerState {
