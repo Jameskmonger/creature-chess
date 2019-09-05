@@ -27,7 +27,15 @@ export class OpponentProvider {
     public getOpponent(localPlayerId: string) {
         const index = this.players.findIndex(p => p.id === localPlayerId);
 
-        return this.players[(index + this.rotation) % this.players.length];
+        const player = this.players[(index + this.rotation) % this.players.length];
+
+        if (player) {
+            return player;
+        }
+
+        const otherPlayers = this.players.filter(p => p.id !== localPlayerId);
+
+        return randomFromArray(otherPlayers);
     }
 
     private generateRotations() {
