@@ -61,8 +61,10 @@ export class Game {
         this.phaseLengths = { ...defaultPhaseLengths, ...phaseLengths };
         this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
         this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
-        this.opponentProvider.setPlayers(this.players);
-        this.lastLivingPlayerCount = this.players.filter(p => p.isAlive).length;
+
+        const livingPlayers = this.players.filter(p => p.isAlive());
+        this.opponentProvider.setPlayers(livingPlayers);
+        this.lastLivingPlayerCount = livingPlayers.length;
 
         this.deck = new CardDeck(this.definitionProvider.getAll());
         this.turnSimulator = new TurnSimulator(this.definitionProvider);
@@ -185,7 +187,7 @@ export class Game {
     }
 
     private updateLivingPlayers() {
-        const livingPlayers = this.players.filter(p => p.isAlive);
+        const livingPlayers = this.players.filter(p => p.isAlive());
         const livingPlayerCount = livingPlayers.length;
 
         if (livingPlayerCount !== this.lastLivingPlayerCount) {
