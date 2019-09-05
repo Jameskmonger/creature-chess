@@ -4,6 +4,7 @@ import { joinGameAction, createGameAction, joinGameError, enableDebugMode, findG
 import { AppState } from "../store/state";
 import { loadingSelector } from "../store/gameSelector";
 import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
+import { getUrlParameter } from '../get-url-parameter';
 
 interface DispatchProps {
     onFindGame: (serverIP: string, name: string) => void;
@@ -31,9 +32,17 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
     public state = {
         name: "",
         gameId: "",
-        serverIP: `https://cc-server.jamesmonger.com`,
+        serverIP: "",
         debugModeClickCount: 0
     };
+
+    public componentDidMount() {
+        const serverParam = getUrlParameter("server");
+
+        this.setState({
+            serverIP: serverParam || "https://cc-server.jamesmonger.com"
+        });
+    }
 
     public render() {
         const title =
