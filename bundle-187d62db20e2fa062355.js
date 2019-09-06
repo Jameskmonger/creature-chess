@@ -322,6 +322,54 @@ exports.Board = Board;
 
 /***/ }),
 
+/***/ "./src/app/board/boardContainer.tsx":
+/*!******************************************!*\
+  !*** ./src/app/board/boardContainer.tsx ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var announcement_1 = __webpack_require__(/*! ./announcement */ "./src/app/board/announcement.tsx");
+var bench_1 = __webpack_require__(/*! ./bench */ "./src/app/board/bench.tsx");
+var board_1 = __webpack_require__(/*! ./board */ "./src/app/board/board.tsx");
+var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
+var reconnectModal_1 = __webpack_require__(/*! ./reconnectModal */ "./src/app/board/reconnectModal.tsx");
+var use_window_size_1 = __webpack_require__(/*! ../use-window-size */ "./src/app/use-window-size.ts");
+var getWidthFromHeight = function (height) {
+    return ((height / (_common_1.Constants.GRID_SIZE + 1)) * _common_1.Constants.GRID_SIZE);
+};
+var getHeightFromWidth = function (width) {
+    return ((width / _common_1.Constants.GRID_SIZE) * (_common_1.Constants.GRID_SIZE + 1));
+};
+var BoardContainer = function () {
+    var _a = use_window_size_1.useWindowSize(), width = _a.width, height = _a.height;
+    var portrait = width < height;
+    var boardMargin = 15;
+    var marginDelta = boardMargin * 3.1;
+    var boardContainerStyle = {
+        height: portrait
+            ? (getHeightFromWidth(width) - marginDelta) + "px"
+            : (height - marginDelta) + "px",
+        width: portrait
+            ? (width - marginDelta) + "px"
+            : (getWidthFromHeight(height) - marginDelta) + "px"
+    };
+    return (React.createElement("div", { className: "group board-container", style: boardContainerStyle },
+        React.createElement("div", { className: "chessboard" },
+            React.createElement(board_1.Board, null),
+            React.createElement(bench_1.Bench, null)),
+        React.createElement(announcement_1.Announcement, null),
+        React.createElement(reconnectModal_1.ReconnectModal, null)));
+};
+exports.BoardContainer = BoardContainer;
+
+
+/***/ }),
+
 /***/ "./src/app/board/boardPiece/boardPiece.tsx":
 /*!*************************************************!*\
   !*** ./src/app/board/boardPiece/boardPiece.tsx ***!
@@ -539,6 +587,32 @@ var BoardRow = function (_a) {
     return React.createElement("div", { className: "tile-row" }, tiles);
 };
 exports.BoardRow = BoardRow;
+
+
+/***/ }),
+
+/***/ "./src/app/board/reconnectModal.tsx":
+/*!******************************************!*\
+  !*** ./src/app/board/reconnectModal.tsx ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var ReconnectModal = function () {
+    var isDisconnected = react_redux_1.useSelector(function (state) { return state.game.isDisconnected; });
+    if (isDisconnected === false) {
+        return null;
+    }
+    return (React.createElement("div", { className: "reconnect" },
+        React.createElement("p", { className: "text" }, "Oops - you've been disconnected"),
+        React.createElement("p", { className: "text" }, "We're working on fixing this")));
+};
+exports.ReconnectModal = ReconnectModal;
 
 
 /***/ }),
@@ -1405,37 +1479,18 @@ var GameState;
 })(GameState || (GameState = {}));
 var GameUnconnected = /** @class */ (function (_super) {
     tslib_1.__extends(GameUnconnected, _super);
-    function GameUnconnected(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state = {
-            width: window.innerWidth,
-            height: window.innerHeight
-        };
-        _this.updateDimensions = _this.updateDimensions.bind(_this);
-        return _this;
+    function GameUnconnected() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     GameUnconnected.prototype.render = function () {
         var gameState = this.props.gameState;
         if (gameState === GameState.GAME) {
-            var _a = this.state, width = _a.width, height = _a.height;
-            return React.createElement(gameStage_1.GameStage, { width: width, height: height });
+            return React.createElement(gameStage_1.GameStage, null);
         }
         if (gameState === GameState.LOBBY) {
             return React.createElement(lobbyStage_1.LobbyStage, null);
         }
         return React.createElement(menuStage_1.MenuStage, null);
-    };
-    GameUnconnected.prototype.componentDidMount = function () {
-        window.addEventListener("resize", this.updateDimensions);
-    };
-    GameUnconnected.prototype.componentWillUnmount = function () {
-        window.removeEventListener("resize", this.updateDimensions);
-    };
-    GameUnconnected.prototype.updateDimensions = function () {
-        this.setState({
-            width: window.innerWidth,
-            height: window.innerHeight
-        });
     };
     return GameUnconnected;
 }(React.Component));
@@ -1473,9 +1528,6 @@ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var react_dnd_1 = __webpack_require__(/*! react-dnd */ "./node_modules/react-dnd/lib/cjs/index.js");
 var react_dnd_multi_backend_1 = __webpack_require__(/*! react-dnd-multi-backend */ "./node_modules/react-dnd-multi-backend/lib/index.js");
 var HTML5toTouch_1 = __webpack_require__(/*! react-dnd-multi-backend/lib/HTML5toTouch */ "./node_modules/react-dnd-multi-backend/lib/HTML5toTouch.js");
-var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
-var board_1 = __webpack_require__(/*! ../board/board */ "./src/app/board/board.tsx");
-var bench_1 = __webpack_require__(/*! ../board/bench */ "./src/app/board/bench.tsx");
 var cardShop_1 = __webpack_require__(/*! ../cardShop/cardShop */ "./src/app/cardShop/cardShop.tsx");
 var playerList_1 = __webpack_require__(/*! ../playerList/playerList */ "./src/app/playerList/playerList.tsx");
 var react_media_1 = __webpack_require__(/*! react-media */ "./node_modules/react-media/esm/react-media.js");
@@ -1484,31 +1536,13 @@ var profile_1 = __webpack_require__(/*! ../components/profile */ "./src/app/comp
 var feed_1 = __webpack_require__(/*! ../feed/feed */ "./src/app/feed/feed.tsx");
 var gameId_1 = __webpack_require__(/*! ../components/gameId */ "./src/app/components/gameId.tsx");
 var roundIndicator_1 = __webpack_require__(/*! ../components/roundIndicator */ "./src/app/components/roundIndicator.tsx");
-var announcement_1 = __webpack_require__(/*! ../board/announcement */ "./src/app/board/announcement.tsx");
-var getWidthFromHeight = function (height) {
-    return ((height / (_common_1.Constants.GRID_SIZE + 1)) * _common_1.Constants.GRID_SIZE);
-};
-var getHeightFromWidth = function (width) {
-    return ((width / _common_1.Constants.GRID_SIZE) * (_common_1.Constants.GRID_SIZE + 1));
-};
+var boardContainer_1 = __webpack_require__(/*! ../board/boardContainer */ "./src/app/board/boardContainer.tsx");
 var GameStageUnconnected = /** @class */ (function (_super) {
     tslib_1.__extends(GameStageUnconnected, _super);
     function GameStageUnconnected() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     GameStageUnconnected.prototype.render = function () {
-        var _a = this.props, width = _a.width, height = _a.height;
-        var portrait = width < height;
-        var boardMargin = 15;
-        var marginDelta = boardMargin * 3.1;
-        var boardContainerStyle = {
-            height: portrait
-                ? (getHeightFromWidth(width) - marginDelta) + "px"
-                : (height - marginDelta) + "px",
-            width: portrait
-                ? (width - marginDelta) + "px"
-                : (getWidthFromHeight(height) - marginDelta) + "px"
-        };
         return (React.createElement(React.Fragment, null,
             React.createElement(react_media_1["default"], { query: "(orientation: landscape) and (min-width: 1200px)" },
                 React.createElement("div", { className: "game landscape" },
@@ -1518,11 +1552,7 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                         React.createElement(playerList_1.PlayerList, null),
                         React.createElement(gameId_1.GameId, null),
                         React.createElement(feed_1.Feed, null)),
-                    React.createElement("div", { className: "group board-container", style: boardContainerStyle },
-                        React.createElement("div", { className: "chessboard" },
-                            React.createElement(board_1.Board, null),
-                            React.createElement(bench_1.Bench, null)),
-                        React.createElement(announcement_1.Announcement, null)),
+                    React.createElement(boardContainer_1.BoardContainer, null),
                     React.createElement("div", { className: "group" },
                         React.createElement(cardShop_1.CardShop, null),
                         React.createElement(profile_1.Profile, null),
@@ -1532,11 +1562,7 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                             React.createElement("a", { href: "https://github.com/Jameskmonger/creature-chess" }, "Source and Licenses on GitHub"))))),
             React.createElement(react_media_1["default"], { query: "(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)" },
                 React.createElement("div", { className: "game landscape" },
-                    React.createElement("div", { className: "group board-container", style: boardContainerStyle },
-                        React.createElement("div", { className: "chessboard" },
-                            React.createElement(board_1.Board, null),
-                            React.createElement(bench_1.Bench, null)),
-                        React.createElement(announcement_1.Announcement, null)),
+                    React.createElement(boardContainer_1.BoardContainer, null),
                     React.createElement("div", { className: "group" },
                         React.createElement(roundIndicator_1.RoundIndicator, null),
                         React.createElement(phaseInfo_1.PhaseInfo, null),
@@ -1551,11 +1577,7 @@ var GameStageUnconnected = /** @class */ (function (_super) {
                         React.createElement(feed_1.Feed, null)))),
             React.createElement(react_media_1["default"], { query: "(orientation: portrait), (max-width: 599px)" },
                 React.createElement("div", { className: "game portrait" },
-                    React.createElement("div", { className: "group board-container", style: boardContainerStyle },
-                        React.createElement("div", { className: "chessboard" },
-                            React.createElement(board_1.Board, null),
-                            React.createElement(bench_1.Bench, null)),
-                        React.createElement(announcement_1.Announcement, null)),
+                    React.createElement(boardContainer_1.BoardContainer, null),
                     React.createElement("div", { className: "group" },
                         React.createElement(roundIndicator_1.RoundIndicator, null),
                         React.createElement(phaseInfo_1.PhaseInfo, null),
@@ -2122,9 +2144,8 @@ exports.updateAnnouncement = function (main, sub) { return ({
         main: main, sub: sub
     }
 }); };
-exports.clearAnnouncement = function () { return ({
-    type: gameActionTypes_1.CLEAR_ANNOUNCEMENT
-}); };
+exports.clearAnnouncement = function () { return ({ type: gameActionTypes_1.CLEAR_ANNOUNCEMENT }); };
+exports.serverDisconnected = function () { return ({ type: gameActionTypes_1.SERVER_DISCONNECTED }); };
 
 
 /***/ }),
@@ -2265,6 +2286,7 @@ exports.PHASE_TIMER_UPDATED = "PHASE_TIMER_UPDATED";
 exports.ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
 exports.UPDATE_ANNOUNCEMENT = "UPDATE_ANNOUNCEMENT";
 exports.CLEAR_ANNOUNCEMENT = "CLEAR_ANNOUNCEMENT";
+exports.SERVER_DISCONNECTED = "SERVER_DISCONNECTED";
 
 
 /***/ }),
@@ -2407,11 +2429,14 @@ var initialState = {
     debug: false,
     mainAnnouncement: null,
     subAnnouncement: null,
-    selectedPiece: null
+    selectedPiece: null,
+    isDisconnected: false
 };
 function game(state, action) {
     if (state === void 0) { state = initialState; }
     switch (action.type) {
+        case gameActionTypes_1.SERVER_DISCONNECTED:
+            return tslib_1.__assign({}, state, { isDisconnected: true });
         case gameActionTypes_1.FIND_GAME:
         case gameActionTypes_1.JOIN_GAME:
         case gameActionTypes_1.CREATE_GAME:
@@ -2901,7 +2926,7 @@ var lobbyActions_1 = __webpack_require__(/*! ../../actions/lobbyActions */ "./sr
 var lobbyActionTypes_1 = __webpack_require__(/*! ../../actiontypes/lobbyActionTypes */ "./src/app/store/actiontypes/lobbyActionTypes.ts");
 var getSocket = function (serverIP) {
     // force to websocket for now until CORS is sorted
-    var socket = io(serverIP, { transports: ["websocket"] });
+    var socket = io(serverIP, { transports: ["websocket"], reconnection: false });
     return new Promise(function (resolve) {
         socket.on("connect", function () {
             resolve(socket);
@@ -2931,6 +2956,7 @@ var createGame = function (socket, name) {
 };
 var subscribe = function (socket) {
     return redux_saga_1.eventChannel(function (emit) {
+        socket.on("disconnect", function () { return emit(gameActions_1.serverDisconnected()); });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, function (players) {
             log_1.log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListActions_1.playerListUpdated(players));
@@ -3425,6 +3451,37 @@ sagaMiddleware.run(sagas_1.rootSaga);
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
+
+/***/ }),
+
+/***/ "./src/app/use-window-size.ts":
+/*!************************************!*\
+  !*** ./src/app/use-window-size.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var react_1 = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+exports.useWindowSize = function () {
+    var _a = tslib_1.__read(react_1.useState(window.innerWidth), 2), width = _a[0], setWidth = _a[1];
+    var _b = tslib_1.__read(react_1.useState(window.innerHeight), 2), height = _b[0], setHeight = _b[1];
+    react_1.useEffect(function () {
+        var handleResize = function () {
+            setWidth(window.innerWidth);
+            setHeight(window.innerHeight);
+        };
+        window.addEventListener("resize", handleResize);
+        return function () {
+            window.removeEventListener("resize", handleResize);
+        };
+    });
+    return { width: width, height: height };
+};
+
 
 /***/ }),
 
