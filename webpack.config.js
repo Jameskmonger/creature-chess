@@ -44,7 +44,7 @@ module.exports = {
     },
 
     output: {
-        filename: "bundle.js",
+        filename: "bundle-[contenthash].js",
         path: outDir
     },
 

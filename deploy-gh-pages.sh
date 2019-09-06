@@ -16,6 +16,9 @@ ORIGIN_URL=`git remote get-url origin`
 rm -rf ./gh-pages/
 git clone -b gh-pages $ORIGIN_URL ./gh-pages
 
+rm -rf ./public/
+rm -rf ./gh-pages/*.js
+
 npm run build:client
 
 cp -a ./public/. ./gh-pages/
