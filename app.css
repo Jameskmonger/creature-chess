@@ -311,6 +311,9 @@ body {
     left: 9%;
     width: 82%;
     height: 82%; }
+  .tile.selected {
+    box-sizing: border-box;
+    border: 2px solid #ff5200; }
   .tile.dark {
     background: #38b764; }
   .tile.light {

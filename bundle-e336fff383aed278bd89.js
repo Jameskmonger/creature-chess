@@ -220,10 +220,14 @@ var recompose_1 = __webpack_require__(/*! recompose */ "./node_modules/recompose
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var benchPieceDragDrop_1 = __webpack_require__(/*! ./benchPieceDragDrop */ "./src/app/board/benchPiece/benchPieceDragDrop.ts");
 var benchPieceUnconnected_1 = __webpack_require__(/*! ./benchPieceUnconnected */ "./src/app/board/benchPiece/benchPieceUnconnected.tsx");
+var boardActions_1 = __webpack_require__(/*! ../../store/actions/boardActions */ "./src/app/store/actions/boardActions.ts");
 var mapStateToProps = function (state) { return ({
     canDrag: true
 }); };
-var BenchPiece = recompose_1.compose(react_redux_1.connect(mapStateToProps), benchPieceDragDrop_1.benchPieceDragSource)(benchPieceUnconnected_1.BenchPieceUnconnected);
+var mapDispatchToProps = function (dispatch) { return ({
+    onBeginDrag: function () { return dispatch(boardActions_1.beginDragBenchPiece()); }
+}); };
+var BenchPiece = recompose_1.compose(react_redux_1.connect(mapStateToProps, mapDispatchToProps), benchPieceDragDrop_1.benchPieceDragSource)(benchPieceUnconnected_1.BenchPieceUnconnected);
 exports.BenchPiece = BenchPiece;
 
 
@@ -243,6 +247,7 @@ var react_dnd_1 = __webpack_require__(/*! react-dnd */ "./node_modules/react-dnd
 var benchPieceUnconnected_1 = __webpack_require__(/*! ./benchPieceUnconnected */ "./src/app/board/benchPiece/benchPieceUnconnected.tsx");
 var selectedPiece = {
     beginDrag: function (props) {
+        props.onBeginDrag();
         return props.piece;
     },
     isDragging: function (props, monitor) {
@@ -333,6 +338,7 @@ var gameSelector_1 = __webpack_require__(/*! ../../store/gameSelector */ "./src/
 var boardPieceDragDrop_1 = __webpack_require__(/*! ./boardPieceDragDrop */ "./src/app/board/boardPiece/boardPieceDragDrop.ts");
 var boardPieceUnconnected_1 = __webpack_require__(/*! ./boardPieceUnconnected */ "./src/app/board/boardPiece/boardPieceUnconnected.tsx");
 var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
+var boardActions_1 = __webpack_require__(/*! ../../store/actions/boardActions */ "./src/app/store/actions/boardActions.ts");
 var mapStateToProps = function (state) { return ({
     canDrag: state.game.phase === _common_1.GamePhase.PREPARING,
     showDamagePerTurn: state.game.phase === _common_1.GamePhase.PREPARING,
@@ -340,7 +346,10 @@ var mapStateToProps = function (state) { return ({
     animate: state.game.debug === false,
     localPlayerId: gameSelector_1.localPlayerIdSelector(state)
 }); };
-var BoardPiece = recompose_1.compose(react_redux_1.connect(mapStateToProps), boardPieceDragDrop_1.boardPieceDragSource)(boardPieceUnconnected_1.BoardPieceUnconnected);
+var mapDispatchToProps = function (dispatch) { return ({
+    onBeginDrag: function () { return dispatch(boardActions_1.beginDragBoardPiece()); }
+}); };
+var BoardPiece = recompose_1.compose(react_redux_1.connect(mapStateToProps, mapDispatchToProps), boardPieceDragDrop_1.boardPieceDragSource)(boardPieceUnconnected_1.BoardPieceUnconnected);
 exports.BoardPiece = BoardPiece;
 
 
@@ -361,6 +370,7 @@ var boardPieceProps_1 = __webpack_require__(/*! ./boardPieceProps */ "./src/app/
 var boardPieceUnconnected_1 = __webpack_require__(/*! ./boardPieceUnconnected */ "./src/app/board/boardPiece/boardPieceUnconnected.tsx");
 var selectedPiece = {
     beginDrag: function (props) {
+        props.onBeginDrag();
         return props.piece;
     },
     isDragging: function (props, monitor) {
@@ -595,18 +605,30 @@ var board_1 = __webpack_require__(/*! @common/board */ "./src/shared/board/index
 var pieceSelectors_1 = __webpack_require__(/*! ../../store/pieceSelectors */ "./src/app/store/pieceSelectors.ts");
 var tileDragDrop_1 = __webpack_require__(/*! ./tileDragDrop */ "./src/app/board/tile/tileDragDrop.ts");
 var tileUnconnected_1 = __webpack_require__(/*! ./tileUnconnected */ "./src/app/board/tile/tileUnconnected.tsx");
-var mapStateToProps = function (state, ownProps) { return ({
-    pieces: pieceSelectors_1.tilePieceSelector(state, ownProps),
-    gamePhase: state.game.phase,
-    belowPieceLimit: pieceSelectors_1.ownedPieceSelector(state).length < state.localPlayer.level
-}); };
+var boardActions_1 = __webpack_require__(/*! src/app/store/actions/boardActions */ "./src/app/store/actions/boardActions.ts");
+var mapStateToProps = function (state, ownProps) {
+    var piece = pieceSelectors_1.tilePieceSelector(state, ownProps);
+    return {
+        piece: piece,
+        gamePhase: state.game.phase,
+        belowPieceLimit: pieceSelectors_1.ownedPieceSelector(state).length < state.localPlayer.level,
+        currentSelectedPiece: state.game.selectedPiece
+    };
+};
 var mapDispatchToProps = function (dispatch, _a) {
     var type = _a.type, position = _a.position;
     return ({
-        onMovePiece: function (piece) { return dispatch(board_1.BoardActions.pieceMoved(piece, position, type)); }
+        onDropPiece: function (piece) { return dispatch(board_1.BoardActions.pieceMoved(piece, position, type)); },
+        onSelectPiece: function (piece) { return dispatch(boardActions_1.selectPiece(piece)); }
     });
 };
-var Tile = recompose_1.compose(react_redux_1.connect(mapStateToProps, mapDispatchToProps), tileDragDrop_1.tileDropTarget)(tileUnconnected_1.TileUnconnected);
+var Tile = recompose_1.compose(react_redux_1.connect(mapStateToProps, mapDispatchToProps), recompose_1.withHandlers({
+    canDropPiece: function (props) {
+        return function (piece) {
+            return board_1.canDropPiece(piece, props.position, props.piece === null, props.gamePhase, props.belowPieceLimit);
+        };
+    }
+}), tileDragDrop_1.tileDropTarget)(tileUnconnected_1.TileUnconnected);
 exports.Tile = Tile;
 
 
@@ -624,14 +646,13 @@ exports.Tile = Tile;
 exports.__esModule = true;
 var react_dnd_1 = __webpack_require__(/*! react-dnd */ "./node_modules/react-dnd/lib/cjs/index.js");
 var tileUnconnected_1 = __webpack_require__(/*! ./tileUnconnected */ "./src/app/board/tile/tileUnconnected.tsx");
-var board_1 = __webpack_require__(/*! @common/board */ "./src/shared/board/index.ts");
 var boxTarget = {
     drop: function (props, monitor) {
-        props.onMovePiece(monitor.getItem());
+        props.onDropPiece(monitor.getItem());
     },
     canDrop: function (props, monitor) {
         var item = monitor.getItem();
-        return board_1.canDropPiece(item, props.position, props.pieces, props.gamePhase, props.belowPieceLimit);
+        return props.canDropPiece(item);
     }
 };
 var collect = function (connector, monitor) { return ({
@@ -657,6 +678,7 @@ exports.tileDropTarget = react_dnd_1.DropTarget(typeof tileUnconnected_1.TileUnc
 exports.__esModule = true;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var position_1 = __webpack_require__(/*! @common/position */ "./src/shared/position.ts");
+var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 // tslint:disable-next-line:no-bitwise
 var isBoardTileDark = function (_a) {
     var x = _a.x, y = _a.y;
@@ -675,9 +697,20 @@ var getOverlayClassName = function (isDragging, canDrop) {
     return "overlay";
 };
 var TileUnconnected = function (props) {
-    var type = props.type, pieces = props.pieces, position = props.position, renderPiece = props.renderPiece, connectDropTarget = props.connectDropTarget, isDragging = props.isDragging, canDrop = props.canDrop;
-    return connectDropTarget(React.createElement("div", { className: "tile " + getClassName(type, position) },
-        pieces.map(renderPiece),
+    var type = props.type, piece = props.piece, position = props.position, renderPiece = props.renderPiece, connectDropTarget = props.connectDropTarget, isDragging = props.isDragging, canDrop = props.canDrop, canDropPiece = props.canDropPiece, currentSelectedPiece = props.currentSelectedPiece, onDropPiece = props.onDropPiece, onSelectPiece = props.onSelectPiece, gamePhase = props.gamePhase;
+    var canSelectPiece = (gamePhase === _common_1.GamePhase.PREPARING || type === position_1.TileType.BENCH);
+    var selectPiece = function () { return canSelectPiece && onSelectPiece(piece); };
+    var dropPiece = function () { return canDropPiece(currentSelectedPiece) && onDropPiece(currentSelectedPiece); };
+    // this can be improved by having a piece movement saga
+    // that just listens for clicks and drops
+    var onClick = (piece
+        ? selectPiece
+        : ((currentSelectedPiece)
+            ? dropPiece
+            : null));
+    var isSelected = piece && currentSelectedPiece && piece.id === currentSelectedPiece.id;
+    return connectDropTarget(React.createElement("div", { className: "tile " + getClassName(type, position) + (isSelected ? " selected" : ""), onPointerUp: onClick },
+        piece && renderPiece(piece),
         React.createElement("div", { className: "" + getOverlayClassName(isDragging, canDrop) })));
 };
 exports.TileUnconnected = TileUnconnected;
@@ -1835,6 +1868,7 @@ exports.__esModule = true;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 var game_1 = __webpack_require__(/*! ./game/game */ "./src/app/game/game.tsx");
+__webpack_require__(/*! pepjs */ "./node_modules/pepjs/dist/pep.js");
 __webpack_require__(/*! ./style/index.scss */ "./src/app/style/index.scss");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var store_1 = __webpack_require__(/*! ./store/store */ "./src/app/store/store.ts");
@@ -1997,6 +2031,29 @@ function playerList(state, action) {
     }
 }
 exports.playerList = playerList;
+
+
+/***/ }),
+
+/***/ "./src/app/store/actions/boardActions.ts":
+/*!***********************************************!*\
+  !*** ./src/app/store/actions/boardActions.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var boardActionTypes_1 = __webpack_require__(/*! ../actiontypes/boardActionTypes */ "./src/app/store/actiontypes/boardActionTypes.ts");
+exports.beginDragBenchPiece = function () { return ({ type: boardActionTypes_1.BEGIN_DRAG_BENCH_PIECE }); };
+exports.beginDragBoardPiece = function () { return ({ type: boardActionTypes_1.BEGIN_DRAG_BOARD_PIECE }); };
+exports.selectPiece = function (piece) { return ({
+    type: boardActionTypes_1.SELECT_PIECE,
+    payload: {
+        piece: piece
+    }
+}); };
 
 
 /***/ }),
@@ -2171,6 +2228,23 @@ exports.sendPacket = function (opcode) {
 
 /***/ }),
 
+/***/ "./src/app/store/actiontypes/boardActionTypes.ts":
+/*!*******************************************************!*\
+  !*** ./src/app/store/actiontypes/boardActionTypes.ts ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.BEGIN_DRAG_BENCH_PIECE = "BEGIN_DRAG_BENCH_PIECE";
+exports.BEGIN_DRAG_BOARD_PIECE = "BEGIN_DRAG_BOARD_PIECE";
+exports.SELECT_PIECE = "SELECT_PIECE";
+
+
+/***/ }),
+
 /***/ "./src/app/store/actiontypes/gameActionTypes.ts":
 /*!******************************************************!*\
   !*** ./src/app/store/actiontypes/gameActionTypes.ts ***!
@@ -2285,7 +2359,17 @@ var piecePositionFilter = function (position) {
         return p.position.x === position.x && p.position.y === position.y;
     };
 };
-exports.tilePieceSelector = reselect_1.createSelector(piecesSelector, positionSelector, function (pieces, position) { return pieces.filter(piecePositionFilter(position)); });
+exports.tilePieceSelector = reselect_1.createSelector(piecesSelector, positionSelector, function (pieces, position) {
+    var allPieces = pieces.filter(piecePositionFilter(position));
+    if (allPieces.length === 0) {
+        return null;
+    }
+    var livingPiece = allPieces.find(function (p) { return p.currentHealth > 0; });
+    if (livingPiece) {
+        return livingPiece;
+    }
+    return allPieces[0] || null;
+});
 exports.ownedPieceSelector = function (state) {
     var playerId = gameSelector_1.localPlayerIdSelector(state);
     return state.board.filter(function (p) { return p.ownerId === playerId; });
@@ -2308,6 +2392,9 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var gameActionTypes_1 = __webpack_require__(/*! ../actiontypes/gameActionTypes */ "./src/app/store/actiontypes/gameActionTypes.ts");
 var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var localPlayerActionTypes_1 = __webpack_require__(/*! ../actiontypes/localPlayerActionTypes */ "./src/app/store/actiontypes/localPlayerActionTypes.ts");
+var boardActionTypes_1 = __webpack_require__(/*! ../actiontypes/boardActionTypes */ "./src/app/store/actiontypes/boardActionTypes.ts");
+var boardActionTypes_2 = __webpack_require__(/*! @common/board/actions/boardActionTypes */ "./src/shared/board/actions/boardActionTypes.ts");
+var position_1 = __webpack_require__(/*! @common/position */ "./src/shared/position.ts");
 var initialState = {
     gameId: null,
     opponentId: null,
@@ -2319,7 +2406,8 @@ var initialState = {
     round: null,
     debug: false,
     mainAnnouncement: null,
-    subAnnouncement: null
+    subAnnouncement: null,
+    selectedPiece: null
 };
 function game(state, action) {
     if (state === void 0) { state = initialState; }
@@ -2335,7 +2423,8 @@ function game(state, action) {
         case gameActionTypes_1.GAME_PHASE_UPDATE:
             // set opponent id when entering ready phase
             if (action.payload.phase === _common_1.GamePhase.READY) {
-                return tslib_1.__assign({}, state, { phase: action.payload.phase, opponentId: action.payload.payload.opponentId });
+                var shouldClearSelected = state.selectedPiece && !position_1.inBench(state.selectedPiece.position);
+                return tslib_1.__assign({}, state, { phase: action.payload.phase, opponentId: action.payload.payload.opponentId, selectedPiece: shouldClearSelected ? null : state.selectedPiece });
             }
             // clear opponent id when entering preparing phase
             if (action.payload.phase === _common_1.GamePhase.PREPARING) {
@@ -2354,6 +2443,16 @@ function game(state, action) {
         }
         case gameActionTypes_1.CLEAR_ANNOUNCEMENT: {
             return tslib_1.__assign({}, state, { mainAnnouncement: null, subAnnouncement: null });
+        }
+        case boardActionTypes_1.BEGIN_DRAG_BENCH_PIECE:
+        case boardActionTypes_1.BEGIN_DRAG_BOARD_PIECE:
+        case boardActionTypes_2.PIECE_MOVED_TO_BENCH:
+        case boardActionTypes_2.PIECE_MOVED_TO_BOARD: {
+            return tslib_1.__assign({}, state, { selectedPiece: null });
+        }
+        case boardActionTypes_1.SELECT_PIECE: {
+            var isSamePiece = state.selectedPiece && state.selectedPiece.id === action.payload.piece.id;
+            return tslib_1.__assign({}, state, { selectedPiece: isSamePiece ? null : action.payload.piece });
         }
         default:
             return state;
@@ -3540,12 +3639,11 @@ exports.LockEvolutionActions = {
 exports.__esModule = true;
 var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var position_1 = __webpack_require__(/*! @common/position */ "./src/shared/position.ts");
-exports.canDropPiece = function (piece, target, tilePieces, gamePhase, belowPieceLimit) {
+exports.canDropPiece = function (piece, target, tileEmpty, gamePhase, belowPieceLimit) {
     var targetIsBench = position_1.inBench(target);
     var benchToBenchMove = targetIsBench && position_1.inBench(piece.position);
     var targetIsFriendlyBoard = position_1.inFriendlyBoard(target);
     var boardToBoardMove = targetIsFriendlyBoard && position_1.inFriendlyBoard(piece.position);
-    var tileEmpty = tilePieces.length === 0;
     var inPreparingPhase = gamePhase === _common_1.GamePhase.PREPARING;
     var inPreparingPhaseOrBenchToBench = (inPreparingPhase || benchToBenchMove);
     var belowPieceLimitOrBoardToBoard = (targetIsBench || belowPieceLimit || boardToBoardMove);
