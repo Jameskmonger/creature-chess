@@ -18,7 +18,7 @@ export class CanDropPieceTests {
         const result = canDropPiece(
             movingPiece,
             createTileCoordinates(1, 4),
-            [ tilePiece ],
+            false,
             GamePhase.PREPARING,
             true
         );
@@ -36,7 +36,7 @@ export class CanDropPieceTests {
         const result = canDropPiece(
             movingPiece,
             createTileCoordinates(1, 4),
-            [ ],
+            true,
             phase,
             true
         );
@@ -52,7 +52,7 @@ export class CanDropPieceTests {
         const result = canDropPiece(
             movingPiece,
             createTileCoordinates(1, null),
-            [ ],
+            true,
             phase,
             true
         );
@@ -67,7 +67,7 @@ export class CanDropPieceTests {
         const result = canDropPiece(
             movingPiece,
             createTileCoordinates(1, 4),
-            [ ],
+            true,
             GamePhase.PREPARING,
             false
         );
@@ -82,7 +82,7 @@ export class CanDropPieceTests {
         const result = canDropPiece(
             movingPiece,
             createTileCoordinates(1, 4),
-            [ ],
+            true,
             GamePhase.PREPARING,
             false
         );
@@ -100,7 +100,7 @@ export class CanDropPieceTests {
         const result = canDropPiece(
             movingPiece,
             createTileCoordinates(x, y),
-            [ ],
+            true,
             GamePhase.PREPARING,
             true
         );

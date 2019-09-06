@@ -420,7 +420,7 @@ export abstract class Player {
         }
 
         const benchTilePieces = this.getBench().filter(p => p.position.x === packet.to.x);
-        const canDrop = canDropPiece(piece, packet.to, benchTilePieces, this.gamePhase, this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, benchTilePieces.length === 0, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);
@@ -444,7 +444,7 @@ export abstract class Player {
         }
 
         const tilePieces = this.getBoard().filter(p => p.position.x === packet.to.x && p.position.y === packet.to.y);
-        const canDrop = canDropPiece(piece, packet.to, tilePieces, this.gamePhase, this.belowPieceLimit());
+        const canDrop = canDropPiece(piece, packet.to, tilePieces.length === 0, this.gamePhase, this.belowPieceLimit());
 
         if (canDrop === false) {
             log(`Could not drop piece`);

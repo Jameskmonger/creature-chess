@@ -4,6 +4,8 @@ import { BenchPieceUnconnected } from "./benchPieceUnconnected";
 
 const selectedPiece = {
     beginDrag(props: Props) {
+        props.onBeginDrag();
+
         return props.piece;
     },
     isDragging(props: Props, monitor: DragSourceMonitor) {

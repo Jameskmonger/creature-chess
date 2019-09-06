@@ -17,7 +17,21 @@ const piecePositionFilter =
 export const tilePieceSelector = createSelector(
     piecesSelector,
     positionSelector,
-    (pieces, position) => pieces.filter(piecePositionFilter(position))
+    (pieces, position) => {
+        const allPieces = pieces.filter(piecePositionFilter(position));
+
+        if (allPieces.length === 0) {
+            return null;
+        }
+
+        const livingPiece = allPieces.find(p => p.currentHealth > 0);
+
+        if (livingPiece) {
+            return livingPiece;
+        }
+
+        return allPieces[0] || null;
+    }
 );
 
 export const ownedPieceSelector = (state: AppState) => {

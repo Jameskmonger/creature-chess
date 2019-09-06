@@ -4,14 +4,15 @@ import { TileCoordinates, TileType } from "@common/position";
 
 type PieceMovedToBoardAction = ({ type: PIECE_MOVED_TO_BOARD, payload: { piece: Models.Piece, position: TileCoordinates } });
 type PieceMovedToBenchAction = ({ type: PIECE_MOVED_TO_BENCH, payload: { piece: Models.Piece, slot: number } });
+export type PieceMovedAction = PieceMovedToBoardAction | PieceMovedToBenchAction;
+
 type SellPieceAction = ({ type: SELL_PIECE, payload: { pieceId: string } });
 
 export type PiecesUpdatedAction = ({ type: PIECES_UPDATED, payload: { pieces: Models.Piece[] } });
 
 export type BoardAction =
     PiecesUpdatedAction
-    | PieceMovedToBoardAction
-    | PieceMovedToBenchAction
+    | PieceMovedAction
     | SellPieceAction;
 
 export const pieceMoved = (piece: Models.Piece, position: TileCoordinates, tileType: TileType): PieceMovedToBoardAction | PieceMovedToBenchAction => {

@@ -12,6 +12,10 @@ export interface BoardPieceStateProps {
     animate: boolean;
 }
 
+export interface BoardPieceDispatchProps {
+    onBeginDrag: () => void;
+}
+
 export const isFriendly = (props: BoardPieceProps) => props.localPlayerId === props.piece.ownerId;
 
-export type BoardPieceProps = BoardPieceOwnProps & BoardPieceStateProps;
+export type BoardPieceProps = BoardPieceOwnProps & BoardPieceStateProps & BoardPieceDispatchProps;
