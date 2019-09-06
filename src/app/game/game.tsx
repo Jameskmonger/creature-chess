@@ -15,30 +15,12 @@ interface Props {
     gameState: GameState;
 }
 
-interface State {
-    width: number;
-    height: number;
-}
-
-class GameUnconnected extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-
-        this.state = {
-            width: window.innerWidth,
-            height: window.innerHeight
-        };
-
-        this.updateDimensions = this.updateDimensions.bind(this);
-    }
-
+class GameUnconnected extends React.Component<Props> {
     public render() {
         const { gameState } = this.props;
 
         if (gameState === GameState.GAME) {
-            const { width, height } = this.state;
-
-            return <GameStage width={width} height={height} />;
+            return <GameStage />;
         }
 
         if (gameState === GameState.LOBBY) {            
@@ -46,21 +28,6 @@ class GameUnconnected extends React.Component<Props, State> {
         }
 
         return <MenuStage />;
-    }
-
-    public componentDidMount() {
-        window.addEventListener("resize", this.updateDimensions);
-    }
-
-    public componentWillUnmount() {
-        window.removeEventListener("resize", this.updateDimensions);
-    }
-
-    private updateDimensions() {
-        this.setState({
-            width: window.innerWidth,
-            height: window.innerHeight
-        });
     }
 }
 

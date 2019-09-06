@@ -21,7 +21,8 @@ const initialState: GameState = {
     debug: false,
     mainAnnouncement: null,
     subAnnouncement: null,
-    selectedPiece: null
+    selectedPiece: null,
+    isDisconnected: true
 };
 
 type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction | PieceMovedAction;

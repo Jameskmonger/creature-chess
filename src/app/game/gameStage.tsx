@@ -17,36 +17,10 @@ import { Feed } from "../feed/feed";
 import { GameId } from "../components/gameId";
 import { RoundIndicator } from "../components/roundIndicator";
 import { Announcement } from '../board/announcement';
+import { BoardContainer } from '../board/boardContainer';
 
-const getWidthFromHeight = (height: number) =>
-    ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
-const getHeightFromWidth = (width: number) =>
-    ((width / Constants.GRID_SIZE) * (Constants.GRID_SIZE + 1));
-
-interface GameStageProps {
-    width: number;
-    height: number;
-}
-
-class GameStageUnconnected extends React.Component<GameStageProps> {
+class GameStageUnconnected extends React.Component {
     public render() {
-        const { width, height } = this.props;
-        const portrait = width < height;
-
-        const boardMargin = 15;
-        const marginDelta = boardMargin * 3.1;
-
-        const boardContainerStyle = {
-            height:
-                portrait
-                    ? (getHeightFromWidth(width) - marginDelta) + "px"
-                    : (height - marginDelta) + "px",
-            width:
-                portrait
-                    ? (width - marginDelta) + "px"
-                    : (getWidthFromHeight(height) - marginDelta) + "px"
-        };
-
         return (
             <>
                 <Media query="(orientation: landscape) and (min-width: 1200px)">
@@ -62,14 +36,9 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                             <Feed />
                         </div>
-                        <div className="group board-container" style={boardContainerStyle}>
-                            <div className="chessboard">
-                                <Board />
-                                <Bench />
-                            </div>
-                            
-                            <Announcement />
-                        </div>
+
+                        <BoardContainer />
+
                         <div className="group">
                             <CardShop />
 
@@ -82,14 +51,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                 <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)">
                     <div className="game landscape">
-                        <div className="group board-container" style={boardContainerStyle}>
-                            <div className="chessboard">
-                                <Board />
-                                <Bench />
-                            </div>
+                        <BoardContainer />
 
-                            <Announcement />
-                        </div>
                         <div className="group">
                             <RoundIndicator />
 
@@ -112,14 +75,8 @@ class GameStageUnconnected extends React.Component<GameStageProps> {
 
                 <Media query="(orientation: portrait), (max-width: 599px)">
                     <div className="game portrait">
-                        <div className="group board-container" style={boardContainerStyle}>
-                            <div className="chessboard">
-                                <Board />
-                                <Bench />
-                            </div>
+                        <BoardContainer />
 
-                            <Announcement />
-                        </div>
                         <div className="group">
                             <RoundIndicator />
 
