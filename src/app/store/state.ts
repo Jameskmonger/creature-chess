@@ -12,6 +12,7 @@ export interface GameState {
     money: number;
     round: number | null;
     debug: boolean;
+    isDisconnected: boolean;
 
     mainAnnouncement: string;
     subAnnouncement: string;

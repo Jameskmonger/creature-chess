@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SERVER_DISCONNECTED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
@@ -21,13 +21,19 @@ const initialState: GameState = {
     debug: false,
     mainAnnouncement: null,
     subAnnouncement: null,
-    selectedPiece: null
+    selectedPiece: null,
+    isDisconnected: false
 };
 
 type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction | PieceMovedAction;
 
 export function game(state: GameState = initialState, action: GameReducerActionTypes) {
     switch (action.type) {
+        case SERVER_DISCONNECTED:
+            return {
+                ...state,
+                isDisconnected: true
+            };
         case FIND_GAME:
         case JOIN_GAME:
         case CREATE_GAME:
