@@ -7,12 +7,12 @@ import { canDropPiece } from "@common/board";
 
 const boxTarget: DropTargetSpec<TileProps> = {
     drop(props: TileProps, monitor: DropTargetMonitor) {
-        props.onMovePiece(monitor.getItem());
+        props.onDropPiece(monitor.getItem());
     },
     canDrop(props: TileProps, monitor: DropTargetMonitor) {
         const item: Models.Piece = monitor.getItem();
 
-        return canDropPiece(item, props.position, props.pieces, props.gamePhase, props.belowPieceLimit);
+        return props.canDropPiece(item);
     }
 };
 

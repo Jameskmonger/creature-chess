@@ -13,6 +13,11 @@
         height: 82%;
     }
 
+    &.selected {
+        box-sizing: border-box;
+        border: 2px solid #ff5200;
+    }
+
     &.dark {
         background: $dark-tile;
     }

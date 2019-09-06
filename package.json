@@ -73,6 +73,7 @@
 		"javascript-astar": "^0.4.1",
 		"lodash": "^4.17.11",
 		"p-defer": "^2.1.0",
+		"pepjs": "^0.5.2",
 		"present": "^1.0.0",
 		"react": "^16.8.4",
 		"react-dnd": "^7.3.2",
