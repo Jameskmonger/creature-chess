@@ -4,6 +4,7 @@ import { Bench } from './bench';
 import { Board } from './board';
 import { Constants } from '@common';
 import { ReconnectModal } from './reconnectModal';
+import { useWindowSize } from '../use-window-size';
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -11,21 +12,7 @@ const getHeightFromWidth = (width: number) =>
     ((width / Constants.GRID_SIZE) * (Constants.GRID_SIZE + 1));
 
 const BoardContainer: React.FunctionComponent = () => {
-    const [width, setWidth] = React.useState<number>(window.innerWidth);
-    const [height, setHeight] = React.useState<number>(window.innerHeight);
-
-    React.useEffect(() => {
-        const handleResize = () => {
-            setWidth(window.innerWidth);
-            setHeight(window.innerHeight);
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    });
+    const { width, height } = useWindowSize();
 
     const portrait = width < height;
 
