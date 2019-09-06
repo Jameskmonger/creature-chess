@@ -12,7 +12,7 @@ const ReconnectModal: React.FunctionComponent = () => {
     return (
         <div className="reconnect">
             <p className="text">Oops - you've been disconnected</p>
-            <button className="button">Reconnect</button>
+            <p className="text">We're working on fixing this</p>
         </div>
     );
 };

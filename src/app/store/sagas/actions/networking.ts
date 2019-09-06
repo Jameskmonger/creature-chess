@@ -13,7 +13,7 @@ import {
     StartGamePacket
 } from "@common/packet-opcodes";
 import { Models } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction } from "../../actions/gameActions";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, serverDisconnected } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
@@ -69,6 +69,8 @@ const createGame = (socket: Socket, name: string) => {
 
 const subscribe = (socket: Socket) => {
     return eventChannel(emit => {
+        socket.on("disconnect", () => emit(serverDisconnected()));
+
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: Models.PlayerListPlayer[]) => {
             log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListUpdated(players));
