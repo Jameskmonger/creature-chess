@@ -24,13 +24,13 @@ const getOverlayClassName = (isDragging: boolean, canDrop: boolean) => {
 };
 
 const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (props) => {
-    const { type, pieces, position, renderPiece, connectDropTarget, isDragging, canDrop, selectedPieceId } = props;
+    const { type, piece, position, renderPiece, connectDropTarget, isDragging, canDrop, selectedPieceId } = props;
 
-    const hasSelectedPiece = pieces.some(p => p.id === selectedPieceId);
+    const hasSelectedPiece = (piece && piece.id === selectedPieceId);
 
     return connectDropTarget(
-        <div onClick={() => alert("clicked")} className={`tile ${getClassName(type, position)}${hasSelectedPiece ? " selected" : ""}`}>
-            {pieces.map(renderPiece)}
+        <div className={`tile ${getClassName(type, position)}${hasSelectedPiece ? " selected" : ""}`}>
+            {piece && renderPiece(piece)}
 
             <div className={`${getOverlayClassName(isDragging, canDrop)}`} />
         </div>

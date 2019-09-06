@@ -8,7 +8,7 @@ export interface TileOwnProps {
 }
 
 export interface TileStateProps {
-    pieces: Models.Piece[];
+    piece: Models.Piece;
     gamePhase: GamePhase;
     belowPieceLimit: boolean;
     selectedPieceId: string;

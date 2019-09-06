@@ -10,7 +10,7 @@ import { TileProps, TileOwnProps, TileStateProps, TileDispatchProps } from "./ti
 import { TileUnconnected } from "./tileUnconnected";
 
 const mapStateToProps: MapStateToProps<TileStateProps, TileOwnProps, AppState> = (state, ownProps) => ({
-    pieces: tilePieceSelector(state, ownProps),
+    piece: tilePieceSelector(state, ownProps),
     gamePhase: state.game.phase,
     belowPieceLimit: ownedPieceSelector(state).length < state.localPlayer.level,
     selectedPieceId: state.game.selectedPieceId

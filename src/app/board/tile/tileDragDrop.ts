@@ -12,7 +12,7 @@ const boxTarget: DropTargetSpec<TileProps> = {
     canDrop(props: TileProps, monitor: DropTargetMonitor) {
         const item: Models.Piece = monitor.getItem();
 
-        return canDropPiece(item, props.position, props.pieces, props.gamePhase, props.belowPieceLimit);
+        return canDropPiece(item, props.position, props.piece === null, props.gamePhase, props.belowPieceLimit);
     }
 };
 
