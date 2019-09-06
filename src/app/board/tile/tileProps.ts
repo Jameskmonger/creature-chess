@@ -11,11 +11,16 @@ export interface TileStateProps {
     piece: Models.Piece;
     gamePhase: GamePhase;
     belowPieceLimit: boolean;
-    selectedPieceId: string;
+    currentSelectedPiece: Models.Piece;
 }
 
 export interface TileDispatchProps {
-    onMovePiece: (piece: Models.Piece) => void;
+    onDropPiece: (piece: Models.Piece) => void;
+    onSelectPiece: (piece: Models.Piece) => void;
 }
 
-export type TileProps = TileOwnProps & TileStateProps & TileDispatchProps;
+export interface TileHandlerProps {
+    canDropPiece: (piece: Models.Piece) => boolean;
+}
+
+export type TileProps = TileOwnProps & TileStateProps & TileDispatchProps & TileHandlerProps;

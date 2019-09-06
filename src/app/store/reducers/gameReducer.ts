@@ -3,8 +3,11 @@ import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE
 import { GameState } from "../state";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
-import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE } from '../actiontypes/boardActionTypes';
-import { BeginDragPieceAction } from '../actions/boardActions';
+import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from '../actiontypes/boardActionTypes';
+import { BeginDragPieceAction, SelectPieceAction } from '../actions/boardActions';
+import { PieceMovedAction } from '@common/board/actions/boardActions';
+import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from '@common/board/actions/boardActionTypes';
+import { inBench } from '@common/position';
 
 const initialState: GameState = {
     gameId: null,
@@ -18,10 +21,12 @@ const initialState: GameState = {
     debug: false,
     mainAnnouncement: null,
     subAnnouncement: null,
-    selectedPieceId: null
+    selectedPiece: null
 };
 
-export function game(state: GameState = initialState, action: GameAction | BeginDragPieceAction) {
+type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction | PieceMovedAction;
+
+export function game(state: GameState = initialState, action: GameReducerActionTypes) {
     switch (action.type) {
         case FIND_GAME:
         case JOIN_GAME:
@@ -46,10 +51,13 @@ export function game(state: GameState = initialState, action: GameAction | Begin
         case GAME_PHASE_UPDATE:
             // set opponent id when entering ready phase
             if (action.payload.phase === GamePhase.READY) {
+                const shouldClearSelected = state.selectedPiece && !inBench(state.selectedPiece.position);
+
                 return {
                     ...state,
                     phase: action.payload.phase,
-                    opponentId: action.payload.payload.opponentId
+                    opponentId: action.payload.payload.opponentId,
+                    selectedPiece: shouldClearSelected ? null : state.selectedPiece
                 };
             }
 
@@ -98,10 +106,20 @@ export function game(state: GameState = initialState, action: GameAction | Begin
             };
         }
         case BEGIN_DRAG_BENCH_PIECE:
-        case BEGIN_DRAG_BOARD_PIECE: {
+        case BEGIN_DRAG_BOARD_PIECE:
+        case PIECE_MOVED_TO_BENCH:
+        case PIECE_MOVED_TO_BOARD: {
             return {
                 ...state,
-                selectedPieceId: null
+                selectedPiece: null
+            };
+        }
+        case SELECT_PIECE: {
+            const isSamePiece = state.selectedPiece && state.selectedPiece.id === action.payload.piece.id;
+
+            return {
+                ...state,
+                selectedPiece: isSamePiece ? null : action.payload.piece
             };
         }
         default:
