@@ -1,11 +1,11 @@
 import * as React from "react";
-import { FaSyncAlt } from "react-icons/fa";
 import { Models, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/state";
 import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
+import { RerollButton } from "./rerollButton";
 
 interface StateProps {
     cards: Models.Card[];
@@ -56,13 +56,8 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
                 <span className="item">Balance</span>
                 <span className="item">${money}</span>
                 <span className="item">&nbsp;|&nbsp;</span>
-                <span className="item">
-                    <FaSyncAlt
-                        onClick={rerollBuyable ? onReroll : undefined}
-                        className={`reroll-icon${rerollBuyable ? "" : " not-buyable"}`}
-                    />
-                </span>
-                <span className="item">(${Constants.REROLL_COST})</span>
+
+                <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onReroll} />
             </div>
             <div className="cards">
                 <div className="shop">
