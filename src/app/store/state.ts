@@ -18,6 +18,7 @@ export interface GameState {
     subAnnouncement: string;
 
     selectedPiece: Models.Piece;
+    shopLocked: boolean;
 }
 
 export interface LocalPlayerState {

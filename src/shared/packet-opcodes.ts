@@ -10,7 +10,8 @@ export enum ServerToClientPacketOpcodes {
     LEVEL_UPDATE = "levelUpdate",
     NEW_FEED_MESSAGE = "newFeedMessage",
     LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate",
-    START_GAME = "START_GAME"
+    START_GAME = "startGame",
+    SHOP_LOCK_UPDATE = "shopLockUpdate"
 }
 
 export enum ClientToServerPacketOpcodes {
@@ -26,7 +27,8 @@ export enum ClientToServerPacketOpcodes {
     SEND_CHAT_MESSAGE = "sendChatMessage",
     FINISH_MATCH = "finishMatch",
     READY_UP = "readyUp",
-    START_LOBBY_GAME = "startLobbyGame"
+    START_LOBBY_GAME = "startLobbyGame",
+    TOGGLE_SHOP_LOCK = "toggleShopLock"
 }
 
 export interface StartGamePacket {
@@ -49,6 +51,10 @@ export interface LevelUpdatePacket {
     level: number;
     xp: number;
 }
+
+export type ShopLockUpdatePacket = {
+    locked: boolean;
+};
 
 export interface LobbyPlayerUpdatePacket {
     index: number;

@@ -10,16 +10,17 @@ import {
     LevelUpdatePacket,
     JoinLobbyResponse,
     LobbyPlayerUpdatePacket,
-    StartGamePacket
+    StartGamePacket,
+    ShopLockUpdatePacket
 } from "@common/packet-opcodes";
 import { Models } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, serverDisconnected } from "../../actions/gameActions";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, serverDisconnected, shopLockUpdated } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
 import { playerListUpdated } from "../../../playerList/playerListActions";
 import { cardsUpdated } from "../../../cardShop/cardActions";
-import { FIND_GAME, JOIN_GAME, CREATE_GAME } from "../../actiontypes/gameActionTypes";
+import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK } from "../../actiontypes/gameActionTypes";
 import { REROLL_CARDS, BUY_CARD } from "../../../cardShop/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../../log";
@@ -116,6 +117,12 @@ const subscribe = (socket: Socket) => {
             emit(joinCompleteAction({ playerId: packet.localPlayerId, gameId: packet.gameId, name: packet.name}));
         });
 
+        socket.on(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, (packet: ShopLockUpdatePacket) => {
+            log("[SHOP_LOCK_UPDATE]", packet);
+
+            emit(shopLockUpdated(packet.locked));
+        })
+
         // tslint:disable-next-line:no-empty
         return () => { };
     });
@@ -201,6 +208,12 @@ const writeActionsToPackets = function*() {
             START_LOBBY_GAME,
             function*() {
                 yield put(sendPacket(ClientToServerPacketOpcodes.START_LOBBY_GAME));
+            }
+        ),
+        takeEvery(
+            TOGGLE_SHOP_LOCK,
+            function*() {
+                yield put(sendPacket(ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK));
             }
         )
     ]);

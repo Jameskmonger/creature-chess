@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket, StartGamePacket } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket, StartGamePacket, ShopLockUpdatePacket } from "@common/packet-opcodes";
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
 import { LobbyPlayer } from '@common/models';
@@ -29,6 +29,7 @@ export class Connection extends Player {
         this.onReceivePacket(ClientToServerPacketOpcodes.READY_UP, this.readyUp);
         this.onReceivePacket(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.onReceivePacket(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
+        this.onReceivePacket(ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK, this.toggleShopLock);
 
         this.money.onChange(this.sendMoneyUpdate);
         this.level.onChange(this.sendLevelUpdate);
@@ -112,6 +113,14 @@ export class Connection extends Player {
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+    }
+
+    protected onShopLockUpdate() {
+        const packet: ShopLockUpdatePacket = {
+            locked: this.shopLocked
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, packet);
     }
 
     private onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {

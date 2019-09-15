@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SERVER_DISCONNECTED } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SERVER_DISCONNECTED, SHOP_LOCK_UPDATED } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { GamePhase } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
@@ -22,7 +22,8 @@ const initialState: GameState = {
     mainAnnouncement: null,
     subAnnouncement: null,
     selectedPiece: null,
-    isDisconnected: false
+    isDisconnected: false,
+    shopLocked: false
 };
 
 type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction | PieceMovedAction;
@@ -126,6 +127,12 @@ export function game(state: GameState = initialState, action: GameReducerActionT
             return {
                 ...state,
                 selectedPiece: isSamePiece ? null : action.payload.piece
+            };
+        }
+        case SHOP_LOCK_UPDATED: {
+            return {
+                ...state,
+                shopLocked: action.payload.locked
             };
         }
         default:
