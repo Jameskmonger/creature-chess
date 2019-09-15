@@ -6,6 +6,7 @@ import { AppState } from "../store/state";
 import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 import { RerollButton } from "./rerollButton";
+import { BalanceDisplay } from './balanceDisplay';
 
 interface StateProps {
     cards: Models.Card[];
@@ -19,6 +20,8 @@ interface DispatchProps {
 }
 
 type Props = StateProps & DispatchProps;
+
+const CardShopDivider: React.FunctionComponent = () => <span className="item">&nbsp;|&nbsp;</span>;
 
 const CardShopUnconnected: React.FunctionComponent<Props> = props => {
     const { cards, money, onReroll, onBuyCard, canUseShop } = props;
@@ -53,9 +56,9 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
     return (
         <div className="card-selector">
             <div className="balance">
-                <span className="item">Balance</span>
-                <span className="item">${money}</span>
-                <span className="item">&nbsp;|&nbsp;</span>
+                <BalanceDisplay value={money} />
+
+                <CardShopDivider />
 
                 <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onReroll} />
             </div>
