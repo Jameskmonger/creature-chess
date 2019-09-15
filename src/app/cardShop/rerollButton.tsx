@@ -1,5 +1,4 @@
 import * as React from "react";
-import { FaSyncAlt } from "react-icons/fa";
 
 interface RerollButtonProps {
   buyable: boolean;

@@ -7,6 +7,7 @@ import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from './balanceDisplay';
+import { LockButton } from './lockButton';
 
 interface StateProps {
     cards: Models.Card[];
@@ -61,6 +62,10 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
                 <CardShopDivider />
 
                 <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onReroll} />
+
+                <CardShopDivider />
+
+                <LockButton locked={false} onToggle={null} />
             </div>
             <div className="cards">
                 <div className="shop">
