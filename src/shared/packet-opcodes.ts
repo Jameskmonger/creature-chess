@@ -11,7 +11,10 @@ export enum ServerToClientPacketOpcodes {
     NEW_FEED_MESSAGE = "newFeedMessage",
     LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate",
     START_GAME = "startGame",
-    SHOP_LOCK_UPDATE = "shopLockUpdate"
+    SHOP_LOCK_UPDATE = "shopLockUpdate",
+
+    RECONNECT_AUTHENTICATE_SUCCESS = "reconnectAuthSuccess",
+    RECONNECT_AUTHENTICATE_FAILURE = "reconnectAuthFailure"
 }
 
 export enum ClientToServerPacketOpcodes {
@@ -28,11 +31,19 @@ export enum ClientToServerPacketOpcodes {
     FINISH_MATCH = "finishMatch",
     READY_UP = "readyUp",
     START_LOBBY_GAME = "startLobbyGame",
-    TOGGLE_SHOP_LOCK = "toggleShopLock"
+    TOGGLE_SHOP_LOCK = "toggleShopLock",
+    RECONNECT_AUTHENTICATE = "reconnectAuthenticate"
+}
+
+export interface ReconnectAuthenticatePacket {
+    playerId: string;
+    gameId: string;
+    reconnectSecret: string;
 }
 
 export interface StartGamePacket {
     gameId: string;
+    reconnectionSecret: string;
     localPlayerId: string;
     name: string;
 }

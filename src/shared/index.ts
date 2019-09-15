@@ -6,3 +6,5 @@ import * as Models from "./models";
 export { Constants, Models };
 
 export { getXpToNextLevel } from "./get-xp-for-level";
+export { ConnectionStatus } from "./connection-status";
+export { debounce } from "./debounce";

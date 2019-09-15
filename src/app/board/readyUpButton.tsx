@@ -7,12 +7,13 @@ import { readyUpAction } from '../store/actions/localPlayerActions';
 const ReadyUpButton: React.FunctionComponent = () => {
     const canReadyUp = useSelector<AppState, boolean>(
         state => state.game.phase === GamePhase.PREPARING && state.localPlayer.ready === false);
+        
+    const dispatch = useDispatch();
 
     if (!canReadyUp) {
         return null;
     }
 
-    const dispatch = useDispatch();
     const onReadyUp = () => dispatch(readyUpAction());
 
     return (

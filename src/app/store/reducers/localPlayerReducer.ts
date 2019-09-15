@@ -7,6 +7,7 @@ import { GamePhase } from "@common";
 
 const initialState: LocalPlayerState = {
     id: null,
+    reconnectionSecret: null,
     name: null,
     level: null,
     xp: null,
@@ -18,6 +19,7 @@ export function localPlayer(state: LocalPlayerState = initialState, action: Loca
         case JOIN_COMPLETE:
             return {
                 id: action.payload.playerId,
+                reconnectionSecret: action.payload.reconnectionSecret,
                 name: action.payload.name,
                 level: 1,
                 xp: 0,
