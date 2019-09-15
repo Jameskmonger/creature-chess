@@ -1,4 +1,4 @@
-import { GamePhase, Models } from "@common";
+import { GamePhase, Models, ConnectionStatus } from "@common";
 import { FeedMessage } from "@common/feed-message";
 import { LobbyPlayer } from '@common/models';
 
@@ -12,7 +12,7 @@ export interface GameState {
     money: number;
     round: number | null;
     debug: boolean;
-    isDisconnected: boolean;
+    connectionStatus: ConnectionStatus;
 
     mainAnnouncement: string;
     subAnnouncement: string;

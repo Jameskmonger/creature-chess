@@ -1,7 +1,7 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SERVER_DISCONNECTED, SHOP_LOCK_UPDATED } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
-import { GamePhase } from "@common";
+import { GamePhase, ConnectionStatus } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from '../actiontypes/boardActionTypes';
 import { BeginDragPieceAction, SelectPieceAction } from '../actions/boardActions';
@@ -22,7 +22,7 @@ const initialState: GameState = {
     mainAnnouncement: null,
     subAnnouncement: null,
     selectedPiece: null,
-    isDisconnected: false,
+    connectionStatus: ConnectionStatus.NOT_CONNECTED,
     shopLocked: false
 };
 
@@ -30,10 +30,10 @@ type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAct
 
 export function game(state: GameState = initialState, action: GameReducerActionTypes) {
     switch (action.type) {
-        case SERVER_DISCONNECTED:
+        case UPDATE_CONNECTION_STATUS:
             return {
                 ...state,
-                isDisconnected: true
+                connectionStatus: action.payload.status
             };
         case FIND_GAME:
         case JOIN_GAME:
