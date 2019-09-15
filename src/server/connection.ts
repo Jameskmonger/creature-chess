@@ -147,7 +147,6 @@ export class Connection extends Player {
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
-        console.log("sending: " + opcode);
         this.socket.emit(opcode, ...data);
     }
 
