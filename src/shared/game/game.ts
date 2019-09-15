@@ -40,6 +40,7 @@ const defaultPhaseLengths: PhaseLengths = {
 };
 
 export class Game {
+    public readonly id: string;
     private phaseLengths: PhaseLengths;
     private turnCount: number;
     private turnDuration: number;
@@ -57,6 +58,8 @@ export class Game {
     private eventManager = new EventManager();
 
     constructor(gameSize: number, phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
+        this.id = uuid();
+
         this.GAME_SIZE = gameSize;
         this.phaseLengths = { ...defaultPhaseLengths, ...phaseLengths };
         this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
@@ -139,6 +142,10 @@ export class Game {
         return player;
     }
 
+    public getPlayerById(playerId: string) {
+        return this.players.find(p => p.id === playerId);
+    }
+
     private startGame = async () => {
         if (this.phase !== GamePhase.WAITING) {
             return;
@@ -146,7 +153,7 @@ export class Game {
 
         const startTime = startStopwatch();
 
-        this.players.forEach(p => p.onStartGame());
+        this.players.forEach(p => p.onStartGame(this.id));
 
         while (this.players.filter(p => p.isAlive()).length >= 2) {
             await this.runPreparingPhase();

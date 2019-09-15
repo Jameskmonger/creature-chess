@@ -1,19 +1,18 @@
 import io = require("socket.io");
 import uuid = require("uuid/v4");
 import { log } from "@common/log";
-import { ClientToServerPacketOpcodes, JoinLobbyResponse } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticatePacket, ServerToClientPacketOpcodes } from "@common/packet-opcodes";
 import { Game } from "@common/game/game";
 import { Connection } from "./connection";
-import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
 import { Lobby } from './lobby';
 import { Player } from '@common/game';
 import { IdGenerator } from './id-generator';
 import { LobbyPlayer } from '@common/models';
-
-const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
+import { nameValidator } from "./name-validator";
 
 export class Server {
     private lobbies = new Map<string, Lobby>();
+    private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
 
     public listen(port: number) {
@@ -27,145 +26,10 @@ export class Server {
     private receiveConnection = (socket: io.Socket) => {
         log("Connection received");
 
-        let inLobby = false;
-
-        const onFindGame = (
-            name: string,
-            response: (response: JoinLobbyResponse) => void
-        ) => {
-            if (inLobby) {
-                return;
-            }
-
-            if (name.match(NAME_REGEX) === null) {
-                response({
-                    error: "Invalid characters in name",
-                    response: null
-                });
-                return;
-            }
-
-            const player = new Connection(socket, name);
-
-            let lobby = this.findPublicLobby();
-
-            if (lobby) {
-                lobby.addPlayer(player);
-            } else {
-                lobby = this.createLobby(player, true);
-            }
-
-            inLobby = true;
-
-            response({
-                error: null,
-                response: {
-                    playerId: player.id,
-                    lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime,
-                    isHost: player.id === lobby.hostId
-                }
-            });
-        }
-
-        const onJoinGame = (
-            name: string,
-            lobbyId: string,
-            response: (response: JoinLobbyResponse) => void
-        ) => {
-            if (inLobby) {
-                return;
-            }
-
-            if (name.match(NAME_REGEX) === null) {
-                response({
-                    error: "Invalid characters in name",
-                    response: null
-                });
-                return;
-            }
-
-            const lobby = this.getLobbyForId(lobbyId);
-
-            if (lobby === null) {
-                response({
-                    error: "Game not found",
-                    response: null
-                });
-                return;
-            }
-
-            if (lobby.canJoin() === false) {
-                response({
-                    error: "Game is not joinable",
-                    response: null
-                });
-                return;
-            }
-
-            const player = new Connection(socket, name);
-
-            lobby.addPlayer(player);
-
-            inLobby = true;
-
-            response({
-                error: null,
-                response: {
-                    playerId: player.id,
-                    lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime,
-                    isHost: player.id === lobby.hostId
-                }
-            });
-        };
-
-        const onCreateGame = (
-            name: string,
-            response: (response: JoinLobbyResponse) => void
-        ) => {
-            if (inLobby) {
-                return;
-            }
-
-            if (name.match(NAME_REGEX) === null) {
-                response({
-                    error: "Invalid characters in name",
-                    response: null
-                });
-                return;
-            }
-
-            if (name.length > MAX_NAME_LENGTH) {
-                response({
-                    error: "Name too long",
-                    response: null
-                });
-                return;
-            }
-
-            const player = new Connection(socket, name);
-            const lobby = this.createLobby(player, false);
-
-            inLobby = true;
-
-            response({
-                error: null,
-                response: {
-                    playerId: player.id,
-                    lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime,
-                    isHost: player.id === lobby.hostId
-                }
-            });
-        };
-
-        socket.on(ClientToServerPacketOpcodes.FIND_GAME, onFindGame);
-        socket.on(ClientToServerPacketOpcodes.JOIN_GAME, onJoinGame);
-        socket.on(ClientToServerPacketOpcodes.CREATE_GAME, onCreateGame);
+        socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
+        socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket));
+        socket.on(ClientToServerPacketOpcodes.JOIN_GAME, this.onSocketJoinGame(socket));
+        socket.on(ClientToServerPacketOpcodes.CREATE_GAME, this.onSocketCreateGame(socket));
     }
 
     private getLobbyPlayers(lobby: Lobby): LobbyPlayer[] {
@@ -183,7 +47,7 @@ export class Server {
             .filter(lobby => lobby.isPublic && lobby.canJoin());
 
         lobbies.sort((a, b) => b.getRealPlayerCount() - a.getRealPlayerCount());
-        
+
         return lobbies[0];
     }
 
@@ -212,11 +76,177 @@ export class Server {
                 game.addPlayer(p);
             });
 
+            this.games.set(game.id, game);
             this.lobbies.delete(lobby.id);
         };
     }
 
     private getLobbyForId(id: string) {
         return this.lobbies.get(id) || null;
+    }
+
+    private onSocketCreateGame(socket: io.Socket) {
+        return (
+            name: string,
+            response: (response: JoinLobbyResponse) => void
+        ) => {
+            const validationError = nameValidator(name);
+
+            if (validationError) {
+                response({
+                    error: validationError,
+                    response: null
+                });
+                return;
+            }
+
+            const player = new Connection(socket, name);
+            const lobby = this.createLobby(player, false);
+
+            response({
+                error: null,
+                response: {
+                    playerId: player.id,
+                    lobbyId: lobby.id,
+                    players: this.getLobbyPlayers(lobby),
+                    startTimestamp: lobby.gameStartTime,
+                    isHost: player.id === lobby.hostId
+                }
+            });
+        };
+    }
+
+    private onSocketFindGame(socket: io.Socket) {
+        return (
+            name: string,
+            response: (response: JoinLobbyResponse) => void
+        ) => {
+            const validationError = nameValidator(name);
+
+            if (validationError) {
+                response({
+                    error: validationError,
+                    response: null
+                });
+                return;
+            }
+
+            const player = new Connection(socket, name);
+
+            let lobby = this.findPublicLobby();
+
+            if (lobby) {
+                lobby.addPlayer(player);
+            } else {
+                lobby = this.createLobby(player, true);
+            }
+
+            response({
+                error: null,
+                response: {
+                    playerId: player.id,
+                    lobbyId: lobby.id,
+                    players: this.getLobbyPlayers(lobby),
+                    startTimestamp: lobby.gameStartTime,
+                    isHost: player.id === lobby.hostId
+                }
+            });
+        }
+    }
+
+    private onSocketJoinGame(socket: io.Socket) {
+        return (
+            name: string,
+            lobbyId: string,
+            response: (response: JoinLobbyResponse) => void
+        ) => {
+            const validationError = nameValidator(name);
+
+            if (validationError) {
+                response({
+                    error: validationError,
+                    response: null
+                });
+                return;
+            }
+
+            const lobby = this.getLobbyForId(lobbyId);
+
+            if (lobby === null) {
+                response({
+                    error: "Game not found",
+                    response: null
+                });
+                return;
+            }
+
+            if (lobby.canJoin() === false) {
+                response({
+                    error: "Game is not joinable",
+                    response: null
+                });
+                return;
+            }
+
+            const player = new Connection(socket, name);
+
+            lobby.addPlayer(player);
+
+            response({
+                error: null,
+                response: {
+                    playerId: player.id,
+                    lobbyId: lobby.id,
+                    players: this.getLobbyPlayers(lobby),
+                    startTimestamp: lobby.gameStartTime,
+                    isHost: player.id === lobby.hostId
+                }
+            });
+        };
+    }
+
+    private onSocketReconnectAuthenticate(socket: io.Socket) {
+        const disconnect = () => {
+            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE);
+
+            socket.disconnect();
+        };
+
+        return (packet: ReconnectAuthenticatePacket) => {
+            const game = this.games.get(packet.gameId);
+
+            if (!game) {
+                log(`Tried to reauthenticate for game ${packet.gameId}, but game not found`);
+                disconnect();
+                return;
+            }
+
+            const player = game.getPlayerById(packet.playerId);
+
+            if (!player) {
+                log(`Tried to reauthenticate as ${packet.playerId}, but player not found`);
+                disconnect();
+                return;
+            }
+
+            const connectionPlayer = player as Connection;
+
+            if (!connectionPlayer.isConnection) {
+                log(`Tried to reauthenticate as ${connectionPlayer.id}, but player is not a connection`);
+                disconnect();
+                return;
+            }
+
+            const success = connectionPlayer.reauthenticate(socket, packet.reconnectSecret);
+
+            if (!success) {
+                log(`Reauthentication unsuccessful`);
+                disconnect();
+                return;
+            }
+
+            log(`Successfully reauthenticated`);
+            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS);
+        };
     }
 }

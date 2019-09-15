@@ -1,6 +1,7 @@
 import { PlayerListPlayer } from "../models";
 import { Player } from "./player/player";
 import { EventEmitter } from "events";
+import { debounce } from '@common';
 
 enum PlayerListEvents {
     UPDATE = "UPDATE"
@@ -77,7 +78,7 @@ export class PlayerList {
         };
     }
 
-    private emitUpdate() {
+    private emitUpdate = debounce(() => {
         this.events.emit(PlayerListEvents.UPDATE, [ ...this.players, ...this.deadPlayers ]);
-    }
+    }, 500);
 }

@@ -267,7 +267,7 @@ export abstract class Player {
         this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
 
-    public abstract onStartGame();
+    public abstract onStartGame(gameId: string);
 
     public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
 
