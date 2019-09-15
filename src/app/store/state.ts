@@ -23,6 +23,8 @@ export interface GameState {
 
 export interface LocalPlayerState {
     id: string;
+    reconnectionSecret: string;
+
     name: string;
     level: number;
     xp: number;

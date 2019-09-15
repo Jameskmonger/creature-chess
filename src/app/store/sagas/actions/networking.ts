@@ -1,6 +1,6 @@
 import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
-import { call, takeEvery, put, take, fork, all } from "@redux-saga/core/effects";
+import { call, takeEvery, put, take, fork, all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../types";
 import {
     ServerToClientPacketOpcodes,
@@ -11,7 +11,8 @@ import {
     JoinLobbyResponse,
     LobbyPlayerUpdatePacket,
     StartGamePacket,
-    ShopLockUpdatePacket
+    ShopLockUpdatePacket,
+    ReconnectAuthenticatePacket
 } from "@common/packet-opcodes";
 import { Models, ConnectionStatus } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, shopLockUpdated, updateConnectionStatus } from "../../actions/gameActions";
@@ -20,7 +21,7 @@ import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
 import { playerListUpdated } from "../../../playerList/playerListActions";
 import { cardsUpdated } from "../../../cardShop/cardActions";
-import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK } from "../../actiontypes/gameActionTypes";
+import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK, UPDATE_CONNECTION_STATUS } from "../../actiontypes/gameActionTypes";
 import { REROLL_CARDS, BUY_CARD } from "../../../cardShop/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../../log";
@@ -32,6 +33,7 @@ import { SEND_CHAT_MESSAGE } from "../../../chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 import { joinLobbyAction, updateLobbyPlayerAction } from '../../actions/lobbyActions';
 import { START_LOBBY_GAME } from '../../actiontypes/lobbyActionTypes';
+import { AppState } from '../../state';
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -70,8 +72,16 @@ const createGame = (socket: Socket, name: string) => {
 
 const subscribe = (socket: Socket) => {
     return eventChannel(emit => {
-        socket.on("disconnect", () => emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED)));
-        socket.on("reconnect", () => emit(updateConnectionStatus(ConnectionStatus.RECONNECTED)));
+        let deliberateDisconnected = false;
+
+        socket.on("disconnect", () => {
+            if (deliberateDisconnected) {
+                return;
+            }
+            
+            emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED_WILL_RECONNECT));
+        });
+        socket.on("reconnect", () => emit(updateConnectionStatus(ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION)));
 
         socket.on(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, (players: Models.PlayerListPlayer[]) => {
             log("[PLAYER_LIST_UPDATE]", players);
@@ -116,14 +126,29 @@ const subscribe = (socket: Socket) => {
         socket.on(ServerToClientPacketOpcodes.START_GAME, (packet: StartGamePacket) => {
             log("[START_GAME]", packet);
 
-            emit(joinCompleteAction({ playerId: packet.localPlayerId, gameId: packet.gameId, name: packet.name}));
+            emit(joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
         });
 
         socket.on(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, (packet: ShopLockUpdatePacket) => {
             log("[SHOP_LOCK_UPDATE]", packet);
 
             emit(shopLockUpdated(packet.locked));
-        })
+        });
+
+        socket.on(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, () => {
+            log("[RECONNECT_AUTHENTICATE_SUCCESS]");
+
+            emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE, () => {
+            log("[RECONNECT_AUTH_FAILURE]");
+
+            emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED_FINAL));
+
+            deliberateDisconnected = true;
+            socket.disconnect();
+        });
 
         // tslint:disable-next-line:no-empty
         return () => { };
@@ -216,6 +241,26 @@ const writeActionsToPackets = function*() {
             TOGGLE_SHOP_LOCK,
             function*() {
                 yield put(sendPacket(ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK));
+            }
+        ),
+        takeLatest(
+            action => action.type === UPDATE_CONNECTION_STATUS && action.payload.status === ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION,
+            function*() {
+                const state: AppState = yield select();
+
+                // if player not connected yet, don't try to reconnect
+                if (state.localPlayer.id === null) {
+                    yield put(updateConnectionStatus(ConnectionStatus.DISCONNECTED_FINAL));
+                    return;
+                }
+
+                const packet: ReconnectAuthenticatePacket = {
+                    gameId: state.game.gameId,
+                    playerId: state.localPlayer.id,
+                    reconnectSecret: state.localPlayer.reconnectionSecret
+                };
+            
+                yield put(sendPacket(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, packet));
             }
         )
     ]);
