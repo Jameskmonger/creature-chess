@@ -609,10 +609,10 @@ var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var localPlayerActions_1 = __webpack_require__(/*! ../store/actions/localPlayerActions */ "./src/app/store/actions/localPlayerActions.ts");
 var ReadyUpButton = function () {
     var canReadyUp = react_redux_1.useSelector(function (state) { return state.game.phase === _common_1.GamePhase.PREPARING && state.localPlayer.ready === false; });
+    var dispatch = react_redux_1.useDispatch();
     if (!canReadyUp) {
         return null;
     }
-    var dispatch = react_redux_1.useDispatch();
     var onReadyUp = function () { return dispatch(localPlayerActions_1.readyUpAction()); };
     return (React.createElement("div", { className: "ready-up" },
         React.createElement("button", { className: "button", onClick: onReadyUp }, "Click to Ready Up")));
@@ -634,14 +634,30 @@ exports.ReadyUpButton = ReadyUpButton;
 exports.__esModule = true;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var ReconnectModal = function () {
-    var isDisconnected = react_redux_1.useSelector(function (state) { return state.game.isDisconnected; });
-    if (isDisconnected === false) {
+    var connectionStatus = react_redux_1.useSelector(function (state) { return state.game.connectionStatus; });
+    if (connectionStatus === _common_1.ConnectionStatus.NOT_CONNECTED
+        || connectionStatus === _common_1.ConnectionStatus.CONNECTED) {
         return null;
     }
     return (React.createElement("div", { className: "reconnect" },
-        React.createElement("p", { className: "text" }, "Oops - you've been disconnected"),
-        React.createElement("p", { className: "text" }, "We're working on fixing this")));
+        connectionStatus === _common_1.ConnectionStatus.DISCONNECTED_WILL_RECONNECT
+            && (React.createElement(React.Fragment, null,
+                React.createElement("p", { className: "text" }, "Oops - you've been disconnected"),
+                React.createElement("p", { className: "text" }, "Please wait while we reconnect you..."))),
+        connectionStatus === _common_1.ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION
+            && (React.createElement(React.Fragment, null,
+                React.createElement("p", { className: "text" }, "Restoring connection with server"),
+                React.createElement("p", { className: "text" }, "Authenticating with server..."))),
+        connectionStatus === _common_1.ConnectionStatus.RECONNECTED
+            && (React.createElement(React.Fragment, null,
+                React.createElement("p", { className: "text" }, "Reconnected!"),
+                React.createElement("p", { className: "text" }, "Please wait for the current round to finish..."))),
+        connectionStatus === _common_1.ConnectionStatus.DISCONNECTED_FINAL
+            && (React.createElement(React.Fragment, null,
+                React.createElement("p", { className: "text" }, "Sorry - we couldn't reconnect you"),
+                React.createElement("p", { className: "text" }, "We're working on fixing this")))));
 };
 exports.ReconnectModal = ReconnectModal;
 
@@ -2243,7 +2259,12 @@ exports.updateAnnouncement = function (main, sub) { return ({
     }
 }); };
 exports.clearAnnouncement = function () { return ({ type: gameActionTypes_1.CLEAR_ANNOUNCEMENT }); };
-exports.serverDisconnected = function () { return ({ type: gameActionTypes_1.SERVER_DISCONNECTED }); };
+exports.updateConnectionStatus = function (status) { return ({
+    type: gameActionTypes_1.UPDATE_CONNECTION_STATUS,
+    payload: {
+        status: status
+    }
+}); };
 exports.shopLockUpdated = function (locked) { return ({
     type: gameActionTypes_1.SHOP_LOCK_UPDATED,
     payload: { locked: locked }
@@ -2303,9 +2324,14 @@ exports.startLobbyGame = function () { return ({ type: lobbyActionTypes_1.START_
 
 exports.__esModule = true;
 var localPlayerActionTypes_1 = __webpack_require__(/*! ../actiontypes/localPlayerActionTypes */ "./src/app/store/actiontypes/localPlayerActionTypes.ts");
-exports.joinCompleteAction = function (payload) { return ({
+exports.joinCompleteAction = function (playerId, reconnectionSecret, gameId, name) { return ({
     type: localPlayerActionTypes_1.JOIN_COMPLETE,
-    payload: payload
+    payload: {
+        playerId: playerId,
+        reconnectionSecret: reconnectionSecret,
+        gameId: gameId,
+        name: name
+    }
 }); };
 exports.localPlayerLevelUpdate = function (level, xp) { return ({
     type: localPlayerActionTypes_1.LEVEL_UPDATE,
@@ -2389,7 +2415,7 @@ exports.PHASE_TIMER_UPDATED = "PHASE_TIMER_UPDATED";
 exports.ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
 exports.UPDATE_ANNOUNCEMENT = "UPDATE_ANNOUNCEMENT";
 exports.CLEAR_ANNOUNCEMENT = "CLEAR_ANNOUNCEMENT";
-exports.SERVER_DISCONNECTED = "SERVER_DISCONNECTED";
+exports.UPDATE_CONNECTION_STATUS = "UPDATE_CONNECTION_STATUS";
 exports.SHOP_LOCK_UPDATED = "SHOP_LOCK_UPDATED";
 exports.TOGGLE_SHOP_LOCK = "TOGGLE_SHOP_LOCK";
 
@@ -2535,14 +2561,14 @@ var initialState = {
     mainAnnouncement: null,
     subAnnouncement: null,
     selectedPiece: null,
-    isDisconnected: false,
+    connectionStatus: _common_1.ConnectionStatus.NOT_CONNECTED,
     shopLocked: false
 };
 function game(state, action) {
     if (state === void 0) { state = initialState; }
     switch (action.type) {
-        case gameActionTypes_1.SERVER_DISCONNECTED:
-            return tslib_1.__assign({}, state, { isDisconnected: true });
+        case gameActionTypes_1.UPDATE_CONNECTION_STATUS:
+            return tslib_1.__assign({}, state, { connectionStatus: action.payload.status });
         case gameActionTypes_1.FIND_GAME:
         case gameActionTypes_1.JOIN_GAME:
         case gameActionTypes_1.CREATE_GAME:
@@ -2684,6 +2710,7 @@ var gameActionTypes_1 = __webpack_require__(/*! ../actiontypes/gameActionTypes *
 var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var initialState = {
     id: null,
+    reconnectionSecret: null,
     name: null,
     level: null,
     xp: null,
@@ -2695,6 +2722,7 @@ function localPlayer(state, action) {
         case localPlayerActionTypes_1.JOIN_COMPLETE:
             return {
                 id: action.payload.playerId,
+                reconnectionSecret: action.payload.reconnectionSecret,
                 name: action.payload.name,
                 level: 1,
                 xp: 0,
@@ -3016,6 +3044,7 @@ var io = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-c
 var redux_saga_1 = __webpack_require__(/*! redux-saga */ "./node_modules/redux-saga/dist/redux-saga-core-npm-proxy.esm.js");
 var effects_1 = __webpack_require__(/*! @redux-saga/core/effects */ "./node_modules/@redux-saga/core/dist/redux-saga-effects.esm.js");
 var packet_opcodes_1 = __webpack_require__(/*! @common/packet-opcodes */ "./src/shared/packet-opcodes.ts");
+var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var gameActions_1 = __webpack_require__(/*! ../../actions/gameActions */ "./src/app/store/actions/gameActions.ts");
 var networkActions_1 = __webpack_require__(/*! ../../actions/networkActions */ "./src/app/store/actions/networkActions.ts");
 var networkActionTypes_1 = __webpack_require__(/*! ../../actiontypes/networkActionTypes */ "./src/app/store/actiontypes/networkActionTypes.ts");
@@ -3065,7 +3094,15 @@ var createGame = function (socket, name) {
 };
 var subscribe = function (socket) {
     return redux_saga_1.eventChannel(function (emit) {
-        socket.on("disconnect", function () { return emit(gameActions_1.serverDisconnected()); });
+        var deliberateDisconnected = false;
+        socket.on("disconnect", function () {
+            if (deliberateDisconnected) {
+                return;
+            }
+            emit(gameActions_1.clearAnnouncement());
+            emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.DISCONNECTED_WILL_RECONNECT));
+        });
+        socket.on("reconnect", function () { return emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION)); });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, function (players) {
             log_1.log("[PLAYER_LIST_UPDATE]", players);
             emit(playerListActions_1.playerListUpdated(players));
@@ -3080,6 +3117,7 @@ var subscribe = function (socket) {
         });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.PHASE_UPDATE, function (packet) {
             log_1.log("[PHASE_UPDATE]", packet);
+            emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.CONNECTED));
             emit(gameActions_1.gamePhaseUpdate(packet));
         });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.LEVEL_UPDATE, function (packet) {
@@ -3096,11 +3134,21 @@ var subscribe = function (socket) {
         });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.START_GAME, function (packet) {
             log_1.log("[START_GAME]", packet);
-            emit(localPlayerActions_1.joinCompleteAction({ playerId: packet.localPlayerId, gameId: packet.gameId, name: packet.name }));
+            emit(localPlayerActions_1.joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
         });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, function (packet) {
             log_1.log("[SHOP_LOCK_UPDATE]", packet);
             emit(gameActions_1.shopLockUpdated(packet.locked));
+        });
+        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, function () {
+            log_1.log("[RECONNECT_AUTHENTICATE_SUCCESS]");
+            emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.RECONNECTED));
+        });
+        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE, function () {
+            log_1.log("[RECONNECT_AUTH_FAILURE]");
+            emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.DISCONNECTED_FINAL));
+            deliberateDisconnected = true;
+            socket.disconnect();
         });
         // tslint:disable-next-line:no-empty
         return function () { };
@@ -3261,6 +3309,31 @@ var writeActionsToPackets = function () {
                                     return [2 /*return*/];
                             }
                         });
+                    }),
+                    effects_1.takeLatest(function (action) { return action.type === gameActionTypes_1.UPDATE_CONNECTION_STATUS && action.payload.status === _common_1.ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION; }, function () {
+                        var state, packet;
+                        return tslib_1.__generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, effects_1.select()];
+                                case 1:
+                                    state = _a.sent();
+                                    if (!(state.localPlayer.id === null)) return [3 /*break*/, 3];
+                                    return [4 /*yield*/, effects_1.put(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.DISCONNECTED_FINAL))];
+                                case 2:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                                case 3:
+                                    packet = {
+                                        gameId: state.game.gameId,
+                                        playerId: state.localPlayer.id,
+                                        reconnectSecret: state.localPlayer.reconnectionSecret
+                                    };
+                                    return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, packet))];
+                                case 4:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
                     })
                 ])];
             case 1:
@@ -3303,32 +3376,35 @@ exports.networking = function () {
                 return [4 /*yield*/, effects_1.call(getSocket, action.payload.serverIP)];
             case 2:
                 socket = _b.sent();
-                return [4 /*yield*/, effects_1.fork(readPacketsToActions, socket)];
+                return [4 /*yield*/, effects_1.put(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.CONNECTED))];
             case 3:
                 _b.sent();
-                _b.label = 4;
+                return [4 /*yield*/, effects_1.fork(readPacketsToActions, socket)];
             case 4:
+                _b.sent();
+                _b.label = 5;
+            case 5:
                 if (false) {}
                 return [4 /*yield*/, getResponseForAction(socket, action)];
-            case 5:
-                _a = _b.sent(), error = _a.error, response = _a.response;
-                if (!!error) return [3 /*break*/, 7];
-                return [4 /*yield*/, effects_1.put(lobbyActions_1.joinLobbyAction(response.playerId, response.lobbyId, response.players, response.startTimestamp, response.isHost))];
             case 6:
+                _a = _b.sent(), error = _a.error, response = _a.response;
+                if (!!error) return [3 /*break*/, 8];
+                return [4 /*yield*/, effects_1.put(lobbyActions_1.joinLobbyAction(response.playerId, response.lobbyId, response.players, response.startTimestamp, response.isHost))];
+            case 7:
                 _b.sent();
-                return [3 /*break*/, 10];
-            case 7: return [4 /*yield*/, effects_1.put(gameActions_1.joinGameError(error))];
-            case 8:
+                return [3 /*break*/, 11];
+            case 8: return [4 /*yield*/, effects_1.put(gameActions_1.joinGameError(error))];
+            case 9:
                 _b.sent();
                 return [4 /*yield*/, effects_1.take([gameActionTypes_1.FIND_GAME, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
-            case 9:
+            case 10:
                 action = _b.sent();
-                return [3 /*break*/, 4];
-            case 10: return [4 /*yield*/, effects_1.fork(writeActionsToPackets)];
-            case 11:
+                return [3 /*break*/, 5];
+            case 11: return [4 /*yield*/, effects_1.fork(writeActionsToPackets)];
+            case 12:
                 _b.sent();
                 return [4 /*yield*/, effects_1.fork(writePacketsToSocket, socket)];
-            case 12:
+            case 13:
                 _b.sent();
                 return [2 /*return*/];
         }
@@ -4000,6 +4076,29 @@ exports.evolutionSagaFactory = function () {
 
 /***/ }),
 
+/***/ "./src/shared/connection-status.ts":
+/*!*****************************************!*\
+  !*** ./src/shared/connection-status.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ConnectionStatus;
+(function (ConnectionStatus) {
+    ConnectionStatus[ConnectionStatus["NOT_CONNECTED"] = 0] = "NOT_CONNECTED";
+    ConnectionStatus[ConnectionStatus["CONNECTED"] = 1] = "CONNECTED";
+    ConnectionStatus[ConnectionStatus["DISCONNECTED_WILL_RECONNECT"] = 2] = "DISCONNECTED_WILL_RECONNECT";
+    ConnectionStatus[ConnectionStatus["RECONNECTED_NEED_AUTHENTICATION"] = 3] = "RECONNECTED_NEED_AUTHENTICATION";
+    ConnectionStatus[ConnectionStatus["RECONNECTED"] = 4] = "RECONNECTED";
+    ConnectionStatus[ConnectionStatus["DISCONNECTED_FINAL"] = 5] = "DISCONNECTED_FINAL";
+})(ConnectionStatus = exports.ConnectionStatus || (exports.ConnectionStatus = {}));
+
+
+/***/ }),
+
 /***/ "./src/shared/constants.ts":
 /*!*********************************!*\
   !*** ./src/shared/constants.ts ***!
@@ -4030,6 +4129,30 @@ exports.DAMAGE_RATIO = 10;
 exports.MAX_NAME_LENGTH = 16;
 exports.MAX_PLAYERS_IN_GAME = 8;
 exports.LOBBY_WAIT_TIME = 60;
+
+
+/***/ }),
+
+/***/ "./src/shared/debounce.ts":
+/*!********************************!*\
+  !*** ./src/shared/debounce.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.debounce = function (func, wait) {
+    var timeout;
+    return function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            timeout = null;
+            func();
+        }, wait);
+    };
+};
 
 
 /***/ }),
@@ -4501,6 +4624,10 @@ var Models = __webpack_require__(/*! ./models */ "./src/shared/models/index.ts")
 exports.Models = Models;
 var get_xp_for_level_1 = __webpack_require__(/*! ./get-xp-for-level */ "./src/shared/get-xp-for-level.ts");
 exports.getXpToNextLevel = get_xp_for_level_1.getXpToNextLevel;
+var connection_status_1 = __webpack_require__(/*! ./connection-status */ "./src/shared/connection-status.ts");
+exports.ConnectionStatus = connection_status_1.ConnectionStatus;
+var debounce_1 = __webpack_require__(/*! ./debounce */ "./src/shared/debounce.ts");
+exports.debounce = debounce_1.debounce;
 
 
 /***/ }),
@@ -5014,6 +5141,8 @@ var ServerToClientPacketOpcodes;
     ServerToClientPacketOpcodes["LOBBY_PLAYER_UPDATE"] = "lobbyPlayerUpdate";
     ServerToClientPacketOpcodes["START_GAME"] = "startGame";
     ServerToClientPacketOpcodes["SHOP_LOCK_UPDATE"] = "shopLockUpdate";
+    ServerToClientPacketOpcodes["RECONNECT_AUTHENTICATE_SUCCESS"] = "reconnectAuthSuccess";
+    ServerToClientPacketOpcodes["RECONNECT_AUTHENTICATE_FAILURE"] = "reconnectAuthFailure";
 })(ServerToClientPacketOpcodes = exports.ServerToClientPacketOpcodes || (exports.ServerToClientPacketOpcodes = {}));
 var ClientToServerPacketOpcodes;
 (function (ClientToServerPacketOpcodes) {
@@ -5031,6 +5160,7 @@ var ClientToServerPacketOpcodes;
     ClientToServerPacketOpcodes["READY_UP"] = "readyUp";
     ClientToServerPacketOpcodes["START_LOBBY_GAME"] = "startLobbyGame";
     ClientToServerPacketOpcodes["TOGGLE_SHOP_LOCK"] = "toggleShopLock";
+    ClientToServerPacketOpcodes["RECONNECT_AUTHENTICATE"] = "reconnectAuthenticate";
 })(ClientToServerPacketOpcodes = exports.ClientToServerPacketOpcodes || (exports.ClientToServerPacketOpcodes = {}));
 
 
