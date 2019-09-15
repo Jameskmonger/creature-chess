@@ -15,7 +15,7 @@ import {
     ReconnectAuthenticatePacket
 } from "@common/packet-opcodes";
 import { Models, ConnectionStatus } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, shopLockUpdated, updateConnectionStatus } from "../../actions/gameActions";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
@@ -79,6 +79,7 @@ const subscribe = (socket: Socket) => {
                 return;
             }
             
+            emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED_WILL_RECONNECT));
         });
         socket.on("reconnect", () => emit(updateConnectionStatus(ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION)));
