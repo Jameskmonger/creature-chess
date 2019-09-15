@@ -11,12 +11,10 @@ const RerollButton: React.FunctionComponent<RerollButtonProps> = ({ buyable, cos
   return (
     <>
       <span className="item">
-        <FaSyncAlt
-          onClick={buyable ? onBuy : undefined}
-          className={`reroll-icon${buyable ? "" : " not-buyable"}`}
-        />
+        <button className="reroll" onClick={buyable ? onBuy : undefined} disabled={buyable === false}>
+          New Cards (${cost})
+        </button>
       </span>
-      <span className="item">(${cost})</span>
     </>
   );
 };

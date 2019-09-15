@@ -50,12 +50,21 @@
         }
     }
 
-    .reroll-icon {
-        display: block;
+    .reroll {
+        padding: 0.6em 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.8em;
+        color: #fff;
         cursor: pointer;
+        background: #566c86;
 
-        &.not-buyable {
+        /* stylelint-disable-next-line */
+        border: none;
+
+        &:disabled {
+            color: #222;
             cursor: not-allowed;
+            background: #666;
         }
     }
 }
