@@ -4,7 +4,7 @@ import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/state";
 import { GamePhase, getXpToNextLevel, Constants } from "@common";
 import { ownedPieceSelector } from "../store/pieceSelectors";
-import { buyXpAction, readyUpAction } from "../store/actions/localPlayerActions";
+import { buyXpAction } from "../store/actions/localPlayerActions";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 
@@ -14,18 +14,16 @@ interface ProfileStateProps {
     xp: number;
     pieceCount: number;
     gameStarted: boolean;
-    canReadyUp: boolean;
 }
 
 interface ProfileDispatchProps {
     onBuyXp: () => void;
-    onReadyUp: () => void;
 }
 
 type ProfileProps = ProfileStateProps & ProfileDispatchProps;
 
 const ProfileUnconnected: React.FunctionComponent<ProfileProps> = (props) => {
-    const { name, level, xp, pieceCount, gameStarted, canReadyUp, onBuyXp, onReadyUp } = props;
+    const { name, level, xp, pieceCount, gameStarted, onBuyXp } = props;
 
     if (gameStarted === false) {
         return null;
@@ -45,11 +43,6 @@ const ProfileUnconnected: React.FunctionComponent<ProfileProps> = (props) => {
                 <ProgressBar className="xp-progress" current={xp} max={xpForNextLevel} renderContents={renderProgressBar} />
                 <button onClick={onBuyXp} className="buy-xp">Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})</button>
             </div>
-
-            {
-                canReadyUp
-                && <button onClick={onReadyUp} className="ready-up">Ready Up</button>
-            }
         </div>
     );
 };
@@ -59,13 +52,11 @@ const mapStateToProps: MapStateToProps<ProfileStateProps, {}, AppState> = state 
     level: state.localPlayer.level,
     xp: state.localPlayer.xp,
     gameStarted: state.game.phase !== GamePhase.WAITING,
-    canReadyUp: (state.game.phase === GamePhase.PREPARING && state.localPlayer.ready === false),
     pieceCount: ownedPieceSelector(state).length
 });
 
 const mapDispatchToProps: MapDispatchToProps<ProfileDispatchProps, {}> = dispatch => ({
-    onBuyXp: () => dispatch(buyXpAction()),
-    onReadyUp: () => dispatch(readyUpAction())
+    onBuyXp: () => dispatch(buyXpAction())
 });
 
 const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileUnconnected);

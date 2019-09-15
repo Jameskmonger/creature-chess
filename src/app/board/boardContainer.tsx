@@ -5,6 +5,7 @@ import { Board } from './board';
 import { Constants } from '@common';
 import { ReconnectModal } from './reconnectModal';
 import { useWindowSize } from '../use-window-size';
+import { ReadyUpButton } from './readyUpButton';
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -38,7 +39,7 @@ const BoardContainer: React.FunctionComponent = () => {
             </div>
 
             <Announcement />
-
+            <ReadyUpButton />
             <ReconnectModal />
         </div>
     );
