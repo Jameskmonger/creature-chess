@@ -287,7 +287,21 @@ body {
     font-family: Arial, sans-serif;
     font-size: 3em;
     color: #717171;
-    transform: rotate(15deg); }
+    transform: rotate(15deg);
+    /* stylelint-disable */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome and Opera */
+    /* stylelint-enable */ }
 
 .card-selector .shop {
   display: flex;
@@ -305,11 +319,22 @@ body {
   .card-selector .balance .item:not(:last-child) {
     margin-right: 1em; }
 
-.card-selector .reroll-icon {
-  display: block;
+.card-selector .reroll {
+  padding: 0.6em 1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.8em;
+  color: #fff;
+  cursor: pointer;
+  background: #566c86;
+  /* stylelint-disable-next-line */
+  border: none; }
+  .card-selector .reroll:disabled {
+    color: #222;
+    cursor: not-allowed;
+    background: #666; }
+
+.card-selector .lock-icon {
   cursor: pointer; }
-  .card-selector .reroll-icon.not-buyable {
-    cursor: not-allowed; }
 
 .chessboard {
   width: 100%;

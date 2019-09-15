@@ -792,6 +792,30 @@ exports.TileUnconnected = TileUnconnected;
 
 /***/ }),
 
+/***/ "./src/app/cardShop/balanceDisplay.tsx":
+/*!*********************************************!*\
+  !*** ./src/app/cardShop/balanceDisplay.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BalanceDisplay = function (_a) {
+    var value = _a.value;
+    return (React.createElement(React.Fragment, null,
+        React.createElement("span", { className: "item" }, "Balance"),
+        React.createElement("span", { className: "item" },
+            "$",
+            value)));
+};
+exports.BalanceDisplay = BalanceDisplay;
+
+
+/***/ }),
+
 /***/ "./src/app/cardShop/card.tsx":
 /*!***********************************!*\
   !*** ./src/app/cardShop/card.tsx ***!
@@ -856,9 +880,7 @@ exports.cardsUpdated = function (payload) { return ({
     type: cardActionTypes_1.CARDS_UPDATED,
     payload: payload
 }); };
-exports.rerollCards = function () { return ({
-    type: cardActionTypes_1.REROLL_CARDS
-}); };
+exports.rerollCards = function () { return ({ type: cardActionTypes_1.REROLL_CARDS }); };
 exports.buyCard = function (index) { return ({
     type: cardActionTypes_1.BUY_CARD,
     payload: {
@@ -880,14 +902,18 @@ exports.buyCard = function (index) { return ({
 
 exports.__esModule = true;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-var fa_1 = __webpack_require__(/*! react-icons/fa */ "./node_modules/react-icons/fa/index.esm.js");
 var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var card_1 = __webpack_require__(/*! ./card */ "./src/app/cardShop/card.tsx");
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var cardActions_1 = __webpack_require__(/*! ./cardActions */ "./src/app/cardShop/cardActions.ts");
 var dropToSell_1 = __webpack_require__(/*! ./dropToSell/dropToSell */ "./src/app/cardShop/dropToSell/dropToSell.tsx");
+var rerollButton_1 = __webpack_require__(/*! ./rerollButton */ "./src/app/cardShop/rerollButton.tsx");
+var balanceDisplay_1 = __webpack_require__(/*! ./balanceDisplay */ "./src/app/cardShop/balanceDisplay.tsx");
+var lockButton_1 = __webpack_require__(/*! ./lockButton */ "./src/app/cardShop/lockButton.tsx");
+var gameActions_1 = __webpack_require__(/*! ../store/actions/gameActions */ "./src/app/store/actions/gameActions.ts");
+var CardShopDivider = function () { return React.createElement("span", { className: "item" }, "\u00A0|\u00A0"); };
 var CardShopUnconnected = function (props) {
-    var cards = props.cards, money = props.money, onReroll = props.onReroll, onBuyCard = props.onBuyCard, canUseShop = props.canUseShop;
+    var cards = props.cards, money = props.money, onReroll = props.onReroll, onBuyCard = props.onBuyCard, canUseShop = props.canUseShop, shopLocked = props.shopLocked, onToggleLock = props.onToggleLock;
     var onCardClick = function (index) {
         return function () { return onBuyCard(index); };
     };
@@ -903,17 +929,11 @@ var CardShopUnconnected = function (props) {
     var rerollBuyable = money >= _common_1.Constants.REROLL_COST;
     return (React.createElement("div", { className: "card-selector" },
         React.createElement("div", { className: "balance" },
-            React.createElement("span", { className: "item" }, "Balance"),
-            React.createElement("span", { className: "item" },
-                "$",
-                money),
-            React.createElement("span", { className: "item" }, "\u00A0|\u00A0"),
-            React.createElement("span", { className: "item" },
-                React.createElement(fa_1.FaSyncAlt, { onClick: rerollBuyable ? onReroll : undefined, className: "reroll-icon" + (rerollBuyable ? "" : " not-buyable") })),
-            React.createElement("span", { className: "item" },
-                "($",
-                _common_1.Constants.REROLL_COST,
-                ")")),
+            React.createElement(balanceDisplay_1.BalanceDisplay, { value: money }),
+            React.createElement(CardShopDivider, null),
+            React.createElement(rerollButton_1.RerollButton, { buyable: rerollBuyable, cost: _common_1.Constants.REROLL_COST, onBuy: onReroll }),
+            React.createElement(CardShopDivider, null),
+            React.createElement(lockButton_1.LockButton, { locked: shopLocked, onToggle: onToggleLock })),
         React.createElement("div", { className: "cards" },
             React.createElement("div", { className: "shop" }, cards.map(createCard)),
             React.createElement(dropToSell_1.DropToSell, null))));
@@ -921,11 +941,13 @@ var CardShopUnconnected = function (props) {
 var mapStateToProps = function (state) { return ({
     cards: state.cards,
     money: state.game.money,
-    canUseShop: state.game.phase !== _common_1.GamePhase.WAITING && state.game.phase !== _common_1.GamePhase.DEAD
+    canUseShop: state.game.phase !== _common_1.GamePhase.WAITING && state.game.phase !== _common_1.GamePhase.DEAD,
+    shopLocked: state.game.shopLocked
 }); };
 var mapDispatchToProps = function (dispatch) { return ({
     onReroll: function () { return dispatch(cardActions_1.rerollCards()); },
-    onBuyCard: function (index) { return dispatch(cardActions_1.buyCard(index)); }
+    onBuyCard: function (index) { return dispatch(cardActions_1.buyCard(index)); },
+    onToggleLock: function () { return dispatch(gameActions_1.toggleShopLock()); }
 }); };
 var CardShop = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(CardShopUnconnected);
 exports.CardShop = CardShop;
@@ -1027,6 +1049,55 @@ var DropToSellUnconnected = function (props) {
         React.createElement("span", { className: "drop-to-sell-text" }, "Drop piece here to sell")));
 };
 exports.DropToSellUnconnected = DropToSellUnconnected;
+
+
+/***/ }),
+
+/***/ "./src/app/cardShop/lockButton.tsx":
+/*!*****************************************!*\
+  !*** ./src/app/cardShop/lockButton.tsx ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var fa_1 = __webpack_require__(/*! react-icons/fa */ "./node_modules/react-icons/fa/index.esm.js");
+var LockButton = function (_a) {
+    var locked = _a.locked, onToggle = _a.onToggle;
+    return (React.createElement(React.Fragment, null,
+        React.createElement("span", { className: "item" }, locked
+            ? React.createElement(fa_1.FaLock, { className: "lock-icon", onClick: onToggle })
+            : React.createElement(fa_1.FaLockOpen, { className: "lock-icon", onClick: onToggle }))));
+};
+exports.LockButton = LockButton;
+
+
+/***/ }),
+
+/***/ "./src/app/cardShop/rerollButton.tsx":
+/*!*******************************************!*\
+  !*** ./src/app/cardShop/rerollButton.tsx ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var RerollButton = function (_a) {
+    var buyable = _a.buyable, cost = _a.cost, onBuy = _a.onBuy;
+    return (React.createElement(React.Fragment, null,
+        React.createElement("span", { className: "item" },
+            React.createElement("button", { className: "reroll", onClick: buyable ? onBuy : undefined, disabled: buyable === false },
+                "New Cards ($",
+                cost,
+                ")"))));
+};
+exports.RerollButton = RerollButton;
 
 
 /***/ }),
@@ -2146,6 +2217,11 @@ exports.updateAnnouncement = function (main, sub) { return ({
 }); };
 exports.clearAnnouncement = function () { return ({ type: gameActionTypes_1.CLEAR_ANNOUNCEMENT }); };
 exports.serverDisconnected = function () { return ({ type: gameActionTypes_1.SERVER_DISCONNECTED }); };
+exports.shopLockUpdated = function (locked) { return ({
+    type: gameActionTypes_1.SHOP_LOCK_UPDATED,
+    payload: { locked: locked }
+}); };
+exports.toggleShopLock = function () { return ({ type: gameActionTypes_1.TOGGLE_SHOP_LOCK }); };
 
 
 /***/ }),
@@ -2287,6 +2363,8 @@ exports.ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
 exports.UPDATE_ANNOUNCEMENT = "UPDATE_ANNOUNCEMENT";
 exports.CLEAR_ANNOUNCEMENT = "CLEAR_ANNOUNCEMENT";
 exports.SERVER_DISCONNECTED = "SERVER_DISCONNECTED";
+exports.SHOP_LOCK_UPDATED = "SHOP_LOCK_UPDATED";
+exports.TOGGLE_SHOP_LOCK = "TOGGLE_SHOP_LOCK";
 
 
 /***/ }),
@@ -2430,7 +2508,8 @@ var initialState = {
     mainAnnouncement: null,
     subAnnouncement: null,
     selectedPiece: null,
-    isDisconnected: false
+    isDisconnected: false,
+    shopLocked: false
 };
 function game(state, action) {
     if (state === void 0) { state = initialState; }
@@ -2478,6 +2557,9 @@ function game(state, action) {
         case boardActionTypes_1.SELECT_PIECE: {
             var isSamePiece = state.selectedPiece && state.selectedPiece.id === action.payload.piece.id;
             return tslib_1.__assign({}, state, { selectedPiece: isSamePiece ? null : action.payload.piece });
+        }
+        case gameActionTypes_1.SHOP_LOCK_UPDATED: {
+            return tslib_1.__assign({}, state, { shopLocked: action.payload.locked });
         }
         default:
             return state;
@@ -2926,7 +3008,7 @@ var lobbyActions_1 = __webpack_require__(/*! ../../actions/lobbyActions */ "./sr
 var lobbyActionTypes_1 = __webpack_require__(/*! ../../actiontypes/lobbyActionTypes */ "./src/app/store/actiontypes/lobbyActionTypes.ts");
 var getSocket = function (serverIP) {
     // force to websocket for now until CORS is sorted
-    var socket = io(serverIP, { transports: ["websocket"], reconnection: false });
+    var socket = io(serverIP, { transports: ['websocket', 'xhr-polling'] });
     return new Promise(function (resolve) {
         socket.on("connect", function () {
             resolve(socket);
@@ -2988,6 +3070,10 @@ var subscribe = function (socket) {
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.START_GAME, function (packet) {
             log_1.log("[START_GAME]", packet);
             emit(localPlayerActions_1.joinCompleteAction({ playerId: packet.localPlayerId, gameId: packet.gameId, name: packet.name }));
+        });
+        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, function (packet) {
+            log_1.log("[SHOP_LOCK_UPDATE]", packet);
+            emit(gameActions_1.shopLockUpdated(packet.locked));
         });
         // tslint:disable-next-line:no-empty
         return function () { };
@@ -3133,6 +3219,16 @@ var writeActionsToPackets = function () {
                         return tslib_1.__generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.START_LOBBY_GAME))];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }),
+                    effects_1.takeEvery(gameActionTypes_1.TOGGLE_SHOP_LOCK, function () {
+                        return tslib_1.__generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK))];
                                 case 1:
                                     _a.sent();
                                     return [2 /*return*/];
@@ -4889,7 +4985,8 @@ var ServerToClientPacketOpcodes;
     ServerToClientPacketOpcodes["LEVEL_UPDATE"] = "levelUpdate";
     ServerToClientPacketOpcodes["NEW_FEED_MESSAGE"] = "newFeedMessage";
     ServerToClientPacketOpcodes["LOBBY_PLAYER_UPDATE"] = "lobbyPlayerUpdate";
-    ServerToClientPacketOpcodes["START_GAME"] = "START_GAME";
+    ServerToClientPacketOpcodes["START_GAME"] = "startGame";
+    ServerToClientPacketOpcodes["SHOP_LOCK_UPDATE"] = "shopLockUpdate";
 })(ServerToClientPacketOpcodes = exports.ServerToClientPacketOpcodes || (exports.ServerToClientPacketOpcodes = {}));
 var ClientToServerPacketOpcodes;
 (function (ClientToServerPacketOpcodes) {
@@ -4906,6 +5003,7 @@ var ClientToServerPacketOpcodes;
     ClientToServerPacketOpcodes["FINISH_MATCH"] = "finishMatch";
     ClientToServerPacketOpcodes["READY_UP"] = "readyUp";
     ClientToServerPacketOpcodes["START_LOBBY_GAME"] = "startLobbyGame";
+    ClientToServerPacketOpcodes["TOGGLE_SHOP_LOCK"] = "toggleShopLock";
 })(ClientToServerPacketOpcodes = exports.ClientToServerPacketOpcodes || (exports.ClientToServerPacketOpcodes = {}));
 
 
