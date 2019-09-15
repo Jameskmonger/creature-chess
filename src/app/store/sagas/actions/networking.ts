@@ -35,7 +35,7 @@ import { START_LOBBY_GAME } from '../../actiontypes/lobbyActionTypes';
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
-    const socket = io(serverIP, { transports: [ "websocket" ], reconnection: false });
+    const socket = io(serverIP, { transports: ['websocket', 'xhr-polling'] });
 
     return new Promise<Socket>(resolve => {
         socket.on("connect", () => {

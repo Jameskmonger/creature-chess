@@ -17,7 +17,7 @@ export class Server {
     private lobbyIdGenerator = new IdGenerator();
 
     public listen(port: number) {
-        const server = io.listen(port);
+        const server = io.listen(port, { transports: ['websocket', 'xhr-polling'] });
 
         log("Server listening on port " + port);
 
