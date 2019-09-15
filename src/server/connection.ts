@@ -1,3 +1,4 @@
+import uuid = require("uuid/v4");
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
 import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket, StartGamePacket, ShopLockUpdatePacket } from "@common/packet-opcodes";
@@ -5,16 +6,20 @@ import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
 import { LobbyPlayer } from '@common/models';
 
+type IncomingPacketListenerReference = ({ opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener });
 type IncomingPacketListener = (...args: any[]) => void;
 
 export class Connection extends Player {
     public readonly isBot: boolean = false;
+    public readonly isConnection = true;
     private socket: Socket;
+    private reconnectionSecret: string;
+    private incomingPacketListeners: IncomingPacketListenerReference[] = [];
 
     constructor(socket: Socket, name: string) {
         super(name);
 
-        this.socket = socket;
+        this.setSocket(socket);
 
         this.onReceivePacket(ClientToServerPacketOpcodes.BUY_CARD, this.buyCard);
         this.onReceivePacket(ClientToServerPacketOpcodes.SELL_PIECE, this.sellPiece);
@@ -35,11 +40,12 @@ export class Connection extends Player {
         this.level.onChange(this.sendLevelUpdate);
     }
 
-    public onStartGame() {
+    public onStartGame(gameId: string) {
         const packet: StartGamePacket = {
             localPlayerId: this.id,
+            reconnectionSecret: this.reconnectionSecret,
             name: this.name,
-            gameId: "" // currently unused, will be used for spectator mode
+            gameId
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.START_GAME, packet);
@@ -74,6 +80,15 @@ export class Connection extends Player {
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, packet);
+    }
+
+    public reauthenticate(socket: Socket, reconnectionSecret: string) {
+        if (this.reconnectionSecret !== reconnectionSecret) {
+            return false;
+        }
+
+        this.setSocket(socket);
+        return true;
     }
 
     protected onEnterPreparingPhase(round: number) {
@@ -124,10 +139,15 @@ export class Connection extends Player {
     }
 
     private onReceivePacket(opcode: ClientToServerPacketOpcodes, listener: IncomingPacketListener) {
-        this.socket.on(opcode, listener);
+        this.incomingPacketListeners.push({ opcode, listener });
+
+        if (this.socket) {
+            this.socket.on(opcode, listener);
+        }
     }
 
     private sendPacket(opcode: ServerToClientPacketOpcodes, ...data: any[]) {
+        console.log("sending: " + opcode);
         this.socket.emit(opcode, ...data);
     }
 
@@ -146,5 +166,15 @@ export class Connection extends Player {
         };
 
         this.sendPacket(ServerToClientPacketOpcodes.LEVEL_UPDATE, packet);
+    }
+
+    private setSocket(socket: Socket) {
+        console.log("socket set");
+        this.socket = socket;
+        this.reconnectionSecret = uuid();
+
+        this.incomingPacketListeners.forEach(({ opcode, listener }) => {
+            this.socket.on(opcode, listener);
+        });
     }
 }
