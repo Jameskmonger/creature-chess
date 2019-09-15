@@ -27,6 +27,15 @@
             font-size: 3em;
             color: #717171;
             transform: rotate(15deg);
+
+            /* stylelint-disable */
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+            /* stylelint-enable */
         }
     }
 
@@ -66,5 +75,9 @@
             cursor: not-allowed;
             background: #666;
         }
+    }
+
+    .lock-icon {
+        cursor: pointer;
     }
 }

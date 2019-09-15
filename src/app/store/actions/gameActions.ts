@@ -1,4 +1,4 @@
-import { FIND_GAME, JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SERVER_DISCONNECTED } from "../actiontypes/gameActionTypes";
+import { FIND_GAME, JOIN_GAME, MONEY_UPDATE, GAME_PHASE_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SERVER_DISCONNECTED, SHOP_LOCK_UPDATED, TOGGLE_SHOP_LOCK } from "../actiontypes/gameActionTypes";
 import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 
@@ -10,6 +10,8 @@ export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: PhaseUp
 export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string }});
 export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type ServerDisconnectedAction = ({ type: SERVER_DISCONNECTED });
+export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
+export type ToggleShopLockAction = ({ type: TOGGLE_SHOP_LOCK });
 
 export type GameAction =
     FindGameAction
@@ -23,7 +25,9 @@ export type GameAction =
     | ({ type: ENABLE_DEBUG_MODE })
     | AnnouncementUpdateAction
     | AnnouncementClearAction
-    | ServerDisconnectedAction;
+    | ServerDisconnectedAction
+    | UpdateShopLockAction
+    | ToggleShopLockAction;
 
 export const findGameAction = (serverIP: string, name: string): FindGameAction => ({
     type: FIND_GAME,
@@ -90,3 +94,10 @@ export const updateAnnouncement = (main: string, sub?: string): AnnouncementUpda
 export const clearAnnouncement = (): AnnouncementClearAction => ({ type: CLEAR_ANNOUNCEMENT });
 
 export const serverDisconnected = (): ServerDisconnectedAction => ({ type: SERVER_DISCONNECTED });
+
+export const shopLockUpdated = (locked: boolean): UpdateShopLockAction => ({
+    type: SHOP_LOCK_UPDATED,
+    payload: { locked }
+});
+
+export const toggleShopLock = (): ToggleShopLockAction => ({ type: TOGGLE_SHOP_LOCK });

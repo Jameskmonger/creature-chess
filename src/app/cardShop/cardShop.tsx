@@ -8,16 +8,19 @@ import { DropToSell } from "./dropToSell/dropToSell";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from './balanceDisplay';
 import { LockButton } from './lockButton';
+import { toggleShopLock } from '../store/actions/gameActions';
 
 interface StateProps {
     cards: Models.Card[];
     money: number;
     canUseShop: boolean;
+    shopLocked: boolean;
 }
 
 interface DispatchProps {
     onReroll: () => void;
     onBuyCard: (index: number) => void;
+    onToggleLock: () => void;
 }
 
 type Props = StateProps & DispatchProps;
@@ -25,7 +28,7 @@ type Props = StateProps & DispatchProps;
 const CardShopDivider: React.FunctionComponent = () => <span className="item">&nbsp;|&nbsp;</span>;
 
 const CardShopUnconnected: React.FunctionComponent<Props> = props => {
-    const { cards, money, onReroll, onBuyCard, canUseShop } = props;
+    const { cards, money, onReroll, onBuyCard, canUseShop, shopLocked, onToggleLock } = props;
 
     const onCardClick = (index: number) => {
         return () => onBuyCard(index);
@@ -65,7 +68,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
 
                 <CardShopDivider />
 
-                <LockButton locked={false} onToggle={null} />
+                <LockButton locked={shopLocked} onToggle={onToggleLock} />
             </div>
             <div className="cards">
                 <div className="shop">
@@ -80,12 +83,14 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
 const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
     cards: state.cards,
     money: state.game.money,
-    canUseShop: state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD
+    canUseShop: state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD,
+    shopLocked: state.game.shopLocked
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     onReroll: () => dispatch(rerollCards()),
-    onBuyCard: (index: number) => dispatch(buyCard(index))
+    onBuyCard: (index: number) => dispatch(buyCard(index)),
+    onToggleLock: () => dispatch(toggleShopLock())
 });
 
 const CardShop = connect(mapStateToProps, mapDispatchToProps)(CardShopUnconnected);

@@ -12,8 +12,8 @@ const LockButton: React.FunctionComponent<LockButtonProps> = ({ locked, onToggle
       <span className="item">
         {
           locked
-          ? <FaLock onClick={onToggle} />
-          : <FaLockOpen onClick={onToggle} />
+          ? <FaLock className="lock-icon" onClick={onToggle} />
+          : <FaLockOpen className="lock-icon" onClick={onToggle} />
         }
       </span>
     </>
