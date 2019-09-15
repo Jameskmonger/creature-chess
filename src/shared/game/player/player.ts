@@ -51,6 +51,7 @@ export abstract class Player {
     protected level = new Observable({ level: 1, xp: 0 });
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
+    protected shopLocked = false;
 
     public abstract readonly isBot: boolean;
 
@@ -127,7 +128,10 @@ export abstract class Player {
 
         this.readyUpDeferred = pDefer();
 
-        this.rerollCards();
+        if (this.shopLocked === false) {
+            this.rerollCards();
+        }
+        
         this.board.unlockEvolution();
 
         this.onEnterPreparingPhase(round);
@@ -279,6 +283,8 @@ export abstract class Player {
 
     protected abstract onDeath();
 
+    protected abstract onShopLockUpdate();
+
     protected getBoard() {
         return this.board.getBoard();
     }
@@ -293,6 +299,12 @@ export abstract class Player {
 
     protected startLobbyGame = () => {
         this.events.emit(PlayerEvent.START_LOBBY_GAME);
+    }
+
+    protected toggleShopLock = () => {
+        this.shopLocked = !this.shopLocked;
+
+        this.onShopLockUpdate();
     }
 
     protected buyCard = (cardIndex: number) => {
