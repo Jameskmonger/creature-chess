@@ -85,6 +85,7 @@ body {
     /* stylelint-enable */ }
   .game .announcement {
     position: absolute;
+    z-index: 4;
     width: 100%;
     padding: 2em 0;
     margin-top: 2em;
@@ -99,6 +100,21 @@ body {
       margin-top: 0.1em;
       font-size: 2em;
       font-weight: 700; }
+  .game .ready-up {
+    position: absolute;
+    width: 100%;
+    padding: 1em 0;
+    margin-top: 2em;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8); }
+    .game .ready-up .button {
+      box-sizing: border-box;
+      padding: 0.4em 1.2em;
+      font-size: 1.1em;
+      color: #000;
+      cursor: pointer;
+      background: #38b764;
+      border: none; }
   .game .reconnect {
     position: absolute;
     z-index: 100;
@@ -650,15 +666,6 @@ body {
     color: #fff;
     cursor: pointer;
     background: #1a1c2c;
-    border: none; }
-  .profile .ready-up {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.4em 1.2em;
-    font-size: 1.1em;
-    color: #000;
-    cursor: pointer;
-    background: #38b764;
     border: none; }
 
 .feed {

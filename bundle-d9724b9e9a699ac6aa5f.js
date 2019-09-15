@@ -339,6 +339,7 @@ var board_1 = __webpack_require__(/*! ./board */ "./src/app/board/board.tsx");
 var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var reconnectModal_1 = __webpack_require__(/*! ./reconnectModal */ "./src/app/board/reconnectModal.tsx");
 var use_window_size_1 = __webpack_require__(/*! ../use-window-size */ "./src/app/use-window-size.ts");
+var readyUpButton_1 = __webpack_require__(/*! ./readyUpButton */ "./src/app/board/readyUpButton.tsx");
 var getWidthFromHeight = function (height) {
     return ((height / (_common_1.Constants.GRID_SIZE + 1)) * _common_1.Constants.GRID_SIZE);
 };
@@ -363,6 +364,7 @@ var BoardContainer = function () {
             React.createElement(board_1.Board, null),
             React.createElement(bench_1.Bench, null)),
         React.createElement(announcement_1.Announcement, null),
+        React.createElement(readyUpButton_1.ReadyUpButton, null),
         React.createElement(reconnectModal_1.ReconnectModal, null)));
 };
 exports.BoardContainer = BoardContainer;
@@ -587,6 +589,35 @@ var BoardRow = function (_a) {
     return React.createElement("div", { className: "tile-row" }, tiles);
 };
 exports.BoardRow = BoardRow;
+
+
+/***/ }),
+
+/***/ "./src/app/board/readyUpButton.tsx":
+/*!*****************************************!*\
+  !*** ./src/app/board/readyUpButton.tsx ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
+var localPlayerActions_1 = __webpack_require__(/*! ../store/actions/localPlayerActions */ "./src/app/store/actions/localPlayerActions.ts");
+var ReadyUpButton = function () {
+    var canReadyUp = react_redux_1.useSelector(function (state) { return state.game.phase === _common_1.GamePhase.PREPARING && state.localPlayer.ready === false; });
+    if (!canReadyUp) {
+        return null;
+    }
+    var dispatch = react_redux_1.useDispatch();
+    var onReadyUp = function () { return dispatch(localPlayerActions_1.readyUpAction()); };
+    return (React.createElement("div", { className: "ready-up" },
+        React.createElement("button", { className: "button", onClick: onReadyUp }, "Click to Ready Up")));
+};
+exports.ReadyUpButton = ReadyUpButton;
 
 
 /***/ }),
@@ -1300,7 +1331,7 @@ var pieceSelectors_1 = __webpack_require__(/*! ../store/pieceSelectors */ "./src
 var localPlayerActions_1 = __webpack_require__(/*! ../store/actions/localPlayerActions */ "./src/app/store/actions/localPlayerActions.ts");
 var renderProgressBar = function (current, max) { return current + " / " + max + " xp"; };
 var ProfileUnconnected = function (props) {
-    var name = props.name, level = props.level, xp = props.xp, pieceCount = props.pieceCount, gameStarted = props.gameStarted, canReadyUp = props.canReadyUp, onBuyXp = props.onBuyXp, onReadyUp = props.onReadyUp;
+    var name = props.name, level = props.level, xp = props.xp, pieceCount = props.pieceCount, gameStarted = props.gameStarted, onBuyXp = props.onBuyXp;
     if (gameStarted === false) {
         return null;
     }
@@ -1322,21 +1353,17 @@ var ProfileUnconnected = function (props) {
                 _common_1.Constants.BUY_XP_AMOUNT,
                 " xp ($",
                 _common_1.Constants.BUY_XP_COST,
-                ")")),
-        canReadyUp
-            && React.createElement("button", { onClick: onReadyUp, className: "ready-up" }, "Ready Up")));
+                ")"))));
 };
 var mapStateToProps = function (state) { return ({
     name: state.localPlayer.name,
     level: state.localPlayer.level,
     xp: state.localPlayer.xp,
     gameStarted: state.game.phase !== _common_1.GamePhase.WAITING,
-    canReadyUp: (state.game.phase === _common_1.GamePhase.PREPARING && state.localPlayer.ready === false),
     pieceCount: pieceSelectors_1.ownedPieceSelector(state).length
 }); };
 var mapDispatchToProps = function (dispatch) { return ({
-    onBuyXp: function () { return dispatch(localPlayerActions_1.buyXpAction()); },
-    onReadyUp: function () { return dispatch(localPlayerActions_1.readyUpAction()); }
+    onBuyXp: function () { return dispatch(localPlayerActions_1.buyXpAction()); }
 }); };
 var Profile = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(ProfileUnconnected);
 exports.Profile = Profile;
