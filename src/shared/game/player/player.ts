@@ -20,6 +20,7 @@ import { DefinitionProvider } from "../definitionProvider";
 import { PlayerBoard } from "./playerBoard";
 import { StreakType } from "../../models/streakType";
 import { LobbyPlayer } from '@common/models';
+import { getPiecesForStage } from '@common/get-pieces-for-stage';
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -345,8 +346,10 @@ export abstract class Player {
             return;
         }
 
+        const piecesUsed = getPiecesForStage(piece.stage);
         const pieceCost = this.definitionProvider.get(piece.definitionId).cost;
-        this.addMoney(pieceCost);
+        this.addMoney(pieceCost * piecesUsed);
+
         this.deck.addPiece(piece);
         this.deck.shuffle();
 
