@@ -84,11 +84,11 @@ export class Connection extends Player {
 
     public reauthenticate(socket: Socket, reconnectionSecret: string) {
         if (this.reconnectionSecret !== reconnectionSecret) {
-            return false;
+            return null;
         }
 
         this.setSocket(socket);
-        return true;
+        return this.reconnectionSecret;
     }
 
     protected onEnterPreparingPhase(round: number) {

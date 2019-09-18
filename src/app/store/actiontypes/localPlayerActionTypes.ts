@@ -9,3 +9,6 @@ export type BUY_XP = typeof BUY_XP;
 
 export const READY_UP = "READY_UP";
 export type READY_UP = typeof READY_UP;
+
+export const UPDATE_RECONNECT_SECRET = "UPDATE_RECONNECT_SECRET";
+export type UPDATE_RECONNECT_SECRET = typeof UPDATE_RECONNECT_SECRET;

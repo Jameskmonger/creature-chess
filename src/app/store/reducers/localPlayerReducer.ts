@@ -1,6 +1,6 @@
 import { LocalPlayerState } from "../state";
 import { LocalPlayerAction } from "../actions/localPlayerActions";
-import { JOIN_COMPLETE, LEVEL_UPDATE, READY_UP } from "../actiontypes/localPlayerActionTypes";
+import { JOIN_COMPLETE, LEVEL_UPDATE, READY_UP, UPDATE_RECONNECT_SECRET } from "../actiontypes/localPlayerActionTypes";
 import { GamePhaseUpdateAction } from "../actions/gameActions";
 import { GAME_PHASE_UPDATE } from "../actiontypes/gameActionTypes";
 import { GamePhase } from "@common";
@@ -16,6 +16,10 @@ const initialState: LocalPlayerState = {
 
 export function localPlayer(state: LocalPlayerState = initialState, action: LocalPlayerAction | GamePhaseUpdateAction) {
     switch (action.type) {
+        case UPDATE_RECONNECT_SECRET:
+            return {
+                reconnectionSecret: action.payload.secret
+            };
         case JOIN_COMPLETE:
             return {
                 id: action.payload.playerId,
