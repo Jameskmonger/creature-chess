@@ -1,7 +1,7 @@
 import io = require("socket.io");
 import uuid = require("uuid/v4");
 import { log } from "@common/log";
-import { ClientToServerPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticatePacket, ServerToClientPacketOpcodes } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticatePacket, ServerToClientPacketOpcodes, ReconnectAuthenticateSuccessPacket } from "@common/packet-opcodes";
 import { Game } from "@common/game/game";
 import { Connection } from "./connection";
 import { Lobby } from './lobby';
@@ -237,16 +237,20 @@ export class Server {
                 return;
             }
 
-            const success = connectionPlayer.reauthenticate(socket, packet.reconnectSecret);
+            const newReconnectionSecret = connectionPlayer.reauthenticate(socket, packet.reconnectSecret);
 
-            if (!success) {
+            if (newReconnectionSecret === null) {
                 log(`Reauthentication unsuccessful`);
                 disconnect();
                 return;
             }
 
             log(`Successfully reauthenticated`);
-            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS);
+
+            const successPacket: ReconnectAuthenticateSuccessPacket = {
+                reconnectSecret: newReconnectionSecret
+            };
+            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, successPacket);
         };
     }
 }

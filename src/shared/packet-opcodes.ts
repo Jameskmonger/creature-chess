@@ -35,11 +35,15 @@ export enum ClientToServerPacketOpcodes {
     RECONNECT_AUTHENTICATE = "reconnectAuthenticate"
 }
 
-export interface ReconnectAuthenticatePacket {
+export type ReconnectAuthenticatePacket = {
     playerId: string;
     gameId: string;
     reconnectSecret: string;
-}
+};
+
+export type ReconnectAuthenticateSuccessPacket = {
+    reconnectSecret: string;
+};
 
 export interface StartGamePacket {
     gameId: string;

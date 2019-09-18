@@ -12,7 +12,8 @@ import {
     LobbyPlayerUpdatePacket,
     StartGamePacket,
     ShopLockUpdatePacket,
-    ReconnectAuthenticatePacket
+    ReconnectAuthenticatePacket,
+    ReconnectAuthenticateSuccessPacket
 } from "@common/packet-opcodes";
 import { Models, ConnectionStatus } from "@common";
 import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement } from "../../actions/gameActions";
@@ -25,7 +26,7 @@ import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK, UPDATE_CONNECTION_
 import { REROLL_CARDS, BUY_CARD } from "../../../cardShop/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../../../log";
-import { joinCompleteAction, localPlayerLevelUpdate } from "../../actions/localPlayerActions";
+import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../../actions/localPlayerActions";
 import { BUY_XP, READY_UP } from "../../actiontypes/localPlayerActionTypes";
 import { newFeedMessage } from "../../../feed/feedActions";
 import { FeedMessage } from "@common/feed-message";
@@ -136,10 +137,11 @@ const subscribe = (socket: Socket) => {
             emit(shopLockUpdated(packet.locked));
         });
 
-        socket.on(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, () => {
+        socket.on(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, (packet: ReconnectAuthenticateSuccessPacket) => {
             log("[RECONNECT_AUTHENTICATE_SUCCESS]");
 
             emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
+            emit(updateReconnectSecret(packet.reconnectSecret));
         });
 
         socket.on(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE, () => {
