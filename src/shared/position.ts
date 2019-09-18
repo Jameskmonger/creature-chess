@@ -4,6 +4,7 @@ import { Piece } from "./models";
 export type TileCoordinates = { x: number, y: number };
 
 export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
+export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;
 
 export enum Direction {
     Up = "up",
