@@ -168,7 +168,6 @@ export class Connection extends Player {
     }
 
     private setSocket(socket: Socket) {
-        console.log("socket set");
         this.socket = socket;
         this.reconnectionSecret = uuid();
 
