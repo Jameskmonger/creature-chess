@@ -24,7 +24,8 @@ export const createPiece = (
         currentHealth: stats.hp,
         coolDown: INITIAL_COOLDOWN,
         damagePerTurn,
-        stage
+        stage,
+        targetPieceId: null
     };
 };
 

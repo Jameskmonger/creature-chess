@@ -31,4 +31,5 @@ export interface Piece {
     coolDown: number;
 
     damagePerTurn: number | null;
+    targetPieceId: string;
 }

@@ -27,8 +27,8 @@ const applyVector = (position: TileCoordinates, vector: Vector): TileCoordinates
 
 const getAttackingTiles = (facingUp: boolean) => {
     return facingUp
-        ? [ Directions.UP, Directions.RIGHT, Directions.LEFT, Directions.DOWN ]
-        : [ Directions.DOWN, Directions.LEFT, Directions.RIGHT, Directions.UP ];
+        ? [Directions.UP, Directions.RIGHT, Directions.LEFT, Directions.DOWN]
+        : [Directions.DOWN, Directions.LEFT, Directions.RIGHT, Directions.UP];
 };
 
 const getLivingEnemies = (piece: Piece, pieces: Piece[]) => {
@@ -42,15 +42,33 @@ const getDelta = (a: Piece, b: Piece) => {
     };
 };
 
-const isAdjacent = (a: Piece) => {
-    return (b: Piece) => {
-        const { x: deltaX, y: deltaY } = getDelta(a, b);
+const arePiecesAdjacent = (a: Piece, b: Piece) => {
+    const { x: deltaX, y: deltaY } = getDelta(a, b);
 
-        return (deltaX + deltaY === 1);
-    };
+    return (deltaX + deltaY === 1);
+};
+
+const getTargetPiece = (piece: Piece, others: Piece[]) => {
+    if (piece.targetPieceId === null) {
+        return null;
+    }
+
+    const target = others.find(o => o.id === piece.targetPieceId && o.currentHealth > 0);
+
+    if (target === undefined) {
+        return null;
+    }
+
+    return target;
 };
 
 export const getAttackableEnemy = (piece: Piece, others: Piece[]) => {
+    const target = getTargetPiece(piece, others);
+
+    if (target && arePiecesAdjacent(piece, target)) {
+        return target;
+    }
+
     const attackDirections = getAttackingTiles(piece.facingAway);
 
     for (const direction of attackDirections) {
@@ -75,7 +93,7 @@ export const getAttackableEnemy = (piece: Piece, others: Piece[]) => {
     return null;
 };
 
-const getTargetPiece = (piece: Piece, pieces: Piece[]) => {
+const findClosestEnemy = (piece: Piece, pieces: Piece[]) => {
     const enemies = getLivingEnemies(piece, pieces);
 
     if (enemies.length === 0) {
@@ -94,7 +112,7 @@ const getTargetPiece = (piece: Piece, pieces: Piece[]) => {
 };
 
 export const getNewPiecePosition = (piece: Piece, pieces: Piece[]): TileCoordinates => {
-    const target = getTargetPiece(piece, pieces);
+    const target = findClosestEnemy(piece, pieces);
 
     if (target === null) {
         return null;
