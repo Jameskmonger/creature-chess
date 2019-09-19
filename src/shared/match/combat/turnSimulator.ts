@@ -39,6 +39,7 @@ export class TurnSimulator {
             const defender = getAttackableEnemy(attacker, updatedPieces);
 
             if (!defender) {
+                attacker.targetPieceId = null;
                 const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => p.currentHealth > 0));
 
                 if (newPosition !== null) {
@@ -52,6 +53,7 @@ export class TurnSimulator {
 
             const defenderCombatInfo = this.getPieceCombatInfo(defender);
             const updatedFighters = this.attack(turnCount, attackerCombatInfo, defenderCombatInfo);
+            updatedFighters.attacker.targetPieceId = updatedFighters.defender.id;
             updatedPieces[index] = updatedFighters.attacker;
             updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
         });
@@ -96,7 +98,8 @@ export class TurnSimulator {
                     direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
                     damage
                 },
-                damagePerTurn: (totalDamage + (damage * DAMAGE_RATIO)) / turnCount
+                damagePerTurn: (totalDamage + (damage * DAMAGE_RATIO)) / turnCount,
+                targetPieceId: defender.piece.id
             },
             defender: {
                 ...defender.piece,
