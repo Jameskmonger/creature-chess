@@ -18,6 +18,7 @@ export function localPlayer(state: LocalPlayerState = initialState, action: Loca
     switch (action.type) {
         case UPDATE_RECONNECT_SECRET:
             return {
+                ...state,
                 reconnectionSecret: action.payload.secret
             };
         case JOIN_COMPLETE:
