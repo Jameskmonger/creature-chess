@@ -2346,6 +2346,12 @@ exports.buyXpAction = function () { return ({
 exports.readyUpAction = function () { return ({
     type: localPlayerActionTypes_1.READY_UP
 }); };
+exports.updateReconnectSecret = function (secret) { return ({
+    type: localPlayerActionTypes_1.UPDATE_RECONNECT_SECRET,
+    payload: {
+        secret: secret
+    }
+}); };
 
 
 /***/ }),
@@ -2454,6 +2460,7 @@ exports.JOIN_COMPLETE = "JOIN_COMPLETE";
 exports.LEVEL_UPDATE = "LEVEL_UPDATE";
 exports.BUY_XP = "BUY_XP";
 exports.READY_UP = "READY_UP";
+exports.UPDATE_RECONNECT_SECRET = "UPDATE_RECONNECT_SECRET";
 
 
 /***/ }),
@@ -2719,6 +2726,8 @@ var initialState = {
 function localPlayer(state, action) {
     if (state === void 0) { state = initialState; }
     switch (action.type) {
+        case localPlayerActionTypes_1.UPDATE_RECONNECT_SECRET:
+            return tslib_1.__assign({}, state, { reconnectionSecret: action.payload.secret });
         case localPlayerActionTypes_1.JOIN_COMPLETE:
             return {
                 id: action.payload.playerId,
@@ -3140,9 +3149,10 @@ var subscribe = function (socket) {
             log_1.log("[SHOP_LOCK_UPDATE]", packet);
             emit(gameActions_1.shopLockUpdated(packet.locked));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, function () {
+        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, function (packet) {
             log_1.log("[RECONNECT_AUTHENTICATE_SUCCESS]");
             emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.RECONNECTED));
+            emit(localPlayerActions_1.updateReconnectSecret(packet.reconnectSecret));
         });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE, function () {
             log_1.log("[RECONNECT_AUTH_FAILURE]");
@@ -4533,6 +4543,33 @@ exports.definitions = [
 
 /***/ }),
 
+/***/ "./src/shared/get-pieces-for-stage.ts":
+/*!********************************************!*\
+  !*** ./src/shared/get-pieces-for-stage.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.getPiecesForStage = function (stage) {
+    if (stage === 1) {
+        return 1;
+    }
+    if (stage === 2) {
+        return 3;
+    }
+    if (stage === 3) {
+        return 9;
+    }
+    // shouldnt occur
+    return 0;
+};
+
+
+/***/ }),
+
 /***/ "./src/shared/get-total-health-by-team.ts":
 /*!************************************************!*\
   !*** ./src/shared/get-total-health-by-team.ts ***!
@@ -4624,6 +4661,8 @@ var Models = __webpack_require__(/*! ./models */ "./src/shared/models/index.ts")
 exports.Models = Models;
 var get_xp_for_level_1 = __webpack_require__(/*! ./get-xp-for-level */ "./src/shared/get-xp-for-level.ts");
 exports.getXpToNextLevel = get_xp_for_level_1.getXpToNextLevel;
+var get_pieces_for_stage_1 = __webpack_require__(/*! ./get-pieces-for-stage */ "./src/shared/get-pieces-for-stage.ts");
+exports.getPiecesForStage = get_pieces_for_stage_1.getPiecesForStage;
 var connection_status_1 = __webpack_require__(/*! ./connection-status */ "./src/shared/connection-status.ts");
 exports.ConnectionStatus = connection_status_1.ConnectionStatus;
 var debounce_1 = __webpack_require__(/*! ./debounce */ "./src/shared/debounce.ts");
@@ -4868,7 +4907,30 @@ exports.getTypeAttackBonus = function (attackType, defenceType) {
 "use strict";
 
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var pathfinding_1 = __webpack_require__(/*! ./pathfinding */ "./src/shared/match/combat/pathfinding.ts");
+var position_1 = __webpack_require__(/*! ../../position */ "./src/shared/position.ts");
+var constants_1 = __webpack_require__(/*! @common/constants */ "./src/shared/constants.ts");
+var Directions = {
+    UP: { x: 0, y: -1 },
+    RIGHT: { x: 1, y: 0 },
+    DOWN: { x: 0, y: 1 },
+    LEFT: { x: -1, y: 0 }
+};
+var applyVector = function (position, vector) {
+    var newX = position.x + vector.x;
+    var newY = position.y + vector.y;
+    var max = constants_1.GRID_SIZE - 1;
+    if (newX < 0 || newY < 0 || newX > max || newY > max) {
+        return null;
+    }
+    return { x: newX, y: newY };
+};
+var getAttackingTiles = function (facingUp) {
+    return facingUp
+        ? [Directions.UP, Directions.RIGHT, Directions.LEFT, Directions.DOWN]
+        : [Directions.DOWN, Directions.LEFT, Directions.RIGHT, Directions.UP];
+};
 var getLivingEnemies = function (piece, pieces) {
     return pieces.filter(function (other) { return other.ownerId !== piece.ownerId && other.currentHealth > 0; });
 };
@@ -4878,16 +4940,60 @@ var getDelta = function (a, b) {
         y: Math.abs(a.position.y - b.position.y)
     };
 };
-var isAdjacent = function (a) {
-    return function (b) {
-        var _a = getDelta(a, b), deltaX = _a.x, deltaY = _a.y;
-        return (deltaX + deltaY === 1);
-    };
+var arePiecesAdjacent = function (a, b) {
+    var _a = getDelta(a, b), deltaX = _a.x, deltaY = _a.y;
+    return (deltaX + deltaY === 1);
+};
+var getTargetPiece = function (piece, others) {
+    if (piece.targetPieceId === null) {
+        return null;
+    }
+    var target = others.find(function (o) { return o.id === piece.targetPieceId && o.currentHealth > 0; });
+    if (target === undefined) {
+        return null;
+    }
+    return target;
 };
 exports.getAttackableEnemy = function (piece, others) {
-    return getLivingEnemies(piece, others).find(isAdjacent(piece)) || null;
+    var e_1, _a;
+    var target = getTargetPiece(piece, others);
+    if (target && arePiecesAdjacent(piece, target)) {
+        return target;
+    }
+    var attackDirections = getAttackingTiles(piece.facingAway);
+    var _loop_1 = function (direction) {
+        var targetPosition = applyVector(piece.position, direction);
+        // targetPosition will be null if there direction is out of bounds
+        if (targetPosition === null) {
+            return "continue";
+        }
+        var enemyInTile = others.find(function (other) {
+            return other.ownerId !== piece.ownerId
+                && other.currentHealth > 0
+                && position_1.arePositionsEqual(targetPosition, other.position);
+        });
+        if (enemyInTile) {
+            return { value: enemyInTile };
+        }
+    };
+    try {
+        for (var attackDirections_1 = tslib_1.__values(attackDirections), attackDirections_1_1 = attackDirections_1.next(); !attackDirections_1_1.done; attackDirections_1_1 = attackDirections_1.next()) {
+            var direction = attackDirections_1_1.value;
+            var state_1 = _loop_1(direction);
+            if (typeof state_1 === "object")
+                return state_1.value;
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (attackDirections_1_1 && !attackDirections_1_1.done && (_a = attackDirections_1["return"])) _a.call(attackDirections_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
+    return null;
 };
-var getTargetPiece = function (piece, pieces) {
+var findClosestEnemy = function (piece, pieces) {
     var enemies = getLivingEnemies(piece, pieces);
     if (enemies.length === 0) {
         return null;
@@ -4901,7 +5007,7 @@ var getTargetPiece = function (piece, pieces) {
     return enemyDeltas[0].enemy;
 };
 exports.getNewPiecePosition = function (piece, pieces) {
-    var target = getTargetPiece(piece, pieces);
+    var target = findClosestEnemy(piece, pieces);
     if (target === null) {
         return null;
     }
@@ -5007,6 +5113,7 @@ var TurnSimulator = /** @class */ (function () {
             }
             var defender = movement_1.getAttackableEnemy(attacker, updatedPieces);
             if (!defender) {
+                attacker.targetPieceId = null;
                 var newPosition = movement_1.getNewPiecePosition(attacker, updatedPieces.filter(function (p) { return p.currentHealth > 0; }));
                 if (newPosition !== null) {
                     attacker.moving = { direction: position_1.getRelativeDirection(attacker.position, newPosition) };
@@ -5017,6 +5124,7 @@ var TurnSimulator = /** @class */ (function () {
             }
             var defenderCombatInfo = _this.getPieceCombatInfo(defender);
             var updatedFighters = _this.attack(turnCount, attackerCombatInfo, defenderCombatInfo);
+            updatedFighters.attacker.targetPieceId = updatedFighters.defender.id;
             updatedPieces[index] = updatedFighters.attacker;
             updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
         });
@@ -5049,7 +5157,7 @@ var TurnSimulator = /** @class */ (function () {
             attacker: tslib_1.__assign({}, attacker.piece, { coolDown: constants_1.INITIAL_COOLDOWN, attacking: {
                     direction: position_1.getRelativeDirection(attacker.piece.position, defender.piece.position),
                     damage: damage
-                }, damagePerTurn: (totalDamage + (damage * constants_1.DAMAGE_RATIO)) / turnCount }),
+                }, damagePerTurn: (totalDamage + (damage * constants_1.DAMAGE_RATIO)) / turnCount, targetPieceId: defender.piece.id }),
             defender: tslib_1.__assign({}, defender.piece, { currentHealth: newDefenderHealth, hit: {
                     direction: position_1.getRelativeDirection(defender.piece.position, attacker.piece.position),
                     damage: damage
@@ -5193,7 +5301,8 @@ exports.createPiece = function (definitionProvider, ownerId, definitionId, posit
         currentHealth: stats.hp,
         coolDown: constants_1.INITIAL_COOLDOWN,
         damagePerTurn: damagePerTurn,
-        stage: stage
+        stage: stage,
+        targetPieceId: null
     };
 };
 exports.createPieceFromCard = function (definitionProvider, ownerId, card, slot) {
@@ -5252,6 +5361,7 @@ exports.rotatePiecePosition = function (piece) {
 exports.__esModule = true;
 var constants_1 = __webpack_require__(/*! ./constants */ "./src/shared/constants.ts");
 exports.createTileCoordinates = function (x, y) { return ({ x: x, y: y }); };
+exports.arePositionsEqual = function (a, b) { return a && b && a.x === b.x && a.y === b.y; };
 var Direction;
 (function (Direction) {
     Direction["Up"] = "up";
