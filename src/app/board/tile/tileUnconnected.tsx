@@ -62,6 +62,7 @@ const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (p
     return connectDropTarget(
         <div
             className={`tile ${getClassName(type, position)}${isSelected ? " selected" : ""}`}
+            touch-action="none"
             onPointerUp={onClick}
         >
             {piece && renderPiece(piece)}
