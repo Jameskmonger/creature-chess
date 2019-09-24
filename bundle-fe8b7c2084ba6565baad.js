@@ -830,7 +830,7 @@ var TileUnconnected = function (props) {
             ? dropPiece
             : null));
     var isSelected = piece && currentSelectedPiece && piece.id === currentSelectedPiece.id;
-    return connectDropTarget(React.createElement("div", { className: "tile " + getClassName(type, position) + (isSelected ? " selected" : ""), onPointerUp: onClick },
+    return connectDropTarget(React.createElement("div", { className: "tile " + getClassName(type, position) + (isSelected ? " selected" : ""), "touch-action": "none", onPointerUp: onClick },
         piece && renderPiece(piece),
         React.createElement("div", { className: "" + getOverlayClassName(isDragging, canDrop) })));
 };
