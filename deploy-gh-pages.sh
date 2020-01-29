@@ -1,13 +1,22 @@
 #!/bin/bash
 
-echo
-echo "Have you copied the Google Analytics code into src/app/index.html, if required? [Y/N]"
-read ynGA
-echo
+if [[ -z "${GA_ID}" ]]; then
+    echo "No Google Analytics tag was set - run with environment variable 'GA_ID' if required"
+    echo
+    echo "Press Y to continue or N to cancel the deployment"
+    read ynGA
+    echo
 
-if [ $ynGA != 'Y' ] && [ $ynGA != 'y' ]; then
-    echo "Copy the code!"
-    exit
+    if [ $ynGA != 'Y' ] && [ $ynGA != 'y' ]; then
+        echo "Cancelling"
+        exit
+    else
+        echo "Continuing"
+        echo
+    fi
+else
+    echo "Using Google Analytics ID ${GA_ID}"
+    echo
 fi
 
 COMMIT_DETAILS=`git log -n 1 --pretty=oneline`
