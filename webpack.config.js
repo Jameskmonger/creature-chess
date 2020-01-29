@@ -5,6 +5,22 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 
+const getGAScript = (id) => {
+    if (!id) {
+        return "";
+    }
+
+    return `    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', '${id}');
+    </script>`;
+};
+
 const outDir = path.resolve(__dirname, "public");
 
 module.exports = {
@@ -50,7 +66,12 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/app/index.html"
+            template: "./src/app/index.ejs",
+            templateParameters: () => {
+                return {
+                    googleAnalyticsScript: getGAScript(process.env.GA_ID)
+                }
+            }
         }),
         new MiniCssExtractPlugin({
             filename: "app.css"
