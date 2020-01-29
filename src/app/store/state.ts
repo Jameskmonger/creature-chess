@@ -19,6 +19,8 @@ export interface GameState {
 
     selectedPiece: Models.Piece;
     shopLocked: boolean;
+
+    winnerName: string;
 }
 
 export interface LocalPlayerState {
@@ -48,4 +50,8 @@ export interface LobbyState {
     players: LobbyPlayer[];
     secondsRemaining: number;
     isHost: boolean;
+}
+
+export interface GameOverInfoState {
+    winnerName: string;
 }

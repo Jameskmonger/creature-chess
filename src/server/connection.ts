@@ -1,7 +1,7 @@
 import uuid = require("uuid/v4");
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket, StartGamePacket, ShopLockUpdatePacket } from "@common/packet-opcodes";
+import { ClientToServerPacketOpcodes, ServerToClientPacketOpcodes, PhaseUpdatePacket, BoardUpatePacket, LevelUpdatePacket, LobbyPlayerUpdatePacket, StartGamePacket, ShopLockUpdatePacket, FinishGamePacket } from "@common/packet-opcodes";
 import { GamePhase, Models } from "@common";
 import { FeedMessage } from "@common/feed-message";
 import { LobbyPlayer } from '@common/models';
@@ -51,10 +51,14 @@ export class Connection extends Player {
         this.sendPacket(ServerToClientPacketOpcodes.START_GAME, packet);
     }
 
-    public onFinishGame() {
-        super.onFinishGame();
+    public onFinishGame(winner: Player) {
+        super.onFinishGame(winner);
 
-        // TODO: send game finished packet here, display scoreboard etc
+        const packet: FinishGamePacket = {
+            winnerName: winner.name
+        };
+
+        this.sendPacket(ServerToClientPacketOpcodes.FINISH_GAME, packet);
     }
 
     public onDeath() {

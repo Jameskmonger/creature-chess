@@ -169,7 +169,7 @@ export class Game {
 
         const winner = this.players.find(p => p.isAlive());
 
-        this.players.forEach(p => p.onFinishGame());
+        this.players.forEach(p => p.onFinishGame(winner));
 
         this.events.emit(GameEvents.FINISH_GAME, this.round, winner);
     }

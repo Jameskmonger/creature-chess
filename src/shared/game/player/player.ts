@@ -116,7 +116,7 @@ export abstract class Player {
         return this.money.getValue();
     }
 
-    public onFinishGame() {
+    public onFinishGame(winner: Player) {
         this.events.removeAllListeners();
     }
 

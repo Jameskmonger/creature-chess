@@ -13,10 +13,11 @@ import {
     StartGamePacket,
     ShopLockUpdatePacket,
     ReconnectAuthenticatePacket,
-    ReconnectAuthenticateSuccessPacket
+    ReconnectAuthenticateSuccessPacket,
+    FinishGamePacket
 } from "@common/packet-opcodes";
 import { Models, ConnectionStatus } from "@common";
-import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement } from "../../actions/gameActions";
+import { moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError, FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction } from "../../actions/gameActions";
 import { NetworkAction, sendPacket } from "../../actions/networkActions";
 import { SEND_PACKET } from "../../actiontypes/networkActionTypes";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
@@ -79,7 +80,7 @@ const subscribe = (socket: Socket) => {
             if (deliberateDisconnected) {
                 return;
             }
-            
+
             emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED_WILL_RECONNECT));
         });
@@ -129,6 +130,12 @@ const subscribe = (socket: Socket) => {
             log("[START_GAME]", packet);
 
             emit(joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
+        });
+
+        socket.on(ServerToClientPacketOpcodes.FINISH_GAME, (packet: FinishGamePacket) => {
+            log("[FINISH_GAME]", packet);
+
+            emit(finishGameAction(packet.winnerName));
         });
 
         socket.on(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, (packet: ShopLockUpdatePacket) => {

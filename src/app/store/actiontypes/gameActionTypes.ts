@@ -36,3 +36,6 @@ export type SHOP_LOCK_UPDATED = typeof SHOP_LOCK_UPDATED;
 
 export const TOGGLE_SHOP_LOCK = "TOGGLE_SHOP_LOCK";
 export type TOGGLE_SHOP_LOCK = typeof TOGGLE_SHOP_LOCK;
+
+export const FINISH_GAME = "FINISH_GAME";
+export type FINISH_GAME = typeof FINISH_GAME;

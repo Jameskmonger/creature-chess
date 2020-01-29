@@ -11,7 +11,8 @@ import {
     CLEAR_ANNOUNCEMENT,
     UPDATE_CONNECTION_STATUS,
     SHOP_LOCK_UPDATED,
-    TOGGLE_SHOP_LOCK
+    TOGGLE_SHOP_LOCK,
+    FINISH_GAME
 } from "../actiontypes/gameActionTypes";
 import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
@@ -27,6 +28,7 @@ export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
 export type ToggleShopLockAction = ({ type: TOGGLE_SHOP_LOCK });
+export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
 
 export type GameAction =
     FindGameAction
@@ -42,7 +44,8 @@ export type GameAction =
     | AnnouncementClearAction
     | UpdateConnectionStatusAction
     | UpdateShopLockAction
-    | ToggleShopLockAction;
+    | ToggleShopLockAction
+    | FinishGameAction;
 
 export const findGameAction = (serverIP: string, name: string): FindGameAction => ({
     type: FIND_GAME,
@@ -121,3 +124,10 @@ export const shopLockUpdated = (locked: boolean): UpdateShopLockAction => ({
 });
 
 export const toggleShopLock = (): ToggleShopLockAction => ({ type: TOGGLE_SHOP_LOCK });
+
+export const finishGameAction = (winnerName: string): FinishGameAction => ({
+    type: FINISH_GAME,
+    payload: {
+        winnerName
+    }
+});
