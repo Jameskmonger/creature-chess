@@ -340,6 +340,7 @@ var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var reconnectModal_1 = __webpack_require__(/*! ./reconnectModal */ "./src/app/board/reconnectModal.tsx");
 var use_window_size_1 = __webpack_require__(/*! ../use-window-size */ "./src/app/use-window-size.ts");
 var readyUpButton_1 = __webpack_require__(/*! ./readyUpButton */ "./src/app/board/readyUpButton.tsx");
+var victoryOverlay_1 = __webpack_require__(/*! ./victoryOverlay/victoryOverlay */ "./src/app/board/victoryOverlay/victoryOverlay.ts");
 var getWidthFromHeight = function (height) {
     return ((height / (_common_1.Constants.GRID_SIZE + 1)) * _common_1.Constants.GRID_SIZE);
 };
@@ -365,6 +366,7 @@ var BoardContainer = function () {
             React.createElement(bench_1.Bench, null)),
         React.createElement(announcement_1.Announcement, null),
         React.createElement(readyUpButton_1.ReadyUpButton, null),
+        React.createElement(victoryOverlay_1.VictoryOverlay, null),
         React.createElement(reconnectModal_1.ReconnectModal, null)));
 };
 exports.BoardContainer = BoardContainer;
@@ -835,6 +837,54 @@ var TileUnconnected = function (props) {
         React.createElement("div", { className: "" + getOverlayClassName(isDragging, canDrop) })));
 };
 exports.TileUnconnected = TileUnconnected;
+
+
+/***/ }),
+
+/***/ "./src/app/board/victoryOverlay/victoryOverlay.ts":
+/*!********************************************************!*\
+  !*** ./src/app/board/victoryOverlay/victoryOverlay.ts ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var victoryOverlayUnconnected_1 = __webpack_require__(/*! ./victoryOverlayUnconnected */ "./src/app/board/victoryOverlay/victoryOverlayUnconnected.tsx");
+var mapStateToProps = function (state, ownProps) {
+    return {
+        winnerName: state.game.winnerName
+    };
+};
+exports.VictoryOverlay = react_redux_1.connect(mapStateToProps)(victoryOverlayUnconnected_1.VictoryOverlayUnconnected);
+
+
+/***/ }),
+
+/***/ "./src/app/board/victoryOverlay/victoryOverlayUnconnected.tsx":
+/*!********************************************************************!*\
+  !*** ./src/app/board/victoryOverlay/victoryOverlayUnconnected.tsx ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+exports.VictoryOverlayUnconnected = function (_a) {
+    var winnerName = _a.winnerName;
+    if (!winnerName) {
+        return null;
+    }
+    return (React.createElement("div", { className: "victory" },
+        React.createElement("h2", { className: "game-over" }, "Game Over"),
+        React.createElement("p", null,
+            React.createElement("span", { className: "winner" }, winnerName),
+            " wins!")));
+};
 
 
 /***/ }),
@@ -2270,6 +2320,12 @@ exports.shopLockUpdated = function (locked) { return ({
     payload: { locked: locked }
 }); };
 exports.toggleShopLock = function () { return ({ type: gameActionTypes_1.TOGGLE_SHOP_LOCK }); };
+exports.finishGameAction = function (winnerName) { return ({
+    type: gameActionTypes_1.FINISH_GAME,
+    payload: {
+        winnerName: winnerName
+    }
+}); };
 
 
 /***/ }),
@@ -2424,6 +2480,7 @@ exports.CLEAR_ANNOUNCEMENT = "CLEAR_ANNOUNCEMENT";
 exports.UPDATE_CONNECTION_STATUS = "UPDATE_CONNECTION_STATUS";
 exports.SHOP_LOCK_UPDATED = "SHOP_LOCK_UPDATED";
 exports.TOGGLE_SHOP_LOCK = "TOGGLE_SHOP_LOCK";
+exports.FINISH_GAME = "FINISH_GAME";
 
 
 /***/ }),
@@ -2569,7 +2626,8 @@ var initialState = {
     subAnnouncement: null,
     selectedPiece: null,
     connectionStatus: _common_1.ConnectionStatus.NOT_CONNECTED,
-    shopLocked: false
+    shopLocked: false,
+    winnerName: null
 };
 function game(state, action) {
     if (state === void 0) { state = initialState; }
@@ -2620,6 +2678,9 @@ function game(state, action) {
         }
         case gameActionTypes_1.SHOP_LOCK_UPDATED: {
             return tslib_1.__assign({}, state, { shopLocked: action.payload.locked });
+        }
+        case gameActionTypes_1.FINISH_GAME: {
+            return tslib_1.__assign({}, state, { winnerName: action.payload.winnerName });
         }
         default:
             return state;
@@ -3144,6 +3205,10 @@ var subscribe = function (socket) {
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.START_GAME, function (packet) {
             log_1.log("[START_GAME]", packet);
             emit(localPlayerActions_1.joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
+        });
+        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.FINISH_GAME, function (packet) {
+            log_1.log("[FINISH_GAME]", packet);
+            emit(gameActions_1.finishGameAction(packet.winnerName));
         });
         socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, function (packet) {
             log_1.log("[SHOP_LOCK_UPDATE]", packet);
@@ -5248,6 +5313,7 @@ var ServerToClientPacketOpcodes;
     ServerToClientPacketOpcodes["NEW_FEED_MESSAGE"] = "newFeedMessage";
     ServerToClientPacketOpcodes["LOBBY_PLAYER_UPDATE"] = "lobbyPlayerUpdate";
     ServerToClientPacketOpcodes["START_GAME"] = "startGame";
+    ServerToClientPacketOpcodes["FINISH_GAME"] = "finishGame";
     ServerToClientPacketOpcodes["SHOP_LOCK_UPDATE"] = "shopLockUpdate";
     ServerToClientPacketOpcodes["RECONNECT_AUTHENTICATE_SUCCESS"] = "reconnectAuthSuccess";
     ServerToClientPacketOpcodes["RECONNECT_AUTHENTICATE_FAILURE"] = "reconnectAuthFailure";

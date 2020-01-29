@@ -132,6 +132,27 @@ body {
       color: #fff; }
     .game .reconnect .button {
       font-size: 1.2em; }
+  .game .victory {
+    position: absolute;
+    top: 20%;
+    left: 0;
+    z-index: 4;
+    width: 100%;
+    padding: 4em 0;
+    font-family: Arial, sans-serif;
+    font-size: 1.4em;
+    color: #fff;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8); }
+    .game .victory .game-over {
+      padding-bottom: 0.8em;
+      font-size: 1.8em;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .game .victory .winner {
+      font-style: italic;
+      font-weight: 700;
+      color: #ffcd75; }
   .game .shop-container {
     display: flex; }
   .game .phase-info,
