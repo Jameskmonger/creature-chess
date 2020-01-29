@@ -1,5 +1,5 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS } from "../actiontypes/gameActionTypes";
+import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { GamePhase, ConnectionStatus } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
@@ -23,7 +23,8 @@ const initialState: GameState = {
     subAnnouncement: null,
     selectedPiece: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED,
-    shopLocked: false
+    shopLocked: false,
+    winnerName: null
 };
 
 type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction | PieceMovedAction;
@@ -133,6 +134,12 @@ export function game(state: GameState = initialState, action: GameReducerActionT
             return {
                 ...state,
                 shopLocked: action.payload.locked
+            };
+        }
+        case FINISH_GAME: {
+            return {
+                ...state,
+                winnerName: action.payload.winnerName
             };
         }
         default:

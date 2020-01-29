@@ -6,6 +6,7 @@ import { Constants } from '@common';
 import { ReconnectModal } from './reconnectModal';
 import { useWindowSize } from '../use-window-size';
 import { ReadyUpButton } from './readyUpButton';
+import { VictoryOverlay } from "./victoryOverlay/victoryOverlay";
 
 const getWidthFromHeight = (height: number) =>
     ((height / (Constants.GRID_SIZE + 1)) * Constants.GRID_SIZE);
@@ -23,12 +24,12 @@ const BoardContainer: React.FunctionComponent = () => {
     const boardContainerStyle = {
         height:
             portrait
-                ? (getHeightFromWidth(width) - marginDelta) + "px"
-                : (height - marginDelta) + "px",
+            ? (getHeightFromWidth(width) - marginDelta) + "px"
+            : (height - marginDelta) + "px",
         width:
             portrait
-                ? (width - marginDelta) + "px"
-                : (getWidthFromHeight(height) - marginDelta) + "px"
+            ? (width - marginDelta) + "px"
+            : (getWidthFromHeight(height) - marginDelta) + "px"
     };
 
     return (
@@ -40,6 +41,7 @@ const BoardContainer: React.FunctionComponent = () => {
 
             <Announcement />
             <ReadyUpButton />
+            <VictoryOverlay />
             <ReconnectModal />
         </div>
     );

@@ -11,6 +11,7 @@ export enum ServerToClientPacketOpcodes {
     NEW_FEED_MESSAGE = "newFeedMessage",
     LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate",
     START_GAME = "startGame",
+    FINISH_GAME = "finishGame",
     SHOP_LOCK_UPDATE = "shopLockUpdate",
 
     RECONNECT_AUTHENTICATE_SUCCESS = "reconnectAuthSuccess",
@@ -50,6 +51,10 @@ export interface StartGamePacket {
     reconnectionSecret: string;
     localPlayerId: string;
     name: string;
+}
+
+export interface FinishGamePacket {
+    winnerName: string;
 }
 
 export interface MovePiecePacket {
