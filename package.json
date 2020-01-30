@@ -71,7 +71,7 @@
 		"@types/uuid": "^3.4.4",
 		"delay": "^4.1.0",
 		"javascript-astar": "^0.4.1",
-		"lodash": "^4.17.11",
+		"lodash": "^4.17.13",
 		"p-defer": "^2.1.0",
 		"pepjs": "^0.5.2",
 		"present": "^1.0.0",
