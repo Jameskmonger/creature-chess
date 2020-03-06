@@ -35,6 +35,7 @@
 		"alsatian": "2.4.0",
 		"awesome-typescript-loader": "^5.2.1",
 		"circular-dependency-plugin": "^5.0.2",
+		"cname-webpack-plugin": "^2.0.1",
 		"cpy-cli": "^2.0.0",
 		"css-loader": "^2.1.1",
 		"enzyme": "^3.9.0",

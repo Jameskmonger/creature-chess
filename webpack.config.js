@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
+const CnameWebpackPlugin = require("cname-webpack-plugin");
 
 const getGAScript = (id) => {
     if (!id) {
@@ -67,11 +68,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: "./src/app/index.ejs",
-            templateParameters: () => {
-                return {
-                    googleAnalyticsScript: getGAScript(process.env.GA_ID)
-                }
-            }
+            templateParameters: () => ({
+                googleAnalyticsScript: getGAScript(process.env.GA_ID)
+            })
         }),
         new MiniCssExtractPlugin({
             filename: "app.css"
@@ -89,8 +88,11 @@ module.exports = {
             allowAsyncCycles: false,
             // set the current working directory for displaying module paths
             cwd: process.cwd(),
-        })
-    ],
+        }),
+        process.env.CNAME
+            ? new CnameWebpackPlugin({ domain: process.env.CNAME })
+            : null
+    ].filter(plugin => plugin !== null),
 
     devServer: {
         contentBase: outDir,
