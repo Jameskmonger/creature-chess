@@ -2412,34 +2412,6 @@ exports.updateReconnectSecret = function (secret) { return ({
 
 /***/ }),
 
-/***/ "./src/app/store/actions/networkActions.ts":
-/*!*************************************************!*\
-  !*** ./src/app/store/actions/networkActions.ts ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var networkActionTypes_1 = __webpack_require__(/*! ../actiontypes/networkActionTypes */ "./src/app/store/actiontypes/networkActionTypes.ts");
-exports.sendPacket = function (opcode) {
-    var data = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        data[_i - 1] = arguments[_i];
-    }
-    return ({
-        type: networkActionTypes_1.SEND_PACKET,
-        payload: {
-            opcode: opcode,
-            data: data
-        }
-    });
-};
-
-
-/***/ }),
-
 /***/ "./src/app/store/actiontypes/boardActionTypes.ts":
 /*!*******************************************************!*\
   !*** ./src/app/store/actiontypes/boardActionTypes.ts ***!
@@ -2518,21 +2490,6 @@ exports.LEVEL_UPDATE = "LEVEL_UPDATE";
 exports.BUY_XP = "BUY_XP";
 exports.READY_UP = "READY_UP";
 exports.UPDATE_RECONNECT_SECRET = "UPDATE_RECONNECT_SECRET";
-
-
-/***/ }),
-
-/***/ "./src/app/store/actiontypes/networkActionTypes.ts":
-/*!*********************************************************!*\
-  !*** ./src/app/store/actiontypes/networkActionTypes.ts ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-exports.SEND_PACKET = "SEND_PACKET";
 
 
 /***/ }),
@@ -3113,11 +3070,8 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var io = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
 var redux_saga_1 = __webpack_require__(/*! redux-saga */ "./node_modules/redux-saga/dist/redux-saga-core-npm-proxy.esm.js");
 var effects_1 = __webpack_require__(/*! @redux-saga/core/effects */ "./node_modules/@redux-saga/core/dist/redux-saga-effects.esm.js");
-var packet_opcodes_1 = __webpack_require__(/*! @common/packet-opcodes */ "./src/shared/packet-opcodes.ts");
 var _common_1 = __webpack_require__(/*! @common */ "./src/shared/index.ts");
 var gameActions_1 = __webpack_require__(/*! ../../actions/gameActions */ "./src/app/store/actions/gameActions.ts");
-var networkActions_1 = __webpack_require__(/*! ../../actions/networkActions */ "./src/app/store/actions/networkActions.ts");
-var networkActionTypes_1 = __webpack_require__(/*! ../../actiontypes/networkActionTypes */ "./src/app/store/actiontypes/networkActionTypes.ts");
 var board_1 = __webpack_require__(/*! @common/board */ "./src/shared/board/index.ts");
 var playerListActions_1 = __webpack_require__(/*! ../../../playerList/playerListActions */ "./src/app/playerList/playerListActions.ts");
 var cardActions_1 = __webpack_require__(/*! ../../../cardShop/cardActions */ "./src/app/cardShop/cardActions.ts");
@@ -3132,37 +3086,41 @@ var chatActionTypes_1 = __webpack_require__(/*! ../../../chat/chatActionTypes */
 var battleEventChannel_1 = __webpack_require__(/*! @common/match/combat/battleEventChannel */ "./src/shared/match/combat/battleEventChannel.ts");
 var lobbyActions_1 = __webpack_require__(/*! ../../actions/lobbyActions */ "./src/app/store/actions/lobbyActions.ts");
 var lobbyActionTypes_1 = __webpack_require__(/*! ../../actiontypes/lobbyActionTypes */ "./src/app/store/actiontypes/lobbyActionTypes.ts");
+var incoming_packet_registry_1 = __webpack_require__(/*! @common/networking/incoming-packet-registry */ "./src/shared/networking/incoming-packet-registry.ts");
+var server_to_client_1 = __webpack_require__(/*! @common/networking/server-to-client */ "./src/shared/networking/server-to-client.ts");
+var outgoing_packet_registry_1 = __webpack_require__(/*! @common/networking/outgoing-packet-registry */ "./src/shared/networking/outgoing-packet-registry.ts");
+var client_to_server_1 = __webpack_require__(/*! @common/networking/client-to-server */ "./src/shared/networking/client-to-server.ts");
 var getSocket = function (serverIP) {
     // force to websocket for now until CORS is sorted
-    var socket = io(serverIP, { transports: ['websocket', 'xhr-polling'] });
+    var socket = io(serverIP, { transports: ["websocket", "xhr-polling"] });
     return new Promise(function (resolve) {
         socket.on("connect", function () {
             resolve(socket);
         });
     });
 };
-var findGame = function (socket, name) {
+var findGame = function (registry, name) {
     return new Promise(function (resolve) {
-        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.FIND_GAME, name, function (response) {
+        registry.emit(client_to_server_1.ClientToServerPacketOpcodes.FIND_GAME, name, function (response) {
             resolve(response);
         });
     });
 };
-var joinGame = function (socket, name, gameId) {
+var joinGame = function (registry, name, gameId) {
     return new Promise(function (resolve) {
-        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.JOIN_GAME, name, gameId, function (response) {
+        registry.emit(client_to_server_1.ClientToServerPacketOpcodes.JOIN_GAME, { name: name, gameId: gameId }, function (response) {
             resolve(response);
         });
     });
 };
-var createGame = function (socket, name) {
+var createGame = function (registry, name) {
     return new Promise(function (resolve) {
-        socket.emit(packet_opcodes_1.ClientToServerPacketOpcodes.CREATE_GAME, name, function (response) {
+        registry.emit(client_to_server_1.ClientToServerPacketOpcodes.CREATE_GAME, name, function (response) {
             resolve(response);
         });
     });
 };
-var subscribe = function (socket) {
+var subscribe = function (registry, socket) {
     return redux_saga_1.eventChannel(function (emit) {
         var deliberateDisconnected = false;
         socket.on("disconnect", function () {
@@ -3173,53 +3131,53 @@ var subscribe = function (socket) {
             emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.DISCONNECTED_WILL_RECONNECT));
         });
         socket.on("reconnect", function () { return emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION)); });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, function (players) {
-            log_1.log("[PLAYER_LIST_UPDATE]", players);
-            emit(playerListActions_1.playerListUpdated(players));
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, function (packet) {
+            log_1.log("[PLAYER_LIST_UPDATE]", packet);
+            emit(playerListActions_1.playerListUpdated(packet));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.CARDS_UPDATE, function (cards) {
-            log_1.log("[CARDS_UPDATE]", cards);
-            emit(cardActions_1.cardsUpdated(cards));
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.CARDS_UPDATE, function (packet) {
+            log_1.log("[CARDS_UPDATE]", packet);
+            emit(cardActions_1.cardsUpdated(packet));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.MONEY_UPDATE, function (money) {
-            log_1.log("[MONEY_UPDATE]", money);
-            emit(gameActions_1.moneyUpdateAction(money));
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.MONEY_UPDATE, function (packet) {
+            log_1.log("[MONEY_UPDATE]", packet);
+            emit(gameActions_1.moneyUpdateAction(packet));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.PHASE_UPDATE, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.PHASE_UPDATE, function (packet) {
             log_1.log("[PHASE_UPDATE]", packet);
             emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.CONNECTED));
             emit(gameActions_1.gamePhaseUpdate(packet));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.LEVEL_UPDATE, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.LEVEL_UPDATE, function (packet) {
             log_1.log("[LEVEL_UPDATE]", packet);
             emit(localPlayerActions_1.localPlayerLevelUpdate(packet.level, packet.xp));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, function (packet) {
             log_1.log("[NEW_FEED_MESSAGE]", packet);
             emit(feedActions_1.newFeedMessage(packet));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE, function (packet) {
             log_1.log("[LOBBY_PLAYER_UPDATE]", packet);
             emit(lobbyActions_1.updateLobbyPlayerAction(packet.index, packet.player));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.START_GAME, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.START_GAME, function (packet) {
             log_1.log("[START_GAME]", packet);
             emit(localPlayerActions_1.joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.FINISH_GAME, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.FINISH_GAME, function (packet) {
             log_1.log("[FINISH_GAME]", packet);
             emit(gameActions_1.finishGameAction(packet.winnerName));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, function (packet) {
             log_1.log("[SHOP_LOCK_UPDATE]", packet);
             emit(gameActions_1.shopLockUpdated(packet.locked));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, function (packet) {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, function (packet) {
             log_1.log("[RECONNECT_AUTHENTICATE_SUCCESS]");
             emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.RECONNECTED));
             emit(localPlayerActions_1.updateReconnectSecret(packet.reconnectSecret));
         });
-        socket.on(packet_opcodes_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE, function () {
+        registry.on(server_to_client_1.ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE, function () {
             log_1.log("[RECONNECT_AUTH_FAILURE]");
             emit(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.DISCONNECTED_FINAL));
             deliberateDisconnected = true;
@@ -3229,11 +3187,11 @@ var subscribe = function (socket) {
         return function () { };
     });
 };
-var readPacketsToActions = function (socket) {
+var readPacketsToActions = function (incomingRegistry, socket) {
     var channel;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, effects_1.call(subscribe, socket)];
+            case 0: return [4 /*yield*/, effects_1.call(subscribe, incomingRegistry, socket)];
             case 1:
                 channel = _a.sent();
                 return [4 /*yield*/, effects_1.takeEvery(channel, function (action) {
@@ -3252,141 +3210,91 @@ var readPacketsToActions = function (socket) {
         }
     });
 };
-var writeActionsToPackets = function () {
+var writeActionsToPackets = function (registry) {
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, effects_1.all([
                     effects_1.takeEvery(battleEventChannel_1.BATTLE_FINISHED, function () {
                         return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.FINISH_MATCH))];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(cardActionTypes_1.REROLL_CARDS, function () {
                         return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.BUY_REROLL))];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.BUY_REROLL, { empty: true });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(localPlayerActionTypes_1.BUY_XP, function () {
                         return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.BUY_XP))];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.BUY_XP, { empty: true });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(localPlayerActionTypes_1.READY_UP, function () {
                         return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.READY_UP))];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.READY_UP, { empty: true });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(cardActionTypes_1.BUY_CARD, function (_a) {
                         var payload = _a.payload;
                         return tslib_1.__generator(this, function (_b) {
-                            switch (_b.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.BUY_CARD, payload.index))];
-                                case 1:
-                                    _b.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.BUY_CARD, payload.index);
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(board_1.BoardActionTypes.SELL_PIECE, function (_a) {
                         var payload = _a.payload;
                         return tslib_1.__generator(this, function (_b) {
-                            switch (_b.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId))];
-                                case 1:
-                                    _b.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId);
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(board_1.BoardActionTypes.PIECE_MOVED_TO_BOARD, function (_a) {
-                        var packet;
                         var payload = _a.payload;
                         return tslib_1.__generator(this, function (_b) {
-                            switch (_b.label) {
-                                case 0:
-                                    packet = {
-                                        id: payload.piece.id,
-                                        from: payload.piece.position,
-                                        to: payload.position
-                                    };
-                                    return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, packet))];
-                                case 1:
-                                    _b.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, {
+                                id: payload.piece.id,
+                                from: payload.piece.position,
+                                to: payload.position
+                            });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(board_1.BoardActionTypes.PIECE_MOVED_TO_BENCH, function (_a) {
-                        var packet;
                         var payload = _a.payload;
                         return tslib_1.__generator(this, function (_b) {
-                            switch (_b.label) {
-                                case 0:
-                                    packet = {
-                                        id: payload.piece.id,
-                                        from: payload.piece.position,
-                                        to: position_1.createTileCoordinates(payload.slot, null)
-                                    };
-                                    return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, packet))];
-                                case 1:
-                                    _b.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, {
+                                id: payload.piece.id,
+                                from: payload.piece.position,
+                                to: position_1.createTileCoordinates(payload.slot, null)
+                            });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(chatActionTypes_1.SEND_CHAT_MESSAGE, function (_a) {
                         var payload = _a.payload;
                         return tslib_1.__generator(this, function (_b) {
-                            switch (_b.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message))];
-                                case 1:
-                                    _b.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message);
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(lobbyActionTypes_1.START_LOBBY_GAME, function () {
                         return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.START_LOBBY_GAME))];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.START_LOBBY_GAME, { empty: true });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeEvery(gameActionTypes_1.TOGGLE_SHOP_LOCK, function () {
                         return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK))];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
+                            registry.emit(client_to_server_1.ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK, { empty: true });
+                            return [2 /*return*/];
                         });
                     }),
                     effects_1.takeLatest(function (action) { return action.type === gameActionTypes_1.UPDATE_CONNECTION_STATUS && action.payload.status === _common_1.ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION; }, function () {
-                        var state, packet;
+                        var state;
                         return tslib_1.__generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0: return [4 /*yield*/, effects_1.select()];
@@ -3398,14 +3306,11 @@ var writeActionsToPackets = function () {
                                     _a.sent();
                                     return [2 /*return*/];
                                 case 3:
-                                    packet = {
+                                    registry.emit(client_to_server_1.ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, {
                                         gameId: state.game.gameId,
                                         playerId: state.localPlayer.id,
                                         reconnectSecret: state.localPlayer.reconnectionSecret
-                                    };
-                                    return [4 /*yield*/, effects_1.put(networkActions_1.sendPacket(packet_opcodes_1.ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, packet))];
-                                case 4:
-                                    _a.sent();
+                                    });
                                     return [2 /*return*/];
                             }
                         });
@@ -3417,32 +3322,19 @@ var writeActionsToPackets = function () {
         }
     });
 };
-var writePacketsToSocket = function (socket) {
-    return tslib_1.__generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, effects_1.takeEvery(networkActionTypes_1.SEND_PACKET, function (_a) {
-                    var payload = _a.payload;
-                    socket.emit.apply(socket, tslib_1.__spread([payload.opcode], payload.data));
-                })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-};
-var getResponseForAction = function (socket, action) {
+var getResponseForAction = function (registry, action) {
     if (action.type === gameActionTypes_1.JOIN_GAME) {
-        return effects_1.call(joinGame, socket, action.payload.name, action.payload.gameId);
+        return effects_1.call(joinGame, registry, action.payload.name, action.payload.gameId);
     }
     if (action.type === gameActionTypes_1.FIND_GAME) {
-        return effects_1.call(findGame, socket, action.payload.name);
+        return effects_1.call(findGame, registry, action.payload.name);
     }
     if (action.type === gameActionTypes_1.CREATE_GAME) {
-        return effects_1.call(createGame, socket, action.payload.name);
+        return effects_1.call(createGame, registry, action.payload.name);
     }
 };
 exports.networking = function () {
-    var action, socket, _a, error, response;
+    var action, socket, outgoingRegistry, incomingRegistry, _a, error, response;
     return tslib_1.__generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, effects_1.take([gameActionTypes_1.FIND_GAME, gameActionTypes_1.JOIN_GAME, gameActionTypes_1.CREATE_GAME])];
@@ -3451,16 +3343,18 @@ exports.networking = function () {
                 return [4 /*yield*/, effects_1.call(getSocket, action.payload.serverIP)];
             case 2:
                 socket = _b.sent();
+                outgoingRegistry = new outgoing_packet_registry_1.OutgoingPacketRegistry(function (opcode, payload, ack) { return socket.emit(opcode, payload, ack); });
+                incomingRegistry = new incoming_packet_registry_1.IncomingPacketRegistry(function (opcode, handler) { return socket.on(opcode, handler); });
                 return [4 /*yield*/, effects_1.put(gameActions_1.updateConnectionStatus(_common_1.ConnectionStatus.CONNECTED))];
             case 3:
                 _b.sent();
-                return [4 /*yield*/, effects_1.fork(readPacketsToActions, socket)];
+                return [4 /*yield*/, effects_1.fork(readPacketsToActions, incomingRegistry, socket)];
             case 4:
                 _b.sent();
                 _b.label = 5;
             case 5:
                 if (false) {}
-                return [4 /*yield*/, getResponseForAction(socket, action)];
+                return [4 /*yield*/, getResponseForAction(outgoingRegistry, action)];
             case 6:
                 _a = _b.sent(), error = _a.error, response = _a.response;
                 if (!!error) return [3 /*break*/, 8];
@@ -3475,11 +3369,8 @@ exports.networking = function () {
             case 10:
                 action = _b.sent();
                 return [3 /*break*/, 5];
-            case 11: return [4 /*yield*/, effects_1.fork(writeActionsToPackets)];
+            case 11: return [4 /*yield*/, effects_1.fork(writeActionsToPackets, outgoingRegistry)];
             case 12:
-                _b.sent();
-                return [4 /*yield*/, effects_1.fork(writePacketsToSocket, socket)];
-            case 13:
                 _b.sent();
                 return [2 /*return*/];
         }
@@ -5293,10 +5184,95 @@ var StreakType;
 
 /***/ }),
 
-/***/ "./src/shared/packet-opcodes.ts":
-/*!**************************************!*\
-  !*** ./src/shared/packet-opcodes.ts ***!
-  \**************************************/
+/***/ "./src/shared/networking/client-to-server.ts":
+/*!***************************************************!*\
+  !*** ./src/shared/networking/client-to-server.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ClientToServerPacketOpcodes;
+(function (ClientToServerPacketOpcodes) {
+    ClientToServerPacketOpcodes["FIND_GAME"] = "findGame";
+    ClientToServerPacketOpcodes["JOIN_GAME"] = "joinGame";
+    ClientToServerPacketOpcodes["CREATE_GAME"] = "createGame";
+    ClientToServerPacketOpcodes["BUY_CARD"] = "buyCard";
+    ClientToServerPacketOpcodes["SELL_PIECE"] = "sellPiece";
+    ClientToServerPacketOpcodes["BUY_REROLL"] = "rerollCards";
+    ClientToServerPacketOpcodes["MOVE_PIECE_TO_BENCH"] = "movePieceToBench";
+    ClientToServerPacketOpcodes["MOVE_PIECE_TO_BOARD"] = "movePieceToBoard";
+    ClientToServerPacketOpcodes["BUY_XP"] = "buyXp";
+    ClientToServerPacketOpcodes["SEND_CHAT_MESSAGE"] = "sendChatMessage";
+    ClientToServerPacketOpcodes["FINISH_MATCH"] = "finishMatch";
+    ClientToServerPacketOpcodes["READY_UP"] = "readyUp";
+    ClientToServerPacketOpcodes["START_LOBBY_GAME"] = "startLobbyGame";
+    ClientToServerPacketOpcodes["TOGGLE_SHOP_LOCK"] = "toggleShopLock";
+    ClientToServerPacketOpcodes["RECONNECT_AUTHENTICATE"] = "reconnectAuthenticate";
+})(ClientToServerPacketOpcodes = exports.ClientToServerPacketOpcodes || (exports.ClientToServerPacketOpcodes = {}));
+
+
+/***/ }),
+
+/***/ "./src/shared/networking/incoming-packet-registry.ts":
+/*!***********************************************************!*\
+  !*** ./src/shared/networking/incoming-packet-registry.ts ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var IncomingPacketRegistry = /** @class */ (function () {
+    function IncomingPacketRegistry(registerListener) {
+        this.registerListener = registerListener;
+    }
+    IncomingPacketRegistry.prototype.on = function (opcode, handler) {
+        this.registerListener(opcode, handler);
+    };
+    return IncomingPacketRegistry;
+}());
+exports.IncomingPacketRegistry = IncomingPacketRegistry;
+
+
+/***/ }),
+
+/***/ "./src/shared/networking/outgoing-packet-registry.ts":
+/*!***********************************************************!*\
+  !*** ./src/shared/networking/outgoing-packet-registry.ts ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var OutgoingPacketRegistry = /** @class */ (function () {
+    function OutgoingPacketRegistry(emitFn) {
+        this.emitFn = emitFn;
+    }
+    OutgoingPacketRegistry.prototype.emit = function (opcode, payload, ack) {
+        if (ack) {
+            this.emitFn(opcode, payload, ack);
+        }
+        else {
+            this.emitFn(opcode, payload);
+        }
+    };
+    return OutgoingPacketRegistry;
+}());
+exports.OutgoingPacketRegistry = OutgoingPacketRegistry;
+
+
+/***/ }),
+
+/***/ "./src/shared/networking/server-to-client.ts":
+/*!***************************************************!*\
+  !*** ./src/shared/networking/server-to-client.ts ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5318,24 +5294,6 @@ var ServerToClientPacketOpcodes;
     ServerToClientPacketOpcodes["RECONNECT_AUTHENTICATE_SUCCESS"] = "reconnectAuthSuccess";
     ServerToClientPacketOpcodes["RECONNECT_AUTHENTICATE_FAILURE"] = "reconnectAuthFailure";
 })(ServerToClientPacketOpcodes = exports.ServerToClientPacketOpcodes || (exports.ServerToClientPacketOpcodes = {}));
-var ClientToServerPacketOpcodes;
-(function (ClientToServerPacketOpcodes) {
-    ClientToServerPacketOpcodes["FIND_GAME"] = "findGame";
-    ClientToServerPacketOpcodes["JOIN_GAME"] = "joinGame";
-    ClientToServerPacketOpcodes["CREATE_GAME"] = "createGame";
-    ClientToServerPacketOpcodes["BUY_CARD"] = "buyCard";
-    ClientToServerPacketOpcodes["SELL_PIECE"] = "sellPiece";
-    ClientToServerPacketOpcodes["BUY_REROLL"] = "rerollCards";
-    ClientToServerPacketOpcodes["MOVE_PIECE_TO_BENCH"] = "movePieceToBench";
-    ClientToServerPacketOpcodes["MOVE_PIECE_TO_BOARD"] = "movePieceToBoard";
-    ClientToServerPacketOpcodes["BUY_XP"] = "buyXp";
-    ClientToServerPacketOpcodes["SEND_CHAT_MESSAGE"] = "sendChatMessage";
-    ClientToServerPacketOpcodes["FINISH_MATCH"] = "finishMatch";
-    ClientToServerPacketOpcodes["READY_UP"] = "readyUp";
-    ClientToServerPacketOpcodes["START_LOBBY_GAME"] = "startLobbyGame";
-    ClientToServerPacketOpcodes["TOGGLE_SHOP_LOCK"] = "toggleShopLock";
-    ClientToServerPacketOpcodes["RECONNECT_AUTHENTICATE"] = "reconnectAuthenticate";
-})(ClientToServerPacketOpcodes = exports.ClientToServerPacketOpcodes || (exports.ClientToServerPacketOpcodes = {}));
 
 
 /***/ }),
