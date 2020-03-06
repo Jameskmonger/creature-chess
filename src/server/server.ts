@@ -1,7 +1,6 @@
 import io = require("socket.io");
 import uuid = require("uuid/v4");
 import { log } from "@common/log";
-import { ClientToServerPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticatePacket, ServerToClientPacketOpcodes, ReconnectAuthenticateSuccessPacket } from "@common/packet-opcodes";
 import { Game } from "@common/game/game";
 import { Connection } from "./connection";
 import { Lobby } from './lobby';
@@ -9,6 +8,8 @@ import { Player } from '@common/game';
 import { IdGenerator } from './id-generator';
 import { LobbyPlayer } from '@common/models';
 import { nameValidator } from "./name-validator";
+import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket } from '@common/networking/client-to-server';
+import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from '@common/networking/server-to-client';
 
 export class Server {
     private lobbies = new Map<string, Lobby>();
