@@ -1,7 +1,6 @@
 import uuid = require("uuid/v4");
 import pDefer = require("p-defer");
 import { clonePiece, createPieceFromCard } from "../../piece-utils";
-import { MovePiecePacket } from "../../packet-opcodes";
 import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
@@ -21,6 +20,7 @@ import { PlayerBoard } from "./playerBoard";
 import { StreakType } from "../../models/streakType";
 import { LobbyPlayer } from '@common/models';
 import { getPiecesForStage } from '@common/get-pieces-for-stage';
+import { MovePiecePacket } from '@common/networking/client-to-server';
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
