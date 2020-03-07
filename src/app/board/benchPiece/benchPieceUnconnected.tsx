@@ -10,7 +10,9 @@ export class BenchPieceUnconnected extends React.Component<Props & DragSourcePro
 
         return connectDragSource(
             <div className="piece">
-                <CreatureImage definitionId={definitionId} stage={stage} />
+                <CreatureImage definitionId={definitionId} />
+
+                <div className="piece-stage">{stage + 1}</div>
             </div>
         );
     }
