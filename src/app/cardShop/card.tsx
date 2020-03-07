@@ -22,7 +22,7 @@ const Card: React.FunctionComponent<CardProps> = ({ definitionId, cost, name, bu
                     <span className="price">${cost}</span>
                 </div>
                 <div>
-                    <CreatureImage definitionId={definitionId} stage={0} />
+                    <CreatureImage definitionId={definitionId} />
                 </div>
             </div>
 

@@ -1,10 +1,12 @@
 .info {
     position: absolute;
+    right: 0;
     bottom: 0;
-    width: 100%;
+    width: 70%;
     height: 30%;
     box-sizing: border-box;
     margin-right: auto;
     margin-left: auto;
     border: 2px solid $info-border-color;
+    border-left-width: 0;
 }
