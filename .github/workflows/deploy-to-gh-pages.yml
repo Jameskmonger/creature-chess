@@ -1,0 +1,32 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false # needed for the GitHub Pages deploy to work
+    - name: Use Node.js '10.x'
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - name: Install dependencies
+      run: npm install
+    - name: Build application
+      run: npm run build
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.4.1
+      with:
+        BRANCH: gh-pages
+        FOLDER: public
+      env:
+        GA_ID: ${{ secrets.GA_ID }}
+        CNAME: ${{ secrets.CNAME }} 
