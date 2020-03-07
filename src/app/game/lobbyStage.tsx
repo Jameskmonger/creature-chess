@@ -8,7 +8,7 @@ import { startLobbyGame } from "../store/actions/lobbyActions";
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
 const TimeRemaining: React.FunctionComponent<{ totalSecondsRemaining: number }> = ({ totalSecondsRemaining }) => {
-    if (totalSecondsRemaining === null) {
+    if (totalSecondsRemaining === null || totalSecondsRemaining < 0) {
         return null;
     }
 
@@ -33,12 +33,32 @@ const LobbyStage: React.FunctionComponent = () => {
         return <div>An error occured, please refresh your page</div>;
     }
 
-    const localPlayerId = useSelector<AppState, string>(state => state.lobby.localPlayerId);
     const players = useSelector<AppState, LobbyPlayer[]>(state => state.lobby.players);
-    const totalSecondsRemaining = useSelector<AppState, number>(state => state.lobby.secondsRemaining);
     const isHost = useSelector<AppState, boolean>(state => state.lobby.isHost);
+    const lobbyStartingAtMs = useSelector<AppState, number>(state => state.lobby.startingAtMs);
+    const [lobbySecondsRemaining, setLobbySecondsRemaining] = React.useState<number | null>(null);
 
-    const isPublic = totalSecondsRemaining !== null;
+    const updateSecondsRemaining = () => {
+        if (lobbyStartingAtMs === null) {
+            return;
+        }
+
+        const msRemaining = lobbyStartingAtMs - Date.now();
+        const secondsRemaining = Math.floor(msRemaining / 1000);
+
+        setLobbySecondsRemaining(secondsRemaining);
+    };
+
+    React.useEffect(() => {
+        updateSecondsRemaining();
+
+        const intervalId = setInterval(updateSecondsRemaining, 1000);
+
+        return () => clearInterval(intervalId);
+
+    }, [lobbyStartingAtMs]);
+
+    const isPublic = lobbyStartingAtMs !== null;
     const onStartGameClick = () => dispatch(startLobbyGame());
 
     return (
@@ -56,7 +76,7 @@ const LobbyStage: React.FunctionComponent = () => {
                     }
                 </div>
                 <div className="text">
-                    <TimeRemaining totalSecondsRemaining={totalSecondsRemaining} />
+                    <TimeRemaining totalSecondsRemaining={lobbySecondsRemaining} />
 
                     <h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
 

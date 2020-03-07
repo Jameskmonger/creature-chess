@@ -5,7 +5,7 @@ import { LobbyPlayer } from "@common/models";
 export interface GameState {
     gameId: string;
     phase: GamePhase;
-    phaseTimer: number;
+    phaseStartedAtSeconds: number;
     opponentId: string;
     loading: boolean;
     menuError: string;
@@ -48,7 +48,7 @@ export interface LobbyState {
     localPlayerId: string;
     lobbyId: string;
     players: LobbyPlayer[];
-    secondsRemaining: number;
+    startingAtMs: number;
     isHost: boolean;
 }
 

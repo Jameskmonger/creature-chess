@@ -1,8 +1,8 @@
 import { GameAction } from "../actions/gameActions";
 import {
-    JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED,
+    JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE,
     CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT,
-    CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME
+    CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS
 } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { GamePhase, ConnectionStatus } from "@common";
@@ -13,14 +13,14 @@ import { PieceMovedAction } from "@common/board/actions/boardActions";
 import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "@common/board/actions/boardActionTypes";
 import { inBench } from "@common/position";
 
-const initialState: GameState = {
+export const initialState: GameState = {
     gameId: null,
     opponentId: null,
     loading: false,
     menuError: null,
     money: 0,
     phase: GamePhase.WAITING,
-    phaseTimer: null,
+    phaseStartedAtSeconds: null,
     round: null,
     debug: false,
     mainAnnouncement: null,
@@ -60,6 +60,11 @@ export function game(state: GameState = initialState, action: GameReducerActionT
                 menuError: null,
                 gameId: action.payload.gameId
             };
+        case PHASE_START_SECONDS:
+            return {
+                ...state,
+                phaseStartedAtSeconds: action.payload.time
+            };
         case GAME_PHASE_UPDATE:
             // set opponent id when entering ready phase
             if (action.payload.phase === GamePhase.READY) {
@@ -86,11 +91,6 @@ export function game(state: GameState = initialState, action: GameReducerActionT
             return {
                 ...state,
                 phase: action.payload.phase
-            };
-        case PHASE_TIMER_UPDATED:
-            return {
-                ...state,
-                phaseTimer: action.payload.time
             };
         case MONEY_UPDATE:
             return {

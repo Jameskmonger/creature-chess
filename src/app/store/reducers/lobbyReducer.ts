@@ -1,12 +1,12 @@
 import { LobbyState } from "../state";
 import { LobbyAction } from "../actions/lobbyActions";
-import { JOIN_LOBBY, UPDATE_LOBBY_PLAYER, UPDATE_LOBBY_SECONDS_REMAINING } from "../actiontypes/lobbyActionTypes";
+import { JOIN_LOBBY, UPDATE_LOBBY_PLAYER } from "../actiontypes/lobbyActionTypes";
 
 const initialState: LobbyState = {
     lobbyId: null,
     localPlayerId: null,
     players: [],
-    secondsRemaining: null,
+    startingAtMs: null,
     isHost: false
 };
 
@@ -21,12 +21,8 @@ export function lobby(
                 lobbyId: action.payload.lobbyId,
                 localPlayerId: action.payload.localPlayerId,
                 players: action.payload.players,
-                isHost: action.payload.isHost
-            };
-        case UPDATE_LOBBY_SECONDS_REMAINING:
-            return {
-                ...state,
-                secondsRemaining: action.payload.secondsRemaining
+                isHost: action.payload.isHost,
+                startingAtMs: action.payload.startTimestamp
             };
         case UPDATE_LOBBY_PLAYER:
             const cloned = {
