@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - 'master'
+    paths:
+      - 'images/*'
+      - 'src/app/*'
+      - 'src/shared/*'
+      - 'webpack.config.js'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
 
 jobs:
   build-deploy:
