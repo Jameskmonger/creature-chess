@@ -8,7 +8,7 @@ import { Player } from '@common/game';
 import { IdGenerator } from './id-generator';
 import { LobbyPlayer } from '@common/models';
 import { nameValidator } from "./name-validator";
-import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket } from '@common/networking/client-to-server';
+import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket, JoinGamePacket } from '@common/networking/client-to-server';
 import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from '@common/networking/server-to-client';
 
 export class Server {
@@ -157,8 +157,7 @@ export class Server {
 
     private onSocketJoinGame(socket: io.Socket) {
         return (
-            name: string,
-            lobbyId: string,
+            { name, gameId }: JoinGamePacket,
             response: (response: JoinLobbyResponse) => void
         ) => {
             const validationError = nameValidator(name);
@@ -171,7 +170,7 @@ export class Server {
                 return;
             }
 
-            const lobby = this.getLobbyForId(lobbyId);
+            const lobby = this.getLobbyForId(gameId);
 
             if (lobby === null) {
                 response({
