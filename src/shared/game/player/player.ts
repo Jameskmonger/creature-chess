@@ -18,9 +18,9 @@ import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { PlayerBoard } from "./playerBoard";
 import { StreakType } from "../../models/streakType";
-import { LobbyPlayer } from '@common/models';
-import { getPiecesForStage } from '@common/get-pieces-for-stage';
-import { MovePiecePacket } from '@common/networking/client-to-server';
+import { LobbyPlayer } from "@common/models";
+import { getPiecesForStage } from "@common/get-pieces-for-stage";
+import { MovePiecePacket } from "@common/networking/client-to-server";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -28,7 +28,7 @@ enum PlayerEvent {
     FINISH_MATCH = "FINISH_MATCH",
     UPDATE_READY = "UPDATE_READY",
     UPDATE_STREAK = "UPDATE_STREAK",
-    START_LOBBY_GAME = "START_LOBBY_GAME" 
+    START_LOBBY_GAME = "START_LOBBY_GAME"
 }
 
 interface StreakInfo {
@@ -46,6 +46,8 @@ export abstract class Player {
         amount: 0
     };
 
+    public abstract readonly isBot: boolean;
+
     protected money = new Observable(3);
     protected cards = new Observable<Card[]>([]);
 
@@ -53,8 +55,6 @@ export abstract class Player {
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
     protected shopLocked = false;
-
-    public abstract readonly isBot: boolean;
 
     private events = new EventEmitter();
 
@@ -132,7 +132,7 @@ export abstract class Player {
         if (this.shopLocked === false) {
             this.rerollCards();
         }
-        
+
         this.board.unlockEvolution();
 
         this.onEnterPreparingPhase(round);
@@ -273,7 +273,7 @@ export abstract class Player {
     public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
 
     public abstract onNewFeedMessage(message: FeedMessage);
-    
+
     public abstract onLobbyPlayerUpdate(index: number, player: LobbyPlayer);
 
     protected abstract onEnterPreparingPhase(round: number);

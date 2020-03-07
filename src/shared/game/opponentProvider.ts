@@ -1,7 +1,7 @@
 import { shuffle } from "lodash";
 import { Player } from "./player/player";
 import { randomFromArray } from "../random-from-array";
-import { log } from '@common/log';
+import { log } from "@common/log";
 
 export class OpponentProvider {
     private players: Player[];
@@ -20,7 +20,7 @@ export class OpponentProvider {
 
     public setPlayers(players: Player[]) {
         this.players = players;
-        
+
         this.generateRotations();
     }
 

@@ -1,5 +1,5 @@
-import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from '../actiontypes/boardActionTypes';
-import { Models } from '@common';
+import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from "../actiontypes/boardActionTypes";
+import { Models } from "@common";
 
 export type BeginDragBenchPieceAction = ({ type: BEGIN_DRAG_BENCH_PIECE });
 export type BeginDragBoardPieceAction = ({ type: BEGIN_DRAG_BOARD_PIECE });

@@ -1,7 +1,7 @@
 import { Piece } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
 import { TileCoordinates, arePositionsEqual } from "../../position";
-import { GRID_SIZE } from '@common/constants';
+import { GRID_SIZE } from "@common/constants";
 
 type Vector = { x: number, y: number };
 

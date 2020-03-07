@@ -3,7 +3,7 @@ import * as React from "react";
 import { TileProps } from "./tileProps";
 import { DropTargetProps } from "../../draggable/drop-target-props";
 import { TileCoordinates, TileType } from "@common/position";
-import { GamePhase } from '@common';
+import { GamePhase } from "@common";
 
 // tslint:disable-next-line:no-bitwise
 const isBoardTileDark = ({ x, y }: TileCoordinates) => ((y ^ x) & 1) !== 0;
@@ -25,16 +25,16 @@ const getOverlayClassName = (isDragging: boolean, canDrop: boolean) => {
 };
 
 const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (props) => {
-    const { 
-        type, 
-        piece, 
-        position, 
-        renderPiece, 
-        connectDropTarget, 
-        isDragging, 
-        canDrop, 
-        canDropPiece, 
-        currentSelectedPiece, 
+    const {
+        type,
+        piece,
+        position,
+        renderPiece,
+        connectDropTarget,
+        isDragging,
+        canDrop,
+        canDropPiece,
+        currentSelectedPiece,
         onDropPiece,
         onSelectPiece,
         gamePhase

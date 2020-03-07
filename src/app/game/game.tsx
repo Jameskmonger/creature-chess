@@ -3,7 +3,7 @@ import { MapStateToProps, connect } from "react-redux";
 import { GameStage } from "./gameStage";
 import { AppState } from "../store/state";
 import { MenuStage } from "./menuStage";
-import { LobbyStage } from './lobbyStage';
+import { LobbyStage } from "./lobbyStage";
 
 enum GameState {
     MENU = 0,
@@ -23,7 +23,7 @@ class GameUnconnected extends React.Component<Props> {
             return <GameStage />;
         }
 
-        if (gameState === GameState.LOBBY) {            
+        if (gameState === GameState.LOBBY) {
             return <LobbyStage />;
         }
 

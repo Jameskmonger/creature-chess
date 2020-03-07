@@ -3,7 +3,6 @@ import { TileUnconnected } from "./tileUnconnected";
 import { TileProps } from "./tileProps";
 import { DropTargetProps } from "../../draggable/drop-target-props";
 import { Models } from "@common";
-import { canDropPiece } from "@common/board";
 
 const boxTarget: DropTargetSpec<TileProps> = {
     drop(props: TileProps, monitor: DropTargetMonitor) {

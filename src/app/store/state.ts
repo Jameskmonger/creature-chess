@@ -1,6 +1,6 @@
 import { GamePhase, Models, ConnectionStatus } from "@common";
 import { FeedMessage } from "@common/feed-message";
-import { LobbyPlayer } from '@common/models';
+import { LobbyPlayer } from "@common/models";
 
 export interface GameState {
     gameId: string;

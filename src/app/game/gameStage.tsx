@@ -4,9 +4,6 @@ import { DragDropContext } from "react-dnd";
 import MultiBackend from "react-dnd-multi-backend";
 import HTML5toTouch from "react-dnd-multi-backend/lib/HTML5toTouch";
 
-import { Constants } from "@common";
-import { Board } from "../board/board";
-import { Bench } from "../board/bench";
 import { CardShop } from "../cardShop/cardShop";
 import { PlayerList } from "../playerList/playerList";
 
@@ -16,8 +13,7 @@ import { Profile } from "../components/profile";
 import { Feed } from "../feed/feed";
 import { GameId } from "../components/gameId";
 import { RoundIndicator } from "../components/roundIndicator";
-import { Announcement } from '../board/announcement';
-import { BoardContainer } from '../board/boardContainer';
+import { BoardContainer } from "../board/boardContainer";
 
 class GameStageUnconnected extends React.Component {
     public render() {
@@ -44,7 +40,11 @@ class GameStageUnconnected extends React.Component {
 
                             <Profile />
 
-                            <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+                            <div className="github-link">
+                                <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
+                                {" - "}
+                                <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
+                            </div>
                         </div>
                     </div>
                 </Media>
@@ -66,7 +66,11 @@ class GameStageUnconnected extends React.Component {
 
                             <GameId />
 
-                            <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+                            <div className="github-link">
+                                <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
+                                {" - "}
+                                <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
+                            </div>
 
                             <Feed />
                         </div>
@@ -90,7 +94,11 @@ class GameStageUnconnected extends React.Component {
 
                             <GameId />
 
-                            <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+                            <div className="github-link">
+                                <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
+                                {" - "}
+                                <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
+                            </div>
 
                             <Feed />
                         </div>

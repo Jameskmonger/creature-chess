@@ -8,8 +8,8 @@ import { tilePieceSelector, ownedPieceSelector } from "../../store/pieceSelector
 import { tileDropTarget } from "./tileDragDrop";
 import { TileProps, TileOwnProps, TileStateProps, TileDispatchProps, TileHandlerProps } from "./tileProps";
 import { TileUnconnected } from "./tileUnconnected";
-import { selectPiece } from 'src/app/store/actions/boardActions';
-import { Piece } from '@common/models';
+import { selectPiece } from "src/app/store/actions/boardActions";
+import { Piece } from "@common/models";
 
 const mapStateToProps: MapStateToProps<TileStateProps, TileOwnProps, AppState> = (state, ownProps) => {
     const piece = tilePieceSelector(state, ownProps);
@@ -39,7 +39,7 @@ const Tile = compose<TileProps, TileOwnProps>(
                     props.gamePhase,
                     props.belowPieceLimit
                 );
-            }
+            };
         }
     }),
     tileDropTarget

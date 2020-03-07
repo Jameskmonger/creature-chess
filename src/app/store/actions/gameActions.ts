@@ -14,9 +14,9 @@ import {
     TOGGLE_SHOP_LOCK,
     FINISH_GAME
 } from "../actiontypes/gameActionTypes";
-import { PhaseUpdatePacket } from "@common/packet-opcodes";
 import { JoinCompleteAction } from "./localPlayerActions";
 import { ConnectionStatus } from "@common";
+import { PhaseUpdatePacket } from "@common/networking/server-to-client";
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string, name: string } });
 export type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, name: string, gameId: string } });

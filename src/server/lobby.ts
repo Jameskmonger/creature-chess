@@ -1,8 +1,8 @@
 import { EventEmitter } from "events";
 import { Player, Bot } from "@common/game";
 import { randomFromArray } from "@common/random-from-array";
-import { IdGenerator } from './id-generator';
-import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from '@common/constants';
+import { IdGenerator } from "./id-generator";
+import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@common/constants";
 
 const BOT_NAMES = [
     "Duke Horacio",
@@ -39,7 +39,7 @@ export class Lobby {
     constructor(idGenerator: IdGenerator, initialPlayer: Player, isPublic: boolean) {
         this.id = idGenerator.generateId();
 
-        this.players = [ initialPlayer ];
+        this.players = [initialPlayer];
         this.hostId = initialPlayer.id;
         initialPlayer.onStartLobbyGame(this.startGame);
 
@@ -91,8 +91,8 @@ export class Lobby {
                 continue;
             }
 
-            const lobbyPlayer = ({ 
-                id: player.id, 
+            const lobbyPlayer = ({
+                id: player.id,
                 name: player.name,
                 isBot: player.isBot,
 

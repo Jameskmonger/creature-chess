@@ -1,5 +1,4 @@
-import { MAX_NAME_LENGTH } from '@common/constants';
-import { log } from '@common/log';
+import { MAX_NAME_LENGTH } from "@common/constants";
 
 const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
 

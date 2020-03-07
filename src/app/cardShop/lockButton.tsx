@@ -20,4 +20,4 @@ const LockButton: React.FunctionComponent<LockButtonProps> = ({ locked, onToggle
   );
 };
 
-export { LockButton }
+export { LockButton };

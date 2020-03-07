@@ -4,7 +4,7 @@ import { joinGameAction, createGameAction, joinGameError, enableDebugMode, findG
 import { AppState } from "../store/state";
 import { loadingSelector } from "../store/gameSelector";
 import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
-import { getUrlParameter } from '../get-url-parameter';
+import { getUrlParameter } from "../get-url-parameter";
 
 interface DispatchProps {
     onFindGame: (serverIP: string, name: string) => void;
@@ -134,7 +134,11 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                     </div>
                 </div>
 
-                <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+                <div className="github-link">
+                    <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
+                    {" - "}
+                    <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
+                </div>
             </div>
         );
     }

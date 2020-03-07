@@ -18,4 +18,4 @@ const RerollButton: React.FunctionComponent<RerollButtonProps> = ({ buyable, cos
   );
 };
 
-export { RerollButton }
+export { RerollButton };

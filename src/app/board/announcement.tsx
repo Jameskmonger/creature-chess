@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useSelector } from 'react-redux';
-import { AppState } from '../store/state';
+import { useSelector } from "react-redux";
+import { AppState } from "../store/state";
 
 const Announcement: React.FunctionComponent = () => {
     const mainAnnouncement = useSelector<AppState, string>(state => state.game.mainAnnouncement);
@@ -12,13 +12,11 @@ const Announcement: React.FunctionComponent = () => {
 
     return (
         <div className="announcement">
-            { 
-                subAnnouncement && <h3 className="sub">{subAnnouncement}</h3>
-            }
-            
+            {subAnnouncement && <h3 className="sub">{subAnnouncement}</h3>}
+
             <h2 className="main">{mainAnnouncement}</h2>
         </div>
-    )
+    );
 };
 
 export { Announcement };

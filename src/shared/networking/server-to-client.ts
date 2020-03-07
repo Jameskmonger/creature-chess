@@ -9,7 +9,7 @@ type PreparingPhasePacket = {
   cards: Models.Card[];
 };
 
-type PhaseUpdatePacket =
+export type PhaseUpdatePacket =
   ({ phase: GamePhase.PREPARING, payload: PreparingPhasePacket })
   | ({ phase: GamePhase.READY, payload: { pieces: Models.Piece[], opponentId: string } })
   | ({ phase: GamePhase.PLAYING })
