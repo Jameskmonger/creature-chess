@@ -1,6 +1,5 @@
-import { takeEvery, takeLatest, call, put } from "@redux-saga/core/effects";
-import { countdown } from "../utils/countdown";
-import { JoinLobbyAction, updateLobbySecondsRemaining } from "../../actions/lobbyActions";
+import { takeLatest, put } from "@redux-saga/core/effects";
+import { JoinLobbyAction, updateLobbyStartMs } from "../../actions/lobbyActions";
 import { JOIN_LOBBY } from "../../actiontypes/lobbyActionTypes";
 
 export const lobbyTimer = function*() {
@@ -8,15 +7,7 @@ export const lobbyTimer = function*() {
         const startTimestamp = action.payload.startTimestamp;
 
         if (startTimestamp !== null) {
-            const secondsRemaining = (startTimestamp - Date.now()) / 1000;
-
-            yield put(updateLobbySecondsRemaining(secondsRemaining));
-
-            const channel = yield call(countdown, secondsRemaining);
-
-            yield takeEvery(channel, function*(secs: number) {
-                yield put(updateLobbySecondsRemaining(secs));
-            });
+            yield put(updateLobbyStartMs(startTimestamp));
         }
     });
 };

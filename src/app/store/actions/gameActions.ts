@@ -3,7 +3,7 @@ import {
     JOIN_GAME,
     MONEY_UPDATE,
     GAME_PHASE_UPDATE,
-    PHASE_TIMER_UPDATED,
+    PHASE_START_SECONDS,
     CREATE_GAME,
     JOIN_ERROR,
     ENABLE_DEBUG_MODE,
@@ -29,6 +29,7 @@ export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, pa
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
 export type ToggleShopLockAction = ({ type: TOGGLE_SHOP_LOCK });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
+export type PhaseStartSecondsAction = ({ type: PHASE_START_SECONDS, payload: { time: number } });
 
 export type GameAction =
     FindGameAction
@@ -36,7 +37,7 @@ export type GameAction =
     | CreateGameAction
     | JoinErrorAction
     | ({ type: MONEY_UPDATE, payload: { money: number } })
-    | ({ type: PHASE_TIMER_UPDATED, payload: { time: number } })
+    | PhaseStartSecondsAction
     | JoinCompleteAction
     | GamePhaseUpdateAction
     | ({ type: ENABLE_DEBUG_MODE })
@@ -91,10 +92,10 @@ export const moneyUpdateAction = (money: number) => ({
     }
 });
 
-export const phaseTimerUpdated = (time: number) => ({
-    type: PHASE_TIMER_UPDATED,
+export const phaseStartSeconds = (timeSeconds: number): PhaseStartSecondsAction => ({
+    type: PHASE_START_SECONDS,
     payload: {
-        time
+        time: timeSeconds
     }
 });
 
