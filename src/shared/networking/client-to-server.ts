@@ -31,11 +31,13 @@ export type ReconnectAuthenticatePacket = {
   reconnectSecret: string;
 };
 
+export type JoinGamePacket = { name: string, gameId: string };
+
 type EmptyPacket = { empty: true };
 
 export type ClientToServerPacketDefinitions = {
   [ClientToServerPacketOpcodes.FIND_GAME]: string,
-  [ClientToServerPacketOpcodes.JOIN_GAME]: { name: string, gameId: string },
+  [ClientToServerPacketOpcodes.JOIN_GAME]: JoinGamePacket,
   [ClientToServerPacketOpcodes.CREATE_GAME]: string,
   [ClientToServerPacketOpcodes.FINISH_MATCH]: EmptyPacket,
   [ClientToServerPacketOpcodes.BUY_REROLL]: EmptyPacket,

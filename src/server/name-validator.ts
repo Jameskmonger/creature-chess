@@ -4,8 +4,6 @@ import { log } from '@common/log';
 const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
 
 export const nameValidator = (name: string) => {
-    log(`Attempting to validate name: ${JSON.stringify(name)}`);
-
     if (!name) {
         return "No name provided";
     }
