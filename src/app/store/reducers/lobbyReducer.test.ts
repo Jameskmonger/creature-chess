@@ -1,6 +1,6 @@
 import { TestFixture, Test, Expect } from "alsatian";
 import { lobby } from "./lobbyReducer";
-import { updateLobbyStartMs } from "../actions/lobbyActions";
+import { joinLobbyAction } from "../actions/lobbyActions";
 
 @TestFixture("lobbyReducer tests")
 export class LobbyReducerTests {
@@ -14,14 +14,24 @@ export class LobbyReducerTests {
       players: [],
       startingAtMs: null,
       isHost: false
-  });
+    });
   }
 
   @Test()
-  public shouldHandleLobbyStartMs() {
-    const action = updateLobbyStartMs(100);
+  public shouldHandleJoinLobbyAction() {
+    const action = joinLobbyAction(
+      "123",
+      "456",
+      [ { id: "789", name: "Bob", isBot: false, isHost: false } ],
+      1234,
+      true
+    );
 
     const state = lobby(undefined, action);
-    Expect(state.startingAtMs).toEqual(100);
+    Expect(state.localPlayerId).toEqual("123");
+    Expect(state.lobbyId).toEqual("456");
+    Expect(state.players).toEqual([ { id: "789", name: "Bob", isBot: false, isHost: false } ]);
+    Expect(state.startingAtMs).toEqual(1234);
+    Expect(state.isHost).toEqual(true);
   }
 }

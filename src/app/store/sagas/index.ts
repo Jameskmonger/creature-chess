@@ -10,14 +10,12 @@ import { TurnSimulator } from "@common/match/combat/turnSimulator";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@common/constants";
 import { AppState } from "../state";
-import { lobbyTimer } from "./actions/lobbyTimer";
 import { announcement } from "./actions/announcement";
 
 export const rootSaga = function*() {
     yield all([
         yield fork(networking),
         yield fork(phaseTimer),
-        yield fork(lobbyTimer),
         yield fork(announcement),
         yield fork(gamePhase),
         yield fork(preventAccidentalClose),

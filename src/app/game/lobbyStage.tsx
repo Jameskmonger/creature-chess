@@ -8,7 +8,7 @@ import { startLobbyGame } from "../store/actions/lobbyActions";
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
 const TimeRemaining: React.FunctionComponent<{ totalSecondsRemaining: number }> = ({ totalSecondsRemaining }) => {
-    if (totalSecondsRemaining === null) {
+    if (totalSecondsRemaining === null || totalSecondsRemaining < 0) {
         return null;
     }
 
