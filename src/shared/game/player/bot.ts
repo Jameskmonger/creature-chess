@@ -35,7 +35,7 @@ export class Bot extends Player {
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
 
-    public onNewFeedMessage(message: FeedMessage) { }
+    public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }
 
     public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
         /* nothing required, we're a bot */
@@ -85,7 +85,7 @@ export class Bot extends Player {
             }
 
             const canCurrentlyAfford = currentMoney >= worstPiece.cost;
-            
+
             // sell a piece to make room
             if (this.atPieceLimit() || !canCurrentlyAfford) {
                 this.sellPiece(worstPiece.id);

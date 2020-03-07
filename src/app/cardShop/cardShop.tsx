@@ -6,9 +6,9 @@ import { AppState } from "../store/state";
 import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 import { RerollButton } from "./rerollButton";
-import { BalanceDisplay } from './balanceDisplay';
-import { LockButton } from './lockButton';
-import { toggleShopLock } from '../store/actions/gameActions';
+import { BalanceDisplay } from "./balanceDisplay";
+import { LockButton } from "./lockButton";
+import { toggleShopLock } from "../store/actions/gameActions";
 
 interface StateProps {
     cards: Models.Card[];

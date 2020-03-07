@@ -3,13 +3,13 @@ import uuid = require("uuid/v4");
 import { log } from "@common/log";
 import { Game } from "@common/game/game";
 import { Connection } from "./connection";
-import { Lobby } from './lobby';
-import { Player } from '@common/game';
-import { IdGenerator } from './id-generator';
-import { LobbyPlayer } from '@common/models';
+import { Lobby } from "./lobby";
+import { Player } from "@common/game";
+import { IdGenerator } from "./id-generator";
+import { LobbyPlayer } from "@common/models";
 import { nameValidator } from "./name-validator";
-import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket, JoinGamePacket } from '@common/networking/client-to-server';
-import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from '@common/networking/server-to-client';
+import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket, JoinGamePacket } from "@common/networking/client-to-server";
+import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
 
 export class Server {
     private lobbies = new Map<string, Lobby>();
@@ -17,7 +17,7 @@ export class Server {
     private lobbyIdGenerator = new IdGenerator();
 
     public listen(port: number) {
-        const server = io.listen(port, { transports: ['websocket', 'xhr-polling'] });
+        const server = io.listen(port, { transports: ["websocket", "xhr-polling"] });
 
         log("Server listening on port " + port);
 
@@ -152,7 +152,7 @@ export class Server {
                     isHost: player.id === lobby.hostId
                 }
             });
-        }
+        };
     }
 
     private onSocketJoinGame(socket: io.Socket) {

@@ -2,7 +2,7 @@ import { takeLatest, put, select } from "@redux-saga/core/effects";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
 import { GamePhase } from "@common";
 import { GamePhaseUpdateAction, clearAnnouncement, updateAnnouncement } from "../../actions/gameActions";
-import { AppState } from '../../state';
+import { AppState } from "../../state";
 
 export const announcement = function*() {
     yield takeLatest<GamePhaseUpdateAction>(GAME_PHASE_UPDATE, function*(action) {

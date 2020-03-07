@@ -1,3 +1,4 @@
+// tslint:disable no-console
 import present = require("present");
 import { GamePhase } from "@common";
 import { Game, Bot, Player } from "@common/game";

@@ -207,55 +207,55 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
     });
 };
 
-const readPacketsToActions = function* (incomingRegistry: ServerToClientPacketRegistry, socket: Socket) {
+const readPacketsToActions = function*(incomingRegistry: ServerToClientPacketRegistry, socket: Socket) {
     const channel = yield call(subscribe, incomingRegistry, socket);
 
-    yield takeEvery(channel, function* (action) {
+    yield takeEvery(channel, function*(action) {
         yield put(action);
     });
 };
 
-const writeActionsToPackets = function* (registry: ClientToServerPacketRegsitry) {
+const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) {
     yield all([
         takeEvery(
             BATTLE_FINISHED,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
             }
         ),
         takeEvery(
             REROLL_CARDS,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.BUY_REROLL, { empty: true });
             }
         ),
         takeEvery(
             BUY_XP,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.BUY_XP, { empty: true });
             }
         ),
         takeEvery(
             READY_UP,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.READY_UP, { empty: true });
             }
         ),
         takeEvery<ActionWithPayload<{ index: number }>>(
             BUY_CARD,
-            function* ({ payload }) {
+            function*({ payload }) {
                 registry.emit(ClientToServerPacketOpcodes.BUY_CARD, payload.index);
             }
         ),
         takeEvery<ActionWithPayload<{ pieceId: string }>>(
             BoardActionTypes.SELL_PIECE,
-            function* ({ payload }) {
+            function*({ payload }) {
                 registry.emit(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId);
             }
         ),
         takeEvery<ActionWithPayload<{ piece: Models.Piece, position: TileCoordinates }>>(
             BoardActionTypes.PIECE_MOVED_TO_BOARD,
-            function* ({ payload }) {
+            function*({ payload }) {
                 registry.emit(
                     ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD,
                     {
@@ -268,7 +268,7 @@ const writeActionsToPackets = function* (registry: ClientToServerPacketRegsitry)
         ),
         takeEvery<ActionWithPayload<{ piece: Models.Piece, slot: number }>>(
             BoardActionTypes.PIECE_MOVED_TO_BENCH,
-            function* ({ payload }) {
+            function*({ payload }) {
                 registry.emit(
                     ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH,
                     {
@@ -281,25 +281,25 @@ const writeActionsToPackets = function* (registry: ClientToServerPacketRegsitry)
         ),
         takeEvery<ActionWithPayload<{ message: string }>>(
             SEND_CHAT_MESSAGE,
-            function* ({ payload }) {
+            function*({ payload }) {
                 registry.emit(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message);
             }
         ),
         takeEvery(
             START_LOBBY_GAME,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.START_LOBBY_GAME, { empty: true });
             }
         ),
         takeEvery(
             TOGGLE_SHOP_LOCK,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK, { empty: true });
             }
         ),
         takeLatest(
             action => action.type === UPDATE_CONNECTION_STATUS && action.payload.status === ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION,
-            function* () {
+            function*() {
                 const state: AppState = yield select();
 
                 // if player not connected yet, don't try to reconnect
@@ -335,7 +335,7 @@ const getResponseForAction = (registry: ClientToServerPacketRegsitry, action: Fi
     }
 };
 
-export const networking = function* () {
+export const networking = function*() {
     let action: (FindGameAction | JoinGameAction | CreateGameAction)
         = yield take([FIND_GAME, JOIN_GAME, CREATE_GAME]);
     const socket: Socket = yield call(getSocket, action.payload.serverIP);

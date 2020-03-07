@@ -1,13 +1,17 @@
 import { GameAction } from "../actions/gameActions";
-import { JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED, CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT, CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME } from "../actiontypes/gameActionTypes";
+import {
+    JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE, PHASE_TIMER_UPDATED,
+    CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT,
+    CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME
+} from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { GamePhase, ConnectionStatus } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
-import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from '../actiontypes/boardActionTypes';
-import { BeginDragPieceAction, SelectPieceAction } from '../actions/boardActions';
-import { PieceMovedAction } from '@common/board/actions/boardActions';
-import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from '@common/board/actions/boardActionTypes';
-import { inBench } from '@common/position';
+import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from "../actiontypes/boardActionTypes";
+import { BeginDragPieceAction, SelectPieceAction } from "../actions/boardActions";
+import { PieceMovedAction } from "@common/board/actions/boardActions";
+import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "@common/board/actions/boardActionTypes";
+import { inBench } from "@common/position";
 
 const initialState: GameState = {
     gameId: null,

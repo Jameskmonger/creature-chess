@@ -13,4 +13,4 @@ const BalanceDisplay: React.FunctionComponent<BalanceDisplayProps> = ({ value })
   );
 };
 
-export { BalanceDisplay }
+export { BalanceDisplay };

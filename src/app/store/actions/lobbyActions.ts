@@ -1,5 +1,5 @@
-import { JOIN_LOBBY, UPDATE_LOBBY_PLAYER, UPDATE_LOBBY_SECONDS_REMAINING, START_LOBBY_GAME } from '../actiontypes/lobbyActionTypes';
-import { LobbyPlayer } from '@common/models';
+import { JOIN_LOBBY, UPDATE_LOBBY_PLAYER, UPDATE_LOBBY_SECONDS_REMAINING, START_LOBBY_GAME } from "../actiontypes/lobbyActionTypes";
+import { LobbyPlayer } from "@common/models";
 
 export type JoinLobbyAction = ({
     type: JOIN_LOBBY,

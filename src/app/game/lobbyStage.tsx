@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AppState } from '../store/state';
-import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from '@common/constants';
-import { LobbyPlayer } from '@common/models';
-import { startLobbyGame } from '../store/actions/lobbyActions';
+import { AppState } from "../store/state";
+import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@common/constants";
+import { LobbyPlayer } from "@common/models";
+import { startLobbyGame } from "../store/actions/lobbyActions";
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
@@ -39,6 +39,7 @@ const LobbyStage: React.FunctionComponent = () => {
     const isHost = useSelector<AppState, boolean>(state => state.lobby.isHost);
 
     const isPublic = totalSecondsRemaining !== null;
+    const onStartGameClick = () => dispatch(startLobbyGame());
 
     return (
         <div className="lobby">
@@ -49,7 +50,7 @@ const LobbyStage: React.FunctionComponent = () => {
                             <div className={`player${p.isBot ? " bot" : ""}`}>
                                 <span>{p.name}</span>
 
-                                { p.isHost && <span className="host">Host</span>}
+                                {p.isHost && <span className="host">Host</span>}
                             </div>
                         ))
                     }
@@ -64,8 +65,10 @@ const LobbyStage: React.FunctionComponent = () => {
                         && (
                             <button
                                 className="start-game"
-                                onClick={() => dispatch(startLobbyGame())}
-                            >Start Game</button>
+                                onClick={onStartGameClick}
+                            >
+                                Start Game
+                            </button>
                         )
                     }
 
@@ -78,12 +81,12 @@ const LobbyStage: React.FunctionComponent = () => {
                             </p>
                         )
                     }
-                    
+
                     {
                         !isPublic
                         && (
                             <p>
-                                { isHost ? "You": "The host" } can choose when to start the game,
+                                {isHost ? "You" : "The host"} can choose when to start the game,
                                 or it will start immediately when there are {MAX_PLAYERS_IN_GAME} players
                             </p>
                         )
@@ -91,9 +94,13 @@ const LobbyStage: React.FunctionComponent = () => {
                 </div>
             </div>
 
-            <div className="github-link"><a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a> - <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a></div>
+            <div className="github-link">
+                <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
+                {" - "}
+                <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
+            </div>
         </div>
-    )
+    );
 };
 
 export { LobbyStage };

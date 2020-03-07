@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Announcement } from './announcement';
-import { Bench } from './bench';
-import { Board } from './board';
-import { Constants } from '@common';
-import { ReconnectModal } from './reconnectModal';
-import { useWindowSize } from '../use-window-size';
-import { ReadyUpButton } from './readyUpButton';
+import { Announcement } from "./announcement";
+import { Bench } from "./bench";
+import { Board } from "./board";
+import { Constants } from "@common";
+import { ReconnectModal } from "./reconnectModal";
+import { useWindowSize } from "../use-window-size";
+import { ReadyUpButton } from "./readyUpButton";
 import { VictoryOverlay } from "./victoryOverlay/victoryOverlay";
 
 const getWidthFromHeight = (height: number) =>
@@ -24,12 +24,12 @@ const BoardContainer: React.FunctionComponent = () => {
     const boardContainerStyle = {
         height:
             portrait
-            ? (getHeightFromWidth(width) - marginDelta) + "px"
-            : (height - marginDelta) + "px",
+                ? (getHeightFromWidth(width) - marginDelta) + "px"
+                : (height - marginDelta) + "px",
         width:
             portrait
-            ? (width - marginDelta) + "px"
-            : (getWidthFromHeight(height) - marginDelta) + "px"
+                ? (width - marginDelta) + "px"
+                : (getWidthFromHeight(height) - marginDelta) + "px"
     };
 
     return (
@@ -45,6 +45,6 @@ const BoardContainer: React.FunctionComponent = () => {
             <ReconnectModal />
         </div>
     );
-}
+};
 
 export { BoardContainer };
