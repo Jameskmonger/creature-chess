@@ -1,4 +1,4 @@
-import { JOIN_LOBBY, UPDATE_LOBBY_PLAYER, UPDATE_LOBBY_SECONDS_REMAINING, START_LOBBY_GAME } from "../actiontypes/lobbyActionTypes";
+import { JOIN_LOBBY, UPDATE_LOBBY_PLAYER, START_LOBBY_GAME } from "../actiontypes/lobbyActionTypes";
 import { LobbyPlayer } from "@common/models";
 
 export type JoinLobbyAction = ({
@@ -20,18 +20,10 @@ export type UpdateLobbyPlayerAction = ({
     }
 });
 
-export type UpdateLobbySecondsRemainingAction = ({
-    type: UPDATE_LOBBY_SECONDS_REMAINING,
-    payload: {
-        secondsRemaining: number
-    }
-});
-
 export type StartLobbyGameAction = ({ type: START_LOBBY_GAME });
 
 export type LobbyAction = JoinLobbyAction
     | UpdateLobbyPlayerAction
-    | UpdateLobbySecondsRemainingAction
     | StartLobbyGameAction;
 
 export const joinLobbyAction = (localPlayerId: string, lobbyId: string, players: LobbyPlayer[], startTimestamp: number, isHost: boolean): JoinLobbyAction => ({
@@ -50,13 +42,6 @@ export const updateLobbyPlayerAction = (index: number, player: LobbyPlayer): Upd
     payload: {
         index,
         player
-    }
-});
-
-export const updateLobbySecondsRemaining = (secondsRemaining: number): UpdateLobbySecondsRemainingAction => ({
-    type: UPDATE_LOBBY_SECONDS_REMAINING,
-    payload: {
-        secondsRemaining
     }
 });
 
