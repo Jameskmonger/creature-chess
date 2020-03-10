@@ -4,14 +4,11 @@ import { AppState } from "../store/state";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@common/constants";
 import { LobbyPlayer } from "@common/models";
 import { startLobbyGame } from "../store/actions/lobbyActions";
+import { Countdown } from "../components/countdown";
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
-const TimeRemaining: React.FunctionComponent<{ totalSecondsRemaining: number }> = ({ totalSecondsRemaining }) => {
-    if (totalSecondsRemaining === null || totalSecondsRemaining < 0) {
-        return null;
-    }
-
+const countdownRender = (totalSecondsRemaining: number) => {
     const minutesRemaining = Math.floor(totalSecondsRemaining / 60);
     const secondsRemaining = Math.ceil(totalSecondsRemaining % 60);
 
@@ -36,27 +33,6 @@ const LobbyStage: React.FunctionComponent = () => {
     const players = useSelector<AppState, LobbyPlayer[]>(state => state.lobby.players);
     const isHost = useSelector<AppState, boolean>(state => state.lobby.isHost);
     const lobbyStartingAtMs = useSelector<AppState, number>(state => state.lobby.startingAtMs);
-    const [lobbySecondsRemaining, setLobbySecondsRemaining] = React.useState<number | null>(null);
-
-    const updateSecondsRemaining = () => {
-        if (lobbyStartingAtMs === null) {
-            return;
-        }
-
-        const msRemaining = lobbyStartingAtMs - Date.now();
-        const secondsRemaining = Math.floor(msRemaining / 1000);
-
-        setLobbySecondsRemaining(secondsRemaining);
-    };
-
-    React.useEffect(() => {
-        updateSecondsRemaining();
-
-        const intervalId = setInterval(updateSecondsRemaining, 1000);
-
-        return () => clearInterval(intervalId);
-
-    }, [lobbyStartingAtMs]);
 
     const isPublic = lobbyStartingAtMs !== null;
     const onStartGameClick = () => dispatch(startLobbyGame());
@@ -76,7 +52,15 @@ const LobbyStage: React.FunctionComponent = () => {
                     }
                 </div>
                 <div className="text">
-                    <TimeRemaining totalSecondsRemaining={lobbySecondsRemaining} />
+                    {
+                        lobbyStartingAtMs
+                        && (
+                            <Countdown
+                                countdownToSeconds={lobbyStartingAtMs / 1000}
+                                render={countdownRender}
+                            />
+                        )
+                    }
 
                     <h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
 
