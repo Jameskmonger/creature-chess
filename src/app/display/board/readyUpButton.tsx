@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AppState } from "../../store/state";
+import { AppState } from "@app/store";
 import { GamePhase } from "@common";
 import { readyUpAction } from "../../store/actions/localPlayerActions";
 

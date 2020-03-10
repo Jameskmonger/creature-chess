@@ -2,7 +2,7 @@ import * as React from "react";
 import { Models, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
-import { AppState } from "../../store/state";
+import { AppState } from "@app/store";
 import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 import { RerollButton } from "./rerollButton";

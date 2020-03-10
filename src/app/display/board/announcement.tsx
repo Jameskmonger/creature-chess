@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { AppState } from "../../store/state";
+import { AppState } from "@app/store";
 
 const Announcement: React.FunctionComponent = () => {
     const mainAnnouncement = useSelector<AppState, string>(state => state.game.mainAnnouncement);

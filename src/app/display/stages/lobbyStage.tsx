@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AppState } from "../../store/state";
+import { AppState } from "@app/store";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@common/constants";
 import { LobbyPlayer } from "@common/models";
 import { startLobbyGame } from "../../store/actions/lobbyActions";

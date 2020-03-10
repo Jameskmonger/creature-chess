@@ -1,7 +1,7 @@
 import * as React from "react";
 import { GamePhase, Constants } from "@common";
 import { MapStateToProps, connect } from "react-redux";
-import { AppState } from "../store/state";
+import { AppState } from "@app/store";
 import { Countdown } from "./countdown";
 
 interface Props {

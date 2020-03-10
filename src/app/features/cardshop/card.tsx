@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CreatureImage } from "../../display/creatureImage";
+import { CreatureImage } from "@app/display";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 
 interface CardProps {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MapStateToProps, connect } from "react-redux";
-import { AppState } from "../store/state";
+import { AppState } from "@app/store";
 
 interface Props {
     gameId: string;

@@ -1,6 +1,6 @@
 import { compose } from "recompose";
 import { connect, MapStateToProps, MapDispatchToProps } from "react-redux";
-import { AppState } from "../../../store/state";
+import { AppState } from "@app/store";
 import { localPlayerIdSelector } from "../../../store/gameSelector";
 import { BoardPieceProps, BoardPieceStateProps, BoardPieceOwnProps, BoardPieceDispatchProps } from "./boardPieceProps";
 import { boardPieceDragSource } from "./boardPieceDragDrop";

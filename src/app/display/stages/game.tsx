@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MapStateToProps, connect } from "react-redux";
 import { GameStage } from "./gameStage";
-import { AppState } from "../../store/state";
+import { AppState } from "@app/store";
 import { MenuStage } from "./menuStage";
 import { LobbyStage } from "./lobbyStage";
 

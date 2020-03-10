@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { joinGameAction, createGameAction, joinGameError, enableDebugMode, findGameAction } from "../../store/actions/gameActions";
-import { AppState } from "../../store/state";
+import { AppState } from "@app/store";
 import { loadingSelector } from "../../store/gameSelector";
 import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/constants";
 import { getUrlParameter } from "../../get-url-parameter";

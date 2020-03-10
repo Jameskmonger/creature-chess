@@ -3,7 +3,7 @@ import { GamePhase } from "@common";
 import { PlayerListPlayer } from "@common/models";
 import { PlayerListItem } from "./playerListItem";
 import { connect, MapStateToProps } from "react-redux";
-import { AppState } from "../../store/state";
+import { AppState } from "@app/store";
 import { opponentIdSelector, localPlayerIdSelector } from "../../store/gameSelector";
 
 interface Props {

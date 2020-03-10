@@ -1,6 +1,6 @@
 import * as React from "react";
 import { PlayerListPlayer, StreakType } from "@common/models";
-import { ProgressBar } from "../../display/progressBar";
+import { ProgressBar } from "@app/display";
 
 interface Props {
     player: PlayerListPlayer;

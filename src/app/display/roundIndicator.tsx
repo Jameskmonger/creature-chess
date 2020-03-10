@@ -1,7 +1,7 @@
 import * as React from "react";
 import { GamePhase } from "@common";
 import { MapStateToProps, connect } from "react-redux";
-import { AppState } from "../store/state";
+import { AppState } from "@app/store";
 
 interface Props {
     round: number | null;

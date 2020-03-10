@@ -1,5 +1,5 @@
 import { DropTargetSpec, DropTargetMonitor, DropTargetConnector, DropTarget } from "react-dnd";
-import { DropTargetProps } from "../../../draggable/drop-target-props";
+import { DropTargetProps } from "@app/draggable/drop-target-props";
 import { DropToSellProps } from "./dropToSellProps";
 import { DropToSellUnconnected } from "./dropToSellUnconnected";
 
