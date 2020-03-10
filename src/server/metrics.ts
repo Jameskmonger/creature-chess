@@ -35,6 +35,8 @@ export class Metrics {
     setInterval(() => {
       this.flush();
     }, METRIC_FLUSH_FREQUENCY_MS);
+
+    this.flush();
   }
 
   public addGame(metric: GameMetric) {
