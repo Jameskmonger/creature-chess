@@ -77,7 +77,7 @@ export class Game {
         this.registerPlugins();
     }
 
-    public onFinish(fn: (rounds: number, winner: Player) => void) {
+    public onFinish(fn: (rounds: number, winner: Player, startTimeMs: number, players: { name: string }[], durationMs: number) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
@@ -152,6 +152,7 @@ export class Game {
         }
 
         const startTime = startStopwatch();
+        const startTimeMs = Date.now();
 
         this.players.forEach(p => p.onStartGame(this.id));
 
@@ -171,7 +172,12 @@ export class Game {
 
         this.players.forEach(p => p.onFinishGame(winner));
 
-        this.events.emit(GameEvents.FINISH_GAME, this.round, winner);
+        const metricPlayers = this.players.map(p => ({
+            name: p.name,
+            isBot: p.isBot
+        }));
+
+        this.events.emit(GameEvents.FINISH_GAME, this.round, winner, startTimeMs, metricPlayers, duration);
     }
 
     private async runPreparingPhase() {
