@@ -1,5 +1,4 @@
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
-import { networking } from "./actions/networking";
 import { phaseTimer } from "./actions/phaseTimer";
 import { gamePhase } from "./actions/gamePhase";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
@@ -12,6 +11,7 @@ import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@common/constants";
 import { AppState } from "../state";
 import { announcement } from "./actions/announcement";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
+import { networking } from "../../networking/saga";
 
 export const rootSaga = function*() {
     yield all([

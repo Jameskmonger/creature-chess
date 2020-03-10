@@ -1,28 +1,27 @@
 import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, takeLatest, select } from "@redux-saga/core/effects";
-import { Socket, ActionWithPayload } from "../types";
+import { Socket, ActionWithPayload } from "../store/sagas/types";
 import { Models, ConnectionStatus } from "@common";
 import {
     moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError,
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction
-} from "../../actions/gameActions";
+} from "../store/actions/gameActions";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
-import { playerListUpdated } from "../../../playerList/playerListActions";
-import { cardsUpdated } from "../../../cardShop/cardActions";
-import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK, UPDATE_CONNECTION_STATUS } from "../../actiontypes/gameActionTypes";
-import { REROLL_CARDS, BUY_CARD } from "../../../cardShop/cardActionTypes";
+import { playerListUpdated } from "../playerList/playerListActions";
+import { cardsUpdated } from "../cardShop/cardActions";
+import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
+import { REROLL_CARDS, BUY_CARD } from "../cardShop/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
-import { log } from "../../../log";
-import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../../actions/localPlayerActions";
-import { BUY_XP, READY_UP } from "../../actiontypes/localPlayerActionTypes";
-import { newFeedMessage } from "../../../feed/feedActions";
-import { FeedMessage } from "@common/feed-message";
-import { SEND_CHAT_MESSAGE } from "../../../chat/chatActionTypes";
+import { log } from "../log";
+import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../store/actions/localPlayerActions";
+import { BUY_XP, READY_UP } from "../store/actiontypes/localPlayerActionTypes";
+import { newFeedMessage } from "../feed/feedActions";
+import { SEND_CHAT_MESSAGE } from "../chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
-import { joinLobbyAction, updateLobbyPlayerAction } from "../../actions/lobbyActions";
-import { START_LOBBY_GAME } from "../../actiontypes/lobbyActionTypes";
-import { AppState } from "../../state";
+import { joinLobbyAction, updateLobbyPlayerAction } from "../store/actions/lobbyActions";
+import { START_LOBBY_GAME } from "../store/actiontypes/lobbyActionTypes";
+import { AppState } from "../store/state";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, JoinLobbyResponse } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
