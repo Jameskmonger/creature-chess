@@ -4,8 +4,8 @@ import { GamePhase } from "@common";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
 import { GamePhaseUpdateAction } from "../../actions/gameActions";
 import { startBattle } from "@common/match/combat/battleSaga";
-import { cardsUpdated } from "../../../cardShop/cardActions";
 import { LockEvolutionActions } from "@common/board";
+import { cardsUpdated } from "../../../features/cardshop/cardActions";
 
 const isGamePhaseUpdate = (phase: GamePhase) =>
     (action: GamePhaseUpdateAction) => action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;

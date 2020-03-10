@@ -8,16 +8,16 @@ import {
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction
 } from "../store/actions/gameActions";
 import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
-import { playerListUpdated } from "../playerList/playerListActions";
-import { cardsUpdated } from "../cardShop/cardActions";
+import { playerListUpdated } from "../features/playerList/playerListActions";
+import { cardsUpdated } from "../features/cardShop/cardActions";
 import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
-import { REROLL_CARDS, BUY_CARD } from "../cardShop/cardActionTypes";
+import { REROLL_CARDS, BUY_CARD } from "../features/cardShop/cardActionTypes";
 import { TileCoordinates, createTileCoordinates } from "@common/position";
 import { log } from "../log";
 import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../store/actions/localPlayerActions";
 import { BUY_XP, READY_UP } from "../store/actiontypes/localPlayerActionTypes";
-import { newFeedMessage } from "../feed/feedActions";
-import { SEND_CHAT_MESSAGE } from "../chat/chatActionTypes";
+import { newFeedMessage } from "../features/feed/feedActions";
+import { SEND_CHAT_MESSAGE } from "../features/chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 import { joinLobbyAction, updateLobbyPlayerAction } from "../store/actions/lobbyActions";
 import { START_LOBBY_GAME } from "../store/actiontypes/lobbyActionTypes";
