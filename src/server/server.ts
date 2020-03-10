@@ -10,11 +10,13 @@ import { LobbyPlayer } from "@common/models";
 import { nameValidator } from "./name-validator";
 import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket, JoinGamePacket } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
+import { Metrics } from "./metrics";
 
 export class Server {
     private lobbies = new Map<string, Lobby>();
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
+    private metrics = new Metrics();
 
     public listen(port: number) {
         const server = io.listen(port, { transports: ["websocket", "xhr-polling"] });
@@ -75,6 +77,17 @@ export class Server {
 
             players.forEach(p => {
                 game.addPlayer(p);
+            });
+
+            game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
+                this.metrics.addGame({
+                    startTimeMs,
+                    players: gamePlayers,
+                    round: rounds,
+                    winner: winner.name,
+                    isPublic: lobby.isPublic,
+                    durationMs
+                });
             });
 
             this.games.set(game.id, game);

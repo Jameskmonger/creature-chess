@@ -4,3 +4,4 @@ test/
 bin/
 .vscode/
 /gh-pages/
+_metrics/
