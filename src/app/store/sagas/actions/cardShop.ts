@@ -5,8 +5,8 @@ import { pieceUtils } from "@common/utils";
 import { getFirstEmptyBenchSlot, BenchActions } from "@common/board";
 import { moneyUpdateAction } from "../../actions/gameActions";
 import { DefinitionProvider } from "@common/game/definitionProvider";
-import { BUY_CARD } from "../../../features/cardshop/cardActionTypes";
-import { BuyCardAction, cardsUpdated } from "../../../features/cardshop/cardActions";
+import { BUY_CARD } from "../../../features/cardShop/cardActionTypes";
+import { BuyCardAction, cardsUpdated } from "../../../features/cardShop/cardActions";
 
 const definitionProvider = new DefinitionProvider();
 
