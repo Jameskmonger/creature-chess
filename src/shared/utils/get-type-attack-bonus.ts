@@ -1,4 +1,4 @@
-import { CreatureType } from "../../models/creatureType";
+import { CreatureType } from "../models/creatureType";
 
 // overcome / generated are Tuxemon language
 const typeInteractions = {

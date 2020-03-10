@@ -4,7 +4,7 @@ import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { Player } from "../game/player/player";
-import { rotatePiecePosition } from "../piece-utils";
+import { pieceUtils } from "@common/utils";
 import { log } from "../log";
 import { Piece } from "../models/piece";
 import { TurnSimulator } from "./combat/turnSimulator";
@@ -114,7 +114,7 @@ export class Match {
     }
 
     private mapAwayPiece(piece: Piece) {
-        return rotatePiecePosition({
+        return pieceUtils.rotatePiecePosition({
             ...piece,
             facingAway: false
         });

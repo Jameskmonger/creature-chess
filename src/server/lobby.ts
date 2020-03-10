@@ -1,8 +1,8 @@
 import { EventEmitter } from "events";
 import { Player, Bot } from "@common/game";
-import { randomFromArray } from "@common/random-from-array";
-import { IdGenerator } from "./id-generator";
+import { randomFromArray } from "@common/utils";
 import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@common/constants";
+import { IdGenerator } from "./id-generator";
 
 const BOT_NAMES = [
     "Duke Horacio",

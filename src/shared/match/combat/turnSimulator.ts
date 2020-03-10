@@ -3,8 +3,7 @@ import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getRelativeDirection } from "../../position";
 import { INITIAL_COOLDOWN, DAMAGE_RATIO } from "../../constants";
-import { isATeamDefeated } from "../../is-a-team-defeated";
-import { getTypeAttackBonus } from "./get-type-attack-bonus";
+import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
 

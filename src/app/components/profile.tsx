@@ -2,7 +2,8 @@ import * as React from "react";
 import { ProgressBar } from "./progressBar";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "../store/state";
-import { GamePhase, getXpToNextLevel, Constants } from "@common";
+import { GamePhase, Constants } from "@common";
+import { getXpToNextLevel } from "@common/utils";
 import { ownedPieceSelector } from "../store/pieceSelectors";
 import { buyXpAction } from "../store/actions/localPlayerActions";
 

@@ -1,4 +1,4 @@
-import { Piece } from "./models";
+import { Piece } from "../models";
 
 const groupBy = <TItem, TKey>(list: TItem[], keyGetter: (item: TItem) => TKey) => {
     const map = new Map<TKey, TItem[]>();
