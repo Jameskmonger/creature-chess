@@ -185,8 +185,6 @@ export class Game {
 
         this.updateLivingPlayers();
 
-        log(`Entering phase ${GamePhase[GamePhase.PREPARING]} (round ${this.round})`);
-
         this.phase = GamePhase.PREPARING;
 
         this.eventManager.getTriggers().enterPreparingPhase(this.players);
@@ -210,8 +208,6 @@ export class Game {
     }
 
     private async runReadyPhase() {
-        log(`Entering phase ${GamePhase[GamePhase.READY]}`);
-
         this.phase = GamePhase.READY;
 
         this.players.forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider));
@@ -220,8 +216,6 @@ export class Game {
     }
 
     private async runPlayingPhase() {
-        log(`Entering phase ${GamePhase[GamePhase.PLAYING]}`);
-
         this.phase = GamePhase.PLAYING;
 
         this.opponentProvider.updateRotation();

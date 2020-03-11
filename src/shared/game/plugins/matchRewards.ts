@@ -30,12 +30,6 @@ const getMoneyForMatch = (player: Player, win: boolean) => {
 
     const total = base + winBonus + streakBonus + interest;
 
-    log(`${player.name} just earned $${total}`);
-    log(` - base: ${base}`);
-    log(` - win bonus: ${winBonus}`);
-    log(` - streak (${player.streak.amount}) bonus: ${streakBonus}`);
-    log(` - interest: ${interest}`);
-
     return total;
 };
 

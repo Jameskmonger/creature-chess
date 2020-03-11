@@ -412,8 +412,6 @@ export abstract class Player {
             return;
         }
 
-        log(`${this.name} readied up`);
-
         this.setReady(true);
 
         this.readyUpDeferred.resolve();
