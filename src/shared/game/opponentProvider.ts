@@ -14,8 +14,6 @@ export class OpponentProvider {
         this.remainingRotations = this.remainingRotations.filter(i => i !== chosen);
 
         this.rotation = chosen;
-
-        log("Now using rotation " + chosen);
     }
 
     public setPlayers(players: Player[]) {

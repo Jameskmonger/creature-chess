@@ -51,19 +51,16 @@ export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: n
                 const defeated = isATeamDefeated(pieces);
 
                 if (shouldStop) {
-                    log(`Fight ended at turn ${turnCount} due to cancellation`);
                     emit(finishAction(turnCount));
                     break;
                 }
 
                 if (defeated) {
-                    log(`Fight ended at turn ${turnCount}`);
                     emit(finishAction(turnCount));
                     break;
                 }
 
                 if (turnCount >= maxTurns) {
-                    log(`Fight timed out at turn ${turnCount}`);
                     emit(finishAction(turnCount));
                     break;
                 }

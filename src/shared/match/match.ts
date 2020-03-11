@@ -66,8 +66,6 @@ export class Match {
             Promise.all([ this.serverFinishedMatch.promise, this.clientFinishedMatch.promise ])
         ]);
 
-        log(`${this.home.name} v ${this.away.name} finished`);
-
         this.finalBoard = this.store.getState().board;
         return this.finalBoard;
     }
