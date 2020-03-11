@@ -2,7 +2,7 @@
 import present = require("present");
 import { GamePhase } from "@common";
 import { Game, Bot, Player } from "@common/game";
-import { DEFAULT_TURN_COUNT } from "./shared/constants";
+import { DEFAULT_TURN_COUNT } from "@common/constants";
 
 let benchmarkStart: number;
 const GAME_COUNT = 5;
