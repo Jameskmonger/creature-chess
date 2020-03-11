@@ -1,7 +1,7 @@
 import { PlayerListPlayer } from "../models";
 import { Player } from "./player/player";
 import { EventEmitter } from "events";
-import { debounce } from "@common";
+import { debounce } from "@common/utils";
 
 enum PlayerListEvents {
     UPDATE = "UPDATE"

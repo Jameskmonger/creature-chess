@@ -1,6 +1,6 @@
 import { shuffle } from "lodash";
 import { Player } from "./player/player";
-import { randomFromArray } from "../random-from-array";
+import { randomFromArray } from "@common/utils";
 import { log } from "@common/log";
 
 export class OpponentProvider {

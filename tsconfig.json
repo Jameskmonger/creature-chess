@@ -3,7 +3,9 @@
         "baseUrl": ".",
         "paths": {
             "@common": ["./src/shared"],
-            "@common/*": ["./src/shared/*"]
+            "@common/*": ["./src/shared/*"],
+            "@app": ["./src/app"],
+            "@app/*": ["./src/app/*"]
         },
         "experimentalDecorators": true,
         "module": "commonjs",

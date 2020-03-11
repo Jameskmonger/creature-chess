@@ -1,6 +1,6 @@
 import { Reducer } from "react";
 import { Models } from "@common";
-import { moveOrAddPiece } from "@common/piece-utils";
+import { pieceUtils } from "@common/utils";
 import { createTileCoordinates } from "@common/position";
 import { BenchPiecesAction } from "./benchActions";
 import { BENCH_PIECES_UPDATED, BENCH_PIECE_ADDED } from "./benchActionTypes";
@@ -20,7 +20,7 @@ export const benchReducer: Reducer<Models.Piece[], BenchPiecesAction> = (state =
                 position: createTileCoordinates(action.payload.slot, null)
             };
 
-            return moveOrAddPiece(state, target);
+            return pieceUtils.moveOrAddPiece(state, target);
         case PIECE_MOVED_TO_BOARD:
             return state.filter(s => s.id !== action.payload.piece.id);
         case SELL_PIECE:
