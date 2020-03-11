@@ -3,7 +3,7 @@ import { eventChannel } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
 import { Piece } from "../../models/piece";
 import { log } from "../../log";
-import { isATeamDefeated } from "../../is-a-team-defeated";
+import { isATeamDefeated } from "@common/utils";
 import { BoardActions } from "../../board";
 import { PiecesUpdatedAction } from "../../board/actions/boardActions";
 

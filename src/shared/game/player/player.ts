@@ -1,6 +1,5 @@
 import uuid = require("uuid/v4");
 import pDefer = require("p-defer");
-import { clonePiece, createPieceFromCard } from "../../piece-utils";
 import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
@@ -12,14 +11,13 @@ import { OpponentProvider } from "../opponentProvider";
 import { Card } from "../../models/card";
 import { GamePhase } from "../../game-phase";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "../../constants";
-import { getXpToNextLevel } from "../../get-xp-for-level";
 import { PlayerListPlayer } from "../../models/player-list-player";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { PlayerBoard } from "./playerBoard";
 import { StreakType } from "../../models/streakType";
 import { LobbyPlayer } from "@common/models";
-import { getPiecesForStage } from "@common/get-pieces-for-stage";
+import { getPiecesForStage, getXpToNextLevel, pieceUtils } from "@common/utils";
 import { MovePiecePacket } from "@common/networking/client-to-server";
 
 enum PlayerEvent {
@@ -186,7 +184,7 @@ export abstract class Player {
     }
 
     public cloneBoard() {
-        return this.getBoard().map(p => clonePiece(this.definitionProvider, p));
+        return this.getBoard().map(p => pieceUtils.clonePiece(this.definitionProvider, p));
     }
 
     public onStartLobbyGame(fn: () => void) {
@@ -333,7 +331,7 @@ export abstract class Player {
         this.money.setValue(money - card.cost);
         this.deleteCard(cardIndex);
 
-        const piece = createPieceFromCard(this.definitionProvider, this.id, card, slot);
+        const piece = pieceUtils.createPieceFromCard(this.definitionProvider, this.id, card, slot);
 
         this.board.addBenchPiece(piece);
     }
