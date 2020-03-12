@@ -2,7 +2,6 @@ import present = require("present");
 import { eventChannel } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
 import { Piece } from "../../models/piece";
-import { log } from "../../log";
 import { isATeamDefeated } from "@common/utils";
 import { BoardActions } from "../../board";
 import { PiecesUpdatedAction } from "../../board/actions/boardActions";
@@ -41,26 +40,20 @@ const duration = (ms: number) => {
 
 export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: number, startPieces: Piece[], maxTurns: number) => {
     return eventChannel<BattleAction>(emit => {
-        let shouldStop = false;
+        let cancelled = false;
         let pieces = startPieces;
 
         const run = async () => {
             let turnCount = 0;
 
             while (true) {
-                const defeated = isATeamDefeated(pieces);
+                const shouldStop = (
+                    cancelled
+                    || turnCount >= maxTurns
+                    || isATeamDefeated(pieces)
+                );
 
                 if (shouldStop) {
-                    emit(finishAction(turnCount));
-                    break;
-                }
-
-                if (defeated) {
-                    emit(finishAction(turnCount));
-                    break;
-                }
-
-                if (turnCount >= maxTurns) {
                     emit(finishAction(turnCount));
                     break;
                 }
@@ -77,7 +70,7 @@ export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: n
         run();
 
         return () => {
-            shouldStop = true;
+            cancelled = true;
         };
     });
 };
