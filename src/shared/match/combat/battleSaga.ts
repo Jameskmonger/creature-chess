@@ -14,7 +14,7 @@ export const battle = function*<TState extends { board: Piece[] }>(turnSimulator
         function*() {
             const { board }: TState = yield select();
 
-            const battleChannel = yield call(battleEventChannel, turnSimulator, turnDuration, board, turnCount);
+            const battleChannel = yield call(battleEventChannel, turnSimulator, turnDuration, board, turnCount, 100);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleAction) {
                 yield put(battleAction);
