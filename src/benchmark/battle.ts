@@ -43,7 +43,7 @@ const run = async () => {
   for (let i = 0; i < TARGET_ITERATIONS; i++) {
     const iterationStartMs = present();
 
-    const channel = battleEventChannel(simulator, 0, pieces, DEFAULT_TURN_COUNT);
+    const channel = battleEventChannel(simulator, 0, pieces, DEFAULT_TURN_COUNT, 100);
     const turnsTaken = await waitForBattleFinish(channel);
 
     const iterationMsTaken = present() - iterationStartMs;

@@ -1,5 +1,5 @@
 import present = require("present");
-import { eventChannel } from "redux-saga";
+import { eventChannel, buffers } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
 import { Piece } from "../../models/piece";
 import { isATeamDefeated } from "@common/utils";
@@ -38,7 +38,7 @@ const duration = (ms: number) => {
     };
 };
 
-export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: number, startPieces: Piece[], maxTurns: number) => {
+export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: number, startPieces: Piece[], maxTurns: number, bufferSize: number) => {
     return eventChannel<BattleAction>(emit => {
         let cancelled = false;
         let pieces = startPieces;
@@ -72,5 +72,5 @@ export const battleEventChannel = (turnSimulator: TurnSimulator, turnDuration: n
         return () => {
             cancelled = true;
         };
-    });
+    }, buffers.expanding(bufferSize));
 };
