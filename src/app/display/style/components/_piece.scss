@@ -36,11 +36,11 @@
         animation-duration: $move-duration;
     }
 
-    $attack-movement-distance-multiplier: 3px;
-    $attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
     $attack-duration: 200ms;
 
     &.attack-basic {
+        $attack-movement-distance-multiplier: 3px;
+        $attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
         @keyframes attack-basic {
             0% {
                 top: 0;
@@ -66,15 +66,16 @@
     }
 
     &.attack-shoot .projectile {
+        $half-tile-size: calc(#{$tile-size} / 2);
         @keyframes attack-shoot {
             0% {
-                top: 0;
-                left: 0;
+                top: $half-tile-size;
+                left: $half-tile-size;
             }
 
             100% {
-                top: calc(#{$attack-movement-distance} * var(--attackYDirection));
-                left: calc(#{$attack-movement-distance} * var(--attackXDirection));
+                top: calc(#{$tile-size} * var(--attackYDirection) * -1 + #{$half-tile-size});
+                left: calc(#{$tile-size} * var(--attackXDirection) * -1 + #{$half-tile-size});
             }
         }
         position: absolute;

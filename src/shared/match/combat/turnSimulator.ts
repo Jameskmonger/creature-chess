@@ -1,7 +1,7 @@
 import { Piece } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
-import { getRelativeDirection } from "../../position";
+import { getRelativeDirection, subtract } from "../../position";
 import { INITIAL_COOLDOWN, DAMAGE_RATIO } from "../../constants";
 import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
@@ -24,10 +24,6 @@ export class TurnSimulator {
         const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
 
         updatedPieces.forEach((attacker, index) => {
-            // TODO: Remove this - for testing
-            if (!attacker.facingAway) {
-                return;
-            }
             if (attacker.currentHealth === 0) {
                 return;
             }
@@ -99,7 +95,7 @@ export class TurnSimulator {
                 coolDown: INITIAL_COOLDOWN,
                 attacking: {
                     attackType: attacker.stats.attackType,
-                    direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
+                    direction: subtract(attacker.piece.position, defender.piece.position),
                     damage
                 },
                 damagePerTurn: (totalDamage + (damage * DAMAGE_RATIO)) / turnCount,

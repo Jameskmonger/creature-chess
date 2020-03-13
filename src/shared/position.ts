@@ -5,6 +5,7 @@ export type TileCoordinates = { x: number, y: number };
 
 export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
 export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;
+export const subtract = (a: TileCoordinates, b: TileCoordinates) => ({ x: a.x - b.x, y: a.y - b.y });
 
 export const Directions = {
     UP: { x: 0, y: -1 },

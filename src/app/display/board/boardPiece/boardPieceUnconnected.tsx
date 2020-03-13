@@ -5,6 +5,7 @@ import { CreatureImage } from "../../../display/creatureImage";
 import { BoardPieceProps, isFriendly } from "./boardPieceProps";
 import { DragSourceProps } from "../../../draggable/drag-source-props";
 import { Constants } from "@common";
+import { Projectile } from "../../projectile";
 
 const dyingAnimation = "dying";
 
@@ -38,7 +39,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
                 onAnimationEnd={this.onAnimationEnd}
             >
                 <CreatureImage definitionId={definitionId} facing={facingAway ? "back" : "front"} />
-                <div className="projectile">x</div>
+                <Projectile />
 
                 {
                     showDamagePerTurn

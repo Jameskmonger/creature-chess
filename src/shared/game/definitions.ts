@@ -13,8 +13,7 @@ export const definitions: CreatureDefinition[] = [
                 attack: 15,
                 defense: 30,
                 speed: 20,
-                // TODO: Revert this
-                attackType: attackTypes.shoot
+                attackType: attackTypes.basic
             },
             {
                 hp: 30,
