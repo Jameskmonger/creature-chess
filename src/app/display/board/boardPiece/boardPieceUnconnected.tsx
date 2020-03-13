@@ -38,6 +38,7 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
                 onAnimationEnd={this.onAnimationEnd}
             >
                 <CreatureImage definitionId={definitionId} facing={facingAway ? "back" : "front"} />
+                <div className="projectile">x</div>
 
                 {
                     showDamagePerTurn

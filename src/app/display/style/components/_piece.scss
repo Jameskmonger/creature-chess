@@ -61,6 +61,28 @@
         animation-duration: $attack-duration;
     }
 
+    .projectile {
+        display: none;
+    }
+
+    &.attack-shoot .projectile {
+        @keyframes attack-shoot {
+            0% {
+                top: 0;
+                left: 0;
+            }
+
+            100% {
+                top: calc(#{$attack-movement-distance} * var(--attackYDirection));
+                left: calc(#{$attack-movement-distance} * var(--attackXDirection));
+            }
+        }
+        position: absolute;
+        display: block;
+        animation-name: attack-shoot;
+        animation-duration: $attack-duration;
+    }
+
     &.hit {
         $hit-rotation-multiplier: 1deg;
         $hit-rotation: calc(#{$hit-rotation-multiplier} * var(--hitPower));

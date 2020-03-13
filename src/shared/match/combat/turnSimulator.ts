@@ -24,6 +24,7 @@ export class TurnSimulator {
         const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
 
         updatedPieces.forEach((attacker, index) => {
+            // TODO: Remove this - for testing
             if (!attacker.facingAway) {
                 return;
             }
@@ -97,6 +98,7 @@ export class TurnSimulator {
                 ...attacker.piece,
                 coolDown: INITIAL_COOLDOWN,
                 attacking: {
+                    attackType: attacker.stats.attackType,
                     direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
                     damage
                 },
