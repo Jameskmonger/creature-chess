@@ -17,10 +17,13 @@ export interface CreatureStats {
 }
 
 export interface AttackType {
+    name: string;
     range: number;
 }
 
-export const attackTypes = {
-    basic: { range: 1 },
-    shoot: { range: 2 }
+type AttackTypeName = "basic" | "shoot";
+
+export const attackTypes: {[name in AttackTypeName]: AttackType} = {
+    basic: { name: "basic", range: 1 },
+    shoot: { name: "shoot", range: 2 }
 };

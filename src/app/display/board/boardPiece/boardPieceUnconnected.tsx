@@ -84,11 +84,14 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
     private runAnimations = (oldProps: BoardPieceProps) => {
         const { moving, attacking, hit, celebrating, currentHealth } = this.props.piece;
         if (!oldProps.piece.moving && moving) {
-            this.runAnimation(`move-${moving.direction}`);
+            this.runAnimation(`move`, { moveXDirection: moving.direction.x, moveYDirection: moving.direction.y });
         }
 
         if (!oldProps.piece.attacking && attacking) {
-            this.runAnimation(`attack-${attacking.direction}`, { attackPower: attacking.damage });
+            this.runAnimation(
+                `attack-${attacking.attackType.name}`,
+                { attackPower: attacking.damage, attackXDirection: attacking.direction.x, attackYDirection: attacking.direction.y }
+            );
         }
 
         if (!oldProps.piece.hit && hit) {

@@ -1,18 +1,11 @@
 import { Piece } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
-import { TileCoordinates, arePositionsEqual } from "../../position";
+import { TileCoordinates, arePositionsEqual, Directions } from "../../position";
 import { GRID_SIZE } from "@common/constants";
 import { AttackType } from "../../models/creatureDefinition";
 import { range, flatten } from "lodash";
 
 type Vector = { x: number, y: number };
-
-const Directions = {
-    UP: { x: 0, y: -1 },
-    RIGHT: { x: 1, y: 0 },
-    DOWN: { x: 0, y: 1 },
-    LEFT: { x: -1, y: 0 }
-};
 
 const applyVector = (position: TileCoordinates, vector: Vector): TileCoordinates => {
     const newX = position.x + vector.x;

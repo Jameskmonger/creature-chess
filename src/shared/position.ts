@@ -6,13 +6,12 @@ export type TileCoordinates = { x: number, y: number };
 export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
 export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;
 
-export enum Direction {
-    Up = "up",
-    Right = "right",
-    Down = "down",
-    Left = "left",
-    Unknown = "unknown"
-}
+export const Directions = {
+    UP: { x: 0, y: -1 },
+    RIGHT: { x: 1, y: 0 },
+    DOWN: { x: 0, y: 1 },
+    LEFT: { x: -1, y: 0 }
+};
 
 const isInsideGrid = (position: TileCoordinates) => {
     const { x, y } = position;
@@ -41,18 +40,18 @@ export const getAdjacentPositions = (piece: Piece) => {
  */
 export const getRelativeDirection = (from: TileCoordinates, to: TileCoordinates) => {
     if (from.x < to.x) {
-        return Direction.Right;
+        return Directions.RIGHT;
     }
     if (from.x > to.x) {
-        return Direction.Left;
+        return Directions.LEFT;
     }
     if (from.y < to.y) {
-        return Direction.Down;
+        return Directions.DOWN;
     }
     if (from.y > to.y) {
-        return Direction.Up;
+        return Directions.UP;
     }
-    return Direction.Unknown;
+    return { x: 0, y: 0 };
 };
 
 export enum TileType {

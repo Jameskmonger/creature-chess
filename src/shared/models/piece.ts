@@ -1,17 +1,19 @@
-import { Direction, TileCoordinates } from "../position";
+import { TileCoordinates } from "../position";
+import { AttackType } from "./creatureDefinition";
 
 export interface AttackDetails {
-    direction: Direction;
+    direction: TileCoordinates;
     damage: number;
+    attackType: AttackType;
 }
 
 export interface HitDetails {
-    direction: Direction;
+    direction: TileCoordinates;
     damage: number;
 }
 
 export interface MovementDetails {
-    direction: Direction;
+    direction: TileCoordinates;
 }
 
 export interface Piece {
