@@ -2,6 +2,8 @@ import { Piece } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
 import { TileCoordinates, arePositionsEqual } from "../../position";
 import { GRID_SIZE } from "@common/constants";
+import { AttackType } from "../../models/creatureDefinition";
+import { range, flatten } from "lodash";
 
 type Vector = { x: number, y: number };
 
@@ -25,10 +27,11 @@ const applyVector = (position: TileCoordinates, vector: Vector): TileCoordinates
     return { x: newX, y: newY };
 };
 
-const getAttackingTiles = (facingUp: boolean) => {
-    return facingUp
+const getAttackingTiles = (facingUp: boolean, attackType: AttackType) => {
+    const attackDirections = facingUp
         ? [Directions.UP, Directions.RIGHT, Directions.LEFT, Directions.DOWN]
         : [Directions.DOWN, Directions.LEFT, Directions.RIGHT, Directions.UP];
+    return flatten(range(1, attackType.range + 1).map(r => attackDirections.map(d => ({ x: d.x * r, y: d.y * r }))));
 };
 
 const getLivingEnemies = (piece: Piece, pieces: Piece[]) => {
@@ -42,10 +45,12 @@ const getDelta = (a: Piece, b: Piece) => {
     };
 };
 
-const arePiecesAdjacent = (a: Piece, b: Piece) => {
+const canAttack = (a: Piece, b: Piece, attackType: AttackType) => {
     const { x: deltaX, y: deltaY } = getDelta(a, b);
 
-    return (deltaX + deltaY === 1);
+    // Pieces cannot attack diagonally
+    const result = (Math.min(deltaX, deltaY) === 0 && Math.max(deltaX, deltaY) <= attackType.range);
+    return result;
 };
 
 const getTargetPiece = (piece: Piece, others: Piece[]) => {
@@ -62,14 +67,14 @@ const getTargetPiece = (piece: Piece, others: Piece[]) => {
     return target;
 };
 
-export const getAttackableEnemy = (piece: Piece, others: Piece[]) => {
+export const getAttackableEnemy = (piece: Piece, attackType: AttackType, others: Piece[]) => {
     const target = getTargetPiece(piece, others);
 
-    if (target && arePiecesAdjacent(piece, target)) {
+    if (target && canAttack(piece, target, attackType)) {
         return target;
     }
 
-    const attackDirections = getAttackingTiles(piece.facingAway);
+    const attackDirections = getAttackingTiles(piece.facingAway, attackType);
 
     for (const direction of attackDirections) {
         const targetPosition = applyVector(piece.position, direction);

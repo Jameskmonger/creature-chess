@@ -13,4 +13,14 @@ export interface CreatureStats {
     attack: number;
     defense: number;
     speed: number;
+    attackType: AttackType;
 }
+
+export interface AttackType {
+    range: number;
+}
+
+export const attackTypes = {
+    basic: { range: 1 },
+    shoot: { range: 2 }
+};

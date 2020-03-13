@@ -24,6 +24,9 @@ export class TurnSimulator {
         const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
 
         updatedPieces.forEach((attacker, index) => {
+            if (!attacker.facingAway) {
+                return;
+            }
             if (attacker.currentHealth === 0) {
                 return;
             }
@@ -35,7 +38,7 @@ export class TurnSimulator {
                 return;
             }
 
-            const defender = getAttackableEnemy(attacker, updatedPieces);
+            const defender = getAttackableEnemy(attacker, attackerCombatInfo.stats.attackType, updatedPieces);
 
             if (!defender) {
                 attacker.targetPieceId = null;
