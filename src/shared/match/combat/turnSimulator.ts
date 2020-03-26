@@ -1,11 +1,12 @@
 import { Piece } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
-import { getRelativeDirection } from "../../position";
-import { INITIAL_COOLDOWN, DAMAGE_RATIO } from "../../constants";
+import { getRelativeDirection } from "../../models/position";
+import { INITIAL_COOLDOWN, DAMAGE_RATIO } from "../../models/constants";
 import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
+import { BoardState } from "@common/board";
 
 interface PieceCombatInfo {
     piece: Piece;
@@ -20,20 +21,33 @@ export class TurnSimulator {
         this.definitionProvider = definitionProvider;
     }
 
-    public simulateTurn(turnCount: number, pieces: Piece[]) {
-        const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
+    public simulateTurn(turnCount: number, pieces: { [key: string]: Piece }) {
+        const pieceIds = Object.keys(pieces);
 
-        updatedPieces.forEach((attacker, index) => {
+        for (const pieceId of pieceIds) {
+            // create a new piece object, reset combat properties
+            const attacker = {
+                ...pieces[pieceId],
+                attacking: null,
+                hit: null,
+                moving: null
+            };
+
             if (attacker.currentHealth === 0) {
-                return;
+                continue;
             }
 
             const attackerCombatInfo = this.getPieceCombatInfo(attacker);
             if (attacker.coolDown > 0) {
                 attacker.coolDown -= attackerCombatInfo.stats.speed;
 
-                return;
+                pieces[attacker.id] = attacker;
+
+                continue;
             }
+
+            // TODO rework getAttackableEnemy and getNewPiecePosition to take pieces objects
+            const updatedPieces = Object.values(pieces);
 
             const defender = getAttackableEnemy(attacker, updatedPieces);
 
@@ -47,21 +61,26 @@ export class TurnSimulator {
                     attacker.coolDown = INITIAL_COOLDOWN;
                 }
 
-                return;
+                pieces[attacker.id] = attacker;
+                continue;
             }
 
             const defenderCombatInfo = this.getPieceCombatInfo(defender);
             const updatedFighters = this.attack(turnCount, attackerCombatInfo, defenderCombatInfo);
             updatedFighters.attacker.targetPieceId = updatedFighters.defender.id;
-            updatedPieces[index] = updatedFighters.attacker;
-            updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
-        });
 
-        if (isATeamDefeated(updatedPieces)) {
-            updatedPieces.forEach(p => p.celebrating = true);
+            pieces[updatedFighters.attacker.id] = updatedFighters.attacker;
+            pieces[updatedFighters.defender.id] = updatedFighters.defender;
         }
 
-        return updatedPieces;
+        // TODO rework isATeamDefeated to take a pieces object
+        if (isATeamDefeated(Object.values(pieces))) {
+            for (const pieceId of Object.keys(pieces)) {
+                pieces[pieceId].celebrating = true;
+            }
+        }
+
+        return pieces;
     }
 
     private getPieceCombatInfo(piece: Piece) {

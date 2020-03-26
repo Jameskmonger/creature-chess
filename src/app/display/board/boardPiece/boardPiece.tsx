@@ -5,8 +5,8 @@ import { localPlayerIdSelector } from "../../../store/gameSelector";
 import { BoardPieceProps, BoardPieceStateProps, BoardPieceOwnProps, BoardPieceDispatchProps } from "./boardPieceProps";
 import { boardPieceDragSource } from "./boardPieceDragDrop";
 import { BoardPieceUnconnected } from "./boardPieceUnconnected";
-import { GamePhase } from "@common";
 import { beginDragBoardPiece } from "../../../store/actions/boardActions";
+import { GamePhase } from "@common/models";
 
 const mapStateToProps: MapStateToProps<BoardPieceStateProps, {}, AppState> = state => ({
     canDrag: state.game.phase === GamePhase.PREPARING,

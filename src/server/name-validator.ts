@@ -1,4 +1,4 @@
-import { MAX_NAME_LENGTH } from "@common/constants";
+import { MAX_NAME_LENGTH } from "@common/models/constants";
 
 const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
 

@@ -1,6 +1,6 @@
 import { takeLatest, put, select } from "@redux-saga/core/effects";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
-import { GamePhase } from "@common";
+import { GamePhase } from "@common/models";
 import { GamePhaseUpdateAction, clearAnnouncement, updateAnnouncement } from "../../actions/gameActions";
 import { AppState } from "../../state";
 

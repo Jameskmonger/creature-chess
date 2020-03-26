@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { BoardRow } from "./boardRow";
-import { Constants } from "@common";
+import { Constants } from "@common/models";
 
 const Board: React.FunctionComponent = props => {
     const rows = [];

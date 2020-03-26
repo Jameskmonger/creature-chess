@@ -2,18 +2,18 @@ import * as React from "react";
 
 import { TileProps } from "./tileProps";
 import { DropTargetProps } from "../../../draggable/drop-target-props";
-import { TileCoordinates, TileType } from "@common/position";
-import { GamePhase } from "@common";
+import { XYLocation, TileType } from "@common/models/position";
+import { GamePhase } from "@common/models";
 
 // tslint:disable-next-line:no-bitwise
-const isBoardTileDark = ({ x, y }: TileCoordinates) => ((y ^ x) & 1) !== 0;
+const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 
-const getClassName = (tileType: TileType, position: TileCoordinates) => {
+const getClassName = (tileType: TileType, x: number, y: number) => {
     if (tileType === TileType.BENCH) {
         return "bench";
     }
 
-    return isBoardTileDark(position) ? "dark" : "light";
+    return isBoardTileDark(x, y) ? "dark" : "light";
 };
 
 const getOverlayClassName = (isDragging: boolean, canDrop: boolean) => {
@@ -28,13 +28,14 @@ const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (p
     const {
         type,
         piece,
-        position,
+        x,
+        y,
         renderPiece,
         connectDropTarget,
         isDragging,
         canDrop,
         canDropPiece,
-        currentSelectedPiece,
+        selectedPiece: currentSelectedPiece,
         onDropPiece,
         onSelectPiece,
         gamePhase
@@ -61,7 +62,7 @@ const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (p
 
     return connectDropTarget(
         <div
-            className={`tile ${getClassName(type, position)}${isSelected ? " selected" : ""}`}
+            className={`tile ${getClassName(type, x, y)}${isSelected ? " selected" : ""}`}
             touch-action="none"
             onPointerUp={onClick}
         >

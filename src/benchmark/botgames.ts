@@ -1,8 +1,8 @@
 // tslint:disable no-console
 import present = require("present");
-import { GamePhase } from "@common";
+import { GamePhase } from "@common/models";
 import { Game, Bot, Player } from "@common/game";
-import { DEFAULT_TURN_COUNT } from "@common/constants";
+import { DEFAULT_TURN_COUNT } from "@common/models/constants";
 
 let benchmarkStart: number;
 const GAME_COUNT = 5;

@@ -2,16 +2,14 @@ import { GameAction } from "../actions/gameActions";
 import {
     JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE,
     CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT,
-    CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS
+    CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS, CLEAR_SELECTED_PIECE
 } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
-import { GamePhase, ConnectionStatus } from "@common";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from "../actiontypes/boardActionTypes";
 import { BeginDragPieceAction, SelectPieceAction } from "../actions/boardActions";
-import { PieceMovedAction } from "@common/board/actions/boardActions";
-import { PIECE_MOVED_TO_BOARD, PIECE_MOVED_TO_BENCH } from "@common/board/actions/boardActionTypes";
-import { inBench } from "@common/position";
+import { ConnectionStatus } from "@common/networking";
+import { GamePhase } from "@common/models";
 
 export const initialState: GameState = {
     gameId: null,
@@ -25,15 +23,15 @@ export const initialState: GameState = {
     debug: false,
     mainAnnouncement: null,
     subAnnouncement: null,
-    selectedPiece: null,
+    selectedPieceId: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED,
     shopLocked: false,
     winnerName: null
 };
 
-type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction | PieceMovedAction;
+type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction;
 
-export function game(state: GameState = initialState, action: GameReducerActionTypes) {
+export function game(state: GameState = initialState, action: GameReducerActionTypes): GameState {
     switch (action.type) {
         case UPDATE_CONNECTION_STATUS:
             return {
@@ -68,13 +66,10 @@ export function game(state: GameState = initialState, action: GameReducerActionT
         case GAME_PHASE_UPDATE:
             // set opponent id when entering ready phase
             if (action.payload.phase === GamePhase.READY) {
-                const shouldClearSelected = state.selectedPiece && !inBench(state.selectedPiece.position);
-
                 return {
                     ...state,
                     phase: action.payload.phase,
-                    opponentId: action.payload.payload.opponentId,
-                    selectedPiece: shouldClearSelected ? null : state.selectedPiece
+                    opponentId: action.payload.payload.opponentId
                 };
             }
 
@@ -117,21 +112,12 @@ export function game(state: GameState = initialState, action: GameReducerActionT
                 subAnnouncement: null
             };
         }
-        case BEGIN_DRAG_BENCH_PIECE:
-        case BEGIN_DRAG_BOARD_PIECE:
-        case PIECE_MOVED_TO_BENCH:
-        case PIECE_MOVED_TO_BOARD: {
-            return {
-                ...state,
-                selectedPiece: null
-            };
-        }
         case SELECT_PIECE: {
-            const isSamePiece = state.selectedPiece && state.selectedPiece.id === action.payload.piece.id;
+            const isSamePiece = state.selectedPieceId && state.selectedPieceId === action.payload.piece.id;
 
             return {
                 ...state,
-                selectedPiece: isSamePiece ? null : action.payload.piece
+                selectedPieceId: isSamePiece ? null : action.payload.piece.id
             };
         }
         case SHOP_LOCK_UPDATED: {
@@ -144,6 +130,12 @@ export function game(state: GameState = initialState, action: GameReducerActionT
             return {
                 ...state,
                 winnerName: action.payload.winnerName
+            };
+        }
+        case CLEAR_SELECTED_PIECE: {
+            return {
+                ...state,
+                selectedPieceId: null
             };
         }
         default:

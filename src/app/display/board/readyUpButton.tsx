@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "@app/store";
-import { GamePhase } from "@common";
+import { GamePhase } from "@common/models";
 import { readyUpAction } from "../../store/actions/localPlayerActions";
 
 const ReadyUpButton: React.FunctionComponent = () => {

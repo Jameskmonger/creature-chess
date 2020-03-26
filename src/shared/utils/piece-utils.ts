@@ -1,8 +1,8 @@
 import uuid = require("uuid/v4");
-import { createTileCoordinates } from "../position";
-import { GRID_SIZE, INITIAL_COOLDOWN } from "../constants";
+import { createTileCoordinates } from "../models/position";
+import { GRID_SIZE, INITIAL_COOLDOWN } from "@common/models/constants";
 import { DefinitionProvider } from "../game/definitionProvider";
-import { Card, Piece } from "../models";
+import { Card, Piece } from "@common/models";
 
 export const createPiece = (
     definitionProvider: DefinitionProvider,

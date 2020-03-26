@@ -1,10 +1,11 @@
 import { GRID_SIZE } from "./constants";
-import { Piece } from "./models";
+import { Piece } from ".";
 
-export type TileCoordinates = { x: number, y: number };
+export type XYLocation = { x: number, y: number };
+export type SlotLocation = { slot: number };
 
-export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
-export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;
+export const createTileCoordinates = (x: number, y: number): XYLocation => ({ x, y });
+export const arePositionsEqual = (a: XYLocation, b: XYLocation) => a && b && a.x === b.x && a.y === b.y;
 
 export enum Direction {
     Up = "up",
@@ -14,7 +15,7 @@ export enum Direction {
     Unknown = "unknown"
 }
 
-const isInsideGrid = (position: TileCoordinates) => {
+const isInsideGrid = (position: XYLocation) => {
     const { x, y } = position;
 
     return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
@@ -23,7 +24,7 @@ const isInsideGrid = (position: TileCoordinates) => {
 export const getAdjacentPositions = (piece: Piece) => {
     const { x, y } = piece.position;
 
-    const positions: TileCoordinates[] = [
+    const positions: XYLocation[] = [
         createTileCoordinates(x, y - 1),
         createTileCoordinates(x - 1, y),
         createTileCoordinates(x + 1, y),
@@ -39,7 +40,7 @@ export const getAdjacentPositions = (piece: Piece) => {
  * @param from The position to find the direction relative from
  * @param to The position to find the direction relative to
  */
-export const getRelativeDirection = (from: TileCoordinates, to: TileCoordinates) => {
+export const getRelativeDirection = (from: XYLocation, to: XYLocation) => {
     if (from.x < to.x) {
         return Direction.Right;
     }
@@ -59,7 +60,3 @@ export enum TileType {
     BOARD,
     BENCH
 }
-
-export const inBench = ({ y }: TileCoordinates) => y === null;
-// TODO: Make this use Constants.GRID_SIZE
-export const inFriendlyBoard = ({ y }: TileCoordinates) => y > 3;

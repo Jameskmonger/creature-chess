@@ -2,10 +2,10 @@ import * as React from "react";
 import { ProgressBar } from "./progressBar";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "@app/store";
-import { GamePhase, Constants } from "@common";
 import { getXpToNextLevel } from "@common/utils";
 import { ownedPieceSelector } from "../store/pieceSelectors";
 import { buyXpAction } from "../store/actions/localPlayerActions";
+import { GamePhase, Constants } from "@common/models";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 

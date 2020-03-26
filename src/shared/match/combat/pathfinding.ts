@@ -1,6 +1,6 @@
 import { astar, Graph } from "javascript-astar";
-import { GRID_SIZE } from "../../constants";
-import { getAdjacentPositions, TileCoordinates } from "../../position";
+import { GRID_SIZE } from "../../models/constants";
+import { getAdjacentPositions, XYLocation } from "../../models/position";
 import { Piece } from "../../models";
 
 const createEmptyWeightGrid = () => {
@@ -19,7 +19,7 @@ const createEmptyWeightGrid = () => {
     return grid;
 };
 
-const createWeightGrid = (start: TileCoordinates, pieces: Piece[]) => {
+const createWeightGrid = (start: XYLocation, pieces: Piece[]) => {
     const grid = createEmptyWeightGrid();
 
     pieces.forEach(piece => {
@@ -35,8 +35,8 @@ const createWeightGrid = (start: TileCoordinates, pieces: Piece[]) => {
 
 const findPath = (
     pieces: Piece[],
-    start: TileCoordinates,
-    end: TileCoordinates
+    start: XYLocation,
+    end: XYLocation
 ) => {
     const weights = createWeightGrid(start, pieces);
     const graph = new Graph(weights);
@@ -51,7 +51,7 @@ const findPath = (
         return null;
     }
 
-    const firstStep: TileCoordinates = firstPathNode;
+    const firstStep: XYLocation = firstPathNode;
 
     return {
         stepCount: path.length,
@@ -59,7 +59,7 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (piece: Piece, target: Piece, pieces: Piece[]): TileCoordinates => {
+export const getNextPiecePosition = (piece: Piece, target: Piece, pieces: Piece[]): XYLocation => {
     const targetTiles = getAdjacentPositions(target);
     const paths = targetTiles.map(pos => findPath(pieces, piece.position, pos)).filter(path => path !== null);
 

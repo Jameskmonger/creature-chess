@@ -1,13 +1,12 @@
 import uuid = require("uuid/v4");
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { GamePhase, Models } from "@common";
-import { FeedMessage } from "@common/feed-message";
-import { LobbyPlayer } from "@common/models";
+import { LobbyPlayer, FeedMessage, PlayerListPlayer } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
+import { GamePhase } from "@common/models";
 
 export class Connection extends Player {
     public readonly isBot: boolean = false;
@@ -30,8 +29,7 @@ export class Connection extends Player {
             this.sendCardsUpdate();
         });
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH, this.movePieceToBench);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD, this.movePieceToBoard);
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.DROP_PIECE, this.onDropPiece);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.READY_UP, this.readyUp);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
@@ -78,7 +76,7 @@ export class Connection extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, message);
     }
 
-    public onPlayerListUpdate(players: Models.PlayerListPlayer[]) {
+    public onPlayerListUpdate(players: PlayerListPlayer[]) {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
     }
 
@@ -102,19 +100,13 @@ export class Connection extends Player {
     }
 
     protected onEnterPreparingPhase(round: number) {
-        const turnedBoard = this.getBoard().map(piece => ({
-            ...piece,
-            facingAway: true
-        }));
-
         this.outgoingPacketRegistry.emit(
             ServerToClientPacketOpcodes.PHASE_UPDATE,
             {
                 phase: GamePhase.PREPARING,
                 payload: {
                     round,
-                    pieces: turnedBoard,
-                    bench: this.getBench(),
+                    pieces: this.pieces.getState(),
                     cards: this.cards.getValue()
                 }
             }
@@ -127,7 +119,7 @@ export class Connection extends Player {
             {
                 phase: GamePhase.READY,
                 payload: {
-                    pieces: this.match.getBoard(),
+                    board: this.match.getBoard(),
                     opponentId: this.match.away.id
                 }
             }

@@ -3,7 +3,7 @@ import { LocalPlayerAction } from "../actions/localPlayerActions";
 import { JOIN_COMPLETE, LEVEL_UPDATE, READY_UP, UPDATE_RECONNECT_SECRET } from "../actiontypes/localPlayerActionTypes";
 import { GamePhaseUpdateAction } from "../actions/gameActions";
 import { GAME_PHASE_UPDATE } from "../actiontypes/gameActionTypes";
-import { GamePhase } from "@common";
+import { GamePhase } from "@common/models";
 
 const initialState: LocalPlayerState = {
     id: null,

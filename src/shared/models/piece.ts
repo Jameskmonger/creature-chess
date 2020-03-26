@@ -1,4 +1,4 @@
-import { Direction, TileCoordinates } from "../position";
+import { Direction, XYLocation } from "./position";
 
 export interface AttackDetails {
     direction: Direction;
@@ -19,7 +19,7 @@ export interface Piece {
     ownerId: string;
     definitionId: number;
     stage: number;
-    position: TileCoordinates;
+    position: XYLocation;
 
     facingAway: boolean;
     attacking?: AttackDetails;

@@ -12,22 +12,23 @@ import {
     UPDATE_CONNECTION_STATUS,
     SHOP_LOCK_UPDATED,
     TOGGLE_SHOP_LOCK,
-    FINISH_GAME
+    FINISH_GAME,
+    CLEAR_SELECTED_PIECE
 } from "../actiontypes/gameActionTypes";
 import { JoinCompleteAction } from "./localPlayerActions";
-import { ConnectionStatus } from "@common";
-import { PhaseUpdatePacket } from "@common/networking/server-to-client";
+import { ConnectionStatus, ServerToClient } from "@common/networking";
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string, name: string } });
 export type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, name: string, gameId: string } });
 export type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
-export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: PhaseUpdatePacket });
+export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: ServerToClient.PhaseUpdatePacket });
 export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string } });
 export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
 export type ToggleShopLockAction = ({ type: TOGGLE_SHOP_LOCK });
+export type ClearSelectedPieceAction = ({ type: CLEAR_SELECTED_PIECE });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
 export type PhaseStartSecondsAction = ({ type: PHASE_START_SECONDS, payload: { time: number } });
 
@@ -46,7 +47,8 @@ export type GameAction =
     | UpdateConnectionStatusAction
     | UpdateShopLockAction
     | ToggleShopLockAction
-    | FinishGameAction;
+    | FinishGameAction
+    | ClearSelectedPieceAction;
 
 export const findGameAction = (serverIP: string, name: string): FindGameAction => ({
     type: FIND_GAME,
@@ -80,7 +82,7 @@ export const joinGameError = (error: string): JoinErrorAction => ({
     }
 });
 
-export const gamePhaseUpdate = (packet: PhaseUpdatePacket) => ({
+export const gamePhaseUpdate = (packet: ServerToClient.PhaseUpdatePacket) => ({
     type: GAME_PHASE_UPDATE,
     payload: packet
 });
@@ -132,3 +134,5 @@ export const finishGameAction = (winnerName: string): FinishGameAction => ({
         winnerName
     }
 });
+
+export const clearSelectedPiece = (): ClearSelectedPieceAction => ({ type: CLEAR_SELECTED_PIECE })

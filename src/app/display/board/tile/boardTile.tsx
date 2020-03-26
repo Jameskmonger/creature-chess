@@ -1,20 +1,22 @@
 import * as React from "react";
-import { TileCoordinates, TileType } from "@common/position";
+import { TileType } from "@common/models/position";
 import { Tile } from "./tile";
 import { BoardPiece } from "../boardPiece/boardPiece";
-import { Models } from "@common";
+import { Piece } from "@common/models";
 
 interface BoardTileProps {
-    position: TileCoordinates;
+    x: number;
+    y: number;
 }
 
-const renderBoardTilePiece = (piece: Models.Piece) => <BoardPiece piece={piece} key={piece.id} />;
+const renderBoardTilePiece = (piece: Piece) => <BoardPiece piece={piece} key={piece.id} />;
 
 const BoardTile: React.FunctionComponent<BoardTileProps> = props => {
     return (
         <Tile
             type={TileType.BOARD}
-            position={props.position}
+            x={props.x}
+            y={props.y}
             renderPiece={renderBoardTilePiece}
         />
     );

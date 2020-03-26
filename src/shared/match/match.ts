@@ -9,11 +9,12 @@ import { log } from "../log";
 import { Piece } from "../models/piece";
 import { TurnSimulator } from "./combat/turnSimulator";
 import { battle, startBattle } from "./combat/battleSaga";
-import { boardReducer, BoardActions } from "../board";
+import { boardReducer, BoardActions, BoardState } from "../board";
 import { BattleAction, BATTLE_FINISHED } from "./combat/battleEventChannel";
+import { mergeBoards } from "@common/board/utils/mergeBoards";
 
 interface MatchState {
-    board: Piece[];
+    board: BoardState;
 }
 
 export class Match {
@@ -24,7 +25,7 @@ export class Match {
     private readonly turnDuration: number;
     private id: string;
     private store: Store<MatchState>;
-    private finalBoard: Piece[];
+    private finalBoard: BoardState;
 
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
@@ -38,12 +39,9 @@ export class Match {
         this.turnDuration = turnDuration;
         this.store = this.createStore();
 
-        const initialBoard = [
-            ...this.home.cloneBoard().map(this.mapHomePiece),
-            ...this.away.cloneBoard().map(this.mapAwayPiece)
-        ];
+        const board = home.getBattleBoard(away);
 
-        this.store.dispatch(BoardActions.piecesUpdated(initialBoard));
+        this.store.dispatch(BoardActions.initialiseBoard(board));
     }
 
     public onClientFinishMatch() {
@@ -63,7 +61,7 @@ export class Match {
 
         await Promise.race([
             battleTimeout,
-            Promise.all([ this.serverFinishedMatch.promise, this.clientFinishedMatch.promise ])
+            Promise.all([this.serverFinishedMatch.promise, this.clientFinishedMatch.promise])
         ]);
 
         this.finalBoard = this.store.getState().board;
@@ -102,19 +100,5 @@ export class Match {
 
     private onServerFinishMatch() {
         this.serverFinishedMatch.resolve();
-    }
-
-    private mapHomePiece(piece: Piece) {
-        return {
-            ...piece,
-            facingAway: true
-        };
-    }
-
-    private mapAwayPiece(piece: Piece) {
-        return pieceUtils.rotatePiecePosition({
-            ...piece,
-            facingAway: false
-        });
     }
 }

@@ -1,7 +1,7 @@
 import { Piece } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
-import { TileCoordinates, arePositionsEqual } from "../../position";
-import { GRID_SIZE } from "@common/constants";
+import { XYLocation, arePositionsEqual } from "../../models/position";
+import { GRID_SIZE } from "@common/models/constants";
 
 type Vector = { x: number, y: number };
 
@@ -12,7 +12,7 @@ const Directions = {
     LEFT: { x: -1, y: 0 }
 };
 
-const applyVector = (position: TileCoordinates, vector: Vector): TileCoordinates => {
+const applyVector = (position: XYLocation, vector: Vector): XYLocation => {
     const newX = position.x + vector.x;
     const newY = position.y + vector.y;
 
@@ -111,7 +111,7 @@ const findClosestEnemy = (piece: Piece, pieces: Piece[]) => {
     return enemyDeltas[0].enemy;
 };
 
-export const getNewPiecePosition = (piece: Piece, pieces: Piece[]): TileCoordinates => {
+export const getNewPiecePosition = (piece: Piece, pieces: Piece[]): XYLocation => {
     const target = findClosestEnemy(piece, pieces);
 
     if (target === null) {

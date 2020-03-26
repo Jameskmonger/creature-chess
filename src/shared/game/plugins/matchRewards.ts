@@ -42,9 +42,10 @@ export const matchRewards: GamePlugin = (eventManager: EventManager) => {
 
                 const results = match.getFinalBoard();
 
+                const pieces = Object.values(results.pieces);
                 const surviving = {
-                    home: results.filter(p => p.currentHealth > 0 && p.ownerId === player.id),
-                    away: results.filter(p => p.currentHealth > 0 && p.ownerId !== player.id)
+                    home: pieces.filter(p => p.currentHealth > 0 && p.ownerId === player.id),
+                    away: pieces.filter(p => p.currentHealth > 0 && p.ownerId !== player.id)
                 };
 
                 const win = surviving.home.length > surviving.away.length;

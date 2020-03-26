@@ -2,17 +2,16 @@ import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../store/sagas/types";
-import { Models, ConnectionStatus } from "@common";
 import {
     moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError,
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction
 } from "../store/actions/gameActions";
-import { BoardActions, BoardActionTypes, BenchActions } from "@common/board";
+import { BoardActions, BoardActionTypes } from "@common/board";
 import { playerListUpdated } from "../features/playerList/playerListActions";
 import { cardsUpdated } from "../features/cardShop/cardActions";
 import { FIND_GAME, JOIN_GAME, CREATE_GAME, TOGGLE_SHOP_LOCK, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
 import { REROLL_CARDS, BUY_CARD } from "../features/cardShop/cardActionTypes";
-import { TileCoordinates, createTileCoordinates } from "@common/position";
+import { XYLocation, createTileCoordinates } from "@common/models/position";
 import { log } from "../log";
 import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../store/actions/localPlayerActions";
 import { BUY_XP, READY_UP } from "../store/actiontypes/localPlayerActionTypes";
@@ -26,6 +25,10 @@ import { IncomingPacketRegistry } from "@common/networking/incoming-packet-regis
 import { ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, JoinLobbyResponse } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes } from "@common/networking/client-to-server";
+import { ConnectionStatus } from "@common/networking";
+import { Piece } from "@common/models";
+import { PLAYER_DROP_PIECE } from "@common/player/actionTypes";
+import { PlayerDropPieceAction } from "@common/player/actions";
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -247,35 +250,9 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
             }
         ),
         takeEvery<ActionWithPayload<{ pieceId: string }>>(
-            BoardActionTypes.SELL_PIECE,
+            BoardActionTypes.REMOVE_BOARD_PIECE,
             function*({ payload }) {
                 registry.emit(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId);
-            }
-        ),
-        takeEvery<ActionWithPayload<{ piece: Models.Piece, position: TileCoordinates }>>(
-            BoardActionTypes.PIECE_MOVED_TO_BOARD,
-            function*({ payload }) {
-                registry.emit(
-                    ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD,
-                    {
-                        id: payload.piece.id,
-                        from: payload.piece.position,
-                        to: payload.position
-                    }
-                );
-            }
-        ),
-        takeEvery<ActionWithPayload<{ piece: Models.Piece, slot: number }>>(
-            BoardActionTypes.PIECE_MOVED_TO_BENCH,
-            function*({ payload }) {
-                registry.emit(
-                    ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH,
-                    {
-                        id: payload.piece.id,
-                        from: payload.piece.position,
-                        to: createTileCoordinates(payload.slot, null)
-                    }
-                );
             }
         ),
         takeEvery<ActionWithPayload<{ message: string }>>(
@@ -294,6 +271,12 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
             TOGGLE_SHOP_LOCK,
             function*() {
                 registry.emit(ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK, { empty: true });
+            }
+        ),
+        takeEvery<PlayerDropPieceAction>(
+            PLAYER_DROP_PIECE,
+            function*({ payload: { pieceId, from, to }}) {
+                registry.emit(ClientToServerPacketOpcodes.DROP_PIECE, { pieceId, from, to });
             }
         ),
         takeLatest(

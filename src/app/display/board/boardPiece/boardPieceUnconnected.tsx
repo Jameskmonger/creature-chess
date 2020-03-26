@@ -4,7 +4,7 @@ import { getAnimationCssVariables, AnimationVariables, Animation } from "../../.
 import { CreatureImage } from "../../../display/creatureImage";
 import { BoardPieceProps, isFriendly } from "./boardPieceProps";
 import { DragSourceProps } from "../../../draggable/drag-source-props";
-import { Constants } from "@common";
+import { Constants } from "@common/models";
 
 const dyingAnimation = "dying";
 

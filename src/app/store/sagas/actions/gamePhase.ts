@@ -1,11 +1,15 @@
-import { put, takeEvery, all } from "@redux-saga/core/effects";
-import { BoardActions, BenchActions } from "@common/board";
-import { GamePhase } from "@common";
+import { put, takeEvery, all, select } from "@redux-saga/core/effects";
+import { BoardActions } from "@common/board";
+import { GamePhase } from "@common/models";
 import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
-import { GamePhaseUpdateAction } from "../../actions/gameActions";
+import { GamePhaseUpdateAction, clearSelectedPiece } from "../../actions/gameActions";
 import { startBattle } from "@common/match/combat/battleSaga";
-import { LockEvolutionActions } from "@common/board";
 import { cardsUpdated } from "../../../features/cardShop/cardActions";
+import { PreparingPhaseUpdatePacket, ReadyPhaseUpdatePacket } from "@common/networking/server-to-client";
+import { unlockBench, initialiseBench } from "@common/player/bench/benchActions";
+import { unlockBoard, lockBoard, initialiseBoard } from "@common/board/actions/boardActions";
+import { AppState } from "../../state";
+import { getPiece } from "@common/player/pieceSelectors";
 
 const isGamePhaseUpdate = (phase: GamePhase) =>
     (action: GamePhaseUpdateAction) => action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;
@@ -15,21 +19,29 @@ export const gamePhase = function*() {
         yield takeEvery<GamePhaseUpdateAction>(
             isGamePhaseUpdate(GamePhase.PREPARING),
             function*(action) {
-                const payload = (action.payload as any).payload;
+                const { payload } = (action.payload as PreparingPhaseUpdatePacket);
 
-                yield put(BoardActions.piecesUpdated(payload.pieces));
-                yield put(BenchActions.benchPiecesUpdated(payload.bench));
+                yield put(initialiseBoard(payload.pieces.board.pieces));
+                yield put(initialiseBench(payload.pieces.bench));
                 yield put(cardsUpdated(payload.cards));
-                yield put(LockEvolutionActions.unlockEvolutionAction());
+                yield put(unlockBoard());
             }
         ),
         yield takeEvery<GamePhaseUpdateAction>(
             isGamePhaseUpdate(GamePhase.READY),
             function*(action) {
-                const pieces = (action.payload as any).payload.pieces;
+                const { payload } = (action.payload as ReadyPhaseUpdatePacket);
 
-                yield put(BoardActions.piecesUpdated(pieces));
-                yield put(LockEvolutionActions.lockEvolutionAction());
+                yield put(initialiseBoard(payload.board.pieces));
+                yield put(lockBoard());
+
+                const state: AppState = yield select();
+
+                const selectedPiece = getPiece(state, state.game.selectedPieceId);
+
+                if (selectedPiece && selectedPiece.position.y !== null) {
+                    yield put(clearSelectedPiece());
+                }
             }
         ),
         yield takeEvery<GamePhaseUpdateAction>(

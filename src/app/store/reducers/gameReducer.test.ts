@@ -1,7 +1,8 @@
 import { TestFixture, Test, Expect } from "alsatian";
 import { phaseStartSeconds } from "../actions/gameActions";
 import { game } from "./gameReducer";
-import { ConnectionStatus, GamePhase } from "@common";
+import { ConnectionStatus } from "@common/networking";
+import { GamePhase } from "@common/models";
 
 @TestFixture("gameReducer tests")
 export class GameReducerTests {
@@ -21,7 +22,7 @@ export class GameReducerTests {
       debug: false,
       mainAnnouncement: null,
       subAnnouncement: null,
-      selectedPiece: null,
+      selectedPieceId: null,
       connectionStatus: ConnectionStatus.NOT_CONNECTED,
       shopLocked: false,
       winnerName: null
