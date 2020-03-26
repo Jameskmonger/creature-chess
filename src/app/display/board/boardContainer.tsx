@@ -2,7 +2,7 @@ import * as React from "react";
 import { Announcement } from "./announcement";
 import { Bench } from "./bench";
 import { Board } from "./board";
-import { Constants } from "@common";
+import { Constants } from "@common/models";
 import { ReconnectModal } from "./reconnectModal";
 import { useWindowSize } from "../../use-window-size";
 import { ReadyUpButton } from "./readyUpButton";

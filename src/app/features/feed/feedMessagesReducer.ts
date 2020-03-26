@@ -1,9 +1,9 @@
 import { FeedAction } from "./feedActions";
-import { FeedMessage, FeedMessageType } from "@common/feed-message";
+import { FeedMessage, FeedMessageType } from "@common/models/feed-message";
 import { NEW_FEED_MESSAGE } from "./feedActionTypes";
 import { GamePhaseUpdateAction } from "../../store/actions/gameActions";
 import { GAME_PHASE_UPDATE } from "../../store/actiontypes/gameActionTypes";
-import { GamePhase } from "@common";
+import { GamePhase } from "@common/models";
 
 export const feedMessages = (state: FeedMessage[] = [], action: FeedAction | GamePhaseUpdateAction) => {
     switch (action.type) {

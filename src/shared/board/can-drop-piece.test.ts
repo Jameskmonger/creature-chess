@@ -1,8 +1,6 @@
 import { TestFixture, Test, Expect, TestCase } from "alsatian";
 import { canDropPiece } from "./can-drop-piece";
 import { pieceUtils } from "@common/utils";
-import { createTileCoordinates } from "../position";
-import { GamePhase } from "../game-phase";
 import { DefinitionProvider } from "../game/definitionProvider";
 
 const definitionProvider = new DefinitionProvider();
@@ -17,43 +15,41 @@ export class CanDropPieceTests {
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             false,
-            GamePhase.PREPARING,
+            false,
             true
         );
 
         Expect(result).toBe(false);
     }
 
-    @TestCase(GamePhase.WAITING)
-    @TestCase(GamePhase.READY)
-    @TestCase(GamePhase.PLAYING)
-    @TestCase(GamePhase.DEAD)
-    public cantDropOnBoardUnlessPreparingPhase(phase: GamePhase) {
+    @Test()
+    public cantDropOnBoardIfBoardLocked() {
         const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             true,
-            phase,
+            true,
             true
         );
 
         Expect(result).toBe(false);
     }
 
-    @TestCase(GamePhase.READY)
-    @TestCase(GamePhase.PLAYING)
-    public canDropOnBenchOutsidePreparingPhase(phase: GamePhase) {
+    public canDropOnBenchIfBoardLocked() {
         const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ], 0);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, null),
+            1,
+            null,
             true,
-            phase,
+            true,
             true
         );
 
@@ -66,9 +62,10 @@ export class CanDropPieceTests {
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             true,
-            GamePhase.PREPARING,
+            false,
             false
         );
 
@@ -81,9 +78,10 @@ export class CanDropPieceTests {
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             true,
-            GamePhase.PREPARING,
+            false,
             false
         );
 
@@ -99,9 +97,10 @@ export class CanDropPieceTests {
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(x, y),
+            x,
+            y,
             true,
-            GamePhase.PREPARING,
+            false,
             true
         );
 

@@ -1,7 +1,7 @@
-import { Models } from "@common";
+import { Piece } from "@common/models";
 
 export interface BoardPieceOwnProps {
-    piece: Models.Piece;
+    piece: Piece;
 }
 
 export interface BoardPieceStateProps {

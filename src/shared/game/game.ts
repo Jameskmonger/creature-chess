@@ -1,12 +1,12 @@
 import uuid = require("uuid");
 import delay from "delay";
-import { GamePhase } from "../game-phase";
-import { FeedMessage, FeedMessageType } from "../feed-message";
+import { GamePhase } from "../models/game-phase";
+import { FeedMessage, FeedMessageType } from "../models/feed-message";
 import { Player } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
-import { PHASE_LENGTHS, CELEBRATION_TIME, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "../constants";
+import { PHASE_LENGTHS, CELEBRATION_TIME, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "../models/constants";
 import { EventEmitter } from "events";
 import { PlayerListPlayer } from "../models/player-list-player";
 import { PlayerList } from "./playerList";
@@ -33,11 +33,7 @@ interface PhaseLengths {
     [GamePhase.PLAYING]?: number;
 }
 
-const defaultPhaseLengths: PhaseLengths = {
-    [GamePhase.PREPARING]: 30,
-    [GamePhase.READY]: 5,
-    [GamePhase.PLAYING]: 30
-};
+const defaultPhaseLengths: PhaseLengths = PHASE_LENGTHS;
 
 export class Game {
     public readonly id: string;

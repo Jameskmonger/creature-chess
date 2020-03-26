@@ -1,6 +1,7 @@
-import { GamePhase, Models, ConnectionStatus } from "@common";
-import { FeedMessage } from "@common/feed-message";
-import { LobbyPlayer } from "@common/models";
+import { LobbyPlayer, FeedMessage, Card, PlayerListPlayer, GamePhase, Piece } from "@common/models";
+import { ConnectionStatus } from "@common/networking";
+import { BoardState } from "@common/board";
+import { BenchState } from "@common/player/bench";
 
 export interface GameState {
     gameId: string;
@@ -17,7 +18,7 @@ export interface GameState {
     mainAnnouncement: string;
     subAnnouncement: string;
 
-    selectedPiece: Models.Piece;
+    selectedPieceId: string;
     shopLocked: boolean;
 
     winnerName: string;
@@ -34,11 +35,11 @@ export interface LocalPlayerState {
 }
 
 export interface AppState {
-    board: Models.Piece[];
-    bench: Models.Piece[];
+    board: BoardState;
+    bench: BenchState;
     game: GameState;
-    playerList: Models.PlayerListPlayer[];
-    cards: Models.Card[];
+    playerList: PlayerListPlayer[];
+    cards: Card[];
     localPlayer: LocalPlayerState;
     feedMessages: FeedMessage[];
     lobby: LobbyState;

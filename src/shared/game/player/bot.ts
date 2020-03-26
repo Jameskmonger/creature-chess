@@ -1,9 +1,9 @@
-import { FeedMessage } from "../../feed-message";
-import { createTileCoordinates } from "../../position";
+import { createTileCoordinates } from "../../models/position";
 import { Player } from "./player";
-import { GRID_SIZE } from "../../constants";
-import { PlayerListPlayer } from "../../models/player-list-player";
-import { Card, Piece, LobbyPlayer } from "../../models";
+import { GRID_SIZE } from "../../models/constants";
+import { Card, Piece, LobbyPlayer, PlayerListPlayer, FeedMessage, PlayerPieceLocation } from "@common/models";
+import { getAllPieces, getBoardPieceForPosition } from "@common/player/pieceSelectors";
+import { PlayerPiecesState } from "@common/player";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
@@ -27,6 +27,12 @@ interface PieceView {
 }
 
 type CardPieceView = CardView | PieceView;
+
+// todo implement
+const getFirstBenchPiece = (state: PlayerPiecesState): Piece => state.bench.pieces.find(p => p !== null) || null;
+const getPieceCountForDefinition =
+    (state: PlayerPiecesState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
+const getPieceCount = (state: PlayerPiecesState): number => getAllPieces(state).length;
 
 export class Bot extends Player {
     public readonly isBot: boolean = true;
@@ -104,28 +110,27 @@ export class Bot extends Player {
     }
 
     private atPieceLimit() {
-        return this.getTotalPieceCount() >= this.getLevel();
+        return getPieceCount(this.pieces.getState()) >= this.getLevel();
     }
 
     private putBenchOnBoard() {
         while (true) {
-            const firstBenchPiece = this.getFirstBenchPiece();
+            const firstBenchPiece = getFirstBenchPiece(this.pieces.getState());
             const firstEmptyPosition = this.getFirstEmptyPosition();
 
             if (firstBenchPiece === null || firstEmptyPosition === null) {
                 break;
             }
 
-            this.movePieceToBoard({
-                id: firstBenchPiece.id,
-                from: firstBenchPiece.position,
-                to: firstEmptyPosition
-            });
-        }
-    }
+            const benchPiecePosition: PlayerPieceLocation = {
+                type: "bench",
+                location: {
+                    slot: firstBenchPiece.position.x
+                }
+            };
 
-    private getTotalPieceCount() {
-        return this.getBoard().length + this.getBench().length;
+            this.pieces.playerDropPiece(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition);
+        }
     }
 
     private getCardViews(): CardView[] {
@@ -139,12 +144,7 @@ export class Bot extends Player {
     }
 
     private getPieceViews(): PieceView[] {
-        const board = this.getBoard();
-        const bench = this.getBench();
-
-        const pieces = [...board, ...bench];
-
-        const views = pieces.map(this.getPieceView);
+        const views = getAllPieces(this.pieces.getState()).map(this.getPieceView);
 
         views.sort(this.compareCardPieceViews);
 
@@ -152,7 +152,7 @@ export class Bot extends Player {
     }
 
     private getCardView = (card: Card, index: number): CardView => {
-        const amountOwned = this.getSameCardCount(card.definitionId);
+        const amountOwned = getPieceCountForDefinition(this.pieces.getState(), card.definitionId);
 
         return {
             source: "shop",
@@ -165,7 +165,7 @@ export class Bot extends Player {
 
     private getPieceView = (piece: Piece): PieceView => {
         const { cost } = this.definitionProvider.get(piece.definitionId);
-        const amountOwned = this.getSameCardCount(piece.definitionId);
+        const amountOwned = getPieceCountForDefinition(this.pieces.getState(), piece.definitionId);
 
         return {
             source: "board",
@@ -199,37 +199,19 @@ export class Bot extends Player {
         return 0;
     }
 
-    private getSameCardCount(definitionId: number) {
-        const board = this.getBoard();
-        const bench = this.getBench();
-
-        return board.filter(p => p.definitionId === definitionId).length
-            + bench.filter(p => p.definitionId === definitionId).length;
-    }
-
-    private getFirstBenchPiece() {
-        const benchPieces = this.getBench();
-
-        for (let x = 0; x < GRID_SIZE; x++) {
-            const piece = benchPieces.find(p => p.position.x === x);
-
-            if (piece !== undefined) {
-                return piece;
-            }
-        }
-
-        return null;
-    }
-
-    private getFirstEmptyPosition() {
-        const boardPieces = this.getBoard();
-
+    private getFirstEmptyPosition(): PlayerPieceLocation | null {
         for (let y = 4; y < GRID_SIZE; y++) {
             for (const x of PREFERRED_COLUMN_ORDER) {
-                const boardPiece = boardPieces.find(p => p.position.x === x && p.position.y === y);
+                const boardPiece = getBoardPieceForPosition(this.pieces.getState(), x, y);
 
-                if (boardPiece === undefined) {
-                    return createTileCoordinates(x, y);
+                if (!boardPiece) {
+                    return {
+                        type: "board",
+                        location: {
+                            x,
+                            y
+                        }
+                    };
                 }
             }
         }
