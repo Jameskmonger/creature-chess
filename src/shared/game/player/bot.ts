@@ -28,7 +28,6 @@ interface PieceView {
 
 type CardPieceView = CardView | PieceView;
 
-// todo implement
 const getFirstBenchPiece = (state: PlayerPiecesState): Piece => state.bench.pieces.find(p => p !== null) || null;
 const getPieceCountForDefinition =
     (state: PlayerPiecesState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;

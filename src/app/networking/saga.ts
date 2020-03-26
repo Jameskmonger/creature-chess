@@ -255,32 +255,6 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
                 registry.emit(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId);
             }
         ),
-        // takeEvery<ActionWithPayload<{ piece: Piece, position: TileCoordinates }>>(
-        //     BoardActionTypes.PIECE_MOVED_TO_BOARD,
-        //     function*({ payload }) {
-        //         registry.emit(
-        //             ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD,
-        //             {
-        //                 id: payload.piece.id,
-        //                 from: payload.piece.position,
-        //                 to: payload.position
-        //             }
-        //         );
-        //     }
-        // ),
-        // takeEvery<ActionWithPayload<{ piece: Piece, slot: number }>>(
-        //     BoardActionTypes.PIECE_MOVED_TO_BENCH,
-        //     function*({ payload }) {
-        //         registry.emit(
-        //             ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH,
-        //             {
-        //                 id: payload.piece.id,
-        //                 from: payload.piece.position,
-        //                 to: createTileCoordinates(payload.slot, null)
-        //             }
-        //         );
-        //     }
-        // ),
         takeEvery<ActionWithPayload<{ message: string }>>(
             SEND_CHAT_MESSAGE,
             function*({ payload }) {

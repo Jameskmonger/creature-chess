@@ -7,7 +7,6 @@ interface PlayerPiecesState {
   bench: BenchState;
 }
 
-// todo implement these
 export const getPiece = (state: PlayerPiecesState, pieceId: string): Piece => {
   const boardPiece = state.board.pieces[pieceId];
   if (boardPiece) {
