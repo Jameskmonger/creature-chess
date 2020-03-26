@@ -22,7 +22,7 @@ export class GameReducerTests {
       debug: false,
       mainAnnouncement: null,
       subAnnouncement: null,
-      selectedPiece: null,
+      selectedPieceId: null,
       connectionStatus: ConnectionStatus.NOT_CONNECTED,
       shopLocked: false,
       winnerName: null
