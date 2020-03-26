@@ -1,6 +1,5 @@
 import * as React from "react";
-import { createTileCoordinates } from "@common/position";
-import { Constants } from "@common";
+import { Constants } from "@common/models";
 import { BoardTile } from "./tile/boardTile";
 
 interface TileRowProps {
@@ -15,7 +14,8 @@ const BoardRow: React.FunctionComponent<TileRowProps> = ({ y }) => {
         tiles.push(
             <BoardTile
                 key={`tile-${x}`}
-                position={createTileCoordinates(x, y)}
+                x={x}
+                y={y}
             />
         );
     }

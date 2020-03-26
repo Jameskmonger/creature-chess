@@ -1,5 +1,6 @@
 import { JoinLobbyResponse } from "./server-to-client";
-import { TileCoordinates } from "../position";
+import { XYLocation } from "../models/position";
+import { PlayerPieceLocation } from "@common/models";
 
 export enum ClientToServerPacketOpcodes {
   FIND_GAME = "findGame",
@@ -8,8 +9,7 @@ export enum ClientToServerPacketOpcodes {
   BUY_CARD = "buyCard",
   SELL_PIECE = "sellPiece",
   BUY_REROLL = "rerollCards",
-  MOVE_PIECE_TO_BENCH = "movePieceToBench",
-  MOVE_PIECE_TO_BOARD = "movePieceToBoard",
+  DROP_PIECE = "dropPiece",
   BUY_XP = "buyXp",
   SEND_CHAT_MESSAGE = "sendChatMessage",
   FINISH_MATCH = "finishMatch",
@@ -19,10 +19,10 @@ export enum ClientToServerPacketOpcodes {
   RECONNECT_AUTHENTICATE = "reconnectAuthenticate"
 }
 
-export type MovePiecePacket = {
-  id: string;
-  from: TileCoordinates;
-  to: TileCoordinates;
+export type DropPiecePacket = {
+  pieceId: string;
+  from: PlayerPieceLocation;
+  to: PlayerPieceLocation;
 };
 
 export type ReconnectAuthenticatePacket = {
@@ -45,8 +45,7 @@ export type ClientToServerPacketDefinitions = {
   [ClientToServerPacketOpcodes.READY_UP]: EmptyPacket,
   [ClientToServerPacketOpcodes.BUY_CARD]: number,
   [ClientToServerPacketOpcodes.SELL_PIECE]: string,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD]: MovePiecePacket,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH]: MovePiecePacket,
+  [ClientToServerPacketOpcodes.DROP_PIECE]: DropPiecePacket,
   [ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE]: string,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: EmptyPacket,
   [ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK]: EmptyPacket,
@@ -63,8 +62,7 @@ export type ClientToServerPacketAcknowledgements = {
   [ClientToServerPacketOpcodes.READY_UP]: never,
   [ClientToServerPacketOpcodes.BUY_CARD]: never,
   [ClientToServerPacketOpcodes.SELL_PIECE]: never,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD]: never,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH]: never,
+  [ClientToServerPacketOpcodes.DROP_PIECE]: never,
   [ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE]: never,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: never,
   [ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK]: never,

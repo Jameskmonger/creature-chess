@@ -7,6 +7,7 @@ export const PHASE_LENGTHS = {
     [GamePhase.PLAYING]: 30
 };
 export const REROLL_COST = 2;
+export const STARTING_MONEY = 3;
 
 export const BUY_XP_COST = 5;
 export const BUY_XP_AMOUNT = 4;

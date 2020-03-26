@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Models, Constants, GamePhase } from "@common";
 import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "@app/store";
+import { Card as CardModel, Constants, GamePhase } from "@common/models";
 import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 import { RerollButton } from "./rerollButton";
@@ -11,7 +11,7 @@ import { LockButton } from "./lockButton";
 import { toggleShopLock } from "../../store/actions/gameActions";
 
 interface StateProps {
-    cards: Models.Card[];
+    cards: CardModel[];
     money: number;
     canUseShop: boolean;
     shopLocked: boolean;
@@ -34,7 +34,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         return () => onBuyCard(index);
     };
 
-    const createCard = (card: Models.Card, index: number) => {
+    const createCard = (card: CardModel, index: number) => {
         if (card === null) {
             return null;
         }

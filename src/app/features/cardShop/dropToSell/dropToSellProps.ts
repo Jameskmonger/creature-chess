@@ -1,8 +1,8 @@
-import { Models } from "@common";
+import { Piece } from "@common/models";
 import { DropTargetProps } from "@app/draggable/drop-target-props";
 
 export interface DropToSellDispatchProps {
-    onDropPiece: (piece: Models.Piece) => void;
+    onDropPiece: (piece: Piece) => void;
 }
 
 export type DropToSellProps = DropToSellDispatchProps & DropTargetProps;

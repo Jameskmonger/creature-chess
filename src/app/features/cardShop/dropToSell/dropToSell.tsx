@@ -1,13 +1,13 @@
 import { MapDispatchToProps, connect } from "react-redux";
 import { DropToSellDispatchProps, DropToSellProps } from "./dropToSellProps";
-import { Models } from "@common";
 import { BoardActions } from "@common/board";
 import { dropToSellDropTarget } from "./dropToSellDragDrop";
 import { compose } from "recompose";
 import { DropToSellUnconnected } from "./dropToSellUnconnected";
+import { Piece } from "@common/models";
 
 const mapDispatchToProps: MapDispatchToProps<DropToSellDispatchProps, {}> = (dispatch) => ({
-    onDropPiece: (piece: Models.Piece) => dispatch(BoardActions.sellPiece(piece.id))
+    onDropPiece: (piece: Piece) => dispatch(BoardActions.removeBoardPiece(piece.id))
 });
 
 const DropToSell = compose<DropToSellProps, {}>(

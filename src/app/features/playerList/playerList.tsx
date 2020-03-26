@@ -1,6 +1,5 @@
 import * as React from "react";
-import { GamePhase } from "@common";
-import { PlayerListPlayer } from "@common/models";
+import { PlayerListPlayer, GamePhase } from "@common/models";
 import { PlayerListItem } from "./playerListItem";
 import { connect, MapStateToProps } from "react-redux";
 import { AppState } from "@app/store";

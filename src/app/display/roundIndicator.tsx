@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GamePhase } from "@common";
+import { GamePhase } from "@common/models";
 import { MapStateToProps, connect } from "react-redux";
 import { AppState } from "@app/store";
 

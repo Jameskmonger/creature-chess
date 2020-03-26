@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "@app/store";
-import { ConnectionStatus } from "@common";
+import { ConnectionStatus } from "@common/networking";
 
 const ReconnectModal: React.FunctionComponent = () => {
     const connectionStatus = useSelector<AppState, ConnectionStatus>(state => state.game.connectionStatus);

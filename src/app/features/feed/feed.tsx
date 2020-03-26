@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FeedMessage, BattleFeedMessage, ChatFeedMessage, FeedMessageType } from "@common/feed-message";
+import { FeedMessage, BattleFeedMessage, ChatFeedMessage, FeedMessageType } from "@common/models/feed-message";
 import { connect, MapStateToProps } from "react-redux";
 import { AppState } from "@app/store";
 import { ChatInput } from "../chat/chatInput";

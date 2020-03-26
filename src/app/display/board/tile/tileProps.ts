@@ -1,26 +1,27 @@
-import { Models, GamePhase } from "@common";
-import { TileCoordinates, TileType } from "@common/position";
+import { TileType } from "@common/models/position";
+import { Piece, GamePhase } from "@common/models";
 
 export interface TileOwnProps {
     type: TileType;
-    position: TileCoordinates;
-    renderPiece: (piece: Models.Piece) => JSX.Element;
+    x: number;
+    y: number;
+    renderPiece: (piece: Piece) => JSX.Element;
 }
 
 export interface TileStateProps {
-    piece: Models.Piece;
+    piece: Piece;
     gamePhase: GamePhase;
     belowPieceLimit: boolean;
-    currentSelectedPiece: Models.Piece;
+    selectedPiece: Piece;
 }
 
 export interface TileDispatchProps {
-    onDropPiece: (piece: Models.Piece) => void;
-    onSelectPiece: (piece: Models.Piece) => void;
+    onDropPiece: (piece: Piece) => void;
+    onSelectPiece: (piece: Piece) => void;
 }
 
 export interface TileHandlerProps {
-    canDropPiece: (piece: Models.Piece) => boolean;
+    canDropPiece: (piece: Piece) => boolean;
 }
 
 export type TileProps = TileOwnProps & TileStateProps & TileDispatchProps & TileHandlerProps;
