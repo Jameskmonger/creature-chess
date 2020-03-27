@@ -1,0 +1,7 @@
+// this file is named _ so it can be imported as "directory/" which resolves to "directory/_"
+// no nice way to have an index file otherwise - SASS :(
+
+@import "./chessboard";
+@import "./tile";
+@import "./tile-row";
+@import "./opponent-board-placeholder";
