@@ -16,11 +16,7 @@ const ReadyUpButton: React.FunctionComponent = () => {
 
     const onReadyUp = () => dispatch(readyUpAction());
 
-    return (
-        <div className="ready-up">
-            <button className="button" onClick={onReadyUp}>Click to Ready Up</button>
-        </div>
-    );
+    return <button className="ready-up" onClick={onReadyUp}>Click to Ready Up</button>;
 };
 
 export { ReadyUpButton };
