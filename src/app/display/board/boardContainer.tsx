@@ -5,7 +5,6 @@ import { Board } from "./board";
 import { Constants } from "@common/models";
 import { ReconnectModal } from "./reconnectModal";
 import { useWindowSize } from "../../use-window-size";
-import { ReadyUpButton } from "./readyUpButton";
 import { VictoryOverlay } from "./victoryOverlay/victoryOverlay";
 
 const getWidthFromHeight = (height: number) =>
@@ -40,7 +39,6 @@ const BoardContainer: React.FunctionComponent = () => {
             </div>
 
             <Announcement />
-            <ReadyUpButton />
             <VictoryOverlay />
             <ReconnectModal />
         </div>

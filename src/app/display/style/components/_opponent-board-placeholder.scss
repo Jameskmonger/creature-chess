@@ -1,0 +1,16 @@
+.opponent-board-placeholder {
+    width: 100%;
+    height: percentage(4 / 9);
+    box-sizing: border-box;
+    background: #717171;
+    border: 3px solid #2d2d2d;
+
+    .label {
+        display: block;
+        padding-top: 2em;
+        margin-bottom: 2em;
+        font-family: Arial, sans-serif;
+        font-size: 1.3em;
+        color: #fff;
+    }
+}
