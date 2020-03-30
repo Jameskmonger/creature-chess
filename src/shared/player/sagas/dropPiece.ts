@@ -37,8 +37,6 @@ const isLocationLocked = (state: PlayerPiecesState, location: PlayerPieceLocatio
   return true;
 };
 
-// listen for PLAYER_DROP_PIECE and modify board, bench accordingly
-// do validation in here from isomorphic state - that way server will pick up and validate
 export const dropPiece = function*() {
   yield takeEvery<PlayerDropPieceAction>(
     PLAYER_DROP_PIECE,
