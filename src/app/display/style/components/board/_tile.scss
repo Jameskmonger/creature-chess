@@ -3,6 +3,7 @@
     display: inline-block;
     width: percentage(1 / 8);
     height: 100%;
+    box-sizing: border-box;
     user-select: none;
 
     .image {
@@ -16,14 +17,6 @@
     &.selected {
         box-sizing: border-box;
         border: 2px solid #ff5200;
-    }
-
-    &.dark {
-        background: $dark-tile;
-    }
-
-    &.light {
-        background: $light-tile;
     }
 
     .overlay {
@@ -41,9 +34,6 @@
     }
 
     &.bench {
-        background: $bench-tile;
-        box-shadow: inset 0 0 2px darken($bench-tile, 50);
-
         .image {
             top: 0;
             left: 0;

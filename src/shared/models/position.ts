@@ -60,3 +60,8 @@ export enum TileType {
     BOARD,
     BENCH
 }
+
+export enum TileStyle {
+    DEFAULT,
+    JAMES
+}
