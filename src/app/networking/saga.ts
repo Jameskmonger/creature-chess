@@ -27,8 +27,8 @@ import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-regis
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes } from "@common/networking/client-to-server";
 import { ConnectionStatus } from "@common/networking";
 import { Piece } from "@common/models";
-import { PLAYER_DROP_PIECE } from "@common/player/actionTypes";
-import { PlayerDropPieceAction } from "@common/player/actions";
+import { PLAYER_DROP_PIECE, PLAYER_SELL_PIECE } from "@common/player/actionTypes";
+import { PlayerDropPieceAction, PlayerSellPieceAction } from "@common/player/actions";
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -249,8 +249,8 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
                 registry.emit(ClientToServerPacketOpcodes.BUY_CARD, payload.index);
             }
         ),
-        takeEvery<ActionWithPayload<{ pieceId: string }>>(
-            BoardActionTypes.REMOVE_BOARD_PIECE,
+        takeEvery<PlayerSellPieceAction>(
+            PLAYER_SELL_PIECE,
             function*({ payload }) {
                 registry.emit(ClientToServerPacketOpcodes.SELL_PIECE, payload.pieceId);
             }

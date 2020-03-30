@@ -13,6 +13,7 @@ import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 import { networking } from "../../networking/saga";
 import { evolutionSagaFactory } from "@common/player/sagas/evolution";
 import { dropPiece } from "@common/player/sagas/dropPiece";
+import { sellPiece } from "./actions/sellPiece";
 
 export const rootSaga = function*() {
     yield all([
@@ -27,6 +28,7 @@ export const rootSaga = function*() {
                     yield fork(announcement),
                     yield fork(gamePhase),
                     yield fork(cardShop),
+                    yield fork(sellPiece),
                     yield fork(evolutionSagaFactory<AppState>()),
                     yield fork(
                         battle,
