@@ -20,11 +20,13 @@ const BoardContainer: React.FunctionComponent = () => {
     const boardMargin = 15;
     const marginDelta = boardMargin * 3.1;
 
+    const BOARD_TO_BENCH_SPACE_PX = 12;
+
     const boardContainerStyle = {
         height:
             portrait
-                ? (getHeightFromWidth(width) - marginDelta) + "px"
-                : (height - marginDelta) + "px",
+                ? (getHeightFromWidth(width) - marginDelta + BOARD_TO_BENCH_SPACE_PX) + "px"
+                : (height - marginDelta + BOARD_TO_BENCH_SPACE_PX) + "px",
         width:
             portrait
                 ? (width - marginDelta) + "px"

@@ -1,0 +1,39 @@
+$outer-border-color: #3cea92;
+$inner-border-color: #404040;
+$dark-tile-color: #828282;
+$light-tile-color: $dark-tile-color;
+
+.style-james {
+    &.tile {
+        &.dark {
+            background: $dark-tile-color;
+        }
+
+        &.light {
+            background: $light-tile-color;
+        }
+    }
+
+    &.tile-row {
+        border-right: $outer-border-width solid $outer-border-color;
+        border-left: $outer-border-width solid $outer-border-color;
+
+        &.first {
+            border-top: $outer-border-width solid $outer-border-color;
+        }
+
+        &.last {
+            border-bottom: $outer-border-width solid $outer-border-color;
+        }
+
+        .tile:not(:last-of-type) {
+            border-right: $inner-border-width solid $inner-border-color;
+        }
+
+        &:not(.last) {
+            .tile {
+                border-bottom: $inner-border-width solid $inner-border-color;
+            }
+        }
+    }
+}

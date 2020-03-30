@@ -44,7 +44,7 @@ export abstract class Player {
     protected money = new Observable(STARTING_MONEY);
     protected cards = new Observable<Card[]>([]);
 
-    protected level = new Observable({ level: 1, xp: 0 });
+    protected level = new Observable({ level: 4, xp: 0 });
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
     protected shopLocked = false;

@@ -1,7 +1,8 @@
-import { TileType } from "@common/models/position";
+import { TileType, TileStyle } from "@common/models/position";
 import { Piece, GamePhase } from "@common/models";
 
 export interface TileOwnProps {
+    tileStyle: TileStyle;
     type: TileType;
     x: number;
     y: number;

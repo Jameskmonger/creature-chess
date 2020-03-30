@@ -2,8 +2,9 @@ import * as React from "react";
 
 import { TileProps } from "./tileProps";
 import { DropTargetProps } from "../../../draggable/drop-target-props";
-import { XYLocation, TileType } from "@common/models/position";
+import { XYLocation, TileType, TileStyle } from "@common/models/position";
 import { GamePhase } from "@common/models";
+import { getClassForTileStyle } from "../getClassForTileStyle";
 
 // tslint:disable-next-line:no-bitwise
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
@@ -38,7 +39,8 @@ const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (p
         selectedPiece: currentSelectedPiece,
         onDropPiece,
         onSelectPiece,
-        gamePhase
+        gamePhase,
+        tileStyle
     } = props;
 
     const canSelectPiece = (gamePhase === GamePhase.PREPARING || type === TileType.BENCH);
@@ -62,7 +64,7 @@ const TileUnconnected: React.FunctionComponent<TileProps & DropTargetProps> = (p
 
     return connectDropTarget(
         <div
-            className={`tile ${getClassName(type, x, y)}${isSelected ? " selected" : ""}`}
+            className={`tile ${getClassName(type, x, y)}${isSelected ? " selected" : ""} ${getClassForTileStyle(tileStyle)}`}
             touch-action="none"
             onPointerUp={onClick}
         >
