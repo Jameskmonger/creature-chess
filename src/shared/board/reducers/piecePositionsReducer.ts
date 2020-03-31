@@ -32,6 +32,12 @@ const piecePositions: Reducer<PiecePositionsState, BoardAction> = (state = initi
       return Object.entries(action.payload.pieces)
         .reduce<PiecePositionsState>(
           (acc, [ pieceId, piece ]) => {
+            // don't add dead pieces to the position matrix
+            // todo should dead pieces be on the board at all? maybe remove them in turnSimulator
+            if (piece.currentHealth === 0) {
+              return acc;
+            }
+
             acc[`${piece.position.x},${piece.position.y}`] = pieceId;
 
             return acc;

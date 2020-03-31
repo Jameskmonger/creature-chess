@@ -31,6 +31,44 @@ export class PiecePositionsReducerTests {
       "4,5": "456"
     });
   }
+
+  @Test()
+  public initialiseBoardShouldNotAddDeadPieces() {
+    const state: PiecePositionsState = {};
+
+    const pieces = {
+      123: {
+        ...createMockPiece("123"),
+        position: createTileCoordinates(1, 2),
+        currentHealth: 100
+      },
+      456: {
+        ...createMockPiece("456"),
+        position: createTileCoordinates(1, 2),
+        currentHealth: 0
+      },
+      124: {
+        ...createMockPiece("124"),
+        position: createTileCoordinates(3, 3),
+        currentHealth: 0
+      },
+      789: {
+        ...createMockPiece("789"),
+        position: createTileCoordinates(3, 3),
+        currentHealth: 100
+      }
+    };
+
+    const action = initialiseBoard(pieces);
+
+    const result = piecePositions(state, action);
+
+    Expect(result).toEqual({
+      "1,2": "123",
+      "3,3": "789"
+    });
+  }
+
   @Test()
   public removePieceShouldRemovePiece() {
     const state: PiecePositionsState = {
