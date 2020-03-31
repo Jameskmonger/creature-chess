@@ -5,7 +5,7 @@ import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_MONEY } from "../../models/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_MONEY, STARTING_LEVEL } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer, Card, FeedMessage, GamePhase } from "@common/models";
@@ -44,7 +44,7 @@ export abstract class Player {
     protected money = new Observable(STARTING_MONEY);
     protected cards = new Observable<Card[]>([]);
 
-    protected level = new Observable({ level: 4, xp: 0 });
+    protected level = new Observable({ level: STARTING_LEVEL, xp: 0 });
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
     protected shopLocked = false;
