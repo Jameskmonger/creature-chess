@@ -1,3 +1,6 @@
+$warning-dark: #ff6464;
+$warning-light: #ffd2d2;
+
 .profile {
     padding: 0.6rem;
     margin-bottom: 0.6rem;
@@ -21,6 +24,16 @@
 
     .pieces {
         font-style: italic;
+
+        &.warning {
+            // stylelint-disable-next-line
+            width: fit-content;
+            padding: 0.6em 1em;
+            font-weight: 700;
+            color: $warning-dark;
+            background: $warning-light;
+            border: 2px solid $warning-dark;
+        }
     }
 
     .xp-progress {
