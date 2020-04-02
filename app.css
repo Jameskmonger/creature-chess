@@ -654,6 +654,7 @@ body {
     margin-bottom: 0.8rem; }
   .player-list-item .name {
     font-family: Arial, sans-serif;
+    font-size: 0.8em;
     font-weight: 700;
     color: #fff;
     text-transform: uppercase; }
@@ -662,14 +663,33 @@ body {
     color: #ffcd75; }
   .player-list-item .healthbar {
     display: block;
-    width: 100%;
-    margin-top: 0.4em; }
+    width: 100%; }
   .player-list-item .row {
     display: flex;
-    justify-content: space-between; }
+    justify-content: space-between;
+    margin-bottom: 0.4em; }
+  .player-list-item .battle-info {
+    width: fit-content;
+    padding: 0.4em 1.2em;
+    margin: 0 auto 0.4em;
+    font-family: Arial, sans-serif;
+    font-size: 0.8em;
+    color: #c3c3c3;
+    text-align: center;
+    background: #333; }
+    .player-list-item .battle-info .highlight {
+      font-weight: 700;
+      color: #ffcd74;
+      text-transform: uppercase; }
+      .player-list-item .battle-info .highlight.win {
+        color: #38b764; }
+      .player-list-item .battle-info .highlight.loss {
+        color: #b13e53; }
+      .player-list-item .battle-info .highlight.opponent-name {
+        color: #fff; }
   .player-list-item .ready-indicator {
-    width: 1em;
-    height: 1em;
+    width: 0.8em;
+    height: 0.8em;
     margin-left: 0.5em; }
     .player-list-item .ready-indicator.ready {
       background: #20b720; }
@@ -681,6 +701,7 @@ body {
     box-sizing: border-box;
     padding: 0 0.4em;
     font-family: Arial, sans-serif;
+    font-size: 0.8em;
     color: #fff;
     border-radius: 50%; }
     .player-list-item .streak-indicator.win {
@@ -766,19 +787,6 @@ body {
     font-weight: 700; }
   .feed .chat-feed-message .message {
     color: #bebebe; }
-  .feed .battle-feed-message {
-    padding: 0.3em 0;
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
-    text-align: center;
-    background: #333c57; }
-    .feed .battle-feed-message .score {
-      font-size: 1.2em;
-      font-weight: 700; }
-    .feed .battle-feed-message .vs {
-      color: #b6b6b6; }
-    .feed .battle-feed-message .player-name {
-      color: #e1e1e1; }
 
 .github-link {
   margin-top: 0.5em;
