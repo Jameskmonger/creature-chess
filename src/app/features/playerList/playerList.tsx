@@ -19,6 +19,7 @@ const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localP
                 players.map(p =>
                     <PlayerListItem
                         key={p.id}
+                        playerId={p.id}
                         player={p}
                         isLocal={p.id === localPlayerId}
                         isOpponent={p.id === opponentId}
