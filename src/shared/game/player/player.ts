@@ -14,6 +14,7 @@ import { DropPiecePacket } from "@common/networking/client-to-server";
 import { getBoardPieceCount, hasSpaceOnBench, getPiece, getAllPieces,  } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "@common/board/utils/mergeBoards";
+import { PlayerBattle, inProgressBattle, finishedBattle } from "@common/models/player-list-player";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -21,7 +22,8 @@ enum PlayerEvent {
     FINISH_MATCH = "FINISH_MATCH",
     UPDATE_READY = "UPDATE_READY",
     UPDATE_STREAK = "UPDATE_STREAK",
-    START_LOBBY_GAME = "START_LOBBY_GAME"
+    START_LOBBY_GAME = "START_LOBBY_GAME",
+    UPDATE_BATTLE = "UPDATE_BATTLE"
 }
 
 interface StreakInfo {
@@ -38,6 +40,7 @@ export abstract class Player {
         type: StreakType.WIN,
         amount: 0
     };
+    public battle: PlayerBattle = null;
 
     public abstract readonly isBot: boolean;
 
@@ -155,6 +158,9 @@ export abstract class Player {
 
             const opponent = opponentProvider.getOpponent(this.id);
 
+            this.battle = inProgressBattle(opponent.id);
+            this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
+
             this.match = new Match(turnSimulator, this.turnCount, this.turnDuration, this, opponent);
 
             this.onEnterReadyPhase();
@@ -175,10 +181,16 @@ export abstract class Player {
             away: pieces.filter(p => p.currentHealth > 0 && p.ownerId !== this.id)
         };
 
+        const homeScore = surviving.home.length;
+        const awayScore = surviving.away.length;
+
+        this.battle = finishedBattle(this.match.away.id, homeScore, awayScore);
+        this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
+
         this.events.emit(PlayerEvent.FINISH_MATCH, {
             opponentName: this.match.away.name,
-            homeScore: surviving.home.length,
-            awayScore: surviving.away.length
+            homeScore,
+            awayScore
         });
 
         this.pieces.applyDamagePerTurn(pieces);
@@ -204,6 +216,12 @@ export abstract class Player {
         this.events.on(PlayerEvent.UPDATE_STREAK, fn);
 
         fn(this.streak);
+    }
+
+    public onBattleUpdate(fn: (battle: PlayerBattle) => void) {
+        this.events.on(PlayerEvent.UPDATE_BATTLE, fn);
+
+        fn(this.battle);
     }
 
     public onSendChatMessage(fn: (message: string) => void) {
@@ -265,7 +283,7 @@ export abstract class Player {
 
     public abstract onStartGame(gameId: string);
 
-    public abstract onPlayerListUpdate(playeLists: PlayerListPlayer[]);
+    public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
 
     public abstract onNewFeedMessage(message: FeedMessage);
 

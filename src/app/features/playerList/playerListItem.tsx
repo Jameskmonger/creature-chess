@@ -1,8 +1,11 @@
 import * as React from "react";
 import { PlayerListPlayer, StreakType } from "@common/models";
 import { ProgressBar } from "@app/display";
+import { PlayerName } from "./playerName";
+import { BattleInfo } from "./battleInfo";
 
 interface Props {
+    playerId: string;
     player: PlayerListPlayer;
     isOpponent: boolean;
     isLocal: boolean;
@@ -35,13 +38,17 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
     return (
         <div className={className}>
             <div className="row">
-                <span className="name">{props.player.name}</span>
+                <span className="name">
+                    <PlayerName playerId={props.playerId} />
+                </span>
 
                 <div className="badges">
                     <StreakIndicator type={props.streakType} amount={props.streakAmount} />
                     <ReadyIndicator ready={props.ready} />
                 </div>
             </div>
+
+            <BattleInfo playerId={props.playerId} />
 
             <ProgressBar
                 className="healthbar friendly"

@@ -1,7 +1,7 @@
 import uuid = require("uuid");
 import delay from "delay";
 import { GamePhase } from "../models/game-phase";
-import { FeedMessage, FeedMessageType } from "../models/feed-message";
+import { FeedMessage } from "../models/feed-message";
 import { Player } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
@@ -91,14 +91,7 @@ export class Game {
         }
 
         player.onSendChatMessage(message => {
-            this.sendFeedMessageToAllPlayers({
-                id: uuid(),
-                type: FeedMessageType.CHAT,
-                payload: {
-                    text: message,
-                    fromId: player.id
-                }
-            });
+            this.sendChatMessageToAllPlayers(player.id, message);
         });
 
         player.onFinishMatch(results => {
@@ -106,19 +99,8 @@ export class Game {
                 ...results,
                 player
             });
-        });
 
-        player.onFinishMatch(results => {
-            this.sendFeedMessageToAllPlayers({
-                id: uuid(),
-                type: FeedMessageType.BATTLE,
-                payload: {
-                    home: player.name,
-                    away: results.opponentName,
-                    homeScore: results.homeScore,
-                    awayScore: results.awayScore
-                }
-            });
+            // todo emit score to all players
         });
 
         this.players.push(player);
@@ -232,7 +214,13 @@ export class Game {
         this.eventManager.getTriggers().finishRound(this.players);
     }
 
-    private sendFeedMessageToAllPlayers(message: FeedMessage) {
+    private sendChatMessageToAllPlayers(playerId: string, text: string) {
+        const message: FeedMessage = {
+            id: uuid(),
+            fromId: playerId,
+            text
+        };
+
         this.players.forEach(p => p.onNewFeedMessage(message));
     }
 
