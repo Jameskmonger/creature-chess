@@ -9,7 +9,7 @@ import { PlayerList } from "../../features/playerList/playerList";
 
 import Media from "react-media";
 import { PhaseInfo } from "../../display/phaseInfo";
-import { Profile } from "../../display/profile";
+import { Profile } from "../../display/profile/profile";
 import { Feed } from "../../features/feed/feed";
 import { GameId } from "../../display/gameId";
 import { RoundIndicator } from "../../display/roundIndicator";
