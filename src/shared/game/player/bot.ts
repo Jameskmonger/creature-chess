@@ -135,7 +135,7 @@ export class Bot extends Player {
     private getCardViews(): CardView[] {
         const cards = this.cards.getValue();
 
-        const views = cards.map(this.getCardView);
+        const views = cards.filter(c => c !== null).map(this.getCardView);
 
         views.sort(this.compareCardPieceViews);
 
