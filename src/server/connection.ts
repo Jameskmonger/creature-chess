@@ -99,6 +99,10 @@ export class Connection extends Player {
         return this.reconnectionSecret;
     }
 
+    public onPlayersResurrected(playerIds: string[]) {
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
+    }
+
     protected onEnterPreparingPhase(round: number) {
         this.outgoingPacketRegistry.emit(
             ServerToClientPacketOpcodes.PHASE_UPDATE,

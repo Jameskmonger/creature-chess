@@ -67,6 +67,10 @@ export type JoinLobbyResponse = {
   };
 };
 
+type PlayersResurrectedPacket = {
+  playerIds: string[];
+};
+
 export enum ServerToClientPacketOpcodes {
   CARDS_UPDATE = "cardsUpdate",
   PLAYER_LIST_UPDATE = "playerListUpdate",
@@ -78,6 +82,7 @@ export enum ServerToClientPacketOpcodes {
   START_GAME = "startGame",
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
+  PLAYERS_RESURRECTED = "playersResurrected",
 
   RECONNECT_AUTHENTICATE_SUCCESS = "reconnectAuthSuccess",
   RECONNECT_AUTHENTICATE_FAILURE = "reconnectAuthFailure"
@@ -94,6 +99,7 @@ export type ServerToClientPacketDefinitions = {
   [ServerToClientPacketOpcodes.START_GAME]: StartGamePacket,
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
+  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS]: ReconnectAuthenticateSuccessPacket,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE]: undefined
 };
@@ -109,6 +115,7 @@ export type ServerToClientPacketAcknowledgements = {
   [ServerToClientPacketOpcodes.START_GAME]: never,
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
+  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS]: never,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE]: never
 };

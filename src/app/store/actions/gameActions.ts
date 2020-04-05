@@ -13,7 +13,8 @@ import {
     SHOP_LOCK_UPDATED,
     TOGGLE_SHOP_LOCK,
     FINISH_GAME,
-    CLEAR_SELECTED_PIECE
+    CLEAR_SELECTED_PIECE,
+    PLAYERS_RESURRECTED
 } from "../actiontypes/gameActionTypes";
 import { JoinCompleteAction } from "./localPlayerActions";
 import { ConnectionStatus, ServerToClient } from "@common/networking";
@@ -31,6 +32,7 @@ export type ToggleShopLockAction = ({ type: TOGGLE_SHOP_LOCK });
 export type ClearSelectedPieceAction = ({ type: CLEAR_SELECTED_PIECE });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
 export type PhaseStartSecondsAction = ({ type: PHASE_START_SECONDS, payload: { time: number } });
+export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] }});
 
 export type GameAction =
     FindGameAction
@@ -48,7 +50,8 @@ export type GameAction =
     | UpdateShopLockAction
     | ToggleShopLockAction
     | FinishGameAction
-    | ClearSelectedPieceAction;
+    | ClearSelectedPieceAction
+    | PlayersResurrectedAction;
 
 export const findGameAction = (serverIP: string, name: string): FindGameAction => ({
     type: FIND_GAME,
@@ -114,6 +117,13 @@ export const updateAnnouncement = (main: string, sub?: string): AnnouncementUpda
 
 export const clearAnnouncement = (): AnnouncementClearAction => ({ type: CLEAR_ANNOUNCEMENT });
 
+export const playersResurrected = (playerIds: string[]): PlayersResurrectedAction => ({
+    type: PLAYERS_RESURRECTED,
+    payload: {
+        playerIds
+    }
+});
+
 export const updateConnectionStatus = (status: ConnectionStatus): UpdateConnectionStatusAction => ({
     type: UPDATE_CONNECTION_STATUS,
     payload: {
@@ -135,4 +145,4 @@ export const finishGameAction = (winnerName: string): FinishGameAction => ({
     }
 });
 
-export const clearSelectedPiece = (): ClearSelectedPieceAction => ({ type: CLEAR_SELECTED_PIECE })
+export const clearSelectedPiece = (): ClearSelectedPieceAction => ({ type: CLEAR_SELECTED_PIECE });

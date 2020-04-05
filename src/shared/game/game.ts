@@ -2,19 +2,17 @@ import uuid = require("uuid");
 import delay from "delay";
 import { GamePhase } from "../models/game-phase";
 import { FeedMessage } from "../models/feed-message";
-import { Player } from "./player/player";
+import { Player, PlayerMatchResults } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
-import { PHASE_LENGTHS, CELEBRATION_TIME, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "../models/constants";
+import { PHASE_LENGTHS, CELEBRATION_TIME, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, RESURRECT_HEALTH } from "../models/constants";
 import { EventEmitter } from "events";
-import { PlayerListPlayer } from "../models/player-list-player";
 import { PlayerList } from "./playerList";
 import { TurnSimulator } from "../match/combat/turnSimulator";
 import { DefinitionProvider } from "./definitionProvider";
 import { EventManager } from "./events/eventManager";
 import { matchRewards } from "./plugins/matchRewards";
-import { playerHealth } from "./plugins/playerHealth";
 import { resetPlayer } from "./plugins/resetPlayer";
 
 const startStopwatch = () => process.hrtime();
@@ -94,15 +92,6 @@ export class Game {
             this.sendChatMessageToAllPlayers(player.id, message);
         });
 
-        player.onFinishMatch(results => {
-            this.eventManager.getTriggers().playerFinishMatch({
-                ...results,
-                player
-            });
-
-            // todo emit score to all players
-        });
-
         this.players.push(player);
         this.playerList.addPlayer(player);
         player.setDeck(this.deck);
@@ -134,12 +123,18 @@ export class Game {
 
         this.players.forEach(p => p.onStartGame(this.id));
 
-        while (this.players.filter(p => p.isAlive()).length >= 2) {
+        while (true) {
             await this.runPreparingPhase();
 
             await this.runReadyPhase();
 
             await this.runPlayingPhase();
+
+            const livingPlayers = this.players.filter(p => p.isAlive());
+
+            if (livingPlayers.length === 1) {
+                break;
+            }
         }
 
         const duration = stopwatch(startTime);
@@ -205,9 +200,35 @@ export class Game {
         const maxTimeMs = this.phaseLengths[GamePhase.PLAYING] * 1000;
         const battleTimeout = delay(maxTimeMs);
 
-        const promises = this.players.filter(p => p.isAlive()).map(p => p.fightMatch(battleTimeout));
+        const livingPlayers = this.players.filter(p => p.isAlive());
+
+        const onPlayerFinishBattle = (results: PlayerMatchResults) => {
+            const damage = results.awayScore * 3;
+
+            results.homePlayer.subtractHealth(damage);
+        };
+        const promises = livingPlayers.map(p => p.fightMatch(battleTimeout).then(onPlayerFinishBattle));
 
         await Promise.all(promises);
+
+        const newLivingPlayers = this.players.filter(p => p.isAlive());
+
+        if (newLivingPlayers.length === 0) {
+            const justDiedPlayers = this.players.filter(p => p.getRoundDiedAt() === this.round);
+
+            for (const player of justDiedPlayers) {
+                player.resurrect(RESURRECT_HEALTH);
+            }
+
+            const justDiedPlayerIds = justDiedPlayers.map(p => p.id);
+            for (const player of this.players) {
+                player.onPlayersResurrected(justDiedPlayerIds);
+            }
+        }
+
+        for (const player of this.players.filter(p => p.getRoundDiedAt() === this.round)) {
+            player.kill();
+        }
 
         await delay(CELEBRATION_TIME); // celebration time
 
@@ -226,7 +247,6 @@ export class Game {
 
     private registerPlugins() {
         matchRewards(this.eventManager);
-        playerHealth(this.eventManager);
         resetPlayer(this.eventManager);
     }
 }
