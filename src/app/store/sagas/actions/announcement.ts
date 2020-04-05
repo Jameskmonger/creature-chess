@@ -63,6 +63,10 @@ export const announcement = function*() {
 
                 const message = distinctLastJoin(playerNames, ", ", " and ");
 
+                if (!message) {
+                    return;
+                }
+
                 yield put(updateAnnouncement("Players Resurrected", message));
 
                 yield delay(2000);
