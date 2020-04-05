@@ -1,7 +1,7 @@
 import { Piece } from "@common/models";
 import { Reducer } from "redux";
 import { BoardAction } from "../actions/boardActions";
-import { REMOVE_BOARD_PIECE, INITIALISE_BOARD, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE, UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE } from "../actions/boardActionTypes";
+import { REMOVE_BOARD_PIECE, INITIALISE_BOARD, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE, UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE, REMOVE_BOARD_PIECES } from "../actions/boardActionTypes";
 import { createTileCoordinates } from "@common/models/position";
 
 type PiecesState = {
@@ -9,6 +9,20 @@ type PiecesState = {
 };
 
 const initialState: PiecesState = {};
+
+const removePieceByIdList = (state: PiecesState, pieceIds: string[]) => {
+  const newState = {
+    ...state
+  };
+
+  for (const pieceId of pieceIds) {
+    if (newState[pieceId]) {
+      delete newState[pieceId];
+    }
+  }
+
+  return newState;
+}
 
 const pieces: Reducer<PiecesState, BoardAction> = (state = initialState, action) => {
   switch (action.type) {
@@ -32,17 +46,10 @@ const pieces: Reducer<PiecesState, BoardAction> = (state = initialState, action)
 
       return newState;
     }
-    case REMOVE_BOARD_PIECE: {
-      const newState = {
-        ...state
-      };
-
-      if (newState[action.payload.pieceId]) {
-        delete newState[action.payload.pieceId];
-      }
-
-      return newState;
-    }
+    case REMOVE_BOARD_PIECE:
+      return removePieceByIdList(state, [ action.payload.pieceId ]);
+    case REMOVE_BOARD_PIECES:
+      return removePieceByIdList(state, action.payload.pieceIds);
     case ADD_BOARD_PIECE: {
       const { piece, x, y } = action.payload;
       return {
