@@ -1,14 +1,14 @@
 import { BenchState } from "../bench";
-import { BoardState, BoardActions } from "@common/board";
+import { BoardState } from "@common/board";
 import { takeLatest, all, select, take, delay, put } from "@redux-saga/core/effects";
-import { AddBenchPieceAction, addBenchPiece, removeBenchPiece } from "../bench/benchActions";
-import { ADD_BENCH_PIECE, UNLOCK_BENCH } from "../bench/benchActionTypes";
+import { AddBenchPieceAction, addBenchPiece, removeBenchPiece, removeBenchPieces } from "../bench/benchActions";
+import { ADD_BENCH_PIECE } from "../bench/benchActionTypes";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 import { Piece } from "@common/models";
 import { PIECES_TO_EVOLVE } from "@common/models/constants";
 import { UNLOCK_BOARD } from "@common/board/actions/boardActionTypes";
 import * as pieceSelectors from "../pieceSelectors";
-import { removeBoardPiece } from "@common/board/actions/boardActions";
+import { removeBoardPieces } from "@common/board/actions/boardActions";
 
 const definitionProvider = new DefinitionProvider();
 
@@ -58,17 +58,12 @@ export const evolutionSagaFactory = <TState extends State>() => {
                     }
 
                     const boardPieceIds = matchingBoardPieces.map(p => p.id);
+
+                    yield put(removeBoardPieces(boardPieceIds));
+
                     const benchPieceIds = matchingBenchPieces.map(p => p.id);
 
-                    for (const pieceId of boardPieceIds) {
-                        // make a single action here removeBoardPieces(boardPieceIds)
-                        yield put(removeBoardPiece(pieceId));
-                    }
-
-                    for (const pieceId of benchPieceIds) {
-                        // make a single action here removeBenchPiece(benchPieceIds)
-                        yield put(removeBenchPiece(pieceId));
-                    }
+                    yield put(removeBenchPieces(benchPieceIds));
 
                     const newPiece = {
                         ...piece,
