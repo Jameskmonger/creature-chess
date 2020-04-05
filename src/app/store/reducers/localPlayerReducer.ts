@@ -9,8 +9,8 @@ const initialState: LocalPlayerState = {
     id: null,
     reconnectionSecret: null,
     name: null,
-    level: null,
-    xp: null,
+    level: 1,
+    xp: 0,
     ready: false
 };
 
@@ -23,11 +23,10 @@ export function localPlayer(state: LocalPlayerState = initialState, action: Loca
             };
         case JOIN_COMPLETE:
             return {
+                ...state,
                 id: action.payload.playerId,
                 reconnectionSecret: action.payload.reconnectionSecret,
                 name: action.payload.name,
-                level: 1,
-                xp: 0,
                 ready: false
             };
         case LEVEL_UPDATE:
