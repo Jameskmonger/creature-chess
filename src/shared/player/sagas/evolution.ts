@@ -8,7 +8,7 @@ import { Piece } from "@common/models";
 import { PIECES_TO_EVOLVE } from "@common/models/constants";
 import { UNLOCK_BOARD } from "@common/board/actions/boardActionTypes";
 import * as pieceSelectors from "../pieceSelectors";
-import { removeBoardPieces } from "@common/board/actions/boardActions";
+import { removeBoardPieces, updateBoardPiece } from "@common/board/actions/boardActions";
 
 const definitionProvider = new DefinitionProvider();
 
@@ -57,22 +57,37 @@ export const evolutionSagaFactory = <TState extends State>() => {
                         return;
                     }
 
-                    const boardPieceIds = matchingBoardPieces.map(p => p.id);
+                    if (matchingBoardPieces.length > 0) {
+                        // replace a board piece if it exists
+                        const pieceToReplace = matchingBoardPieces.pop();
 
-                    yield put(removeBoardPieces(boardPieceIds));
+                        // remove any remaining board pieces
+                        const boardPieceIds = matchingBoardPieces.map(p => p.id);
+                        yield put(removeBoardPieces(boardPieceIds));
 
-                    const benchPieceIds = matchingBenchPieces.map(p => p.id);
+                        const benchPieceIds = matchingBenchPieces.map(p => p.id);
+                        yield put(removeBenchPieces([ ...benchPieceIds, piece.id ]));
 
-                    yield put(removeBenchPieces(benchPieceIds));
+                        const newPiece = {
+                            ...pieceToReplace,
+                            stage: nextStageIndex
+                        };
 
-                    const newPiece = {
-                        ...piece,
-                        stage: nextStageIndex
-                    };
+                        yield put(updateBoardPiece(newPiece));
+                    } else {
+                        // otherwise replace the just-added bench piece
+                        const benchPieceIds = matchingBenchPieces.map(p => p.id);
+                        yield put(removeBenchPieces(benchPieceIds));
 
-                    // todo make updateBenchPiece action
-                    yield put(removeBenchPiece(piece.id));
-                    yield put(addBenchPiece(newPiece, null));
+                        const newPiece = {
+                            ...piece,
+                            stage: nextStageIndex
+                        };
+
+                        // todo make updateBenchPiece action
+                        yield put(removeBenchPiece(piece.id));
+                        yield put(addBenchPiece(newPiece, null));
+                    }
                 }
             )
         ]);
