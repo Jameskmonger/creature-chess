@@ -19,7 +19,6 @@ import { PlayerBattle, inProgressBattle, finishedBattle } from "@common/models/p
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
     SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
-    FINISH_MATCH = "FINISH_MATCH",
     UPDATE_READY = "UPDATE_READY",
     UPDATE_STREAK = "UPDATE_STREAK",
     START_LOBBY_GAME = "START_LOBBY_GAME",
@@ -29,6 +28,13 @@ enum PlayerEvent {
 interface StreakInfo {
     type: StreakType;
     amount: number;
+}
+
+export interface PlayerMatchResults {
+    homePlayer: Player;
+    opponentName: string;
+    homeScore: number;
+    awayScore: number;
 }
 
 export abstract class Player {
@@ -62,6 +68,9 @@ export abstract class Player {
 
     private turnCount: number;
     private turnDuration: number;
+
+    private currentRound: number | null = null;
+    private roundDiedAt: number | null = null;
 
     constructor(name: string) {
         this.id = uuid();
@@ -116,6 +125,10 @@ export abstract class Player {
         return this.money.getValue();
     }
 
+    public getRoundDiedAt() {
+        return this.roundDiedAt;
+    }
+
     public onFinishGame(winner: Player) {
         this.events.removeAllListeners();
     }
@@ -126,6 +139,7 @@ export abstract class Player {
 
     public async enterPreparingPhase(round: number) {
         this.gamePhase = GamePhase.PREPARING;
+        this.currentRound = round;
 
         this.readyUpDeferred = pDefer();
 
@@ -167,7 +181,7 @@ export abstract class Player {
         }
     }
 
-    public async fightMatch(battleTimeout: Promise<void>) {
+    public async fightMatch(battleTimeout: Promise<void>): Promise<PlayerMatchResults> {
         this.gamePhase = GamePhase.PLAYING;
 
         this.onEnterPlayingPhase();
@@ -187,13 +201,14 @@ export abstract class Player {
         this.battle = finishedBattle(this.match.away.id, homeScore, awayScore);
         this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
 
-        this.events.emit(PlayerEvent.FINISH_MATCH, {
+        this.pieces.applyDamagePerTurn(pieces);
+
+        return {
+            homePlayer: this,
             opponentName: this.match.away.name,
             homeScore,
             awayScore
-        });
-
-        this.pieces.applyDamagePerTurn(pieces);
+        };
     }
 
     public onStartLobbyGame(fn: () => void) {
@@ -228,10 +243,6 @@ export abstract class Player {
         this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
     }
 
-    public onFinishMatch(fn: (results: { opponentName: string, homeScore: number, awayScore: number }) => void) {
-        this.events.on(PlayerEvent.FINISH_MATCH, fn);
-    }
-
     public isAlive() {
         return this.health > 0;
     }
@@ -243,10 +254,7 @@ export abstract class Player {
 
         const cards = this.cards.getValue();
 
-        this.deck.add(cards);
-        this.deck.shuffle();
-
-        const newCards = this.deck.take(this.getLevel(), 5);
+        const newCards = this.deck.reroll(cards, this.getLevel(), 5);
         this.cards.setValue(newCards);
     }
 
@@ -263,6 +271,20 @@ export abstract class Player {
         this.events.emit(PlayerEvent.UPDATE_STREAK, this.streak);
     }
 
+    public clearPieces() {
+        const pieces = getAllPieces(this.pieces.getState());
+        this.pieces.clear();
+        for (const piece of pieces) {
+            this.deck.addPiece(piece);
+        }
+
+        const cards = this.cards.getValue();
+        this.cards.setValue([]);
+        this.deck.addCards(cards);
+
+        this.deck.shuffle();
+    }
+
     public subtractHealth(value: number) {
         const oldValue = this.health;
 
@@ -273,13 +295,24 @@ export abstract class Player {
 
         if (newValue === 0 && oldValue !== 0) {
             // player has just died
-            this.addCardsToDeck();
-            this.addPiecesToDeck();
-            this.onDeath();
+            this.roundDiedAt = this.currentRound;
         }
 
         this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
+
+    public kill() {
+        this.clearPieces();
+        this.onDeath();
+    }
+
+    public resurrect(startingHealth: number) {
+        this.roundDiedAt = null;
+        this.health = startingHealth;
+        this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
+    }
+
+    public abstract onPlayersResurrected(playerIds: string[]);
 
     public abstract onStartGame(gameId: string);
 
@@ -445,27 +478,6 @@ export abstract class Player {
             .map((card, index) => index === indexToDelete ? null : card);
 
         this.cards.setValue(newValue);
-    }
-
-    private addPiecesToDeck() {
-        const pieces = getAllPieces(this.pieces.getState());
-
-        this.pieces.clear();
-
-        for (const piece of pieces) {
-            this.deck.addPiece(piece);
-        }
-
-        this.deck.shuffle();
-    }
-
-    private addCardsToDeck() {
-        const cards = this.cards.getValue();
-
-        this.deck.add(cards);
-        this.deck.shuffle();
-
-        this.cards.setValue([]);
     }
 
     private setReady(ready: boolean) {

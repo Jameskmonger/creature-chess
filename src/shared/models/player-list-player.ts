@@ -35,4 +35,5 @@ export interface PlayerListPlayer {
     streakType: StreakType | null;
     streakAmount: number | null;
     battle: PlayerBattle;
+    roundDiedAt: number | null;
 }

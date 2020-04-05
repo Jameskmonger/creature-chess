@@ -52,6 +52,13 @@ export class CardDeck {
         this.shuffle();
     }
 
+    public reroll(input: Card[], level: number, count: number) {
+        this.addCards(input);
+        this.shuffle();
+
+        return this.take(level, count);
+    }
+
     public take(level: number, count: number) {
         const output: Card[] = [];
 
@@ -62,7 +69,7 @@ export class CardDeck {
         return output;
     }
 
-    public add(cards: Card[]) {
+    public addCards(cards: Card[]) {
         const cardsToAdd = cards.filter(card => card !== null);
 
         for (const card of cardsToAdd) {
@@ -82,6 +89,12 @@ export class CardDeck {
         }
 
         this.shuffle();
+    }
+
+    public addPieces(pieces: Piece[]) {
+        for (const piece of pieces) {
+            this.addPiece(piece);
+        }
     }
 
     public shuffle() {

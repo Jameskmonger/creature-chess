@@ -9,18 +9,15 @@ type PlayerFinishMatchEvent = {
     homeScore: number;
     awayScore: number;
 };
-type PlayerFinishMatchEventHandler = (event: PlayerFinishMatchEvent) => void;
 
 interface EventManagerTriggers {
     enterPreparingPhase: (players: Player[]) => void;
     finishRound: (players: Player[]) => void;
-    playerFinishMatch: (event: PlayerFinishMatchEvent) => void;
 }
 
 enum Events {
     ENTER_PREPARING_PHASE = "ENTER_PREPARING_PHASE",
-    FINISH_ROUND = "FINISH_ROUND",
-    PLAYER_FINISH_MATCH = "PLAYER_FINISH_MATCH"
+    FINISH_ROUND = "FINISH_ROUND"
 }
 
 export class EventManager {
@@ -31,9 +28,6 @@ export class EventManager {
         },
         finishRound: (players: Player[]) => {
             this.events.emit(Events.FINISH_ROUND, players);
-        },
-        playerFinishMatch: (event: PlayerFinishMatchEvent) => {
-            this.events.emit(Events.PLAYER_FINISH_MATCH, event);
         }
     };
 
@@ -47,9 +41,5 @@ export class EventManager {
 
     public onFinishRound(fn: GameEventHandler) {
         this.events.on(Events.FINISH_ROUND, fn);
-    }
-
-    public onPlayerFinishMatch(fn: PlayerFinishMatchEventHandler) {
-        this.events.on(Events.PLAYER_FINISH_MATCH, fn);
     }
 }
