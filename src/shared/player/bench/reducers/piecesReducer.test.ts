@@ -1,6 +1,6 @@
 import { TestFixture, Test, Expect } from "alsatian";
 import { PiecesState, pieces } from "./piecesReducer";
-import { removeBenchPiece, initialiseBench, addBenchPiece, moveBenchPiece } from "../benchActions";
+import { removeBenchPiece, initialiseBench, addBenchPiece, moveBenchPiece, removeBenchPieces } from "../benchActions";
 import { createMockPiece } from "@testing/utils";
 import { createTileCoordinates } from "@common/models/position";
 
@@ -36,6 +36,24 @@ export class PiecesReducerTests {
     ];
 
     const result = pieces(state, removeBenchPiece("123"));
+
+    Expect(result).toEqual([
+      null, null, null, null,
+      keepingPiece, null, null, null
+    ]);
+  }
+
+  @Test()
+  public removePiecesShouldRemovePieces() {
+    const removingPieceA = createMockPiece("123");
+    const removingPieceB = createMockPiece("124");
+    const keepingPiece = createMockPiece("456");
+    const state: PiecesState = [
+      null, removingPieceB, removingPieceA, null,
+      keepingPiece, null, null, null
+    ];
+
+    const result = pieces(state, removeBenchPieces([ "123", "124" ]));
 
     Expect(result).toEqual([
       null, null, null, null,

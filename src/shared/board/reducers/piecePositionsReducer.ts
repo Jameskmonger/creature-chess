@@ -1,7 +1,7 @@
 import { Piece } from "@common/models";
 import { Reducer } from "redux";
 import { BoardAction } from "../actions/boardActions";
-import { INITIALISE_BOARD, REMOVE_BOARD_PIECE, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE, UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE } from "../actions/boardActionTypes";
+import { INITIALISE_BOARD, REMOVE_BOARD_PIECE, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE, UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE, REMOVE_BOARD_PIECES } from "../actions/boardActionTypes";
 
 type PiecePositionsState = {
   [position: string]: string;
@@ -67,6 +67,8 @@ const piecePositions: Reducer<PiecePositionsState, BoardAction> = (state = initi
     }
     case REMOVE_BOARD_PIECE:
       return removePieceById(state, action.payload.pieceId);
+    case REMOVE_BOARD_PIECES:
+      return removePieceByIdList(state, action.payload.pieceIds);
     case ADD_BOARD_PIECE: {
       const { x, y, piece } = action.payload;
       return {

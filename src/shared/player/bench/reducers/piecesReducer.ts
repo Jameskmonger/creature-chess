@@ -1,12 +1,26 @@
 import { Piece } from "@common/models";
 import { Reducer } from "redux";
 import { BenchAction } from "../benchActions";
-import { REMOVE_BENCH_PIECE, INITIALISE_BENCH, ADD_BENCH_PIECE, MOVE_BENCH_PIECE } from "../benchActionTypes";
+import { REMOVE_BENCH_PIECE, INITIALISE_BENCH, ADD_BENCH_PIECE, MOVE_BENCH_PIECE, REMOVE_BENCH_PIECES } from "../benchActionTypes";
 import { createTileCoordinates } from "@common/models/position";
 
 type PiecesState = Piece[];
 
 const initialState: PiecesState = [null, null, null, null, null, null, null, null];
+
+const removePieces = (state: PiecesState, pieceIds: string[]) => {
+  const newState = [];
+
+  for (const piece of state) {
+    if (!piece || pieceIds.includes(piece.id)) {
+      newState.push(null);
+    } else {
+      newState.push(piece);
+    }
+  }
+
+  return newState;
+};
 
 const pieces: Reducer<PiecesState, BenchAction> = (state = initialState, action) => {
   switch (action.type) {
@@ -26,17 +40,10 @@ const pieces: Reducer<PiecesState, BenchAction> = (state = initialState, action)
       return newState;
     }
     case REMOVE_BENCH_PIECE: {
-      const newState = [];
-
-      for (const piece of state) {
-        if (!piece || piece.id === action.payload.pieceId) {
-          newState.push(null);
-        } else {
-          newState.push(piece);
-        }
-      }
-
-      return newState;
+      return removePieces(state, [ action.payload.pieceId ]);
+    }
+    case REMOVE_BENCH_PIECES: {
+      return removePieces(state, action.payload.pieceIds);
     }
     case MOVE_BENCH_PIECE: {
       const { pieceId, from, to } = action.payload;
