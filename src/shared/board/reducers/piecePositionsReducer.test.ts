@@ -1,5 +1,8 @@
 import { TestFixture, Test, Expect, TestCase } from "alsatian";
-import { initialiseBoard, removeBoardPiece, addBoardPiece, updateBoardPiece, updateBoardPieces, moveBoardPiece } from "../actions/boardActions";
+import {
+  initialiseBoard, removeBoardPiece, addBoardPiece, updateBoardPiece,
+  updateBoardPieces, moveBoardPiece, removeBoardPieces
+} from "../actions/boardActions";
 import { piecePositions, PiecePositionsState } from "./piecePositionsReducer";
 import { createMockPiece } from "@testing/utils";
 import { createTileCoordinates } from "@common/models/position";
@@ -77,6 +80,23 @@ export class PiecePositionsReducerTests {
     };
 
     const action = removeBoardPiece("123");
+
+    const result = piecePositions(state, action);
+
+    Expect(result).toEqual({
+      "4,5": "456"
+    });
+  }
+
+  @Test()
+  public removePiecesShouldRemovePieces() {
+    const state: PiecePositionsState = {
+      "1,2": "123",
+      "1,3": "124",
+      "4,5": "456"
+    };
+
+    const action = removeBoardPieces(["123", "124"]);
 
     const result = piecePositions(state, action);
 
