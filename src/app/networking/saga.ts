@@ -4,7 +4,7 @@ import { call, takeEvery, put, take, fork, all, takeLatest, select } from "@redu
 import { Socket, ActionWithPayload } from "../store/sagas/types";
 import {
     moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError,
-    FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction
+    FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
 } from "../store/actions/gameActions";
 import { BoardActions, BoardActionTypes } from "@common/board";
 import { playerListUpdated } from "../features/playerList/playerListActions";
@@ -179,6 +179,13 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                 log("[SHOP_LOCK_UPDATE]", packet);
 
                 emit(shopLockUpdated(packet.locked));
+            }
+        );
+
+        registry.on(
+            ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
+            ({ playerIds }) => {
+                emit(playersResurrected(playerIds));
             }
         );
 

@@ -46,6 +46,8 @@ export class Bot extends Player {
         /* nothing required, we're a bot */
     }
 
+    public onPlayersResurrected() { /* nothing required, we're a bot */ }
+
     protected onEnterPreparingPhase() {
         this.buyBestPieces();
         this.putBenchOnBoard();

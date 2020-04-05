@@ -203,7 +203,7 @@ export class Game {
         const livingPlayers = this.players.filter(p => p.isAlive());
 
         const onPlayerFinishBattle = (results: PlayerMatchResults) => {
-            const damage = results.awayScore * 3;
+            const damage = this.round === 3 ? 100 : results.awayScore * 3;
 
             results.homePlayer.subtractHealth(damage);
         };
@@ -222,7 +222,7 @@ export class Game {
 
             const justDiedPlayerIds = justDiedPlayers.map(p => p.id);
             for (const player of this.players) {
-                player.broadcastResurrections(justDiedPlayerIds);
+                player.onPlayersResurrected(justDiedPlayerIds);
             }
         }
 

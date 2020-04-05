@@ -312,9 +312,7 @@ export abstract class Player {
         this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
     }
 
-    public broadcastResurrections(playerIds: string[]) {
-        console.log(`Resurrected: ${playerIds.join(" ")}`);
-    }
+    public abstract onPlayersResurrected(playerIds: string[]);
 
     public abstract onStartGame(gameId: string);
 
