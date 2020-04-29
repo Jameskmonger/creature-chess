@@ -4,8 +4,6 @@ import { BoardPieceUnconnected } from "./boardPieceUnconnected";
 
 const selectedPiece = {
     beginDrag(props: BoardPieceProps) {
-        props.onBeginDrag();
-
         return props.piece;
     },
     isDragging(props: BoardPieceProps, monitor: DragSourceMonitor) {
