@@ -6,8 +6,8 @@ import {
 } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
-import { BEGIN_DRAG_BENCH_PIECE, BEGIN_DRAG_BOARD_PIECE, SELECT_PIECE } from "../actiontypes/boardActionTypes";
-import { BeginDragPieceAction, SelectPieceAction } from "../actions/boardActions";
+import { SELECT_PIECE } from "../actiontypes/boardActionTypes";
+import { SelectPieceAction } from "../actions/boardActions";
 import { ConnectionStatus } from "@common/networking";
 import { GamePhase } from "@common/models";
 
@@ -29,7 +29,7 @@ export const initialState: GameState = {
     winnerName: null
 };
 
-type GameReducerActionTypes = GameAction | BeginDragPieceAction | SelectPieceAction;
+type GameReducerActionTypes = GameAction | SelectPieceAction;
 
 export function game(state: GameState = initialState, action: GameReducerActionTypes): GameState {
     switch (action.type) {

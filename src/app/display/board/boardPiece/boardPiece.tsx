@@ -2,10 +2,9 @@ import { compose } from "recompose";
 import { connect, MapStateToProps, MapDispatchToProps } from "react-redux";
 import { AppState } from "@app/store";
 import { localPlayerIdSelector } from "../../../store/gameSelector";
-import { BoardPieceProps, BoardPieceStateProps, BoardPieceOwnProps, BoardPieceDispatchProps } from "./boardPieceProps";
+import { BoardPieceProps, BoardPieceStateProps, BoardPieceOwnProps } from "./boardPieceProps";
 import { boardPieceDragSource } from "./boardPieceDragDrop";
 import { BoardPieceUnconnected } from "./boardPieceUnconnected";
-import { beginDragBoardPiece } from "../../../store/actions/boardActions";
 import { GamePhase } from "@common/models";
 
 const mapStateToProps: MapStateToProps<BoardPieceStateProps, {}, AppState> = state => ({
@@ -16,12 +15,8 @@ const mapStateToProps: MapStateToProps<BoardPieceStateProps, {}, AppState> = sta
     localPlayerId: localPlayerIdSelector(state)
 });
 
-const mapDispatchToProps: MapDispatchToProps<BoardPieceDispatchProps, {}> = (dispatch) => ({
-    onBeginDrag: () => dispatch(beginDragBoardPiece())
-});
-
 const BoardPiece = compose<BoardPieceProps, BoardPieceOwnProps>(
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps),
     boardPieceDragSource
 )(BoardPieceUnconnected);
 
