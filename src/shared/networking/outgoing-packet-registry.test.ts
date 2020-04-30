@@ -2,14 +2,11 @@ import { TestFixture, Test, Expect, createFunctionSpy, Any } from "alsatian";
 import { OutgoingPacketRegistry } from "./outgoing-packet-registry";
 
 const SOME_TEST_PACKET = "someTestPacket";
-const ANOTHER_TEST_PACKET = "anotherTestPacket";
 type TestPackets = {
-    [SOME_TEST_PACKET]: { value: number },
-    [ANOTHER_TEST_PACKET]: { a: string, b: { value: boolean }}
+    [SOME_TEST_PACKET]: { value: number }
 };
 type TestAcknowledgements = {
-    [SOME_TEST_PACKET]: string,
-    [ANOTHER_TEST_PACKET]: undefined
+    [SOME_TEST_PACKET]: (val: string) => void
 };
 
 @TestFixture("OutgoingPacketRegistry")
@@ -32,7 +29,7 @@ export class OutgoingPacketRegistryTests {
 
         const registry = new OutgoingPacketRegistry<TestPackets, TestAcknowledgements>(emit);
 
-        const ack = (response: string) => null;
+        const ack = (response: string) => { };
         registry.emit(SOME_TEST_PACKET, { value: 3 }, ack);
 
         Expect(emit).toHaveBeenCalledWith(Any(String), Any(Object), ack);

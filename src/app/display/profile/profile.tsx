@@ -3,9 +3,9 @@ import { ProgressBar } from "../progressBar";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "@app/store";
 import { getXpToNextLevel } from "@common/utils";
-import { buyXpAction } from "../../store/actions/localPlayerActions";
 import { GamePhase, Constants } from "@common/models";
 import { PieceCount } from "./pieceCount";
+import { PlayerActions } from '@common/player';
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 
@@ -57,7 +57,7 @@ const mapStateToProps: MapStateToProps<ProfileStateProps, {}, AppState> = state 
 });
 
 const mapDispatchToProps: MapDispatchToProps<ProfileDispatchProps, {}> = dispatch => ({
-    onBuyXp: () => dispatch(buyXpAction())
+    onBuyXp: () => dispatch(PlayerActions.buyXpAction())
 });
 
 const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileUnconnected);

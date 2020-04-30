@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PLAYER_DROP_PIECE } from "../actionTypes";
-import { PlayerPiecesState } from "../state";
+import { PlayerState } from "../state";
 import { PlayerDropPieceAction } from "../actions";
 import { BenchState } from "../bench";
 import { BoardState } from "@common/board";
@@ -9,7 +9,7 @@ import * as pieceSelectors from "../pieceSelectors";
 import { moveBoardPiece, removeBoardPiece, addBoardPiece } from "@common/board/actions/boardActions";
 import { moveBenchPiece, addBenchPiece, removeBenchPiece } from "../bench/benchActions";
 
-const findPiece = (state: PlayerPiecesState, location: PlayerPieceLocation) => {
+const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {
     const { x, y } = location.location;
 
@@ -25,7 +25,7 @@ const findPiece = (state: PlayerPiecesState, location: PlayerPieceLocation) => {
   return null;
 };
 
-const isLocationLocked = (state: PlayerPiecesState, location: PlayerPieceLocation) => {
+const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {
     return state.board.locked;
   }
@@ -41,7 +41,7 @@ export const dropPiece = function*() {
   yield takeEvery<PlayerDropPieceAction>(
     PLAYER_DROP_PIECE,
     function*({ payload: { from, pieceId, to } }) {
-      const state: PlayerPiecesState = yield select();
+      const state: PlayerState = yield select();
 
       if (isLocationLocked(state, from) || isLocationLocked(state, to)) {
         // source or destination is locked

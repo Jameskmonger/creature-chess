@@ -5,6 +5,9 @@ const SOME_TEST_PACKET = "someTestPacket";
 type TestPackets = {
     [SOME_TEST_PACKET]: { value: number }
 };
+type TestAcknowledgements = {
+    [SOME_TEST_PACKET]: (val: string) => void,
+};
 
 @TestFixture("IncomingPacketRegistry")
 export class IncomingPacketRegistryTests {
@@ -12,9 +15,9 @@ export class IncomingPacketRegistryTests {
     public shouldCallRegisterListenerFn() {
         const register = createFunctionSpy();
 
-        const registry = new IncomingPacketRegistry<TestPackets>(register);
+        const registry = new IncomingPacketRegistry<TestPackets, TestAcknowledgements>(register);
 
-        const handler = () => { return; };
+        const handler = (packet: { value: number }, ack: (val: string) => void) => { return; };
         registry.on(SOME_TEST_PACKET, handler);
 
         Expect(register).toHaveBeenCalledWith(SOME_TEST_PACKET, handler);

@@ -5,15 +5,15 @@ import { pieceUtils } from "@common/utils";
 import { getFirstEmptyBenchSlot } from "@common/board";
 import { moneyUpdateAction } from "../../actions/gameActions";
 import { DefinitionProvider } from "@common/game/definitionProvider";
-import { BUY_CARD } from "../../../features/cardShop/cardActionTypes";
-import { BuyCardAction, cardsUpdated } from "../../../features/cardShop/cardActions";
+import { cardsUpdated } from "../../../features/cardShop/cardActions";
 import { addBenchPiece } from "@common/player/bench/benchActions";
+import { PlayerActions, PlayerActionTypes } from '@common/player';
 
 const definitionProvider = new DefinitionProvider();
 
 export const cardShop = function*() {
-    yield takeEvery<BuyCardAction>(
-        BUY_CARD,
+    yield takeEvery<PlayerActions.BuyCardAction>(
+        PlayerActionTypes.BUY_CARD,
         function*(action) {
             const state: AppState = yield select();
 

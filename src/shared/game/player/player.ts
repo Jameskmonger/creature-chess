@@ -10,11 +10,11 @@ import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer, Card, FeedMessage, GamePhase } from "@common/models";
 import { getPiecesForStage, getXpToNextLevel, pieceUtils, Observable } from "@common/utils";
-import { DropPiecePacket } from "@common/networking/client-to-server";
 import { getBoardPieceCount, hasSpaceOnBench, getPiece, getAllPieces,  } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "@common/board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle } from "@common/models/player-list-player";
+import { PlayerActions } from '@common/player';
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -456,15 +456,17 @@ export abstract class Player {
         this.readyUpDeferred.resolve();
     }
 
-    protected onDropPiece = (packet: DropPiecePacket) => {
-        if (!packet || !packet.pieceId || !packet.from || !packet.to) {
+    protected onDropPiece = ({ payload }: PlayerActions.PlayerDropPieceAction) => {
+        if (!payload || !payload.pieceId || !payload.from || !payload.to) {
             // packet malformed
             return;
         }
 
-        this.pieces.playerDropPiece(packet.pieceId, packet.from, packet.to);
+        this.pieces.dispatchAction(
+            PlayerActions.playerDropPiece(payload.pieceId, payload.from, payload.to)
+        );
     }
-
+    
     protected getLevel() {
         return this.level.getValue().level;
     }

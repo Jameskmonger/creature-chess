@@ -11,7 +11,6 @@ import {
     CLEAR_ANNOUNCEMENT,
     UPDATE_CONNECTION_STATUS,
     SHOP_LOCK_UPDATED,
-    TOGGLE_SHOP_LOCK,
     FINISH_GAME,
     CLEAR_SELECTED_PIECE,
     PLAYERS_RESURRECTED
@@ -28,7 +27,6 @@ export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { 
 export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
-export type ToggleShopLockAction = ({ type: TOGGLE_SHOP_LOCK });
 export type ClearSelectedPieceAction = ({ type: CLEAR_SELECTED_PIECE });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
 export type PhaseStartSecondsAction = ({ type: PHASE_START_SECONDS, payload: { time: number } });
@@ -48,7 +46,6 @@ export type GameAction =
     | AnnouncementClearAction
     | UpdateConnectionStatusAction
     | UpdateShopLockAction
-    | ToggleShopLockAction
     | FinishGameAction
     | ClearSelectedPieceAction
     | PlayersResurrectedAction;
@@ -135,8 +132,6 @@ export const shopLockUpdated = (locked: boolean): UpdateShopLockAction => ({
     type: SHOP_LOCK_UPDATED,
     payload: { locked }
 });
-
-export const toggleShopLock = (): ToggleShopLockAction => ({ type: TOGGLE_SHOP_LOCK });
 
 export const finishGameAction = (winnerName: string): FinishGameAction => ({
     type: FINISH_GAME,

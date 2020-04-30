@@ -3,10 +3,11 @@ import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
 import { LobbyPlayer, FeedMessage, PlayerListPlayer } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
-import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes } from "@common/networking/client-to-server";
+import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { GamePhase } from "@common/models";
+import { PlayerActionTypes, PlayerActionTypesArray } from '@common/player';
 
 export class Connection extends Player {
     public readonly isBot: boolean = false;
@@ -14,7 +15,7 @@ export class Connection extends Player {
     private socket: Socket;
     private reconnectionSecret: string;
 
-    private incomingPacketRegistry: IncomingPacketRegistry<ClientToServerPacketDefinitions>;
+    private incomingPacketRegistry: IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
     private outgoingPacketRegistry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
     constructor(socket: Socket, name: string) {
@@ -22,19 +23,11 @@ export class Connection extends Player {
 
         this.setSocket(socket);
 
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.BUY_CARD, this.buyCard);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SELL_PIECE, this.sellPiece);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.BUY_REROLL, () => {
-            this.buyReroll();
-            this.sendCardsUpdate();
-        });
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.DROP_PIECE, this.onDropPiece);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.BUY_XP, this.buyXp);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.READY_UP, this.readyUp);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK, this.toggleShopLock);
+
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
 
         this.money.onChange(this.sendMoneyUpdate);
         this.level.onChange(this.sendLevelUpdate);
@@ -166,11 +159,58 @@ export class Connection extends Player {
         );
     }
 
+    private lastReceivedPacketIndex = 0;
+    private receiveActions = (packet: SendPlayerActionsPacket, ack: (accepted: boolean, packetIndex?: number) => void) => {
+        const expectedPacketIndex = this.lastReceivedPacketIndex + 1;
+
+        if (expectedPacketIndex !== packet.index) {
+            ack(false);
+            return;
+        }
+
+        for (const action of packet.actions) {
+            switch (action.type) {
+                case PlayerActionTypes.TOGGLE_SHOP_LOCK: {
+                    this.toggleShopLock();
+                    break;
+                }
+                case PlayerActionTypes.BUY_CARD: {
+                    this.buyCard(action.payload.index);
+                    break;
+                }
+                case PlayerActionTypes.PLAYER_SELL_PIECE: {
+                    this.sellPiece(action.payload.pieceId);
+                    break;
+                }
+                case PlayerActionTypes.REROLL_CARDS: {
+                    this.buyReroll();
+                    this.sendCardsUpdate();
+                    break;
+                }
+                case PlayerActionTypes.PLAYER_DROP_PIECE: {
+                    this.onDropPiece(action);
+                    break;
+                }
+                case PlayerActionTypes.BUY_XP: {
+                    this.buyXp();
+                    break;
+                }
+                case PlayerActionTypes.READY_UP: {
+                    this.readyUp();
+                    break;
+                }
+            }
+        }
+
+        this.lastReceivedPacketIndex = packet.index;
+        ack(true, packet.index);
+    }
+
     private setSocket(socket: Socket) {
         this.socket = socket;
         this.reconnectionSecret = uuid();
 
-        this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions>(
+        this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
             (opcode, handler) => socket.on(opcode, handler)
         );
 

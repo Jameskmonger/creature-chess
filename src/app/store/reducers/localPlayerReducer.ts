@@ -1,9 +1,10 @@
 import { LocalPlayerState } from "../state";
 import { LocalPlayerAction } from "../actions/localPlayerActions";
-import { JOIN_COMPLETE, LEVEL_UPDATE, READY_UP, UPDATE_RECONNECT_SECRET } from "../actiontypes/localPlayerActionTypes";
+import { JOIN_COMPLETE, LEVEL_UPDATE, UPDATE_RECONNECT_SECRET } from "../actiontypes/localPlayerActionTypes";
 import { GamePhaseUpdateAction } from "../actions/gameActions";
 import { GAME_PHASE_UPDATE } from "../actiontypes/gameActionTypes";
 import { GamePhase } from "@common/models";
+import { PlayerActionTypes, PlayerActions } from '@common/player';
 
 const initialState: LocalPlayerState = {
     id: null,
@@ -14,7 +15,7 @@ const initialState: LocalPlayerState = {
     ready: false
 };
 
-export function localPlayer(state: LocalPlayerState = initialState, action: LocalPlayerAction | GamePhaseUpdateAction) {
+export function localPlayer(state: LocalPlayerState = initialState, action: LocalPlayerAction | GamePhaseUpdateAction | PlayerActions.ReadyUpAction) {
     switch (action.type) {
         case UPDATE_RECONNECT_SECRET:
             return {
@@ -35,7 +36,7 @@ export function localPlayer(state: LocalPlayerState = initialState, action: Loca
                 level: action.payload.level,
                 xp: action.payload.xp
             };
-        case READY_UP:
+        case PlayerActionTypes.READY_UP:
             return {
                 ...state,
                 ready: true

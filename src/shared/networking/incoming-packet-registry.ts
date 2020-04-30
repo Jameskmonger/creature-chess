@@ -1,16 +1,16 @@
-type RegisterListenerFn<TPayloads> = <TOpcode extends keyof TPayloads>(
+type RegisterListenerFn<TPayloads, TAcknowledgements> = <TOpcode extends keyof TPayloads & keyof TAcknowledgements>(
   opcode: TOpcode,
-  handler: (payload: TPayloads[TOpcode]) => void
+  handler: (payload: TPayloads[TOpcode], ack?: TAcknowledgements[TOpcode]) => void
 ) => void;
 
-export class IncomingPacketRegistry<TPayloads> {
-  constructor(private registerListener: RegisterListenerFn<TPayloads>) {
+export class IncomingPacketRegistry<TPayloads, TAcknowledgements> {
+  constructor(private registerListener: RegisterListenerFn<TPayloads, TAcknowledgements>) {
 
   }
 
-  public on<TOpcode extends keyof TPayloads>(
+  public on<TOpcode extends keyof TPayloads & keyof TAcknowledgements>(
     opcode: TOpcode,
-    handler: (payload: TPayloads[TOpcode]) => void
+    handler: (payload: TPayloads[TOpcode], ack?: TAcknowledgements[TOpcode]) => void
   ) {
     this.registerListener(opcode, handler);
   }

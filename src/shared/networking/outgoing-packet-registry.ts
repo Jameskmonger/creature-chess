@@ -1,7 +1,7 @@
 type EmitFn <TPayloads, TAcknowledgements> = <TOpcode extends keyof TPayloads & keyof TAcknowledgements>(
   opcode: TOpcode,
   payload: TPayloads[TOpcode],
-  ack?: (response: TAcknowledgements[TOpcode]) => void
+  ack?: TAcknowledgements[TOpcode]
 ) => void;
 
 export class OutgoingPacketRegistry<TPayloads, TAcknowledgements> {
@@ -12,7 +12,7 @@ export class OutgoingPacketRegistry<TPayloads, TAcknowledgements> {
   public emit<TKey extends keyof TPayloads & keyof TAcknowledgements>(
     opcode: TKey,
     payload?: TPayloads[TKey],
-    ack?: (response: TAcknowledgements[TKey]) => void
+    ack?: TAcknowledgements[TKey]
   ) {
     if (ack) {
       this.emitFn(opcode, payload, ack);

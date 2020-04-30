@@ -9,10 +9,9 @@ import { lockBench, unlockBench, addBenchPiece, removeBenchPiece, initialiseBenc
 import { evolutionSagaFactory } from "@common/player/sagas/evolution";
 
 import { PlayerPiecesState } from "@common/player";
-import { playerDropPiece } from "@common/player/actions";
+import { playerDropPiece, PlayerAction } from "@common/player/actions";
 import { dropPiece } from "@common/player/sagas/dropPiece";
 import { removeBoardPiece, initialiseBoard } from "@common/board/actions/boardActions";
-
 const createBoardStore = () => {
   const rootSaga = function*() {
     yield all([
@@ -74,7 +73,13 @@ export class PlayerPieces {
     // todo consider whether damage per turn is the right metric and implement if so
   }
 
-  public playerDropPiece(pieceId: string, from: PlayerPieceLocation, to: PlayerPieceLocation) {
-    this.store.dispatch(playerDropPiece(pieceId, from, to));
+  public dispatchAction(action: PlayerAction) {
+    this.store.dispatch(action);
+  }
+
+  public dispatchActions(actions: PlayerAction[]) {
+    for (const action of actions) {
+      this.store.dispatch(action);
+    }
   }
 }
