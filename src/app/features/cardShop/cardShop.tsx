@@ -3,12 +3,11 @@ import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "@app/store";
 import { Card as CardModel, Constants, GamePhase } from "@common/models";
-import { rerollCards, buyCard } from "./cardActions";
 import { DropToSell } from "./dropToSell/dropToSell";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
 import { LockButton } from "./lockButton";
-import { toggleShopLock } from "../../store/actions/gameActions";
+import { PlayerActions } from '@common/player';
 
 interface StateProps {
     cards: CardModel[];
@@ -88,9 +87,9 @@ const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onReroll: () => dispatch(rerollCards()),
-    onBuyCard: (index: number) => dispatch(buyCard(index)),
-    onToggleLock: () => dispatch(toggleShopLock())
+    onReroll: () => dispatch(PlayerActions.rerollCards()),
+    onBuyCard: (index: number) => dispatch(PlayerActions.buyCard(index)),
+    onToggleLock: () => dispatch(PlayerActions.toggleShopLock())
 });
 
 const CardShop = connect(mapStateToProps, mapDispatchToProps)(CardShopUnconnected);

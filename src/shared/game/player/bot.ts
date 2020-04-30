@@ -1,9 +1,8 @@
-import { createTileCoordinates } from "../../models/position";
 import { Player } from "./player";
 import { GRID_SIZE } from "../../models/constants";
 import { Card, Piece, LobbyPlayer, PlayerListPlayer, FeedMessage, PlayerPieceLocation } from "@common/models";
 import { getAllPieces, getBoardPieceForPosition } from "@common/player/pieceSelectors";
-import { PlayerPiecesState } from "@common/player";
+import { PlayerPiecesState, PlayerActions } from "@common/player";
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
@@ -64,7 +63,7 @@ export class Bot extends Player {
     protected onDeath() { /* nothing required, we're a bot */ }
 
     protected onShopLockUpdate() { /* nothing required, we're a bot */ }
-
+    
     private buyBestPieces() {
         const cards = this.getCardViews();
 
@@ -130,7 +129,9 @@ export class Bot extends Player {
                 }
             };
 
-            this.pieces.playerDropPiece(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition);
+            this.pieces.dispatchAction(
+                PlayerActions.playerDropPiece(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition)
+            );
         }
     }
 
