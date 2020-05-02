@@ -201,8 +201,6 @@ export abstract class Player {
         this.battle = finishedBattle(this.match.away.id, homeScore, awayScore);
         this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
 
-        this.pieces.applyDamagePerTurn(pieces);
-
         return {
             homePlayer: this,
             opponentName: this.match.away.name,

@@ -11,6 +11,5 @@ export const createMockPiece = (id: string): Piece => ({
   currentHealth: 100,
   maxHealth: 100,
   coolDown: 100,
-  damagePerTurn: 0,
   targetPieceId: null
 });

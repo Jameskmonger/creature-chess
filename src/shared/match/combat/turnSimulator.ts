@@ -106,8 +106,6 @@ export class TurnSimulator {
         const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 10;
         const newDefenderHealth = Math.max(defender.piece.currentHealth - damage, 0);
 
-        const totalDamage = attacker.piece.damagePerTurn * turnCount;
-
         return {
             attacker: {
                 ...attacker.piece,
@@ -116,7 +114,6 @@ export class TurnSimulator {
                     direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
                     damage
                 },
-                damagePerTurn: (totalDamage + (damage * DAMAGE_RATIO)) / turnCount,
                 targetPieceId: defender.piece.id
             },
             defender: {

@@ -69,10 +69,6 @@ export class PlayerPieces {
     this.store.dispatch(lockBench());
   }
 
-  public applyDamagePerTurn(template: Piece[]) {
-    // todo consider whether damage per turn is the right metric and implement if so
-  }
-
   public dispatchAction(action: PlayerAction) {
     this.store.dispatch(action);
   }

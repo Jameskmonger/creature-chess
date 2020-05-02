@@ -24,8 +24,8 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
             return null;
         }
 
-        const { piece, connectDragSource, showDamagePerTurn, showHealthbar } = this.props;
-        const { facingAway, definitionId, currentHealth, maxHealth, coolDown, stage, damagePerTurn } = piece;
+        const { piece, connectDragSource, showHealthbar } = this.props;
+        const { facingAway, definitionId, currentHealth, maxHealth, coolDown, stage } = piece;
         const { currentAnimations } = this.state;
 
         const friendly = isFriendly(this.props);
@@ -38,12 +38,6 @@ class BoardPieceUnconnected extends React.Component<BoardPieceProps & DragSource
                 onAnimationEnd={this.onAnimationEnd}
             >
                 <CreatureImage definitionId={definitionId} facing={facingAway ? "back" : "front"} />
-
-                {
-                    showDamagePerTurn
-                    && damagePerTurn !== null
-                    && <div className="damage-per-turn">{damagePerTurn.toFixed(0)} dpt</div>
-                }
 
                 <div className="piece-stage">{stage + 1}</div>
 

@@ -9,7 +9,6 @@ export const createPiece = (
     ownerId: string,
     definitionId: number,
     position: [number, number],
-    damagePerTurn: number | null,
     id?: string,
     stage: number = 0
 ): Piece => {
@@ -23,7 +22,6 @@ export const createPiece = (
         maxHealth: stats.hp,
         currentHealth: stats.hp,
         coolDown: INITIAL_COOLDOWN,
-        damagePerTurn,
         stage,
         targetPieceId: null
     };
@@ -35,11 +33,11 @@ export const createPieceFromCard = (
     card: Card,
     slot: number
 ) =>
-    createPiece(definitionProvider, ownerId, card.definitionId, [slot, null], null, card.id);
+    createPiece(definitionProvider, ownerId, card.definitionId, [slot, null], card.id);
 
 export const clonePiece =
     (definitionProvider: DefinitionProvider, piece: Piece) =>
-        createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y], 0, piece.id, piece.stage);
+        createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y], piece.id, piece.stage);
 
 export const moveOrAddPiece = <T extends Piece>(allPieces: T[], target: T) => {
     const result: T[] = [];

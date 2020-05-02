@@ -7,7 +7,6 @@ export interface BoardPieceOwnProps {
 export interface BoardPieceStateProps {
     localPlayerId: string;
     canDrag: boolean;
-    showDamagePerTurn: boolean;
     showHealthbar: boolean;
     animate: boolean;
 }
