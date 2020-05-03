@@ -46,111 +46,6 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-.chessboard {
-  width: 100%;
-  height: 100%;
-  text-align: center; }
-
-.tile {
-  position: relative;
-  display: inline-block;
-  width: 12.5%;
-  height: 100%;
-  box-sizing: border-box;
-  user-select: none; }
-  .tile .image {
-    position: absolute;
-    top: 0;
-    left: 9%;
-    width: 82%;
-    height: 82%; }
-  .tile.selected {
-    box-sizing: border-box;
-    border: 2px solid #ff5200; }
-  .tile .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; }
-    .tile .overlay.not-allowed {
-      background: #484848;
-      opacity: 0.4; }
-  .tile.bench .image {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; }
-
-.tile-row {
-  width: 100%;
-  height: 11.11111%;
-  box-sizing: border-box;
-  line-height: 0;
-  white-space: nowrap; }
-  .tile-row.last {
-    margin-bottom: 12px; }
-
-.opponent-board-placeholder {
-  width: 100%;
-  height: 44.44444%;
-  box-sizing: border-box;
-  background: #717171;
-  border: 3px solid #2d2d2d; }
-  .opponent-board-placeholder .label {
-    display: block;
-    padding-top: 2em;
-    margin-bottom: 2em;
-    font-family: Arial, sans-serif;
-    font-size: 1.3em;
-    color: #fff; }
-
-/* stylelint-disable */
-.style-default.tile.dark {
-  background: #38b764; }
-
-.style-default.tile.light {
-  background: #a7f070; }
-
-.style-default.tile.bench {
-  background: #ffcd75;
-  box-shadow: inset 0 0 2px #754b00; }
-
-.style-default.tile-row {
-  border-right: 3px solid #2d2d2d;
-  border-left: 3px solid #2d2d2d; }
-  .style-default.tile-row.first {
-    border-top: 3px solid #2d2d2d; }
-  .style-default.tile-row.last {
-    border-bottom: 3px solid #2d2d2d; }
-  .style-default.tile-row .tile:not(:last-of-type).dark {
-    border-right: #38b764 solid #404040; }
-  .style-default.tile-row .tile:not(:last-of-type).light {
-    border-right: #a7f070 solid #404040; }
-  .style-default.tile-row:not(.last) .tile.dark {
-    border-bottom: #38b764 solid #404040; }
-  .style-default.tile-row:not(.last) .tile.light {
-    border-bottom: #a7f070 solid #404040; }
-
-.style-james.tile.dark {
-  background: #828282; }
-
-.style-james.tile.light {
-  background: #828282; }
-
-.style-james.tile-row {
-  border-right: 3px solid #3cea92;
-  border-left: 3px solid #3cea92; }
-  .style-james.tile-row.first {
-    border-top: 3px solid #3cea92; }
-  .style-james.tile-row.last {
-    border-bottom: 3px solid #3cea92; }
-  .style-james.tile-row .tile:not(:last-of-type) {
-    border-right: 2px solid #404040; }
-  .style-james.tile-row:not(.last) .tile {
-    border-bottom: 2px solid #404040; }
-
 /* stylelint-disable */
 body {
   /* stylelint-enable */
@@ -161,7 +56,7 @@ body {
 
 .game {
   display: flex;
-  padding: 1em;
+  padding: 0.4em;
   overflow-y: hidden; }
   .game .game-id {
     margin-bottom: 1em;
@@ -179,21 +74,12 @@ body {
   .game .group {
     flex: 1;
     box-sizing: border-box; }
-  .game .board-container {
-    position: relative;
-    display: flex;
-    margin: 0 auto;
-    flex-grow: 0;
-    /* stylelint-disable */
-    flex-shrink: initial;
-    flex-basis: initial;
-    /* stylelint-enable */ }
   .game .announcement {
     position: absolute;
+    top: 2em;
     z-index: 4;
     width: 100%;
     padding: 2em 0;
-    margin-top: 2em;
     font-family: Arial, sans-serif;
     color: #fff;
     text-align: center;
@@ -215,6 +101,7 @@ body {
     border: none; }
   .game .reconnect {
     position: absolute;
+    top: 0;
     z-index: 100;
     width: 100%;
     height: 100%;
@@ -471,23 +358,68 @@ body {
 .card-selector .lock-icon {
   cursor: pointer; }
 
+.chessboard {
+  position: relative;
+  margin-bottom: 1em; }
+
+.tile-row {
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 0;
+  white-space: nowrap; }
+
+.tile {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  user-select: none; }
+  .tile.selected {
+    box-sizing: border-box;
+    border: 2px solid #ff5200; }
+  .tile .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; }
+    .tile .overlay.not-allowed {
+      background: #484848;
+      opacity: 0.4; }
+  .tile.bench .image {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+
+.positionable-piece {
+  position: absolute; }
+
+.opponent-board-placeholder {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  background: #717171;
+  border: 3px solid #2d2d2d; }
+  .opponent-board-placeholder .label {
+    display: block;
+    padding-top: 2em;
+    margin-bottom: 2em;
+    font-family: Arial, sans-serif;
+    font-size: 1.3em;
+    color: #fff; }
+
 .piece {
   position: relative;
   z-index: 3;
   width: 100%;
   height: 100%; }
-  .piece .damage-per-turn {
+  .piece .image {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 0.1em 0;
-    font-family: Arial, sans-serif;
-    font-size: 0.7em;
-    font-weight: 700;
-    line-height: 1em;
-    color: #ffff21;
-    background: rgba(0, 0, 0, 0.4); }
+    bottom: 0;
+    left: 9%;
+    width: 82%;
+    height: 82%; }
   .piece.move-up {
     animation-name: move-up;
     animation-duration: 300ms; }
@@ -605,22 +537,20 @@ body {
 
 .healthbar {
   width: 101%;
-  height: 60%;
+  height: 70%;
   box-sizing: border-box;
   margin: 0 auto;
   background: #636363; }
   .healthbar .fill {
     height: 100%; }
   .healthbar.friendly .fill {
-    height: 12px;
     background: #20b720; }
   .healthbar.enemy .fill {
-    height: 12px;
     background: #e60d0d; }
 
 .cooldownbar {
   width: 101%;
-  height: 40%;
+  height: 30%;
   box-sizing: border-box;
   margin: 0 auto;
   background: #636363; }
@@ -630,15 +560,16 @@ body {
 
 .info {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 70%;
-  height: 30%;
+  top: 3%;
+  right: 4%;
+  width: 72%;
+  height: 20%;
   box-sizing: border-box;
   margin-right: auto;
   margin-left: auto;
-  border: 2px solid #1a1c2c;
-  border-left-width: 0; }
+  border-top: 2px solid #555;
+  border-right: 3px solid #555;
+  border-bottom: 2px solid #555; }
 
 .player-list {
   margin-bottom: 1rem; }
@@ -663,7 +594,8 @@ body {
     color: #ffcd75; }
   .player-list-item .healthbar {
     display: block;
-    width: 100%; }
+    width: 100%;
+    height: 12px; }
   .player-list-item .row {
     display: flex;
     justify-content: space-between;
@@ -872,15 +804,58 @@ body {
 
 .piece-stage {
   position: absolute;
-  bottom: 0;
-  width: 30%;
-  height: 30%;
-  box-sizing: border-box;
-  margin-right: auto;
-  margin-left: auto;
+  top: 3%;
+  left: 3%;
+  width: 22%;
+  height: 20%;
   font-family: Arial, sans-serif;
-  line-height: 1.25;
+  line-height: 1.5;
   color: #fff;
-  background: #555;
-  border: 2px solid #1a1c2c; }
+  text-align: center;
+  background: #555; }
+
+/* stylelint-disable */
+.style-default.tile.dark {
+  background: #38b764; }
+
+.style-default.tile.light {
+  background: #a7f070; }
+
+.style-default.tile.bench {
+  background: #ffcd75;
+  box-shadow: inset 0 0 2px #754b00; }
+
+.style-default.tile-row {
+  border-right: 3px solid #2d2d2d;
+  border-left: 3px solid #2d2d2d; }
+  .style-default.tile-row.first {
+    border-top: 3px solid #2d2d2d; }
+  .style-default.tile-row.last {
+    border-bottom: 3px solid #2d2d2d; }
+  .style-default.tile-row .tile:not(:last-of-type).dark {
+    border-right: #38b764 solid #404040; }
+  .style-default.tile-row .tile:not(:last-of-type).light {
+    border-right: #a7f070 solid #404040; }
+  .style-default.tile-row:not(.last) .tile.dark {
+    border-bottom: #38b764 solid #404040; }
+  .style-default.tile-row:not(.last) .tile.light {
+    border-bottom: #a7f070 solid #404040; }
+
+.style-james.tile.dark {
+  background: #828282; }
+
+.style-james.tile.light {
+  background: #828282; }
+
+.style-james.tile-row {
+  border-right: 3px solid #3cea92;
+  border-left: 3px solid #3cea92; }
+  .style-james.tile-row.first {
+    border-top: 3px solid #3cea92; }
+  .style-james.tile-row.last {
+    border-bottom: 3px solid #3cea92; }
+  .style-james.tile-row .tile:not(:last-of-type) {
+    border-right: 2px solid #404040; }
+  .style-james.tile-row:not(.last) .tile {
+    border-bottom: 2px solid #404040; }
 
