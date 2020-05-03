@@ -29,7 +29,7 @@ export class OutgoingPacketRegistryTests {
 
         const registry = new OutgoingPacketRegistry<TestPackets, TestAcknowledgements>(emit);
 
-        const ack = (response: string) => { };
+        const ack = (response: string) => { /* */ };
         registry.emit(SOME_TEST_PACKET, { value: 3 }, ack);
 
         Expect(emit).toHaveBeenCalledWith(Any(String), Any(Object), ack);

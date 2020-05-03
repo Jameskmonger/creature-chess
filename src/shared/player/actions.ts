@@ -1,10 +1,10 @@
-import { 
-  PLAYER_DROP_PIECE, PLAYER_SELL_PIECE, REROLL_CARDS, 
+import {
+  PLAYER_DROP_PIECE, PLAYER_SELL_PIECE, REROLL_CARDS,
   BUY_CARD, BUY_XP, READY_UP, TOGGLE_SHOP_LOCK
 } from "./actionTypes";
 import { PlayerPieceLocation } from "@common/models";
 
-export type PlayerAction = 
+export type PlayerAction =
   PlayerDropPieceAction
   | PlayerSellPieceAction
   | RerollCardsAction

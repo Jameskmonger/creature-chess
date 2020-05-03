@@ -1,10 +1,10 @@
+// tslint:disable:no-console
+
 import present = require("present");
 import { battleEventChannel, BattleAction } from "@common/match/combat/battleEventChannel";
 import { TurnSimulator } from "@common/match/combat/turnSimulator";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 import { DEFAULT_TURN_COUNT } from "@common/models/constants";
-import { createPiece } from "@common/utils/piece-utils";
-import { createTileCoordinates } from "@common/models/position";
 import { EventChannel } from "redux-saga";
 import { BoardState } from "@common/board";
 

@@ -61,7 +61,7 @@ export class PiecesReducerTests {
   }
 
   @Test()
-  public addPieceShouldAddPiece() {
+  public addBoardPieceShouldAddPiece() {
     const firstPiece = createMockPiece("123");
     const state: PiecesState = {
       [firstPiece.id]: firstPiece
@@ -84,6 +84,31 @@ export class PiecesReducerTests {
       [firstPiece.id]: firstPiece,
       [addingPiece.id]: expectedPiece
     });
+  }
+
+  @Test()
+  public addBoardPieceShouldSetFacingAwayTrue() {
+    const piece = {
+      ...createMockPiece("123"),
+      position: createTileCoordinates(0, null),
+      facingAway: false
+    };
+
+    const state: PiecesState = {
+      [piece.id]: piece
+    };
+
+    const action = addBoardPiece(piece, 1, 2);
+
+    const expectedPiece = {
+      ...piece,
+      position: createTileCoordinates(1, 2),
+      facingAway: true
+    };
+
+    const result = pieces(state, action);
+
+    Expect(result[piece.id]).toEqual(expectedPiece);
   }
 
   @Test()

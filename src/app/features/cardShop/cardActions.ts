@@ -10,4 +10,3 @@ export const cardsUpdated = (payload: Card[]): UpdateCardsAction => ({
     type: CARDS_UPDATED,
     payload
 });
-

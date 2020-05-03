@@ -20,7 +20,9 @@ const Bench: React.FunctionComponent = props => {
     }
 
     return (
-        <div className="tile-row">{tiles}</div>
+        <>
+            {tiles}
+        </>
     );
 };
 

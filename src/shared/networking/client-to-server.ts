@@ -1,7 +1,5 @@
 import { JoinLobbyResponse } from "./server-to-client";
-import { XYLocation } from "../models/position";
-import { PlayerPieceLocation } from "@common/models";
-import { PlayerAction } from '@common/player/actions';
+import { PlayerAction } from "@common/player/actions";
 
 export enum ClientToServerPacketOpcodes {
   FIND_GAME = "findGame",

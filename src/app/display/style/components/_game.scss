@@ -1,6 +1,6 @@
 .game {
     display: flex;
-    padding: $spacer;
+    padding: 0.4em;
     overflow-y: hidden;
 
     .game-id {
@@ -35,23 +35,12 @@
         box-sizing: border-box;
     }
 
-    .board-container {
-        position: relative;
-        display: flex;
-        margin: 0 auto;
-        flex-grow: 0;
-        /* stylelint-disable */
-        flex-shrink: initial;
-        flex-basis: initial;
-        /* stylelint-enable */
-    }
-
     .announcement {
         position: absolute;
+        top: 2em;
         z-index: $piece-z-index + 1;
         width: 100%;
         padding: 2em 0;
-        margin-top: 2em;
         font-family: Arial, sans-serif;
         color: #fff;
         text-align: center;
@@ -82,6 +71,7 @@
 
     .reconnect {
         position: absolute;
+        top: 0;
         z-index: 100;
         width: 100%;
         height: 100%;

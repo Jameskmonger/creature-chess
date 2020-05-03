@@ -12,9 +12,9 @@ import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket, JoinGamePacke
 import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
 
-process.on('unhandledRejection', (error, p) => {
-    console.log("unhandled rejection:")
-    console.log((error as any).stack);
+process.on("unhandledRejection", (error, p) => {
+    log("unhandled rejection:");
+    log((error as any).stack);
 });
 
 export class Server {

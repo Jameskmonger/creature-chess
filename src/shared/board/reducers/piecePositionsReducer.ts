@@ -1,4 +1,3 @@
-import { Piece } from "@common/models";
 import { Reducer } from "redux";
 import { BoardAction } from "../actions/boardActions";
 import { INITIALISE_BOARD, REMOVE_BOARD_PIECE, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE, UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE, REMOVE_BOARD_PIECES } from "../actions/boardActionTypes";

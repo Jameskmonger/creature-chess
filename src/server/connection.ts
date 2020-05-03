@@ -7,16 +7,17 @@ import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlaye
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { GamePhase } from "@common/models";
-import { PlayerActionTypes, PlayerActionTypesArray } from '@common/player';
+import { PlayerActionTypes } from "@common/player";
+import { log } from "console";
 
 export class Connection extends Player {
     public readonly isBot: boolean = false;
     public readonly isConnection = true;
-    private socket: Socket;
     private reconnectionSecret: string;
 
     private incomingPacketRegistry: IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
     private outgoingPacketRegistry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
+    private lastReceivedPacketIndex = 0;
 
     constructor(socket: Socket, name: string) {
         super(name);
@@ -159,7 +160,6 @@ export class Connection extends Player {
         );
     }
 
-    private lastReceivedPacketIndex = 0;
     private receiveActions = (packet: SendPlayerActionsPacket, ack: (accepted: boolean, packetIndex?: number) => void) => {
         const expectedPacketIndex = this.lastReceivedPacketIndex + 1;
 
@@ -199,6 +199,10 @@ export class Connection extends Player {
                     this.readyUp();
                     break;
                 }
+                default: {
+                    log(`Unhandled action type for player ${this.name}`);
+                    break;
+                }
             }
         }
 
@@ -207,7 +211,6 @@ export class Connection extends Player {
     }
 
     private setSocket(socket: Socket) {
-        this.socket = socket;
         this.reconnectionSecret = uuid();
 
         this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(

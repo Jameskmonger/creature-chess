@@ -2,6 +2,5 @@ node_modules/
 public/
 test/
 bin/
-.vscode/
 /gh-pages/
 _metrics/

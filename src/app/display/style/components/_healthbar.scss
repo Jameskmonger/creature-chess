@@ -1,6 +1,6 @@
 .healthbar {
     width: 101%;
-    height: 60%;
+    height: 70%;
     box-sizing: border-box;
     margin: 0 auto;
     background: $healthbar-background;
@@ -10,12 +10,10 @@
     }
 
     &.friendly .fill {
-        height: $healthbar-height;
         background: $friendly-healthbar-color;
     }
 
     &.enemy .fill {
-        height: $healthbar-height;
         background: $enemy-healthbar-color;
     }
 }

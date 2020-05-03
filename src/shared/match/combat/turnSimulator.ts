@@ -2,11 +2,10 @@ import { Piece } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getRelativeDirection } from "../../models/position";
-import { INITIAL_COOLDOWN, DAMAGE_RATIO } from "../../models/constants";
+import { INITIAL_COOLDOWN } from "../../models/constants";
 import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
-import { BoardState } from "@common/board";
 
 interface PieceCombatInfo {
     piece: Piece;
@@ -30,7 +29,6 @@ export class TurnSimulator {
                 ...pieces[pieceId],
                 attacking: null,
                 hit: null,
-                moving: null
             };
 
             if (attacker.currentHealth === 0) {
@@ -56,7 +54,6 @@ export class TurnSimulator {
                 const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => p.currentHealth > 0));
 
                 if (newPosition !== null) {
-                    attacker.moving = { direction: getRelativeDirection(attacker.position, newPosition) };
                     attacker.position = newPosition;
                     attacker.coolDown = INITIAL_COOLDOWN;
                 }
@@ -66,7 +63,7 @@ export class TurnSimulator {
             }
 
             const defenderCombatInfo = this.getPieceCombatInfo(defender);
-            const updatedFighters = this.attack(turnCount, attackerCombatInfo, defenderCombatInfo);
+            const updatedFighters = this.attack(attackerCombatInfo, defenderCombatInfo);
             updatedFighters.attacker.targetPieceId = updatedFighters.defender.id;
 
             pieces[updatedFighters.attacker.id] = updatedFighters.attacker;
@@ -93,7 +90,7 @@ export class TurnSimulator {
         };
     }
 
-    private attack(turnCount: number, attacker: PieceCombatInfo, defender: PieceCombatInfo) {
+    private attack(attacker: PieceCombatInfo, defender: PieceCombatInfo) {
         if (attacker.piece.currentHealth === 0) {
             // Dead Pokémon don't attack
             return {

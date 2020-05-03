@@ -3,11 +3,11 @@ import { Card } from "./card";
 import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
 import { AppState } from "@app/store";
 import { Card as CardModel, Constants, GamePhase } from "@common/models";
-import { DropToSell } from "./dropToSell/dropToSell";
+import { DropToSell } from "./dropToSell";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
 import { LockButton } from "./lockButton";
-import { PlayerActions } from '@common/player';
+import { PlayerActions } from "@common/player";
 
 interface StateProps {
     cards: CardModel[];

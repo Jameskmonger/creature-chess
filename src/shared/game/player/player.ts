@@ -14,7 +14,7 @@ import { getBoardPieceCount, hasSpaceOnBench, getPiece, getAllPieces,  } from ".
 import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "@common/board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle } from "@common/models/player-list-player";
-import { PlayerActions } from '@common/player';
+import { PlayerActions } from "@common/player";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -464,7 +464,7 @@ export abstract class Player {
             PlayerActions.playerDropPiece(payload.pieceId, payload.from, payload.to)
         );
     }
-    
+
     protected getLevel() {
         return this.level.getValue().level;
     }

@@ -14,10 +14,13 @@ import { Feed } from "../../features/feed/feed";
 import { GameId } from "../../display/gameId";
 import { RoundIndicator } from "../../display/roundIndicator";
 import { BoardContainer } from "../board/boardContainer";
+import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
 
 const GameStage: React.FunctionComponent = () => {
     return (
         <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+            <ResponsiveBoardStyles />
+
             <Media query="(orientation: landscape) and (min-width: 1200px)">
                 <div className="game landscape">
                     <div className="group">
@@ -105,7 +108,7 @@ const GameStage: React.FunctionComponent = () => {
             </Media>
         </DndProvider>
     );
-}
+};
 
 export {
     GameStage

@@ -63,7 +63,7 @@ export class Bot extends Player {
     protected onDeath() { /* nothing required, we're a bot */ }
 
     protected onShopLockUpdate() { /* nothing required, we're a bot */ }
-    
+
     private buyBestPieces() {
         const cards = this.getCardViews();
 

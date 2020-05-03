@@ -10,8 +10,8 @@ export class CanDropPieceTests {
 
     @Test()
     public cantDropOnOccupiedTile() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
-        const tilePiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 1, 4 ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
+        const tilePiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 1, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
@@ -27,7 +27,7 @@ export class CanDropPieceTests {
 
     @Test()
     public cantDropOnBoardIfBoardLocked() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
@@ -42,7 +42,7 @@ export class CanDropPieceTests {
     }
 
     public canDropOnBenchIfBoardLocked() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ]);
 
         const result = canDropPiece(
             movingPiece,
@@ -58,7 +58,7 @@ export class CanDropPieceTests {
 
     @Test()
     public cantDropOnBoardFromBenchIfNotBelowPieceLimit() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ]);
 
         const result = canDropPiece(
             movingPiece,
@@ -74,7 +74,7 @@ export class CanDropPieceTests {
 
     @Test()
     public canDropOnBoardFromBoardIfNotBelowPieceLimit() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
@@ -93,7 +93,7 @@ export class CanDropPieceTests {
     @TestCase(0, 3)
     @TestCase(7, 3)
     public cantDropInOpponentArea(x: number, y: number) {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
