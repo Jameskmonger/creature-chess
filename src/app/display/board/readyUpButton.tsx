@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "@app/store";
 import { GamePhase } from "@common/models";
-import { PlayerActions } from '@common/player';
+import { PlayerActions } from "@common/player";
 
 const ReadyUpButton: React.FunctionComponent = () => {
     const canReadyUp = useSelector<AppState, boolean>(

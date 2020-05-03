@@ -7,7 +7,7 @@ import { moneyUpdateAction } from "../../actions/gameActions";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 import { cardsUpdated } from "../../../features/cardShop/cardActions";
 import { addBenchPiece } from "@common/player/bench/benchActions";
-import { PlayerActions, PlayerActionTypes } from '@common/player';
+import { PlayerActions, PlayerActionTypes } from "@common/player";
 
 const definitionProvider = new DefinitionProvider();
 

@@ -85,9 +85,9 @@ export class Lobby {
         }
 
         // notify other players
-        for (let i = 0; i < this.players.length; i++) {
+        for (const otherPlayer of this.players) {
             // skip the player we just added
-            if (this.players[i] === player) {
+            if (player.id === otherPlayer.id) {
                 continue;
             }
 
@@ -99,7 +99,7 @@ export class Lobby {
                 // only first player can be host so no point trying to calculate it for a just-added player
                 isHost: false
             });
-            this.players[i].onLobbyPlayerUpdate(playerChangedIndex, lobbyPlayer);
+            otherPlayer.onLobbyPlayerUpdate(playerChangedIndex, lobbyPlayer);
         }
 
         if (this.getRealPlayerCount() === MAX_PLAYERS_IN_GAME) {

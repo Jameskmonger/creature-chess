@@ -1,14 +1,12 @@
 // this file is named _ so it can be imported as "directory/" which resolves to "directory/_"
 // no nice way to have an index file otherwise - SASS :(
 
-@import "./board/";
-
 @import "./app";
 @import "./game";
 @import "./menu";
 @import "./card";
 @import "./card-selector";
-@import "./piece";
+@import "./board";
 @import "./healthbar";
 @import "./cooldownbar";
 @import "./info";
@@ -18,3 +16,4 @@
 @import "./github-link";
 @import "./lobby";
 @import "./piece-stage";
+@import "./board/styles/";

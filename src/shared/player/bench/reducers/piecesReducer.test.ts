@@ -65,7 +65,8 @@ export class PiecesReducerTests {
   public addPieceShouldAddPieceInFirstSlot() {
     const firstPiece = {
       ...createMockPiece("123"),
-      position: createTileCoordinates(3, null)
+      position: createTileCoordinates(3, null),
+      facingAway: true
     };
     const state: PiecesState = [
       firstPiece, null, null, null,
@@ -80,7 +81,8 @@ export class PiecesReducerTests {
 
     const expectedPiece = {
       ...addingPiece,
-      position: createTileCoordinates(1, null)
+      position: createTileCoordinates(1, null),
+      facingAway: false
     };
 
     const result = pieces(state, action);
@@ -95,7 +97,8 @@ export class PiecesReducerTests {
   public addPieceShouldAddPieceInSlotIfProvided() {
     const firstPiece = {
       ...createMockPiece("123"),
-      position: createTileCoordinates(3, null)
+      position: createTileCoordinates(3, null),
+      facingAway: true
     };
     const state: PiecesState = [
       firstPiece, null, null, null,
@@ -110,7 +113,8 @@ export class PiecesReducerTests {
 
     const expectedPiece = {
       ...addingPiece,
-      position: createTileCoordinates(5, null)
+      position: createTileCoordinates(5, null),
+      facingAway: false
     };
 
     const result = pieces(state, action);

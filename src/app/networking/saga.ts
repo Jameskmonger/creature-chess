@@ -22,9 +22,7 @@ import { ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, JoinLobby
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@common/networking/client-to-server";
 import { ConnectionStatus } from "@common/networking";
-import { PLAYER_DROP_PIECE, PLAYER_SELL_PIECE } from "@common/player/actionTypes";
-import { PlayerDropPieceAction, PlayerSellPieceAction, PlayerActionTypesArray, PlayerAction } from "@common/player/actions";
-import { PlayerActionTypes } from '@common/player';
+import { PlayerActionTypesArray, PlayerAction } from "@common/player/actions";
 
 const getSocket = (serverIP: string) => {
     // force to websocket for now until CORS is sorted
@@ -212,15 +210,15 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
     });
 };
 
-const readPacketsToActions = function* (incomingRegistry: ServerToClientPacketRegistry, socket: Socket) {
+const readPacketsToActions = function*(incomingRegistry: ServerToClientPacketRegistry, socket: Socket) {
     const channel = yield call(subscribe, incomingRegistry, socket);
 
-    yield takeEvery(channel, function* (action) {
+    yield takeEvery(channel, function*(action) {
         yield put(action);
     });
 };
 
-const sendPlayerActions = function* (registry: ClientToServerPacketRegsitry) {
+const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
     let transmissionInProgress = false;
     let actionPacketIndex = 0;
     let pendingActions: PlayerAction[] = [];
@@ -287,36 +285,36 @@ const sendPlayerActions = function* (registry: ClientToServerPacketRegsitry) {
 
     yield takeEvery<PlayerAction>(
         PlayerActionTypesArray,
-        function* (action) {
+        function*(action) {
             queueAction(action);
         }
     );
 };
 
-const writeActionsToPackets = function* (registry: ClientToServerPacketRegsitry) {
+const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) {
     yield all([
         takeEvery(
             BATTLE_FINISHED,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
             }
         ),
 
         takeEvery<ActionWithPayload<{ message: string }>>(
             SEND_CHAT_MESSAGE,
-            function* ({ payload }) {
+            function*({ payload }) {
                 registry.emit(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message);
             }
         ),
         takeEvery(
             START_LOBBY_GAME,
-            function* () {
+            function*() {
                 registry.emit(ClientToServerPacketOpcodes.START_LOBBY_GAME, { empty: true });
             }
         ),
         takeLatest(
             action => action.type === UPDATE_CONNECTION_STATUS && action.payload.status === ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION,
-            function* () {
+            function*() {
                 const state: AppState = yield select();
 
                 // if player not connected yet, don't try to reconnect
@@ -353,7 +351,7 @@ const getResponseForAction = (registry: ClientToServerPacketRegsitry, action: Fi
     }
 };
 
-export const networking = function* () {
+export const networking = function*() {
     let action: (FindGameAction | JoinGameAction | CreateGameAction)
         = yield take([FIND_GAME, JOIN_GAME, CREATE_GAME]);
     const socket: Socket = yield call(getSocket, action.payload.serverIP);

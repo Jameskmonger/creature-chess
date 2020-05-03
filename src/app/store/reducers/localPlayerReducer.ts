@@ -4,7 +4,7 @@ import { JOIN_COMPLETE, LEVEL_UPDATE, UPDATE_RECONNECT_SECRET } from "../actiont
 import { GamePhaseUpdateAction } from "../actions/gameActions";
 import { GAME_PHASE_UPDATE } from "../actiontypes/gameActionTypes";
 import { GamePhase } from "@common/models";
-import { PlayerActionTypes, PlayerActions } from '@common/player';
+import { PlayerActionTypes, PlayerActions } from "@common/player";
 
 const initialState: LocalPlayerState = {
     id: null,

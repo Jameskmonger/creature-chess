@@ -5,7 +5,7 @@ import { AppState } from "@app/store";
 import { getXpToNextLevel } from "@common/utils";
 import { GamePhase, Constants } from "@common/models";
 import { PieceCount } from "./pieceCount";
-import { PlayerActions } from '@common/player';
+import { PlayerActions } from "@common/player";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 

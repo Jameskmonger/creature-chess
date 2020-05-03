@@ -22,7 +22,7 @@ const removePieceByIdList = (state: PiecesState, pieceIds: string[]) => {
   }
 
   return newState;
-}
+};
 
 const pieces: Reducer<PiecesState, BoardAction> = (state = initialState, action) => {
   switch (action.type) {
@@ -47,7 +47,7 @@ const pieces: Reducer<PiecesState, BoardAction> = (state = initialState, action)
       return newState;
     }
     case REMOVE_BOARD_PIECE:
-      return removePieceByIdList(state, [ action.payload.pieceId ]);
+      return removePieceByIdList(state, [action.payload.pieceId]);
     case REMOVE_BOARD_PIECES:
       return removePieceByIdList(state, action.payload.pieceIds);
     case ADD_BOARD_PIECE: {
@@ -56,7 +56,8 @@ const pieces: Reducer<PiecesState, BoardAction> = (state = initialState, action)
         ...state,
         [piece.id]: {
           ...piece,
-          position: createTileCoordinates(x, y)
+          position: createTileCoordinates(x, y),
+          facingAway: true
         }
       };
     }

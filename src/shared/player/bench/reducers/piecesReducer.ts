@@ -34,7 +34,8 @@ const pieces: Reducer<PiecesState, BenchAction> = (state = initialState, action)
 
       newState[slotToUse] = {
         ...piece,
-        position: createTileCoordinates(slotToUse, null)
+        position: createTileCoordinates(slotToUse, null),
+        facingAway: false
       };
 
       return newState;

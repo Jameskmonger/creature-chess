@@ -113,11 +113,11 @@ export function game(state: GameState = initialState, action: GameReducerActionT
             };
         }
         case SELECT_PIECE: {
-            const isSamePiece = state.selectedPieceId && state.selectedPieceId === action.payload.piece.id;
+            const isSamePiece = state.selectedPieceId && state.selectedPieceId === action.payload.id;
 
             return {
                 ...state,
-                selectedPieceId: isSamePiece ? null : action.payload.piece.id
+                selectedPieceId: isSamePiece ? null : action.payload.id
             };
         }
         case SHOP_LOCK_UPDATED: {

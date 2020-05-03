@@ -1,3 +1,14 @@
 {
-    "extends": "neworbit-stylelint-config"
- }
+    "extends": "neworbit-stylelint-config",
+    "rules": {
+        "plugin/no-unsupported-browser-features": [
+            true,
+            {
+                "browsers": [
+                    "last 1 chrome version",
+                    "last 1 firefox version"
+                ]
+            }
+        ]
+    }
+}

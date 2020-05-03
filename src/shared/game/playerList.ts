@@ -28,7 +28,7 @@ const sortPlayers = (a: PlayerListPlayer, b: PlayerListPlayer) => {
     }
 
     return 0;
-}
+};
 
 export class PlayerList {
     private players: PlayerListPlayer[] = [];
