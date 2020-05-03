@@ -1,5 +1,4 @@
 import { GRID_SIZE } from "./constants";
-import { Piece } from ".";
 
 export type XYLocation = { x: number, y: number };
 export type SlotLocation = { slot: number };
@@ -21,9 +20,7 @@ const isInsideGrid = (position: XYLocation) => {
     return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
 };
 
-export const getAdjacentPositions = (piece: Piece) => {
-    const { x, y } = piece.position;
-
+export const getAdjacentPositions = ({ x, y }: XYLocation) => {
     const positions: XYLocation[] = [
         createTileCoordinates(x, y - 1),
         createTileCoordinates(x - 1, y),

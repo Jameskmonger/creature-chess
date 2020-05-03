@@ -2,16 +2,17 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { fork, all } from "@redux-saga/core/effects";
 
-import { boardReducer, BoardState } from "@common/board";
-import { benchReducer, BenchState } from "../../player/bench";
-import { Piece, PlayerPieceLocation } from "@common/models";
+import { boardReducer } from "@common/board";
+import { benchReducer } from "../../player/bench";
+import { PieceModel } from "@common/models";
 import { lockBench, unlockBench, addBenchPiece, removeBenchPiece, initialiseBench } from "@common/player/bench/benchActions";
 import { evolutionSagaFactory } from "@common/player/sagas/evolution";
 
 import { PlayerPiecesState } from "@common/player";
-import { playerDropPiece, PlayerAction } from "@common/player/actions";
+import { PlayerAction } from "@common/player/actions";
 import { dropPiece } from "@common/player/sagas/dropPiece";
 import { removeBoardPiece, initialiseBoard } from "@common/board/actions/boardActions";
+
 const createBoardStore = () => {
   const rootSaga = function*() {
     yield all([
@@ -42,7 +43,7 @@ export class PlayerPieces {
     return this.store.getState();
   }
 
-  public addBenchPiece(piece: Piece) {
+  public addBenchPiece(piece: PieceModel) {
     this.store.dispatch(addBenchPiece(piece, null));
   }
 

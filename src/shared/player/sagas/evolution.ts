@@ -4,7 +4,7 @@ import { takeLatest, all, select, take, delay, put } from "@redux-saga/core/effe
 import { AddBenchPieceAction, addBenchPiece, removeBenchPiece, removeBenchPieces } from "../bench/benchActions";
 import { ADD_BENCH_PIECE } from "../bench/benchActionTypes";
 import { DefinitionProvider } from "@common/game/definitionProvider";
-import { Piece } from "@common/models";
+import { PieceModel } from "@common/models";
 import { PIECES_TO_EVOLVE } from "@common/models/constants";
 import { UNLOCK_BOARD } from "@common/board/actions/boardActionTypes";
 import * as pieceSelectors from "../pieceSelectors";
@@ -40,7 +40,7 @@ export const evolutionSagaFactory = <TState extends State>() => {
                         yield delay(500);
                     }
 
-                    const getCombinablePieces = (pieces: Piece[]) => pieces.filter(p => p.id !== piece.id && p.stage === piece.stage);
+                    const getCombinablePieces = (pieces: PieceModel[]) => pieces.filter(p => p.id !== piece.id && p.stage === piece.stage);
 
                     const state: TState = yield select();
 

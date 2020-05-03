@@ -1,6 +1,6 @@
 import { Player } from "./player";
 import { GRID_SIZE } from "../../models/constants";
-import { Card, Piece, LobbyPlayer, PlayerListPlayer, FeedMessage, PlayerPieceLocation } from "@common/models";
+import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, FeedMessage, PlayerPieceLocation } from "@common/models";
 import { getAllPieces, getBoardPieceForPosition } from "@common/player/pieceSelectors";
 import { PlayerPiecesState, PlayerActions } from "@common/player";
 
@@ -27,7 +27,7 @@ interface PieceView {
 
 type CardPieceView = CardView | PieceView;
 
-const getFirstBenchPiece = (state: PlayerPiecesState): Piece => state.bench.pieces.find(p => p !== null) || null;
+const getFirstBenchPiece = (state: PlayerPiecesState): PieceModel => state.bench.pieces.find(p => p !== null) || null;
 const getPieceCountForDefinition =
     (state: PlayerPiecesState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
 const getPieceCount = (state: PlayerPiecesState): number => getAllPieces(state).length;
@@ -165,7 +165,7 @@ export class Bot extends Player {
         };
     }
 
-    private getPieceView = (piece: Piece): PieceView => {
+    private getPieceView = (piece: PieceModel): PieceView => {
         const { cost } = this.definitionProvider.get(piece.definitionId);
         const amountOwned = getPieceCountForDefinition(this.pieces.getState(), piece.definitionId);
 

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "@app/store";
 import { getClassForTileStyle } from "../getClassForTileStyle";
 import { selectPiece } from "@app/store/actions/boardActions";
-import { GamePhase, Piece, PlayerPieceLocation } from "@common/models";
+import { GamePhase, PieceModel, PlayerPieceLocation } from "@common/models";
 import { getPiece } from "@common/player/pieceSelectors";
 import { playerDropPiece } from "@common/player/actions";
 import { clearSelectedPiece } from "@app/store/actions/gameActions";
@@ -40,7 +40,7 @@ const getOverlayClassName = (isDragging: boolean, canDrop: boolean) => {
     return "overlay";
 };
 
-const onDropPiece = (dispatch: Dispatch, piece: Piece, type: TileType, x: number, y: number) => {
+const onDropPiece = (dispatch: Dispatch, piece: PieceModel, type: TileType, x: number, y: number) => {
     const from: PlayerPieceLocation = (
         piece.position.y !== null
             ? ({
@@ -72,7 +72,7 @@ const onDropPiece = (dispatch: Dispatch, piece: Piece, type: TileType, x: number
 const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => {
     const dispatch = useDispatch();
 
-    const piece = useSelector<AppState, Piece>(state => (
+    const piece = useSelector<AppState, PieceModel>(state => (
         type === TileType.BOARD
             ? boardTilePieceSelector(state, { x, y })
             : benchTilePieceSelector(state, { x })
@@ -81,7 +81,7 @@ const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => 
     const boardLocked = useSelector<AppState, boolean>(state => state.board.locked);
     const belowPieceLimit = useSelector<AppState, boolean>(state => ownedPieceSelector(state).length < state.localPlayer.level);
     const canMovePiece = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING || type === TileType.BENCH);
-    const selectedPiece = useSelector<AppState, Piece>(state => state.game.selectedPieceId ? getPiece(state, state.game.selectedPieceId) : null);
+    const selectedPiece = useSelector<AppState, PieceModel>(state => state.game.selectedPieceId ? getPiece(state, state.game.selectedPieceId) : null);
     const isSelected = piece && selectedPiece && piece.id === selectedPiece.id;
 
     const [{ canDrop, isDragging }, drop] = useDrop({

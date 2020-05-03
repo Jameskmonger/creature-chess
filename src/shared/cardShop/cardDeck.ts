@@ -1,9 +1,8 @@
 import uuid = require("uuid/v4");
-import { shuffle, flatten } from "lodash";
+import { shuffle } from "lodash";
 import { CreatureDefinition } from "../models/creatureDefinition";
 import { Card } from "../models/card";
-import { Piece } from "../models/piece";
-import { Player } from "../game/player/player";
+import { PieceModel } from "../models/piece";
 import { PIECES_TO_EVOLVE } from "../models/constants";
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
@@ -79,7 +78,7 @@ export class CardDeck {
         this.shuffle();
     }
 
-    public addPiece(piece: Piece) {
+    public addPiece(piece: PieceModel) {
         const definition = this.definitions.find(p => p.id === piece.definitionId);
 
         const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
@@ -91,7 +90,7 @@ export class CardDeck {
         this.shuffle();
     }
 
-    public addPieces(pieces: Piece[]) {
+    public addPieces(pieces: PieceModel[]) {
         for (const piece of pieces) {
             this.addPiece(piece);
         }

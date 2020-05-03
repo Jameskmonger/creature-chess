@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { Piece } from "../models";
+import { PieceModel } from "../models";
 
 import { pieces } from "./reducers/piecesReducer";
 import { piecePositions } from "./reducers/piecePositionsReducer";
@@ -7,7 +7,7 @@ import { locked } from "./reducers/lockedReducer";
 
 type BoardState = {
   pieces: {
-    [key: string]: Piece
+    [key: string]: PieceModel
   },
   piecePositions: {
     [key: string]: string

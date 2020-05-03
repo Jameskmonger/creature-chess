@@ -2,7 +2,7 @@ import uuid = require("uuid/v4");
 import { createTileCoordinates } from "../models/position";
 import { GRID_SIZE, INITIAL_COOLDOWN } from "@common/models/constants";
 import { DefinitionProvider } from "../game/definitionProvider";
-import { Card, Piece } from "@common/models";
+import { Card, PieceModel } from "@common/models";
 
 export const createPiece = (
     definitionProvider: DefinitionProvider,
@@ -11,7 +11,7 @@ export const createPiece = (
     position: [number, number],
     id?: string,
     stage: number = 0
-): Piece => {
+): PieceModel => {
     const stats = definitionProvider.get(definitionId).stages[0];
     return {
         id: id || uuid(),
@@ -36,10 +36,10 @@ export const createPieceFromCard = (
     createPiece(definitionProvider, ownerId, card.definitionId, [slot, null], card.id);
 
 export const clonePiece =
-    (definitionProvider: DefinitionProvider, piece: Piece) =>
+    (definitionProvider: DefinitionProvider, piece: PieceModel) =>
         createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y], piece.id, piece.stage);
 
-export const moveOrAddPiece = <T extends Piece>(allPieces: T[], target: T) => {
+export const moveOrAddPiece = <T extends PieceModel>(allPieces: T[], target: T) => {
     const result: T[] = [];
     let targetAdded = false;
 
@@ -62,7 +62,7 @@ export const moveOrAddPiece = <T extends Piece>(allPieces: T[], target: T) => {
     return result;
 };
 
-export const rotatePiecePosition = (piece: Piece) => {
+export const rotatePiecePosition = (piece: PieceModel) => {
     piece.position.x = GRID_SIZE - 1 - piece.position.x;
     piece.position.y = GRID_SIZE - 1 - piece.position.y;
     return piece;

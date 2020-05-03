@@ -1,4 +1,4 @@
-import { LobbyPlayer, FeedMessage, Card, PlayerListPlayer, GamePhase, Piece } from "@common/models";
+import { LobbyPlayer, FeedMessage, Card, PlayerListPlayer, GamePhase } from "@common/models";
 import { ConnectionStatus } from "@common/networking";
 import { BoardState } from "@common/board";
 import { BenchState } from "@common/player/bench";

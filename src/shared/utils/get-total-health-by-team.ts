@@ -1,4 +1,4 @@
-import { Piece } from "../models";
+import { PieceModel } from "../models";
 
 const groupBy = <TItem, TKey>(list: TItem[], keyGetter: (item: TItem) => TKey) => {
     const map = new Map<TKey, TItem[]>();
@@ -16,7 +16,7 @@ const groupBy = <TItem, TKey>(list: TItem[], keyGetter: (item: TItem) => TKey) =
     return Array.from(map);
 };
 
-export const getTotalHealthByTeam = (pieces: Piece[]) => {
+export const getTotalHealthByTeam = (pieces: PieceModel[]) => {
     const grouped = groupBy(pieces, p => p.ownerId);
 
     return grouped.map(([ key, values ]) => {

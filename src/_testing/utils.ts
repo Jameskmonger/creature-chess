@@ -1,7 +1,7 @@
-import { Piece } from "@common/models";
+import { PieceModel } from "@common/models";
 import { createTileCoordinates } from "@common/models/position";
 
-export const createMockPiece = (id: string): Piece => ({
+export const createMockPiece = (id: string): PieceModel => ({
   id,
   ownerId: "123",
   definitionId: 1,

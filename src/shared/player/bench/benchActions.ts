@@ -1,10 +1,10 @@
-import { Piece } from "@common/models";
+import { PieceModel } from "@common/models";
 import { INITIALISE_BENCH, REMOVE_BENCH_PIECE, REMOVE_BENCH_PIECES, ADD_BENCH_PIECE, LOCK_BENCH, UNLOCK_BENCH, MOVE_BENCH_PIECE } from "./benchActionTypes";
 import { BenchState } from "./state";
 import { SlotLocation } from "@common/models/position";
 
 type InitialiseBenchAction = ({ type: INITIALISE_BENCH, payload: { state: BenchState } });
-export type AddBenchPieceAction = ({ type: ADD_BENCH_PIECE, payload: { piece: Piece, slot: number | null } });
+export type AddBenchPieceAction = ({ type: ADD_BENCH_PIECE, payload: { piece: PieceModel, slot: number | null } });
 type RemoveBenchPieceAction = ({ type: REMOVE_BENCH_PIECE, payload: { pieceId: string } });
 type RemoveBenchPiecesAction = ({ type: REMOVE_BENCH_PIECES, payload: { pieceIds: string[] } });
 type MoveBenchPieceAction = ({ type: MOVE_BENCH_PIECE, payload: { pieceId: string, from: SlotLocation, to: SlotLocation }});
@@ -27,7 +27,7 @@ export const initialiseBench = (state: BenchState): InitialiseBenchAction => ({
     }
 });
 
-export const addBenchPiece = (piece: Piece, slot: number | null): AddBenchPieceAction => ({
+export const addBenchPiece = (piece: PieceModel, slot: number | null): AddBenchPieceAction => ({
     type: ADD_BENCH_PIECE,
     payload: {
         piece,

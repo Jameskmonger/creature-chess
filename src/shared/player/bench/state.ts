@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
-import { Piece } from "@common/models";
+import { PieceModel } from "@common/models";
 
 import { pieces } from "./reducers/piecesReducer";
 import { locked } from "./reducers/lockedReducer";
 
 type BenchState = {
-  pieces: Piece[],
+  pieces: PieceModel[],
   locked: boolean
 };
 

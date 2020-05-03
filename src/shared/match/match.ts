@@ -1,17 +1,12 @@
-import uuid = require("uuid");
 import pDefer = require("p-defer");
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { Player } from "../game/player/player";
-import { pieceUtils } from "@common/utils";
-import { log } from "../log";
-import { Piece } from "../models/piece";
 import { TurnSimulator } from "./combat/turnSimulator";
 import { battle, startBattle } from "./combat/battleSaga";
 import { boardReducer, BoardActions, BoardState } from "../board";
 import { BattleAction, BATTLE_FINISHED } from "./combat/battleEventChannel";
-import { mergeBoards } from "@common/board/utils/mergeBoards";
 
 interface MatchState {
     board: BoardState;
@@ -23,7 +18,6 @@ export class Match {
     private readonly turnSimulator: TurnSimulator;
     private readonly turnCount: number;
     private readonly turnDuration: number;
-    private id: string;
     private store: Store<MatchState>;
     private finalBoard: BoardState;
 
@@ -32,7 +26,6 @@ export class Match {
 
     constructor(turnSimulator: TurnSimulator, turnCount: number, turnDuration: number, home: Player, away: Player) {
         this.turnSimulator = turnSimulator;
-        this.id = uuid();
         this.home = home;
         this.away = away;
         this.turnCount = turnCount;
