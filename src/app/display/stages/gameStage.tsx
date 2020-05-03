@@ -11,7 +11,6 @@ import Media from "react-media";
 import { PhaseInfo } from "../../display/phaseInfo";
 import { Profile } from "../../display/profile/profile";
 import { Feed } from "../../features/feed/feed";
-import { GameId } from "../../display/gameId";
 import { RoundIndicator } from "../../display/roundIndicator";
 import { BoardContainer } from "../board/boardContainer";
 import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
@@ -29,8 +28,6 @@ const GameStage: React.FunctionComponent = () => {
                         <PhaseInfo />
 
                         <PlayerList />
-
-                        <GameId />
 
                         <Feed />
                     </div>
@@ -66,8 +63,6 @@ const GameStage: React.FunctionComponent = () => {
 
                         <PlayerList />
 
-                        <GameId />
-
                         <div className="github-link">
                             <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
                             {" - "}
@@ -93,8 +88,6 @@ const GameStage: React.FunctionComponent = () => {
                         <Profile />
 
                         <PlayerList />
-
-                        <GameId />
 
                         <div className="github-link">
                             <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
