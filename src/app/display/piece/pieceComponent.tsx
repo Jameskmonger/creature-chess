@@ -5,7 +5,7 @@ import { StageIndicator } from "./components/stageIndicator";
 import { Healthbar } from "./components/healthbar";
 import { AnimationVariables, getAnimationCssVariables } from "../animation";
 import { useSelector, useDispatch } from "react-redux";
-import { Piece as PieceComponent, GamePhase } from "@common/models";
+import { PieceModel as PieceComponent, GamePhase } from "@common/models";
 import { getPiece } from "@common/player/pieceSelectors";
 import { AppState } from "@app/store";
 import { arePositionsEqual, getRelativeDirection } from "@common/models/position";

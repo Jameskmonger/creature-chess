@@ -1,7 +1,7 @@
 import { astar, Graph } from "javascript-astar";
 import { GRID_SIZE } from "../../models/constants";
 import { getAdjacentPositions, XYLocation } from "../../models/position";
-import { Piece } from "../../models";
+import { PieceModel } from "../../models";
 
 const createEmptyWeightGrid = () => {
     const grid: number[][] = [];
@@ -19,7 +19,7 @@ const createEmptyWeightGrid = () => {
     return grid;
 };
 
-const createWeightGrid = (start: XYLocation, pieces: Piece[]) => {
+const createWeightGrid = (start: XYLocation, pieces: PieceModel[]) => {
     const grid = createEmptyWeightGrid();
 
     pieces.forEach(piece => {
@@ -34,7 +34,7 @@ const createWeightGrid = (start: XYLocation, pieces: Piece[]) => {
 };
 
 const findPath = (
-    pieces: Piece[],
+    pieces: PieceModel[],
     start: XYLocation,
     end: XYLocation
 ) => {
@@ -59,8 +59,8 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (piece: Piece, target: Piece, pieces: Piece[]): XYLocation => {
-    const targetTiles = getAdjacentPositions(target);
+export const getNextPiecePosition = (piece: PieceModel, target: PieceModel, pieces: PieceModel[]): XYLocation => {
+    const targetTiles = getAdjacentPositions(target.position);
     const paths = targetTiles.map(pos => findPath(pieces, piece.position, pos)).filter(path => path !== null);
 
     if (paths.length === 0) {

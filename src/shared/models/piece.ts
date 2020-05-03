@@ -14,7 +14,7 @@ export interface MovementDetails {
     direction: Direction;
 }
 
-export interface Piece {
+export interface PieceModel {
     id: string;
     ownerId: string;
     definitionId: number;

@@ -1,6 +1,5 @@
-import { BoardState } from "../state";
 import { GRID_SIZE } from "@common/models/constants";
-import { Piece } from "@common/models";
+import { PieceModel } from "@common/models";
 import { createTileCoordinates, XYLocation } from "@common/models/position";
 
 const rotateGridPosition = (position: XYLocation) => {
@@ -10,8 +9,8 @@ const rotateGridPosition = (position: XYLocation) => {
   );
 };
 
-const transformAwayPieces = (pieces: { [pieceId: string]: Piece }) => {
-  return Object.entries(pieces).reduce<{ [pieceId: string]: Piece }>(
+const transformAwayPieces = (pieces: { [pieceId: string]: PieceModel }) => {
+  return Object.entries(pieces).reduce<{ [pieceId: string]: PieceModel }>(
     (acc, [pieceId, piece]) => {
       // it's not too bad to mutate `acc` here, because we're creating it as an empty object in this reduce call
 
@@ -27,7 +26,7 @@ const transformAwayPieces = (pieces: { [pieceId: string]: Piece }) => {
   );
 };
 
-export const mergeBoards = (home: { [pieceId: string]: Piece }, away: { [pieceId: string]: Piece }): { [pieceId: string]: Piece } => {
+export const mergeBoards = (home: { [pieceId: string]: PieceModel }, away: { [pieceId: string]: PieceModel }): { [pieceId: string]: PieceModel } => {
   const transformedAway = transformAwayPieces(away);
 
   return {

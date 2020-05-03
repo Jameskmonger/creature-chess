@@ -1,4 +1,4 @@
-import { Piece } from "../../models";
+import { PieceModel } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
 import { XYLocation, arePositionsEqual } from "../../models/position";
 import { GRID_SIZE } from "@common/models/constants";
@@ -31,24 +31,24 @@ const getAttackingTiles = (facingUp: boolean) => {
         : [Directions.DOWN, Directions.LEFT, Directions.RIGHT, Directions.UP];
 };
 
-const getLivingEnemies = (piece: Piece, pieces: Piece[]) => {
+const getLivingEnemies = (piece: PieceModel, pieces: PieceModel[]) => {
     return pieces.filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
 };
 
-const getDelta = (a: Piece, b: Piece) => {
+const getDelta = (a: PieceModel, b: PieceModel) => {
     return {
         x: Math.abs(a.position.x - b.position.x),
         y: Math.abs(a.position.y - b.position.y)
     };
 };
 
-const arePiecesAdjacent = (a: Piece, b: Piece) => {
+const arePiecesAdjacent = (a: PieceModel, b: PieceModel) => {
     const { x: deltaX, y: deltaY } = getDelta(a, b);
 
     return (deltaX + deltaY === 1);
 };
 
-const getTargetPiece = (piece: Piece, others: Piece[]) => {
+const getTargetPiece = (piece: PieceModel, others: PieceModel[]) => {
     if (piece.targetPieceId === null) {
         return null;
     }
@@ -62,7 +62,7 @@ const getTargetPiece = (piece: Piece, others: Piece[]) => {
     return target;
 };
 
-export const getAttackableEnemy = (piece: Piece, others: Piece[]) => {
+export const getAttackableEnemy = (piece: PieceModel, others: PieceModel[]) => {
     const target = getTargetPiece(piece, others);
 
     if (target && arePiecesAdjacent(piece, target)) {
@@ -93,7 +93,7 @@ export const getAttackableEnemy = (piece: Piece, others: Piece[]) => {
     return null;
 };
 
-const findClosestEnemy = (piece: Piece, pieces: Piece[]) => {
+const findClosestEnemy = (piece: PieceModel, pieces: PieceModel[]) => {
     const enemies = getLivingEnemies(piece, pieces);
 
     if (enemies.length === 0) {
@@ -111,7 +111,7 @@ const findClosestEnemy = (piece: Piece, pieces: Piece[]) => {
     return enemyDeltas[0].enemy;
 };
 
-export const getNewPiecePosition = (piece: Piece, pieces: Piece[]): XYLocation => {
+export const getNewPiecePosition = (piece: PieceModel, pieces: PieceModel[]): XYLocation => {
     const target = findClosestEnemy(piece, pieces);
 
     if (target === null) {

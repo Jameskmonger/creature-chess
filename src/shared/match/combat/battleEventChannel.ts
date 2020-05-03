@@ -1,9 +1,8 @@
 import present = require("present");
 import { eventChannel, buffers } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
-import { Piece } from "../../models/piece";
 import { isATeamDefeated } from "@common/utils";
-import { BoardActions, BoardState } from "../../board";
+import { BoardState } from "../../board";
 import { initialiseBoard } from "@common/board/actions/boardActions";
 // import { UpdatePiecesAction } from "../../board/actions/boardActions";
 type UpdatePiecesAction = any;

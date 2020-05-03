@@ -1,4 +1,4 @@
-import { Piece } from "../../models";
+import { PieceModel } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getRelativeDirection } from "../../models/position";
@@ -8,7 +8,7 @@ import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
 
 interface PieceCombatInfo {
-    piece: Piece;
+    piece: PieceModel;
     stats: CreatureStats;
     type: CreatureType;
 }
@@ -20,7 +20,7 @@ export class TurnSimulator {
         this.definitionProvider = definitionProvider;
     }
 
-    public simulateTurn(turnCount: number, pieces: { [key: string]: Piece }) {
+    public simulateTurn(turnCount: number, pieces: { [key: string]: PieceModel }) {
         const pieceIds = Object.keys(pieces);
 
         for (const pieceId of pieceIds) {
@@ -80,7 +80,7 @@ export class TurnSimulator {
         return pieces;
     }
 
-    private getPieceCombatInfo(piece: Piece) {
+    private getPieceCombatInfo(piece: PieceModel) {
         const definition = this.definitionProvider.get(piece.definitionId);
 
         return {

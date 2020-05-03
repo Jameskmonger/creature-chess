@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "@app/store";
-import { GamePhase, Piece, Constants } from "@common/models";
+import { GamePhase, PieceModel, Constants } from "@common/models";
 import { ProgressBar } from "../../progressBar";
 import { getPiece } from "@common/player/pieceSelectors";
 
@@ -15,7 +15,7 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId }) => {
         || state.game.phase === GamePhase.PLAYING
     ));
 
-    const piece = useSelector<AppState, (Piece | null)>(state => getPiece(state, pieceId));
+    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
 
     const localPlayerId = useSelector<AppState, string>(state => state.localPlayer.id);
 

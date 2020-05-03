@@ -1,6 +1,5 @@
-import { GRID_SIZE } from "../models/constants";
-import { Piece } from "../models";
+import { PieceModel } from "../models";
 
-export const getFirstEmptyBenchSlot = (bench: Piece[]) => {
+export const getFirstEmptyBenchSlot = (bench: PieceModel[]) => {
     return bench.findIndex(p => p === null);
 };
