@@ -9,7 +9,6 @@ import { GamePhase, PieceModel, PlayerPieceLocation } from "@common/models";
 import { getPiece } from "@common/player/pieceSelectors";
 import { playerDropPiece } from "@common/player/actions";
 import { clearSelectedPiece } from "@app/store/actions/gameActions";
-import { PieceComponent } from "../../piece/pieceComponent";
 import { ownedPieceSelector, boardTilePieceSelector, benchTilePieceSelector } from "@app/store/pieceSelectors";
 import { Dispatch } from "redux";
 import { canDropPiece } from "@common/board";
@@ -108,8 +107,6 @@ const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => 
         }
     };
 
-    const isBoard = type === TileType.BOARD;
-
     return (
         <div
             ref={drop}
@@ -117,8 +114,6 @@ const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => 
             touch-action="none"
             onPointerUp={onClick}
         >
-            {!isBoard && piece && <PieceComponent key={piece.id} id={piece.id} draggable={canMovePiece} animate={isBoard} />}
-
             <div className={`${getOverlayClassName(isDragging, canDrop)}`} />
         </div>
     );

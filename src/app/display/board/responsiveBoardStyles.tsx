@@ -44,7 +44,7 @@ const getTilePosition = (tileSize: number, inPreparingPhase: boolean, x: number,
     };
 };
 
-const getTilePositionStyles = (tileSize: number, inPreparingPhase: boolean) => {
+const getPositionablePieceStyles = (tileSize: number, inPreparingPhase: boolean) => {
     const styles = [];
     const TILE_BASE_Z_INDEX = 10;
 
@@ -72,7 +72,7 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
             ? `{ height: ${boardHeight}px; width: ${boardWidth}px; margin: "0 auto"; }`
             : `{ height: ${boardHeight}px; width: ${boardWidth}px; }`;
 
-    const tilePositionStyles = getTilePositionStyles(tileSize, inPreparingPhase);
+    const positionablePieceStyles = getPositionablePieceStyles(tileSize, inPreparingPhase);
 
     return (
         <style
@@ -83,7 +83,7 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
 
             .board-container ${boardContainerStyle}
 
-            ${tilePositionStyles}
+            ${positionablePieceStyles}
 
             .chessboard { height: ${tileSize * Constants.GRID_SIZE}px; }
 

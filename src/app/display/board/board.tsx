@@ -7,6 +7,9 @@ import { useSelector } from "react-redux";
 import { AppState } from "@app/store";
 import { TileStyle } from "@common/models/position";
 import { PieceComponent } from "../piece/pieceComponent";
+import { Announcement } from "./announcement";
+import { VictoryOverlay } from "./victoryOverlay/victoryOverlay";
+import { ReconnectModal } from "./reconnectModal";
 
 const BoardPieces: React.FunctionComponent = props => {
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
@@ -67,11 +70,15 @@ const Board: React.FunctionComponent = props => {
     }
 
     return (
-        <>
+        <div className="chessboard">
             {showOpponentBoardPlaceholder && <OpponentBoardPlaceholder />}
             {rows}
             <BoardPieces />
-        </>
+
+            <Announcement />
+            <VictoryOverlay />
+            <ReconnectModal />
+        </div>
     );
 };
 

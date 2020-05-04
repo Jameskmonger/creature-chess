@@ -12,8 +12,19 @@ import { PhaseInfo } from "../../display/phaseInfo";
 import { Profile } from "../../display/profile/profile";
 import { Feed } from "../../features/feed/feed";
 import { RoundIndicator } from "../../display/roundIndicator";
-import { BoardContainer } from "../board/boardContainer";
 import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
+import { Board } from "../board/board";
+import { Bench } from "../bench";
+
+const GameBoard: React.FunctionComponent = () => {
+    return (
+        <div className="group board-container">
+            <Board />
+
+            <Bench />
+        </div>
+    );
+};
 
 const GameStage: React.FunctionComponent = () => {
     return (
@@ -32,7 +43,7 @@ const GameStage: React.FunctionComponent = () => {
                         <Feed />
                     </div>
 
-                    <BoardContainer />
+                    <GameBoard />
 
                     <div className="group">
                         <CardShop />
@@ -50,7 +61,7 @@ const GameStage: React.FunctionComponent = () => {
 
             <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)">
                 <div className="game landscape">
-                    <BoardContainer />
+                    <GameBoard />
 
                     <div className="group">
                         <RoundIndicator />
@@ -76,7 +87,7 @@ const GameStage: React.FunctionComponent = () => {
 
             <Media query="(orientation: portrait), (max-width: 599px)">
                 <div className="game portrait">
-                    <BoardContainer />
+                    <GameBoard />
 
                     <div className="group">
                         <RoundIndicator />
