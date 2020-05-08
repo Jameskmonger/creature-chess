@@ -1,15 +1,13 @@
 import * as React from "react";
-import { MapStateToProps, connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { AppState } from "@app/store";
 import { Countdown } from "./countdown";
 import { GamePhase, Constants } from "@common/models";
 
-interface Props {
-    phase: GamePhase;
-    phaseStartedAtSeconds: number;
-}
+const PhaseInfo: React.FunctionComponent = () => {
+    const phase = useSelector<AppState, GamePhase>(state => state.game.phase);
+    const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.game.phaseStartedAtSeconds);
 
-const PhaseInfoUnconnected: React.FunctionComponent<Props> = ({ phase, phaseStartedAtSeconds }) => {
     if (phase === GamePhase.WAITING) {
         return <div className="phase-info">Waiting for players</div>;
     }
@@ -22,12 +20,5 @@ const PhaseInfoUnconnected: React.FunctionComponent<Props> = ({ phase, phaseStar
 
     return <div className="phase-info">{GamePhase[phase]} - <Countdown countdownToSeconds={phaseEndTime} /></div>;
 };
-
-const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    phase: state.game.phase,
-    phaseStartedAtSeconds: state.game.phaseStartedAtSeconds
-});
-
-const PhaseInfo = connect(mapStateToProps)(PhaseInfoUnconnected);
 
 export { PhaseInfo };

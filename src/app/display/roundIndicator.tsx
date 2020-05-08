@@ -1,24 +1,15 @@
 import * as React from "react";
-import { GamePhase } from "@common/models";
-import { MapStateToProps, connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { AppState } from "@app/store";
 
-interface Props {
-    round: number | null;
-}
+const RoundIndicator: React.FunctionComponent = () => {
+    const round = useSelector<AppState, number>(state => state.game.round);
 
-const RoundIndicatorUnconnected: React.FunctionComponent<Props> = ({ round }) => {
     if (round === null) {
         return null;
     }
 
     return <div className="round-indicator">Round {round}</div>;
 };
-
-const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    round: state.game.round
-});
-
-const RoundIndicator = connect(mapStateToProps)(RoundIndicatorUnconnected);
 
 export { RoundIndicator };

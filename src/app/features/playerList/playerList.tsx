@@ -1,18 +1,16 @@
 import * as React from "react";
 import { PlayerListPlayer, GamePhase } from "@common/models";
 import { PlayerListItem } from "./playerListItem";
-import { connect, MapStateToProps } from "react-redux";
+import { useSelector } from "react-redux";
 import { AppState } from "@app/store";
 import { opponentIdSelector, localPlayerIdSelector } from "../../store/gameSelector";
 
-interface Props {
-    players: PlayerListPlayer[];
-    opponentId: string;
-    localPlayerId: string;
-    showReadyIndicators: boolean;
-}
+const PlayerList: React.FunctionComponent = () => {
+    const players = useSelector<AppState, PlayerListPlayer[]>(state => state.playerList);
+    const opponentId = useSelector<AppState, string>(opponentIdSelector);
+    const localPlayerId = useSelector<AppState, string>(localPlayerIdSelector);
+    const showReadyIndicators = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 
-const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localPlayerId, opponentId, showReadyIndicators }) => {
     return (
         <div className="player-list">
             {
@@ -32,14 +30,5 @@ const PlayerListUnconnected: React.FunctionComponent<Props> = ({ players, localP
         </div>
     );
 };
-
-const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    players: state.playerList,
-    opponentId: opponentIdSelector(state),
-    localPlayerId: localPlayerIdSelector(state),
-    showReadyIndicators: state.game.phase === GamePhase.PREPARING
-});
-
-const PlayerList = connect(mapStateToProps)(PlayerListUnconnected);
 
 export { PlayerList };
