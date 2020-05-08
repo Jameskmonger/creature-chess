@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card } from "./card";
-import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@app/store";
 import { Card as CardModel, Constants, GamePhase } from "@common/models";
 import { DropToSell } from "./dropToSell";
@@ -9,34 +9,22 @@ import { BalanceDisplay } from "./balanceDisplay";
 import { LockButton } from "./lockButton";
 import { PlayerActions } from "@common/player";
 
-interface StateProps {
-    cards: CardModel[];
-    money: number;
-    canUseShop: boolean;
-    shopLocked: boolean;
-}
-
-interface DispatchProps {
-    onReroll: () => void;
-    onBuyCard: (index: number) => void;
-    onToggleLock: () => void;
-}
-
-type Props = StateProps & DispatchProps;
-
 const CardShopDivider: React.FunctionComponent = () => <span className="item">&nbsp;|&nbsp;</span>;
 
-const CardShopUnconnected: React.FunctionComponent<Props> = props => {
-    const { cards, money, onReroll, onBuyCard, canUseShop, shopLocked, onToggleLock } = props;
+const CardShop: React.FunctionComponent = () => {
+    const dispatch = useDispatch();
 
-    const onCardClick = (index: number) => {
-        return () => onBuyCard(index);
-    };
+    const cards = useSelector<AppState, CardModel[]>(state => state.cards);
+    const money = useSelector<AppState, number>(state => state.game.money);
+    const canUseShop = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD);
+    const shopLocked = useSelector<AppState, boolean>(state => state.game.shopLocked);
 
     const createCard = (card: CardModel, index: number) => {
         if (card === null) {
             return null;
         }
+
+        const onClick = () => dispatch(PlayerActions.buyCard(index));
 
         return (
             <Card
@@ -45,7 +33,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
                 cost={card.cost}
                 name={card.name}
                 buyable={money >= card.cost}
-                onClick={onCardClick(index)}
+                onClick={onClick}
             />
         );
     };
@@ -54,7 +42,10 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         return null;
     }
 
+    // todo move this inside RerollButton
     const rerollBuyable = money >= Constants.REROLL_COST;
+    const onBuyReroll = () => dispatch(PlayerActions.rerollCards());
+    const onToggleLock = () => dispatch(PlayerActions.toggleShopLock());
 
     return (
         <div className="card-selector">
@@ -63,7 +54,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
 
                 <CardShopDivider />
 
-                <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onReroll} />
+                <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onBuyReroll} />
 
                 <CardShopDivider />
 
@@ -78,21 +69,6 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         </div>
     );
 };
-
-const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
-    cards: state.cards,
-    money: state.game.money,
-    canUseShop: state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD,
-    shopLocked: state.game.shopLocked
-});
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onReroll: () => dispatch(PlayerActions.rerollCards()),
-    onBuyCard: (index: number) => dispatch(PlayerActions.buyCard(index)),
-    onToggleLock: () => dispatch(PlayerActions.toggleShopLock())
-});
-
-const CardShop = connect(mapStateToProps, mapDispatchToProps)(CardShopUnconnected);
 
 export {
     CardShop

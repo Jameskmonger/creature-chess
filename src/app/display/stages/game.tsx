@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MapStateToProps, connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { GameStage } from "./gameStage";
 import { AppState } from "@app/store";
 import { MenuStage } from "./menuStage";
@@ -9,26 +9,6 @@ enum GameState {
     MENU = 0,
     LOBBY = 1,
     GAME = 2
-}
-
-interface Props {
-    gameState: GameState;
-}
-
-class GameUnconnected extends React.Component<Props> {
-    public render() {
-        const { gameState } = this.props;
-
-        if (gameState === GameState.GAME) {
-            return <GameStage />;
-        }
-
-        if (gameState === GameState.LOBBY) {
-            return <LobbyStage />;
-        }
-
-        return <MenuStage />;
-    }
 }
 
 const gameStateSelector = (state: AppState) => {
@@ -43,11 +23,19 @@ const gameStateSelector = (state: AppState) => {
     return GameState.MENU;
 };
 
-const mapStateToProps: MapStateToProps<Props, {}, AppState> = state => ({
-    gameState: gameStateSelector(state)
-});
+const Game: React.FunctionComponent = () => {
+    const gameState = useSelector<AppState, GameState>(gameStateSelector);
 
-const Game = connect(mapStateToProps)(GameUnconnected);
+    if (gameState === GameState.GAME) {
+        return <GameStage />;
+    }
+
+    if (gameState === GameState.LOBBY) {
+        return <LobbyStage />;
+    }
+
+    return <MenuStage />;
+};
 
 export {
     Game

@@ -1,15 +1,15 @@
 import * as React from "react";
-import { Constants, GamePhase } from "@common/models";
-
-import { BoardRow } from "./boardRow";
-import { OpponentBoardPlaceholder } from "./opponentBoardPlaceholder";
 import { useSelector } from "react-redux";
-import { AppState } from "@app/store";
+import { Constants, GamePhase } from "@common/models";
 import { TileStyle } from "@common/models/position";
+import { AppState } from "@app/store";
+
 import { PieceComponent } from "../piece/pieceComponent";
-import { Announcement } from "./announcement";
-import { VictoryOverlay } from "./victoryOverlay/victoryOverlay";
-import { ReconnectModal } from "./reconnectModal";
+import { BoardRow } from "./boardRow";
+import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
+import { Announcement } from "./overlays/announcement";
+import { VictoryOverlay } from "./overlays/victoryOverlay";
+import { ReconnectModal } from "./overlays/reconnectModal";
 
 const BoardPieces: React.FunctionComponent = props => {
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
