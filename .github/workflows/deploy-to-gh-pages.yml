@@ -24,7 +24,10 @@ jobs:
       run: npm run build
       env:
         GA_ID: ${{ secrets.GA_ID }}
-        CNAME: ${{ secrets.CNAME }} 
+        CNAME: ${{ secrets.CNAME }}
+        GH_PAGES: true
+    - name: Copy 404 page
+      run: cp src/app/404.html public/404.html
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.4.1
       with:
