@@ -1,16 +1,19 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Game } from "./display/stages/game";
 
 import "pepjs";
 import "./display/style/index.scss";
 
-import { Provider } from "react-redux";
+import { Provider as ReduxProvider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 import { store } from "./store/store";
+import { App } from "./app";
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Game />
-    </Provider>,
+    <ReduxProvider store={store}>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </ReduxProvider>,
     document.getElementById("approot")
 );
