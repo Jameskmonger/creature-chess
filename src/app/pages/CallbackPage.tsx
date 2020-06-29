@@ -5,18 +5,18 @@ import { AppState } from "@app/store";
 import { handleAuthenticationCallback } from "@app/store/actions/authActions";
 
 const CallbackPage: React.FunctionComponent = () => {
-    const userExists = useSelector<AppState>(state => state.auth !== null);
+    const isLoggedIn = useSelector<AppState>(state => state.auth !== null);
     const dispatch = useDispatch();
 
     React.useEffect(() => {
-        if (userExists) {
+        if (isLoggedIn) {
             return;
         }
 
         dispatch(handleAuthenticationCallback());
     }, []);
 
-    if (userExists) {
+    if (isLoggedIn) {
         return <Redirect to="/" />;
     }
 

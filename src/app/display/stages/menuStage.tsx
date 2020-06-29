@@ -1,10 +1,11 @@
 import * as React from "react";
-import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import { connect, MapDispatchToProps, MapStateToProps, useSelector } from "react-redux";
 import { joinGameAction, createGameAction, joinGameError, enableDebugMode, findGameAction } from "../../store/actions/gameActions";
 import { AppState } from "@app/store";
 import { loadingSelector } from "../../store/gameSelector";
 import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/models/constants";
 import { getUrlParameter } from "../../get-url-parameter";
+import { signOut } from "@app/auth/auth0";
 
 interface DispatchProps {
     onFindGame: (serverIP: string, name: string) => void;
@@ -27,6 +28,18 @@ interface MenuStageState {
     serverIP: string;
     debugModeClickCount: number;
 }
+
+const PlayerInfo: React.FunctionComponent = () => {
+    const email = useSelector<AppState, any>(state => state.auth.profile.email);
+
+    return (
+        <div className="player-info">
+            <span className="welcome">Welcome back, <span className="email">{email}</span></span>
+
+            <button className="sign-out" onClick={signOut}>Log out</button>
+        </div>
+    );
+};
 
 class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
     public state = {
@@ -64,6 +77,8 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
 
         return (
             <div className="menu">
+                <PlayerInfo />
+
                 <div className="join-game">
                     {title}
 
