@@ -27,6 +27,7 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"@types/auth0-js": "^9.13.2",
 		"@types/enzyme": "^3.9.0",
 		"@types/enzyme-adapter-react-16": "^1.0.5",
 		"@types/node": "^11.11.3",
@@ -71,6 +72,7 @@
 		"@types/socket.io": "^2.1.2",
 		"@types/socket.io-client": "^1.4.32",
 		"@types/uuid": "^3.4.4",
+		"auth0-js": "^9.13.2",
 		"delay": "^4.1.0",
 		"javascript-astar": "^0.4.1",
 		"lodash": "^4.17.13",

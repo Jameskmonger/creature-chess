@@ -14,10 +14,12 @@ import { networking } from "../../networking/saga";
 import { evolutionSagaFactory } from "@common/player/sagas/evolution";
 import { dropPiece } from "@common/player/sagas/dropPiece";
 import { sellPiece } from "./actions/sellPiece";
+import { auth } from "./actions/auth";
 
 export const rootSaga = function*() {
     yield all([
         yield fork(preventAccidentalClose),
+        yield fork(auth),
         yield fork(networking),
         yield takeEvery(
             JOIN_COMPLETE,
