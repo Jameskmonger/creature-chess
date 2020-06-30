@@ -8,7 +8,7 @@ import { Player } from "@common/game";
 import { IdGenerator } from "./id-generator";
 import { LobbyPlayer } from "@common/models";
 import { nameValidator } from "./name-validator";
-import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket, JoinGamePacket } from "@common/networking/client-to-server";
+import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
 import { verify } from "./jwt";
@@ -46,8 +46,6 @@ export class Server {
 
             socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
             socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket));
-            socket.on(ClientToServerPacketOpcodes.JOIN_GAME, this.onSocketJoinGame(socket));
-            socket.on(ClientToServerPacketOpcodes.CREATE_GAME, this.onSocketCreateGame(socket));
             socket.removeAllListeners("authenticate");
 
             socket.emit("authenticate_response", { success: true });
@@ -114,41 +112,6 @@ export class Server {
         };
     }
 
-    private getLobbyForId(id: string) {
-        return this.lobbies.get(id) || null;
-    }
-
-    private onSocketCreateGame(socket: io.Socket) {
-        return (
-            name: string,
-            response: (response: JoinLobbyResponse) => void
-        ) => {
-            const validationError = nameValidator(name);
-
-            if (validationError) {
-                response({
-                    error: validationError,
-                    response: null
-                });
-                return;
-            }
-
-            const player = new Connection(socket, name);
-            const lobby = this.createLobby(player, false);
-
-            response({
-                error: null,
-                response: {
-                    playerId: player.id,
-                    lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime,
-                    isHost: player.id === lobby.hostId
-                }
-            });
-        };
-    }
-
     private onSocketFindGame(socket: io.Socket) {
         return (
             name: string,
@@ -173,56 +136,6 @@ export class Server {
             } else {
                 lobby = this.createLobby(player, true);
             }
-
-            response({
-                error: null,
-                response: {
-                    playerId: player.id,
-                    lobbyId: lobby.id,
-                    players: this.getLobbyPlayers(lobby),
-                    startTimestamp: lobby.gameStartTime,
-                    isHost: player.id === lobby.hostId
-                }
-            });
-        };
-    }
-
-    private onSocketJoinGame(socket: io.Socket) {
-        return (
-            { name, gameId }: JoinGamePacket,
-            response: (response: JoinLobbyResponse) => void
-        ) => {
-            const validationError = nameValidator(name);
-
-            if (validationError) {
-                response({
-                    error: validationError,
-                    response: null
-                });
-                return;
-            }
-
-            const lobby = this.getLobbyForId(gameId);
-
-            if (lobby === null) {
-                response({
-                    error: "Game not found",
-                    response: null
-                });
-                return;
-            }
-
-            if (lobby.canJoin() === false) {
-                response({
-                    error: "Game is not joinable",
-                    response: null
-                });
-                return;
-            }
-
-            const player = new Connection(socket, name);
-
-            lobby.addPlayer(player);
 
             response({
                 error: null,

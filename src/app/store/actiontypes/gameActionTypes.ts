@@ -1,12 +1,6 @@
 export const FIND_GAME = "FIND_GAME";
 export type FIND_GAME = typeof FIND_GAME;
 
-export const JOIN_GAME = "JOIN_GAME";
-export type JOIN_GAME = typeof JOIN_GAME;
-
-export const CREATE_GAME = "CREATE_GAME";
-export type CREATE_GAME = typeof CREATE_GAME;
-
 export const JOIN_ERROR = "JOIN_ERROR";
 export type JOIN_ERROR = typeof JOIN_ERROR;
 
