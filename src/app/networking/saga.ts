@@ -23,15 +23,31 @@ import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-regis
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@common/networking/client-to-server";
 import { ConnectionStatus } from "@common/networking";
 import { PlayerActionTypesArray, PlayerAction } from "@common/player/actions";
+import { signIn } from "@app/auth/auth0";
 
-const getSocket = (serverIP: string) => {
+const getSocket = (serverIP: string, idToken: string) => {
     // force to websocket for now until CORS is sorted
     const socket = io(serverIP, { transports: ["websocket", "xhr-polling"] });
 
-    return new Promise<Socket>(resolve => {
+    return new Promise<Socket>((resolve, reject) => {
         socket.on("connect", () => {
-            resolve(socket);
+            socket.emit("authenticate", { idToken });
         });
+
+        const onAuthenticated = ({ success }: { success: boolean }) => {
+            if (success) {
+                socket.off("authenticate_response", onAuthenticated);
+
+                resolve(socket);
+
+                return;
+            }
+
+            socket.disconnect();
+            reject();
+        };
+
+        socket.on("authenticate_response", onAuthenticated);
     });
 };
 
@@ -354,7 +370,28 @@ const getResponseForAction = (registry: ClientToServerPacketRegsitry, action: Fi
 export const networking = function*() {
     let action: (FindGameAction | JoinGameAction | CreateGameAction)
         = yield take([FIND_GAME, JOIN_GAME, CREATE_GAME]);
-    const socket: Socket = yield call(getSocket, action.payload.serverIP);
+
+    const state: AppState = yield select();
+
+    // this should never happen, but it doesn't hurt to be safe
+    const isLoggedIn = state.auth !== null;
+    if (!isLoggedIn) {
+        signIn();
+
+        return;
+    }
+
+    const { idToken } = state.auth;
+
+    let socket: Socket;
+
+    try {
+        socket = yield call(getSocket, action.payload.serverIP, idToken);
+    } catch (e) {
+        signIn();
+
+        return;
+    }
 
     const outgoingRegistry = new OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
         (opcode, payload, ack) => socket.emit(opcode, payload, ack)

@@ -11,6 +11,7 @@ import { nameValidator } from "./name-validator";
 import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket, JoinGamePacket } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
+import { verify } from "./jwt";
 
 process.on("unhandledRejection", (error, p) => {
     log("unhandled rejection:");
@@ -34,10 +35,23 @@ export class Server {
     private receiveConnection = (socket: io.Socket) => {
         log("Connection received");
 
-        socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
-        socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket));
-        socket.on(ClientToServerPacketOpcodes.JOIN_GAME, this.onSocketJoinGame(socket));
-        socket.on(ClientToServerPacketOpcodes.CREATE_GAME, this.onSocketCreateGame(socket));
+        socket.on("authenticate", async ({ idToken }: { idToken: string }) => {
+            const decoded = await verify(idToken);
+
+            if (decoded === null) {
+                socket.emit("authenticate_response", { success: false });
+                socket.disconnect();
+                return;
+            }
+
+            socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
+            socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket));
+            socket.on(ClientToServerPacketOpcodes.JOIN_GAME, this.onSocketJoinGame(socket));
+            socket.on(ClientToServerPacketOpcodes.CREATE_GAME, this.onSocketCreateGame(socket));
+            socket.removeAllListeners("authenticate");
+
+            socket.emit("authenticate_response", { success: true });
+        });
     }
 
     private getLobbyPlayers(lobby: Lobby): LobbyPlayer[] {
