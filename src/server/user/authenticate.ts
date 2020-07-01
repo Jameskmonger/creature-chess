@@ -5,7 +5,11 @@ interface User {
 
 }
 
-export const authenticate = async (managementClient: ManagementClient, token: string): Promise<User> => {
+interface UserAppMetadata {
+    uuid: string;
+}
+
+export const authenticate = async (managementClient: ManagementClient<UserAppMetadata>, token: string): Promise<User> => {
     const decoded = await verifyDecodeJwt(token);
 
     if (decoded === null) {
@@ -18,6 +22,7 @@ export const authenticate = async (managementClient: ManagementClient, token: st
         const user = await managementClient.getUser({ id: userId });
 
         return {
+            id: user.app_metadata.uuid,
             name: user.nickname
         };
     } catch (e) {
