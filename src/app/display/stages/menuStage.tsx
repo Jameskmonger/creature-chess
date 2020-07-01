@@ -31,7 +31,7 @@ const PlayerInfo: React.FunctionComponent = () => {
 
     return (
         <div className="player-info">
-            <span className="welcome">Welcome back, <span className="email">{email}</span></span>
+            <span className="welcome">Logged in (<span className="email">{email}</span>)</span>
 
             <button className="sign-out" onClick={signOut}>Log out</button>
         </div>
