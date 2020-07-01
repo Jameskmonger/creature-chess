@@ -1,12 +1,9 @@
 import { ManagementClient } from "auth0";
 import { verifyDecodeJwt } from "./verifyDecodeJwt";
+import { UserAppMetadata } from "./userAppMetadata";
 
 interface User {
 
-}
-
-interface UserAppMetadata {
-    uuid: string;
 }
 
 export const authenticate = async (managementClient: ManagementClient<UserAppMetadata>, token: string): Promise<User> => {

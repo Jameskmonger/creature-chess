@@ -12,6 +12,7 @@ import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket } from "@commo
 import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
 import { authenticate } from "./user/authenticate";
+import { UserAppMetadata } from "./user/userAppMetadata";
 
 process.on("unhandledRejection", (error, p) => {
     log("unhandled rejection:");
@@ -30,7 +31,7 @@ export class Server {
     private lobbyIdGenerator = new IdGenerator();
     private metrics = new Metrics();
 
-    private client = new ManagementClient({
+    private client = new ManagementClient<UserAppMetadata>({
         domain: AUTH0_CONFIG.domain,
         clientId: AUTH0_CONFIG.clientId,
         clientSecret: AUTH0_CONFIG.clientSecret
