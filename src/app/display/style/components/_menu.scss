@@ -12,7 +12,6 @@
         margin-bottom: 0.5em;
         font-size: 2em;
         text-align: center;
-        cursor: pointer;
         user-select: none;
 
         .debug-mode {
@@ -24,37 +23,67 @@
     }
 
     .name-input {
+        margin-top: 1em;
         font-size: 1.4em;
     }
 
-    .join-game input {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0.2em 0.4em;
-        color: #fff;
-        background: none;
-        border-style: solid;
-        /* stylelint-disable */
-        border-top: none;
-        border-left: none;
-        border-right: none;
-        /* stylelint-enable */
-        border-bottom: 2px solid $join-lobby-button;
+    .player-info {
+        padding: 1em 4em;
+        margin-top: 3em;
+        text-align: center;
+        background: #566c86;
 
-        /* stylelint-disable */
-        &::placeholder {
-        /* stylelint-enable */
+        .welcome {
+            margin-right: 1em;
+        }
+
+        .email {
             font-style: italic;
-            color: #aaa;
+            font-weight: 700;
+            color: $player-list-name-local;
+        }
+
+        .sign-out {
+            padding: 0.4em 1em;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            background: $join-lobby-button;
+            /* stylelint-disable */
+            border: none;
+            /* stylelint-enable */
         }
     }
 
     .join-game {
         padding: 2em 5em;
-        margin-top: 3em;
+        margin-top: 1em;
         text-align: center;
         background: #566c86;
+
+        input {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.2em 0.4em;
+            color: #fff;
+            background: none;
+            border-style: solid;
+            /* stylelint-disable */
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            /* stylelint-enable */
+            border-bottom: 2px solid $join-lobby-button;
+
+            /* stylelint-disable */
+            &::placeholder {
+            /* stylelint-enable */
+                font-style: italic;
+                color: #aaa;
+            }
+        }
     }
 
     .how-to-play {

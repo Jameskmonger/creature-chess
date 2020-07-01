@@ -3,8 +3,6 @@ import { PlayerAction } from "@common/player/actions";
 
 export enum ClientToServerPacketOpcodes {
   FIND_GAME = "findGame",
-  JOIN_GAME = "joinGame",
-  CREATE_GAME = "createGame",
   SEND_CHAT_MESSAGE = "sendChatMessage",
   FINISH_MATCH = "finishMatch",
   START_LOBBY_GAME = "startLobbyGame",
@@ -18,8 +16,6 @@ export type ReconnectAuthenticatePacket = {
   reconnectSecret: string;
 };
 
-export type JoinGamePacket = { name: string, gameId: string };
-
 export type SendPlayerActionsPacket = {
   index: number;
   actions: PlayerAction[];
@@ -31,8 +27,6 @@ type EmptyPacket = { empty: true };
 
 export type ClientToServerPacketDefinitions = {
   [ClientToServerPacketOpcodes.FIND_GAME]: string,
-  [ClientToServerPacketOpcodes.JOIN_GAME]: JoinGamePacket,
-  [ClientToServerPacketOpcodes.CREATE_GAME]: string,
   [ClientToServerPacketOpcodes.FINISH_MATCH]: EmptyPacket,
   [ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE]: string,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: EmptyPacket,
@@ -42,8 +36,6 @@ export type ClientToServerPacketDefinitions = {
 
 export type ClientToServerPacketAcknowledgements = {
   [ClientToServerPacketOpcodes.FIND_GAME]: (response: JoinLobbyResponse) => void,
-  [ClientToServerPacketOpcodes.JOIN_GAME]: (response: JoinLobbyResponse) => void,
-  [ClientToServerPacketOpcodes.CREATE_GAME]: (response: JoinLobbyResponse) => void,
   [ClientToServerPacketOpcodes.FINISH_MATCH]: never,
   [ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE]: never,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: never,

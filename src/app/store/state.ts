@@ -3,6 +3,26 @@ import { ConnectionStatus } from "@common/networking";
 import { BoardState } from "@common/board";
 import { BenchState } from "@common/player/bench";
 
+export interface AppState {
+    auth: AuthState | null;
+
+    board: BoardState;
+    bench: BenchState;
+    game: GameState;
+    playerList: PlayerListPlayer[];
+    cards: Card[];
+    localPlayer: LocalPlayerState;
+    feedMessages: FeedMessage[];
+    lobby: LobbyState;
+}
+
+export interface AuthState {
+    authenticated: boolean;
+    idToken: string;
+    profile: any;
+    expiresAt: number;
+}
+
 export interface GameState {
     gameId: string;
     phase: GamePhase;
@@ -32,17 +52,6 @@ export interface LocalPlayerState {
     level: number;
     xp: number;
     ready: boolean;
-}
-
-export interface AppState {
-    board: BoardState;
-    bench: BenchState;
-    game: GameState;
-    playerList: PlayerListPlayer[];
-    cards: Card[];
-    localPlayer: LocalPlayerState;
-    feedMessages: FeedMessage[];
-    lobby: LobbyState;
 }
 
 export interface LobbyState {

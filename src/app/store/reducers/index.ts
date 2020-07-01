@@ -6,6 +6,7 @@ import { localPlayer } from "./localPlayerReducer";
 import { feedMessages } from "../../features/feed/feedMessagesReducer";
 import { lobby } from "./lobbyReducer";
 import { benchReducer } from "@common/player/bench";
+import { auth } from "./authReducer";
 
 export const reducers = {
     board,
@@ -15,5 +16,6 @@ export const reducers = {
     game,
     localPlayer,
     feedMessages,
-    lobby
+    lobby,
+    auth
 };

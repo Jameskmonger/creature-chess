@@ -1,7 +1,7 @@
 import { GameAction } from "../actions/gameActions";
 import {
-    JOIN_GAME, GAME_PHASE_UPDATE, MONEY_UPDATE,
-    CREATE_GAME, JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT,
+    GAME_PHASE_UPDATE, MONEY_UPDATE,
+    JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT,
     CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS, CLEAR_SELECTED_PIECE
 } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
@@ -39,8 +39,6 @@ export function game(state: GameState = initialState, action: GameReducerActionT
                 connectionStatus: action.payload.status
             };
         case FIND_GAME:
-        case JOIN_GAME:
-        case CREATE_GAME:
             return {
                 ...state,
                 loading: true

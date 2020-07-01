@@ -27,8 +27,10 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"@types/auth0-js": "^9.13.2",
 		"@types/enzyme": "^3.9.0",
 		"@types/enzyme-adapter-react-16": "^1.0.5",
+		"@types/jsonwebtoken": "^8.5.0",
 		"@types/node": "^11.11.3",
 		"@types/react-redux": "^7.1.2",
 		"@types/redux": "^3.6.0",
@@ -63,6 +65,7 @@
 		"webpack-dev-server": "^3.2.1"
 	},
 	"dependencies": {
+		"@types/auth0": "^2.20.5",
 		"@types/lodash": "^4.14.123",
 		"@types/react": "^16.8.7",
 		"@types/react-dom": "^16.8.2",
@@ -71,8 +74,12 @@
 		"@types/socket.io": "^2.1.2",
 		"@types/socket.io-client": "^1.4.32",
 		"@types/uuid": "^3.4.4",
+		"auth0": "^2.26.0",
+		"auth0-js": "^9.13.2",
 		"delay": "^4.1.0",
 		"javascript-astar": "^0.4.1",
+		"jsonwebtoken": "^8.5.1",
+		"jwks-rsa": "^1.8.1",
 		"lodash": "^4.17.13",
 		"p-defer": "^2.1.0",
 		"pepjs": "^0.5.2",

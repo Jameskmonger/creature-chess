@@ -1,10 +1,8 @@
 import {
     FIND_GAME,
-    JOIN_GAME,
     MONEY_UPDATE,
     GAME_PHASE_UPDATE,
     PHASE_START_SECONDS,
-    CREATE_GAME,
     JOIN_ERROR,
     ENABLE_DEBUG_MODE,
     UPDATE_ANNOUNCEMENT,
@@ -19,8 +17,6 @@ import { JoinCompleteAction } from "./localPlayerActions";
 import { ConnectionStatus, ServerToClient } from "@common/networking";
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string, name: string } });
-export type JoinGameAction = ({ type: JOIN_GAME, payload: { serverIP: string, name: string, gameId: string } });
-export type CreateGameAction = ({ type: CREATE_GAME, payload: { serverIP: string, name: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: ServerToClient.PhaseUpdatePacket });
 export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string } });
@@ -34,8 +30,6 @@ export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { 
 
 export type GameAction =
     FindGameAction
-    | JoinGameAction
-    | CreateGameAction
     | JoinErrorAction
     | ({ type: MONEY_UPDATE, payload: { money: number } })
     | PhaseStartSecondsAction
@@ -52,23 +46,6 @@ export type GameAction =
 
 export const findGameAction = (serverIP: string, name: string): FindGameAction => ({
     type: FIND_GAME,
-    payload: {
-        name,
-        serverIP
-    }
-});
-
-export const joinGameAction = (serverIP: string, name: string, gameId: string): JoinGameAction => ({
-    type: JOIN_GAME,
-    payload: {
-        name,
-        serverIP,
-        gameId
-    }
-});
-
-export const createGameAction = (serverIP: string, name: string): CreateGameAction => ({
-    type: CREATE_GAME,
     payload: {
         name,
         serverIP

@@ -3,12 +3,12 @@ import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket, ActionWithPayload } from "../store/sagas/types";
 import {
-    moneyUpdateAction, gamePhaseUpdate, CreateGameAction, JoinGameAction, joinGameError,
+    moneyUpdateAction, gamePhaseUpdate, joinGameError,
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
 } from "../store/actions/gameActions";
 import { playerListUpdated } from "../features/playerList/playerListActions";
 import { cardsUpdated } from "../features/cardShop/cardActions";
-import { FIND_GAME, JOIN_GAME, CREATE_GAME, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
+import { FIND_GAME, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
 import { log } from "../log";
 import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../store/actions/localPlayerActions";
 import { newFeedMessage } from "../features/feed/feedActions";
@@ -23,15 +23,31 @@ import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-regis
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@common/networking/client-to-server";
 import { ConnectionStatus } from "@common/networking";
 import { PlayerActionTypesArray, PlayerAction } from "@common/player/actions";
+import { signIn } from "@app/auth/auth0";
 
-const getSocket = (serverIP: string) => {
+const getSocket = (serverIP: string, idToken: string) => {
     // force to websocket for now until CORS is sorted
     const socket = io(serverIP, { transports: ["websocket", "xhr-polling"] });
 
-    return new Promise<Socket>(resolve => {
+    return new Promise<Socket>((resolve, reject) => {
         socket.on("connect", () => {
-            resolve(socket);
+            socket.emit("authenticate", { idToken });
         });
+
+        const onAuthenticated = ({ success }: { success: boolean }) => {
+            if (success) {
+                socket.off("authenticate_response", onAuthenticated);
+
+                resolve(socket);
+
+                return;
+            }
+
+            socket.disconnect();
+            reject();
+        };
+
+        socket.on("authenticate_response", onAuthenticated);
     });
 };
 
@@ -42,30 +58,6 @@ const findGame = (registry: ClientToServerPacketRegsitry, name: string) => {
     return new Promise<JoinLobbyResponse>(resolve => {
         registry.emit(
             ClientToServerPacketOpcodes.FIND_GAME,
-            name,
-            response => {
-                resolve(response);
-            }
-        );
-    });
-};
-
-const joinGame = (registry: ClientToServerPacketRegsitry, name: string, gameId: string) => {
-    return new Promise<JoinLobbyResponse>(resolve => {
-        registry.emit(
-            ClientToServerPacketOpcodes.JOIN_GAME,
-            { name, gameId },
-            response => {
-                resolve(response);
-            }
-        );
-    });
-};
-
-const createGame = (registry: ClientToServerPacketRegsitry, name: string) => {
-    return new Promise<JoinLobbyResponse>(resolve => {
-        registry.emit(
-            ClientToServerPacketOpcodes.CREATE_GAME,
             name,
             response => {
                 resolve(response);
@@ -337,24 +329,30 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
     ]);
 };
 
-const getResponseForAction = (registry: ClientToServerPacketRegsitry, action: FindGameAction | JoinGameAction | CreateGameAction) => {
-    if (action.type === JOIN_GAME) {
-        return call(joinGame, registry, action.payload.name, action.payload.gameId);
-    }
-
-    if (action.type === FIND_GAME) {
-        return call(findGame, registry, action.payload.name);
-    }
-
-    if (action.type === CREATE_GAME) {
-        return call(createGame, registry, action.payload.name);
-    }
-};
-
 export const networking = function*() {
-    let action: (FindGameAction | JoinGameAction | CreateGameAction)
-        = yield take([FIND_GAME, JOIN_GAME, CREATE_GAME]);
-    const socket: Socket = yield call(getSocket, action.payload.serverIP);
+    let action: FindGameAction = yield take(FIND_GAME);
+
+    const state: AppState = yield select();
+
+    // this should never happen, but it doesn't hurt to be safe
+    const isLoggedIn = state.auth !== null;
+    if (!isLoggedIn) {
+        signIn();
+
+        return;
+    }
+
+    const { idToken } = state.auth;
+
+    let socket: Socket;
+
+    try {
+        socket = yield call(getSocket, action.payload.serverIP, idToken);
+    } catch (e) {
+        signIn();
+
+        return;
+    }
 
     const outgoingRegistry = new OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
         (opcode, payload, ack) => socket.emit(opcode, payload, ack)
@@ -369,7 +367,7 @@ export const networking = function*() {
     yield fork(readPacketsToActions, incomingRegistry, socket);
 
     while (true) {
-        const { error, response }: JoinLobbyResponse = yield getResponseForAction(outgoingRegistry, action);
+        const { error, response }: JoinLobbyResponse = yield call(findGame, outgoingRegistry, action.payload.name);
 
         if (!error) {
             yield put(joinLobbyAction(
@@ -383,7 +381,7 @@ export const networking = function*() {
         }
 
         yield put(joinGameError(error));
-        action = yield take([FIND_GAME, JOIN_GAME, CREATE_GAME]);
+        action = yield take(FIND_GAME);
     }
 
     yield fork(writeActionsToPackets, outgoingRegistry);
