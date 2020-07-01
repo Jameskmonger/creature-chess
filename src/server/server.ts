@@ -1,5 +1,5 @@
 import io = require("socket.io");
-import uuid = require("uuid/v4");
+import { ManagementClient } from "auth0";
 import { log } from "@common/log";
 import { Game } from "@common/game/game";
 import { Connection } from "./connection";
@@ -11,18 +11,30 @@ import { nameValidator } from "./name-validator";
 import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
-import { verify } from "./jwt";
+import { authenticate } from "./user/authenticate";
 
 process.on("unhandledRejection", (error, p) => {
     log("unhandled rejection:");
     log((error as any).stack);
 });
 
+const AUTH0_CONFIG = {
+    domain: "creaturechess.eu.auth0.com",
+    clientId: "gWNTtsTNepgyyqE7QAEC4e7nt5A3ZZ4k",
+    clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
+};
+
 export class Server {
     private lobbies = new Map<string, Lobby>();
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
     private metrics = new Metrics();
+
+    private client = new ManagementClient({
+        domain: AUTH0_CONFIG.domain,
+        clientId: AUTH0_CONFIG.clientId,
+        clientSecret: AUTH0_CONFIG.clientSecret
+    });
 
     public listen(port: number) {
         const server = io.listen(port, { transports: ["websocket", "xhr-polling"] });
@@ -35,21 +47,29 @@ export class Server {
     private receiveConnection = (socket: io.Socket) => {
         log("Connection received");
 
-        socket.on("authenticate", async ({ idToken }: { idToken: string }) => {
-            const decoded = await verify(idToken);
+        const failAuthentication = () => {
+            socket.emit("authenticate_response", { success: false });
+            socket.disconnect();
+        };
 
-            if (decoded === null) {
-                socket.emit("authenticate_response", { success: false });
-                socket.disconnect();
-                return;
+        const onAuthenticate = async ({ idToken }: { idToken: string }) => {
+            try {
+                const user = await authenticate(this.client, idToken);
+
+                console.log("user authenticated", user);
+
+                socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
+                socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket));
+                socket.removeAllListeners("authenticate");
+
+                socket.emit("authenticate_response", { success: true });
+            } catch (e) {
+                console.error("onAuthenticate err", e);
+                failAuthentication();
             }
+        };
 
-            socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
-            socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket));
-            socket.removeAllListeners("authenticate");
-
-            socket.emit("authenticate_response", { success: true });
-        });
+        socket.on("authenticate", onAuthenticate);
     }
 
     private getLobbyPlayers(lobby: Lobby): LobbyPlayer[] {

@@ -10,7 +10,16 @@ const client = jwksClient({
     jwksUri: `https://${domain}/.well-known/jwks.json`
 });
 
-const getSecret = (header: any) => {
+interface JWTPayload {
+    sub: string;
+}
+
+interface DecodedToken {
+    header: jwt.JwtHeader;
+    payload: JWTPayload;
+}
+
+const getSecret = (header: jwt.JwtHeader) => {
     return new Promise<string>((resolve, reject) => {
         client.getSigningKey(header.kid, (err, key) => {
             if (err) {
@@ -22,23 +31,26 @@ const getSecret = (header: any) => {
         });
     });
 };
-
-const verifyToken = async (token: string, secret: any) => {
-    return new Promise<any>((resolve, reject) => {
-        jwt.verify(token, secret, (err, decoded) => {
+const verifyToken = async (token: string, secret: string) => {
+    return new Promise<JWTPayload>((resolve, reject) => {
+        jwt.verify(token, secret, (err, payload: JWTPayload) => {
             if (err) {
                 reject(err);
                 return;
             }
 
-            resolve(decoded);
+            resolve(payload);
         });
     });
 };
 
-export const verify = async (token: string) => {
+export const verifyDecodeJwt = async (token: string) => {
     try {
-        const dtoken: any = jwt.decode(token, { complete: true }) || {};
+        const dtoken: DecodedToken | null = (jwt.decode(token, { complete: true }) || null) as DecodedToken | null;
+
+        if (dtoken === null) {
+            return null;
+        }
 
         const secret = await getSecret(dtoken.header);
         const decoded = await verifyToken(token, secret);
