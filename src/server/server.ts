@@ -37,6 +37,9 @@ export class Server {
     });
 
     public listen(port: number) {
+        // TODO create UnauthenticatedPlayerFactory and AuthenticatedPlayerFactory or something that takes in `server` and:
+        // - listens for authentication event, handles authentication
+        // - only sends completely authenticated players back up to the server
         const server = io.listen(port, { transports: ["websocket", "xhr-polling"] });
 
         log("Server listening on port " + port);
