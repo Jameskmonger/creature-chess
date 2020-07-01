@@ -161,7 +161,6 @@ body {
     margin-bottom: 0.5em;
     font-size: 2em;
     text-align: center;
-    cursor: pointer;
     user-select: none; }
     .menu .title .debug-mode {
       font-size: 0.7em;
@@ -169,31 +168,53 @@ body {
       font-weight: 700;
       color: #b3b3b3; }
   .menu .name-input {
+    margin-top: 1em;
     font-size: 1.4em; }
-  .menu .join-game input {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.2em 0.4em;
-    color: #fff;
-    background: none;
-    border-style: solid;
-    /* stylelint-disable */
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    /* stylelint-enable */
-    border-bottom: 2px solid #b13e53;
-    /* stylelint-disable */ }
-    .menu .join-game input::placeholder {
-      /* stylelint-enable */
-      font-style: italic;
-      color: #aaa; }
-  .menu .join-game {
-    padding: 2em 5em;
+  .menu .player-info {
+    padding: 1em 4em;
     margin-top: 3em;
     text-align: center;
     background: #566c86; }
+    .menu .player-info .welcome {
+      margin-right: 1em; }
+    .menu .player-info .email {
+      font-style: italic;
+      font-weight: 700;
+      color: #ffcd75; }
+    .menu .player-info .sign-out {
+      padding: 0.4em 1em;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      background: #b13e53;
+      /* stylelint-disable */
+      border: none;
+      /* stylelint-enable */ }
+  .menu .join-game {
+    padding: 2em 5em;
+    margin-top: 1em;
+    text-align: center;
+    background: #566c86; }
+    .menu .join-game input {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.2em 0.4em;
+      color: #fff;
+      background: none;
+      border-style: solid;
+      /* stylelint-disable */
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      /* stylelint-enable */
+      border-bottom: 2px solid #b13e53;
+      /* stylelint-disable */ }
+      .menu .join-game input::placeholder {
+        /* stylelint-enable */
+        font-style: italic;
+        color: #aaa; }
   .menu .how-to-play {
     margin-top: 2em;
     text-align: center;
