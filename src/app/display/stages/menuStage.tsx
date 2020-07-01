@@ -1,15 +1,14 @@
 import * as React from "react";
-import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameAction, createGameAction, joinGameError, enableDebugMode, findGameAction } from "../../store/actions/gameActions";
+import { connect, MapDispatchToProps, MapStateToProps, useSelector } from "react-redux";
+import { joinGameError, enableDebugMode, findGameAction } from "../../store/actions/gameActions";
 import { AppState } from "@app/store";
 import { loadingSelector } from "../../store/gameSelector";
 import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/models/constants";
 import { getUrlParameter } from "../../get-url-parameter";
+import { signOut } from "@app/auth/auth0";
 
 interface DispatchProps {
     onFindGame: (serverIP: string, name: string) => void;
-    onJoinGame: (serverIP: string, name: string, gameId: string) => void;
-    onCreateGame: (serverIP: string, name: string) => void;
     enableDebugMode: () => void;
     setError: (error: string) => void;
 }
@@ -23,15 +22,25 @@ type Props = MenuStageProps & DispatchProps;
 
 interface MenuStageState {
     name: string;
-    gameId: string;
     serverIP: string;
     debugModeClickCount: number;
 }
 
+const PlayerInfo: React.FunctionComponent = () => {
+    const email = useSelector<AppState, any>(state => state.auth.profile.email);
+
+    return (
+        <div className="player-info">
+            <span className="welcome">Logged in (<span className="email">{email}</span>)</span>
+
+            <button className="sign-out" onClick={signOut}>Log out</button>
+        </div>
+    );
+};
+
 class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
     public state = {
         name: "",
-        gameId: "",
         serverIP: "",
         debugModeClickCount: 0
     };
@@ -64,10 +73,12 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
 
         return (
             <div className="menu">
+                <PlayerInfo />
+
                 <div className="join-game">
                     {title}
 
-                    <p>Enter your name and select one of the options below to start playing</p>
+                    <p>Enter your name and click "Find Game" to start playing</p>
 
                     <input
                         value={this.state.name}
@@ -80,25 +91,6 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                     <div className="join-options">
                         <div className="option">
                             <button onClick={this.onFindGameClick} className="option-button primary">Find Game</button>
-
-                            <p className="description">Automatically find a public game for you</p>
-                        </div>
-                        <div className="option">
-                            <input
-                                value={this.state.gameId}
-                                onChange={this.onGameIdChange}
-                                placeholder="Game ID"
-                                className="option-input"
-                            />
-
-                            <button onClick={this.onJoinGameClick} className="option-button primary">Join Game</button>
-
-                            <p className="description">Join a specific game</p>
-                        </div>
-                        <div className="option">
-                            <button onClick={this.onCreateGameClick} className="option-button secondary">Create Private Game</button>
-
-                            <p className="description">Create a private game that others can join</p>
                         </div>
                     </div>
 
@@ -165,12 +157,6 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
         });
     }
 
-    private onGameIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({
-            gameId: event.target.value
-        });
-    }
-
     private onServerIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (this.state.debugModeClickCount !== 3) {
             return;
@@ -199,44 +185,6 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
 
         this.props.onFindGame(this.state.serverIP, this.state.name);
     }
-
-    private onJoinGameClick = () => {
-        if (!this.state.serverIP) {
-            this.props.setError("Server IP field empty");
-            return;
-        }
-
-        if (!this.state.gameId) {
-            this.props.setError("Game ID field empty");
-            return;
-        }
-
-        if (!this.state.name) {
-            this.props.setError("Name field empty");
-            return;
-        }
-
-        if (this.state.name.length > MAX_NAME_LENGTH) {
-            this.props.setError(`Name too long. Max ${MAX_NAME_LENGTH} characters`);
-            return;
-        }
-
-        this.props.onJoinGame(this.state.serverIP, this.state.name, this.state.gameId);
-    }
-
-    private onCreateGameClick = () => {
-        if (!this.state.serverIP) {
-            this.props.setError("Server IP field empty");
-            return;
-        }
-
-        if (!this.state.name) {
-            this.props.setError("Name field empty");
-            return;
-        }
-
-        this.props.onCreateGame(this.state.serverIP, this.state.name);
-    }
 }
 
 const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => ({
@@ -246,8 +194,6 @@ const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => 
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     onFindGame: (serverIP: string, name: string) => dispatch(findGameAction(serverIP, name)),
-    onCreateGame: (serverIP: string, name: string) => dispatch(createGameAction(serverIP, name)),
-    onJoinGame: (serverIP: string, name: string, gameId: string) => dispatch(joinGameAction(serverIP, name, gameId)),
     enableDebugMode: () => dispatch(enableDebugMode()),
     setError: (error: string) => dispatch(joinGameError(error))
 });
