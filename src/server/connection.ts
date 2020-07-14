@@ -24,12 +24,6 @@ export class Connection extends Player {
 
         this.setSocket(socket);
 
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
-
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
-
         this.money.onChange(this.sendMoneyUpdate);
         this.level.onChange(this.sendLevelUpdate);
     }
@@ -220,5 +214,10 @@ export class Connection extends Player {
         this.outgoingPacketRegistry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
             (opcode, payload, ack) => socket.emit(opcode, payload, ack)
         );
+
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
     }
 }
