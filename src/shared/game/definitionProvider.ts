@@ -1,5 +1,5 @@
 import { CreatureDefinition } from "../models/creatureDefinition";
-import { definitions } from "./definitions";
+import { definitions } from "./definitions/definitions";
 
 export class DefinitionProvider {
     private definitions = new Map<number, CreatureDefinition>();

@@ -29,11 +29,11 @@ export const getTypeAttackBonus = (attackType: CreatureType, defenceType: Creatu
     const defenderInteractions = typeInteractions[defenceType];
 
     if (defenderInteractions.generatedBy === attackType) {
-        return 0.5;
+        return 0.7;
     }
 
     if (defenderInteractions.overcomeBy === attackType) {
-        return 2;
+        return 1.4;
     }
 
     return 1;
