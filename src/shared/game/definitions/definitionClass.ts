@@ -1,4 +1,4 @@
-import { CreatureStats } from "@common/models/creatureDefinition"
+import { CreatureStats, AttackType, attackTypes } from "@common/models/creatureDefinition"
 
 export enum DefinitionClass {
     VALIANT,
@@ -30,7 +30,7 @@ export const classBuilds = {
     }
 };
 
-const getBaseStats = (cost: number): CreatureStats => {
+const getBaseStats = (cost: number): Omit<CreatureStats, "attackType"> => {
     if (cost === 1) {
         return {
             hp: 10,
@@ -109,11 +109,18 @@ const getStats = (definitionClass: DefinitionClass, cost: number, stage: number)
 
     const build = classBuilds[definitionClass];
 
+    const attackType: AttackType = (
+        definitionClass === DefinitionClass.ARCANE
+        ? attackTypes.shoot
+        : attackTypes.basic
+    );
+
     return {
         hp: getStat(baseStats.hp, build.hp, availablePoints),
         attack: getStat(baseStats.attack, build.attack, availablePoints),
         defense: getStat(baseStats.defense, build.defense, availablePoints),
         speed: getStat(baseStats.speed, build.speed, availablePoints),
+        attackType
     };
 };
 

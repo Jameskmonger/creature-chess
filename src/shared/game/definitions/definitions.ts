@@ -15,7 +15,7 @@ export const definitions: CreatureDefinition[] = [
         name: "Anoleaf",
         cost: 1,
         type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.ARCANE, 1)
+        stages: getStages(DefinitionClass.CUNNING, 1)
     },
     {
         id: 3,
@@ -57,7 +57,7 @@ export const definitions: CreatureDefinition[] = [
         name: "Tweesher",
         cost: 1,
         type: CreatureType.Water,
-        stages: getStages(DefinitionClass.CUNNING, 1)
+        stages: getStages(DefinitionClass.ARCANE, 1)
     },
     {
         id: 9,

@@ -2,6 +2,7 @@ import { GRID_SIZE } from "./constants";
 import { PieceModel } from "./piece";
 
 export type TileCoordinates = { x: number, y: number };
+export type SlotLocation = { slot: number };
 
 export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
 export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;

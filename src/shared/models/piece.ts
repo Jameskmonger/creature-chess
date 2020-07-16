@@ -1,4 +1,4 @@
-import { TileCoordinates } from "../position";
+import { TileCoordinates } from "./position";
 import { AttackType } from "./creatureDefinition";
 
 export interface AttackDetails {
