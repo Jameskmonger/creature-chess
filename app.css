@@ -444,86 +444,46 @@ body {
     left: 9%;
     width: 82%;
     height: 82%; }
-  .piece.move-up {
-    animation-name: move-up;
+  .piece.move {
+    animation-name: move;
     animation-duration: 300ms; }
 
-@keyframes move-up {
+@keyframes move {
   0% {
-    top: 90px; }
+    top: calc(90px * var(--moveYDirection) * -1);
+    left: calc(90px * var(--moveXDirection) * -1); }
   100% {
-    top: 0; } }
-  .piece.move-right {
-    animation-name: move-right;
-    animation-duration: 300ms; }
-
-@keyframes move-right {
-  0% {
-    left: -90px; }
-  100% {
+    top: 0;
     left: 0; } }
-  .piece.move-down {
-    animation-name: move-down;
-    animation-duration: 300ms; }
-
-@keyframes move-down {
-  0% {
-    top: -90px; }
-  100% {
-    top: 0; } }
-  .piece.move-left {
-    animation-name: move-left;
-    animation-duration: 300ms; }
-
-@keyframes move-left {
-  0% {
-    left: 90px; }
-  100% {
-    left: 0; } }
-  .piece.attack-up {
-    animation-name: attack-up;
+  .piece.attack-basic {
+    animation-name: attack-basic;
     animation-duration: 200ms; }
 
-@keyframes attack-up {
+@keyframes attack-basic {
   0% {
-    top: 0; }
-  50% {
-    top: calc(calc(3px * var(--attackPower)) * -1); }
-  100% {
-    top: 0; } }
-  .piece.attack-right {
-    animation-name: attack-right;
-    animation-duration: 200ms; }
-
-@keyframes attack-right {
-  0% {
+    top: 0;
     left: 0; }
   50% {
-    left: calc(3px * var(--attackPower)); }
+    top: calc(calc(3px * var(--attackPower)) * var(--attackYDirection));
+    left: calc(calc(3px * var(--attackPower)) * var(--attackXDirection)); }
   100% {
+    top: 0;
     left: 0; } }
-  .piece.attack-down {
-    animation-name: attack-down;
+  .piece .projectile {
+    display: none; }
+  .piece.attack-shoot .projectile {
+    position: absolute;
+    display: block;
+    animation-name: attack-shoot;
     animation-duration: 200ms; }
 
-@keyframes attack-down {
+@keyframes attack-shoot {
   0% {
-    top: 0; }
-  50% {
-    top: calc(3px * var(--attackPower)); }
+    top: calc(90px / 2);
+    left: calc(90px / 2); }
   100% {
-    top: 0; } }
-  .piece.attack-left {
-    animation-name: attack-left;
-    animation-duration: 200ms; }
-
-@keyframes attack-left {
-  0% {
-    left: 0; }
-  50% {
-    left: calc(calc(3px * var(--attackPower)) * -1); }
-  100% {
-    left: 0; } }
+    top: calc(90px * var(--attackYDirection) * -1 + calc(90px / 2));
+    left: calc(90px * var(--attackXDirection) * -1 + calc(90px / 2)); } }
   .piece.hit {
     animation-name: hit;
     animation-duration: 200ms; }
