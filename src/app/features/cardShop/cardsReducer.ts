@@ -1,8 +1,8 @@
-import { Models } from "@common";
 import { CardAction } from "./cardActions";
 import { CARDS_UPDATED } from "./cardActionTypes";
+import { Card } from "@common/models";
 
-export function cards(state: Models.Card[] = [], action: CardAction) {
+export function cards(state: Card[] = [], action: CardAction) {
     switch (action.type) {
         case CARDS_UPDATED:
             return action.payload;

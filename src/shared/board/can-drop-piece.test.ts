@@ -1,8 +1,6 @@
 import { TestFixture, Test, Expect, TestCase } from "alsatian";
 import { canDropPiece } from "./can-drop-piece";
 import { pieceUtils } from "@common/utils";
-import { createTileCoordinates } from "../position";
-import { GamePhase } from "../game-phase";
 import { DefinitionProvider } from "../game/definitionProvider";
 
 const definitionProvider = new DefinitionProvider();
@@ -12,48 +10,46 @@ export class CanDropPieceTests {
 
     @Test()
     public cantDropOnOccupiedTile() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
-        const tilePiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 1, 4 ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
+        const tilePiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 1, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             false,
-            GamePhase.PREPARING,
+            false,
             true
         );
 
         Expect(result).toBe(false);
     }
 
-    @TestCase(GamePhase.WAITING)
-    @TestCase(GamePhase.READY)
-    @TestCase(GamePhase.PLAYING)
-    @TestCase(GamePhase.DEAD)
-    public cantDropOnBoardUnlessPreparingPhase(phase: GamePhase) {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
+    @Test()
+    public cantDropOnBoardIfBoardLocked() {
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             true,
-            phase,
+            true,
             true
         );
 
         Expect(result).toBe(false);
     }
 
-    @TestCase(GamePhase.READY)
-    @TestCase(GamePhase.PLAYING)
-    public canDropOnBenchOutsidePreparingPhase(phase: GamePhase) {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ], 0);
+    public canDropOnBenchIfBoardLocked() {
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ]);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, null),
+            1,
+            null,
             true,
-            phase,
+            true,
             true
         );
 
@@ -62,13 +58,14 @@ export class CanDropPieceTests {
 
     @Test()
     public cantDropOnBoardFromBenchIfNotBelowPieceLimit() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ]);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             true,
-            GamePhase.PREPARING,
+            false,
             false
         );
 
@@ -77,13 +74,14 @@ export class CanDropPieceTests {
 
     @Test()
     public canDropOnBoardFromBoardIfNotBelowPieceLimit() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(1, 4),
+            1,
+            4,
             true,
-            GamePhase.PREPARING,
+            false,
             false
         );
 
@@ -95,13 +93,14 @@ export class CanDropPieceTests {
     @TestCase(0, 3)
     @TestCase(7, 3)
     public cantDropInOpponentArea(x: number, y: number) {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ], 0);
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
 
         const result = canDropPiece(
             movingPiece,
-            createTileCoordinates(x, y),
+            x,
+            y,
             true,
-            GamePhase.PREPARING,
+            false,
             true
         );
 

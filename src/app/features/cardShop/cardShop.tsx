@@ -1,43 +1,30 @@
 import * as React from "react";
-import { Models, Constants, GamePhase } from "@common";
 import { Card } from "./card";
-import { MapStateToProps, connect, MapDispatchToProps } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@app/store";
-import { rerollCards, buyCard } from "./cardActions";
-import { DropToSell } from "./dropToSell/dropToSell";
+import { Card as CardModel, Constants, GamePhase } from "@common/models";
+import { DropToSell } from "./dropToSell";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
 import { LockButton } from "./lockButton";
-import { toggleShopLock } from "../../store/actions/gameActions";
-
-interface StateProps {
-    cards: Models.Card[];
-    money: number;
-    canUseShop: boolean;
-    shopLocked: boolean;
-}
-
-interface DispatchProps {
-    onReroll: () => void;
-    onBuyCard: (index: number) => void;
-    onToggleLock: () => void;
-}
-
-type Props = StateProps & DispatchProps;
+import { PlayerActions } from "@common/player";
 
 const CardShopDivider: React.FunctionComponent = () => <span className="item">&nbsp;|&nbsp;</span>;
 
-const CardShopUnconnected: React.FunctionComponent<Props> = props => {
-    const { cards, money, onReroll, onBuyCard, canUseShop, shopLocked, onToggleLock } = props;
+const CardShop: React.FunctionComponent = () => {
+    const dispatch = useDispatch();
 
-    const onCardClick = (index: number) => {
-        return () => onBuyCard(index);
-    };
+    const cards = useSelector<AppState, CardModel[]>(state => state.cards);
+    const money = useSelector<AppState, number>(state => state.game.money);
+    const canUseShop = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD);
+    const shopLocked = useSelector<AppState, boolean>(state => state.game.shopLocked);
 
-    const createCard = (card: Models.Card, index: number) => {
+    const createCard = (card: CardModel, index: number) => {
         if (card === null) {
             return null;
         }
+
+        const onClick = () => dispatch(PlayerActions.buyCard(index));
 
         return (
             <Card
@@ -46,7 +33,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
                 cost={card.cost}
                 name={card.name}
                 buyable={money >= card.cost}
-                onClick={onCardClick(index)}
+                onClick={onClick}
             />
         );
     };
@@ -55,7 +42,10 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         return null;
     }
 
+    // todo move this inside RerollButton
     const rerollBuyable = money >= Constants.REROLL_COST;
+    const onBuyReroll = () => dispatch(PlayerActions.rerollCards());
+    const onToggleLock = () => dispatch(PlayerActions.toggleShopLock());
 
     return (
         <div className="card-selector">
@@ -64,7 +54,7 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
 
                 <CardShopDivider />
 
-                <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onReroll} />
+                <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onBuyReroll} />
 
                 <CardShopDivider />
 
@@ -79,21 +69,6 @@ const CardShopUnconnected: React.FunctionComponent<Props> = props => {
         </div>
     );
 };
-
-const mapStateToProps: MapStateToProps<StateProps, {}, AppState> = state => ({
-    cards: state.cards,
-    money: state.game.money,
-    canUseShop: state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD,
-    shopLocked: state.game.shopLocked
-});
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onReroll: () => dispatch(rerollCards()),
-    onBuyCard: (index: number) => dispatch(buyCard(index)),
-    onToggleLock: () => dispatch(toggleShopLock())
-});
-
-const CardShop = connect(mapStateToProps, mapDispatchToProps)(CardShopUnconnected);
 
 export {
     CardShop

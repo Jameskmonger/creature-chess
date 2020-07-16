@@ -1,14 +1,14 @@
-import { Piece } from "../../models";
+import { PieceModel } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
-import { getRelativeDirection, subtract } from "../../position";
-import { INITIAL_COOLDOWN, DAMAGE_RATIO } from "../../constants";
+import { getRelativeDirection, subtract } from "../../models/position";
+import { INITIAL_COOLDOWN } from "../../models/constants";
 import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
 
 interface PieceCombatInfo {
-    piece: Piece;
+    piece: PieceModel;
     stats: CreatureStats;
     type: CreatureType;
 }
@@ -20,20 +20,32 @@ export class TurnSimulator {
         this.definitionProvider = definitionProvider;
     }
 
-    public simulateTurn(turnCount: number, pieces: Piece[]) {
-        const updatedPieces: Piece[] = pieces.map(p => ({ ...p, attacking: null, hit: null, moving: null }));
+    public simulateTurn(turnCount: number, pieces: { [key: string]: PieceModel }) {
+        const pieceIds = Object.keys(pieces);
 
-        updatedPieces.forEach((attacker, index) => {
+        for (const pieceId of pieceIds) {
+            // create a new piece object, reset combat properties
+            const attacker = {
+                ...pieces[pieceId],
+                attacking: null,
+                hit: null,
+            };
+
             if (attacker.currentHealth === 0) {
-                return;
+                continue;
             }
 
             const attackerCombatInfo = this.getPieceCombatInfo(attacker);
             if (attacker.coolDown > 0) {
                 attacker.coolDown -= attackerCombatInfo.stats.speed;
 
-                return;
+                pieces[attacker.id] = attacker;
+
+                continue;
             }
+
+            // TODO rework getAttackableEnemy and getNewPiecePosition to take pieces objects
+            const updatedPieces = Object.values(pieces);
 
             const defender = getAttackableEnemy(attacker, attackerCombatInfo.stats.attackType, updatedPieces);
 
@@ -42,29 +54,33 @@ export class TurnSimulator {
                 const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => p.currentHealth > 0));
 
                 if (newPosition !== null) {
-                    attacker.moving = { direction: getRelativeDirection(attacker.position, newPosition) };
                     attacker.position = newPosition;
                     attacker.coolDown = INITIAL_COOLDOWN;
                 }
 
-                return;
+                pieces[attacker.id] = attacker;
+                continue;
             }
 
             const defenderCombatInfo = this.getPieceCombatInfo(defender);
-            const updatedFighters = this.attack(turnCount, attackerCombatInfo, defenderCombatInfo);
+            const updatedFighters = this.attack(attackerCombatInfo, defenderCombatInfo);
             updatedFighters.attacker.targetPieceId = updatedFighters.defender.id;
-            updatedPieces[index] = updatedFighters.attacker;
-            updatedPieces[updatedPieces.indexOf(defender)] = updatedFighters.defender;
-        });
 
-        if (isATeamDefeated(updatedPieces)) {
-            updatedPieces.forEach(p => p.celebrating = true);
+            pieces[updatedFighters.attacker.id] = updatedFighters.attacker;
+            pieces[updatedFighters.defender.id] = updatedFighters.defender;
         }
 
-        return updatedPieces;
+        // TODO rework isATeamDefeated to take a pieces object
+        if (isATeamDefeated(Object.values(pieces))) {
+            for (const pieceId of Object.keys(pieces)) {
+                pieces[pieceId].celebrating = true;
+            }
+        }
+
+        return pieces;
     }
 
-    private getPieceCombatInfo(piece: Piece) {
+    private getPieceCombatInfo(piece: PieceModel) {
         const definition = this.definitionProvider.get(piece.definitionId);
 
         return {
@@ -74,7 +90,7 @@ export class TurnSimulator {
         };
     }
 
-    private attack(turnCount: number, attacker: PieceCombatInfo, defender: PieceCombatInfo) {
+    private attack(attacker: PieceCombatInfo, defender: PieceCombatInfo) {
         if (attacker.piece.currentHealth === 0) {
             // Dead Pokémon don't attack
             return {
@@ -87,8 +103,6 @@ export class TurnSimulator {
         const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 10;
         const newDefenderHealth = Math.max(defender.piece.currentHealth - damage, 0);
 
-        const totalDamage = attacker.piece.damagePerTurn * turnCount;
-
         return {
             attacker: {
                 ...attacker.piece,
@@ -98,7 +112,6 @@ export class TurnSimulator {
                     direction: subtract(attacker.piece.position, defender.piece.position),
                     damage
                 },
-                damagePerTurn: (totalDamage + (damage * DAMAGE_RATIO)) / turnCount,
                 targetPieceId: defender.piece.id
             },
             defender: {

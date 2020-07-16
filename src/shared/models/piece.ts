@@ -16,7 +16,7 @@ export interface MovementDetails {
     direction: TileCoordinates;
 }
 
-export interface Piece {
+export interface PieceModel {
     id: string;
     ownerId: string;
     definitionId: number;
@@ -32,6 +32,5 @@ export interface Piece {
     currentHealth: number;
     coolDown: number;
 
-    damagePerTurn: number | null;
     targetPieceId: string;
 }

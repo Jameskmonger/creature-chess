@@ -1,0 +1,56 @@
+/* stylelint-disable */
+
+$outer-border-color: #2d2d2d;
+$inner-border-color: #404040;
+
+.style-default {
+    &.tile {
+        &.dark {
+            background: $dark-tile;
+        }
+
+        &.light {
+            background: $light-tile;
+        }
+
+        &.bench {
+            background: $bench-tile;
+            box-shadow: inset 0 0 2px darken($bench-tile, 50);
+        }
+    }
+
+    &.tile-row {
+        border-right: $outer-border-width solid $outer-border-color;
+        border-left: $outer-border-width solid $outer-border-color;
+
+        &.first {
+            border-top: $outer-border-width solid $outer-border-color;
+        }
+
+        &.last {
+            border-bottom: $outer-border-width solid $outer-border-color;
+        }
+
+        .tile:not(:last-of-type) {
+            &.dark {
+                border-right: $dark-tile solid $inner-border-color;
+            }
+
+            &.light {
+                border-right: $light-tile solid $inner-border-color;
+            }
+        }
+
+        &:not(.last) {
+            .tile {
+                &.dark {
+                    border-bottom: $dark-tile solid $inner-border-color;
+                }
+
+                &.light {
+                    border-bottom: $light-tile solid $inner-border-color;
+                }
+            }
+        }
+    }
+}

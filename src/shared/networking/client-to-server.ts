@@ -1,29 +1,14 @@
 import { JoinLobbyResponse } from "./server-to-client";
-import { TileCoordinates } from "../position";
+import { PlayerAction } from "@common/player/actions";
 
 export enum ClientToServerPacketOpcodes {
   FIND_GAME = "findGame",
-  JOIN_GAME = "joinGame",
-  CREATE_GAME = "createGame",
-  BUY_CARD = "buyCard",
-  SELL_PIECE = "sellPiece",
-  BUY_REROLL = "rerollCards",
-  MOVE_PIECE_TO_BENCH = "movePieceToBench",
-  MOVE_PIECE_TO_BOARD = "movePieceToBoard",
-  BUY_XP = "buyXp",
   SEND_CHAT_MESSAGE = "sendChatMessage",
   FINISH_MATCH = "finishMatch",
-  READY_UP = "readyUp",
   START_LOBBY_GAME = "startLobbyGame",
-  TOGGLE_SHOP_LOCK = "toggleShopLock",
-  RECONNECT_AUTHENTICATE = "reconnectAuthenticate"
+  RECONNECT_AUTHENTICATE = "reconnectAuthenticate",
+  SEND_PLAYER_ACTIONS = "sendPlayerActions"
 }
-
-export type MovePiecePacket = {
-  id: string;
-  from: TileCoordinates;
-  to: TileCoordinates;
-};
 
 export type ReconnectAuthenticatePacket = {
   playerId: string;
@@ -31,42 +16,29 @@ export type ReconnectAuthenticatePacket = {
   reconnectSecret: string;
 };
 
-export type JoinGamePacket = { name: string, gameId: string };
+export type SendPlayerActionsPacket = {
+  index: number;
+  actions: PlayerAction[];
+};
+
+export const SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS = 300;
 
 type EmptyPacket = { empty: true };
 
 export type ClientToServerPacketDefinitions = {
   [ClientToServerPacketOpcodes.FIND_GAME]: string,
-  [ClientToServerPacketOpcodes.JOIN_GAME]: JoinGamePacket,
-  [ClientToServerPacketOpcodes.CREATE_GAME]: string,
   [ClientToServerPacketOpcodes.FINISH_MATCH]: EmptyPacket,
-  [ClientToServerPacketOpcodes.BUY_REROLL]: EmptyPacket,
-  [ClientToServerPacketOpcodes.BUY_XP]: EmptyPacket,
-  [ClientToServerPacketOpcodes.READY_UP]: EmptyPacket,
-  [ClientToServerPacketOpcodes.BUY_CARD]: number,
-  [ClientToServerPacketOpcodes.SELL_PIECE]: string,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD]: MovePiecePacket,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH]: MovePiecePacket,
   [ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE]: string,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: EmptyPacket,
-  [ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK]: EmptyPacket,
-  [ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE]: ReconnectAuthenticatePacket
+  [ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE]: ReconnectAuthenticatePacket,
+  [ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS]: SendPlayerActionsPacket
 };
 
 export type ClientToServerPacketAcknowledgements = {
-  [ClientToServerPacketOpcodes.FIND_GAME]: JoinLobbyResponse,
-  [ClientToServerPacketOpcodes.JOIN_GAME]: JoinLobbyResponse,
-  [ClientToServerPacketOpcodes.CREATE_GAME]: JoinLobbyResponse,
+  [ClientToServerPacketOpcodes.FIND_GAME]: (response: JoinLobbyResponse) => void,
   [ClientToServerPacketOpcodes.FINISH_MATCH]: never,
-  [ClientToServerPacketOpcodes.BUY_REROLL]: never,
-  [ClientToServerPacketOpcodes.BUY_XP]: never,
-  [ClientToServerPacketOpcodes.READY_UP]: never,
-  [ClientToServerPacketOpcodes.BUY_CARD]: never,
-  [ClientToServerPacketOpcodes.SELL_PIECE]: never,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BOARD]: never,
-  [ClientToServerPacketOpcodes.MOVE_PIECE_TO_BENCH]: never,
   [ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE]: never,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: never,
-  [ClientToServerPacketOpcodes.TOGGLE_SHOP_LOCK]: never,
-  [ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE]: never
+  [ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE]: never,
+  [ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS]: (accepted: boolean, packetIndex?: number) => void
 };

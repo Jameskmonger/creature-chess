@@ -1,41 +1,34 @@
 import { createSelector } from "reselect";
 
-import { Models } from "@common";
 import { AppState } from "./state";
-import { TileCoordinates, TileType } from "@common/position";
 import { localPlayerIdSelector } from "./gameSelector";
 
-const piecesSelector = (state: AppState, props: { type: TileType }) =>
-    props.type === TileType.BOARD ? state.board : state.bench;
-const positionSelector = (state: AppState, props: { position: TileCoordinates }) => props.position;
+export const benchTilePieceSelector = createSelector(
+    (state: AppState) => state.bench,
+    (state: AppState, props: { x: number }) => ({ x: props.x }),
+    ({ pieces }, { x }) => {
+        return pieces[x] || null;
+    }
+);
 
-const piecePositionFilter =
-    (position: TileCoordinates) =>
-        (p: Models.Piece) =>
-            p.position.x === position.x && p.position.y === position.y;
+export const boardTilePieceSelector = createSelector(
+    (state: AppState) => state.board.pieces,
+    (state: AppState) => state.board.piecePositions,
+    (state: AppState, props: { x: number, y: number }) => ({ x: props.x, y: props.y }),
+    (pieces, piecePositions, { x, y }) => {
+        const positionString = `${x},${y}`;
+        const pieceId = piecePositions[positionString];
 
-export const tilePieceSelector = createSelector(
-    piecesSelector,
-    positionSelector,
-    (pieces, position) => {
-        const allPieces = pieces.filter(piecePositionFilter(position));
-
-        if (allPieces.length === 0) {
+        if (!pieceId) {
             return null;
         }
 
-        const livingPiece = allPieces.find(p => p.currentHealth > 0);
-
-        if (livingPiece) {
-            return livingPiece;
-        }
-
-        return allPieces[0] || null;
+        return pieces[pieceId] || null;
     }
 );
 
 export const ownedPieceSelector = (state: AppState) => {
     const playerId = localPlayerIdSelector(state);
 
-    return state.board.filter(p => p.ownerId === playerId);
+    return Object.values(state.board.pieces).filter(p => p.ownerId === playerId);
 };

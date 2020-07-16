@@ -1,25 +1,31 @@
+// tslint:disable:no-console
+
 import present = require("present");
 import { battleEventChannel, BattleAction } from "@common/match/combat/battleEventChannel";
 import { TurnSimulator } from "@common/match/combat/turnSimulator";
 import { DefinitionProvider } from "@common/game/definitionProvider";
-import { DEFAULT_TURN_COUNT } from "@common/constants";
-import { createPiece } from "@common/utils/piece-utils";
-import { createTileCoordinates } from "@common/position";
+import { DEFAULT_TURN_COUNT } from "@common/models/constants";
 import { EventChannel } from "redux-saga";
+import { BoardState } from "@common/board";
 
 const definitionProvider = new DefinitionProvider();
 const simulator = new TurnSimulator(definitionProvider);
 
-const pieces = [
-  createPiece(definitionProvider, "bot-a", 1, [2, 2], null),
-  createPiece(definitionProvider, "bot-a", 1, [3, 3], null),
-  createPiece(definitionProvider, "bot-a", 1, [4, 3], null),
-  createPiece(definitionProvider, "bot-a", 1, [5, 2], null),
-  createPiece(definitionProvider, "bot-b", 1, [2, 5], null),
-  createPiece(definitionProvider, "bot-b", 1, [3, 4], null),
-  createPiece(definitionProvider, "bot-b", 1, [4, 4], null),
-  createPiece(definitionProvider, "bot-b", 1, [4, 4], null)
-];
+const pieces: BoardState = {
+  pieces: {},
+  piecePositions: {},
+  locked: true
+};
+// [
+//   createPiece(definitionProvider, "bot-a", 1, [2, 2], null),
+//   createPiece(definitionProvider, "bot-a", 1, [3, 3], null),
+//   createPiece(definitionProvider, "bot-a", 1, [4, 3], null),
+//   createPiece(definitionProvider, "bot-a", 1, [5, 2], null),
+//   createPiece(definitionProvider, "bot-b", 1, [2, 5], null),
+//   createPiece(definitionProvider, "bot-b", 1, [3, 4], null),
+//   createPiece(definitionProvider, "bot-b", 1, [4, 4], null),
+//   createPiece(definitionProvider, "bot-b", 1, [4, 4], null)
+// ];
 
 const listenForBattleFinish = (channel: EventChannel<BattleAction>, resolve: (value: number) => void) => {
   channel.take(action => {

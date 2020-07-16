@@ -7,13 +7,35 @@ enum PlayerListEvents {
     UPDATE = "UPDATE"
 }
 
+const sortPlayers = (a: PlayerListPlayer, b: PlayerListPlayer) => {
+    const SORT_A_FIRST = -1;
+    const SORT_A_SECOND = 1;
+
+    if (a.health > b.health) {
+        return SORT_A_FIRST;
+    }
+
+    if (a.health < b.health) {
+        return SORT_A_SECOND;
+    }
+
+    if (a.roundDiedAt > b.roundDiedAt) {
+        return SORT_A_FIRST;
+    }
+
+    if (a.roundDiedAt < b.roundDiedAt) {
+        return SORT_A_SECOND;
+    }
+
+    return 0;
+};
+
 export class PlayerList {
     private players: PlayerListPlayer[] = [];
-    private deadPlayers: PlayerListPlayer[] = [];
     private events = new EventEmitter();
 
     private emitUpdate = debounce(() => {
-        this.events.emit(PlayerListEvents.UPDATE, [...this.players, ...this.deadPlayers]);
+        this.events.emit(PlayerListEvents.UPDATE, this.players);
     }, 500);
 
     public onUpdate(fn: (players: PlayerListPlayer[]) => void) {
@@ -27,14 +49,19 @@ export class PlayerList {
             health: player.health,
             ready: player.ready,
             streakType: player.streak.type,
-            streakAmount: player.streak.amount
+            streakAmount: player.streak.amount,
+            battle: null,
+            roundDiedAt: player.getRoundDiedAt()
         };
 
         this.players.push(playerListPlayer);
 
-        player.onHealthUpdate(this.updatePlayer(player));
-        player.onReadyUpdate(this.updatePlayer(player));
-        player.onStreakUpdate(this.updatePlayer(player));
+        const update = this.updatePlayer(player);
+
+        player.onHealthUpdate(update);
+        player.onReadyUpdate(update);
+        player.onStreakUpdate(update);
+        player.onBattleUpdate(update);
     }
 
     private updatePlayer(player: Player) {
@@ -47,36 +74,18 @@ export class PlayerList {
 
             this.players.splice(index, 1);
 
-            if (player.health === 0) {
-                // don't re-add player to dead list
-                if (this.deadPlayers.some(p => p.id === player.id)) {
-                    return;
-                }
-
-                this.deadPlayers.unshift({
-                    id: player.id,
-                    name: player.name,
-                    health: player.health,
-                    ready: null,
-                    streakType: null,
-                    streakAmount: null
-                });
-
-                this.emitUpdate();
-
-                return;
-            }
-
             this.players.push({
                 id: player.id,
                 name: player.name,
                 health: player.health,
                 ready: player.ready,
                 streakType: player.streak.type,
-                streakAmount: player.streak.amount
+                streakAmount: player.streak.amount,
+                battle: player.battle,
+                roundDiedAt: player.getRoundDiedAt()
             });
 
-            this.players.sort((a, b) => b.health - a.health);
+            this.players.sort(sortPlayers);
 
             this.emitUpdate();
         };

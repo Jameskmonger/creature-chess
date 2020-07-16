@@ -1,9 +1,9 @@
-import { Piece } from "../../models";
+import { PieceModel } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
-import { TileCoordinates, arePositionsEqual, Directions } from "../../position";
-import { GRID_SIZE } from "@common/constants";
 import { AttackType } from "../../models/creatureDefinition";
 import { range, flatten } from "lodash";
+import { Directions, TileCoordinates, arePositionsEqual } from "@common/models/position";
+import { GRID_SIZE } from "@common/models/constants";
 
 type Vector = { x: number, y: number };
 
@@ -27,18 +27,18 @@ const getAttackingTiles = (facingUp: boolean, attackType: AttackType) => {
     return flatten(range(1, attackType.range + 1).map(r => attackDirections.map(d => ({ x: d.x * r, y: d.y * r }))));
 };
 
-const getLivingEnemies = (piece: Piece, pieces: Piece[]) => {
+const getLivingEnemies = (piece: PieceModel, pieces: PieceModel[]) => {
     return pieces.filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
 };
 
-const getDelta = (a: Piece, b: Piece) => {
+const getDelta = (a: PieceModel, b: PieceModel) => {
     return {
         x: Math.abs(a.position.x - b.position.x),
         y: Math.abs(a.position.y - b.position.y)
     };
 };
 
-const canAttack = (a: Piece, b: Piece, attackType: AttackType) => {
+const canAttack = (a: PieceModel, b: PieceModel, attackType: AttackType) => {
     const { x: deltaX, y: deltaY } = getDelta(a, b);
 
     // Pieces cannot attack diagonally
@@ -46,7 +46,7 @@ const canAttack = (a: Piece, b: Piece, attackType: AttackType) => {
     return result;
 };
 
-const getTargetPiece = (piece: Piece, others: Piece[]) => {
+const getTargetPiece = (piece: PieceModel, others: PieceModel[]) => {
     if (piece.targetPieceId === null) {
         return null;
     }
@@ -60,7 +60,7 @@ const getTargetPiece = (piece: Piece, others: Piece[]) => {
     return target;
 };
 
-export const getAttackableEnemy = (piece: Piece, attackType: AttackType, others: Piece[]) => {
+export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, others: PieceModel[]) => {
     const target = getTargetPiece(piece, others);
 
     if (target && canAttack(piece, target, attackType)) {
@@ -91,7 +91,7 @@ export const getAttackableEnemy = (piece: Piece, attackType: AttackType, others:
     return null;
 };
 
-const findClosestEnemy = (piece: Piece, pieces: Piece[]) => {
+const findClosestEnemy = (piece: PieceModel, pieces: PieceModel[]) => {
     const enemies = getLivingEnemies(piece, pieces);
 
     if (enemies.length === 0) {
@@ -109,7 +109,7 @@ const findClosestEnemy = (piece: Piece, pieces: Piece[]) => {
     return enemyDeltas[0].enemy;
 };
 
-export const getNewPiecePosition = (piece: Piece, pieces: Piece[]): TileCoordinates => {
+export const getNewPiecePosition = (piece: PieceModel, pieces: PieceModel[]): TileCoordinates => {
     const target = findClosestEnemy(piece, pieces);
 
     if (target === null) {

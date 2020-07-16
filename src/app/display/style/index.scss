@@ -1,22 +1,2 @@
-@import "globals/reset";
-@import "globals/variables";
-@import "globals/colors";
-
-@import "components/app";
-@import "components/game";
-@import "components/menu";
-@import "components/card";
-@import "components/card-selector";
-@import "components/chessboard";
-@import "components/tile";
-@import "components/tile-row";
-@import "components/piece";
-@import "components/healthbar";
-@import "components/cooldownbar";
-@import "components/info";
-@import "components/player-list";
-@import "components/profile";
-@import "components/feed";
-@import "components/github-link";
-@import "components/lobby";
-@import "components/piece-stage";
+@import "./globals/";
+@import "./components/";

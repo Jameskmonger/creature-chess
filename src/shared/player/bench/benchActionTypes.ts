@@ -1,0 +1,20 @@
+export const REMOVE_BENCH_PIECE = "REMOVE_BENCH_PIECE";
+export type REMOVE_BENCH_PIECE = typeof REMOVE_BENCH_PIECE;
+
+export const REMOVE_BENCH_PIECES = "REMOVE_BENCH_PIECES";
+export type REMOVE_BENCH_PIECES = typeof REMOVE_BENCH_PIECES;
+
+export const ADD_BENCH_PIECE = "ADD_BENCH_PIECE";
+export type ADD_BENCH_PIECE = typeof ADD_BENCH_PIECE;
+
+export const INITIALISE_BENCH = "INITIALISE_BENCH";
+export type INITIALISE_BENCH = typeof INITIALISE_BENCH;
+
+export const LOCK_BENCH = "LOCK_BENCH";
+export type LOCK_BENCH = typeof LOCK_BENCH;
+
+export const UNLOCK_BENCH = "UNLOCK_BENCH";
+export type UNLOCK_BENCH = typeof UNLOCK_BENCH;
+
+export const MOVE_BENCH_PIECE = "MOVE_BENCH_PIECE";
+export type MOVE_BENCH_PIECE = typeof MOVE_BENCH_PIECE;

@@ -1,17 +1,29 @@
-import * as Models from "../models";
-import { GamePhase } from "../game-phase";
-import { FeedMessage } from "../feed-message";
+import * as Models from "@common/models";
+import { BoardState } from "@common/board";
+import { PlayerPiecesState } from "@common/player";
+import { GamePhase } from "@common/models";
 
-type PreparingPhasePacket = {
-  round: number;
-  pieces: Models.Piece[];
-  bench: Models.Piece[];
-  cards: Models.Card[];
+export type PreparingPhaseUpdatePacket = {
+  phase: GamePhase.PREPARING,
+  payload:
+  {
+    round: number;
+    pieces: PlayerPiecesState;
+    cards: Models.Card[];
+  }
+};
+
+export type ReadyPhaseUpdatePacket = {
+  phase: GamePhase.READY,
+  payload: {
+    board: BoardState;
+    opponentId: string
+  }
 };
 
 export type PhaseUpdatePacket =
-  ({ phase: GamePhase.PREPARING, payload: PreparingPhasePacket })
-  | ({ phase: GamePhase.READY, payload: { pieces: Models.Piece[], opponentId: string } })
+  PreparingPhaseUpdatePacket
+  | ReadyPhaseUpdatePacket
   | ({ phase: GamePhase.PLAYING })
   | ({ phase: GamePhase.DEAD });
 
@@ -47,12 +59,16 @@ export type ReconnectAuthenticateSuccessPacket = {
 export type JoinLobbyResponse = {
   error?: string;
   response?: {
-      playerId: string;
-      lobbyId: string;
-      players: Models.LobbyPlayer[];
-      startTimestamp: number;
-      isHost: boolean;
+    playerId: string;
+    lobbyId: string;
+    players: Models.LobbyPlayer[];
+    startTimestamp: number;
+    isHost: boolean;
   };
+};
+
+type PlayersResurrectedPacket = {
+  playerIds: string[];
 };
 
 export enum ServerToClientPacketOpcodes {
@@ -66,6 +82,7 @@ export enum ServerToClientPacketOpcodes {
   START_GAME = "startGame",
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
+  PLAYERS_RESURRECTED = "playersResurrected",
 
   RECONNECT_AUTHENTICATE_SUCCESS = "reconnectAuthSuccess",
   RECONNECT_AUTHENTICATE_FAILURE = "reconnectAuthFailure"
@@ -77,11 +94,12 @@ export type ServerToClientPacketDefinitions = {
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
   [ServerToClientPacketOpcodes.MONEY_UPDATE]: number,
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: LevelUpdatePacket,
-  [ServerToClientPacketOpcodes.NEW_FEED_MESSAGE]: FeedMessage,
+  [ServerToClientPacketOpcodes.NEW_FEED_MESSAGE]: Models.FeedMessage,
   [ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE]: LobbyPlayerUpdatePacket,
   [ServerToClientPacketOpcodes.START_GAME]: StartGamePacket,
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
+  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS]: ReconnectAuthenticateSuccessPacket,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE]: undefined
 };
@@ -97,6 +115,7 @@ export type ServerToClientPacketAcknowledgements = {
   [ServerToClientPacketOpcodes.START_GAME]: never,
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
+  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS]: never,
   [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE]: never
 };

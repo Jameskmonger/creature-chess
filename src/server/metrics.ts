@@ -22,15 +22,15 @@ export class Metrics {
   private metricFolder: string;
 
   constructor() {
-    if (!process.env.METRIC_FOLDER) {
-      const folder = path.join(__dirname, "../../_metrics");
+    const { METRIC_FOLDER } = process.env;
 
-      log(`No env var METRIC_FOLDER provided, falling back to: ${folder}`);
-      this.metricFolder = folder;
-    } else {
-      log(`Storing metrics in: ${process.env.METRIC_FOLDER}`);
-      this.metricFolder = process.env.METRIC_FOLDER;
+    if (!METRIC_FOLDER) {
+      log(`METRIC_FOLDER not set, not logging metrics`);
+      return;
     }
+
+    log(`Storing metrics in: ${METRIC_FOLDER}`);
+    this.metricFolder = METRIC_FOLDER;
 
     setInterval(() => {
       this.flush();

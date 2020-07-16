@@ -1,17 +1,14 @@
 export const FIND_GAME = "FIND_GAME";
 export type FIND_GAME = typeof FIND_GAME;
 
-export const JOIN_GAME = "JOIN_GAME";
-export type JOIN_GAME = typeof JOIN_GAME;
-
-export const CREATE_GAME = "CREATE_GAME";
-export type CREATE_GAME = typeof CREATE_GAME;
-
 export const JOIN_ERROR = "JOIN_ERROR";
 export type JOIN_ERROR = typeof JOIN_ERROR;
 
 export const GAME_PHASE_UPDATE = "GAME_PHASE_UPDATE";
 export type GAME_PHASE_UPDATE = typeof GAME_PHASE_UPDATE;
+
+export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
+export type PLAYERS_RESURRECTED = typeof PLAYERS_RESURRECTED;
 
 export const MONEY_UPDATE = "MONEY_UPDATE";
 export type MONEY_UPDATE = typeof MONEY_UPDATE;
@@ -34,8 +31,8 @@ export type UPDATE_CONNECTION_STATUS = typeof UPDATE_CONNECTION_STATUS;
 export const SHOP_LOCK_UPDATED = "SHOP_LOCK_UPDATED";
 export type SHOP_LOCK_UPDATED = typeof SHOP_LOCK_UPDATED;
 
-export const TOGGLE_SHOP_LOCK = "TOGGLE_SHOP_LOCK";
-export type TOGGLE_SHOP_LOCK = typeof TOGGLE_SHOP_LOCK;
+export const CLEAR_SELECTED_PIECE = "CLEAR_SELECTED_PIECE";
+export type CLEAR_SELECTED_PIECE = typeof CLEAR_SELECTED_PIECE;
 
 export const FINISH_GAME = "FINISH_GAME";
 export type FINISH_GAME = typeof FINISH_GAME;

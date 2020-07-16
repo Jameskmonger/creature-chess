@@ -1,6 +1,27 @@
-import { GamePhase, Models, ConnectionStatus } from "@common";
-import { FeedMessage } from "@common/feed-message";
-import { LobbyPlayer } from "@common/models";
+import { LobbyPlayer, FeedMessage, Card, PlayerListPlayer, GamePhase } from "@common/models";
+import { ConnectionStatus } from "@common/networking";
+import { BoardState } from "@common/board";
+import { BenchState } from "@common/player/bench";
+
+export interface AppState {
+    auth: AuthState | null;
+
+    board: BoardState;
+    bench: BenchState;
+    game: GameState;
+    playerList: PlayerListPlayer[];
+    cards: Card[];
+    localPlayer: LocalPlayerState;
+    feedMessages: FeedMessage[];
+    lobby: LobbyState;
+}
+
+export interface AuthState {
+    authenticated: boolean;
+    idToken: string;
+    profile: any;
+    expiresAt: number;
+}
 
 export interface GameState {
     gameId: string;
@@ -17,7 +38,7 @@ export interface GameState {
     mainAnnouncement: string;
     subAnnouncement: string;
 
-    selectedPiece: Models.Piece;
+    selectedPieceId: string;
     shopLocked: boolean;
 
     winnerName: string;
@@ -31,17 +52,6 @@ export interface LocalPlayerState {
     level: number;
     xp: number;
     ready: boolean;
-}
-
-export interface AppState {
-    board: Models.Piece[];
-    bench: Models.Piece[];
-    game: GameState;
-    playerList: Models.PlayerListPlayer[];
-    cards: Models.Card[];
-    localPlayer: LocalPlayerState;
-    feedMessages: FeedMessage[];
-    lobby: LobbyState;
 }
 
 export interface LobbyState {

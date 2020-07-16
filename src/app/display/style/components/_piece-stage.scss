@@ -1,14 +1,12 @@
 .piece-stage {
     position: absolute;
-    bottom: 0;
-    width: 30%;
-    height: 30%;
-    box-sizing: border-box;
-    margin-right: auto;
-    margin-left: auto;
+    top: 3%;
+    left: 3%;
+    width: 22%;
+    height: 20%;
     font-family: Arial, sans-serif;
-    line-height: 1.25;
+    line-height: 1.5;
     color: #fff;
+    text-align: center;
     background: #555;
-    border: 2px solid #1a1c2c;
 }

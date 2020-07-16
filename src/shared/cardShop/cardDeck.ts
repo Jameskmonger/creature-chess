@@ -1,18 +1,17 @@
 import uuid = require("uuid/v4");
-import { shuffle, flatten } from "lodash";
+import { shuffle } from "lodash";
 import { CreatureDefinition } from "../models/creatureDefinition";
 import { Card } from "../models/card";
-import { Piece } from "../models/piece";
-import { Player } from "../game/player/player";
-import { PIECES_TO_EVOLVE } from "../constants";
+import { PieceModel } from "../models/piece";
+import { PIECES_TO_EVOLVE } from "../models/constants";
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [
-    [100, 70, 60, 50, 40, 33, 30, 24, 22, 19],
-    [0, 30, 35, 35, 35, 30, 30, 30, 30, 25],
-    [0, 0, 5, 15, 23, 30, 30, 30, 25, 25],
-    [0, 0, 0, 0, 2, 7, 10, 15, 20, 25],
-    [0, 0, 0, 0, 0, 0, 0, 1, 3, 6]
+    [100,  70,  60,  50,  40,  33,  30,  24,  22,  19],
+    [0,    30,  35,  35,  35,  30,  30,  30,  30,  25],
+    [0,    0,   5,   15,  23,  30,  30,  30,  25,  25],
+    [0,    0,   0,   2,   5,   9,   12,  16,  20,  25],
+    [0,    0,   0,   0,   1,   3,   5,   7,   10,  14]
 ];
 
 const CARD_LEVEL_QUANTITIES = [45, 30, 25, 15, 10];
@@ -52,6 +51,13 @@ export class CardDeck {
         this.shuffle();
     }
 
+    public reroll(input: Card[], level: number, count: number) {
+        this.addCards(input);
+        this.shuffle();
+
+        return this.take(level, count);
+    }
+
     public take(level: number, count: number) {
         const output: Card[] = [];
 
@@ -62,7 +68,7 @@ export class CardDeck {
         return output;
     }
 
-    public add(cards: Card[]) {
+    public addCards(cards: Card[]) {
         const cardsToAdd = cards.filter(card => card !== null);
 
         for (const card of cardsToAdd) {
@@ -72,7 +78,7 @@ export class CardDeck {
         this.shuffle();
     }
 
-    public addPiece(piece: Piece) {
+    public addPiece(piece: PieceModel) {
         const definition = this.definitions.find(p => p.id === piece.definitionId);
 
         const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
@@ -82,6 +88,12 @@ export class CardDeck {
         }
 
         this.shuffle();
+    }
+
+    public addPieces(pieces: PieceModel[]) {
+        for (const piece of pieces) {
+            this.addPiece(piece);
+        }
     }
 
     public shuffle() {

@@ -1,18 +1,17 @@
 import uuid = require("uuid/v4");
-import { createTileCoordinates } from "../position";
-import { GRID_SIZE, INITIAL_COOLDOWN } from "../constants";
+import { createTileCoordinates } from "../models/position";
+import { GRID_SIZE, INITIAL_COOLDOWN } from "@common/models/constants";
 import { DefinitionProvider } from "../game/definitionProvider";
-import { Card, Piece } from "../models";
+import { Card, PieceModel } from "@common/models";
 
 export const createPiece = (
     definitionProvider: DefinitionProvider,
     ownerId: string,
     definitionId: number,
     position: [number, number],
-    damagePerTurn: number | null,
     id?: string,
     stage: number = 0
-): Piece => {
+): PieceModel => {
     const stats = definitionProvider.get(definitionId).stages[0];
     return {
         id: id || uuid(),
@@ -23,7 +22,6 @@ export const createPiece = (
         maxHealth: stats.hp,
         currentHealth: stats.hp,
         coolDown: INITIAL_COOLDOWN,
-        damagePerTurn,
         stage,
         targetPieceId: null
     };
@@ -35,13 +33,13 @@ export const createPieceFromCard = (
     card: Card,
     slot: number
 ) =>
-    createPiece(definitionProvider, ownerId, card.definitionId, [slot, null], null, card.id);
+    createPiece(definitionProvider, ownerId, card.definitionId, [slot, null], card.id);
 
 export const clonePiece =
-    (definitionProvider: DefinitionProvider, piece: Piece) =>
-        createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y], 0, piece.id, piece.stage);
+    (definitionProvider: DefinitionProvider, piece: PieceModel) =>
+        createPiece(definitionProvider, piece.ownerId, piece.definitionId, [piece.position.x, piece.position.y], piece.id, piece.stage);
 
-export const moveOrAddPiece = <T extends Piece>(allPieces: T[], target: T) => {
+export const moveOrAddPiece = <T extends PieceModel>(allPieces: T[], target: T) => {
     const result: T[] = [];
     let targetAdded = false;
 
@@ -64,7 +62,7 @@ export const moveOrAddPiece = <T extends Piece>(allPieces: T[], target: T) => {
     return result;
 };
 
-export const rotatePiecePosition = (piece: Piece) => {
+export const rotatePiecePosition = (piece: PieceModel) => {
     piece.position.x = GRID_SIZE - 1 - piece.position.x;
     piece.position.y = GRID_SIZE - 1 - piece.position.y;
     return piece;
