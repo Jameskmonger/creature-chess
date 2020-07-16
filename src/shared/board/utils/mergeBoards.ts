@@ -1,8 +1,8 @@
 import { GRID_SIZE } from "@common/models/constants";
 import { PieceModel } from "@common/models";
-import { createTileCoordinates, XYLocation } from "@common/models/position";
+import { createTileCoordinates, TileCoordinates } from "@common/models/position";
 
-const rotateGridPosition = (position: XYLocation) => {
+const rotateGridPosition = (position: TileCoordinates) => {
   return createTileCoordinates(
     GRID_SIZE - 1 - position.x,
     GRID_SIZE - 1 - position.y

@@ -86,83 +86,67 @@
 
     $move-duration: 300ms;
 
-    &.move-up {
-        @keyframes move-up {
-            0% { top: $tile-size; }
-            100% { top: 0; }
+    &.move {
+        @keyframes move {
+            0% {
+                top: calc(#{$tile-size} * var(--moveYDirection) * -1);
+                left: calc(#{$tile-size} * var(--moveXDirection) * -1);
+            }
+
+            100% {
+                top: 0;
+                left: 0;
+            }
         }
-        animation-name: move-up;
+        animation-name: move;
         animation-duration: $move-duration;
     }
 
-    &.move-right {
-        @keyframes move-right {
-            0% { left: -$tile-size; }
-            100% { left: 0; }
-        }
-        animation-name: move-right;
-        animation-duration: $move-duration;
-    }
-
-    &.move-down {
-        @keyframes move-down {
-            0% { top: -$tile-size; }
-            100% { top: 0; }
-        }
-        animation-name: move-down;
-        animation-duration: $move-duration;
-    }
-
-    &.move-left {
-        @keyframes move-left {
-            0% { left: $tile-size; }
-            100% { left: 0; }
-        }
-        animation-name: move-left;
-        animation-duration: $move-duration;
-    }
-
-    $attack-movement-distance-multiplier: 3px;
-    $attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
     $attack-duration: 200ms;
 
-    &.attack-up {
-        @keyframes attack-up {
-            0% { top: 0; }
-            50% { top: calc(#{$attack-movement-distance} * -1); }
-            100% { top: 0; }
+    &.attack-basic {
+        $attack-movement-distance-multiplier: 3px;
+        $attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
+        @keyframes attack-basic {
+            0% {
+                top: 0;
+                left: 0;
+            }
+
+            50% {
+                top: calc(#{$attack-movement-distance} * var(--attackYDirection));
+                left: calc(#{$attack-movement-distance} * var(--attackXDirection));
+            }
+
+            100% {
+                top: 0;
+                left: 0;
+            }
         }
-        animation-name: attack-up;
+        animation-name: attack-basic;
         animation-duration: $attack-duration;
     }
 
-    &.attack-right {
-        @keyframes attack-right {
-            0% { left: 0; }
-            50% { left: $attack-movement-distance; }
-            100% { left: 0; }
-        }
-        animation-name: attack-right;
-        animation-duration: $attack-duration;
+    .projectile {
+        display: none;
     }
 
-    &.attack-down {
-        @keyframes attack-down {
-            0% { top: 0; }
-            50% { top: $attack-movement-distance; }
-            100% { top: 0; }
-        }
-        animation-name: attack-down;
-        animation-duration: $attack-duration;
-    }
+    &.attack-shoot .projectile {
+        $half-tile-size: calc(#{$tile-size} / 2);
+        @keyframes attack-shoot {
+            0% {
+                top: $half-tile-size;
+                left: $half-tile-size;
+            }
 
-    &.attack-left {
-        @keyframes attack-left {
-            0% { left: 0; }
-            50% { left: calc(#{$attack-movement-distance} * -1); }
-            100% { left: 0; }
+            100% {
+                top: calc(#{$tile-size} * var(--attackYDirection) * -1 + #{$half-tile-size});
+                left: calc(#{$tile-size} * var(--attackXDirection) * -1 + #{$half-tile-size});
+            }
         }
-        animation-name: attack-left;
+        position: absolute;
+        display: block;
+        animation-name: attack-shoot;
         animation-duration: $attack-duration;
     }
 

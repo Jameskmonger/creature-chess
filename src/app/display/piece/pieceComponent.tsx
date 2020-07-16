@@ -10,6 +10,7 @@ import { getPiece } from "@common/player/pieceSelectors";
 import { AppState } from "@app/store";
 import { arePositionsEqual, getRelativeDirection } from "@common/models/position";
 import { selectPiece } from "@app/store/actions/boardActions";
+import { Projectile } from "../projectile";
 
 const dyingAnimation = "dying";
 
@@ -66,11 +67,14 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
         if (!arePositionsEqual(oldPiece.position, position)) {
             const direction = getRelativeDirection(oldPiece.position, position);
 
-            runAnimation(`move-${direction}`);
+            runAnimation(`move`, { moveXDirection: direction.x, moveYDirection: direction.y });
         }
 
         if (attacking && !oldPiece.attacking) {
-            runAnimation(`attack-${attacking.direction}`, { attackPower: attacking.damage });
+            runAnimation(
+                `attack-${attacking.attackType.name}`,
+                { attackPower: attacking.damage, attackXDirection: attacking.direction.x, attackYDirection: attacking.direction.y }
+            );
         }
 
         if (hit && !oldPiece.hit) {
@@ -123,6 +127,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
             onAnimationEnd={onAnimationEnd}
         >
             <PieceImage pieceId={id} />
+            <Projectile />
 
             <StageIndicator pieceId={id} />
 
