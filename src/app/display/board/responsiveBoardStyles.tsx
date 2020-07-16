@@ -53,7 +53,7 @@ const getPositionablePieceStyles = (tileSize: number, inPreparingPhase: boolean)
             const { left, top } = getTilePosition(tileSize, inPreparingPhase, x, y);
 
             styles.push(`.positionable-piece.x-${x} { left: ${left}px; }`);
-            styles.push(`.positionable-piece.y-${y} { top: ${top}px; z-index: ${TILE_BASE_Z_INDEX + 1}; }`);
+            styles.push(`.positionable-piece.y-${y} { top: ${top}px; z-index: ${TILE_BASE_Z_INDEX + y + 1}; }`);
         }
     }
 
