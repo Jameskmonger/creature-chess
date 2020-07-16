@@ -114,8 +114,8 @@
             }
 
             50% {
-                top: calc(#{$attack-movement-distance} * var(--attackYDirection));
-                left: calc(#{$attack-movement-distance} * var(--attackXDirection));
+                top: calc(#{$attack-movement-distance} * var(--attackYDirection) * -1);
+                left: calc(#{$attack-movement-distance} * var(--attackXDirection) * -1);
             }
 
             100% {
