@@ -1,17 +1,19 @@
-import { Direction, XYLocation } from "./position";
+import { TileCoordinates } from "./position";
+import { AttackType } from "./creatureDefinition";
 
 export interface AttackDetails {
-    direction: Direction;
+    direction: TileCoordinates;
     damage: number;
+    attackType: AttackType;
 }
 
 export interface HitDetails {
-    direction: Direction;
+    direction: TileCoordinates;
     damage: number;
 }
 
 export interface MovementDetails {
-    direction: Direction;
+    direction: TileCoordinates;
 }
 
 export interface PieceModel {
@@ -19,7 +21,7 @@ export interface PieceModel {
     ownerId: string;
     definitionId: number;
     stage: number;
-    position: XYLocation;
+    position: TileCoordinates;
 
     facingAway: boolean;
     attacking?: AttackDetails;

@@ -10,7 +10,7 @@ import {
     MOVE_BOARD_PIECE,
     REMOVE_BOARD_PIECES
 } from "./boardActionTypes";
-import { XYLocation } from "@common/models/position";
+import { TileCoordinates } from "@common/models/position";
 
 type InitialiseBoardAction = ({ type: INITIALISE_BOARD, payload: { pieces: { [key: string]: PieceModel } } });
 type AddBoardPieceAction = ({ type: ADD_BOARD_PIECE, payload: { piece: PieceModel, x: number, y: number } });
@@ -18,7 +18,7 @@ type RemoveBoardPieceAction = ({ type: REMOVE_BOARD_PIECE, payload: { pieceId: s
 type RemoveBoardPiecesAction = ({ type: REMOVE_BOARD_PIECES, payload: { pieceIds: string[] } });
 export type UpdateBoardPieceAction = ({ type: UPDATE_BOARD_PIECE, payload: { piece: PieceModel } });
 type UpdateBoardPiecesAction = ({ type: UPDATE_BOARD_PIECES, payload: { pieces: PieceModel[] } });
-type MoveBoardPieceAction = ({ type: MOVE_BOARD_PIECE, payload: { pieceId: string, from: XYLocation, to: XYLocation } });
+type MoveBoardPieceAction = ({ type: MOVE_BOARD_PIECE, payload: { pieceId: string, from: TileCoordinates, to: TileCoordinates } });
 type LockBoardAction = ({ type: LOCK_BOARD });
 type UnlockBoardAction = ({ type: UNLOCK_BOARD });
 
@@ -77,7 +77,7 @@ export const updateBoardPieces = (pieces: PieceModel[]): UpdateBoardPiecesAction
     }
 });
 
-export const moveBoardPiece = (pieceId: string, from: XYLocation, to: XYLocation): MoveBoardPieceAction => ({
+export const moveBoardPiece = (pieceId: string, from: TileCoordinates, to: TileCoordinates): MoveBoardPieceAction => ({
     type: MOVE_BOARD_PIECE,
     payload: {
         pieceId,

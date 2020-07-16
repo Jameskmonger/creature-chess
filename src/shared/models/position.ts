@@ -1,27 +1,30 @@
 import { GRID_SIZE } from "./constants";
+import { PieceModel } from "./piece";
 
-export type XYLocation = { x: number, y: number };
+export type TileCoordinates = { x: number, y: number };
 export type SlotLocation = { slot: number };
 
-export const createTileCoordinates = (x: number, y: number): XYLocation => ({ x, y });
-export const arePositionsEqual = (a: XYLocation, b: XYLocation) => a && b && a.x === b.x && a.y === b.y;
+export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
+export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;
+export const subtract = (a: TileCoordinates, b: TileCoordinates) => ({ x: a.x - b.x, y: a.y - b.y });
 
-export enum Direction {
-    Up = "up",
-    Right = "right",
-    Down = "down",
-    Left = "left",
-    Unknown = "unknown"
-}
+export const Directions = {
+    UP: { x: 0, y: -1 },
+    RIGHT: { x: 1, y: 0 },
+    DOWN: { x: 0, y: 1 },
+    LEFT: { x: -1, y: 0 }
+};
 
-const isInsideGrid = (position: XYLocation) => {
+const isInsideGrid = (position: TileCoordinates) => {
     const { x, y } = position;
 
     return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
 };
 
-export const getAdjacentPositions = ({ x, y }: XYLocation) => {
-    const positions: XYLocation[] = [
+export const getAdjacentPositions = (piece: PieceModel) => {
+    const { x, y } = piece.position;
+
+    const positions: TileCoordinates[] = [
         createTileCoordinates(x, y - 1),
         createTileCoordinates(x - 1, y),
         createTileCoordinates(x + 1, y),
@@ -37,20 +40,20 @@ export const getAdjacentPositions = ({ x, y }: XYLocation) => {
  * @param from The position to find the direction relative from
  * @param to The position to find the direction relative to
  */
-export const getRelativeDirection = (from: XYLocation, to: XYLocation) => {
+export const getRelativeDirection = (from: TileCoordinates, to: TileCoordinates) => {
     if (from.x < to.x) {
-        return Direction.Right;
+        return Directions.RIGHT;
     }
     if (from.x > to.x) {
-        return Direction.Left;
+        return Directions.LEFT;
     }
     if (from.y < to.y) {
-        return Direction.Down;
+        return Directions.DOWN;
     }
     if (from.y > to.y) {
-        return Direction.Up;
+        return Directions.UP;
     }
-    return Direction.Unknown;
+    return { x: 0, y: 0 };
 };
 
 export enum TileType {
@@ -62,3 +65,7 @@ export enum TileStyle {
     DEFAULT,
     JAMES
 }
+
+export const inBench = ({ y }: TileCoordinates) => y === null;
+// TODO: Make this use Constants.GRID_SIZE
+export const inFriendlyBoard = ({ y }: TileCoordinates) => y > 3;
