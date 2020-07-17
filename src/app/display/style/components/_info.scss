@@ -1,13 +1,10 @@
 .info {
-    position: absolute;
-    top: 3%;
-    right: 4%;
-    width: 72%;
-    height: 20%;
+    height: 100%;
+    flex: 1;
     box-sizing: border-box;
     margin-right: auto;
     margin-left: auto;
-    border-top: 2px solid #555;
-    border-right: 3px solid #555;
-    border-bottom: 2px solid #555;
+    border-top: 1px solid #555;
+    border-right: 1px solid #555;
+    border-bottom: 1px solid #555;
 }

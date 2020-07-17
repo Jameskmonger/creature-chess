@@ -2,327 +2,60 @@ import { CreatureType } from "../../models/creatureType";
 import { CreatureDefinition } from "../../models/creatureDefinition";
 import { getStages, DefinitionClass } from "./definitionClass";
 
+const createDefinition = (id: number, name: string, type: CreatureType, definitionClass: DefinitionClass, cost: number): CreatureDefinition => ({
+    id,
+    name,
+    type,
+    class: definitionClass,
+    cost,
+    stages: getStages(definitionClass, cost)
+});
+
 export const definitions: CreatureDefinition[] = [
-    {
-        id: 1,
-        name: "Budaye",
-        cost: 1,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.VALIANT, 1)
-    },
-    {
-        id: 2,
-        name: "Anoleaf",
-        cost: 1,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.CUNNING, 1)
-    },
-    {
-        id: 3,
-        name: "Rockitten",
-        cost: 1,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.VALIANT, 1)
-    },
-    {
-        id: 4,
-        name: "Aardorn",
-        cost: 1,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.CUNNING, 1)
-    },
-    {
-        id: 5,
-        name: "Nut",
-        cost: 1,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.VALIANT, 1)
-    },
-    {
-        id: 6,
-        name: "Puparmor",
-        cost: 1,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.VALIANT, 1)
-    },
-    {
-        id: 7,
-        name: "Embra",
-        cost: 1,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.ARCANE, 1)
-    },
-    {
-        id: 8,
-        name: "Tweesher",
-        cost: 1,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.ARCANE, 1)
-    },
-    {
-        id: 9,
-        name: "Bamboon",
-        cost: 2,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.VALIANT, 2)
-    },
-    {
-        id: 10,
-        name: "Chenipode",
-        cost: 2,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.CUNNING, 2)
-    },
-    {
-        id: 11,
-        name: "Bolt",
-        cost: 2,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.VALIANT, 2)
-    },
-    {
-        id: 12,
-        name: "Weavifly",
-        cost: 2,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.ARCANE, 2)
-    },
-    {
-        id: 13,
-        name: "Cardiling",
-        cost: 2,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.CUNNING, 2)
-    },
-    {
-        id: 14,
-        name: "Agnite",
-        cost: 2,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.VALIANT, 2)
-    },
-    {
-        id: 15,
-        name: "Elowind",
-        cost: 2,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.ARCANE, 2)
-    },
-    {
-        id: 16,
-        name: "Incandesfin",
-        cost: 2,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.VALIANT, 2)
-    },
-    {
-        id: 17,
-        name: "Velocitile",
-        cost: 3,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.CUNNING, 3)
-    },
-    {
-        id: 18,
-        name: "Sapsnap",
-        cost: 3,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.VALIANT, 3)
-    },
-    {
-        id: 19,
-        name: "Rockat",
-        cost: 3,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.CUNNING, 3)
-    },
-    {
-        id: 20,
-        name: "Grintot",
-        cost: 3,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.VALIANT, 3)
-    },
-    {
-        id: 21,
-        name: "Propellorcat",
-        cost: 3,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.CUNNING, 3)
-    },
-    {
-        id: 22,
-        name: "Sumchon",
-        cost: 3,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.VALIANT, 3)
-    },
-    {
-        id: 23,
-        name: "Ignibus",
-        cost: 3,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.VALIANT, 3)
-    },
-    {
-        id: 24,
-        name: "Ruption",
-        cost: 3,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.ARCANE, 3)
-    },
-    {
-        id: 25,
-        name: "Noctalo",
-        cost: 3,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.CUNNING, 3)
-    },
-    {
-        id: 26,
-        name: "Lightmare",
-        cost: 3,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.VALIANT, 3)
-    },
-    {
-        id: 27,
-        name: "Narcileaf",
-        cost: 4,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.ARCANE, 4)
-    },
-    {
-        id: 28,
-        name: "Coleorus",
-        cost: 4,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.CUNNING, 4)
-    },
-    {
-        id: 29,
-        name: "Aardart",
-        cost: 4,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.CUNNING, 4)
-    },
-    {
-        id: 30,
-        name: "Bursa",
-        cost: 4,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.ARCANE, 4)
-    },
-    {
-        id: 31,
-        name: "Sampsack",
-        cost: 4,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.VALIANT, 4)
-    },
-    {
-        id: 32,
-        name: "Cairfrey",
-        cost: 4,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.ARCANE, 4)
-    },
-    {
-        id: 33,
-        name: "Prophetoise",
-        cost: 4,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.ARCANE, 4)
-    },
-    {
-        id: 34,
-        name: "Tikorch",
-        cost: 4,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.CUNNING, 4)
-    },
-    {
-        id: 35,
-        name: "Nudimind",
-        cost: 4,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.ARCANE, 4)
-    },
-    {
-        id: 36,
-        name: "Dollfin",
-        cost: 4,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.VALIANT, 4)
-    },
-    {
-        id: 37,
-        name: "Arbelder",
-        cost: 5,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.VALIANT, 5)
-    },
-    {
-        id: 38,
-        name: "Viviphyta",
-        cost: 5,
-        type: CreatureType.Wood,
-        stages: getStages(DefinitionClass.CUNNING, 5)
-    },
-    {
-        id: 39,
-        name: "Grintrock",
-        cost: 5,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.VALIANT, 5)
-    },
-    {
-        id: 40,
-        name: "Jemuar",
-        cost: 5,
-        type: CreatureType.Earth,
-        stages: getStages(DefinitionClass.CUNNING, 5)
-    },
-    {
-        id: 41,
-        name: "Pyraminx",
-        cost: 5,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.VALIANT, 5)
-    },
-    {
-        id: 42,
-        name: "AV8R",
-        cost: 5,
-        type: CreatureType.Metal,
-        stages: getStages(DefinitionClass.CUNNING, 5)
-    },
-    {
-        id: 43,
-        name: "Agnigon",
-        cost: 5,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.VALIANT, 5)
-    },
-    {
-        id: 44,
-        name: "Cardinale",
-        cost: 5,
-        type: CreatureType.Fire,
-        stages: getStages(DefinitionClass.CUNNING, 5)
-    },
-    {
-        id: 45,
-        name: "Nudikill",
-        cost: 5,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.VALIANT, 5)
-    },
-    {
-        id: 46,
-        name: "Eaglace",
-        cost: 5,
-        type: CreatureType.Water,
-        stages: getStages(DefinitionClass.CUNNING, 5)
-    }
+    createDefinition(1, "Budaye", CreatureType.Wood, DefinitionClass.VALIANT, 1),
+    createDefinition(2, "Anoleaf", CreatureType.Wood, DefinitionClass.CUNNING, 1),
+    createDefinition(3, "Rockitten", CreatureType.Earth, DefinitionClass.VALIANT, 1),
+    createDefinition(4, "Aardorn", CreatureType.Earth, DefinitionClass.CUNNING, 1),
+    createDefinition(5, "Nut", CreatureType.Metal, DefinitionClass.VALIANT, 1),
+    createDefinition(6, "Puparmor", CreatureType.Metal, DefinitionClass.VALIANT, 1),
+    createDefinition(7, "Embra", CreatureType.Fire, DefinitionClass.ARCANE, 1),
+    createDefinition(8, "Tweesher", CreatureType.Water, DefinitionClass.ARCANE, 1),
+    createDefinition(9, "Bamboon", CreatureType.Wood, DefinitionClass.VALIANT, 2),
+    createDefinition(10, "Chenipode", CreatureType.Earth, DefinitionClass.CUNNING, 2),
+    createDefinition(11, "Bolt", CreatureType.Metal, DefinitionClass.VALIANT, 2),
+    createDefinition(12, "Weavifly", CreatureType.Metal, DefinitionClass.ARCANE, 2),
+    createDefinition(13, "Cardiling", CreatureType.Fire, DefinitionClass.CUNNING, 2),
+    createDefinition(14, "Agnite", CreatureType.Fire, DefinitionClass.VALIANT, 2),
+    createDefinition(15, "Elowind", CreatureType.Water, DefinitionClass.ARCANE, 2),
+    createDefinition(16, "Incandesfin", CreatureType.Water, DefinitionClass.VALIANT, 2),
+    createDefinition(17, "Velocitile", CreatureType.Wood, DefinitionClass.CUNNING, 3),
+    createDefinition(18, "Sapsnap", CreatureType.Wood, DefinitionClass.VALIANT, 3),
+    createDefinition(19, "Rockat", CreatureType.Earth, DefinitionClass.CUNNING, 3),
+    createDefinition(20, "Grintot", CreatureType.Earth, DefinitionClass.VALIANT, 3),
+    createDefinition(21, "Propellorcat", CreatureType.Metal, DefinitionClass.CUNNING, 3),
+    createDefinition(22, "Sumchon", CreatureType.Metal, DefinitionClass.VALIANT, 3),
+    createDefinition(23, "Ignibus", CreatureType.Fire, DefinitionClass.VALIANT, 3),
+    createDefinition(24, "Ruption", CreatureType.Fire, DefinitionClass.ARCANE, 3),
+    createDefinition(25, "Noctalo", CreatureType.Water, DefinitionClass.CUNNING, 3),
+    createDefinition(26, "Lightmare", CreatureType.Water, DefinitionClass.VALIANT, 3),
+    createDefinition(27, "Narcileaf", CreatureType.Wood, DefinitionClass.ARCANE, 4),
+    createDefinition(28, "Coleorus", CreatureType.Wood, DefinitionClass.CUNNING, 4),
+    createDefinition(29, "Aardart", CreatureType.Earth, DefinitionClass.CUNNING, 4),
+    createDefinition(30, "Bursa", CreatureType.Earth, DefinitionClass.ARCANE, 4),
+    createDefinition(31, "Sampsack", CreatureType.Metal, DefinitionClass.VALIANT, 4),
+    createDefinition(32, "Cairfrey", CreatureType.Metal, DefinitionClass.ARCANE, 4),
+    createDefinition(33, "Prophetoise", CreatureType.Fire, DefinitionClass.ARCANE, 4),
+    createDefinition(34, "Tikorch", CreatureType.Fire, DefinitionClass.CUNNING, 4),
+    createDefinition(35, "Nudimind", CreatureType.Water, DefinitionClass.ARCANE, 4),
+    createDefinition(36, "Dollfin", CreatureType.Water, DefinitionClass.VALIANT, 4),
+    createDefinition(37, "Arbelder", CreatureType.Wood, DefinitionClass.VALIANT, 5),
+    createDefinition(38, "Viviphyta", CreatureType.Wood, DefinitionClass.CUNNING, 5),
+    createDefinition(39, "Grintrock", CreatureType.Earth, DefinitionClass.VALIANT, 5),
+    createDefinition(40, "Jemuar", CreatureType.Earth, DefinitionClass.CUNNING, 5),
+    createDefinition(41, "Pyraminx", CreatureType.Metal, DefinitionClass.VALIANT, 5),
+    createDefinition(42, "AV8R", CreatureType.Metal, DefinitionClass.CUNNING, 5),
+    createDefinition(43, "Agnigon", CreatureType.Fire, DefinitionClass.VALIANT, 5),
+    createDefinition(44, "Cardinale", CreatureType.Fire, DefinitionClass.CUNNING, 5),
+    createDefinition(45, "Nudikill", CreatureType.Water, DefinitionClass.VALIANT, 5),
+    createDefinition(46, "Eaglace", CreatureType.Water, DefinitionClass.CUNNING, 5)
 ];

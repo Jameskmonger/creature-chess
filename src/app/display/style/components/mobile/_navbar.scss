@@ -1,0 +1,20 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+
+    .navitem {
+        padding: 1.4rem 0;
+        font-size: 1rem;
+        color: #fff;
+        background: #171717;
+        flex: 1;
+
+        /* stylelint-disable-next-line */
+        border: none;
+
+        &.active {
+            text-decoration: underline;
+            background: #3c3c3c;
+        }
+    }
+}

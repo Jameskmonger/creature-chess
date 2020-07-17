@@ -9,7 +9,7 @@ const inPortraitMode = (width: number, height: number) => (height >= width);
 const getBoardInformation = (width: number, height: number) => {
     if (inPortraitMode(width, height)) {
         // board + spacing
-        const colsRequired = Constants.GRID_SIZE + 0.5;
+        const colsRequired = Constants.GRID_SIZE;
 
         // in portrait mode, use full width
         const tileWidth = width / colsRequired;
@@ -34,23 +34,20 @@ const getBoardInformation = (width: number, height: number) => {
     };
 };
 
-const getTilePosition = (tileSize: number, inPreparingPhase: boolean, x: number, y: number) => {
-    const LEFT_OFFSET_PX = 3;
-    const TOP_OFFSET_PX = inPreparingPhase ? 0 : 3;
-
+const getTilePosition = (tileSize: number, x: number, y: number) => {
     return {
-        left: LEFT_OFFSET_PX + (x * tileSize),
-        top: TOP_OFFSET_PX + (y * tileSize)
+        left: (x * tileSize),
+        top: (y * tileSize)
     };
 };
 
-const getPositionablePieceStyles = (tileSize: number, inPreparingPhase: boolean) => {
+const getPositionablePieceStyles = (tileSize: number) => {
     const styles = [];
     const TILE_BASE_Z_INDEX = 10;
 
     for (let x = 0; x < Constants.GRID_SIZE; x++) {
         for (let y = 0; y < Constants.GRID_SIZE; y++) {
-            const { left, top } = getTilePosition(tileSize, inPreparingPhase, x, y);
+            const { left, top } = getTilePosition(tileSize, x, y);
 
             styles.push(`.positionable-piece.x-${x} { left: ${left}px; }`);
             styles.push(`.positionable-piece.y-${y} { top: ${top}px; z-index: ${TILE_BASE_Z_INDEX + y + 1}; }`);
@@ -62,17 +59,16 @@ const getPositionablePieceStyles = (tileSize: number, inPreparingPhase: boolean)
 
 const ResponsiveBoardStyles: React.FunctionComponent = () => {
     const { width, height } = useWindowSize();
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 
     const { tileSize, boardHeight, boardWidth } = getBoardInformation(width, height);
 
     // todo this is ugly
     const boardContainerStyle =
         inPortraitMode(width, height)
-            ? `{ height: ${boardHeight}px; width: ${boardWidth}px; margin: "0 auto"; }`
-            : `{ height: ${boardHeight}px; width: ${boardWidth}px; }`;
+            ? `{ width: ${boardWidth}; margin: 0 auto 0.5rem; }`
+            : `{ height: ${boardHeight}; width: ${boardWidth}; }`;
 
-    const positionablePieceStyles = getPositionablePieceStyles(tileSize, inPreparingPhase);
+    const positionablePieceStyles = getPositionablePieceStyles(tileSize);
 
     return (
         <style
@@ -80,6 +76,7 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
             __html: `
             .tile { width: ${tileSize}px; height: ${tileSize}px; }
             .positionable-piece { width: ${tileSize}px; height: ${tileSize}px; }
+            .piece { width: ${tileSize}px; height: ${tileSize}px; }
 
             .board-container ${boardContainerStyle}
 

@@ -1,9 +1,9 @@
-import { CreatureStats, AttackType, attackTypes } from "@common/models/creatureDefinition"
+import { CreatureStats, AttackType, attackTypes } from "@common/models/creatureDefinition";
 
 export enum DefinitionClass {
-    VALIANT,
-    ARCANE,
-    CUNNING
+    VALIANT = "Valiant",
+    ARCANE = "Arcane",
+    CUNNING = "Cunning"
 }
 
 // each class has points to assign
@@ -11,20 +11,20 @@ export enum DefinitionClass {
 // the decimals here indicate how the points are assigned for each class
 export const classBuilds = {
     [DefinitionClass.VALIANT]: {
-        hp: 0.3,
+        hp: 0.4,
         attack: 0.2,
         defense: 0.3,
         speed: 0.2
     },
     [DefinitionClass.ARCANE]: {
         hp: 0.2,
-        attack: 0.3,
+        attack: 0.4,
         defense: 0.2,
         speed: 0.3
     },
     [DefinitionClass.CUNNING]: {
         hp: 0.1,
-        attack: 0.35,
+        attack: 0.4,
         defense: 0.1,
         speed: 0.45
     }

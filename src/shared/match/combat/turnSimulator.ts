@@ -109,7 +109,7 @@ export class TurnSimulator {
                 coolDown: INITIAL_COOLDOWN,
                 attacking: {
                     attackType: attacker.stats.attackType,
-                    direction: subtract(attacker.piece.position, defender.piece.position),
+                    direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
                     damage
                 },
                 targetPieceId: defender.piece.id
