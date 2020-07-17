@@ -10,6 +10,32 @@
     user-select: none;
     background: #4e4e4e;
 
+    &.full-width {
+        width: 100%;
+
+        .card-content {
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .card-content-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-name {
+            font-size: 1.2rem;
+        }
+
+        .card-name,
+        .card-class,
+        .card-type {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+    }
+
     .card-content {
         flex: 1;
         display: flex;
@@ -29,12 +55,13 @@
         .divider {
             border-right: 2px solid #8e8e8e;
         }
+    }
 
-        .card-class,
-        .card-type {
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
+    .card-class,
+    .card-type {
+        font-size: 0.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
     }
 
     .price {

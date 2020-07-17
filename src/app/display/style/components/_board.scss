@@ -56,19 +56,25 @@
 }
 
 .opponent-board-placeholder {
+    display: flex;
     width: 100%;
     box-sizing: border-box;
+    padding: 0 0.4rem;
+    font-size: 1rem;
     text-align: center;
     background: #717171;
     border: 3px solid #2d2d2d;
 
-    .label {
-        display: block;
-        padding-top: 2em;
-        margin-bottom: 2em;
-        font-family: Arial, sans-serif;
-        font-size: 1.3em;
-        color: #fff;
+    .o-group {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+
+        &.stretch {
+            flex: 1;
+            margin-right: 0.4rem;
+            justify-content: center;
+        }
     }
 }
 

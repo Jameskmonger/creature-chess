@@ -92,7 +92,6 @@ const MobileGameContentPane: React.FunctionComponent = () => {
         return (
             <div className="content-pane">
                 <BoardContainer />
-                <DropToSell />
             </div>
         );
     }
