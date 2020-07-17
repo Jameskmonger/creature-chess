@@ -33,6 +33,10 @@ html, body {
         padding: 0;
 
         .group {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+
             &:not(:first-child) {
                 margin-top: $spacer;
             }
@@ -69,13 +73,14 @@ html, body {
 
     .ready-up {
         box-sizing: border-box;
-        padding: 0.4em 1.2em;
+        padding: 0.4em;
         font-size: 1rem;
         color: $ready-up-button-text;
         cursor: pointer;
         background: $ready-up-button;
         // stylelint-disable-next-line
         border: none;
+        flex: 0;
     }
 
     .reconnect {
@@ -141,9 +146,5 @@ html, body {
         color: #fff;
         text-align: center;
         text-transform: uppercase;
-    }
-
-    .opponent-board-placeholder {
-        font-size: 1rem;
     }
 }
