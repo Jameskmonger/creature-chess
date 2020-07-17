@@ -1,6 +1,5 @@
 import * as React from "react";
 import { BoardContainer } from "./boardContainer";
-import { DropToSell } from "@app/features/cardShop/dropToSell";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "@app/store";
 import { Overlay } from "@app/overlay";
@@ -9,6 +8,8 @@ import { CardShop } from "@app/features/cardShop/cardShop";
 import { PlayerList } from "@app/features/playerList/playerList";
 import { Profile } from "../profile/profile";
 import { Help } from "./help";
+import { RoundIndicator } from "../roundIndicator";
+import { PhaseInfo } from "../phaseInfo";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, children: React.ReactNode }> = ({ overlay, children }) => {
     const dispatch = useDispatch();
@@ -106,6 +107,12 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 const MobileGame: React.FunctionComponent = () => {
     return (
         <div className="game mobile portrait">
+            <div className="top-bar">
+                <RoundIndicator />
+
+                <PhaseInfo />
+            </div>
+
             <MobileGameContentPane />
 
             <Navbar />

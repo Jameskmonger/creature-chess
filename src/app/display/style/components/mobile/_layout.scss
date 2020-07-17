@@ -1,3 +1,15 @@
+.mobile .top-bar {
+    display: flex;
+    flex-direction: row;
+
+    .round-indicator,
+    .phase-info {
+        margin: 0.2rem 0;
+        font-size: 0.7rem;
+        flex: 1;
+    }
+}
+
 .content-pane {
     flex: 1;
     display: flex;
@@ -9,8 +21,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 0.5rem 0.8rem;
-    margin: 0.6rem;
+    padding: 0.5rem;
     overflow-y: scroll;
     font-family: Arial, sans-serif;
     background: #9da5bd;
