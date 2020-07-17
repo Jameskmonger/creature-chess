@@ -9,7 +9,7 @@ const inPortraitMode = (width: number, height: number) => (height >= width);
 const getBoardInformation = (width: number, height: number) => {
     if (inPortraitMode(width, height)) {
         // board + spacing
-        const colsRequired = Constants.GRID_SIZE + 0.5;
+        const colsRequired = Constants.GRID_SIZE;
 
         // in portrait mode, use full width
         const tileWidth = width / colsRequired;
@@ -69,8 +69,8 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
     // todo this is ugly
     const boardContainerStyle =
         inPortraitMode(width, height)
-            ? `{ height: ${boardHeight}px; width: ${boardWidth}px; margin: "0 auto"; }`
-            : `{ height: ${boardHeight}px; width: ${boardWidth}px; }`;
+            ? `{ width: ${boardWidth}; margin: 0 auto 0.5rem; }`
+            : `{ height: ${boardHeight}; width: ${boardWidth}; }`;
 
     const positionablePieceStyles = getPositionablePieceStyles(tileSize, inPreparingPhase);
 

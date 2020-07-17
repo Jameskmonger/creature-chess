@@ -2,6 +2,7 @@ import { LobbyPlayer, FeedMessage, Card, PlayerListPlayer, GamePhase } from "@co
 import { ConnectionStatus } from "@common/networking";
 import { BoardState } from "@common/board";
 import { BenchState } from "@common/player/bench";
+import { Overlay } from "@app/overlay";
 
 export interface AppState {
     auth: AuthState | null;
@@ -14,6 +15,7 @@ export interface AppState {
     localPlayer: LocalPlayerState;
     feedMessages: FeedMessage[];
     lobby: LobbyState;
+    ui: UiState;
 }
 
 export interface AuthState {
@@ -64,4 +66,8 @@ export interface LobbyState {
 
 export interface GameOverInfoState {
     winnerName: string;
+}
+
+export interface UiState {
+    currentOverlay: Overlay | null;
 }
