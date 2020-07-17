@@ -1,10 +1,12 @@
 import { CreatureType } from "./creatureType";
+import { DefinitionClass } from "@common/game/definitions/definitionClass";
 
 export interface CreatureDefinition {
     id: number;
     name: string;
     cost: number;
     type: CreatureType;
+    class: DefinitionClass;
     stages: CreatureStats[];
 }
 

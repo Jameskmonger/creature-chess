@@ -36,7 +36,7 @@ const GameStage: React.FunctionComponent = () => {
                     <BoardContainer />
 
                     <div className="group">
-                        <CardShop />
+                        <CardShop showBalance />
 
                         <Profile />
 
@@ -58,7 +58,7 @@ const GameStage: React.FunctionComponent = () => {
 
                         <PhaseInfo />
 
-                        <CardShop />
+                        <CardShop showBalance />
 
                         <Profile />
 

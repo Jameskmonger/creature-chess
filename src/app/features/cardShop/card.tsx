@@ -4,29 +4,31 @@ import { DefinitionProvider } from "@common/game/definitionProvider";
 
 interface CardProps {
     definitionId: number;
-    cost: number;
-    name: string;
     buyable: boolean;
     onClick: () => void;
 }
 
 const definitionProvider = new DefinitionProvider();
 
-const Card: React.FunctionComponent<CardProps> = ({ definitionId, cost, name, buyable, onClick }) => {
-    const className = `card ${definitionProvider.get(definitionId).type.toLowerCase()}${buyable ? "" : " not-buyable"}`;
+const Card: React.FunctionComponent<CardProps> = ({ definitionId, buyable, onClick }) => {
+    const creature = definitionProvider.get(definitionId);
 
     return (
-        <div className={className} onClick={buyable ? onClick : undefined}>
-            <div className="header">
-                <div>
-                    <span className="price">${cost}</span>
-                </div>
+        <div className="card" onClick={buyable ? onClick : undefined}>
+            <div className="card-content">
                 <div>
                     <CreatureImage definitionId={definitionId} />
                 </div>
+                <h2 className="card-name">{creature.name}</h2>
+                <div className="card-meta">
+                    <span className="card-class">{creature.class}</span>
+                    <div className="divider" />
+                    <span className="card-type">{creature.type}</span>
+                </div>
             </div>
-
-            <div>{name}</div>
+            <div className="price">
+                <div>${creature.cost}</div>
+            </div>
         </div>
     );
 };

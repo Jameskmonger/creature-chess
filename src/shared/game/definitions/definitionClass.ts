@@ -1,9 +1,9 @@
 import { CreatureStats, AttackType, attackTypes } from "@common/models/creatureDefinition"
 
 export enum DefinitionClass {
-    VALIANT,
-    ARCANE,
-    CUNNING
+    VALIANT = "Valiant",
+    ARCANE = "Arcane",
+    CUNNING = "Cunning"
 }
 
 // each class has points to assign
