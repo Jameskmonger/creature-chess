@@ -46,23 +46,23 @@ html, body {
 
     .announcement {
         position: absolute;
-        top: 2em;
+        top: 0.5rem;
         z-index: 50;
         width: 100%;
-        padding: 2em 0;
+        padding: 1em 0;
         font-family: Arial, sans-serif;
         color: #fff;
         text-align: center;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.5);
 
         .sub {
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #eee;
         }
 
         .main {
             margin-top: 0.1em;
-            font-size: 2em;
+            font-size: 1.5em;
             font-weight: 700;
         }
     }
