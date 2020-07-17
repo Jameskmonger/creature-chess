@@ -68,7 +68,10 @@ body {
     .game.landscape .group:not(:first-child) {
       margin-left: 1em; }
   .game.portrait {
-    flex-direction: column; }
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    padding: 0; }
     .game.portrait .group:not(:first-child) {
       margin-top: 1em; }
   .game .group {
@@ -77,7 +80,7 @@ body {
   .game .announcement {
     position: absolute;
     top: 2em;
-    z-index: 4;
+    z-index: 50;
     width: 100%;
     padding: 2em 0;
     font-family: Arial, sans-serif;
@@ -94,7 +97,7 @@ body {
   .game .ready-up {
     box-sizing: border-box;
     padding: 0.4em 1.2em;
-    font-size: 1.1em;
+    font-size: 1rem;
     color: #000;
     cursor: pointer;
     background: #38b764;
@@ -148,6 +151,8 @@ body {
     color: #fff;
     text-align: center;
     text-transform: uppercase; }
+  .game .opponent-board-placeholder {
+    font-size: 1rem; }
 
 .menu {
   display: flex;
@@ -171,12 +176,13 @@ body {
     margin-top: 1em;
     font-size: 1.4em; }
   .menu .player-info {
-    padding: 1em 4em;
-    margin-top: 3em;
+    padding: 1rem;
+    margin-top: 1rem;
     text-align: center;
     background: #566c86; }
     .menu .player-info .welcome {
-      margin-right: 1em; }
+      display: block;
+      margin-bottom: 0.4rem; }
     .menu .player-info .email {
       font-style: italic;
       font-weight: 700;
@@ -192,8 +198,8 @@ body {
       border: none;
       /* stylelint-enable */ }
   .menu .join-game {
-    padding: 2em 5em;
-    margin-top: 1em;
+    padding: 1rem;
+    margin-top: 1rem;
     text-align: center;
     background: #566c86; }
     .menu .join-game input {
@@ -270,85 +276,82 @@ body {
     box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent; }
 
 .card {
-  display: inline-block;
+  display: flex;
+  width: 49%;
   box-sizing: border-box;
-  padding: 0 0.4em 0.4em;
-  margin-bottom: 1rem;
+  margin-bottom: 2%;
   font-family: Arial, sans-serif;
   color: #fff;
   text-align: center;
   cursor: pointer;
   user-select: none;
-  border-style: solid;
-  border-width: 2px;
-  border-right-width: 2.5em; }
-  .card .image {
-    width: 50px;
-    height: 50px; }
-  .card .header {
-    display: flex; }
+  background: #4e4e4e; }
+  .card .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column; }
+  .card .card-name {
+    font-size: 1rem;
+    font-weight: 700; }
+  .card .card-meta {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 0.5rem 0; }
+    .card .card-meta .divider {
+      border-right: 2px solid #8e8e8e; }
+    .card .card-meta .card-class,
+    .card .card-meta .card-type {
+      font-size: 0.7rem;
+      font-weight: 700; }
   .card .price {
-    height: 50px;
-    margin-right: 0.2em;
-    font-size: 2em;
-    line-height: 50px; }
-  .card.reroll {
-    background: #555;
-    border-color: #555; }
-  .card.fire {
-    border-color: #ec8f8f; }
-  .card.wood {
-    border-color: #88f88e; }
-  .card.earth {
-    border-color: #a0522d; }
-  .card.water {
-    border-color: #479dff; }
-  .card.metal {
-    border-color: #5f5f5f; }
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 0 0.3rem;
+    font-size: 1.5rem;
+    line-height: 50px;
+    background: #353535; }
+
+.drop-to-sell {
+  position: relative;
+  box-sizing: border-box;
+  flex: 1;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-align: center;
+  background: #fff;
+  border: 2px solid #ccc;
+  opacity: 0.6; }
+
+.drop-to-sell-text {
+  position: absolute;
+  top: 35%;
+  left: 8%;
+  display: block;
+  width: 80%;
+  font-family: Arial, sans-serif;
+  font-size: 2rem;
+  color: #717171;
+  /* stylelint-disable */
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome and Opera */
+  /* stylelint-enable */ }
 
 .card-selector .cards {
   display: flex;
-  width: 100%; }
-  .card-selector .cards .drop-to-sell {
-    position: relative;
-    min-height: 10rem;
-    box-sizing: border-box;
-    flex: 1;
-    margin-bottom: 1rem;
-    margin-left: 0.5rem;
-    overflow: hidden;
-    text-align: center;
-    background: #fff;
-    border: 2px solid #ccc;
-    opacity: 0.6; }
-  .card-selector .cards .drop-to-sell-text {
-    position: absolute;
-    top: 35%;
-    left: 8%;
-    display: block;
-    width: 80%;
-    font-family: Arial, sans-serif;
-    font-size: 3em;
-    color: #717171;
-    transform: rotate(15deg);
-    /* stylelint-disable */
-    -webkit-touch-callout: none;
-    /* iOS Safari */
-    -webkit-user-select: none;
-    /* Safari */
-    -khtml-user-select: none;
-    /* Konqueror HTML */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* Internet Explorer/Edge */
-    user-select: none;
-    /* Non-prefixed version, currently supported by Chrome and Opera */
-    /* stylelint-enable */ }
-
-.card-selector .shop {
-  display: flex;
-  flex-direction: column; }
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between; }
 
 .card-selector .balance {
   display: flex;
@@ -362,26 +365,28 @@ body {
   .card-selector .balance .item:not(:last-child) {
     margin-right: 1em; }
 
-.card-selector .reroll {
-  padding: 0.6em 1em;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.8em;
-  color: #fff;
-  cursor: pointer;
-  background: #566c86;
-  /* stylelint-disable-next-line */
-  border: none; }
-  .card-selector .reroll:disabled {
-    color: #222;
-    cursor: not-allowed;
-    background: #666; }
-
-.card-selector .lock-icon {
-  cursor: pointer; }
+.card-selector .shop-actions {
+  display: flex;
+  flex-direction: column;
+  width: 48%; }
+  .card-selector .shop-actions .shop-action {
+    padding: 0.6em 1em;
+    margin-bottom: 0.5rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8em;
+    color: #fff;
+    cursor: pointer;
+    background: #566c86;
+    /* stylelint-disable-next-line */
+    border: none; }
+    .card-selector .shop-actions .shop-action:disabled {
+      color: #222;
+      cursor: not-allowed;
+      background: #666; }
 
 .chessboard {
   position: relative;
-  margin-bottom: 1em; }
+  margin-bottom: 0.5rem; }
 
 .bench {
   position: relative; }
@@ -417,7 +422,9 @@ body {
     height: 100%; }
 
 .positionable-piece {
-  position: absolute; }
+  position: absolute;
+  /* stylelint-disable-next-line */
+  transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s; }
 
 .opponent-board-placeholder {
   width: 100%;
@@ -440,21 +447,17 @@ body {
   height: 100%; }
   .piece .image {
     position: absolute;
-    bottom: 0;
+    bottom: 20%;
     left: 9%;
-    width: 82%;
-    height: 82%; }
-  .piece.move {
-    animation-name: move;
-    animation-duration: 300ms; }
-
-@keyframes move {
-  0% {
-    top: calc(90px * var(--moveYDirection) * -1);
-    left: calc(90px * var(--moveXDirection) * -1); }
-  100% {
-    top: 0;
-    left: 0; } }
+    width: 80%;
+    height: 80%; }
+  .piece .piece-meta {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 30%; }
   .piece.attack-basic {
     animation-name: attack-basic;
     animation-duration: 200ms; }
@@ -464,8 +467,8 @@ body {
     top: 0;
     left: 0; }
   50% {
-    top: calc(calc(3px * var(--attackPower)) * var(--attackYDirection) * -1);
-    left: calc(calc(3px * var(--attackPower)) * var(--attackXDirection) * -1); }
+    top: calc(calc(3px * var(--attackPower)) * var(--attackYDirection));
+    left: calc(calc(3px * var(--attackPower)) * var(--attackXDirection)); }
   100% {
     top: 0;
     left: 0; } }
@@ -479,11 +482,11 @@ body {
 
 @keyframes attack-shoot {
   0% {
-    top: calc(90px / 2);
-    left: calc(90px / 2); }
+    top: calc(50% - (10px / 2));
+    left: calc(50% - (10px / 2)); }
   100% {
-    top: calc(90px * var(--attackYDirection) * -1 + calc(90px / 2));
-    left: calc(90px * var(--attackXDirection) * -1 + calc(90px / 2)); } }
+    top: calc(((100% * var(--attackYDirection)) + 50%) - (10px / 2));
+    left: calc(((100% * var(--attackXDirection)) + 50%) - (10px / 2)); } }
   .piece.hit {
     animation-name: hit;
     animation-duration: 200ms; }
@@ -543,17 +546,14 @@ body {
     background: #73eff7; }
 
 .info {
-  position: absolute;
-  top: 3%;
-  right: 4%;
-  width: 72%;
-  height: 20%;
+  height: 100%;
+  flex: 1;
   box-sizing: border-box;
   margin-right: auto;
   margin-left: auto;
-  border-top: 2px solid #555;
-  border-right: 3px solid #555;
-  border-bottom: 2px solid #555; }
+  border-top: 1px solid #555;
+  border-right: 1px solid #555;
+  border-bottom: 1px solid #555; }
 
 .player-list {
   margin-bottom: 1rem; }
@@ -740,8 +740,8 @@ body {
 
 .lobby-info {
   display: flex;
-  padding: 2em 5em;
-  margin-top: 3em;
+  padding: 1rem;
+  margin-top: 1rem;
   text-align: center;
   background: #566c86; }
 
@@ -787,16 +787,94 @@ body {
   border: none; }
 
 .piece-stage {
-  position: absolute;
-  top: 3%;
-  left: 3%;
   width: 22%;
-  height: 20%;
+  height: 100%;
   font-family: Arial, sans-serif;
-  line-height: 1.5;
+  font-size: 0.7rem;
   color: #fff;
   text-align: center;
   background: #555; }
+
+.navbar {
+  display: flex;
+  flex-direction: row; }
+  .navbar .navitem {
+    padding: 1.4rem 0;
+    font-size: 1rem;
+    color: #fff;
+    background: #171717;
+    flex: 1;
+    /* stylelint-disable-next-line */
+    border: none; }
+    .navbar .navitem.active {
+      text-decoration: underline;
+      background: #3c3c3c; }
+
+.content-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden; }
+
+.game-overlay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.8rem;
+  margin: 0.6rem;
+  overflow-y: scroll;
+  font-family: Arial, sans-serif;
+  background: #9da5bd; }
+
+.overlay-header {
+  display: flex;
+  flex-direction: row; }
+
+.overlay-title {
+  flex: 1;
+  font-family: Arial, sans-serif;
+  font-size: 1.5rem;
+  color: #fff;
+  text-align: center;
+  text-decoration: underline; }
+
+.close {
+  padding: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: none;
+  /* stylelint-disable-next-line */
+  border: none; }
+
+.overlay-content {
+  overflow: scroll; }
+
+.help {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  color: #fff;
+  /* stylelint-disable-next-line selector-max-type */
+  /* stylelint-disable-next-line selector-max-type,selector-list-comma-newline-after */ }
+  .help .section {
+    margin-bottom: 0.4rem; }
+    .help .section .header {
+      margin-bottom: 0.4rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #b13e53; }
+    .help .section .subheader {
+      margin-bottom: 0.4rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #b13e53; }
+  .help ul {
+    margin-left: 1.4rem;
+    list-style-type: disc; }
+  .help p, .help ul {
+    margin-bottom: 1rem; }
+  .help .list-header {
+    font-weight: 700;
+    color: #b13e53; }
 
 /* stylelint-disable */
 .style-default.tile.dark {
@@ -808,22 +886,6 @@ body {
 .style-default.tile.bench {
   background: #ffcd75;
   box-shadow: inset 0 0 2px #754b00; }
-
-.style-default.tile-row {
-  border-right: 3px solid #2d2d2d;
-  border-left: 3px solid #2d2d2d; }
-  .style-default.tile-row.first {
-    border-top: 3px solid #2d2d2d; }
-  .style-default.tile-row.last {
-    border-bottom: 3px solid #2d2d2d; }
-  .style-default.tile-row .tile:not(:last-of-type).dark {
-    border-right: #38b764 solid #404040; }
-  .style-default.tile-row .tile:not(:last-of-type).light {
-    border-right: #a7f070 solid #404040; }
-  .style-default.tile-row:not(.last) .tile.dark {
-    border-bottom: #38b764 solid #404040; }
-  .style-default.tile-row:not(.last) .tile.light {
-    border-bottom: #a7f070 solid #404040; }
 
 .style-james.tile.dark {
   background: #828282; }
