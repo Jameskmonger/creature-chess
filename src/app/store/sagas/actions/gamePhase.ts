@@ -10,6 +10,8 @@ import { unlockBench, initialiseBench } from "@common/player/bench/benchActions"
 import { unlockBoard, lockBoard, initialiseBoard } from "@common/board/actions/boardActions";
 import { AppState } from "../../state";
 import { getPiece } from "@common/player/pieceSelectors";
+import { openOverlay, closeOverlay } from "@app/store/actions/uiActions";
+import { Overlay } from "@app/overlay";
 
 const isGamePhaseUpdate = (phase: GamePhase) =>
     (action: GamePhaseUpdateAction) => action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;
@@ -25,6 +27,7 @@ export const gamePhase = function*() {
                 yield put(initialiseBench(payload.pieces.bench));
                 yield put(cardsUpdated(payload.cards));
                 yield put(unlockBoard());
+                yield put(openOverlay(Overlay.SHOP));
             }
         ),
         yield takeEvery<GamePhaseUpdateAction>(
@@ -34,6 +37,7 @@ export const gamePhase = function*() {
 
                 yield put(initialiseBoard(payload.board.pieces));
                 yield put(lockBoard());
+                yield put(closeOverlay());
 
                 const state: AppState = yield select();
 
