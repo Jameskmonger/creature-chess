@@ -8,13 +8,9 @@ interface RerollButtonProps {
 
 const RerollButton: React.FunctionComponent<RerollButtonProps> = ({ buyable, cost, onBuy }) => {
   return (
-    <>
-      <span className="item">
-        <button className="reroll" onClick={buyable ? onBuy : undefined} disabled={buyable === false}>
-          New Cards (${cost})
-        </button>
-      </span>
-    </>
+    <button className="reroll shop-action" onClick={buyable ? onBuy : undefined} disabled={buyable === false}>
+      New Cards (${cost})
+    </button>
   );
 };
 

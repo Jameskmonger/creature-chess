@@ -3,15 +3,15 @@ import { Card } from "./card";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@app/store";
 import { Card as CardModel, Constants, GamePhase } from "@common/models";
-import { DropToSell } from "./dropToSell";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
-import { LockButton } from "./lockButton";
 import { PlayerActions } from "@common/player";
 
-const CardShopDivider: React.FunctionComponent = () => <span className="item">&nbsp;|&nbsp;</span>;
+interface CardShopProps {
+    showBalance: boolean;
+}
 
-const CardShop: React.FunctionComponent = () => {
+const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const dispatch = useDispatch();
 
     const cards = useSelector<AppState, CardModel[]>(state => state.cards);
@@ -30,8 +30,6 @@ const CardShop: React.FunctionComponent = () => {
             <Card
                 key={`${index}-${card.definitionId}`}
                 definitionId={card.definitionId}
-                cost={card.cost}
-                name={card.name}
                 buyable={money >= card.cost}
                 onClick={onClick}
             />
@@ -49,22 +47,29 @@ const CardShop: React.FunctionComponent = () => {
 
     return (
         <div className="card-selector">
-            <div className="balance">
-                <BalanceDisplay value={money} />
+            {
+                showBalance
+                && (
+                    <div className="balance">
+                        <BalanceDisplay value={money} />
+                    </div>
+                )
+            }
 
-                <CardShopDivider />
-
-                <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onBuyReroll} />
-
-                <CardShopDivider />
-
-                <LockButton locked={shopLocked} onToggle={onToggleLock} />
-            </div>
             <div className="cards">
-                <div className="shop">
-                    {cards.map(createCard)}
+                {cards.map(createCard)}
+
+                <div className="shop-actions">
+                    <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onBuyReroll} />
+
+                    <button className="shop-action" onClick={onToggleLock}>
+                        {
+                            shopLocked
+                                ? "Unlock"
+                                : "Lock"
+                        }
+                    </button>
                 </div>
-                <DropToSell />
             </div>
         </div>
     );

@@ -1,47 +1,41 @@
+.drop-to-sell {
+    position: relative;
+    box-sizing: border-box;
+    flex: 1;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-align: center;
+    background: #fff;
+    border: 2px solid #ccc;
+    opacity: 0.6;
+}
+
+.drop-to-sell-text {
+    position: absolute;
+    top: 35%;
+    left: 8%;
+    display: block;
+    width: 80%;
+    font-family: Arial, sans-serif;
+    font-size: 2rem;
+    color: #717171;
+
+    /* stylelint-disable */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+    /* stylelint-enable */
+}
+
 .card-selector {
     .cards {
         display: flex;
         width: 100%;
-
-        .drop-to-sell {
-            position: relative;
-            min-height: 10rem;
-            box-sizing: border-box;
-            flex: 1;
-            margin-bottom: 1rem;
-            margin-left: 0.5rem;
-            overflow: hidden;
-            text-align: center;
-            background: #fff;
-            border: 2px solid #ccc;
-            opacity: 0.6;
-        }
-
-        .drop-to-sell-text {
-            position: absolute;
-            top: 35%;
-            left: 8%;
-            display: block;
-            width: 80%;
-            font-family: Arial, sans-serif;
-            font-size: 3em;
-            color: #717171;
-            transform: rotate(15deg);
-
-            /* stylelint-disable */
-            -webkit-touch-callout: none; /* iOS Safari */
-            -webkit-user-select: none; /* Safari */
-            -khtml-user-select: none; /* Konqueror HTML */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-            /* stylelint-enable */
-        }
-    }
-
-    .shop {
-        display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
 
     .balance {
@@ -59,25 +53,28 @@
         }
     }
 
-    .reroll {
-        padding: 0.6em 1em;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
-        color: #fff;
-        cursor: pointer;
-        background: #566c86;
+    .shop-actions {
+        display: flex;
+        flex-direction: column;
+        width: 48%;
 
-        /* stylelint-disable-next-line */
-        border: none;
+        .shop-action {
+            padding: 0.6em 1em;
+            margin-bottom: 0.5rem;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.8em;
+            color: #fff;
+            cursor: pointer;
+            background: #566c86;
 
-        &:disabled {
-            color: #222;
-            cursor: not-allowed;
-            background: #666;
+            /* stylelint-disable-next-line */
+            border: none;
+
+            &:disabled {
+                color: #222;
+                cursor: not-allowed;
+                background: #666;
+            }
         }
-    }
-
-    .lock-icon {
-        cursor: pointer;
     }
 }

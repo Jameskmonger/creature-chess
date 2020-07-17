@@ -28,13 +28,14 @@
     }
 
     .player-info {
-        padding: 1em 4em;
-        margin-top: 3em;
+        padding: 1rem;
+        margin-top: 1rem;
         text-align: center;
         background: #566c86;
 
         .welcome {
-            margin-right: 1em;
+            display: block;
+            margin-bottom: 0.4rem;
         }
 
         .email {
@@ -57,8 +58,8 @@
     }
 
     .join-game {
-        padding: 2em 5em;
-        margin-top: 1em;
+        padding: 1rem;
+        margin-top: 1rem;
         text-align: center;
         background: #566c86;
 

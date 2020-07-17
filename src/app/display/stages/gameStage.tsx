@@ -13,18 +13,8 @@ import { Profile } from "../../display/profile/profile";
 import { Feed } from "../../features/feed/feed";
 import { RoundIndicator } from "../../display/roundIndicator";
 import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
-import { Board } from "../board/board";
-import { Bench } from "../bench";
-
-const GameBoard: React.FunctionComponent = () => {
-    return (
-        <div className="group board-container">
-            <Board />
-
-            <Bench />
-        </div>
-    );
-};
+import { BoardContainer } from "../game/boardContainer";
+import { MobileGame } from "../game/mobileGame";
 
 const GameStage: React.FunctionComponent = () => {
     return (
@@ -43,10 +33,10 @@ const GameStage: React.FunctionComponent = () => {
                         <Feed />
                     </div>
 
-                    <GameBoard />
+                    <BoardContainer />
 
                     <div className="group">
-                        <CardShop />
+                        <CardShop showBalance />
 
                         <Profile />
 
@@ -61,14 +51,14 @@ const GameStage: React.FunctionComponent = () => {
 
             <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)">
                 <div className="game landscape">
-                    <GameBoard />
+                    <BoardContainer />
 
                     <div className="group">
                         <RoundIndicator />
 
                         <PhaseInfo />
 
-                        <CardShop />
+                        <CardShop showBalance />
 
                         <Profile />
 
@@ -86,7 +76,9 @@ const GameStage: React.FunctionComponent = () => {
             </Media>
 
             <Media query="(orientation: portrait), (max-width: 599px)">
-                <div className="game portrait">
+                <MobileGame />
+
+                {/* <div className="game portrait">
                     <GameBoard />
 
                     <div className="group">
@@ -108,7 +100,7 @@ const GameStage: React.FunctionComponent = () => {
 
                         <Feed />
                     </div>
-                </div>
+                </div> */}
             </Media>
         </DndProvider>
     );

@@ -57,17 +57,11 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
             return;
         }
 
-        const { attacking, hit, celebrating, currentHealth, position } = newPiece;
+        const { attacking, hit, celebrating, currentHealth } = newPiece;
 
         if (!oldPiece) {
             setOldPiece(newPiece);
             return;
-        }
-
-        if (!arePositionsEqual(oldPiece.position, position)) {
-            const direction = getRelativeDirection(oldPiece.position, position);
-
-            runAnimation(`move`, { moveXDirection: direction.x, moveYDirection: direction.y });
         }
 
         if (attacking && !oldPiece.attacking) {
@@ -127,11 +121,14 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
             onAnimationEnd={onAnimationEnd}
         >
             <PieceImage pieceId={id} />
+
             <Projectile />
 
-            <StageIndicator pieceId={id} />
+            <div className="piece-meta">
+                <StageIndicator pieceId={id} />
 
-            <Healthbar pieceId={id} />
+                <Healthbar pieceId={id} />
+            </div>
         </div>
     );
 };
