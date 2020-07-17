@@ -91,8 +91,8 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const onClick = () => {
         const pieceIsOnBoard = piece.position.y !== null;
 
-        // can only select a board pieces, and can only select in preparing phase
-        if (!pieceIsOnBoard || !inPreparingPhase) {
+        // can only select a board piece in preparing phase
+        if (pieceIsOnBoard && !inPreparingPhase) {
             return;
         }
 
