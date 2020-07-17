@@ -6,6 +6,9 @@ import { AppState } from "@app/store";
 import { Overlay } from "@app/overlay";
 import { closeOverlay, openOverlay } from "@app/store/actions/uiActions";
 import { CardShop } from "@app/features/cardShop/cardShop";
+import { PlayerList } from "@app/features/playerList/playerList";
+import { Profile } from "../profile/profile";
+import { Help } from "./help";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, children: React.ReactNode }> = ({ overlay, children }) => {
     const dispatch = useDispatch();
@@ -33,56 +36,70 @@ const Navbar: React.FunctionComponent = () => {
     );
 };
 
+const OverlayComponent: React.FunctionComponent<{ title: string, children: React.ReactNode }> = ({ title, children }) => {
+    const dispatch = useDispatch();
+    const dispatchCloseOverlay = () => dispatch(closeOverlay());
+
+    return (
+        <div className="game-overlay">
+            <div className="overlay-header">
+                <h2 className="overlay-title">{title}</h2>
+                <button className="close" onClick={dispatchCloseOverlay}>X</button>
+            </div>
+            <div className="overlay-content">
+                {children}
+            </div>
+        </div>
+    );
+};
+
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ currentOverlay }) => {
     const dispatch = useDispatch();
     const currentBalance = useSelector<AppState, number>(state => state.game.money);
 
-    if (!currentOverlay) {
-        return null;
+    if (currentOverlay === Overlay.PLAYERS) {
+        return (
+            <OverlayComponent title="Players">
+                <Profile />
+                <PlayerList />
+            </OverlayComponent>
+        );
     }
 
     if (currentOverlay === Overlay.SHOP) {
         return (
-            <div className="game-overlay">
-                <div className="overlay-header">
-                    <h2 className="overlay-title">Balance: ${currentBalance}</h2>
-                    <button className="close" onClick={() => dispatch(closeOverlay())}>X</button>
-                </div>
-                <div className="overlay-content">
-                    <CardShop showBalance={false} />
-                </div>
-            </div>
+            <OverlayComponent title={`Balance: $${currentBalance}`}>
+                <CardShop showBalance={false} />
+            </OverlayComponent>
+        );
+    }
+
+    if (currentOverlay === Overlay.HELP) {
+        return (
+            <OverlayComponent title="Help">
+                <Help />
+            </OverlayComponent>
         );
     }
 
     return null;
-}
+};
 
 const MobileGameContentPane: React.FunctionComponent = () => {
     const currentOverlay = useSelector<AppState, Overlay>(state => state.ui.currentOverlay);
 
-    // if (1 === 2) {
-    //     return (
-    //         <div className="content-pane">
-    //             <BoardContainer />
-
-    //             <DropToSell />
-    //         </div>
-    //     );
-    // }
-
-    if (currentOverlay) {
+    if (currentOverlay === null) {
         return (
             <div className="content-pane">
-                <GameOverlay currentOverlay={currentOverlay} />
+                <BoardContainer />
+                <DropToSell />
             </div>
         );
     }
 
     return (
         <div className="content-pane">
-            <BoardContainer />
-            <DropToSell />
+            <GameOverlay currentOverlay={currentOverlay} />
         </div>
     );
 };

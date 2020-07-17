@@ -1,0 +1,39 @@
+.help {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    color: #fff;
+
+    .section {
+        margin-bottom: 0.4rem;
+
+        .header {
+            margin-bottom: 0.4rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: $join-lobby-button;
+        }
+
+        .subheader {
+            margin-bottom: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: $join-lobby-button;
+        }
+    }
+
+    /* stylelint-disable-next-line selector-max-type */
+    ul {
+        margin-left: 1.4rem;
+        list-style-type: disc;
+    }
+
+    /* stylelint-disable-next-line selector-max-type,selector-list-comma-newline-after */
+    p, ul {
+        margin-bottom: 1rem;
+    }
+
+    .list-header {
+        font-weight: 700;
+        color: $join-lobby-button;
+    }
+}
