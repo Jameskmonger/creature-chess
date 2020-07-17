@@ -74,6 +74,7 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
         <style
             dangerouslySetInnerHTML={{
             __html: `
+            #approot { height: 100%; }
             .tile { width: ${tileSize}px; height: ${tileSize}px; }
             .positionable-piece { width: ${tileSize}px; height: ${tileSize}px; }
             .piece { width: ${tileSize}px; height: ${tileSize}px; }
