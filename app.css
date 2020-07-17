@@ -76,36 +76,41 @@ html, body {
     width: 100%;
     height: 100%;
     padding: 0; }
-    .game.portrait .group:not(:first-child) {
-      margin-top: 1em; }
+    .game.portrait .group {
+      display: flex;
+      justify-content: center;
+      flex-direction: column; }
+      .game.portrait .group:not(:first-child) {
+        margin-top: 1em; }
   .game .group {
     flex: 1;
     box-sizing: border-box; }
   .game .announcement {
     position: absolute;
-    top: 2em;
+    top: 0.5rem;
     z-index: 50;
     width: 100%;
-    padding: 2em 0;
+    padding: 1em 0;
     font-family: Arial, sans-serif;
     color: #fff;
     text-align: center;
-    background: rgba(0, 0, 0, 0.8); }
+    background: rgba(0, 0, 0, 0.5); }
     .game .announcement .sub {
-      font-size: 1.2em;
+      font-size: 1.1em;
       color: #eee; }
     .game .announcement .main {
       margin-top: 0.1em;
-      font-size: 2em;
+      font-size: 1.5em;
       font-weight: 700; }
   .game .ready-up {
     box-sizing: border-box;
-    padding: 0.4em 1.2em;
+    padding: 0.4em;
     font-size: 1rem;
     color: #000;
     cursor: pointer;
     background: #38b764;
-    border: none; }
+    border: none;
+    flex: 0; }
   .game .reconnect {
     position: absolute;
     top: 0;
@@ -155,8 +160,6 @@ html, body {
     color: #fff;
     text-align: center;
     text-transform: uppercase; }
-  .game .opponent-board-placeholder {
-    font-size: 1rem; }
 
 .menu {
   display: flex;
@@ -290,6 +293,22 @@ html, body {
   cursor: pointer;
   user-select: none;
   background: #4e4e4e; }
+  .card.full-width {
+    width: 100%; }
+    .card.full-width .card-content {
+      flex-direction: row;
+      justify-content: center; }
+    .card.full-width .card-content-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: center; }
+    .card.full-width .card-name {
+      font-size: 1.2rem; }
+    .card.full-width .card-name,
+    .card.full-width .card-class,
+    .card.full-width .card-type {
+      display: block;
+      margin-bottom: 0.2rem; }
   .card .card-content {
     flex: 1;
     display: flex;
@@ -303,10 +322,11 @@ html, body {
     margin: 0.5rem 0; }
     .card .card-meta .divider {
       border-right: 2px solid #8e8e8e; }
-    .card .card-meta .card-class,
-    .card .card-meta .card-type {
-      font-size: 0.7rem;
-      font-weight: 700; }
+  .card .card-class,
+  .card .card-type {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase; }
   .card .price {
     display: flex;
     flex-direction: column;
@@ -431,18 +451,22 @@ html, body {
   transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s; }
 
 .opponent-board-placeholder {
+  display: flex;
   width: 100%;
   box-sizing: border-box;
+  padding: 0 0.4rem;
+  font-size: 1rem;
   text-align: center;
   background: #717171;
   border: 3px solid #2d2d2d; }
-  .opponent-board-placeholder .label {
-    display: block;
-    padding-top: 2em;
-    margin-bottom: 2em;
-    font-family: Arial, sans-serif;
-    font-size: 1.3em;
-    color: #fff; }
+  .opponent-board-placeholder .o-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; }
+    .opponent-board-placeholder .o-group.stretch {
+      flex: 1;
+      margin-right: 0.4rem;
+      justify-content: center; }
 
 .piece {
   position: relative;
@@ -814,6 +838,15 @@ html, body {
       text-decoration: underline;
       background: #3c3c3c; }
 
+.mobile .top-bar {
+  display: flex;
+  flex-direction: row; }
+  .mobile .top-bar .round-indicator,
+  .mobile .top-bar .phase-info {
+    margin: 0.2rem 0;
+    font-size: 0.7rem;
+    flex: 1; }
+
 .content-pane {
   flex: 1;
   display: flex;
@@ -824,8 +857,7 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem 0.8rem;
-  margin: 0.6rem;
+  padding: 0.5rem;
   overflow-y: scroll;
   font-family: Arial, sans-serif;
   background: #9da5bd; }
