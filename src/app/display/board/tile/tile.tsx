@@ -96,12 +96,7 @@ const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => 
     // this can be improved by having a piece movement saga
     // that just listens for clicks and drops
     const onClick = () => {
-        if (piece && canMovePiece) {
-            dispatch(selectPiece(piece.id));
-            return;
-        }
-
-        if (selectedPiece) {
+        if (selectedPiece && canMovePiece) {
             onDropPiece(dispatch, selectedPiece, type, x, y);
             return;
         }
