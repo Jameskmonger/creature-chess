@@ -51,6 +51,8 @@
 
 .positionable-piece {
     position: absolute;
+    /* stylelint-disable-next-line */
+    transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s;
 }
 
 .opponent-board-placeholder {
@@ -93,24 +95,6 @@
         height: 30%;
     }
 
-    $move-duration: 300ms;
-
-    &.move {
-        @keyframes move {
-            0% {
-                top: calc(#{$tile-size} * var(--moveYDirection) * -1);
-                left: calc(#{$tile-size} * var(--moveXDirection) * -1);
-            }
-
-            100% {
-                top: 0;
-                left: 0;
-            }
-        }
-        animation-name: move;
-        animation-duration: $move-duration;
-    }
-
     $attack-duration: 200ms;
 
     &.attack-basic {
@@ -123,8 +107,8 @@
             }
 
             50% {
-                top: calc(#{$attack-movement-distance} * var(--attackYDirection) * -1);
-                left: calc(#{$attack-movement-distance} * var(--attackXDirection) * -1);
+                top: calc(#{$attack-movement-distance} * var(--attackYDirection));
+                left: calc(#{$attack-movement-distance} * var(--attackXDirection));
             }
 
             100% {
@@ -140,17 +124,18 @@
         display: none;
     }
 
+    $projectile-size: 10px;
+
     &.attack-shoot .projectile {
-        $half-tile-size: calc(#{$tile-size} / 2);
         @keyframes attack-shoot {
             0% {
-                top: $half-tile-size;
-                left: $half-tile-size;
+                top: calc(50% - (#{$projectile-size} / 2));
+                left: calc(50% - (#{$projectile-size} / 2));
             }
 
             100% {
-                top: calc(#{$tile-size} * var(--attackYDirection) * -1 + #{$half-tile-size});
-                left: calc(#{$tile-size} * var(--attackXDirection) * -1 + #{$half-tile-size});
+                top: calc(((100% * var(--attackYDirection)) + 50%) - (#{$projectile-size} / 2));
+                left: calc(((100% * var(--attackXDirection)) + 50%) - (#{$projectile-size} / 2));
             }
         }
         position: absolute;
