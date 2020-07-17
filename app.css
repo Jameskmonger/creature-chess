@@ -74,7 +74,7 @@ html {
   .game.portrait {
     flex-direction: column;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     padding: 0; }
     .game.portrait .group:not(:first-child) {
       margin-top: 1em; }
