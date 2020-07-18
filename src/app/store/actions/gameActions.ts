@@ -1,7 +1,5 @@
 import {
     FIND_GAME,
-    MONEY_UPDATE,
-    GAME_PHASE_UPDATE,
     PHASE_START_SECONDS,
     JOIN_ERROR,
     ENABLE_DEBUG_MODE,
@@ -14,11 +12,11 @@ import {
     PLAYERS_RESURRECTED
 } from "../actiontypes/gameActionTypes";
 import { JoinCompleteAction } from "./localPlayerActions";
-import { ConnectionStatus, ServerToClient } from "@common/networking";
+import { ConnectionStatus } from "@common/networking";
+import { GamePhaseUpdateAction, MoneyUpdateAction } from "@common/player/gameInfo";
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
-export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: ServerToClient.PhaseUpdatePacket });
 export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string } });
 export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
@@ -31,7 +29,6 @@ export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { 
 export type GameAction =
     FindGameAction
     | JoinErrorAction
-    | ({ type: MONEY_UPDATE, payload: { money: number } })
     | PhaseStartSecondsAction
     | JoinCompleteAction
     | GamePhaseUpdateAction
@@ -42,7 +39,8 @@ export type GameAction =
     | UpdateShopLockAction
     | FinishGameAction
     | ClearSelectedPieceAction
-    | PlayersResurrectedAction;
+    | PlayersResurrectedAction
+    | MoneyUpdateAction;
 
 export const findGameAction = (serverIP: string): FindGameAction => ({
     type: FIND_GAME,
@@ -55,18 +53,6 @@ export const joinGameError = (error: string): JoinErrorAction => ({
     type: JOIN_ERROR,
     payload: {
         error
-    }
-});
-
-export const gamePhaseUpdate = (packet: ServerToClient.PhaseUpdatePacket) => ({
-    type: GAME_PHASE_UPDATE,
-    payload: packet
-});
-
-export const moneyUpdateAction = (money: number) => ({
-    type: MONEY_UPDATE,
-    payload: {
-        money
     }
 });
 

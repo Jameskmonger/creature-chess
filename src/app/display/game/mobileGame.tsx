@@ -10,6 +10,7 @@ import { Profile } from "../profile/profile";
 import { Help } from "./help";
 import { RoundIndicator } from "../roundIndicator";
 import { PhaseInfo } from "../phaseInfo";
+import { getPlayerMoney } from "@common/player/playerSelectors";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, children: React.ReactNode }> = ({ overlay, children }) => {
     const dispatch = useDispatch();
@@ -55,8 +56,7 @@ const OverlayComponent: React.FunctionComponent<{ title: string, children: React
 };
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ currentOverlay }) => {
-    const dispatch = useDispatch();
-    const currentBalance = useSelector<AppState, number>(state => state.game.money);
+    const currentBalance = useSelector<AppState, number>(getPlayerMoney);
 
     if (currentOverlay === Overlay.PLAYERS) {
         return (

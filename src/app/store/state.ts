@@ -3,15 +3,18 @@ import { ConnectionStatus } from "@common/networking";
 import { BoardState } from "@common/board";
 import { BenchState } from "@common/player/bench";
 import { Overlay } from "@app/overlay";
+import { GameInfoState } from "@common/player/gameInfo";
 
 export interface AppState {
     auth: AuthState | null;
 
+    gameInfo: GameInfoState;
     board: BoardState;
     bench: BenchState;
+    cards: Card[];
+
     game: GameState;
     playerList: PlayerListPlayer[];
-    cards: Card[];
     localPlayer: LocalPlayerState;
     lobby: LobbyState;
     ui: UiState;
@@ -36,7 +39,6 @@ export interface GameState {
     opponentId: string;
     loading: boolean;
     menuError: string;
-    money: number;
     round: number | null;
     debug: boolean;
     connectionStatus: ConnectionStatus;

@@ -1,14 +1,41 @@
 import uuid = require("uuid/v4");
+import { all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { LobbyPlayer, PlayerListPlayer } from "@common/models";
+import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements } from "@common/networking/server-to-client";
+import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
-import { GamePhase } from "@common/models";
-import { PlayerActionTypes } from "@common/player";
 import { log } from "console";
+import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, BUY_XP, READY_UP } from "@common/player/actions";
+import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@common/player/gameInfo";
+import { Task } from "redux-saga";
+import { CARDS_UPDATED, CardsUpdatedAction } from "@common/player/cardShop";
+import { PlayerState } from "@common/player/store";
+
+const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
+    return function*() {
+        yield all([
+            yield takeLatest<CardsUpdatedAction>(
+                CARDS_UPDATED,
+                function*() {
+                    const cards: Card[] = yield select((state: PlayerState) => state.cards);
+
+                    registry.emit(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
+                }
+            ),
+            yield takeLatest<MoneyUpdateAction>(
+                MONEY_UPDATE,
+                function*() {
+                    const money: number = yield select((state: PlayerState) => state.gameInfo.money);
+
+                    registry.emit(ServerToClientPacketOpcodes.MONEY_UPDATE, money);
+                }
+            )
+        ]);
+    };
+};
 
 export class Connection extends Player {
     public readonly isBot: boolean = false;
@@ -18,13 +45,13 @@ export class Connection extends Player {
     private incomingPacketRegistry: IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
     private outgoingPacketRegistry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
     private lastReceivedPacketIndex = 0;
+    private outgoingPacketsTask: Task = null;
 
-    constructor(socket: Socket, name: string) {
-        super(name);
+    constructor(socket: Socket, id: string, name: string) {
+        super(id, name);
 
         this.setSocket(socket);
 
-        this.money.onChange(this.sendMoneyUpdate);
         this.level.onChange(this.sendLevelUpdate);
     }
 
@@ -52,12 +79,9 @@ export class Connection extends Player {
     }
 
     public onDeath() {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.PHASE_UPDATE,
-            {
-                phase: GamePhase.DEAD
-            }
-        );
+        const packet: PhaseUpdatePacket = { phase: GamePhase.DEAD };
+        this.store.dispatch(gamePhaseUpdate(packet));
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) {
@@ -88,39 +112,39 @@ export class Connection extends Player {
     }
 
     protected onEnterPreparingPhase(round: number) {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.PHASE_UPDATE,
-            {
-                phase: GamePhase.PREPARING,
-                payload: {
-                    round,
-                    pieces: this.pieces.getState(),
-                    cards: this.cards.getValue()
-                }
+        const { board, bench, cards } = this.store.getState();
+
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.PREPARING,
+            payload: {
+                round,
+                pieces: {
+                    board,
+                    bench
+                },
+                cards
             }
-        );
+        };
+        this.store.dispatch(gamePhaseUpdate(packet));
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     protected onEnterReadyPhase() {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.PHASE_UPDATE,
-            {
-                phase: GamePhase.READY,
-                payload: {
-                    board: this.match.getBoard(),
-                    opponentId: this.match.away.id
-                }
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.READY,
+            payload: {
+                board: this.match.getBoard(),
+                opponentId: this.match.away.id
             }
-        );
+        };
+        this.store.dispatch(gamePhaseUpdate(packet));
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     protected onEnterPlayingPhase() {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.PHASE_UPDATE,
-            {
-                phase: GamePhase.PLAYING
-            }
-        );
+        const packet: PhaseUpdatePacket = { phase: GamePhase.PLAYING };
+        this.store.dispatch(gamePhaseUpdate(packet));
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
     protected onShopLockUpdate() {
@@ -130,14 +154,6 @@ export class Connection extends Player {
                 locked: this.shopLocked
             }
         );
-    }
-
-    private sendMoneyUpdate = (newValue: number) => {
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.MONEY_UPDATE, newValue);
-    }
-
-    private sendCardsUpdate = () => {
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.CARDS_UPDATE, this.cards.getValue());
     }
 
     private sendLevelUpdate = ({ level, xp }: { level: number, xp: number }) => {
@@ -160,32 +176,31 @@ export class Connection extends Player {
 
         for (const action of packet.actions) {
             switch (action.type) {
-                case PlayerActionTypes.TOGGLE_SHOP_LOCK: {
+                case TOGGLE_SHOP_LOCK: {
                     this.toggleShopLock();
                     break;
                 }
-                case PlayerActionTypes.BUY_CARD: {
-                    this.buyCard(action.payload.index);
+                case BUY_CARD: {
+                    this.store.dispatch(action);
                     break;
                 }
-                case PlayerActionTypes.PLAYER_SELL_PIECE: {
+                case PLAYER_SELL_PIECE: {
                     this.sellPiece(action.payload.pieceId);
                     break;
                 }
-                case PlayerActionTypes.REROLL_CARDS: {
+                case REROLL_CARDS: {
                     this.buyReroll();
-                    this.sendCardsUpdate();
                     break;
                 }
-                case PlayerActionTypes.PLAYER_DROP_PIECE: {
+                case PLAYER_DROP_PIECE: {
                     this.onDropPiece(action);
                     break;
                 }
-                case PlayerActionTypes.BUY_XP: {
+                case BUY_XP: {
                     this.buyXp();
                     break;
                 }
-                case PlayerActionTypes.READY_UP: {
+                case READY_UP: {
                     this.readyUp();
                     break;
                 }
@@ -210,6 +225,12 @@ export class Connection extends Player {
         this.outgoingPacketRegistry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
             (opcode, payload, ack) => socket.emit(opcode, payload, ack)
         );
+
+        if (this.outgoingPacketsTask) {
+            this.outgoingPacketsTask.cancel();
+        }
+
+        this.outgoingPacketsTask = this.sagaMiddleware.run(outgoingPackets(this.outgoingPacketRegistry));
 
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);

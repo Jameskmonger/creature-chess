@@ -15,7 +15,6 @@ export class GameReducerTests {
       opponentId: null,
       loading: false,
       menuError: null,
-      money: 0,
       phase: GamePhase.WAITING,
       phaseStartedAtSeconds: null,
       round: null,

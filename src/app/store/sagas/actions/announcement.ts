@@ -1,8 +1,9 @@
 import { takeLatest, put, select, delay } from "@redux-saga/core/effects";
-import { GAME_PHASE_UPDATE, PLAYERS_RESURRECTED } from "../../actiontypes/gameActionTypes";
+import { PLAYERS_RESURRECTED } from "../../actiontypes/gameActionTypes";
 import { GamePhase } from "@common/models";
-import { GamePhaseUpdateAction, clearAnnouncement, updateAnnouncement, PlayersResurrectedAction } from "../../actions/gameActions";
+import { clearAnnouncement, updateAnnouncement, PlayersResurrectedAction } from "../../actions/gameActions";
 import { AppState } from "../../state";
+import { GAME_PHASE_UPDATE, GamePhaseUpdateAction } from "@common/player/gameInfo";
 
 // distinctLastJoin(["James", "Bob", "William", "Steve"], ", ", " and ")
 // -> "James, Bob, William and Steve"

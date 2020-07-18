@@ -1,14 +1,17 @@
 import * as Models from "@common/models";
 import { BoardState } from "@common/board";
-import { PlayerPiecesState } from "@common/player";
 import { GamePhase } from "@common/models";
+import { BenchState } from "@common/player/bench";
 
 export type PreparingPhaseUpdatePacket = {
   phase: GamePhase.PREPARING,
   payload:
   {
     round: number;
-    pieces: PlayerPiecesState;
+    pieces: {
+      board: BoardState;
+      bench: BenchState;
+    };
     cards: Models.Card[];
   }
 };
@@ -58,7 +61,7 @@ export type ReconnectAuthenticateSuccessPacket = {
 
 export type AuthenticateResponse = {
   error?: { type: "nickname_required" } | { type: "invalid_nickname", error: string } | { type: "authentication" };
-}
+};
 
 export type JoinLobbyResponse = {
   error?: string;
