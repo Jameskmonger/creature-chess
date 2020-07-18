@@ -16,7 +16,7 @@ import {
 import { JoinCompleteAction } from "./localPlayerActions";
 import { ConnectionStatus, ServerToClient } from "@common/networking";
 
-export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string, name: string } });
+export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type GamePhaseUpdateAction = ({ type: GAME_PHASE_UPDATE, payload: ServerToClient.PhaseUpdatePacket });
 export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string } });
@@ -44,10 +44,9 @@ export type GameAction =
     | ClearSelectedPieceAction
     | PlayersResurrectedAction;
 
-export const findGameAction = (serverIP: string, name: string): FindGameAction => ({
+export const findGameAction = (serverIP: string): FindGameAction => ({
     type: FIND_GAME,
     payload: {
-        name,
         serverIP
     }
 });

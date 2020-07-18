@@ -62,6 +62,7 @@ export interface LobbyState {
     players: LobbyPlayer[];
     startingAtMs: number;
     isHost: boolean;
+    requestNicknameMessage: string;
 }
 
 export interface GameOverInfoState {

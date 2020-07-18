@@ -3,12 +3,11 @@ import { connect, MapDispatchToProps, MapStateToProps, useSelector } from "react
 import { joinGameError, enableDebugMode, findGameAction } from "../../store/actions/gameActions";
 import { AppState } from "@app/store";
 import { loadingSelector } from "../../store/gameSelector";
-import { MAX_NAME_LENGTH, MAX_PLAYERS_IN_GAME } from "@common/models/constants";
 import { getUrlParameter } from "../../get-url-parameter";
 import { signOut } from "@app/auth/auth0";
 
 interface DispatchProps {
-    onFindGame: (serverIP: string, name: string) => void;
+    onFindGame: (serverIP: string) => void;
     enableDebugMode: () => void;
     setError: (error: string) => void;
 }
@@ -21,7 +20,6 @@ interface MenuStageProps {
 type Props = MenuStageProps & DispatchProps;
 
 interface MenuStageState {
-    name: string;
     serverIP: string;
     debugModeClickCount: number;
 }
@@ -40,7 +38,6 @@ const PlayerInfo: React.FunctionComponent = () => {
 
 class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
     public state = {
-        name: "",
         serverIP: "",
         debugModeClickCount: 0
     };
@@ -78,15 +75,7 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                 <div className="join-game">
                     {title}
 
-                    <p>Enter your name and click "Find Game" to start playing</p>
-
-                    <input
-                        value={this.state.name}
-                        onChange={this.onNameChange}
-                        maxLength={MAX_NAME_LENGTH}
-                        placeholder="Your name"
-                        className="name-input"
-                    />
+                    <p>Click "Find Game" to start playing. If you haven't set a nickname, you will be prompted to choose one.</p>
 
                     <div className="join-options">
                         <div className="option">
@@ -151,12 +140,6 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
         });
     }
 
-    private onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({
-            name: event.target.value
-        });
-    }
-
     private onServerIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (this.state.debugModeClickCount !== 3) {
             return;
@@ -173,17 +156,7 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
             return;
         }
 
-        if (!this.state.name) {
-            this.props.setError("Name field empty");
-            return;
-        }
-
-        if (this.state.name.length > MAX_NAME_LENGTH) {
-            this.props.setError(`Name too long. Max ${MAX_NAME_LENGTH} characters`);
-            return;
-        }
-
-        this.props.onFindGame(this.state.serverIP, this.state.name);
+        this.props.onFindGame(this.state.serverIP);
     }
 }
 
@@ -193,7 +166,7 @@ const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => 
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onFindGame: (serverIP: string, name: string) => dispatch(findGameAction(serverIP, name)),
+    onFindGame: (serverIP: string) => dispatch(findGameAction(serverIP)),
     enableDebugMode: () => dispatch(enableDebugMode()),
     setError: (error: string) => dispatch(joinGameError(error))
 });

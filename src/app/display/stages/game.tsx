@@ -4,6 +4,7 @@ import { GameStage } from "./gameStage";
 import { AppState } from "@app/store";
 import { MenuStage } from "./menuStage";
 import { LobbyStage } from "./lobbyStage";
+import { NicknameRequest } from "./nicknameRequest";
 
 enum GameState {
     MENU = 0,
@@ -25,6 +26,7 @@ const gameStateSelector = (state: AppState) => {
 
 const Game: React.FunctionComponent = () => {
     const gameState = useSelector<AppState, GameState>(gameStateSelector);
+    const requestNicknameMessage = useSelector<AppState, string>(state => state.lobby.requestNicknameMessage);
 
     if (gameState === GameState.GAME) {
         return <GameStage />;
@@ -32,6 +34,10 @@ const Game: React.FunctionComponent = () => {
 
     if (gameState === GameState.LOBBY) {
         return <LobbyStage />;
+    }
+
+    if (requestNicknameMessage) {
+        return <NicknameRequest message={requestNicknameMessage} />;
     }
 
     return <MenuStage />;
