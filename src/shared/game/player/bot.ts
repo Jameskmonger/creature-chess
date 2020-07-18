@@ -9,7 +9,16 @@ import { PhaseUpdatePacket } from "@common/networking/server-to-client";
 import { gamePhaseUpdate } from "@common/player/gameInfo";
 import uuid = require("uuid");
 
-const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7].filter(col => col < GRID_SIZE.width);
+const PREFERRED_COLUMN_ORDERS = {
+    8: [
+        [3, 4, 2, 5, 1, 6, 0, 7],
+        [4, 3, 1, 6, 2, 5, 7, 0]
+    ],
+    7: [
+        [3, 4, 2, 5, 1, 6, 0],
+        [3, 2, 4, 1, 5, 0, 6]
+    ]
+};
 
 interface CardView {
     source: "shop";
@@ -38,9 +47,15 @@ const getPieceCount = (state: PlayerState): number => getAllPieces(state).length
 
 export class Bot extends Player {
     public readonly isBot: boolean = true;
+    private preferredColumnOrder: number[];
 
     constructor(name: string) {
         super(uuid(), name);
+
+        const columnsForGridSize = PREFERRED_COLUMN_ORDERS[GRID_SIZE.width];
+        this.preferredColumnOrder = columnsForGridSize[
+            Math.floor(Math.random() * columnsForGridSize.length)
+        ];
     }
 
     public onStartGame(gameId: string) { /* nothing required, we're a bot */ }
@@ -242,7 +257,7 @@ export class Bot extends Player {
 
     private getFirstEmptyPosition(): PlayerPieceLocation | null {
         for (let y = (GRID_SIZE.height / 2); y < GRID_SIZE.height; y++) {
-            for (const x of PREFERRED_COLUMN_ORDER) {
+            for (const x of this.preferredColumnOrder) {
                 const boardPiece = getBoardPieceForPosition(this.store.getState().board, x, y);
 
                 if (!boardPiece) {
