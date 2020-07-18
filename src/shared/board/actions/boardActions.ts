@@ -11,8 +11,9 @@ import {
     REMOVE_BOARD_PIECES
 } from "./boardActionTypes";
 import { TileCoordinates } from "@common/models/position";
+import { IndexedPieces } from "@common/models/piece";
 
-type InitialiseBoardAction = ({ type: INITIALISE_BOARD, payload: { pieces: { [key: string]: PieceModel } } });
+type InitialiseBoardAction = ({ type: INITIALISE_BOARD, payload: { pieces: IndexedPieces } });
 type AddBoardPieceAction = ({ type: ADD_BOARD_PIECE, payload: { piece: PieceModel, x: number, y: number } });
 type RemoveBoardPieceAction = ({ type: REMOVE_BOARD_PIECE, payload: { pieceId: string } });
 type RemoveBoardPiecesAction = ({ type: REMOVE_BOARD_PIECES, payload: { pieceIds: string[] } });
@@ -33,7 +34,7 @@ export type BoardAction =
     | LockBoardAction
     | UnlockBoardAction;
 
-export const initialiseBoard = (pieces: { [key: string]: PieceModel }): InitialiseBoardAction => ({
+export const initialiseBoard = (pieces: IndexedPieces): InitialiseBoardAction => ({
     type: INITIALISE_BOARD,
     payload: {
         pieces
