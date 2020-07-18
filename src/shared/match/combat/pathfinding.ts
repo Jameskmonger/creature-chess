@@ -2,6 +2,7 @@ import { astar, Graph } from "javascript-astar";
 import { PieceModel } from "@common/models";
 import { GRID_SIZE } from "@common/models/constants";
 import { getAdjacentPositions, TileCoordinates } from "@common/models/position";
+import { BoardState } from "@common/board";
 
 const createEmptyWeightGrid = () => {
     const grid: number[][] = [];
@@ -19,14 +20,15 @@ const createEmptyWeightGrid = () => {
     return grid;
 };
 
-const createWeightGrid = (start: TileCoordinates, pieces: PieceModel[]) => {
+const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
     const grid = createEmptyWeightGrid();
 
-    pieces.forEach(piece => {
-        const { x, y } = piece.position;
+    Object.entries(board.piecePositions)
+        .forEach(([ position, pieceId ]) => {
+            const [ x, y ] = position.split(",");
 
-        grid[x][y] = 0;
-    });
+            grid[x][y] = 0;
+        });
 
     grid[start.x][start.y] = 1;
 
@@ -34,11 +36,11 @@ const createWeightGrid = (start: TileCoordinates, pieces: PieceModel[]) => {
 };
 
 const findPath = (
-    pieces: PieceModel[],
+    board: BoardState,
     start: TileCoordinates,
     end: TileCoordinates
 ) => {
-    const weights = createWeightGrid(start, pieces);
+    const weights = createWeightGrid(start, board);
     const graph = new Graph(weights);
 
     const startGraphItem = graph.grid[start.x][start.y];
@@ -59,9 +61,9 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (piece: PieceModel, target: PieceModel, pieces: PieceModel[]): TileCoordinates => {
+export const getNextPiecePosition = (piece: PieceModel, target: PieceModel, board: BoardState): TileCoordinates => {
     const targetTiles = getAdjacentPositions(target);
-    const paths = targetTiles.map(pos => findPath(pieces, piece.position, pos)).filter(path => path !== null);
+    const paths = targetTiles.map(pos => findPath(board, piece.position, pos)).filter(path => path !== null);
 
     if (paths.length === 0) {
         return null;
