@@ -14,28 +14,28 @@ import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } fro
 import { newFeedMessage } from "../features/feed/feedActions";
 import { SEND_CHAT_MESSAGE } from "../features/chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
-import { joinLobbyAction, updateLobbyPlayerAction } from "../store/actions/lobbyActions";
-import { START_LOBBY_GAME } from "../store/actiontypes/lobbyActionTypes";
+import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN, START_LOBBY_GAME } from "../store/actions/lobbyActions";
 import { AppState } from "../store/state";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
-import { ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, JoinLobbyResponse, ServerToClientPacketAcknowledgements } from "@common/networking/server-to-client";
+import { ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, JoinLobbyResponse, ServerToClientPacketAcknowledgements, AuthenticateResponse } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@common/networking/client-to-server";
 import { ConnectionStatus } from "@common/networking";
 import { PlayerActionTypesArray, PlayerAction } from "@common/player/actions";
 import { signIn } from "@app/auth/auth0";
+import { validateNickname } from "@common/validation/nickname";
 
-const getSocket = (serverIP: string, idToken: string) => {
+const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
     // force to websocket for now until CORS is sorted
     const socket = io(serverIP, { transports: ["websocket", "xhr-polling"] });
 
     return new Promise<Socket>((resolve, reject) => {
         socket.on("connect", () => {
-            socket.emit("authenticate", { idToken });
+            socket.emit("authenticate", { idToken, nickname });
         });
 
-        const onAuthenticated = ({ success }: { success: boolean }) => {
-            if (success) {
+        const onAuthenticated = ({ error }: AuthenticateResponse) => {
+            if (!error) {
                 socket.off("authenticate_response", onAuthenticated);
 
                 resolve(socket);
@@ -44,7 +44,7 @@ const getSocket = (serverIP: string, idToken: string) => {
             }
 
             socket.disconnect();
-            reject();
+            reject(error);
         };
 
         socket.on("authenticate_response", onAuthenticated);
@@ -54,11 +54,11 @@ const getSocket = (serverIP: string, idToken: string) => {
 type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-const findGame = (registry: ClientToServerPacketRegsitry, name: string) => {
+const findGame = (registry: ClientToServerPacketRegsitry) => {
     return new Promise<JoinLobbyResponse>(resolve => {
         registry.emit(
             ClientToServerPacketOpcodes.FIND_GAME,
-            name,
+            { empty: true },
             response => {
                 resolve(response);
             }
@@ -344,14 +344,53 @@ export const networking = function*() {
 
     const { idToken } = state.auth;
 
-    let socket: Socket;
+    let socket: Socket = null;
+    let chosenNickname: string = null;
 
-    try {
-        socket = yield call(getSocket, action.payload.serverIP, idToken);
-    } catch (e) {
-        signIn();
+    while (socket === null) {
+        try {
+            socket = yield call(getSocket, action.payload.serverIP, idToken, chosenNickname);
+        } catch (e) {
+            // todo abstract this- the duplication isnt nice
+            if (e.type === "nickname_required") {
+                chosenNickname = null;
+                yield put(requestNickname("You must choose a unique nickname before you can play!"));
 
-        return;
+                while (chosenNickname === null) {
+                    const { payload: { nickname } }: NicknameChosenAction = yield take<NicknameChosenAction>(NICKNAME_CHOSEN);
+
+                    const error = validateNickname(nickname);
+
+                    if (error) {
+                        yield put(requestNickname(error));
+                    } else {
+                        // this stops the loop
+                        chosenNickname = nickname;
+                    }
+                }
+            } else if (e.type === "invalid_nickname") {
+                chosenNickname = null;
+
+                yield put(requestNickname(`Error: ${e.error}`));
+
+                while (chosenNickname === null) {
+                    const { payload: { nickname } }: NicknameChosenAction = yield take<NicknameChosenAction>(NICKNAME_CHOSEN);
+
+                    const error = validateNickname(nickname);
+
+                    if (error) {
+                        yield put(requestNickname(error));
+                    } else {
+                        // this stops the loop
+                        chosenNickname = nickname;
+                    }
+                }
+            } else {
+                signIn();
+
+                return;
+            }
+        }
     }
 
     const outgoingRegistry = new OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
@@ -367,7 +406,7 @@ export const networking = function*() {
     yield fork(readPacketsToActions, incomingRegistry, socket);
 
     while (true) {
-        const { error, response }: JoinLobbyResponse = yield call(findGame, outgoingRegistry, action.payload.name);
+        const { error, response }: JoinLobbyResponse = yield call(findGame, outgoingRegistry);
 
         if (!error) {
             yield put(joinLobbyAction(
