@@ -1,4 +1,4 @@
-import { LobbyPlayer, FeedMessage, Card, PlayerListPlayer, GamePhase } from "@common/models";
+import { LobbyPlayer, Card, PlayerListPlayer, GamePhase } from "@common/models";
 import { ConnectionStatus } from "@common/networking";
 import { BoardState } from "@common/board";
 import { BenchState } from "@common/player/bench";
@@ -13,7 +13,6 @@ export interface AppState {
     playerList: PlayerListPlayer[];
     cards: Card[];
     localPlayer: LocalPlayerState;
-    feedMessages: FeedMessage[];
     lobby: LobbyState;
     ui: UiState;
 }

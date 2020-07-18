@@ -8,7 +8,7 @@ import { OpponentProvider } from "../opponentProvider";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_MONEY, STARTING_LEVEL } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, StreakType, PlayerListPlayer, Card, FeedMessage, GamePhase } from "@common/models";
+import { LobbyPlayer, StreakType, PlayerListPlayer, Card, GamePhase } from "@common/models";
 import { getPiecesForStage, getXpToNextLevel, pieceUtils, Observable } from "@common/utils";
 import { getBoardPieceCount, hasSpaceOnBench, getPiece, getAllPieces,  } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
@@ -18,7 +18,6 @@ import { PlayerActions } from "@common/player";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
-    SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
     UPDATE_READY = "UPDATE_READY",
     UPDATE_STREAK = "UPDATE_STREAK",
     START_LOBBY_GAME = "START_LOBBY_GAME",
@@ -237,10 +236,6 @@ export abstract class Player {
         fn(this.battle);
     }
 
-    public onSendChatMessage(fn: (message: string) => void) {
-        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
-    }
-
     public isAlive() {
         return this.health > 0;
     }
@@ -315,8 +310,6 @@ export abstract class Player {
     public abstract onStartGame(gameId: string);
 
     public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
-
-    public abstract onNewFeedMessage(message: FeedMessage);
 
     public abstract onLobbyPlayerUpdate(index: number, player: LobbyPlayer);
 
@@ -427,13 +420,6 @@ export abstract class Player {
         this.rerollCards();
 
         this.money.setValue(money - REROLL_COST);
-    }
-
-    protected sendChatMessage = (message: string) => {
-        if (!message) {
-            return;
-        }
-        this.events.emit(PlayerEvent.SEND_CHAT_MESSAGE, message);
     }
 
     protected finishMatch = () => {

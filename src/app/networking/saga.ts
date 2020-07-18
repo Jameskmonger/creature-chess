@@ -11,8 +11,6 @@ import { cardsUpdated } from "../features/cardShop/cardActions";
 import { FIND_GAME, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
 import { log } from "../log";
 import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../store/actions/localPlayerActions";
-import { newFeedMessage } from "../features/feed/feedActions";
-import { SEND_CHAT_MESSAGE } from "../features/chat/chatActionTypes";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN, START_LOBBY_GAME } from "../store/actions/lobbyActions";
 import { AppState } from "../store/state";
@@ -120,15 +118,6 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                 log("[LEVEL_UPDATE]", packet);
 
                 emit(localPlayerLevelUpdate(packet.level, packet.xp));
-            }
-        );
-
-        registry.on(
-            ServerToClientPacketOpcodes.NEW_FEED_MESSAGE,
-            (packet) => {
-                log("[NEW_FEED_MESSAGE]", packet);
-
-                emit(newFeedMessage(packet));
             }
         );
 
@@ -289,13 +278,6 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
             BATTLE_FINISHED,
             function*() {
                 registry.emit(ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
-            }
-        ),
-
-        takeEvery<ActionWithPayload<{ message: string }>>(
-            SEND_CHAT_MESSAGE,
-            function*({ payload }) {
-                registry.emit(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, payload.message);
             }
         ),
         takeEvery(
