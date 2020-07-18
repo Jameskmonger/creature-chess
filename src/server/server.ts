@@ -16,6 +16,7 @@ import { validateNickname } from "@common/validation/nickname";
 import { updateUser } from "./user/updateUser";
 import { UserAppMetadata } from "./user/userModel";
 import { checkNicknameUnique } from "./user/checkNicknameUnique";
+import { PlayerSessionRegistry } from "./playerSessionRegistry";
 
 process.on("unhandledRejection", (error, p) => {
     log("unhandled rejection:");
@@ -34,6 +35,7 @@ export class Server {
     private lobbyIdGenerator = new IdGenerator();
     private metrics = new Metrics();
     private filter = new Filter();
+    private playerSessionRegistry = new PlayerSessionRegistry();
 
     private client = new ManagementClient<UserAppMetadata>({
         domain: AUTH0_CONFIG.domain,
@@ -77,19 +79,19 @@ export class Server {
                     const nicknameError = validateNickname(trimmedNickname);
 
                     if (nicknameError) {
-                        failAuthentication({ error: { type: "invalid_nickname", error: nicknameError }});
+                        failAuthentication({ error: { type: "invalid_nickname", error: nicknameError } });
                         return;
                     }
 
                     if (this.filter.isProfane(trimmedNickname)) {
-                        failAuthentication({ error: { type: "invalid_nickname", error: "Profanity filter" }});
+                        failAuthentication({ error: { type: "invalid_nickname", error: "Profanity filter" } });
                         return;
                     }
 
                     const isUnique = await checkNicknameUnique(this.client, trimmedNickname);
 
                     if (!isUnique) {
-                        failAuthentication({ error: { type: "invalid_nickname", error: "Nickname already in use" }});
+                        failAuthentication({ error: { type: "invalid_nickname", error: "Nickname already in use" } });
                         return;
                     }
 
@@ -162,6 +164,8 @@ export class Server {
 
             players.forEach(p => {
                 game.addPlayer(p);
+
+                this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
             });
 
             game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
@@ -185,24 +189,106 @@ export class Server {
             junk: any,
             response: (response: JoinLobbyResponse) => void
         ) => {
-            const player = new Connection(socket, id, name);
+            const existingPlayer = this.playerSessionRegistry.getPlayer(id);
+
+            if (!existingPlayer) {
+                const player = new Connection(socket, id, name);
+
+                let lobby = this.findPublicLobby();
+
+                if (lobby) {
+                    lobby.addPlayer(player);
+                } else {
+                    lobby = this.createLobby(player, true);
+                }
+
+                this.playerSessionRegistry.registerPlayer(player.id, player, "lobby", lobby.id);
+
+                response({
+                    error: null,
+                    response: {
+                        playerId: player.id,
+                        lobbyId: lobby.id,
+                        players: this.getLobbyPlayers(lobby),
+                        startTimestamp: lobby.gameStartTime,
+                        isHost: player.id === lobby.hostId
+                    }
+                });
+                return;
+            }
+
+            if (existingPlayer.location.type === "lobby") {
+                const existingLobby = this.lobbies.get(existingPlayer.location.id);
+
+                if (existingLobby) {
+                    const playerInLobby = existingLobby.getPlayers().some(p => p.id === id);
+
+                    if (!playerInLobby) {
+                        return;
+                    }
+
+                    (existingPlayer.player as Connection).replaceSocket(socket);
+
+                    response({
+                        error: null,
+                        response: {
+                            playerId: existingPlayer.player.id,
+                            lobbyId: existingLobby.id,
+                            players: this.getLobbyPlayers(existingLobby),
+                            startTimestamp: existingLobby.gameStartTime,
+                            isHost: existingPlayer.player.id === existingLobby.hostId
+                        }
+                    });
+
+                    return;
+                }
+            }
+
+            if (existingPlayer && existingPlayer.location.type === "game") {
+                const existingGame = this.games.get(existingPlayer.location.id);
+
+                if (existingGame) {
+                    const playerInGame = existingGame.getPlayers().some(p => p.id === id);
+
+                    if (!playerInGame) {
+                        return;
+                    }
+
+                    (existingPlayer.player as Connection).replaceSocket(socket);
+
+                    response({
+                        error: null,
+                        response: {
+                            playerId: existingPlayer.player.id,
+                            lobbyId: null,
+                            players: [],
+                            startTimestamp: 0,
+                            isHost: false
+                        }
+                    });
+
+                    return;
+                }
+            }
 
             let lobby = this.findPublicLobby();
 
             if (lobby) {
-                lobby.addPlayer(player);
+                lobby.addPlayer(existingPlayer.player);
             } else {
-                lobby = this.createLobby(player, true);
+                lobby = this.createLobby(existingPlayer.player, true);
             }
+
+            this.playerSessionRegistry.registerPlayer(existingPlayer.player.id, existingPlayer.player, "lobby", lobby.id);
 
             response({
                 error: null,
                 response: {
-                    playerId: player.id,
+                    playerId: existingPlayer.player.id,
                     lobbyId: lobby.id,
                     players: this.getLobbyPlayers(lobby),
                     startTimestamp: lobby.gameStartTime,
-                    isHost: player.id === lobby.hostId
+                    isHost: existingPlayer.player.id === lobby.hostId
                 }
             });
         };

@@ -59,6 +59,7 @@ const findGame = (registry: ClientToServerPacketRegsitry) => {
             ClientToServerPacketOpcodes.FIND_GAME,
             { empty: true },
             response => {
+                console.log(response);
                 resolve(response);
             }
         );
@@ -390,7 +391,7 @@ export const networking = function*() {
 
     while (true) {
         const { error, response }: JoinLobbyResponse = yield call(findGame, outgoingRegistry);
-
+        console.log(error, response);
         if (!error) {
             yield put(joinLobbyAction(
                 response.playerId,
