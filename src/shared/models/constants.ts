@@ -1,8 +1,8 @@
 import { GamePhase } from "./game-phase";
 
 export const GRID_SIZE = {
-    width: 8,
-    height: 8 // THIS MUST BE AN EVEN NUMBER
+    width: 7,
+    height: 6 // THIS MUST BE AN EVEN NUMBER
 };
 
 export const PHASE_LENGTHS = {
