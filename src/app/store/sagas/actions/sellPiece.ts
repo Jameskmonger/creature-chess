@@ -1,6 +1,5 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { PLAYER_SELL_PIECE } from "@common/player/actionTypes";
-import { PlayerSellPieceAction } from "@common/player/actions";
+import { PlayerSellPieceAction, PLAYER_SELL_PIECE } from "@common/player/actions";
 import { AppState } from "@app/store/state";
 import { getPiece } from "@common/player/pieceSelectors";
 import { removeBenchPiece } from "@common/player/bench/benchActions";

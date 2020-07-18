@@ -1,10 +1,10 @@
 import { LocalPlayerState } from "../state";
 import { LocalPlayerAction } from "../actions/localPlayerActions";
 import { JOIN_COMPLETE, LEVEL_UPDATE, UPDATE_RECONNECT_SECRET } from "../actiontypes/localPlayerActionTypes";
-import { GamePhaseUpdateAction } from "../actions/gameActions";
-import { GAME_PHASE_UPDATE } from "../actiontypes/gameActionTypes";
 import { GamePhase } from "@common/models";
-import { PlayerActionTypes, PlayerActions } from "@common/player";
+import { PlayerActions } from "@common/player";
+import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@common/player/gameInfo";
+import { READY_UP } from "@common/player/actions";
 
 const initialState: LocalPlayerState = {
     id: null,
@@ -36,7 +36,7 @@ export function localPlayer(state: LocalPlayerState = initialState, action: Loca
                 level: action.payload.level,
                 xp: action.payload.xp
             };
-        case PlayerActionTypes.READY_UP:
+        case READY_UP:
             return {
                 ...state,
                 ready: true

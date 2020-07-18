@@ -1,6 +1,5 @@
 import { GameAction } from "../actions/gameActions";
 import {
-    GAME_PHASE_UPDATE, MONEY_UPDATE,
     JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT,
     CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS, CLEAR_SELECTED_PIECE
 } from "../actiontypes/gameActionTypes";
@@ -10,13 +9,13 @@ import { SELECT_PIECE } from "../actiontypes/boardActionTypes";
 import { SelectPieceAction } from "../actions/boardActions";
 import { ConnectionStatus } from "@common/networking";
 import { GamePhase } from "@common/models";
+import { GAME_PHASE_UPDATE } from "@common/player/gameInfo";
 
 export const initialState: GameState = {
     gameId: null,
     opponentId: null,
     loading: false,
     menuError: null,
-    money: 0,
     phase: GamePhase.WAITING,
     phaseStartedAtSeconds: null,
     round: null,
@@ -84,11 +83,6 @@ export function game(state: GameState = initialState, action: GameReducerActionT
             return {
                 ...state,
                 phase: action.payload.phase
-            };
-        case MONEY_UPDATE:
-            return {
-                ...state,
-                money: action.payload.money
             };
         case ENABLE_DEBUG_MODE: {
             return {

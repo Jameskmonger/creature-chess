@@ -1,20 +1,23 @@
-import uuid = require("uuid/v4");
 import pDefer = require("p-defer");
 import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_MONEY, STARTING_LEVEL } from "../../models/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, StreakType, PlayerListPlayer, Card, FeedMessage, GamePhase } from "@common/models";
-import { getPiecesForStage, getXpToNextLevel, pieceUtils, Observable } from "@common/utils";
-import { getBoardPieceCount, hasSpaceOnBench, getPiece, getAllPieces,  } from "../../player/pieceSelectors";
+import { LobbyPlayer, StreakType, PlayerListPlayer, FeedMessage, GamePhase } from "@common/models";
+import { getPiecesForStage, getXpToNextLevel, Observable } from "@common/utils";
+import { getBoardPieceCount, getPiece, getAllPieces,  } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "@common/board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle } from "@common/models/player-list-player";
 import { PlayerActions } from "@common/player";
+import { createPlayerStore, PlayerStore } from "@common/player/store";
+import { cardsUpdated } from "@common/player/cardShop/actions";
+import { moneyUpdateAction } from "@common/player/gameInfo";
+import { SagaMiddleware } from "redux-saga";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -50,19 +53,18 @@ export abstract class Player {
 
     public abstract readonly isBot: boolean;
 
-    protected money = new Observable(STARTING_MONEY);
-    protected cards = new Observable<Card[]>([]);
-
     protected level = new Observable({ level: STARTING_LEVEL, xp: 0 });
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
     protected shopLocked = false;
-    protected pieces = new PlayerPieces();
+    protected store: PlayerStore;
+    protected sagaMiddleware: SagaMiddleware;
+
+    protected pieces: PlayerPieces;
 
     private events = new EventEmitter();
 
     private deck: CardDeck;
-    private gamePhase: GamePhase = GamePhase.WAITING;
 
     private readyUpDeferred: pDefer.DeferredPromise<void>;
 
@@ -72,9 +74,14 @@ export abstract class Player {
     private currentRound: number | null = null;
     private roundDiedAt: number | null = null;
 
-    constructor(name: string) {
-        this.id = uuid();
+    constructor(id: string, name: string, saga?: () => Generator) {
+        this.id = id;
         this.name = name;
+
+        const { store, sagaMiddleware } = createPlayerStore(this.id, saga);
+        this.store = store;
+        this.sagaMiddleware = sagaMiddleware;
+        this.pieces = new PlayerPieces(this.store);
     }
 
     public setDefinitionProvider(definitionProvider: DefinitionProvider) {
@@ -94,7 +101,7 @@ export abstract class Player {
     }
 
     public getBattleBoard(away: Player) {
-        return mergeBoards(this.pieces.getState().board.pieces, away.pieces.getState().board.pieces);
+        return mergeBoards(this.store.getState().board.pieces, away.store.getState().board.pieces);
     }
 
     public addXp(amount: number) {
@@ -116,13 +123,13 @@ export abstract class Player {
     }
 
     public addMoney(money: number) {
-        const currentMoney = this.money.getValue();
+        const currentMoney = this.store.getState().gameInfo.money;
 
-        this.money.setValue(currentMoney + money);
+        this.store.dispatch(moneyUpdateAction(currentMoney + money));
     }
 
     public getMoney() {
-        return this.money.getValue();
+        return this.store.getState().gameInfo.money;
     }
 
     public getRoundDiedAt() {
@@ -138,7 +145,6 @@ export abstract class Player {
     }
 
     public async enterPreparingPhase(round: number) {
-        this.gamePhase = GamePhase.PREPARING;
         this.currentRound = round;
 
         this.readyUpDeferred = pDefer();
@@ -163,7 +169,6 @@ export abstract class Player {
     }
 
     public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider) {
-        this.gamePhase = GamePhase.READY;
         this.readyUpDeferred = null;
         this.ready = false;
 
@@ -182,7 +187,6 @@ export abstract class Player {
     }
 
     public async fightMatch(battleTimeout: Promise<void>): Promise<PlayerMatchResults> {
-        this.gamePhase = GamePhase.PLAYING;
 
         this.onEnterPlayingPhase();
 
@@ -250,10 +254,10 @@ export abstract class Player {
             return;
         }
 
-        const cards = this.cards.getValue();
+        const cards = this.store.getState().cards;
 
         const newCards = this.deck.reroll(cards, this.getLevel(), 5);
-        this.cards.setValue(newCards);
+        this.store.dispatch(cardsUpdated(newCards));
     }
 
     public adjustStreak(win: boolean) {
@@ -270,14 +274,14 @@ export abstract class Player {
     }
 
     public clearPieces() {
-        const pieces = getAllPieces(this.pieces.getState());
+        const pieces = getAllPieces(this.store.getState());
         this.pieces.clear();
         for (const piece of pieces) {
             this.deck.addPiece(piece);
         }
 
-        const cards = this.cards.getValue();
-        this.cards.setValue([]);
+        const cards = this.store.getState().cards;
+        this.store.dispatch(cardsUpdated([]));
         this.deck.addCards(cards);
 
         this.deck.shuffle();
@@ -331,7 +335,7 @@ export abstract class Player {
     protected abstract onShopLockUpdate();
 
     protected belowPieceLimit() {
-        return getBoardPieceCount(this.pieces.getState()) < this.level.getValue().level;
+        return getBoardPieceCount(this.store.getState()) < this.level.getValue().level;
     }
 
     protected startLobbyGame = () => {
@@ -344,37 +348,9 @@ export abstract class Player {
         this.onShopLockUpdate();
     }
 
-    protected buyCard = (cardIndex: number) => {
-        if (hasSpaceOnBench(this.pieces.getState()) === false) {
-            log(`${this.name} attempted to buy a card but has no empty slot`);
-            return;
-        }
-
-        const card = this.getCardAtIndex(cardIndex);
-
-        if (!card) {
-            log(`${this.name} attempted to buy card at index ${cardIndex} but that card was ${card}`);
-            return;
-        }
-
-        const money = this.money.getValue();
-
-        if (money < card.cost) {
-            log(`${this.name} attempted to buy card costing $${card.cost} but only had $${money}`);
-            return;
-        }
-
-        this.money.setValue(money - card.cost);
-        this.deleteCard(cardIndex);
-
-        const piece = pieceUtils.createPieceFromCard(this.definitionProvider, this.id, card, 0);
-
-        this.pieces.addBenchPiece(piece);
-    }
-
     protected sellPiece = (pieceId: string) => {
         // todo add `from` here to improve lookup
-        const piece = getPiece(this.pieces.getState(), pieceId);
+        const piece = getPiece(this.store.getState(), pieceId);
 
         if (piece === null) {
             log(`${this.name} attempted to sell piece with id ${pieceId} but did not own it`);
@@ -397,7 +373,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.money.getValue();
+        const money = this.store.getState().gameInfo.money;
 
         // not enough money
         if (money < BUY_XP_COST) {
@@ -407,7 +383,7 @@ export abstract class Player {
 
         this.addXp(BUY_XP_AMOUNT);
 
-        this.money.setValue(money - BUY_XP_COST);
+        this.store.dispatch(moneyUpdateAction(money - BUY_XP_COST));
     }
 
     protected buyReroll = () => {
@@ -416,7 +392,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.money.getValue();
+        const money = this.store.getState().gameInfo.money;
 
         // not enough money
         if (money < REROLL_COST) {
@@ -426,7 +402,7 @@ export abstract class Player {
 
         this.rerollCards();
 
-        this.money.setValue(money - REROLL_COST);
+        this.store.dispatch(moneyUpdateAction(money - REROLL_COST));
     }
 
     protected sendChatMessage = (message: string) => {
@@ -467,17 +443,6 @@ export abstract class Player {
 
     protected getLevel() {
         return this.level.getValue().level;
-    }
-
-    private getCardAtIndex(index: number) {
-        return this.cards.getValue()[index];
-    }
-
-    private deleteCard(indexToDelete: number) {
-        const newValue = this.cards.getValue()
-            .map((card, index) => index === indexToDelete ? null : card);
-
-        this.cards.setValue(newValue);
     }
 
     private setReady(ready: boolean) {

@@ -1,8 +1,19 @@
-import {
-  PLAYER_DROP_PIECE, PLAYER_SELL_PIECE, REROLL_CARDS,
-  BUY_CARD, BUY_XP, READY_UP, TOGGLE_SHOP_LOCK
-} from "./actionTypes";
 import { PlayerPieceLocation } from "@common/models";
+
+export const PLAYER_DROP_PIECE = "PLAYER_DROP_PIECE";
+export type PLAYER_DROP_PIECE = typeof PLAYER_DROP_PIECE;
+export const PLAYER_SELL_PIECE = "PLAYER_SELL_PIECE";
+export type PLAYER_SELL_PIECE = typeof PLAYER_SELL_PIECE;
+export const REROLL_CARDS = "REROLL_CARDS";
+export type REROLL_CARDS = typeof REROLL_CARDS;
+export const BUY_CARD = "BUY_CARD";
+export type BUY_CARD = typeof BUY_CARD;
+export const BUY_XP = "BUY_XP";
+export type BUY_XP = typeof BUY_XP;
+export const READY_UP = "READY_UP";
+export type READY_UP = typeof READY_UP;
+export const TOGGLE_SHOP_LOCK = "TOGGLE_SHOP_LOCK";
+export type TOGGLE_SHOP_LOCK = typeof TOGGLE_SHOP_LOCK;
 
 export type PlayerAction =
   PlayerDropPieceAction
@@ -57,10 +68,10 @@ export const playerSellPiece = (pieceId: string): PlayerSellPieceAction => ({
 export const rerollCards = (): RerollCardsAction => ({ type: REROLL_CARDS });
 
 export const buyCard = (index: number): BuyCardAction => ({
-    type: BUY_CARD,
-    payload: {
-        index
-    }
+  type: BUY_CARD,
+  payload: {
+    index
+  }
 });
 
 export const toggleShopLock = (): ToggleShopLockAction => ({ type: TOGGLE_SHOP_LOCK });

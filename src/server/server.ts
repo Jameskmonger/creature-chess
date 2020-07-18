@@ -107,7 +107,7 @@ export class Server {
                 }
 
                 socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
-                socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket, user.metadata.nickname.value));
+                socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket, user.id, user.metadata.nickname.value));
                 socket.removeAllListeners("authenticate");
 
                 socket.emit("authenticate_response", { error: null });
@@ -180,12 +180,12 @@ export class Server {
         };
     }
 
-    private onSocketFindGame(socket: io.Socket, name: string) {
+    private onSocketFindGame(socket: io.Socket, id: string, name: string) {
         return (
             junk: any,
             response: (response: JoinLobbyResponse) => void
         ) => {
-            const player = new Connection(socket, name);
+            const player = new Connection(socket, id, name);
 
             let lobby = this.findPublicLobby();
 
