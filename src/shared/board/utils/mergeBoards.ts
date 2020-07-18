@@ -5,8 +5,8 @@ import { IndexedPieces } from "@common/models/piece";
 
 const rotateGridPosition = (position: TileCoordinates) => {
   return createTileCoordinates(
-    GRID_SIZE - 1 - position.x,
-    GRID_SIZE - 1 - position.y
+    GRID_SIZE.width - 1 - position.x,
+    GRID_SIZE.height - 1 - position.y
   );
 };
 

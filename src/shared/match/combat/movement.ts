@@ -11,9 +11,10 @@ const applyVector = (position: TileCoordinates, vector: Vector): TileCoordinates
     const newX = position.x + vector.x;
     const newY = position.y + vector.y;
 
-    const max = GRID_SIZE - 1;
+    const maxX = GRID_SIZE.width - 1;
+    const maxY = GRID_SIZE.height - 1;
 
-    if (newX < 0 || newY < 0 || newX > max || newY > max) {
+    if (newX < 0 || newY < 0 || newX > maxX || newY > maxY) {
         return null;
     }
 

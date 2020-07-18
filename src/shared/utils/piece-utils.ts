@@ -63,7 +63,7 @@ export const moveOrAddPiece = <T extends PieceModel>(allPieces: T[], target: T) 
 };
 
 export const rotatePiecePosition = (piece: PieceModel) => {
-    piece.position.x = GRID_SIZE - 1 - piece.position.x;
-    piece.position.y = GRID_SIZE - 1 - piece.position.y;
+    piece.position.x = GRID_SIZE.width - 1 - piece.position.x;
+    piece.position.y = GRID_SIZE.height - 1 - piece.position.y;
     return piece;
 };

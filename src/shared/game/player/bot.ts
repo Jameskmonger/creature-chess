@@ -9,8 +9,7 @@ import { PhaseUpdatePacket } from "@common/networking/server-to-client";
 import { gamePhaseUpdate } from "@common/player/gameInfo";
 import uuid = require("uuid");
 
-// TODO: Make this use Constants.GRID_SIZE
-const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
+const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7].filter(col => col < GRID_SIZE.width);
 
 interface CardView {
     source: "shop";
@@ -242,7 +241,7 @@ export class Bot extends Player {
     }
 
     private getFirstEmptyPosition(): PlayerPieceLocation | null {
-        for (let y = 4; y < GRID_SIZE; y++) {
+        for (let y = (GRID_SIZE.height / 2); y < GRID_SIZE.height; y++) {
             for (const x of PREFERRED_COLUMN_ORDER) {
                 const boardPiece = getBoardPieceForPosition(this.store.getState(), x, y);
 
