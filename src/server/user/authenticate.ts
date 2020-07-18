@@ -1,12 +1,8 @@
 import { ManagementClient } from "auth0";
 import { verifyDecodeJwt } from "./verifyDecodeJwt";
-import { UserAppMetadata } from "./userAppMetadata";
+import { UserModel, UserAppMetadata } from "./userModel";
 
-interface User {
-
-}
-
-export const authenticate = async (managementClient: ManagementClient<UserAppMetadata>, token: string): Promise<User> => {
+export const authenticate = async (managementClient: ManagementClient<UserAppMetadata>, token: string): Promise<UserModel> => {
     const decoded = await verifyDecodeJwt(token);
 
     if (decoded === null) {
@@ -20,7 +16,8 @@ export const authenticate = async (managementClient: ManagementClient<UserAppMet
 
         return {
             id: user.app_metadata.uuid,
-            name: user.nickname
+            authId: user.user_id,
+            metadata: user.app_metadata
         };
     } catch (e) {
         throw e;

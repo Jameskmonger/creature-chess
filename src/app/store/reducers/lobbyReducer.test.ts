@@ -13,7 +13,8 @@ export class LobbyReducerTests {
       localPlayerId: null,
       players: [],
       startingAtMs: null,
-      isHost: false
+      isHost: false,
+      requestNicknameMessage: null
     });
   }
 

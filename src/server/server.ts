@@ -1,4 +1,5 @@
 import io = require("socket.io");
+import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
 import { log } from "@common/log";
 import { Game } from "@common/game/game";
@@ -7,12 +8,14 @@ import { Lobby } from "./lobby";
 import { Player } from "@common/game";
 import { IdGenerator } from "./id-generator";
 import { LobbyPlayer } from "@common/models";
-import { nameValidator } from "./name-validator";
 import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket } from "@common/networking/client-to-server";
-import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
+import { ServerToClientPacketOpcodes, JoinLobbyResponse, ReconnectAuthenticateSuccessPacket, AuthenticateResponse } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
 import { authenticate } from "./user/authenticate";
-import { UserAppMetadata } from "./user/userAppMetadata";
+import { validateNickname } from "@common/validation/nickname";
+import { updateUser } from "./user/updateUser";
+import { UserAppMetadata } from "./user/userModel";
+import { checkNicknameUnique } from "./user/checkNicknameUnique";
 
 process.on("unhandledRejection", (error, p) => {
     log("unhandled rejection:");
@@ -30,6 +33,7 @@ export class Server {
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
     private metrics = new Metrics();
+    private filter = new Filter();
 
     private client = new ManagementClient<UserAppMetadata>({
         domain: AUTH0_CONFIG.domain,
@@ -51,25 +55,65 @@ export class Server {
     private receiveConnection = (socket: io.Socket) => {
         log("Connection received");
 
-        const failAuthentication = () => {
-            socket.emit("authenticate_response", { success: false });
+        const failAuthentication = (response: AuthenticateResponse) => {
+            socket.emit("authenticate_response", response);
+            socket.removeAllListeners();
             socket.disconnect();
         };
 
-        const onAuthenticate = async ({ idToken }: { idToken: string }) => {
+        const onAuthenticate = async ({ idToken, nickname }: { idToken: string, nickname: string }) => {
             try {
-                const user = await authenticate(this.client, idToken);
+                let user = await authenticate(this.client, idToken);
 
-                console.log("user authenticated", user);
+                // if user doesnt have a nickname we need to ask for it
+                if (!user.metadata.nickname) {
+                    if (!nickname) {
+                        failAuthentication({ error: { type: "nickname_required" } });
+                        return;
+                    }
+
+                    const trimmedNickname = nickname.trim();
+
+                    const nicknameError = validateNickname(trimmedNickname);
+
+                    if (nicknameError) {
+                        failAuthentication({ error: { type: "invalid_nickname", error: nicknameError }});
+                        return;
+                    }
+
+                    if (this.filter.isProfane(trimmedNickname)) {
+                        failAuthentication({ error: { type: "invalid_nickname", error: "Profanity filter" }});
+                        return;
+                    }
+
+                    const isUnique = await checkNicknameUnique(this.client, trimmedNickname);
+
+                    if (!isUnique) {
+                        failAuthentication({ error: { type: "invalid_nickname", error: "Nickname already in use" }});
+                        return;
+                    }
+
+                    const newMetadata = {
+                        ...user.metadata,
+                        nickname: {
+                            value: trimmedNickname,
+                            uppercase: trimmedNickname.toUpperCase()
+                        }
+                    };
+
+                    user = await updateUser(this.client, user.authId, newMetadata);
+
+                    console.log(`User ${user.id} set nickname to '${user.metadata.nickname.value}'`);
+                }
 
                 socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
-                socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket));
+                socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket, user.metadata.nickname.value));
                 socket.removeAllListeners("authenticate");
 
-                socket.emit("authenticate_response", { success: true });
+                socket.emit("authenticate_response", { error: null });
             } catch (e) {
                 console.error("onAuthenticate err", e);
-                failAuthentication();
+                failAuthentication({ error: { type: "authentication" } });
             }
         };
 
@@ -136,21 +180,11 @@ export class Server {
         };
     }
 
-    private onSocketFindGame(socket: io.Socket) {
+    private onSocketFindGame(socket: io.Socket, name: string) {
         return (
-            name: string,
+            junk: any,
             response: (response: JoinLobbyResponse) => void
         ) => {
-            const validationError = nameValidator(name);
-
-            if (validationError) {
-                response({
-                    error: validationError,
-                    response: null
-                });
-                return;
-            }
-
             const player = new Connection(socket, name);
 
             let lobby = this.findPublicLobby();

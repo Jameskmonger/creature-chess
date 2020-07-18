@@ -21,7 +21,12 @@ export interface AppState {
 export interface AuthState {
     authenticated: boolean;
     idToken: string;
-    profile: any;
+    profile: {
+        nickname?: {
+            value: string;
+            uppercase: string;
+        };
+    };
     expiresAt: number;
 }
 
@@ -62,6 +67,7 @@ export interface LobbyState {
     players: LobbyPlayer[];
     startingAtMs: number;
     isHost: boolean;
+    requestNicknameMessage: string;
 }
 
 export interface GameOverInfoState {

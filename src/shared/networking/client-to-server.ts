@@ -26,7 +26,7 @@ export const SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS = 300;
 type EmptyPacket = { empty: true };
 
 export type ClientToServerPacketDefinitions = {
-  [ClientToServerPacketOpcodes.FIND_GAME]: string,
+  [ClientToServerPacketOpcodes.FIND_GAME]: EmptyPacket,
   [ClientToServerPacketOpcodes.FINISH_MATCH]: EmptyPacket,
   [ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE]: string,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: EmptyPacket,

@@ -1,13 +1,13 @@
 import { LobbyState } from "../state";
-import { LobbyAction } from "../actions/lobbyActions";
-import { JOIN_LOBBY, UPDATE_LOBBY_PLAYER } from "../actiontypes/lobbyActionTypes";
+import { LobbyAction, JOIN_LOBBY, UPDATE_LOBBY_PLAYER, REQUEST_NICKNAME } from "../actions/lobbyActions";
 
 const initialState: LobbyState = {
     lobbyId: null,
     localPlayerId: null,
     players: [],
     startingAtMs: null,
-    isHost: false
+    isHost: false,
+    requestNicknameMessage: null
 };
 
 export function lobby(
@@ -15,6 +15,12 @@ export function lobby(
     action: LobbyAction
 ): LobbyState {
     switch (action.type) {
+        case REQUEST_NICKNAME: {
+            return {
+                ...state,
+                requestNicknameMessage: action.payload.reason
+            };
+        }
         case JOIN_LOBBY:
             return {
                 ...state,

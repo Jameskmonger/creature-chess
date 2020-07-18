@@ -1,8 +1,0 @@
-export const JOIN_LOBBY = "JOIN_LOBBY";
-export type JOIN_LOBBY = typeof JOIN_LOBBY;
-
-export const UPDATE_LOBBY_PLAYER = "UPDATE_LOBBY_PLAYER";
-export type UPDATE_LOBBY_PLAYER = typeof UPDATE_LOBBY_PLAYER;
-
-export const START_LOBBY_GAME = "START_LOBBY_GAME";
-export type START_LOBBY_GAME = typeof START_LOBBY_GAME;
