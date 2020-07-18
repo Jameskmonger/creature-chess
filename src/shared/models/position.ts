@@ -18,7 +18,7 @@ export const Directions = {
 const isInsideGrid = (position: TileCoordinates) => {
     const { x, y } = position;
 
-    return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
+    return x >= 0 && y >= 0 && x < GRID_SIZE.width && y < GRID_SIZE.height;
 };
 
 export const getAdjacentPositions = (piece: PieceModel) => {

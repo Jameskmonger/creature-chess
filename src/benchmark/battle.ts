@@ -16,6 +16,7 @@ const pieces: BoardState = {
   piecePositions: {},
   locked: true
 };
+// todo these need tying into GRID_SIZE
 // [
 //   createPiece(definitionProvider, "bot-a", 1, [2, 2], null),
 //   createPiece(definitionProvider, "bot-a", 1, [3, 3], null),

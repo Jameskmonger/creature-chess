@@ -48,7 +48,7 @@ const Board: React.FunctionComponent = props => {
     const rows = [];
 
     if (!showOpponentBoardPlaceholder) {
-        for (let y = 0; y < Constants.GRID_SIZE / 2; y++) {
+        for (let y = 0; y < Constants.GRID_SIZE.height / 2; y++) {
             rows.push(
                 <BoardRow
                     key={`tile-row-${y}`}
@@ -59,7 +59,7 @@ const Board: React.FunctionComponent = props => {
         }
     }
 
-    for (let y = Constants.GRID_SIZE / 2; y < Constants.GRID_SIZE; y++) {
+    for (let y = Constants.GRID_SIZE.height / 2; y < Constants.GRID_SIZE.height; y++) {
         rows.push(
             <BoardRow
                 key={`tile-row-${y}`}

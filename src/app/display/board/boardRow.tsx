@@ -24,7 +24,7 @@ const getRowClassForY = (y: number) => {
 const BoardRow: React.FunctionComponent<TileRowProps> = ({ y, tileStyle }) => {
     const tiles = [];
 
-    for (let x = 0; x < Constants.GRID_SIZE; x++) {
+    for (let x = 0; x < Constants.GRID_SIZE.width; x++) {
 
         tiles.push(
             <BoardTile

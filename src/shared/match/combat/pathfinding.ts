@@ -6,10 +6,10 @@ import { getAdjacentPositions, TileCoordinates } from "@common/models/position";
 const createEmptyWeightGrid = () => {
     const grid: number[][] = [];
 
-    for (let y = 0; y < GRID_SIZE; y++) {
+    for (let y = 0; y < GRID_SIZE.height; y++) {
         const row = [];
 
-        for (let x = 0; x < GRID_SIZE; x++) {
+        for (let x = 0; x < GRID_SIZE.width; x++) {
             row.push(1);
         }
 

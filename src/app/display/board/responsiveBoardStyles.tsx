@@ -9,20 +9,20 @@ const inPortraitMode = (width: number, height: number) => (height >= width);
 const getBoardInformation = (width: number, height: number) => {
     if (inPortraitMode(width, height)) {
         // board + spacing
-        const colsRequired = Constants.GRID_SIZE;
+        const colsRequired = Constants.GRID_SIZE.width;
 
         // in portrait mode, use full width
         const tileWidth = width / colsRequired;
 
         return {
             tileSize: tileWidth,
-            boardHeight: `${tileWidth * (Constants.GRID_SIZE + 1 + 0.5)}px`,
-            boardWidth: `${tileWidth * Constants.GRID_SIZE}px`
+            boardHeight: `${tileWidth * (Constants.GRID_SIZE.height + 1 + 0.5)}px`,
+            boardWidth: `${tileWidth * Constants.GRID_SIZE.width}px`
         };
     }
 
     // board + bench + spacing
-    const rowsRequired = Constants.GRID_SIZE + 1 + 0.5;
+    const rowsRequired = Constants.GRID_SIZE.height + 1 + 0.5;
 
     // in landscape mode, use full height
     const tileHeight = height / rowsRequired;
@@ -30,7 +30,7 @@ const getBoardInformation = (width: number, height: number) => {
     return {
         tileSize: tileHeight,
         boardHeight: "100%",
-        boardWidth: `${tileHeight * Constants.GRID_SIZE}px`
+        boardWidth: `${tileHeight * Constants.GRID_SIZE.width}px`
     };
 };
 
@@ -45,8 +45,8 @@ const getPositionablePieceStyles = (tileSize: number) => {
     const styles = [];
     const TILE_BASE_Z_INDEX = 10;
 
-    for (let x = 0; x < Constants.GRID_SIZE; x++) {
-        for (let y = 0; y < Constants.GRID_SIZE; y++) {
+    for (let x = 0; x < Constants.GRID_SIZE.width; x++) {
+        for (let y = 0; y < Constants.GRID_SIZE.height; y++) {
             const { left, top } = getTilePosition(tileSize, x, y);
 
             styles.push(`.positionable-piece.x-${x} { left: ${left}px; }`);
@@ -83,11 +83,11 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
 
             ${positionablePieceStyles}
 
-            .chessboard { height: ${tileSize * Constants.GRID_SIZE}px; }
+            .chessboard { height: ${tileSize * Constants.GRID_SIZE.height}px; }
 
             .bench { height: ${tileSize}px; }
 
-            .opponent-board-placeholder { height: ${tileSize * Constants.GRID_SIZE / 2}px; }
+            .opponent-board-placeholder { height: ${tileSize * Constants.GRID_SIZE.height / 2}px; }
             `}}
         />
     );

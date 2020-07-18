@@ -33,7 +33,7 @@ const Bench: React.FunctionComponent = () => {
 
     const tiles = [];
 
-    for (let x = 0; x < Constants.GRID_SIZE; x++) {
+    for (let x = 0; x < Constants.GRID_SIZE.width; x++) {
         tiles.push(
             <BenchTile
                 key={`tile-${x}`}
