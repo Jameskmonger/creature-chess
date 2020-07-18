@@ -7,14 +7,15 @@ import { BoardState } from "@common/board";
 const createEmptyWeightGrid = () => {
     const grid: number[][] = [];
 
-    for (let y = 0; y < GRID_SIZE.height; y++) {
-        const row = [];
+    // todo this is a weird way round
+    for (let x = 0; x < GRID_SIZE.width; x++) {
+        const column = [];
 
-        for (let x = 0; x < GRID_SIZE.width; x++) {
-            row.push(1);
+        for (let y = 0; y < GRID_SIZE.height; y++) {
+            column.push(1);
         }
 
-        grid.push(row);
+        grid.push(column);
     }
 
     return grid;
