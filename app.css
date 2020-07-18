@@ -712,33 +712,6 @@ html, body {
     background: #1a1c2c;
     border: none; }
 
-.feed {
-  padding: 0.6rem;
-  margin-bottom: 0.6rem;
-  font-family: Arial, sans-serif;
-  color: #fff;
-  background: #566c86; }
-  .feed .chat-input {
-    display: flex;
-    margin-bottom: 0.6rem; }
-    .feed .chat-input .text-input {
-      flex-grow: 1;
-      padding: 0.4em;
-      color: #fff;
-      background: #333c57;
-      border: 0; }
-    .feed .chat-input .send-button {
-      padding: 0.4em;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-      background: #b13e53;
-      border: 0; }
-  .feed .chat-feed-message .sender {
-    font-weight: 700; }
-  .feed .chat-feed-message .message {
-    color: #bebebe; }
-
 .github-link {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
