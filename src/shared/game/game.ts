@@ -1,7 +1,6 @@
 import uuid = require("uuid");
 import delay from "delay";
 import { GamePhase } from "../models/game-phase";
-import { FeedMessage } from "../models/feed-message";
 import { Player, PlayerMatchResults } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
@@ -87,10 +86,6 @@ export class Game {
         if (this.canAddPlayer() === false) {
             return;
         }
-
-        player.onSendChatMessage(message => {
-            this.sendChatMessageToAllPlayers(player.id, message);
-        });
 
         this.players.push(player);
         this.playerList.addPlayer(player);
@@ -233,16 +228,6 @@ export class Game {
         await delay(CELEBRATION_TIME); // celebration time
 
         this.eventManager.getTriggers().finishRound(this.players);
-    }
-
-    private sendChatMessageToAllPlayers(playerId: string, text: string) {
-        const message: FeedMessage = {
-            id: uuid(),
-            fromId: playerId,
-            text
-        };
-
-        this.players.forEach(p => p.onNewFeedMessage(message));
     }
 
     private registerPlugins() {

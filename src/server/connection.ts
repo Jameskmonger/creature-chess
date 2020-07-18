@@ -1,7 +1,7 @@
 import uuid = require("uuid/v4");
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { LobbyPlayer, FeedMessage, PlayerListPlayer } from "@common/models";
+import { LobbyPlayer, PlayerListPlayer } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements } from "@common/networking/server-to-client";
@@ -58,10 +58,6 @@ export class Connection extends Player {
                 phase: GamePhase.DEAD
             }
         );
-    }
-
-    public onNewFeedMessage(message: FeedMessage) {
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, message);
     }
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) {
@@ -216,7 +212,6 @@ export class Connection extends Player {
         );
 
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
     }
