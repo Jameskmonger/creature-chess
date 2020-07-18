@@ -10,7 +10,7 @@ const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {
     const { x, y } = location.location;
 
-    return pieceSelectors.getBoardPieceForPosition(state, x, y);
+    return pieceSelectors.getBoardPieceForPosition(state.board, x, y);
   }
 
   if (location.type === "bench") {

@@ -49,7 +49,15 @@ export const battleEventChannel = (
     return eventChannel<BattleAction>(emit => {
         let cancelled = false;
 
-        let pieces = { ...startingBoardState.pieces };
+        let board: BoardState = {
+            pieces: {
+                ...startingBoardState.pieces
+            },
+            piecePositions: {
+                ...startingBoardState.piecePositions
+            },
+            locked: startingBoardState.locked
+        };
 
         const run = async () => {
             let turnCount = 0;
@@ -58,7 +66,7 @@ export const battleEventChannel = (
                 const shouldStop = (
                     cancelled
                     || turnCount >= maxTurns
-                    || isATeamDefeated(Object.values(pieces))
+                    || isATeamDefeated(board)
                 );
 
                 if (shouldStop) {
@@ -68,8 +76,8 @@ export const battleEventChannel = (
 
                 const turnTimer = duration(turnDuration);
 
-                pieces = turnSimulator.simulateTurn(++turnCount, pieces);
-                emit(initialiseBoard(pieces));
+                board = turnSimulator.simulateTurn(++turnCount, board);
+                emit(initialiseBoard(board.pieces));
 
                 await turnTimer.remaining();
             }
