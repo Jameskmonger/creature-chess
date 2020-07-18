@@ -6,6 +6,7 @@ import { Card as CardModel, Constants, GamePhase } from "@common/models";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
 import { PlayerActions } from "@common/player";
+import { getPlayerMoney } from "@common/player/playerSelectors";
 
 interface CardShopProps {
     showBalance: boolean;
@@ -15,7 +16,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const dispatch = useDispatch();
 
     const cards = useSelector<AppState, CardModel[]>(state => state.cards);
-    const money = useSelector<AppState, number>(state => state.game.money);
+    const money = useSelector<AppState, number>(getPlayerMoney);
     const canUseShop = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD);
     const shopLocked = useSelector<AppState, boolean>(state => state.game.shopLocked);
 

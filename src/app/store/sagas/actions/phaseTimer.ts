@@ -1,6 +1,6 @@
 import { takeLatest, put } from "@redux-saga/core/effects";
-import { GAME_PHASE_UPDATE } from "../../actiontypes/gameActionTypes";
-import { GamePhaseUpdateAction, phaseStartSeconds } from "../../actions/gameActions";
+import { phaseStartSeconds } from "../../actions/gameActions";
+import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@common/player/gameInfo";
 
 export const phaseTimer = function*() {
     yield takeLatest<GamePhaseUpdateAction>(GAME_PHASE_UPDATE, function*() {

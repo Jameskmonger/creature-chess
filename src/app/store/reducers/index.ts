@@ -1,18 +1,20 @@
-import { boardReducer as board } from "@common/board";
+import { boardReducer } from "@common/board";
+import { benchReducer } from "@common/player/bench";
+import { cardsReducer } from "@common/player/cardShop";
+import { gameInfoReducer } from "@common/player/gameInfo";
 import { playerList } from "../../features/playerList/playerListReducer";
-import { cards } from "../../features/cardShop/cardsReducer";
 import { game } from "./gameReducer";
 import { localPlayer } from "./localPlayerReducer";
 import { lobby } from "./lobbyReducer";
-import { benchReducer } from "@common/player/bench";
 import { auth } from "./authReducer";
 import { ui } from "./uiReducer";
 
 export const reducers = {
-    board,
+    board: boardReducer,
     bench: benchReducer,
     playerList,
-    cards,
+    cards: cardsReducer,
+    gameInfo: gameInfoReducer,
     game,
     localPlayer,
     lobby,

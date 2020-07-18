@@ -1,13 +1,10 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { PLAYER_DROP_PIECE } from "../actionTypes";
-import { PlayerState } from "../state";
-import { PlayerDropPieceAction } from "../actions";
-import { BenchState } from "../bench";
-import { BoardState } from "@common/board";
+import { PlayerDropPieceAction, PLAYER_DROP_PIECE } from "../actions";
 import { PlayerPieceLocation } from "@common/models";
 import * as pieceSelectors from "../pieceSelectors";
 import { moveBoardPiece, removeBoardPiece, addBoardPiece } from "@common/board/actions/boardActions";
 import { moveBenchPiece, addBenchPiece, removeBenchPiece } from "../bench/benchActions";
+import { PlayerState } from "../store";
 
 const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {

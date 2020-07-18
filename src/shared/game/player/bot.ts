@@ -1,8 +1,13 @@
 import { Player } from "./player";
 import { GRID_SIZE } from "../../models/constants";
-import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation } from "@common/models";
+import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@common/models";
 import { getAllPieces, getBoardPieceForPosition } from "@common/player/pieceSelectors";
-import { PlayerPiecesState, PlayerActions } from "@common/player";
+import { PlayerActions } from "@common/player";
+import { buyCard } from "@common/player/actions";
+import { PlayerState } from "@common/player/store";
+import { PhaseUpdatePacket } from "@common/networking/server-to-client";
+import { gamePhaseUpdate } from "@common/player/gameInfo";
+import uuid = require("uuid");
 
 // TODO: Make this use Constants.GRID_SIZE
 const PREFERRED_COLUMN_ORDER = [3, 4, 2, 5, 1, 6, 0, 7];
@@ -27,13 +32,17 @@ interface PieceView {
 
 type CardPieceView = CardView | PieceView;
 
-const getFirstBenchPiece = (state: PlayerPiecesState): PieceModel => state.bench.pieces.find(p => p !== null) || null;
+const getFirstBenchPiece = (state: PlayerState): PieceModel => state.bench.pieces.find(p => p !== null) || null;
 const getPieceCountForDefinition =
-    (state: PlayerPiecesState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
-const getPieceCount = (state: PlayerPiecesState): number => getAllPieces(state).length;
+    (state: PlayerState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
+const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
 
 export class Bot extends Player {
     public readonly isBot: boolean = true;
+
+    constructor(name: string) {
+        super(uuid(), name);
+    }
 
     public onStartGame(gameId: string) { /* nothing required, we're a bot */ }
 
@@ -45,20 +54,53 @@ export class Bot extends Player {
 
     public onPlayersResurrected() { /* nothing required, we're a bot */ }
 
-    protected onEnterPreparingPhase() {
+    protected onEnterPreparingPhase(round: number) {
+        // todo rework this, it's a quick fix to make bots aware of game state
+        const { board, bench, cards } = this.store.getState();
+
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.PREPARING,
+            payload: {
+                round,
+                pieces: {
+                    board,
+                    bench
+                },
+                cards
+            }
+        };
+        this.store.dispatch(gamePhaseUpdate(packet));
+
         this.buyBestPieces();
         this.putBenchOnBoard();
 
         this.readyUp();
     }
 
-    protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
+    protected onEnterReadyPhase() {
+        // todo rework this, it's a quick fix to make bots aware of game state
+        const packet: PhaseUpdatePacket = {
+            phase: GamePhase.READY,
+            payload: {
+                board: this.match.getBoard(),
+                opponentId: this.match.away.id
+            }
+        };
+        this.store.dispatch(gamePhaseUpdate(packet));
+    }
 
     protected onEnterPlayingPhase() {
+        const packet: PhaseUpdatePacket = { phase: GamePhase.PLAYING };
+        this.store.dispatch(gamePhaseUpdate(packet));
+
         this.finishMatch();
     }
 
-    protected onDeath() { /* nothing required, we're a bot */ }
+    protected onDeath() {
+        // todo rework this, it's a quick fix to make bots aware of game state
+        const packet: PhaseUpdatePacket = { phase: GamePhase.DEAD };
+        this.store.dispatch(gamePhaseUpdate(packet));
+    }
 
     protected onShopLockUpdate() { /* nothing required, we're a bot */ }
 
@@ -80,7 +122,7 @@ export class Bot extends Player {
                 continue;
             }
 
-            const currentMoney = this.money.getValue();
+            const currentMoney = this.store.getState().gameInfo.money;
             const moneyAfterSelling = currentMoney + worstPiece.cost;
 
             // if we still can't afford, move to the next card
@@ -104,16 +146,16 @@ export class Bot extends Player {
             return;
         }
 
-        this.buyCard(card.index);
+        this.store.dispatch(buyCard(card.index));
     }
 
     private atPieceLimit() {
-        return getPieceCount(this.pieces.getState()) >= this.getLevel();
+        return getPieceCount(this.store.getState()) >= this.getLevel();
     }
 
     private putBenchOnBoard() {
         while (true) {
-            const firstBenchPiece = getFirstBenchPiece(this.pieces.getState());
+            const firstBenchPiece = getFirstBenchPiece(this.store.getState());
             const firstEmptyPosition = this.getFirstEmptyPosition();
 
             if (firstBenchPiece === null || firstEmptyPosition === null) {
@@ -134,7 +176,7 @@ export class Bot extends Player {
     }
 
     private getCardViews(): CardView[] {
-        const cards = this.cards.getValue();
+        const cards = this.store.getState().cards;
 
         const views = cards.filter(c => c !== null).map(this.getCardView);
 
@@ -144,7 +186,7 @@ export class Bot extends Player {
     }
 
     private getPieceViews(): PieceView[] {
-        const views = getAllPieces(this.pieces.getState()).map(this.getPieceView);
+        const views = getAllPieces(this.store.getState()).map(this.getPieceView);
 
         views.sort(this.compareCardPieceViews);
 
@@ -152,7 +194,7 @@ export class Bot extends Player {
     }
 
     private getCardView = (card: Card, index: number): CardView => {
-        const amountOwned = getPieceCountForDefinition(this.pieces.getState(), card.definitionId);
+        const amountOwned = getPieceCountForDefinition(this.store.getState(), card.definitionId);
 
         return {
             source: "shop",
@@ -165,7 +207,7 @@ export class Bot extends Player {
 
     private getPieceView = (piece: PieceModel): PieceView => {
         const { cost } = this.definitionProvider.get(piece.definitionId);
-        const amountOwned = getPieceCountForDefinition(this.pieces.getState(), piece.definitionId);
+        const amountOwned = getPieceCountForDefinition(this.store.getState(), piece.definitionId);
 
         return {
             source: "board",
@@ -202,7 +244,7 @@ export class Bot extends Player {
     private getFirstEmptyPosition(): PlayerPieceLocation | null {
         for (let y = 4; y < GRID_SIZE; y++) {
             for (const x of PREFERRED_COLUMN_ORDER) {
-                const boardPiece = getBoardPieceForPosition(this.pieces.getState(), x, y);
+                const boardPiece = getBoardPieceForPosition(this.store.getState(), x, y);
 
                 if (!boardPiece) {
                     return {
