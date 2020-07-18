@@ -5,7 +5,6 @@ import { gameInfoReducer } from "@common/player/gameInfo";
 import { playerList } from "../../features/playerList/playerListReducer";
 import { game } from "./gameReducer";
 import { localPlayer } from "./localPlayerReducer";
-import { feedMessages } from "../../features/feed/feedMessagesReducer";
 import { lobby } from "./lobbyReducer";
 import { auth } from "./authReducer";
 import { ui } from "./uiReducer";
@@ -18,7 +17,6 @@ export const reducers = {
     gameInfo: gameInfoReducer,
     game,
     localPlayer,
-    feedMessages,
     lobby,
     auth,
     ui

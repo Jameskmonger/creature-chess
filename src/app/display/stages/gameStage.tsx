@@ -10,7 +10,6 @@ import { PlayerList } from "../../features/playerList/playerList";
 import Media from "react-media";
 import { PhaseInfo } from "../../display/phaseInfo";
 import { Profile } from "../../display/profile/profile";
-import { Feed } from "../../features/feed/feed";
 import { RoundIndicator } from "../../display/roundIndicator";
 import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
 import { BoardContainer } from "../game/boardContainer";
@@ -29,8 +28,6 @@ const GameStage: React.FunctionComponent = () => {
                         <PhaseInfo />
 
                         <PlayerList />
-
-                        <Feed />
                     </div>
 
                     <BoardContainer />
@@ -69,38 +66,12 @@ const GameStage: React.FunctionComponent = () => {
                             {" - "}
                             <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
                         </div>
-
-                        <Feed />
                     </div>
                 </div>
             </Media>
 
             <Media query="(orientation: portrait), (max-width: 599px)">
                 <MobileGame />
-
-                {/* <div className="game portrait">
-                    <GameBoard />
-
-                    <div className="group">
-                        <RoundIndicator />
-
-                        <PhaseInfo />
-
-                        <CardShop />
-
-                        <Profile />
-
-                        <PlayerList />
-
-                        <div className="github-link">
-                            <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
-                            {" - "}
-                            <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
-                        </div>
-
-                        <Feed />
-                    </div>
-                </div> */}
             </Media>
         </DndProvider>
     );

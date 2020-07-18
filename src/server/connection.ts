@@ -2,12 +2,11 @@ import uuid = require("uuid/v4");
 import { all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { Player } from "@common/game/player/player";
-import { LobbyPlayer, FeedMessage, PlayerListPlayer, Card } from "@common/models";
+import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
-import { GamePhase } from "@common/models";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, BUY_XP, READY_UP } from "@common/player/actions";
 import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@common/player/gameInfo";
@@ -83,10 +82,6 @@ export class Connection extends Player {
         const packet: PhaseUpdatePacket = { phase: GamePhase.DEAD };
         this.store.dispatch(gamePhaseUpdate(packet));
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-    }
-
-    public onNewFeedMessage(message: FeedMessage) {
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.NEW_FEED_MESSAGE, message);
     }
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) {
@@ -238,7 +233,6 @@ export class Connection extends Player {
         this.outgoingPacketsTask = this.sagaMiddleware.run(outgoingPackets(this.outgoingPacketRegistry));
 
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_CHAT_MESSAGE, this.sendChatMessage);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
     }

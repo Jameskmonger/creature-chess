@@ -7,9 +7,9 @@ import { OpponentProvider } from "../opponentProvider";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, StreakType, PlayerListPlayer, FeedMessage, GamePhase } from "@common/models";
+import { LobbyPlayer, StreakType, PlayerListPlayer, GamePhase } from "@common/models";
 import { getPiecesForStage, getXpToNextLevel, Observable } from "@common/utils";
-import { getBoardPieceCount, getPiece, getAllPieces,  } from "../../player/pieceSelectors";
+import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "@common/board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle } from "@common/models/player-list-player";
@@ -21,7 +21,6 @@ import { SagaMiddleware } from "redux-saga";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
-    SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE",
     UPDATE_READY = "UPDATE_READY",
     UPDATE_STREAK = "UPDATE_STREAK",
     START_LOBBY_GAME = "START_LOBBY_GAME",
@@ -241,10 +240,6 @@ export abstract class Player {
         fn(this.battle);
     }
 
-    public onSendChatMessage(fn: (message: string) => void) {
-        this.events.on(PlayerEvent.SEND_CHAT_MESSAGE, fn);
-    }
-
     public isAlive() {
         return this.health > 0;
     }
@@ -319,8 +314,6 @@ export abstract class Player {
     public abstract onStartGame(gameId: string);
 
     public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
-
-    public abstract onNewFeedMessage(message: FeedMessage);
 
     public abstract onLobbyPlayerUpdate(index: number, player: LobbyPlayer);
 
@@ -403,13 +396,6 @@ export abstract class Player {
         this.rerollCards();
 
         this.store.dispatch(moneyUpdateAction(money - REROLL_COST));
-    }
-
-    protected sendChatMessage = (message: string) => {
-        if (!message) {
-            return;
-        }
-        this.events.emit(PlayerEvent.SEND_CHAT_MESSAGE, message);
     }
 
     protected finishMatch = () => {
