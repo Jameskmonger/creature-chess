@@ -34,3 +34,7 @@ export interface PieceModel {
 
     targetPieceId: string;
 }
+
+export type IndexedPieces = {
+    [pieceId: string]: PieceModel;
+};

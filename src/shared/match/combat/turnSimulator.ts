@@ -1,11 +1,12 @@
 import { PieceModel } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
-import { getRelativeDirection, subtract } from "../../models/position";
+import { getRelativeDirection } from "../../models/position";
 import { INITIAL_COOLDOWN } from "../../models/constants";
 import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
+import { IndexedPieces } from "@common/models/piece";
 
 interface PieceCombatInfo {
     piece: PieceModel;
@@ -20,7 +21,7 @@ export class TurnSimulator {
         this.definitionProvider = definitionProvider;
     }
 
-    public simulateTurn(turnCount: number, pieces: { [key: string]: PieceModel }) {
+    public simulateTurn(turnCount: number, pieces: IndexedPieces) {
         const pieceIds = Object.keys(pieces);
 
         for (const pieceId of pieceIds) {
