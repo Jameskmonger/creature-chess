@@ -4,6 +4,9 @@ import { AttackType } from "../../models/creatureDefinition";
 import { range, flatten } from "lodash";
 import { Directions, TileCoordinates, arePositionsEqual } from "@common/models/position";
 import { GRID_SIZE } from "@common/models/constants";
+import { IndexedPieces } from "@common/models/piece";
+import { BoardState } from "@common/board";
+import { getBoardPieceForPosition } from "@common/player/pieceSelectors";
 
 type Vector = { x: number, y: number };
 
@@ -27,8 +30,16 @@ const getAttackingTiles = (facingUp: boolean, attackType: AttackType) => {
     return flatten(range(1, attackType.range + 1).map(r => attackDirections.map(d => ({ x: d.x * r, y: d.y * r }))));
 };
 
-const getLivingEnemies = (piece: PieceModel, pieces: PieceModel[]) => {
-    return pieces.filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
+const getLivingEnemies = (piece: PieceModel, board: BoardState): PieceModel[] => {
+    const output: PieceModel[] = [];
+
+    for (const [ id, other ] of Object.entries(board.pieces)) {
+        if (other.ownerId !== piece.ownerId && other.currentHealth > 0) {
+            output.push(other);
+        }
+    }
+
+    return output;
 };
 
 const getDelta = (a: PieceModel, b: PieceModel) => {
@@ -46,22 +57,22 @@ const canAttack = (a: PieceModel, b: PieceModel, attackType: AttackType) => {
     return result;
 };
 
-const getTargetPiece = (piece: PieceModel, others: PieceModel[]) => {
+const getTargetPiece = (piece: PieceModel, board: BoardState) => {
     if (piece.targetPieceId === null) {
         return null;
     }
 
-    const target = others.find(o => o.id === piece.targetPieceId && o.currentHealth > 0);
+    const target = board.pieces[piece.targetPieceId];
 
-    if (target === undefined) {
+    if (target === undefined || target.currentHealth <= 0) {
         return null;
     }
 
     return target;
 };
 
-export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, others: PieceModel[]) => {
-    const target = getTargetPiece(piece, others);
+export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, board: BoardState) => {
+    const target = getTargetPiece(piece, board);
 
     if (target && canAttack(piece, target, attackType)) {
         return target;
@@ -77,22 +88,22 @@ export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, ot
             continue;
         }
 
-        const enemyInTile = others.find(other =>
-            other.ownerId !== piece.ownerId
-            && other.currentHealth > 0
-            && arePositionsEqual(targetPosition, other.position)
-        );
+        const pieceInTargetPosition = getBoardPieceForPosition(board, targetPosition.x, targetPosition.y);
 
-        if (enemyInTile) {
-            return enemyInTile;
+        if (
+            pieceInTargetPosition
+            && pieceInTargetPosition.ownerId !== piece.ownerId
+            && pieceInTargetPosition.currentHealth > 0
+        ) {
+            return pieceInTargetPosition;
         }
     }
 
     return null;
 };
 
-const findClosestEnemy = (piece: PieceModel, pieces: PieceModel[]) => {
-    const enemies = getLivingEnemies(piece, pieces);
+const findClosestEnemy = (piece: PieceModel, board: BoardState) => {
+    const enemies = getLivingEnemies(piece, board);
 
     if (enemies.length === 0) {
         return null;
@@ -109,12 +120,12 @@ const findClosestEnemy = (piece: PieceModel, pieces: PieceModel[]) => {
     return enemyDeltas[0].enemy;
 };
 
-export const getNewPiecePosition = (piece: PieceModel, pieces: PieceModel[]): TileCoordinates => {
-    const target = findClosestEnemy(piece, pieces);
+export const getNewPiecePosition = (piece: PieceModel, board: BoardState): TileCoordinates => {
+    const target = findClosestEnemy(piece, board);
 
     if (target === null) {
         return null;
     }
 
-    return getNextPiecePosition(piece, target, pieces);
+    return getNextPiecePosition(piece, target, board);
 };

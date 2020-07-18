@@ -1,8 +1,8 @@
 import { getTotalHealthByTeam } from "./get-total-health-by-team";
-import { PieceModel } from "../models";
+import { BoardState } from "@common/board";
 
-export const isATeamDefeated = (pieces: PieceModel[]) => {
-    const healthByTeam = getTotalHealthByTeam(pieces);
+export const isATeamDefeated = (board: BoardState) => {
+    const healthByTeam = getTotalHealthByTeam(board);
 
     return healthByTeam.length !== 2 || healthByTeam.some(x => x.totalHealth === 0);
 };

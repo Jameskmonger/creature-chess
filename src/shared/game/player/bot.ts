@@ -244,7 +244,7 @@ export class Bot extends Player {
     private getFirstEmptyPosition(): PlayerPieceLocation | null {
         for (let y = 4; y < GRID_SIZE; y++) {
             for (const x of PREFERRED_COLUMN_ORDER) {
-                const boardPiece = getBoardPieceForPosition(this.store.getState(), x, y);
+                const boardPiece = getBoardPieceForPosition(this.store.getState().board, x, y);
 
                 if (!boardPiece) {
                     return {

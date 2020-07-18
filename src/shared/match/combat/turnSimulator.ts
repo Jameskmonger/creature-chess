@@ -6,7 +6,8 @@ import { INITIAL_COOLDOWN } from "../../models/constants";
 import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
-import { IndexedPieces } from "@common/models/piece";
+import { BoardState, boardReducer } from "@common/board";
+import { updateBoardPiece, updateBoardPieces } from "@common/board/actions/boardActions";
 
 interface PieceCombatInfo {
     piece: PieceModel;
@@ -21,13 +22,13 @@ export class TurnSimulator {
         this.definitionProvider = definitionProvider;
     }
 
-    public simulateTurn(turnCount: number, pieces: IndexedPieces) {
-        const pieceIds = Object.keys(pieces);
+    public simulateTurn(turnCount: number, board: BoardState) {
+        const pieceIds = Object.keys(board.pieces);
 
         for (const pieceId of pieceIds) {
             // create a new piece object, reset combat properties
             const attacker = {
-                ...pieces[pieceId],
+                ...board.pieces[pieceId],
                 attacking: null,
                 hit: null,
             };
@@ -40,45 +41,46 @@ export class TurnSimulator {
             if (attacker.coolDown > 0) {
                 attacker.coolDown -= attackerCombatInfo.stats.speed;
 
-                pieces[attacker.id] = attacker;
+                board = boardReducer(board, updateBoardPiece(attacker));
 
                 continue;
             }
 
-            // TODO rework getAttackableEnemy and getNewPiecePosition to take pieces objects
-            const updatedPieces = Object.values(pieces);
-
-            const defender = getAttackableEnemy(attacker, attackerCombatInfo.stats.attackType, updatedPieces);
+            const defender = getAttackableEnemy(attacker, attackerCombatInfo.stats.attackType, board);
 
             if (!defender) {
                 attacker.targetPieceId = null;
-                const newPosition = getNewPiecePosition(attacker, updatedPieces.filter(p => p.currentHealth > 0));
+                const newPosition = getNewPiecePosition(attacker, board);
 
                 if (newPosition !== null) {
                     attacker.position = newPosition;
+
+                    // todo change this to be a "readyTurn" or something numeric so that we
+                    // aren't updating the creature every turn. e.g. is "readyTurn" is 50 we can just skip over this
+                    // creature until turn 50 rather than actually doing anything
                     attacker.coolDown = INITIAL_COOLDOWN;
+
+                    board = boardReducer(board, updateBoardPiece(attacker));
                 }
 
-                pieces[attacker.id] = attacker;
                 continue;
             }
 
             const defenderCombatInfo = this.getPieceCombatInfo(defender);
+
             const updatedFighters = this.attack(attackerCombatInfo, defenderCombatInfo);
             updatedFighters.attacker.targetPieceId = updatedFighters.defender.id;
 
-            pieces[updatedFighters.attacker.id] = updatedFighters.attacker;
-            pieces[updatedFighters.defender.id] = updatedFighters.defender;
+            board = boardReducer(board, updateBoardPieces([ updatedFighters.attacker, updatedFighters.defender ]));
         }
 
-        // TODO rework isATeamDefeated to take a pieces object
-        if (isATeamDefeated(Object.values(pieces))) {
-            for (const pieceId of Object.keys(pieces)) {
-                pieces[pieceId].celebrating = true;
-            }
+        if (isATeamDefeated(board)) {
+            const newPieces = Object.values(board.pieces).map(piece => ({ ...piece, celebrating: true }));
+
+            board = boardReducer(board, updateBoardPieces(newPieces));
         }
 
-        return pieces;
+        return board;
     }
 
     private getPieceCombatInfo(piece: PieceModel) {
