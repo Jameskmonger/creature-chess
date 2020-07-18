@@ -1,6 +1,6 @@
 import { Player } from "./player";
 import { GRID_SIZE } from "../../models/constants";
-import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, FeedMessage, PlayerPieceLocation } from "@common/models";
+import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation } from "@common/models";
 import { getAllPieces, getBoardPieceForPosition } from "@common/player/pieceSelectors";
 import { PlayerPiecesState, PlayerActions } from "@common/player";
 
@@ -38,8 +38,6 @@ export class Bot extends Player {
     public onStartGame(gameId: string) { /* nothing required, we're a bot */ }
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
-
-    public onNewFeedMessage(message: FeedMessage) { /* nothing required, we're a bot */ }
 
     public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
         /* nothing required, we're a bot */
