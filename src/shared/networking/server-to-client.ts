@@ -56,6 +56,10 @@ export type ReconnectAuthenticateSuccessPacket = {
   reconnectSecret: string;
 };
 
+export type AuthenticateResponse = {
+  error?: { type: "nickname_required" } | { type: "invalid_nickname", error: string } | { type: "authentication" };
+}
+
 export type JoinLobbyResponse = {
   error?: string;
   response?: {

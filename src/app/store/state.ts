@@ -21,7 +21,12 @@ export interface AppState {
 export interface AuthState {
     authenticated: boolean;
     idToken: string;
-    profile: any;
+    profile: {
+        nickname?: {
+            value: string;
+            uppercase: string;
+        };
+    };
     expiresAt: number;
 }
 

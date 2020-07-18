@@ -25,11 +25,11 @@ interface MenuStageState {
 }
 
 const PlayerInfo: React.FunctionComponent = () => {
-    const email = useSelector<AppState, any>(state => state.auth.profile.email);
+    const nickname = useSelector<AppState, string>(state => state.auth.profile.nickname?.value);
 
     return (
         <div className="player-info">
-            <span className="welcome">Logged in (<span className="email">{email}</span>)</span>
+            <span className="welcome">Logged in (<span className="email">{nickname ? nickname : "No nickname set"}</span>)</span>
 
             <button className="sign-out" onClick={signOut}>Log out</button>
         </div>
