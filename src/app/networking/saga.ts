@@ -143,6 +143,8 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
 
                 emit(joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
 
+                // used when placing the player into an existing game
+                // todo rework this
                 if (packet.fullState) {
                     const { money, cards, players, level: { level, xp }, board, bench } = packet.fullState;
 
