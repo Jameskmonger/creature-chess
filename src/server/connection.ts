@@ -57,6 +57,10 @@ export class Connection extends Player {
         this.level.onChange(this.sendLevelUpdate);
     }
 
+    public getReconnectionSecret() {
+        return this.reconnectionSecret;
+    }
+
     public replaceSocket(socket: Socket) {
         // no need to close the socket if it's the same one
         if (this.socket && this.socket.id === socket.id) {
@@ -71,17 +75,7 @@ export class Connection extends Player {
 
         this.setSocket(socket);
 
-        socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, {
-            reconnectSecret: this.reconnectionSecret
-        });
-
         console.log(`Socket replaced for ${this.id}`);
-
-        if (this.gameId) {
-            this.onStartGame(this.gameId);
-            console.log(`Game already started, ${this.id}`);
-        }
-
     }
 
     public clearSocket() {
@@ -151,8 +145,8 @@ export class Connection extends Player {
         );
     }
 
-    public onDeath() {
-        const packet: PhaseUpdatePacket = { phase: GamePhase.DEAD };
+    public onDeath(phaseStartedAt: number) {
+        const packet: PhaseUpdatePacket = { startedAt: phaseStartedAt, phase: GamePhase.DEAD };
         this.store.dispatch(gamePhaseUpdate(packet));
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
@@ -184,10 +178,11 @@ export class Connection extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
     }
 
-    protected onEnterPreparingPhase(round: number) {
+    protected onEnterPreparingPhase(startedAt: number, round: number) {
         const { board, bench, cards } = this.store.getState();
 
         const packet: PhaseUpdatePacket = {
+            startedAt,
             phase: GamePhase.PREPARING,
             payload: {
                 round,
@@ -202,8 +197,9 @@ export class Connection extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onEnterReadyPhase() {
+    protected onEnterReadyPhase(startedAt: number) {
         const packet: PhaseUpdatePacket = {
+            startedAt,
             phase: GamePhase.READY,
             payload: {
                 board: this.match.getBoard(),
@@ -214,8 +210,8 @@ export class Connection extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onEnterPlayingPhase() {
-        const packet: PhaseUpdatePacket = { phase: GamePhase.PLAYING };
+    protected onEnterPlayingPhase(startedAt: number) {
+        const packet: PhaseUpdatePacket = { startedAt, phase: GamePhase.PLAYING };
         this.store.dispatch(gamePhaseUpdate(packet));
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }

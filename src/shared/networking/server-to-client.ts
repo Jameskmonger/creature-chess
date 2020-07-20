@@ -2,8 +2,10 @@ import * as Models from "@common/models";
 import { BoardState } from "@common/board";
 import { GamePhase } from "@common/models";
 import { BenchState } from "@common/player/bench";
+import { IndexedPieces } from "@common/models/piece";
 
 export type PreparingPhaseUpdatePacket = {
+  startedAt: number,
   phase: GamePhase.PREPARING,
   payload:
   {
@@ -17,6 +19,7 @@ export type PreparingPhaseUpdatePacket = {
 };
 
 export type ReadyPhaseUpdatePacket = {
+  startedAt: number,
   phase: GamePhase.READY,
   payload: {
     board: BoardState;
@@ -27,8 +30,8 @@ export type ReadyPhaseUpdatePacket = {
 export type PhaseUpdatePacket =
   PreparingPhaseUpdatePacket
   | ReadyPhaseUpdatePacket
-  | ({ phase: GamePhase.PLAYING })
-  | ({ phase: GamePhase.DEAD });
+  | ({ startedAt: number, phase: GamePhase.PLAYING })
+  | ({ startedAt: number, phase: GamePhase.DEAD });
 
 type LevelUpdatePacket = {
   level: number;
@@ -38,13 +41,6 @@ type LevelUpdatePacket = {
 type LobbyPlayerUpdatePacket = {
   index: number;
   player: Models.LobbyPlayer;
-};
-
-type StartGamePacket = {
-  gameId: string;
-  reconnectionSecret: string;
-  localPlayerId: string;
-  name: string;
 };
 
 type FinishGamePacket = {
@@ -63,15 +59,42 @@ export type AuthenticateResponse = {
   error?: { type: "nickname_required" } | { type: "invalid_nickname", error: string } | { type: "authentication" };
 };
 
-export type JoinLobbyResponse = {
+export type PlayerGameState = {
+  gameId: string;
+  reconnectionSecret: string;
+  localPlayerId: string;
+  name: string;
+
+  // todo get rid of the ones above
+  fullState?: {
+    board: IndexedPieces;
+    bench: BenchState;
+    players: Models.PlayerListPlayer[];
+    level: {
+      level: number;
+      xp: number;
+    };
+    cards: Models.Card[];
+    money: number;
+
+    phase: PhaseUpdatePacket;
+  }
+};
+
+export type FindGameResponse = {
   error?: string;
   response?: {
-    playerId: string;
-    lobbyId: string;
-    players: Models.LobbyPlayer[];
-    startTimestamp: number;
-    isHost: boolean;
-  };
+    type: "lobby",
+    payload: {
+      playerId: string;
+      lobbyId: string;
+      players: Models.LobbyPlayer[];
+      startTimestamp: number;
+    }
+  } | {
+    type: "game",
+    payload: PlayerGameState
+  }
 };
 
 type PlayersResurrectedPacket = {
@@ -101,7 +124,7 @@ export type ServerToClientPacketDefinitions = {
   [ServerToClientPacketOpcodes.MONEY_UPDATE]: number,
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: LevelUpdatePacket,
   [ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE]: LobbyPlayerUpdatePacket,
-  [ServerToClientPacketOpcodes.START_GAME]: StartGamePacket,
+  [ServerToClientPacketOpcodes.START_GAME]: PlayerGameState,
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,

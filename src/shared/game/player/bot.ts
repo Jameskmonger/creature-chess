@@ -68,11 +68,12 @@ export class Bot extends Player {
 
     public onPlayersResurrected() { /* nothing required, we're a bot */ }
 
-    protected onEnterPreparingPhase(round: number) {
+    protected onEnterPreparingPhase(startedAt: number, round: number) {
         // todo rework this, it's a quick fix to make bots aware of game state
         const { board, bench, cards } = this.store.getState();
 
         const packet: PhaseUpdatePacket = {
+            startedAt,
             phase: GamePhase.PREPARING,
             payload: {
                 round,
@@ -91,9 +92,10 @@ export class Bot extends Player {
         this.readyUp();
     }
 
-    protected onEnterReadyPhase() {
+    protected onEnterReadyPhase(startedAt: number) {
         // todo rework this, it's a quick fix to make bots aware of game state
         const packet: PhaseUpdatePacket = {
+            startedAt,
             phase: GamePhase.READY,
             payload: {
                 board: this.match.getBoard(),
@@ -103,16 +105,16 @@ export class Bot extends Player {
         this.store.dispatch(gamePhaseUpdate(packet));
     }
 
-    protected onEnterPlayingPhase() {
-        const packet: PhaseUpdatePacket = { phase: GamePhase.PLAYING };
+    protected onEnterPlayingPhase(phaseStartedAt: number) {
+        const packet: PhaseUpdatePacket = { startedAt: phaseStartedAt, phase: GamePhase.PLAYING };
         this.store.dispatch(gamePhaseUpdate(packet));
 
         this.finishMatch();
     }
 
-    protected onDeath() {
+    protected onDeath(startedAt: number) {
         // todo rework this, it's a quick fix to make bots aware of game state
-        const packet: PhaseUpdatePacket = { phase: GamePhase.DEAD };
+        const packet: PhaseUpdatePacket = { startedAt, phase: GamePhase.DEAD };
         this.store.dispatch(gamePhaseUpdate(packet));
     }
 
