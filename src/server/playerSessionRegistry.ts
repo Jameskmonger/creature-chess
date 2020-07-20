@@ -17,6 +17,10 @@ export class PlayerSessionRegistry {
         this.sessions[playerId] = { player, location: { type, id }};
     }
 
+    public deregisterPlayer(playerId: string) {
+        delete this.sessions[playerId];
+    }
+
     public getPlayer(playerId: string) {
         return this.sessions[playerId] || null;
     }

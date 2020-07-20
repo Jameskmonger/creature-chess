@@ -175,7 +175,9 @@ export class Server {
             players.forEach(p => {
                 game.addPlayer(p);
 
-                this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
+                if ((p as Connection).isConnection) {
+                    this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
+                }
             });
 
             game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
@@ -186,6 +188,12 @@ export class Server {
                     winner: winner.name,
                     isPublic: lobby.isPublic,
                     durationMs
+                });
+
+                gamePlayers.forEach(p => {
+                    if ((p as Connection).isConnection) {
+                        this.playerSessionRegistry.deregisterPlayer(p.id);
+                    }
                 });
             });
 

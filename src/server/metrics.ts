@@ -5,8 +5,9 @@ import { log } from "@common/log";
 type GameMetric = {
   startTimeMs: number;
   players: {
+    id: string;
     name: string;
-    isBot?: true;
+    isBot: boolean;
   }[];
   round: number;
   winner: string;

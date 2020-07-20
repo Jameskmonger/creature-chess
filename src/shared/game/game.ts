@@ -115,7 +115,11 @@ export class Game {
         }
     }
 
-    public onFinish(fn: (rounds: number, winner: Player, startTimeMs: number, players: { name: string }[], durationMs: number) => void) {
+    public onFinish(
+        fn: (rounds: number, winner: Player, startTimeMs: number, players: {
+            id: string, name: string, isBot: boolean
+        }[], durationMs: number
+    ) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
@@ -190,6 +194,7 @@ export class Game {
         this.players.forEach(p => p.onFinishGame(winner));
 
         const metricPlayers = this.players.map(p => ({
+            id: p.id,
             name: p.name,
             isBot: p.isBot
         }));
