@@ -5,14 +5,14 @@ import { Player } from "@common/game/player/player";
 import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket } from "@common/networking/server-to-client";
+import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, BUY_XP, READY_UP } from "@common/player/actions";
 import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@common/player/gameInfo";
 import { Task } from "redux-saga";
-import { CARDS_UPDATED, CardsUpdatedAction } from "@common/player/cardShop";
 import { PlayerState } from "@common/player/store";
+import { CardsUpdatedAction, CARDS_UPDATED } from "@common/player/cardShop/actions";
 
 const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
     return function*() {
@@ -42,10 +42,12 @@ export class Connection extends Player {
     public readonly isConnection = true;
     private reconnectionSecret: string;
 
+    private socket: Socket;
     private incomingPacketRegistry: IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
     private outgoingPacketRegistry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
     private lastReceivedPacketIndex = 0;
     private outgoingPacketsTask: Task = null;
+    private gameId: string;
 
     constructor(socket: Socket, id: string, name: string) {
         super(id, name);
@@ -55,14 +57,79 @@ export class Connection extends Player {
         this.level.onChange(this.sendLevelUpdate);
     }
 
+    public getReconnectionSecret() {
+        return this.reconnectionSecret;
+    }
+
+    public replaceSocket(socket: Socket) {
+        // no need to close the socket if it's the same one
+        if (this.socket && this.socket.id === socket.id) {
+            console.log(`Socket soft-replaced for ${this.id}`);
+
+            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, {
+                reconnectSecret: this.reconnectionSecret
+            });
+
+            return;
+        }
+
+        this.setSocket(socket);
+
+        console.log(`Socket replaced for ${this.id}`);
+    }
+
+    public clearSocket() {
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket.removeAllListeners();
+            this.socket = null;
+        }
+
+        this.reconnectionSecret = null;
+
+        if (this.outgoingPacketsTask) {
+            this.outgoingPacketsTask.cancel();
+        }
+
+        // todo make a proper teardown for these
+        this.incomingPacketRegistry = null;
+        this.outgoingPacketsTask = null;
+    }
+
+    public setSocket(socket: Socket) {
+        this.clearSocket();
+
+        this.socket = socket;
+        this.reconnectionSecret = uuid();
+
+        this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
+            (opcode, handler) => socket.on(opcode, handler)
+        );
+
+        this.outgoingPacketRegistry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
+            (opcode, payload, ack) => socket.emit(opcode, payload, ack)
+        );
+
+        if (this.outgoingPacketsTask) {
+            this.outgoingPacketsTask.cancel();
+        }
+
+        this.outgoingPacketsTask = this.sagaMiddleware.run(outgoingPackets(this.outgoingPacketRegistry));
+
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
+    }
+
     public onStartGame(gameId: string) {
+        this.gameId = gameId;
         this.outgoingPacketRegistry.emit(
             ServerToClientPacketOpcodes.START_GAME,
             {
                 localPlayerId: this.id,
                 reconnectionSecret: this.reconnectionSecret,
                 name: this.name,
-                gameId
+                gameId: this.gameId
             }
         );
     }
@@ -78,8 +145,8 @@ export class Connection extends Player {
         );
     }
 
-    public onDeath() {
-        const packet: PhaseUpdatePacket = { phase: GamePhase.DEAD };
+    public onDeath(phaseStartedAt: number) {
+        const packet: PhaseUpdatePacket = { startedAt: phaseStartedAt, phase: GamePhase.DEAD };
         this.store.dispatch(gamePhaseUpdate(packet));
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
@@ -111,10 +178,11 @@ export class Connection extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
     }
 
-    protected onEnterPreparingPhase(round: number) {
+    protected onEnterPreparingPhase(startedAt: number, round: number) {
         const { board, bench, cards } = this.store.getState();
 
         const packet: PhaseUpdatePacket = {
+            startedAt,
             phase: GamePhase.PREPARING,
             payload: {
                 round,
@@ -129,8 +197,9 @@ export class Connection extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onEnterReadyPhase() {
+    protected onEnterReadyPhase(startedAt: number) {
         const packet: PhaseUpdatePacket = {
+            startedAt,
             phase: GamePhase.READY,
             payload: {
                 board: this.match.getBoard(),
@@ -141,8 +210,8 @@ export class Connection extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onEnterPlayingPhase() {
-        const packet: PhaseUpdatePacket = { phase: GamePhase.PLAYING };
+    protected onEnterPlayingPhase(startedAt: number) {
+        const packet: PhaseUpdatePacket = { startedAt, phase: GamePhase.PLAYING };
         this.store.dispatch(gamePhaseUpdate(packet));
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
@@ -213,27 +282,5 @@ export class Connection extends Player {
 
         this.lastReceivedPacketIndex = packet.index;
         ack(true, packet.index);
-    }
-
-    private setSocket(socket: Socket) {
-        this.reconnectionSecret = uuid();
-
-        this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
-            (opcode, handler) => socket.on(opcode, handler)
-        );
-
-        this.outgoingPacketRegistry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
-            (opcode, payload, ack) => socket.emit(opcode, payload, ack)
-        );
-
-        if (this.outgoingPacketsTask) {
-            this.outgoingPacketsTask.cancel();
-        }
-
-        this.outgoingPacketsTask = this.sagaMiddleware.run(outgoingPackets(this.outgoingPacketRegistry));
-
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.START_LOBBY_GAME, this.startLobbyGame);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
     }
 }

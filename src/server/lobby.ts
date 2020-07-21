@@ -1,8 +1,10 @@
+import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import { Player, Bot } from "@common/game";
 import { randomFromArray } from "@common/utils";
 import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@common/models/constants";
 import { IdGenerator } from "./id-generator";
+import { Connection } from "./connection";
 
 const BOT_NAMES = [
     "Duke Horacio",
@@ -63,6 +65,22 @@ export class Lobby {
 
     public canJoin() {
         return this.gameStarted === false && this.getRealPlayerCount() < MAX_PLAYERS_IN_GAME;
+    }
+
+    public replaceConnectedPlayer(player: Player, socket: Socket) {
+        const matchingPlayer = this.players.find(p => p.id === player.id);
+
+        if (!matchingPlayer) {
+            console.error("No matching player");
+            return;
+        }
+
+        if (!(player as Connection).isConnection) {
+            console.error("Tried to replace non-connection player");
+            return;
+        }
+
+        (player as Connection).replaceSocket(socket);
     }
 
     public addPlayer(player: Player) {

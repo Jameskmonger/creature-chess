@@ -13,6 +13,7 @@ import { DefinitionProvider } from "./definitionProvider";
 import { EventManager } from "./events/eventManager";
 import { matchRewards } from "./plugins/matchRewards";
 import { resetPlayer } from "./plugins/resetPlayer";
+import { PhaseUpdatePacket } from "@common/networking/server-to-client";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -34,13 +35,16 @@ const defaultPhaseLengths: PhaseLengths = PHASE_LENGTHS;
 
 export class Game {
     public readonly id: string;
+    public phase: {
+        value: GamePhase;
+        startedAt: number;
+    };
     private phaseLengths: PhaseLengths;
     private turnCount: number;
     private turnDuration: number;
     private GAME_SIZE: number;
     private round = 0;
     private lastLivingPlayerCount: number;
-    private phase = GamePhase.WAITING;
     private opponentProvider = new OpponentProvider();
     private playerList = new PlayerList();
     private turnSimulator: TurnSimulator;
@@ -58,6 +62,11 @@ export class Game {
         this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
         this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
 
+        this.phase = {
+            value: GamePhase.WAITING,
+            startedAt: null
+        };
+
         const livingPlayers = this.players.filter(p => p.isAlive());
         this.opponentProvider.setPlayers(livingPlayers);
         this.lastLivingPlayerCount = livingPlayers.length;
@@ -70,7 +79,47 @@ export class Game {
         this.registerPlugins();
     }
 
-    public onFinish(fn: (rounds: number, winner: Player, startTimeMs: number, players: { name: string }[], durationMs: number) => void) {
+    // todo use this everywhere
+    public getCurrentGamePhaseUpdateForPlayer(player: Player): PhaseUpdatePacket {
+        switch (this.phase.value) {
+            case GamePhase.DEAD:
+                return {
+                    startedAt: this.phase.startedAt,
+                    phase: this.phase.value
+                };
+            case GamePhase.PREPARING:
+                return {
+                    startedAt: this.phase.startedAt,
+                    phase: this.phase.value,
+                    payload: {
+                        round: this.round,
+                        pieces: {
+                            board: player.getBoard(),
+                            bench: player.getBench()
+                        },
+                        cards: player.getCards()
+                    }
+                };
+            case GamePhase.READY:
+                return {
+                    startedAt: this.phase.startedAt,
+                    phase: this.phase.value,
+                    payload: {
+                        board: player.getMatch().getBoard(),
+                        opponentId: player.getMatch().away.id
+                    }
+                };
+            case GamePhase.PLAYING:
+            default:
+                return null;
+        }
+    }
+
+    public onFinish(
+        fn: (rounds: number, winner: Player, startTimeMs: number, players: {
+            id: string, name: string, isBot: boolean
+        }[], durationMs: number
+    ) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
@@ -78,8 +127,12 @@ export class Game {
         return this.players;
     }
 
+    public getPlayerList() {
+        return this.playerList.getValue();
+    }
+
     public canAddPlayer() {
-        return this.players.length < this.GAME_SIZE && this.phase === GamePhase.WAITING;
+        return this.players.length < this.GAME_SIZE && this.phase.value === GamePhase.WAITING;
     }
 
     public addPlayer(player: Player) {
@@ -109,7 +162,7 @@ export class Game {
     }
 
     private startGame = async () => {
-        if (this.phase !== GamePhase.WAITING) {
+        if (this.phase.value !== GamePhase.WAITING) {
             return;
         }
 
@@ -141,6 +194,7 @@ export class Game {
         this.players.forEach(p => p.onFinishGame(winner));
 
         const metricPlayers = this.players.map(p => ({
+            id: p.id,
             name: p.name,
             isBot: p.isBot
         }));
@@ -148,16 +202,23 @@ export class Game {
         this.events.emit(GameEvents.FINISH_GAME, this.round, winner, startTimeMs, metricPlayers, duration);
     }
 
+    private setPhase(value: GamePhase) {
+        this.phase = {
+            value,
+            startedAt: Date.now()
+        };
+    }
+
     private async runPreparingPhase() {
         this.round++;
 
         this.updateLivingPlayers();
 
-        this.phase = GamePhase.PREPARING;
+        this.setPhase(GamePhase.PREPARING);
 
         this.eventManager.getTriggers().enterPreparingPhase(this.players);
 
-        const promises = this.players.map(p => p.enterPreparingPhase(this.round));
+        const promises = this.players.map(p => p.enterPreparingPhase(this.phase.startedAt, this.round));
 
         await Promise.race([
             Promise.all(promises),
@@ -176,15 +237,15 @@ export class Game {
     }
 
     private async runReadyPhase() {
-        this.phase = GamePhase.READY;
+        this.setPhase(GamePhase.READY);
 
-        this.players.forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider));
+        this.players.forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, this.phase.startedAt));
 
         await delay(this.phaseLengths[GamePhase.READY] * 1000);
     }
 
     private async runPlayingPhase() {
-        this.phase = GamePhase.PLAYING;
+        this.setPhase(GamePhase.PLAYING);
 
         this.opponentProvider.updateRotation();
 
@@ -202,7 +263,7 @@ export class Game {
 
             results.homePlayer.subtractHealth(damage);
         };
-        const promises = livingPlayers.map(p => p.fightMatch(battleTimeout).then(onPlayerFinishBattle));
+        const promises = livingPlayers.map(p => p.fightMatch(this.phase.startedAt, battleTimeout).then(onPlayerFinishBattle));
 
         await Promise.all(promises);
 

@@ -90,8 +90,8 @@ export class CanDropPieceTests {
 
     @TestCase(0, 0)
     @TestCase(7, 0)
-    @TestCase(0, 3)
-    @TestCase(7, 3)
+    @TestCase(0, 2)
+    @TestCase(7, 2)
     public cantDropInOpponentArea(x: number, y: number) {
         const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
 

@@ -4,10 +4,10 @@ import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL } from "../../models/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL, GRID_SIZE } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, StreakType, PlayerListPlayer, GamePhase } from "@common/models";
+import { LobbyPlayer, StreakType, PlayerListPlayer } from "@common/models";
 import { getPiecesForStage, getXpToNextLevel, Observable } from "@common/utils";
 import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
@@ -100,7 +100,7 @@ export abstract class Player {
     }
 
     public getBattleBoard(away: Player) {
-        return mergeBoards(this.store.getState().board.pieces, away.store.getState().board.pieces);
+        return mergeBoards(GRID_SIZE, this.store.getState().board.pieces, away.store.getState().board.pieces);
     }
 
     public addXp(amount: number) {
@@ -143,7 +143,7 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public async enterPreparingPhase(round: number) {
+    public async enterPreparingPhase(startedAt: number, round: number) {
         this.currentRound = round;
 
         this.readyUpDeferred = pDefer();
@@ -154,7 +154,7 @@ export abstract class Player {
 
         this.pieces.unlockEvolutions();
 
-        this.onEnterPreparingPhase(round);
+        this.onEnterPreparingPhase(startedAt, round);
 
         if (this.isAlive() === false) {
             return;
@@ -167,7 +167,7 @@ export abstract class Player {
         this.match = null;
     }
 
-    public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider) {
+    public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider, startedAt: number) {
         this.readyUpDeferred = null;
         this.ready = false;
 
@@ -181,13 +181,13 @@ export abstract class Player {
 
             this.match = new Match(turnSimulator, this.turnCount, this.turnDuration, this, opponent);
 
-            this.onEnterReadyPhase();
+            this.onEnterReadyPhase(startedAt);
         }
     }
 
-    public async fightMatch(battleTimeout: Promise<void>): Promise<PlayerMatchResults> {
+    public async fightMatch(startedAt: number, battleTimeout: Promise<void>): Promise<PlayerMatchResults> {
 
-        this.onEnterPlayingPhase();
+        this.onEnterPlayingPhase(startedAt);
 
         const finalMatchBoard = await this.match.fight(battleTimeout);
 
@@ -300,13 +300,38 @@ export abstract class Player {
 
     public kill() {
         this.clearPieces();
-        this.onDeath();
+        this.onDeath(Date.now());
     }
 
     public resurrect(startingHealth: number) {
         this.roundDiedAt = null;
         this.health = startingHealth;
         this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
+    }
+
+    public getBoard() {
+        return this.store.getState().board;
+    }
+
+    public getBench() {
+        return this.store.getState().bench;
+    }
+
+    public getCards() {
+        return this.store.getState().cards;
+    }
+
+    public getGameState() {
+        const { board, bench, cards, gameInfo: { money } } = this.store.getState();
+        const level = this.level.getValue();
+
+        return {
+            board: board.pieces,
+            bench,
+            cards,
+            money,
+            level
+        };
     }
 
     public abstract onPlayersResurrected(playerIds: string[]);
@@ -317,13 +342,13 @@ export abstract class Player {
 
     public abstract onLobbyPlayerUpdate(index: number, player: LobbyPlayer);
 
-    protected abstract onEnterPreparingPhase(round: number);
+    protected abstract onEnterPreparingPhase(startedAt: number, round: number);
 
-    protected abstract onEnterReadyPhase();
+    protected abstract onEnterReadyPhase(startedAt: number, );
 
-    protected abstract onEnterPlayingPhase();
+    protected abstract onEnterPlayingPhase(startedAt: number, );
 
-    protected abstract onDeath();
+    protected abstract onDeath(phaseStartedAt: number, );
 
     protected abstract onShopLockUpdate();
 
