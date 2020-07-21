@@ -76,6 +76,7 @@ export class Connection extends Player {
         this.clearSocket();
 
         this.socket = socket;
+        this.lastReceivedPacketIndex = 0;
 
         this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
             (opcode, handler) => socket.on(opcode, handler)
