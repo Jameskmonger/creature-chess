@@ -1,5 +1,4 @@
 import io = require("socket.io");
-import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
 import { log } from "@common/log";
 import { Game } from "@common/game/game";
@@ -8,15 +7,11 @@ import { Lobby } from "./lobby";
 import { Player } from "@common/game";
 import { IdGenerator } from "./id-generator";
 import { LobbyPlayer } from "@common/models";
-import { ClientToServerPacketOpcodes } from "@common/networking/client-to-server";
-import { AuthenticateResponse, FindGameResponse, PlayerGameState } from "@common/networking/server-to-client";
+import { PlayerGameState } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
-import { authenticate } from "./user/authenticate";
-import { validateNickname } from "@common/validation/nickname";
-import { updateUser } from "./user/updateUser";
-import { UserAppMetadata } from "./user/userModel";
-import { checkNicknameUnique } from "./user/checkNicknameUnique";
+import { UserAppMetadata, UserModel } from "./user/userModel";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
+import { SocketReceiver } from "./socketAuthenticator";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
@@ -29,12 +24,20 @@ const AUTH0_CONFIG = {
     clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 
+const getLobbyPlayers = (lobby: Lobby): LobbyPlayer[] => {
+    return lobby.getPlayers().map(p => ({
+        id: p.id,
+        name: p.name,
+        isBot: p.isBot,
+        isHost: false
+    }));
+};
+
 export class Server {
     private lobbies = new Map<string, Lobby>();
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
     private metrics = new Metrics();
-    private filter = new Filter();
     private playerSessionRegistry = new PlayerSessionRegistry();
 
     private client = new ManagementClient<UserAppMetadata>({
@@ -44,91 +47,13 @@ export class Server {
     });
 
     public listen(port: number) {
-        // TODO create UnauthenticatedPlayerFactory and AuthenticatedPlayerFactory or something that takes in `server` and:
-        // - listens for authentication event, handles authentication
-        // - only sends completely authenticated players back up to the server
         const server = io.listen(port, { transports: ["websocket", "xhr-polling"] });
 
         log("Server listening on port " + port);
 
-        server.on("connection", this.receiveConnection);
-    }
+        const socketReceiver = new SocketReceiver(this.client, server);
 
-    private receiveConnection = (socket: io.Socket) => {
-        log("Connection received");
-
-        const failAuthentication = (response: AuthenticateResponse) => {
-            socket.emit("authenticate_response", response);
-            socket.removeAllListeners();
-            socket.disconnect();
-        };
-
-        const onAuthenticate = async ({ idToken, nickname }: { idToken: string, nickname: string }) => {
-            try {
-                let user = await authenticate(this.client, idToken);
-
-                // if user doesnt have a nickname we need to ask for it
-                if (!user.metadata.nickname) {
-                    if (!nickname) {
-                        failAuthentication({ error: { type: "nickname_required" } });
-                        return;
-                    }
-
-                    const trimmedNickname = nickname.trim();
-
-                    const nicknameError = validateNickname(trimmedNickname);
-
-                    if (nicknameError) {
-                        failAuthentication({ error: { type: "invalid_nickname", error: nicknameError } });
-                        return;
-                    }
-
-                    if (this.filter.isProfane(trimmedNickname)) {
-                        failAuthentication({ error: { type: "invalid_nickname", error: "Profanity filter" } });
-                        return;
-                    }
-
-                    const isUnique = await checkNicknameUnique(this.client, trimmedNickname);
-
-                    if (!isUnique) {
-                        failAuthentication({ error: { type: "invalid_nickname", error: "Nickname already in use" } });
-                        return;
-                    }
-
-                    const newMetadata = {
-                        ...user.metadata,
-                        nickname: {
-                            value: trimmedNickname,
-                            uppercase: trimmedNickname.toUpperCase()
-                        }
-                    };
-
-                    user = await updateUser(this.client, user.authId, newMetadata);
-
-                    log(`User ${user.id} set nickname to '${user.metadata.nickname.value}'`);
-                }
-
-                socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket, user.id, user.metadata.nickname.value));
-                socket.removeAllListeners("authenticate");
-
-                socket.emit("authenticate_response", { error: null });
-            } catch (e) {
-                console.error("onAuthenticate err", e);
-                failAuthentication({ error: { type: "authentication" } });
-            }
-        };
-
-        socket.on("authenticate", onAuthenticate);
-    }
-
-    private getLobbyPlayers(lobby: Lobby): LobbyPlayer[] {
-        return lobby.getPlayers().map((p, index) => ({
-            id: p.id,
-            name: p.name,
-            isBot: p.isBot,
-            // first player is always host, but no host in public lobby
-            isHost: lobby.isPublic ? false : (index === 0)
-        }));
+        socketReceiver.onReceiveSocket(this.onReceiveSocket);
     }
 
     private findOrCreatePublicLobby(player: Player) {
@@ -190,7 +115,7 @@ export class Server {
                 });
 
                 gamePlayers.forEach(p => {
-                    if ((p as Connection).isConnection) {
+                    if (!p.isBot) {
                         this.playerSessionRegistry.deregisterPlayer(p.id);
                     }
                 });
@@ -201,76 +126,64 @@ export class Server {
         };
     }
 
-    private onSocketFindGame(socket: io.Socket, id: string, name: string) {
-        return (
-            junk: any,
-            response: (response: FindGameResponse) => void
-        ) => {
-            const existingPlayer = this.playerSessionRegistry.getPlayer(id);
+    private onReceiveSocket = (socket: io.Socket, user: UserModel) => {
+        const { id, metadata: { nickname } } = user;
 
-            if (existingPlayer && existingPlayer.location.type === "game") {
-                const existingGame = this.games.get(existingPlayer.location.id);
+        const existingPlayer = this.playerSessionRegistry.getPlayer(id);
 
-                if (existingGame) {
-                    const playerInGame = existingGame.getPlayers().some(p => p.id === id);
+        if (existingPlayer && existingPlayer.location.type === "game") {
+            const existingGame = this.games.get(existingPlayer.location.id);
 
-                    if (!playerInGame) {
-                        return;
-                    }
+            if (existingGame) {
+                const playerInGame = existingGame.getPlayers().some(p => p.id === id);
 
-                    const player: Connection = (existingPlayer.player as Connection);
-
-                    player.setSocket(socket);
-
-                    const fullGameState: PlayerGameState = {
-                        gameId: existingGame.id,
-                        localPlayerId: player.id,
-                        name: player.name,
-
-                        fullState: {
-                            players: existingGame.getPlayerList(),
-                            phase: existingGame.getCurrentGamePhaseUpdateForPlayer(player),
-                            ...player.getGameState()
-                        }
-                    };
-
-                    response({
-                        error: null,
-                        response: {
-                            type: "game",
-                            payload: fullGameState
-                        }
-                    });
-
+                if (!playerInGame) {
                     return;
                 }
-            }
 
-            const playerToRegister: Connection =
-                existingPlayer && existingPlayer.location.type === "lobby"
-                    ? existingPlayer.player as Connection
-                    : new Connection(socket, id, name);
+                const player: Connection = (existingPlayer.player as Connection);
 
-            const lobby = this.findOrCreatePublicLobby(playerToRegister);
+                player.setSocket(socket);
 
-            if (!existingPlayer) {
-                this.playerSessionRegistry.registerPlayer(playerToRegister.id, playerToRegister, "lobby", lobby.id);
-            } else {
-                playerToRegister.setSocket(socket);
-            }
+                const fullGameState: PlayerGameState = {
+                    gameId: existingGame.id,
+                    localPlayerId: player.id,
+                    name: player.name,
 
-            response({
-                error: null,
-                response: {
-                    type: "lobby",
-                    payload: {
-                        playerId: playerToRegister.id,
-                        lobbyId: lobby.id,
-                        players: this.getLobbyPlayers(lobby),
-                        startTimestamp: lobby.gameStartTime
+                    fullState: {
+                        players: existingGame.getPlayerList(),
+                        phase: existingGame.getCurrentGamePhaseUpdateForPlayer(player),
+                        ...player.getGameState()
                     }
-                }
-            });
-        };
+                };
+
+                player.sendJoinGamePacket({ type: "game", payload: fullGameState });
+
+                return;
+            }
+        }
+
+        const playerToRegister: Connection =
+            existingPlayer && existingPlayer.location.type === "lobby"
+                ? existingPlayer.player as Connection
+                : new Connection(socket, id, nickname.value);
+
+        const lobby = this.findOrCreatePublicLobby(playerToRegister);
+
+        if (!existingPlayer) {
+            this.playerSessionRegistry.registerPlayer(playerToRegister.id, playerToRegister, "lobby", lobby.id);
+        } else {
+            playerToRegister.setSocket(socket);
+        }
+
+        playerToRegister.sendJoinGamePacket({
+            type: "lobby",
+            payload: {
+                playerId: playerToRegister.id,
+                lobbyId: lobby.id,
+                players: getLobbyPlayers(lobby),
+                startTimestamp: lobby.gameStartTime
+            }
+        });
     }
 }

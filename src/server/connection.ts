@@ -5,7 +5,7 @@ import { Player } from "@common/game/player/player";
 import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket } from "@common/networking/server-to-client";
+import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, JoinGamePacket } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, BUY_XP, READY_UP } from "@common/player/actions";
@@ -100,13 +100,20 @@ export class Connection extends Player {
     public onStartGame(gameId: string) {
         this.gameId = gameId;
         this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.START_GAME,
+            ServerToClientPacketOpcodes.JOIN_GAME,
             {
-                localPlayerId: this.id,
-                name: this.name,
-                gameId: this.gameId
+                type: "game",
+                payload: {
+                    localPlayerId: this.id,
+                    name: this.name,
+                    gameId: this.gameId
+                }
             }
         );
+    }
+
+    public sendJoinGamePacket(packet: JoinGamePacket) {
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.JOIN_GAME, packet);
     }
 
     public onFinishGame(winner: Player) {

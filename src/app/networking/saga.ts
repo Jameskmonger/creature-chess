@@ -16,7 +16,7 @@ import { AppState } from "../store/state";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import {
     ServerToClientPacketDefinitions,
-    ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse, FindGameResponse
+    ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse, JoinGamePacket
 } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@common/networking/client-to-server";
@@ -57,18 +57,6 @@ const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
 
 type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
-
-const findGame = (registry: ClientToServerPacketRegsitry) => {
-    return new Promise<FindGameResponse>(resolve => {
-        registry.emit(
-            ClientToServerPacketOpcodes.FIND_GAME,
-            { empty: true },
-            response => {
-                resolve(response);
-            }
-        );
-    });
-};
 
 const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
     return eventChannel(emit => {
@@ -130,16 +118,26 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.START_GAME,
+            ServerToClientPacketOpcodes.JOIN_GAME,
             (packet) => {
-                log("[START_GAME]", packet);
+                if (packet.type === "lobby") {
+                    const { playerId, lobbyId, players, startTimestamp } = packet.payload;
 
-                emit(joinCompleteAction(packet.localPlayerId, packet.gameId, packet.name));
+                    emit(joinLobbyAction(
+                        playerId,
+                        lobbyId,
+                        players,
+                        startTimestamp,
+                        false // todo remove this parameter
+                    ));
+                }
 
-                // used when placing the player into an existing game
-                // todo rework this
-                if (packet.fullState) {
-                    const { money, cards, players, level: { level, xp }, board, bench } = packet.fullState;
+                if (packet.type === "game") {
+                    const { localPlayerId, gameId, name } = packet.payload;
+
+                    emit(joinCompleteAction(localPlayerId, gameId, name));
+
+                    const { money, cards, players, level: { level, xp }, board, bench, phase } = packet.payload.fullState;
 
                     emit(moneyUpdateAction(money));
                     emit(cardsUpdated(cards));
@@ -147,6 +145,12 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                     emit(localPlayerLevelUpdate(level, xp));
                     emit(initialiseBoard(board));
                     emit(initialiseBench(bench));
+
+                    if (phase) {
+                        emit(gamePhaseUpdate(phase));
+                    } else {
+                        emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
+                    }
                 }
             }
         );
@@ -281,7 +285,7 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
 };
 
 export const networking = function*() {
-    let action: FindGameAction = yield take(FIND_GAME);
+    const action: FindGameAction = yield take(FIND_GAME);
 
     const state: AppState = yield select();
 
@@ -355,49 +359,5 @@ export const networking = function*() {
     yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
     yield fork(readPacketsToActions, incomingRegistry, socket);
-
-    while (true) {
-        const { error, response }: FindGameResponse = yield call(findGame, outgoingRegistry);
-
-        if (!error) {
-            if (response.type === "lobby") {
-                const { playerId, lobbyId, players, startTimestamp } = response.payload;
-
-                yield put(joinLobbyAction(
-                    playerId,
-                    lobbyId,
-                    players,
-                    startTimestamp,
-                    false // todo remove this parameter
-                ));
-            }
-
-            if (response.type === "game") {
-                const { localPlayerId, gameId, name } = response.payload;
-
-                yield put(joinCompleteAction(localPlayerId, gameId, name));
-
-                const { money, cards, players, level: { level, xp }, board, bench, phase } = response.payload.fullState;
-
-                yield put(moneyUpdateAction(money));
-                yield put(cardsUpdated(cards));
-                yield put(playerListUpdated(players));
-                yield put(localPlayerLevelUpdate(level, xp));
-                yield put(initialiseBoard(board));
-                yield put(initialiseBench(bench));
-
-                if (phase) {
-                    yield put(gamePhaseUpdate(phase));
-                } else {
-                    yield put(updateConnectionStatus(ConnectionStatus.RECONNECTED));
-                }
-            }
-            break;
-        }
-
-        yield put(joinGameError(error));
-        action = yield take(FIND_GAME);
-    }
-
     yield fork(writeActionsToPackets, outgoingRegistry);
 };
