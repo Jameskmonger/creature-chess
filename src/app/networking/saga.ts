@@ -7,9 +7,9 @@ import {
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected, phaseStartSeconds
 } from "../store/actions/gameActions";
 import { playerListUpdated } from "../features/playerList/playerListActions";
-import { FIND_GAME, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
+import { FIND_GAME } from "../store/actiontypes/gameActionTypes";
 import { log } from "../log";
-import { joinCompleteAction, localPlayerLevelUpdate, updateReconnectSecret } from "../store/actions/localPlayerActions";
+import { joinCompleteAction, localPlayerLevelUpdate } from "../store/actions/localPlayerActions";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN, START_LOBBY_GAME } from "../store/actions/lobbyActions";
 import { AppState } from "../store/state";
@@ -31,7 +31,7 @@ import { initialiseBench } from "@common/player/bench/benchActions";
 
 const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
     // force to websocket for now until CORS is sorted
-    const socket = io(serverIP, { transports: ["websocket", "xhr-polling"] });
+    const socket = io(serverIP, { transports: ["websocket", "xhr-polling"], reconnection: false });
 
     return new Promise<Socket>((resolve, reject) => {
         socket.on("connect", () => {
@@ -72,17 +72,10 @@ const findGame = (registry: ClientToServerPacketRegsitry) => {
 
 const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
     return eventChannel(emit => {
-        let deliberateDisconnected = false;
-
         socket.on("disconnect", () => {
-            if (deliberateDisconnected) {
-                return;
-            }
-
             emit(clearAnnouncement());
-            emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED_WILL_RECONNECT));
+            emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
         });
-        socket.on("reconnect", () => emit(updateConnectionStatus(ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION)));
 
         registry.on(
             ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE,
@@ -141,7 +134,7 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
             (packet) => {
                 log("[START_GAME]", packet);
 
-                emit(joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
+                emit(joinCompleteAction(packet.localPlayerId, packet.gameId, packet.name));
 
                 // used when placing the player into an existing game
                 // todo rework this
@@ -180,28 +173,6 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
             ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
             ({ playerIds }) => {
                 emit(playersResurrected(playerIds));
-            }
-        );
-
-        registry.on(
-            ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS,
-            (packet) => {
-                log("[RECONNECT_AUTHENTICATE_SUCCESS]");
-
-                emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
-                emit(updateReconnectSecret(packet.reconnectSecret));
-            }
-        );
-
-        registry.on(
-            ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE,
-            () => {
-                log("[RECONNECT_AUTH_FAILURE]");
-
-                emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED_FINAL));
-
-                deliberateDisconnected = true;
-                socket.disconnect();
             }
         );
 
@@ -305,27 +276,6 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
                 registry.emit(ClientToServerPacketOpcodes.START_LOBBY_GAME, { empty: true });
             }
         ),
-        takeLatest(
-            action => action.type === UPDATE_CONNECTION_STATUS && action.payload.status === ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION,
-            function*() {
-                const state: AppState = yield select();
-
-                // if player not connected yet, don't try to reconnect
-                if (state.localPlayer.id === null) {
-                    yield put(updateConnectionStatus(ConnectionStatus.DISCONNECTED_FINAL));
-                    return;
-                }
-
-                registry.emit(
-                    ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE,
-                    {
-                        gameId: state.game.gameId,
-                        playerId: state.localPlayer.id,
-                        reconnectSecret: state.localPlayer.reconnectionSecret
-                    }
-                );
-            }
-        ),
         yield fork(sendPlayerActions, registry)
     ]);
 };
@@ -423,9 +373,9 @@ export const networking = function*() {
             }
 
             if (response.type === "game") {
-                const { localPlayerId, reconnectionSecret, gameId, name } = response.payload;
+                const { localPlayerId, gameId, name } = response.payload;
 
-                yield put(joinCompleteAction(localPlayerId, reconnectionSecret, gameId, name));
+                yield put(joinCompleteAction(localPlayerId, gameId, name));
 
                 const { money, cards, players, level: { level, xp }, board, bench, phase } = response.payload.fullState;
 
@@ -438,7 +388,6 @@ export const networking = function*() {
 
                 if (phase) {
                     yield put(gamePhaseUpdate(phase));
-                    yield put(phaseStartSeconds(phase.startedAt / 1000));
                 } else {
                     yield put(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                 }

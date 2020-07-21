@@ -8,8 +8,8 @@ import { Lobby } from "./lobby";
 import { Player } from "@common/game";
 import { IdGenerator } from "./id-generator";
 import { LobbyPlayer } from "@common/models";
-import { ClientToServerPacketOpcodes, ReconnectAuthenticatePacket } from "@common/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ReconnectAuthenticateSuccessPacket, AuthenticateResponse, FindGameResponse, PlayerGameState } from "@common/networking/server-to-client";
+import { ClientToServerPacketOpcodes } from "@common/networking/client-to-server";
+import { AuthenticateResponse, FindGameResponse, PlayerGameState } from "@common/networking/server-to-client";
 import { Metrics } from "./metrics";
 import { authenticate } from "./user/authenticate";
 import { validateNickname } from "@common/validation/nickname";
@@ -18,7 +18,7 @@ import { UserAppMetadata } from "./user/userModel";
 import { checkNicknameUnique } from "./user/checkNicknameUnique";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
 
-process.on("unhandledRejection", (error, p) => {
+process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
     log((error as any).stack);
 });
@@ -105,10 +105,9 @@ export class Server {
 
                     user = await updateUser(this.client, user.authId, newMetadata);
 
-                    console.log(`User ${user.id} set nickname to '${user.metadata.nickname.value}'`);
+                    log(`User ${user.id} set nickname to '${user.metadata.nickname.value}'`);
                 }
 
-                socket.on(ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE, this.onSocketReconnectAuthenticate(socket));
                 socket.on(ClientToServerPacketOpcodes.FIND_GAME, this.onSocketFindGame(socket, user.id, user.metadata.nickname.value));
                 socket.removeAllListeners("authenticate");
 
@@ -221,11 +220,10 @@ export class Server {
 
                     const player: Connection = (existingPlayer.player as Connection);
 
-                    player.replaceSocket(socket);
+                    player.setSocket(socket);
 
                     const fullGameState: PlayerGameState = {
                         gameId: existingGame.id,
-                        reconnectionSecret: player.getReconnectionSecret(),
                         localPlayerId: player.id,
                         name: player.name,
 
@@ -258,7 +256,7 @@ export class Server {
             if (!existingPlayer) {
                 this.playerSessionRegistry.registerPlayer(playerToRegister.id, playerToRegister, "lobby", lobby.id);
             } else {
-                playerToRegister.replaceSocket(socket);
+                playerToRegister.setSocket(socket);
             }
 
             response({
@@ -273,55 +271,6 @@ export class Server {
                     }
                 }
             });
-        };
-    }
-
-    private onSocketReconnectAuthenticate(socket: io.Socket) {
-        const disconnect = () => {
-            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE);
-
-            socket.disconnect();
-        };
-
-        return (packet: ReconnectAuthenticatePacket) => {
-            const game = this.games.get(packet.gameId);
-
-            if (!game) {
-                log(`Tried to reauthenticate for game ${packet.gameId}, but game not found`);
-                disconnect();
-                return;
-            }
-
-            const player = game.getPlayerById(packet.playerId);
-
-            if (!player) {
-                log(`Tried to reauthenticate as ${packet.playerId}, but player not found`);
-                disconnect();
-                return;
-            }
-
-            const connectionPlayer = player as Connection;
-
-            if (!connectionPlayer.isConnection) {
-                log(`Tried to reauthenticate as ${connectionPlayer.id}, but player is not a connection`);
-                disconnect();
-                return;
-            }
-
-            const newReconnectionSecret = connectionPlayer.reauthenticate(socket, packet.reconnectSecret);
-
-            if (newReconnectionSecret === null) {
-                log(`Reauthentication unsuccessful`);
-                disconnect();
-                return;
-            }
-
-            log(`Successfully reauthenticated`);
-
-            const successPacket: ReconnectAuthenticateSuccessPacket = {
-                reconnectSecret: newReconnectionSecret
-            };
-            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, successPacket);
         };
     }
 }

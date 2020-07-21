@@ -16,20 +16,11 @@ const ReconnectModal: React.FunctionComponent = () => {
     return (
         <div className="reconnect">
             {
-                connectionStatus === ConnectionStatus.DISCONNECTED_WILL_RECONNECT
+                connectionStatus === ConnectionStatus.DISCONNECTED
                 && (
                     <>
                         <p className="text">Oops - you've been disconnected</p>
-                        <p className="text">Please wait while we reconnect you...</p>
-                    </>
-                )
-            }
-            {
-                connectionStatus === ConnectionStatus.RECONNECTED_NEED_AUTHENTICATION
-                && (
-                    <>
-                        <p className="text">Restoring connection with server</p>
-                        <p className="text">Authenticating with server...</p>
+                        <p className="text">Please refresh the page and press 'Find Game' to rejoin</p>
                     </>
                 )
             }
@@ -39,15 +30,6 @@ const ReconnectModal: React.FunctionComponent = () => {
                     <>
                         <p className="text">Reconnected!</p>
                         <p className="text">Please wait for the current round to finish...</p>
-                    </>
-                )
-            }
-            {
-                connectionStatus === ConnectionStatus.DISCONNECTED_FINAL
-                && (
-                    <>
-                        <p className="text">Sorry - we couldn't reconnect you</p>
-                        <p className="text">We're working on fixing this</p>
                     </>
                 )
             }

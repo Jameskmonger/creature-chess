@@ -51,17 +51,12 @@ type ShopLockUpdatePacket = {
   locked: boolean;
 };
 
-export type ReconnectAuthenticateSuccessPacket = {
-  reconnectSecret: string;
-};
-
 export type AuthenticateResponse = {
   error?: { type: "nickname_required" } | { type: "invalid_nickname", error: string } | { type: "authentication" };
 };
 
 export type PlayerGameState = {
   gameId: string;
-  reconnectionSecret: string;
   localPlayerId: string;
   name: string;
 
@@ -112,9 +107,6 @@ export enum ServerToClientPacketOpcodes {
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
   PLAYERS_RESURRECTED = "playersResurrected",
-
-  RECONNECT_AUTHENTICATE_SUCCESS = "reconnectAuthSuccess",
-  RECONNECT_AUTHENTICATE_FAILURE = "reconnectAuthFailure"
 }
 
 export type ServerToClientPacketDefinitions = {
@@ -128,8 +120,6 @@ export type ServerToClientPacketDefinitions = {
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
-  [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS]: ReconnectAuthenticateSuccessPacket,
-  [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE]: undefined
 };
 
 export type ServerToClientPacketAcknowledgements = {
@@ -142,7 +132,5 @@ export type ServerToClientPacketAcknowledgements = {
   [ServerToClientPacketOpcodes.START_GAME]: never,
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
-  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never,
-  [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS]: never,
-  [ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_FAILURE]: never
+  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never
 };
