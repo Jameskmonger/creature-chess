@@ -76,20 +76,17 @@ export type PlayerGameState = {
   }
 };
 
-export type FindGameResponse = {
-  error?: string;
-  response?: {
-    type: "lobby",
-    payload: {
-      playerId: string;
-      lobbyId: string;
-      players: Models.LobbyPlayer[];
-      startTimestamp: number;
-    }
-  } | {
-    type: "game",
-    payload: PlayerGameState
+export type JoinGamePacket = {
+  type: "lobby",
+  payload: {
+    playerId: string;
+    lobbyId: string;
+    players: Models.LobbyPlayer[];
+    startTimestamp: number;
   }
+} | {
+  type: "game",
+  payload: PlayerGameState
 };
 
 type PlayersResurrectedPacket = {
@@ -97,39 +94,39 @@ type PlayersResurrectedPacket = {
 };
 
 export enum ServerToClientPacketOpcodes {
+  JOIN_GAME = "joinGame",
   CARDS_UPDATE = "cardsUpdate",
   PLAYER_LIST_UPDATE = "playerListUpdate",
   PHASE_UPDATE = "phaseUpdate",
   MONEY_UPDATE = "moneyUpdate",
   LEVEL_UPDATE = "levelUpdate",
   LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate",
-  START_GAME = "startGame",
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
   PLAYERS_RESURRECTED = "playersResurrected",
 }
 
 export type ServerToClientPacketDefinitions = {
+  [ServerToClientPacketOpcodes.JOIN_GAME]: JoinGamePacket,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: Models.Card[],
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: Models.PlayerListPlayer[],
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
   [ServerToClientPacketOpcodes.MONEY_UPDATE]: number,
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: LevelUpdatePacket,
   [ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE]: LobbyPlayerUpdatePacket,
-  [ServerToClientPacketOpcodes.START_GAME]: PlayerGameState,
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
 };
 
 export type ServerToClientPacketAcknowledgements = {
+  [ServerToClientPacketOpcodes.JOIN_GAME]: never,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: never,
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: never,
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: never,
   [ServerToClientPacketOpcodes.MONEY_UPDATE]: never,
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: never,
   [ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE]: never,
-  [ServerToClientPacketOpcodes.START_GAME]: never,
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never
