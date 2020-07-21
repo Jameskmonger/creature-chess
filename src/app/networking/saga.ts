@@ -1,10 +1,10 @@
 import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, takeLatest, select } from "@redux-saga/core/effects";
-import { Socket, ActionWithPayload } from "../store/sagas/types";
+import { Socket } from "../store/sagas/types";
 import {
     joinGameError,
-    FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
+    FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected, phaseStartSeconds
 } from "../store/actions/gameActions";
 import { playerListUpdated } from "../features/playerList/playerListActions";
 import { FIND_GAME, UPDATE_CONNECTION_STATUS } from "../store/actiontypes/gameActionTypes";
@@ -14,7 +14,10 @@ import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN, START_LOBBY_GAME } from "../store/actions/lobbyActions";
 import { AppState } from "../store/state";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
-import { ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, JoinLobbyResponse, ServerToClientPacketAcknowledgements, AuthenticateResponse } from "@common/networking/server-to-client";
+import {
+    ServerToClientPacketDefinitions,
+    ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse, FindGameResponse
+} from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@common/networking/client-to-server";
 import { ConnectionStatus } from "@common/networking";
@@ -23,6 +26,8 @@ import { signIn } from "@app/auth/auth0";
 import { validateNickname } from "@common/validation/nickname";
 import { moneyUpdateAction, gamePhaseUpdate } from "@common/player/gameInfo";
 import { cardsUpdated } from "@common/player/cardShop";
+import { initialiseBoard } from "@common/board/actions/boardActions";
+import { initialiseBench } from "@common/player/bench/benchActions";
 
 const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
     // force to websocket for now until CORS is sorted
@@ -54,7 +59,7 @@ type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServerPacketD
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
 const findGame = (registry: ClientToServerPacketRegsitry) => {
-    return new Promise<JoinLobbyResponse>(resolve => {
+    return new Promise<FindGameResponse>(resolve => {
         registry.emit(
             ClientToServerPacketOpcodes.FIND_GAME,
             { empty: true },
@@ -137,6 +142,19 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                 log("[START_GAME]", packet);
 
                 emit(joinCompleteAction(packet.localPlayerId, packet.reconnectionSecret, packet.gameId, packet.name));
+
+                // used when placing the player into an existing game
+                // todo rework this
+                if (packet.fullState) {
+                    const { money, cards, players, level: { level, xp }, board, bench } = packet.fullState;
+
+                    emit(moneyUpdateAction(money));
+                    emit(cardsUpdated(cards));
+                    emit(playerListUpdated(players));
+                    emit(localPlayerLevelUpdate(level, xp));
+                    emit(initialiseBoard(board));
+                    emit(initialiseBench(bench));
+                }
             }
         );
 
@@ -389,16 +407,42 @@ export const networking = function*() {
     yield fork(readPacketsToActions, incomingRegistry, socket);
 
     while (true) {
-        const { error, response }: JoinLobbyResponse = yield call(findGame, outgoingRegistry);
+        const { error, response }: FindGameResponse = yield call(findGame, outgoingRegistry);
 
         if (!error) {
-            yield put(joinLobbyAction(
-                response.playerId,
-                response.lobbyId,
-                response.players,
-                response.startTimestamp,
-                response.isHost
-            ));
+            if (response.type === "lobby") {
+                const { playerId, lobbyId, players, startTimestamp } = response.payload;
+
+                yield put(joinLobbyAction(
+                    playerId,
+                    lobbyId,
+                    players,
+                    startTimestamp,
+                    false // todo remove this parameter
+                ));
+            }
+
+            if (response.type === "game") {
+                const { localPlayerId, reconnectionSecret, gameId, name } = response.payload;
+
+                yield put(joinCompleteAction(localPlayerId, reconnectionSecret, gameId, name));
+
+                const { money, cards, players, level: { level, xp }, board, bench, phase } = response.payload.fullState;
+
+                yield put(moneyUpdateAction(money));
+                yield put(cardsUpdated(cards));
+                yield put(playerListUpdated(players));
+                yield put(localPlayerLevelUpdate(level, xp));
+                yield put(initialiseBoard(board));
+                yield put(initialiseBench(bench));
+
+                if (phase) {
+                    yield put(gamePhaseUpdate(phase));
+                    yield put(phaseStartSeconds(phase.startedAt / 1000));
+                } else {
+                    yield put(updateConnectionStatus(ConnectionStatus.RECONNECTED));
+                }
+            }
             break;
         }
 

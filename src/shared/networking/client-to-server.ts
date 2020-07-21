@@ -1,4 +1,4 @@
-import { JoinLobbyResponse } from "./server-to-client";
+import { FindGameResponse } from "./server-to-client";
 import { PlayerAction } from "@common/player/actions";
 
 export enum ClientToServerPacketOpcodes {
@@ -33,7 +33,7 @@ export type ClientToServerPacketDefinitions = {
 };
 
 export type ClientToServerPacketAcknowledgements = {
-  [ClientToServerPacketOpcodes.FIND_GAME]: (response: JoinLobbyResponse) => void,
+  [ClientToServerPacketOpcodes.FIND_GAME]: (response: FindGameResponse) => void,
   [ClientToServerPacketOpcodes.FINISH_MATCH]: never,
   [ClientToServerPacketOpcodes.START_LOBBY_GAME]: never,
   [ClientToServerPacketOpcodes.RECONNECT_AUTHENTICATE]: never,

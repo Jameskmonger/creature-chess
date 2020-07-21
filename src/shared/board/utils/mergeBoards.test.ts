@@ -35,7 +35,7 @@ export class MergeBoardsTests {
             ["457"]: awayPieceB
         };
 
-        const result = mergeBoards(home, away);
+        const result = mergeBoards({ width: 8, height: 8 }, home, away);
 
         Expect(result).toEqual({
             ["123"]: {

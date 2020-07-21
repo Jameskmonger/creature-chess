@@ -42,6 +42,10 @@ export class PlayerList {
         this.events.on(PlayerListEvents.UPDATE, fn);
     }
 
+    public getValue(): PlayerListPlayer[] {
+        return this.players;
+    }
+
     public addPlayer(player: Player) {
         const playerListPlayer: PlayerListPlayer = {
             id: player.id,
