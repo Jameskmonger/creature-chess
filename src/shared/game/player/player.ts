@@ -4,7 +4,7 @@ import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL } from "../../models/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL, GRID_SIZE } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer } from "@common/models";
@@ -100,7 +100,7 @@ export abstract class Player {
     }
 
     public getBattleBoard(away: Player) {
-        return mergeBoards(this.store.getState().board.pieces, away.store.getState().board.pieces);
+        return mergeBoards(GRID_SIZE, this.store.getState().board.pieces, away.store.getState().board.pieces);
     }
 
     public addXp(amount: number) {
