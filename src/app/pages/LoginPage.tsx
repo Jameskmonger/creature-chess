@@ -36,6 +36,17 @@ const LoginPage: React.FunctionComponent = () => {
                     </div>
                 </div>
             </div>
+
+            <div className="how-to-play">
+                <div className="header">Why do I need an account?</div>
+                <div className="content">
+                    <p>Logging into an account allows the game to keep your session, so that if you get</p>
+                    <p>disconnected, you can get right back into the game.</p>
+                    <p>&nbsp;</p>
+                    <p>I don't store any of your personal data. Your game data might be deleted occasionally as I</p>
+                    <p>develop the game further.</p>
+                </div>
+            </div>
         </div>
     );
 };
