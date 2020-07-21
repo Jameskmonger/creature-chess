@@ -5,7 +5,7 @@ import { Player } from "@common/game/player/player";
 import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@common/models";
 import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, ReconnectAuthenticateSuccessPacket } from "@common/networking/server-to-client";
+import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, BUY_XP, READY_UP } from "@common/player/actions";
@@ -40,7 +40,6 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
 export class Connection extends Player {
     public readonly isBot: boolean = false;
     public readonly isConnection = true;
-    private reconnectionSecret: string;
 
     private socket: Socket;
     private incomingPacketRegistry: IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
@@ -57,35 +56,12 @@ export class Connection extends Player {
         this.level.onChange(this.sendLevelUpdate);
     }
 
-    public getReconnectionSecret() {
-        return this.reconnectionSecret;
-    }
-
-    public replaceSocket(socket: Socket) {
-        // no need to close the socket if it's the same one
-        if (this.socket && this.socket.id === socket.id) {
-            console.log(`Socket soft-replaced for ${this.id}`);
-
-            socket.emit(ServerToClientPacketOpcodes.RECONNECT_AUTHENTICATE_SUCCESS, {
-                reconnectSecret: this.reconnectionSecret
-            });
-
-            return;
-        }
-
-        this.setSocket(socket);
-
-        console.log(`Socket replaced for ${this.id}`);
-    }
-
     public clearSocket() {
         if (this.socket) {
             this.socket.disconnect();
             this.socket.removeAllListeners();
             this.socket = null;
         }
-
-        this.reconnectionSecret = null;
 
         if (this.outgoingPacketsTask) {
             this.outgoingPacketsTask.cancel();
@@ -100,7 +76,6 @@ export class Connection extends Player {
         this.clearSocket();
 
         this.socket = socket;
-        this.reconnectionSecret = uuid();
 
         this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
             (opcode, handler) => socket.on(opcode, handler)
@@ -127,7 +102,6 @@ export class Connection extends Player {
             ServerToClientPacketOpcodes.START_GAME,
             {
                 localPlayerId: this.id,
-                reconnectionSecret: this.reconnectionSecret,
                 name: this.name,
                 gameId: this.gameId
             }
@@ -163,15 +137,6 @@ export class Connection extends Player {
                 player
             }
         );
-    }
-
-    public reauthenticate(socket: Socket, reconnectionSecret: string) {
-        if (this.reconnectionSecret !== reconnectionSecret) {
-            return null;
-        }
-
-        this.setSocket(socket);
-        return this.reconnectionSecret;
     }
 
     public onPlayersResurrected(playerIds: string[]) {

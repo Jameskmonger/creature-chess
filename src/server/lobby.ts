@@ -80,7 +80,7 @@ export class Lobby {
             return;
         }
 
-        (player as Connection).replaceSocket(socket);
+        (player as Connection).setSocket(socket);
     }
 
     public addPlayer(player: Player) {
