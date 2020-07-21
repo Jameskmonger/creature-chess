@@ -33,6 +33,11 @@ export interface PieceModel {
     coolDown: number;
 
     targetPieceId: string;
+
+    battleBrain?: {
+        canMoveAtTurn: number;
+        canBeAttackedAtTurn: number; // used to stop pieces being hit as soon as they land
+    };
 }
 
 export type IndexedPieces = {

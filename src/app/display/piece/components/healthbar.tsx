@@ -38,7 +38,7 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId }) => {
             <ProgressBar
                 className="cooldownbar"
                 current={coolDown}
-                max={Constants.INITIAL_COOLDOWN}
+                max={Constants.COOLDOWN_FULL}
             />
         </div>
     );
