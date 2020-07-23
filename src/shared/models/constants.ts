@@ -26,4 +26,4 @@ export const DAMAGE_RATIO = 10;
 export const MAX_NAME_LENGTH = 16;
 
 export const MAX_PLAYERS_IN_GAME = 8;
-export const LOBBY_WAIT_TIME = 5;
+export const LOBBY_WAIT_TIME = 60;
