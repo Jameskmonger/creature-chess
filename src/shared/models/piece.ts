@@ -27,7 +27,6 @@ export interface PieceModel {
     attacking?: AttackDetails;
     hit?: HitDetails;
     moving?: MovementDetails;
-    celebrating?: boolean;
     maxHealth: number;
     currentHealth: number;
     coolDown: number;

@@ -29,12 +29,6 @@ export class TurnSimulator {
             board = this.takePieceTurn(currentTurn, pieceId, board);
         }
 
-        if (isATeamDefeated(board)) {
-            const newPieces = Object.values(board.pieces).map(piece => ({ ...piece, celebrating: true }));
-
-            board = boardReducer(board, updateBoardPieces(newPieces));
-        }
-
         return board;
     }
 

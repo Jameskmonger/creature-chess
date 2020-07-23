@@ -5,7 +5,7 @@ import { Player, PlayerMatchResults } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
-import { PHASE_LENGTHS, CELEBRATION_TIME, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, RESURRECT_HEALTH } from "../models/constants";
+import { PHASE_LENGTHS, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, RESURRECT_HEALTH } from "../models/constants";
 import { EventEmitter } from "events";
 import { PlayerList } from "./playerList";
 import { TurnSimulator } from "../match/combat/turnSimulator";
@@ -286,7 +286,9 @@ export class Game {
             player.kill();
         }
 
-        await delay(CELEBRATION_TIME); // celebration time
+        // some battles go right up to the end, so it's nice to have a delay
+        // rather than jumping straight into the next phase
+        await delay(3000);
 
         this.eventManager.getTriggers().finishRound(this.players);
     }
