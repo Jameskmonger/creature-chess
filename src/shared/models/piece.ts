@@ -35,6 +35,7 @@ export interface PieceModel {
         canMoveAtTurn: number;
         canBeAttackedAtTurn: number; // used to stop pieces being hit as soon as they land
         canAttackAtTurn: number;
+        removeFromBoardAtTurn: number;
     };
 }
 

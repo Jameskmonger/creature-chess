@@ -163,12 +163,14 @@
         animation-duration: 200ms;
     }
 
+    @keyframes dying {
+        100% { transform: scale(0); }
+    }
+
     &.dying {
-        @keyframes dying {
-            100% { transform: scale(0); }
-        }
         animation-name: dying;
         animation-duration: 1000ms;
+        animation-fill-mode: forwards;
         animation-iteration-count: 1;
     }
 }
