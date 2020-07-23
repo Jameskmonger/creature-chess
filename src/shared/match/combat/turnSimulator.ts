@@ -6,7 +6,7 @@ import { getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
 import { BoardState, boardReducer } from "@common/board";
-import { updateBoardPiece, updateBoardPieces } from "@common/board/actions/boardActions";
+import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "@common/board/actions/boardActions";
 
 interface PieceCombatInfo {
     piece: PieceModel;
@@ -46,7 +46,7 @@ export class TurnSimulator {
         };
 
         if (attacker.currentHealth === 0) {
-            return board;
+            return boardReducer(board, removeBoardPiece(pieceId));
         }
 
         if (!attacker.battleBrain) {
