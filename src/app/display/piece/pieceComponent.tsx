@@ -50,14 +50,12 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
         }
     };
 
-    const stopCelebrateAnimation = () => setCurrentAnimations(oldAnimations => oldAnimations.filter(a => a.name !== "celebrate"));
-
     const runAnimations = (newPiece: PieceComponent) => {
         if (!animate) {
             return;
         }
 
-        const { attacking, hit, celebrating, currentHealth } = newPiece;
+        const { attacking, hit, currentHealth } = newPiece;
 
         if (!oldPiece) {
             setOldPiece(newPiece);
@@ -73,12 +71,6 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 
         if (hit && !oldPiece.hit) {
             runAnimation("hit", { hitPower: hit.damage });
-        }
-
-        if (celebrating && !oldPiece.celebrating) {
-            runAnimation("celebrate");
-        } else if (!celebrating && oldPiece.celebrating) {
-            stopCelebrateAnimation();
         }
 
         if (oldPiece.currentHealth > 0 && currentHealth === 0) {
