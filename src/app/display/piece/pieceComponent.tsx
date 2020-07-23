@@ -28,7 +28,6 @@ interface Animation {
 const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props) => {
     const { id, draggable, animate } = props;
     const dispatch = useDispatch();
-    const [dead, setDead] = React.useState<boolean>(false);
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceComponent | null>(null);
     const localPlayerId = useSelector<AppState, string>(state => state.localPlayer.id);
@@ -44,10 +43,6 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 
     const onAnimationEnd = ({ animationName }: React.AnimationEvent<HTMLDivElement>) => {
         setCurrentAnimations(oldAnimations => oldAnimations.filter(a => a.name !== animationName && !a.name.startsWith("move-")));
-
-        if (animationName === dyingAnimation) {
-            setDead(true);
-        }
     };
 
     const runAnimations = (newPiece: PieceComponent) => {
@@ -55,7 +50,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
             return;
         }
 
-        const { attacking, hit, currentHealth } = newPiece;
+        const { attacking, hit } = newPiece;
 
         if (!oldPiece) {
             setOldPiece(newPiece);
@@ -71,10 +66,6 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 
         if (hit && !oldPiece.hit) {
             runAnimation("hit", { hitPower: hit.damage });
-        }
-
-        if (oldPiece.currentHealth > 0 && currentHealth === 0) {
-            runAnimation(dyingAnimation);
         }
 
         setOldPiece(newPiece);
@@ -97,16 +88,14 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
         } else {
             setOldPiece(null);
         }
+    }, [piece]);
 
-        if (dead && piece.currentHealth > 0) {
-            setDead(false);
-        }
-    }, [piece, dead]);
+    const isDead = piece.currentHealth === 0;
 
     return (
         <div
             ref={drag}
-            className={`piece ${currentAnimations.map(a => a.name).join(" ")}`}
+            className={`piece ${currentAnimations.map(a => a.name).join(" ")} ${isDead ? dyingAnimation : ""}`}
             // tslint:disable-next-line: jsx-ban-props
             style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
             onClick={onClick}

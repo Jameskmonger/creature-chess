@@ -1,8 +1,10 @@
-import { getTotalHealthByTeam } from "./get-total-health-by-team";
 import { BoardState } from "@common/board";
 
 export const isATeamDefeated = (board: BoardState) => {
-    const healthByTeam = getTotalHealthByTeam(board);
+    const pieces = Object.values(board.pieces);
 
-    return healthByTeam.length !== 2 || healthByTeam.some(x => x.totalHealth === 0);
+    const pieceOwnerIds = pieces.map(p => p.ownerId);
+
+    // if there are only pieces belonging to 1 player, then we have a winner
+    return (new Set(pieceOwnerIds).size === 1);
 };

@@ -36,7 +36,7 @@ export class PiecePositionsReducerTests {
   }
 
   @Test()
-  public initialiseBoardShouldNotAddDeadPieces() {
+  public initialiseBoardShouldAddDeadPieces() {
     const state: PiecePositionsState = {};
 
     const pieces = {
@@ -47,7 +47,7 @@ export class PiecePositionsReducerTests {
       },
       456: {
         ...createMockPiece("456"),
-        position: createTileCoordinates(1, 2),
+        position: createTileCoordinates(1, 3),
         currentHealth: 0
       },
       124: {
@@ -57,7 +57,7 @@ export class PiecePositionsReducerTests {
       },
       789: {
         ...createMockPiece("789"),
-        position: createTileCoordinates(3, 3),
+        position: createTileCoordinates(3, 4),
         currentHealth: 100
       }
     };
@@ -68,7 +68,9 @@ export class PiecePositionsReducerTests {
 
     Expect(result).toEqual({
       "1,2": "123",
-      "3,3": "789"
+      "1,3": "456",
+      "3,3": "124",
+      "3,4": "789"
     });
   }
 
