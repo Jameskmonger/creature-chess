@@ -528,14 +528,15 @@ html, body {
     transform: rotate(calc(1deg * var(--hitPower))); }
   100% {
     transform: rotate(0deg); } }
-  .piece.dying {
-    animation-name: dying;
-    animation-duration: 1000ms;
-    animation-iteration-count: 1; }
 
 @keyframes dying {
   100% {
     transform: scale(0); } }
+  .piece.dying {
+    animation-name: dying;
+    animation-duration: 1000ms;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1; }
 
 .healthbar {
   width: 101%;
