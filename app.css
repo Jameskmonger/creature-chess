@@ -485,7 +485,7 @@ html, body {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 30%; }
+    height: 18%; }
   .piece.attack-basic {
     animation-name: attack-basic;
     animation-duration: 200ms; }
@@ -528,19 +528,6 @@ html, body {
     transform: rotate(calc(1deg * var(--hitPower))); }
   100% {
     transform: rotate(0deg); } }
-  .piece.celebrate {
-    animation-name: celebrate;
-    animation-duration: 1000ms;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite; }
-
-@keyframes celebrate {
-  25% {
-    transform: translate(20px, -20px) skewX(-20deg); }
-  50% {
-    transform: translate(0, 0) skewX(0); }
-  75% {
-    transform: translate(-20px, -20px) skewX(20deg); } }
   .piece.dying {
     animation-name: dying;
     animation-duration: 1000ms;
@@ -552,7 +539,7 @@ html, body {
 
 .healthbar {
   width: 101%;
-  height: 70%;
+  height: 100%;
   box-sizing: border-box;
   margin: 0 auto;
   background: #636363; }
@@ -562,16 +549,6 @@ html, body {
     background: #20b720; }
   .healthbar.enemy .fill {
     background: #e60d0d; }
-
-.cooldownbar {
-  width: 101%;
-  height: 30%;
-  box-sizing: border-box;
-  margin: 0 auto;
-  background: #636363; }
-  .cooldownbar .fill {
-    height: 100%;
-    background: #73eff7; }
 
 .info {
   height: 100%;
@@ -791,7 +768,8 @@ html, body {
   width: 22%;
   height: 100%;
   font-family: Arial, sans-serif;
-  font-size: 0.7rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
   color: #fff;
   text-align: center;
   background: #555; }
