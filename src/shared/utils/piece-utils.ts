@@ -1,6 +1,6 @@
 import uuid = require("uuid/v4");
 import { createTileCoordinates } from "../models/position";
-import { GRID_SIZE, COOLDOWN_FULL } from "@common/models/constants";
+import { GRID_SIZE } from "@common/models/constants";
 import { DefinitionProvider } from "../game/definitionProvider";
 import { Card, PieceModel } from "@common/models";
 
@@ -21,7 +21,6 @@ export const createPiece = (
         facingAway: true,
         maxHealth: stats.hp,
         currentHealth: stats.hp,
-        coolDown: COOLDOWN_FULL / 2,
         stage,
         targetPieceId: null
     };

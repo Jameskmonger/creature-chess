@@ -2,8 +2,7 @@ import { PieceModel } from "../../models";
 import { CreatureStats } from "../../models/creatureDefinition";
 import { getAttackableEnemy, getNewPiecePosition } from "./movement";
 import { getRelativeDirection } from "../../models/position";
-import { COOLDOWN_FULL } from "../../models/constants";
-import { isATeamDefeated, getTypeAttackBonus } from "@common/utils";
+import { getTypeAttackBonus } from "@common/utils";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { CreatureType } from "../../models/creatureType";
 import { BoardState, boardReducer } from "@common/board";
@@ -14,6 +13,12 @@ interface PieceCombatInfo {
     stats: CreatureStats;
     type: CreatureType;
 }
+
+const ATTACK_TURN_DURATION = 4;
+const MOVE_TURN_DURATION = 4;
+
+// todo tune this
+const getCooldownForSpeed = (speed: number) => (180 - speed) / 12;
 
 export class TurnSimulator {
     private definitionProvider: DefinitionProvider;
@@ -47,31 +52,27 @@ export class TurnSimulator {
         if (!attacker.battleBrain) {
             attacker.battleBrain = {
                 canMoveAtTurn: 0,
-                canBeAttackedAtTurn: 0
+                canBeAttackedAtTurn: 0,
+                canAttackAtTurn: 0,
             };
         }
 
         const attackerCombatInfo = this.getPieceCombatInfo(attacker);
-        if (attacker.coolDown < COOLDOWN_FULL) {
-            attacker.coolDown += attackerCombatInfo.stats.speed * 2;
-
-            if (attacker.coolDown > COOLDOWN_FULL) {
-                attacker.coolDown = COOLDOWN_FULL;
-            }
-        }
 
         // try to find an enemy in attack range
         const attackableEnemy = getAttackableEnemy(attacker, attackerCombatInfo.stats.attackType, board);
         if (attackableEnemy) {
             // if there's an enemy in range but we can't attack it yet, just wait for cooldown
-            if (attacker.coolDown !== COOLDOWN_FULL) {
+            if (attacker.battleBrain.canAttackAtTurn > currentTurn) {
+                // todo check if attacker has been changed
                 return boardReducer(board, updateBoardPiece(attacker));
             }
 
             if (!attackableEnemy.battleBrain) {
                 attackableEnemy.battleBrain = {
                     canMoveAtTurn: 0,
-                    canBeAttackedAtTurn: 0
+                    canBeAttackedAtTurn: 0,
+                    canAttackAtTurn: 0,
                 };
             }
 
@@ -84,6 +85,8 @@ export class TurnSimulator {
 
             const updatedFighters = this.attack(attackerCombatInfo, defenderCombatInfo);
             updatedFighters.attacker.targetPieceId = updatedFighters.defender.id;
+
+            attacker.battleBrain.canAttackAtTurn = currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerCombatInfo.stats.speed);
 
             return boardReducer(board, updateBoardPieces([updatedFighters.attacker, updatedFighters.defender]));
         }
@@ -103,8 +106,9 @@ export class TurnSimulator {
 
         attacker.position = newPosition;
 
-        attacker.battleBrain.canMoveAtTurn = currentTurn + 12;
-        attacker.battleBrain.canBeAttackedAtTurn = currentTurn + 2;
+        attacker.battleBrain.canMoveAtTurn = currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerCombatInfo.stats.speed);
+        attacker.battleBrain.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
+        attacker.battleBrain.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 
         return boardReducer(board, updateBoardPiece(attacker));
     }
