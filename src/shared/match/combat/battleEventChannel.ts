@@ -3,9 +3,7 @@ import { eventChannel, buffers } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
 import { isATeamDefeated } from "@common/utils";
 import { BoardState } from "../../board";
-import { initialiseBoard } from "@common/board/actions/boardActions";
-// import { UpdatePiecesAction } from "../../board/actions/boardActions";
-type UpdatePiecesAction = any;
+import { initialiseBoard, InitialiseBoardAction } from "@common/board/actions/boardActions";
 
 export const BATTLE_TURN = "BATTLE_TURN";
 export type BATTLE_TURN = typeof BATTLE_TURN;
@@ -13,7 +11,7 @@ export const BATTLE_FINISHED = "BATTLE_FINISHED";
 export type BATTLE_FINISHED = typeof BATTLE_FINISHED;
 
 type BattleFinishAction = ({ type: BATTLE_FINISHED, payload: { turns: number } });
-export type BattleAction = UpdatePiecesAction | BattleFinishAction;
+export type BattleAction = InitialiseBoardAction | BattleFinishAction;
 
 const finishAction = (turns: number): BattleFinishAction => ({ type: BATTLE_FINISHED, payload: { turns } });
 

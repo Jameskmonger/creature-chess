@@ -13,12 +13,12 @@ import {
 import { TileCoordinates } from "@common/models/position";
 import { IndexedPieces } from "@common/models/piece";
 
-type InitialiseBoardAction = ({ type: INITIALISE_BOARD, payload: { pieces: IndexedPieces } });
+export type InitialiseBoardAction = ({ type: INITIALISE_BOARD, payload: { pieces: IndexedPieces } });
 type AddBoardPieceAction = ({ type: ADD_BOARD_PIECE, payload: { piece: PieceModel, x: number, y: number } });
 type RemoveBoardPieceAction = ({ type: REMOVE_BOARD_PIECE, payload: { pieceId: string } });
 type RemoveBoardPiecesAction = ({ type: REMOVE_BOARD_PIECES, payload: { pieceIds: string[] } });
 export type UpdateBoardPieceAction = ({ type: UPDATE_BOARD_PIECE, payload: { piece: PieceModel } });
-type UpdateBoardPiecesAction = ({ type: UPDATE_BOARD_PIECES, payload: { pieces: PieceModel[] } });
+export type UpdateBoardPiecesAction = ({ type: UPDATE_BOARD_PIECES, payload: { pieces: PieceModel[] } });
 type MoveBoardPieceAction = ({ type: MOVE_BOARD_PIECE, payload: { pieceId: string, from: TileCoordinates, to: TileCoordinates } });
 type LockBoardAction = ({ type: LOCK_BOARD });
 type UnlockBoardAction = ({ type: UNLOCK_BOARD });

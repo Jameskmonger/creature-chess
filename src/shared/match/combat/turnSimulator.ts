@@ -14,6 +14,7 @@ interface PieceCombatInfo {
     type: CreatureType;
 }
 
+const DYING_DURATION = 20;
 const ATTACK_TURN_DURATION = 4;
 const MOVE_TURN_DURATION = 4;
 
@@ -45,16 +46,26 @@ export class TurnSimulator {
             hit: null,
         };
 
-        if (attacker.currentHealth === 0) {
-            return boardReducer(board, removeBoardPiece(pieceId));
-        }
-
         if (!attacker.battleBrain) {
             attacker.battleBrain = {
                 canMoveAtTurn: 0,
                 canBeAttackedAtTurn: 0,
                 canAttackAtTurn: 0,
+                removeFromBoardAtTurn: null
             };
+        }
+
+        if (attacker.battleBrain.removeFromBoardAtTurn === currentTurn) {
+            return boardReducer(board, removeBoardPiece(pieceId));
+        }
+
+        if (attacker.currentHealth === 0) {
+            if (attacker.battleBrain.removeFromBoardAtTurn) {
+                return board;
+            }
+
+            attacker.battleBrain.removeFromBoardAtTurn = currentTurn + DYING_DURATION;
+            return boardReducer(board, updateBoardPiece(attacker));
         }
 
         const attackerCombatInfo = this.getPieceCombatInfo(attacker);
@@ -73,6 +84,7 @@ export class TurnSimulator {
                     canMoveAtTurn: 0,
                     canBeAttackedAtTurn: 0,
                     canAttackAtTurn: 0,
+                    removeFromBoardAtTurn: null
                 };
             }
 
@@ -139,7 +151,6 @@ export class TurnSimulator {
         return {
             attacker: {
                 ...attacker.piece,
-                coolDown: 0,
                 attacking: {
                     attackType: attacker.stats.attackType,
                     direction: getRelativeDirection(attacker.piece.position, defender.piece.position),
