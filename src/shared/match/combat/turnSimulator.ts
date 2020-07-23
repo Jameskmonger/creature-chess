@@ -14,12 +14,12 @@ interface PieceCombatInfo {
     type: CreatureType;
 }
 
-const DYING_DURATION = 20;
-const ATTACK_TURN_DURATION = 4;
-const MOVE_TURN_DURATION = 4;
+const DYING_DURATION = 10;
+const ATTACK_TURN_DURATION = 2;
+const MOVE_TURN_DURATION = 2;
 
 // todo tune this
-const getCooldownForSpeed = (speed: number) => (180 - speed) / 12;
+const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
 
 export class TurnSimulator {
     private definitionProvider: DefinitionProvider;
@@ -145,7 +145,7 @@ export class TurnSimulator {
         }
 
         const attackBonus = getTypeAttackBonus(attacker.type, defender.type);
-        const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 5; // 5 is a magic number
+        const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 10; // 5 is a magic number
         const newDefenderHealth = Math.max(defender.piece.currentHealth - damage, 0);
 
         return {
