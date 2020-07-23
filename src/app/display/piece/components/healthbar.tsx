@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "@app/store";
-import { GamePhase, PieceModel, Constants } from "@common/models";
+import { GamePhase, PieceModel } from "@common/models";
 import { ProgressBar } from "../../progressBar";
 import { getPiece } from "@common/player/pieceSelectors";
 
@@ -25,7 +25,7 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId }) => {
         return null;
     }
 
-    const { ownerId, currentHealth, maxHealth, coolDown } = piece;
+    const { ownerId, currentHealth, maxHealth } = piece;
     const friendly = (localPlayerId === ownerId);
 
     return (
@@ -34,11 +34,6 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId }) => {
                 className={`healthbar ${friendly ? "friendly" : "enemy"}`}
                 current={currentHealth}
                 max={maxHealth}
-            />
-            <ProgressBar
-                className="cooldownbar"
-                current={coolDown}
-                max={Constants.COOLDOWN_FULL}
             />
         </div>
     );

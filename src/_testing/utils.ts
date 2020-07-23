@@ -10,6 +10,5 @@ export const createMockPiece = (id: string): PieceModel => ({
   facingAway: true,
   currentHealth: 100,
   maxHealth: 100,
-  coolDown: 100,
   targetPieceId: null
 });

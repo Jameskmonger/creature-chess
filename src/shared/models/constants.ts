@@ -18,8 +18,6 @@ export const RESURRECT_HEALTH = 6;
 export const BUY_XP_COST = 5;
 export const BUY_XP_AMOUNT = 4;
 
-export const COOLDOWN_FULL = 1000;
-
 export const PIECES_TO_EVOLVE = 3;
 
 export const DEFAULT_TURN_COUNT = 600;
