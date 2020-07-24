@@ -46,15 +46,6 @@ export class TurnSimulator {
             hit: null,
         };
 
-        if (!attacker.battleBrain) {
-            attacker.battleBrain = {
-                canMoveAtTurn: 0,
-                canBeAttackedAtTurn: 0,
-                canAttackAtTurn: 0,
-                removeFromBoardAtTurn: null
-            };
-        }
-
         if (attacker.battleBrain.removeFromBoardAtTurn === currentTurn) {
             return boardReducer(board, removeBoardPiece(pieceId));
         }
@@ -69,6 +60,15 @@ export class TurnSimulator {
         }
 
         const attackerCombatInfo = this.getPieceCombatInfo(attacker);
+        const cooldown = getCooldownForSpeed(attackerCombatInfo.stats.speed);
+
+        if (attacker.battleBrain.canMoveAtTurn === null) {
+            attacker.battleBrain.canMoveAtTurn = currentTurn + cooldown;
+        }
+
+        if (attacker.battleBrain.canAttackAtTurn === null) {
+            attacker.battleBrain.canAttackAtTurn = currentTurn + cooldown;
+        }
 
         // try to find an enemy in attack range
         const attackableEnemy = getAttackableEnemy(attacker, attackerCombatInfo.stats.attackType, board);
@@ -77,15 +77,6 @@ export class TurnSimulator {
             if (attacker.battleBrain.canAttackAtTurn > currentTurn) {
                 // todo check if attacker has been changed
                 return boardReducer(board, updateBoardPiece(attacker));
-            }
-
-            if (!attackableEnemy.battleBrain) {
-                attackableEnemy.battleBrain = {
-                    canMoveAtTurn: 0,
-                    canBeAttackedAtTurn: 0,
-                    canAttackAtTurn: 0,
-                    removeFromBoardAtTurn: null
-                };
             }
 
             // if the enemy can't be attacked yet, wait
