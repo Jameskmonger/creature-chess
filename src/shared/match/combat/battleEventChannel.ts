@@ -4,6 +4,7 @@ import { TurnSimulator } from "./turnSimulator";
 import { isATeamDefeated } from "@common/utils";
 import { BoardState } from "../../board";
 import { initialiseBoard, InitialiseBoardAction } from "@common/board/actions/boardActions";
+import { IndexedPieces } from "@common/models/piece";
 
 export const BATTLE_TURN = "BATTLE_TURN";
 export type BATTLE_TURN = typeof BATTLE_TURN;
@@ -37,6 +38,23 @@ const duration = (ms: number) => {
     };
 };
 
+const addBattleBrains = (pieces: IndexedPieces) => {
+    return Object.entries(pieces)
+        .reduce<IndexedPieces>((acc, [pieceId, piece]) => {
+            acc[pieceId] = {
+                ...piece,
+                battleBrain: {
+                    canMoveAtTurn: null,
+                    canBeAttackedAtTurn: 0,
+                    canAttackAtTurn: null,
+                    removeFromBoardAtTurn: null
+                }
+            };
+
+            return acc;
+        }, {});
+};
+
 export const battleEventChannel = (
     turnSimulator: TurnSimulator,
     turnDuration: number,
@@ -48,9 +66,7 @@ export const battleEventChannel = (
         let cancelled = false;
 
         let board: BoardState = {
-            pieces: {
-                ...startingBoardState.pieces
-            },
+            pieces: addBattleBrains(startingBoardState.pieces),
             piecePositions: {
                 ...startingBoardState.piecePositions
             },
