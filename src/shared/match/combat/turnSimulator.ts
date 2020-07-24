@@ -128,7 +128,6 @@ export class TurnSimulator {
 
     private attack(attacker: PieceCombatInfo, defender: PieceCombatInfo) {
         if (attacker.piece.currentHealth === 0) {
-            // Dead Pokémon don't attack
             return {
                 attacker: attacker.piece,
                 defender: defender.piece
@@ -136,7 +135,7 @@ export class TurnSimulator {
         }
 
         const attackBonus = getTypeAttackBonus(attacker.type, defender.type);
-        const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 10; // 5 is a magic number
+        const damage = (attacker.stats.attack / defender.stats.defense) * attackBonus * 8; // todo tweak this
         const newDefenderHealth = Math.max(defender.piece.currentHealth - damage, 0);
 
         return {
