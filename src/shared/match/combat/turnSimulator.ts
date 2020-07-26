@@ -1,5 +1,5 @@
 import { PieceModel } from "../../models";
-import { getAttackableEnemy, getNewPiecePosition } from "./movement";
+import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
 import { getRelativeDirection } from "../../models/position";
 import { getTypeAttackBonus } from "@common/utils";
 import { BoardState, boardReducer } from "@common/board";
@@ -15,18 +15,25 @@ const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
 
 export class TurnSimulator {
     public simulateTurn(currentTurn: number, board: BoardState) {
-        const pieceIds = Object.keys(board.pieces);
+        const pieceEntries = Object.entries(board.pieces);
 
-        for (const pieceId of pieceIds) {
+        pieceEntries.sort(([, aPiece], [, bPiece]) => {
+            const aStats = getStats(aPiece);
+            const bStats = getStats(bPiece);
+
+            return bStats.speed - aStats.speed;
+        });
+
+        pieceEntries.forEach(([pieceId]) => {
             board = this.takePieceTurn(currentTurn, pieceId, board);
-        }
+        });
 
         return board;
     }
 
     private takePieceTurn(currentTurn: number, pieceId: string, board: BoardState): BoardState {
         // create a new piece object, reset combat properties
-        const attacker = {
+        const attacker: PieceModel = {
             ...board.pieces[pieceId],
             attacking: null,
             hit: null,
@@ -46,7 +53,7 @@ export class TurnSimulator {
             attacker.battleBrain.removeFromBoardAtTurn = currentTurn + DYING_DURATION;
             return boardReducer(board, updateBoardPiece(attacker));
         }
-;
+
         const cooldown = getCooldownForSpeed(attackerStats.speed);
 
         if (attacker.battleBrain.canMoveAtTurn === null) {
@@ -58,7 +65,7 @@ export class TurnSimulator {
         }
 
         // try to find an enemy in attack range
-        const attackableEnemy = getAttackableEnemy(attacker, attackerStats.attackType, board);
+        const attackableEnemy = getAttackableEnemyFromCurrentPosition(attacker, attackerStats.attackType, board);
         if (attackableEnemy) {
             // if there's an enemy in range but we can't attack it yet, just wait for cooldown
             if (attacker.battleBrain.canAttackAtTurn > currentTurn) {

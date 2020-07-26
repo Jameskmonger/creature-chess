@@ -72,7 +72,7 @@ const getTargetPiece = (piece: PieceModel, board: BoardState) => {
     return target;
 };
 
-export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, board: BoardState) => {
+export const getAttackableEnemyFromCurrentPosition = (piece: PieceModel, attackType: AttackType, board: BoardState) => {
     const target = getTargetPiece(piece, board);
 
     if (target && canAttack(piece, target, attackType)) {
@@ -84,7 +84,7 @@ export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, bo
     for (const direction of attackDirections) {
         const targetPosition = applyVector(piece.position, direction);
 
-        // targetPosition will be null if there direction is out of bounds
+        // targetPosition will be null if the direction is out of bounds
         if (targetPosition === null) {
             continue;
         }
