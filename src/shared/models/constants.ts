@@ -13,6 +13,7 @@ export const PHASE_LENGTHS = {
 export const REROLL_COST = 2;
 export const STARTING_MONEY = 3;
 export const STARTING_LEVEL = 1;
+export const STARTING_HEALTH = 100;
 export const RESURRECT_HEALTH = 6;
 
 export const BUY_XP_COST = 5;

@@ -4,7 +4,7 @@ import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL, GRID_SIZE } from "../../models/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL, GRID_SIZE, STARTING_HEALTH } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer } from "@common/models";
@@ -42,7 +42,7 @@ export interface PlayerMatchResults {
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
-    public health: number = 100;
+    public health: number = STARTING_HEALTH;
     public ready = false;
     public readonly streak: StreakInfo = {
         type: StreakType.WIN,

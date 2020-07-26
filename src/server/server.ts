@@ -12,6 +12,7 @@ import { Metrics } from "./metrics";
 import { UserAppMetadata, UserModel } from "./user/userModel";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
 import { SocketReceiver } from "./socketAuthenticator";
+import { addUserWin, addUserGamesPlayed } from "./user/stats";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
@@ -100,6 +101,8 @@ export class Server {
                 game.addPlayer(p);
 
                 if ((p as Connection).isConnection) {
+                    addUserGamesPlayed(this.client, p.id);
+
                     this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
                 }
             });
@@ -113,6 +116,10 @@ export class Server {
                     isPublic: lobby.isPublic,
                     durationMs
                 });
+
+                if ((winner as Connection).isConnection) {
+                    addUserWin(this.client, winner.id);
+                }
 
                 gamePlayers.forEach(p => {
                     if (!p.isBot) {
