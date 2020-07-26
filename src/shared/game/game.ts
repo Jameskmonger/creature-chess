@@ -72,7 +72,7 @@ export class Game {
         this.lastLivingPlayerCount = livingPlayers.length;
 
         this.deck = new CardDeck(this.definitionProvider.getAll());
-        this.turnSimulator = new TurnSimulator(this.definitionProvider);
+        this.turnSimulator = new TurnSimulator();
 
         this.playerList.onUpdate(playerList => this.players.forEach(p => p.onPlayerListUpdate(playerList)));
 
