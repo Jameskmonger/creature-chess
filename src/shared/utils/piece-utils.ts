@@ -17,6 +17,7 @@ export const createPiece = (
         id: id || uuid(),
         ownerId,
         definitionId,
+        definition: definitionProvider.get(definitionId),
         position: createTileCoordinates(...position),
         facingAway: true,
         maxHealth: stats.hp,
@@ -25,6 +26,8 @@ export const createPiece = (
         targetPieceId: null
     };
 };
+
+export const getStats = (piece: PieceModel) => piece.definition.stages[piece.stage];
 
 export const createPieceFromCard = (
     definitionProvider: DefinitionProvider,

@@ -1,5 +1,5 @@
 import { TileCoordinates } from "./position";
-import { AttackType } from "./creatureDefinition";
+import { AttackType, CreatureDefinition } from "./creatureDefinition";
 
 export interface AttackDetails {
     direction: TileCoordinates;
@@ -19,7 +19,10 @@ export interface MovementDetails {
 export interface PieceModel {
     id: string;
     ownerId: string;
+
     definitionId: number;
+    definition: CreatureDefinition;
+
     stage: number;
     position: TileCoordinates;
 
