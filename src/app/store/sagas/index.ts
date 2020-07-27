@@ -4,7 +4,6 @@ import { gamePhase } from "./actions/gamePhase";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { battle } from "@common/match/combat/battleSaga";
 import { TurnSimulator } from "@common/match/combat/turnSimulator";
-import { DefinitionProvider } from "@common/game/definitionProvider";
 import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@common/models/constants";
 import { AppState } from "../state";
 import { announcement } from "./actions/announcement";
@@ -35,7 +34,7 @@ export const rootSaga = function*() {
                     yield fork(cardShopSagaFactory<AppState>(playerId)),
                     yield fork(
                         battle,
-                        new TurnSimulator(new DefinitionProvider()),
+                        new TurnSimulator(),
                         DEFAULT_TURN_COUNT,
                         DEFAULT_TURN_DURATION
                     )

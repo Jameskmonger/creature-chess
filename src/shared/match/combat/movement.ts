@@ -34,7 +34,7 @@ const getAttackingTiles = (facingUp: boolean, attackType: AttackType) => {
 const getLivingEnemies = (piece: PieceModel, board: BoardState): PieceModel[] => {
     const output: PieceModel[] = [];
 
-    for (const [ id, other ] of Object.entries(board.pieces)) {
+    for (const [id, other] of Object.entries(board.pieces)) {
         if (other.ownerId !== piece.ownerId && other.currentHealth > 0) {
             output.push(other);
         }
@@ -72,7 +72,7 @@ const getTargetPiece = (piece: PieceModel, board: BoardState) => {
     return target;
 };
 
-export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, board: BoardState) => {
+export const getAttackableEnemyFromCurrentPosition = (piece: PieceModel, attackType: AttackType, board: BoardState) => {
     const target = getTargetPiece(piece, board);
 
     if (target && canAttack(piece, target, attackType)) {
@@ -84,7 +84,7 @@ export const getAttackableEnemy = (piece: PieceModel, attackType: AttackType, bo
     for (const direction of attackDirections) {
         const targetPosition = applyVector(piece.position, direction);
 
-        // targetPosition will be null if there direction is out of bounds
+        // targetPosition will be null if the direction is out of bounds
         if (targetPosition === null) {
             continue;
         }
@@ -116,7 +116,29 @@ const findClosestEnemy = (piece: PieceModel, board: BoardState) => {
     }));
 
     // sort by column then by row
-    enemyDeltas.sort((a, b) => a.delta.y - b.delta.y || a.delta.x - b.delta.x);
+    enemyDeltas.sort((a, b) => {
+        if (a.delta.y < b.delta.y) {
+            return -1;
+        }
+
+        if (a.delta.y > b.delta.y) {
+            return 1;
+        }
+
+        if (a.delta.x < b.delta.x) {
+            return -1;
+        }
+
+        if (a.delta.x > b.delta.x) {
+            return 1;
+        }
+
+        if (a.enemy.definition.cost > b.enemy.definition.cost) {
+            return -1;
+        }
+
+        return 1;
+    });
 
     return enemyDeltas[0].enemy;
 };

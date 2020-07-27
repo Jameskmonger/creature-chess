@@ -6,27 +6,34 @@ import { TurnSimulator } from "@common/match/combat/turnSimulator";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 import { DEFAULT_TURN_COUNT } from "@common/models/constants";
 import { EventChannel } from "redux-saga";
-import { BoardState } from "@common/board";
+import { BoardState, boardReducer } from "@common/board";
+import { createPiece } from "@common/utils/piece-utils";
+import { addBoardPiece } from "@common/board/actions/boardActions";
 
 const definitionProvider = new DefinitionProvider();
-const simulator = new TurnSimulator(definitionProvider);
+const simulator = new TurnSimulator();
 
-const pieces: BoardState = {
+let board: BoardState = {
   pieces: {},
   piecePositions: {},
   locked: true
 };
+
 // todo these need tying into GRID_SIZE
-// [
-//   createPiece(definitionProvider, "bot-a", 1, [2, 2], null),
-//   createPiece(definitionProvider, "bot-a", 1, [3, 3], null),
-//   createPiece(definitionProvider, "bot-a", 1, [4, 3], null),
-//   createPiece(definitionProvider, "bot-a", 1, [5, 2], null),
-//   createPiece(definitionProvider, "bot-b", 1, [2, 5], null),
-//   createPiece(definitionProvider, "bot-b", 1, [3, 4], null),
-//   createPiece(definitionProvider, "bot-b", 1, [4, 4], null),
-//   createPiece(definitionProvider, "bot-b", 1, [4, 4], null)
-// ];
+const pieces = [
+  createPiece(definitionProvider, "bot-a", 1, [0, 0], null),
+  createPiece(definitionProvider, "bot-a", 1, [1, 0], null),
+  createPiece(definitionProvider, "bot-a", 1, [2, 1], null),
+  createPiece(definitionProvider, "bot-a", 1, [3, 1], null),
+  createPiece(definitionProvider, "bot-b", 1, [4, 4], null),
+  createPiece(definitionProvider, "bot-b", 1, [5, 4], null),
+  createPiece(definitionProvider, "bot-b", 1, [5, 5], null),
+  createPiece(definitionProvider, "bot-b", 1, [6, 5], null)
+];
+
+pieces.forEach(piece => {
+  board = boardReducer(board, addBoardPiece(piece, piece.position.x, piece.position.y));
+});
 
 const listenForBattleFinish = (channel: EventChannel<BattleAction>, resolve: (value: number) => void) => {
   channel.take(action => {
@@ -50,7 +57,7 @@ const run = async () => {
   for (let i = 0; i < TARGET_ITERATIONS; i++) {
     const iterationStartMs = present();
 
-    const channel = battleEventChannel(simulator, 0, pieces, DEFAULT_TURN_COUNT, 100);
+    const channel = battleEventChannel(simulator, 0, board, DEFAULT_TURN_COUNT, 100);
     const turnsTaken = await waitForBattleFinish(channel);
 
     const iterationMsTaken = present() - iterationStartMs;
