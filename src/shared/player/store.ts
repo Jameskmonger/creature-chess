@@ -11,11 +11,16 @@ import { cardShopSagaFactory } from "./cardShop/saga";
 import { Card } from "@common/models";
 import { cardsReducer } from "./cardShop";
 import { GameInfoState, gameInfoReducer } from "./gameInfo";
+import { levelReducer } from "./level";
 
 export interface PlayerState {
     board: BoardState;
     bench: BenchState;
     gameInfo: GameInfoState;
+    level: {
+        level: number;
+        xp: number;
+    };
     cards: Card[];
 }
 
@@ -41,7 +46,8 @@ export const createPlayerStore = (playerId: string, otherSaga?: () => Generator)
             board: boardReducer,
             bench: benchReducer,
             cards: cardsReducer,
-            gameInfo: gameInfoReducer
+            gameInfo: gameInfoReducer,
+            level: levelReducer
         }),
         applyMiddleware(sagaMiddleware)
     );

@@ -4,6 +4,7 @@ import { BoardState } from "@common/board";
 import { BenchState } from "@common/player/bench";
 import { Overlay } from "@app/overlay";
 import { GameInfoState } from "@common/player/gameInfo";
+import { LevelState } from "@common/player/level";
 
 export interface AppState {
     auth: AuthState | null;
@@ -12,6 +13,7 @@ export interface AppState {
     board: BoardState;
     bench: BenchState;
     cards: Card[];
+    level: LevelState;
 
     game: GameState;
     playerList: PlayerListPlayer[];
@@ -56,8 +58,6 @@ export interface LocalPlayerState {
     id: string;
 
     name: string;
-    level: number;
-    xp: number;
     ready: boolean;
 }
 

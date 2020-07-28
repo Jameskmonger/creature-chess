@@ -9,7 +9,7 @@ import {
 import { playerListUpdated } from "../features/playerList/playerListActions";
 import { FIND_GAME } from "../store/actiontypes/gameActionTypes";
 import { log } from "../log";
-import { joinCompleteAction, localPlayerLevelUpdate } from "../store/actions/localPlayerActions";
+import { joinCompleteAction } from "../store/actions/localPlayerActions";
 import { BATTLE_FINISHED } from "@common/match/combat/battleEventChannel";
 import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN, START_LOBBY_GAME } from "../store/actions/lobbyActions";
 import { AppState } from "../store/state";
@@ -28,6 +28,7 @@ import { moneyUpdateAction, gamePhaseUpdate } from "@common/player/gameInfo";
 import { cardsUpdated } from "@common/player/cardShop";
 import { initialiseBoard } from "@common/board/actions/boardActions";
 import { initialiseBench } from "@common/player/bench/benchActions";
+import { setLevelAction } from "@common/player/level";
 
 const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
     // force to websocket for now until CORS is sorted
@@ -104,7 +105,7 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
             (packet) => {
                 log("[LEVEL_UPDATE]", packet);
 
-                emit(localPlayerLevelUpdate(packet.level, packet.xp));
+                emit(setLevelAction(packet.level, packet.xp));
             }
         );
 
@@ -142,7 +143,7 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                     emit(moneyUpdateAction(money));
                     emit(cardsUpdated(cards));
                     emit(playerListUpdated(players));
-                    emit(localPlayerLevelUpdate(level, xp));
+                    emit(setLevelAction(level, xp));
                     emit(initialiseBoard(board));
                     emit(initialiseBench(bench));
 
