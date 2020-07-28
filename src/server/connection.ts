@@ -8,11 +8,12 @@ import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlaye
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, JoinGamePacket } from "@common/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
 import { log } from "console";
-import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, BUY_XP, READY_UP } from "@common/player/actions";
+import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP } from "@common/player/actions";
 import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@common/player/gameInfo";
 import { Task } from "redux-saga";
 import { PlayerState } from "@common/player/store";
 import { CardsUpdatedAction, CARDS_UPDATED } from "@common/player/cardShop/actions";
+import { LevelUpdateAction, LEVEL_UPDATE } from "@common/player/level/actions";
 
 const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
     return function*() {
@@ -31,6 +32,14 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
                     const money: number = yield select((state: PlayerState) => state.gameInfo.money);
 
                     registry.emit(ServerToClientPacketOpcodes.MONEY_UPDATE, money);
+                }
+            ),
+            yield takeLatest<LevelUpdateAction>(
+                [LEVEL_UPDATE],
+                function*() {
+                    const level: { level: number, xp: number } = yield select((state: PlayerState) => state.level);
+
+                    registry.emit(ServerToClientPacketOpcodes.LEVEL_UPDATE, level);
                 }
             )
         ]);
@@ -52,8 +61,6 @@ export class Connection extends Player {
         super(id, name);
 
         this.setSocket(socket);
-
-        this.level.onChange(this.sendLevelUpdate);
     }
 
     public clearSocket() {
@@ -194,16 +201,6 @@ export class Connection extends Player {
             ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE,
             {
                 locked: this.shopLocked
-            }
-        );
-    }
-
-    private sendLevelUpdate = ({ level, xp }: { level: number, xp: number }) => {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.LEVEL_UPDATE,
-            {
-                level,
-                xp
             }
         );
     }

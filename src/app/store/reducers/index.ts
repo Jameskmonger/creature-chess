@@ -8,6 +8,7 @@ import { localPlayer } from "./localPlayerReducer";
 import { lobby } from "./lobbyReducer";
 import { auth } from "./authReducer";
 import { ui } from "./uiReducer";
+import { levelReducer } from "@common/player/level";
 
 export const reducers = {
     board: boardReducer,
@@ -15,6 +16,7 @@ export const reducers = {
     playerList,
     cards: cardsReducer,
     gameInfo: gameInfoReducer,
+    level: levelReducer,
     game,
     localPlayer,
     lobby,

@@ -4,11 +4,11 @@ import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, STARTING_LEVEL, GRID_SIZE, STARTING_HEALTH } from "../../models/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, STARTING_HEALTH } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer } from "@common/models";
-import { getPiecesForStage, getXpToNextLevel, Observable } from "@common/utils";
+import { getPiecesForStage, getXpToNextLevel } from "@common/utils";
 import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "@common/board/utils/mergeBoards";
@@ -18,6 +18,7 @@ import { createPlayerStore, PlayerStore } from "@common/player/store";
 import { cardsUpdated } from "@common/player/cardShop/actions";
 import { moneyUpdateAction } from "@common/player/gameInfo";
 import { SagaMiddleware } from "redux-saga";
+import { setLevelAction } from "@common/player/level/actions";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -52,7 +53,6 @@ export abstract class Player {
 
     public abstract readonly isBot: boolean;
 
-    protected level = new Observable({ level: STARTING_LEVEL, xp: 0 });
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
     protected shopLocked = false;
@@ -104,7 +104,7 @@ export abstract class Player {
     }
 
     public addXp(amount: number) {
-        let { level, xp } = this.level.getValue();
+        let { level, xp } = this.store.getState().level;
 
         for (let i = 0; i < amount; i++) {
             const toNextLevel = getXpToNextLevel(level);
@@ -118,7 +118,7 @@ export abstract class Player {
             }
         }
 
-        this.level.setValue({ level, xp });
+        this.store.dispatch(setLevelAction(level, xp));
     }
 
     public addMoney(money: number) {
@@ -322,8 +322,7 @@ export abstract class Player {
     }
 
     public getGameState() {
-        const { board, bench, cards, gameInfo: { money } } = this.store.getState();
-        const level = this.level.getValue();
+        const { board, bench, cards, gameInfo: { money }, level } = this.store.getState();
 
         return {
             board: board.pieces,
@@ -353,7 +352,7 @@ export abstract class Player {
     protected abstract onShopLockUpdate();
 
     protected belowPieceLimit() {
-        return getBoardPieceCount(this.store.getState()) < this.level.getValue().level;
+        return getBoardPieceCount(this.store.getState()) < this.store.getState().level.level;
     }
 
     protected startLobbyGame = () => {
@@ -386,6 +385,7 @@ export abstract class Player {
     }
 
     protected buyXp = () => {
+        // todo put this all into a saga
         if (this.isAlive() === false) {
             log(`${this.name} attempted to buy xp, but they are dead`);
             return;
@@ -453,7 +453,7 @@ export abstract class Player {
     }
 
     protected getLevel() {
-        return this.level.getValue().level;
+        return this.store.getState().level.level;
     }
 
     private setReady(ready: boolean) {

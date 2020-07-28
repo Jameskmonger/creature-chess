@@ -6,6 +6,7 @@ import { getXpToNextLevel } from "@common/utils";
 import { GamePhase, Constants } from "@common/models";
 import { PieceCount } from "./pieceCount";
 import { PlayerActions } from "@common/player";
+import { getPlayerLevel, getPlayerXp } from "@common/player/playerSelectors";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 
@@ -13,8 +14,8 @@ const Profile: React.FunctionComponent = () => {
     const dispatch = useDispatch();
     const gameStarted = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING);
     const name = useSelector<AppState, string>(state => state.localPlayer.name);
-    const level = useSelector<AppState, number>(state => state.localPlayer.level);
-    const xp = useSelector<AppState, number>(state => state.localPlayer.xp);
+    const level = useSelector<AppState, number>(getPlayerLevel);
+    const xp = useSelector<AppState, number>(getPlayerXp);
 
     if (gameStarted === false) {
         return null;
