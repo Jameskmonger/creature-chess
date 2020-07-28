@@ -10,11 +10,11 @@ import { announcement } from "./actions/announcement";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 import { networking } from "../../networking/saga";
 import { evolutionSagaFactory } from "@common/player/sagas/evolution";
-import { dropPiece } from "@common/player/sagas/dropPiece";
 import { sellPiece } from "./actions/sellPiece";
 import { auth } from "./actions/auth";
 import { JoinCompleteAction } from "../actions/localPlayerActions";
 import { cardShopSagaFactory } from "@common/player/cardShop/saga";
+import { dropPieceSagaFactory } from "@common/player/sagas/dropPiece";
 
 export const rootSaga = function*() {
     yield all([
@@ -25,11 +25,11 @@ export const rootSaga = function*() {
             JOIN_COMPLETE,
             function*({ payload: { playerId }}) {
                 yield all([
-                    yield fork(dropPiece),
                     yield fork(phaseTimer),
                     yield fork(announcement),
                     yield fork(gamePhase),
                     yield fork(sellPiece),
+                    yield fork(dropPieceSagaFactory<AppState>(playerId)),
                     yield fork(evolutionSagaFactory<AppState>()),
                     yield fork(cardShopSagaFactory<AppState>(playerId)),
                     yield fork(
