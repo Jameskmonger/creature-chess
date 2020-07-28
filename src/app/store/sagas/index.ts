@@ -15,6 +15,28 @@ import { auth } from "./actions/auth";
 import { JoinCompleteAction } from "../actions/localPlayerActions";
 import { cardShopSagaFactory } from "@common/player/cardShop/saga";
 import { dropPieceSagaFactory } from "@common/player/sagas/dropPiece";
+import { closeShopOnFirstBuy } from "@app/features/cardShop/closeShopOnFirstBuy";
+
+const gameSagaFactory = (playerId: string) => {
+    return function*() {
+        yield all([
+            yield fork(phaseTimer),
+            yield fork(announcement),
+            yield fork(gamePhase),
+            yield fork(sellPiece),
+            yield fork(closeShopOnFirstBuy),
+            yield fork(dropPieceSagaFactory<AppState>(playerId)),
+            yield fork(evolutionSagaFactory<AppState>()),
+            yield fork(cardShopSagaFactory<AppState>(playerId)),
+            yield fork(
+                battle,
+                new TurnSimulator(),
+                DEFAULT_TURN_COUNT,
+                DEFAULT_TURN_DURATION
+            )
+        ]);
+    };
+};
 
 export const rootSaga = function*() {
     yield all([
@@ -24,21 +46,7 @@ export const rootSaga = function*() {
         yield takeEvery<JoinCompleteAction>(
             JOIN_COMPLETE,
             function*({ payload: { playerId }}) {
-                yield all([
-                    yield fork(phaseTimer),
-                    yield fork(announcement),
-                    yield fork(gamePhase),
-                    yield fork(sellPiece),
-                    yield fork(dropPieceSagaFactory<AppState>(playerId)),
-                    yield fork(evolutionSagaFactory<AppState>()),
-                    yield fork(cardShopSagaFactory<AppState>(playerId)),
-                    yield fork(
-                        battle,
-                        new TurnSimulator(),
-                        DEFAULT_TURN_COUNT,
-                        DEFAULT_TURN_DURATION
-                    )
-                ]);
+                yield fork(gameSagaFactory(playerId));
             }
         )
     ]);
