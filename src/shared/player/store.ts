@@ -5,7 +5,7 @@ import { fork, all } from "@redux-saga/core/effects";
 import { boardReducer, BoardState } from "@common/board";
 import { evolutionSagaFactory } from "@common/player/sagas/evolution";
 
-import { dropPiece } from "@common/player/sagas/dropPiece";
+import { dropPieceSagaFactory } from "@common/player/sagas/dropPiece";
 import { benchReducer, BenchState } from "./bench";
 import { cardShopSagaFactory } from "./cardShop/saga";
 import { Card } from "@common/models";
@@ -35,7 +35,7 @@ export const createPlayerStore = (playerId: string, otherSaga?: () => Generator)
         yield all([
             yield fork(evolutionSagaFactory<PlayerState>()),
             yield fork(cardShopSagaFactory<PlayerState>(playerId)),
-            yield fork(dropPiece)
+            yield fork(dropPieceSagaFactory<PlayerState>(playerId))
         ]);
     };
 

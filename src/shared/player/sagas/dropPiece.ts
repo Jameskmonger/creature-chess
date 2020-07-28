@@ -34,42 +34,54 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
   return true;
 };
 
-export const dropPiece = function*() {
-  yield takeEvery<PlayerDropPieceAction>(
-    PLAYER_DROP_PIECE,
-    function*({ payload: { from, pieceId, to } }) {
-      const state: PlayerState = yield select();
+export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: string) => {
+  return function*() {
+    yield takeEvery<PlayerDropPieceAction>(
+      PLAYER_DROP_PIECE,
+      function*({ payload: { from, pieceId, to } }) {
+        const state: TState = yield select();
 
-      if (isLocationLocked(state, from) || isLocationLocked(state, to)) {
-        // source or destination is locked
-        return;
+        if (isLocationLocked(state, from) || isLocationLocked(state, to)) {
+          // source or destination is locked
+          return;
+        }
+
+        const fromPiece = findPiece(state, from);
+
+        if (fromPiece === null || fromPiece.id !== pieceId) {
+          // from piece not found or id wrong (position mismatch?)
+          return;
+        }
+
+        const toPiece = findPiece(state, to);
+
+        if (toPiece !== null) {
+          // destination tile not empty
+          return;
+        }
+
+        if (to.type === "board") {
+          const ownedBoardPieceCount = Object.values(state.board.pieces).filter(p => p.ownerId === playerId).length;
+          const level = state.level.level;
+
+          // already at board limit
+          if (ownedBoardPieceCount >= level) {
+            return;
+          }
+        }
+
+        if (from.type === "board" && to.type === "board") {
+          yield put(moveBoardPiece(pieceId, from.location, to.location));
+        } else if (from.type !== "board" && to.type !== "board") {
+          yield put(moveBenchPiece(pieceId, from.location, to.location));
+        } else if (from.type === "board" && to.type !== "board") {
+          yield put(removeBoardPiece(pieceId));
+          yield put(addBenchPiece(fromPiece, to.location.slot));
+        } else if (from.type !== "board" && to.type === "board") {
+          yield put(removeBenchPiece(pieceId));
+          yield put(addBoardPiece(fromPiece, to.location.x, to.location.y));
+        }
       }
-
-      const fromPiece = findPiece(state, from);
-
-      if (fromPiece === null || fromPiece.id !== pieceId) {
-        // from piece not found or id wrong (position mismatch?)
-        return;
-      }
-
-      const toPiece = findPiece(state, to);
-
-      if (toPiece !== null) {
-        // destination tile not empty
-        return;
-      }
-
-      if (from.type === "board" && to.type === "board") {
-        yield put(moveBoardPiece(pieceId, from.location, to.location));
-      } else if (from.type !== "board" && to.type !== "board") {
-        yield put(moveBenchPiece(pieceId, from.location, to.location));
-      } else if (from.type === "board" && to.type !== "board") {
-        yield put(removeBoardPiece(pieceId));
-        yield put(addBenchPiece(fromPiece, to.location.slot));
-      } else if (from.type !== "board" && to.type === "board") {
-        yield put(removeBenchPiece(pieceId));
-        yield put(addBoardPiece(fromPiece, to.location.x, to.location.y));
-      }
-    }
-  );
+    );
+  };
 };
