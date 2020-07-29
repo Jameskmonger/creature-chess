@@ -6,7 +6,7 @@ import { ADD_BENCH_PIECE } from "../bench/benchActionTypes";
 import { DefinitionProvider } from "@common/game/definitionProvider";
 import { PieceModel } from "@common/models";
 import { PIECES_TO_EVOLVE } from "@common/models/constants";
-import { UNLOCK_BOARD, UPDATE_BOARD_PIECE } from "@common/board/actions/boardActionTypes";
+import { UNLOCK_BOARD, UPDATE_BOARD_PIECE, ADD_BOARD_PIECE } from "@common/board/actions/boardActionTypes";
 import * as pieceSelectors from "../pieceSelectors";
 import { removeBoardPieces, updateBoardPiece, UpdateBoardPieceAction } from "@common/board/actions/boardActions";
 
@@ -26,9 +26,9 @@ const pieceCanEvolve = (piece: PieceModel) => {
 export const evolutionSagaFactory = <TState extends State>() => {
     return function*() {
         yield takeLatest<AddBenchPieceAction | UpdateBoardPieceAction>(
-            // need to check when bench pieces are added (could have come from shop)
+            // need to check when bench/board pieces are added (could have come from shop)
             // or when board piece is updated (could be due to a previous evolution)
-            [ADD_BENCH_PIECE, UPDATE_BOARD_PIECE],
+            [ADD_BENCH_PIECE, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE],
             function*({ payload: { piece } }) {
                 if (!pieceCanEvolve(piece)) {
                     return;

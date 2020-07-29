@@ -2,7 +2,7 @@ import uuid = require("uuid/v4");
 import { createTileCoordinates } from "../models/position";
 import { GRID_SIZE } from "@common/models/constants";
 import { DefinitionProvider } from "../game/definitionProvider";
-import { Card, PieceModel } from "@common/models";
+import { Card, PieceModel, PlayerPieceLocation } from "@common/models";
 
 export const createPiece = (
     definitionProvider: DefinitionProvider,
@@ -29,13 +29,24 @@ export const createPiece = (
 
 export const getStats = (piece: PieceModel) => piece.definition.stages[piece.stage];
 
+const getPositionFromLocation = (location: PlayerPieceLocation): [number, number | null] => {
+    if (location.type === "board") {
+        return [location.location.x, location.location.y];
+    } else if (location.type === "bench") {
+        return [location.location.slot, null];
+    }
+};
+
 export const createPieceFromCard = (
     definitionProvider: DefinitionProvider,
     ownerId: string,
     card: Card,
-    slot: number
-) =>
-    createPiece(definitionProvider, ownerId, card.definitionId, [slot, null], card.id);
+    destination: PlayerPieceLocation
+) => {
+    const position = getPositionFromLocation(destination);
+
+    return createPiece(definitionProvider, ownerId, card.definitionId, position, card.id);
+};
 
 export const clonePiece =
     (definitionProvider: DefinitionProvider, piece: PieceModel) =>
