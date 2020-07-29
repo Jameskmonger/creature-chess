@@ -60,7 +60,7 @@ export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: strin
           return;
         }
 
-        if (to.type === "board") {
+        if (to.type === "board" && from.type !== "board") {
           const ownedBoardPieceCount = Object.values(state.board.pieces).filter(p => p.ownerId === playerId).length;
           const level = state.level.level;
 
