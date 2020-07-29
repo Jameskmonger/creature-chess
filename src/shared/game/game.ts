@@ -106,6 +106,7 @@ export class Game {
                     phase: this.phase.value,
                     payload: {
                         board: player.getMatch().getBoard(),
+                        bench: player.getBench(),
                         opponentId: player.getMatch().away.id
                     }
                 };

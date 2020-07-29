@@ -37,3 +37,15 @@ export const getPlayerFirstEmptyBoardSlot = (state: PlayerState): (TileCoordinat
 
     return null;
 };
+
+export const getMostExpensiveBenchPiece = (state: PlayerState) => {
+    const benchPieces = state.bench.pieces.filter(p => p !== null);
+
+    if (!benchPieces.length) {
+        return null;
+    }
+
+    benchPieces.sort((a, b) => b.definition.cost - a.definition.cost);
+
+    return benchPieces[0];
+};

@@ -7,7 +7,7 @@ import { OpponentProvider } from "../opponentProvider";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, STARTING_HEALTH } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, StreakType, PlayerListPlayer } from "@common/models";
+import { LobbyPlayer, StreakType, PlayerListPlayer, PlayerPieceLocation } from "@common/models";
 import { getPiecesForStage, getXpToNextLevel } from "@common/utils";
 import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
@@ -19,6 +19,7 @@ import { cardsUpdated } from "@common/player/cardShop/actions";
 import { moneyUpdateAction } from "@common/player/gameInfo";
 import { SagaMiddleware } from "redux-saga";
 import { setLevelAction } from "@common/player/level/actions";
+import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "@common/player/playerSelectors";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -172,6 +173,8 @@ export abstract class Player {
         this.ready = false;
 
         if (this.isAlive()) {
+            this.fillBoard();
+
             this.pieces.lockEvolutions();
 
             const opponent = opponentProvider.getOpponent(this.id);
@@ -459,5 +462,47 @@ export abstract class Player {
     private setReady(ready: boolean) {
         this.ready = ready;
         this.events.emit(PlayerEvent.UPDATE_READY, this.ready);
+    }
+
+    private fillBoard() {
+        while (true) {
+            const state = this.store.getState();
+            const belowPieceLimit = getPlayerBelowPieceLimit(state, this.id);
+
+            if (!belowPieceLimit) {
+                return;
+            }
+
+            const benchPiece = getMostExpensiveBenchPiece(state);
+
+            if (!benchPiece) {
+                return;
+            }
+
+            const destination = getPlayerFirstEmptyBoardSlot(state);
+
+            if (!destination) {
+                return;
+            }
+
+            const fromLocation: PlayerPieceLocation = {
+                type: "bench",
+                location: {
+                    slot: benchPiece.position.x
+                }
+            };
+
+            const toLocation: PlayerPieceLocation = {
+                type: "board",
+                location: {
+                    x: destination.x,
+                    y: destination.y
+                }
+            };
+
+            this.store.dispatch(
+                PlayerActions.playerDropPiece(benchPiece.id, fromLocation, toLocation)
+            );
+        }
     }
 }

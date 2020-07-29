@@ -99,6 +99,7 @@ export class Bot extends Player {
             phase: GamePhase.READY,
             payload: {
                 board: this.match.getBoard(),
+                bench: this.getBench(),
                 opponentId: this.match.away.id
             }
         };

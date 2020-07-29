@@ -23,6 +23,7 @@ export type ReadyPhaseUpdatePacket = {
   phase: GamePhase.READY,
   payload: {
     board: BoardState;
+    bench: BenchState;
     opponentId: string
   }
 };
