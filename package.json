@@ -75,7 +75,7 @@
 		"@types/socket.io": "^2.1.2",
 		"@types/socket.io-client": "^1.4.32",
 		"@types/uuid": "^3.4.4",
-		"auth0": "^2.26.0",
+		"auth0": "^2.27.1",
 		"auth0-js": "^9.13.2",
 		"bad-words": "^3.0.3",
 		"delay": "^4.1.0",
