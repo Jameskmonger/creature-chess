@@ -5,6 +5,7 @@ import * as pieceSelectors from "../pieceSelectors";
 import { moveBoardPiece, removeBoardPiece, addBoardPiece } from "@common/board/actions/boardActions";
 import { moveBenchPiece, addBenchPiece, removeBenchPiece } from "../bench/benchActions";
 import { PlayerState } from "../store";
+import { getPlayerBelowPieceLimit } from "../playerSelectors";
 
 const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {
@@ -61,11 +62,9 @@ export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: strin
         }
 
         if (to.type === "board" && from.type !== "board") {
-          const ownedBoardPieceCount = Object.values(state.board.pieces).filter(p => p.ownerId === playerId).length;
-          const level = state.level.level;
+          const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
 
-          // already at board limit
-          if (ownedBoardPieceCount >= level) {
+          if (!belowPieceLimit) {
             return;
           }
         }
