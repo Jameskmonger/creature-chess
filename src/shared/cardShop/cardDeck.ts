@@ -16,11 +16,10 @@ const CARD_COST_CHANCES = [
 
 const CARD_LEVEL_QUANTITIES = [45, 30, 25, 15, 10];
 
-const getCardChanceForLevel = (level: number, costIndex: number) => CARD_COST_CHANCES[costIndex][level - 1];
-const rollCard = (level: number, cost: number) => {
-    const chance = getCardChanceForLevel(level, cost);
+const canTakeCardAtCost = (level: number, cost: number): boolean => {
+    const chance = CARD_COST_CHANCES[cost - 1][level - 1];
 
-    if (chance === 0) {
+    if (!chance) {
         return false;
     }
 
@@ -43,7 +42,7 @@ export class CardDeck {
         ];
 
         this.definitions.filter(d => d.cost).forEach(d => {
-            for (let count = 0; count < CARD_LEVEL_QUANTITIES[d.cost]; count++) {
+            for (let count = 0; count < CARD_LEVEL_QUANTITIES[d.cost - 1]; count++) {
                 this.addDefinition(d);
             }
         });
@@ -72,7 +71,7 @@ export class CardDeck {
         const cardsToAdd = cards.filter(card => card !== null);
 
         for (const card of cardsToAdd) {
-            this.deck[card.cost].push(card);
+            this.getDeckForCost(card.cost).push(card);
         }
 
         this.shuffle();
@@ -102,22 +101,29 @@ export class CardDeck {
         }
     }
 
+    private getDeckForCost(cost: number): Card[] {
+        return this.deck[cost - 1];
+    }
+
     private takeCard(level: number) {
-        for (let i = CARD_COST_CHANCES.length - 1; i >= 0; i--) {
-            const roll = rollCard(level, i);
+        // start at 5 and work downwards
+        for (let cost = CARD_COST_CHANCES.length; cost >= 1; cost--) {
+            const roll = canTakeCardAtCost(level, cost);
 
-            if (roll) {
-                const card = this.deck[i].pop();
+            if (!roll) {
+                continue;
+            }
 
-                if (card) {
-                    return card;
-                }
+            const card = this.getDeckForCost(cost).pop();
+
+            if (card) {
+                return card;
             }
         }
 
         // otherwise go back up and give them the first existing card
-        for (let i = 0; i < CARD_COST_CHANCES.length; i++) {
-            const card = this.deck[i].pop();
+        for (let cost = 1; cost <= CARD_COST_CHANCES.length; cost++) {
+            const card = this.getDeckForCost(cost).pop();
 
             if (card) {
                 return card;
@@ -135,6 +141,6 @@ export class CardDeck {
             name: definition.name
         };
 
-        this.deck[definition.cost].push(card);
+        this.getDeckForCost(definition.cost).push(card);
     }
 }
