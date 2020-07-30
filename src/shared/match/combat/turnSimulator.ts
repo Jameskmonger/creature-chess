@@ -1,6 +1,6 @@
 import { PieceModel } from "../../models";
 import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
-import { getRelativeDirection, TileCoordinates, Directions } from "../../models/position";
+import { getRelativeDirection, TileCoordinates, Directions, getDistance } from "../../models/position";
 import { getTypeAttackBonus } from "@common/utils";
 import { BoardState, boardReducer } from "@common/board";
 import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "@common/board/actions/boardActions";
@@ -151,6 +151,7 @@ export class TurnSimulator {
                 ...attacker,
                 attacking: {
                     attackType: attackerStats.attackType,
+                    distance: getDistance(attacker.position, defender.position),
                     direction: attackerDirection,
                     damage
                 },
