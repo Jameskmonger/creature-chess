@@ -41,7 +41,7 @@ export const definitions: CreatureDefinition[] = [
     createDefinition(27, "Narcileaf", CreatureType.Wood, DefinitionClass.ARCANE, 4),
     createDefinition(28, "Coleorus", CreatureType.Wood, DefinitionClass.CUNNING, 4),
     createDefinition(29, "Aardart", CreatureType.Earth, DefinitionClass.CUNNING, 4),
-    createDefinition(30, "Bursa", CreatureType.Earth, DefinitionClass.ARCANE, 4),
+    createDefinition(30, "Hubursa", CreatureType.Earth, DefinitionClass.ARCANE, 4),
     createDefinition(31, "Sampsack", CreatureType.Metal, DefinitionClass.VALIANT, 4),
     createDefinition(32, "Cairfrey", CreatureType.Metal, DefinitionClass.ARCANE, 4),
     createDefinition(33, "Prophetoise", CreatureType.Fire, DefinitionClass.ARCANE, 4),
