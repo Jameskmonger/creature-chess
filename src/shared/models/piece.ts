@@ -5,6 +5,7 @@ export interface AttackDetails {
     direction: TileCoordinates;
     damage: number;
     attackType: AttackType;
+    distance: number;
 }
 
 export interface HitDetails {

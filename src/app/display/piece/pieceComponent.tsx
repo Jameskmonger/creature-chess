@@ -60,7 +60,12 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
         if (attacking && !oldPiece.attacking) {
             runAnimation(
                 `attack-${attacking.attackType.name}`,
-                { attackPower: attacking.damage, attackXDirection: attacking.direction.x, attackYDirection: attacking.direction.y }
+                {
+                    attackPower: attacking.damage,
+                    attackXDirection: attacking.direction.x,
+                    attackYDirection: attacking.direction.y,
+                    attackDistance: attacking.distance
+                }
             );
         }
 
