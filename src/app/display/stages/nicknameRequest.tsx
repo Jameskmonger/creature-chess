@@ -15,6 +15,8 @@ const NicknameRequest: React.FunctionComponent<{ message: string }> = ({ message
         <div className="join-game">
             <p>{message}</p>
 
+            <h2 className="nickname-warning">This nickname is permanent and cannot be changed</h2>
+
             <input
                 value={nickname}
                 onChange={onNameChange}
