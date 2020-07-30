@@ -143,12 +143,15 @@ const findClosestEnemy = (piece: PieceModel, board: BoardState) => {
     return enemyDeltas[0].enemy;
 };
 
-export const getNewPiecePosition = (piece: PieceModel, board: BoardState): TileCoordinates => {
+export const getNewPiecePosition = (piece: PieceModel, board: BoardState): { nextPosition: TileCoordinates, targetPosition: TileCoordinates } => {
     const target = findClosestEnemy(piece, board);
 
     if (target === null) {
         return null;
     }
 
-    return getNextPiecePosition(piece, target, board);
+    return {
+        nextPosition: getNextPiecePosition(piece, target, board),
+        targetPosition: target.position
+    };
 };

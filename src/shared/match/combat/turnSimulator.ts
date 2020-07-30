@@ -1,6 +1,6 @@
 import { PieceModel } from "../../models";
 import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
-import { getRelativeDirection } from "../../models/position";
+import { getRelativeDirection, TileCoordinates, Directions } from "../../models/position";
 import { getTypeAttackBonus } from "@common/utils";
 import { BoardState, boardReducer } from "@common/board";
 import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "@common/board/actions/boardActions";
@@ -101,11 +101,16 @@ export class TurnSimulator {
 
         const newPosition = getNewPiecePosition(attacker, board);
 
-        if (newPosition === null) {
+        if (newPosition === null || newPosition.nextPosition === null) {
             return boardReducer(board, updateBoardPiece(attacker));
         }
 
-        attacker.position = newPosition;
+        const { nextPosition, targetPosition } = newPosition;
+
+        const attackerDirection = getRelativeDirection(attacker.position, targetPosition);
+
+        attacker.position = nextPosition;
+        attacker.facingAway = this.getNewAttackerFacingAway(attacker.facingAway, attackerDirection);
 
         attacker.battleBrain.canMoveAtTurn = currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
         attacker.battleBrain.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
@@ -114,7 +119,20 @@ export class TurnSimulator {
         return boardReducer(board, updateBoardPiece(attacker));
     }
 
-    private attack(attacker: PieceModel, defender: PieceModel) {
+    private getNewAttackerFacingAway(oldFacingAway: boolean, direction: TileCoordinates) {
+        if (direction === Directions.LEFT || direction === Directions.RIGHT) {
+            // if it's left or right we don't need to change it
+            return oldFacingAway;
+        }
+
+        if (direction === Directions.UP) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private attack(attacker: PieceModel, defender: PieceModel): { attacker: PieceModel, defender: PieceModel } {
         if (attacker.currentHealth === 0) {
             return null;
         }
@@ -126,15 +144,18 @@ export class TurnSimulator {
         const damage = (attackerStats.attack / defenderStats.defense) * attackBonus * 8; // todo tweak this
         const newDefenderHealth = Math.max(defender.currentHealth - damage, 0);
 
+        const attackerDirection = getRelativeDirection(attacker.position, defender.position);
+
         return {
             attacker: {
                 ...attacker,
                 attacking: {
                     attackType: attackerStats.attackType,
-                    direction: getRelativeDirection(attacker.position, defender.position),
+                    direction: attackerDirection,
                     damage
                 },
-                targetPieceId: defender.id
+                targetPieceId: defender.id,
+                facingAway: this.getNewAttackerFacingAway(attacker.facingAway, attackerDirection)
             },
             defender: {
                 ...defender,
