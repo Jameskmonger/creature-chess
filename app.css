@@ -513,8 +513,8 @@ html, body {
     top: calc(50% - (10px / 2));
     left: calc(50% - (10px / 2)); }
   100% {
-    top: calc(((100% * var(--attackYDirection)) + 50%) - (10px / 2));
-    left: calc(((100% * var(--attackXDirection)) + 50%) - (10px / 2)); } }
+    top: calc(((100% * var(--attackDistance) * var(--attackYDirection)) + 50%) - (10px / 2));
+    left: calc(((100% * var(--attackDistance) * var(--attackXDirection)) + 50%) - (10px / 2)); } }
   .piece.hit {
     animation-name: hit;
     animation-duration: 200ms; }
