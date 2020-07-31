@@ -209,6 +209,8 @@ html, body {
     margin-top: 1rem;
     text-align: center;
     background: #566c86; }
+    .menu .join-game .nickname-warning {
+      font-size: 1.4em; }
     .menu .join-game input {
       display: block;
       width: 100%;
