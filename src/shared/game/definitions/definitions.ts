@@ -27,7 +27,7 @@ export const definitions: CreatureDefinition[] = [
     createDefinition(13, "Cardiling", CreatureType.Fire, DefinitionClass.CUNNING, 2),
     createDefinition(14, "Agnite", CreatureType.Fire, DefinitionClass.VALIANT, 2),
     createDefinition(15, "Elowind", CreatureType.Water, DefinitionClass.ARCANE, 2),
-    createDefinition(16, "Incandesfin", CreatureType.Water, DefinitionClass.VALIANT, 2),
+    createDefinition(16, "Fluttaflap", CreatureType.Water, DefinitionClass.VALIANT, 2),
     createDefinition(17, "Velocitile", CreatureType.Wood, DefinitionClass.CUNNING, 3),
     createDefinition(18, "Sapsnap", CreatureType.Wood, DefinitionClass.VALIANT, 3),
     createDefinition(19, "Rockat", CreatureType.Earth, DefinitionClass.CUNNING, 3),
