@@ -73,14 +73,13 @@ html, body {
 
     .ready-up {
         box-sizing: border-box;
-        padding: 0.4em;
-        font-size: 1rem;
+        padding: 2rem;
+        font-size: 1.6rem;
         color: $ready-up-button-text;
         cursor: pointer;
         background: $ready-up-button;
         // stylelint-disable-next-line
         border: none;
-        flex: 0;
     }
 
     .reconnect {
@@ -146,5 +145,9 @@ html, body {
         color: #fff;
         text-align: center;
         text-transform: uppercase;
+
+        .highlight {
+            color: $player-list-name-local;
+        }
     }
 }
