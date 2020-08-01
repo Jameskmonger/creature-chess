@@ -104,13 +104,12 @@ html, body {
       font-weight: 700; }
   .game .ready-up {
     box-sizing: border-box;
-    padding: 0.4em;
-    font-size: 1rem;
+    padding: 2rem;
+    font-size: 1.6rem;
     color: #000;
     cursor: pointer;
     background: #38b764;
-    border: none;
-    flex: 0; }
+    border: none; }
   .game .reconnect {
     position: absolute;
     top: 0;
@@ -160,6 +159,9 @@ html, body {
     color: #fff;
     text-align: center;
     text-transform: uppercase; }
+    .game .phase-info .highlight,
+    .game .round-indicator .highlight {
+      color: #ffcd75; }
 
 .menu {
   display: flex;
@@ -798,7 +800,7 @@ html, body {
   .mobile .top-bar .round-indicator,
   .mobile .top-bar .phase-info {
     margin: 0.2rem 0;
-    font-size: 0.7rem;
+    font-size: 1.5rem;
     flex: 1; }
 
 .content-pane {
