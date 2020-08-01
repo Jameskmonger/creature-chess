@@ -4,6 +4,8 @@ import { AppState } from "@app/store";
 import { Countdown } from "./countdown";
 import { GamePhase, Constants } from "@common/models";
 
+const renderPhaseInfoCountdown = (secondsRemaining: number) => <span className="highlight">({secondsRemaining})</span>;
+
 const PhaseInfo: React.FunctionComponent = () => {
     const phase = useSelector<AppState, GamePhase>(state => state.game.phase);
     const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.game.phaseStartedAtSeconds);
@@ -18,7 +20,7 @@ const PhaseInfo: React.FunctionComponent = () => {
 
     const phaseEndTime = Constants.PHASE_LENGTHS[phase] + phaseStartedAtSeconds;
 
-    return <div className="phase-info">{GamePhase[phase]} - <Countdown countdownToSeconds={phaseEndTime} /></div>;
+    return <div className="phase-info">{GamePhase[phase]} <Countdown countdownToSeconds={phaseEndTime} render={renderPhaseInfoCountdown} /></div>;
 };
 
 export { PhaseInfo };

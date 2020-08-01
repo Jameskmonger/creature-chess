@@ -9,7 +9,7 @@ const RoundIndicator: React.FunctionComponent = () => {
         return null;
     }
 
-    return <div className="round-indicator">Round {round}</div>;
+    return <div className="round-indicator">Round <span className="highlight">{round}</span></div>;
 };
 
 export { RoundIndicator };
