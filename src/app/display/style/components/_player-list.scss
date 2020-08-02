@@ -34,10 +34,14 @@ $player-list-gutter-size: 0.4em;
         }
     }
 
-    .healthbar {
+    .player-health {
         display: block;
         width: 100%;
         height: 12px;
+
+        .fill {
+            background: $player-list-healthbar-color;
+        }
     }
 
     .row {

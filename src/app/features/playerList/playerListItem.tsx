@@ -51,7 +51,7 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
             <BattleInfo playerId={props.playerId} />
 
             <ProgressBar
-                className="healthbar friendly"
+                className="healthbar player-health"
                 current={props.player.health}
                 max={100}
             />

@@ -106,15 +106,15 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
             onClick={onClick}
             onAnimationEnd={onAnimationEnd}
         >
-            <PieceImage pieceId={id} />
-
-            <Projectile />
-
             <div className="piece-meta">
                 <StageIndicator pieceId={id} />
 
-                <Healthbar pieceId={id} />
+                <Healthbar pieceId={id} vertical />
             </div>
+
+            <PieceImage pieceId={id} />
+
+            <Projectile />
         </div>
     );
 };
