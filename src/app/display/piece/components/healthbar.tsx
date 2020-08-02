@@ -7,9 +7,10 @@ import { getPiece } from "@common/player/pieceSelectors";
 
 interface HealthbarProps {
     pieceId: string;
+    vertical?: boolean;
 }
 
-const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId }) => {
+const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical = false }) => {
     const showHealthbar = useSelector<AppState, boolean>(state => (
         state.game.phase === GamePhase.READY
         || state.game.phase === GamePhase.PLAYING
@@ -29,13 +30,12 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId }) => {
     const friendly = (localPlayerId === ownerId);
 
     return (
-        <div className="info">
             <ProgressBar
-                className={`healthbar ${friendly ? "friendly" : "enemy"}`}
+                className={`healthbar ${friendly ? "friendly" : "enemy"} ${vertical ? "vertical" : ""}`}
                 current={currentHealth}
                 max={maxHealth}
+                vertical={vertical}
             />
-        </div>
     );
 };
 
