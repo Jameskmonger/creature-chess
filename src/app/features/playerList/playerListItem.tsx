@@ -12,6 +12,8 @@ interface Props {
     ready: boolean | null;
     streakType: StreakType | null;
     streakAmount: number | null;
+    money: number;
+    level: number;
 }
 
 const ReadyIndicator: React.FunctionComponent<{ ready: boolean | null }> = ({ ready }) => {
@@ -20,7 +22,7 @@ const ReadyIndicator: React.FunctionComponent<{ ready: boolean | null }> = ({ re
     }
 
     return (
-        <div className={`ready-indicator ${ready ? "ready" : "not-ready"}`} />
+        <span className={`ready-indicator ${ready ? "ready" : "not-ready"}`} />
     );
 };
 
@@ -38,23 +40,35 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
     return (
         <div className={className}>
             <div className="row">
-                <span className="name">
-                    <PlayerName playerId={props.playerId} />
-                </span>
+                <div className="row-half">
+                    <span className="name">
+                        <ReadyIndicator ready={props.ready} />
 
-                <div className="badges">
-                    <StreakIndicator type={props.streakType} amount={props.streakAmount} />
-                    <ReadyIndicator ready={props.ready} />
+                        <PlayerName playerId={props.playerId} />
+                    </span>
+                </div>
+
+                <div className="row-half">
+                    <ProgressBar
+                        className="healthbar player-health"
+                        current={props.player.health}
+                        max={100}
+                    />
                 </div>
             </div>
+            <div className="row">
+                <div className="row-half">
+                    <div className="badges">
+                        <span className="badge money">${props.money}</span>
+                        <span className="badge">Lv {props.level}</span>
+                    </div>
+                </div>
 
-            <BattleInfo playerId={props.playerId} />
-
-            <ProgressBar
-                className="healthbar player-health"
-                current={props.player.health}
-                max={100}
-            />
+                <div className="row-half">
+                    <BattleInfo playerId={props.playerId} />
+                    <StreakIndicator type={props.streakType} amount={props.streakAmount} />
+                </div>
+            </div>
         </div>
     );
 };

@@ -31,6 +31,8 @@ export interface PlayerListPlayer {
     id: string;
     name: string;
     health: number;
+    money: number;
+    level: number;
     ready: boolean;
     streakType: StreakType | null;
     streakAmount: number | null;
