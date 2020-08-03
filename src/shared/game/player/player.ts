@@ -128,6 +128,10 @@ export abstract class Player {
         this.store.dispatch(moneyUpdateAction(currentMoney + money));
     }
 
+    public getLevel() {
+        return this.store.getState().level.level;
+    }
+
     public getMoney() {
         return this.store.getState().gameInfo.money;
     }
@@ -453,10 +457,6 @@ export abstract class Player {
         this.pieces.dispatchAction(
             PlayerActions.playerDropPiece(payload.pieceId, payload.from, payload.to)
         );
-    }
-
-    protected getLevel() {
-        return this.store.getState().level.level;
     }
 
     private setReady(ready: boolean) {

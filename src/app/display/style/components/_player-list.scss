@@ -49,6 +49,11 @@ $player-list-gutter-size: 0.4em;
         display: flex;
         justify-content: space-between;
         margin-bottom: $player-list-gutter-size;
+
+        .row-half {
+            display: flex;
+            width: 50%;
+        }
     }
 
     .battle-info {
@@ -82,9 +87,10 @@ $player-list-gutter-size: 0.4em;
     }
 
     .ready-indicator {
+        display: inline-block;
         width: $player-list-font-size;
         height: $player-list-font-size;
-        margin-left: 0.5em;
+        margin-right: 0.5em;
 
         &.ready {
             background: $ready-indicator;
@@ -98,6 +104,18 @@ $player-list-gutter-size: 0.4em;
     .badges {
         // stylelint-disable-next-line
         display: flex;
+
+        .badge {
+            font-family: Arial, sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+
+            &.money {
+                margin-right: 0.4rem;
+                color: $player-list-name-local;
+            }
+        }
     }
 
     .streak-indicator {
