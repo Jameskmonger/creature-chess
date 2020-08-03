@@ -1,10 +1,11 @@
 import { PieceModel } from "../../models";
 import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
 import { getRelativeDirection, TileCoordinates, Directions, getDistance } from "../../models/position";
-import { getTypeAttackBonus } from "@common/utils";
 import { BoardState, boardReducer } from "@common/board";
 import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "@common/board/actions/boardActions";
 import { getStats } from "@common/utils/piece-utils";
+import { CreatureType } from "@common/models/creatureType";
+import { isOvercomeBy, isGeneratedBy } from "@common/utils/get-type-attack-bonus";
 
 const DYING_DURATION = 10;
 const ATTACK_TURN_DURATION = 2;
@@ -12,6 +13,9 @@ const MOVE_TURN_DURATION = 2;
 
 // todo tune this
 const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
+
+const STRONG_ATTACK_MODIFIER = 1.7;
+const WEAK_ATTACK_MODIFIER = 0.3;
 
 export class TurnSimulator {
     public simulateTurn(currentTurn: number, board: BoardState) {
@@ -132,6 +136,23 @@ export class TurnSimulator {
         return false;
     }
 
+    private getAttackBonus(attacker: CreatureType, defender: CreatureType) {
+        const isDefenderOvercome = isOvercomeBy(defender, attacker);
+
+        if (isDefenderOvercome) {
+            return STRONG_ATTACK_MODIFIER;
+        }
+
+        const isDefenderGenerated = isGeneratedBy(defender, attacker);
+        const isAttackerOvercome = isOvercomeBy(attacker, defender);
+
+        if (isDefenderGenerated || isAttackerOvercome) {
+            return WEAK_ATTACK_MODIFIER;
+        }
+
+        return 1;
+    }
+
     private attack(attacker: PieceModel, defender: PieceModel): { attacker: PieceModel, defender: PieceModel } {
         if (attacker.currentHealth === 0) {
             return null;
@@ -140,7 +161,7 @@ export class TurnSimulator {
         const attackerStats = getStats(attacker);
         const defenderStats = getStats(defender);
 
-        const attackBonus = getTypeAttackBonus(attacker.definition.type, defender.definition.type);
+        const attackBonus = this.getAttackBonus(attacker.definition.type, defender.definition.type);
         const damage = (attackerStats.attack / defenderStats.defense) * attackBonus * 8; // todo tweak this
         const newDefenderHealth = Math.max(defender.currentHealth - damage, 0);
 

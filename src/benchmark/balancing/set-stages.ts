@@ -1,15 +1,10 @@
-import { CreatureStats, AttackType, attackTypes } from "@common/models/creatureDefinition";
-
-export enum DefinitionClass {
-    VALIANT = "Valiant",
-    ARCANE = "Arcane",
-    CUNNING = "Cunning"
-}
+import { CreatureStats, AttackType, attackTypes, CreatureDefinition } from "@common/models/creatureDefinition";
+import { DefinitionClass } from "@common/game/definitions/definitionClass";
 
 // each class has points to assign
 // these are then used, along with piece cost and stage, to get stats
 // the decimals here indicate how the points are assigned for each class
-export const classBuilds = {
+const classBuilds = {
     [DefinitionClass.VALIANT]: {
         hp: 0.4,
         attack: 0.2,
@@ -39,29 +34,13 @@ const getBaseStats = (): Omit<CreatureStats, "attackType"> => {
     };
 };
 
-const getPoints = (cost: number, stage: number): number => {
-    const COST_MODIFIER = 1.5;
-
-    if (stage === 0) {
-        return (cost * COST_MODIFIER) * 20;
-    }
-
-    if (stage === 1) {
-        return (cost * COST_MODIFIER) * 80;
-    }
-
-    if (stage === 2) {
-        return (cost * COST_MODIFIER) * 210;
-    }
-};
-
 const getStat = (baseStat: number, buildStat: number, availablePoints: number) => {
     return baseStat + Math.ceil(buildStat * availablePoints);
 };
 
-const getStats = (definitionClass: DefinitionClass, cost: number, stage: number): CreatureStats => {
+const getStats = (definitionClass: DefinitionClass, cost: number, stage: number, points: number[][]): CreatureStats => {
     const baseStats = getBaseStats();
-    const availablePoints = getPoints(cost, stage);
+    const availablePoints = points[cost - 1][stage];
 
     const build = classBuilds[definitionClass];
 
@@ -80,10 +59,13 @@ const getStats = (definitionClass: DefinitionClass, cost: number, stage: number)
     };
 };
 
-export const getStages = (definitionClass: DefinitionClass, cost: number): CreatureStats[] => {
-    return [
-        getStats(definitionClass, cost, 0),
-        getStats(definitionClass, cost, 1),
-        getStats(definitionClass, cost, 2)
-    ];
+export const setStages = (definitions: CreatureDefinition[], points: number[][]): CreatureDefinition[] => {
+    return definitions.map(d => ({
+        ...d,
+        stages: [
+            getStats(d.class, d.cost, 0, points),
+            getStats(d.class, d.cost, 1, points),
+            getStats(d.class, d.cost, 2, points)
+        ]
+    }));
 };
