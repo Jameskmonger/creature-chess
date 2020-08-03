@@ -30,72 +30,28 @@ export const classBuilds = {
     }
 };
 
-const getBaseStats = (cost: number): Omit<CreatureStats, "attackType"> => {
-    if (cost === 1) {
-        return {
-            hp: 10,
-            attack: 10,
-            defense: 10,
-            speed: 10
-        };
-    }
-
-    if (cost === 2) {
-        return {
-            hp: 16,
-            attack: 16,
-            defense: 16,
-            speed: 16
-        };
-    }
-
-    if (cost === 3) {
-        return {
-            hp: 25,
-            attack: 24,
-            defense: 24,
-            speed: 25
-        };
-    }
-
-    if (cost === 4) {
-        return {
-            hp: 43,
-            attack: 40,
-            defense: 40,
-            speed: 43
-        };
-    }
-
-    if (cost === 5) {
-        return {
-            hp: 68,
-            attack: 60,
-            defense: 60,
-            speed: 68
-        };
-    }
+const getBaseStats = (): Omit<CreatureStats, "attackType"> => {
+    return {
+        hp: 10,
+        attack: 10,
+        defense: 10,
+        speed: 10
+    };
 };
 
-const getAvailablePoints = (stage: number): number => {
+const getPoints = (cost: number, stage: number): number => {
+    const COST_MODIFIER = 1.5;
+
     if (stage === 0) {
-        return 20;
+        return (cost * COST_MODIFIER) * 20;
     }
 
     if (stage === 1) {
-        return 32;
+        return (cost * COST_MODIFIER) * 80;
     }
 
     if (stage === 2) {
-        return 46;
-    }
-
-    if (stage === 3) {
-        return 74;
-    }
-
-    if (stage === 4) {
-        return 110;
+        return (cost * COST_MODIFIER) * 210;
     }
 };
 
@@ -104,15 +60,15 @@ const getStat = (baseStat: number, buildStat: number, availablePoints: number) =
 };
 
 const getStats = (definitionClass: DefinitionClass, cost: number, stage: number): CreatureStats => {
-    const baseStats = getBaseStats(cost);
-    const availablePoints = getAvailablePoints(stage);
+    const baseStats = getBaseStats();
+    const availablePoints = getPoints(cost, stage);
 
     const build = classBuilds[definitionClass];
 
     const attackType: AttackType = (
         definitionClass === DefinitionClass.ARCANE
-        ? attackTypes.shoot
-        : attackTypes.basic
+            ? attackTypes.shoot
+            : attackTypes.basic
     );
 
     return {
