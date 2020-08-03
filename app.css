@@ -605,6 +605,9 @@ html, body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.4em; }
+    .player-list-item .row .row-half {
+      display: flex;
+      width: 50%; }
   .player-list-item .battle-info {
     width: fit-content;
     padding: 0.4em 1.2em;
@@ -625,15 +628,24 @@ html, body {
       .player-list-item .battle-info .highlight.opponent-name {
         color: #fff; }
   .player-list-item .ready-indicator {
+    display: inline-block;
     width: 0.8em;
     height: 0.8em;
-    margin-left: 0.5em; }
+    margin-right: 0.5em; }
     .player-list-item .ready-indicator.ready {
       background: #20b720; }
     .player-list-item .ready-indicator.not-ready {
       background: #ccc; }
   .player-list-item .badges {
     display: flex; }
+    .player-list-item .badges .badge {
+      font-family: Arial, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff; }
+      .player-list-item .badges .badge.money {
+        margin-right: 0.4rem;
+        color: #ffcd75; }
   .player-list-item .streak-indicator {
     box-sizing: border-box;
     padding: 0 0.4em;
