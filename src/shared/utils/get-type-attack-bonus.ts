@@ -1,7 +1,7 @@
 import { CreatureType } from "../models/creatureType";
 
 // overcome / generated are Tuxemon language
-const typeInteractions = {
+export const typeInteractions = {
     [CreatureType.Earth]: {
         generatedBy: CreatureType.Fire,
         overcomeBy: CreatureType.Wood
@@ -23,6 +23,9 @@ const typeInteractions = {
         overcomeBy: CreatureType.Water
     }
 };
+
+export const isGeneratedBy = (defender: CreatureType, attacker: CreatureType): boolean => typeInteractions[defender].generatedBy === attacker;
+export const isOvercomeBy = (defender: CreatureType, attacker: CreatureType): boolean => typeInteractions[defender].overcomeBy === attacker;
 
 export const getTypeAttackBonus = (attackType: CreatureType, defenceType: CreatureType) => {
     // an attack is weak against the element that it Generates and strong against the element that it Overcomes.
