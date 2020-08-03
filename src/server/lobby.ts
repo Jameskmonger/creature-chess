@@ -7,21 +7,32 @@ import { IdGenerator } from "./id-generator";
 import { Connection } from "./connection";
 
 const BOT_NAMES = [
-    "Duke Horacio",
-    "Father Aereck",
-    "Prince Ali",
-    "Fred the Farmer",
-    "King Roald",
-    "Wise Old Man",
-    "Thessalia",
-    "Johnny the Beard",
-    "Delrith",
-    "Cap'n Izzy No-Beard",
-    "Sir Amik Varze",
-    "Party Pete",
-    "Make-over mage",
     "Aggie",
-    "Evil Dave"
+    "Bertie",
+    "Conan",
+    "Dawn",
+    "Eddy",
+    "Fox",
+    "Ghost",
+    "Hazuki",
+    "Isaac",
+    "C.J.",
+    "Knuckle",
+    "Lily",
+    "Madison",
+    "Navi",
+    "Oscar",
+    "Price",
+    "Quiet",
+    "Rune",
+    "Smoke",
+    "Tony",
+    "U.B.",
+    "Venom",
+    "Warp",
+    "Xenon",
+    "Yew",
+    "Zero"
 ];
 
 enum LobbyEvents {
