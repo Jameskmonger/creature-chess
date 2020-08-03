@@ -7,7 +7,8 @@
             "@common": ["./src/shared"],
             "@common/*": ["./src/shared/*"],
             "@app": ["./src/app"],
-            "@app/*": ["./src/app/*"]
+            "@app/*": ["./src/app/*"],
+            "tslib" : ["./node_modules/tslib/tslib"]
         },
         "experimentalDecorators": true,
         "module": "commonjs",

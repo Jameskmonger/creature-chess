@@ -9,46 +9,91 @@ import { EventChannel } from "redux-saga";
 import { BoardState, boardReducer } from "@common/board";
 import { createPiece } from "@common/utils/piece-utils";
 import { addBoardPiece } from "@common/board/actions/boardActions";
+import { PieceModel } from "@common/models";
+import { IndexedPieces } from "@common/models/piece";
 
 const definitionProvider = new DefinitionProvider();
 const simulator = new TurnSimulator();
 
-let board: BoardState = {
-  pieces: {},
-  piecePositions: {},
-  locked: true
+const createBoard = (pieces: PieceModel[]): BoardState => {
+  let board: BoardState = {
+    pieces: {},
+    piecePositions: {},
+    locked: true
+  };
+
+  pieces.forEach(piece => {
+    board = boardReducer(board, addBoardPiece(piece, piece.position.x, piece.position.y));
+  });
+
+  return board;
 };
 
-// todo these need tying into GRID_SIZE
-const pieces = [
-  createPiece(definitionProvider, "bot-a", 1, [0, 0], null),
-  createPiece(definitionProvider, "bot-a", 1, [1, 0], null),
-  createPiece(definitionProvider, "bot-a", 1, [2, 1], null),
-  createPiece(definitionProvider, "bot-a", 1, [3, 1], null),
-  createPiece(definitionProvider, "bot-b", 1, [4, 4], null),
-  createPiece(definitionProvider, "bot-b", 1, [5, 4], null),
-  createPiece(definitionProvider, "bot-b", 1, [5, 5], null),
-  createPiece(definitionProvider, "bot-b", 1, [6, 5], null)
-];
-
-pieces.forEach(piece => {
-  board = boardReducer(board, addBoardPiece(piece, piece.position.x, piece.position.y));
-});
-
-const listenForBattleFinish = (channel: EventChannel<BattleAction>, resolve: (value: number) => void) => {
+const listenForBattleFinish = (
+  channel: EventChannel<BattleAction>,
+  resolve: (res: { pieces: IndexedPieces, turnsTaken: number }) => void,
+  pieces?: IndexedPieces
+) => {
   channel.take(action => {
     if (action.type === "BATTLE_FINISHED") {
-      resolve(action.payload.turns);
+      resolve({ turnsTaken: action.payload.turns, pieces });
     } else {
-      listenForBattleFinish(channel, resolve);
+      if (action.type === "INITIALISE_BOARD") {
+        listenForBattleFinish(channel, resolve, action.payload.pieces);
+      } else {
+        listenForBattleFinish(channel, resolve, pieces);
+      }
     }
   });
 };
+
 const waitForBattleFinish = (channel: EventChannel<BattleAction>) => {
-  return new Promise<number>(resolve => listenForBattleFinish(channel, resolve));
+  return new Promise<{ pieces: IndexedPieces, turnsTaken: number }>(resolve => listenForBattleFinish(channel, resolve));
 };
 
-const run = async () => {
+const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min) ) + min;
+
+export const runDefinitions = async (a: number, aAttributes: { stage: number }, b: number, bAttributes: { stage: number }, iterations: number) => {
+  const winCounts: { [id: string]: number } = {};
+
+  for (let i = 0; i < iterations; i++) {
+    const board = createBoard([
+      createPiece(definitionProvider, "bot-a", a, [randomInt(0, 6), randomInt(0, 2)], null, aAttributes.stage),
+      createPiece(definitionProvider, "bot-b", b, [randomInt(0, 6), randomInt(3, 5)], null, bAttributes.stage),
+    ]);
+
+    const channel = battleEventChannel(simulator, 0, board, DEFAULT_TURN_COUNT, 100);
+    const { pieces } = await waitForBattleFinish(channel);
+
+    const winnerId = [...new Set(Object.values(pieces).map(p => p.ownerId))][0];
+
+    winCounts[winnerId] = winCounts[winnerId] ? winCounts[winnerId] + 1 : 1;
+  }
+
+  const aWins = winCounts["bot-a"] || 0;
+  const bWins = winCounts["bot-b"] || 0;
+
+  return {
+    aWins,
+    bWins
+  };
+};
+
+export const run = async () => {
+  // todo these need tying into GRID_SIZE
+  const pieces = [
+    createPiece(definitionProvider, "bot-a", 1, [0, 0], null),
+    createPiece(definitionProvider, "bot-a", 1, [1, 0], null),
+    createPiece(definitionProvider, "bot-a", 1, [2, 1], null),
+    createPiece(definitionProvider, "bot-a", 1, [3, 1], null),
+    createPiece(definitionProvider, "bot-b", 1, [4, 4], null),
+    createPiece(definitionProvider, "bot-b", 1, [5, 4], null),
+    createPiece(definitionProvider, "bot-b", 1, [5, 5], null),
+    createPiece(definitionProvider, "bot-b", 1, [6, 5], null)
+  ];
+
+  const board = createBoard(pieces);
+
   let totalMsTaken = 0;
   let totalTurnsTaken = 0;
 
@@ -58,7 +103,7 @@ const run = async () => {
     const iterationStartMs = present();
 
     const channel = battleEventChannel(simulator, 0, board, DEFAULT_TURN_COUNT, 100);
-    const turnsTaken = await waitForBattleFinish(channel);
+    const { turnsTaken } = await waitForBattleFinish(channel);
 
     const iterationMsTaken = present() - iterationStartMs;
     totalMsTaken += iterationMsTaken;
@@ -69,5 +114,3 @@ const run = async () => {
   console.log(`Average of ${(totalMsTaken / TARGET_ITERATIONS).toFixed(2)} ms per battle`);
   console.log(`Average of ${(totalMsTaken / totalTurnsTaken).toFixed(4)} ms per turn`);
 };
-
-run();
