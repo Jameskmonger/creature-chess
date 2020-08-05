@@ -60,7 +60,7 @@ $player-list-gutter-size: 0.4em;
         // stylelint-disable-next-line
         width: fit-content;
         padding: 0.4em 1.2em;
-        margin: 0 auto $player-list-gutter-size;
+        margin: 0 auto;
         font-family: Arial, sans-serif;
         font-size: 0.8em;
         color: #c3c3c3;
@@ -119,6 +119,9 @@ $player-list-gutter-size: 0.4em;
     }
 
     .streak-indicator {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         box-sizing: border-box;
         padding: 0 0.4em;
         font-family: Arial, sans-serif;
