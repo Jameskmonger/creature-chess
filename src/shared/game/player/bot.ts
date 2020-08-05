@@ -1,5 +1,5 @@
 import { Player } from "./player";
-import { GRID_SIZE } from "../../models/constants";
+import { GRID_SIZE, BUY_XP_COST } from "../../models/constants";
 import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@common/models";
 import { getAllPieces, getBoardPieceForPosition } from "@common/player/pieceSelectors";
 import { PlayerActions } from "@common/player";
@@ -87,6 +87,7 @@ export class Bot extends Player {
         this.store.dispatch(gamePhaseUpdate(packet));
 
         this.buyBestPieces();
+        this.spendExcessMoneyOnXp();
         this.putBenchOnBoard();
 
         this.readyUp();
@@ -120,6 +121,24 @@ export class Bot extends Player {
     }
 
     protected onShopLockUpdate() { /* nothing required, we're a bot */ }
+
+    private spendExcessMoneyOnXp() {
+        while (true) {
+            const hasEnoughMoney = this.getMoney() >= (10 + BUY_XP_COST);
+
+            if (!hasEnoughMoney) {
+                return;
+            }
+
+            const canLevelUp = this.getLevel() !== 10;
+
+            if (!canLevelUp) {
+                return;
+            }
+
+            this.buyXp();
+        }
+    }
 
     private buyBestPieces() {
         const cards = this.getCardViews();
