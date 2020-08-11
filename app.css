@@ -611,7 +611,7 @@ html, body {
   .player-list-item .battle-info {
     width: fit-content;
     padding: 0.4em 1.2em;
-    margin: 0 auto 0.4em;
+    margin: 0 auto;
     font-family: Arial, sans-serif;
     font-size: 0.8em;
     color: #c3c3c3;
@@ -647,6 +647,9 @@ html, body {
         margin-right: 0.4rem;
         color: #ffcd75; }
   .player-list-item .streak-indicator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     box-sizing: border-box;
     padding: 0 0.4em;
     font-family: Arial, sans-serif;
