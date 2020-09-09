@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"
   },
-  "homepage": "https://github.com/Jameskmonger/creature-chess#readme"
+  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+  "dependencies": {
+    "@creature-chess/shared": "^0.0.0"
+  }
 }
