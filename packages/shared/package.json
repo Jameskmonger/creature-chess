@@ -26,5 +26,13 @@
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"
   },
-  "homepage": "https://github.com/Jameskmonger/creature-chess#readme"
+  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+  "dependencies": {
+		"javascript-astar": "^0.4.1",
+		"p-defer": "^2.1.0",
+		"delay": "^4.1.0",
+		"@types/lodash": "^4.14.123",
+		"lodash": "^4.17.13",
+		"present": "^1.0.0"
+  }
 }
