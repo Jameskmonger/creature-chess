@@ -1,7 +1,7 @@
-import { GRID_SIZE } from "@common/models/constants";
-import { PieceModel } from "@common/models";
-import { createTileCoordinates, TileCoordinates } from "@common/models/position";
-import { IndexedPieces } from "@common/models/piece";
+import { GRID_SIZE } from "../../models/constants";
+import { PieceModel } from "../../models";
+import { createTileCoordinates, TileCoordinates } from "../../models/position";
+import { IndexedPieces } from "../../models/piece";
 
 const rotateGridPosition = (gridSize: { width: number, height: number}, position: TileCoordinates) => {
   return createTileCoordinates(

@@ -2,7 +2,7 @@ import { TestFixture, Test, Expect } from "alsatian";
 import { PiecesState, pieces } from "./piecesReducer";
 import { removeBoardPiece, initialiseBoard, addBoardPiece, updateBoardPiece, updateBoardPieces, moveBoardPiece, removeBoardPieces } from "../actions/boardActions";
 import { createMockPiece } from "@testing/utils";
-import { createTileCoordinates } from "@common/models/position";
+import { createTileCoordinates } from "../../models/position";
 
 @TestFixture()
 export class PiecesReducerTests {

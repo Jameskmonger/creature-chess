@@ -1,9 +1,9 @@
-import { PieceModel } from "@common/models";
-import { lockBench, unlockBench, addBenchPiece, removeBenchPiece, initialiseBench } from "@common/player/bench/benchActions";
+import { PieceModel } from "../../models";
+import { lockBench, unlockBench, addBenchPiece, removeBenchPiece, initialiseBench } from "../../player/bench/benchActions";
 
-import { PlayerAction } from "@common/player/actions";
-import { removeBoardPiece, initialiseBoard } from "@common/board/actions/boardActions";
-import { PlayerStore } from "@common/player/store";
+import { PlayerAction } from "../../player/actions";
+import { removeBoardPiece, initialiseBoard } from "../../board/actions/boardActions";
+import { PlayerStore } from "../../player/store";
 
 export class PlayerPieces {
   constructor(private store: PlayerStore) {

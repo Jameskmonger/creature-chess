@@ -2,11 +2,11 @@ import { PieceModel } from "../../models";
 import { getNextPiecePosition } from "./pathfinding";
 import { AttackType } from "../../models/creatureDefinition";
 import { range, flatten } from "lodash";
-import { Directions, TileCoordinates, arePositionsEqual } from "@common/models/position";
-import { GRID_SIZE } from "@common/models/constants";
-import { IndexedPieces } from "@common/models/piece";
-import { BoardState } from "@common/board";
-import { getBoardPieceForPosition } from "@common/player/pieceSelectors";
+import { Directions, TileCoordinates, arePositionsEqual } from "../../models/position";
+import { GRID_SIZE } from "../../models/constants";
+import { IndexedPieces } from "../../models/piece";
+import { BoardState } from "../../board";
+import { getBoardPieceForPosition } from "../../player/pieceSelectors";
 
 type Vector = { x: number, y: number };
 

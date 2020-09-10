@@ -5,7 +5,7 @@ import {
 } from "../actions/boardActions";
 import { piecePositions, PiecePositionsState } from "./piecePositionsReducer";
 import { createMockPiece } from "@testing/utils";
-import { createTileCoordinates } from "@common/models/position";
+import { createTileCoordinates } from "../../models/position";
 import { PiecesState } from "./piecesReducer";
 
 @TestFixture()

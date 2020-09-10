@@ -1,4 +1,4 @@
-import { PlayerAction } from "@common/player/actions";
+import { PlayerAction } from "../player/actions";
 
 export enum ClientToServerPacketOpcodes {
   FINISH_MATCH = "finishMatch",

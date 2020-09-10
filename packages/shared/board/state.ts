@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { pieces } from "./reducers/piecesReducer";
 import { piecePositions } from "./reducers/piecePositionsReducer";
 import { locked } from "./reducers/lockedReducer";
-import { IndexedPieces } from "@common/models/piece";
+import { IndexedPieces } from "../models/piece";
 
 type BoardState = {
   pieces: IndexedPieces,

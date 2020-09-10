@@ -66,7 +66,8 @@ module.exports = {
     mode: "development",
     devtool: false,
 
-    entry: "./index.tsx",
+    context: __dirname,
+    entry: "./src/index.tsx",
 
     module: {
         rules: [

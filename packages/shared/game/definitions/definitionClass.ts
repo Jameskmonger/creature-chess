@@ -1,4 +1,4 @@
-import { CreatureStats, AttackType, attackTypes } from "@common/models/creatureDefinition";
+import { CreatureStats, AttackType, attackTypes } from "../../models/creatureDefinition";
 
 export enum DefinitionClass {
     VALIANT = "Valiant",

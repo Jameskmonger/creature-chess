@@ -1,6 +1,6 @@
-import { PieceModel } from "@common/models";
-import { createTileCoordinates } from "@common/models/position";
-import { DefinitionProvider } from "@common/game/definitionProvider";
+import { PieceModel } from "@creature-chess/shared/models";
+import { createTileCoordinates } from "@creature-chess/shared/models/position";
+import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
 
 const definitionProvider = new DefinitionProvider();
 

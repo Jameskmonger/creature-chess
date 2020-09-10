@@ -1,6 +1,6 @@
-import { PieceModel } from "@common/models";
-import { BoardState } from "@common/board";
-import { BenchState } from "@common/player/bench";
+import { PieceModel } from "../models"
+import { BoardState } from "../board";
+import { BenchState } from "./bench";
 
 interface PlayerPiecesState {
   board: BoardState;
@@ -23,9 +23,12 @@ export const getPiece = (state: PlayerPiecesState, pieceId: string): PieceModel 
 export const getBenchPieceForSlot = (state: PlayerPiecesState, slot: number): PieceModel => state.bench.pieces[slot] || null;
 export const getBoardPieceForPosition =
   (state: BoardState, x: number, y: number): PieceModel => state.pieces[state.piecePositions[`${x},${y}`]] || null;
-export const getAllPieces = (state: PlayerPiecesState): PieceModel[] => [...Object.values(state.board.pieces), ...state.bench.pieces.filter(p => p !== null)];
+export const getAllPieces = (state: PlayerPiecesState): PieceModel[] => [
+  ...(Object.values(state.board.pieces) as PieceModel[]), ...state.bench.pieces.filter(p => p !== null)
+];
 export const getBoardPiecesForDefinition =
-  (state: PlayerPiecesState, definitionId: number): PieceModel[] => Object.values(state.board.pieces).filter(p => p.definitionId === definitionId);
+  (state: PlayerPiecesState, definitionId: number): PieceModel[] =>
+  (Object.values(state.board.pieces) as PieceModel[]).filter(p => p.definitionId === definitionId);
 export const getBenchPiecesForDefinition =
   (state: PlayerPiecesState, definitionId: number): PieceModel[] => state.bench.pieces.filter(p => p && p.definitionId === definitionId);
 export const getBoardPieceCount = (state: PlayerPiecesState): number => Object.values(state.board.pieces).length;

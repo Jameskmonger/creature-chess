@@ -1,6 +1,6 @@
 import { TestFixture, Test, Expect, TestCase } from "alsatian";
 import { canDropPiece } from "./can-drop-piece";
-import { pieceUtils } from "@common/utils";
+import { pieceUtils } from "../utils";
 import { DefinitionProvider } from "../game/definitionProvider";
 
 const definitionProvider = new DefinitionProvider();

@@ -1,4 +1,4 @@
-import { ServerToClient } from "@common/networking";
+import { ServerToClient } from "../../networking";
 
 export const GAME_PHASE_UPDATE = "GAME_PHASE_UPDATE";
 export type GAME_PHASE_UPDATE = typeof GAME_PHASE_UPDATE;

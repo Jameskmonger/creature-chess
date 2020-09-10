@@ -1,12 +1,12 @@
 import { Player } from "./player";
 import { GRID_SIZE, BUY_XP_COST } from "../../models/constants";
-import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@common/models";
-import { getAllPieces, getBoardPieceForPosition } from "@common/player/pieceSelectors";
-import { PlayerActions } from "@common/player";
-import { buyCard } from "@common/player/actions";
-import { PlayerState } from "@common/player/store";
-import { PhaseUpdatePacket } from "@common/networking/server-to-client";
-import { gamePhaseUpdate } from "@common/player/gameInfo";
+import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "../../models";
+import { getAllPieces, getBoardPieceForPosition } from "../../player/pieceSelectors";
+import { PlayerActions } from "../../player";
+import { buyCard } from "../../player/actions";
+import { PlayerState } from "../../player/store";
+import { PhaseUpdatePacket } from "../../networking/server-to-client";
+import { gamePhaseUpdate } from "../../player/gameInfo";
 import uuid = require("uuid");
 
 const PREFERRED_COLUMN_ORDERS = {

@@ -1,6 +1,6 @@
 import { PieceModel } from "../models";
-import { IndexedPieces } from "@common/models/piece";
-import { BoardState } from "@common/board";
+import { IndexedPieces } from "../models/piece";
+import { BoardState } from "../board";
 
 const groupBy = <TItem, TKey>(list: TItem[], keyGetter: (item: TItem) => TKey) => {
     const map = new Map<TKey, TItem[]>();

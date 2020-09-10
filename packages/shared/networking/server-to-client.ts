@@ -1,8 +1,8 @@
-import * as Models from "@common/models";
-import { BoardState } from "@common/board";
-import { GamePhase } from "@common/models";
-import { BenchState } from "@common/player/bench";
-import { IndexedPieces } from "@common/models/piece";
+import * as Models from "../models";
+import { BoardState } from "../board";
+import { GamePhase } from "../models";
+import { BenchState } from "../player/bench";
+import { IndexedPieces } from "../models/piece";
 
 export type PreparingPhaseUpdatePacket = {
   startedAt: number,

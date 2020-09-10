@@ -1,8 +1,8 @@
-import { PieceModel } from "@common/models";
+import { PieceModel } from "../../../models";
 import { Reducer } from "redux";
 import { BenchAction } from "../benchActions";
 import { REMOVE_BENCH_PIECE, INITIALISE_BENCH, ADD_BENCH_PIECE, MOVE_BENCH_PIECE, REMOVE_BENCH_PIECES } from "../benchActionTypes";
-import { createTileCoordinates } from "@common/models/position";
+import { createTileCoordinates } from "../../../models/position";
 
 type PiecesState = PieceModel[];
 

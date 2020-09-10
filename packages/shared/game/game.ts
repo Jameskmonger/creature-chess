@@ -13,7 +13,7 @@ import { DefinitionProvider } from "./definitionProvider";
 import { EventManager } from "./events/eventManager";
 import { matchRewards } from "./plugins/matchRewards";
 import { resetPlayer } from "./plugins/resetPlayer";
-import { PhaseUpdatePacket } from "@common/networking/server-to-client";
+import { PhaseUpdatePacket } from "../networking/server-to-client";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {

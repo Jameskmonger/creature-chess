@@ -21,29 +21,26 @@
     "url": "git+https://github.com/Jameskmonger/creature-chess.git"
   },
   "scripts": {
-		"build": "tsc -p ./tsconfig.json",
-		"start": "npm run build && node -r ts-node/register -r tsconfig-paths/register ./bin/index.js 3000",
-		"dev": "nodemon 3000"
+    "build": "tsc -p ./tsconfig.json",
+    "start": "node -r ts-node/register -r tsconfig-paths/register ./lib/index.js 3000",
+    "dev": "nodemon 3000"
   },
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"
   },
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
-  "devDependencies": {
-		"@types/jsonwebtoken": "^8.5.0",
-		"@types/bad-words": "^3.0.0",
-		"nodemon": "^1.18.11"
-  },
   "dependencies": {
     "@creature-chess/shared": "^0.0.0",
-		"bad-words": "^3.0.3",
-		"jsonwebtoken": "^8.5.1",
-		"jwks-rsa": "^1.8.1",
-		"@types/uuid": "^3.4.4",
-		"uuid": "^3.3.2",
-		"@types/auth0": "^2.20.5",
-		"auth0": "^2.27.1",
-		"@types/socket.io": "^2.1.2",
-		"socket.io": "^2.2.0"
+    "@types/auth0": "^2.20.5",
+    "@types/redux-saga": "^0.10.5",
+    "@types/socket.io": "^2.1.2",
+    "@types/uuid": "^3.4.4",
+    "auth0": "^2.27.1",
+    "bad-words": "^3.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.8.1",
+    "redux-saga": "^1.0.2",
+    "socket.io": "^2.2.0",
+    "uuid": "^3.3.2"
   }
 }

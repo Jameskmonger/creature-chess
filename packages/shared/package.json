@@ -5,14 +5,7 @@
   "keywords": [],
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
   "license": "ISC",
-  "main": "lib/shared.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
+  "main": "index.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -33,6 +26,10 @@
 		"delay": "^4.1.0",
 		"@types/lodash": "^4.14.123",
 		"lodash": "^4.17.13",
-		"present": "^1.0.0"
+		"present": "^1.0.0",
+		"@types/redux": "^3.6.0",
+		"redux": "^4.0.1",
+		"@types/redux-saga": "^0.10.5",
+		"redux-saga": "^1.0.2"
   }
 }

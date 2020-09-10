@@ -1,0 +1,4 @@
+node_modules
+npm-debug.log
+Dockerfile*
+packages/**/node_modules

@@ -1,11 +1,11 @@
 import { PieceModel } from "../../models";
 import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
 import { getRelativeDirection, TileCoordinates, Directions, getDistance } from "../../models/position";
-import { BoardState, boardReducer } from "@common/board";
-import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "@common/board/actions/boardActions";
-import { getStats } from "@common/utils/piece-utils";
-import { CreatureType } from "@common/models/creatureType";
-import { isOvercomeBy, isGeneratedBy } from "@common/utils/get-type-attack-bonus";
+import { BoardState, boardReducer } from "../../board";
+import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "../../board/actions/boardActions";
+import { getStats } from "../../utils/piece-utils";
+import { CreatureType } from "../../models/creatureType";
+import { isOvercomeBy, isGeneratedBy } from "../../utils/get-type-attack-bonus";
 
 const DYING_DURATION = 10;
 const ATTACK_TURN_DURATION = 2;

@@ -1,16 +1,16 @@
 // tslint:disable:no-console
 
 import present = require("present");
-import { battleEventChannel, BattleAction } from "@common/match/combat/battleEventChannel";
-import { TurnSimulator } from "@common/match/combat/turnSimulator";
-import { DefinitionProvider } from "@common/game/definitionProvider";
-import { DEFAULT_TURN_COUNT } from "@common/models/constants";
+import { battleEventChannel, BattleAction } from "@creature-chess/shared/match/combat/battleEventChannel";
+import { TurnSimulator } from "@creature-chess/shared/match/combat/turnSimulator";
+import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
+import { DEFAULT_TURN_COUNT } from "@creature-chess/shared/models/constants";
 import { EventChannel } from "redux-saga";
-import { BoardState, boardReducer } from "@common/board";
-import { createPiece } from "@common/utils/piece-utils";
-import { addBoardPiece } from "@common/board/actions/boardActions";
-import { PieceModel } from "@common/models";
-import { IndexedPieces } from "@common/models/piece";
+import { BoardState, boardReducer } from "@creature-chess/shared/board";
+import { createPiece } from "@creature-chess/shared/utils/piece-utils";
+import { addBoardPiece } from "@creature-chess/shared/board/actions/boardActions";
+import { PieceModel } from "@creature-chess/shared/models";
+import { IndexedPieces } from "@creature-chess/shared/models/piece";
 
 const definitionProvider = new DefinitionProvider();
 const simulator = new TurnSimulator();

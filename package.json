@@ -28,8 +28,10 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"@types/bad-words": "^3.0.0",
 		"@types/enzyme": "^3.9.0",
 		"@types/enzyme-adapter-react-16": "^1.0.5",
+		"@types/jsonwebtoken": "^8.5.0",
 		"@types/node": "^11.11.3",
 		"alsatian": "2.4.0",
 		"awesome-typescript-loader": "^5.2.1",
@@ -40,11 +42,13 @@
 		"enzyme": "^3.9.0",
 		"enzyme-adapter-react-16": "^1.10.0",
 		"html-webpack-plugin": "^3.2.0",
+		"http-server": "~0.9.0",
 		"lerna": "^3.22.1",
 		"mini-css-extract-plugin": "^0.5.0",
 		"neworbit-stylelint-config": "^2.0.7",
 		"neworbit-tslint-config": "^4.0.0",
 		"node-sass": "^4.11.0",
+		"nodemon": "^1.18.11",
 		"npm-run-all": "^4.1.5",
 		"sass-loader": "^7.1.0",
 		"stylelint": "^9.10.1",
@@ -59,11 +63,5 @@
 		"webpack": "^4.29.6",
 		"webpack-cli": "^3.2.3",
 		"webpack-dev-server": "^3.2.1"
-	},
-	"dependencies": {
-		"@types/redux": "^3.6.0",
-		"@types/redux-saga": "^0.10.5",
-		"redux": "^4.0.1",
-		"redux-saga": "^1.0.2"
 	}
 }

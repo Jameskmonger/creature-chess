@@ -7,19 +7,19 @@ import { OpponentProvider } from "../opponentProvider";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, STARTING_HEALTH } from "../../models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, StreakType, PlayerListPlayer, PlayerPieceLocation } from "@common/models";
-import { getPiecesForStage, getXpToNextLevel } from "@common/utils";
+import { LobbyPlayer, StreakType, PlayerListPlayer, PlayerPieceLocation } from "../../models";
+import { getPiecesForStage, getXpToNextLevel } from "../../utils";
 import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
-import { mergeBoards } from "@common/board/utils/mergeBoards";
-import { PlayerBattle, inProgressBattle, finishedBattle } from "@common/models/player-list-player";
-import { PlayerActions } from "@common/player";
-import { createPlayerStore, PlayerStore } from "@common/player/store";
-import { cardsUpdated } from "@common/player/cardShop/actions";
-import { moneyUpdateAction } from "@common/player/gameInfo";
+import { mergeBoards } from "../../board/utils/mergeBoards";
+import { PlayerBattle, inProgressBattle, finishedBattle } from "../../models/player-list-player";
+import { PlayerActions } from "../../player";
+import { createPlayerStore, PlayerStore } from "../../player/store";
+import { cardsUpdated } from "../../player/cardShop/actions";
+import { moneyUpdateAction } from "../../player/gameInfo";
 import { SagaMiddleware } from "redux-saga";
-import { setLevelAction } from "@common/player/level/actions";
-import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "@common/player/playerSelectors";
+import { setLevelAction } from "../../player/level/actions";
+import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "../../player/playerSelectors";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
