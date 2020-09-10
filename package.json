@@ -5,6 +5,7 @@
 	"description": "Creature Chess",
 	"main": "index.js",
 	"scripts": {
+		"bootstrap": "lerna bootstrap --hoist",
 		"build": "npm run build:server && npm run build:client",
 		"build:client": "lerna run build --scope=@creature-chess/app --stream",
 		"build:server": "lerna run build --scope=@creature-chess/server --stream",
