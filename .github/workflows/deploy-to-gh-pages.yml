@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: '10.x'
     - name: Install dependencies
-      run: npm install
+      run: npm install && npm run bootstrap
     - name: Build application
       run: npm run build
       env:
@@ -27,10 +27,10 @@ jobs:
         CNAME: ${{ secrets.CNAME }}
         GH_PAGES: true
     - name: Copy 404 page
-      run: cp src/app/404.html public/404.html
+      run: cp packages/app/404.html packages/app/public/404.html
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.4.1
       with:
         ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: public
+        FOLDER: packages/app/public
