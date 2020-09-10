@@ -1,7 +1,7 @@
 import { shuffle } from "lodash";
 import { Player } from "./player/player";
-import { randomFromArray } from "@common/utils";
-import { log } from "@common/log";
+import { randomFromArray } from "../utils";
+import { log } from "../log";
 
 export class OpponentProvider {
     private players: Player[];

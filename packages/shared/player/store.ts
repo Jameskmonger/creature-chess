@@ -2,13 +2,13 @@ import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import { fork, all } from "@redux-saga/core/effects";
 
-import { boardReducer, BoardState } from "@common/board";
-import { evolutionSagaFactory } from "@common/player/sagas/evolution";
+import { boardReducer, BoardState } from "../board";
+import { evolutionSagaFactory } from "./sagas/evolution";
 
-import { dropPieceSagaFactory } from "@common/player/sagas/dropPiece";
+import { dropPieceSagaFactory } from "./sagas/dropPiece";
 import { benchReducer, BenchState } from "./bench";
 import { cardShopSagaFactory } from "./cardShop/saga";
-import { Card } from "@common/models";
+import { Card } from "../models";
 import { cardsReducer } from "./cardShop";
 import { GameInfoState, gameInfoReducer } from "./gameInfo";
 import { levelReducer } from "./level";

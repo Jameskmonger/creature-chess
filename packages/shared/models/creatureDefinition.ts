@@ -1,5 +1,5 @@
 import { CreatureType } from "./creatureType";
-import { DefinitionClass } from "@common/game/definitions/definitionClass";
+import { DefinitionClass } from "../game/definitions/definitionClass";
 
 export interface CreatureDefinition {
     id: number;

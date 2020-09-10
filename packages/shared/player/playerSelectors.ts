@@ -1,7 +1,7 @@
 import { PlayerState } from "./store";
 import { getBoardPieceForPosition } from "./pieceSelectors";
-import { GRID_SIZE } from "@common/models/constants";
-import { TileCoordinates } from "@common/models/position";
+import { GRID_SIZE } from "../models/constants";
+import { TileCoordinates } from "../models/position";
 
 export const getPlayerMoney = (state: PlayerState): number => state.gameInfo.money;
 export const getPlayerLevel = (state: PlayerState): number => state.level.level;

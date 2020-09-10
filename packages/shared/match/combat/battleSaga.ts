@@ -1,7 +1,7 @@
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
 import { battleEventChannel, BattleAction } from "./battleEventChannel";
 import { TurnSimulator } from "./turnSimulator";
-import { BoardState } from "@common/board";
+import { BoardState } from "../../board";
 
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;

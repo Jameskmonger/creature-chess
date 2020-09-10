@@ -1,8 +1,8 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerDropPieceAction, PLAYER_DROP_PIECE } from "../actions";
-import { PlayerPieceLocation } from "@common/models";
+import { PlayerPieceLocation } from "../../models";
 import * as pieceSelectors from "../pieceSelectors";
-import { moveBoardPiece, removeBoardPiece, addBoardPiece } from "@common/board/actions/boardActions";
+import { moveBoardPiece, removeBoardPiece, addBoardPiece } from "../../board/actions/boardActions";
 import { moveBenchPiece, addBenchPiece, removeBenchPiece } from "../bench/benchActions";
 import { PlayerState } from "../store";
 import { getPlayerBelowPieceLimit } from "../playerSelectors";

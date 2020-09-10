@@ -1,4 +1,4 @@
-import { BoardState } from "@common/board";
+import { BoardState } from "../board";
 
 export const isATeamDefeated = (board: BoardState) => {
     const pieces = Object.values(board.pieces);

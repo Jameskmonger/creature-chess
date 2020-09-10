@@ -1,10 +1,10 @@
 import present = require("present");
 import { eventChannel, buffers } from "redux-saga";
 import { TurnSimulator } from "./turnSimulator";
-import { isATeamDefeated } from "@common/utils";
+import { isATeamDefeated } from "../../utils";
 import { BoardState } from "../../board";
-import { initialiseBoard, InitialiseBoardAction } from "@common/board/actions/boardActions";
-import { IndexedPieces } from "@common/models/piece";
+import { initialiseBoard, InitialiseBoardAction } from "../../board/actions/boardActions";
+import { IndexedPieces } from "../../models/piece";
 
 export const BATTLE_TURN = "BATTLE_TURN";
 export type BATTLE_TURN = typeof BATTLE_TURN;

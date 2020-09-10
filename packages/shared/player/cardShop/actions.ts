@@ -1,4 +1,4 @@
-import { Card } from "@common/models";
+import { Card } from "../../models";
 
 export const CARDS_UPDATED = "CARDS_UPDATED";
 export type CARDS_UPDATED = typeof CARDS_UPDATED;

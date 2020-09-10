@@ -1,5 +1,5 @@
-import { PieceModel } from "@common/models";
-import { GRID_SIZE } from "@common/models/constants";
+import { PieceModel } from "../models";
+import { GRID_SIZE } from "../models/constants";
 
 const inBench = (targetY: number) => targetY === null;
 const inFriendlyBoard = (targetY: number) => targetY !== null && targetY > (GRID_SIZE.height / 2) - 1;

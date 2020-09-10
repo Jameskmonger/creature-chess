@@ -1,5 +1,5 @@
 import { LevelUpdateAction, LEVEL_UPDATE } from "./actions";
-import { STARTING_LEVEL } from "@common/models/constants";
+import { STARTING_LEVEL } from "../../models/constants";
 
 export type LevelState = {
     level: number;

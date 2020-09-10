@@ -1,16 +1,16 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD } from "../actions";
-import { GamePhase, PlayerPieceLocation } from "@common/models";
-import { getFirstEmptyBenchSlot } from "@common/board";
-import { DefinitionProvider } from "@common/game/definitionProvider";
-import { createPieceFromCard } from "@common/utils/piece-utils";
+import { GamePhase, PlayerPieceLocation } from "../../models";
+import { getFirstEmptyBenchSlot } from "../../board";
+import { DefinitionProvider } from "../../game/definitionProvider";
+import { createPieceFromCard } from "../../utils/piece-utils";
 import { addBenchPiece } from "../bench/benchActions";
 import { cardsUpdated } from "./actions";
 import { PlayerState } from "../store";
 import { moneyUpdateAction } from "../gameInfo";
-import { log } from "@common/log";
+import { log } from "../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
-import { addBoardPiece } from "@common/board/actions/boardActions";
+import { addBoardPiece } from "../../board/actions/boardActions";
 
 // todo figure out dependency injection here - or at least construct one and pass it down :)
 const definitionProvider = new DefinitionProvider();

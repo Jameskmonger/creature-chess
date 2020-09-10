@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { PieceModel } from "@common/models";
+import { PieceModel } from "../../models";
 
 import { pieces } from "./reducers/piecesReducer";
 import { locked } from "./reducers/lockedReducer";

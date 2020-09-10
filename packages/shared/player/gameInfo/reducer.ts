@@ -1,6 +1,6 @@
 import { MONEY_UPDATE, GAME_PHASE_UPDATE, GameAction } from "./actions";
-import { GamePhase } from "@common/models";
-import { STARTING_MONEY } from "@common/models/constants";
+import { GamePhase } from "../../models";
+import { STARTING_MONEY } from "../../models/constants";
 
 export interface GameInfoState {
     phase: GamePhase;
