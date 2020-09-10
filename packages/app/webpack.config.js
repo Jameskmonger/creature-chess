@@ -66,7 +66,7 @@ module.exports = {
     mode: "development",
     devtool: false,
 
-    entry: "./src/app/index.tsx",
+    entry: "./index.tsx",
 
     module: {
         rules: [
@@ -100,7 +100,7 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/app/index.ejs",
+            template: "./index.ejs",
             templateParameters: () => ({
                 googleAnalyticsScript: getGAScript(process.env.GA_ID),
                 ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES)

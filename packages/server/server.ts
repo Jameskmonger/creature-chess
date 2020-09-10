@@ -1,13 +1,13 @@
 import io = require("socket.io");
 import { ManagementClient } from "auth0";
-import { log } from "@common/log";
-import { Game } from "@common/game/game";
+import { log } from "@creature-chess/shared/log";
+import { Game } from "@creature-chess/shared/game/game";
 import { Connection } from "./connection";
 import { Lobby } from "./lobby";
-import { Player } from "@common/game";
+import { Player } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
-import { LobbyPlayer } from "@common/models";
-import { PlayerGameState } from "@common/networking/server-to-client";
+import { LobbyPlayer } from "@creature-chess/shared/models";
+import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
 import { Metrics } from "./metrics";
 import { UserAppMetadata, UserModel } from "./user/userModel";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
@@ -48,7 +48,7 @@ export class Server {
     });
 
     public listen(port: number) {
-        const server = io.listen(port, { transports: ["websocket", "xhr-polling"] });
+        const server = io.listen(port, { transports: ["websocket", "polling"] });
 
         log("Server listening on port " + port);
 

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { log } from "@common/log";
+import { log } from "@creature-chess/shared/log";
 
 type GameMetric = {
   startTimeMs: number;
