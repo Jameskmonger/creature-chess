@@ -4,10 +4,10 @@
         "paths": {
             "@testing": ["./src/_testing"],
             "@testing/*": ["./src/_testing/*"],
-            "@common": ["./src/shared"],
-            "@common/*": ["./src/shared/*"],
-            "@app": ["./src/app"],
-            "@app/*": ["./src/app/*"],
+            "@common": ["./packages/shared"],
+            "@common/*": ["./packages/shared/*"],
+            "@app": ["./packages/app"],
+            "@app/*": ["./packages/app/*"],
             "tslib" : ["./node_modules/tslib/tslib"]
         },
         "experimentalDecorators": true,

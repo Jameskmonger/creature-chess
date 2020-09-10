@@ -1,11 +1,11 @@
 import io = require("socket.io");
 import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
-import { log } from "@common/log";
-import { AuthenticateResponse } from "@common/networking/server-to-client";
+import { log } from "@creature-chess/shared/log";
+import { AuthenticateResponse } from "@creature-chess/shared/networking/server-to-client";
 import { authenticate } from "./user/authenticate";
 import { UserAppMetadata, UserModel } from "./user/userModel";
-import { validateNickname } from "@common/validation/nickname";
+import { validateNickname } from "@creature-chess/shared/validation/nickname";
 import { checkNicknameUnique } from "./user/checkNicknameUnique";
 import { updateUser } from "./user/updateUser";
 import { EventEmitter } from "events";

@@ -1,19 +1,19 @@
 import uuid = require("uuid/v4");
 import { all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
-import { Player } from "@common/game/player/player";
-import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@common/models";
-import { IncomingPacketRegistry } from "@common/networking/incoming-packet-registry";
-import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@common/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, JoinGamePacket } from "@common/networking/server-to-client";
-import { OutgoingPacketRegistry } from "@common/networking/outgoing-packet-registry";
+import { Player } from "@creature-chess/shared/game/player/player";
+import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@creature-chess/shared/models";
+import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
+import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@creature-chess/shared/networking/client-to-server";
+import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, JoinGamePacket } from "@creature-chess/shared/networking/server-to-client";
+import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { log } from "console";
-import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP } from "@common/player/actions";
-import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@common/player/gameInfo";
+import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP } from "@creature-chess/shared/player/actions";
+import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@creature-chess/shared/player/gameInfo";
 import { Task } from "redux-saga";
-import { PlayerState } from "@common/player/store";
-import { CardsUpdatedAction, CARDS_UPDATED } from "@common/player/cardShop/actions";
-import { LevelUpdateAction, LEVEL_UPDATE } from "@common/player/level/actions";
+import { PlayerState } from "@creature-chess/shared/player/store";
+import { CardsUpdatedAction, CARDS_UPDATED } from "@creature-chess/shared/player/cardShop/actions";
+import { LevelUpdateAction, LEVEL_UPDATE } from "@creature-chess/shared/player/level/actions";
 
 const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
     return function*() {

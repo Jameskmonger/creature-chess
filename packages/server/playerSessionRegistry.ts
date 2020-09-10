@@ -1,4 +1,4 @@
-import { Player } from "@common/game";
+import { Player } from "@creature-chess/shared/game";
 
 type PlayerLocation = {
     type: "lobby" | "game",

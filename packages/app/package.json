@@ -1,0 +1,62 @@
+{
+  "name": "@creature-chess/app",
+  "version": "0.0.0",
+  "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
+  "keywords": [],
+  "author": "James Monger <jameskmonger@hotmail.co.uk>",
+  "license": "ISC",
+  "main": "lib/app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jameskmonger/creature-chess.git"
+  },
+  "scripts": {
+    "build": "npm run copy-images && webpack",
+		"start": "npm run build && http-server ./public -p 8090",
+    "dev": "npm run copy-images && webpack-dev-server",
+    "copy-images": "cpy \"./images/**/*\" \"./public/\" --parents"
+  },
+  "bugs": {
+    "url": "https://github.com/Jameskmonger/creature-chess/issues"
+  },
+  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+  "devDependencies": {
+		"http-server": "~0.9.0"
+  },
+  "dependencies": {
+    "@creature-chess/shared": "^0.0.0",
+		"redux-devtools-extension": "^2.13.8",
+		"react-dnd": "^10.0.2",
+		"react-dnd-html5-backend": "^10.0.2",
+		"react-dnd-multi-backend": "^5.0.0",
+		"react-dnd-touch-backend": "^10.0.2",
+		"@types/react-router-dom": "^5.1.5",
+		"react-router-dom": "^5.2.0",
+		"@types/react-dom": "^16.8.2",
+		"react-dom": "^16.8.4",
+		"@types/auth0-js": "^9.13.2",
+		"auth0-js": "^9.13.2",
+		"pepjs": "^0.5.2",
+		"react-media": "^1.9.2",
+		"delay": "^4.1.0",
+		"@types/lodash": "^4.14.123",
+		"lodash": "^4.17.13",
+		"@types/react": "^16.8.7",
+		"react": "^16.8.4",
+		"@types/react-redux": "^7.1.2",
+		"react-redux": "^7.1.1",
+		"@types/socket.io-client": "^1.4.32",
+		"socket.io-client": "^2.2.0",
+		"reselect": "^4.0.0"
+  }
+}
