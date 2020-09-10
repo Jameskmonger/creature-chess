@@ -21,12 +21,18 @@
     "url": "git+https://github.com/Jameskmonger/creature-chess.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "npm run copy-images && webpack",
+		"start": "npm run build && http-server ./public -p 8090",
+    "dev": "npm run copy-images && webpack-dev-server",
+    "copy-images": "cpy \"./images/**/*\" \"./public/\" --parents"
   },
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"
   },
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+  "devDependencies": {
+		"http-server": "~0.9.0"
+  },
   "dependencies": {
     "@creature-chess/shared": "^0.0.0",
 		"redux-devtools-extension": "^2.13.8",
@@ -51,6 +57,6 @@
 		"react-redux": "^7.1.1",
 		"@types/socket.io-client": "^1.4.32",
 		"socket.io-client": "^2.2.0",
-		"reselect": "^4.0.0",
+		"reselect": "^4.0.0"
   }
 }

@@ -1,0 +1,11 @@
+{
+    "watch": [
+        "./",
+        "../shared"
+    ],
+    "ext": "ts",
+    "ignore": [
+        "*.test.ts"
+    ],
+    "exec": "ts-node -r tsconfig-paths/register ./index.ts"
+}
