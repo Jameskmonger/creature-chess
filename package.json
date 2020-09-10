@@ -51,6 +51,7 @@
 		"stylelint-order": "^2.1.0",
 		"stylelint-scss": "^3.5.4",
 		"stylelint-webpack-plugin": "^0.10.5",
+		"tap-bark": "^1.0.0",
 		"tsconfig-paths": "^3.8.0",
 		"tslint": "^5.14.0",
 		"typescript": "^3.3.3333",
