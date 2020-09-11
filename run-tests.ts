@@ -18,8 +18,8 @@ const testSet = TestSet.create();
 
 // add your tests
 testSet.addTestsFromFiles([
-    "./src/**/*.test.ts",
-    "./src/**/*.test.tsx"
+    "./packages/**/*.test.ts",
+    "./packages/**/*.test.tsx"
 ]);
 
 // create a test runner
