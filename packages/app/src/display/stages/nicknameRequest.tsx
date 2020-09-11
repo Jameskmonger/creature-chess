@@ -17,6 +17,8 @@ const NicknameRequest: React.FunctionComponent<{ message: string }> = ({ message
 
             <h2 className="nickname-warning">This nickname is permanent and cannot be changed</h2>
 
+            <h2 className="nickname-warning">All player accounts have been reset. Please feel free to choose a new name!</h2>
+
             <input
                 value={nickname}
                 onChange={onNameChange}
