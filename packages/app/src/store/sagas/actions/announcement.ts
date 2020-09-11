@@ -1,6 +1,6 @@
 import { takeLatest, put, select, delay } from "@redux-saga/core/effects";
 import { PLAYERS_RESURRECTED } from "../../actiontypes/gameActionTypes";
-import { GamePhase } from "@creature-chess/shared/models";
+import { GamePhase } from "@creature-chess/models";
 import { clearAnnouncement, updateAnnouncement, PlayersResurrectedAction } from "../../actions/gameActions";
 import { AppState } from "../../state";
 import { GAME_PHASE_UPDATE, GamePhaseUpdateAction } from "@creature-chess/shared/player/gameInfo";

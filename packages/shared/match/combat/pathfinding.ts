@@ -1,7 +1,7 @@
 import { astar, Graph } from "javascript-astar";
-import { PieceModel } from "../../models";
-import { GRID_SIZE } from "../../models/constants";
-import { getAdjacentPositions, TileCoordinates } from "../../models/position";
+import { PieceModel } from "@creature-chess/models";
+import { GRID_SIZE } from "@creature-chess/models/constants";
+import { getAdjacentPositions, TileCoordinates } from "@creature-chess/models/position";
 import { BoardState } from "../../board";
 
 const createEmptyWeightGrid = () => {

@@ -2,7 +2,7 @@ import { TestFixture, Test, Expect } from "alsatian";
 import { phaseStartSeconds } from "../actions/gameActions";
 import { game } from "./gameReducer";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
-import { GamePhase } from "@creature-chess/shared/models";
+import { GamePhase } from "@creature-chess/models";
 
 @TestFixture("gameReducer tests")
 export class GameReducerTests {

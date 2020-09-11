@@ -1,4 +1,4 @@
-import { LobbyPlayer, Card, PlayerListPlayer, GamePhase } from "@creature-chess/shared/models";
+import { LobbyPlayer, Card, PlayerListPlayer, GamePhase } from "@creature-chess/models";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { BoardState } from "@creature-chess/shared/board";
 import { BenchState } from "@creature-chess/shared/player/bench";

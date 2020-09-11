@@ -2,7 +2,7 @@ import uuid = require("uuid/v4");
 import { all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { Player } from "@creature-chess/shared/game/player/player";
-import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@creature-chess/shared/models";
+import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@creature-chess/models";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@creature-chess/shared/networking/client-to-server";
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, JoinGamePacket } from "@creature-chess/shared/networking/server-to-client";

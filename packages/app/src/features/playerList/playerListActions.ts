@@ -1,4 +1,4 @@
-import { PlayerListPlayer } from "@creature-chess/shared/models";
+import { PlayerListPlayer } from "@creature-chess/models";
 import { PLAYER_LIST_UPDATED } from "./playerListActionTypes";
 
 export type PlayerListAction = ({ type: PLAYER_LIST_UPDATED, payload: PlayerListPlayer[] });

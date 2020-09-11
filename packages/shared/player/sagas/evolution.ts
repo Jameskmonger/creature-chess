@@ -4,8 +4,8 @@ import { takeLatest, all, select, take, delay, put } from "@redux-saga/core/effe
 import { AddBenchPieceAction, addBenchPiece, removeBenchPiece, removeBenchPieces } from "../bench/benchActions";
 import { ADD_BENCH_PIECE } from "../bench/benchActionTypes";
 import { DefinitionProvider } from "../../game/definitionProvider";
-import { PieceModel } from "../../models";
-import { PIECES_TO_EVOLVE } from "../../models/constants";
+import { PieceModel } from "@creature-chess/models";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models/constants";
 import { UNLOCK_BOARD, UPDATE_BOARD_PIECE, ADD_BOARD_PIECE } from "../../board/actions/boardActionTypes";
 import * as pieceSelectors from "../pieceSelectors";
 import { removeBoardPieces, updateBoardPiece, UpdateBoardPieceAction } from "../../board/actions/boardActions";

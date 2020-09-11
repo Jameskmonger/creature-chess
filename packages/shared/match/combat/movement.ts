@@ -1,10 +1,10 @@
-import { PieceModel } from "../../models";
+import { PieceModel } from "@creature-chess/models";
 import { getNextPiecePosition } from "./pathfinding";
-import { AttackType } from "../../models/creatureDefinition";
+import { AttackType } from "@creature-chess/models/creatureDefinition";
 import { range, flatten } from "lodash";
-import { Directions, TileCoordinates, arePositionsEqual } from "../../models/position";
-import { GRID_SIZE } from "../../models/constants";
-import { IndexedPieces } from "../../models/piece";
+import { Directions, TileCoordinates, arePositionsEqual } from "@creature-chess/models/position";
+import { GRID_SIZE } from "@creature-chess/models/constants";
+import { IndexedPieces } from "@creature-chess/models/piece";
 import { BoardState } from "../../board";
 import { getBoardPieceForPosition } from "../../player/pieceSelectors";
 

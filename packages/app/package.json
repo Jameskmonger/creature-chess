@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
   "dependencies": {
+    "@creature-chess/models": "^0.0.0",
     "@creature-chess/shared": "^0.0.0",
     "@types/auth0-js": "^9.13.2",
     "@types/lodash": "^4.14.123",

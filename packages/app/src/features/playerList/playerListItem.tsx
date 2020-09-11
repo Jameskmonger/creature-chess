@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PlayerListPlayer, StreakType } from "@creature-chess/shared/models";
+import { PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { ProgressBar } from "../../display";
 import { PlayerName } from "./playerName";
 import { BattleInfo } from "./battleInfo";

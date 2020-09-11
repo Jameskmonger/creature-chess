@@ -1,4 +1,4 @@
-import { PieceModel } from "../models"
+import { PieceModel } from "@creature-chess/models"
 import { BoardState } from "../board";
 import { BenchState } from "./bench";
 

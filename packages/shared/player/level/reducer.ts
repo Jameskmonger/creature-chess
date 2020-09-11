@@ -1,5 +1,5 @@
 import { LevelUpdateAction, LEVEL_UPDATE } from "./actions";
-import { STARTING_LEVEL } from "../../models/constants";
+import { STARTING_LEVEL } from "@creature-chess/models/constants";
 
 export type LevelState = {
     level: number;

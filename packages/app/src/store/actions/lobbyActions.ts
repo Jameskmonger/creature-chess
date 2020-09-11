@@ -1,4 +1,4 @@
-import { LobbyPlayer } from "@creature-chess/shared/models";
+import { LobbyPlayer } from "@creature-chess/models";
 
 export const JOIN_LOBBY = "JOIN_LOBBY";
 export type JOIN_LOBBY = typeof JOIN_LOBBY;

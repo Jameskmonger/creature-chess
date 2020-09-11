@@ -2,8 +2,8 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../store";
 import { getPlayerById } from "../../store/playerSelectors";
-import { PlayerListPlayer } from "@creature-chess/shared/models";
-import { PlayerBattleStatus, PlayerBattle } from "@creature-chess/shared/models/player-list-player";
+import { PlayerListPlayer } from "@creature-chess/models";
+import { PlayerBattleStatus, PlayerBattle } from "@creature-chess/models/player-list-player";
 import { PlayerName } from "./playerName";
 
 interface Props {

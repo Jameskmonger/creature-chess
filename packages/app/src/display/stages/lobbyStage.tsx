@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
-import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/shared/models/constants";
-import { LobbyPlayer } from "@creature-chess/shared/models";
+import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models/constants";
+import { LobbyPlayer } from "@creature-chess/models";
 import { startLobbyGame } from "../../store/actions/lobbyActions";
 import { Countdown } from "../../display/countdown";
 

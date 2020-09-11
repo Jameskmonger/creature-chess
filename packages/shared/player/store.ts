@@ -8,7 +8,7 @@ import { evolutionSagaFactory } from "./sagas/evolution";
 import { dropPieceSagaFactory } from "./sagas/dropPiece";
 import { benchReducer, BenchState } from "./bench";
 import { cardShopSagaFactory } from "./cardShop/saga";
-import { Card } from "../models";
+import { Card } from "@creature-chess/models";
 import { cardsReducer } from "./cardShop";
 import { GameInfoState, gameInfoReducer } from "./gameInfo";
 import { levelReducer } from "./level";

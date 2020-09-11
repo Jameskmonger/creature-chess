@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TileType, TileStyle } from "@creature-chess/shared/models/position";
+import { TileType, TileStyle } from "@creature-chess/models/position";
 import { Tile } from "./tile";
 
 interface BoardTileProps {
