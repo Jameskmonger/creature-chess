@@ -2,7 +2,7 @@ import { TestFixture, Test, Expect } from "alsatian";
 import { BoardState } from "../state";
 import { createMockPiece } from "@testing/utils";
 import { mergeBoards } from "./mergeBoards";
-import { createTileCoordinates } from "../../models/position";
+import { createTileCoordinates } from "@creature-chess/models/position";
 
 @TestFixture()
 export class MergeBoardsTests {

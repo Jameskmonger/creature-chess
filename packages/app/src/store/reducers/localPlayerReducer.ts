@@ -1,7 +1,7 @@
 import { LocalPlayerState } from "../state";
 import { JoinCompleteAction } from "../actions/localPlayerActions";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
-import { GamePhase } from "@creature-chess/shared/models";
+import { GamePhase } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/shared/player";
 import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
 import { READY_UP } from "@creature-chess/shared/player/actions";

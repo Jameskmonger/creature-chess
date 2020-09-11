@@ -1,8 +1,8 @@
 import uuid = require("uuid/v4");
-import { createTileCoordinates } from "../models/position";
-import { GRID_SIZE } from "../models/constants";
+import { createTileCoordinates } from "@creature-chess/models/position";
+import { GRID_SIZE } from "@creature-chess/models/constants";
 import { DefinitionProvider } from "../game/definitionProvider";
-import { Card, PieceModel, PlayerPieceLocation } from "../models";
+import { Card, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 
 export const createPiece = (
     definitionProvider: DefinitionProvider,

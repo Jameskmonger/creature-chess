@@ -1,5 +1,5 @@
 import { put, takeEvery, all, select } from "@redux-saga/core/effects";
-import { GamePhase } from "@creature-chess/shared/models";
+import { GamePhase } from "@creature-chess/models";
 import { clearSelectedPiece } from "../../actions/gameActions";
 import { startBattle } from "@creature-chess/shared/match/combat/battleSaga";
 import { PreparingPhaseUpdatePacket, ReadyPhaseUpdatePacket } from "@creature-chess/shared/networking/server-to-client";

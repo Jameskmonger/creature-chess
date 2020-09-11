@@ -1,4 +1,4 @@
-import { PlayerListPlayer } from "../models";
+import { PlayerListPlayer } from "@creature-chess/models";
 import { Player } from "./player/player";
 import { EventEmitter } from "events";
 import { debounce } from "../utils";

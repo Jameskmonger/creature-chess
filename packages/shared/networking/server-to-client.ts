@@ -1,8 +1,8 @@
-import * as Models from "../models";
+import * as Models from "@creature-chess/models";
 import { BoardState } from "../board";
-import { GamePhase } from "../models";
+import { GamePhase } from "@creature-chess/models";
 import { BenchState } from "../player/bench";
-import { IndexedPieces } from "../models/piece";
+import { IndexedPieces } from "@creature-chess/models/piece";
 
 export type PreparingPhaseUpdatePacket = {
   startedAt: number,

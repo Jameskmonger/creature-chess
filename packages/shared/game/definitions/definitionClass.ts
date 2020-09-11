@@ -1,10 +1,4 @@
-import { CreatureStats, AttackType, attackTypes } from "../../models/creatureDefinition";
-
-export enum DefinitionClass {
-    VALIANT = "Valiant",
-    ARCANE = "Arcane",
-    CUNNING = "Cunning"
-}
+import { CreatureStats, AttackType, attackTypes, DefinitionClass } from "@creature-chess/models/creatureDefinition";
 
 // each class has points to assign
 // these are then used, along with piece cost and stage, to get stats

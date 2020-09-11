@@ -1,9 +1,9 @@
 import uuid = require("uuid/v4");
 import { shuffle } from "lodash";
-import { CreatureDefinition } from "../models/creatureDefinition";
-import { Card } from "../models/card";
-import { PieceModel } from "../models/piece";
-import { PIECES_TO_EVOLVE } from "../models/constants";
+import { CreatureDefinition } from "@creature-chess/models/creatureDefinition";
+import { Card } from "@creature-chess/models/card";
+import { PieceModel } from "@creature-chess/models/piece";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models/constants";
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [

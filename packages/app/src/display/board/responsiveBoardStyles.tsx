@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Constants, GamePhase } from "@creature-chess/shared/models";
+import { Constants, GamePhase } from "@creature-chess/models";
 import { useWindowSize } from "../../use-window-size";
 import { useSelector } from "react-redux";
 import { AppState } from "../../store";

@@ -3,7 +3,7 @@ import { ProgressBar } from "../progressBar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../store";
 import { getXpToNextLevel } from "@creature-chess/shared/utils";
-import { GamePhase, Constants } from "@creature-chess/shared/models";
+import { GamePhase, Constants } from "@creature-chess/models";
 import { PieceCount } from "./pieceCount";
 import { PlayerActions } from "@creature-chess/shared/player";
 import { getPlayerLevel, getPlayerXp } from "@creature-chess/shared/player/playerSelectors";

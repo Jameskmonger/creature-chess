@@ -1,6 +1,7 @@
-import { PieceModel } from "@creature-chess/shared/models";
-import { createTileCoordinates } from "@creature-chess/shared/models/position";
-import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
+// todo fix these imports - make this a package!
+import { PieceModel } from "../../packages/models";
+import { createTileCoordinates } from "../../packages/models/position";
+import { DefinitionProvider } from "../../packages/shared/game/definitionProvider";
 
 const definitionProvider = new DefinitionProvider();
 

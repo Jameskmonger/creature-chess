@@ -1,6 +1,6 @@
 node_modules/
 public/
 test/
-lib/
 /gh-pages/
 _metrics/
+lerna-debug.log

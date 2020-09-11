@@ -1,4 +1,4 @@
-import { CreatureType } from "../models/creatureType";
+import { CreatureType } from "@creature-chess/models/creatureType";
 
 // overcome / generated are Tuxemon language
 export const typeInteractions = {

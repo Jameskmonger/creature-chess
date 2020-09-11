@@ -1,6 +1,6 @@
 import * as React from "react";
-import { TileStyle } from "@creature-chess/shared/models/position";
-import { Constants, PieceModel } from "@creature-chess/shared/models";
+import { TileStyle } from "@creature-chess/models/position";
+import { Constants, PieceModel } from "@creature-chess/models";
 import { BenchTile } from "./board/tile/benchTile";
 import { useSelector } from "react-redux";
 import { AppState } from "../store";

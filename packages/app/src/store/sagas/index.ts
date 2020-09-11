@@ -4,7 +4,7 @@ import { gamePhase } from "./actions/gamePhase";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { battle } from "@creature-chess/shared/match/combat/battleSaga";
 import { TurnSimulator } from "@creature-chess/shared/match/combat/turnSimulator";
-import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@creature-chess/shared/models/constants";
+import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@creature-chess/models/constants";
 import { AppState } from "../state";
 import { announcement } from "./actions/announcement";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";

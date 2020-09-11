@@ -1,11 +1,11 @@
 import uuid = require("uuid");
 import delay from "delay";
-import { GamePhase } from "../models/game-phase";
+import { GamePhase } from "@creature-chess/models/game-phase";
 import { Player, PlayerMatchResults } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
-import { PHASE_LENGTHS, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, RESURRECT_HEALTH } from "../models/constants";
+import { PHASE_LENGTHS, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, RESURRECT_HEALTH } from "@creature-chess/models/constants";
 import { EventEmitter } from "events";
 import { PlayerList } from "./playerList";
 import { TurnSimulator } from "../match/combat/turnSimulator";
