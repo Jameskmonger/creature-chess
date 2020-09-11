@@ -19,7 +19,7 @@ export const authenticate = async (
     try {
         const user = await managementClient.getUser({ id: userId });
 
-        if (!user.app_metadata.playerId) {
+        if (!user.app_metadata || !user.app_metadata.playerId) {
             // need to create an account
 
             const dbUser = (await database.user.create(user.user_id)) as any;
