@@ -1,6 +1,6 @@
 import { Player } from "./player";
-import { GRID_SIZE, BUY_XP_COST } from "../../models/constants";
-import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "../../models";
+import { GRID_SIZE, BUY_XP_COST } from "@creature-chess/models/constants";
+import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@creature-chess/models";
 import { getAllPieces, getBoardPieceForPosition } from "../../player/pieceSelectors";
 import { PlayerActions } from "../../player";
 import { buyCard } from "../../player/actions";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../store";
-import { GamePhase } from "@creature-chess/shared/models";
+import { GamePhase } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/shared/player";
 
 const ReadyUpButton: React.FunctionComponent = () => {

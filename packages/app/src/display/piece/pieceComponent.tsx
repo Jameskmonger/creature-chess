@@ -5,10 +5,10 @@ import { StageIndicator } from "./components/stageIndicator";
 import { Healthbar } from "./components/healthbar";
 import { AnimationVariables, getAnimationCssVariables } from "../animation";
 import { useSelector, useDispatch } from "react-redux";
-import { PieceModel as PieceComponent, GamePhase } from "@creature-chess/shared/models";
+import { PieceModel as PieceComponent, GamePhase } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { AppState } from "../../store";
-import { arePositionsEqual, getRelativeDirection } from "@creature-chess/shared/models/position";
+import { arePositionsEqual, getRelativeDirection } from "@creature-chess/models/position";
 import { selectPiece } from "../../store/actions/boardActions";
 import { Projectile } from "../projectile";
 

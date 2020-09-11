@@ -2,7 +2,7 @@ import * as React from "react";
 import { Card } from "./card";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../store";
-import { Card as CardModel, Constants, GamePhase } from "@creature-chess/shared/models";
+import { Card as CardModel, Constants, GamePhase } from "@creature-chess/models";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
 import { PlayerActions } from "@creature-chess/shared/player";

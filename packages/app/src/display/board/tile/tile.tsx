@@ -1,11 +1,11 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
-import { TileType, TileStyle } from "@creature-chess/shared/models/position";
+import { TileType, TileStyle } from "@creature-chess/models/position";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../store";
 import { getClassForTileStyle } from "../getClassForTileStyle";
 import { selectPiece } from "../../../store/actions/boardActions";
-import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/shared/models";
+import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { playerDropPiece } from "@creature-chess/shared/player/actions";
 import { clearSelectedPiece } from "../../../store/actions/gameActions";

@@ -1,5 +1,5 @@
-import { PieceModel } from "../models";
-import { IndexedPieces } from "../models/piece";
+import { PieceModel } from "@creature-chess/models";
+import { IndexedPieces } from "@creature-chess/models/piece";
 import { BoardState } from "../board";
 
 const groupBy = <TItem, TKey>(list: TItem[], keyGetter: (item: TItem) => TKey) => {

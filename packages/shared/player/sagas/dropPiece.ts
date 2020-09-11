@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerDropPieceAction, PLAYER_DROP_PIECE } from "../actions";
-import { PlayerPieceLocation } from "../../models";
+import { PlayerPieceLocation } from "@creature-chess/models";
 import * as pieceSelectors from "../pieceSelectors";
 import { moveBoardPiece, removeBoardPiece, addBoardPiece } from "../../board/actions/boardActions";
 import { moveBenchPiece, addBenchPiece, removeBenchPiece } from "../bench/benchActions";

@@ -1,4 +1,4 @@
-import { PieceModel } from "../../models";
+import { PieceModel } from "@creature-chess/models";
 import {
     INITIALISE_BOARD,
     REMOVE_BOARD_PIECE,
@@ -10,8 +10,8 @@ import {
     MOVE_BOARD_PIECE,
     REMOVE_BOARD_PIECES
 } from "./boardActionTypes";
-import { TileCoordinates } from "../../models/position";
-import { IndexedPieces } from "../../models/piece";
+import { TileCoordinates } from "@creature-chess/models/position";
+import { IndexedPieces } from "@creature-chess/models/piece";
 
 export type InitialiseBoardAction = ({ type: INITIALISE_BOARD, payload: { pieces: IndexedPieces } });
 type AddBoardPieceAction = ({ type: ADD_BOARD_PIECE, payload: { piece: PieceModel, x: number, y: number } });

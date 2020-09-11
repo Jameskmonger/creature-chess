@@ -1,5 +1,5 @@
 import { CardsUpdatedAction, CARDS_UPDATED } from "./actions";
-import { Card } from "../../models";
+import { Card } from "@creature-chess/models";
 
 export function cards(state: Card[] = [], action: CardsUpdatedAction): Card[] {
     switch (action.type) {

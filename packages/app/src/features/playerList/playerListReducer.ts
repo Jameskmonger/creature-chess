@@ -1,4 +1,4 @@
-import { PlayerListPlayer } from "@creature-chess/shared/models";
+import { PlayerListPlayer } from "@creature-chess/models";
 import { PlayerListAction } from "./playerListActions";
 import { PLAYER_LIST_UPDATED } from "./playerListActionTypes";
 

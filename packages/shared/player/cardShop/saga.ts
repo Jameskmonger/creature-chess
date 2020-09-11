@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD } from "../actions";
-import { GamePhase, PlayerPieceLocation } from "../../models";
+import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 import { getFirstEmptyBenchSlot } from "../../board";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { createPieceFromCard } from "../../utils/piece-utils";

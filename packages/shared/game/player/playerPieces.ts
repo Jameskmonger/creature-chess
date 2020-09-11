@@ -1,4 +1,4 @@
-import { PieceModel } from "../../models";
+import { PieceModel } from "@creature-chess/models";
 import { lockBench, unlockBench, addBenchPiece, removeBenchPiece, initialiseBench } from "../../player/bench/benchActions";
 
 import { PlayerAction } from "../../player/actions";

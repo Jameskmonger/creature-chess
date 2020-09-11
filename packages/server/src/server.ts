@@ -6,7 +6,7 @@ import { Connection } from "./connection";
 import { Lobby } from "./lobby";
 import { Player } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
-import { LobbyPlayer } from "@creature-chess/shared/models";
+import { LobbyPlayer } from "@creature-chess/models";
 import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
 import { Metrics } from "./metrics";
 import { UserAppMetadata, UserModel } from "./user/userModel";

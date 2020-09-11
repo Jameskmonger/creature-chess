@@ -1,4 +1,4 @@
-import { Card } from "../../models";
+import { Card } from "@creature-chess/models";
 
 export const CARDS_UPDATED = "CARDS_UPDATED";
 export type CARDS_UPDATED = typeof CARDS_UPDATED;

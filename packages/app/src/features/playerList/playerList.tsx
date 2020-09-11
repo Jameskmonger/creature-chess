@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PlayerListPlayer, GamePhase } from "@creature-chess/shared/models";
+import { PlayerListPlayer, GamePhase } from "@creature-chess/models";
 import { PlayerListItem } from "./playerListItem";
 import { useSelector } from "react-redux";
 import { AppState } from "../../store";

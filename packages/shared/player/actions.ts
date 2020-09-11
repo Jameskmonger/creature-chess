@@ -1,4 +1,4 @@
-import { PlayerPieceLocation } from "../models";
+import { PlayerPieceLocation } from "@creature-chess/models";
 
 export const PLAYER_DROP_PIECE = "PLAYER_DROP_PIECE";
 export type PLAYER_DROP_PIECE = typeof PLAYER_DROP_PIECE;

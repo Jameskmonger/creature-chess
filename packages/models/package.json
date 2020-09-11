@@ -1,11 +1,11 @@
 {
-  "name": "@creature-chess/server",
+  "name": "@creature-chess/models",
   "version": "0.0.0",
   "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
   "keywords": [],
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
   "license": "ISC",
-  "main": "lib/server.js",
+  "main": "lib/models.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -21,27 +21,10 @@
     "url": "git+https://github.com/Jameskmonger/creature-chess.git"
   },
   "scripts": {
-    "build": "tsc -p ./tsconfig.json",
-    "start": "node -r ts-node/register -r tsconfig-paths/register ./lib/index.js 3000",
-    "dev": "nodemon 3000"
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"
   },
-  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
-  "dependencies": {
-    "@creature-chess/models": "^0.0.0",
-    "@creature-chess/shared": "^0.0.0",
-    "@types/auth0": "^2.20.5",
-    "@types/redux-saga": "^0.10.5",
-    "@types/socket.io": "^2.1.2",
-    "@types/uuid": "^3.4.4",
-    "auth0": "^2.27.1",
-    "bad-words": "^3.0.3",
-    "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^1.8.1",
-    "redux-saga": "^1.0.2",
-    "socket.io": "^2.2.0",
-    "uuid": "^3.3.2"
-  }
+  "homepage": "https://github.com/Jameskmonger/creature-chess#readme"
 }

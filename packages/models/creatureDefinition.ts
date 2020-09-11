@@ -1,5 +1,10 @@
 import { CreatureType } from "./creatureType";
-import { DefinitionClass } from "../game/definitions/definitionClass";
+
+export enum DefinitionClass {
+    VALIANT = "Valiant",
+    ARCANE = "Arcane",
+    CUNNING = "Cunning"
+}
 
 export interface CreatureDefinition {
     id: number;
