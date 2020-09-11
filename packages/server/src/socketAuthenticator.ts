@@ -1,14 +1,13 @@
 import io = require("socket.io");
 import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
+import { EventEmitter } from "events";
 import { log } from "@creature-chess/shared/log";
+import { DatabaseConnection } from "@creature-chess/data";
 import { AuthenticateResponse } from "@creature-chess/shared/networking/server-to-client";
 import { authenticate } from "./user/authenticate";
 import { UserAppMetadata, UserModel } from "./user/userModel";
 import { validateNickname } from "@creature-chess/shared/validation/nickname";
-import { checkNicknameUnique } from "./user/checkNicknameUnique";
-import { updateUser } from "./user/updateUser";
-import { EventEmitter } from "events";
 
 /**
  * Listens for new connections to the server,
@@ -18,14 +17,16 @@ import { EventEmitter } from "events";
 export class SocketReceiver {
     private filter = new Filter();
     private authClient: ManagementClient<UserAppMetadata>;
+    private database: DatabaseConnection;
 
     private eventEmitter = new EventEmitter();
     private EVENT_KEYS = {
         SOCKET_AUTHENTICATED: "socketAuthenticated"
     };
 
-    constructor(authClient: ManagementClient<UserAppMetadata>, server: io.Server) {
+    constructor(authClient: ManagementClient<UserAppMetadata>, database: DatabaseConnection, server: io.Server) {
         this.authClient = authClient;
+        this.database = database;
         server.on("connection", this.receiveConnection);
     }
 
@@ -48,10 +49,10 @@ export class SocketReceiver {
 
         const onAuthenticate = async ({ idToken, nickname }: { idToken: string, nickname: string }) => {
             try {
-                let user = await authenticate(this.authClient, idToken);
+                const user = await authenticate(this.authClient, this.database, idToken);
 
                 // if user doesnt have a nickname we need to ask for it
-                if (!user.metadata.nickname) {
+                if (!user.nickname) {
                     if (!nickname) {
                         failAuthentication({ error: { type: "nickname_required" } });
                         return;
@@ -71,24 +72,18 @@ export class SocketReceiver {
                         return;
                     }
 
-                    const isUnique = await checkNicknameUnique(this.authClient, trimmedNickname);
+                    const isUnique = (await this.database.user.getByNickname(trimmedNickname)) === null;
 
                     if (!isUnique) {
                         failAuthentication({ error: { type: "invalid_nickname", error: "Nickname already in use" } });
                         return;
                     }
 
-                    const newMetadata = {
-                        ...user.metadata,
-                        nickname: {
-                            value: trimmedNickname,
-                            uppercase: trimmedNickname.toUpperCase()
-                        }
-                    };
+                    await this.database.user.setNickname(user.id, trimmedNickname);
 
-                    user = await updateUser(this.authClient, user.authId, newMetadata);
+                    user.nickname = trimmedNickname;
 
-                    log(`User ${user.id} set nickname to '${user.metadata.nickname.value}'`);
+                    log(`User ${user.id} set nickname to '${trimmedNickname}'`);
                 }
 
                 socket.removeAllListeners("authenticate");

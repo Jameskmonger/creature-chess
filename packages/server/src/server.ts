@@ -12,7 +12,7 @@ import { Metrics } from "./metrics";
 import { UserAppMetadata, UserModel } from "./user/userModel";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
 import { SocketReceiver } from "./socketAuthenticator";
-import { addUserWin, addUserGamesPlayed } from "./user/stats";
+import { createDatabaseConnection } from "@creature-chess/data";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
@@ -47,12 +47,14 @@ export class Server {
         clientSecret: AUTH0_CONFIG.clientSecret
     });
 
+    private database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
+
     public listen(port: number) {
         const server = io.listen(port, { transports: ["websocket", "polling"] });
 
         log("Server listening on port " + port);
 
-        const socketReceiver = new SocketReceiver(this.client, server);
+        const socketReceiver = new SocketReceiver(this.client, this.database, server);
 
         socketReceiver.onReceiveSocket(this.onReceiveSocket);
     }
@@ -101,7 +103,8 @@ export class Server {
                 game.addPlayer(p);
 
                 if ((p as Connection).isConnection) {
-                    addUserGamesPlayed(this.client, p.id);
+                    // todo do this in 1 call
+                    this.database.user.addGamePlayed(p.id);
 
                     this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
                 }
@@ -118,7 +121,7 @@ export class Server {
                 });
 
                 if ((winner as Connection).isConnection) {
-                    addUserWin(this.client, winner.id);
+                    this.database.user.addWin(winner.id);
                 }
 
                 gamePlayers.forEach(p => {
@@ -134,7 +137,7 @@ export class Server {
     }
 
     private onReceiveSocket = (socket: io.Socket, user: UserModel) => {
-        const { id, metadata: { nickname } } = user;
+        const { id, nickname } = user;
 
         const existingPlayer = this.playerSessionRegistry.getPlayer(id);
 
@@ -173,7 +176,7 @@ export class Server {
         const playerToRegister: Connection =
             existingPlayer && existingPlayer.location.type === "lobby"
                 ? existingPlayer.player as Connection
-                : new Connection(socket, id, nickname.value);
+                : new Connection(socket, id, nickname);
 
         const lobby = this.findOrCreatePublicLobby(playerToRegister);
 

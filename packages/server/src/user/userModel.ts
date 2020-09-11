@@ -1,21 +1,14 @@
 import { User, UserMetadata } from "auth0";
 
 export interface UserAppMetadata {
-    uuid: string;
-    nickname?: {
-        value: string;
-        uppercase: string;
-    };
-    stats: {
-        gamesPlayed: number;
-        wins: number;
-    };
+    playerId: string;
 }
 
 export interface UserModel {
     id: string;
     authId: string;
-    metadata: UserAppMetadata;
+    stats: { gamesPlayed: number; wins: number; };
+    nickname?: string;
 }
 
 export type Auth0User = User<UserAppMetadata, UserMetadata>;
