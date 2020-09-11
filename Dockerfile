@@ -8,6 +8,7 @@ COPY package-lock.json .
 # common packages used by server
 # todo: find a way to automate this
 COPY packages/models ./packages/models
+COPY packages/data ./packages/data
 COPY packages/shared ./packages/shared
 
 COPY packages/server ./packages/server
