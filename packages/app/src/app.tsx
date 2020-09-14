@@ -25,7 +25,8 @@ const AuthenticatedRoutes: React.FunctionComponent = () => {
 };
 
 const App: React.FunctionComponent = () => {
-    const isLoggedIn = useSelector<AppState, boolean>(state => state.auth !== null);
+    // todo make a selector
+    const isLoggedIn = useSelector<AppState, boolean>(state => state.auth.user !== null);
 
     if (isLoggedIn) {
         return <AuthenticatedRoutes />;

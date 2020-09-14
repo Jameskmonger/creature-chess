@@ -23,15 +23,17 @@ export interface AppState {
 }
 
 export interface AuthState {
-    authenticated: boolean;
-    idToken: string;
-    profile: {
-        nickname?: {
-            value: string;
-            uppercase: string;
+    checkingSession: boolean;
+    user: {
+        idToken: string;
+        profile: {
+            nickname?: {
+                value: string;
+                uppercase: string;
+            };
         };
+        expiresAt: number;
     };
-    expiresAt: number;
 }
 
 export interface GameState {
