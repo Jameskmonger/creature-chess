@@ -1,4 +1,5 @@
-import { Client as FaunaDBClient, query as q } from "faunadb";
+import { Client as FaunaDBClient } from "faunadb";
+import { setup } from "./setup";
 import { userDatabase, UserDatabaseFunctions } from "./user";
 
 export type DatabaseConnection = {
@@ -7,6 +8,8 @@ export type DatabaseConnection = {
 
 export const createDatabaseConnection = (faunaSecret: string): DatabaseConnection => {
     const client = new FaunaDBClient({ secret: faunaSecret });
+
+    setup(client);
 
     return {
         user: userDatabase(client)
