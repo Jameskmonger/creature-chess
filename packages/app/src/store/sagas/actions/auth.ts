@@ -1,14 +1,22 @@
 import { takeLatest, call, put } from "@redux-saga/core/effects";
-import { HANDLE_AUTHENTICATION_CALLBACK, userLoaded } from "../../../store/actions/authActions";
-import { handleAuthentication } from "../../../auth/auth0";
+import { HANDLE_AUTHENTICATION_CALLBACK, sessionChecked, userLoaded } from "../../../store/actions/authActions";
+import { checkSession, handleAuthentication } from "../../../auth/auth0";
 
 export const auth = function*() {
-    yield takeLatest(
-        HANDLE_AUTHENTICATION_CALLBACK,
-        function* parseHash() {
-            const authInfo = yield call(handleAuthentication);
+    const existingAuthInfo = yield call(checkSession);
 
-            yield put(userLoaded(authInfo));
-        }
-    );
+    if (existingAuthInfo) {
+        yield put(userLoaded(existingAuthInfo));
+    } else {
+        yield put(sessionChecked());
+
+        yield takeLatest(
+            HANDLE_AUTHENTICATION_CALLBACK,
+            function* parseHash() {
+                const authInfo = yield call(handleAuthentication);
+
+                yield put(userLoaded(authInfo));
+            }
+        );
+    }
 };

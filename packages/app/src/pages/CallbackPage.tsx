@@ -5,7 +5,7 @@ import { AppState } from "../store";
 import { handleAuthenticationCallback } from "../store/actions/authActions";
 
 const CallbackPage: React.FunctionComponent = () => {
-    const isLoggedIn = useSelector<AppState>(state => state.auth !== null);
+    const isLoggedIn = useSelector<AppState>(state => state.auth.user !== null);
     const dispatch = useDispatch();
 
     React.useEffect(() => {

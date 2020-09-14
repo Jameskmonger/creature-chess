@@ -1,14 +1,19 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import { signIn } from "../auth/auth0";
+import { AppState } from "../store";
 
 const LoginPage: React.FunctionComponent = () => {
-    const [loading, setLoading] = React.useState<boolean>(false);
+    const checkingSession = useSelector<AppState, boolean>(state => state.auth.checkingSession);
+    const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
 
-    const onLoginClick = () => {
-        setLoading(true);
+    const onSignInClick = () => {
+        setLoadingSignIn(true);
 
         signIn();
     };
+
+    const loading = (checkingSession || loadingSignIn);
 
     return (
         <div className="menu">
@@ -24,7 +29,7 @@ const LoginPage: React.FunctionComponent = () => {
 
                         {
                             !loading
-                            && <button onClick={onLoginClick} className="option-button primary">Log in / Sign up</button>
+                            && <button onClick={onSignInClick} className="option-button primary">Log in / Sign up</button>
                         }
 
                         <p className="description">
