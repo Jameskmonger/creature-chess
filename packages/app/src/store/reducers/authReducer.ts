@@ -21,7 +21,7 @@ export function auth(state: AuthState = initialState, action: AuthReducerActionT
         case SESSION_CHECKED:
             return {
                 ...state,
-                checkingSession: true
+                checkingSession: false
             };
         default:
             return state;
