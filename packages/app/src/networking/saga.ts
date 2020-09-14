@@ -291,14 +291,14 @@ export const networking = function*() {
     const state: AppState = yield select();
 
     // this should never happen, but it doesn't hurt to be safe
-    const isLoggedIn = state.auth !== null;
+    const isLoggedIn = state.auth.user !== null;
     if (!isLoggedIn) {
         signIn();
 
         return;
     }
 
-    const { idToken } = state.auth;
+    const { user: { idToken } } = state.auth;
 
     let socket: Socket = null;
     let chosenNickname: string = null;

@@ -1,27 +1,27 @@
 import { AuthState } from "../state";
-import { UserLoadedAction, USER_LOADED } from "../actions/authActions";
+import { SessionCheckedAction, SESSION_CHECKED, UserLoadedAction, USER_LOADED } from "../actions/authActions";
 
-export const initialState: AuthState = null;
+export const initialState: AuthState = {
+    checkingSession: true,
+    user: null
+};
 
-type AuthReducerActionTypes = UserLoadedAction;
+type AuthReducerActionTypes = UserLoadedAction | SessionCheckedAction;
 
 export function auth(state: AuthState = initialState, action: AuthReducerActionTypes): AuthState {
     switch (action.type) {
         case USER_LOADED:
-            const {
-                user: {
-                    authenticated,
-                    expiresAt,
-                    idToken,
-                    profile
-                }
-            } = action.payload;
+            const { user } = action.payload;
 
             return {
-                authenticated,
-                expiresAt,
-                idToken,
-                profile
+                ...state,
+                checkingSession: false,
+                user
+            };
+        case SESSION_CHECKED:
+            return {
+                ...state,
+                checkingSession: true
             };
         default:
             return state;
