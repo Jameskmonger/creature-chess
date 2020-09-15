@@ -29,6 +29,7 @@ import { cardsUpdated } from "@creature-chess/shared/player/cardShop";
 import { initialiseBoard } from "@creature-chess/shared/board/actions/boardActions";
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { setLevelAction } from "@creature-chess/shared/player/level";
+import { AuthSelectors } from "../auth";
 
 const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
     // force to websocket for now until CORS is sorted
@@ -291,14 +292,13 @@ export const networking = function*() {
     const state: AppState = yield select();
 
     // this should never happen, but it doesn't hurt to be safe
-    const isLoggedIn = state.auth.user !== null;
-    if (!isLoggedIn) {
+    if (!AuthSelectors.isLoggedIn(state)) {
         signIn();
 
         return;
     }
 
-    const { user: { idToken } } = state.auth;
+    const idToken = AuthSelectors.getIdToken(state);
 
     let socket: Socket = null;
     let chosenNickname: string = null;

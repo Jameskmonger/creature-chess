@@ -11,7 +11,7 @@ import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 import { networking } from "../../networking/saga";
 import { evolutionSagaFactory } from "@creature-chess/shared/player/sagas/evolution";
 import { sellPiece } from "./actions/sellPiece";
-import { auth } from "./actions/auth";
+import { authSaga } from "../../auth";
 import { JoinCompleteAction } from "../actions/localPlayerActions";
 import { cardShopSagaFactory } from "@creature-chess/shared/player/cardShop/saga";
 import { dropPieceSagaFactory } from "@creature-chess/shared/player/sagas/dropPiece";
@@ -41,7 +41,7 @@ const gameSagaFactory = (playerId: string) => {
 export const rootSaga = function*() {
     yield all([
         yield fork(preventAccidentalClose),
-        yield fork(auth),
+        yield fork(authSaga),
         yield fork(networking),
         yield takeEvery<JoinCompleteAction>(
             JOIN_COMPLETE,

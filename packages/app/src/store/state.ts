@@ -7,7 +7,7 @@ import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
 import { LevelState } from "@creature-chess/shared/player/level";
 
 export interface AppState {
-    auth: AuthState | null;
+    auth: AuthState;
 
     gameInfo: GameInfoState;
     board: BoardState;
