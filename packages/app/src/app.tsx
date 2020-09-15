@@ -24,7 +24,6 @@ const AuthenticatedRoutes: React.FunctionComponent = () => {
 };
 
 const App: React.FunctionComponent = () => {
-    // todo make a selector
     const loggedIn = useSelector<AppState, boolean>(AuthSelectors.isLoggedIn);
 
     if (loggedIn) {
