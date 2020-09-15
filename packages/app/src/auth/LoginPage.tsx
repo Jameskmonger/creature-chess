@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { signIn } from "../auth/auth0";
+import { signIn } from "./auth0";
 import { AppState } from "../store";
+import { isCheckingSession } from "./store/selectors";
 
 const LoginPage: React.FunctionComponent = () => {
-    const checkingSession = useSelector<AppState, boolean>(state => state.auth.checkingSession);
+    const checkingSession = useSelector<AppState, boolean>(isCheckingSession);
     const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
 
     const onSignInClick = () => {

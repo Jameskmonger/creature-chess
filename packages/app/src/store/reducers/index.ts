@@ -6,7 +6,7 @@ import { playerList } from "../../features/playerList/playerListReducer";
 import { game } from "./gameReducer";
 import { localPlayer } from "./localPlayerReducer";
 import { lobby } from "./lobbyReducer";
-import { auth } from "./authReducer";
+import { authReducer } from "../../auth";
 import { ui } from "./uiReducer";
 import { levelReducer } from "@creature-chess/shared/player/level";
 
@@ -20,6 +20,6 @@ export const reducers = {
     game,
     localPlayer,
     lobby,
-    auth,
+    auth: authReducer,
     ui
 };

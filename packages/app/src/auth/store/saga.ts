@@ -1,8 +1,8 @@
 import { takeLatest, call, put } from "@redux-saga/core/effects";
-import { HANDLE_AUTHENTICATION_CALLBACK, sessionChecked, userLoaded } from "../../../store/actions/authActions";
-import { checkSession, handleAuthentication } from "../../../auth/auth0";
+import { HANDLE_AUTHENTICATION_CALLBACK, sessionChecked, userLoaded } from "./actions";
+import { checkSession, handleAuthentication } from "../auth0";
 
-export const auth = function*() {
+export const authSaga = function*() {
     const existingAuthInfo = yield call(checkSession);
 
     if (existingAuthInfo) {
