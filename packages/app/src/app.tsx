@@ -2,9 +2,8 @@ import * as React from "react";
 import { Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Game } from "./display/stages/game";
-import { CallbackPage } from "./pages/CallbackPage";
 import { AppState } from "./store";
-import { LoginPage } from "./pages/LoginPage";
+import { AuthSelectors, CallbackPage, LoginPage } from "./auth";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {
     return (
@@ -25,10 +24,9 @@ const AuthenticatedRoutes: React.FunctionComponent = () => {
 };
 
 const App: React.FunctionComponent = () => {
-    // todo make a selector
-    const isLoggedIn = useSelector<AppState, boolean>(state => state.auth.user !== null);
+    const loggedIn = useSelector<AppState, boolean>(AuthSelectors.isLoggedIn);
 
-    if (isLoggedIn) {
+    if (loggedIn) {
         return <AuthenticatedRoutes />;
     }
 
