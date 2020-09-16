@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { signIn } from "./auth0";
 import { AppState } from "../store";
 import { isCheckingSession } from "./store/selectors";
+import { Footer } from "../display/footer";
 
 const LoginPage: React.FunctionComponent = () => {
     const checkingSession = useSelector<AppState, boolean>(isCheckingSession);
@@ -53,6 +54,8 @@ const LoginPage: React.FunctionComponent = () => {
                     <p>develop the game further.</p>
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 };

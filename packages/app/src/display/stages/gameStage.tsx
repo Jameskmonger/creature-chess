@@ -14,6 +14,7 @@ import { RoundIndicator } from "../../display/roundIndicator";
 import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
 import { BoardContainer } from "../game/boardContainer";
 import { MobileGame } from "../game/mobileGame";
+import { Footer } from "../footer";
 
 const GameStage: React.FunctionComponent = () => {
     return (
@@ -37,11 +38,7 @@ const GameStage: React.FunctionComponent = () => {
 
                         <Profile />
 
-                        <div className="github-link">
-                            <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
-                            {" - "}
-                            <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
-                        </div>
+                        <Footer />
                     </div>
                 </div>
             </Media>
@@ -61,11 +58,7 @@ const GameStage: React.FunctionComponent = () => {
 
                         <PlayerList />
 
-                        <div className="github-link">
-                            <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
-                            {" - "}
-                            <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
-                        </div>
+                        <Footer />
                     </div>
                 </div>
             </Media>
