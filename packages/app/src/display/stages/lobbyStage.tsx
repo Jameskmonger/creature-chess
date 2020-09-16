@@ -5,6 +5,7 @@ import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models/con
 import { LobbyPlayer } from "@creature-chess/models";
 import { startLobbyGame } from "../../store/actions/lobbyActions";
 import { Countdown } from "../../display/countdown";
+import { Footer } from "../footer";
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
@@ -98,11 +99,7 @@ const LobbyStage: React.FunctionComponent = () => {
                 </div>
             </div>
 
-            <div className="github-link">
-                <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
-                {" - "}
-                <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
-            </div>
+            <Footer />
         </div>
     );
 };
