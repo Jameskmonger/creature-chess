@@ -12,8 +12,8 @@ const getGAScript = (id) => {
     }
 
     return `    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>
-    <script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${id}" data-cookieconsent="statistics"></script>
+    <script data-cookieconsent="statistics">
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
