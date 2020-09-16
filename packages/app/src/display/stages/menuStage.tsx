@@ -5,6 +5,7 @@ import { AppState } from "../../store";
 import { loadingSelector } from "../../store/gameSelector";
 import { getUrlParameter } from "../../get-url-parameter";
 import { signOut } from "../../auth/auth0";
+import { Footer } from "../footer";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -113,11 +114,7 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                     </div>
                 </div>
 
-                <div className="github-link">
-                    <a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
-                    {" - "}
-                    <a href="https://github.com/Jameskmonger/creature-chess">Source and Licenses on GitHub</a>
-                </div>
+                <Footer />
             </div>
         );
     }

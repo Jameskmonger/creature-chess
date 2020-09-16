@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Footer } from "../footer";
 
 const Help: React.FunctionComponent = () => {
     return (
@@ -41,6 +42,8 @@ const Help: React.FunctionComponent = () => {
                     <li>Win / loss streak bonus</li>
                 </ul>
             </div>
+
+            <Footer />
         </div>
     );
 };
