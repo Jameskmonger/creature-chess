@@ -34,7 +34,10 @@ export const gamePhase = function*() {
             function*(action) {
                 const { payload } = (action.payload as ReadyPhaseUpdatePacket);
 
-                yield put(initialiseBoard(payload.board.pieces));
+                if (payload.board) {
+                    yield put(initialiseBoard(payload.board.pieces));
+                }
+
                 yield put(initialiseBench(payload.bench));
                 yield put(lockBoard());
                 yield put(closeOverlay());
