@@ -22,7 +22,8 @@ const stopwatch = (start: [number, number]) => {
 };
 
 enum GameEvents {
-    FINISH_GAME = "FINISH_GAME"
+    FINISH_GAME = "FINISH_GAME",
+    PLAYER_DEATH = "PLAYER_DEATH"
 }
 
 interface PhaseLengths {
@@ -126,6 +127,10 @@ export class Game {
         }[], durationMs: number
     ) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
+    }
+
+    public onPlayerDeath(fn: (player: Player) => void) {
+        this.events.on(GameEvents.PLAYER_DEATH, fn);
     }
 
     public getPlayers() {
@@ -303,6 +308,8 @@ export class Game {
 
         for (const player of this.players.filter(p => p.getRoundDiedAt() === this.round)) {
             player.kill();
+
+            this.events.emit(GameEvents.PLAYER_DEATH, player);
         }
 
         // some battles go right up to the end, so it's nice to have a delay
