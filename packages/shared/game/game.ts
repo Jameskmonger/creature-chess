@@ -101,11 +101,15 @@ export class Game {
                     }
                 };
             case GamePhase.READY:
+                // todo figure out why match can be null at this point
+                const match = player.getMatch();
+                const board = match ? match.getBoard() : null;
+
                 return {
                     startedAt: this.phase.startedAt,
                     phase: this.phase.value,
                     payload: {
-                        board: player.getMatch().getBoard(),
+                        board,
                         bench: player.getBench(),
                         opponentId: player.getMatch().away.id
                     }
