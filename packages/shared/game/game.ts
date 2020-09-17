@@ -190,6 +190,14 @@ export class Game {
 
         log(`Match complete in ${(duration)} ms (${this.round} rounds)`);
 
+        // teardown
+        this.opponentProvider = null;
+        this.deck = null;
+        this.turnSimulator = null;
+        this.playerList.deconstructor();
+        this.playerList = null;
+        this.definitionProvider = null;
+
         const winner = this.players.find(p => p.isAlive());
 
         this.players.forEach(p => p.onFinishGame(winner));
@@ -201,6 +209,12 @@ export class Game {
         }));
 
         this.events.emit(GameEvents.FINISH_GAME, this.round, winner, startTimeMs, metricPlayers, duration);
+
+        // more teardown
+        this.events.removeAllListeners();
+        this.events = null;
+        this.eventManager.deconstructor();
+        this.eventManager = null;
     }
 
     private setPhase(value: GamePhase) {

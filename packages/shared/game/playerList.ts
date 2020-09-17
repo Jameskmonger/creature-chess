@@ -35,8 +35,19 @@ export class PlayerList {
     private events = new EventEmitter();
 
     private emitUpdate = debounce(() => {
+        // incase the debounce lands after deconstructor is called
+        // todo cancel this manually
+        if (!this.events) {
+            return;
+        }
+
         this.events.emit(PlayerListEvents.UPDATE, this.players);
     }, 500);
+
+    public deconstructor() {
+        this.events.removeAllListeners();
+        this.events = null;
+    }
 
     public onUpdate(fn: (players: PlayerListPlayer[]) => void) {
         this.events.on(PlayerListEvents.UPDATE, fn);
