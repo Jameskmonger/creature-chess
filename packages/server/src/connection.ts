@@ -250,9 +250,10 @@ export class Connection extends Player {
 
         if (this.outgoingPacketsTask) {
             this.outgoingPacketsTask.cancel();
+
+            this.outgoingPacketsTask = null;
         }
 
-        // todo make a proper teardown for these
         this.incomingPacketRegistry = null;
         this.outgoingPacketRegistry = null;
     }
