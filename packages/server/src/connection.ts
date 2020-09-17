@@ -254,6 +254,6 @@ export class Connection extends Player {
 
         // todo make a proper teardown for these
         this.incomingPacketRegistry = null;
-        this.outgoingPacketsTask = null;
+        this.outgoingPacketRegistry = null;
     }
 }
