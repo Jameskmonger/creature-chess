@@ -131,6 +131,12 @@ export class Server {
                 });
             });
 
+            game.onPlayerDeath(p => {
+                if (!p.isBot) {
+                    this.playerSessionRegistry.deregisterPlayer(p.id);
+                }
+            });
+
             this.games.set(game.id, game);
             this.lobbies.delete(lobby.id);
         };
