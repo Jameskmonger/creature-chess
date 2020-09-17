@@ -62,7 +62,13 @@ type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketD
 
 const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
     return eventChannel(emit => {
+        let gameFinished = false;
+
         socket.on("disconnect", () => {
+            if (gameFinished) {
+                return;
+            }
+
             emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
         });
@@ -163,6 +169,8 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                 log("[FINISH_GAME]", packet);
 
                 emit(finishGameAction(packet.winnerName));
+
+                gameFinished = true;
             }
         );
 

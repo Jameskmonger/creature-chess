@@ -31,6 +31,11 @@ export class EventManager {
         }
     };
 
+    public deconstructor() {
+        this.events.removeAllListeners();
+        this.events = null;
+    }
+
     public getTriggers() {
         return this.triggers;
     }

@@ -63,22 +63,6 @@ export class Connection extends Player {
         this.setSocket(socket);
     }
 
-    public clearSocket() {
-        if (this.socket) {
-            this.socket.disconnect();
-            this.socket.removeAllListeners();
-            this.socket = null;
-        }
-
-        if (this.outgoingPacketsTask) {
-            this.outgoingPacketsTask.cancel();
-        }
-
-        // todo make a proper teardown for these
-        this.incomingPacketRegistry = null;
-        this.outgoingPacketsTask = null;
-    }
-
     public setSocket(socket: Socket) {
         this.clearSocket();
 
@@ -132,6 +116,8 @@ export class Connection extends Player {
                 winnerName: winner.name
             }
         );
+
+        this.clearSocket();
     }
 
     public onDeath(phaseStartedAt: number) {
@@ -253,5 +239,22 @@ export class Connection extends Player {
 
         this.lastReceivedPacketIndex = packet.index;
         ack(true, packet.index);
+    }
+
+    private clearSocket() {
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket.removeAllListeners();
+            this.socket = null;
+        }
+
+        if (this.outgoingPacketsTask) {
+            this.outgoingPacketsTask.cancel();
+
+            this.outgoingPacketsTask = null;
+        }
+
+        this.incomingPacketRegistry = null;
+        this.outgoingPacketRegistry = null;
     }
 }
