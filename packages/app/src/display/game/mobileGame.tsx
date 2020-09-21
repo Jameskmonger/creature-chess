@@ -61,7 +61,6 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
     if (currentOverlay === Overlay.PLAYERS) {
         return (
             <OverlayComponent title="Players">
-                <Profile />
                 <PlayerList />
             </OverlayComponent>
         );
@@ -71,6 +70,8 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
         return (
             <OverlayComponent title={`Balance: $${currentBalance}`}>
                 <CardShop showBalance={false} />
+
+                <Profile />
             </OverlayComponent>
         );
     }

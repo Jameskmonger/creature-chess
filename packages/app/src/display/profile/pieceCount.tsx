@@ -9,10 +9,10 @@ const PieceCount: React.FunctionComponent = props => {
   const pieceCount = useSelector<AppState, number>(state => ownedPieceSelector(state).length);
 
   if (pieceCount !== level) {
-    return <p className="pieces warning">{pieceCount} / {level} pieces (board not full!)</p>;
+    return <span className="pieces warning">{pieceCount} / {level} pieces (board not full!)</span>;
   }
 
-  return <p className="pieces">{pieceCount} / {level} pieces</p>;
+  return null;
 };
 
 export {

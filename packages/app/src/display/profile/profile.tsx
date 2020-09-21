@@ -29,11 +29,7 @@ const Profile: React.FunctionComponent = () => {
         <div className="profile">
             <p className="item name">{name}</p>
 
-            <p className="item level">Level {level}</p>
-
-            <div className="item">
-                <PieceCount />
-            </div>
+            <p className="item level">Level {level} <PieceCount /></p>
 
             <div className="level-bar">
                 <ProgressBar className="xp-progress" current={xp} max={xpForNextLevel} renderContents={renderProgressBar} />
