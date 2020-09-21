@@ -7,5 +7,5 @@
     "ignore": [
         "*.test.ts"
     ],
-    "exec": "ts-node -r tsconfig-paths/register ./index.ts"
+    "exec": "npm run build && npm start"
 }
