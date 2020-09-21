@@ -58,8 +58,6 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
             }
 
             <div className="cards">
-                {cards.map(createCard)}
-
                 <div className="shop-actions">
                     <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onBuyReroll} />
 
@@ -71,6 +69,8 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
                         }
                     </button>
                 </div>
+
+                {cards.map(createCard)}
             </div>
         </div>
     );
