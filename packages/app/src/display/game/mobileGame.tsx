@@ -1,6 +1,8 @@
 import * as React from "react";
 import { BoardContainer } from "./boardContainer";
 import { useSelector, useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { AppState } from "../../store";
 import { Overlay } from "../../overlay";
 import { closeOverlay, openOverlay } from "../../store/actions/uiActions";
@@ -12,7 +14,7 @@ import { RoundIndicator } from "../roundIndicator";
 import { PhaseInfo } from "../phaseInfo";
 import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
 
-const NavItem: React.FunctionComponent<{ overlay: Overlay, children: React.ReactNode }> = ({ overlay, children }) => {
+const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
     const isActive = useSelector<AppState, boolean>(state => state.ui.currentOverlay === overlay);
 
@@ -25,15 +27,19 @@ const NavItem: React.FunctionComponent<{ overlay: Overlay, children: React.React
         dispatch(openOverlay(overlay));
     };
 
-    return <button className={`navitem${isActive ? " active" : ""}`} onClick={onClick}>{children}</button>;
+    return (
+        <button className={`navitem${isActive ? " active" : ""}`} onClick={onClick}>
+            <FontAwesomeIcon icon={icon} />
+        </button>
+    );
 };
 
 const Navbar: React.FunctionComponent = () => {
     return (
         <nav className="navbar">
-            <NavItem overlay={Overlay.PLAYERS}>Players</NavItem>
-            <NavItem overlay={Overlay.SHOP}>Shop</NavItem>
-            <NavItem overlay={Overlay.HELP}>Help</NavItem>
+            <NavItem overlay={Overlay.PLAYERS} icon={faUsers} />
+            <NavItem overlay={Overlay.SHOP} icon={faShoppingCart} />
+            <NavItem overlay={Overlay.HELP} icon={faQuestionCircle} />
         </nav>
     );
 };
