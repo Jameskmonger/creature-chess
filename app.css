@@ -396,12 +396,14 @@ html, body {
 .card-selector .shop-actions {
   display: flex;
   flex-direction: column;
-  width: 48%; }
+  width: 48%;
+  justify-content: center;
+  margin-bottom: 2%; }
   .card-selector .shop-actions .shop-action {
-    padding: 0.6em 1em;
+    padding: 0.7em 1em;
     margin-bottom: 0.5rem;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.8em;
+    font-size: 1em;
     color: #fff;
     cursor: pointer;
     background: #566c86;
@@ -679,17 +681,17 @@ html, body {
     font-style: italic; }
     .profile .pieces.warning {
       width: fit-content;
-      padding: 0.6em 1em;
+      padding: 0.2em 0.4em;
       font-weight: 700;
       color: #ff6464;
       background: #ffd2d2;
       border: 2px solid #ff6464; }
   .profile .xp-progress {
     position: relative;
-    width: 70%;
+    width: 50%;
     height: 2em;
     box-sizing: border-box;
-    margin: 0 auto;
+    margin-right: 0.5em;
     background: #636363; }
     .profile .xp-progress .fill {
       height: 100%;
@@ -710,10 +712,10 @@ html, body {
     align-items: center;
     margin: 0.8em 0; }
   .profile .buy-xp {
-    width: 30%;
+    width: 50%;
     box-sizing: border-box;
-    padding: 0.4em 1.2em;
-    margin-left: 1em;
+    padding: 0.5em 1.2em;
+    margin-left: 0.5em;
     font-size: 1.1em;
     color: #fff;
     cursor: pointer;
@@ -820,7 +822,8 @@ html, body {
     background: #171717;
     flex: 1;
     /* stylelint-disable-next-line */
-    border: none; }
+    border: none;
+    outline: none; }
     .navbar .navitem.active {
       text-decoration: underline;
       background: #3c3c3c; }
@@ -832,7 +835,8 @@ html, body {
   .mobile .top-bar .phase-info {
     margin: 0.2rem 0;
     font-size: 1.5rem;
-    flex: 1; }
+    flex: 1;
+    white-space: nowrap; }
 
 .content-pane {
   flex: 1;
