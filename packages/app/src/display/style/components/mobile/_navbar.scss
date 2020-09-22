@@ -3,8 +3,8 @@
     flex-direction: row;
 
     .navitem {
-        padding: 1.4rem 0;
-        font-size: 1rem;
+        padding: 0.7rem 0;
+        font-size: 1.6rem;
         color: #fff;
         background: #171717;
         flex: 1;
@@ -16,6 +16,10 @@
         &.active {
             text-decoration: underline;
             background: #3c3c3c;
+        }
+
+        &:not(:last-child) {
+            border-right: 3px solid #3c3c3c;
         }
     }
 }
