@@ -8,12 +8,6 @@ $warning-light: #ffd2d2;
     color: $profile-text;
     background: $profile-background;
 
-    .name {
-        font-weight: 700;
-        color: $profile-player-name;
-        text-transform: uppercase;
-    }
-
     .item {
         margin-bottom: 0.4em;
     }
@@ -67,7 +61,6 @@ $warning-light: #ffd2d2;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin: 0.8em 0;
     }
 
     .buy-xp {
