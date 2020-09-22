@@ -400,8 +400,8 @@ html, body {
   justify-content: center;
   margin-bottom: 2%; }
   .card-selector .shop-actions .shop-action {
+    flex: 1;
     padding: 0.7em 1em;
-    margin-bottom: 0.5rem;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: #fff;
@@ -413,6 +413,8 @@ html, body {
       color: #222;
       cursor: not-allowed;
       background: #666; }
+    .card-selector .shop-actions .shop-action.reroll {
+      margin-bottom: 0.5rem; }
 
 .chessboard {
   position: relative;
@@ -669,10 +671,6 @@ html, body {
   font-family: Arial, sans-serif;
   color: #fff;
   background: #566c86; }
-  .profile .name {
-    font-weight: 700;
-    color: #ffcd75;
-    text-transform: uppercase; }
   .profile .item {
     margin-bottom: 0.4em; }
   .profile .level {
@@ -709,8 +707,7 @@ html, body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    margin: 0.8em 0; }
+    align-items: center; }
   .profile .buy-xp {
     width: 50%;
     box-sizing: border-box;
@@ -816,8 +813,8 @@ html, body {
   display: flex;
   flex-direction: row; }
   .navbar .navitem {
-    padding: 1.4rem 0;
-    font-size: 1rem;
+    padding: 0.7rem 0;
+    font-size: 1.6rem;
     color: #fff;
     background: #171717;
     flex: 1;
@@ -827,6 +824,8 @@ html, body {
     .navbar .navitem.active {
       text-decoration: underline;
       background: #3c3c3c; }
+    .navbar .navitem:not(:last-child) {
+      border-right: 3px solid #3c3c3c; }
 
 .mobile .top-bar {
   display: flex;
