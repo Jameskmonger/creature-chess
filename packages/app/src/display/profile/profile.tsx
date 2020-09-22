@@ -13,7 +13,6 @@ const renderProgressBar = (current: number, max: number) => `${current} / ${max}
 const Profile: React.FunctionComponent = () => {
     const dispatch = useDispatch();
     const gameStarted = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING);
-    const name = useSelector<AppState, string>(state => state.localPlayer.name);
     const level = useSelector<AppState, number>(getPlayerLevel);
     const xp = useSelector<AppState, number>(getPlayerXp);
 
@@ -27,9 +26,9 @@ const Profile: React.FunctionComponent = () => {
 
     return (
         <div className="profile">
-            <p className="item name">{name}</p>
+            <p className="item level">Level {level}</p>
 
-            <p className="item level">Level {level} <PieceCount /></p>
+            <PieceCount />
 
             <div className="level-bar">
                 <ProgressBar className="xp-progress" current={xp} max={xpForNextLevel} renderContents={renderProgressBar} />
