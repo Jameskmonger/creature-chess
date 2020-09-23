@@ -1,0 +1,18 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+
+    .button {
+        display: block;
+        box-sizing: border-box;
+        padding: 0.5em 1.2em;
+        margin-bottom: 0.5rem;
+        font-size: 1.4em;
+        color: #fff;
+        cursor: pointer;
+        background: #1a1c2c;
+
+        /* stylelint-disable-next-line declaration-property-value-blacklist */
+        border: none;
+    }
+}

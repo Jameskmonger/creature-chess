@@ -135,6 +135,14 @@ export class Server {
                 }
             });
 
+            game.onPlayerQuit(p => {
+                console.log(`Player '${p.name} quit game ${game.id}`);
+
+                if (!p.isBot) {
+                    this.playerSessionRegistry.deregisterPlayer(p.id);
+                }
+            });
+
             this.games.set(game.id, game);
             this.lobbies.delete(lobby.id);
         };

@@ -23,7 +23,8 @@ const stopwatch = (start: [number, number]) => {
 
 enum GameEvents {
     FINISH_GAME = "FINISH_GAME",
-    PLAYER_DEATH = "PLAYER_DEATH"
+    PLAYER_DEATH = "PLAYER_DEATH",
+    PLAYER_QUIT = "PLAYER_QUIT"
 }
 
 interface PhaseLengths {
@@ -133,6 +134,10 @@ export class Game {
         this.events.on(GameEvents.PLAYER_DEATH, fn);
     }
 
+    public onPlayerQuit(fn: (player: Player) => void) {
+        this.events.on(GameEvents.PLAYER_QUIT, fn);
+    }
+
     public getPlayers() {
         return this.players;
     }
@@ -157,6 +162,10 @@ export class Game {
         player.setTurnCount(this.turnCount);
         player.setTurnDuration(this.turnDuration);
 
+        if (!player.isBot) {
+            player.onQuitGame(this.playerQuitGame);
+        }
+
         if (this.players.length === this.GAME_SIZE) {
             // execute at the end of the execution queue
             setTimeout(() => {
@@ -169,6 +178,10 @@ export class Game {
 
     public getPlayerById(playerId: string) {
         return this.players.find(p => p.id === playerId);
+    }
+
+    private playerQuitGame = (player: Player) => {
+        this.events.emit(GameEvents.PLAYER_QUIT, player);
     }
 
     private startGame = async () => {

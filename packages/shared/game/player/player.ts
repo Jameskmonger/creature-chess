@@ -25,7 +25,9 @@ enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
     UPDATE_READY = "UPDATE_READY",
     UPDATE_STREAK = "UPDATE_STREAK",
-    UPDATE_BATTLE = "UPDATE_BATTLE"
+    START_LOBBY_GAME = "START_LOBBY_GAME",
+    UPDATE_BATTLE = "UPDATE_BATTLE",
+    QUIT_GAME = "QUIT_GAME"
 }
 
 interface StreakInfo {
@@ -192,7 +194,6 @@ export abstract class Player {
     }
 
     public async fightMatch(startedAt: number, battleTimeout: Promise<void>): Promise<PlayerMatchResults> {
-
         this.onEnterPlayingPhase(startedAt);
 
         const finalMatchBoard = await this.match.fight(battleTimeout);
@@ -216,6 +217,14 @@ export abstract class Player {
             homeScore,
             awayScore
         };
+    }
+
+    public onQuitGame(fn: (player: Player) => void) {
+        this.events.on(PlayerEvent.QUIT_GAME, fn);
+    }
+
+    public onStartLobbyGame(fn: () => void) {
+        this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
     }
 
     public onHealthUpdate(fn: (health: number) => void) {
@@ -352,6 +361,10 @@ export abstract class Player {
     protected abstract onDeath(phaseStartedAt: number, );
 
     protected abstract onShopLockUpdate();
+
+    protected quitGame() {
+        this.events.emit(PlayerEvent.QUIT_GAME, this);
+    }
 
     protected belowPieceLimit() {
         return getBoardPieceCount(this.store.getState()) < this.store.getState().level.level;
