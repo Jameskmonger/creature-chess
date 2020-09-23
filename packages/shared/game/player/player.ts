@@ -4,7 +4,7 @@ import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, STARTING_HEALTH } from "@creature-chess/models/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, STARTING_HEALTH, MAX_PLAYER_LEVEL } from "@creature-chess/models/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer, PlayerPieceLocation } from "@creature-chess/models";
@@ -395,6 +395,11 @@ export abstract class Player {
         // todo put this all into a saga
         if (this.isAlive() === false) {
             log(`${this.name} attempted to buy xp, but they are dead`);
+            return;
+        }
+
+        if (this.getLevel() === MAX_PLAYER_LEVEL) {
+            log(`${this.name} attempted to buy xp, but they are at max level`);
             return;
         }
 
