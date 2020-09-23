@@ -58,7 +58,6 @@ export interface GameState {
 export interface LocalPlayerState {
     id: string;
 
-    name: string;
     ready: boolean;
 }
 

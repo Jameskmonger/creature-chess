@@ -94,8 +94,7 @@ export class Connection extends Player {
             {
                 type: "game",
                 payload: {
-                    localPlayerId: this.id,
-                    name: this.name
+                    localPlayerId: this.id
                 }
             }
         );
