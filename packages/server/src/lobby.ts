@@ -41,7 +41,6 @@ enum LobbyEvents {
 
 export class Lobby {
     public readonly id: string;
-    public readonly isPublic: boolean;
     public readonly gameStartTime: number = null;
     public readonly hostId: string;
 
@@ -49,25 +48,19 @@ export class Lobby {
     private events = new EventEmitter();
     private gameStarted: boolean = false;
 
-    constructor(idGenerator: IdGenerator, initialPlayer: Player, isPublic: boolean) {
+    constructor(idGenerator: IdGenerator, initialPlayer: Player) {
         this.id = idGenerator.generateId();
 
         this.players = [initialPlayer];
         this.hostId = initialPlayer.id;
-        initialPlayer.onStartLobbyGame(this.startGame);
 
         for (let i = 0; i < MAX_PLAYERS_IN_GAME - 1; i++) {
             this.addBot();
         }
 
-        this.isPublic = isPublic;
-
-        // start public games automatically
-        if (this.isPublic) {
-            const waitTimeMs = LOBBY_WAIT_TIME_SECONDS * 1000;
-            this.gameStartTime = Date.now() + waitTimeMs;
-            setTimeout(this.startGame, waitTimeMs);
-        }
+        const waitTimeMs = LOBBY_WAIT_TIME_SECONDS * 1000;
+        this.gameStartTime = Date.now() + waitTimeMs;
+        setTimeout(this.startGame, waitTimeMs);
     }
 
     public onStartGame(fn: () => void) {
@@ -123,10 +116,7 @@ export class Lobby {
             const lobbyPlayer = ({
                 id: player.id,
                 name: player.name,
-                isBot: player.isBot,
-
-                // only first player can be host so no point trying to calculate it for a just-added player
-                isHost: false
+                isBot: player.isBot
             });
             otherPlayer.onLobbyPlayerUpdate(playerChangedIndex, lobbyPlayer);
         }

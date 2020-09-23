@@ -68,7 +68,6 @@ export interface LobbyState {
     lobbyId: string;
     players: LobbyPlayer[];
     startingAtMs: number;
-    isHost: boolean;
     requestNicknameMessage: string;
 }
 

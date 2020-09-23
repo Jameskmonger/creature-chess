@@ -25,7 +25,6 @@ enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
     UPDATE_READY = "UPDATE_READY",
     UPDATE_STREAK = "UPDATE_STREAK",
-    START_LOBBY_GAME = "START_LOBBY_GAME",
     UPDATE_BATTLE = "UPDATE_BATTLE"
 }
 
@@ -219,10 +218,6 @@ export abstract class Player {
         };
     }
 
-    public onStartLobbyGame(fn: () => void) {
-        this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
-    }
-
     public onHealthUpdate(fn: (health: number) => void) {
         this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
 
@@ -360,10 +355,6 @@ export abstract class Player {
 
     protected belowPieceLimit() {
         return getBoardPieceCount(this.store.getState()) < this.store.getState().level.level;
-    }
-
-    protected startLobbyGame = () => {
-        this.events.emit(PlayerEvent.START_LOBBY_GAME);
     }
 
     protected toggleShopLock = () => {

@@ -11,7 +11,6 @@ type GameMetric = {
   }[];
   round: number;
   winner: string;
-  isPublic: boolean;
   durationMs: number;
 };
 

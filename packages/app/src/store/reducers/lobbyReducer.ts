@@ -6,7 +6,6 @@ const initialState: LobbyState = {
     localPlayerId: null,
     players: [],
     startingAtMs: null,
-    isHost: false,
     requestNicknameMessage: null
 };
 
@@ -27,7 +26,6 @@ export function lobby(
                 lobbyId: action.payload.lobbyId,
                 localPlayerId: action.payload.localPlayerId,
                 players: action.payload.players,
-                isHost: action.payload.isHost,
                 startingAtMs: action.payload.startTimestamp
             };
         case UPDATE_LOBBY_PLAYER:
