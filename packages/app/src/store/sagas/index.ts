@@ -16,8 +16,12 @@ import { JoinCompleteAction } from "../actions/localPlayerActions";
 import { cardShopSagaFactory } from "@creature-chess/shared/player/cardShop/saga";
 import { dropPieceSagaFactory } from "@creature-chess/shared/player/sagas/dropPiece";
 import { closeShopOnFirstBuy } from "../../features/cardShop/closeShopOnFirstBuy";
+import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
 
 const gameSagaFactory = (playerId: string) => {
+    const turnSimulator = new TurnSimulator();
+    const definitionProvider = new DefinitionProvider();
+
     return function*() {
         yield all([
             yield fork(phaseTimer),
@@ -27,10 +31,10 @@ const gameSagaFactory = (playerId: string) => {
             yield fork(closeShopOnFirstBuy),
             yield fork(dropPieceSagaFactory<AppState>(playerId)),
             yield fork(evolutionSagaFactory<AppState>()),
-            yield fork(cardShopSagaFactory<AppState>(playerId)),
+            yield fork(cardShopSagaFactory<AppState>(definitionProvider, playerId)),
             yield fork(
                 battle,
-                new TurnSimulator(),
+                turnSimulator,
                 DEFAULT_TURN_COUNT,
                 DEFAULT_TURN_DURATION
             )

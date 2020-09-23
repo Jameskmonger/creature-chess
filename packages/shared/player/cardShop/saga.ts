@@ -12,9 +12,6 @@ import { log } from "../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
 import { addBoardPiece } from "../../board/actions/boardActions";
 
-// todo figure out dependency injection here - or at least construct one and pass it down :)
-const definitionProvider = new DefinitionProvider();
-
 const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
 
@@ -46,7 +43,7 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
     return null;
 };
 
-export const cardShopSagaFactory = <TState extends PlayerState>(playerId: string) => {
+export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvider: DefinitionProvider, playerId: string) => {
     return function*() {
         yield takeEvery<BuyCardAction>(
             BUY_CARD,
@@ -82,10 +79,9 @@ export const cardShopSagaFactory = <TState extends PlayerState>(playerId: string
                     return;
                 }
 
-                const piece = createPieceFromCard(definitionProvider, playerId, card, destination);
+                const piece = createPieceFromCard(definitionProvider, playerId, card);
                 const remainingCards = state.cards.map(c => c === card ? null : c);
 
-                // todo it's a bit ugly that `destination` is passed into `createPieceFromCard` and then also in here
                 if (destination.type === "board") {
                     yield put(addBoardPiece(piece, destination.location.x, destination.location.y));
                 } else if (destination.type === "bench") {
