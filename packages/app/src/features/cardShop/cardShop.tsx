@@ -7,6 +7,7 @@ import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
 import { PlayerActions } from "@creature-chess/shared/player";
 import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
+import { ToggleLockButton } from "./toggleLockButton";
 
 interface CardShopProps {
     showBalance: boolean;
@@ -18,7 +19,6 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const cards = useSelector<AppState, CardModel[]>(state => state.cards);
     const money = useSelector<AppState, number>(getPlayerMoney);
     const canUseShop = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD);
-    const shopLocked = useSelector<AppState, boolean>(state => state.game.shopLocked);
 
     const createCard = (card: CardModel, index: number) => {
         if (card === null) {
@@ -41,9 +41,6 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
         return null;
     }
 
-    // todo move this inside RerollButton
-    const onToggleLock = () => dispatch(PlayerActions.toggleShopLock());
-
     return (
         <div className="card-selector">
             {
@@ -59,13 +56,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
                 <div className="shop-actions">
                     <RerollButton />
 
-                    <button className="shop-action" onClick={onToggleLock}>
-                        {
-                            shopLocked
-                                ? "Unlock"
-                                : "Lock"
-                        }
-                    </button>
+                    <ToggleLockButton />
                 </div>
 
                 {cards.map(createCard)}
