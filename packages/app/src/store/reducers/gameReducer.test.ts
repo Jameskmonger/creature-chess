@@ -11,7 +11,6 @@ export class GameReducerTests {
     const state = game(undefined, { type: undefined });
 
     Expect(state).toEqual({
-      gameId: null,
       opponentId: null,
       loading: false,
       menuError: null,

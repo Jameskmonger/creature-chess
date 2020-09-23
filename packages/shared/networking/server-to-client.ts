@@ -57,7 +57,6 @@ export type AuthenticateResponse = {
 };
 
 export type PlayerGameState = {
-  gameId: string;
   localPlayerId: string;
   name: string;
 

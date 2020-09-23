@@ -12,7 +12,6 @@ import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
 
 export const initialState: GameState = {
-    gameId: null,
     opponentId: null,
     loading: false,
     menuError: null,
@@ -52,8 +51,7 @@ export function game(state: GameState = initialState, action: GameReducerActionT
             return {
                 ...state,
                 loading: false,
-                menuError: null,
-                gameId: action.payload.gameId
+                menuError: null
             };
         case PHASE_START_SECONDS:
             return {
