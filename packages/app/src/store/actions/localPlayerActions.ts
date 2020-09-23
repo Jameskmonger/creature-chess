@@ -4,16 +4,14 @@ export type JoinCompleteAction = ({
     type: JOIN_COMPLETE,
     payload: {
         playerId: string,
-        gameId: string,
         name: string
     }
 });
 
-export const joinCompleteAction = (playerId: string, gameId: string, name: string): JoinCompleteAction => ({
+export const joinCompleteAction = (playerId: string, name: string): JoinCompleteAction => ({
     type: JOIN_COMPLETE,
     payload: {
         playerId,
-        gameId,
         name
     }
 });

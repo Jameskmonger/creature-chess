@@ -160,7 +160,6 @@ export class Server {
                 player.setSocket(socket);
 
                 const fullGameState: PlayerGameState = {
-                    gameId: existingGame.id,
                     localPlayerId: player.id,
                     name: player.name,
 

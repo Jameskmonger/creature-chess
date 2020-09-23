@@ -37,7 +37,6 @@ export interface AuthState {
 }
 
 export interface GameState {
-    gameId: string;
     phase: GamePhase;
     phaseStartedAtSeconds: number;
     opponentId: string;
