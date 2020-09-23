@@ -1,22 +1,20 @@
 import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
-import { call, takeEvery, put, take, fork, all, takeLatest, select } from "@redux-saga/core/effects";
+import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
 import { Socket } from "../store/sagas/types";
 import {
-    joinGameError,
-    FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected, phaseStartSeconds
+    FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
 } from "../store/actions/gameActions";
 import { playerListUpdated } from "../features/playerList/playerListActions";
 import { FIND_GAME } from "../store/actiontypes/gameActionTypes";
 import { log } from "../log";
 import { joinCompleteAction } from "../store/actions/localPlayerActions";
 import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEventChannel";
-import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN, START_LOBBY_GAME } from "../store/actions/lobbyActions";
+import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN } from "../store/actions/lobbyActions";
 import { AppState } from "../store/state";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
 import {
-    ServerToClientPacketDefinitions,
-    ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse, JoinGamePacket
+    ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse
 } from "@creature-chess/shared/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@creature-chess/shared/networking/client-to-server";
@@ -135,8 +133,7 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                         playerId,
                         lobbyId,
                         players,
-                        startTimestamp,
-                        false // todo remove this parameter
+                        startTimestamp
                     ));
                 }
 
@@ -282,12 +279,6 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
             BATTLE_FINISHED,
             function*() {
                 registry.emit(ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
-            }
-        ),
-        takeEvery(
-            START_LOBBY_GAME,
-            function*() {
-                registry.emit(ClientToServerPacketOpcodes.START_LOBBY_GAME, { empty: true });
             }
         ),
         yield fork(sendPlayerActions, registry)

@@ -1,9 +1,8 @@
 import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { AppState } from "../../store";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models/constants";
 import { LobbyPlayer } from "@creature-chess/models";
-import { startLobbyGame } from "../../store/actions/lobbyActions";
 import { Countdown } from "../../display/countdown";
 import { Footer } from "../footer";
 
@@ -23,8 +22,6 @@ const countdownRender = (totalSecondsRemaining: number) => {
 };
 
 const LobbyStage: React.FunctionComponent = () => {
-    const dispatch = useDispatch();
-
     const lobbyId = useSelector<AppState, string>(state => state.lobby.lobbyId);
 
     if (lobbyId === null) {
@@ -32,11 +29,7 @@ const LobbyStage: React.FunctionComponent = () => {
     }
 
     const players = useSelector<AppState, LobbyPlayer[]>(state => state.lobby.players);
-    const isHost = useSelector<AppState, boolean>(state => state.lobby.isHost);
     const lobbyStartingAtMs = useSelector<AppState, number>(state => state.lobby.startingAtMs);
-
-    const isPublic = lobbyStartingAtMs !== null;
-    const onStartGameClick = () => dispatch(startLobbyGame());
 
     return (
         <div className="lobby">
@@ -46,8 +39,6 @@ const LobbyStage: React.FunctionComponent = () => {
                         players.map(p => (
                             <div className={`player${p.isBot ? " bot" : ""}`}>
                                 <span>{p.name}</span>
-
-                                {p.isHost && <span className="host">Host</span>}
                             </div>
                         ))
                     }
@@ -65,37 +56,10 @@ const LobbyStage: React.FunctionComponent = () => {
 
                     <h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
 
-                    {
-                        isHost && !isPublic
-                        && (
-                            <button
-                                className="start-game"
-                                onClick={onStartGameClick}
-                            >
-                                Start Game
-                            </button>
-                        )
-                    }
-
-                    {
-                        isPublic
-                        && (
-                            <p>
-                                The game will start {LOBBY_WAIT_TIME} seconds after the lobby is created,
+                    <p>
+                        The game will start {LOBBY_WAIT_TIME} seconds after the lobby is created,
                                 or immediately when there are {MAX_PLAYERS_IN_GAME} players
                             </p>
-                        )
-                    }
-
-                    {
-                        !isPublic
-                        && (
-                            <p>
-                                {isHost ? "You" : "The host"} can choose when to start the game,
-                                or it will start immediately when there are {MAX_PLAYERS_IN_GAME} players
-                            </p>
-                        )
-                    }
                 </div>
             </div>
 

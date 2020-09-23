@@ -29,8 +29,7 @@ const getLobbyPlayers = (lobby: Lobby): LobbyPlayer[] => {
     return lobby.getPlayers().map(p => ({
         id: p.id,
         name: p.name,
-        isBot: p.isBot,
-        isHost: false
+        isBot: p.isBot
     }));
 };
 
@@ -59,12 +58,12 @@ export class Server {
         socketReceiver.onReceiveSocket(this.onReceiveSocket);
     }
 
-    private findOrCreatePublicLobby(player: Player) {
+    private findOrCreateLobby(player: Player) {
         const lobbies = Array.from(this.lobbies.values())
-            .filter(lobby => lobby.isPublic && lobby.canJoin());
+            .filter(lobby => lobby.canJoin());
 
         if (lobbies.length === 0) {
-            return this.createLobby(player, true);
+            return this.createLobby(player);
         }
 
         lobbies.sort((a, b) => b.getRealPlayerCount() - a.getRealPlayerCount());
@@ -78,8 +77,8 @@ export class Server {
         return mostFullLobby;
     }
 
-    private createLobby(player: Player, isPublic: boolean) {
-        const lobby = new Lobby(this.lobbyIdGenerator, player, isPublic);
+    private createLobby(player: Player) {
+        const lobby = new Lobby(this.lobbyIdGenerator, player);
 
         lobby.onStartGame(this.startGame(lobby));
 
@@ -116,7 +115,6 @@ export class Server {
                     players: gamePlayers,
                     round: rounds,
                     winner: winner.name,
-                    isPublic: lobby.isPublic,
                     durationMs
                 });
 
@@ -184,7 +182,7 @@ export class Server {
                 ? existingPlayer.player as Connection
                 : new Connection(socket, id, nickname);
 
-        const lobby = this.findOrCreatePublicLobby(playerToRegister);
+        const lobby = this.findOrCreateLobby(playerToRegister);
 
         if (!existingPlayer) {
             this.playerSessionRegistry.registerPlayer(playerToRegister.id, playerToRegister, "lobby", lobby.id);
