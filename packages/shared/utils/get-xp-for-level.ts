@@ -1,3 +1,5 @@
+import { MAX_PLAYER_LEVEL } from "@creature-chess/models/constants";
+
 const XP_TO_NEXT_LEVEL = [
     1,
     1,
@@ -11,6 +13,10 @@ const XP_TO_NEXT_LEVEL = [
 ];
 
 export const getXpToNextLevel = (level: number) => {
+    if (level === MAX_PLAYER_LEVEL) {
+        return null;
+    }
+
     const result = XP_TO_NEXT_LEVEL[level - 1];
 
     if (result === undefined) {
