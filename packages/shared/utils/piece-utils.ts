@@ -8,7 +8,7 @@ export const createPiece = (
     definitionProvider: DefinitionProvider,
     ownerId: string,
     definitionId: number,
-    position: [number, number],
+    position: [number, number] | null,
     id?: string,
     stage: number = 0
 ): PieceModel => {
@@ -18,7 +18,7 @@ export const createPiece = (
         ownerId,
         definitionId,
         definition: definitionProvider.get(definitionId),
-        position: createTileCoordinates(...position),
+        position: position ? createTileCoordinates(...position) : null,
         facingAway: true,
         maxHealth: stats.hp,
         currentHealth: stats.hp,
@@ -40,12 +40,9 @@ const getPositionFromLocation = (location: PlayerPieceLocation): [number, number
 export const createPieceFromCard = (
     definitionProvider: DefinitionProvider,
     ownerId: string,
-    card: Card,
-    destination: PlayerPieceLocation
+    card: Card
 ) => {
-    const position = getPositionFromLocation(destination);
-
-    return createPiece(definitionProvider, ownerId, card.definitionId, position, card.id);
+    return createPiece(definitionProvider, ownerId, card.definitionId, null, card.id);
 };
 
 export const clonePiece =

@@ -12,6 +12,7 @@ import { Card } from "@creature-chess/models";
 import { cardsReducer } from "./cardShop";
 import { GameInfoState, gameInfoReducer } from "./gameInfo";
 import { levelReducer } from "./level";
+import { DefinitionProvider } from "../game/definitionProvider";
 
 export interface PlayerState {
     board: BoardState;
@@ -34,7 +35,7 @@ export const createPlayerStore = (playerId: string, otherSaga?: () => Generator)
 
         yield all([
             yield fork(evolutionSagaFactory<PlayerState>()),
-            yield fork(cardShopSagaFactory<PlayerState>(playerId)),
+            yield fork(cardShopSagaFactory<PlayerState>(new DefinitionProvider(), playerId)),
             yield fork(dropPieceSagaFactory<PlayerState>(playerId))
         ]);
     };
