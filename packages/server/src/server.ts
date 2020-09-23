@@ -161,7 +161,6 @@ export class Server {
 
                 const fullGameState: PlayerGameState = {
                     localPlayerId: player.id,
-                    name: player.name,
 
                     fullState: {
                         players: existingGame.getPlayerList(),

@@ -8,7 +8,6 @@ import { READY_UP } from "@creature-chess/shared/player/actions";
 
 const initialState: LocalPlayerState = {
     id: null,
-    name: null,
     ready: false
 };
 
@@ -21,7 +20,6 @@ export function localPlayer(
             return {
                 ...state,
                 id: action.payload.playerId,
-                name: action.payload.name,
                 ready: false
             };
         case READY_UP:
