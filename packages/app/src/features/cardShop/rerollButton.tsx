@@ -1,15 +1,20 @@
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { REROLL_COST } from "@creature-chess/models/constants";
+import { rerollCards } from "@creature-chess/shared/player/actions";
+import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
+import { AppState } from "../../store";
 
-interface RerollButtonProps {
-  buyable: boolean;
-  cost: number;
-  onBuy: () => void;
-}
+const RerollButton: React.FunctionComponent = () => {
+  const dispatch = useDispatch();
+  const money = useSelector<AppState, number>(getPlayerMoney);
 
-const RerollButton: React.FunctionComponent<RerollButtonProps> = ({ buyable, cost, onBuy }) => {
+  const buyable = money >= REROLL_COST;
+  const onBuy = () => dispatch(rerollCards());
+
   return (
     <button className="reroll shop-action" onClick={buyable ? onBuy : undefined} disabled={buyable === false}>
-      New Cards (${cost})
+      New Cards (${REROLL_COST})
     </button>
   );
 };
