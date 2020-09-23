@@ -56,10 +56,10 @@ export class Game {
     private deck: CardDeck;
     private eventManager = new EventManager();
 
-    constructor(gameSize: number, phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
+    constructor(players: Player[], phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
         this.id = uuid();
 
-        this.GAME_SIZE = gameSize;
+        this.GAME_SIZE = players.length;
         this.phaseLengths = { ...defaultPhaseLengths, ...phaseLengths };
         this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
         this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
@@ -79,6 +79,15 @@ export class Game {
         this.playerList.onUpdate(playerList => this.players.forEach(p => p.onPlayerListUpdate(playerList)));
 
         this.registerPlugins();
+
+        players.forEach(p => {
+            this.addPlayer(p);
+        })
+
+        // execute at the end of the execution queue
+        setTimeout(() => {
+            this.startGame();
+        });
     }
 
     // todo use this everywhere
@@ -146,15 +155,7 @@ export class Game {
         return this.playerList.getValue();
     }
 
-    public canAddPlayer() {
-        return this.players.length < this.GAME_SIZE && this.phase.value === GamePhase.WAITING;
-    }
-
     public addPlayer(player: Player) {
-        if (this.canAddPlayer() === false) {
-            return;
-        }
-
         this.players.push(player);
         this.playerList.addPlayer(player);
         player.setDeck(this.deck);
@@ -165,15 +166,6 @@ export class Game {
         if (!player.isBot) {
             player.onQuitGame(this.playerQuitGame);
         }
-
-        if (this.players.length === this.GAME_SIZE) {
-            // execute at the end of the execution queue
-            setTimeout(() => {
-                this.startGame();
-            });
-        }
-
-        return player;
     }
 
     public getPlayerById(playerId: string) {
