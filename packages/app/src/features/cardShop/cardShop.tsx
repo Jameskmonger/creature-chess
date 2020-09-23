@@ -42,8 +42,6 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     }
 
     // todo move this inside RerollButton
-    const rerollBuyable = money >= Constants.REROLL_COST;
-    const onBuyReroll = () => dispatch(PlayerActions.rerollCards());
     const onToggleLock = () => dispatch(PlayerActions.toggleShopLock());
 
     return (
@@ -59,7 +57,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
 
             <div className="cards">
                 <div className="shop-actions">
-                    <RerollButton buyable={rerollBuyable} cost={Constants.REROLL_COST} onBuy={onBuyReroll} />
+                    <RerollButton />
 
                     <button className="shop-action" onClick={onToggleLock}>
                         {
