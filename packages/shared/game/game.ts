@@ -14,6 +14,7 @@ import { EventManager } from "./events/eventManager";
 import { matchRewards } from "./plugins/matchRewards";
 import { resetPlayer } from "./plugins/resetPlayer";
 import { PhaseUpdatePacket } from "../networking/server-to-client";
+import { PlayerStatus } from "@creature-chess/models";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -76,7 +77,11 @@ export class Game {
         this.deck = new CardDeck(this.definitionProvider.getAll());
         this.turnSimulator = new TurnSimulator();
 
-        this.playerList.onUpdate(playerList => this.players.forEach(p => p.onPlayerListUpdate(playerList)));
+        this.playerList.onUpdate(playerList =>
+            this.players
+                .filter(p => p.getStatus() === PlayerStatus.CONNECTED)
+                .forEach(p => p.onPlayerListUpdate(playerList))
+        );
 
         this.registerPlugins();
 
@@ -135,7 +140,7 @@ export class Game {
         fn: (rounds: number, winner: Player, startTimeMs: number, players: {
             id: string, name: string, isBot: boolean
         }[], durationMs: number
-    ) => void) {
+        ) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
@@ -193,7 +198,7 @@ export class Game {
 
             await this.runPlayingPhase();
 
-            const livingPlayers = this.players.filter(p => p.isAlive());
+            const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 
             if (livingPlayers.length === 1) {
                 break;
@@ -214,7 +219,7 @@ export class Game {
 
         const winner = this.players.find(p => p.isAlive());
 
-        this.players.forEach(p => p.onFinishGame(winner));
+        this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.onFinishGame(winner));
 
         const metricPlayers = this.players.map(p => ({
             id: p.id,
@@ -241,13 +246,13 @@ export class Game {
     private async runPreparingPhase() {
         this.round++;
 
-        this.updateLivingPlayers();
-
         this.setPhase(GamePhase.PREPARING);
 
         this.eventManager.getTriggers().enterPreparingPhase(this.players);
 
-        const promises = this.players.map(p => p.enterPreparingPhase(this.phase.startedAt, this.round));
+        const promises = this.players
+            .filter(p => p.getStatus() !== PlayerStatus.QUIT)
+            .map(p => p.enterPreparingPhase(this.phase.startedAt, this.round));
 
         await Promise.race([
             Promise.all(promises),
@@ -256,7 +261,7 @@ export class Game {
     }
 
     private updateLivingPlayers() {
-        const livingPlayers = this.players.filter(p => p.isAlive());
+        const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
         const livingPlayerCount = livingPlayers.length;
 
         if (livingPlayerCount !== this.lastLivingPlayerCount) {
@@ -268,7 +273,11 @@ export class Game {
     private async runReadyPhase() {
         this.setPhase(GamePhase.READY);
 
-        this.players.forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, this.phase.startedAt));
+        this.updateLivingPlayers();
+
+        this.players
+            .filter(p => p.getStatus() !== PlayerStatus.QUIT)
+            .forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, this.phase.startedAt));
 
         await delay(this.phaseLengths[GamePhase.READY] * 1000);
     }
@@ -285,7 +294,7 @@ export class Game {
         const maxTimeMs = this.phaseLengths[GamePhase.PLAYING] * 1000;
         const battleTimeout = delay(maxTimeMs);
 
-        const livingPlayers = this.players.filter(p => p.isAlive());
+        const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 
         const onPlayerFinishBattle = (results: PlayerMatchResults) => {
             const damage = results.awayScore * 3;
@@ -296,10 +305,10 @@ export class Game {
 
         await Promise.all(promises);
 
-        const newLivingPlayers = this.players.filter(p => p.isAlive());
+        const newLivingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 
         if (newLivingPlayers.length === 0) {
-            const justDiedPlayers = this.players.filter(p => p.getRoundDiedAt() === this.round);
+            const justDiedPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === this.round);
 
             for (const player of justDiedPlayers) {
                 player.resurrect(RESURRECT_HEALTH);
@@ -311,7 +320,7 @@ export class Game {
             }
         }
 
-        for (const player of this.players.filter(p => p.getRoundDiedAt() === this.round)) {
+        for (const player of this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === this.round)) {
             player.kill();
 
             this.events.emit(GameEvents.PLAYER_DEATH, player);

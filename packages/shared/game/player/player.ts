@@ -12,7 +12,7 @@ import { getPiecesForStage, getXpToNextLevel } from "../../utils";
 import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "../../board/utils/mergeBoards";
-import { PlayerBattle, inProgressBattle, finishedBattle } from "@creature-chess/models/player-list-player";
+import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/player-list-player";
 import { PlayerActions } from "../../player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
 import { cardsUpdated } from "../../player/cardShop/actions";
@@ -27,6 +27,7 @@ enum PlayerEvent {
     UPDATE_STREAK = "UPDATE_STREAK",
     START_LOBBY_GAME = "START_LOBBY_GAME",
     UPDATE_BATTLE = "UPDATE_BATTLE",
+    UPDATE_STATUS = "UPDATE_STATUS",
     QUIT_GAME = "QUIT_GAME"
 }
 
@@ -74,6 +75,7 @@ export abstract class Player {
 
     private currentRound: number | null = null;
     private roundDiedAt: number | null = null;
+    private status: PlayerStatus = PlayerStatus.CONNECTED;
 
     constructor(id: string, name: string, saga?: () => Generator) {
         this.id = id;
@@ -139,6 +141,10 @@ export abstract class Player {
 
     public getRoundDiedAt() {
         return this.roundDiedAt;
+    }
+
+    public getStatus() {
+        return this.status;
     }
 
     public onFinishGame(winner: Player) {
@@ -249,6 +255,12 @@ export abstract class Player {
         this.events.on(PlayerEvent.UPDATE_BATTLE, fn);
 
         fn(this.battle);
+    }
+
+    public onStatusUpdate(fn: (status: PlayerStatus) => void) {
+        this.events.on(PlayerEvent.UPDATE_STATUS, fn);
+
+        fn(this.status);
     }
 
     public isAlive() {
@@ -363,7 +375,15 @@ export abstract class Player {
     protected abstract onShopLockUpdate();
 
     protected quitGame() {
+        this.status = PlayerStatus.QUIT;
+
+        // todo combine these
         this.events.emit(PlayerEvent.QUIT_GAME, this);
+        this.events.emit(PlayerEvent.UPDATE_STATUS, this.status);
+
+        if (this.readyUpDeferred) {
+            this.readyUpDeferred.resolve();
+        }
     }
 
     protected belowPieceLimit() {
