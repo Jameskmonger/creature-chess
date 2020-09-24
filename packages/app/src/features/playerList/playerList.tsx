@@ -1,6 +1,6 @@
 import * as React from "react";
-import { PlayerListPlayer, GamePhase } from "@creature-chess/models";
-import { PlayerListItem } from "./playerListItem";
+import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
+import { PlayerListItem, QuitPlayerListItem } from "./playerListItem";
 import { useSelector } from "react-redux";
 import { AppState } from "../../store";
 import { opponentIdSelector, localPlayerIdSelector } from "../../store/gameSelector";
@@ -18,20 +18,29 @@ const PlayerList: React.FunctionComponent = () => {
     return (
         <div className="player-list">
             {
-                players.map(p =>
-                    <PlayerListItem
-                        key={p.id}
-                        playerId={p.id}
-                        player={p}
-                        isLocal={p.id === localPlayerId}
-                        isOpponent={p.id === opponentId}
-                        ready={showReadyIndicators ? p.ready : null}
-                        streakType={p.streakType}
-                        streakAmount={p.streakAmount}
-                        money={p.id === localPlayerId ? localPlayerMoney : p.money}
-                        level={p.id === localPlayerId ? localPlayerLevel : p.level}
-                    />
-                )
+                players.map(p => (
+                    p.status === PlayerStatus.QUIT
+                        ? (
+                            <QuitPlayerListItem
+                                key={p.id}
+                                playerId={p.id}
+                            />
+                        )
+                        : (
+                            <PlayerListItem
+                                key={p.id}
+                                playerId={p.id}
+                                player={p}
+                                isLocal={p.id === localPlayerId}
+                                isOpponent={p.id === opponentId}
+                                ready={showReadyIndicators ? p.ready : null}
+                                streakType={p.streakType}
+                                streakAmount={p.streakAmount}
+                                money={p.id === localPlayerId ? localPlayerMoney : p.money}
+                                level={p.id === localPlayerId ? localPlayerLevel : p.level}
+                            />
+                        )
+                ))
             }
         </div>
     );

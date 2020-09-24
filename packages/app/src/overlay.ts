@@ -1,5 +1,6 @@
 export enum Overlay {
     PLAYERS,
     SHOP,
-    HELP
+    HELP,
+    SETTINGS
 }

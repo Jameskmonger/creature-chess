@@ -96,18 +96,16 @@ export class Server {
             log(`Lobby '${lobby.id}' has started with the following players:`);
             log(`    ${players.map(p => p.name).join(", ")}`);
 
-            const game = new Game(players.length);
+            const game = new Game(players);
 
-            players.forEach(p => {
-                game.addPlayer(p);
-
-                if ((p as Connection).isConnection) {
+            players
+                .filter(p => (p as Connection).isConnection)
+                .forEach(p => {
                     // todo do this in 1 call
                     this.database.user.addGamePlayed(p.id);
 
                     this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
-                }
-            });
+                });
 
             game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
                 this.metrics.addGame({
@@ -130,6 +128,14 @@ export class Server {
             });
 
             game.onPlayerDeath(p => {
+                if (!p.isBot) {
+                    this.playerSessionRegistry.deregisterPlayer(p.id);
+                }
+            });
+
+            game.onPlayerQuit(p => {
+                console.log(`Player '${p.name} quit game ${game.id}`);
+
                 if (!p.isBot) {
                     this.playerSessionRegistry.deregisterPlayer(p.id);
                 }

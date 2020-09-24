@@ -1,4 +1,4 @@
-import { PlayerListPlayer } from "@creature-chess/models";
+import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { Player } from "./player/player";
 import { EventEmitter } from "events";
 import { debounce } from "../utils";
@@ -10,6 +10,14 @@ enum PlayerListEvents {
 const sortPlayers = (a: PlayerListPlayer, b: PlayerListPlayer) => {
     const SORT_A_FIRST = -1;
     const SORT_A_SECOND = 1;
+
+    if (a.status !== PlayerStatus.QUIT && b.status === PlayerStatus.QUIT) {
+        return SORT_A_FIRST;
+    }
+
+    if (a.status === PlayerStatus.QUIT && b.status !== PlayerStatus.QUIT) {
+        return SORT_A_SECOND;
+    }
 
     if (a.health > b.health) {
         return SORT_A_FIRST;
@@ -68,7 +76,8 @@ export class PlayerList {
             streakType: player.streak.type,
             streakAmount: player.streak.amount,
             battle: null,
-            roundDiedAt: player.getRoundDiedAt()
+            roundDiedAt: player.getRoundDiedAt(),
+            status: player.getStatus()
         };
 
         this.players.push(playerListPlayer);
@@ -79,6 +88,7 @@ export class PlayerList {
         player.onReadyUpdate(update);
         player.onStreakUpdate(update);
         player.onBattleUpdate(update);
+        player.onStatusUpdate(update);
     }
 
     private updatePlayer(player: Player) {
@@ -101,7 +111,8 @@ export class PlayerList {
                 streakType: player.streak.type,
                 streakAmount: player.streak.amount,
                 battle: player.battle,
-                roundDiedAt: player.getRoundDiedAt()
+                roundDiedAt: player.getRoundDiedAt(),
+                status: player.getStatus()
             });
 
             this.players.sort(sortPlayers);

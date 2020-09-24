@@ -15,6 +15,7 @@ import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
 import { BoardContainer } from "../game/boardContainer";
 import { MobileGame } from "../game/mobileGame";
 import { Footer } from "../footer";
+import { QuitGameButton } from "../game/settings/quitGameButton";
 
 const GameStage: React.FunctionComponent = () => {
     return (
@@ -34,6 +35,8 @@ const GameStage: React.FunctionComponent = () => {
                     <BoardContainer />
 
                     <div className="group">
+                        <QuitGameButton />
+
                         <CardShop showBalance />
 
                         <Profile />
@@ -44,23 +47,7 @@ const GameStage: React.FunctionComponent = () => {
             </Media>
 
             <Media query="(orientation: landscape) and (max-width: 1199px) and (min-width: 600px)">
-                <div className="game landscape">
-                    <BoardContainer />
-
-                    <div className="group">
-                        <RoundIndicator />
-
-                        <PhaseInfo />
-
-                        <CardShop showBalance />
-
-                        <Profile />
-
-                        <PlayerList />
-
-                        <Footer />
-                    </div>
-                </div>
+                <MobileGame />
             </Media>
 
             <Media query="(orientation: portrait), (max-width: 599px)">
