@@ -586,6 +586,19 @@ html, body {
   box-sizing: border-box;
   padding: 0.6rem;
   background: #566c86; }
+  .player-list-item.quit {
+    background: #3b3d40; }
+    .player-list-item.quit .status {
+      width: 100%;
+      font-family: Arial, sans-serif;
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      text-transform: uppercase; }
+    .player-list-item.quit .name {
+      font-style: italic;
+      color: #cecece; }
   .player-list-item.opponent {
     border: 5px solid #b13e53; }
   .player-list-item:not(:last-child) {
@@ -901,6 +914,21 @@ html, body {
   .help .list-header {
     font-weight: 700;
     color: #b13e53; }
+
+.settings {
+  display: flex;
+  flex-direction: column; }
+  .settings .button {
+    display: block;
+    box-sizing: border-box;
+    padding: 0.5em 1.2em;
+    margin-bottom: 0.5rem;
+    font-size: 1.4em;
+    color: #fff;
+    cursor: pointer;
+    background: #1a1c2c;
+    /* stylelint-disable-next-line declaration-property-value-blacklist */
+    border: none; }
 
 /* stylelint-disable */
 .style-default.tile.dark {
