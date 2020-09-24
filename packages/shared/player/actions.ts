@@ -14,6 +14,8 @@ export const READY_UP = "READY_UP";
 export type READY_UP = typeof READY_UP;
 export const TOGGLE_SHOP_LOCK = "TOGGLE_SHOP_LOCK";
 export type TOGGLE_SHOP_LOCK = typeof TOGGLE_SHOP_LOCK;
+export const QUIT_GAME = "QUIT_GAME";
+export type QUIT_GAME = typeof QUIT_GAME;
 
 export type PlayerAction =
   PlayerDropPieceAction
@@ -22,11 +24,12 @@ export type PlayerAction =
   | BuyCardAction
   | BuyXpAction
   | ReadyUpAction
-  | ToggleShopLockAction;
+  | ToggleShopLockAction
+  | QuitGameAction;
 
 export const PlayerActionTypesArray = [
   PLAYER_DROP_PIECE, PLAYER_SELL_PIECE, REROLL_CARDS, BUY_CARD,
-  BUY_XP, READY_UP, TOGGLE_SHOP_LOCK
+  BUY_XP, READY_UP, TOGGLE_SHOP_LOCK, QUIT_GAME
 ];
 
 // card management
@@ -88,3 +91,6 @@ export const buyXpAction = (): BuyXpAction => ({
 export const readyUpAction = (): ReadyUpAction => ({
   type: READY_UP
 });
+
+export type QuitGameAction = ({ type: QUIT_GAME });
+export const quitGame = (): QuitGameAction => ({ type: QUIT_GAME });

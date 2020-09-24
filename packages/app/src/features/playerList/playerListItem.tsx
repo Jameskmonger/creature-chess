@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PlayerListPlayer, StreakType } from "@creature-chess/models";
+import { PlayerListPlayer, PlayerStatus, StreakType } from "@creature-chess/models";
 import { ProgressBar } from "../../display";
 import { PlayerName } from "./playerName";
 import { BattleInfo } from "./battleInfo";
@@ -34,6 +34,27 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
     return <div className={`streak-indicator ${type === StreakType.WIN ? "win" : "lose"}`}>{amount}</div>;
 };
 
+const QuitPlayerListItem: React.FunctionComponent<{ playerId: string }> = ({ playerId }) => {
+    return (
+        <div className="player-list-item quit">
+            <div className="row">
+                <div className="row-half">
+                    <span className="name">
+                        <PlayerName playerId={playerId} />
+                    </span>
+                </div>
+            </div>
+            <div className="row">
+                <div className="row-half"></div>
+
+                <div className="row-half">
+                    <span className="status">Quit</span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 const PlayerListItem: React.FunctionComponent<Props> = props => {
     const className = `player-list-item ${props.isLocal ? " local" : ""} ${props.isOpponent ? " opponent" : ""}`;
 
@@ -44,7 +65,7 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
                     <span className="name">
                         <ReadyIndicator ready={props.ready} />
 
-                        <PlayerName playerId={props.playerId} />
+                        <PlayerName playerId={props.playerId} /> {props.player.status === PlayerStatus.QUIT && 'has quit'}
                     </span>
                 </div>
 
@@ -73,4 +94,4 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
     );
 };
 
-export { PlayerListItem };
+export { PlayerListItem, QuitPlayerListItem };

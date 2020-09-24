@@ -2,7 +2,7 @@ import * as React from "react";
 import { BoardContainer } from "./boardContainer";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { faChess, faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { AppState } from "../../store";
 import { Overlay } from "../../overlay";
 import { closeOverlay, openOverlay } from "../../store/actions/uiActions";
@@ -13,6 +13,7 @@ import { Help } from "./help";
 import { RoundIndicator } from "../roundIndicator";
 import { PhaseInfo } from "../phaseInfo";
 import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
+import { Settings } from "./settings/settings";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const Navbar: React.FunctionComponent = () => {
             <NavItem overlay={Overlay.PLAYERS} icon={faUsers} />
             <NavItem overlay={Overlay.SHOP} icon={faShoppingCart} />
             <NavItem overlay={Overlay.HELP} icon={faQuestionCircle} />
+            <NavItem overlay={Overlay.SETTINGS} icon={faCog} />
         </nav>
     );
 };
@@ -86,6 +88,14 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
         return (
             <OverlayComponent title="Help">
                 <Help />
+            </OverlayComponent>
+        );
+    }
+
+    if (currentOverlay === Overlay.SETTINGS) {
+        return (
+            <OverlayComponent title="Settings">
+                <Settings />
             </OverlayComponent>
         );
     }

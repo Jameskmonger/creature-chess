@@ -8,7 +8,7 @@ import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlaye
 import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, JoinGamePacket } from "@creature-chess/shared/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { log } from "console";
-import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP } from "@creature-chess/shared/player/actions";
+import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP, QUIT_GAME } from "@creature-chess/shared/player/actions";
 import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@creature-chess/shared/player/gameInfo";
 import { Task } from "redux-saga";
 import { PlayerState } from "@creature-chess/shared/player/store";
@@ -199,12 +199,18 @@ export class Connection extends Player {
 
         for (const action of packet.actions) {
             switch (action.type) {
-                case TOGGLE_SHOP_LOCK: {
-                    this.toggleShopLock();
-                    break;
-                }
                 case BUY_CARD: {
                     this.store.dispatch(action);
+                    break;
+                }
+                case QUIT_GAME: {
+                    this.clearSocket();
+
+                    this.quitGame();
+                    break;
+                }
+                case TOGGLE_SHOP_LOCK: {
+                    this.toggleShopLock();
                     break;
                 }
                 case PLAYER_SELL_PIECE: {

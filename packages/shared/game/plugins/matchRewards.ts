@@ -2,6 +2,7 @@ import { EventManager } from "../events/eventManager";
 import { Player } from "../player/player";
 import { log } from "../../log";
 import { GamePlugin } from "./gamePlugin";
+import { PlayerStatus } from "@creature-chess/models";
 
 const getNewStreakBonus = (player: Player, win: boolean) => {
     player.adjustStreak(win);
@@ -36,7 +37,7 @@ const getMoneyForMatch = (player: Player, win: boolean) => {
 export const matchRewards: GamePlugin = (eventManager: EventManager) => {
     eventManager.onFinishRound((players: Player[]) => {
         players
-            .filter(player => player.isAlive())
+            .filter(player => player.getStatus() !== PlayerStatus.QUIT && player.isAlive())
             .forEach(player => {
                 const match = player.getMatch();
 

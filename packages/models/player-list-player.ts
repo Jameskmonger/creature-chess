@@ -5,6 +5,11 @@ export enum PlayerBattleStatus {
     FINISHED
 }
 
+export enum PlayerStatus {
+    CONNECTED,
+    QUIT
+}
+
 export type PlayerBattle = {
     status: PlayerBattleStatus.IN_PROGRESS;
     opponentId: string;
@@ -38,4 +43,5 @@ export interface PlayerListPlayer {
     streakAmount: number | null;
     battle: PlayerBattle;
     roundDiedAt: number | null;
+    status: PlayerStatus;
 }

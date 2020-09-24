@@ -11,6 +11,25 @@ $player-list-gutter-size: 0.4em;
     padding: 0.6rem;
     background: $player-list-background;
 
+    &.quit {
+        background: #3b3d40;
+
+        .status {
+            width: 100%;
+            font-family: Arial, sans-serif;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .name {
+            font-style: italic;
+            color: #cecece;
+        }
+    }
+
     &.opponent {
         border: 5px solid $player-list-background-opponent;
     }
