@@ -13,6 +13,7 @@ import { UserAppMetadata, UserModel } from "./user/userModel";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
 import { SocketReceiver } from "./socketAuthenticator";
 import { createDatabaseConnection } from "@creature-chess/data";
+import { openServer } from "./socket/openServer";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
@@ -49,9 +50,7 @@ export class Server {
     private database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
 
     public listen(port: number) {
-        const server = io.listen(port, { transports: ["websocket", "polling"] });
-
-        log("Server listening on port " + port);
+        const server = openServer(port);
 
         const socketReceiver = new SocketReceiver(this.client, this.database, server);
 
