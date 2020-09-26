@@ -1,2 +1,1 @@
-
-import * as Models from "./models";
+export { log } from "./log";
