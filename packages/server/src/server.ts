@@ -11,8 +11,8 @@ import { PlayerGameState } from "@creature-chess/shared/networking/server-to-cli
 import { Metrics } from "./metrics";
 import { UserAppMetadata, UserModel } from "./user/userModel";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
-import { SocketReceiver } from "./socketAuthenticator";
-import { createDatabaseConnection } from "@creature-chess/data";
+import { SocketAuthenticator } from "./socket/socketAuthenticator";
+import { createDatabaseConnection, DatabaseConnection } from "@creature-chess/data";
 import { openServer } from "./socket/openServer";
 
 process.on("unhandledRejection", (error) => {
@@ -34,27 +34,90 @@ const getLobbyPlayers = (lobby: Lobby): LobbyPlayer[] => {
     }));
 };
 
-export class Server {
+export const startServer = (port: number) => {
+    const socketServer = openServer(port);
+    const client = new ManagementClient<UserAppMetadata>({
+        domain: AUTH0_CONFIG.domain,
+        clientId: AUTH0_CONFIG.clientId,
+        clientSecret: AUTH0_CONFIG.clientSecret
+    });
+    const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
+
+    const socketAuthenticator = new SocketAuthenticator(client, database, socketServer);
+
+    const gameServer = new GameServer(database);
+
+    socketAuthenticator.onSocketAuthenticated(gameServer.addSocket);
+};
+
+class GameServer {
     private lobbies = new Map<string, Lobby>();
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
     private metrics = new Metrics();
     private playerSessionRegistry = new PlayerSessionRegistry();
 
-    private client = new ManagementClient<UserAppMetadata>({
-        domain: AUTH0_CONFIG.domain,
-        clientId: AUTH0_CONFIG.clientId,
-        clientSecret: AUTH0_CONFIG.clientSecret
-    });
+    constructor(private database: DatabaseConnection) {
 
-    private database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
+    }
 
-    public listen(port: number) {
-        const server = openServer(port);
+    public addSocket = (socket: io.Socket, user: UserModel) => {
+        const { id, nickname } = user;
 
-        const socketReceiver = new SocketReceiver(this.client, this.database, server);
+        const existingPlayer = this.playerSessionRegistry.getPlayer(id);
 
-        socketReceiver.onReceiveSocket(this.onReceiveSocket);
+        if (existingPlayer && existingPlayer.location.type === "game") {
+            const existingGame = this.games.get(existingPlayer.location.id);
+
+            if (existingGame) {
+                const playerInGame = existingGame.getPlayers().some(p => p.id === id);
+
+                if (!playerInGame) {
+                    return;
+                }
+
+                const player: Connection = (existingPlayer.player as Connection);
+
+                player.setSocket(socket);
+
+                const fullGameState: PlayerGameState = {
+                    localPlayerId: player.id,
+
+                    fullState: {
+                        players: existingGame.getPlayerList(),
+                        phase: existingGame.getCurrentGamePhaseUpdateForPlayer(player),
+                        ...player.getGameState()
+                    }
+                };
+
+                player.sendJoinGamePacket({ type: "game", payload: fullGameState });
+
+                return;
+            }
+        }
+
+        const playerToRegister: Connection =
+            existingPlayer && existingPlayer.location.type === "lobby"
+                ? existingPlayer.player as Connection
+                : new Connection(socket, id, nickname);
+
+        const lobby = this.findOrCreateLobby(playerToRegister);
+
+        if (!existingPlayer) {
+            this.playerSessionRegistry.registerPlayer(playerToRegister.id, playerToRegister, "lobby", lobby.id);
+        } else {
+            playerToRegister.setSocket(socket);
+        }
+
+        playerToRegister.sendJoinGamePacket({
+            type: "lobby",
+            payload: {
+                playerId: playerToRegister.id,
+                lobbyId: lobby.id,
+                players: getLobbyPlayers(lobby),
+                startTimestamp: lobby.gameStartTime
+            }
+        });
     }
 
     private findOrCreateLobby(player: Player) {
@@ -133,7 +196,7 @@ export class Server {
             });
 
             game.onPlayerQuit(p => {
-                console.log(`Player '${p.name} quit game ${game.id}`);
+                log(`Player '${p.name}' quit game ${game.id}`);
 
                 if (!p.isBot) {
                     this.playerSessionRegistry.deregisterPlayer(p.id);
@@ -143,64 +206,5 @@ export class Server {
             this.games.set(game.id, game);
             this.lobbies.delete(lobby.id);
         };
-    }
-
-    private onReceiveSocket = (socket: io.Socket, user: UserModel) => {
-        const { id, nickname } = user;
-
-        const existingPlayer = this.playerSessionRegistry.getPlayer(id);
-
-        if (existingPlayer && existingPlayer.location.type === "game") {
-            const existingGame = this.games.get(existingPlayer.location.id);
-
-            if (existingGame) {
-                const playerInGame = existingGame.getPlayers().some(p => p.id === id);
-
-                if (!playerInGame) {
-                    return;
-                }
-
-                const player: Connection = (existingPlayer.player as Connection);
-
-                player.setSocket(socket);
-
-                const fullGameState: PlayerGameState = {
-                    localPlayerId: player.id,
-
-                    fullState: {
-                        players: existingGame.getPlayerList(),
-                        phase: existingGame.getCurrentGamePhaseUpdateForPlayer(player),
-                        ...player.getGameState()
-                    }
-                };
-
-                player.sendJoinGamePacket({ type: "game", payload: fullGameState });
-
-                return;
-            }
-        }
-
-        const playerToRegister: Connection =
-            existingPlayer && existingPlayer.location.type === "lobby"
-                ? existingPlayer.player as Connection
-                : new Connection(socket, id, nickname);
-
-        const lobby = this.findOrCreateLobby(playerToRegister);
-
-        if (!existingPlayer) {
-            this.playerSessionRegistry.registerPlayer(playerToRegister.id, playerToRegister, "lobby", lobby.id);
-        } else {
-            playerToRegister.setSocket(socket);
-        }
-
-        playerToRegister.sendJoinGamePacket({
-            type: "lobby",
-            payload: {
-                playerId: playerToRegister.id,
-                lobbyId: lobby.id,
-                players: getLobbyPlayers(lobby),
-                startTimestamp: lobby.gameStartTime
-            }
-        });
     }
 }
