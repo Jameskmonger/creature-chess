@@ -358,7 +358,7 @@ export abstract class Player {
 
     public abstract onPlayersResurrected(playerIds: string[]);
 
-    public abstract onStartGame(gameId: string);
+    public abstract onStartGame();
 
     public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
 

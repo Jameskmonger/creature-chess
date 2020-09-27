@@ -1,10 +1,11 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
-import { Player, Bot } from "@creature-chess/shared/game";
+import { Player } from "@creature-chess/shared/game";
 import { randomFromArray } from "@creature-chess/shared/utils";
 import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models/constants";
 import { IdGenerator } from "./id-generator";
-import { Connection } from "./connection";
+import { SocketPlayer } from "../player/socketPlayer";
+import { BotPlayer } from "../player/botPlayer";
 
 const BOT_NAMES = [
     "Aggie",
@@ -39,22 +40,25 @@ enum LobbyEvents {
     START_GAME = "START_GAME"
 }
 
+export type LobbyStartEvent = {
+    id: string;
+    players: Player[];
+};
+
 export class Lobby {
     public readonly id: string;
     public readonly gameStartTime: number = null;
-    public readonly hostId: string;
 
     private players: Player[];
     private events = new EventEmitter();
     private gameStarted: boolean = false;
 
-    constructor(idGenerator: IdGenerator, initialPlayer: Player) {
+    constructor(idGenerator: IdGenerator) {
         this.id = idGenerator.generateId();
 
-        this.players = [initialPlayer];
-        this.hostId = initialPlayer.id;
+        this.players = [];
 
-        for (let i = 0; i < MAX_PLAYERS_IN_GAME - 1; i++) {
+        for (let i = 0; i < MAX_PLAYERS_IN_GAME; i++) {
             this.addBot();
         }
 
@@ -63,7 +67,7 @@ export class Lobby {
         setTimeout(this.startGame, waitTimeMs);
     }
 
-    public onStartGame(fn: () => void) {
+    public onStartGame(fn: (event: LobbyStartEvent) => void) {
         this.events.on(LobbyEvents.START_GAME, fn);
     }
 
@@ -79,12 +83,12 @@ export class Lobby {
             return;
         }
 
-        if (!(player as Connection).isConnection) {
+        if (!(player as SocketPlayer).isConnection) {
             console.error("Tried to replace non-connection player");
             return;
         }
 
-        (player as Connection).setSocket(socket);
+        (player as SocketPlayer).setSocket(socket);
     }
 
     public addPlayer(player: Player) {
@@ -140,7 +144,12 @@ export class Lobby {
         }
 
         this.gameStarted = true;
-        this.events.emit(LobbyEvents.START_GAME);
+
+        const event: LobbyStartEvent = {
+            id: this.id,
+            players: this.getPlayers()
+        };
+        this.events.emit(LobbyEvents.START_GAME, event);
     }
 
     private addBot() {
@@ -151,6 +160,6 @@ export class Lobby {
             ? `Bot Player #${playerNames.length}`
             : randomFromArray(availableNames);
 
-        this.players.push(new Bot(`[BOT] ${name}`));
+        this.players.push(new BotPlayer(`[BOT] ${name}`));
     }
 }
