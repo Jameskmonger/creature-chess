@@ -58,7 +58,7 @@ export class Lobby {
 
         this.players = [];
 
-        for (let i = 0; i < MAX_PLAYERS_IN_GAME - 1; i++) {
+        for (let i = 0; i < MAX_PLAYERS_IN_GAME; i++) {
             this.addBot();
         }
 
