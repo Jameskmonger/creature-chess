@@ -47,17 +47,15 @@ export type LobbyStartEvent = {
 export class Lobby {
     public readonly id: string;
     public readonly gameStartTime: number = null;
-    public readonly hostId: string;
 
     private players: Player[];
     private events = new EventEmitter();
     private gameStarted: boolean = false;
 
-    constructor(idGenerator: IdGenerator, initialPlayer: Player) {
+    constructor(idGenerator: IdGenerator) {
         this.id = idGenerator.generateId();
 
-        this.players = [initialPlayer];
-        this.hostId = initialPlayer.id;
+        this.players = [];
 
         for (let i = 0; i < MAX_PLAYERS_IN_GAME - 1; i++) {
             this.addBot();

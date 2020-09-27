@@ -133,7 +133,8 @@ export class Matchmaking {
     private newConnectionJoin(socket: io.Socket, id: string, nickname: string) {
         const connection: Connection = new Connection(socket, id, nickname);
 
-        const lobby = this.findOrCreateLobby(connection);
+        const lobby = this.findOrCreateLobby();
+        lobby.addPlayer(connection);
 
         this.playerSessionRegistry.registerPlayer(connection.id, connection, "lobby", lobby.id);
 
@@ -193,27 +194,21 @@ export class Matchmaking {
         this.lobbies.delete(id);
     }
 
-    private findOrCreateLobby(player: Player) {
+    private findOrCreateLobby() {
         const lobbies = Array.from(this.lobbies.values())
             .filter(lobby => lobby.canJoin());
 
         if (lobbies.length === 0) {
-            return this.createLobby(player);
+            return this.createLobby();
         }
 
         lobbies.sort((a, b) => b.getRealPlayerCount() - a.getRealPlayerCount());
 
-        const mostFullLobby = lobbies[0];
-
-        if (!mostFullLobby.getPlayers().some(p => p.id === player.id)) {
-            mostFullLobby.addPlayer(player);
-        }
-
-        return mostFullLobby;
+        return lobbies[0];
     }
 
-    private createLobby(player: Player) {
-        const lobby = new Lobby(this.lobbyIdGenerator, player);
+    private createLobby() {
+        const lobby = new Lobby(this.lobbyIdGenerator);
 
         lobby.onStartGame(this.onLobbyStart);
 
