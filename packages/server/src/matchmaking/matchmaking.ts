@@ -149,7 +149,7 @@ export class Matchmaking {
         });
     }
 
-    private onLobbyStart({ id, players }: LobbyStartEvent) {
+    private onLobbyStart = ({ id, players }: LobbyStartEvent) => {
         log(`Lobby '${id}' has started with the following players:`);
         log(`    ${players.map(p => p.name).join(", ")}`);
 
