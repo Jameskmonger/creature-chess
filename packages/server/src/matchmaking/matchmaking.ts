@@ -4,7 +4,7 @@ import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
 import { UserModel } from "../user/userModel";
-import { Connection } from "../connection";
+import { SocketPlayer } from "../player/socketPlayer";
 import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
 import { LobbyPlayer } from "@creature-chess/models";
 import { log } from "@creature-chess/shared";
@@ -66,7 +66,7 @@ export class Matchmaking {
                 if (playerInGame) {
                     return {
                         game: existingGame,
-                        player: playerInGame as Connection
+                        player: playerInGame as SocketPlayer
                     };
                 }
             }
@@ -77,7 +77,7 @@ export class Matchmaking {
         return null;
     }
 
-    private addPlayerToGame(game: Game, socket: io.Socket, player: Connection) {
+    private addPlayerToGame(game: Game, socket: io.Socket, player: SocketPlayer) {
         player.setSocket(socket);
 
         const fullGameState: PlayerGameState = {
@@ -105,7 +105,7 @@ export class Matchmaking {
                 if (playerInLobby) {
                     return {
                         lobby: existingLobby,
-                        player: playerInLobby as Connection
+                        player: playerInLobby as SocketPlayer
                     };
                 }
             }
@@ -116,7 +116,7 @@ export class Matchmaking {
         return null;
     }
 
-    private addPlayerToLobby(lobby: Lobby, socket: io.Socket, player: Connection) {
+    private addPlayerToLobby(lobby: Lobby, socket: io.Socket, player: SocketPlayer) {
         player.setSocket(socket);
 
         player.sendJoinGamePacket({
@@ -131,7 +131,7 @@ export class Matchmaking {
     }
 
     private newConnectionJoin(socket: io.Socket, id: string, nickname: string) {
-        const connection: Connection = new Connection(socket, id, nickname);
+        const connection: SocketPlayer = new SocketPlayer(socket, id, nickname);
 
         const lobby = this.findOrCreateLobby();
         lobby.addPlayer(connection);
@@ -156,7 +156,7 @@ export class Matchmaking {
         const game = new Game(players);
 
         players
-            .filter(p => (p as Connection).isConnection)
+            .filter(p => (p as SocketPlayer).isConnection)
             .forEach(p => {
                 // todo do this in 1 call
                 this.database.user.addGamePlayed(p.id);
@@ -165,7 +165,7 @@ export class Matchmaking {
             });
 
         game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
-            if ((winner as Connection).isConnection) {
+            if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
             }
 

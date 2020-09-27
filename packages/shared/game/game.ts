@@ -189,7 +189,7 @@ export class Game {
         const startTime = startStopwatch();
         const startTimeMs = Date.now();
 
-        this.players.forEach(p => p.onStartGame(this.id));
+        this.players.forEach(p => p.onStartGame());
 
         while (true) {
             await this.runPreparingPhase();

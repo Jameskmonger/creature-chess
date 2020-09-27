@@ -1,12 +1,12 @@
-import { Player } from "./player";
+import { Player } from "@creature-chess/shared/game/player/player";
 import { GRID_SIZE, BUY_XP_COST } from "@creature-chess/models/constants";
 import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@creature-chess/models";
-import { getAllPieces, getBoardPieceForPosition } from "../../player/pieceSelectors";
-import { PlayerActions } from "../../player";
-import { buyCard } from "../../player/actions";
-import { PlayerState } from "../../player/store";
-import { PhaseUpdatePacket } from "../../networking/server-to-client";
-import { gamePhaseUpdate } from "../../player/gameInfo";
+import { getAllPieces, getBoardPieceForPosition } from "@creature-chess/shared/player/pieceSelectors";
+import { PlayerActions } from "@creature-chess/shared/player";
+import { buyCard } from "@creature-chess/shared/player/actions";
+import { PlayerState } from "@creature-chess/shared/player/store";
+import { PhaseUpdatePacket } from "@creature-chess/shared/networking/server-to-client";
+import { gamePhaseUpdate } from "@creature-chess/shared/player/gameInfo";
 import uuid = require("uuid");
 
 const PREFERRED_COLUMN_ORDERS = {
@@ -45,7 +45,7 @@ const getPieceCountForDefinition =
     (state: PlayerState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
 
-export class Bot extends Player {
+export class BotPlayer extends Player {
     public readonly isBot: boolean = true;
     private preferredColumnOrder: number[];
 
@@ -58,7 +58,7 @@ export class Bot extends Player {
         ];
     }
 
-    public onStartGame(gameId: string) { /* nothing required, we're a bot */ }
+    public onStartGame() { /* nothing required, we're a bot */ }
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
 

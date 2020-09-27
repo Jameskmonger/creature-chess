@@ -1,10 +1,11 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
-import { Player, Bot } from "@creature-chess/shared/game";
+import { Player } from "@creature-chess/shared/game";
 import { randomFromArray } from "@creature-chess/shared/utils";
 import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models/constants";
 import { IdGenerator } from "./id-generator";
-import { Connection } from "../connection";
+import { SocketPlayer } from "../player/socketPlayer";
+import { BotPlayer } from "../player/botPlayer";
 
 const BOT_NAMES = [
     "Aggie",
@@ -82,12 +83,12 @@ export class Lobby {
             return;
         }
 
-        if (!(player as Connection).isConnection) {
+        if (!(player as SocketPlayer).isConnection) {
             console.error("Tried to replace non-connection player");
             return;
         }
 
-        (player as Connection).setSocket(socket);
+        (player as SocketPlayer).setSocket(socket);
     }
 
     public addPlayer(player: Player) {
@@ -159,6 +160,6 @@ export class Lobby {
             ? `Bot Player #${playerNames.length}`
             : randomFromArray(availableNames);
 
-        this.players.push(new Bot(`[BOT] ${name}`));
+        this.players.push(new BotPlayer(`[BOT] ${name}`));
     }
 }
