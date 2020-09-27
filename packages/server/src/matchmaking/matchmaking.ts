@@ -2,7 +2,7 @@ import io = require("socket.io");
 import { Game } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby";
-import { PlayerSessionRegistry } from "../playerSessionRegistry";
+import { PlayerSessionRegistry } from "./playerSessionRegistry";
 import { UserModel } from "../user/userModel";
 import { Connection } from "../connection";
 import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
