@@ -39,6 +39,11 @@ enum LobbyEvents {
     START_GAME = "START_GAME"
 }
 
+export type LobbyStartEvent = {
+    id: string;
+    players: Player[];
+};
+
 export class Lobby {
     public readonly id: string;
     public readonly gameStartTime: number = null;
@@ -63,7 +68,7 @@ export class Lobby {
         setTimeout(this.startGame, waitTimeMs);
     }
 
-    public onStartGame(fn: () => void) {
+    public onStartGame(fn: (event: LobbyStartEvent) => void) {
         this.events.on(LobbyEvents.START_GAME, fn);
     }
 
@@ -140,7 +145,12 @@ export class Lobby {
         }
 
         this.gameStarted = true;
-        this.events.emit(LobbyEvents.START_GAME);
+
+        const event: LobbyStartEvent = {
+            id: this.id,
+            players: this.getPlayers()
+        };
+        this.events.emit(LobbyEvents.START_GAME, event);
     }
 
     private addBot() {

@@ -1,7 +1,7 @@
 import io = require("socket.io");
 import { Game, Player } from "@creature-chess/shared/game";
 import { IdGenerator } from "../id-generator";
-import { Lobby } from "../lobby";
+import { Lobby, LobbyStartEvent } from "../lobby";
 import { PlayerSessionRegistry } from "../playerSessionRegistry";
 import { UserModel } from "../user/userModel";
 import { Connection } from "../connection";
@@ -31,55 +31,98 @@ export class Matchmaking {
     public findGame(socket: io.Socket, user: UserModel) {
         const { id, nickname } = user;
 
+        const playerInGame = this.getPlayerInGame(id);
+
+        if (playerInGame) {
+            const { game, player } = playerInGame;
+
+            this.addPlayerToGame(game, socket, player);
+
+            return;
+        }
+
+        const playerInLobby = this.getPlayerInLobby(id);
+
+        if (playerInLobby) {
+            const { lobby, player } = playerInLobby;
+
+            this.addPlayerToLobby(lobby, socket, player);
+
+            return;
+        }
+
+        this.newConnectionJoin(socket, id, nickname);
+    }
+
+    private getPlayerInGame(id: string) {
         const existingPlayer = this.playerSessionRegistry.getPlayer(id);
 
         if (existingPlayer && existingPlayer.location.type === "game") {
             const existingGame = this.games.get(existingPlayer.location.id);
 
             if (existingGame) {
-                const playerInGame = existingGame.getPlayers().some(p => p.id === id);
+                const playerInGame = existingGame.getPlayers().find(p => p.id === id);
 
-                if (!playerInGame) {
-                    return;
+                if (playerInGame) {
+                    return {
+                        game: existingGame,
+                        player: playerInGame as Connection
+                    };
                 }
-
-                const player: Connection = (existingPlayer.player as Connection);
-
-                player.setSocket(socket);
-
-                const fullGameState: PlayerGameState = {
-                    localPlayerId: player.id,
-
-                    fullState: {
-                        players: existingGame.getPlayerList(),
-                        phase: existingGame.getCurrentGamePhaseUpdateForPlayer(player),
-                        ...player.getGameState()
-                    }
-                };
-
-                player.sendJoinGamePacket({ type: "game", payload: fullGameState });
-
-                return;
             }
         }
 
-        const playerToRegister: Connection =
-            existingPlayer && existingPlayer.location.type === "lobby"
-                ? existingPlayer.player as Connection
-                : new Connection(socket, id, nickname);
+        this.playerSessionRegistry.deregisterPlayer(id);
 
-        const lobby = this.findOrCreateLobby(playerToRegister);
+        return null;
+    }
 
-        if (!existingPlayer) {
-            this.playerSessionRegistry.registerPlayer(playerToRegister.id, playerToRegister, "lobby", lobby.id);
-        } else {
-            playerToRegister.setSocket(socket);
+    private addPlayerToGame(game: Game, socket: io.Socket, player: Connection) {
+        player.setSocket(socket);
+
+        const fullGameState: PlayerGameState = {
+            localPlayerId: player.id,
+
+            fullState: {
+                players: game.getPlayerList(),
+                phase: game.getCurrentGamePhaseUpdateForPlayer(player),
+                ...player.getGameState()
+            }
+        };
+
+        player.sendJoinGamePacket({ type: "game", payload: fullGameState });
+    }
+
+    private getPlayerInLobby(id: string) {
+        const existingPlayer = this.playerSessionRegistry.getPlayer(id);
+
+        if (existingPlayer && existingPlayer.location.type === "lobby") {
+            const existingLobby = this.lobbies.get(existingPlayer.location.id);
+
+            if (existingLobby) {
+                const playerInLobby = existingLobby.getPlayers().find(p => p.id === id);
+
+                if (playerInLobby) {
+                    return {
+                        lobby: existingLobby,
+                        player: playerInLobby as Connection
+                    };
+                }
+            }
         }
 
-        playerToRegister.sendJoinGamePacket({
+        this.playerSessionRegistry.deregisterPlayer(id);
+
+        return null;
+    }
+
+    private addPlayerToLobby(lobby: Lobby, socket: io.Socket, player: Connection) {
+        player.setSocket(socket);
+
+        player.sendJoinGamePacket({
             type: "lobby",
             payload: {
-                playerId: playerToRegister.id,
+                playerId: player.id,
                 lobbyId: lobby.id,
                 players: getLobbyPlayers(lobby),
                 startTimestamp: lobby.gameStartTime
@@ -87,53 +130,67 @@ export class Matchmaking {
         });
     }
 
-    private startGame(lobby: Lobby) {
-        return () => {
-            const players = lobby.getPlayers();
+    private newConnectionJoin(socket: io.Socket, id: string, nickname: string) {
+        const connection: Connection = new Connection(socket, id, nickname);
 
-            log(`Lobby '${lobby.id}' has started with the following players:`);
-            log(`    ${players.map(p => p.name).join(", ")}`);
+        const lobby = this.findOrCreateLobby(connection);
 
-            const game = new Game(players);
+        this.playerSessionRegistry.registerPlayer(connection.id, connection, "lobby", lobby.id);
 
-            players
-                .filter(p => (p as Connection).isConnection)
-                .forEach(p => {
-                    // todo do this in 1 call
-                    this.database.user.addGamePlayed(p.id);
+        connection.sendJoinGamePacket({
+            type: "lobby",
+            payload: {
+                playerId: connection.id,
+                lobbyId: lobby.id,
+                players: getLobbyPlayers(lobby),
+                startTimestamp: lobby.gameStartTime
+            }
+        });
+    }
 
-                    this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
-                });
+    private onLobbyStart({ id, players }: LobbyStartEvent) {
+        log(`Lobby '${id}' has started with the following players:`);
+        log(`    ${players.map(p => p.name).join(", ")}`);
 
-            game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
-                if ((winner as Connection).isConnection) {
-                    this.database.user.addWin(winner.id);
-                }
+        const game = new Game(players);
 
-                gamePlayers.forEach(p => {
-                    if (!p.isBot) {
-                        this.playerSessionRegistry.deregisterPlayer(p.id);
-                    }
-                });
+        players
+            .filter(p => (p as Connection).isConnection)
+            .forEach(p => {
+                // todo do this in 1 call
+                this.database.user.addGamePlayed(p.id);
+
+                this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
             });
 
-            game.onPlayerDeath(p => {
+        game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
+            if ((winner as Connection).isConnection) {
+                this.database.user.addWin(winner.id);
+            }
+
+            gamePlayers.forEach(p => {
                 if (!p.isBot) {
                     this.playerSessionRegistry.deregisterPlayer(p.id);
                 }
             });
+        });
 
-            game.onPlayerQuit(p => {
-                log(`Player '${p.name}' quit game ${game.id}`);
+        game.onPlayerDeath(p => {
+            if (!p.isBot) {
+                this.playerSessionRegistry.deregisterPlayer(p.id);
+            }
+        });
 
-                if (!p.isBot) {
-                    this.playerSessionRegistry.deregisterPlayer(p.id);
-                }
-            });
+        game.onPlayerQuit(p => {
+            log(`Player '${p.name}' quit game ${game.id}`);
 
-            this.games.set(game.id, game);
-            this.lobbies.delete(lobby.id);
-        };
+            if (!p.isBot) {
+                this.playerSessionRegistry.deregisterPlayer(p.id);
+            }
+        });
+
+        this.games.set(game.id, game);
+        this.lobbies.delete(id);
     }
 
     private findOrCreateLobby(player: Player) {
@@ -158,7 +215,7 @@ export class Matchmaking {
     private createLobby(player: Player) {
         const lobby = new Lobby(this.lobbyIdGenerator, player);
 
-        lobby.onStartGame(this.startGame(lobby));
+        lobby.onStartGame(this.onLobbyStart);
 
         this.lobbies.set(lobby.id, lobby);
 
