@@ -46,7 +46,7 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
     };
 };
 
-export class Connection extends Player {
+export class SocketPlayer extends Player {
     public readonly isBot: boolean = false;
     public readonly isConnection = true;
 
@@ -55,7 +55,6 @@ export class Connection extends Player {
     private outgoingPacketRegistry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
     private lastReceivedPacketIndex = 0;
     private outgoingPacketsTask: Task = null;
-    private gameId: string;
 
     constructor(socket: Socket, id: string, name: string) {
         super(id, name);
@@ -87,8 +86,7 @@ export class Connection extends Player {
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
     }
 
-    public onStartGame(gameId: string) {
-        this.gameId = gameId;
+    public onStartGame() {
         this.outgoingPacketRegistry.emit(
             ServerToClientPacketOpcodes.JOIN_GAME,
             {
