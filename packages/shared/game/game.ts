@@ -221,13 +221,13 @@ export class Game {
 
         this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.onFinishGame(winner));
 
-        const metricPlayers = this.players.map(p => ({
+        const gamePlayers = this.players.map(p => ({
             id: p.id,
             name: p.name,
             isBot: p.isBot
         }));
 
-        this.events.emit(GameEvents.FINISH_GAME, this.round, winner, startTimeMs, metricPlayers, duration);
+        this.events.emit(GameEvents.FINISH_GAME, this.round, winner, startTimeMs, gamePlayers, duration);
 
         // more teardown
         this.events.removeAllListeners();
