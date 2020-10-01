@@ -164,7 +164,7 @@ export class Matchmaking {
                 this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
             });
 
-        game.onFinish((rounds, winner, startTimeMs, gamePlayers, durationMs) => {
+        game.onFinish((winner, gamePlayers) => {
             if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
             }
