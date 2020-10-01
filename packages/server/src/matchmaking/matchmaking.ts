@@ -72,6 +72,7 @@ export class Matchmaking {
             }
         }
 
+        // if we found a valid player we would have returned, so this clears any invalid players
         this.playerSessionRegistry.deregisterPlayer(id);
 
         return null;
@@ -111,6 +112,7 @@ export class Matchmaking {
             }
         }
 
+        // if we found a valid player we would have returned, so this clears any invalid players
         this.playerSessionRegistry.deregisterPlayer(id);
 
         return null;
@@ -156,39 +158,20 @@ export class Matchmaking {
         const game = new Game(players);
 
         players
-            .filter(p => (p as SocketPlayer).isConnection)
             .forEach(p => {
-                // todo do this in 1 call
-                this.database.user.addGamePlayed(p.id);
-
-                this.playerSessionRegistry.registerPlayer(p.id, p, "game", game.id);
+                if ((p as SocketPlayer).isConnection) {
+                    // todo do this in 1 call
+                    this.database.user.addGamePlayed(p.id);
+                }
             });
 
         game.onFinish((winner, gamePlayers) => {
             if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
             }
-
-            gamePlayers.forEach(p => {
-                if (!p.isBot) {
-                    this.playerSessionRegistry.deregisterPlayer(p.id);
-                }
-            });
         });
 
-        game.onPlayerDeath(p => {
-            if (!p.isBot) {
-                this.playerSessionRegistry.deregisterPlayer(p.id);
-            }
-        });
-
-        game.onPlayerQuit(p => {
-            log(`Player '${p.name}' quit game ${game.id}`);
-
-            if (!p.isBot) {
-                this.playerSessionRegistry.deregisterPlayer(p.id);
-            }
-        });
+        this.playerSessionRegistry.registerGame(game);
 
         this.games.set(game.id, game);
         this.lobbies.delete(id);
