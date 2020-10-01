@@ -31,7 +31,15 @@ import { AuthSelectors } from "../auth";
 
 const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
     // force to websocket for now until CORS is sorted
-    const socket = io(serverIP, { transports: ["websocket", "xhr-polling"], reconnection: false });
+    const socket = io(
+        serverIP,
+        {
+            transports: ["websocket", "xhr-polling"],
+            reconnectionAttempts: 15,
+            reconnectionDelay: 100,
+            reconnectionDelayMax: 1000
+        }
+    );
 
     return new Promise<Socket>((resolve, reject) => {
         socket.on("connect", () => {
@@ -60,13 +68,11 @@ type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketD
 
 const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
     return eventChannel(emit => {
-        let gameFinished = false;
-
-        socket.on("disconnect", () => {
-            if (gameFinished) {
-                return;
-            }
-
+        socket.on("reconnect_failed", () => {
+            emit(clearAnnouncement());
+            emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
+        });
+        socket.on("reconnect_error", () => {
             emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
         });
@@ -167,7 +173,7 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
 
                 emit(finishGameAction(packet.winnerName));
 
-                gameFinished = true;
+                socket.close();
             }
         );
 
