@@ -19,7 +19,7 @@ const ReconnectModal: React.FunctionComponent = () => {
                 connectionStatus === ConnectionStatus.DISCONNECTED
                 && (
                     <>
-                        <p className="text">Oops - you've been disconnected</p>
+                        <p className="text">You've been disconnected - but you can get back in!</p>
                         <p className="text">Please refresh the page and press 'Find Game' to rejoin</p>
                     </>
                 )
