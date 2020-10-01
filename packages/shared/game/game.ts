@@ -137,10 +137,10 @@ export class Game {
     }
 
     public onFinish(
-        fn: (rounds: number, winner: Player, startTimeMs: number, players: {
+        fn: (winner: Player, players: {
             id: string, name: string, isBot: boolean
-        }[], durationMs: number
-        ) => void) {
+        }[]) => void
+    ) {
         this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
@@ -227,7 +227,7 @@ export class Game {
             isBot: p.isBot
         }));
 
-        this.events.emit(GameEvents.FINISH_GAME, this.round, winner, startTimeMs, gamePlayers, duration);
+        this.events.emit(GameEvents.FINISH_GAME, winner, gamePlayers);
 
         // more teardown
         this.events.removeAllListeners();
