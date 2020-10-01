@@ -72,6 +72,12 @@ export class SocketPlayer extends Player {
             (opcode, handler) => socket.on(opcode, handler)
         );
 
+        socket.on("disconnect", () => {
+            if (this.battleTimeout) {
+                this.battleTimeout.resolve();
+            }
+        });
+
         this.outgoingPacketRegistry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
             (opcode, payload, ack) => socket.emit(opcode, payload, ack)
         );

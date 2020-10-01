@@ -77,6 +77,8 @@ export abstract class Player {
     private roundDiedAt: number | null = null;
     private status: PlayerStatus = PlayerStatus.CONNECTED;
 
+    protected battleTimeout: pDefer.DeferredPromise<void> = null;
+
     constructor(id: string, name: string, saga?: () => Generator) {
         this.id = id;
         this.name = name;
@@ -199,10 +201,14 @@ export abstract class Player {
         }
     }
 
-    public async fightMatch(startedAt: number, battleTimeout: Promise<void>): Promise<PlayerMatchResults> {
+    public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
         this.onEnterPlayingPhase(startedAt);
 
-        const finalMatchBoard = await this.match.fight(battleTimeout);
+        this.battleTimeout = battleTimeout;
+
+        const finalMatchBoard = await this.match.fight(battleTimeout.promise);
+
+        this.battleTimeout = null;
 
         const pieces = Object.values(finalMatchBoard.pieces);
 

@@ -15,6 +15,7 @@ import { matchRewards } from "./plugins/matchRewards";
 import { resetPlayer } from "./plugins/resetPlayer";
 import { PhaseUpdatePacket } from "../networking/server-to-client";
 import { PlayerStatus } from "@creature-chess/models";
+import pDefer = require("p-defer");
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -292,7 +293,10 @@ export class Game {
 
     private async fightBattles() {
         const maxTimeMs = this.phaseLengths[GamePhase.PLAYING] * 1000;
-        const battleTimeout = delay(maxTimeMs);
+
+        const battleTimeoutDeferred = pDefer<void>();
+
+        delay(maxTimeMs).then(() => battleTimeoutDeferred.resolve());
 
         const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 
@@ -301,7 +305,7 @@ export class Game {
 
             results.homePlayer.subtractHealth(damage);
         };
-        const promises = livingPlayers.map(p => p.fightMatch(this.phase.startedAt, battleTimeout).then(onPlayerFinishBattle));
+        const promises = livingPlayers.map(p => p.fightMatch(this.phase.startedAt, battleTimeoutDeferred).then(onPlayerFinishBattle));
 
         await Promise.all(promises);
 
