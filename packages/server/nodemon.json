@@ -1,7 +1,9 @@
 {
     "watch": [
         "./",
-        "../shared"
+        "../shared",
+        "../models",
+        "../data"
     ],
     "ext": "ts",
     "ignore": [
