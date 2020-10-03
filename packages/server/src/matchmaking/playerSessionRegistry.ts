@@ -19,8 +19,13 @@ export class PlayerSessionRegistry {
         this.sessions[playerId] = { player, location: { type, id } };
     }
 
-    public deregisterPlayer(playerId: string) {
-        delete this.sessions[playerId];
+    public deregisterPlayer(playerId: string, location: "lobby" | "game") {
+        if (
+            this.sessions[playerId]
+            && this.sessions[playerId].location.type === location
+        ) {
+            delete this.sessions[playerId];
+        }
     }
 
     public getPlayer(playerId: string) {
@@ -37,14 +42,14 @@ export class PlayerSessionRegistry {
         game.onFinish((winner, gamePlayers) => {
             gamePlayers.forEach(p => {
                 if (!p.isBot) {
-                    this.deregisterPlayer(p.id);
+                    this.deregisterPlayer(p.id, "game");
                 }
             });
         });
 
         game.onPlayerDeath(p => {
             if (!p.isBot) {
-                this.deregisterPlayer(p.id);
+                this.deregisterPlayer(p.id, "game");
             }
         });
 
@@ -52,7 +57,7 @@ export class PlayerSessionRegistry {
             log(`Player '${p.name}' quit game ${game.id}`);
 
             if (!p.isBot) {
-                this.deregisterPlayer(p.id);
+                this.deregisterPlayer(p.id, "game");
             }
         });
     }

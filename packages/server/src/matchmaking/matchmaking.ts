@@ -73,7 +73,7 @@ export class Matchmaking {
         }
 
         // if we found a valid player we would have returned, so this clears any invalid players
-        this.playerSessionRegistry.deregisterPlayer(id);
+        this.playerSessionRegistry.deregisterPlayer(id, "game");
 
         return null;
     }
@@ -113,7 +113,7 @@ export class Matchmaking {
         }
 
         // if we found a valid player we would have returned, so this clears any invalid players
-        this.playerSessionRegistry.deregisterPlayer(id);
+        this.playerSessionRegistry.deregisterPlayer(id, "lobby");
 
         return null;
     }
