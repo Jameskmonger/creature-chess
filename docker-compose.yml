@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  server-game:
+    environment:
+      - CREATURE_CHESS_FAUNA_KEY
+      - AUTH0_MANAGEMENT_CLIENT_SECRET
+    build:
+      context: .
+      dockerfile: ./packages/server/Dockerfile
+    ports:
+      - "3000:3000"
