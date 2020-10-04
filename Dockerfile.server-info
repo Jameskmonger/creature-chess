@@ -5,6 +5,10 @@ WORKDIR /usr/src/app
 COPY package.json .
 COPY package-lock.json .
 
+# common packages used by server
+# todo: find a way to automate this
+COPY packages/data ./packages/data
+
 COPY packages/server-info ./packages/server-info
 
 RUN npm ci --loglevel notice
