@@ -245,6 +245,8 @@ html, body {
       padding: 1em 4em; }
       .menu .segment .content p {
         margin-bottom: 0.4em; }
+  .menu .leaderboard td {
+    padding: 0.2em 2em; }
   .menu .join-options {
     display: flex; }
   .menu .option:not(:last-child) {
