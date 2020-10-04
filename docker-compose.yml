@@ -9,3 +9,9 @@ services:
       dockerfile: ./packages/server/Dockerfile
     ports:
       - "3000:3000"
+  server-info:
+    build:
+      context: .
+      dockerfile: ./packages/server-info/Dockerfile
+    ports:
+      - "3001:3000"
