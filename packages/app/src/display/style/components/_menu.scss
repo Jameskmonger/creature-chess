@@ -113,6 +113,13 @@
         }
     }
 
+    .leaderboard {
+        // stylelint-disable-next-line
+        td {
+            padding: 0.2em 2em;
+        }
+    }
+
     .join-options {
         display: flex;
     }

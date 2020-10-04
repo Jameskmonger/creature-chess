@@ -44,7 +44,7 @@ const LoginPage: React.FunctionComponent = () => {
                 </div>
             </div>
 
-            <div className="how-to-play">
+            <div className="segment">
                 <div className="header">Why do I need an account?</div>
                 <div className="content">
                     <p>Logging into an account allows the game to keep your session, so that if you get</p>
