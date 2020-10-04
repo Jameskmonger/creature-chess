@@ -6,12 +6,12 @@ services:
       - AUTH0_MANAGEMENT_CLIENT_SECRET
     build:
       context: .
-      dockerfile: ./packages/server/Dockerfile
+      dockerfile: ./Dockerfile.server
     ports:
       - "3000:3000"
   server-info:
     build:
       context: .
-      dockerfile: ./packages/server-info/Dockerfile
+      dockerfile: ./Dockerfile.server-info
     ports:
       - "3001:3000"
