@@ -6,6 +6,7 @@ import { loadingSelector } from "../../store/gameSelector";
 import { getUrlParameter } from "../../get-url-parameter";
 import { signOut } from "../../auth/auth0";
 import { Footer } from "../footer";
+import { Leaderboard } from "../leaderboard";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -99,7 +100,9 @@ class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
                     }
                 </div>
 
-                <div className="how-to-play">
+                <Leaderboard />
+
+                <div className="segment">
                     <div className="header">How to play</div>
                     <div className="content">
                         <p>This game is a strategy game where you have to arrange pieces on a chess board</p>
