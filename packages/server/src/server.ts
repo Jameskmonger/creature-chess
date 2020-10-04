@@ -8,7 +8,7 @@ import { Matchmaking } from "./matchmaking/matchmaking";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
-    log((error as any).stack);
+    log(error as any);
 });
 
 const AUTH0_CONFIG = {
