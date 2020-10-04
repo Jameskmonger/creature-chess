@@ -1,9 +1,14 @@
 import express = require("express");
+import { createDatabaseConnection } from "@creature-chess/data";
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
+const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
+
+app.get("/leaderboard", async (req, res) => {
+    const users = await database.leaderboard.getPlayers();
+
+    res.send(users);
 });
 
 app.listen(port, () => {
