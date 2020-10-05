@@ -1,15 +1,15 @@
 import * as React from "react";
 import { useDrag } from "react-dnd";
-import { PieceImage } from "./components/pieceImage";
-import { StageIndicator } from "./components/stageIndicator";
-import { Healthbar } from "./components/healthbar";
-import { AnimationVariables, getAnimationCssVariables } from "../animation";
 import { useSelector, useDispatch } from "react-redux";
 import { PieceModel as PieceComponent, GamePhase } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
-import { AppState } from "../../store";
-import { selectPiece } from "../../game/features/board/actions";
-import { Projectile } from "../projectile";
+import { AppState } from "../../../../store";
+import { AnimationVariables, getAnimationCssVariables } from "../../../../display/animation";
+import { Projectile } from "../../../../display/projectile";
+import { selectPiece } from "../actions";
+import { PieceImage } from "./components/pieceImage";
+import { StageIndicator } from "./components/stageIndicator";
+import { Healthbar } from "./components/healthbar";
 
 const dyingAnimation = "dying";
 

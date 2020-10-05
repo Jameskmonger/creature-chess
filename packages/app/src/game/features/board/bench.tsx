@@ -1,10 +1,10 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import { TileStyle } from "@creature-chess/models/src/position";
 import { Constants, PieceModel } from "@creature-chess/models";
-import { BenchTile } from "./tile/benchTile";
-import { useSelector } from "react-redux";
 import { AppState } from "../../../store";
-import { PositionablePiece } from "../../../display/piece/positionablePiece";
+import { BenchTile } from "./tile/benchTile";
+import { PositionablePiece } from "./piece/positionablePiece";
 
 const BenchPieces: React.FunctionComponent = () => {
     const pieces = useSelector<AppState, (PieceModel | null)[]>(state => state.bench.pieces);

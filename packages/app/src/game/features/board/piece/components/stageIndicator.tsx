@@ -1,22 +1,21 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { AppState } from "../../../store";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
-import { CreatureImage } from "../../creatureImage";
+import { AppState } from "../../../../../store";
 
-interface PieceImageProps {
+interface StageIndicatorProps {
     pieceId: string;
 }
 
-const PieceImage: React.FunctionComponent<PieceImageProps> = ({ pieceId }) => {
+const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ pieceId }) => {
     const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
 
     if (!piece) {
         return null;
     }
 
-    return <CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} />;
+    return <div className="piece-stage">{piece.stage + 1}</div>;
 };
 
-export { PieceImage };
+export { StageIndicator };

@@ -3,8 +3,7 @@ import { useSelector } from "react-redux";
 import { Constants, GamePhase } from "@creature-chess/models";
 import { TileStyle } from "@creature-chess/models/src/position";
 import { AppState } from "../../../store";
-
-import { PieceComponent } from "../../../display/piece/pieceComponent";
+import { PieceComponent } from "./piece/pieceComponent";
 import { BoardRow } from "./boardRow";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { Announcement } from "./overlays/announcement";

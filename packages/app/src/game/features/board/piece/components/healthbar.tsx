@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { AppState } from "../../../store";
 import { GamePhase, PieceModel } from "@creature-chess/models";
-import { ProgressBar } from "../../progressBar";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
+import { AppState } from "../../../../../store";
+import { ProgressBar } from "../../../../../display/progressBar";
 
 interface HealthbarProps {
     pieceId: string;
