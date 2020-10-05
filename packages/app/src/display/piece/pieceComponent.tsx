@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { PieceModel as PieceComponent, GamePhase } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { AppState } from "../../store";
-import { arePositionsEqual, getRelativeDirection } from "@creature-chess/models/position";
+import { arePositionsEqual, getRelativeDirection } from "@creature-chess/models/src/position";
 import { selectPiece } from "../../store/actions/boardActions";
 import { Projectile } from "../projectile";
 

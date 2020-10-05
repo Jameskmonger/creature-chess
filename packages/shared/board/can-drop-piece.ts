@@ -1,5 +1,5 @@
 import { PieceModel } from "@creature-chess/models";
-import { GRID_SIZE } from "@creature-chess/models/constants";
+import { GRID_SIZE } from "@creature-chess/models/src/constants";
 
 const inBench = (targetY: number) => targetY === null;
 const inFriendlyBoard = (targetY: number) => targetY !== null && targetY > (GRID_SIZE.height / 2) - 1;

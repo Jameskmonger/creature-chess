@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Constants } from "@creature-chess/models";
 import { BoardTile } from "./tile/boardTile";
-import { TileStyle } from "@creature-chess/models/position";
+import { TileStyle } from "@creature-chess/models/src/position";
 import { getClassForTileStyle } from "./getClassForTileStyle";
 
 interface TileRowProps {

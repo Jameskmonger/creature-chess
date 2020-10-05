@@ -24,16 +24,8 @@ export interface AppState {
 
 export interface AuthState {
     checkingSession: boolean;
-    user: {
-        idToken: string;
-        profile: {
-            nickname?: {
-                value: string;
-                uppercase: string;
-            };
-        };
-        expiresAt: number;
-    };
+    token: string | null;
+    tokenExpiry: number | null;
 }
 
 export interface GameState {

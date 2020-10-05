@@ -9,3 +9,5 @@ import * as Constants from "./constants";
 export { Constants };
 
 export { GamePhase } from "./game-phase";
+
+export { SanitizedUser } from "./user";

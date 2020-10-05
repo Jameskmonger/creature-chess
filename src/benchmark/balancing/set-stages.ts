@@ -1,4 +1,4 @@
-import { CreatureStats, AttackType, attackTypes, CreatureDefinition } from "@creature-chess/shared/models/creatureDefinition";
+import { CreatureStats, AttackType, attackTypes, CreatureDefinition } from "@creature-chess/shared/models/src/creatureDefinition";
 import { DefinitionClass } from "@creature-chess/shared/game/definitions/definitionClass";
 
 // each class has points to assign

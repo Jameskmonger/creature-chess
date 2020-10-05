@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { AppState } from "../../store";
 import { getPlayerById } from "../../store/playerSelectors";
 import { PlayerListPlayer } from "@creature-chess/models";
-import { PlayerBattleStatus, PlayerBattle } from "@creature-chess/models/player-list-player";
 import { PlayerName } from "./playerName";
+import { PlayerBattle, PlayerBattleStatus } from "@creature-chess/models/src/player-list-player";
 
 interface Props {
     playerId: string;

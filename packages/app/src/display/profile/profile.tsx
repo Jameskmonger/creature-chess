@@ -7,7 +7,7 @@ import { GamePhase, Constants } from "@creature-chess/models";
 import { PieceCount } from "./pieceCount";
 import { PlayerActions } from "@creature-chess/shared/player";
 import { getPlayerLevel, getPlayerXp } from "@creature-chess/shared/player/playerSelectors";
-import { MAX_PLAYER_LEVEL } from "@creature-chess/models/constants";
+import { MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 
