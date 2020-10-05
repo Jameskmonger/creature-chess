@@ -46,6 +46,25 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
+.loading-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  text-align: center; }
+  .loading-full h1 {
+    margin-bottom: 0.4em;
+    font-size: 2em;
+    color: #fff; }
+  .loading-full p {
+    font-style: italic;
+    color: #ccc; }
+
 /* stylelint-disable */
 body {
   /* stylelint-enable */
