@@ -4,9 +4,10 @@ import {
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT
 } from "../actions/uiActions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
-import { FinishGameAction, FINISH_GAME, JoinCompleteAction, JoinErrorAction, JOIN_COMPLETE, JOIN_ERROR } from "../../game/store/actions";
+import { FindGameAction, FIND_GAME, FinishGameAction, FINISH_GAME, JoinCompleteAction, JoinErrorAction, JOIN_COMPLETE, JOIN_ERROR } from "../../game/store/actions";
 
 const initialState: UiState = {
+    loading: false,
     currentOverlay: null,
     selectedPieceId: null,
     winnerName: null,
@@ -24,10 +25,16 @@ type UIAction =
     | AnnouncementUpdateAction
     | AnnouncementClearAction
     | JoinErrorAction
-    | JoinCompleteAction;
+    | JoinCompleteAction
+    | FindGameAction;
 
 export function ui(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
+        case FIND_GAME:
+            return {
+                ...state,
+                loading: true
+            };
         case OPEN_OVERLAY: {
             return {
                 ...state,

@@ -25,6 +25,7 @@ export interface AppState {
 }
 
 export interface UiState {
+    loading: boolean;
     selectedPieceId: string;
     currentOverlay: Overlay | null;
     winnerName: string;
