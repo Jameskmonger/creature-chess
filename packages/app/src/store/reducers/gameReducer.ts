@@ -5,8 +5,7 @@ import {
 } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
-import { SELECT_PIECE } from "../actiontypes/boardActionTypes";
-import { SelectPieceAction } from "../actions/boardActions";
+import { SelectPieceAction, SELECT_PIECE } from "../../game/features/board/actions";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";

@@ -4,7 +4,7 @@ import { TileType, TileStyle } from "@creature-chess/models/src/position";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../../store";
 import { getClassForTileStyle } from "../getClassForTileStyle";
-import { selectPiece } from "../../../../store/actions/boardActions";
+import { selectPiece } from "../actions";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { playerDropPiece } from "@creature-chess/shared/player/actions";
