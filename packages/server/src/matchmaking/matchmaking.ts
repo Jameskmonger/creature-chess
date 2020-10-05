@@ -8,6 +8,7 @@ import { LobbyPlayer } from "@creature-chess/models";
 import { log } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
+import { createMetricLogger } from "../metrics";
 
 const getLobbyPlayers = (lobby: Lobby): LobbyPlayer[] => {
     return lobby.getPlayers().map(p => ({
@@ -21,6 +22,7 @@ export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
+    private metrics = createMetricLogger();
 
     constructor(private database: DatabaseConnection) {
 
@@ -149,12 +151,17 @@ export class Matchmaking {
 
         game.onFinish((winner, gamePlayers) => {
             if ((winner as SocketPlayer).isConnection) {
-                this.database.user.addWin(winner.id);
+                this.database.user.addWin(winner
+                    .id);
             }
+            this.games.delete(game.id);
+            this.metrics.sendGameCount(this.games.size);
         });
 
         this.games.set(game.id, game);
         this.lobbies.delete(id);
+
+        this.metrics.sendGameCount(this.games.size);
     }
 
     private findOrCreateLobby() {
