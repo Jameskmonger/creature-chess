@@ -6,7 +6,7 @@ import { PlayerActions } from "@creature-chess/shared/player";
 
 const ReadyUpButton: React.FunctionComponent = () => {
     const canReadyUp = useSelector<AppState, boolean>(
-        state => state.game.phase === GamePhase.PREPARING && state.game.ready === false);
+        state => state.gameInfo.phase === GamePhase.PREPARING && state.game.ready === false);
 
     const dispatch = useDispatch();
 
