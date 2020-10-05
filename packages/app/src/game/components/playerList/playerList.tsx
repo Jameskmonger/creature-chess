@@ -2,8 +2,8 @@ import * as React from "react";
 import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
 import { PlayerListItem, QuitPlayerListItem } from "./playerListItem";
 import { useSelector } from "react-redux";
-import { AppState } from "../../store";
-import { opponentIdSelector, localPlayerIdSelector } from "../../store/gameSelector";
+import { AppState } from "../../../store";
+import { opponentIdSelector, localPlayerIdSelector } from "../../../store/gameSelector";
 import { getPlayerMoney, getPlayerLevel } from "@creature-chess/shared/player/playerSelectors";
 
 const PlayerList: React.FunctionComponent = () => {

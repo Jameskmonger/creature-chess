@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BoardContainer } from "../components/board/boardContainer";
 import { CardShop } from "../components/cardShop";
-import { PlayerList } from "../../features/playerList/playerList";
+import { PlayerList } from "../components/playerList";
 import { Profile } from "../../display/profile/profile";
 import { RoundIndicator } from "../../display/roundIndicator";
 import { PhaseInfo } from "../../display/phaseInfo";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { AppState } from "../../store";
-import { getPlayerById } from "../../store/playerSelectors";
+import { AppState } from "../../../store";
+import { getPlayerById } from "../../../store/playerSelectors";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { PlayerName } from "./playerName";
 import { PlayerBattle, PlayerBattleStatus } from "@creature-chess/models/src/player-list-player";

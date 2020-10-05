@@ -5,7 +5,7 @@ import { Socket } from "../store/sagas/types";
 import {
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
 } from "../store/actions/gameActions";
-import { playerListUpdated } from "../features/playerList/playerListActions";
+import { playerListUpdated } from "../game/components/playerList/playerListActions";
 import { FIND_GAME } from "../store/actiontypes/gameActionTypes";
 import { log } from "../log";
 import { joinCompleteAction } from "../store/actions/localPlayerActions";

@@ -1,13 +1,13 @@
 import * as React from "react";
 import { BoardContainer } from "../components/board/boardContainer";
 import { CardShop } from "../components/cardShop";
+import { PlayerList } from "../components/playerList";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChess, faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { AppState } from "../../store";
 import { Overlay } from "../../overlay";
 import { closeOverlay, openOverlay } from "../../store/actions/uiActions";
-import { PlayerList } from "../../features/playerList/playerList";
 import { Profile } from "../../display/profile/profile";
 import { Help } from "../../display/game/help";
 import { RoundIndicator } from "../../display/roundIndicator";
