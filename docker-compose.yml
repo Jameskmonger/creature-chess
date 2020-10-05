@@ -4,8 +4,6 @@ services:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
       - AUTH0_MANAGEMENT_CLIENT_SECRET
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
     build:
       context: .
       dockerfile: ./Dockerfile.server
