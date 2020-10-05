@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
+import { Loading } from "../display/loading";
 import { AppState } from "../store";
 import { handleAuthenticationCallback } from "./store/actions";
 import { isCheckingSession, isLoggedIn } from "./store/selectors";
@@ -22,7 +23,7 @@ const CallbackPage: React.FunctionComponent = () => {
         return <Redirect to="/" />;
     }
 
-    return <div className="text-center">Loading user profile.</div>;
+    return <Loading />;
 };
 
 export { CallbackPage };
