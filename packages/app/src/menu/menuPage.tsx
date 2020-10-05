@@ -7,6 +7,7 @@ import { signOut } from "../auth/auth0";
 import { Footer } from "../display/footer";
 import { Leaderboard } from "./leaderboard";
 import { enableDebugMode } from "../store/actions/uiActions";
+import { Loading } from "../display/loading";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -57,15 +58,7 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
                 : <h2 className="title" onClick={this.onTitleClick}>Creature Chess</h2>;
 
         if (this.props.loading) {
-            return (
-                <div className="menu">
-                    <div className="join-game">
-                        {title}
-
-                        <p>Loading game...</p>
-                    </div>
-                </div>
-            );
+            return <Loading />;
         }
 
         return (
