@@ -2,7 +2,6 @@ import io = require("socket.io");
 import { Game } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby";
-import { PlayerSessionRegistry } from "./playerSessionRegistry";
 import { SocketPlayer } from "../player/socketPlayer";
 import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
 import { LobbyPlayer } from "@creature-chess/models";
@@ -22,7 +21,6 @@ export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
-    private playerSessionRegistry = new PlayerSessionRegistry();
 
     constructor(private database: DatabaseConnection) {
 
@@ -55,27 +53,20 @@ export class Matchmaking {
     }
 
     private getPlayerInGame(id: string) {
-        const existingPlayer = this.playerSessionRegistry.getPlayer(id);
+        const games = Array.from<Game>(this.games.values());
 
-        if (existingPlayer && existingPlayer.location.type === "game") {
-            const existingGame = this.games.get(existingPlayer.location.id);
+        const matchingGame = games.find(g => g.getPlayers().find(p => p.id === id));
 
-            if (existingGame) {
-                const playerInGame = existingGame.getPlayers().find(p => p.id === id);
-
-                if (playerInGame) {
-                    return {
-                        game: existingGame,
-                        player: playerInGame as SocketPlayer
-                    };
-                }
-            }
+        if (!matchingGame) {
+            return null;
         }
 
-        // if we found a valid player we would have returned, so this clears any invalid players
-        this.playerSessionRegistry.deregisterPlayer(id, "game");
+        const playerInGame = matchingGame.getPlayers().find(p => p.id === id);
 
-        return null;
+        return {
+            game: matchingGame,
+            player: playerInGame as SocketPlayer
+        };
     }
 
     private addPlayerToGame(game: Game, socket: io.Socket, player: SocketPlayer) {
@@ -95,27 +86,20 @@ export class Matchmaking {
     }
 
     private getPlayerInLobby(id: string) {
-        const existingPlayer = this.playerSessionRegistry.getPlayer(id);
+        const lobbies = Array.from<Lobby>(this.lobbies.values());
 
-        if (existingPlayer && existingPlayer.location.type === "lobby") {
-            const existingLobby = this.lobbies.get(existingPlayer.location.id);
+        const matchingLobby = lobbies.find(g => g.getPlayers().find(p => p.id === id));
 
-            if (existingLobby) {
-                const playerInLobby = existingLobby.getPlayers().find(p => p.id === id);
-
-                if (playerInLobby) {
-                    return {
-                        lobby: existingLobby,
-                        player: playerInLobby as SocketPlayer
-                    };
-                }
-            }
+        if (!matchingLobby) {
+            return null;
         }
 
-        // if we found a valid player we would have returned, so this clears any invalid players
-        this.playerSessionRegistry.deregisterPlayer(id, "lobby");
+        const playerInLobby = matchingLobby.getPlayers().find(p => p.id === id);
 
-        return null;
+        return {
+            lobby: matchingLobby,
+            player: playerInLobby as SocketPlayer
+        };
     }
 
     private addPlayerToLobby(lobby: Lobby, socket: io.Socket, player: SocketPlayer) {
@@ -137,8 +121,6 @@ export class Matchmaking {
 
         const lobby = this.findOrCreateLobby();
         lobby.addPlayer(connection);
-
-        this.playerSessionRegistry.registerPlayer(connection.id, connection, "lobby", lobby.id);
 
         connection.sendJoinGamePacket({
             type: "lobby",
@@ -170,8 +152,6 @@ export class Matchmaking {
                 this.database.user.addWin(winner.id);
             }
         });
-
-        this.playerSessionRegistry.registerGame(game);
 
         this.games.set(game.id, game);
         this.lobbies.delete(id);
