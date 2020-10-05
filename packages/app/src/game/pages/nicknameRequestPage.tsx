@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { MAX_NAME_LENGTH } from "@creature-chess/models/src/constants";
 import { nicknameChosen } from "../../store/actions/lobbyActions";
 
-const NicknameRequest: React.FunctionComponent<{ message: string }> = ({ message }) => {
+const NicknameRequestPage: React.FunctionComponent<{ message: string }> = ({ message }) => {
     const dispatch = useDispatch();
     const [ nickname, setNickname ] = React.useState<string>("");
 
@@ -37,4 +37,4 @@ const NicknameRequest: React.FunctionComponent<{ message: string }> = ({ message
     );
 };
 
-export { NicknameRequest };
+export { NicknameRequestPage };

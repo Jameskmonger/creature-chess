@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { GameStage } from "./gameStage";
-import { AppState } from "../../store";
-import { MenuStage } from "./menuStage";
-import { LobbyStage } from "./lobbyStage";
-import { NicknameRequest } from "./nicknameRequest";
+import { AppState } from "../store";
+import { MenuPage } from "./pages/menuPage";
+import { LobbyPage } from "./pages/lobbyPage";
+import { GamePage } from "./pages/gamePage";
+import { NicknameRequestPage } from "./pages/nicknameRequestPage";
 
 enum GameState {
     MENU = 0,
@@ -24,25 +24,25 @@ const gameStateSelector = (state: AppState) => {
     return GameState.MENU;
 };
 
-const Game: React.FunctionComponent = () => {
+const GameRouter: React.FunctionComponent = () => {
     const gameState = useSelector<AppState, GameState>(gameStateSelector);
     const requestNicknameMessage = useSelector<AppState, string>(state => state.lobby.requestNicknameMessage);
 
     if (gameState === GameState.GAME) {
-        return <GameStage />;
+        return <GamePage />;
     }
 
     if (gameState === GameState.LOBBY) {
-        return <LobbyStage />;
+        return <LobbyPage />;
     }
 
     if (requestNicknameMessage) {
-        return <NicknameRequest message={requestNicknameMessage} />;
+        return <NicknameRequestPage message={requestNicknameMessage} />;
     }
 
-    return <MenuStage />;
+    return <MenuPage />;
 };
 
 export {
-    Game
+    GameRouter
 };

@@ -5,8 +5,8 @@ import { AppState } from "../../store";
 import { loadingSelector } from "../../store/gameSelector";
 import { getUrlParameter } from "../../get-url-parameter";
 import { signOut } from "../../auth/auth0";
-import { Footer } from "../footer";
-import { Leaderboard } from "../leaderboard";
+import { Footer } from "../../display/footer";
+import { Leaderboard } from "../../display/leaderboard";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -36,7 +36,7 @@ const PlayerInfo: React.FunctionComponent = () => {
     );
 };
 
-class MenuStageUnconnected extends React.Component<Props, MenuStageState> {
+class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
     public state = {
         serverIP: "",
         debugModeClickCount: 0
@@ -169,8 +169,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     setError: (error: string) => dispatch(joinGameError(error))
 });
 
-const MenuStage = connect(mapStateToProps, mapDispatchToProps)(MenuStageUnconnected);
+const MenuPage = connect(mapStateToProps, mapDispatchToProps)(MenuPageUnconnected);
 
 export {
-    MenuStage
+    MenuPage
 };

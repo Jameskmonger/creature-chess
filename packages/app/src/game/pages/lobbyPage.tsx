@@ -4,7 +4,7 @@ import { AppState } from "../../store";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models/src/constants";
 import { LobbyPlayer } from "@creature-chess/models";
 import { Countdown } from "../../display/countdown";
-import { Footer } from "../footer";
+import { Footer } from "../../display/footer";
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
@@ -21,7 +21,7 @@ const countdownRender = (totalSecondsRemaining: number) => {
     );
 };
 
-const LobbyStage: React.FunctionComponent = () => {
+const LobbyPage: React.FunctionComponent = () => {
     const lobbyId = useSelector<AppState, string>(state => state.lobby.lobbyId);
 
     if (lobbyId === null) {
@@ -68,4 +68,4 @@ const LobbyStage: React.FunctionComponent = () => {
     );
 };
 
-export { LobbyStage };
+export { LobbyPage };

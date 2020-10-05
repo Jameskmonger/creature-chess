@@ -11,13 +11,13 @@ import Media from "react-media";
 import { PhaseInfo } from "../../display/phaseInfo";
 import { Profile } from "../../display/profile/profile";
 import { RoundIndicator } from "../../display/roundIndicator";
-import { ResponsiveBoardStyles } from "../board/responsiveBoardStyles";
-import { BoardContainer } from "../game/boardContainer";
-import { MobileGame } from "../game/mobileGame";
-import { Footer } from "../footer";
-import { QuitGameButton } from "../game/settings/quitGameButton";
+import { ResponsiveBoardStyles } from "../../display/board/responsiveBoardStyles";
+import { BoardContainer } from "../../display/game/boardContainer";
+import { MobileGame } from "../../display/game/mobileGame";
+import { Footer } from "../../display/footer";
+import { QuitGameButton } from "../../display/game/settings/quitGameButton";
 
-const GameStage: React.FunctionComponent = () => {
+const GamePage: React.FunctionComponent = () => {
     return (
         <DndProvider backend={MultiBackend} options={HTML5toTouch}>
             <ResponsiveBoardStyles />
@@ -58,5 +58,5 @@ const GameStage: React.FunctionComponent = () => {
 };
 
 export {
-    GameStage
+    GamePage
 };
