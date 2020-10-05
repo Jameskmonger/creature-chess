@@ -7,7 +7,10 @@ COPY package-lock.json .
 
 # common packages used by server
 # todo: find a way to automate this
+COPY packages/auth-server ./packages/auth-server
+COPY packages/models ./packages/models
 COPY packages/data ./packages/data
+COPY packages/shared ./packages/shared
 
 COPY packages/server-info ./packages/server-info
 

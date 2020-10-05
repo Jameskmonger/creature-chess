@@ -12,6 +12,7 @@ services:
   server-info:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
+      - AUTH0_MANAGEMENT_CLIENT_SECRET
     build:
       context: .
       dockerfile: ./Dockerfile.server-info
