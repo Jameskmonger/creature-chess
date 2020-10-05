@@ -20,8 +20,7 @@ export const initialState: GameState = {
     mainAnnouncement: null,
     subAnnouncement: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED,
-    shopLocked: false,
-    winnerName: null
+    shopLocked: false
 };
 
 export function game(state: GameState = initialState, action: GameAction): GameState {
@@ -101,12 +100,6 @@ export function game(state: GameState = initialState, action: GameAction): GameS
             return {
                 ...state,
                 shopLocked: action.payload.locked
-            };
-        }
-        case FINISH_GAME: {
-            return {
-                ...state,
-                winnerName: action.payload.winnerName
             };
         }
         default:

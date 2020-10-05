@@ -1,13 +1,16 @@
 import { UiState } from "../state";
 import { OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY } from "../actions/uiActions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
+import { FINISH_GAME } from "../actiontypes/gameActionTypes";
+import { FinishGameAction } from "../actions/gameActions";
 
 const initialState: UiState = {
     currentOverlay: null,
-    selectedPieceId: null
+    selectedPieceId: null,
+    winnerName: null
 };
 
-type UIAction = OpenOverlayAction | CloseOverlayAction | SelectPieceAction | ClearSelectedPieceAction;
+type UIAction = OpenOverlayAction | CloseOverlayAction | SelectPieceAction | ClearSelectedPieceAction | FinishGameAction;
 
 export function ui(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
@@ -35,6 +38,12 @@ export function ui(state: UiState = initialState, action: UIAction) {
             return {
                 ...state,
                 selectedPieceId: null
+            };
+        }
+        case FINISH_GAME: {
+            return {
+                ...state,
+                winnerName: action.payload.winnerName
             };
         }
         default:

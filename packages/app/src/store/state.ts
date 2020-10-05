@@ -36,8 +36,6 @@ export interface GameState {
     mainAnnouncement: string;
     subAnnouncement: string;
     shopLocked: boolean;
-
-    winnerName: string;
 }
 
 export interface LocalPlayerState {
@@ -54,11 +52,8 @@ export interface LobbyState {
     requestNicknameMessage: string;
 }
 
-export interface GameOverInfoState {
-    winnerName: string;
-}
-
 export interface UiState {
     selectedPieceId: string;
     currentOverlay: Overlay | null;
+    winnerName: string;
 }
