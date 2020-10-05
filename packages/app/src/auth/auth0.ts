@@ -19,65 +19,47 @@ const auth0Client = new WebAuth({
   scope
 });
 
-export const checkSession = () => (
-  new Promise((resolve, reject) => {
-    auth0Client.checkSession(
-      {
-        audience,
-        scope
-      },
-      (err, authResult) => {
-        if (err) {
-          if (err.code === "login_required") {
-            return resolve(null);
-          }
+export type AuthResponse = { token: string, expiry: number } | null;
 
-          return reject(err);
-        }
+export const checkSession = () => new Promise<AuthResponse>((resolve, reject) => {
+  const options = { audience, scope };
 
-        if (!authResult || !authResult.idToken) {
-          return resolve(null);
-        }
-
-        const idToken = authResult.idToken;
-        const profile = authResult.idTokenPayload;
-        // set the time that the id token will expire at
-        const expiresAt = authResult.idTokenPayload.exp * 1000;
-
-        resolve({
-          idToken,
-          profile,
-          expiresAt
-        });
-      });
-  })
-);
-
-export const handleAuthentication = () => (
-  new Promise((resolve, reject) => {
-    auth0Client.parseHash((err, authResult) => {
-      if (err) {
-        return reject(err);
+  auth0Client.checkSession(options, (err, authResult) => {
+    if (err) {
+      if (err.code === "login_required") {
+        return resolve(null);
       }
 
-      if (!authResult || !authResult.idToken) {
-        return reject(err);
-      }
+      return reject(err);
+    }
 
-      const idToken = authResult.idToken;
-      const profile = authResult.idTokenPayload;
-      // set the time that the id token will expire at
-      const expiresAt = authResult.idTokenPayload.exp * 1000;
+    if (!authResult || !authResult.idToken) {
+      return resolve(null);
+    }
 
-      resolve({
-        authenticated: true,
-        idToken,
-        profile,
-        expiresAt
-      });
-    });
-  })
-);
+    const token = authResult.idToken;
+    const expiry = authResult.idTokenPayload.exp * 1000;
+
+    resolve({ token, expiry });
+  });
+});
+
+export const handleAuthentication = () => new Promise<AuthResponse>((resolve, reject) => {
+  auth0Client.parseHash((err, authResult) => {
+    if (err) {
+      return reject(err);
+    }
+
+    if (!authResult || !authResult.idToken) {
+      return reject(err);
+    }
+
+    const token = authResult.idToken;
+    const expiry = authResult.idTokenPayload.exp * 1000;
+
+    resolve({ token, expiry });
+  });
+});
 
 export const signIn = () => auth0Client.authorize();
 
