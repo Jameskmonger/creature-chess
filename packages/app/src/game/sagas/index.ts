@@ -1,7 +1,5 @@
-import { fork, all, takeEvery } from "@redux-saga/core/effects";
+import { fork, all } from "@redux-saga/core/effects";
 import { preventAccidentalClose } from "../../game/sagas/actions/preventAccidentalClose";
-import { networking } from "./networking/saga";
-import { authSaga } from "../../auth";
 import { battle } from "@creature-chess/shared/match/combat/battleSaga";
 import { TurnSimulator } from "@creature-chess/shared/match/combat/turnSimulator";
 import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@creature-chess/models/src/constants";
@@ -15,10 +13,8 @@ import { phaseTimer } from "./actions/phaseTimer";
 import { gamePhase } from "./actions/gamePhase";
 import { sellPiece } from "./actions/sellPiece";
 import { announcement } from "./actions/announcement";
-import { JoinCompleteAction } from "../../store/actions/localPlayerActions";
-import { JOIN_COMPLETE } from "../../store/actiontypes/localPlayerActionTypes";
 
-const gameSagaFactory = (playerId: string) => {
+export const gameSagaFactory = (playerId: string) => {
     const turnSimulator = new TurnSimulator();
     const definitionProvider = new DefinitionProvider();
 
@@ -41,17 +37,4 @@ const gameSagaFactory = (playerId: string) => {
             )
         ]);
     };
-};
-
-export const gameSaga = function*() {
-    yield all([
-        yield fork(authSaga),
-        yield fork(networking),
-        yield takeEvery<JoinCompleteAction>(
-            JOIN_COMPLETE,
-            function*({ payload: { playerId }}) {
-                yield fork(gameSagaFactory(playerId));
-            }
-        )
-    ]);
 };
