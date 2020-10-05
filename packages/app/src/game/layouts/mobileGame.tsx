@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BoardContainer } from "./boardContainer";
+import { BoardContainer } from "../../display/game/boardContainer";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChess, faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
@@ -8,12 +8,12 @@ import { Overlay } from "../../overlay";
 import { closeOverlay, openOverlay } from "../../store/actions/uiActions";
 import { CardShop } from "../../features/cardShop/cardShop";
 import { PlayerList } from "../../features/playerList/playerList";
-import { Profile } from "../profile/profile";
-import { Help } from "./help";
-import { RoundIndicator } from "../roundIndicator";
-import { PhaseInfo } from "../phaseInfo";
+import { Profile } from "../../display/profile/profile";
+import { Help } from "../../display/game/help";
+import { RoundIndicator } from "../../display/roundIndicator";
+import { PhaseInfo } from "../../display/phaseInfo";
 import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
-import { Settings } from "./settings/settings";
+import { Settings } from "../../display/game/settings/settings";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
