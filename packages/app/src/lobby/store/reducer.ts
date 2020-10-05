@@ -1,5 +1,5 @@
-import { LobbyState } from "../state";
-import { LobbyAction, JOIN_LOBBY, UPDATE_LOBBY_PLAYER, REQUEST_NICKNAME } from "../actions/lobbyActions";
+import { LobbyState } from "./state";
+import { LobbyAction, JOIN_LOBBY, UPDATE_LOBBY_PLAYER, REQUEST_NICKNAME } from "./actions";
 
 const initialState: LobbyState = {
     lobbyId: null,
@@ -9,7 +9,7 @@ const initialState: LobbyState = {
     requestNicknameMessage: null
 };
 
-export function lobby(
+export function reducer(
     state: LobbyState = initialState,
     action: LobbyAction
 ): LobbyState {

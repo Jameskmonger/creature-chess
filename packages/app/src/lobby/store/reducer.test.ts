@@ -1,6 +1,6 @@
 import { TestFixture, Test, Expect } from "alsatian";
-import { lobby } from "./lobbyReducer";
-import { joinLobbyAction } from "../actions/lobbyActions";
+import { lobby } from "./reducer";
+import { joinLobbyAction } from "./actions";
 
 @TestFixture("lobbyReducer tests")
 export class LobbyReducerTests {

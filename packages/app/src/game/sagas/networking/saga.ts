@@ -9,7 +9,7 @@ import { FIND_GAME } from "../../../store/actiontypes/gameActionTypes";
 import { log } from "../../../log";
 import { joinCompleteAction } from "../../../store/actions/localPlayerActions";
 import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEventChannel";
-import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN } from "../../../store/actions/lobbyActions";
+import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN } from "../../../lobby/store/actions";
 import { AppState } from "../../../store/state";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
 import {

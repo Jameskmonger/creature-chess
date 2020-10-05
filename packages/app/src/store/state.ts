@@ -6,9 +6,12 @@ import { Overlay } from "../overlay";
 import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
 import { LevelState } from "@creature-chess/shared/player/level";
 import { AuthState } from "../auth";
+import { LobbyState } from "../lobby";
 
 export interface AppState {
     auth: AuthState;
+    ui: UiState;
+    lobby: LobbyState;
 
     gameInfo: GameInfoState;
     board: BoardState;
@@ -19,8 +22,6 @@ export interface AppState {
     game: GameState;
     playerList: PlayerListPlayer[];
     localPlayer: LocalPlayerState;
-    lobby: LobbyState;
-    ui: UiState;
 }
 
 export interface GameState {
@@ -38,14 +39,6 @@ export interface LocalPlayerState {
     id: string;
 
     ready: boolean;
-}
-
-export interface LobbyState {
-    localPlayerId: string;
-    lobbyId: string;
-    players: LobbyPlayer[];
-    startingAtMs: number;
-    requestNicknameMessage: string;
 }
 
 export interface UiState {
