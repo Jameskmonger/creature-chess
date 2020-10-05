@@ -1,3 +1,5 @@
+import { SanitizedUser } from "@creature-chess/models";
+
 export const USER_AUTHENTICATED = "USER_AUTHENTICATED";
 export type USER_AUTHENTICATED = typeof USER_AUTHENTICATED;
 export const SESSION_CHECKED = "SESSION_CHECKED";
@@ -12,14 +14,16 @@ export type UserAuthenticatedAction = {
     payload: {
         token: string;
         expiry: number;
+        user: SanitizedUser;
     };
 };
 
-export const userAuthenticated = (token: string, expiry: number): UserAuthenticatedAction => ({
+export const userAuthenticated = (token: string, expiry: number, user: SanitizedUser): UserAuthenticatedAction => ({
     type: USER_AUTHENTICATED,
     payload: {
         token,
-        expiry
+        expiry,
+        user
     }
 });
 
