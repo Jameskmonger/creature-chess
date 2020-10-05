@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameError, enableDebugMode, findGameAction } from "../store/actions/gameActions";
+import { joinGameError, enableDebugMode, findGameAction } from "../game/store/actions";
 import { AppState } from "../store";
 import { loadingSelector } from "../store/gameSelector";
 import { getUrlParameter } from "./get-url-parameter";

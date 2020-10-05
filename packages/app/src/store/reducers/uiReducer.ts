@@ -4,8 +4,7 @@ import {
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT
 } from "../actions/uiActions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
-import { FINISH_GAME, JOIN_ERROR } from "../actiontypes/gameActionTypes";
-import { FinishGameAction, JoinErrorAction } from "../actions/gameActions";
+import { FinishGameAction, FINISH_GAME, JoinErrorAction, JOIN_ERROR } from "../../game/store/actions";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
 import { JoinCompleteAction } from "../actions/localPlayerActions";
 

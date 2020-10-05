@@ -1,16 +1,24 @@
-import {
-    FIND_GAME,
-    PHASE_START_SECONDS,
-    JOIN_ERROR,
-    ENABLE_DEBUG_MODE,
-    UPDATE_CONNECTION_STATUS,
-    SHOP_LOCK_UPDATED,
-    FINISH_GAME,
-    PLAYERS_RESURRECTED
-} from "../actiontypes/gameActionTypes";
-import { JoinCompleteAction } from "./localPlayerActions";
+import { JoinCompleteAction } from "../../store/actions/localPlayerActions";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { GamePhaseUpdateAction, MoneyUpdateAction } from "@creature-chess/shared/player/gameInfo";
+
+export const FIND_GAME = "FIND_GAME";
+export type FIND_GAME = typeof FIND_GAME;
+export const JOIN_ERROR = "JOIN_ERROR";
+export type JOIN_ERROR = typeof JOIN_ERROR;
+export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
+export type PLAYERS_RESURRECTED = typeof PLAYERS_RESURRECTED;
+export const PHASE_START_SECONDS = "PHASE_START_SECONDS";
+export type PHASE_START_SECONDS = typeof PHASE_START_SECONDS;
+export const ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
+export type ENABLE_DEBUG_MODE = typeof ENABLE_DEBUG_MODE;
+export const UPDATE_CONNECTION_STATUS = "UPDATE_CONNECTION_STATUS";
+export type UPDATE_CONNECTION_STATUS = typeof UPDATE_CONNECTION_STATUS;
+export const SHOP_LOCK_UPDATED = "SHOP_LOCK_UPDATED";
+export type SHOP_LOCK_UPDATED = typeof SHOP_LOCK_UPDATED;
+export const FINISH_GAME = "FINISH_GAME";
+export type FINISH_GAME = typeof FINISH_GAME;
+
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
