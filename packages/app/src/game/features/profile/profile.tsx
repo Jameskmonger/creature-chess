@@ -13,7 +13,7 @@ const renderProgressBar = (current: number, max: number) => `${current} / ${max}
 
 const Profile: React.FunctionComponent = () => {
     const dispatch = useDispatch();
-    const gameStarted = useSelector<AppState, boolean>(state => state.gameInfo.phase !== GamePhase.WAITING);
+    const gameStarted = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING);
     const level = useSelector<AppState, number>(getPlayerLevel);
     const xp = useSelector<AppState, number>(getPlayerXp);
 

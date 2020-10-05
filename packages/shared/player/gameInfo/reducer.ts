@@ -1,11 +1,9 @@
-import { MONEY_UPDATE, GAME_PHASE_UPDATE, SHOP_LOCK_UPDATED, PHASE_START_SECONDS, GameAction } from "./actions";
+import { MONEY_UPDATE, GAME_PHASE_UPDATE, SHOP_LOCK_UPDATED, GameAction } from "./actions";
 import { GamePhase } from "@creature-chess/models";
 import { STARTING_MONEY } from "@creature-chess/models/src/constants";
 import { READY_UP } from "../actions";
 
 export interface GameInfoState {
-    phase: GamePhase;
-    phaseStartedAtSeconds: number;
     opponentId: string;
     shopLocked: boolean;
     money: number;
@@ -13,8 +11,6 @@ export interface GameInfoState {
 }
 
 const initialState: GameInfoState = {
-    phase: GamePhase.WAITING,
-    phaseStartedAtSeconds: null,
     opponentId: null,
     shopLocked: false,
     money: STARTING_MONEY,
@@ -33,7 +29,6 @@ export function gameInfo(state: GameInfoState = initialState, action: GameAction
             if (action.payload.phase === GamePhase.READY) {
                 return {
                     ...state,
-                    phase: action.payload.phase,
                     opponentId: action.payload.payload.opponentId,
                     ready: false
                 };
@@ -43,26 +38,17 @@ export function gameInfo(state: GameInfoState = initialState, action: GameAction
             if (action.payload.phase === GamePhase.PREPARING) {
                 return {
                     ...state,
-                    phase: action.payload.phase,
                     opponentId: null
                 };
             }
 
-            return {
-                ...state,
-                phase: action.payload.phase
-            };
+            return state;
         case SHOP_LOCK_UPDATED: {
             return {
                 ...state,
                 shopLocked: action.payload.locked
             };
-        }
-        case PHASE_START_SECONDS:
-            return {
-                ...state,
-                phaseStartedAtSeconds: action.payload.time
-            };
+        };
         case READY_UP:
             return {
                 ...state,

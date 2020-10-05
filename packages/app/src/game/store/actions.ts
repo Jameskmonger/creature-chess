@@ -10,14 +10,17 @@ export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
 export type PLAYERS_RESURRECTED = typeof PLAYERS_RESURRECTED;
 export const FINISH_GAME = "FINISH_GAME";
 export type FINISH_GAME = typeof FINISH_GAME;
+export const PHASE_START_SECONDS = "PHASE_START_SECONDS";
+export type PHASE_START_SECONDS = typeof PHASE_START_SECONDS;
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
 export type JoinCompleteAction = ({ type: JOIN_COMPLETE, payload: { gameId: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
 export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] }});
+export type PhaseStartSecondsAction = ({ type: PHASE_START_SECONDS, payload: { time: number } });
 
-export type GameAction = JoinCompleteAction | GamePhaseUpdateAction;
+export type GameAction = JoinCompleteAction | GamePhaseUpdateAction | PhaseStartSecondsAction;
 
 export const findGameAction = (serverIP: string): FindGameAction => ({
     type: FIND_GAME,
@@ -51,5 +54,12 @@ export const finishGameAction = (winnerName: string): FinishGameAction => ({
     type: FINISH_GAME,
     payload: {
         winnerName
+    }
+});
+
+export const phaseStartSeconds = (timeSeconds: number): PhaseStartSecondsAction => ({
+    type: PHASE_START_SECONDS,
+    payload: {
+        time: timeSeconds
     }
 });

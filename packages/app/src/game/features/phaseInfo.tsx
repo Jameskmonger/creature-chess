@@ -7,8 +7,8 @@ import { GamePhase, Constants } from "@creature-chess/models";
 const renderPhaseInfoCountdown = (secondsRemaining: number) => <span className="highlight">({secondsRemaining})</span>;
 
 const PhaseInfo: React.FunctionComponent = () => {
-    const phase = useSelector<AppState, GamePhase>(state => state.gameInfo.phase);
-    const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.gameInfo.phaseStartedAtSeconds);
+    const phase = useSelector<AppState, GamePhase>(state => state.game.phase);
+    const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.game.phaseStartedAtSeconds);
 
     if (phase === GamePhase.WAITING) {
         return <div className="phase-info">Waiting for players</div>;
