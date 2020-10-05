@@ -1,11 +1,12 @@
 import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
-import { joinGameError, enableDebugMode, findGameAction } from "../game/store/actions";
+import { joinGameError, findGameAction } from "../game/store/actions";
 import { AppState } from "../store";
 import { getUrlParameter } from "./get-url-parameter";
 import { signOut } from "../auth/auth0";
 import { Footer } from "../display/footer";
 import { Leaderboard } from "./leaderboard";
+import { enableDebugMode } from "../store/actions/uiActions";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
