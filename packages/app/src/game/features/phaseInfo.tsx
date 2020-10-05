@@ -8,7 +8,7 @@ const renderPhaseInfoCountdown = (secondsRemaining: number) => <span className="
 
 const PhaseInfo: React.FunctionComponent = () => {
     const phase = useSelector<AppState, GamePhase>(state => state.gameInfo.phase);
-    const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.game.phaseStartedAtSeconds);
+    const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.gameInfo.phaseStartedAtSeconds);
 
     if (phase === GamePhase.WAITING) {
         return <div className="phase-info">Waiting for players</div>;
