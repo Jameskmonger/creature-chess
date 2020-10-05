@@ -2,9 +2,9 @@ import { fork, all, takeEvery, select } from "@redux-saga/core/effects";
 import { authSaga } from "../auth";
 import { networking } from "../game/sagas/networking/saga";
 import { gameSagaFactory } from "../game";
-import { JOIN_COMPLETE } from "../game/store/actions";
 import { SanitizedUser } from "@creature-chess/models";
 import { AppState } from "./state";
+import { JOIN_COMPLETE } from "../ui/actions";
 
 export const rootSaga = function*() {
     yield all([
