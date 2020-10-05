@@ -4,15 +4,14 @@ import { TileType, TileStyle } from "@creature-chess/models/src/position";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../../store";
 import { getClassForTileStyle } from "../getClassForTileStyle";
-import { selectPiece } from "../actions";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { playerDropPiece } from "@creature-chess/shared/player/actions";
-import { clearSelectedPiece } from "../../../../store/actions/gameActions";
 import { ownedPieceSelector, boardTilePieceSelector, benchTilePieceSelector } from "../../../../store/pieceSelectors";
 import { Dispatch } from "redux";
 import { canDropPiece } from "@creature-chess/shared/board";
 import { getPlayerLevel } from "@creature-chess/shared/player/playerSelectors";
+import { clearSelectedPiece } from "../actions";
 
 interface TileProps {
     x: number;
@@ -81,7 +80,7 @@ const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => 
     const boardLocked = useSelector<AppState, boolean>(state => state.board.locked);
     const belowPieceLimit = useSelector<AppState, boolean>(state => ownedPieceSelector(state).length < getPlayerLevel(state));
     const canMovePiece = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING || type === TileType.BENCH);
-    const selectedPiece = useSelector<AppState, PieceModel>(state => state.game.selectedPieceId ? getPiece(state, state.game.selectedPieceId) : null);
+    const selectedPiece = useSelector<AppState, PieceModel>(state => state.ui.selectedPieceId ? getPiece(state, state.ui.selectedPieceId) : null);
     const isSelected = piece && selectedPiece && piece.id === selectedPiece.id;
 
     const [{ canDrop, isDragging }, drop] = useDrop({

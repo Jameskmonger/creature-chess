@@ -7,8 +7,8 @@ import { AppState } from "../../../../store";
 import { Card } from "../../cardShop";
 
 const selectedPieceSelector = (state: AppState): PieceModel =>
-    state.game.selectedPieceId
-        ? getPiece(state, state.game.selectedPieceId)
+    state.ui.selectedPieceId
+        ? getPiece(state, state.ui.selectedPieceId)
         : null;
 
 const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId }) => {

@@ -12,7 +12,6 @@ import { GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
 export const initialState: GameState = {
     opponentId: null,
     loading: false,
-    menuError: null,
     phase: GamePhase.WAITING,
     phaseStartedAtSeconds: null,
     round: null,
@@ -32,18 +31,6 @@ export function game(state: GameState = initialState, action: GameAction): GameS
             return {
                 ...state,
                 loading: true
-            };
-        case JOIN_ERROR:
-            return {
-                ...state,
-                loading: false,
-                menuError: action.payload.error
-            };
-        case JOIN_COMPLETE:
-            return {
-                ...state,
-                loading: false,
-                menuError: null
             };
         case PHASE_START_SECONDS:
             return {

@@ -2,7 +2,7 @@ import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
 import {
-    FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
+    FindGameAction, shopLockUpdated, updateConnectionStatus, finishGameAction, playersResurrected
 } from "../../../store/actions/gameActions";
 import { playerListUpdated } from "../../features/playerList/playerListActions";
 import { FIND_GAME } from "../../../store/actiontypes/gameActionTypes";
@@ -27,6 +27,7 @@ import { initialiseBoard } from "@creature-chess/shared/board/actions/boardActio
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { setLevelAction } from "@creature-chess/shared/player/level";
 import { AuthSelectors } from "../../../auth";
+import { clearAnnouncement } from "packages/app/src/store/actions/uiActions";
 
 type Socket = SocketIOClient.Socket;
 

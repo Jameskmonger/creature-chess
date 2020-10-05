@@ -160,7 +160,7 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
 
 const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => ({
     loading: loadingSelector(state),
-    error: state.game.menuError
+    error: state.ui.menuError
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

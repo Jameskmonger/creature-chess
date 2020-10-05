@@ -28,7 +28,6 @@ export interface GameState {
     phaseStartedAtSeconds: number;
     opponentId: string;
     loading: boolean;
-    menuError: string;
     round: number | null;
     debug: boolean;
     connectionStatus: ConnectionStatus;
@@ -55,4 +54,5 @@ export interface UiState {
     winnerName: string;
     mainAnnouncement: string;
     subAnnouncement: string;
+    menuError: string;
 }

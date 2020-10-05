@@ -4,8 +4,10 @@ import {
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT
 } from "../actions/uiActions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
-import { FINISH_GAME } from "../actiontypes/gameActionTypes";
-import { FinishGameAction } from "../actions/gameActions";
+import { FINISH_GAME, JOIN_ERROR } from "../actiontypes/gameActionTypes";
+import { FinishGameAction, JoinErrorAction } from "../actions/gameActions";
+import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
+import { JoinCompleteAction } from "../actions/localPlayerActions";
 
 const initialState: UiState = {
     currentOverlay: null,
@@ -13,6 +15,7 @@ const initialState: UiState = {
     winnerName: null,
     mainAnnouncement: null,
     subAnnouncement: null,
+    menuError: null
 };
 
 type UIAction =
@@ -22,7 +25,9 @@ type UIAction =
     | ClearSelectedPieceAction
     | FinishGameAction
     | AnnouncementUpdateAction
-    | AnnouncementClearAction;
+    | AnnouncementClearAction
+    | JoinErrorAction
+    | JoinCompleteAction;
 
 export function ui(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
@@ -72,6 +77,18 @@ export function ui(state: UiState = initialState, action: UIAction) {
                 subAnnouncement: null
             };
         }
+        case JOIN_ERROR:
+            return {
+                ...state,
+                loading: false,
+                menuError: action.payload.error
+            };
+        case JOIN_COMPLETE:
+            return {
+                ...state,
+                loading: false,
+                menuError: null
+            };
         default:
             return state;
     }
