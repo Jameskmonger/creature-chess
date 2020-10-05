@@ -1,6 +1,6 @@
 import {
     GameAction,
-    ENABLE_DEBUG_MODE, FIND_GAME, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, PHASE_START_SECONDS, JOIN_COMPLETE
+    ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_CONNECTION_STATUS, PHASE_START_SECONDS, JOIN_COMPLETE
 } from "./actions";
 import { GameState } from "./state";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
@@ -17,8 +17,7 @@ export const initialState: GameState = {
     phaseStartedAtSeconds: null,
     round: null,
     debug: false,
-    connectionStatus: ConnectionStatus.NOT_CONNECTED,
-    shopLocked: false
+    connectionStatus: ConnectionStatus.NOT_CONNECTED
 };
 
 export function reducer(state: GameState = initialState, action: GameAction): GameState {
@@ -78,12 +77,6 @@ export function reducer(state: GameState = initialState, action: GameAction): Ga
             return {
                 ...state,
                 debug: true
-            };
-        }
-        case SHOP_LOCK_UPDATED: {
-            return {
-                ...state,
-                shopLocked: action.payload.locked
             };
         }
         default:

@@ -19,8 +19,7 @@ export class GameReducerTests {
       phaseStartedAtSeconds: null,
       round: null,
       debug: false,
-      connectionStatus: ConnectionStatus.NOT_CONNECTED,
-      shopLocked: false,
+      connectionStatus: ConnectionStatus.NOT_CONNECTED
     });
   }
 
