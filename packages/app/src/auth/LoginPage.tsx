@@ -4,6 +4,7 @@ import { signIn } from "./auth0";
 import { AppState } from "../store";
 import { isCheckingSession } from "./store/selectors";
 import { Footer } from "../display/footer";
+import { Loading } from "../display/loading";
 
 const LoginPage: React.FunctionComponent = () => {
     const checkingSession = useSelector<AppState, boolean>(isCheckingSession);
@@ -15,7 +16,9 @@ const LoginPage: React.FunctionComponent = () => {
         signIn();
     };
 
-    const loading = (checkingSession || loadingSignIn);
+    if (checkingSession) {
+        return <Loading />;
+    }
 
     return (
         <div className="menu">
@@ -25,12 +28,12 @@ const LoginPage: React.FunctionComponent = () => {
                 <div className="join-options">
                     <div className="option">
                         {
-                            loading
+                            loadingSignIn
                             && <button className="option-button primary">Loading...</button>
                         }
 
                         {
-                            !loading
+                            !loadingSignIn
                             && <button onClick={onSignInClick} className="option-button primary">Log in / Sign up</button>
                         }
 
