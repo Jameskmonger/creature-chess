@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { signIn } from "./auth0";
 import { AppState } from "../store";
 import { isCheckingSession } from "./store/selectors";
-import { Footer } from "../display/footer";
-import { Loading } from "../display/loading";
+import { Footer } from "../ui/display/footer";
+import { Loading } from "../ui/display/loading";
 
 const LoginPage: React.FunctionComponent = () => {
     const checkingSession = useSelector<AppState, boolean>(isCheckingSession);

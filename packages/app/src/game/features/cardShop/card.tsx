@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
-import { CreatureImage } from "../../../display";
+import { CreatureImage } from "../../../ui/display";
 
 interface CardProps {
     definitionId: number;

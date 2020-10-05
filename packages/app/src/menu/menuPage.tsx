@@ -3,10 +3,10 @@ import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { AppState } from "../store";
 import { getUrlParameter } from "./get-url-parameter";
 import { signOut } from "../auth/auth0";
-import { Footer } from "../display/footer";
+import { Footer } from "../ui/display/footer";
 import { Leaderboard } from "./leaderboard";
 import { enableDebugMode, findGameAction, joinGameError } from "../ui/actions";
-import { Loading } from "../display/loading";
+import { Loading } from "../ui/display/loading";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
