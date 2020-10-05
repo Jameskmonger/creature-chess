@@ -19,6 +19,7 @@ import { SagaMiddleware } from "redux-saga";
 import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "../../player/playerSelectors";
 import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
 import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
+import { getMoneyForMatch } from "./matchRewards";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -197,6 +198,8 @@ export abstract class Player {
         }
     }
 
+    private wonLastMatch: boolean = false;
+
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
         this.onEnterPlayingPhase(startedAt);
 
@@ -216,6 +219,12 @@ export abstract class Player {
         const homeScore = surviving.home.length;
         const awayScore = surviving.away.length;
 
+        const win = homeScore > awayScore;
+
+        this.wonLastMatch = win;
+
+        this.adjustStreak(win);
+
         this.battle = finishedBattle(this.match.away.id, homeScore, awayScore);
         this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
 
@@ -225,6 +234,15 @@ export abstract class Player {
             homeScore,
             awayScore
         };
+    }
+
+    public giveMatchRewards() {
+        const money = getMoneyForMatch(this.getMoney(), this.streak.amount, this.wonLastMatch);
+
+        this.addMoney(money);
+        this.addXp(1);
+
+        this.wonLastMatch = false;
     }
 
     public onQuitGame(fn: (player: Player) => void) {
