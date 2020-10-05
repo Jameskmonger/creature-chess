@@ -11,5 +11,4 @@ export interface GameState {
     round: number | null;
     debug: boolean;
     connectionStatus: ConnectionStatus;
-    shopLocked: boolean;
 }
