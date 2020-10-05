@@ -22,7 +22,11 @@
   },
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
   "dependencies": {
+    "@creature-chess/auth-server": "^0.0.0",
     "@creature-chess/data": "^0.0.0",
+    "@creature-chess/models": "^0.0.0",
+    "@types/auth0": "^2.20.5",
+    "auth0": "^2.27.1",
     "@types/express": "^4.17.8",
     "express": "^4.17.1"
   }

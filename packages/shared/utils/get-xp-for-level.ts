@@ -1,4 +1,4 @@
-import { MAX_PLAYER_LEVEL } from "@creature-chess/models/constants";
+import { MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 
 const XP_TO_NEXT_LEVEL = [
     1,

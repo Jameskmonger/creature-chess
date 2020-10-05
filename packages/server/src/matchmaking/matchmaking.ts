@@ -3,12 +3,12 @@ import { Game } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby";
 import { PlayerSessionRegistry } from "./playerSessionRegistry";
-import { UserModel } from "../user/userModel";
 import { SocketPlayer } from "../player/socketPlayer";
 import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
 import { LobbyPlayer } from "@creature-chess/models";
 import { log } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
+import { UserModel } from "@creature-chess/auth-server";
 
 const getLobbyPlayers = (lobby: Lobby): LobbyPlayer[] => {
     return lobby.getPlayers().map(p => ({

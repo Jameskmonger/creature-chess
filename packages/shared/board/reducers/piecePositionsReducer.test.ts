@@ -5,7 +5,7 @@ import {
 } from "../actions/boardActions";
 import { piecePositions, PiecePositionsState } from "./piecePositionsReducer";
 import { createMockPiece } from "@testing/utils";
-import { createTileCoordinates } from "@creature-chess/models/position";
+import { createTileCoordinates } from "@creature-chess/models/src/position";
 import { PiecesState } from "./piecesReducer";
 
 @TestFixture()

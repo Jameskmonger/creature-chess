@@ -1,4 +1,4 @@
-import { CreatureStats, AttackType, attackTypes, DefinitionClass } from "@creature-chess/models/creatureDefinition";
+import { CreatureStats, AttackType, attackTypes, DefinitionClass } from "@creature-chess/models/src/creatureDefinition";
 
 // each class has points to assign
 // these are then used, along with piece cost and stage, to get stats

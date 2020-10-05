@@ -2,7 +2,7 @@
 import present = require("present");
 import { GamePhase } from "@creature-chess/shared/models";
 import { Game, Bot, Player } from "@creature-chess/shared/game";
-import { DEFAULT_TURN_COUNT } from "@creature-chess/shared/models/constants";
+import { DEFAULT_TURN_COUNT } from "@creature-chess/shared/models/src/constants";
 
 let benchmarkStart: number;
 const GAME_COUNT = 5;

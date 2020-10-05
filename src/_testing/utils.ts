@@ -1,6 +1,6 @@
 // todo fix these imports - make this a package!
 import { PieceModel } from "../../packages/models";
-import { createTileCoordinates } from "../../packages/models/position";
+import { createTileCoordinates } from "../../packages/models/src/position";
 import { DefinitionProvider } from "../../packages/shared/game/definitionProvider";
 
 const definitionProvider = new DefinitionProvider();

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
-import { TileType, TileStyle } from "@creature-chess/models/position";
+import { TileType, TileStyle } from "@creature-chess/models/src/position";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../store";
 import { getClassForTileStyle } from "../getClassForTileStyle";

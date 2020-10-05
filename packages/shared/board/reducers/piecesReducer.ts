@@ -1,8 +1,8 @@
 import { Reducer } from "redux";
 import { BoardAction } from "../actions/boardActions";
 import { REMOVE_BOARD_PIECE, INITIALISE_BOARD, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE, UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE, REMOVE_BOARD_PIECES } from "../actions/boardActionTypes";
-import { createTileCoordinates } from "@creature-chess/models/position";
-import { IndexedPieces } from "@creature-chess/models/piece";
+import { createTileCoordinates } from "@creature-chess/models/src/position";
+import { IndexedPieces } from "@creature-chess/models/src/piece";
 
 type PiecesState = IndexedPieces;
 

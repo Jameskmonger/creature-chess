@@ -1,4 +1,4 @@
-import { CreatureDefinition } from "@creature-chess/models/creatureDefinition";
+import { CreatureDefinition } from "@creature-chess/models/src/creatureDefinition";
 import { definitions } from "./definitions/definitions";
 
 export class DefinitionProvider {
