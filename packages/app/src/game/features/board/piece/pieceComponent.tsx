@@ -10,6 +10,7 @@ import { selectPiece } from "../actions";
 import { PieceImage } from "./components/pieceImage";
 import { StageIndicator } from "./components/stageIndicator";
 import { Healthbar } from "./components/healthbar";
+import { getUserId } from "../../../../auth/store/selectors";
 
 const dyingAnimation = "dying";
 
@@ -29,7 +30,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const dispatch = useDispatch();
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceComponent | null>(null);
-    const localPlayerId = useSelector<AppState, string>(state => state.game.localPlayerId);
+    const localPlayerId = useSelector<AppState, string>(getUserId);
     const piece = useSelector<AppState, PieceComponent>(state => getPiece(state, id));
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.gameInfo.phase === GamePhase.PREPARING);
 

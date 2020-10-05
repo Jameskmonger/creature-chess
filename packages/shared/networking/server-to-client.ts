@@ -57,7 +57,7 @@ export type AuthenticateResponse = {
 };
 
 export type PlayerGameState = {
-  localPlayerId: string;
+  id: string;
 
   // todo get rid of the ones above
   fullState?: {

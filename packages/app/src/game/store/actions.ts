@@ -18,7 +18,7 @@ export const FINISH_GAME = "FINISH_GAME";
 export type FINISH_GAME = typeof FINISH_GAME;
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
-export type JoinCompleteAction = ({ type: JOIN_COMPLETE, payload: { playerId: string } });
+export type JoinCompleteAction = ({ type: JOIN_COMPLETE, payload: { gameId: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
@@ -43,10 +43,10 @@ export const findGameAction = (serverIP: string): FindGameAction => ({
     }
 });
 
-export const joinCompleteAction = (playerId: string): JoinCompleteAction => ({
+export const joinCompleteAction = (gameId: string): JoinCompleteAction => ({
     type: JOIN_COMPLETE,
     payload: {
-        playerId
+        gameId
     }
 });
 
