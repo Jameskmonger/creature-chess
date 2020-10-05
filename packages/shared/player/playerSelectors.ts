@@ -49,3 +49,5 @@ export const getMostExpensiveBenchPiece = (state: PlayerState) => {
 
     return benchPieces[0];
 };
+
+export const getOpponentId = (state: PlayerState) => state.gameInfo.opponentId;

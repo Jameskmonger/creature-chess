@@ -9,7 +9,6 @@ import { GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
 
 export const initialState: GameState = {
     localPlayerId: null,
-    opponentId: null,
     loading: false,
     round: null,
     debug: false,
@@ -34,20 +33,10 @@ export function reducer(state: GameState = initialState, action: GameAction): Ga
                 loading: true
             };
         case GAME_PHASE_UPDATE:
-            // set opponent id when entering ready phase
-            if (action.payload.phase === GamePhase.READY) {
-                return {
-                    ...state,
-                    opponentId: action.payload.payload.opponentId
-                };
-            }
-
-            // clear opponent id when entering preparing phase
             if (action.payload.phase === GamePhase.PREPARING) {
                 return {
                     ...state,
-                    round: action.payload.payload.round,
-                    opponentId: null
+                    round: action.payload.payload.round
                 };
             }
 
