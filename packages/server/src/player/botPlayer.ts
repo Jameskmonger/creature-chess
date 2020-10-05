@@ -205,9 +205,7 @@ export class BotPlayer extends Player {
                 }
             };
 
-            this.pieces.dispatchAction(
-                PlayerActions.playerDropPiece(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition)
-            );
+            this.store.dispatch(PlayerActions.playerDropPiece(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition));
         }
     }
 

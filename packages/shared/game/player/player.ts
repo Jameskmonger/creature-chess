@@ -10,7 +10,6 @@ import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer, PlayerPieceLocation } from "@creature-chess/models";
 import { getPiecesForStage, getXpToNextLevel } from "../../utils";
 import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
-import { PlayerPieces } from "./playerPieces";
 import { mergeBoards } from "../../board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { PlayerActions } from "../../player";
@@ -18,6 +17,8 @@ import { createPlayerStore, PlayerStore } from "../../player/store";
 import { cardsUpdated, moneyUpdateAction, setLevelAction } from "../../player/playerInfo";
 import { SagaMiddleware } from "redux-saga";
 import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "../../player/playerSelectors";
+import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
+import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -60,8 +61,6 @@ export abstract class Player {
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
-    protected pieces: PlayerPieces;
-
     private events = new EventEmitter();
 
     private deck: CardDeck;
@@ -84,7 +83,6 @@ export abstract class Player {
         const { store, sagaMiddleware } = createPlayerStore(this.id, saga);
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
-        this.pieces = new PlayerPieces(this.store);
     }
 
     public setDefinitionProvider(definitionProvider: DefinitionProvider) {
@@ -164,7 +162,7 @@ export abstract class Player {
             this.rerollCards();
         }
 
-        this.pieces.unlockEvolutions();
+        this.store.dispatch(unlockBench());
 
         this.onEnterPreparingPhase(startedAt, round);
 
@@ -186,7 +184,7 @@ export abstract class Player {
         if (this.isAlive()) {
             this.fillBoard();
 
-            this.pieces.lockEvolutions();
+            this.store.dispatch(lockBench());
 
             const opponent = opponentProvider.getOpponent(this.id);
 
@@ -297,7 +295,15 @@ export abstract class Player {
 
     public clearPieces() {
         const pieces = getAllPieces(this.store.getState());
-        this.pieces.clear();
+
+        this.store.dispatch(initialiseBoard({}));
+
+        // todo this is ugly
+        this.store.dispatch(initialiseBench({
+            pieces: [],
+            locked: this.store.getState().bench.locked
+        }));
+
         for (const piece of pieces) {
             this.deck.addPiece(piece);
         }
@@ -373,11 +379,11 @@ export abstract class Player {
 
     protected abstract onEnterPreparingPhase(startedAt: number, round: number);
 
-    protected abstract onEnterReadyPhase(startedAt: number, );
+    protected abstract onEnterReadyPhase(startedAt: number,);
 
-    protected abstract onEnterPlayingPhase(startedAt: number, );
+    protected abstract onEnterPlayingPhase(startedAt: number,);
 
-    protected abstract onDeath(phaseStartedAt: number, );
+    protected abstract onDeath(phaseStartedAt: number,);
 
     protected abstract onShopLockUpdate();
 
@@ -419,7 +425,8 @@ export abstract class Player {
         this.deck.addPiece(piece);
         this.deck.shuffle();
 
-        this.pieces.removePiece(pieceId);
+        this.store.dispatch(removeBenchPiece(pieceId));
+        this.store.dispatch(removeBoardPiece(pieceId));
     }
 
     protected buyXp = () => {
@@ -490,9 +497,7 @@ export abstract class Player {
             return;
         }
 
-        this.pieces.dispatchAction(
-            PlayerActions.playerDropPiece(payload.pieceId, payload.from, payload.to)
-        );
+        this.store.dispatch(PlayerActions.playerDropPiece(payload.pieceId, payload.from, payload.to));
     }
 
     private setReady(ready: boolean) {
