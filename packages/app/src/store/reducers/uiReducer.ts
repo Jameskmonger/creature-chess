@@ -4,9 +4,7 @@ import {
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT
 } from "../actions/uiActions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
-import { FinishGameAction, FINISH_GAME, JoinErrorAction, JOIN_ERROR } from "../../game/store/actions";
-import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
-import { JoinCompleteAction } from "../actions/localPlayerActions";
+import { FinishGameAction, FINISH_GAME, JoinCompleteAction, JoinErrorAction, JOIN_COMPLETE, JOIN_ERROR } from "../../game/store/actions";
 
 const initialState: UiState = {
     currentOverlay: null,

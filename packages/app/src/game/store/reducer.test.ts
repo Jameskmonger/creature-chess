@@ -11,6 +11,8 @@ export class GameReducerTests {
     const state = reducer(undefined, { type: undefined });
 
     Expect(state).toEqual({
+      localPlayerId: null,
+      ready: false,
       opponentId: null,
       loading: false,
       phase: GamePhase.WAITING,

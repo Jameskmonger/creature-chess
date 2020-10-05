@@ -2,11 +2,10 @@ import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
 import {
-    FindGameAction, shopLockUpdated, updateConnectionStatus, finishGameAction, playersResurrected, FIND_GAME
+    FindGameAction, shopLockUpdated, updateConnectionStatus, finishGameAction, playersResurrected, FIND_GAME, joinCompleteAction
 } from "../../store/actions";
 import { playerListUpdated } from "../../features/playerList/playerListActions";
 import { log } from "../../../log";
-import { joinCompleteAction } from "../../../store/actions/localPlayerActions";
 import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEventChannel";
 import { AppState } from "../../../store/state";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
