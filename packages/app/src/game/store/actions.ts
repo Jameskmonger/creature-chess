@@ -10,8 +10,6 @@ export const JOIN_ERROR = "JOIN_ERROR";
 export type JOIN_ERROR = typeof JOIN_ERROR;
 export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
 export type PLAYERS_RESURRECTED = typeof PLAYERS_RESURRECTED;
-export const PHASE_START_SECONDS = "PHASE_START_SECONDS";
-export type PHASE_START_SECONDS = typeof PHASE_START_SECONDS;
 export const ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
 export type ENABLE_DEBUG_MODE = typeof ENABLE_DEBUG_MODE;
 export const UPDATE_CONNECTION_STATUS = "UPDATE_CONNECTION_STATUS";
@@ -24,13 +22,11 @@ export type JoinCompleteAction = ({ type: JOIN_COMPLETE, payload: { playerId: st
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
-export type PhaseStartSecondsAction = ({ type: PHASE_START_SECONDS, payload: { time: number } });
 export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] }});
 
 export type GameAction =
     FindGameAction
     | JoinErrorAction
-    | PhaseStartSecondsAction
     | JoinCompleteAction
     | GamePhaseUpdateAction
     | ({ type: ENABLE_DEBUG_MODE })
@@ -58,13 +54,6 @@ export const joinGameError = (error: string): JoinErrorAction => ({
     type: JOIN_ERROR,
     payload: {
         error
-    }
-});
-
-export const phaseStartSeconds = (timeSeconds: number): PhaseStartSecondsAction => ({
-    type: PHASE_START_SECONDS,
-    payload: {
-        time: timeSeconds
     }
 });
 

@@ -1,17 +1,22 @@
-import { MONEY_UPDATE, GAME_PHASE_UPDATE, SHOP_LOCK_UPDATED, GameAction } from "./actions";
+import { MONEY_UPDATE, GAME_PHASE_UPDATE, SHOP_LOCK_UPDATED, PHASE_START_SECONDS, GameAction } from "./actions";
 import { GamePhase } from "@creature-chess/models";
 import { STARTING_MONEY } from "@creature-chess/models/src/constants";
+import { READY_UP } from "../actions";
 
 export interface GameInfoState {
     phase: GamePhase;
+    phaseStartedAtSeconds: number;
     shopLocked: boolean;
     money: number;
+    ready: boolean;
 }
 
 const initialState: GameInfoState = {
     phase: GamePhase.WAITING,
+    phaseStartedAtSeconds: null,
     shopLocked: false,
-    money: STARTING_MONEY
+    money: STARTING_MONEY,
+    ready: false
 };
 
 export function gameInfo(state: GameInfoState = initialState, action: GameAction): GameInfoState {
@@ -22,6 +27,15 @@ export function gameInfo(state: GameInfoState = initialState, action: GameAction
                 money: action.payload.money
             };
         case GAME_PHASE_UPDATE:
+            // set ready to false when entering ready phase
+            if (action.payload.phase === GamePhase.READY) {
+                return {
+                    ...state,
+                    phase: action.payload.phase,
+                    ready: false
+                };
+            }
+
             return {
                 ...state,
                 phase: action.payload.phase
@@ -32,6 +46,16 @@ export function gameInfo(state: GameInfoState = initialState, action: GameAction
                 shopLocked: action.payload.locked
             };
         }
+        case PHASE_START_SECONDS:
+            return {
+                ...state,
+                phaseStartedAtSeconds: action.payload.time
+            };
+        case READY_UP:
+            return {
+                ...state,
+                ready: true
+            };
         default:
             return state;
     }
