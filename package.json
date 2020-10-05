@@ -6,7 +6,7 @@
 	"main": "index.js",
 	"scripts": {
 		"bootstrap": "lerna bootstrap --hoist",
-		"build": "npm run build:server && npm run build:client",
+		"build": "npm run build:server && npm run build:server-info && npm run build:client",
 		"build:client": "lerna run build --scope=@creature-chess/app --stream",
 		"build:server": "lerna run build --scope=@creature-chess/server --stream",
 		"build:server-info": "lerna run build --scope=@creature-chess/server-info --stream",
