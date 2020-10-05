@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD } from "../actions";
-import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
+import { PlayerPieceLocation } from "@creature-chess/models";
 import { getFirstEmptyBenchSlot } from "../../board";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { createPieceFromCard } from "../../utils/piece-utils";
@@ -49,13 +49,6 @@ export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvid
             BUY_CARD,
             function*({ payload: { index } }) {
                 const state: TState = yield select();
-
-                const gamePhase = state.gameInfo.phase;
-
-                // not in correct phase
-                if (gamePhase === GamePhase.WAITING || gamePhase === GamePhase.DEAD) {
-                    return;
-                }
 
                 const card = state.cards[index];
                 const money = state.gameInfo.money;

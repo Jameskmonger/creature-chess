@@ -11,9 +11,9 @@ import { GameState } from "../game";
 
 export interface AppState {
     auth: AuthState;
-    lobby: LobbyState;
-
     ui: UiState;
+
+    lobby: LobbyState;
     game: GameState;
 
     gameInfo: GameInfoState;

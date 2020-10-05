@@ -11,7 +11,7 @@ import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectModal } from "./overlays/reconnectModal";
 
 const BoardPieces: React.FunctionComponent = props => {
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.gameInfo.phase === GamePhase.PREPARING);
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
     const pieces = useSelector<AppState, { [key: string]: string }>(state => state.board.piecePositions);
 
     const pieceElements: React.ReactNode[] = [];
@@ -39,7 +39,7 @@ const BoardPieces: React.FunctionComponent = props => {
 
 const Board: React.FunctionComponent = props => {
     const showOpponentBoardPlaceholder = useSelector<AppState, boolean>(
-        state => state.gameInfo.phase === GamePhase.WAITING || state.gameInfo.phase === GamePhase.PREPARING);
+        state => state.game.phase === GamePhase.WAITING || state.game.phase === GamePhase.PREPARING);
 
     const localPlayerStyle = TileStyle.DEFAULT;
     const opponentStyle = TileStyle.DEFAULT;

@@ -79,7 +79,7 @@ const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => 
 
     const boardLocked = useSelector<AppState, boolean>(state => state.board.locked);
     const belowPieceLimit = useSelector<AppState, boolean>(state => ownedPieceSelector(state).length < getPlayerLevel(state));
-    const canMovePiece = useSelector<AppState, boolean>(state => state.gameInfo.phase === GamePhase.PREPARING || type === TileType.BENCH);
+    const canMovePiece = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING || type === TileType.BENCH);
     const selectedPiece = useSelector<AppState, PieceModel>(state => state.ui.selectedPieceId ? getPiece(state, state.ui.selectedPieceId) : null);
     const isSelected = piece && selectedPiece && piece.id === selectedPiece.id;
 
