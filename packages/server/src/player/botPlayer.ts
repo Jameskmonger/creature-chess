@@ -70,7 +70,7 @@ export class BotPlayer extends Player {
 
     protected onEnterPreparingPhase(startedAt: number, round: number) {
         // todo rework this, it's a quick fix to make bots aware of game state
-        const { board, bench, cards } = this.store.getState();
+        const { board, bench, gameInfo: { cards } } = this.store.getState();
 
         const packet: PhaseUpdatePacket = {
             startedAt,
@@ -212,7 +212,7 @@ export class BotPlayer extends Player {
     }
 
     private getCardViews(): CardView[] {
-        const cards = this.store.getState().cards;
+        const cards = this.getCards();
 
         const views = cards.filter(c => c !== null).map(this.getCardView);
 

@@ -1,3 +1,4 @@
+import { Card } from "@creature-chess/models";
 import { ReadyUpAction } from "../actions";
 
 export const SHOP_LOCK_UPDATED = "SHOP_LOCK_UPDATED";
@@ -10,6 +11,8 @@ export const CLEAR_OPPONENT = "CLEAR_OPPONENT";
 export type CLEAR_OPPONENT = typeof CLEAR_OPPONENT;
 export const LEVEL_UPDATE = "LEVEL_UPDATE";
 export type LEVEL_UPDATE = typeof LEVEL_UPDATE;
+export const CARDS_UPDATED = "CARDS_UPDATED";
+export type CARDS_UPDATED = typeof CARDS_UPDATED;
 
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
 export type MoneyUpdateAction = ({ type: MONEY_UPDATE, payload: { money: number } });
@@ -22,6 +25,7 @@ export type LevelUpdateAction = ({
         xp: number;
     };
 });
+export type CardsUpdatedAction = ({ type: CARDS_UPDATED, payload: { cards: Card[] } });
 
 export type GameAction =
     UpdateShopLockAction
@@ -29,7 +33,8 @@ export type GameAction =
     | ReadyUpAction
     | SetOpponentAction
     | ClearOpponentAction
-    | LevelUpdateAction;
+    | LevelUpdateAction
+    | CardsUpdatedAction;
 
 export const shopLockUpdated = (locked: boolean): UpdateShopLockAction => ({
     type: SHOP_LOCK_UPDATED,
@@ -50,5 +55,12 @@ export const setLevelAction = (level: number, xp: number): LevelUpdateAction => 
     type: LEVEL_UPDATE,
     payload: {
         level, xp
+    }
+});
+
+export const cardsUpdated = (cards: Card[]): CardsUpdatedAction => ({
+    type: CARDS_UPDATED,
+    payload: {
+        cards
     }
 });

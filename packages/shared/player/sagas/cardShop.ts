@@ -5,9 +5,8 @@ import { getFirstEmptyBenchSlot } from "../../board";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { createPieceFromCard } from "../../utils/piece-utils";
 import { addBenchPiece } from "../bench/benchActions";
-import { cardsUpdated } from "./actions";
 import { PlayerState } from "../store";
-import { moneyUpdateAction } from "../gameInfo";
+import { cardsUpdated, moneyUpdateAction } from "../gameInfo";
 import { log } from "../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
 import { addBoardPiece } from "../../board/actions/boardActions";
@@ -50,7 +49,7 @@ export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvid
             function*({ payload: { index } }) {
                 const state: TState = yield select();
 
-                const card = state.cards[index];
+                const card = state.gameInfo.cards[index];
                 const money = state.gameInfo.money;
 
                 // card doesn't exist or player can't afford
@@ -73,7 +72,7 @@ export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvid
                 }
 
                 const piece = createPieceFromCard(definitionProvider, playerId, card);
-                const remainingCards = state.cards.map(c => c === card ? null : c);
+                const remainingCards = state.gameInfo.cards.map(c => c === card ? null : c);
 
                 if (destination.type === "board") {
                     yield put(addBoardPiece(piece, destination.location.x, destination.location.y));

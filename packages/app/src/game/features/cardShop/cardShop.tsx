@@ -16,7 +16,7 @@ interface CardShopProps {
 const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const dispatch = useDispatch();
 
-    const cards = useSelector<AppState, CardModel[]>(state => state.cards);
+    const cards = useSelector<AppState, CardModel[]>(state => state.gameInfo.cards);
     const money = useSelector<AppState, number>(getPlayerMoney);
     const canUseShop = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.DEAD);
 

@@ -1,6 +1,7 @@
-import { MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT, LEVEL_UPDATE } from "./actions";
+import { MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT, LEVEL_UPDATE, CARDS_UPDATED } from "./actions";
 import { STARTING_LEVEL, STARTING_MONEY } from "@creature-chess/models/src/constants";
 import { READY_UP } from "../actions";
+import { Card } from "@creature-chess/models";
 
 export interface GameInfoState {
     opponentId: string;
@@ -9,6 +10,7 @@ export interface GameInfoState {
     ready: boolean;
     level: number;
     xp: number;
+    cards: Card[];
 }
 
 const initialState: GameInfoState = {
@@ -17,11 +19,17 @@ const initialState: GameInfoState = {
     money: STARTING_MONEY,
     ready: false,
     level: STARTING_LEVEL,
-    xp: 0
+    xp: 0,
+    cards: []
 };
 
 export function gameInfo(state: GameInfoState = initialState, action: GameAction): GameInfoState {
     switch (action.type) {
+        case CARDS_UPDATED:
+            return {
+                ...state,
+                cards: action.payload.cards
+            };
         case LEVEL_UPDATE:
             return {
                 ...state,

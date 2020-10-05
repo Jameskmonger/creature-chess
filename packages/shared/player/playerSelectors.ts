@@ -4,12 +4,12 @@ import { GRID_SIZE } from "@creature-chess/models/src/constants";
 import { TileCoordinates } from "@creature-chess/models/src/position";
 
 export const getPlayerMoney = (state: PlayerState): number => state.gameInfo.money;
-export const getPlayerLevel = (state: PlayerState): number => state.level.level;
-export const getPlayerXp = (state: PlayerState): number => state.level.xp;
+export const getPlayerLevel = (state: PlayerState): number => state.gameInfo.level;
+export const getPlayerXp = (state: PlayerState): number => state.gameInfo.xp;
 
 export const getPlayerBelowPieceLimit = (state: PlayerState, playerId: string): boolean => {
     const ownedBoardPieceCount = Object.values(state.board.pieces).filter(p => p.ownerId === playerId).length;
-    const level = state.level.level;
+    const level = getPlayerLevel(state);
 
     return ownedBoardPieceCount < level;
 };
