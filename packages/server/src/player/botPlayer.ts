@@ -58,7 +58,7 @@ export class BotPlayer extends Player {
         ];
     }
 
-    public onStartGame() { /* nothing required, we're a bot */ }
+    public onStartGame(gameId: string) { /* nothing required, we're a bot */ }
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
 

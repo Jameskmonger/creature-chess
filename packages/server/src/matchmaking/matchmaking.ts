@@ -82,7 +82,7 @@ export class Matchmaking {
         player.setSocket(socket);
 
         const fullGameState: PlayerGameState = {
-            localPlayerId: player.id,
+            id: game.id,
 
             fullState: {
                 players: game.getPlayerList(),

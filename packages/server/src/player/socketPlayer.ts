@@ -92,13 +92,13 @@ export class SocketPlayer extends Player {
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
     }
 
-    public onStartGame() {
+    public onStartGame(gameId: string) {
         this.outgoingPacketRegistry.emit(
             ServerToClientPacketOpcodes.JOIN_GAME,
             {
                 type: "game",
                 payload: {
-                    localPlayerId: this.id
+                    id: gameId
                 }
             }
         );
