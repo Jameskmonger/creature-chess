@@ -10,9 +10,6 @@ import { EventEmitter } from "events";
 import { PlayerList } from "./playerList";
 import { TurnSimulator } from "../match/combat/turnSimulator";
 import { DefinitionProvider } from "./definitionProvider";
-import { EventManager } from "./events/eventManager";
-import { matchRewards } from "./plugins/matchRewards";
-import { resetPlayer } from "./plugins/resetPlayer";
 import { PhaseUpdatePacket } from "../networking/server-to-client";
 import { PlayerStatus } from "@creature-chess/models";
 import pDefer = require("p-defer");
@@ -56,7 +53,6 @@ export class Game {
     private players: Player[] = [];
     private events = new EventEmitter();
     private deck: CardDeck;
-    private eventManager = new EventManager();
 
     constructor(players: Player[], phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
         this.id = uuid();
@@ -80,8 +76,6 @@ export class Game {
                 .filter(p => p.getStatus() === PlayerStatus.CONNECTED)
                 .forEach(p => p.onPlayerListUpdate(playerList))
         );
-
-        this.registerPlugins();
 
         players.forEach(p => {
             this.addPlayer(p);
@@ -230,8 +224,6 @@ export class Game {
         // more teardown
         this.events.removeAllListeners();
         this.events = null;
-        this.eventManager.deconstructor();
-        this.eventManager = null;
     }
 
     private setPhase(value: GamePhase) {
@@ -246,7 +238,7 @@ export class Game {
 
         this.setPhase(GamePhase.PREPARING);
 
-        this.eventManager.getTriggers().enterPreparingPhase(this.players);
+        this.players.forEach(p => p.reset());
 
         const promises = this.players
             .filter(p => p.getStatus() !== PlayerStatus.QUIT)
@@ -331,11 +323,8 @@ export class Game {
         // rather than jumping straight into the next phase
         await delay(3000);
 
-        this.eventManager.getTriggers().finishRound(this.players);
-    }
-
-    private registerPlugins() {
-        matchRewards(this.eventManager);
-        resetPlayer(this.eventManager);
+        for (const player of this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive())) {
+            player.giveMatchRewards();
+        }
     }
 }
