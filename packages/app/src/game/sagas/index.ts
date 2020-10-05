@@ -4,7 +4,6 @@ import { battle } from "@creature-chess/shared/match/combat/battleSaga";
 import { TurnSimulator } from "@creature-chess/shared/match/combat/turnSimulator";
 import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION } from "@creature-chess/models/src/constants";
 import { evolutionSagaFactory } from "@creature-chess/shared/player/sagas/evolution";
-import { cardShopSagaFactory } from "@creature-chess/shared/player/cardShop/saga";
 import { dropPieceSagaFactory } from "@creature-chess/shared/player/sagas/dropPiece";
 import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
 import { AppState } from "../../store";
@@ -13,6 +12,7 @@ import { phaseTimer } from "./actions/phaseTimer";
 import { gamePhase } from "./actions/gamePhase";
 import { sellPiece } from "./actions/sellPiece";
 import { announcement } from "./actions/announcement";
+import { cardShopSagaFactory } from "@creature-chess/shared/player/sagas/cardShop";
 
 export const gameSagaFactory = (playerId: string) => {
     const turnSimulator = new TurnSimulator();

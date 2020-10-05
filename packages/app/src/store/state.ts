@@ -1,8 +1,7 @@
-import { Card, PlayerListPlayer } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "@creature-chess/shared/board";
 import { BenchState } from "@creature-chess/shared/player/bench";
 import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
-import { LevelState } from "@creature-chess/shared/player/level";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { GameState } from "@creature-chess/shared/game";
 import { Overlay } from "../ui/overlay";
@@ -19,8 +18,6 @@ export interface AppState {
     gameInfo: GameInfoState;
     board: BoardState;
     bench: BenchState;
-    cards: Card[];
-    level: LevelState;
 
     playerList: PlayerListPlayer[];
 }

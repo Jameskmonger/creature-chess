@@ -15,10 +15,8 @@ import { mergeBoards } from "../../board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { PlayerActions } from "../../player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
-import { cardsUpdated } from "../../player/cardShop/actions";
-import { moneyUpdateAction } from "../../player/gameInfo";
+import { cardsUpdated, moneyUpdateAction, setLevelAction } from "../../player/gameInfo";
 import { SagaMiddleware } from "redux-saga";
-import { setLevelAction } from "../../player/level/actions";
 import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "../../player/playerSelectors";
 
 enum PlayerEvent {
@@ -110,7 +108,7 @@ export abstract class Player {
     }
 
     public addXp(amount: number) {
-        let { level, xp } = this.store.getState().level;
+        let { level, xp } = this.store.getState().gameInfo;
 
         for (let i = 0; i < amount; i++) {
             const toNextLevel = getXpToNextLevel(level);
@@ -134,7 +132,7 @@ export abstract class Player {
     }
 
     public getLevel() {
-        return this.store.getState().level.level;
+        return this.store.getState().gameInfo.level;
     }
 
     public getMoney() {
@@ -278,7 +276,7 @@ export abstract class Player {
             return;
         }
 
-        const cards = this.store.getState().cards;
+        const cards = this.store.getState().gameInfo.cards;
 
         const newCards = this.deck.reroll(cards, this.getLevel(), 5);
         this.store.dispatch(cardsUpdated(newCards));
@@ -304,7 +302,7 @@ export abstract class Player {
             this.deck.addPiece(piece);
         }
 
-        const cards = this.store.getState().cards;
+        const cards = this.store.getState().gameInfo.cards;
         this.store.dispatch(cardsUpdated([]));
         this.deck.addCards(cards);
 
@@ -347,18 +345,21 @@ export abstract class Player {
     }
 
     public getCards() {
-        return this.store.getState().cards;
+        return this.store.getState().gameInfo.cards;
     }
 
     public getGameState() {
-        const { board, bench, cards, gameInfo: { money }, level } = this.store.getState();
+        const { board, bench, gameInfo: { money, cards, level, xp } } = this.store.getState();
 
         return {
             board: board.pieces,
             bench,
             cards,
             money,
-            level
+            level: {
+                level,
+                xp
+            }
         };
     }
 
@@ -393,7 +394,7 @@ export abstract class Player {
     }
 
     protected belowPieceLimit() {
-        return getBoardPieceCount(this.store.getState()) < this.store.getState().level.level;
+        return getBoardPieceCount(this.store.getState()) < this.store.getState().gameInfo.level;
     }
 
     protected toggleShopLock = () => {

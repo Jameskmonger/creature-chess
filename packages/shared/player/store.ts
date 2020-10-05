@@ -7,22 +7,14 @@ import { evolutionSagaFactory } from "./sagas/evolution";
 
 import { dropPieceSagaFactory } from "./sagas/dropPiece";
 import { benchReducer, BenchState } from "./bench";
-import { cardShopSagaFactory } from "./cardShop/saga";
-import { Card } from "@creature-chess/models";
-import { cardsReducer } from "./cardShop";
+import { cardShopSagaFactory } from "./sagas/cardShop";
 import { GameInfoState, gameInfoReducer } from "./gameInfo";
-import { levelReducer } from "./level";
 import { DefinitionProvider } from "../game/definitionProvider";
 
 export interface PlayerState {
     board: BoardState;
     bench: BenchState;
     gameInfo: GameInfoState;
-    level: {
-        level: number;
-        xp: number;
-    };
-    cards: Card[];
 }
 
 export type PlayerStore = Store<PlayerState>;
@@ -46,9 +38,7 @@ export const createPlayerStore = (playerId: string, otherSaga?: () => Generator)
         combineReducers<PlayerState>({
             board: boardReducer,
             bench: benchReducer,
-            cards: cardsReducer,
             gameInfo: gameInfoReducer,
-            level: levelReducer
         }),
         applyMiddleware(sagaMiddleware)
     );
