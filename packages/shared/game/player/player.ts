@@ -1,10 +1,11 @@
 import pDefer = require("p-defer");
+import { takeEvery, select } from "@redux-saga/core/effects";
 import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, STARTING_HEALTH, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { LobbyPlayer, StreakType, PlayerListPlayer, PlayerPieceLocation } from "@creature-chess/models";
@@ -14,18 +15,18 @@ import { mergeBoards } from "../../board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { PlayerActions } from "../../player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
-import { cardsUpdated, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setLevelAction } from "../../player/playerInfo";
+import { cardsUpdated, clearOpponent, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setLevelAction, setOpponent } from "../../player/playerInfo";
 import { SagaMiddleware } from "redux-saga";
 import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../../player/playerSelectors";
 import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
 import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
 import { getMoneyForMatch } from "./matchRewards";
 import { subtractHealthCommand } from "packages/shared/player/sagas/health";
+import { ReadyUpAction, READY_UP } from "packages/shared/player/actions";
+import { playerFinishMatch, playerStreak } from "./streak";
+import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./playerPropertyUpdates";
 
 enum PlayerEvent {
-    UPDATE_HEALTH = "UPDATE_HEALTH",
-    UPDATE_READY = "UPDATE_READY",
-    UPDATE_STREAK = "UPDATE_STREAK",
     START_LOBBY_GAME = "START_LOBBY_GAME",
     UPDATE_BATTLE = "UPDATE_BATTLE",
     UPDATE_STATUS = "UPDATE_STATUS",
@@ -47,22 +48,17 @@ export interface PlayerMatchResults {
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
-    public ready = false;
-    public readonly streak: StreakInfo = {
-        type: StreakType.WIN,
-        amount: 0
-    };
     public battle: PlayerBattle = null;
 
     public abstract readonly isBot: boolean;
 
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
-    protected shopLocked = false;
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
     private events = new EventEmitter();
+    private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
     private deck: CardDeck;
 
@@ -76,13 +72,22 @@ export abstract class Player {
 
     protected battleTimeout: pDefer.DeferredPromise<void> = null;
 
-    constructor(id: string, name: string, saga?: () => Generator) {
+    constructor(id: string, name: string) {
         this.id = id;
         this.name = name;
 
-        const { store, sagaMiddleware } = createPlayerStore(this.id, saga);
+        const { store, sagaMiddleware } = createPlayerStore(this.id);
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
+
+        this.sagaMiddleware.run(this.readyUpSaga());
+        playerStreak(this.sagaMiddleware);
+
+        this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
+    }
+
+    public propertyUpdates() {
+        return this.propertyUpdateRegistry;
     }
 
     public setDefinitionProvider(definitionProvider: DefinitionProvider) {
@@ -133,6 +138,14 @@ export abstract class Player {
         return this.store.getState().playerInfo.health;
     }
 
+    public getReady() {
+        return this.store.getState().playerInfo.ready;
+    }
+
+    public getStreak() {
+        return this.store.getState().playerInfo.streak;
+    }
+
     public getLevel() {
         return this.store.getState().playerInfo.level;
     }
@@ -158,10 +171,11 @@ export abstract class Player {
 
         this.readyUpDeferred = pDefer();
 
-        if (this.shopLocked === false) {
+        if (this.store.getState().playerInfo.shopLocked === false) {
             this.rerollCards();
         }
 
+        this.store.dispatch(clearOpponent());
         this.store.dispatch(unlockBench());
 
         this.onEnterPreparingPhase(startedAt, round);
@@ -179,7 +193,6 @@ export abstract class Player {
 
     public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider, startedAt: number) {
         this.readyUpDeferred = null;
-        this.ready = false;
 
         if (isPlayerAlive(this.store.getState())) {
             this.fillBoard();
@@ -188,6 +201,7 @@ export abstract class Player {
 
             const opponent = opponentProvider.getOpponent(this.id);
 
+            this.store.dispatch(setOpponent(opponent.id));
             this.battle = inProgressBattle(opponent.id);
             this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
 
@@ -225,7 +239,7 @@ export abstract class Player {
 
         this.wonLastMatch = win;
 
-        this.adjustStreak(win);
+        this.store.dispatch(playerFinishMatch(homeScore, awayScore));
 
         this.battle = finishedBattle(this.match.away.id, homeScore, awayScore);
         this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
@@ -239,7 +253,7 @@ export abstract class Player {
     }
 
     public giveMatchRewards() {
-        const money = getMoneyForMatch(this.getMoney(), this.streak.amount, this.wonLastMatch);
+        const money = getMoneyForMatch(this.getMoney(), this.store.getState().playerInfo.streak.amount, this.wonLastMatch);
 
         this.addMoney(money);
         this.addXp(1);
@@ -253,18 +267,6 @@ export abstract class Player {
 
     public onStartLobbyGame(fn: () => void) {
         this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
-    }
-
-    public onReadyUpdate(fn: (ready: boolean) => void) {
-        this.events.on(PlayerEvent.UPDATE_READY, fn);
-
-        fn(this.ready);
-    }
-
-    public onStreakUpdate(fn: (streak: StreakInfo) => void) {
-        this.events.on(PlayerEvent.UPDATE_STREAK, fn);
-
-        fn(this.streak);
     }
 
     public onBattleUpdate(fn: (battle: PlayerBattle) => void) {
@@ -288,19 +290,6 @@ export abstract class Player {
 
         const newCards = this.deck.reroll(cards, this.getLevel(), 5);
         this.store.dispatch(cardsUpdated(newCards));
-    }
-
-    public adjustStreak(win: boolean) {
-        const type = win ? StreakType.WIN : StreakType.LOSS;
-
-        if (this.streak.type !== type) {
-            this.streak.type = type;
-            this.streak.amount = 0;
-        }
-
-        this.streak.amount++;
-
-        this.events.emit(PlayerEvent.UPDATE_STREAK, this.streak);
     }
 
     public clearPieces() {
@@ -380,13 +369,11 @@ export abstract class Player {
 
     protected abstract onEnterPreparingPhase(startedAt: number, round: number);
 
-    protected abstract onEnterReadyPhase(startedAt: number,);
+    protected abstract onEnterReadyPhase(startedAt: number);
 
-    protected abstract onEnterPlayingPhase(startedAt: number,);
+    protected abstract onEnterPlayingPhase(startedAt: number);
 
-    protected abstract onDeath(phaseStartedAt: number,);
-
-    protected abstract onShopLockUpdate();
+    protected abstract onDeath(phaseStartedAt: number);
 
     protected quitGame() {
         this.status = PlayerStatus.QUIT;
@@ -402,12 +389,6 @@ export abstract class Player {
 
     protected belowPieceLimit() {
         return getBoardPieceCount(this.store.getState()) < this.store.getState().playerInfo.level;
-    }
-
-    protected toggleShopLock = () => {
-        this.shopLocked = !this.shopLocked;
-
-        this.onShopLockUpdate();
     }
 
     protected sellPiece = (pieceId: string) => {
@@ -482,28 +463,21 @@ export abstract class Player {
         this.match.onClientFinishMatch();
     }
 
-    protected readyUp = () => {
-        if (this.ready || this.readyUpDeferred === null) {
-            return;
+    private readyUpSaga() {
+        const getReadyUpDeferred = () => this.readyUpDeferred;
+
+        return function*() {
+            yield takeEvery<ReadyUpAction>(
+                READY_UP,
+                function*() {
+                    const deferred = getReadyUpDeferred();
+
+                    if (deferred) {
+                        deferred.resolve();
+                    }
+                }
+            )
         }
-
-        this.setReady(true);
-
-        this.readyUpDeferred.resolve();
-    }
-
-    protected onDropPiece = ({ payload }: PlayerActions.PlayerDropPieceAction) => {
-        if (!payload || !payload.pieceId || !payload.from || !payload.to) {
-            // packet malformed
-            return;
-        }
-
-        this.store.dispatch(PlayerActions.playerDropPiece(payload.pieceId, payload.from, payload.to));
-    }
-
-    private setReady(ready: boolean) {
-        this.ready = ready;
-        this.events.emit(PlayerEvent.UPDATE_READY, this.ready);
     }
 
     private fillBoard() {

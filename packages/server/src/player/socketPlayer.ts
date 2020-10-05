@@ -9,7 +9,7 @@ import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToC
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP, QUIT_GAME } from "@creature-chess/shared/player/actions";
-import { CardsUpdatedAction, CARDS_UPDATED, LevelUpdateAction, LEVEL_UPDATE, MoneyUpdateAction, MONEY_UPDATE } from "@creature-chess/shared/player/playerInfo";
+import { CardsUpdatedAction, CARDS_UPDATED, LevelUpdateAction, LEVEL_UPDATE, MoneyUpdateAction, MONEY_UPDATE, SHOP_LOCK_UPDATED, UpdateShopLockAction } from "@creature-chess/shared/player/playerInfo";
 import { Task } from "redux-saga";
 import { PlayerState } from "@creature-chess/shared/player/store";
 import { gamePhaseUpdate } from "@creature-chess/shared/game/store/actions";
@@ -40,6 +40,14 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
                     const xp: number = yield select((state: PlayerState) => state.playerInfo.xp);
 
                     registry.emit(ServerToClientPacketOpcodes.LEVEL_UPDATE, { level, xp });
+                }
+            ),
+            yield takeLatest<UpdateShopLockAction>(
+                [SHOP_LOCK_UPDATED],
+                function*() {
+                    const locked: boolean = yield select((state: PlayerState) => state.playerInfo.shopLocked);
+
+                    registry.emit(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, { locked });
                 }
             )
         ]);
@@ -184,15 +192,6 @@ export class SocketPlayer extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onShopLockUpdate() {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE,
-            {
-                locked: this.shopLocked
-            }
-        );
-    }
-
     private receiveActions = (packet: SendPlayerActionsPacket, ack: (accepted: boolean, packetIndex?: number) => void) => {
         const expectedPacketIndex = this.lastReceivedPacketIndex + 1;
 
@@ -203,7 +202,10 @@ export class SocketPlayer extends Player {
 
         for (const action of packet.actions) {
             switch (action.type) {
-                case BUY_CARD: {
+                case BUY_CARD:
+                case TOGGLE_SHOP_LOCK:
+                case PLAYER_DROP_PIECE:
+                case READY_UP: {
                     this.store.dispatch(action);
                     break;
                 }
@@ -211,10 +213,6 @@ export class SocketPlayer extends Player {
                     this.clearSocket();
 
                     this.quitGame();
-                    break;
-                }
-                case TOGGLE_SHOP_LOCK: {
-                    this.toggleShopLock();
                     break;
                 }
                 case PLAYER_SELL_PIECE: {
@@ -225,16 +223,8 @@ export class SocketPlayer extends Player {
                     this.buyReroll();
                     break;
                 }
-                case PLAYER_DROP_PIECE: {
-                    this.onDropPiece(action);
-                    break;
-                }
                 case BUY_XP: {
                     this.buyXp();
-                    break;
-                }
-                case READY_UP: {
-                    this.readyUp();
                     break;
                 }
                 default: {

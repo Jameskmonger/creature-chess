@@ -1,11 +1,19 @@
-import { MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT, LEVEL_UPDATE, CARDS_UPDATED, HEALTH_UPDATED, ROUND_DIED_AT_UPDATED } from "./actions";
+import { MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT, LEVEL_UPDATE, CARDS_UPDATED, HEALTH_UPDATED, ROUND_DIED_AT_UPDATED, STREAK_UPDATED } from "./actions";
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY } from "@creature-chess/models/src/constants";
 import { READY_UP } from "../actions";
-import { Card } from "@creature-chess/models";
+import { Card, StreakType } from "@creature-chess/models";
+
+export interface PlayerStreak {
+    type: StreakType;
+    amount: number;
+}
+
+export type HasPlayerInfo = { playerInfo: PlayerInfoState };
 
 export interface PlayerInfoState {
     health: number;
     roundDiedAt: number | null;
+    streak: PlayerStreak;
 
     opponentId: string;
     shopLocked: boolean;
@@ -19,6 +27,10 @@ export interface PlayerInfoState {
 const initialState: PlayerInfoState = {
     health: STARTING_HEALTH,
     roundDiedAt: null,
+    streak: {
+        type: StreakType.WIN,
+        amount: 0
+    },
     opponentId: null,
     shopLocked: false,
     money: STARTING_MONEY,
@@ -34,6 +46,15 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, action:
             return {
                 ...state,
                 health: action.payload.health
+            };
+        }
+        case STREAK_UPDATED: {
+            return {
+                ...state,
+                streak: {
+                    amount: action.payload.amount,
+                    type: action.payload.type
+                }
             };
         }
         case ROUND_DIED_AT_UPDATED: {
