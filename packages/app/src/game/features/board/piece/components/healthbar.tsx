@@ -18,7 +18,7 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
 
     const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
 
-    const localPlayerId = useSelector<AppState, string>(state => state.localPlayer.id);
+    const localPlayerId = useSelector<AppState, string>(state => state.game.localPlayerId);
 
     const pieceIsOnBench = piece.position.y === null;
 

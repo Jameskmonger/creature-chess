@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 
 import { AppState } from "./state";
-import { localPlayerIdSelector } from "./gameSelector";
+import { localPlayerIdSelector } from "../game/store/selectors";
 
 export const benchTilePieceSelector = createSelector(
     (state: AppState) => state.bench,

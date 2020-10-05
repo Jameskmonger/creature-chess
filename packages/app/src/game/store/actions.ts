@@ -1,9 +1,11 @@
-import { JoinCompleteAction } from "../../store/actions/localPlayerActions";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
+import { ReadyUpAction } from "@creature-chess/shared/player/actions";
 import { GamePhaseUpdateAction, MoneyUpdateAction } from "@creature-chess/shared/player/gameInfo";
 
 export const FIND_GAME = "FIND_GAME";
 export type FIND_GAME = typeof FIND_GAME;
+export const JOIN_COMPLETE = "JOIN_COMPLETE";
+export type JOIN_COMPLETE = typeof JOIN_COMPLETE;
 export const JOIN_ERROR = "JOIN_ERROR";
 export type JOIN_ERROR = typeof JOIN_ERROR;
 export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
@@ -19,8 +21,8 @@ export type SHOP_LOCK_UPDATED = typeof SHOP_LOCK_UPDATED;
 export const FINISH_GAME = "FINISH_GAME";
 export type FINISH_GAME = typeof FINISH_GAME;
 
-
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
+export type JoinCompleteAction = ({ type: JOIN_COMPLETE, payload: { playerId: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
@@ -39,12 +41,20 @@ export type GameAction =
     | UpdateShopLockAction
     | FinishGameAction
     | PlayersResurrectedAction
-    | MoneyUpdateAction;
+    | MoneyUpdateAction
+    | ReadyUpAction;
 
 export const findGameAction = (serverIP: string): FindGameAction => ({
     type: FIND_GAME,
     payload: {
         serverIP
+    }
+});
+
+export const joinCompleteAction = (playerId: string): JoinCompleteAction => ({
+    type: JOIN_COMPLETE,
+    payload: {
+        playerId
     }
 });
 

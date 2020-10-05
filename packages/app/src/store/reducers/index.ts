@@ -3,7 +3,6 @@ import { benchReducer } from "@creature-chess/shared/player/bench";
 import { cardsReducer } from "@creature-chess/shared/player/cardShop";
 import { gameInfoReducer } from "@creature-chess/shared/player/gameInfo";
 import { playerList } from "../../game/features/playerList/playerListReducer";
-import { localPlayer } from "./localPlayerReducer";
 import { ui } from "./uiReducer";
 import { levelReducer } from "@creature-chess/shared/player/level";
 import { authReducer } from "../../auth";
@@ -19,7 +18,6 @@ export const reducers = {
     gameInfo: gameInfoReducer,
     level: levelReducer,
     game: gameReducer,
-    localPlayer,
     auth: authReducer,
     ui
 };

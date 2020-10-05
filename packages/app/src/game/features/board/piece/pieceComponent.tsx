@@ -29,7 +29,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const dispatch = useDispatch();
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceComponent | null>(null);
-    const localPlayerId = useSelector<AppState, string>(state => state.localPlayer.id);
+    const localPlayerId = useSelector<AppState, string>(state => state.game.localPlayerId);
     const piece = useSelector<AppState, PieceComponent>(state => getPiece(state, id));
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 

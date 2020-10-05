@@ -1,13 +1,16 @@
 import {
     GameAction,
-    ENABLE_DEBUG_MODE, FIND_GAME, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, PHASE_START_SECONDS
+    ENABLE_DEBUG_MODE, FIND_GAME, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, PHASE_START_SECONDS, JOIN_COMPLETE
 } from "./actions";
 import { GameState } from "./state";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
+import { READY_UP } from "@creature-chess/shared/player/actions";
 
 export const initialState: GameState = {
+    localPlayerId: null,
+    ready: false,
     opponentId: null,
     loading: false,
     phase: GamePhase.WAITING,
@@ -20,6 +23,17 @@ export const initialState: GameState = {
 
 export function reducer(state: GameState = initialState, action: GameAction): GameState {
     switch (action.type) {
+        case JOIN_COMPLETE:
+            return {
+                ...state,
+                localPlayerId: action.payload.playerId,
+                ready: false
+            };
+        case READY_UP:
+            return {
+                ...state,
+                ready: true
+            };
         case UPDATE_CONNECTION_STATUS:
             return {
                 ...state,
@@ -41,7 +55,8 @@ export function reducer(state: GameState = initialState, action: GameAction): Ga
                 return {
                     ...state,
                     phase: action.payload.phase,
-                    opponentId: action.payload.payload.opponentId
+                    opponentId: action.payload.payload.opponentId,
+                    ready: false
                 };
             }
 

@@ -23,7 +23,7 @@ enum GameState {
 }
 
 const gameStateSelector = (state: AppState) => {
-    if (state.localPlayer.id !== null) {
+    if (state.game.localPlayerId !== null) {
         return GameState.GAME;
     }
 

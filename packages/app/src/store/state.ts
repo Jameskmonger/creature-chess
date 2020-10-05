@@ -22,13 +22,6 @@ export interface AppState {
     level: LevelState;
 
     playerList: PlayerListPlayer[];
-    localPlayer: LocalPlayerState;
-}
-
-export interface LocalPlayerState {
-    id: string;
-
-    ready: boolean;
 }
 
 export interface UiState {
