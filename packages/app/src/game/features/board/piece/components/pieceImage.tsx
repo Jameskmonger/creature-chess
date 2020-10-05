@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { AppState } from "../../../../../store";
-import { CreatureImage } from "../../../../../display/creatureImage";
+import { CreatureImage } from "../../../../../ui/display/creatureImage";
 
 interface PieceImageProps {
     pieceId: string;

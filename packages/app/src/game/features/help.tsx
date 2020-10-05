@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Footer } from "../../display/footer";
+import { Footer } from "../../ui/display/footer";
 
 const Help: React.FunctionComponent = () => {
     return (

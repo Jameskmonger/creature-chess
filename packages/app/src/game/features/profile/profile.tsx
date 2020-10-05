@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ProgressBar } from "../../../display/progressBar";
+import { ProgressBar } from "../../../ui/display/progressBar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../../store";
 import { getXpToNextLevel } from "@creature-chess/shared/utils";

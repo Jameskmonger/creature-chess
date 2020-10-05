@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../store";
-import { Countdown } from "../../display/countdown";
+import { Countdown } from "../../ui/display/countdown";
 import { GamePhase, Constants } from "@creature-chess/models";
 
 const renderPhaseInfoCountdown = (secondsRemaining: number) => <span className="highlight">({secondsRemaining})</span>;
