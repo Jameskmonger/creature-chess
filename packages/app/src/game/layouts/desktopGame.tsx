@@ -1,11 +1,11 @@
 import * as React from "react";
-import { BoardContainer } from "../components/board/boardContainer";
-import { CardShop } from "../components/cardShop";
-import { PlayerList } from "../components/playerList";
-import { Profile } from "../components/profile";
-import { RoundIndicator } from "../components/roundIndicator";
-import { PhaseInfo } from "../components/phaseInfo";
-import { QuitGameButton } from "../components/settings";
+import { BoardContainer } from "../features/board/boardContainer";
+import { CardShop } from "../features/cardShop";
+import { PlayerList } from "../features/playerList";
+import { Profile } from "../features/profile";
+import { RoundIndicator } from "../features/roundIndicator";
+import { PhaseInfo } from "../features/phaseInfo";
+import { QuitGameButton } from "../features/settings";
 import { Footer } from "../../display/footer";
 
 const DesktopGame: React.FunctionComponent = () => {

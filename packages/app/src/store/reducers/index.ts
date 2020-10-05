@@ -2,7 +2,7 @@ import { boardReducer } from "@creature-chess/shared/board";
 import { benchReducer } from "@creature-chess/shared/player/bench";
 import { cardsReducer } from "@creature-chess/shared/player/cardShop";
 import { gameInfoReducer } from "@creature-chess/shared/player/gameInfo";
-import { playerList } from "../../game/components/playerList/playerListReducer";
+import { playerList } from "../../game/features/playerList/playerListReducer";
 import { game } from "./gameReducer";
 import { localPlayer } from "./localPlayerReducer";
 import { lobby } from "./lobbyReducer";

@@ -10,7 +10,7 @@ import { cardShopSagaFactory } from "@creature-chess/shared/player/cardShop/saga
 import { dropPieceSagaFactory } from "@creature-chess/shared/player/sagas/dropPiece";
 import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
 import { AppState } from "../../store";
-import { closeShopOnFirstBuy } from "../components/cardShop/closeShopOnFirstBuy";
+import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
 import { phaseTimer } from "./actions/phaseTimer";
 import { gamePhase } from "./actions/gamePhase";
 import { sellPiece } from "./actions/sellPiece";

@@ -4,7 +4,7 @@ import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/
 import {
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
 } from "../../../store/actions/gameActions";
-import { playerListUpdated } from "../../components/playerList/playerListActions";
+import { playerListUpdated } from "../../features/playerList/playerListActions";
 import { FIND_GAME } from "../../../store/actiontypes/gameActionTypes";
 import { log } from "../../../log";
 import { joinCompleteAction } from "../../../store/actions/localPlayerActions";

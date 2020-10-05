@@ -6,14 +6,14 @@ import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
 import { AppState } from "../../store";
 import { Overlay } from "../../overlay";
 import { closeOverlay, openOverlay } from "../../store/actions/uiActions";
-import { BoardContainer } from "../components/board/boardContainer";
-import { CardShop } from "../components/cardShop";
-import { PlayerList } from "../components/playerList";
-import { Profile } from "../components/profile";
-import { Settings } from "../components/settings";
-import { RoundIndicator } from "../components/roundIndicator";
-import { PhaseInfo } from "../components/phaseInfo";
-import { Help } from "../components/help";
+import { BoardContainer } from "../features/board/boardContainer";
+import { CardShop } from "../features/cardShop";
+import { PlayerList } from "../features/playerList";
+import { Profile } from "../features/profile";
+import { Settings } from "../features/settings";
+import { RoundIndicator } from "../features/roundIndicator";
+import { PhaseInfo } from "../features/phaseInfo";
+import { Help } from "../features/help";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();

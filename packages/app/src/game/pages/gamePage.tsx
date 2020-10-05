@@ -4,7 +4,7 @@ import { DndProvider } from "react-dnd";
 import MultiBackend from "react-dnd-multi-backend";
 import HTML5toTouch from "react-dnd-multi-backend/dist/esm/HTML5toTouch";
 import Media from "react-media";
-import { ResponsiveBoardStyles } from "../components/board/responsiveBoardStyles";
+import { ResponsiveBoardStyles } from "../features/board/responsiveBoardStyles";
 import { MobileGame } from "../layouts/mobileGame";
 import { DesktopGame } from "../layouts/desktopGame";
 
