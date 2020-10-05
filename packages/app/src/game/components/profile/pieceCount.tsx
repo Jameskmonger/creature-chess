@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { AppState } from "../../store";
-import { ownedPieceSelector } from "../../store/pieceSelectors";
+import { AppState } from "../../../store";
+import { ownedPieceSelector } from "../../../store/pieceSelectors";
 import { getPlayerLevel } from "@creature-chess/shared/player/playerSelectors";
 
 const PieceCount: React.FunctionComponent = props => {

@@ -1,19 +1,19 @@
 import * as React from "react";
-import { BoardContainer } from "../components/board/boardContainer";
-import { CardShop } from "../components/cardShop";
-import { PlayerList } from "../components/playerList";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChess, faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
 import { AppState } from "../../store";
 import { Overlay } from "../../overlay";
 import { closeOverlay, openOverlay } from "../../store/actions/uiActions";
-import { Profile } from "../../display/profile/profile";
-import { Help } from "../../display/game/help";
-import { RoundIndicator } from "../../display/roundIndicator";
-import { PhaseInfo } from "../../display/phaseInfo";
-import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
-import { Settings } from "../../display/game/settings/settings";
+import { BoardContainer } from "../components/board/boardContainer";
+import { CardShop } from "../components/cardShop";
+import { PlayerList } from "../components/playerList";
+import { Profile } from "../components/profile";
+import { Settings } from "../components/settings";
+import { RoundIndicator } from "../components/roundIndicator";
+import { PhaseInfo } from "../components/phaseInfo";
+import { Help } from "../components/help";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
