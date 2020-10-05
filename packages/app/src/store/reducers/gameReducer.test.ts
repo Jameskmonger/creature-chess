@@ -13,17 +13,12 @@ export class GameReducerTests {
     Expect(state).toEqual({
       opponentId: null,
       loading: false,
-      menuError: null,
       phase: GamePhase.WAITING,
       phaseStartedAtSeconds: null,
       round: null,
       debug: false,
-      mainAnnouncement: null,
-      subAnnouncement: null,
-      selectedPieceId: null,
       connectionStatus: ConnectionStatus.NOT_CONNECTED,
       shopLocked: false,
-      winnerName: null
     });
   }
 

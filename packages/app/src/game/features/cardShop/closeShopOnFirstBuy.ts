@@ -1,7 +1,7 @@
 import { take, select, put } from "@redux-saga/core/effects";
 import { BUY_CARD, BuyCardAction } from "@creature-chess/shared/player/actions";
 import { AppState } from "../../../store/state";
-import { Overlay } from "../../../overlay";
+import { Overlay } from "../../overlay";
 import { closeOverlay } from "../../../store/actions/uiActions";
 
 export const closeShopOnFirstBuy = function*() {
