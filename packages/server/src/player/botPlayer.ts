@@ -3,7 +3,7 @@ import { GRID_SIZE, BUY_XP_COST } from "@creature-chess/models/src/constants";
 import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@creature-chess/models";
 import { getAllPieces, getBoardPieceForPosition } from "@creature-chess/shared/player/pieceSelectors";
 import { PlayerActions } from "@creature-chess/shared/player";
-import { buyCard } from "@creature-chess/shared/player/actions";
+import { buyCard, readyUpAction } from "@creature-chess/shared/player/actions";
 import { PlayerState } from "@creature-chess/shared/player/store";
 import { PhaseUpdatePacket } from "@creature-chess/shared/networking/server-to-client";
 import uuid = require("uuid");
@@ -90,7 +90,7 @@ export class BotPlayer extends Player {
         this.spendExcessMoneyOnXp();
         this.putBenchOnBoard();
 
-        this.readyUp();
+        this.store.dispatch(readyUpAction());
     }
 
     protected onEnterReadyPhase(startedAt: number) {
@@ -119,8 +119,6 @@ export class BotPlayer extends Player {
         const packet: PhaseUpdatePacket = { startedAt, phase: GamePhase.DEAD };
         this.store.dispatch(gamePhaseUpdate(packet));
     }
-
-    protected onShopLockUpdate() { /* nothing required, we're a bot */ }
 
     private spendExcessMoneyOnXp() {
         while (true) {

@@ -66,15 +66,17 @@ export class PlayerList {
     }
 
     public addPlayer(player: Player) {
+        const streak = player.getStreak();
+
         const playerListPlayer: PlayerListPlayer = {
             id: player.id,
             name: player.name,
             health: player.getHealth(),
-            ready: player.ready,
+            ready: player.getReady(),
             level: player.getLevel(),
             money: player.getMoney(),
-            streakType: player.streak.type,
-            streakAmount: player.streak.amount,
+            streakType: streak.type,
+            streakAmount: streak.amount,
             battle: null,
             roundDiedAt: player.getRoundDiedAt(),
             status: player.getStatus()
@@ -84,8 +86,9 @@ export class PlayerList {
 
         const update = this.updatePlayer(player);
 
-        player.onReadyUpdate(update);
-        player.onStreakUpdate(update);
+        player.propertyUpdates().onReadyUpdate(update);
+        player.propertyUpdates().onStreakUpdate(update);
+        player.propertyUpdates().onHealthUpdate(update);
         player.onBattleUpdate(update);
         player.onStatusUpdate(update);
     }
@@ -100,15 +103,17 @@ export class PlayerList {
 
             this.players.splice(index, 1);
 
+            const streak = player.getStreak();
+
             this.players.push({
                 id: player.id,
                 name: player.name,
                 health: player.getHealth(),
-                ready: player.ready,
+                ready: player.getReady(),
                 level: player.getLevel(),
                 money: player.getMoney(),
-                streakType: player.streak.type,
-                streakAmount: player.streak.amount,
+                streakType: streak.type,
+                streakAmount: streak.amount,
                 battle: player.battle,
                 roundDiedAt: player.getRoundDiedAt(),
                 status: player.getStatus()

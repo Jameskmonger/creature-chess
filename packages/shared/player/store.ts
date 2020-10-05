@@ -20,12 +20,8 @@ export interface PlayerState {
 
 export type PlayerStore = Store<PlayerState>;
 
-export const createPlayerStore = (playerId: string, otherSaga?: () => Generator): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
+export const createPlayerStore = (playerId: string): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
-        if (otherSaga) {
-            yield fork(otherSaga);
-        }
-
         yield all([
             yield fork(evolutionSagaFactory<PlayerState>()),
             yield fork(cardShopSagaFactory<PlayerState>(new DefinitionProvider(), playerId)),
