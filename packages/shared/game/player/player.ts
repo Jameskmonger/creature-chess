@@ -14,12 +14,13 @@ import { mergeBoards } from "../../board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { PlayerActions } from "../../player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
-import { cardsUpdated, moneyUpdateAction, setLevelAction } from "../../player/playerInfo";
+import { cardsUpdated, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setLevelAction } from "../../player/playerInfo";
 import { SagaMiddleware } from "redux-saga";
-import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "../../player/playerSelectors";
+import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../../player/playerSelectors";
 import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
 import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
 import { getMoneyForMatch } from "./matchRewards";
+import { subtractHealthCommand } from "packages/shared/player/sagas/health";
 
 enum PlayerEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -46,7 +47,6 @@ export interface PlayerMatchResults {
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
-    public health: number = STARTING_HEALTH;
     public ready = false;
     public readonly streak: StreakInfo = {
         type: StreakType.WIN,
@@ -72,7 +72,6 @@ export abstract class Player {
     private turnDuration: number;
 
     private currentRound: number | null = null;
-    private roundDiedAt: number | null = null;
     private status: PlayerStatus = PlayerStatus.CONNECTED;
 
     protected battleTimeout: pDefer.DeferredPromise<void> = null;
@@ -130,16 +129,16 @@ export abstract class Player {
         this.store.dispatch(moneyUpdateAction(currentMoney + money));
     }
 
+    public getHealth() {
+        return this.store.getState().playerInfo.health;
+    }
+
     public getLevel() {
         return this.store.getState().playerInfo.level;
     }
 
     public getMoney() {
         return this.store.getState().playerInfo.money;
-    }
-
-    public getRoundDiedAt() {
-        return this.roundDiedAt;
     }
 
     public getStatus() {
@@ -167,7 +166,7 @@ export abstract class Player {
 
         this.onEnterPreparingPhase(startedAt, round);
 
-        if (this.isAlive() === false) {
+        if (isPlayerAlive(this.store.getState()) === false) {
             return;
         }
 
@@ -182,7 +181,7 @@ export abstract class Player {
         this.readyUpDeferred = null;
         this.ready = false;
 
-        if (this.isAlive()) {
+        if (isPlayerAlive(this.store.getState())) {
             this.fillBoard();
 
             this.store.dispatch(lockBench());
@@ -219,6 +218,9 @@ export abstract class Player {
         const homeScore = surviving.home.length;
         const awayScore = surviving.away.length;
 
+        const damage = awayScore * 3;
+        this.store.dispatch(subtractHealthCommand(this.currentRound, damage));
+
         const win = homeScore > awayScore;
 
         this.wonLastMatch = win;
@@ -253,12 +255,6 @@ export abstract class Player {
         this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
     }
 
-    public onHealthUpdate(fn: (health: number) => void) {
-        this.events.on(PlayerEvent.UPDATE_HEALTH, fn);
-
-        fn(this.health);
-    }
-
     public onReadyUpdate(fn: (ready: boolean) => void) {
         this.events.on(PlayerEvent.UPDATE_READY, fn);
 
@@ -283,12 +279,8 @@ export abstract class Player {
         fn(this.status);
     }
 
-    public isAlive() {
-        return this.health > 0;
-    }
-
     public rerollCards() {
-        if (this.isAlive() === false) {
+        if (isPlayerAlive(this.store.getState()) === false) {
             return;
         }
 
@@ -333,31 +325,22 @@ export abstract class Player {
         this.deck.shuffle();
     }
 
-    public subtractHealth(value: number) {
-        const oldValue = this.health;
-
-        let newValue = this.health - value;
-        newValue = (newValue < 0) ? 0 : newValue;
-
-        this.health = newValue;
-
-        if (newValue === 0 && oldValue !== 0) {
-            // player has just died
-            this.roundDiedAt = this.currentRound;
-        }
-
-        this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
-    }
-
     public kill() {
         this.clearPieces();
         this.onDeath(Date.now());
     }
 
     public resurrect(startingHealth: number) {
-        this.roundDiedAt = null;
-        this.health = startingHealth;
-        this.events.emit(PlayerEvent.UPDATE_HEALTH, this.health);
+        this.store.dispatch(roundDiedAtUpdated(null));
+        this.store.dispatch(healthUpdated(startingHealth));
+    }
+
+    public isAlive() {
+        return isPlayerAlive(this.store.getState());
+    }
+
+    public getRoundDiedAt() {
+        return this.store.getState().playerInfo.roundDiedAt;
     }
 
     public getBoard() {
@@ -449,7 +432,7 @@ export abstract class Player {
 
     protected buyXp = () => {
         // todo put this all into a saga
-        if (this.isAlive() === false) {
+        if (isPlayerAlive(this.store.getState()) === false) {
             log(`${this.name} attempted to buy xp, but they are dead`);
             return;
         }
@@ -473,7 +456,7 @@ export abstract class Player {
     }
 
     protected buyReroll = () => {
-        if (this.isAlive() === false) {
+        if (isPlayerAlive(this.store.getState()) === false) {
             log(`${this.name} attempted to reroll, but they are dead`);
             return;
         }

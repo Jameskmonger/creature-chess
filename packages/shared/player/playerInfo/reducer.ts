@@ -1,9 +1,12 @@
-import { MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT, LEVEL_UPDATE, CARDS_UPDATED } from "./actions";
-import { STARTING_LEVEL, STARTING_MONEY } from "@creature-chess/models/src/constants";
+import { MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT, LEVEL_UPDATE, CARDS_UPDATED, HEALTH_UPDATED, ROUND_DIED_AT_UPDATED } from "./actions";
+import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY } from "@creature-chess/models/src/constants";
 import { READY_UP } from "../actions";
 import { Card } from "@creature-chess/models";
 
 export interface PlayerInfoState {
+    health: number;
+    roundDiedAt: number | null;
+
     opponentId: string;
     shopLocked: boolean;
     money: number;
@@ -14,6 +17,8 @@ export interface PlayerInfoState {
 }
 
 const initialState: PlayerInfoState = {
+    health: STARTING_HEALTH,
+    roundDiedAt: null,
     opponentId: null,
     shopLocked: false,
     money: STARTING_MONEY,
@@ -25,6 +30,18 @@ const initialState: PlayerInfoState = {
 
 export function playerInfoReducer(state: PlayerInfoState = initialState, action: GameAction): PlayerInfoState {
     switch (action.type) {
+        case HEALTH_UPDATED: {
+            return {
+                ...state,
+                health: action.payload.health
+            };
+        }
+        case ROUND_DIED_AT_UPDATED: {
+            return {
+                ...state,
+                roundDiedAt: action.payload.roundDiedAt
+            };
+        }
         case CARDS_UPDATED:
             return {
                 ...state,

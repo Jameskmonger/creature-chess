@@ -10,6 +10,7 @@ import { benchReducer, BenchState } from "./bench";
 import { cardShopSagaFactory } from "./sagas/cardShop";
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import { DefinitionProvider } from "../game/definitionProvider";
+import { healthSagaFactory } from "./sagas/health";
 
 export interface PlayerState {
     board: BoardState;
@@ -28,7 +29,8 @@ export const createPlayerStore = (playerId: string, otherSaga?: () => Generator)
         yield all([
             yield fork(evolutionSagaFactory<PlayerState>()),
             yield fork(cardShopSagaFactory<PlayerState>(new DefinitionProvider(), playerId)),
-            yield fork(dropPieceSagaFactory<PlayerState>(playerId))
+            yield fork(dropPieceSagaFactory<PlayerState>(playerId)),
+            yield fork(healthSagaFactory<PlayerState>())
         ]);
     };
 

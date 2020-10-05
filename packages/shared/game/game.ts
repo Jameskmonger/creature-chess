@@ -289,12 +289,7 @@ export class Game {
 
         const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 
-        const onPlayerFinishBattle = (results: PlayerMatchResults) => {
-            const damage = results.awayScore * 3;
-
-            results.homePlayer.subtractHealth(damage);
-        };
-        const promises = livingPlayers.map(p => p.fightMatch(this.phase.startedAt, battleTimeoutDeferred).then(onPlayerFinishBattle));
+        const promises = livingPlayers.map(p => p.fightMatch(this.phase.startedAt, battleTimeoutDeferred));
 
         await Promise.all(promises);
 
