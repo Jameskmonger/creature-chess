@@ -1,13 +1,5 @@
 import { UserModel } from "@creature-chess/auth-server";
-
-interface SanitizedUser {
-    id: string;
-    nickname: string;
-    stats: {
-        gamesPlayed: number;
-        wins: number;
-    };
-}
+import { SanitizedUser } from "@creature-chess/models";
 
 export const sanitize = (user: UserModel): SanitizedUser => {
     const {
