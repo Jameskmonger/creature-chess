@@ -4,7 +4,7 @@ import { AppState } from "../../../../store";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 
 const ReconnectModal: React.FunctionComponent = () => {
-    const connectionStatus = useSelector<AppState, ConnectionStatus>(state => state.game.connectionStatus);
+    const connectionStatus = useSelector<AppState, ConnectionStatus>(state => state.ui.connectionStatus);
 
     if (
         connectionStatus === ConnectionStatus.NOT_CONNECTED
