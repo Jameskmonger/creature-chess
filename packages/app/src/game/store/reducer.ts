@@ -13,7 +13,6 @@ export const initialState: GameState = {
     ready: false,
     opponentId: null,
     loading: false,
-    phase: GamePhase.WAITING,
     phaseStartedAtSeconds: null,
     round: null,
     debug: false,
@@ -53,7 +52,6 @@ export function reducer(state: GameState = initialState, action: GameAction): Ga
             if (action.payload.phase === GamePhase.READY) {
                 return {
                     ...state,
-                    phase: action.payload.phase,
                     opponentId: action.payload.payload.opponentId,
                     ready: false
                 };
@@ -63,16 +61,12 @@ export function reducer(state: GameState = initialState, action: GameAction): Ga
             if (action.payload.phase === GamePhase.PREPARING) {
                 return {
                     ...state,
-                    phase: action.payload.phase,
                     round: action.payload.payload.round,
                     opponentId: null
                 };
             }
 
-            return {
-                ...state,
-                phase: action.payload.phase
-            };
+            return state;
         case ENABLE_DEBUG_MODE: {
             return {
                 ...state,
