@@ -1,4 +1,4 @@
-import { AuthState } from "../../store/state";
+import { AuthState } from "./state";
 import { SessionCheckedAction, SESSION_CHECKED, UserAuthenticatedAction, USER_AUTHENTICATED } from "./actions";
 
 export const initialState: AuthState = {

@@ -5,6 +5,7 @@ import { BenchState } from "@creature-chess/shared/player/bench";
 import { Overlay } from "../overlay";
 import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
 import { LevelState } from "@creature-chess/shared/player/level";
+import { AuthState } from "../auth";
 
 export interface AppState {
     auth: AuthState;
@@ -20,12 +21,6 @@ export interface AppState {
     localPlayer: LocalPlayerState;
     lobby: LobbyState;
     ui: UiState;
-}
-
-export interface AuthState {
-    checkingSession: boolean;
-    token: string | null;
-    tokenExpiry: number | null;
 }
 
 export interface GameState {

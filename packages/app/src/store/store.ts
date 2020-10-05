@@ -2,8 +2,8 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import { reducers } from "./reducers";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
-import { rootSaga } from "./sagas";
 import { AppState } from "./state";
+import { gameSaga } from "../game";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -16,6 +16,6 @@ const store = createStore(
     )
 );
 
-sagaMiddleware.run(rootSaga);
+sagaMiddleware.run(gameSaga);
 
 export { store };
