@@ -69,7 +69,7 @@ export class PlayerList {
         const playerListPlayer: PlayerListPlayer = {
             id: player.id,
             name: player.name,
-            health: player.health,
+            health: player.getHealth(),
             ready: player.ready,
             level: player.getLevel(),
             money: player.getMoney(),
@@ -84,7 +84,6 @@ export class PlayerList {
 
         const update = this.updatePlayer(player);
 
-        player.onHealthUpdate(update);
         player.onReadyUpdate(update);
         player.onStreakUpdate(update);
         player.onBattleUpdate(update);
@@ -104,7 +103,7 @@ export class PlayerList {
             this.players.push({
                 id: player.id,
                 name: player.name,
-                health: player.health,
+                health: player.getHealth(),
                 ready: player.ready,
                 level: player.getLevel(),
                 money: player.getMoney(),

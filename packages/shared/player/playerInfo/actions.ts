@@ -1,6 +1,10 @@
 import { Card } from "@creature-chess/models";
 import { ReadyUpAction } from "../actions";
 
+export const HEALTH_UPDATED = "HEALTH_UPDATED";
+export type HEALTH_UPDATED = typeof HEALTH_UPDATED;
+export const ROUND_DIED_AT_UPDATED = "ROUND_DIED_AT_UPDATED";
+export type ROUND_DIED_AT_UPDATED = typeof ROUND_DIED_AT_UPDATED;
 export const SHOP_LOCK_UPDATED = "SHOP_LOCK_UPDATED";
 export type SHOP_LOCK_UPDATED = typeof SHOP_LOCK_UPDATED;
 export const MONEY_UPDATE = "MONEY_UPDATE";
@@ -14,6 +18,8 @@ export type LEVEL_UPDATE = typeof LEVEL_UPDATE;
 export const CARDS_UPDATED = "CARDS_UPDATED";
 export type CARDS_UPDATED = typeof CARDS_UPDATED;
 
+export type UpdateHealthAction = ({ type: HEALTH_UPDATED, payload: { health: number } });
+export type UpdateRoundDiedAtAction = ({ type: ROUND_DIED_AT_UPDATED, payload: { roundDiedAt: number | null } });
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
 export type MoneyUpdateAction = ({ type: MONEY_UPDATE, payload: { money: number } });
 export type SetOpponentAction = ({ type: SET_OPPONENT, payload: { opponentId: string } });
@@ -28,7 +34,9 @@ export type LevelUpdateAction = ({
 export type CardsUpdatedAction = ({ type: CARDS_UPDATED, payload: { cards: Card[] } });
 
 export type GameAction =
-    UpdateShopLockAction
+    UpdateHealthAction
+    | UpdateRoundDiedAtAction
+    | UpdateShopLockAction
     | MoneyUpdateAction
     | ReadyUpAction
     | SetOpponentAction
@@ -36,17 +44,11 @@ export type GameAction =
     | LevelUpdateAction
     | CardsUpdatedAction;
 
-export const shopLockUpdated = (locked: boolean): UpdateShopLockAction => ({
-    type: SHOP_LOCK_UPDATED,
-    payload: { locked }
-});
+export const healthUpdated = (health: number): UpdateHealthAction => ({ type: HEALTH_UPDATED, payload: { health } });
+export const roundDiedAtUpdated = (roundDiedAt: number | null): UpdateRoundDiedAtAction => ({ type: ROUND_DIED_AT_UPDATED, payload: { roundDiedAt } });
+export const shopLockUpdated = (locked: boolean): UpdateShopLockAction => ({ type: SHOP_LOCK_UPDATED, payload: { locked } });
 
-export const moneyUpdateAction = (money: number): MoneyUpdateAction => ({
-    type: MONEY_UPDATE,
-    payload: {
-        money
-    }
-});
+export const moneyUpdateAction = (money: number): MoneyUpdateAction => ({ type: MONEY_UPDATE, payload: { money } });
 
 export const setOpponent = (opponentId: string): SetOpponentAction => ({ type: SET_OPPONENT, payload: { opponentId } });
 export const clearOpponent = (): ClearOpponentAction => ({ type: CLEAR_OPPONENT });
