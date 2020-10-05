@@ -24,6 +24,7 @@ const gameSagaFactory = (playerId: string) => {
 
     return function*() {
         yield all([
+            yield fork(preventAccidentalClose),
             yield fork(phaseTimer),
             yield fork(announcement),
             yield fork(gamePhase),
@@ -44,7 +45,6 @@ const gameSagaFactory = (playerId: string) => {
 
 export const gameSaga = function*() {
     yield all([
-        yield fork(preventAccidentalClose),
         yield fork(authSaga),
         yield fork(networking),
         yield takeEvery<JoinCompleteAction>(
