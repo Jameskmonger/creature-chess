@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BoardContainer } from "../../display/game/boardContainer";
+import { BoardContainer } from "../components/board/boardContainer";
 import { CardShop } from "../../features/cardShop/cardShop";
 import { PlayerList } from "../../features/playerList/playerList";
 import { Profile } from "../../display/profile/profile";

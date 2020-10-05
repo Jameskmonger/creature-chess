@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BoardContainer } from "../../display/game/boardContainer";
+import { BoardContainer } from "../components/board/boardContainer";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChess, faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";

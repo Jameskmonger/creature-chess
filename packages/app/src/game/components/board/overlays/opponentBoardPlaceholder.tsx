@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ReadyUpButton } from "./readyUpButton";
-import { SelectedCreature } from "../../../features/selectedCreature/selectedCreature";
+import { SelectedCreature } from "../../../../features/selectedCreature/selectedCreature";
 
 export const OpponentBoardPlaceholder: React.FunctionComponent = props => {
   return (
