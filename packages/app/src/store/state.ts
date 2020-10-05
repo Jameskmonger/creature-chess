@@ -2,13 +2,16 @@ import { LobbyPlayer, Card, PlayerListPlayer, GamePhase } from "@creature-chess/
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { BoardState } from "@creature-chess/shared/board";
 import { BenchState } from "@creature-chess/shared/player/bench";
-import { Overlay } from "../overlay";
+import { Overlay } from "../game/overlay";
 import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
 import { LevelState } from "@creature-chess/shared/player/level";
 import { AuthState } from "../auth";
+import { LobbyState } from "../lobby";
 
 export interface AppState {
     auth: AuthState;
+    ui: UiState;
+    lobby: LobbyState;
 
     gameInfo: GameInfoState;
     board: BoardState;
@@ -19,8 +22,6 @@ export interface AppState {
     game: GameState;
     playerList: PlayerListPlayer[];
     localPlayer: LocalPlayerState;
-    lobby: LobbyState;
-    ui: UiState;
 }
 
 export interface GameState {
@@ -28,18 +29,10 @@ export interface GameState {
     phaseStartedAtSeconds: number;
     opponentId: string;
     loading: boolean;
-    menuError: string;
     round: number | null;
     debug: boolean;
     connectionStatus: ConnectionStatus;
-
-    mainAnnouncement: string;
-    subAnnouncement: string;
-
-    selectedPieceId: string;
     shopLocked: boolean;
-
-    winnerName: string;
 }
 
 export interface LocalPlayerState {
@@ -48,18 +41,11 @@ export interface LocalPlayerState {
     ready: boolean;
 }
 
-export interface LobbyState {
-    localPlayerId: string;
-    lobbyId: string;
-    players: LobbyPlayer[];
-    startingAtMs: number;
-    requestNicknameMessage: string;
-}
-
-export interface GameOverInfoState {
-    winnerName: string;
-}
-
 export interface UiState {
+    selectedPieceId: string;
     currentOverlay: Overlay | null;
+    winnerName: string;
+    mainAnnouncement: string;
+    subAnnouncement: string;
+    menuError: string;
 }

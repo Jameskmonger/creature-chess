@@ -1,12 +1,12 @@
 import * as React from "react";
-import { connect, MapDispatchToProps, MapStateToProps, useSelector } from "react-redux";
-import { joinGameError, enableDebugMode, findGameAction } from "../../store/actions/gameActions";
-import { AppState } from "../../store";
-import { loadingSelector } from "../../store/gameSelector";
-import { getUrlParameter } from "../../get-url-parameter";
-import { signOut } from "../../auth/auth0";
-import { Footer } from "../../display/footer";
-import { Leaderboard } from "../../display/leaderboard";
+import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import { joinGameError, enableDebugMode, findGameAction } from "../store/actions/gameActions";
+import { AppState } from "../store";
+import { loadingSelector } from "../store/gameSelector";
+import { getUrlParameter } from "./get-url-parameter";
+import { signOut } from "../auth/auth0";
+import { Footer } from "../display/footer";
+import { Leaderboard } from "./leaderboard";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -160,7 +160,7 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
 
 const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => ({
     loading: loadingSelector(state),
-    error: state.game.menuError
+    error: state.ui.menuError
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

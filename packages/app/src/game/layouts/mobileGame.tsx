@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
 import { AppState } from "../../store";
-import { Overlay } from "../../overlay";
+import { Overlay } from "../overlay";
 import { closeOverlay, openOverlay } from "../../store/actions/uiActions";
 import { BoardContainer } from "../features/board/boardContainer";
 import { CardShop } from "../features/cardShop";

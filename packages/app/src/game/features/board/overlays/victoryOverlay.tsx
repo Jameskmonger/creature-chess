@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "../../../../store";
 
 const VictoryOverlay: React.FunctionComponent = () => {
-    const winnerName = useSelector<AppState, string>(state => state.game.winnerName);
+    const winnerName = useSelector<AppState, string>(state => state.ui.winnerName);
 
     if (!winnerName) {
         return null;

@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { AppState } from "../../../../store";
 
 const Announcement: React.FunctionComponent = () => {
-    const mainAnnouncement = useSelector<AppState, string>(state => state.game.mainAnnouncement);
-    const subAnnouncement = useSelector<AppState, string>(state => state.game.subAnnouncement);
+    const mainAnnouncement = useSelector<AppState, string>(state => state.ui.mainAnnouncement);
+    const subAnnouncement = useSelector<AppState, string>(state => state.ui.subAnnouncement);
 
     if (!mainAnnouncement) {
         return null;

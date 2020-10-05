@@ -20,7 +20,7 @@ const LeaderboardContents: React.FunctionComponent<{ data: any }> = ({ data }) =
                 }
             </tbody>
         </table>
-    )
+    );
 };
 
 const Leaderboard: React.FunctionComponent = () => {
@@ -41,7 +41,7 @@ const Leaderboard: React.FunctionComponent = () => {
                 }
             </div>
         </div>
-    )
+    );
 };
 
 export { Leaderboard };

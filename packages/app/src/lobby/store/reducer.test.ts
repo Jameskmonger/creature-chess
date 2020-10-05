@@ -1,12 +1,12 @@
 import { TestFixture, Test, Expect } from "alsatian";
-import { lobby } from "./lobbyReducer";
-import { joinLobbyAction } from "../actions/lobbyActions";
+import { reducer } from "./reducer";
+import { joinLobbyAction } from "./actions";
 
 @TestFixture("lobbyReducer tests")
 export class LobbyReducerTests {
   @Test()
   public shouldReturnInitialState() {
-    const state = lobby(undefined, { type: undefined } as any);
+    const state = reducer(undefined, { type: undefined } as any);
 
     Expect(state).toEqual({
       lobbyId: null,
@@ -26,7 +26,7 @@ export class LobbyReducerTests {
       1234
     );
 
-    const state = lobby(undefined, action);
+    const state = reducer(undefined, action);
     Expect(state.localPlayerId).toEqual("123");
     Expect(state.lobbyId).toEqual("456");
     Expect(state.players).toEqual([ { id: "789", name: "Bob", isBot: false } ]);
