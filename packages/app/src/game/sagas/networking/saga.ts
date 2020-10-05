@@ -1,9 +1,6 @@
 import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
-import {
-    FindGameAction, finishGameAction, playersResurrected, FIND_GAME, joinCompleteAction
-} from "../../store/actions";
 import { playerListUpdated } from "../../features/playerList/playerListActions";
 import { log } from "../../../log";
 import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEventChannel";
@@ -18,14 +15,15 @@ import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { PlayerActionTypesArray, PlayerAction } from "@creature-chess/shared/player/actions";
 import { signIn } from "../../../auth/auth0";
 import { validateNickname } from "@creature-chess/shared/validation/nickname";
-import { moneyUpdateAction, gamePhaseUpdate, shopLockUpdated } from "@creature-chess/shared/player/gameInfo";
+import { moneyUpdateAction, shopLockUpdated } from "@creature-chess/shared/player/gameInfo";
 import { cardsUpdated } from "@creature-chess/shared/player/cardShop";
 import { initialiseBoard } from "@creature-chess/shared/board/actions/boardActions";
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { setLevelAction } from "@creature-chess/shared/player/level";
 import { AuthSelectors } from "../../../auth";
-import { clearAnnouncement, updateConnectionStatus } from "../../../store/actions/uiActions";
+import { clearAnnouncement, FindGameAction, FIND_GAME, joinCompleteAction, updateConnectionStatus } from "../../../ui/actions";
 import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
+import { finishGameAction, gamePhaseUpdate, playersResurrected } from "@creature-chess/shared/game/store/actions";
 
 type Socket = SocketIOClient.Socket;
 

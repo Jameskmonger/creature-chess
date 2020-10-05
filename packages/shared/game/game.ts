@@ -66,10 +66,7 @@ export class Game {
         this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
         this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
 
-        this.phase = {
-            value: GamePhase.WAITING,
-            startedAt: null
-        };
+        this.phase = null;
 
         const livingPlayers = this.players.filter(p => p.isAlive());
         this.opponentProvider.setPlayers(livingPlayers);
@@ -183,7 +180,7 @@ export class Game {
     }
 
     private startGame = async () => {
-        if (this.phase.value !== GamePhase.WAITING) {
+        if (this.phase !== null) {
             return;
         }
 

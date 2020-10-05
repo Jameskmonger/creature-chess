@@ -10,10 +10,6 @@ const PhaseInfo: React.FunctionComponent = () => {
     const phase = useSelector<AppState, GamePhase>(state => state.game.phase);
     const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.game.phaseStartedAtSeconds);
 
-    if (phase === GamePhase.WAITING) {
-        return <div className="phase-info">Waiting for players</div>;
-    }
-
     if (phase === GamePhase.DEAD) {
         return <div className="phase-info">You are dead</div>;
     }

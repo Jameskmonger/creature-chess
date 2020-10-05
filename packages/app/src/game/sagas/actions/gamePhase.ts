@@ -6,11 +6,12 @@ import { initialiseBench } from "@creature-chess/shared/player/bench/benchAction
 import { unlockBoard, lockBoard, initialiseBoard } from "@creature-chess/shared/board/actions/boardActions";
 import { AppState } from "../../../store/state";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
-import { openOverlay, closeOverlay } from "../../../store/actions/uiActions";
-import { Overlay } from "../../overlay";
-import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
+import { openOverlay, closeOverlay } from "../../../ui/actions";
+import { Overlay } from "../../../ui/overlay";
 import { cardsUpdated } from "@creature-chess/shared/player/cardShop";
 import { clearSelectedPiece } from "../../features/board/actions";
+import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@creature-chess/shared/game/store/actions";
+import { clearOpponent, setOpponent } from "@creature-chess/shared/player/gameInfo";
 
 const isGamePhaseUpdate = (phase: GamePhase) =>
     (action: GamePhaseUpdateAction) => action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;
@@ -27,6 +28,7 @@ export const gamePhase = function*() {
                 yield put(cardsUpdated(payload.cards));
                 yield put(unlockBoard());
                 yield put(openOverlay(Overlay.SHOP));
+                yield put(clearOpponent());
             }
         ),
         yield takeEvery<GamePhaseUpdateAction>(
@@ -41,6 +43,7 @@ export const gamePhase = function*() {
                 yield put(initialiseBench(payload.bench));
                 yield put(lockBoard());
                 yield put(closeOverlay());
+                yield put(setOpponent(payload.opponentId));
 
                 const state: AppState = yield select();
 

@@ -1,15 +1,13 @@
-import { UiState } from "../state";
+import { UiState } from "../store/state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT,
-    EnableDebugModeAction, UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, ENABLE_DEBUG_MODE
-} from "../actions/uiActions";
-import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
-import {
-    FindGameAction, FIND_GAME, FinishGameAction, FINISH_GAME, JoinCompleteAction, JoinErrorAction,
-    JOIN_COMPLETE, JOIN_ERROR
-} from "../../game/store/actions";
+    EnableDebugModeAction, UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, ENABLE_DEBUG_MODE, JoinErrorAction,
+    JoinCompleteAction, FindGameAction, FIND_GAME, JOIN_ERROR, JOIN_COMPLETE
+} from "./actions";
+import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../game/features/board/actions";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
+import { FinishGameAction, FINISH_GAME } from "@creature-chess/shared/game/store/actions";
 
 const initialState: UiState = {
     loading: false,
@@ -28,16 +26,16 @@ type UIAction =
     | CloseOverlayAction
     | SelectPieceAction
     | ClearSelectedPieceAction
-    | FinishGameAction
     | AnnouncementUpdateAction
     | AnnouncementClearAction
     | JoinErrorAction
     | JoinCompleteAction
     | FindGameAction
     | EnableDebugModeAction
-    | UpdateConnectionStatusAction;
+    | UpdateConnectionStatusAction
+    | FinishGameAction;
 
-export function ui(state: UiState = initialState, action: UIAction) {
+export function reducer(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
         case FIND_GAME:
             return {

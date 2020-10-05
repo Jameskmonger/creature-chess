@@ -9,11 +9,12 @@ import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToC
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP, QUIT_GAME } from "@creature-chess/shared/player/actions";
-import { gamePhaseUpdate, MoneyUpdateAction, MONEY_UPDATE } from "@creature-chess/shared/player/gameInfo";
+import { MoneyUpdateAction, MONEY_UPDATE } from "@creature-chess/shared/player/gameInfo";
 import { Task } from "redux-saga";
 import { PlayerState } from "@creature-chess/shared/player/store";
 import { CardsUpdatedAction, CARDS_UPDATED } from "@creature-chess/shared/player/cardShop/actions";
 import { LevelUpdateAction, LEVEL_UPDATE } from "@creature-chess/shared/player/level/actions";
+import { gamePhaseUpdate } from "@creature-chess/shared/game/store/actions";
 
 const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
     return function*() {

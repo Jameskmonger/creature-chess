@@ -18,7 +18,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
 
     const cards = useSelector<AppState, CardModel[]>(state => state.cards);
     const money = useSelector<AppState, number>(getPlayerMoney);
-    const canUseShop = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.WAITING && state.game.phase !== GamePhase.DEAD);
+    const canUseShop = useSelector<AppState, boolean>(state => state.game.phase !== GamePhase.DEAD);
 
     const createCard = (card: CardModel, index: number) => {
         if (card === null) {

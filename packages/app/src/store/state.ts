@@ -4,10 +4,10 @@ import { BenchState } from "@creature-chess/shared/player/bench";
 import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
 import { LevelState } from "@creature-chess/shared/player/level";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
-import { Overlay } from "../game/overlay";
+import { GameState } from "@creature-chess/shared/game";
+import { Overlay } from "../ui/overlay";
 import { AuthState } from "../auth";
 import { LobbyState } from "../lobby";
-import { GameState } from "../game";
 
 export interface AppState {
     auth: AuthState;
