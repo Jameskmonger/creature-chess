@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleShopLock } from "@creature-chess/shared/player/actions";
-import { AppState } from "../../store";
+import { AppState } from "../../../store";
 
 const ToggleLockButton: React.FunctionComponent = () => {
   const dispatch = useDispatch();

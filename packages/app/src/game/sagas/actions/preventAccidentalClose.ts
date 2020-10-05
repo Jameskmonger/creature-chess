@@ -1,6 +1,6 @@
 import { QUIT_GAME } from "@creature-chess/shared/player/actions";
 import { take } from "@redux-saga/core/effects";
-import { JOIN_COMPLETE } from "../../actiontypes/localPlayerActionTypes";
+import { JOIN_COMPLETE } from "../../../store/actiontypes/localPlayerActionTypes";
 
 export const preventAccidentalClose = function*() {
     yield take(JOIN_COMPLETE);

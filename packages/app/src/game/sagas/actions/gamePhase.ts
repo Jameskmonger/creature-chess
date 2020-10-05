@@ -1,11 +1,11 @@
 import { put, takeEvery, all, select } from "@redux-saga/core/effects";
 import { GamePhase } from "@creature-chess/models";
-import { clearSelectedPiece } from "../../actions/gameActions";
+import { clearSelectedPiece } from "../../../store/actions/gameActions";
 import { startBattle } from "@creature-chess/shared/match/combat/battleSaga";
 import { PreparingPhaseUpdatePacket, ReadyPhaseUpdatePacket } from "@creature-chess/shared/networking/server-to-client";
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { unlockBoard, lockBoard, initialiseBoard } from "@creature-chess/shared/board/actions/boardActions";
-import { AppState } from "../../state";
+import { AppState } from "../../../store/state";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { openOverlay, closeOverlay } from "../../../store/actions/uiActions";
 import { Overlay } from "../../../overlay";

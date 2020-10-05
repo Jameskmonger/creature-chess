@@ -1,17 +1,16 @@
 import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
-import { Socket } from "../store/sagas/types";
 import {
     FindGameAction, shopLockUpdated, updateConnectionStatus, clearAnnouncement, finishGameAction, playersResurrected
-} from "../store/actions/gameActions";
-import { playerListUpdated } from "../game/components/playerList/playerListActions";
-import { FIND_GAME } from "../store/actiontypes/gameActionTypes";
-import { log } from "../log";
-import { joinCompleteAction } from "../store/actions/localPlayerActions";
+} from "../../../store/actions/gameActions";
+import { playerListUpdated } from "../../components/playerList/playerListActions";
+import { FIND_GAME } from "../../../store/actiontypes/gameActionTypes";
+import { log } from "../../../log";
+import { joinCompleteAction } from "../../../store/actions/localPlayerActions";
 import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEventChannel";
-import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN } from "../store/actions/lobbyActions";
-import { AppState } from "../store/state";
+import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN } from "../../../store/actions/lobbyActions";
+import { AppState } from "../../../store/state";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
 import {
     ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse
@@ -20,14 +19,16 @@ import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoi
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@creature-chess/shared/networking/client-to-server";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { PlayerActionTypesArray, PlayerAction } from "@creature-chess/shared/player/actions";
-import { signIn } from "../auth/auth0";
+import { signIn } from "../../../auth/auth0";
 import { validateNickname } from "@creature-chess/shared/validation/nickname";
 import { moneyUpdateAction, gamePhaseUpdate } from "@creature-chess/shared/player/gameInfo";
 import { cardsUpdated } from "@creature-chess/shared/player/cardShop";
 import { initialiseBoard } from "@creature-chess/shared/board/actions/boardActions";
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { setLevelAction } from "@creature-chess/shared/player/level";
-import { AuthSelectors } from "../auth";
+import { AuthSelectors } from "../../../auth";
+
+type Socket = SocketIOClient.Socket;
 
 const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
     // force to websocket for now until CORS is sorted
