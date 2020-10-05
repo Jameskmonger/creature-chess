@@ -1,6 +1,6 @@
 import { GRID_SIZE } from "@creature-chess/models/constants";
 import { PieceModel } from "@creature-chess/models";
-import { createTileCoordinates, TileCoordinates } from "@creature-chess/models/position";
+import { createTileCoordinates, TileCoordinates } from "@creature-chess/models/src/position";
 import { IndexedPieces } from "@creature-chess/models/piece";
 
 const rotateGridPosition = (gridSize: { width: number, height: number}, position: TileCoordinates) => {

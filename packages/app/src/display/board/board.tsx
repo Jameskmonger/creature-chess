@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { Constants, GamePhase } from "@creature-chess/models";
-import { TileStyle } from "@creature-chess/models/position";
+import { TileStyle } from "@creature-chess/models/src/position";
 import { AppState } from "../../store";
 
 import { PieceComponent } from "../piece/pieceComponent";

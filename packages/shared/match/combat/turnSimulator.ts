@@ -1,6 +1,6 @@
 import { PieceModel } from "@creature-chess/models";
 import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
-import { getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models/position";
+import { getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models/src/position";
 import { BoardState, boardReducer } from "../../board";
 import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "../../board/actions/boardActions";
 import { getStats } from "../../utils/piece-utils";

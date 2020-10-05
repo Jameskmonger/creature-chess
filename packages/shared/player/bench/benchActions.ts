@@ -1,7 +1,7 @@
 import { PieceModel } from "@creature-chess/models";
 import { INITIALISE_BENCH, REMOVE_BENCH_PIECE, REMOVE_BENCH_PIECES, ADD_BENCH_PIECE, LOCK_BENCH, UNLOCK_BENCH, MOVE_BENCH_PIECE } from "./benchActionTypes";
 import { BenchState } from "./state";
-import { SlotLocation } from "@creature-chess/models/position";
+import { SlotLocation } from "@creature-chess/models/src/position";
 
 type InitialiseBenchAction = ({ type: INITIALISE_BENCH, payload: { state: BenchState } });
 export type AddBenchPieceAction = ({ type: ADD_BENCH_PIECE, payload: { piece: PieceModel, slot: number | null } });

@@ -10,7 +10,7 @@ import {
     MOVE_BOARD_PIECE,
     REMOVE_BOARD_PIECES
 } from "./boardActionTypes";
-import { TileCoordinates } from "@creature-chess/models/position";
+import { TileCoordinates } from "@creature-chess/models/src/position";
 import { IndexedPieces } from "@creature-chess/models/piece";
 
 export type InitialiseBoardAction = ({ type: INITIALISE_BOARD, payload: { pieces: IndexedPieces } });

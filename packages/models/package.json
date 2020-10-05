@@ -5,13 +5,9 @@
   "keywords": [],
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
   "license": "ISC",
-  "main": "lib/models.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
+  "main": "src/index.ts",
   "files": [
-    "lib"
+    "src"
   ],
   "publishConfig": {
     "access": "public"
