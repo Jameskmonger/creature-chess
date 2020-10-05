@@ -35,8 +35,6 @@ export interface GameState {
 
     mainAnnouncement: string;
     subAnnouncement: string;
-
-    selectedPieceId: string;
     shopLocked: boolean;
 
     winnerName: string;
@@ -61,5 +59,6 @@ export interface GameOverInfoState {
 }
 
 export interface UiState {
+    selectedPieceId: string;
     currentOverlay: Overlay | null;
 }

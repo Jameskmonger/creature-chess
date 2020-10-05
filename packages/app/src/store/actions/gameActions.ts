@@ -8,7 +8,6 @@ import {
     UPDATE_CONNECTION_STATUS,
     SHOP_LOCK_UPDATED,
     FINISH_GAME,
-    CLEAR_SELECTED_PIECE,
     PLAYERS_RESURRECTED
 } from "../actiontypes/gameActionTypes";
 import { JoinCompleteAction } from "./localPlayerActions";
@@ -21,7 +20,6 @@ export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { 
 export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
-export type ClearSelectedPieceAction = ({ type: CLEAR_SELECTED_PIECE });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
 export type PhaseStartSecondsAction = ({ type: PHASE_START_SECONDS, payload: { time: number } });
 export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] }});
@@ -38,7 +36,6 @@ export type GameAction =
     | UpdateConnectionStatusAction
     | UpdateShopLockAction
     | FinishGameAction
-    | ClearSelectedPieceAction
     | PlayersResurrectedAction
     | MoneyUpdateAction;
 
@@ -101,5 +98,3 @@ export const finishGameAction = (winnerName: string): FinishGameAction => ({
         winnerName
     }
 });
-
-export const clearSelectedPiece = (): ClearSelectedPieceAction => ({ type: CLEAR_SELECTED_PIECE });
