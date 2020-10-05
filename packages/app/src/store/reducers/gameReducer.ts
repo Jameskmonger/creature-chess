@@ -1,7 +1,7 @@
 import { GameAction } from "../actions/gameActions";
 import {
-    JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME, UPDATE_ANNOUNCEMENT,
-    CLEAR_ANNOUNCEMENT, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS
+    JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME,
+    SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS
 } from "../actiontypes/gameActionTypes";
 import { GameState } from "../state";
 import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
@@ -17,8 +17,6 @@ export const initialState: GameState = {
     phaseStartedAtSeconds: null,
     round: null,
     debug: false,
-    mainAnnouncement: null,
-    subAnnouncement: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED,
     shopLocked: false
 };
@@ -80,20 +78,6 @@ export function game(state: GameState = initialState, action: GameAction): GameS
             return {
                 ...state,
                 debug: true
-            };
-        }
-        case UPDATE_ANNOUNCEMENT: {
-            return {
-                ...state,
-                mainAnnouncement: action.payload.main,
-                subAnnouncement: action.payload.sub
-            };
-        }
-        case CLEAR_ANNOUNCEMENT: {
-            return {
-                ...state,
-                mainAnnouncement: null,
-                subAnnouncement: null
             };
         }
         case SHOP_LOCK_UPDATED: {

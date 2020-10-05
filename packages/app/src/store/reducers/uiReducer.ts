@@ -1,5 +1,8 @@
 import { UiState } from "../state";
-import { OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY } from "../actions/uiActions";
+import {
+    OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
+    AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT
+} from "../actions/uiActions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
 import { FINISH_GAME } from "../actiontypes/gameActionTypes";
 import { FinishGameAction } from "../actions/gameActions";
@@ -7,10 +10,19 @@ import { FinishGameAction } from "../actions/gameActions";
 const initialState: UiState = {
     currentOverlay: null,
     selectedPieceId: null,
-    winnerName: null
+    winnerName: null,
+    mainAnnouncement: null,
+    subAnnouncement: null,
 };
 
-type UIAction = OpenOverlayAction | CloseOverlayAction | SelectPieceAction | ClearSelectedPieceAction | FinishGameAction;
+type UIAction =
+    OpenOverlayAction
+    | CloseOverlayAction
+    | SelectPieceAction
+    | ClearSelectedPieceAction
+    | FinishGameAction
+    | AnnouncementUpdateAction
+    | AnnouncementClearAction;
 
 export function ui(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
@@ -44,6 +56,20 @@ export function ui(state: UiState = initialState, action: UIAction) {
             return {
                 ...state,
                 winnerName: action.payload.winnerName
+            };
+        }
+        case UPDATE_ANNOUNCEMENT: {
+            return {
+                ...state,
+                mainAnnouncement: action.payload.main,
+                subAnnouncement: action.payload.sub
+            };
+        }
+        case CLEAR_ANNOUNCEMENT: {
+            return {
+                ...state,
+                mainAnnouncement: null,
+                subAnnouncement: null
             };
         }
         default:

@@ -3,8 +3,6 @@ import {
     PHASE_START_SECONDS,
     JOIN_ERROR,
     ENABLE_DEBUG_MODE,
-    UPDATE_ANNOUNCEMENT,
-    CLEAR_ANNOUNCEMENT,
     UPDATE_CONNECTION_STATUS,
     SHOP_LOCK_UPDATED,
     FINISH_GAME,
@@ -16,8 +14,6 @@ import { GamePhaseUpdateAction, MoneyUpdateAction } from "@creature-chess/shared
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
-export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string } });
-export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
 export type UpdateShopLockAction = ({ type: SHOP_LOCK_UPDATED, payload: { locked: boolean } });
 export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
@@ -31,8 +27,6 @@ export type GameAction =
     | JoinCompleteAction
     | GamePhaseUpdateAction
     | ({ type: ENABLE_DEBUG_MODE })
-    | AnnouncementUpdateAction
-    | AnnouncementClearAction
     | UpdateConnectionStatusAction
     | UpdateShopLockAction
     | FinishGameAction
@@ -63,15 +57,6 @@ export const phaseStartSeconds = (timeSeconds: number): PhaseStartSecondsAction 
 export const enableDebugMode = () => ({
     type: ENABLE_DEBUG_MODE
 });
-
-export const updateAnnouncement = (main: string, sub?: string): AnnouncementUpdateAction => ({
-    type: UPDATE_ANNOUNCEMENT,
-    payload: {
-        main, sub
-    }
-});
-
-export const clearAnnouncement = (): AnnouncementClearAction => ({ type: CLEAR_ANNOUNCEMENT });
 
 export const playersResurrected = (playerIds: string[]): PlayersResurrectedAction => ({
     type: PLAYERS_RESURRECTED,

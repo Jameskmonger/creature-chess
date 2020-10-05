@@ -32,9 +32,6 @@ export interface GameState {
     round: number | null;
     debug: boolean;
     connectionStatus: ConnectionStatus;
-
-    mainAnnouncement: string;
-    subAnnouncement: string;
     shopLocked: boolean;
 }
 
@@ -56,4 +53,6 @@ export interface UiState {
     selectedPieceId: string;
     currentOverlay: Overlay | null;
     winnerName: string;
+    mainAnnouncement: string;
+    subAnnouncement: string;
 }
