@@ -2,7 +2,7 @@ import { LobbyPlayer, Card, PlayerListPlayer, GamePhase } from "@creature-chess/
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { BoardState } from "@creature-chess/shared/board";
 import { BenchState } from "@creature-chess/shared/player/bench";
-import { Overlay } from "../overlay";
+import { Overlay } from "../game/overlay";
 import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
 import { LevelState } from "@creature-chess/shared/player/level";
 import { AuthState } from "../auth";

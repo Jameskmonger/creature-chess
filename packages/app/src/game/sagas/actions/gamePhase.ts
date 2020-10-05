@@ -7,7 +7,7 @@ import { unlockBoard, lockBoard, initialiseBoard } from "@creature-chess/shared/
 import { AppState } from "../../../store/state";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { openOverlay, closeOverlay } from "../../../store/actions/uiActions";
-import { Overlay } from "../../../overlay";
+import { Overlay } from "../../overlay";
 import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
 import { cardsUpdated } from "@creature-chess/shared/player/cardShop";
 import { clearSelectedPiece } from "../../features/board/actions";

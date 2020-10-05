@@ -1,4 +1,4 @@
-import { Overlay } from "../../overlay";
+import { Overlay } from "../../game/overlay";
 
 export const OPEN_OVERLAY = "OPEN_OVERLAY";
 export type OPEN_OVERLAY = typeof OPEN_OVERLAY;
