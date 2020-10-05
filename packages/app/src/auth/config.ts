@@ -1,4 +1,4 @@
-const local = true;
+const local = false;
 
 export const domain = "creaturechess.eu.auth0.com";
 export const clientID = "HNUYYyRCtFJsA3xKGp964Kgy4jwx8bW1";
