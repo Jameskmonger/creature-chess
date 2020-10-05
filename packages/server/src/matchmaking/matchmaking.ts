@@ -25,7 +25,7 @@ export class Matchmaking {
     private metrics = createMetricLogger();
 
     constructor(private database: DatabaseConnection) {
-
+        setInterval(this.sendMetrics, 60 * 1000);
     }
 
     public findGame(socket: io.Socket, user: UserModel) {
@@ -155,13 +155,13 @@ export class Matchmaking {
                     .id);
             }
             this.games.delete(game.id);
-            this.metrics.sendGameCount(this.games.size);
+            this.sendMetrics();
         });
 
         this.games.set(game.id, game);
         this.lobbies.delete(id);
 
-        this.metrics.sendGameCount(this.games.size);
+        this.sendMetrics();
     }
 
     private findOrCreateLobby() {
@@ -187,5 +187,9 @@ export class Matchmaking {
         log(`Lobby '${lobby.id}' created`);
 
         return lobby;
+    }
+
+    private sendMetrics = () => {
+        this.metrics.sendGameCount(this.games.size);
     }
 }
