@@ -4,6 +4,7 @@ import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
 import { AppState } from "../../../../../store";
 import { ProgressBar } from "../../../../../display/progressBar";
+import { getUserId } from "../../../../../auth/store/selectors";
 
 interface HealthbarProps {
     pieceId: string;
@@ -18,7 +19,7 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
 
     const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
 
-    const localPlayerId = useSelector<AppState, string>(state => state.game.localPlayerId);
+    const localPlayerId = useSelector<AppState, string>(getUserId);
 
     const pieceIsOnBench = piece.position.y === null;
 

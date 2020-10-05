@@ -144,9 +144,9 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                 }
 
                 if (packet.type === "game") {
-                    const { localPlayerId } = packet.payload;
+                    const { id } = packet.payload;
 
-                    emit(joinCompleteAction(localPlayerId));
+                    emit(joinCompleteAction(id));
 
                     const { money, cards, players, level: { level, xp }, board, bench, phase } = packet.payload.fullState;
 

@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
+import { getUserId } from "../auth/store/selectors";
 
 import { AppState } from "./state";
-import { localPlayerIdSelector } from "../game/store/selectors";
 
 export const benchTilePieceSelector = createSelector(
     (state: AppState) => state.bench,
@@ -28,7 +28,7 @@ export const boardTilePieceSelector = createSelector(
 );
 
 export const ownedPieceSelector = (state: AppState) => {
-    const playerId = localPlayerIdSelector(state);
+    const playerId = getUserId(state);
 
     return Object.values(state.board.pieces).filter(p => p.ownerId === playerId);
 };

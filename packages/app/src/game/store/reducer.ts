@@ -8,7 +8,7 @@ import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
 
 export const initialState: GameState = {
-    localPlayerId: null,
+    id: null,
     loading: false,
     round: null,
     debug: false,
@@ -20,7 +20,7 @@ export function reducer(state: GameState = initialState, action: GameAction): Ga
         case JOIN_COMPLETE:
             return {
                 ...state,
-                localPlayerId: action.payload.playerId
+                id: action.payload.gameId
             };
         case UPDATE_CONNECTION_STATUS:
             return {
