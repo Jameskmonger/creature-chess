@@ -1,10 +1,15 @@
 import { UiState } from "../state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
-    AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT
+    AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT,
+    EnableDebugModeAction, UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, ENABLE_DEBUG_MODE
 } from "../actions/uiActions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../../game/features/board/actions";
-import { FindGameAction, FIND_GAME, FinishGameAction, FINISH_GAME, JoinCompleteAction, JoinErrorAction, JOIN_COMPLETE, JOIN_ERROR } from "../../game/store/actions";
+import {
+    FindGameAction, FIND_GAME, FinishGameAction, FINISH_GAME, JoinCompleteAction, JoinErrorAction,
+    JOIN_COMPLETE, JOIN_ERROR
+} from "../../game/store/actions";
+import { ConnectionStatus } from "@creature-chess/shared/networking";
 
 const initialState: UiState = {
     loading: false,
@@ -13,7 +18,9 @@ const initialState: UiState = {
     winnerName: null,
     mainAnnouncement: null,
     subAnnouncement: null,
-    menuError: null
+    menuError: null,
+    debug: false,
+    connectionStatus: ConnectionStatus.NOT_CONNECTED
 };
 
 type UIAction =
@@ -26,7 +33,9 @@ type UIAction =
     | AnnouncementClearAction
     | JoinErrorAction
     | JoinCompleteAction
-    | FindGameAction;
+    | FindGameAction
+    | EnableDebugModeAction
+    | UpdateConnectionStatusAction;
 
 export function ui(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
@@ -35,6 +44,17 @@ export function ui(state: UiState = initialState, action: UIAction) {
                 ...state,
                 loading: true
             };
+        case UPDATE_CONNECTION_STATUS:
+            return {
+                ...state,
+                connectionStatus: action.payload.status
+            };
+        case ENABLE_DEBUG_MODE: {
+            return {
+                ...state,
+                debug: true
+            };
+        }
         case OPEN_OVERLAY: {
             return {
                 ...state,

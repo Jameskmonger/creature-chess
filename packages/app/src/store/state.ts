@@ -1,9 +1,10 @@
 import { Card, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "@creature-chess/shared/board";
 import { BenchState } from "@creature-chess/shared/player/bench";
-import { Overlay } from "../game/overlay";
 import { GameInfoState } from "@creature-chess/shared/player/gameInfo";
 import { LevelState } from "@creature-chess/shared/player/level";
+import { ConnectionStatus } from "@creature-chess/shared/networking";
+import { Overlay } from "../game/overlay";
 import { AuthState } from "../auth";
 import { LobbyState } from "../lobby";
 import { GameState } from "../game";
@@ -26,6 +27,8 @@ export interface AppState {
 
 export interface UiState {
     loading: boolean;
+    debug: boolean;
+    connectionStatus: ConnectionStatus;
     selectedPieceId: string;
     currentOverlay: Overlay | null;
     winnerName: string;
