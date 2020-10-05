@@ -2,14 +2,12 @@ import io = require("socket.io-client");
 import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
 import {
-    FindGameAction, shopLockUpdated, updateConnectionStatus, finishGameAction, playersResurrected
-} from "../../../store/actions/gameActions";
+    FindGameAction, shopLockUpdated, updateConnectionStatus, finishGameAction, playersResurrected, FIND_GAME
+} from "../../store/actions";
 import { playerListUpdated } from "../../features/playerList/playerListActions";
-import { FIND_GAME } from "../../../store/actiontypes/gameActionTypes";
 import { log } from "../../../log";
 import { joinCompleteAction } from "../../../store/actions/localPlayerActions";
 import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEventChannel";
-import { joinLobbyAction, updateLobbyPlayerAction, requestNickname, NicknameChosenAction, NICKNAME_CHOSEN } from "../../../lobby/store/actions";
 import { AppState } from "../../../store/state";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
 import {
@@ -27,7 +25,8 @@ import { initialiseBoard } from "@creature-chess/shared/board/actions/boardActio
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { setLevelAction } from "@creature-chess/shared/player/level";
 import { AuthSelectors } from "../../../auth";
-import { clearAnnouncement } from "packages/app/src/store/actions/uiActions";
+import { clearAnnouncement } from "../../../store/actions/uiActions";
+import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
 
 type Socket = SocketIOClient.Socket;
 

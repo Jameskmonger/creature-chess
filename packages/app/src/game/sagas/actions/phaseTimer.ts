@@ -1,5 +1,5 @@
 import { takeLatest, put } from "@redux-saga/core/effects";
-import { phaseStartSeconds } from "../../../store/actions/gameActions";
+import { phaseStartSeconds } from "../../store/actions";
 import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
 
 export const phaseTimer = function*() {

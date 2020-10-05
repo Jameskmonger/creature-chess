@@ -1,10 +1,8 @@
-import { GameAction } from "../actions/gameActions";
 import {
-    JOIN_ERROR, ENABLE_DEBUG_MODE, FIND_GAME,
-    SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, FINISH_GAME, PHASE_START_SECONDS
-} from "../actiontypes/gameActionTypes";
-import { GameState } from "../state";
-import { JOIN_COMPLETE } from "../actiontypes/localPlayerActionTypes";
+    GameAction,
+    ENABLE_DEBUG_MODE, FIND_GAME, SHOP_LOCK_UPDATED, UPDATE_CONNECTION_STATUS, PHASE_START_SECONDS
+} from "./actions";
+import { GameState } from "./state";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_UPDATE } from "@creature-chess/shared/player/gameInfo";
@@ -20,7 +18,7 @@ export const initialState: GameState = {
     shopLocked: false
 };
 
-export function game(state: GameState = initialState, action: GameAction): GameState {
+export function reducer(state: GameState = initialState, action: GameAction): GameState {
     switch (action.type) {
         case UPDATE_CONNECTION_STATUS:
             return {

@@ -1,6 +1,6 @@
 import { TestFixture, Test, Expect } from "alsatian";
-import { phaseStartSeconds } from "../actions/gameActions";
-import { game } from "./gameReducer";
+import { phaseStartSeconds } from "./actions";
+import { reducer } from "./reducer";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { GamePhase } from "@creature-chess/models";
 
@@ -8,7 +8,7 @@ import { GamePhase } from "@creature-chess/models";
 export class GameReducerTests {
   @Test()
   public shouldReturnInitialState() {
-    const state = game(undefined, { type: undefined });
+    const state = reducer(undefined, { type: undefined });
 
     Expect(state).toEqual({
       opponentId: null,
@@ -26,7 +26,7 @@ export class GameReducerTests {
   public shouldHandlePhaseStartSeconds() {
     const action = phaseStartSeconds(100);
 
-    const state = game(undefined, action);
+    const state = reducer(undefined, action);
     Expect(state.phaseStartedAtSeconds).toEqual(100);
   }
 }

@@ -1,9 +1,8 @@
 import { takeLatest, put, select, delay } from "@redux-saga/core/effects";
-import { PLAYERS_RESURRECTED } from "../../../store/actiontypes/gameActionTypes";
 import { GamePhase } from "@creature-chess/models";
 import { AppState } from "../../../store/state";
 import { GAME_PHASE_UPDATE, GamePhaseUpdateAction } from "@creature-chess/shared/player/gameInfo";
-import { PlayersResurrectedAction } from "packages/app/src/store/actions/gameActions";
+import { PlayersResurrectedAction, PLAYERS_RESURRECTED } from "packages/app/src/game/store/actions";
 import { clearAnnouncement, updateAnnouncement } from "packages/app/src/store/actions/uiActions";
 
 // distinctLastJoin(["James", "Bob", "William", "Steve"], ", ", " and ")
