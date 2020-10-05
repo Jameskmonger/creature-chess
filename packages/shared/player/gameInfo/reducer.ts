@@ -1,6 +1,6 @@
 import { MONEY_UPDATE, GAME_PHASE_UPDATE, GameAction } from "./actions";
 import { GamePhase } from "@creature-chess/models";
-import { STARTING_MONEY } from "@creature-chess/models/constants";
+import { STARTING_MONEY } from "@creature-chess/models/src/constants";
 
 export interface GameInfoState {
     phase: GamePhase;

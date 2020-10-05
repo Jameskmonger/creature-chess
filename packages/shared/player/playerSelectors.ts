@@ -1,6 +1,6 @@
 import { PlayerState } from "./store";
 import { getBoardPieceForPosition } from "./pieceSelectors";
-import { GRID_SIZE } from "@creature-chess/models/constants";
+import { GRID_SIZE } from "@creature-chess/models/src/constants";
 import { TileCoordinates } from "@creature-chess/models/src/position";
 
 export const getPlayerMoney = (state: PlayerState): number => state.gameInfo.money;

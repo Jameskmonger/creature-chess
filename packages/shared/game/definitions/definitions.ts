@@ -1,5 +1,5 @@
-import { CreatureType } from "@creature-chess/models/creatureType";
-import { CreatureDefinition, DefinitionClass } from "@creature-chess/models/creatureDefinition";
+import { CreatureType } from "@creature-chess/models/src/creatureType";
+import { CreatureDefinition, DefinitionClass } from "@creature-chess/models/src/creatureDefinition";
 import { getStages } from "./definitionClass";
 
 const createDefinition = (id: number, name: string, type: CreatureType, definitionClass: DefinitionClass, cost: number): CreatureDefinition => ({

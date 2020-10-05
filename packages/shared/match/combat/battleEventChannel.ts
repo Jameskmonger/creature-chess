@@ -4,7 +4,7 @@ import { TurnSimulator } from "./turnSimulator";
 import { isATeamDefeated } from "../../utils";
 import { BoardState } from "../../board";
 import { initialiseBoard, InitialiseBoardAction } from "../../board/actions/boardActions";
-import { IndexedPieces } from "@creature-chess/models/piece";
+import { IndexedPieces } from "@creature-chess/models/src/piece";
 
 export const BATTLE_TURN = "BATTLE_TURN";
 export type BATTLE_TURN = typeof BATTLE_TURN;

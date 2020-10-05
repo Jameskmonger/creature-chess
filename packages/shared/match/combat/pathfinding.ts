@@ -1,6 +1,6 @@
 import { astar, Graph } from "javascript-astar";
 import { PieceModel } from "@creature-chess/models";
-import { GRID_SIZE } from "@creature-chess/models/constants";
+import { GRID_SIZE } from "@creature-chess/models/src/constants";
 import { getAdjacentPositions, TileCoordinates } from "@creature-chess/models/src/position";
 import { BoardState } from "../../board";
 

@@ -5,7 +5,7 @@ import { AddBenchPieceAction, addBenchPiece, removeBenchPiece, removeBenchPieces
 import { ADD_BENCH_PIECE } from "../bench/benchActionTypes";
 import { DefinitionProvider } from "../../game/definitionProvider";
 import { PieceModel } from "@creature-chess/models";
-import { PIECES_TO_EVOLVE } from "@creature-chess/models/constants";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models/src/constants";
 import { UNLOCK_BOARD, UPDATE_BOARD_PIECE, ADD_BOARD_PIECE } from "../../board/actions/boardActionTypes";
 import * as pieceSelectors from "../pieceSelectors";
 import { removeBoardPieces, updateBoardPiece, UpdateBoardPieceAction } from "../../board/actions/boardActions";

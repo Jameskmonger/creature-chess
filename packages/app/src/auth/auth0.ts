@@ -1,14 +1,5 @@
 import { WebAuth } from "auth0-js";
-
-const domain = "creaturechess.eu.auth0.com";
-const clientID = "HNUYYyRCtFJsA3xKGp964Kgy4jwx8bW1";
-
-const local = false;
-
-const redirectUri = local ? "http://localhost:8090/callback" : "http://creaturechess.jamesmonger.com/callback";
-const logoutRedirectUrl = local ? "http://localhost:8090" : "http://creaturechess.jamesmonger.com/";
-const audience = `https://${domain}/userinfo`;
-const scope = "openid profile email";
+import { audience, clientID, domain, logoutRedirectUrl, redirectUri, scope } from "./config";
 
 const auth0Client = new WebAuth({
   domain,

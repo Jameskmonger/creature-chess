@@ -4,13 +4,13 @@ import present = require("present");
 import { battleEventChannel, BattleAction } from "@creature-chess/shared/match/combat/battleEventChannel";
 import { TurnSimulator } from "@creature-chess/shared/match/combat/turnSimulator";
 import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
-import { DEFAULT_TURN_COUNT } from "@creature-chess/shared/models/constants";
+import { DEFAULT_TURN_COUNT } from "@creature-chess/shared/models/src/constants";
 import { EventChannel } from "redux-saga";
 import { BoardState, boardReducer } from "@creature-chess/shared/board";
 import { createPiece } from "@creature-chess/shared/utils/piece-utils";
 import { addBoardPiece } from "@creature-chess/shared/board/actions/boardActions";
 import { PieceModel } from "@creature-chess/shared/models";
-import { IndexedPieces } from "@creature-chess/shared/models/piece";
+import { IndexedPieces } from "@creature-chess/shared/models/src/piece";
 
 const definitionProvider = new DefinitionProvider();
 const simulator = new TurnSimulator();

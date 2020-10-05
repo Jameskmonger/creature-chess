@@ -4,7 +4,7 @@ import { getRelativeDirection, TileCoordinates, Directions, getDistance } from "
 import { BoardState, boardReducer } from "../../board";
 import { updateBoardPiece, updateBoardPieces, removeBoardPiece } from "../../board/actions/boardActions";
 import { getStats } from "../../utils/piece-utils";
-import { CreatureType } from "@creature-chess/models/creatureType";
+import { CreatureType } from "@creature-chess/models/src/creatureType";
 import { isOvercomeBy, isGeneratedBy } from "../../utils/get-type-attack-bonus";
 
 const DYING_DURATION = 10;
