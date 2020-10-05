@@ -9,7 +9,7 @@ import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToC
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP, QUIT_GAME } from "@creature-chess/shared/player/actions";
-import { CardsUpdatedAction, CARDS_UPDATED, LevelUpdateAction, LEVEL_UPDATE, MoneyUpdateAction, MONEY_UPDATE } from "@creature-chess/shared/player/gameInfo";
+import { CardsUpdatedAction, CARDS_UPDATED, LevelUpdateAction, LEVEL_UPDATE, MoneyUpdateAction, MONEY_UPDATE } from "@creature-chess/shared/player/playerInfo";
 import { Task } from "redux-saga";
 import { PlayerState } from "@creature-chess/shared/player/store";
 import { gamePhaseUpdate } from "@creature-chess/shared/game/store/actions";
@@ -20,7 +20,7 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
             yield takeLatest<CardsUpdatedAction>(
                 CARDS_UPDATED,
                 function*() {
-                    const cards: Card[] = yield select((state: PlayerState) => state.gameInfo.cards);
+                    const cards: Card[] = yield select((state: PlayerState) => state.playerInfo.cards);
 
                     registry.emit(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
                 }
@@ -28,7 +28,7 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
             yield takeLatest<MoneyUpdateAction>(
                 MONEY_UPDATE,
                 function*() {
-                    const money: number = yield select((state: PlayerState) => state.gameInfo.money);
+                    const money: number = yield select((state: PlayerState) => state.playerInfo.money);
 
                     registry.emit(ServerToClientPacketOpcodes.MONEY_UPDATE, money);
                 }
@@ -36,8 +36,8 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
             yield takeLatest<LevelUpdateAction>(
                 [LEVEL_UPDATE],
                 function*() {
-                    const level: number = yield select((state: PlayerState) => state.gameInfo.level);
-                    const xp: number = yield select((state: PlayerState) => state.gameInfo.xp);
+                    const level: number = yield select((state: PlayerState) => state.playerInfo.level);
+                    const xp: number = yield select((state: PlayerState) => state.playerInfo.xp);
 
                     registry.emit(ServerToClientPacketOpcodes.LEVEL_UPDATE, { level, xp });
                 }
@@ -146,7 +146,7 @@ export class SocketPlayer extends Player {
     }
 
     protected onEnterPreparingPhase(startedAt: number, round: number) {
-        const { board, bench, gameInfo: { cards } } = this.store.getState();
+        const { board, bench, playerInfo: { cards } } = this.store.getState();
 
         const packet: PhaseUpdatePacket = {
             startedAt,

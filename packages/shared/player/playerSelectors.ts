@@ -3,9 +3,9 @@ import { getBoardPieceForPosition } from "./pieceSelectors";
 import { GRID_SIZE } from "@creature-chess/models/src/constants";
 import { TileCoordinates } from "@creature-chess/models/src/position";
 
-export const getPlayerMoney = (state: PlayerState): number => state.gameInfo.money;
-export const getPlayerLevel = (state: PlayerState): number => state.gameInfo.level;
-export const getPlayerXp = (state: PlayerState): number => state.gameInfo.xp;
+export const getPlayerMoney = (state: PlayerState): number => state.playerInfo.money;
+export const getPlayerLevel = (state: PlayerState): number => state.playerInfo.level;
+export const getPlayerXp = (state: PlayerState): number => state.playerInfo.xp;
 
 export const getPlayerBelowPieceLimit = (state: PlayerState, playerId: string): boolean => {
     const ownedBoardPieceCount = Object.values(state.board.pieces).filter(p => p.ownerId === playerId).length;
@@ -50,4 +50,4 @@ export const getMostExpensiveBenchPiece = (state: PlayerState) => {
     return benchPieces[0];
 };
 
-export const getOpponentId = (state: PlayerState) => state.gameInfo.opponentId;
+export const getOpponentId = (state: PlayerState) => state.playerInfo.opponentId;

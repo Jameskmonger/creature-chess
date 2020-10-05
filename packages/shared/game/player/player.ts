@@ -15,7 +15,7 @@ import { mergeBoards } from "../../board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { PlayerActions } from "../../player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
-import { cardsUpdated, moneyUpdateAction, setLevelAction } from "../../player/gameInfo";
+import { cardsUpdated, moneyUpdateAction, setLevelAction } from "../../player/playerInfo";
 import { SagaMiddleware } from "redux-saga";
 import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot } from "../../player/playerSelectors";
 
@@ -108,7 +108,7 @@ export abstract class Player {
     }
 
     public addXp(amount: number) {
-        let { level, xp } = this.store.getState().gameInfo;
+        let { level, xp } = this.store.getState().playerInfo;
 
         for (let i = 0; i < amount; i++) {
             const toNextLevel = getXpToNextLevel(level);
@@ -126,17 +126,17 @@ export abstract class Player {
     }
 
     public addMoney(money: number) {
-        const currentMoney = this.store.getState().gameInfo.money;
+        const currentMoney = this.store.getState().playerInfo.money;
 
         this.store.dispatch(moneyUpdateAction(currentMoney + money));
     }
 
     public getLevel() {
-        return this.store.getState().gameInfo.level;
+        return this.store.getState().playerInfo.level;
     }
 
     public getMoney() {
-        return this.store.getState().gameInfo.money;
+        return this.store.getState().playerInfo.money;
     }
 
     public getRoundDiedAt() {
@@ -276,7 +276,7 @@ export abstract class Player {
             return;
         }
 
-        const cards = this.store.getState().gameInfo.cards;
+        const cards = this.store.getState().playerInfo.cards;
 
         const newCards = this.deck.reroll(cards, this.getLevel(), 5);
         this.store.dispatch(cardsUpdated(newCards));
@@ -302,7 +302,7 @@ export abstract class Player {
             this.deck.addPiece(piece);
         }
 
-        const cards = this.store.getState().gameInfo.cards;
+        const cards = this.store.getState().playerInfo.cards;
         this.store.dispatch(cardsUpdated([]));
         this.deck.addCards(cards);
 
@@ -345,11 +345,11 @@ export abstract class Player {
     }
 
     public getCards() {
-        return this.store.getState().gameInfo.cards;
+        return this.store.getState().playerInfo.cards;
     }
 
     public getGameState() {
-        const { board, bench, gameInfo: { money, cards, level, xp } } = this.store.getState();
+        const { board, bench, playerInfo: { money, cards, level, xp } } = this.store.getState();
 
         return {
             board: board.pieces,
@@ -394,7 +394,7 @@ export abstract class Player {
     }
 
     protected belowPieceLimit() {
-        return getBoardPieceCount(this.store.getState()) < this.store.getState().gameInfo.level;
+        return getBoardPieceCount(this.store.getState()) < this.store.getState().playerInfo.level;
     }
 
     protected toggleShopLock = () => {
@@ -434,7 +434,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.store.getState().gameInfo.money;
+        const money = this.store.getState().playerInfo.money;
 
         // not enough money
         if (money < BUY_XP_COST) {
@@ -453,7 +453,7 @@ export abstract class Player {
             return;
         }
 
-        const money = this.store.getState().gameInfo.money;
+        const money = this.store.getState().playerInfo.money;
 
         // not enough money
         if (money < REROLL_COST) {

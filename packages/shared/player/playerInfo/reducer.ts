@@ -3,7 +3,7 @@ import { STARTING_LEVEL, STARTING_MONEY } from "@creature-chess/models/src/const
 import { READY_UP } from "../actions";
 import { Card } from "@creature-chess/models";
 
-export interface GameInfoState {
+export interface PlayerInfoState {
     opponentId: string;
     shopLocked: boolean;
     money: number;
@@ -13,7 +13,7 @@ export interface GameInfoState {
     cards: Card[];
 }
 
-const initialState: GameInfoState = {
+const initialState: PlayerInfoState = {
     opponentId: null,
     shopLocked: false,
     money: STARTING_MONEY,
@@ -23,7 +23,7 @@ const initialState: GameInfoState = {
     cards: []
 };
 
-export function gameInfo(state: GameInfoState = initialState, action: GameAction): GameInfoState {
+export function playerInfoReducer(state: PlayerInfoState = initialState, action: GameAction): PlayerInfoState {
     switch (action.type) {
         case CARDS_UPDATED:
             return {
