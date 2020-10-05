@@ -1,7 +1,7 @@
 import { ManagementClient } from "auth0";
 import { verifyDecodeJwt } from "./verifyDecodeJwt";
-import { UserModel, UserAppMetadata } from "../../server/src/user/userModel";
 import { DatabaseConnection } from "@creature-chess/data";
+import { UserAppMetadata, UserModel } from "./user";
 
 export const authenticate = async (
     managementClient: ManagementClient<UserAppMetadata>,

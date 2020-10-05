@@ -5,9 +5,8 @@ import { EventEmitter } from "events";
 import { log } from "@creature-chess/shared/log";
 import { DatabaseConnection } from "@creature-chess/data";
 import { AuthenticateResponse } from "@creature-chess/shared/networking/server-to-client";
-import { authenticate } from "@creature-chess/auth-server";
+import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth-server";
 import { validateNickname } from "@creature-chess/shared/validation/nickname";
-import { UserAppMetadata, UserModel } from "../user/userModel";
 
 /**
  * Listens for new connections to the server,

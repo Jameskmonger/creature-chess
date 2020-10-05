@@ -1,10 +1,10 @@
 import { ManagementClient } from "auth0";
 import { log } from "@creature-chess/shared/log";
-import { UserAppMetadata } from "./user/userModel";
 import { SocketAuthenticator } from "./socket/socketAuthenticator";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { openServer } from "./socket/openServer";
 import { Matchmaking } from "./matchmaking/matchmaking";
+import { UserAppMetadata } from "@creature-chess/auth-server";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
