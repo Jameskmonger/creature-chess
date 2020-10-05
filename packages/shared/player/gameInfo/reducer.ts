@@ -6,6 +6,7 @@ import { READY_UP } from "../actions";
 export interface GameInfoState {
     phase: GamePhase;
     phaseStartedAtSeconds: number;
+    opponentId: string;
     shopLocked: boolean;
     money: number;
     ready: boolean;
@@ -14,6 +15,7 @@ export interface GameInfoState {
 const initialState: GameInfoState = {
     phase: GamePhase.WAITING,
     phaseStartedAtSeconds: null,
+    opponentId: null,
     shopLocked: false,
     money: STARTING_MONEY,
     ready: false
@@ -27,12 +29,22 @@ export function gameInfo(state: GameInfoState = initialState, action: GameAction
                 money: action.payload.money
             };
         case GAME_PHASE_UPDATE:
-            // set ready to false when entering ready phase
+            // set ready to false, and set opponent id when entering ready phase
             if (action.payload.phase === GamePhase.READY) {
                 return {
                     ...state,
                     phase: action.payload.phase,
+                    opponentId: action.payload.payload.opponentId,
                     ready: false
+                };
+            }
+
+            // clear opponent id when entering preparing phase
+            if (action.payload.phase === GamePhase.PREPARING) {
+                return {
+                    ...state,
+                    phase: action.payload.phase,
+                    opponentId: null
                 };
             }
 

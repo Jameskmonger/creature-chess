@@ -3,12 +3,12 @@ import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/model
 import { PlayerListItem, QuitPlayerListItem } from "./playerListItem";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../store";
-import { opponentIdSelector, localPlayerIdSelector } from "../../store/selectors";
-import { getPlayerMoney, getPlayerLevel } from "@creature-chess/shared/player/playerSelectors";
+import { localPlayerIdSelector } from "../../store/selectors";
+import { getPlayerMoney, getPlayerLevel, getOpponentId } from "@creature-chess/shared/player/playerSelectors";
 
 const PlayerList: React.FunctionComponent = () => {
     const players = useSelector<AppState, PlayerListPlayer[]>(state => state.playerList);
-    const opponentId = useSelector<AppState, string>(opponentIdSelector);
+    const opponentId = useSelector<AppState, string>(getOpponentId);
     const localPlayerId = useSelector<AppState, string>(localPlayerIdSelector);
     const showReadyIndicators = useSelector<AppState, boolean>(state => state.gameInfo.phase === GamePhase.PREPARING);
 
