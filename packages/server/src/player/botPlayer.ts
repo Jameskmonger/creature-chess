@@ -70,7 +70,7 @@ export class BotPlayer extends Player {
 
     protected onEnterPreparingPhase(startedAt: number, round: number) {
         // todo rework this, it's a quick fix to make bots aware of game state
-        const { board, bench, gameInfo: { cards } } = this.store.getState();
+        const { board, bench, playerInfo: { cards } } = this.store.getState();
 
         const packet: PhaseUpdatePacket = {
             startedAt,
@@ -158,7 +158,7 @@ export class BotPlayer extends Player {
                 continue;
             }
 
-            const currentMoney = this.store.getState().gameInfo.money;
+            const currentMoney = this.store.getState().playerInfo.money;
             const moneyAfterSelling = currentMoney + worstPiece.cost;
 
             // if we still can't afford, move to the next card

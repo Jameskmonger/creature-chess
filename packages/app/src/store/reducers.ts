@@ -1,6 +1,6 @@
 import { boardReducer } from "@creature-chess/shared/board";
 import { benchReducer } from "@creature-chess/shared/player/bench";
-import { gameInfoReducer } from "@creature-chess/shared/player/gameInfo";
+import { playerInfoReducer } from "@creature-chess/shared/player/playerInfo";
 import { gameReducer } from "@creature-chess/shared/game";
 import { playerList } from "../game/features/playerList/playerListReducer";
 import { authReducer } from "../auth";
@@ -12,7 +12,7 @@ export const reducers = {
     bench: benchReducer,
     lobby: lobbyReducer,
     playerList,
-    gameInfo: gameInfoReducer,
+    playerInfo: playerInfoReducer,
     game: gameReducer,
     auth: authReducer,
     ui: uiReducer

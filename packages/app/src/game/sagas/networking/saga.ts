@@ -15,7 +15,7 @@ import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { PlayerActionTypesArray, PlayerAction } from "@creature-chess/shared/player/actions";
 import { signIn } from "../../../auth/auth0";
 import { validateNickname } from "@creature-chess/shared/validation/nickname";
-import { cardsUpdated, moneyUpdateAction, setLevelAction, shopLockUpdated } from "@creature-chess/shared/player/gameInfo";
+import { cardsUpdated, moneyUpdateAction, setLevelAction, shopLockUpdated } from "@creature-chess/shared/player/playerInfo";
 import { initialiseBoard } from "@creature-chess/shared/board/actions/boardActions";
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { AuthSelectors } from "../../../auth";

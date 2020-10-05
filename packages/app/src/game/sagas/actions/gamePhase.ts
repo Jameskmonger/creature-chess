@@ -10,7 +10,7 @@ import { openOverlay, closeOverlay } from "../../../ui/actions";
 import { Overlay } from "../../../ui/overlay";
 import { clearSelectedPiece } from "../../features/board/actions";
 import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "@creature-chess/shared/game/store/actions";
-import { cardsUpdated, clearOpponent, setOpponent } from "@creature-chess/shared/player/gameInfo";
+import { cardsUpdated, clearOpponent, setOpponent } from "@creature-chess/shared/player/playerInfo";
 
 const isGamePhaseUpdate = (phase: GamePhase) =>
     (action: GamePhaseUpdateAction) => action.type === GAME_PHASE_UPDATE && action.payload.phase === phase;

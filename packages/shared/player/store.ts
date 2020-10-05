@@ -8,13 +8,13 @@ import { evolutionSagaFactory } from "./sagas/evolution";
 import { dropPieceSagaFactory } from "./sagas/dropPiece";
 import { benchReducer, BenchState } from "./bench";
 import { cardShopSagaFactory } from "./sagas/cardShop";
-import { GameInfoState, gameInfoReducer } from "./gameInfo";
+import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import { DefinitionProvider } from "../game/definitionProvider";
 
 export interface PlayerState {
     board: BoardState;
     bench: BenchState;
-    gameInfo: GameInfoState;
+    playerInfo: PlayerInfoState;
 }
 
 export type PlayerStore = Store<PlayerState>;
@@ -38,7 +38,7 @@ export const createPlayerStore = (playerId: string, otherSaga?: () => Generator)
         combineReducers<PlayerState>({
             board: boardReducer,
             bench: benchReducer,
-            gameInfo: gameInfoReducer,
+            playerInfo: playerInfoReducer,
         }),
         applyMiddleware(sagaMiddleware)
     );

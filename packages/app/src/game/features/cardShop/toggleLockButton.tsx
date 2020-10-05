@@ -5,7 +5,7 @@ import { AppState } from "../../../store";
 
 const ToggleLockButton: React.FunctionComponent = () => {
   const dispatch = useDispatch();
-  const shopLocked = useSelector<AppState, boolean>(state => state.gameInfo.shopLocked);
+  const shopLocked = useSelector<AppState, boolean>(state => state.playerInfo.shopLocked);
 
   const onToggleLock = () => dispatch(toggleShopLock());
 
