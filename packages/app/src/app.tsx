@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Route } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Game } from "./display/stages/game";
 import { AppState } from "./store";
 import { AuthSelectors, CallbackPage, LoginPage } from "./auth";
+import { GameRouter } from "./game";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {
     return (
@@ -17,7 +17,7 @@ const UnauthenticatedRoutes: React.FunctionComponent = () => {
 const AuthenticatedRoutes: React.FunctionComponent = () => {
     return (
         <>
-            <Route exact path="/" component={Game} />
+            <Route exact path="/" component={GameRouter} />
             <Route exact path="/callback" component={CallbackPage} />
         </>
     );

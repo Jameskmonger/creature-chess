@@ -1,4 +1,4 @@
-import { AuthState } from "../../store/state";
+import { AuthState } from "./state";
 
 type HasAuthState = { auth: AuthState };
 
