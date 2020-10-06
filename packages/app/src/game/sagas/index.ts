@@ -8,9 +8,11 @@ import { dropPieceSagaFactory } from "@creature-chess/shared/player/sagas/dropPi
 import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
 import { AppState } from "../../store";
 import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
-import { sellPiece } from "./actions/sellPiece";
 import { announcement } from "./actions/announcement";
 import { cardShopSagaFactory } from "@creature-chess/shared/player/sagas/cardShop";
+import { sellPiece } from "@creature-chess/shared/player/sagas/sellPiece";
+import { rerollCards } from "@creature-chess/shared/player/sagas/rerollCards";
+import { xpSagaFactory } from "@creature-chess/shared/player/sagas/xp";
 
 export const gameSagaFactory = (playerId: string) => {
     const turnSimulator = new TurnSimulator();
@@ -21,10 +23,12 @@ export const gameSagaFactory = (playerId: string) => {
             yield fork(preventAccidentalClose),
             yield fork(announcement),
             yield fork(sellPiece),
+            yield fork(rerollCards),
             yield fork(closeShopOnFirstBuy),
-            yield fork(dropPieceSagaFactory<AppState>(playerId)),
             yield fork(evolutionSagaFactory<AppState>()),
             yield fork(cardShopSagaFactory<AppState>(definitionProvider, playerId)),
+            yield fork(dropPieceSagaFactory<AppState>(playerId)),
+            yield fork(xpSagaFactory<AppState>()),
             yield fork(
                 battle,
                 turnSimulator,

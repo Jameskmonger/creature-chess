@@ -2,9 +2,9 @@ import { SagaMiddleware } from "redux-saga";
 import { take, takeLatest, put, select } from "@redux-saga/core/effects";
 
 import { PLAYER_FINISH_MATCH, PlayerFinishMatchAction } from "../actions";
-import { PlayerState } from "packages/shared/player/store";
+import { PlayerState } from "../../../player/store";
 import { CLEAR_OPPONENT, moneyUpdateAction } from "../../../player/playerInfo";
-import { addXpCommand } from "packages/shared/player/sagas/xp";
+import { addXpCommand } from "../../../player/sagas/xp";
 
 const getStreakBonus = (streak: number) => {
     if (streak >= 9) {
