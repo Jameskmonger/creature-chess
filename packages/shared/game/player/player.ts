@@ -15,7 +15,7 @@ import { mergeBoards } from "../../board/utils/mergeBoards";
 import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { PlayerActions } from "../../player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
-import { cardsUpdated, clearOpponent, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setLevelAction, setOpponent } from "../../player/playerInfo";
+import { cardsUpdated, clearOpponent, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setLevelAction, setOpponent, statusUpdated } from "../../player/playerInfo";
 import { SagaMiddleware } from "redux-saga";
 import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../../player/playerSelectors";
 import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
@@ -23,19 +23,13 @@ import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions
 import { getMoneyForMatch } from "./matchRewards";
 import { subtractHealthCommand } from "packages/shared/player/sagas/health";
 import { ReadyUpAction, READY_UP } from "packages/shared/player/actions";
-import { playerFinishMatch, playerStreak } from "./streak";
-import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./playerPropertyUpdates";
+import { playerStreak } from "./sagas/streak";
+import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sagas/playerPropertyUpdates";
+import { playerFinishMatch } from "./actions";
 
 enum PlayerEvent {
     START_LOBBY_GAME = "START_LOBBY_GAME",
-    UPDATE_BATTLE = "UPDATE_BATTLE",
-    UPDATE_STATUS = "UPDATE_STATUS",
     QUIT_GAME = "QUIT_GAME"
-}
-
-interface StreakInfo {
-    type: StreakType;
-    amount: number;
 }
 
 export interface PlayerMatchResults {
@@ -48,7 +42,6 @@ export interface PlayerMatchResults {
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
-    public battle: PlayerBattle = null;
 
     public abstract readonly isBot: boolean;
 
@@ -68,7 +61,6 @@ export abstract class Player {
     private turnDuration: number;
 
     private currentRound: number | null = null;
-    private status: PlayerStatus = PlayerStatus.CONNECTED;
 
     protected battleTimeout: pDefer.DeferredPromise<void> = null;
 
@@ -155,7 +147,11 @@ export abstract class Player {
     }
 
     public getStatus() {
-        return this.status;
+        return this.store.getState().playerInfo.status;
+    }
+
+    public getBattle() {
+        return this.store.getState().playerInfo.battle;
     }
 
     public onFinishGame(winner: Player) {
@@ -202,8 +198,6 @@ export abstract class Player {
             const opponent = opponentProvider.getOpponent(this.id);
 
             this.store.dispatch(setOpponent(opponent.id));
-            this.battle = inProgressBattle(opponent.id);
-            this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
 
             this.match = new Match(turnSimulator, this.turnCount, this.turnDuration, this, opponent);
 
@@ -241,9 +235,6 @@ export abstract class Player {
 
         this.store.dispatch(playerFinishMatch(homeScore, awayScore));
 
-        this.battle = finishedBattle(this.match.away.id, homeScore, awayScore);
-        this.events.emit(PlayerEvent.UPDATE_BATTLE, this.battle);
-
         return {
             homePlayer: this,
             opponentName: this.match.away.name,
@@ -267,18 +258,6 @@ export abstract class Player {
 
     public onStartLobbyGame(fn: () => void) {
         this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
-    }
-
-    public onBattleUpdate(fn: (battle: PlayerBattle) => void) {
-        this.events.on(PlayerEvent.UPDATE_BATTLE, fn);
-
-        fn(this.battle);
-    }
-
-    public onStatusUpdate(fn: (status: PlayerStatus) => void) {
-        this.events.on(PlayerEvent.UPDATE_STATUS, fn);
-
-        fn(this.status);
     }
 
     public rerollCards() {
@@ -376,11 +355,10 @@ export abstract class Player {
     protected abstract onDeath(phaseStartedAt: number);
 
     protected quitGame() {
-        this.status = PlayerStatus.QUIT;
+        this.store.dispatch(statusUpdated(PlayerStatus.QUIT));
 
         // todo combine these
         this.events.emit(PlayerEvent.QUIT_GAME, this);
-        this.events.emit(PlayerEvent.UPDATE_STATUS, this.status);
 
         if (this.readyUpDeferred) {
             this.readyUpDeferred.resolve();

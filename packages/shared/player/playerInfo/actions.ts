@@ -1,6 +1,11 @@
 import { Card, StreakType } from "@creature-chess/models";
+import { PlayerBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { ReadyUpAction } from "../actions";
 
+export const STATUS_UPDATED = "STATUS_UPDATED";
+export type STATUS_UPDATED = typeof STATUS_UPDATED;
+export const BATTLE_UPDATED = "BATTLE_UPDATED";
+export type BATTLE_UPDATED = typeof BATTLE_UPDATED;
 export const HEALTH_UPDATED = "HEALTH_UPDATED";
 export type HEALTH_UPDATED = typeof HEALTH_UPDATED;
 export const STREAK_UPDATED = "STREAK_UPDATED";
@@ -20,6 +25,8 @@ export type LEVEL_UPDATE = typeof LEVEL_UPDATE;
 export const CARDS_UPDATED = "CARDS_UPDATED";
 export type CARDS_UPDATED = typeof CARDS_UPDATED;
 
+export type UpdateBattleAction = ({ type: BATTLE_UPDATED, payload: { battle: PlayerBattle } });
+export type UpdateStatusAction = ({ type: STATUS_UPDATED, payload: { status: PlayerStatus } });
 export type UpdateHealthAction = ({ type: HEALTH_UPDATED, payload: { health: number } });
 export type UpdateStreakAction = ({ type: STREAK_UPDATED, payload: { type: StreakType, amount: number } });
 export type UpdateRoundDiedAtAction = ({ type: ROUND_DIED_AT_UPDATED, payload: { roundDiedAt: number | null } });
@@ -37,7 +44,9 @@ export type LevelUpdateAction = ({
 export type CardsUpdatedAction = ({ type: CARDS_UPDATED, payload: { cards: Card[] } });
 
 export type GameAction =
-    UpdateHealthAction
+    UpdateStatusAction
+    | UpdateHealthAction
+    | UpdateBattleAction
     | UpdateStreakAction
     | UpdateRoundDiedAtAction
     | UpdateShopLockAction
@@ -48,6 +57,8 @@ export type GameAction =
     | LevelUpdateAction
     | CardsUpdatedAction;
 
+export const statusUpdated = (status: PlayerStatus): UpdateStatusAction => ({ type: STATUS_UPDATED, payload: { status } });
+export const battleUpdated = (battle: PlayerBattle): UpdateBattleAction => ({ type: BATTLE_UPDATED, payload: { battle } });
 export const healthUpdated = (health: number): UpdateHealthAction => ({ type: HEALTH_UPDATED, payload: { health } });
 export const streakUpdated = (type: StreakType, amount: number): UpdateStreakAction => ({
     type: STREAK_UPDATED,
