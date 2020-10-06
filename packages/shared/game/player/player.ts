@@ -1,23 +1,21 @@
 import pDefer = require("p-defer");
-import { takeEvery, select } from "@redux-saga/core/effects";
+import { takeEvery } from "@redux-saga/core/effects";
 import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
 import { OpponentProvider } from "../opponentProvider";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, GRID_SIZE, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, StreakType, PlayerListPlayer, PlayerPieceLocation } from "@creature-chess/models";
-import { getPiecesForStage, getXpToNextLevel } from "../../utils";
-import { getBoardPieceCount, getPiece, getAllPieces } from "../../player/pieceSelectors";
-import { mergeBoards } from "../../board/utils/mergeBoards";
-import { PlayerBattle, inProgressBattle, finishedBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
-import { PlayerActions } from "../../player";
+import { LobbyPlayer, PlayerListPlayer } from "@creature-chess/models";
+import { getPiecesForStage } from "../../utils";
+import { getPiece, getAllPieces } from "../../player/pieceSelectors";
+import { PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
-import { cardsUpdated, clearOpponent, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setLevelAction, setOpponent, statusUpdated } from "../../player/playerInfo";
+import { cardsUpdated, clearOpponent, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setOpponent, statusUpdated } from "../../player/playerInfo";
 import { SagaMiddleware } from "redux-saga";
-import { getPlayerBelowPieceLimit, getMostExpensiveBenchPiece, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../../player/playerSelectors";
+import { isPlayerAlive } from "../../player/playerSelectors";
 import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
 import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
 import { getMoneyForMatch } from "./matchRewards";
@@ -26,6 +24,7 @@ import { ReadyUpAction, READY_UP } from "packages/shared/player/actions";
 import { playerStreak } from "./sagas/streak";
 import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sagas/playerPropertyUpdates";
 import { playerFinishMatch } from "./actions";
+import { addXpCommand } from "packages/shared/player/sagas/xp";
 
 enum PlayerEvent {
     START_LOBBY_GAME = "START_LOBBY_GAME",
@@ -96,28 +95,6 @@ export abstract class Player {
 
     public getMatch() {
         return this.match;
-    }
-
-    public getBattleBoard(away: Player) {
-        return mergeBoards(GRID_SIZE, this.store.getState().board.pieces, away.store.getState().board.pieces);
-    }
-
-    public addXp(amount: number) {
-        let { level, xp } = this.store.getState().playerInfo;
-
-        for (let i = 0; i < amount; i++) {
-            const toNextLevel = getXpToNextLevel(level);
-            const newXp = xp + 1;
-
-            if (newXp === toNextLevel) {
-                xp = 0;
-                level++;
-            } else {
-                xp = newXp;
-            }
-        }
-
-        this.store.dispatch(setLevelAction(level, xp));
     }
 
     public addMoney(money: number) {
@@ -191,8 +168,6 @@ export abstract class Player {
         this.readyUpDeferred = null;
 
         if (isPlayerAlive(this.store.getState())) {
-            this.fillBoard();
-
             this.store.dispatch(lockBench());
 
             const opponent = opponentProvider.getOpponent(this.id);
@@ -247,7 +222,7 @@ export abstract class Player {
         const money = getMoneyForMatch(this.getMoney(), this.store.getState().playerInfo.streak.amount, this.wonLastMatch);
 
         this.addMoney(money);
-        this.addXp(1);
+        this.store.dispatch(addXpCommand(1));
 
         this.wonLastMatch = false;
     }
@@ -365,10 +340,6 @@ export abstract class Player {
         }
     }
 
-    protected belowPieceLimit() {
-        return getBoardPieceCount(this.store.getState()) < this.store.getState().playerInfo.level;
-    }
-
     protected sellPiece = (pieceId: string) => {
         // todo add `from` here to improve lookup
         const piece = getPiece(this.store.getState(), pieceId);
@@ -409,8 +380,7 @@ export abstract class Player {
             return;
         }
 
-        this.addXp(BUY_XP_AMOUNT);
-
+        this.store.dispatch(addXpCommand(BUY_XP_AMOUNT));
         this.store.dispatch(moneyUpdateAction(money - BUY_XP_COST));
     }
 
@@ -455,48 +425,6 @@ export abstract class Player {
                     }
                 }
             )
-        }
-    }
-
-    private fillBoard() {
-        while (true) {
-            const state = this.store.getState();
-            const belowPieceLimit = getPlayerBelowPieceLimit(state, this.id);
-
-            if (!belowPieceLimit) {
-                return;
-            }
-
-            const benchPiece = getMostExpensiveBenchPiece(state);
-
-            if (!benchPiece) {
-                return;
-            }
-
-            const destination = getPlayerFirstEmptyBoardSlot(state);
-
-            if (!destination) {
-                return;
-            }
-
-            const fromLocation: PlayerPieceLocation = {
-                type: "bench",
-                location: {
-                    slot: benchPiece.position.x
-                }
-            };
-
-            const toLocation: PlayerPieceLocation = {
-                type: "board",
-                location: {
-                    x: destination.x,
-                    y: destination.y
-                }
-            };
-
-            this.store.dispatch(
-                PlayerActions.playerDropPiece(benchPiece.id, fromLocation, toLocation)
-            );
         }
     }
 }

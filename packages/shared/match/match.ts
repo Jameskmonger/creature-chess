@@ -7,6 +7,8 @@ import { TurnSimulator } from "./combat/turnSimulator";
 import { battle, startBattle } from "./combat/battleSaga";
 import { boardReducer, BoardActions, BoardState } from "../board";
 import { BattleAction, BATTLE_FINISHED } from "./combat/battleEventChannel";
+import { mergeBoards } from "../board/utils/mergeBoards";
+import { GRID_SIZE } from "@creature-chess/models/src/constants";
 
 interface MatchState {
     board: BoardState;
@@ -32,7 +34,7 @@ export class Match {
         this.turnDuration = turnDuration;
         this.store = this.createStore();
 
-        const board = home.getBattleBoard(away);
+        const board = mergeBoards(GRID_SIZE, home.getBoard().pieces, away.getBoard().pieces);
 
         this.store.dispatch(BoardActions.initialiseBoard(board));
     }
