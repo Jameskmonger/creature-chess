@@ -9,6 +9,9 @@ import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incomi
 import {
     ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse, PreparingPhaseUpdatePacket
 } from "@creature-chess/shared/networking/server-to-client";
+import {
+    ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements
+} from "@creature-chess/shared/networking/server-to-client-lobby";
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@creature-chess/shared/networking/client-to-server";
 import { ConnectionStatus } from "@creature-chess/shared/networking";
@@ -65,8 +68,13 @@ const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
 
 type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
+type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
-const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
+const subscribe = (
+    registry: ServerToClientPacketRegistry,
+    lobbyRegistry: ServerToClientLobbyPacketRegistry,
+    socket: Socket
+) => {
     return eventChannel(emit => {
         socket.on("reconnect_failed", () => {
             emit(clearAnnouncement());
@@ -155,52 +163,48 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
             }
         );
 
-        registry.on(
-            ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE,
-            (packet) => {
-                log("[LOBBY_PLAYER_UPDATE]", packet);
+        // todo split lobby networking
+        lobbyRegistry.on(
+            ServerToClientLobbyPacketOpcodes.JOIN_LOBBY,
+            ({ playerId, lobbyId, players, startTimestamp }) => {
+                emit(joinLobbyAction(
+                    playerId,
+                    lobbyId,
+                    players,
+                    startTimestamp
+                ));
+            }
+        );
 
-                emit(updateLobbyPlayerAction(packet.index, packet.player));
+        lobbyRegistry.on(
+            ServerToClientLobbyPacketOpcodes.LOBBY_PLAYER_UPDATE,
+            ({ index, player }) => {
+                emit(updateLobbyPlayerAction(index, player));
             }
         );
 
         registry.on(
             ServerToClientPacketOpcodes.JOIN_GAME,
-            (packet) => {
-                if (packet.type === "lobby") {
-                    const { playerId, lobbyId, players, startTimestamp } = packet.payload;
+            ({ id, fullState }) => {
+                emit(joinCompleteAction(id));
 
-                    emit(joinLobbyAction(
-                        playerId,
-                        lobbyId,
-                        players,
-                        startTimestamp
-                    ));
+                if (!fullState) {
+                    return;
                 }
 
-                if (packet.type === "game") {
-                    const { id } = packet.payload;
+                const { money, cards, players, level: { level, xp }, board, bench, phase } = fullState;
 
-                    emit(joinCompleteAction(id));
+                emit(moneyUpdateAction(money));
+                emit(cardsUpdated(cards));
+                emit(playerListUpdated(players));
+                emit(setLevelAction(level, xp));
+                emit(initialiseBoard(board));
+                emit(initialiseBench(bench));
 
-                    if (!packet.payload.fullState) {
-                        return;
-                    }
-
-                    const { money, cards, players, level: { level, xp }, board, bench, phase } = packet.payload.fullState;
-
-                    emit(moneyUpdateAction(money));
-                    emit(cardsUpdated(cards));
-                    emit(playerListUpdated(players));
-                    emit(setLevelAction(level, xp));
-                    emit(initialiseBoard(board));
-                    emit(initialiseBench(bench));
-
-                    if (phase) {
-                        emit(gamePhaseStarted(phase.phase, phase.startedAtSeconds));
-                    } else {
-                        emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
-                    }
+                if (phase) {
+                    emit(gamePhaseStarted(phase.phase, phase.startedAtSeconds));
+                } else {
+                    emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                 }
             }
         );
@@ -237,8 +241,8 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
     });
 };
 
-const readPacketsToActions = function*(incomingRegistry: ServerToClientPacketRegistry, socket: Socket) {
-    const channel = yield call(subscribe, incomingRegistry, socket);
+const readPacketsToActions = function*(incomingRegistry: ServerToClientPacketRegistry, lobbyRegistry: ServerToClientLobbyPacketRegistry, socket: Socket) {
+    const channel = yield call(subscribe, incomingRegistry, lobbyRegistry, socket);
 
     yield takeEvery(channel, function*(action) {
         yield put(action);
@@ -401,8 +405,12 @@ export const networking = function*() {
         (opcode, handler) => socket.on(opcode, handler)
     );
 
+    const lobbyRegistry = new IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>(
+        (opcode, handler) => socket.on(opcode, handler)
+    );
+
     yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
-    yield fork(readPacketsToActions, incomingRegistry, socket);
+    yield fork(readPacketsToActions, incomingRegistry, lobbyRegistry, socket);
     yield fork(writeActionsToPackets, outgoingRegistry);
 };

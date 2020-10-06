@@ -1,22 +1,15 @@
 import io = require("socket.io");
 import { Game } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
-import { Lobby, LobbyStartEvent } from "./lobby";
+import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { SocketPlayer } from "../player/socketPlayer";
 import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
-import { LobbyPlayer } from "@creature-chess/models";
 import { log } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
-
-const getLobbyPlayers = (lobby: Lobby): LobbyPlayer[] => {
-    return lobby.getPlayers().map(p => ({
-        id: p.id,
-        name: p.name,
-        isBot: p.isBot
-    }));
-};
+import { LobbyMemberType } from "./lobby/lobbyMember";
+import { BotPlayer } from "../player/botPlayer";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -36,22 +29,21 @@ export class Matchmaking {
         if (playerInGame) {
             const { game, player } = playerInGame;
 
-            this.addPlayerToGame(game, socket, player);
+            this.reconnectGamePlayer(game, socket, player);
 
             return;
         }
 
-        const playerInLobby = this.getPlayerInLobby(id);
+        const lobby = this.getLobbyContainingPlayer(id);
 
-        if (playerInLobby) {
-            const { lobby, player } = playerInLobby;
-
-            this.addPlayerToLobby(lobby, socket, player);
+        if (lobby) {
+            lobby.reconnect(id, socket);
 
             return;
         }
 
-        this.newConnectionJoin(socket, id, nickname);
+        const newLobby = this.findOrCreateLobby();
+        newLobby.addConnection(socket, id, nickname);
     }
 
     private getPlayerInGame(id: string) {
@@ -71,8 +63,8 @@ export class Matchmaking {
         };
     }
 
-    private addPlayerToGame(game: Game, socket: io.Socket, player: SocketPlayer) {
-        player.setSocket(socket);
+    private reconnectGamePlayer(game: Game, socket: io.Socket, player: SocketPlayer) {
+        player.reconnectSocket(socket);
 
         const fullGameState: PlayerGameState = {
             id: game.id,
@@ -84,60 +76,28 @@ export class Matchmaking {
             }
         };
 
-        player.sendJoinGamePacket({ type: "game", payload: fullGameState });
+        player.sendJoinGamePacket(fullGameState);
     }
 
-    private getPlayerInLobby(id: string) {
+    private getLobbyContainingPlayer(id: string) {
         const lobbies = Array.from<Lobby>(this.lobbies.values());
 
-        const matchingLobby = lobbies.find(g => g.getPlayers().find(p => p.id === id));
-
-        if (!matchingLobby) {
-            return null;
-        }
-
-        const playerInLobby = matchingLobby.getPlayers().find(p => p.id === id);
-
-        return {
-            lobby: matchingLobby,
-            player: playerInLobby as SocketPlayer
-        };
+        return lobbies.find(g => g.getMemberById(id)) || null;
     }
 
-    private addPlayerToLobby(lobby: Lobby, socket: io.Socket, player: SocketPlayer) {
-        player.setSocket(socket);
-
-        player.sendJoinGamePacket({
-            type: "lobby",
-            payload: {
-                playerId: player.id,
-                lobbyId: lobby.id,
-                players: getLobbyPlayers(lobby),
-                startTimestamp: lobby.gameStartTime
-            }
-        });
-    }
-
-    private newConnectionJoin(socket: io.Socket, id: string, nickname: string) {
-        const connection: SocketPlayer = new SocketPlayer(socket, id, nickname);
-
-        const lobby = this.findOrCreateLobby();
-        lobby.addPlayer(connection);
-
-        connection.sendJoinGamePacket({
-            type: "lobby",
-            payload: {
-                playerId: connection.id,
-                lobbyId: lobby.id,
-                players: getLobbyPlayers(lobby),
-                startTimestamp: lobby.gameStartTime
-            }
-        });
-    }
-
-    private onLobbyStart = ({ id, players }: LobbyStartEvent) => {
+    private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         log(`Lobby '${id}' has started with the following players:`);
-        log(`    ${players.map(p => p.name).join(", ")}`);
+        log(`    ${members.map(p => p.name).join(", ")}`);
+
+        const players = members.map(m => {
+            if (m.type === LobbyMemberType.BOT) {
+                return new BotPlayer(m.name);
+            }
+
+            if (m.type === LobbyMemberType.PLAYER) {
+                return new SocketPlayer(m.net.socket, m.id, m.name);
+            }
+        });
 
         const game = new Game(players);
 
@@ -151,8 +111,7 @@ export class Matchmaking {
 
         game.onFinish((winner, gamePlayers) => {
             if ((winner as SocketPlayer).isConnection) {
-                this.database.user.addWin(winner
-                    .id);
+                this.database.user.addWin(winner.id);
             }
             this.games.delete(game.id);
             this.sendMetrics();
@@ -172,7 +131,7 @@ export class Matchmaking {
             return this.createLobby();
         }
 
-        lobbies.sort((a, b) => b.getRealPlayerCount() - a.getRealPlayerCount());
+        lobbies.sort((a, b) => a.getFreeSlotCount() - b.getFreeSlotCount());
 
         return lobbies[0];
     }
