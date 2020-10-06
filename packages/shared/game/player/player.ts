@@ -27,6 +27,7 @@ import { playerFinishMatch } from "./actions";
 import { addXpCommand } from "packages/shared/player/sagas/xp";
 import { playerBattle } from "./sagas/battle";
 import { GameOptions } from "../options";
+import { GameState } from "../store/state";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -62,6 +63,9 @@ export abstract class Player {
     private readyUpDeferred: pDefer.DeferredPromise<void>;
     protected battleTimeout: pDefer.DeferredPromise<void> = null;
 
+    protected getGameState: () => GameState;
+    protected getPlayerListPlayers: () => PlayerListPlayer[];
+
     constructor(id: string, name: string) {
         this.id = id;
         this.name = name;
@@ -79,6 +83,14 @@ export abstract class Player {
 
     public propertyUpdates() {
         return this.propertyUpdateRegistry;
+    }
+
+    public setGetGameState(fn: () => GameState) {
+        this.getGameState = fn;
+    }
+
+    public setGetPlayerListPlayers(fn: () => PlayerListPlayer[]) {
+        this.getPlayerListPlayers = fn;
     }
 
     public setDefinitionProvider(definitionProvider: DefinitionProvider) {
@@ -288,21 +300,6 @@ export abstract class Player {
 
     public getCards() {
         return this.store.getState().playerInfo.cards;
-    }
-
-    public getGameState() {
-        const { board, bench, playerInfo: { money, cards, level, xp } } = this.store.getState();
-
-        return {
-            board: board.pieces,
-            bench,
-            cards,
-            money,
-            level: {
-                level,
-                xp
-            }
-        };
     }
 
     public abstract onPlayersResurrected(playerIds: string[]);

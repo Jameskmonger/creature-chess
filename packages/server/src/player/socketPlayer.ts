@@ -73,14 +73,30 @@ export class SocketPlayer extends Player {
         this.clearSocket();
 
         this.initialiseSocket(socket);
+
+        const { board, bench, playerInfo: { money, cards, level, xp } } = this.store.getState();
+
+        const players = this.getPlayerListPlayers();
+
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.JOIN_GAME, {
+            id: "",
+            fullState: {
+                phase: this.getJoinGamePhaseUpdate(),
+                players,
+                board: board.pieces,
+                bench,
+                cards,
+                money,
+                level: {
+                    level,
+                    xp
+                }
+            }
+        });
     }
 
     public onStartGame(gameId: string) {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.JOIN_GAME, { id: gameId });
-    }
-
-    public sendJoinGamePacket(state: PlayerGameState) {
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.JOIN_GAME, state);
     }
 
     public onFinishGame(winner: Player) {
@@ -230,5 +246,51 @@ export class SocketPlayer extends Player {
 
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
         this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
+    }
+
+    private getJoinGamePhaseUpdate() {
+        const { round, phase, phaseStartedAtSeconds } = this.getGameState();
+
+        switch (phase) {
+            case GamePhase.DEAD:
+                return {
+                    startedAtSeconds: phaseStartedAtSeconds,
+                    phase
+                };
+            case GamePhase.PREPARING:
+                return {
+                    startedAtSeconds: phaseStartedAtSeconds,
+                    phase,
+                    payload: {
+                        round,
+                        pieces: {
+                            board: this.getBoard(),
+                            bench: this.getBench()
+                        },
+                        cards: this.getCards()
+                    }
+                };
+            case GamePhase.READY:
+                // todo figure out why match can be null at this point
+                const match = this.getMatch();
+                const board = match ? match.getBoard() : null;
+
+                return {
+                    startedAtSeconds: phaseStartedAtSeconds,
+                    phase,
+                    payload: {
+                        board,
+                        bench: this.getBench(),
+                        opponentId: this.getMatch().away.id
+                    }
+                };
+            case GamePhase.PLAYING:
+                return {
+                    startedAtSeconds: phaseStartedAtSeconds,
+                    phase,
+                };
+            default:
+                return null;
+        }
     }
 }
