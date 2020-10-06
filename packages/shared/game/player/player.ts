@@ -8,7 +8,7 @@ import { OpponentProvider } from "../opponentProvider";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { PlayerListPlayer } from "@creature-chess/models";
+import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import { getPiecesForStage } from "../../utils";
 import { getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerStatus } from "@creature-chess/models/src/player-list-player";
@@ -20,7 +20,6 @@ import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packa
 import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
 import { getMoneyForMatch } from "./matchRewards";
 import { subtractHealthCommand } from "packages/shared/player/sagas/health";
-import { ReadyUpAction, READY_UP } from "packages/shared/player/actions";
 import { playerStreak } from "./sagas/streak";
 import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sagas/playerPropertyUpdates";
 import { playerFinishMatch } from "./actions";
@@ -28,6 +27,7 @@ import { addXpCommand } from "packages/shared/player/sagas/xp";
 import { playerBattle } from "./sagas/battle";
 import { GameOptions } from "../options";
 import { GameState } from "../store/state";
+import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "../store/actions";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -58,9 +58,6 @@ export abstract class Player {
 
     private gameOptions: GameOptions;
 
-    private currentRound: number | null = null;
-
-    private readyUpDeferred: pDefer.DeferredPromise<void>;
     protected battleTimeout: pDefer.DeferredPromise<void> = null;
 
     protected getGameState: () => GameState;
@@ -74,7 +71,7 @@ export abstract class Player {
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.readyUpSaga());
+        this.sagaMiddleware.run(this.clearMatchSaga());
         playerStreak(this.sagaMiddleware);
         playerBattle(this.sagaMiddleware);
 
@@ -147,11 +144,7 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public async enterPreparingPhase(startedAtSeconds: number, round: number) {
-        this.currentRound = round;
-
-        this.readyUpDeferred = pDefer();
-
+    public async enterPreparingPhase() {
         if (this.store.getState().playerInfo.shopLocked === false) {
             this.rerollCards();
         }
@@ -159,22 +152,10 @@ export abstract class Player {
         this.store.dispatch(clearOpponent());
         this.store.dispatch(unlockBench());
 
-        this.onEnterPreparingPhase(startedAtSeconds, round);
-
-        if (isPlayerAlive(this.store.getState()) === false) {
-            return;
-        }
-
-        await this.readyUpDeferred.promise;
-    }
-
-    public reset() {
-        this.match = null;
+        this.onEnterPreparingPhase();
     }
 
     public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider, startedAt: number) {
-        this.readyUpDeferred = null;
-
         if (isPlayerAlive(this.store.getState())) {
             this.store.dispatch(lockBench());
 
@@ -210,7 +191,7 @@ export abstract class Player {
         const awayScore = surviving.away.length;
 
         const damage = awayScore * 3;
-        this.store.dispatch(subtractHealthCommand(this.currentRound, damage));
+        this.store.dispatch(subtractHealthCommand(this.getGameState().round, damage));
 
         const win = homeScore > awayScore;
 
@@ -237,6 +218,8 @@ export abstract class Player {
 
     public onQuitGame(fn: (player: Player) => void) {
         this.events.on(PlayerEvent.QUIT_GAME, fn);
+
+        return () => this.events.off(PlayerEvent.QUIT_GAME, fn);
     }
 
     public rerollCards() {
@@ -308,7 +291,7 @@ export abstract class Player {
 
     public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
 
-    protected abstract onEnterPreparingPhase(startedAt: number, round: number);
+    protected abstract onEnterPreparingPhase();
 
     protected abstract onEnterReadyPhase(startedAt: number);
 
@@ -321,10 +304,6 @@ export abstract class Player {
 
         // todo combine these
         this.events.emit(PlayerEvent.QUIT_GAME, this);
-
-        if (this.readyUpDeferred) {
-            this.readyUpDeferred.resolve();
-        }
     }
 
     protected sellPiece = (pieceId: string) => {
@@ -398,18 +377,18 @@ export abstract class Player {
         this.match.onClientFinishMatch();
     }
 
-    private readyUpSaga() {
-        const getReadyUpDeferred = () => this.readyUpDeferred;
+    private clearMatchSaga() {
+        const clearMatch = () => this.match = null;
 
         return function*() {
-            yield takeEvery<ReadyUpAction>(
-                READY_UP,
-                function*() {
-                    const deferred = getReadyUpDeferred();
-
-                    if (deferred) {
-                        deferred.resolve();
+            yield takeEvery<GamePhaseStartedAction>(
+                GAME_PHASE_STARTED,
+                function*({ payload: { phase }}) {
+                    if (phase !== GamePhase.PREPARING) {
+                        return;
                     }
+
+                    clearMatch();
                 }
             )
         }

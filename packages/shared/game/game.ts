@@ -15,6 +15,7 @@ import pDefer = require("p-defer");
 import { createGameStore } from "./store/store";
 import { gamePhaseStarted, preparingPhaseStarted } from "./store/actions";
 import { GameOptions, getOptions } from "./options";
+import { readyNotifier } from "./readyNotifier";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -33,7 +34,7 @@ export class Game {
 
     private options: GameOptions;
 
-    private lastLivingPlayerCount: number;
+    private lastLivingPlayerCount: number = 0;
     private opponentProvider = new OpponentProvider();
     private playerList = new PlayerList();
     private turnSimulator: TurnSimulator;
@@ -49,10 +50,6 @@ export class Game {
 
         this.options = getOptions(options);
 
-        const livingPlayers = this.players.filter(p => p.isAlive());
-        this.opponentProvider.setPlayers(livingPlayers);
-        this.lastLivingPlayerCount = livingPlayers.length;
-
         this.deck = new CardDeck(this.definitionProvider.getAll());
         this.turnSimulator = new TurnSimulator();
 
@@ -62,14 +59,12 @@ export class Game {
                 .forEach(p => p.onPlayerListUpdate(playerList))
         );
 
-        players.forEach(p => {
-            this.addPlayer(p);
-        })
+        players.forEach(this.addPlayer)
+
+        this.updateLivingPlayers();
 
         // execute at the end of the execution queue
-        setTimeout(() => {
-            this.startGame();
-        });
+        setTimeout(this.startGame);
     }
 
     public onFinish(
@@ -96,9 +91,10 @@ export class Game {
         return this.playerList.getValue();
     }
 
-    public addPlayer(player: Player) {
+    public addPlayer = (player: Player) => {
         this.players.push(player);
         this.playerList.addPlayer(player);
+
         player.setDeck(this.deck);
         player.setGetGameState(this.store.getState);
         player.setGetPlayerListPlayers(this.playerList.getValue);
@@ -131,9 +127,7 @@ export class Game {
 
             await this.runPlayingPhase();
 
-            const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
-
-            if (livingPlayers.length === 1) {
+            if (this.getLivingPlayers().length === 1) {
                 break;
             }
         }
@@ -150,7 +144,7 @@ export class Game {
         this.playerList = null;
         this.definitionProvider = null;
 
-        const winner = this.players.find(p => p.isAlive());
+        const winner = this.getLivingPlayers()[0];
 
         this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.onFinishGame(winner));
 
@@ -169,25 +163,23 @@ export class Game {
 
     private async runPreparingPhase() {
         const { round } = this.store.getState();
-
         this.store.dispatch(preparingPhaseStarted(round + 1, Date.now() / 1000));
 
-        this.players.forEach(p => p.reset());
+        const livingPlayers = this.getLivingPlayers();
 
-        const { phaseStartedAtSeconds: newPhaseStartedAt, round: newRound } = this.store.getState();
-
-        const promises = this.players
-            .filter(p => p.getStatus() !== PlayerStatus.QUIT)
-            .map(p => p.enterPreparingPhase(newPhaseStartedAt, newRound));
+        const notifier = readyNotifier(livingPlayers);
+        livingPlayers.forEach(p => p.enterPreparingPhase());
 
         await Promise.race([
-            Promise.all(promises),
-            delay(this.options.phaseLengths[GamePhase.PREPARING] * 1000)
+            notifier.promise,
+            this.delayPhaseLength(GamePhase.PREPARING)
         ]);
+
+        notifier.dispose();
     }
 
     private updateLivingPlayers() {
-        const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
+        const livingPlayers = this.getLivingPlayers();
         const livingPlayerCount = livingPlayers.length;
 
         if (livingPlayerCount !== this.lastLivingPlayerCount) {
@@ -207,7 +199,7 @@ export class Game {
             .filter(p => p.getStatus() !== PlayerStatus.QUIT)
             .forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, newPhaseStartedAt));
 
-        await delay(this.options.phaseLengths[GamePhase.READY] * 1000);
+        await this.delayPhaseLength(GamePhase.READY);
     }
 
     private async runPlayingPhase() {
@@ -219,22 +211,15 @@ export class Game {
     }
 
     private async fightBattles() {
-        const maxTimeMs = this.options.phaseLengths[GamePhase.PLAYING] * 1000;
-
         const battleTimeoutDeferred = pDefer<void>();
-
-        delay(maxTimeMs).then(() => battleTimeoutDeferred.resolve());
-
-        const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
+        this.delayPhaseLength(GamePhase.PLAYING).then(() => battleTimeoutDeferred.resolve());
 
         const { round, phaseStartedAtSeconds: newPhaseStartedAt } = this.store.getState();
-        const promises = livingPlayers.map(p => p.fightMatch(newPhaseStartedAt, battleTimeoutDeferred));
+        const promises = this.getLivingPlayers().map(p => p.fightMatch(newPhaseStartedAt, battleTimeoutDeferred));
 
         await Promise.all(promises);
 
-        const newLivingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
-
-        if (newLivingPlayers.length === 0) {
+        if (this.getLivingPlayers().length === 0) {
             const justDiedPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round);
 
             for (const player of justDiedPlayers) {
@@ -257,8 +242,11 @@ export class Game {
         // rather than jumping straight into the next phase
         await delay(3000);
 
-        for (const player of this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive())) {
+        for (const player of this.getLivingPlayers()) {
             player.giveMatchRewards();
         }
     }
+
+    private getLivingPlayers = () => this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
+    private delayPhaseLength = (phase: GamePhase) => delay(this.options.phaseLengths[phase] * 1000);
 }

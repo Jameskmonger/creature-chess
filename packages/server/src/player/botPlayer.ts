@@ -5,7 +5,6 @@ import { getAllPieces, getBoardPieceForPosition } from "@creature-chess/shared/p
 import { PlayerActions } from "@creature-chess/shared/player";
 import { buyCard, readyUpAction } from "@creature-chess/shared/player/actions";
 import { PlayerState } from "@creature-chess/shared/player/store";
-import { PhaseUpdatePacket } from "@creature-chess/shared/networking/server-to-client";
 import uuid = require("uuid");
 
 const PREFERRED_COLUMN_ORDERS = {
@@ -67,7 +66,7 @@ export class BotPlayer extends Player {
 
     public onPlayersResurrected() { /* nothing required, we're a bot */ }
 
-    protected onEnterPreparingPhase(startedAtSeconds: number, round: number) {
+    protected onEnterPreparingPhase() {
         this.buyBestPieces();
         this.spendExcessMoneyOnXp();
         this.putBenchOnBoard();

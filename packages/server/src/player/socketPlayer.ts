@@ -125,11 +125,12 @@ export class SocketPlayer extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
     }
 
-    protected onEnterPreparingPhase(startedAtSeconds: number, round: number) {
+    protected onEnterPreparingPhase() {
         const { board, bench, playerInfo: { cards } } = this.store.getState();
+        const { phaseStartedAtSeconds, round } = this.getGameState();
 
         const packet: PhaseUpdatePacket = {
-            startedAtSeconds,
+            startedAtSeconds: phaseStartedAtSeconds,
             phase: GamePhase.PREPARING,
             payload: {
                 round,
