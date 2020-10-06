@@ -16,7 +16,6 @@ import { SagaMiddleware } from "redux-saga";
 import { isPlayerAlive } from "../../player/playerSelectors";
 import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
 import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
-import { getMoneyForMatch } from "./matchRewards";
 import { subtractHealthCommand } from "packages/shared/player/sagas/health";
 import { playerStreak } from "./sagas/streak";
 import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sagas/playerPropertyUpdates";
@@ -25,6 +24,7 @@ import { addXpCommand } from "packages/shared/player/sagas/xp";
 import { playerBattle } from "./sagas/battle";
 import { GameState } from "../store/state";
 import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "../store/actions";
+import { playerMatchRewards } from "./sagas/matchRewards";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -65,6 +65,7 @@ export abstract class Player {
         this.sagaMiddleware.run(this.clearMatchSaga());
         playerStreak(this.sagaMiddleware);
         playerBattle(this.sagaMiddleware);
+        playerMatchRewards(this.sagaMiddleware);
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
     }
@@ -87,12 +88,6 @@ export abstract class Player {
 
     public getMatch() {
         return this.match;
-    }
-
-    public addMoney(money: number) {
-        const currentMoney = this.store.getState().playerInfo.money;
-
-        this.store.dispatch(moneyUpdateAction(currentMoney + money));
     }
 
     public getHealth() {
@@ -151,8 +146,6 @@ export abstract class Player {
         this.onEnterReadyPhase();
     }
 
-    private wonLastMatch: boolean = false;
-
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
         this.onEnterPlayingPhase(startedAt);
 
@@ -171,10 +164,6 @@ export abstract class Player {
         const damage = awayScore * 3;
         this.store.dispatch(subtractHealthCommand(this.getGameState().round, damage));
 
-        const win = homeScore > awayScore;
-
-        this.wonLastMatch = win;
-
         this.store.dispatch(playerFinishMatch(homeScore, awayScore));
 
         return {
@@ -183,15 +172,6 @@ export abstract class Player {
             homeScore,
             awayScore
         };
-    }
-
-    public giveMatchRewards() {
-        const money = getMoneyForMatch(this.getMoney(), this.store.getState().playerInfo.streak.amount, this.wonLastMatch);
-
-        this.addMoney(money);
-        this.store.dispatch(addXpCommand(1));
-
-        this.wonLastMatch = false;
     }
 
     public onQuitGame(fn: (player: Player) => void) {
@@ -295,7 +275,9 @@ export abstract class Player {
 
         const piecesUsed = getPiecesForStage(piece.stage);
         const pieceCost = this.definitionProvider.get(piece.definitionId).cost;
-        this.addMoney(pieceCost * piecesUsed);
+        const currentMoney = this.store.getState().playerInfo.money;
+
+        this.store.dispatch(moneyUpdateAction(currentMoney + (pieceCost * piecesUsed)));
 
         this.deck.addPiece(piece);
         this.deck.shuffle();

@@ -231,10 +231,6 @@ export class Game {
         // some battles go right up to the end, so it's nice to have a delay
         // rather than jumping straight into the next phase
         await delay(3000);
-
-        for (const player of this.getLivingPlayers()) {
-            player.giveMatchRewards();
-        }
     }
 
     private getLivingPlayers = () => this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
