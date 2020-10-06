@@ -1,8 +1,8 @@
 import { takeLatest, put, select, delay } from "@redux-saga/core/effects";
-import { GamePhase } from "@creature-chess/models";
 import { AppState } from "../../../store/state";
 import { clearAnnouncement, updateAnnouncement } from "packages/app/src/ui/actions";
-import { GamePhaseUpdateAction, GAME_PHASE_UPDATE, PlayersResurrectedAction, PLAYERS_RESURRECTED } from "@creature-chess/shared/game/store/actions";
+import { PlayersResurrectedAction, PLAYERS_RESURRECTED } from "@creature-chess/shared/game/store/actions";
+import { SetOpponentAction, SET_OPPONENT } from "@creature-chess/shared/player/playerInfo";
 
 // distinctLastJoin(["James", "Bob", "William", "Steve"], ", ", " and ")
 // -> "James, Bob, William and Steve"
@@ -24,27 +24,19 @@ const distinctLastJoin = (items: string[], mainSeparator: string, lastSeparator:
 };
 
 export const announcement = function*() {
-    yield takeLatest<GamePhaseUpdateAction | PlayersResurrectedAction>(
-        [GAME_PHASE_UPDATE, PLAYERS_RESURRECTED],
+    yield takeLatest<SetOpponentAction | PlayersResurrectedAction>(
+        [SET_OPPONENT, PLAYERS_RESURRECTED],
         function*(action) {
-            if (action.type === GAME_PHASE_UPDATE) {
-                if (action.payload.phase === GamePhase.PLAYING) {
-                    yield put(clearAnnouncement());
+            if (action.type === SET_OPPONENT) {
+                const state: AppState = yield select();
+
+                const opponent = state.playerList.find(p => p.id === action.payload.opponentId);
+
+                if (!opponent) {
                     return;
                 }
 
-                if (action.payload.phase === GamePhase.READY) {
-                    const state: AppState = yield select();
-
-                    const opponentId = action.payload.payload.opponentId;
-                    const opponent = state.playerList.find(p => p.id === opponentId);
-
-                    if (!opponent) {
-                        return;
-                    }
-
-                    yield put(updateAnnouncement(opponent.name, "Now Playing"));
-                }
+                yield put(updateAnnouncement(opponent.name, "Now Playing"));
             }
 
             if (action.type === PLAYERS_RESURRECTED) {

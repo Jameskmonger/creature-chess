@@ -25,6 +25,7 @@ import { playerStreak } from "./sagas/streak";
 import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sagas/playerPropertyUpdates";
 import { playerFinishMatch } from "./actions";
 import { addXpCommand } from "packages/shared/player/sagas/xp";
+import { playerBattle } from "./sagas/battle";
 
 enum PlayerEvent {
     START_LOBBY_GAME = "START_LOBBY_GAME",
@@ -73,6 +74,7 @@ export abstract class Player {
 
         this.sagaMiddleware.run(this.readyUpSaga());
         playerStreak(this.sagaMiddleware);
+        playerBattle(this.sagaMiddleware);
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
     }
@@ -139,7 +141,7 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public async enterPreparingPhase(startedAt: number, round: number) {
+    public async enterPreparingPhase(startedAtSeconds: number, round: number) {
         this.currentRound = round;
 
         this.readyUpDeferred = pDefer();
@@ -151,7 +153,7 @@ export abstract class Player {
         this.store.dispatch(clearOpponent());
         this.store.dispatch(unlockBench());
 
-        this.onEnterPreparingPhase(startedAt, round);
+        this.onEnterPreparingPhase(startedAtSeconds, round);
 
         if (isPlayerAlive(this.store.getState()) === false) {
             return;

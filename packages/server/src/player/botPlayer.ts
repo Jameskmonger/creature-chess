@@ -7,7 +7,6 @@ import { buyCard, readyUpAction } from "@creature-chess/shared/player/actions";
 import { PlayerState } from "@creature-chess/shared/player/store";
 import { PhaseUpdatePacket } from "@creature-chess/shared/networking/server-to-client";
 import uuid = require("uuid");
-import { gamePhaseUpdate } from "@creature-chess/shared/game/store/actions";
 
 const PREFERRED_COLUMN_ORDERS = {
     8: [
@@ -68,24 +67,7 @@ export class BotPlayer extends Player {
 
     public onPlayersResurrected() { /* nothing required, we're a bot */ }
 
-    protected onEnterPreparingPhase(startedAt: number, round: number) {
-        // todo rework this, it's a quick fix to make bots aware of game state
-        const { board, bench, playerInfo: { cards } } = this.store.getState();
-
-        const packet: PhaseUpdatePacket = {
-            startedAt,
-            phase: GamePhase.PREPARING,
-            payload: {
-                round,
-                pieces: {
-                    board,
-                    bench
-                },
-                cards
-            }
-        };
-        this.store.dispatch(gamePhaseUpdate(packet));
-
+    protected onEnterPreparingPhase(startedAtSeconds: number, round: number) {
         this.buyBestPieces();
         this.spendExcessMoneyOnXp();
         this.putBenchOnBoard();
@@ -93,31 +75,16 @@ export class BotPlayer extends Player {
         this.store.dispatch(readyUpAction());
     }
 
-    protected onEnterReadyPhase(startedAt: number) {
-        // todo rework this, it's a quick fix to make bots aware of game state
-        const packet: PhaseUpdatePacket = {
-            startedAt,
-            phase: GamePhase.READY,
-            payload: {
-                board: this.match.getBoard(),
-                bench: this.getBench(),
-                opponentId: this.match.away.id
-            }
-        };
-        this.store.dispatch(gamePhaseUpdate(packet));
+    protected onEnterReadyPhase(startedAtSeconds: number) {
+        /* nothing required, we're a bot */
     }
 
-    protected onEnterPlayingPhase(phaseStartedAt: number) {
-        const packet: PhaseUpdatePacket = { startedAt: phaseStartedAt, phase: GamePhase.PLAYING };
-        this.store.dispatch(gamePhaseUpdate(packet));
-
+    protected onEnterPlayingPhase(startedAtSeconds: number) {
         this.finishMatch();
     }
 
-    protected onDeath(startedAt: number) {
-        // todo rework this, it's a quick fix to make bots aware of game state
-        const packet: PhaseUpdatePacket = { startedAt, phase: GamePhase.DEAD };
-        this.store.dispatch(gamePhaseUpdate(packet));
+    protected onDeath(startedAtSeconds: number) {
+        /* nothing required, we're a bot */
     }
 
     private spendExcessMoneyOnXp() {

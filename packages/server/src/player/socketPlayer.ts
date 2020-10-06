@@ -12,7 +12,6 @@ import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DRO
 import { CardsUpdatedAction, CARDS_UPDATED, LevelUpdateAction, LEVEL_UPDATE, MoneyUpdateAction, MONEY_UPDATE, SHOP_LOCK_UPDATED, UpdateShopLockAction } from "@creature-chess/shared/player/playerInfo";
 import { Task } from "redux-saga";
 import { PlayerState } from "@creature-chess/shared/player/store";
-import { gamePhaseUpdate } from "@creature-chess/shared/game/store/actions";
 
 const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
     return function*() {
@@ -129,9 +128,8 @@ export class SocketPlayer extends Player {
         this.clearSocket();
     }
 
-    public onDeath(phaseStartedAt: number) {
-        const packet: PhaseUpdatePacket = { startedAt: phaseStartedAt, phase: GamePhase.DEAD };
-        this.store.dispatch(gamePhaseUpdate(packet));
+    public onDeath(startedAtSeconds: number) {
+        const packet: PhaseUpdatePacket = { startedAtSeconds, phase: GamePhase.DEAD };
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
@@ -153,11 +151,11 @@ export class SocketPlayer extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
     }
 
-    protected onEnterPreparingPhase(startedAt: number, round: number) {
+    protected onEnterPreparingPhase(startedAtSeconds: number, round: number) {
         const { board, bench, playerInfo: { cards } } = this.store.getState();
 
         const packet: PhaseUpdatePacket = {
-            startedAt,
+            startedAtSeconds,
             phase: GamePhase.PREPARING,
             payload: {
                 round,
@@ -168,13 +166,12 @@ export class SocketPlayer extends Player {
                 cards
             }
         };
-        this.store.dispatch(gamePhaseUpdate(packet));
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onEnterReadyPhase(startedAt: number) {
+    protected onEnterReadyPhase(startedAtSeconds: number) {
         const packet: PhaseUpdatePacket = {
-            startedAt,
+            startedAtSeconds,
             phase: GamePhase.READY,
             payload: {
                 board: this.match.getBoard(),
@@ -182,13 +179,11 @@ export class SocketPlayer extends Player {
                 opponentId: this.match.away.id
             }
         };
-        this.store.dispatch(gamePhaseUpdate(packet));
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onEnterPlayingPhase(startedAt: number) {
-        const packet: PhaseUpdatePacket = { startedAt, phase: GamePhase.PLAYING };
-        this.store.dispatch(gamePhaseUpdate(packet));
+    protected onEnterPlayingPhase(startedAtSeconds: number) {
+        const packet: PhaseUpdatePacket = { startedAtSeconds, phase: GamePhase.PLAYING };
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 

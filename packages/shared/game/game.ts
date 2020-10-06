@@ -10,9 +10,10 @@ import { EventEmitter } from "events";
 import { PlayerList } from "./playerList";
 import { TurnSimulator } from "../match/combat/turnSimulator";
 import { DefinitionProvider } from "./definitionProvider";
-import { PhaseUpdatePacket } from "../networking/server-to-client";
 import { PlayerStatus } from "@creature-chess/models";
 import pDefer = require("p-defer");
+import { createGameStore } from "./store/store";
+import { gamePhaseStarted, preparingPhaseStarted } from "./store/actions";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -36,15 +37,9 @@ const defaultPhaseLengths: PhaseLengths = PHASE_LENGTHS;
 
 export class Game {
     public readonly id: string;
-    public phase: {
-        value: GamePhase;
-        startedAt: number;
-    };
     private phaseLengths: PhaseLengths;
     private turnCount: number;
     private turnDuration: number;
-    private GAME_SIZE: number;
-    private round = 0;
     private lastLivingPlayerCount: number;
     private opponentProvider = new OpponentProvider();
     private playerList = new PlayerList();
@@ -54,15 +49,14 @@ export class Game {
     private events = new EventEmitter();
     private deck: CardDeck;
 
+    private store = createGameStore();
+
     constructor(players: Player[], phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
         this.id = uuid();
 
-        this.GAME_SIZE = players.length;
         this.phaseLengths = { ...defaultPhaseLengths, ...phaseLengths };
         this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
         this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
-
-        this.phase = null;
 
         const livingPlayers = this.players.filter(p => p.isAlive());
         this.opponentProvider.setPlayers(livingPlayers);
@@ -88,19 +82,21 @@ export class Game {
     }
 
     // todo use this everywhere
-    public getCurrentGamePhaseUpdateForPlayer(player: Player): PhaseUpdatePacket {
-        switch (this.phase.value) {
+    public getCurrentGamePhaseUpdateForPlayer(player: Player) {
+        const { round, phase, phaseStartedAtSeconds } = this.store.getState();
+
+        switch (phase) {
             case GamePhase.DEAD:
                 return {
-                    startedAt: this.phase.startedAt,
-                    phase: this.phase.value
+                    startedAtSeconds: phaseStartedAtSeconds,
+                    phase: phase
                 };
             case GamePhase.PREPARING:
                 return {
-                    startedAt: this.phase.startedAt,
-                    phase: this.phase.value,
+                    startedAtSeconds: phaseStartedAtSeconds,
+                    phase: phase,
                     payload: {
-                        round: this.round,
+                        round: round,
                         pieces: {
                             board: player.getBoard(),
                             bench: player.getBench()
@@ -114,8 +110,8 @@ export class Game {
                 const board = match ? match.getBoard() : null;
 
                 return {
-                    startedAt: this.phase.startedAt,
-                    phase: this.phase.value,
+                    startedAtSeconds: phaseStartedAtSeconds,
+                    phase: phase,
                     payload: {
                         board,
                         bench: player.getBench(),
@@ -144,8 +140,8 @@ export class Game {
         this.events.on(GameEvents.PLAYER_QUIT, fn);
     }
 
-    public getPlayers() {
-        return this.players;
+    public getPlayerById(playerId: string) {
+        return this.players.find(p => p.id === playerId);
     }
 
     public getPlayerList() {
@@ -165,16 +161,12 @@ export class Game {
         }
     }
 
-    public getPlayerById(playerId: string) {
-        return this.players.find(p => p.id === playerId);
-    }
-
     private playerQuitGame = (player: Player) => {
         this.events.emit(GameEvents.PLAYER_QUIT, player);
     }
 
     private startGame = async () => {
-        if (this.phase !== null) {
+        if (this.store.getState().phase !== null) {
             return;
         }
 
@@ -199,7 +191,7 @@ export class Game {
 
         const duration = stopwatch(startTime);
 
-        log(`Match complete in ${(duration)} ms (${this.round} rounds)`);
+        log(`Match complete in ${(duration)} ms (${this.store.getState().round} rounds)`);
 
         // teardown
         this.opponentProvider = null;
@@ -226,23 +218,18 @@ export class Game {
         this.events = null;
     }
 
-    private setPhase(value: GamePhase) {
-        this.phase = {
-            value,
-            startedAt: Date.now()
-        };
-    }
-
     private async runPreparingPhase() {
-        this.round++;
+        const { round } = this.store.getState();
 
-        this.setPhase(GamePhase.PREPARING);
+        this.store.dispatch(preparingPhaseStarted(round + 1, Date.now() / 1000));
 
         this.players.forEach(p => p.reset());
 
+        const { phaseStartedAtSeconds: newPhaseStartedAt, round: newRound } = this.store.getState();
+
         const promises = this.players
             .filter(p => p.getStatus() !== PlayerStatus.QUIT)
-            .map(p => p.enterPreparingPhase(this.phase.startedAt, this.round));
+            .map(p => p.enterPreparingPhase(newPhaseStartedAt, newRound));
 
         await Promise.race([
             Promise.all(promises),
@@ -261,19 +248,21 @@ export class Game {
     }
 
     private async runReadyPhase() {
-        this.setPhase(GamePhase.READY);
+        this.store.dispatch(gamePhaseStarted(GamePhase.READY, Date.now() / 1000));
 
         this.updateLivingPlayers();
 
+        const { phaseStartedAtSeconds: newPhaseStartedAt } = this.store.getState();
+
         this.players
             .filter(p => p.getStatus() !== PlayerStatus.QUIT)
-            .forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, this.phase.startedAt));
+            .forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, newPhaseStartedAt));
 
         await delay(this.phaseLengths[GamePhase.READY] * 1000);
     }
 
     private async runPlayingPhase() {
-        this.setPhase(GamePhase.PLAYING);
+        this.store.dispatch(gamePhaseStarted(GamePhase.PLAYING, Date.now() / 1000));
 
         this.opponentProvider.updateRotation();
 
@@ -289,14 +278,15 @@ export class Game {
 
         const livingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 
-        const promises = livingPlayers.map(p => p.fightMatch(this.phase.startedAt, battleTimeoutDeferred));
+        const { round, phaseStartedAtSeconds: newPhaseStartedAt } = this.store.getState();
+        const promises = livingPlayers.map(p => p.fightMatch(newPhaseStartedAt, battleTimeoutDeferred));
 
         await Promise.all(promises);
 
         const newLivingPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 
         if (newLivingPlayers.length === 0) {
-            const justDiedPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === this.round);
+            const justDiedPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round);
 
             for (const player of justDiedPlayers) {
                 player.resurrect(RESURRECT_HEALTH);
@@ -308,7 +298,7 @@ export class Game {
             }
         }
 
-        for (const player of this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === this.round)) {
+        for (const player of this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round)) {
             player.kill();
 
             this.events.emit(GameEvents.PLAYER_DEATH, player);
