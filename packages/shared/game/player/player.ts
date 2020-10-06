@@ -4,27 +4,28 @@ import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 import { DefinitionProvider } from "../definitionProvider";
-import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
-import { getPiecesForStage } from "../../utils";
-import { getPiece, getAllPieces } from "../../player/pieceSelectors";
+import { PieceModel, PlayerListPlayer } from "@creature-chess/models";
+import { getAllPieces } from "../../player/pieceSelectors";
 import { PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
 import { cardsUpdated, clearOpponent, healthUpdated, moneyUpdateAction, roundDiedAtUpdated, setOpponent, statusUpdated } from "../../player/playerInfo";
 import { SagaMiddleware } from "redux-saga";
 import { isPlayerAlive } from "../../player/playerSelectors";
-import { initialiseBench, lockBench, removeBenchPiece, unlockBench } from "packages/shared/player/bench/benchActions";
-import { initialiseBoard, removeBoardPiece } from "packages/shared/board/actions/boardActions";
+import { initialiseBench, lockBench, unlockBench } from "packages/shared/player/bench/benchActions";
+import { initialiseBoard } from "packages/shared/board/actions/boardActions";
 import { subtractHealthCommand } from "packages/shared/player/sagas/health";
 import { playerStreak } from "./sagas/streak";
 import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sagas/playerPropertyUpdates";
-import { playerFinishMatch } from "./actions";
+import { AfterRerollCardsAction, AfterSellPieceAction, AFTER_REROLL_CARDS, AFTER_SELL_PIECE, playerFinishMatch } from "./actions";
 import { addXpCommand } from "packages/shared/player/sagas/xp";
 import { playerBattle } from "./sagas/battle";
 import { GameState } from "../store/state";
-import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "../store/actions";
 import { playerMatchRewards } from "./sagas/matchRewards";
+import { fillBoardCommand } from "packages/shared/player/sagas/fillBoard";
+import { sellPiece } from "../../player/sagas/sellPiece";
+import { rerollCards } from "../../player/sagas/rerollCards";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -62,7 +63,10 @@ export abstract class Player {
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.clearMatchSaga());
+        this.sagaMiddleware.run(this.afterSellPieceSaga());
+        this.sagaMiddleware.run(this.afterRerollCardsSaga());
+        this.sagaMiddleware.run(sellPiece);
+        this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
         playerBattle(this.sagaMiddleware);
         playerMatchRewards(this.sagaMiddleware);
@@ -137,6 +141,10 @@ export abstract class Player {
         this.onEnterPreparingPhase();
     }
 
+    public fillBoard() {
+        this.store.dispatch(fillBoardCommand());
+    }
+
     public enterReadyPhase(match: Match) {
         this.store.dispatch(lockBench());
 
@@ -180,7 +188,7 @@ export abstract class Player {
         return () => this.events.off(PlayerEvent.QUIT_GAME, fn);
     }
 
-    public rerollCards() {
+    public rerollCards = () => {
         if (isPlayerAlive(this.store.getState()) === false) {
             return;
         }
@@ -264,71 +272,6 @@ export abstract class Player {
         this.events.emit(PlayerEvent.QUIT_GAME, this);
     }
 
-    protected sellPiece = (pieceId: string) => {
-        // todo add `from` here to improve lookup
-        const piece = getPiece(this.store.getState(), pieceId);
-
-        if (piece === null) {
-            log(`${this.name} attempted to sell piece with id ${pieceId} but did not own it`);
-            return;
-        }
-
-        const piecesUsed = getPiecesForStage(piece.stage);
-        const pieceCost = this.definitionProvider.get(piece.definitionId).cost;
-        const currentMoney = this.store.getState().playerInfo.money;
-
-        this.store.dispatch(moneyUpdateAction(currentMoney + (pieceCost * piecesUsed)));
-
-        this.deck.addPiece(piece);
-        this.deck.shuffle();
-
-        this.store.dispatch(removeBenchPiece(pieceId));
-        this.store.dispatch(removeBoardPiece(pieceId));
-    }
-
-    protected buyXp = () => {
-        // todo put this all into a saga
-        if (isPlayerAlive(this.store.getState()) === false) {
-            log(`${this.name} attempted to buy xp, but they are dead`);
-            return;
-        }
-
-        if (this.getLevel() === MAX_PLAYER_LEVEL) {
-            log(`${this.name} attempted to buy xp, but they are at max level`);
-            return;
-        }
-
-        const money = this.store.getState().playerInfo.money;
-
-        // not enough money
-        if (money < BUY_XP_COST) {
-            log(`${this.name} attempted to buy xp costing $${BUY_XP_COST} but only had $${money}`);
-            return;
-        }
-
-        this.store.dispatch(addXpCommand(BUY_XP_AMOUNT));
-        this.store.dispatch(moneyUpdateAction(money - BUY_XP_COST));
-    }
-
-    protected buyReroll = () => {
-        if (isPlayerAlive(this.store.getState()) === false) {
-            log(`${this.name} attempted to reroll, but they are dead`);
-            return;
-        }
-
-        const money = this.store.getState().playerInfo.money;
-
-        // not enough money
-        if (money < REROLL_COST) {
-            log(`${this.name} attempted to reroll costing $${REROLL_COST} but only had $${money}`);
-            return;
-        }
-
-        this.rerollCards();
-
-        this.store.dispatch(moneyUpdateAction(money - REROLL_COST));
-    }
-
     protected finishMatch = () => {
         if (this.match === null) {
             return;
@@ -337,20 +280,32 @@ export abstract class Player {
         this.match.onClientFinishMatch();
     }
 
-    private clearMatchSaga() {
-        const clearMatch = () => this.match = null;
+    private afterSellPieceSaga() {
+        const addPieceToDeck = (piece: PieceModel) => {
+            this.deck.addPiece(piece);
+            this.deck.shuffle();
+        };
 
         return function*() {
-            yield takeEvery<GamePhaseStartedAction>(
-                GAME_PHASE_STARTED,
-                function*({ payload: { phase } }) {
-                    if (phase !== GamePhase.PREPARING) {
-                        return;
-                    }
-
-                    clearMatch();
+            yield takeEvery<AfterSellPieceAction>(
+                AFTER_SELL_PIECE,
+                function*({ payload: { piece } }) {
+                    addPieceToDeck(piece);
                 }
-            )
-        }
+            );
+        };
+    }
+
+    private afterRerollCardsSaga() {
+        const rerollCards = this.rerollCards;
+
+        return function*() {
+            yield takeEvery<AfterRerollCardsAction>(
+                AFTER_REROLL_CARDS,
+                function*() {
+                    rerollCards();
+                }
+            );
+        };
     }
 }
