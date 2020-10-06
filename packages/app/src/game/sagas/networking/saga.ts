@@ -7,7 +7,7 @@ import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEvent
 import { AppState } from "../../../store/state";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
 import {
-    ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse
+    ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse, PreparingPhaseUpdatePacket
 } from "@creature-chess/shared/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@creature-chess/shared/networking/client-to-server";
@@ -15,13 +15,17 @@ import { ConnectionStatus } from "@creature-chess/shared/networking";
 import { PlayerActionTypesArray, PlayerAction } from "@creature-chess/shared/player/actions";
 import { signIn } from "../../../auth/auth0";
 import { validateNickname } from "@creature-chess/shared/validation/nickname";
-import { cardsUpdated, moneyUpdateAction, setLevelAction, shopLockUpdated } from "@creature-chess/shared/player/playerInfo";
-import { initialiseBoard } from "@creature-chess/shared/board/actions/boardActions";
+import { cardsUpdated, clearOpponent, moneyUpdateAction, setLevelAction, setOpponent, shopLockUpdated } from "@creature-chess/shared/player/playerInfo";
+import { initialiseBoard, lockBoard, unlockBoard } from "@creature-chess/shared/board/actions/boardActions";
 import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
 import { AuthSelectors } from "../../../auth";
-import { clearAnnouncement, FindGameAction, FIND_GAME, joinCompleteAction, updateConnectionStatus } from "../../../ui/actions";
+import { clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay, updateConnectionStatus } from "../../../ui/actions";
 import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
-import { finishGameAction, gamePhaseUpdate, playersResurrected } from "@creature-chess/shared/game/store/actions";
+import { finishGameAction, gamePhaseStarted, playersResurrected } from "@creature-chess/shared/game/store/actions";
+import { GamePhase } from "@creature-chess/models";
+import { Overlay } from "packages/app/src/ui/overlay";
+import { clearSelectedPiece } from "../../features/board/actions";
+import { startBattle } from "@creature-chess/shared/match/combat/battleSaga";
 
 type Socket = SocketIOClient.Socket;
 
@@ -103,7 +107,42 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                 log("[PHASE_UPDATE]", packet);
 
                 emit(updateConnectionStatus(ConnectionStatus.CONNECTED));
-                emit(gamePhaseUpdate(packet));
+                emit(gamePhaseStarted(packet.phase, packet.startedAtSeconds));
+
+                switch (packet.phase) {
+                    case GamePhase.PREPARING: {
+                        const { cards, pieces: { board, bench } } = packet.payload;
+
+                        emit(initialiseBoard(board.pieces));
+                        emit(initialiseBench(bench));
+                        emit(cardsUpdated(cards));
+                        emit(unlockBoard());
+                        emit(openOverlay(Overlay.SHOP));
+                        emit(clearOpponent());
+                        emit(clearAnnouncement());
+                        return;
+                    }
+                    case GamePhase.READY: {
+                        const { board, bench, opponentId } = packet.payload;
+
+                        if (board) {
+                            emit(initialiseBoard(board.pieces));
+                        }
+
+                        emit(initialiseBench(bench));
+                        emit(lockBoard());
+                        emit(closeOverlay());
+                        emit(setOpponent(opponentId));
+                        emit(clearSelectedPiece());
+                        return;
+                    }
+                    case GamePhase.PLAYING: {
+                        emit(startBattle());
+                        return;
+                    }
+                    default:
+                        return;
+                }
             }
         );
 
@@ -144,6 +183,10 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
 
                     emit(joinCompleteAction(id));
 
+                    if (!packet.payload.fullState) {
+                        return;
+                    }
+
                     const { money, cards, players, level: { level, xp }, board, bench, phase } = packet.payload.fullState;
 
                     emit(moneyUpdateAction(money));
@@ -154,7 +197,7 @@ const subscribe = (registry: ServerToClientPacketRegistry, socket: Socket) => {
                     emit(initialiseBench(bench));
 
                     if (phase) {
-                        emit(gamePhaseUpdate(phase));
+                        emit(gamePhaseStarted(phase.phase, phase.startedAtSeconds));
                     } else {
                         emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                     }

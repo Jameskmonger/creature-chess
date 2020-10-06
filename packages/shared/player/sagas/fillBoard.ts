@@ -1,14 +1,14 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerState } from "../store";
-import { GamePhaseUpdateAction, GAME_PHASE_UPDATE } from "packages/shared/game/store/actions";
+import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "packages/shared/game/store/actions";
 import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 import { getMostExpensiveBenchPiece, getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../playerSelectors";
 import { playerDropPiece } from "../actions";
 
 export const fillBoardSagaFactory = <TState extends PlayerState>() => {
     return function*() {
-        yield takeEvery<GamePhaseUpdateAction>(
-            GAME_PHASE_UPDATE,
+        yield takeEvery<GamePhaseStartedAction>(
+            GAME_PHASE_STARTED,
             function*({ payload: { phase } }) {
                 if (phase !== GamePhase.READY) {
                     return;

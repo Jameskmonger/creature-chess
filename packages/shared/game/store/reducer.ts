@@ -1,5 +1,4 @@
-import { GameAction, PHASE_START_SECONDS, GAME_PHASE_UPDATE } from "./actions";
-import { GamePhase } from "@creature-chess/models";
+import { GameAction, GAME_PHASE_STARTED } from "./actions";
 import { GameState } from "./state";
 
 export const initialState: GameState = {
@@ -10,23 +9,20 @@ export const initialState: GameState = {
 
 export function reducer(state: GameState = initialState, action: GameAction): GameState {
     switch (action.type) {
-        case GAME_PHASE_UPDATE:
-            if (action.payload.phase === GamePhase.PREPARING) {
+        case GAME_PHASE_STARTED:
+            if (action.payload.round) {
                 return {
                     ...state,
                     phase: action.payload.phase,
-                    round: action.payload.payload.round
+                    phaseStartedAtSeconds: Math.floor(action.payload.startedAt),
+                    round: action.payload.round
                 };
             }
 
             return {
                 ...state,
-                phase: action.payload.phase
-            };
-        case PHASE_START_SECONDS:
-            return {
-                ...state,
-                phaseStartedAtSeconds: action.payload.time
+                phase: action.payload.phase,
+                phaseStartedAtSeconds: Math.floor(action.payload.startedAt)
             };
         default:
             return state;

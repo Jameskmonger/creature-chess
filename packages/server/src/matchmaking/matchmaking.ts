@@ -57,13 +57,13 @@ export class Matchmaking {
     private getPlayerInGame(id: string) {
         const games = Array.from<Game>(this.games.values());
 
-        const matchingGame = games.find(g => g.getPlayers().find(p => p.id === id));
+        const matchingGame = games.find(g => g.getPlayerById(id));
 
         if (!matchingGame) {
             return null;
         }
 
-        const playerInGame = matchingGame.getPlayers().find(p => p.id === id);
+        const playerInGame = matchingGame.getPlayerById(id);
 
         return {
             game: matchingGame,

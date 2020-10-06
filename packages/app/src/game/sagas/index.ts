@@ -8,8 +8,6 @@ import { dropPieceSagaFactory } from "@creature-chess/shared/player/sagas/dropPi
 import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
 import { AppState } from "../../store";
 import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
-import { phaseTimer } from "./actions/phaseTimer";
-import { gamePhase } from "./actions/gamePhase";
 import { sellPiece } from "./actions/sellPiece";
 import { announcement } from "./actions/announcement";
 import { cardShopSagaFactory } from "@creature-chess/shared/player/sagas/cardShop";
@@ -21,9 +19,7 @@ export const gameSagaFactory = (playerId: string) => {
     return function*() {
         yield all([
             yield fork(preventAccidentalClose),
-            yield fork(phaseTimer),
             yield fork(announcement),
-            yield fork(gamePhase),
             yield fork(sellPiece),
             yield fork(closeShopOnFirstBuy),
             yield fork(dropPieceSagaFactory<AppState>(playerId)),

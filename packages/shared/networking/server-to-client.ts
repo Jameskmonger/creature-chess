@@ -5,7 +5,7 @@ import { BenchState } from "../player/bench";
 import { IndexedPieces } from "@creature-chess/models/src/piece";
 
 export type PreparingPhaseUpdatePacket = {
-  startedAt: number,
+  startedAtSeconds: number,
   phase: GamePhase.PREPARING,
   payload:
   {
@@ -19,7 +19,7 @@ export type PreparingPhaseUpdatePacket = {
 };
 
 export type ReadyPhaseUpdatePacket = {
-  startedAt: number,
+  startedAtSeconds: number,
   phase: GamePhase.READY,
   payload: {
     board: BoardState;
@@ -28,11 +28,14 @@ export type ReadyPhaseUpdatePacket = {
   }
 };
 
+type PlayingPhaseUpdatePacket = ({ startedAtSeconds: number, phase: GamePhase.PLAYING });
+type DeadPhaseUpdatePacket = ({ startedAtSeconds: number, phase: GamePhase.DEAD });
+
 export type PhaseUpdatePacket =
   PreparingPhaseUpdatePacket
   | ReadyPhaseUpdatePacket
-  | ({ startedAt: number, phase: GamePhase.PLAYING })
-  | ({ startedAt: number, phase: GamePhase.DEAD });
+  | PlayingPhaseUpdatePacket
+  | DeadPhaseUpdatePacket;
 
 type LevelUpdatePacket = {
   level: number;
