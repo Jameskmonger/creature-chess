@@ -32,7 +32,6 @@
 	"devDependencies": {
 		"@types/node": "^11.11.3",
 		"alsatian": "2.4.0",
-		"cpy-cli": "^2.0.0",
 		"lerna": "^3.22.1",
 		"neworbit-tslint-config": "^4.0.0",
 		"nodemon": "^1.18.11",
