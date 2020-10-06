@@ -12,3 +12,8 @@ export const AFTER_SELL_PIECE = "AFTER_SELL_PIECE";
 export type AFTER_SELL_PIECE = typeof AFTER_SELL_PIECE;
 export type AfterSellPieceAction = ({ type: AFTER_SELL_PIECE, payload: { piece: PieceModel } });
 export const afterSellPiece = (piece: PieceModel): AfterSellPieceAction => ({ type: AFTER_SELL_PIECE, payload: { piece } });
+
+export const AFTER_REROLL_CARDS = "AFTER_REROLL_CARDS";
+export type AFTER_REROLL_CARDS = typeof AFTER_REROLL_CARDS;
+export type AfterRerollCardsAction = ({ type: AFTER_REROLL_CARDS });
+export const afterRerollCards = (): AfterRerollCardsAction => ({ type: AFTER_REROLL_CARDS });

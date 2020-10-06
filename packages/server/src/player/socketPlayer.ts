@@ -177,7 +177,8 @@ export class SocketPlayer extends Player {
                 case TOGGLE_SHOP_LOCK:
                 case PLAYER_DROP_PIECE:
                 case READY_UP:
-                case PLAYER_SELL_PIECE: {
+                case PLAYER_SELL_PIECE:
+                case REROLL_CARDS: {
                     this.store.dispatch(action);
                     break;
                 }
@@ -185,10 +186,6 @@ export class SocketPlayer extends Player {
                     this.clearSocket();
 
                     this.quitGame();
-                    break;
-                }
-                case REROLL_CARDS: {
-                    this.buyReroll();
                     break;
                 }
                 case BUY_XP: {

@@ -4,9 +4,9 @@ import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
-import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
+import { BUY_XP_COST, BUY_XP_AMOUNT, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 import { DefinitionProvider } from "../definitionProvider";
-import { GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { getAllPieces } from "../../player/pieceSelectors";
 import { PlayerStatus } from "@creature-chess/models/src/player-list-player";
 import { createPlayerStore, PlayerStore } from "../../player/store";
@@ -18,14 +18,14 @@ import { initialiseBoard } from "packages/shared/board/actions/boardActions";
 import { subtractHealthCommand } from "packages/shared/player/sagas/health";
 import { playerStreak } from "./sagas/streak";
 import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sagas/playerPropertyUpdates";
-import { AfterSellPieceAction, AFTER_SELL_PIECE, playerFinishMatch } from "./actions";
+import { AfterRerollCardsAction, AfterSellPieceAction, AFTER_REROLL_CARDS, AFTER_SELL_PIECE, playerFinishMatch } from "./actions";
 import { addXpCommand } from "packages/shared/player/sagas/xp";
 import { playerBattle } from "./sagas/battle";
 import { GameState } from "../store/state";
-import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "../store/actions";
 import { playerMatchRewards } from "./sagas/matchRewards";
 import { fillBoardCommand } from "packages/shared/player/sagas/fillBoard";
 import { sellPiece } from "../../player/sagas/sellPiece";
+import { rerollCards } from "../../player/sagas/rerollCards";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -63,9 +63,10 @@ export abstract class Player {
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.clearMatchSaga());
         this.sagaMiddleware.run(this.afterSellPieceSaga());
+        this.sagaMiddleware.run(this.afterRerollCardsSaga());
         this.sagaMiddleware.run(sellPiece);
+        this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
         playerBattle(this.sagaMiddleware);
         playerMatchRewards(this.sagaMiddleware);
@@ -187,7 +188,7 @@ export abstract class Player {
         return () => this.events.off(PlayerEvent.QUIT_GAME, fn);
     }
 
-    public rerollCards() {
+    public rerollCards = () => {
         if (isPlayerAlive(this.store.getState()) === false) {
             return;
         }
@@ -295,48 +296,12 @@ export abstract class Player {
         this.store.dispatch(moneyUpdateAction(money - BUY_XP_COST));
     }
 
-    protected buyReroll = () => {
-        if (isPlayerAlive(this.store.getState()) === false) {
-            log(`${this.name} attempted to reroll, but they are dead`);
-            return;
-        }
-
-        const money = this.store.getState().playerInfo.money;
-
-        // not enough money
-        if (money < REROLL_COST) {
-            log(`${this.name} attempted to reroll costing $${REROLL_COST} but only had $${money}`);
-            return;
-        }
-
-        this.rerollCards();
-
-        this.store.dispatch(moneyUpdateAction(money - REROLL_COST));
-    }
-
     protected finishMatch = () => {
         if (this.match === null) {
             return;
         }
 
         this.match.onClientFinishMatch();
-    }
-
-    private clearMatchSaga() {
-        const clearMatch = () => this.match = null;
-
-        return function*() {
-            yield takeEvery<GamePhaseStartedAction>(
-                GAME_PHASE_STARTED,
-                function*({ payload: { phase } }) {
-                    if (phase !== GamePhase.PREPARING) {
-                        return;
-                    }
-
-                    clearMatch();
-                }
-            );
-        };
     }
 
     private afterSellPieceSaga() {
@@ -350,6 +315,19 @@ export abstract class Player {
                 AFTER_SELL_PIECE,
                 function*({ payload: { piece } }) {
                     addPieceToDeck(piece);
+                }
+            );
+        };
+    }
+
+    private afterRerollCardsSaga() {
+        const rerollCards = this.rerollCards;
+
+        return function*() {
+            yield takeEvery<AfterRerollCardsAction>(
+                AFTER_REROLL_CARDS,
+                function*() {
+                    rerollCards();
                 }
             );
         };
