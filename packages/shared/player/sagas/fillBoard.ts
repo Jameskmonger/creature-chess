@@ -10,7 +10,7 @@ type FillBoardCommand = ({ type: FILL_BOARD_COMMAND });
 
 export const fillBoardCommand = (): FillBoardCommand => ({ type: FILL_BOARD_COMMAND });
 
-export const fillBoardSagaFactory = <TState extends PlayerState>() => {
+export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: string) => {
     return function*() {
         yield takeEvery<FillBoardCommand>(
             FILL_BOARD_COMMAND,
@@ -23,7 +23,7 @@ export const fillBoardSagaFactory = <TState extends PlayerState>() => {
 
                 while (true) {
                     const state: TState = yield select();
-                    const belowPieceLimit = getPlayerBelowPieceLimit(state, this.id);
+                    const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
 
                     if (!belowPieceLimit) {
                         return;

@@ -30,7 +30,7 @@ export const createPlayerStore = (playerId: string): { store: PlayerStore, sagaM
             yield fork(dropPieceSagaFactory<PlayerState>(playerId)),
             yield fork(healthSagaFactory<PlayerState>()),
             yield fork(xpSagaFactory<PlayerState>()),
-            yield fork(fillBoardSagaFactory<PlayerState>())
+            yield fork(fillBoardSagaFactory<PlayerState>(playerId))
         ]);
     };
 
