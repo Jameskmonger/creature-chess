@@ -16,7 +16,7 @@ enum PlayerPropertyUpdateEvent {
 
 export interface PlayerPropertyUpdateRegistry {
     onHealthUpdate: (fn: (value: number) => void) => void;
-    onReadyUpdate: (fn: (value: boolean) => void) => void;
+    onReadyUpdate: (fn: (value: boolean) => void) => (() => void);
     onStreakUpdate: (fn: (value: PlayerStreak) => void) => void;
     onBattleUpdate: (fn: (value: PlayerBattle) => void) => void;
     onStatusUpdate: (fn: (value: PlayerStatus) => void) => void;
@@ -71,8 +71,11 @@ export const createPropertyUpdateRegistry = (sagaMiddleware: SagaMiddleware): Pl
     return {
         onHealthUpdate: (fn: (value: number) => void) =>
             events.on(PlayerPropertyUpdateEvent.UPDATE_HEALTH, fn),
-        onReadyUpdate: (fn: (value: boolean) => void) =>
-            events.on(PlayerPropertyUpdateEvent.UPDATE_READY, fn),
+        onReadyUpdate: (fn: (value: boolean) => void) => {
+            events.on(PlayerPropertyUpdateEvent.UPDATE_READY, fn);
+
+            return () => events.off(PlayerPropertyUpdateEvent.UPDATE_READY, fn);
+        },
         onStreakUpdate: (fn: (value: PlayerStreak) => void) =>
             events.on(PlayerPropertyUpdateEvent.UPDATE_STREAK, fn),
         onBattleUpdate: (fn: (value: PlayerBattle) => void) =>
