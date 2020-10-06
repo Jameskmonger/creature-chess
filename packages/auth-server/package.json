@@ -28,6 +28,7 @@
     "@creature-chess/models": "^0.0.0",
     "@creature-chess/shared": "^0.0.0",
     "@types/auth0": "^2.20.5",
+		"@types/jsonwebtoken": "^8.5.0",
     "auth0": "^2.27.1",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.8.1"
