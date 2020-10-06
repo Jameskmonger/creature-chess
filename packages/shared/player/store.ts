@@ -11,6 +11,8 @@ import { cardShopSagaFactory } from "./sagas/cardShop";
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import { DefinitionProvider } from "../game/definitionProvider";
 import { healthSagaFactory } from "./sagas/health";
+import { xpSagaFactory } from "./sagas/xp";
+import { fillBoardSagaFactory } from "./sagas/fillBoard";
 
 export interface PlayerState {
     board: BoardState;
@@ -26,7 +28,9 @@ export const createPlayerStore = (playerId: string): { store: PlayerStore, sagaM
             yield fork(evolutionSagaFactory<PlayerState>()),
             yield fork(cardShopSagaFactory<PlayerState>(new DefinitionProvider(), playerId)),
             yield fork(dropPieceSagaFactory<PlayerState>(playerId)),
-            yield fork(healthSagaFactory<PlayerState>())
+            yield fork(healthSagaFactory<PlayerState>()),
+            yield fork(xpSagaFactory<PlayerState>()),
+            yield fork(fillBoardSagaFactory<PlayerState>())
         ]);
     };
 

@@ -1,4 +1,4 @@
-import { takeEvery, select, put } from "@redux-saga/core/effects";
+import { takeEvery, select, put, all } from "@redux-saga/core/effects";
 import { PlayerState } from "../store";
 import { healthUpdated, roundDiedAtUpdated } from "../playerInfo";
 
@@ -14,23 +14,25 @@ export const subtractHealthCommand = (currentRound: number, amount: number): Hea
 
 export const healthSagaFactory = <TState extends PlayerState>() => {
     return function*() {
-        yield takeEvery<HealthSubtractCommand>(
-            HEALTH_SUBTRACT_COMMAND,
-            function*({ payload: { currentRound, amount } }) {
-                const state: TState = yield select();
+        yield all([
+            yield takeEvery<HealthSubtractCommand>(
+                HEALTH_SUBTRACT_COMMAND,
+                function*({ payload: { currentRound, amount } }) {
+                    const state: TState = yield select();
 
-                const oldValue = state.playerInfo.health;
+                    const oldValue = state.playerInfo.health;
 
-                let newValue = oldValue - amount;
-                newValue = (newValue < 0) ? 0 : newValue;
+                    let newValue = oldValue - amount;
+                    newValue = (newValue < 0) ? 0 : newValue;
 
-                yield put(healthUpdated(newValue));
+                    yield put(healthUpdated(newValue));
 
-                if (newValue === 0 && oldValue !== 0) {
-                    // player has just died
-                    yield put(roundDiedAtUpdated(currentRound));
+                    if (newValue === 0 && oldValue !== 0) {
+                        // player has just died
+                        yield put(roundDiedAtUpdated(currentRound));
+                    }
                 }
-            }
-        );
+            )
+        ])
     };
 };
