@@ -25,9 +25,7 @@ const stopwatch = (start: [number, number]) => {
 };
 
 enum GameEvents {
-    FINISH_GAME = "FINISH_GAME",
-    PLAYER_DEATH = "PLAYER_DEATH",
-    PLAYER_QUIT = "PLAYER_QUIT"
+    FINISH_GAME = "FINISH_GAME"
 }
 
 export class Game {
@@ -62,7 +60,7 @@ export class Game {
 
         players.forEach(this.addPlayer)
 
-        this.updateLivingPlayers();
+        this.updateOpponentProvider();
 
         // execute at the end of the execution queue
         setTimeout(this.startGame);
@@ -70,14 +68,6 @@ export class Game {
 
     public onFinish(fn: (winner: Player) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
-    }
-
-    public onPlayerDeath(fn: (player: Player) => void) {
-        this.events.on(GameEvents.PLAYER_DEATH, fn);
-    }
-
-    public onPlayerQuit(fn: (player: Player) => void) {
-        this.events.on(GameEvents.PLAYER_QUIT, fn);
     }
 
     public getPlayerById(playerId: string) {
@@ -96,11 +86,6 @@ export class Game {
         player.setGetGameState(this.store.getState);
         player.setGetPlayerListPlayers(this.playerList.getValue);
         player.setDefinitionProvider(this.definitionProvider);
-        player.onQuitGame(this.playerQuitGame);
-    }
-
-    private playerQuitGame = (player: Player) => {
-        this.events.emit(GameEvents.PLAYER_QUIT, player);
     }
 
     private startGame = async () => {
@@ -172,20 +157,10 @@ export class Game {
         this.getLivingPlayers().forEach(p => p.fillBoard());
     }
 
-    private updateLivingPlayers() {
-        const livingPlayers = this.getLivingPlayers();
-        const livingPlayerCount = livingPlayers.length;
-
-        if (livingPlayerCount !== this.lastLivingPlayerCount) {
-            this.opponentProvider.setPlayers(livingPlayers);
-            this.lastLivingPlayerCount = livingPlayerCount;
-        }
-    }
-
     private async runReadyPhase() {
         this.store.dispatch(gamePhaseStarted(GamePhase.READY, Date.now() / 1000));
 
-        this.updateLivingPlayers();
+        this.updateOpponentProvider();
 
         this.getLivingPlayers().forEach(player => {
             const opponent = this.opponentProvider.getOpponent(player.id);
@@ -226,13 +201,21 @@ export class Game {
 
         for (const player of this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round)) {
             player.kill();
-
-            this.events.emit(GameEvents.PLAYER_DEATH, player);
         }
 
         // some battles go right up to the end, so it's nice to have a delay
         // rather than jumping straight into the next phase
         await delay(3000);
+    }
+
+    private updateOpponentProvider() {
+        const livingPlayers = this.getLivingPlayers();
+        const livingPlayerCount = livingPlayers.length;
+
+        if (livingPlayerCount !== this.lastLivingPlayerCount) {
+            this.opponentProvider.setPlayers(livingPlayers);
+            this.lastLivingPlayerCount = livingPlayerCount;
+        }
     }
 
     private getLivingPlayers = () => this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
