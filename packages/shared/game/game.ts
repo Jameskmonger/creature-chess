@@ -71,7 +71,7 @@ export class Game {
     }
 
     public getPlayerById(playerId: string) {
-        return this.players.find(p => p.id === playerId);
+        return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId);
     }
 
     public getPlayerList() {
