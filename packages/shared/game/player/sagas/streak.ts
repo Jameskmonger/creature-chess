@@ -1,18 +1,10 @@
 import { SagaMiddleware } from "redux-saga";
 import { takeLatest, select, put } from "@redux-saga/core/effects";
 import { StreakType } from "@creature-chess/models";
-import { HasPlayerInfo, PlayerStreak } from "../../player/playerInfo/reducer";
+import { HasPlayerInfo, PlayerStreak } from "../../../player/playerInfo/reducer";
 import { streakUpdated } from "packages/shared/player/playerInfo";
 
-const PLAYER_FINISH_MATCH = "PLAYER_FINISH_MATCH";
-type PLAYER_FINISH_MATCH = typeof PLAYER_FINISH_MATCH;
-
-type PlayerFinishMatchAction = ({ type: PLAYER_FINISH_MATCH, payload: { homeScore: number, awayScore: number } });
-
-export const playerFinishMatch = (homeScore: number, awayScore: number): PlayerFinishMatchAction => ({
-    type: PLAYER_FINISH_MATCH,
-    payload: { homeScore, awayScore }
-});
+import { PLAYER_FINISH_MATCH, PlayerFinishMatchAction } from "../actions";
 
 export const playerStreak = (sagaMiddleware: SagaMiddleware) => {
     sagaMiddleware.run(function*() {

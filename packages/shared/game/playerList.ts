@@ -89,8 +89,8 @@ export class PlayerList {
         player.propertyUpdates().onReadyUpdate(update);
         player.propertyUpdates().onStreakUpdate(update);
         player.propertyUpdates().onHealthUpdate(update);
-        player.onBattleUpdate(update);
-        player.onStatusUpdate(update);
+        player.propertyUpdates().onBattleUpdate(update);
+        player.propertyUpdates().onStatusUpdate(update);
     }
 
     private updatePlayer(player: Player) {
@@ -114,7 +114,7 @@ export class PlayerList {
                 money: player.getMoney(),
                 streakType: streak.type,
                 streakAmount: streak.amount,
-                battle: player.battle,
+                battle: player.getBattle(),
                 roundDiedAt: player.getRoundDiedAt(),
                 status: player.getStatus()
             });

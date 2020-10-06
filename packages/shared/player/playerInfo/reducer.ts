@@ -1,7 +1,11 @@
-import { MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT, LEVEL_UPDATE, CARDS_UPDATED, HEALTH_UPDATED, ROUND_DIED_AT_UPDATED, STREAK_UPDATED } from "./actions";
+import {
+    MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT,
+    LEVEL_UPDATE, CARDS_UPDATED, HEALTH_UPDATED, ROUND_DIED_AT_UPDATED, STREAK_UPDATED, STATUS_UPDATED, BATTLE_UPDATED
+} from "./actions";
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY } from "@creature-chess/models/src/constants";
 import { READY_UP } from "../actions";
 import { Card, StreakType } from "@creature-chess/models";
+import { PlayerBattle, PlayerStatus } from "@creature-chess/models/src/player-list-player";
 
 export interface PlayerStreak {
     type: StreakType;
@@ -11,9 +15,11 @@ export interface PlayerStreak {
 export type HasPlayerInfo = { playerInfo: PlayerInfoState };
 
 export interface PlayerInfoState {
+    status: PlayerStatus;
     health: number;
     roundDiedAt: number | null;
     streak: PlayerStreak;
+    battle: PlayerBattle | null;
 
     opponentId: string;
     shopLocked: boolean;
@@ -25,12 +31,14 @@ export interface PlayerInfoState {
 }
 
 const initialState: PlayerInfoState = {
+    status: PlayerStatus.CONNECTED,
     health: STARTING_HEALTH,
     roundDiedAt: null,
     streak: {
         type: StreakType.WIN,
         amount: 0
     },
+    battle: null,
     opponentId: null,
     shopLocked: false,
     money: STARTING_MONEY,
@@ -42,6 +50,18 @@ const initialState: PlayerInfoState = {
 
 export function playerInfoReducer(state: PlayerInfoState = initialState, action: GameAction): PlayerInfoState {
     switch (action.type) {
+        case STATUS_UPDATED: {
+            return {
+                ...state,
+                status: action.payload.status
+            }
+        };
+        case BATTLE_UPDATED: {
+            return {
+                ...state,
+                battle: action.payload.battle
+            }
+        };
         case HEALTH_UPDATED: {
             return {
                 ...state,
