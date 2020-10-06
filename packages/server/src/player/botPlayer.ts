@@ -3,7 +3,7 @@ import { GRID_SIZE, BUY_XP_COST } from "@creature-chess/models/src/constants";
 import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@creature-chess/models";
 import { getAllPieces, getBoardPieceForPosition } from "@creature-chess/shared/player/pieceSelectors";
 import { PlayerActions } from "@creature-chess/shared/player";
-import { buyCard, readyUpAction } from "@creature-chess/shared/player/actions";
+import { buyCard, playerSellPiece, readyUpAction } from "@creature-chess/shared/player/actions";
 import { PlayerState } from "@creature-chess/shared/player/store";
 import uuid = require("uuid");
 
@@ -131,7 +131,7 @@ export class BotPlayer extends Player {
 
             // sell a piece to make room
             if (this.atPieceLimit() || !canCurrentlyAfford) {
-                this.sellPiece(worstPiece.id);
+                this.store.dispatch(playerSellPiece(worstPiece.id));
             }
 
             this.buyCardIfBelowLimit(card);

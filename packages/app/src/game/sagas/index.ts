@@ -8,9 +8,9 @@ import { dropPieceSagaFactory } from "@creature-chess/shared/player/sagas/dropPi
 import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
 import { AppState } from "../../store";
 import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
-import { sellPiece } from "./actions/sellPiece";
 import { announcement } from "./actions/announcement";
 import { cardShopSagaFactory } from "@creature-chess/shared/player/sagas/cardShop";
+import { sellPiece } from "@creature-chess/shared/player/sagas/sellPiece";
 
 export const gameSagaFactory = (playerId: string) => {
     const turnSimulator = new TurnSimulator();
