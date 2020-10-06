@@ -4,9 +4,7 @@ import { Match } from "../../match/match";
 import { log } from "../../log";
 import { CardDeck } from "../../cardShop/cardDeck";
 import { EventEmitter } from "events";
-import { OpponentProvider } from "../opponentProvider";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
-import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
 import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import { getPiecesForStage } from "../../utils";
@@ -25,7 +23,6 @@ import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sa
 import { playerFinishMatch } from "./actions";
 import { addXpCommand } from "packages/shared/player/sagas/xp";
 import { playerBattle } from "./sagas/battle";
-import { GameOptions } from "../options";
 import { GameState } from "../store/state";
 import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "../store/actions";
 
@@ -44,8 +41,6 @@ export abstract class Player {
     public readonly id: string;
     public readonly name: string;
 
-    public abstract readonly isBot: boolean;
-
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
     protected store: PlayerStore;
@@ -55,10 +50,6 @@ export abstract class Player {
     private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
     private deck: CardDeck;
-
-    private gameOptions: GameOptions;
-
-    protected battleTimeout: pDefer.DeferredPromise<void> = null;
 
     protected getGameState: () => GameState;
     protected getPlayerListPlayers: () => PlayerListPlayer[];
@@ -92,10 +83,6 @@ export abstract class Player {
 
     public setDefinitionProvider(definitionProvider: DefinitionProvider) {
         this.definitionProvider = definitionProvider;
-    }
-
-    public setGameOptions(options: GameOptions) {
-        this.gameOptions = options;
     }
 
     public getMatch() {
@@ -155,18 +142,13 @@ export abstract class Player {
         this.onEnterPreparingPhase();
     }
 
-    public enterReadyPhase(turnSimulator: TurnSimulator, opponentProvider: OpponentProvider, startedAt: number) {
-        if (isPlayerAlive(this.store.getState())) {
-            this.store.dispatch(lockBench());
+    public enterReadyPhase(match: Match) {
+        this.store.dispatch(lockBench());
 
-            const opponent = opponentProvider.getOpponent(this.id);
+        this.store.dispatch(setOpponent(match.away.id));
+        this.match = match;
 
-            this.store.dispatch(setOpponent(opponent.id));
-
-            this.match = new Match(turnSimulator, this.gameOptions.turnCount, this.gameOptions.turnDuration, this, opponent);
-
-            this.onEnterReadyPhase(startedAt);
-        }
+        this.onEnterReadyPhase();
     }
 
     private wonLastMatch: boolean = false;
@@ -174,11 +156,7 @@ export abstract class Player {
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
         this.onEnterPlayingPhase(startedAt);
 
-        this.battleTimeout = battleTimeout;
-
         const finalMatchBoard = await this.match.fight(battleTimeout.promise);
-
-        this.battleTimeout = null;
 
         const pieces = Object.values(finalMatchBoard.pieces);
 
@@ -293,7 +271,7 @@ export abstract class Player {
 
     protected abstract onEnterPreparingPhase();
 
-    protected abstract onEnterReadyPhase(startedAt: number);
+    protected abstract onEnterReadyPhase();
 
     protected abstract onEnterPlayingPhase(startedAt: number);
 
@@ -383,7 +361,7 @@ export abstract class Player {
         return function*() {
             yield takeEvery<GamePhaseStartedAction>(
                 GAME_PHASE_STARTED,
-                function*({ payload: { phase }}) {
+                function*({ payload: { phase } }) {
                     if (phase !== GamePhase.PREPARING) {
                         return;
                     }

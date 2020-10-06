@@ -16,6 +16,7 @@ import { createGameStore } from "./store/store";
 import { gamePhaseStarted, preparingPhaseStarted } from "./store/actions";
 import { GameOptions, getOptions } from "./options";
 import { readyNotifier } from "./readyNotifier";
+import { Match } from "../match/match";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -67,11 +68,7 @@ export class Game {
         setTimeout(this.startGame);
     }
 
-    public onFinish(
-        fn: (winner: Player, players: {
-            id: string, name: string, isBot: boolean
-        }[]) => void
-    ) {
+    public onFinish(fn: (winner: Player) => void) {
         this.events.on(GameEvents.FINISH_GAME, fn);
     }
 
@@ -99,11 +96,7 @@ export class Game {
         player.setGetGameState(this.store.getState);
         player.setGetPlayerListPlayers(this.playerList.getValue);
         player.setDefinitionProvider(this.definitionProvider);
-        player.setGameOptions(this.options);
-
-        if (!player.isBot) {
-            player.onQuitGame(this.playerQuitGame);
-        }
+        player.onQuitGame(this.playerQuitGame);
     }
 
     private playerQuitGame = (player: Player) => {
@@ -150,8 +143,7 @@ export class Game {
 
         const gamePlayers = this.players.map(p => ({
             id: p.id,
-            name: p.name,
-            isBot: p.isBot
+            name: p.name
         }));
 
         this.events.emit(GameEvents.FINISH_GAME, winner, gamePlayers);
@@ -193,11 +185,15 @@ export class Game {
 
         this.updateLivingPlayers();
 
-        const { phaseStartedAtSeconds: newPhaseStartedAt } = this.store.getState();
+        this.getLivingPlayers().forEach(player => {
+            const opponent = this.opponentProvider.getOpponent(player.id);
 
-        this.players
-            .filter(p => p.getStatus() !== PlayerStatus.QUIT)
-            .forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, newPhaseStartedAt));
+            const match = new Match(this.turnSimulator, this.options.turnCount, this.options.turnDuration, player, opponent);
+
+            player.enterReadyPhase(match);
+        });
+
+        this.opponentProvider.updateRotation();
 
         await this.delayPhaseLength(GamePhase.READY);
     }
@@ -205,12 +201,6 @@ export class Game {
     private async runPlayingPhase() {
         this.store.dispatch(gamePhaseStarted(GamePhase.PLAYING, Date.now() / 1000));
 
-        this.opponentProvider.updateRotation();
-
-        await this.fightBattles();
-    }
-
-    private async fightBattles() {
         const battleTimeoutDeferred = pDefer<void>();
         this.delayPhaseLength(GamePhase.PLAYING).then(() => battleTimeoutDeferred.resolve());
 
