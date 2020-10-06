@@ -42,11 +42,6 @@ type LevelUpdatePacket = {
   xp: number;
 };
 
-type LobbyPlayerUpdatePacket = {
-  index: number;
-  player: Models.LobbyPlayer;
-};
-
 type FinishGamePacket = {
   winnerName: string;
 };
@@ -78,19 +73,6 @@ export type PlayerGameState = {
   }
 };
 
-export type JoinGamePacket = {
-  type: "lobby",
-  payload: {
-    playerId: string;
-    lobbyId: string;
-    players: Models.LobbyPlayer[];
-    startTimestamp: number;
-  }
-} | {
-  type: "game",
-  payload: PlayerGameState
-};
-
 type PlayersResurrectedPacket = {
   playerIds: string[];
 };
@@ -102,20 +84,18 @@ export enum ServerToClientPacketOpcodes {
   PHASE_UPDATE = "phaseUpdate",
   MONEY_UPDATE = "moneyUpdate",
   LEVEL_UPDATE = "levelUpdate",
-  LOBBY_PLAYER_UPDATE = "lobbyPlayerUpdate",
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
   PLAYERS_RESURRECTED = "playersResurrected",
 }
 
 export type ServerToClientPacketDefinitions = {
-  [ServerToClientPacketOpcodes.JOIN_GAME]: JoinGamePacket,
+  [ServerToClientPacketOpcodes.JOIN_GAME]: PlayerGameState,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: Models.Card[],
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: Models.PlayerListPlayer[],
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
   [ServerToClientPacketOpcodes.MONEY_UPDATE]: number,
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: LevelUpdatePacket,
-  [ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE]: LobbyPlayerUpdatePacket,
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
@@ -128,7 +108,6 @@ export type ServerToClientPacketAcknowledgements = {
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: never,
   [ServerToClientPacketOpcodes.MONEY_UPDATE]: never,
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: never,
-  [ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE]: never,
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never

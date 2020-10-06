@@ -2,10 +2,10 @@ import uuid = require("uuid/v4");
 import { all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { Player } from "@creature-chess/shared/game/player/player";
-import { LobbyPlayer, PlayerListPlayer, Card, GamePhase } from "@creature-chess/models";
+import { PlayerListPlayer, Card, GamePhase } from "@creature-chess/models";
 import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
 import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@creature-chess/shared/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, JoinGamePacket } from "@creature-chess/shared/networking/server-to-client";
+import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
 import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { log } from "console";
 import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP, QUIT_GAME } from "@creature-chess/shared/player/actions";
@@ -66,53 +66,21 @@ export class SocketPlayer extends Player {
     constructor(socket: Socket, id: string, name: string) {
         super(id, name);
 
-        this.setSocket(socket);
+        this.initialiseSocket(socket);
     }
 
-    public setSocket(socket: Socket) {
+    public reconnectSocket(socket: Socket) {
         this.clearSocket();
 
-        this.socket = socket;
-        this.lastReceivedPacketIndex = 0;
-
-        this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
-            (opcode, handler) => socket.on(opcode, handler)
-        );
-
-        socket.on("disconnect", () => {
-            if (this.battleTimeout) {
-                this.battleTimeout.resolve();
-            }
-        });
-
-        this.outgoingPacketRegistry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
-            (opcode, payload, ack) => socket.emit(opcode, payload, ack)
-        );
-
-        if (this.outgoingPacketsTask) {
-            this.outgoingPacketsTask.cancel();
-        }
-
-        this.outgoingPacketsTask = this.sagaMiddleware.run(outgoingPackets(this.outgoingPacketRegistry));
-
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
-        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
+        this.initialiseSocket(socket);
     }
 
     public onStartGame(gameId: string) {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.JOIN_GAME,
-            {
-                type: "game",
-                payload: {
-                    id: gameId
-                }
-            }
-        );
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.JOIN_GAME, { id: gameId });
     }
 
-    public sendJoinGamePacket(packet: JoinGamePacket) {
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.JOIN_GAME, packet);
+    public sendJoinGamePacket(state: PlayerGameState) {
+        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.JOIN_GAME, state);
     }
 
     public onFinishGame(winner: Player) {
@@ -135,16 +103,6 @@ export class SocketPlayer extends Player {
 
     public onPlayerListUpdate(players: PlayerListPlayer[]) {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
-    }
-
-    public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
-        this.outgoingPacketRegistry.emit(
-            ServerToClientPacketOpcodes.LOBBY_PLAYER_UPDATE,
-            {
-                index,
-                player
-            }
-        );
     }
 
     public onPlayersResurrected(playerIds: string[]) {
@@ -248,5 +206,29 @@ export class SocketPlayer extends Player {
 
         this.incomingPacketRegistry = null;
         this.outgoingPacketRegistry = null;
+    }
+
+    private initialiseSocket(socket: Socket) {
+        this.socket = socket;
+        this.lastReceivedPacketIndex = 0;
+
+        socket.on("disconnect", () => {
+            if (this.battleTimeout) {
+                this.battleTimeout.resolve();
+            }
+        });
+
+        this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
+            (opcode, handler) => socket.on(opcode, handler)
+        );
+
+        this.outgoingPacketRegistry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
+            (opcode, payload, ack) => socket.emit(opcode, payload, ack)
+        );
+
+        this.outgoingPacketsTask = this.sagaMiddleware.run(outgoingPackets(this.outgoingPacketRegistry));
+
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.FINISH_MATCH, this.finishMatch);
+        this.incomingPacketRegistry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, this.receiveActions);
     }
 }

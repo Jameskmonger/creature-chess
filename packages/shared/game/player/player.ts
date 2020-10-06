@@ -8,7 +8,7 @@ import { OpponentProvider } from "../opponentProvider";
 import { BUY_XP_COST, BUY_XP_AMOUNT, REROLL_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
 import { TurnSimulator } from "../../match/combat/turnSimulator";
 import { DefinitionProvider } from "../definitionProvider";
-import { LobbyPlayer, PlayerListPlayer } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models";
 import { getPiecesForStage } from "../../utils";
 import { getPiece, getAllPieces } from "../../player/pieceSelectors";
 import { PlayerStatus } from "@creature-chess/models/src/player-list-player";
@@ -29,7 +29,6 @@ import { playerBattle } from "./sagas/battle";
 import { GameOptions } from "../options";
 
 enum PlayerEvent {
-    START_LOBBY_GAME = "START_LOBBY_GAME",
     QUIT_GAME = "QUIT_GAME"
 }
 
@@ -228,10 +227,6 @@ export abstract class Player {
         this.events.on(PlayerEvent.QUIT_GAME, fn);
     }
 
-    public onStartLobbyGame(fn: () => void) {
-        this.events.on(PlayerEvent.START_LOBBY_GAME, fn);
-    }
-
     public rerollCards() {
         if (isPlayerAlive(this.store.getState()) === false) {
             return;
@@ -315,8 +310,6 @@ export abstract class Player {
     public abstract onStartGame(gameId: string);
 
     public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
-
-    public abstract onLobbyPlayerUpdate(index: number, player: LobbyPlayer);
 
     protected abstract onEnterPreparingPhase(startedAt: number, round: number);
 
