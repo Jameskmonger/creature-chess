@@ -1,11 +1,11 @@
 import uuid = require("uuid");
 import delay from "delay";
 import { GamePhase } from "@creature-chess/models/src/game-phase";
-import { Player, PlayerMatchResults } from "./player/player";
+import { Player } from "./player/player";
 import { OpponentProvider } from "./opponentProvider";
 import { CardDeck } from "../cardShop/cardDeck";
 import { log } from "../log";
-import { PHASE_LENGTHS, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, RESURRECT_HEALTH } from "@creature-chess/models/src/constants";
+import { RESURRECT_HEALTH } from "@creature-chess/models/src/constants";
 import { EventEmitter } from "events";
 import { PlayerList } from "./playerList";
 import { TurnSimulator } from "../match/combat/turnSimulator";
@@ -14,6 +14,7 @@ import { PlayerStatus } from "@creature-chess/models";
 import pDefer = require("p-defer");
 import { createGameStore } from "./store/store";
 import { gamePhaseStarted, preparingPhaseStarted } from "./store/actions";
+import { GameOptions, getOptions } from "./options";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -27,19 +28,11 @@ enum GameEvents {
     PLAYER_QUIT = "PLAYER_QUIT"
 }
 
-interface PhaseLengths {
-    [GamePhase.PREPARING]?: number;
-    [GamePhase.READY]?: number;
-    [GamePhase.PLAYING]?: number;
-}
-
-const defaultPhaseLengths: PhaseLengths = PHASE_LENGTHS;
-
 export class Game {
     public readonly id: string;
-    private phaseLengths: PhaseLengths;
-    private turnCount: number;
-    private turnDuration: number;
+
+    private options: GameOptions;
+
     private lastLivingPlayerCount: number;
     private opponentProvider = new OpponentProvider();
     private playerList = new PlayerList();
@@ -51,12 +44,10 @@ export class Game {
 
     private store = createGameStore();
 
-    constructor(players: Player[], phaseLengths?: PhaseLengths, turnCount?: number, turnDuration?: number) {
+    constructor(players: Player[], options?: Partial<GameOptions>) {
         this.id = uuid();
 
-        this.phaseLengths = { ...defaultPhaseLengths, ...phaseLengths };
-        this.turnCount = turnCount >= 0 ? turnCount : DEFAULT_TURN_COUNT;
-        this.turnDuration = turnDuration >= 0 ? turnDuration : DEFAULT_TURN_DURATION;
+        this.options = getOptions(options);
 
         const livingPlayers = this.players.filter(p => p.isAlive());
         this.opponentProvider.setPlayers(livingPlayers);
@@ -153,8 +144,7 @@ export class Game {
         this.playerList.addPlayer(player);
         player.setDeck(this.deck);
         player.setDefinitionProvider(this.definitionProvider);
-        player.setTurnCount(this.turnCount);
-        player.setTurnDuration(this.turnDuration);
+        player.setGameOptions(this.options);
 
         if (!player.isBot) {
             player.onQuitGame(this.playerQuitGame);
@@ -233,7 +223,7 @@ export class Game {
 
         await Promise.race([
             Promise.all(promises),
-            delay(this.phaseLengths[GamePhase.PREPARING] * 1000)
+            delay(this.options.phaseLengths[GamePhase.PREPARING] * 1000)
         ]);
     }
 
@@ -258,7 +248,7 @@ export class Game {
             .filter(p => p.getStatus() !== PlayerStatus.QUIT)
             .forEach(p => p.enterReadyPhase(this.turnSimulator, this.opponentProvider, newPhaseStartedAt));
 
-        await delay(this.phaseLengths[GamePhase.READY] * 1000);
+        await delay(this.options.phaseLengths[GamePhase.READY] * 1000);
     }
 
     private async runPlayingPhase() {
@@ -270,7 +260,7 @@ export class Game {
     }
 
     private async fightBattles() {
-        const maxTimeMs = this.phaseLengths[GamePhase.PLAYING] * 1000;
+        const maxTimeMs = this.options.phaseLengths[GamePhase.PLAYING] * 1000;
 
         const battleTimeoutDeferred = pDefer<void>();
 

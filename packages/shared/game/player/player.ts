@@ -26,6 +26,7 @@ import { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./sa
 import { playerFinishMatch } from "./actions";
 import { addXpCommand } from "packages/shared/player/sagas/xp";
 import { playerBattle } from "./sagas/battle";
+import { GameOptions } from "../options";
 
 enum PlayerEvent {
     START_LOBBY_GAME = "START_LOBBY_GAME",
@@ -55,13 +56,11 @@ export abstract class Player {
 
     private deck: CardDeck;
 
-    private readyUpDeferred: pDefer.DeferredPromise<void>;
-
-    private turnCount: number;
-    private turnDuration: number;
+    private gameOptions: GameOptions;
 
     private currentRound: number | null = null;
 
+    private readyUpDeferred: pDefer.DeferredPromise<void>;
     protected battleTimeout: pDefer.DeferredPromise<void> = null;
 
     constructor(id: string, name: string) {
@@ -87,12 +86,8 @@ export abstract class Player {
         this.definitionProvider = definitionProvider;
     }
 
-    public setTurnCount(turnCount: number) {
-        this.turnCount = turnCount;
-    }
-
-    public setTurnDuration(turnDuration: number) {
-        this.turnDuration = turnDuration;
+    public setGameOptions(options: GameOptions) {
+        this.gameOptions = options;
     }
 
     public getMatch() {
@@ -176,7 +171,7 @@ export abstract class Player {
 
             this.store.dispatch(setOpponent(opponent.id));
 
-            this.match = new Match(turnSimulator, this.turnCount, this.turnDuration, this, opponent);
+            this.match = new Match(turnSimulator, this.gameOptions.turnCount, this.gameOptions.turnDuration, this, opponent);
 
             this.onEnterReadyPhase(startedAt);
         }
