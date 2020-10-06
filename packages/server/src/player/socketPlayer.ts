@@ -54,7 +54,6 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
 };
 
 export class SocketPlayer extends Player {
-    public readonly isBot: boolean = false;
     public readonly isConnection = true;
 
     private socket: Socket;
@@ -144,9 +143,11 @@ export class SocketPlayer extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    protected onEnterReadyPhase(startedAtSeconds: number) {
+    protected onEnterReadyPhase() {
+        const { phaseStartedAtSeconds } = this.getGameState();
+
         const packet: PhaseUpdatePacket = {
-            startedAtSeconds,
+            startedAtSeconds: phaseStartedAtSeconds,
             phase: GamePhase.READY,
             payload: {
                 board: this.match.getBoard(),
@@ -228,12 +229,6 @@ export class SocketPlayer extends Player {
     private initialiseSocket(socket: Socket) {
         this.socket = socket;
         this.lastReceivedPacketIndex = 0;
-
-        socket.on("disconnect", () => {
-            if (this.battleTimeout) {
-                this.battleTimeout.resolve();
-            }
-        });
 
         this.incomingPacketRegistry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
             (opcode, handler) => socket.on(opcode, handler)

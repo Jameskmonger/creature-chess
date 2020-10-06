@@ -44,7 +44,6 @@ const getPieceCountForDefinition =
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
 
 export class BotPlayer extends Player {
-    public readonly isBot: boolean = true;
     private preferredColumnOrder: number[];
 
     constructor(name: string) {
@@ -74,9 +73,7 @@ export class BotPlayer extends Player {
         this.store.dispatch(readyUpAction());
     }
 
-    protected onEnterReadyPhase(startedAtSeconds: number) {
-        /* nothing required, we're a bot */
-    }
+    protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
 
     protected onEnterPlayingPhase(startedAtSeconds: number) {
         this.finishMatch();

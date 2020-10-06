@@ -92,7 +92,7 @@ export class Matchmaking {
                 }
             });
 
-        game.onFinish((winner, gamePlayers) => {
+        game.onFinish((winner) => {
             if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
             }
