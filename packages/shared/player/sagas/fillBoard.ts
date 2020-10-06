@@ -1,19 +1,20 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerState } from "../store";
-import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "packages/shared/game/store/actions";
-import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
+import { PlayerPieceLocation } from "@creature-chess/models";
 import { getMostExpensiveBenchPiece, getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../playerSelectors";
 import { playerDropPiece } from "../actions";
 
+const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
+type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;
+type FillBoardCommand = ({ type: FILL_BOARD_COMMAND });
+
+export const fillBoardCommand = (): FillBoardCommand => ({ type: FILL_BOARD_COMMAND });
+
 export const fillBoardSagaFactory = <TState extends PlayerState>() => {
     return function*() {
-        yield takeEvery<GamePhaseStartedAction>(
-            GAME_PHASE_STARTED,
-            function*({ payload: { phase } }) {
-                if (phase !== GamePhase.READY) {
-                    return;
-                }
-
+        yield takeEvery<FillBoardCommand>(
+            FILL_BOARD_COMMAND,
+            function*() {
                 const isAlive: boolean = yield select(isPlayerAlive);
 
                 if (!isAlive) {

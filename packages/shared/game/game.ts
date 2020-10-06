@@ -168,6 +168,8 @@ export class Game {
         ]);
 
         notifier.dispose();
+
+        this.getLivingPlayers().forEach(p => p.fillBoard());
     }
 
     private updateLivingPlayers() {

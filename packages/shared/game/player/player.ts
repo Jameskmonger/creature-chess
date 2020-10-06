@@ -25,6 +25,7 @@ import { playerBattle } from "./sagas/battle";
 import { GameState } from "../store/state";
 import { GamePhaseStartedAction, GAME_PHASE_STARTED } from "../store/actions";
 import { playerMatchRewards } from "./sagas/matchRewards";
+import { fillBoardCommand } from "packages/shared/player/sagas/fillBoard";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -135,6 +136,10 @@ export abstract class Player {
         this.store.dispatch(unlockBench());
 
         this.onEnterPreparingPhase();
+    }
+
+    public fillBoard() {
+        this.store.dispatch(fillBoardCommand());
     }
 
     public enterReadyPhase(match: Match) {
