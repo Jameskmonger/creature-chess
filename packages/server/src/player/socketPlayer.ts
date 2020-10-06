@@ -178,7 +178,8 @@ export class SocketPlayer extends Player {
                 case PLAYER_DROP_PIECE:
                 case READY_UP:
                 case PLAYER_SELL_PIECE:
-                case REROLL_CARDS: {
+                case REROLL_CARDS:
+                case BUY_XP: {
                     this.store.dispatch(action);
                     break;
                 }
@@ -186,10 +187,6 @@ export class SocketPlayer extends Player {
                     this.clearSocket();
 
                     this.quitGame();
-                    break;
-                }
-                case BUY_XP: {
-                    this.buyXp();
                     break;
                 }
                 default: {

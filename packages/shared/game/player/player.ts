@@ -272,30 +272,6 @@ export abstract class Player {
         this.events.emit(PlayerEvent.QUIT_GAME, this);
     }
 
-    protected buyXp = () => {
-        // todo put this all into a saga
-        if (isPlayerAlive(this.store.getState()) === false) {
-            log(`${this.name} attempted to buy xp, but they are dead`);
-            return;
-        }
-
-        if (this.getLevel() === MAX_PLAYER_LEVEL) {
-            log(`${this.name} attempted to buy xp, but they are at max level`);
-            return;
-        }
-
-        const money = this.store.getState().playerInfo.money;
-
-        // not enough money
-        if (money < BUY_XP_COST) {
-            log(`${this.name} attempted to buy xp costing $${BUY_XP_COST} but only had $${money}`);
-            return;
-        }
-
-        this.store.dispatch(addXpCommand(BUY_XP_AMOUNT));
-        this.store.dispatch(moneyUpdateAction(money - BUY_XP_COST));
-    }
-
     protected finishMatch = () => {
         if (this.match === null) {
             return;
