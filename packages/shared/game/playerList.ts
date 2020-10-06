@@ -61,9 +61,7 @@ export class PlayerList {
         this.events.on(PlayerListEvents.UPDATE, fn);
     }
 
-    public getValue(): PlayerListPlayer[] {
-        return this.players;
-    }
+    public getValue = (): PlayerListPlayer[] => this.players;
 
     public addPlayer(player: Player) {
         const streak = player.getStreak();

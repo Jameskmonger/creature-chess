@@ -3,7 +3,6 @@ import { Game } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { SocketPlayer } from "../player/socketPlayer";
-import { PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
 import { log } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
@@ -29,7 +28,7 @@ export class Matchmaking {
         if (playerInGame) {
             const { game, player } = playerInGame;
 
-            this.reconnectGamePlayer(game, socket, player);
+            player.reconnectSocket(socket);
 
             return;
         }
@@ -61,22 +60,6 @@ export class Matchmaking {
             game: matchingGame,
             player: playerInGame as SocketPlayer
         };
-    }
-
-    private reconnectGamePlayer(game: Game, socket: io.Socket, player: SocketPlayer) {
-        player.reconnectSocket(socket);
-
-        const fullGameState: PlayerGameState = {
-            id: game.id,
-
-            fullState: {
-                players: game.getPlayerList(),
-                phase: game.getCurrentGamePhaseUpdateForPlayer(player),
-                ...player.getGameState()
-            }
-        };
-
-        player.sendJoinGamePacket(fullGameState);
     }
 
     private getLobbyContainingPlayer(id: string) {

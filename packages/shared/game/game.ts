@@ -72,49 +72,6 @@ export class Game {
         });
     }
 
-    // todo use this everywhere
-    public getCurrentGamePhaseUpdateForPlayer(player: Player) {
-        const { round, phase, phaseStartedAtSeconds } = this.store.getState();
-
-        switch (phase) {
-            case GamePhase.DEAD:
-                return {
-                    startedAtSeconds: phaseStartedAtSeconds,
-                    phase: phase
-                };
-            case GamePhase.PREPARING:
-                return {
-                    startedAtSeconds: phaseStartedAtSeconds,
-                    phase: phase,
-                    payload: {
-                        round: round,
-                        pieces: {
-                            board: player.getBoard(),
-                            bench: player.getBench()
-                        },
-                        cards: player.getCards()
-                    }
-                };
-            case GamePhase.READY:
-                // todo figure out why match can be null at this point
-                const match = player.getMatch();
-                const board = match ? match.getBoard() : null;
-
-                return {
-                    startedAtSeconds: phaseStartedAtSeconds,
-                    phase: phase,
-                    payload: {
-                        board,
-                        bench: player.getBench(),
-                        opponentId: player.getMatch().away.id
-                    }
-                };
-            case GamePhase.PLAYING:
-            default:
-                return null;
-        }
-    }
-
     public onFinish(
         fn: (winner: Player, players: {
             id: string, name: string, isBot: boolean
@@ -143,6 +100,8 @@ export class Game {
         this.players.push(player);
         this.playerList.addPlayer(player);
         player.setDeck(this.deck);
+        player.setGetGameState(this.store.getState);
+        player.setGetPlayerListPlayers(this.playerList.getValue);
         player.setDefinitionProvider(this.definitionProvider);
         player.setGameOptions(this.options);
 
