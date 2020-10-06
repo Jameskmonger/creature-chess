@@ -45,5 +45,8 @@
     "redux-saga": "^1.0.2",
     "socket.io": "^2.2.0",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+		"nodemon": "^1.18.11"
   }
 }
