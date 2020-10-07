@@ -1,7 +1,6 @@
-import { shuffle } from "lodash";
+import shuffle = require("lodash.shuffle");
 import { Player } from "./player/player";
 import { randomFromArray } from "../utils";
-import { log } from "../log";
 
 export class OpponentProvider {
     private players: Player[];

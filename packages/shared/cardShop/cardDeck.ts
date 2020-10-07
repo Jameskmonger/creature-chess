@@ -1,5 +1,5 @@
 import uuid = require("uuid/v4");
-import { shuffle } from "lodash";
+import shuffle = require("lodash.shuffle");
 import { CreatureDefinition } from "@creature-chess/models/src/creatureDefinition";
 import { Card } from "@creature-chess/models/src/card";
 import { PieceModel } from "@creature-chess/models/src/piece";

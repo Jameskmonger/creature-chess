@@ -5,17 +5,24 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm ci --loglevel notice
 
+# package dependencies
+
+COPY packages/server-info/package*.json ./packages/server-info/
+COPY packages/auth-server/package*.json ./packages/auth-server/
+COPY packages/models/package*.json ./packages/models/
+COPY packages/data/package*.json ./packages/data/
+COPY packages/shared/package*.json ./packages/shared/
+
+COPY lerna.json ./
+RUN npm run bootstrap
+
 # common packages used by server
 # todo: find a way to automate this
 COPY packages/auth-server ./packages/auth-server
 COPY packages/models ./packages/models
 COPY packages/data ./packages/data
 COPY packages/shared ./packages/shared
-
 COPY packages/server-info ./packages/server-info
-
-COPY lerna.json .
-RUN npm run bootstrap
 
 COPY tsconfig.json .
 RUN npm run build:server-info
