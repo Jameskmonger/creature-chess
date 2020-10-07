@@ -4,7 +4,7 @@ import { AppState } from "../../../store";
 import { getPlayerById } from "../../../store/playerSelectors";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { PlayerName } from "./playerName";
-import { PlayerBattle, PlayerBattleStatus } from "@creature-chess/models/src/player-list-player";
+import { PlayerBattle, PlayerBattleStatus } from "@creature-chess/models";
 
 interface Props {
     playerId: string;

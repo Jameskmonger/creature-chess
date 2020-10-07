@@ -1,11 +1,5 @@
 import { TestRunner, TestSet } from "alsatian";
 import { TapBark } from "tap-bark";
-import { register } from "tsconfig-paths";
-
-// tslint:disable-next-line:no-var-requires
-const { compilerOptions } = require("./tsconfig.json");
-const { baseUrl, paths } = compilerOptions;
-register({ baseUrl, paths });
 
 const testType = process.argv[2];
 

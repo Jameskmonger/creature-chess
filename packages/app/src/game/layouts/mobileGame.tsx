@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
+import { getPlayerMoney } from "@creature-chess/shared";
 import { AppState } from "../../store";
 import { Overlay } from "../../ui/overlay";
 import { closeOverlay, openOverlay } from "../../ui/actions";

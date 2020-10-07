@@ -1,5 +1,4 @@
-import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
-import { ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions } from "@creature-chess/shared/networking/server-to-client-lobby";
+import { OutgoingPacketRegistry, ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions } from "@creature-chess/shared";
 import { Socket } from "socket.io";
 
 export enum LobbyMemberType {

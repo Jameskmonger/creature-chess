@@ -2,12 +2,10 @@ import * as React from "react";
 import { ProgressBar } from "../../../ui/display/progressBar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../../store";
-import { getXpToNextLevel } from "@creature-chess/shared/utils";
-import { GamePhase, Constants } from "@creature-chess/models";
+import { Constants } from "@creature-chess/models";
 import { PieceCount } from "./pieceCount";
-import { PlayerActions } from "@creature-chess/shared/player";
-import { getPlayerLevel, getPlayerXp } from "@creature-chess/shared/player/playerSelectors";
-import { MAX_PLAYER_LEVEL } from "@creature-chess/models/src/constants";
+import { PlayerActions, getPlayerLevel, getPlayerXp, getXpToNextLevel } from "@creature-chess/shared";
+import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 

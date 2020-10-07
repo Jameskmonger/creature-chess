@@ -2,11 +2,9 @@ import io = require("socket.io");
 import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
 import { EventEmitter } from "events";
-import { log } from "@creature-chess/shared/log";
+import { log, validateNickname, AuthenticateResponse } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
-import { AuthenticateResponse } from "@creature-chess/shared/networking/server-to-client";
 import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth-server";
-import { validateNickname } from "@creature-chess/shared/validation/nickname";
 
 /**
  * Listens for new connections to the server,
