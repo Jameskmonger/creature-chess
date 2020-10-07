@@ -4,8 +4,7 @@ export { randomFromArray, getXpToNextLevel } from "./utils";
 export { validateNickname } from "./validation";
 
 export {
-    BoardActions,
-    canDropPiece,
+    BoardCommands,
     boardReducer, BoardState
 } from "./board";
 
@@ -13,12 +12,12 @@ export {
     TurnSimulator, DefinitionProvider,
     GameActions,
     battle, startBattle,
-    BATTLE_FINISHED,
+    BATTLE_FINISH_EVENT,
     gameReducer, GameState, Game, Player,
-    getPiece, getAllPieces, getBoardPieceForPosition,
+    getPiece, getAllPieces, getBoardPieceForPosition, canDropPiece,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
-    PlayerInfoActions, PlayerInfoState, playerInfoReducer,
-    BenchActions, benchReducer, BenchState,
+    PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
+    BenchCommands, benchReducer, BenchState,
     PlayerActions, PlayerState, PlayerSagas
 } from "./game";
 

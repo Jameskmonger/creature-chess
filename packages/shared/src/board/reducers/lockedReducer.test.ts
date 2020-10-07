@@ -1,5 +1,5 @@
 import { TestFixture, Test, Expect } from "alsatian";
-import { lockBoard, unlockBoard } from "../actions";
+import { lockBoard, unlockBoard } from "../commands";
 import { locked } from "./lockedReducer";
 
 @TestFixture()

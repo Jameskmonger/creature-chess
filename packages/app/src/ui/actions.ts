@@ -19,6 +19,10 @@ export const JOIN_COMPLETE = "JOIN_COMPLETE";
 export type JOIN_COMPLETE = typeof JOIN_COMPLETE;
 export const JOIN_ERROR = "JOIN_ERROR";
 export type JOIN_ERROR = typeof JOIN_ERROR;
+export const FINISH_GAME = "FINISH_GAME";
+export type FINISH_GAME = typeof FINISH_GAME;
+export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
+export type PLAYERS_RESURRECTED = typeof PLAYERS_RESURRECTED;
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
 export type JoinCompleteAction = ({ type: JOIN_COMPLETE, payload: { gameId: string } });
@@ -29,6 +33,8 @@ export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { 
 export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type EnableDebugModeAction = ({ type: ENABLE_DEBUG_MODE });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
+export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
+export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] }});
 
 export const findGameAction = (serverIP: string): FindGameAction => ({
     type: FIND_GAME,
@@ -75,5 +81,19 @@ export const updateConnectionStatus = (status: ConnectionStatus): UpdateConnecti
     type: UPDATE_CONNECTION_STATUS,
     payload: {
         status
+    }
+});
+
+export const finishGameAction = (winnerName: string): FinishGameAction => ({
+    type: FINISH_GAME,
+    payload: {
+        winnerName
+    }
+});
+
+export const playersResurrected = (playerIds: string[]): PlayersResurrectedAction => ({
+    type: PLAYERS_RESURRECTED,
+    payload: {
+        playerIds
     }
 });

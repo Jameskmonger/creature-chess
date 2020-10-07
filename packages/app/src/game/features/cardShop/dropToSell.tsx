@@ -7,7 +7,7 @@ const DropToSell: React.FunctionComponent = () => {
     const dispatch = useDispatch();
     const [{ }, drop] = useDrop({
         accept: "Piece",
-        drop: item => dispatch(PlayerActions.playerSellPiece((item as any).piece.id)),
+        drop: item => dispatch(PlayerActions.playerSellPieceAction((item as any).piece.id)),
     });
 
     return (

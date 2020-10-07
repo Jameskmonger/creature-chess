@@ -2,7 +2,7 @@ import { TestFixture, Test, Expect } from "alsatian";
 import {
   initialiseBoard, removeBoardPiece, addBoardPiece, updateBoardPiece,
   updateBoardPieces, moveBoardPiece, removeBoardPieces
-} from "../actions";
+} from "../commands";
 import { piecePositions, PiecePositionsState } from "./piecePositionsReducer";
 import { pieceUtils } from "../../utils";
 import { createTileCoordinates } from "@creature-chess/models";
@@ -24,9 +24,9 @@ export class PiecePositionsReducerTests {
       }
     };
 
-    const action = initialiseBoard(pieces);
+    const command = initialiseBoard(pieces);
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "1,2": "123",
@@ -61,9 +61,9 @@ export class PiecePositionsReducerTests {
       }
     };
 
-    const action = initialiseBoard(pieces);
+    const command = initialiseBoard(pieces);
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "1,2": "123",
@@ -80,9 +80,9 @@ export class PiecePositionsReducerTests {
       "4,5": "456"
     };
 
-    const action = removeBoardPiece("123");
+    const command = removeBoardPiece("123");
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "4,5": "456"
@@ -97,9 +97,9 @@ export class PiecePositionsReducerTests {
       "4,5": "456"
     };
 
-    const action = removeBoardPieces(["123", "124"]);
+    const command = removeBoardPieces(["123", "124"]);
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "4,5": "456"
@@ -113,9 +113,9 @@ export class PiecePositionsReducerTests {
     };
 
     const addingPiece = pieceUtils.createMockPiece("456");
-    const action = addBoardPiece(addingPiece, 7, 7);
+    const command = addBoardPiece(addingPiece, 7, 7);
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "1,2": "123",
@@ -133,12 +133,12 @@ export class PiecePositionsReducerTests {
       "0,0": "123"
     };
 
-    const action = updateBoardPiece({
+    const command = updateBoardPiece({
       ...firstPiece,
       position: createTileCoordinates(0, 7)
     });
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "0,7": "123"
@@ -160,7 +160,7 @@ export class PiecePositionsReducerTests {
       "1,0": "456"
     };
 
-    const action = updateBoardPieces([
+    const command = updateBoardPieces([
       {
         ...firstPiece,
         position: createTileCoordinates(0, 1)
@@ -171,7 +171,7 @@ export class PiecePositionsReducerTests {
       }
     ]);
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "0,1": "123",
@@ -189,9 +189,9 @@ export class PiecePositionsReducerTests {
       "0,0": "123"
     };
 
-    const action = moveBoardPiece("123", { x: 0, y: 0 }, { x: 7, y: 3 });
+    const command = moveBoardPiece("123", { x: 0, y: 0 }, { x: 7, y: 3 });
 
-    const result = piecePositions(state, action);
+    const result = piecePositions(state, command);
 
     Expect(result).toEqual({
       "0,0": null,

@@ -126,7 +126,7 @@ export class BotPlayer extends Player {
 
             // sell a piece to make room
             if (this.atPieceLimit() || !canCurrentlyAfford) {
-                this.store.dispatch(PlayerActions.playerSellPiece(worstPiece.id));
+                this.store.dispatch(PlayerActions.playerSellPieceAction(worstPiece.id));
             }
 
             this.buyCardIfBelowLimit(card);
@@ -138,7 +138,7 @@ export class BotPlayer extends Player {
             return;
         }
 
-        this.store.dispatch(PlayerActions.buyCard(card.index));
+        this.store.dispatch(PlayerActions.buyCardAction(card.index));
     }
 
     private atPieceLimit() {
@@ -161,7 +161,7 @@ export class BotPlayer extends Player {
                 }
             };
 
-            this.store.dispatch(PlayerActions.playerDropPiece(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition));
+            this.store.dispatch(PlayerActions.playerDropPieceAction(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition));
         }
     }
 

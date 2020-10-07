@@ -1,5 +1,5 @@
 import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
-import { BoardState, boardReducer, BoardActions } from "../../../board";
+import { BoardState, boardReducer, BoardCommands } from "../../../board";
 import { getStats } from "../../../utils/piece-utils";
 import { isOvercomeBy, isGeneratedBy } from "../../../utils/get-type-attack-bonus";
 import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
@@ -43,7 +43,7 @@ export class TurnSimulator {
         const attackerStats = getStats(attacker);
 
         if (attacker.battleBrain.removeFromBoardAtTurn === currentTurn) {
-            return boardReducer(board, BoardActions.removeBoardPiece(pieceId));
+            return boardReducer(board, BoardCommands.removeBoardPiece(pieceId));
         }
 
         if (attacker.currentHealth === 0) {
@@ -52,7 +52,7 @@ export class TurnSimulator {
             }
 
             attacker.battleBrain.removeFromBoardAtTurn = currentTurn + DYING_DURATION;
-            return boardReducer(board, BoardActions.updateBoardPiece(attacker));
+            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
         }
 
         const cooldown = getCooldownForSpeed(attackerStats.speed);
@@ -71,39 +71,39 @@ export class TurnSimulator {
             // if there's an enemy in range but we can't attack it yet, just wait for cooldown
             if (attacker.battleBrain.canAttackAtTurn > currentTurn) {
                 // todo check if attacker has been changed
-                return boardReducer(board, BoardActions.updateBoardPiece(attacker));
+                return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
             }
 
             // if the enemy can't be attacked yet, wait
             if (attackableEnemy.battleBrain.canBeAttackedAtTurn > currentTurn) {
-                return boardReducer(board, BoardActions.updateBoardPiece(attacker));
+                return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
             }
 
             const attackResult = this.attack(attacker, attackableEnemy);
 
             // if no attack result, no need to update defender
             if (attackResult == null) {
-                return boardReducer(board, BoardActions.updateBoardPiece(attacker));
+                return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
             }
 
             attackResult.attacker.targetPieceId = attackResult.defender.id;
 
             attacker.battleBrain.canAttackAtTurn = currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
 
-            return boardReducer(board, BoardActions.updateBoardPieces([attackResult.attacker, attackResult.defender]));
+            return boardReducer(board, BoardCommands.updateBoardPieces([attackResult.attacker, attackResult.defender]));
         }
 
         // clear target if they're no longer in attack range
         attacker.targetPieceId = null;
 
         if (attacker.battleBrain.canMoveAtTurn > currentTurn) {
-            return boardReducer(board, BoardActions.updateBoardPiece(attacker));
+            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
         }
 
         const newPosition = getNewPiecePosition(attacker, board);
 
         if (newPosition === null || newPosition.nextPosition === null) {
-            return boardReducer(board, BoardActions.updateBoardPiece(attacker));
+            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
         }
 
         const { nextPosition, targetPosition } = newPosition;
@@ -117,7 +117,7 @@ export class TurnSimulator {
         attacker.battleBrain.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
         attacker.battleBrain.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 
-        return boardReducer(board, BoardActions.updateBoardPiece(attacker));
+        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
     }
 
     private getNewAttackerFacingAway(oldFacingAway: boolean, direction: TileCoordinates) {

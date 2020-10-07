@@ -3,9 +3,9 @@ import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import { GRID_SIZE } from "@creature-chess/models";
-import { boardReducer, BoardState, BoardActions, mergeBoards } from "../../board";
+import { boardReducer, BoardState, BoardCommands, mergeBoards } from "../../board";
 import { Player } from "../player";
-import { TurnSimulator, battle, startBattle, BattleAction, BATTLE_FINISHED } from "./combat";
+import { TurnSimulator, battle, startBattle, BattleFinishEvent, BATTLE_FINISH_EVENT } from "./combat";
 
 interface MatchState {
     board: BoardState;
@@ -33,7 +33,7 @@ export class Match {
 
         const board = mergeBoards(GRID_SIZE, home.getBoard().pieces, away.getBoard().pieces);
 
-        this.store.dispatch(BoardActions.initialiseBoard(board));
+        this.store.dispatch(BoardCommands.initialiseBoard(board));
     }
 
     public onClientFinishMatch() {
@@ -67,8 +67,8 @@ export class Match {
         const rootSaga = function*() {
             yield all([
                 yield fork(battle, _this.turnSimulator, _this.turnCount, _this.turnDuration),
-                yield takeEvery<BattleAction>(
-                    BATTLE_FINISHED,
+                yield takeEvery<BattleFinishEvent>(
+                    BATTLE_FINISH_EVENT,
                     function*() {
                         _this.onServerFinishMatch();
                     }

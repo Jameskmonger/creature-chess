@@ -1,13 +1,13 @@
 import { TestFixture, Test, Expect } from "alsatian";
 import { createTileCoordinates } from "@creature-chess/models";
 import { PiecesState, pieces } from "./piecesReducer";
-import { removeBenchPiece, initialiseBench, addBenchPiece, moveBenchPiece, removeBenchPieces } from "../actions";
+import { removeBenchPieceCommand, initialiseBenchCommand, addBenchPieceCommand, moveBenchPieceCommand, removeBenchPiecesCommand } from "../commands";
 import { pieceUtils } from "../../../../utils";
 
 @TestFixture()
 export class PiecesReducerTests {
   @Test()
-  public initialiseBenchShouldSetPieces() {
+  public initialiseBenchCommandShouldSetPieces() {
     const pieceA = pieceUtils.createMockPiece("123");
     const pieceB = pieceUtils.createMockPiece("456");
 
@@ -16,12 +16,12 @@ export class PiecesReducerTests {
       pieceA, null, null, pieceB
     ];
 
-    const action = initialiseBench({
+    const command = initialiseBenchCommand({
       pieces: piecesState,
       locked: false
     });
 
-    const result = pieces([], action);
+    const result = pieces([], command);
 
     Expect(result).toEqual(piecesState);
   }
@@ -35,7 +35,7 @@ export class PiecesReducerTests {
       keepingPiece, null, null, null
     ];
 
-    const result = pieces(state, removeBenchPiece("123"));
+    const result = pieces(state, removeBenchPieceCommand("123"));
 
     Expect(result).toEqual([
       null, null, null, null,
@@ -53,7 +53,7 @@ export class PiecesReducerTests {
       keepingPiece, null, null, null
     ];
 
-    const result = pieces(state, removeBenchPieces([ "123", "124" ]));
+    const result = pieces(state, removeBenchPiecesCommand([ "123", "124" ]));
 
     Expect(result).toEqual([
       null, null, null, null,
@@ -77,7 +77,7 @@ export class PiecesReducerTests {
       ...pieceUtils.createMockPiece("456"),
       position: createTileCoordinates(3, 4)
     };
-    const action = addBenchPiece(addingPiece, null);
+    const command = addBenchPieceCommand(addingPiece, null);
 
     const expectedPiece = {
       ...addingPiece,
@@ -85,7 +85,7 @@ export class PiecesReducerTests {
       facingAway: false
     };
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result).toEqual([
       firstPiece, expectedPiece, null, null,
@@ -109,7 +109,7 @@ export class PiecesReducerTests {
       ...pieceUtils.createMockPiece("456"),
       position: createTileCoordinates(3, 4)
     };
-    const action = addBenchPiece(addingPiece, 5);
+    const command = addBenchPieceCommand(addingPiece, 5);
 
     const expectedPiece = {
       ...addingPiece,
@@ -117,7 +117,7 @@ export class PiecesReducerTests {
       facingAway: false
     };
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result).toEqual([
       firstPiece, null, null, null,
@@ -126,7 +126,7 @@ export class PiecesReducerTests {
   }
 
   @Test()
-  public moveBenchPieceShouldMovePiece() {
+  public moveBenchPieceCommandShouldMovePiece() {
     const piece = {
       ...pieceUtils.createMockPiece("123"),
       position: createTileCoordinates(3, null)
@@ -136,9 +136,9 @@ export class PiecesReducerTests {
       null, null, null, null
     ];
 
-    const action = moveBenchPiece("123", { slot: 3 }, { slot: 7 });
+    const command = moveBenchPieceCommand("123", { slot: 3 }, { slot: 7 });
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     const expectedPiece = {
       ...piece,

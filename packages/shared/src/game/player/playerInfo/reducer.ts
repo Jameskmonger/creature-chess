@@ -1,9 +1,9 @@
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, Card, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import {
-    MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT,
-    LEVEL_UPDATE, CARDS_UPDATED, HEALTH_UPDATED, ROUND_DIED_AT_UPDATED, STREAK_UPDATED, STATUS_UPDATED, BATTLE_UPDATED
-} from "./actions";
-import { READY_UP } from "../actions";
+    UPDATE_MONEY_COMMAND, UPDATE_SHOP_LOCK_COMMAND, PlayerInfoCommand, UPDATE_OPPONENT_COMMAND, CLEAR_OPPONENT_COMMAND,
+    UPDATE_LEVEL_COMMAND, UPDATE_CARDS_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_ROUND_DIED_AT_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_STATUS_COMMAND, UPDATE_BATTLE_COMMAND
+} from "./commands";
+import { READY_UP_ACTION } from "../actions";
 
 export interface PlayerStreak {
     type: StreakType;
@@ -46,75 +46,75 @@ const initialState: PlayerInfoState = {
     cards: []
 };
 
-export function playerInfoReducer(state: PlayerInfoState = initialState, action: GameAction): PlayerInfoState {
-    switch (action.type) {
-        case STATUS_UPDATED: {
+export function playerInfoReducer(state: PlayerInfoState = initialState, command: PlayerInfoCommand): PlayerInfoState {
+    switch (command.type) {
+        case UPDATE_STATUS_COMMAND: {
             return {
                 ...state,
-                status: action.payload.status
+                status: command.payload.status
             }
         };
-        case BATTLE_UPDATED: {
+        case UPDATE_BATTLE_COMMAND: {
             return {
                 ...state,
-                battle: action.payload.battle
+                battle: command.payload.battle
             }
         };
-        case HEALTH_UPDATED: {
+        case UPDATE_HEALTH_COMMAND: {
             return {
                 ...state,
-                health: action.payload.health
+                health: command.payload.health
             };
         }
-        case STREAK_UPDATED: {
+        case UPDATE_STREAK_COMMAND: {
             return {
                 ...state,
                 streak: {
-                    amount: action.payload.amount,
-                    type: action.payload.type
+                    amount: command.payload.amount,
+                    type: command.payload.type
                 }
             };
         }
-        case ROUND_DIED_AT_UPDATED: {
+        case UPDATE_ROUND_DIED_AT_COMMAND: {
             return {
                 ...state,
-                roundDiedAt: action.payload.roundDiedAt
+                roundDiedAt: command.payload.roundDiedAt
             };
         }
-        case CARDS_UPDATED:
+        case UPDATE_CARDS_COMMAND:
             return {
                 ...state,
-                cards: action.payload.cards
+                cards: command.payload.cards
             };
-        case LEVEL_UPDATE:
+        case UPDATE_LEVEL_COMMAND:
             return {
                 ...state,
-                level: action.payload.level,
-                xp: action.payload.xp
+                level: command.payload.level,
+                xp: command.payload.xp
             };
-        case MONEY_UPDATE:
+        case UPDATE_MONEY_COMMAND:
             return {
                 ...state,
-                money: action.payload.money
+                money: command.payload.money
             };
-        case SET_OPPONENT:
+        case UPDATE_OPPONENT_COMMAND:
             return {
                 ...state,
-                opponentId: action.payload.opponentId,
+                opponentId: command.payload.opponentId,
                 ready: false
             };
-        case CLEAR_OPPONENT:
+        case CLEAR_OPPONENT_COMMAND:
             return {
                 ...state,
                 opponentId: null
             };
-        case SHOP_LOCK_UPDATED: {
+        case UPDATE_SHOP_LOCK_COMMAND: {
             return {
                 ...state,
-                shopLocked: action.payload.locked
+                shopLocked: command.payload.locked
             };
         };
-        case READY_UP:
+        case READY_UP_ACTION:
             return {
                 ...state,
                 ready: true

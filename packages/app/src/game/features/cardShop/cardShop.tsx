@@ -24,7 +24,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
             return null;
         }
 
-        const onClick = () => dispatch(PlayerActions.buyCard(index));
+        const onClick = () => dispatch(PlayerActions.buyCardAction(index));
 
         return (
             <Card

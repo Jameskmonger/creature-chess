@@ -2,7 +2,7 @@ import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerState } from "../store";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { getMostExpensiveBenchPiece, getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../playerSelectors";
-import { playerDropPiece } from "../actions";
+import { playerDropPieceAction } from "../actions";
 
 const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
 type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;
@@ -56,7 +56,7 @@ export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: strin
                         }
                     };
 
-                    yield put(playerDropPiece(benchPiece.id, fromLocation, toLocation));
+                    yield put(playerDropPieceAction(benchPiece.id, fromLocation, toLocation));
                 }
             }
         );

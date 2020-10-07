@@ -1,10 +1,10 @@
 import { Reducer } from "redux";
 import { createTileCoordinates, IndexedPieces } from "@creature-chess/models";
 import {
-  BoardAction,
-  REMOVE_BOARD_PIECE, INITIALISE_BOARD, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE,
-  UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE, REMOVE_BOARD_PIECES
-} from "../actions";
+  BoardCommand,
+  REMOVE_BOARD_PIECE_COMMAND, INITIALISE_BOARD_COMMAND, ADD_BOARD_PIECE_COMMAND, UPDATE_BOARD_PIECE_COMMAND,
+  UPDATE_BOARD_PIECES_COMMAND, MOVE_BOARD_PIECE_COMMAND, REMOVE_BOARD_PIECES_COMMAND
+} from "../commands";
 
 type PiecesState = IndexedPieces;
 
@@ -24,34 +24,34 @@ const removePieceByIdList = (state: PiecesState, pieceIds: string[]) => {
   return newState;
 };
 
-const pieces: Reducer<PiecesState, BoardAction> = (state = initialState, action) => {
-  switch (action.type) {
-    case INITIALISE_BOARD: {
-      return { ...action.payload.pieces };
+const pieces: Reducer<PiecesState, BoardCommand> = (state = initialState, command) => {
+  switch (command.type) {
+    case INITIALISE_BOARD_COMMAND: {
+      return { ...command.payload.pieces };
     }
-    case UPDATE_BOARD_PIECE: {
-      const { piece } = action.payload;
+    case UPDATE_BOARD_PIECE_COMMAND: {
+      const { piece } = command.payload;
 
       return {
         ...state,
         [piece.id]: piece
       };
     }
-    case UPDATE_BOARD_PIECES: {
+    case UPDATE_BOARD_PIECES_COMMAND: {
       const newState = { ...state };
 
-      for (const piece of action.payload.pieces) {
+      for (const piece of command.payload.pieces) {
         newState[piece.id] = piece;
       }
 
       return newState;
     }
-    case REMOVE_BOARD_PIECE:
-      return removePieceByIdList(state, [action.payload.pieceId]);
-    case REMOVE_BOARD_PIECES:
-      return removePieceByIdList(state, action.payload.pieceIds);
-    case ADD_BOARD_PIECE: {
-      const { piece, x, y } = action.payload;
+    case REMOVE_BOARD_PIECE_COMMAND:
+      return removePieceByIdList(state, [command.payload.pieceId]);
+    case REMOVE_BOARD_PIECES_COMMAND:
+      return removePieceByIdList(state, command.payload.pieceIds);
+    case ADD_BOARD_PIECE_COMMAND: {
+      const { piece, x, y } = command.payload;
       return {
         ...state,
         [piece.id]: {
@@ -61,8 +61,8 @@ const pieces: Reducer<PiecesState, BoardAction> = (state = initialState, action)
         }
       };
     }
-    case MOVE_BOARD_PIECE: {
-      const { pieceId, from, to } = action.payload;
+    case MOVE_BOARD_PIECE_COMMAND: {
+      const { pieceId, from, to } = command.payload;
 
       const piece = state[pieceId];
 

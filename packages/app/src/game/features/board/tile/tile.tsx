@@ -62,7 +62,7 @@ const onDropPiece = (dispatch: Dispatch, piece: PieceModel, type: TileType, x: n
             })
     );
 
-    dispatch(PlayerActions.playerDropPiece(piece.id, from, to));
+    dispatch(PlayerActions.playerDropPieceAction(piece.id, from, to));
     dispatch(clearSelectedPiece());
 };
 

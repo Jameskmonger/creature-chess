@@ -5,7 +5,7 @@ import { Overlay } from "../../../ui/overlay";
 import { closeOverlay } from "../../../ui/actions";
 
 export const closeShopOnFirstBuy = function*() {
-    yield take<PlayerActions.BuyCardAction>(PlayerActions.BUY_CARD);
+    yield take<PlayerActions.BuyCardAction>(PlayerActions.BUY_CARD_ACTION);
 
     const shopIsOpen = yield select((state: AppState) => state.ui.currentOverlay === Overlay.SHOP);
 

@@ -4,7 +4,7 @@ import { takeEvery } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 
-import { BoardActions } from "../../board";
+import { BoardCommands } from "../../board";
 import { GameState } from "../store/state";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 import { CardDeck } from "../cardDeck";
@@ -14,10 +14,10 @@ import {
     playerStreak, playerBattle, playerMatchRewards, sellPiece, rerollCards,
     subtractHealthCommand, fillBoardCommand
 } from "./sagas";
-import { AfterRerollCardsAction, AfterSellPieceAction, AFTER_REROLL_CARDS, AFTER_SELL_PIECE, playerFinishMatch } from "./actions";
+import { AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT, playerFinishMatchEvent } from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
-import { PlayerInfoActions } from "./playerInfo";
-import { BenchActions } from "./bench";
+import { PlayerInfoCommands } from "./playerInfo";
+import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces } from "./pieceSelectors";
 
@@ -57,8 +57,8 @@ export abstract class Player {
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.afterSellPieceSaga());
-        this.sagaMiddleware.run(this.afterRerollCardsSaga());
+        this.sagaMiddleware.run(this.afterSellPieceEventSaga());
+        this.sagaMiddleware.run(this.afterRerollCardsEventSaga());
         this.sagaMiddleware.run(sellPiece);
         this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
@@ -129,8 +129,8 @@ export abstract class Player {
             this.rerollCards();
         }
 
-        this.store.dispatch(PlayerInfoActions.clearOpponent());
-        this.store.dispatch(BenchActions.unlockBench());
+        this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
+        this.store.dispatch(BenchCommands.unlockBenchCommand());
 
         this.onEnterPreparingPhase();
     }
@@ -140,9 +140,9 @@ export abstract class Player {
     }
 
     public enterReadyPhase(match: Match) {
-        this.store.dispatch(BenchActions.lockBench());
+        this.store.dispatch(BenchCommands.lockBenchCommand());
 
-        this.store.dispatch(PlayerInfoActions.setOpponent(match.away.id));
+        this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(match.away.id));
         this.match = match;
 
         this.onEnterReadyPhase();
@@ -166,7 +166,7 @@ export abstract class Player {
         const damage = awayScore * 3;
         this.store.dispatch(subtractHealthCommand(this.getGameState().round, damage));
 
-        this.store.dispatch(playerFinishMatch(homeScore, awayScore));
+        this.store.dispatch(playerFinishMatchEvent(homeScore, awayScore));
 
         return {
             homePlayer: this,
@@ -190,16 +190,16 @@ export abstract class Player {
         const cards = this.store.getState().playerInfo.cards;
 
         const newCards = this.deck.reroll(cards, this.getLevel(), 5);
-        this.store.dispatch(PlayerInfoActions.cardsUpdated(newCards));
+        this.store.dispatch(PlayerInfoCommands.updateCardsCommand(newCards));
     }
 
     public clearPieces() {
         const pieces = getAllPieces(this.store.getState());
 
-        this.store.dispatch(BoardActions.initialiseBoard({}));
+        this.store.dispatch(BoardCommands.initialiseBoard({}));
 
         // todo this is ugly
-        this.store.dispatch(BenchActions.initialiseBench({
+        this.store.dispatch(BenchCommands.initialiseBenchCommand({
             pieces: [],
             locked: this.store.getState().bench.locked
         }));
@@ -209,7 +209,7 @@ export abstract class Player {
         }
 
         const cards = this.store.getState().playerInfo.cards;
-        this.store.dispatch(PlayerInfoActions.cardsUpdated([]));
+        this.store.dispatch(PlayerInfoCommands.updateCardsCommand([]));
         this.deck.addCards(cards);
 
         this.deck.shuffle();
@@ -221,8 +221,8 @@ export abstract class Player {
     }
 
     public resurrect(startingHealth: number) {
-        this.store.dispatch(PlayerInfoActions.roundDiedAtUpdated(null));
-        this.store.dispatch(PlayerInfoActions.healthUpdated(startingHealth));
+        this.store.dispatch(PlayerInfoCommands.updateRoundDiedAtCommand(null));
+        this.store.dispatch(PlayerInfoCommands.updateHealthCommand(startingHealth));
     }
 
     public isAlive() {
@@ -260,7 +260,7 @@ export abstract class Player {
     protected abstract onDeath(phaseStartedAt: number);
 
     protected quitGame() {
-        this.store.dispatch(PlayerInfoActions.statusUpdated(PlayerStatus.QUIT));
+        this.store.dispatch(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
 
         // todo combine these
         this.events.emit(PlayerEvent.QUIT_GAME, this);
@@ -274,15 +274,15 @@ export abstract class Player {
         this.match.onClientFinishMatch();
     }
 
-    private afterSellPieceSaga() {
+    private afterSellPieceEventSaga() {
         const addPieceToDeck = (piece: PieceModel) => {
             this.deck.addPiece(piece);
             this.deck.shuffle();
         };
 
         return function*() {
-            yield takeEvery<AfterSellPieceAction>(
-                AFTER_SELL_PIECE,
+            yield takeEvery<AfterSellPieceEvent>(
+                AFTER_SELL_PIECE_EVENT,
                 function*({ payload: { piece } }) {
                     addPieceToDeck(piece);
                 }
@@ -290,12 +290,12 @@ export abstract class Player {
         };
     }
 
-    private afterRerollCardsSaga() {
+    private afterRerollCardsEventSaga() {
         const thisRerollCards = this.rerollCards;
 
         return function*() {
-            yield takeEvery<AfterRerollCardsAction>(
-                AFTER_REROLL_CARDS,
+            yield takeEvery<AfterRerollCardsEvent>(
+                AFTER_REROLL_CARDS_EVENT,
                 function*() {
                     thisRerollCards();
                 }

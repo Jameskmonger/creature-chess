@@ -1,4 +1,4 @@
-import { GameAction, GAME_PHASE_STARTED } from "./actions";
+import { GameCommand, START_GAME_PHASE_COMMAND } from "./commands";
 import { GameState } from "./state";
 
 export const initialState: GameState = {
@@ -7,22 +7,22 @@ export const initialState: GameState = {
     phaseStartedAtSeconds: null,
 };
 
-export function reducer(state: GameState = initialState, action: GameAction): GameState {
-    switch (action.type) {
-        case GAME_PHASE_STARTED:
-            if (action.payload.round) {
+export function reducer(state: GameState = initialState, command: GameCommand): GameState {
+    switch (command.type) {
+        case START_GAME_PHASE_COMMAND:
+            if (command.payload.round) {
                 return {
                     ...state,
-                    phase: action.payload.phase,
-                    phaseStartedAtSeconds: Math.floor(action.payload.startedAt),
-                    round: action.payload.round
+                    phase: command.payload.phase,
+                    phaseStartedAtSeconds: Math.floor(command.payload.startedAt),
+                    round: command.payload.round
                 };
             }
 
             return {
                 ...state,
-                phase: action.payload.phase,
-                phaseStartedAtSeconds: Math.floor(action.payload.startedAt)
+                phase: command.payload.phase,
+                phaseStartedAtSeconds: Math.floor(command.payload.startedAt)
             };
         default:
             return state;
