@@ -17,7 +17,7 @@ import {
     ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements
 } from "@creature-chess/shared";
 import { AuthSelectors } from "../../../auth";
-import { clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay, updateConnectionStatus } from "../../../ui/actions";
+import { clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay, updateConnectionStatus, finishGameAction } from "../../../ui/actions";
 import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
 import { GamePhase } from "@creature-chess/models";
 import { Overlay } from "../../../ui/overlay";
@@ -207,7 +207,7 @@ const subscribe = (
             (packet) => {
                 log("[FINISH_GAME]", packet);
 
-                emit(GameActions.finishGameAction(packet.winnerName));
+                emit(finishGameAction(packet.winnerName));
 
                 socket.close();
             }

@@ -4,14 +4,11 @@ export const START_GAME_PHASE_COMMAND = "START_GAME_PHASE_COMMAND";
 export type START_GAME_PHASE_COMMAND = typeof START_GAME_PHASE_COMMAND;
 export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
 export type PLAYERS_RESURRECTED = typeof PLAYERS_RESURRECTED;
-export const FINISH_GAME = "FINISH_GAME";
-export type FINISH_GAME = typeof FINISH_GAME;
 
 export type StartGamePhaseCommand = ({
     type: START_GAME_PHASE_COMMAND,
     payload: { phase: GamePhase, startedAt: number, round?: number }
 });
-export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
 export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] }});
 
 export type GameAction = StartGamePhaseCommand;
@@ -30,12 +27,5 @@ export const playersResurrected = (playerIds: string[]): PlayersResurrectedActio
     type: PLAYERS_RESURRECTED,
     payload: {
         playerIds
-    }
-});
-
-export const finishGameAction = (winnerName: string): FinishGameAction => ({
-    type: FINISH_GAME,
-    payload: {
-        winnerName
     }
 });
