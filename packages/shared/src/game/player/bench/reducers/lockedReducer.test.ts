@@ -1,5 +1,5 @@
 import { TestFixture, Test, Expect } from "alsatian";
-import { lockBench, unlockBench } from "../actions";
+import { lockBenchCommand, unlockBenchCommand } from "../commands";
 import { locked } from "./lockedReducer";
 
 @TestFixture()
@@ -12,15 +12,15 @@ export class LockedReducerTests {
   }
 
   @Test()
-  public lockBenchShouldReturnTrue() {
-    const result = locked(false, lockBench());
+  public lockBenchCommandShouldReturnTrue() {
+    const result = locked(false, lockBenchCommand());
 
     Expect(result).toEqual(true);
   }
 
   @Test()
-  public unlockBenchShouldReturnFalse() {
-    const result = locked(true, unlockBench());
+  public unlockBenchCommandShouldReturnFalse() {
+    const result = locked(true, unlockBenchCommand());
 
     Expect(result).toEqual(false);
   }

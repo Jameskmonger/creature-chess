@@ -17,7 +17,7 @@ import {
 import { AfterRerollCardsAction, AfterSellPieceAction, AFTER_REROLL_CARDS, AFTER_SELL_PIECE, playerFinishMatch } from "./actions";
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
-import { BenchActions } from "./bench";
+import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces } from "./pieceSelectors";
 
@@ -130,7 +130,7 @@ export abstract class Player {
         }
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
-        this.store.dispatch(BenchActions.unlockBench());
+        this.store.dispatch(BenchCommands.unlockBenchCommand());
 
         this.onEnterPreparingPhase();
     }
@@ -140,7 +140,7 @@ export abstract class Player {
     }
 
     public enterReadyPhase(match: Match) {
-        this.store.dispatch(BenchActions.lockBench());
+        this.store.dispatch(BenchCommands.lockBenchCommand());
 
         this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(match.away.id));
         this.match = match;
@@ -199,7 +199,7 @@ export abstract class Player {
         this.store.dispatch(BoardActions.initialiseBoard({}));
 
         // todo this is ugly
-        this.store.dispatch(BenchActions.initialiseBench({
+        this.store.dispatch(BenchCommands.initialiseBenchCommand({
             pieces: [],
             locked: this.store.getState().bench.locked
         }));

@@ -4,7 +4,7 @@ import { PlayerPieceLocation } from "@creature-chess/models";
 import { getFirstEmptyBenchSlot, BoardActions } from "../../../board";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../utils/piece-utils";
-import { addBenchPiece } from "../bench/actions";
+import { addBenchPieceCommand } from "../bench/commands";
 import { PlayerState } from "../store";
 import { log } from "../../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
@@ -76,7 +76,7 @@ export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvid
                 if (destination.type === "board") {
                     yield put(BoardActions.addBoardPiece(piece, destination.location.x, destination.location.y));
                 } else if (destination.type === "bench") {
-                    yield put(addBenchPiece(piece, destination.location.slot));
+                    yield put(addBenchPieceCommand(piece, destination.location.slot));
                 }
 
                 yield put(updateMoneyCommand(money - card.cost));

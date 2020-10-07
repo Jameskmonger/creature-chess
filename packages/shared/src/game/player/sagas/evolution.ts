@@ -2,7 +2,7 @@ import { takeLatest, select, take, delay, put } from "@redux-saga/core/effects";
 import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { BenchState } from "../bench";
 import { BoardState } from "../../../board";
-import { AddBenchPieceAction, addBenchPiece, removeBenchPiece, removeBenchPieces, ADD_BENCH_PIECE } from "../bench/actions";
+import { AddBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, ADD_BENCH_PIECE_COMMAND } from "../bench/commands";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
 import { BoardActions } from "../../../board";
 import * as pieceSelectors from "../pieceSelectors";
@@ -23,10 +23,10 @@ const pieceCanEvolve = (piece: PieceModel) => {
 
 export const evolutionSagaFactory = <TState extends State>() => {
     return function*() {
-        yield takeLatest<AddBenchPieceAction | UpdateBoardPieceAction>(
+        yield takeLatest<AddBenchPieceCommand | UpdateBoardPieceAction>(
             // need to check when bench/board pieces are added (could have come from shop)
             // or when board piece is updated (could be due to a previous evolution)
-            [ADD_BENCH_PIECE, BoardActions.ADD_BOARD_PIECE, BoardActions.UPDATE_BOARD_PIECE],
+            [ADD_BENCH_PIECE_COMMAND, BoardActions.ADD_BOARD_PIECE, BoardActions.UPDATE_BOARD_PIECE],
             function*({ payload: { piece } }) {
                 if (!pieceCanEvolve(piece)) {
                     return;
@@ -71,7 +71,7 @@ export const evolutionSagaFactory = <TState extends State>() => {
                     yield put(removeBoardPieces(boardPieceIds));
 
                     const benchPieceIds = matchingBenchPieces.map(p => p.id);
-                    yield put(removeBenchPieces([...benchPieceIds, piece.id]));
+                    yield put(removeBenchPiecesCommand([...benchPieceIds, piece.id]));
 
                     const newPiece = {
                         ...pieceToReplace,
@@ -82,7 +82,7 @@ export const evolutionSagaFactory = <TState extends State>() => {
                 } else {
                     // otherwise replace the just-added bench piece
                     const benchPieceIds = matchingBenchPieces.map(p => p.id);
-                    yield put(removeBenchPieces(benchPieceIds));
+                    yield put(removeBenchPiecesCommand(benchPieceIds));
 
                     const newPiece = {
                         ...piece,
@@ -90,8 +90,8 @@ export const evolutionSagaFactory = <TState extends State>() => {
                     };
 
                     // todo make updateBenchPiece action
-                    yield put(removeBenchPiece(piece.id));
-                    yield put(addBenchPiece(newPiece, null));
+                    yield put(removeBenchPieceCommand(piece.id));
+                    yield put(addBenchPieceCommand(newPiece, null));
                 }
             }
         );

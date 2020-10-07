@@ -7,7 +7,7 @@ import { AppState } from "../../../store/state";
 import { signIn } from "../../../auth/auth0";
 import {
     BoardActions,
-    PlayerActions, PlayerInfoCommands, BenchActions, GameActions,
+    PlayerActions, PlayerInfoCommands, BenchCommands, GameActions,
     BATTLE_FINISHED, startBattle,
 
     validateNickname,
@@ -115,7 +115,7 @@ const subscribe = (
                         const { cards, pieces: { board, bench } } = packet.payload;
 
                         emit(BoardActions.initialiseBoard(board.pieces));
-                        emit(BenchActions.initialiseBench(bench));
+                        emit(BenchCommands.initialiseBenchCommand(bench));
                         emit(PlayerInfoCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
                         emit(BoardActions.unlockBoard());
@@ -130,7 +130,7 @@ const subscribe = (
                             emit(BoardActions.initialiseBoard(board.pieces));
                         }
 
-                        emit(BenchActions.initialiseBench(bench));
+                        emit(BenchCommands.initialiseBenchCommand(bench));
                         emit(BoardActions.lockBoard());
                         emit(closeOverlay());
                         emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
@@ -192,7 +192,7 @@ const subscribe = (
                 emit(playerListUpdated(players));
                 emit(PlayerInfoCommands.updateLevelCommand(level, xp));
                 emit(BoardActions.initialiseBoard(board));
-                emit(BenchActions.initialiseBench(bench));
+                emit(BenchCommands.initialiseBenchCommand(bench));
 
                 if (phase) {
                     emit(GameActions.gamePhaseStarted(phase.phase, phase.startedAtSeconds));

@@ -5,7 +5,7 @@ import { getPiecesForStage } from "../../../utils";
 import { PlayerState } from "../store";
 import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../actions";
 import { updateMoneyCommand } from "../playerInfo/commands";
-import { removeBenchPiece } from "../bench/actions";
+import { removeBenchPieceCommand } from "../bench/commands";
 import { BoardActions } from "../../../board";
 import { afterSellPiece } from "../actions";
 
@@ -28,7 +28,7 @@ export const sellPiece = function*() {
       yield put(updateMoneyCommand(currentMoney + (pieceCost * piecesUsed)));
 
       if (piece.position.y === null) {
-        yield put(removeBenchPiece(pieceId));
+        yield put(removeBenchPieceCommand(pieceId));
       } else {
         yield put(BoardActions.removeBoardPiece(pieceId));
       }
