@@ -11,7 +11,7 @@ RUN npm ci --loglevel notice
 
 # package dependencies
 
-COPY packages/server/package*.json ./packages/server/
+COPY packages/server-game/package*.json ./packages/server-game/
 COPY packages/auth-server/package*.json ./packages/auth-server/
 COPY packages/models/package*.json ./packages/models/
 COPY packages/data/package*.json ./packages/data/
@@ -35,8 +35,8 @@ COPY packages/auth-server ./packages/auth-server
 RUN npm run build -- --scope @creature-chess/auth-server
 
 # build main package
-COPY packages/server ./packages/server
-RUN npm run build -- --scope @creature-chess/server
+COPY packages/server-game ./packages/server-game
+RUN npm run build -- --scope @creature-chess/server-game
 
 FROM built as binary
 
@@ -53,4 +53,4 @@ COPY --from=binary /usr/src/cc-server/bin/ ./
 
 EXPOSE 3000
 
-CMD [ "node", "server/lib/index.js", "3000" ]
+CMD [ "node", "server-game/lib/index.js", "3000" ]
