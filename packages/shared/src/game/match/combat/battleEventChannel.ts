@@ -3,7 +3,8 @@ import { eventChannel, buffers } from "redux-saga";
 import { IndexedPieces } from "@creature-chess/models";
 import { isATeamDefeated } from "../../../utils";
 import { BoardState, BoardCommands } from "../../../board";
-import { TurnSimulator } from "./turnSimulator";
+import { simulateTurn } from "./turnSimulator";
+import { GameOptions } from "../../options";
 
 export const BATTLE_TURN = "BATTLE_TURN";
 export type BATTLE_TURN = typeof BATTLE_TURN;
@@ -56,10 +57,8 @@ const addBattleBrains = (pieces: IndexedPieces) => {
 };
 
 export const battleEventChannel = (
-    turnSimulator: TurnSimulator,
-    turnDuration: number,
     startingBoardState: BoardState,
-    maxTurns: number,
+    options: GameOptions,
     bufferSize: number
 ) => {
     return eventChannel<BattleEvent>(emit => {
@@ -79,7 +78,7 @@ export const battleEventChannel = (
             while (true) {
                 const shouldStop = (
                     cancelled
-                    || turnCount >= maxTurns
+                    || turnCount >= options.turnCount
                     || isATeamDefeated(board)
                 );
 
@@ -88,9 +87,9 @@ export const battleEventChannel = (
                     break;
                 }
 
-                const turnTimer = duration(turnDuration);
+                const turnTimer = duration(options.turnDuration);
 
-                board = turnSimulator.simulateTurn(++turnCount, board);
+                board = simulateTurn(++turnCount, board);
                 emit(BoardCommands.initialiseBoard(board.pieces));
 
                 await turnTimer.remaining();

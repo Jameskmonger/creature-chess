@@ -13,7 +13,7 @@ import { PlayerList } from "./playerList";
 import { createGameStore, GameCommands } from "./store";
 import { GameOptions, getOptions } from "./options";
 import { readyNotifier } from "./readyNotifier";
-import { Match, TurnSimulator } from "./match";
+import { Match } from "./match";
 import { CardDeck } from "./cardDeck";
 
 const startStopwatch = () => process.hrtime();
@@ -34,7 +34,6 @@ export class Game {
     private lastLivingPlayerCount: number = 0;
     private opponentProvider = new OpponentProvider();
     private playerList = new PlayerList();
-    private turnSimulator: TurnSimulator;
     private definitionProvider = new DefinitionProvider();
     private players: Player[] = [];
     private events = new EventEmitter();
@@ -48,7 +47,6 @@ export class Game {
         this.options = getOptions(options);
 
         this.deck = new CardDeck(this.definitionProvider.getAll());
-        this.turnSimulator = new TurnSimulator();
 
         this.playerList.onUpdate(playerList =>
             this.players
@@ -115,7 +113,6 @@ export class Game {
         // teardown
         this.opponentProvider = null;
         this.deck = null;
-        this.turnSimulator = null;
         this.playerList.deconstructor();
         this.playerList = null;
         this.definitionProvider = null;
@@ -163,7 +160,7 @@ export class Game {
         this.getLivingPlayers().forEach(player => {
             const opponent = this.opponentProvider.getOpponent(player.id);
 
-            const match = new Match(this.turnSimulator, this.options.turnCount, this.options.turnDuration, player, opponent);
+            const match = new Match(player, opponent, this.options);
 
             player.enterReadyPhase(match);
         });

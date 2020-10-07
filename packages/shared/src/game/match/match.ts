@@ -5,7 +5,8 @@ import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import { GRID_SIZE } from "@creature-chess/models";
 import { boardReducer, BoardState, BoardCommands, mergeBoards } from "../../board";
 import { Player } from "../player";
-import { TurnSimulator, battle, startBattle, BattleFinishEvent, BATTLE_FINISH_EVENT } from "./combat";
+import { battle, startBattle, BattleFinishEvent, BATTLE_FINISH_EVENT } from "./combat";
+import { GameOptions } from "../options";
 
 interface MatchState {
     board: BoardState;
@@ -14,22 +15,16 @@ interface MatchState {
 export class Match {
     public readonly home: Player;
     public readonly away: Player;
-    private readonly turnSimulator: TurnSimulator;
-    private readonly turnCount: number;
-    private readonly turnDuration: number;
     private store: Store<MatchState>;
     private finalBoard: BoardState;
 
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
 
-    constructor(turnSimulator: TurnSimulator, turnCount: number, turnDuration: number, home: Player, away: Player) {
-        this.turnSimulator = turnSimulator;
+    constructor(home: Player, away: Player, gameOptions: GameOptions) {
         this.home = home;
         this.away = away;
-        this.turnCount = turnCount;
-        this.turnDuration = turnDuration;
-        this.store = this.createStore();
+        this.store = this.createStore(gameOptions);
 
         const board = mergeBoards(GRID_SIZE, home.getBoard().pieces, away.getBoard().pieces);
 
@@ -60,13 +55,13 @@ export class Match {
         return this.finalBoard;
     }
 
-    private createStore() {
+    private createStore(gameOptions: GameOptions) {
         // required to preserve inside the generator
         // tslint:disable-next-line:variable-name
         const _this = this;
         const rootSaga = function*() {
             yield all([
-                yield fork(battle, _this.turnSimulator, _this.turnCount, _this.turnDuration),
+                yield fork(battle, gameOptions),
                 yield takeEvery<BattleFinishEvent>(
                     BATTLE_FINISH_EVENT,
                     function*() {
