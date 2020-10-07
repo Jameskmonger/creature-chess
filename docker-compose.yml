@@ -6,7 +6,7 @@ services:
       - AUTH0_MANAGEMENT_CLIENT_SECRET
     build:
       context: .
-      dockerfile: ./Dockerfile.server
+      dockerfile: ./Dockerfile.server-game
     ports:
       - "3000:3000"
   server-info:
