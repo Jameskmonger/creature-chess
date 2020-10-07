@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
-import { playerSellPiece } from "@creature-chess/shared/player/actions";
+import { PlayerActions, getPiece } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { Card } from "../../cardShop";
 
@@ -13,7 +12,7 @@ const selectedPieceSelector = (state: AppState): PieceModel =>
 
 const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId }) => {
     const dispatch = useDispatch();
-    const onClick = () => dispatch(playerSellPiece(pieceId));
+    const onClick = () => dispatch(PlayerActions.playerSellPiece(pieceId));
 
     return <button className="ready-up" onClick={onClick}>Sell Piece</button>;
 };

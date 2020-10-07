@@ -1,16 +1,10 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "paths": {
-            "@testing": ["./src/_testing"],
-            "@testing/*": ["./src/_testing/*"],
-            "tslib" : ["./node_modules/tslib/tslib"]
-        },
         "experimentalDecorators": true,
         "module": "commonjs",
         "moduleResolution": "node",
         "jsx": "react",
-        "importHelpers": true,
         "lib": [ "es2015", "dom" ],
         "downlevelIteration": true
     }

@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
-import { playerSellPiece } from "@creature-chess/shared/player/actions";
+import { PlayerActions } from "@creature-chess/shared";
 
 const DropToSell: React.FunctionComponent = () => {
     const dispatch = useDispatch();
     const [{ }, drop] = useDrop({
         accept: "Piece",
-        drop: item => dispatch(playerSellPiece((item as any).piece.id)),
+        drop: item => dispatch(PlayerActions.playerSellPiece((item as any).piece.id)),
     });
 
     return (

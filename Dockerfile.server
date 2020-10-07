@@ -1,6 +1,8 @@
-FROM node:12-alpine
+FROM node:12-alpine AS node
 
-WORKDIR /usr/src/app
+FROM node AS builder
+
+WORKDIR /usr/src/cc-server
 
 # root dependencies
 
@@ -18,19 +20,37 @@ COPY packages/shared/package*.json ./packages/shared/
 COPY lerna.json ./
 RUN npm run bootstrap
 
-# common packages used by server
-# todo: find a way to automate this
-COPY packages/auth-server ./packages/auth-server
-COPY packages/models ./packages/models
-COPY packages/data ./packages/data
-COPY packages/shared ./packages/shared
-COPY packages/server ./packages/server
+FROM builder as built
 
 COPY tsconfig.json .
-RUN npm run build:server
 
-# todo: don't put source into the final docker image
+# build dependencies - doing this manually improves docker caching
+COPY packages/models ./packages/models
+RUN npm run build -- --scope @creature-chess/models
+COPY packages/data ./packages/data
+RUN npm run build -- --scope @creature-chess/data
+COPY packages/shared ./packages/shared
+RUN npm run build -- --scope @creature-chess/shared
+COPY packages/auth-server ./packages/auth-server
+RUN npm run build -- --scope @creature-chess/auth-server
+
+# build main package
+COPY packages/server ./packages/server
+RUN npm run build -- --scope @creature-chess/server
+
+FROM built as binary
+
+# run script to create binary
+COPY scripts/ ./scripts/
+RUN npm run build:create-bin
+
+FROM node
+
+WORKDIR /usr/src/cc-server-bin
+
+# copy binary only
+COPY --from=binary /usr/src/cc-server/bin/ ./
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start:server" ]
+CMD [ "node", "server/lib/index.js", "3000" ]

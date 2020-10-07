@@ -1,9 +1,8 @@
 import io = require("socket.io");
-import { Game } from "@creature-chess/shared/game";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { SocketPlayer } from "../player/socketPlayer";
-import { log } from "@creature-chess/shared";
+import { log, Game } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";

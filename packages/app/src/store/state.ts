@@ -1,9 +1,5 @@
 import { PlayerListPlayer } from "@creature-chess/models";
-import { BoardState } from "@creature-chess/shared/board";
-import { BenchState } from "@creature-chess/shared/player/bench";
-import { PlayerInfoState } from "@creature-chess/shared/player/playerInfo";
-import { ConnectionStatus } from "@creature-chess/shared/networking";
-import { GameState } from "@creature-chess/shared/game";
+import { BoardState, BenchState, PlayerInfoState, GameState, ConnectionStatus } from "@creature-chess/shared";
 import { Overlay } from "../ui/overlay";
 import { AuthState } from "../auth";
 import { LobbyState } from "../lobby";

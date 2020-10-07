@@ -6,10 +6,6 @@
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
   "license": "ISC",
   "main": "lib/server.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
   "files": [
     "lib"
   ],
@@ -35,7 +31,7 @@
     "@creature-chess/models": "^0.0.0",
     "@creature-chess/shared": "^0.0.0",
     "@types/auth0": "^2.20.8",
-		"@types/bad-words": "^3.0.0",
+    "@types/bad-words": "^3.0.0",
     "@types/redux-saga": "^0.10.5",
     "@types/socket.io": "^2.1.2",
     "@types/uuid": "^3.4.4",
@@ -44,9 +40,10 @@
     "bad-words": "^3.0.3",
     "redux-saga": "^1.0.2",
     "socket.io": "^2.2.0",
+    "tslib": "^2.0.2",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-		"nodemon": "^1.18.11"
+    "nodemon": "^1.18.11"
   }
 }

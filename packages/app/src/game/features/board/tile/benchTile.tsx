@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TileStyle, TileType } from "@creature-chess/models/src/position";
+import { TileStyle, TileType } from "@creature-chess/models";
 import { Tile } from "./tile";
 
 interface BenchTileProps {

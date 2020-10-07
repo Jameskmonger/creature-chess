@@ -1,15 +1,15 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
-import { randomFromArray } from "@creature-chess/shared/utils";
-import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models/src/constants";
+import {
+    randomFromArray,
+    OutgoingPacketRegistry,
+    ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions,
+    ServerToClientLobbyPacketOpcodes
+} from "@creature-chess/shared";
+import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models";
 import { IdGenerator } from "../id-generator";
 import { LobbyMember, LobbyMemberType, PlayerLobbyMember } from "./lobbyMember";
 import { BOT_NAMES } from "./botNames";
-import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
-import {
-    ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions,
-    ServerToClientLobbyPacketOpcodes
-} from "@creature-chess/shared/networking/server-to-client-lobby";
 import { LobbyPlayer } from "@creature-chess/models";
 
 enum LobbyEvents {

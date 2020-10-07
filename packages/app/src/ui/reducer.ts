@@ -6,8 +6,7 @@ import {
     JoinCompleteAction, FindGameAction, FIND_GAME, JOIN_ERROR, JOIN_COMPLETE
 } from "./actions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../game/features/board/actions";
-import { ConnectionStatus } from "@creature-chess/shared/networking";
-import { FinishGameAction, FINISH_GAME } from "@creature-chess/shared/game/store/actions";
+import { GameActions, ConnectionStatus } from "@creature-chess/shared";
 
 const initialState: UiState = {
     loading: false,
@@ -33,7 +32,7 @@ type UIAction =
     | FindGameAction
     | EnableDebugModeAction
     | UpdateConnectionStatusAction
-    | FinishGameAction;
+    | GameActions.FinishGameAction;
 
 export function reducer(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
@@ -79,7 +78,7 @@ export function reducer(state: UiState = initialState, action: UIAction) {
                 selectedPieceId: null
             };
         }
-        case FINISH_GAME: {
+        case GameActions.FINISH_GAME: {
             return {
                 ...state,
                 winnerName: action.payload.winnerName
