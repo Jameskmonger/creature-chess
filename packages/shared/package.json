@@ -22,12 +22,11 @@
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
   "dependencies": {
     "@creature-chess/models": "^0.0.0",
-    "@types/lodash": "^4.14.123",
     "@types/redux": "^3.6.0",
     "@types/redux-saga": "^0.10.5",
     "delay": "^4.1.0",
     "javascript-astar": "^0.4.1",
-    "lodash": "^4.17.13",
+    "lodash.shuffle": "^4.2.0",
     "p-defer": "^2.1.0",
     "present": "^1.0.0",
     "redux": "^4.0.1",
