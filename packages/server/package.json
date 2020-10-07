@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
-    "start": "node -r ts-node/register -r tsconfig-paths/register ./lib/index.js 3000",
+    "start": "node ./lib/index.js 3000",
     "dev": "nodemon 3000"
   },
   "bugs": {
