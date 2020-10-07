@@ -12,7 +12,7 @@ const selectedPieceSelector = (state: AppState): PieceModel =>
 
 const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId }) => {
     const dispatch = useDispatch();
-    const onClick = () => dispatch(PlayerActions.playerSellPiece(pieceId));
+    const onClick = () => dispatch(PlayerActions.playerSellPieceAction(pieceId));
 
     return <button className="ready-up" onClick={onClick}>Sell Piece</button>;
 };

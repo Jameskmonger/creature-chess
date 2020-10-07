@@ -1,14 +1,15 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { BuyCardAction, BUY_CARD } from "../actions";
+import { BuyCardAction, BUY_CARD_ACTION } from "../actions";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { getFirstEmptyBenchSlot, BoardActions } from "../../../board";
+import { BoardCommands } from "../../../board";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../utils/piece-utils";
-import { addBenchPiece } from "../bench/actions";
+import { addBenchPieceCommand } from "../bench/commands";
 import { PlayerState } from "../store";
 import { log } from "../../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
-import { cardsUpdated, moneyUpdateAction } from "../playerInfo/actions";
+import { updateCardsCommand, updateMoneyCommand } from "../playerInfo/commands";
+import { getFirstEmptyBenchSlot } from "../pieceSelectors";
 
 const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
@@ -27,7 +28,7 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
         }
     }
 
-    const benchSlot = getFirstEmptyBenchSlot(state.bench.pieces);
+    const benchSlot = getFirstEmptyBenchSlot(state);
 
     if (benchSlot !== null) {
         return {
@@ -44,7 +45,7 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
 export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvider: DefinitionProvider, playerId: string) => {
     return function*() {
         yield takeEvery<BuyCardAction>(
-            BUY_CARD,
+            BUY_CARD_ACTION,
             function*({ payload: { index } }) {
                 const state: TState = yield select();
 
@@ -74,13 +75,13 @@ export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvid
                 const remainingCards = state.playerInfo.cards.map(c => c === card ? null : c);
 
                 if (destination.type === "board") {
-                    yield put(BoardActions.addBoardPiece(piece, destination.location.x, destination.location.y));
+                    yield put(BoardCommands.addBoardPiece(piece, destination.location.x, destination.location.y));
                 } else if (destination.type === "bench") {
-                    yield put(addBenchPiece(piece, destination.location.slot));
+                    yield put(addBenchPieceCommand(piece, destination.location.slot));
                 }
 
-                yield put(moneyUpdateAction(money - card.cost));
-                yield put(cardsUpdated(remainingCards));
+                yield put(updateMoneyCommand(money - card.cost));
+                yield put(updateCardsCommand(remainingCards));
             }
         );
     };

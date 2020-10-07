@@ -1,6 +1,6 @@
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
 import { BoardState } from "../../../board";
-import { battleEventChannel, BattleAction } from "./battleEventChannel";
+import { battleEventChannel, BattleEvent } from "./battleEventChannel";
 import { TurnSimulator } from "./turnSimulator";
 
 const START_BATTLE = "START_BATTLE";
@@ -16,7 +16,7 @@ export const battle = function*(turnSimulator: TurnSimulator, turnCount: number,
 
             const battleChannel = yield call(battleEventChannel, turnSimulator, turnDuration, board, turnCount, 100);
 
-            yield takeEvery(battleChannel, function*(battleAction: BattleAction) {
+            yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
                 yield put(battleAction);
             });
         }

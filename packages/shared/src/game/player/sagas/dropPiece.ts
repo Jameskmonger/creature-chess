@@ -1,9 +1,9 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerDropPieceAction, PLAYER_DROP_PIECE } from "../actions";
+import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../actions";
 import * as pieceSelectors from "../pieceSelectors";
-import { BoardActions } from "../../../board";
-import { moveBenchPiece, addBenchPiece, removeBenchPiece } from "../bench/actions";
+import { BoardCommands } from "../../../board";
+import { moveBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand } from "../bench/commands";
 import { PlayerState } from "../store";
 import { getPlayerBelowPieceLimit } from "../playerSelectors";
 
@@ -38,7 +38,7 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
 export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: string) => {
   return function*() {
     yield takeEvery<PlayerDropPieceAction>(
-      PLAYER_DROP_PIECE,
+      PLAYER_DROP_PIECE_ACTION,
       function*({ payload: { from, pieceId, to } }) {
         const state: TState = yield select();
 
@@ -70,15 +70,15 @@ export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: strin
         }
 
         if (from.type === "board" && to.type === "board") {
-          yield put(BoardActions.moveBoardPiece(pieceId, from.location, to.location));
+          yield put(BoardCommands.moveBoardPiece(pieceId, from.location, to.location));
         } else if (from.type !== "board" && to.type !== "board") {
-          yield put(moveBenchPiece(pieceId, from.location, to.location));
+          yield put(moveBenchPieceCommand(pieceId, from.location, to.location));
         } else if (from.type === "board" && to.type !== "board") {
-          yield put(BoardActions.removeBoardPiece(pieceId));
-          yield put(addBenchPiece(fromPiece, to.location.slot));
+          yield put(BoardCommands.removeBoardPiece(pieceId));
+          yield put(addBenchPieceCommand(fromPiece, to.location.slot));
         } else if (from.type !== "board" && to.type === "board") {
-          yield put(removeBenchPiece(pieceId));
-          yield put(BoardActions.addBoardPiece(fromPiece, to.location.x, to.location.y));
+          yield put(removeBenchPieceCommand(pieceId));
+          yield put(BoardCommands.addBoardPiece(fromPiece, to.location.x, to.location.y));
         }
       }
     );

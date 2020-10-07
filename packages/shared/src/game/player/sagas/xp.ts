@@ -1,8 +1,8 @@
 import { all, takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerState } from "../store";
-import { moneyUpdateAction, setLevelAction } from "../playerInfo/actions";
+import { updateMoneyCommand, updateLevelCommand } from "../playerInfo/commands";
 import { getXpToNextLevel } from "../../../utils";
-import { BUY_XP, BuyXpAction } from "../actions";
+import { BUY_XP_ACTION, BuyXpAction } from "../actions";
 import { isPlayerAlive } from "../playerSelectors";
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models";
 
@@ -35,11 +35,11 @@ export const xpSagaFactory = <TState extends PlayerState>() => {
                         }
                     }
 
-                    yield put(setLevelAction(level, xp));
+                    yield put(updateLevelCommand(level, xp));
                 }
             ),
             yield takeEvery<BuyXpAction>(
-                BUY_XP,
+                BUY_XP_ACTION,
                 function*() {
                     const isAlive: boolean = yield select(isPlayerAlive);
 
@@ -64,7 +64,7 @@ export const xpSagaFactory = <TState extends PlayerState>() => {
                     }
 
                     yield put(addXpCommand(BUY_XP_AMOUNT));
-                    yield put(moneyUpdateAction(money - BUY_XP_COST));
+                    yield put(updateMoneyCommand(money - BUY_XP_COST));
                 }
             )
         ])

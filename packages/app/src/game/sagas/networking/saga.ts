@@ -6,9 +6,9 @@ import { log } from "../../../log";
 import { AppState } from "../../../store/state";
 import { signIn } from "../../../auth/auth0";
 import {
-    BoardActions,
-    PlayerActions, PlayerInfoActions, BenchActions, GameActions,
-    BATTLE_FINISHED, startBattle,
+    BoardCommands,
+    PlayerActions, PlayerInfoCommands, BenchCommands, GameActions,
+    BATTLE_FINISH_EVENT, startBattle,
 
     validateNickname,
     IncomingPacketRegistry, OutgoingPacketRegistry, ConnectionStatus,
@@ -17,7 +17,10 @@ import {
     ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements
 } from "@creature-chess/shared";
 import { AuthSelectors } from "../../../auth";
-import { clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay, updateConnectionStatus } from "../../../ui/actions";
+import {
+    clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay,
+    updateConnectionStatus, finishGameAction, playersResurrected
+} from "../../../ui/actions";
 import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
 import { GamePhase } from "@creature-chess/models";
 import { Overlay } from "../../../ui/overlay";
@@ -90,7 +93,7 @@ const subscribe = (
             ServerToClientPacketOpcodes.CARDS_UPDATE,
             (packet) => {
                 log("[CARDS_UPDATE]", packet);
-                emit(PlayerInfoActions.cardsUpdated(packet));
+                emit(PlayerInfoCommands.updateCardsCommand(packet));
             }
         );
 
@@ -98,7 +101,7 @@ const subscribe = (
             ServerToClientPacketOpcodes.MONEY_UPDATE,
             (packet) => {
                 log("[MONEY_UPDATE]", packet);
-                emit(PlayerInfoActions.moneyUpdateAction(packet));
+                emit(PlayerInfoCommands.updateMoneyCommand(packet));
             }
         );
 
@@ -108,17 +111,17 @@ const subscribe = (
                 log("[PHASE_UPDATE]", packet);
 
                 emit(updateConnectionStatus(ConnectionStatus.CONNECTED));
-                emit(GameActions.gamePhaseStarted(packet.phase, packet.startedAtSeconds));
+                emit(GameActions.startGamePhaseCommand(packet.phase, packet.startedAtSeconds));
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {
                         const { cards, pieces: { board, bench } } = packet.payload;
 
-                        emit(BoardActions.initialiseBoard(board.pieces));
-                        emit(BenchActions.initialiseBench(bench));
-                        emit(PlayerInfoActions.cardsUpdated(cards));
-                        emit(PlayerInfoActions.clearOpponent());
-                        emit(BoardActions.unlockBoard());
+                        emit(BoardCommands.initialiseBoard(board.pieces));
+                        emit(BenchCommands.initialiseBenchCommand(bench));
+                        emit(PlayerInfoCommands.updateCardsCommand(cards));
+                        emit(PlayerInfoCommands.clearOpponentCommand());
+                        emit(BoardCommands.unlockBoard());
                         emit(openOverlay(Overlay.SHOP));
                         emit(clearAnnouncement());
                         return;
@@ -127,13 +130,13 @@ const subscribe = (
                         const { board, bench, opponentId } = packet.payload;
 
                         if (board) {
-                            emit(BoardActions.initialiseBoard(board.pieces));
+                            emit(BoardCommands.initialiseBoard(board.pieces));
                         }
 
-                        emit(BenchActions.initialiseBench(bench));
-                        emit(BoardActions.lockBoard());
+                        emit(BenchCommands.initialiseBenchCommand(bench));
+                        emit(BoardCommands.lockBoard());
                         emit(closeOverlay());
-                        emit(PlayerInfoActions.setOpponent(opponentId));
+                        emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
                         emit(clearSelectedPiece());
                         return;
                     }
@@ -152,7 +155,7 @@ const subscribe = (
             (packet) => {
                 log("[LEVEL_UPDATE]", packet);
 
-                emit(PlayerInfoActions.setLevelAction(packet.level, packet.xp));
+                emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
             }
         );
 
@@ -187,15 +190,15 @@ const subscribe = (
 
                 const { money, cards, players, level: { level, xp }, board, bench, phase } = fullState;
 
-                emit(PlayerInfoActions.moneyUpdateAction(money));
-                emit(PlayerInfoActions.cardsUpdated(cards));
+                emit(PlayerInfoCommands.updateMoneyCommand(money));
+                emit(PlayerInfoCommands.updateCardsCommand(cards));
                 emit(playerListUpdated(players));
-                emit(PlayerInfoActions.setLevelAction(level, xp));
-                emit(BoardActions.initialiseBoard(board));
-                emit(BenchActions.initialiseBench(bench));
+                emit(PlayerInfoCommands.updateLevelCommand(level, xp));
+                emit(BoardCommands.initialiseBoard(board));
+                emit(BenchCommands.initialiseBenchCommand(bench));
 
                 if (phase) {
-                    emit(GameActions.gamePhaseStarted(phase.phase, phase.startedAtSeconds));
+                    emit(GameActions.startGamePhaseCommand(phase.phase, phase.startedAtSeconds));
                 } else {
                     emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                 }
@@ -207,7 +210,7 @@ const subscribe = (
             (packet) => {
                 log("[FINISH_GAME]", packet);
 
-                emit(GameActions.finishGameAction(packet.winnerName));
+                emit(finishGameAction(packet.winnerName));
 
                 socket.close();
             }
@@ -218,14 +221,14 @@ const subscribe = (
             (packet) => {
                 log("[SHOP_LOCK_UPDATE]", packet);
 
-                emit(PlayerInfoActions.shopLockUpdated(packet.locked));
+                emit(PlayerInfoCommands.updateShopLockCommand(packet.locked));
             }
         );
 
         registry.on(
             ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
             ({ playerIds }) => {
-                emit(GameActions.playersResurrected(playerIds));
+                emit(playersResurrected(playerIds));
             }
         );
 
@@ -318,7 +321,7 @@ const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
 const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) {
     yield all([
         takeEvery(
-            BATTLE_FINISHED,
+            BATTLE_FINISH_EVENT,
             function*() {
                 registry.emit(ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
             }
