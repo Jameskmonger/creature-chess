@@ -1,7 +1,7 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../actions";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { getFirstEmptyBenchSlot, BoardCommands } from "../../../board";
+import { BoardCommands } from "../../../board";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../utils/piece-utils";
 import { addBenchPieceCommand } from "../bench/commands";
@@ -9,6 +9,7 @@ import { PlayerState } from "../store";
 import { log } from "../../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
 import { updateCardsCommand, updateMoneyCommand } from "../playerInfo/commands";
+import { getFirstEmptyBenchSlot } from "../pieceSelectors";
 
 const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
@@ -27,7 +28,7 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
         }
     }
 
-    const benchSlot = getFirstEmptyBenchSlot(state.bench.pieces);
+    const benchSlot = getFirstEmptyBenchSlot(state);
 
     if (benchSlot !== null) {
         return {

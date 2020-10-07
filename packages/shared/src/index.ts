@@ -5,7 +5,6 @@ export { validateNickname } from "./validation";
 
 export {
     BoardCommands,
-    canDropPiece,
     boardReducer, BoardState
 } from "./board";
 
@@ -15,7 +14,7 @@ export {
     battle, startBattle,
     BATTLE_FINISHED,
     gameReducer, GameState, Game, Player,
-    getPiece, getAllPieces, getBoardPieceForPosition,
+    getPiece, getAllPieces, getBoardPieceForPosition, canDropPiece,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     BenchCommands, benchReducer, BenchState,
