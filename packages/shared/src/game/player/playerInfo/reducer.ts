@@ -3,7 +3,7 @@ import {
     MONEY_UPDATE, SHOP_LOCK_UPDATED, GameAction, SET_OPPONENT, CLEAR_OPPONENT,
     LEVEL_UPDATE, CARDS_UPDATED, HEALTH_UPDATED, ROUND_DIED_AT_UPDATED, STREAK_UPDATED, STATUS_UPDATED, BATTLE_UPDATED
 } from "./actions";
-import { READY_UP } from "../actions";
+import { READY_UP_ACTION } from "../actions";
 
 export interface PlayerStreak {
     type: StreakType;
@@ -114,7 +114,7 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, action:
                 shopLocked: action.payload.locked
             };
         };
-        case READY_UP:
+        case READY_UP_ACTION:
             return {
                 ...state,
                 ready: true

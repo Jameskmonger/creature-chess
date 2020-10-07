@@ -9,7 +9,7 @@ const RerollButton: React.FunctionComponent = () => {
   const money = useSelector<AppState, number>(getPlayerMoney);
 
   const buyable = money >= REROLL_COST;
-  const onBuy = () => dispatch(PlayerActions.rerollCards());
+  const onBuy = () => dispatch(PlayerActions.rerollCardsAction());
 
   return (
     <button className="reroll shop-action" onClick={buyable ? onBuy : undefined} disabled={buyable === false}>

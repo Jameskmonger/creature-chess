@@ -171,17 +171,17 @@ export class SocketPlayer extends Player {
 
         for (const action of packet.actions) {
             switch (action.type) {
-                case PlayerActions.BUY_CARD:
-                case PlayerActions.TOGGLE_SHOP_LOCK:
-                case PlayerActions.PLAYER_DROP_PIECE:
-                case PlayerActions.READY_UP:
-                case PlayerActions.PLAYER_SELL_PIECE:
-                case PlayerActions.REROLL_CARDS:
-                case PlayerActions.BUY_XP: {
+                case PlayerActions.BUY_CARD_ACTION:
+                case PlayerActions.TOGGLE_SHOP_LOCK_ACTION:
+                case PlayerActions.PLAYER_DROP_PIECE_ACTION:
+                case PlayerActions.READY_UP_ACTION:
+                case PlayerActions.PLAYER_SELL_PIECE_ACTION:
+                case PlayerActions.REROLL_CARDS_ACTION:
+                case PlayerActions.BUY_XP_ACTION: {
                     this.store.dispatch(action);
                     break;
                 }
-                case PlayerActions.QUIT_GAME: {
+                case PlayerActions.QUIT_GAME_ACTION: {
                     this.clearSocket();
 
                     this.quitGame();

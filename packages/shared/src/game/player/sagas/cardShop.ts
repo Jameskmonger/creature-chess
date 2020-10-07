@@ -1,5 +1,5 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { BuyCardAction, BUY_CARD } from "../actions";
+import { BuyCardAction, BUY_CARD_ACTION } from "../actions";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { getFirstEmptyBenchSlot, BoardActions } from "../../../board";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
@@ -44,7 +44,7 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
 export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvider: DefinitionProvider, playerId: string) => {
     return function*() {
         yield takeEvery<BuyCardAction>(
-            BUY_CARD,
+            BUY_CARD_ACTION,
             function*({ payload: { index } }) {
                 const state: TState = yield select();
 

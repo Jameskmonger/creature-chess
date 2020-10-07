@@ -1,5 +1,5 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { RerollCardsAction, REROLL_CARDS } from "../actions";
+import { RerollCardsAction, REROLL_CARDS_ACTION } from "../actions";
 import { moneyUpdateAction } from "../playerInfo/actions";
 import { afterRerollCards } from "../actions";
 import { isPlayerAlive } from "../playerSelectors";
@@ -8,7 +8,7 @@ import { PlayerState } from "../store";
 
 export const rerollCards = function*() {
   yield takeEvery<RerollCardsAction>(
-    REROLL_CARDS,
+    REROLL_CARDS_ACTION,
     function*() {
       const isAlive: boolean = yield select(isPlayerAlive);
 

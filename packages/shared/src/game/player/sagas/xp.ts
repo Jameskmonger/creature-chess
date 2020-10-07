@@ -2,7 +2,7 @@ import { all, takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerState } from "../store";
 import { moneyUpdateAction, setLevelAction } from "../playerInfo/actions";
 import { getXpToNextLevel } from "../../../utils";
-import { BUY_XP, BuyXpAction } from "../actions";
+import { BUY_XP_ACTION, BuyXpAction } from "../actions";
 import { isPlayerAlive } from "../playerSelectors";
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models";
 
@@ -39,7 +39,7 @@ export const xpSagaFactory = <TState extends PlayerState>() => {
                 }
             ),
             yield takeEvery<BuyXpAction>(
-                BUY_XP,
+                BUY_XP_ACTION,
                 function*() {
                     const isAlive: boolean = yield select(isPlayerAlive);
 

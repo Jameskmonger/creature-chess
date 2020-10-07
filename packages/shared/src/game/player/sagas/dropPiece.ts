@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerDropPieceAction, PLAYER_DROP_PIECE } from "../actions";
+import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../actions";
 import * as pieceSelectors from "../pieceSelectors";
 import { BoardActions } from "../../../board";
 import { moveBenchPiece, addBenchPiece, removeBenchPiece } from "../bench/actions";
@@ -38,7 +38,7 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
 export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: string) => {
   return function*() {
     yield takeEvery<PlayerDropPieceAction>(
-      PLAYER_DROP_PIECE,
+      PLAYER_DROP_PIECE_ACTION,
       function*({ payload: { from, pieceId, to } }) {
         const state: TState = yield select();
 

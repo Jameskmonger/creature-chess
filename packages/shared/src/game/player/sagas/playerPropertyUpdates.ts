@@ -4,7 +4,7 @@ import { EventEmitter } from "events";
 import { PlayerStreak } from "../playerInfo/reducer";
 import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { PlayerInfoActions } from "../playerInfo";
-import { ReadyUpAction, READY_UP } from "../actions";
+import { ReadyUpAction, READY_UP_ACTION } from "../actions";
 
 enum PlayerPropertyUpdateEvent {
     UPDATE_HEALTH = "UPDATE_HEALTH",
@@ -54,7 +54,7 @@ export const createPropertyUpdateRegistry = (sagaMiddleware: SagaMiddleware): Pl
 
             // todo create a single "READY_UPDATED" action
             yield takeLatest<ReadyUpAction>(
-                READY_UP,
+                READY_UP_ACTION,
                 function*() {
                     events.emit(PlayerPropertyUpdateEvent.UPDATE_READY, true);
                 }

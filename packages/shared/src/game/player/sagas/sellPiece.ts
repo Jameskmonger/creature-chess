@@ -3,7 +3,7 @@ import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "../pieceSelectors";
 import { getPiecesForStage } from "../../../utils";
 import { PlayerState } from "../store";
-import { PlayerSellPieceAction, PLAYER_SELL_PIECE } from "../actions";
+import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../actions";
 import { moneyUpdateAction } from "../playerInfo/actions";
 import { removeBenchPiece } from "../bench/actions";
 import { BoardActions } from "../../../board";
@@ -11,7 +11,7 @@ import { afterSellPiece } from "../actions";
 
 export const sellPiece = function*() {
   yield takeEvery<PlayerSellPieceAction>(
-    PLAYER_SELL_PIECE,
+    PLAYER_SELL_PIECE_ACTION,
     function*({ payload: { pieceId } }) {
       const piece: PieceModel = yield select((state: PlayerState) => getPiece(state, pieceId));
 
