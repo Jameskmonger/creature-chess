@@ -9,7 +9,7 @@ export {
 } from "./board";
 
 export {
-    TurnSimulator, DefinitionProvider,
+    DefinitionProvider,
     GameActions,
     battle, startBattle,
     BATTLE_FINISH_EVENT,
@@ -18,7 +18,8 @@ export {
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     BenchCommands, benchReducer, BenchState,
-    PlayerActions, PlayerState, PlayerSagas
+    PlayerActions, PlayerState, PlayerSagas,
+    defaultGameOptions
 } from "./game";
 
 export {

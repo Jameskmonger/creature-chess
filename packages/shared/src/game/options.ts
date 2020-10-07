@@ -12,7 +12,7 @@ export type GameOptions = {
     turnDuration: number;
 };
 
-const defaultOptions: GameOptions = {
+export const defaultOptions: GameOptions = {
     phaseLengths: PHASE_LENGTHS,
     turnCount: DEFAULT_TURN_COUNT,
     turnDuration: DEFAULT_TURN_DURATION
