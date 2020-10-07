@@ -1,15 +1,11 @@
 import { TestRunner, TestSet } from "alsatian";
 import { TapBark } from "tap-bark";
-import { configure } from "enzyme";
-import * as Adapter from "enzyme-adapter-react-16";
 import { register } from "tsconfig-paths";
 
 // tslint:disable-next-line:no-var-requires
 const { compilerOptions } = require("./tsconfig.json");
 const { baseUrl, paths } = compilerOptions;
 register({ baseUrl, paths });
-
-configure({ adapter: new Adapter() });
 
 const testType = process.argv[2];
 
@@ -18,8 +14,7 @@ const testSet = TestSet.create();
 
 // add your tests
 testSet.addTestsFromFiles([
-    "./packages/**/*.test.ts",
-    "./packages/**/*.test.tsx"
+    "./packages/*/!(node_modules)/**/*.test.ts?(x)"
 ]);
 
 // create a test runner
