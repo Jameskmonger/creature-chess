@@ -7,13 +7,14 @@ import { TurnSimulator } from "./turnSimulator";
 
 export const BATTLE_TURN = "BATTLE_TURN";
 export type BATTLE_TURN = typeof BATTLE_TURN;
-export const BATTLE_FINISHED = "BATTLE_FINISHED";
-export type BATTLE_FINISHED = typeof BATTLE_FINISHED;
+export const BATTLE_FINISH_EVENT = "BATTLE_FINISH_EVENT";
+export type BATTLE_FINISH_EVENT = typeof BATTLE_FINISH_EVENT;
 
-type BattleFinishAction = ({ type: BATTLE_FINISHED, payload: { turns: number } });
-export type BattleAction = BoardCommands.InitialiseBoardCommand | BattleFinishAction;
+export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: number } });
 
-const finishAction = (turns: number): BattleFinishAction => ({ type: BATTLE_FINISHED, payload: { turns } });
+export type BattleEvent = BoardCommands.InitialiseBoardCommand | BattleFinishEvent;
+
+const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
 
 const duration = (ms: number) => {
     const startTime = present();
@@ -61,7 +62,7 @@ export const battleEventChannel = (
     maxTurns: number,
     bufferSize: number
 ) => {
-    return eventChannel<BattleAction>(emit => {
+    return eventChannel<BattleEvent>(emit => {
         let cancelled = false;
 
         let board: BoardState = {
@@ -83,7 +84,7 @@ export const battleEventChannel = (
                 );
 
                 if (shouldStop) {
-                    emit(finishAction(turnCount));
+                    emit(battleFinishEvent(turnCount));
                     break;
                 }
 

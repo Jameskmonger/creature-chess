@@ -12,7 +12,7 @@ export {
     TurnSimulator, DefinitionProvider,
     GameActions,
     battle, startBattle,
-    BATTLE_FINISHED,
+    BATTLE_FINISH_EVENT,
     gameReducer, GameState, Game, Player,
     getPiece, getAllPieces, getBoardPieceForPosition, canDropPiece,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,

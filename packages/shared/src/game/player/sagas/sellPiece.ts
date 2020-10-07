@@ -7,7 +7,7 @@ import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../actions";
 import { updateMoneyCommand } from "../playerInfo/commands";
 import { removeBenchPieceCommand } from "../bench/commands";
 import { BoardCommands } from "../../../board";
-import { afterSellPiece } from "../actions";
+import { afterSellPieceEvent } from "../events";
 
 export const sellPiece = function*() {
   yield takeEvery<PlayerSellPieceAction>(
@@ -33,7 +33,7 @@ export const sellPiece = function*() {
         yield put(BoardCommands.removeBoardPiece(pieceId));
       }
 
-      yield put(afterSellPiece(piece));
+      yield put(afterSellPieceEvent(piece));
     }
   );
 };

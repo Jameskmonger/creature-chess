@@ -8,7 +8,7 @@ import { signIn } from "../../../auth/auth0";
 import {
     BoardCommands,
     PlayerActions, PlayerInfoCommands, BenchCommands, GameActions,
-    BATTLE_FINISHED, startBattle,
+    BATTLE_FINISH_EVENT, startBattle,
 
     validateNickname,
     IncomingPacketRegistry, OutgoingPacketRegistry, ConnectionStatus,
@@ -318,7 +318,7 @@ const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
 const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) {
     yield all([
         takeEvery(
-            BATTLE_FINISHED,
+            BATTLE_FINISH_EVENT,
             function*() {
                 registry.emit(ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
             }

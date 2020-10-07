@@ -14,7 +14,7 @@ import {
     playerStreak, playerBattle, playerMatchRewards, sellPiece, rerollCards,
     subtractHealthCommand, fillBoardCommand
 } from "./sagas";
-import { AfterRerollCardsAction, AfterSellPieceAction, AFTER_REROLL_CARDS, AFTER_SELL_PIECE, playerFinishMatch } from "./actions";
+import { AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT, playerFinishMatchEvent } from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { BenchCommands } from "./bench";
@@ -57,8 +57,8 @@ export abstract class Player {
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.afterSellPieceSaga());
-        this.sagaMiddleware.run(this.afterRerollCardsSaga());
+        this.sagaMiddleware.run(this.afterSellPieceEventSaga());
+        this.sagaMiddleware.run(this.afterRerollCardsEventSaga());
         this.sagaMiddleware.run(sellPiece);
         this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
@@ -166,7 +166,7 @@ export abstract class Player {
         const damage = awayScore * 3;
         this.store.dispatch(subtractHealthCommand(this.getGameState().round, damage));
 
-        this.store.dispatch(playerFinishMatch(homeScore, awayScore));
+        this.store.dispatch(playerFinishMatchEvent(homeScore, awayScore));
 
         return {
             homePlayer: this,
@@ -274,15 +274,15 @@ export abstract class Player {
         this.match.onClientFinishMatch();
     }
 
-    private afterSellPieceSaga() {
+    private afterSellPieceEventSaga() {
         const addPieceToDeck = (piece: PieceModel) => {
             this.deck.addPiece(piece);
             this.deck.shuffle();
         };
 
         return function*() {
-            yield takeEvery<AfterSellPieceAction>(
-                AFTER_SELL_PIECE,
+            yield takeEvery<AfterSellPieceEvent>(
+                AFTER_SELL_PIECE_EVENT,
                 function*({ payload: { piece } }) {
                     addPieceToDeck(piece);
                 }
@@ -290,12 +290,12 @@ export abstract class Player {
         };
     }
 
-    private afterRerollCardsSaga() {
+    private afterRerollCardsEventSaga() {
         const thisRerollCards = this.rerollCards;
 
         return function*() {
-            yield takeEvery<AfterRerollCardsAction>(
-                AFTER_REROLL_CARDS,
+            yield takeEvery<AfterRerollCardsEvent>(
+                AFTER_REROLL_CARDS_EVENT,
                 function*() {
                     thisRerollCards();
                 }

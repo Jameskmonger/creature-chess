@@ -2,7 +2,7 @@ import { SagaMiddleware } from "redux-saga";
 import { all, takeLatest, put, select } from "@redux-saga/core/effects";
 import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 
-import { PLAYER_FINISH_MATCH, PlayerFinishMatchAction } from "../actions";
+import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent } from "../events";
 import { HasPlayerInfo, PlayerInfoCommands } from "../playerInfo";
 
 export const playerBattle = (sagaMiddleware: SagaMiddleware) => {
@@ -14,8 +14,8 @@ export const playerBattle = (sagaMiddleware: SagaMiddleware) => {
                     yield put(PlayerInfoCommands.updateBattleCommand(inProgressBattle(opponentId)));
                 }
             ),
-            yield takeLatest<PlayerFinishMatchAction>(
-                PLAYER_FINISH_MATCH,
+            yield takeLatest<PlayerFinishMatchEvent>(
+                PLAYER_FINISH_MATCH_EVENT,
                 function*({ payload: { homeScore, awayScore } }) {
                     const opponentId: string = yield select((state: HasPlayerInfo) => state.playerInfo.opponentId);
 
