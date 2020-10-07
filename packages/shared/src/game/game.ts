@@ -10,7 +10,7 @@ import { DefinitionProvider } from "./definitions/definitionProvider";
 import { Player } from "./player";
 import { OpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
-import { createGameStore, GameActions } from "./store";
+import { createGameStore, GameCommands } from "./store";
 import { GameOptions, getOptions } from "./options";
 import { readyNotifier } from "./readyNotifier";
 import { Match, TurnSimulator } from "./match";
@@ -138,7 +138,7 @@ export class Game {
 
     private async runPreparingPhase() {
         const { round } = this.store.getState();
-        this.store.dispatch(GameActions.startPreparingPhaseCommand(round + 1, Date.now() / 1000));
+        this.store.dispatch(GameCommands.startPreparingPhaseCommand(round + 1, Date.now() / 1000));
 
         const livingPlayers = this.getLivingPlayers();
 
@@ -156,7 +156,7 @@ export class Game {
     }
 
     private async runReadyPhase() {
-        this.store.dispatch(GameActions.startGamePhaseCommand(GamePhase.READY, Date.now() / 1000));
+        this.store.dispatch(GameCommands.startGamePhaseCommand(GamePhase.READY, Date.now() / 1000));
 
         this.updateOpponentProvider();
 
@@ -174,7 +174,7 @@ export class Game {
     }
 
     private async runPlayingPhase() {
-        this.store.dispatch(GameActions.startGamePhaseCommand(GamePhase.PLAYING, Date.now() / 1000));
+        this.store.dispatch(GameCommands.startGamePhaseCommand(GamePhase.PLAYING, Date.now() / 1000));
 
         const battleTimeoutDeferred = pDefer<void>();
         this.delayPhaseLength(GamePhase.PLAYING).then(() => battleTimeoutDeferred.resolve());

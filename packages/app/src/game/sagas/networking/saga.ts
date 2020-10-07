@@ -17,7 +17,10 @@ import {
     ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements
 } from "@creature-chess/shared";
 import { AuthSelectors } from "../../../auth";
-import { clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay, updateConnectionStatus, finishGameAction } from "../../../ui/actions";
+import {
+    clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay,
+    updateConnectionStatus, finishGameAction, playersResurrected
+} from "../../../ui/actions";
 import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
 import { GamePhase } from "@creature-chess/models";
 import { Overlay } from "../../../ui/overlay";
@@ -225,7 +228,7 @@ const subscribe = (
         registry.on(
             ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
             ({ playerIds }) => {
-                emit(GameActions.playersResurrected(playerIds));
+                emit(playersResurrected(playerIds));
             }
         );
 
