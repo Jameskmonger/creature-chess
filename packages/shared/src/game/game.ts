@@ -138,7 +138,7 @@ export class Game {
 
     private async runPreparingPhase() {
         const { round } = this.store.getState();
-        this.store.dispatch(GameActions.preparingPhaseStarted(round + 1, Date.now() / 1000));
+        this.store.dispatch(GameActions.startPreparingPhaseCommand(round + 1, Date.now() / 1000));
 
         const livingPlayers = this.getLivingPlayers();
 
@@ -156,7 +156,7 @@ export class Game {
     }
 
     private async runReadyPhase() {
-        this.store.dispatch(GameActions.gamePhaseStarted(GamePhase.READY, Date.now() / 1000));
+        this.store.dispatch(GameActions.startGamePhaseCommand(GamePhase.READY, Date.now() / 1000));
 
         this.updateOpponentProvider();
 
@@ -174,7 +174,7 @@ export class Game {
     }
 
     private async runPlayingPhase() {
-        this.store.dispatch(GameActions.gamePhaseStarted(GamePhase.PLAYING, Date.now() / 1000));
+        this.store.dispatch(GameActions.startGamePhaseCommand(GamePhase.PLAYING, Date.now() / 1000));
 
         const battleTimeoutDeferred = pDefer<void>();
         this.delayPhaseLength(GamePhase.PLAYING).then(() => battleTimeoutDeferred.resolve());

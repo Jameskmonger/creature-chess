@@ -1,4 +1,4 @@
-import { GameAction, GAME_PHASE_STARTED } from "./actions";
+import { GameAction, START_GAME_PHASE_COMMAND } from "./actions";
 import { GameState } from "./state";
 
 export const initialState: GameState = {
@@ -9,7 +9,7 @@ export const initialState: GameState = {
 
 export function reducer(state: GameState = initialState, action: GameAction): GameState {
     switch (action.type) {
-        case GAME_PHASE_STARTED:
+        case START_GAME_PHASE_COMMAND:
             if (action.payload.round) {
                 return {
                     ...state,

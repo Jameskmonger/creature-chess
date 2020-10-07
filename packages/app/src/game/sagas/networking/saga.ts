@@ -108,7 +108,7 @@ const subscribe = (
                 log("[PHASE_UPDATE]", packet);
 
                 emit(updateConnectionStatus(ConnectionStatus.CONNECTED));
-                emit(GameActions.gamePhaseStarted(packet.phase, packet.startedAtSeconds));
+                emit(GameActions.startGamePhaseCommand(packet.phase, packet.startedAtSeconds));
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {
@@ -195,7 +195,7 @@ const subscribe = (
                 emit(BenchCommands.initialiseBenchCommand(bench));
 
                 if (phase) {
-                    emit(GameActions.gamePhaseStarted(phase.phase, phase.startedAtSeconds));
+                    emit(GameActions.startGamePhaseCommand(phase.phase, phase.startedAtSeconds));
                 } else {
                     emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                 }
