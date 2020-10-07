@@ -4,7 +4,7 @@ import { StreakType } from "@creature-chess/models";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 
 import { PLAYER_FINISH_MATCH, PlayerFinishMatchAction } from "../actions";
-import { streakUpdated } from "../playerInfo/actions";
+import { updateStreakCommand } from "../playerInfo/commands";
 
 export const playerStreak = (sagaMiddleware: SagaMiddleware) => {
     sagaMiddleware.run(function*() {
@@ -19,7 +19,7 @@ export const playerStreak = (sagaMiddleware: SagaMiddleware) => {
 
                 const newAmount = (type === existingStreak.type) ? existingStreak.amount + 1 : 0;
 
-                yield put(streakUpdated(type, newAmount));
+                yield put(updateStreakCommand(type, newAmount));
             }
         );
     });

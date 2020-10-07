@@ -1,7 +1,7 @@
 import { takeLatest, put, select, delay } from "@redux-saga/core/effects";
 import { AppState } from "../../../store/state";
 import { clearAnnouncement, updateAnnouncement } from "../../../ui/actions";
-import { PlayerInfoActions, GameActions } from "@creature-chess/shared";
+import { PlayerInfoCommands, GameActions } from "@creature-chess/shared";
 
 // distinctLastJoin(["James", "Bob", "William", "Steve"], ", ", " and ")
 // -> "James, Bob, William and Steve"
@@ -23,10 +23,10 @@ const distinctLastJoin = (items: string[], mainSeparator: string, lastSeparator:
 };
 
 export const announcement = function*() {
-    yield takeLatest<PlayerInfoActions.SetOpponentAction | GameActions.PlayersResurrectedAction>(
-        [PlayerInfoActions.SET_OPPONENT, GameActions.PLAYERS_RESURRECTED],
+    yield takeLatest<PlayerInfoCommands.UpdateOpponentCommand | GameActions.PlayersResurrectedAction>(
+        [PlayerInfoCommands.UPDATE_OPPONENT_COMMAND, GameActions.PLAYERS_RESURRECTED],
         function*(action) {
-            if (action.type === PlayerInfoActions.SET_OPPONENT) {
+            if (action.type === PlayerInfoCommands.UPDATE_OPPONENT_COMMAND) {
                 const state: AppState = yield select();
 
                 const opponent = state.playerList.find(p => p.id === action.payload.opponentId);

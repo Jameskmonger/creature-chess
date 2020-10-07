@@ -1,6 +1,6 @@
 import { takeEvery, select, put, all } from "@redux-saga/core/effects";
 import { PlayerState } from "../store";
-import { healthUpdated, roundDiedAtUpdated } from "../playerInfo/actions";
+import { updateHealthCommand, updateRoundDiedAtCommand } from "../playerInfo/commands";
 
 const HEALTH_SUBTRACT_COMMAND = "HEALTH_SUBTRACT_COMMAND";
 type HEALTH_SUBTRACT_COMMAND = typeof HEALTH_SUBTRACT_COMMAND;
@@ -25,11 +25,11 @@ export const healthSagaFactory = <TState extends PlayerState>() => {
                     let newValue = oldValue - amount;
                     newValue = (newValue < 0) ? 0 : newValue;
 
-                    yield put(healthUpdated(newValue));
+                    yield put(updateHealthCommand(newValue));
 
                     if (newValue === 0 && oldValue !== 0) {
                         // player has just died
-                        yield put(roundDiedAtUpdated(currentRound));
+                        yield put(updateRoundDiedAtCommand(currentRound));
                     }
                 }
             )

@@ -5,7 +5,7 @@ import { PlayerListPlayer, Card, GamePhase } from "@creature-chess/models";
 import { log } from "console";
 import { Task } from "redux-saga";
 import {
-    Player, PlayerState, PlayerActions, PlayerInfoActions,
+    Player, PlayerState, PlayerActions, PlayerInfoCommands,
     IncomingPacketRegistry, OutgoingPacketRegistry,
     ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements,
     ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket
@@ -14,24 +14,24 @@ import {
 const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
     return function*() {
         yield all([
-            yield takeLatest<PlayerInfoActions.CardsUpdatedAction>(
-                PlayerInfoActions.CARDS_UPDATED,
+            yield takeLatest<PlayerInfoCommands.UpdateCardsCommand>(
+                PlayerInfoCommands.UPDATE_CARDS_COMMAND,
                 function*() {
                     const cards: Card[] = yield select((state: PlayerState) => state.playerInfo.cards);
 
                     registry.emit(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
                 }
             ),
-            yield takeLatest<PlayerInfoActions.MoneyUpdateAction>(
-                PlayerInfoActions.MONEY_UPDATE,
+            yield takeLatest<PlayerInfoCommands.UpdateMoneyCommand>(
+                PlayerInfoCommands.UPDATE_MONEY_COMMAND,
                 function*() {
                     const money: number = yield select((state: PlayerState) => state.playerInfo.money);
 
                     registry.emit(ServerToClientPacketOpcodes.MONEY_UPDATE, money);
                 }
             ),
-            yield takeLatest<PlayerInfoActions.LevelUpdateAction>(
-                PlayerInfoActions.LEVEL_UPDATE,
+            yield takeLatest<PlayerInfoCommands.UpdateLevelCommand>(
+                PlayerInfoCommands.UPDATE_LEVEL_COMMAND,
                 function*() {
                     const level: number = yield select((state: PlayerState) => state.playerInfo.level);
                     const xp: number = yield select((state: PlayerState) => state.playerInfo.xp);
@@ -39,8 +39,8 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
                     registry.emit(ServerToClientPacketOpcodes.LEVEL_UPDATE, { level, xp });
                 }
             ),
-            yield takeLatest<PlayerInfoActions.UpdateShopLockAction>(
-                PlayerInfoActions.SHOP_LOCK_UPDATED,
+            yield takeLatest<PlayerInfoCommands.UpdateShopLockCommand>(
+                PlayerInfoCommands.UPDATE_SHOP_LOCK_COMMAND,
                 function*() {
                     const locked: boolean = yield select((state: PlayerState) => state.playerInfo.shopLocked);
 

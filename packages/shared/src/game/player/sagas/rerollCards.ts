@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { RerollCardsAction, REROLL_CARDS_ACTION } from "../actions";
-import { moneyUpdateAction } from "../playerInfo/actions";
+import { updateMoneyCommand } from "../playerInfo/commands";
 import { afterRerollCards } from "../actions";
 import { isPlayerAlive } from "../playerSelectors";
 import { REROLL_COST } from "@creature-chess/models";
@@ -25,7 +25,7 @@ export const rerollCards = function*() {
         return;
       }
 
-      yield put(moneyUpdateAction(money - REROLL_COST));
+      yield put(updateMoneyCommand(money - REROLL_COST));
       yield put(afterRerollCards());
     }
   );

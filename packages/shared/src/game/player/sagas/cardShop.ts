@@ -8,7 +8,7 @@ import { addBenchPiece } from "../bench/actions";
 import { PlayerState } from "../store";
 import { log } from "../../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
-import { cardsUpdated, moneyUpdateAction } from "../playerInfo/actions";
+import { updateCardsCommand, updateMoneyCommand } from "../playerInfo/commands";
 
 const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
@@ -79,8 +79,8 @@ export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvid
                     yield put(addBenchPiece(piece, destination.location.slot));
                 }
 
-                yield put(moneyUpdateAction(money - card.cost));
-                yield put(cardsUpdated(remainingCards));
+                yield put(updateMoneyCommand(money - card.cost));
+                yield put(updateCardsCommand(remainingCards));
             }
         );
     };

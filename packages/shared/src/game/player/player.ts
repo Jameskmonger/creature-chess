@@ -16,7 +16,7 @@ import {
 } from "./sagas";
 import { AfterRerollCardsAction, AfterSellPieceAction, AFTER_REROLL_CARDS, AFTER_SELL_PIECE, playerFinishMatch } from "./actions";
 import { PlayerStore, createPlayerStore } from "./store";
-import { PlayerInfoActions } from "./playerInfo";
+import { PlayerInfoCommands } from "./playerInfo";
 import { BenchActions } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces } from "./pieceSelectors";
@@ -129,7 +129,7 @@ export abstract class Player {
             this.rerollCards();
         }
 
-        this.store.dispatch(PlayerInfoActions.clearOpponent());
+        this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
         this.store.dispatch(BenchActions.unlockBench());
 
         this.onEnterPreparingPhase();
@@ -142,7 +142,7 @@ export abstract class Player {
     public enterReadyPhase(match: Match) {
         this.store.dispatch(BenchActions.lockBench());
 
-        this.store.dispatch(PlayerInfoActions.setOpponent(match.away.id));
+        this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(match.away.id));
         this.match = match;
 
         this.onEnterReadyPhase();
@@ -190,7 +190,7 @@ export abstract class Player {
         const cards = this.store.getState().playerInfo.cards;
 
         const newCards = this.deck.reroll(cards, this.getLevel(), 5);
-        this.store.dispatch(PlayerInfoActions.cardsUpdated(newCards));
+        this.store.dispatch(PlayerInfoCommands.updateCardsCommand(newCards));
     }
 
     public clearPieces() {
@@ -209,7 +209,7 @@ export abstract class Player {
         }
 
         const cards = this.store.getState().playerInfo.cards;
-        this.store.dispatch(PlayerInfoActions.cardsUpdated([]));
+        this.store.dispatch(PlayerInfoCommands.updateCardsCommand([]));
         this.deck.addCards(cards);
 
         this.deck.shuffle();
@@ -221,8 +221,8 @@ export abstract class Player {
     }
 
     public resurrect(startingHealth: number) {
-        this.store.dispatch(PlayerInfoActions.roundDiedAtUpdated(null));
-        this.store.dispatch(PlayerInfoActions.healthUpdated(startingHealth));
+        this.store.dispatch(PlayerInfoCommands.updateRoundDiedAtCommand(null));
+        this.store.dispatch(PlayerInfoCommands.updateHealthCommand(startingHealth));
     }
 
     public isAlive() {
@@ -260,7 +260,7 @@ export abstract class Player {
     protected abstract onDeath(phaseStartedAt: number);
 
     protected quitGame() {
-        this.store.dispatch(PlayerInfoActions.statusUpdated(PlayerStatus.QUIT));
+        this.store.dispatch(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
 
         // todo combine these
         this.events.emit(PlayerEvent.QUIT_GAME, this);

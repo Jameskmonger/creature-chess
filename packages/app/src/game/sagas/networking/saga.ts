@@ -7,7 +7,7 @@ import { AppState } from "../../../store/state";
 import { signIn } from "../../../auth/auth0";
 import {
     BoardActions,
-    PlayerActions, PlayerInfoActions, BenchActions, GameActions,
+    PlayerActions, PlayerInfoCommands, BenchActions, GameActions,
     BATTLE_FINISHED, startBattle,
 
     validateNickname,
@@ -90,7 +90,7 @@ const subscribe = (
             ServerToClientPacketOpcodes.CARDS_UPDATE,
             (packet) => {
                 log("[CARDS_UPDATE]", packet);
-                emit(PlayerInfoActions.cardsUpdated(packet));
+                emit(PlayerInfoCommands.updateCardsCommand(packet));
             }
         );
 
@@ -98,7 +98,7 @@ const subscribe = (
             ServerToClientPacketOpcodes.MONEY_UPDATE,
             (packet) => {
                 log("[MONEY_UPDATE]", packet);
-                emit(PlayerInfoActions.moneyUpdateAction(packet));
+                emit(PlayerInfoCommands.updateMoneyCommand(packet));
             }
         );
 
@@ -116,8 +116,8 @@ const subscribe = (
 
                         emit(BoardActions.initialiseBoard(board.pieces));
                         emit(BenchActions.initialiseBench(bench));
-                        emit(PlayerInfoActions.cardsUpdated(cards));
-                        emit(PlayerInfoActions.clearOpponent());
+                        emit(PlayerInfoCommands.updateCardsCommand(cards));
+                        emit(PlayerInfoCommands.clearOpponentCommand());
                         emit(BoardActions.unlockBoard());
                         emit(openOverlay(Overlay.SHOP));
                         emit(clearAnnouncement());
@@ -133,7 +133,7 @@ const subscribe = (
                         emit(BenchActions.initialiseBench(bench));
                         emit(BoardActions.lockBoard());
                         emit(closeOverlay());
-                        emit(PlayerInfoActions.setOpponent(opponentId));
+                        emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
                         emit(clearSelectedPiece());
                         return;
                     }
@@ -152,7 +152,7 @@ const subscribe = (
             (packet) => {
                 log("[LEVEL_UPDATE]", packet);
 
-                emit(PlayerInfoActions.setLevelAction(packet.level, packet.xp));
+                emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
             }
         );
 
@@ -187,10 +187,10 @@ const subscribe = (
 
                 const { money, cards, players, level: { level, xp }, board, bench, phase } = fullState;
 
-                emit(PlayerInfoActions.moneyUpdateAction(money));
-                emit(PlayerInfoActions.cardsUpdated(cards));
+                emit(PlayerInfoCommands.updateMoneyCommand(money));
+                emit(PlayerInfoCommands.updateCardsCommand(cards));
                 emit(playerListUpdated(players));
-                emit(PlayerInfoActions.setLevelAction(level, xp));
+                emit(PlayerInfoCommands.updateLevelCommand(level, xp));
                 emit(BoardActions.initialiseBoard(board));
                 emit(BenchActions.initialiseBench(bench));
 
@@ -218,7 +218,7 @@ const subscribe = (
             (packet) => {
                 log("[SHOP_LOCK_UPDATE]", packet);
 
-                emit(PlayerInfoActions.shopLockUpdated(packet.locked));
+                emit(PlayerInfoCommands.updateShopLockCommand(packet.locked));
             }
         );
 

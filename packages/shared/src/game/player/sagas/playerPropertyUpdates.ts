@@ -3,7 +3,7 @@ import { SagaMiddleware } from "redux-saga";
 import { EventEmitter } from "events";
 import { PlayerStreak } from "../playerInfo/reducer";
 import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
-import { PlayerInfoActions } from "../playerInfo";
+import { PlayerInfoCommands } from "../playerInfo";
 import { ReadyUpAction, READY_UP_ACTION } from "../actions";
 
 enum PlayerPropertyUpdateEvent {
@@ -27,26 +27,26 @@ export const createPropertyUpdateRegistry = (sagaMiddleware: SagaMiddleware): Pl
 
     sagaMiddleware.run(function*() {
         yield all([
-            yield takeLatest<PlayerInfoActions.UpdateHealthAction>(
-                PlayerInfoActions.HEALTH_UPDATED,
+            yield takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
+                PlayerInfoCommands.UPDATE_HEALTH_COMMAND,
                 function*({ payload: { health } }) {
                     events.emit(PlayerPropertyUpdateEvent.UPDATE_HEALTH, health);
                 }
             ),
-            yield takeLatest<PlayerInfoActions.UpdateStreakAction>(
-                PlayerInfoActions.STREAK_UPDATED,
+            yield takeLatest<PlayerInfoCommands.UpdateStreakCommand>(
+                PlayerInfoCommands.UPDATE_STREAK_COMMAND,
                 function*({ payload: streak }) {
                     events.emit(PlayerPropertyUpdateEvent.UPDATE_STREAK, streak);
                 }
             ),
-            yield takeLatest<PlayerInfoActions.UpdateStatusAction>(
-                PlayerInfoActions.STATUS_UPDATED,
+            yield takeLatest<PlayerInfoCommands.UpdateStatusCommand>(
+                PlayerInfoCommands.UPDATE_STATUS_COMMAND,
                 function*({ payload: { status } }) {
                     events.emit(PlayerPropertyUpdateEvent.UPDATE_STATUS, status);
                 }
             ),
-            yield takeLatest<PlayerInfoActions.UpdateBattleAction>(
-                PlayerInfoActions.BATTLE_UPDATED,
+            yield takeLatest<PlayerInfoCommands.UpdateBattleCommand>(
+                PlayerInfoCommands.UPDATE_BATTLE_COMMAND,
                 function*({ payload: { battle } }) {
                     events.emit(PlayerPropertyUpdateEvent.UPDATE_BATTLE, battle);
                 }
@@ -59,8 +59,8 @@ export const createPropertyUpdateRegistry = (sagaMiddleware: SagaMiddleware): Pl
                     events.emit(PlayerPropertyUpdateEvent.UPDATE_READY, true);
                 }
             ),
-            yield takeLatest<PlayerInfoActions.ClearOpponentAction>(
-                PlayerInfoActions.CLEAR_OPPONENT,
+            yield takeLatest<PlayerInfoCommands.ClearOpponentCommand>(
+                PlayerInfoCommands.CLEAR_OPPONENT_COMMAND,
                 function*() {
                     events.emit(PlayerPropertyUpdateEvent.UPDATE_READY, false);
                 }
