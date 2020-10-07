@@ -6,7 +6,7 @@ import { PlayerState } from "../store";
 import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../actions";
 import { updateMoneyCommand } from "../playerInfo/commands";
 import { removeBenchPieceCommand } from "../bench/commands";
-import { BoardActions } from "../../../board";
+import { BoardCommands } from "../../../board";
 import { afterSellPiece } from "../actions";
 
 export const sellPiece = function*() {
@@ -30,7 +30,7 @@ export const sellPiece = function*() {
       if (piece.position.y === null) {
         yield put(removeBenchPieceCommand(pieceId));
       } else {
-        yield put(BoardActions.removeBoardPiece(pieceId));
+        yield put(BoardCommands.removeBoardPiece(pieceId));
       }
 
       yield put(afterSellPiece(piece));

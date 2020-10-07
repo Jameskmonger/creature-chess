@@ -2,7 +2,7 @@ import present = require("present");
 import { eventChannel, buffers } from "redux-saga";
 import { IndexedPieces } from "@creature-chess/models";
 import { isATeamDefeated } from "../../../utils";
-import { BoardState, BoardActions } from "../../../board";
+import { BoardState, BoardCommands } from "../../../board";
 import { TurnSimulator } from "./turnSimulator";
 
 export const BATTLE_TURN = "BATTLE_TURN";
@@ -11,7 +11,7 @@ export const BATTLE_FINISHED = "BATTLE_FINISHED";
 export type BATTLE_FINISHED = typeof BATTLE_FINISHED;
 
 type BattleFinishAction = ({ type: BATTLE_FINISHED, payload: { turns: number } });
-export type BattleAction = BoardActions.InitialiseBoardAction | BattleFinishAction;
+export type BattleAction = BoardCommands.InitialiseBoardCommand | BattleFinishAction;
 
 const finishAction = (turns: number): BattleFinishAction => ({ type: BATTLE_FINISHED, payload: { turns } });
 
@@ -90,7 +90,7 @@ export const battleEventChannel = (
                 const turnTimer = duration(turnDuration);
 
                 board = turnSimulator.simulateTurn(++turnCount, board);
-                emit(BoardActions.initialiseBoard(board.pieces));
+                emit(BoardCommands.initialiseBoard(board.pieces));
 
                 await turnTimer.remaining();
             }

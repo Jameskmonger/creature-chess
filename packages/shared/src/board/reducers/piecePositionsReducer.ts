@@ -1,9 +1,9 @@
 import { Reducer } from "redux";
 import {
-  BoardAction,
-  INITIALISE_BOARD, REMOVE_BOARD_PIECE, ADD_BOARD_PIECE, UPDATE_BOARD_PIECE,
-  UPDATE_BOARD_PIECES, MOVE_BOARD_PIECE, REMOVE_BOARD_PIECES
-} from "../actions";
+  BoardCommand,
+  INITIALISE_BOARD_COMMAND, REMOVE_BOARD_PIECE_COMMAND, ADD_BOARD_PIECE_COMMAND, UPDATE_BOARD_PIECE_COMMAND,
+  UPDATE_BOARD_PIECES_COMMAND, MOVE_BOARD_PIECE_COMMAND, REMOVE_BOARD_PIECES_COMMAND
+} from "../commands";
 
 type PiecePositionsState = {
   [position: string]: string;
@@ -28,10 +28,10 @@ const removePieceByIdList = (state: PiecePositionsState, ids: string[]) => {
 
 const removePieceById = (state: PiecePositionsState, targetPieceId: string) => removePieceByIdList(state, [targetPieceId]);
 
-const piecePositions: Reducer<PiecePositionsState, BoardAction> = (state = initialState, action) => {
-  switch (action.type) {
-    case INITIALISE_BOARD:
-      return Object.entries(action.payload.pieces)
+const piecePositions: Reducer<PiecePositionsState, BoardCommand> = (state = initialState, command) => {
+  switch (command.type) {
+    case INITIALISE_BOARD_COMMAND:
+      return Object.entries(command.payload.pieces)
         .reduce<PiecePositionsState>(
           (acc, [pieceId, piece]) => {
             acc[`${piece.position.x},${piece.position.y}`] = pieceId;
@@ -40,8 +40,8 @@ const piecePositions: Reducer<PiecePositionsState, BoardAction> = (state = initi
           },
           {}
         );
-    case UPDATE_BOARD_PIECES: {
-      const { pieces } = action.payload;
+    case UPDATE_BOARD_PIECES_COMMAND: {
+      const { pieces } = command.payload;
 
       const newState = removePieceByIdList(state, pieces.map(p => p.id));
 
@@ -51,8 +51,8 @@ const piecePositions: Reducer<PiecePositionsState, BoardAction> = (state = initi
 
       return newState;
     }
-    case UPDATE_BOARD_PIECE: {
-      const { piece } = action.payload;
+    case UPDATE_BOARD_PIECE_COMMAND: {
+      const { piece } = command.payload;
 
       const filtered = removePieceById(state, piece.id);
 
@@ -61,19 +61,19 @@ const piecePositions: Reducer<PiecePositionsState, BoardAction> = (state = initi
         [`${piece.position.x},${piece.position.y}`]: piece.id
       };
     }
-    case REMOVE_BOARD_PIECE:
-      return removePieceById(state, action.payload.pieceId);
-    case REMOVE_BOARD_PIECES:
-      return removePieceByIdList(state, action.payload.pieceIds);
-    case ADD_BOARD_PIECE: {
-      const { x, y, piece } = action.payload;
+    case REMOVE_BOARD_PIECE_COMMAND:
+      return removePieceById(state, command.payload.pieceId);
+    case REMOVE_BOARD_PIECES_COMMAND:
+      return removePieceByIdList(state, command.payload.pieceIds);
+    case ADD_BOARD_PIECE_COMMAND: {
+      const { x, y, piece } = command.payload;
       return {
         ...state,
         [`${x},${y}`]: piece.id
       };
     }
-    case MOVE_BOARD_PIECE: {
-      const { pieceId, from, to } = action.payload;
+    case MOVE_BOARD_PIECE_COMMAND: {
+      const { pieceId, from, to } = command.payload;
       const fromString = `${from.x},${from.y}`;
       const toString = `${to.x},${to.y}`;
 

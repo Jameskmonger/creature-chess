@@ -4,9 +4,9 @@ import { BenchState } from "../bench";
 import { BoardState } from "../../../board";
 import { AddBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, ADD_BENCH_PIECE_COMMAND } from "../bench/commands";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
-import { BoardActions } from "../../../board";
+import { BoardCommands } from "../../../board";
 import * as pieceSelectors from "../pieceSelectors";
-import { removeBoardPieces, updateBoardPiece, UpdateBoardPieceAction } from "../../../board/actions";
+import { removeBoardPieces, updateBoardPiece, UpdateBoardPieceCommand } from "../../../board/commands";
 
 const definitionProvider = new DefinitionProvider();
 
@@ -23,10 +23,10 @@ const pieceCanEvolve = (piece: PieceModel) => {
 
 export const evolutionSagaFactory = <TState extends State>() => {
     return function*() {
-        yield takeLatest<AddBenchPieceCommand | UpdateBoardPieceAction>(
+        yield takeLatest<AddBenchPieceCommand | UpdateBoardPieceCommand>(
             // need to check when bench/board pieces are added (could have come from shop)
             // or when board piece is updated (could be due to a previous evolution)
-            [ADD_BENCH_PIECE_COMMAND, BoardActions.ADD_BOARD_PIECE, BoardActions.UPDATE_BOARD_PIECE],
+            [ADD_BENCH_PIECE_COMMAND, BoardCommands.ADD_BOARD_PIECE_COMMAND, BoardCommands.UPDATE_BOARD_PIECE_COMMAND],
             function*({ payload: { piece } }) {
                 if (!pieceCanEvolve(piece)) {
                     return;
@@ -38,7 +38,7 @@ export const evolutionSagaFactory = <TState extends State>() => {
                 if (boardLocked) {
                     // todo check if we have 3 evolvable pieces on the bench and evolve those? maybe
 
-                    yield take(BoardActions.UNLOCK_BOARD);
+                    yield take(BoardCommands.UNLOCK_BOARD_COMMAND);
                     yield delay(500);
                 }
 

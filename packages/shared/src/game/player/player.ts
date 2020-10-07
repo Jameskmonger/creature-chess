@@ -4,7 +4,7 @@ import { takeEvery } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 
-import { BoardActions } from "../../board";
+import { BoardCommands } from "../../board";
 import { GameState } from "../store/state";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 import { CardDeck } from "../cardDeck";
@@ -196,7 +196,7 @@ export abstract class Player {
     public clearPieces() {
         const pieces = getAllPieces(this.store.getState());
 
-        this.store.dispatch(BoardActions.initialiseBoard({}));
+        this.store.dispatch(BoardCommands.initialiseBoard({}));
 
         // todo this is ugly
         this.store.dispatch(BenchCommands.initialiseBenchCommand({

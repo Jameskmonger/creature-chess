@@ -1,7 +1,7 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../actions";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { getFirstEmptyBenchSlot, BoardActions } from "../../../board";
+import { getFirstEmptyBenchSlot, BoardCommands } from "../../../board";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../utils/piece-utils";
 import { addBenchPieceCommand } from "../bench/commands";
@@ -74,7 +74,7 @@ export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvid
                 const remainingCards = state.playerInfo.cards.map(c => c === card ? null : c);
 
                 if (destination.type === "board") {
-                    yield put(BoardActions.addBoardPiece(piece, destination.location.x, destination.location.y));
+                    yield put(BoardCommands.addBoardPiece(piece, destination.location.x, destination.location.y));
                 } else if (destination.type === "bench") {
                     yield put(addBenchPieceCommand(piece, destination.location.slot));
                 }

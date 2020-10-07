@@ -1,6 +1,6 @@
 import { TestFixture, Test, Expect } from "alsatian";
 import { PiecesState, pieces } from "./piecesReducer";
-import { removeBoardPiece, initialiseBoard, addBoardPiece, updateBoardPiece, updateBoardPieces, moveBoardPiece, removeBoardPieces } from "../actions";
+import { removeBoardPiece, initialiseBoard, addBoardPiece, updateBoardPiece, updateBoardPieces, moveBoardPiece, removeBoardPieces } from "../commands";
 import { pieceUtils } from "../../utils";
 import { createTileCoordinates } from "@creature-chess/models";
 
@@ -13,12 +13,12 @@ export class PiecesReducerTests {
     const pieceA = pieceUtils.createMockPiece("123");
     const pieceB = pieceUtils.createMockPiece("456");
 
-    const action = initialiseBoard({
+    const command = initialiseBoard({
       ["123"]: pieceA,
       ["456"]: pieceB
     });
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result).toEqual({
       ["123"]: pieceA,
@@ -71,14 +71,14 @@ export class PiecesReducerTests {
       ...pieceUtils.createMockPiece("456"),
       position: createTileCoordinates(3, null)
     };
-    const action = addBoardPiece(addingPiece, 1, 2);
+    const command = addBoardPiece(addingPiece, 1, 2);
 
     const expectedPiece = {
       ...addingPiece,
       position: createTileCoordinates(1, 2)
     };
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result).toEqual({
       [firstPiece.id]: firstPiece,
@@ -98,7 +98,7 @@ export class PiecesReducerTests {
       [piece.id]: piece
     };
 
-    const action = addBoardPiece(piece, 1, 2);
+    const command = addBoardPiece(piece, 1, 2);
 
     const expectedPiece = {
       ...piece,
@@ -106,7 +106,7 @@ export class PiecesReducerTests {
       facingAway: true
     };
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result[piece.id]).toEqual(expectedPiece);
   }
@@ -121,12 +121,12 @@ export class PiecesReducerTests {
       [firstPiece.id]: firstPiece
     };
 
-    const action = updateBoardPiece({
+    const command = updateBoardPiece({
       ...firstPiece,
       currentHealth: 50
     });
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result[firstPiece.id].currentHealth).toEqual(50);
   }
@@ -146,7 +146,7 @@ export class PiecesReducerTests {
       [secondPiece.id]: secondPiece
     };
 
-    const action = updateBoardPieces([
+    const command = updateBoardPieces([
       {
         ...firstPiece,
         currentHealth: 50
@@ -157,7 +157,7 @@ export class PiecesReducerTests {
       }
     ]);
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result[firstPiece.id].currentHealth).toEqual(50);
     Expect(result[secondPiece.id].currentHealth).toEqual(40);
@@ -173,9 +173,9 @@ export class PiecesReducerTests {
       [piece.id]: piece
     };
 
-    const action = moveBoardPiece(piece.id, { x: 0, y: 0 }, { x: 7, y: 3 });
+    const command = moveBoardPiece(piece.id, { x: 0, y: 0 }, { x: 7, y: 3 });
 
-    const result = pieces(state, action);
+    const result = pieces(state, command);
 
     Expect(result[piece.id].position).toEqual({ x: 7, y: 3 });
   }

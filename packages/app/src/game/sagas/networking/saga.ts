@@ -6,7 +6,7 @@ import { log } from "../../../log";
 import { AppState } from "../../../store/state";
 import { signIn } from "../../../auth/auth0";
 import {
-    BoardActions,
+    BoardCommands,
     PlayerActions, PlayerInfoCommands, BenchCommands, GameActions,
     BATTLE_FINISHED, startBattle,
 
@@ -114,11 +114,11 @@ const subscribe = (
                     case GamePhase.PREPARING: {
                         const { cards, pieces: { board, bench } } = packet.payload;
 
-                        emit(BoardActions.initialiseBoard(board.pieces));
+                        emit(BoardCommands.initialiseBoard(board.pieces));
                         emit(BenchCommands.initialiseBenchCommand(bench));
                         emit(PlayerInfoCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
-                        emit(BoardActions.unlockBoard());
+                        emit(BoardCommands.unlockBoard());
                         emit(openOverlay(Overlay.SHOP));
                         emit(clearAnnouncement());
                         return;
@@ -127,11 +127,11 @@ const subscribe = (
                         const { board, bench, opponentId } = packet.payload;
 
                         if (board) {
-                            emit(BoardActions.initialiseBoard(board.pieces));
+                            emit(BoardCommands.initialiseBoard(board.pieces));
                         }
 
                         emit(BenchCommands.initialiseBenchCommand(bench));
-                        emit(BoardActions.lockBoard());
+                        emit(BoardCommands.lockBoard());
                         emit(closeOverlay());
                         emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
                         emit(clearSelectedPiece());
@@ -191,7 +191,7 @@ const subscribe = (
                 emit(PlayerInfoCommands.updateCardsCommand(cards));
                 emit(playerListUpdated(players));
                 emit(PlayerInfoCommands.updateLevelCommand(level, xp));
-                emit(BoardActions.initialiseBoard(board));
+                emit(BoardCommands.initialiseBoard(board));
                 emit(BenchCommands.initialiseBenchCommand(bench));
 
                 if (phase) {

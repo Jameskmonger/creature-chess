@@ -2,7 +2,7 @@ import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../actions";
 import * as pieceSelectors from "../pieceSelectors";
-import { BoardActions } from "../../../board";
+import { BoardCommands } from "../../../board";
 import { moveBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand } from "../bench/commands";
 import { PlayerState } from "../store";
 import { getPlayerBelowPieceLimit } from "../playerSelectors";
@@ -70,15 +70,15 @@ export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: strin
         }
 
         if (from.type === "board" && to.type === "board") {
-          yield put(BoardActions.moveBoardPiece(pieceId, from.location, to.location));
+          yield put(BoardCommands.moveBoardPiece(pieceId, from.location, to.location));
         } else if (from.type !== "board" && to.type !== "board") {
           yield put(moveBenchPieceCommand(pieceId, from.location, to.location));
         } else if (from.type === "board" && to.type !== "board") {
-          yield put(BoardActions.removeBoardPiece(pieceId));
+          yield put(BoardCommands.removeBoardPiece(pieceId));
           yield put(addBenchPieceCommand(fromPiece, to.location.slot));
         } else if (from.type !== "board" && to.type === "board") {
           yield put(removeBenchPieceCommand(pieceId));
-          yield put(BoardActions.addBoardPiece(fromPiece, to.location.x, to.location.y));
+          yield put(BoardCommands.addBoardPiece(fromPiece, to.location.x, to.location.y));
         }
       }
     );
