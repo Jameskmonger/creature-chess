@@ -5,8 +5,7 @@ import { AppState } from "../../../store";
 import { Card as CardModel, GamePhase } from "@creature-chess/models";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
-import { PlayerActions } from "@creature-chess/shared/player";
-import { getPlayerMoney } from "@creature-chess/shared/player/playerSelectors";
+import { PlayerActions, getPlayerMoney } from "@creature-chess/shared";
 import { ToggleLockButton } from "./toggleLockButton";
 
 interface CardShopProps {

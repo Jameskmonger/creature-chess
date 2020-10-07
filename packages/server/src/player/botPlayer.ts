@@ -1,10 +1,5 @@
-import { Player } from "@creature-chess/shared/game/player/player";
-import { GRID_SIZE, BUY_XP_COST } from "@creature-chess/models/src/constants";
-import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GamePhase } from "@creature-chess/models";
-import { getAllPieces, getBoardPieceForPosition } from "@creature-chess/shared/player/pieceSelectors";
-import { PlayerActions } from "@creature-chess/shared/player";
-import { buyCard, buyXpAction, playerSellPiece, readyUpAction } from "@creature-chess/shared/player/actions";
-import { PlayerState } from "@creature-chess/shared/player/store";
+import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GRID_SIZE, BUY_XP_COST } from "@creature-chess/models";
+import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition } from "@creature-chess/shared";
 import uuid = require("uuid");
 
 const PREFERRED_COLUMN_ORDERS = {
@@ -70,7 +65,7 @@ export class BotPlayer extends Player {
         this.spendExcessMoneyOnXp();
         this.putBenchOnBoard();
 
-        this.store.dispatch(readyUpAction());
+        this.store.dispatch(PlayerActions.readyUpAction());
     }
 
     protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
@@ -97,7 +92,7 @@ export class BotPlayer extends Player {
                 return;
             }
 
-            this.store.dispatch(buyXpAction());
+            this.store.dispatch(PlayerActions.buyXpAction());
         }
     }
 
@@ -131,7 +126,7 @@ export class BotPlayer extends Player {
 
             // sell a piece to make room
             if (this.atPieceLimit() || !canCurrentlyAfford) {
-                this.store.dispatch(playerSellPiece(worstPiece.id));
+                this.store.dispatch(PlayerActions.playerSellPiece(worstPiece.id));
             }
 
             this.buyCardIfBelowLimit(card);
@@ -143,7 +138,7 @@ export class BotPlayer extends Player {
             return;
         }
 
-        this.store.dispatch(buyCard(card.index));
+        this.store.dispatch(PlayerActions.buyCard(card.index));
     }
 
     private atPieceLimit() {

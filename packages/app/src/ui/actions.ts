@@ -1,4 +1,4 @@
-import { ConnectionStatus } from "@creature-chess/shared/networking";
+import { ConnectionStatus } from "@creature-chess/shared";
 import { Overlay } from "./overlay";
 
 export const FIND_GAME = "FIND_GAME";

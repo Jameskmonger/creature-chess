@@ -1,5 +1,5 @@
 import { startServer } from "./server";
-import { log } from "@creature-chess/shared/log";
+import { log } from "@creature-chess/shared";
 
 if (process.argv[2] === undefined) {
     log("Arguments: [port]");

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { MAX_NAME_LENGTH } from "@creature-chess/models/src/constants";
+import { MAX_NAME_LENGTH } from "@creature-chess/models";
 import { nicknameChosen } from "../lobby/store/actions";
 
 const NicknameRequestPage: React.FunctionComponent<{ message: string }> = ({ message }) => {

@@ -1,5 +1,5 @@
 import { ManagementClient } from "auth0";
-import { log } from "@creature-chess/shared/log";
+import { log } from "@creature-chess/shared";
 import { SocketAuthenticator } from "./socket/socketAuthenticator";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { openServer } from "./socket/openServer";

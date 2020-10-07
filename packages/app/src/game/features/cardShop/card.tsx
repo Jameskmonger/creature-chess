@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DefinitionProvider } from "@creature-chess/shared/game/definitionProvider";
+import { DefinitionProvider } from "@creature-chess/shared";
 import { CreatureImage } from "../../../ui/display";
 
 interface CardProps {

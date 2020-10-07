@@ -1,39 +1,37 @@
 import uuid = require("uuid/v4");
 import { all, takeLatest, select } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
-import { Player } from "@creature-chess/shared/game/player/player";
 import { PlayerListPlayer, Card, GamePhase } from "@creature-chess/models";
-import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
-import { ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements } from "@creature-chess/shared/networking/client-to-server";
-import { ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, PlayerGameState } from "@creature-chess/shared/networking/server-to-client";
-import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
 import { log } from "console";
-import { TOGGLE_SHOP_LOCK, BUY_CARD, PLAYER_SELL_PIECE, REROLL_CARDS, PLAYER_DROP_PIECE, READY_UP, BUY_XP, QUIT_GAME } from "@creature-chess/shared/player/actions";
-import { CardsUpdatedAction, CARDS_UPDATED, LevelUpdateAction, LEVEL_UPDATE, MoneyUpdateAction, MONEY_UPDATE, SHOP_LOCK_UPDATED, UpdateShopLockAction } from "@creature-chess/shared/player/playerInfo";
 import { Task } from "redux-saga";
-import { PlayerState } from "@creature-chess/shared/player/store";
+import {
+    Player, PlayerState, PlayerActions, PlayerInfoActions,
+    IncomingPacketRegistry, OutgoingPacketRegistry,
+    ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements,
+    ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket
+} from "@creature-chess/shared";
 
 const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>) => {
     return function*() {
         yield all([
-            yield takeLatest<CardsUpdatedAction>(
-                CARDS_UPDATED,
+            yield takeLatest<PlayerInfoActions.CardsUpdatedAction>(
+                PlayerInfoActions.CARDS_UPDATED,
                 function*() {
                     const cards: Card[] = yield select((state: PlayerState) => state.playerInfo.cards);
 
                     registry.emit(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
                 }
             ),
-            yield takeLatest<MoneyUpdateAction>(
-                MONEY_UPDATE,
+            yield takeLatest<PlayerInfoActions.MoneyUpdateAction>(
+                PlayerInfoActions.MONEY_UPDATE,
                 function*() {
                     const money: number = yield select((state: PlayerState) => state.playerInfo.money);
 
                     registry.emit(ServerToClientPacketOpcodes.MONEY_UPDATE, money);
                 }
             ),
-            yield takeLatest<LevelUpdateAction>(
-                [LEVEL_UPDATE],
+            yield takeLatest<PlayerInfoActions.LevelUpdateAction>(
+                PlayerInfoActions.LEVEL_UPDATE,
                 function*() {
                     const level: number = yield select((state: PlayerState) => state.playerInfo.level);
                     const xp: number = yield select((state: PlayerState) => state.playerInfo.xp);
@@ -41,8 +39,8 @@ const outgoingPackets = (registry: OutgoingPacketRegistry<ServerToClientPacketDe
                     registry.emit(ServerToClientPacketOpcodes.LEVEL_UPDATE, { level, xp });
                 }
             ),
-            yield takeLatest<UpdateShopLockAction>(
-                [SHOP_LOCK_UPDATED],
+            yield takeLatest<PlayerInfoActions.UpdateShopLockAction>(
+                PlayerInfoActions.SHOP_LOCK_UPDATED,
                 function*() {
                     const locked: boolean = yield select((state: PlayerState) => state.playerInfo.shopLocked);
 
@@ -173,17 +171,17 @@ export class SocketPlayer extends Player {
 
         for (const action of packet.actions) {
             switch (action.type) {
-                case BUY_CARD:
-                case TOGGLE_SHOP_LOCK:
-                case PLAYER_DROP_PIECE:
-                case READY_UP:
-                case PLAYER_SELL_PIECE:
-                case REROLL_CARDS:
-                case BUY_XP: {
+                case PlayerActions.BUY_CARD:
+                case PlayerActions.TOGGLE_SHOP_LOCK:
+                case PlayerActions.PLAYER_DROP_PIECE:
+                case PlayerActions.READY_UP:
+                case PlayerActions.PLAYER_SELL_PIECE:
+                case PlayerActions.REROLL_CARDS:
+                case PlayerActions.BUY_XP: {
                     this.store.dispatch(action);
                     break;
                 }
-                case QUIT_GAME: {
+                case PlayerActions.QUIT_GAME: {
                     this.clearSocket();
 
                     this.quitGame();

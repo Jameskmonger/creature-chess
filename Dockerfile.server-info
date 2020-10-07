@@ -16,16 +16,21 @@ COPY packages/shared/package*.json ./packages/shared/
 COPY lerna.json ./
 RUN npm run bootstrap
 
-# common packages used by server
-# todo: find a way to automate this
-COPY packages/auth-server ./packages/auth-server
-COPY packages/models ./packages/models
-COPY packages/data ./packages/data
-COPY packages/shared ./packages/shared
-COPY packages/server-info ./packages/server-info
-
 COPY tsconfig.json .
-RUN npm run build:server-info
+
+# build dependencies - doing this manually improves docker caching
+COPY packages/models ./packages/models
+RUN npm run build -- --scope @creature-chess/models
+COPY packages/data ./packages/data
+RUN npm run build -- --scope @creature-chess/data
+COPY packages/shared ./packages/shared
+RUN npm run build -- --scope @creature-chess/shared
+COPY packages/auth-server ./packages/auth-server
+RUN npm run build -- --scope @creature-chess/auth-server
+
+# build main package
+COPY packages/server-info ./packages/server-info
+RUN npm run build -- --scope @creature-chess/server-info
 
 # todo: don't put source into the final docker image
 

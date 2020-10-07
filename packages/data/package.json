@@ -5,7 +5,10 @@
   "keywords": [],
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
   "license": "ISC",
-  "main": "src/index.ts",
+  "main": "lib/index.js",
+  "files": [
+    "lib/"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -14,7 +17,7 @@
     "url": "git+https://github.com/Jameskmonger/creature-chess.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "tsc -p ./tsconfig.json"
   },
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"

@@ -3,32 +3,25 @@ import { eventChannel } from "redux-saga";
 import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
 import { playerListUpdated } from "../../features/playerList/playerListActions";
 import { log } from "../../../log";
-import { BATTLE_FINISHED } from "@creature-chess/shared/match/combat/battleEventChannel";
 import { AppState } from "../../../store/state";
-import { IncomingPacketRegistry } from "@creature-chess/shared/networking/incoming-packet-registry";
-import {
-    ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse, PreparingPhaseUpdatePacket
-} from "@creature-chess/shared/networking/server-to-client";
-import {
-    ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements
-} from "@creature-chess/shared/networking/server-to-client-lobby";
-import { OutgoingPacketRegistry } from "@creature-chess/shared/networking/outgoing-packet-registry";
-import { ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS } from "@creature-chess/shared/networking/client-to-server";
-import { ConnectionStatus } from "@creature-chess/shared/networking";
-import { PlayerActionTypesArray, PlayerAction } from "@creature-chess/shared/player/actions";
 import { signIn } from "../../../auth/auth0";
-import { validateNickname } from "@creature-chess/shared/validation/nickname";
-import { cardsUpdated, clearOpponent, moneyUpdateAction, setLevelAction, setOpponent, shopLockUpdated } from "@creature-chess/shared/player/playerInfo";
-import { initialiseBoard, lockBoard, unlockBoard } from "@creature-chess/shared/board/actions/boardActions";
-import { initialiseBench } from "@creature-chess/shared/player/bench/benchActions";
+import {
+    BoardActions,
+    PlayerActions, PlayerInfoActions, BenchActions, GameActions,
+    BATTLE_FINISHED, startBattle,
+
+    validateNickname,
+    IncomingPacketRegistry, OutgoingPacketRegistry, ConnectionStatus,
+    ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse,
+    ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, ClientToServerPacketAcknowledgements, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS,
+    ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements
+} from "@creature-chess/shared";
 import { AuthSelectors } from "../../../auth";
 import { clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay, updateConnectionStatus } from "../../../ui/actions";
 import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
-import { finishGameAction, gamePhaseStarted, playersResurrected } from "@creature-chess/shared/game/store/actions";
 import { GamePhase } from "@creature-chess/models";
-import { Overlay } from "packages/app/src/ui/overlay";
+import { Overlay } from "../../../ui/overlay";
 import { clearSelectedPiece } from "../../features/board/actions";
-import { startBattle } from "@creature-chess/shared/match/combat/battleSaga";
 
 type Socket = SocketIOClient.Socket;
 
@@ -97,7 +90,7 @@ const subscribe = (
             ServerToClientPacketOpcodes.CARDS_UPDATE,
             (packet) => {
                 log("[CARDS_UPDATE]", packet);
-                emit(cardsUpdated(packet));
+                emit(PlayerInfoActions.cardsUpdated(packet));
             }
         );
 
@@ -105,7 +98,7 @@ const subscribe = (
             ServerToClientPacketOpcodes.MONEY_UPDATE,
             (packet) => {
                 log("[MONEY_UPDATE]", packet);
-                emit(moneyUpdateAction(packet));
+                emit(PlayerInfoActions.moneyUpdateAction(packet));
             }
         );
 
@@ -115,18 +108,18 @@ const subscribe = (
                 log("[PHASE_UPDATE]", packet);
 
                 emit(updateConnectionStatus(ConnectionStatus.CONNECTED));
-                emit(gamePhaseStarted(packet.phase, packet.startedAtSeconds));
+                emit(GameActions.gamePhaseStarted(packet.phase, packet.startedAtSeconds));
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {
                         const { cards, pieces: { board, bench } } = packet.payload;
 
-                        emit(initialiseBoard(board.pieces));
-                        emit(initialiseBench(bench));
-                        emit(cardsUpdated(cards));
-                        emit(unlockBoard());
+                        emit(BoardActions.initialiseBoard(board.pieces));
+                        emit(BenchActions.initialiseBench(bench));
+                        emit(PlayerInfoActions.cardsUpdated(cards));
+                        emit(PlayerInfoActions.clearOpponent());
+                        emit(BoardActions.unlockBoard());
                         emit(openOverlay(Overlay.SHOP));
-                        emit(clearOpponent());
                         emit(clearAnnouncement());
                         return;
                     }
@@ -134,13 +127,13 @@ const subscribe = (
                         const { board, bench, opponentId } = packet.payload;
 
                         if (board) {
-                            emit(initialiseBoard(board.pieces));
+                            emit(BoardActions.initialiseBoard(board.pieces));
                         }
 
-                        emit(initialiseBench(bench));
-                        emit(lockBoard());
+                        emit(BenchActions.initialiseBench(bench));
+                        emit(BoardActions.lockBoard());
                         emit(closeOverlay());
-                        emit(setOpponent(opponentId));
+                        emit(PlayerInfoActions.setOpponent(opponentId));
                         emit(clearSelectedPiece());
                         return;
                     }
@@ -159,7 +152,7 @@ const subscribe = (
             (packet) => {
                 log("[LEVEL_UPDATE]", packet);
 
-                emit(setLevelAction(packet.level, packet.xp));
+                emit(PlayerInfoActions.setLevelAction(packet.level, packet.xp));
             }
         );
 
@@ -194,15 +187,15 @@ const subscribe = (
 
                 const { money, cards, players, level: { level, xp }, board, bench, phase } = fullState;
 
-                emit(moneyUpdateAction(money));
-                emit(cardsUpdated(cards));
+                emit(PlayerInfoActions.moneyUpdateAction(money));
+                emit(PlayerInfoActions.cardsUpdated(cards));
                 emit(playerListUpdated(players));
-                emit(setLevelAction(level, xp));
-                emit(initialiseBoard(board));
-                emit(initialiseBench(bench));
+                emit(PlayerInfoActions.setLevelAction(level, xp));
+                emit(BoardActions.initialiseBoard(board));
+                emit(BenchActions.initialiseBench(bench));
 
                 if (phase) {
-                    emit(gamePhaseStarted(phase.phase, phase.startedAtSeconds));
+                    emit(GameActions.gamePhaseStarted(phase.phase, phase.startedAtSeconds));
                 } else {
                     emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                 }
@@ -214,7 +207,7 @@ const subscribe = (
             (packet) => {
                 log("[FINISH_GAME]", packet);
 
-                emit(finishGameAction(packet.winnerName));
+                emit(GameActions.finishGameAction(packet.winnerName));
 
                 socket.close();
             }
@@ -225,14 +218,14 @@ const subscribe = (
             (packet) => {
                 log("[SHOP_LOCK_UPDATE]", packet);
 
-                emit(shopLockUpdated(packet.locked));
+                emit(PlayerInfoActions.shopLockUpdated(packet.locked));
             }
         );
 
         registry.on(
             ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
             ({ playerIds }) => {
-                emit(playersResurrected(playerIds));
+                emit(GameActions.playersResurrected(playerIds));
             }
         );
 
@@ -252,7 +245,7 @@ const readPacketsToActions = function*(incomingRegistry: ServerToClientPacketReg
 const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
     let transmissionInProgress = false;
     let actionPacketIndex = 0;
-    let pendingActions: PlayerAction[] = [];
+    let pendingActions: PlayerActions.PlayerAction[] = [];
 
     const emitPendingActions = () => {
         // if there's a transmission in progress then wait
@@ -308,14 +301,14 @@ const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
         sendPacket();
     };
 
-    const queueAction = (action: PlayerAction) => {
+    const queueAction = (action: PlayerActions.PlayerAction) => {
         pendingActions.push(action);
 
         emitPendingActions();
     };
 
-    yield takeEvery<PlayerAction>(
-        PlayerActionTypesArray,
+    yield takeEvery<PlayerActions.PlayerAction>(
+        PlayerActions.PlayerActionTypesArray,
         function*(action) {
             queueAction(action);
         }

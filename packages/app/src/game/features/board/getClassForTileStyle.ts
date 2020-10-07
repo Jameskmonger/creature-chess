@@ -1,4 +1,4 @@
-import { TileStyle } from "@creature-chess/models/src/position";
+import { TileStyle } from "@creature-chess/models";
 
 export const getClassForTileStyle = (style: TileStyle) => {
   switch (style) {

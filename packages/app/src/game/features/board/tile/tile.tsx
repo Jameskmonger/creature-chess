@@ -1,16 +1,14 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
-import { TileType, TileStyle } from "@creature-chess/models/src/position";
+import { TileType, TileStyle } from "@creature-chess/models";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../../store";
 import { getClassForTileStyle } from "../getClassForTileStyle";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/shared/player/pieceSelectors";
-import { playerDropPiece } from "@creature-chess/shared/player/actions";
+import { getPiece } from "@creature-chess/shared";
 import { ownedPieceSelector, boardTilePieceSelector, benchTilePieceSelector } from "../../../../store/pieceSelectors";
 import { Dispatch } from "redux";
-import { canDropPiece } from "@creature-chess/shared/board";
-import { getPlayerLevel } from "@creature-chess/shared/player/playerSelectors";
+import { canDropPiece, PlayerActions, getPlayerLevel } from "@creature-chess/shared";
 import { clearSelectedPiece } from "../actions";
 
 interface TileProps {
@@ -64,7 +62,7 @@ const onDropPiece = (dispatch: Dispatch, piece: PieceModel, type: TileType, x: n
             })
     );
 
-    dispatch(playerDropPiece(piece.id, from, to));
+    dispatch(PlayerActions.playerDropPiece(piece.id, from, to));
     dispatch(clearSelectedPiece());
 };
 
