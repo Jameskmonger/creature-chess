@@ -11,7 +11,7 @@ import { CardDeck } from "../cardDeck";
 import { Match } from "../match";
 import {
     createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry,
-    playerStreak, playerBattle, playerMatchRewards, sellPiece, rerollCards,
+    playerStreak, playerBattle, playerMatchRewards,
     subtractHealthCommand, fillBoardCommand
 } from "./sagas";
 import {
@@ -68,8 +68,6 @@ export abstract class Player {
         this.sagaMiddleware.run(this.quitGameSaga());
         this.sagaMiddleware.run(this.clientFinishMatchSaga());
         this.sagaMiddleware.run(this.finishGameSaga());
-        this.sagaMiddleware.run(sellPiece);
-        this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
         playerBattle(this.sagaMiddleware);
         playerMatchRewards(this.sagaMiddleware);

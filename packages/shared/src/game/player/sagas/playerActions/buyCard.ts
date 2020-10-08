@@ -1,15 +1,15 @@
 import { take, select, put } from "@redux-saga/core/effects";
-import { BuyCardAction, BUY_CARD_ACTION } from "../actions";
+import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { BoardCommands } from "../../../board";
-import { DefinitionProvider } from "../../definitions/definitionProvider";
-import { createPieceFromCard } from "../../../utils/piece-utils";
-import { addBenchPieceCommand } from "../bench/commands";
-import { PlayerState } from "../store";
-import { log } from "../../../log";
-import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../playerSelectors";
-import { updateCardsCommand, updateMoneyCommand } from "../playerInfo/commands";
-import { getFirstEmptyBenchSlot } from "../pieceSelectors";
+import { BoardCommands } from "../../../../board";
+import { DefinitionProvider } from "../../../definitions/definitionProvider";
+import { createPieceFromCard } from "../../../../utils/piece-utils";
+import { addBenchPieceCommand } from "../../bench/commands";
+import { PlayerState } from "../../store";
+import { log } from "../../../../log";
+import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../../playerSelectors";
+import { updateCardsCommand, updateMoneyCommand } from "../../playerInfo/commands";
+import { getFirstEmptyBenchSlot } from "../../pieceSelectors";
 
 const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
@@ -42,7 +42,7 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
     return null;
 };
 
-export const cardShopSagaFactory = <TState extends PlayerState>(definitionProvider: DefinitionProvider, playerId: string) => {
+export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(definitionProvider: DefinitionProvider, playerId: string) => {
     return function*() {
         while (true) {
             const { payload: { index } }: BuyCardAction = yield take(BUY_CARD_ACTION);

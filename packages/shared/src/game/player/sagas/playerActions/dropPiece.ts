@@ -1,11 +1,11 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../actions";
-import * as pieceSelectors from "../pieceSelectors";
-import { BoardCommands } from "../../../board";
-import { moveBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand } from "../bench/commands";
-import { PlayerState } from "../store";
-import { getPlayerBelowPieceLimit } from "../playerSelectors";
+import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../../actions";
+import * as pieceSelectors from "../../pieceSelectors";
+import { BoardCommands } from "../../../../board";
+import { moveBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand } from "../../bench/commands";
+import { PlayerState } from "../../store";
+import { getPlayerBelowPieceLimit } from "../../playerSelectors";
 
 const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {
@@ -35,7 +35,7 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
   return true;
 };
 
-export const dropPieceSagaFactory = <TState extends PlayerState>(playerId: string) => {
+export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(playerId: string) => {
   return function*() {
     yield takeEvery<PlayerDropPieceAction>(
       PLAYER_DROP_PIECE_ACTION,
