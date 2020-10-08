@@ -10,16 +10,15 @@ export {
 
 export {
     DefinitionProvider,
-    GameActions,
     battle, startBattle,
     BATTLE_FINISH_EVENT,
-    gameReducer, GameState, Game, Player,
+    gameReducer, GameState, Game, Player, GameEvents,
     getPiece, getAllPieces, getBoardPieceForPosition, canDropPiece,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     BenchCommands, benchReducer, BenchState,
-    PlayerActions, PlayerState, PlayerSagas,
-    defaultGameOptions
+    PlayerActions, PlayerState, PlayerSagas, PlayerEvents,
+    defaultGameOptions, Match
 } from "./game";
 
 export {

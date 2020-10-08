@@ -1,4 +1,4 @@
-import { GameCommand, START_GAME_PHASE_COMMAND } from "./commands";
+import { GameEvent, GAME_PHASE_STARTED_EVENT } from "./events";
 import { GameState } from "./state";
 
 export const initialState: GameState = {
@@ -7,9 +7,9 @@ export const initialState: GameState = {
     phaseStartedAtSeconds: null,
 };
 
-export function reducer(state: GameState = initialState, command: GameCommand): GameState {
+export function reducer(state: GameState = initialState, command: GameEvent): GameState {
     switch (command.type) {
-        case START_GAME_PHASE_COMMAND:
+        case GAME_PHASE_STARTED_EVENT:
             if (command.payload.round) {
                 return {
                     ...state,

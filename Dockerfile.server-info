@@ -36,4 +36,4 @@ RUN npm run build -- --scope @creature-chess/server-info
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start:server-info" ]
+CMD [ "node", "packages/server-info/lib/index.js", "3000" ]
