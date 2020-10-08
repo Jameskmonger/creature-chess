@@ -4,7 +4,7 @@ import { AppState } from "../../store";
 import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
 import { announcement } from "./actions/announcement";
 
-import { PlayerSagas, battle, DefinitionProvider, defaultGameOptions } from "@creature-chess/shared";
+import { PlayerSagas, PlayerActionSagas, battle, DefinitionProvider, defaultGameOptions } from "@creature-chess/shared";
 
 export const gameSagaFactory = (playerId: string) => {
     const definitionProvider = new DefinitionProvider();
@@ -14,11 +14,12 @@ export const gameSagaFactory = (playerId: string) => {
             yield fork(preventAccidentalClose),
             yield fork(announcement),
             yield fork(closeShopOnFirstBuy),
-            yield fork(PlayerSagas.sellPiece),
-            yield fork(PlayerSagas.rerollCards),
             yield fork(PlayerSagas.evolutionSagaFactory<AppState>()),
-            yield fork(PlayerSagas.cardShopSagaFactory<AppState>(definitionProvider, playerId)),
-            yield fork(PlayerSagas.dropPieceSagaFactory<AppState>(playerId)),
+            yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<AppState>()),
+            yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<AppState>()),
+            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<AppState>(definitionProvider, playerId)),
+            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<AppState>()),
+            yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<AppState>(playerId)),
             yield fork(PlayerSagas.xpSagaFactory<AppState>()),
             yield fork(
                 battle,

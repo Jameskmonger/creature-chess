@@ -17,7 +17,7 @@ export {
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     BenchCommands, benchReducer, BenchState,
-    PlayerActions, PlayerState, PlayerSagas, PlayerEvents,
+    PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents,
     defaultGameOptions, Match
 } from "./game";
 
