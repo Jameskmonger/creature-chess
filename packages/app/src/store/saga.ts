@@ -4,15 +4,20 @@ import { networking } from "../game/sagas/networking/saga";
 import { gameSagaFactory } from "../game";
 import { SanitizedUser } from "@creature-chess/models";
 import { AppState } from "./state";
-import { JOIN_COMPLETE } from "../ui/actions";
+import { UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS } from "../ui/actions";
+import { ConnectionStatus } from "@creature-chess/shared";
 
 export const rootSaga = function*() {
     yield all([
         yield fork(authSaga),
         yield fork(networking),
-        yield takeEvery(
-            JOIN_COMPLETE,
-            function*() {
+        yield takeEvery<UpdateConnectionStatusAction>(
+            UPDATE_CONNECTION_STATUS,
+            function*({ payload: { status } }) {
+                if (status !== ConnectionStatus.CONNECTED) {
+                    return;
+                }
+
                 const user: SanitizedUser = yield select((state: AppState) => state.auth.user);
 
                 yield fork(gameSagaFactory(user.id));

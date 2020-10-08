@@ -2,6 +2,7 @@ import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core
 import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GRID_SIZE, BUY_XP_COST, GamePhase } from "@creature-chess/models";
 import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition, PlayerEvents, GameEvents } from "@creature-chess/shared";
 import uuid = require("uuid");
+import delay from "delay";
 
 const PREFERRED_COLUMN_ORDERS = {
     8: [
@@ -53,27 +54,29 @@ export class BotPlayer extends Player {
         ];
     }
 
-    public onStartGame(gameId: string) { /* nothing required, we're a bot */ }
-
     public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
         /* nothing required, we're a bot */
     }
 
-    private spendExcessMoneyOnXp() {
+    private async spendExcessMoneyOnXp() {
         while (true) {
-            const hasEnoughMoney = this.getMoney() >= (10 + BUY_XP_COST);
+            const money = this.getMoney();
+            const hasEnoughMoney = money >= (10 + BUY_XP_COST);
 
             if (!hasEnoughMoney) {
                 return;
             }
 
-            const canLevelUp = this.getLevel() !== 10;
+            const level = this.getLevel();
+            const canLevelUp = level !== 10;
 
             if (!canLevelUp) {
                 return;
             }
 
             this.store.dispatch(PlayerActions.buyXpAction());
+
+            await delay(500);
         }
     }
 
@@ -233,9 +236,9 @@ export class BotPlayer extends Player {
     }
 
     private botLogicSaga() {
-        const preparingPhase = () => {
+        const preparingPhase = async () => {
             this.buyBestPieces();
-            this.spendExcessMoneyOnXp();
+            await this.spendExcessMoneyOnXp();
             this.putBenchOnBoard();
 
             this.store.dispatch(PlayerActions.readyUpAction());

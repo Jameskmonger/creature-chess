@@ -3,10 +3,10 @@ import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT,
     EnableDebugModeAction, UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, ENABLE_DEBUG_MODE, JoinErrorAction,
-    JoinCompleteAction, FindGameAction, FIND_GAME, JOIN_ERROR, JOIN_COMPLETE, FINISH_GAME, FinishGameAction
+    FindGameAction, FIND_GAME, JOIN_ERROR, FINISH_GAME, FinishGameAction
 } from "./actions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../game/features/board/actions";
-import { ConnectionStatus } from "@creature-chess/shared";
+import { ConnectionStatus, GameEvents } from "@creature-chess/shared";
 
 const initialState: UiState = {
     loading: false,
@@ -28,13 +28,12 @@ type UIAction =
     | AnnouncementUpdateAction
     | AnnouncementClearAction
     | JoinErrorAction
-    | JoinCompleteAction
     | FindGameAction
     | EnableDebugModeAction
     | UpdateConnectionStatusAction
     | FinishGameAction;
 
-export function reducer(state: UiState = initialState, action: UIAction) {
+export function reducer(state: UiState = initialState, action: UIAction | GameEvents.GamePhaseStartedEvent) {
     switch (action.type) {
         case FIND_GAME:
             return {
@@ -104,7 +103,7 @@ export function reducer(state: UiState = initialState, action: UIAction) {
                 loading: false,
                 menuError: action.payload.error
             };
-        case JOIN_COMPLETE:
+        case GameEvents.GAME_PHASE_STARTED_EVENT:
             return {
                 ...state,
                 loading: false,

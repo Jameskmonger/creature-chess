@@ -4,7 +4,7 @@ import {
     PlayerActions, PlayerState, PlayerInfoCommands, GameEvents, PlayerEvents, Match,
     OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket
 } from "@creature-chess/shared";
-import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT, JoinGameEvent, JOIN_GAME_EVENT } from "../events";
+import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
@@ -63,12 +63,6 @@ export const outgoingNetworking = (getCurrentMatch: () => Match) => {
 
         const sendAnnouncements = function*() {
             yield all([
-                takeLatest<JoinGameEvent>(
-                    JOIN_GAME_EVENT,
-                    function*({ payload }) {
-                        registry.emit(ServerToClientPacketOpcodes.JOIN_GAME, payload);
-                    }
-                ),
                 takeLatest<GameEvents.PlayersResurrectedEvent>(
                     GameEvents.PLAYERS_RESURRECTED_EVENT,
                     function*({ payload: { playerIds } }) {

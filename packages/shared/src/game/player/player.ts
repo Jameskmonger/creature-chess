@@ -244,8 +244,6 @@ export abstract class Player {
         return this.store.getState().playerInfo.cards;
     }
 
-    public abstract onStartGame(gameId: string);
-
     private afterSellPieceEventSaga() {
         const addPieceToDeck = (piece: PieceModel) => {
             this.deck.addPiece(piece);
