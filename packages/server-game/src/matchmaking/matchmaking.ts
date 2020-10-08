@@ -1,13 +1,12 @@
 import io = require("socket.io");
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
-import { SocketPlayer } from "../player/socketPlayer";
+import { SocketPlayer, BotPlayer } from "../player";
 import { log, Game } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
 import { LobbyMemberType } from "./lobby/lobbyMember";
-import { BotPlayer } from "../player/botPlayer";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();

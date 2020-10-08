@@ -1,5 +1,5 @@
 import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GRID_SIZE, BUY_XP_COST } from "@creature-chess/models";
-import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition } from "@creature-chess/shared";
+import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition, PlayerEvents } from "@creature-chess/shared";
 import uuid = require("uuid");
 
 const PREFERRED_COLUMN_ORDERS = {
@@ -71,7 +71,7 @@ export class BotPlayer extends Player {
     protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
 
     protected onEnterPlayingPhase(startedAtSeconds: number) {
-        this.finishMatch();
+        this.store.dispatch(PlayerEvents.clientFinishMatchEvent());
     }
 
     protected onDeath(startedAtSeconds: number) {

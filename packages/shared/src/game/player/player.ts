@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { SagaMiddleware } from "redux-saga";
-import { takeEvery } from "@redux-saga/core/effects";
+import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 
@@ -14,12 +14,16 @@ import {
     playerStreak, playerBattle, playerMatchRewards, sellPiece, rerollCards,
     subtractHealthCommand, fillBoardCommand
 } from "./sagas";
-import { AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT, playerFinishMatchEvent } from "./events";
+import {
+    AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT,
+    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent
+} from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces } from "./pieceSelectors";
+import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -41,13 +45,13 @@ export abstract class Player {
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
+    protected getGameState: () => GameState;
+    protected getPlayerListPlayers: () => PlayerListPlayer[];
+
     private events = new EventEmitter();
     private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
     private deck: CardDeck;
-
-    protected getGameState: () => GameState;
-    protected getPlayerListPlayers: () => PlayerListPlayer[];
 
     constructor(id: string, name: string) {
         this.id = id;
@@ -59,6 +63,8 @@ export abstract class Player {
 
         this.sagaMiddleware.run(this.afterSellPieceEventSaga());
         this.sagaMiddleware.run(this.afterRerollCardsEventSaga());
+        this.sagaMiddleware.run(this.quitGameSaga());
+        this.sagaMiddleware.run(this.clientFinishMatchSaga());
         this.sagaMiddleware.run(sellPiece);
         this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
@@ -259,21 +265,6 @@ export abstract class Player {
 
     protected abstract onDeath(phaseStartedAt: number);
 
-    protected quitGame() {
-        this.store.dispatch(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
-
-        // todo combine these
-        this.events.emit(PlayerEvent.QUIT_GAME, this);
-    }
-
-    protected finishMatch = () => {
-        if (this.match === null) {
-            return;
-        }
-
-        this.match.onClientFinishMatch();
-    }
-
     private afterSellPieceEventSaga() {
         const addPieceToDeck = (piece: PieceModel) => {
             this.deck.addPiece(piece);
@@ -298,6 +289,40 @@ export abstract class Player {
                 AFTER_REROLL_CARDS_EVENT,
                 function*() {
                     thisRerollCards();
+                }
+            );
+        };
+    }
+
+    private quitGameSaga() {
+        const emitEvent = () => this.events.emit(PlayerEvent.QUIT_GAME, this);
+
+        return function*() {
+            yield takeEvery<QuitGameAction>(
+                QUIT_GAME_ACTION,
+                function*() {
+                    yield put(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
+
+                    emitEvent();
+                }
+            );
+        };
+    }
+
+    private clientFinishMatchSaga() {
+        const finishMatch = () => {
+            if (this.match === null) {
+                return;
+            }
+
+            this.match.onClientFinishMatch();
+        };
+
+        return function*() {
+            yield takeLatest<ClientFinishMatchEvent>(
+                CLIENT_FINISH_MATCH_EVENT,
+                function*() {
+                    finishMatch();
                 }
             );
         };
