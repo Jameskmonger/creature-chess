@@ -1,4 +1,5 @@
 import { PlayerAction } from "../game/player/actions";
+import { EmptyPacket } from "./empty-packet";
 
 export enum ClientToServerPacketOpcodes {
   FINISH_MATCH = "finishMatch",
@@ -11,8 +12,6 @@ export type SendPlayerActionsPacket = {
 };
 
 export const SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS = 300;
-
-export type EmptyPacket = { empty: true };
 
 export type ClientToServerPacketDefinitions = {
   [ClientToServerPacketOpcodes.FINISH_MATCH]: EmptyPacket,

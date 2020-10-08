@@ -1,6 +1,7 @@
 import { Card, GamePhase, IndexedPieces, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "../board";
 import { BenchState } from "../game/player/bench";
+import { EmptyPacket } from "./empty-packet";
 
 export type PreparingPhaseUpdatePacket = {
   startedAtSeconds: number,
@@ -27,13 +28,11 @@ export type ReadyPhaseUpdatePacket = {
 };
 
 type PlayingPhaseUpdatePacket = ({ startedAtSeconds: number, phase: GamePhase.PLAYING });
-type DeadPhaseUpdatePacket = ({ startedAtSeconds: number, phase: GamePhase.DEAD });
 
 export type PhaseUpdatePacket =
   PreparingPhaseUpdatePacket
   | ReadyPhaseUpdatePacket
-  | PlayingPhaseUpdatePacket
-  | DeadPhaseUpdatePacket;
+  | PlayingPhaseUpdatePacket;
 
 type LevelUpdatePacket = {
   level: number;
@@ -85,6 +84,7 @@ export enum ServerToClientPacketOpcodes {
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
   PLAYERS_RESURRECTED = "playersResurrected",
+  PLAYER_DEAD = "playerDead"
 }
 
 export type ServerToClientPacketDefinitions = {
@@ -97,6 +97,7 @@ export type ServerToClientPacketDefinitions = {
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
+  [ServerToClientPacketOpcodes.PLAYER_DEAD]: EmptyPacket,
 };
 
 export type ServerToClientPacketAcknowledgements = {
@@ -108,5 +109,6 @@ export type ServerToClientPacketAcknowledgements = {
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: never,
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
-  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never
+  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never,
+  [ServerToClientPacketOpcodes.PLAYER_DEAD]: never,
 };

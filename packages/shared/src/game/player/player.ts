@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { SagaMiddleware } from "redux-saga";
-import { takeEvery } from "@redux-saga/core/effects";
+import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 
@@ -14,12 +14,18 @@ import {
     playerStreak, playerBattle, playerMatchRewards, sellPiece, rerollCards,
     subtractHealthCommand, fillBoardCommand
 } from "./sagas";
-import { AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT, playerFinishMatchEvent } from "./events";
+import {
+    AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT,
+    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, playerDeathEvent
+} from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces } from "./pieceSelectors";
+import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
+import { GameEvent } from "../store/events";
+import { GameEvents } from "../store";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -41,13 +47,13 @@ export abstract class Player {
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
+    protected getGameState: () => GameState;
+    protected getPlayerListPlayers: () => PlayerListPlayer[];
+
     private events = new EventEmitter();
     private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
     private deck: CardDeck;
-
-    protected getGameState: () => GameState;
-    protected getPlayerListPlayers: () => PlayerListPlayer[];
 
     constructor(id: string, name: string) {
         this.id = id;
@@ -59,6 +65,9 @@ export abstract class Player {
 
         this.sagaMiddleware.run(this.afterSellPieceEventSaga());
         this.sagaMiddleware.run(this.afterRerollCardsEventSaga());
+        this.sagaMiddleware.run(this.quitGameSaga());
+        this.sagaMiddleware.run(this.clientFinishMatchSaga());
+        this.sagaMiddleware.run(this.finishGameSaga());
         this.sagaMiddleware.run(sellPiece);
         this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
@@ -66,6 +75,10 @@ export abstract class Player {
         playerMatchRewards(this.sagaMiddleware);
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
+    }
+
+    public receiveGameEvent(gameEvent: GameEvent) {
+        this.store.dispatch(gameEvent);
     }
 
     public propertyUpdates() {
@@ -84,9 +97,7 @@ export abstract class Player {
         this.definitionProvider = definitionProvider;
     }
 
-    public getMatch() {
-        return this.match;
-    }
+    public getMatch = () => this.match;
 
     public getHealth() {
         return this.store.getState().playerInfo.health;
@@ -116,23 +127,17 @@ export abstract class Player {
         return this.store.getState().playerInfo.battle;
     }
 
-    public onFinishGame(winner: Player) {
-        this.events.removeAllListeners();
-    }
-
     public setDeck(deck: CardDeck) {
         this.deck = deck;
     }
 
-    public async enterPreparingPhase() {
+    public enterPreparingPhase() {
         if (this.store.getState().playerInfo.shopLocked === false) {
             this.rerollCards();
         }
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
         this.store.dispatch(BenchCommands.unlockBenchCommand());
-
-        this.onEnterPreparingPhase();
     }
 
     public fillBoard() {
@@ -144,13 +149,9 @@ export abstract class Player {
 
         this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(match.away.id));
         this.match = match;
-
-        this.onEnterReadyPhase();
     }
 
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
-        this.onEnterPlayingPhase(startedAt);
-
         const finalMatchBoard = await this.match.fight(battleTimeout.promise);
 
         const pieces = Object.values(finalMatchBoard.pieces);
@@ -217,7 +218,7 @@ export abstract class Player {
 
     public kill() {
         this.clearPieces();
-        this.onDeath(Date.now());
+        this.store.dispatch(playerDeathEvent());
     }
 
     public resurrect(startingHealth: number) {
@@ -245,34 +246,7 @@ export abstract class Player {
         return this.store.getState().playerInfo.cards;
     }
 
-    public abstract onPlayersResurrected(playerIds: string[]);
-
     public abstract onStartGame(gameId: string);
-
-    public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
-
-    protected abstract onEnterPreparingPhase();
-
-    protected abstract onEnterReadyPhase();
-
-    protected abstract onEnterPlayingPhase(startedAt: number);
-
-    protected abstract onDeath(phaseStartedAt: number);
-
-    protected quitGame() {
-        this.store.dispatch(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
-
-        // todo combine these
-        this.events.emit(PlayerEvent.QUIT_GAME, this);
-    }
-
-    protected finishMatch = () => {
-        if (this.match === null) {
-            return;
-        }
-
-        this.match.onClientFinishMatch();
-    }
 
     private afterSellPieceEventSaga() {
         const addPieceToDeck = (piece: PieceModel) => {
@@ -298,6 +272,53 @@ export abstract class Player {
                 AFTER_REROLL_CARDS_EVENT,
                 function*() {
                     thisRerollCards();
+                }
+            );
+        };
+    }
+
+    private quitGameSaga() {
+        const emitEvent = () => this.events.emit(PlayerEvent.QUIT_GAME, this);
+
+        return function*() {
+            yield takeEvery<QuitGameAction>(
+                QUIT_GAME_ACTION,
+                function*() {
+                    yield put(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
+
+                    emitEvent();
+                }
+            );
+        };
+    }
+
+    private clientFinishMatchSaga() {
+        const finishMatch = () => {
+            if (this.match === null) {
+                return;
+            }
+
+            this.match.onClientFinishMatch();
+        };
+
+        return function*() {
+            yield takeLatest<ClientFinishMatchEvent>(
+                CLIENT_FINISH_MATCH_EVENT,
+                function*() {
+                    finishMatch();
+                }
+            );
+        };
+    }
+
+    private finishGameSaga() {
+        const removeListeners = () => this.events.removeAllListeners();
+
+        return function*() {
+            yield takeLatest<GameEvents.GameFinishEvent>(
+                GameEvents.GAME_FINISH_EVENT,
+                function*() {
+                    removeListeners();
                 }
             );
         };

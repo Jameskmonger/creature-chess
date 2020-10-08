@@ -7,14 +7,14 @@ import { AppState } from "../../../store/state";
 import { signIn } from "../../../auth/auth0";
 import {
     BoardCommands,
-    PlayerActions, PlayerInfoCommands, BenchCommands, GameActions,
+    PlayerActions, PlayerInfoCommands, BenchCommands,
     BATTLE_FINISH_EVENT, startBattle,
 
     validateNickname,
     IncomingPacketRegistry, OutgoingPacketRegistry, ConnectionStatus,
     ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements, AuthenticateResponse,
     ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, ClientToServerPacketAcknowledgements, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS,
-    ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements
+    ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements, GameEvents
 } from "@creature-chess/shared";
 import { AuthSelectors } from "../../../auth";
 import {
@@ -111,7 +111,7 @@ const subscribe = (
                 log("[PHASE_UPDATE]", packet);
 
                 emit(updateConnectionStatus(ConnectionStatus.CONNECTED));
-                emit(GameActions.startGamePhaseCommand(packet.phase, packet.startedAtSeconds));
+                emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds));
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {
@@ -198,7 +198,7 @@ const subscribe = (
                 emit(BenchCommands.initialiseBenchCommand(bench));
 
                 if (phase) {
-                    emit(GameActions.startGamePhaseCommand(phase.phase, phase.startedAtSeconds));
+                    emit(GameEvents.gamePhaseStartedEvent(phase.phase, phase.startedAtSeconds));
                 } else {
                     emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                 }
