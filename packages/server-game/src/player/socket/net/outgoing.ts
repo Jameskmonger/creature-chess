@@ -1,16 +1,16 @@
 import { takeLatest, take, race, fork, all, select } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import {
-    PlayerActions, PlayerState, PlayerInfoCommands, GameEvents,
-    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, PlayerEvents
+    PlayerActions, PlayerState, PlayerInfoCommands, GameEvents, PlayerEvents, Match,
+    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket
 } from "@creature-chess/shared";
-import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
+import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT, JoinGameEvent, JOIN_GAME_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-export const outgoingNetworking = function*() {
-    const sendPackets = function*() {
+export const outgoingNetworking = (getCurrentMatch: () => Match) => {
+    return function*() {
         let registry: OutgoingRegistry;
         let socket: Socket;
 
@@ -38,13 +38,16 @@ export const outgoingNetworking = function*() {
                     } else if (phase === GamePhase.READY) {
                         const { bench }: PlayerState = yield select();
 
+                        // todo this isn't nice, get it in state?
+                        const match = getCurrentMatch();
+
                         const packet: PhaseUpdatePacket = {
                             startedAtSeconds: startedAt,
                             phase: GamePhase.READY,
                             payload: {
                                 bench,
-                                board: this.match.getBoard(),
-                                opponentId: this.match.away.id
+                                board: match.getBoard(),
+                                opponentId: match.away.id
                             }
                         };
 
@@ -60,9 +63,15 @@ export const outgoingNetworking = function*() {
 
         const sendAnnouncements = function*() {
             yield all([
+                takeLatest<JoinGameEvent>(
+                    JOIN_GAME_EVENT,
+                    function*({ payload }) {
+                        registry.emit(ServerToClientPacketOpcodes.JOIN_GAME, payload);
+                    }
+                ),
                 takeLatest<GameEvents.PlayersResurrectedEvent>(
                     GameEvents.PLAYERS_RESURRECTED_EVENT,
-                    function*({ payload: { playerIds }}) {
+                    function*({ payload: { playerIds } }) {
                         registry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
                     }
                 ),
@@ -72,6 +81,12 @@ export const outgoingNetworking = function*() {
                         registry.emit(ServerToClientPacketOpcodes.PLAYER_DEAD, { empty: true });
                     }
                 ),
+                takeLatest<GameEvents.GameFinishEvent>(
+                    GameEvents.GAME_FINISH_EVENT,
+                    function*({ payload: { winnerName } }) {
+                        registry.emit(ServerToClientPacketOpcodes.FINISH_GAME, { winnerName });
+                    }
+                )
             ]);
         };
 
@@ -84,7 +99,7 @@ export const outgoingNetworking = function*() {
             );
         };
 
-        const writeToRegistry = function*() {
+        const sendCommands = function*() {
             yield all([
                 yield takeLatest<PlayerInfoCommands.UpdateCardsCommand>(
                     PlayerInfoCommands.UPDATE_CARDS_COMMAND,
@@ -131,16 +146,18 @@ export const outgoingNetworking = function*() {
                     (opcode, payload, ack) => socket.emit(opcode, payload, ack)
                 );
 
-                yield fork(writeToRegistry);
+                yield fork(sendCommands);
                 yield fork(sendGamePhaseUpdates);
                 yield fork(sendAnnouncements);
                 yield fork(sendPlayerListUpdates);
             }
         );
-    };
 
-    yield race([
-        fork(sendPackets),
-        take(PlayerActions.QUIT_GAME_ACTION)
-    ]);
+        yield take([PlayerActions.QUIT_GAME_ACTION, GameEvents.GAME_FINISH_EVENT]);
+
+        socket.removeAllListeners();
+        socket.disconnect();
+        socket = null;
+        registry = null;
+    };
 };

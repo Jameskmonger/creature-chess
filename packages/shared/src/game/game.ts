@@ -10,12 +10,12 @@ import { DefinitionProvider } from "./definitions/definitionProvider";
 import { Player } from "./player";
 import { OpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
-import { createGameStore, GameCommands } from "./store";
+import { createGameStore, GameEvents } from "./store";
 import { GameOptions, getOptions } from "./options";
 import { readyNotifier } from "./readyNotifier";
 import { Match } from "./match";
 import { CardDeck } from "./cardDeck";
-import { playerListChangedEvent, playersResurrectedEvent } from "./store/events";
+import { GameEvent, gameFinishEvent, playerListChangedEvent, playersResurrectedEvent } from "./store/events";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -23,7 +23,7 @@ const stopwatch = (start: [number, number]) => {
     return Math.round((end[0] * 1000) + (end[1] / 1000000));
 };
 
-const finishGameEvent = "FINISH_GAME";
+const finishGameEventKey = "FINISH_GAME";
 
 export class Game {
     public readonly id: string;
@@ -58,7 +58,7 @@ export class Game {
     }
 
     public onFinish(fn: (winner: Player) => void) {
-        this.events.on(finishGameEvent, fn);
+        this.events.on(finishGameEventKey, fn);
     }
 
     public getPlayerById(playerId: string) {
@@ -79,12 +79,15 @@ export class Game {
         player.setDefinitionProvider(this.definitionProvider);
     }
 
+    private dispatchPublicGameEvent(event: GameEvent) {
+        this.store.dispatch(event);
+
+        this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
+            .forEach(p => p.receiveGameEvent(event));
+    }
+
     private onPlayerListUpdate = (playerList: PlayerListPlayer[]) => {
-        const players = this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED);
-
-        const event = playerListChangedEvent(playerList);
-
-        players.forEach(p => p.receiveGameEvent(event));
+        this.dispatchPublicGameEvent(playerListChangedEvent(playerList));
     }
 
     private startGame = async () => {
@@ -122,14 +125,15 @@ export class Game {
 
         const winner = this.getLivingPlayers()[0];
 
-        this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.onFinishGame(winner));
+        const event = gameFinishEvent(winner.name);
+        this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
 
         const gamePlayers = this.players.map(p => ({
             id: p.id,
             name: p.name
         }));
 
-        this.events.emit(finishGameEvent, winner, gamePlayers);
+        this.events.emit(finishGameEventKey, winner, gamePlayers);
 
         // more teardown
         this.events.removeAllListeners();
@@ -140,10 +144,10 @@ export class Game {
         const livingPlayers = this.getLivingPlayers();
         livingPlayers.forEach(p => p.enterPreparingPhase());
 
-        const { round } = this.store.getState();
-        this.store.dispatch(GameCommands.startPreparingPhaseCommand(round + 1, Date.now() / 1000));
-
         const notifier = readyNotifier(livingPlayers);
+
+        const { round } = this.store.getState();
+        this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.PREPARING, Date.now() / 1000, round + 1));
 
         await Promise.race([
             notifier.promise,
@@ -168,7 +172,7 @@ export class Game {
 
         this.opponentProvider.updateRotation();
 
-        this.store.dispatch(GameCommands.startGamePhaseCommand(GamePhase.READY, Date.now() / 1000));
+        this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.READY, Date.now() / 1000));
 
         await this.delayPhaseLength(GamePhase.READY);
     }
@@ -180,7 +184,7 @@ export class Game {
         const { round, phaseStartedAtSeconds: newPhaseStartedAt } = this.store.getState();
         const promises = this.getLivingPlayers().map(p => p.fightMatch(newPhaseStartedAt, battleTimeoutDeferred));
 
-        this.store.dispatch(GameCommands.startGamePhaseCommand(GamePhase.PLAYING, Date.now() / 1000));
+        this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.PLAYING, Date.now() / 1000));
 
         await Promise.all(promises);
 

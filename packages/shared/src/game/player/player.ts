@@ -25,6 +25,7 @@ import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
 import { GameEvent } from "../store/events";
+import { GameEvents } from "../store";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -66,6 +67,7 @@ export abstract class Player {
         this.sagaMiddleware.run(this.afterRerollCardsEventSaga());
         this.sagaMiddleware.run(this.quitGameSaga());
         this.sagaMiddleware.run(this.clientFinishMatchSaga());
+        this.sagaMiddleware.run(this.finishGameSaga());
         this.sagaMiddleware.run(sellPiece);
         this.sagaMiddleware.run(rerollCards);
         playerStreak(this.sagaMiddleware);
@@ -95,9 +97,7 @@ export abstract class Player {
         this.definitionProvider = definitionProvider;
     }
 
-    public getMatch() {
-        return this.match;
-    }
+    public getMatch = () => this.match;
 
     public getHealth() {
         return this.store.getState().playerInfo.health;
@@ -125,10 +125,6 @@ export abstract class Player {
 
     public getBattle() {
         return this.store.getState().playerInfo.battle;
-    }
-
-    public onFinishGame(winner: Player) {
-        this.events.removeAllListeners();
     }
 
     public setDeck(deck: CardDeck) {
@@ -310,6 +306,19 @@ export abstract class Player {
                 CLIENT_FINISH_MATCH_EVENT,
                 function*() {
                     finishMatch();
+                }
+            );
+        };
+    }
+
+    private finishGameSaga() {
+        const removeListeners = () => this.events.removeAllListeners();
+
+        return function*() {
+            yield takeLatest<GameEvents.GameFinishEvent>(
+                GameEvents.GAME_FINISH_EVENT,
+                function*() {
+                    removeListeners();
                 }
             );
         };

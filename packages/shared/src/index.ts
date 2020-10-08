@@ -10,7 +10,6 @@ export {
 
 export {
     DefinitionProvider,
-    GameCommands,
     battle, startBattle,
     BATTLE_FINISH_EVENT,
     gameReducer, GameState, Game, Player, GameEvents,
@@ -19,7 +18,7 @@ export {
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     BenchCommands, benchReducer, BenchState,
     PlayerActions, PlayerState, PlayerSagas, PlayerEvents,
-    defaultGameOptions
+    defaultGameOptions, Match
 } from "./game";
 
 export {

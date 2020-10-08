@@ -1,7 +1,7 @@
 import { takeLatest, put, select, delay } from "@redux-saga/core/effects";
 import { AppState } from "../../../store/state";
 import { clearAnnouncement, updateAnnouncement, PlayersResurrectedAction, PLAYERS_RESURRECTED } from "../../../ui/actions";
-import { PlayerInfoCommands, GameCommands } from "@creature-chess/shared";
+import { PlayerInfoCommands } from "@creature-chess/shared";
 
 // distinctLastJoin(["James", "Bob", "William", "Steve"], ", ", " and ")
 // -> "James, Bob, William and Steve"

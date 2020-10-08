@@ -11,6 +11,17 @@ export const gamePhaseStartedEvent = (phase: GamePhase, startedAt: number, round
     payload: { phase, startedAt, round }
 });
 
+export const GAME_FINISH_EVENT = "GAME_FINISH_EVENT";
+export type GAME_FINISH_EVENT = typeof GAME_FINISH_EVENT;
+export type GameFinishEvent = ({
+    type: GAME_FINISH_EVENT,
+    payload: { winnerName: string }
+});
+export const gameFinishEvent = (winnerName: string): GameFinishEvent => ({
+    type: GAME_FINISH_EVENT,
+    payload: { winnerName }
+});
+
 export const PLAYER_LIST_CHANGED_EVENT = "PLAYER_LIST_CHANGED_EVENT";
 export type PLAYER_LIST_CHANGED_EVENT = typeof PLAYER_LIST_CHANGED_EVENT;
 export type PlayerListChangedEvent = ({
@@ -34,4 +45,4 @@ export const playersResurrectedEvent = (playerIds: string[]): PlayersResurrected
 });
 
 export type GameEvent =
-    GamePhaseStartedEvent | PlayerListChangedEvent | PlayersResurrectedEvent;
+    GamePhaseStartedEvent | GameFinishEvent | PlayerListChangedEvent | PlayersResurrectedEvent;
