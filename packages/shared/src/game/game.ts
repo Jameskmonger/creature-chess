@@ -15,7 +15,7 @@ import { GameOptions, getOptions } from "./options";
 import { readyNotifier } from "./readyNotifier";
 import { Match } from "./match";
 import { CardDeck } from "./cardDeck";
-import { playerListChangedEvent } from "./store/events";
+import { playerListChangedEvent, playersResurrectedEvent } from "./store/events";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -23,9 +23,7 @@ const stopwatch = (start: [number, number]) => {
     return Math.round((end[0] * 1000) + (end[1] / 1000000));
 };
 
-enum GameEvents {
-    FINISH_GAME = "FINISH_GAME"
-}
+const finishGameEvent = "FINISH_GAME";
 
 export class Game {
     public readonly id: string;
@@ -60,7 +58,7 @@ export class Game {
     }
 
     public onFinish(fn: (winner: Player) => void) {
-        this.events.on(GameEvents.FINISH_GAME, fn);
+        this.events.on(finishGameEvent, fn);
     }
 
     public getPlayerById(playerId: string) {
@@ -131,7 +129,7 @@ export class Game {
             name: p.name
         }));
 
-        this.events.emit(GameEvents.FINISH_GAME, winner, gamePlayers);
+        this.events.emit(finishGameEvent, winner, gamePlayers);
 
         // more teardown
         this.events.removeAllListeners();
@@ -194,8 +192,10 @@ export class Game {
             }
 
             const justDiedPlayerIds = justDiedPlayers.map(p => p.id);
+            const event = playersResurrectedEvent(justDiedPlayerIds);
+
             for (const player of this.players) {
-                player.onPlayersResurrected(justDiedPlayerIds);
+                player.receiveGameEvent(event);
             }
         }
 

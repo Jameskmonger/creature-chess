@@ -58,6 +58,15 @@ export const outgoingNetworking = function*() {
             );
         };
 
+        const sendAnnouncements = function*() {
+            yield takeLatest<GameEvents.PlayersResurrectedEvent>(
+                GameEvents.PLAYERS_RESURRECTED_EVENT,
+                function*({ payload: { playerIds }}) {
+                    registry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
+                }
+            );
+        };
+
         const sendPlayerListUpdates = function*() {
             yield takeLatest<GameEvents.PlayerListChangedEvent>(
                 GameEvents.PLAYER_LIST_CHANGED_EVENT,
@@ -116,6 +125,7 @@ export const outgoingNetworking = function*() {
 
                 yield fork(writeToRegistry);
                 yield fork(sendGamePhaseUpdates);
+                yield fork(sendAnnouncements);
                 yield fork(sendPlayerListUpdates);
             }
         );

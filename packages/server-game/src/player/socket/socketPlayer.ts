@@ -66,10 +66,6 @@ export class SocketPlayer extends Player {
         this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
     }
 
-    public onPlayersResurrected(playerIds: string[]) {
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
-    }
-
     private clearSocket() {
         if (this.socket) {
             this.socket.disconnect();

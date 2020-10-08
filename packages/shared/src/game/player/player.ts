@@ -250,8 +250,6 @@ export abstract class Player {
         return this.store.getState().playerInfo.cards;
     }
 
-    public abstract onPlayersResurrected(playerIds: string[]);
-
     public abstract onStartGame(gameId: string);
 
     protected abstract onDeath(phaseStartedAt: number);
