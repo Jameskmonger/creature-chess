@@ -10,10 +10,10 @@ export {
 
 export {
     DefinitionProvider,
-    GameActions,
+    GameCommands,
     battle, startBattle,
     BATTLE_FINISH_EVENT,
-    gameReducer, GameState, Game, Player,
+    gameReducer, GameState, Game, Player, GameEvents,
     getPiece, getAllPieces, getBoardPieceForPosition, canDropPiece,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,

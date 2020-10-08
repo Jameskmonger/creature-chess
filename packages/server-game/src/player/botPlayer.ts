@@ -1,5 +1,6 @@
-import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GRID_SIZE, BUY_XP_COST } from "@creature-chess/models";
-import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition, PlayerEvents } from "@creature-chess/shared";
+import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
+import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GRID_SIZE, BUY_XP_COST, GamePhase } from "@creature-chess/models";
+import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition, PlayerEvents, GameEvents } from "@creature-chess/shared";
 import uuid = require("uuid");
 
 const PREFERRED_COLUMN_ORDERS = {
@@ -44,6 +45,8 @@ export class BotPlayer extends Player {
     constructor(name: string) {
         super(uuid(), name);
 
+        this.sagaMiddleware.run(this.botLogicSaga());
+
         const columnsForGridSize = PREFERRED_COLUMN_ORDERS[GRID_SIZE.width];
         this.preferredColumnOrder = columnsForGridSize[
             Math.floor(Math.random() * columnsForGridSize.length)
@@ -52,27 +55,11 @@ export class BotPlayer extends Player {
 
     public onStartGame(gameId: string) { /* nothing required, we're a bot */ }
 
-    public onPlayerListUpdate(players: PlayerListPlayer[]) { /* nothing required, we're a bot */ }
-
     public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
         /* nothing required, we're a bot */
     }
 
     public onPlayersResurrected() { /* nothing required, we're a bot */ }
-
-    protected onEnterPreparingPhase() {
-        this.buyBestPieces();
-        this.spendExcessMoneyOnXp();
-        this.putBenchOnBoard();
-
-        this.store.dispatch(PlayerActions.readyUpAction());
-    }
-
-    protected onEnterReadyPhase() { /* nothing required, we're a bot */ }
-
-    protected onEnterPlayingPhase(startedAtSeconds: number) {
-        this.store.dispatch(PlayerEvents.clientFinishMatchEvent());
-    }
 
     protected onDeath(startedAtSeconds: number) {
         /* nothing required, we're a bot */
@@ -249,5 +236,28 @@ export class BotPlayer extends Player {
         }
 
         return null;
+    }
+
+    private botLogicSaga() {
+        const preparingPhase = () => {
+            this.buyBestPieces();
+            this.spendExcessMoneyOnXp();
+            this.putBenchOnBoard();
+
+            this.store.dispatch(PlayerActions.readyUpAction());
+        };
+
+        return function*() {
+            yield takeLatest<GameEvents.GamePhaseStartedEvent>(
+                GameEvents.GAME_PHASE_STARTED_EVENT,
+                function*({ payload: { phase } }) {
+                    if (phase === GamePhase.PREPARING) {
+                        preparingPhase();
+                    } else if (phase === GamePhase.PLAYING) {
+                        yield put(PlayerEvents.clientFinishMatchEvent());
+                    }
+                }
+            );
+        };
     }
 }

@@ -8,7 +8,7 @@ export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo }
 export { BenchState, benchReducer, BenchCommands } from "./player/bench";
 export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
 
-export { GameState, gameReducer, GameCommands as GameActions } from "./store";
+export { GameState, gameReducer, GameCommands, GameEvents } from "./store";
 export { BATTLE_FINISH_EVENT, battle, startBattle } from "./match";
 export { DefinitionProvider } from "./definitions/definitionProvider";
 

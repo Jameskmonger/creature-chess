@@ -7,7 +7,7 @@ import { AppState } from "../../../store/state";
 import { signIn } from "../../../auth/auth0";
 import {
     BoardCommands,
-    PlayerActions, PlayerInfoCommands, BenchCommands, GameActions,
+    PlayerActions, PlayerInfoCommands, BenchCommands, GameCommands,
     BATTLE_FINISH_EVENT, startBattle,
 
     validateNickname,
@@ -111,7 +111,7 @@ const subscribe = (
                 log("[PHASE_UPDATE]", packet);
 
                 emit(updateConnectionStatus(ConnectionStatus.CONNECTED));
-                emit(GameActions.startGamePhaseCommand(packet.phase, packet.startedAtSeconds));
+                emit(GameCommands.startGamePhaseCommand(packet.phase, packet.startedAtSeconds));
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {
@@ -198,7 +198,7 @@ const subscribe = (
                 emit(BenchCommands.initialiseBenchCommand(bench));
 
                 if (phase) {
-                    emit(GameActions.startGamePhaseCommand(phase.phase, phase.startedAtSeconds));
+                    emit(GameCommands.startGamePhaseCommand(phase.phase, phase.startedAtSeconds));
                 } else {
                     emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
                 }

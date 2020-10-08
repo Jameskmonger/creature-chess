@@ -24,6 +24,7 @@ import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
+import { GameEvent } from "../store/events";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -72,6 +73,10 @@ export abstract class Player {
         playerMatchRewards(this.sagaMiddleware);
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
+    }
+
+    public receiveGameEvent(gameEvent: GameEvent) {
+        this.store.dispatch(gameEvent);
     }
 
     public propertyUpdates() {
@@ -130,15 +135,13 @@ export abstract class Player {
         this.deck = deck;
     }
 
-    public async enterPreparingPhase() {
+    public enterPreparingPhase() {
         if (this.store.getState().playerInfo.shopLocked === false) {
             this.rerollCards();
         }
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
         this.store.dispatch(BenchCommands.unlockBenchCommand());
-
-        this.onEnterPreparingPhase();
     }
 
     public fillBoard() {
@@ -150,13 +153,9 @@ export abstract class Player {
 
         this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(match.away.id));
         this.match = match;
-
-        this.onEnterReadyPhase();
     }
 
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
-        this.onEnterPlayingPhase(startedAt);
-
         const finalMatchBoard = await this.match.fight(battleTimeout.promise);
 
         const pieces = Object.values(finalMatchBoard.pieces);
@@ -254,14 +253,6 @@ export abstract class Player {
     public abstract onPlayersResurrected(playerIds: string[]);
 
     public abstract onStartGame(gameId: string);
-
-    public abstract onPlayerListUpdate(playerLists: PlayerListPlayer[]);
-
-    protected abstract onEnterPreparingPhase();
-
-    protected abstract onEnterReadyPhase();
-
-    protected abstract onEnterPlayingPhase(startedAt: number);
 
     protected abstract onDeath(phaseStartedAt: number);
 
