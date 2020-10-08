@@ -15,8 +15,6 @@ export const ENABLE_DEBUG_MODE = "ENABLE_DEBUG_MODE";
 export type ENABLE_DEBUG_MODE = typeof ENABLE_DEBUG_MODE;
 export const UPDATE_CONNECTION_STATUS = "UPDATE_CONNECTION_STATUS";
 export type UPDATE_CONNECTION_STATUS = typeof UPDATE_CONNECTION_STATUS;
-export const JOIN_COMPLETE = "JOIN_COMPLETE";
-export type JOIN_COMPLETE = typeof JOIN_COMPLETE;
 export const JOIN_ERROR = "JOIN_ERROR";
 export type JOIN_ERROR = typeof JOIN_ERROR;
 export const FINISH_GAME = "FINISH_GAME";
@@ -25,7 +23,6 @@ export const PLAYERS_RESURRECTED = "PLAYERS_RESURRECTED";
 export type PLAYERS_RESURRECTED = typeof PLAYERS_RESURRECTED;
 
 export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
-export type JoinCompleteAction = ({ type: JOIN_COMPLETE, payload: { gameId: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type OpenOverlayAction = { type: OPEN_OVERLAY, payload: { overlay: Overlay } };
 export type CloseOverlayAction = { type: CLOSE_OVERLAY };
@@ -40,13 +37,6 @@ export const findGameAction = (serverIP: string): FindGameAction => ({
     type: FIND_GAME,
     payload: {
         serverIP
-    }
-});
-
-export const joinCompleteAction = (gameId: string): JoinCompleteAction => ({
-    type: JOIN_COMPLETE,
-    payload: {
-        gameId
     }
 });
 

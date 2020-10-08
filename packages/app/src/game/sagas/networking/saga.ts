@@ -18,7 +18,7 @@ import {
 } from "@creature-chess/shared";
 import { AuthSelectors } from "../../../auth";
 import {
-    clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, joinCompleteAction, openOverlay,
+    clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, openOverlay,
     updateConnectionStatus, finishGameAction, playersResurrected
 } from "../../../ui/actions";
 import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
@@ -110,7 +110,6 @@ const subscribe = (
             (packet) => {
                 log("[PHASE_UPDATE]", packet);
 
-                emit(updateConnectionStatus(ConnectionStatus.CONNECTED));
                 emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds));
 
                 switch (packet.phase) {
@@ -181,13 +180,7 @@ const subscribe = (
 
         registry.on(
             ServerToClientPacketOpcodes.JOIN_GAME,
-            ({ id, fullState }) => {
-                emit(joinCompleteAction(id));
-
-                if (!fullState) {
-                    return;
-                }
-
+            ({ fullState }) => {
                 const { money, cards, players, level: { level, xp }, board, bench, phase } = fullState;
 
                 emit(PlayerInfoCommands.updateMoneyCommand(money));
