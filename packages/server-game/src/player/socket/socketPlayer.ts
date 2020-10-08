@@ -61,11 +61,6 @@ export class SocketPlayer extends Player {
         this.clearSocket();
     }
 
-    public onDeath(startedAtSeconds: number) {
-        const packet: PhaseUpdatePacket = { startedAtSeconds, phase: GamePhase.DEAD };
-        this.outgoingPacketRegistry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
-    }
-
     private clearSocket() {
         if (this.socket) {
             this.socket.disconnect();
@@ -92,11 +87,6 @@ export class SocketPlayer extends Player {
         const { round, phase, phaseStartedAtSeconds } = this.getGameState();
 
         switch (phase) {
-            case GamePhase.DEAD:
-                return {
-                    startedAtSeconds: phaseStartedAtSeconds,
-                    phase
-                };
             case GamePhase.PREPARING:
                 return {
                     startedAtSeconds: phaseStartedAtSeconds,

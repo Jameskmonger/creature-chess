@@ -2,7 +2,7 @@ import { takeLatest, take, race, fork, all, select } from "@redux-saga/core/effe
 import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, GameEvents,
-    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket
+    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, PlayerEvents
 } from "@creature-chess/shared";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
@@ -59,12 +59,20 @@ export const outgoingNetworking = function*() {
         };
 
         const sendAnnouncements = function*() {
-            yield takeLatest<GameEvents.PlayersResurrectedEvent>(
-                GameEvents.PLAYERS_RESURRECTED_EVENT,
-                function*({ payload: { playerIds }}) {
-                    registry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
-                }
-            );
+            yield all([
+                takeLatest<GameEvents.PlayersResurrectedEvent>(
+                    GameEvents.PLAYERS_RESURRECTED_EVENT,
+                    function*({ payload: { playerIds }}) {
+                        registry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
+                    }
+                ),
+                takeLatest<PlayerEvents.PlayerDeathEvent>(
+                    PlayerEvents.PLAYER_DEATH_EVENT,
+                    function*() {
+                        registry.emit(ServerToClientPacketOpcodes.PLAYER_DEAD, { empty: true });
+                    }
+                ),
+            ]);
         };
 
         const sendPlayerListUpdates = function*() {

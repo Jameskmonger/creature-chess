@@ -16,7 +16,7 @@ import {
 } from "./sagas";
 import {
     AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT,
-    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent
+    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, playerDeathEvent
 } from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
@@ -222,7 +222,7 @@ export abstract class Player {
 
     public kill() {
         this.clearPieces();
-        this.onDeath(Date.now());
+        this.store.dispatch(playerDeathEvent());
     }
 
     public resurrect(startingHealth: number) {
@@ -251,8 +251,6 @@ export abstract class Player {
     }
 
     public abstract onStartGame(gameId: string);
-
-    protected abstract onDeath(phaseStartedAt: number);
 
     private afterSellPieceEventSaga() {
         const addPieceToDeck = (piece: PieceModel) => {

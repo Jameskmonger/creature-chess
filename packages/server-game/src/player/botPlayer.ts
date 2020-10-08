@@ -59,10 +59,6 @@ export class BotPlayer extends Player {
         /* nothing required, we're a bot */
     }
 
-    protected onDeath(startedAtSeconds: number) {
-        /* nothing required, we're a bot */
-    }
-
     private spendExcessMoneyOnXp() {
         while (true) {
             const hasEnoughMoney = this.getMoney() >= (10 + BUY_XP_COST);

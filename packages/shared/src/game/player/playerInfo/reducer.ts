@@ -4,6 +4,7 @@ import {
     UPDATE_LEVEL_COMMAND, UPDATE_CARDS_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_ROUND_DIED_AT_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_STATUS_COMMAND, UPDATE_BATTLE_COMMAND
 } from "./commands";
 import { READY_UP_ACTION } from "../actions";
+import { PlayerEvent, PLAYER_DEATH_EVENT } from "../events";
 
 export interface PlayerStreak {
     type: StreakType;
@@ -15,9 +16,11 @@ export type HasPlayerInfo = { playerInfo: PlayerInfoState };
 export interface PlayerInfoState {
     status: PlayerStatus;
     health: number;
-    roundDiedAt: number | null;
     streak: PlayerStreak;
     battle: PlayerBattle | null;
+
+    dead: boolean;
+    roundDiedAt: number | null;
 
     opponentId: string;
     shopLocked: boolean;
@@ -32,6 +35,7 @@ const initialState: PlayerInfoState = {
     status: PlayerStatus.CONNECTED,
     health: STARTING_HEALTH,
     roundDiedAt: null,
+    dead: false,
     streak: {
         type: StreakType.WIN,
         amount: 0
@@ -46,27 +50,29 @@ const initialState: PlayerInfoState = {
     cards: []
 };
 
-export function playerInfoReducer(state: PlayerInfoState = initialState, command: PlayerInfoCommand): PlayerInfoState {
+export function playerInfoReducer(state: PlayerInfoState = initialState, command: PlayerInfoCommand | PlayerEvent): PlayerInfoState {
     switch (command.type) {
-        case UPDATE_STATUS_COMMAND: {
+        case PLAYER_DEATH_EVENT:
+            return {
+                ...state,
+                dead: true
+            };
+        case UPDATE_STATUS_COMMAND:
             return {
                 ...state,
                 status: command.payload.status
-            }
-        };
-        case UPDATE_BATTLE_COMMAND: {
+            };
+        case UPDATE_BATTLE_COMMAND:
             return {
                 ...state,
                 battle: command.payload.battle
-            }
-        };
-        case UPDATE_HEALTH_COMMAND: {
+            };
+        case UPDATE_HEALTH_COMMAND:
             return {
                 ...state,
                 health: command.payload.health
             };
-        }
-        case UPDATE_STREAK_COMMAND: {
+        case UPDATE_STREAK_COMMAND:
             return {
                 ...state,
                 streak: {
@@ -74,13 +80,11 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
                     type: command.payload.type
                 }
             };
-        }
-        case UPDATE_ROUND_DIED_AT_COMMAND: {
+        case UPDATE_ROUND_DIED_AT_COMMAND:
             return {
                 ...state,
                 roundDiedAt: command.payload.roundDiedAt
             };
-        }
         case UPDATE_CARDS_COMMAND:
             return {
                 ...state,
@@ -108,12 +112,11 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
                 ...state,
                 opponentId: null
             };
-        case UPDATE_SHOP_LOCK_COMMAND: {
+        case UPDATE_SHOP_LOCK_COMMAND:
             return {
                 ...state,
                 shopLocked: command.payload.locked
             };
-        };
         case READY_UP_ACTION:
             return {
                 ...state,
