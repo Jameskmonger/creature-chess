@@ -28,8 +28,6 @@ export const createMetricLogger = () => {
         cw.putMetricData(params, (err, data) => {
             if (err) {
                 console.log("Error sending metric", err);
-            } else {
-                console.log("Success sending metric", JSON.stringify(data));
             }
         });
     };
