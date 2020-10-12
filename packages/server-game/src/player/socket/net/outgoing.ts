@@ -1,4 +1,4 @@
-import { takeLatest, take, race, fork, all, select } from "@redux-saga/core/effects";
+import { takeLatest, take, fork, all, select, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, GameEvents, PlayerEvents, Match,
@@ -148,6 +148,7 @@ export const outgoingNetworking = (getCurrentMatch: () => Match) => {
         );
 
         yield take([PlayerActions.QUIT_GAME_ACTION, GameEvents.GAME_FINISH_EVENT]);
+        yield delay(100);
 
         socket.removeAllListeners();
         socket.disconnect();
