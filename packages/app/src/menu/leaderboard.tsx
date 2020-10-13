@@ -1,5 +1,6 @@
 import * as React from "react";
 import useFetch from "use-http";
+import { LEADERBOARD_ENDPOINT } from "../auth/config";
 
 const LeaderboardContents: React.FunctionComponent<{ data: any }> = ({ data }) => {
     return (
@@ -32,7 +33,7 @@ const LeaderboardContents: React.FunctionComponent<{ data: any }> = ({ data }) =
 };
 
 const Leaderboard: React.FunctionComponent = () => {
-    const { loading, error, data = [] } = useFetch("https://cc-server-info.herokuapp.com/leaderboard", {}, []);
+    const { loading, error, data = [] } = useFetch(LEADERBOARD_ENDPOINT, {}, []);
 
     return (
         <div className="segment">
