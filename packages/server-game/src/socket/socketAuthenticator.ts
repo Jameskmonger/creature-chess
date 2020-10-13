@@ -5,6 +5,7 @@ import { EventEmitter } from "events";
 import { log, validateNickname, AuthenticateResponse } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth-server";
+import { logger } from "../log";
 
 /**
  * Listens for new connections to the server,
@@ -36,7 +37,7 @@ export class SocketAuthenticator {
     }
 
     private receiveConnection = (socket: io.Socket) => {
-        log("Connection received");
+        logger.info("New connection received");
 
         socket.on("authenticate", ({ idToken, nickname }: { idToken: string, nickname: string }) => {
             this.authenticateSocket(socket, idToken, nickname);
@@ -44,6 +45,8 @@ export class SocketAuthenticator {
     }
 
     private failAuthentication(socket: io.Socket, response: AuthenticateResponse) {
+        logger.error("Authentication failed", { socketId: socket.id });
+
         socket.emit("authenticate_response", response);
         socket.removeAllListeners();
         socket.disconnect();
@@ -85,7 +88,7 @@ export class SocketAuthenticator {
 
                 user.nickname = trimmedNickname;
 
-                log(`User ${user.id} set nickname to '${trimmedNickname}'`);
+                logger.info(`User set nickname`, { userId: user.id, nickname: trimmedNickname });
             }
 
             socket.removeAllListeners("authenticate");
