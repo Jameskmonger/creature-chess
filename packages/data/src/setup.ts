@@ -14,7 +14,7 @@ export const setup = async (client: FaunaDBClient) => {
         console.log(` - Created collection '${COLLECTION_NAMES.USERS}'`);
     } catch (e) {
         if (e.message === INSTANCE_ALREADY_EXISTS) {
-            console.log(` - Colletion '${COLLECTION_NAMES.USERS}' already exists`);
+            console.log(` - Collection '${COLLECTION_NAMES.USERS}' already exists`);
         } else {
             throw e;
         }

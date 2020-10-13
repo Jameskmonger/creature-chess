@@ -7,6 +7,7 @@ import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
 import { LobbyMemberType } from "./lobby/lobbyMember";
+import { logger } from "../log";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -67,9 +68,6 @@ export class Matchmaking {
     }
 
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
-        log(`Lobby '${id}' has started with the following players:`);
-        log(`    ${members.map(p => p.name).join(", ")}`);
-
         const players = members.map(m => {
             if (m.type === LobbyMemberType.BOT) {
                 return new BotPlayer(m.name);
@@ -82,6 +80,16 @@ export class Matchmaking {
 
         const game = new Game(players);
 
+        logger.info(`[Game ${game.id}] started from lobby ${id}`);
+
+        const realPlayers = players
+            .filter(p => (p as SocketPlayer).isConnection)
+            .map(p => ({
+                id: p.id,
+                name: p.name
+            }));
+        logger.info(`[Game ${game.id}] started with ${realPlayers.length} real players`, realPlayers);
+
         players
             .forEach(p => {
                 if ((p as SocketPlayer).isConnection) {
@@ -91,8 +99,13 @@ export class Matchmaking {
             });
 
         game.onFinish((winner) => {
+            logger.info(`[Game ${game.id}] finished`);
+
             if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
+                logger.info(`[Game ${game.id}] win added for player ${winner.id}`);
+            } else {
+                logger.info(`[Game ${game.id}] won by non-connection '${winner.name}'`);
             }
             this.games.delete(game.id);
             this.sendMetrics();
@@ -124,7 +137,7 @@ export class Matchmaking {
 
         this.lobbies.set(lobby.id, lobby);
 
-        log(`Lobby '${lobby.id}' created`);
+        logger.info(`[Lobby ${lobby.id}] created`);
 
         return lobby;
     }

@@ -1,6 +1,5 @@
 import { takeLatest, take, fork, takeEvery, put, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
-import { log } from "console";
 import { eventChannel } from "redux-saga";
 import {
     PlayerActions, PlayerEvents, IncomingPacketRegistry, ClientToServerPacketDefinitions,
@@ -10,6 +9,7 @@ import {
     NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT, receivePlayerActionsEvent,
     ReceivePlayerActionsEvent
 } from "../events";
+import { logger } from "../../../log";
 
 type IncomingRegistry = IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 
@@ -38,6 +38,8 @@ export const incomingNetworking = function*() {
 
             if (expectedPacketIndex !== index) {
                 ack(false);
+                logger.error(`Incoming packet index mismatch`, { expected: expectedPacketIndex, received: index });
+
                 return;
             }
 
@@ -45,7 +47,7 @@ export const incomingNetworking = function*() {
                 const validAction = PlayerActions.PlayerActionTypesArray.includes(action.type);
 
                 if (!validAction) {
-                    log(`Unhandled action type (${action.type}) for player ${this.name}`);
+                    logger.error(`Unhandled player action type`, { actionType: action.type });
 
                     continue;
                 }
