@@ -26,13 +26,11 @@ interface MenuStageState {
     debugModeClickCount: number;
 }
 
-const PlayerInfo: React.FunctionComponent = () => {
+const Navbar: React.FunctionComponent = () => {
     return (
-        <div className="player-info">
-            <span className="welcome">Logged in</span>
-
-            <button className="sign-out" onClick={signOut}>Log out</button>
-        </div>
+        <nav className="navbar">
+            <button className="sign-out" onClick={signOut}>Log Out</button>
+        </nav>
     );
 };
 
@@ -62,7 +60,7 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
 
         return (
             <div className="menu">
-                <PlayerInfo />
+                <Navbar />
 
                 <div className="join-game">
                     {title}
