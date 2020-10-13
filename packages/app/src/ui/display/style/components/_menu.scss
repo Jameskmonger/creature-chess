@@ -27,39 +27,30 @@
         font-size: 1.4em;
     }
 
-    .player-info {
-        padding: 1rem;
-        margin-top: 1rem;
-        text-align: center;
-        background: #566c86;
-
-        .welcome {
-            display: block;
-            margin-bottom: 0.4rem;
-        }
-
-        .email {
-            font-style: italic;
-            font-weight: 700;
-            color: $player-list-name-local;
-        }
+    .navbar {
+        position: fixed;
+        top: 0;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 2em;
+        background: #985763;
+        justify-content: flex-end;
 
         .sign-out {
-            padding: 0.4em 1em;
-            font-size: 1rem;
             font-weight: 700;
             color: #fff;
             cursor: pointer;
-            background: $join-lobby-button;
-            /* stylelint-disable */
+            background: #b13e53;
+            // stylelint-disable-next-line
             border: none;
-            /* stylelint-enable */
+            border-left: 1px solid #fff;
         }
     }
 
     .join-game {
         padding: 1rem;
-        margin-top: 1rem;
+        margin-top: 3em;
         text-align: center;
         background: #566c86;
 
@@ -92,7 +83,7 @@
     }
 
     .segment {
-        margin-top: 2em;
+        margin-top: 1em;
         text-align: center;
         background: #566c86;
 
@@ -115,7 +106,7 @@
 
     .leaderboard {
         width: 100%;
-        margin-bottom: 2em;
+        margin-bottom: 1em;
 
         // stylelint-disable-next-line
         thead {
@@ -138,7 +129,8 @@
 
         // stylelint-disable-next-line
         td {
-            padding: 0.4em 1em;
+            padding: 0.3em 1em;
+            font-size: 0.8em;
         }
     }
 
@@ -160,9 +152,6 @@
     .option {
         flex: 1 1 0;
         padding-top: 1rem;
-        padding-bottom: 1rem;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
 
         .option-input {
             margin-bottom: 1rem;
@@ -172,7 +161,6 @@
 
         .option-button {
             padding: 0.8em 2em;
-            margin-bottom: 0.5em;
             font-size: 1.4rem;
             font-weight: 700;
             color: #fff;
