@@ -104,7 +104,7 @@
         }
 
         .content {
-            padding: 1em 4em;
+            padding: 1em 2em;
 
             // stylelint-disable-next-line
             p {
@@ -114,10 +114,37 @@
     }
 
     .leaderboard {
+        width: 100%;
+        margin-bottom: 2em;
+
+        // stylelint-disable-next-line
+        thead {
+            text-transform: uppercase;
+            border-bottom: 3px solid #b13e53;
+        }
+
+        // stylelint-disable-next-line
+        tbody {
+            // stylelint-disable-next-line
+            tr:not(:last-child) {
+                border-bottom: 2px solid #465567;
+            }
+
+            // stylelint-disable-next-line
+            td:first-child {
+                border-right: 2px solid #b13e53;
+            }
+        }
+
         // stylelint-disable-next-line
         td {
-            padding: 0.2em 2em;
+            padding: 0.4em 1em;
         }
+    }
+
+    .wipe-warning {
+        padding: 1em 2em;
+        background: #3b3d40;
     }
 
     .join-options {
