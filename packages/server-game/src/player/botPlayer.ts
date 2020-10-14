@@ -41,10 +41,11 @@ const getPieceCountForDefinition =
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
 
 export class BotPlayer extends Player {
+    public readonly isBot = true;
     private preferredColumnOrder: number[];
 
-    constructor(name: string) {
-        super(uuid(), name);
+    constructor(id: string, name: string) {
+        super(id, name);
 
         this.sagaMiddleware.run(this.botLogicSaga());
 

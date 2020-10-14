@@ -2,10 +2,12 @@ import { Client as FaunaDBClient } from "faunadb";
 import { setup } from "./setup";
 import { userDatabase, UserDatabaseFunctions } from "./user";
 import { leaderboardDatabase, LeaderboardDatabaseFunctions } from "./leaderboard";
+import { botDatabase, BotDatabaseFunctions } from "./bot";
 
 export type DatabaseConnection = {
     user: UserDatabaseFunctions;
     leaderboard: LeaderboardDatabaseFunctions;
+    bot: BotDatabaseFunctions;
 };
 
 export const createDatabaseConnection = (faunaSecret: string): DatabaseConnection => {
@@ -15,6 +17,7 @@ export const createDatabaseConnection = (faunaSecret: string): DatabaseConnectio
 
     return {
         user: userDatabase(client),
-        leaderboard: leaderboardDatabase(client)
+        leaderboard: leaderboardDatabase(client),
+        bot: botDatabase(client)
     };
 };
