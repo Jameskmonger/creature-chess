@@ -8,6 +8,7 @@ import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
 import { LobbyMemberType } from "./lobby/lobbyMember";
 import { logger } from "../log";
+import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -19,7 +20,7 @@ export class Matchmaking {
         setInterval(this.sendMetrics, 60 * 1000);
     }
 
-    public findGame(socket: io.Socket, user: UserModel) {
+    public async findGame(socket: io.Socket, user: UserModel) {
         const { id, nickname } = user;
 
         const playerInGame = this.getPlayerInGame(id);
@@ -40,7 +41,7 @@ export class Matchmaking {
             return;
         }
 
-        const newLobby = this.findOrCreateLobby();
+        const newLobby = await this.findOrCreateLobby();
         newLobby.addConnection(socket, id, nickname);
     }
 
@@ -70,7 +71,7 @@ export class Matchmaking {
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const players = members.map(m => {
             if (m.type === LobbyMemberType.BOT) {
-                return new BotPlayer(m.name);
+                return new BotPlayer(m.id, m.name);
             }
 
             if (m.type === LobbyMemberType.PLAYER) {
@@ -88,13 +89,19 @@ export class Matchmaking {
                 id: p.id,
                 name: p.name
             }));
-        logger.info(`[Game ${game.id}] started with ${realPlayers.length} real players`, realPlayers);
+        logger.info(`[Game ${game.id}] started with ${realPlayers.length} real players: ${realPlayers.map(p => p.name).join(", ")}`);
 
         players
             .forEach(p => {
                 if ((p as SocketPlayer).isConnection) {
                     // todo do this in 1 call
                     this.database.user.addGamePlayed(p.id);
+                }
+
+                if ((p as BotPlayer).isBot) {
+                    // todo do this in 1 call
+                    this.database.bot.addGamePlayed(p.id);
+                    logger.info(`[Game ${game.id}] game played added to bot '${p.name}'`);
                 }
             });
 
@@ -103,10 +110,14 @@ export class Matchmaking {
 
             if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
-                logger.info(`[Game ${game.id}] win added for player ${winner.id}`);
-            } else {
-                logger.info(`[Game ${game.id}] won by non-connection '${winner.name}'`);
+                logger.info(`[Game ${game.id}] won by player ${winner.name}`);
             }
+
+            if ((winner as BotPlayer).isBot) {
+                this.database.bot.addWin(winner.id);
+                logger.info(`[Game ${game.id}] won by bot '${winner.name}'`);
+            }
+
             this.games.delete(game.id);
             this.sendMetrics();
         });
@@ -130,8 +141,9 @@ export class Matchmaking {
         return lobbies[0];
     }
 
-    private createLobby() {
-        const lobby = new Lobby(this.lobbyIdGenerator);
+    private async createLobby() {
+        const bots = await this.database.bot.getLeastPlayedBots(MAX_PLAYERS_IN_GAME);
+        const lobby = new Lobby(this.lobbyIdGenerator, bots);
 
         lobby.onStartGame(this.onLobbyStart);
 

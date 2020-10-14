@@ -38,7 +38,7 @@ export const incomingNetworking = function*() {
 
             if (expectedPacketIndex !== index) {
                 ack(false);
-                logger.error(`Incoming packet index mismatch`, { expected: expectedPacketIndex, received: index });
+                logger.error(`Incoming packet index mismatch. Expected: ${expectedPacketIndex}, received: ${index}`);
 
                 return;
             }
@@ -47,7 +47,7 @@ export const incomingNetworking = function*() {
                 const validAction = PlayerActions.PlayerActionTypesArray.includes(action.type);
 
                 if (!validAction) {
-                    logger.error(`Unhandled player action type`, { actionType: action.type });
+                    logger.error(`Unhandled player action type: ${action.type}`);
 
                     continue;
                 }

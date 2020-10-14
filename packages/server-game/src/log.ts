@@ -20,6 +20,8 @@ const createWinstonLogger = () => {
         awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY
     }));
 
+    newLogger.info("Sending Winston logs to Cloudwatch");
+
     return newLogger;
 };
 
