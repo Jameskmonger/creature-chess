@@ -1,5 +1,6 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
+import shuffle = require("lodash.shuffle");
 import {
     OutgoingPacketRegistry,
     ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions,
@@ -120,6 +121,8 @@ export class Lobby {
     }
 
     private addBots(bots: { id: string, name: string }[]) {
+        const shuffledBots: { id: string, name: string }[] = shuffle(bots);
+
         for (const { id, name } of bots) {
             this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}` });
         }
