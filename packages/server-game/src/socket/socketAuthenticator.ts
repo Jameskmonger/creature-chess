@@ -45,7 +45,7 @@ export class SocketAuthenticator {
     }
 
     private failAuthentication(socket: io.Socket, response: AuthenticateResponse) {
-        logger.error("Authentication failed", { socketId: socket.id });
+        logger.error(`Authentication failed for socket ${socket.id}, reason: '${response.error?.type}'`);
 
         socket.emit("authenticate_response", response);
         socket.removeAllListeners();
@@ -88,7 +88,7 @@ export class SocketAuthenticator {
 
                 user.nickname = trimmedNickname;
 
-                logger.info(`User set nickname`, { userId: user.id, nickname: trimmedNickname });
+                logger.info(`User ${user.id} set nickname to '${user.nickname}'`, { userId: user.id, nickname: trimmedNickname });
             }
 
             socket.removeAllListeners("authenticate");

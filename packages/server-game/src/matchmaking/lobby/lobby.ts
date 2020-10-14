@@ -1,15 +1,13 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import {
-    randomFromArray,
     OutgoingPacketRegistry,
     ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions,
     ServerToClientLobbyPacketOpcodes
 } from "@creature-chess/shared";
-import { MAX_PLAYERS_IN_GAME, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models";
+import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models";
 import { IdGenerator } from "../id-generator";
 import { LobbyMember, LobbyMemberType, PlayerLobbyMember } from "./lobbyMember";
-import { BOT_NAMES } from "./botNames";
 import { LobbyPlayer } from "@creature-chess/models";
 
 enum LobbyEvents {
@@ -30,14 +28,12 @@ export class Lobby {
     private events = new EventEmitter();
     private gameStarted: boolean = false;
 
-    constructor(idGenerator: IdGenerator) {
+    constructor(idGenerator: IdGenerator, bots: { id: string, name: string }[]) {
         this.id = idGenerator.generateId();
 
         this.members = [];
 
-        for (let i = 0; i < MAX_PLAYERS_IN_GAME; i++) {
-            this.addBot();
-        }
+        this.addBots(bots);
 
         const waitTimeMs = LOBBY_WAIT_TIME_SECONDS * 1000;
         this.gameStartTime = Date.now() + waitTimeMs;
@@ -123,12 +119,10 @@ export class Lobby {
         this.events.emit(LobbyEvents.START_GAME, event);
     }
 
-    private addBot() {
-        const memberNames = this.members.map(p => p.name);
-        const availableNames = BOT_NAMES.filter(n => memberNames.includes(`[BOT] ${n}`) === false);
-        const name = randomFromArray(availableNames);
-
-        this.members.push({ type: LobbyMemberType.BOT, id: `bot-${name.substring(0, 1)}`, name: `[BOT] ${name}` });
+    private addBots(bots: { id: string, name: string }[]) {
+        for (const { id, name } of bots) {
+            this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}` });
+        }
     }
 
     private getLobbyPlayers(): LobbyPlayer[] {
