@@ -29,3 +29,5 @@ export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {
         setNickname: setNickname(client)
     };
 };
+
+export { setupUserDatabase } from "./_setup";
