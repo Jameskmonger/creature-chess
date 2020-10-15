@@ -40,6 +40,8 @@ const getPieceCountForDefinition =
     (state: PlayerState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
 
+const BOT_ACTION_TIME_MS = 400;
+
 export class BotPlayer extends Player {
     public readonly isBot = true;
     private preferredColumnOrder: number[];
@@ -76,12 +78,11 @@ export class BotPlayer extends Player {
             }
 
             this.store.dispatch(PlayerActions.buyXpAction());
-
-            await delay(500);
+            await delay(BOT_ACTION_TIME_MS);
         }
     }
 
-    private buyBestPieces() {
+    private async buyBestPieces() {
         const cards = this.getCardViews();
 
         for (const card of cards) {
@@ -95,7 +96,7 @@ export class BotPlayer extends Player {
                 || worstPiece.definitionId === card.definitionId
                 || pieceIsBetter()
             ) {
-                this.buyCardIfBelowLimit(card);
+                await this.buyCardIfBelowLimit(card);
                 continue;
             }
 
@@ -112,25 +113,27 @@ export class BotPlayer extends Player {
             // sell a piece to make room
             if (this.atPieceLimit() || !canCurrentlyAfford) {
                 this.store.dispatch(PlayerActions.playerSellPieceAction(worstPiece.id));
+                await delay(BOT_ACTION_TIME_MS);
             }
 
-            this.buyCardIfBelowLimit(card);
+            await this.buyCardIfBelowLimit(card);
         }
     }
 
-    private buyCardIfBelowLimit(card: CardView) {
+    private async buyCardIfBelowLimit(card: CardView) {
         if (this.atPieceLimit()) {
             return;
         }
 
         this.store.dispatch(PlayerActions.buyCardAction(card.index));
+        await delay(BOT_ACTION_TIME_MS);
     }
 
     private atPieceLimit() {
         return getPieceCount(this.store.getState()) >= this.getLevel();
     }
 
-    private putBenchOnBoard() {
+    private async putBenchOnBoard() {
         while (true) {
             const firstBenchPiece = getFirstBenchPiece(this.store.getState());
             const firstEmptyPosition = this.getFirstEmptyPosition();
@@ -147,6 +150,7 @@ export class BotPlayer extends Player {
             };
 
             this.store.dispatch(PlayerActions.playerDropPieceAction(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition));
+            await delay(BOT_ACTION_TIME_MS);
         }
     }
 
@@ -238,11 +242,12 @@ export class BotPlayer extends Player {
 
     private botLogicSaga() {
         const preparingPhase = async () => {
-            this.buyBestPieces();
+            await this.buyBestPieces();
             await this.spendExcessMoneyOnXp();
-            this.putBenchOnBoard();
+            await this.putBenchOnBoard();
 
             this.store.dispatch(PlayerActions.readyUpAction());
+            await delay(BOT_ACTION_TIME_MS);
         };
 
         return function*() {
