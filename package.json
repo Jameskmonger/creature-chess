@@ -6,12 +6,12 @@
 	"main": "index.js",
 	"scripts": {
 		"bootstrap": "lerna bootstrap",
+		"test": "lerna run test",
 		"build:create-bin": "sh ./scripts/createBin.sh",
 		"build": "lerna run build --stream",
 		"build:for-server": "lerna run build --ignore=\"@creature-chess/@(app|server-info|models)\"",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",
 		"dev:app": "lerna run dev --scope=@creature-chess/app --stream",
-		"test": "ts-node --files run-tests.ts",
 		"lint:sass": "stylelint \"./src/**/*.scss\"",
 		"lint:ts": "tslint -c tslint.json \"./src/**/*.{ts,tsx}\"",
 		"lint": "npm run lint:ts && npm run lint:sass"
@@ -19,12 +19,14 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"@types/jest": "^26.0.14",
 		"@types/node": "^11.11.3",
-		"alsatian": "2.4.0",
+		"jest": "^26.5.3",
 		"lerna": "^3.22.1",
 		"neworbit-tslint-config": "^4.0.0",
 		"npm-run-all": "^4.1.5",
 		"tap-bark": "^1.0.0",
+		"ts-jest": "^26.4.1",
 		"tslint": "^5.14.0",
 		"typescript": "^3.3.3333"
 	}

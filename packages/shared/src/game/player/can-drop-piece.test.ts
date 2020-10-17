@@ -1,110 +1,120 @@
-import { TestFixture, Test, Expect, TestCase } from "alsatian";
 import { canDropPiece } from "./can-drop-piece";
 import { pieceUtils } from "../../utils";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 
 const definitionProvider = new DefinitionProvider();
 
-@TestFixture()
-export class CanDropPieceTests {
+describe("canDropPiece", () => {
+    describe("when piece is on the board", () => {
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [0, 4]);
 
-    @Test()
-    public cantDropOnOccupiedTile() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
-        const tilePiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 1, 4 ]);
+        describe("when target is the board", () => {
+            const targetX = 1;
+            const targetY = 4;
 
-        const result = canDropPiece(
-            movingPiece,
-            1,
-            4,
-            false,
-            false,
-            true
-        );
+            describe("when tile is not empty", () => {
+                const tileEmpty = false;
 
-        Expect(result).toBe(false);
-    }
+                test("should return false", () => {
+                    const result = canDropPiece(movingPiece, targetX, targetY, tileEmpty, false, true);
 
-    @Test()
-    public cantDropOnBoardIfBoardLocked() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
+                    expect(result).toEqual(false);
+                });
+            });
 
-        const result = canDropPiece(
-            movingPiece,
-            1,
-            4,
-            true,
-            true,
-            true
-        );
+            describe("when tile is empty", () => {
+                const tileEmpty = true;
 
-        Expect(result).toBe(false);
-    }
+                describe("when board is locked", () => {
+                    const boardLocked = true;
 
-    public canDropOnBenchIfBoardLocked() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ]);
+                    test("should return false", () => {
+                        const result = canDropPiece(movingPiece, targetX, targetY, tileEmpty, boardLocked, true);
 
-        const result = canDropPiece(
-            movingPiece,
-            1,
-            null,
-            true,
-            true,
-            true
-        );
+                        expect(result).toEqual(false);
+                    });
+                });
+            });
+        });
 
-        Expect(result).toBe(true);
-    }
+        describe("when target is the bench", () => {
+            const targetX = 1;
+            const targetY = null;
 
-    @Test()
-    public cantDropOnBoardFromBenchIfNotBelowPieceLimit() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, null ]);
+            describe("when tile is empty", () => {
+                const tileEmpty = true;
 
-        const result = canDropPiece(
-            movingPiece,
-            1,
-            4,
-            true,
-            false,
-            false
-        );
+                describe("when board is locked", () => {
+                    const boardLocked = true;
 
-        Expect(result).toBe(false);
-    }
+                    test("should return true", () => {
+                        const result = canDropPiece(movingPiece, targetX, targetY, tileEmpty, boardLocked, true);
 
-    @Test()
-    public canDropOnBoardFromBoardIfNotBelowPieceLimit() {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
+                        expect(result).toEqual(false);
+                    });
+                });
+            });
+        });
 
-        const result = canDropPiece(
-            movingPiece,
-            1,
-            4,
-            true,
-            false,
-            false
-        );
+        describe.each([
+            [0, 0],
+            [7, 0],
+            [0, 2],
+            [7, 2]
+        ])("when target is in opponents area (%i, %i)", (x, y) => {
+            const result = canDropPiece(
+                movingPiece,
+                x,
+                y,
+                true,
+                false,
+                true
+            );
 
-        Expect(result).toBe(true);
-    }
+            expect(result).toEqual(false);
+        });
+    });
 
-    @TestCase(0, 0)
-    @TestCase(7, 0)
-    @TestCase(0, 2)
-    @TestCase(7, 2)
-    public cantDropInOpponentArea(x: number, y: number) {
-        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [ 0, 4 ]);
+    describe("when piece is on the bench", () => {
+        const movingPiece = pieceUtils.createPiece(definitionProvider, null, 1, [0, null]);
 
-        const result = canDropPiece(
-            movingPiece,
-            x,
-            y,
-            true,
-            false,
-            true
-        );
+        describe("when not below piece limit", () => {
+            const belowPieceLimit = false;
 
-        Expect(result).toBe(false);
-    }
+            describe("when target is the board", () => {
+                const targetX = 1;
+                const targetY = 4;
 
-}
+                describe("when tile is empty", () => {
+                    const tileEmpty = true;
+
+                    describe("when board is not locked", () => {
+                        const boardLocked = false;
+
+                        test("should return false", () => {
+                            const result = canDropPiece(movingPiece, targetX, targetY, tileEmpty, boardLocked, belowPieceLimit);
+
+                            expect(result).toEqual(false);
+                        });
+                    });
+                });
+            });
+
+            describe("when target is the bench", () => {
+                const targetX = 1;
+                const targetY = null;
+
+                describe("when tile is empty", () => {
+                    const tileEmpty = true;
+                    const boardLocked = false;
+
+                    test("should return true", () => {
+                        const result = canDropPiece(movingPiece, targetX, targetY, tileEmpty, boardLocked, belowPieceLimit);
+
+                        expect(result).toEqual(true);
+                    });
+                });
+            });
+        });
+    });
+});
