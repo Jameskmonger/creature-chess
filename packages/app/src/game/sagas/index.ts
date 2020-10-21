@@ -17,6 +17,7 @@ export const gameSagaFactory = (playerId: string) => {
             yield fork(PlayerSagas.evolutionSagaFactory<AppState>()),
             yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<AppState>()),
             yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<AppState>()),
+            yield fork(PlayerActionSagas.toggleShopLockPlayerActionSagaFactory<AppState>()),
             yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<AppState>(definitionProvider, playerId)),
             yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<AppState>()),
             yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<AppState>(playerId)),
