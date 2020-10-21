@@ -9,6 +9,7 @@ import { Loading } from "../ui/display/loading";
 const LoginPage: React.FunctionComponent = () => {
     const checkingSession = useSelector<AppState, boolean>(isCheckingSession);
     const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
+    const [whyNeedAccountOpen, setWhyNeedAccountOpen] = React.useState<boolean>(false);
 
     const onSignInClick = () => {
         setLoadingSignIn(true);
@@ -16,46 +17,45 @@ const LoginPage: React.FunctionComponent = () => {
         signIn();
     };
 
+    const onWhyNeedAccountClick = () => setWhyNeedAccountOpen(!whyNeedAccountOpen);
+
     if (checkingSession) {
         return <Loading />;
     }
 
     return (
-        <div className="menu">
-            <div className="join-game">
-                <h2 className="title">Creature Chess</h2>
+        <div className="login">
+            <h2 className="title">Creature Chess</h2>
+            {
+                loadingSignIn
+                && <button className="login-button">Loading...</button>
+            }
 
-                <div className="join-options">
-                    <div className="option">
-                        {
-                            loadingSignIn
-                            && <button className="option-button primary">Loading...</button>
-                        }
+            {
+                !loadingSignIn
+                && <button onClick={onSignInClick} className="login-button">Log in / Sign up</button>
+            }
 
-                        {
-                            !loadingSignIn
-                            && <button onClick={onSignInClick} className="option-button primary">Log in / Sign up</button>
-                        }
-
-                        <p className="description">
-                            Creature Chess is completely free to play.<br /><br />
-
-                            Use the button above to create an account,
-                            or to log in if you already have one.
-                        </p>
-                    </div>
+            <div className={`segment ${whyNeedAccountOpen ? "" : "closed"}`}>
+                <div className="header" onClick={onWhyNeedAccountClick}>Why do I need an account? {whyNeedAccountOpen ? "-" : "+"}</div>
+                <div className="content">
+                    <p>
+                        Logging into an account allows the game to keep your session, so that if you get
+                        disconnected, you can get right back into the game.
+                    </p>
+                    <p>&nbsp;</p>
+                    <p>
+                        I don't store any of your personal data. Your game data might be deleted occasionally as I
+                        develop the game further.
+                    </p>
                 </div>
             </div>
 
-            <div className="segment">
-                <div className="header">Why do I need an account?</div>
-                <div className="content">
-                    <p>Logging into an account allows the game to keep your session, so that if you get</p>
-                    <p>disconnected, you can get right back into the game.</p>
-                    <p>&nbsp;</p>
-                    <p>I don't store any of your personal data. Your game data might be deleted occasionally as I</p>
-                    <p>develop the game further.</p>
-                </div>
+            <div className="video-container">
+                <video controls autoPlay>
+                    <source src="https://i.imgur.com/EAwP0Qm.mp4" type="video/mp4" />
+                    Your browser does not support videos.
+                </video>
             </div>
 
             <Footer />
