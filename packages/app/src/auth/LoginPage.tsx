@@ -52,7 +52,8 @@ const LoginPage: React.FunctionComponent = () => {
             </div>
 
             <div className="video-container">
-                <video controls autoPlay>
+                <h3 className="demo">Demo</h3>
+                <video controls autoPlay className="video">
                     <source src="https://i.imgur.com/EAwP0Qm.mp4" type="video/mp4" />
                     Your browser does not support videos.
                 </video>
