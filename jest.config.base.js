@@ -17,5 +17,7 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: [ "src/**/*.ts"],
     coveragePathIgnorePatterns: [ ".*\.test\.ts" ],
+    coverageReporters: [ "lcov" ],
+    reporters: [ "jest-standard-reporter" ],
     verbose: true
 };
