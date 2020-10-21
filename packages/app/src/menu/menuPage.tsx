@@ -65,13 +65,15 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
                 <div className="join-game">
                     {title}
 
-                    <p>Click "Find Game" to start playing. If you haven't set a nickname, you will be prompted to choose one.</p>
-
-                    <div className="join-options">
-                        <div className="option">
-                            <button onClick={this.onFindGameClick} className="option-button primary">Find Game</button>
-                        </div>
+                    <div className="blurb">
+                        <p>This is a strategy game in which you configure creatures on a board.</p>
+                        <p>Each round, your board is matched against an opponent's board. Defeat all their pieces to win the round.</p>
+                        <p>Every loss decreases your health bar. When your health reaches zero, you're out!</p>
+                        <p>Players will battle against eachother until only one player remains.</p>
+                        <p>Good luck! <span className="author">~ jkm</span></p>
                     </div>
+
+                    <button onClick={this.onFindGameClick} className="find-game">Find Game</button>
 
                     {
                         this.props.error
@@ -91,21 +93,6 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
                 </div>
 
                 <Leaderboard />
-
-                <div className="segment">
-                    <div className="header">How to play</div>
-                    <div className="content">
-                        <p>This game is a strategy game where you have to arrange pieces on a chess board</p>
-                        <p>Every turn, these pieces will be matched against an opponent's board, to fight to the winner</p>
-                        <p>Losing will decrease your health bar, when you reach 0 health you will be knocked out</p>
-                        <p>&nbsp;</p>
-                        <p>You can buy pieces from the shop on the right - this refreshes every turn</p>
-                        <p>When you have 3 identical pieces, they will combine and upgrade - each piece has 3 levels</p>
-                        <p>There is also an XP shop, where you can buy XP to level up and place more pieces on the board</p>
-                        <p>&nbsp;</p>
-                        <p>Good luck!</p>
-                    </div>
-                </div>
 
                 <Footer />
             </div>
