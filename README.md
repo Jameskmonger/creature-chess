@@ -34,10 +34,12 @@ When the game is running, you will be able to access it at localhost:8090 in you
 
 ## Publishing
 
-- Use `lerna version` to create a new version - create a tag and commit, and push to Git
+- Use `npm run version` to create a new version - create a tag and commit, and push to Git
   - This publishes GitHub pages (`app`) and Docker Hub (`server-game`)
-- Push to Heroku with `git push -f heroku v1.1^{}:master`
+- Push to Heroku with `git push -f heroku v0.2.2^{}:master`
+  - Replace v0.2.2 with tag from last step
   - This publishes Heroku (`server-info`)
+  - You may have to run this in Bash
 
 ## Special thanks :heart:
 
