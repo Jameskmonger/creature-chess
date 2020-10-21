@@ -32,6 +32,13 @@ $ npm install && npm run bootstrap
 
 When the game is running, you will be able to access it at localhost:8090 in your browser.
 
+## Publishing
+
+- Use `lerna version` to create a new version - create a tag and commit, and push to Git
+  - This publishes GitHub pages (`app`) and Docker Hub (`server-game`)
+- Push to Heroku with `git push -f heroku v1.1^{}:master`
+  - This publishes Heroku (`server-info`)
+
 ## Special thanks :heart:
 
 Special thanks to **[thyde1](https://github.com/thyde1)**, **[hisuwh](https://github.com/hisuwh)**, **[OwenPattison](https://github.com/OwenPattison)**, **[BaronBeans](https://github.com/BaronBeans)**, **[CalumGreen](https://github.com/CalumGreen)**, **[ollymonger](https://github.com/ollymonger)** and Jack
