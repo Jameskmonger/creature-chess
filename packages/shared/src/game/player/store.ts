@@ -27,6 +27,7 @@ export const createPlayerStore = (playerId: string): { store: PlayerStore, sagaM
             yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>()),
             yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(playerId)),
             yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<PlayerState>()),
+            yield fork(PlayerActionSagas.toggleShopLockPlayerActionSagaFactory<PlayerState>()),
             yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<PlayerState>()),
             yield fork(evolutionSagaFactory<PlayerState>()),
             yield fork(healthSagaFactory<PlayerState>()),
