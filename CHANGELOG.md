@@ -1,7 +1,21 @@
-# Change Log
+## [0.2.2](https://github.com/Jameskmonger/creature-chess/compare/v0.2.1...v0.2.2) (2020-10-21)
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+### Features
+
+* :lipstick: Styling changes to login page ([7ab8f0f](https://github.com/Jameskmonger/creature-chess/commit/7ab8f0fe2c8e3857a0a5254e2add17e9c9f6d03a))
+* Add connection warning ([77715fd](https://github.com/Jameskmonger/creature-chess/commit/77715fd152d6fa79df65b540b4022f6af861eb86))
+
+
+
+## [0.2.1](https://github.com/Jameskmonger/creature-chess/compare/v0.2.0...v0.2.1) (2020-10-21)
+
+
+### Features
+
+* Restyle login page, add video ([a84fa81](https://github.com/Jameskmonger/creature-chess/commit/a84fa8138c80fcd0f47e29d5cd9200bfc04aff91))
+
+
 
 # [0.2.0](https://github.com/Jameskmonger/creature-chess/compare/v0.1.0...v0.2.0) (2020-10-21)
 
