@@ -16,6 +16,14 @@ html, body {
         text-align: center;
     }
 
+    .connection-warning {
+        padding: 0 1em;
+        font-family: Arial, sans-serif;
+        font-style: italic;
+        color: #ccc;
+        text-align: center;
+    }
+
     &.landscape {
         flex-direction: row;
 
@@ -23,6 +31,10 @@ html, body {
             &:not(:first-child) {
                 margin-left: $spacer;
             }
+        }
+
+        .connection-warning {
+            font-size: 1em;
         }
     }
 
@@ -40,6 +52,10 @@ html, body {
             &:not(:first-child) {
                 margin-top: $spacer;
             }
+        }
+
+        .connection-warning {
+            font-size: 0.7em;
         }
     }
 

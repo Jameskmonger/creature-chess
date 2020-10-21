@@ -26,6 +26,8 @@ const DesktopGame: React.FunctionComponent = () => {
 
                 <CardShop showBalance />
 
+                <p className="connection-warning">If you encounter connection issues, please refresh and press "Find Game" to reconnect</p>
+
                 <Profile />
 
                 <Footer />
