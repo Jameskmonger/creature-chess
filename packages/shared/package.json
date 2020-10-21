@@ -37,6 +37,7 @@
     "present": "^1.0.0",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
+    "redux-saga-test-plan": "^4.0.1",
     "uuid": "^8.3.1"
   }
 }
