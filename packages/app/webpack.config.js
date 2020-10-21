@@ -5,6 +5,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const CnameWebpackPlugin = require("cname-webpack-plugin");
+const { DefinePlugin } = require("webpack");
 
 const getGAScript = (id) => {
     if (!id) {
@@ -100,6 +101,9 @@ module.exports = {
     },
 
     plugins: [
+        new DefinePlugin({
+            APP_VERSION: JSON.stringify(require("./package.json").version)
+        }),
         new HtmlWebpackPlugin({
             template: "./index.ejs",
             templateParameters: () => ({
