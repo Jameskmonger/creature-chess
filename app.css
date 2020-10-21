@@ -191,7 +191,7 @@ html, body {
   align-items: center;
   justify-content: center; }
   .menu .title {
-    margin-bottom: 0.5em;
+    margin-bottom: 1rem;
     font-size: 2em;
     text-align: center;
     user-select: none; }
@@ -219,6 +219,14 @@ html, body {
       background: #b13e53;
       border: none;
       border-left: 1px solid #fff; }
+  .menu .blurb {
+    margin-bottom: 1rem; }
+    .menu .blurb p {
+      margin-bottom: 0.25rem; }
+    .menu .blurb .author {
+      font-style: italic;
+      font-weight: 700;
+      color: #bfbfbf; }
   .menu .join-game {
     padding: 1rem;
     margin-top: 3em;
@@ -245,6 +253,16 @@ html, body {
         /* stylelint-enable */
         font-style: italic;
         color: #aaa; }
+    .menu .join-game .find-game {
+      padding: 0.8em 2em;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      background: #b13e53;
+      /* stylelint-disable */
+      border: none;
+      /* stylelint-enable */ }
   .menu .segment {
     margin-top: 1em;
     text-align: center;
@@ -274,36 +292,6 @@ html, body {
   .menu .wipe-warning {
     padding: 1em 2em;
     background: #3b3d40; }
-  .menu .join-options {
-    display: flex; }
-  .menu .option:not(:last-child) {
-    padding-right: 1em;
-    margin-right: 1em;
-    border-right: 2px solid #626262; }
-  .menu .option {
-    flex: 1 1 0;
-    padding-top: 1rem; }
-    .menu .option .option-input {
-      margin-bottom: 1rem;
-      font-size: 1.4em;
-      text-align: center; }
-    .menu .option .option-button {
-      padding: 0.8em 2em;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-      /* stylelint-disable */
-      border: none;
-      /* stylelint-enable */ }
-      .menu .option .option-button.primary {
-        background: #b13e53; }
-      .menu .option .option-button.secondary {
-        background: #626262; }
-    .menu .option .description {
-      margin-bottom: 0.4em;
-      font-size: 0.8rem;
-      font-style: italic; }
   .menu .error {
     padding: 1em 0.5em;
     margin-bottom: 1em;
@@ -757,12 +745,12 @@ html, body {
     background: #1a1c2c;
     border: none; }
 
-.github-link {
+.footer {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   text-align: center;
   /* stylelint-disable-next-line */ }
-  .github-link a {
+  .footer a, .footer span {
     font-family: Arial, sans-serif;
     font-size: 0.8em;
     font-style: italic;
