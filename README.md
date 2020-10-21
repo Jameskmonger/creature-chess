@@ -45,6 +45,6 @@ Special thanks to **[thyde1](https://github.com/thyde1)**, **[hisuwh](https://gi
 
 ## License
 
-Creature Chess is licensed under the [MIT License](LICENSE).
+Creature Chess is licensed under the [AGPL v3 License](LICENSE).
 
 All creature sprites are from Tuxemon and are licensed under the [CC BY-SA 3.0 license](https://creativecommons.org/licenses/by-sa/3.0/).
