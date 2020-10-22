@@ -1,9 +1,11 @@
 import express = require("express");
+import { json as jsonParser } from "body-parser";
+import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
 import { UserAppMetadata } from "@creature-chess/auth-server";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { leaderboard } from "./leaderboard";
-import { userCurrent } from "./user";
+import { userGetCurrent, userPatchCurrent } from "./user";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,18 +21,22 @@ const authClient = new ManagementClient<UserAppMetadata>({
     clientId: AUTH0_CONFIG.clientId,
     clientSecret: AUTH0_CONFIG.clientSecret
 });
+const filter = new Filter();
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,PATCH,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
 });
 
+app.use(jsonParser());
+
 app.get("/leaderboard", leaderboard(database));
 
-app.get("/user/current", userCurrent(database, authClient));
+app.get("/user/current", userGetCurrent(database, authClient));
+app.patch("/user/current", userPatchCurrent(database, authClient, filter));
 
 app.listen(port, () => {
     console.log(`server-info listening on port ${port}`);

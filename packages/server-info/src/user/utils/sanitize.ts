@@ -5,12 +5,14 @@ export const sanitize = (user: UserModel): SanitizedUser => {
     const {
         id,
         nickname,
-        stats
+        stats,
+        registered
     } = user;
 
     return {
         id,
         nickname,
-        stats
+        stats,
+        registered
     };
 };

@@ -6,11 +6,6 @@ export type JOIN_LOBBY = typeof JOIN_LOBBY;
 export const UPDATE_LOBBY_PLAYER = "UPDATE_LOBBY_PLAYER";
 export type UPDATE_LOBBY_PLAYER = typeof UPDATE_LOBBY_PLAYER;
 
-export const REQUEST_NICKNAME = "REQUEST_NICKNAME";
-export type REQUEST_NICKNAME = typeof REQUEST_NICKNAME;
-export const NICKNAME_CHOSEN = "NICKNAME_CHOSEN";
-export type NICKNAME_CHOSEN = typeof NICKNAME_CHOSEN;
-
 export type JoinLobbyAction = ({
     type: JOIN_LOBBY,
     payload: {
@@ -29,13 +24,8 @@ export type UpdateLobbyPlayerAction = ({
     }
 });
 
-export type RequestNicknameAction = ({ type: REQUEST_NICKNAME, payload: { reason: string } });
-export type NicknameChosenAction = ({ type: NICKNAME_CHOSEN, payload: { nickname: string } });
-
 export type LobbyAction = JoinLobbyAction
-    | UpdateLobbyPlayerAction
-    | RequestNicknameAction
-    | NicknameChosenAction;
+    | UpdateLobbyPlayerAction;
 
 export const joinLobbyAction = (localPlayerId: string, lobbyId: string, players: LobbyPlayer[], startTimestamp: number): JoinLobbyAction => ({
     type: JOIN_LOBBY,
@@ -54,6 +44,3 @@ export const updateLobbyPlayerAction = (index: number, player: LobbyPlayer): Upd
         player
     }
 });
-
-export const requestNickname = (reason: string): RequestNicknameAction => ({ type: REQUEST_NICKNAME, payload: { reason }});
-export const nicknameChosen = (nickname: string): NicknameChosenAction => ({ type: NICKNAME_CHOSEN, payload: { nickname }});

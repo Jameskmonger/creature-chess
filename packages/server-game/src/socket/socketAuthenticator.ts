@@ -1,8 +1,7 @@
 import io = require("socket.io");
-import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
 import { EventEmitter } from "events";
-import { log, validateNickname, AuthenticateResponse } from "@creature-chess/shared";
+import { AuthenticateResponse } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth-server";
 import { logger } from "../log";
@@ -13,7 +12,6 @@ import { logger } from "../log";
  * and emits successfully authenticated sockets.
  */
 export class SocketAuthenticator {
-    private filter = new Filter();
     private authClient: ManagementClient<UserAppMetadata>;
     private database: DatabaseConnection;
 
@@ -39,8 +37,8 @@ export class SocketAuthenticator {
     private receiveConnection = (socket: io.Socket) => {
         logger.info("New connection received");
 
-        socket.on("authenticate", ({ idToken, nickname }: { idToken: string, nickname: string }) => {
-            this.authenticateSocket(socket, idToken, nickname);
+        socket.on("authenticate", ({ idToken }: { idToken: string }) => {
+            this.authenticateSocket(socket, idToken);
         });
     }
 
@@ -52,43 +50,15 @@ export class SocketAuthenticator {
         socket.disconnect();
     }
 
-    private async authenticateSocket(socket: io.Socket, idToken: string, nickname: string) {
+    private async authenticateSocket(socket: io.Socket, idToken: string) {
         try {
             const user = await authenticate(this.authClient, this.database, idToken);
 
             // if user doesnt have a nickname we need to ask for it
-            if (!user.nickname) {
-                if (!nickname) {
-                    this.failAuthentication(socket, { error: { type: "nickname_required" } });
-                    return;
-                }
+            if (!user.registered) {
+                this.failAuthentication(socket, { error: { type: "not_registered" } });
 
-                const trimmedNickname = nickname.trim();
-
-                const nicknameError = validateNickname(trimmedNickname);
-
-                if (nicknameError) {
-                    this.failAuthentication(socket, { error: { type: "invalid_nickname", error: nicknameError } });
-                    return;
-                }
-
-                if (this.filter.isProfane(trimmedNickname)) {
-                    this.failAuthentication(socket, { error: { type: "invalid_nickname", error: "Profanity filter" } });
-                    return;
-                }
-
-                const isUnique = (await this.database.user.getByNickname(trimmedNickname)) === null;
-
-                if (!isUnique) {
-                    this.failAuthentication(socket, { error: { type: "invalid_nickname", error: "Nickname already in use" } });
-                    return;
-                }
-
-                await this.database.user.setNickname(user.id, trimmedNickname);
-
-                user.nickname = trimmedNickname;
-
-                logger.info(`User ${user.id} set nickname to '${user.nickname}'`, { userId: user.id, nickname: trimmedNickname });
+                return;
             }
 
             socket.removeAllListeners("authenticate");

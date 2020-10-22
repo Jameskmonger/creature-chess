@@ -1,12 +1,11 @@
 import { LobbyState } from "./state";
-import { LobbyAction, JOIN_LOBBY, UPDATE_LOBBY_PLAYER, REQUEST_NICKNAME } from "./actions";
+import { LobbyAction, JOIN_LOBBY, UPDATE_LOBBY_PLAYER } from "./actions";
 
 const initialState: LobbyState = {
     lobbyId: null,
     localPlayerId: null,
     players: [],
-    startingAtMs: null,
-    requestNicknameMessage: null
+    startingAtMs: null
 };
 
 export function reducer(
@@ -14,12 +13,6 @@ export function reducer(
     action: LobbyAction
 ): LobbyState {
     switch (action.type) {
-        case REQUEST_NICKNAME: {
-            return {
-                ...state,
-                requestNicknameMessage: action.payload.reason
-            };
-        }
         case JOIN_LOBBY:
             return {
                 ...state,

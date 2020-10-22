@@ -1,7 +1,7 @@
 import { ManagementClient } from "auth0";
 import { verifyDecodeJwt } from "./verifyDecodeJwt";
 import { DatabaseConnection } from "@creature-chess/data";
-import { UserAppMetadata, UserModel } from "./user";
+import { convertDatabaseUserToUserModel, UserAppMetadata, UserModel } from "./user";
 
 export const authenticate = async (
     managementClient: ManagementClient<UserAppMetadata>,
@@ -21,27 +21,16 @@ export const authenticate = async (
 
         if (!user.app_metadata || !user.app_metadata.playerId) {
             // need to create an account
-
-            const dbUser = (await database.user.create(user.user_id)) as any;
+            const dbUser = await database.user.create(user.user_id);
 
             await managementClient.updateAppMetadata({ id: user.user_id }, { playerId: dbUser.ref.id });
 
-            return {
-                id: dbUser.ref.id,
-                authId: user.user_id,
-                stats: dbUser.data.stats
-            };
+            return convertDatabaseUserToUserModel(dbUser);
         }
 
-        // todo put proper typing around this
-        const player = (await database.user.getById(user.app_metadata.playerId)) as any;
+        const player = await database.user.getById(user.app_metadata.playerId);
 
-        return {
-            id: player.ref.id,
-            authId: user.user_id,
-            stats: player.data.stats,
-            nickname: player.data.nickname ? player.data.nickname.value : null
-        };
+        return convertDatabaseUserToUserModel(player);
     } catch (e) {
         throw e;
     }

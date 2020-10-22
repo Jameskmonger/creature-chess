@@ -1,9 +1,10 @@
 import { Client as FaunaDBClient, query as q } from "faunadb";
+import { DatabaseUser } from "./databaseUser";
 
 export const getById = (client: FaunaDBClient) => {
     return async (id: string) => {
         try {
-            const user = await client.query(
+            const user = await client.query<DatabaseUser>(
                 q.Get(
                     q.Ref(
                         q.Collection("users"),

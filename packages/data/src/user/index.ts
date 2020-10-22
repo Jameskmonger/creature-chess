@@ -1,4 +1,5 @@
 import { Client as FaunaDBClient, query as q } from "faunadb";
+import { DatabaseUser } from "./databaseUser";
 import { addGamePlayed } from "./addGamePlayed";
 import { addWin } from "./addWin";
 import { create } from "./create";
@@ -6,17 +7,16 @@ import { getById } from "./getById";
 import { getByNickname } from "./getByNickname";
 import { setNickname } from "./setNickname";
 
-// todo type these properly
 export type UserDatabaseFunctions = {
-    create: (authId: string) => Promise<object>;
+    create: (authId: string) => Promise<DatabaseUser>;
 
-    getById: (id: string) => Promise<object>;
-    getByNickname: (nickname: string) => Promise<object>;
+    getById: (id: string) => Promise<DatabaseUser>;
+    getByNickname: (nickname: string) => Promise<DatabaseUser>;
 
-    addWin: (id: string) => Promise<object>;
-    addGamePlayed: (id: string) => Promise<object>;
+    addWin: (id: string) => Promise<DatabaseUser>;
+    addGamePlayed: (id: string) => Promise<DatabaseUser>;
 
-    setNickname: (id: string, nickname: string) => Promise<object>;
+    setNickname: (id: string, nickname: string) => Promise<DatabaseUser>;
 };
 
 export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {
@@ -31,3 +31,4 @@ export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {
 };
 
 export { setupUserDatabase } from "./_setup";
+export { DatabaseUser } from "./databaseUser";

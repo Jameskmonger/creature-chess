@@ -5,5 +5,4 @@ export interface LobbyState {
     lobbyId: string;
     players: LobbyPlayer[];
     startingAtMs: number;
-    requestNicknameMessage: string;
 }

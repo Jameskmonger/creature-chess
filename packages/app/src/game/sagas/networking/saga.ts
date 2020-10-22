@@ -21,14 +21,14 @@ import {
     clearAnnouncement, closeOverlay, FindGameAction, FIND_GAME, openOverlay,
     updateConnectionStatus, finishGameAction, playersResurrected
 } from "../../../ui/actions";
-import { joinLobbyAction, NicknameChosenAction, NICKNAME_CHOSEN, requestNickname, updateLobbyPlayerAction } from "../../../lobby/store/actions";
+import { joinLobbyAction, updateLobbyPlayerAction } from "../../../lobby/store/actions";
 import { GamePhase } from "@creature-chess/models";
 import { Overlay } from "../../../ui/overlay";
 import { clearSelectedPiece } from "../../features/board/actions";
 
 type Socket = SocketIOClient.Socket;
 
-const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
+const getSocket = (serverIP: string, idToken: string) => {
     // force to websocket for now until CORS is sorted
     const socket = io(
         serverIP,
@@ -42,7 +42,7 @@ const getSocket = (serverIP: string, idToken: string, nickname?: string) => {
 
     return new Promise<Socket>((resolve, reject) => {
         socket.on("connect", () => {
-            socket.emit("authenticate", { idToken, nickname });
+            socket.emit("authenticate", { idToken });
         });
 
         const onAuthenticated = ({ error }: AuthenticateResponse) => {
@@ -338,51 +338,15 @@ export const networking = function*() {
     const idToken = AuthSelectors.getIdToken(state);
 
     let socket: Socket = null;
-    let chosenNickname: string = null;
 
     while (socket === null) {
         try {
-            socket = yield call(getSocket, action.payload.serverIP, idToken, chosenNickname);
+            socket = yield call(getSocket, action.payload.serverIP, idToken);
         } catch (e) {
-            // todo abstract this- the duplication isnt nice
-            if (e.type === "nickname_required") {
-                chosenNickname = null;
-                yield put(requestNickname("You must choose a unique nickname before you can play!"));
+            // todo improve this, currently it just refreshes if there's an error.
+            signIn();
 
-                while (chosenNickname === null) {
-                    const { payload: { nickname } }: NicknameChosenAction = yield take<NicknameChosenAction>(NICKNAME_CHOSEN);
-
-                    const error = validateNickname(nickname);
-
-                    if (error) {
-                        yield put(requestNickname(error));
-                    } else {
-                        // this stops the loop
-                        chosenNickname = nickname;
-                    }
-                }
-            } else if (e.type === "invalid_nickname") {
-                chosenNickname = null;
-
-                yield put(requestNickname(`Error: ${e.error}`));
-
-                while (chosenNickname === null) {
-                    const { payload: { nickname } }: NicknameChosenAction = yield take<NicknameChosenAction>(NICKNAME_CHOSEN);
-
-                    const error = validateNickname(nickname);
-
-                    if (error) {
-                        yield put(requestNickname(error));
-                    } else {
-                        // this stops the loop
-                        chosenNickname = nickname;
-                    }
-                }
-            } else {
-                signIn();
-
-                return;
-            }
+            return;
         }
     }
 

@@ -5,4 +5,5 @@ export interface SanitizedUser {
         gamesPlayed: number;
         wins: number;
     };
+    registered: boolean;
 }

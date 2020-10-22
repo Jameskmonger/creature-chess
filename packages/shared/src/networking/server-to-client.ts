@@ -48,7 +48,7 @@ type ShopLockUpdatePacket = {
 };
 
 export type AuthenticateResponse = {
-  error?: { type: "nickname_required" } | { type: "invalid_nickname", error: string } | { type: "authentication" };
+  error?: { type: "not_registered" } | { type: "authentication" };
 };
 
 export type PlayerGameState = {

@@ -1,5 +1,5 @@
 import { AuthState } from "./state";
-import { SessionCheckedAction, SESSION_CHECKED, UserAuthenticatedAction, USER_AUTHENTICATED } from "./actions";
+import { SessionCheckedAction, SESSION_CHECKED, UserAuthenticatedAction, UserUpdatedAction, USER_AUTHENTICATED, USER_UPDATED } from "./actions";
 
 export const initialState: AuthState = {
     checkingSession: true,
@@ -8,11 +8,11 @@ export const initialState: AuthState = {
     user: null
 };
 
-type AuthReducerActionTypes = UserAuthenticatedAction | SessionCheckedAction;
+type AuthReducerActionTypes = UserAuthenticatedAction | UserUpdatedAction | SessionCheckedAction;
 
 export function authReducer(state: AuthState = initialState, action: AuthReducerActionTypes): AuthState {
     switch (action.type) {
-        case USER_AUTHENTICATED:
+        case USER_AUTHENTICATED: {
             const { token, expiry, user } = action.payload;
 
             return {
@@ -22,11 +22,21 @@ export function authReducer(state: AuthState = initialState, action: AuthReducer
                 tokenExpiry: expiry,
                 user
             };
-        case SESSION_CHECKED:
+        }
+        case USER_UPDATED: {
+            const { user } = action.payload;
+
+            return {
+                ...state,
+                user
+            };
+        }
+        case SESSION_CHECKED: {
             return {
                 ...state,
                 checkingSession: false
             };
+        }
         default:
             return state;
     }

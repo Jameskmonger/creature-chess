@@ -1,2 +1,2 @@
 export { authenticate } from "./authenticate";
-export { UserAppMetadata, UserModel } from "./user";
+export { UserAppMetadata, UserModel, convertDatabaseUserToUserModel } from "./user";

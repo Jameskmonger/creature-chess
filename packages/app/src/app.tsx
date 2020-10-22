@@ -2,10 +2,10 @@ import * as React from "react";
 import { Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AppState } from "./store";
-import { AuthSelectors, CallbackPage, LoginPage } from "./auth";
+import { AuthSelectors, CallbackPage, LoginPage, RegistrationPage } from "./auth";
 import { GamePage } from "./game";
 import { LobbyPage } from "./lobby";
-import { MenuPage, NicknameRequestPage } from "./menu";
+import { MenuPage } from "./menu";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {
     return (
@@ -36,7 +36,11 @@ const gameStateSelector = (state: AppState) => {
 
 const AuthenticatedRootPage: React.FunctionComponent = () => {
     const gameState = useSelector<AppState, GameState>(gameStateSelector);
-    const requestNicknameMessage = useSelector<AppState, string>(state => state.lobby.requestNicknameMessage);
+    const registered = useSelector<AppState, boolean>(state => state.auth.user.registered);
+
+    if (!registered) {
+        return <RegistrationPage />;
+    }
 
     if (gameState === GameState.GAME) {
         return <GamePage />;
@@ -44,10 +48,6 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
 
     if (gameState === GameState.LOBBY) {
         return <LobbyPage />;
-    }
-
-    if (requestNicknameMessage) {
-        return <NicknameRequestPage message={requestNicknameMessage} />;
     }
 
     return <MenuPage />;

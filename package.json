@@ -13,7 +13,6 @@
 		"build:for-server": "lerna run build --ignore=\"@creature-chess/@(app|server-info|models)\"",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",
 		"dev:app": "lerna run dev --scope=@creature-chess/app --stream",
-
 		"lint:ts": "tslint -c tslint.json \"./packages/*/src/**/*.{ts,tsx}\"",
 		"lint": "npm run lint:ts && lerna run lint"
 	},
@@ -25,8 +24,13 @@
 		"jest": "^26.5.3",
 		"jest-standard-reporter": "^1.1.1",
 		"lerna": "^3.22.1",
+		"neworbit-stylelint-config": "^2.0.7",
 		"neworbit-tslint-config": "^4.0.0",
 		"npm-run-all": "^4.1.5",
+		"stylelint": "^9.10.1",
+		"stylelint-no-unsupported-browser-features": "^3.0.2",
+		"stylelint-order": "^2.1.0",
+		"stylelint-scss": "^3.5.4",
 		"tap-bark": "^1.0.0",
 		"ts-jest": "^26.4.1",
 		"tslint": "^5.14.0",
