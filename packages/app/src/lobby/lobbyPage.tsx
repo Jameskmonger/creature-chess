@@ -37,7 +37,7 @@ const LobbyPage: React.FunctionComponent = () => {
                 <div className="players">
                     {
                         players.map(p => (
-                            <div className={`player${p.isBot ? " bot" : ""}`}>
+                            <div key={p.id} className={`player${p.isBot ? " bot" : ""}`}>
                                 <span>{p.name}</span>
                             </div>
                         ))
