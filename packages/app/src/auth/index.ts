@@ -7,3 +7,5 @@ export { AuthState } from "./store/state";
 export { CallbackPage } from "./CallbackPage";
 export { LoginPage } from "./LoginPage";
 export { RegistrationPage } from "./RegistrationPage";
+
+export { signIn } from "./auth0";

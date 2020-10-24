@@ -6,11 +6,12 @@ import { SanitizedUser } from "@creature-chess/models";
 import { AppState } from "./state";
 import { UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS } from "../ui/actions";
 import { ConnectionStatus } from "@creature-chess/shared";
+import { findGame } from "../menu/findGame";
 
 export const rootSaga = function*() {
     yield all([
         yield fork(authSaga),
-        yield fork(networking),
+        yield fork(findGame),
         yield takeEvery<UpdateConnectionStatusAction>(
             UPDATE_CONNECTION_STATUS,
             function*({ payload: { status } }) {

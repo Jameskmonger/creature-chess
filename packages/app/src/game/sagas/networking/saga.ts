@@ -28,47 +28,11 @@ import { clearSelectedPiece } from "../../features/board/actions";
 
 type Socket = SocketIOClient.Socket;
 
-const getSocket = (serverIP: string, idToken: string) => {
-    // force to websocket for now until CORS is sorted
-    const socket = io(
-        serverIP,
-        {
-            transports: ["websocket", "xhr-polling"],
-            reconnectionAttempts: 15,
-            reconnectionDelay: 100,
-            reconnectionDelayMax: 1000
-        }
-    );
-
-    return new Promise<Socket>((resolve, reject) => {
-        socket.on("connect", () => {
-            socket.emit("authenticate", { idToken });
-        });
-
-        const onAuthenticated = ({ error }: AuthenticateResponse) => {
-            if (!error) {
-                socket.off("authenticate_response", onAuthenticated);
-
-                resolve(socket);
-
-                return;
-            }
-
-            socket.disconnect();
-            reject(error);
-        };
-
-        socket.on("authenticate_response", onAuthenticated);
-    });
-};
-
 type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
-type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
 const subscribe = (
     registry: ServerToClientPacketRegistry,
-    lobbyRegistry: ServerToClientLobbyPacketRegistry,
     socket: Socket
 ) => {
     return eventChannel(emit => {
@@ -158,26 +122,6 @@ const subscribe = (
             }
         );
 
-        // todo split lobby networking
-        lobbyRegistry.on(
-            ServerToClientLobbyPacketOpcodes.JOIN_LOBBY,
-            ({ playerId, lobbyId, players, startTimestamp }) => {
-                emit(joinLobbyAction(
-                    playerId,
-                    lobbyId,
-                    players,
-                    startTimestamp
-                ));
-            }
-        );
-
-        lobbyRegistry.on(
-            ServerToClientLobbyPacketOpcodes.LOBBY_PLAYER_UPDATE,
-            ({ index, player }) => {
-                emit(updateLobbyPlayerAction(index, player));
-            }
-        );
-
         registry.on(
             ServerToClientPacketOpcodes.JOIN_GAME,
             ({ fullState }) => {
@@ -230,8 +174,8 @@ const subscribe = (
     });
 };
 
-const readPacketsToActions = function*(incomingRegistry: ServerToClientPacketRegistry, lobbyRegistry: ServerToClientLobbyPacketRegistry, socket: Socket) {
-    const channel = yield call(subscribe, incomingRegistry, lobbyRegistry, socket);
+const readPacketsToActions = function*(incomingRegistry: ServerToClientPacketRegistry, socket: Socket) {
+    const channel = yield call(subscribe, incomingRegistry, socket);
 
     yield takeEvery(channel, function*(action) {
         yield put(action);
@@ -324,46 +268,42 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
 };
 
 export const networking = function*() {
-    const action: FindGameAction = yield take(FIND_GAME);
+    // const action: FindGameAction = yield take(FIND_GAME);
 
-    const state: AppState = yield select();
+    // const state: AppState = yield select();
 
-    // this should never happen, but it doesn't hurt to be safe
-    if (!AuthSelectors.isLoggedIn(state)) {
-        signIn();
+    // // this should never happen, but it doesn't hurt to be safe
+    // if (!AuthSelectors.isLoggedIn(state)) {
+    //     signIn();
 
-        return;
-    }
+    //     return;
+    // }
 
-    const idToken = AuthSelectors.getIdToken(state);
+    // const idToken = AuthSelectors.getIdToken(state);
 
-    let socket: Socket = null;
+    // let socket: Socket = null;
 
-    while (socket === null) {
-        try {
-            socket = yield call(getSocket, action.payload.serverIP, idToken);
-        } catch (e) {
-            // todo improve this, currently it just refreshes if there's an error.
-            signIn();
+    // while (socket === null) {
+    //     try {
+    //         socket = yield call(getSocket, action.payload.serverIP, idToken);
+    //     } catch (e) {
+    //         // todo improve this, currently it just refreshes if there's an error.
+    //         signIn();
 
-            return;
-        }
-    }
+    //         return;
+    //     }
+    // }
 
-    const outgoingRegistry = new OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
-        (opcode, payload, ack) => socket.emit(opcode, payload, ack)
-    );
+    // const outgoingRegistry = new OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
+    //     (opcode, payload, ack) => socket.emit(opcode, payload, ack)
+    // );
 
-    const incomingRegistry = new IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
-        (opcode, handler) => socket.on(opcode, handler)
-    );
+    // const incomingRegistry = new IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
+    //     (opcode, handler) => socket.on(opcode, handler)
+    // );
 
-    const lobbyRegistry = new IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>(
-        (opcode, handler) => socket.on(opcode, handler)
-    );
+    // yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
-    yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
-
-    yield fork(readPacketsToActions, incomingRegistry, lobbyRegistry, socket);
-    yield fork(writeActionsToPackets, outgoingRegistry);
+    // yield fork(readPacketsToActions, incomingRegistry, socket);
+    // yield fork(writeActionsToPackets, outgoingRegistry);
 };

@@ -1,5 +1,4 @@
 import { Socket } from "socket.io";
-import { GamePhase } from "@creature-chess/models";
 import { Player} from "@creature-chess/shared";
 import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";

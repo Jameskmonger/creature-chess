@@ -7,6 +7,7 @@ import { Footer } from "../ui/display/footer";
 import { Leaderboard } from "./leaderboard";
 import { enableDebugMode, findGameAction, joinGameError } from "../ui/actions";
 import { Loading } from "../ui/display/loading";
+import { GAME_SERVER_URL } from "../auth/config";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -44,7 +45,7 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
         const serverParam = getUrlParameter("server");
 
         this.setState({
-            serverIP: serverParam || "https://cc-server.jamesmonger.com"
+            serverIP: serverParam || GAME_SERVER_URL
         });
     }
 
