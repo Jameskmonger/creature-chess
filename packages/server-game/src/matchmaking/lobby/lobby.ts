@@ -112,6 +112,11 @@ export class Lobby {
             throw Error("Tried to start already-started game");
         }
 
+        this.members.filter(m => m.type === LobbyMemberType.PLAYER)
+            .forEach((player: PlayerLobbyMember) => {
+                player.net.outgoing.emit(ServerToClientLobbyPacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
+            });
+
         this.gameStarted = true;
 
         const event: LobbyStartEvent = {

@@ -50,6 +50,9 @@ export const findGame = function*() {
         yield put(action);
     });
 
+    // todo put race (take(JOIN_LOBBY), take(JOIN_GAME)) here
+    // and run the correct networking saga
+
     // wait for a JOIN_LOBBY action
     yield take(JOIN_LOBBY);
 

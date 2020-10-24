@@ -4,7 +4,7 @@ import { updateConnectionStatus} from "../../../ui/actions";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
 
-export const networking = function*(socket: SocketIOClient.Socket) {
+export const gameNetworking = function*(socket: SocketIOClient.Socket) {
     console.log("game networking started");
 
     yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));

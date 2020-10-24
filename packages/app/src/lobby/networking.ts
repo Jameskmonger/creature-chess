@@ -1,7 +1,9 @@
-import { takeEvery, put, fork } from "@redux-saga/core/effects";
+import { takeEvery, put, fork, take, select } from "@redux-saga/core/effects";
 import { IncomingPacketRegistry, ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes } from "@creature-chess/shared";
 import { eventChannel } from "redux-saga";
-import { LobbyAction, updateLobbyPlayerAction } from "./store/actions";
+import { LobbyAction, updateLobbyPlayerAction, lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "./store/actions";
+import { AppState } from "../store";
+import { gameSaga } from "../game";
 
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
@@ -14,8 +16,17 @@ const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegist
             }
         );
 
+        registry.on(
+            ServerToClientLobbyPacketOpcodes.LOBBY_GAME_STARTED,
+            () => {
+                emit(lobbyGameStartedEvent());
+            }
+        );
+
         // tslint:disable-next-line:no-empty
-        return () => { };
+        return () => {
+            console.log("cancelling lobby readPacketsToActions channel");
+        };
     });
 
     yield takeEvery(channel, function*(action) {
@@ -31,4 +42,10 @@ export const lobbyNetworking = function*(socket: SocketIOClient.Socket) {
     );
 
     yield fork(readPacketsToActions, registry);
+
+    yield take(LOBBY_GAME_STARTED_EVENT);
+
+    const playerId: string = yield select((state: AppState) => state.auth.user.id);
+
+    yield fork(gameSaga, playerId, socket);
 };
