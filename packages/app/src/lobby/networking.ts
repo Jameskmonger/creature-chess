@@ -1,6 +1,6 @@
-import { takeEvery, put, fork, take, select } from "@redux-saga/core/effects";
+import { put, fork, take, select, cancel, cancelled } from "@redux-saga/core/effects";
 import { IncomingPacketRegistry, ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes } from "@creature-chess/shared";
-import { eventChannel } from "redux-saga";
+import { EventChannel, eventChannel } from "redux-saga";
 import { LobbyAction, updateLobbyPlayerAction, lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "./store/actions";
 import { AppState } from "../store";
 import { gameSaga } from "../game";
@@ -8,42 +8,52 @@ import { gameSaga } from "../game";
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
 const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegistry) {
-    const channel = eventChannel<LobbyAction>(emit => {
-        registry.on(
-            ServerToClientLobbyPacketOpcodes.LOBBY_PLAYER_UPDATE,
-            ({ index, player }) => {
-                emit(updateLobbyPlayerAction(index, player));
-            }
-        );
+    let channel: EventChannel<LobbyAction>;
 
-        registry.on(
-            ServerToClientLobbyPacketOpcodes.LOBBY_GAME_STARTED,
-            () => {
-                emit(lobbyGameStartedEvent());
-            }
-        );
+    try {
+        channel = eventChannel<LobbyAction>(emit => {
+            registry.on(
+                ServerToClientLobbyPacketOpcodes.LOBBY_PLAYER_UPDATE,
+                ({ index, player }) => {
+                    emit(updateLobbyPlayerAction(index, player));
+                }
+            );
 
-        // tslint:disable-next-line:no-empty
-        return () => {
-            console.log("cancelling lobby readPacketsToActions channel");
-        };
-    });
+            registry.on(
+                ServerToClientLobbyPacketOpcodes.LOBBY_GAME_STARTED,
+                () => {
+                    emit(lobbyGameStartedEvent());
+                }
+            );
 
-    yield takeEvery(channel, function*(action) {
-        yield put(action);
-    });
+            // tslint:disable-next-line:no-empty
+            return () => {
+                // todo registry.off or registry.close
+            };
+        });
+
+        while (true) {
+            const action = yield take(channel);
+
+            yield put(action);
+        }
+    } finally {
+        if (yield cancelled()) {
+            channel.close();
+        }
+    }
 };
 
 export const lobbyNetworking = function*(socket: SocketIOClient.Socket) {
-    console.log("lobby networking started");
-
     const registry = new IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
 
-    yield fork(readPacketsToActions, registry);
+    const readPacketsTask = yield fork(readPacketsToActions, registry);
 
     yield take(LOBBY_GAME_STARTED_EVENT);
+
+    yield cancel(readPacketsTask);
 
     const playerId: string = yield select((state: AppState) => state.auth.user.id);
 
