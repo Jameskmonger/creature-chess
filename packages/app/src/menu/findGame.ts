@@ -93,7 +93,7 @@ export const findGame = function*() {
         yield put(playerListUpdated(players));
         yield put(GameEvents.gamePhaseStartedEvent(phase, phaseStartedAtSeconds));
 
-        if (battleTurn) {
+        if (battleTurn !== null) {
             yield put(startBattle(battleTurn));
         }
     }
