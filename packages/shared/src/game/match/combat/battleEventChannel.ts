@@ -6,15 +6,17 @@ import { BoardState, BoardCommands } from "../../../board";
 import { simulateTurn } from "./turnSimulator";
 import { GameOptions } from "../../options";
 
-export const BATTLE_TURN = "BATTLE_TURN";
-export type BATTLE_TURN = typeof BATTLE_TURN;
+export const BATTLE_TURN_EVENT = "BATTLE_TURN_EVENT";
+export type BATTLE_TURN_EVENT = typeof BATTLE_TURN_EVENT;
 export const BATTLE_FINISH_EVENT = "BATTLE_FINISH_EVENT";
 export type BATTLE_FINISH_EVENT = typeof BATTLE_FINISH_EVENT;
 
+export type BattleTurnEvent = ({ type: BATTLE_TURN_EVENT, payload: { turn: number } });
 export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: number } });
 
-export type BattleEvent = BoardCommands.InitialiseBoardCommand | BattleFinishEvent;
+export type BattleEvent = BoardCommands.InitialiseBoardCommand | BattleTurnEvent | BattleFinishEvent;
 
+const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn }});
 const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
 
 const duration = (ms: number) => {
@@ -90,6 +92,7 @@ export const battleEventChannel = (
                 const turnTimer = duration(options.turnDuration);
 
                 board = simulateTurn(++turnCount, board);
+                emit(battleTurnEvent(turnCount));
                 emit(BoardCommands.initialiseBoard(board.pieces));
 
                 await turnTimer.remaining();

@@ -26,6 +26,7 @@ export class SocketPlayer extends Player {
         const match = this.getMatch();
         const board = match ? match.getBoard() : this.getBoard();
         const opponentId = match ? match.away.id : null;
+        const battleTurn = match ? match.getTurn() : null;
 
         registry.emit(
             ServerToClientMenuPacketOpcodes.GAME_CONNECTED,
@@ -34,6 +35,7 @@ export class SocketPlayer extends Player {
                 bench: this.getBench(),
                 game: this.getGameState(),
                 players: this.getPlayerListPlayers(),
+                battleTurn,
                 playerInfo: {
                     cards: this.getCards(),
                     health: this.getHealth(),

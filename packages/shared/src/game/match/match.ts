@@ -1,16 +1,21 @@
 import pDefer = require("p-defer");
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
-import { createStore, combineReducers, applyMiddleware, Store } from "redux";
+import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
 import { GRID_SIZE } from "@creature-chess/models";
 import { boardReducer, BoardState, BoardCommands, mergeBoards } from "../../board";
 import { Player } from "../player";
-import { battle, startBattle, BattleFinishEvent, BATTLE_FINISH_EVENT } from "./combat";
+import { battle, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
 import { GameOptions } from "../options";
 
 interface MatchState {
     board: BoardState;
+    turn: number;
 }
+
+const turnReducer: Reducer<number, BattleTurnEvent> = (state = 0, event) => (
+    event.type === BATTLE_TURN_EVENT ? event.payload.turn : state
+);
 
 export class Match {
     public readonly home: Player;
@@ -37,6 +42,10 @@ export class Match {
 
     public getBoard() {
         return this.store.getState().board;
+    }
+
+    public getTurn() {
+        return this.store.getState().turn;
     }
 
     public getFinalBoard() {
@@ -75,7 +84,8 @@ export class Match {
 
         const store = createStore(
             combineReducers<MatchState>({
-                board: boardReducer
+                board: boardReducer,
+                turn: turnReducer
             }),
             applyMiddleware(sagaMiddleware)
         );
