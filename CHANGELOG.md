@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/Jameskmonger/creature-chess/compare/v0.2.3...v0.2.4) (2020-10-25)
+
+
+### Bug Fixes
+
+* Fix networking for player actions ([#327](https://github.com/Jameskmonger/creature-chess/issues/327)) ([697c40c](https://github.com/Jameskmonger/creature-chess/commit/697c40c399670ee92273ffe0a932a5b01efcc559))
+
+
+
+
+
 ## [0.2.3](https://github.com/Jameskmonger/creature-chess/compare/v0.2.2...v0.2.3) (2020-10-23)
 
 
