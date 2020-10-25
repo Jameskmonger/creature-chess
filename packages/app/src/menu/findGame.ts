@@ -2,7 +2,7 @@ import { race, call, takeEvery, put, take, fork, all, select } from "@redux-saga
 import { eventChannel } from "redux-saga";
 import {
     BenchCommands, BoardCommands, GameEvents, IncomingPacketRegistry, PlayerInfoCommands,
-    ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes
+    ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, startBattle
 } from "@creature-chess/shared";
 import { AuthSelectors, signIn } from "../auth";
 import { lobbyNetworking } from "../lobby/networking";
@@ -80,6 +80,7 @@ export const findGame = function*() {
             board,
             bench,
             players,
+            battleTurn,
             game: { phase, phaseStartedAtSeconds },
             playerInfo: { money, cards, level, xp }
         } } = game as GameConnectedEvent;
@@ -91,5 +92,9 @@ export const findGame = function*() {
         yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
         yield put(playerListUpdated(players));
         yield put(GameEvents.gamePhaseStartedEvent(phase, phaseStartedAtSeconds));
+
+        if (battleTurn) {
+            yield put(startBattle(battleTurn));
+        }
     }
 };

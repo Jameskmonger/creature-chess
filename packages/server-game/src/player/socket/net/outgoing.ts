@@ -6,7 +6,7 @@ import {
 } from "@creature-chess/shared";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
-import { logger } from "packages/server-game/src/log";
+import { logger } from "../../../log";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
