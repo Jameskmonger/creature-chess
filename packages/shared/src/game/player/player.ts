@@ -175,9 +175,13 @@ export abstract class Player {
 
         this.store.dispatch(playerFinishMatchEvent(homeScore, awayScore));
 
+        const opponentName = this.match.away.name;
+
+        this.match = null;
+
         return {
             homePlayer: this,
-            opponentName: this.match.away.name,
+            opponentName,
             homeScore,
             awayScore
         };
