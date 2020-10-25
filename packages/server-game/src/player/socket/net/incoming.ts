@@ -14,11 +14,12 @@ import { logger } from "../../../log";
 type IncomingRegistry = IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 
 export const incomingNetworking = function*() {
-    let lastReceivedPacketIndex = 0;
     let registry: IncomingRegistry;
     let socket: Socket;
 
     const processIncomingPackets = function*() {
+        let expectedPacketIndex = 1;
+
         const channel = eventChannel<ReceivePlayerActionsEvent>(emit => {
             const onReceiveActions = (
                 { index, actions }: SendPlayerActionsPacket,
@@ -31,32 +32,32 @@ export const incomingNetworking = function*() {
             return () => socket.off(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, onReceiveActions);
         });
 
+        const actionQueue: PlayerActions.PlayerAction[] = [];
+
         while (true) {
-            const { payload: { index, actions, ack } }: ReceivePlayerActionsEvent = yield take(channel);
+            // todo refactor this client+server to make use of the array
+            const { payload: { index, actions: [action] } }: ReceivePlayerActionsEvent = yield take(channel);
 
-            const expectedPacketIndex = lastReceivedPacketIndex + 1;
+            const validAction = PlayerActions.PlayerActionTypesArray.includes(action.type);
+            if (!validAction) {
+                logger.error(`Unhandled player action type: ${action.type}`);
 
-            if (expectedPacketIndex !== index) {
-                ack(false);
-                logger.error(`Incoming packet index mismatch. Expected: ${expectedPacketIndex}, received: ${index}`);
-
-                return;
+                continue;
             }
 
-            for (const action of actions) {
-                const validAction = PlayerActions.PlayerActionTypesArray.includes(action.type);
+            if (index < expectedPacketIndex) {
+                logger.warn(`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex}`);
+            } else {
+                // queue future actions and execute them after the expected one arrives
+                actionQueue[index - expectedPacketIndex] = action;
 
-                if (!validAction) {
-                    logger.error(`Unhandled player action type: ${action.type}`);
-
-                    continue;
+                // if there's an action for the expected index, process it and repeat
+                while (actionQueue[0]) {
+                    const actionFromQueue = actionQueue.shift();
+                    expectedPacketIndex++;
+                    yield put(actionFromQueue);
                 }
-
-                yield put(action);
             }
-
-            lastReceivedPacketIndex = index;
-            ack(true, index);
         }
     };
 
@@ -81,8 +82,6 @@ export const incomingNetworking = function*() {
     yield takeLatest<NewPlayerSocketEvent>(
         NEW_PLAYER_SOCKET_EVENT,
         function*({ payload: { socket: newSocket } }) {
-            lastReceivedPacketIndex = 0;
-
             if (socket) {
                 socket.removeAllListeners();
             }

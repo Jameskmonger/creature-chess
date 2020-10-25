@@ -27,6 +27,7 @@ export {
     ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements,
     AuthenticateResponse, PhaseUpdatePacket,
     ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes, ServerToClientLobbyPacketAcknowledgements,
+    ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, ServerToClientMenuPacketAcknowledgements,
     ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes,
     SendPlayerActionsPacket, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS
 } from "./networking";

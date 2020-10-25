@@ -20,5 +20,5 @@ export type ClientToServerPacketDefinitions = {
 
 export type ClientToServerPacketAcknowledgements = {
   [ClientToServerPacketOpcodes.FINISH_MATCH]: never,
-  [ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS]: (accepted: boolean, packetIndex?: number) => void
+  [ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS]: never
 };

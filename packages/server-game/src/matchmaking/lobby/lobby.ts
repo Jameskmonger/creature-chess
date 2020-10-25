@@ -4,7 +4,8 @@ import shuffle = require("lodash.shuffle");
 import {
     OutgoingPacketRegistry,
     ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions,
-    ServerToClientLobbyPacketOpcodes
+    ServerToClientLobbyPacketOpcodes,
+    ServerToClientMenuPacketOpcodes
 } from "@creature-chess/shared";
 import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models";
 import { IdGenerator } from "../id-generator";
@@ -65,7 +66,7 @@ export class Lobby {
                 socket,
                 outgoing: this.createOutgoingRegistry(socket)
             };
-            this.sendMemberJoinEvent(member);
+            this.sendMemberJoinEvent(socket, member);
             return;
         }
 
@@ -110,6 +111,11 @@ export class Lobby {
         if (this.gameStarted) {
             throw Error("Tried to start already-started game");
         }
+
+        this.members.filter(m => m.type === LobbyMemberType.PLAYER)
+            .forEach((player: PlayerLobbyMember) => {
+                player.net.outgoing.emit(ServerToClientLobbyPacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
+            });
 
         this.gameStarted = true;
 
@@ -161,7 +167,7 @@ export class Lobby {
 
         this.members[index] = member;
 
-        this.sendMemberJoinEvent(member);
+        this.sendMemberJoinEvent(socket, member);
 
         return index;
     }
@@ -175,8 +181,9 @@ export class Lobby {
         );
     }
 
-    private sendMemberJoinEvent(member: PlayerLobbyMember) {
-        member.net.outgoing.emit(ServerToClientLobbyPacketOpcodes.JOIN_LOBBY, {
+    private sendMemberJoinEvent(socket: Socket, member: PlayerLobbyMember) {
+        // todo use a registry for this
+        socket.emit(ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED, {
             playerId: member.id,
             lobbyId: this.id,
             players: this.getLobbyPlayers(),
