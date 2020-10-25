@@ -1,20 +1,127 @@
+import present = require("present");
+import { eventChannel, buffers } from "redux-saga";
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
-import { BoardState } from "../../../board";
+import { IndexedPieces } from "@creature-chess/models";
+import { isATeamDefeated } from "../../../utils";
+import { BoardState, BoardCommands } from "../../../board";
+import { simulateTurn } from "./turnSimulator";
 import { GameOptions } from "../../options";
-import { battleEventChannel, BattleEvent } from "./battleEventChannel";
+
+export const BATTLE_TURN_EVENT = "BATTLE_TURN_EVENT";
+export type BATTLE_TURN_EVENT = typeof BATTLE_TURN_EVENT;
+export const BATTLE_FINISH_EVENT = "BATTLE_FINISH_EVENT";
+export type BATTLE_FINISH_EVENT = typeof BATTLE_FINISH_EVENT;
+
+export type BattleTurnEvent = ({ type: BATTLE_TURN_EVENT, payload: { turn: number } });
+export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: number } });
+
+export type BattleEvent = BoardCommands.InitialiseBoardCommand | BattleTurnEvent | BattleFinishEvent;
+
+const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn }});
+const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
 
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;
+type StartBattleCommand = { type: START_BATTLE, payload: { turn?: number }};
+export const startBattle = (turn?: number): StartBattleCommand => ({ type: START_BATTLE, payload: { turn } });
 
-export const startBattle = () => ({ type: START_BATTLE });
+const duration = (ms: number) => {
+    const startTime = present();
 
-export const battle = function*(gameOptions: GameOptions) {
-    yield takeEvery(
+    return {
+        remaining: () => {
+            return new Promise(resolve => {
+                const endTime = present();
+                const timePassed = endTime - startTime;
+
+                const remaining = Math.max(ms - timePassed, 0);
+
+                if (remaining === 0) {
+                    resolve();
+                    return;
+                }
+
+                setTimeout(() => resolve(), remaining);
+            });
+        }
+    };
+};
+
+const addBattleBrains = (pieces: IndexedPieces) => {
+    return Object.entries(pieces)
+        .reduce<IndexedPieces>((acc, [pieceId, piece]) => {
+            acc[pieceId] = {
+                ...piece,
+                battleBrain: {
+                    canMoveAtTurn: null,
+                    canBeAttackedAtTurn: 0,
+                    canAttackAtTurn: null,
+                    removeFromBoardAtTurn: null
+                }
+            };
+
+            return acc;
+        }, {});
+};
+
+const battleEventChannel = (
+    startingBoardState: BoardState,
+    startingTurn: number,
+    options: GameOptions,
+    bufferSize: number
+) => {
+    return eventChannel<BattleEvent>(emit => {
+        let cancelled = false;
+
+        let board: BoardState = {
+            pieces: addBattleBrains(startingBoardState.pieces),
+            piecePositions: {
+                ...startingBoardState.piecePositions
+            },
+            locked: startingBoardState.locked
+        };
+
+        const run = async () => {
+            let turnCount = startingTurn;
+
+            while (true) {
+                const shouldStop = (
+                    cancelled
+                    || turnCount >= options.turnCount
+                    || isATeamDefeated(board)
+                );
+
+                if (shouldStop) {
+                    emit(battleFinishEvent(turnCount));
+                    break;
+                }
+
+                const turnTimer = duration(options.turnDuration);
+
+                board = simulateTurn(++turnCount, board);
+                emit(battleTurnEvent(turnCount));
+                emit(BoardCommands.initialiseBoard(board.pieces));
+
+                await turnTimer.remaining();
+            }
+        };
+
+        run();
+
+        return () => {
+            cancelled = true;
+        };
+    }, buffers.expanding(bufferSize));
+};
+
+export const battleSaga = function*(gameOptions: GameOptions) {
+    yield takeEvery<StartBattleCommand>(
         START_BATTLE,
-        function*() {
+        function*({ payload: { turn } }) {
             const board: BoardState = yield select(state => state.board);
 
-            const battleChannel = yield call(battleEventChannel, board, gameOptions, 100);
+            // todo no need for the channel here. this can just run synchronously in a loop
+            const battleChannel = yield call(battleEventChannel, board, turn || 0, gameOptions, 100);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
                 yield put(battleAction);

@@ -10,7 +10,7 @@ export {
 
 export {
     DefinitionProvider,
-    battle, startBattle,
+    battleSaga, startBattle,
     BATTLE_FINISH_EVENT,
     gameReducer, GameState, Game, Player, GameEvents,
     getPiece, getAllPieces, getBoardPieceForPosition, canDropPiece,

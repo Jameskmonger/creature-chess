@@ -24,15 +24,6 @@ const ReconnectModal: React.FunctionComponent = () => {
                     </>
                 )
             }
-            {
-                connectionStatus === ConnectionStatus.RECONNECTED
-                && (
-                    <>
-                        <p className="text">Reconnected!</p>
-                        <p className="text">Please wait for the current round to finish...</p>
-                    </>
-                )
-            }
         </div>
     );
 };

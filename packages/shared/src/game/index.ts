@@ -9,7 +9,7 @@ export { BenchState, benchReducer, BenchCommands } from "./player/bench";
 export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
 
 export { GameState, gameReducer, GameEvents } from "./store";
-export { BATTLE_FINISH_EVENT, battle, startBattle } from "./match";
+export { BATTLE_FINISH_EVENT, battleSaga, startBattle } from "./match";
 export { DefinitionProvider } from "./definitions/definitionProvider";
 
 export { defaultOptions as defaultGameOptions } from "./options";

@@ -5,7 +5,7 @@ import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
 import { announcement } from "./actions/announcement";
 import { gameNetworking } from "./networking/saga";
 
-import { PlayerSagas, PlayerActionSagas, battle, DefinitionProvider, defaultGameOptions } from "@creature-chess/shared";
+import { PlayerSagas, PlayerActionSagas, battleSaga, DefinitionProvider, defaultGameOptions } from "@creature-chess/shared";
 
 export const gameSaga = function*(playerId: string, socket: SocketIOClient.Socket) {
     const definitionProvider = new DefinitionProvider();
@@ -24,9 +24,6 @@ export const gameSaga = function*(playerId: string, socket: SocketIOClient.Socke
         yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<AppState>()),
         yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<AppState>(playerId)),
         yield fork(PlayerSagas.xpSagaFactory<AppState>()),
-        yield fork(
-            battle,
-            defaultGameOptions
-        )
+        yield fork(battleSaga, defaultGameOptions)
     ]);
 };

@@ -51,31 +51,11 @@ export type AuthenticateResponse = {
   error?: { type: "not_registered" } | { type: "authentication" };
 };
 
-export type PlayerGameState = {
-  id: string;
-
-  // todo get rid of the ones above
-  fullState?: {
-    board: IndexedPieces;
-    bench: BenchState;
-    players: PlayerListPlayer[];
-    level: {
-      level: number;
-      xp: number;
-    };
-    cards: Card[];
-    money: number;
-
-    phase: PhaseUpdatePacket;
-  }
-};
-
 type PlayersResurrectedPacket = {
   playerIds: string[];
 };
 
 export enum ServerToClientPacketOpcodes {
-  JOIN_GAME = "joinGame",
   CARDS_UPDATE = "cardsUpdate",
   PLAYER_LIST_UPDATE = "playerListUpdate",
   PHASE_UPDATE = "phaseUpdate",
@@ -88,7 +68,6 @@ export enum ServerToClientPacketOpcodes {
 }
 
 export type ServerToClientPacketDefinitions = {
-  [ServerToClientPacketOpcodes.JOIN_GAME]: PlayerGameState,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: Card[],
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[],
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
@@ -101,7 +80,6 @@ export type ServerToClientPacketDefinitions = {
 };
 
 export type ServerToClientPacketAcknowledgements = {
-  [ServerToClientPacketOpcodes.JOIN_GAME]: never,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: never,
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: never,
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: never,

@@ -116,26 +116,6 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
             }
         );
 
-        registry.on(
-            ServerToClientPacketOpcodes.JOIN_GAME,
-            ({ fullState }) => {
-                const { money, cards, players, level: { level, xp }, board, bench, phase } = fullState;
-
-                emit(PlayerInfoCommands.updateMoneyCommand(money));
-                emit(PlayerInfoCommands.updateCardsCommand(cards));
-                emit(playerListUpdated(players));
-                emit(PlayerInfoCommands.updateLevelCommand(level, xp));
-                emit(BoardCommands.initialiseBoard(board));
-                emit(BenchCommands.initialiseBenchCommand(bench));
-
-                if (phase) {
-                    emit(GameEvents.gamePhaseStartedEvent(phase.phase, phase.startedAtSeconds));
-                } else {
-                    emit(updateConnectionStatus(ConnectionStatus.RECONNECTED));
-                }
-            }
-        );
-
         // todo registry off here
         // tslint:disable-next-line:no-empty
         return () => { };

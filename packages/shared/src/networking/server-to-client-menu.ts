@@ -14,6 +14,8 @@ export type GameConnectionPacket = {
   bench: BenchState;
   players: Models.PlayerListPlayer[];
 
+  battleTurn: number | null;
+
   // todo check which props we're sending here - no `ready` for example
   playerInfo: {
     health: number;
