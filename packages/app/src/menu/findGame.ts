@@ -1,12 +1,13 @@
-import { IncomingPacketRegistry, ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes } from "@creature-chess/shared";
-import { call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
+import { race, call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
+import { IncomingPacketRegistry, ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes } from "@creature-chess/shared";
 import { AuthSelectors, signIn } from "../auth";
 import { lobbyNetworking } from "../lobby/networking";
-import { joinLobbyAction, JoinLobbyAction, JOIN_LOBBY } from "../lobby/store/actions";
+import { gameConnectedEvent, joinLobbyAction, JoinLobbyAction, JOIN_LOBBY, GameConnectedEvent, GAME_CONNECTED } from "../lobby/store/actions";
 import { AppState } from "../store";
 import { FindGameAction, FIND_GAME } from "../ui/actions";
 import { getSocket } from "../ui/socket";
+import { gameSaga } from "../game";
 
 export const findGame = function*() {
     const findGameAction: FindGameAction = yield take(FIND_GAME);
@@ -28,7 +29,7 @@ export const findGame = function*() {
         (opcode, handler) => socket.on(opcode, handler)
     );
 
-    const channel = eventChannel<JoinLobbyAction>(emit => {
+    const channel = eventChannel<JoinLobbyAction | GameConnectedEvent>(emit => {
         registry.on(
             ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED,
             ({ playerId, lobbyId, players, startTimestamp }) => {
@@ -41,6 +42,13 @@ export const findGame = function*() {
             }
         );
 
+        registry.on(
+            ServerToClientMenuPacketOpcodes.GAME_CONNECTED,
+            (payload) => {
+                emit(gameConnectedEvent(payload));
+            }
+        );
+
         // todo registry.off
         // tslint:disable-next-line:no-empty
         return () => { console.log("channel closing"); };
@@ -50,16 +58,18 @@ export const findGame = function*() {
         yield put(action);
     });
 
-    // todo put race (take(JOIN_LOBBY), take(JOIN_GAME)) here
-    // and run the correct networking saga
+    const { lobby, game } = yield race({
+        lobby: take(JOIN_LOBBY),
+        game: take(GAME_CONNECTED)
+    });
 
-    // wait for a JOIN_LOBBY action
-    yield take(JOIN_LOBBY);
-
-    console.log("JOIN_LOBBY received");
-
-    // close the menu channel
     channel.close();
 
-    yield fork(lobbyNetworking, socket);
+    if (lobby) {
+        yield fork(lobbyNetworking, socket);
+    } else if (game) {
+        const playerId: string = yield select((s: AppState) => s.auth.user.id);
+
+        yield fork(gameSaga, playerId, socket);
+    }
 };

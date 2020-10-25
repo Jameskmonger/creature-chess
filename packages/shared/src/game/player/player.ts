@@ -113,8 +113,16 @@ export abstract class Player {
         return this.store.getState().playerInfo.level;
     }
 
+    public getXp() {
+        return this.store.getState().playerInfo.xp;
+    }
+
     public getMoney() {
         return this.store.getState().playerInfo.money;
+    }
+
+    public getShopLocked() {
+        return this.store.getState().playerInfo.shopLocked;
     }
 
     public getStatus() {
