@@ -6,6 +6,7 @@ import {
 } from "@creature-chess/shared";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
+import { logger } from "packages/server-game/src/log";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
@@ -41,13 +42,20 @@ export const outgoingNetworking = (getCurrentMatch: () => Match) => {
                         // todo this isn't nice, get it in state?
                         const match = getCurrentMatch();
 
+                        if (!match) {
+                            logger.warn("No match found when entering ready state");
+                        }
+
+                        const board = match ? match.getBoard() : null;
+                        const opponentId = match ? match.away.id : null;
+
                         const packet: PhaseUpdatePacket = {
                             startedAtSeconds: startedAt,
                             phase: GamePhase.READY,
                             payload: {
                                 bench,
-                                board: match.getBoard(),
-                                opponentId: match.away.id
+                                board,
+                                opponentId
                             }
                         };
 

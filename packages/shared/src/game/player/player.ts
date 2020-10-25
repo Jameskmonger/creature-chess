@@ -151,10 +151,10 @@ export abstract class Player {
     }
 
     public enterReadyPhase(match: Match) {
+        this.match = match;
         this.store.dispatch(BenchCommands.lockBenchCommand());
 
         this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(match.away.id));
-        this.match = match;
     }
 
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
