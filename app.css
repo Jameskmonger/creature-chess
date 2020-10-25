@@ -1064,21 +1064,3 @@ html, body {
   background: #ffcd75;
   box-shadow: inset 0 0 2px #754b00; }
 
-.style-james.tile.dark {
-  background: #828282; }
-
-.style-james.tile.light {
-  background: #828282; }
-
-.style-james.tile-row {
-  border-right: 3px solid #3cea92;
-  border-left: 3px solid #3cea92; }
-  .style-james.tile-row.first {
-    border-top: 3px solid #3cea92; }
-  .style-james.tile-row.last {
-    border-bottom: 3px solid #3cea92; }
-  .style-james.tile-row .tile:not(:last-of-type) {
-    border-right: 2px solid #404040; }
-  .style-james.tile-row:not(.last) .tile {
-    border-bottom: 2px solid #404040; }
-
