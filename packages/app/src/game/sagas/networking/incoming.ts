@@ -77,11 +77,18 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
         registry.on(
             ServerToClientPacketOpcodes.PHASE_UPDATE,
             (packet) => {
-                emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds));
+                // todo this is ugly
+                if (packet.phase === GamePhase.PREPARING) {
+                    emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, packet.payload.round));
+                } else {
+                    emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds));
+                }
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {
-                        const { cards, pieces: { board, bench } } = packet.payload;
+                        const { cards, pieces: { board, bench }, round } = packet.payload;
+
+                        emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
 
                         emit(BoardCommands.initialiseBoard(board.pieces));
                         emit(BenchCommands.initialiseBenchCommand(bench));
