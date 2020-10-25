@@ -6,8 +6,7 @@ import { EmptyPacket } from "./empty-packet";
 export type PreparingPhaseUpdatePacket = {
   startedAtSeconds: number,
   phase: GamePhase.PREPARING,
-  payload:
-  {
+  payload: {
     round: number;
     pieces: {
       board: BoardState;
