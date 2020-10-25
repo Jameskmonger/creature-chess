@@ -60,6 +60,7 @@ const addBattleBrains = (pieces: IndexedPieces) => {
 
 export const battleEventChannel = (
     startingBoardState: BoardState,
+    startingTurn: number,
     options: GameOptions,
     bufferSize: number
 ) => {
@@ -75,7 +76,7 @@ export const battleEventChannel = (
         };
 
         const run = async () => {
-            let turnCount = 0;
+            let turnCount = startingTurn;
 
             while (true) {
                 const shouldStop = (

@@ -5,16 +5,16 @@ import { battleEventChannel, BattleEvent } from "./battleEventChannel";
 
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;
-
-export const startBattle = () => ({ type: START_BATTLE });
+type StartBattleCommand = { type: START_BATTLE, payload: { turn?: number }};
+export const startBattle = (turn?: number): StartBattleCommand => ({ type: START_BATTLE, payload: { turn } });
 
 export const battle = function*(gameOptions: GameOptions) {
-    yield takeEvery(
+    yield takeEvery<StartBattleCommand>(
         START_BATTLE,
-        function*() {
+        function*({ payload: { turn } }) {
             const board: BoardState = yield select(state => state.board);
 
-            const battleChannel = yield call(battleEventChannel, board, gameOptions, 100);
+            const battleChannel = yield call(battleEventChannel, board, turn || 0, gameOptions, 100);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
                 yield put(battleAction);
