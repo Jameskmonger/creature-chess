@@ -1,5 +1,6 @@
 import present = require("present");
 import { eventChannel, buffers } from "redux-saga";
+import { takeEvery, select, put, call } from "@redux-saga/core/effects";
 import { IndexedPieces } from "@creature-chess/models";
 import { isATeamDefeated } from "../../../utils";
 import { BoardState, BoardCommands } from "../../../board";
@@ -18,6 +19,11 @@ export type BattleEvent = BoardCommands.InitialiseBoardCommand | BattleTurnEvent
 
 const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn }});
 const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
+
+const START_BATTLE = "START_BATTLE";
+type START_BATTLE = typeof START_BATTLE;
+type StartBattleCommand = { type: START_BATTLE, payload: { turn?: number }};
+export const startBattle = (turn?: number): StartBattleCommand => ({ type: START_BATTLE, payload: { turn } });
 
 const duration = (ms: number) => {
     const startTime = present();
@@ -58,7 +64,7 @@ const addBattleBrains = (pieces: IndexedPieces) => {
         }, {});
 };
 
-export const battleEventChannel = (
+const battleEventChannel = (
     startingBoardState: BoardState,
     startingTurn: number,
     options: GameOptions,
@@ -106,4 +112,20 @@ export const battleEventChannel = (
             cancelled = true;
         };
     }, buffers.expanding(bufferSize));
+};
+
+export const battleSaga = function*(gameOptions: GameOptions) {
+    yield takeEvery<StartBattleCommand>(
+        START_BATTLE,
+        function*({ payload: { turn } }) {
+            const board: BoardState = yield select(state => state.board);
+
+            // todo no need for the channel here. this can just run synchronously in a loop
+            const battleChannel = yield call(battleEventChannel, board, turn || 0, gameOptions, 100);
+
+            yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
+                yield put(battleAction);
+            });
+        }
+    );
 };

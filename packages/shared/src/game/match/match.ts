@@ -5,7 +5,7 @@ import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "r
 import { GRID_SIZE } from "@creature-chess/models";
 import { boardReducer, BoardState, BoardCommands, mergeBoards } from "../../board";
 import { Player } from "../player";
-import { battle, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
+import { battleSaga, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
 import { GameOptions } from "../options";
 
 interface MatchState {
@@ -70,7 +70,7 @@ export class Match {
         const _this = this;
         const rootSaga = function*() {
             yield all([
-                yield fork(battle, gameOptions),
+                yield fork(battleSaga, gameOptions),
                 yield takeEvery<BattleFinishEvent>(
                     BATTLE_FINISH_EVENT,
                     function*() {
