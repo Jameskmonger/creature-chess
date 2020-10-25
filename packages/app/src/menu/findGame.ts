@@ -55,7 +55,7 @@ export const findGame = function*() {
 
         // todo registry.off
         // tslint:disable-next-line:no-empty
-        return () => { console.log("channel closing"); };
+        return () => { };
     });
 
     yield takeEvery(channel, function*(action) {

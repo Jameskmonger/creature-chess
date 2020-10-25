@@ -8,7 +8,6 @@ import { gameNetworking } from "./networking/saga";
 import { PlayerSagas, PlayerActionSagas, battle, DefinitionProvider, defaultGameOptions } from "@creature-chess/shared";
 
 export const gameSaga = function*(playerId: string, socket: SocketIOClient.Socket) {
-    console.log("game saga started for player ", playerId);
     const definitionProvider = new DefinitionProvider();
 
     yield all([

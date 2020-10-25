@@ -136,6 +136,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
             }
         );
 
+        // todo registry off here
         // tslint:disable-next-line:no-empty
         return () => { };
     });
@@ -146,8 +147,6 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
 };
 
 export const incomingGameNetworking = function*(socket: SocketIOClient.Socket) {
-    console.log("incoming game net started");
-
     const registry = new IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );

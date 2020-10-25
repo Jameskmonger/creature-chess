@@ -5,8 +5,6 @@ import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
 
 export const gameNetworking = function*(socket: SocketIOClient.Socket) {
-    console.log("game networking started");
-
     yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
     yield fork(outgoingGameNetworking, socket);
