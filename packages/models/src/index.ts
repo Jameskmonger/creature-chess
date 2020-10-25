@@ -14,7 +14,7 @@ export { GamePhase } from "./game-phase";
 export { SanitizedUser } from "./user";
 
 export {
-    TileStyle, TileType, TileCoordinates, Directions, SlotLocation,
+    TileType, TileCoordinates, Directions, SlotLocation,
     createTileCoordinates, getDistance, getAdjacentPositions, getRelativeDirection
 } from "./position";
 export { CreatureDefinition, CreatureStats, AttackType, attackTypes, DefinitionClass } from "./creatureDefinition";

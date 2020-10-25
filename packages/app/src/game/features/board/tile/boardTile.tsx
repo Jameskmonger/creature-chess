@@ -1,9 +1,8 @@
 import * as React from "react";
-import { TileType, TileStyle } from "@creature-chess/models";
+import { TileType } from "@creature-chess/models";
 import { Tile } from "./tile";
 
 interface BoardTileProps {
-    tileStyle: TileStyle;
     x: number;
     y: number;
 }
@@ -14,7 +13,6 @@ const BoardTile: React.FunctionComponent<BoardTileProps> = props => {
             type={TileType.BOARD}
             x={props.x}
             y={props.y}
-            tileStyle={props.tileStyle}
         />
     );
 };

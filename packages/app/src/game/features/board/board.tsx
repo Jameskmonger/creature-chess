@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { Constants, GamePhase } from "@creature-chess/models";
-import { TileStyle } from "@creature-chess/models";
 import { AppState } from "../../../store";
 import { PieceComponent } from "./piece/pieceComponent";
 import { BoardRow } from "./boardRow";
@@ -41,9 +40,6 @@ const Board: React.FunctionComponent = props => {
     const showOpponentBoardPlaceholder = useSelector<AppState, boolean>(
         state => state.game.phase === GamePhase.PREPARING);
 
-    const localPlayerStyle = TileStyle.DEFAULT;
-    const opponentStyle = TileStyle.DEFAULT;
-
     const rows = [];
 
     if (!showOpponentBoardPlaceholder) {
@@ -52,7 +48,6 @@ const Board: React.FunctionComponent = props => {
                 <BoardRow
                     key={`tile-row-${y}`}
                     y={y}
-                    tileStyle={opponentStyle}
                 />
             );
         }
@@ -63,7 +58,6 @@ const Board: React.FunctionComponent = props => {
             <BoardRow
                 key={`tile-row-${y}`}
                 y={y}
-                tileStyle={localPlayerStyle}
             />
         );
     }

@@ -1,9 +1,8 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
-import { TileType, TileStyle } from "@creature-chess/models";
+import { TileType } from "@creature-chess/models";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../../store";
-import { getClassForTileStyle } from "../getClassForTileStyle";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared";
 import { ownedPieceSelector, boardTilePieceSelector, benchTilePieceSelector } from "../../../../store/pieceSelectors";
@@ -15,7 +14,6 @@ interface TileProps {
     x: number;
     y: number;
     type: TileType;
-    tileStyle: TileStyle;
 }
 
 // tslint:disable-next-line:no-bitwise
@@ -66,7 +64,7 @@ const onDropPiece = (dispatch: Dispatch, piece: PieceModel, type: TileType, x: n
     dispatch(clearSelectedPiece());
 };
 
-const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => {
+const Tile: React.FunctionComponent<TileProps> = ({ x, y, type }) => {
     const dispatch = useDispatch();
 
     const piece = useSelector<AppState, PieceModel>(state => (
@@ -103,7 +101,7 @@ const Tile: React.FunctionComponent<TileProps> = ({ x, y, type, tileStyle }) => 
     return (
         <div
             ref={drop}
-            className={`tile ${getClassName(type, x, y)}${isSelected ? " selected" : ""} ${getClassForTileStyle(tileStyle)}`}
+            className={`tile ${getClassName(type, x, y)}${isSelected ? " selected" : ""} style-default`}
             touch-action="none"
             onPointerUp={onClick}
         >

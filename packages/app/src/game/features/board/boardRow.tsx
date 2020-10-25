@@ -1,11 +1,8 @@
 import * as React from "react";
 import { Constants } from "@creature-chess/models";
 import { BoardTile } from "./tile/boardTile";
-import { TileStyle } from "@creature-chess/models";
-import { getClassForTileStyle } from "./getClassForTileStyle";
 
 interface TileRowProps {
-    tileStyle: TileStyle;
     y: number;
 }
 
@@ -21,7 +18,7 @@ const getRowClassForY = (y: number) => {
     return "";
 };
 
-const BoardRow: React.FunctionComponent<TileRowProps> = ({ y, tileStyle }) => {
+const BoardRow: React.FunctionComponent<TileRowProps> = ({ y }) => {
     const tiles = [];
 
     for (let x = 0; x < Constants.GRID_SIZE.width; x++) {
@@ -31,12 +28,11 @@ const BoardRow: React.FunctionComponent<TileRowProps> = ({ y, tileStyle }) => {
                 key={`tile-${x}`}
                 x={x}
                 y={y}
-                tileStyle={tileStyle}
             />
         );
     }
 
-    return <div className={`tile-row ${getClassForTileStyle(tileStyle)} ${getRowClassForY(y)}`}>{tiles}</div>;
+    return <div className={`tile-row style-default ${getRowClassForY(y)}`}>{tiles}</div>;
 };
 
 export { BoardRow };

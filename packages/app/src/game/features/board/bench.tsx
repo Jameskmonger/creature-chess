@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { TileStyle } from "@creature-chess/models";
 import { Constants, PieceModel } from "@creature-chess/models";
 import { AppState } from "../../../store";
 import { BenchTile } from "./tile/benchTile";
@@ -27,9 +26,6 @@ const BenchPieces: React.FunctionComponent = () => {
 };
 
 const Bench: React.FunctionComponent = () => {
-    // get this from local player style
-    const tileStyle = TileStyle.DEFAULT;
-
     const tiles = [];
 
     for (let x = 0; x < Constants.GRID_SIZE.width; x++) {
@@ -37,7 +33,6 @@ const Bench: React.FunctionComponent = () => {
             <BenchTile
                 key={`tile-${x}`}
                 slot={x}
-                tileStyle={tileStyle}
             />
         );
     }
