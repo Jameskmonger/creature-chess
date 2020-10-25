@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.5](https://github.com/Jameskmonger/creature-chess/compare/v0.2.4...v0.2.5) (2020-10-25)
+
+
+### Features
+
+* Start battle on reconnect if it's in progress ([#330](https://github.com/Jameskmonger/creature-chess/issues/330)) ([56cd34b](https://github.com/Jameskmonger/creature-chess/commit/56cd34b0e03d0bfec837f4815cfde4f57c359a66))
+
+
+
+
+
 ## [0.2.4](https://github.com/Jameskmonger/creature-chess/compare/v0.2.3...v0.2.4) (2020-10-25)
 
 
