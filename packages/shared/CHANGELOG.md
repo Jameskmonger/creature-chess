@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/Jameskmonger/creature-chess/compare/v0.2.5...v0.2.6) (2020-10-28)
+
+
+### Bug Fixes
+
+* Emit round information when entering preparing phase ([#333](https://github.com/Jameskmonger/creature-chess/issues/333)) ([670dec6](https://github.com/Jameskmonger/creature-chess/commit/670dec62ae61446892d3f208c78fcb26c9e770ba))
+* Limit player to 7 bench pieces ([#335](https://github.com/Jameskmonger/creature-chess/issues/335)) ([84cb6c8](https://github.com/Jameskmonger/creature-chess/commit/84cb6c8f63d95923724e61d4b31cc14b102d68f5))
+
+
+
+
+
 ## [0.2.5](https://github.com/Jameskmonger/creature-chess/compare/v0.2.4...v0.2.5) (2020-10-25)
 
 
