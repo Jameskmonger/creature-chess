@@ -4,7 +4,7 @@ import { BenchCommand, REMOVE_BENCH_PIECE_COMMAND, INITIALISE_BENCH_COMMAND, ADD
 
 type PiecesState = PieceModel[];
 
-const initialState: PiecesState = [null, null, null, null, null, null, null, null];
+const initialState: PiecesState = [null, null, null, null, null, null, null];
 
 const removePieces = (state: PiecesState, pieceIds: string[]) => {
   const newState = [];

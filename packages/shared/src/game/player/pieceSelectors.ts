@@ -36,7 +36,7 @@ export const hasSpaceOnBench = (state: PlayerPiecesState): boolean => getFirstEm
 export const getFirstEmptyBenchSlot = (state: PlayerPiecesState): number => {
   const index = state.bench.pieces.findIndex(p => p === null);
 
-  if (index === undefined) {
+  if (index === -1) {
     return null;
   }
 
