@@ -18,6 +18,7 @@ We welcome help in all areas: creating new pieces, adding new features, fixing b
 - Docker w/ docker-compose
 - A Fauna database with an access key in environment variable `CREATURE_CHESS_FAUNA_KEY`
 - An Auth0 app with a management client secret in environment variable `AUTH0_MANAGEMENT_CLIENT_SECRET`
+- **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
 
 ## Installation
 

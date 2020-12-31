@@ -4,6 +4,7 @@ services:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
       - AUTH0_MANAGEMENT_CLIENT_SECRET
+      - DISCORD_BOT_TOKEN
     build:
       context: .
       dockerfile: ./Dockerfile.server-game
