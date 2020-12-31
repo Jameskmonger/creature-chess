@@ -67,11 +67,15 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
                     {title}
 
                     <div className="blurb">
-                        <p>This is a strategy game in which you configure creatures on a board.</p>
+                        <p>This is a <span className="highlight">multiplayer strategy game</span> in which you configure creatures on a board.</p>
                         <p>Each round, your board is matched against an opponent's board. Defeat all their pieces to win the round.</p>
                         <p>Every loss decreases your health bar. When your health reaches zero, you're out!</p>
                         <p>Players will battle against eachother until only one player remains.</p>
-                        <p>Good luck! <span className="author">~ jkm</span></p>
+                        <p>Good luck! <span className="highlight">~ jkm</span></p>
+                    </div>
+
+                    <div className="blurb">
+                        <p>More fun with friends! Press "Find Game" at the same time to play together</p>
                     </div>
 
                     <button onClick={this.onFindGameClick} className="find-game">Find Game</button>
