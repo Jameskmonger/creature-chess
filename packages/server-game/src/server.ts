@@ -5,6 +5,7 @@ import { createDatabaseConnection } from "@creature-chess/data";
 import { openServer } from "./socket/openServer";
 import { Matchmaking } from "./matchmaking/matchmaking";
 import { UserAppMetadata } from "@creature-chess/auth-server";
+import { createDiscordApi } from "./discord";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
@@ -17,15 +18,17 @@ const AUTH0_CONFIG = {
     clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 
-export const startServer = (port: number) => {
+export const startServer = async (port: number) => {
     const socketServer = openServer(port);
     const client = new ManagementClient<UserAppMetadata>({
         domain: AUTH0_CONFIG.domain,
         clientId: AUTH0_CONFIG.clientId,
         clientSecret: AUTH0_CONFIG.clientSecret
     });
+
     const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
-    const matchmaking = new Matchmaking(database);
+    const discordApi = await createDiscordApi(process.env.DISCORD_BOT_TOKEN);
+    const matchmaking = new Matchmaking(database, discordApi);
 
     // networking
     const socketAuthenticator = new SocketAuthenticator(client, database, socketServer);

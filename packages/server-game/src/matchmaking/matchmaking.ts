@@ -2,13 +2,14 @@ import io = require("socket.io");
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { SocketPlayer, BotPlayer } from "../player";
-import { log, Game } from "@creature-chess/shared";
+import { Game } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
 import { LobbyMemberType } from "./lobby/lobbyMember";
 import { logger } from "../log";
 import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
+import { DiscordApi } from "../discord";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -16,7 +17,7 @@ export class Matchmaking {
     private lobbyIdGenerator = new IdGenerator();
     private metrics = createMetricLogger();
 
-    constructor(private database: DatabaseConnection) {
+    constructor(private database: DatabaseConnection, private discordApi: DiscordApi) {
         setInterval(this.sendMetrics, 60 * 1000);
     }
 
@@ -41,8 +42,12 @@ export class Matchmaking {
             return;
         }
 
-        const newLobby = await this.findOrCreateLobby();
+        const { lobby: newLobby, created } = await this.findOrCreateLobby();
         newLobby.addConnection(socket, id, nickname);
+
+        if (created) {
+            this.discordApi.startLobby(nickname);
+        }
     }
 
     private getPlayerInGame(id: string) {
@@ -128,17 +133,23 @@ export class Matchmaking {
         this.sendMetrics();
     }
 
-    private findOrCreateLobby() {
+    private async findOrCreateLobby(): Promise<{ lobby: Lobby, created: boolean }> {
         const lobbies = Array.from(this.lobbies.values())
             .filter(lobby => lobby.canJoin());
 
         if (lobbies.length === 0) {
-            return this.createLobby();
+            return {
+                lobby: await this.createLobby(),
+                created: true
+            };
         }
 
         lobbies.sort((a, b) => a.getFreeSlotCount() - b.getFreeSlotCount());
 
-        return lobbies[0];
+        return {
+            lobby: lobbies[0],
+            created: false
+        };
     }
 
     private async createLobby() {
