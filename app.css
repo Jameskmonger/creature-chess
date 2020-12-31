@@ -233,7 +233,8 @@ html, body {
     margin-bottom: 1rem; }
     .menu .blurb p {
       margin-bottom: 0.25rem; }
-    .menu .blurb .author {
+    .menu .blurb .highlight {
+      font-size: 1.2em;
       font-style: italic;
       font-weight: 700;
       color: #bfbfbf; }
