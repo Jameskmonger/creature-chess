@@ -7,12 +7,17 @@
     align-items: center;
     justify-content: center;
 
-    .title {
+    .banner {
+        max-width: 700px;
         margin-top: 1rem;
         margin-bottom: 1rem;
-        font-size: 2em;
-        text-align: center;
         user-select: none;
+
+        // stylelint-disable-next-line
+        img {
+            width: 100%;
+            user-select: none;
+        }
     }
 
     .login-button {

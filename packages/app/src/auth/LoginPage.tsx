@@ -25,7 +25,8 @@ const LoginPage: React.FunctionComponent = () => {
 
     return (
         <div className="login">
-            <h2 className="title">Creature Chess</h2>
+            <div className="banner"><img src="https://i.imgur.com/7FAcFwZ.png" /></div>
+
             {
                 loadingSignIn
                 && <button className="login-button">Loading...</button>
