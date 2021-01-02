@@ -37,13 +37,13 @@ export const outgoingNetworking = (getCurrentMatch: () => Match) => {
 
                         registry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
                     } else if (phase === GamePhase.READY) {
-                        const { bench }: PlayerState = yield select();
+                        const { bench, playerInfo: { health } }: PlayerState = yield select();
 
                         // todo this isn't nice, get it in state?
                         const match = getCurrentMatch();
 
-                        if (!match) {
-                            logger.warn("No match found when entering ready state");
+                        if (!match && health > 0) {
+                            logger.warn("No match found for living player when entering ready state");
                         }
 
                         const board = match ? match.getBoard() : null;
