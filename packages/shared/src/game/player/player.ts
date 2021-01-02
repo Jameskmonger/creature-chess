@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import { SagaMiddleware } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
-import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer, PlayerStatus, HEALTH_LOST_PER_PIECE } from "@creature-chess/models";
 
 import { BoardCommands } from "../../board";
 import { GameState } from "../store/state";
@@ -170,7 +170,7 @@ export abstract class Player {
         const homeScore = surviving.home.length;
         const awayScore = surviving.away.length;
 
-        const damage = awayScore * 3;
+        const damage = awayScore * HEALTH_LOST_PER_PIECE;
         this.store.dispatch(subtractHealthCommand(this.getGameState().round, damage));
 
         this.store.dispatch(playerFinishMatchEvent(homeScore, awayScore));
