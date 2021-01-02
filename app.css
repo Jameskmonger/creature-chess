@@ -230,7 +230,7 @@ html, body {
       border: none;
       border-left: 1px solid #fff; }
   .menu .blurb {
-    margin-bottom: 1rem; }
+    margin-bottom: 0.5rem; }
     .menu .blurb p {
       margin-bottom: 0.25rem; }
     .menu .blurb .highlight {
@@ -238,6 +238,10 @@ html, body {
       font-style: italic;
       font-weight: 700;
       color: #bfbfbf; }
+  .menu .discord-button {
+    max-width: 12em;
+    margin-bottom: 1rem;
+    cursor: pointer; }
   .menu .join-game {
     padding: 1rem;
     margin-top: 3em;
@@ -266,6 +270,7 @@ html, body {
         color: #aaa; }
     .menu .join-game .find-game {
       padding: 0.8em 2em;
+      margin-bottom: 1rem;
       font-size: 1.4rem;
       font-weight: 700;
       color: #fff;
@@ -854,27 +859,44 @@ html, body {
   color: #fff;
   align-items: center;
   justify-content: center; }
-  .login .title {
+  .login .banner {
+    max-width: 700px;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    font-size: 2em;
-    text-align: center;
     user-select: none; }
+    .login .banner img {
+      width: 100%;
+      user-select: none; }
+  .login .subtext {
+    margin-bottom: 0.5rem;
+    font-size: 0.8em; }
+  .login .groups {
+    display: flex;
+    width: 100%;
+    max-width: 700px; }
+    .login .groups .group {
+      width: 50%; }
+      .login .groups .group.main {
+        text-align: center; }
   .login .login-button {
     padding: 0.6em 1.2em;
-    margin-bottom: 0.25rem;
+    margin-bottom: 1rem;
     font-size: 1.2em;
     color: #fff;
+    cursor: pointer;
     background: #b13e53;
     border: none; }
+  .login .discord-button {
+    max-width: 12em;
+    margin-bottom: 1rem;
+    cursor: pointer; }
   .login .segment {
     margin-bottom: 1rem;
     text-align: center; }
     .login .segment .header {
       display: inline-block;
       padding: 0.6em;
-      margin-top: 0.6em;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       font-size: 1em;
       font-style: italic;
       font-weight: 700;
@@ -884,9 +906,6 @@ html, body {
       border: 1px solid #b13e53; }
     .login .segment p {
       margin-bottom: 0.4em; }
-    .login .segment .content {
-      padding: 0.4em 0.8em;
-      background: #566c86; }
     .login .segment.closed .header {
       margin-bottom: 0; }
     .login .segment.closed .content {
@@ -897,10 +916,17 @@ html, body {
     .login .video-container {
       width: 100%;
       box-sizing: border-box;
-      padding: 0 1em; } }
+      padding: 0 1em; }
+    .login .groups {
+      flex-direction: column; }
+      .login .groups .group {
+        width: 100%; } }
   @media only screen and (min-width: 392px) {
     .login .video-container {
-      width: 392px; } }
+      width: 392px; }
+    .login .group.main {
+      padding: 0.5rem;
+      background: #566c86; } }
   .login .video-container {
     text-align: center; }
     .login .video-container .demo {
