@@ -6,10 +6,28 @@ import { isCheckingSession } from "./store/selectors";
 import { Footer } from "../ui/display/footer";
 import { Loading } from "../ui/display/loading";
 
+type SegmentProps = {
+    open: boolean;
+    onHeaderClick: () => void;
+    header: string;
+    children: React.ReactNode;
+};
+
+const Segment: React.FunctionComponent<SegmentProps> = ({ open, onHeaderClick, header, children }) => {
+    return (
+        <div className={`segment ${open ? "" : "closed"}`}>
+            <div className="header" onClick={onHeaderClick}>{header} {open ? "-" : "+"}</div>
+            <div className="content">
+                {children}
+            </div>
+        </div>
+    );
+};
+
 const LoginPage: React.FunctionComponent = () => {
     const checkingSession = useSelector<AppState, boolean>(isCheckingSession);
     const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
-    const [whyNeedAccountOpen, setWhyNeedAccountOpen] = React.useState<boolean>(false);
+    const [demoOpen, setDemoOpen] = React.useState<boolean>(false);
 
     const onSignInClick = () => {
         setLoadingSignIn(true);
@@ -17,9 +35,9 @@ const LoginPage: React.FunctionComponent = () => {
         signIn();
     };
 
-    const onWhyNeedAccountClick = () => setWhyNeedAccountOpen(!whyNeedAccountOpen);
+    const onDemoClick = () => setDemoOpen(!demoOpen);
 
-    if (checkingSession) {
+    if (checkingSession || loadingSignIn) {
         return <Loading />;
     }
 
@@ -27,37 +45,31 @@ const LoginPage: React.FunctionComponent = () => {
         <div className="login">
             <div className="banner"><img src="https://i.imgur.com/7FAcFwZ.png" /></div>
 
-            {
-                loadingSignIn
-                && <button className="login-button">Loading...</button>
-            }
+            <div className="groups">
+                <div className="group main">
+                    <p className="subtext">Creature Chess is a multiplayer game, so you need an account to play. Watch the demo video to see a preview</p>
 
-            {
-                !loadingSignIn
-                && <button onClick={onSignInClick} className="login-button">Log in / Sign up</button>
-            }
+                    <button onClick={onSignInClick} className="login-button">Log in / Sign up</button>
 
-            <div className={`segment ${whyNeedAccountOpen ? "" : "closed"}`}>
-                <div className="header" onClick={onWhyNeedAccountClick}>Why do I need an account? {whyNeedAccountOpen ? "-" : "+"}</div>
-                <div className="content">
-                    <p>
-                        Logging into an account allows the game to keep your session, so that if you get
-                        disconnected, you can get right back into the game.
-                    </p>
-                    <p>&nbsp;</p>
-                    <p>
-                        I don't store any of your personal data. Your game data might be deleted occasionally as I
-                        develop the game further.
-                    </p>
+                    <p className="subtext">Join us on Discord to find other players and give feedback on the game</p>
+
+                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/YNyTNuw.png" className="discord-button" /></a>
                 </div>
-            </div>
 
-            <div className="video-container">
-                <h3 className="demo">Demo</h3>
-                <video controls autoPlay className="video">
-                    <source src="https://i.imgur.com/EAwP0Qm.mp4" type="video/mp4" />
-                    Your browser does not support videos.
-                </video>
+                <div className="group">
+                    <Segment
+                        header="Watch a demo video"
+                        open={demoOpen}
+                        onHeaderClick={onDemoClick}
+                    >
+                        <div className="video-container">
+                            <video controls autoPlay className="video">
+                                <source src="https://i.imgur.com/EAwP0Qm.mp4" type="video/mp4" />
+                                Your browser does not support videos.
+                            </video>
+                        </div>
+                    </Segment>
+                </div>
             </div>
 
             <Footer />

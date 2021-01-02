@@ -20,14 +20,40 @@
         }
     }
 
+    .subtext {
+        margin-bottom: 0.5rem;
+        font-size: 0.8em;
+    }
+
+    .groups {
+        display: flex;
+        width: 100%;
+        max-width: 700px;
+
+        .group {
+            width: 50%;
+
+            &.main {
+                text-align: center;
+            }
+        }
+    }
+
     .login-button {
         padding: 0.6em 1.2em;
-        margin-bottom: 0.25rem;
+        margin-bottom: 1rem;
         font-size: 1.2em;
         color: #fff;
+        cursor: pointer;
         background: #b13e53;
         // stylelint-disable-next-line
         border: none;
+    }
+
+    .discord-button {
+        max-width: 12em;
+        margin-bottom: 1rem;
+        cursor: pointer;
     }
 
     .segment {
@@ -37,8 +63,7 @@
         .header {
             display: inline-block;
             padding: 0.6em;
-            margin-top: 0.6em;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             font-size: 1em;
             font-style: italic;
             font-weight: 700;
@@ -51,11 +76,6 @@
         // stylelint-disable-next-line
         p {
             margin-bottom: 0.4em;
-        }
-
-        .content {
-            padding: 0.4em 0.8em;
-            background: #566c86;
         }
 
         &.closed {
@@ -77,11 +97,24 @@
             box-sizing: border-box;
             padding: 0 1em;
         }
+
+        .groups {
+            flex-direction: column;
+
+            .group {
+                width: 100%;
+            }
+        }
     }
 
     @media only screen and (min-width: 392px) {
         .video-container {
             width: 392px;
+        }
+
+        .group.main {
+            padding: 0.5rem;
+            background: #566c86;
         }
     }
 

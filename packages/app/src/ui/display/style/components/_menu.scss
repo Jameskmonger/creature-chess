@@ -49,7 +49,7 @@
     }
 
     .blurb {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
 
         // stylelint-disable-next-line
         p {
@@ -62,6 +62,12 @@
             font-weight: 700;
             color: #bfbfbf;
         }
+    }
+
+    .discord-button {
+        max-width: 12em;
+        margin-bottom: 1rem;
+        cursor: pointer;
     }
 
     .join-game {
@@ -99,6 +105,7 @@
 
         .find-game {
             padding: 0.8em 2em;
+            margin-bottom: 1rem;
             font-size: 1.4rem;
             font-weight: 700;
             color: #fff;
