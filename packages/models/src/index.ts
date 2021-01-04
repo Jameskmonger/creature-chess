@@ -19,3 +19,5 @@ export {
 } from "./position";
 export { CreatureDefinition, CreatureStats, AttackType, attackTypes, DefinitionClass } from "./creatureDefinition";
 export { CreatureType } from "./creatureType";
+
+export { createPieceCombatState, PieceCombatState } from "./pieceCombat";

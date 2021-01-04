@@ -1,5 +1,6 @@
 import { TileCoordinates } from "./position";
 import { AttackType, CreatureDefinition } from "./creatureDefinition";
+import { PieceCombatState } from "./pieceCombat";
 
 export interface AttackDetails {
     direction: TileCoordinates;
@@ -35,12 +36,7 @@ export interface PieceModel {
 
     targetPieceId: string;
 
-    battleBrain?: {
-        canMoveAtTurn: number;
-        canBeAttackedAtTurn: number; // used to stop pieces being hit as soon as they land
-        canAttackAtTurn: number;
-        removeFromBoardAtTurn: number;
-    };
+    combat?: PieceCombatState;
 }
 
 export type IndexedPieces = {

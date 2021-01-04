@@ -24,11 +24,10 @@ export const simulateTurn = (currentTurn: number, board: BoardState) => {
         return bStats.speed - aStats.speed;
     });
 
-    pieceEntries.forEach(([pieceId]) => {
-        board = takePieceTurn(currentTurn, pieceId, board);
-    });
-
-    return board;
+    return pieceEntries.reduce<BoardState>(
+        (b, [pieceId]) => takePieceTurn(currentTurn, pieceId, b),
+        board
+    );
 };
 
 const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState): BoardState => {
@@ -40,41 +39,42 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     };
 
     const attackerStats = getStats(attacker);
+    const { combat: { board: attackerBoardState } } = attacker;
 
-    if (attacker.battleBrain.removeFromBoardAtTurn === currentTurn) {
+    if (attackerBoardState.removeFromBoardAtTurn === currentTurn) {
         return boardReducer(board, BoardCommands.removeBoardPiece(pieceId));
     }
 
     if (attacker.currentHealth === 0) {
-        if (attacker.battleBrain.removeFromBoardAtTurn) {
+        if (attackerBoardState.removeFromBoardAtTurn) {
             return board;
         }
 
-        attacker.battleBrain.removeFromBoardAtTurn = currentTurn + DYING_DURATION;
+        attackerBoardState.removeFromBoardAtTurn = currentTurn + DYING_DURATION;
         return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
     }
 
     const cooldown = getCooldownForSpeed(attackerStats.speed);
 
-    if (attacker.battleBrain.canMoveAtTurn === null) {
-        attacker.battleBrain.canMoveAtTurn = currentTurn + cooldown;
+    if (attackerBoardState.canMoveAtTurn === null) {
+        attackerBoardState.canMoveAtTurn = currentTurn + cooldown;
     }
 
-    if (attacker.battleBrain.canAttackAtTurn === null) {
-        attacker.battleBrain.canAttackAtTurn = currentTurn + cooldown;
+    if (attackerBoardState.canAttackAtTurn === null) {
+        attackerBoardState.canAttackAtTurn = currentTurn + cooldown;
     }
 
     // try to find an enemy in attack range
     const attackableEnemy = getAttackableEnemyFromCurrentPosition(attacker, attackerStats.attackType, board);
     if (attackableEnemy) {
         // if there's an enemy in range but we can't attack it yet, just wait for cooldown
-        if (attacker.battleBrain.canAttackAtTurn > currentTurn) {
+        if (attackerBoardState.canAttackAtTurn > currentTurn) {
             // todo check if attacker has been changed
             return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
         }
 
         // if the enemy can't be attacked yet, wait
-        if (attackableEnemy.battleBrain.canBeAttackedAtTurn > currentTurn) {
+        if (attackableEnemy.combat.board.canBeAttackedAtTurn > currentTurn) {
             return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
         }
 
@@ -87,7 +87,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
 
         attackResult.attacker.targetPieceId = attackResult.defender.id;
 
-        attacker.battleBrain.canAttackAtTurn = currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
+        attackerBoardState.canAttackAtTurn = currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
 
         return boardReducer(board, BoardCommands.updateBoardPieces([attackResult.attacker, attackResult.defender]));
     }
@@ -95,7 +95,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     // clear target if they're no longer in attack range
     attacker.targetPieceId = null;
 
-    if (attacker.battleBrain.canMoveAtTurn > currentTurn) {
+    if (attackerBoardState.canMoveAtTurn > currentTurn) {
         return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
     }
 
@@ -112,9 +112,9 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     attacker.position = nextPosition;
     attacker.facingAway = getNewAttackerFacingAway(attacker.facingAway, attackerDirection);
 
-    attacker.battleBrain.canMoveAtTurn = currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
-    attacker.battleBrain.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
-    attacker.battleBrain.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
+    attackerBoardState.canMoveAtTurn = currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
+    attackerBoardState.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
+    attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 
     return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
 };
