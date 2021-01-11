@@ -1,4 +1,4 @@
-enum TargetType {
+export enum TargetType {
     IN_COMBAT,
     CHASE
 }
@@ -11,7 +11,7 @@ type PieceBoardState = {
 }
 
 export type PieceCombatState = {
-    target?: { type: TargetType, pieceId: string };
+    targetId: string | null;
     board: PieceBoardState;
 }
 
@@ -22,5 +22,5 @@ export const createPieceCombatState = (): PieceCombatState => ({
         canAttackAtTurn: null,
         removeFromBoardAtTurn: null
     },
-    target: null
+    targetId: null
 });

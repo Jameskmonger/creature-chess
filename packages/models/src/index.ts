@@ -15,9 +15,9 @@ export { SanitizedUser } from "./user";
 
 export {
     TileType, TileCoordinates, Directions, SlotLocation,
-    createTileCoordinates, getDistance, getAdjacentPositions, getRelativeDirection
+    createTileCoordinates, getDistance, getDelta, getAdjacentPositions, getRelativeDirection
 } from "./position";
 export { CreatureDefinition, CreatureStats, AttackType, attackTypes, DefinitionClass } from "./creatureDefinition";
 export { CreatureType } from "./creatureType";
 
-export { createPieceCombatState, PieceCombatState } from "./pieceCombat";
+export { createPieceCombatState, PieceCombatState, TargetType } from "./pieceCombat";

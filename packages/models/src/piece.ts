@@ -34,8 +34,6 @@ export interface PieceModel {
     maxHealth: number;
     currentHealth: number;
 
-    targetPieceId: string;
-
     combat?: PieceCombatState;
 }
 

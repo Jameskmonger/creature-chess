@@ -7,10 +7,16 @@ export type SlotLocation = { slot: number };
 export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
 export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;
 export const subtract = (a: TileCoordinates, b: TileCoordinates) => ({ x: a.x - b.x, y: a.y - b.y });
+export const getDelta = (a: TileCoordinates, b: TileCoordinates) => {
+    return {
+        x: Math.abs(a.x - b.x),
+        y: Math.abs(a.y - b.y)
+    };
+};
 export const getDistance = (a: TileCoordinates, b: TileCoordinates) => {
-    const distances = subtract(a, b);
+    const { x, y } = getDelta(a, b);
 
-    return Math.abs(distances.x) + Math.abs(distances.y);
+    return x + y;
 };
 
 export const Directions = {

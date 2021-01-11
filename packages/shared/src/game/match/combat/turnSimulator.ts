@@ -1,8 +1,10 @@
-import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
+import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance, TargetType } from "@creature-chess/models";
 import { BoardState, boardReducer, BoardCommands } from "../../../board";
 import { getStats } from "../../../utils/piece-utils";
 import { isOvercomeBy, isGeneratedBy } from "../../../utils/get-type-attack-bonus";
-import { getAttackableEnemyFromCurrentPosition, getNewPiecePosition } from "./movement";
+import { inAttackRange } from "./utils/inAttackRange";
+import { findTargetId } from "./utils/findTargetId";
+import { getNextPiecePosition } from "./pathfinding";
 
 const DYING_DURATION = 10;
 const ATTACK_TURN_DURATION = 2;
@@ -39,7 +41,14 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     };
 
     const attackerStats = getStats(attacker);
-    const { combat: { board: attackerBoardState } } = attacker;
+    const {
+        combat: {
+            targetId: attackerTarget,
+            board: attackerBoardState
+        }
+    } = attacker;
+
+    // board management
 
     if (attackerBoardState.removeFromBoardAtTurn === currentTurn) {
         return boardReducer(board, BoardCommands.removeBoardPiece(pieceId));
@@ -64,59 +73,79 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         attackerBoardState.canAttackAtTurn = currentTurn + cooldown;
     }
 
-    // try to find an enemy in attack range
-    const attackableEnemy = getAttackableEnemyFromCurrentPosition(attacker, attackerStats.attackType, board);
-    if (attackableEnemy) {
-        // if there's an enemy in range but we can't attack it yet, just wait for cooldown
-        if (attackerBoardState.canAttackAtTurn > currentTurn) {
-            // todo check if attacker has been changed
-            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
-        }
+    // combat logic
 
-        // if the enemy can't be attacked yet, wait
-        if (attackableEnemy.combat.board.canBeAttackedAtTurn > currentTurn) {
-            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
-        }
+    if (!attackerTarget) {
+        attacker.combat.targetId = findTargetId(attacker, board);
 
-        const attackResult = attack(attacker, attackableEnemy);
-
-        // if no attack result, no need to update defender
-        if (attackResult == null) {
-            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
-        }
-
-        attackResult.attacker.targetPieceId = attackResult.defender.id;
-
-        attackerBoardState.canAttackAtTurn = currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
-
-        return boardReducer(board, BoardCommands.updateBoardPieces([attackResult.attacker, attackResult.defender]));
-    }
-
-    // clear target if they're no longer in attack range
-    attacker.targetPieceId = null;
-
-    if (attackerBoardState.canMoveAtTurn > currentTurn) {
         return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
     }
 
-    const newPosition = getNewPiecePosition(attacker, board);
+    const target = board.pieces[attackerTarget];
 
-    if (newPosition === null || newPosition.nextPosition === null) {
+    // if we can't attack yet, wait for cooldown
+    if (attackerBoardState.canAttackAtTurn > currentTurn) {
+        // todo check if attacker has been changed
         return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
     }
 
-    const { nextPosition, targetPosition } = newPosition;
+    // if the enemy can't be attacked yet, wait
+    // todo consider breaking and choosing different target..
+    if (target.combat.board.canBeAttackedAtTurn > currentTurn) {
+        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+    }
 
-    const attackerDirection = getRelativeDirection(attacker.position, targetPosition);
+    const inRange = inAttackRange(attacker, target, attackerStats.attackType);
+    const targetAlive = target.currentHealth > 0
 
-    attacker.position = nextPosition;
-    attacker.facingAway = getNewAttackerFacingAway(attacker.facingAway, attackerDirection);
+    if (!targetAlive) {
+        // target is dead, so clear target
+        // todo should we increment canAttackAtTurn here?
+        attacker.combat.targetId = null;
 
-    attackerBoardState.canMoveAtTurn = currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
-    attackerBoardState.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
-    attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
+        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+    } else if (inRange) {
+        // target is in range, so attack
+        // attack cooldown
+        attacker.combat.board.canAttackAtTurn = currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
 
-    return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        const damage = getAttackDamage(attacker, target);
+        const newDefenderHealth = Math.max(target.currentHealth - damage, 0);
+
+        const defender: PieceModel = {
+            ...target,
+            currentHealth: newDefenderHealth,
+            hit: {
+                direction: getRelativeDirection(target.position, attacker.position),
+                damage
+            }
+        }
+
+        return boardReducer(board, BoardCommands.updateBoardPieces([attacker, defender]));
+    } else {
+        // target is out of range, so move towards
+        if (attackerBoardState.canMoveAtTurn > currentTurn) {
+            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        }
+
+        // todo make getNextPiecePosition take range into account
+        const nextPosition = getNextPiecePosition(attacker, target, board);
+
+        if (!nextPosition) {
+            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        }
+
+        const attackerDirection = getRelativeDirection(attacker.position, target.position);
+
+        attacker.position = nextPosition;
+        attacker.facingAway = getNewAttackerFacingAway(attacker.facingAway, attackerDirection);
+
+        attackerBoardState.canMoveAtTurn = currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
+        attackerBoardState.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
+        attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
+
+        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+    }
 };
 
 const getNewAttackerFacingAway = (oldFacingAway: boolean, direction: TileCoordinates) => {
@@ -149,39 +178,10 @@ const getAttackBonus = (attacker: CreatureType, defender: CreatureType) => {
     return 1;
 };
 
-const attack = (attacker: PieceModel, defender: PieceModel): { attacker: PieceModel, defender: PieceModel } => {
-    if (attacker.currentHealth === 0) {
-        return null;
-    }
-
+const getAttackDamage = (attacker: PieceModel, defender: PieceModel): number => {
     const attackerStats = getStats(attacker);
     const defenderStats = getStats(defender);
 
     const attackBonus = getAttackBonus(attacker.definition.type, defender.definition.type);
-    const damage = (attackerStats.attack / defenderStats.defense) * attackBonus * 8; // todo tweak this
-    const newDefenderHealth = Math.max(defender.currentHealth - damage, 0);
-
-    const attackerDirection = getRelativeDirection(attacker.position, defender.position);
-
-    return {
-        attacker: {
-            ...attacker,
-            attacking: {
-                attackType: attackerStats.attackType,
-                distance: getDistance(attacker.position, defender.position),
-                direction: attackerDirection,
-                damage
-            },
-            targetPieceId: defender.id,
-            facingAway: getNewAttackerFacingAway(attacker.facingAway, attackerDirection)
-        },
-        defender: {
-            ...defender,
-            currentHealth: newDefenderHealth,
-            hit: {
-                direction: getRelativeDirection(defender.position, attacker.position),
-                damage
-            }
-        }
-    };
+    return (attackerStats.attack / defenderStats.defense) * attackBonus * 8; // todo tweak this
 };
