@@ -1,10 +1,10 @@
 import { MAX_NAME_LENGTH } from "@creature-chess/models";
 
-const NAME_REGEX = /^[a-zA-Z0-9_\ ]*$/;
+const NAME_REGEX = /^[a-zA-Z0-9\ ]*$/;
 
 export const validateNickname = (nickname: string) => {
     if (!nickname || !nickname.length  || nickname.length < 4) {
-        return "Your nickname must be at least 4 characters long.";
+        return "Nickname must be at least 4 characters long";
     }
 
     if (nickname.length > MAX_NAME_LENGTH) {
