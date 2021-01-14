@@ -1,8 +1,3 @@
-export enum TargetType {
-    IN_COMBAT,
-    CHASE
-}
-
 type PieceBoardState = {
     canMoveAtTurn: number;
     canBeAttackedAtTurn: number; // used to stop pieces being hit as soon as they land

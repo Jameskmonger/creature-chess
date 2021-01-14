@@ -1,4 +1,4 @@
-import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance, TargetType } from "@creature-chess/models";
+import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
 import { BoardState, boardReducer, BoardCommands } from "../../../board";
 import { getStats } from "../../../utils/piece-utils";
 import { isOvercomeBy, isGeneratedBy } from "../../../utils/get-type-attack-bonus";
@@ -43,7 +43,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     const attackerStats = getStats(attacker);
     const {
         combat: {
-            targetId: attackerTarget,
+            targetId: attackerTargetId,
             board: attackerBoardState
         }
     } = attacker;
@@ -75,13 +75,13 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
 
     // combat logic
 
-    if (!attackerTarget) {
+    if (!attackerTargetId) {
         attacker.combat.targetId = findTargetId(attacker, board);
 
         return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
     }
 
-    const target = board.pieces[attackerTarget];
+    const target = board.pieces[attackerTargetId];
 
     // if we can't attack yet, wait for cooldown
     if (attackerBoardState.canAttackAtTurn > currentTurn) {
@@ -96,7 +96,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     }
 
     const inRange = inAttackRange(attacker, target, attackerStats.attackType);
-    const targetAlive = target.currentHealth > 0
+    const targetAlive = target.currentHealth > 0;
 
     if (!targetAlive) {
         // target is dead, so clear target
@@ -106,11 +106,32 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
     } else if (inRange) {
         // target is in range, so attack
-        // attack cooldown
-        attacker.combat.board.canAttackAtTurn = currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
-
         const damage = getAttackDamage(attacker, target);
         const newDefenderHealth = Math.max(target.currentHealth - damage, 0);
+
+        const attackerDirection = getRelativeDirection(attacker.position, target.position);
+        const attackerDistance = getDistance(attacker.position, target.position);
+        const attackerFacingAway = getNewAttackerFacingAway(attacker.facingAway, attackerDirection);
+
+        const newAttacker = {
+            ...attacker,
+            combat: {
+                ...attacker.combat,
+                board: {
+                    ...attacker.combat.board,
+
+                    // attack cooldown
+                    canAttackAtTurn: currentTurn + ATTACK_TURN_DURATION + getCooldownForSpeed(attackerStats.speed)
+                }
+            },
+            attacking: {
+                attackType: attackerStats.attackType,
+                distance: attackerDistance,
+                direction: attackerDirection,
+                damage
+            },
+            facingAway: attackerFacingAway
+        };
 
         const defender: PieceModel = {
             ...target,
@@ -121,7 +142,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
             }
         }
 
-        return boardReducer(board, BoardCommands.updateBoardPieces([attacker, defender]));
+        return boardReducer(board, BoardCommands.updateBoardPieces([newAttacker, defender]));
     } else {
         // target is out of range, so move towards
         if (attackerBoardState.canMoveAtTurn > currentTurn) {

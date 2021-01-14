@@ -20,4 +20,4 @@ export {
 export { CreatureDefinition, CreatureStats, AttackType, attackTypes, DefinitionClass } from "./creatureDefinition";
 export { CreatureType } from "./creatureType";
 
-export { createPieceCombatState, PieceCombatState, TargetType } from "./pieceCombat";
+export { createPieceCombatState, PieceCombatState } from "./pieceCombat";
