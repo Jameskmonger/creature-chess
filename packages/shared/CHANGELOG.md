@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/Jameskmonger/creature-chess/compare/v0.2.9...v0.2.10) (2021-01-14)
+
+
+### Bug Fixes
+
+* Disallow underscores in nicknames ([f3427ac](https://github.com/Jameskmonger/creature-chess/commit/f3427acc938cba463b8a1062af4ffd7b755ecb2e))
+
+
+
+
+
 ## [0.2.9](https://github.com/Jameskmonger/creature-chess/compare/v0.2.8...v0.2.9) (2021-01-14)
 
 **Note:** Version bump only for package @creature-chess/shared
