@@ -150,7 +150,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         }
 
         // todo make getNextPiecePosition take range into account
-        const nextPosition = getNextPiecePosition(attacker, target, board);
+        const nextPosition = getNextPiecePosition(attacker, attackerStats, target, board);
 
         if (!nextPosition) {
             return boardReducer(board, BoardCommands.updateBoardPiece(attacker));

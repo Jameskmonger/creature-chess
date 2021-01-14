@@ -1,6 +1,3 @@
-import { GRID_SIZE } from "./constants";
-import { PieceModel } from "./piece";
-
 export type TileCoordinates = { x: number, y: number };
 export type SlotLocation = { slot: number };
 
@@ -26,25 +23,7 @@ export const Directions = {
     LEFT: { x: -1, y: 0 }
 };
 
-const isInsideGrid = (position: TileCoordinates) => {
-    const { x, y } = position;
 
-    return x >= 0 && y >= 0 && x < GRID_SIZE.width && y < GRID_SIZE.height;
-};
-
-export const getAdjacentPositions = (piece: PieceModel) => {
-    const { x, y } = piece.position;
-
-    const positions: TileCoordinates[] = [
-        createTileCoordinates(x, y - 1),
-        createTileCoordinates(x - 1, y),
-        createTileCoordinates(x + 1, y),
-        createTileCoordinates(x, y + 1)
-    ];
-
-    // filter out any that are outside the grid
-    return positions.filter(isInsideGrid);
-};
 
 /**
  * Returns the relative direction of position b from the perspective of position a
