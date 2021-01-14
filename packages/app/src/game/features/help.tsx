@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Footer } from "../../ui/display/footer";
 
-const Help: React.FunctionComponent = () => {
+const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = false }) => {
     return (
         <div className="help">
             <div className="section">
@@ -43,7 +43,7 @@ const Help: React.FunctionComponent = () => {
                 </ul>
             </div>
 
-            <Footer />
+            {!hideFooter && <Footer />}
         </div>
     );
 };

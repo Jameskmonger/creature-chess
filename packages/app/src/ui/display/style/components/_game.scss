@@ -26,6 +26,8 @@ html, body {
 
     &.landscape {
         flex-direction: row;
+        height: 100%;
+        box-sizing: border-box;
 
         .group {
             &:not(:first-child) {

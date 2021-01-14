@@ -7,6 +7,7 @@ import { RoundIndicator } from "../features/roundIndicator";
 import { PhaseInfo } from "../features/phaseInfo";
 import { QuitGameButton } from "../features/settings";
 import { Footer } from "../../ui/display/footer";
+import { Help } from "../features/help";
 
 const DesktopGame: React.FunctionComponent = () => {
     return (
@@ -21,7 +22,7 @@ const DesktopGame: React.FunctionComponent = () => {
 
             <BoardContainer />
 
-            <div className="group">
+            <div className="group right">
                 <QuitGameButton />
 
                 <CardShop showBalance />
@@ -29,6 +30,8 @@ const DesktopGame: React.FunctionComponent = () => {
                 <p className="connection-warning">If you encounter connection issues, please refresh and press "Find Game" to reconnect</p>
 
                 <Profile />
+
+                <div className="help-container"><Help hideFooter /></div>
 
                 <Footer />
             </div>
