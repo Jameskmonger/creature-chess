@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.11](https://github.com/Jameskmonger/creature-chess/compare/v0.2.10...v0.2.11) (2021-01-14)
+
+
+### Bug Fixes
+
+* Ranged pieces will walk into ranged distance instead of melee distance ([14ed3ed](https://github.com/Jameskmonger/creature-chess/commit/14ed3edb1b646a5b8861316230d43956cb93f9d2)), closes [#325](https://github.com/Jameskmonger/creature-chess/issues/325)
+
+
+
+
+
 ## [0.2.10](https://github.com/Jameskmonger/creature-chess/compare/v0.2.9...v0.2.10) (2021-01-14)
 
 
