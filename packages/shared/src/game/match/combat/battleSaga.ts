@@ -1,7 +1,7 @@
 import present = require("present");
 import { eventChannel, buffers } from "redux-saga";
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
-import { IndexedPieces } from "@creature-chess/models";
+import { IndexedPieces, createPieceCombatState } from "@creature-chess/models";
 import { isATeamDefeated } from "../../../utils";
 import { BoardState, BoardCommands } from "../../../board";
 import { simulateTurn } from "./turnSimulator";
@@ -17,12 +17,12 @@ export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: 
 
 export type BattleEvent = BoardCommands.InitialiseBoardCommand | BattleTurnEvent | BattleFinishEvent;
 
-const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn }});
+const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn } });
 const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
 
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;
-type StartBattleCommand = { type: START_BATTLE, payload: { turn?: number }};
+type StartBattleCommand = { type: START_BATTLE, payload: { turn?: number } };
 export const startBattle = (turn?: number): StartBattleCommand => ({ type: START_BATTLE, payload: { turn } });
 
 const duration = (ms: number) => {
@@ -47,17 +47,12 @@ const duration = (ms: number) => {
     };
 };
 
-const addBattleBrains = (pieces: IndexedPieces) => {
+const addCombatState = (pieces: IndexedPieces) => {
     return Object.entries(pieces)
         .reduce<IndexedPieces>((acc, [pieceId, piece]) => {
             acc[pieceId] = {
                 ...piece,
-                battleBrain: {
-                    canMoveAtTurn: null,
-                    canBeAttackedAtTurn: 0,
-                    canAttackAtTurn: null,
-                    removeFromBoardAtTurn: null
-                }
+                combat: createPieceCombatState()
             };
 
             return acc;
@@ -74,7 +69,7 @@ const battleEventChannel = (
         let cancelled = false;
 
         let board: BoardState = {
-            pieces: addBattleBrains(startingBoardState.pieces),
+            pieces: addCombatState(startingBoardState.pieces),
             piecePositions: {
                 ...startingBoardState.piecePositions
             },

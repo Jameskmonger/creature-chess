@@ -20,8 +20,7 @@ export const createPiece = (
         facingAway: true,
         maxHealth: stats.hp,
         currentHealth: stats.hp,
-        stage,
-        targetPieceId: null
+        stage
     };
 };
 
@@ -85,6 +84,5 @@ export const createMockPiece = (id: string): PieceModel => ({
   position: createTileCoordinates(0, 0),
   facingAway: true,
   currentHealth: 100,
-  maxHealth: 100,
-  targetPieceId: null
+  maxHealth: 100
 });
