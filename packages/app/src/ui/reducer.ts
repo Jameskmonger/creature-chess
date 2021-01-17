@@ -2,7 +2,7 @@ import { UiState } from "../store/state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT,
-    EnableDebugModeAction, UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, ENABLE_DEBUG_MODE, JoinErrorAction,
+    UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, JoinErrorAction,
     FindGameAction, FIND_GAME, JOIN_ERROR, FINISH_GAME, FinishGameAction
 } from "./actions";
 import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../game/features/board/actions";
@@ -16,7 +16,6 @@ const initialState: UiState = {
     mainAnnouncement: null,
     subAnnouncement: null,
     menuError: null,
-    debug: false,
     connectionStatus: ConnectionStatus.NOT_CONNECTED
 };
 
@@ -29,7 +28,6 @@ type UIAction =
     | AnnouncementClearAction
     | JoinErrorAction
     | FindGameAction
-    | EnableDebugModeAction
     | UpdateConnectionStatusAction
     | FinishGameAction;
 
@@ -45,12 +43,6 @@ export function reducer(state: UiState = initialState, action: UIAction | GameEv
                 ...state,
                 connectionStatus: action.payload.status
             };
-        case ENABLE_DEBUG_MODE: {
-            return {
-                ...state,
-                debug: true
-            };
-        }
         case OPEN_OVERLAY: {
             return {
                 ...state,

@@ -20,7 +20,6 @@ export interface AppState {
 
 export interface UiState {
     loading: boolean;
-    debug: boolean;
     connectionStatus: ConnectionStatus;
     selectedPieceId: string;
     currentOverlay: Overlay | null;

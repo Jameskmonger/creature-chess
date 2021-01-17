@@ -5,13 +5,12 @@ import { getUrlParameter } from "./get-url-parameter";
 import { signOut } from "../auth/auth0";
 import { Footer } from "../ui/display/footer";
 import { Leaderboard } from "./leaderboard";
-import { enableDebugMode, findGameAction, joinGameError } from "../ui/actions";
+import { findGameAction, joinGameError } from "../ui/actions";
 import { Loading } from "../ui/display/loading";
 import { GAME_SERVER_URL } from "../auth/config";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
-    enableDebugMode: () => void;
     setError: (error: string) => void;
 }
 
@@ -22,11 +21,6 @@ interface MenuStageProps {
 
 type Props = MenuStageProps & DispatchProps;
 
-interface MenuStageState {
-    serverIP: string;
-    debugModeClickCount: number;
-}
-
 const Navbar: React.FunctionComponent = () => {
     return (
         <nav className="navbar">
@@ -35,26 +29,8 @@ const Navbar: React.FunctionComponent = () => {
     );
 };
 
-class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
-    public state = {
-        serverIP: "",
-        debugModeClickCount: 0
-    };
-
-    public componentDidMount() {
-        const serverParam = getUrlParameter("server");
-
-        this.setState({
-            serverIP: serverParam || GAME_SERVER_URL
-        });
-    }
-
+class MenuPageUnconnected extends React.Component<Props> {
     public render() {
-        const title =
-            this.state.debugModeClickCount === 3
-                ? <h2 className="title">Creature Chess <span className="debug-mode">(Debug Mode)</span></h2>
-                : <h2 className="title" onClick={this.onTitleClick}>Creature Chess</h2>;
-
         if (this.props.loading) {
             return <Loading />;
         }
@@ -64,7 +40,7 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
                 <Navbar />
 
                 <div className="join-game">
-                    {title}
+                    <h2 className="title">Creature Chess</h2>
 
                     <div className="blurb">
                         <p>More fun with friends! Press "Find Game" at the same time to play together</p>
@@ -90,17 +66,6 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
                         this.props.error
                         && <div className="error"><p>{this.props.error}</p></div>
                     }
-
-                    {
-                        this.state.debugModeClickCount === 3
-                        && (
-                            <input
-                                value={this.state.serverIP}
-                                onChange={this.onServerIPChange}
-                                placeholder="Server IP"
-                            />
-                        )
-                    }
                 </div>
 
                 <Leaderboard />
@@ -110,39 +75,10 @@ class MenuPageUnconnected extends React.Component<Props, MenuStageState> {
         );
     }
 
-    private onTitleClick = () => {
-        if (this.state.debugModeClickCount === 3) {
-            return;
-        }
-
-        this.setState(prevState => ({
-            debugModeClickCount: prevState.debugModeClickCount + 1
-        }), () => {
-            if (this.state.debugModeClickCount !== 3) {
-                return;
-            }
-
-            this.props.enableDebugMode();
-        });
-    }
-
-    private onServerIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (this.state.debugModeClickCount !== 3) {
-            return;
-        }
-
-        this.setState({
-            serverIP: event.target.value
-        });
-    }
-
     private onFindGameClick = () => {
-        if (!this.state.serverIP) {
-            this.props.setError("Server IP field empty");
-            return;
-        }
+        const serverIP = getUrlParameter("server") || GAME_SERVER_URL;
 
-        this.props.onFindGame(this.state.serverIP);
+        this.props.onFindGame(serverIP);
     }
 }
 
@@ -153,7 +89,6 @@ const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => 
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
     onFindGame: (serverIP: string) => dispatch(findGameAction(serverIP)),
-    enableDebugMode: () => dispatch(enableDebugMode()),
     setError: (error: string) => dispatch(joinGameError(error))
 });
 
