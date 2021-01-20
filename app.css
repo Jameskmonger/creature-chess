@@ -326,11 +326,6 @@ html, body {
     font-size: 2em;
     text-align: center;
     user-select: none; }
-    .menu .title .debug-mode {
-      font-size: 0.7em;
-      font-style: italic;
-      font-weight: 700;
-      color: #b3b3b3; }
   .menu .name-input {
     margin-top: 1em;
     font-size: 1.4em; }
