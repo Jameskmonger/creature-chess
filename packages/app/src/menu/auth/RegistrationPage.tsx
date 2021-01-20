@@ -1,14 +1,14 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useAuth0 } from "@auth0/auth0-react";
 import { MAX_NAME_LENGTH, SanitizedUser } from "@creature-chess/models";
 import { validateNickname } from "@creature-chess/shared";
-import { userUpdated } from "./store/actions";
 import { patchUser } from "./utils/patchUser";
-import { AppState } from "../store";
+import { userUpdated } from "./store/actions";
 
 const RegistrationPage: React.FunctionComponent = () => {
     const dispatch = useDispatch();
-    const token = useSelector<AppState, string>(state => state.auth.token);
+    const { getAccessTokenSilently } = useAuth0();
     const [nickname, setNickname] = React.useState<string>("");
     const [loading, setLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | null>(null);
@@ -24,6 +24,7 @@ const RegistrationPage: React.FunctionComponent = () => {
 
         setLoading(true);
 
+        const token = await getAccessTokenSilently();
         const response = await patchUser(token, nickname);
 
         setLoading(false);

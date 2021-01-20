@@ -5,17 +5,19 @@ import createSagaMiddleware from "redux-saga";
 import { AppState } from "./state";
 import { rootSaga } from "./saga";
 
-const sagaMiddleware = createSagaMiddleware();
+export const createAppStore = (getAccessTokenSilently: () => Promise<string>, loginWithRedirect: () => Promise<void>) => {
+    const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(
-    combineReducers<AppState>({
-        ...reducers
-    }),
-    composeWithDevTools(
-        applyMiddleware(sagaMiddleware)
-    )
-);
+    const store = createStore(
+        combineReducers<AppState>({
+            ...reducers
+        }),
+        composeWithDevTools(
+            applyMiddleware(sagaMiddleware)
+        )
+    );
 
-sagaMiddleware.run(rootSaga);
+    sagaMiddleware.run(rootSaga, getAccessTokenSilently, loginWithRedirect);
 
-export { store };
+    return store;
+};

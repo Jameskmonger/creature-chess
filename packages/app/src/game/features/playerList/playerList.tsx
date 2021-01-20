@@ -4,7 +4,7 @@ import { PlayerListItem, QuitPlayerListItem } from "./playerListItem";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../store";
 import { getPlayerMoney, getPlayerLevel, getOpponentId } from "@creature-chess/shared";
-import { getUserId } from "../../../auth/store/selectors";
+import { getUserId } from "../../../menu/auth/store/selectors";
 
 const PlayerList: React.FunctionComponent = () => {
     const players = useSelector<AppState, PlayerListPlayer[]>(state => state.playerList);

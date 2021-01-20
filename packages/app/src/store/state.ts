@@ -1,11 +1,12 @@
 import { PlayerListPlayer } from "@creature-chess/models";
 import { BoardState, BenchState, PlayerInfoState, GameState, ConnectionStatus } from "@creature-chess/shared";
 import { Overlay } from "../ui/overlay";
-import { AuthState } from "../auth";
 import { LobbyState } from "../lobby";
+import { UserState } from "../menu/auth/store/reducer";
 
 export interface AppState {
-    auth: AuthState;
+    user: UserState;
+
     ui: UiState;
 
     lobby: LobbyState;

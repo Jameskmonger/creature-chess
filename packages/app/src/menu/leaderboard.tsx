@@ -1,6 +1,6 @@
 import * as React from "react";
 import useFetch from "use-http";
-import { LEADERBOARD_ENDPOINT } from "../auth/config";
+import { LEADERBOARD_ENDPOINT } from "./auth/config";
 
 const LeaderboardContents: React.FunctionComponent<{ data: any }> = ({ data }) => {
     return (

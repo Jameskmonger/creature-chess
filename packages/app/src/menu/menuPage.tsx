@@ -1,13 +1,13 @@
 import * as React from "react";
-import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import { connect, MapDispatchToProps, MapStateToProps, useDispatch } from "react-redux";
+import { useAuth0 } from "@auth0/auth0-react";
 import { AppState } from "../store";
 import { getUrlParameter } from "./get-url-parameter";
-import { signOut } from "../auth/auth0";
 import { Footer } from "../ui/display/footer";
 import { Leaderboard } from "./leaderboard";
 import { findGameAction, joinGameError } from "../ui/actions";
 import { Loading } from "../ui/display/loading";
-import { GAME_SERVER_URL } from "../auth/config";
+import { GAME_SERVER_URL } from "./auth/config";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -22,9 +22,12 @@ interface MenuStageProps {
 type Props = MenuStageProps & DispatchProps;
 
 const Navbar: React.FunctionComponent = () => {
+    const { logout } = useAuth0();
+    const onLogoutClick = () => logout();
+
     return (
         <nav className="navbar">
-            <button className="sign-out" onClick={signOut}>Log Out</button>
+            <button className="sign-out" onClick={onLogoutClick}>Log Out</button>
         </nav>
     );
 };

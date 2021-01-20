@@ -4,7 +4,6 @@ import {
     BenchCommands, BoardCommands, GameEvents, IncomingPacketRegistry, PlayerInfoCommands,
     ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, startBattle
 } from "@creature-chess/shared";
-import { AuthSelectors, signIn } from "../auth";
 import { lobbyNetworking } from "../lobby/networking";
 import { gameConnectedEvent, joinLobbyAction, JoinLobbyAction, JOIN_LOBBY, GameConnectedEvent, GAME_CONNECTED } from "../lobby/store/actions";
 import { AppState } from "../store";
@@ -12,22 +11,29 @@ import { FindGameAction, FIND_GAME } from "../ui/actions";
 import { getSocket } from "../ui/socket";
 import { gameSaga } from "../game";
 import { playerListUpdated } from "../game/features/playerList/playerListActions";
+import { isLoggedIn } from "./auth/store/selectors";
 
-export const findGame = function*() {
+export const findGame = function*(getAccessTokenSilently: () => Promise<string>, loginWithRedirect: () => Promise<void>) {
     const findGameAction: FindGameAction = yield take(FIND_GAME);
 
     const state: AppState = yield select();
 
     // this should never happen, but it doesn't hurt to be safe
-    if (!AuthSelectors.isLoggedIn(state)) {
-        signIn();
-
+    if (!isLoggedIn(state)) {
+        loginWithRedirect();
         return;
     }
 
-    const idToken = AuthSelectors.getIdToken(state);
+    const idToken = yield call(getAccessTokenSilently);
 
-    const socket: SocketIOClient.Socket = yield call(getSocket, findGameAction.payload.serverIP, idToken);
+    let socket: SocketIOClient.Socket = null;
+
+    try {
+        socket = yield call(getSocket, findGameAction.payload.serverIP, idToken);
+    } catch (error) {
+        loginWithRedirect();
+        return;
+    }
 
     const registry = new IncomingPacketRegistry<ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
@@ -72,7 +78,7 @@ export const findGame = function*() {
     if (lobby) {
         yield fork(lobbyNetworking, socket);
     } else if (game) {
-        const playerId: string = yield select((s: AppState) => s.auth.user.id);
+        const playerId: string = yield select((s: AppState) => s.user.user.id);
 
         yield fork(gameSaga, playerId, socket);
 

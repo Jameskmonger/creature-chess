@@ -1,10 +1,7 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
-import { signIn } from "./auth0";
-import { AppState } from "../store";
-import { isCheckingSession } from "./store/selectors";
-import { Footer } from "../ui/display/footer";
-import { Loading } from "../ui/display/loading";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Footer } from "../../ui/display/footer";
+import { Loading } from "../../ui/display/loading";
 
 type SegmentProps = {
     open: boolean;
@@ -25,19 +22,19 @@ const Segment: React.FunctionComponent<SegmentProps> = ({ open, onHeaderClick, h
 };
 
 const LoginPage: React.FunctionComponent = () => {
-    const checkingSession = useSelector<AppState, boolean>(isCheckingSession);
+    const { loginWithRedirect, isLoading } = useAuth0();
     const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
     const [demoOpen, setDemoOpen] = React.useState<boolean>(false);
 
     const onSignInClick = () => {
         setLoadingSignIn(true);
 
-        signIn();
+        loginWithRedirect();
     };
 
     const onDemoClick = () => setDemoOpen(!demoOpen);
 
-    if (checkingSession || loadingSignIn) {
+    if (isLoading || loadingSignIn) {
         return <Loading />;
     }
 

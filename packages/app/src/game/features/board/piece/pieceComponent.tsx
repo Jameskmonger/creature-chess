@@ -10,7 +10,7 @@ import { selectPiece } from "../actions";
 import { PieceImage } from "./components/pieceImage";
 import { StageIndicator } from "./components/stageIndicator";
 import { Healthbar } from "./components/healthbar";
-import { getUserId } from "../../../../auth/store/selectors";
+import { getUserId } from "../../../../menu/auth/store/selectors";
 
 const dyingAnimation = "dying";
 
