@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { getUserId } from "../auth/store/selectors";
+import { getUserId } from "../menu/auth/store/selectors";
 
 import { AppState } from "./state";
 

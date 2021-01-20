@@ -92,7 +92,10 @@ module.exports = {
         plugins: [
             new TsConfigPathsPlugin()
         ],
-        extensions: [".tsx", ".ts", ".js"]
+        extensions: [".tsx", ".ts", ".js"],
+        fallback: {
+            "events": require.resolve("events/")
+        }
     },
 
     output: {
@@ -109,7 +112,8 @@ module.exports = {
             templateParameters: () => ({
                 googleAnalyticsScript: getGAScript(process.env.GA_ID),
                 ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES)
-            })
+            }),
+            scriptLoading: "blocking"
         }),
         new MiniCssExtractPlugin({
             filename: "app.css"
@@ -137,7 +141,10 @@ module.exports = {
         contentBase: outDir,
         compress: true,
         port: 8090,
-        historyApiFallback: true
+        historyApiFallback: true,
+        disableHostCheck: true,
+        https: true,
+        host: 'creaturechess.local-dev.com'
     },
 
     optimization: {

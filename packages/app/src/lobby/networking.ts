@@ -55,7 +55,7 @@ export const lobbyNetworking = function*(socket: SocketIOClient.Socket) {
 
     yield cancel(readPacketsTask);
 
-    const playerId: string = yield select((state: AppState) => state.auth.user.id);
+    const playerId: string = yield select((state: AppState) => state.user.user.id);
 
     yield fork(gameSaga, playerId, socket);
 };

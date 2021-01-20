@@ -1,6 +1,5 @@
 import io = require("socket.io-client");
 import { AuthenticateResponse } from "@creature-chess/shared";
-import { signIn } from "../auth";
 
 export const getSocket = (serverIP: string, idToken: string) => {
     // force to websocket for now until CORS is sorted
@@ -31,8 +30,7 @@ export const getSocket = (serverIP: string, idToken: string) => {
             socket.disconnect();
 
             // todo improve this
-
-            signIn();
+            reject(error);
         };
 
         socket.on("authenticate_response", onAuthenticated);
