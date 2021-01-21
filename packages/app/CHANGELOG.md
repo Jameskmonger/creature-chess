@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.13](https://github.com/Jameskmonger/creature-chess/compare/v0.2.12...v0.2.13) (2021-01-21)
+
+
+### Bug Fixes
+
+* Fix callback url ([7087b86](https://github.com/Jameskmonger/creature-chess/commit/7087b8657925e26fd921d7c7c98a45186af36d28))
+
+
+
+
+
 ## [0.2.12](https://github.com/Jameskmonger/creature-chess/compare/v0.2.11...v0.2.12) (2021-01-20)
 
 **Note:** Version bump only for package @creature-chess/app
