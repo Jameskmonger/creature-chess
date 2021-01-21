@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.14](https://github.com/Jameskmonger/creature-chess/compare/v0.2.13...v0.2.14) (2021-01-21)
+
+
+### Bug Fixes
+
+* Replace http with https throughout ([0d05236](https://github.com/Jameskmonger/creature-chess/commit/0d05236e75b3868dcb6b7da69c591f4a796b082e))
+
+
+
+
+
 ## [0.2.13](https://github.com/Jameskmonger/creature-chess/compare/v0.2.12...v0.2.13) (2021-01-21)
 
 
