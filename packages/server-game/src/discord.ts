@@ -51,7 +51,7 @@ export const createDiscordApi = async (token: string): Promise<DiscordApi> => {
 
     return {
         startLobby: (playerName) => {
-            channel.send(`:bell: ${roleMention(LOBBY_NOTIFICATIONS_ROLE_ID)} :bell: - '**${playerName}**' has started a lobby - it will close in ${LOBBY_WAIT_TIME_SECONDS} seconds. http://creaturechess.jamesmonger.com/`);
+            channel.send(`:bell: ${roleMention(LOBBY_NOTIFICATIONS_ROLE_ID)} :bell: - '**${playerName}**' has started a lobby - it will close in ${LOBBY_WAIT_TIME_SECONDS} seconds. https://creaturechess.jamesmonger.com/`);
         }
     };
 };
