@@ -8,6 +8,7 @@ import { PhaseInfo } from "../features/phaseInfo";
 import { QuitGameButton } from "../features/settings";
 import { Footer } from "../../ui/display/footer";
 import { Help } from "../features/help";
+import { NowPlaying } from "../features/nowPlaying";
 
 const DesktopGame: React.FunctionComponent = () => {
     return (
@@ -16,6 +17,8 @@ const DesktopGame: React.FunctionComponent = () => {
                 <RoundIndicator />
 
                 <PhaseInfo />
+
+                <NowPlaying />
 
                 <PlayerList />
             </div>

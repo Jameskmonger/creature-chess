@@ -1,7 +1,6 @@
 import { takeLatest, put, select, delay } from "@redux-saga/core/effects";
 import { AppState } from "../../../store/state";
 import { clearAnnouncement, updateAnnouncement, PlayersResurrectedAction, PLAYERS_RESURRECTED } from "../../../ui/actions";
-import { PlayerInfoCommands } from "@creature-chess/shared";
 
 // distinctLastJoin(["James", "Bob", "William", "Steve"], ", ", " and ")
 // -> "James, Bob, William and Steve"
@@ -23,47 +22,33 @@ const distinctLastJoin = (items: string[], mainSeparator: string, lastSeparator:
 };
 
 export const announcement = function*() {
-    yield takeLatest<PlayerInfoCommands.UpdateOpponentCommand | PlayersResurrectedAction>(
-        [PlayerInfoCommands.UPDATE_OPPONENT_COMMAND, PLAYERS_RESURRECTED],
+    yield takeLatest<PlayersResurrectedAction>(
+        PLAYERS_RESURRECTED,
         function*(action) {
-            if (action.type === PlayerInfoCommands.UPDATE_OPPONENT_COMMAND) {
-                const state: AppState = yield select();
+            const { playerIds } = action.payload;
+            const state: AppState = yield select();
 
-                const opponent = state.playerList.find(p => p.id === action.payload.opponentId);
+            const playerNames = playerIds.map(playerId => {
+                const player = state.playerList.find(p => p.id === playerId);
 
-                if (!opponent) {
-                    return;
+                if (!player) {
+                    return null;
                 }
 
-                yield put(updateAnnouncement(opponent.name, "Now Playing"));
+                return player.name;
+            }).filter(name => name !== null);
+
+            const message = distinctLastJoin(playerNames, ", ", " and ");
+
+            if (!message) {
+                return;
             }
 
-            if (action.type === PLAYERS_RESURRECTED) {
-                const { playerIds } = action.payload;
-                const state: AppState = yield select();
+            yield put(updateAnnouncement("Players Resurrected", message));
 
-                const playerNames = playerIds.map(playerId => {
-                    const player = state.playerList.find(p => p.id === playerId);
+            yield delay(2000);
 
-                    if (!player) {
-                        return null;
-                    }
-
-                    return player.name;
-                }).filter(name => name !== null);
-
-                const message = distinctLastJoin(playerNames, ", ", " and ");
-
-                if (!message) {
-                    return;
-                }
-
-                yield put(updateAnnouncement("Players Resurrected", message));
-
-                yield delay(2000);
-
-                yield put(clearAnnouncement());
-            }
+            yield put(clearAnnouncement());
         }
     );
 };

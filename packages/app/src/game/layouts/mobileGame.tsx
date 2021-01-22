@@ -14,6 +14,7 @@ import { Settings } from "../features/settings";
 import { RoundIndicator } from "../features/roundIndicator";
 import { PhaseInfo } from "../features/phaseInfo";
 import { Help } from "../features/help";
+import { NowPlaying } from "../features/nowPlaying";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
@@ -110,6 +111,8 @@ const MobileGameContentPane: React.FunctionComponent = () => {
         return (
             <div className="content-pane">
                 <p className="connection-warning">If you encounter connection issues, please refresh and press "Find Game" to reconnect</p>
+
+                <NowPlaying />
 
                 <BoardContainer />
             </div>
