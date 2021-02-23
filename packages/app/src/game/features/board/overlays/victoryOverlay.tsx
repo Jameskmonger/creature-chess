@@ -13,7 +13,13 @@ const VictoryOverlay: React.FunctionComponent = () => {
         <div className="victory">
             <h2 className="game-over">Game Over</h2>
             <p><span className="winner">{winnerName}</span> wins!</p>
-        </div>
+
+            <div className="discord-link">
+                <p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
+
+                <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/YNyTNuw.png" className="discord-button" /></a>
+            </div>
+        </div >
     );
 };
 

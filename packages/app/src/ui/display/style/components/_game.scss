@@ -1,5 +1,6 @@
 // stylelint-disable-next-line
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
 }
@@ -124,9 +125,20 @@ html, body {
         }
     }
 
+    @media only screen and (max-width: 599px) {
+        .victory {
+            top: 0;
+        }
+    }
+
+    @media only screen and (min-width: 600px) {
+        .victory {
+            top: 20%;
+        }
+    }
+
     .victory {
         position: absolute;
-        top: 20%;
         left: 0;
         z-index: 20;
         width: 100%;
@@ -148,6 +160,21 @@ html, body {
             font-style: italic;
             font-weight: 700;
             color: $profile-player-name;
+        }
+
+        .discord-link {
+            margin-top: 1em;
+            font-size: 0.6em;
+
+            // stylelint-disable-next-line
+            p {
+                margin-bottom: 1em;
+            }
+
+            // stylelint-disable-next-line
+            img {
+                width: 260px;
+            }
         }
     }
 
