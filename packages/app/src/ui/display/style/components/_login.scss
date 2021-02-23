@@ -56,41 +56,6 @@
         cursor: pointer;
     }
 
-    .segment {
-        margin-bottom: 1rem;
-        text-align: center;
-
-        .header {
-            display: inline-block;
-            padding: 0.6em;
-            margin-bottom: 0.5rem;
-            font-size: 1em;
-            font-style: italic;
-            font-weight: 700;
-            color: #b13e53;
-            cursor: pointer;
-            user-select: none;
-            border: 1px solid #b13e53;
-        }
-
-        // stylelint-disable-next-line
-        p {
-            margin-bottom: 0.4em;
-        }
-
-        &.closed {
-            .header {
-                margin-bottom: 0;
-            }
-
-            .content {
-                height: 0;
-                padding: 0;
-                overflow-y: hidden;
-            }
-        }
-    }
-
     @media only screen and (max-width: 391px) {
         .video-container {
             width: 100%;

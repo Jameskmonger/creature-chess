@@ -2,24 +2,7 @@ import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Footer } from "../../ui/display/footer";
 import { Loading } from "../../ui/display/loading";
-
-type SegmentProps = {
-    open: boolean;
-    onHeaderClick: () => void;
-    header: string;
-    children: React.ReactNode;
-};
-
-const Segment: React.FunctionComponent<SegmentProps> = ({ open, onHeaderClick, header, children }) => {
-    return (
-        <div className={`segment ${open ? "" : "closed"}`}>
-            <div className="header" onClick={onHeaderClick}>{header} {open ? "-" : "+"}</div>
-            <div className="content">
-                {children}
-            </div>
-        </div>
-    );
-};
+import { Segment } from "../../ui/display/segment";
 
 const LoginPage: React.FunctionComponent = () => {
     const { loginWithRedirect, isLoading } = useAuth0();
