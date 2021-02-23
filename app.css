@@ -112,6 +112,9 @@ table {
 .overlay-content {
   overflow: scroll; }
 
+.now-playing {
+  margin-top: 0.6em; }
+
 .help {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1rem;
@@ -164,6 +167,29 @@ table {
   flex-direction: column;
   overflow-y: visible; }
 
+.segment {
+  margin-bottom: 1rem;
+  text-align: center; }
+  .segment .header {
+    display: inline-block;
+    padding: 0.6em;
+    margin-bottom: 0.5rem;
+    font-size: 1em;
+    font-style: italic;
+    font-weight: 700;
+    color: #b13e53;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid #b13e53; }
+  .segment p {
+    margin-bottom: 0.4em; }
+  .segment.closed .header {
+    margin-bottom: 0; }
+  .segment.closed .content {
+    height: 0;
+    padding: 0;
+    overflow-y: hidden; }
+
 .loading-full {
   position: absolute;
   top: 0;
@@ -180,6 +206,7 @@ table {
     font-size: 2em;
     color: #fff; }
   .loading-full p {
+    margin-bottom: 1em;
     font-style: italic;
     color: #ccc; }
 
@@ -192,7 +219,8 @@ body {
   width: 100%;
   height: 100vh; }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%; }
 
@@ -278,9 +306,14 @@ html, body {
       color: #fff; }
     .game .reconnect .button {
       font-size: 1.2em; }
+  @media only screen and (max-width: 599px) {
+    .game .victory {
+      top: 0; } }
+  @media only screen and (min-width: 600px) {
+    .game .victory {
+      top: 20%; } }
   .game .victory {
     position: absolute;
-    top: 20%;
     left: 0;
     z-index: 20;
     width: 100%;
@@ -299,6 +332,13 @@ html, body {
       font-style: italic;
       font-weight: 700;
       color: #ffcd75; }
+    .game .victory .discord-link {
+      margin-top: 1em;
+      font-size: 0.6em; }
+      .game .victory .discord-link p {
+        margin-bottom: 1em; }
+      .game .victory .discord-link img {
+        width: 260px; }
   .game .shop-container {
     display: flex; }
   .game .phase-info,
@@ -1005,28 +1045,6 @@ html, body {
     max-width: 12em;
     margin-bottom: 1rem;
     cursor: pointer; }
-  .login .segment {
-    margin-bottom: 1rem;
-    text-align: center; }
-    .login .segment .header {
-      display: inline-block;
-      padding: 0.6em;
-      margin-bottom: 0.5rem;
-      font-size: 1em;
-      font-style: italic;
-      font-weight: 700;
-      color: #b13e53;
-      cursor: pointer;
-      user-select: none;
-      border: 1px solid #b13e53; }
-    .login .segment p {
-      margin-bottom: 0.4em; }
-    .login .segment.closed .header {
-      margin-bottom: 0; }
-    .login .segment.closed .content {
-      height: 0;
-      padding: 0;
-      overflow-y: hidden; }
   @media only screen and (max-width: 391px) {
     .login .video-container {
       width: 100%;
@@ -1086,6 +1104,18 @@ html, body {
   .register .nickname-warning {
     margin-bottom: 0.6em;
     font-style: italic; }
+
+.now-playing {
+  margin-bottom: 0.6em;
+  font-family: Arial, sans-serif;
+  font-size: 1.4em;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase; }
+  .now-playing .label {
+    box-sizing: border-box;
+    padding: 0.3em 0.6em;
+    background: #333; }
 
 /* stylelint-disable */
 .style-default.tile.dark {
