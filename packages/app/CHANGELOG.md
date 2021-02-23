@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.15](https://github.com/Jameskmonger/creature-chess/compare/v0.2.14...v0.2.15) (2021-02-23)
+
+
+### Bug Fixes
+
+* Stop top of page from hiding on phones ([726b8e3](https://github.com/Jameskmonger/creature-chess/commit/726b8e31975e25e3257df0077043819e18956242))
+
+
+### Features
+
+* add demo video to loading screen ([f3d655c](https://github.com/Jameskmonger/creature-chess/commit/f3d655c21c3471719c938a98e353087a76f9fac7))
+* add discord link to victory screen ([b3ec470](https://github.com/Jameskmonger/creature-chess/commit/b3ec470140636cfc915a374c3facd12e9cf69579))
+* Move Now Playing off of board ([a8df859](https://github.com/Jameskmonger/creature-chess/commit/a8df859f44b2cf65144c03aa27f78e1ba2c421fa)), closes [#343](https://github.com/Jameskmonger/creature-chess/issues/343)
+
+
+
+
+
 ## [0.2.14](https://github.com/Jameskmonger/creature-chess/compare/v0.2.13...v0.2.14) (2021-01-21)
 
 
