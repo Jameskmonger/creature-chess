@@ -3,6 +3,7 @@ import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, G
 import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition, PlayerEvents, GameEvents } from "@creature-chess/shared";
 import uuid = require("uuid");
 import delay from "delay";
+import { shouldBuyXp } from "./shop/shouldBuyXp";
 
 const PREFERRED_COLUMN_ORDERS = {
     8: [
@@ -64,16 +65,10 @@ export class BotPlayer extends Player {
     private async spendExcessMoneyOnXp() {
         while (true) {
             const money = this.getMoney();
-            const hasEnoughMoney = money >= (10 + BUY_XP_COST);
-
-            if (!hasEnoughMoney) {
-                return;
-            }
-
             const level = this.getLevel();
-            const canLevelUp = level !== 10;
+            const xp = this.getXp();
 
-            if (!canLevelUp) {
+            if (shouldBuyXp(money, level, xp) === false) {
                 return;
             }
 
