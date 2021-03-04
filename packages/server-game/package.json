@@ -20,7 +20,8 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
     "start": "node ./lib/index.js 3000",
-    "dev": "nodemon 3000"
+    "dev": "nodemon 3000",
+    "test": "jest"
   },
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"

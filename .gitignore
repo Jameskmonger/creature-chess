@@ -6,3 +6,4 @@ _metrics/
 lerna-debug.log
 lib/
 bin/
+coverage/
