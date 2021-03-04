@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.16](https://github.com/Jameskmonger/creature-chess/compare/v0.2.15...v0.2.16) (2021-03-04)
+
+
+### Features
+
+* bots will save money until they can level up ([8f1dc05](https://github.com/Jameskmonger/creature-chess/commit/8f1dc0581df6b38d0df648f17158aba1e52abc0f)), closes [#348](https://github.com/Jameskmonger/creature-chess/issues/348)
+
+
+
+
+
 ## [0.2.14](https://github.com/Jameskmonger/creature-chess/compare/v0.2.13...v0.2.14) (2021-01-21)
 
 
