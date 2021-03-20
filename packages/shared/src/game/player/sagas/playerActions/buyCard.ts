@@ -1,6 +1,6 @@
 import { take, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
-import { PlayerPieceLocation } from "@creature-chess/models";
+import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 import { BoardCommands } from "../../../../board";
 import { DefinitionProvider } from "../../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../../utils/piece-utils";
@@ -13,8 +13,9 @@ import { getFirstEmptyBenchSlot } from "../../pieceSelectors";
 
 const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+    const inPreparingPhase = state.game.phase === GamePhase.PREPARING;
 
-    if (belowPieceLimit) {
+    if (belowPieceLimit && inPreparingPhase) {
         const boardSlot = getPlayerFirstEmptyBoardSlot(state);
 
         if (boardSlot) {

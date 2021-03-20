@@ -11,11 +11,13 @@ import {
     fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory,
     PlayerActionSagas
 } from "./sagas";
+import { gameReducer, GameState } from "../store";
 
 export interface PlayerState {
     board: BoardState;
     bench: BenchState;
     playerInfo: PlayerInfoState;
+    game: GameState;
 }
 
 export type PlayerStore = Store<PlayerState>;
@@ -43,6 +45,7 @@ export const createPlayerStore = (playerId: string): { store: PlayerStore, sagaM
             board: boardReducer,
             bench: benchReducer,
             playerInfo: playerInfoReducer,
+            game: gameReducer
         }),
         applyMiddleware(sagaMiddleware)
     );
