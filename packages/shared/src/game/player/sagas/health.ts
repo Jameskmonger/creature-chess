@@ -4,12 +4,11 @@ import { updateHealthCommand, updateRoundDiedAtCommand } from "../playerInfo/com
 
 const HEALTH_SUBTRACT_COMMAND = "HEALTH_SUBTRACT_COMMAND";
 type HEALTH_SUBTRACT_COMMAND = typeof HEALTH_SUBTRACT_COMMAND;
-type HealthSubtractCommand = ({ type: HEALTH_SUBTRACT_COMMAND, payload: { currentRound: number, amount: number } });
+type HealthSubtractCommand = ({ type: HEALTH_SUBTRACT_COMMAND, payload: { amount: number } });
 
-// todo remove currentround from here
-export const subtractHealthCommand = (currentRound: number, amount: number): HealthSubtractCommand => ({
+export const subtractHealthCommand = (amount: number): HealthSubtractCommand => ({
     type: HEALTH_SUBTRACT_COMMAND,
-    payload: { currentRound, amount }
+    payload: { amount }
 });
 
 export const healthSagaFactory = <TState extends PlayerState>() => {
@@ -17,7 +16,7 @@ export const healthSagaFactory = <TState extends PlayerState>() => {
         yield all([
             yield takeEvery<HealthSubtractCommand>(
                 HEALTH_SUBTRACT_COMMAND,
-                function*({ payload: { currentRound, amount } }) {
+                function*({ payload: { amount } }) {
                     const state: TState = yield select();
 
                     const oldValue = state.playerInfo.health;
@@ -26,11 +25,6 @@ export const healthSagaFactory = <TState extends PlayerState>() => {
                     newValue = (newValue < 0) ? 0 : newValue;
 
                     yield put(updateHealthCommand(newValue));
-
-                    if (newValue === 0 && oldValue !== 0) {
-                        // player has just died
-                        yield put(updateRoundDiedAtCommand(currentRound));
-                    }
                 }
             )
         ])

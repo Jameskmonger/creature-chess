@@ -1,11 +1,13 @@
 import { SagaMiddleware } from "redux-saga";
 import { take, takeLatest, put, select, call } from "@redux-saga/core/effects";
-import { StreakType } from "@creature-chess/models";
+import { HEALTH_LOST_PER_PIECE, StreakType } from "@creature-chess/models";
 
 import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent } from "../events";
-import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateStreakCommand } from "../playerInfo/commands";
+import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateRoundDiedAtCommand, updateStreakCommand } from "../playerInfo/commands";
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
+import { subtractHealthCommand } from "./health";
+import { GameState } from "../../store";
 
 const getStreakBonus = (streak: number) => {
     if (streak >= 9) {
@@ -45,7 +47,7 @@ const updateStreak = function*(win: boolean) {
     yield put(updateStreakCommand(type, newAmount));
 }
 
-export const playerMatchRewards = (sagaMiddleware: SagaMiddleware) => {
+export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameState })>(sagaMiddleware: SagaMiddleware) => {
     sagaMiddleware.run(function*() {
         yield takeLatest<PlayerFinishMatchEvent>(
             PLAYER_FINISH_MATCH_EVENT,
@@ -54,11 +56,26 @@ export const playerMatchRewards = (sagaMiddleware: SagaMiddleware) => {
 
                 yield call(updateStreak, win);
 
+                const damage = awayScore * HEALTH_LOST_PER_PIECE;
+
+                const oldValue: number = yield select(({ playerInfo: { health } }: TState) => health);
+
+                yield put(subtractHealthCommand(damage));
+
+                const newValue: number = yield select(({ playerInfo: { health } }: TState) => health);
+
+                if (newValue === 0 && oldValue !== 0) {
+                    // player has just died
+                    const currentRound: number = yield select(({ game: { round } }: TState) => round);
+
+                    yield put(updateRoundDiedAtCommand(currentRound));
+                }
+
                 // wait for preparing phase to give money
                 yield take(CLEAR_OPPONENT_COMMAND);
 
-                const currentMoney: number = yield select((state: HasPlayerInfo) => state.playerInfo.money);
-                const streak: number = yield select((state: HasPlayerInfo) => state.playerInfo.streak.amount);
+                const currentMoney: number = yield select(({ playerInfo: { money } }: TState) => money);
+                const streak: number = yield select(({ playerInfo: { streak: { amount } } }: TState) => amount);
 
                 const rewardMoney = getMoneyForMatch(currentMoney, streak, win);
 

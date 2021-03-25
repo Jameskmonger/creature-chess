@@ -169,9 +169,6 @@ export abstract class Player {
         const homeScore = surviving.home.length;
         const awayScore = surviving.away.length;
 
-        const damage = awayScore * HEALTH_LOST_PER_PIECE;
-        this.store.dispatch(subtractHealthCommand(this.getGameState().round, damage));
-
         this.store.dispatch(playerFinishMatchEvent(homeScore, awayScore));
 
         const opponentName = this.match.away.name;
