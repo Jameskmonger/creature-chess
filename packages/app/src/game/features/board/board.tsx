@@ -8,6 +8,7 @@ import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { Announcement } from "./overlays/announcement";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectModal } from "./overlays/reconnectModal";
+import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
 
 const BoardPieces: React.FunctionComponent = props => {
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
@@ -70,6 +71,7 @@ const Board: React.FunctionComponent = props => {
 
             <Announcement />
             <VictoryOverlay />
+            <MatchRewardsOverlay />
             <ReconnectModal />
         </div>
     );

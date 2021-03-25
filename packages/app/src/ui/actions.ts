@@ -27,8 +27,8 @@ export type CloseOverlayAction = { type: CLOSE_OVERLAY };
 export type AnnouncementUpdateAction = ({ type: UPDATE_ANNOUNCEMENT, payload: { main: string, sub?: string } });
 export type AnnouncementClearAction = ({ type: CLEAR_ANNOUNCEMENT });
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
-export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string }});
-export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] }});
+export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string } });
+export type PlayersResurrectedAction = ({ type: PLAYERS_RESURRECTED, payload: { playerIds: string[] } });
 
 export const findGameAction = (serverIP: string): FindGameAction => ({
     type: FIND_GAME,

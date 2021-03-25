@@ -83,6 +83,12 @@ export const outgoingNetworking = (getCurrentMatch: () => Match) => {
                         registry.emit(ServerToClientPacketOpcodes.PLAYER_DEAD, { empty: true });
                     }
                 ),
+                takeLatest<PlayerEvents.PlayerMatchRewardsEvent>(
+                    PlayerEvents.PLAYER_MATCH_REWARDS_EVENT,
+                    function*({ payload }: PlayerEvents.PlayerMatchRewardsEvent) {
+                        registry.emit(ServerToClientPacketOpcodes.MATCH_REWARDS, payload);
+                    }
+                ),
                 takeLatest<GameEvents.GameFinishEvent>(
                     GameEvents.GAME_FINISH_EVENT,
                     function*({ payload: { winnerName } }) {

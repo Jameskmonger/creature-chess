@@ -54,6 +54,12 @@ type PlayersResurrectedPacket = {
   playerIds: string[];
 };
 
+type MatchRewardsPacket = {
+  damage: number;
+  justDied: boolean;
+  rewardMoney: number;
+}
+
 export enum ServerToClientPacketOpcodes {
   CARDS_UPDATE = "cardsUpdate",
   PLAYER_LIST_UPDATE = "playerListUpdate",
@@ -63,6 +69,7 @@ export enum ServerToClientPacketOpcodes {
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
   PLAYERS_RESURRECTED = "playersResurrected",
+  MATCH_REWARDS = "matchRewards",
   PLAYER_DEAD = "playerDead"
 }
 
@@ -75,6 +82,7 @@ export type ServerToClientPacketDefinitions = {
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
+  [ServerToClientPacketOpcodes.MATCH_REWARDS]: MatchRewardsPacket,
   [ServerToClientPacketOpcodes.PLAYER_DEAD]: EmptyPacket,
 };
 
@@ -87,5 +95,6 @@ export type ServerToClientPacketAcknowledgements = {
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
   [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never,
+  [ServerToClientPacketOpcodes.MATCH_REWARDS]: never,
   [ServerToClientPacketOpcodes.PLAYER_DEAD]: never,
 };

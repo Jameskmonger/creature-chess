@@ -2,7 +2,8 @@ import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import {
     BenchCommands, BoardCommands, ConnectionStatus, GameEvents, IncomingPacketRegistry,
-    PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, startBattle
+    PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, startBattle,
+    PlayerEvents
 } from "@creature-chess/shared";
 import { GamePhase } from "@creature-chess/models";
 import { playerListUpdated } from "../../features/playerList/playerListActions";
@@ -62,6 +63,13 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
             ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
             ({ playerIds }) => {
                 emit(playersResurrected(playerIds));
+            }
+        );
+
+        registry.on(
+            ServerToClientPacketOpcodes.MATCH_REWARDS,
+            (payload) => {
+                emit(PlayerEvents.playerMatchRewardsEvent(payload));
             }
         );
 

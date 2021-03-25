@@ -2,7 +2,7 @@ import { SagaMiddleware } from "redux-saga";
 import { take, takeLatest, put, select, call } from "@redux-saga/core/effects";
 import { HEALTH_LOST_PER_PIECE, StreakType } from "@creature-chess/models";
 
-import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent } from "../events";
+import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent, playerMatchRewardsEvent } from "../events";
 import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateRoundDiedAtCommand, updateStreakCommand } from "../playerInfo/commands";
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
@@ -64,20 +64,29 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameS
 
                 const newValue: number = yield select(({ playerInfo: { health } }: TState) => health);
 
-                if (newValue === 0 && oldValue !== 0) {
-                    // player has just died
+                const justDied = (newValue === 0 && oldValue !== 0)
+
+                if (justDied) {
                     const currentRound: number = yield select(({ game: { round } }: TState) => round);
 
                     yield put(updateRoundDiedAtCommand(currentRound));
                 }
 
-                // wait for preparing phase to give money
-                yield take(CLEAR_OPPONENT_COMMAND);
-
                 const currentMoney: number = yield select(({ playerInfo: { money } }: TState) => money);
                 const streak: number = yield select(({ playerInfo: { streak: { amount } } }: TState) => amount);
 
                 const rewardMoney = getMoneyForMatch(currentMoney, streak, win);
+
+                yield put(playerMatchRewardsEvent({
+                    damage,
+                    justDied,
+                    rewardMoney
+                }));
+
+                // wait for preparing phase to give money
+                yield take(CLEAR_OPPONENT_COMMAND);
+
+                yield put(playerMatchRewardsEvent(null));
 
                 // todo make addMoneyCommand
                 yield put(updateMoneyCommand(currentMoney + rewardMoney));

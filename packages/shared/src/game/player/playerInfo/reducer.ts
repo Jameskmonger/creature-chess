@@ -4,7 +4,7 @@ import {
     UPDATE_LEVEL_COMMAND, UPDATE_CARDS_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_ROUND_DIED_AT_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_STATUS_COMMAND, UPDATE_BATTLE_COMMAND
 } from "./commands";
 import { READY_UP_ACTION } from "../actions";
-import { PlayerEvent, PLAYER_DEATH_EVENT } from "../events";
+import { PlayerEvent, PLAYER_DEATH_EVENT, PLAYER_MATCH_REWARDS_EVENT } from "../events";
 
 export interface PlayerStreak {
     type: StreakType;
@@ -13,11 +13,18 @@ export interface PlayerStreak {
 
 export type HasPlayerInfo = { playerInfo: PlayerInfoState };
 
+export type PlayerMatchRewards = {
+    damage: number;
+    justDied: boolean;
+    rewardMoney: number;
+}
+
 export interface PlayerInfoState {
     status: PlayerStatus;
     health: number;
     streak: PlayerStreak;
     battle: PlayerBattle | null;
+    matchRewards: PlayerMatchRewards | null;
 
     dead: boolean;
     roundDiedAt: number | null;
@@ -41,6 +48,7 @@ const initialState: PlayerInfoState = {
         amount: 0
     },
     battle: null,
+    matchRewards: null,
     opponentId: null,
     shopLocked: false,
     money: STARTING_MONEY,
@@ -57,6 +65,11 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
                 ...state,
                 dead: true
             };
+        case PLAYER_MATCH_REWARDS_EVENT:
+            return {
+                ...state,
+                matchRewards: command.payload
+            }
         case UPDATE_STATUS_COMMAND:
             return {
                 ...state,

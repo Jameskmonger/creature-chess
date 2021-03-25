@@ -18,7 +18,7 @@ export {
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     BenchCommands, benchReducer, BenchState,
     PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents,
-    defaultGameOptions, Match
+    defaultGameOptions, Match, PlayerMatchRewards
 } from "./game";
 
 export {
