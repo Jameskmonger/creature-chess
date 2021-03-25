@@ -1,10 +1,11 @@
 import { SagaMiddleware } from "redux-saga";
-import { take, takeLatest, put, select } from "@redux-saga/core/effects";
+import { take, takeLatest, put, select, call } from "@redux-saga/core/effects";
+import { StreakType } from "@creature-chess/models";
 
 import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent } from "../events";
-import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand } from "../playerInfo/commands";
-import { PlayerState } from "../store";
+import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateStreakCommand } from "../playerInfo/commands";
 import { addXpCommand } from "./xp";
+import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 
 const getStreakBonus = (streak: number) => {
     if (streak >= 9) {
@@ -34,6 +35,16 @@ const getMoneyForMatch = (currentMoney: number, streak: number, win: boolean) =>
     return total;
 };
 
+const updateStreak = function*(win: boolean) {
+    const type = win ? StreakType.WIN : StreakType.LOSS;
+
+    const existingStreak: PlayerStreak = yield select((state: HasPlayerInfo) => state.playerInfo.streak);
+
+    const newAmount = (type === existingStreak.type) ? existingStreak.amount + 1 : 0;
+
+    yield put(updateStreakCommand(type, newAmount));
+}
+
 export const playerMatchRewards = (sagaMiddleware: SagaMiddleware) => {
     sagaMiddleware.run(function*() {
         yield takeLatest<PlayerFinishMatchEvent>(
@@ -41,11 +52,13 @@ export const playerMatchRewards = (sagaMiddleware: SagaMiddleware) => {
             function*({ payload: { homeScore, awayScore } }) {
                 const win = homeScore > awayScore;
 
+                yield call(updateStreak, win);
+
                 // wait for preparing phase to give money
                 yield take(CLEAR_OPPONENT_COMMAND);
 
-                const currentMoney: number = yield select((state: PlayerState) => state.playerInfo.money);
-                const streak: number = yield select((state: PlayerState) => state.playerInfo.streak.amount);
+                const currentMoney: number = yield select((state: HasPlayerInfo) => state.playerInfo.money);
+                const streak: number = yield select((state: HasPlayerInfo) => state.playerInfo.streak.amount);
 
                 const rewardMoney = getMoneyForMatch(currentMoney, streak, win);
 
