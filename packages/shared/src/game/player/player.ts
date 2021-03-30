@@ -69,7 +69,7 @@ export abstract class Player {
         this.sagaMiddleware.run(this.clientFinishMatchSaga());
         this.sagaMiddleware.run(this.finishGameSaga());
         playerBattle(this.sagaMiddleware);
-        playerMatchRewards(this.sagaMiddleware);
+        this.sagaMiddleware.run(playerMatchRewards(this.id));
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
     }

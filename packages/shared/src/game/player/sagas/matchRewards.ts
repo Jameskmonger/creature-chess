@@ -1,9 +1,8 @@
-import { SagaMiddleware } from "redux-saga";
 import { take, takeLatest, put, select, call } from "@redux-saga/core/effects";
 import { HEALTH_LOST_PER_PIECE, StreakType } from "@creature-chess/models";
 
 import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent, playerMatchRewardsEvent } from "../events";
-import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateRoundDiedAtCommand, updateStreakCommand } from "../playerInfo/commands";
+import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateRoundDiedAtCommand, updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../playerInfo/commands";
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
@@ -47,8 +46,8 @@ const updateStreak = function*(win: boolean) {
     yield put(updateStreakCommand(type, newAmount));
 }
 
-export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameState })>(sagaMiddleware: SagaMiddleware) => {
-    sagaMiddleware.run(function*() {
+export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameState })>(playerId: string) => {
+    return function*() {
         yield takeLatest<PlayerFinishMatchEvent>(
             PLAYER_FINISH_MATCH_EVENT,
             function*({ payload: { homeScore, awayScore } }) {
@@ -62,10 +61,13 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameS
 
                 yield put(subtractHealthCommand(damage));
 
+                // subtractHealthCommand emits an UPDATE_HEALTH_COMMAND so need to wait for that.
+                // todo this is ugly
+                yield take(UPDATE_HEALTH_COMMAND);
+
                 const newValue: number = yield select(({ playerInfo: { health } }: TState) => health);
 
-                const justDied = (newValue === 0 && oldValue !== 0)
-
+                const justDied = (newValue === 0 && oldValue !== 0);
                 if (justDied) {
                     const currentRound: number = yield select(({ game: { round } }: TState) => round);
 
@@ -93,5 +95,5 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameS
                 yield put(addXpCommand(1));
             }
         )
-    });
+    };
 };
