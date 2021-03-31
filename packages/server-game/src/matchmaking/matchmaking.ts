@@ -27,9 +27,7 @@ export class Matchmaking {
         const playerInGame = this.getPlayerInGame(id);
 
         if (playerInGame) {
-            const { game, player } = playerInGame;
-
-            player.reconnectSocket(socket);
+            playerInGame.reconnectSocket(socket);
 
             return;
         }
@@ -61,10 +59,11 @@ export class Matchmaking {
 
         const playerInGame = matchingGame.getPlayerById(id);
 
-        return {
-            game: matchingGame,
-            player: playerInGame as SocketPlayer
-        };
+        if (playerInGame.isDead()) {
+            return null;
+        }
+
+        return playerInGame as SocketPlayer;
     }
 
     private getLobbyContainingPlayer(id: string) {

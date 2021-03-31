@@ -120,6 +120,10 @@ export abstract class Player {
         return this.store.getState().playerInfo.money;
     }
 
+    public isDead() {
+        return this.store.getState().playerInfo.dead;
+    }
+
     public getShopLocked() {
         return this.store.getState().playerInfo.shopLocked;
     }
