@@ -27,10 +27,20 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
         );
     }
 
+    if (damage === 0) {
+        return (
+            <div className="victory">
+                <h2 className="game-over">Round Won</h2>
+                <p><span className="winner">${rewardMoney}</span> gained</p>
+            </div >
+        );
+    }
+
     return (
         <div className="victory">
-            <h2 className="game-over">{damage === 0 ? 'Round Won' : 'Round Lost'}</h2>
+            <h2 className="game-over">Round Lost</h2>
             <p><span className="winner">${rewardMoney}</span> gained</p>
+            <p><span className="winner">{damage}</span> health lost</p>
         </div >
     );
 };
