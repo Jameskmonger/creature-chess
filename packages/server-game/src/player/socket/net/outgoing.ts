@@ -10,7 +10,7 @@ import { logger } from "../../../log";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-export const outgoingNetworking = (getCurrentMatch: () => Match) => {
+export const outgoingNetworking = (playerId: string, getCurrentMatch: () => Match) => {
     return function*() {
         let registry: OutgoingRegistry;
         let socket: Socket;
@@ -47,7 +47,14 @@ export const outgoingNetworking = (getCurrentMatch: () => Match) => {
                         }
 
                         const board = match ? match.getBoard() : null;
-                        const opponentId = match ? match.away.id : null;
+
+                        let opponentId = match
+                            ? (
+                                match.home.id === playerId
+                                    ? match.away.id
+                                    : match.home.id
+                            )
+                            : null
 
                         const packet: PhaseUpdatePacket = {
                             startedAtSeconds: startedAt,

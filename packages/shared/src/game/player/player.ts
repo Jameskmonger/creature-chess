@@ -153,7 +153,11 @@ export abstract class Player {
         this.match = match;
         this.store.dispatch(BenchCommands.lockBenchCommand());
 
-        this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(match.away.id));
+        const opponentId = match.home.id === this.id
+            ? match.away.id
+            : match.home.id
+
+        this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(opponentId));
     }
 
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {

@@ -11,7 +11,7 @@ export class SocketPlayer extends Player {
         super(id, name);
 
         this.sagaMiddleware.run(incomingNetworking);
-        this.sagaMiddleware.run(outgoingNetworking(this.getMatch));
+        this.sagaMiddleware.run(outgoingNetworking(id, this.getMatch));
 
         this.initialiseSocket(socket);
     }
