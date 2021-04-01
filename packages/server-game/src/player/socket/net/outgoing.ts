@@ -42,19 +42,20 @@ export const outgoingNetworking = (playerId: string, getCurrentMatch: () => Matc
                         // todo this isn't nice, get it in state?
                         const match = getCurrentMatch();
 
-                        if (!match && health > 0) {
-                            logger.warn("No match found for living player when entering ready state");
+                        if (!match) {
+                            if (health > 0) {
+                                logger.warn("No match found for living player when entering ready state");
+                            }
+
+                            return;
                         }
 
-                        const board = match ? match.getBoard() : null;
+                        const board = match.getBoard();
 
-                        let opponentId = match
-                            ? (
-                                match.home.id === playerId
-                                    ? match.away.id
-                                    : match.home.id
-                            )
-                            : null
+                        let opponentId =
+                            match.home.id === playerId
+                                ? match.away.id
+                                : match.home.id
 
                         const packet: PhaseUpdatePacket = {
                             startedAtSeconds: startedAt,
