@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.17](https://github.com/Jameskmonger/creature-chess/compare/v0.2.16...v0.2.17) (2021-04-01)
+
+
+### Bug Fixes
+
+* check if player is dead before reconnecting ([4d17250](https://github.com/Jameskmonger/creature-chess/commit/4d1725008e03f7aef6317636d225277df676f167))
+
+
+### Features
+
+* Show announcement on round end ([43d7607](https://github.com/Jameskmonger/creature-chess/commit/43d7607d3e793b5ec4156d53ae27520fff38281d)), closes [#286](https://github.com/Jameskmonger/creature-chess/issues/286)
+
+
+
+
+
 ## [0.2.16](https://github.com/Jameskmonger/creature-chess/compare/v0.2.15...v0.2.16) (2021-03-04)
 
 

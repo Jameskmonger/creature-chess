@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.17](https://github.com/Jameskmonger/creature-chess/compare/v0.2.16...v0.2.17) (2021-04-01)
+
+
+### Features
+
+* show 'health lost' on round end screen ([e568f3b](https://github.com/Jameskmonger/creature-chess/commit/e568f3b0d87c0a04ed6cdff61379e88ce6dca1e2))
+* Show announcement on round end ([43d7607](https://github.com/Jameskmonger/creature-chess/commit/43d7607d3e793b5ec4156d53ae27520fff38281d)), closes [#286](https://github.com/Jameskmonger/creature-chess/issues/286)
+
+
+
+
+
 ## [0.2.16](https://github.com/Jameskmonger/creature-chess/compare/v0.2.15...v0.2.16) (2021-03-04)
 
 **Note:** Version bump only for package @creature-chess/app
