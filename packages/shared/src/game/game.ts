@@ -8,7 +8,7 @@ import { log } from "../log";
 
 import { DefinitionProvider } from "./definitions/definitionProvider";
 import { Player } from "./player";
-import { OpponentProvider } from "./opponentProvider";
+import { HeadToHeadOpponentProvider, IOpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
 import { createGameStore, GameEvents } from "./store";
 import { GameOptions, getOptions } from "./options";
@@ -31,7 +31,7 @@ export class Game {
     private options: GameOptions;
 
     private lastLivingPlayerCount: number = 0;
-    private opponentProvider = new OpponentProvider();
+    private opponentProvider: IOpponentProvider = new HeadToHeadOpponentProvider();
     private playerList = new PlayerList();
     private definitionProvider = new DefinitionProvider();
     private players: Player[] = [];
@@ -159,15 +159,20 @@ export class Game {
     private async runReadyPhase() {
         this.updateOpponentProvider();
 
-        this.getLivingPlayers().forEach(player => {
-            const opponent = this.opponentProvider.getOpponent(player.id);
+        const matchups = this.opponentProvider.getMatchups();
 
-            const match = new Match(player, opponent, this.options);
+        matchups.forEach(({ homeId, awayId, awayIsClone }) => {
+            const homePlayer = this.players.find(p => p.id === homeId);
+            const awayPlayer = this.players.find(p => p.id === awayId);
 
-            player.enterReadyPhase(match);
+            const match = new Match(homePlayer, awayPlayer, this.options);
+
+            homePlayer.enterReadyPhase(match);
+
+            if (!awayIsClone) {
+                awayPlayer.enterReadyPhase(match);
+            }
         });
-
-        this.opponentProvider.updateRotation();
 
         this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.READY, Date.now() / 1000));
 

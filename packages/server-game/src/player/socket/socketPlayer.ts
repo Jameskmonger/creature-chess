@@ -11,7 +11,7 @@ export class SocketPlayer extends Player {
         super(id, name);
 
         this.sagaMiddleware.run(incomingNetworking);
-        this.sagaMiddleware.run(outgoingNetworking(this.getMatch));
+        this.sagaMiddleware.run(outgoingNetworking(id, this.getMatch));
 
         this.initialiseSocket(socket);
     }
@@ -24,7 +24,7 @@ export class SocketPlayer extends Player {
         );
 
         const match = this.getMatch();
-        const board = match ? match.getBoard() : this.getBoard();
+        const board = match ? match.getBoardForPlayer(this.id) : this.getBoard();
         const opponentId = match ? match.away.id : null;
         const battleTurn = match ? match.getTurn() : null;
 

@@ -3,7 +3,7 @@ import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
 import { GRID_SIZE } from "@creature-chess/models";
-import { boardReducer, BoardState, BoardCommands, mergeBoards } from "../../board";
+import { boardReducer, BoardState, BoardCommands, mergeBoards, rotatePiecesAboutCenter } from "../../board";
 import { Player } from "../player";
 import { battleSaga, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
 import { GameOptions } from "../options";
@@ -40,8 +40,21 @@ export class Match {
         this.clientFinishedMatch.resolve();
     }
 
-    public getBoard() {
-        return this.store.getState().board;
+    public getBoardForPlayer(playerId: string): BoardState {
+        const { board: { pieces } } = this.store.getState();
+
+        // rotate the board for the away player, so that their pieces are shown on their own side
+        const boardPieces =
+            (playerId === this.away.id)
+            ? rotatePiecesAboutCenter(GRID_SIZE, pieces)
+            : pieces;
+
+        // todo sending the whole BoardState feels messy here, piecePositions isn't used
+        return {
+            pieces: boardPieces,
+            piecePositions: {},
+            locked: true
+        };
     }
 
     public getTurn() {

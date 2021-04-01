@@ -10,7 +10,7 @@ import { logger } from "../../../log";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-export const outgoingNetworking = (getCurrentMatch: () => Match) => {
+export const outgoingNetworking = (playerId: string, getCurrentMatch: () => Match) => {
     return function*() {
         let registry: OutgoingRegistry;
         let socket: Socket;
@@ -42,12 +42,20 @@ export const outgoingNetworking = (getCurrentMatch: () => Match) => {
                         // todo this isn't nice, get it in state?
                         const match = getCurrentMatch();
 
-                        if (!match && health > 0) {
-                            logger.warn("No match found for living player when entering ready state");
+                        if (!match) {
+                            if (health > 0) {
+                                logger.warn("No match found for living player when entering ready state");
+                            }
+
+                            return;
                         }
 
-                        const board = match ? match.getBoard() : null;
-                        const opponentId = match ? match.away.id : null;
+                        const board = match.getBoardForPlayer(playerId);
+
+                        let opponentId =
+                            match.home.id === playerId
+                                ? match.away.id
+                                : match.home.id
 
                         const packet: PhaseUpdatePacket = {
                             startedAtSeconds: startedAt,
