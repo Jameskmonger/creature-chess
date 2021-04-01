@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.19](https://github.com/Jameskmonger/creature-chess/compare/v0.2.16...v0.2.19) (2021-04-01)
+
+
+### Bug Fixes
+
+* check for preparing phase before putting new piece on board ([5358e45](https://github.com/Jameskmonger/creature-chess/commit/5358e454225b0654522817101abc07e9a877d42b)), closes [#331](https://github.com/Jameskmonger/creature-chess/issues/331)
+* check if player is dead before reconnecting ([4d17250](https://github.com/Jameskmonger/creature-chess/commit/4d1725008e03f7aef6317636d225277df676f167))
+* wait for UPDATE_HEALTH_COMMAND after subtracting ([8994d58](https://github.com/Jameskmonger/creature-chess/commit/8994d589f27f43fa31e8e591c4517878e2838d26))
+
+
+### Features
+
+* make battles 1v1 ([256e1e4](https://github.com/Jameskmonger/creature-chess/commit/256e1e434890b51cc127e6b4c6dc4aff283c4b63)), closes [#332](https://github.com/Jameskmonger/creature-chess/issues/332)
+* show 'health lost' on round end screen ([e568f3b](https://github.com/Jameskmonger/creature-chess/commit/e568f3b0d87c0a04ed6cdff61379e88ce6dca1e2))
+* Show announcement on round end ([43d7607](https://github.com/Jameskmonger/creature-chess/commit/43d7607d3e793b5ec4156d53ae27520fff38281d)), closes [#286](https://github.com/Jameskmonger/creature-chess/issues/286)
+
+
+
+
+
 ## [0.2.18](https://github.com/Jameskmonger/creature-chess/compare/v0.2.16...v0.2.18) (2021-04-01)
 
 
