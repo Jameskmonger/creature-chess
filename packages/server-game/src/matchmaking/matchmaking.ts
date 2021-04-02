@@ -85,7 +85,7 @@ export class Matchmaking {
 
         const game = new Game(players);
 
-        logger.info(`[Game ${game.id}] started from lobby ${id}`);
+        logger.info(`Game ${game.id} started from lobby ${id}`);
 
         const realPlayers = players
             .filter(p => (p as SocketPlayer).isConnection)
@@ -93,7 +93,7 @@ export class Matchmaking {
                 id: p.id,
                 name: p.name
             }));
-        logger.info(`[Game ${game.id}] started with ${realPlayers.length} real players: ${realPlayers.map(p => p.name).join(", ")}`);
+        logger.info(`Game started with ${realPlayers.length} real players: ${realPlayers.map(p => p.name).join(", ")}`, game.id);
 
         players
             .forEach(p => {
@@ -105,21 +105,20 @@ export class Matchmaking {
                 if ((p as BotPlayer).isBot) {
                     // todo do this in 1 call
                     this.database.bot.addGamePlayed(p.id);
-                    logger.info(`[Game ${game.id}] game played added to bot '${p.name}'`);
                 }
             });
 
         game.onFinish((winner) => {
-            logger.info(`[Game ${game.id}] finished`);
+            logger.info(`Game finished`, game.id);
 
             if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
-                logger.info(`[Game ${game.id}] won by player ${winner.name}`);
+                logger.info(`Game won by player ${winner.name}`, game.id);
             }
 
             if ((winner as BotPlayer).isBot) {
                 this.database.bot.addWin(winner.id);
-                logger.info(`[Game ${game.id}] won by bot '${winner.name}'`);
+                logger.info(`Game won by bot '${winner.name}'`, game.id);
             }
 
             this.games.delete(game.id);
