@@ -74,6 +74,7 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
                         className="healthbar player-health"
                         current={props.player.health}
                         max={100}
+                        renderContents={current => current.toString()}
                     />
                 </div>
             </div>
