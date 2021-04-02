@@ -7,31 +7,43 @@ enum PlayerListEvents {
     UPDATE = "UPDATE"
 }
 
-const sortPlayers = (a: PlayerListPlayer, b: PlayerListPlayer) => {
+type SortablePlayerValues = {
+    health: number,
+    hasQuit: boolean
+};
+
+type SortablePlayer = {
+    id: string,
+    position: number,
+    sortValues: SortablePlayerValues
+};
+
+const sortPlayers = (a: SortablePlayer, b: SortablePlayer) => {
     const SORT_A_FIRST = -1;
     const SORT_A_SECOND = 1;
 
-    if (a.status !== PlayerStatus.QUIT && b.status === PlayerStatus.QUIT) {
+    if (a.sortValues.health > b.sortValues.health) {
         return SORT_A_FIRST;
     }
 
-    if (a.status === PlayerStatus.QUIT && b.status !== PlayerStatus.QUIT) {
+    if (a.sortValues.health < b.sortValues.health) {
         return SORT_A_SECOND;
     }
 
-    if (a.health > b.health) {
+    if (!a.sortValues.hasQuit && b.sortValues.hasQuit) {
         return SORT_A_FIRST;
     }
 
-    if (a.health < b.health) {
+    if (a.sortValues.hasQuit && !b.sortValues.hasQuit) {
         return SORT_A_SECOND;
     }
 
-    if (a.roundDiedAt > b.roundDiedAt) {
+    // if A is coming from a higher position than B, it should come first
+    if (a.position < b.position) {
         return SORT_A_FIRST;
     }
 
-    if (a.roundDiedAt < b.roundDiedAt) {
+    if (a.position > b.position) {
         return SORT_A_SECOND;
     }
 
@@ -39,7 +51,8 @@ const sortPlayers = (a: PlayerListPlayer, b: PlayerListPlayer) => {
 };
 
 export class PlayerList {
-    private players: PlayerListPlayer[] = [];
+    private players: SortablePlayer[] = [];
+    private gamePlayers: { [playerId: string]: Player } = {};
     private events = new EventEmitter();
 
     private emitUpdate = debounce(() => {
@@ -49,7 +62,7 @@ export class PlayerList {
             return;
         }
 
-        this.events.emit(PlayerListEvents.UPDATE, this.players);
+        this.events.emit(PlayerListEvents.UPDATE, this.getValue());
     }, 500);
 
     public deconstructor() {
@@ -61,49 +74,12 @@ export class PlayerList {
         this.events.on(PlayerListEvents.UPDATE, fn);
     }
 
-    public getValue = (): PlayerListPlayer[] => this.players;
-
-    public addPlayer(player: Player) {
-        const streak = player.getStreak();
-
-        const playerListPlayer: PlayerListPlayer = {
-            id: player.id,
-            name: player.name,
-            health: player.getHealth(),
-            ready: player.getReady(),
-            level: player.getLevel(),
-            money: player.getMoney(),
-            streakType: streak.type,
-            streakAmount: streak.amount,
-            battle: null,
-            roundDiedAt: player.getRoundDiedAt(),
-            status: player.getStatus()
-        };
-
-        this.players.push(playerListPlayer);
-
-        const update = this.updatePlayer(player);
-
-        player.propertyUpdates().onReadyUpdate(update);
-        player.propertyUpdates().onStreakUpdate(update);
-        player.propertyUpdates().onHealthUpdate(update);
-        player.propertyUpdates().onBattleUpdate(update);
-        player.propertyUpdates().onStatusUpdate(update);
-    }
-
-    private updatePlayer(player: Player) {
-        return () => {
-            const index = this.players.findIndex(p => p.id === player.id);
-
-            if (index === -1) {
-                return;
-            }
-
-            this.players.splice(index, 1);
+    public getValue = (): PlayerListPlayer[] => {
+        return this.players.map(({ id }) => {
+            const player = this.gamePlayers[id];
 
             const streak = player.getStreak();
-
-            this.players.push({
+            return {
                 id: player.id,
                 name: player.name,
                 health: player.getHealth(),
@@ -115,11 +91,62 @@ export class PlayerList {
                 battle: player.getBattle(),
                 roundDiedAt: player.getRoundDiedAt(),
                 status: player.getStatus()
-            });
+            };
+        })
+    };
 
-            this.players.sort(sortPlayers);
+    public addPlayer(player: Player) {
+        this.players.push({
+            id: player.id,
+            position: null,
+            sortValues: {
+                health: player.getHealth(),
+                hasQuit: player.getStatus() === PlayerStatus.QUIT
+            }
+        });
 
-            this.emitUpdate();
+        this.gamePlayers[player.id] = player;
+
+        player.propertyUpdates().onHealthUpdate(health => this.updateSortedValue(player.id, { health }));
+        player.propertyUpdates().onStatusUpdate(status => this.updateSortedValue(player.id, { hasQuit: status === PlayerStatus.QUIT }));
+
+        player.propertyUpdates().onReadyUpdate(this.emitUpdate);
+        player.propertyUpdates().onStreakUpdate(this.emitUpdate);
+        player.propertyUpdates().onBattleUpdate(this.emitUpdate);
+    }
+
+    private updateSortedValue(id: string, patch: Partial<SortablePlayerValues>) {
+        const index = this.players.findIndex(p => p.id === id);
+
+        if (index === -1) {
+            return;
+        }
+
+        this.players[index] = {
+            ...this.players[index],
+            sortValues: {
+                ...this.players[index].sortValues,
+                ...patch
+            }
         };
+
+        let newPlayers = [...this.players];
+        newPlayers.sort(sortPlayers);
+
+        this.players = newPlayers.reduce((acc, cur, index) => {
+            if (cur.position === index + 1) {
+                return [ ...acc, cur ];
+            }
+
+            return [
+                ...acc,
+                {
+                    ...cur,
+                    position: index + 1
+                }
+            ];
+        }, []);
+
+        this.emitUpdate();
     }
 }
