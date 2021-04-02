@@ -8,30 +8,36 @@ To try the game, head to [creaturechess.jamesmonger.com](https://creaturechess.j
 
 This is just on a tiny server for demo purposes so it might not work all the time - please [get in touch](mailto:jameskmonger@hotmail.co.uk) if you have a better server that we can use :heart:
 
-# Developing
-
-We welcome help in all areas: creating new pieces, adding new features, fixing bugs, balancing combat, improving performance, and anything else you can think of.
+# Development
 
 ## Prerequisites
 
 - Node.js
 - Docker w/ docker-compose
 - A Fauna database with an access key in environment variable `CREATURE_CHESS_FAUNA_KEY`
-- An Auth0 app with a management client secret in environment variable `AUTH0_MANAGEMENT_CLIENT_SECRET`
+  - You can use [Fauna Dev](https://docs.fauna.com/fauna/current/integrations/dev.html) for this
+- An Auth0 app for the server
+  - Set up a [machine to machine app](https://auth0.com/docs/applications/set-up-an-application/register-machine-to-machine-applications)
+  - Store the client secret in environment variable `AUTH0_MANAGEMENT_CLIENT_SECRET`
+- An Auth0 app for the frontend
+  - Set up a [single page app](https://auth0.com/docs/applications/set-up-an-application/register-single-page-app)
+  - Modify `app/src/menu/auth/config.ts` and change `domain`, `clientID`, `redirectUri`, `logoutRedirectUri` and `audience`
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
-
-## Installation
-
-```shell
-$ npm install && npm run bootstrap
-```
 
 ## Running
 
-- Run the app with `npm run dev:app`
-- Run the servers with `docker-compose build && docker-compose up`
+```shell
+# install and link dependencies
+$ npm install && npm run bootstrap
 
-When the game is running, you will be able to access it at localhost:8090 in your browser.
+# run the frontend in dev mode
+$ npm run dev:app
+
+# run the server (do this in a separate console)
+$ docker-compose build && docker-compose up
+```
+
+The game is then accessible at `https://creaturechess.local-dev.com:8090/?server=ws://localhost:3000`. You might need to add `creaturechess.local-dev.com` to your host file (or remove `host` from `webpack.config.js`)
 
 ## Publishing
 
@@ -41,10 +47,6 @@ When the game is running, you will be able to access it at localhost:8090 in you
   - Replace v0.2.2 with tag from last step
   - This publishes Heroku (`server-info`)
   - You may have to run this in Bash
-
-## Special thanks :heart:
-
-Special thanks to **[thyde1](https://github.com/thyde1)**, **[hisuwh](https://github.com/hisuwh)**, **[OwenPattison](https://github.com/OwenPattison)**, **[BaronBeans](https://github.com/BaronBeans)**, **[CalumGreen](https://github.com/CalumGreen)**, **[ollymonger](https://github.com/ollymonger)** and Jack
 
 ## License
 
