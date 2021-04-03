@@ -30,7 +30,7 @@ const duration = (ms: number) => {
 
     return {
         remaining: () => {
-            return new Promise(resolve => {
+            return new Promise<void>(resolve => {
                 const endTime = present();
                 const timePassed = endTime - startTime;
 
@@ -73,7 +73,8 @@ const battleEventChannel = (
             piecePositions: {
                 ...startingBoardState.piecePositions
             },
-            locked: startingBoardState.locked
+            locked: startingBoardState.locked,
+            pieceLimit: null
         };
 
         const run = async () => {

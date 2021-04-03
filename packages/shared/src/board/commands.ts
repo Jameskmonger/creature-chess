@@ -18,6 +18,8 @@ export const LOCK_BOARD_COMMAND = "LOCK_BOARD_COMMAND";
 export type LOCK_BOARD_COMMAND = typeof LOCK_BOARD_COMMAND;
 export const UNLOCK_BOARD_COMMAND = "UNLOCK_BOARD_COMMAND";
 export type UNLOCK_BOARD_COMMAND = typeof UNLOCK_BOARD_COMMAND;
+export const SET_PIECE_LIMIT_COMMAND = "SET_PIECE_LIMIT_COMMAND";
+export type SET_PIECE_LIMIT_COMMAND = typeof SET_PIECE_LIMIT_COMMAND;
 
 export type InitialiseBoardCommand = ({ type: INITIALISE_BOARD_COMMAND, payload: { pieces: IndexedPieces } });
 type AddBoardPieceCommand = ({ type: ADD_BOARD_PIECE_COMMAND, payload: { piece: PieceModel, x: number, y: number } });
@@ -28,6 +30,7 @@ export type UpdateBoardPiecesCommand = ({ type: UPDATE_BOARD_PIECES_COMMAND, pay
 type MoveBoardPieceCommand = ({ type: MOVE_BOARD_PIECE_COMMAND, payload: { pieceId: string, from: TileCoordinates, to: TileCoordinates } });
 type LockBoardCommand = ({ type: LOCK_BOARD_COMMAND });
 type UnlockBoardCommand = ({ type: UNLOCK_BOARD_COMMAND });
+type SetPieceLimitCommand = ({ type: SET_PIECE_LIMIT_COMMAND, payload: { limit: number | null } });
 
 export type BoardCommand =
     InitialiseBoardCommand
@@ -38,7 +41,8 @@ export type BoardCommand =
     | UpdateBoardPiecesCommand
     | MoveBoardPieceCommand
     | LockBoardCommand
-    | UnlockBoardCommand;
+    | UnlockBoardCommand
+    | SetPieceLimitCommand;
 
 export const initialiseBoard = (pieces: IndexedPieces): InitialiseBoardCommand => ({
     type: INITIALISE_BOARD_COMMAND,
@@ -94,5 +98,11 @@ export const moveBoardPiece = (pieceId: string, from: TileCoordinates, to: TileC
 });
 
 export const lockBoard = (): LockBoardCommand => ({ type: LOCK_BOARD_COMMAND });
-
 export const unlockBoard = (): UnlockBoardCommand => ({ type: UNLOCK_BOARD_COMMAND });
+
+export const setPieceLimit = (limit: number | null): SetPieceLimitCommand => ({
+    type: SET_PIECE_LIMIT_COMMAND,
+    payload: {
+        limit
+    }
+});

@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useDrag } from "react-dnd";
+import { DragObjectWithType, useDrag } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
-import { PieceModel as PieceComponent, GamePhase } from "@creature-chess/models";
+import { PieceModel as PieceComponent, GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../ui/display/animation";
@@ -18,6 +18,7 @@ interface DraggableBoardPieceProps {
     id: string;
     draggable: boolean;
     animate: boolean;
+    selected: boolean;
 }
 
 interface Animation {
@@ -25,8 +26,10 @@ interface Animation {
     variables?: AnimationVariables;
 }
 
+type PieceDragObject = DragObjectWithType & { piece: PieceModel }
+
 const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props) => {
-    const { id, draggable, animate } = props;
+    const { id, draggable, animate, selected } = props;
     const dispatch = useDispatch();
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceComponent | null>(null);
@@ -34,7 +37,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const piece = useSelector<AppState, PieceComponent>(state => getPiece(state, id));
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 
-    const [{ }, drag] = useDrag({
+    const [{ }, drag] = useDrag<PieceDragObject, void, { }>({
         item: { type: "Piece", piece },
         canDrag: () => draggable && piece.ownerId === localPlayerId
     });
@@ -97,10 +100,12 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 
     const isDead = piece.currentHealth === 0;
 
+    const className = `piece ${currentAnimations.map(a => a.name).join(" ")} ${isDead ? dyingAnimation : ""} ${selected ? "selected" : ""}`;
+
     return (
         <div
             ref={drag}
-            className={`piece ${currentAnimations.map(a => a.name).join(" ")} ${isDead ? dyingAnimation : ""}`}
+            className={className}
             // tslint:disable-next-line: jsx-ban-props
             style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
             onClick={onClick}
