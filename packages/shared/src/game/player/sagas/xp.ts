@@ -1,9 +1,9 @@
 import { take, select, put } from "@redux-saga/core/effects";
+import { GamePhase } from "@creature-chess/models";
 import { PlayerState } from "../store";
 import { updateLevelCommand } from "../playerInfo/commands";
 import { getXpToNextLevel } from "../../../utils";
-import { setPieceLimit } from "packages/shared/src/board/commands";
-import { GamePhase } from "packages/models/lib";
+import { BoardCommands } from "../../../board";
 
 const ADD_XP_COMMAND = "ADD_XP_COMMAND";
 type ADD_XP_COMMAND = typeof ADD_XP_COMMAND;
@@ -40,7 +40,7 @@ export const xpSagaFactory = <TState extends PlayerState>() => {
                 const inPreparingPhase: boolean = yield select((state: TState) => state.game.phase === GamePhase.PREPARING);
 
                 if (inPreparingPhase) {
-                    yield put(setPieceLimit(level));
+                    yield put(BoardCommands.setPieceLimit(level));
                 }
             }
         }

@@ -35,16 +35,19 @@ const onDropPiece = (dispatch: Dispatch<any>, location: PlayerPieceLocation) =>
         dispatch(clearSelectedPiece());
     };
 
+type PieceDragObject = DragObjectWithType & { piece: PieceModel };
+type DropTargetCollectProps = { canDrop: boolean, isDragging: boolean };
+
 const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className, location }) => {
     const belowPieceLimit = useBelowPieceLimit();
 
     const dispatch = useDispatch();
-    const [{ canDrop, isDragging }, drop] = useDrop({
+    const [{ canDrop, isDragging }, drop] = useDrop<PieceDragObject, void, DropTargetCollectProps>({
         accept: "Piece",
         drop: onDropPiece(dispatch, location),
-        canDrop: item => (
+        canDrop: ({ piece }) => (
             belowPieceLimit
-            || (item as any as { piece: PieceModel }).piece.position.y !== null
+            || piece.position.y !== null
         ),
         collect: monitor => ({
             canDrop: !!monitor.canDrop(),

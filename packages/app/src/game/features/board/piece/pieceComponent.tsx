@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useDrag } from "react-dnd";
+import { DragObjectWithType, useDrag } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
-import { PieceModel as PieceComponent, GamePhase } from "@creature-chess/models";
+import { PieceModel as PieceComponent, GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../ui/display/animation";
@@ -25,6 +25,8 @@ interface Animation {
     variables?: AnimationVariables;
 }
 
+type PieceDragObject = DragObjectWithType & { piece: PieceModel }
+
 const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props) => {
     const { id, draggable, animate } = props;
     const dispatch = useDispatch();
@@ -34,7 +36,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const piece = useSelector<AppState, PieceComponent>(state => getPiece(state, id));
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 
-    const [{ }, drag] = useDrag({
+    const [{ }, drag] = useDrag<PieceDragObject, void, { }>({
         item: { type: "Piece", piece },
         canDrag: () => draggable && piece.ownerId === localPlayerId
     });
