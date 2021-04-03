@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.21](https://github.com/Jameskmonger/creature-chess/compare/v0.2.20...v0.2.21) (2021-04-03)
+
+
+### Bug Fixes
+
+* hide match rewards overlay when victory overlay is showing ([debf665](https://github.com/Jameskmonger/creature-chess/commit/debf665c5aec2de31d4ff2f25c04c11b470f2141))
+
+
+
+
+
 ## [0.2.20](https://github.com/Jameskmonger/creature-chess/compare/v0.2.19...v0.2.20) (2021-04-02)
 
 
