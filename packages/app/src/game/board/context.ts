@@ -6,3 +6,9 @@ BoardContext.displayName = "BoardContext";
 
 export const BoardContextProvider = BoardContext.Provider;
 export const useBoard = () => useContext(BoardContext);
+
+export const useBelowPieceLimit = () => {
+    const { pieces, pieceLimit } = useContext(BoardContext);
+
+    return Object.values(pieces).length < pieceLimit;
+};

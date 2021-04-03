@@ -6,6 +6,7 @@ import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/shared";
 import { getOverlayClassName } from "./getOverlayClassName";
 import { clearSelectedPiece } from "../../features/board/actions";
+import { useBelowPieceLimit } from "../context";
 
 type DroppableTileProps = {
     className: string;
@@ -34,11 +35,18 @@ const onDropPiece = (dispatch: Dispatch<any>, location: PlayerPieceLocation) =>
     };
 
 const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className, location }) => {
+    const belowPieceLimit = useBelowPieceLimit();
+
     const dispatch = useDispatch();
-    const [{ isDragging }, drop] = useDrop({
+    const [{ canDrop, isDragging }, drop] = useDrop({
         accept: "Piece",
         drop: onDropPiece(dispatch, location),
+        canDrop: item => (
+            belowPieceLimit
+            || (item as any as { piece: PieceModel }).piece.position.y !== null
+        ),
         collect: monitor => ({
+            canDrop: !!monitor.canDrop(),
             isDragging: !!monitor.getItem(),
         }),
     });
@@ -49,7 +57,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
             className={`tile ${className} style-default`}
             touch-action="none"
         >
-            <div className={`${getOverlayClassName(isDragging, true)}`} />
+            <div className={`${getOverlayClassName(isDragging, canDrop)}`} />
         </div>
     );
 };
