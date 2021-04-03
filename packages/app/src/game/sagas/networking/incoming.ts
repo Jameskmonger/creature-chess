@@ -49,6 +49,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
             ServerToClientPacketOpcodes.LEVEL_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
+                emit(BoardCommands.setPieceLimit(packet.level));
             }
         );
 

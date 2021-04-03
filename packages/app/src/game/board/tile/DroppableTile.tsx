@@ -48,6 +48,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
         canDrop: ({ piece }) => (
             belowPieceLimit
             || piece.position.y !== null
+            || location.type === "bench"
         ),
         collect: monitor => ({
             canDrop: !!monitor.canDrop(),

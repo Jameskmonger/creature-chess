@@ -8,11 +8,11 @@ export const BoardContextProvider = BoardContext.Provider;
 export const useBoard = () => useContext(BoardContext);
 
 export const useBelowPieceLimit = () => {
-    const { pieces, pieceLimit } = useContext(BoardContext);
+    const board = useContext(BoardContext);
 
-    if (pieceLimit === null) {
+    if (!board || board.pieceLimit === null) {
         return false;
     }
 
-    return Object.values(pieces).length < pieceLimit;
+    return Object.values(board.pieces).length < board.pieceLimit;
 };
