@@ -29,7 +29,7 @@ const BoardPieces: React.FunctionComponent = props => {
 
         const [ x, y ] = position.split(",");
 
-        pieceElements.push(<PositionablePiece id={id} x={x} y={y} draggable={inPreparingPhase} animate={!inPreparingPhase} selected={selected} />);
+        pieceElements.push(<PositionablePiece key={id} id={id} x={x} y={y} draggable={inPreparingPhase} animate={!inPreparingPhase} selected={selected} />);
     }
 
     return (
