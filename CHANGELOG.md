@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.22](https://github.com/Jameskmonger/creature-chess/compare/v0.2.21...v0.2.22) (2021-04-03)
+
+
+### Bug Fixes
+
+* add key to board PositionalPieces ([6fd933e](https://github.com/Jameskmonger/creature-chess/commit/6fd933e880ac5db6063054e3daf71f5b01ea2eee))
+
+
+
+
+
 ## [0.2.21](https://github.com/Jameskmonger/creature-chess/compare/v0.2.20...v0.2.21) (2021-04-03)
 
 
