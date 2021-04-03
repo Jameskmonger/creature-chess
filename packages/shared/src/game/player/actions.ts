@@ -1,5 +1,7 @@
 import { PlayerPieceLocation } from "@creature-chess/models";
 
+export const PLAYER_CLICK_TILE_ACTION = "PLAYER_CLICK_TILE_ACTION";
+export type PLAYER_CLICK_TILE_ACTION = typeof PLAYER_CLICK_TILE_ACTION;
 export const PLAYER_DROP_PIECE_ACTION = "PLAYER_DROP_PIECE_ACTION";
 export type PLAYER_DROP_PIECE_ACTION = typeof PLAYER_DROP_PIECE_ACTION;
 export const PLAYER_SELL_PIECE_ACTION = "PLAYER_SELL_PIECE_ACTION";
@@ -43,6 +45,17 @@ export type PlayerDropPieceAction = {
 export const playerDropPieceAction = (pieceId: string, from: PlayerPieceLocation, to: PlayerPieceLocation): PlayerDropPieceAction => ({
   type: PLAYER_DROP_PIECE_ACTION,
   payload: { pieceId, to, from }
+});
+
+export type PlayerClickTileAction = {
+  type: PLAYER_CLICK_TILE_ACTION,
+  payload: {
+    tile: PlayerPieceLocation
+  }
+};
+export const playerClickTileAction = (tile: PlayerPieceLocation): PlayerClickTileAction => ({
+  type: PLAYER_CLICK_TILE_ACTION,
+  payload: { tile }
 });
 
 // card ownership

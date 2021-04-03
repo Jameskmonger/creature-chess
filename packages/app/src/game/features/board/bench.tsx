@@ -9,6 +9,7 @@ import { DroppableTile } from "../../board/tile/DroppableTile";
 
 const BenchPieces: React.FunctionComponent = () => {
     const pieces = useSelector<AppState, (PieceModel | null)[]>(state => state.bench.pieces);
+    const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
 
     const pieceElements: React.ReactNode[] = [];
 
@@ -17,7 +18,9 @@ const BenchPieces: React.FunctionComponent = () => {
             return;
         }
 
-        pieceElements.push(<PositionablePiece key={piece.id} id={piece.id} x={piece.position.x} y={0} draggable animate={false} />);
+        const selected = piece.id === selectedPieceId;
+
+        pieceElements.push(<PositionablePiece key={piece.id} id={piece.id} x={piece.position.x} y={0} draggable animate={false} selected={selected} />);
     });
 
     return (

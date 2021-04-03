@@ -18,6 +18,7 @@ interface DraggableBoardPieceProps {
     id: string;
     draggable: boolean;
     animate: boolean;
+    selected: boolean;
 }
 
 interface Animation {
@@ -28,7 +29,7 @@ interface Animation {
 type PieceDragObject = DragObjectWithType & { piece: PieceModel }
 
 const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props) => {
-    const { id, draggable, animate } = props;
+    const { id, draggable, animate, selected } = props;
     const dispatch = useDispatch();
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceComponent | null>(null);
@@ -99,10 +100,12 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 
     const isDead = piece.currentHealth === 0;
 
+    const className = `piece ${currentAnimations.map(a => a.name).join(" ")} ${isDead ? dyingAnimation : ""} ${selected ? "selected" : ""}`;
+
     return (
         <div
             ref={drag}
-            className={`piece ${currentAnimations.map(a => a.name).join(" ")} ${isDead ? dyingAnimation : ""}`}
+            className={className}
             // tslint:disable-next-line: jsx-ban-props
             style={getAnimationCssVariables(currentAnimations) as React.CSSProperties}
             onClick={onClick}

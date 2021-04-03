@@ -11,10 +11,12 @@ import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
 import { BoardContextProvider } from "../../board/context";
 import { BoardState } from "packages/shared/lib";
 import { BoardGrid } from "../../board/BoardGrid";
+import { PositionablePiece } from "./piece/positionablePiece";
 
 const BoardPieces: React.FunctionComponent = props => {
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
     const pieces = useSelector<AppState, { [key: string]: string }>(state => state.board.piecePositions);
+    const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
 
     const pieceElements: React.ReactNode[] = [];
 
@@ -23,13 +25,11 @@ const BoardPieces: React.FunctionComponent = props => {
             continue;
         }
 
+        const selected = id === selectedPieceId;
+
         const [ x, y ] = position.split(",");
 
-        pieceElements.push(
-            <div key={id} className={`positionable-piece x-${x} y-${y}`}>
-                <PieceComponent id={id} draggable={inPreparingPhase} animate={!inPreparingPhase} />
-            </div>
-        );
+        pieceElements.push(<PositionablePiece id={id} x={x} y={y} draggable={inPreparingPhase} animate={!inPreparingPhase} selected={selected} />);
     }
 
     return (

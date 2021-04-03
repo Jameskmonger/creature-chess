@@ -6,6 +6,7 @@ import { announcement } from "./actions/announcement";
 import { gameNetworking } from "./networking/saga";
 
 import { PlayerSagas, PlayerActionSagas, battleSaga, DefinitionProvider, defaultGameOptions } from "@creature-chess/shared";
+import { clickToDrop } from "./actions/clickToDrop";
 
 export const gameSaga = function*(playerId: string, socket: SocketIOClient.Socket) {
     const definitionProvider = new DefinitionProvider();
@@ -16,6 +17,7 @@ export const gameSaga = function*(playerId: string, socket: SocketIOClient.Socke
         yield fork(preventAccidentalClose),
         yield fork(announcement),
         yield fork(closeShopOnFirstBuy),
+        yield fork(clickToDrop),
         yield fork(PlayerSagas.evolutionSagaFactory<AppState>()),
         yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<AppState>()),
         yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<AppState>()),

@@ -56,11 +56,14 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
         }),
     });
 
+    const onClick = () => dispatch(PlayerActions.playerClickTileAction(location));
+
     return (
         <div
             ref={drop}
             className={`tile ${className} style-default`}
             touch-action="none"
+            onPointerUp={onClick}
         >
             <div className={`${getOverlayClassName(isDragging, canDrop)}`} />
         </div>

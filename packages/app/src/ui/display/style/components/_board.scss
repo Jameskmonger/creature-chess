@@ -20,11 +20,6 @@
     box-sizing: border-box;
     user-select: none;
 
-    &.selected {
-        box-sizing: border-box;
-        border: 2px solid #ff5200;
-    }
-
     .overlay {
         position: absolute;
         top: 0;
@@ -83,6 +78,11 @@
     z-index: $piece-z-index;
     width: 100%;
     height: 100%;
+
+    &.selected {
+        box-sizing: border-box;
+        border: 2px solid #ff5200;
+    }
 
     .image {
         position: absolute;
@@ -154,17 +154,30 @@
         $hit-rotation-multiplier: 1deg;
         $hit-rotation: calc(#{$hit-rotation-multiplier} * var(--hitPower));
         @keyframes hit {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(calc(#{$hit-rotation} * -1)); }
-            75% { transform: rotate($hit-rotation); }
-            100% { transform: rotate(0deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(calc(#{$hit-rotation} * -1));
+            }
+
+            75% {
+                transform: rotate($hit-rotation);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
         }
         animation-name: hit;
         animation-duration: 200ms;
     }
 
     @keyframes dying {
-        100% { transform: scale(0); }
+        100% {
+            transform: scale(0);
+        }
     }
 
     &.dying {
