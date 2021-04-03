@@ -30,6 +30,7 @@ const onDropPiece = (dispatch: Dispatch<any>, location: PlayerPieceLocation) =>
         const piece: PieceModel = (item as any).piece;
         const from = getLocationForPiece(piece);
 
+        // todo `from` is here as a safety check, is it needed?
         dispatch(PlayerActions.playerDropPieceAction(piece.id, from, location));
         dispatch(clearSelectedPiece());
     };

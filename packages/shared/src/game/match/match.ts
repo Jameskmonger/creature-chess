@@ -53,7 +53,8 @@ export class Match {
         return {
             pieces: boardPieces,
             piecePositions: {},
-            locked: true
+            locked: true,
+            pieceLimit: null
         };
     }
 
