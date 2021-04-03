@@ -9,6 +9,7 @@ import { ownedPieceSelector, boardTilePieceSelector, benchTilePieceSelector } fr
 import { Dispatch } from "redux";
 import { canDropPiece, PlayerActions, getPlayerLevel } from "@creature-chess/shared";
 import { clearSelectedPiece } from "../actions";
+import { getOverlayClassName } from "../../../board/tile/getOverlayClassName";
 
 interface TileProps {
     x: number;
@@ -25,14 +26,6 @@ const getClassName = (tileType: TileType, x: number, y: number) => {
     }
 
     return isBoardTileDark(x, y) ? "dark" : "light";
-};
-
-const getOverlayClassName = (isDragging: boolean, canDrop: boolean) => {
-    if (isDragging && canDrop === false) {
-        return "overlay not-allowed";
-    }
-
-    return "overlay";
 };
 
 const onDropPiece = (dispatch: Dispatch, piece: PieceModel, type: TileType, x: number, y: number) => {

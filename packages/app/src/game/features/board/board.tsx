@@ -1,14 +1,16 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { Constants, GamePhase } from "@creature-chess/models";
+import { Constants, GamePhase, GRID_SIZE } from "@creature-chess/models";
 import { AppState } from "../../../store";
 import { PieceComponent } from "./piece/pieceComponent";
-import { BoardRow } from "./boardRow";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { Announcement } from "./overlays/announcement";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectModal } from "./overlays/reconnectModal";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
+import { BoardContextProvider } from "../../board/context";
+import { BoardState } from "packages/shared/lib";
+import { BoardGrid } from "../../board/BoardGrid";
 
 const BoardPieces: React.FunctionComponent = props => {
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
@@ -41,32 +43,16 @@ const Board: React.FunctionComponent = props => {
     const showOpponentBoardPlaceholder = useSelector<AppState, boolean>(
         state => state.game.phase === GamePhase.PREPARING);
 
-    const rows = [];
-
-    if (!showOpponentBoardPlaceholder) {
-        for (let y = 0; y < Constants.GRID_SIZE.height / 2; y++) {
-            rows.push(
-                <BoardRow
-                    key={`tile-row-${y}`}
-                    y={y}
-                />
-            );
-        }
-    }
-
-    for (let y = Constants.GRID_SIZE.height / 2; y < Constants.GRID_SIZE.height; y++) {
-        rows.push(
-            <BoardRow
-                key={`tile-row-${y}`}
-                y={y}
-            />
-        );
-    }
+    const board = useSelector<AppState, BoardState>(state => state.board);
 
     return (
         <div className="chessboard">
             {showOpponentBoardPlaceholder && <OpponentBoardPlaceholder />}
-            {rows}
+
+            <BoardContextProvider value={board}>
+                <BoardGrid showOpponentHalf={!showOpponentBoardPlaceholder} width={GRID_SIZE.width} playerHeight={GRID_SIZE.height / 2} />
+            </BoardContextProvider>
+
             <BoardPieces />
 
             <Announcement />
