@@ -171,9 +171,12 @@ table {
   font-family: Arial, sans-serif;
   font-size: 0.65rem;
   font-weight: 700;
+  color: #d6d0d0;
   text-transform: uppercase; }
   .player-profile-title.developer-001 {
     color: #79ffe0; }
+  .player-profile-title.hall-of-fame-001 {
+    color: #f7ee85; }
 
 .segment {
   margin-bottom: 1rem;
