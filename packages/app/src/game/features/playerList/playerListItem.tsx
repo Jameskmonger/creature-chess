@@ -1,8 +1,10 @@
 import * as React from "react";
-import { PlayerListPlayer, PlayerStatus, StreakType } from "@creature-chess/models";
+import { GamePhase, PlayerListPlayer, PlayerStatus, StreakType } from "@creature-chess/models";
 import { ProgressBar } from "../../../ui/display";
 import { PlayerName } from "./playerName";
 import { BattleInfo } from "./battleInfo";
+import { useSelector } from "react-redux";
+import { AppState } from "packages/app/src/store";
 
 interface Props {
     playerId: string;
@@ -15,16 +17,6 @@ interface Props {
     money: number;
     level: number;
 }
-
-const ReadyIndicator: React.FunctionComponent<{ ready: boolean | null }> = ({ ready }) => {
-    if (ready === null) {
-        return null;
-    }
-
-    return (
-        <span className={`ready-indicator ${ready ? "ready" : "not-ready"}`} />
-    );
-};
 
 const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount: number | null }> = ({ type, amount }) => {
     if (type === null || !amount || amount === 1) {
@@ -56,15 +48,16 @@ const QuitPlayerListItem: React.FunctionComponent<{ playerId: string }> = ({ pla
 }
 
 const PlayerListItem: React.FunctionComponent<Props> = props => {
-    const className = `player-list-item ${props.isLocal ? " local" : ""} ${props.isOpponent ? " opponent" : ""}`;
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
+    const readyClassName = props.ready ? "ready" : "not-ready";
+
+    const className = `player-list-item ${props.isLocal ? "local" : ""} ${props.isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : ""}`;
 
     return (
         <div className={className}>
             <div className="row">
                 <div className="row-half">
                     <span className="name">
-                        <ReadyIndicator ready={props.ready} />
-
                         <PlayerName playerId={props.playerId} /> {props.player.status === PlayerStatus.QUIT && 'has quit'}
                     </span>
                 </div>
