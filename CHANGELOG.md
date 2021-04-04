@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.23](https://github.com/Jameskmonger/creature-chess/compare/v0.2.22...v0.2.23) (2021-04-04)
+
+
+### Bug Fixes
+
+* move all calculations to server side ([8b61a65](https://github.com/Jameskmonger/creature-chess/commit/8b61a658901e1083642955d5292cad6d082e536e)), closes [#355](https://github.com/Jameskmonger/creature-chess/issues/355)
+
+
+### Features
+
+* Add developer title ([93ef0f7](https://github.com/Jameskmonger/creature-chess/commit/93ef0f7e6f35d58d537612fea6c92175876fd861))
+* player list styling changes ([a131cd7](https://github.com/Jameskmonger/creature-chess/commit/a131cd7b4efd1e4454cc3bed4c5cdc903881644a))
+
+
+
+
+
 ## [0.2.22](https://github.com/Jameskmonger/creature-chess/compare/v0.2.21...v0.2.22) (2021-04-03)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.23](https://github.com/Jameskmonger/creature-chess/compare/v0.2.22...v0.2.23) (2021-04-04)
+
+
+### Features
+
+* Add developer title ([93ef0f7](https://github.com/Jameskmonger/creature-chess/commit/93ef0f7e6f35d58d537612fea6c92175876fd861))
+
+
+
+
+
 ## [0.2.11](https://github.com/Jameskmonger/creature-chess/compare/v0.2.10...v0.2.11) (2021-01-14)
 
 
