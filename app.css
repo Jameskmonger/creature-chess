@@ -167,6 +167,14 @@ table {
   flex-direction: column;
   overflow-y: visible; }
 
+.player-profile-title {
+  font-family: Arial, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase; }
+  .player-profile-title.developer-001 {
+    color: #79ffe0; }
+
 .segment {
   margin-bottom: 1rem;
   text-align: center; }
@@ -733,8 +741,12 @@ body {
 .player-list-item {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.6rem;
+  padding: 0.4rem;
   background: #566c86; }
+  .player-list-item.ready {
+    border-left: 5px solid #20b720; }
+  .player-list-item.not-ready {
+    border-left: 5px solid #ccc; }
   .player-list-item.quit {
     background: #3b3d40; }
     .player-list-item.quit .status {
@@ -749,9 +761,9 @@ body {
       font-style: italic;
       color: #cecece; }
   .player-list-item.opponent {
-    border: 5px solid #b13e53; }
+    border: 3px solid #b13e53; }
   .player-list-item:not(:last-child) {
-    margin-bottom: 0.8rem; }
+    margin-bottom: 0.25rem; }
   .player-list-item .name {
     font-family: Arial, sans-serif;
     font-size: 0.8em;
@@ -777,17 +789,24 @@ body {
       font-weight: 700; }
   .player-list-item .row {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.4em; }
+    justify-content: space-between; }
+    .player-list-item .row:not(:last-child) {
+      margin-bottom: 0.4em; }
     .player-list-item .row .row-half {
       display: flex;
       width: 50%; }
+  .player-list-item .name-container {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0.15rem; }
+    .player-list-item .name-container .name {
+      margin-bottom: 0.25rem; }
   .player-list-item .battle-info {
     width: fit-content;
     padding: 0.4em 1.2em;
     margin: 0 auto;
     font-family: Arial, sans-serif;
-    font-size: 0.8em;
+    font-size: 0.75em;
     color: #c3c3c3;
     text-align: center;
     background: #333; }
@@ -801,15 +820,6 @@ body {
         color: #b13e53; }
       .player-list-item .battle-info .highlight.opponent-name {
         color: #fff; }
-  .player-list-item .ready-indicator {
-    display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
-    margin-right: 0.5em; }
-    .player-list-item .ready-indicator.ready {
-      background: #20b720; }
-    .player-list-item .ready-indicator.not-ready {
-      background: #ccc; }
   .player-list-item .badges {
     display: flex; }
     .player-list-item .badges .badge {
@@ -922,17 +932,20 @@ body {
   margin-top: 1rem;
   text-align: center;
   background: #566c86; }
-
-.players {
-  flex: 1 0 0; }
+  .lobby-info .players {
+    flex: 1 0 0; }
+  .lobby-info .player {
+    display: flex;
+    flex-direction: column; }
+    .lobby-info .player .name {
+      margin-bottom: 0.25rem; }
+    .lobby-info .player.bot {
+      font-style: italic;
+      color: #d0d0d0; }
 
 .text {
   flex: 1 0 0;
   margin-left: 1em; }
-
-.player.bot {
-  font-style: italic;
-  color: #d0d0d0; }
 
 .lobby-id {
   margin-bottom: 1em;
