@@ -5,12 +5,13 @@ import {
     OutgoingPacketRegistry,
     ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions,
     ServerToClientLobbyPacketOpcodes,
-    ServerToClientMenuPacketOpcodes
+    ServerToClientMenuPacketOpcodes,
+    PLAYER_TITLES
 } from "@creature-chess/shared";
-import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models";
+
+import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer } from "@creature-chess/models";
 import { IdGenerator } from "../id-generator";
 import { LobbyMember, LobbyMemberType, PlayerLobbyMember } from "./lobbyMember";
-import { LobbyPlayer } from "@creature-chess/models";
 
 enum LobbyEvents {
     START_GAME = "START_GAME"
@@ -80,10 +81,11 @@ export class Lobby {
 
         const playerChangedIndex = this.createPlayerLobbyMember(socket, id, name);
 
-        const lobbyPlayer = {
+        const lobbyPlayer: LobbyPlayer = {
             id,
             name,
-            isBot: false
+            isBot: false,
+            title: PLAYER_TITLES[id] || null
         };
 
         for (const other of this.members) {
@@ -138,7 +140,8 @@ export class Lobby {
         return this.members.map(m => ({
             id: m.id,
             name: m.name,
-            isBot: m.type === LobbyMemberType.BOT
+            isBot: m.type === LobbyMemberType.BOT,
+            title: PLAYER_TITLES[m.id] || null
         }));
     }
 

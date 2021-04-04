@@ -2,9 +2,10 @@ import * as React from "react";
 import { GamePhase, PlayerListPlayer, PlayerStatus, StreakType } from "@creature-chess/models";
 import { ProgressBar } from "../../../ui/display";
 import { PlayerName } from "./playerName";
+import { PlayerTitle } from "./playerTitle";
 import { BattleInfo } from "./battleInfo";
 import { useSelector } from "react-redux";
-import { AppState } from "packages/app/src/store";
+import { AppState } from "../../../store";
 
 interface Props {
     playerId: string;
@@ -56,10 +57,12 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
     return (
         <div className={className}>
             <div className="row">
-                <div className="row-half">
+                <div className="row-half name-container">
                     <span className="name">
-                        <PlayerName playerId={props.playerId} /> {props.player.status === PlayerStatus.QUIT && 'has quit'}
+                        <PlayerName playerId={props.playerId} />
                     </span>
+
+                    <PlayerTitle playerId={props.playerId} />
                 </div>
 
                 <div className="row-half">

@@ -96,6 +96,16 @@ $player-list-gutter-size: 0.4em;
         }
     }
 
+    .name-container {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 0.15rem;
+
+        .name {
+            margin-bottom: 0.25rem;
+        }
+    }
+
     .battle-info {
         // stylelint-disable-next-line
         width: fit-content;

@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { debounce } from "../utils";
 import { Player } from "./player/player";
+import { PLAYER_TITLES } from "../titles";
 
 enum PlayerListEvents {
     UPDATE = "UPDATE"
@@ -90,7 +91,8 @@ export class PlayerList {
                 streakAmount: streak.amount,
                 battle: player.getBattle(),
                 roundDiedAt: player.getRoundDiedAt(),
-                status: player.getStatus()
+                status: player.getStatus(),
+                title: PLAYER_TITLES[player.id] || null
             };
         })
     };

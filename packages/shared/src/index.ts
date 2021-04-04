@@ -31,3 +31,5 @@ export {
     ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements, ClientToServerPacketOpcodes,
     SendPlayerActionsPacket, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS
 } from "./networking";
+
+export { PLAYER_TITLES } from "./titles";

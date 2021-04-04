@@ -35,6 +35,10 @@ export const finishedBattle = (opponentId: string, homeScore: number, awayScore:
 export interface PlayerListPlayer {
     id: string;
     name: string;
+    title: {
+        className: string;
+        text: string;
+    } | null;
     health: number;
     money: number;
     level: number;
