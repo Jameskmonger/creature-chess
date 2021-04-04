@@ -2,7 +2,7 @@ import { takeLatest, take, fork, all, select, delay } from "@redux-saga/core/eff
 import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, GameEvents, PlayerEvents, Match,
-    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket
+    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BoardCommands, BenchCommands, BenchState, BoardState
 } from "@creature-chess/shared";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
@@ -117,6 +117,35 @@ export const outgoingNetworking = (playerId: string, getCurrentMatch: () => Matc
 
         const sendCommands = function*() {
             yield all([
+                yield takeLatest(
+                    [
+                        BenchCommands.ADD_BENCH_PIECE_COMMAND,
+                        BenchCommands.REMOVE_BENCH_PIECE_COMMAND,
+                        BenchCommands.REMOVE_BENCH_PIECES_COMMAND,
+                        BenchCommands.MOVE_BENCH_PIECE_COMMAND
+                    ],
+                    function*() {
+                        const bench: BenchState = yield select((state: PlayerState) => state.bench);
+
+                        registry.emit(ServerToClientPacketOpcodes.BENCH_UPDATE, { benchPieces: bench.pieces });
+                    }
+                ),
+                yield takeLatest(
+                    [
+                        BoardCommands.ADD_BOARD_PIECE_COMMAND,
+                        BoardCommands.REMOVE_BOARD_PIECE_COMMAND,
+                        BoardCommands.REMOVE_BOARD_PIECES_COMMAND,
+                        BoardCommands.MOVE_BOARD_PIECE_COMMAND,
+                        BoardCommands.UPDATE_BOARD_PIECE_COMMAND,
+                        BoardCommands.UPDATE_BOARD_PIECES_COMMAND
+                    ],
+                    function*() {
+                        const board: BoardState = yield select((state: PlayerState) => state.board);
+
+                        registry.emit(ServerToClientPacketOpcodes.BOARD_UPDATE, { boardPieces: board.pieces });
+                    }
+                ),
+
                 yield takeLatest<PlayerInfoCommands.UpdateCardsCommand>(
                     PlayerInfoCommands.UPDATE_CARDS_COMMAND,
                     function*() {

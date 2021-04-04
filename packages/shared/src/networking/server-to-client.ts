@@ -1,4 +1,4 @@
-import { Card, GamePhase, IndexedPieces, PlayerListPlayer } from "@creature-chess/models";
+import { Card, GamePhase, IndexedPieces, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "../board";
 import { BenchState } from "../game/player/bench";
 import { EmptyPacket } from "./empty-packet";
@@ -58,9 +58,19 @@ type MatchRewardsPacket = {
   damage: number;
   justDied: boolean;
   rewardMoney: number;
-}
+};
+
+type BenchUpdatePacket = {
+  benchPieces: PieceModel[]
+};
+
+type BoardUpdatePacket = {
+  boardPieces: IndexedPieces
+};
 
 export enum ServerToClientPacketOpcodes {
+  BENCH_UPDATE = "benchUpdate",
+  BOARD_UPDATE = "boardUpdate",
   CARDS_UPDATE = "cardsUpdate",
   PLAYER_LIST_UPDATE = "playerListUpdate",
   PHASE_UPDATE = "phaseUpdate",
@@ -74,6 +84,8 @@ export enum ServerToClientPacketOpcodes {
 }
 
 export type ServerToClientPacketDefinitions = {
+  [ServerToClientPacketOpcodes.BENCH_UPDATE]: BenchUpdatePacket,
+  [ServerToClientPacketOpcodes.BOARD_UPDATE]: BoardUpdatePacket,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: Card[],
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[],
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
@@ -87,6 +99,8 @@ export type ServerToClientPacketDefinitions = {
 };
 
 export type ServerToClientPacketAcknowledgements = {
+  [ServerToClientPacketOpcodes.BENCH_UPDATE]: never,
+  [ServerToClientPacketOpcodes.BOARD_UPDATE]: never,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: never,
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: never,
   [ServerToClientPacketOpcodes.PHASE_UPDATE]: never,

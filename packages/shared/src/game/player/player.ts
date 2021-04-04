@@ -146,7 +146,7 @@ export abstract class Player {
         }
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
-        this.store.dispatch(BenchCommands.unlockBenchCommand());
+        this.store.dispatch(BoardCommands.unlockBoard());
     }
 
     public fillBoard() {
@@ -155,7 +155,7 @@ export abstract class Player {
 
     public enterReadyPhase(match: Match) {
         this.match = match;
-        this.store.dispatch(BenchCommands.lockBenchCommand());
+        this.store.dispatch(BoardCommands.lockBoard());
 
         const opponentId = match.home.id === this.id
             ? match.away.id
@@ -212,12 +212,7 @@ export abstract class Player {
         const pieces = getAllPieces(this.store.getState());
 
         this.store.dispatch(BoardCommands.initialiseBoard({}));
-
-        // todo this is ugly
-        this.store.dispatch(BenchCommands.initialiseBenchCommand({
-            pieces: [],
-            locked: this.store.getState().bench.locked
-        }));
+        this.store.dispatch(BenchCommands.initialiseBenchCommand([]));
 
         for (const piece of pieces) {
             this.deck.addPiece(piece);

@@ -16,7 +16,7 @@ export type UNLOCK_BENCH_COMMAND = typeof UNLOCK_BENCH_COMMAND;
 export const MOVE_BENCH_PIECE_COMMAND = "MOVE_BENCH_PIECE_COMMAND";
 export type MOVE_BENCH_PIECE_COMMAND = typeof MOVE_BENCH_PIECE_COMMAND;
 
-type InitialiseBenchCommand = ({ type: INITIALISE_BENCH_COMMAND, payload: { state: BenchState } });
+type InitialiseBenchCommand = ({ type: INITIALISE_BENCH_COMMAND, payload: { pieces: PieceModel[] } });
 export type AddBenchPieceCommand = ({ type: ADD_BENCH_PIECE_COMMAND, payload: { piece: PieceModel, slot: number | null } });
 type RemoveBenchPieceCommand = ({ type: REMOVE_BENCH_PIECE_COMMAND, payload: { pieceId: string } });
 type RemoveBenchPiecesCommand = ({ type: REMOVE_BENCH_PIECES_COMMAND, payload: { pieceIds: string[] } });
@@ -33,10 +33,10 @@ export type BenchCommand =
     | LockBenchCommand
     | UnlockBenchCommand;
 
-export const initialiseBenchCommand = (state: BenchState): InitialiseBenchCommand => ({
+export const initialiseBenchCommand = (pieces: PieceModel[]): InitialiseBenchCommand => ({
     type: INITIALISE_BENCH_COMMAND,
     payload: {
-        state
+        pieces
     }
 });
 

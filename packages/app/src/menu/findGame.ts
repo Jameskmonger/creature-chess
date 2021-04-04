@@ -92,7 +92,7 @@ export const findGame = function*(getAccessTokenSilently: () => Promise<string>,
         } } = game as GameConnectedEvent;
 
         yield put(BoardCommands.initialiseBoard(board.pieces));
-        yield put(BenchCommands.initialiseBenchCommand(bench));
+        yield put(BenchCommands.initialiseBenchCommand(bench.pieces));
         yield put(PlayerInfoCommands.updateMoneyCommand(money));
         yield put(PlayerInfoCommands.updateCardsCommand(cards));
         yield put(PlayerInfoCommands.updateLevelCommand(level, xp));

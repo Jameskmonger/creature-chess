@@ -32,6 +32,20 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
         );
 
         registry.on(
+            ServerToClientPacketOpcodes.BOARD_UPDATE,
+            ({ boardPieces }) => {
+                emit(BoardCommands.initialiseBoard(boardPieces));
+            }
+        );
+
+        registry.on(
+            ServerToClientPacketOpcodes.BENCH_UPDATE,
+            ({ benchPieces }) => {
+                emit(BenchCommands.initialiseBenchCommand(benchPieces));
+            }
+        );
+
+        registry.on(
             ServerToClientPacketOpcodes.CARDS_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateCardsCommand(packet));
@@ -100,7 +114,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
                         emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
 
                         emit(BoardCommands.initialiseBoard(board.pieces));
-                        emit(BenchCommands.initialiseBenchCommand(bench));
+                        emit(BenchCommands.initialiseBenchCommand(bench.pieces));
                         emit(PlayerInfoCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
                         emit(BoardCommands.unlockBoard());
@@ -115,7 +129,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
                             emit(BoardCommands.initialiseBoard(board.pieces));
                         }
 
-                        emit(BenchCommands.initialiseBenchCommand(bench));
+                        emit(BenchCommands.initialiseBenchCommand(bench.pieces));
                         emit(BoardCommands.lockBoard());
                         emit(closeOverlay());
                         emit(PlayerInfoCommands.updateOpponentCommand(opponentId));

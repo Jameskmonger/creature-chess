@@ -23,7 +23,7 @@ const removePieces = (state: PiecesState, pieceIds: string[]) => {
 const pieces: Reducer<PiecesState, BenchCommand> = (state = initialState, command) => {
   switch (command.type) {
     case INITIALISE_BENCH_COMMAND:
-      return [...command.payload.state.pieces];
+      return [...command.payload.pieces];
     case ADD_BENCH_PIECE_COMMAND: {
       const { piece, slot } = command.payload;
       const newState = [...state];
