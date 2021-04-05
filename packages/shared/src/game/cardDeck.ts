@@ -47,18 +47,18 @@ export class CardDeck {
         this.shuffle();
     }
 
-    public reroll(input: Card[], level: number, count: number) {
+    public reroll(input: Card[], level: number, count: number, excludeCards: number[] = []) {
         this.addCards(input);
         this.shuffle();
 
-        return this.take(level, count);
+        return this.take(level, count, excludeCards);
     }
 
-    public take(level: number, count: number) {
+    public take(level: number, count: number, excludeCards: number[] = []) {
         const output: Card[] = [];
 
         for (let i = 0; i < count; i++) {
-            output.push(this.takeCard(level));
+            output.push(this.takeCard(level, excludeCards));
         }
 
         return output;
@@ -102,7 +102,7 @@ export class CardDeck {
         return this.deck[cost - 1];
     }
 
-    private takeCard(level: number) {
+    private takeCard(level: number, excludeDefinitions: number[]) {
         // start at 5 and work downwards
         for (let cost = CARD_COST_CHANCES.length; cost >= 1; cost--) {
             const roll = canTakeCardAtCost(level, cost);
@@ -111,10 +111,14 @@ export class CardDeck {
                 continue;
             }
 
-            const card = this.getDeckForCost(cost).pop();
+            // try 3 times to get a non-excluded card
+            // todo rethink this
+            for (let i = 0; i < 3; i++) {
+                const card = this.getDeckForCost(cost).pop();
 
-            if (card) {
-                return card;
+                if (card && !excludeDefinitions.includes(card.definitionId)) {
+                    return card;
+                }
             }
         }
 

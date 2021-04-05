@@ -23,7 +23,7 @@ import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
-import { getAllPieces } from "./pieceSelectors";
+import { getAllPieces, getBenchPiecesByStage, getBoardPiecesByStage } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
 import { GameEvent } from "../store/events";
 import { GameEvents } from "../store";
@@ -203,9 +203,16 @@ export abstract class Player {
             return;
         }
 
-        const cards = this.store.getState().playerInfo.cards;
+        const state = this.store.getState();
 
-        const newCards = this.deck.reroll(cards, this.getLevel(), 5);
+        const cards = state.playerInfo.cards;
+
+        const threeStarBoardPieces = getBoardPiecesByStage(state, 2);
+        const threeStarBenchPieces = getBenchPiecesByStage(state, 2);
+
+        const excludeIds = [ ...threeStarBoardPieces, ...threeStarBenchPieces ].map(p => p.definitionId);
+
+        const newCards = this.deck.reroll(cards, this.getLevel(), 5, excludeIds);
         this.store.dispatch(PlayerInfoCommands.updateCardsCommand(newCards));
     }
 
