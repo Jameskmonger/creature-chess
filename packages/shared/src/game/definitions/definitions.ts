@@ -22,7 +22,7 @@ export const definitions: CreatureDefinition[] = [
     createDefinition(9, "Bamboon", CreatureType.Wood, DefinitionClass.VALIANT, 2),
     createDefinition(10, "Chenipode", CreatureType.Earth, DefinitionClass.CUNNING, 2),
     createDefinition(11, "Bolt", CreatureType.Metal, DefinitionClass.VALIANT, 2),
-    createDefinition(12, "Weavifly", CreatureType.Metal, DefinitionClass.ARCANE, 2),
+    createDefinition(12, "Weavifly", CreatureType.Metal, DefinitionClass.ARCANE, 1),
     createDefinition(13, "Cardiling", CreatureType.Fire, DefinitionClass.CUNNING, 2),
     createDefinition(14, "Agnite", CreatureType.Fire, DefinitionClass.VALIANT, 2),
     createDefinition(15, "Elowind", CreatureType.Water, DefinitionClass.ARCANE, 2),
@@ -42,7 +42,7 @@ export const definitions: CreatureDefinition[] = [
     createDefinition(29, "Aardart", CreatureType.Earth, DefinitionClass.CUNNING, 4),
     createDefinition(30, "Hubursa", CreatureType.Earth, DefinitionClass.ARCANE, 4),
     createDefinition(31, "Sampsack", CreatureType.Metal, DefinitionClass.VALIANT, 4),
-    createDefinition(32, "Cairfrey", CreatureType.Metal, DefinitionClass.ARCANE, 4),
+    createDefinition(32, "Cairfrey", CreatureType.Metal, DefinitionClass.ARCANE, 3),
     createDefinition(33, "Prophetoise", CreatureType.Fire, DefinitionClass.ARCANE, 4),
     createDefinition(34, "Tikorch", CreatureType.Fire, DefinitionClass.CUNNING, 4),
     createDefinition(35, "Nudimind", CreatureType.Water, DefinitionClass.ARCANE, 4),
@@ -56,5 +56,6 @@ export const definitions: CreatureDefinition[] = [
     createDefinition(43, "Agnigon", CreatureType.Fire, DefinitionClass.VALIANT, 5),
     createDefinition(44, "Cardinale", CreatureType.Fire, DefinitionClass.CUNNING, 5),
     createDefinition(45, "Nudikill", CreatureType.Water, DefinitionClass.VALIANT, 5),
-    createDefinition(46, "Eaglace", CreatureType.Water, DefinitionClass.CUNNING, 5)
+    createDefinition(46, "Eaglace", CreatureType.Water, DefinitionClass.CUNNING, 5),
+    createDefinition(47, "Kirkanon", CreatureType.Metal, DefinitionClass.ARCANE, 5)
 ];
