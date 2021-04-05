@@ -1,16 +1,15 @@
 import * as React from "react";
 import { DragObjectWithType, useDrag } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
-import { PieceModel as PieceComponent, GamePhase, PieceModel } from "@creature-chess/models";
+import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../ui/display/animation";
 import { Projectile } from "../../../../ui/display/projectile";
 import { selectPiece } from "../actions";
 import { PieceImage } from "./components/pieceImage";
-import { StageIndicator } from "./components/stageIndicator";
-import { Healthbar } from "./components/healthbar";
 import { getUserId } from "../../../../menu/auth/store/selectors";
+import { PieceMeta } from "./pieceMeta";
 
 const dyingAnimation = "dying";
 
@@ -32,9 +31,9 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const { id, draggable, animate, selected } = props;
     const dispatch = useDispatch();
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
-    const [oldPiece, setOldPiece] = React.useState<PieceComponent | null>(null);
+    const [oldPiece, setOldPiece] = React.useState<PieceModel | null>(null);
     const localPlayerId = useSelector<AppState, string>(getUserId);
-    const piece = useSelector<AppState, PieceComponent>(state => getPiece(state, id));
+    const piece = useSelector<AppState, PieceModel>(state => getPiece(state, id));
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 
     const [{ }, drag] = useDrag<PieceDragObject, void, { }>({
@@ -48,7 +47,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
         setCurrentAnimations(oldAnimations => oldAnimations.filter(a => a.name !== animationName && !a.name.startsWith("move-")));
     };
 
-    const runAnimations = (newPiece: PieceComponent) => {
+    const runAnimations = (newPiece: PieceModel) => {
         if (!animate) {
             return;
         }
@@ -111,11 +110,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
             onClick={onClick}
             onAnimationEnd={onAnimationEnd}
         >
-            <div className="piece-meta">
-                <StageIndicator pieceId={id} />
-
-                <Healthbar pieceId={id} vertical />
-            </div>
+            <PieceMeta id={id} />
 
             <PieceImage pieceId={id} />
 

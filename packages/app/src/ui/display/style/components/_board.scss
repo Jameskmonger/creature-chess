@@ -73,6 +73,41 @@
     }
 }
 
+.piece-meta-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 4%;
+
+    .piece-meta {
+        display: flex;
+        flex-direction: column;
+        width: 20%;
+    }
+
+    .piece-meta-top {
+        flex: 1;
+        height: 25%;
+        box-sizing: border-box;
+        padding: 0.25em 0;
+        text-align: center;
+
+        .piece-stage {
+            height: 100%;
+        }
+
+        // stylelint-disable-next-line
+        img {
+            height: 100%;
+        }
+    }
+}
+
 .piece {
     position: relative;
     z-index: $piece-z-index;
@@ -89,16 +124,6 @@
         bottom: 0;
         left: 14%;
         width: 80%;
-    }
-
-    .piece-meta {
-        position: absolute;
-        top: 4%;
-        left: 4%;
-        display: flex;
-        flex-direction: column;
-        width: 20%;
-        height: 92%;
     }
 
     $attack-duration: 200ms;
@@ -141,7 +166,10 @@
 
             100% {
                 top: calc(((100% * var(--attackDistance) * var(--attackYDirection)) + 50%) - (#{$projectile-size} / 2));
-                left: calc(((100% * var(--attackDistance) * var(--attackXDirection)) + 50%) - (#{$projectile-size} / 2));
+                // stylelint-disable-next-line
+                left: calc(
+                    ((100% * var(--attackDistance) * var(--attackXDirection)) + 50%) - (#{$projectile-size} / 2)
+                );
             }
         }
         position: absolute;
