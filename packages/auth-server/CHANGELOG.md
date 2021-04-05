@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Jameskmonger/creature-chess/compare/v0.2.25...v0.3.0) (2021-04-05)
+
+**Note:** Version bump only for package @creature-chess/auth-server
+
+
+
+
+
 ## [0.2.25](https://github.com/Jameskmonger/creature-chess/compare/v0.2.24...v0.2.25) (2021-04-05)
 
 **Note:** Version bump only for package @creature-chess/auth-server
