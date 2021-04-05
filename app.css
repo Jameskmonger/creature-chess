@@ -175,6 +175,8 @@ table {
   text-transform: uppercase; }
   .player-profile-title.developer-001 {
     color: #79ffe0; }
+  .player-profile-title.contributor {
+    color: #e89292; }
   .player-profile-title.hall-of-fame-001 {
     color: #f7ee85; }
 
