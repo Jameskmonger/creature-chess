@@ -3,6 +3,13 @@
     font-size: 1rem;
     color: #fff;
 
+    .piece-type {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        margin-right: 0.5rem;
+    }
+
     .section {
         margin-bottom: 0.4rem;
 

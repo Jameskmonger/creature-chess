@@ -1,5 +1,7 @@
+import { CreatureType } from "packages/models/lib";
 import * as React from "react";
 import { Footer } from "../../ui/display/footer";
+import { TypeIndicator } from "./board/piece/components/TypeIndicator";
 
 const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = false }) => {
     return (
@@ -26,11 +28,11 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = 
                 </ul>
                 <h3 className="subheader">Types</h3>
                 <ul>
-                    <li><span className="list-header">Earth:</span> Overcomes water. Immunity to fire.</li>
-                    <li><span className="list-header">Metal:</span> Overcomes wood. Immunity to earth.</li>
-                    <li><span className="list-header">Water:</span> Overcomes fire. Immunity to metal.</li>
-                    <li><span className="list-header">Wood:</span> Overcomes earth. Immunity to water.</li>
-                    <li><span className="list-header">Fire:</span> Overcomes metal. Immunity to wood.</li>
+                    <li><span className="list-header"><TypeIndicator type={CreatureType.Earth} /> Earth:</span> Overcomes water.</li>
+                    <li><span className="list-header"><TypeIndicator type={CreatureType.Metal} />Metal:</span> Overcomes wood.</li>
+                    <li><span className="list-header"><TypeIndicator type={CreatureType.Water} />Water:</span> Overcomes fire.</li>
+                    <li><span className="list-header"><TypeIndicator type={CreatureType.Wood} />Wood:</span> Overcomes earth.</li>
+                    <li><span className="list-header"><TypeIndicator type={CreatureType.Fire} />Fire:</span> Overcomes metal.</li>
                 </ul>
             </div>
             <div className="section">
