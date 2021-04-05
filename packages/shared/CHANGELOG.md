@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Jameskmonger/creature-chess/compare/v0.3.0...v0.3.1) (2021-04-05)
+
+
+### Features
+
+* rework attack bonus [trial] ([65c2e7e](https://github.com/Jameskmonger/creature-chess/commit/65c2e7e530d8287fd59c14c722a696d301b03c73))
+
+
+
+
+
 # [0.3.0](https://github.com/Jameskmonger/creature-chess/compare/v0.2.25...v0.3.0) (2021-04-05)
 
 

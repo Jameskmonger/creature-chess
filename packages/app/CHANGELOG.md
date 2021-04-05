@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Jameskmonger/creature-chess/compare/v0.3.0...v0.3.1) (2021-04-05)
+
+
+### Features
+
+* add type indicator to piece ([00dea8d](https://github.com/Jameskmonger/creature-chess/commit/00dea8dcfb501fd9a2550a765b72093d6b27baf7))
+* add TypeIndicator to help page ([03bd722](https://github.com/Jameskmonger/creature-chess/commit/03bd72236ba281b85b18ec16fad8a2a6adfa8683))
+* change bench colour ([b6b8c38](https://github.com/Jameskmonger/creature-chess/commit/b6b8c38920fb752c4aca5720b06288a176664553))
+* show TypeIndicator on cards ([486f9d8](https://github.com/Jameskmonger/creature-chess/commit/486f9d88e50684968257ffed3541cd674b548f60))
+* use stars to indicate stage ([6f7a0b6](https://github.com/Jameskmonger/creature-chess/commit/6f7a0b6cfb1aef6c02ba013575eb73307aa994ab))
+
+
+
+
+
 # [0.3.0](https://github.com/Jameskmonger/creature-chess/compare/v0.2.25...v0.3.0) (2021-04-05)
 
 
