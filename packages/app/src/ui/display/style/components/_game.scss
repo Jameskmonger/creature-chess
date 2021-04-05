@@ -137,6 +137,27 @@ body {
         }
     }
 
+    .match-rewards {
+        .money {
+            // stylelint-disable-next-line
+            .highlight {
+                font-weight: 700;
+                color: #ffcd75;
+            }
+
+            // stylelint-disable-next-line
+            h3 {
+                margin-bottom: 1rem;
+                font-size: 1.2em;
+            }
+
+            // stylelint-disable-next-line
+            ul {
+                font-size: 0.9em;
+            }
+        }
+    }
+
     .victory {
         position: absolute;
         left: 0;

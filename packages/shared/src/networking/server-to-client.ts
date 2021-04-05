@@ -57,7 +57,7 @@ type PlayersResurrectedPacket = {
 type MatchRewardsPacket = {
   damage: number;
   justDied: boolean;
-  rewardMoney: number;
+  rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
 };
 
 type BenchUpdatePacket = {

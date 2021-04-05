@@ -35,13 +35,13 @@ export type PlayerMatchRewardsEvent = ({
     payload: {
         damage: number;
         justDied: boolean;
-        rewardMoney: number;
+        rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
     }
 });
 export const playerMatchRewardsEvent = (payload: {
     damage: number;
     justDied: boolean;
-    rewardMoney: number;
+    rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
 }): PlayerMatchRewardsEvent => ({
     type: PLAYER_MATCH_REWARDS_EVENT,
     payload

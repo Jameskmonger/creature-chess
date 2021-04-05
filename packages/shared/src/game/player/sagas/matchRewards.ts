@@ -33,7 +33,7 @@ const getMoneyForMatch = (currentMoney: number, streak: number, win: boolean) =>
 
     const total = base + winBonus + streakBonus + interest;
 
-    return total;
+    return { total, base, winBonus, streakBonus, interest };
 };
 
 const updateStreak = function*(win: boolean) {
@@ -77,12 +77,12 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameS
                 const currentMoney: number = yield select(({ playerInfo: { money } }: TState) => money);
                 const streak: number = yield select(({ playerInfo: { streak: { amount } } }: TState) => amount);
 
-                const rewardMoney = getMoneyForMatch(currentMoney, streak, win);
+                const { total, base, winBonus, streakBonus, interest } = getMoneyForMatch(currentMoney, streak, win);
 
                 yield put(playerMatchRewardsEvent({
                     damage,
                     justDied,
-                    rewardMoney
+                    rewardMoney: { total, base, winBonus, streakBonus, interest }
                 }));
 
                 // wait for preparing phase to give money
@@ -91,7 +91,7 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameS
                 yield put(playerMatchRewardsEvent(null));
 
                 // todo make addMoneyCommand
-                yield put(updateMoneyCommand(currentMoney + rewardMoney));
+                yield put(updateMoneyCommand(currentMoney + total));
                 yield put(addXpCommand(1));
             }
         )

@@ -16,7 +16,13 @@ export type HasPlayerInfo = { playerInfo: PlayerInfoState };
 export type PlayerMatchRewards = {
     damage: number;
     justDied: boolean;
-    rewardMoney: number;
+    rewardMoney: {
+        total: number,
+        base: number,
+        winBonus: number,
+        streakBonus: number,
+        interest: number
+    };
 }
 
 export interface PlayerInfoState {

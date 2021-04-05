@@ -11,11 +11,17 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
         return null;
     }
 
-    const { damage, justDied, rewardMoney } = matchRewards;
+    const {
+        damage,
+        justDied,
+        rewardMoney: {
+            total, base, winBonus, streakBonus, interest
+        }
+    } = matchRewards;
 
     if (justDied) {
         return (
-            <div className="victory">
+            <div className="victory match-rewards">
                 <h2 className="game-over">You Died</h2>
                 <p><span className="winner">{damage}</span> health lost</p>
 
@@ -30,18 +36,38 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 
     if (damage === 0) {
         return (
-            <div className="victory">
+            <div className="victory match-rewards">
                 <h2 className="game-over">Round Won</h2>
-                <p><span className="winner">${rewardMoney}</span> gained</p>
-            </div >
+
+                <div className="money">
+                    <h3><span className="highlight">${total}</span> gained</h3>
+
+                    <ul>
+                        <li>Base: <span className="highlight">${base}</span></li>
+                        <li>Win Bonus: <span className="highlight">${winBonus}</span></li>
+                        <li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
+                        <li>Interest (10%): <span className="highlight">${interest}</span></li>
+                    </ul>
+                </div>
+            </div>
         );
     }
 
     return (
-        <div className="victory">
+        <div className="victory match-rewards">
             <h2 className="game-over">Round Lost</h2>
-            <p><span className="winner">${rewardMoney}</span> gained</p>
             <p><span className="winner">{damage}</span> health lost</p>
+
+            <div className="money">
+                <h3><span className="highlight">${total}</span> gained</h3>
+
+                <ul>
+                    <li>Base: <span className="highlight">${base}</span></li>
+                    <li>Win Bonus: <span className="highlight">${winBonus}</span></li>
+                    <li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
+                    <li>Interest (10%): <span className="highlight">${interest}</span></li>
+                </ul>
+            </div>
         </div >
     );
 };
