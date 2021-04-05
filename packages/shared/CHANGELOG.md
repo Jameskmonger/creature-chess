@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.25](https://github.com/Jameskmonger/creature-chess/compare/v0.2.24...v0.2.25) (2021-04-05)
+
+
+### Bug Fixes
+
+* add logging to buyCard/buyXp, send updates on mismatch ([fa6a282](https://github.com/Jameskmonger/creature-chess/commit/fa6a282f3a5c63c2941d903a512e919fd553222c))
+
+
+
+
+
 ## [0.2.24](https://github.com/Jameskmonger/creature-chess/compare/v0.2.23...v0.2.24) (2021-04-04)
 
 **Note:** Version bump only for package @creature-chess/shared
