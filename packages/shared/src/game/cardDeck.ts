@@ -116,8 +116,12 @@ export class CardDeck {
             for (let i = 0; i < 3; i++) {
                 const card = this.getDeckForCost(cost).pop();
 
-                if (card && !excludeDefinitions.includes(card.definitionId)) {
-                    return card;
+                if (card) {
+                    if (!excludeDefinitions.includes(card.definitionId)) {
+                        return card;
+                    }
+
+                    this.addCards([ card ]);
                 }
             }
         }
