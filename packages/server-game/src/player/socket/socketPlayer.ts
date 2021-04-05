@@ -3,12 +3,14 @@ import { OutgoingPacketRegistry, Player, ServerToClientMenuPacketAcknowledgement
 import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
+import { logger } from "../../log";
 
 export class SocketPlayer extends Player {
     public readonly isConnection = true;
 
     constructor(socket: Socket, id: string, name: string) {
-        super(id, name);
+        // todo fix typing
+        super({ logger: logger } as any, id, name);
 
         this.sagaMiddleware.run(incomingNetworking);
         this.sagaMiddleware.run(outgoingNetworking(id, this.getMatch));

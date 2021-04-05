@@ -4,6 +4,7 @@ import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosit
 import uuid = require("uuid");
 import delay from "delay";
 import { shouldBuyXp } from "./shop/shouldBuyXp";
+import { logger } from "../../log";
 
 const PREFERRED_COLUMN_ORDERS = {
     8: [
@@ -48,7 +49,8 @@ export class BotPlayer extends Player {
     private preferredColumnOrder: number[];
 
     constructor(id: string, name: string) {
-        super(id, name);
+        // todo fix typing
+        super({ logger: logger } as any, id, name);
 
         this.sagaMiddleware.run(this.botLogicSaga());
 

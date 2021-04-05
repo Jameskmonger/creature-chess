@@ -12,6 +12,7 @@ import {
     PlayerActionSagas
 } from "./sagas";
 import { gameReducer, GameState } from "../store";
+import { Logger } from "winston";
 
 export interface PlayerState {
     board: BoardState;
@@ -22,11 +23,11 @@ export interface PlayerState {
 
 export type PlayerStore = Store<PlayerState>;
 
-export const createPlayerStore = (playerId: string): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
+export const createPlayerStore = (logger: Logger, playerId: string): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([
-            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(new DefinitionProvider(), playerId)),
-            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>()),
+            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(logger, new DefinitionProvider(), playerId)),
+            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(logger)),
             yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(playerId)),
             yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<PlayerState>()),
             yield fork(PlayerActionSagas.toggleShopLockPlayerActionSagaFactory<PlayerState>()),

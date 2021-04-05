@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import { take, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
 import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
@@ -43,7 +44,7 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
     return null;
 };
 
-export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(definitionProvider: DefinitionProvider, playerId: string) => {
+export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(logger: Logger, definitionProvider: DefinitionProvider, playerId: string) => {
     return function*() {
         while (true) {
             const { payload: { index } }: BuyCardAction = yield take(BUY_CARD_ACTION);
@@ -53,14 +54,21 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(defin
             const card = state.playerInfo.cards[index];
             const money = state.playerInfo.money;
 
-            // card doesn't exist or player can't afford
             if (!card) {
-                log(`attempted to buy null/undefined card`);
+                logger.info(`Player attempted to buy null/undefined card`);
+
+                yield put(updateMoneyCommand(money));
+                yield put(updateCardsCommand(state.playerInfo.cards));
+
                 return;
             }
 
             if (money < card.cost) {
-                log(`attempted to buy card costing $${card.cost} but only had $${money}`);
+                logger.info(`Player attempted to buy card costing $${card.cost} but only had $${money}`);
+
+                yield put(updateMoneyCommand(money));
+                yield put(updateCardsCommand(state.playerInfo.cards));
+
                 return;
             }
 
@@ -68,7 +76,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(defin
 
             // no valid slots
             if (destination === null) {
-                log(`attempted to buy a card but has no available destination`);
+                logger.info(`Player attempted to buy a card but has no available destination`);
                 return;
             }
 

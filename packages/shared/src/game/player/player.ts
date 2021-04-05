@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import { EventEmitter } from "events";
 import { SagaMiddleware } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
@@ -55,11 +56,11 @@ export abstract class Player {
 
     private deck: CardDeck;
 
-    constructor(id: string, name: string) {
+    constructor(dependencies: { logger: Logger }, id: string, name: string) {
         this.id = id;
         this.name = name;
 
-        const { store, sagaMiddleware } = createPlayerStore(this.id);
+        const { store, sagaMiddleware } = createPlayerStore(dependencies.logger, this.id);
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 

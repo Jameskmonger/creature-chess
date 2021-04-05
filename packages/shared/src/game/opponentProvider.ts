@@ -44,10 +44,6 @@ export class HeadToHeadOpponentProvider implements IOpponentProvider {
             const playerA = remainingPlayerIds[0]
             const playerB = remainingPlayerIds[rotation % remainingPlayerIds.length];
 
-            if (playerA === playerB) {
-                console.log(JSON.stringify({playerA, rotation, remainingPlayers: remainingPlayerIds}, null, 4))
-            }
-
             remainingPlayerIds = remainingPlayerIds.filter(id => id !== playerA && id !== playerB);
 
             // dice roll
@@ -133,10 +129,6 @@ export class RoundRobinOpponentProvider implements IOpponentProvider {
 
         const output = this.players.map((player, index) => {
             const opponent = this.players[(index + this.rotation) % this.players.length];
-
-            if (!opponent) {
-                console.log("BIG WARNING! NO OPPONENT FOUND!", index, this.rotation, this.players.length, this.remainingRotations.length);
-            }
 
             return { homeId: player.id, awayId: opponent.id, awayIsClone: true };
         });
