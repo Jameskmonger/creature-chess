@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.2](https://github.com/Jameskmonger/creature-chess/compare/v0.3.1...v0.3.2) (2021-04-05)
+
+
+### Features
+
+* break down money on match reward screen ([2752b75](https://github.com/Jameskmonger/creature-chess/commit/2752b754b931fb04bc76dd43841124317f747717)), closes [#352](https://github.com/Jameskmonger/creature-chess/issues/352)
+* exclude cards player has level 3 for already ([e1a0c90](https://github.com/Jameskmonger/creature-chess/commit/e1a0c90ad539fbdcf3a20df5b9d8cc15e0d11c72)), closes [#364](https://github.com/Jameskmonger/creature-chess/issues/364)
+
+
+
+
+
 ## [0.3.1](https://github.com/Jameskmonger/creature-chess/compare/v0.3.0...v0.3.1) (2021-04-05)
 
 
