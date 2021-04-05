@@ -7,6 +7,7 @@
 
     &.vertical {
         position: relative;
+        border-top: 1px solid #555;
         border-right: 1px solid $healthbar-background;
         border-bottom: 1px solid #555;
         border-left: 1px solid $healthbar-background;

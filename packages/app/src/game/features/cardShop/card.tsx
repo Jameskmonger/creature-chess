@@ -1,6 +1,7 @@
 import * as React from "react";
 import { DefinitionProvider } from "@creature-chess/shared";
 import { CreatureImage } from "../../../ui/display";
+import { TypeIndicator } from "../board/piece/components/TypeIndicator";
 
 interface CardProps {
     definitionId: number;
@@ -31,7 +32,7 @@ const Card: React.FunctionComponent<CardProps> = ({ definitionId, buyable, onCli
                             <div className="card-meta">
                                 <span className="card-class">{creature.class}</span>
                                 <div className="divider" />
-                                <span className="card-type">{creature.type}</span>
+                                <TypeIndicator type={creature.type} /> <span className="card-type">{creature.type}</span>
                             </div>
                         </>
                     )
@@ -42,7 +43,7 @@ const Card: React.FunctionComponent<CardProps> = ({ definitionId, buyable, onCli
                         <div className="card-content-group">
                             <h2 className="card-name">{creature.name}</h2>
                             <span className="card-class">{creature.class}</span>
-                            <span className="card-type">{creature.type}</span>
+                            <TypeIndicator type={creature.type} /> <span className="card-type">{creature.type}</span>
                         </div>
                     )
                 }

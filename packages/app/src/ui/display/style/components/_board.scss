@@ -87,12 +87,30 @@
     .piece-meta {
         display: flex;
         flex-direction: column;
-        width: 20%;
+    }
+
+    @media only screen and (max-width: 799px) {
+        .piece-meta {
+            width: 30%;
+        }
+
+        .piece-meta-top {
+            height: 30%;
+        }
+    }
+
+    @media only screen and (min-width: 800px) {
+        .piece-meta {
+            width: 22%;
+        }
+
+        .piece-meta-top {
+            height: 22%;
+        }
     }
 
     .piece-meta-top {
         flex: 1;
-        height: 20%;
         box-sizing: border-box;
         text-align: center;
 
