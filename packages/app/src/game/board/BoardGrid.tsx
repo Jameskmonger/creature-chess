@@ -21,7 +21,7 @@ const BoardGrid: React.FunctionComponent<{ showOpponentHalf: boolean, width: num
                 tiles.push(<UndroppableTile key={`tile-${x}`} className={getClassName(x, y)} />);
             }
 
-            rows.push(<div className={`tile-row style-default`}>{tiles}</div>);
+            rows.push(<div key={`row-${y}`} className={`tile-row style-default`}>{tiles}</div>);
         }
     }
 
@@ -45,7 +45,7 @@ const BoardGrid: React.FunctionComponent<{ showOpponentHalf: boolean, width: num
             );
         }
 
-        rows.push(<div className={`tile-row style-default`}>{tiles}</div>);
+        rows.push(<div key={`row-${y}`} className={`tile-row style-default`}>{tiles}</div>);
     }
 
     return <>{rows}</>;

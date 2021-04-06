@@ -4,7 +4,7 @@ import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { Healthbar } from "./components/healthbar";
-import { StageIndicator } from "./components/stageIndicator";
+import { StageIndicator } from "./components/StageIndicator";
 import { TypeIndicator } from "./components/TypeIndicator";
 
 const PieceMeta: React.FunctionComponent<{ id: string }> = ({ id }) => {
