@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.4](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.4) (2021-04-06)
+
+
+### Bug Fixes
+
+* use correct url for creature stage stars ([202d2bb](https://github.com/Jameskmonger/creature-chess/commit/202d2bbd0410aef78172a430253c4f9a7fb61bed))
+
+
+
+
+
 ## [0.3.3](https://github.com/Jameskmonger/creature-chess/compare/v0.3.2...v0.3.3) (2021-04-06)
 
 
