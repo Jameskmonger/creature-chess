@@ -1050,24 +1050,35 @@ body {
 
 .lobby-info {
   display: flex;
+  flex-direction: column;
   padding: 1rem;
   margin-top: 1rem;
   text-align: center;
-  background: #566c86; }
+  background: #566c86;
+  /* stylelint-disable-next-line */
+  /* stylelint-disable-next-line */ }
+  .lobby-info p {
+    margin-bottom: 0.5rem; }
+  .lobby-info strong {
+    font-style: italic;
+    font-weight: 700; }
   .lobby-info .players {
-    flex: 1 0 0; }
+    flex: 1 0 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; }
   .lobby-info .player {
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    width: 46%; }
     .lobby-info .player .name {
       margin-bottom: 0.25rem; }
     .lobby-info .player.bot {
       font-style: italic;
       color: #d0d0d0; }
 
-.text {
-  flex: 1 0 0;
-  margin-left: 1em; }
+.hero {
+  flex: 1 0 0; }
 
 .lobby-id {
   margin-bottom: 1em;
