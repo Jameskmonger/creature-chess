@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/Jameskmonger/creature-chess/compare/v0.3.2...v0.3.3) (2021-04-06)
+
+
+### Bug Fixes
+
+* put excluded cards back on deck ([bd6ea48](https://github.com/Jameskmonger/creature-chess/commit/bd6ea48c46c355042d0f66dbffc116afb5fd9775)), closes [#365](https://github.com/Jameskmonger/creature-chess/issues/365)
+
+
+### Features
+
+* make bots place pieces in a sensible order ([493176c](https://github.com/Jameskmonger/creature-chess/commit/493176cb328d334a89343aa43b3ae9b1dc511166)), closes [#346](https://github.com/Jameskmonger/creature-chess/issues/346)
+
+
+
+
+
 ## [0.3.2](https://github.com/Jameskmonger/creature-chess/compare/v0.3.1...v0.3.2) (2021-04-05)
 
 
