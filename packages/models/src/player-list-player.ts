@@ -48,4 +48,5 @@ export interface PlayerListPlayer {
     battle: PlayerBattle;
     roundDiedAt: number | null;
     status: PlayerStatus;
+    picture: number;
 }

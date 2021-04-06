@@ -118,9 +118,9 @@ const BOT_ACTION_TIME_MS = 400;
 export class BotPlayer extends Player {
     public readonly isBot = true;
 
-    constructor(id: string, name: string) {
+    constructor(id: string, name: string, picture: number) {
         // todo fix typing
-        super({ logger: logger } as any, id, name);
+        super({ logger: logger } as any, id, name, picture);
 
         this.sagaMiddleware.run(this.botLogicSaga());
     }

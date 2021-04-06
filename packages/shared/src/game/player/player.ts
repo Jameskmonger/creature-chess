@@ -42,6 +42,7 @@ export interface PlayerMatchResults {
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
+    public readonly picture: number;
 
     protected match: Match = null;
     protected definitionProvider: DefinitionProvider;
@@ -56,9 +57,10 @@ export abstract class Player {
 
     private deck: CardDeck;
 
-    constructor(dependencies: { logger: Logger }, id: string, name: string) {
+    constructor(dependencies: { logger: Logger }, id: string, name: string, picture: number) {
         this.id = id;
         this.name = name;
+        this.picture = picture;
 
         const { store, sagaMiddleware } = createPlayerStore(dependencies.logger, this.id);
         this.store = store;

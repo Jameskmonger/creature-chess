@@ -6,17 +6,37 @@ $player-list-gutter-size: 0.4em;
 }
 
 .player-list-item {
+    display: flex;
+    flex-direction: row;
     width: 100%;
     box-sizing: border-box;
     padding: 0.4rem;
     background: $player-list-background;
 
     &.ready {
-        border-left: 5px solid $ready-indicator;
+        .details {
+            border-left: 5px solid $ready-indicator;
+        }
     }
 
     &.not-ready {
-        border-left: 5px solid $not-ready-indicator;
+        .details {
+            border-left: 5px solid $not-ready-indicator;
+        }
+    }
+
+    .details {
+        flex: 1;
+        padding-left: 0.5em;
+    }
+
+    .picture {
+        margin-right: 0.5em;
+
+        // stylelint-disable-next-line
+        img {
+            height: 48px;
+        }
     }
 
     &.quit {

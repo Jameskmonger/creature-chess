@@ -1,4 +1,5 @@
 import io = require("socket.io");
+import shuffle = require("lodash.shuffle");
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { SocketPlayer, BotPlayer } from "../player";
@@ -72,14 +73,34 @@ export class Matchmaking {
         return lobbies.find(g => g.getMemberById(id)) || null;
     }
 
+    private getPictures(): number[] {
+        const pictures: number[] = [];
+
+        // todo tie this into definition provider
+        for (let i = 1; i <= 46; i++) {
+            pictures.push(i);
+        }
+
+        return shuffle(pictures);
+    }
+
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
+        const pictures = this.getPictures();
+
         const players = members.map(m => {
             if (m.type === LobbyMemberType.BOT) {
-                return new BotPlayer(m.id, m.name);
+                const picture = pictures.pop();
+
+                return new BotPlayer(m.id, m.name, picture);
             }
 
             if (m.type === LobbyMemberType.PLAYER) {
-                return new SocketPlayer(m.net.socket, m.id, m.name);
+                // todo put this into db
+                const picture = m.id === "276389458988761607"
+                    ? 47
+                    : pictures.pop();
+
+                return new SocketPlayer(m.net.socket, m.id, m.name, picture);
             }
         });
 

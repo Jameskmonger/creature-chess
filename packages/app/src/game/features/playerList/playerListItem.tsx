@@ -1,11 +1,12 @@
 import * as React from "react";
-import { GamePhase, PlayerListPlayer, PlayerStatus, StreakType } from "@creature-chess/models";
+import { GamePhase, PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { ProgressBar } from "../../../ui/display";
 import { PlayerName } from "./playerName";
 import { PlayerTitle } from "./playerTitle";
 import { BattleInfo } from "./battleInfo";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../store";
+import { PlayerPicture } from "./playerPicture";
 
 interface Props {
     playerId: string;
@@ -52,39 +53,44 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
     const readyClassName = props.ready ? "ready" : "not-ready";
 
-    const className = `player-list-item ${props.isLocal ? "local" : ""} ${props.isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : ""}`;
+    const className = `player-list-item ${props.isLocal ? "local" : ""} ${props.isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
     return (
         <div className={className}>
-            <div className="row">
-                <div className="row-half name-container">
-                    <span className="name">
-                        <PlayerName playerId={props.playerId} />
-                    </span>
-
-                    <PlayerTitle playerId={props.playerId} />
-                </div>
-
-                <div className="row-half">
-                    <ProgressBar
-                        className="healthbar player-health"
-                        current={props.player.health}
-                        max={100}
-                        renderContents={current => current.toString()}
-                    />
-                </div>
+            <div className="picture">
+                <PlayerPicture playerId={props.playerId} />
             </div>
-            <div className="row">
-                <div className="row-half">
-                    <div className="badges">
-                        <span className="badge money">${props.money}</span>
-                        <span className="badge">Lv {props.level}</span>
+            <div className="details">
+                <div className="row">
+                    <div className="row-half name-container">
+                        <span className="name">
+                            <PlayerName playerId={props.playerId} />
+                        </span>
+
+                        <PlayerTitle playerId={props.playerId} />
+                    </div>
+
+                    <div className="row-half">
+                        <ProgressBar
+                            className="healthbar player-health"
+                            current={props.player.health}
+                            max={100}
+                            renderContents={current => current.toString()}
+                        />
                     </div>
                 </div>
+                <div className="row">
+                    <div className="row-half">
+                        <div className="badges">
+                            <span className="badge money">${props.money}</span>
+                            <span className="badge">Lv {props.level}</span>
+                        </div>
+                    </div>
 
-                <div className="row-half">
-                    <BattleInfo playerId={props.playerId} />
-                    <StreakIndicator type={props.streakType} amount={props.streakAmount} />
+                    <div className="row-half">
+                        <BattleInfo playerId={props.playerId} />
+                        <StreakIndicator type={props.streakType} amount={props.streakAmount} />
+                    </div>
                 </div>
             </div>
         </div>

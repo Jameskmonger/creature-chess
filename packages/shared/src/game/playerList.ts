@@ -92,7 +92,8 @@ export class PlayerList {
                 battle: player.getBattle(),
                 roundDiedAt: player.getRoundDiedAt(),
                 status: player.getStatus(),
-                title: PLAYER_TITLES[player.id] || null
+                title: PLAYER_TITLES[player.id] || null,
+                picture: player.picture
             };
         })
     };

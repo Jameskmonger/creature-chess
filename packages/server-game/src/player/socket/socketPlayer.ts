@@ -8,9 +8,9 @@ import { logger } from "../../log";
 export class SocketPlayer extends Player {
     public readonly isConnection = true;
 
-    constructor(socket: Socket, id: string, name: string) {
+    constructor(socket: Socket, id: string, name: string, picture: number) {
         // todo fix typing
-        super({ logger: logger } as any, id, name);
+        super({ logger: logger } as any, id, name, picture);
 
         this.sagaMiddleware.run(incomingNetworking);
         this.sagaMiddleware.run(outgoingNetworking(id, this.getMatch));
