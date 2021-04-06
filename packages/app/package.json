@@ -48,6 +48,7 @@
     "react-dnd-touch-backend": "^10.0.2",
     "react-dom": "^16.8.4",
     "react-media": "^1.9.2",
+    "react-modal": "^3.12.1",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.1",
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@types/enzyme-adapter-react-16": "^1.0.5",
+    "@types/react-modal": "^3.12.0",
     "awesome-typescript-loader": "^5.2.1",
     "circular-dependency-plugin": "^5.2.2",
     "cname-webpack-plugin": "^2.0.1",

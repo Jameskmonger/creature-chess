@@ -2,6 +2,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { PlayerMatchRewards } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
+import { BoardOverlay } from "./boardOverlay";
 
 const MatchRewardsOverlay: React.FunctionComponent = () => {
     const matchRewards = useSelector<AppState, PlayerMatchRewards>(state => state.playerInfo.matchRewards);
@@ -21,23 +22,48 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 
     if (justDied) {
         return (
-            <div className="victory match-rewards">
-                <h2 className="game-over">You Died</h2>
-                <p><span className="winner">{damage}</span> health lost</p>
+            <BoardOverlay>
+                <div className="match-rewards-content">
+                    <h2>You Died</h2>
 
-                <div className="discord-link">
-                    <p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
+                    <p className="health"><span className="highlight">{damage}</span> health lost</p>
 
-                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/YNyTNuw.png" className="discord-button" /></a>
+                    <div className="discord-link">
+                        <p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
+
+                        <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/YNyTNuw.png" className="discord-button" /></a>
+                    </div>
                 </div>
-            </div >
+            </BoardOverlay>
         );
     }
 
     if (damage === 0) {
         return (
-            <div className="victory match-rewards">
-                <h2 className="game-over">Round Won</h2>
+            <BoardOverlay>
+                <div className="match-rewards-content">
+                    <h2>Round Won</h2>
+
+                    <div className="money">
+                        <h3><span className="highlight">${total}</span> gained</h3>
+
+                        <ul>
+                            <li>Base: <span className="highlight">${base}</span></li>
+                            <li>Win Bonus: <span className="highlight">${winBonus}</span></li>
+                            <li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
+                            <li>Interest (10%): <span className="highlight">${interest}</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </BoardOverlay>
+        )
+    }
+
+    return (
+        <BoardOverlay>
+            <div className="match-rewards-content">
+                <h2>Round Lost</h2>
+                <p className="health"><span className="highlight">{damage}</span> health lost</p>
 
                 <div className="money">
                     <h3><span className="highlight">${total}</span> gained</h3>
@@ -50,25 +76,7 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
                     </ul>
                 </div>
             </div>
-        );
-    }
-
-    return (
-        <div className="victory match-rewards">
-            <h2 className="game-over">Round Lost</h2>
-            <p><span className="winner">{damage}</span> health lost</p>
-
-            <div className="money">
-                <h3><span className="highlight">${total}</span> gained</h3>
-
-                <ul>
-                    <li>Base: <span className="highlight">${base}</span></li>
-                    <li>Win Bonus: <span className="highlight">${winBonus}</span></li>
-                    <li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
-                    <li>Interest (10%): <span className="highlight">${interest}</span></li>
-                </ul>
-            </div>
-        </div >
+        </BoardOverlay>
     );
 };
 

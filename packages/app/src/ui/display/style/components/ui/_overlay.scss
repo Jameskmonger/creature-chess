@@ -1,0 +1,94 @@
+.ReactModalPortal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+    // stylelint-disable-next-line
+    inset: 0px;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.modal {
+    position: absolute;
+    display: flex;
+    padding: 2em;
+    overflow: auto;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background: #333c57;
+    outline: none;
+}
+
+.match-rewards-content {
+    @media only screen and (max-width: 799px) {
+        // stylelint-disable-next-line
+        h2, h3 {
+            font-size: 2em;
+        }
+    }
+
+    @media only screen and (min-width: 800px) {
+        // stylelint-disable-next-line
+        h2 {
+            font-size: 4em;
+        }
+
+        // stylelint-disable-next-line
+        h3 {
+            font-size: 3em;
+        }
+    }
+
+    // stylelint-disable-next-line
+    h2 {
+        padding: 0 1.5em;
+        margin-bottom: 0.5em;
+        text-align: center;
+    }
+
+    // stylelint-disable-next-line
+    h3 {
+        margin-bottom: 0.5em;
+        text-align: center;
+    }
+
+    .highlight {
+        font-weight: 700;
+        color: #ffcd75;
+    }
+
+    .health {
+        margin-bottom: 0.5em;
+        font-size: 2em;
+        text-align: center;
+
+        .highlight {
+            color: #ff6464;
+        }
+    }
+
+    .money {
+        // stylelint-disable-next-line
+        ul {
+            font-size: 1.4em;
+        }
+        // stylelint-disable-next-line
+        li {
+            margin-bottom: 0.5em;
+        }
+    }
+}

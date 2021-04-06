@@ -5,6 +5,21 @@ body {
     height: 100%;
 }
 
+.discord-link {
+    margin-top: 1em;
+    text-align: center;
+
+    // stylelint-disable-next-line
+    p {
+        margin-bottom: 1em;
+    }
+
+    // stylelint-disable-next-line
+    img {
+        width: 260px;
+    }
+}
+
 .game {
     display: flex;
     padding: 0.4em;
@@ -181,21 +196,6 @@ body {
             font-style: italic;
             font-weight: 700;
             color: $profile-player-name;
-        }
-
-        .discord-link {
-            margin-top: 1em;
-            font-size: 0.6em;
-
-            // stylelint-disable-next-line
-            p {
-                margin-bottom: 1em;
-            }
-
-            // stylelint-disable-next-line
-            img {
-                width: 260px;
-            }
         }
     }
 

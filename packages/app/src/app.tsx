@@ -1,4 +1,5 @@
 import * as React from "react";
+import ReactModal from "react-modal";
 import { Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -63,6 +64,8 @@ const AuthenticatedRoutes: React.FunctionComponent = () => {
         </>
     );
 };
+
+ReactModal.setAppElement('#approot');
 
 const App: React.FunctionComponent = () => {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0();
