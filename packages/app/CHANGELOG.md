@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.14](https://github.com/Jameskmonger/creature-chess/compare/v0.3.13...v0.3.14) (2021-04-06)
+
+
+### Bug Fixes
+
+* make now-playing 100% width ([756412e](https://github.com/Jameskmonger/creature-chess/commit/756412e7580d87fac1db2009219f359c42862d49))
+
+
+
+
+
 ## [0.3.13](https://github.com/Jameskmonger/creature-chess/compare/v0.3.12...v0.3.13) (2021-04-06)
 
 
