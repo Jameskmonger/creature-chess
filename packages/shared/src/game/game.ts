@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import { v4 as uuid } from "uuid";
 import { EventEmitter } from "events";
 import delay from "delay";
@@ -40,6 +41,9 @@ export class Game {
 
     private store = createGameStore();
 
+    // todo set a sensible default
+    private logger: Logger;
+
     constructor(options?: Partial<GameOptions>) {
         this.id = uuid();
 
@@ -48,6 +52,10 @@ export class Game {
         this.deck = new CardDeck(this.definitionProvider.getAll());
 
         this.playerList.onUpdate(this.onPlayerListUpdate);
+    }
+
+    public setLogger(logger: Logger) {
+        this.logger = logger;
     }
 
     public onFinish(fn: (winner: Player) => void) {
@@ -114,6 +122,8 @@ export class Game {
     }
 
     private addPlayer = (player: Player) => {
+        player.setLogger(this.logger);
+
         this.players.push(player);
         this.playerList.addPlayer(player);
 

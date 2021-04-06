@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import io = require("socket.io");
 import shuffle = require("lodash.shuffle");
 import { IdGenerator } from "./id-generator";
@@ -8,7 +9,7 @@ import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
 import { LobbyMemberType } from "./lobby/lobbyMember";
-import { logger } from "../log";
+import { createWinstonLogger } from "../log";
 import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { DiscordApi } from "../discord";
 
@@ -18,7 +19,7 @@ export class Matchmaking {
     private lobbyIdGenerator = new IdGenerator();
     private metrics = createMetricLogger();
 
-    constructor(private database: DatabaseConnection, private discordApi: DiscordApi) {
+    constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
         setInterval(this.sendMetrics, 60 * 1000);
     }
 
@@ -88,6 +89,10 @@ export class Matchmaking {
         const pictures = this.getPictures();
 
         const game = new Game();
+
+        const logger = createWinstonLogger(`match-${game.id}`);
+
+        game.setLogger(logger);
 
         const players = members.map(m => {
             if (m.type === LobbyMemberType.BOT) {
@@ -181,7 +186,7 @@ export class Matchmaking {
 
         this.lobbies.set(lobby.id, lobby);
 
-        logger.info(`[Lobby ${lobby.id}] created`);
+        this.logger.info(`[Lobby ${lobby.id}] created`);
 
         return lobby;
     }

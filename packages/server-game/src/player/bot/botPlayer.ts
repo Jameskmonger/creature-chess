@@ -4,7 +4,6 @@ import { Player, PlayerActions, PlayerState, getAllPieces, PlayerEvents, GameEve
 import uuid = require("uuid");
 import delay from "delay";
 import { shouldBuyXp } from "./shop/shouldBuyXp";
-import { logger } from "../../log";
 
 const SORT_A_FIRST = -1;
 const SORT_A_SECOND = 1;
@@ -120,7 +119,7 @@ export class BotPlayer extends Player {
 
     constructor(id: string, name: string, picture: number) {
         // todo fix typing
-        super({ logger: logger } as any, id, name, picture);
+        super(id, name, picture);
 
         this.sagaMiddleware.run(this.botLogicSaga());
     }

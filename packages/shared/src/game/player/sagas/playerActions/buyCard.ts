@@ -43,7 +43,12 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
     return null;
 };
 
-export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(logger: Logger, definitionProvider: DefinitionProvider, playerId: string) => {
+export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
+    getLogger: () => Logger,
+    definitionProvider: DefinitionProvider,
+    playerId: string,
+    name: string
+) => {
     return function*() {
         while (true) {
             const action: BuyCardAction = yield take(BUY_CARD_ACTION);
@@ -52,11 +57,25 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(logge
 
             const state: TState = yield select();
 
-            const card = state.playerInfo.cards[index];
+            const cards = state.playerInfo.cards;
             const money = state.playerInfo.money;
 
+            getLogger().info(
+                "BUY_CARD_ACTION received",
+                {
+                    actor: { playerId, name },
+                    details: { index },
+                    state: { cards, money }
+                }
+            );
+
+            const card = cards[index];
+
             if (!card) {
-                logger.info(`Player attempted to buy null/undefined card`);
+                getLogger().info(
+                    `Player attempted to buy null/undefined card`,
+                    { actor: { playerId, name } }
+                );
 
                 yield put(updateMoneyCommand(money));
                 yield put(updateCardsCommand(state.playerInfo.cards));
@@ -65,7 +84,14 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(logge
             }
 
             if (money < card.cost) {
-                logger.info(`Player attempted to buy card costing $${card.cost} but only had $${money}`);
+                getLogger().info(
+                    "Not enough money to buy card",
+                    {
+                        actor: { playerId, name },
+                        details: { index },
+                        state: { cost: card.cost, cards, money }
+                    }
+                );
 
                 yield put(updateMoneyCommand(money));
                 yield put(updateCardsCommand(state.playerInfo.cards));
@@ -77,7 +103,10 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(logge
 
             // no valid slots
             if (destination === null) {
-                logger.info(`Player attempted to buy a card but has no available destination`);
+                getLogger().info(
+                    `Player attempted to buy a card but has no available destination`,
+                    { actor: { playerId, name } }
+                );
                 return;
             }
 

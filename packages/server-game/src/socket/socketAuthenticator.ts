@@ -1,10 +1,10 @@
+import { Logger } from "winston";
 import io = require("socket.io");
 import { ManagementClient } from "auth0";
 import { EventEmitter } from "events";
 import { AuthenticateResponse } from "@creature-chess/shared";
 import { DatabaseConnection } from "@creature-chess/data";
 import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth-server";
-import { logger } from "../log";
 
 /**
  * Listens for new connections to the server,
@@ -12,15 +12,17 @@ import { logger } from "../log";
  * and emits successfully authenticated sockets.
  */
 export class SocketAuthenticator {
-    private authClient: ManagementClient<UserAppMetadata>;
-    private database: DatabaseConnection;
-
     private eventEmitter = new EventEmitter();
     private EVENT_KEYS = {
         SOCKET_AUTHENTICATED: "socketAuthenticated"
     };
 
-    constructor(authClient: ManagementClient<UserAppMetadata>, database: DatabaseConnection, server: io.Server) {
+    constructor(
+        private logger: Logger,
+        private authClient: ManagementClient<UserAppMetadata>,
+        private database: DatabaseConnection,
+        server: io.Server
+    ) {
         this.authClient = authClient;
         this.database = database;
         server.on("connection", this.receiveConnection);
@@ -35,7 +37,7 @@ export class SocketAuthenticator {
     }
 
     private receiveConnection = (socket: io.Socket) => {
-        logger.info("New connection received");
+        this.logger.info("New connection received");
 
         socket.on("authenticate", ({ idToken }: { idToken: string }) => {
             this.authenticateSocket(socket, idToken);
@@ -43,7 +45,7 @@ export class SocketAuthenticator {
     }
 
     private failAuthentication(socket: io.Socket, response: AuthenticateResponse) {
-        logger.error(`Authentication failed for socket ${socket.id}, reason: '${response.error?.type}'`);
+        this.logger.error(`Authentication failed for socket ${socket.id}, reason: '${response.error?.type}'`);
 
         socket.emit("authenticate_response", response);
         socket.removeAllListeners();

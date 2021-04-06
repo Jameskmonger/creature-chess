@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import { takeLatest, take, fork, takeEvery, put, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
@@ -9,11 +10,10 @@ import {
     NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT, receivePlayerActionsEvent,
     ReceivePlayerActionsEvent
 } from "../events";
-import { logger } from "../../../log";
 
 type IncomingRegistry = IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 
-export const incomingNetworking = function*() {
+export const incomingNetworking = function*(getLogger: () => Logger) {
     let registry: IncomingRegistry;
     let socket: Socket;
 
@@ -40,13 +40,13 @@ export const incomingNetworking = function*() {
 
             const validAction = PlayerActions.PlayerActionTypesArray.includes(action.type);
             if (!validAction) {
-                logger.error(`Unhandled player action type: ${action.type}`);
+                getLogger().error(`Unhandled player action type: ${action.type}`);
 
                 continue;
             }
 
             if (index < expectedPacketIndex) {
-                logger.warn(`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex}`);
+                getLogger().warn(`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex}`);
             } else {
                 // queue future actions and execute them after the expected one arrives
                 actionQueue[index - expectedPacketIndex] = action;
