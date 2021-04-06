@@ -1,4 +1,5 @@
 import { Logger } from "winston";
+import delay from "delay";
 import io = require("socket.io");
 import shuffle = require("lodash.shuffle");
 import { IdGenerator } from "./id-generator";
@@ -18,18 +19,27 @@ export class Matchmaking {
     private games = new Map<string, Game>();
     private lobbyIdGenerator = new IdGenerator();
     private metrics = createMetricLogger();
+    private searchingForGame: boolean = false;
 
     constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
         setInterval(this.sendMetrics, 60 * 1000);
     }
 
     public async findGame(socket: io.Socket, user: UserModel) {
+        while (this.searchingForGame) {
+            await delay(250);
+        }
+
+        this.searchingForGame = true;
+
         const { id, nickname } = user;
 
         const playerInGame = this.getPlayerInGame(id);
 
         if (playerInGame) {
             playerInGame.reconnectSocket(socket);
+
+            this.searchingForGame = false;
 
             return;
         }
@@ -38,6 +48,8 @@ export class Matchmaking {
 
         if (lobby) {
             lobby.reconnect(id, socket);
+
+            this.searchingForGame = false;
 
             return;
         }
@@ -48,6 +60,8 @@ export class Matchmaking {
         if (created) {
             this.discordApi.startLobby(nickname);
         }
+
+        this.searchingForGame = false;
     }
 
     private getPlayerInGame(id: string) {
