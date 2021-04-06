@@ -803,14 +803,23 @@ body {
   margin-bottom: 1rem; }
 
 .player-list-item {
+  display: flex;
+  flex-direction: row;
   width: 100%;
   box-sizing: border-box;
   padding: 0.4rem;
   background: #566c86; }
-  .player-list-item.ready {
+  .player-list-item.ready .details {
     border-left: 5px solid #20b720; }
-  .player-list-item.not-ready {
+  .player-list-item.not-ready .details {
     border-left: 5px solid #ccc; }
+  .player-list-item .details {
+    flex: 1;
+    padding-left: 0.5em; }
+  .player-list-item .picture {
+    margin-right: 0.5em; }
+    .player-list-item .picture img {
+      height: 48px; }
   .player-list-item.quit {
     background: #3b3d40; }
     .player-list-item.quit .status {
