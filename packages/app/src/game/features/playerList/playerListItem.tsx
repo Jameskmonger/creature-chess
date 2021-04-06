@@ -11,6 +11,7 @@ import { PlayerPicture } from "./playerPicture";
 interface Props {
     playerId: string;
     player: PlayerListPlayer;
+    index: number;
     isOpponent: boolean;
     isLocal: boolean;
     ready: boolean | null;
@@ -64,7 +65,7 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
                 <div className="row">
                     <div className="row-half name-container">
                         <span className="name">
-                            <PlayerName playerId={props.playerId} />
+                            {props.index}&nbsp;<PlayerName playerId={props.playerId} />
                         </span>
 
                         <PlayerTitle playerId={props.playerId} />

@@ -18,7 +18,7 @@ const PlayerList: React.FunctionComponent = () => {
     return (
         <div className="player-list">
             {
-                players.map(p => (
+                players.map((p, index) => (
                     p.status === PlayerStatus.QUIT
                         ? (
                             <QuitPlayerListItem
@@ -31,6 +31,7 @@ const PlayerList: React.FunctionComponent = () => {
                                 key={p.id}
                                 playerId={p.id}
                                 player={p}
+                                index={index}
                                 isLocal={p.id === localPlayerId}
                                 isOpponent={p.id === opponentId}
                                 ready={showReadyIndicators ? p.ready : null}
