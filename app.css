@@ -737,6 +737,7 @@ body {
   .board-container .now-playing {
     position: absolute;
     top: 0;
+    z-index: 19;
     width: 100%; }
 
 .piece {
@@ -867,6 +868,12 @@ body {
     border-left: 5px solid #20b720; }
   .player-list-item.not-ready .details {
     border-left: 5px solid #ccc; }
+  .player-list-item .half {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-around; }
   .player-list-item .details {
     flex: 1;
     padding-left: 0.5em; }
@@ -878,13 +885,26 @@ body {
     background: #3b3d40; }
     .player-list-item.quit .status {
       width: 100%;
+      margin-bottom: 0.25em;
       font-family: Arial, sans-serif;
       font-size: 1.2em;
       font-weight: 700;
       color: #fff;
       text-align: center;
       text-transform: uppercase; }
+    .player-list-item.quit .subtitle {
+      padding: 0.5em 0;
+      margin-top: 0.5em;
+      font-family: Arial, sans-serif;
+      font-size: 0.9em;
+      font-weight: 700;
+      color: #847878;
+      text-align: center;
+      text-transform: uppercase;
+      border-top: 2px solid #847878;
+      border-bottom: 2px solid #847878; }
     .player-list-item.quit .name {
+      font-size: 1.8em;
       font-style: italic;
       color: #cecece; }
   .player-list-item.opponent {
@@ -1070,7 +1090,7 @@ body {
   .lobby-info .player {
     display: flex;
     flex-direction: column;
-    width: 46%; }
+    width: 38%; }
     .lobby-info .player .name {
       margin-bottom: 0.25rem; }
     .lobby-info .player.bot {
