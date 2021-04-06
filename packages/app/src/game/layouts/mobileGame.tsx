@@ -108,8 +108,6 @@ const MobileGameContentPane: React.FunctionComponent = () => {
     if (currentOverlay === null) {
         return (
             <div className="content-pane">
-                <p className="connection-warning">If you encounter connection issues, please refresh and press "Find Game" to reconnect</p>
-
                 <NowPlaying />
 
                 <Profile />
