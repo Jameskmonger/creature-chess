@@ -32,20 +32,8 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 const QuitPlayerListItem: React.FunctionComponent<{ playerId: string }> = ({ playerId }) => {
     return (
         <div className="player-list-item quit">
-            <div className="row">
-                <div className="row-half">
-                    <span className="name">
-                        <PlayerName playerId={playerId} />
-                    </span>
-                </div>
-            </div>
-            <div className="row">
-                <div className="row-half"></div>
-
-                <div className="row-half">
-                    <span className="status">Quit</span>
-                </div>
-            </div>
+            <div className="half"><span className="name"><PlayerName playerId={playerId} /></span></div>
+            <div className="half"><span className="status">Quit</span></div>
         </div>
     );
 }

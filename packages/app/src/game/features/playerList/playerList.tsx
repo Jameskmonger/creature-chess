@@ -18,30 +18,27 @@ const PlayerList: React.FunctionComponent = () => {
     return (
         <div className="player-list">
             {
-                players.map((p, index) => (
-                    p.status === PlayerStatus.QUIT
-                        ? (
-                            <QuitPlayerListItem
-                                key={p.id}
-                                playerId={p.id}
-                            />
-                        )
-                        : (
-                            <PlayerListItem
-                                key={p.id}
-                                playerId={p.id}
-                                player={p}
-                                index={index}
-                                isLocal={p.id === localPlayerId}
-                                isOpponent={p.id === opponentId}
-                                ready={showReadyIndicators ? p.ready : null}
-                                streakType={p.streakType}
-                                streakAmount={p.streakAmount}
-                                money={p.id === localPlayerId ? localPlayerMoney : p.money}
-                                level={p.id === localPlayerId ? localPlayerLevel : p.level}
-                            />
-                        )
-                ))
+                players.map((p, index) => {
+                    if (p.status === PlayerStatus.QUIT) {
+                        return <QuitPlayerListItem key={p.id} playerId={p.id} />;
+                    }
+
+                    return (
+                        <PlayerListItem
+                            key={p.id}
+                            playerId={p.id}
+                            player={p}
+                            index={index}
+                            isLocal={p.id === localPlayerId}
+                            isOpponent={p.id === opponentId}
+                            ready={showReadyIndicators ? p.ready : null}
+                            streakType={p.streakType}
+                            streakAmount={p.streakAmount}
+                            money={p.id === localPlayerId ? localPlayerMoney : p.money}
+                            level={p.id === localPlayerId ? localPlayerLevel : p.level}
+                        />
+                    )
+                })
             }
         </div>
     );

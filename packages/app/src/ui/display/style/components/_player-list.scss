@@ -46,6 +46,11 @@ $player-list-gutter-size: 0.4em;
         }
     }
 
+    .half {
+        flex: 1;
+        text-align: center;
+    }
+
     .details {
         flex: 1;
         padding-left: 0.5em;
