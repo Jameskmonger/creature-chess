@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.10](https://github.com/Jameskmonger/creature-chess/compare/v0.3.9...v0.3.10) (2021-04-06)
+
+
+### Bug Fixes
+
+* add safety check around state.playerList ([7ff5c35](https://github.com/Jameskmonger/creature-chess/commit/7ff5c355f2798d00838a779bd55774c91013b4da))
+* search for games sequentially ([b077392](https://github.com/Jameskmonger/creature-chess/commit/b077392691eaea42bea88db59789a18d597936ec)), closes [#366](https://github.com/Jameskmonger/creature-chess/issues/366)
+
+
+### Features
+
+* add health bar to main screen ([558b9df](https://github.com/Jameskmonger/creature-chess/commit/558b9dfb5af4652e257c00eeadfa08b53bc617c8)), closes [#353](https://github.com/Jameskmonger/creature-chess/issues/353)
+* rearrange profile elements ([43ac2f6](https://github.com/Jameskmonger/creature-chess/commit/43ac2f676710b5e18b8e83a9ee3f42d3bba8ac2e))
+
+
+
+
+
 ## [0.3.9](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.9) (2021-04-06)
 
 

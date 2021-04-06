@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.10](https://github.com/Jameskmonger/creature-chess/compare/v0.3.9...v0.3.10) (2021-04-06)
+
+
+### Bug Fixes
+
+* search for games sequentially ([b077392](https://github.com/Jameskmonger/creature-chess/commit/b077392691eaea42bea88db59789a18d597936ec)), closes [#366](https://github.com/Jameskmonger/creature-chess/issues/366)
+
+
+
+
+
 ## [0.3.9](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.9) (2021-04-06)
 
 
