@@ -31,9 +31,7 @@
     color: #fff;
     background: #333c57;
     outline: none;
-}
 
-.match-rewards-content {
     @media only screen and (max-width: 799px) {
         // stylelint-disable-next-line
         h2, h3 {
@@ -68,9 +66,26 @@
 
     .highlight {
         font-weight: 700;
-        color: #ffcd75;
+        color: $profile-player-name;
+    }
+}
+
+.discord-link {
+    margin-top: 1em;
+    text-align: center;
+
+    // stylelint-disable-next-line
+    p {
+        margin-bottom: 1em;
     }
 
+    // stylelint-disable-next-line
+    img {
+        width: 260px;
+    }
+}
+
+.match-rewards-content {
     .health {
         margin-bottom: 0.5em;
         font-size: 2em;
@@ -90,5 +105,30 @@
         li {
             margin-bottom: 0.5em;
         }
+    }
+}
+
+.victory-overlay {
+    // stylelint-disable-next-line
+    h2 {
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .highlight {
+        font-style: italic;
+    }
+
+    .winner {
+        font-size: 2em;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .game-over {
+        padding-bottom: 0.8em;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
     }
 }
