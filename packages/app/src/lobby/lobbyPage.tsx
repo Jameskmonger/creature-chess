@@ -34,6 +34,22 @@ const LobbyPage: React.FunctionComponent = () => {
     return (
         <div className="lobby">
             <div className="lobby-info">
+                {
+                    lobbyStartingAtMs
+                    && (
+                        <Countdown
+                            countdownToSeconds={lobbyStartingAtMs / 1000}
+                            render={countdownRender}
+                        />
+                    )
+                }
+
+                <h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
+
+                <p><strong>tip:</strong> you can always sell your pieces back for their costs. Don't be afraid to change your team!</p>
+
+                <p><strong>tip:</strong> building a balanced team is key to winning. Check out the help page to see type advantages!</p>
+
                 <div className="players">
                     {
                         players.map(p => (
@@ -45,24 +61,11 @@ const LobbyPage: React.FunctionComponent = () => {
                         ))
                     }
                 </div>
-                <div className="text">
-                    {
-                        lobbyStartingAtMs
-                        && (
-                            <Countdown
-                                countdownToSeconds={lobbyStartingAtMs / 1000}
-                                render={countdownRender}
-                            />
-                        )
-                    }
 
-                    <h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
-
-                    <p>
-                        The game will start {LOBBY_WAIT_TIME} seconds after the lobby is created,
-                                or immediately when there are {MAX_PLAYERS_IN_GAME} players
-                            </p>
-                </div>
+                <p>
+                    The game will start {LOBBY_WAIT_TIME} seconds after the lobby is created,
+                or immediately when there are {MAX_PLAYERS_IN_GAME} players
+            </p>
             </div>
 
             <Footer />

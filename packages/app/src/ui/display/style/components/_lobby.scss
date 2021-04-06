@@ -18,18 +18,34 @@
 
 .lobby-info {
     display: flex;
+    flex-direction: column;
     padding: 1rem;
     margin-top: 1rem;
     text-align: center;
     background: #566c86;
 
+    /* stylelint-disable-next-line */
+    p {
+        margin-bottom: 0.5rem;
+    }
+
+    /* stylelint-disable-next-line */
+    strong {
+        font-style: italic;
+        font-weight: 700;
+    }
+
     .players {
         flex: 1 0 0;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
     }
 
     .player {
         display: flex;
         flex-direction: column;
+        width: 46%;
 
         .name {
             margin-bottom: 0.25rem;
@@ -42,9 +58,8 @@
     }
 }
 
-.text {
+.hero {
     flex: 1 0 0;
-    margin-left: 1em;
 }
 
 .lobby-id {
