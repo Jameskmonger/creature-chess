@@ -88,6 +88,8 @@ const battleEventChannel = (
                 );
 
                 if (shouldStop) {
+                    await duration(1000).remaining();
+
                     emit(battleFinishEvent(turnCount));
                     break;
                 }

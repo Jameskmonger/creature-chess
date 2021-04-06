@@ -211,7 +211,7 @@ export class Game {
 
         // some battles go right up to the end, so it's nice to have a delay
         // rather than jumping straight into the next phase
-        await delay(3000);
+        await delay(5000);
     }
 
     private updateOpponentProvider() {
