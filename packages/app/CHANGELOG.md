@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.15](https://github.com/Jameskmonger/creature-chess/compare/v0.3.14...v0.3.15) (2021-04-06)
+
+
+### Features
+
+* restyle lobby page, add tips ([6de45d5](https://github.com/Jameskmonger/creature-chess/commit/6de45d53857097154dae7e029199dcbdd0772b6e))
+
+
+
+
+
 ## [0.3.14](https://github.com/Jameskmonger/creature-chess/compare/v0.3.13...v0.3.14) (2021-04-06)
 
 
