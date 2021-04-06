@@ -25,7 +25,7 @@ export const PIECES_TO_EVOLVE = 3;
 
 export const DEFAULT_TURN_COUNT = 300;
 export const DEFAULT_TURN_DURATION = 100;
-export const DAMAGE_RATIO = 10;
+export const DAMAGE_RATIO = 7;
 export const MAX_NAME_LENGTH = 16;
 
 export const MAX_PLAYERS_IN_GAME = 8;
