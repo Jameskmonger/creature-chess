@@ -2,22 +2,42 @@ $warning-dark: #ff6464;
 $warning-light: #ffd2d2;
 
 .profile {
-    padding: 0.6rem;
-    margin-bottom: 0.6rem;
+    padding: 0.25rem;
+    margin-bottom: 0.5rem;
     font-family: Arial, sans-serif;
     color: $profile-text;
     background: $profile-background;
 
-    .item {
-        margin-bottom: 0.4em;
+    .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &:not(:last-child) {
+            margin-bottom: 0.4em;
+        }
+
+        .item {
+            flex: 1;
+        }
+    }
+
+    .highlight {
+        color: #ffcd75;
     }
 
     .level {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-direction: row;
         font-weight: 700;
     }
 
     .pieces {
+        font-size: 0.85em;
         font-style: italic;
+        text-align: center;
 
         &.warning {
             // stylelint-disable-next-line
@@ -33,7 +53,7 @@ $warning-light: #ffd2d2;
     .xp-progress {
         position: relative;
         width: 50%;
-        height: 2em;
+        height: 1.75em;
         box-sizing: border-box;
         margin-right: 0.5em;
         background: $xp-bar-background;
@@ -50,25 +70,19 @@ $warning-light: #ffd2d2;
             top: 0;
             right: 0.5em;
             font-weight: 700;
-            line-height: 2em;
+            line-height: 1.75em;
             color: $xp-bar-text;
         }
     }
 
-    .level-bar {
-        // stylelint-disable-next-line
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .buy-xp {
         width: 50%;
+        height: 2em;
         box-sizing: border-box;
-        padding: 0.5em 1.2em;
+        padding: 0.5em 1em;
         margin-left: 0.5em;
-        font-size: 1.1em;
+        font-size: 1em;
+        line-height: 1em;
         color: $buy-xp-button-text;
         cursor: pointer;
         background: $buy-xp-button;

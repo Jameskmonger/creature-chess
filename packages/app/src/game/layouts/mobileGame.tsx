@@ -79,8 +79,6 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
         return (
             <OverlayComponent title={`Balance: $${currentBalance}`}>
                 <CardShop showBalance={false} />
-
-                <Profile />
             </OverlayComponent>
         );
     }
@@ -113,6 +111,8 @@ const MobileGameContentPane: React.FunctionComponent = () => {
                 <p className="connection-warning">If you encounter connection issues, please refresh and press "Find Game" to reconnect</p>
 
                 <NowPlaying />
+
+                <Profile />
 
                 <BoardContainer />
             </div>
