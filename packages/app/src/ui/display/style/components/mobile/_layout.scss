@@ -1,11 +1,12 @@
 .mobile .top-bar {
     display: flex;
     flex-direction: row;
+    background: #1d1d1d;
 
     .round-indicator,
     .phase-info {
         margin: 0.2rem 0;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         flex: 1;
         white-space: nowrap;
     }
