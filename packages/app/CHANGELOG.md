@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.16](https://github.com/Jameskmonger/creature-chess/compare/v0.3.15...v0.3.16) (2021-04-06)
+
+
+### Bug Fixes
+
+* fix casing for StageIndicator ([0d08c00](https://github.com/Jameskmonger/creature-chess/commit/0d08c003e769c97d7aff9c0e98858014ab2f0056))
+
+
+
+
+
 ## [0.3.15](https://github.com/Jameskmonger/creature-chess/compare/v0.3.14...v0.3.15) (2021-04-06)
 
 
