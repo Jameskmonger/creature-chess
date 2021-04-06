@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.12](https://github.com/Jameskmonger/creature-chess/compare/v0.3.11...v0.3.12) (2021-04-06)
+
+
+### Bug Fixes
+
+* fix board layout on mobile ([770bed2](https://github.com/Jameskmonger/creature-chess/commit/770bed2346e32488dd4f96b45ed11614484dc9f5))
+
+
+
+
+
 ## [0.3.11](https://github.com/Jameskmonger/creature-chess/compare/v0.3.10...v0.3.11) (2021-04-06)
 
 
