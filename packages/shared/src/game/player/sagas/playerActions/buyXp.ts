@@ -18,7 +18,7 @@ export const buyXpPlayerActionSagaFactory = <TState extends PlayerState>(
 
             getLogger().info(
                 "BUY_XP_ACTION received",
-                { playerId, name }
+                { actor: { playerId, name } }
             );
 
             const isAlive: boolean = yield select(isPlayerAlive);

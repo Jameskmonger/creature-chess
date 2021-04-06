@@ -56,6 +56,8 @@ export class Game {
 
     public setLogger(logger: Logger) {
         this.logger = logger;
+
+        this.deck.setLogger(this.logger);
     }
 
     public onFinish(fn: (winner: Player) => void) {
