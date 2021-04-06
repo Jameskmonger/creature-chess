@@ -4,12 +4,15 @@ import { REROLL_COST } from "@creature-chess/models";
 import { PlayerActions, getPlayerMoney } from "@creature-chess/shared";
 import { AppState } from "../../../store";
 
-const RerollButton: React.FunctionComponent = () => {
+const RerollButton: React.FunctionComponent<{ afterReroll: () => void }> = ({ afterReroll }) => {
   const dispatch = useDispatch();
   const money = useSelector<AppState, number>(getPlayerMoney);
 
   const buyable = money >= REROLL_COST;
-  const onBuy = () => dispatch(PlayerActions.rerollCardsAction());
+  const onBuy = () => {
+    dispatch(PlayerActions.rerollCardsAction());
+    afterReroll();
+  };
 
   return (
     <button className="reroll shop-action" onClick={buyable ? onBuy : undefined} disabled={buyable === false}>

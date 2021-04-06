@@ -46,7 +46,7 @@ const Navbar: React.FunctionComponent = () => {
     );
 };
 
-const OverlayComponent: React.FunctionComponent<{ title: string, children: React.ReactNode }> = ({ title, children }) => {
+const OverlayComponent: React.FunctionComponent<{ title: string, children: React.ReactNode, fullscreen?: boolean }> = ({ title, children, fullscreen = false }) => {
     const dispatch = useDispatch();
     const dispatchCloseOverlay = () => dispatch(closeOverlay());
 
@@ -56,7 +56,7 @@ const OverlayComponent: React.FunctionComponent<{ title: string, children: React
                 <h2 className="overlay-title">{title}</h2>
                 <button className="close" onClick={dispatchCloseOverlay}>X</button>
             </div>
-            <div className="overlay-content">
+            <div className={`overlay-content ${fullscreen ? "fullscreen" : ""}`}>
                 {children}
             </div>
         </div>
@@ -76,7 +76,7 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
 
     if (currentOverlay === Overlay.SHOP) {
         return (
-            <OverlayComponent title={`Balance: $${currentBalance}`}>
+            <OverlayComponent title={`Balance: $${currentBalance}`} fullscreen>
                 <CardShop showBalance={false} />
             </OverlayComponent>
         );

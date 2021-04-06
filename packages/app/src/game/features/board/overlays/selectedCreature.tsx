@@ -24,6 +24,10 @@ const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId
         }
     );
 
+    React.useEffect(() => {
+        setAreYouSure(false);
+    }, [ pieceId ]);
+
     if (!areYouSure) {
         return <button className="ready-up" onClick={onClick}>Sell Piece</button>;
     }
@@ -40,8 +44,6 @@ const SelectedCreature: React.FunctionComponent = () => {
 
     return (
         <>
-            <Card definitionId={selectedPiece.definitionId} buyable={false} fullWidth />
-
             <SellPieceButton pieceId={selectedPiece.id} />
         </>
     );
