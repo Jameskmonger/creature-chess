@@ -9,14 +9,14 @@ interface Props {
 }
 
 
-const PlayerTitle: React.FunctionComponent<Props> = ({ playerId }) => {
+const PlayerPicture: React.FunctionComponent<Props> = ({ playerId }) => {
     const player = useSelector<AppState, PlayerListPlayer>(getPlayerById(playerId));
 
-    if (!player || !player.title) {
+    if (!player || !player.picture) {
         return null;
     }
 
-    return <span className={`player-profile-title ${player.title.className}`}>{player.title.text}</span>;
+    return <img src={`https://creaturechess.jamesmonger.com/images/front/${player.picture}.png`} />;
 };
 
-export { PlayerTitle };
+export { PlayerPicture };
