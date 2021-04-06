@@ -1,12 +1,11 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { Constants, GamePhase, GRID_SIZE } from "@creature-chess/models";
+import { GamePhase, GRID_SIZE } from "@creature-chess/models";
 import { AppState } from "../../../store";
-import { PieceComponent } from "./piece/pieceComponent";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { Announcement } from "./overlays/announcement";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
-import { ReconnectModal } from "./overlays/reconnectModal";
+import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
 import { BoardContextProvider } from "../../board/context";
 import { BoardState } from "packages/shared/lib";
@@ -58,7 +57,7 @@ const Board: React.FunctionComponent = props => {
             <Announcement />
             <VictoryOverlay />
             <MatchRewardsOverlay />
-            <ReconnectModal />
+            <ReconnectOverlay />
         </div>
     );
 };
