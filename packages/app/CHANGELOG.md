@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.13](https://github.com/Jameskmonger/creature-chess/compare/v0.3.12...v0.3.13) (2021-04-06)
+
+
+### Features
+
+* add bottom margin to profile in landscape view ([d925b63](https://github.com/Jameskmonger/creature-chess/commit/d925b6392ea3d8ad2012f5713dcd7956ede8b744))
+
+
+
+
+
 ## [0.3.12](https://github.com/Jameskmonger/creature-chess/compare/v0.3.11...v0.3.12) (2021-04-06)
 
 
