@@ -685,6 +685,21 @@ body {
       height: 100%; }
     .piece-meta-container .piece-meta-top img {
       height: 100%; }
+  .piece-meta-container .health-bar-container {
+    position: relative;
+    flex: 1; }
+  .piece-meta-container .piece-stage {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 70%;
+    justify-content: space-evenly; }
+  .piece-meta-container .healthbar {
+    width: 100%;
+    height: 100%; }
 
 .piece {
   position: relative;
