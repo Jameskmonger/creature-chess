@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.6](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.6) (2021-04-06)
+
+
+### Features
+
+* add random play pictures ([3aec2e0](https://github.com/Jameskmonger/creature-chess/commit/3aec2e0b6ba1543a05c22ab9b24c9c0e6336cba9))
+
+
+
+
+
 ## [0.3.5](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.5) (2021-04-06)
 
 **Note:** Version bump only for package @creature-chess/models
