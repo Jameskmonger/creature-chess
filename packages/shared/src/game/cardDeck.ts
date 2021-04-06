@@ -5,11 +5,11 @@ import { CreatureDefinition, Card, PieceModel, PIECES_TO_EVOLVE } from "@creatur
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [
-    [100,  70,  60,  50,  40,  33,  30,  24,  22,  19],
-    [0,    30,  35,  35,  35,  30,  30,  30,  30,  25],
-    [0,    0,   5,   15,  23,  30,  30,  30,  25,  25],
-    [0,    0,   0,   2,   5,   9,   12,  16,  20,  25],
-    [0,    0,   0,   0,   1,   3,   5,   7,   10,  14]
+    [100, 70, 60, 50, 40, 33, 30, 24, 22, 19],
+    [0, 30, 35, 35, 35, 30, 30, 30, 30, 25],
+    [0, 0, 5, 15, 23, 30, 30, 30, 25, 25],
+    [0, 0, 0, 2, 5, 9, 12, 16, 20, 25],
+    [0, 0, 0, 0, 1, 3, 5, 7, 10, 14]
 ];
 
 const CARD_LEVEL_QUANTITIES = [45, 30, 25, 15, 10];
@@ -136,7 +136,7 @@ export class CardDeck {
                     continue;
                 }
 
-                const [ card ] = deck.splice(index, 1);
+                const [card] = deck.splice(index, 1);
 
                 if (card.definitionId !== candidate) {
                     deck.push(card);
@@ -163,7 +163,7 @@ export class CardDeck {
             }
 
             // try 3 times to get a non-excluded card
-            // todo rethink this
+            // todo rethink this as below
             for (let i = 0; i < 3; i++) {
                 const card = this.getDeckForCost(cost).pop();
 
@@ -181,12 +181,22 @@ export class CardDeck {
 
         // otherwise go back up and give them the first existing card
         for (let cost = 1; cost <= CARD_COST_CHANCES.length; cost++) {
-            const card = this.getDeckForCost(cost).pop();
+            // try 3 times to get a non-excluded card
+            // todo rethink this as above
+            for (let i = 0; i < 3; i++) {
+                const card = this.getDeckForCost(cost).pop();
 
-            if (card) {
-                return { card, blessed: false };
+                if (card) {
+                    if (!excludeDefinitions.includes(card.definitionId)) {
+                        return { card, blessed: false };
+                    }
+
+                    this.addCards([card]);
+                }
             }
         }
+
+        this.logger.error(`No card found at all`);
 
         return null;
     }
