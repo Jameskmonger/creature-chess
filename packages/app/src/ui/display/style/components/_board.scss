@@ -152,6 +152,7 @@
     .now-playing {
         position: absolute;
         top: 0;
+        z-index: 19;
         width: 100%;
     }
 }
