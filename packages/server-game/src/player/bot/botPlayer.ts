@@ -1,20 +1,91 @@
 import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
-import { Card, PieceModel, LobbyPlayer, PlayerListPlayer, PlayerPieceLocation, GRID_SIZE, BUY_XP_COST, GamePhase } from "@creature-chess/models";
-import { Player, PlayerActions, PlayerState, getAllPieces, getBoardPieceForPosition, PlayerEvents, GameEvents } from "@creature-chess/shared";
+import { Card, PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
+import { Player, PlayerActions, PlayerState, getAllPieces, PlayerEvents, GameEvents, PlayerSelectors } from "@creature-chess/shared";
 import uuid = require("uuid");
 import delay from "delay";
 import { shouldBuyXp } from "./shop/shouldBuyXp";
 import { logger } from "../../log";
 
-const PREFERRED_COLUMN_ORDERS = {
-    8: [
-        [3, 4, 2, 5, 1, 6, 0, 7],
-        [4, 3, 1, 6, 2, 5, 7, 0]
-    ],
-    7: [
-        [3, 4, 2, 5, 1, 6, 0],
-        [3, 2, 4, 1, 5, 0, 6]
-    ]
+const SORT_A_FIRST = -1;
+const SORT_A_SECOND = 1;
+// todo tie this into GRID_SIZE
+const ARCANE_ROW_PREFERENCE = {
+    [3]: 2,
+    [4]: 0,
+    [5]: 1
+};
+const PREFERRED_LOCATIONS: {
+    [key in DefinitionClass]: (a: TileCoordinates, b: TileCoordinates) => -1 | 1
+} = {
+    [DefinitionClass.VALIANT]: (a, b) => {
+        if (a.y < b.y) {
+            return SORT_A_FIRST;
+        }
+
+        if (a.y > b.y) {
+            return SORT_A_SECOND;
+        }
+
+        // todo tie this into GRID_SIZE
+        const distanceFromMiddleA = Math.abs(a.x - 3);
+        const distanceFromMiddleB = Math.abs(b.x - 3);
+
+        if (distanceFromMiddleA < distanceFromMiddleB) {
+            return SORT_A_FIRST;
+        }
+
+        if (distanceFromMiddleA > distanceFromMiddleB) {
+            return SORT_A_SECOND;
+        }
+
+        return SORT_A_FIRST;
+    },
+    [DefinitionClass.CUNNING]: (a, b) => {
+        if (a.y < b.y) {
+            return SORT_A_FIRST;
+        }
+
+        if (a.y > b.y) {
+            return SORT_A_SECOND;
+        }
+
+        // todo tie this into GRID_SIZE
+        const distanceFromMiddleA = Math.abs(a.x - 3);
+        const distanceFromMiddleB = Math.abs(b.x - 3);
+
+        if (distanceFromMiddleA > distanceFromMiddleB) {
+            return SORT_A_FIRST;
+        }
+
+        if (distanceFromMiddleA < distanceFromMiddleB) {
+            return SORT_A_SECOND;
+        }
+
+        return SORT_A_FIRST;
+    },
+    [DefinitionClass.ARCANE]: (a, b) => {
+        if (ARCANE_ROW_PREFERENCE[a.y] < ARCANE_ROW_PREFERENCE[b.y]) {
+            return SORT_A_FIRST;
+        }
+
+        if (ARCANE_ROW_PREFERENCE[a.y] > ARCANE_ROW_PREFERENCE[b.y]) {
+            return SORT_A_SECOND;
+        }
+
+        // todo tie this into GRID_SIZE
+        const distanceFromMiddleA = Math.abs(a.x - 3);
+        const distanceFromMiddleB = Math.abs(b.x - 3);
+
+        if (distanceFromMiddleA < distanceFromMiddleB) {
+            return SORT_A_FIRST;
+        }
+
+        if (distanceFromMiddleA > distanceFromMiddleB) {
+            return SORT_A_SECOND;
+        }
+
+        return SORT_A_FIRST;
+    },
 };
 
 interface CardView {
@@ -46,18 +117,12 @@ const BOT_ACTION_TIME_MS = 400;
 
 export class BotPlayer extends Player {
     public readonly isBot = true;
-    private preferredColumnOrder: number[];
 
     constructor(id: string, name: string) {
         // todo fix typing
         super({ logger: logger } as any, id, name);
 
         this.sagaMiddleware.run(this.botLogicSaga());
-
-        const columnsForGridSize = PREFERRED_COLUMN_ORDERS[GRID_SIZE.width];
-        this.preferredColumnOrder = columnsForGridSize[
-            Math.floor(Math.random() * columnsForGridSize.length)
-        ];
     }
 
     public onLobbyPlayerUpdate(index: number, player: LobbyPlayer) {
@@ -122,7 +187,9 @@ export class BotPlayer extends Player {
             return;
         }
 
-        this.store.dispatch(PlayerActions.buyCardAction(card.index));
+        const definition = this.definitionProvider.get(card.definitionId);
+
+        this.store.dispatch(PlayerActions.buyCardAction(card.index, PREFERRED_LOCATIONS[definition.class]));
         await delay(BOT_ACTION_TIME_MS);
     }
 
@@ -133,11 +200,21 @@ export class BotPlayer extends Player {
     private async putBenchOnBoard() {
         while (true) {
             const firstBenchPiece = getFirstBenchPiece(this.store.getState());
-            const firstEmptyPosition = this.getFirstEmptyPosition();
 
-            if (firstBenchPiece === null || firstEmptyPosition === null) {
+            if (firstBenchPiece === null) {
                 break;
             }
+
+            const firstEmptyPosition = PlayerSelectors.getPlayerFirstEmptyBoardSlot(this.store.getState(), PREFERRED_LOCATIONS[firstBenchPiece.definition.class]);
+
+            if (firstEmptyPosition === null) {
+                break;
+            }
+
+            const boardPiecePosition: PlayerPieceLocation = {
+                type: "board",
+                location: firstEmptyPosition
+            };
 
             const benchPiecePosition: PlayerPieceLocation = {
                 type: "bench",
@@ -146,7 +223,7 @@ export class BotPlayer extends Player {
                 }
             };
 
-            this.store.dispatch(PlayerActions.playerDropPieceAction(firstBenchPiece.id, benchPiecePosition, firstEmptyPosition));
+            this.store.dispatch(PlayerActions.playerDropPieceAction(firstBenchPiece.id, benchPiecePosition, boardPiecePosition));
             await delay(BOT_ACTION_TIME_MS);
         }
     }
@@ -195,9 +272,6 @@ export class BotPlayer extends Player {
     }
 
     private compareCardPieceViews = (a: CardPieceView, b: CardPieceView) => {
-        const SORT_A_FIRST = -1;
-        const SORT_A_SECOND = 1;
-
         if (a.cost > b.cost) {
             return SORT_A_FIRST;
         }
@@ -215,26 +289,6 @@ export class BotPlayer extends Player {
         }
 
         return 0;
-    }
-
-    private getFirstEmptyPosition(): PlayerPieceLocation | null {
-        for (let y = (GRID_SIZE.height / 2); y < GRID_SIZE.height; y++) {
-            for (const x of this.preferredColumnOrder) {
-                const boardPiece = getBoardPieceForPosition(this.store.getState().board, x, y);
-
-                if (!boardPiece) {
-                    return {
-                        type: "board",
-                        location: {
-                            x,
-                            y
-                        }
-                    };
-                }
-            }
-        }
-
-        return null;
     }
 
     private botLogicSaga() {

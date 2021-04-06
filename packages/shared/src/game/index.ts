@@ -1,6 +1,6 @@
 export { Game } from "./game";
 
-export { Player, PlayerActions, PlayerEvents, PlayerSagas, PlayerActionSagas } from "./player";
+export { Player, PlayerActions, PlayerEvents, PlayerSagas, PlayerActionSagas, PlayerSelectors } from "./player";
 export { getPiece, getAllPieces, getBoardPieceForPosition } from "./player/pieceSelectors";
 export { getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive } from "./player/playerSelectors";
 export { canDropPiece } from "./player/can-drop-piece";

@@ -1,23 +1,22 @@
 import { Logger } from "winston";
 import { take, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
-import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
+import { GamePhase, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardCommands } from "../../../../board";
 import { DefinitionProvider } from "../../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../../utils/piece-utils";
 import { addBenchPieceCommand } from "../../bench/commands";
 import { PlayerState } from "../../store";
-import { log } from "../../../../log";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../../playerSelectors";
 import { updateCardsCommand, updateMoneyCommand } from "../../playerInfo/commands";
 import { getFirstEmptyBenchSlot } from "../../pieceSelectors";
 
-const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLocation => {
+const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
     const inPreparingPhase = state.game.phase === GamePhase.PREPARING;
 
     if (belowPieceLimit && inPreparingPhase) {
-        const boardSlot = getPlayerFirstEmptyBoardSlot(state);
+        const boardSlot = getPlayerFirstEmptyBoardSlot(state, sortPositions);
 
         if (boardSlot) {
             return {
@@ -47,7 +46,9 @@ const getCardDestination = (state: PlayerState, playerId: string): PlayerPieceLo
 export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(logger: Logger, definitionProvider: DefinitionProvider, playerId: string) => {
     return function*() {
         while (true) {
-            const { payload: { index } }: BuyCardAction = yield take(BUY_CARD_ACTION);
+            const action: BuyCardAction = yield take(BUY_CARD_ACTION);
+            const index = action.payload.index;
+            const sortPositions = action.meta ? action.meta.sortPositions : undefined;
 
             const state: TState = yield select();
 
@@ -72,7 +73,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(logge
                 return;
             }
 
-            const destination = getCardDestination(state, playerId);
+            const destination = getCardDestination(state, playerId, sortPositions);
 
             // no valid slots
             if (destination === null) {

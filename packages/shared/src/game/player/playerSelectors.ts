@@ -15,28 +15,54 @@ export const getPlayerBelowPieceLimit = (state: PlayerState, playerId: string): 
     return ownedBoardPieceCount < level;
 };
 
-const PREFERRED_COLUMN_ORDERS = {
-    8: [3, 4, 2, 5, 1, 6, 0, 7],
-    7: [3, 4, 2, 5, 1, 6, 0]
-};
+const SORT_A_FIRST = -1;
+const SORT_A_SECOND = 1;
+const defaultSortPositions = (a: TileCoordinates, b: TileCoordinates) => {
+    if (a.y < b.y) {
+        return SORT_A_FIRST;
+    }
 
-export const getPlayerFirstEmptyBoardSlot = (state: PlayerState): (TileCoordinates | null) => {
-    const preferredColumnOrder = PREFERRED_COLUMN_ORDERS[GRID_SIZE.width];
+    if (a.y > b.y) {
+        return SORT_A_SECOND;
+    }
+
+    // todo tie this into GRID_SIZE
+    const distanceFromMiddleA = Math.abs(a.x - 3);
+    const distanceFromMiddleB = Math.abs(b.x - 3);
+
+    if (distanceFromMiddleA < distanceFromMiddleB) {
+        return SORT_A_FIRST;
+    }
+
+    if (distanceFromMiddleA > distanceFromMiddleB) {
+        return SORT_A_SECOND;
+    }
+
+    return SORT_A_FIRST;
+}
+
+export const getPlayerFirstEmptyBoardSlot = (state: PlayerState, sortPositions: (a: TileCoordinates, b: TileCoordinates) => -1 | 1 = defaultSortPositions): (TileCoordinates | null) => {
+    const emptyPositions: TileCoordinates[] = [];
 
     for (let y = (GRID_SIZE.height / 2); y < GRID_SIZE.height; y++) {
-        for (const x of preferredColumnOrder) {
+        for (let x = 0; x < GRID_SIZE.width; x++) {
             const boardPiece = getBoardPieceForPosition(state.board, x, y);
 
             if (!boardPiece) {
-                return {
-                    x,
-                    y
-                };
+                emptyPositions.push({ x, y });
             }
         }
     }
 
-    return null;
+    if (emptyPositions.length === 0) {
+        return null;
+    }
+
+    emptyPositions.sort(sortPositions);
+
+    const { x, y } = emptyPositions[0];
+
+    return { x, y };
 };
 
 export const getMostExpensiveBenchPiece = (state: PlayerState) => {

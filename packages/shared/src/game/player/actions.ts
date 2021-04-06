@@ -1,4 +1,4 @@
-import { PlayerPieceLocation } from "@creature-chess/models";
+import { PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 
 export const PLAYER_CLICK_TILE_ACTION = "PLAYER_CLICK_TILE_ACTION";
 export type PLAYER_CLICK_TILE_ACTION = typeof PLAYER_CLICK_TILE_ACTION;
@@ -67,8 +67,23 @@ export const playerSellPieceAction = (pieceId: string): PlayerSellPieceAction =>
 });
 export type RerollCardsAction = ({ type: REROLL_CARDS_ACTION });
 export const rerollCardsAction = (): RerollCardsAction => ({ type: REROLL_CARDS_ACTION });
-export type BuyCardAction = ({ type: BUY_CARD_ACTION, payload: { index: number }});
-export const buyCardAction = (index: number): BuyCardAction => ({ type: BUY_CARD_ACTION, payload: { index }});
+
+// todo - sortPositions is only here to allow bots to place pieces easier
+export type BuyCardAction = ({
+  type: BUY_CARD_ACTION,
+  payload: { index: number },
+  meta?: {
+    sortPositions: (a: TileCoordinates, b: TileCoordinates) => -1 | 1
+  }
+});
+export const buyCardAction = (index: number, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): BuyCardAction => {
+  if (sortPositions) {
+    return ({ type: BUY_CARD_ACTION, payload: { index }, meta: { sortPositions }});
+  }
+
+  return ({ type: BUY_CARD_ACTION, payload: { index }});
+}
+
 export type ToggleShopLockAction = ({ type: TOGGLE_SHOP_LOCK_ACTION });
 export const toggleShopLock = (): ToggleShopLockAction => ({ type: TOGGLE_SHOP_LOCK_ACTION });
 
