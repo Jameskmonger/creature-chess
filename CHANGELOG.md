@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.11](https://github.com/Jameskmonger/creature-chess/compare/v0.3.10...v0.3.11) (2021-04-06)
+
+
+### Features
+
+* move now playing on mobile ([b442f0f](https://github.com/Jameskmonger/creature-chess/commit/b442f0f0206786aed269505029ad3f8cd96e2ef5))
+* restyle top bar ([0dd22dc](https://github.com/Jameskmonger/creature-chess/commit/0dd22dcc62e4650597c99f4655d19ae67fcb6963))
+
+
+
+
+
 ## [0.3.10](https://github.com/Jameskmonger/creature-chess/compare/v0.3.9...v0.3.10) (2021-04-06)
 
 
