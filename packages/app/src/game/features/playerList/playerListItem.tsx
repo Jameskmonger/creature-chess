@@ -29,14 +29,20 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
     return <div className={`streak-indicator ${type === StreakType.WIN ? "win" : "lose"}`}>{amount}</div>;
 };
 
-const QuitPlayerListItem: React.FunctionComponent<{ playerId: string }> = ({ playerId }) => {
+const StatusPlayerListItem: React.FunctionComponent<{ playerId: string, status: string, subtitle?: string }> = ({ playerId, status, subtitle }) => {
     return (
         <div className="player-list-item quit">
-            <div className="half"><span className="name"><PlayerName playerId={playerId} /></span></div>
-            <div className="half"><span className="status">Quit</span></div>
+            <div className="half">
+                <span className="name"><PlayerName playerId={playerId} /></span>
+            </div>
+            <div className="half">
+                <span className="status">{status}</span>
+                <BattleInfo playerId={playerId} />
+                {subtitle && <span className="subtitle">{subtitle}</span>}
+            </div>
         </div>
     );
-}
+};
 
 const PlayerListItem: React.FunctionComponent<Props> = props => {
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
@@ -86,4 +92,4 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
     );
 };
 
-export { PlayerListItem, QuitPlayerListItem };
+export { PlayerListItem, StatusPlayerListItem };

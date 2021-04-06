@@ -1,10 +1,26 @@
 import * as React from "react";
 import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
-import { PlayerListItem, QuitPlayerListItem } from "./playerListItem";
+import { PlayerListItem, StatusPlayerListItem } from "./playerListItem";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../store";
 import { getPlayerMoney, getPlayerLevel, getOpponentId } from "@creature-chess/shared";
 import { getUserId } from "../../../menu/auth/store/selectors";
+
+// todo move this
+function ordinal_suffix_of(i: number) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
 
 const PlayerList: React.FunctionComponent = () => {
     const players = useSelector<AppState, PlayerListPlayer[]>(state => state.playerList);
@@ -20,7 +36,11 @@ const PlayerList: React.FunctionComponent = () => {
             {
                 players.map((p, index) => {
                     if (p.status === PlayerStatus.QUIT) {
-                        return <QuitPlayerListItem key={p.id} playerId={p.id} />;
+                        return <StatusPlayerListItem key={p.id} playerId={p.id} status="Quit" />;
+                    }
+
+                    if (p.roundDiedAt) {
+                        return <StatusPlayerListItem key={p.id} playerId={p.id} status="Dead" subtitle={`${ordinal_suffix_of(index + 1)} place`} />;
                     }
 
                     return (

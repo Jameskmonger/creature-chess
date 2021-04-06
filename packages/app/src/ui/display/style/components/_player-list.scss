@@ -48,7 +48,10 @@ $player-list-gutter-size: 0.4em;
 
     .half {
         flex: 1;
+        display: flex;
+        flex-direction: column;
         text-align: center;
+        justify-content: space-around;
     }
 
     .details {
@@ -70,6 +73,7 @@ $player-list-gutter-size: 0.4em;
 
         .status {
             width: 100%;
+            margin-bottom: 0.25em;
             font-family: Arial, sans-serif;
             font-size: 1.2em;
             font-weight: 700;
@@ -78,7 +82,21 @@ $player-list-gutter-size: 0.4em;
             text-transform: uppercase;
         }
 
+        .subtitle {
+            padding: 0.5em 0;
+            margin-top: 0.5em;
+            font-family: Arial, sans-serif;
+            font-size: 0.9em;
+            font-weight: 700;
+            color: #847878;
+            text-align: center;
+            text-transform: uppercase;
+            border-top: 2px solid #847878;
+            border-bottom: 2px solid #847878;
+        }
+
         .name {
+            font-size: 1.8em;
             font-style: italic;
             color: #cecece;
         }
