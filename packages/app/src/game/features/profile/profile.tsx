@@ -15,7 +15,15 @@ const Profile: React.FunctionComponent = () => {
     const xp = useSelector<AppState, number>(getPlayerXp);
     const money = useSelector<AppState, number>(getPlayerMoney);
     // todo reselect
-    const health = useSelector<AppState, number>(state => state.playerList.find(p => p.id === state.user.user.id).health);
+    const health = useSelector<AppState, number | null>(state => {
+        const player = state.playerList.find(p => p.id === state.user.user.id);
+
+        return player ? player.health : null;
+    });
+
+    if (health === null) {
+        return null;
+    }
 
     return (
         <div className="profile">
