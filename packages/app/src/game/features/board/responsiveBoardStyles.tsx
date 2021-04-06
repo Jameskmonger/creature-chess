@@ -63,7 +63,7 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
     // todo this is ugly
     const boardContainerStyle =
         inPortraitMode(width, height)
-            ? `{ width: ${boardWidth}; margin: 0 auto 0.5rem; }`
+            ? `{ width: ${boardWidth}; margin: 0 auto; }`
             : `{ height: ${boardHeight}; width: ${boardWidth}; }`;
 
     const positionablePieceStyles = getPositionablePieceStyles(tileSize);
