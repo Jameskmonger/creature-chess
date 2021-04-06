@@ -79,7 +79,8 @@ table {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: hidden; }
+  overflow-y: hidden;
+  justify-content: space-between; }
 
 .game-overlay {
   flex: 1;
@@ -365,8 +366,6 @@ body {
       display: flex;
       justify-content: center;
       flex-direction: column; }
-      .game.portrait .group:not(:first-child) {
-        margin-top: 1em; }
   .game .group {
     flex: 1;
     box-sizing: border-box; }
@@ -958,7 +957,6 @@ body {
 
 .profile {
   padding: 0.25rem;
-  margin-bottom: 0.5rem;
   font-family: Arial, sans-serif;
   color: #fff;
   background: #566c86; }
