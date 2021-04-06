@@ -87,6 +87,8 @@ export class Matchmaking {
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
 
+        const game = new Game();
+
         const players = members.map(m => {
             if (m.type === LobbyMemberType.BOT) {
                 const picture = pictures.pop();
@@ -104,7 +106,7 @@ export class Matchmaking {
             }
         });
 
-        const game = new Game(players);
+        game.start(players);
 
         logger.info(`Game ${game.id} started from lobby ${id}`);
 

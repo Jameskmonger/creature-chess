@@ -40,7 +40,7 @@ export class Game {
 
     private store = createGameStore();
 
-    constructor(players: Player[], options?: Partial<GameOptions>) {
+    constructor(options?: Partial<GameOptions>) {
         this.id = uuid();
 
         this.options = getOptions(options);
@@ -48,13 +48,6 @@ export class Game {
         this.deck = new CardDeck(this.definitionProvider.getAll());
 
         this.playerList.onUpdate(this.onPlayerListUpdate);
-
-        players.forEach(this.addPlayer);
-
-        this.updateOpponentProvider();
-
-        // execute at the end of the execution queue
-        setTimeout(this.startGame);
     }
 
     public onFinish(fn: (winner: Player) => void) {
@@ -69,28 +62,11 @@ export class Game {
         return this.playerList.getValue();
     }
 
-    public addPlayer = (player: Player) => {
-        this.players.push(player);
-        this.playerList.addPlayer(player);
+    public start = async (players: Player[]) => {
+        players.forEach(this.addPlayer);
 
-        player.setDeck(this.deck);
-        player.setGetGameState(this.store.getState);
-        player.setGetPlayerListPlayers(this.playerList.getValue);
-        player.setDefinitionProvider(this.definitionProvider);
-    }
+        this.updateOpponentProvider();
 
-    private dispatchPublicGameEvent(event: GameEvent) {
-        this.store.dispatch(event);
-
-        this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
-            .forEach(p => p.receiveGameEvent(event));
-    }
-
-    private onPlayerListUpdate = (playerList: PlayerListPlayer[]) => {
-        this.dispatchPublicGameEvent(playerListChangedEvent(playerList));
-    }
-
-    private startGame = async () => {
         if (this.store.getState().phase !== null) {
             return;
         }
@@ -135,6 +111,27 @@ export class Game {
         // more teardown
         this.events.removeAllListeners();
         this.events = null;
+    }
+
+    private addPlayer = (player: Player) => {
+        this.players.push(player);
+        this.playerList.addPlayer(player);
+
+        player.setDeck(this.deck);
+        player.setGetGameState(this.store.getState);
+        player.setGetPlayerListPlayers(this.playerList.getValue);
+        player.setDefinitionProvider(this.definitionProvider);
+    }
+
+    private dispatchPublicGameEvent(event: GameEvent) {
+        this.store.dispatch(event);
+
+        this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
+            .forEach(p => p.receiveGameEvent(event));
+    }
+
+    private onPlayerListUpdate = (playerList: PlayerListPlayer[]) => {
+        this.dispatchPublicGameEvent(playerListChangedEvent(playerList));
     }
 
     private async runPreparingPhase() {
