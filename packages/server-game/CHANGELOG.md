@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.9](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.9) (2021-04-06)
+
+
+### Features
+
+* add random play pictures ([418862e](https://github.com/Jameskmonger/creature-chess/commit/418862e2a8efc414f627b9c963056415a5955da4))
+* improve backend logging ([63df62d](https://github.com/Jameskmonger/creature-chess/commit/63df62dac8882389c1fcf35d038e26ae6be1dc5a))
+
+
+
+
+
 ## [0.3.8](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.8) (2021-04-06)
 
 

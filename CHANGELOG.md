@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.9](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.9) (2021-04-06)
+
+
+### Bug Fixes
+
+* replace `continue` in `while` loops with `return` ([a02f9ed](https://github.com/Jameskmonger/creature-chess/commit/a02f9ede52c905a07dcdefc3db8a23e1f2477f99)), closes [#355](https://github.com/Jameskmonger/creature-chess/issues/355)
+* use correct url for creature stage stars ([28fdd29](https://github.com/Jameskmonger/creature-chess/commit/28fdd299ca98fb080321a73d9e30be50caaa08bc))
+
+
+### Features
+
+* add blessed hand feature ([18bd997](https://github.com/Jameskmonger/creature-chess/commit/18bd997b61264b71cd968d6e580129c8db52a30c)), closes [#363](https://github.com/Jameskmonger/creature-chess/issues/363)
+* add random play pictures ([418862e](https://github.com/Jameskmonger/creature-chess/commit/418862e2a8efc414f627b9c963056415a5955da4))
+* improve backend logging ([63df62d](https://github.com/Jameskmonger/creature-chess/commit/63df62dac8882389c1fcf35d038e26ae6be1dc5a))
+* improve text colour for help page ([039aea2](https://github.com/Jameskmonger/creature-chess/commit/039aea2ef42366c4b6eb3347a2e88f6eb261ccfc))
+* move profile out of shop ([725140c](https://github.com/Jameskmonger/creature-chess/commit/725140c52c6ff76b22d8aea61545d43a79fd7859))
+* move stars to inside healthbar ([145742b](https://github.com/Jameskmonger/creature-chess/commit/145742bf6c92b0ffa6331640f549809ebed67c33))
+* remove connection warning ([2b26c96](https://github.com/Jameskmonger/creature-chess/commit/2b26c965f993dfe7e2078e18ee3086ba8cc55d8e))
+* show correct number of stars for upgraded pieces ([536fa98](https://github.com/Jameskmonger/creature-chess/commit/536fa983babdbc2072178be71da3b53bfab36e1d))
+* use colorblind-friendly colours for piece healthbars ([1801ddd](https://github.com/Jameskmonger/creature-chess/commit/1801dddec3aad8b8c057eacafc10fb6a4982860a))
+
+
+
+
+
 ## [0.3.8](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.8) (2021-04-06)
 
 
