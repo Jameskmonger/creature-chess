@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.8) (2021-04-06)
+
+
+### Bug Fixes
+
+* replace `continue` in `while` loops with `return` ([a02f9ed](https://github.com/Jameskmonger/creature-chess/commit/a02f9ede52c905a07dcdefc3db8a23e1f2477f99)), closes [#355](https://github.com/Jameskmonger/creature-chess/issues/355)
+* use correct url for creature stage stars ([28fdd29](https://github.com/Jameskmonger/creature-chess/commit/28fdd299ca98fb080321a73d9e30be50caaa08bc))
+
+
+### Features
+
+* add blessed hand feature ([3fc1c41](https://github.com/Jameskmonger/creature-chess/commit/3fc1c41d25c42514582a9c9109a79476fc9402b4)), closes [#363](https://github.com/Jameskmonger/creature-chess/issues/363)
+* add random play pictures ([418862e](https://github.com/Jameskmonger/creature-chess/commit/418862e2a8efc414f627b9c963056415a5955da4))
+* improve backend logging ([63df62d](https://github.com/Jameskmonger/creature-chess/commit/63df62dac8882389c1fcf35d038e26ae6be1dc5a))
+* move stars to inside healthbar ([145742b](https://github.com/Jameskmonger/creature-chess/commit/145742bf6c92b0ffa6331640f549809ebed67c33))
+* show correct number of stars for upgraded pieces ([536fa98](https://github.com/Jameskmonger/creature-chess/commit/536fa983babdbc2072178be71da3b53bfab36e1d))
+
+
+
+
+
 ## [0.3.7](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.7) (2021-04-06)
 
 
