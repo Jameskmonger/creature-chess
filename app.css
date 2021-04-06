@@ -831,6 +831,22 @@ body {
 .player-list {
   margin-bottom: 1rem; }
 
+.player-health {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 16px; }
+  .player-health .fill {
+    background: #20b720; }
+  .player-health .contents {
+    position: absolute;
+    top: 0;
+    right: 0.25em;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000; }
+
 .player-list-item {
   display: flex;
   flex-direction: row;
@@ -875,20 +891,6 @@ body {
   .player-list-item.local .name {
     font-style: italic;
     color: #ffcd75; }
-  .player-list-item .player-health {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 16px; }
-    .player-list-item .player-health .fill {
-      background: #20b720; }
-    .player-list-item .player-health .contents {
-      position: absolute;
-      top: 0;
-      right: 0.25em;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      font-weight: 700; }
   .player-list-item .row {
     display: flex;
     justify-content: space-between; }
@@ -985,7 +987,6 @@ body {
     width: 50%;
     height: 1.75em;
     box-sizing: border-box;
-    margin-right: 0.5em;
     background: #636363; }
     .profile .xp-progress .fill {
       height: 100%;
