@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import { v4 as uuid } from "uuid";
 import shuffle = require("lodash.shuffle");
 import { CreatureDefinition, Card, PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
@@ -27,9 +28,13 @@ const canTakeCardAtCost = (level: number, cost: number): boolean => {
     return roll <= chance;
 };
 
+const BLESSED_HAND_CHANCE = [0, 0.1, 0.2, 0.15, 0.15, 0.23, 0.23, 0.1, 0.1, 0.1]
+const isHandBlessed = (level: number) => (Math.floor(Math.random() * 100) * 0.01) <= BLESSED_HAND_CHANCE[level - 1];
+
 export class CardDeck {
     public deck: Card[][];
     private definitions: CreatureDefinition[];
+    private logger: Logger;
 
     constructor(definitions: CreatureDefinition[]) {
         this.definitions = definitions;
@@ -47,21 +52,15 @@ export class CardDeck {
         this.shuffle();
     }
 
-    public reroll(input: Card[], level: number, count: number, excludeCards: number[] = []) {
+    public setLogger(logger: Logger) {
+        this.logger = logger;
+    }
+
+    public reroll(input: Card[], count: number, level: number, blessCandidates: number[], excludeCards: number[] = []) {
         this.addCards(input);
         this.shuffle();
 
-        return this.take(level, count, excludeCards);
-    }
-
-    public take(level: number, count: number, excludeCards: number[] = []) {
-        const output: Card[] = [];
-
-        for (let i = 0; i < count; i++) {
-            output.push(this.takeCard(level, excludeCards));
-        }
-
-        return output;
+        return this.take(count, level, blessCandidates, excludeCards);
     }
 
     public addCards(cards: Card[]) {
@@ -102,7 +101,59 @@ export class CardDeck {
         return this.deck[cost - 1];
     }
 
-    private takeCard(level: number, excludeDefinitions: number[]) {
+    private take(count: number, level: number, blessCandidates: number[], excludeCards: number[] = []) {
+        const output: Card[] = [];
+
+        let blessedHand = isHandBlessed(level);
+
+        if (blessedHand) {
+            this.logger.info(`Hand is blessed!`);
+        }
+
+        for (let i = 0; i < count; i++) {
+            const { card, blessed } = this.takeCard(level, blessedHand, blessCandidates, excludeCards);
+
+            output.push(card);
+
+            // clear blessed if it was used
+            if (blessed) {
+                blessedHand = false;
+            }
+        }
+
+        return output;
+    }
+
+    private takeCard(level: number, isBlessed: boolean, blessCandidates: number[], excludeDefinitions: number[]) {
+        if (isBlessed && blessCandidates.length > 0) {
+            for (const candidate of shuffle(blessCandidates)) {
+                const definition = this.definitions.find(p => p.id === candidate);
+                const deck = this.getDeckForCost(definition.cost);
+
+                const index = deck.findIndex(c => c.definitionId === candidate);
+
+                if (!index) {
+                    continue;
+                }
+
+                const [ card ] = deck.splice(index, 1);
+
+                if (card.definitionId !== candidate) {
+                    deck.push(card);
+
+                    this.logger.warn(`- Definition ${card.definitionId} mismatch, pulled for bless candidate ${candidate}`);
+
+                    continue;
+                }
+
+                this.logger.info(`- Bless pulled ${definition.name}, worth $${definition.cost}!`);
+
+                return { card, blessed: true };
+            }
+
+            this.logger.warn(`- No card pulled for bless`);
+        }
+
         // start at 5 and work downwards
         for (let cost = CARD_COST_CHANCES.length; cost >= 1; cost--) {
             const roll = canTakeCardAtCost(level, cost);
@@ -118,20 +169,22 @@ export class CardDeck {
 
                 if (card) {
                     if (!excludeDefinitions.includes(card.definitionId)) {
-                        return card;
+                        return { card, blessed: false };
                     }
 
-                    this.addCards([ card ]);
+                    this.addCards([card]);
                 }
             }
         }
+
+        this.logger.warn(`Falling back for second pass to find card`);
 
         // otherwise go back up and give them the first existing card
         for (let cost = 1; cost <= CARD_COST_CHANCES.length; cost++) {
             const card = this.getDeckForCost(cost).pop();
 
             if (card) {
-                return card;
+                return { card, blessed: false };
             }
         }
 

@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import { SagaMiddleware } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
-import { PieceModel, PlayerListPlayer, PlayerStatus, HEALTH_LOST_PER_PIECE } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 
 import { BoardCommands } from "../../board";
 import { GameState } from "../store/state";
@@ -13,7 +13,7 @@ import { Match } from "../match";
 import {
     createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry,
     playerBattle, playerMatchRewards,
-    subtractHealthCommand, fillBoardCommand
+    fillBoardCommand
 } from "./sagas";
 import {
     AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT,
@@ -23,7 +23,7 @@ import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
-import { getAllPieces, getBenchPiecesByStage, getBoardPiecesByStage } from "./pieceSelectors";
+import { getAllPieces, getBenchPiecesByStage, getBoardPiecesByStage, getBoardPiecesExceptStage } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
 import { GameEvent } from "../store/events";
 import { GameEvents } from "../store";
@@ -221,7 +221,9 @@ export abstract class Player {
 
         const excludeIds = [ ...threeStarBoardPieces, ...threeStarBenchPieces ].map(p => p.definitionId);
 
-        const newCards = this.deck.reroll(cards, this.getLevel(), 5, excludeIds);
+        const blessCandidateIds = [... new Set(getBoardPiecesExceptStage(state, 2).map(p => p.definitionId)) ];
+
+        const newCards = this.deck.reroll(cards, 5, this.getLevel(), blessCandidateIds, excludeIds);
         this.store.dispatch(PlayerInfoCommands.updateCardsCommand(newCards));
     }
 

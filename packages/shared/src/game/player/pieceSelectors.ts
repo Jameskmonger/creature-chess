@@ -35,6 +35,9 @@ export const getBenchPiecesForDefinition =
 export const getBoardPiecesByStage =
 (state: PlayerPiecesState, stage: number): PieceModel[] =>
 (Object.values(state.board.pieces) as PieceModel[]).filter(p => p.stage === stage);
+export const getBoardPiecesExceptStage =
+(state: PlayerPiecesState, stage: number): PieceModel[] =>
+(Object.values(state.board.pieces) as PieceModel[]).filter(p => p.stage !== stage);
 export const getBenchPiecesByStage =
 (state: PlayerPiecesState, stage: number): PieceModel[] => state.bench.pieces.filter(p => p && p.stage === stage);
 export const getBoardPieceCount = (state: PlayerPiecesState): number => Object.values(state.board.pieces).length;
