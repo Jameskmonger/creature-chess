@@ -736,7 +736,8 @@ body {
   position: relative; }
   .board-container .now-playing {
     position: absolute;
-    top: 0; }
+    top: 0;
+    width: 100%; }
 
 .piece {
   position: relative;
