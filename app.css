@@ -357,6 +357,8 @@ body {
     box-sizing: border-box; }
     .game.landscape .group:not(:first-child) {
       margin-left: 1em; }
+    .game.landscape .profile {
+      margin-bottom: 0.5rem; }
   .game.portrait {
     flex-direction: column;
     width: 100%;
