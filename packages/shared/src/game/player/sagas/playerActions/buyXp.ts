@@ -28,7 +28,7 @@ export const buyXpPlayerActionSagaFactory = <TState extends PlayerState>(
                     "Player attempted to buy xp, but dead",
                     { actor: { playerId, name } }
                 );
-                return;
+                continue;
             }
 
             const currentLevel: number = yield select((state: TState) => state.playerInfo.level);
@@ -38,7 +38,7 @@ export const buyXpPlayerActionSagaFactory = <TState extends PlayerState>(
                     "Player attempted to buy xp, but at max level",
                     { actor: { playerId, name } }
                 );
-                return;
+                continue;
             }
 
             const money: number = yield select((state: TState) => state.playerInfo.money);
@@ -58,7 +58,7 @@ export const buyXpPlayerActionSagaFactory = <TState extends PlayerState>(
 
                 yield put(updateMoneyCommand(money));
 
-                return;
+                continue;
             }
 
             yield put(addXpCommand(BUY_XP_AMOUNT));

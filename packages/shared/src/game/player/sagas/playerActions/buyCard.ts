@@ -64,8 +64,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                 "BUY_CARD_ACTION received",
                 {
                     actor: { playerId, name },
-                    details: { index },
-                    state: { cards, money }
+                    details: { index }
                 }
             );
 
@@ -80,7 +79,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                 yield put(updateMoneyCommand(money));
                 yield put(updateCardsCommand(state.playerInfo.cards));
 
-                return;
+                continue;
             }
 
             if (money < card.cost) {
@@ -88,15 +87,14 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                     "Not enough money to buy card",
                     {
                         actor: { playerId, name },
-                        details: { index },
-                        state: { cost: card.cost, cards, money }
+                        details: { index }
                     }
                 );
 
                 yield put(updateMoneyCommand(money));
                 yield put(updateCardsCommand(state.playerInfo.cards));
 
-                return;
+                continue;
             }
 
             const destination = getCardDestination(state, playerId, sortPositions);
@@ -107,7 +105,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                     `Player attempted to buy a card but has no available destination`,
                     { actor: { playerId, name } }
                 );
-                return;
+                continue;
             }
 
             const piece = createPieceFromCard(definitionProvider, playerId, card);
