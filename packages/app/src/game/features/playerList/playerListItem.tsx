@@ -59,7 +59,7 @@ const PlayerListItem: React.FunctionComponent<Props> = props => {
                 <div className="row">
                     <div className="row-half name-container">
                         <span className="name">
-                            {props.index}&nbsp;<PlayerName playerId={props.playerId} />
+                            {props.index}.&nbsp;<PlayerName playerId={props.playerId} />
                         </span>
 
                         <PlayerTitle playerId={props.playerId} />
