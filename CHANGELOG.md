@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.17](https://github.com/Jameskmonger/creature-chess/compare/v0.3.16...v0.3.17) (2021-04-06)
+
+
+### Bug Fixes
+
+* add z-index to now playing ([644dc70](https://github.com/Jameskmonger/creature-chess/commit/644dc706a6682f6d51ef01d5f68d6367f916d757))
+* fix QuitPlayerListItem ([a338012](https://github.com/Jameskmonger/creature-chess/commit/a338012a3e2a31d1112e6ccfa40813d6e40ab9e9))
+* make exclusions work for fallback ([4d197a6](https://github.com/Jameskmonger/creature-chess/commit/4d197a645b3284ae8a0e1571f56b7f6dfdd6d12a)), closes [#368](https://github.com/Jameskmonger/creature-chess/issues/368)
+* make lobby player width smaller ([6430be6](https://github.com/Jameskmonger/creature-chess/commit/6430be64644ea051f5a058fd64c4bbd69a56011a))
+* put full stop after player position ([5c62da3](https://github.com/Jameskmonger/creature-chess/commit/5c62da384b30cf1c3860783cd1a67a4ea6b9efcf))
+
+
+### Features
+
+* add position to player list ([dfd1a30](https://github.com/Jameskmonger/creature-chess/commit/dfd1a30aa4ee027665312a97ebc4c15c910cdf8b)), closes [#357](https://github.com/Jameskmonger/creature-chess/issues/357)
+* create "dead" player list card ([3f1b7c2](https://github.com/Jameskmonger/creature-chess/commit/3f1b7c26dbd4b42835b89040130d574d28750bb5)), closes [#356](https://github.com/Jameskmonger/creature-chess/issues/356)
+
+
+
+
+
 ## [0.3.16](https://github.com/Jameskmonger/creature-chess/compare/v0.3.15...v0.3.16) (2021-04-06)
 
 

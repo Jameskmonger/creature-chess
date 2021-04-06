@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.17](https://github.com/Jameskmonger/creature-chess/compare/v0.3.16...v0.3.17) (2021-04-06)
+
+
+### Bug Fixes
+
+* make exclusions work for fallback ([4d197a6](https://github.com/Jameskmonger/creature-chess/commit/4d197a645b3284ae8a0e1571f56b7f6dfdd6d12a)), closes [#368](https://github.com/Jameskmonger/creature-chess/issues/368)
+
+
+
+
+
 ## [0.3.9](https://github.com/Jameskmonger/creature-chess/compare/v0.3.3...v0.3.9) (2021-04-06)
 
 
