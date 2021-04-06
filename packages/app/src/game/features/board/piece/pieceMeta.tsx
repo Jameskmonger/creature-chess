@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { CreatureType, PieceModel } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { Healthbar } from "./components/healthbar";
@@ -15,10 +15,13 @@ const PieceMeta: React.FunctionComponent<{ id: string }> = ({ id }) => {
             <div className="piece-meta">
                 <TypeIndicator type={piece.definition.type} />
 
-                <Healthbar pieceId={id} vertical />
+                <div className="health-bar-container">
+                    <Healthbar pieceId={id} vertical />
+
+                    <StageIndicator pieceId={id} />
+                </div>
             </div>
             <div className="piece-meta-top">
-                <StageIndicator pieceId={id} />
             </div>
         </div>
     )

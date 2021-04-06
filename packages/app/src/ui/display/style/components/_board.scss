@@ -123,6 +123,27 @@
             height: 100%;
         }
     }
+
+    .health-bar-container {
+        position: relative;
+        flex: 1;
+    }
+
+    .piece-stage {
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        height: 70%;
+        justify-content: space-evenly;
+    }
+
+    .healthbar {
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .piece {
