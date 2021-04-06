@@ -3,17 +3,16 @@ import { OutgoingPacketRegistry, Player, ServerToClientMenuPacketAcknowledgement
 import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
-import { logger } from "../../log";
 
 export class SocketPlayer extends Player {
     public readonly isConnection = true;
 
     constructor(socket: Socket, id: string, name: string, picture: number) {
         // todo fix typing
-        super({ logger: logger } as any, id, name, picture);
+        super(id, name, picture);
 
-        this.sagaMiddleware.run(incomingNetworking);
-        this.sagaMiddleware.run(outgoingNetworking(id, this.getMatch));
+        this.sagaMiddleware.run(incomingNetworking, this.getLogger);
+        this.sagaMiddleware.run(outgoingNetworking, this.getLogger, id, this.getMatch);
 
         this.initialiseSocket(socket);
     }

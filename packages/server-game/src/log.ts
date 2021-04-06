@@ -25,43 +25,4 @@ const createWinstonLogger = (logStreamName: string) => {
     return newLogger;
 };
 
-type LoggerWrapper = {
-    info: (message: string, matchId?: string) => void;
-    warn: (message: string, matchId?: string) => void;
-    error: (message: string, matchId?: string) => void;
-    closeMatch: (matchId: string) => void;
-}
-
-const loggers: { [matchId: string]: winston.Logger } = {
-    [""]: createWinstonLogger("global")
-};
-
-const wrapLogFunction = (logMethodSelector: (logger: winston.Logger) => winston.LeveledLogMethod) =>
-    (message: string, matchId: string = "") => {
-        let logger = loggers[matchId];
-
-        if (!logger) {
-            logger = createWinstonLogger(`match-${matchId}`);
-            loggers[matchId] = logger;
-        }
-
-        return logMethodSelector(logger)(message);
-    }
-
-const logger: LoggerWrapper = {
-    info: wrapLogFunction(logger => logger.info),
-    warn: wrapLogFunction(logger => logger.warn),
-    error: wrapLogFunction(logger => logger.error),
-    closeMatch: matchId => {
-        const logger = loggers[matchId];
-
-        if (!logger) {
-            return;
-        }
-
-        logger.close();
-        delete loggers[matchId];
-    }
-}
-
-export { logger };
+export { createWinstonLogger };

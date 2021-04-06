@@ -56,13 +56,14 @@ export abstract class Player {
     private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
     private deck: CardDeck;
+    private logger: Logger;
 
-    constructor(dependencies: { logger: Logger }, id: string, name: string, picture: number) {
+    constructor(id: string, name: string, picture: number) {
         this.id = id;
         this.name = name;
         this.picture = picture;
 
-        const { store, sagaMiddleware } = createPlayerStore(dependencies.logger, this.id);
+        const { store, sagaMiddleware } = createPlayerStore(this.getLogger, this.id, this.name);
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
@@ -76,6 +77,12 @@ export abstract class Player {
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
     }
+
+    public setLogger(logger: Logger) {
+        this.logger = logger;
+    }
+
+    public getLogger = () => this.logger;
 
     public receiveGameEvent(gameEvent: GameEvent) {
         this.store.dispatch(gameEvent);

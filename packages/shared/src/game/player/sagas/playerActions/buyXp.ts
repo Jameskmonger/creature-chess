@@ -7,22 +7,37 @@ import { isPlayerAlive } from "../../playerSelectors";
 import { updateMoneyCommand } from "../../playerInfo/commands";
 import { addXpCommand } from "../xp";
 
-export const buyXpPlayerActionSagaFactory = <TState extends PlayerState>(logger: Logger) => {
+export const buyXpPlayerActionSagaFactory = <TState extends PlayerState>(
+    getLogger: () => Logger,
+    playerId: string,
+    name: string
+) => {
     return function*() {
         while (true) {
             yield take(BUY_XP_ACTION);
 
+            getLogger().info(
+                "BUY_XP_ACTION received",
+                { playerId, name }
+            );
+
             const isAlive: boolean = yield select(isPlayerAlive);
 
             if (isAlive === false) {
-                logger.info("Player attempted to buy xp, but dead");
+                getLogger().info(
+                    "Player attempted to buy xp, but dead",
+                    { actor: { playerId, name } }
+                );
                 return;
             }
 
             const currentLevel: number = yield select((state: TState) => state.playerInfo.level);
 
             if (currentLevel === MAX_PLAYER_LEVEL) {
-                logger.info("Player attempted to buy xp, but at max level");
+                getLogger().info(
+                    "Player attempted to buy xp, but at max level",
+                    { actor: { playerId, name } }
+                );
                 return;
             }
 
@@ -30,7 +45,16 @@ export const buyXpPlayerActionSagaFactory = <TState extends PlayerState>(logger:
 
             // not enough money
             if (money < BUY_XP_COST) {
-                logger.info(`Player attempted to buy xp costing $${BUY_XP_COST} but only had $${money}`);
+                getLogger().info(
+                    "Not enough money to buy xp",
+                    {
+                        actor: { playerId, name },
+                        details: {
+                            money,
+                            cost: BUY_XP_COST
+                        }
+                    }
+                );
 
                 yield put(updateMoneyCommand(money));
 

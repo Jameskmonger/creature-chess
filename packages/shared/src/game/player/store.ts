@@ -23,11 +23,11 @@ export interface PlayerState {
 
 export type PlayerStore = Store<PlayerState>;
 
-export const createPlayerStore = (logger: Logger, playerId: string): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
+export const createPlayerStore = (getLogger: () => Logger, playerId: string, name: string): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([
-            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(logger, new DefinitionProvider(), playerId)),
-            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(logger)),
+            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(getLogger, new DefinitionProvider(), playerId, name)),
+            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(getLogger, playerId, name)),
             yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(playerId)),
             yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<PlayerState>()),
             yield fork(PlayerActionSagas.toggleShopLockPlayerActionSagaFactory<PlayerState>()),

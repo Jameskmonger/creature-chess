@@ -6,6 +6,7 @@ import { openServer } from "./socket/openServer";
 import { Matchmaking } from "./matchmaking/matchmaking";
 import { UserAppMetadata } from "@creature-chess/auth-server";
 import { createDiscordApi } from "./discord";
+import { createWinstonLogger } from "./log";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
@@ -19,7 +20,9 @@ const AUTH0_CONFIG = {
 };
 
 export const startServer = async (port: number) => {
-    const socketServer = openServer(port);
+    const logger = createWinstonLogger("global");
+
+    const socketServer = openServer(logger, port);
     const client = new ManagementClient<UserAppMetadata>({
         domain: AUTH0_CONFIG.domain,
         clientId: AUTH0_CONFIG.clientId,
@@ -27,11 +30,11 @@ export const startServer = async (port: number) => {
     });
 
     const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
-    const discordApi = await createDiscordApi(process.env.DISCORD_BOT_TOKEN);
-    const matchmaking = new Matchmaking(database, discordApi);
+    const discordApi = await createDiscordApi(logger, process.env.DISCORD_BOT_TOKEN);
+    const matchmaking = new Matchmaking(logger, database, discordApi);
 
     // networking
-    const socketAuthenticator = new SocketAuthenticator(client, database, socketServer);
+    const socketAuthenticator = new SocketAuthenticator(logger, client, database, socketServer);
     socketAuthenticator.onSocketAuthenticated((socket, user) => {
         matchmaking.findGame(socket, user);
     });
