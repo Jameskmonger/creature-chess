@@ -21,27 +21,31 @@ const Profile: React.FunctionComponent = () => {
         <div className="profile">
             <div className="row">
                 <p className="item level">Level {level} <span className="highlight">${money}</span></p>
-
-                <PieceCount />
-            </div>
-
-            {
-                level !== MAX_PLAYER_LEVEL
-                && (
-                    <div className="row">
+                {
+                    level !== MAX_PLAYER_LEVEL
+                    && (
                         <ProgressBar
                             className="xp-progress"
                             current={xp}
                             max={getXpToNextLevel(level)}
                             renderContents={renderProgressBar}
                         />
+                    )
+                }
+            </div>
+
+            <div className="row">
+                <PieceCount />
+                {
+                    level !== MAX_PLAYER_LEVEL
+                    && (
                         <button
                             className="buy-xp"
                             onClick={() => dispatch(PlayerActions.buyXpAction())}
                         >Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})</button>
-                    </div>
-                )
-            }
+                    )
+                }
+            </div>
 
             <ProgressBar
                 className="healthbar player-health"
