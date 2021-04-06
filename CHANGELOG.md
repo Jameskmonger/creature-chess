@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.19](https://github.com/Jameskmonger/creature-chess/compare/v0.3.18...v0.3.19) (2021-04-06)
+
+
+### Bug Fixes
+
+* fix off-by-one error on player position ([f0d6eab](https://github.com/Jameskmonger/creature-chess/commit/f0d6eabefeef839e49b6ab730330a75eae0f128a))
+
+
+
+
+
 ## [0.3.18](https://github.com/Jameskmonger/creature-chess/compare/v0.3.17...v0.3.18) (2021-04-06)
 
 
