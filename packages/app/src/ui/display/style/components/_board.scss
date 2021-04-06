@@ -146,6 +146,15 @@
     }
 }
 
+.board-container {
+    position: relative;
+
+    .now-playing {
+        position: absolute;
+        top: 0;
+    }
+}
+
 .piece {
     position: relative;
     z-index: $piece-z-index;

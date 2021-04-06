@@ -14,7 +14,6 @@ import { Settings } from "../features/settings";
 import { RoundIndicator } from "../features/roundIndicator";
 import { PhaseInfo } from "../features/phaseInfo";
 import { Help } from "../features/help";
-import { NowPlaying } from "../features/nowPlaying";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
@@ -108,11 +107,9 @@ const MobileGameContentPane: React.FunctionComponent = () => {
     if (currentOverlay === null) {
         return (
             <div className="content-pane">
-                <NowPlaying />
-
                 <Profile />
 
-                <BoardContainer />
+                <BoardContainer showNowPlaying />
             </div>
         );
     }
