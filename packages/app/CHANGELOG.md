@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.18](https://github.com/Jameskmonger/creature-chess/compare/v0.3.17...v0.3.18) (2021-04-06)
+
+
+### Features
+
+* add confirm to sell piece ([ea07730](https://github.com/Jameskmonger/creature-chess/commit/ea07730749f2a65794aa6fe5bfda5d8bb80b5627))
+
+
+
+
+
 ## [0.3.17](https://github.com/Jameskmonger/creature-chess/compare/v0.3.16...v0.3.17) (2021-04-06)
 
 
