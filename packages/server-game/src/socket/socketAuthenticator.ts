@@ -37,15 +37,16 @@ export class SocketAuthenticator {
     }
 
     private receiveConnection = (socket: io.Socket) => {
-        this.logger.info("New connection received");
+        this.logger.info(`[socket ${socket.id}] New connection received`);
 
         socket.on("authenticate", ({ idToken }: { idToken: string }) => {
+            this.logger.info(`[socket ${socket.id}] Authentication request recieved`);
+
             this.authenticateSocket(socket, idToken);
         });
     }
 
     private failAuthentication(socket: io.Socket, response: AuthenticateResponse) {
-        this.logger.error(`Authentication failed for socket ${socket.id}, reason: '${response.error?.type}'`);
 
         socket.emit("authenticate_response", response);
         socket.removeAllListeners();
@@ -69,6 +70,7 @@ export class SocketAuthenticator {
             this.broadcastSocketAuthenticated(socket, user);
         } catch (e) {
             console.error("onAuthenticate err", e);
+            this.logger.error(`[socket ${socket.id}] Authentication failed ${e}`);
             this.failAuthentication(socket, { error: { type: "authentication" } });
         }
     }
