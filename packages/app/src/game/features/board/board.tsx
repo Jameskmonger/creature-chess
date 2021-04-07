@@ -22,7 +22,11 @@ const BoardPieces: React.FunctionComponent = props => {
 
     const pieceElements: React.ReactNode[] = [];
 
-    for (const [position, id] of Object.entries(pieces)) {
+    // this weird code is needed so that React keeps the same DOM elements, thus preserving the CSS animations
+    const entries = Object.entries(pieces);
+    entries.sort(([ aPosition, aId ], [bPosition, bId]) => aId.localeCompare(bId));
+
+    for (const [position, id] of entries) {
         if (!id) {
             continue;
         }
@@ -35,9 +39,9 @@ const BoardPieces: React.FunctionComponent = props => {
     }
 
     return (
-        <>
+        <div className="board-pieces">
             {pieceElements}
-        </>
+        </div>
     );
 };
 
