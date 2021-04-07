@@ -6,10 +6,6 @@ import { DroppableTile } from "./tile/DroppableTile";
 import { DragObjectWithType } from "react-dnd";
 
 type BoardGridProps = {
-    showOpponentHalf: boolean;
-    width: number;
-    playerHeight: number;
-
     onDrop: (item: DragObjectWithType & { piece: PieceModel }, location: PlayerPieceLocation) => void;
     onClick: (location: PlayerPieceLocation) => void;
 }
@@ -17,24 +13,12 @@ type BoardGridProps = {
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 const getClassName = (x: number, y: number) => isBoardTileDark(x, y) ? "dark" : "light";
 
-const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ showOpponentHalf, width, playerHeight, onDrop, onClick }) => {
-    const { locked, piecePositions } = useBoard();
+const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ onDrop, onClick }) => {
+    const { locked, piecePositions, size: { width, height } } = useBoard();
 
     const rows = [];
 
-    if (showOpponentHalf) {
-        for (let y = 0; y < playerHeight; y++) {
-            const tiles = [];
-
-            for (let x = 0; x < width; x++) {
-                tiles.push(<UndroppableTile key={`tile-${x}`} className={getClassName(x, y)} />);
-            }
-
-            rows.push(<div key={`row-${y}`} className={`tile-row style-default`}>{tiles}</div>);
-        }
-    }
-
-    for (let y = playerHeight; y < playerHeight * 2; y++) {
+    for (let y = 0; y < height; y++) {
         const tiles = [];
 
         for (let x = 0; x < width; x++) {

@@ -74,6 +74,7 @@ const battleEventChannel = (
                 ...startingBoardState.piecePositions
             },
             locked: startingBoardState.locked,
+            size: startingBoardState.size,
             pieceLimit: null
         };
 
@@ -98,7 +99,11 @@ const battleEventChannel = (
 
                 board = simulateTurn(++turnCount, board);
                 emit(battleTurnEvent(turnCount));
-                emit(BoardCommands.setBoardPiecesCommand({ pieces: board.pieces, piecePositions: board.piecePositions }));
+                emit(BoardCommands.setBoardPiecesCommand({
+                    pieces: board.pieces,
+                    piecePositions: board.piecePositions,
+                    size: undefined // todo improve this
+                }));
 
                 await turnTimer.remaining();
             }

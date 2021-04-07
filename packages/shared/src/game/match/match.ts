@@ -2,7 +2,6 @@ import pDefer = require("p-defer");
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { GRID_SIZE } from "@creature-chess/models";
 import { boardReducer, BoardState, BoardCommands, mergeBoards, rotatePiecesAboutCenter } from "../../board";
 import { Player } from "../player";
 import { battleSaga, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
@@ -31,7 +30,7 @@ export class Match {
         this.away = away;
         this.store = this.createStore(gameOptions);
 
-        const board = mergeBoards(GRID_SIZE, home.getBoard(), away.getBoard());
+        const board = mergeBoards(home.getBoard(), away.getBoard());
 
         this.store.dispatch(BoardCommands.setBoardPiecesCommand(board));
     }
@@ -45,7 +44,7 @@ export class Match {
 
         // rotate the board for the away player, so that their pieces are shown on their own side
         return (playerId === this.away.id)
-            ? rotatePiecesAboutCenter(GRID_SIZE, board)
+            ? rotatePiecesAboutCenter(board)
             : board;
     }
 

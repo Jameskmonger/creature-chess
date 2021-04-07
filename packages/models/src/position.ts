@@ -2,8 +2,6 @@ export type TileCoordinates = { x: number, y: number };
 export type SlotLocation = { slot: number };
 
 export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
-export const arePositionsEqual = (a: TileCoordinates, b: TileCoordinates) => a && b && a.x === b.x && a.y === b.y;
-export const subtract = (a: TileCoordinates, b: TileCoordinates) => ({ x: a.x - b.x, y: a.y - b.y });
 export const getDelta = (a: TileCoordinates, b: TileCoordinates) => {
     return {
         x: Math.abs(a.x - b.x),
@@ -22,8 +20,6 @@ export const Directions = {
     DOWN: { x: 0, y: 1 },
     LEFT: { x: -1, y: 0 }
 };
-
-
 
 /**
  * Returns the relative direction of position b from the perspective of position a
@@ -50,7 +46,3 @@ export enum TileType {
     BOARD,
     BENCH
 }
-
-export const inBench = ({ y }: TileCoordinates) => y === null;
-// TODO: Make this use Constants.GRID_SIZE
-export const inFriendlyBoard = ({ y }: TileCoordinates) => y > 3;

@@ -9,12 +9,12 @@ export const rotateGridPosition = (gridSize: { width: number, height: number }, 
     );
 };
 
-export const rotatePiecesAboutCenter = (gridSize: { width: number, height: number }, state: BoardState): BoardState => {
+export const rotatePiecesAboutCenter = (state: BoardState): BoardState => {
     const newPositions: { pieceId: string, position: string }[] = [];
 
     for (const [pieceId] of Object.entries(state.pieces)) {
         const position = getPiecePosition(state, pieceId);
-        const newPosition = rotateGridPosition(gridSize, position);
+        const newPosition = rotateGridPosition(state.size, position);
         const newPositionKey = `${newPosition.x},${newPosition.y}`;
 
         newPositions.push({ pieceId, position: newPositionKey });

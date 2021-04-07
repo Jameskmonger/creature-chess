@@ -35,7 +35,7 @@ export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: strin
                         return;
                     }
 
-                    const destination = getPlayerFirstEmptyBoardSlot(state);
+                    const destination = getPlayerFirstEmptyBoardSlot(state.board);
 
                     if (!destination) {
                         return;

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
-import { GamePhase, GRID_SIZE, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { BenchState, BoardState, BoardSelectors, PlayerActions } from "@creature-chess/shared";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
@@ -93,17 +93,16 @@ const Board: React.FunctionComponent = props => {
         <div className="chessboard">
             {showOpponentBoardPlaceholder && <OpponentBoardPlaceholder />}
 
-            <BoardContextProvider value={board}>
-                <BoardGrid
-                    showOpponentHalf={!showOpponentBoardPlaceholder}
-                    width={GRID_SIZE.width}
-                    playerHeight={GRID_SIZE.height / 2}
-                    onDrop={onDropPiece(dispatch, board, bench)}
-                    onClick={onTileClick}
-                />
-            </BoardContextProvider>
+            <div className="board-tiles">
+                <BoardContextProvider value={board}>
+                    <BoardGrid
+                        onDrop={onDropPiece(dispatch, board, bench)}
+                        onClick={onTileClick}
+                    />
+                </BoardContextProvider>
 
-            <BoardPieces />
+                <BoardPieces />
+            </div>
 
             <Announcement />
             <VictoryOverlay />

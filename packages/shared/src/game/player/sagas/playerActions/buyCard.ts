@@ -17,7 +17,7 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
     const inPreparingPhase = state.game.phase === GamePhase.PREPARING;
 
     if (belowPieceLimit && inPreparingPhase) {
-        const boardSlot = getPlayerFirstEmptyBoardSlot(state, sortPositions);
+        const boardSlot = getPlayerFirstEmptyBoardSlot(state.board, sortPositions);
 
         if (boardSlot) {
             return {

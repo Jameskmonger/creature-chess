@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createTileCoordinates, IndexedPieces, PieceModel, TileCoordinates } from "@creature-chess/models";
+import { IndexedPieces, PieceModel, TileCoordinates } from "@creature-chess/models";
 import { getPiecesWithoutIds, getPiecePositionsWithoutIds } from "./utils/filter";
 
 type PiecePositionsState = {
@@ -7,22 +7,31 @@ type PiecePositionsState = {
 };
 
 export type BoardState = {
-    pieces: IndexedPieces,
-    piecePositions: PiecePositionsState,
-    locked: boolean,
-    pieceLimit: number | null
+    pieces: IndexedPieces;
+    piecePositions: PiecePositionsState;
+    locked: boolean;
+    pieceLimit: number | null;
+    size: {
+        width: number,
+        height: number
+    };
 };
 
 const initialState: BoardState = {
     pieces: {},
     piecePositions: {},
     locked: false,
-    pieceLimit: null
-}
+    pieceLimit: null,
+    size: {
+        width: 7,
+        height: 3
+    }
+};
 
 export const {
     reducer,
     actions: {
+        setBoardSizeCommand,
         lockBoardCommand,
         unlockBoardCommand,
         setPieceLimitCommand,
@@ -36,16 +45,49 @@ export const {
     name: "board",
     initialState,
     reducers: {
+        setBoardSizeCommand: (state, { payload: { width, height } }: PayloadAction<{ width: number, height: number }>) => {
+            const differenceWidth = width - state.size.width;
+            const differenceHeight = height - state.size.height;
+
+            return {
+                ...state,
+                size: { width, height },
+                piecePositions: Object.entries(state.piecePositions).reduce<{ [position: string]: string }>(
+                    (newPiecePositions, [position, pieceId]) => {
+                        const [x, y] = position.split(",").map(x => parseInt(x, 10));
+
+                        const newX = x + differenceWidth;
+                        const newY = y + differenceHeight;
+
+                        return {
+                            ...newPiecePositions,
+                            [`${newX},${newY}`]: pieceId
+                        };
+                    },
+                    {}
+                )
+            };
+        },
         lockBoardCommand: state => ({ ...state, locked: true }),
         unlockBoardCommand: state => ({ ...state, locked: false }),
         setPieceLimitCommand: (state, { payload: limit }: PayloadAction<number | null>) => ({
             ...state,
             pieceLimit: limit
         }),
-        setBoardPiecesCommand: (state, { payload: { pieces, piecePositions } }: PayloadAction<{ pieces: IndexedPieces, piecePositions: PiecePositionsState }>) => ({
+        setBoardPiecesCommand: (
+            state,
+            {
+                payload: {
+                    pieces,
+                    piecePositions,
+                    size
+                }
+            }: PayloadAction<{ pieces: IndexedPieces, piecePositions: PiecePositionsState, size?: { width: number, height: number } }>
+        ) => ({
             ...state,
             pieces: { ...pieces },
-            piecePositions: { ...piecePositions }
+            piecePositions: { ...piecePositions },
+            ...(size ? { size: { width: size.width, height: size.height } } : {})
         }),
         addBoardPieceCommand: (state, { payload: { x, y, piece } }: PayloadAction<{ x: number, y: number, piece: PieceModel }>) => {
             return {

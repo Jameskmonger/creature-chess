@@ -3,5 +3,5 @@ export {
     setPieceLimitCommand,
     setBoardPiecesCommand, moveBoardPieceCommand,
     removeBoardPiecesCommand, updateBoardPiecesCommand,
-    addBoardPieceCommand
+    addBoardPieceCommand, setBoardSizeCommand
 } from "./state";

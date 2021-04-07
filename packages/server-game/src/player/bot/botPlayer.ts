@@ -204,7 +204,7 @@ export class BotPlayer extends Player {
                 break;
             }
 
-            const firstEmptyPosition = PlayerSelectors.getPlayerFirstEmptyBoardSlot(this.store.getState(), PREFERRED_LOCATIONS[firstBenchPiece.definition.class]);
+            const firstEmptyPosition = PlayerSelectors.getPlayerFirstEmptyBoardSlot(this.store.getState().board, PREFERRED_LOCATIONS[firstBenchPiece.definition.class]);
 
             if (firstEmptyPosition === null) {
                 break;
