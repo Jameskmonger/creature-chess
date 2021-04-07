@@ -86,7 +86,7 @@ table {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
+  padding: 0.5rem 0.25rem;
   overflow-y: scroll;
   font-family: Arial, sans-serif;
   background: #9da5bd; }
@@ -113,6 +113,11 @@ table {
 
 .overlay-content {
   overflow: scroll; }
+  .overlay-content.fullscreen {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0 0.25em;
+    margin-top: 1em; }
 
 .now-playing {
   margin-top: 0.5em; }
@@ -337,6 +342,9 @@ body {
   width: 100%;
   height: 100vh; }
 
+* {
+  user-select: none; }
+
 html,
 body {
   width: 100%;
@@ -528,105 +536,181 @@ body {
     box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent; }
 
 .card {
+  z-index: 10;
   display: flex;
-  width: 49%;
+  width: 19%;
   box-sizing: border-box;
-  margin-bottom: 2%;
   font-family: Arial, sans-serif;
   color: #fff;
   text-align: center;
   cursor: pointer;
   user-select: none;
   background: #4e4e4e; }
-  .card.full-width {
+  .card.selected {
+    margin-top: -2em; }
+  .card .image {
     width: 100%; }
-    .card.full-width .card-content {
-      flex-direction: row;
-      justify-content: center; }
-    .card.full-width .card-content-group {
-      display: flex;
-      flex-direction: column;
-      justify-content: center; }
-    .card.full-width .card-name {
-      font-size: 1.2rem; }
-    .card.full-width .card-name,
-    .card.full-width .card-class,
-    .card.full-width .card-type {
-      display: block;
-      margin-bottom: 0.2rem; }
+  .card .card-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; }
+  .card .card-content-group .half:first-child {
+    z-index: 20;
+    margin-top: -0.5em;
+    margin-left: -0.125em; }
+  .card .card-content-group .half:last-child {
+    padding: 0.125em;
+    margin-top: -0.5em;
+    margin-right: -0.1em;
+    background: gray; }
   .card .card-content {
     flex: 1;
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    width: 100%; }
     .card .card-content .piece-type {
       width: 24px;
-      height: 24px;
-      margin: 0.25rem auto; }
+      height: 24px; }
+    .card .card-content .card-content-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%; }
   .card .card-name {
-    font-size: 1rem;
+    font-size: 0.8em;
     font-weight: 700; }
   .card .card-meta {
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
     margin: 0.5rem 0; }
     .card .card-meta .divider {
       border-right: 2px solid #8e8e8e; }
-    .card .card-meta .piece-type {
-      margin: 0; }
+  @media only screen and (max-width: 539px) {
+    .card .card-meta {
+      flex-direction: column; } }
+  @media only screen and (min-width: 540px) {
+    .card .card-meta {
+      flex-direction: row; } }
   .card .card-class,
   .card .card-type {
     font-size: 0.6rem;
     font-weight: 700;
     text-transform: uppercase; }
-  .card .price {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 0 0.3rem;
-    font-size: 1.5rem;
-    line-height: 50px;
-    background: #353535; }
 
-.card-selector .cards {
-  display: flex;
-  width: 100%;
-  flex-wrap: wrap;
-  justify-content: space-between; }
-
-.card-selector .balance {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.8em;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.2em;
-  color: #fff;
-  text-align: center; }
-  .card-selector .balance .item:not(:last-child) {
-    margin-right: 1em; }
-
-.card-selector .shop-actions {
+.current-card {
   display: flex;
   flex-direction: column;
-  width: 48%;
-  justify-content: center;
-  margin-bottom: 2%; }
-  .card-selector .shop-actions .shop-action {
+  justify-content: center; }
+  .current-card .current-card-detail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2f2f2f; }
+  .current-card .card-image {
     flex: 1;
-    padding: 0.7em 1em;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+  .current-card .card-text {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
     color: #fff;
-    cursor: pointer;
-    background: #566c86;
     /* stylelint-disable-next-line */
-    border: none; }
-    .card-selector .shop-actions .shop-action:disabled {
-      color: #222;
-      cursor: not-allowed;
-      background: #666; }
-    .card-selector .shop-actions .shop-action.reroll {
-      margin-bottom: 0.5rem; }
+    /* stylelint-disable-next-line */ }
+    .current-card .card-text h2 {
+      margin-bottom: 0.35em; }
+    .current-card .card-text span {
+      font-size: 0.7em;
+      text-transform: uppercase; }
+  .current-card .current-card-buy {
+    display: flex;
+    justify-content: center;
+    padding: 1em;
+    background: #4e4e4e;
+    /* stylelint-disable-next-line */ }
+    .current-card .current-card-buy button {
+      padding: 0.7em 1em;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1em;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      background: #566c86;
+      /* stylelint-disable-next-line */
+      border: none; }
+
+.card-selector {
+  display: flex;
+  flex-direction: column;
+  height: 100%; }
+  .card-selector .current-card {
+    flex: 1; }
+  .card-selector .cards {
+    position: relative;
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    box-sizing: border-box;
+    margin-top: 1em;
+    margin-bottom: 2%; }
+    .card-selector .cards .tray {
+      position: absolute;
+      top: 30%;
+      width: 100%;
+      height: 70%;
+      background: #2b2b2b; }
+  .card-selector .balance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.8em;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+    color: #fff;
+    text-align: center; }
+    .card-selector .balance .item:not(:last-child) {
+      margin-right: 1em; }
+  .card-selector .shop-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 2%; }
+    .card-selector .shop-actions .third,
+    .card-selector .shop-actions .twothirds {
+      display: flex;
+      flex-direction: row;
+      align-items: center; }
+    @media only screen and (max-width: 539px) {
+      .card-selector .shop-actions .third {
+        flex: 0; } }
+    @media only screen and (min-width: 540px) {
+      .card-selector .shop-actions .third {
+        flex: 1; } }
+    .card-selector .shop-actions .two-thirds {
+      flex: 2;
+      justify-content: space-between;
+      display: flex;
+      flex-direction: row;
+      align-items: center; }
+    .card-selector .shop-actions .shop-action {
+      padding: 0.7em 1em;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1em;
+      color: #fff;
+      cursor: pointer;
+      background: #566c86;
+      /* stylelint-disable-next-line */
+      border: none; }
+      .card-selector .shop-actions .shop-action:disabled {
+        color: #222;
+        cursor: not-allowed;
+        background: #666; }
 
 .chessboard {
   position: relative;
