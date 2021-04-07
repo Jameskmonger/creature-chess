@@ -4,14 +4,14 @@ import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match,
     OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions,
-    ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BoardCommands, BenchCommands, BenchState, BoardState
+    ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BenchCommands, BenchState, BoardState, BoardSlice
 } from "@creature-chess/shared";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-export const outgoingNetworking = function*(getLogger: () => Logger, playerId: string, getCurrentMatch: () => Match) {
+export const outgoingNetworking = function*(getLogger: () => Logger, playerId: string, getCurrentMatch: () => Match, boardSlice: BoardSlice) {
     let registry: OutgoingRegistry;
     let socket: Socket;
 
@@ -132,10 +132,10 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
             ),
             yield takeLatest(
                 [
-                    BoardCommands.addBoardPieceCommand,
-                    BoardCommands.moveBoardPieceCommand,
-                    BoardCommands.removeBoardPiecesCommand,
-                    BoardCommands.updateBoardPiecesCommand
+                    boardSlice.commands.addBoardPieceCommand,
+                    boardSlice.commands.moveBoardPieceCommand,
+                    boardSlice.commands.removeBoardPiecesCommand,
+                    boardSlice.commands.updateBoardPiecesCommand
                 ],
                 function*() {
                     const board: BoardState = yield select((state: PlayerState) => state.board);

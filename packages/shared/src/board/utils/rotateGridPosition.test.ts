@@ -4,6 +4,7 @@ import { rotatePiecesAboutCenter } from "./rotateGridPosition";
 describe("rotatePiecesAboutCenter", () => {
     test("should rotate grid correctly - 2 pieces", () => {
         const input: BoardState = {
+            id: 'abc',
             size: { width: 7, height: 6 },
             pieces: {
                 'd6572bec-8397-4310-a50f-be2a897ab6a5': {
@@ -36,6 +37,7 @@ describe("rotatePiecesAboutCenter", () => {
         };
 
         const expected: BoardState = {
+            id: 'abc',
             size: { width: 7, height: 6 },
             pieces: {
                 'd6572bec-8397-4310-a50f-be2a897ab6a5': {
@@ -74,6 +76,7 @@ describe("rotatePiecesAboutCenter", () => {
 
     test("should rotate grid correctly", () => {
         const input: BoardState = {
+            id: 'abc',
             size: { width: 7, height: 6 },
             pieces: {
                 '0e1341ec-b1ab-4e7e-8473-09852e79c2c1': {
@@ -128,6 +131,7 @@ describe("rotatePiecesAboutCenter", () => {
         };
 
         const expected: BoardState = {
+            id: 'abc',
             size: { width: 7, height: 6 },
             pieces: {
                 '0e1341ec-b1ab-4e7e-8473-09852e79c2c1': {

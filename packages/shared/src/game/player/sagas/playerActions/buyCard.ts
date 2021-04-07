@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import { take, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
 import { GamePhase, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
-import { BoardCommands } from "../../../../board";
+import { BoardSlice } from "../../../../board";
 import { DefinitionProvider } from "../../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../../utils/piece-utils";
 import { addBenchPieceCommand } from "../../bench/commands";
@@ -47,6 +47,7 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
 export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
     getLogger: () => Logger,
     definitionProvider: DefinitionProvider,
+    boardSlice: BoardSlice,
     playerId: string,
     name: string
 ) => {
@@ -116,7 +117,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
 
             if (destination.type === "board") {
                 const { x, y } = destination.location
-                yield put(BoardCommands.addBoardPieceCommand({ piece, x, y }));
+                yield put(boardSlice.commands.addBoardPieceCommand({ piece, x, y }));
             } else if (destination.type === "bench") {
                 yield put(addBenchPieceCommand(piece, destination.location.slot));
             }

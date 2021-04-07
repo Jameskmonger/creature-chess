@@ -1,11 +1,13 @@
 import pDefer = require("p-defer");
+import { v4 as uuid } from "uuid";
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { boardReducer, BoardState, BoardCommands, mergeBoards, rotatePiecesAboutCenter } from "../../board";
+import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice } from "../../board";
 import { Player } from "../player";
 import { battleSaga, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
 import { GameOptions } from "../options";
+import { GRID_SIZE } from "@creature-chess/models";
 
 interface MatchState {
     board: BoardState;
@@ -21,6 +23,8 @@ export class Match {
     public readonly away: Player;
     private store: Store<MatchState>;
     private finalBoard: BoardState;
+    private boardId = uuid();
+    private board = createBoardSlice(this.boardId, GRID_SIZE);
 
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
@@ -30,9 +34,9 @@ export class Match {
         this.away = away;
         this.store = this.createStore(gameOptions);
 
-        const board = mergeBoards(home.getBoard(), away.getBoard());
+        const board = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
 
-        this.store.dispatch(BoardCommands.setBoardPiecesCommand(board));
+        this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
     }
 
     public onClientFinishMatch() {
@@ -74,7 +78,7 @@ export class Match {
         const _this = this;
         const rootSaga = function*() {
             yield all([
-                yield fork(battleSaga, gameOptions),
+                yield fork(battleSaga, gameOptions, _this.board),
                 yield takeEvery<BattleFinishEvent>(
                     BATTLE_FINISH_EVENT,
                     function*() {
@@ -88,7 +92,7 @@ export class Match {
 
         const store = createStore(
             combineReducers<MatchState>({
-                board: boardReducer,
+                board: this.board.boardReducer,
                 turn: turnReducer
             }),
             applyMiddleware(sagaMiddleware)

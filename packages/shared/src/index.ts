@@ -4,9 +4,10 @@ export { randomFromArray, getXpToNextLevel } from "./utils";
 export { validateNickname } from "./validation";
 
 export {
-    BoardCommands,
-    boardReducer, BoardState,
-    BoardSelectors
+    BoardState,
+    BoardSlice,
+    createBoardSlice,
+    BoardSelectors,
 } from "./board";
 
 export {

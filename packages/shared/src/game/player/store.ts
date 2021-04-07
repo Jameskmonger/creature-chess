@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import { fork, all } from "@redux-saga/core/effects";
 
-import { boardReducer, BoardState } from "../../board";
+import { BoardSlice, BoardState } from "../../board";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 import { benchReducer, BenchState } from "./bench";
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
@@ -25,18 +25,18 @@ export interface PlayerState {
 
 export type PlayerStore = Store<PlayerState>;
 
-export const createPlayerStore = (getLogger: () => Logger, playerId: string, name: string): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
+export const createPlayerStore = (getLogger: () => Logger, playerId: string, name: string, boardSlice: BoardSlice): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([
-            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(getLogger, new DefinitionProvider(), playerId, name)),
+            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(getLogger, new DefinitionProvider(), boardSlice, playerId, name)),
             yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(getLogger, playerId, name)),
-            yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(playerId)),
+            yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(boardSlice, playerId)),
             yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<PlayerState>()),
             yield fork(PlayerActionSagas.toggleShopLockPlayerActionSagaFactory<PlayerState>()),
-            yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<PlayerState>()),
-            yield fork(evolutionSagaFactory<PlayerState>()),
+            yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<PlayerState>(boardSlice)),
+            yield fork(evolutionSagaFactory<PlayerState>(boardSlice)),
             yield fork(healthSagaFactory<PlayerState>()),
-            yield fork(xpSagaFactory<PlayerState>()),
+            yield fork(xpSagaFactory<PlayerState>(boardSlice)),
             yield fork(fillBoardSagaFactory<PlayerState>(playerId))
         ]);
     };
@@ -45,7 +45,7 @@ export const createPlayerStore = (getLogger: () => Logger, playerId: string, nam
 
     const store = createStore(
         combineReducers<PlayerState>({
-            board: boardReducer,
+            board: boardSlice.boardReducer,
             bench: benchReducer,
             playerInfo: playerInfoReducer,
             game: gameReducer,

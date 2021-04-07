@@ -3,7 +3,7 @@ import { GamePhase } from "@creature-chess/models";
 import { PlayerState } from "../store";
 import { updateLevelCommand } from "../playerInfo/commands";
 import { getXpToNextLevel } from "../../../utils";
-import { BoardCommands } from "../../../board";
+import { BoardSlice } from "../../../board";
 
 const ADD_XP_COMMAND = "ADD_XP_COMMAND";
 type ADD_XP_COMMAND = typeof ADD_XP_COMMAND;
@@ -13,7 +13,7 @@ export const addXpCommand = (amount: number): AddXpCommand => ({
     payload: { amount }
 });
 
-export const xpSagaFactory = <TState extends PlayerState>() => {
+export const xpSagaFactory = <TState extends PlayerState>(boardSlice: BoardSlice) => {
     return function*() {
         while (true) {
             const { payload: { amount } }: AddXpCommand = yield take(ADD_XP_COMMAND);
@@ -40,7 +40,7 @@ export const xpSagaFactory = <TState extends PlayerState>() => {
                 const inPreparingPhase: boolean = yield select((state: TState) => state.game.phase === GamePhase.PREPARING);
 
                 if (inPreparingPhase) {
-                    yield put(BoardCommands.setPieceLimitCommand(level));
+                    yield put(boardSlice.commands.setPieceLimitCommand(level));
                 }
             }
         }

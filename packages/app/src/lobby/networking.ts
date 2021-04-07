@@ -4,6 +4,7 @@ import { EventChannel, eventChannel } from "redux-saga";
 import { LobbyAction, updateLobbyPlayerAction, lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "./store/actions";
 import { AppState } from "../store";
 import { gameSaga } from "../game";
+import { BoardSlice } from "packages/shared/lib/board";
 
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
@@ -44,7 +45,7 @@ const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegist
     }
 };
 
-export const lobbyNetworking = function*(socket: SocketIOClient.Socket) {
+export const lobbyNetworking = function*(socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
     const registry = new IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
@@ -57,5 +58,5 @@ export const lobbyNetworking = function*(socket: SocketIOClient.Socket) {
 
     const playerId: string = yield select((state: AppState) => state.user.user.id);
 
-    yield fork(gameSaga, playerId, socket);
+    yield fork(gameSaga, playerId, socket, boardSlice);
 };

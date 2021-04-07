@@ -3,7 +3,7 @@ import { eventChannel, buffers } from "redux-saga";
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
 import { IndexedPieces, createPieceCombatState } from "@creature-chess/models";
 import { isATeamDefeated } from "../../../utils";
-import { BoardState, BoardCommands } from "../../../board";
+import { BoardSlice, BoardState, } from "../../../board";
 import { simulateTurn } from "./turnSimulator";
 import { GameOptions } from "../../options";
 
@@ -15,7 +15,7 @@ export type BATTLE_FINISH_EVENT = typeof BATTLE_FINISH_EVENT;
 export type BattleTurnEvent = ({ type: BATTLE_TURN_EVENT, payload: { turn: number } });
 export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: number } });
 
-export type BattleEvent = ReturnType<typeof BoardCommands.setBoardPiecesCommand> | BattleTurnEvent | BattleFinishEvent;
+export type BattleEvent = any | BattleTurnEvent | BattleFinishEvent;
 
 const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn } });
 const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
@@ -61,6 +61,7 @@ const addCombatState = (pieces: IndexedPieces) => {
 
 const battleEventChannel = (
     startingBoardState: BoardState,
+    boardSlice: BoardSlice,
     startingTurn: number,
     options: GameOptions,
     bufferSize: number
@@ -69,6 +70,7 @@ const battleEventChannel = (
         let cancelled = false;
 
         let board: BoardState = {
+            id: startingBoardState.id,
             pieces: addCombatState(startingBoardState.pieces),
             piecePositions: {
                 ...startingBoardState.piecePositions
@@ -97,9 +99,9 @@ const battleEventChannel = (
 
                 const turnTimer = duration(options.turnDuration);
 
-                board = simulateTurn(++turnCount, board);
+                board = simulateTurn(++turnCount, board, boardSlice);
                 emit(battleTurnEvent(turnCount));
-                emit(BoardCommands.setBoardPiecesCommand({
+                emit(boardSlice.commands.setBoardPiecesCommand({
                     pieces: board.pieces,
                     piecePositions: board.piecePositions,
                     size: undefined // todo improve this
@@ -117,14 +119,14 @@ const battleEventChannel = (
     }, buffers.expanding(bufferSize));
 };
 
-export const battleSaga = function*(gameOptions: GameOptions) {
+export const battleSaga = function*(gameOptions: GameOptions, boardSlice: BoardSlice) {
     yield takeEvery<StartBattleCommand>(
         START_BATTLE,
         function*({ payload: { turn } }) {
             const board: BoardState = yield select(state => state.board);
 
             // todo no need for the channel here. this can just run synchronously in a loop
-            const battleChannel = yield call(battleEventChannel, board, turn || 0, gameOptions, 100);
+            const battleChannel = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
                 yield put(battleAction);

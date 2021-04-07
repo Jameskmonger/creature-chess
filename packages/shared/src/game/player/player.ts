@@ -5,7 +5,7 @@ import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 
-import { BoardCommands } from "../../board";
+import { BoardSlice, createBoardSlice } from "../../board";
 import { GameState } from "../store/state";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 import { CardDeck } from "../cardDeck";
@@ -58,13 +58,16 @@ export abstract class Player {
 
     private deck: CardDeck;
     private logger: Logger;
+    protected readonly boardSlice: BoardSlice;
 
     constructor(id: string, name: string, picture: number) {
         this.id = id;
         this.name = name;
         this.picture = picture;
 
-        const { store, sagaMiddleware } = createPlayerStore(this.getLogger, this.id, this.name);
+        this.boardSlice = createBoardSlice(`player-${this.id}`, { width: 7, height: 3 });
+
+        const { store, sagaMiddleware } = createPlayerStore(this.getLogger, this.id, this.name, this.boardSlice);
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
@@ -158,8 +161,8 @@ export abstract class Player {
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
 
-        this.store.dispatch(BoardCommands.setPieceLimitCommand(this.getLevel()));
-        this.store.dispatch(BoardCommands.unlockBoardCommand());
+        this.store.dispatch(this.boardSlice.commands.setPieceLimitCommand(this.getLevel()));
+        this.store.dispatch(this.boardSlice.commands.unlockBoardCommand());
     }
 
     public fillBoard() {
@@ -168,7 +171,7 @@ export abstract class Player {
 
     public enterReadyPhase(match: Match) {
         this.match = match;
-        this.store.dispatch(BoardCommands.lockBoardCommand());
+        this.store.dispatch(this.boardSlice.commands.lockBoardCommand());
 
         const opponentId = match.home.id === this.id
             ? match.away.id
@@ -233,7 +236,7 @@ export abstract class Player {
     public clearPieces() {
         const pieces = getAllPieces(this.store.getState());
 
-        this.store.dispatch(BoardCommands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
+        this.store.dispatch(this.boardSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
         this.store.dispatch(BenchCommands.initialiseBenchCommand([]));
 
         for (const piece of pieces) {

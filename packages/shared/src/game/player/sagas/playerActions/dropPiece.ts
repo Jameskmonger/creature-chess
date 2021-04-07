@@ -2,7 +2,7 @@ import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../../actions";
 import * as pieceSelectors from "../../pieceSelectors";
-import { BoardCommands } from "../../../../board";
+import { BoardSlice } from "../../../../board";
 import { moveBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand } from "../../bench/commands";
 import { PlayerState } from "../../store";
 import { getPlayerBelowPieceLimit } from "../../playerSelectors";
@@ -35,7 +35,7 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
   return true;
 };
 
-export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(playerId: string) => {
+export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(boardSlice: BoardSlice, playerId: string) => {
   return function*() {
     yield takeEvery<PlayerDropPieceAction>(
       PLAYER_DROP_PIECE_ACTION,
@@ -70,16 +70,16 @@ export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(pla
         }
 
         if (from.type === "board" && to.type === "board") {
-          yield put(BoardCommands.moveBoardPieceCommand({ pieceId, from: from.location, to: to.location }));
+          yield put(boardSlice.commands.moveBoardPieceCommand({ pieceId, from: from.location, to: to.location }));
         } else if (from.type !== "board" && to.type !== "board") {
           yield put(moveBenchPieceCommand(pieceId, from.location, to.location));
         } else if (from.type === "board" && to.type !== "board") {
-          yield put(BoardCommands.removeBoardPiecesCommand([pieceId]));
+          yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
           yield put(addBenchPieceCommand(fromPiece, to.location.slot));
         } else if (from.type !== "board" && to.type === "board") {
           yield put(removeBenchPieceCommand(pieceId));
           const { x, y } = to.location;
-          yield put(BoardCommands.addBoardPieceCommand({ piece: fromPiece, x, y }));
+          yield put(boardSlice.commands.addBoardPieceCommand({ piece: fromPiece, x, y }));
         }
       }
     );

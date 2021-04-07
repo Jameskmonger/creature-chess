@@ -4,6 +4,7 @@ import { getTargetAttackPositions } from "./getTargetAttackPositions";
 
 describe("getTargetAttackPositions", () => {
     const board: BoardState = {
+        id: '',
         pieces: {},
         piecePositions: {},
         pieceLimit: null,

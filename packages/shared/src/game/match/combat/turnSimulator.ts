@@ -1,5 +1,5 @@
 import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
-import { BoardState, boardReducer, BoardCommands, BoardSelectors } from "../../../board";
+import { BoardState, BoardSelectors, BoardSlice } from "../../../board";
 import { getStats } from "../../../utils/piece-utils";
 import { isOvercomeBy, isGeneratedBy } from "../../../utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
@@ -16,7 +16,7 @@ const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
 const STRONG_ATTACK_MODIFIER = 1.7;
 const WEAK_ATTACK_MODIFIER = 0.3;
 
-export const simulateTurn = (currentTurn: number, board: BoardState) => {
+export const simulateTurn = (currentTurn: number, board: BoardState, boardSlice: BoardSlice) => {
     const pieceEntries = Object.entries(board.pieces);
 
     pieceEntries.sort(([, aPiece], [, bPiece]) => {
@@ -27,12 +27,12 @@ export const simulateTurn = (currentTurn: number, board: BoardState) => {
     });
 
     return pieceEntries.reduce<BoardState>(
-        (b, [pieceId]) => takePieceTurn(currentTurn, pieceId, b),
+        (b, [pieceId]) => takePieceTurn(currentTurn, pieceId, b, boardSlice),
         board
     );
 };
 
-const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState): BoardState => {
+const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState, boardSlice: BoardSlice): BoardState => {
     // create a new piece object, reset combat properties
     const attacker: PieceModel = {
         ...board.pieces[pieceId],
@@ -55,7 +55,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     // board management
 
     if (attackerBoardState.removeFromBoardAtTurn === currentTurn) {
-        return boardReducer(board, BoardCommands.removeBoardPiecesCommand([pieceId]));
+        return boardSlice.boardReducer(board, boardSlice.commands.removeBoardPiecesCommand([pieceId]));
     }
 
     if (attacker.currentHealth === 0) {
@@ -64,7 +64,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         }
 
         attackerBoardState.removeFromBoardAtTurn = currentTurn + DYING_DURATION;
-        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+        return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     }
 
     const cooldown = getCooldownForSpeed(attackerStats.speed);
@@ -82,7 +82,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     if (!attackerTargetId) {
         attacker.combat.targetId = findTargetId(attacker, board);
 
-        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+        return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     }
 
     const target = board.pieces[attackerTargetId];
@@ -90,13 +90,13 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     // if we can't attack yet, wait for cooldown
     if (attackerBoardState.canAttackAtTurn > currentTurn) {
         // todo check if attacker has been changed
-        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+        return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     }
 
     // if the enemy can't be attacked yet, wait
     // todo consider breaking and choosing different target..
     if (target.combat.board.canBeAttackedAtTurn > currentTurn) {
-        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+        return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     }
 
     const targetPosition = BoardSelectors.getPiecePosition(board, attackerTargetId);
@@ -109,7 +109,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         // todo should we increment canAttackAtTurn here?
         attacker.combat.targetId = null;
 
-        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+        return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     } else if (inRange) {
         // target is in range, so attack
         const damage = getAttackDamage(attacker, target);
@@ -148,17 +148,17 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
             }
         }
 
-        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([newAttacker, defender]));
+        return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([newAttacker, defender]));
     } else {
         // target is out of range, so move towards
         if (attackerBoardState.canMoveAtTurn > currentTurn) {
-            return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+            return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
         }
 
         const nextPosition = getNextPiecePosition(attackerPosition, attackerStats, targetPosition, board);
 
         if (!nextPosition) {
-            return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+            return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
         }
 
         const attackerDirection = getRelativeDirection(attackerPosition, targetPosition);
@@ -169,12 +169,12 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         attackerBoardState.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
         attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 
-        return boardReducer(
-            boardReducer(
+        return boardSlice.boardReducer(
+            boardSlice.boardReducer(
                 board,
-                BoardCommands.moveBoardPieceCommand({ pieceId, from: attackerPosition, to: nextPosition })
+                boardSlice.commands.moveBoardPieceCommand({ pieceId, from: attackerPosition, to: nextPosition })
             ),
-            BoardCommands.updateBoardPiecesCommand([attacker])
+            boardSlice.commands.updateBoardPiecesCommand([attacker])
         );
     }
 };

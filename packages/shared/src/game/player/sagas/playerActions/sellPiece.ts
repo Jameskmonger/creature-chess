@@ -6,10 +6,10 @@ import { PlayerState } from "../../store";
 import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../../actions";
 import { updateMoneyCommand } from "../../playerInfo/commands";
 import { removeBenchPieceCommand } from "../../bench/commands";
-import { BoardCommands } from "../../../../board";
+import { BoardSlice } from "../../../../board";
 import { afterSellPieceEvent } from "../../events";
 
-export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>() => {
+export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(boardSlice: BoardSlice) => {
   return function*() {
     yield takeEvery<PlayerSellPieceAction>(
       PLAYER_SELL_PIECE_ACTION,
@@ -29,7 +29,7 @@ export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>() =
         yield put(updateMoneyCommand(currentMoney + (pieceCost * piecesUsed)));
 
         yield put(removeBenchPieceCommand(pieceId));
-        yield put(BoardCommands.removeBoardPiecesCommand([pieceId]));
+        yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
 
         yield put(afterSellPieceEvent(piece));
       }

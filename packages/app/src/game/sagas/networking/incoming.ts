@@ -1,7 +1,7 @@
 import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import {
-    BenchCommands, BoardCommands, ConnectionStatus, GameEvents, IncomingPacketRegistry,
+    BenchCommands, BoardSlice, ConnectionStatus, GameEvents, IncomingPacketRegistry,
     PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, startBattle,
     PlayerEvents, PlayerCommands
 } from "@creature-chess/shared";
@@ -13,7 +13,7 @@ import { Overlay } from "../../../ui/overlay";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, socket: SocketIOClient.Socket) {
+const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
     const channel = eventChannel<any>(emit => {
         socket.on("reconnect_failed", () => {
             emit(clearAnnouncement());
@@ -34,7 +34,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
         registry.on(
             ServerToClientPacketOpcodes.BOARD_UPDATE,
             ({ state }) => {
-                emit(BoardCommands.setBoardPiecesCommand(state));
+                emit(boardSlice.commands.setBoardPiecesCommand(state));
             }
         );
 
@@ -70,7 +70,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
             ServerToClientPacketOpcodes.LEVEL_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
-                emit(BoardCommands.setPieceLimitCommand(packet.level));
+                emit(boardSlice.commands.setPieceLimitCommand(packet.level));
             }
         );
 
@@ -113,11 +113,11 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
 
                         emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
 
-                        emit(BoardCommands.setBoardPiecesCommand(board));
+                        emit(boardSlice.commands.setBoardPiecesCommand(board));
                         emit(BenchCommands.initialiseBenchCommand(bench.pieces));
                         emit(PlayerCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
-                        emit(BoardCommands.unlockBoardCommand());
+                        emit(boardSlice.commands.unlockBoardCommand());
                         emit(openOverlay(Overlay.SHOP));
                         emit(clearAnnouncement());
                         return;
@@ -126,11 +126,11 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
                         const { board, bench, opponentId } = packet.payload;
 
                         if (board) {
-                            emit(BoardCommands.setBoardPiecesCommand(board));
+                            emit(boardSlice.commands.setBoardPiecesCommand(board));
                         }
 
                         emit(BenchCommands.initialiseBenchCommand(bench.pieces));
-                        emit(BoardCommands.lockBoardCommand());
+                        emit(boardSlice.commands.lockBoardCommand());
                         emit(closeOverlay());
                         emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
                         emit(clearSelectedPiece());
@@ -156,10 +156,10 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
     });
 };
 
-export const incomingGameNetworking = function*(socket: SocketIOClient.Socket) {
+export const incomingGameNetworking = function*(socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
     const registry = new IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
 
-    yield fork(readPacketsToActions, registry, socket);
+    yield fork(readPacketsToActions, registry, socket, boardSlice);
 };

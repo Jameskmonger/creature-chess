@@ -4,6 +4,7 @@ import { mergeBoards } from "./mergeBoards";
 describe("mergeBoards", () => {
     test("should merge boards correctly - 1 piece each", () => {
         const inputHome: BoardState = {
+            id: '',
             size: {
                 width: 7,
                 height: 3
@@ -27,6 +28,7 @@ describe("mergeBoards", () => {
             pieceLimit: 5
         };
         const inputAway: BoardState = {
+            id: '',
             size: {
                 width: 7,
                 height: 3
@@ -51,6 +53,7 @@ describe("mergeBoards", () => {
         };
 
         const expected: BoardState = {
+            id: 'abc',
             size: {
                 width: 7,
                 height: 6
@@ -85,13 +88,14 @@ describe("mergeBoards", () => {
             pieceLimit: null
         };
 
-        const result = mergeBoards(inputHome, inputAway);
+        const result = mergeBoards('abc', inputHome, inputAway);
 
         expect(result).toEqual(expected);
     });
 
     test("should merge boards correctly", () => {
         const inputHome: BoardState = {
+            id: '',
             size: {
                 width: 7,
                 height: 3
@@ -126,6 +130,7 @@ describe("mergeBoards", () => {
             pieceLimit: 5
         };
         const inputAway: BoardState = {
+            id: '',
             size: {
                 width: 7,
                 height: 3
@@ -161,6 +166,7 @@ describe("mergeBoards", () => {
         };
 
         const expected: BoardState = {
+            id: 'def',
             size: {
                 width: 7,
                 height: 6
@@ -217,7 +223,7 @@ describe("mergeBoards", () => {
             pieceLimit: null
         };
 
-        const result = mergeBoards(inputHome, inputAway);
+        const result = mergeBoards('def', inputHome, inputAway);
 
         expect(result).toEqual(expected);
     });

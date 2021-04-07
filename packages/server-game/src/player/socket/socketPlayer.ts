@@ -12,7 +12,7 @@ export class SocketPlayer extends Player {
         super(id, name, picture);
 
         this.sagaMiddleware.run(incomingNetworking, this.getLogger);
-        this.sagaMiddleware.run(outgoingNetworking, this.getLogger, id, this.getMatch);
+        this.sagaMiddleware.run(outgoingNetworking, this.getLogger, id, this.getMatch, this.boardSlice);
 
         this.initialiseSocket(socket);
     }
