@@ -33,6 +33,7 @@ export class SocketAuthenticator {
     }
 
     private broadcastSocketAuthenticated(socket: io.Socket, user: UserModel) {
+        this.logger.info(`[socket ${socket.id}] Authentication successful for '${user.nickname}'`);
         this.eventEmitter.emit(this.EVENT_KEYS.SOCKET_AUTHENTICATED, socket, user);
     }
 
@@ -63,6 +64,8 @@ export class SocketAuthenticator {
 
                 return;
             }
+
+            this.logger.info(`[socket ${socket.id}] Authentication successful as '${user.nickname}'`);
 
             socket.removeAllListeners("authenticate");
             socket.emit("authenticate_response", { error: null });
