@@ -18,7 +18,6 @@ export {
     getPiece, getAllPieces, getBoardPieceForPosition,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
-    BenchCommands, benchReducer, BenchState,
     PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents, PlayerSelectors,
     defaultGameOptions, Match, PlayerMatchRewards, PlayerCommands, PlayerReducers
 } from "./game";

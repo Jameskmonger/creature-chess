@@ -1,6 +1,5 @@
-import { Card, GamePhase, IndexedPieces, PieceModel, PlayerListPlayer } from "@creature-chess/models";
+import { Card, GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "../board";
-import { BenchState } from "../game/player/bench";
 import { EmptyPacket } from "./empty-packet";
 
 export type PreparingPhaseUpdatePacket = {
@@ -10,7 +9,7 @@ export type PreparingPhaseUpdatePacket = {
     round: number;
     pieces: {
       board: BoardState;
-      bench: BenchState;
+      bench: BoardState;
     };
     cards: Card[];
   }
@@ -21,7 +20,7 @@ export type ReadyPhaseUpdatePacket = {
   phase: GamePhase.READY,
   payload: {
     board: BoardState;
-    bench: BenchState;
+    bench: BoardState;
     opponentId: string
   }
 };
@@ -60,10 +59,6 @@ type MatchRewardsPacket = {
   rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
 };
 
-type BenchUpdatePacket = {
-  benchPieces: PieceModel[]
-};
-
 type BoardUpdatePacket = {
   state: BoardState
 };
@@ -84,7 +79,7 @@ export enum ServerToClientPacketOpcodes {
 }
 
 export type ServerToClientPacketDefinitions = {
-  [ServerToClientPacketOpcodes.BENCH_UPDATE]: BenchUpdatePacket,
+  [ServerToClientPacketOpcodes.BENCH_UPDATE]: BoardUpdatePacket,
   [ServerToClientPacketOpcodes.BOARD_UPDATE]: BoardUpdatePacket,
   [ServerToClientPacketOpcodes.CARDS_UPDATE]: Card[],
   [ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[],

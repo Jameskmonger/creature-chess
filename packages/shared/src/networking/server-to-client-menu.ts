@@ -1,6 +1,5 @@
 import * as Models from "@creature-chess/models";
 import { BoardState } from "../board";
-import { BenchState } from "../game";
 
 type LobbyConnectionPacket = {
     playerId: string;
@@ -11,7 +10,7 @@ type LobbyConnectionPacket = {
 
 export type GameConnectionPacket = {
   board: BoardState;
-  bench: BenchState;
+  bench: BoardState;
   players: Models.PlayerListPlayer[];
 
   battleTurn: number | null;

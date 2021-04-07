@@ -1,10 +1,10 @@
 import { take, select, put } from "@redux-saga/core/effects";
-import { PlayerActions, getPiece, BenchState, BoardState, BoardSelectors } from "@creature-chess/shared";
+import { PlayerActions, getPiece, BoardState, BoardSelectors } from "@creature-chess/shared";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
 import { clearSelectedPiece } from "../../features/board/actions";
 
-const getLocationForPiece = (pieceId: string, board: BoardState, bench: BenchState): PlayerPieceLocation => {
+const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
     if (board) {
         const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
 
@@ -17,12 +17,12 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BenchSta
     }
 
     if (bench) {
-        const benchSlot = bench.pieces.findIndex(p => p !== null && p.id === pieceId);
+        const benchPiecePosition = BoardSelectors.getPiecePosition(bench, pieceId);
 
-        if (benchSlot !== undefined) {
+        if (benchPiecePosition !== undefined) {
             return {
                 type: "bench",
-                location: { slot: benchSlot }
+                location: benchPiecePosition
             }
         }
     }
@@ -43,14 +43,14 @@ export const clickToDrop = function*() {
         }
 
         let tileEmpty = false;
-        const bench: BenchState = yield select((state: AppState) => state.bench);
+        const bench: BoardState = yield select((state: AppState) => state.bench);
         const board: BoardState = yield select((state: AppState) => state.board);
 
-        if (tile.type === "bench") {
-            tileEmpty = !bench.pieces[tile.location.slot];
-        } else if (tile.type === "board") {
-            const piecePositionKey = `${tile.location.x},${tile.location.y}`;
+        const piecePositionKey = `${tile.location.x},${tile.location.y}`;
 
+        if (tile.type === "bench") {
+            tileEmpty = !bench.piecePositions[piecePositionKey];;
+        } else if (tile.type === "board") {
             tileEmpty = !board.piecePositions[piecePositionKey];;
         }
 

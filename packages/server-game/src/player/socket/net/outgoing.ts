@@ -4,14 +4,19 @@ import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match,
     OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions,
-    ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BenchCommands, BenchState, BoardState, BoardSlice
+    ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BoardState, BoardSlice
 } from "@creature-chess/shared";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-export const outgoingNetworking = function*(getLogger: () => Logger, playerId: string, getCurrentMatch: () => Match, boardSlice: BoardSlice) {
+export const outgoingNetworking = function*(
+    getLogger: () => Logger,
+    playerId: string,
+    getCurrentMatch: () => Match,
+    { benchSlice, boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }
+) {
     let registry: OutgoingRegistry;
     let socket: Socket;
 
@@ -119,15 +124,15 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
         yield all([
             yield takeLatest(
                 [
-                    BenchCommands.ADD_BENCH_PIECE_COMMAND,
-                    BenchCommands.REMOVE_BENCH_PIECE_COMMAND,
-                    BenchCommands.REMOVE_BENCH_PIECES_COMMAND,
-                    BenchCommands.MOVE_BENCH_PIECE_COMMAND
+                    benchSlice.commands.addBoardPieceCommand,
+                    benchSlice.commands.moveBoardPieceCommand,
+                    benchSlice.commands.removeBoardPiecesCommand,
+                    benchSlice.commands.updateBoardPiecesCommand
                 ],
                 function*() {
-                    const bench: BenchState = yield select((state: PlayerState) => state.bench);
+                    const bench: BoardState = yield select((state: PlayerState) => state.bench);
 
-                    registry.emit(ServerToClientPacketOpcodes.BENCH_UPDATE, { benchPieces: bench.pieces });
+                    registry.emit(ServerToClientPacketOpcodes.BENCH_UPDATE, { state: bench });
                 }
             ),
             yield takeLatest(

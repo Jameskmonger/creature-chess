@@ -3,7 +3,6 @@ import { PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../../actions";
 import * as pieceSelectors from "../../pieceSelectors";
 import { BoardSlice } from "../../../../board";
-import { moveBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand } from "../../bench/commands";
 import { PlayerState } from "../../store";
 import { getPlayerBelowPieceLimit } from "../../playerSelectors";
 
@@ -15,9 +14,9 @@ const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   }
 
   if (location.type === "bench") {
-    const { slot } = location.location;
+    const { x } = location.location;
 
-    return pieceSelectors.getBenchPieceForSlot(state, slot);
+    return pieceSelectors.getBoardPieceForPosition(state.bench, x, 0);
   }
 
   return null;
@@ -35,7 +34,10 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
   return true;
 };
 
-export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(boardSlice: BoardSlice, playerId: string) => {
+export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(
+  { boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice },
+  playerId: string
+) => {
   return function*() {
     yield takeEvery<PlayerDropPieceAction>(
       PLAYER_DROP_PIECE_ACTION,
@@ -72,12 +74,15 @@ export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(boa
         if (from.type === "board" && to.type === "board") {
           yield put(boardSlice.commands.moveBoardPieceCommand({ pieceId, from: from.location, to: to.location }));
         } else if (from.type !== "board" && to.type !== "board") {
-          yield put(moveBenchPieceCommand(pieceId, from.location, to.location));
+          const fromBench = { x: from.location.x, y: 0 };
+          const toBench = { x: to.location.x, y: 0 };
+
+          yield put(benchSlice.commands.moveBoardPieceCommand({ pieceId, from: fromBench, to: toBench }));
         } else if (from.type === "board" && to.type !== "board") {
           yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
-          yield put(addBenchPieceCommand(fromPiece, to.location.slot));
+          yield put(benchSlice.commands.addBoardPieceCommand({ piece: fromPiece, x: to.location.x, y: 0 }));
         } else if (from.type !== "board" && to.type === "board") {
-          yield put(removeBenchPieceCommand(pieceId));
+          yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
           const { x, y } = to.location;
           yield put(boardSlice.commands.addBoardPieceCommand({ piece: fromPiece, x, y }));
         }

@@ -4,9 +4,9 @@ import { updateConnectionStatus} from "../../../ui/actions";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
 
-export const gameNetworking = function*(socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
+export const gameNetworking = function*(socket: SocketIOClient.Socket, slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
     yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
     yield fork(outgoingGameNetworking, socket);
-    yield fork(incomingGameNetworking, socket, boardSlice);
+    yield fork(incomingGameNetworking, socket, slices);
 };

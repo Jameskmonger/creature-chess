@@ -1,8 +1,6 @@
 import { takeLatest, select, take, delay, put } from "@redux-saga/core/effects";
 import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
-import { BenchState } from "../bench";
 import { BoardState } from "../../../board";
-import { AddBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, ADD_BENCH_PIECE_COMMAND } from "../bench/commands";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
 import { BoardSelectors } from "../../../board";
 import * as pieceSelectors from "../pieceSelectors";
@@ -11,7 +9,7 @@ import { BoardSlice } from "../../../board";
 const definitionProvider = new DefinitionProvider();
 
 interface State {
-    bench: BenchState;
+    bench: BoardState;
     board: BoardState;
 }
 
@@ -21,15 +19,15 @@ const pieceCanEvolve = (piece: PieceModel) => {
     return piece.stage < stages.length - 1;
 };
 
-export const evolutionSagaFactory = <TState extends State>(board: BoardSlice) => {
+export const evolutionSagaFactory = <TState extends State>({ boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice }) => {
     return function*() {
         yield takeLatest<
-            AddBenchPieceCommand
-            | ReturnType<typeof board.commands.addBoardPieceCommand>
+            ReturnType<typeof boardSlice.commands.addBoardPieceCommand>
+            | ReturnType<typeof benchSlice.commands.addBoardPieceCommand>
         >(
             // need to check when bench/board pieces are added (could have come from shop)
             // or when board piece is updated (could be due to a previous evolution)
-            [ADD_BENCH_PIECE_COMMAND, board.commands.addBoardPieceCommand],
+            [boardSlice.commands.addBoardPieceCommand, benchSlice.commands.addBoardPieceCommand],
             function*({ payload: { piece } }) {
                 if (!pieceCanEvolve(piece)) {
                     return;
@@ -41,7 +39,7 @@ export const evolutionSagaFactory = <TState extends State>(board: BoardSlice) =>
                 if (boardLocked) {
                     // todo check if we have 3 evolvable pieces on the bench and evolve those? maybe
 
-                    yield take(board.commands.unlockBoardCommand);
+                    yield take(boardSlice.commands.unlockBoardCommand);
                     yield delay(500);
                 }
 
@@ -73,10 +71,10 @@ export const evolutionSagaFactory = <TState extends State>(board: BoardSlice) =>
 
                     // remove any remaining board pieces
                     const boardPieceIds = [...matchingBoardPieces, pieceToReplace].map(p => p.id);
-                    yield put(board.commands.removeBoardPiecesCommand(boardPieceIds));
+                    yield put(boardSlice.commands.removeBoardPiecesCommand(boardPieceIds));
 
                     const benchPieceIds = matchingBenchPieces.map(p => p.id);
-                    yield put(removeBenchPiecesCommand([...benchPieceIds, piece.id]));
+                    yield put(benchSlice.commands.removeBoardPiecesCommand([...benchPieceIds, piece.id]));
 
                     const newPiece = {
                         ...pieceToReplace,
@@ -85,20 +83,20 @@ export const evolutionSagaFactory = <TState extends State>(board: BoardSlice) =>
 
                     const {x, y} = piecePosition;
 
-                    yield put(board.commands.addBoardPieceCommand({ x, y, piece: newPiece }));
+                    yield put(boardSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece }));
                 } else {
                     // otherwise replace the just-added bench piece
                     const benchPieceIds = matchingBenchPieces.map(p => p.id);
-                    yield put(removeBenchPiecesCommand(benchPieceIds));
 
                     const newPiece = {
                         ...piece,
                         stage: targetStage + 1
                     };
 
-                    // todo make updateBenchPiece action
-                    yield put(removeBenchPieceCommand(piece.id));
-                    yield put(addBenchPieceCommand(newPiece, null));
+                    const { x, y } = BoardSelectors.getPiecePosition(state.bench, piece.id);
+
+                    yield put(benchSlice.commands.removeBoardPiecesCommand([...benchPieceIds, piece.id]));
+                    yield put(benchSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece }));
                 }
             }
         );

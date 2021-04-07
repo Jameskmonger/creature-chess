@@ -4,7 +4,6 @@ export { Player, PlayerActions, PlayerEvents, PlayerSagas, PlayerActionSagas, Pl
 export { getPiece, getAllPieces, getBoardPieceForPosition } from "./player/pieceSelectors";
 export { getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive } from "./player/playerSelectors";
 export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, PlayerMatchRewards } from "./player/playerInfo";
-export { BenchState, benchReducer, BenchCommands } from "./player/bench";
 export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
 
 export { GameState, gameReducer, GameEvents } from "./store";

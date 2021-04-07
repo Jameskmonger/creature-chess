@@ -13,7 +13,7 @@ export const addXpCommand = (amount: number): AddXpCommand => ({
     payload: { amount }
 });
 
-export const xpSagaFactory = <TState extends PlayerState>(boardSlice: BoardSlice) => {
+export const xpSagaFactory = <TState extends PlayerState>({ boardSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice }) => {
     return function*() {
         while (true) {
             const { payload: { amount } }: AddXpCommand = yield take(ADD_XP_COMMAND);

@@ -1,7 +1,7 @@
 import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import {
-    BenchCommands, BoardSlice, ConnectionStatus, GameEvents, IncomingPacketRegistry,
+    BoardSlice, ConnectionStatus, GameEvents, IncomingPacketRegistry,
     PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, startBattle,
     PlayerEvents, PlayerCommands
 } from "@creature-chess/shared";
@@ -13,7 +13,11 @@ import { Overlay } from "../../../ui/overlay";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
-const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
+const readPacketsToActions = function*(
+    registry: ServerToClientPacketRegistry,
+    socket: SocketIOClient.Socket,
+    { benchSlice, boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }
+) {
     const channel = eventChannel<any>(emit => {
         socket.on("reconnect_failed", () => {
             emit(clearAnnouncement());
@@ -40,8 +44,8 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
 
         registry.on(
             ServerToClientPacketOpcodes.BENCH_UPDATE,
-            ({ benchPieces }) => {
-                emit(BenchCommands.initialiseBenchCommand(benchPieces));
+            ({ state }) => {
+                emit(benchSlice.commands.setBoardPiecesCommand(state));
             }
         );
 
@@ -114,7 +118,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
                         emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
 
                         emit(boardSlice.commands.setBoardPiecesCommand(board));
-                        emit(BenchCommands.initialiseBenchCommand(bench.pieces));
+                        emit(benchSlice.commands.setBoardPiecesCommand(bench));
                         emit(PlayerCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
                         emit(boardSlice.commands.unlockBoardCommand());
@@ -129,7 +133,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
                             emit(boardSlice.commands.setBoardPiecesCommand(board));
                         }
 
-                        emit(BenchCommands.initialiseBenchCommand(bench.pieces));
+                        emit(benchSlice.commands.setBoardPiecesCommand(bench));
                         emit(boardSlice.commands.lockBoardCommand());
                         emit(closeOverlay());
                         emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
@@ -156,10 +160,13 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
     });
 };
 
-export const incomingGameNetworking = function*(socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
+export const incomingGameNetworking = function*(
+    socket: SocketIOClient.Socket,
+    slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }
+) {
     const registry = new IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
 
-    yield fork(readPacketsToActions, registry, socket, boardSlice);
+    yield fork(readPacketsToActions, registry, socket, slices);
 };

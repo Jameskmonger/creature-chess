@@ -107,7 +107,24 @@ interface PieceView {
 
 type CardPieceView = CardView | PieceView;
 
-const getFirstBenchPiece = (state: PlayerState): PieceModel => state.bench.pieces.find(p => p !== null) || null;
+const getFirstBenchPiece = (state: PlayerState): PieceModel => {
+    for (let x = 0; x < state.bench.size.width; x++) {
+        if (state.bench.piecePositions[`${x},0`]) {
+            return state.bench.pieces[state.bench.piecePositions[`${x},0`]];
+        }
+    }
+
+    return null;
+}
+const getBenchSlotForPiece = (state: PlayerState, pieceId: string): number => {
+    for (let x = 0; x < state.bench.size.width; x++) {
+      if (state.bench.piecePositions[`${x},0`] === pieceId) {
+        return x;
+      }
+    }
+
+    return null;
+  };
 const getPieceCountForDefinition =
     (state: PlayerState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
@@ -215,12 +232,13 @@ export class BotPlayer extends Player {
                 location: firstEmptyPosition
             };
 
-            const benchPieceSlot = this.store.getState().bench.pieces.findIndex(p => p.id === firstBenchPiece.id);
+            const benchPieceSlot = getBenchSlotForPiece(this.store.getState(), firstBenchPiece.id);
 
             const benchPiecePosition: PlayerPieceLocation = {
                 type: "bench",
                 location: {
-                    slot: benchPieceSlot
+                    x: benchPieceSlot,
+                    y: 0
                 }
             };
 

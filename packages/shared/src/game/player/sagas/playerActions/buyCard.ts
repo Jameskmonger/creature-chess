@@ -5,7 +5,6 @@ import { GamePhase, PlayerPieceLocation, TileCoordinates } from "@creature-chess
 import { BoardSlice } from "../../../../board";
 import { DefinitionProvider } from "../../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../../utils/piece-utils";
-import { addBenchPieceCommand } from "../../bench/commands";
 import { PlayerState } from "../../store";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../../playerSelectors";
 import { updateMoneyCommand } from "../../playerInfo/commands";
@@ -36,7 +35,8 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
         return {
             type: "bench",
             location: {
-                slot: benchSlot
+                x: benchSlot,
+                y: 0
             }
         };
     }
@@ -47,7 +47,7 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
 export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
     getLogger: () => Logger,
     definitionProvider: DefinitionProvider,
-    boardSlice: BoardSlice,
+    { boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice },
     playerId: string,
     name: string
 ) => {
@@ -119,7 +119,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                 const { x, y } = destination.location
                 yield put(boardSlice.commands.addBoardPieceCommand({ piece, x, y }));
             } else if (destination.type === "bench") {
-                yield put(addBenchPieceCommand(piece, destination.location.slot));
+                yield put(benchSlice.commands.addBoardPieceCommand({ piece, x: destination.location.x, y: 0 }));
             }
 
             yield put(updateMoneyCommand(money - card.cost));

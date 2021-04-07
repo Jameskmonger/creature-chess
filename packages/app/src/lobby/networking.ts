@@ -45,7 +45,10 @@ const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegist
     }
 };
 
-export const lobbyNetworking = function*(socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
+export const lobbyNetworking = function*(
+    socket: SocketIOClient.Socket,
+    slices: { boardSlice: BoardSlice, benchSlice: BoardSlice }
+) {
     const registry = new IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
@@ -58,5 +61,5 @@ export const lobbyNetworking = function*(socket: SocketIOClient.Socket, boardSli
 
     const playerId: string = yield select((state: AppState) => state.user.user.id);
 
-    yield fork(gameSaga, playerId, socket, boardSlice);
+    yield fork(gameSaga, playerId, socket, slices);
 };

@@ -1,7 +1,7 @@
 import { race, call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import {
-    BenchCommands, GameEvents, IncomingPacketRegistry, PlayerInfoCommands,
+    GameEvents, IncomingPacketRegistry, PlayerInfoCommands,
     ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, startBattle,
     PlayerCommands, BoardSlice
 } from "@creature-chess/shared";
@@ -14,7 +14,11 @@ import { gameSaga } from "../game";
 import { playerListUpdated } from "../game/features/playerList/playerListActions";
 import { isLoggedIn } from "./auth/store/selectors";
 
-export const findGame = function*(getAccessTokenSilently: () => Promise<string>, loginWithRedirect: () => Promise<void>, boardSlice: BoardSlice) {
+export const findGame = function*(
+    getAccessTokenSilently: () => Promise<string>,
+    loginWithRedirect: () => Promise<void>,
+    slices: { boardSlice: BoardSlice, benchSlice: BoardSlice }
+) {
     const findGameAction: FindGameAction = yield take(FIND_GAME);
 
     const state: AppState = yield select();
@@ -77,11 +81,11 @@ export const findGame = function*(getAccessTokenSilently: () => Promise<string>,
     channel.close();
 
     if (lobby) {
-        yield fork(lobbyNetworking, socket, boardSlice);
+        yield fork(lobbyNetworking, socket, slices);
     } else if (game) {
         const playerId: string = yield select((s: AppState) => s.user.user.id);
 
-        yield fork(gameSaga, playerId, socket, boardSlice);
+        yield fork(gameSaga, playerId, socket, slices);
 
         const { payload: {
             board,
@@ -92,8 +96,8 @@ export const findGame = function*(getAccessTokenSilently: () => Promise<string>,
             playerInfo: { money, cards, level, xp }
         } } = game as GameConnectedEvent;
 
-        yield put(boardSlice.commands.setBoardPiecesCommand(board));
-        yield put(BenchCommands.initialiseBenchCommand(bench.pieces));
+        yield put(slices.boardSlice.commands.setBoardPiecesCommand(board));
+        yield put(slices.benchSlice.commands.setBoardPiecesCommand(bench));
         yield put(PlayerInfoCommands.updateMoneyCommand(money));
         yield put(PlayerCommands.updateCardsCommand(cards));
         yield put(PlayerInfoCommands.updateLevelCommand(level, xp));

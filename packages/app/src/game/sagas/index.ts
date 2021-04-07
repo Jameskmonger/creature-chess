@@ -5,17 +5,17 @@ import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
 import { announcement } from "./actions/announcement";
 import { gameNetworking } from "./networking/saga";
 
-import { battleSaga, DefinitionProvider, defaultGameOptions, BenchCommands, PlayerInfoCommands, PlayerCommands, GameEvents, startBattle, BoardSlice } from "@creature-chess/shared";
+import { battleSaga, DefinitionProvider, defaultGameOptions, PlayerInfoCommands, PlayerCommands, GameEvents, startBattle, BoardSlice } from "@creature-chess/shared";
 import { clickToDrop } from "./actions/clickToDrop";
 import { GameConnectedEvent } from "../../lobby/store/actions";
 import { playerListUpdated } from "../features/playerList/playerListActions";
 
-export const gameSaga = function*(playerId: string, socket: SocketIOClient.Socket, boardSlice: BoardSlice) {
+export const gameSaga = function*(playerId: string, socket: SocketIOClient.Socket, slices: { boardSlice: BoardSlice, benchSlice: BoardSlice }) {
     const definitionProvider = new DefinitionProvider();
 
     yield all([
-        yield fork(gameNetworking, socket, boardSlice),
-        yield fork(battleSaga, defaultGameOptions, boardSlice),
+        yield fork(gameNetworking, socket, slices),
+        yield fork(battleSaga, defaultGameOptions, slices.boardSlice),
 
         yield fork(preventAccidentalClose),
         yield fork(announcement),

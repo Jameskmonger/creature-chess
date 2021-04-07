@@ -21,7 +21,6 @@ import {
 } from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
-import { BenchCommands } from "./bench";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces, getBenchPiecesByStage, getBoardPiecesByStage, getBoardPiecesExceptStage } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
@@ -59,15 +58,20 @@ export abstract class Player {
     private deck: CardDeck;
     private logger: Logger;
     protected readonly boardSlice: BoardSlice;
+    protected readonly benchSlice: BoardSlice;
 
     constructor(id: string, name: string, picture: number) {
         this.id = id;
         this.name = name;
         this.picture = picture;
 
-        this.boardSlice = createBoardSlice(`player-${this.id}`, { width: 7, height: 3 });
+        this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
+        this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
 
-        const { store, sagaMiddleware } = createPlayerStore(this.getLogger, this.id, this.name, this.boardSlice);
+        const { store, sagaMiddleware } = createPlayerStore(this.getLogger, this.id, this.name, {
+            boardSlice: this.boardSlice,
+            benchSlice: this.benchSlice
+        });
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
@@ -237,7 +241,7 @@ export abstract class Player {
         const pieces = getAllPieces(this.store.getState());
 
         this.store.dispatch(this.boardSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
-        this.store.dispatch(BenchCommands.initialiseBenchCommand([]));
+        this.store.dispatch(this.benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
 
         for (const piece of pieces) {
             this.deck.addPiece(piece);

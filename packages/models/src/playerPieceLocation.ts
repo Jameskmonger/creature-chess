@@ -1,3 +1,2 @@
 export type PlayerPieceLocation =
-  { type: "bench", location: { slot: number } }
-  | { type: "board", location: { x: number, y: number } };
+  { type: "bench" | "board", location: { x: number, y: number } };

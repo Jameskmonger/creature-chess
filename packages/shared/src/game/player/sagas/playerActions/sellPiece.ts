@@ -5,11 +5,12 @@ import { getPiecesForStage } from "../../../../utils";
 import { PlayerState } from "../../store";
 import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../../actions";
 import { updateMoneyCommand } from "../../playerInfo/commands";
-import { removeBenchPieceCommand } from "../../bench/commands";
 import { BoardSlice } from "../../../../board";
 import { afterSellPieceEvent } from "../../events";
 
-export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(boardSlice: BoardSlice) => {
+export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(
+  { boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice }
+) => {
   return function*() {
     yield takeEvery<PlayerSellPieceAction>(
       PLAYER_SELL_PIECE_ACTION,
@@ -28,7 +29,7 @@ export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(boa
 
         yield put(updateMoneyCommand(currentMoney + (pieceCost * piecesUsed)));
 
-        yield put(removeBenchPieceCommand(pieceId));
+        yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
         yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
 
         yield put(afterSellPieceEvent(piece));

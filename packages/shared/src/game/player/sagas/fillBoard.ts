@@ -3,6 +3,7 @@ import { PlayerState } from "../store";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { getMostExpensiveBenchPiece, getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot, isPlayerAlive } from "../playerSelectors";
 import { playerDropPieceAction } from "../actions";
+import { BoardSelectors } from "../../../board";
 
 const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
 type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;
@@ -41,13 +42,11 @@ export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: strin
                         return;
                     }
 
-                    const benchPieceSlot = state.bench.pieces.findIndex(p => p !== null && p.id === benchPiece.id);
+                    const benchPiecePosition = BoardSelectors.getPiecePosition(state.bench, benchPiece.id);
 
                     const fromLocation: PlayerPieceLocation = {
                         type: "bench",
-                        location: {
-                            slot: benchPieceSlot
-                        }
+                        location: benchPiecePosition
                     };
 
                     const toLocation: PlayerPieceLocation = {

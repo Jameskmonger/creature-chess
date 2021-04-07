@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { BenchState, BoardState, BoardSelectors, PlayerActions } from "@creature-chess/shared";
+import { BoardState, BoardSelectors, PlayerActions } from "@creature-chess/shared";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { Announcement } from "./overlays/announcement";
@@ -45,7 +45,7 @@ const BoardPieces: React.FunctionComponent = props => {
     );
 };
 
-const getLocationForPiece = (pieceId: string, board: BoardState, bench: BenchState): PlayerPieceLocation => {
+const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
     if (board) {
         const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
 
@@ -58,12 +58,12 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BenchSta
     }
 
     if (bench) {
-        const benchSlot = bench.pieces.findIndex(p => p !== null && p.id === pieceId);
+        const benchPiecePosition = BoardSelectors.getPiecePosition(bench, pieceId);
 
-        if (benchSlot > -1) {
+        if (benchPiecePosition !== undefined) {
             return {
                 type: "bench",
-                location: { slot: benchSlot }
+                location: benchPiecePosition
             }
         }
     }
@@ -71,7 +71,7 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BenchSta
     return null;
 };
 
-const onDropPiece = (dispatch: Dispatch<any>, board: BoardState, bench: BenchState) =>
+const onDropPiece = (dispatch: Dispatch<any>, board: BoardState, bench: BoardState) =>
     (item: DragObjectWithType, location: PlayerPieceLocation) => {
         const piece: PieceModel = (item as any).piece;
         const from = getLocationForPiece(piece.id, board, bench);
@@ -89,7 +89,7 @@ const Board: React.FunctionComponent = props => {
 
     // todo decouple this, make a playerDropPiece saga
     const board = useSelector<AppState, BoardState>(state => state.board);
-    const bench = useSelector<AppState, BenchState>(state => state.bench);
+    const bench = useSelector<AppState, BoardState>(state => state.bench);
 
     const onTileClick = (location: PlayerPieceLocation) => dispatch(PlayerActions.playerClickTileAction(location));
 

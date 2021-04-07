@@ -67,7 +67,7 @@ export const getPlayerFirstEmptyBoardSlot = (state: BoardState, sortPositions: (
 };
 
 export const getMostExpensiveBenchPiece = (state: PlayerState) => {
-    const benchPieces = state.bench.pieces.filter(p => p !== null);
+    const benchPieces = Object.values(state.bench.pieces);
 
     if (!benchPieces.length) {
         return null;
