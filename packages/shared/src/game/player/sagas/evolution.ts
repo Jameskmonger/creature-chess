@@ -4,7 +4,7 @@ import { BenchState } from "../bench";
 import { BoardState } from "../../../board";
 import { AddBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, ADD_BENCH_PIECE_COMMAND } from "../bench/commands";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
-import { BoardCommands } from "../../../board";
+import { BoardCommands, BoardSelectors } from "../../../board";
 import * as pieceSelectors from "../pieceSelectors";
 
 const definitionProvider = new DefinitionProvider();
@@ -68,6 +68,8 @@ export const evolutionSagaFactory = <TState extends State>() => {
                     // replace a board piece if it exists
                     const pieceToReplace = matchingBoardPieces.pop();
 
+                    const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.board, pieceToReplace.id));
+
                     // remove any remaining board pieces
                     const boardPieceIds = [...matchingBoardPieces, pieceToReplace].map(p => p.id);
                     yield put(BoardCommands.removeBoardPiecesCommand(boardPieceIds));
@@ -80,7 +82,7 @@ export const evolutionSagaFactory = <TState extends State>() => {
                         stage: targetStage + 1
                     };
 
-                    const {x, y} = newPiece.position;
+                    const {x, y} = piecePosition;
 
                     yield put(BoardCommands.addBoardPieceCommand({ x, y, piece: newPiece }));
                 } else {

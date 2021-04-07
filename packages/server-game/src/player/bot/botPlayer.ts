@@ -215,10 +215,12 @@ export class BotPlayer extends Player {
                 location: firstEmptyPosition
             };
 
+            const benchPieceSlot = this.store.getState().bench.pieces.findIndex(p => p.id === firstBenchPiece.id);
+
             const benchPiecePosition: PlayerPieceLocation = {
                 type: "bench",
                 location: {
-                    slot: firstBenchPiece.position.x
+                    slot: benchPieceSlot
                 }
             };
 

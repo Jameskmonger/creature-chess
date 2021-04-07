@@ -1,9 +1,19 @@
-import { IndexedPieces } from "@creature-chess/models";
+import { BoardState } from "../state";
 import { rotatePiecesAboutCenter } from "./rotateGridPosition";
 
-export const mergeBoards = (gridSize: { width: number, height: number}, home: IndexedPieces, away: IndexedPieces): IndexedPieces => {
+export const mergeBoards = (gridSize: { width: number, height: number}, home: BoardState, away: BoardState): BoardState => {
+  const rotatedAway = rotatePiecesAboutCenter(gridSize, away);
+
   return {
-    ...home,
-    ...rotatePiecesAboutCenter(gridSize, away)
+    pieces: {
+      ...home.pieces,
+      ...rotatedAway.pieces
+    },
+    piecePositions: {
+      ...home.piecePositions,
+      ...rotatedAway.piecePositions
+    },
+    locked: true,
+    pieceLimit: null
   };
 };

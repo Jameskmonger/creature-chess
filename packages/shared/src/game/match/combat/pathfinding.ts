@@ -1,5 +1,5 @@
 import { astar, Graph } from "javascript-astar";
-import { PieceModel, GRID_SIZE, TileCoordinates, CreatureStats } from "@creature-chess/models";
+import { GRID_SIZE, TileCoordinates, CreatureStats } from "@creature-chess/models";
 import { BoardState } from "../../../board";
 import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
 
@@ -61,11 +61,11 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (attacker: PieceModel, attackerStats: CreatureStats, target: PieceModel, board: BoardState): TileCoordinates => {
+export const getNextPiecePosition = (attackerPosition: TileCoordinates, attackerStats: CreatureStats, targetPosition: TileCoordinates, board: BoardState): TileCoordinates => {
     const { attackType: { range: attackRange } } = attackerStats;
 
-    const targetTiles = getTargetAttackPositions(target, attackRange);
-    const paths = targetTiles.map(pos => findPath(board, attacker.position, pos)).filter(path => path !== null);
+    const targetTiles = getTargetAttackPositions(targetPosition, attackRange);
+    const paths = targetTiles.map(pos => findPath(board, attackerPosition, pos)).filter(path => path !== null);
 
     if (paths.length === 0) {
         return null;

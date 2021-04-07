@@ -42,18 +42,10 @@ export const {
             ...state,
             pieceLimit: limit
         }),
-        setBoardPiecesCommand: (state, { payload: pieces }: PayloadAction<IndexedPieces>) => ({
+        setBoardPiecesCommand: (state, { payload: { pieces, piecePositions } }: PayloadAction<{ pieces: IndexedPieces, piecePositions: PiecePositionsState }>) => ({
             ...state,
             pieces: { ...pieces },
-            piecePositions: Object.entries(pieces)
-                .reduce<PiecePositionsState>(
-                    (acc, [pieceId, piece]) => {
-                        acc[`${piece.position.x},${piece.position.y}`] = pieceId;
-
-                        return acc;
-                    },
-                    {}
-                )
+            piecePositions: { ...piecePositions }
         }),
         addBoardPieceCommand: (state, { payload: { x, y, piece } }: PayloadAction<{ x: number, y: number, piece: PieceModel }>) => {
             return {
@@ -62,7 +54,6 @@ export const {
                     ...state.pieces,
                     [piece.id]: {
                         ...piece,
-                        position: createTileCoordinates(x, y),
                         facingAway: true
                     }
                 },
@@ -74,27 +65,18 @@ export const {
         },
         moveBoardPieceCommand: (state, { payload: { pieceId, from, to } }: PayloadAction<{ pieceId: string, from: TileCoordinates, to: TileCoordinates }>) => {
             const piece = state.pieces[pieceId];
+            const fromString = `${from.x},${from.y}`;
+            const pieceAtFrom = state.piecePositions[fromString];
 
             // safety catch
-            if (!piece || !piece.position || piece.id !== pieceId || piece.position.x !== from.x || piece.position.y !== from.y) {
+            if (!piece || piece.id !== pieceId || piece.id !== pieceAtFrom) {
                 return state;
             }
 
-            const fromString = `${from.x},${from.y}`;
             const toString = `${to.x},${to.y}`;
 
             return {
                 ...state,
-                pieces: {
-                    ...state.pieces,
-                    [piece.id]: {
-                        ...piece,
-                        position: {
-                            x: to.x,
-                            y: to.y
-                        }
-                    }
-                },
                 piecePositions: {
                     ...state.piecePositions,
                     [fromString]: null,
@@ -114,13 +96,11 @@ export const {
                 ...state,
                 pieces: {
                     ...state.pieces
-                },
-                piecePositions: getPiecePositionsWithoutIds(state.piecePositions, pieces.map(p => p.id))
+                }
             }
 
             for (const piece of pieces) {
                 newState.pieces[piece.id] = piece;
-                newState[`${piece.position.x},${piece.position.y}`] = piece.id;
             }
 
             return newState;

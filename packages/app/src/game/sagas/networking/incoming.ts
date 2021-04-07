@@ -33,8 +33,8 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
 
         registry.on(
             ServerToClientPacketOpcodes.BOARD_UPDATE,
-            ({ boardPieces }) => {
-                emit(BoardCommands.setBoardPiecesCommand(boardPieces));
+            ({ state }) => {
+                emit(BoardCommands.setBoardPiecesCommand(state));
             }
         );
 
@@ -113,7 +113,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
 
                         emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
 
-                        emit(BoardCommands.setBoardPiecesCommand(board.pieces));
+                        emit(BoardCommands.setBoardPiecesCommand(board));
                         emit(BenchCommands.initialiseBenchCommand(bench.pieces));
                         emit(PlayerCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
@@ -126,7 +126,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
                         const { board, bench, opponentId } = packet.payload;
 
                         if (board) {
-                            emit(BoardCommands.setBoardPiecesCommand(board.pieces));
+                            emit(BoardCommands.setBoardPiecesCommand(board));
                         }
 
                         emit(BenchCommands.initialiseBenchCommand(bench.pieces));

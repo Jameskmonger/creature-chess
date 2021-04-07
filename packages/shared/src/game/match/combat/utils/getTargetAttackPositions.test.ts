@@ -4,11 +4,7 @@ import { getTargetAttackPositions } from "./getTargetAttackPositions";
 describe("getTargetAttackPositions", () => {
     describe("when range is not provided", () => {
         test("should give adjacent positions", () => {
-            const piece = {
-                position: createTileCoordinates(3, 3)
-            };
-
-            const positions = getTargetAttackPositions(piece);
+            const positions = getTargetAttackPositions(createTileCoordinates(3, 3));
 
             expect(positions).toContainEqual(createTileCoordinates(2, 3));
             expect(positions).toContainEqual(createTileCoordinates(4, 3));
@@ -19,11 +15,7 @@ describe("getTargetAttackPositions", () => {
 
     describe("when range is 2", () => {
         test("should give all points in range 2", () => {
-            const piece = {
-                position: createTileCoordinates(3, 3)
-            };
-
-            const positions = getTargetAttackPositions(piece, 2);
+            const positions = getTargetAttackPositions(createTileCoordinates(3, 3), 2);
 
             expect(positions).toContainEqual(createTileCoordinates(1, 3));
             expect(positions).toContainEqual(createTileCoordinates(2, 3));

@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { PieceModel, createTileCoordinates } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 import { BenchCommand, REMOVE_BENCH_PIECE_COMMAND, INITIALISE_BENCH_COMMAND, ADD_BENCH_PIECE_COMMAND, MOVE_BENCH_PIECE_COMMAND, REMOVE_BENCH_PIECES_COMMAND } from "../commands";
 
 type PiecesState = PieceModel[];
@@ -32,7 +32,6 @@ const pieces: Reducer<PiecesState, BenchCommand> = (state = initialState, comman
 
       newState[slotToUse] = {
         ...piece,
-        position: createTileCoordinates(slotToUse, null),
         facingAway: false
       };
 
@@ -50,17 +49,14 @@ const pieces: Reducer<PiecesState, BenchCommand> = (state = initialState, comman
       const piece = state[from.slot];
 
       // safety catch
-      if (!piece || !piece.position || piece.id !== pieceId || piece.position.x !== from.slot || piece.position.y !== null) {
+      if (!piece || piece.id !== pieceId) {
         return state;
       }
 
       const newState = [...state];
 
       newState[from.slot] = null;
-      newState[to.slot] = {
-        ...piece,
-        position: createTileCoordinates(to.slot, null)
-      };
+      newState[to.slot] = { ...piece };
 
       return newState;
     }

@@ -231,7 +231,7 @@ export abstract class Player {
     public clearPieces() {
         const pieces = getAllPieces(this.store.getState());
 
-        this.store.dispatch(BoardCommands.setBoardPiecesCommand({}));
+        this.store.dispatch(BoardCommands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
         this.store.dispatch(BenchCommands.initialiseBenchCommand([]));
 
         for (const piece of pieces) {

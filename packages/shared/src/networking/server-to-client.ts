@@ -65,7 +65,7 @@ type BenchUpdatePacket = {
 };
 
 type BoardUpdatePacket = {
-  boardPieces: IndexedPieces
+  state: BoardState
 };
 
 export enum ServerToClientPacketOpcodes {

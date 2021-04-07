@@ -140,7 +140,7 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
                 function*() {
                     const board: BoardState = yield select((state: PlayerState) => state.board);
 
-                    registry.emit(ServerToClientPacketOpcodes.BOARD_UPDATE, { boardPieces: board.pieces });
+                    registry.emit(ServerToClientPacketOpcodes.BOARD_UPDATE, { state: board });
                 }
             ),
 

@@ -1,5 +1,5 @@
 import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
-import { BoardState, boardReducer, BoardCommands } from "../../../board";
+import { BoardState, boardReducer, BoardCommands, BoardSelectors } from "../../../board";
 import { getStats } from "../../../utils/piece-utils";
 import { isOvercomeBy, isGeneratedBy } from "../../../utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
@@ -45,6 +45,8 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
             }
         }
     };
+
+    const attackerPosition = BoardSelectors.getPiecePosition(board, pieceId);
 
     const attackerTargetId = attacker.combat.targetId;
     const attackerBoardState = attacker.combat.board;
@@ -97,7 +99,9 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
     }
 
-    const inRange = inAttackRange(attacker, target, attackerStats.attackType);
+    const targetPosition = BoardSelectors.getPiecePosition(board, attackerTargetId);
+
+    const inRange = inAttackRange(attackerPosition, targetPosition, attackerStats.attackType);
     const targetAlive = target.currentHealth > 0;
 
     if (!targetAlive) {
@@ -111,8 +115,8 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         const damage = getAttackDamage(attacker, target);
         const newDefenderHealth = Math.max(target.currentHealth - damage, 0);
 
-        const attackerDirection = getRelativeDirection(attacker.position, target.position);
-        const attackerDistance = getDistance(attacker.position, target.position);
+        const attackerDirection = getRelativeDirection(attackerPosition, targetPosition);
+        const attackerDistance = getDistance(attackerPosition, targetPosition);
         const attackerFacingAway = getNewAttackerFacingAway(attacker.facingAway, attackerDirection);
 
         const newAttacker = {
@@ -139,7 +143,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
             ...target,
             currentHealth: newDefenderHealth,
             hit: {
-                direction: getRelativeDirection(target.position, attacker.position),
+                direction: getRelativeDirection(targetPosition, attackerPosition),
                 damage
             }
         }
@@ -151,23 +155,27 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
             return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
         }
 
-        // todo make getNextPiecePosition take range into account
-        const nextPosition = getNextPiecePosition(attacker, attackerStats, target, board);
+        const nextPosition = getNextPiecePosition(attackerPosition, attackerStats, targetPosition, board);
 
         if (!nextPosition) {
             return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
         }
 
-        const attackerDirection = getRelativeDirection(attacker.position, target.position);
+        const attackerDirection = getRelativeDirection(attackerPosition, targetPosition);
 
-        attacker.position = nextPosition;
         attacker.facingAway = getNewAttackerFacingAway(attacker.facingAway, attackerDirection);
 
         attackerBoardState.canMoveAtTurn = currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
         attackerBoardState.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
         attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 
-        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
+        return boardReducer(
+            boardReducer(
+                board,
+                BoardCommands.moveBoardPieceCommand({ pieceId, from: attackerPosition, to: nextPosition })
+            ),
+            BoardCommands.updateBoardPiecesCommand([attacker])
+        );
     }
 };
 

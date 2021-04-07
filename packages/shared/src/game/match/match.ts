@@ -31,7 +31,7 @@ export class Match {
         this.away = away;
         this.store = this.createStore(gameOptions);
 
-        const board = mergeBoards(GRID_SIZE, home.getBoard().pieces, away.getBoard().pieces);
+        const board = mergeBoards(GRID_SIZE, home.getBoard(), away.getBoard());
 
         this.store.dispatch(BoardCommands.setBoardPiecesCommand(board));
     }
@@ -41,21 +41,12 @@ export class Match {
     }
 
     public getBoardForPlayer(playerId: string): BoardState {
-        const { board: { pieces } } = this.store.getState();
+        const { board } = this.store.getState();
 
         // rotate the board for the away player, so that their pieces are shown on their own side
-        const boardPieces =
-            (playerId === this.away.id)
-            ? rotatePiecesAboutCenter(GRID_SIZE, pieces)
-            : pieces;
-
-        // todo sending the whole BoardState feels messy here, piecePositions isn't used
-        return {
-            pieces: boardPieces,
-            piecePositions: {},
-            locked: true,
-            pieceLimit: null
-        };
+        return (playerId === this.away.id)
+            ? rotatePiecesAboutCenter(GRID_SIZE, board)
+            : board;
     }
 
     public getTurn() {

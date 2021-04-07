@@ -41,10 +41,12 @@ export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: strin
                         return;
                     }
 
+                    const benchPieceSlot = state.bench.pieces.findIndex(p => p.id === benchPiece.id);
+
                     const fromLocation: PlayerPieceLocation = {
                         type: "bench",
                         location: {
-                            slot: benchPiece.position.x
+                            slot: benchPieceSlot
                         }
                     };
 

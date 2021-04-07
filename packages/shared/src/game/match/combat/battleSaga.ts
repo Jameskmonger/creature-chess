@@ -98,7 +98,7 @@ const battleEventChannel = (
 
                 board = simulateTurn(++turnCount, board);
                 emit(battleTurnEvent(turnCount));
-                emit(BoardCommands.setBoardPiecesCommand(board.pieces));
+                emit(BoardCommands.setBoardPiecesCommand({ pieces: board.pieces, piecePositions: board.piecePositions }));
 
                 await turnTimer.remaining();
             }

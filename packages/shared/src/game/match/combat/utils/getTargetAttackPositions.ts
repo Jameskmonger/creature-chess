@@ -6,8 +6,7 @@ const isInsideGrid = (position: TileCoordinates) => {
     return x >= 0 && y >= 0 && x < GRID_SIZE.width && y < GRID_SIZE.height;
 };
 
-export const getTargetAttackPositions = (target: { position: TileCoordinates }, range = 1) => {
-    const { x, y } = target.position;
+export const getTargetAttackPositions = ({ x, y }: TileCoordinates, range = 1) => {
     const positions: TileCoordinates[] = [];
 
     for (let _x = x - range; _x <= x + range; _x++) {
