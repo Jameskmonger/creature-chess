@@ -1,14 +1,23 @@
 import * as React from "react";
-import { PlayerPieceLocation } from "@creature-chess/models";
+import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { useBoard } from "./context";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";
+import { DragObjectWithType } from "react-dnd";
+
+type BoardGridProps = {
+    showOpponentHalf: boolean;
+    width: number;
+    playerHeight: number;
+
+    onDrop: (item: DragObjectWithType & { piece: PieceModel }, location: PlayerPieceLocation) => void;
+    onClick: (location: PlayerPieceLocation) => void;
+}
 
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
-
 const getClassName = (x: number, y: number) => isBoardTileDark(x, y) ? "dark" : "light";
 
-const BoardGrid: React.FunctionComponent<{ showOpponentHalf: boolean, width: number, playerHeight: number }> = ({ showOpponentHalf, width, playerHeight }) => {
+const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ showOpponentHalf, width, playerHeight, onDrop, onClick }) => {
     const { locked, piecePositions } = useBoard();
 
     const rows = [];
@@ -36,11 +45,11 @@ const BoardGrid: React.FunctionComponent<{ showOpponentHalf: boolean, width: num
                 location: { x, y }
             };
 
-            const tileEmpty = !piecePositions[piecePositionKey];
+            const tileContainsPiece = Boolean(piecePositions[piecePositionKey]);
 
             tiles.push(
-                (tileEmpty && !locked)
-                    ? <DroppableTile key={`tile-${x}`} className={className} location={location} />
+                (!tileContainsPiece && !locked)
+                    ? <DroppableTile key={`tile-${x}`} className={className} location={location} onDrop={onDrop} onClick={onClick} />
                     : <UndroppableTile key={`tile-${x}`} className={className} />
             );
         }
