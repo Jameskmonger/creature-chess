@@ -13,10 +13,12 @@ import {
 } from "./sagas";
 import { gameReducer, GameState } from "../store";
 import { Logger } from "winston";
+import { cardShopReducer, CardShopState } from "./cardShop";
 
 export interface PlayerState {
     board: BoardState;
     bench: BenchState;
+    cardShop: CardShopState;
     playerInfo: PlayerInfoState;
     game: GameState;
 }
@@ -46,7 +48,8 @@ export const createPlayerStore = (getLogger: () => Logger, playerId: string, nam
             board: boardReducer,
             bench: benchReducer,
             playerInfo: playerInfoReducer,
-            game: gameReducer
+            game: gameReducer,
+            cardShop: cardShopReducer
         }),
         applyMiddleware(sagaMiddleware)
     );

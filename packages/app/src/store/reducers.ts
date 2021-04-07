@@ -1,5 +1,5 @@
 import { ReducersMapObject } from "redux";
-import { boardReducer, benchReducer, playerInfoReducer, gameReducer } from "@creature-chess/shared";
+import { boardReducer, benchReducer, playerInfoReducer, gameReducer, PlayerReducers } from "@creature-chess/shared";
 import { playerList } from "../game/features/playerList/playerListReducer";
 import { lobbyReducer } from "../lobby";
 import { uiReducer } from "../ui";
@@ -12,6 +12,7 @@ export const reducers: ReducersMapObject<AppState> = {
     lobby: lobbyReducer,
     playerList,
     playerInfo: playerInfoReducer,
+    cardShop: PlayerReducers.cardShopReducer,
     game: gameReducer,
     ui: uiReducer,
     user: userReducer

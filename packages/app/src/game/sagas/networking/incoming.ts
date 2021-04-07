@@ -3,7 +3,7 @@ import { eventChannel } from "redux-saga";
 import {
     BenchCommands, BoardCommands, ConnectionStatus, GameEvents, IncomingPacketRegistry,
     PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, startBattle,
-    PlayerEvents
+    PlayerEvents, PlayerCommands
 } from "@creature-chess/shared";
 import { GamePhase } from "@creature-chess/models";
 import { playerListUpdated } from "../../features/playerList/playerListActions";
@@ -48,7 +48,14 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
         registry.on(
             ServerToClientPacketOpcodes.CARDS_UPDATE,
             (packet) => {
-                emit(PlayerInfoCommands.updateCardsCommand(packet));
+                emit(PlayerCommands.updateCardsCommand(packet));
+            }
+        );
+
+        registry.on(
+            ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE,
+            (packet) => {
+                emit(PlayerCommands.updateShopLockCommand(packet.locked));
             }
         );
 
@@ -64,13 +71,6 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
             (packet) => {
                 emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
                 emit(BoardCommands.setPieceLimit(packet.level));
-            }
-        );
-
-        registry.on(
-            ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE,
-            (packet) => {
-                emit(PlayerInfoCommands.updateShopLockCommand(packet.locked));
             }
         );
 
@@ -115,7 +115,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
 
                         emit(BoardCommands.initialiseBoard(board.pieces));
                         emit(BenchCommands.initialiseBenchCommand(bench.pieces));
-                        emit(PlayerInfoCommands.updateCardsCommand(cards));
+                        emit(PlayerCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
                         emit(BoardCommands.unlockBoard());
                         emit(openOverlay(Overlay.SHOP));

@@ -1,4 +1,4 @@
-import { PlayerListPlayer } from "@creature-chess/models";
+import { Card, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState, BenchState, PlayerInfoState, GameState, ConnectionStatus } from "@creature-chess/shared";
 import { Overlay } from "../ui/overlay";
 import { LobbyState } from "../lobby";
@@ -15,6 +15,10 @@ export interface AppState {
     playerInfo: PlayerInfoState;
     board: BoardState;
     bench: BenchState;
+    cardShop: {
+        cards: Card[],
+        locked: boolean
+    };
 
     playerList: PlayerListPlayer[];
 }

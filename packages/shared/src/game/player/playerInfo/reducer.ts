@@ -1,7 +1,7 @@
-import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, Card, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
+import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import {
-    UPDATE_MONEY_COMMAND, UPDATE_SHOP_LOCK_COMMAND, PlayerInfoCommand, UPDATE_OPPONENT_COMMAND, CLEAR_OPPONENT_COMMAND,
-    UPDATE_LEVEL_COMMAND, UPDATE_CARDS_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_ROUND_DIED_AT_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_STATUS_COMMAND, UPDATE_BATTLE_COMMAND
+    UPDATE_MONEY_COMMAND, PlayerInfoCommand, UPDATE_OPPONENT_COMMAND, CLEAR_OPPONENT_COMMAND,
+    UPDATE_LEVEL_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_ROUND_DIED_AT_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_STATUS_COMMAND, UPDATE_BATTLE_COMMAND
 } from "./commands";
 import { READY_UP_ACTION } from "../actions";
 import { PlayerEvent, PLAYER_DEATH_EVENT, PLAYER_MATCH_REWARDS_EVENT } from "../events";
@@ -36,12 +36,10 @@ export interface PlayerInfoState {
     roundDiedAt: number | null;
 
     opponentId: string;
-    shopLocked: boolean;
     money: number;
     ready: boolean;
     level: number;
     xp: number;
-    cards: Card[];
 }
 
 const initialState: PlayerInfoState = {
@@ -56,12 +54,10 @@ const initialState: PlayerInfoState = {
     battle: null,
     matchRewards: null,
     opponentId: null,
-    shopLocked: false,
     money: STARTING_MONEY,
     ready: false,
     level: STARTING_LEVEL,
-    xp: 0,
-    cards: []
+    xp: 0
 };
 
 export function playerInfoReducer(state: PlayerInfoState = initialState, command: PlayerInfoCommand | PlayerEvent): PlayerInfoState {
@@ -104,11 +100,6 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
                 ...state,
                 roundDiedAt: command.payload.roundDiedAt
             };
-        case UPDATE_CARDS_COMMAND:
-            return {
-                ...state,
-                cards: command.payload.cards
-            };
         case UPDATE_LEVEL_COMMAND:
             return {
                 ...state,
@@ -130,11 +121,6 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
             return {
                 ...state,
                 opponentId: null
-            };
-        case UPDATE_SHOP_LOCK_COMMAND:
-            return {
-                ...state,
-                shopLocked: command.payload.locked
             };
         case READY_UP_ACTION:
             return {

@@ -2,7 +2,8 @@ import { race, call, takeEvery, put, take, fork, all, select } from "@redux-saga
 import { eventChannel } from "redux-saga";
 import {
     BenchCommands, BoardCommands, GameEvents, IncomingPacketRegistry, PlayerInfoCommands,
-    ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, startBattle
+    ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, startBattle,
+    PlayerCommands
 } from "@creature-chess/shared";
 import { lobbyNetworking } from "../lobby/networking";
 import { gameConnectedEvent, joinLobbyAction, JoinLobbyAction, JOIN_LOBBY, GameConnectedEvent, GAME_CONNECTED } from "../lobby/store/actions";
@@ -94,7 +95,7 @@ export const findGame = function*(getAccessTokenSilently: () => Promise<string>,
         yield put(BoardCommands.initialiseBoard(board.pieces));
         yield put(BenchCommands.initialiseBenchCommand(bench.pieces));
         yield put(PlayerInfoCommands.updateMoneyCommand(money));
-        yield put(PlayerInfoCommands.updateCardsCommand(cards));
+        yield put(PlayerCommands.updateCardsCommand(cards));
         yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
         yield put(playerListUpdated(players));
         yield put(GameEvents.gamePhaseStartedEvent(phase, phaseStartedAtSeconds));

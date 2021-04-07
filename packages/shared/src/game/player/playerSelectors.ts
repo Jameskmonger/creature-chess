@@ -6,7 +6,7 @@ export const getPlayerMoney = (state: PlayerState): number => state.playerInfo.m
 export const getPlayerLevel = (state: PlayerState): number => state.playerInfo.level;
 export const getPlayerXp = (state: PlayerState): number => state.playerInfo.xp;
 export const isPlayerAlive = (state: PlayerState): boolean => state.playerInfo.health > 0;
-export const isPlayerShopLocked = (state: PlayerState): boolean => state.playerInfo.shopLocked;
+export const isPlayerShopLocked = (state: PlayerState): boolean => state.cardShop.locked;
 
 export const getPlayerBelowPieceLimit = (state: PlayerState, playerId: string): boolean => {
     const ownedBoardPieceCount = Object.values(state.board.pieces).filter(p => p.ownerId === playerId).length;

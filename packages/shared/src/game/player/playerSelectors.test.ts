@@ -5,8 +5,8 @@ describe("playerSelectors", () => {
         describe("when shopLocked is false", () => {
             // todo use a builder here
             const state: any = {
-                playerInfo: {
-                    shopLocked: false
+                cardShop: {
+                    locked: false
                 }
             };
 
@@ -18,8 +18,8 @@ describe("playerSelectors", () => {
         describe("when shopLocked is true", () => {
             // todo use a builder here
             const state: any = {
-                playerInfo: {
-                    shopLocked: true
+                cardShop: {
+                    locked: true
                 }
             };
 

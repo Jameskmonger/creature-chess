@@ -27,6 +27,7 @@ import { getAllPieces, getBenchPiecesByStage, getBoardPiecesByStage, getBoardPie
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
 import { GameEvent } from "../store/events";
 import { GameEvents } from "../store";
+import { updateCardsCommand } from "./cardShop";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -135,7 +136,7 @@ export abstract class Player {
     }
 
     public getShopLocked() {
-        return this.store.getState().playerInfo.shopLocked;
+        return this.store.getState().cardShop.locked;
     }
 
     public getStatus() {
@@ -151,7 +152,7 @@ export abstract class Player {
     }
 
     public enterPreparingPhase() {
-        if (this.store.getState().playerInfo.shopLocked === false) {
+        if (!this.getShopLocked()) {
             this.rerollCards();
         }
 
@@ -214,7 +215,7 @@ export abstract class Player {
 
         const state = this.store.getState();
 
-        const cards = state.playerInfo.cards;
+        const { cardShop: { cards } } = state;
 
         const threeStarBoardPieces = getBoardPiecesByStage(state, 2);
         const threeStarBenchPieces = getBenchPiecesByStage(state, 2);
@@ -224,7 +225,7 @@ export abstract class Player {
         const blessCandidateIds = [... new Set(getBoardPiecesExceptStage(state, 2).map(p => p.definitionId)) ];
 
         const newCards = this.deck.reroll(cards, 5, this.getLevel(), blessCandidateIds, excludeIds);
-        this.store.dispatch(PlayerInfoCommands.updateCardsCommand(newCards));
+        this.store.dispatch(updateCardsCommand(newCards));
     }
 
     public clearPieces() {
@@ -237,8 +238,8 @@ export abstract class Player {
             this.deck.addPiece(piece);
         }
 
-        const cards = this.store.getState().playerInfo.cards;
-        this.store.dispatch(PlayerInfoCommands.updateCardsCommand([]));
+        const { cardShop: { cards } } = this.store.getState();
+        this.store.dispatch(updateCardsCommand([]));
         this.deck.addCards(cards);
 
         this.deck.shuffle();
@@ -271,7 +272,7 @@ export abstract class Player {
     }
 
     public getCards() {
-        return this.store.getState().playerInfo.cards;
+        return this.store.getState().cardShop.cards;
     }
 
     private afterSellPieceEventSaga() {

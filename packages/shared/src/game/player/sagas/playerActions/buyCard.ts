@@ -8,7 +8,8 @@ import { createPieceFromCard } from "../../../../utils/piece-utils";
 import { addBenchPieceCommand } from "../../bench/commands";
 import { PlayerState } from "../../store";
 import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../../playerSelectors";
-import { updateCardsCommand, updateMoneyCommand } from "../../playerInfo/commands";
+import { updateMoneyCommand } from "../../playerInfo/commands";
+import { updateCardsCommand } from "../../cardShop";
 import { getFirstEmptyBenchSlot } from "../../pieceSelectors";
 
 const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation => {
@@ -57,8 +58,10 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
 
             const state: TState = yield select();
 
-            const cards = state.playerInfo.cards;
-            const money = state.playerInfo.money;
+            const {
+                cardShop: { cards },
+                playerInfo: { money }
+            } = state;
 
             getLogger().info(
                 "BUY_CARD_ACTION received",
@@ -77,7 +80,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                 );
 
                 yield put(updateMoneyCommand(money));
-                yield put(updateCardsCommand(state.playerInfo.cards));
+                yield put(updateCardsCommand(cards));
 
                 continue;
             }
@@ -92,7 +95,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                 );
 
                 yield put(updateMoneyCommand(money));
-                yield put(updateCardsCommand(state.playerInfo.cards));
+                yield put(updateCardsCommand(cards));
 
                 continue;
             }
@@ -109,7 +112,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
             }
 
             const piece = createPieceFromCard(definitionProvider, playerId, card);
-            const remainingCards = state.playerInfo.cards.map(c => c === card ? null : c);
+            const remainingCards = cards.map(c => c === card ? null : c);
 
             if (destination.type === "board") {
                 yield put(BoardCommands.addBoardPiece(piece, destination.location.x, destination.location.y));

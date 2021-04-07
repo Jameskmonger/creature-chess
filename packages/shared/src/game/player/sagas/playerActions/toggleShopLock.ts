@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { ToggleShopLockAction, TOGGLE_SHOP_LOCK_ACTION } from "../../actions";
-import { updateShopLockCommand } from "../../playerInfo/commands";
+import { updateShopLockCommand } from "../../cardShop";
 import { isPlayerShopLocked } from "../../playerSelectors";
 import { PlayerState } from "../../store";
 

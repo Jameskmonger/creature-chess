@@ -2,8 +2,9 @@ import { Logger } from "winston";
 import { takeLatest, take, fork, all, select, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import {
-    PlayerActions, PlayerState, PlayerInfoCommands, GameEvents, PlayerEvents, Match,
-    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BoardCommands, BenchCommands, BenchState, BoardState
+    PlayerActions, PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match,
+    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions,
+    ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BoardCommands, BenchCommands, BenchState, BoardState
 } from "@creature-chess/shared";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
@@ -19,7 +20,7 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
             GameEvents.GAME_PHASE_STARTED_EVENT,
             function*({ payload: { phase, startedAt, round } }) {
                 if (phase === GamePhase.PREPARING) {
-                    const { board, bench, playerInfo: { cards } }: PlayerState = yield select();
+                    const { board, bench, cardShop: { cards } }: PlayerState = yield select();
 
                     const packet: PhaseUpdatePacket = {
                         startedAtSeconds: startedAt,
@@ -145,12 +146,20 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
                 }
             ),
 
-            yield takeLatest<PlayerInfoCommands.UpdateCardsCommand>(
-                PlayerInfoCommands.UPDATE_CARDS_COMMAND,
+            yield takeLatest(
+                PlayerCommands.updateCardsCommand,
                 function*() {
-                    const cards: Card[] = yield select((state: PlayerState) => state.playerInfo.cards);
+                    const cards: Card[] = yield select((state: PlayerState) => state.cardShop.cards);
 
                     registry.emit(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
+                }
+            ),
+            yield takeLatest(
+                PlayerCommands.updateShopLockCommand,
+                function*() {
+                    const locked: boolean = yield select((state: PlayerState) => state.cardShop.locked);
+
+                    registry.emit(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, { locked });
                 }
             ),
             yield takeLatest<PlayerInfoCommands.UpdateMoneyCommand>(
@@ -168,14 +177,6 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
                     const xp: number = yield select((state: PlayerState) => state.playerInfo.xp);
 
                     registry.emit(ServerToClientPacketOpcodes.LEVEL_UPDATE, { level, xp });
-                }
-            ),
-            yield takeLatest<PlayerInfoCommands.UpdateShopLockCommand>(
-                PlayerInfoCommands.UPDATE_SHOP_LOCK_COMMAND,
-                function*() {
-                    const locked: boolean = yield select((state: PlayerState) => state.playerInfo.shopLocked);
-
-                    registry.emit(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, { locked });
                 }
             )
         ]);
