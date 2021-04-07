@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.20](https://github.com/Jameskmonger/creature-chess/compare/v0.3.19...v0.3.20) (2021-04-07)
+
+
+### Bug Fixes
+
+* set user-select:none on everything ([bc8fe89](https://github.com/Jameskmonger/creature-chess/commit/bc8fe891cceaa6c8892d583bd2518f2ed398291e))
+
+
+### Features
+
+* add new shop ui ([908c6e0](https://github.com/Jameskmonger/creature-chess/commit/908c6e0c3a2be3453099d926b8fb97e105188887))
+
+
+
+
+
 ## [0.3.19](https://github.com/Jameskmonger/creature-chess/compare/v0.3.18...v0.3.19) (2021-04-06)
 
 
