@@ -11,7 +11,7 @@ import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
 import { BoardGrid } from "../../board/BoardGrid";
-import { clearSelectedPiece } from "./actions";
+import { clearSelectedPiece } from "../../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
 import { PieceComponent } from "./piece/pieceComponent";
 

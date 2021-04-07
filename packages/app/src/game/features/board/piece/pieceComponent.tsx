@@ -6,7 +6,7 @@ import { getPiece } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../ui/display/animation";
 import { Projectile } from "../../../../ui/display/projectile";
-import { selectPiece } from "../actions";
+import { selectPiece } from "../../../../ui/actions";
 import { PieceImage } from "./components/pieceImage";
 import { getUserId } from "../../../../menu/auth/store/selectors";
 import { PieceMeta } from "./pieceMeta";

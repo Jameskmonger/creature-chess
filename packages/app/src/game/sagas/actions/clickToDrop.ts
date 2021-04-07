@@ -2,7 +2,7 @@ import { take, select, put } from "@redux-saga/core/effects";
 import { PlayerActions, getPiece, BoardState, BoardSelectors } from "@creature-chess/shared";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
-import { clearSelectedPiece } from "../../features/board/actions";
+import { clearSelectedPiece } from "../../../ui/actions";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
     if (board) {
