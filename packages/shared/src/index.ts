@@ -13,7 +13,7 @@ export {
     battleSaga, startBattle,
     BATTLE_FINISH_EVENT,
     gameReducer, GameState, Game, Player, GameEvents,
-    getPiece, getAllPieces, getBoardPieceForPosition, canDropPiece,
+    getPiece, getAllPieces, getBoardPieceForPosition,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     BenchCommands, benchReducer, BenchState,
