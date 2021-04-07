@@ -5,10 +5,12 @@ import { BoardContextProvider, useBoard } from "./context";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";
 import { DragObjectWithType } from "react-dnd";
+import { BoardItems, BoardItemRenderFn } from "./BoardItems";
 
 type BoardGridProps = {
     state: BoardState;
     className?: string;
+    renderItem: BoardItemRenderFn;
     onDrop: (item: DragObjectWithType & { piece: PieceModel }, x: number, y: number) => void;
     onClick: (x: number, y: number) => void;
 }
@@ -43,9 +45,11 @@ const BoardRows: React.FunctionComponent<Partial<BoardGridProps>> = ({ className
     return <>{rows}</>;
 };
 
-const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ state, className = "", onDrop, onClick }) => (
+const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ state, className = "", renderItem, onDrop, onClick }) => (
     <BoardContextProvider value={state}>
         <BoardRows className={className} onDrop={onDrop} onClick={onClick} />
+
+        <BoardItems render={renderItem} />
     </BoardContextProvider>
 );
 

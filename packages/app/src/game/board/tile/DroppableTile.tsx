@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DragObjectWithType, useDrop } from "react-dnd";
-import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 import { getOverlayClassName } from "./getOverlayClassName";
 import { useBelowPieceLimit, usePieces } from "../context";
 

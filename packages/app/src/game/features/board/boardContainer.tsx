@@ -10,42 +10,10 @@ import { Announcement } from "./overlays/announcement";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
-import { BoardContextProvider } from "../../board/context";
 import { BoardGrid } from "../../board/BoardGrid";
-import { PositionablePiece } from "./piece/positionablePiece";
 import { clearSelectedPiece } from "./actions";
 import { NowPlaying } from "../nowPlaying";
-
-type BoardPiecesProps = {
-    piecePositions: { [key: string]: string },
-    draggable: boolean;
-    animate: boolean;
-    pieceIsOnBench?: boolean;
-}
-
-const BoardPieces: React.FunctionComponent<BoardPiecesProps> = ({ piecePositions, draggable, animate, pieceIsOnBench = false }) => {
-    const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
-
-    const pieceElements: React.ReactNode[] = [];
-
-    // this weird code is needed so that React keeps the same DOM elements, thus preserving the CSS animations
-    const entries = Object.entries(piecePositions);
-    entries.sort(([aPosition, aId], [bPosition, bId]) => aId.localeCompare(bId));
-
-    for (const [position, id] of entries) {
-        if (!id) {
-            continue;
-        }
-
-        const selected = id === selectedPieceId;
-
-        const [x, y] = position.split(",");
-
-        pieceElements.push(<PositionablePiece key={id} id={id} x={x} y={y} draggable={draggable} animate={animate} selected={selected} pieceIsOnBench={pieceIsOnBench} />);
-    }
-
-    return <div className="board-pieces">{pieceElements}</div>;
-};
+import { PieceComponent } from "./piece/pieceComponent";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
     if (board) {
@@ -98,6 +66,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
     const board = useSelector<AppState, BoardState>(state => state.board);
     const bench = useSelector<AppState, BoardState>(state => state.bench);
 
+    const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 
     return (
@@ -112,9 +81,16 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
                         state={board}
                         onDrop={onDropPiece(dispatch, "board", board, bench)}
                         onClick={onTileClick(dispatch, "board")}
+                        renderItem={id => (
+                            <PieceComponent
+                                id={id}
+                                draggable={inPreparingPhase}
+                                animate={!inPreparingPhase}
+                                selected={id === selectedPieceId}
+                                pieceIsOnBench={false}
+                            />
+                        )}
                     />
-
-                    <BoardPieces piecePositions={board.piecePositions} draggable={inPreparingPhase} animate={!inPreparingPhase} />
                 </div>
 
                 <Announcement />
@@ -124,16 +100,21 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
             </div>
 
             <div className="bench">
-                <BoardContextProvider value={bench}>
-                    <BoardGrid
-                        state={bench}
-                        className="bench"
-                        onDrop={onDropPiece(dispatch, "bench", board, bench)}
-                        onClick={onTileClick(dispatch, "bench")}
-                    />
-                </BoardContextProvider>
-
-                <BoardPieces piecePositions={bench.piecePositions} draggable animate={false} pieceIsOnBench />
+                <BoardGrid
+                    state={bench}
+                    className="bench"
+                    onDrop={onDropPiece(dispatch, "bench", board, bench)}
+                    onClick={onTileClick(dispatch, "bench")}
+                    renderItem={id => (
+                        <PieceComponent
+                            id={id}
+                            draggable
+                            animate={false}
+                            selected={id === selectedPieceId}
+                            pieceIsOnBench
+                        />
+                    )}
+                />
             </div>
         </div>
     );
