@@ -157,6 +157,8 @@ export abstract class Player {
         }
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
+
+        this.store.dispatch(BoardCommands.setPieceLimitCommand(this.getLevel()));
         this.store.dispatch(BoardCommands.unlockBoardCommand());
     }
 
