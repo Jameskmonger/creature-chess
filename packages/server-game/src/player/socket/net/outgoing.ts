@@ -55,7 +55,7 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
                     let opponentId =
                         match.home.id === playerId
                             ? match.away.id
-                            : match.home.id
+                            : match.home.id;
 
                     const packet: PhaseUpdatePacket = {
                         startedAtSeconds: startedAt,
@@ -132,17 +132,15 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
             ),
             yield takeLatest(
                 [
-                    BoardCommands.ADD_BOARD_PIECE_COMMAND,
-                    BoardCommands.REMOVE_BOARD_PIECE_COMMAND,
-                    BoardCommands.REMOVE_BOARD_PIECES_COMMAND,
-                    BoardCommands.MOVE_BOARD_PIECE_COMMAND,
-                    BoardCommands.UPDATE_BOARD_PIECE_COMMAND,
-                    BoardCommands.UPDATE_BOARD_PIECES_COMMAND
+                    BoardCommands.addBoardPieceCommand,
+                    BoardCommands.moveBoardPieceCommand,
+                    BoardCommands.removeBoardPiecesCommand,
+                    BoardCommands.updateBoardPiecesCommand
                 ],
                 function*() {
                     const board: BoardState = yield select((state: PlayerState) => state.board);
 
-                    registry.emit(ServerToClientPacketOpcodes.BOARD_UPDATE, { boardPieces: board.pieces });
+                    registry.emit(ServerToClientPacketOpcodes.BOARD_UPDATE, { state: board });
                 }
             ),
 

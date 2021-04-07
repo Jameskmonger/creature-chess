@@ -5,7 +5,8 @@ export { validateNickname } from "./validation";
 
 export {
     BoardCommands,
-    boardReducer, BoardState
+    boardReducer, BoardState,
+    BoardSelectors
 } from "./board";
 
 export {

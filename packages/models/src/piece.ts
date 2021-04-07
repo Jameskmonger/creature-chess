@@ -26,7 +26,6 @@ export interface PieceModel {
     definition: CreatureDefinition;
 
     stage: number;
-    position: TileCoordinates;
 
     facingAway: boolean;
     attacking?: AttackDetails;

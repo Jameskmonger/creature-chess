@@ -17,7 +17,7 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
     const inPreparingPhase = state.game.phase === GamePhase.PREPARING;
 
     if (belowPieceLimit && inPreparingPhase) {
-        const boardSlot = getPlayerFirstEmptyBoardSlot(state, sortPositions);
+        const boardSlot = getPlayerFirstEmptyBoardSlot(state.board, sortPositions);
 
         if (boardSlot) {
             return {
@@ -115,7 +115,8 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
             const remainingCards = cards.map(c => c === card ? null : c);
 
             if (destination.type === "board") {
-                yield put(BoardCommands.addBoardPiece(piece, destination.location.x, destination.location.y));
+                const { x, y } = destination.location
+                yield put(BoardCommands.addBoardPieceCommand({ piece, x, y }));
             } else if (destination.type === "bench") {
                 yield put(addBenchPieceCommand(piece, destination.location.slot));
             }

@@ -204,7 +204,7 @@ export class BotPlayer extends Player {
                 break;
             }
 
-            const firstEmptyPosition = PlayerSelectors.getPlayerFirstEmptyBoardSlot(this.store.getState(), PREFERRED_LOCATIONS[firstBenchPiece.definition.class]);
+            const firstEmptyPosition = PlayerSelectors.getPlayerFirstEmptyBoardSlot(this.store.getState().board, PREFERRED_LOCATIONS[firstBenchPiece.definition.class]);
 
             if (firstEmptyPosition === null) {
                 break;
@@ -215,10 +215,12 @@ export class BotPlayer extends Player {
                 location: firstEmptyPosition
             };
 
+            const benchPieceSlot = this.store.getState().bench.pieces.findIndex(p => p.id === firstBenchPiece.id);
+
             const benchPiecePosition: PlayerPieceLocation = {
                 type: "bench",
                 location: {
-                    slot: firstBenchPiece.position.x
+                    slot: benchPieceSlot
                 }
             };
 

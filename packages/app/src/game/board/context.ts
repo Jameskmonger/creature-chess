@@ -16,3 +16,23 @@ export const useBelowPieceLimit = () => {
 
     return Object.values(board.pieces).length < board.pieceLimit;
 };
+
+export const usePieces = () => {
+    const board = useContext(BoardContext);
+
+    if (!board) {
+        return null;
+    }
+
+    return board.pieces;
+};
+
+export const usePiecePositions = () => {
+    const board = useContext(BoardContext);
+
+    if (!board) {
+        return null;
+    }
+
+    return board.piecePositions;
+};

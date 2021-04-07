@@ -4,9 +4,8 @@ import { BenchState } from "../bench";
 import { BoardState } from "../../../board";
 import { AddBenchPieceCommand, addBenchPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, ADD_BENCH_PIECE_COMMAND } from "../bench/commands";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
-import { BoardCommands } from "../../../board";
+import { BoardCommands, BoardSelectors } from "../../../board";
 import * as pieceSelectors from "../pieceSelectors";
-import { removeBoardPieces, updateBoardPiece, UpdateBoardPieceCommand } from "../../../board/commands";
 
 const definitionProvider = new DefinitionProvider();
 
@@ -23,10 +22,13 @@ const pieceCanEvolve = (piece: PieceModel) => {
 
 export const evolutionSagaFactory = <TState extends State>() => {
     return function*() {
-        yield takeLatest<AddBenchPieceCommand | UpdateBoardPieceCommand>(
+        yield takeLatest<
+            AddBenchPieceCommand
+            | ReturnType<typeof BoardCommands.addBoardPieceCommand>
+        >(
             // need to check when bench/board pieces are added (could have come from shop)
             // or when board piece is updated (could be due to a previous evolution)
-            [ADD_BENCH_PIECE_COMMAND, BoardCommands.ADD_BOARD_PIECE_COMMAND, BoardCommands.UPDATE_BOARD_PIECE_COMMAND],
+            [ADD_BENCH_PIECE_COMMAND, BoardCommands.addBoardPieceCommand],
             function*({ payload: { piece } }) {
                 if (!pieceCanEvolve(piece)) {
                     return;
@@ -38,7 +40,7 @@ export const evolutionSagaFactory = <TState extends State>() => {
                 if (boardLocked) {
                     // todo check if we have 3 evolvable pieces on the bench and evolve those? maybe
 
-                    yield take(BoardCommands.UNLOCK_BOARD_COMMAND);
+                    yield take(BoardCommands.unlockBoardCommand);
                     yield delay(500);
                 }
 
@@ -66,9 +68,11 @@ export const evolutionSagaFactory = <TState extends State>() => {
                     // replace a board piece if it exists
                     const pieceToReplace = matchingBoardPieces.pop();
 
+                    const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.board, pieceToReplace.id));
+
                     // remove any remaining board pieces
-                    const boardPieceIds = matchingBoardPieces.map(p => p.id);
-                    yield put(removeBoardPieces(boardPieceIds));
+                    const boardPieceIds = [...matchingBoardPieces, pieceToReplace].map(p => p.id);
+                    yield put(BoardCommands.removeBoardPiecesCommand(boardPieceIds));
 
                     const benchPieceIds = matchingBenchPieces.map(p => p.id);
                     yield put(removeBenchPiecesCommand([...benchPieceIds, piece.id]));
@@ -78,7 +82,9 @@ export const evolutionSagaFactory = <TState extends State>() => {
                         stage: targetStage + 1
                     };
 
-                    yield put(updateBoardPiece(newPiece));
+                    const {x, y} = piecePosition;
+
+                    yield put(BoardCommands.addBoardPieceCommand({ x, y, piece: newPiece }));
                 } else {
                     // otherwise replace the just-added bench piece
                     const benchPieceIds = matchingBenchPieces.map(p => p.id);

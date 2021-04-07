@@ -1,6 +1,7 @@
-import { GRID_SIZE, TileCoordinates } from "@creature-chess/models";
+import { TileCoordinates } from "@creature-chess/models";
 import { PlayerState } from "./store";
 import { getBoardPieceForPosition } from "./pieceSelectors";
+import { BoardState } from "../../board";
 
 export const getPlayerMoney = (state: PlayerState): number => state.playerInfo.money;
 export const getPlayerLevel = (state: PlayerState): number => state.playerInfo.level;
@@ -26,7 +27,7 @@ const defaultSortPositions = (a: TileCoordinates, b: TileCoordinates) => {
         return SORT_A_SECOND;
     }
 
-    // todo tie this into GRID_SIZE
+    // todo tie this into board size
     const distanceFromMiddleA = Math.abs(a.x - 3);
     const distanceFromMiddleB = Math.abs(b.x - 3);
 
@@ -41,12 +42,12 @@ const defaultSortPositions = (a: TileCoordinates, b: TileCoordinates) => {
     return SORT_A_FIRST;
 }
 
-export const getPlayerFirstEmptyBoardSlot = (state: PlayerState, sortPositions: (a: TileCoordinates, b: TileCoordinates) => -1 | 1 = defaultSortPositions): (TileCoordinates | null) => {
+export const getPlayerFirstEmptyBoardSlot = (state: BoardState, sortPositions: (a: TileCoordinates, b: TileCoordinates) => -1 | 1 = defaultSortPositions): (TileCoordinates | null) => {
     const emptyPositions: TileCoordinates[] = [];
 
-    for (let y = (GRID_SIZE.height / 2); y < GRID_SIZE.height; y++) {
-        for (let x = 0; x < GRID_SIZE.width; x++) {
-            const boardPiece = getBoardPieceForPosition(state.board, x, y);
+    for (let y = 0; y < state.size.height; y++) {
+        for (let x = 0; x < state.size.width; x++) {
+            const boardPiece = getBoardPieceForPosition(state, x, y);
 
             if (!boardPiece) {
                 emptyPositions.push({ x, y });

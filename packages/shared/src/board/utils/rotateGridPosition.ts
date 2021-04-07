@@ -1,4 +1,6 @@
 import { createTileCoordinates, TileCoordinates, IndexedPieces } from "@creature-chess/models";
+import { getPiecePosition } from "../selectors";
+import { BoardState } from "../state";
 
 export const rotateGridPosition = (gridSize: { width: number, height: number }, position: TileCoordinates) => {
     return createTileCoordinates(
@@ -7,19 +9,35 @@ export const rotateGridPosition = (gridSize: { width: number, height: number }, 
     );
 };
 
-export const rotatePiecesAboutCenter = (gridSize: { width: number, height: number }, pieces: IndexedPieces) => {
-    return Object.entries(pieces).reduce<IndexedPieces>(
-        (acc, [pieceId, piece]) => {
-            // it's not too bad to mutate `acc` here, because we're creating it as an empty object in this reduce call
+export const rotatePiecesAboutCenter = (state: BoardState): BoardState => {
+    const newPositions: { pieceId: string, position: string }[] = [];
 
-            acc[pieceId] = {
-                ...piece,
-                facingAway: !piece.facingAway,
-                position: rotateGridPosition(gridSize, piece.position)
-            };
+    for (const [pieceId] of Object.entries(state.pieces)) {
+        const position = getPiecePosition(state, pieceId);
+        const newPosition = rotateGridPosition(state.size, position);
+        const newPositionKey = `${newPosition.x},${newPosition.y}`;
 
-            return acc;
-        },
-        {}
-    );
+        newPositions.push({ pieceId, position: newPositionKey });
+    }
+
+    return {
+        ...state,
+        pieces: Object.entries(state.pieces).reduce<IndexedPieces>(
+            (acc, [pieceId, piece]) => ({
+                ...acc,
+                [pieceId]: {
+                    ...piece,
+                    facingAway: !piece.facingAway
+                }
+            }),
+            {}
+        ),
+        piecePositions: newPositions.reduce<{ [position: string]: string }>(
+            (acc, { pieceId, position }) => ({
+                ...acc,
+                [position]: pieceId
+            }),
+            {}
+        )
+    };
 };

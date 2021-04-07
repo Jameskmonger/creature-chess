@@ -1,8 +1,34 @@
 import { take, select, put } from "@redux-saga/core/effects";
-import { PlayerActions, getPiece, BenchState, BoardState } from "@creature-chess/shared";
+import { PlayerActions, getPiece, BenchState, BoardState, BoardSelectors } from "@creature-chess/shared";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
 import { clearSelectedPiece } from "../../features/board/actions";
+
+const getLocationForPiece = (pieceId: string, board: BoardState, bench: BenchState): PlayerPieceLocation => {
+    if (board) {
+        const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
+
+        if (boardPiecePosition) {
+            return {
+                type: "board",
+                location: boardPiecePosition
+            }
+        }
+    }
+
+    if (bench) {
+        const benchSlot = bench.pieces.findIndex(p => p !== null && p.id === pieceId);
+
+        if (benchSlot !== undefined) {
+            return {
+                type: "bench",
+                location: { slot: benchSlot }
+            }
+        }
+    }
+
+    return null;
+};
 
 export const clickToDrop = function*() {
     while (true) {
@@ -16,16 +42,14 @@ export const clickToDrop = function*() {
             continue;
         }
 
-        let tileEmpty = false
+        let tileEmpty = false;
+        const bench: BenchState = yield select((state: AppState) => state.bench);
+        const board: BoardState = yield select((state: AppState) => state.board);
 
         if (tile.type === "bench") {
-            const bench: BenchState = yield select((state: AppState) => state.bench);
-
             tileEmpty = !bench.pieces[tile.location.slot];
         } else if (tile.type === "board") {
             const piecePositionKey = `${tile.location.x},${tile.location.y}`;
-
-            const board: BoardState = yield select((state: AppState) => state.board);
 
             tileEmpty = !board.piecePositions[piecePositionKey];;
         }
@@ -34,17 +58,7 @@ export const clickToDrop = function*() {
             continue;
         }
 
-        const from: PlayerPieceLocation = (
-            piece.position.y !== null
-                ? ({
-                    type: "board",
-                    location: { x: piece.position.x, y: piece.position.y }
-                })
-                : ({
-                    type: "bench",
-                    location: { slot: piece.position.x }
-                })
-        );
+        const from: PlayerPieceLocation = getLocationForPiece(piece.id, board, bench);
 
         yield put(PlayerActions.playerDropPieceAction(piece.id, from, tile));
         yield put(clearSelectedPiece());

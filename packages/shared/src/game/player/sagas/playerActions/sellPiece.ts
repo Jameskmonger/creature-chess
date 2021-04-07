@@ -28,11 +28,8 @@ export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>() =
 
         yield put(updateMoneyCommand(currentMoney + (pieceCost * piecesUsed)));
 
-        if (piece.position.y === null) {
-          yield put(removeBenchPieceCommand(pieceId));
-        } else {
-          yield put(BoardCommands.removeBoardPiece(pieceId));
-        }
+        yield put(removeBenchPieceCommand(pieceId));
+        yield put(BoardCommands.removeBoardPiecesCommand([pieceId]));
 
         yield put(afterSellPieceEvent(piece));
       }

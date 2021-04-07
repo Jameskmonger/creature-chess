@@ -1,16 +1,16 @@
 import { astar, Graph } from "javascript-astar";
-import { PieceModel, GRID_SIZE, TileCoordinates, CreatureStats } from "@creature-chess/models";
+import { TileCoordinates, CreatureStats } from "@creature-chess/models";
 import { BoardState } from "../../../board";
 import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
 
-const createEmptyWeightGrid = () => {
+const createEmptyWeightGrid = ({ width, height }: { width: number, height: number }) => {
     const grid: number[][] = [];
 
     // todo this is a weird way round
-    for (let x = 0; x < GRID_SIZE.width; x++) {
+    for (let x = 0; x < width; x++) {
         const column = [];
 
-        for (let y = 0; y < GRID_SIZE.height; y++) {
+        for (let y = 0; y < height; y++) {
             column.push(1);
         }
 
@@ -21,13 +21,15 @@ const createEmptyWeightGrid = () => {
 };
 
 const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
-    const grid = createEmptyWeightGrid();
+    const grid = createEmptyWeightGrid(board.size);
 
     Object.entries(board.piecePositions)
         .forEach(([ position, pieceId ]) => {
             const [ x, y ] = position.split(",");
 
-            grid[x][y] = 0;
+            if (pieceId) {
+                grid[x][y] = 0;
+            }
         });
 
     grid[start.x][start.y] = 1;
@@ -61,11 +63,11 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (attacker: PieceModel, attackerStats: CreatureStats, target: PieceModel, board: BoardState): TileCoordinates => {
+export const getNextPiecePosition = (attackerPosition: TileCoordinates, attackerStats: CreatureStats, targetPosition: TileCoordinates, board: BoardState): TileCoordinates => {
     const { attackType: { range: attackRange } } = attackerStats;
 
-    const targetTiles = getTargetAttackPositions(target, attackRange);
-    const paths = targetTiles.map(pos => findPath(board, attacker.position, pos)).filter(path => path !== null);
+    const targetTiles = getTargetAttackPositions(board, targetPosition, attackRange);
+    const paths = targetTiles.map(pos => findPath(board, attackerPosition, pos)).filter(path => path !== null);
 
     if (paths.length === 0) {
         return null;

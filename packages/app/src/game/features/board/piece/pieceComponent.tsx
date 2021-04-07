@@ -18,6 +18,8 @@ interface DraggableBoardPieceProps {
     draggable: boolean;
     animate: boolean;
     selected: boolean;
+
+    pieceIsOnBench?: boolean;
 }
 
 interface Animation {
@@ -28,7 +30,7 @@ interface Animation {
 type PieceDragObject = DragObjectWithType & { piece: PieceModel }
 
 const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props) => {
-    const { id, draggable, animate, selected } = props;
+    const { id, draggable, animate, selected, pieceIsOnBench = false } = props;
     const dispatch = useDispatch();
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceModel | null>(null);
@@ -79,10 +81,8 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     };
 
     const onClick = () => {
-        const pieceIsOnBoard = piece.position.y !== null;
-
         // can only select a board piece in preparing phase
-        if (pieceIsOnBoard && !inPreparingPhase) {
+        if (!pieceIsOnBench && !inPreparingPhase) {
             return;
         }
 
@@ -110,7 +110,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
             onClick={onClick}
             onAnimationEnd={onAnimationEnd}
         >
-            <PieceMeta id={id} />
+            <PieceMeta id={id} pieceIsOnBench={pieceIsOnBench} />
 
             <PieceImage pieceId={id} />
 

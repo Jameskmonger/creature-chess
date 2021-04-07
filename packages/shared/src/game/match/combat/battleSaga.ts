@@ -15,7 +15,7 @@ export type BATTLE_FINISH_EVENT = typeof BATTLE_FINISH_EVENT;
 export type BattleTurnEvent = ({ type: BATTLE_TURN_EVENT, payload: { turn: number } });
 export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: number } });
 
-export type BattleEvent = BoardCommands.InitialiseBoardCommand | BattleTurnEvent | BattleFinishEvent;
+export type BattleEvent = ReturnType<typeof BoardCommands.setBoardPiecesCommand> | BattleTurnEvent | BattleFinishEvent;
 
 const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn } });
 const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
@@ -74,6 +74,7 @@ const battleEventChannel = (
                 ...startingBoardState.piecePositions
             },
             locked: startingBoardState.locked,
+            size: startingBoardState.size,
             pieceLimit: null
         };
 
@@ -98,7 +99,11 @@ const battleEventChannel = (
 
                 board = simulateTurn(++turnCount, board);
                 emit(battleTurnEvent(turnCount));
-                emit(BoardCommands.initialiseBoard(board.pieces));
+                emit(BoardCommands.setBoardPiecesCommand({
+                    pieces: board.pieces,
+                    piecePositions: board.piecePositions,
+                    size: undefined // todo improve this
+                }));
 
                 await turnTimer.remaining();
             }

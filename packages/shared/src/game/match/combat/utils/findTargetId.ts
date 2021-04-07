@@ -1,5 +1,5 @@
 import { PieceModel, getDelta } from "@creature-chess/models";
-import { BoardState } from "../../../../board";
+import { BoardSelectors, BoardState } from "../../../../board";
 
 const getLivingEnemies = (piece: PieceModel, board: BoardState): PieceModel[] => {
     const output: PieceModel[] = [];
@@ -20,10 +20,20 @@ export const findTargetId = (piece: PieceModel, board: BoardState): string | nul
         return null;
     }
 
-    const enemyDeltas = enemies.map(enemy => ({
-        enemy,
-        delta: getDelta(piece.position, enemy.position)
-    }));
+    const attackerPosition = BoardSelectors.getPiecePosition(board, piece.id);
+
+    const enemyDeltas = enemies.map(enemy => {
+        const enemyPosition = BoardSelectors.getPiecePosition(board, enemy.id)
+
+        if (!enemyPosition) {
+            return null;
+        }
+
+        return {
+            enemy,
+            delta: getDelta(attackerPosition, enemyPosition)
+        };
+    }).filter(x => x !== null);
 
     // sort by column then by row
     enemyDeltas.sort((a, b) => {
