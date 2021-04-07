@@ -8,10 +8,11 @@ import { getUserId } from "../../../../../menu/auth/store/selectors";
 
 interface HealthbarProps {
     pieceId: string;
+    pieceIsOnBench?: boolean;
     vertical?: boolean;
 }
 
-const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical = false }) => {
+const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical = false, pieceIsOnBench = false }) => {
     const showHealthbar = useSelector<AppState, boolean>(state => (
         state.game.phase === GamePhase.READY
         || state.game.phase === GamePhase.PLAYING
@@ -20,8 +21,6 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
     const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
 
     const localPlayerId = useSelector<AppState, string>(getUserId);
-
-    const pieceIsOnBench = piece.position.y === null;
 
     if (!showHealthbar || !piece || pieceIsOnBench) {
         return null;

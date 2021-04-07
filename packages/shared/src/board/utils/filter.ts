@@ -18,7 +18,7 @@ export const getPiecePositionsWithoutIds = (piecePositions: { [position: string]
     return Object.entries(piecePositions).reduce<{ [position: string]: string }>(
         (newPiecePositions, [position, pieceId]) => {
             // skip the desired piece
-            if (ids.includes(pieceId)) {
+            if (!pieceId || ids.includes(pieceId)) {
                 return newPiecePositions;
             }
 

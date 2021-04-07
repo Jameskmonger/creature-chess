@@ -7,7 +7,7 @@ import { Healthbar } from "./components/healthbar";
 import { StageIndicator } from "./components/StageIndicator";
 import { TypeIndicator } from "./components/TypeIndicator";
 
-const PieceMeta: React.FunctionComponent<{ id: string }> = ({ id }) => {
+const PieceMeta: React.FunctionComponent<{ id: string; pieceIsOnBench?: boolean }> = ({ id, pieceIsOnBench = false }) => {
     const piece = useSelector<AppState, PieceModel>(state => getPiece(state, id));
 
     return (
@@ -16,7 +16,7 @@ const PieceMeta: React.FunctionComponent<{ id: string }> = ({ id }) => {
                 <TypeIndicator type={piece.definition.type} />
 
                 <div className="health-bar-container">
-                    <Healthbar pieceId={id} vertical />
+                    <Healthbar pieceId={id} vertical pieceIsOnBench={pieceIsOnBench} />
 
                     <StageIndicator pieceId={id} />
                 </div>

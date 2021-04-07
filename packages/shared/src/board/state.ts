@@ -75,14 +75,17 @@ export const {
 
             const toString = `${to.x},${to.y}`;
 
-            return {
+            const newState = {
                 ...state,
                 piecePositions: {
                     ...state.piecePositions,
-                    [fromString]: null,
                     [toString]: pieceId
                 }
             };
+
+            delete newState.piecePositions[fromString];
+
+            return newState;
         },
         removeBoardPiecesCommand: (state, { payload: pieceIds }: PayloadAction<string[]>) => {
             return {

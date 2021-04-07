@@ -13,14 +13,14 @@ const BenchPieces: React.FunctionComponent = () => {
 
     const pieceElements: React.ReactNode[] = [];
 
-    pieces.forEach((piece) => {
+    pieces.forEach((piece, index) => {
         if (!piece) {
             return;
         }
 
         const selected = piece.id === selectedPieceId;
 
-        pieceElements.push(<PositionablePiece key={piece.id} id={piece.id} x={piece.position.x} y={0} draggable animate={false} selected={selected} />);
+        pieceElements.push(<PositionablePiece key={piece.id} id={piece.id} x={index} y={0} draggable animate={false} selected={selected} pieceIsOnBench />);
     });
 
     return (

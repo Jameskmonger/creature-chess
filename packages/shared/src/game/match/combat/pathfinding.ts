@@ -27,7 +27,9 @@ const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
         .forEach(([ position, pieceId ]) => {
             const [ x, y ] = position.split(",");
 
-            grid[x][y] = 0;
+            if (pieceId) {
+                grid[x][y] = 0;
+            }
         });
 
     grid[start.x][start.y] = 1;

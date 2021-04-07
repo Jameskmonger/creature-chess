@@ -10,29 +10,34 @@ export const rotateGridPosition = (gridSize: { width: number, height: number }, 
 };
 
 export const rotatePiecesAboutCenter = (gridSize: { width: number, height: number }, state: BoardState): BoardState => {
-    let newState: BoardState = {
-        ...state,
-        piecePositions: {
-            ...state.piecePositions
-        }
-    };
+    const newPositions: { pieceId: string, position: string }[] = [];
 
-    for (const [ pieceId, piece ] of Object.entries(state.pieces)) {
+    for (const [pieceId] of Object.entries(state.pieces)) {
         const position = getPiecePosition(state, pieceId);
-        const positionKey = `${position.x},${position.y}`;
-
         const newPosition = rotateGridPosition(gridSize, position);
         const newPositionKey = `${newPosition.x},${newPosition.y}`;
 
-        newState = {
-            ...newState,
-            piecePositions: {
-                ...newState.piecePositions,
-                [positionKey]: undefined,
-                [newPositionKey]: pieceId
-            }
-        }
+        newPositions.push({ pieceId, position: newPositionKey });
     }
 
-    return newState;
+    return {
+        ...state,
+        pieces: Object.entries(state.pieces).reduce<IndexedPieces>(
+            (acc, [pieceId, piece]) => ({
+                ...acc,
+                [pieceId]: {
+                    ...piece,
+                    facingAway: !piece.facingAway
+                }
+            }),
+            {}
+        ),
+        piecePositions: newPositions.reduce<{ [position: string]: string }>(
+            (acc, { pieceId, position }) => ({
+                ...acc,
+                [position]: pieceId
+            }),
+            {}
+        )
+    };
 };

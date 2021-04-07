@@ -55,7 +55,7 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
                     let opponentId =
                         match.home.id === playerId
                             ? match.away.id
-                            : match.home.id
+                            : match.home.id;
 
                     const packet: PhaseUpdatePacket = {
                         startedAtSeconds: startedAt,
