@@ -38,20 +38,22 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         ...board.pieces[pieceId],
         attacking: null,
         hit: null,
+        combat: {
+            ...board.pieces[pieceId].combat,
+            board: {
+                ...board.pieces[pieceId].combat.board
+            }
+        }
     };
 
+    const attackerTargetId = attacker.combat.targetId;
+    const attackerBoardState = attacker.combat.board;
     const attackerStats = getStats(attacker);
-    const {
-        combat: {
-            targetId: attackerTargetId,
-            board: attackerBoardState
-        }
-    } = attacker;
 
     // board management
 
     if (attackerBoardState.removeFromBoardAtTurn === currentTurn) {
-        return boardReducer(board, BoardCommands.removeBoardPiece(pieceId));
+        return boardReducer(board, BoardCommands.removeBoardPiecesCommand([pieceId]));
     }
 
     if (attacker.currentHealth === 0) {
@@ -60,7 +62,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         }
 
         attackerBoardState.removeFromBoardAtTurn = currentTurn + DYING_DURATION;
-        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
     }
 
     const cooldown = getCooldownForSpeed(attackerStats.speed);
@@ -78,7 +80,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     if (!attackerTargetId) {
         attacker.combat.targetId = findTargetId(attacker, board);
 
-        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
     }
 
     const target = board.pieces[attackerTargetId];
@@ -86,13 +88,13 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
     // if we can't attack yet, wait for cooldown
     if (attackerBoardState.canAttackAtTurn > currentTurn) {
         // todo check if attacker has been changed
-        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
     }
 
     // if the enemy can't be attacked yet, wait
     // todo consider breaking and choosing different target..
     if (target.combat.board.canBeAttackedAtTurn > currentTurn) {
-        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
     }
 
     const inRange = inAttackRange(attacker, target, attackerStats.attackType);
@@ -103,7 +105,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         // todo should we increment canAttackAtTurn here?
         attacker.combat.targetId = null;
 
-        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
     } else if (inRange) {
         // target is in range, so attack
         const damage = getAttackDamage(attacker, target);
@@ -142,18 +144,18 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
             }
         }
 
-        return boardReducer(board, BoardCommands.updateBoardPieces([newAttacker, defender]));
+        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([newAttacker, defender]));
     } else {
         // target is out of range, so move towards
         if (attackerBoardState.canMoveAtTurn > currentTurn) {
-            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+            return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
         }
 
         // todo make getNextPiecePosition take range into account
         const nextPosition = getNextPiecePosition(attacker, attackerStats, target, board);
 
         if (!nextPosition) {
-            return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+            return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
         }
 
         const attackerDirection = getRelativeDirection(attacker.position, target.position);
@@ -165,7 +167,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState):
         attackerBoardState.canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
         attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 
-        return boardReducer(board, BoardCommands.updateBoardPiece(attacker));
+        return boardReducer(board, BoardCommands.updateBoardPiecesCommand([attacker]));
     }
 };
 

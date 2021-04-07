@@ -40,7 +40,7 @@ export const xpSagaFactory = <TState extends PlayerState>() => {
                 const inPreparingPhase: boolean = yield select((state: TState) => state.game.phase === GamePhase.PREPARING);
 
                 if (inPreparingPhase) {
-                    yield put(BoardCommands.setPieceLimit(level));
+                    yield put(BoardCommands.setPieceLimitCommand(level));
                 }
             }
         }

@@ -157,7 +157,7 @@ export abstract class Player {
         }
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
-        this.store.dispatch(BoardCommands.unlockBoard());
+        this.store.dispatch(BoardCommands.unlockBoardCommand());
     }
 
     public fillBoard() {
@@ -166,7 +166,7 @@ export abstract class Player {
 
     public enterReadyPhase(match: Match) {
         this.match = match;
-        this.store.dispatch(BoardCommands.lockBoard());
+        this.store.dispatch(BoardCommands.lockBoardCommand());
 
         const opponentId = match.home.id === this.id
             ? match.away.id
@@ -231,7 +231,7 @@ export abstract class Player {
     public clearPieces() {
         const pieces = getAllPieces(this.store.getState());
 
-        this.store.dispatch(BoardCommands.initialiseBoard({}));
+        this.store.dispatch(BoardCommands.setBoardPiecesCommand({}));
         this.store.dispatch(BenchCommands.initialiseBenchCommand([]));
 
         for (const piece of pieces) {

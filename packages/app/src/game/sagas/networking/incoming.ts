@@ -34,7 +34,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
         registry.on(
             ServerToClientPacketOpcodes.BOARD_UPDATE,
             ({ boardPieces }) => {
-                emit(BoardCommands.initialiseBoard(boardPieces));
+                emit(BoardCommands.setBoardPiecesCommand(boardPieces));
             }
         );
 
@@ -70,7 +70,7 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
             ServerToClientPacketOpcodes.LEVEL_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
-                emit(BoardCommands.setPieceLimit(packet.level));
+                emit(BoardCommands.setPieceLimitCommand(packet.level));
             }
         );
 
@@ -113,11 +113,11 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
 
                         emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
 
-                        emit(BoardCommands.initialiseBoard(board.pieces));
+                        emit(BoardCommands.setBoardPiecesCommand(board.pieces));
                         emit(BenchCommands.initialiseBenchCommand(bench.pieces));
                         emit(PlayerCommands.updateCardsCommand(cards));
                         emit(PlayerInfoCommands.clearOpponentCommand());
-                        emit(BoardCommands.unlockBoard());
+                        emit(BoardCommands.unlockBoardCommand());
                         emit(openOverlay(Overlay.SHOP));
                         emit(clearAnnouncement());
                         return;
@@ -126,11 +126,11 @@ const readPacketsToActions = function*(registry: ServerToClientPacketRegistry, s
                         const { board, bench, opponentId } = packet.payload;
 
                         if (board) {
-                            emit(BoardCommands.initialiseBoard(board.pieces));
+                            emit(BoardCommands.setBoardPiecesCommand(board.pieces));
                         }
 
                         emit(BenchCommands.initialiseBenchCommand(bench.pieces));
-                        emit(BoardCommands.lockBoard());
+                        emit(BoardCommands.lockBoardCommand());
                         emit(closeOverlay());
                         emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
                         emit(clearSelectedPiece());

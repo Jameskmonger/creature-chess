@@ -70,15 +70,16 @@ export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(pla
         }
 
         if (from.type === "board" && to.type === "board") {
-          yield put(BoardCommands.moveBoardPiece(pieceId, from.location, to.location));
+          yield put(BoardCommands.moveBoardPieceCommand({ pieceId, from: from.location, to: to.location }));
         } else if (from.type !== "board" && to.type !== "board") {
           yield put(moveBenchPieceCommand(pieceId, from.location, to.location));
         } else if (from.type === "board" && to.type !== "board") {
-          yield put(BoardCommands.removeBoardPiece(pieceId));
+          yield put(BoardCommands.removeBoardPiecesCommand([pieceId]));
           yield put(addBenchPieceCommand(fromPiece, to.location.slot));
         } else if (from.type !== "board" && to.type === "board") {
           yield put(removeBenchPieceCommand(pieceId));
-          yield put(BoardCommands.addBoardPiece(fromPiece, to.location.x, to.location.y));
+          const { x, y } = to.location;
+          yield put(BoardCommands.addBoardPieceCommand({ piece: fromPiece, x, y }));
         }
       }
     );

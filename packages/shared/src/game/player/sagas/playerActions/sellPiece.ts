@@ -31,7 +31,7 @@ export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>() =
         if (piece.position.y === null) {
           yield put(removeBenchPieceCommand(pieceId));
         } else {
-          yield put(BoardCommands.removeBoardPiece(pieceId));
+          yield put(BoardCommands.removeBoardPiecesCommand([pieceId]));
         }
 
         yield put(afterSellPieceEvent(piece));

@@ -33,7 +33,7 @@ export class Match {
 
         const board = mergeBoards(GRID_SIZE, home.getBoard().pieces, away.getBoard().pieces);
 
-        this.store.dispatch(BoardCommands.initialiseBoard(board));
+        this.store.dispatch(BoardCommands.setBoardPiecesCommand(board));
     }
 
     public onClientFinishMatch() {

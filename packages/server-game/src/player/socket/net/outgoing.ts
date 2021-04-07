@@ -132,12 +132,10 @@ export const outgoingNetworking = function*(getLogger: () => Logger, playerId: s
             ),
             yield takeLatest(
                 [
-                    BoardCommands.ADD_BOARD_PIECE_COMMAND,
-                    BoardCommands.REMOVE_BOARD_PIECE_COMMAND,
-                    BoardCommands.REMOVE_BOARD_PIECES_COMMAND,
-                    BoardCommands.MOVE_BOARD_PIECE_COMMAND,
-                    BoardCommands.UPDATE_BOARD_PIECE_COMMAND,
-                    BoardCommands.UPDATE_BOARD_PIECES_COMMAND
+                    BoardCommands.addBoardPieceCommand,
+                    BoardCommands.moveBoardPieceCommand,
+                    BoardCommands.removeBoardPiecesCommand,
+                    BoardCommands.updateBoardPiecesCommand
                 ],
                 function*() {
                     const board: BoardState = yield select((state: PlayerState) => state.board);
