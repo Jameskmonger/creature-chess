@@ -116,7 +116,7 @@ module.exports = {
             scriptLoading: "blocking"
         }),
         new MiniCssExtractPlugin({
-            filename: "app.css"
+            filename: "app-[contenthash].css"
         }),
         new StyleLintPlugin({
             files: "**/*.scss"
