@@ -1,5 +1,5 @@
 import { Card, GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
-import { BoardState } from "../board";
+import { BoardState } from "@creature-chess/board";
 import { EmptyPacket } from "./empty-packet";
 
 export type PreparingPhaseUpdatePacket = {

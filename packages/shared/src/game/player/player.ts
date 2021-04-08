@@ -4,8 +4,8 @@ import { SagaMiddleware } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
+import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
-import { BoardSlice, createBoardSlice } from "../../board";
 import { GameState } from "../store/state";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 import { CardDeck } from "../cardDeck";
@@ -22,7 +22,7 @@ import {
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
-import { getAllPieces, getBenchPiecesByStage, getBoardPiecesByStage, getBoardPiecesExceptStage } from "./pieceSelectors";
+import { getAllPieces, getPiecesForStage, getPiecesExceptStage } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
 import { GameEvent } from "../store/events";
 import { GameEvents } from "../store";
@@ -57,8 +57,8 @@ export abstract class Player {
 
     private deck: CardDeck;
     private logger: Logger;
-    protected readonly boardSlice: BoardSlice;
-    protected readonly benchSlice: BoardSlice;
+    protected readonly boardSlice: BoardSlice<PieceModel>;
+    protected readonly benchSlice: BoardSlice<PieceModel>;
 
     constructor(id: string, name: string, picture: number) {
         this.id = id;
@@ -187,11 +187,11 @@ export abstract class Player {
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
         const finalMatchBoard = await this.match.fight(battleTimeout.promise);
 
-        const pieces = Object.values(finalMatchBoard.pieces);
+        const survivingPieces = BoardSelectors.getAllPieces(finalMatchBoard).filter(p => p.currentHealth > 0);
 
         const surviving = {
-            home: pieces.filter(p => p.currentHealth > 0 && p.ownerId === this.id),
-            away: pieces.filter(p => p.currentHealth > 0 && p.ownerId !== this.id)
+            home: survivingPieces.filter(p => p.ownerId === this.id),
+            away: survivingPieces.filter(p => p.ownerId !== this.id)
         };
 
         const homeScore = surviving.home.length;
@@ -226,12 +226,12 @@ export abstract class Player {
 
         const { cardShop: { cards } } = state;
 
-        const threeStarBoardPieces = getBoardPiecesByStage(state, 2);
-        const threeStarBenchPieces = getBenchPiecesByStage(state, 2);
+        const threeStarBoardPieces = getPiecesForStage(state.board, 2);
+        const threeStarBenchPieces = getPiecesForStage(state.bench, 2);
 
         const excludeIds = [ ...threeStarBoardPieces, ...threeStarBenchPieces ].map(p => p.definitionId);
 
-        const blessCandidateIds = [... new Set(getBoardPiecesExceptStage(state, 2).map(p => p.definitionId)) ];
+        const blessCandidateIds = [... new Set(getPiecesExceptStage(state.board, 2).map(p => p.definitionId)) ];
 
         const newCards = this.deck.reroll(cards, 5, this.getLevel(), blessCandidateIds, excludeIds);
         this.store.dispatch(updateCardsCommand(newCards));

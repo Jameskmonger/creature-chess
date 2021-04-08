@@ -4,18 +4,11 @@ export { randomFromArray, getXpToNextLevel } from "./utils";
 export { validateNickname } from "./validation";
 
 export {
-    BoardState,
-    BoardSlice,
-    createBoardSlice,
-    BoardSelectors,
-} from "./board";
-
-export {
     DefinitionProvider,
     battleSaga, startBattle,
     BATTLE_FINISH_EVENT,
     gameReducer, GameState, Game, Player, GameEvents,
-    getPiece, getAllPieces, getBoardPieceForPosition,
+    getPiece, getAllPieces,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents, PlayerSelectors,

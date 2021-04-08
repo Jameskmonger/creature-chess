@@ -1,5 +1,5 @@
-import { BoardState } from "@creature-chess/shared"
 import { createContext, useContext } from "react"
+import { BoardSelectors, BoardState } from "@creature-chess/board"
 
 const BoardContext = createContext<BoardState>(null);
 BoardContext.displayName = "BoardContext";
@@ -14,7 +14,7 @@ export const useBelowPieceLimit = () => {
         return;
     }
 
-    return board.pieceLimit === null || Object.values(board.pieces).length < board.pieceLimit;
+    return board.pieceLimit === null || BoardSelectors.isBelowPieceLimit(board);
 };
 
 export const usePieces = () => {

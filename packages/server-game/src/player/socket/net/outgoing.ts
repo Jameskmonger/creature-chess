@@ -4,8 +4,9 @@ import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match,
     OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions,
-    ServerToClientPacketAcknowledgements, PhaseUpdatePacket, BoardState, BoardSlice
+    ServerToClientPacketAcknowledgements, PhaseUpdatePacket
 } from "@creature-chess/shared";
+import { BoardState, BoardSlice } from "@creature-chess/board";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
 

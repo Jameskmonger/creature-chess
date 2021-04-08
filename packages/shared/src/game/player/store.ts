@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import { fork, all } from "@redux-saga/core/effects";
 
-import { BoardSlice, BoardState } from "../../board";
+import { BoardState, BoardSlice } from "@creature-chess/board";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 
@@ -13,10 +13,11 @@ import {
 import { gameReducer, GameState } from "../store";
 import { Logger } from "winston";
 import { cardShopReducer, CardShopState } from "./cardShop";
+import { PieceModel } from "@creature-chess/models";
 
 export interface PlayerState {
-    board: BoardState;
-    bench: BoardState;
+    board: BoardState<PieceModel>;
+    bench: BoardState<PieceModel>;
     cardShop: CardShopState;
     playerInfo: PlayerInfoState;
     game: GameState;
@@ -28,7 +29,7 @@ export const createPlayerStore = (
     getLogger: () => Logger,
     playerId: string,
     name: string,
-    slices: { boardSlice: BoardSlice, benchSlice: BoardSlice }
+    slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([

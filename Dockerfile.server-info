@@ -9,6 +9,7 @@ RUN npm ci --loglevel notice
 
 COPY packages/server-info/package*.json ./packages/server-info/
 COPY packages/auth-server/package*.json ./packages/auth-server/
+COPY packages/board/package*.json ./packages/board/
 COPY packages/models/package*.json ./packages/models/
 COPY packages/data/package*.json ./packages/data/
 COPY packages/shared/package*.json ./packages/shared/
@@ -19,6 +20,8 @@ RUN npm run bootstrap
 COPY tsconfig.json .
 
 # build dependencies - doing this manually improves docker caching
+COPY packages/board ./packages/board
+RUN npm run build -- --scope @creature-chess/board
 COPY packages/models ./packages/models
 RUN npm run build -- --scope @creature-chess/models
 COPY packages/data ./packages/data

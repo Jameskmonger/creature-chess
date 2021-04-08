@@ -1,19 +1,10 @@
 import { PieceModel, getDelta } from "@creature-chess/models";
-import { BoardSelectors, BoardState } from "../../../../board";
+import { BoardSelectors, BoardState } from "@creature-chess/board";
 
-const getLivingEnemies = (piece: PieceModel, board: BoardState): PieceModel[] => {
-    const output: PieceModel[] = [];
+const getLivingEnemies = (piece: PieceModel, board: BoardState<PieceModel>): PieceModel[] =>
+    BoardSelectors.getAllPieces(board).filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
 
-    for (const other of Object.values(board.pieces)) {
-        if (other.ownerId !== piece.ownerId && other.currentHealth > 0) {
-            output.push(other);
-        }
-    }
-
-    return output;
-};
-
-export const findTargetId = (piece: PieceModel, board: BoardState): string | null => {
+export const findTargetId = (piece: PieceModel, board: BoardState<PieceModel>): string | null => {
     const enemies = getLivingEnemies(piece, board);
 
     if (enemies.length === 0) {

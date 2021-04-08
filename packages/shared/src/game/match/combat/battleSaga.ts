@@ -1,9 +1,9 @@
 import present = require("present");
 import { eventChannel, buffers } from "redux-saga";
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
-import { IndexedPieces, createPieceCombatState } from "@creature-chess/models";
+import { IndexedPieces, createPieceCombatState, PieceModel } from "@creature-chess/models";
+import { BoardState, BoardSlice } from "@creature-chess/board";
 import { isATeamDefeated } from "../../../utils";
-import { BoardSlice, BoardState, } from "../../../board";
 import { simulateTurn } from "./turnSimulator";
 import { GameOptions } from "../../options";
 
@@ -60,8 +60,8 @@ const addCombatState = (pieces: IndexedPieces) => {
 };
 
 const battleEventChannel = (
-    startingBoardState: BoardState,
-    boardSlice: BoardSlice,
+    startingBoardState: BoardState<PieceModel>,
+    boardSlice: BoardSlice<PieceModel>,
     startingTurn: number,
     options: GameOptions,
     bufferSize: number
@@ -69,7 +69,7 @@ const battleEventChannel = (
     return eventChannel<BattleEvent>(emit => {
         let cancelled = false;
 
-        let board: BoardState = {
+        let board: BoardState<PieceModel> = {
             id: startingBoardState.id,
             pieces: addCombatState(startingBoardState.pieces),
             piecePositions: {
@@ -119,11 +119,11 @@ const battleEventChannel = (
     }, buffers.expanding(bufferSize));
 };
 
-export const battleSaga = function*(gameOptions: GameOptions, boardSlice: BoardSlice) {
+export const battleSaga = function*(gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
     yield takeEvery<StartBattleCommand>(
         START_BATTLE,
         function*({ payload: { turn } }) {
-            const board: BoardState = yield select(state => state.board);
+            const board: BoardState<PieceModel> = yield select(state => state.board);
 
             // todo no need for the channel here. this can just run synchronously in a loop
             const battleChannel = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);

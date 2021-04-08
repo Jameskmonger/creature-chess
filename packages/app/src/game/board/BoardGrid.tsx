@@ -1,6 +1,6 @@
 import * as React from "react";
 import { PieceModel } from "@creature-chess/models";
-import { BoardState } from "@creature-chess/shared";
+import { BoardState } from "@creature-chess/board";
 import { BoardContextProvider, useBoard } from "./context";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";

@@ -1,5 +1,5 @@
 import { createTileCoordinates, TileCoordinates } from "@creature-chess/models";
-import { BoardState } from "../../../../board";
+import { BoardState } from "@creature-chess/board";
 
 const isInsideGrid = ({ width, height }: { width: number, height: number}) => (position: TileCoordinates) => {
     const { x, y } = position;

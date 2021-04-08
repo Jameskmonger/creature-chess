@@ -3,8 +3,9 @@ import { eventChannel } from "redux-saga";
 import {
     GameEvents, IncomingPacketRegistry, PlayerInfoCommands,
     ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, startBattle,
-    PlayerCommands, BoardSlice
+    PlayerCommands
 } from "@creature-chess/shared";
+import { BoardSlice } from "@creature-chess/board";
 import { lobbyNetworking } from "../lobby/networking";
 import { gameConnectedEvent, joinLobbyAction, JoinLobbyAction, JOIN_LOBBY, GameConnectedEvent, GAME_CONNECTED } from "../lobby/store/actions";
 import { AppState } from "../store";
@@ -13,11 +14,12 @@ import { getSocket } from "../ui/socket";
 import { gameSaga } from "../game";
 import { playerListUpdated } from "../game/features/playerList/playerListActions";
 import { isLoggedIn } from "./auth/store/selectors";
+import { PieceModel } from "@creature-chess/models";
 
 export const findGame = function*(
     getAccessTokenSilently: () => Promise<string>,
     loginWithRedirect: () => Promise<void>,
-    slices: { boardSlice: BoardSlice, benchSlice: BoardSlice }
+    slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
     const findGameAction: FindGameAction = yield take(FIND_GAME);
 

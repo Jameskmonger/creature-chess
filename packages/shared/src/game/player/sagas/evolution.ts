@@ -1,16 +1,14 @@
 import { takeLatest, select, take, delay, put } from "@redux-saga/core/effects";
 import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
-import { BoardState } from "../../../board";
+import { BoardState, BoardSelectors, BoardSlice } from "@creature-chess/board";
 import { DefinitionProvider } from "../../definitions/definitionProvider";
-import { BoardSelectors } from "../../../board";
 import * as pieceSelectors from "../pieceSelectors";
-import { BoardSlice } from "../../../board";
 
 const definitionProvider = new DefinitionProvider();
 
 interface State {
-    bench: BoardState;
-    board: BoardState;
+    bench: BoardState<PieceModel>;
+    board: BoardState<PieceModel>;
 }
 
 const pieceCanEvolve = (piece: PieceModel) => {
@@ -19,7 +17,7 @@ const pieceCanEvolve = (piece: PieceModel) => {
     return piece.stage < stages.length - 1;
 };
 
-export const evolutionSagaFactory = <TState extends State>({ boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice }) => {
+export const evolutionSagaFactory = <TState extends State>({ boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) => {
     return function*() {
         yield takeLatest<
             ReturnType<typeof boardSlice.commands.addBoardPieceCommand>
@@ -51,10 +49,10 @@ export const evolutionSagaFactory = <TState extends State>({ boardSlice, benchSl
                 const getCombinablePieces = (pieces: PieceModel[]) => pieces.filter(p => p.stage === targetStage);
 
                 const matchingBoardPieces = getCombinablePieces(
-                    pieceSelectors.getBoardPiecesForDefinition(state, targetDefinitionId)
+                    pieceSelectors.getPiecesForDefinition(state.board, targetDefinitionId)
                 );
                 const matchingBenchPieces = getCombinablePieces(
-                    pieceSelectors.getBenchPiecesForDefinition(state, targetDefinitionId)
+                    pieceSelectors.getPiecesForDefinition(state.bench, targetDefinitionId)
                 );
 
                 const totalInstances = matchingBoardPieces.length + matchingBenchPieces.length;

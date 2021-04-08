@@ -3,14 +3,14 @@ import { v4 as uuid } from "uuid";
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice } from "../../board";
+import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice } from "@creature-chess/board";
 import { Player } from "../player";
 import { battleSaga, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
 import { GameOptions } from "../options";
-import { GRID_SIZE } from "@creature-chess/models";
+import { GRID_SIZE, PieceModel } from "@creature-chess/models";
 
 interface MatchState {
-    board: BoardState;
+    board: BoardState<PieceModel>;
     turn: number;
 }
 
@@ -22,9 +22,9 @@ export class Match {
     public readonly home: Player;
     public readonly away: Player;
     private store: Store<MatchState>;
-    private finalBoard: BoardState;
+    private finalBoard: BoardState<PieceModel>;
     private boardId = uuid();
-    private board = createBoardSlice(this.boardId, GRID_SIZE);
+    private board = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
 
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
@@ -43,7 +43,7 @@ export class Match {
         this.clientFinishedMatch.resolve();
     }
 
-    public getBoardForPlayer(playerId: string): BoardState {
+    public getBoardForPlayer(playerId: string): BoardState<PieceModel> {
         const { board } = this.store.getState();
 
         // rotate the board for the away player, so that their pieces are shown on their own side

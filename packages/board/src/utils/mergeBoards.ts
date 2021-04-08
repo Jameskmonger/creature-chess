@@ -1,7 +1,7 @@
-import { BoardState } from "../state";
+import { BoardState, HasId } from "../types";
 import { rotatePiecesAboutCenter } from "./rotateGridPosition";
 
-const expandBoard = (board: BoardState, { width, height }: { width: number, height: number }): BoardState => {
+const expandBoard = <TState extends BoardState>(board: TState, { width, height }: { width: number, height: number }): TState => {
   const differenceWidth = width - board.size.width;
   const differenceHeight = height - board.size.height;
 
@@ -25,7 +25,7 @@ const expandBoard = (board: BoardState, { width, height }: { width: number, heig
   };
 }
 
-export const mergeBoards = (id: string, home: BoardState, away: BoardState): BoardState => {
+export const mergeBoards = <TPiece extends HasId, TState extends BoardState<TPiece>>(id: string, home: TState, away: TState): TState => {
   if (home.size.width !== away.size.width || home.size.height !== away.size.height) {
     throw Error("Trying to merge odd-sized boards");
   }
@@ -52,5 +52,5 @@ export const mergeBoards = (id: string, home: BoardState, away: BoardState): Boa
     locked: true,
     pieceLimit: null,
     size: newSize
-  };
+  } as TState;
 };

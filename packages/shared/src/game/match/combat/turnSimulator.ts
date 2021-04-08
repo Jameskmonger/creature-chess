@@ -1,5 +1,5 @@
 import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
-import { BoardState, BoardSelectors, BoardSlice } from "../../../board";
+import { BoardSelectors, BoardSlice, BoardState } from "@creature-chess/board";
 import { getStats } from "../../../utils/piece-utils";
 import { isOvercomeBy, isGeneratedBy } from "../../../utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
@@ -16,7 +16,7 @@ const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
 const STRONG_ATTACK_MODIFIER = 1.7;
 const WEAK_ATTACK_MODIFIER = 0.3;
 
-export const simulateTurn = (currentTurn: number, board: BoardState, boardSlice: BoardSlice) => {
+export const simulateTurn = (currentTurn: number, board: BoardState<PieceModel>, boardSlice: BoardSlice<PieceModel>) => {
     const pieceEntries = Object.entries(board.pieces);
 
     pieceEntries.sort(([, aPiece], [, bPiece]) => {
@@ -26,22 +26,24 @@ export const simulateTurn = (currentTurn: number, board: BoardState, boardSlice:
         return bStats.speed - aStats.speed;
     });
 
-    return pieceEntries.reduce<BoardState>(
+    return pieceEntries.reduce(
         (b, [pieceId]) => takePieceTurn(currentTurn, pieceId, b, boardSlice),
         board
     );
 };
 
-const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState, boardSlice: BoardSlice): BoardState => {
+const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState<PieceModel>, boardSlice: BoardSlice<PieceModel>): BoardState<PieceModel> => {
+    const originalPiece = BoardSelectors.getPiece(board, pieceId);
+
     // create a new piece object, reset combat properties
     const attacker: PieceModel = {
-        ...board.pieces[pieceId],
+        ...originalPiece,
         attacking: null,
         hit: null,
         combat: {
-            ...board.pieces[pieceId].combat,
+            ...originalPiece.combat,
             board: {
-                ...board.pieces[pieceId].combat.board
+                ...originalPiece.combat.board
             }
         }
     };
@@ -85,7 +87,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState, 
         return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     }
 
-    const target = board.pieces[attackerTargetId];
+    const target = BoardSelectors.getPiece(board, attackerTargetId);
 
     // if we can't attack yet, wait for cooldown
     if (attackerBoardState.canAttackAtTurn > currentTurn) {

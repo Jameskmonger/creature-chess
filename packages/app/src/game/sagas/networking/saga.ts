@@ -1,5 +1,6 @@
 import { put, fork } from "@redux-saga/core/effects";
-import { ConnectionStatus, BoardSlice } from "@creature-chess/shared";
+import { ConnectionStatus } from "@creature-chess/shared";
+import { BoardSlice } from "@creature-chess/board";
 import { updateConnectionStatus} from "../../../ui/actions";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";

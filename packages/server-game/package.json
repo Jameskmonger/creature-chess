@@ -29,6 +29,7 @@
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
   "dependencies": {
     "@creature-chess/auth-server": "^0.3.25",
+    "@creature-chess/board": "^0.1.0",
     "@creature-chess/data": "^0.3.0",
     "@creature-chess/models": "^0.3.25",
     "@creature-chess/shared": "^0.3.25",

@@ -5,7 +5,7 @@ import { getPiecesForStage } from "../../../../utils";
 import { PlayerState } from "../../store";
 import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../../actions";
 import { updateMoneyCommand } from "../../playerInfo/commands";
-import { BoardSlice } from "../../../../board";
+import { BoardSlice } from "@creature-chess/board";
 import { afterSellPieceEvent } from "../../events";
 
 export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(

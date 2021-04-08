@@ -1,7 +1,7 @@
-import { IndexedPieces } from "@creature-chess/models";
+import { PiecesState } from "../types";
 
-export const getPiecesWithoutIds = (pieces: IndexedPieces, ids: string[]) => {
-    const newPieces: IndexedPieces = {
+export const getPiecesWithoutIds = <TPiece>(pieces: PiecesState<TPiece>, ids: string[]) => {
+    const newPieces: PiecesState<TPiece> = {
         ...pieces
     };
 

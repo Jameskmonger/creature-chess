@@ -1,0 +1,29 @@
+{
+  "name": "@creature-chess/board",
+  "version": "0.1.0",
+  "description": "Board used in Creature Chess",
+  "author": "James Monger <jameskmonger@hotmail.co.uk>",
+  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jameskmonger/creature-chess.git"
+  },
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json",
+    "test": "jest"
+  },
+  "bugs": {
+    "url": "https://github.com/Jameskmonger/creature-chess/issues"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.5.1"
+  }
+}

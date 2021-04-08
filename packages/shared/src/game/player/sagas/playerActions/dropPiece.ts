@@ -1,8 +1,7 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
-import { PlayerPieceLocation } from "@creature-chess/models";
+import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerDropPieceAction, PLAYER_DROP_PIECE_ACTION } from "../../actions";
-import * as pieceSelectors from "../../pieceSelectors";
-import { BoardSlice } from "../../../../board";
+import { BoardSelectors, BoardSlice } from "@creature-chess/board";
 import { PlayerState } from "../../store";
 import { getPlayerBelowPieceLimit } from "../../playerSelectors";
 
@@ -10,13 +9,13 @@ const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {
     const { x, y } = location.location;
 
-    return pieceSelectors.getBoardPieceForPosition(state.board, x, y);
+    return BoardSelectors.getPieceForPosition(state.board, x, y);
   }
 
   if (location.type === "bench") {
     const { x } = location.location;
 
-    return pieceSelectors.getBoardPieceForPosition(state.bench, x, 0);
+    return BoardSelectors.getPieceForPosition(state.bench, x, 0);
   }
 
   return null;
@@ -35,7 +34,7 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
 };
 
 export const dropPiecePlayerActionSagaFactory = <TState extends PlayerState>(
-  { boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice },
+  { boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> },
   playerId: string
 ) => {
   return function*() {

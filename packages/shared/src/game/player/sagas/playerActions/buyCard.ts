@@ -1,43 +1,36 @@
 import { Logger } from "winston";
 import { take, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
-import { GamePhase, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
-import { BoardSlice } from "../../../../board";
+import { GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
+import { BoardSelectors, BoardSlice, topLeftToBottomRightSortPositions } from "@creature-chess/board";
 import { DefinitionProvider } from "../../../definitions/definitionProvider";
 import { createPieceFromCard } from "../../../../utils/piece-utils";
 import { PlayerState } from "../../store";
-import { getPlayerBelowPieceLimit, getPlayerFirstEmptyBoardSlot } from "../../playerSelectors";
+import { getPlayerBelowPieceLimit } from "../../playerSelectors";
 import { updateMoneyCommand } from "../../playerInfo/commands";
 import { updateCardsCommand } from "../../cardShop";
-import { getFirstEmptyBenchSlot } from "../../pieceSelectors";
 
 const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
     const inPreparingPhase = state.game.phase === GamePhase.PREPARING;
 
     if (belowPieceLimit && inPreparingPhase) {
-        const boardSlot = getPlayerFirstEmptyBoardSlot(state.board, sortPositions);
+        const boardSlot = BoardSelectors.getFirstEmptySlot(state.board, sortPositions);
 
         if (boardSlot) {
             return {
                 type: "board",
-                location: {
-                    x: boardSlot.x,
-                    y: boardSlot.y
-                }
+                location: boardSlot
             };
         }
     }
 
-    const benchSlot = getFirstEmptyBenchSlot(state);
+    const benchSlot = BoardSelectors.getFirstEmptySlot(state.bench, topLeftToBottomRightSortPositions);
 
     if (benchSlot !== null) {
         return {
             type: "bench",
-            location: {
-                x: benchSlot,
-                y: 0
-            }
+            location: benchSlot
         };
     }
 
@@ -47,7 +40,7 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
 export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
     getLogger: () => Logger,
     definitionProvider: DefinitionProvider,
-    { boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice },
+    { boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> },
     playerId: string,
     name: string
 ) => {

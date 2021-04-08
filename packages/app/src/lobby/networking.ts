@@ -4,7 +4,8 @@ import { EventChannel, eventChannel } from "redux-saga";
 import { LobbyAction, updateLobbyPlayerAction, lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "./store/actions";
 import { AppState } from "../store";
 import { gameSaga } from "../game";
-import { BoardSlice } from "packages/shared/lib/board";
+import { BoardSlice } from "@creature-chess/board";
+import { PieceModel } from "@creature-chess/models";
 
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
@@ -47,7 +48,7 @@ const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegist
 
 export const lobbyNetworking = function*(
     socket: SocketIOClient.Socket,
-    slices: { boardSlice: BoardSlice, benchSlice: BoardSlice }
+    slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
     const registry = new IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)

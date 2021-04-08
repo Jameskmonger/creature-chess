@@ -1,27 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IndexedPieces, PieceModel, TileCoordinates } from "@creature-chess/models";
+import { createSlice, ActionCreatorWithPayload, ActionCreatorWithoutPayload, PayloadAction, Reducer } from "@reduxjs/toolkit";
+import { BoardState, HasId, PiecePosition, PiecePositionsState, PiecesState } from "./types";
 import { getPiecesWithoutIds, getPiecePositionsWithoutIds } from "./utils/filter";
 
-type PiecePositionsState = {
-    [position: string]: string;
-};
-
-export type BoardState = {
-    id: string;
-    pieces: IndexedPieces;
-    piecePositions: PiecePositionsState;
-    locked: boolean;
-    pieceLimit: number | null;
-    size: {
-        width: number,
-        height: number
-    };
-};
-
-const createInitialState = (id: string, size: { width: number, height: number } = {
+const createInitialState = <TPiece>(id: string, size: { width: number, height: number } = {
     width: 7,
     height: 3
-}): BoardState => ({
+}): BoardState<TPiece> => ({
     id: id,
     pieces: {},
     piecePositions: {},
@@ -30,9 +14,41 @@ const createInitialState = (id: string, size: { width: number, height: number } 
     size
 });
 
-export type BoardSlice = ReturnType<typeof createBoardSlice>;
+export type BoardSlice<TPiece extends HasId = HasId> = {
+    boardReducer: Reducer<BoardState<TPiece>>;
+    commands: BoardSliceCommands<TPiece>;
+}
+export type BoardSliceCommands<TPiece extends HasId = HasId> = {
+    setBoardSizeCommand: ActionCreatorWithPayload<{
+        width: number;
+        height: number;
+    }>;
+    lockBoardCommand: ActionCreatorWithoutPayload;
+    unlockBoardCommand: ActionCreatorWithoutPayload;
+    setPieceLimitCommand: ActionCreatorWithPayload<number>;
+    setBoardPiecesCommand: ActionCreatorWithPayload<{
+        pieces: PiecesState<TPiece>;
+        piecePositions: PiecePositionsState;
+        size?: {
+            width: number;
+            height: number;
+        };
+    }>;
+    addBoardPieceCommand: ActionCreatorWithPayload<{
+        x: number;
+        y: number;
+        piece: TPiece;
+    }>;
+    moveBoardPieceCommand: ActionCreatorWithPayload<{
+        pieceId: string;
+        from: PiecePosition;
+        to: PiecePosition;
+    }>;
+    removeBoardPiecesCommand: ActionCreatorWithPayload<string[]>;
+    updateBoardPiecesCommand: ActionCreatorWithPayload<TPiece[]>;
+};
 
-export const createBoardSlice = (id: string, size?: { width: number, height: number }) => {
+export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { width: number, height: number }) => {
     const {
         reducer,
         actions: {
@@ -48,7 +64,7 @@ export const createBoardSlice = (id: string, size?: { width: number, height: num
         }
     } = createSlice({
         name: `board-${id}`,
-        initialState: createInitialState(id, size),
+        initialState: createInitialState<TPiece>(id, size),
         reducers: {
             setBoardSizeCommand: (state, { payload: { width, height } }: PayloadAction<{ width: number, height: number }>) => {
                 const differenceWidth = width - state.size.width;
@@ -87,22 +103,19 @@ export const createBoardSlice = (id: string, size?: { width: number, height: num
                         piecePositions,
                         size
                     }
-                }: PayloadAction<{ pieces: IndexedPieces, piecePositions: PiecePositionsState, size?: { width: number, height: number } }>
+                }: PayloadAction<{ pieces: PiecesState<TPiece>, piecePositions: PiecePositionsState, size?: { width: number, height: number } }>
             ) => ({
                 ...state,
                 pieces: { ...pieces },
                 piecePositions: { ...piecePositions },
                 ...(size ? { size: { width: size.width, height: size.height } } : {})
             }),
-            addBoardPieceCommand: (state, { payload: { x, y, piece } }: PayloadAction<{ x: number, y: number, piece: PieceModel }>) => {
+            addBoardPieceCommand: (state, { payload: { x, y, piece } }: PayloadAction<{ x: number, y: number, piece: TPiece }>) => {
                 return {
                     ...state,
                     pieces: {
-                        ...state.pieces,
-                        [piece.id]: {
-                            ...piece,
-                            facingAway: true
-                        }
+                        ...(state.pieces as PiecesState<TPiece>),
+                        [piece.id]: piece
                     },
                     piecePositions: {
                         ...state.piecePositions,
@@ -114,7 +127,7 @@ export const createBoardSlice = (id: string, size?: { width: number, height: num
                 state,
                 {
                     payload: { pieceId, from, to }
-                }: PayloadAction<{ pieceId: string, from: TileCoordinates, to: TileCoordinates }>
+                }: PayloadAction<{ pieceId: string, from: PiecePosition, to: PiecePosition }>
             ) => {
                 const piece = state.pieces[pieceId];
                 const fromString = `${from.x},${from.y}`;
@@ -146,19 +159,19 @@ export const createBoardSlice = (id: string, size?: { width: number, height: num
                     piecePositions: getPiecePositionsWithoutIds(state.piecePositions, pieceIds)
                 };
             },
-            updateBoardPiecesCommand: (state, { payload: pieces }: PayloadAction<PieceModel[]>) => {
-                const newState: BoardState = {
-                    ...state,
-                    pieces: {
-                        ...state.pieces
-                    }
-                }
+            updateBoardPiecesCommand: (state, { payload: pieces }: PayloadAction<TPiece[]>) => {
+                const newPieces: PiecesState<TPiece> = {
+                    ...state.pieces
+                } as PiecesState<TPiece>
 
                 for (const piece of pieces) {
-                    newState.pieces[piece.id] = piece;
+                    newPieces[piece.id] = piece;
                 }
 
-                return newState;
+                return {
+                    ...state,
+                    pieces: newPieces
+                };
             }
         }
     });

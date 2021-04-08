@@ -1,6 +1,7 @@
 import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
 import { Card, PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
-import { Player, PlayerActions, PlayerState, getAllPieces, PlayerEvents, GameEvents, PlayerSelectors } from "@creature-chess/shared";
+import { Player, PlayerActions, PlayerState, PlayerEvents, GameEvents, PlayerSelectors, getAllPieces } from "@creature-chess/shared";
+import { BoardSelectors } from "@creature-chess/board"
 import uuid = require("uuid");
 import delay from "delay";
 import { shouldBuyXp } from "./shop/shouldBuyXp";
@@ -221,7 +222,7 @@ export class BotPlayer extends Player {
                 break;
             }
 
-            const firstEmptyPosition = PlayerSelectors.getPlayerFirstEmptyBoardSlot(this.store.getState().board, PREFERRED_LOCATIONS[firstBenchPiece.definition.class]);
+            const firstEmptyPosition = BoardSelectors.getFirstEmptySlot(this.store.getState().board, PREFERRED_LOCATIONS[firstBenchPiece.definition.class]);
 
             if (firstEmptyPosition === null) {
                 break;

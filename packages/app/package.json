@@ -27,6 +27,7 @@
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
   "dependencies": {
     "@auth0/auth0-react": "^1.2.0",
+    "@creature-chess/board": "^0.1.0",
     "@creature-chess/models": "^0.3.25",
     "@creature-chess/shared": "^0.3.25",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
