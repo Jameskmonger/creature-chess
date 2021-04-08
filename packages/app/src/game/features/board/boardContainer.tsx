@@ -11,7 +11,7 @@ import { Announcement } from "./overlays/announcement";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
-import { BoardGrid } from "../../board/BoardGrid";
+import { BoardGrid } from "../../../board/BoardGrid";
 import { clearSelectedPiece } from "../../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
 import { PieceComponent } from "./piece/pieceComponent";
@@ -71,7 +71,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
 
     return (
-        <div className="group board-container">
+        <div className="group board-container style-default">
             { showNowPlaying && <NowPlaying />}
 
             <div className="chessboard">
@@ -103,7 +103,6 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
             <div className="bench">
                 <BoardGrid
                     state={bench}
-                    className="bench"
                     onDrop={onDropPiece(dispatch, "bench", board, bench)}
                     onClick={onTileClick(dispatch, "bench")}
                     renderItem={id => (

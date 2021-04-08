@@ -1,6 +1,5 @@
 import * as React from "react";
-import { PieceModel } from "@creature-chess/models";
-import { BoardState } from "@creature-chess/board";
+import { BoardState, HasId } from "@creature-chess/board";
 import { BoardContextProvider, useBoard } from "./context";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";
@@ -9,16 +8,15 @@ import { BoardItems, BoardItemRenderFn } from "./BoardItems";
 
 type BoardGridProps = {
     state: BoardState;
-    className?: string;
     renderItem: BoardItemRenderFn;
-    onDrop: (item: DragObjectWithType & { piece: PieceModel }, x: number, y: number) => void;
+    onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
     onClick: (x: number, y: number) => void;
 }
 
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
-const getClassName = (x: number, y: number) => isBoardTileDark(x, y) ? "dark" : "light";
+const getTileColourClassName = (x: number, y: number) => isBoardTileDark(x, y) ? "dark" : "light";
 
-const BoardRows: React.FunctionComponent<Partial<BoardGridProps>> = ({ className = "", onDrop, onClick }) => {
+const BoardRows: React.FunctionComponent<Partial<BoardGridProps>> = ({ onDrop, onClick }) => {
     const { locked, piecePositions, size: { width, height } } = useBoard();
 
     const rows = [];
@@ -27,27 +25,27 @@ const BoardRows: React.FunctionComponent<Partial<BoardGridProps>> = ({ className
         const tiles = [];
 
         for (let x = 0; x < width; x++) {
-            const tileClassName = `${className} ${getClassName(x, y)}`;
+            const className = getTileColourClassName(x, y);
             const piecePositionKey = `${x},${y}`;
 
             const tileContainsPiece = Boolean(piecePositions[piecePositionKey]);
 
             tiles.push(
                 (!tileContainsPiece && !locked)
-                    ? <DroppableTile key={`tile-${x}`} className={tileClassName} x={x} y={y} onDrop={onDrop} onClick={onClick} />
-                    : <UndroppableTile key={`tile-${x}`} className={tileClassName} />
+                    ? <DroppableTile key={`tile-${x}`} className={className} x={x} y={y} onDrop={onDrop} onClick={onClick} />
+                    : <UndroppableTile key={`tile-${x}`} className={className} />
             );
         }
 
-        rows.push(<div key={`row-${y}`} className={`tile-row style-default`}>{tiles}</div>);
+        rows.push(<div key={`row-${y}`} className="tile-row">{tiles}</div>);
     }
 
     return <>{rows}</>;
 };
 
-const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ state, className = "", renderItem, onDrop, onClick }) => (
+const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ state, renderItem, onDrop, onClick }) => (
     <BoardContextProvider value={state}>
-        <BoardRows className={className} onDrop={onDrop} onClick={onClick} />
+        <BoardRows onDrop={onDrop} onClick={onClick} />
 
         <BoardItems render={renderItem} />
     </BoardContextProvider>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DragObjectWithType, useDrop } from "react-dnd";
-import { PieceModel } from "@creature-chess/models";
+import { HasId } from "@creature-chess/board";
 import { getOverlayClassName } from "./getOverlayClassName";
 import { useBelowPieceLimit, usePieces } from "../context";
 
@@ -8,11 +8,11 @@ type DroppableTileProps = {
     className: string;
     x: number;
     y: number;
-    onDrop: (item: DragObjectWithType & { piece: PieceModel }, x: number, y: number) => void;
+    onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
     onClick: (x: number, y: number) => void;
 }
 
-type PieceDragObject = DragObjectWithType & { piece: PieceModel };
+type PieceDragObject = DragObjectWithType & { piece: HasId };
 type DropTargetCollectProps = { canDrop: boolean, isDragging: boolean };
 
 const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className, x, y, onDrop, onClick }) => {
@@ -35,7 +35,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
     return (
         <div
             ref={drop}
-            className={`tile ${className} style-default`}
+            className={`tile ${className}`}
             touch-action="none"
             onPointerUp={() => onClick(x, y)}
         >

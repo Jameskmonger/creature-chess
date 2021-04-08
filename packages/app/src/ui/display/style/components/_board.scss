@@ -15,6 +15,13 @@
 
 .bench {
     position: relative;
+
+    .image {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .tile-row {
@@ -41,15 +48,6 @@
         &.not-allowed {
             background: #484848;
             opacity: 0.4;
-        }
-    }
-
-    &.bench {
-        .image {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
         }
     }
 }
