@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.26](https://github.com/Jameskmonger/creature-chess/compare/v0.3.25...v0.3.26) (2021-04-08)
+
+**Note:** Version bump only for package @creature-chess/app
+
+
+
+
+
 ## [0.3.25](https://github.com/Jameskmonger/creature-chess/compare/v0.3.24...v0.3.25) (2021-04-07)
 
 **Note:** Version bump only for package @creature-chess/app
