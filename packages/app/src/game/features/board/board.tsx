@@ -24,7 +24,7 @@ const BoardPieces: React.FunctionComponent = props => {
 
     // this weird code is needed so that React keeps the same DOM elements, thus preserving the CSS animations
     const entries = Object.entries(pieces);
-    entries.sort(([ aPosition, aId ], [bPosition, bId]) => aId.localeCompare(bId));
+    entries.sort(([aPosition, aId], [bPosition, bId]) => aId.localeCompare(bId));
 
     for (const [position, id] of entries) {
         if (!id) {
@@ -38,11 +38,7 @@ const BoardPieces: React.FunctionComponent = props => {
         pieceElements.push(<PositionablePiece key={id} id={id} x={x} y={y} draggable={inPreparingPhase} animate={!inPreparingPhase} selected={selected} />);
     }
 
-    return (
-        <div className="board-pieces">
-            {pieceElements}
-        </div>
-    );
+    return <div className="board-pieces">{pieceElements}</div>;
 };
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
@@ -72,14 +68,22 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 };
 
 const onDropPiece = (dispatch: Dispatch<any>, board: BoardState, bench: BoardState) =>
-    (item: DragObjectWithType, location: PlayerPieceLocation) => {
+    (item: DragObjectWithType, x: number, y: number) => {
         const piece: PieceModel = (item as any).piece;
         const from = getLocationForPiece(piece.id, board, bench);
+
+        const location: PlayerPieceLocation = {
+            type: "board",
+            location: { x, y }
+        };
 
         // todo `from` is here as a safety check, is it needed?
         dispatch(PlayerActions.playerDropPieceAction(piece.id, from, location));
         dispatch(clearSelectedPiece());
     };
+
+const onTileClick = (dispatch: Dispatch<any>) =>
+    (x: number, y: number) => dispatch(PlayerActions.playerClickTileAction({ type: "board", location: { x, y } }));
 
 const Board: React.FunctionComponent = props => {
     const dispatch = useDispatch();
@@ -91,19 +95,16 @@ const Board: React.FunctionComponent = props => {
     const board = useSelector<AppState, BoardState>(state => state.board);
     const bench = useSelector<AppState, BoardState>(state => state.bench);
 
-    const onTileClick = (location: PlayerPieceLocation) => dispatch(PlayerActions.playerClickTileAction(location));
-
     return (
         <div className="chessboard">
             {showOpponentBoardPlaceholder && <OpponentBoardPlaceholder />}
 
             <div className="board-tiles">
-                <BoardContextProvider value={board}>
-                    <BoardGrid
-                        onDrop={onDropPiece(dispatch, board, bench)}
-                        onClick={onTileClick}
-                    />
-                </BoardContextProvider>
+                <BoardGrid
+                    state={board}
+                    onDrop={onDropPiece(dispatch, board, bench)}
+                    onClick={onTileClick(dispatch)}
+                />
 
                 <BoardPieces />
             </div>

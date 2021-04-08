@@ -1,30 +1,30 @@
 import * as React from "react";
 import { DragObjectWithType, useDrop } from "react-dnd";
-import { useDispatch } from "react-redux";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerActions } from "@creature-chess/shared";
 import { getOverlayClassName } from "./getOverlayClassName";
 import { useBelowPieceLimit, usePieces } from "../context";
 
 type DroppableTileProps = {
     className: string;
-    location: PlayerPieceLocation;
-    onDrop: (item: DragObjectWithType & { piece: PieceModel }, location: PlayerPieceLocation) => void;
-    onClick: (location: PlayerPieceLocation) => void;
+    x: number;
+    y: number;
+    onDrop: (item: DragObjectWithType & { piece: PieceModel }, x: number, y: number) => void;
+    onClick: (x: number, y: number) => void;
 }
 
 type PieceDragObject = DragObjectWithType & { piece: PieceModel };
 type DropTargetCollectProps = { canDrop: boolean, isDragging: boolean };
 
-const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className, location, onDrop, onClick }) => {
+const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className, x, y, onDrop, onClick }) => {
     const belowPieceLimit = useBelowPieceLimit();
     const pieces = usePieces();
 
     const [{ canDrop, isDragging }, drop] = useDrop<PieceDragObject, void, DropTargetCollectProps>({
         accept: "Piece",
-        drop: item => onDrop(item, location),
+        drop: item => onDrop(item, x, y),
         canDrop: ({ piece }) => {
-            return belowPieceLimit || !pieces || Boolean(pieces[piece.id])
+            const pieceIsFromSameBoard = Boolean(pieces[piece.id])
+            return belowPieceLimit || pieceIsFromSameBoard
         },
         collect: monitor => ({
             canDrop: !!monitor.canDrop(),
@@ -37,7 +37,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
             ref={drop}
             className={`tile ${className} style-default`}
             touch-action="none"
-            onPointerUp={() => onClick(location)}
+            onPointerUp={() => onClick(x, y)}
         >
             <div className={`${getOverlayClassName(isDragging, canDrop)}`} />
         </div>
