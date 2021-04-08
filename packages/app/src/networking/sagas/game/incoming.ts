@@ -7,9 +7,9 @@ import {
 } from "@creature-chess/shared";
 import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
-import { playerListUpdated } from "../../features/playerList/playerListActions";
 import { clearAnnouncement, closeOverlay, finishGameAction, openOverlay, playersResurrected, updateConnectionStatus, clearSelectedPiece } from "../../../ui/actions";
 import { Overlay } from "../../../ui/overlay";
+import { playerListUpdated } from "../../../game/features/playerList/playerListActions";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 

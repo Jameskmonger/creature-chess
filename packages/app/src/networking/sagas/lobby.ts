@@ -1,23 +1,26 @@
 import { put, fork, take, select, cancel, cancelled } from "@redux-saga/core/effects";
 import { IncomingPacketRegistry, ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes } from "@creature-chess/shared";
 import { EventChannel, eventChannel } from "redux-saga";
-import { LobbyAction, updateLobbyPlayerAction, lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "./store/actions";
-import { AppState } from "../store";
-import { gameSaga } from "../game";
+import { lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
+import { AppState } from "../../store";
+import { gameSaga } from "../../game";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { LobbyConnectedEvent, LOBBY_CONNECTED_EVENT } from "../actions";
+import { Action } from "redux";
+import { lobbyCommands } from "../../lobby";
 
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
 const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegistry) {
-    let channel: EventChannel<LobbyAction>;
+    let channel: EventChannel<Action>;
 
     try {
-        channel = eventChannel<LobbyAction>(emit => {
+        channel = eventChannel(emit => {
             registry.on(
                 ServerToClientLobbyPacketOpcodes.LOBBY_PLAYER_UPDATE,
                 ({ index, player }) => {
-                    emit(updateLobbyPlayerAction(index, player));
+                    emit(lobbyCommands.updateLobbyPlayerCommand({ index, player }));
                 }
             );
 
@@ -47,9 +50,10 @@ const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegist
 };
 
 export const lobbyNetworking = function*(
-    socket: SocketIOClient.Socket,
-    slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+    socket: SocketIOClient.Socket
 ) {
+    yield take<LobbyConnectedEvent>(LOBBY_CONNECTED_EVENT);
+
     const registry = new IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
@@ -59,8 +63,4 @@ export const lobbyNetworking = function*(
     yield take(LOBBY_GAME_STARTED_EVENT);
 
     yield cancel(readPacketsTask);
-
-    const playerId: string = yield select((state: AppState) => state.user.user.id);
-
-    yield fork(gameSaga, playerId, socket, slices);
 };

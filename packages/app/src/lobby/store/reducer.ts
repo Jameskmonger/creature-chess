@@ -1,5 +1,7 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { LobbyPlayer } from "@creature-chess/models";
 import { LobbyState } from "./state";
-import { LobbyAction, JOIN_LOBBY, UPDATE_LOBBY_PLAYER } from "./actions";
+import { LobbyConnectedEventPayload } from "../../networking/actions";
 
 const initialState: LobbyState = {
     lobbyId: null,
@@ -8,20 +10,18 @@ const initialState: LobbyState = {
     startingAtMs: null
 };
 
-export function reducer(
-    state: LobbyState = initialState,
-    action: LobbyAction
-): LobbyState {
-    switch (action.type) {
-        case JOIN_LOBBY:
-            return {
-                ...state,
-                lobbyId: action.payload.lobbyId,
-                localPlayerId: action.payload.localPlayerId,
-                players: action.payload.players,
-                startingAtMs: action.payload.startTimestamp
-            };
-        case UPDATE_LOBBY_PLAYER:
+export const { reducer, actions: lobbyCommands } = createSlice({
+    name: "lobby",
+    initialState,
+    reducers: {
+        setLobbyDetailsCommand: (state, action: PayloadAction<LobbyConnectedEventPayload>) => ({
+            ...state,
+            lobbyId: action.payload.lobbyId,
+            localPlayerId: action.payload.localPlayerId,
+            players: action.payload.players,
+            startingAtMs: action.payload.startTimestamp
+        }),
+        updateLobbyPlayerCommand: (state: LobbyState, action: PayloadAction<{ index: number, player: LobbyPlayer }>) => {
             const cloned = {
                 ...state,
                 players: [
@@ -32,7 +32,6 @@ export function reducer(
             cloned.players[action.payload.index] = action.payload.player;
 
             return cloned;
-        default:
-            return state;
+        }
     }
-}
+})

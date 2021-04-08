@@ -1,2 +1,2 @@
-export { reducer } from "./reducer";
+export { reducer, lobbyCommands } from "./reducer";
 export { LobbyState } from "./state";

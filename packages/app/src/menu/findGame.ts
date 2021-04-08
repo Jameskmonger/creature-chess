@@ -1,24 +1,23 @@
-import { race, call, takeEvery, put, take, fork, all, select } from "@redux-saga/core/effects";
+import { race, call, takeEvery, put, take, select, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import {
-    GameEvents, IncomingPacketRegistry, PlayerInfoCommands,
-    ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes, startBattle,
-    PlayerCommands
+    IncomingPacketRegistry, ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes
 } from "@creature-chess/shared";
 import { BoardSlice } from "@creature-chess/board";
-import { lobbyNetworking } from "../lobby/networking";
-import { gameConnectedEvent, joinLobbyAction, JoinLobbyAction, JOIN_LOBBY, GameConnectedEvent, GAME_CONNECTED } from "../lobby/store/actions";
+import { gameConnectedEvent, GameConnectedEvent, GAME_CONNECTED_EVENT, lobbyConnectedEvent, LobbyConnectedEvent, LOBBY_CONNECTED_EVENT } from "../networking/actions";
 import { AppState } from "../store";
 import { FindGameAction, FIND_GAME } from "../ui/actions";
 import { getSocket } from "../ui/socket";
-import { gameSaga } from "../game";
-import { playerListUpdated } from "../game/features/playerList/playerListActions";
 import { isLoggedIn } from "./auth/store/selectors";
 import { PieceModel } from "@creature-chess/models";
+import { lobbyCommands } from "../lobby";
+import { networkingSaga } from "../networking";
 
 export const findGame = function*(
-    getAccessTokenSilently: () => Promise<string>,
-    loginWithRedirect: () => Promise<void>,
+    auth: {
+        getAccessTokenSilently: () => Promise<string>,
+        loginWithRedirect: () => Promise<void>,
+    },
     slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
     const findGameAction: FindGameAction = yield take(FIND_GAME);
@@ -27,18 +26,18 @@ export const findGame = function*(
 
     // this should never happen, but it doesn't hurt to be safe
     if (!isLoggedIn(state)) {
-        loginWithRedirect();
+        auth.loginWithRedirect();
         return;
     }
 
-    const idToken = yield call(getAccessTokenSilently);
+    const idToken = yield call(auth.getAccessTokenSilently);
 
     let socket: SocketIOClient.Socket = null;
 
     try {
         socket = yield call(getSocket, findGameAction.payload.serverIP, idToken);
     } catch (error) {
-        loginWithRedirect();
+        auth.loginWithRedirect();
         return;
     }
 
@@ -46,11 +45,11 @@ export const findGame = function*(
         (opcode, handler) => socket.on(opcode, handler)
     );
 
-    const channel = eventChannel<JoinLobbyAction | GameConnectedEvent>(emit => {
+    const channel = eventChannel<LobbyConnectedEvent | GameConnectedEvent>(emit => {
         registry.on(
             ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED,
             ({ playerId, lobbyId, players, startTimestamp }) => {
-                emit(joinLobbyAction(
+                emit(lobbyConnectedEvent(
                     playerId,
                     lobbyId,
                     players,
@@ -75,39 +74,19 @@ export const findGame = function*(
         yield put(action);
     });
 
-    const { lobby, game } = yield race({
-        lobby: take(JOIN_LOBBY),
-        game: take(GAME_CONNECTED)
+    const { lobby, game }: { lobby: LobbyConnectedEvent, game: GameConnectedEvent } = yield race({
+        lobby: take(LOBBY_CONNECTED_EVENT),
+        game: take(GAME_CONNECTED_EVENT)
     });
 
     channel.close();
 
+    yield fork(networkingSaga, socket, slices);
+
     if (lobby) {
-        yield fork(lobbyNetworking, socket, slices);
+        yield put(lobbyCommands.setLobbyDetailsCommand(lobby.payload));
+        yield put(lobby);
     } else if (game) {
-        const playerId: string = yield select((s: AppState) => s.user.user.id);
-
-        yield fork(gameSaga, playerId, socket, slices);
-
-        const { payload: {
-            board,
-            bench,
-            players,
-            battleTurn,
-            game: { phase, phaseStartedAtSeconds },
-            playerInfo: { money, cards, level, xp }
-        } } = game as GameConnectedEvent;
-
-        yield put(slices.boardSlice.commands.setBoardPiecesCommand(board));
-        yield put(slices.benchSlice.commands.setBoardPiecesCommand(bench));
-        yield put(PlayerInfoCommands.updateMoneyCommand(money));
-        yield put(PlayerCommands.updateCardsCommand(cards));
-        yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
-        yield put(playerListUpdated(players));
-        yield put(GameEvents.gamePhaseStartedEvent(phase, phaseStartedAtSeconds));
-
-        if (battleTurn !== null) {
-            yield put(startBattle(battleTurn));
-        }
+        yield put(game);
     }
 };
