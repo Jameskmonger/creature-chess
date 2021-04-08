@@ -3,9 +3,9 @@ import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
     AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT,
     UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, JoinErrorAction,
-    FindGameAction, FIND_GAME, JOIN_ERROR, FINISH_GAME, FinishGameAction
+    FindGameAction, FIND_GAME, JOIN_ERROR, FINISH_GAME, FinishGameAction,
+    SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
 } from "./actions";
-import { SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE } from "../game/features/board/actions";
 import { ConnectionStatus, GameEvents } from "@creature-chess/shared";
 
 const initialState: UiState = {
