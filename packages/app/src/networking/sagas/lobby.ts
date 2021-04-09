@@ -2,10 +2,6 @@ import { put, fork, take, select, cancel, cancelled } from "@redux-saga/core/eff
 import { IncomingPacketRegistry, ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes } from "@creature-chess/shared";
 import { EventChannel, eventChannel } from "redux-saga";
 import { lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
-import { AppState } from "../../store";
-import { gameSaga } from "../../game";
-import { BoardSlice } from "@creature-chess/board";
-import { PieceModel } from "@creature-chess/models";
 import { LobbyConnectedEvent, LOBBY_CONNECTED_EVENT } from "../actions";
 import { Action } from "redux";
 import { lobbyCommands } from "../../lobby";

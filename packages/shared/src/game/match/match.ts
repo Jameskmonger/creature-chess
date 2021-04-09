@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice } from "@creature-chess/board";
+import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardSelectors, BoardPiecesState } from "@creature-chess/board";
 import { Player } from "../player";
 import { battleSaga, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
 import { GameOptions } from "../options";
@@ -34,7 +34,21 @@ export class Match {
         this.away = away;
         this.store = this.createStore(gameOptions);
 
-        const board = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
+        const mergedBoard = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
+
+        const board: BoardState<PieceModel> = {
+            ...mergedBoard,
+            pieces: Object.entries(mergedBoard.pieces).reduce<BoardPiecesState<PieceModel>>(
+                (acc, [id, piece]) => ({
+                    ...acc,
+                    [id]: {
+                        ...piece,
+                        facingAway: (piece.ownerId === home.id)
+                    }
+                }),
+                {}
+            )
+        }
 
         this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
     }
@@ -47,9 +61,30 @@ export class Match {
         const { board } = this.store.getState();
 
         // rotate the board for the away player, so that their pieces are shown on their own side
-        return (playerId === this.away.id)
-            ? rotatePiecesAboutCenter(board)
-            : board;
+
+        if (playerId === this.away.id) {
+            const rotatedBoard = rotatePiecesAboutCenter(board);
+
+            // todo improve this
+
+            const newState: BoardState<PieceModel> = {
+                ...rotatedBoard,
+                pieces: Object.entries(rotatedBoard.pieces).reduce<BoardPiecesState<PieceModel>>(
+                    (acc, [id, piece]) => ({
+                        ...acc,
+                        [id]: {
+                            ...piece,
+                            facingAway: !piece.facingAway
+                        }
+                    }),
+                    {}
+                )
+            }
+
+            return newState;
+        }
+
+        return board;
     }
 
     public getTurn() {

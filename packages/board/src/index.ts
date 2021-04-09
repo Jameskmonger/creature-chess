@@ -1,4 +1,4 @@
-export { BoardState, HasId } from "./types";
+export { BoardState, PiecesState as BoardPiecesState, HasId } from "./types";
 export { BoardSlice, createBoardSlice } from "./state";
 export * as BoardSelectors from "./selectors";
 export { mergeBoards } from "./utils/mergeBoards";

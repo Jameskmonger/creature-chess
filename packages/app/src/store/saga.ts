@@ -1,9 +1,9 @@
-import { all, call, fork } from "@redux-saga/core/effects";
+import { fork } from "@redux-saga/core/effects";
 import { BoardSlice } from "@creature-chess/board";
+import { PieceModel } from "@creature-chess/models";
 import { findGame } from "../menu/findGame";
 import { loadUserSaga } from "../menu/auth/store/saga";
-import { PieceModel } from "@creature-chess/models";
-import { networkingSaga } from "../networking/sagas";
+import { gameSaga } from "../game";
 
 export const rootSaga = function*(
     getAccessTokenSilently: () => Promise<string>,
@@ -12,4 +12,5 @@ export const rootSaga = function*(
 ) {
     yield fork(loadUserSaga);
     yield fork(findGame, { getAccessTokenSilently, loginWithRedirect }, slices);
+    yield fork(gameSaga, slices);
 };

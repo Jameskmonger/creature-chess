@@ -18,10 +18,8 @@ import {
 import { playerListUpdated } from "../features/playerList/playerListActions";
 import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
 
-export const gameSaga = function*(playerId: string, slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
+export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
     const action = yield take<GameConnectedEvent | LobbyGameStartedEvent>([ GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT ]);
-
-    debugger;
 
     // const definitionProvider = new DefinitionProvider();
 
