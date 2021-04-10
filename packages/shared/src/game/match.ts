@@ -1,9 +1,9 @@
 import pDefer = require("p-defer");
 import { v4 as uuid } from "uuid";
-import { fork, all, takeEvery } from "@redux-saga/core/effects";
+import { fork, all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardSelectors, BoardPiecesState } from "@creature-chess/board";
+import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardSelectors, BoardPiecesState, BoardSlice } from "@creature-chess/board";
 import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 import { Player } from "./player";
@@ -23,7 +23,7 @@ export class Match {
     private store: Store<MatchState>;
     private finalBoard: BoardState<PieceModel>;
     private boardId = uuid();
-    private board = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
+    private board: BoardSlice<PieceModel> = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
 
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
@@ -117,6 +117,16 @@ export class Match {
                     BattleEvents.BATTLE_FINISH_EVENT,
                     function*() {
                         _this.onServerFinishMatch();
+                    }
+                ),
+                yield takeLatest<BattleEvents.BattleTurnEvent>(
+                    BattleEvents.BATTLE_TURN_EVENT,
+                    function*({ payload: { board } }: BattleEvents.BattleTurnEvent) {
+                        yield put(_this.board.commands.setBoardPiecesCommand({
+                            pieces: board.pieces,
+                            piecePositions: board.piecePositions,
+                            size: undefined // todo improve this
+                        }));
                     }
                 )
             ]);

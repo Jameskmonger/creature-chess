@@ -48,7 +48,7 @@ export type BoardSliceCommands<TPiece extends HasId = HasId> = {
     updateBoardPiecesCommand: ActionCreatorWithPayload<TPiece[]>;
 };
 
-export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { width: number, height: number }) => {
+export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { width: number, height: number }): BoardSlice<TPiece> => {
     const {
         reducer,
         actions: {
