@@ -25,3 +25,5 @@ export {
 } from "./networking";
 
 export { PLAYER_TITLES } from "./titles";
+
+export { config } from "./config";
