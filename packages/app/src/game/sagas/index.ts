@@ -1,28 +1,21 @@
 import { take, fork, put, takeLatest } from "@redux-saga/core/effects";
-import { preventAccidentalClose } from "../../game/sagas/actions/preventAccidentalClose";
-import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
-import { announcement } from "./actions/announcement";
 
-import {
-    DefinitionProvider,
-    GameEvents, PlayerInfoCommands, PlayerCommands
-} from "@creature-chess/shared";
+import { GameEvents, PlayerInfoCommands, PlayerCommands } from "@creature-chess/shared";
 import { BoardSlice } from "@creature-chess/board";
 import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
-import { clickToDrop } from "./actions/clickToDrop";
 import { PieceModel, defaultGameOptions } from "@creature-chess/models";
+
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
-
-import {
-
-} from "@creature-chess/shared";
 import { playerListUpdated } from "../features/playerList/playerListActions";
 import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
 
+import { clickToDrop } from "./actions/clickToDrop";
+import { closeShopOnFirstBuy } from "./actions/closeShopOnFirstBuy";
+import { announcement } from "./actions/announcement";
+import { preventAccidentalClose } from "./actions/preventAccidentalClose";
+
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
     const action = yield take<GameConnectedEvent | LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT]);
-
-    // const definitionProvider = new DefinitionProvider();
 
     yield fork(battleSaga, defaultGameOptions, slices.boardSlice);
 
