@@ -1,7 +1,7 @@
 import jwt = require("jsonwebtoken");
 import jwksClient = require("jwks-rsa");
 
-const domain = "creaturechess.eu.auth0.com";
+const domain = "thyde1.eu.auth0.com";
 
 const client = jwksClient({
     cache: true,

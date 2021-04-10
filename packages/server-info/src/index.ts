@@ -12,8 +12,8 @@ const port = process.env.PORT || 3000;
 
 const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
 const AUTH0_CONFIG = {
-    domain: "creaturechess.eu.auth0.com",
-    clientId: "gWNTtsTNepgyyqE7QAEC4e7nt5A3ZZ4k",
+    domain: "thyde1.eu.auth0.com",
+    clientId: "fjHNHPUVDAyTMcq7Cjt6ryxYV0de4awf",
     clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 const authClient = new ManagementClient<UserAppMetadata>({

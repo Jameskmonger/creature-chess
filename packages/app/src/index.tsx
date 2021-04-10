@@ -24,7 +24,7 @@ const BrowserRouterChild: React.FunctionComponent = () => {
             domain={auth0Config.domain}
             clientId={auth0Config.clientID}
             redirectUri={auth0Config.redirectUri}
-            audience={"https://creaturechess.eu.auth0.com/api/v2/"}
+            audience={"https://thyde1.eu.auth0.com/api/v2/"}
             scope={auth0Config.scope}
             onRedirectCallback={onRedirectCallback}
         >

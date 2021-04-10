@@ -14,8 +14,8 @@ process.on("unhandledRejection", (error) => {
 });
 
 const AUTH0_CONFIG = {
-    domain: "creaturechess.eu.auth0.com",
-    clientId: "gWNTtsTNepgyyqE7QAEC4e7nt5A3ZZ4k",
+    domain: "thyde1.eu.auth0.com",
+    clientId: "fjHNHPUVDAyTMcq7Cjt6ryxYV0de4awf",
     clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 
