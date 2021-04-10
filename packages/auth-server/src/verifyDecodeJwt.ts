@@ -1,13 +1,12 @@
 import jwt = require("jsonwebtoken");
 import jwksClient = require("jwks-rsa");
-
-const domain = "thyde1.eu.auth0.com";
+import { config } from "@creature-chess/shared";
 
 const client = jwksClient({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://${domain}/.well-known/jwks.json`
+    jwksUri: `https://${config.auth0.domain}/.well-known/jwks.json`
 });
 
 interface JWTPayload {

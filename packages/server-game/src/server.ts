@@ -7,6 +7,7 @@ import { Matchmaking } from "./matchmaking/matchmaking";
 import { UserAppMetadata } from "@creature-chess/auth-server";
 import { createDiscordApi } from "./discord";
 import { createWinstonLogger } from "./log";
+import { config } from "@creature-chess/shared";
 
 process.on("unhandledRejection", (error) => {
     log("unhandled rejection:");
@@ -14,8 +15,8 @@ process.on("unhandledRejection", (error) => {
 });
 
 const AUTH0_CONFIG = {
-    domain: "thyde1.eu.auth0.com",
-    clientId: "fjHNHPUVDAyTMcq7Cjt6ryxYV0de4awf",
+    domain: config.auth0.domain,
+    clientId: config.auth0.machineToMachineClientId,
     clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 

@@ -21,7 +21,8 @@ This is just on a tiny server for demo purposes so it might not work all the tim
   - Store the client secret in environment variable `AUTH0_MANAGEMENT_CLIENT_SECRET`
 - An Auth0 app for the frontend
   - Set up a [single page app](https://auth0.com/docs/applications/set-up-an-application/register-single-page-app)
-  - Modify `app/src/menu/auth/config.ts` and change `domain`, `clientID`, `redirectUri`, `logoutRedirectUri` and `audience`
+  - Modify `packages/shared/src/config.local.ts` and change `auth0` config.
+- Modify `packages/shared/src/config.ts` and set `const environment = ENVIRONMENT.LOCAL`
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
 
 ## Running
@@ -37,7 +38,7 @@ $ npm run dev:app
 $ docker-compose build && docker-compose up
 ```
 
-The game is then accessible at `https://creaturechess.local-dev.com:8090/?server=ws://localhost:3000`. You might need to add `creaturechess.local-dev.com` to your host file (or remove `host` from `webpack.config.js`)
+The game is then accessible at `https://creaturechess.local-dev.com:8090`. You might need to add `creaturechess.local-dev.com` to your host file (or remove `host` from `webpack.config.js`)
 
 ## Publishing
 
