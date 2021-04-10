@@ -1,9 +1,10 @@
 import { takeEvery, take, all, fork } from "@redux-saga/core/effects";
 import {
-    BATTLE_FINISH_EVENT,
     ClientToServerPacketAcknowledgements, ClientToServerPacketDefinitions, ClientToServerPacketOpcodes, OutgoingPacketRegistry,
     PlayerActions, SEND_PLAYER_ACTIONS_PACKET_RETRY_TIME_MS
 } from "@creature-chess/shared";
+
+import { BattleEvents } from "@creature-chess/battle";
 
 type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
 
@@ -22,7 +23,7 @@ const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
 const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) {
     yield all([
         takeEvery(
-            BATTLE_FINISH_EVENT,
+            BattleEvents.BATTLE_FINISH_EVENT,
             function*() {
                 registry.emit(ClientToServerPacketOpcodes.FINISH_MATCH, { empty: true });
             }

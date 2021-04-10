@@ -5,14 +5,12 @@ export { validateNickname } from "./validation";
 
 export {
     DefinitionProvider,
-    battleSaga, startBattle,
-    BATTLE_FINISH_EVENT,
     gameReducer, GameState, Game, Player, GameEvents,
     getPiece, getAllPieces,
     getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents, PlayerSelectors,
-    defaultGameOptions, Match, PlayerMatchRewards, PlayerCommands, PlayerReducers
+    Match, PlayerMatchRewards, PlayerCommands, PlayerReducers
 } from "./game";
 
 export {

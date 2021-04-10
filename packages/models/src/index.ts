@@ -21,3 +21,5 @@ export { CreatureDefinition, CreatureStats, AttackType, attackTypes, DefinitionC
 export { CreatureType } from "./creatureType";
 
 export { createPieceCombatState, PieceCombatState } from "./pieceCombat";
+
+export { getOptions, GameOptions, defaultOptions as defaultGameOptions } from "./options";

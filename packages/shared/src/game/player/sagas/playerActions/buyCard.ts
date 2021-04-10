@@ -4,7 +4,7 @@ import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
 import { GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, topLeftToBottomRightSortPositions } from "@creature-chess/board";
 import { DefinitionProvider } from "../../../definitions/definitionProvider";
-import { createPieceFromCard } from "../../../../utils/piece-utils";
+import { createPieceFromCard } from "./createPieceFromCard";
 import { PlayerState } from "../../store";
 import { getPlayerBelowPieceLimit } from "../../playerSelectors";
 import { updateMoneyCommand } from "../../playerInfo/commands";

@@ -1,4 +1,5 @@
-import { GamePhase, DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, PHASE_LENGTHS } from "@creature-chess/models";
+import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, PHASE_LENGTHS } from "./constants";
+import { GamePhase } from "./game-phase";
 
 type PhaseLengths = {
     [GamePhase.PREPARING]?: number;

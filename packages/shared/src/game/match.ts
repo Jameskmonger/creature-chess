@@ -4,18 +4,17 @@ import { fork, all, takeEvery } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
 import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardSelectors, BoardPiecesState } from "@creature-chess/board";
-import { Player } from "../player";
-import { battleSaga, startBattle, BattleFinishEvent, BattleTurnEvent, BATTLE_FINISH_EVENT, BATTLE_TURN_EVENT } from "./combat";
-import { GameOptions } from "../options";
-import { GRID_SIZE, PieceModel } from "@creature-chess/models";
+import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
+import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
+import { Player } from "./player";
 
 interface MatchState {
     board: BoardState<PieceModel>;
     turn: number;
 }
 
-const turnReducer: Reducer<number, BattleTurnEvent> = (state = 0, event) => (
-    event.type === BATTLE_TURN_EVENT ? event.payload.turn : state
+const turnReducer: Reducer<number, BattleEvents.BattleTurnEvent> = (state = 0, event) => (
+    event.type === BattleEvents.BATTLE_TURN_EVENT ? event.payload.turn : state
 );
 
 export class Match {
@@ -114,8 +113,8 @@ export class Match {
         const rootSaga = function*() {
             yield all([
                 yield fork(battleSaga, gameOptions, _this.board),
-                yield takeEvery<BattleFinishEvent>(
-                    BATTLE_FINISH_EVENT,
+                yield takeEvery<BattleEvents.BattleFinishEvent>(
+                    BattleEvents.BATTLE_FINISH_EVENT,
                     function*() {
                         _this.onServerFinishMatch();
                     }

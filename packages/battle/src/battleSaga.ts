@@ -1,24 +1,11 @@
 import present = require("present");
 import { eventChannel, buffers } from "redux-saga";
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
-import { IndexedPieces, createPieceCombatState, PieceModel } from "@creature-chess/models";
+import { IndexedPieces, createPieceCombatState, PieceModel, GameOptions } from "@creature-chess/models";
 import { BoardState, BoardSlice } from "@creature-chess/board";
-import { isATeamDefeated } from "../../../utils";
 import { simulateTurn } from "./turnSimulator";
-import { GameOptions } from "../../options";
-
-export const BATTLE_TURN_EVENT = "BATTLE_TURN_EVENT";
-export type BATTLE_TURN_EVENT = typeof BATTLE_TURN_EVENT;
-export const BATTLE_FINISH_EVENT = "BATTLE_FINISH_EVENT";
-export type BATTLE_FINISH_EVENT = typeof BATTLE_FINISH_EVENT;
-
-export type BattleTurnEvent = ({ type: BATTLE_TURN_EVENT, payload: { turn: number } });
-export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: number } });
-
-export type BattleEvent = any | BattleTurnEvent | BattleFinishEvent;
-
-const battleTurnEvent = (turn: number): BattleTurnEvent => ({ type: BATTLE_TURN_EVENT, payload: { turn } });
-const battleFinishEvent = (turns: number): BattleFinishEvent => ({ type: BATTLE_FINISH_EVENT, payload: { turns } });
+import { isATeamDefeated } from "./utils/is-a-team-defeated";
+import { BattleEvent, battleFinishEvent, battleTurnEvent } from "./events";
 
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;
@@ -100,12 +87,7 @@ const battleEventChannel = (
                 const turnTimer = duration(options.turnDuration);
 
                 board = simulateTurn(++turnCount, board, boardSlice);
-                emit(battleTurnEvent(turnCount));
-                emit(boardSlice.commands.setBoardPiecesCommand({
-                    pieces: board.pieces,
-                    piecePositions: board.piecePositions,
-                    size: undefined // todo improve this
-                }));
+                emit(battleTurnEvent(turnCount, board));
 
                 await turnTimer.remaining();
             }

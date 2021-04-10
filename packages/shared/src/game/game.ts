@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { EventEmitter } from "events";
 import delay from "delay";
 import pDefer = require("p-defer");
-import { GamePhase, PlayerListPlayer, PlayerStatus, RESURRECT_HEALTH } from "@creature-chess/models";
+import { GamePhase, PlayerListPlayer, PlayerStatus, RESURRECT_HEALTH, GameOptions, getOptions } from "@creature-chess/models";
 
 import { log } from "../log";
 
@@ -12,7 +12,6 @@ import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
 import { createGameStore, GameEvents } from "./store";
-import { GameOptions, getOptions } from "./options";
 import { readyNotifier } from "./readyNotifier";
 import { Match } from "./match";
 import { CardDeck } from "./cardDeck";

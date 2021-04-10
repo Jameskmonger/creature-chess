@@ -7,9 +7,6 @@ export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, 
 export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
 
 export { GameState, gameReducer, GameEvents } from "./store";
-export { BATTLE_FINISH_EVENT, battleSaga, startBattle } from "./match";
 export { DefinitionProvider } from "./definitions/definitionProvider";
-
-export { defaultOptions as defaultGameOptions } from "./options";
 
 export { Match } from "./match";

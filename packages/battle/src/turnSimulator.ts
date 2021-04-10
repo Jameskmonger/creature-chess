@@ -1,7 +1,6 @@
 import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, BoardState } from "@creature-chess/board";
-import { getStats } from "../../../utils/piece-utils";
-import { isOvercomeBy, isGeneratedBy } from "../../../utils/get-type-attack-bonus";
+import { isOvercomeBy, isGeneratedBy } from "./utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
 import { findTargetId } from "./utils/findTargetId";
 import { getNextPiecePosition } from "./pathfinding";
@@ -15,6 +14,8 @@ const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
 
 const STRONG_ATTACK_MODIFIER = 1.7;
 const WEAK_ATTACK_MODIFIER = 0.3;
+
+const getStats = (piece: PieceModel) => piece.definition.stages[piece.stage];
 
 export const simulateTurn = (currentTurn: number, board: BoardState<PieceModel>, boardSlice: BoardSlice<PieceModel>) => {
     const pieceEntries = Object.entries(board.pieces);

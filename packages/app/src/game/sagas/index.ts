@@ -1,15 +1,16 @@
-import { take, fork, put } from "@redux-saga/core/effects";
+import { take, fork, put, takeLatest } from "@redux-saga/core/effects";
 import { preventAccidentalClose } from "../../game/sagas/actions/preventAccidentalClose";
 import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
 import { announcement } from "./actions/announcement";
 
 import {
-    battleSaga, DefinitionProvider, defaultGameOptions,
-    GameEvents, PlayerInfoCommands, startBattle, PlayerCommands
+    DefinitionProvider,
+    GameEvents, PlayerInfoCommands, PlayerCommands
 } from "@creature-chess/shared";
 import { BoardSlice } from "@creature-chess/board";
+import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
 import { clickToDrop } from "./actions/clickToDrop";
-import { PieceModel } from "@creature-chess/models";
+import { PieceModel, defaultGameOptions } from "@creature-chess/models";
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
 
 import {
@@ -19,11 +20,23 @@ import { playerListUpdated } from "../features/playerList/playerListActions";
 import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
-    const action = yield take<GameConnectedEvent | LobbyGameStartedEvent>([ GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT ]);
+    const action = yield take<GameConnectedEvent | LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT]);
 
     // const definitionProvider = new DefinitionProvider();
 
     yield fork(battleSaga, defaultGameOptions, slices.boardSlice);
+
+    yield takeLatest<BattleEvents.BattleTurnEvent>(
+        BattleEvents.BATTLE_TURN_EVENT,
+        function*({ payload: { board }}: BattleEvents.BattleTurnEvent) {
+            yield put(slices.boardSlice.commands.setBoardPiecesCommand({
+                pieces: board.pieces,
+                piecePositions: board.piecePositions,
+                size: undefined // todo improve this
+            }));
+        }
+    );
+
     yield fork(preventAccidentalClose);
     yield fork(announcement);
     yield fork(closeShopOnFirstBuy);
