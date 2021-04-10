@@ -33,6 +33,8 @@ const BOT_NAMES = [
 ];
 
 export const setupBotDatabase = async (client: FaunaDBClient) => {
+    let shouldCreateBots = false;
+
     try {
         await client.query(q.CreateCollection({
             name: COLLECTION_NAMES.BOTS
@@ -41,24 +43,7 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
         console.log(` - Created collection '${COLLECTION_NAMES.BOTS}'`);
 
         // if we just created the collection, create bots
-        for (const name of BOT_NAMES) {
-            await client.query(
-                q.Create(
-                    q.Collection(COLLECTION_NAMES.BOTS),
-                    {
-                        data: {
-                            nickname: name,
-                            stats: {
-                                gamesPlayed: 0,
-                                wins: 0
-                            }
-                        }
-                    }
-                )
-            );
-
-            console.log(` - Created bot '${name}'`);
-        }
+        shouldCreateBots = true;
     } catch (e) {
         if (e.message === INSTANCE_ALREADY_EXISTS) {
             console.log(` - Collection '${COLLECTION_NAMES.BOTS}' already exists`);
@@ -102,6 +87,27 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
             console.log(` - Index '${INDEX_NAMES.BOTS_BY_LOWEST_GAMES_PLAYED}' already exists`);
         } else {
             throw e;
+        }
+    }
+
+    if (shouldCreateBots) {
+        for (const name of BOT_NAMES) {
+            await client.query(
+                q.Create(
+                    q.Collection(COLLECTION_NAMES.BOTS),
+                    {
+                        data: {
+                            nickname: name,
+                            stats: {
+                                gamesPlayed: 0,
+                                wins: 0
+                            }
+                        }
+                    }
+                )
+            );
+
+            console.log(` - Created bot '${name}'`);
         }
     }
 };
