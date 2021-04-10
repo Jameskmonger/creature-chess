@@ -21,6 +21,9 @@ This is just on a tiny server for demo purposes so it might not work all the tim
   - Store the client secret in environment variable `AUTH0_MANAGEMENT_CLIENT_SECRET`
 - An Auth0 app for the frontend
   - Set up a [single page app](https://auth0.com/docs/applications/set-up-an-application/register-single-page-app)
+  - In Auth0 config for SPA
+    - Set `Allowed Callback URLs` = "https://creaturechess.local-dev.com:8090"
+    - Set `Allowed Web Origins` = "https://creaturechess.local-dev.com:8090"
   - Modify `packages/shared/src/config.local.ts` and change `auth0` config.
 - Modify `packages/shared/src/config.ts` and set `const environment = ENVIRONMENT.LOCAL`
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
