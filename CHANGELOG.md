@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.29](https://github.com/Jameskmonger/creature-chess/compare/v0.3.28...v0.3.29) (2021-04-10)
+
+
+### Bug Fixes
+
+* make match turns affect board ([37d4526](https://github.com/Jameskmonger/creature-chess/commit/37d452641baccfd20133df2b9292cbc1dc11434a))
+
+
+
+
+
 ## [0.3.28](https://github.com/Jameskmonger/creature-chess/compare/v0.3.25...v0.3.28) (2021-04-09)
 
 
