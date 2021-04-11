@@ -6,8 +6,6 @@ import pDefer = require("p-defer");
 import { combineReducers, createStore } from "redux";
 import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
-import { log } from "./log";
-
 import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
@@ -52,23 +50,19 @@ export class Game {
 
     private store = createGameStore();
 
-    // todo set a sensible default
     private logger: Logger;
 
-    constructor(options?: Partial<GameOptions>) {
+    constructor(createLogger: (id: string) => Logger, players: Player[], options?: Partial<GameOptions>) {
         this.id = uuid();
 
         this.options = getOptions(options);
+        this.logger = createLogger(this.id);
 
-        this.deck = new CardDeck(getAllDefinitions());
+        this.deck = new CardDeck(this.logger, getAllDefinitions());
 
         this.playerList.onUpdate(this.onPlayerListUpdate);
-    }
 
-    public setLogger(logger: Logger) {
-        this.logger = logger;
-
-        this.deck.setLogger(this.logger);
+        this.start(players);
     }
 
     public onFinish(fn: (winner: Player) => void) {
@@ -83,7 +77,7 @@ export class Game {
         return this.playerList.getValue();
     }
 
-    public start = async (players: Player[]) => {
+    private start = async (players: Player[]) => {
         players.forEach(this.addPlayer);
 
         this.updateOpponentProvider();
@@ -93,6 +87,8 @@ export class Game {
         }
 
         const startTime = startStopwatch();
+
+        this.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
 
         while (true) {
             await this.runPreparingPhase();
@@ -110,7 +106,7 @@ export class Game {
 
         const duration = stopwatch(startTime);
 
-        log(`Match complete in ${(duration)} ms (${this.store.getState().gameInfo.round} rounds)`);
+        this.logger.info(`Match complete in ${(duration)} ms (${this.store.getState().gameInfo.round} rounds)`);
 
         // teardown
         this.opponentProvider = null;
@@ -128,6 +124,7 @@ export class Game {
             name: p.name
         }));
 
+        this.logger.info(`Game finished, won by ${winner.name}`);
         this.events.emit(finishGameEventKey, winner, gamePlayers);
 
         // more teardown
