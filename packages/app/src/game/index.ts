@@ -1,2 +1,2 @@
 export { gameSaga } from "./sagas";
-export { GamePage } from "./gamePage";
+export { GamePage } from "./gamePage/gamePage";
