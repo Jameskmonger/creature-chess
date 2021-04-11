@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
-import { MAX_NAME_LENGTH, SanitizedUser } from "@creature-chess/models";
-import { validateNickname } from "@creature-chess/shared";
+import { MAX_NAME_LENGTH, SanitizedUser, validateNickname } from "@creature-chess/models";
 import { patchUser } from "./utils/patchUser";
 import { userUpdated } from "./store/actions";
 

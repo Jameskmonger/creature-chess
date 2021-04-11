@@ -1,4 +1,4 @@
-import { MAX_NAME_LENGTH } from "@creature-chess/models";
+import { MAX_NAME_LENGTH } from "./constants";
 
 const NAME_REGEX = /^[a-zA-Z0-9\ ]*$/;
 

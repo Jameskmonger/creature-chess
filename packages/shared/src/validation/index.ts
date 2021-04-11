@@ -1,1 +1,0 @@
-export { validateNickname } from "./nickname";

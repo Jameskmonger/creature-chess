@@ -9,8 +9,9 @@ import * as Constants from "./constants";
 export { Constants };
 export * from "./constants";
 
+export { validateNickname } from "./nickname";
 export { GamePhase } from "./game-phase";
-
+export { PLAYER_TITLES } from "./titles";
 export { SanitizedUser } from "./user";
 
 export {

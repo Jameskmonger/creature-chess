@@ -2,10 +2,9 @@ import { ManagementClient } from "auth0";
 import { Request, Response } from "express";
 import Filter = require("bad-words");
 import { DatabaseConnection } from "@creature-chess/data";
-import { validateNickname } from "@creature-chess/shared";
 import { authenticate, convertDatabaseUserToUserModel, UserAppMetadata } from "@creature-chess/auth-server";
 import { sanitize } from "./utils/sanitize";
-import { SanitizedUser } from "@creature-chess/models";
+import { SanitizedUser, validateNickname } from "@creature-chess/models";
 
 export const getCurrent = (database: DatabaseConnection, authClient: ManagementClient<UserAppMetadata>) => {
     return async (req: Request, res: Response<SanitizedUser>) => {

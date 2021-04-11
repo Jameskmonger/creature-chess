@@ -1,7 +1,6 @@
 import { EventEmitter } from "events";
-import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
+import { PlayerListPlayer, PlayerStatus, PLAYER_TITLES } from "@creature-chess/models";
 import { Player } from "./player/player";
-import { PLAYER_TITLES } from "../titles";
 
 const debounce = (func: () => void, wait: number) => {
     let timeout: any;

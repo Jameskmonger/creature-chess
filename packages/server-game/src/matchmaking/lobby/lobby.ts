@@ -1,8 +1,7 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import shuffle = require("lodash.shuffle");
-import { PLAYER_TITLES } from "@creature-chess/shared";
-import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer } from "@creature-chess/models";
+import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, PLAYER_TITLES } from "@creature-chess/models";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 
 import { IdGenerator } from "../id-generator";
