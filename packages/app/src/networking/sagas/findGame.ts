@@ -4,14 +4,17 @@ import {
     IncomingPacketRegistry, ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes
 } from "@creature-chess/shared";
 import { BoardSlice } from "@creature-chess/board";
-import { gameConnectedEvent, GameConnectedEvent, GAME_CONNECTED_EVENT, lobbyConnectedEvent, LobbyConnectedEvent, LOBBY_CONNECTED_EVENT } from "../networking/actions";
-import { AppState } from "../store";
-import { FindGameAction, FIND_GAME } from "../ui/actions";
-import { getSocket } from "../ui/socket";
-import { isLoggedIn } from "./auth/store/selectors";
 import { PieceModel } from "@creature-chess/models";
-import { lobbyCommands } from "../lobby";
-import { networkingSaga } from "../networking";
+import { AppState } from "../../store";
+import { isLoggedIn } from "../../menu/auth/store/selectors";
+import { lobbyCommands } from "../../lobby";
+import { MenuActions } from "../../menu";
+import { getSocket } from "../socket";
+import {
+    gameConnectedEvent, GameConnectedEvent, GAME_CONNECTED_EVENT,
+    lobbyConnectedEvent, LobbyConnectedEvent, LOBBY_CONNECTED_EVENT
+} from "../actions";
+import { networkingSaga } from "./networkingSaga";
 
 export const findGame = function*(
     auth: {
@@ -20,7 +23,7 @@ export const findGame = function*(
     },
     slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
-    const findGameAction: FindGameAction = yield take(FIND_GAME);
+    const findGameAction: MenuActions.FindGameAction = yield take(MenuActions.FIND_GAME);
 
     const state: AppState = yield select();
 

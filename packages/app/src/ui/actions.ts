@@ -1,8 +1,6 @@
 import { ConnectionStatus } from "@creature-chess/shared";
 import { Overlay } from "./overlay";
 
-export const FIND_GAME = "FIND_GAME";
-export type FIND_GAME = typeof FIND_GAME;
 export const OPEN_OVERLAY = "OPEN_OVERLAY";
 export type OPEN_OVERLAY = typeof OPEN_OVERLAY;
 export const CLOSE_OVERLAY = "CLOSE_OVERLAY";
@@ -14,7 +12,6 @@ export type JOIN_ERROR = typeof JOIN_ERROR;
 export const FINISH_GAME = "FINISH_GAME";
 export type FINISH_GAME = typeof FINISH_GAME;
 
-export type FindGameAction = ({ type: FIND_GAME, payload: { serverIP: string } });
 export type JoinErrorAction = ({ type: JOIN_ERROR, payload: { error: string } });
 export type OpenOverlayAction = { type: OPEN_OVERLAY, payload: { overlay: Overlay } };
 export type CloseOverlayAction = { type: CLOSE_OVERLAY };
@@ -37,14 +34,6 @@ export const selectPiece = (id: string): SelectPieceAction => ({
 });
 
 export const clearSelectedPiece = (): ClearSelectedPieceAction => ({ type: CLEAR_SELECTED_PIECE });
-
-
-export const findGameAction = (serverIP: string): FindGameAction => ({
-    type: FIND_GAME,
-    payload: {
-        serverIP
-    }
-});
 
 export const joinGameError = (error: string): JoinErrorAction => ({
     type: JOIN_ERROR,

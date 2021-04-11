@@ -2,10 +2,11 @@ import { UiState } from "../store/state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
     UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, JoinErrorAction,
-    FindGameAction, FIND_GAME, JOIN_ERROR, FINISH_GAME, FinishGameAction,
+    JOIN_ERROR, FINISH_GAME, FinishGameAction,
     SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
 } from "./actions";
 import { ConnectionStatus, GameEvents } from "@creature-chess/shared";
+import { MenuActions } from "../menu";
 
 const initialState: UiState = {
     loading: false,
@@ -22,13 +23,13 @@ type UIAction =
     | SelectPieceAction
     | ClearSelectedPieceAction
     | JoinErrorAction
-    | FindGameAction
+    | MenuActions.FindGameAction
     | UpdateConnectionStatusAction
     | FinishGameAction;
 
 export function reducer(state: UiState = initialState, action: UIAction | GameEvents.GamePhaseStartedEvent) {
     switch (action.type) {
-        case FIND_GAME:
+        case MenuActions.FIND_GAME:
             return {
                 ...state,
                 loading: true
