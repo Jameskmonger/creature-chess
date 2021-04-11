@@ -4,7 +4,7 @@ import {
     GameEvents,
     PlayerInfoCommands,
     PlayerEvents, PlayerCommands
-} from "@creature-chess/shared";
+} from "@creature-chess/gamemode";
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 
 import { startBattle } from "@creature-chess/battle";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DefinitionProvider } from "@creature-chess/shared";
+import { DefinitionProvider } from "@creature-chess/gamemode";
 import { CreatureImage } from "../../../ui/display";
 import { TypeIndicator } from "../board/piece/components/TypeIndicator";
 

@@ -6,7 +6,7 @@ import { UserAppMetadata } from "@creature-chess/auth-server";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { leaderboard } from "./leaderboard";
 import { userGetCurrent, userPatchCurrent } from "./user";
-import { config } from "@creature-chess/shared";
+import { config } from "@creature-chess/gamemode";
 
 const app = express();
 const port = process.env.PORT || 3000;

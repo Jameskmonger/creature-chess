@@ -1,5 +1,5 @@
 import { takeEvery, take, all, fork } from "@redux-saga/core/effects";
-import { PlayerActions } from "@creature-chess/shared";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ClientToServer } from "@creature-chess/networking";
 
 import { BattleEvents } from "@creature-chess/battle";

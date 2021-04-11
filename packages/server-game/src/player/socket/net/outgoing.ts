@@ -3,7 +3,7 @@ import { takeLatest, take, fork, all, select, delay } from "@redux-saga/core/eff
 import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match,
-} from "@creature-chess/shared";
+} from "@creature-chess/gamemode";
 
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 

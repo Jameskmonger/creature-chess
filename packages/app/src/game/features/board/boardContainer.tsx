@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerActions } from "@creature-chess/shared";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";

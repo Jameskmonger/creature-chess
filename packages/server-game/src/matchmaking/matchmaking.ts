@@ -5,7 +5,7 @@ import shuffle = require("lodash.shuffle");
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { SocketPlayer, BotPlayer } from "../player";
-import { Game } from "@creature-chess/shared";
+import { Game } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";

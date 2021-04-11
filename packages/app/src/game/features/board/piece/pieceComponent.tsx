@@ -2,7 +2,7 @@ import * as React from "react";
 import { DragObjectWithType, useDrag } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { GamePhase, PieceModel } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/shared";
+import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../ui/display/animation";
 import { Projectile } from "../../../../ui/display/projectile";

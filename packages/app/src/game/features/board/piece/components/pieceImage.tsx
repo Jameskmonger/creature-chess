@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/shared";
+import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 import { CreatureImage } from "../../../../../ui/display/creatureImage";
 

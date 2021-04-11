@@ -1,5 +1,5 @@
 import { BUY_XP_AMOUNT } from "@creature-chess/models";
-import { getXpToNextLevel } from "@creature-chess/shared";
+import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { shouldBuyXp } from "./shouldBuyXp";
 
 describe("shouldBuyXp", () => {

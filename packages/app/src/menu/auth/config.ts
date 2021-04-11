@@ -1,4 +1,4 @@
-import { config } from "@creature-chess/shared";
+import { config } from "@creature-chess/gamemode";
 
 export const auth0Config = {
     domain: config.auth0.domain,

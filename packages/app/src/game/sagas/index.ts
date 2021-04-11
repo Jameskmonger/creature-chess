@@ -1,6 +1,6 @@
 import { take, fork, put, takeLatest } from "@redux-saga/core/effects";
 
-import { GameEvents, PlayerInfoCommands, PlayerCommands } from "@creature-chess/shared";
+import { GameEvents, PlayerInfoCommands, PlayerCommands } from "@creature-chess/gamemode";
 import { BoardSlice } from "@creature-chess/board";
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { PieceModel, defaultGameOptions } from "@creature-chess/models";

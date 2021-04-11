@@ -1,4 +1,4 @@
-import { PlayerActions } from "@creature-chess/shared";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { EmptyPacket } from "./empty-packet";
 
 export enum PacketOpcodes {

@@ -1,5 +1,5 @@
 import { take, select, put } from "@redux-saga/core/effects";
-import { PlayerActions } from "@creature-chess/shared";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { AppState } from "../../../store/state";
 import { Overlay } from "../../../ui/overlay";
 import { closeOverlay } from "../../../ui/actions";

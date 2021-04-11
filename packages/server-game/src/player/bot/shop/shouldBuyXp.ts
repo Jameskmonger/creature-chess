@@ -1,4 +1,4 @@
-import { getXpToNextLevel } from "@creature-chess/shared";
+import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models";
 
 // don't go under this amount

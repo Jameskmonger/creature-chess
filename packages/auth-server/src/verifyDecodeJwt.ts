@@ -1,6 +1,6 @@
 import jwt = require("jsonwebtoken");
 import jwksClient = require("jwks-rsa");
-import { config } from "@creature-chess/shared";
+import { config } from "@creature-chess/gamemode";
 
 const client = jwksClient({
     cache: true,

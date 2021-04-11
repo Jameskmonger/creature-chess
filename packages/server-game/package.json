@@ -20,7 +20,6 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
     "start": "node ./lib/index.js 3000",
-    "dev": "nodemon 3000",
     "test": "jest"
   },
   "bugs": {
@@ -33,7 +32,7 @@
     "@creature-chess/data": "^0.3.30",
     "@creature-chess/models": "^0.3.30",
     "@creature-chess/networking": "^0.3.33",
-    "@creature-chess/shared": "^0.3.33",
+    "@creature-chess/gamemode": "^0.3.33",
     "@types/auth0": "^2.20.8",
     "@types/redux-saga": "^0.10.5",
     "@types/socket.io": "^2.1.2",
@@ -49,8 +48,5 @@
     "uuid": "^3.3.2",
     "winston": "^3.3.3",
     "winston-cloudwatch": "^2.3.2"
-  },
-  "devDependencies": {
-    "nodemon": "^1.18.11"
   }
 }

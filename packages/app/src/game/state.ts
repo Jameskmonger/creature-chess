@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { BoardSlice } from "@creature-chess/board";
 import { playerListReducer } from "../game/features";
 
-import { GameInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, gameInfoReducer } from "@creature-chess/shared";
+import { GameInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, gameInfoReducer } from "@creature-chess/gamemode";
 import { BoardState } from "@creature-chess/board";
 import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 

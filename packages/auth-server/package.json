@@ -27,7 +27,7 @@
   "dependencies": {
     "@creature-chess/data": "^0.3.30",
     "@creature-chess/models": "^0.3.30",
-    "@creature-chess/shared": "^0.3.33",
+    "@creature-chess/gamemode": "^0.3.33",
     "@types/auth0": "^2.20.8",
     "@types/jsonwebtoken": "^8.5.0",
     "auth0": "^2.29.0",

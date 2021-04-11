@@ -27,6 +27,6 @@
   "dependencies": {
     "@creature-chess/board": "^0.3.29",
     "@creature-chess/models": "^0.3.30",
-    "@creature-chess/shared": "^0.3.33"
+    "@creature-chess/gamemode": "^0.3.33"
   }
 }

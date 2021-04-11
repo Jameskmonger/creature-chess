@@ -5,7 +5,7 @@ import { AppState } from "../../../store";
 import { Card as CardModel } from "@creature-chess/models";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
-import { getPlayerMoney, DefinitionProvider, PlayerActions } from "@creature-chess/shared";
+import { getPlayerMoney, DefinitionProvider, PlayerActions } from "@creature-chess/gamemode";
 import { ToggleLockButton } from "./toggleLockButton";
 import { CreatureImage } from "../../../ui/display";
 

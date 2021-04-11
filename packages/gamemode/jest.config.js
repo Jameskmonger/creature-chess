@@ -3,6 +3,6 @@ const base = require("../../jest.config.base.js");
 
 module.exports = {
     ...base,
-    name: "@creature-chess/shared",
-    displayName: "@creature-chess/shared"
+    name: "@creature-chess/gamemode",
+    displayName: "@creature-chess/gamemode"
 };

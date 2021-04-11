@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { getPlayerLevel } from "@creature-chess/shared";
+import { getPlayerLevel } from "@creature-chess/gamemode";
 import { AppState } from "../../../store";
 import { ownedPieceCountSelector } from "./ownedPieceCountSelector";
 

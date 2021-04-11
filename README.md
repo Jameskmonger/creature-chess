@@ -24,7 +24,7 @@ This is just on a tiny server for demo purposes so it might not work all the tim
   - In Auth0 config for SPA
     - Set `Allowed Callback URLs` = "https://creaturechess.local-dev.com:8090"
     - Set `Allowed Web Origins` = "https://creaturechess.local-dev.com:8090"
-  - Modify `packages/shared/src/config.local.ts` and change `auth0` config to match your two auth0 apps
+  - Modify `packages/gamemode/src/config/config.local.ts` and change `auth0` config to match your two auth0 apps
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
 
 ### Running
@@ -64,7 +64,7 @@ The game is then accessible at `https://creaturechess.local-dev.com:8090`. You m
 
 ### Gamemode
 - **board** - Redux reducer and commands for the board
-- **shared** - the gamemode
+- **gamemode** - the gamemode
 - **battle** - battle logic
 
 ### Utilities

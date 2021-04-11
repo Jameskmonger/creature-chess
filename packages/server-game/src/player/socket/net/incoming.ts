@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import { takeLatest, take, fork, takeEvery, put, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
-import { PlayerActions, PlayerEvents, GameEvents } from "@creature-chess/shared";
+import { PlayerActions, PlayerEvents, GameEvents } from "@creature-chess/gamemode";
 import { ClientToServer, IncomingPacketRegistry } from "@creature-chess/networking";
 
 import {
