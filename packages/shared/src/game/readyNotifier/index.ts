@@ -1,5 +1,5 @@
-import { deferLimitedQueue, limitedQueue } from "../utils/limitedQueue";
-import { Player } from "./player";
+import { Player } from "../player";
+import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
 
 export const readyNotifier = (livingPlayers: Player[]) => {
     const queue = limitedQueue<string>(livingPlayers.length);

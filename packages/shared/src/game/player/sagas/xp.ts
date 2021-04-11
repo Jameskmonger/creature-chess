@@ -3,7 +3,7 @@ import { GamePhase } from "@creature-chess/models";
 import { BoardSlice } from "@creature-chess/board";
 import { PlayerState } from "../store";
 import { updateLevelCommand } from "../playerInfo/commands";
-import { getXpToNextLevel } from "../../../utils";
+import { getXpToNextLevel } from "../../getXpToNextLevel";
 
 const ADD_XP_COMMAND = "ADD_XP_COMMAND";
 type ADD_XP_COMMAND = typeof ADD_XP_COMMAND;

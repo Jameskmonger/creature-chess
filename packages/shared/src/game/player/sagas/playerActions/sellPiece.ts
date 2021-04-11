@@ -1,12 +1,13 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "../../pieceSelectors";
-import { getPiecesForStage } from "../../../../utils";
 import { PlayerState } from "../../store";
 import { PlayerSellPieceAction, PLAYER_SELL_PIECE_ACTION } from "../../actions";
 import { updateMoneyCommand } from "../../playerInfo/commands";
 import { BoardSlice } from "@creature-chess/board";
 import { afterSellPieceEvent } from "../../events";
+
+export const PIECES_FOR_STAGE = [1, 3, 9];
 
 export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(
   { boardSlice, benchSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice }
@@ -22,8 +23,7 @@ export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(
           return;
         }
 
-        // todo add money here also, remove immediate update packets from the server
-        const piecesUsed = getPiecesForStage(piece.stage);
+        const piecesUsed = PIECES_FOR_STAGE[piece.stage];
         const pieceCost = piece.definition.cost;
         const currentMoney: number = yield select((state: TState) => state.playerInfo.money);
 

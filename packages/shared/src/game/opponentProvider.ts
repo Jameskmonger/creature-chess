@@ -1,11 +1,14 @@
 import shuffle = require("lodash.shuffle");
-import { randomFromArray } from "../utils";
 import { Player } from "./player";
 
 export interface IOpponentProvider {
     setPlayers(players: Player[]): void;
     getMatchups(): ({ homeId: string, awayId: string, awayIsClone: boolean })[];
 }
+
+const randomFromArray = <T>(array: T[]) => {
+    return array[Math.floor(Math.random() * array.length)];
+};
 
 export class HeadToHeadOpponentProvider implements IOpponentProvider {
     private playerIds: string[];

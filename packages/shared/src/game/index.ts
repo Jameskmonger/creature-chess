@@ -10,3 +10,4 @@ export { GameInfoState, gameInfoReducer, GameEvents } from "./store";
 export { DefinitionProvider } from "./definitions/definitionProvider";
 
 export { Match } from "./match";
+export { getXpToNextLevel } from "./getXpToNextLevel";

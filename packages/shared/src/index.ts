@@ -1,6 +1,5 @@
 export { log } from "./log";
 
-export { randomFromArray, getXpToNextLevel } from "./utils";
 export { validateNickname } from "./validation";
 
 export {
@@ -10,7 +9,7 @@ export {
     getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents, PlayerSelectors,
-    Match, PlayerMatchRewards, PlayerCommands, PlayerReducers
+    Match, PlayerMatchRewards, PlayerCommands, PlayerReducers, getXpToNextLevel
 } from "./game";
 
 export { PLAYER_TITLES } from "./titles";
