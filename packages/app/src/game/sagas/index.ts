@@ -6,16 +6,16 @@ import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
 import { PieceModel, defaultGameOptions } from "@creature-chess/models";
 
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
-import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
 
 import { clickToDrop } from "./actions/clickToDrop";
 import { closeShopOnFirstBuy } from "./actions/closeShopOnFirstBuy";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
+import { LobbyEvents } from "../../lobby";
 import { PlayerListCommands } from "../features";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
-    const action = yield take<GameConnectedEvent | LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT]);
+    const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
     yield fork(battleSaga, defaultGameOptions, slices.boardSlice);
 

@@ -4,12 +4,12 @@ import { BoardSlice } from "@creature-chess/board";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
 
-import { updateConnectionStatus} from "../../../ui/actions";
+import { updateConnectionStatus } from "../../../ui/actions";
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../actions";
-import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../../lobby/store/actions";
+import { LobbyEvents } from "../../../lobby";
 
 export const gameNetworking = function*(socket: SocketIOClient.Socket, slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
-    yield take<GameConnectedEvent | LobbyGameStartedEvent>([ GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT ]);
+    yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([ GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT ]);
 
     yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 

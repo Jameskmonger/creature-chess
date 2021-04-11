@@ -187,7 +187,6 @@ export class Lobby {
     private sendMemberJoinEvent(socket: Socket, member: PlayerLobbyMember) {
         // todo use a registry for this
         socket.emit(ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED, {
-            playerId: member.id,
             lobbyId: this.id,
             players: this.getLobbyPlayers(),
             startTimestamp: this.gameStartTime

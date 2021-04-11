@@ -7,7 +7,6 @@ export const GAME_CONNECTED_EVENT = "GAME_CONNECTED_EVENT";
 export type GAME_CONNECTED_EVENT = typeof GAME_CONNECTED_EVENT;
 
 export type LobbyConnectedEventPayload = {
-    localPlayerId: string;
     lobbyId: string;
     players: LobbyPlayer[];
     startTimestamp: number;
@@ -19,10 +18,9 @@ export type LobbyConnectedEvent = {
 
 export type GameConnectedEvent = { type: GAME_CONNECTED_EVENT, payload: GameConnectionPacket };
 
-export const lobbyConnectedEvent = (localPlayerId: string, lobbyId: string, players: LobbyPlayer[], startTimestamp: number): LobbyConnectedEvent => ({
+export const lobbyConnectedEvent = (lobbyId: string, players: LobbyPlayer[], startTimestamp: number): LobbyConnectedEvent => ({
     type: LOBBY_CONNECTED_EVENT,
     payload: {
-        localPlayerId,
         lobbyId,
         players,
         startTimestamp

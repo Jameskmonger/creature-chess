@@ -1,23 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LobbyPlayer } from "@creature-chess/models";
-import { LobbyState } from "./state";
-import { LobbyConnectedEventPayload } from "../../networking/actions";
+import { LobbyConnectedEventPayload } from "../networking/actions";
+
+export type LobbyState = {
+    lobbyId: string;
+    players: LobbyPlayer[];
+    startingAtMs: number;
+}
 
 const initialState: LobbyState = {
     lobbyId: null,
-    localPlayerId: null,
     players: [],
     startingAtMs: null
 };
 
-export const { reducer, actions: lobbyCommands } = createSlice({
+export const { reducer, actions: LobbyCommands } = createSlice({
     name: "lobby",
     initialState,
     reducers: {
         setLobbyDetailsCommand: (state, action: PayloadAction<LobbyConnectedEventPayload>) => ({
             ...state,
             lobbyId: action.payload.lobbyId,
-            localPlayerId: action.payload.localPlayerId,
             players: action.payload.players,
             startingAtMs: action.payload.startTimestamp
         }),

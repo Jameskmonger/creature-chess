@@ -2,7 +2,6 @@ import * as Models from "@creature-chess/models";
 import { BoardState } from "@creature-chess/board";
 
 type LobbyConnectionPacket = {
-    playerId: string;
     lobbyId: string;
     players: Models.LobbyPlayer[];
     startTimestamp: number;

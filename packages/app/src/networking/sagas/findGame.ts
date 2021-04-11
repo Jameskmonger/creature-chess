@@ -7,7 +7,7 @@ import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { AppState } from "../../store";
 import { isLoggedIn } from "../../menu/auth/store/selectors";
-import { lobbyCommands } from "../../lobby";
+import { LobbyCommands } from "../../lobby";
 import { MenuActions } from "../../menu";
 import { getSocket } from "../socket";
 import {
@@ -51,9 +51,8 @@ export const findGame = function*(
     const channel = eventChannel<LobbyConnectedEvent | GameConnectedEvent>(emit => {
         registry.on(
             ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED,
-            ({ playerId, lobbyId, players, startTimestamp }) => {
+            ({ lobbyId, players, startTimestamp }) => {
                 emit(lobbyConnectedEvent(
-                    playerId,
                     lobbyId,
                     players,
                     startTimestamp
@@ -87,7 +86,7 @@ export const findGame = function*(
     yield fork(networkingSaga, socket, slices);
 
     if (lobby) {
-        yield put(lobbyCommands.setLobbyDetailsCommand(lobby.payload));
+        yield put(LobbyCommands.setLobbyDetailsCommand(lobby.payload));
         yield put(lobby);
     } else if (game) {
         yield put(game);

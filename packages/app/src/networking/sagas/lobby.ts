@@ -1,10 +1,9 @@
 import { put, fork, take, select, cancel, cancelled } from "@redux-saga/core/effects";
 import { IncomingPacketRegistry, ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketOpcodes } from "@creature-chess/shared";
 import { EventChannel, eventChannel } from "redux-saga";
-import { lobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
 import { LobbyConnectedEvent, LOBBY_CONNECTED_EVENT } from "../actions";
 import { Action } from "redux";
-import { lobbyCommands } from "../../lobby";
+import { LobbyCommands, LobbyEvents } from "../../lobby";
 
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClientLobbyPacketDefinitions, ServerToClientLobbyPacketAcknowledgements>;
 
@@ -16,14 +15,14 @@ const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegist
             registry.on(
                 ServerToClientLobbyPacketOpcodes.LOBBY_PLAYER_UPDATE,
                 ({ index, player }) => {
-                    emit(lobbyCommands.updateLobbyPlayerCommand({ index, player }));
+                    emit(LobbyCommands.updateLobbyPlayerCommand({ index, player }));
                 }
             );
 
             registry.on(
                 ServerToClientLobbyPacketOpcodes.LOBBY_GAME_STARTED,
                 () => {
-                    emit(lobbyGameStartedEvent());
+                    emit(LobbyEvents.lobbyGameStartedEvent());
                 }
             );
 
@@ -56,7 +55,7 @@ export const lobbyNetworking = function*(
 
     const readPacketsTask = yield fork(readPacketsToActions, registry);
 
-    yield take(LOBBY_GAME_STARTED_EVENT);
+    yield take(LobbyEvents.LOBBY_GAME_STARTED_EVENT);
 
     yield cancel(readPacketsTask);
 };
