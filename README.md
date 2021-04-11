@@ -52,6 +52,26 @@ The game is then accessible at `https://creaturechess.local-dev.com:8090`. You m
   - This publishes Heroku (`server-info`)
   - You may have to run this in Bash
 
+## Packages
+
+### Clients
+- **app** - React app
+- **server-game** - websocket gameserver
+- **server-info** - express API server
+
+### Server/Client bindings
+- **models** - type library for all shared/domain-centered models
+- **networking** - packet definitions etc shared between app and server
+
+### Gamemode
+- **board** - Redux reducer and commands for the board
+- **shared** - the gamemode
+- **battle** - battle logic
+
+### Utilities
+- **auth-server** - shared code for auth0 on the server
+- **data** - database access
+
 ## License
 
 Creature Chess is licensed under the [AGPL v3 License](LICENSE).
