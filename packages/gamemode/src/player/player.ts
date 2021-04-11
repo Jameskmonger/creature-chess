@@ -6,7 +6,7 @@ import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
-import { GameInfoState } from "../store/state";
+import { GameInfoState } from "../gameInfo";
 import { CardDeck } from "../cardDeck";
 import { Match } from "../match";
 import {
@@ -23,8 +23,7 @@ import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces, getPiecesForStage, getPiecesExceptStage } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
-import { GameEvent } from "../store/events";
-import { GameEvents } from "../store";
+import { GameEvent } from "../events";
 import { updateCardsCommand } from "./cardShop";
 
 enum PlayerEvent {
@@ -340,8 +339,8 @@ export abstract class Player {
         const removeListeners = () => this.events.removeAllListeners();
 
         return function*() {
-            yield takeLatest<GameEvents.GameFinishEvent>(
-                GameEvents.GAME_FINISH_EVENT,
+            yield takeLatest<GameEvent>(
+                "gameFinishEvent",
                 function*() {
                     removeListeners();
                 }

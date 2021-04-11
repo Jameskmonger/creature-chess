@@ -78,7 +78,7 @@ export function reducer(state: UiState = initialState, action: UIAction | GameEv
                 loading: false,
                 menuError: action.payload.error
             };
-        case GameEvents.GAME_PHASE_STARTED_EVENT:
+        case "gamePhaseStartedEvent":
             return {
                 ...state,
                 loading: false,

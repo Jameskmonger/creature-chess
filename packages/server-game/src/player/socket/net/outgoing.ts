@@ -10,6 +10,7 @@ import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networki
 import { BoardState, BoardSlice } from "@creature-chess/board";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
+import { QuitGameAction } from "packages/gamemode/lib/player/actions";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
@@ -24,7 +25,7 @@ export const outgoingNetworking = function*(
 
     const sendGamePhaseUpdates = function*() {
         yield takeLatest<GameEvents.GamePhaseStartedEvent>(
-            GameEvents.GAME_PHASE_STARTED_EVENT,
+            "gamePhaseStartedEvent",
             function*({ payload: { phase, startedAt, round } }) {
                 if (phase === GamePhase.PREPARING) {
                     const { board, bench, cardShop: { cards } }: PlayerState = yield select();
@@ -99,7 +100,7 @@ export const outgoingNetworking = function*(
                 }
             ),
             takeLatest<GameEvents.GameFinishEvent>(
-                GameEvents.GAME_FINISH_EVENT,
+                "gameFinishEvent",
                 function*({ payload: { winnerName } }) {
                     registry.emit(ServerToClient.Game.PacketOpcodes.FINISH_GAME, { winnerName });
                 }
@@ -109,7 +110,7 @@ export const outgoingNetworking = function*(
 
     const sendPlayerListUpdates = function*() {
         yield takeLatest<GameEvents.PlayerListChangedEvent>(
-            GameEvents.PLAYER_LIST_CHANGED_EVENT,
+            "playerListChangedEvent",
             function*({ payload: { players } }) {
                 registry.emit(ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE, players);
             }
@@ -197,7 +198,7 @@ export const outgoingNetworking = function*(
         }
     );
 
-    yield take([PlayerActions.QUIT_GAME_ACTION, GameEvents.GAME_FINISH_EVENT]);
+    yield take<QuitGameAction | GameEvents.GameFinishEvent>([PlayerActions.QUIT_GAME_ACTION, "gameFinishEvent"]);
     yield delay(100);
 
     socket.removeAllListeners();

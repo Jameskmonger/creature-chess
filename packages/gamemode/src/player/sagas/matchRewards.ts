@@ -6,7 +6,7 @@ import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateRoundDiedAtCommand, u
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
-import { GameInfoState } from "../../store";
+import { GameInfoState } from "../../gameInfo";
 
 const getStreakBonus = (streak: number) => {
     if (streak >= 9) {

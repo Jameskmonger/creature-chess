@@ -14,6 +14,7 @@ import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { LobbyEvents } from "../../lobby";
 import { PlayerListCommands } from "../features";
 import { AppState } from "../../store";
+import { GameInfoCommands } from "packages/gamemode/lib/gameInfo";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
     const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
@@ -54,7 +55,10 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
         yield put(PlayerCommands.updateCardsCommand(cards));
         yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
         yield put(PlayerListCommands.updatePlayerListCommand(players));
-        yield put(GameEvents.gamePhaseStartedEvent(phase, phaseStartedAtSeconds));
+
+        const update = { phase, startedAt: phaseStartedAtSeconds };
+        yield put(GameEvents.gamePhaseStartedEvent(update));
+        yield put(GameInfoCommands.setGameInfoCommand(update))
 
         if (battleTurn !== null) {
             yield put(startBattle(battleTurn));

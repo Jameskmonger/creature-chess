@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import { EventEmitter } from "events";
 import delay from "delay";
 import pDefer = require("p-defer");
+import { combineReducers, createStore } from "redux";
 import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
 import { log } from "./log";
@@ -10,11 +11,11 @@ import { log } from "./log";
 import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
-import { createGameStore, GameEvents } from "./store";
+import { GameInfoCommands, gameInfoReducer, GameInfoState } from "./gameInfo";
 import { readyNotifier } from "./readyNotifier";
 import { Match } from "./match";
 import { CardDeck } from "./cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent } from "./store/events";
+import { GameEvent, gameFinishEvent, gamePhaseStartedEvent, playerListChangedEvent } from "./events";
 import { getAllDefinitions } from "./definitions";
 
 const startStopwatch = () => process.hrtime();
@@ -24,6 +25,18 @@ const stopwatch = (start: [number, number]) => {
 };
 
 const finishGameEventKey = "FINISH_GAME";
+
+type GameState = {
+    gameInfo: GameInfoState
+};
+
+const createGameStore = () => {
+    const store = createStore(combineReducers<GameState>({
+        gameInfo: gameInfoReducer,
+    }));
+
+    return store;
+};
 
 export class Game {
     public readonly id: string;
@@ -75,7 +88,7 @@ export class Game {
 
         this.updateOpponentProvider();
 
-        if (this.store.getState().phase !== null) {
+        if (this.store.getState().gameInfo.phase !== null) {
             return;
         }
 
@@ -97,7 +110,7 @@ export class Game {
 
         const duration = stopwatch(startTime);
 
-        log(`Match complete in ${(duration)} ms (${this.store.getState().round} rounds)`);
+        log(`Match complete in ${(duration)} ms (${this.store.getState().gameInfo.round} rounds)`);
 
         // teardown
         this.opponentProvider = null;
@@ -107,7 +120,7 @@ export class Game {
 
         const winner = this.players.find(p => p.id === winnerId);
 
-        const event = gameFinishEvent(winner.name);
+        const event = gameFinishEvent({ winnerName: winner.name });
         this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
 
         const gamePlayers = this.players.map(p => ({
@@ -129,7 +142,7 @@ export class Game {
         this.playerList.addPlayer(player);
 
         player.setDeck(this.deck);
-        player.setGetGameInfoState(this.store.getState);
+        player.setGetGameInfoState(() => this.store.getState().gameInfo);
         player.setGetPlayerListPlayers(this.playerList.getValue);
     }
 
@@ -140,8 +153,8 @@ export class Game {
             .forEach(p => p.receiveGameEvent(event));
     }
 
-    private onPlayerListUpdate = (playerList: PlayerListPlayer[]) => {
-        this.dispatchPublicGameEvent(playerListChangedEvent(playerList));
+    private onPlayerListUpdate = (players: PlayerListPlayer[]) => {
+        this.dispatchPublicGameEvent(playerListChangedEvent({ players }));
     }
 
     private async runPreparingPhase() {
@@ -150,8 +163,13 @@ export class Game {
 
         const notifier = readyNotifier(livingPlayers);
 
-        const { round } = this.store.getState();
-        this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.PREPARING, Date.now() / 1000, round + 1));
+        const { gameInfo: { round } } = this.store.getState();
+
+        const phase = GamePhase.PREPARING;
+        const startedAt = Date.now() / 1000;
+        const update = { phase, startedAt, round: round + 1 };
+        this.dispatchPublicGameEvent(gamePhaseStartedEvent(update));
+        this.store.dispatch(GameInfoCommands.setGameInfoCommand(update));
 
         await Promise.race([
             notifier.promise,
@@ -181,7 +199,11 @@ export class Game {
             }
         });
 
-        this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.READY, Date.now() / 1000));
+        const phase = GamePhase.READY;
+        const startedAt = Date.now() / 1000;
+        const update = { phase, startedAt };
+        this.dispatchPublicGameEvent(gamePhaseStartedEvent(update));
+        this.store.dispatch(GameInfoCommands.setGameInfoCommand(update));
 
         await this.delayPhaseLength(GamePhase.READY);
     }
@@ -190,10 +212,14 @@ export class Game {
         const battleTimeoutDeferred = pDefer<void>();
         this.delayPhaseLength(GamePhase.PLAYING).then(() => battleTimeoutDeferred.resolve());
 
-        const { round, phaseStartedAtSeconds: newPhaseStartedAt } = this.store.getState();
+        const { gameInfo: { round, phaseStartedAtSeconds: newPhaseStartedAt } } = this.store.getState();
         const promises = this.getLivingPlayers().map(p => p.fightMatch(newPhaseStartedAt, battleTimeoutDeferred));
 
-        this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.PLAYING, Date.now() / 1000));
+        const phase = GamePhase.PLAYING;
+        const startedAt = Date.now() / 1000;
+        const update = { phase, startedAt };
+        this.dispatchPublicGameEvent(gamePhaseStartedEvent(update));
+        this.store.dispatch(GameInfoCommands.setGameInfoCommand(update));
 
         await Promise.all(promises);
 

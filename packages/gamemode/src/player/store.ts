@@ -9,7 +9,7 @@ import {
     fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory,
     PlayerActionSagas
 } from "./sagas";
-import { gameInfoReducer, GameInfoState } from "../store";
+import { gameInfoReducer, GameInfoState } from "../gameInfo";
 import { Logger } from "winston";
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { PieceModel } from "@creature-chess/models";

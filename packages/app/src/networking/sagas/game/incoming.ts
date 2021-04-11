@@ -14,6 +14,7 @@ import { closeOverlay, finishGameAction, openOverlay, updateConnectionStatus, cl
 import { Overlay } from "../../../ui/overlay";
 import { PlayerListCommands } from "../../../game/features";
 import { ConnectionStatus } from "../../connection-status";
+import { GameInfoCommands } from "packages/gamemode/lib/gameInfo";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
@@ -99,18 +100,18 @@ const readPacketsToActions = function*(
         registry.on(
             ServerToClient.Game.PacketOpcodes.PHASE_UPDATE,
             (packet) => {
-                // todo this is ugly
-                if (packet.phase === GamePhase.PREPARING) {
-                    emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, packet.payload.round));
-                } else {
-                    emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds));
-                }
+                const update = {
+                    phase: packet.phase,
+                    startedAt: packet.startedAtSeconds,
+                    ...(packet.phase === GamePhase.PREPARING ? { round: packet.payload.round } : undefined)
+                };
+
+                emit(GameEvents.gamePhaseStartedEvent(update));
+                emit(GameInfoCommands.setGameInfoCommand(update));
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {
                         const { cards, pieces: { board, bench }, round } = packet.payload;
-
-                        emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
 
                         emit(boardSlice.commands.setBoardPiecesCommand(board));
                         emit(benchSlice.commands.setBoardPiecesCommand(bench));
