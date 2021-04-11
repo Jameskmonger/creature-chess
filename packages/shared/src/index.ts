@@ -1,13 +1,16 @@
-export { log } from "./log";
+export { Game } from "./game";
 
-export {
-    DefinitionProvider,
-    gameInfoReducer, GameInfoState, Game, Player, GameEvents,
-    getPiece, getAllPieces,
-    getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive,
-    PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
-    PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents, PlayerSelectors,
-    Match, PlayerMatchRewards, PlayerCommands, PlayerReducers, getXpToNextLevel
-} from "./game";
+export { Player, PlayerActions, PlayerEvents, PlayerSagas, PlayerActionSagas, PlayerSelectors, PlayerCommands, PlayerReducers } from "./player";
+export { getPiece, getAllPieces } from "./player/pieceSelectors";
+export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./player/playerSelectors";
+export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, PlayerMatchRewards } from "./player/playerInfo";
+export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
+
+export { GameInfoState, gameInfoReducer, GameEvents } from "./store";
+export { DefinitionProvider } from "./definitions/definitionProvider";
+
+export { Match } from "./match";
+export { getXpToNextLevel } from "./getXpToNextLevel";
+
 
 export { config } from "./config";

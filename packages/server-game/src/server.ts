@@ -1,18 +1,12 @@
+import { Logger } from "winston";
 import { ManagementClient } from "auth0";
-import { log } from "@creature-chess/shared";
 import { SocketAuthenticator } from "./socket/socketAuthenticator";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { openServer } from "./socket/openServer";
 import { Matchmaking } from "./matchmaking/matchmaking";
 import { UserAppMetadata } from "@creature-chess/auth-server";
 import { createDiscordApi } from "./discord";
-import { createWinstonLogger } from "./log";
 import { config } from "@creature-chess/shared";
-
-process.on("unhandledRejection", (error) => {
-    log("unhandled rejection:");
-    log(error as any);
-});
 
 const AUTH0_CONFIG = {
     domain: config.auth0.domain,
@@ -20,8 +14,11 @@ const AUTH0_CONFIG = {
     clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 
-export const startServer = async (port: number) => {
-    const logger = createWinstonLogger("global");
+export const startServer = async (logger: Logger, port: number) => {
+    process.on("unhandledRejection", (error) => {
+        logger.error("unhandled rejection:");
+        logger.error(error as any);
+    });
 
     const socketServer = openServer(logger, port);
     const client = new ManagementClient<UserAppMetadata>({

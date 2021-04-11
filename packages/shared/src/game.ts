@@ -5,7 +5,7 @@ import delay from "delay";
 import pDefer = require("p-defer");
 import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
-import { log } from "../log";
+import { log } from "./log";
 
 import { DefinitionProvider } from "./definitions/definitionProvider";
 import { Player } from "./player";
