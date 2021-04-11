@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { AppState } from "../../../../store";
 
-const getPlayers = (state: AppState) => state.playerList;
+const getPlayers = (state: AppState) => state.game.playerList;
 
 export const getPlayerById = (id: string) => {
   return createSelector(

@@ -45,7 +45,7 @@ const StatusPlayerListItem: React.FunctionComponent<{ playerId: string, status: 
 };
 
 const PlayerListItem: React.FunctionComponent<Props> = props => {
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.gameInfo.phase === GamePhase.PREPARING);
     const readyClassName = props.ready ? "ready" : "not-ready";
 
     const className = `player-list-item ${props.isLocal ? "local" : ""} ${props.isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;

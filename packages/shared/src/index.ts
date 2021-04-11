@@ -5,9 +5,9 @@ export { validateNickname } from "./validation";
 
 export {
     DefinitionProvider,
-    gameReducer, GameState, Game, Player, GameEvents,
+    gameReducer, GameInfoState, Game, Player, GameEvents,
     getPiece, getAllPieces,
-    getPlayerLevel, getPlayerMoney, getOpponentId, getPlayerXp, isPlayerAlive,
+    getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive,
     PlayerInfoCommands, PlayerInfoState, playerInfoReducer,
     PlayerActions, PlayerState, PlayerSagas, PlayerActionSagas, PlayerEvents, PlayerSelectors,
     Match, PlayerMatchRewards, PlayerCommands, PlayerReducers

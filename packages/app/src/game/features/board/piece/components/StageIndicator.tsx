@@ -9,7 +9,7 @@ interface StageIndicatorProps {
 }
 
 const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ pieceId }) => {
-    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
+    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
 
     if (!piece || piece.stage === 0) {
         return null;

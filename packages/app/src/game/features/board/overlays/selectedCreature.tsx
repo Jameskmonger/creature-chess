@@ -7,7 +7,7 @@ import { Card } from "../../cardShop";
 
 const selectedPieceSelector = (state: AppState): PieceModel =>
     state.ui.selectedPieceId
-        ? getPiece(state, state.ui.selectedPieceId)
+        ? getPiece(state.game, state.ui.selectedPieceId)
         : null;
 
 const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId }) => {

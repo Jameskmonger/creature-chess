@@ -5,8 +5,8 @@ import { AppState } from "../../../store";
 import { ownedPieceCountSelector } from "./ownedPieceCountSelector";
 
 const PieceCount: React.FunctionComponent = props => {
-  const level = useSelector<AppState, number>(getPlayerLevel);
-  const pieceCount = useSelector<AppState, number>(state => ownedPieceCountSelector(state));
+  const level = useSelector<AppState, number>(state => getPlayerLevel(state.game));
+  const pieceCount = useSelector<AppState, number>(ownedPieceCountSelector);
 
   if (pieceCount !== level) {
     return <p className="item pieces warning">{pieceCount} / {level} pieces (board not full!)</p>;

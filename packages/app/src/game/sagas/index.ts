@@ -2,7 +2,7 @@ import { take, fork, put, takeLatest } from "@redux-saga/core/effects";
 
 import { GameEvents, PlayerInfoCommands, PlayerCommands } from "@creature-chess/shared";
 import { BoardSlice } from "@creature-chess/board";
-import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
+import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { PieceModel, defaultGameOptions } from "@creature-chess/models";
 
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
@@ -13,11 +13,15 @@ import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
 import { LobbyEvents } from "../../lobby";
 import { PlayerListCommands } from "../features";
+import { AppState } from "../../store";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
     const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
-    yield fork(battleSaga, defaultGameOptions, slices.boardSlice);
+    yield fork(
+        battleSagaFactory<AppState>(state => state.game.board),
+        defaultGameOptions, slices.boardSlice
+    );
 
     yield takeLatest<BattleEvents.BattleTurnEvent>(
         BattleEvents.BATTLE_TURN_EVENT,

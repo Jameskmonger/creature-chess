@@ -11,12 +11,12 @@ const renderProgressBar = (current: number, max: number) => `${current} / ${max}
 
 const Profile: React.FunctionComponent = () => {
     const dispatch = useDispatch();
-    const level = useSelector<AppState, number>(getPlayerLevel);
-    const xp = useSelector<AppState, number>(getPlayerXp);
-    const money = useSelector<AppState, number>(getPlayerMoney);
+    const level = useSelector<AppState, number>(state => getPlayerLevel(state.game));
+    const xp = useSelector<AppState, number>(state => getPlayerXp(state.game));
+    const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
     // todo reselect
     const health = useSelector<AppState, number | null>(state => {
-        const player = state.playerList.find(p => p.id === state.user.user.id);
+        const player = state.game.playerList.find(p => p.id === state.user.user.id);
 
         return player ? player.health : null;
     });

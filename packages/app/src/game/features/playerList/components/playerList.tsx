@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
-import { getPlayerMoney, getPlayerLevel, getOpponentId } from "@creature-chess/shared";
+import { getPlayerMoney, getPlayerLevel } from "@creature-chess/shared";
 import { AppState } from "../../../../store";
 import { getUserId } from "../../../../menu/auth/store/selectors";
 import { PlayerListItem, StatusPlayerListItem } from "./playerListItem";
@@ -23,13 +23,13 @@ function ordinal_suffix_of(i: number) {
 }
 
 const PlayerList: React.FunctionComponent = () => {
-    const players = useSelector<AppState, PlayerListPlayer[]>(state => state.playerList);
-    const opponentId = useSelector<AppState, string>(getOpponentId);
+    const players = useSelector<AppState, PlayerListPlayer[]>(state => state.game.playerList);
+    const opponentId = useSelector<AppState, string>(state => state.game.playerInfo.opponentId);
     const localPlayerId = useSelector<AppState, string>(getUserId);
-    const showReadyIndicators = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
+    const showReadyIndicators = useSelector<AppState, boolean>(state => state.game.gameInfo.phase === GamePhase.PREPARING);
 
-    const localPlayerMoney = useSelector<AppState, number>(getPlayerMoney);
-    const localPlayerLevel = useSelector<AppState, number>(getPlayerLevel);
+    const localPlayerMoney = useSelector<AppState, number>(state => getPlayerMoney(state.game));
+    const localPlayerLevel = useSelector<AppState, number>(state => getPlayerLevel(state.game));
 
     return (
         <div className="player-list">

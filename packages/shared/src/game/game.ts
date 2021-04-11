@@ -131,7 +131,7 @@ export class Game {
         this.playerList.addPlayer(player);
 
         player.setDeck(this.deck);
-        player.setGetGameState(this.store.getState);
+        player.setGetGameInfoState(this.store.getState);
         player.setGetPlayerListPlayers(this.playerList.getValue);
         player.setDefinitionProvider(this.definitionProvider);
     }

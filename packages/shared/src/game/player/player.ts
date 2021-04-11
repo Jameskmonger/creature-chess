@@ -6,7 +6,7 @@ import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
-import { GameState } from "../store/state";
+import { GameInfoState } from "../store/state";
 import { DefinitionProvider } from "../definitions/definitionProvider";
 import { CardDeck } from "../cardDeck";
 import { Match } from "../match";
@@ -19,7 +19,7 @@ import {
     AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT,
     ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, playerDeathEvent
 } from "./events";
-import { PlayerStore, createPlayerStore } from "./store";
+import { PlayerStore, createPlayerStore, PlayerState } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces, getPiecesForStage, getPiecesExceptStage } from "./pieceSelectors";
@@ -49,7 +49,7 @@ export abstract class Player {
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
-    protected getGameState: () => GameState;
+    protected getGameInfoState: () => GameInfoState;
     protected getPlayerListPlayers: () => PlayerListPlayer[];
 
     private events = new EventEmitter();
@@ -81,7 +81,7 @@ export abstract class Player {
         this.sagaMiddleware.run(this.clientFinishMatchSaga());
         this.sagaMiddleware.run(this.finishGameSaga());
         playerBattle(this.sagaMiddleware);
-        this.sagaMiddleware.run(playerMatchRewards(this.id));
+        this.sagaMiddleware.run(playerMatchRewards<PlayerState>(this.id));
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
     }
@@ -100,8 +100,8 @@ export abstract class Player {
         return this.propertyUpdateRegistry;
     }
 
-    public setGetGameState(fn: () => GameState) {
-        this.getGameState = fn;
+    public setGetGameInfoState(fn: () => GameInfoState) {
+        this.getGameInfoState = fn;
     }
 
     public setGetPlayerListPlayers(fn: () => PlayerListPlayer[]) {

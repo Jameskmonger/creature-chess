@@ -6,7 +6,7 @@ import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateRoundDiedAtCommand, u
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
-import { GameState } from "../../store";
+import { GameInfoState } from "../../store";
 
 const getStreakBonus = (streak: number) => {
     if (streak >= 9) {
@@ -46,7 +46,7 @@ const updateStreak = function*(win: boolean) {
     yield put(updateStreakCommand(type, newAmount));
 }
 
-export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameState })>(playerId: string) => {
+export const playerMatchRewards = <TState extends (HasPlayerInfo & { gameInfo: GameInfoState })>(playerId: string) => {
     return function*() {
         yield takeLatest<PlayerFinishMatchEvent>(
             PLAYER_FINISH_MATCH_EVENT,
@@ -69,7 +69,7 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { game: GameS
 
                 const justDied = (newValue === 0 && oldValue !== 0);
                 if (justDied) {
-                    const currentRound: number = yield select(({ game: { round } }: TState) => round);
+                    const currentRound: number = yield select(({ gameInfo: { round } }: TState) => round);
 
                     yield put(updateRoundDiedAtCommand(currentRound));
                 }

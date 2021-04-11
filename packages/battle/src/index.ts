@@ -1,2 +1,2 @@
 export * as BattleEvents from "./events";
-export { battleSaga, startBattle } from "./battleSaga";
+export { battleSagaFactory, startBattle } from "./battleSaga";

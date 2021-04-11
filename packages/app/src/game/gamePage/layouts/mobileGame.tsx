@@ -64,7 +64,7 @@ const OverlayComponent: React.FunctionComponent<{ title: string, children: React
 };
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ currentOverlay }) => {
-    const currentBalance = useSelector<AppState, number>(getPlayerMoney);
+    const currentBalance = useSelector<AppState, number>(state => getPlayerMoney(state.game));
 
     if (currentOverlay === Overlay.PLAYERS) {
         return (

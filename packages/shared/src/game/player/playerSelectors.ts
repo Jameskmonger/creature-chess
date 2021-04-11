@@ -6,6 +6,7 @@ export const getPlayerLevel = (state: PlayerState): number => state.playerInfo.l
 export const getPlayerXp = (state: PlayerState): number => state.playerInfo.xp;
 export const isPlayerAlive = (state: PlayerState): boolean => state.playerInfo.health > 0;
 export const isPlayerShopLocked = (state: PlayerState): boolean => state.cardShop.locked;
+export const getOpponentId = (state: PlayerState) => state.playerInfo.opponentId;
 
 // todo use piece limit from board, remove this
 export const getPlayerBelowPieceLimit = (state: PlayerState, playerId: string): boolean => {
@@ -26,5 +27,3 @@ export const getMostExpensiveBenchPiece = (state: PlayerState) => {
 
     return benchPieces[0];
 };
-
-export const getOpponentId = (state: PlayerState) => state.playerInfo.opponentId;

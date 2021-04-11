@@ -10,7 +10,7 @@ interface PieceImageProps {
 }
 
 const PieceImage: React.FunctionComponent<PieceImageProps> = ({ pieceId }) => {
-    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
+    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
 
     if (!piece) {
         return null;

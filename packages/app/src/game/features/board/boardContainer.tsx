@@ -63,11 +63,11 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
     const dispatch = useDispatch();
 
     // todo decouple this, make a playerDropPiece saga
-    const board = useSelector<AppState, BoardState>(state => state.board);
-    const bench = useSelector<AppState, BoardState>(state => state.bench);
+    const board = useSelector<AppState, BoardState>(state => state.game.board);
+    const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 
     const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.gameInfo.phase === GamePhase.PREPARING);
 
     return (
         <div className="group board-container style-default">

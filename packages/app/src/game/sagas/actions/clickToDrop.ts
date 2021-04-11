@@ -37,15 +37,15 @@ export const clickToDrop = function*() {
 
         const { tile } = action.payload;
 
-        const piece: PieceModel = yield select((state: AppState) => state.ui.selectedPieceId ? getPiece(state, state.ui.selectedPieceId) : null);
+        const piece: PieceModel = yield select((state: AppState) => state.ui.selectedPieceId ? getPiece(state.game, state.ui.selectedPieceId) : null);
 
         if (!piece) {
             continue;
         }
 
         let tileEmpty = false;
-        const bench: BoardState = yield select((state: AppState) => state.bench);
-        const board: BoardState = yield select((state: AppState) => state.board);
+        const bench: BoardState = yield select((state: AppState) => state.game.bench);
+        const board: BoardState = yield select((state: AppState) => state.game.board);
 
         const piecePositionKey = `${tile.location.x},${tile.location.y}`;
 

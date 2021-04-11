@@ -44,9 +44,9 @@ const definitionProvider = new DefinitionProvider();
 const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const dispatch = useDispatch();
 
-    const cards = useSelector<AppState, CardModel[]>(state => state.cardShop.cards);
-    const money = useSelector<AppState, number>(getPlayerMoney);
-    const canUseShop = useSelector<AppState, boolean>(state => state.playerInfo.dead === false);
+    const cards = useSelector<AppState, CardModel[]>(state => state.game.cardShop.cards);
+    const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
+    const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.dead === false);
 
     const [currentCardIndex, setCurrentCardIndex] = React.useState<number>(null);
 

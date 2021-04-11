@@ -3,8 +3,8 @@ import { v4 as uuid } from "uuid";
 import { fork, all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardSelectors, BoardPiecesState, BoardSlice } from "@creature-chess/board";
-import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
+import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice } from "@creature-chess/board";
+import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 import { Player } from "./player";
 
@@ -112,7 +112,10 @@ export class Match {
         const _this = this;
         const rootSaga = function*() {
             yield all([
-                yield fork(battleSaga, gameOptions, _this.board),
+                yield fork(
+                    battleSagaFactory<MatchState>(state => state.board),
+                    gameOptions, _this.board
+                ),
                 yield takeEvery<BattleEvents.BattleFinishEvent>(
                     BattleEvents.BATTLE_FINISH_EVENT,
                     function*() {

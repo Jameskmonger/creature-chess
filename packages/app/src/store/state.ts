@@ -1,10 +1,8 @@
-import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
-import { PlayerInfoState, GameState } from "@creature-chess/shared";
-import { BoardState } from "@creature-chess/board";
 import { Overlay } from "../ui/overlay";
 import { LobbyState } from "../lobby";
 import { UserState } from "../menu/auth/store/reducer";
 import { ConnectionStatus } from "../networking";
+import { GameState } from "../game";
 
 export interface AppState {
     user: UserState;
@@ -13,16 +11,6 @@ export interface AppState {
 
     lobby: LobbyState;
     game: GameState;
-
-    playerInfo: PlayerInfoState;
-    board: BoardState<PieceModel>;
-    bench: BoardState<PieceModel>;
-    cardShop: {
-        cards: Card[],
-        locked: boolean
-    };
-
-    playerList: PlayerListPlayer[];
 }
 
 export interface UiState {

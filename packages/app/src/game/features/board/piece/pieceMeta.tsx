@@ -8,7 +8,7 @@ import { StageIndicator } from "./components/StageIndicator";
 import { TypeIndicator } from "./components/TypeIndicator";
 
 const PieceMeta: React.FunctionComponent<{ id: string; pieceIsOnBench?: boolean }> = ({ id, pieceIsOnBench = false }) => {
-    const piece = useSelector<AppState, PieceModel>(state => getPiece(state, id));
+    const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
 
     return (
         <div className="piece-meta-container">

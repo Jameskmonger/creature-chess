@@ -5,7 +5,7 @@ import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
 const MatchRewardsOverlay: React.FunctionComponent = () => {
-    const matchRewards = useSelector<AppState, PlayerMatchRewards>(state => state.playerInfo.matchRewards);
+    const matchRewards = useSelector<AppState, PlayerMatchRewards>(state => state.game.playerInfo.matchRewards);
     const victoryOverlayShowing = useSelector<AppState, boolean>(state => state.ui.winnerName !== null);
 
     if (!matchRewards || victoryOverlayShowing) {
