@@ -24,6 +24,7 @@ jobs:
       run: npm run build
       env:
         GA_ID: ${{ secrets.GA_ID }}
+        COOKIEBOT_ID: ${{ secrets.COOKIEBOT_ID }}
         CNAME: ${{ secrets.CNAME }}
         GH_PAGES: true
     - name: Copy privacy policy
