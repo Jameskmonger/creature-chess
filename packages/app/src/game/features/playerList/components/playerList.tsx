@@ -4,7 +4,8 @@ import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/model
 import { getPlayerMoney, getPlayerLevel } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
 import { getUserId } from "../../../../menu/auth/store/selectors";
-import { PlayerListItem, StatusPlayerListItem } from "./playerListItem";
+import { PlayerListItem } from "./items/playerListItem";
+import { StatusPlayerListItem } from "./items/statusPlayerListItem";
 
 // todo move this
 function ordinal_suffix_of(i: number) {
@@ -47,13 +48,10 @@ const PlayerList: React.FunctionComponent = () => {
                         <PlayerListItem
                             key={p.id}
                             playerId={p.id}
-                            player={p}
                             index={index}
                             isLocal={p.id === localPlayerId}
                             isOpponent={p.id === opponentId}
-                            ready={showReadyIndicators ? p.ready : null}
-                            streakType={p.streakType}
-                            streakAmount={p.streakAmount}
+                            showReadyIndicator={showReadyIndicators}
                             money={p.id === localPlayerId ? localPlayerMoney : p.money}
                             level={p.id === localPlayerId ? localPlayerLevel : p.level}
                         />
