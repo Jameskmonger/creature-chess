@@ -11,7 +11,7 @@ import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
 import { closeOverlay, finishGameAction, openOverlay, updateConnectionStatus, clearSelectedPiece } from "../../../ui/actions";
 import { Overlay } from "../../../ui/overlay";
-import { playerListUpdated } from "../../../game/features/playerList/playerListActions";
+import { PlayerListCommands } from "../../../game/features";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 
@@ -31,7 +31,7 @@ const readPacketsToActions = function*(
         registry.on(
             ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE,
             (packet) => {
-                emit(playerListUpdated(packet));
+                emit(PlayerListCommands.updatePlayerListCommand(packet));
             }
         );
 

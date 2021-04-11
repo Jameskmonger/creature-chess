@@ -1,10 +1,10 @@
 import * as React from "react";
-import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
-import { PlayerListItem, StatusPlayerListItem } from "./playerListItem";
 import { useSelector } from "react-redux";
-import { AppState } from "../../../store";
+import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
 import { getPlayerMoney, getPlayerLevel, getOpponentId } from "@creature-chess/shared";
-import { getUserId } from "../../../menu/auth/store/selectors";
+import { AppState } from "../../../../store";
+import { getUserId } from "../../../../menu/auth/store/selectors";
+import { PlayerListItem, StatusPlayerListItem } from "./playerListItem";
 
 // todo move this
 function ordinal_suffix_of(i: number) {

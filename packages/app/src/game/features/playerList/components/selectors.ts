@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
-import { AppState } from "./state";
+import { AppState } from "../../../../store";
 
-export const getPlayers = (state: AppState) => state.playerList;
+const getPlayers = (state: AppState) => state.playerList;
 
 export const getPlayerById = (id: string) => {
   return createSelector(

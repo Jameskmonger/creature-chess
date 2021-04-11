@@ -6,12 +6,13 @@ import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
 import { PieceModel, defaultGameOptions } from "@creature-chess/models";
 
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
-import { playerListUpdated } from "../features/playerList/playerListActions";
 import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
 
 import { clickToDrop } from "./actions/clickToDrop";
 import { closeShopOnFirstBuy } from "./actions/closeShopOnFirstBuy";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
+
+import { PlayerListCommands } from "../features";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
     const action = yield take<GameConnectedEvent | LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT]);
@@ -48,7 +49,7 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
         yield put(PlayerInfoCommands.updateMoneyCommand(money));
         yield put(PlayerCommands.updateCardsCommand(cards));
         yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
-        yield put(playerListUpdated(players));
+        yield put(PlayerListCommands.updatePlayerListCommand(players));
         yield put(GameEvents.gamePhaseStartedEvent(phase, phaseStartedAtSeconds));
 
         if (battleTurn !== null) {

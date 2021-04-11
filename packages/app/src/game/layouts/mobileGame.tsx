@@ -8,7 +8,7 @@ import { Overlay } from "../../ui/overlay";
 import { closeOverlay, openOverlay } from "../../ui/actions";
 import { BoardContainer } from "../features/board/boardContainer";
 import { CardShop } from "../features/cardShop";
-import { PlayerList } from "../features/playerList";
+import { PlayerList } from "../features";
 import { Profile } from "../features/profile";
 import { Settings } from "../features/settings";
 import { RoundIndicator } from "../features/roundIndicator";

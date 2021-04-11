@@ -1,11 +1,11 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer, StreakType } from "@creature-chess/models";
-import { ProgressBar } from "../../../ui/display";
+import { AppState } from "../../../../store";
+import { ProgressBar } from "../../../../ui/display";
 import { PlayerName } from "./playerName";
 import { PlayerTitle } from "./playerTitle";
 import { BattleInfo } from "./battleInfo";
-import { useSelector } from "react-redux";
-import { AppState } from "../../../store";
 import { PlayerPicture } from "./playerPicture";
 
 interface Props {
