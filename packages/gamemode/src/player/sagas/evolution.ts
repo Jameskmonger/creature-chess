@@ -1,10 +1,8 @@
 import { takeLatest, select, take, delay, put } from "@redux-saga/core/effects";
 import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { BoardState, BoardSelectors, BoardSlice } from "@creature-chess/board";
-import { DefinitionProvider } from "../../definitions/definitionProvider";
 import * as pieceSelectors from "../pieceSelectors";
-
-const definitionProvider = new DefinitionProvider();
+import { getDefinitionById } from "../../definitions";
 
 interface State {
     bench: BoardState<PieceModel>;
@@ -12,7 +10,7 @@ interface State {
 }
 
 const pieceCanEvolve = (piece: PieceModel) => {
-    const { stages } = definitionProvider.get(piece.definitionId);
+    const { stages } = getDefinitionById(piece.definitionId);
 
     return piece.stage < stages.length - 1;
 };

@@ -1,20 +1,21 @@
 import { v4 as uuid } from "uuid";
 import { Card, PieceModel } from "@creature-chess/models";
-import { DefinitionProvider } from "../../../definitions/definitionProvider";
+import { getDefinitionById } from "../../../definitions";
 
 export const createPiece = (
-    definitionProvider: DefinitionProvider,
     ownerId: string,
     definitionId: number,
     id?: string,
     stage: number = 0
 ): PieceModel => {
-    const stats = definitionProvider.get(definitionId).stages[0];
+    const definition = getDefinitionById(definitionId);
+    const stats = definition.stages[0];
+
     return {
         id: id || uuid(),
         ownerId,
         definitionId,
-        definition: definitionProvider.get(definitionId),
+        definition,
         facingAway: true,
         maxHealth: stats.hp,
         currentHealth: stats.hp,
@@ -23,9 +24,8 @@ export const createPiece = (
 };
 
 export const createPieceFromCard = (
-    definitionProvider: DefinitionProvider,
     ownerId: string,
     card: Card
 ) => {
-    return createPiece(definitionProvider, ownerId, card.definitionId, card.id);
+    return createPiece(ownerId, card.definitionId, card.id);
 };

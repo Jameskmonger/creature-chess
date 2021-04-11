@@ -5,7 +5,7 @@ import { AppState } from "../../../store";
 import { Card as CardModel } from "@creature-chess/models";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
-import { getPlayerMoney, DefinitionProvider, PlayerActions } from "@creature-chess/gamemode";
+import { getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
 import { ToggleLockButton } from "./toggleLockButton";
 import { CreatureImage } from "../../../ui/display";
 
@@ -13,12 +13,10 @@ interface CardShopProps {
     showBalance: boolean;
 }
 
-const CurrentCard: React.FunctionComponent<{ definitionProvider: DefinitionProvider, card: CardModel, onBuy: () => void }> = ({ definitionProvider, card, onBuy }) => {
+const CurrentCard: React.FunctionComponent<{ card: CardModel, onBuy: () => void }> = ({ card, onBuy }) => {
     if (!card) {
         return null;
     }
-
-    const creature = definitionProvider.get(card.definitionId);
 
     return (
         <>
@@ -27,19 +25,17 @@ const CurrentCard: React.FunctionComponent<{ definitionProvider: DefinitionProvi
                     <CreatureImage definitionId={card.definitionId} />
                 </div>
                 <div className="card-text">
-                    <h2>{creature.name}</h2>
-                    <span>{creature.type}</span>
-                    <span>{creature.class}</span>
+                    <h2>{card.name}</h2>
+                    <span>{card.type}</span>
+                    <span>{card.class}</span>
                 </div>
             </div>
             <div className="current-card-buy">
-                <button onClick={onBuy}>Buy (${creature.cost})</button>
+                <button onClick={onBuy}>Buy (${card.cost})</button>
             </div>
         </>
     )
 };
-
-const definitionProvider = new DefinitionProvider();
 
 const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const dispatch = useDispatch();
@@ -66,10 +62,8 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
         return (
             <Card
                 key={`${index}-${card.definitionId}`}
-                definitionProvider={definitionProvider}
-                definitionId={card.definitionId}
+                card={card}
                 selected={index === currentCardIndex}
-                buyable={money >= card.cost}
                 onClick={onClick}
             />
         );
@@ -111,7 +105,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
             </div>
 
             <div className="current-card">
-                <CurrentCard definitionProvider={definitionProvider} card={cards[currentCardIndex]} onBuy={onBuy} />
+                <CurrentCard card={cards[currentCardIndex]} onBuy={onBuy} />
             </div>
 
             <div className="cards">

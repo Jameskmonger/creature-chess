@@ -7,7 +7,6 @@ import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/mode
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { GameInfoState } from "../store/state";
-import { DefinitionProvider } from "../definitions/definitionProvider";
 import { CardDeck } from "../cardDeck";
 import { Match } from "../match";
 import {
@@ -45,7 +44,6 @@ export abstract class Player {
     public readonly picture: number;
 
     protected match: Match = null;
-    protected definitionProvider: DefinitionProvider;
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
@@ -106,10 +104,6 @@ export abstract class Player {
 
     public setGetPlayerListPlayers(fn: () => PlayerListPlayer[]) {
         this.getPlayerListPlayers = fn;
-    }
-
-    public setDefinitionProvider(definitionProvider: DefinitionProvider) {
-        this.definitionProvider = definitionProvider;
     }
 
     public getMatch = () => this.match;

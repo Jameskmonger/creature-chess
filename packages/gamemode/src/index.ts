@@ -7,7 +7,7 @@ export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, 
 export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
 
 export { GameInfoState, gameInfoReducer, GameEvents } from "./store";
-export { DefinitionProvider } from "./definitions/definitionProvider";
+export { getDefinitionById } from "./definitions";
 
 export { Match } from "./match";
 export { getXpToNextLevel } from "./getXpToNextLevel";

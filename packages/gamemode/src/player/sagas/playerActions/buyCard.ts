@@ -3,7 +3,6 @@ import { take, select, put } from "@redux-saga/core/effects";
 import { BuyCardAction, BUY_CARD_ACTION } from "../../actions";
 import { GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, topLeftToBottomRightSortPositions } from "@creature-chess/board";
-import { DefinitionProvider } from "../../../definitions/definitionProvider";
 import { createPieceFromCard } from "./createPieceFromCard";
 import { PlayerState } from "../../store";
 import { getPlayerBelowPieceLimit } from "../../playerSelectors";
@@ -39,7 +38,6 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
 
 export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
     getLogger: () => Logger,
-    definitionProvider: DefinitionProvider,
     { boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> },
     playerId: string,
     name: string
@@ -105,7 +103,7 @@ export const buyCardPlayerActionSagaFactory = <TState extends PlayerState>(
                 continue;
             }
 
-            const piece = createPieceFromCard(definitionProvider, playerId, card);
+            const piece = createPieceFromCard(playerId, card);
             const remainingCards = cards.map(c => c === card ? null : c);
 
             if (destination.type === "board") {

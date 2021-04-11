@@ -10,7 +10,7 @@ const createDefinition = (id: number, name: string, type: CreatureType, definiti
     stages: getStages(definitionClass, cost)
 });
 
-export const definitions: CreatureDefinition[] = [
+const definitionsArray: CreatureDefinition[] = [
     createDefinition(1, "Budaye", CreatureType.Wood, DefinitionClass.VALIANT, 1),
     createDefinition(2, "Anoleaf", CreatureType.Wood, DefinitionClass.CUNNING, 1),
     createDefinition(3, "Rockitten", CreatureType.Earth, DefinitionClass.VALIANT, 1),
@@ -59,3 +59,12 @@ export const definitions: CreatureDefinition[] = [
     createDefinition(46, "Eaglace", CreatureType.Water, DefinitionClass.CUNNING, 5),
     createDefinition(47, "Kirkanon", CreatureType.Metal, DefinitionClass.ARCANE, 5)
 ];
+
+const definitionMap = new Map<number, CreatureDefinition>();
+
+definitionsArray.forEach(d => {
+    definitionMap.set(d.id, d);
+});
+
+export const getDefinitionById = (id: number) => definitionMap.get(id);
+export const getAllDefinitions = () => [...definitionsArray];

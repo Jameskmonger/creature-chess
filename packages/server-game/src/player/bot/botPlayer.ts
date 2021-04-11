@@ -1,6 +1,6 @@
 import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
 import { Card, PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
-import { Player, PlayerActions, PlayerState, PlayerEvents, GameEvents, PlayerSelectors, getAllPieces } from "@creature-chess/gamemode";
+import { Player, PlayerActions, PlayerState, PlayerEvents, GameEvents, getDefinitionById, getAllPieces } from "@creature-chess/gamemode";
 import { BoardSelectors } from "@creature-chess/board"
 import uuid = require("uuid");
 import delay from "delay";
@@ -204,7 +204,7 @@ export class BotPlayer extends Player {
             return;
         }
 
-        const definition = this.definitionProvider.get(card.definitionId);
+        const definition = getDefinitionById(card.definitionId);
 
         this.store.dispatch(PlayerActions.buyCardAction(card.index, PREFERRED_LOCATIONS[definition.class]));
         await delay(BOT_ACTION_TIME_MS);
@@ -279,7 +279,7 @@ export class BotPlayer extends Player {
     }
 
     private getPieceView = (piece: PieceModel): PieceView => {
-        const { cost } = this.definitionProvider.get(piece.definitionId);
+        const { cost } = getDefinitionById(piece.definitionId);
         const amountOwned = getPieceCountForDefinition(this.store.getState(), piece.definitionId);
 
         return {

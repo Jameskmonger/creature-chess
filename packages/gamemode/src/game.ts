@@ -7,7 +7,6 @@ import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } fr
 
 import { log } from "./log";
 
-import { DefinitionProvider } from "./definitions/definitionProvider";
 import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
@@ -16,6 +15,7 @@ import { readyNotifier } from "./readyNotifier";
 import { Match } from "./match";
 import { CardDeck } from "./cardDeck";
 import { GameEvent, gameFinishEvent, playerListChangedEvent } from "./store/events";
+import { getAllDefinitions } from "./definitions";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -33,7 +33,6 @@ export class Game {
     private lastLivingPlayerCount: number = 0;
     private opponentProvider: IOpponentProvider = new HeadToHeadOpponentProvider();
     private playerList = new PlayerList();
-    private definitionProvider = new DefinitionProvider();
     private players: Player[] = [];
     private events = new EventEmitter();
     private deck: CardDeck;
@@ -48,7 +47,7 @@ export class Game {
 
         this.options = getOptions(options);
 
-        this.deck = new CardDeck(this.definitionProvider.getAll());
+        this.deck = new CardDeck(getAllDefinitions());
 
         this.playerList.onUpdate(this.onPlayerListUpdate);
     }
@@ -105,7 +104,6 @@ export class Game {
         this.deck = null;
         this.playerList.deconstructor();
         this.playerList = null;
-        this.definitionProvider = null;
 
         const winner = this.players.find(p => p.id === winnerId);
 
@@ -133,7 +131,6 @@ export class Game {
         player.setDeck(this.deck);
         player.setGetGameInfoState(this.store.getState);
         player.setGetPlayerListPlayers(this.playerList.getValue);
-        player.setDefinitionProvider(this.definitionProvider);
     }
 
     private dispatchPublicGameEvent(event: GameEvent) {

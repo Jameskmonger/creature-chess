@@ -3,7 +3,6 @@ import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import { fork, all } from "@redux-saga/core/effects";
 
 import { BoardState, BoardSlice } from "@creature-chess/board";
-import { DefinitionProvider } from "../definitions/definitionProvider";
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 
 import {
@@ -33,7 +32,7 @@ export const createPlayerStore = (
 ): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([
-            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(getLogger, new DefinitionProvider(), slices, playerId, name)),
+            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(getLogger, slices, playerId, name)),
             yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(getLogger, playerId, name)),
             yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(slices, playerId)),
             yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<PlayerState>()),

@@ -206,7 +206,9 @@ export class CardDeck {
             id: uuid(),
             definitionId: definition.id,
             cost: definition.cost,
-            name: definition.name
+            name: definition.name,
+            type: definition.type,
+            class: definition.class
         };
 
         this.getDeckForCost(definition.cost).push(card);
