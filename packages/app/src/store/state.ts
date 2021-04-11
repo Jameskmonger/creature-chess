@@ -30,7 +30,5 @@ export interface UiState {
     selectedPieceId: string;
     currentOverlay: Overlay | null;
     winnerName: string;
-    mainAnnouncement: string;
-    subAnnouncement: string;
     menuError: string;
 }

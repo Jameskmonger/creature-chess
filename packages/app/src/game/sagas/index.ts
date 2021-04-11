@@ -11,7 +11,6 @@ import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/sto
 
 import { clickToDrop } from "./actions/clickToDrop";
 import { closeShopOnFirstBuy } from "./actions/closeShopOnFirstBuy";
-import { announcement } from "./actions/announcement";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
@@ -31,7 +30,6 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
     );
 
     yield fork(preventAccidentalClose);
-    yield fork(announcement);
     yield fork(closeShopOnFirstBuy);
     yield fork(clickToDrop);
 

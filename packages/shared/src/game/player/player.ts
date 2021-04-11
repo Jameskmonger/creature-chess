@@ -259,11 +259,6 @@ export abstract class Player {
         this.store.dispatch(playerDeathEvent());
     }
 
-    public resurrect(startingHealth: number) {
-        this.store.dispatch(PlayerInfoCommands.updateRoundDiedAtCommand(null));
-        this.store.dispatch(PlayerInfoCommands.updateHealthCommand(startingHealth));
-    }
-
     public isAlive() {
         return isPlayerAlive(this.store.getState());
     }

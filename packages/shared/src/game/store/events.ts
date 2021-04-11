@@ -33,16 +33,5 @@ export const playerListChangedEvent = (players: PlayerListPlayer[]): PlayerListC
     payload: { players }
 });
 
-export const PLAYERS_RESURRECTED_EVENT = "PLAYERS_RESURRECTED_EVENT";
-export type PLAYERS_RESURRECTED_EVENT = typeof PLAYERS_RESURRECTED_EVENT;
-export type PlayersResurrectedEvent = ({
-    type: PLAYERS_RESURRECTED_EVENT,
-    payload: { playerIds: string[] }
-});
-export const playersResurrectedEvent = (playerIds: string[]): PlayersResurrectedEvent => ({
-    type: PLAYERS_RESURRECTED_EVENT,
-    payload: { playerIds }
-});
-
 export type GameEvent =
-    GamePhaseStartedEvent | GameFinishEvent | PlayerListChangedEvent | PlayersResurrectedEvent;
+    GamePhaseStartedEvent | GameFinishEvent | PlayerListChangedEvent;

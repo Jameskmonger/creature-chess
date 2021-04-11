@@ -7,7 +7,6 @@ import { PlayerActions } from "@creature-chess/shared";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
-import { Announcement } from "./overlays/announcement";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
@@ -94,7 +93,6 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
                     />
                 </div>
 
-                <Announcement />
                 <VictoryOverlay />
                 <MatchRewardsOverlay />
                 <ReconnectOverlay />

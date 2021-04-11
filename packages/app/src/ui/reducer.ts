@@ -1,7 +1,6 @@
 import { UiState } from "../store/state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
-    AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT,
     UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, JoinErrorAction,
     FindGameAction, FIND_GAME, JOIN_ERROR, FINISH_GAME, FinishGameAction,
     SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
@@ -13,8 +12,6 @@ const initialState: UiState = {
     currentOverlay: null,
     selectedPieceId: null,
     winnerName: null,
-    mainAnnouncement: null,
-    subAnnouncement: null,
     menuError: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED
 };
@@ -24,8 +21,6 @@ type UIAction =
     | CloseOverlayAction
     | SelectPieceAction
     | ClearSelectedPieceAction
-    | AnnouncementUpdateAction
-    | AnnouncementClearAction
     | JoinErrorAction
     | FindGameAction
     | UpdateConnectionStatusAction
@@ -73,20 +68,6 @@ export function reducer(state: UiState = initialState, action: UIAction | GameEv
             return {
                 ...state,
                 winnerName: action.payload.winnerName
-            };
-        }
-        case UPDATE_ANNOUNCEMENT: {
-            return {
-                ...state,
-                mainAnnouncement: action.payload.main,
-                subAnnouncement: action.payload.sub
-            };
-        }
-        case CLEAR_ANNOUNCEMENT: {
-            return {
-                ...state,
-                mainAnnouncement: null,
-                subAnnouncement: null
             };
         }
         case JOIN_ERROR:

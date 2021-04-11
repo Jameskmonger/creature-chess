@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { EventEmitter } from "events";
 import delay from "delay";
 import pDefer = require("p-defer");
-import { GamePhase, PlayerListPlayer, PlayerStatus, RESURRECT_HEALTH, GameOptions, getOptions } from "@creature-chess/models";
+import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
 import { log } from "../log";
 
@@ -15,7 +15,7 @@ import { createGameStore, GameEvents } from "./store";
 import { readyNotifier } from "./readyNotifier";
 import { Match } from "./match";
 import { CardDeck } from "./cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, playersResurrectedEvent } from "./store/events";
+import { GameEvent, gameFinishEvent, playerListChangedEvent } from "./store/events";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -89,10 +89,12 @@ export class Game {
 
             await this.runPlayingPhase();
 
-            if (this.getLivingPlayers().length === 1) {
+            if (this.getLivingPlayers().length < 2) {
                 break;
             }
         }
+
+        const winnerId = this.getPlayerList()[0].id;
 
         const duration = stopwatch(startTime);
 
@@ -105,7 +107,7 @@ export class Game {
         this.playerList = null;
         this.definitionProvider = null;
 
-        const winner = this.getLivingPlayers()[0];
+        const winner = this.players.find(p => p.id === winnerId);
 
         const event = gameFinishEvent(winner.name);
         this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
@@ -197,21 +199,6 @@ export class Game {
         this.dispatchPublicGameEvent(GameEvents.gamePhaseStartedEvent(GamePhase.PLAYING, Date.now() / 1000));
 
         await Promise.all(promises);
-
-        if (this.getLivingPlayers().length === 0) {
-            const justDiedPlayers = this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round);
-
-            for (const player of justDiedPlayers) {
-                player.resurrect(RESURRECT_HEALTH);
-            }
-
-            const justDiedPlayerIds = justDiedPlayers.map(p => p.id);
-            const event = playersResurrectedEvent(justDiedPlayerIds);
-
-            for (const player of this.players) {
-                player.receiveGameEvent(event);
-            }
-        }
 
         for (const player of this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round)) {
             player.kill();

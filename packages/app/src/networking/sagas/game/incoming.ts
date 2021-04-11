@@ -9,7 +9,7 @@ import {
 import { startBattle } from "@creature-chess/battle";
 import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
-import { clearAnnouncement, closeOverlay, finishGameAction, openOverlay, playersResurrected, updateConnectionStatus, clearSelectedPiece } from "../../../ui/actions";
+import { closeOverlay, finishGameAction, openOverlay, updateConnectionStatus, clearSelectedPiece } from "../../../ui/actions";
 import { Overlay } from "../../../ui/overlay";
 import { playerListUpdated } from "../../../game/features/playerList/playerListActions";
 
@@ -22,11 +22,9 @@ const readPacketsToActions = function*(
 ) {
     const channel = eventChannel<any>(emit => {
         socket.on("reconnect_failed", () => {
-            emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
         });
         socket.on("reconnect_error", () => {
-            emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
         });
 
@@ -81,13 +79,6 @@ const readPacketsToActions = function*(
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
-            ({ playerIds }) => {
-                emit(playersResurrected(playerIds));
-            }
-        );
-
-        registry.on(
             ServerToClientPacketOpcodes.MATCH_REWARDS,
             (payload) => {
                 emit(PlayerEvents.playerMatchRewardsEvent(payload));
@@ -125,7 +116,6 @@ const readPacketsToActions = function*(
                         emit(PlayerInfoCommands.clearOpponentCommand());
                         emit(boardSlice.commands.unlockBoardCommand());
                         emit(openOverlay(Overlay.SHOP));
-                        emit(clearAnnouncement());
                         return;
                     }
                     case GamePhase.READY: {

@@ -85,12 +85,6 @@ export const outgoingNetworking = function*(
 
     const sendAnnouncements = function*() {
         yield all([
-            takeLatest<GameEvents.PlayersResurrectedEvent>(
-                GameEvents.PLAYERS_RESURRECTED_EVENT,
-                function*({ payload: { playerIds } }) {
-                    registry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
-                }
-            ),
             takeLatest<PlayerEvents.PlayerDeathEvent>(
                 PlayerEvents.PLAYER_DEATH_EVENT,
                 function*() {

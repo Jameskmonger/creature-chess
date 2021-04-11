@@ -49,10 +49,6 @@ export type AuthenticateResponse = {
   error?: { type: "not_registered" } | { type: "authentication" };
 };
 
-type PlayersResurrectedPacket = {
-  playerIds: string[];
-};
-
 type MatchRewardsPacket = {
   damage: number;
   justDied: boolean;
@@ -73,7 +69,6 @@ export enum ServerToClientPacketOpcodes {
   LEVEL_UPDATE = "levelUpdate",
   FINISH_GAME = "finishGame",
   SHOP_LOCK_UPDATE = "shopLockUpdate",
-  PLAYERS_RESURRECTED = "playersResurrected",
   MATCH_REWARDS = "matchRewards",
   PLAYER_DEAD = "playerDead"
 }
@@ -88,7 +83,6 @@ export type ServerToClientPacketDefinitions = {
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: LevelUpdatePacket,
   [ServerToClientPacketOpcodes.FINISH_GAME]: FinishGamePacket,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
-  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: PlayersResurrectedPacket,
   [ServerToClientPacketOpcodes.MATCH_REWARDS]: MatchRewardsPacket,
   [ServerToClientPacketOpcodes.PLAYER_DEAD]: EmptyPacket,
 };
@@ -103,7 +97,6 @@ export type ServerToClientPacketAcknowledgements = {
   [ServerToClientPacketOpcodes.LEVEL_UPDATE]: never,
   [ServerToClientPacketOpcodes.FINISH_GAME]: never,
   [ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE]: never,
-  [ServerToClientPacketOpcodes.PLAYERS_RESURRECTED]: never,
   [ServerToClientPacketOpcodes.MATCH_REWARDS]: never,
   [ServerToClientPacketOpcodes.PLAYER_DEAD]: never,
 };
