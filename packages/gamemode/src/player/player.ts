@@ -23,7 +23,7 @@ import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces, getPiecesForStage, getPiecesExceptStage } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
-import { GameEvent } from "../events";
+import { GameEvent, gameFinishEvent } from "../events";
 import { updateCardsCommand } from "./cardShop";
 
 enum PlayerEvent {
@@ -339,8 +339,8 @@ export abstract class Player {
         const removeListeners = () => this.events.removeAllListeners();
 
         return function*() {
-            yield takeLatest<GameEvent>(
-                "gameFinishEvent",
+            yield takeLatest(
+                gameFinishEvent.toString(),
                 function*() {
                     removeListeners();
                 }

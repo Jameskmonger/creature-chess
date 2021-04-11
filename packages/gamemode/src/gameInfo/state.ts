@@ -13,7 +13,7 @@ const initialState: GameInfoState = {
     phaseStartedAtSeconds: null,
 };
 
-const { reducer, actions: { setGameInfoCommand } } = createSlice({
+export const { reducer, actions: { setGameInfoCommand } } = createSlice({
     name: "gameInfo",
     initialState,
     reducers: {
@@ -36,6 +36,8 @@ const { reducer, actions: { setGameInfoCommand } } = createSlice({
     }
 });
 
+export type SetGameInfoCommand = ReturnType<typeof setGameInfoCommand>;
+
 const GameInfoCommands = { setGameInfoCommand };
 
-export { reducer, GameInfoCommands };
+export { GameInfoCommands };
