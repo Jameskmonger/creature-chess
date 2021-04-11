@@ -14,7 +14,6 @@ export {
 } from "./game";
 
 export {
-    ConnectionStatus,
     IncomingPacketRegistry, OutgoingPacketRegistry,
     ServerToClientPacketDefinitions, ServerToClientPacketOpcodes, ServerToClientPacketAcknowledgements,
     AuthenticateResponse, PhaseUpdatePacket,

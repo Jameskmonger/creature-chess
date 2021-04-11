@@ -1,4 +1,4 @@
-import { ConnectionStatus } from "@creature-chess/shared";
+import { ConnectionStatus } from "../networking";
 import { Overlay } from "./overlay";
 
 export const OPEN_OVERLAY = "OPEN_OVERLAY";

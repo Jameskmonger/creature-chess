@@ -1,8 +1,6 @@
 import * as ServerToClient from "./server-to-client";
 export { ServerToClient };
 
-export { ConnectionStatus } from "./connection-status";
-
 export { IncomingPacketRegistry } from "./incoming-packet-registry";
 export { OutgoingPacketRegistry } from "./outgoing-packet-registry";
 

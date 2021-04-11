@@ -1,9 +1,10 @@
 import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
-import { PlayerInfoState, GameState, ConnectionStatus } from "@creature-chess/shared";
+import { PlayerInfoState, GameState } from "@creature-chess/shared";
 import { BoardState } from "@creature-chess/board";
 import { Overlay } from "../ui/overlay";
 import { LobbyState } from "../lobby";
 import { UserState } from "../menu/auth/store/reducer";
+import { ConnectionStatus } from "../networking";
 
 export interface AppState {
     user: UserState;

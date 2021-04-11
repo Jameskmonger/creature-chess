@@ -1,7 +1,7 @@
 import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import {
-    ConnectionStatus, GameEvents, IncomingPacketRegistry,
+    GameEvents, IncomingPacketRegistry,
     PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes,
     PlayerEvents, PlayerCommands
 } from "@creature-chess/shared";
@@ -12,6 +12,7 @@ import { GamePhase } from "@creature-chess/models";
 import { closeOverlay, finishGameAction, openOverlay, updateConnectionStatus, clearSelectedPiece } from "../../../ui/actions";
 import { Overlay } from "../../../ui/overlay";
 import { PlayerListCommands } from "../../../game/features";
+import { ConnectionStatus } from "../../connection-status";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
 

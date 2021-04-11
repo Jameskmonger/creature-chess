@@ -5,8 +5,9 @@ import {
     JOIN_ERROR, FINISH_GAME, FinishGameAction,
     SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
 } from "./actions";
-import { ConnectionStatus, GameEvents } from "@creature-chess/shared";
+import { GameEvents } from "@creature-chess/shared";
 import { MenuActions } from "../menu";
+import { ConnectionStatus } from "../networking";
 
 const initialState: UiState = {
     loading: false,
