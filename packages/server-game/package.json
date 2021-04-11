@@ -32,6 +32,7 @@
     "@creature-chess/board": "^0.3.29",
     "@creature-chess/data": "^0.3.30",
     "@creature-chess/models": "^0.3.30",
+    "@creature-chess/networking": "^0.3.30",
     "@creature-chess/shared": "^0.3.30",
     "@types/auth0": "^2.20.8",
     "@types/redux-saga": "^0.10.5",

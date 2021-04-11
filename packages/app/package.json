@@ -30,6 +30,7 @@
     "@creature-chess/battle": "^0.3.30",
     "@creature-chess/board": "^0.3.29",
     "@creature-chess/models": "^0.3.30",
+    "@creature-chess/networking": "^0.3.30",
     "@creature-chess/shared": "^0.3.30",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",

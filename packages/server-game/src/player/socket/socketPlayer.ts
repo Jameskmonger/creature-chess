@@ -1,5 +1,6 @@
 import { Socket } from "socket.io";
-import { OutgoingPacketRegistry, Player, ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes} from "@creature-chess/shared";
+import { Player } from "@creature-chess/shared";
+import { OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
@@ -20,7 +21,7 @@ export class SocketPlayer extends Player {
     public reconnectSocket(socket: Socket) {
         this.initialiseSocket(socket);
 
-        const registry = new OutgoingPacketRegistry<ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketAcknowledgements>(
+        const registry = new OutgoingPacketRegistry<ServerToClient.Menu.PacketDefinitions, ServerToClient.Menu.PacketAcknowledgements>(
             (opcode, payload) => socket.emit(opcode, payload)
         );
 
@@ -30,7 +31,7 @@ export class SocketPlayer extends Player {
         const battleTurn = match ? match.getTurn() : null;
 
         registry.emit(
-            ServerToClientMenuPacketOpcodes.GAME_CONNECTED,
+            ServerToClient.Menu.PacketOpcodes.GAME_CONNECTED,
             {
                 board,
                 bench: this.getBench(),

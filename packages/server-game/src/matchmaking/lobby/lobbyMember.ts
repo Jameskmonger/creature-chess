@@ -1,5 +1,5 @@
-import { OutgoingPacketRegistry, ServerToClientLobbyPacketAcknowledgements, ServerToClientLobbyPacketDefinitions } from "@creature-chess/shared";
 import { Socket } from "socket.io";
+import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 
 export enum LobbyMemberType {
     BOT,
@@ -13,8 +13,8 @@ export type PlayerLobbyMember = {
     net: {
         socket: Socket,
         outgoing: OutgoingPacketRegistry<
-            ServerToClientLobbyPacketDefinitions,
-            ServerToClientLobbyPacketAcknowledgements
+            ServerToClient.Lobby.PacketDefinitions,
+            ServerToClient.Lobby.PacketAcknowledgements
         >
     }
 };

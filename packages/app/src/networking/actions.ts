@@ -1,5 +1,5 @@
-import { LobbyPlayer } from "packages/models/lib";
-import { GameConnectionPacket } from "packages/shared/lib/networking";
+import { LobbyPlayer } from "@creature-chess/models";
+import { ServerToClient } from "@creature-chess/networking";
 
 export const LOBBY_CONNECTED_EVENT = "LOBBY_CONNECTED_EVENT";
 export type LOBBY_CONNECTED_EVENT = typeof LOBBY_CONNECTED_EVENT;
@@ -16,7 +16,7 @@ export type LobbyConnectedEvent = {
     payload: LobbyConnectedEventPayload
 };
 
-export type GameConnectedEvent = { type: GAME_CONNECTED_EVENT, payload: GameConnectionPacket };
+export type GameConnectedEvent = { type: GAME_CONNECTED_EVENT, payload: ServerToClient.Menu.GameConnectionPacket };
 
 export const lobbyConnectedEvent = (lobbyId: string, players: LobbyPlayer[], startTimestamp: number): LobbyConnectedEvent => ({
     type: LOBBY_CONNECTED_EVENT,
@@ -27,4 +27,4 @@ export const lobbyConnectedEvent = (lobbyId: string, players: LobbyPlayer[], sta
     }
 });
 
-export const gameConnectedEvent = (payload: GameConnectionPacket): GameConnectedEvent => ({ type: GAME_CONNECTED_EVENT, payload });
+export const gameConnectedEvent = (payload: ServerToClient.Menu.GameConnectionPacket): GameConnectedEvent => ({ type: GAME_CONNECTED_EVENT, payload });

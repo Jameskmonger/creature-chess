@@ -1,10 +1,11 @@
 import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import {
-    GameEvents, IncomingPacketRegistry,
-    PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes,
+    GameEvents,
+    PlayerInfoCommands,
     PlayerEvents, PlayerCommands
 } from "@creature-chess/shared";
+import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 
 import { startBattle } from "@creature-chess/battle";
 import { BoardSlice } from "@creature-chess/board";
@@ -14,7 +15,7 @@ import { Overlay } from "../../../ui/overlay";
 import { PlayerListCommands } from "../../../game/features";
 import { ConnectionStatus } from "../../connection-status";
 
-type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
+type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
 const readPacketsToActions = function*(
     registry: ServerToClientPacketRegistry,
@@ -30,49 +31,49 @@ const readPacketsToActions = function*(
         });
 
         registry.on(
-            ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE,
+            ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE,
             (packet) => {
                 emit(PlayerListCommands.updatePlayerListCommand(packet));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.BOARD_UPDATE,
+            ServerToClient.Game.PacketOpcodes.BOARD_UPDATE,
             ({ state }) => {
                 emit(boardSlice.commands.setBoardPiecesCommand(state));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.BENCH_UPDATE,
+            ServerToClient.Game.PacketOpcodes.BENCH_UPDATE,
             ({ state }) => {
                 emit(benchSlice.commands.setBoardPiecesCommand(state));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.CARDS_UPDATE,
+            ServerToClient.Game.PacketOpcodes.CARDS_UPDATE,
             (packet) => {
                 emit(PlayerCommands.updateCardsCommand(packet));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE,
+            ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE,
             (packet) => {
                 emit(PlayerCommands.updateShopLockCommand(packet.locked));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.MONEY_UPDATE,
+            ServerToClient.Game.PacketOpcodes.MONEY_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateMoneyCommand(packet));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.LEVEL_UPDATE,
+            ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
                 emit(boardSlice.commands.setPieceLimitCommand(packet.level));
@@ -80,14 +81,14 @@ const readPacketsToActions = function*(
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.MATCH_REWARDS,
+            ServerToClient.Game.PacketOpcodes.MATCH_REWARDS,
             (payload) => {
                 emit(PlayerEvents.playerMatchRewardsEvent(payload));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.FINISH_GAME,
+            ServerToClient.Game.PacketOpcodes.FINISH_GAME,
             (packet) => {
                 emit(finishGameAction(packet.winnerName));
 
@@ -96,7 +97,7 @@ const readPacketsToActions = function*(
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.PHASE_UPDATE,
+            ServerToClient.Game.PacketOpcodes.PHASE_UPDATE,
             (packet) => {
                 // todo this is ugly
                 if (packet.phase === GamePhase.PREPARING) {
@@ -157,7 +158,7 @@ export const incomingGameNetworking = function*(
     socket: SocketIOClient.Socket,
     slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }
 ) {
-    const registry = new IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
+    const registry = new IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
 

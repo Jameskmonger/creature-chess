@@ -18,6 +18,7 @@ COPY packages/battle/package*.json ./packages/battle/
 COPY packages/models/package*.json ./packages/models/
 COPY packages/data/package*.json ./packages/data/
 COPY packages/shared/package*.json ./packages/shared/
+COPY packages/networking/package*.json ./packages/networking/
 
 COPY lerna.json ./
 RUN npm run bootstrap
@@ -37,6 +38,8 @@ COPY packages/battle ./packages/battle
 RUN npm run build -- --scope @creature-chess/battle
 COPY packages/shared ./packages/shared
 RUN npm run build -- --scope @creature-chess/shared
+COPY packages/networking ./packages/networking
+RUN npm run build -- --scope @creature-chess/networking
 COPY packages/auth-server ./packages/auth-server
 RUN npm run build -- --scope @creature-chess/auth-server
 

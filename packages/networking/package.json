@@ -1,0 +1,32 @@
+{
+  "name": "@creature-chess/networking",
+  "version": "0.3.32",
+  "private": true,
+  "description": "Shared network definitions for Creature Chess",
+  "author": "James Monger <jameskmonger@hotmail.co.uk>",
+  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jameskmonger/creature-chess.git"
+  },
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json",
+    "test": "jest"
+  },
+  "bugs": {
+    "url": "https://github.com/Jameskmonger/creature-chess/issues"
+  },
+  "dependencies": {
+    "@creature-chess/board": "^0.3.29",
+    "@creature-chess/models": "^0.3.30",
+    "@creature-chess/shared": "^0.3.30"
+  }
+}

@@ -1,8 +1,6 @@
 import { race, call, takeEvery, put, take, select, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
-import {
-    IncomingPacketRegistry, ServerToClientMenuPacketAcknowledgements, ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketOpcodes
-} from "@creature-chess/shared";
+import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { AppState } from "../../store";
@@ -44,13 +42,13 @@ export const findGame = function*(
         return;
     }
 
-    const registry = new IncomingPacketRegistry<ServerToClientMenuPacketDefinitions, ServerToClientMenuPacketAcknowledgements>(
+    const registry = new IncomingPacketRegistry<ServerToClient.Menu.PacketDefinitions, ServerToClient.Menu.PacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
 
     const channel = eventChannel<LobbyConnectedEvent | GameConnectedEvent>(emit => {
         registry.on(
-            ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED,
+            ServerToClient.Menu.PacketOpcodes.LOBBY_CONNECTED,
             ({ lobbyId, players, startTimestamp }) => {
                 emit(lobbyConnectedEvent(
                     lobbyId,
@@ -61,7 +59,7 @@ export const findGame = function*(
         );
 
         registry.on(
-            ServerToClientMenuPacketOpcodes.GAME_CONNECTED,
+            ServerToClient.Menu.PacketOpcodes.GAME_CONNECTED,
             (payload) => {
                 emit(gameConnectedEvent(payload));
             }

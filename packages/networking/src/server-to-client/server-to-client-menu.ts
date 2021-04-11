@@ -32,17 +32,17 @@ export type GameConnectionPacket = {
   };
 };
 
-export enum ServerToClientMenuPacketOpcodes {
+export enum PacketOpcodes {
   LOBBY_CONNECTED = "lobbyConnected",
   GAME_CONNECTED = "gameConnected"
 }
 
-export type ServerToClientMenuPacketDefinitions = {
-  [ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED]: LobbyConnectionPacket,
-  [ServerToClientMenuPacketOpcodes.GAME_CONNECTED]: GameConnectionPacket
+export type PacketDefinitions = {
+  [PacketOpcodes.LOBBY_CONNECTED]: LobbyConnectionPacket,
+  [PacketOpcodes.GAME_CONNECTED]: GameConnectionPacket
 };
 
-export type ServerToClientMenuPacketAcknowledgements = {
-  [ServerToClientMenuPacketOpcodes.LOBBY_CONNECTED]: never,
-  [ServerToClientMenuPacketOpcodes.GAME_CONNECTED]: never
+export type PacketAcknowledgements = {
+  [PacketOpcodes.LOBBY_CONNECTED]: never,
+  [PacketOpcodes.GAME_CONNECTED]: never
 };

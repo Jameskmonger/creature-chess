@@ -2,16 +2,15 @@ import { Logger } from "winston";
 import { takeLatest, take, fork, takeEvery, put, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
-import {
-    PlayerActions, PlayerEvents, IncomingPacketRegistry, ClientToServerPacketDefinitions,
-    ClientToServerPacketOpcodes, SendPlayerActionsPacket, ClientToServerPacketAcknowledgements, GameEvents
-} from "@creature-chess/shared";
+import { PlayerActions, PlayerEvents, GameEvents } from "@creature-chess/shared";
+import { ClientToServer, IncomingPacketRegistry } from "@creature-chess/networking";
+
 import {
     NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT, receivePlayerActionsEvent,
     ReceivePlayerActionsEvent
 } from "../events";
 
-type IncomingRegistry = IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>;
+type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
 
 export const incomingNetworking = function*(getLogger: () => Logger) {
     let registry: IncomingRegistry;
@@ -22,14 +21,14 @@ export const incomingNetworking = function*(getLogger: () => Logger) {
 
         const channel = eventChannel<ReceivePlayerActionsEvent>(emit => {
             const onReceiveActions = (
-                { index, actions }: SendPlayerActionsPacket,
+                { index, actions }: ClientToServer.SendPlayerActionsPacket,
                 ack: (accepted: boolean, packetIndex?: number) => void
             ) => emit(receivePlayerActionsEvent(index, actions, ack));
 
-            registry.on(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, onReceiveActions);
+            registry.on(ClientToServer.PacketOpcodes.SEND_PLAYER_ACTIONS, onReceiveActions);
 
             // todo create a registry.off function here
-            return () => socket.off(ClientToServerPacketOpcodes.SEND_PLAYER_ACTIONS, onReceiveActions);
+            return () => socket.off(ClientToServer.PacketOpcodes.SEND_PLAYER_ACTIONS, onReceiveActions);
         });
 
         const actionQueue: PlayerActions.PlayerAction[] = [];
@@ -65,10 +64,10 @@ export const incomingNetworking = function*(getLogger: () => Logger) {
         const channel = eventChannel<PlayerEvents.ClientFinishMatchEvent>(emit => {
             const onFinishMatch = () => emit(PlayerEvents.clientFinishMatchEvent());
 
-            registry.on(ClientToServerPacketOpcodes.FINISH_MATCH, onFinishMatch);
+            registry.on(ClientToServer.PacketOpcodes.FINISH_MATCH, onFinishMatch);
 
             // todo create a registry.off function here
-            return () => socket.off(ClientToServerPacketOpcodes.FINISH_MATCH, onFinishMatch);
+            return () => socket.off(ClientToServer.PacketOpcodes.FINISH_MATCH, onFinishMatch);
         });
 
         // take events from channel and put them directly
@@ -88,7 +87,7 @@ export const incomingNetworking = function*(getLogger: () => Logger) {
 
             socket = newSocket;
 
-            registry = new IncomingPacketRegistry<ClientToServerPacketDefinitions, ClientToServerPacketAcknowledgements>(
+            registry = new IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>(
                 (opcode, handler) => socket.on(opcode, handler)
             );
 

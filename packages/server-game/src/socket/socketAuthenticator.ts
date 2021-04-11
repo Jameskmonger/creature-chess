@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import io = require("socket.io");
 import { ManagementClient } from "auth0";
 import { EventEmitter } from "events";
-import { AuthenticateResponse } from "@creature-chess/shared";
+import { ServerToClient } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
 import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth-server";
 
@@ -47,7 +47,7 @@ export class SocketAuthenticator {
         });
     }
 
-    private failAuthentication(socket: io.Socket, response: AuthenticateResponse) {
+    private failAuthentication(socket: io.Socket, response: ServerToClient.Game.AuthenticateResponse) {
 
         socket.emit("authenticate_response", response);
         socket.removeAllListeners();
