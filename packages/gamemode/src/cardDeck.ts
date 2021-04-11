@@ -33,10 +33,8 @@ const isHandBlessed = (level: number) => (Math.floor(Math.random() * 100) * 0.01
 
 export class CardDeck {
     public deck: Card[][];
-    private definitions: CreatureDefinition[];
-    private logger: Logger;
 
-    constructor(definitions: CreatureDefinition[]) {
+    constructor(private logger: Logger, private definitions: CreatureDefinition[]) {
         this.definitions = definitions;
 
         this.deck = [
