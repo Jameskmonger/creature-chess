@@ -1,23 +1,15 @@
-import { combineReducers, ReducersMapObject } from "redux";
-import { playerInfoReducer, gameReducer, PlayerReducers } from "@creature-chess/shared";
+import { ReducersMapObject } from "redux";
 import { BoardSlice } from "@creature-chess/board";
 import { lobbyReducer } from "../lobby";
 import { uiReducer } from "../ui";
 import { userReducer } from "../menu/auth/store/reducer";
 import { AppState } from "./state";
 import { PieceModel } from "@creature-chess/models";
-import { playerListReducer } from "../game/features";
+import { createGameReducer } from "../game";
 
-export const createReducers = ({ boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }): ReducersMapObject<AppState> => ({
+export const createReducers = (slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }): ReducersMapObject<AppState> => ({
     lobby: lobbyReducer,
-    game: combineReducers({
-        gameInfo: gameReducer,
-        board: boardSlice.boardReducer,
-        bench: benchSlice.boardReducer,
-        playerList: playerListReducer,
-        playerInfo: playerInfoReducer,
-        cardShop: PlayerReducers.cardShopReducer,
-    }),
+    game: createGameReducer(slices),
     ui: uiReducer,
     user: userReducer
 });

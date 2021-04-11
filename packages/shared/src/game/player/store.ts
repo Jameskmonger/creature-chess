@@ -10,7 +10,7 @@ import {
     fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory,
     PlayerActionSagas
 } from "./sagas";
-import { gameReducer, GameInfoState } from "../store";
+import { gameInfoReducer, GameInfoState } from "../store";
 import { Logger } from "winston";
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { PieceModel } from "@creature-chess/models";
@@ -53,7 +53,7 @@ export const createPlayerStore = (
             board: slices.boardSlice.boardReducer,
             bench: slices.benchSlice.boardReducer,
             playerInfo: playerInfoReducer,
-            gameInfo: gameReducer,
+            gameInfo: gameInfoReducer,
             cardShop: cardShopReducer
         }),
         applyMiddleware(sagaMiddleware)
