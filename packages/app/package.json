@@ -17,7 +17,7 @@
   "scripts": {
     "build": "npm run copy-images && webpack",
     "start": "npm run build && http-server ./public -p 8090",
-    "dev": "npm run copy-images && webpack-dev-server",
+    "dev": "npm run copy-images && NODE_ENV=development webpack-dev-server",
     "copy-images": "cpy \"./images/**/*\" \"./public/\" --parents",
     "lint": "stylelint \"./src/**/*.scss\""
   },

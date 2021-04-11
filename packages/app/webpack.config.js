@@ -5,7 +5,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const CnameWebpackPlugin = require("cname-webpack-plugin");
-const { DefinePlugin } = require("webpack");
+const { DefinePlugin, EnvironmentPlugin } = require("webpack");
 
 const getCookiebotScript = (id) => {
     if (!id) {
@@ -112,6 +112,9 @@ module.exports = {
     },
 
     plugins: [
+        new EnvironmentPlugin({
+            NODE_ENV: 'production'
+        }),
         new DefinePlugin({
             APP_VERSION: JSON.stringify(require("./package.json").version)
         }),
