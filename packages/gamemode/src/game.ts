@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import { v4 as uuid } from "uuid";
 import { EventEmitter } from "events";
 import { Store } from "redux";
-import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
+import { PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
 import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./game/opponentProvider";
@@ -11,8 +11,9 @@ import { CardDeck } from "./game/cardDeck";
 import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent } from "./game/events";
 import { createGameStore, GameState } from "./game/store";
 import { call, takeLatest } from "@redux-saga/core/effects";
-import { runPlayingPhase, runPreparingPhase, runReadyPhase } from "./game/phases";
 import { RoundInfoCommands, SetRoundInfoCommand } from "./game/roundInfo";
+import { GameSagaDependencies } from "./game/sagas";
+import { gameLoopSaga } from "./game/gameLoop";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -89,21 +90,21 @@ export class Game {
 
             _this.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
 
-            while (true) {
-                yield call(runPreparingPhase, _this.players, _this.options.phaseLengths[GamePhase.PREPARING] * 1000);
+            const sagaDependencies: GameSagaDependencies = {
+                options: _this.options,
+                getMatchups: () => {
+                    _this.updateOpponentProvider();
+                    return _this.opponentProvider.getMatchups();
+                },
 
-                _this.updateOpponentProvider();
-
-                yield call(runReadyPhase, _this.opponentProvider, _this.players, _this.options.phaseLengths[GamePhase.READY] * 1000, _this.options);
-
-                yield call(runPlayingPhase, _this.players, _this.options.phaseLengths[GamePhase.PLAYING] * 1000);
-
-                if (_this.getLivingPlayers().length < 2) {
-                    break;
+                players: {
+                    getAll: () => _this.players,
+                    getLiving: _this.getLivingPlayers,
+                    getById: (id: string) => _this.players.find(p => p.id === id) || null
                 }
-            }
+            };
 
-            const winnerId = _this.getPlayerList()[0].id;
+            const { winnerId } = yield call(gameLoopSaga, sagaDependencies);
 
             const duration = stopwatch(startTime);
 
