@@ -5,10 +5,10 @@ import { Store } from "redux";
 import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
 import { Player } from "./player";
-import { HeadToHeadOpponentProvider, IOpponentProvider } from "./opponentProvider";
-import { PlayerList } from "./playerList";
+import { HeadToHeadOpponentProvider, IOpponentProvider } from "./game/opponentProvider";
+import { PlayerList } from "./game/playerList";
 import { CardDeck } from "./game/cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent } from "./events";
+import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent } from "./game/events";
 import { createGameStore, GameState } from "./game/store";
 import { call, takeLatest } from "@redux-saga/core/effects";
 import { runPlayingPhase, runPreparingPhase, runReadyPhase } from "./game/phases";

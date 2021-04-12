@@ -1,4 +1,4 @@
-import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
+import { MAX_PLAYER_LEVEL } from "./constants";
 
 const LOWER_XP = true;
 

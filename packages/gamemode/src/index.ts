@@ -7,11 +7,9 @@ export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, 
 export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
 
 export { RoundInfoState, roundInfoReducer } from "./game/roundInfo";
-export * as GameEvents from "./events";
+export * as GameEvents from "./game/events";
 export { getDefinitionById } from "./definitions";
 
-export { Match } from "./match";
-export { getXpToNextLevel } from "./getXpToNextLevel";
-
+export { Match } from "./game/match";
 
 export { config } from "./config";

@@ -2,7 +2,7 @@ import { select, race, put , delay } from "@redux-saga/core/effects";
 import { GamePhase, PlayerStatus } from "@creature-chess/models";
 import { RoundInfoCommands } from "../roundInfo";
 import { Player } from "../../player";
-import { readyNotifier } from "../../readyNotifier";
+import { readyNotifier } from "../readyNotifier";
 
 const getLivingPlayers = (players: Player[]) => players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 

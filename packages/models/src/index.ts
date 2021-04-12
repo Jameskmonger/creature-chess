@@ -24,3 +24,4 @@ export { CreatureType } from "./creatureType";
 export { createPieceCombatState, PieceCombatState } from "./pieceCombat";
 
 export { getOptions, GameOptions, defaultOptions as defaultGameOptions } from "./options";
+export { getXpToNextLevel } from "./getXpToNextLevel";

@@ -8,7 +8,7 @@ import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/bo
 
 import { RoundInfoState } from "../game/roundInfo";
 import { CardDeck } from "../game/cardDeck";
-import { Match } from "../match";
+import { Match } from "../game/match";
 import {
     createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry,
     playerBattle, playerMatchRewards,
@@ -23,7 +23,7 @@ import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces, getPiecesForStage, getPiecesExceptStage } from "./pieceSelectors";
 import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
-import { GameEvent, gameFinishEvent } from "../events";
+import { GameEvent, gameFinishEvent } from "../game/events";
 import { updateCardsCommand } from "./cardShop";
 
 enum PlayerEvent {

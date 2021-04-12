@@ -1,5 +1,5 @@
 import shuffle = require("lodash.shuffle");
-import { Player } from "./player";
+import { Player } from "../player";
 
 export interface IOpponentProvider {
     setPlayers(players: Player[]): void;

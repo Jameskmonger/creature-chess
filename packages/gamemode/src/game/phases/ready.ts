@@ -2,8 +2,8 @@ import { put, delay } from "@redux-saga/core/effects";
 import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../roundInfo";
 import { Player } from "../../player";
-import { IOpponentProvider } from "../../opponentProvider";
-import { Match } from "../../match";
+import { IOpponentProvider } from "../opponentProvider";
+import { Match } from "../match";
 
 export const runReadyPhase = function*(opponentProvider: IOpponentProvider, players: Player[], phaseLengthMs: number, options: GameOptions) {
     const matchups = opponentProvider.getMatchups();

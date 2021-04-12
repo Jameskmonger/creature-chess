@@ -6,7 +6,7 @@ import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "r
 import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice } from "@creature-chess/board";
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
-import { Player } from "./player";
+import { Player } from "../player";
 
 interface MatchState {
     board: BoardState<PieceModel>;
