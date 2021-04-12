@@ -1,6 +1,6 @@
 import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
-import { PlayerInfoCommands, PlayerEvents, PlayerCommands } from "@creature-chess/gamemode";
+import { PlayerInfoCommands, PlayerEvents, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
@@ -8,7 +8,6 @@ import { GamePhase } from "@creature-chess/models";
 import { finishGameAction, updateConnectionStatus } from "../../../ui/actions";
 import { PlayerListCommands } from "../../../game/features";
 import { ConnectionStatus } from "../../../game/connection-status";
-import { RoundInfoCommands } from "packages/gamemode/lib/roundInfo";
 import { gameRoundUpdateEvent } from "../../../game/sagas/events";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;

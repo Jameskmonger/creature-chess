@@ -6,7 +6,7 @@ export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./pl
 export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, PlayerMatchRewards } from "./player/playerInfo";
 export { PlayerState, PlayerStore, createPlayerStore } from "./player/store";
 
-export { RoundInfoState, roundInfoReducer } from "./game/roundInfo";
+export { RoundInfoState, roundInfoReducer, RoundInfoCommands } from "./game/roundInfo";
 export * as GameEvents from "./game/events";
 export { getDefinitionById } from "./definitions";
 

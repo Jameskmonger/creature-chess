@@ -9,7 +9,6 @@ import {
     NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT, receivePlayerActionsEvent,
     ReceivePlayerActionsEvent
 } from "../events";
-import { QuitGameAction } from "packages/gamemode/lib/player/actions";
 
 type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
 
@@ -97,7 +96,7 @@ export const incomingNetworking = function*(getLogger: () => Logger) {
         }
     );
 
-    yield take<QuitGameAction | GameEvents.GameFinishEvent>([PlayerActions.QUIT_GAME_ACTION, GameEvents.gameFinishEvent.toString()]);
+    yield take<PlayerActions.QuitGameAction | GameEvents.GameFinishEvent>([PlayerActions.QUIT_GAME_ACTION, GameEvents.gameFinishEvent.toString()]);
     yield delay(100);
 
     socket.removeAllListeners();

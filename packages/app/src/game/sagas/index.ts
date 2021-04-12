@@ -1,6 +1,6 @@
 import { take, fork, put } from "@redux-saga/core/effects";
 
-import { PlayerInfoCommands, PlayerCommands } from "@creature-chess/gamemode";
+import { PlayerInfoCommands, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { BoardSlice } from "@creature-chess/board";
 import { startBattle } from "@creature-chess/battle";
 import { PieceModel } from "@creature-chess/models";
@@ -13,7 +13,6 @@ import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
 import { LobbyEvents } from "../../lobby";
 import { PlayerListCommands } from "../features";
-import { RoundInfoCommands } from "packages/gamemode/lib/roundInfo";
 import { roundUpdateSaga, clientBattleSaga, uiSaga } from "./events";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
