@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { getPlayerMoney } from "@creature-chess/shared";
+import { getPlayerMoney, Player } from "@creature-chess/shared";
 import { AppState } from "../../store";
 import { Overlay } from "../../ui/overlay";
 import { closeOverlay, openOverlay } from "../../ui/actions";
@@ -14,15 +14,33 @@ import { Settings } from "../features/settings";
 import { RoundIndicator } from "../features/roundIndicator";
 import { PhaseInfo } from "../features/phaseInfo";
 import { Help } from "../features/help";
+import { getUserId } from "../../menu/auth/store/selectors";
+
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
     const isActive = useSelector<AppState, boolean>(state => state.ui.currentOverlay === overlay);
 
+    const isDead = useSelector<AppState, boolean>(state => {
+        //stops isDead returning true before game has initialised
+        if (state.playerList.length === 0){
+            return false
+        }
+        const player = state.playerList.find(player => player.id === getUserId(state))
+
+        return player.health <= 0
+    })
+
     const onClick = () => {
         if (isActive) {
             dispatch(closeOverlay());
             return;
+        }
+        //prevent shop being opened when player is dead
+        if (overlay === 1){
+            if (isDead){
+                return;
+            }
         }
 
         dispatch(openOverlay(overlay));
@@ -50,6 +68,7 @@ const OverlayComponent: React.FunctionComponent<{ title: string, children: React
     const dispatch = useDispatch();
     const dispatchCloseOverlay = () => dispatch(closeOverlay());
 
+
     return (
         <div className="game-overlay">
             <div className="overlay-header">
@@ -75,6 +94,7 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
     }
 
     if (currentOverlay === Overlay.SHOP) {
+
         return (
             <OverlayComponent title={`Balance: $${currentBalance}`} fullscreen>
                 <CardShop showBalance={false} />
