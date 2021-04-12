@@ -323,7 +323,7 @@ export class BotPlayer extends Player {
 
         return function*() {
             yield takeLatest<GameEvents.GamePhaseStartedEvent>(
-                "gamePhaseStartedEvent",
+                GameEvents.gamePhaseStartedEvent.toString(),
                 function*({ payload: { phase } }) {
                     if (phase === GamePhase.PREPARING) {
                         preparingPhase();

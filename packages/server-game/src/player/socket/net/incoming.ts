@@ -97,7 +97,7 @@ export const incomingNetworking = function*(getLogger: () => Logger) {
         }
     );
 
-    yield take<QuitGameAction | GameEvents.GameFinishEvent>([PlayerActions.QUIT_GAME_ACTION, "gameFinishEvent"]);
+    yield take<QuitGameAction | GameEvents.GameFinishEvent>([PlayerActions.QUIT_GAME_ACTION, GameEvents.gameFinishEvent.toString()]);
     yield delay(100);
 
     socket.removeAllListeners();
