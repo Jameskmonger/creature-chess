@@ -1,20 +1,15 @@
 import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
-import {
-    GameEvents,
-    PlayerInfoCommands,
-    PlayerEvents, PlayerCommands
-} from "@creature-chess/gamemode";
+import { PlayerInfoCommands, PlayerEvents, PlayerCommands } from "@creature-chess/gamemode";
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
-
-import { startBattle } from "@creature-chess/battle";
 import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
-import { closeOverlay, finishGameAction, openOverlay, updateConnectionStatus, clearSelectedPiece } from "../../../ui/actions";
-import { Overlay } from "../../../ui/overlay";
+
+import { finishGameAction, updateConnectionStatus } from "../../../ui/actions";
 import { PlayerListCommands } from "../../../game/features";
-import { ConnectionStatus } from "../../connection-status";
+import { ConnectionStatus } from "../../../game/connection-status";
 import { RoundInfoCommands } from "packages/gamemode/lib/roundInfo";
+import { gameRoundUpdateEvent } from "../../../game/sagas/events";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
@@ -106,42 +101,8 @@ const readPacketsToActions = function*(
                     ...(packet.phase === GamePhase.PREPARING ? { round: packet.payload.round } : undefined)
                 };
 
-                emit(GameEvents.gamePhaseStartedEvent(update));
                 emit(RoundInfoCommands.setRoundInfoCommand(update));
-
-                switch (packet.phase) {
-                    case GamePhase.PREPARING: {
-                        const { cards, pieces: { board, bench }, round } = packet.payload;
-
-                        emit(boardSlice.commands.setBoardPiecesCommand(board));
-                        emit(benchSlice.commands.setBoardPiecesCommand(bench));
-                        emit(PlayerCommands.updateCardsCommand(cards));
-                        emit(PlayerInfoCommands.clearOpponentCommand());
-                        emit(boardSlice.commands.unlockBoardCommand());
-                        emit(openOverlay(Overlay.SHOP));
-                        return;
-                    }
-                    case GamePhase.READY: {
-                        const { board, bench, opponentId } = packet.payload;
-
-                        if (board) {
-                            emit(boardSlice.commands.setBoardPiecesCommand(board));
-                        }
-
-                        emit(benchSlice.commands.setBoardPiecesCommand(bench));
-                        emit(boardSlice.commands.lockBoardCommand());
-                        emit(closeOverlay());
-                        emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
-                        emit(clearSelectedPiece());
-                        return;
-                    }
-                    case GamePhase.PLAYING: {
-                        emit(startBattle());
-                        return;
-                    }
-                    default:
-                        return;
-                }
+                emit(gameRoundUpdateEvent(packet));
             }
         );
 

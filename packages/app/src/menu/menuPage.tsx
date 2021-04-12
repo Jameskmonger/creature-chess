@@ -5,10 +5,10 @@ import { AppState } from "../store";
 import { getUrlParameter } from "./get-url-parameter";
 import { Footer } from "../ui/display/footer";
 import { Leaderboard } from "./leaderboard";
-import { joinGameError } from "../ui/actions";
 import { Loading } from "../ui/display/loading";
 import { GAME_SERVER_URL } from "./auth/config";
 import { findGameAction } from "./actions";
+import { finishLoading, startLoading } from "./state";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -87,13 +87,16 @@ class MenuPageUnconnected extends React.Component<Props> {
 }
 
 const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => ({
-    loading: state.ui.loading,
-    error: state.ui.menuError
+    loading: state.menu.loading,
+    error: state.menu.error
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onFindGame: (serverIP: string) => dispatch(findGameAction(serverIP)),
-    setError: (error: string) => dispatch(joinGameError(error))
+    onFindGame: (serverIP: string) => {
+        dispatch(startLoading());
+        dispatch(findGameAction(serverIP));
+    },
+    setError: (error: string) => dispatch(finishLoading(error))
 });
 
 const MenuPage = connect(mapStateToProps, mapDispatchToProps)(MenuPageUnconnected);

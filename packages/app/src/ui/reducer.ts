@@ -1,20 +1,16 @@
 import { UiState } from "../store/state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
-    UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, JoinErrorAction,
-    JOIN_ERROR, FINISH_GAME, FinishGameAction,
+    UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, FINISH_GAME, FinishGameAction,
     SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
 } from "./actions";
-import { GameEvents } from "@creature-chess/gamemode";
 import { MenuActions } from "../menu";
-import { ConnectionStatus } from "../networking";
+import { ConnectionStatus } from "../game/connection-status";
 
 const initialState: UiState = {
-    loading: false,
     currentOverlay: null,
     selectedPieceId: null,
     winnerName: null,
-    menuError: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED
 };
 
@@ -23,18 +19,12 @@ type UIAction =
     | CloseOverlayAction
     | SelectPieceAction
     | ClearSelectedPieceAction
-    | JoinErrorAction
     | MenuActions.FindGameAction
     | UpdateConnectionStatusAction
     | FinishGameAction;
 
-export function reducer(state: UiState = initialState, action: UIAction | GameEvents.GamePhaseStartedEvent) {
+export function reducer(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
-        case MenuActions.FIND_GAME:
-            return {
-                ...state,
-                loading: true
-            };
         case UPDATE_CONNECTION_STATUS:
             return {
                 ...state,
@@ -72,18 +62,6 @@ export function reducer(state: UiState = initialState, action: UIAction | GameEv
                 winnerName: action.payload.winnerName
             };
         }
-        case JOIN_ERROR:
-            return {
-                ...state,
-                loading: false,
-                menuError: action.payload.error
-            };
-        case "gamePhaseStartedEvent":
-            return {
-                ...state,
-                loading: false,
-                menuError: null
-            };
         default:
             return state;
     }

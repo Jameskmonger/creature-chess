@@ -1,9 +1,9 @@
-import { take, fork, put, takeLatest } from "@redux-saga/core/effects";
+import { take, fork, put } from "@redux-saga/core/effects";
 
-import { GameEvents, PlayerInfoCommands, PlayerCommands } from "@creature-chess/gamemode";
+import { PlayerInfoCommands, PlayerCommands } from "@creature-chess/gamemode";
 import { BoardSlice } from "@creature-chess/board";
-import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
-import { PieceModel, defaultGameOptions } from "@creature-chess/models";
+import { startBattle } from "@creature-chess/battle";
+import { PieceModel } from "@creature-chess/models";
 
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
 
@@ -13,31 +13,19 @@ import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
 import { LobbyEvents } from "../../lobby";
 import { PlayerListCommands } from "../features";
-import { AppState } from "../../store";
 import { RoundInfoCommands } from "packages/gamemode/lib/roundInfo";
+import { roundUpdateSaga, clientBattleSaga, uiSaga } from "./events";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
     const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
-    yield fork(
-        battleSagaFactory<AppState>(state => state.game.board),
-        defaultGameOptions, slices.boardSlice
-    );
-
-    yield takeLatest<BattleEvents.BattleTurnEvent>(
-        BattleEvents.BATTLE_TURN_EVENT,
-        function*({ payload: { board }}: BattleEvents.BattleTurnEvent) {
-            yield put(slices.boardSlice.commands.setBoardPiecesCommand({
-                pieces: board.pieces,
-                piecePositions: board.piecePositions,
-                size: undefined // todo improve this
-            }));
-        }
-    );
-
     yield fork(preventAccidentalClose);
     yield fork(closeShopOnFirstBuy);
     yield fork(clickToDrop);
+
+    yield fork(roundUpdateSaga, slices);
+    yield fork(clientBattleSaga, slices);
+    yield fork(uiSaga);
 
     if (action && action.payload) {
         const { payload: {
@@ -57,7 +45,6 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
         yield put(PlayerListCommands.updatePlayerListCommand(players));
 
         const update = { phase, startedAt: phaseStartedAtSeconds };
-        yield put(GameEvents.gamePhaseStartedEvent(update));
         yield put(RoundInfoCommands.setRoundInfoCommand(update))
 
         if (battleTurn !== null) {

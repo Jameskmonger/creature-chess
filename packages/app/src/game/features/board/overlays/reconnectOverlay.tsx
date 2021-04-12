@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../../store";
+import { ConnectionStatus } from "../../../connection-status";
 import { BoardOverlay } from "./boardOverlay";
-import { ConnectionStatus } from "../../../../networking";
 
 const ReconnectOverlay: React.FunctionComponent = () => {
     const connectionStatus = useSelector<AppState, ConnectionStatus>(state => state.ui.connectionStatus);
