@@ -67,7 +67,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
     const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 
     const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.gameInfo.phase === GamePhase.PREPARING);
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
     return (
         <div className="group board-container style-default">

@@ -1,6 +1,6 @@
 import { put, delay } from "@redux-saga/core/effects";
 import { GameOptions, GamePhase } from "@creature-chess/models";
-import { GameInfoCommands } from "../../gameInfo";
+import { RoundInfoCommands } from "../roundInfo";
 import { Player } from "../../player";
 import { IOpponentProvider } from "../../opponentProvider";
 import { Match } from "../../match";
@@ -23,7 +23,7 @@ export const runReadyPhase = function*(opponentProvider: IOpponentProvider, play
 
     const phase = GamePhase.READY;
     const startedAt = Date.now() / 1000;
-    yield put(GameInfoCommands.setGameInfoCommand({ phase, startedAt }));
+    yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
 
     yield delay(phaseLengthMs);
 };

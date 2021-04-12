@@ -14,7 +14,7 @@ import { closeOverlay, finishGameAction, openOverlay, updateConnectionStatus, cl
 import { Overlay } from "../../../ui/overlay";
 import { PlayerListCommands } from "../../../game/features";
 import { ConnectionStatus } from "../../connection-status";
-import { GameInfoCommands } from "packages/gamemode/lib/gameInfo";
+import { RoundInfoCommands } from "packages/gamemode/lib/roundInfo";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
@@ -107,7 +107,7 @@ const readPacketsToActions = function*(
                 };
 
                 emit(GameEvents.gamePhaseStartedEvent(update));
-                emit(GameInfoCommands.setGameInfoCommand(update));
+                emit(RoundInfoCommands.setRoundInfoCommand(update));
 
                 switch (packet.phase) {
                     case GamePhase.PREPARING: {

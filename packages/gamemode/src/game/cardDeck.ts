@@ -2,6 +2,7 @@ import { Logger } from "winston";
 import { v4 as uuid } from "uuid";
 import shuffle = require("lodash.shuffle");
 import { CreatureDefinition, Card, PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
+import { getAllDefinitions, getDefinitionById } from "../definitions";
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [
@@ -34,24 +35,18 @@ const isHandBlessed = (level: number) => (Math.floor(Math.random() * 100) * 0.01
 export class CardDeck {
     public deck: Card[][];
 
-    constructor(private logger: Logger, private definitions: CreatureDefinition[]) {
-        this.definitions = definitions;
-
+    constructor(private logger: Logger) {
         this.deck = [
             [], [], [], [], []
         ];
 
-        this.definitions.filter(d => d.cost).forEach(d => {
+        getAllDefinitions().filter(d => d.cost).forEach(d => {
             for (let count = 0; count < CARD_LEVEL_QUANTITIES[d.cost - 1]; count++) {
                 this.addDefinition(d);
             }
         });
 
         this.shuffle();
-    }
-
-    public setLogger(logger: Logger) {
-        this.logger = logger;
     }
 
     public reroll(input: Card[], count: number, level: number, blessCandidates: number[], excludeCards: number[] = []) {
@@ -72,7 +67,7 @@ export class CardDeck {
     }
 
     public addPiece(piece: PieceModel) {
-        const definition = this.definitions.find(p => p.id === piece.definitionId);
+        const definition = getDefinitionById(piece.definitionId);
 
         const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
 
@@ -125,7 +120,7 @@ export class CardDeck {
     private takeCard(level: number, isBlessed: boolean, blessCandidates: number[], excludeDefinitions: number[]) {
         if (isBlessed && blessCandidates.length > 0) {
             for (const candidate of shuffle(blessCandidates)) {
-                const definition = this.definitions.find(p => p.id === candidate);
+                const definition = getDefinitionById(candidate);
                 const deck = this.getDeckForCost(definition.cost);
 
                 const index = deck.findIndex(c => c.definitionId === candidate);

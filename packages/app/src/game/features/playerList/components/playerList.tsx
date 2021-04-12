@@ -27,7 +27,7 @@ const PlayerList: React.FunctionComponent = () => {
     const players = useSelector<AppState, PlayerListPlayer[]>(state => state.game.playerList);
     const opponentId = useSelector<AppState, string>(state => state.game.playerInfo.opponentId);
     const localPlayerId = useSelector<AppState, string>(getUserId);
-    const showReadyIndicators = useSelector<AppState, boolean>(state => state.game.gameInfo.phase === GamePhase.PREPARING);
+    const showReadyIndicators = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
     const localPlayerMoney = useSelector<AppState, number>(state => getPlayerMoney(state.game));
     const localPlayerLevel = useSelector<AppState, number>(state => getPlayerLevel(state.game));

@@ -6,8 +6,8 @@ import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
-import { GameInfoState } from "../gameInfo";
-import { CardDeck } from "../cardDeck";
+import { RoundInfoState } from "../game/roundInfo";
+import { CardDeck } from "../game/cardDeck";
 import { Match } from "../match";
 import {
     createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry,
@@ -46,7 +46,7 @@ export abstract class Player {
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
-    protected getGameInfoState: () => GameInfoState;
+    protected getRoundInfoState: () => RoundInfoState;
     protected getPlayerListPlayers: () => PlayerListPlayer[];
 
     private events = new EventEmitter();
@@ -97,8 +97,8 @@ export abstract class Player {
         return this.propertyUpdateRegistry;
     }
 
-    public setGetGameInfoState(fn: () => GameInfoState) {
-        this.getGameInfoState = fn;
+    public setGetRoundInfoState(fn: () => RoundInfoState) {
+        this.getRoundInfoState = fn;
     }
 
     public setGetPlayerListPlayers(fn: () => PlayerListPlayer[]) {

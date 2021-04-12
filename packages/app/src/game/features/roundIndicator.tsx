@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "../../store";
 
 const RoundIndicator: React.FunctionComponent = () => {
-    const round = useSelector<AppState, number>(state => state.game.gameInfo.round);
+    const round = useSelector<AppState, number>(state => state.game.roundInfo.round);
 
     if (round === null) {
         return null;

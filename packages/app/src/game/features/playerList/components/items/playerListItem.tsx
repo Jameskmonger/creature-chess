@@ -29,7 +29,7 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 
 const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpponent, isLocal, showReadyIndicator = false, level = null, money = null }) => {
     const player = useSelector<AppState, PlayerListPlayer>(state => state.game.playerList.find(p => p.id === playerId));
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.gameInfo.phase === GamePhase.PREPARING);
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
     const readyClassName = (player.ready && showReadyIndicator) ? "ready" : "not-ready";
 
     const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;

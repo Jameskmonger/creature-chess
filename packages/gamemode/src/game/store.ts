@@ -1,9 +1,9 @@
 import { applyMiddleware, combineReducers, createStore, Store } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { gameInfoReducer, GameInfoState } from "../gameInfo";
+import { roundInfoReducer, RoundInfoState } from "./roundInfo";
 
 export type GameState = {
-    gameInfo: GameInfoState
+    roundInfo: RoundInfoState
 };
 
 export const createGameStore = () => {
@@ -11,7 +11,7 @@ export const createGameStore = () => {
 
     const store: Store<GameState> = createStore(
         combineReducers<GameState>({
-            gameInfo: gameInfoReducer,
+            roundInfo: roundInfoReducer,
         }),
         applyMiddleware(sagaMiddleware)
     );

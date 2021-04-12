@@ -11,7 +11,7 @@ import { updateCardsCommand } from "../../cardShop";
 
 const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
-    const inPreparingPhase = state.gameInfo.phase === GamePhase.PREPARING;
+    const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
     if (belowPieceLimit && inPreparingPhase) {
         const boardSlot = BoardSelectors.getFirstEmptySlot(state.board, sortPositions);

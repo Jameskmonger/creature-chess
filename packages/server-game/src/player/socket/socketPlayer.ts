@@ -35,7 +35,7 @@ export class SocketPlayer extends Player {
             {
                 board,
                 bench: this.getBench(),
-                game: this.getGameInfoState(),
+                game: this.getRoundInfoState(),
                 players: this.getPlayerListPlayers(),
                 battleTurn,
                 playerInfo: {

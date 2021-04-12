@@ -37,7 +37,7 @@ export const xpSagaFactory = <TState extends PlayerState>({ boardSlice }: { boar
             yield put(updateLevelCommand(level, xp));
 
             if (level !== oldLevel) {
-                const inPreparingPhase: boolean = yield select((state: TState) => state.gameInfo.phase === GamePhase.PREPARING);
+                const inPreparingPhase: boolean = yield select((state: TState) => state.roundInfo.phase === GamePhase.PREPARING);
 
                 if (inPreparingPhase) {
                     yield put(boardSlice.commands.setPieceLimitCommand(level));

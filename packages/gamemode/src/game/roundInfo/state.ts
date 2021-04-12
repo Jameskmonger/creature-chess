@@ -1,23 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GamePhase } from "@creature-chess/models";
 
-export type GameInfoState = {
+export type RoundInfoState = {
     round: number | null;
     phase: GamePhase | null;
     phaseStartedAtSeconds: number;
 };
 
-const initialState: GameInfoState = {
+const initialState: RoundInfoState = {
     round: null,
     phase: null,
     phaseStartedAtSeconds: null,
 };
 
-export const { reducer, actions: { setGameInfoCommand } } = createSlice({
-    name: "gameInfo",
+export const { reducer, actions: { setRoundInfoCommand } } = createSlice({
+    name: "roundInfo",
     initialState,
     reducers: {
-        setGameInfoCommand: (state, command: PayloadAction<{ phase: GamePhase, startedAt: number, round?: number }>) => {
+        setRoundInfoCommand: (state, command: PayloadAction<{ phase: GamePhase, startedAt: number, round?: number }>) => {
             if (command.payload.round) {
                 return {
                     ...state,
@@ -36,8 +36,8 @@ export const { reducer, actions: { setGameInfoCommand } } = createSlice({
     }
 });
 
-export type SetGameInfoCommand = ReturnType<typeof setGameInfoCommand>;
+export type SetRoundInfoCommand = ReturnType<typeof setRoundInfoCommand>;
 
-const GameInfoCommands = { setGameInfoCommand };
+const RoundInfoCommands = { setRoundInfoCommand };
 
-export { GameInfoCommands };
+export { RoundInfoCommands };

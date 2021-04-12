@@ -1,6 +1,6 @@
 import * as Models from "@creature-chess/models";
 import { BoardState } from "@creature-chess/board";
-import { GameInfoState } from "@creature-chess/gamemode";
+import { RoundInfoState } from "@creature-chess/gamemode";
 
 type LobbyConnectionPacket = {
     lobbyId: string;
@@ -26,7 +26,7 @@ export type GameConnectionPacket = {
     cards: Models.Card[];
   };
 
-  game: GameInfoState;
+  game: RoundInfoState;
 };
 
 export enum PacketOpcodes {

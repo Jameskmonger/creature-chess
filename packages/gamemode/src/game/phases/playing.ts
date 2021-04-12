@@ -2,7 +2,7 @@ import pDefer = require("p-defer");
 import { select, put } from "@redux-saga/core/effects";
 import delay from "delay";
 import { GamePhase, PlayerStatus } from "@creature-chess/models";
-import { GameInfoCommands } from "../../gameInfo";
+import { RoundInfoCommands } from "../roundInfo";
 import { Player } from "../../player";
 
 const getLivingPlayers = (players: Player[]) => players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
@@ -14,13 +14,13 @@ export const runPlayingPhase = function*(players: Player[], phaseLengthMs: numbe
     const phase = GamePhase.PLAYING;
     const startedAt = Date.now() / 1000;
 
-    yield put(GameInfoCommands.setGameInfoCommand({ phase, startedAt }));
+    yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
 
     const promises = getLivingPlayers(players).map(p => p.fightMatch(startedAt, battleTimeoutDeferred));
 
     yield Promise.all(promises);
 
-    const round: number = yield select(state => state.gameInfo.round);
+    const round: number = yield select(state => state.roundInfo.round);
 
     for (const player of players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round)) {
         player.kill();

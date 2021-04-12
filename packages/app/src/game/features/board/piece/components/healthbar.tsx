@@ -14,8 +14,8 @@ interface HealthbarProps {
 
 const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical = false, pieceIsOnBench = false }) => {
     const showHealthbar = useSelector<AppState, boolean>(state => (
-        state.game.gameInfo.phase === GamePhase.READY
-        || state.game.gameInfo.phase === GamePhase.PLAYING
+        state.game.roundInfo.phase === GamePhase.READY
+        || state.game.roundInfo.phase === GamePhase.PLAYING
     ));
 
     const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));

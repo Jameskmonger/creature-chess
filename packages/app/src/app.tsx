@@ -27,7 +27,7 @@ enum GameState {
 }
 
 const gameStateSelector = (state: AppState) => {
-    if (state.game.gameInfo.phase !== null) {
+    if (state.game.roundInfo.phase !== null) {
         return GameState.GAME;
     }
 

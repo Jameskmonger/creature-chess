@@ -2,12 +2,12 @@ import { combineReducers } from "redux";
 import { BoardSlice } from "@creature-chess/board";
 import { playerListReducer } from "../game/features";
 
-import { GameInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, gameInfoReducer } from "@creature-chess/gamemode";
+import { RoundInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, roundInfoReducer } from "@creature-chess/gamemode";
 import { BoardState } from "@creature-chess/board";
 import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 
 export type GameState = {
-    gameInfo: GameInfoState;
+    roundInfo: RoundInfoState;
     board: BoardState<PieceModel>;
     bench: BoardState<PieceModel>;
 
@@ -21,7 +21,7 @@ export type GameState = {
 
 export const createGameReducer = ({ boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) =>
     combineReducers({
-        gameInfo: gameInfoReducer,
+        roundInfo: roundInfoReducer,
         board: boardSlice.boardReducer,
         bench: benchSlice.boardReducer,
         playerList: playerListReducer,

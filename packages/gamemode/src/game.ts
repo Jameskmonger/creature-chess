@@ -7,13 +7,12 @@ import { GamePhase, PlayerListPlayer, PlayerStatus, GameOptions, getOptions } fr
 import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
-import { CardDeck } from "./cardDeck";
+import { CardDeck } from "./game/cardDeck";
 import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent } from "./events";
-import { getAllDefinitions } from "./definitions";
 import { createGameStore, GameState } from "./game/store";
 import { call, takeLatest } from "@redux-saga/core/effects";
 import { runPlayingPhase, runPreparingPhase, runReadyPhase } from "./game/phases";
-import { setGameInfoCommand, SetGameInfoCommand } from "./gameInfo/state";
+import { RoundInfoCommands, SetRoundInfoCommand } from "./game/roundInfo";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -48,7 +47,7 @@ export class Game {
         this.options = getOptions(options);
         this.logger = createLogger(this.id);
 
-        this.deck = new CardDeck(this.logger, getAllDefinitions());
+        this.deck = new CardDeck(this.logger);
 
         this.playerList.onUpdate(this.onPlayerListUpdate);
 
@@ -72,7 +71,7 @@ export class Game {
         const _this = this;
 
         return function*() {
-            yield takeLatest<SetGameInfoCommand>(setGameInfoCommand.toString(), function*({ payload }) {
+            yield takeLatest<SetRoundInfoCommand>(RoundInfoCommands.setRoundInfoCommand.toString(), function*({ payload }) {
                 _this.dispatchPublicGameEvent(gamePhaseStartedEvent(payload));
             });
         }
@@ -108,7 +107,7 @@ export class Game {
 
             const duration = stopwatch(startTime);
 
-            _this.logger.info(`Match complete in ${(duration)} ms (${_this.store.getState().gameInfo.round} rounds)`);
+            _this.logger.info(`Match complete in ${(duration)} ms (${_this.store.getState().roundInfo.round} rounds)`);
 
             // teardown
             _this.opponentProvider = null;
@@ -142,7 +141,7 @@ export class Game {
         this.playerList.addPlayer(player);
 
         player.setDeck(this.deck);
-        player.setGetGameInfoState(() => this.store.getState().gameInfo);
+        player.setGetRoundInfoState(() => this.store.getState().roundInfo);
         player.setGetPlayerListPlayers(this.playerList.getValue);
     }
 
