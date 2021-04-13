@@ -1,15 +1,15 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { Provider as ReduxProvider } from "react-redux";
+import { BrowserRouter, useHistory } from "react-router-dom";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 
 import "pepjs";
 import "./ui/display/style/index.scss";
 
-import { Provider as ReduxProvider } from "react-redux";
-import { BrowserRouter, useHistory } from "react-router-dom";
 import { createAppStore } from "./store/store";
 import { App } from "./app";
-import { auth0Config } from "./menu/auth/config";
+import { auth0Config } from "./auth/config";
 
 const BrowserRouterChild: React.FunctionComponent = () => {
     const history = useHistory();

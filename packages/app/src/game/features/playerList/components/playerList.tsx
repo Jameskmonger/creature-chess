@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
 import { getPlayerMoney, getPlayerLevel } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
-import { getUserId } from "../../../../menu/auth/store/selectors";
+import { getUserId } from "../../../../auth";
 import { PlayerListItem } from "./items/playerListItem";
 import { StatusPlayerListItem } from "./items/statusPlayerListItem";
 

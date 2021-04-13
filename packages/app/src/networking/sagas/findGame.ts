@@ -3,8 +3,6 @@ import { eventChannel } from "redux-saga";
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { AppState } from "../../store";
-import { isLoggedIn } from "../../menu/auth/store/selectors";
 import { LobbyCommands } from "../../lobby";
 import { MenuActions } from "../../menu";
 import { getSocket } from "../socket";
@@ -22,14 +20,6 @@ export const findGame = function*(
     slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
     const findGameAction: MenuActions.FindGameAction = yield take(MenuActions.FIND_GAME);
-
-    const state: AppState = yield select();
-
-    // this should never happen, but it doesn't hurt to be safe
-    if (!isLoggedIn(state)) {
-        auth.loginWithRedirect();
-        return;
-    }
 
     const idToken = yield call(auth.getAccessTokenSilently);
 

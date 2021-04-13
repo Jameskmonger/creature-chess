@@ -1,6 +1,6 @@
 import { BoardSelectors } from "@creature-chess/board";
-import { getUserId } from "../../../menu/auth/store/selectors";
 
+import { getUserId } from "../../../auth";
 import { AppState } from "../../../store/state";
 
 export const ownedPieceCountSelector = (state: AppState) => {

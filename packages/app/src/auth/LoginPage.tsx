@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Footer } from "../../ui/display/footer";
-import { Loading } from "../../ui/display/loading";
-import { Segment } from "../../ui/display/segment";
+
+import { Footer, Loading, Segment } from "../ui";
 
 const LoginPage: React.FunctionComponent = () => {
     const { loginWithRedirect, isLoading } = useAuth0();

@@ -2,7 +2,7 @@ import { fork } from "@redux-saga/core/effects";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { findGame } from "../networking";
-import { loadUserSaga } from "../menu/auth/store/saga";
+import { loadUserSaga } from "../auth";
 import { gameSaga } from "../game";
 
 export const rootSaga = function*(

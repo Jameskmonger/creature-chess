@@ -3,7 +3,7 @@ import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { lobbyReducer } from "../lobby";
 import { uiReducer } from "../ui";
-import { userReducer } from "../menu/auth/store/reducer";
+import { userReducer } from "../auth";
 import { menuReducer } from "../menu";
 import { AppState } from "./state";
 import { createGameReducer } from "../game";

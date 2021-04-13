@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
-import { ProgressBar } from "../../../../../ui/display/progressBar";
-import { getUserId } from "../../../../../menu/auth/store/selectors";
+import { ProgressBar } from "../../../../../ui";
+import { getUserId } from "../../../../../auth";
 
 interface HealthbarProps {
     pieceId: string;
