@@ -13,6 +13,8 @@ import {
 } from "./sagas";
 import { roundInfoReducer, RoundInfoState } from "../game/roundInfo";
 import { cardShopReducer, CardShopState } from "./cardShop";
+import { PlayerSagaContext } from "./sagaContext";
+import { playerGameActionsSaga } from "./playerGameActions";
 
 export interface PlayerState {
     board: BoardState<PieceModel>;
@@ -27,30 +29,39 @@ export type PlayerStore = Store<PlayerState>;
 export const createPlayerStore = (
     getLogger: () => Logger,
     playerId: string,
-    name: string,
-    slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+    playerName: string,
+    boardSlices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([
-            yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<PlayerState>(getLogger, slices, playerId, name)),
-            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(getLogger, playerId, name)),
-            yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(slices, playerId)),
+            yield fork(playerGameActionsSaga),
+            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(getLogger, playerId, playerName)),
+            yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(boardSlices, playerId)),
             yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<PlayerState>()),
             yield fork(PlayerActionSagas.toggleShopLockPlayerActionSagaFactory<PlayerState>()),
-            yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<PlayerState>(slices)),
-            yield fork(evolutionSagaFactory<PlayerState>(slices)),
+            yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<PlayerState>(boardSlices)),
+            yield fork(evolutionSagaFactory<PlayerState>(boardSlices)),
             yield fork(healthSagaFactory<PlayerState>()),
-            yield fork(xpSagaFactory<PlayerState>(slices)),
+            yield fork(xpSagaFactory<PlayerState>(boardSlices)),
             yield fork(fillBoardSagaFactory<PlayerState>(playerId))
         ]);
     };
 
-    const sagaMiddleware = createSagaMiddleware();
+    const sagaMiddleware = createSagaMiddleware<PlayerSagaContext>({
+        context: {
+            playerId,
+            playerName,
+            boardSlices,
+            dependencies: {
+                getLogger
+            }
+        }
+    });
 
     const store = createStore(
         combineReducers<PlayerState>({
-            board: slices.boardSlice.boardReducer,
-            bench: slices.benchSlice.boardReducer,
+            board: boardSlices.boardSlice.boardReducer,
+            bench: boardSlices.benchSlice.boardReducer,
             playerInfo: playerInfoReducer,
             roundInfo: roundInfoReducer,
             cardShop: cardShopReducer

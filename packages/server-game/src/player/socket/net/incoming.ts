@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import { takeLatest, take, fork, takeEvery, put, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
-import { PlayerActions, PlayerEvents, GameEvents } from "@creature-chess/gamemode";
+import { PlayerActions, PlayerEvents, GameEvents, PlayerGameActions } from "@creature-chess/gamemode";
 import { ClientToServer, IncomingPacketRegistry } from "@creature-chess/networking";
 
 import {
@@ -37,7 +37,10 @@ export const incomingNetworking = function*(getLogger: () => Logger) {
             // todo refactor this client+server to make use of the array
             const { payload: { index, actions: [action] } }: ReceivePlayerActionsEvent = yield take(channel);
 
-            const validAction = PlayerActions.PlayerActionTypesArray.includes(action.type);
+            const validAction = (
+                PlayerGameActions.PlayerGameActionTypesArray.includes(action.type)
+                || PlayerActions.PlayerActionTypesArray.includes(action.type)
+            );
             if (!validAction) {
                 getLogger().error(`Unhandled player action type: ${action.type}`);
 
