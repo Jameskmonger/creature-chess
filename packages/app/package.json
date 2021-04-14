@@ -36,6 +36,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
     "@reduxjs/toolkit": "^1.5.1",
+    "@sentry/react": "^6.2.5",
+    "@sentry/tracing": "^6.2.5",
     "@types/react": "^16.8.7",
     "@types/react-dom": "^16.8.2",
     "@types/react-redux": "^7.1.2",

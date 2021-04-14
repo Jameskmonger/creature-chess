@@ -113,7 +113,8 @@ module.exports = {
 
     plugins: [
         new EnvironmentPlugin({
-            NODE_ENV: 'production'
+            NODE_ENV: 'production',
+            SENTRY_DSN: ''
         }),
         new DefinePlugin({
             APP_VERSION: JSON.stringify(require("./package.json").version)

@@ -26,6 +26,7 @@ This is just on a tiny server for demo purposes so it might not work all the tim
     - Set `Allowed Web Origins` = "https://creaturechess.local-dev.com:8090"
   - Modify `packages/gamemode/src/config/config.local.ts` and change `auth0` config to match your two auth0 apps
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
+- **(optional)** A Sentry.io DSN in `SENTRY_DSN`
 
 ### Running
 
