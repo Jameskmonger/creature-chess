@@ -131,10 +131,6 @@ export abstract class Player {
         return this.store.getState().playerInfo.money;
     }
 
-    public isDead() {
-        return this.store.getState().playerInfo.dead;
-    }
-
     public getShopLocked() {
         return this.store.getState().cardShop.locked;
     }
@@ -254,6 +250,10 @@ export abstract class Player {
 
     public isAlive() {
         return isPlayerAlive(this.store.getState());
+    }
+
+    public isDead() {
+        return !this.isAlive();
     }
 
     public getRoundDiedAt() {

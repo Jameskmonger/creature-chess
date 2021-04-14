@@ -9,7 +9,7 @@ const renderPhaseInfoCountdown = (secondsRemaining: number) => <span className="
 const PhaseInfo: React.FunctionComponent = () => {
     const phase = useSelector<AppState, GamePhase>(state => state.game.roundInfo.phase);
     const phaseStartedAtSeconds = useSelector<AppState, number>(state => state.game.roundInfo.phaseStartedAtSeconds);
-    const isDead = useSelector<AppState, boolean>(state => state.game.playerInfo.dead);
+    const isDead = useSelector<AppState, boolean>(state => state.game.playerInfo.health === 0);
 
     if (isDead) {
         return <div className="phase-info">You are dead</div>;
