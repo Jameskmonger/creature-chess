@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { REROLL_COST } from "@creature-chess/models";
-import { PlayerActions, getPlayerMoney } from "@creature-chess/gamemode";
+import { getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
 import { AppState } from "../../../store";
 
 const RerollButton: React.FunctionComponent<{ afterReroll: () => void }> = ({ afterReroll }) => {
@@ -10,7 +10,7 @@ const RerollButton: React.FunctionComponent<{ afterReroll: () => void }> = ({ af
 
   const buyable = money >= REROLL_COST;
   const onBuy = () => {
-    dispatch(PlayerActions.rerollCardsAction());
+    dispatch(PlayerGameActions.rerollCardsPlayerAction());
     afterReroll();
   };
 

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../../store";
 import { Constants, getXpToNextLevel } from "@creature-chess/models";
 import { PieceCount } from "./pieceCount";
-import { PlayerActions, getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerSelectors } from "@creature-chess/gamemode";
+import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
 import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
@@ -49,7 +49,7 @@ const Profile: React.FunctionComponent = () => {
                     && (
                         <button
                             className="buy-xp"
-                            onClick={() => dispatch(PlayerActions.buyXpAction())}
+                            onClick={() => dispatch(PlayerGameActions.buyXpPlayerAction())}
                         >Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})</button>
                     )
                 }

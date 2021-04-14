@@ -35,10 +35,7 @@ export const createPlayerStore = (
     const rootSaga = function*() {
         yield all([
             yield fork(playerGameActionsSaga),
-            yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<PlayerState>(getLogger, playerId, playerName)),
             yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(boardSlices, playerId)),
-            yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<PlayerState>()),
-            yield fork(PlayerActionSagas.toggleShopLockPlayerActionSagaFactory<PlayerState>()),
             yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<PlayerState>(boardSlices)),
             yield fork(evolutionSagaFactory<PlayerState>(boardSlices)),
             yield fork(healthSagaFactory<PlayerState>()),

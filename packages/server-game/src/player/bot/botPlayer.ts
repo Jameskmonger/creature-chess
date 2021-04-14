@@ -156,7 +156,7 @@ export class BotPlayer extends Player {
                 return;
             }
 
-            this.store.dispatch(PlayerActions.buyXpAction());
+            this.store.dispatch(PlayerGameActions.buyXpPlayerAction());
             await delay(BOT_ACTION_TIME_MS);
         }
     }
