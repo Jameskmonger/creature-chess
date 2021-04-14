@@ -68,6 +68,13 @@ const readPacketsToActions = function*(
         );
 
         registry.on(
+            ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE,
+            (packet) => {
+                emit(PlayerInfoCommands.updateHealthCommand(packet));
+            }
+        );
+
+        registry.on(
             ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));

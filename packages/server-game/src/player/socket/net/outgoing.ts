@@ -177,6 +177,14 @@ export const outgoingNetworking = function*(
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE, { level, xp });
                 }
+            ),
+            yield takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
+                PlayerInfoCommands.UPDATE_HEALTH_COMMAND,
+                function*() {
+                    const health: number = yield select((state: PlayerState) => state.playerInfo.health);
+
+                    registry.emit(ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE, health);
+                }
             )
         ]);
     };
