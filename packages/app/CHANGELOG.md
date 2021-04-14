@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.38](https://github.com/Jameskmonger/creature-chess/compare/v0.3.37...v0.3.38) (2021-04-14)
+
+
+### Features
+
+* add sentry.io insrumentation ([92a6599](https://github.com/Jameskmonger/creature-chess/commit/92a6599a59e83c0f43e566edfda455aa052c651f))
+
+
+
+
+
 ## [0.3.37](https://github.com/Jameskmonger/creature-chess/compare/v0.3.36...v0.3.37) (2021-04-12)
 
 
