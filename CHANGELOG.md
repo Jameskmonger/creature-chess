@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.41](https://github.com/Jameskmonger/creature-chess/compare/v0.3.40...v0.3.41) (2021-04-14)
+
+
+### Features
+
+* add 'up to 8 players' text ([59c9fc6](https://github.com/Jameskmonger/creature-chess/commit/59c9fc68a1f93c53c3aa9f6a2df85c0d8427ab02))
+
+
+
+
+
 ## [0.3.40](https://github.com/Jameskmonger/creature-chess/compare/v0.3.39...v0.3.40) (2021-04-14)
 
 **Note:** Version bump only for package creature-chess
