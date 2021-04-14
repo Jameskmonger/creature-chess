@@ -64,10 +64,6 @@ export class Game {
         return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId);
     }
 
-    public getPlayerList() {
-        return this.playerList.getValue();
-    }
-
     private sendPublicEventsSagaFactory = () => {
         const _this = this;
 
