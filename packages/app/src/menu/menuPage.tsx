@@ -47,6 +47,7 @@ class MenuPageUnconnected extends React.Component<Props> {
 
                     <div className="blurb">
                         <p>More fun with friends! Press "Find Game" at the same time to play together</p>
+                        <p>Up to 8 players!</p>
                     </div>
 
                     <button onClick={this.onFindGameClick} className="find-game">Find Game</button>
