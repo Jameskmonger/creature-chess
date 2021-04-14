@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.39](https://github.com/Jameskmonger/creature-chess/compare/v0.3.38...v0.3.39) (2021-04-14)
+
+
+### Bug Fixes
+
+* allow sentry-trace header ([98c47ec](https://github.com/Jameskmonger/creature-chess/commit/98c47ecec103d94ca4fefd1d1f543e2c4a385de7))
+
+
+
+
+
 ## [0.3.37](https://github.com/Jameskmonger/creature-chess/compare/v0.3.36...v0.3.37) (2021-04-12)
 
 **Note:** Version bump only for package @creature-chess/server-info

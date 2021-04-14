@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.39](https://github.com/Jameskmonger/creature-chess/compare/v0.3.38...v0.3.39) (2021-04-14)
+
+
+### Bug Fixes
+
+* sync health with client correctly ([6cacba5](https://github.com/Jameskmonger/creature-chess/commit/6cacba5a716e1cda007c31de04dacfd9ce513a69))
+
+
+
+
+
 ## [0.3.38](https://github.com/Jameskmonger/creature-chess/compare/v0.3.37...v0.3.38) (2021-04-14)
 
 
