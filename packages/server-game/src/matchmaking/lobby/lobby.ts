@@ -42,6 +42,10 @@ export class Lobby {
     }
 
     public canJoin() {
+        if (this.getFreeSlotCount() === 0){
+            console.log("no free slots")
+            console.log(this.members)
+        }
         return this.gameStarted === false && this.getFreeSlotCount() > 0;
     }
 
@@ -70,7 +74,7 @@ export class Lobby {
 
     public addConnection(socket: Socket, id: string, name: string) {
         if (this.canJoin() === false) {
-            throw Error(`Player ${id} tried to join game that was not joinable`);
+            throw Error(`Player ${id} tried to join game ${this.id} that was not joinable`);
         }
 
         const playerChangedIndex = this.createPlayerLobbyMember(socket, id, name);

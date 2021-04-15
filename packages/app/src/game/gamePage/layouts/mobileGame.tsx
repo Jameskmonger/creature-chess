@@ -18,11 +18,17 @@ import { Help } from "../../features/help";
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
     const isActive = useSelector<AppState, boolean>(state => state.ui.currentOverlay === overlay);
+    const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health !== 0)
 
     const onClick = () => {
         if (isActive) {
             dispatch(closeOverlay());
             return;
+        }
+        if (overlay === Overlay.SHOP) {
+            if (!canUseShop) {
+                return
+            }
         }
 
         dispatch(openOverlay(overlay));
