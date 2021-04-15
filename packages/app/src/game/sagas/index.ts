@@ -1,46 +1,30 @@
-import { take, fork, put, takeLatest } from "@redux-saga/core/effects";
-import { preventAccidentalClose } from "../../game/sagas/actions/preventAccidentalClose";
-import { closeShopOnFirstBuy } from "../features/cardShop/closeShopOnFirstBuy";
-import { announcement } from "./actions/announcement";
+import { take, fork, put } from "@redux-saga/core/effects";
 
-import {
-    DefinitionProvider,
-    GameEvents, PlayerInfoCommands, PlayerCommands
-} from "@creature-chess/shared";
+import { PlayerInfoCommands, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { BoardSlice } from "@creature-chess/board";
-import { battleSaga, startBattle, BattleEvents } from "@creature-chess/battle";
-import { clickToDrop } from "./actions/clickToDrop";
-import { PieceModel, defaultGameOptions } from "@creature-chess/models";
+import { startBattle } from "@creature-chess/battle";
+import { PieceModel } from "@creature-chess/models";
+
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
 
-import {
+import { clickToDrop } from "./actions/clickToDrop";
+import { closeShopOnFirstBuy } from "./actions/closeShopOnFirstBuy";
+import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
-} from "@creature-chess/shared";
-import { playerListUpdated } from "../features/playerList/playerListActions";
-import { LobbyGameStartedEvent, LOBBY_GAME_STARTED_EVENT } from "../../lobby/store/actions";
+import { LobbyEvents } from "../../lobby";
+import { PlayerListCommands } from "../features";
+import { roundUpdateSaga, clientBattleSaga, uiSaga } from "./events";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
-    const action = yield take<GameConnectedEvent | LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LOBBY_GAME_STARTED_EVENT]);
-
-    // const definitionProvider = new DefinitionProvider();
-
-    yield fork(battleSaga, defaultGameOptions, slices.boardSlice);
-
-    yield takeLatest<BattleEvents.BattleTurnEvent>(
-        BattleEvents.BATTLE_TURN_EVENT,
-        function*({ payload: { board }}: BattleEvents.BattleTurnEvent) {
-            yield put(slices.boardSlice.commands.setBoardPiecesCommand({
-                pieces: board.pieces,
-                piecePositions: board.piecePositions,
-                size: undefined // todo improve this
-            }));
-        }
-    );
+    const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
     yield fork(preventAccidentalClose);
-    yield fork(announcement);
     yield fork(closeShopOnFirstBuy);
     yield fork(clickToDrop);
+
+    yield fork(roundUpdateSaga, slices);
+    yield fork(clientBattleSaga, slices);
+    yield fork(uiSaga);
 
     if (action && action.payload) {
         const { payload: {
@@ -57,8 +41,10 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
         yield put(PlayerInfoCommands.updateMoneyCommand(money));
         yield put(PlayerCommands.updateCardsCommand(cards));
         yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
-        yield put(playerListUpdated(players));
-        yield put(GameEvents.gamePhaseStartedEvent(phase, phaseStartedAtSeconds));
+        yield put(PlayerListCommands.updatePlayerListCommand(players));
+
+        const update = { phase, startedAt: phaseStartedAtSeconds };
+        yield put(RoundInfoCommands.setRoundInfoCommand(update))
 
         if (battleTurn !== null) {
             yield put(startBattle(battleTurn));
@@ -69,7 +55,7 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
     // yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<AppState>()),
     // yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<AppState>()),
     // yield fork(PlayerActionSagas.toggleShopLockSaga<AppState>()),
-    // yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<AppState>(definitionProvider, playerId)),
+    // yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<AppState>(playerId)),
     // yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<AppState>()),
     // yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<AppState>(playerId)),
     // yield fork(PlayerSagas.xpSagaFactory<AppState>()),

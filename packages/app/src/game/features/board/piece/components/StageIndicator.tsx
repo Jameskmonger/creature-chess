@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/shared";
+import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 
 interface StageIndicatorProps {
@@ -9,7 +9,7 @@ interface StageIndicatorProps {
 }
 
 const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ pieceId }) => {
-    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
+    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
 
     if (!piece || piece.stage === 0) {
         return null;

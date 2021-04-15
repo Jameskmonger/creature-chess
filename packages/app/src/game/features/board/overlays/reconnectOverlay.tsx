@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../../store";
-import { ConnectionStatus } from "@creature-chess/shared";
+import { ConnectionStatus } from "../../../connection-status";
 import { BoardOverlay } from "./boardOverlay";
 
 const ReconnectOverlay: React.FunctionComponent = () => {

@@ -5,7 +5,7 @@ import shuffle = require("lodash.shuffle");
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { SocketPlayer, BotPlayer } from "../player";
-import { Game } from "@creature-chess/shared";
+import { Game } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
@@ -102,12 +102,6 @@ export class Matchmaking {
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
 
-        const game = new Game();
-
-        const logger = createWinstonLogger(`match-${game.id}`);
-
-        game.setLogger(logger);
-
         const players = members.map(m => {
             if (m.type === LobbyMemberType.BOT) {
                 const picture = pictures.pop();
@@ -125,17 +119,9 @@ export class Matchmaking {
             }
         });
 
-        game.start(players);
+        const game = new Game(id => createWinstonLogger(`match-${id}`), players);
 
-        logger.info(`Game ${game.id} started from lobby ${id}`);
-
-        const realPlayers = players
-            .filter(p => (p as SocketPlayer).isConnection)
-            .map(p => ({
-                id: p.id,
-                name: p.name
-            }));
-        logger.info(`Game started with ${realPlayers.length} real players: ${realPlayers.map(p => p.name).join(", ")}`, game.id);
+        this.logger.info(`Game ${game.id} started from lobby ${id}`);
 
         players
             .forEach(p => {
@@ -151,16 +137,12 @@ export class Matchmaking {
             });
 
         game.onFinish((winner) => {
-            logger.info(`Game finished`, game.id);
-
             if ((winner as SocketPlayer).isConnection) {
                 this.database.user.addWin(winner.id);
-                logger.info(`Game won by player ${winner.name}`, game.id);
             }
 
             if ((winner as BotPlayer).isBot) {
                 this.database.bot.addWin(winner.id);
-                logger.info(`Game won by bot '${winner.name}'`, game.id);
             }
 
             this.games.delete(game.id);

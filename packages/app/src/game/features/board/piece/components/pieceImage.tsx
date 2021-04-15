@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/shared";
+import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 import { CreatureImage } from "../../../../../ui/display/creatureImage";
 
@@ -10,7 +10,7 @@ interface PieceImageProps {
 }
 
 const PieceImage: React.FunctionComponent<PieceImageProps> = ({ pieceId }) => {
-    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state, pieceId));
+    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
 
     if (!piece) {
         return null;

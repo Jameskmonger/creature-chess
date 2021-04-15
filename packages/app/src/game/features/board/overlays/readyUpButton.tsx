@@ -2,11 +2,11 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../../store";
 import { GamePhase } from "@creature-chess/models";
-import { PlayerActions } from "@creature-chess/shared";
+import { PlayerActions } from "@creature-chess/gamemode";
 
 const ReadyUpButton: React.FunctionComponent = () => {
     const canReadyUp = useSelector<AppState, boolean>(
-        state => state.game.phase === GamePhase.PREPARING && state.playerInfo.ready === false);
+        state => state.game.roundInfo.phase === GamePhase.PREPARING && state.game.playerInfo.ready === false);
 
     const dispatch = useDispatch();
 

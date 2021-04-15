@@ -1,13 +1,13 @@
 import * as React from "react";
-import { connect, MapDispatchToProps, MapStateToProps, useDispatch } from "react-redux";
+import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AppState } from "../store";
+import { Footer, Loading } from "../ui";
+import { GAME_SERVER_URL } from "../auth/config";
 import { getUrlParameter } from "./get-url-parameter";
-import { Footer } from "../ui/display/footer";
 import { Leaderboard } from "./leaderboard";
-import { findGameAction, joinGameError } from "../ui/actions";
-import { Loading } from "../ui/display/loading";
-import { GAME_SERVER_URL } from "./auth/config";
+import { findGameAction } from "./actions";
+import { finishLoading, startLoading } from "./state";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;
@@ -47,6 +47,7 @@ class MenuPageUnconnected extends React.Component<Props> {
 
                     <div className="blurb">
                         <p>More fun with friends! Press "Find Game" at the same time to play together</p>
+                        <p>Up to 8 players!</p>
                     </div>
 
                     <button onClick={this.onFindGameClick} className="find-game">Find Game</button>
@@ -86,13 +87,16 @@ class MenuPageUnconnected extends React.Component<Props> {
 }
 
 const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => ({
-    loading: state.ui.loading,
-    error: state.ui.menuError
+    loading: state.menu.loading,
+    error: state.menu.error
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onFindGame: (serverIP: string) => dispatch(findGameAction(serverIP)),
-    setError: (error: string) => dispatch(joinGameError(error))
+    onFindGame: (serverIP: string) => {
+        dispatch(startLoading());
+        dispatch(findGameAction(serverIP));
+    },
+    setError: (error: string) => dispatch(finishLoading(error))
 });
 
 const MenuPage = connect(mapStateToProps, mapDispatchToProps)(MenuPageUnconnected);

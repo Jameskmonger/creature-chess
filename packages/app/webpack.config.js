@@ -5,7 +5,15 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const CnameWebpackPlugin = require("cname-webpack-plugin");
-const { DefinePlugin } = require("webpack");
+const { DefinePlugin, EnvironmentPlugin } = require("webpack");
+
+const getCookiebotScript = (id) => {
+    if (!id) {
+        return "";
+    }
+
+    return `<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="${id}" data-blockingmode="auto" type="text/javascript"></script>`;
+};
 
 const getGAScript = (id) => {
     if (!id) {
@@ -104,6 +112,10 @@ module.exports = {
     },
 
     plugins: [
+        new EnvironmentPlugin({
+            NODE_ENV: 'production',
+            SENTRY_DSN: ''
+        }),
         new DefinePlugin({
             APP_VERSION: JSON.stringify(require("./package.json").version)
         }),
@@ -111,7 +123,8 @@ module.exports = {
             template: "./index.ejs",
             templateParameters: () => ({
                 googleAnalyticsScript: getGAScript(process.env.GA_ID),
-                ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES)
+                ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES),
+                cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID)
             }),
             scriptLoading: "blocking"
         }),

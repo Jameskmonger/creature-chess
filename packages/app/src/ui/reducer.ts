@@ -1,21 +1,16 @@
 import { UiState } from "../store/state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
-    AnnouncementClearAction, AnnouncementUpdateAction, CLEAR_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT,
-    UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, JoinErrorAction,
-    FindGameAction, FIND_GAME, JOIN_ERROR, FINISH_GAME, FinishGameAction,
+    UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, FINISH_GAME, FinishGameAction,
     SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
 } from "./actions";
-import { ConnectionStatus, GameEvents } from "@creature-chess/shared";
+import { MenuActions } from "../menu";
+import { ConnectionStatus } from "../game/connection-status";
 
 const initialState: UiState = {
-    loading: false,
     currentOverlay: null,
     selectedPieceId: null,
     winnerName: null,
-    mainAnnouncement: null,
-    subAnnouncement: null,
-    menuError: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED
 };
 
@@ -24,20 +19,12 @@ type UIAction =
     | CloseOverlayAction
     | SelectPieceAction
     | ClearSelectedPieceAction
-    | AnnouncementUpdateAction
-    | AnnouncementClearAction
-    | JoinErrorAction
-    | FindGameAction
+    | MenuActions.FindGameAction
     | UpdateConnectionStatusAction
     | FinishGameAction;
 
-export function reducer(state: UiState = initialState, action: UIAction | GameEvents.GamePhaseStartedEvent) {
+export function reducer(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
-        case FIND_GAME:
-            return {
-                ...state,
-                loading: true
-            };
         case UPDATE_CONNECTION_STATUS:
             return {
                 ...state,
@@ -75,32 +62,6 @@ export function reducer(state: UiState = initialState, action: UIAction | GameEv
                 winnerName: action.payload.winnerName
             };
         }
-        case UPDATE_ANNOUNCEMENT: {
-            return {
-                ...state,
-                mainAnnouncement: action.payload.main,
-                subAnnouncement: action.payload.sub
-            };
-        }
-        case CLEAR_ANNOUNCEMENT: {
-            return {
-                ...state,
-                mainAnnouncement: null,
-                subAnnouncement: null
-            };
-        }
-        case JOIN_ERROR:
-            return {
-                ...state,
-                loading: false,
-                menuError: action.payload.error
-            };
-        case GameEvents.GAME_PHASE_STARTED_EVENT:
-            return {
-                ...state,
-                loading: false,
-                menuError: null
-            };
         default:
             return state;
     }

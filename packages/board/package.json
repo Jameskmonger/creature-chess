@@ -1,6 +1,6 @@
 {
   "name": "@creature-chess/board",
-  "version": "0.3.29",
+  "version": "0.3.36",
   "description": "Board used in Creature Chess",
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",

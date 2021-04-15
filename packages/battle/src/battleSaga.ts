@@ -101,11 +101,13 @@ const battleEventChannel = (
     }, buffers.expanding(bufferSize));
 };
 
-export const battleSaga = function*(gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
+export const battleSagaFactory = <TState>(
+    boardSelector: (state: TState) => BoardState<PieceModel>
+) => function*(gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
     yield takeEvery<StartBattleCommand>(
         START_BATTLE,
         function*({ payload: { turn } }) {
-            const board: BoardState<PieceModel> = yield select(state => state.board);
+            const board: BoardState<PieceModel> = yield select(boardSelector);
 
             // todo no need for the channel here. this can just run synchronously in a loop
             const battleChannel = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);

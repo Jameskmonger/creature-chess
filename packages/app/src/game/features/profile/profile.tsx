@@ -2,21 +2,21 @@ import * as React from "react";
 import { ProgressBar } from "../../../ui/display/progressBar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../../store";
-import { Constants } from "@creature-chess/models";
+import { Constants, getXpToNextLevel } from "@creature-chess/models";
 import { PieceCount } from "./pieceCount";
-import { PlayerActions, getPlayerLevel, getPlayerXp, getXpToNextLevel, getPlayerMoney, PlayerSelectors } from "@creature-chess/shared";
+import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
 import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 
 const Profile: React.FunctionComponent = () => {
     const dispatch = useDispatch();
-    const level = useSelector<AppState, number>(getPlayerLevel);
-    const xp = useSelector<AppState, number>(getPlayerXp);
-    const money = useSelector<AppState, number>(getPlayerMoney);
+    const level = useSelector<AppState, number>(state => getPlayerLevel(state.game));
+    const xp = useSelector<AppState, number>(state => getPlayerXp(state.game));
+    const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
     // todo reselect
     const health = useSelector<AppState, number | null>(state => {
-        const player = state.playerList.find(p => p.id === state.user.user.id);
+        const player = state.game.playerList.find(p => p.id === state.user.user.id);
 
         return player ? player.health : null;
     });
@@ -49,7 +49,7 @@ const Profile: React.FunctionComponent = () => {
                     && (
                         <button
                             className="buy-xp"
-                            onClick={() => dispatch(PlayerActions.buyXpAction())}
+                            onClick={() => dispatch(PlayerGameActions.buyXpPlayerAction())}
                         >Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})</button>
                     )
                 }

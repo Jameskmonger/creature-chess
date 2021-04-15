@@ -1,7 +1,7 @@
 {
     "watch": [
         "./",
-        "../shared",
+        "../gamemode",
         "../models",
         "../data"
     ],

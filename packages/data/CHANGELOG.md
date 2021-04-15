@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.30](https://github.com/Jameskmonger/creature-chess/compare/v0.3.29...v0.3.30) (2021-04-11)
+
+
+### Bug Fixes
+
+* move bot creation after index creation ([a6de766](https://github.com/Jameskmonger/creature-chess/commit/a6de766e5b3968f95efc83feb5cb2dda3e37119a))
+
+
+
+
+
 ## [0.3.28](https://github.com/Jameskmonger/creature-chess/compare/v0.3.25...v0.3.28) (2021-04-09)
 
 **Note:** Version bump only for package @creature-chess/data

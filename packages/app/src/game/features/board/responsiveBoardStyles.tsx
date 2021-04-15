@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Constants } from "@creature-chess/models";
-import { useWindowSize } from "../../use-window-size";
+import { useWindowSize } from "./use-window-size";
 
 const inPortraitMode = (width: number, height: number) => (height >= width);
 

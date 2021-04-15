@@ -1,2 +1,7 @@
-export { LobbyState, reducer as lobbyReducer, lobbyCommands } from "./store";
+export {
+    LobbyState,
+    reducer as lobbyReducer,
+    LobbyCommands
+} from "./state";
+export * as LobbyEvents from "./events";
 export { LobbyPage } from "./lobbyPage";

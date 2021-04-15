@@ -9,8 +9,9 @@ import * as Constants from "./constants";
 export { Constants };
 export * from "./constants";
 
+export { validateNickname } from "./nickname";
 export { GamePhase } from "./game-phase";
-
+export { PLAYER_TITLES } from "./titles";
 export { SanitizedUser } from "./user";
 
 export {
@@ -23,3 +24,4 @@ export { CreatureType } from "./creatureType";
 export { createPieceCombatState, PieceCombatState } from "./pieceCombat";
 
 export { getOptions, GameOptions, defaultOptions as defaultGameOptions } from "./options";
+export { getXpToNextLevel } from "./getXpToNextLevel";

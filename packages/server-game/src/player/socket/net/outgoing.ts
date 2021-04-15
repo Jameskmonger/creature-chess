@@ -3,14 +3,15 @@ import { takeLatest, take, fork, all, select, delay } from "@redux-saga/core/eff
 import { Socket } from "socket.io";
 import {
     PlayerActions, PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match,
-    OutgoingPacketRegistry, ServerToClientPacketOpcodes, ServerToClientPacketDefinitions,
-    ServerToClientPacketAcknowledgements, PhaseUpdatePacket
-} from "@creature-chess/shared";
+} from "@creature-chess/gamemode";
+
+import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
+
 import { BoardState, BoardSlice } from "@creature-chess/board";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
 import { Card, GamePhase } from "@creature-chess/models";
 
-type OutgoingRegistry = OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
+type OutgoingRegistry = OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
 export const outgoingNetworking = function*(
     getLogger: () => Logger,
@@ -23,12 +24,12 @@ export const outgoingNetworking = function*(
 
     const sendGamePhaseUpdates = function*() {
         yield takeLatest<GameEvents.GamePhaseStartedEvent>(
-            GameEvents.GAME_PHASE_STARTED_EVENT,
+            GameEvents.gamePhaseStartedEvent.toString(),
             function*({ payload: { phase, startedAt, round } }) {
                 if (phase === GamePhase.PREPARING) {
                     const { board, bench, cardShop: { cards } }: PlayerState = yield select();
 
-                    const packet: PhaseUpdatePacket = {
+                    const packet: ServerToClient.Game.PhaseUpdatePacket = {
                         startedAtSeconds: startedAt,
                         phase: GamePhase.PREPARING,
                         payload: {
@@ -41,7 +42,7 @@ export const outgoingNetworking = function*(
                         }
                     };
 
-                    registry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+                    registry.emit(ServerToClient.Game.PacketOpcodes.PHASE_UPDATE, packet);
                 } else if (phase === GamePhase.READY) {
                     const { bench, playerInfo: { health } }: PlayerState = yield select();
 
@@ -63,7 +64,7 @@ export const outgoingNetworking = function*(
                             ? match.away.id
                             : match.home.id;
 
-                    const packet: PhaseUpdatePacket = {
+                    const packet: ServerToClient.Game.PhaseUpdatePacket = {
                         startedAtSeconds: startedAt,
                         phase: GamePhase.READY,
                         payload: {
@@ -73,11 +74,11 @@ export const outgoingNetworking = function*(
                         }
                     };
 
-                    registry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+                    registry.emit(ServerToClient.Game.PacketOpcodes.PHASE_UPDATE, packet);
                 } else if (phase === GamePhase.PLAYING) {
-                    const packet: PhaseUpdatePacket = { startedAtSeconds: startedAt, phase: GamePhase.PLAYING };
+                    const packet: ServerToClient.Game.PhaseUpdatePacket = { startedAtSeconds: startedAt, phase: GamePhase.PLAYING };
 
-                    registry.emit(ServerToClientPacketOpcodes.PHASE_UPDATE, packet);
+                    registry.emit(ServerToClient.Game.PacketOpcodes.PHASE_UPDATE, packet);
                 }
             }
         );
@@ -85,28 +86,22 @@ export const outgoingNetworking = function*(
 
     const sendAnnouncements = function*() {
         yield all([
-            takeLatest<GameEvents.PlayersResurrectedEvent>(
-                GameEvents.PLAYERS_RESURRECTED_EVENT,
-                function*({ payload: { playerIds } }) {
-                    registry.emit(ServerToClientPacketOpcodes.PLAYERS_RESURRECTED, { playerIds });
-                }
-            ),
             takeLatest<PlayerEvents.PlayerDeathEvent>(
                 PlayerEvents.PLAYER_DEATH_EVENT,
                 function*() {
-                    registry.emit(ServerToClientPacketOpcodes.PLAYER_DEAD, { empty: true });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.PLAYER_DEAD, { empty: true });
                 }
             ),
             takeLatest<PlayerEvents.PlayerMatchRewardsEvent>(
                 PlayerEvents.PLAYER_MATCH_REWARDS_EVENT,
                 function*({ payload }: PlayerEvents.PlayerMatchRewardsEvent) {
-                    registry.emit(ServerToClientPacketOpcodes.MATCH_REWARDS, payload);
+                    registry.emit(ServerToClient.Game.PacketOpcodes.MATCH_REWARDS, payload);
                 }
             ),
             takeLatest<GameEvents.GameFinishEvent>(
-                GameEvents.GAME_FINISH_EVENT,
+                GameEvents.gameFinishEvent.toString(),
                 function*({ payload: { winnerName } }) {
-                    registry.emit(ServerToClientPacketOpcodes.FINISH_GAME, { winnerName });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.FINISH_GAME, { winnerName });
                 }
             )
         ]);
@@ -114,9 +109,9 @@ export const outgoingNetworking = function*(
 
     const sendPlayerListUpdates = function*() {
         yield takeLatest<GameEvents.PlayerListChangedEvent>(
-            GameEvents.PLAYER_LIST_CHANGED_EVENT,
+            GameEvents.playerListChangedEvent.toString(),
             function*({ payload: { players } }) {
-                registry.emit(ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE, players);
+                registry.emit(ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE, players);
             }
         );
     };
@@ -133,7 +128,7 @@ export const outgoingNetworking = function*(
                 function*() {
                     const bench: BoardState = yield select((state: PlayerState) => state.bench);
 
-                    registry.emit(ServerToClientPacketOpcodes.BENCH_UPDATE, { state: bench });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.BENCH_UPDATE, { state: bench });
                 }
             ),
             yield takeLatest(
@@ -146,7 +141,7 @@ export const outgoingNetworking = function*(
                 function*() {
                     const board: BoardState = yield select((state: PlayerState) => state.board);
 
-                    registry.emit(ServerToClientPacketOpcodes.BOARD_UPDATE, { state: board });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.BOARD_UPDATE, { state: board });
                 }
             ),
 
@@ -155,7 +150,7 @@ export const outgoingNetworking = function*(
                 function*() {
                     const cards: Card[] = yield select((state: PlayerState) => state.cardShop.cards);
 
-                    registry.emit(ServerToClientPacketOpcodes.CARDS_UPDATE, cards);
+                    registry.emit(ServerToClient.Game.PacketOpcodes.CARDS_UPDATE, cards);
                 }
             ),
             yield takeLatest(
@@ -163,7 +158,7 @@ export const outgoingNetworking = function*(
                 function*() {
                     const locked: boolean = yield select((state: PlayerState) => state.cardShop.locked);
 
-                    registry.emit(ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE, { locked });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE, { locked });
                 }
             ),
             yield takeLatest<PlayerInfoCommands.UpdateMoneyCommand>(
@@ -171,7 +166,7 @@ export const outgoingNetworking = function*(
                 function*() {
                     const money: number = yield select((state: PlayerState) => state.playerInfo.money);
 
-                    registry.emit(ServerToClientPacketOpcodes.MONEY_UPDATE, money);
+                    registry.emit(ServerToClient.Game.PacketOpcodes.MONEY_UPDATE, money);
                 }
             ),
             yield takeLatest<PlayerInfoCommands.UpdateLevelCommand>(
@@ -180,7 +175,15 @@ export const outgoingNetworking = function*(
                     const level: number = yield select((state: PlayerState) => state.playerInfo.level);
                     const xp: number = yield select((state: PlayerState) => state.playerInfo.xp);
 
-                    registry.emit(ServerToClientPacketOpcodes.LEVEL_UPDATE, { level, xp });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE, { level, xp });
+                }
+            ),
+            yield takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
+                PlayerInfoCommands.UPDATE_HEALTH_COMMAND,
+                function*() {
+                    const health: number = yield select((state: PlayerState) => state.playerInfo.health);
+
+                    registry.emit(ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE, health);
                 }
             )
         ]);
@@ -191,7 +194,7 @@ export const outgoingNetworking = function*(
         function*({ payload: { socket: newSocket } }) {
             socket = newSocket;
 
-            registry = new OutgoingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
+            registry = new OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
                 (opcode, payload, ack) => socket.emit(opcode, payload, ack)
             );
 
@@ -202,7 +205,7 @@ export const outgoingNetworking = function*(
         }
     );
 
-    yield take([PlayerActions.QUIT_GAME_ACTION, GameEvents.GAME_FINISH_EVENT]);
+    yield take<PlayerActions.QuitGameAction | GameEvents.GameFinishEvent>([PlayerActions.QUIT_GAME_ACTION, GameEvents.gameFinishEvent.toString()]);
     yield delay(100);
 
     socket.removeAllListeners();

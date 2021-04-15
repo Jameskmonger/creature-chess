@@ -1,16 +1,16 @@
+import { createWinstonLogger } from "./log";
 import { startServer } from "./server";
-import { log } from "@creature-chess/shared";
+
+const logger = createWinstonLogger("global");
 
 if (process.argv[2] === undefined) {
-    log("Arguments: [port]");
+    logger.error("Arguments: [port]");
     process.exit(1);
 }
 
 const port = parseInt(process.argv[2], 10);
 
-log("");
-log("Server running with settings:");
-log("   PORT: " + port);
-log("");
+logger.info("Server running with settings:");
+logger.info("   PORT: " + port);
 
-startServer(port);
+startServer(logger, port);

@@ -1,6 +1,6 @@
 import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
 import { Card, PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
-import { Player, PlayerActions, PlayerState, PlayerEvents, GameEvents, PlayerSelectors, getAllPieces } from "@creature-chess/shared";
+import { Player, PlayerActions, PlayerGameActions, PlayerState, PlayerEvents, GameEvents, getDefinitionById, getAllPieces } from "@creature-chess/gamemode";
 import { BoardSelectors } from "@creature-chess/board"
 import uuid = require("uuid");
 import delay from "delay";
@@ -119,13 +119,13 @@ const getFirstBenchPiece = (state: PlayerState): PieceModel => {
 }
 const getBenchSlotForPiece = (state: PlayerState, pieceId: string): number => {
     for (let x = 0; x < state.bench.size.width; x++) {
-      if (state.bench.piecePositions[`${x},0`] === pieceId) {
-        return x;
-      }
+        if (state.bench.piecePositions[`${x},0`] === pieceId) {
+            return x;
+        }
     }
 
     return null;
-  };
+};
 const getPieceCountForDefinition =
     (state: PlayerState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
@@ -156,7 +156,7 @@ export class BotPlayer extends Player {
                 return;
             }
 
-            this.store.dispatch(PlayerActions.buyXpAction());
+            this.store.dispatch(PlayerGameActions.buyXpPlayerAction());
             await delay(BOT_ACTION_TIME_MS);
         }
     }
@@ -204,9 +204,12 @@ export class BotPlayer extends Player {
             return;
         }
 
-        const definition = this.definitionProvider.get(card.definitionId);
+        const definition = getDefinitionById(card.definitionId);
 
-        this.store.dispatch(PlayerActions.buyCardAction(card.index, PREFERRED_LOCATIONS[definition.class]));
+        this.store.dispatch(PlayerGameActions.buyCardPlayerAction({
+            index: card.index,
+            sortPositions: PREFERRED_LOCATIONS[definition.class]
+        }));
         await delay(BOT_ACTION_TIME_MS);
     }
 
@@ -279,7 +282,7 @@ export class BotPlayer extends Player {
     }
 
     private getPieceView = (piece: PieceModel): PieceView => {
-        const { cost } = this.definitionProvider.get(piece.definitionId);
+        const { cost } = getDefinitionById(piece.definitionId);
         const amountOwned = getPieceCountForDefinition(this.store.getState(), piece.definitionId);
 
         return {
@@ -323,7 +326,7 @@ export class BotPlayer extends Player {
 
         return function*() {
             yield takeLatest<GameEvents.GamePhaseStartedEvent>(
-                GameEvents.GAME_PHASE_STARTED_EVENT,
+                GameEvents.gamePhaseStartedEvent.toString(),
                 function*({ payload: { phase } }) {
                     if (phase === GamePhase.PREPARING) {
                         preparingPhase();

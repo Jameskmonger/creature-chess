@@ -1,18 +1,20 @@
 import * as React from "react";
-import { DefinitionProvider } from "@creature-chess/shared";
+import { Card } from "@creature-chess/models";
 import { CreatureImage } from "../../../ui/display";
 import { TypeIndicator } from "../board/piece/components/TypeIndicator";
+import { useSelector } from "react-redux";
+import { AppState } from "../../../store";
+import { getPlayerMoney } from "@creature-chess/gamemode";
 
 interface CardProps {
-    definitionId: number;
-    buyable: boolean;
+    card: Card;
     selected: boolean;
-    definitionProvider: DefinitionProvider;
     onClick?: () => void;
 }
 
-const Card: React.FunctionComponent<CardProps> = ({ definitionProvider, definitionId, buyable, onClick, selected }) => {
-    const creature = definitionProvider.get(definitionId);
+const Card: React.FunctionComponent<CardProps> = ({ card, onClick, selected }) => {
+    const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
+    const buyable = money >= card.cost;
 
     const cardClassName = `card${selected ? " selected" : ""}`;
 
@@ -21,20 +23,20 @@ const Card: React.FunctionComponent<CardProps> = ({ definitionProvider, definiti
             <div className="card-content">
                 <div className="card-content-group">
                     <div className="half">
-                        <TypeIndicator type={creature.type} />
+                        <TypeIndicator type={card.type} />
                     </div>
                     <div className="half">
-                        <span>${creature.cost}</span>
+                        <span>${card.cost}</span>
                     </div>
                 </div>
                 <div className="card-content-group">
-                    <CreatureImage definitionId={definitionId} />
+                    <CreatureImage definitionId={card.definitionId} />
                 </div>
-                <h2 className="card-name">{creature.name}</h2>
+                <h2 className="card-name">{card.name}</h2>
                 <div className="card-meta">
                     <div className="card-details">
-                        <span className="card-class">{creature.class}</span>
-                        <span className="card-type">{creature.type}</span>
+                        <span className="card-class">{card.class}</span>
+                        <span className="card-type">{card.type}</span>
                     </div>
                 </div>
             </div>

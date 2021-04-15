@@ -3,14 +3,14 @@ import ReactModal from "react-modal";
 import { Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
+import { SanitizedUser } from "@creature-chess/models";
 import { AppState } from "./store";
 import { GamePage } from "./game";
 import { LobbyPage } from "./lobby";
 import { MenuPage } from "./menu";
-import { LoginPage, RegistrationPage } from "./menu/auth";
-import { SanitizedUser } from "packages/models/lib";
+import { LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./ui/display/loading";
-import { userAuthenticated } from "./menu/auth/store/actions";
+import { AuthActions } from "./auth";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {
     return (
@@ -27,7 +27,7 @@ enum GameState {
 }
 
 const gameStateSelector = (state: AppState) => {
-    if (state.game.phase !== null) {
+    if (state.game.roundInfo.phase !== null) {
         return GameState.GAME;
     }
 
@@ -76,7 +76,7 @@ const App: React.FunctionComponent = () => {
     React.useEffect(() => {
         if (isAuthenticated && !userFetched) {
             getAccessTokenSilently().then(token => {
-                dispatch(userAuthenticated(token));
+                dispatch(AuthActions.userAuthenticated(token));
             }).catch(e => {
                 console.log("error getting token", e);
                 // todo display this back to the user

@@ -1,19 +1,16 @@
 import { takeEvery, put, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
-import {
-    ConnectionStatus, GameEvents, IncomingPacketRegistry,
-    PlayerInfoCommands, ServerToClientPacketAcknowledgements, ServerToClientPacketDefinitions, ServerToClientPacketOpcodes,
-    PlayerEvents, PlayerCommands
-} from "@creature-chess/shared";
-
-import { startBattle } from "@creature-chess/battle";
+import { PlayerInfoCommands, PlayerEvents, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
+import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
-import { clearAnnouncement, closeOverlay, finishGameAction, openOverlay, playersResurrected, updateConnectionStatus, clearSelectedPiece } from "../../../ui/actions";
-import { Overlay } from "../../../ui/overlay";
-import { playerListUpdated } from "../../../game/features/playerList/playerListActions";
 
-type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>;
+import { finishGameAction, updateConnectionStatus } from "../../../ui/actions";
+import { PlayerListCommands } from "../../../game/features";
+import { ConnectionStatus } from "../../../game/connection-status";
+import { gameRoundUpdateEvent } from "../../../game/sagas/events";
+
+type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
 const readPacketsToActions = function*(
     registry: ServerToClientPacketRegistry,
@@ -22,58 +19,63 @@ const readPacketsToActions = function*(
 ) {
     const channel = eventChannel<any>(emit => {
         socket.on("reconnect_failed", () => {
-            emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
         });
         socket.on("reconnect_error", () => {
-            emit(clearAnnouncement());
             emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
         });
 
         registry.on(
-            ServerToClientPacketOpcodes.PLAYER_LIST_UPDATE,
+            ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE,
             (packet) => {
-                emit(playerListUpdated(packet));
+                emit(PlayerListCommands.updatePlayerListCommand(packet));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.BOARD_UPDATE,
+            ServerToClient.Game.PacketOpcodes.BOARD_UPDATE,
             ({ state }) => {
                 emit(boardSlice.commands.setBoardPiecesCommand(state));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.BENCH_UPDATE,
+            ServerToClient.Game.PacketOpcodes.BENCH_UPDATE,
             ({ state }) => {
                 emit(benchSlice.commands.setBoardPiecesCommand(state));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.CARDS_UPDATE,
+            ServerToClient.Game.PacketOpcodes.CARDS_UPDATE,
             (packet) => {
                 emit(PlayerCommands.updateCardsCommand(packet));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.SHOP_LOCK_UPDATE,
+            ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE,
             (packet) => {
                 emit(PlayerCommands.updateShopLockCommand(packet.locked));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.MONEY_UPDATE,
+            ServerToClient.Game.PacketOpcodes.MONEY_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateMoneyCommand(packet));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.LEVEL_UPDATE,
+            ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE,
+            (packet) => {
+                emit(PlayerInfoCommands.updateHealthCommand(packet));
+            }
+        );
+
+        registry.on(
+            ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE,
             (packet) => {
                 emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
                 emit(boardSlice.commands.setPieceLimitCommand(packet.level));
@@ -81,21 +83,14 @@ const readPacketsToActions = function*(
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.PLAYERS_RESURRECTED,
-            ({ playerIds }) => {
-                emit(playersResurrected(playerIds));
-            }
-        );
-
-        registry.on(
-            ServerToClientPacketOpcodes.MATCH_REWARDS,
+            ServerToClient.Game.PacketOpcodes.MATCH_REWARDS,
             (payload) => {
                 emit(PlayerEvents.playerMatchRewardsEvent(payload));
             }
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.FINISH_GAME,
+            ServerToClient.Game.PacketOpcodes.FINISH_GAME,
             (packet) => {
                 emit(finishGameAction(packet.winnerName));
 
@@ -104,51 +99,16 @@ const readPacketsToActions = function*(
         );
 
         registry.on(
-            ServerToClientPacketOpcodes.PHASE_UPDATE,
+            ServerToClient.Game.PacketOpcodes.PHASE_UPDATE,
             (packet) => {
-                // todo this is ugly
-                if (packet.phase === GamePhase.PREPARING) {
-                    emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, packet.payload.round));
-                } else {
-                    emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds));
-                }
+                const update = {
+                    phase: packet.phase,
+                    startedAt: packet.startedAtSeconds,
+                    ...(packet.phase === GamePhase.PREPARING ? { round: packet.payload.round } : undefined)
+                };
 
-                switch (packet.phase) {
-                    case GamePhase.PREPARING: {
-                        const { cards, pieces: { board, bench }, round } = packet.payload;
-
-                        emit(GameEvents.gamePhaseStartedEvent(packet.phase, packet.startedAtSeconds, round));
-
-                        emit(boardSlice.commands.setBoardPiecesCommand(board));
-                        emit(benchSlice.commands.setBoardPiecesCommand(bench));
-                        emit(PlayerCommands.updateCardsCommand(cards));
-                        emit(PlayerInfoCommands.clearOpponentCommand());
-                        emit(boardSlice.commands.unlockBoardCommand());
-                        emit(openOverlay(Overlay.SHOP));
-                        emit(clearAnnouncement());
-                        return;
-                    }
-                    case GamePhase.READY: {
-                        const { board, bench, opponentId } = packet.payload;
-
-                        if (board) {
-                            emit(boardSlice.commands.setBoardPiecesCommand(board));
-                        }
-
-                        emit(benchSlice.commands.setBoardPiecesCommand(bench));
-                        emit(boardSlice.commands.lockBoardCommand());
-                        emit(closeOverlay());
-                        emit(PlayerInfoCommands.updateOpponentCommand(opponentId));
-                        emit(clearSelectedPiece());
-                        return;
-                    }
-                    case GamePhase.PLAYING: {
-                        emit(startBattle());
-                        return;
-                    }
-                    default:
-                        return;
-                }
+                emit(RoundInfoCommands.setRoundInfoCommand(update));
+                emit(gameRoundUpdateEvent(packet));
             }
         );
 
@@ -166,7 +126,7 @@ export const incomingGameNetworking = function*(
     socket: SocketIOClient.Socket,
     slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }
 ) {
-    const registry = new IncomingPacketRegistry<ServerToClientPacketDefinitions, ServerToClientPacketAcknowledgements>(
+    const registry = new IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
         (opcode, handler) => socket.on(opcode, handler)
     );
 

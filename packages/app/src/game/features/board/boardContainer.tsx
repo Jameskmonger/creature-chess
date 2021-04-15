@@ -3,11 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerActions } from "@creature-chess/shared";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
-import { Announcement } from "./overlays/announcement";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
@@ -64,11 +63,11 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
     const dispatch = useDispatch();
 
     // todo decouple this, make a playerDropPiece saga
-    const board = useSelector<AppState, BoardState>(state => state.board);
-    const bench = useSelector<AppState, BoardState>(state => state.bench);
+    const board = useSelector<AppState, BoardState>(state => state.game.board);
+    const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 
     const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
     return (
         <div className="group board-container style-default">
@@ -94,7 +93,6 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
                     />
                 </div>
 
-                <Announcement />
                 <VictoryOverlay />
                 <MatchRewardsOverlay />
                 <ReconnectOverlay />

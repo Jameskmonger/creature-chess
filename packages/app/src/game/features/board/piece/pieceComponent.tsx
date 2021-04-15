@@ -2,13 +2,13 @@ import * as React from "react";
 import { DragObjectWithType, useDrag } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { GamePhase, PieceModel } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/shared";
+import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../ui/display/animation";
 import { Projectile } from "../../../../ui/display/projectile";
 import { selectPiece } from "../../../../ui/actions";
+import { getUserId } from "../../../../auth";
 import { PieceImage } from "./components/pieceImage";
-import { getUserId } from "../../../../menu/auth/store/selectors";
 import { PieceMeta } from "./pieceMeta";
 
 const dyingAnimation = "dying";
@@ -35,8 +35,8 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceModel | null>(null);
     const localPlayerId = useSelector<AppState, string>(getUserId);
-    const piece = useSelector<AppState, PieceModel>(state => getPiece(state, id));
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.phase === GamePhase.PREPARING);
+    const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
+    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
     const [{ }, drag] = useDrag<PieceDragObject, void, { }>({
         item: { type: "Piece", piece },
