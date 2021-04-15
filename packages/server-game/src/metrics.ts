@@ -1,3 +1,4 @@
+// tslint:disable: no-console
 import AWS = require("aws-sdk");
 
 AWS.config.update({ region: "eu-west-1" });
@@ -7,7 +8,7 @@ export const createMetricLogger = () => {
         console.log("No AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY set, not sending metrics to Cloudwatch");
 
         return {
-            sendGameCount: (count: number) => {}
+            sendGameCount: (count: number) => { /* empty */ }
         };
     }
 

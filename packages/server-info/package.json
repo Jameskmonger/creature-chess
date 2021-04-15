@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
     "start": "node ./lib/index.js 3000",
-    "lint": ""
+    "lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
   },
   "bugs": {
     "url": "https://github.com/Jameskmonger/creature-chess/issues"

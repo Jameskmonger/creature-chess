@@ -119,7 +119,7 @@ export class Matchmaking {
             }
         });
 
-        const game = new Game(id => createWinstonLogger(`match-${id}`), players);
+        const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
 
         this.logger.info(`Game ${game.id} started from lobby ${id}`);
 

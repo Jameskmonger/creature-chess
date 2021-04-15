@@ -1,3 +1,4 @@
+// tslint:disable: no-console
 import express = require("express");
 import { json as jsonParser } from "body-parser";
 import Filter = require("bad-words");

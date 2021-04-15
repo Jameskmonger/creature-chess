@@ -1,3 +1,4 @@
+// tslint:disable: no-console
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import shuffle = require("lodash.shuffle");
@@ -42,10 +43,11 @@ export class Lobby {
     }
 
     public canJoin() {
-        if (this.getFreeSlotCount() === 0){
-            console.log("no free slots")
-            console.log(this.members)
+        if (this.getFreeSlotCount() === 0) {
+            console.log("no free slots");
+            console.log(this.members);
         }
+
         return this.gameStarted === false && this.getFreeSlotCount() > 0;
     }
 

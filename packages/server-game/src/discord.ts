@@ -19,7 +19,7 @@ const LOBBY_NOTIFICATIONS_ROLE_ID = "793944131369304104";
 
 const roleMention = (roleId: string) => `<@&${roleId}>`;
 
-const noopApi: DiscordApi = { startLobby: () => {} };
+const noopApi: DiscordApi = { startLobby: () => { /* empty */ } };
 
 export const createDiscordApi = async (logger: Logger, token: string): Promise<DiscordApi> => {
     if (!token) {
