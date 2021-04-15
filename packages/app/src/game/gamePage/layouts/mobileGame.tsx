@@ -25,7 +25,7 @@ const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition 
             dispatch(closeOverlay());
             return;
         }
-        if (overlay === 1){
+        if (overlay === Overlay.SHOP){
             if (!canUseShop){
                 return
         }

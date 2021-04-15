@@ -13,17 +13,13 @@ export const uiSaga = function*() {
                     const isDead:boolean = yield select((state:AppState) =>{
                         return state.game.playerInfo.health === 0
                     })
-                    switch (isDead){
-                        case true:{
-                            return;
-                        }
-                        case false:{
-                            yield put(openOverlay(Overlay.SHOP));
-                            return;
-                        }
-                    }
 
+                    if (!isDead){
+                        yield put(openOverlay(Overlay.SHOP));
+                        return;
+                    }
                 }
+
                 case GamePhase.READY: {
                     yield put(closeOverlay());
                     yield put(clearSelectedPiece());
