@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.42](https://github.com/Jameskmonger/creature-chess/compare/v0.3.41...v0.3.42) (2021-04-15)
+
+
+### Bug Fixes
+
+* dont open shop when player is dead ([#380](https://github.com/Jameskmonger/creature-chess/issues/380)) ([c0bd23c](https://github.com/Jameskmonger/creature-chess/commit/c0bd23cd4c936ba6d5664d72fdc4a2a9edbad362))
+* fix contributor title colour ([a0a6673](https://github.com/Jameskmonger/creature-chess/commit/a0a6673b317f0174ac81e0a444431ea6f150db63))
+
+
+### Features
+
+* add contributor for thebigcheese and acetomman ([3d242a8](https://github.com/Jameskmonger/creature-chess/commit/3d242a8bbdd52d7d10163655966c31838f48fe86))
+
+
+
+
+
 ## [0.3.41](https://github.com/Jameskmonger/creature-chess/compare/v0.3.40...v0.3.41) (2021-04-14)
 
 

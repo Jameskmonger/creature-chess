@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.42](https://github.com/Jameskmonger/creature-chess/compare/v0.3.41...v0.3.42) (2021-04-15)
+
+
+### Features
+
+* add contributor for thebigcheese and acetomman ([3d242a8](https://github.com/Jameskmonger/creature-chess/commit/3d242a8bbdd52d7d10163655966c31838f48fe86))
+
+
+
+
+
 ## [0.3.36](https://github.com/Jameskmonger/creature-chess/compare/v0.3.34...v0.3.36) (2021-04-12)
 
 **Note:** Version bump only for package @creature-chess/models

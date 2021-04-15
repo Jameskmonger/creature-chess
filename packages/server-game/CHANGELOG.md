@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.42](https://github.com/Jameskmonger/creature-chess/compare/v0.3.41...v0.3.42) (2021-04-15)
+
+
+### Bug Fixes
+
+* dont open shop when player is dead ([#380](https://github.com/Jameskmonger/creature-chess/issues/380)) ([c0bd23c](https://github.com/Jameskmonger/creature-chess/commit/c0bd23cd4c936ba6d5664d72fdc4a2a9edbad362))
+
+
+
+
+
 ## [0.3.40](https://github.com/Jameskmonger/creature-chess/compare/v0.3.39...v0.3.40) (2021-04-14)
 
 **Note:** Version bump only for package @creature-chess/server-game
