@@ -15,15 +15,15 @@ type Acknowledgements = {
     [Opcodes.MOCK_OPCODE_WITH_ACK]: () => void
 };
 
-describe('OutgoingPacketRegistry', () => {
-    const emitFn = jest.fn()
+describe("OutgoingPacketRegistry", () => {
+    const emitFn = jest.fn();
     const registry = new OutgoingPacketRegistry<Definitions, Acknowledgements>(emitFn);
 
     beforeEach(() => {
         emitFn.mockReset();
     });
 
-    test('should call emitFn with opcode and payload', () => {
+    test("should call emitFn with opcode and payload", () => {
         const payload = { foo: 3 };
 
         registry.emit(Opcodes.MOCK_OPCODE, payload);
@@ -31,10 +31,10 @@ describe('OutgoingPacketRegistry', () => {
         expect(emitFn).toHaveBeenCalledWith(Opcodes.MOCK_OPCODE, payload);
     });
 
-    describe('when ack provided', () => {
-        const ack = () => { }
+    describe("when ack provided", () => {
+        const ack = () => { /* empty */ };
 
-        test('should call emitFn with opcode and payload', () => {
+        test("should call emitFn with opcode and payload", () => {
             const payload = { bar: "blablabla" };
 
             registry.emit(Opcodes.MOCK_OPCODE_WITH_ACK, payload, ack);

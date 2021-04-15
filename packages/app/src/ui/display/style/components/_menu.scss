@@ -82,14 +82,14 @@
             border-style: solid;
             /* stylelint-disable */
             border-top: none;
-            border-left: none;
             border-right: none;
             /* stylelint-enable */
             border-bottom: 2px solid $join-lobby-button;
+            border-left: none;
 
             /* stylelint-disable */
             &::placeholder {
-            /* stylelint-enable */
+                /* stylelint-enable */
                 font-style: italic;
                 color: #aaa;
             }

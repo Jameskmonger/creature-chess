@@ -10,7 +10,7 @@ const expandBoard = <TState extends BoardState>(board: TState, { width, height }
     size: { width, height },
     piecePositions: Object.entries(board.piecePositions).reduce<{ [position: string]: string }>(
       (newPiecePositions, [position, pieceId]) => {
-        const [x, y] = position.split(",").map(x => parseInt(x, 10));
+        const [x, y] = position.split(",").map(val => parseInt(val, 10));
 
         const newX = x + differenceWidth;
         const newY = y + differenceHeight;
@@ -23,7 +23,7 @@ const expandBoard = <TState extends BoardState>(board: TState, { width, height }
       {}
     )
   };
-}
+};
 
 export const mergeBoards = <TPiece extends HasId, TState extends BoardState<TPiece>>(id: string, home: TState, away: TState): TState => {
   if (home.size.width !== away.size.width || home.size.height !== away.size.height) {

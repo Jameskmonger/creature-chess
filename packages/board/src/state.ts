@@ -6,7 +6,7 @@ const createInitialState = <TPiece>(id: string, size: { width: number, height: n
     width: 7,
     height: 3
 }): BoardState<TPiece> => ({
-    id: id,
+    id,
     pieces: {},
     piecePositions: {},
     locked: false,
@@ -17,7 +17,7 @@ const createInitialState = <TPiece>(id: string, size: { width: number, height: n
 export type BoardSlice<TPiece extends HasId = HasId> = {
     boardReducer: Reducer<BoardState<TPiece>>;
     commands: BoardSliceCommands<TPiece>;
-}
+};
 export type BoardSliceCommands<TPiece extends HasId = HasId> = {
     setBoardSizeCommand: ActionCreatorWithPayload<{
         width: number;
@@ -75,7 +75,7 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
                     size: { width, height },
                     piecePositions: Object.entries(state.piecePositions).reduce<{ [position: string]: string }>(
                         (newPiecePositions, [position, pieceId]) => {
-                            const [x, y] = position.split(",").map(x => parseInt(x, 10));
+                            const [x, y] = position.split(",").map(val => parseInt(val, 10));
 
                             const newX = x + differenceWidth;
                             const newY = y + differenceHeight;
@@ -101,14 +101,14 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
                     payload: {
                         pieces,
                         piecePositions,
-                        size
+                        size: newSize
                     }
                 }: PayloadAction<{ pieces: PiecesState<TPiece>, piecePositions: PiecePositionsState, size?: { width: number, height: number } }>
             ) => ({
                 ...state,
                 pieces: { ...pieces },
                 piecePositions: { ...piecePositions },
-                ...(size ? { size: { width: size.width, height: size.height } } : {})
+                ...(newSize ? { size: { width: newSize.width, height: newSize.height } } : {})
             }),
             addBoardPieceCommand: (state, { payload: { x, y, piece } }: PayloadAction<{ x: number, y: number, piece: TPiece }>) => {
                 return {
@@ -162,7 +162,7 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
             updateBoardPiecesCommand: (state, { payload: pieces }: PayloadAction<TPiece[]>) => {
                 const newPieces: PiecesState<TPiece> = {
                     ...state.pieces
-                } as PiecesState<TPiece>
+                } as PiecesState<TPiece>;
 
                 for (const piece of pieces) {
                     newPieces[piece.id] = piece;
@@ -190,4 +190,4 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
             updateBoardPiecesCommand
         }
     };
-}
+};

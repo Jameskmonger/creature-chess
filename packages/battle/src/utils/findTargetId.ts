@@ -14,7 +14,7 @@ export const findTargetId = (piece: PieceModel, board: BoardState<PieceModel>): 
     const attackerPosition = BoardSelectors.getPiecePosition(board, piece.id);
 
     const enemyDeltas = enemies.map(enemy => {
-        const enemyPosition = BoardSelectors.getPiecePosition(board, enemy.id)
+        const enemyPosition = BoardSelectors.getPiecePosition(board, enemy.id);
 
         if (!enemyPosition) {
             return null;

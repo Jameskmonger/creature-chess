@@ -106,8 +106,8 @@ export class PlayerList {
                 title: PLAYER_TITLES[player.id] || null,
                 picture: player.picture
             };
-        })
-    };
+        });
+    }
 
     public addPlayer(player: Player) {
         this.players.push({
@@ -144,11 +144,11 @@ export class PlayerList {
             }
         };
 
-        let newPlayers = [...this.players];
+        const newPlayers = [...this.players];
         newPlayers.sort(sortPlayers);
 
-        this.players = newPlayers.reduce((acc, cur, index) => {
-            if (cur.position === index + 1) {
+        this.players = newPlayers.reduce((acc, cur, i) => {
+            if (cur.position === i + 1) {
                 return [ ...acc, cur ];
             }
 
@@ -156,7 +156,7 @@ export class PlayerList {
                 ...acc,
                 {
                     ...cur,
-                    position: index + 1
+                    position: i + 1
                 }
             ];
         }, []);

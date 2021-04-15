@@ -23,7 +23,7 @@ export type PlayerMatchRewards = {
         streakBonus: number,
         interest: number
     };
-}
+};
 
 export interface PlayerInfoState {
     status: PlayerStatus;
@@ -64,7 +64,7 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
             return {
                 ...state,
                 matchRewards: command.payload
-            }
+            };
         case UPDATE_STATUS_COMMAND:
             return {
                 ...state,

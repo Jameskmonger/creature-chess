@@ -19,7 +19,7 @@ export const sellPiecePlayerActionSagaFactory = <TState extends PlayerState>(
         const piece: PieceModel = yield select((state: TState) => getPiece(state, pieceId));
 
         if (!piece) {
-          console.log(`Attempted to sell piece with id ${pieceId} but did not own it`);
+          // console.log(`Attempted to sell piece with id ${pieceId} but did not own it`);
           return;
         }
 

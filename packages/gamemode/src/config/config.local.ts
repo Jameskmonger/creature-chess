@@ -7,4 +7,4 @@ export const config = {
     appUrl: "https://creaturechess.local-dev.com:8090",
     serverUrl: "ws://localhost:3000",
     serverInfoUrl: "http://localhost:3001"
-}
+};

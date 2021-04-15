@@ -27,6 +27,6 @@ export const healthSagaFactory = <TState extends PlayerState>() => {
                     yield put(updateHealthCommand(newValue));
                 }
             )
-        ])
+        ]);
     };
 };

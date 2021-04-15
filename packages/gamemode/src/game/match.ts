@@ -47,7 +47,7 @@ export class Match {
                 }),
                 {}
             )
-        }
+        };
 
         this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
     }
@@ -78,7 +78,7 @@ export class Match {
                     }),
                     {}
                 )
-            }
+            };
 
             return newState;
         }

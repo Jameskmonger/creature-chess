@@ -12,16 +12,16 @@ type Acknowledgements = {
     [Opcodes.MOCK_OPCODE]: never
 };
 
-describe('IncomingPacketRegistry', () => {
-    const registerListener = jest.fn()
+describe("IncomingPacketRegistry", () => {
+    const registerListener = jest.fn();
     const registry = new IncomingPacketRegistry<Definitions, Acknowledgements>(registerListener);
 
     beforeEach(() => {
         registerListener.mockReset();
     });
 
-    test('should call registerListener with opcode and handler', () => {
-        const handler = () => { };
+    test("should call registerListener with opcode and handler", () => {
+        const handler = () => { /* empty */ };
 
         registry.on(Opcodes.MOCK_OPCODE, handler);
 

@@ -4,7 +4,7 @@ import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/mode
 
 export type DiscordApi = {
     startLobby: (playerName: string) => void;
-}
+};
 
 const awaitClientReady = (client: Client) => {
     return new Promise<void>(resolve => {
@@ -12,7 +12,7 @@ const awaitClientReady = (client: Client) => {
             resolve();
         });
     });
-}
+};
 
 const LOBBY_NOTIFICATIONS_CHANNEL_ID = "794003654545375232";
 const LOBBY_NOTIFICATIONS_ROLE_ID = "793944131369304104";

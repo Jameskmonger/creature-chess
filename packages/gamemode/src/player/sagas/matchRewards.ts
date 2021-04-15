@@ -44,7 +44,7 @@ const updateStreak = function*(win: boolean) {
     const newAmount = (type === existingStreak.type) ? existingStreak.amount + 1 : 0;
 
     yield put(updateStreakCommand(type, newAmount));
-}
+};
 
 export const playerMatchRewards = <TState extends (HasPlayerInfo & { roundInfo: RoundInfoState })>(playerId: string) => {
     return function*() {
@@ -94,6 +94,6 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { roundInfo: 
                 yield put(updateMoneyCommand(currentMoney + total));
                 yield put(addXpCommand(1));
             }
-        )
+        );
     };
 };

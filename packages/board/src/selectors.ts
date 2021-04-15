@@ -11,14 +11,14 @@ export const getPiecePosition = (state: BoardState, pieceId: string): PiecePosit
     }
 
     const [x, y] = entry[0].split(",")
-        .map(x => parseInt(x, 10));
+        .map(val => parseInt(val, 10));
 
     return { x, y };
 };
 
 export const getAllPieces = <TPiece>(state: BoardState<TPiece>): TPiece[] => Object.values(state.pieces);
 export const getPiece = <TPiece>(state: BoardState<TPiece>, pieceId: string): TPiece => state.pieces[pieceId] || null;
-export const isBelowPieceLimit = (state: BoardState) => getAllPieces(state).length < state.pieceLimit
+export const isBelowPieceLimit = (state: BoardState) => getAllPieces(state).length < state.pieceLimit;
 
 export const getPieceForPosition = <TPiece>(state: BoardState<TPiece>, x: number, y: number): TPiece =>
     state.pieces[state.piecePositions[`${x},${y}`]] || null;
@@ -42,7 +42,10 @@ export const getFirstEmptySlot = (state: BoardState, sortPositions: SortPosition
 
     emptyPositions.sort(sortPositions);
 
-    const { x, y } = emptyPositions[0];
+    const position = emptyPositions[0];
 
-    return { x, y };
+    return {
+        x: position.x,
+        y: position.y
+    };
 };

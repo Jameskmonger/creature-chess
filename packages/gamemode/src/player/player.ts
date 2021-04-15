@@ -48,14 +48,14 @@ export abstract class Player {
 
     protected getRoundInfoState: () => RoundInfoState;
     protected getPlayerListPlayers: () => PlayerListPlayer[];
+    protected readonly boardSlice: BoardSlice<PieceModel>;
+    protected readonly benchSlice: BoardSlice<PieceModel>;
 
     private events = new EventEmitter();
     private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
     private deck: CardDeck;
     private logger: Logger;
-    protected readonly boardSlice: BoardSlice<PieceModel>;
-    protected readonly benchSlice: BoardSlice<PieceModel>;
 
     constructor(id: string, name: string, picture: number) {
         this.id = id;
@@ -168,7 +168,7 @@ export abstract class Player {
 
         const opponentId = match.home.id === this.id
             ? match.away.id
-            : match.home.id
+            : match.home.id;
 
         this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(opponentId));
     }

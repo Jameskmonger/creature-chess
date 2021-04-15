@@ -1,7 +1,7 @@
 import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
 import { Card, PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
 import { Player, PlayerActions, PlayerGameActions, PlayerState, PlayerEvents, GameEvents, getDefinitionById, getAllPieces } from "@creature-chess/gamemode";
-import { BoardSelectors } from "@creature-chess/board"
+import { BoardSelectors } from "@creature-chess/board";
 import uuid = require("uuid");
 import delay from "delay";
 import { shouldBuyXp } from "./shop/shouldBuyXp";
@@ -116,7 +116,7 @@ const getFirstBenchPiece = (state: PlayerState): PieceModel => {
     }
 
     return null;
-}
+};
 const getBenchSlotForPiece = (state: PlayerState, pieceId: string): number => {
     for (let x = 0; x < state.bench.size.width; x++) {
         if (state.bench.piecePositions[`${x},0`] === pieceId) {

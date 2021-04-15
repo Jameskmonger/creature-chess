@@ -15,7 +15,9 @@ const pieceCanEvolve = (piece: PieceModel) => {
     return piece.stage < stages.length - 1;
 };
 
-export const evolutionSagaFactory = <TState extends State>({ boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) => {
+export const evolutionSagaFactory = <TState extends State>(
+    { boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+) => {
     return function*() {
         yield takeLatest<
             ReturnType<typeof boardSlice.commands.addBoardPieceCommand>
@@ -77,7 +79,7 @@ export const evolutionSagaFactory = <TState extends State>({ boardSlice, benchSl
                         stage: targetStage + 1
                     };
 
-                    const {x, y} = piecePosition;
+                    const { x, y } = piecePosition;
 
                     yield put(boardSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece }));
                 } else {

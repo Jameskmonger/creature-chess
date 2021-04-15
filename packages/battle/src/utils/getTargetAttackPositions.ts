@@ -7,23 +7,23 @@ const isInsideGrid = ({ width, height }: { width: number, height: number}) => (p
     return x >= 0 && y >= 0 && x < width && y < height;
 };
 
-export const getTargetAttackPositions = (board: BoardState, { x, y }: TileCoordinates, range = 1) => {
+export const getTargetAttackPositions = (board: BoardState, { x: positionX, y: positionY }: TileCoordinates, range = 1) => {
     const positions: TileCoordinates[] = [];
 
-    for (let _x = x - range; _x <= x + range; _x++) {
-        if (_x === x) {
+    for (let x = positionX - range; x <= positionX + range; x++) {
+        if (x === positionX) {
             continue;
         }
 
-        positions.push(createTileCoordinates(_x, y));
+        positions.push(createTileCoordinates(x, positionY));
     }
 
-    for (let _y = y - range; _y <= y + range; _y++) {
-        if (_y === y) {
+    for (let y = positionY - range; y <= positionY + range; y++) {
+        if (y === positionY) {
             continue;
         }
 
-        positions.push(createTileCoordinates(x, _y));
+        positions.push(createTileCoordinates(positionX, y));
     }
 
     // filter out any that are outside the grid

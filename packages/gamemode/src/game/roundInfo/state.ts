@@ -31,7 +31,7 @@ export const { reducer, actions: { setRoundInfoCommand } } = createSlice({
                 ...state,
                 phase: command.payload.phase,
                 phaseStartedAtSeconds: Math.floor(command.payload.startedAt)
-            }
+            };
         }
     }
 });

@@ -224,9 +224,10 @@
             100% {
                 top: calc(((100% * var(--attackDistance) * var(--attackYDirection)) + 50%) - (#{$projectile-size} / 2));
                 // stylelint-disable-next-line
-                left: calc(
-                    ((100% * var(--attackDistance) * var(--attackXDirection)) + 50%) - (#{$projectile-size} / 2)
-                );
+                left:
+                    calc(
+                        ((100% * var(--attackDistance) * var(--attackXDirection)) + 50%) - (#{$projectile-size} / 2)
+                    );
             }
         }
         position: absolute;

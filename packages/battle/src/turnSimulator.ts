@@ -149,7 +149,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState<P
                 direction: getRelativeDirection(targetPosition, attackerPosition),
                 damage
             }
-        }
+        };
 
         return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([newAttacker, defender]));
     } else {

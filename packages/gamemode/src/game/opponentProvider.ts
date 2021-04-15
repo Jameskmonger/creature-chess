@@ -15,6 +15,9 @@ export class HeadToHeadOpponentProvider implements IOpponentProvider {
     private remainingRotations: number[] = null;
     private rotation: number;
 
+    private lastOddMatchupHomeId: string = null;
+    private lastOddMatchupAwayId: string = null;
+
     public setPlayers(players: Player[]) {
         this.playerIds = players.map(p => p.id);
         this.remainingRotations = null;
@@ -34,7 +37,7 @@ export class HeadToHeadOpponentProvider implements IOpponentProvider {
     }
 
     private getMatchupsEven(playerIds: string[]) {
-        const matchups: ({ homeId: string, awayId: string, awayIsClone: boolean })[] = []
+        const matchups: ({ homeId: string, awayId: string, awayIsClone: boolean })[] = [];
 
         let remainingPlayerIds = [...playerIds];
         while (remainingPlayerIds.length > 0) {
@@ -42,9 +45,9 @@ export class HeadToHeadOpponentProvider implements IOpponentProvider {
             const rotation =
                 this.rotation % remainingPlayerIds.length === 0
                 ? this.rotation + 1
-                : this.rotation
+                : this.rotation;
 
-            const playerA = remainingPlayerIds[0]
+            const playerA = remainingPlayerIds[0];
             const playerB = remainingPlayerIds[rotation % remainingPlayerIds.length];
 
             remainingPlayerIds = remainingPlayerIds.filter(id => id !== playerA && id !== playerB);
@@ -61,9 +64,6 @@ export class HeadToHeadOpponentProvider implements IOpponentProvider {
 
         return matchups;
     }
-
-    private lastOddMatchupHomeId: string = null;
-    private lastOddMatchupAwayId: string = null;
     private getMatchupsOdd(playerIds: string[]) {
         const cloneMatchup = this.getOddCloneMatchup(playerIds);
 

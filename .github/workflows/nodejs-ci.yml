@@ -19,5 +19,7 @@ jobs:
       run: npm install && npm run bootstrap
     - name: Build application
       run: npm run build
+    - name: Run linter
+      run: npm run lint
     - name: Run tests
       run: npm test

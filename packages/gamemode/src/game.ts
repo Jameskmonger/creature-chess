@@ -65,38 +65,38 @@ export class Game {
     }
 
     private sendPublicEventsSagaFactory = () => {
-        const _this = this;
+        const thisRef = this;
 
         return function*() {
             yield takeLatest<SetRoundInfoCommand>(RoundInfoCommands.setRoundInfoCommand.toString(), function*({ payload }) {
-                _this.dispatchPublicGameEvent(gamePhaseStartedEvent(payload));
+                thisRef.dispatchPublicGameEvent(gamePhaseStartedEvent(payload));
             });
-        }
+        };
     }
 
     private gameSagaFactory = () => {
-        const _this = this;
+        const thisRef = this;
 
         return function*(players: Player[]) {
-            players.forEach(_this.addPlayer);
+            players.forEach(thisRef.addPlayer);
 
-            _this.updateOpponentProvider();
+            thisRef.updateOpponentProvider();
 
             const startTime = startStopwatch();
 
-            _this.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
+            thisRef.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
 
             const sagaDependencies: GameSagaDependencies = {
-                options: _this.options,
+                options: thisRef.options,
                 getMatchups: () => {
-                    _this.updateOpponentProvider();
-                    return _this.opponentProvider.getMatchups();
+                    thisRef.updateOpponentProvider();
+                    return thisRef.opponentProvider.getMatchups();
                 },
 
                 players: {
-                    getAll: () => _this.players,
-                    getLiving: _this.getLivingPlayers,
-                    getById: (id: string) => _this.players.find(p => p.id === id) || null
+                    getAll: () => thisRef.players,
+                    getLiving: thisRef.getLivingPlayers,
+                    getById: (id: string) => thisRef.players.find(p => p.id === id) || null
                 }
             };
 
@@ -104,32 +104,32 @@ export class Game {
 
             const duration = stopwatch(startTime);
 
-            _this.logger.info(`Match complete in ${(duration)} ms (${_this.store.getState().roundInfo.round} rounds)`);
+            thisRef.logger.info(`Match complete in ${(duration)} ms (${thisRef.store.getState().roundInfo.round} rounds)`);
 
             // teardown
-            _this.opponentProvider = null;
-            _this.deck = null;
-            _this.playerList.deconstructor();
-            _this.playerList = null;
+            thisRef.opponentProvider = null;
+            thisRef.deck = null;
+            thisRef.playerList.deconstructor();
+            thisRef.playerList = null;
 
-            const winner = _this.players.find(p => p.id === winnerId);
+            const winner = thisRef.players.find(p => p.id === winnerId);
 
             const event = gameFinishEvent({ winnerName: winner.name });
-            _this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
+            thisRef.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
 
-            const gamePlayers = _this.players.map(p => ({
+            const gamePlayers = thisRef.players.map(p => ({
                 id: p.id,
                 name: p.name
             }));
 
-            _this.logger.info(`Game finished, won by ${winner.name}`);
-            _this.events.emit(finishGameEventKey, winner, gamePlayers);
+            thisRef.logger.info(`Game finished, won by ${winner.name}`);
+            thisRef.events.emit(finishGameEventKey, winner, gamePlayers);
 
             // more teardown
-            _this.events.removeAllListeners();
-            _this.events = null;
-        }
-    };
+            thisRef.events.removeAllListeners();
+            thisRef.events = null;
+        };
+    }
 
     private addPlayer = (player: Player) => {
         player.setLogger(this.logger);

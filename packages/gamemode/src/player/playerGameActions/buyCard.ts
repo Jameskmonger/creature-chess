@@ -103,7 +103,7 @@ export const buyCardPlayerActionSaga = function*() {
         const remainingCards = cards.map(c => c === card ? null : c);
 
         if (destination.type === "board") {
-            const { x, y } = destination.location
+            const { x, y } = destination.location;
             yield put(boardSlice.commands.addBoardPieceCommand({ piece, x, y }));
         } else if (destination.type === "bench") {
             yield put(benchSlice.commands.addBoardPieceCommand({ piece, x: destination.location.x, y: 0 }));

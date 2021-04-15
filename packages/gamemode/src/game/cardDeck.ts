@@ -29,7 +29,7 @@ const canTakeCardAtCost = (level: number, cost: number): boolean => {
     return roll <= chance;
 };
 
-const BLESSED_HAND_CHANCE = [0, 0.1, 0.2, 0.15, 0.15, 0.23, 0.23, 0.1, 0.1, 0.1]
+const BLESSED_HAND_CHANCE = [0, 0.1, 0.2, 0.15, 0.15, 0.23, 0.23, 0.1, 0.1, 0.1];
 const isHandBlessed = (level: number) => (Math.floor(Math.random() * 100) * 0.01) <= BLESSED_HAND_CHANCE[level - 1];
 
 export class CardDeck {

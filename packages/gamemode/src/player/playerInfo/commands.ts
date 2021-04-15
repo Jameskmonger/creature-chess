@@ -28,7 +28,7 @@ export type UpdateRoundDiedAtCommand = ({ type: UPDATE_ROUND_DIED_AT_COMMAND, pa
 export type UpdateOpponentCommand = ({ type: UPDATE_OPPONENT_COMMAND, payload: { opponentId: string } });
 export type ClearOpponentCommand = ({ type: CLEAR_OPPONENT_COMMAND });
 export type UpdateMoneyCommand = ({ type: UPDATE_MONEY_COMMAND, payload: { money: number } });
-export type UpdateLevelCommand = ({ type: UPDATE_LEVEL_COMMAND; payload: { level: number, xp: number }});
+export type UpdateLevelCommand = ({ type: UPDATE_LEVEL_COMMAND; payload: { level: number, xp: number } });
 
 export type PlayerInfoCommand =
     UpdateStatusCommand
@@ -46,10 +46,13 @@ export const updateStatusCommand = (status: PlayerStatus): UpdateStatusCommand =
 export const updateBattleCommand = (battle: PlayerBattle): UpdateBattleCommand => ({ type: UPDATE_BATTLE_COMMAND, payload: { battle } });
 export const updateHealthCommand = (health: number): UpdateHealthCommand => ({ type: UPDATE_HEALTH_COMMAND, payload: { health } });
 export const updateStreakCommand = (type: StreakType, amount: number): UpdateStreakCommand =>
-    ({ type: UPDATE_STREAK_COMMAND, payload: { type, amount }});
-export const updateRoundDiedAtCommand = (roundDiedAt: number | null): UpdateRoundDiedAtCommand => ({ type: UPDATE_ROUND_DIED_AT_COMMAND, payload: { roundDiedAt } });
+    ({ type: UPDATE_STREAK_COMMAND, payload: { type, amount } });
+export const updateRoundDiedAtCommand = (roundDiedAt: number | null): UpdateRoundDiedAtCommand => ({
+    type: UPDATE_ROUND_DIED_AT_COMMAND,
+    payload: { roundDiedAt }
+});
 export const updateOpponentCommand = (opponentId: string): UpdateOpponentCommand => ({ type: UPDATE_OPPONENT_COMMAND, payload: { opponentId } });
 export const clearOpponentCommand = (): ClearOpponentCommand => ({ type: CLEAR_OPPONENT_COMMAND });
 export const updateMoneyCommand = (money: number): UpdateMoneyCommand => ({ type: UPDATE_MONEY_COMMAND, payload: { money } });
 export const updateLevelCommand = (level: number, xp: number): UpdateLevelCommand =>
-    ({ type: UPDATE_LEVEL_COMMAND, payload: { level, xp }});
+    ({ type: UPDATE_LEVEL_COMMAND, payload: { level, xp } });

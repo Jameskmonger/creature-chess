@@ -18,7 +18,7 @@
     justify-content: space-around;
     align-items: center;
     // stylelint-disable-next-line
-    inset: 0px;
+    inset: 0;
     background: rgba(0, 0, 0, 0.85);
 }
 
@@ -34,7 +34,8 @@
 
     @media only screen and (max-width: 799px) {
         // stylelint-disable-next-line
-        h2, h3 {
+        h2,
+ h3 {
             font-size: 2em;
         }
     }

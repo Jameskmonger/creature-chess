@@ -1,3 +1,4 @@
+// tslint:disable: no-console
 import { Client as FaunaDBClient, query as q } from "faunadb";
 import { COLLECTION_NAMES, INDEX_NAMES } from "../constants";
 

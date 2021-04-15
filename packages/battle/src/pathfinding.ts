@@ -24,8 +24,8 @@ const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
     const grid = createEmptyWeightGrid(board.size);
 
     Object.entries(board.piecePositions)
-        .forEach(([ position, pieceId ]) => {
-            const [ x, y ] = position.split(",");
+        .forEach(([position, pieceId]) => {
+            const [x, y] = position.split(",");
 
             if (pieceId) {
                 grid[x][y] = 0;
@@ -63,7 +63,12 @@ const findPath = (
     };
 };
 
-export const getNextPiecePosition = (attackerPosition: TileCoordinates, attackerStats: CreatureStats, targetPosition: TileCoordinates, board: BoardState): TileCoordinates => {
+export const getNextPiecePosition = (
+    attackerPosition: TileCoordinates,
+    attackerStats: CreatureStats,
+    targetPosition: TileCoordinates,
+    board: BoardState
+): TileCoordinates => {
     const { attackType: { range: attackRange } } = attackerStats;
 
     const targetTiles = getTargetAttackPositions(board, targetPosition, attackRange);

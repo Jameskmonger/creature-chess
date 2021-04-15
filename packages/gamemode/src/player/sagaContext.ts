@@ -11,4 +11,4 @@ export type PlayerSagaContext = {
     dependencies: {
         getLogger: () => Logger;
     };
-}
+};

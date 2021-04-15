@@ -1,4 +1,4 @@
-import { select, put, takeEvery } from "@redux-saga/core/effects";
+import { select, put, takeEvery, getContext } from "@redux-saga/core/effects";
 import { REROLL_COST } from "@creature-chess/models";
 import { isPlayerAlive } from "../playerSelectors";
 import { updateMoneyCommand } from "../playerInfo/commands";
@@ -12,10 +12,12 @@ export const rerollCardsPlayerActionSaga = function*() {
     yield takeEvery<RerollCardsPlayerAction>(
         rerollCardsPlayerAction.toString(),
         function*() {
+            const { getLogger } = yield getContext("dependencies");
+
             const isAlive: boolean = yield select(isPlayerAlive);
 
             if (isAlive === false) {
-                console.log("Attempted to reroll, but dead");
+                getLogger().info("Attempted to reroll, but dead");
                 return;
             }
 
@@ -23,7 +25,7 @@ export const rerollCardsPlayerActionSaga = function*() {
 
             // not enough money
             if (money < REROLL_COST) {
-                console.log(`Attempted to reroll costing $${REROLL_COST} but only had $${money}`);
+                getLogger().info(`Attempted to reroll costing $${REROLL_COST} but only had $${money}`);
                 return;
             }
 

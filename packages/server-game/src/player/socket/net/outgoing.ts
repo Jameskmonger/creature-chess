@@ -59,7 +59,7 @@ export const outgoingNetworking = function*(
 
                     const board = match.getBoardForPlayer(playerId);
 
-                    let opponentId =
+                    const opponentId =
                         match.home.id === playerId
                             ? match.away.id
                             : match.home.id;

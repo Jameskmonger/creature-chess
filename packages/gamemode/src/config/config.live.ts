@@ -7,4 +7,4 @@ export const config = {
     appUrl: "https://creaturechess.jamesmonger.com",
     serverUrl: "https://cc-server.jamesmonger.com",
     serverInfoUrl: "https://cc-server-info.herokuapp.com"
-}
+};

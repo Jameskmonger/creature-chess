@@ -13,8 +13,7 @@
 		"build:for-server": "lerna run build --ignore=\"@creature-chess/@(app|server-info|models)\"",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",
 		"dev:app": "lerna run dev --scope=@creature-chess/app --stream",
-		"lint:ts": "tslint -c tslint.json \"./packages/*/src/**/*.{ts,tsx}\"",
-		"lint": "npm run lint:ts && lerna run lint"
+		"lint": "lerna run lint"
 	},
 	"author": "",
 	"license": "ISC",
