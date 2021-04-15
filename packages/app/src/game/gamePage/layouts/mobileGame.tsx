@@ -25,11 +25,11 @@ const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition 
             dispatch(closeOverlay());
             return;
         }
-        if (overlay === Overlay.SHOP){
-            if (!canUseShop){
+        if (overlay === Overlay.SHOP) {
+            if (!canUseShop) {
                 return
+            }
         }
-    }
 
         dispatch(openOverlay(overlay));
     };
@@ -56,7 +56,6 @@ const OverlayComponent: React.FunctionComponent<{ title: string, children: React
     const dispatch = useDispatch();
     const dispatchCloseOverlay = () => dispatch(closeOverlay());
 
-
     return (
         <div className="game-overlay">
             <div className="overlay-header">
@@ -82,7 +81,6 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
     }
 
     if (currentOverlay === Overlay.SHOP) {
-
         return (
             <OverlayComponent title={`Balance: $${currentBalance}`} fullscreen>
                 <CardShop showBalance={false} />

@@ -10,11 +10,9 @@ export const uiSaga = function*() {
         function*({ payload: { phase } }) {
             switch (phase) {
                 case GamePhase.PREPARING: {
-                    const isDead:boolean = yield select((state:AppState) =>{
-                        return state.game.playerInfo.health === 0
-                    })
+                    const isDead: boolean = yield select((state: AppState) => state.game.playerInfo.health === 0);
 
-                    if (!isDead){
+                    if (!isDead) {
                         yield put(openOverlay(Overlay.SHOP));
                         return;
                     }
