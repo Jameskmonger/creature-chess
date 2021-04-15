@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerActions } from "@creature-chess/gamemode";
+import { PlayerGameActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
@@ -14,6 +14,7 @@ import { BoardGrid } from "../../../board/BoardGrid";
 import { clearSelectedPiece } from "../../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
 import { PieceComponent } from "./piece/pieceComponent";
+import { playerClickTileAction } from "../../sagas/actions/clickToDrop";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
     if (board) {
@@ -52,12 +53,16 @@ const onDropPiece = (dispatch: Dispatch<any>, locationType: "board" | "bench", b
         };
 
         // todo `from` is here as a safety check, is it needed?
-        dispatch(PlayerActions.playerDropPieceAction(piece.id, from, location));
+        dispatch(PlayerGameActions.dropPiecePlayerAction({
+            pieceId: piece.id,
+            from,
+            to: location
+        }));
         dispatch(clearSelectedPiece());
     };
 
 const onTileClick = (dispatch: Dispatch<any>, locationType: "board" | "bench") =>
-    (x: number, y: number) => dispatch(PlayerActions.playerClickTileAction({ type: locationType, location: { x, y } }));
+    (x: number, y: number) => dispatch(playerClickTileAction({ tile: { type: locationType, location: { x, y } } }));
 
 const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({ showNowPlaying = false }) => {
     const dispatch = useDispatch();

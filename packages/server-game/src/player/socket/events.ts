@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { PlayerActions } from "@creature-chess/gamemode";
+import { PlayerGameActions } from "@creature-chess/gamemode";
 
 export const RECEIVE_PLAYER_ACTIONS_EVENT = "RECEIVE_PLAYER_ACTIONS_EVENT";
 export type RECEIVE_PLAYER_ACTIONS_EVENT = typeof RECEIVE_PLAYER_ACTIONS_EVENT;
@@ -7,13 +7,13 @@ export type ReceivePlayerActionsEvent = ({
     type: RECEIVE_PLAYER_ACTIONS_EVENT,
     payload: {
         index: number,
-        actions: PlayerActions.PlayerAction[],
+        actions: PlayerGameActions.PlayerGameAction[],
         ack: (accepted: boolean, packetIndex?: number) => void
     }
 });
 export const receivePlayerActionsEvent = (
     index: number,
-    actions: PlayerActions.PlayerAction[],
+    actions: PlayerGameActions.PlayerGameAction[],
     ack: (accepted: boolean, packetIndex?: number) => void
 ): ReceivePlayerActionsEvent => ({
     type: RECEIVE_PLAYER_ACTIONS_EVENT,

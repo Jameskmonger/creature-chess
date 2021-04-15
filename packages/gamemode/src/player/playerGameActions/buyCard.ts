@@ -1,12 +1,13 @@
+import { v4 as uuid } from "uuid";
 import { createAction } from "@reduxjs/toolkit";
 import { take, select, put, getContext } from "@redux-saga/core/effects";
-import { GamePhase, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
+import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
-import { createPieceFromCard } from "../sagas/playerActions/createPieceFromCard";
 import { PlayerState } from "../store";
 import { getPlayerBelowPieceLimit } from "../playerSelectors";
 import { updateMoneyCommand } from "../playerInfo/commands";
 import { updateCardsCommand } from "../cardShop";
+import { getDefinitionById } from "../../definitions";
 
 const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
@@ -33,6 +34,27 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
     }
 
     return null;
+};
+
+const createPieceFromCard = (
+    ownerId: string,
+    card: Card
+): PieceModel => {
+    const { id, definitionId } = card;
+
+    const definition = getDefinitionById(definitionId);
+    const stats = definition.stages[0];
+
+    return {
+        id: id || uuid(),
+        ownerId,
+        definitionId,
+        definition,
+        facingAway: true,
+        maxHealth: stats.hp,
+        currentHealth: stats.hp,
+        stage: 0
+    };
 };
 
 export type BuyCardPlayerAction = ReturnType<typeof buyCardPlayerAction>;

@@ -8,8 +8,7 @@ import { PieceModel } from "@creature-chess/models";
 
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import {
-    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory,
-    PlayerActionSagas
+    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory
 } from "./sagas";
 import { roundInfoReducer, RoundInfoState } from "../game/roundInfo";
 import { cardShopReducer, CardShopState } from "./cardShop";
@@ -35,8 +34,6 @@ export const createPlayerStore = (
     const rootSaga = function*() {
         yield all([
             yield fork(playerGameActionsSaga),
-            yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<PlayerState>(boardSlices, playerId)),
-            yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<PlayerState>(boardSlices)),
             yield fork(evolutionSagaFactory<PlayerState>(boardSlices)),
             yield fork(healthSagaFactory<PlayerState>()),
             yield fork(xpSagaFactory<PlayerState>(boardSlices)),

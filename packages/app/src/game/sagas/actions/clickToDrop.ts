@@ -1,9 +1,10 @@
 import { take, select, put } from "@redux-saga/core/effects";
-import { PlayerActions, getPiece } from "@creature-chess/gamemode";
+import { getPiece, PlayerGameActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
 import { clearSelectedPiece } from "../../../ui/actions";
+import { createAction } from "@reduxjs/toolkit";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
     if (board) {
@@ -31,9 +32,12 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
     return null;
 };
 
+export type PlayerClickTileAction = ReturnType<typeof playerClickTileAction>;
+export const playerClickTileAction = createAction<{ tile: PlayerPieceLocation }>("playerClickTileAction");
+
 export const clickToDrop = function*() {
     while (true) {
-        const action: PlayerActions.PlayerClickTileAction = yield take(PlayerActions.PLAYER_CLICK_TILE_ACTION);
+        const action: PlayerClickTileAction = yield take(playerClickTileAction.toString());
 
         const { tile } = action.payload;
 
@@ -61,7 +65,11 @@ export const clickToDrop = function*() {
 
         const from: PlayerPieceLocation = getLocationForPiece(piece.id, board, bench);
 
-        yield put(PlayerActions.playerDropPieceAction(piece.id, from, tile));
+        yield put(PlayerGameActions.dropPiecePlayerAction({
+            pieceId: piece.id,
+            from,
+            to: tile
+        }));
         yield put(clearSelectedPiece());
     }
 };

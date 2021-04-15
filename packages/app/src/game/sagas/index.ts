@@ -50,13 +50,4 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
             yield put(startBattle(battleTurn));
         }
     }
-
-    // yield fork(PlayerSagas.evolutionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.toggleShopLockSaga<AppState>()),
-    // yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<AppState>(playerId)),
-    // yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<AppState>(playerId)),
-    // yield fork(PlayerSagas.xpSagaFactory<AppState>()),
 };

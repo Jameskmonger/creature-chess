@@ -22,9 +22,9 @@ import { PlayerStore, createPlayerStore, PlayerState } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
 import { getAllPieces, getPiecesForStage, getPiecesExceptStage } from "./pieceSelectors";
-import { QuitGameAction, QUIT_GAME_ACTION } from "./actions";
 import { GameEvent, gameFinishEvent } from "../game/events";
 import { updateCardsCommand } from "./cardShop";
+import { quitGamePlayerAction, QuitGamePlayerAction } from "./playerGameActions";
 
 enum PlayerEvent {
     QUIT_GAME = "QUIT_GAME"
@@ -305,8 +305,8 @@ export abstract class Player {
         const emitEvent = () => this.events.emit(PlayerEvent.QUIT_GAME, this);
 
         return function*() {
-            yield takeEvery<QuitGameAction>(
-                QUIT_GAME_ACTION,
+            yield takeEvery<QuitGamePlayerAction>(
+                quitGamePlayerAction.toString(),
                 function*() {
                     yield put(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
 
