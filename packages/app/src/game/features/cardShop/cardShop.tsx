@@ -43,9 +43,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const cards = useSelector<AppState, CardModel[]>(state => state.game.cardShop.cards);
     const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
     const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health > 0);
-    const playOrReadyPhase = useSelector<AppState, boolean>(state => {const phase = state.game.roundInfo.phase
-        return (phase === GamePhase.PLAYING || phase === GamePhase.READY)
-    })
+
 
     const [currentCardIndex, setCurrentCardIndex] = React.useState<number>(null);
 
@@ -72,7 +70,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
         );
     };
 
-    if (cards === null || canUseShop === false || playOrReadyPhase) {
+    if (cards === null || canUseShop === false) {
         return null;
     }
 
