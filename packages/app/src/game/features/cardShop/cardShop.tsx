@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card as CardModel, GamePhase } from "@creature-chess/models";
+import { Card as CardModel } from "@creature-chess/models";
 import { getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
 import { Card } from "./card";
 import { AppState } from "../../../store";
