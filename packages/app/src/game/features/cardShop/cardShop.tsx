@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card as CardModel } from "@creature-chess/models";
+import { Card as CardModel, GamePhase } from "@creature-chess/models";
 import { getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
 import { Card } from "./card";
 import { AppState } from "../../../store";
@@ -43,6 +43,9 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
     const cards = useSelector<AppState, CardModel[]>(state => state.game.cardShop.cards);
     const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
     const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health > 0);
+    const playOrReadyPhase = useSelector<AppState, boolean>(state => {const phase = state.game.roundInfo.phase
+        return (phase === GamePhase.PLAYING || phase === GamePhase.READY)
+    })
 
     const [currentCardIndex, setCurrentCardIndex] = React.useState<number>(null);
 
@@ -69,7 +72,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
         );
     };
 
-    if (cards === null || canUseShop === false) {
+    if (cards === null || canUseShop === false || playOrReadyPhase) {
         return null;
     }
 
