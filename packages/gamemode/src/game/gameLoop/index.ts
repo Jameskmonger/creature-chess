@@ -15,7 +15,7 @@ export const gameLoopSaga = function*(dependencies: GameSagaDependencies) {
         }
     }
 
-    const winnerId = dependencies.players.getAll()[0].id;
+    const winnerId = dependencies.players.getLiving()[0].id;
 
     return {
         winnerId
