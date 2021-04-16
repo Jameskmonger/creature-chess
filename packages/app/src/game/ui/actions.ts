@@ -1,4 +1,4 @@
-import { ConnectionStatus } from "../game/connection-status";
+import { ConnectionStatus } from "../connection-status";
 import { Overlay } from "./overlay";
 
 export const OPEN_OVERLAY = "OPEN_OVERLAY";

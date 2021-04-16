@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
-import { ProgressBar } from "../../../../../ui";
+import { ProgressBar } from "../../../../../display";
 import { getUserId } from "../../../../../auth";
 
 interface HealthbarProps {

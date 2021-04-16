@@ -7,7 +7,7 @@ import { AppState } from "../../../store";
 import { RerollButton } from "./rerollButton";
 import { BalanceDisplay } from "./balanceDisplay";
 import { ToggleLockButton } from "./toggleLockButton";
-import { CreatureImage } from "../../../ui/display";
+import { CreatureImage } from "../../../display";
 
 interface CardShopProps {
     showBalance: boolean;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card } from "@creature-chess/models";
-import { CreatureImage } from "../../../ui/display";
+import { CreatureImage } from "../../../display";
 import { TypeIndicator } from "../board/piece/components/TypeIndicator";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../store";

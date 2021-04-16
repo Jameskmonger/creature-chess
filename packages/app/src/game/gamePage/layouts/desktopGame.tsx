@@ -6,7 +6,7 @@ import { Profile } from "../../features/profile";
 import { RoundIndicator } from "../../features/roundIndicator";
 import { PhaseInfo } from "../../features/phaseInfo";
 import { QuitGameButton } from "../../features/settings";
-import { Footer } from "../../../ui/display/footer";
+import { Footer } from "../../../display/footer";
 import { Help } from "../../features/help";
 import { NowPlaying } from "../../features/nowPlaying";
 

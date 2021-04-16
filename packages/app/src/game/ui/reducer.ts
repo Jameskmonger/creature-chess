@@ -1,11 +1,18 @@
-import { UiState } from "../store/state";
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
     UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, FINISH_GAME, FinishGameAction,
     SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
 } from "./actions";
-import { MenuActions } from "../menu";
-import { ConnectionStatus } from "../game/connection-status";
+import { MenuActions } from "../../menu";
+import { ConnectionStatus } from "../connection-status";
+import { Overlay } from "./overlay";
+
+export interface UiState {
+    connectionStatus: ConnectionStatus;
+    selectedPieceId: string;
+    currentOverlay: Overlay | null;
+    winnerName: string;
+}
 
 const initialState: UiState = {
     currentOverlay: null,

@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { getPlayerMoney } from "@creature-chess/gamemode";
 import { AppState } from "../../../store";
-import { Overlay } from "../../../ui/overlay";
-import { closeOverlay, openOverlay } from "../../../ui/actions";
+import { Overlay } from "../../ui/overlay";
+import { closeOverlay, openOverlay } from "../../ui/actions";
 import { BoardContainer } from "../../features/board/boardContainer";
 import { CardShop } from "../../features/cardShop";
 import { PlayerList } from "../../features";
@@ -17,7 +17,7 @@ import { Help } from "../../features/help";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
     const dispatch = useDispatch();
-    const isActive = useSelector<AppState, boolean>(state => state.ui.currentOverlay === overlay);
+    const isActive = useSelector<AppState, boolean>(state => state.game.ui.currentOverlay === overlay);
     const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health !== 0)
 
     const onClick = () => {
@@ -108,7 +108,7 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
 };
 
 const MobileGameContentPane: React.FunctionComponent = () => {
-    const currentOverlay = useSelector<AppState, Overlay>(state => state.ui.currentOverlay);
+    const currentOverlay = useSelector<AppState, Overlay>(state => state.game.ui.currentOverlay);
 
     if (currentOverlay === null) {
         return (

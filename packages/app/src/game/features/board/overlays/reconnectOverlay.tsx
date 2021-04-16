@@ -5,7 +5,7 @@ import { ConnectionStatus } from "../../../connection-status";
 import { BoardOverlay } from "./boardOverlay";
 
 const ReconnectOverlay: React.FunctionComponent = () => {
-    const connectionStatus = useSelector<AppState, ConnectionStatus>(state => state.ui.connectionStatus);
+    const connectionStatus = useSelector<AppState, ConnectionStatus>(state => state.game.ui.connectionStatus);
 
     if (
         connectionStatus === ConnectionStatus.NOT_CONNECTED

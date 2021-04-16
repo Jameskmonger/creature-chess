@@ -5,8 +5,8 @@ import { getPiece, PlayerGameActions } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
 
 const selectedPieceSelector = (state: AppState): PieceModel =>
-    state.ui.selectedPieceId
-        ? getPiece(state.game, state.ui.selectedPieceId)
+    state.game.ui.selectedPieceId
+        ? getPiece(state.game, state.game.ui.selectedPieceId)
         : null;
 
 const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId }) => {

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { AppState } from "../../../../../store";
-import { ProgressBar } from "../../../../../ui/display";
+import { ProgressBar } from "../../../../../display";
 import { PlayerName } from "../playerName";
 import { PlayerTitle } from "../playerTitle";
 import { BattleInfo } from "../battleInfo";

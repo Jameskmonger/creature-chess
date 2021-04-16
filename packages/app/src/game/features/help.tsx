@@ -1,6 +1,6 @@
 import { CreatureType } from "packages/models/lib";
 import * as React from "react";
-import { Footer } from "../../ui/display/footer";
+import { Footer } from "../../display/footer";
 import { TypeIndicator } from "./board/piece/components/TypeIndicator";
 
 const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = false }) => {

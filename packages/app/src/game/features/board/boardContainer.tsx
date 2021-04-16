@@ -11,7 +11,7 @@ import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
 import { BoardGrid } from "../../../board/BoardGrid";
-import { clearSelectedPiece } from "../../../ui/actions";
+import { clearSelectedPiece } from "../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
 import { PieceComponent } from "./piece/pieceComponent";
 import { playerClickTileAction } from "../../sagas/actions/clickToDrop";
@@ -71,7 +71,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
     const board = useSelector<AppState, BoardState>(state => state.game.board);
     const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 
-    const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
+    const selectedPieceId = useSelector<AppState, string>(state => state.game.ui.selectedPieceId);
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
     return (

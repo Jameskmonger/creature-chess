@@ -4,7 +4,7 @@ import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
 const VictoryOverlay: React.FunctionComponent = () => {
-    const winnerName = useSelector<AppState, string>(state => state.ui.winnerName);
+    const winnerName = useSelector<AppState, string>(state => state.game.ui.winnerName);
 
     if (!winnerName) {
         return null;

@@ -3,7 +3,7 @@ import { getPiece, PlayerGameActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
-import { clearSelectedPiece } from "../../../ui/actions";
+import { clearSelectedPiece } from "../../ui/actions";
 import { createAction } from "@reduxjs/toolkit";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
@@ -41,7 +41,7 @@ export const clickToDrop = function*() {
 
         const { tile } = action.payload;
 
-        const piece: PieceModel = yield select((state: AppState) => state.ui.selectedPieceId ? getPiece(state.game, state.ui.selectedPieceId) : null);
+        const piece: PieceModel = yield select((state: AppState) => state.game.ui.selectedPieceId ? getPiece(state.game, state.game.ui.selectedPieceId) : null);
 
         if (!piece) {
             continue;
