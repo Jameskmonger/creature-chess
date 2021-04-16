@@ -2,7 +2,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { REROLL_COST } from "@creature-chess/models";
 import { getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
-import { AppState } from "../../../store";
+import { AppState } from "../../../../store";
 
 const RerollButton: React.FunctionComponent<{ afterReroll: () => void }> = ({ afterReroll }) => {
   const dispatch = useDispatch();

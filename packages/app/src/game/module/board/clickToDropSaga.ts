@@ -35,7 +35,7 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 export type PlayerClickTileAction = ReturnType<typeof playerClickTileAction>;
 export const playerClickTileAction = createAction<{ tile: PlayerPieceLocation }>("playerClickTileAction");
 
-export const clickToDrop = function*() {
+export const clickToDropSaga = function*() {
     while (true) {
         const action: PlayerClickTileAction = yield take(playerClickTileAction.toString());
 

@@ -1,13 +1,11 @@
-import { Action, combineReducers } from "redux";
-import { BoardSlice } from "@creature-chess/board";
-import { playerListReducer } from "../game/features";
-
-import { RoundInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, roundInfoReducer } from "@creature-chess/gamemode";
-import { BoardState } from "@creature-chess/board";
-import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
-import { UiState } from "./ui/reducer";
 import { Reducer } from "react";
-import { uiReducer } from "./ui";
+import { Action, combineReducers } from "redux";
+import { BoardSlice, BoardState } from "@creature-chess/board";
+import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
+import { RoundInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, roundInfoReducer } from "@creature-chess/gamemode";
+
+import { playerListReducer } from "./module";
+import { UiState, uiReducer } from "./ui";
 
 export type GameState = {
     ui: UiState;

@@ -14,7 +14,7 @@ import { BoardGrid } from "../../../board/BoardGrid";
 import { clearSelectedPiece } from "../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
 import { PieceComponent } from "./piece/pieceComponent";
-import { playerClickTileAction } from "../../sagas/actions/clickToDrop";
+import { playerClickTileAction } from "./clickToDropSaga";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
     if (board) {

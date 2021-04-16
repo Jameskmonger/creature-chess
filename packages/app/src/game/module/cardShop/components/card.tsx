@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Card } from "@creature-chess/models";
-import { CreatureImage } from "../../../display";
-import { TypeIndicator } from "../board/piece/components/TypeIndicator";
 import { useSelector } from "react-redux";
-import { AppState } from "../../../store";
 import { getPlayerMoney } from "@creature-chess/gamemode";
+import { Card } from "@creature-chess/models";
+import { AppState } from "../../../../store";
+import { CreatureImage } from "../../../../display";
+import { TypeIndicator } from "../../board/piece/components/TypeIndicator";
 
 interface CardProps {
     card: Card;

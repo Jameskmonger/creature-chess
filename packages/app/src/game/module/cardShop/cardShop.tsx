@@ -2,11 +2,11 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card as CardModel } from "@creature-chess/models";
 import { getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
-import { Card } from "./card";
+import { Card } from "./components/card";
 import { AppState } from "../../../store";
-import { RerollButton } from "./rerollButton";
-import { BalanceDisplay } from "./balanceDisplay";
-import { ToggleLockButton } from "./toggleLockButton";
+import { RerollButton } from "./components/rerollButton";
+import { BalanceDisplay } from "./components/balanceDisplay";
+import { ToggleLockButton } from "./components/toggleLockButton";
 import { CreatureImage } from "../../../display";
 
 interface CardShopProps {

@@ -6,7 +6,7 @@ import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
 
 import { finishGameAction, updateConnectionStatus } from "../../../game/ui/actions";
-import { PlayerListCommands } from "../../../game/features";
+import { PlayerListCommands } from "../../../game/module";
 import { ConnectionStatus } from "../../../game/connection-status";
 import { gameRoundUpdateEvent } from "../../../game/sagas/events";
 
