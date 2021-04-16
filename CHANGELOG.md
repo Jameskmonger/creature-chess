@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.44](https://github.com/Jameskmonger/creature-chess/compare/v0.3.42...v0.3.44) (2021-04-16)
+
+
+### Bug Fixes
+
+* Player can win after dying ([#383](https://github.com/Jameskmonger/creature-chess/issues/383)) ([0aa9aa3](https://github.com/Jameskmonger/creature-chess/commit/0aa9aa3efae3afc1c508df9be60c66757bfaad0d))
+
+
+
+
+
 ## [0.3.43](https://github.com/Jameskmonger/creature-chess/compare/v0.3.42...v0.3.43) (2021-04-16)
 
 **Note:** Version bump only for package creature-chess
