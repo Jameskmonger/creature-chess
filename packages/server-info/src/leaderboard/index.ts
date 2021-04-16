@@ -1,3 +1,4 @@
+// tslint:disable: no-console
 import { DatabaseConnection } from "@creature-chess/data";
 import { Request, Response } from "express";
 

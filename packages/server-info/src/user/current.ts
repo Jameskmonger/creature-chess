@@ -1,3 +1,4 @@
+// tslint:disable: no-console
 import { ManagementClient } from "auth0";
 import { Request, Response } from "express";
 import Filter = require("bad-words");
