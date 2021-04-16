@@ -1,3 +1,4 @@
+import { createAction } from "@reduxjs/toolkit";
 import { ConnectionStatus } from "../connection-status";
 import { Overlay } from "./overlay";
 
@@ -7,13 +8,13 @@ export const CLOSE_OVERLAY = "CLOSE_OVERLAY";
 export type CLOSE_OVERLAY = typeof CLOSE_OVERLAY;
 export const UPDATE_CONNECTION_STATUS = "UPDATE_CONNECTION_STATUS";
 export type UPDATE_CONNECTION_STATUS = typeof UPDATE_CONNECTION_STATUS;
-export const FINISH_GAME = "FINISH_GAME";
-export type FINISH_GAME = typeof FINISH_GAME;
 
 export type OpenOverlayAction = { type: OPEN_OVERLAY, payload: { overlay: Overlay } };
 export type CloseOverlayAction = { type: CLOSE_OVERLAY };
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS, payload: { status: ConnectionStatus } });
-export type FinishGameAction = ({ type: FINISH_GAME, payload: { winnerName: string } });
+
+export type SetWinnerIdCommand = ReturnType<typeof setWinnerIdCommand>;
+export const setWinnerIdCommand = createAction<{ winnerId: string }, "setWinnerIdCommand">("setWinnerIdCommand");
 
 export const SELECT_PIECE = "SELECT_PIECE";
 export type SELECT_PIECE = typeof SELECT_PIECE;
@@ -45,12 +46,5 @@ export const updateConnectionStatus = (status: ConnectionStatus): UpdateConnecti
     type: UPDATE_CONNECTION_STATUS,
     payload: {
         status
-    }
-});
-
-export const finishGameAction = (winnerName: string): FinishGameAction => ({
-    type: FINISH_GAME,
-    payload: {
-        winnerName
     }
 });

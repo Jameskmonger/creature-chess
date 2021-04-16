@@ -38,7 +38,7 @@ type LevelUpdatePacket = {
 };
 
 type FinishGamePacket = {
-  winnerName: string;
+  winnerId: string;
 };
 
 type ShopLockUpdatePacket = {

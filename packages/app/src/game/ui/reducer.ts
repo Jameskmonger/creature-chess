@@ -1,9 +1,8 @@
 import {
     OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
-    UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS, FINISH_GAME, FinishGameAction,
-    SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE
+    UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS,
+    SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE, setWinnerIdCommand, SetWinnerIdCommand
 } from "./actions";
-import { MenuActions } from "../../menu";
 import { ConnectionStatus } from "../connection-status";
 import { Overlay } from "./overlay";
 
@@ -11,13 +10,13 @@ export interface UiState {
     connectionStatus: ConnectionStatus;
     selectedPieceId: string;
     currentOverlay: Overlay | null;
-    winnerName: string;
+    winnerId: string;
 }
 
 const initialState: UiState = {
     currentOverlay: null,
     selectedPieceId: null,
-    winnerName: null,
+    winnerId: null,
     connectionStatus: ConnectionStatus.NOT_CONNECTED
 };
 
@@ -26,9 +25,8 @@ type UIAction =
     | CloseOverlayAction
     | SelectPieceAction
     | ClearSelectedPieceAction
-    | MenuActions.FindGameAction
     | UpdateConnectionStatusAction
-    | FinishGameAction;
+    | SetWinnerIdCommand;
 
 export function reducer(state: UiState = initialState, action: UIAction) {
     switch (action.type) {
@@ -63,10 +61,10 @@ export function reducer(state: UiState = initialState, action: UIAction) {
                 selectedPieceId: null
             };
         }
-        case FINISH_GAME: {
+        case "setWinnerIdCommand": {
             return {
                 ...state,
-                winnerName: action.payload.winnerName
+                winnerId: action.payload.winnerId
             };
         }
         default:

@@ -5,7 +5,7 @@ import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networki
 import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
 
-import { finishGameAction, updateConnectionStatus } from "../../../game/ui/actions";
+import { setWinnerIdCommand, updateConnectionStatus } from "../../../game/ui/actions";
 import { PlayerListCommands } from "../../../game/module";
 import { ConnectionStatus } from "../../../game/connection-status";
 import { gameRoundUpdateEvent } from "../../../game/sagas/events";
@@ -91,8 +91,8 @@ const readPacketsToActions = function*(
 
         registry.on(
             ServerToClient.Game.PacketOpcodes.FINISH_GAME,
-            (packet) => {
-                emit(finishGameAction(packet.winnerName));
+            ({ winnerId }) => {
+                emit(setWinnerIdCommand({ winnerId }));
 
                 socket.close();
             }

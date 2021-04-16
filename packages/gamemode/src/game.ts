@@ -97,7 +97,8 @@ export class Game {
                     getAll: () => thisRef.players,
                     getLiving: thisRef.getLivingPlayers,
                     getById: (id: string) => thisRef.players.find(p => p.id === id) || null
-                }
+                },
+                logger: thisRef.logger
             };
 
             const { winnerId } = yield call(gameLoopSaga, sagaDependencies);
@@ -112,18 +113,10 @@ export class Game {
             thisRef.playerList.deconstructor();
             thisRef.playerList = null;
 
-            const winner = thisRef.players.find(p => p.id === winnerId);
-
-            const event = gameFinishEvent({ winnerName: winner.name });
+            const event = gameFinishEvent({ winnerId });
             thisRef.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
 
-            const gamePlayers = thisRef.players.map(p => ({
-                id: p.id,
-                name: p.name
-            }));
-
-            thisRef.logger.info(`Game finished, won by ${winner.name}`);
-            thisRef.events.emit(finishGameEventKey, winner, gamePlayers);
+            thisRef.events.emit(finishGameEventKey, winnerId);
 
             // more teardown
             thisRef.events.removeAllListeners();
