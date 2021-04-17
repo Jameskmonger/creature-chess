@@ -8,9 +8,9 @@ import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./game/opponentProvider";
 import { PlayerList } from "./game/playerList";
 import { CardDeck } from "./game/cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent } from "./game/events";
+import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent, GameFinishEvent } from "./game/events";
 import { createGameStore, GameState } from "./game/store";
-import { call, takeLatest } from "@redux-saga/core/effects";
+import { call, put, select, take, takeLatest } from "@redux-saga/core/effects";
 import { RoundInfoCommands, SetRoundInfoCommand } from "./game/roundInfo";
 import { GameSagaDependencies } from "./game/sagas";
 import { gameLoopSaga } from "./game/gameLoop";
@@ -53,7 +53,8 @@ export class Game {
         this.playerList.onUpdate(this.onPlayerListUpdate);
 
         sagaMiddleware.run(this.sendPublicEventsSagaFactory());
-        sagaMiddleware.run(this.gameSagaFactory(), players);
+        sagaMiddleware.run(this.gameSagaFactory(players));
+        sagaMiddleware.run(this.gameTeardownSagaFactory());
     }
 
     public onFinish(fn: (winner: Player) => void) {
@@ -74,53 +75,63 @@ export class Game {
         };
     }
 
-    private gameSagaFactory = () => {
-        const thisRef = this;
+    private gameSagaFactory = (players: Player[]) => {
+        const sagaDependencies: GameSagaDependencies = {
+            options: this.options,
+            getMatchups: () => {
+                this.updateOpponentProvider();
+                return this.opponentProvider.getMatchups();
+            },
 
-        return function*(players: Player[]) {
-            players.forEach(thisRef.addPlayer);
+            players: {
+                getAll: () => this.players,
+                getLiving: this.getLivingPlayers,
+                getById: (id: string) => this.players.find(p => p.id === id) || null
+            },
+            logger: this.logger
+        };
 
-            thisRef.updateOpponentProvider();
+        players.forEach(this.addPlayer);
 
+        this.updateOpponentProvider();
+
+        return function*() {
             const startTime = startStopwatch();
 
-            thisRef.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
-
-            const sagaDependencies: GameSagaDependencies = {
-                options: thisRef.options,
-                getMatchups: () => {
-                    thisRef.updateOpponentProvider();
-                    return thisRef.opponentProvider.getMatchups();
-                },
-
-                players: {
-                    getAll: () => thisRef.players,
-                    getLiving: thisRef.getLivingPlayers,
-                    getById: (id: string) => thisRef.players.find(p => p.id === id) || null
-                },
-                logger: thisRef.logger
-            };
+            sagaDependencies.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
 
             const { winnerId } = yield call(gameLoopSaga, sagaDependencies);
 
             const duration = stopwatch(startTime);
 
-            thisRef.logger.info(`Match complete in ${(duration)} ms (${thisRef.store.getState().roundInfo.round} rounds)`);
+            const round = yield select((state: GameState) => state.roundInfo.round);
 
-            // teardown
-            thisRef.opponentProvider = null;
-            thisRef.deck = null;
-            thisRef.playerList.deconstructor();
-            thisRef.playerList = null;
+            sagaDependencies.logger.info(`Match complete in ${(duration)} ms (${round} rounds)`);
 
-            const event = gameFinishEvent({ winnerId });
-            thisRef.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
+            yield put(gameFinishEvent({ winnerId }));
+        };
+    }
 
-            thisRef.events.emit(finishGameEventKey, winnerId);
+    private gameTeardownSagaFactory = () => {
+        const broadcast = (event: GameFinishEvent) => {
+            this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
+            this.events.emit(finishGameEventKey, event.payload.winnerId);
+        };
 
-            // more teardown
-            thisRef.events.removeAllListeners();
-            thisRef.events = null;
+        const teardown = () => {
+            this.opponentProvider = null;
+            this.deck = null;
+            this.playerList.deconstructor();
+            this.playerList = null;
+            this.events.removeAllListeners();
+            this.events = null;
+        };
+
+        return function*() {
+            const event: GameFinishEvent = yield take(gameFinishEvent.toString());
+
+            broadcast(event);
+            teardown();
         };
     }
 
