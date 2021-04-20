@@ -91,6 +91,8 @@ export const patchCurrent = (
 
         const updatedUser = await database.user.setNickname(user.id, trimmedNickname);
 
+        await authClient.updateAppMetadata({ id: user.authId }, { playerId: user.id, playerNickname: trimmedNickname });
+
         const sanitized = sanitize(convertDatabaseUserToUserModel(updatedUser));
 
         res.send(sanitized);

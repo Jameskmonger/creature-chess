@@ -7,7 +7,7 @@ import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../display/animation";
 import { Projectile } from "../../../../display/projectile";
 import { selectPiece } from "../../../ui/actions";
-import { getUserId } from "../../../../auth";
+import { usePlayerId } from "../../../../auth";
 import { PieceImage } from "./components/pieceImage";
 import { PieceMeta } from "./pieceMeta";
 
@@ -34,7 +34,7 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
     const dispatch = useDispatch();
     const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
     const [oldPiece, setOldPiece] = React.useState<PieceModel | null>(null);
-    const localPlayerId = useSelector<AppState, string>(getUserId);
+    const localPlayerId = usePlayerId();
     const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
