@@ -8,7 +8,7 @@ import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./game/opponentProvider";
 import { PlayerList } from "./game/playerList";
 import { CardDeck } from "./game/cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent, GameFinishEvent } from "./game/events";
+import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./game/events";
 import { createGameStore, GameState } from "./game/store";
 import { call, put, select, take, takeLatest } from "@redux-saga/core/effects";
 import { RoundInfoCommands, SetRoundInfoCommand } from "./game/roundInfo";
@@ -50,7 +50,12 @@ export class Game {
 
         this.deck = new CardDeck(this.logger);
 
-        this.playerList.onUpdate(this.onPlayerListUpdate);
+        players.forEach(this.addPlayer);
+        this.updateOpponentProvider();
+
+        this.playerList.onUpdate(players => {
+            this.dispatchPublicGameEvent(playerListChangedEvent({ players }));
+        });
 
         sagaMiddleware.run(this.sendPublicEventsSagaFactory());
         sagaMiddleware.run(this.gameSagaFactory(players));
@@ -66,11 +71,13 @@ export class Game {
     }
 
     private sendPublicEventsSagaFactory = () => {
-        const thisRef = this;
+        const broadcast = (event: GamePhaseStartedEvent) => {
+            this.dispatchPublicGameEvent(event);
+        };
 
         return function*() {
             yield takeLatest<SetRoundInfoCommand>(RoundInfoCommands.setRoundInfoCommand.toString(), function*({ payload }) {
-                thisRef.dispatchPublicGameEvent(gamePhaseStartedEvent(payload));
+                broadcast(gamePhaseStartedEvent(payload));
             });
         };
     }
@@ -91,10 +98,6 @@ export class Game {
             logger: this.logger
         };
 
-        players.forEach(this.addPlayer);
-
-        this.updateOpponentProvider();
-
         return function*() {
             const startTime = startStopwatch();
 
@@ -114,7 +117,7 @@ export class Game {
 
     private gameTeardownSagaFactory = () => {
         const broadcast = (event: GameFinishEvent) => {
-            this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
+            this.dispatchPublicGameEvent(event);
             this.events.emit(finishGameEventKey, event.payload.winnerId);
         };
 
@@ -149,10 +152,6 @@ export class Game {
     private dispatchPublicGameEvent(event: GameEvent) {
         this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
             .forEach(p => p.receiveGameEvent(event));
-    }
-
-    private onPlayerListUpdate = (players: PlayerListPlayer[]) => {
-        this.dispatchPublicGameEvent(playerListChangedEvent({ players }));
     }
 
     private updateOpponentProvider() {
