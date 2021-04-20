@@ -1,11 +1,12 @@
 # `@creature-chess/app`
 
-> TODO: description
+> React frontend for Creature Chess
 
-## Usage
+## Sections
 
-```
-const app = require('@creature-chess/app');
+There are 4 main sections of the app:
 
-// TODO: DEMONSTRATE API
-```
+- **auth** - logged out view, login and registration
+- **menu** - main menu for logged-in users
+- **lobby** - waiting for a game to start
+- [**game**](./src/game/README.md) - the main game

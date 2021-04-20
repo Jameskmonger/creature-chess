@@ -2,12 +2,12 @@ import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AppState } from "../store";
-import { Footer, Loading } from "../ui";
 import { GAME_SERVER_URL } from "../auth/config";
 import { getUrlParameter } from "./get-url-parameter";
 import { Leaderboard } from "./leaderboard";
 import { findGameAction } from "./actions";
 import { finishLoading, startLoading } from "./state";
+import { Footer, Loading } from "../display";
 
 interface DispatchProps {
     onFindGame: (serverIP: string) => void;

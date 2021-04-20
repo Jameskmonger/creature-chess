@@ -1,6 +1,6 @@
 import { takeLatest, put, select } from "@redux-saga/core/effects";
 import { GamePhase } from "@creature-chess/models";
-import { clearSelectedPiece, openOverlay, closeOverlay, Overlay } from "../../../ui";
+import { clearSelectedPiece, openOverlay, closeOverlay, Overlay } from "../../ui";
 import { gameRoundUpdateEvent, GameRoundUpdateEvent } from "./roundUpdate";
 import { AppState } from "../../../store";
 

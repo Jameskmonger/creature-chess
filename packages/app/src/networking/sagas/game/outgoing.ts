@@ -1,5 +1,5 @@
 import { takeEvery, take, all, fork } from "@redux-saga/core/effects";
-import { PlayerActions, PlayerGameActions } from "@creature-chess/gamemode";
+import { PlayerGameActions } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ClientToServer } from "@creature-chess/networking";
 
 import { BattleEvents } from "@creature-chess/battle";
@@ -10,10 +10,7 @@ const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
     let lastSentIndex = 0;
 
     while (true) {
-        const action: PlayerActions.PlayerAction = yield take([
-            ...PlayerActions.PlayerActionTypesArray,
-            ...PlayerGameActions.PlayerGameActionTypesArray
-        ]);
+        const action: PlayerGameActions.PlayerGameAction = yield take(PlayerGameActions.PlayerGameActionTypesArray);
 
         const index = ++lastSentIndex;
 

@@ -3,8 +3,8 @@ import {
     UPDATE_MONEY_COMMAND, PlayerInfoCommand, UPDATE_OPPONENT_COMMAND, CLEAR_OPPONENT_COMMAND,
     UPDATE_LEVEL_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_ROUND_DIED_AT_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_STATUS_COMMAND, UPDATE_BATTLE_COMMAND
 } from "./commands";
-import { READY_UP_ACTION } from "../actions";
 import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../events";
+import { readyUpPlayerAction } from "../playerGameActions";
 
 export interface PlayerStreak {
     type: StreakType;
@@ -115,7 +115,7 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
                 ...state,
                 opponentId: null
             };
-        case READY_UP_ACTION:
+        case readyUpPlayerAction.toString():
             return {
                 ...state,
                 ready: true

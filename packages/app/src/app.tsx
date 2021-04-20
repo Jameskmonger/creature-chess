@@ -9,7 +9,7 @@ import { GamePage } from "./game";
 import { LobbyPage } from "./lobby";
 import { MenuPage } from "./menu";
 import { LoginPage, RegistrationPage } from "./auth";
-import { Loading } from "./ui/display/loading";
+import { Loading } from "./display/loading";
 import { AuthActions } from "./auth";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {

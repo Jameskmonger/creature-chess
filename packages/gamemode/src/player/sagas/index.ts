@@ -5,5 +5,3 @@ export { addXpCommand, xpSagaFactory } from "./xp";
 export { playerBattle } from "./battle";
 export { playerMatchRewards } from "./matchRewards";
 export { createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry } from "./playerPropertyUpdates";
-
-export * as PlayerActionSagas from "./playerActions";

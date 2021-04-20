@@ -3,7 +3,7 @@ import { BoardSlice } from "@creature-chess/board";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
 
-import { updateConnectionStatus } from "../../../ui/actions";
+import { updateConnectionStatus } from "../../../game/ui/actions";
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../actions";
 import { LobbyEvents } from "../../../lobby";
 import { ConnectionStatus } from "../../../game/connection-status";

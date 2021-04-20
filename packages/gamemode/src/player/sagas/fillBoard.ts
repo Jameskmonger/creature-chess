@@ -3,7 +3,7 @@ import { PlayerState } from "../store";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { BoardSelectors } from "@creature-chess/board";
 import { getMostExpensiveBenchPiece, getPlayerBelowPieceLimit, isPlayerAlive } from "../playerSelectors";
-import { playerDropPieceAction } from "../actions";
+import { dropPiecePlayerAction } from "../playerGameActions";
 
 const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
 type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;
@@ -57,7 +57,11 @@ export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: strin
                         }
                     };
 
-                    yield put(playerDropPieceAction(benchPiece.id, fromLocation, toLocation));
+                    yield put(dropPiecePlayerAction({
+                        pieceId: benchPiece.id,
+                        from: fromLocation,
+                        to: toLocation
+                    }));
                 }
             }
         );

@@ -1,9 +1,7 @@
 import { Logger } from "winston";
 import { takeLatest, take, fork, all, select, delay } from "@redux-saga/core/effects";
 import { Socket } from "socket.io";
-import {
-    PlayerActions, PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match,
-} from "@creature-chess/gamemode";
+import { PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match, PlayerGameActions } from "@creature-chess/gamemode";
 
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 
@@ -205,7 +203,10 @@ export const outgoingNetworking = function*(
         }
     );
 
-    yield take<PlayerActions.QuitGameAction | GameEvents.GameFinishEvent>([PlayerActions.QUIT_GAME_ACTION, GameEvents.gameFinishEvent.toString()]);
+    yield take<PlayerGameActions.QuitGamePlayerAction | GameEvents.GameFinishEvent>([
+        PlayerGameActions.quitGamePlayerAction.toString(),
+        GameEvents.gameFinishEvent.toString()
+    ]);
     yield delay(100);
 
     socket.removeAllListeners();

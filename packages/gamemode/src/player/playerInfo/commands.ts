@@ -1,5 +1,5 @@
 import { StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
-import { ReadyUpAction } from "../actions";
+import { ReadyUpPlayerAction } from "../playerGameActions";
 
 export const UPDATE_STATUS_COMMAND = "UPDATE_STATUS_COMMAND";
 export type UPDATE_STATUS_COMMAND = typeof UPDATE_STATUS_COMMAND;
@@ -37,7 +37,7 @@ export type PlayerInfoCommand =
     | UpdateStreakCommand
     | UpdateRoundDiedAtCommand
     | UpdateMoneyCommand
-    | ReadyUpAction
+    | ReadyUpPlayerAction
     | UpdateOpponentCommand
     | ClearOpponentCommand
     | UpdateLevelCommand;

@@ -7,7 +7,7 @@ import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
 import "pepjs";
-import "./ui/display/style/index.scss";
+import "./display/style/index.scss";
 
 import { createAppStore } from "./store/store";
 import { App } from "./app";

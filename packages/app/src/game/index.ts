@@ -1,3 +1,3 @@
 export { gameSaga } from "./sagas";
-export { GamePage } from "./gamePage/gamePage";
+export { GamePage } from "./page";
 export { GameState, createGameReducer } from "./state";

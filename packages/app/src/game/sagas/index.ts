@@ -7,20 +7,19 @@ import { PieceModel } from "@creature-chess/models";
 
 import { GameConnectedEvent, GAME_CONNECTED_EVENT } from "../../networking/actions";
 
-import { clickToDrop } from "./actions/clickToDrop";
-import { closeShopOnFirstBuy } from "./actions/closeShopOnFirstBuy";
+import { PlayerListCommands, clickToDropSaga, closeShopOnFirstBuySaga } from "../module";
+
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
 import { LobbyEvents } from "../../lobby";
-import { PlayerListCommands } from "../features";
 import { roundUpdateSaga, clientBattleSaga, uiSaga } from "./events";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
     const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
     yield fork(preventAccidentalClose);
-    yield fork(closeShopOnFirstBuy);
-    yield fork(clickToDrop);
+    yield fork(closeShopOnFirstBuySaga);
+    yield fork(clickToDropSaga);
 
     yield fork(roundUpdateSaga, slices);
     yield fork(clientBattleSaga, slices);
@@ -50,13 +49,4 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
             yield put(startBattle(battleTurn));
         }
     }
-
-    // yield fork(PlayerSagas.evolutionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.sellPiecePlayerActionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.rerollCardsPlayerActionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.toggleShopLockSaga<AppState>()),
-    // yield fork(PlayerActionSagas.buyCardPlayerActionSagaFactory<AppState>(playerId)),
-    // yield fork(PlayerActionSagas.buyXpPlayerActionSagaFactory<AppState>()),
-    // yield fork(PlayerActionSagas.dropPiecePlayerActionSagaFactory<AppState>(playerId)),
-    // yield fork(PlayerSagas.xpSagaFactory<AppState>()),
 };

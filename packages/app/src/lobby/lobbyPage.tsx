@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { AppState } from "../store";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
-import { Countdown } from "../ui/display/countdown";
-import { Footer } from "../ui/display/footer";
+import { Countdown } from "../display/countdown";
+import { Footer } from "../display/footer";
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 

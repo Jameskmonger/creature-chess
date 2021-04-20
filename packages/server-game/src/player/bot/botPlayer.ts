@@ -1,6 +1,6 @@
 import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
 import { Card, PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
-import { Player, PlayerActions, PlayerGameActions, PlayerState, PlayerEvents, GameEvents, getDefinitionById, getAllPieces } from "@creature-chess/gamemode";
+import { Player, PlayerGameActions, PlayerState, PlayerEvents, GameEvents, getDefinitionById, getAllPieces } from "@creature-chess/gamemode";
 import { BoardSelectors } from "@creature-chess/board";
 import uuid = require("uuid");
 import delay from "delay";
@@ -191,7 +191,7 @@ export class BotPlayer extends Player {
 
             // sell a piece to make room
             if (this.atPieceLimit() || !canCurrentlyAfford) {
-                this.store.dispatch(PlayerActions.playerSellPieceAction(worstPiece.id));
+                this.store.dispatch(PlayerGameActions.sellPiecePlayerAction({ pieceId: worstPiece.id }));
                 await delay(BOT_ACTION_TIME_MS);
             }
 
@@ -246,7 +246,11 @@ export class BotPlayer extends Player {
                 }
             };
 
-            this.store.dispatch(PlayerActions.playerDropPieceAction(firstBenchPiece.id, benchPiecePosition, boardPiecePosition));
+            this.store.dispatch(PlayerGameActions.dropPiecePlayerAction({
+                pieceId: firstBenchPiece.id,
+                from: benchPiecePosition,
+                to: boardPiecePosition
+            }));
             await delay(BOT_ACTION_TIME_MS);
         }
     }
@@ -320,7 +324,7 @@ export class BotPlayer extends Player {
             await this.spendExcessMoneyOnXp();
             await this.putBenchOnBoard();
 
-            this.store.dispatch(PlayerActions.readyUpAction());
+            this.store.dispatch(PlayerGameActions.readyUpPlayerAction());
             await delay(BOT_ACTION_TIME_MS);
         };
 
