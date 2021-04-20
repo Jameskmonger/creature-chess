@@ -10,6 +10,7 @@ import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
+import { ReadyOverlay } from "./overlays/readyOverlay"
 import { BoardGrid } from "../../../board/BoardGrid";
 import { clearSelectedPiece } from "../../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
@@ -68,6 +69,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 
     const selectedPieceId = useSelector<AppState, string>(state => state.ui.selectedPieceId);
     const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
+    const inReadyPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.READY)
 
     return (
         <div className="group board-container style-default">
@@ -92,7 +94,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
                         )}
                     />
                 </div>
-
+                {inReadyPhase && <ReadyOverlay/>}
                 <VictoryOverlay />
                 <MatchRewardsOverlay />
                 <ReconnectOverlay />

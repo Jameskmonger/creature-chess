@@ -109,6 +109,19 @@
     }
 }
 
+.ready-overlay-content {
+    .h2h {
+        margin-bottom: 0.5em;
+        font-size: 1.4em;
+        text-align: center;
+
+        .opponent {
+            font-weight: bold;
+            color: #ff6464;
+        }
+    }
+}
+
 .victory-overlay {
     // stylelint-disable-next-line
     h2 {
