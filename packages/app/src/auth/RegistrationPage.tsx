@@ -1,13 +1,11 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
-import { MAX_NAME_LENGTH, SanitizedUser, validateNickname } from "@creature-chess/models";
+import { MAX_NAME_LENGTH, validateNickname } from "@creature-chess/models";
 import { patchUser } from "./utils/patchUser";
-import { userUpdated } from "./store/actions";
 
 const RegistrationPage: React.FunctionComponent = () => {
-    const dispatch = useDispatch();
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
     const [nickname, setNickname] = React.useState<string>("");
     const [loading, setLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | null>(null);
@@ -36,9 +34,8 @@ const RegistrationPage: React.FunctionComponent = () => {
         }
 
         if (response.status === 200) {
-            const user: SanitizedUser = await response.json();
-
-            dispatch(userUpdated(user));
+            await getAccessTokenSilently({ ignoreCache: true });
+            await getIdTokenClaims();
             return;
         }
 

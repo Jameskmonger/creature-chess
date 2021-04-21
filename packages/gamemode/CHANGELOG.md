@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.46](https://github.com/Jameskmonger/creature-chess/compare/v0.3.44...v0.3.46) (2021-04-21)
+
+**Note:** Version bump only for package @creature-chess/gamemode
+
+
+
+
+
+## [0.3.45](https://github.com/Jameskmonger/creature-chess/compare/v0.3.44...v0.3.45) (2021-04-21)
+
+**Note:** Version bump only for package @creature-chess/gamemode
+
+
+
+
+
 ## [0.3.44](https://github.com/Jameskmonger/creature-chess/compare/v0.3.42...v0.3.44) (2021-04-16)
 
 

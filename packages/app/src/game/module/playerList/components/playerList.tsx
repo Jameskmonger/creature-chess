@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
 import { getPlayerMoney, getPlayerLevel } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
-import { getUserId } from "../../../../auth";
 import { PlayerListItem } from "./items/playerListItem";
 import { StatusPlayerListItem } from "./items/statusPlayerListItem";
+import { usePlayerId } from "../../../../auth";
 
 // todo move this
 function ordinal_suffix_of(i: number) {
@@ -24,9 +24,9 @@ function ordinal_suffix_of(i: number) {
 }
 
 const PlayerList: React.FunctionComponent = () => {
+    const localPlayerId = usePlayerId();
     const players = useSelector<AppState, PlayerListPlayer[]>(state => state.game.playerList);
     const opponentId = useSelector<AppState, string>(state => state.game.playerInfo.opponentId);
-    const localPlayerId = useSelector<AppState, string>(getUserId);
     const showReadyIndicators = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
     const localPlayerMoney = useSelector<AppState, number>(state => getPlayerMoney(state.game));

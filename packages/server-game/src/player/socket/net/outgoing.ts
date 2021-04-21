@@ -98,8 +98,8 @@ export const outgoingNetworking = function*(
             ),
             takeLatest<GameEvents.GameFinishEvent>(
                 GameEvents.gameFinishEvent.toString(),
-                function*({ payload: { winnerName } }) {
-                    registry.emit(ServerToClient.Game.PacketOpcodes.FINISH_GAME, { winnerName });
+                function*({ payload: { winnerId } }) {
+                    registry.emit(ServerToClient.Game.PacketOpcodes.FINISH_GAME, { winnerId });
                 }
             )
         ]);

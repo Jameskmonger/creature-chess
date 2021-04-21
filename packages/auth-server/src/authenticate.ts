@@ -17,20 +17,26 @@ export const authenticate = async (
     const { sub: userId } = decoded;
 
     try {
-        const user = await managementClient.getUser({ id: userId });
+        const authUser = await managementClient.getUser({ id: userId });
 
-        if (!user.app_metadata || !user.app_metadata.playerId) {
+        if (!authUser.app_metadata || !authUser.app_metadata.playerId) {
             // need to create an account
-            const dbUser = await database.user.create(user.user_id);
+            const dbUser = await database.user.create(authUser.user_id);
 
-            await managementClient.updateAppMetadata({ id: user.user_id }, { playerId: dbUser.ref.id });
+            await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: dbUser.ref.id, playerNickname: null });
 
             return convertDatabaseUserToUserModel(dbUser);
         }
 
-        const player = await database.user.getById(user.app_metadata.playerId);
+        const dbUser = await database.user.getById(authUser.app_metadata.playerId);
 
-        return convertDatabaseUserToUserModel(player);
+        const userModel = convertDatabaseUserToUserModel(dbUser);
+
+        if (userModel.nickname && !authUser.app_metadata.playerNickname) {
+            await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: dbUser.ref.id, playerNickname: userModel.nickname });
+        }
+
+        return userModel;
     } catch (e) {
         throw e;
     }

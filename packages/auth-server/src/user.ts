@@ -3,6 +3,7 @@ import { DatabaseUser } from "@creature-chess/data";
 
 export interface UserAppMetadata {
     playerId: string;
+    playerNickname: string;
 }
 
 export interface UserModel {

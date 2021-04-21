@@ -8,9 +8,9 @@ import { Player } from "./player";
 import { HeadToHeadOpponentProvider, IOpponentProvider } from "./game/opponentProvider";
 import { PlayerList } from "./game/playerList";
 import { CardDeck } from "./game/cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent } from "./game/events";
+import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./game/events";
 import { createGameStore, GameState } from "./game/store";
-import { call, takeLatest } from "@redux-saga/core/effects";
+import { call, put, select, take, takeLatest } from "@redux-saga/core/effects";
 import { RoundInfoCommands, SetRoundInfoCommand } from "./game/roundInfo";
 import { GameSagaDependencies } from "./game/sagas";
 import { gameLoopSaga } from "./game/gameLoop";
@@ -50,10 +50,16 @@ export class Game {
 
         this.deck = new CardDeck(this.logger);
 
-        this.playerList.onUpdate(this.onPlayerListUpdate);
+        players.forEach(this.addPlayer);
+        this.updateOpponentProvider();
+
+        this.playerList.onUpdate(players => {
+            this.dispatchPublicGameEvent(playerListChangedEvent({ players }));
+        });
 
         sagaMiddleware.run(this.sendPublicEventsSagaFactory());
-        sagaMiddleware.run(this.gameSagaFactory(), players);
+        sagaMiddleware.run(this.gameSagaFactory(players));
+        sagaMiddleware.run(this.gameTeardownSagaFactory());
     }
 
     public onFinish(fn: (winner: Player) => void) {
@@ -65,69 +71,70 @@ export class Game {
     }
 
     private sendPublicEventsSagaFactory = () => {
-        const thisRef = this;
+        const broadcast = (event: GamePhaseStartedEvent) => {
+            this.dispatchPublicGameEvent(event);
+        };
 
         return function*() {
             yield takeLatest<SetRoundInfoCommand>(RoundInfoCommands.setRoundInfoCommand.toString(), function*({ payload }) {
-                thisRef.dispatchPublicGameEvent(gamePhaseStartedEvent(payload));
+                broadcast(gamePhaseStartedEvent(payload));
             });
         };
     }
 
-    private gameSagaFactory = () => {
-        const thisRef = this;
+    private gameSagaFactory = (players: Player[]) => {
+        const sagaDependencies: GameSagaDependencies = {
+            options: this.options,
+            getMatchups: () => {
+                this.updateOpponentProvider();
+                return this.opponentProvider.getMatchups();
+            },
 
-        return function*(players: Player[]) {
-            players.forEach(thisRef.addPlayer);
+            players: {
+                getAll: () => this.players,
+                getLiving: this.getLivingPlayers,
+                getById: (id: string) => this.players.find(p => p.id === id) || null
+            },
+            logger: this.logger
+        };
 
-            thisRef.updateOpponentProvider();
-
+        return function*() {
             const startTime = startStopwatch();
 
-            thisRef.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
-
-            const sagaDependencies: GameSagaDependencies = {
-                options: thisRef.options,
-                getMatchups: () => {
-                    thisRef.updateOpponentProvider();
-                    return thisRef.opponentProvider.getMatchups();
-                },
-
-                players: {
-                    getAll: () => thisRef.players,
-                    getLiving: thisRef.getLivingPlayers,
-                    getById: (id: string) => thisRef.players.find(p => p.id === id) || null
-                }
-            };
+            sagaDependencies.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
 
             const { winnerId } = yield call(gameLoopSaga, sagaDependencies);
 
             const duration = stopwatch(startTime);
 
-            thisRef.logger.info(`Match complete in ${(duration)} ms (${thisRef.store.getState().roundInfo.round} rounds)`);
+            const round = yield select((state: GameState) => state.roundInfo.round);
 
-            // teardown
-            thisRef.opponentProvider = null;
-            thisRef.deck = null;
-            thisRef.playerList.deconstructor();
-            thisRef.playerList = null;
+            sagaDependencies.logger.info(`Match complete in ${(duration)} ms (${round} rounds)`);
 
-            const winner = thisRef.players.find(p => p.id === winnerId);
+            yield put(gameFinishEvent({ winnerId }));
+        };
+    }
 
-            const event = gameFinishEvent({ winnerName: winner.name });
-            thisRef.players.filter(p => p.getStatus() !== PlayerStatus.QUIT).forEach(p => p.receiveGameEvent(event));
+    private gameTeardownSagaFactory = () => {
+        const broadcast = (event: GameFinishEvent) => {
+            this.dispatchPublicGameEvent(event);
+            this.events.emit(finishGameEventKey, event.payload.winnerId);
+        };
 
-            const gamePlayers = thisRef.players.map(p => ({
-                id: p.id,
-                name: p.name
-            }));
+        const teardown = () => {
+            this.opponentProvider = null;
+            this.deck = null;
+            this.playerList.deconstructor();
+            this.playerList = null;
+            this.events.removeAllListeners();
+            this.events = null;
+        };
 
-            thisRef.logger.info(`Game finished, won by ${winner.name}`);
-            thisRef.events.emit(finishGameEventKey, winner, gamePlayers);
+        return function*() {
+            const event: GameFinishEvent = yield take(gameFinishEvent.toString());
 
-            // more teardown
-            thisRef.events.removeAllListeners();
-            thisRef.events = null;
+            broadcast(event);
+            teardown();
         };
     }
 
@@ -145,10 +152,6 @@ export class Game {
     private dispatchPublicGameEvent(event: GameEvent) {
         this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
             .forEach(p => p.receiveGameEvent(event));
-    }
-
-    private onPlayerListUpdate = (players: PlayerListPlayer[]) => {
-        this.dispatchPublicGameEvent(playerListChangedEvent({ players }));
     }
 
     private updateOpponentProvider() {

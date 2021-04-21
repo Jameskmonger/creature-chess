@@ -1,10 +1,20 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../../store";
+import { getPlayerById } from "../../playerList/components/selectors";
 import { BoardOverlay } from "./boardOverlay";
 
 const VictoryOverlay: React.FunctionComponent = () => {
-    const winnerName = useSelector<AppState, string>(state => state.game.ui.winnerName);
+    const winnerName = useSelector<AppState, string>(state => {
+        const { winnerId } = state.game.ui;
+
+        if (!winnerId) {
+            return null;
+        }
+
+        // todo fix this selector
+        return getPlayerById(winnerId)(state).name;
+    });
 
     if (!winnerName) {
         return null;
