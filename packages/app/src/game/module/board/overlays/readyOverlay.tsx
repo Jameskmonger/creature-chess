@@ -1,4 +1,4 @@
-import { getUserId } from "packages/app/src/auth";
+import { getUserId } from "../../../../auth";
 import { GamePhase, PlayerListPlayer, StreakType } from "packages/models/lib";
 import * as React from "react";
 import { useSelector } from "react-redux";
@@ -6,7 +6,8 @@ import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
 const getStreakType = (player: PlayerListPlayer): string => {
-    const { streakType, streakAmount } = player
+    const streakType = player?.streakType
+    const streakAmount = player?.streakAmount
 
     if (!player || streakAmount === 0) {
         return ""
