@@ -1,4 +1,4 @@
-import { getUserId } from "../../../../auth";
+import { getUserId } from "packages/app/src/auth";
 import { GamePhase, PlayerListPlayer, StreakType } from "packages/models/lib";
 import * as React from "react";
 import { useSelector } from "react-redux";
