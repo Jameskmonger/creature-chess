@@ -32,22 +32,6 @@ const Navbar: React.FunctionComponent = () => {
     );
 };
 
-const TestButton = () => {
-    const { getAccessTokenSilently, getIdTokenClaims, user } = useAuth0();
-    const [ loading, setLoading ] = React.useState(false);
-
-    const onClick = async () => {
-        await getAccessTokenSilently({ ignoreCache: true });
-        await getIdTokenClaims();
-    };
-
-    if (loading) {
-        return <button disabled>Loading...</button>
-    }
-
-    return <button onClick={onClick}>Test</button>;
-};
-
 class MenuPageUnconnected extends React.Component<Props> {
     public render() {
         if (this.props.loading) {
@@ -59,8 +43,6 @@ class MenuPageUnconnected extends React.Component<Props> {
                 <Navbar />
 
                 <div className="join-game">
-
-<TestButton />
                     <h2 className="title">Creature Chess</h2>
 
                     <div className="blurb">
