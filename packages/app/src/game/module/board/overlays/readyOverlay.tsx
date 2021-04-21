@@ -1,32 +1,42 @@
 import { getUserId } from "packages/app/src/auth";
-import { PlayerListPlayer, StreakType } from "packages/models/lib";
+import { GamePhase, PlayerListPlayer, StreakType } from "packages/models/lib";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
 const getStreakType = (player: PlayerListPlayer): string => {
+    const { streakType, streakAmount } = player
 
-    const streakType = player?.streakAmount === 0 ? ""
-        : player?.streakType === StreakType.WIN ? player?.streakAmount === 1 ? "Win" : "Wins"
-            : player?.streakAmount === 1 ? "Loss" : "Losses"
-
-    return streakType
+    if (!player || streakAmount === 0) {
+        return ""
+    }
+    if (streakType === StreakType.WIN) {
+        return streakAmount === 1 ? "Win" : "Wins"
+    }
+    return streakAmount === 1 ? "Loss" : "Losses"
 }
 
-const getPosition = (player: PlayerListPlayer): number => {
-    const position = useSelector((state: AppState) => {
-        return state.game.playerList.indexOf(player) + 1
-    })
-    return position
+const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): number => {
+    return playerList.indexOf(player) + 1
 }
 
-const getPositionModifier = (position: number): string => { return position === 1 ? "st" : position === 2 ? "nd" : position === 3 ? "rd" : "th" }
+const getPositionModifier = (position: number): string => {
+    return position === 1 ? "st" : position === 2 ? "nd" : position === 3 ? "rd" : "th"
+}
 
 const ReadyOverlay: React.FunctionComponent = () => {
 
+    const inReadyPhase = useSelector<AppState, Boolean>(state =>
+        state.game.roundInfo.phase === GamePhase.READY
+    )
+
+    const playerList = useSelector((state: AppState) => {
+        return state.game.playerList
+    })
+
     const player: PlayerListPlayer = useSelector((state: AppState) => {
-        return state.game.playerList.find(p => p.id === getUserId(state))
+        return playerList.find(p => p.id === getUserId(state))
     })
 
     const opponent: PlayerListPlayer = useSelector((state: AppState) => {
@@ -34,12 +44,14 @@ const ReadyOverlay: React.FunctionComponent = () => {
         return state.game.playerList.find(p => p.id === id)
     })
 
-    const playerPosition = getPosition(player)
-    const opponentPosition = getPosition(opponent)
-
-    if (!opponent) {
+    if (!opponent || !inReadyPhase) {
         return null
     }
+
+    const playerPosition = getPosition(player, playerList)
+    const opponentPosition = getPosition(opponent, playerList)
+
+
     return (
         <BoardOverlay>
             <div className="ready-overlay-content">
