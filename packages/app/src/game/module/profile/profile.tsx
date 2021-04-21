@@ -6,17 +6,21 @@ import { Constants, getXpToNextLevel } from "@creature-chess/models";
 import { PieceCount } from "./pieceCount";
 import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
 import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
+import { usePlayerId } from "../../../auth";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 
 const Profile: React.FunctionComponent = () => {
     const dispatch = useDispatch();
+
+    const playerId = usePlayerId();
+
     const level = useSelector<AppState, number>(state => getPlayerLevel(state.game));
     const xp = useSelector<AppState, number>(state => getPlayerXp(state.game));
     const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
     // todo reselect
     const health = useSelector<AppState, number | null>(state => {
-        const player = state.game.playerList.find(p => p.id === state.user.user.id);
+        const player = state.game.playerList.find(p => p.id === playerId);
 
         return player ? player.health : null;
     });

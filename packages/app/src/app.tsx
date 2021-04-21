@@ -1,16 +1,14 @@
 import * as React from "react";
 import ReactModal from "react-modal";
 import { Route } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
-import { SanitizedUser } from "@creature-chess/models";
 import { AppState } from "./store";
 import { GamePage } from "./game";
 import { LobbyPage } from "./lobby";
 import { MenuPage } from "./menu";
 import { LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
-import { AuthActions } from "./auth";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {
     return (
@@ -39,8 +37,9 @@ const gameStateSelector = (state: AppState) => {
 };
 
 const AuthenticatedRootPage: React.FunctionComponent = () => {
+    const { user } = useAuth0();
     const gameState = useSelector<AppState, GameState>(gameStateSelector);
-    const registered = useSelector<AppState, boolean>(state => state.user.user.registered);
+    const registered: boolean = user["https://creaturechess.jamesmonger.com/playerNickname"] !== null;
 
     if (!registered) {
         return <RegistrationPage />;
@@ -68,27 +67,13 @@ const AuthenticatedRoutes: React.FunctionComponent = () => {
 ReactModal.setAppElement('#approot');
 
 const App: React.FunctionComponent = () => {
-    const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-    const dispatch = useDispatch();
-    const userFetched = useSelector<AppState, boolean>(state => state.user.fetched);
-    const user = useSelector<AppState, SanitizedUser | null>(state => state.user.user);
+    const { isAuthenticated, isLoading } = useAuth0();
 
-    React.useEffect(() => {
-        if (isAuthenticated && !userFetched) {
-            getAccessTokenSilently().then(token => {
-                dispatch(AuthActions.userAuthenticated(token));
-            }).catch(e => {
-                console.log("error getting token", e);
-                // todo display this back to the user
-            });
-        }
-    }, [ isAuthenticated ]);
-
-    if (isAuthenticated && !userFetched) {
+    if (isLoading) {
         return <Loading />;
     }
 
-    if (isAuthenticated && user) {
+    if (isAuthenticated) {
         return <AuthenticatedRoutes />;
     }
 
