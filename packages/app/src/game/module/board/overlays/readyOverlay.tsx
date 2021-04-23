@@ -1,4 +1,4 @@
-import { getUserId } from "packages/app/src/auth";
+import { usePlayerId } from "packages/app/src/auth";
 import { GamePhase, PlayerListPlayer, StreakType } from "packages/models/lib";
 import * as React from "react";
 import { useSelector } from "react-redux";
@@ -23,7 +23,16 @@ const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): 
 }
 
 const getPositionModifier = (position: number): string => {
-    return position === 1 ? "st" : position === 2 ? "nd" : position === 3 ? "rd" : "th"
+    if (position === 1){
+        return "st"
+    }
+    if (position === 2) {
+        return "nd"
+    }
+    if (position === 3) {
+        return "rd"
+    }
+    return "th"
 }
 
 const ReadyOverlay: React.FunctionComponent = () => {
@@ -37,7 +46,8 @@ const ReadyOverlay: React.FunctionComponent = () => {
     })
 
     const player: PlayerListPlayer = useSelector((state: AppState) => {
-        return playerList.find(p => p.id === getUserId(state))
+        const localId = usePlayerId()
+        return playerList.find(p => p.id === localId)
     })
 
     const opponent: PlayerListPlayer = useSelector((state: AppState) => {
