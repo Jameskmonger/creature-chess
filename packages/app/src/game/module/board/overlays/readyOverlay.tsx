@@ -23,7 +23,7 @@ const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): 
 }
 
 const getPositionModifier = (position: number): string => {
-    if (position === 1){
+    if (position === 1) {
         return "st"
     }
     if (position === 2) {
@@ -45,10 +45,8 @@ const ReadyOverlay: React.FunctionComponent = () => {
         return state.game.playerList
     })
 
-    const player: PlayerListPlayer = useSelector((state: AppState) => {
-        const localId = usePlayerId()
-        return playerList.find(p => p.id === localId)
-    })
+    const localId = usePlayerId()
+    const player = playerList.find(p => p.id === localId)
 
     const opponent: PlayerListPlayer = useSelector((state: AppState) => {
         const id = state.game.playerInfo.opponentId
@@ -61,7 +59,6 @@ const ReadyOverlay: React.FunctionComponent = () => {
 
     const playerPosition = getPosition(player, playerList)
     const opponentPosition = getPosition(opponent, playerList)
-
 
     return (
         <BoardOverlay>
