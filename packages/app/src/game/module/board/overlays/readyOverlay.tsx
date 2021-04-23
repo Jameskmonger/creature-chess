@@ -46,31 +46,31 @@ const ReadyOverlay: React.FunctionComponent = () => {
     })
 
     const localId = usePlayerId()
-    const player = playerList.find(p => p.id === localId)
+    const playerInfo = playerList.find(p => p.id === localId)
 
-    const opponent: PlayerListPlayer = useSelector((state: AppState) => {
+    const opponentInfo: PlayerListPlayer = useSelector((state: AppState) => {
         const id = state.game.playerInfo.opponentId
         return state.game.playerList.find(p => p.id === id)
     })
 
-    if (!opponent || !inReadyPhase) {
+    if (!opponentInfo || !inReadyPhase) {
         return null
     }
 
-    const playerPosition = getPosition(player, playerList)
-    const opponentPosition = getPosition(opponent, playerList)
+    const playerPosition = getPosition(playerInfo, playerList)
+    const opponentPosition = getPosition(opponentInfo, playerList)
 
     return (
         <BoardOverlay>
             <div className="ready-overlay-content">
-                <h3>Now Playing {opponent.name}</h3>
+                <h3>Now Playing {opponentInfo.name}</h3>
                 <ul className="h2h">
-                    <li>Health: <span className="highlight">{player.health} </span>
-                     vs. <span className="opponent">{opponent.health}</span></li>
-                    <li>Level: <span className="highlight">{player.level} </span>
-                     vs. <span className="opponent">{opponent.level}</span></li>
-                    <li>Streak: <span className="highlight">{player.streakAmount} {getStreakType(player)} </span>
-                     vs. <span className="opponent">{opponent.streakAmount} {getStreakType(opponent)}</span></li>
+                    <li>Health: <span className="highlight">{playerInfo.health} </span>
+                     vs. <span className="opponent">{opponentInfo.health}</span></li>
+                    <li>Level: <span className="highlight">{playerInfo.level} </span>
+                     vs. <span className="opponent">{opponentInfo.level}</span></li>
+                    <li>Streak: <span className="highlight">{playerInfo.streakAmount} {getStreakType(playerInfo)} </span>
+                     vs. <span className="opponent">{opponentInfo.streakAmount} {getStreakType(opponentInfo)}</span></li>
                     <li>Position: <span className="highlight">{playerPosition}{getPositionModifier(playerPosition)} </span>
                      vs. <span className="opponent">{opponentPosition}{getPositionModifier(opponentPosition)}</span></li>
                 </ul>
