@@ -53,8 +53,8 @@ export class Game {
         players.forEach(this.addPlayer);
         this.updateOpponentProvider();
 
-        this.playerList.onUpdate(players => {
-            this.dispatchPublicGameEvent(playerListChangedEvent({ players }));
+        this.playerList.onUpdate(newPlayers => {
+            this.dispatchPublicGameEvent(playerListChangedEvent({ players: newPlayers }));
         });
 
         sagaMiddleware.run(this.sendPublicEventsSagaFactory());
