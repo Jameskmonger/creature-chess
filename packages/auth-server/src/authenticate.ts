@@ -21,11 +21,11 @@ export const authenticate = async (
 
         if (!authUser.app_metadata || !authUser.app_metadata.playerId) {
             // need to create an account
-            const dbUser = await database.user.create(authUser.user_id);
+            const newUser = await database.user.create(authUser.user_id);
 
-            await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: dbUser.ref.id, playerNickname: null });
+            await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: newUser.ref.id, playerNickname: null });
 
-            return convertDatabaseUserToUserModel(dbUser);
+            return convertDatabaseUserToUserModel(newUser);
         }
 
         const dbUser = await database.user.getById(authUser.app_metadata.playerId);
