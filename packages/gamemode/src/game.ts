@@ -2,10 +2,10 @@ import { Logger } from "winston";
 import { v4 as uuid } from "uuid";
 import { EventEmitter } from "events";
 import { Store } from "redux";
-import { PlayerListPlayer, PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
+import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
 import { Player } from "./player";
-import { HeadToHeadOpponentProvider, IOpponentProvider } from "./game/opponentProvider";
+import { OpponentProvider } from "./game/opponentProvider";
 import { PlayerList } from "./game/playerList";
 import { CardDeck } from "./game/cardDeck";
 import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./game/events";
@@ -28,8 +28,7 @@ export class Game {
 
     private options: GameOptions;
 
-    private lastLivingPlayerCount: number = 0;
-    private opponentProvider: IOpponentProvider = new HeadToHeadOpponentProvider();
+    private opponentProvider: OpponentProvider;
     private playerList = new PlayerList();
     private players: Player[] = [];
     private events = new EventEmitter();
@@ -51,8 +50,8 @@ export class Game {
         this.deck = new CardDeck(this.logger);
 
         players.forEach(this.addPlayer);
-        this.updateOpponentProvider();
 
+        this.opponentProvider = new OpponentProvider(players);
         this.playerList.onUpdate(newPlayers => {
             this.dispatchPublicGameEvent(playerListChangedEvent({ players: newPlayers }));
         });
@@ -85,11 +84,7 @@ export class Game {
     private gameSagaFactory = (players: Player[]) => {
         const sagaDependencies: GameSagaDependencies = {
             options: this.options,
-            getMatchups: () => {
-                this.updateOpponentProvider();
-                return this.opponentProvider.getMatchups();
-            },
-
+            getMatchups: this.opponentProvider.getMatchups,
             players: {
                 getAll: () => this.players,
                 getLiving: this.getLivingPlayers,
@@ -152,16 +147,6 @@ export class Game {
     private dispatchPublicGameEvent(event: GameEvent) {
         this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
             .forEach(p => p.receiveGameEvent(event));
-    }
-
-    private updateOpponentProvider() {
-        const livingPlayers = this.getLivingPlayers();
-        const livingPlayerCount = livingPlayers.length;
-
-        if (livingPlayerCount !== this.lastLivingPlayerCount) {
-            this.opponentProvider.setPlayers(livingPlayers);
-            this.lastLivingPlayerCount = livingPlayerCount;
-        }
     }
 
     private getLivingPlayers = () => this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
