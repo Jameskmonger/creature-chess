@@ -10,6 +10,7 @@ import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
+import { ReadyOverlay } from "./overlays/readyOverlay"
 import { BoardGrid } from "../../../board/BoardGrid";
 import { clearSelectedPiece } from "../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
@@ -98,6 +99,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
                     />
                 </div>
 
+                <ReadyOverlay/>
                 <VictoryOverlay />
                 <MatchRewardsOverlay />
                 <ReconnectOverlay />
