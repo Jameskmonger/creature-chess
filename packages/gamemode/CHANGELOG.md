@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.47](https://github.com/Jameskmonger/creature-chess/compare/v0.3.44...v0.3.47) (2021-05-03)
+
+
+### Bug Fixes
+
+* fix shadowed variable lint issue ([54e4543](https://github.com/Jameskmonger/creature-chess/commit/54e45434abe38b19c51cbe0cddc97f4f6c51ad1d))
+
+
+
+
+
 ## [0.3.46](https://github.com/Jameskmonger/creature-chess/compare/v0.3.44...v0.3.46) (2021-04-21)
 
 **Note:** Version bump only for package @creature-chess/gamemode

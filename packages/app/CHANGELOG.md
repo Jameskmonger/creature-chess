@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.47](https://github.com/Jameskmonger/creature-chess/compare/v0.3.44...v0.3.47) (2021-05-03)
+
+
+### Bug Fixes
+
+* delete test button ([8b4c67f](https://github.com/Jameskmonger/creature-chess/commit/8b4c67f4c3053b1cd7dbcb8f9534c029dbbb3748))
+
+
+### Features
+
+* store nickname against auth0 user ([0349057](https://github.com/Jameskmonger/creature-chess/commit/03490573925ca5739cd34181d4c1d743eb4092ef))
+
+
+
+
+
 ## [0.3.46](https://github.com/Jameskmonger/creature-chess/compare/v0.3.44...v0.3.46) (2021-04-21)
 
 
