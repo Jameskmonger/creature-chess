@@ -4,16 +4,16 @@ import { EventEmitter } from "events";
 import { Store } from "redux";
 import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
-import { Player } from "./player";
-import { OpponentProvider } from "./game/opponentProvider";
-import { PlayerList } from "./game/playerList";
-import { CardDeck } from "./game/cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./game/events";
-import { createGameStore, GameState } from "./game/store";
+import { Player } from "../player";
+import { OpponentProvider } from "./opponentProvider";
+import { PlayerList } from "./playerList";
+import { CardDeck } from "./cardDeck";
+import { GameEvent, gameFinishEvent, playerListChangedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./events";
+import { createGameStore, GameState } from "./store";
 import { take } from "@redux-saga/core/effects";
-import { gameSaga } from "./game/sagas";
-import { playerGameDeckSagaFactory } from "./game/player/playerGameDeckSaga";
-import { sendPublicEventsSaga } from "./game/publicEvents";
+import { gameSaga } from "./sagas";
+import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
+import { sendPublicEventsSaga } from "./publicEvents";
 
 const finishGameEventKey = "FINISH_GAME";
 
