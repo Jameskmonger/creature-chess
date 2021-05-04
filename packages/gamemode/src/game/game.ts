@@ -51,9 +51,9 @@ export class Game {
             options: this.options,
             getMatchups: this.opponentProvider.getMatchups,
             players: {
-                getAll: () => this.players,
+                getAll: this.getAllPlayers,
                 getLiving: this.getLivingPlayers,
-                getById: (id: string) => this.players.find(p => p.id === id) || null,
+                getById: this.getPlayerById,
                 broadcast: this.dispatchPublicGameEvent
             },
             logger: this.logger
@@ -65,12 +65,12 @@ export class Game {
         sagaMiddleware.run(sendPublicEventsSaga);
     }
 
-    public onFinish(fn: (winner: Player) => void) {
-        this.events.on(finishGameEventKey, fn);
+    public getPlayerById = (playerId: string) => {
+        return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId) || null;
     }
 
-    public getPlayerById(playerId: string) {
-        return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId);
+    public onFinish(fn: (winner: Player) => void) {
+        this.events.on(finishGameEventKey, fn);
     }
 
     private gameTeardownSagaFactory = () => {
@@ -107,6 +107,8 @@ export class Game {
 
         player.runSaga(playerGameDeckSagaFactory(this.deck));
     }
+
+    private getAllPlayers = () => this.players;
 
     private dispatchPublicGameEvent = (event: GameEvent) => {
         this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
