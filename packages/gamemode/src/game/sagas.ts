@@ -1,7 +1,7 @@
 import { Logger } from "winston";
 import { GameOptions } from "@creature-chess/models";
 import { Player } from "../player";
-import { call, getContext, put, select } from "@redux-saga/core/effects";
+import { call, delay, getContext, put, select } from "@redux-saga/core/effects";
 import { GameEvent, gameFinishEvent } from "./events";
 import { GameState } from "./store";
 import { gameLoopSaga } from "./gameLoop";
@@ -33,9 +33,13 @@ export const gameSaga = function*() {
     const players: GameSagaContextPlayers = yield getContext("players");
     const logger: Logger = yield getContext("logger");
 
-    const startTime = startStopwatch();
-
     logger.info(`Game started with ${players.getAll().length} players: ${players.getAll().map(p => p.name).join(", ")}`);
+
+    // this is to wait for the end of the execution queue. without it, things go a bit weird with observers
+    // todo improve this
+    yield delay(100);
+
+    const startTime = startStopwatch();
 
     const { winnerId } = yield call(gameLoopSaga);
 
