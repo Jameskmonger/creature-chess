@@ -1,10 +1,13 @@
-import { select, race, put , delay } from "@redux-saga/core/effects";
-import { GamePhase } from "@creature-chess/models";
+import { select, race, put , delay, getContext } from "@redux-saga/core/effects";
+import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { readyNotifier } from "../../readyNotifier";
-import { GameSagaDependencies } from "../../sagas";
+import { GameSagaContextPlayers } from "../../sagas";
 
-export const runPreparingPhase = function*({ options, players }: GameSagaDependencies) {
+export const runPreparingPhase = function*() {
+    const options: GameOptions = yield getContext("options");
+    const players: GameSagaContextPlayers = yield getContext("players");
+
     const round: number = yield select(state => state.roundInfo.round);
 
     const phase = GamePhase.PREPARING;

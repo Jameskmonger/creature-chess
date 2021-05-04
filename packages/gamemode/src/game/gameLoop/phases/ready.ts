@@ -1,10 +1,14 @@
-import { put, delay } from "@redux-saga/core/effects";
-import { GamePhase } from "@creature-chess/models";
+import { put, delay, getContext } from "@redux-saga/core/effects";
+import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { Match } from "../../match";
-import { GameSagaDependencies } from "../../sagas";
+import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
 
-export const runReadyPhase = function*({ getMatchups, options, players }: GameSagaDependencies) {
+export const runReadyPhase = function*() {
+    const options: GameOptions = yield getContext("options");
+    const players: GameSagaContextPlayers = yield getContext("players");
+    const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
+
     const matchups = getMatchups();
 
     matchups.forEach(({ homeId, awayId, awayIsClone }) => {

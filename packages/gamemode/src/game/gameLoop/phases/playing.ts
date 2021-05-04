@@ -1,12 +1,15 @@
 import pDefer = require("p-defer");
-import { select, put } from "@redux-saga/core/effects";
+import { select, put, getContext } from "@redux-saga/core/effects";
 import delay from "delay";
-import { GamePhase, PlayerStatus } from "@creature-chess/models";
+import { GameOptions, GamePhase, PlayerStatus } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameState } from "../../store";
-import { GameSagaDependencies } from "../../sagas";
+import { GameSagaContextPlayers } from "../../sagas";
 
-export const runPlayingPhase = function*({ options, players }: GameSagaDependencies) {
+export const runPlayingPhase = function*() {
+    const options: GameOptions = yield getContext("options");
+    const players: GameSagaContextPlayers = yield getContext("players");
+
     const battleTimeoutDeferred = pDefer<void>();
 
     const phase = GamePhase.PLAYING;

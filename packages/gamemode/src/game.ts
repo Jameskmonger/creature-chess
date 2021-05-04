@@ -8,19 +8,12 @@ import { Player } from "./player";
 import { OpponentProvider } from "./game/opponentProvider";
 import { PlayerList } from "./game/playerList";
 import { CardDeck } from "./game/cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, gamePhaseStartedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./game/events";
+import { GameEvent, gameFinishEvent, playerListChangedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./game/events";
 import { createGameStore, GameState } from "./game/store";
-import { call, put, select, take, takeLatest } from "@redux-saga/core/effects";
-import { RoundInfoCommands, SetRoundInfoCommand } from "./game/roundInfo";
-import { GameSagaDependencies } from "./game/sagas";
-import { gameLoopSaga } from "./game/gameLoop";
+import { take } from "@redux-saga/core/effects";
+import { gameSaga } from "./game/sagas";
 import { playerGameDeckSagaFactory } from "./game/player/playerGameDeckSaga";
-
-const startStopwatch = () => process.hrtime();
-const stopwatch = (start: [number, number]) => {
-    const end = process.hrtime(start);
-    return Math.round((end[0] * 1000) + (end[1] / 1000000));
-};
+import { sendPublicEventsSaga } from "./game/publicEvents";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -42,9 +35,6 @@ export class Game {
     constructor(createLogger: (id: string) => Logger, players: Player[], options?: Partial<GameOptions>) {
         this.id = uuid();
 
-        const { store, sagaMiddleware } = createGameStore();
-        this.store = store;
-
         this.options = getOptions(options);
         this.logger = createLogger(this.id);
 
@@ -57,9 +47,22 @@ export class Game {
             this.dispatchPublicGameEvent(playerListChangedEvent({ players: newPlayers }));
         });
 
-        sagaMiddleware.run(this.sendPublicEventsSagaFactory());
-        sagaMiddleware.run(this.gameSagaFactory(players));
+        const { store, sagaMiddleware } = createGameStore({
+            options: this.options,
+            getMatchups: this.opponentProvider.getMatchups,
+            players: {
+                getAll: () => this.players,
+                getLiving: this.getLivingPlayers,
+                getById: (id: string) => this.players.find(p => p.id === id) || null,
+                broadcast: this.dispatchPublicGameEvent
+            },
+            logger: this.logger
+        });
+        this.store = store;
+
         sagaMiddleware.run(this.gameTeardownSagaFactory());
+        sagaMiddleware.run(gameSaga);
+        sagaMiddleware.run(sendPublicEventsSaga);
     }
 
     public onFinish(fn: (winner: Player) => void) {
@@ -68,47 +71,6 @@ export class Game {
 
     public getPlayerById(playerId: string) {
         return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId);
-    }
-
-    private sendPublicEventsSagaFactory = () => {
-        const broadcast = (event: GamePhaseStartedEvent) => {
-            this.dispatchPublicGameEvent(event);
-        };
-
-        return function*() {
-            yield takeLatest<SetRoundInfoCommand>(RoundInfoCommands.setRoundInfoCommand.toString(), function*({ payload }) {
-                broadcast(gamePhaseStartedEvent(payload));
-            });
-        };
-    }
-
-    private gameSagaFactory = (players: Player[]) => {
-        const sagaDependencies: GameSagaDependencies = {
-            options: this.options,
-            getMatchups: this.opponentProvider.getMatchups,
-            players: {
-                getAll: () => this.players,
-                getLiving: this.getLivingPlayers,
-                getById: (id: string) => this.players.find(p => p.id === id) || null
-            },
-            logger: this.logger
-        };
-
-        return function*() {
-            const startTime = startStopwatch();
-
-            sagaDependencies.logger.info(`Game started with ${players.length} players: ${players.map(p => p.name).join(", ")}`);
-
-            const { winnerId } = yield call(gameLoopSaga, sagaDependencies);
-
-            const duration = stopwatch(startTime);
-
-            const round = yield select((state: GameState) => state.roundInfo.round);
-
-            sagaDependencies.logger.info(`Match complete in ${(duration)} ms (${round} rounds)`);
-
-            yield put(gameFinishEvent({ winnerId }));
-        };
     }
 
     private gameTeardownSagaFactory = () => {
@@ -146,7 +108,7 @@ export class Game {
         player.runSaga(playerGameDeckSagaFactory(this.deck));
     }
 
-    private dispatchPublicGameEvent(event: GameEvent) {
+    private dispatchPublicGameEvent = (event: GameEvent) => {
         this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
             .forEach(p => p.receiveGameEvent(event));
     }
