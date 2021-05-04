@@ -14,6 +14,7 @@ import { call, put, select, take, takeLatest } from "@redux-saga/core/effects";
 import { RoundInfoCommands, SetRoundInfoCommand } from "./game/roundInfo";
 import { GameSagaDependencies } from "./game/sagas";
 import { gameLoopSaga } from "./game/gameLoop";
+import { playerGameDeckSagaFactory } from "./game/player/playerGameDeckSaga";
 
 const startStopwatch = () => process.hrtime();
 const stopwatch = (start: [number, number]) => {
@@ -139,9 +140,10 @@ export class Game {
         this.players.push(player);
         this.playerList.addPlayer(player);
 
-        player.setDeck(this.deck);
         player.setGetRoundInfoState(() => this.store.getState().roundInfo);
         player.setGetPlayerListPlayers(this.playerList.getValue);
+
+        player.runSaga(playerGameDeckSagaFactory(this.deck));
     }
 
     private dispatchPublicGameEvent(event: GameEvent) {

@@ -1,13 +1,12 @@
 import { Logger } from "winston";
 import { EventEmitter } from "events";
-import { SagaMiddleware } from "redux-saga";
+import { Saga, SagaMiddleware, Task } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
-import { CardDeck } from "../game/cardDeck";
 import { Match } from "../game/match";
 import {
     createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry,
@@ -15,13 +14,12 @@ import {
     fillBoardCommand
 } from "./sagas";
 import {
-    AfterRerollCardsEvent, AfterSellPieceEvent, AFTER_REROLL_CARDS_EVENT, AFTER_SELL_PIECE_EVENT,
-    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, playerDeathEvent
+    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, playerDeathEvent, afterRerollCardsEvent
 } from "./events";
 import { PlayerStore, createPlayerStore, PlayerState } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
-import { getAllPieces, getPiecesForStage, getPiecesExceptStage } from "./pieceSelectors";
+import { getAllPieces } from "./pieceSelectors";
 import { GameEvent, gameFinishEvent } from "../game/events";
 import { updateCardsCommand } from "./cardShop";
 import { quitGamePlayerAction, QuitGamePlayerAction } from "./playerGameActions";
@@ -42,6 +40,8 @@ export abstract class Player {
     public readonly name: string;
     public readonly picture: number;
 
+    public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
+
     protected match: Match = null;
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
@@ -54,7 +54,6 @@ export abstract class Player {
     private events = new EventEmitter();
     private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
-    private deck: CardDeck;
     private logger: Logger;
 
     constructor(id: string, name: string, picture: number) {
@@ -72,13 +71,13 @@ export abstract class Player {
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.afterSellPieceEventSaga());
-        this.sagaMiddleware.run(this.afterRerollCardsEventSaga());
         this.sagaMiddleware.run(this.quitGameSaga());
         this.sagaMiddleware.run(this.clientFinishMatchSaga());
         this.sagaMiddleware.run(this.finishGameSaga());
         playerBattle(this.sagaMiddleware);
         this.sagaMiddleware.run(playerMatchRewards<PlayerState>(this.id));
+
+        this.runSaga = this.sagaMiddleware.run;
 
         this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
     }
@@ -143,13 +142,9 @@ export abstract class Player {
         return this.store.getState().playerInfo.battle;
     }
 
-    public setDeck(deck: CardDeck) {
-        this.deck = deck;
-    }
-
     public enterPreparingPhase() {
         if (!this.getShopLocked()) {
-            this.rerollCards();
+            this.store.dispatch(afterRerollCardsEvent());
         }
 
         this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
@@ -206,46 +201,15 @@ export abstract class Player {
         return () => this.events.off(PlayerEvent.QUIT_GAME, fn);
     }
 
-    public rerollCards = () => {
-        if (isPlayerAlive(this.store.getState()) === false) {
-            return;
-        }
-
-        const state = this.store.getState();
-
-        const { cardShop: { cards } } = state;
-
-        const threeStarBoardPieces = getPiecesForStage(state.board, 2);
-        const threeStarBenchPieces = getPiecesForStage(state.bench, 2);
-
-        const excludeIds = [ ...threeStarBoardPieces, ...threeStarBenchPieces ].map(p => p.definitionId);
-
-        const blessCandidateIds = [... new Set(getPiecesExceptStage(state.board, 2).map(p => p.definitionId)) ];
-
-        const newCards = this.deck.reroll(cards, 5, this.getLevel(), blessCandidateIds, excludeIds);
-        this.store.dispatch(updateCardsCommand(newCards));
-    }
-
-    public clearPieces() {
+    public kill() {
         const pieces = getAllPieces(this.store.getState());
+        const { cardShop: { cards } } = this.store.getState();
 
         this.store.dispatch(this.boardSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
         this.store.dispatch(this.benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
-
-        for (const piece of pieces) {
-            this.deck.addPiece(piece);
-        }
-
-        const { cardShop: { cards } } = this.store.getState();
         this.store.dispatch(updateCardsCommand([]));
-        this.deck.addCards(cards);
 
-        this.deck.shuffle();
-    }
-
-    public kill() {
-        this.clearPieces();
-        this.store.dispatch(playerDeathEvent());
+        this.store.dispatch(playerDeathEvent({ pieces, cards }));
     }
 
     public isAlive() {
@@ -270,35 +234,6 @@ export abstract class Player {
 
     public getCards() {
         return this.store.getState().cardShop.cards;
-    }
-
-    private afterSellPieceEventSaga() {
-        const addPieceToDeck = (piece: PieceModel) => {
-            this.deck.addPiece(piece);
-            this.deck.shuffle();
-        };
-
-        return function*() {
-            yield takeEvery<AfterSellPieceEvent>(
-                AFTER_SELL_PIECE_EVENT,
-                function*({ payload: { piece } }) {
-                    addPieceToDeck(piece);
-                }
-            );
-        };
-    }
-
-    private afterRerollCardsEventSaga() {
-        const thisRerollCards = this.rerollCards;
-
-        return function*() {
-            yield takeEvery<AfterRerollCardsEvent>(
-                AFTER_REROLL_CARDS_EVENT,
-                function*() {
-                    thisRerollCards();
-                }
-            );
-        };
     }
 
     private quitGameSaga() {

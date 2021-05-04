@@ -49,8 +49,8 @@ export class OpponentProvider {
             // increment rotation by 1 if it would pick player 0
             const rotation =
                 this.rotation % remainingPlayerIds.length === 0
-                ? this.rotation + 1
-                : this.rotation;
+                    ? this.rotation + 1
+                    : this.rotation;
 
             const playerA = remainingPlayerIds[0];
             const playerB = remainingPlayerIds[rotation % remainingPlayerIds.length];
@@ -85,7 +85,9 @@ export class OpponentProvider {
         const potentialHomePlayers = livingPlayers.filter(({ id }) => id !== this.lastOddMatchupHomeId || this.lastOddMatchupHomeId === null);
         const home = randomFromArray(potentialHomePlayers);
 
-        const potentialAwayPlayers = livingPlayers.filter(({ id }) => id !== home.id && (id !== this.lastOddMatchupAwayId || this.lastOddMatchupAwayId === null));
+        const potentialAwayPlayers = livingPlayers.filter(
+            ({ id }) => id !== home.id && (id !== this.lastOddMatchupAwayId || this.lastOddMatchupAwayId === null)
+        );
         const away = randomFromArray(potentialAwayPlayers);
 
         this.lastOddMatchupHomeId = home.id;

@@ -74,7 +74,7 @@ export const buyCardPlayerActionSaga = function*() {
         const index = action.payload.index;
         const sortPositions = action.payload.sortPositions || undefined;
 
-        const state = yield select();
+        const state: PlayerState = yield select();
 
         const {
             cardShop: { cards },

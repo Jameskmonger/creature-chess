@@ -32,7 +32,7 @@ export const sellPiecePlayerActionSaga = function*() {
       yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
       yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
 
-      yield put(afterSellPieceEvent(piece));
+      yield put(afterSellPieceEvent({ piece }));
     }
   );
 };

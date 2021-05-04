@@ -85,7 +85,7 @@ export const outgoingNetworking = function*(
     const sendAnnouncements = function*() {
         yield all([
             takeLatest<PlayerEvents.PlayerDeathEvent>(
-                PlayerEvents.PLAYER_DEATH_EVENT,
+                PlayerEvents.playerDeathEvent.toString(),
                 function*() {
                     registry.emit(ServerToClient.Game.PacketOpcodes.PLAYER_DEAD, { empty: true });
                 }

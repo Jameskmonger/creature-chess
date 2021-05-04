@@ -329,6 +329,17 @@ export class BotPlayer extends Player {
         };
 
         return function*() {
+            // take first event manually to allow for a delay
+            const event: GameEvents.GamePhaseStartedEvent = yield take(GameEvents.gamePhaseStartedEvent.toString());
+
+            yield delay(500);
+
+            if (event.payload.phase === GamePhase.PREPARING) {
+                preparingPhase();
+            } else if (event.payload.phase === GamePhase.PLAYING) {
+                yield put(PlayerEvents.clientFinishMatchEvent());
+            }
+
             yield takeLatest<GameEvents.GamePhaseStartedEvent>(
                 GameEvents.gamePhaseStartedEvent.toString(),
                 function*({ payload: { phase } }) {
