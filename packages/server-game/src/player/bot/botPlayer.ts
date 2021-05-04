@@ -1,10 +1,11 @@
-import { takeLatest, put, take, race, fork, all, select } from "@redux-saga/core/effects";
-import { Card, PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
+import { takeLatest, put, take } from "@redux-saga/core/effects";
+import { PieceModel, LobbyPlayer, PlayerPieceLocation, GamePhase, DefinitionClass, TileCoordinates } from "@creature-chess/models";
 import { Player, PlayerGameActions, PlayerState, PlayerEvents, GameEvents, getDefinitionById, getAllPieces } from "@creature-chess/gamemode";
 import { BoardSelectors } from "@creature-chess/board";
 import uuid = require("uuid");
 import delay from "delay";
 import { shouldBuyXp } from "./shop/shouldBuyXp";
+import { compareCardPieceViews, getCardViews, getPieceViews } from "./shop/cardPieceViews";
 
 const SORT_A_FIRST = -1;
 const SORT_A_SECOND = 1;
@@ -88,26 +89,6 @@ const PREFERRED_LOCATIONS: {
     },
 };
 
-interface CardView {
-    source: "shop";
-    index: number;
-
-    cost: number;
-    amountOwned: number;
-    definitionId: number;
-}
-
-interface PieceView {
-    source: "board";
-    id: string;
-
-    cost: number;
-    amountOwned: number;
-    definitionId: number;
-}
-
-type CardPieceView = CardView | PieceView;
-
 const getFirstBenchPiece = (state: PlayerState): PieceModel => {
     for (let x = 0; x < state.bench.size.width; x++) {
         if (state.bench.piecePositions[`${x},0`]) {
@@ -126,8 +107,7 @@ const getBenchSlotForPiece = (state: PlayerState, pieceId: string): number => {
 
     return null;
 };
-const getPieceCountForDefinition =
-    (state: PlayerState, definitionId: number): number => getAllPieces(state).filter(p => p.definitionId === definitionId).length;
+
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
 
 const BOT_ACTION_TIME_MS = 400;
@@ -162,20 +142,20 @@ export class BotPlayer extends Player {
     }
 
     private async buyBestPieces() {
-        const cards = this.getCardViews();
+        const cards = getCardViews(this.store.getState());
 
         for (const card of cards) {
-            const pieces = this.getPieceViews();
+            const pieces = getPieceViews(this.store.getState());
             const worstPiece = pieces.pop();
 
-            const pieceIsBetter = () => this.compareCardPieceViews(card, worstPiece) === 1;
+            const pieceIsBetter = () => compareCardPieceViews(card, worstPiece) === 1;
 
             if (
                 !worstPiece
                 || worstPiece.definitionId === card.definitionId
                 || pieceIsBetter()
             ) {
-                await this.buyCardIfBelowLimit(card);
+                await this.buyCardIfBelowLimit(card.index);
                 continue;
             }
 
@@ -195,19 +175,29 @@ export class BotPlayer extends Player {
                 await delay(BOT_ACTION_TIME_MS);
             }
 
-            await this.buyCardIfBelowLimit(card);
+            await this.buyCardIfBelowLimit(card.index);
         }
     }
 
-    private async buyCardIfBelowLimit(card: CardView) {
+    private async buyCardIfBelowLimit(index: number) {
         if (this.atPieceLimit()) {
+            return;
+        }
+
+        const card = this.getCards()[index];
+
+        if (!card) {
+            this.getLogger().warn(
+                `buyCardIfBelowLimit card was not found`,
+                { actor: { name: this.name } }
+            );
             return;
         }
 
         const definition = getDefinitionById(card.definitionId);
 
         this.store.dispatch(PlayerGameActions.buyCardPlayerAction({
-            index: card.index,
+            index,
             sortPositions: PREFERRED_LOCATIONS[definition.class]
         }));
         await delay(BOT_ACTION_TIME_MS);
@@ -253,69 +243,6 @@ export class BotPlayer extends Player {
             }));
             await delay(BOT_ACTION_TIME_MS);
         }
-    }
-
-    private getCardViews(): CardView[] {
-        const cards = this.getCards();
-
-        const views = cards.filter(c => c !== null).map(this.getCardView);
-
-        views.sort(this.compareCardPieceViews);
-
-        return views;
-    }
-
-    private getPieceViews(): PieceView[] {
-        const views = getAllPieces(this.store.getState()).map(this.getPieceView);
-
-        views.sort(this.compareCardPieceViews);
-
-        return views;
-    }
-
-    private getCardView = (card: Card, index: number): CardView => {
-        const amountOwned = getPieceCountForDefinition(this.store.getState(), card.definitionId);
-
-        return {
-            source: "shop",
-            index,
-            amountOwned,
-            cost: card.cost,
-            definitionId: card.definitionId
-        };
-    }
-
-    private getPieceView = (piece: PieceModel): PieceView => {
-        const { cost } = getDefinitionById(piece.definitionId);
-        const amountOwned = getPieceCountForDefinition(this.store.getState(), piece.definitionId);
-
-        return {
-            source: "board",
-            cost,
-            amountOwned,
-            id: piece.id,
-            definitionId: piece.definitionId
-        };
-    }
-
-    private compareCardPieceViews = (a: CardPieceView, b: CardPieceView) => {
-        if (a.cost > b.cost) {
-            return SORT_A_FIRST;
-        }
-
-        if (a.cost < b.cost) {
-            return SORT_A_SECOND;
-        }
-
-        if (a.amountOwned > b.amountOwned) {
-            return SORT_A_FIRST;
-        }
-
-        if (a.amountOwned < b.amountOwned) {
-            return SORT_A_SECOND;
-        }
-
-        return 0;
     }
 
     private botLogicSaga() {
