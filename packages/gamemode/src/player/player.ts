@@ -8,11 +8,7 @@ import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/bo
 
 import { RoundInfoState } from "../game/roundInfo";
 import { Match } from "../game/match";
-import {
-    createPropertyUpdateRegistry, PlayerPropertyUpdateRegistry,
-    playerBattle, playerMatchRewards,
-    fillBoardCommand
-} from "./sagas";
+import { playerBattle, playerMatchRewards, fillBoardCommand } from "./sagas";
 import {
     ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, playerDeathEvent, afterRerollCardsEvent
 } from "./events";
@@ -52,7 +48,6 @@ export abstract class Player {
     protected readonly benchSlice: BoardSlice<PieceModel>;
 
     private events = new EventEmitter();
-    private propertyUpdateRegistry: PlayerPropertyUpdateRegistry;
 
     private logger: Logger;
 
@@ -78,8 +73,6 @@ export abstract class Player {
         this.sagaMiddleware.run(playerMatchRewards<PlayerState>(this.id));
 
         this.runSaga = this.sagaMiddleware.run;
-
-        this.propertyUpdateRegistry = createPropertyUpdateRegistry(this.sagaMiddleware);
     }
 
     public setLogger(logger: Logger) {
@@ -90,10 +83,6 @@ export abstract class Player {
 
     public receiveGameEvent(gameEvent: GameEvent) {
         this.store.dispatch(gameEvent);
-    }
-
-    public propertyUpdates() {
-        return this.propertyUpdateRegistry;
     }
 
     public setGetRoundInfoState(fn: () => RoundInfoState) {
