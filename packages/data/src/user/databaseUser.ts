@@ -1,4 +1,4 @@
-import { PlayerTitle } from "../../../models"
+import { PlayerTitle } from "@creature-chess/models"
 
 export type DatabaseUser = {
     ref: { id: string };
