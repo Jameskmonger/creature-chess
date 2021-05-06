@@ -145,7 +145,7 @@ export class Lobby {
         }));
     }
 
-    private createPlayerLobbyMember(socket: Socket, id: string, name: string, title:PlayerTitle) {
+    private createPlayerLobbyMember(socket: Socket, id: string, name: string, title: PlayerTitle) {
         let index = null;
 
         for (let i = 0; i < this.members.length; i++) {

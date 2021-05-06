@@ -1,6 +1,6 @@
 import { User, UserMetadata } from "auth0";
 import { DatabaseUser } from "@creature-chess/data";
-import { PlayerTitle } from "@creature-chess/models"
+import { PlayerTitle } from "@creature-chess/models";
 
 export interface UserAppMetadata {
     playerId: string;

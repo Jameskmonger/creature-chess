@@ -108,7 +108,7 @@ export class Matchmaking {
                 const profile: PlayerProfile = {
                     title: m.title,
                     picture
-                }
+                };
 
                 return new BotPlayer(m.id, m.name, profile);
             }
@@ -121,7 +121,7 @@ export class Matchmaking {
                 const profile = {
                     title: m.title,
                     picture
-                }
+                };
                 return new SocketPlayer(m.net.socket, m.id, m.name, profile);
             }
         });
