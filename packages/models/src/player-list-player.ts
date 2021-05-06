@@ -1,4 +1,5 @@
 import { StreakType } from "./streakType";
+import { PlayerTitle } from "./titles";
 
 export enum PlayerBattleStatus {
     IN_PROGRESS,
@@ -35,10 +36,7 @@ export const finishedBattle = (opponentId: string, homeScore: number, awayScore:
 export interface PlayerListPlayer {
     id: string;
     name: string;
-    title: {
-        className: string;
-        text: string;
-    } | null;
+    title: PlayerTitle | null;
     health: number;
     money: number;
     level: number;

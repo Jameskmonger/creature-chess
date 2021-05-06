@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import { Saga, SagaMiddleware, Task } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
-import { PieceModel, PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer, PlayerStatus, PlayerTitle, PlayerProfile } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
@@ -35,6 +35,7 @@ export abstract class Player {
     public readonly id: string;
     public readonly name: string;
     public readonly picture: number;
+    public readonly title: PlayerTitle | null;
 
     public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
 
@@ -51,10 +52,11 @@ export abstract class Player {
 
     private logger: Logger;
 
-    constructor(id: string, name: string, picture: number) {
+    constructor(id: string, name: string, profile: PlayerProfile) {
         this.id = id;
         this.name = name;
-        this.picture = picture;
+        this.picture = profile.picture;
+        this.title = profile.title;
 
         this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
         this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });

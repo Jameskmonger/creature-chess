@@ -4,13 +4,14 @@ import { OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networki
 import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
+import {  PlayerProfile } from "packages/models/lib";
 
 export class SocketPlayer extends Player {
     public readonly isConnection = true;
 
-    constructor(socket: Socket, id: string, name: string, picture: number) {
+    constructor(socket: Socket, id: string, name: string, profile: PlayerProfile) {
         // todo fix typing
-        super(id, name, picture);
+        super(id, name, profile);
 
         this.sagaMiddleware.run(incomingNetworking, this.getLogger);
         this.sagaMiddleware.run(outgoingNetworking, this.getLogger, id, this.getMatch, { boardSlice: this.boardSlice, benchSlice: this.benchSlice });

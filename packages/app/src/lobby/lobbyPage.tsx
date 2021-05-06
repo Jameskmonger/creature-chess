@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../store";
-import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
+import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME, TITLES } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
 import { Countdown } from "../display/countdown";
 import { Footer } from "../display/footer";
@@ -55,8 +55,7 @@ const LobbyPage: React.FunctionComponent = () => {
                         players.map(p => (
                             <div key={p.id} className={`player${p.isBot ? " bot" : ""}`}>
                                 <span className="name">{p.name}</span>
-
-                                {p.title && <span className={`player-profile-title ${p.title.className}`}>{p.title.text}</span>}
+                                {p.title && <span className={`player-profile-title ${TITLES[p.title].className}`}>{TITLES[p.title].text}</span>}
                             </div>
                         ))
                     }

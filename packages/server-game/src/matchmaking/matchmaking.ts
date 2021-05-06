@@ -11,7 +11,7 @@ import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
 import { LobbyMemberType } from "./lobby/lobbyMember";
 import { createWinstonLogger } from "../log";
-import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
+import { MAX_PLAYERS_IN_GAME, PlayerProfile } from "@creature-chess/models";
 import { DiscordApi } from "../discord";
 
 export class Matchmaking {
@@ -32,7 +32,7 @@ export class Matchmaking {
 
         this.searchingForGame = true;
 
-        const { id, nickname } = user;
+        const { id, nickname, title } = user;
 
         const playerInGame = this.getPlayerInGame(id);
 
@@ -55,7 +55,7 @@ export class Matchmaking {
         }
 
         const { lobby: newLobby, created } = await this.findOrCreateLobby();
-        newLobby.addConnection(socket, id, nickname);
+        newLobby.addConnection(socket, id, nickname, title);
 
         if (created) {
             this.discordApi.startLobby(nickname);
@@ -105,8 +105,12 @@ export class Matchmaking {
         const players = members.map(m => {
             if (m.type === LobbyMemberType.BOT) {
                 const picture = pictures.pop();
+                const profile: PlayerProfile = {
+                    title: m.title,
+                    picture
+                }
 
-                return new BotPlayer(m.id, m.name, picture);
+                return new BotPlayer(m.id, m.name, profile);
             }
 
             if (m.type === LobbyMemberType.PLAYER) {
@@ -114,8 +118,11 @@ export class Matchmaking {
                 const picture = m.id === "276389458988761607"
                     ? 47
                     : pictures.pop();
-
-                return new SocketPlayer(m.net.socket, m.id, m.name, picture);
+                const profile = {
+                    title: m.title,
+                    picture
+                }
+                return new SocketPlayer(m.net.socket, m.id, m.name, profile);
             }
         });
 
