@@ -1,8 +1,8 @@
-import { Player } from "@creature-chess/gamemode";
+import { Player, PlayerType} from "@creature-chess/gamemode";
 import { botLogicSaga } from "./saga";
 
 export class BotPlayer extends Player {
-    public readonly isBot = true;
+    public readonly type = PlayerType.BOT;
 
     constructor(id: string, name: string, picture: number) {
         // todo fix typing

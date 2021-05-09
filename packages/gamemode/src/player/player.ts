@@ -31,12 +31,19 @@ export interface PlayerMatchResults {
     awayScore: number;
 }
 
+export enum PlayerType {
+    BOT,
+    USER
+}
+
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
     public readonly picture: number;
 
     public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
+
+    public abstract readonly type: PlayerType;
 
     protected match: Match = null;
     protected store: PlayerStore;
