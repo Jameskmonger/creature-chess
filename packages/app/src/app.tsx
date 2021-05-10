@@ -7,7 +7,7 @@ import { AppState } from "./store";
 import { GamePage } from "./game";
 import { LobbyPage } from "./lobby";
 import { MenuPage } from "./menu";
-import { LoginPage, RegistrationPage } from "./auth";
+import { Auth0User, isRegistered, LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {
@@ -37,11 +37,10 @@ const gameStateSelector = (state: AppState) => {
 };
 
 const AuthenticatedRootPage: React.FunctionComponent = () => {
-    const { user } = useAuth0();
+    const { user } = useAuth0<Auth0User>();
     const gameState = useSelector<AppState, GameState>(gameStateSelector);
-    const registered: boolean = user["https://creaturechess.jamesmonger.com/playerNickname"] !== null;
 
-    if (!registered) {
+    if (!isRegistered(user)) {
         return <RegistrationPage />;
     }
 
