@@ -2,17 +2,18 @@ import { Logger } from "winston";
 import delay from "delay";
 import io = require("socket.io");
 import shuffle = require("lodash.shuffle");
-import { IdGenerator } from "./id-generator";
-import { Lobby, LobbyStartEvent } from "./lobby/lobby";
-import { SocketPlayer, BotPlayer } from "../player";
-import { Game } from "@creature-chess/gamemode";
+import { Game, PlayerType } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
-import { createMetricLogger } from "../metrics";
-import { LobbyMemberType } from "./lobby/lobbyMember";
-import { createWinstonLogger } from "../log";
 import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
+
+import { createWinstonLogger } from "../log";
 import { DiscordApi } from "../discord";
+import { createMetricLogger } from "../metrics";
+import { SocketPlayer, BotPlayer } from "../player";
+import { IdGenerator } from "./id-generator";
+import { Lobby, LobbyStartEvent } from "./lobby/lobby";
+import { LobbyMemberType } from "./lobby/lobbyMember";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -137,23 +138,23 @@ export class Matchmaking {
 
         players
             .forEach(p => {
-                if ((p as SocketPlayer).isConnection) {
+                if (p.type === PlayerType.USER) {
                     // todo do this in 1 call
                     this.database.user.addGamePlayed(p.id);
                 }
 
-                if ((p as BotPlayer).isBot) {
+                if (p.type === PlayerType.BOT) {
                     // todo do this in 1 call
                     this.database.bot.addGamePlayed(p.id);
                 }
             });
 
         game.onFinish((winner) => {
-            if ((winner as SocketPlayer).isConnection) {
+            if (winner.type === PlayerType.USER) {
                 this.database.user.addWin(winner.id);
             }
 
-            if ((winner as BotPlayer).isBot) {
+            if (winner.type === PlayerType.BOT) {
                 this.database.bot.addWin(winner.id);
             }
 
