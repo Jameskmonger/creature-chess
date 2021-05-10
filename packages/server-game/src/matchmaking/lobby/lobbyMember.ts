@@ -1,5 +1,6 @@
 import { Socket } from "socket.io";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
+import { PlayerProfile } from "@creature-chess/models";
 
 export enum LobbyMemberType {
     BOT,
@@ -10,6 +11,7 @@ export type PlayerLobbyMember = {
     type: LobbyMemberType.PLAYER,
     id: string,
     name: string,
+    profile: PlayerProfile | null,
     net: {
         socket: Socket,
         outgoing: OutgoingPacketRegistry<
@@ -20,5 +22,5 @@ export type PlayerLobbyMember = {
 };
 
 export type LobbyMember =
-    { type: LobbyMemberType.BOT, id: string, name: string }
+    { type: LobbyMemberType.BOT, id: string, name: string, profile: PlayerProfile | null }
     | PlayerLobbyMember;

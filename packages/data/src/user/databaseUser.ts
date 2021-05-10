@@ -1,3 +1,5 @@
+import { PlayerProfile } from "@creature-chess/models";
+
 export type DatabaseUser = {
     ref: { id: string };
     data: {
@@ -10,5 +12,6 @@ export type DatabaseUser = {
             value: string;
             uppercase: string;
         };
+        profile: PlayerProfile | null;
     };
 };

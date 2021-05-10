@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { PlayerListPlayer, PlayerStatus, PLAYER_TITLES } from "@creature-chess/models";
+import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { Player } from "../player/player";
 import { listenForPropertyUpdates } from "./playerPropertyUpdates";
 
@@ -104,8 +104,7 @@ export class PlayerList {
                 battle: player.getBattle(),
                 roundDiedAt: player.getRoundDiedAt(),
                 status: player.getStatus(),
-                title: PLAYER_TITLES[player.id] || null,
-                picture: player.picture
+                profile: player.profile
             };
         });
     }

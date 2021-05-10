@@ -33,7 +33,7 @@ export class Matchmaking {
 
         this.searchingForGame = true;
 
-        const { id, nickname } = user;
+        const { id, nickname, profile } = user;
 
         const playerInGame = this.getPlayerInGame(id);
 
@@ -56,7 +56,7 @@ export class Matchmaking {
         }
 
         const { lobby: newLobby, created } = await this.findOrCreateLobby();
-        newLobby.addConnection(socket, id, nickname);
+        newLobby.addConnection(socket, id, nickname, profile);
 
         if (created) {
             this.discordApi.startLobby(nickname);
@@ -100,24 +100,41 @@ export class Matchmaking {
         return shuffle(pictures);
     }
 
+    private generateProfile = (player, picture) => {
+        const profilePicture = player.profile?.picture ?
+            player.profile.picture
+            :
+            picture;
+
+        return({
+            picture: profilePicture,
+            title: player.profile?.title ? player.profile.title : null
+        });
+    }
+
+    private assignPicture = (pictures, id) => {
+        const picture = id === "276389458988761607"
+        ? 47
+        : pictures.pop();
+        // removes picture from pictures array if picture is taken from database (temporary fix/may not be necessary)
+        if (picture === 47) {
+            const index = pictures.indexOf(47);
+            pictures.splice(index, index);
+        }
+        return picture;
+    }
+
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
-
         const players = members.map(m => {
+            const picture = this.assignPicture(pictures, id);
+            const profile = this.generateProfile(m, picture);
+
             if (m.type === LobbyMemberType.BOT) {
-                const picture = pictures.pop();
-
-                return new BotPlayer(m.id, m.name, picture);
+                return new BotPlayer(m.id, m.name, profile);
             }
 
-            if (m.type === LobbyMemberType.PLAYER) {
-                // todo put this into db
-                const picture = m.id === "276389458988761607"
-                    ? 47
-                    : pictures.pop();
-
-                return new SocketPlayer(m.net.socket, m.id, m.name, picture);
-            }
+            return new SocketPlayer(m.net.socket, m.id, m.name, profile);
         });
 
         const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);

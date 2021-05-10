@@ -11,7 +11,8 @@ export * from "./constants";
 
 export { validateNickname } from "./nickname";
 export { GamePhase } from "./game-phase";
-export { PLAYER_TITLES } from "./titles";
+export { PlayerTitle, TITLES } from "./titles";
+export { PlayerProfile } from "./playerProfile";
 export { SanitizedUser } from "./user";
 
 export {

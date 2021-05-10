@@ -8,15 +8,14 @@ interface Props {
     playerId: string;
 }
 
-
 const PlayerPicture: React.FunctionComponent<Props> = ({ playerId }) => {
     const player = useSelector<AppState, PlayerListPlayer>(getPlayerById(playerId));
 
-    if (!player || !player.picture) {
+    if (!player || !player.profile.picture) {
         return null;
     }
 
-    return <img src={`https://creaturechess.jamesmonger.com/images/front/${player.picture}.png`} />;
+    return <img src={`https://creaturechess.jamesmonger.com/images/front/${player.profile.picture}.png`} />;
 };
 
 export { PlayerPicture };

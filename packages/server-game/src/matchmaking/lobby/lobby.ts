@@ -2,7 +2,7 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import shuffle = require("lodash.shuffle");
-import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, PLAYER_TITLES } from "@creature-chess/models";
+import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, PlayerProfile } from "@creature-chess/models";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 
 import { IdGenerator } from "../id-generator";
@@ -74,18 +74,18 @@ export class Lobby {
         console.error("Tried to replace non-connection player");
     }
 
-    public addConnection(socket: Socket, id: string, name: string) {
+    public addConnection(socket: Socket, id: string, name: string, profile: PlayerProfile) {
         if (this.canJoin() === false) {
             throw Error(`Player ${id} tried to join game ${this.id} that was not joinable`);
         }
 
-        const playerChangedIndex = this.createPlayerLobbyMember(socket, id, name);
+        const playerChangedIndex = this.createPlayerLobbyMember(socket, id, name, profile);
 
         const lobbyPlayer: LobbyPlayer = {
             id,
             name,
             isBot: false,
-            title: PLAYER_TITLES[id] || null
+            profile
         };
 
         for (const other of this.members) {
@@ -129,10 +129,10 @@ export class Lobby {
     }
 
     private addBots(bots: { id: string, name: string }[]) {
-        const shuffledBots: { id: string, name: string }[] = shuffle(bots);
+        const shuffledBots: { id: string, name: string, profile: PlayerProfile }[] = shuffle(bots);
 
-        for (const { id, name } of shuffledBots) {
-            this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}` });
+        for (const { id, name, profile } of shuffledBots) {
+            this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}`, profile });
         }
     }
 
@@ -141,11 +141,11 @@ export class Lobby {
             id: m.id,
             name: m.name,
             isBot: m.type === LobbyMemberType.BOT,
-            title: PLAYER_TITLES[m.id] || null
+            profile: m.profile
         }));
     }
 
-    private createPlayerLobbyMember(socket: Socket, id: string, name: string) {
+    private createPlayerLobbyMember(socket: Socket, id: string, name: string, profile: PlayerProfile) {
         let index = null;
 
         for (let i = 0; i < this.members.length; i++) {
@@ -162,6 +162,7 @@ export class Lobby {
             type: LobbyMemberType.PLAYER,
             id,
             name,
+            profile,
             net: {
                 socket,
                 outgoing: this.createOutgoingRegistry(socket)
