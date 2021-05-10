@@ -99,30 +99,35 @@ export class Matchmaking {
         return shuffle(pictures);
     }
 
-    private generateProfile = (player) => {
-        const picture = player.profile?.picture ?
+    private generateProfile = (player, picture) => {
+        const profilePicture = player.profile?.picture ?
             player.profile.picture
             :
-            this.assignPicture(player.id);
+            picture;
 
         return({
-            picture,
+            picture: profilePicture,
             title: player.profile?.title ? player.profile.title : null
         });
     }
 
-    private assignPicture = (id) => {
-        const pictures = this.getPictures();
+    private assignPicture = (pictures, id) => {
         const picture = id === "276389458988761607"
         ? 47
         : pictures.pop();
+        //removes picture from pictures array if picture is taken from database (temporary fix/may not be necessary)
+        if (picture === 47){
+            const index = pictures.indexOf(47)
+            pictures.splice(index, index)
+        }
         return picture;
     }
 
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
-
+        const pictures = this.getPictures();
         const players = members.map(m => {
-            const profile = this.generateProfile(m);
+            const picture = this.assignPicture(pictures, id)
+            const profile = this.generateProfile(m, picture);
 
             if (m.type === LobbyMemberType.BOT) {
                 return new BotPlayer(m.id, m.name, profile);
