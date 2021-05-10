@@ -11,7 +11,7 @@ interface Props {
 const PlayerTitle: React.FunctionComponent<Props> = ({ playerId }) => {
     const player = useSelector<AppState, PlayerListPlayer>(getPlayerById(playerId));
 
-    if (!player || !player.profile.title) {
+    if (!player || !player.profile?.title) {
         return null;
     }
 
