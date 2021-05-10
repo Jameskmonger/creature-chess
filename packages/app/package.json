@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
   "dependencies": {
-    "@auth0/auth0-react": "^1.2.0",
+    "@auth0/auth0-react": "^1.5.0",
     "@creature-chess/battle": "^0.3.42",
     "@creature-chess/board": "^0.3.42",
     "@creature-chess/gamemode": "^0.3.48",
