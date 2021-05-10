@@ -107,7 +107,7 @@ export class Matchmaking {
 
         return({
             picture,
-            title: player.profile?.title? player.profile.title : null
+            title: player.profile?.title ? player.profile.title : null
         });
     }
 
