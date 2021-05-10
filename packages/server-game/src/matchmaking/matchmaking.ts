@@ -116,10 +116,10 @@ export class Matchmaking {
         const picture = id === "276389458988761607"
         ? 47
         : pictures.pop();
-        //removes picture from pictures array if picture is taken from database (temporary fix/may not be necessary)
-        if (picture === 47){
-            const index = pictures.indexOf(47)
-            pictures.splice(index, index)
+        // removes picture from pictures array if picture is taken from database (temporary fix/may not be necessary)
+        if (picture === 47) {
+            const index = pictures.indexOf(47);
+            pictures.splice(index, index);
         }
         return picture;
     }
@@ -127,7 +127,7 @@ export class Matchmaking {
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
         const players = members.map(m => {
-            const picture = this.assignPicture(pictures, id)
+            const picture = this.assignPicture(pictures, id);
             const profile = this.generateProfile(m, picture);
 
             if (m.type === LobbyMemberType.BOT) {

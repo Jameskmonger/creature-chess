@@ -6,7 +6,6 @@ import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
 
-
 export class SocketPlayer extends Player {
     public readonly type = PlayerType.USER;
 
