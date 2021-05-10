@@ -1,10 +1,11 @@
 import { Socket } from "socket.io";
 import { Player } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
+import {  PlayerProfile } from "@creature-chess/models";
 import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
-import {  PlayerProfile } from "packages/models/lib";
+
 
 export class SocketPlayer extends Player {
     public readonly isConnection = true;

@@ -1,5 +1,5 @@
 import { Player } from "@creature-chess/gamemode";
-import { PlayerProfile } from "packages/models/lib";
+import { PlayerProfile } from "@creature-chess/models";
 import { botLogicSaga } from "./saga";
 
 export class BotPlayer extends Player {

@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
-import { PlayerProfile } from "packages/models/lib";
+import { PlayerProfile } from "@creature-chess/models";
 
 export enum LobbyMemberType {
     BOT,
