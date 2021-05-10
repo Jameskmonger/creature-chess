@@ -1,4 +1,4 @@
-import { PlayerTitle } from "@creature-chess/models";
+import { PlayerProfile } from "@creature-chess/models";
 
 export type DatabaseUser = {
     ref: { id: string };
@@ -12,6 +12,6 @@ export type DatabaseUser = {
             value: string;
             uppercase: string;
         };
-        title: PlayerTitle;
+        profile: PlayerProfile | null;
     };
 };

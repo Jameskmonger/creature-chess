@@ -11,11 +11,11 @@ interface Props {
 const PlayerTitle: React.FunctionComponent<Props> = ({ playerId }) => {
     const player = useSelector<AppState, PlayerListPlayer>(getPlayerById(playerId));
 
-    if (!player || !player.title) {
+    if (!player || !player.profile.title) {
         return null;
     }
 
-    return <span className={`player-profile-title ${TITLES[player.title].className}`}>{TITLES[player.title].text}</span>;
+    return <span className={`player-profile-title ${TITLES[player.profile.title].className}`}>{TITLES[player.profile.title].text}</span>;
 };
 
 export { PlayerTitle };

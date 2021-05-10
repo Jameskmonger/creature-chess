@@ -1,8 +1,8 @@
-import { PlayerTitle } from "./titles";
+import { PlayerProfile } from "./playerProfile";
 
 export interface LobbyPlayer {
     id: string;
     name: string;
     isBot: boolean;
-    title: PlayerTitle | null;
+    profile: PlayerProfile | null;
 }

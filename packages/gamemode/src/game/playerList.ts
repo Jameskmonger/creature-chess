@@ -104,8 +104,7 @@ export class PlayerList {
                 battle: player.getBattle(),
                 roundDiedAt: player.getRoundDiedAt(),
                 status: player.getStatus(),
-                title: player.title || null,
-                picture: player.picture
+                profile: player.profile
             };
         });
     }

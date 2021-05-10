@@ -34,8 +34,7 @@ export interface PlayerMatchResults {
 export abstract class Player {
     public readonly id: string;
     public readonly name: string;
-    public readonly picture: number;
-    public readonly title: PlayerTitle | null;
+    public readonly profile: PlayerProfile | null;
 
     public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
 
@@ -55,8 +54,7 @@ export abstract class Player {
     constructor(id: string, name: string, profile: PlayerProfile) {
         this.id = id;
         this.name = name;
-        this.picture = profile.picture;
-        this.title = profile.title;
+        this.profile = profile;
 
         this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
         this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });

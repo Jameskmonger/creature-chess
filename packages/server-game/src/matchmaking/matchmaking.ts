@@ -11,7 +11,7 @@ import { UserModel } from "@creature-chess/auth-server";
 import { createMetricLogger } from "../metrics";
 import { LobbyMemberType } from "./lobby/lobbyMember";
 import { createWinstonLogger } from "../log";
-import { MAX_PLAYERS_IN_GAME, PlayerProfile } from "@creature-chess/models";
+import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { DiscordApi } from "../discord";
 
 export class Matchmaking {
@@ -32,7 +32,7 @@ export class Matchmaking {
 
         this.searchingForGame = true;
 
-        const { id, nickname, title } = user;
+        const { id, nickname, profile } = user;
 
         const playerInGame = this.getPlayerInGame(id);
 
@@ -55,7 +55,7 @@ export class Matchmaking {
         }
 
         const { lobby: newLobby, created } = await this.findOrCreateLobby();
-        newLobby.addConnection(socket, id, nickname, title);
+        newLobby.addConnection(socket, id, nickname, profile);
 
         if (created) {
             this.discordApi.startLobby(nickname);
@@ -99,31 +99,36 @@ export class Matchmaking {
         return shuffle(pictures);
     }
 
-    private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
+    private generateProfile = (player) => {
+        const picture = player.profile?.picture ?
+            player.profile.picture
+            :
+            this.assignPicture(player.id);
+
+        return({
+            picture,
+            title: player.profile?.title? player.profile.title : null
+        });
+    }
+
+    private assignPicture = (id) => {
         const pictures = this.getPictures();
+        const picture = id === "276389458988761607"
+        ? 47
+        : pictures.pop();
+        return picture;
+    }
+
+    private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
 
         const players = members.map(m => {
-            if (m.type === LobbyMemberType.BOT) {
-                const picture = pictures.pop();
-                const profile: PlayerProfile = {
-                    title: m.title,
-                    picture
-                };
+            const profile = this.generateProfile(m);
 
+            if (m.type === LobbyMemberType.BOT) {
                 return new BotPlayer(m.id, m.name, profile);
             }
 
-            if (m.type === LobbyMemberType.PLAYER) {
-                // todo put this into db
-                const picture = m.id === "276389458988761607"
-                    ? 47
-                    : pictures.pop();
-                const profile = {
-                    title: m.title,
-                    picture
-                };
-                return new SocketPlayer(m.net.socket, m.id, m.name, profile);
-            }
+            return new SocketPlayer(m.net.socket, m.id, m.name, profile);
         });
 
         const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
