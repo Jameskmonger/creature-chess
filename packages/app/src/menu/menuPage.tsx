@@ -56,7 +56,7 @@ class MenuPageUnconnected extends React.Component<Props> {
                         <p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
                     </div>
 
-                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/YNyTNuw.png" className="discord-button" /></a>
+                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
 
                     <div className="blurb">
                         <p>This is a <span className="highlight">multiplayer strategy game</span> in which you configure creatures on a board.</p>

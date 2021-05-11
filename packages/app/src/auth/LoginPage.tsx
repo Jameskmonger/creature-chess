@@ -32,7 +32,7 @@ const LoginPage: React.FunctionComponent = () => {
 
                     <p className="subtext">Join us on Discord to find other players and give feedback on the game</p>
 
-                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/YNyTNuw.png" className="discord-button" /></a>
+                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
                 </div>
 
                 <div className="group">
