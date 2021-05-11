@@ -136,9 +136,6 @@ export class Matchmaking {
         const players = membersOrderedByType.map(m => {
             let profilePicture = m.profile?.picture
 
-            if (profilePicture) {
-                removePictureFromArray(profilePicture)
-            }
             if (!profilePicture){
                 profilePicture = assignPicture(m)
             }
@@ -148,7 +145,7 @@ export class Matchmaking {
             if (m.type === LobbyMemberType.BOT) {
                 return new BotPlayer(m.id, m.name, profile);
             }
-
+            removePictureFromArray(profilePicture)
             return new SocketPlayer(m.net.socket, m.id, m.name, profile);
         });
 
