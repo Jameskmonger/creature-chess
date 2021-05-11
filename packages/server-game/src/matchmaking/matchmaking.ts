@@ -119,25 +119,25 @@ export class Matchmaking {
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
 
-        const removePictureFromArray = (picture) =>{
+        const removePictureFromArray = (picture) => {
             if (pictures.includes(picture)) {
                 const index = pictures.indexOf(picture);
                 pictures.splice(index, index);
-        }}
+        }};
 
-        const assignPicture = (player) =>{
+        const assignPicture = (player) => {
             return player.profile?.picture ?
             player.profile.picture :
             pictures.pop();
-        }
+        };
 
         const membersOrderedByType = members.sort(this.bringPlayersToFront);
 
         const players = membersOrderedByType.map(m => {
-            let profilePicture = m.profile?.picture
+            let profilePicture = m.profile?.picture;
 
-            if (!profilePicture){
-                profilePicture = assignPicture(m)
+            if (!profilePicture) {
+                profilePicture = assignPicture(m);
             }
 
             const profile = this.generateProfile(m, profilePicture);
@@ -145,7 +145,7 @@ export class Matchmaking {
             if (m.type === LobbyMemberType.BOT) {
                 return new BotPlayer(m.id, m.name, profile);
             }
-            removePictureFromArray(profilePicture)
+            removePictureFromArray(profilePicture);
             return new SocketPlayer(m.net.socket, m.id, m.name, profile);
         });
 
