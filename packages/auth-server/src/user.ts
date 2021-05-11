@@ -5,6 +5,7 @@ import { PlayerProfile } from "@creature-chess/models";
 export interface UserAppMetadata {
     playerId: string;
     playerNickname: string;
+    playerPicture: number;
 }
 
 export interface UserModel {

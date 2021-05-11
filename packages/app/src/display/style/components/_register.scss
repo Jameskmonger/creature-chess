@@ -42,4 +42,25 @@
         margin-bottom: 0.6em;
         font-style: italic;
     }
+
+    .arrow-buttons {
+        display: inline-block;
+    }
+
+    .arrow-left {
+        display: inline-block;
+        padding: 3px;
+        border: solid #000;
+        border-width: 0 3px 3px 0;
+        transform: rotate(135deg);
+    }
+
+    .arrow-right {
+        display: inline-block;
+        padding: 3px;
+        border: solid #000;
+        border-width: 0 3px 3px 0;
+        transform: rotate(-45deg);
+    }
+
 }
