@@ -29,7 +29,7 @@ const VictoryOverlay: React.FunctionComponent = () => {
                 <div className="discord-link">
                     <p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
 
-                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/YNyTNuw.png" className="discord-button" /></a>
+                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
                 </div>
             </div>
         </BoardOverlay>
