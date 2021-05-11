@@ -17,14 +17,14 @@ const PictureSelection: React.FunctionComponent<{
         .map(string => Number(string))
 
     return (
-        <div>
+        <div className = "picture-selection">
+
+            <h1 className = "section-heading">Profile Picture</h1>
             <h2 className="picture-selection-heading">Choose a profile picture - more can be unlocked!</h2>
-            <div style={{ height: 20 }} />
             <form>
-                <div className="available-pictures">
                     {
                         availablePictures.map(picture => {
-                            const name = (creatureNames[availablePictures.indexOf(picture)])
+                            const creatureName = (creatureNames[availablePictures.indexOf(picture)])
                             return (
                                 <div className="available-pictures" key = {picture}>
                                     <img
@@ -32,7 +32,7 @@ const PictureSelection: React.FunctionComponent<{
                                         src={`https://creaturechess.jamesmonger.com/images/front/${picture}.png`}
                                         alt="tuxemon"
                                     />
-                                    <p>{name}</p>
+                                    <p>{creatureName}</p>
                                     <input
                                         className="picture-selector-element"
                                         type="radio"
@@ -44,7 +44,6 @@ const PictureSelection: React.FunctionComponent<{
                             )
                         })
                     }
-                </div>
             </form>
         </div>
     )
@@ -59,6 +58,7 @@ const NicknameSelection: React.FunctionComponent<{
     return (
         <div className="nickname-selection">
             <div className="nickname">
+                <h1 className = "section-heading">Nickname</h1>
                 <h2 className = "nickname-info">Choose a nickname</h2>
                 <h2 className="nickname-warning">This nickname is permanent and cannot be changed</h2>
                 <input
@@ -135,11 +135,6 @@ const RegistrationPage: React.FunctionComponent = () => {
         <div className="register">
             <h1 className="register-heading">Registration</h1>
             {error && <p className="register-error">{error}</p>}
-
-            <PictureSelection
-                currentImage={currentImage}
-                handleImageChange={handleImageChange}
-            />
             {
                 !isRegistered(user) &&
                 <NicknameSelection
@@ -148,6 +143,10 @@ const RegistrationPage: React.FunctionComponent = () => {
                     loading={loading}
                 />
             }
+            <PictureSelection
+                currentImage={currentImage}
+                handleImageChange={handleImageChange}
+            />
             <button
                 className="register-button"
                 onClick={onClick}

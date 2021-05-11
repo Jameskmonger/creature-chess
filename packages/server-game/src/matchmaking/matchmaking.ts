@@ -106,7 +106,7 @@ export class Matchmaking {
             title: player.profile?.title ? player.profile.title : null
         });
     }
-    private sortByPlayerType = (a, b) => {
+    private bringPlayersToFront = (a, b) => {
         if (a.type === LobbyMemberType.BOT && b.type === LobbyMemberType.PLAYER) {
             return 1;
         }
@@ -115,26 +115,35 @@ export class Matchmaking {
         }
         return 0;
     }
+
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
 
-        const orderedMembers = members.sort(this.sortByPlayerType);
-        // members are first sorted by player type, meaning all PLAYER members are mapped first
-        const players = orderedMembers.map(m => {
+        const removePictureFromArray = (picture) =>{
+            if (pictures.includes(picture)) {
+                const index = pictures.indexOf(picture);
+                pictures.splice(index, index);
+        }}
 
-            // Every PLAYER picture is removed from pictures array to stop them being assigned to BOT players
-            if (m.profile?.picture) {
-                if (pictures.includes(m.profile.picture)) {
-                    const index = pictures.indexOf(m.profile.picture);
-                    pictures.splice(index, index);
-                }
+        const assignPicture = (player) =>{
+            return player.profile?.picture ?
+            player.profile.picture :
+            pictures.pop();
+        }
+
+        const membersOrderedByType = members.sort(this.bringPlayersToFront);
+
+        const players = membersOrderedByType.map(m => {
+            let profilePicture = m.profile?.picture
+
+            if (profilePicture) {
+                removePictureFromArray(profilePicture)
             }
-            // takes picture from profile for players, assigns random picture for BOTs
-            const picture = m.profile?.picture ?
-                m.profile.picture :
-                pictures.pop();
+            if (!profilePicture){
+                profilePicture = assignPicture(m)
+            }
 
-            const profile = this.generateProfile(m, picture);
+            const profile = this.generateProfile(m, profilePicture);
 
             if (m.type === LobbyMemberType.BOT) {
                 return new BotPlayer(m.id, m.name, profile);
