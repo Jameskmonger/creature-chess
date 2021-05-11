@@ -48,6 +48,6 @@
     "tslib": "^2.0.2",
     "uuid": "^3.3.2",
     "winston": "^3.3.3",
-    "winston-cloudwatch": "^2.3.2"
+    "winston-cloudwatch": "^2.5.2"
   }
 }
