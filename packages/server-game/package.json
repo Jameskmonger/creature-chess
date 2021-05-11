@@ -38,7 +38,7 @@
     "@types/redux-saga": "^0.10.5",
     "@types/socket.io": "^2.1.2",
     "@types/uuid": "^3.4.4",
-    "auth0": "^2.29.0",
+    "auth0": "^2.34.2",
     "aws-sdk": "^2.767.0",
     "delay": "^4.1.0",
     "discord.js": "^12.5.1",
