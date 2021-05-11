@@ -5,7 +5,7 @@ import Filter = require("bad-words");
 import { DatabaseConnection } from "@creature-chess/data";
 import { authenticate, convertDatabaseUserToUserModel, UserAppMetadata } from "@creature-chess/auth-server";
 import { sanitize } from "./utils/sanitize";
-import { SanitizedUser, validateNickname } from "@creature-chess/models";
+import { SanitizedUser, validateNicknameFormat } from "@creature-chess/models";
 
 export const getCurrent = (database: DatabaseConnection, authClient: ManagementClient<UserAppMetadata>) => {
     return async (req: Request, res: Response<SanitizedUser>) => {
@@ -27,17 +27,43 @@ export const getCurrent = (database: DatabaseConnection, authClient: ManagementC
 type PatchError = { type: "invalid_nickname", error: string };
 type PatchResponse = SanitizedUser | PatchError;
 
+type PatchCurrentUserRequest = Request<{}, PatchResponse, { nickname: string }>;
+
+const getNicknameError = async (filter: Filter, database: DatabaseConnection, nickname: string): Promise<string | null> => {
+    const nicknameError = validateNicknameFormat(nickname);
+
+    if (nicknameError) {
+        return nicknameError;
+    }
+
+    if (filter.isProfane(nickname)) {
+        return "Profanity filter";
+    }
+
+    const isUnique = (await database.user.getByNickname(nickname)) === null;
+
+    if (!isUnique) {
+        return "Nickname already in use";
+    }
+
+    return null;
+};
+
 export const patchCurrent = (
     database: DatabaseConnection,
     authClient: ManagementClient<UserAppMetadata>,
     filter: Filter
 ) => {
-    return async (req: Request<{}, PatchResponse, { nickname: string }>, res: Response<PatchResponse>) => {
-        const { authorization } = req.headers;
+    return async (req: PatchCurrentUserRequest, res: Response<PatchResponse>) => {
+        const { body, headers: { authorization } } = req;
 
         if (!authorization) {
             res.send(null);
+            return;
+        }
 
+        if (!body) {
+            res.sendStatus(400);
             return;
         }
 
@@ -54,46 +80,33 @@ export const patchCurrent = (
             return;
         }
 
-        if (!req.body) {
-            res.sendStatus(400);
-            return;
-        }
-
         const { nickname } = req.body;
 
-        if (!nickname) {
-            res.sendStatus(400);
-            return;
+        let outputUser = user;
+
+        if (nickname) {
+            const trimmedNickname = nickname.trim();
+            const nicknameError = await getNicknameError(filter, database, trimmedNickname);
+
+            if (nicknameError) {
+                res.status(400).send({
+                    type: "invalid_nickname",
+                    error: nicknameError
+                });
+
+                return;
+            }
+
+            const updatedUser = await database.user.setNickname(user.id, trimmedNickname);
+            outputUser = convertDatabaseUserToUserModel(updatedUser);
         }
 
-        const trimmedNickname = nickname.trim();
-
-        const nicknameError = validateNickname(trimmedNickname);
-
-        const failNickname = (error: string) => res.status(400).send({ type: "invalid_nickname", error });
-
-        if (nicknameError) {
-            failNickname(nicknameError);
-            return;
+        // update metadata if anything changed
+        if (outputUser !== user) {
+            await authClient.updateAppMetadata({ id: outputUser.authId }, { playerId: outputUser.id, playerNickname: outputUser.nickname });
         }
 
-        if (filter.isProfane(trimmedNickname)) {
-            failNickname("Profanity filter");
-            return;
-        }
-
-        const isUnique = (await database.user.getByNickname(trimmedNickname)) === null;
-
-        if (!isUnique) {
-            failNickname("Nickname already in use");
-            return;
-        }
-
-        const updatedUser = await database.user.setNickname(user.id, trimmedNickname);
-
-        await authClient.updateAppMetadata({ id: user.authId }, { playerId: user.id, playerNickname: trimmedNickname });
-
-        const sanitized = sanitize(convertDatabaseUserToUserModel(updatedUser));
+        const sanitized = sanitize(outputUser);
 
         res.send(sanitized);
     };

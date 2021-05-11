@@ -1,7 +1,6 @@
 import * as React from "react";
-import { useDispatch } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
-import { MAX_NAME_LENGTH, validateNickname } from "@creature-chess/models";
+import { MAX_NAME_LENGTH, validateNicknameFormat } from "@creature-chess/models";
 import { patchUser } from "./utils/patchUser";
 
 const RegistrationPage: React.FunctionComponent = () => {
@@ -12,7 +11,7 @@ const RegistrationPage: React.FunctionComponent = () => {
 
     const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => setNickname(event.target.value);
     const onClick = async () => {
-        const nicknameError = validateNickname(nickname);
+        const nicknameError = validateNicknameFormat(nickname);
 
         if (nicknameError) {
             setError(nicknameError);

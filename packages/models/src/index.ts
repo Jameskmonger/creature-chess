@@ -9,7 +9,7 @@ import * as Constants from "./constants";
 export { Constants };
 export * from "./constants";
 
-export { validateNickname } from "./nickname";
+export { validateNicknameFormat } from "./nickname";
 export { GamePhase } from "./game-phase";
 export { PlayerTitle, TITLES } from "./titles";
 export { PlayerProfile } from "./playerProfile";
