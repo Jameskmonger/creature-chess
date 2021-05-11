@@ -18,21 +18,9 @@ interface DecodedToken {
     payload: JWTPayload;
 }
 
-const getSecret = (header: jwt.JwtHeader) => {
-    return new Promise<string>((resolve, reject) => {
-        client.getSigningKey(header.kid, (err, key) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            resolve(key.getPublicKey());
-        });
-    });
-};
-const verifyToken = async (token: string, secret: string) => {
+const verifyToken = async (token: string, publicKey: string) => {
     return new Promise<JWTPayload>((resolve, reject) => {
-        jwt.verify(token, secret, (err, payload: JWTPayload) => {
+        jwt.verify(token, publicKey, (err, payload: JWTPayload) => {
             if (err) {
                 reject(err);
                 return;
@@ -51,8 +39,10 @@ export const verifyDecodeJwt = async (token: string) => {
             return null;
         }
 
-        const secret = await getSecret(dtoken.header);
-        const decoded = await verifyToken(token, secret);
+        const key = await client.getSigningKey(dtoken.header.kid);
+        const publicKey = key.getPublicKey();
+
+        const decoded = await verifyToken(token, publicKey);
 
         return decoded;
     } catch (err) {
