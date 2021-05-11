@@ -4,26 +4,98 @@ import { MAX_NAME_LENGTH, validateNicknameFormat } from "@creature-chess/models"
 import { patchUser } from "./utils/patchUser";
 import { isRegistered } from "../auth/utils/isRegistered"
 import { Auth0User } from "./user";
+import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
+
+
+const PictureSelection: React.FunctionComponent<{
+    currentImage: number,
+    handleImageChange: (picture: number) => void
+    }> = ({ currentImage, handleImageChange }) => {
+
+    const creatureNames = Object.values((AVAILABLE_PROFILE_PICTURES))
+    const availablePictures = Object.keys((AVAILABLE_PROFILE_PICTURES))
+        .map(string => Number(string))
+
+    return (
+        <div>
+            <h2 className="picture-selection-heading">Choose a profile picture - more can be unlocked!</h2>
+            <div style={{ height: 20 }} />
+            <form>
+                <div className="available-pictures">
+                    {
+                        availablePictures.map(picture => {
+                            const name = (creatureNames[availablePictures.indexOf(picture)])
+                            return (
+                                <div className="available-pictures" key = {picture}>
+                                    <img
+                                        className="picture-selector-element"
+                                        src={`https://creaturechess.jamesmonger.com/images/front/${picture}.png`}
+                                        alt="tuxemon"
+                                    />
+                                    <p>{name}</p>
+                                    <input
+                                        className="picture-selector-element"
+                                        type="radio"
+                                        value={picture}
+                                        checked={currentImage === picture}
+                                        onChange={() => handleImageChange(picture)}
+                                    />
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            </form>
+        </div>
+    )
+}
+
+const NicknameSelection: React.FunctionComponent<{
+    nickname: string,
+    onNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+    loading: boolean
+    }> = ({ nickname, onNameChange, loading }) => {
+
+    return (
+        <div className="nickname-selection">
+            <div className="nickname">
+                <h2 className = "nickname-info">Choose a nickname</h2>
+                <h2 className="nickname-warning">This nickname is permanent and cannot be changed</h2>
+                <input
+                    value={nickname}
+                    onChange={onNameChange}
+                    maxLength={MAX_NAME_LENGTH}
+                    placeholder="Nickname"
+                    className="name-input"
+                    disabled={loading}
+                />
+                <div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 
 const RegistrationPage: React.FunctionComponent = () => {
-    const availablePictures = [1,4,5,7,8]
 
     const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
     const [nickname, setNickname] = React.useState<string>("");
     const [loading, setLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | null>(null);
-    const [currentImage, setCurrentImage] = React.useState<number>(availablePictures[0])
+    const [currentImage, setCurrentImage] = React.useState(1)
     const { user } = useAuth0<Auth0User>();
 
-    React.useEffect(()=>{
-        if (isRegistered(user)){
+    React.useEffect(() => {
+        if (isRegistered(user)) {
             setNickname(null)
         }
     })
 
     const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => setNickname(event.target.value);
+
     const onClick = async () => {
-        if (!isRegistered(user)){
+        if (!isRegistered(user)) {
             const nicknameError = validateNicknameFormat(nickname);
 
             if (nicknameError) {
@@ -55,66 +127,26 @@ const RegistrationPage: React.FunctionComponent = () => {
         setError("An unknown error occured");
     };
 
-    const handleImageChange = (direction:string): void =>{
-        const currentIndex = availablePictures.indexOf(currentImage)
-        let newIndex;
-        if (direction === "left"){
-            newIndex = currentIndex - 1 < 0 ?
-                availablePictures.length -1
-                :
-                currentIndex - 1
-        }
-        if (direction === "right"){
-            newIndex = currentIndex + 1 > availablePictures.length - 1 ?
-                0
-                :
-                currentIndex + 1
-        }
-        setCurrentImage(availablePictures[newIndex])
+    const handleImageChange = (picture: number): void => {
+        setCurrentImage(picture)
     }
 
     return (
-        <div className = "register">
+        <div className="register">
             <h1 className="register-heading">Registration</h1>
             {error && <p className="register-error">{error}</p>}
-            <h2 className = "picture-selection-heading">Choose a profile picture - more can be unlocked through achievements!</h2>
-            <div style = {{height: 20}}/>
-            <div className = "arrow-buttons">
-                <button
-                    className = "picture-scroll-left"
-                    onClick = {()=>handleImageChange("left")}
-                    >
-                        <i className = "arrow-left"></i>
-                </button>
-                <button
-                    className = "picture-scroll-right"
-                    onClick = {()=>handleImageChange("right")}
-                    >
-                        <i className = "arrow-right"></i>
-                </button>
-            </div>
-            <div style = {{height: 10}}/>
 
-            <img src = {`https://creaturechess.jamesmonger.com/images/front/${currentImage}.png`} alt = "Tuxemon"/>
+            <PictureSelection
+                currentImage={currentImage}
+                handleImageChange={handleImageChange}
+            />
             {
                 !isRegistered(user) &&
-                <div className="nickname">
-
-                <h2 className="nickname-warning">This nickname is permanent and cannot be changed</h2>
-
-                <input
-                    value={nickname}
-                    onChange={onNameChange}
-                    maxLength={MAX_NAME_LENGTH}
-                    placeholder="Nickname"
-                    className="name-input"
-                    disabled={loading}
+                <NicknameSelection
+                    nickname={nickname}
+                    onNameChange={onNameChange}
+                    loading={loading}
                 />
-
-                <div>
-
-                </div>
-            </div>
             }
             <button
                 className="register-button"

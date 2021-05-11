@@ -27,7 +27,6 @@
         color: #fff;
         cursor: pointer;
         background: #b13e53;
-
         // stylelint-disable-next-line
         border: none;
     }
@@ -38,29 +37,21 @@
         border: 2px solid #a01515;
     }
 
+    .nickname-selection {
+        margin-top: 0.6em;
+    }
+
+    .nickname-info {
+        margin-top: 0.6em;
+    }
+
     .nickname-warning {
+        margin-top: 0.6em;
         margin-bottom: 0.6em;
         font-style: italic;
     }
 
-    .arrow-buttons {
+    .available-pictures {
         display: inline-block;
     }
-
-    .arrow-left {
-        display: inline-block;
-        padding: 3px;
-        border: solid #000;
-        border-width: 0 3px 3px 0;
-        transform: rotate(135deg);
-    }
-
-    .arrow-right {
-        display: inline-block;
-        padding: 3px;
-        border: solid #000;
-        border-width: 0 3px 3px 0;
-        transform: rotate(-45deg);
-    }
-
 }
