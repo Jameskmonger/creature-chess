@@ -34,7 +34,7 @@ export interface PlayerInfoState {
 
     roundDiedAt: number | null;
 
-    opponentId: string;
+    opponentId: string | null;
     money: number;
     ready: boolean;
     level: number;

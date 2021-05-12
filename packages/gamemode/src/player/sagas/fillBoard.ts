@@ -44,6 +44,10 @@ export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: strin
 
                     const benchPiecePosition = BoardSelectors.getPiecePosition(state.bench, benchPiece.id);
 
+                    if (!benchPiecePosition) {
+                        return;
+                    }
+
                     const fromLocation: PlayerPieceLocation = {
                         type: "bench",
                         location: benchPiecePosition

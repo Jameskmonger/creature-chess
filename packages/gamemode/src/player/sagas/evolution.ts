@@ -3,7 +3,6 @@ import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { BoardState, BoardSelectors, BoardSlice } from "@creature-chess/board";
 import * as pieceSelectors from "../pieceSelectors";
 import { getDefinitionById } from "../../definitions";
-import { PiecePosition } from "../../../../board/lib/types";
 
 interface State {
     bench: BoardState<PieceModel>;
@@ -68,9 +67,10 @@ export const evolutionSagaFactory = <TState extends State>(
 
                 if (matchingBoardPieces.length > 0) {
                     // replace a board piece if it exists
-                    const pieceToReplace = matchingBoardPieces.pop();
+                    const pieceToReplace = matchingBoardPieces.pop() !;
 
                     const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.board, pieceToReplace.id));
+                    const { x, y } = piecePosition;
 
                     // remove any remaining board pieces
                     const boardPieceIds = [...matchingBoardPieces, pieceToReplace].map(p => p.id);
@@ -84,8 +84,6 @@ export const evolutionSagaFactory = <TState extends State>(
                         stage: targetStage + 1
                     };
 
-                    const { x, y } = piecePosition;
-
                     yield put(boardSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece }));
                 } else {
                     // otherwise replace the just-added bench piece
@@ -96,7 +94,8 @@ export const evolutionSagaFactory = <TState extends State>(
                         stage: targetStage + 1
                     };
 
-                    const { x, y } = BoardSelectors.getPiecePosition(state.bench, piece.id);
+                    const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.bench, piece.id));
+                    const { x, y } = piecePosition;
 
                     yield put(benchSlice.commands.removeBoardPiecesCommand([...benchPieceIds, piece.id]));
                     yield put(benchSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece }));

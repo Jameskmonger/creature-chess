@@ -39,10 +39,15 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
 const createPieceFromCard = (
     ownerId: string,
     card: Card
-): PieceModel => {
+): PieceModel | null => {
     const { id, definitionId } = card;
 
     const definition = getDefinitionById(definitionId);
+
+    if (!definition) {
+        return null;
+    }
+
     const stats = definition.stages[0];
 
     return {
@@ -122,6 +127,11 @@ export const buyCardPlayerActionSaga = function*() {
         }
 
         const piece = createPieceFromCard(playerId, card);
+
+        if (!piece) {
+            return;
+        }
+
         const remainingCards = cards.map(c => c === card ? null : c);
 
         if (destination.type === "board") {
