@@ -7,7 +7,7 @@ import { AppState } from "./store";
 import { GamePage } from "./game";
 import { LobbyPage } from "./lobby";
 import { MenuPage } from "./menu";
-import { Auth0User, isFullyRegistered, LoginPage, RegistrationPage } from "./auth";
+import { Auth0User, isRegistered, LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => {
@@ -40,7 +40,7 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
     const { user } = useAuth0<Auth0User>();
     const gameState = useSelector<AppState, GameState>(gameStateSelector);
 
-    if (!isFullyRegistered(user)) {
+    if (!isRegistered(user)) {
         return <RegistrationPage />;
     }
 
