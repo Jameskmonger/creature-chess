@@ -1,80 +1,11 @@
 import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { MAX_NAME_LENGTH, validateNicknameFormat } from "@creature-chess/models";
+import { validateNicknameFormat } from "@creature-chess/models";
 import { patchUser } from "./utils/patchUser";
-import { isRegistered } from "../auth/utils/isRegistered"
 import { Auth0User } from "./user";
-import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
-
-
-const PictureSelection: React.FunctionComponent<{
-    currentImage: number,
-    handleImageChange: (picture: number) => void
-    }> = ({ currentImage, handleImageChange }) => {
-
-    const creatureNames = Object.values((AVAILABLE_PROFILE_PICTURES))
-    const availablePictures = Object.keys((AVAILABLE_PROFILE_PICTURES))
-        .map(string => Number(string))
-
-    return (
-        <div className = "picture-selection">
-
-            <h1 className = "section-heading">Profile Picture</h1>
-            <h2 className="picture-selection-heading">Choose a profile picture - more can be unlocked!</h2>
-            <form>
-                    {
-                        availablePictures.map(picture => {
-                            const creatureName = (creatureNames[availablePictures.indexOf(picture)])
-                            return (
-                                <div className="available-pictures" key = {picture}>
-                                    <img
-                                        className="picture-selector-element"
-                                        src={`https://creaturechess.jamesmonger.com/images/front/${picture}.png`}
-                                        alt="tuxemon"
-                                    />
-                                    <p>{creatureName}</p>
-                                    <input
-                                        className="picture-selector-element"
-                                        type="radio"
-                                        value={picture}
-                                        checked={currentImage === picture}
-                                        onChange={() => handleImageChange(picture)}
-                                    />
-                                </div>
-                            )
-                        })
-                    }
-            </form>
-        </div>
-    )
-}
-
-const NicknameSelection: React.FunctionComponent<{
-    nickname: string,
-    onNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-    loading: boolean
-    }> = ({ nickname, onNameChange, loading }) => {
-
-    return (
-        <div className="nickname-selection">
-            <div className="nickname">
-                <h1 className = "section-heading">Nickname</h1>
-                <h2 className = "nickname-info">Choose a nickname</h2>
-                <h2 className="nickname-warning">This nickname is permanent and cannot be changed</h2>
-                <input
-                    value={nickname}
-                    onChange={onNameChange}
-                    maxLength={MAX_NAME_LENGTH}
-                    placeholder="Nickname"
-                    className="name-input"
-                    disabled={loading}
-                />
-                <div>
-                </div>
-            </div>
-        </div>
-    )
-}
+import NicknameSelection from "./registration/NicknameSelection"
+import PictureSelection from "./registration/PictureSelection"
+import { hasNickname } from "./utils/isRegistered";
 
 
 const RegistrationPage: React.FunctionComponent = () => {
@@ -87,7 +18,7 @@ const RegistrationPage: React.FunctionComponent = () => {
     const { user } = useAuth0<Auth0User>();
 
     React.useEffect(() => {
-        if (isRegistered(user)) {
+        if (hasNickname(user)) {
             setNickname(null)
         }
     })
@@ -95,7 +26,7 @@ const RegistrationPage: React.FunctionComponent = () => {
     const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => setNickname(event.target.value);
 
     const onClick = async () => {
-        if (!isRegistered(user)) {
+        if (!hasNickname(user)) {
             const nicknameError = validateNicknameFormat(nickname);
 
             if (nicknameError) {
@@ -136,7 +67,7 @@ const RegistrationPage: React.FunctionComponent = () => {
             <h1 className="register-heading">Registration</h1>
             {error && <p className="register-error">{error}</p>}
             {
-                !isRegistered(user) &&
+                !hasNickname(user) &&
                 <NicknameSelection
                     nickname={nickname}
                     onNameChange={onNameChange}
