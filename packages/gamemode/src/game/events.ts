@@ -10,7 +10,11 @@ export const gameFinishEvent = createAction<{ winnerId: string }, "gameFinishEve
 export type PlayerListChangedEvent = ReturnType<typeof playerListChangedEvent>;
 export const playerListChangedEvent = createAction<{ players: PlayerListPlayer[] }, "playerListChangedEvent">("playerListChangedEvent");
 
+export type PlayerRunPreparingPhaseEvent = ReturnType<typeof playerRunPreparingPhaseEvent>;
+export const playerRunPreparingPhaseEvent = createAction("playerRunPreparingPhaseEvent");
+
 export type GameEvent =
     GamePhaseStartedEvent
     | GameFinishEvent
-    | PlayerListChangedEvent;
+    | PlayerListChangedEvent
+    | PlayerRunPreparingPhaseEvent;

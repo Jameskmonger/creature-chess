@@ -122,17 +122,6 @@ export abstract class Player {
         return this.store.getState().playerInfo.battle;
     }
 
-    public enterPreparingPhase() {
-        if (!this.getShopLocked()) {
-            this.store.dispatch(afterRerollCardsEvent());
-        }
-
-        this.store.dispatch(PlayerInfoCommands.clearOpponentCommand());
-
-        this.store.dispatch(this.boardSlice.commands.setPieceLimitCommand(this.getLevel()));
-        this.store.dispatch(this.boardSlice.commands.unlockBoardCommand());
-    }
-
     public enterReadyPhase(match: Match) {
         this.store.dispatch(fillBoardCommand());
 

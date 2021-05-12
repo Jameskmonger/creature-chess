@@ -3,6 +3,7 @@ import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { readyNotifier } from "../../readyNotifier";
 import { GameSagaContextPlayers } from "../../sagas";
+import { playerRunPreparingPhaseEvent } from "../../events";
 
 export const runPreparingPhase = function*() {
     const options: GameOptions = yield getContext("options");
@@ -15,7 +16,7 @@ export const runPreparingPhase = function*() {
 
     yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt, round: round + 1 }));
 
-    players.getLiving().forEach(p => p.enterPreparingPhase());
+    players.getLiving().forEach(p => p.receiveGameEvent(playerRunPreparingPhaseEvent()));
 
     const notifier = readyNotifier(players.getLiving());
 
