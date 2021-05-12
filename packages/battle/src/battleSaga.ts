@@ -1,6 +1,7 @@
 import { eventChannel, buffers, EventChannel } from "redux-saga";
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
 // no typings so this needs a standard require
+// tslint:disable-next-line: no-var-requires
 const present = require("present");
 
 import { IndexedPieces, createPieceCombatState, PieceModel, GameOptions } from "@creature-chess/models";

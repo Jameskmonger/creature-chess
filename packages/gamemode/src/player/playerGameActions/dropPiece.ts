@@ -47,7 +47,7 @@ export const dropPiecePlayerActionSaga = function*() {
       const playerId = yield* getContext<string>("playerId");
       const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
 
-      const state = yield* select((state: PlayerState) => state);
+      const state = yield* select((s: PlayerState) => s);
 
       if (isLocationLocked(state, from) || isLocationLocked(state, to)) {
         // source or destination is locked

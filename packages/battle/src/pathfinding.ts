@@ -1,4 +1,5 @@
 // no typings so this needs a standard require
+// tslint:disable-next-line: no-var-requires
 const { astar, Graph } = require("javascript-astar");
 
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";

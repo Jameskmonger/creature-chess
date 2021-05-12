@@ -9,6 +9,8 @@
                     "last 1 firefox version"
                 ]
             }
-        ]
+        ],
+        "unit-disallowed-list": null,
+        "unit-blacklist": null
     }
 }

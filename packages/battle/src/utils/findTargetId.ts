@@ -23,7 +23,7 @@ const getEnemyDeltas = (board: BoardState, enemies: PieceModel[], attackerPositi
     }
 
     return enemyDeltas;
-}
+};
 
 export const findTargetId = (piece: PieceModel, board: BoardState<PieceModel>): string | null => {
     const enemies = getLivingEnemies(piece, board);
