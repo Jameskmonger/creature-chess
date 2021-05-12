@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 import { v4 as uuid } from "uuid";
-import shuffle = require("lodash.shuffle");
+import { shuffle } from "lodash";
 import { CreatureDefinition, Card, PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { getAllDefinitions, getDefinitionById } from "../definitions";
 
@@ -69,6 +69,10 @@ export class CardDeck {
     public addPiece(piece: PieceModel) {
         const definition = getDefinitionById(piece.definitionId);
 
+        if (!definition) {
+            return;
+        }
+
         const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
 
         for (let i = 0; i < cardCount; i++) {
@@ -104,12 +108,16 @@ export class CardDeck {
         }
 
         for (let i = 0; i < count; i++) {
-            const { card, blessed } = this.takeCard(level, blessedHand, blessCandidates, excludeCards);
+            const takenCard = this.takeCard(level, blessedHand, blessCandidates, excludeCards);
 
-            output.push(card);
+            if (!takenCard) {
+                continue;
+            }
+
+            output.push(takenCard.card);
 
             // clear blessed if it was used
-            if (blessed) {
+            if (takenCard.blessed) {
                 blessedHand = false;
             }
         }
@@ -121,6 +129,11 @@ export class CardDeck {
         if (isBlessed && blessCandidates.length > 0) {
             for (const candidate of shuffle(blessCandidates)) {
                 const definition = getDefinitionById(candidate);
+
+                if (!definition) {
+                    continue;
+                }
+
                 const deck = this.getDeckForCost(definition.cost);
 
                 const index = deck.findIndex(c => c.definitionId === candidate);

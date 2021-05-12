@@ -28,12 +28,16 @@ export interface PieceModel {
     stage: number;
 
     facingAway: boolean;
-    attacking?: AttackDetails;
-    hit?: HitDetails;
+    attacking?: AttackDetails | null;
+    hit?: HitDetails | null;
     maxHealth: number;
     currentHealth: number;
 
     combat?: PieceCombatState;
+}
+
+export interface CombatPieceModel extends PieceModel {
+    combat: PieceCombatState;
 }
 
 export type IndexedPieces = {

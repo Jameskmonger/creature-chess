@@ -52,7 +52,8 @@ export const playerGameDeckSagaFactory = (deck: CardDeck) => {
                     const excludeIds = [...threeStarBoardPieces, ...threeStarBenchPieces].map(p => p.definitionId);
                     const blessCandidateIds = [... new Set(getPiecesExceptStage(state.board, 2).map(p => p.definitionId))];
 
-                    const newCards = pullNewCards(cards, level, excludeIds, blessCandidateIds);
+                    const remainingCards = cards.filter((card): card is Card => card !== null)
+                    const newCards = pullNewCards(remainingCards, level, excludeIds, blessCandidateIds);
 
                     yield put(PlayerCommands.updateCardsCommand(newCards));
                 }

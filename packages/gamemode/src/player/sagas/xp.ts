@@ -1,5 +1,5 @@
 import { take, select, put } from "@redux-saga/core/effects";
-import { GamePhase, getXpToNextLevel } from "@creature-chess/models";
+import { GamePhase, getXpToNextLevel, PieceModel } from "@creature-chess/models";
 import { BoardSlice } from "@creature-chess/board";
 import { PlayerState } from "../store";
 import { updateLevelCommand } from "../playerInfo/commands";
@@ -12,7 +12,7 @@ export const addXpCommand = (amount: number): AddXpCommand => ({
     payload: { amount }
 });
 
-export const xpSagaFactory = <TState extends PlayerState>({ boardSlice }: { boardSlice: BoardSlice, benchSlice: BoardSlice }) => {
+export const xpSagaFactory = <TState extends PlayerState>({ boardSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) => {
     return function*() {
         while (true) {
             const { payload: { amount } }: AddXpCommand = yield take(ADD_XP_COMMAND);

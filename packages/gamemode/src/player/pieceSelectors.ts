@@ -6,7 +6,7 @@ interface PlayerPiecesState {
   bench: BoardState<PieceModel>;
 }
 
-export const getPiece = (state: PlayerPiecesState, pieceId: string): PieceModel =>
+export const getPiece = (state: PlayerPiecesState, pieceId: string): PieceModel | null =>
   BoardSelectors.getPiece(state.board, pieceId)
   || BoardSelectors.getPiece(state.bench, pieceId)
   || null;

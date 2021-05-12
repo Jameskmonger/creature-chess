@@ -1,7 +1,7 @@
 import { Logger } from "winston";
 import delay from "delay";
 import io = require("socket.io");
-import shuffle = require("lodash.shuffle");
+import { shuffle } from "lodash";
 import { Game, PlayerType } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";

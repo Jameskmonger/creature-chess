@@ -4,7 +4,7 @@ import { GamePhase } from "@creature-chess/models";
 export type RoundInfoState = {
     round: number | null;
     phase: GamePhase | null;
-    phaseStartedAtSeconds: number;
+    phaseStartedAtSeconds: number | null;
 };
 
 const initialState: RoundInfoState = {

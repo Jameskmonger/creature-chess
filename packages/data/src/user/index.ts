@@ -8,15 +8,15 @@ import { getByNickname } from "./getByNickname";
 import { setProfileInfo } from "./setProfileInfo";
 
 export type UserDatabaseFunctions = {
-    create: (authId: string) => Promise<DatabaseUser>;
+    create: (authId: string) => Promise<DatabaseUser | null>;
 
-    getById: (id: string) => Promise<DatabaseUser>;
-    getByNickname: (nickname: string) => Promise<DatabaseUser>;
+    getById: (id: string) => Promise<DatabaseUser | null>;
+    getByNickname: (nickname: string) => Promise<DatabaseUser | null>;
 
-    addWin: (id: string) => Promise<DatabaseUser>;
-    addGamePlayed: (id: string) => Promise<DatabaseUser>;
+    addWin: (id: string) => Promise<DatabaseUser | null>;
+    addGamePlayed: (id: string) => Promise<DatabaseUser | null>;
 
-    setProfileInfo: (id: string, nickname: string, picture: number) => Promise<DatabaseUser>;
+    setProfileInfo: (id: string, nickname: string, picture: number) => Promise<DatabaseUser> | null;
 };
 
 export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {

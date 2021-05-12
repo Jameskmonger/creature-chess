@@ -13,6 +13,11 @@ export const rotatePiecesAboutCenter = <TPiece extends HasId, TState extends Boa
 
     for (const [pieceId] of Object.entries(state.pieces)) {
         const position = getPiecePosition(state, pieceId);
+
+        if (!position) {
+            continue;
+        }
+
         const newPosition = rotateGridPosition(state.size, position);
         const newPositionKey = `${newPosition.x},${newPosition.y}`;
 

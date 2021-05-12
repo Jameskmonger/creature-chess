@@ -9,7 +9,7 @@ import { updateMoneyCommand } from "../playerInfo/commands";
 import { updateCardsCommand } from "../cardShop";
 import { getDefinitionById } from "../../definitions";
 
-const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation => {
+const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation | null => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
     const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
@@ -39,10 +39,15 @@ const getCardDestination = (state: PlayerState, playerId: string, sortPositions?
 const createPieceFromCard = (
     ownerId: string,
     card: Card
-): PieceModel => {
+): PieceModel | null => {
     const { id, definitionId } = card;
 
     const definition = getDefinitionById(definitionId);
+
+    if (!definition) {
+        return null;
+    }
+
     const stats = definition.stages[0];
 
     return {
@@ -122,6 +127,11 @@ export const buyCardPlayerActionSaga = function*() {
         }
 
         const piece = createPieceFromCard(playerId, card);
+
+        if (!piece) {
+            return;
+        }
+
         const remainingCards = cards.map(c => c === card ? null : c);
 
         if (destination.type === "board") {

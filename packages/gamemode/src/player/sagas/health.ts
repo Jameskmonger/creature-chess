@@ -14,7 +14,7 @@ export const subtractHealthCommand = (amount: number): HealthSubtractCommand => 
 export const healthSagaFactory = <TState extends PlayerState>() => {
     return function*() {
         yield all([
-            yield takeEvery<HealthSubtractCommand>(
+            takeEvery<HealthSubtractCommand>(
                 HEALTH_SUBTRACT_COMMAND,
                 function*({ payload: { amount } }) {
                     const state: TState = yield select();

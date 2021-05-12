@@ -7,7 +7,7 @@ import { Player } from "../player";
 
 export const listenForPropertyUpdates = (
     player: Player,
-    fns: {
+    { health: emitHealth, streak: emitStreak, status: emitStatus, battle: emitBattle, ready: emitReady }: {
         health?: (health: number) => void;
         streak?: (streak: PlayerStreak) => void;
         status?: (status: PlayerStatus) => void;
@@ -18,55 +18,55 @@ export const listenForPropertyUpdates = (
     const saga = player.runSaga(function*() {
         const sagas = [];
 
-        if (fns.health) {
+        if (emitHealth) {
             sagas.push(takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
                 PlayerInfoCommands.UPDATE_HEALTH_COMMAND,
                 function*({ payload: { health } }) {
-                    fns.health(health);
+                    emitHealth(health);
                 }
             ));
         }
 
-        if (fns.streak) {
+        if (emitStreak) {
             sagas.push(takeLatest<PlayerInfoCommands.UpdateStreakCommand>(
                 PlayerInfoCommands.UPDATE_STREAK_COMMAND,
                 function*({ payload: streak }) {
-                    fns.streak(streak);
+                    emitStreak(streak);
                 }
             ));
         }
 
-        if (fns.status) {
+        if (emitStatus) {
             sagas.push(takeLatest<PlayerInfoCommands.UpdateStatusCommand>(
                 PlayerInfoCommands.UPDATE_STATUS_COMMAND,
                 function*({ payload: { status } }) {
-                    fns.status(status);
+                    emitStatus(status);
                 }
             ));
         }
 
-        if (fns.battle) {
+        if (emitBattle) {
             sagas.push(takeLatest<PlayerInfoCommands.UpdateBattleCommand>(
                 PlayerInfoCommands.UPDATE_BATTLE_COMMAND,
                 function*({ payload: { battle } }) {
-                    fns.battle(battle);
+                    emitBattle(battle);
                 }
             ));
         }
 
-        if (fns.ready) {
+        if (emitReady) {
             // todo create a single "READY_UPDATED" action
             sagas.push(takeLatest<ReadyUpPlayerAction>(
                 readyUpPlayerAction.toString(),
                 function*() {
-                    fns.ready(true);
+                    emitReady(true);
                 }
             ));
 
             sagas.push(takeLatest<PlayerInfoCommands.ClearOpponentCommand>(
                 PlayerInfoCommands.CLEAR_OPPONENT_COMMAND,
                 function*() {
-                    fns.ready(false);
+                    emitReady(false);
                 }
             ));
         }
