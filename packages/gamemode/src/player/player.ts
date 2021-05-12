@@ -1,9 +1,8 @@
 import { Logger } from "winston";
-import { EventEmitter } from "events";
 import { Saga, SagaMiddleware, Task } from "redux-saga";
-import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
+import { takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
-import { PieceModel, PlayerListPlayer, PlayerStatus, PlayerProfile } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer, PlayerProfile } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
@@ -15,12 +14,7 @@ import {
 import { PlayerStore, createPlayerStore, PlayerState } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
-import { GameEvent, gameFinishEvent } from "../game/events";
-import { quitGamePlayerAction, QuitGamePlayerAction } from "./playerGameActions";
-
-enum PlayerEvent {
-    QUIT_GAME = "QUIT_GAME"
-}
+import { GameEvent } from "../game/events";
 
 export interface PlayerMatchResults {
     homePlayer: Player;
@@ -52,8 +46,6 @@ export abstract class Player {
     protected readonly boardSlice: BoardSlice<PieceModel>;
     protected readonly benchSlice: BoardSlice<PieceModel>;
 
-    private events = new EventEmitter();
-
     private logger!: Logger;
 
     constructor(id: string, name: string, profile: PlayerProfile) {
@@ -71,9 +63,7 @@ export abstract class Player {
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.quitGameSaga());
         this.sagaMiddleware.run(this.clientFinishMatchSaga());
-        this.sagaMiddleware.run(this.finishGameSaga());
         playerBattle(this.sagaMiddleware);
         this.sagaMiddleware.run(playerMatchRewards<PlayerState>(this.id));
 
@@ -201,12 +191,6 @@ export abstract class Player {
         };
     }
 
-    public onQuitGame(fn: (player: Player) => void) {
-        this.events.on(PlayerEvent.QUIT_GAME, fn);
-
-        return () => this.events.off(PlayerEvent.QUIT_GAME, fn);
-    }
-
     public isAlive() {
         return isPlayerAlive(this.store.getState());
     }
@@ -227,21 +211,6 @@ export abstract class Player {
         return this.store.getState().cardShop.cards;
     }
 
-    private quitGameSaga() {
-        const emitEvent = () => this.events.emit(PlayerEvent.QUIT_GAME, this);
-
-        return function*() {
-            yield takeEvery<QuitGamePlayerAction>(
-                quitGamePlayerAction.toString(),
-                function*() {
-                    yield put(PlayerInfoCommands.updateStatusCommand({ status: PlayerStatus.QUIT }));
-
-                    emitEvent();
-                }
-            );
-        };
-    }
-
     private clientFinishMatchSaga() {
         const finishMatch = () => {
             if (this.match === null) {
@@ -256,19 +225,6 @@ export abstract class Player {
                 CLIENT_FINISH_MATCH_EVENT,
                 function*() {
                     finishMatch();
-                }
-            );
-        };
-    }
-
-    private finishGameSaga() {
-        const removeListeners = () => this.events.removeAllListeners();
-
-        return function*() {
-            yield takeLatest(
-                gameFinishEvent.toString(),
-                function*() {
-                    removeListeners();
                 }
             );
         };

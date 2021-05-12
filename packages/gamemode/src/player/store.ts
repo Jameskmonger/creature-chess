@@ -8,7 +8,7 @@ import { PieceModel } from "@creature-chess/models";
 
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import {
-    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory
+    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory, setStatusOnQuit
 } from "./sagas";
 import { roundInfoReducer, RoundInfoState } from "../game/roundInfo";
 import { cardShopReducer, CardShopState } from "./cardShop";
@@ -37,7 +37,8 @@ export const createPlayerStore = (
             fork(evolutionSagaFactory<PlayerState>(boardSlices)),
             fork(healthSagaFactory<PlayerState>()),
             fork(xpSagaFactory<PlayerState>(boardSlices)),
-            fork(fillBoardSagaFactory<PlayerState>(playerId))
+            fork(fillBoardSagaFactory<PlayerState>(playerId)),
+            fork(setStatusOnQuit)
         ]);
     };
 
