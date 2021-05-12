@@ -28,8 +28,6 @@ export const readyNotifier = (livingPlayers: Player[]) => {
             const isReady = yield* select((state: PlayerState) => state.playerInfo.ready);
 
             if (isAlive && !isReady) {
-                console.log(player.name + " just quit");
-
                 queue.add(player.id);
             }
         });

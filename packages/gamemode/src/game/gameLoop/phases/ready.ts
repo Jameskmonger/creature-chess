@@ -20,7 +20,7 @@ export const runReadyPhase = function*() {
             return;
         }
 
-        const match = new Match(homePlayer, awayPlayer, options);
+        const match = new Match(homePlayer, awayPlayer, awayIsClone, options);
 
         homePlayer.enterReadyPhase(match);
 

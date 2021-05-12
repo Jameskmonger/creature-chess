@@ -1,13 +1,8 @@
-import { Card, PieceModel } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 
-export const PLAYER_FINISH_MATCH_EVENT = "PLAYER_FINISH_MATCH_EVENT";
-export type PLAYER_FINISH_MATCH_EVENT = typeof PLAYER_FINISH_MATCH_EVENT;
-export type PlayerFinishMatchEvent = ({ type: PLAYER_FINISH_MATCH_EVENT, payload: { homeScore: number, awayScore: number } });
-export const playerFinishMatchEvent = (homeScore: number, awayScore: number): PlayerFinishMatchEvent => ({
-    type: PLAYER_FINISH_MATCH_EVENT,
-    payload: { homeScore, awayScore }
-});
+export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
+export const playerFinishMatchEvent = createAction<{ homeScore: number, awayScore: number }, "playerFinishMatchEvent">("playerFinishMatchEvent");
 
 export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;
 export const afterSellPieceEvent = createAction<{ piece: PieceModel }, "afterSellPieceEvent">("afterSellPieceEvent");

@@ -1,16 +1,13 @@
 import { Logger } from "winston";
 import { Saga, SagaMiddleware, Task } from "redux-saga";
-import { takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
 import { PieceModel, PlayerListPlayer, PlayerProfile } from "@creature-chess/models";
-import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
+import { BoardSelectors, BoardSlice, BoardState, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
 import { Match } from "../game/match";
 import { playerBattle, playerMatchRewards, fillBoardCommand } from "./sagas";
-import {
-    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, afterRerollCardsEvent
-} from "./events";
+import { playerFinishMatchEvent, afterRerollCardsEvent } from "./events";
 import { PlayerStore, createPlayerStore, PlayerState } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
@@ -155,21 +152,7 @@ export abstract class Player {
         this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(opponentId));
     }
 
-    public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
-        if (!this.match) {
-            this.logger.warn("No match found when fighting match", { actor: { playerId: this.id, name: this.name } });
-
-            // todo improve this
-            return {
-                homePlayer: this,
-                opponentName: "",
-                homeScore: 0,
-                awayScore: 0
-            };
-        }
-
-        const finalMatchBoard = await this.match.fight(battleTimeout.promise);
-
+    public onFinishMatch(finalMatchBoard: BoardState<PieceModel>) {
         const survivingPieces = BoardSelectors.getAllPieces(finalMatchBoard).filter(p => p.currentHealth > 0);
 
         const surviving = {
@@ -180,18 +163,9 @@ export abstract class Player {
         const homeScore = surviving.home.length;
         const awayScore = surviving.away.length;
 
-        this.store.dispatch(playerFinishMatchEvent(homeScore, awayScore));
-
-        const opponentName = this.match.away.name;
+        this.store.dispatch(playerFinishMatchEvent({ homeScore, awayScore }));
 
         this.match = null;
-
-        return {
-            homePlayer: this,
-            opponentName,
-            homeScore,
-            awayScore
-        };
     }
 
     public isAlive() {

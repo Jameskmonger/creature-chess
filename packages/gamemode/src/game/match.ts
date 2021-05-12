@@ -18,8 +18,6 @@ const turnReducer: Reducer<number, BattleEvents.BattleTurnEvent> = (state = 0, e
 );
 
 export class Match {
-    public readonly home: Player;
-    public readonly away: Player;
     private store: Store<MatchState>;
     private finalBoard!: BoardState<PieceModel>;
     private boardId = uuid();
@@ -28,9 +26,12 @@ export class Match {
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
 
-    constructor(home: Player, away: Player, gameOptions: GameOptions) {
-        this.home = home;
-        this.away = away;
+    constructor(
+        public readonly home: Player,
+        public readonly away: Player,
+        private awayIsClone: boolean,
+        gameOptions: GameOptions
+    ) {
         this.store = this.createStore(gameOptions);
 
         const mergedBoard = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
@@ -103,6 +104,13 @@ export class Match {
         ]);
 
         this.finalBoard = this.store.getState().board;
+
+        this.home.onFinishMatch(this.finalBoard);
+
+        if (!this.awayIsClone) {
+            this.away.onFinishMatch(this.finalBoard);
+        }
+
         return this.finalBoard;
     }
 

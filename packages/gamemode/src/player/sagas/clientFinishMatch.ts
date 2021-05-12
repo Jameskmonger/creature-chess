@@ -4,7 +4,7 @@ import { ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT } from "../events";
 import { PlayerSagaDependencies } from "../sagaContext";
 
 export const clientFinishMatch = function*() {
-    const { getMatch } = yield* getContext<PlayerSagaDependencies>("dependencies")
+    const { getMatch } = yield* getContext<PlayerSagaDependencies>("dependencies");
 
     yield takeLatest<ClientFinishMatchEvent>(
         CLIENT_FINISH_MATCH_EVENT,
