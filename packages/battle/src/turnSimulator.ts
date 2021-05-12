@@ -40,7 +40,7 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState<P
         return board;
     }
 
-    const attackerCombatState = clonePieceCombatState(originalPiece.combat)
+    const attackerCombatState = clonePieceCombatState(originalPiece.combat);
     // create a new piece object, reset combat properties
     const attacker: CombatPieceModel = {
         ...originalPiece,
