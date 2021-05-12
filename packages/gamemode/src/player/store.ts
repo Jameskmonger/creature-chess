@@ -8,14 +8,13 @@ import { PieceModel } from "@creature-chess/models";
 
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import {
-    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory, setStatusOnQuit
+    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory, setStatusOnQuit, playerBattle, playerMatchRewards
 } from "./sagas";
 import { roundInfoReducer, RoundInfoState } from "../game/roundInfo";
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { PlayerSagaContext } from "./sagaContext";
 import { playerGameActionsSaga } from "./playerGameActions";
 import { Match } from "../game/match";
-import { clientFinishMatch } from "./sagas/clientFinishMatch";
 
 export interface PlayerState {
     board: BoardState<PieceModel>;
@@ -42,7 +41,7 @@ export const createPlayerStore = (
             fork(xpSagaFactory<PlayerState>(boardSlices)),
             fork(fillBoardSagaFactory<PlayerState>(playerId)),
             fork(setStatusOnQuit),
-            fork(clientFinishMatch)
+            fork(playerBattle)
         ]);
     };
 

@@ -8,6 +8,6 @@ export class BotPlayer extends Player {
         // todo fix typing
         super(id, name, profile);
 
-        this.sagaMiddleware.run(botLogicSaga);
+        this.runSaga(botLogicSaga);
     }
 }

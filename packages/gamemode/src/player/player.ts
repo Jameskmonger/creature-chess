@@ -1,14 +1,13 @@
 import { Logger } from "winston";
-import { Saga, SagaMiddleware, Task } from "redux-saga";
-import pDefer = require("p-defer");
+import { Saga, Task } from "redux-saga";
 import { PieceModel, PlayerListPlayer, PlayerProfile } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, BoardState, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
 import { Match } from "../game/match";
-import { playerBattle, playerMatchRewards, fillBoardCommand } from "./sagas";
+import { fillBoardCommand } from "./sagas";
 import { playerFinishMatchEvent, afterRerollCardsEvent } from "./events";
-import { PlayerStore, createPlayerStore, PlayerState } from "./store";
+import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
 import { GameEvent } from "../game/events";
@@ -36,7 +35,6 @@ export abstract class Player {
 
     protected match: Match | null = null;
     protected store: PlayerStore;
-    protected sagaMiddleware: SagaMiddleware;
 
     protected getRoundInfoState!: () => RoundInfoState;
     protected getPlayerListPlayers!: () => PlayerListPlayer[];
@@ -64,12 +62,8 @@ export abstract class Player {
             }
         );
         this.store = store;
-        this.sagaMiddleware = sagaMiddleware;
 
-        playerBattle(this.sagaMiddleware);
-        this.sagaMiddleware.run(playerMatchRewards<PlayerState>(this.id));
-
-        this.runSaga = this.sagaMiddleware.run;
+        this.runSaga = sagaMiddleware.run;
     }
 
     public setLogger(logger: Logger) {

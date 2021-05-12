@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { Player, PlayerType } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
-import {  PlayerProfile } from "@creature-chess/models";
+import { PlayerProfile } from "@creature-chess/models";
 import { newPlayerSocketEvent } from "./events";
 import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
@@ -13,8 +13,8 @@ export class SocketPlayer extends Player {
         // todo fix typing
         super(id, name, profile);
 
-        this.sagaMiddleware.run(incomingNetworking, this.getLogger);
-        this.sagaMiddleware.run(outgoingNetworking, this.getLogger, id, this.getMatch, { boardSlice: this.boardSlice, benchSlice: this.benchSlice });
+        this.runSaga(incomingNetworking, this.getLogger);
+        this.runSaga(outgoingNetworking, this.getLogger, id, this.getMatch, { boardSlice: this.boardSlice, benchSlice: this.benchSlice });
 
         this.initialiseSocket(socket);
     }

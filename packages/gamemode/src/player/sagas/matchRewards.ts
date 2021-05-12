@@ -1,4 +1,5 @@
-import { take, takeLatest, put, select, call } from "@redux-saga/core/effects";
+import { take, takeLatest, put, call } from "@redux-saga/core/effects";
+import { select } from "typed-redux-saga";
 import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType } from "@creature-chess/models";
 
 import { PlayerFinishMatchEvent, playerMatchRewardsEvent, playerDeathEvent, playerFinishMatchEvent } from "../events";
@@ -6,8 +7,8 @@ import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateStreakCommand, UPDATE
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
-import { RoundInfoState } from "../../game/roundInfo";
 import { PlayerInfoCommands } from "../playerInfo";
+import { PlayerState } from "../store";
 
 const getStreakBonus = (streak: number) => {
     if (streak >= 9) {
@@ -47,57 +48,55 @@ const updateStreak = function*(win: boolean) {
     yield put(updateStreakCommand(type, newAmount));
 };
 
-export const playerMatchRewards = <TState extends (HasPlayerInfo & { roundInfo: RoundInfoState })>(playerId: string) => {
-    return function*() {
-        yield takeLatest<PlayerFinishMatchEvent>(
-            playerFinishMatchEvent.toString(),
-            function*({ payload: { homeScore, awayScore } }) {
-                const win = homeScore > awayScore;
+export const playerMatchRewards = function*() {
+    yield takeLatest<PlayerFinishMatchEvent>(
+        playerFinishMatchEvent.toString(),
+        function*({ payload: { homeScore, awayScore } }) {
+            const win = homeScore > awayScore;
 
-                yield call(updateStreak, win);
+            yield call(updateStreak, win);
 
-                const damage = awayScore * HEALTH_LOST_PER_PIECE;
+            const damage = awayScore * HEALTH_LOST_PER_PIECE;
 
-                const oldValue: number = yield select(({ playerInfo: { health } }: TState) => health);
+            const oldValue = yield* select(({ playerInfo: { health } }: PlayerState) => health);
 
-                yield put(subtractHealthCommand(damage));
+            yield put(subtractHealthCommand(damage));
 
-                // subtractHealthCommand emits an UPDATE_HEALTH_COMMAND so need to wait for that.
-                // todo this is ugly
-                yield take(UPDATE_HEALTH_COMMAND);
+            // subtractHealthCommand emits an UPDATE_HEALTH_COMMAND so need to wait for that.
+            // todo this is ugly
+            yield take(UPDATE_HEALTH_COMMAND);
 
-                const newValue: number = yield select(({ playerInfo: { health } }: TState) => health);
+            const newValue = yield* select(({ playerInfo: { health } }: PlayerState) => health);
 
-                const justDied = (newValue === 0 && oldValue !== 0);
-                if (justDied) {
-                    yield put(PlayerInfoCommands.updateStatusCommand({ status: PlayerStatus.DEAD }));
-                    yield put(playerDeathEvent());
-                }
-
-                const currentMoney: number = yield select(({ playerInfo: { money } }: TState) => money);
-                const streak: number = yield select(({ playerInfo: { streak: { amount } } }: TState) => amount);
-
-                const { total, base, winBonus, streakBonus, interest } = getMoneyForMatch(currentMoney, streak, win);
-
-                yield put(playerMatchRewardsEvent({
-                    damage,
-                    justDied,
-                    rewardMoney: { total, base, winBonus, streakBonus, interest }
-                }));
-
-                if (justDied) {
-                    return;
-                }
-
-                // wait for preparing phase to give money
-                yield take(CLEAR_OPPONENT_COMMAND);
-
-                yield put(playerMatchRewardsEvent(null));
-
-                // todo make addMoneyCommand
-                yield put(updateMoneyCommand(currentMoney + total));
-                yield put(addXpCommand(1));
+            const justDied = (newValue === 0 && oldValue !== 0);
+            if (justDied) {
+                yield put(PlayerInfoCommands.updateStatusCommand({ status: PlayerStatus.DEAD }));
+                yield put(playerDeathEvent());
             }
-        );
-    };
+
+            const currentMoney = yield* select(({ playerInfo: { money } }: PlayerState) => money);
+            const streak = yield* select(({ playerInfo: { streak: { amount } } }: PlayerState) => amount);
+
+            const { total, base, winBonus, streakBonus, interest } = getMoneyForMatch(currentMoney, streak, win);
+
+            yield put(playerMatchRewardsEvent({
+                damage,
+                justDied,
+                rewardMoney: { total, base, winBonus, streakBonus, interest }
+            }));
+
+            if (justDied) {
+                return;
+            }
+
+            // wait for preparing phase to give money
+            yield take(CLEAR_OPPONENT_COMMAND);
+
+            yield put(playerMatchRewardsEvent(null));
+
+            // todo make addMoneyCommand
+            yield put(updateMoneyCommand(currentMoney + total));
+            yield put(addXpCommand(1));
+        }
+    );
 };
