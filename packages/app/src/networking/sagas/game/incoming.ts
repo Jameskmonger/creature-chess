@@ -34,43 +34,43 @@ const readPacketsToActions = function*(
 
         registry.on(
             ServerToClient.Game.PacketOpcodes.BOARD_UPDATE,
-            ({ state }) => {
-                emit(boardSlice.commands.setBoardPiecesCommand(state));
+            (newValue) => {
+                emit(boardSlice.commands.setBoardPiecesCommand(newValue));
             }
         );
 
         registry.on(
             ServerToClient.Game.PacketOpcodes.BENCH_UPDATE,
-            ({ state }) => {
-                emit(benchSlice.commands.setBoardPiecesCommand(state));
+            (newValue) => {
+                emit(benchSlice.commands.setBoardPiecesCommand(newValue));
             }
         );
 
         registry.on(
             ServerToClient.Game.PacketOpcodes.CARDS_UPDATE,
-            (packet) => {
-                emit(PlayerCommands.updateCardsCommand(packet));
+            (newValue) => {
+                emit(PlayerCommands.updateCardsCommand(newValue));
             }
         );
 
         registry.on(
             ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE,
-            (packet) => {
-                emit(PlayerCommands.updateShopLockCommand(packet.locked));
+            (newValue) => {
+                emit(PlayerCommands.updateShopLockCommand(newValue));
             }
         );
 
         registry.on(
             ServerToClient.Game.PacketOpcodes.MONEY_UPDATE,
-            (packet) => {
-                emit(PlayerInfoCommands.updateMoneyCommand(packet));
+            (newValue) => {
+                emit(PlayerInfoCommands.updateMoneyCommand(newValue));
             }
         );
 
         registry.on(
             ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE,
-            (packet) => {
-                emit(PlayerInfoCommands.updateHealthCommand(packet));
+            (newValue) => {
+                emit(PlayerInfoCommands.updateHealthCommand(newValue));
             }
         );
 

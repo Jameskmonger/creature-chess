@@ -116,7 +116,7 @@ export const outgoingNetworking = function*() {
 
     const sendCommands = function*() {
         yield all([
-            yield takeLatest(
+            takeLatest(
                 [
                     benchSlice.commands.addBoardPieceCommand,
                     benchSlice.commands.moveBoardPieceCommand,
@@ -126,10 +126,10 @@ export const outgoingNetworking = function*() {
                 function*() {
                     const bench = yield* select((state: PlayerState) => state.bench);
 
-                    registry.emit(ServerToClient.Game.PacketOpcodes.BENCH_UPDATE, { state: bench });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.BENCH_UPDATE, bench);
                 }
             ),
-            yield takeLatest(
+            takeLatest(
                 [
                     boardSlice.commands.addBoardPieceCommand,
                     boardSlice.commands.moveBoardPieceCommand,
@@ -139,11 +139,11 @@ export const outgoingNetworking = function*() {
                 function*() {
                     const board = yield* select((state: PlayerState) => state.board);
 
-                    registry.emit(ServerToClient.Game.PacketOpcodes.BOARD_UPDATE, { state: board });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.BOARD_UPDATE, board);
                 }
             ),
 
-            yield takeLatest(
+            takeLatest(
                 PlayerCommands.updateCardsCommand,
                 function*() {
                     const cards = yield* select((state: PlayerState) => state.cardShop.cards);
@@ -151,15 +151,15 @@ export const outgoingNetworking = function*() {
                     registry.emit(ServerToClient.Game.PacketOpcodes.CARDS_UPDATE, cards);
                 }
             ),
-            yield takeLatest(
+            takeLatest(
                 PlayerCommands.updateShopLockCommand,
                 function*() {
                     const locked = yield* select((state: PlayerState) => state.cardShop.locked);
 
-                    registry.emit(ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE, { locked });
+                    registry.emit(ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE, locked);
                 }
             ),
-            yield takeLatest<PlayerInfoCommands.UpdateMoneyCommand>(
+            takeLatest<PlayerInfoCommands.UpdateMoneyCommand>(
                 PlayerInfoCommands.UPDATE_MONEY_COMMAND,
                 function*() {
                     const money = yield* select((state: PlayerState) => state.playerInfo.money);
@@ -167,7 +167,7 @@ export const outgoingNetworking = function*() {
                     registry.emit(ServerToClient.Game.PacketOpcodes.MONEY_UPDATE, money);
                 }
             ),
-            yield takeLatest<PlayerInfoCommands.UpdateLevelCommand>(
+            takeLatest<PlayerInfoCommands.UpdateLevelCommand>(
                 PlayerInfoCommands.UPDATE_LEVEL_COMMAND,
                 function*() {
                     const level = yield* select((state: PlayerState) => state.playerInfo.level);
@@ -176,7 +176,7 @@ export const outgoingNetworking = function*() {
                     registry.emit(ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE, { level, xp });
                 }
             ),
-            yield takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
+            takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
                 PlayerInfoCommands.UPDATE_HEALTH_COMMAND,
                 function*() {
                     const health = yield* select((state: PlayerState) => state.playerInfo.health);
