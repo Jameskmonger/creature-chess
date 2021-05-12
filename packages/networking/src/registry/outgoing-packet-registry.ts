@@ -11,7 +11,7 @@ export class OutgoingPacketRegistry<TPayloads, TAcknowledgements> {
 
   public emit<TKey extends keyof TPayloads & keyof TAcknowledgements>(
     opcode: TKey,
-    payload?: TPayloads[TKey],
+    payload: TPayloads[TKey],
     ack?: TAcknowledgements[TKey]
   ) {
     if (ack) {

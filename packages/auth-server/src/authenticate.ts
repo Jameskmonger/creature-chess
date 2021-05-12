@@ -19,21 +19,23 @@ export const authenticate = async (
     try {
         const authUser = await managementClient.getUser({ id: userId });
 
+        // todo lots of ! in this function, improve it
+
         if (!authUser.app_metadata || !authUser.app_metadata.playerId) {
             // need to create an account
-            const newUser = await database.user.create(authUser.user_id);
+            const newUser = await database.user.create(authUser.user_id!);
 
-            await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: newUser.ref.id, playerNickname: null });
+            await managementClient.updateAppMetadata({ id: authUser.user_id! }, { playerId: newUser!.ref.id, playerNickname: null });
 
-            return convertDatabaseUserToUserModel(newUser);
+            return convertDatabaseUserToUserModel(newUser!);
         }
 
         const dbUser = await database.user.getById(authUser.app_metadata.playerId);
 
-        const userModel = convertDatabaseUserToUserModel(dbUser);
+        const userModel = convertDatabaseUserToUserModel(dbUser!);
 
         if (userModel.nickname && !authUser.app_metadata.playerNickname) {
-            await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: dbUser.ref.id, playerNickname: userModel.nickname });
+            await managementClient.updateAppMetadata({ id: authUser.user_id! }, { playerId: dbUser!.ref.id, playerNickname: userModel.nickname });
         }
 
         return userModel;
