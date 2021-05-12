@@ -1,8 +1,11 @@
 import { Card, PieceModel } from "@creature-chess/models";
-import { all, put, select, takeEvery } from "@redux-saga/core/effects";
+import { all, put, takeEvery } from "@redux-saga/core/effects";
+import { getContext, select } from "typed-redux-saga";
 import { PlayerCommands, PlayerEvents } from "../../player";
-import { getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
+import { updateCardsCommand } from "../../player/cardShop";
+import { getAllPieces, getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
 import { isPlayerAlive } from "../../player/playerSelectors";
+import { PlayerBoardSlices } from "../../player/sagaContext";
 import { PlayerState } from "../../player/store";
 import { CardDeck } from "../cardDeck";
 
@@ -28,14 +31,24 @@ export const playerGameDeckSagaFactory = (deck: CardDeck) => {
         yield all([
             takeEvery<PlayerEvents.PlayerDeathEvent>(
                 PlayerEvents.playerDeathEvent.toString(),
-                function*({ payload: { pieces, cards } }) {
-                    addToDeck(pieces, cards);
+                function*() {
+                    const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
+                    const cards = yield* select((s: PlayerState) => s.cardShop.cards);
+                    const pieces = yield* select(getAllPieces);
+
+                    const remainingCards = cards.filter((card): card is Card => card !== null);
+
+                    yield put(updateCardsCommand([]));
+                    yield put(boardSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
+                    yield put(benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
+
+                    addToDeck(pieces, remainingCards);
                 }
             ),
             takeEvery<PlayerEvents.AfterRerollCardsEvent>(
                 PlayerEvents.afterRerollCardsEvent.toString(),
                 function*() {
-                    const state: PlayerState = yield select();
+                    const state = yield* select((s: PlayerState) => s);
 
                     if (!isPlayerAlive(state)) {
                         return;

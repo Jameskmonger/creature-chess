@@ -1,9 +1,8 @@
 import pDefer = require("p-defer");
-import { select, put, getContext } from "@redux-saga/core/effects";
+import { put, getContext } from "@redux-saga/core/effects";
 import delay from "delay";
-import { GameOptions, GamePhase, PlayerStatus } from "@creature-chess/models";
+import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
-import { GameState } from "../../store";
 import { GameSagaContextPlayers } from "../../sagas";
 
 export const runPlayingPhase = function*() {
@@ -22,12 +21,6 @@ export const runPlayingPhase = function*() {
     const promises = players.getLiving().map(p => p.fightMatch(startedAt, battleTimeoutDeferred));
 
     yield Promise.all(promises);
-
-    const round: number = yield select((state: GameState) => state.roundInfo.round);
-
-    for (const player of players.getAll().filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round)) {
-        player.kill();
-    }
 
     // some battles go right up to the end, so it's nice to have a delay
     // rather than jumping straight into the next phase

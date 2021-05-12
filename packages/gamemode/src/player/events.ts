@@ -21,7 +21,7 @@ export type ClientFinishMatchEvent = ({ type: CLIENT_FINISH_MATCH_EVENT });
 export const clientFinishMatchEvent = (): ClientFinishMatchEvent => ({ type: CLIENT_FINISH_MATCH_EVENT });
 
 export type PlayerDeathEvent = ReturnType<typeof playerDeathEvent>;
-export const playerDeathEvent = createAction<{ pieces: PieceModel[], cards: Card[] }, "playerDeathEvent">("playerDeathEvent");
+export const playerDeathEvent = createAction("playerDeathEvent");
 
 export const PLAYER_MATCH_REWARDS_EVENT = "PLAYER_MATCH_REWARDS_EVENT";
 export type PLAYER_MATCH_REWARDS_EVENT = typeof PLAYER_MATCH_REWARDS_EVENT;

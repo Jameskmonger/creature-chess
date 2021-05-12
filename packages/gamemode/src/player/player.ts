@@ -3,21 +3,19 @@ import { EventEmitter } from "events";
 import { Saga, SagaMiddleware, Task } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
-import { PieceModel, PlayerListPlayer, PlayerStatus, PlayerTitle, PlayerProfile, Card } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer, PlayerStatus, PlayerProfile } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
 import { Match } from "../game/match";
 import { playerBattle, playerMatchRewards, fillBoardCommand } from "./sagas";
 import {
-    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, playerDeathEvent, afterRerollCardsEvent
+    ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT, playerFinishMatchEvent, afterRerollCardsEvent
 } from "./events";
 import { PlayerStore, createPlayerStore, PlayerState } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
-import { getAllPieces } from "./pieceSelectors";
 import { GameEvent, gameFinishEvent } from "../game/events";
-import { updateCardsCommand } from "./cardShop";
 import { quitGamePlayerAction, QuitGamePlayerAction } from "./playerGameActions";
 
 enum PlayerEvent {
@@ -209,29 +207,12 @@ export abstract class Player {
         return () => this.events.off(PlayerEvent.QUIT_GAME, fn);
     }
 
-    public kill() {
-        const pieces = getAllPieces(this.store.getState());
-        const { cardShop: { cards } } = this.store.getState();
-
-        this.store.dispatch(this.boardSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
-        this.store.dispatch(this.benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
-        this.store.dispatch(updateCardsCommand([]));
-
-        const remainingCards = cards.filter((card): card is Card => card !== null);
-
-        this.store.dispatch(playerDeathEvent({ pieces, cards: remainingCards }));
-    }
-
     public isAlive() {
         return isPlayerAlive(this.store.getState());
     }
 
     public isDead() {
         return !this.isAlive();
-    }
-
-    public getRoundDiedAt() {
-        return this.store.getState().playerInfo.roundDiedAt;
     }
 
     public getBoard() {
@@ -253,7 +234,7 @@ export abstract class Player {
             yield takeEvery<QuitGamePlayerAction>(
                 quitGamePlayerAction.toString(),
                 function*() {
-                    yield put(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
+                    yield put(PlayerInfoCommands.updateStatusCommand({ status: PlayerStatus.QUIT }));
 
                     emitEvent();
                 }

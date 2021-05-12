@@ -1,7 +1,7 @@
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import {
     UPDATE_MONEY_COMMAND, PlayerInfoCommand, UPDATE_OPPONENT_COMMAND, CLEAR_OPPONENT_COMMAND,
-    UPDATE_LEVEL_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_ROUND_DIED_AT_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_STATUS_COMMAND, UPDATE_BATTLE_COMMAND
+    UPDATE_LEVEL_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_BATTLE_COMMAND
 } from "./commands";
 import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../events";
 import { readyUpPlayerAction } from "../playerGameActions";
@@ -32,8 +32,6 @@ export interface PlayerInfoState {
     battle: PlayerBattle | null;
     matchRewards: PlayerMatchRewards | null;
 
-    roundDiedAt: number | null;
-
     opponentId: string | null;
     money: number;
     ready: boolean;
@@ -44,7 +42,6 @@ export interface PlayerInfoState {
 const initialState: PlayerInfoState = {
     status: PlayerStatus.CONNECTED,
     health: STARTING_HEALTH,
-    roundDiedAt: null,
     streak: {
         type: StreakType.WIN,
         amount: 0
@@ -65,7 +62,7 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
                 ...state,
                 matchRewards: command.payload
             };
-        case UPDATE_STATUS_COMMAND:
+        case "updateStatusCommand":
             return {
                 ...state,
                 status: command.payload.status
@@ -87,11 +84,6 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
                     amount: command.payload.amount,
                     type: command.payload.type
                 }
-            };
-        case UPDATE_ROUND_DIED_AT_COMMAND:
-            return {
-                ...state,
-                roundDiedAt: command.payload.roundDiedAt
             };
         case UPDATE_LEVEL_COMMAND:
             return {

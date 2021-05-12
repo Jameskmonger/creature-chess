@@ -112,7 +112,6 @@ export class PlayerList {
                 streakType: streak.type,
                 streakAmount: streak.amount,
                 battle: player.getBattle(),
-                roundDiedAt: player.getRoundDiedAt(),
                 status: player.getStatus(),
                 profile: player.profile
             };

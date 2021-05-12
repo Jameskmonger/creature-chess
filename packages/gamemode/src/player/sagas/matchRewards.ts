@@ -1,12 +1,13 @@
 import { take, takeLatest, put, select, call } from "@redux-saga/core/effects";
-import { HEALTH_LOST_PER_PIECE, StreakType } from "@creature-chess/models";
+import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType } from "@creature-chess/models";
 
-import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent, playerMatchRewardsEvent } from "../events";
-import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateRoundDiedAtCommand, updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../playerInfo/commands";
+import { PLAYER_FINISH_MATCH_EVENT, PlayerFinishMatchEvent, playerMatchRewardsEvent, playerDeathEvent } from "../events";
+import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../playerInfo/commands";
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
 import { RoundInfoState } from "../../game/roundInfo";
+import { PlayerInfoCommands } from "../playerInfo";
 
 const getStreakBonus = (streak: number) => {
     if (streak >= 9) {
@@ -69,9 +70,8 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { roundInfo: 
 
                 const justDied = (newValue === 0 && oldValue !== 0);
                 if (justDied) {
-                    const currentRound: number = yield select(({ roundInfo: { round } }: TState) => round);
-
-                    yield put(updateRoundDiedAtCommand(currentRound));
+                    yield put(PlayerInfoCommands.updateStatusCommand({ status: PlayerStatus.DEAD }));
+                    yield put(playerDeathEvent());
                 }
 
                 const currentMoney: number = yield select(({ playerInfo: { money } }: TState) => money);
@@ -84,6 +84,10 @@ export const playerMatchRewards = <TState extends (HasPlayerInfo & { roundInfo: 
                     justDied,
                     rewardMoney: { total, base, winBonus, streakBonus, interest }
                 }));
+
+                if (justDied) {
+                    return;
+                }
 
                 // wait for preparing phase to give money
                 yield take(CLEAR_OPPONENT_COMMAND);

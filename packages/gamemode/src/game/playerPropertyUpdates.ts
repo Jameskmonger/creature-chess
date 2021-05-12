@@ -38,7 +38,7 @@ export const listenForPropertyUpdates = (
 
         if (emitStatus) {
             sagas.push(takeLatest<PlayerInfoCommands.UpdateStatusCommand>(
-                PlayerInfoCommands.UPDATE_STATUS_COMMAND,
+                PlayerInfoCommands.updateStatusCommand.toString(),
                 function*({ payload: { status } }) {
                     emitStatus(status);
                 }
