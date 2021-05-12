@@ -33,11 +33,11 @@ export const createPlayerStore = (
 ): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([
-            yield fork(playerGameActionsSaga),
-            yield fork(evolutionSagaFactory<PlayerState>(boardSlices)),
-            yield fork(healthSagaFactory<PlayerState>()),
-            yield fork(xpSagaFactory<PlayerState>(boardSlices)),
-            yield fork(fillBoardSagaFactory<PlayerState>(playerId))
+            fork(playerGameActionsSaga),
+            fork(evolutionSagaFactory<PlayerState>(boardSlices)),
+            fork(healthSagaFactory<PlayerState>()),
+            fork(xpSagaFactory<PlayerState>(boardSlices)),
+            fork(fillBoardSagaFactory<PlayerState>(playerId))
         ]);
     };
 

@@ -1,8 +1,8 @@
 type PieceBoardState = {
-    canMoveAtTurn: number;
+    canMoveAtTurn: number | null;
     canBeAttackedAtTurn: number; // used to stop pieces being hit as soon as they land
-    canAttackAtTurn: number;
-    removeFromBoardAtTurn: number;
+    canAttackAtTurn: number | null;
+    removeFromBoardAtTurn: number | null;
 };
 
 export type PieceCombatState = {
@@ -19,3 +19,16 @@ export const createPieceCombatState = (): PieceCombatState => ({
     },
     targetId: null
 });
+
+export const clonePieceCombatState = (combat?: PieceCombatState) => {
+    if (!combat || !combat.board) {
+        return createPieceCombatState();
+    }
+
+    return {
+        ...combat,
+        board: {
+            ...combat.board
+        }
+    };
+}

@@ -7,12 +7,12 @@ const randomFromArray = <T>(array: T[]) => {
 };
 
 export class OpponentProvider {
-    private remainingRotations: number[] = null;
-    private rotation: number;
+    private remainingRotations: number[] | null = null;
+    private rotation: number = 0;
 
     private lastLivingPlayerCount: number = 0;
-    private lastOddMatchupHomeId: string = null;
-    private lastOddMatchupAwayId: string = null;
+    private lastOddMatchupHomeId: string | null = null;
+    private lastOddMatchupAwayId: string | null = null;
 
     private getLivingPlayers: () => Player[];
 
@@ -115,6 +115,10 @@ export class OpponentProvider {
     }
 
     private updateRotation() {
+        if (!this.remainingRotations) {
+            return;
+        }
+
         const chosen = randomFromArray(this.remainingRotations);
 
         this.remainingRotations = this.remainingRotations.filter(i => i !== chosen);

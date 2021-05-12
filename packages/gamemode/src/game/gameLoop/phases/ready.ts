@@ -15,6 +15,11 @@ export const runReadyPhase = function*() {
         const homePlayer = players.getById(homeId);
         const awayPlayer = players.getById(awayId);
 
+        // todo add logging here
+        if (!homePlayer || !awayPlayer) {
+            return;
+        }
+
         const match = new Match(homePlayer, awayPlayer, options);
 
         homePlayer.enterReadyPhase(match);

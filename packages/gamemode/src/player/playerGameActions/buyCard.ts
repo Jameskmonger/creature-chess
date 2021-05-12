@@ -9,7 +9,7 @@ import { updateMoneyCommand } from "../playerInfo/commands";
 import { updateCardsCommand } from "../cardShop";
 import { getDefinitionById } from "../../definitions";
 
-const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation => {
+const getCardDestination = (state: PlayerState, playerId: string, sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1): PlayerPieceLocation | null => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
     const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 

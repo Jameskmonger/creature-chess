@@ -1,8 +1,29 @@
-import { PieceModel, getDelta } from "@creature-chess/models";
+import { PieceModel, getDelta, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, BoardState } from "@creature-chess/board";
 
 const getLivingEnemies = (piece: PieceModel, board: BoardState<PieceModel>): PieceModel[] =>
     BoardSelectors.getAllPieces(board).filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
+
+type EnemyDelta = { enemy: PieceModel, delta: TileCoordinates };
+
+const getEnemyDeltas = (board: BoardState, enemies: PieceModel[], attackerPosition: TileCoordinates): EnemyDelta[] => {
+    const enemyDeltas: EnemyDelta[] = [];
+
+    for (const enemy of enemies) {
+        const enemyPosition = BoardSelectors.getPiecePosition(board, enemy.id);
+
+        if (!enemyPosition) {
+            continue;
+        }
+
+        enemyDeltas.push({
+            enemy,
+            delta: getDelta(attackerPosition, enemyPosition)
+        });
+    }
+
+    return enemyDeltas;
+}
 
 export const findTargetId = (piece: PieceModel, board: BoardState<PieceModel>): string | null => {
     const enemies = getLivingEnemies(piece, board);
@@ -13,18 +34,11 @@ export const findTargetId = (piece: PieceModel, board: BoardState<PieceModel>): 
 
     const attackerPosition = BoardSelectors.getPiecePosition(board, piece.id);
 
-    const enemyDeltas = enemies.map(enemy => {
-        const enemyPosition = BoardSelectors.getPiecePosition(board, enemy.id);
+    if (!attackerPosition) {
+        return null;
+    }
 
-        if (!enemyPosition) {
-            return null;
-        }
-
-        return {
-            enemy,
-            delta: getDelta(attackerPosition, enemyPosition)
-        };
-    }).filter(x => x !== null);
+    const enemyDeltas = getEnemyDeltas(board, enemies, attackerPosition);
 
     // sort by column then by row
     enemyDeltas.sort((a, b) => {

@@ -3,6 +3,7 @@ import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { BoardState, BoardSelectors, BoardSlice } from "@creature-chess/board";
 import * as pieceSelectors from "../pieceSelectors";
 import { getDefinitionById } from "../../definitions";
+import { PiecePosition } from "../../../../board/lib/types";
 
 interface State {
     bench: BoardState<PieceModel>;
@@ -10,9 +11,13 @@ interface State {
 }
 
 const pieceCanEvolve = (piece: PieceModel) => {
-    const { stages } = getDefinitionById(piece.definitionId);
+    const definition = getDefinitionById(piece.definitionId);
 
-    return piece.stage < stages.length - 1;
+    if (!definition) {
+        return false;
+    }
+
+    return piece.stage < definition.stages.length - 1;
 };
 
 export const evolutionSagaFactory = <TState extends State>(

@@ -80,12 +80,13 @@ export class Game {
         };
 
         const teardown = () => {
-            this.opponentProvider = null;
-            this.deck = null;
+            // todo this is ugly
+            (this.opponentProvider as unknown as null) = null;
+            (this.deck as unknown as null) = null;
             this.playerList.deconstructor();
-            this.playerList = null;
+            (this.playerList as unknown as null) = null;
             this.events.removeAllListeners();
-            this.events = null;
+            (this.events as unknown as null) = null;
         };
 
         return function*() {

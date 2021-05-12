@@ -47,6 +47,8 @@ const getPoints = (cost: number, stage: number): number => {
     if (stage === 2) {
         return (cost * COST_MODIFIER) * 210;
     }
+
+    return 0;
 };
 
 const getStat = (baseStat: number, buildStat: number, availablePoints: number) => {
