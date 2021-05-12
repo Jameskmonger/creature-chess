@@ -1,5 +1,5 @@
 import pDefer = require("p-defer");
-import { put, getContext, take, race, all } from "@redux-saga/core/effects";
+import { put, getContext, take } from "@redux-saga/core/effects";
 import delay from "delay";
 import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
@@ -30,7 +30,7 @@ export const runPlayingPhase = function*() {
 
     matches.forEach(m => m.fight(battleTimeoutDeferred.promise));
 
-    yield all(finishMatchTasks);
+    yield Promise.all(finishMatchTasks.map(t => t.toPromise()));
 
     // some battles go right up to the end, so it's nice to have a delay
     // rather than jumping straight into the next phase

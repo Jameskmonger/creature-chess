@@ -4,8 +4,7 @@ import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType } from "@creature-chess
 
 import { playerMatchRewardsEvent, playerDeathEvent } from "../events";
 import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../game/events";
-import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../playerInfo/commands";
-import { addXpCommand } from "./xp";
+import { updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../playerInfo/commands";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
 import { PlayerInfoCommands } from "../playerInfo";
@@ -86,19 +85,6 @@ export const playerMatchRewards = function*() {
                 justDied,
                 rewardMoney: { total, base, winBonus, streakBonus, interest }
             }));
-
-            if (justDied) {
-                return;
-            }
-
-            // wait for preparing phase to give money
-            yield take(CLEAR_OPPONENT_COMMAND);
-
-            yield put(playerMatchRewardsEvent(null));
-
-            // todo make addMoneyCommand
-            yield put(updateMoneyCommand(currentMoney + total));
-            yield put(addXpCommand(1));
         }
     );
 };

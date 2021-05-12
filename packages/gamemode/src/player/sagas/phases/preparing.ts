@@ -1,10 +1,13 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { getContext, select } from "typed-redux-saga";
 import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../../../game/events";
-import { afterRerollCardsEvent } from "../../events";
+import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../events";
 import { PlayerInfoCommands } from "../../playerInfo";
-import { getPlayerLevel, isPlayerShopLocked } from "../../playerSelectors";
+import { updateMoneyCommand } from "../../playerInfo/commands";
+import { getPlayerLevel, isPlayerAlive, isPlayerShopLocked } from "../../playerSelectors";
 import { PlayerBoardSlices } from "../../sagaContext";
+import { PlayerState } from "../../store";
+import { addXpCommand } from "../xp";
 
 export const playerPreparingPhase = function*() {
     const { boardSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
@@ -12,13 +15,33 @@ export const playerPreparingPhase = function*() {
     yield takeEvery<PlayerRunPreparingPhaseEvent>(
         playerRunPreparingPhaseEvent.toString(),
         function*() {
+            const alive = yield* select(isPlayerAlive);
+
+            if (!alive) {
+                return;
+            }
+
+            const matchRewards = yield* select((state: PlayerState) => state.playerInfo.matchRewards);
+
+            if (matchRewards) {
+                const currentMoney = yield* select((state: PlayerState) => state.playerInfo.money);
+                const totalMatchReward = yield* select((state: PlayerState) => state.playerInfo.matchRewards.rewardMoney.total);
+
+                // todo make addMoneyCommand
+                yield put(updateMoneyCommand(currentMoney + totalMatchReward));
+                yield put(addXpCommand(1));
+            }
+
             const locked = yield* select(isPlayerShopLocked);
 
             if (!locked) {
                 yield put(afterRerollCardsEvent());
             }
 
-            yield put(PlayerInfoCommands.clearOpponentCommand());
+            if (matchRewards) {
+                yield put(playerMatchRewardsEvent(null));
+                yield put(PlayerInfoCommands.clearOpponentCommand());
+            }
 
             const level = yield* select(getPlayerLevel);
 
