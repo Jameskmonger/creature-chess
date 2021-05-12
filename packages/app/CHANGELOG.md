@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.50](https://github.com/Jameskmonger/creature-chess/compare/v0.3.48...v0.3.50) (2021-05-12)
+
+
+### Bug Fixes
+
+* fix discord link image ([60f74e6](https://github.com/Jameskmonger/creature-chess/commit/60f74e65a3d6ad0a613348325a0e463376e331d7))
+
+
+
+
+
 ## [0.3.49](https://github.com/Jameskmonger/creature-chess/compare/v0.3.48...v0.3.49) (2021-05-11)
 
 
