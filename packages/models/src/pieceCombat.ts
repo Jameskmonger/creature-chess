@@ -31,4 +31,4 @@ export const clonePieceCombatState = (combat?: PieceCombatState) => {
             ...combat.board
         }
     };
-}
+};

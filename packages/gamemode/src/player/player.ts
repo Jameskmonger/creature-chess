@@ -217,7 +217,7 @@ export abstract class Player {
         this.store.dispatch(this.benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
         this.store.dispatch(updateCardsCommand([]));
 
-        const remainingCards = cards.filter((card): card is Card => card !== null)
+        const remainingCards = cards.filter((card): card is Card => card !== null);
 
         this.store.dispatch(playerDeathEvent({ pieces, cards: remainingCards }));
     }
