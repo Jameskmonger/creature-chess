@@ -6,6 +6,7 @@ import { PlayerBoardSlices } from "../../sagaContext";
 import { fillBoardCommand } from "../fillBoard";
 
 export const playerReadyPhase = function*() {
+    const playerId = yield* getContext<string>("playerId");
     const { boardSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
 
     yield takeEvery<PlayerRunReadyPhaseEvent>(
@@ -15,7 +16,7 @@ export const playerReadyPhase = function*() {
 
             yield put(boardSlice.commands.lockBoardCommand());
 
-            const opponentId = match.home.id === this.id
+            const opponentId = match.home.id === playerId
                 ? match.away.id
                 : match.home.id;
 
