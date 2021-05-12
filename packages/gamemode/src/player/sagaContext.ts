@@ -1,6 +1,7 @@
 import { Logger } from "winston";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { Match } from "../game/match";
 
 export type PlayerBoardSlices = {
     boardSlice: BoardSlice<PieceModel>,
@@ -8,6 +9,7 @@ export type PlayerBoardSlices = {
 };
 export type PlayerSagaDependencies = {
     getLogger: () => Logger;
+    getMatch: () => Match;
 };
 
 export type PlayerSagaContext = {

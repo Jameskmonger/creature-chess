@@ -14,6 +14,8 @@ import { roundInfoReducer, RoundInfoState } from "../game/roundInfo";
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { PlayerSagaContext } from "./sagaContext";
 import { playerGameActionsSaga } from "./playerGameActions";
+import { Match } from "../game/match";
+import { clientFinishMatch } from "./sagas/clientFinishMatch";
 
 export interface PlayerState {
     board: BoardState<PieceModel>;
@@ -27,6 +29,7 @@ export type PlayerStore = Store<PlayerState>;
 
 export const createPlayerStore = (
     getLogger: () => Logger,
+    getMatch: () => Match,
     playerId: string,
     playerName: string,
     boardSlices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
@@ -38,7 +41,8 @@ export const createPlayerStore = (
             fork(healthSagaFactory<PlayerState>()),
             fork(xpSagaFactory<PlayerState>(boardSlices)),
             fork(fillBoardSagaFactory<PlayerState>(playerId)),
-            fork(setStatusOnQuit)
+            fork(setStatusOnQuit),
+            fork(clientFinishMatch)
         ]);
     };
 
@@ -48,7 +52,8 @@ export const createPlayerStore = (
             playerName,
             boardSlices,
             dependencies: {
-                getLogger
+                getLogger,
+                getMatch
             }
         }
     });

@@ -56,14 +56,19 @@ export abstract class Player {
         this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
         this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
 
-        const { store, sagaMiddleware } = createPlayerStore(this.getLogger, this.id, this.name, {
-            boardSlice: this.boardSlice,
-            benchSlice: this.benchSlice
-        });
+        const { store, sagaMiddleware } = createPlayerStore(
+            this.getLogger,
+            () => this.match,
+            this.id,
+            this.name,
+            {
+                boardSlice: this.boardSlice,
+                benchSlice: this.benchSlice
+            }
+        );
         this.store = store;
         this.sagaMiddleware = sagaMiddleware;
 
-        this.sagaMiddleware.run(this.clientFinishMatchSaga());
         playerBattle(this.sagaMiddleware);
         this.sagaMiddleware.run(playerMatchRewards<PlayerState>(this.id));
 
@@ -207,24 +212,5 @@ export abstract class Player {
 
     public getCards() {
         return this.store.getState().cardShop.cards;
-    }
-
-    private clientFinishMatchSaga() {
-        const finishMatch = () => {
-            if (this.match === null) {
-                return;
-            }
-
-            this.match.onClientFinishMatch();
-        };
-
-        return function*() {
-            yield takeLatest<ClientFinishMatchEvent>(
-                CLIENT_FINISH_MATCH_EVENT,
-                function*() {
-                    finishMatch();
-                }
-            );
-        };
     }
 }
