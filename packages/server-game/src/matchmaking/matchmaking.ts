@@ -13,7 +13,7 @@ import { createMetricLogger } from "../metrics";
 import { SocketPlayer, BotPlayer } from "../player";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
-import { LobbyMemberType } from "./lobby/lobbyMember";
+import { LobbyMember, LobbyMemberType } from "./lobby/lobbyMember";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -100,41 +100,26 @@ export class Matchmaking {
         return shuffle(pictures);
     }
 
-    private generateProfile = (player, picture) => {
-        const profilePicture = player.profile?.picture ?
-            player.profile.picture
-            :
-            picture;
+    private generateProfile = (player: LobbyMember, pictures: number[]) => {
+        const picture = player.profile?.picture ?? pictures.pop();
+        const title = player.profile?.title ?? null;
 
-        return({
-            picture: profilePicture,
-            title: player.profile?.title ? player.profile.title : null
-        });
-    }
-
-    private assignPicture = (pictures, id) => {
-        const picture = id === "276389458988761607"
-        ? 47
-        : pictures.pop();
-        // removes picture from pictures array if picture is taken from database (temporary fix/may not be necessary)
-        if (picture === 47) {
-            const index = pictures.indexOf(47);
-            pictures.splice(index, index);
-        }
-        return picture;
+        return {
+            picture,
+            title
+        };
     }
 
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
-        const players = members.map(m => {
-            const picture = this.assignPicture(pictures, id);
-            const profile = this.generateProfile(m, picture);
+        const players = members.map(lobbyMember => {
+            const profile = this.generateProfile(lobbyMember, pictures);
 
-            if (m.type === LobbyMemberType.BOT) {
-                return new BotPlayer(m.id, m.name, profile);
+            if (lobbyMember.type === LobbyMemberType.BOT) {
+                return new BotPlayer(lobbyMember.id, lobbyMember.name, profile);
             }
 
-            return new SocketPlayer(m.net.socket, m.id, m.name, profile);
+            return new SocketPlayer(lobbyMember.net.socket, lobbyMember.id, lobbyMember.name, profile);
         });
 
         const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
