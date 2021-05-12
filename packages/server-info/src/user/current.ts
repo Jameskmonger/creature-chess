@@ -12,7 +12,7 @@ export const getCurrent = (database: DatabaseConnection, authClient: ManagementC
         const { authorization } = req.headers;
 
         if (!authorization) {
-            res.send(null);
+            res.sendStatus(401);
 
             return;
         }
@@ -58,7 +58,7 @@ export const patchCurrent = (
         const { body, headers: { authorization } } = req;
 
         if (!authorization) {
-            res.send(null);
+            res.sendStatus(401);
             return;
         }
 
@@ -98,7 +98,7 @@ export const patchCurrent = (
             }
 
             const updatedUser = await database.user.setNickname(user.id, trimmedNickname);
-            outputUser = convertDatabaseUserToUserModel(updatedUser);
+            outputUser = convertDatabaseUserToUserModel(updatedUser!);
         }
 
         // update metadata if anything changed
