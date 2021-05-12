@@ -1,8 +1,11 @@
-import present = require("present");
-import { eventChannel, buffers } from "redux-saga";
+import { eventChannel, buffers, EventChannel } from "redux-saga";
 import { takeEvery, select, put, call } from "@redux-saga/core/effects";
+// no typings so this needs a standard require
+const present = require("present");
+
 import { IndexedPieces, createPieceCombatState, PieceModel, GameOptions } from "@creature-chess/models";
 import { BoardState, BoardSlice } from "@creature-chess/board";
+
 import { simulateTurn } from "./turnSimulator";
 import { isATeamDefeated } from "./utils/is-a-team-defeated";
 import { BattleEvent, battleFinishEvent, battleTurnEvent } from "./events";
@@ -110,7 +113,7 @@ export const battleSagaFactory = <TState>(
             const board: BoardState<PieceModel> = yield select(boardSelector);
 
             // todo no need for the channel here. this can just run synchronously in a loop
-            const battleChannel = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);
+            const battleChannel: EventChannel<BattleEvent> = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);
 
             yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
                 yield put(battleAction);

@@ -10,9 +10,13 @@ interface State {
 }
 
 const pieceCanEvolve = (piece: PieceModel) => {
-    const { stages } = getDefinitionById(piece.definitionId);
+    const definition = getDefinitionById(piece.definitionId);
 
-    return piece.stage < stages.length - 1;
+    if (!definition) {
+        return false;
+    }
+
+    return piece.stage < definition.stages.length - 1;
 };
 
 export const evolutionSagaFactory = <TState extends State>(
@@ -63,9 +67,10 @@ export const evolutionSagaFactory = <TState extends State>(
 
                 if (matchingBoardPieces.length > 0) {
                     // replace a board piece if it exists
-                    const pieceToReplace = matchingBoardPieces.pop();
+                    const pieceToReplace = matchingBoardPieces.pop() !;
 
                     const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.board, pieceToReplace.id));
+                    const { x, y } = piecePosition;
 
                     // remove any remaining board pieces
                     const boardPieceIds = [...matchingBoardPieces, pieceToReplace].map(p => p.id);
@@ -79,8 +84,6 @@ export const evolutionSagaFactory = <TState extends State>(
                         stage: targetStage + 1
                     };
 
-                    const { x, y } = piecePosition;
-
                     yield put(boardSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece }));
                 } else {
                     // otherwise replace the just-added bench piece
@@ -91,7 +94,8 @@ export const evolutionSagaFactory = <TState extends State>(
                         stage: targetStage + 1
                     };
 
-                    const { x, y } = BoardSelectors.getPiecePosition(state.bench, piece.id);
+                    const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.bench, piece.id));
+                    const { x, y } = piecePosition;
 
                     yield put(benchSlice.commands.removeBoardPiecesCommand([...benchPieceIds, piece.id]));
                     yield put(benchSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece }));

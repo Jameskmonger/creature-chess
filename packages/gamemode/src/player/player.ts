@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import { Saga, SagaMiddleware, Task } from "redux-saga";
 import { takeEvery, put, takeLatest } from "@redux-saga/core/effects";
 import pDefer = require("p-defer");
-import { PieceModel, PlayerListPlayer, PlayerStatus, PlayerTitle, PlayerProfile } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer, PlayerStatus, PlayerTitle, PlayerProfile, Card } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
@@ -45,18 +45,18 @@ export abstract class Player {
 
     public abstract readonly type: PlayerType;
 
-    protected match: Match = null;
+    protected match: Match | null = null;
     protected store: PlayerStore;
     protected sagaMiddleware: SagaMiddleware;
 
-    protected getRoundInfoState: () => RoundInfoState;
-    protected getPlayerListPlayers: () => PlayerListPlayer[];
+    protected getRoundInfoState!: () => RoundInfoState;
+    protected getPlayerListPlayers!: () => PlayerListPlayer[];
     protected readonly boardSlice: BoardSlice<PieceModel>;
     protected readonly benchSlice: BoardSlice<PieceModel>;
 
     private events = new EventEmitter();
 
-    private logger: Logger;
+    private logger!: Logger;
 
     constructor(id: string, name: string, profile: PlayerProfile) {
         this.id = id;
@@ -165,6 +165,18 @@ export abstract class Player {
     }
 
     public async fightMatch(startedAt: number, battleTimeout: pDefer.DeferredPromise<void>): Promise<PlayerMatchResults> {
+        if (!this.match) {
+            this.logger.warn("No match found when fighting match", { actor: { playerId: this.id, name: this.name } });
+
+            // todo improve this
+            return {
+                homePlayer: this,
+                opponentName: "",
+                homeScore: 0,
+                awayScore: 0
+            };
+        }
+
         const finalMatchBoard = await this.match.fight(battleTimeout.promise);
 
         const survivingPieces = BoardSelectors.getAllPieces(finalMatchBoard).filter(p => p.currentHealth > 0);
@@ -205,7 +217,9 @@ export abstract class Player {
         this.store.dispatch(this.benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
         this.store.dispatch(updateCardsCommand([]));
 
-        this.store.dispatch(playerDeathEvent({ pieces, cards }));
+        const remainingCards = cards.filter((card): card is Card => card !== null)
+
+        this.store.dispatch(playerDeathEvent({ pieces, cards: remainingCards }));
     }
 
     public isAlive() {

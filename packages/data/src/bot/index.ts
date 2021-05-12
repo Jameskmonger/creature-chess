@@ -5,10 +5,10 @@ import { addGamePlayed } from "./addGamePlayed";
 
 // todo type these properly
 export type BotDatabaseFunctions = {
-    getLeastPlayedBots: (count: number) => Promise<{ id: string, name: string }[]>;
+    getLeastPlayedBots: (count: number) => Promise<{ id: string, name: string }[] | null>;
 
-    addWin: (id: string) => Promise<object>;
-    addGamePlayed: (id: string) => Promise<object>;
+    addWin: (id: string) => Promise<object | null>;
+    addGamePlayed: (id: string) => Promise<object | null>;
 };
 
 export const botDatabase = (client: FaunaDBClient): BotDatabaseFunctions => {

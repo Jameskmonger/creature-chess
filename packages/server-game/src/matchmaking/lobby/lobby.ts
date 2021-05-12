@@ -1,7 +1,7 @@
 // tslint:disable: no-console
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
-import shuffle = require("lodash.shuffle");
+import { shuffle } from "lodash";
 import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, PlayerProfile } from "@creature-chess/models";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 
@@ -129,10 +129,10 @@ export class Lobby {
     }
 
     private addBots(bots: { id: string, name: string }[]) {
-        const shuffledBots: { id: string, name: string, profile: PlayerProfile }[] = shuffle(bots);
+        const shuffledBots = shuffle(bots);
 
-        for (const { id, name, profile } of shuffledBots) {
-            this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}`, profile });
+        for (const { id, name } of shuffledBots) {
+            this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}`, profile: undefined });
         }
     }
 

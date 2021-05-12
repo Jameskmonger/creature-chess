@@ -2,7 +2,7 @@ import { MAX_NAME_LENGTH } from "./constants";
 
 const NAME_REGEX = /^[a-zA-Z0-9\ ]*$/;
 
-export const validateNicknameFormat = (nickname: string) => {
+export const validateNicknameFormat = (nickname: string | null) => {
     if (!nickname || !nickname.length  || nickname.length < 4) {
         return "Nickname must be at least 4 characters long";
     }

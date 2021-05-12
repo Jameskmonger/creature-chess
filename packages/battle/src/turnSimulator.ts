@@ -1,4 +1,4 @@
-import { CreatureType, PieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance } from "@creature-chess/models";
+import { CreatureType, PieceModel, CombatPieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance, clonePieceCombatState } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, BoardState } from "@creature-chess/board";
 import { isOvercomeBy, isGeneratedBy } from "./utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
@@ -36,23 +36,27 @@ export const simulateTurn = (currentTurn: number, board: BoardState<PieceModel>,
 const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState<PieceModel>, boardSlice: BoardSlice<PieceModel>): BoardState<PieceModel> => {
     const originalPiece = BoardSelectors.getPiece(board, pieceId);
 
+    if (!originalPiece) {
+        return board;
+    }
+
+    const attackerCombatState = clonePieceCombatState(originalPiece.combat)
     // create a new piece object, reset combat properties
-    const attacker: PieceModel = {
+    const attacker: CombatPieceModel = {
         ...originalPiece,
         attacking: null,
         hit: null,
-        combat: {
-            ...originalPiece.combat,
-            board: {
-                ...originalPiece.combat.board
-            }
-        }
+        combat: attackerCombatState
     };
 
     const attackerPosition = BoardSelectors.getPiecePosition(board, pieceId);
 
-    const attackerTargetId = attacker.combat.targetId;
-    const attackerBoardState = attacker.combat.board;
+    if (!attackerPosition) {
+        return board;
+    }
+
+    const attackerTargetId = attackerCombatState.targetId;
+    const attackerBoardState = attackerCombatState.board;
     const attackerStats = getStats(attacker);
 
     // board management
@@ -88,10 +92,10 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState<P
         return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     }
 
-    const target = BoardSelectors.getPiece(board, attackerTargetId);
+    const target = BoardSelectors.getPiece(board, attackerTargetId) as CombatPieceModel;
 
     // if we can't attack yet, wait for cooldown
-    if (attackerBoardState.canAttackAtTurn > currentTurn) {
+    if (!target || attackerBoardState.canAttackAtTurn > currentTurn) {
         // todo check if attacker has been changed
         return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
     }
@@ -103,17 +107,18 @@ const takePieceTurn = (currentTurn: number, pieceId: string, board: BoardState<P
     }
 
     const targetPosition = BoardSelectors.getPiecePosition(board, attackerTargetId);
-
-    const inRange = inAttackRange(attackerPosition, targetPosition, attackerStats.attackType);
     const targetAlive = target.currentHealth > 0;
 
-    if (!targetAlive) {
+    if (!targetAlive || !targetPosition) {
         // target is dead, so clear target
         // todo should we increment canAttackAtTurn here?
         attacker.combat.targetId = null;
 
         return boardSlice.boardReducer(board, boardSlice.commands.updateBoardPiecesCommand([attacker]));
-    } else if (inRange) {
+    }
+
+    const inRange = inAttackRange(attackerPosition, targetPosition, attackerStats.attackType);
+    if (inRange) {
         // target is in range, so attack
         const damage = getAttackDamage(attacker, target);
         const newDefenderHealth = Math.max(target.currentHealth - damage, 0);

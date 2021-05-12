@@ -31,13 +31,13 @@ export type PlayerMatchRewardsEvent = ({
         damage: number;
         justDied: boolean;
         rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
-    }
+    } | null
 });
 export const playerMatchRewardsEvent = (payload: {
     damage: number;
     justDied: boolean;
     rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
-}): PlayerMatchRewardsEvent => ({
+} | null): PlayerMatchRewardsEvent => ({
     type: PLAYER_MATCH_REWARDS_EVENT,
     payload
 });

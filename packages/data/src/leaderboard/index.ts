@@ -3,7 +3,7 @@ import { getPlayers } from "./getPlayers";
 
 // todo type these properly
 export type LeaderboardDatabaseFunctions = {
-    getPlayers: () => Promise<{ name: string, wins: number }[]>;
+    getPlayers: () => Promise<{ name: string, wins: number }[] | null>;
 };
 
 export const leaderboardDatabase = (client: FaunaDBClient): LeaderboardDatabaseFunctions => {

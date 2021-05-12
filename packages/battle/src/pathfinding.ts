@@ -1,4 +1,6 @@
-import { astar, Graph } from "javascript-astar";
+// no typings so this needs a standard require
+const { astar, Graph } = require("javascript-astar");
+
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";
 import { BoardState } from "@creature-chess/board";
 import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
@@ -25,7 +27,7 @@ const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
 
     Object.entries(board.piecePositions)
         .forEach(([position, pieceId]) => {
-            const [x, y] = position.split(",");
+            const [x, y] = position.split(",").map(p => parseInt(p, 10));
 
             if (pieceId) {
                 grid[x][y] = 0;
@@ -37,11 +39,13 @@ const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
     return grid;
 };
 
+type Path = { stepCount: number, firstStep: TileCoordinates };
+
 const findPath = (
     board: BoardState,
     start: TileCoordinates,
     end: TileCoordinates
-) => {
+): Path | null => {
     const weights = createWeightGrid(start, board);
     const graph = new Graph(weights);
 
@@ -63,16 +67,18 @@ const findPath = (
     };
 };
 
+const pathNotNull = (path: Path | null): path is Path => path !== null;
+
 export const getNextPiecePosition = (
     attackerPosition: TileCoordinates,
     attackerStats: CreatureStats,
     targetPosition: TileCoordinates,
     board: BoardState
-): TileCoordinates => {
+): TileCoordinates | null => {
     const { attackType: { range: attackRange } } = attackerStats;
 
     const targetTiles = getTargetAttackPositions(board, targetPosition, attackRange);
-    const paths = targetTiles.map(pos => findPath(board, attackerPosition, pos)).filter(path => path !== null);
+    const paths = targetTiles.map(pos => findPath(board, attackerPosition, pos)).filter(pathNotNull);
 
     if (paths.length === 0) {
         return null;

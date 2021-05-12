@@ -31,8 +31,8 @@
     "@creature-chess/models": "^0.3.49",
     "@types/auth0": "^2.20.8",
     "@types/jsonwebtoken": "^8.5.0",
-    "auth0": "^2.29.0",
+    "auth0": "^2.34.2",
     "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^1.8.1"
+    "jwks-rsa": "^2.0.3"
   }
 }

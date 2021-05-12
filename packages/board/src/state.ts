@@ -25,7 +25,7 @@ export type BoardSliceCommands<TPiece extends HasId = HasId> = {
     }>;
     lockBoardCommand: ActionCreatorWithoutPayload;
     unlockBoardCommand: ActionCreatorWithoutPayload;
-    setPieceLimitCommand: ActionCreatorWithPayload<number>;
+    setPieceLimitCommand: ActionCreatorWithPayload<number | null>;
     setBoardPiecesCommand: ActionCreatorWithPayload<{
         pieces: PiecesState<TPiece>;
         piecePositions: PiecePositionsState;

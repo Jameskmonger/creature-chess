@@ -27,7 +27,7 @@ type SortablePlayerValues = {
 
 type SortablePlayer = {
     id: string,
-    position: number,
+    position: number | null,
     sortValues: SortablePlayerValues
 };
 
@@ -48,6 +48,14 @@ const sortPlayers = (a: SortablePlayer, b: SortablePlayer) => {
     }
 
     if (a.sortValues.hasQuit && !b.sortValues.hasQuit) {
+        return SORT_A_SECOND;
+    }
+
+    if (b.position === null) {
+        return SORT_A_FIRST;
+    }
+
+    if (a.position === null) {
         return SORT_A_SECOND;
     }
 
@@ -80,7 +88,9 @@ export class PlayerList {
 
     public deconstructor() {
         this.events.removeAllListeners();
-        this.events = null;
+
+        // todo this is ugly
+        (this.events as unknown as null) = null;
     }
 
     public onUpdate(fn: (players: PlayerListPlayer[]) => void) {
@@ -151,7 +161,7 @@ export class PlayerList {
         const newPlayers = [...this.players];
         newPlayers.sort(sortPlayers);
 
-        this.players = newPlayers.reduce((acc, cur, i) => {
+        this.players = newPlayers.reduce<SortablePlayer[]>((acc, cur, i) => {
             if (cur.position === i + 1) {
                 return [ ...acc, cur ];
             }
