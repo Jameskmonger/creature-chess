@@ -23,7 +23,7 @@
 		"jest": "^26.6.3",
 		"jest-standard-reporter": "^1.1.1",
 		"lerna": "^4.0.0",
-		"neworbit-stylelint-config": "^3.0.1",
+		"neworbit-stylelint-config": "^3.0.2",
 		"neworbit-tslint-config": "^6.0.0",
 		"stylelint": "^13.13.1",
 		"stylelint-no-unsupported-browser-features": "^4.1.4",

@@ -10,7 +10,18 @@
                 ]
             }
         ],
-        "unit-disallowed-list": null,
-        "unit-blacklist": null
+        "unit-disallowed-list": [
+            [ "px" ],
+            {
+                "ignoreProperties": {
+
+                    "px": [ "/^border(-(top|bottom|left|right))?(-width)?$/", "box-shadow" ]
+                },
+                "ignoreMediaFeatureNames": {
+
+                    "px": [ "min-width", "max-width" ]
+                }
+            }
+        ]
     }
 }

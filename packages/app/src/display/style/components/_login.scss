@@ -8,6 +8,7 @@
     justify-content: center;
 
     .banner {
+        // stylelint-disable-next-line unit-disallowed-list
         max-width: 700px;
         margin-top: 1rem;
         margin-bottom: 1rem;
@@ -28,6 +29,7 @@
     .groups {
         display: flex;
         width: 100%;
+        // stylelint-disable-next-line unit-disallowed-list
         max-width: 700px;
 
         .group {
@@ -74,6 +76,7 @@
 
     @media only screen and (min-width: 392px) {
         .video-container {
+            // stylelint-disable-next-line unit-disallowed-list
             width: 392px;
         }
 
