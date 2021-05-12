@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import delay from "delay";
 import io = require("socket.io");
 import { shuffle } from "lodash";
-import { Game, PlayerType } from "@creature-chess/gamemode";
+import { Game, Player, PlayerType } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
@@ -10,10 +10,11 @@ import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { createWinstonLogger } from "../log";
 import { DiscordApi } from "../discord";
 import { createMetricLogger } from "../metrics";
-import { SocketPlayer, BotPlayer } from "../player";
+import { SocketPlayer } from "../player";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { LobbyMember, LobbyMemberType } from "./lobby/lobbyMember";
+import { botLogicSaga } from "../player/bot/saga";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -116,7 +117,7 @@ export class Matchmaking {
             const profile = this.generateProfile(lobbyMember, pictures);
 
             if (lobbyMember.type === LobbyMemberType.BOT) {
-                return new BotPlayer(lobbyMember.id, lobbyMember.name, profile);
+                return new Player(PlayerType.BOT, lobbyMember.id, lobbyMember.name, profile);
             }
 
             return new SocketPlayer(lobbyMember.net.socket, lobbyMember.id, lobbyMember.name, profile);
@@ -127,15 +128,17 @@ export class Matchmaking {
         this.logger.info(`Game ${game.id} started from lobby ${id}`);
 
         players
-            .forEach(p => {
-                if (p.type === PlayerType.USER) {
+            .forEach(player => {
+                if (player.type === PlayerType.USER) {
                     // todo do this in 1 call
-                    this.database.user.addGamePlayed(p.id);
+                    this.database.user.addGamePlayed(player.id);
                 }
 
-                if (p.type === PlayerType.BOT) {
+                if (player.type === PlayerType.BOT) {
                     // todo do this in 1 call
-                    this.database.bot.addGamePlayed(p.id);
+                    this.database.bot.addGamePlayed(player.id);
+
+                    player.runSaga(botLogicSaga);
                 }
             });
 

@@ -7,11 +7,9 @@ import { incomingNetworking } from "./net/incoming";
 import { outgoingNetworking } from "./net/outgoing";
 
 export class SocketPlayer extends Player {
-    public readonly type = PlayerType.USER;
-
     constructor(socket: Socket, id: string, name: string, profile: PlayerProfile) {
         // todo fix typing
-        super(id, name, profile);
+        super(PlayerType.USER, id, name, profile);
 
         this.runSaga(incomingNetworking, this.getLogger);
         this.runSaga(outgoingNetworking, this.getLogger, id, this.getMatch, { boardSlice: this.boardSlice, benchSlice: this.benchSlice });

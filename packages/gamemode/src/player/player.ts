@@ -22,14 +22,8 @@ export enum PlayerType {
     USER
 }
 
-export abstract class Player {
-    public readonly id: string;
-    public readonly name: string;
-    public readonly profile: PlayerProfile | null;
-
+export class Player {
     public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
-
-    public abstract readonly type: PlayerType;
 
     protected match: Match | null = null;
     protected store: PlayerStore;
@@ -41,11 +35,12 @@ export abstract class Player {
 
     private logger!: Logger;
 
-    constructor(id: string, name: string, profile: PlayerProfile) {
-        this.id = id;
-        this.name = name;
-        this.profile = profile;
-
+    constructor(
+        public readonly type: PlayerType,
+        public readonly id: string,
+        public readonly name: string,
+        public readonly profile: PlayerProfile | null
+    ) {
         this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
         this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
 
