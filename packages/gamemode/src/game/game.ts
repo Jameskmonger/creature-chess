@@ -60,8 +60,9 @@ export class Game {
         });
         this.store = store;
 
-        sagaMiddleware.run(this.gameTeardownSagaFactory());
-        sagaMiddleware.run(gameSaga);
+        // todo fix these ugly typings
+        sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
+        sagaMiddleware.run(gameSaga as () => Generator);
         sagaMiddleware.run(sendPublicEventsSaga);
     }
 

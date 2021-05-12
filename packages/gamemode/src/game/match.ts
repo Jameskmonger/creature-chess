@@ -21,7 +21,7 @@ export class Match {
     public readonly home: Player;
     public readonly away: Player;
     private store: Store<MatchState>;
-    private finalBoard: BoardState<PieceModel>;
+    private finalBoard!: BoardState<PieceModel>;
     private boardId = uuid();
     private board: BoardSlice<PieceModel> = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
 
@@ -112,17 +112,17 @@ export class Match {
         const _this = this;
         const rootSaga = function*() {
             yield all([
-                yield fork(
+                fork(
                     battleSagaFactory<MatchState>(state => state.board),
                     gameOptions, _this.board
                 ),
-                yield takeEvery<BattleEvents.BattleFinishEvent>(
+                takeEvery<BattleEvents.BattleFinishEvent>(
                     BattleEvents.BATTLE_FINISH_EVENT,
                     function*() {
                         _this.onServerFinishMatch();
                     }
                 ),
-                yield takeLatest<BattleEvents.BattleTurnEvent>(
+                takeLatest<BattleEvents.BattleTurnEvent>(
                     BattleEvents.BATTLE_TURN_EVENT,
                     function*({ payload: { board } }: BattleEvents.BattleTurnEvent) {
                         yield put(_this.board.commands.setBoardPiecesCommand({
