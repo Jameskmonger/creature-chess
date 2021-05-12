@@ -1,22 +1,20 @@
-import { Logger } from "winston";
-import { takeLatest, take, fork, all, select, delay } from "@redux-saga/core/effects";
+import { takeLatest, take, fork, all, delay } from "redux-saga/effects";
+import { getContext, select } from "typed-redux-saga";
 import { Socket } from "socket.io";
-import { PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, Match, PlayerGameActions } from "@creature-chess/gamemode";
 
+import { PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, PlayerGameActions, PlayerSagaContext } from "@creature-chess/gamemode";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
+import { GamePhase } from "@creature-chess/models";
 
-import { BoardState, BoardSlice } from "@creature-chess/board";
 import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
-import { Card, GamePhase } from "@creature-chess/models";
 
 type OutgoingRegistry = OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
-export const outgoingNetworking = function*(
-    getLogger: () => Logger,
-    playerId: string,
-    getCurrentMatch: () => Match,
-    { benchSlice, boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }
-) {
+export const outgoingNetworking = function*() {
+    const playerId = yield* getContext<string>("playerId");
+    const { getLogger, getMatch } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
+    const { boardSlice, benchSlice } = yield* getContext<PlayerSagaContext.PlayerBoardSlices>("boardSlices");
+
     let registry: OutgoingRegistry;
     let socket: Socket;
 
@@ -25,7 +23,9 @@ export const outgoingNetworking = function*(
             GameEvents.gamePhaseStartedEvent.toString(),
             function*({ payload: { phase, startedAt, round } }) {
                 if (phase === GamePhase.PREPARING) {
-                    const { board, bench, cardShop: { cards } }: PlayerState = yield select();
+                    const board = yield* select((state: PlayerState) => state.board);
+                    const bench = yield* select((state: PlayerState) => state.bench);
+                    const cards = yield* select((state: PlayerState) => state.cardShop.cards);
 
                     const packet: ServerToClient.Game.PhaseUpdatePacket = {
                         startedAtSeconds: startedAt,
@@ -42,10 +42,10 @@ export const outgoingNetworking = function*(
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.PHASE_UPDATE, packet);
                 } else if (phase === GamePhase.READY) {
-                    const { bench, playerInfo: { health } }: PlayerState = yield select();
+                    const bench = yield* select((state: PlayerState) => state.bench);
+                    const health = yield* select((state: PlayerState) => state.playerInfo.health);
 
-                    // todo this isn't nice, get it in state?
-                    const match = getCurrentMatch();
+                    const match = getMatch();
 
                     if (!match) {
                         if (health > 0) {
@@ -124,7 +124,7 @@ export const outgoingNetworking = function*(
                     benchSlice.commands.updateBoardPiecesCommand
                 ],
                 function*() {
-                    const bench: BoardState = yield select((state: PlayerState) => state.bench);
+                    const bench = yield* select((state: PlayerState) => state.bench);
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.BENCH_UPDATE, { state: bench });
                 }
@@ -137,7 +137,7 @@ export const outgoingNetworking = function*(
                     boardSlice.commands.updateBoardPiecesCommand
                 ],
                 function*() {
-                    const board: BoardState = yield select((state: PlayerState) => state.board);
+                    const board = yield* select((state: PlayerState) => state.board);
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.BOARD_UPDATE, { state: board });
                 }
@@ -146,7 +146,7 @@ export const outgoingNetworking = function*(
             yield takeLatest(
                 PlayerCommands.updateCardsCommand,
                 function*() {
-                    const cards: Card[] = yield select((state: PlayerState) => state.cardShop.cards);
+                    const cards = yield* select((state: PlayerState) => state.cardShop.cards);
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.CARDS_UPDATE, cards);
                 }
@@ -154,7 +154,7 @@ export const outgoingNetworking = function*(
             yield takeLatest(
                 PlayerCommands.updateShopLockCommand,
                 function*() {
-                    const locked: boolean = yield select((state: PlayerState) => state.cardShop.locked);
+                    const locked = yield* select((state: PlayerState) => state.cardShop.locked);
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE, { locked });
                 }
@@ -162,7 +162,7 @@ export const outgoingNetworking = function*(
             yield takeLatest<PlayerInfoCommands.UpdateMoneyCommand>(
                 PlayerInfoCommands.UPDATE_MONEY_COMMAND,
                 function*() {
-                    const money: number = yield select((state: PlayerState) => state.playerInfo.money);
+                    const money = yield* select((state: PlayerState) => state.playerInfo.money);
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.MONEY_UPDATE, money);
                 }
@@ -170,8 +170,8 @@ export const outgoingNetworking = function*(
             yield takeLatest<PlayerInfoCommands.UpdateLevelCommand>(
                 PlayerInfoCommands.UPDATE_LEVEL_COMMAND,
                 function*() {
-                    const level: number = yield select((state: PlayerState) => state.playerInfo.level);
-                    const xp: number = yield select((state: PlayerState) => state.playerInfo.xp);
+                    const level = yield* select((state: PlayerState) => state.playerInfo.level);
+                    const xp = yield* select((state: PlayerState) => state.playerInfo.xp);
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE, { level, xp });
                 }
@@ -179,7 +179,7 @@ export const outgoingNetworking = function*(
             yield takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
                 PlayerInfoCommands.UPDATE_HEALTH_COMMAND,
                 function*() {
-                    const health: number = yield select((state: PlayerState) => state.playerInfo.health);
+                    const health = yield* select((state: PlayerState) => state.playerInfo.health);
 
                     registry.emit(ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE, health);
                 }

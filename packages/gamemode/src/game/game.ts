@@ -74,6 +74,9 @@ export class Game {
         this.events.on(finishGameEventKey, fn);
     }
 
+    public getRoundInfo = () => this.store.getState().roundInfo;
+    public getPlayerListPlayers = () => this.playerList.getValue();
+
     private gameTeardownSagaFactory = () => {
         const broadcast = (event: GameFinishEvent) => {
             this.dispatchPublicGameEvent(event);

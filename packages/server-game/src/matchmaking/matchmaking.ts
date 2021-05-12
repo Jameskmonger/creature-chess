@@ -2,6 +2,7 @@ import { Logger } from "winston";
 import delay from "delay";
 import io = require("socket.io");
 import { shuffle } from "lodash";
+import { put } from "redux-saga/effects";
 import { Game, Player, PlayerType } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
@@ -10,11 +11,14 @@ import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { createWinstonLogger } from "../log";
 import { DiscordApi } from "../discord";
 import { createMetricLogger } from "../metrics";
-import { SocketPlayer } from "../player";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { LobbyMember, LobbyMemberType } from "./lobby/lobbyMember";
 import { botLogicSaga } from "../player/bot/saga";
+import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
+import { incomingNetworking } from "../player/socket/net/incoming";
+import { outgoingNetworking } from "../player/socket/net/outgoing";
+import { newPlayerSocketEvent } from "../player/socket/events";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -39,7 +43,16 @@ export class Matchmaking {
         const playerInGame = this.getPlayerInGame(id);
 
         if (playerInGame) {
-            playerInGame.reconnectSocket(socket);
+            // todo cancel the old saga
+            playerInGame.player.runSaga(incomingNetworking);
+            playerInGame.player.runSaga(outgoingNetworking);
+
+            playerInGame.player.runSaga(
+                reconnectPlayerSocket,
+                socket,
+                playerInGame.game.getRoundInfo(),
+                playerInGame.game.getPlayerListPlayers()
+            );
 
             this.searchingForGame = false;
 
@@ -81,7 +94,10 @@ export class Matchmaking {
             return null;
         }
 
-        return playerInGame as SocketPlayer;
+        return {
+            game: matchingGame,
+            player: playerInGame
+        };
     }
 
     private getLobbyContainingPlayer(id: string) {
@@ -120,7 +136,17 @@ export class Matchmaking {
                 return new Player(PlayerType.BOT, lobbyMember.id, lobbyMember.name, profile);
             }
 
-            return new SocketPlayer(lobbyMember.net.socket, lobbyMember.id, lobbyMember.name, profile);
+            const player = new Player(PlayerType.USER, lobbyMember.id, lobbyMember.name, profile);
+
+            // todo keep track of these tasks so they can be cancelled later
+            player.runSaga(incomingNetworking);
+            player.runSaga(outgoingNetworking);
+
+            player.runSaga(function*() {
+                yield put(newPlayerSocketEvent(lobbyMember.net.socket));
+            });
+
+            return player;
         });
 
         const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
