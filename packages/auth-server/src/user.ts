@@ -24,6 +24,6 @@ export const convertDatabaseUserToUserModel = (user: DatabaseUser): UserModel =>
     authId: user.data.authId,
     stats: user.data.stats,
     nickname: user.data.nickname ? user.data.nickname.value : null,
-    registered: Boolean(user.data.nickname),
+    registered: Boolean(user.data.nickname && user.data.profile.picture),
     profile: user.data.profile ? user.data.profile : null
 });
