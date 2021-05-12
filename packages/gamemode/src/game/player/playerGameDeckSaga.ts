@@ -46,7 +46,7 @@ export const playerGameDeckSagaFactory = (deck: CardDeck) => {
                         playerInfo: { level }
                     } = state;
 
-                const threeStarBoardPieces = getPiecesForStage(state.board, 2);
+                    const threeStarBoardPieces = getPiecesForStage(state.board, 2);
                     const threeStarBenchPieces = getPiecesForStage(state.bench, 2);
 
                     const excludeIds = [...threeStarBoardPieces, ...threeStarBenchPieces].map(p => p.definitionId);
