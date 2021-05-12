@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 import { v4 as uuid } from "uuid";
-import shuffle = require("lodash.shuffle");
+import { shuffle } from "lodash";
 import { CreatureDefinition, Card, PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { getAllDefinitions, getDefinitionById } from "../definitions";
 

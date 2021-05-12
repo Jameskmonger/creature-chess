@@ -1,5 +1,5 @@
+import { shuffle } from "lodash";
 import { PlayerStatus } from "@creature-chess/models";
-import shuffle = require("lodash.shuffle");
 import { Player } from "../player";
 
 const randomFromArray = <T>(array: T[]) => {
