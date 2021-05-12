@@ -3,6 +3,7 @@ import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { Match } from "../../match";
 import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
+import { playerRunReadyPhaseEvent } from "../../events";
 
 export const runReadyPhase = function*() {
     const options: GameOptions = yield getContext("options");
@@ -22,10 +23,10 @@ export const runReadyPhase = function*() {
 
         const match = new Match(homePlayer, awayPlayer, awayIsClone, options);
 
-        homePlayer.enterReadyPhase(match);
+        homePlayer.receiveGameEvent(playerRunReadyPhaseEvent({ match }));
 
         if (!awayIsClone) {
-            awayPlayer.enterReadyPhase(match);
+            awayPlayer.receiveGameEvent(playerRunReadyPhaseEvent({ match }));
         }
     });
 

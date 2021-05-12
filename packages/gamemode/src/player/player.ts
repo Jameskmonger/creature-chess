@@ -1,16 +1,17 @@
 import { Logger } from "winston";
 import { Saga, Task } from "redux-saga";
+import { all, takeEvery } from "redux-saga/effects";
 import { PieceModel, PlayerListPlayer, PlayerProfile } from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, BoardState, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
 import { Match } from "../game/match";
 import { fillBoardCommand } from "./sagas";
-import { playerFinishMatchEvent, afterRerollCardsEvent } from "./events";
+import { playerFinishMatchEvent, afterRerollCardsEvent, PlayerFinishMatchEvent } from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
 import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
-import { GameEvent } from "../game/events";
+import { GameEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
 
 export interface PlayerMatchResults {
     homePlayer: Player;
@@ -64,6 +65,8 @@ export abstract class Player {
         this.store = store;
 
         this.runSaga = sagaMiddleware.run;
+
+        sagaMiddleware.run(this.matchSaga());
     }
 
     public setLogger(logger: Logger) {
@@ -122,19 +125,6 @@ export abstract class Player {
         return this.store.getState().playerInfo.battle;
     }
 
-    public enterReadyPhase(match: Match) {
-        this.store.dispatch(fillBoardCommand());
-
-        this.match = match;
-        this.store.dispatch(this.boardSlice.commands.lockBoardCommand());
-
-        const opponentId = match.home.id === this.id
-            ? match.away.id
-            : match.home.id;
-
-        this.store.dispatch(PlayerInfoCommands.updateOpponentCommand(opponentId));
-    }
-
     public onFinishMatch(finalMatchBoard: BoardState<PieceModel>) {
         const survivingPieces = BoardSelectors.getAllPieces(finalMatchBoard).filter(p => p.currentHealth > 0);
 
@@ -147,8 +137,6 @@ export abstract class Player {
         const awayScore = surviving.away.length;
 
         this.store.dispatch(playerFinishMatchEvent({ homeScore, awayScore }));
-
-        this.match = null;
     }
 
     public isAlive() {
@@ -169,5 +157,27 @@ export abstract class Player {
 
     public getCards() {
         return this.store.getState().cardShop.cards;
+    }
+
+    private matchSaga() {
+        const setMatch = (match: Match) => this.match = match;
+        const clearMatch = () => this.match;
+
+        return function*() {
+            yield all([
+                takeEvery<PlayerRunReadyPhaseEvent>(
+                    playerRunReadyPhaseEvent.toString(),
+                    function*({ payload: { match } }) {
+                        setMatch(match);
+                    }
+                ),
+                takeEvery<PlayerFinishMatchEvent>(
+                    playerFinishMatchEvent.toString(),
+                    function*() {
+                        clearMatch();
+                    }
+                )
+            ]);
+        };
     }
 }

@@ -1,5 +1,5 @@
 import { put, takeEvery } from "redux-saga/effects";
-import { getContext, select } from "typed-redux-saga/dist";
+import { getContext, select } from "typed-redux-saga";
 import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../../../game/events";
 import { afterRerollCardsEvent } from "../../events";
 import { PlayerInfoCommands } from "../../playerInfo";
