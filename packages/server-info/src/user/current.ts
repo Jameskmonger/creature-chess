@@ -6,7 +6,7 @@ import { DatabaseConnection } from "@creature-chess/data";
 import { authenticate, convertDatabaseUserToUserModel, UserAppMetadata } from "@creature-chess/auth-server";
 import { sanitize } from "./utils/sanitize";
 import { SanitizedUser, validateNicknameFormat } from "@creature-chess/models";
-import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models"
+import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
 
 export const getCurrent = (database: DatabaseConnection, authClient: ManagementClient<UserAppMetadata>) => {
     return async (req: Request, res: Response<SanitizedUser>) => {
@@ -51,15 +51,15 @@ const getNicknameError = async (filter: Filter, database: DatabaseConnection, ni
     return null;
 };
 
-const getPictureIdError = (picture:number) =>{
-    if (typeof picture !== "number"){
+const getPictureIdError = (picture: number) => {
+    if (typeof picture !== "number") {
         return "Picture id supplied is not a number";
     }
-    if (!Object.keys(AVAILABLE_PROFILE_PICTURES).includes(picture.toString())){
-        return "Picture id supplied is not useable by players"
+    if (!Object.keys(AVAILABLE_PROFILE_PICTURES).includes(picture.toString())) {
+        return "Picture id supplied is not useable by players";
     }
     return null;
-}
+};
 
 export const patchCurrent = (
     database: DatabaseConnection,
@@ -96,7 +96,6 @@ export const patchCurrent = (
 
         let outputUser = user;
 
-
         let nicknameUpdate: string | null = null;
         let pictureUpdate: number | null = null;
 
@@ -112,21 +111,21 @@ export const patchCurrent = (
 
                 return;
             }
-            nicknameUpdate = trimmedNickname
+            nicknameUpdate = trimmedNickname;
         }
 
         if (picture) {
-            const pictureIdError = getPictureIdError(picture)
+            const pictureIdError = getPictureIdError(picture);
 
-            if (pictureIdError){
+            if (pictureIdError) {
                 res.status(400).send({
-                    type:"invalid_picture_id",
+                    type: "invalid_picture_id",
                     error: pictureIdError
                 });
 
                 return;
             }
-            pictureUpdate = picture
+            pictureUpdate = picture;
         }
 
         const updatedUser = await database.user.setProfileInfo(user.id, nicknameUpdate, pictureUpdate);
