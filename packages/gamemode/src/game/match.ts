@@ -3,10 +3,11 @@ import { v4 as uuid } from "uuid";
 import { fork, all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice } from "@creature-chess/board";
+import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice, BoardSelectors } from "@creature-chess/board";
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 import { Player } from "../player";
+import { playerFinishMatchEvent } from "./events";
 
 interface MatchState {
     board: BoardState<PieceModel>;
@@ -105,10 +106,20 @@ export class Match {
 
         this.finalBoard = this.store.getState().board;
 
-        this.home.onFinishMatch(this.finalBoard);
+        const survivingPieces = BoardSelectors.getAllPieces(this.finalBoard).filter(p => p.currentHealth > 0);
+
+        const surviving = {
+            home: survivingPieces.filter(p => p.ownerId === this.home.id),
+            away: survivingPieces.filter(p => p.ownerId === this.away.id)
+        };
+
+        const homeScore = surviving.home.length;
+        const awayScore = surviving.away.length;
+
+        this.home.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
 
         if (!this.awayIsClone) {
-            this.away.onFinishMatch(this.finalBoard);
+            this.away.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
         }
 
         return this.finalBoard;

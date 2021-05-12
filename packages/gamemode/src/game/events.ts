@@ -17,9 +17,13 @@ export const playerRunPreparingPhaseEvent = createAction("playerRunPreparingPhas
 export type PlayerRunReadyPhaseEvent = ReturnType<typeof playerRunReadyPhaseEvent>;
 export const playerRunReadyPhaseEvent = createAction<{ match: Match }, "playerRunReadyPhaseEvent">("playerRunReadyPhaseEvent");
 
+export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
+export const playerFinishMatchEvent = createAction<{ homeScore: number, awayScore: number, isHomePlayer: boolean }, "playerFinishMatchEvent">("playerFinishMatchEvent");
+
 export type GameEvent =
     GamePhaseStartedEvent
     | GameFinishEvent
     | PlayerListChangedEvent
     | PlayerRunPreparingPhaseEvent
-    | PlayerRunReadyPhaseEvent;
+    | PlayerRunReadyPhaseEvent
+    | PlayerFinishMatchEvent;

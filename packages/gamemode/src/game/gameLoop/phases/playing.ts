@@ -4,7 +4,7 @@ import delay from "delay";
 import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
-import { playerFinishMatchEvent } from "../../../player/events";
+import { playerFinishMatchEvent } from "../../events";
 
 const waitForFinishMatchSaga = function*() {
     yield take(playerFinishMatchEvent.toString());

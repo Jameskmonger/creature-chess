@@ -1,9 +1,6 @@
 import { PieceModel } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 
-export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
-export const playerFinishMatchEvent = createAction<{ homeScore: number, awayScore: number }, "playerFinishMatchEvent">("playerFinishMatchEvent");
-
 export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;
 export const afterSellPieceEvent = createAction<{ piece: PieceModel }, "afterSellPieceEvent">("afterSellPieceEvent");
 
@@ -38,8 +35,7 @@ export const playerMatchRewardsEvent = (payload: {
 });
 
 export type PlayerEvent =
-    PlayerFinishMatchEvent
-    | AfterSellPieceEvent
+    AfterSellPieceEvent
     | AfterRerollCardsEvent
     | ClientFinishMatchEvent
     | PlayerDeathEvent

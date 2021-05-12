@@ -2,16 +2,13 @@ import { Logger } from "winston";
 import { Saga, Task } from "redux-saga";
 import { all, takeEvery } from "redux-saga/effects";
 import { PieceModel, PlayerListPlayer, PlayerProfile } from "@creature-chess/models";
-import { BoardSelectors, BoardSlice, BoardState, createBoardSlice } from "@creature-chess/board";
+import { BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { RoundInfoState } from "../game/roundInfo";
 import { Match } from "../game/match";
-import { fillBoardCommand } from "./sagas";
-import { playerFinishMatchEvent, afterRerollCardsEvent, PlayerFinishMatchEvent } from "./events";
 import { PlayerStore, createPlayerStore } from "./store";
-import { PlayerInfoCommands } from "./playerInfo";
 import { isPlayerAlive } from "./playerSelectors";
-import { GameEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
+import { GameEvent, playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
 
 export interface PlayerMatchResults {
     homePlayer: Player;
@@ -123,20 +120,6 @@ export abstract class Player {
 
     public getBattle() {
         return this.store.getState().playerInfo.battle;
-    }
-
-    public onFinishMatch(finalMatchBoard: BoardState<PieceModel>) {
-        const survivingPieces = BoardSelectors.getAllPieces(finalMatchBoard).filter(p => p.currentHealth > 0);
-
-        const surviving = {
-            home: survivingPieces.filter(p => p.ownerId === this.id),
-            away: survivingPieces.filter(p => p.ownerId !== this.id)
-        };
-
-        const homeScore = surviving.home.length;
-        const awayScore = surviving.away.length;
-
-        this.store.dispatch(playerFinishMatchEvent({ homeScore, awayScore }));
     }
 
     public isAlive() {

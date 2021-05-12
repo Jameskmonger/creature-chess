@@ -2,7 +2,8 @@ import { take, takeLatest, put, call } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType } from "@creature-chess/models";
 
-import { PlayerFinishMatchEvent, playerMatchRewardsEvent, playerDeathEvent, playerFinishMatchEvent } from "../events";
+import { playerMatchRewardsEvent, playerDeathEvent } from "../events";
+import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../game/events";
 import { CLEAR_OPPONENT_COMMAND, updateMoneyCommand, updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../playerInfo/commands";
 import { addXpCommand } from "./xp";
 import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
@@ -51,12 +52,13 @@ const updateStreak = function*(win: boolean) {
 export const playerMatchRewards = function*() {
     yield takeLatest<PlayerFinishMatchEvent>(
         playerFinishMatchEvent.toString(),
-        function*({ payload: { homeScore, awayScore } }) {
-            const win = homeScore > awayScore;
+        function*({ payload: { homeScore, awayScore, isHomePlayer } }) {
+            const win = isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
 
             yield call(updateStreak, win);
 
-            const damage = awayScore * HEALTH_LOST_PER_PIECE;
+            const enemyPiecesRemaining = isHomePlayer ? awayScore : homeScore;
+            const damage = enemyPiecesRemaining * HEALTH_LOST_PER_PIECE;
 
             const oldValue = yield* select(({ playerInfo: { health } }: PlayerState) => health);
 

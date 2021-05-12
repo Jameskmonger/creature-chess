@@ -2,7 +2,7 @@ import { all, takeLatest, put, fork } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 
-import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../events";
+import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../../game/events";
 import { HasPlayerInfo, PlayerInfoCommands } from "../playerInfo";
 import { playerMatchRewards } from "./matchRewards";
 import { clientFinishMatch } from "./clientFinishMatch";
