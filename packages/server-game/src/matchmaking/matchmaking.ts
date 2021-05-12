@@ -6,7 +6,6 @@ import { Game, PlayerType } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
-
 import { createWinstonLogger } from "../log";
 import { DiscordApi } from "../discord";
 import { createMetricLogger } from "../metrics";
@@ -14,6 +13,7 @@ import { SocketPlayer, BotPlayer } from "../player";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { LobbyMemberType } from "./lobby/lobbyMember";
+import { sortMembersByPlayerType } from "./utils/sortMembersByPlayerType"
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -106,15 +106,7 @@ export class Matchmaking {
             title: player.profile?.title ? player.profile.title : null
         });
     }
-    private bringPlayersToFront = (a, b) => {
-        if (a.type === LobbyMemberType.BOT && b.type === LobbyMemberType.PLAYER) {
-            return 1;
-        }
-        if (a.type === LobbyMemberType.PLAYER && b.type === LobbyMemberType.BOT) {
-            return -1;
-        }
-        return 0;
-    }
+
 
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
@@ -125,20 +117,12 @@ export class Matchmaking {
                 pictures.splice(index, index);
         }};
 
-        const assignPicture = (player) => {
-            return player.profile?.picture ?
-            player.profile.picture :
-            pictures.pop();
-        };
+        const assignPicture = (player) => player.profile?.picture || pictures.pop();
 
-        const membersOrderedByType = members.sort(this.bringPlayersToFront);
+        const membersOrderedByType = members.sort(sortMembersByPlayerType);
 
         const players = membersOrderedByType.map(m => {
-            let profilePicture = m.profile?.picture;
-
-            if (!profilePicture) {
-                profilePicture = assignPicture(m);
-            }
+            const profilePicture = assignPicture(m)
 
             const profile = this.generateProfile(m, profilePicture);
 
