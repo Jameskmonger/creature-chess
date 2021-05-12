@@ -13,7 +13,7 @@ import { SocketPlayer, BotPlayer } from "../player";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
 import { LobbyMemberType } from "./lobby/lobbyMember";
-import { sortMembersByPlayerType } from "./utils/sortMembersByPlayerType"
+import { sortMembersByPlayerType } from "./utils/sortMembersByPlayerType";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -107,7 +107,6 @@ export class Matchmaking {
         });
     }
 
-
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
 
@@ -122,7 +121,7 @@ export class Matchmaking {
         const membersOrderedByType = members.sort(sortMembersByPlayerType);
 
         const players = membersOrderedByType.map(m => {
-            const profilePicture = assignPicture(m)
+            const profilePicture = assignPicture(m);
 
             const profile = this.generateProfile(m, profilePicture);
 
