@@ -137,11 +137,9 @@ export abstract class Player {
         this.store.dispatch(this.boardSlice.commands.unlockBoardCommand());
     }
 
-    public fillBoard() {
-        this.store.dispatch(fillBoardCommand());
-    }
-
     public enterReadyPhase(match: Match) {
+        this.store.dispatch(fillBoardCommand());
+
         this.match = match;
         this.store.dispatch(this.boardSlice.commands.lockBoardCommand());
 

@@ -25,6 +25,4 @@ export const runPreparingPhase = function*() {
     ]);
 
     notifier.dispose();
-
-    players.getLiving().forEach(p => p.fillBoard());
 };
