@@ -1,27 +1,44 @@
 import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { MAX_NAME_LENGTH, validateNicknameFormat } from "@creature-chess/models";
+import { validateNicknameFormat } from "@creature-chess/models";
 import { patchUser } from "./utils/patchUser";
+import { Auth0User } from "./user";
+import { NicknameSelection } from "./registration/NicknameSelection"
+import { PictureSelection } from "./registration/PictureSelection"
+import { hasNickname } from "./utils/isRegistered";
+
 
 const RegistrationPage: React.FunctionComponent = () => {
+
     const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
     const [nickname, setNickname] = React.useState<string>("");
     const [loading, setLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | null>(null);
+    const [currentImage, setCurrentImage] = React.useState(1)
+    const { user } = useAuth0<Auth0User>();
+
+    React.useEffect(() => {
+        if (hasNickname(user)) {
+            setNickname(null)
+        }
+    })
 
     const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => setNickname(event.target.value);
-    const onClick = async () => {
-        const nicknameError = validateNicknameFormat(nickname);
 
-        if (nicknameError) {
-            setError(nicknameError);
-            return;
+    const onClick = async () => {
+        if (!hasNickname(user)) {
+            const nicknameError = validateNicknameFormat(nickname);
+
+            if (nicknameError) {
+                setError(nicknameError);
+                return;
+            }
         }
 
         setLoading(true);
 
         const token = await getAccessTokenSilently();
-        const response = await patchUser(token, nickname);
+        const response = await patchUser(token, nickname, currentImage);
 
         setLoading(false);
 
@@ -41,34 +58,36 @@ const RegistrationPage: React.FunctionComponent = () => {
         setError("An unknown error occured");
     };
 
+    const handleImageChange = (picture: number): void => {
+        setCurrentImage(picture)
+    }
+
     return (
         <div className="register">
             <h1 className="register-heading">Registration</h1>
-
             {error && <p className="register-error">{error}</p>}
-
-            <h2 className="nickname-warning">This nickname is permanent and cannot be changed</h2>
-
-            <input
-                value={nickname}
-                onChange={onNameChange}
-                maxLength={MAX_NAME_LENGTH}
-                placeholder="Nickname"
-                className="name-input"
-                disabled={loading}
+            {
+                !hasNickname(user) &&
+                <NicknameSelection
+                    nickname={nickname}
+                    onChange={onNameChange}
+                    loading={loading}
+                />
+            }
+            <PictureSelection
+                currentImage={currentImage}
+                onChange={handleImageChange}
             />
-
-            <div>
-                <button
-                    className="register-button"
-                    onClick={onClick}
-                    disabled={loading}
-                >
-                    {!loading && "Register"}
-                    {loading && "Loading..."}
-                </button>
-            </div>
+            <button
+                className="register-button"
+                onClick={onClick}
+                disabled={loading}
+            >
+                {!loading && "Register"}
+                {loading && "Loading..."}
+            </button>
         </div>
+
     );
 };
 

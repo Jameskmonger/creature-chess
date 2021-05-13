@@ -16,6 +16,11 @@
         font-size: 2em;
     }
 
+    .section-heading {
+        margin-bottom: 0.5rem;
+        font-size: 1.4em;
+    }
+
     .name-input {
         padding: 0.5rem 1rem;
         margin-bottom: 1em;
@@ -27,7 +32,6 @@
         color: #fff;
         cursor: pointer;
         background: #b13e53;
-
         // stylelint-disable-next-line
         border: none;
     }
@@ -38,8 +42,25 @@
         border: 2px solid #a01515;
     }
 
+    .nickname-info {
+        margin-top: 0.6em;
+    }
+
     .nickname-warning {
+        margin-top: 0.6em;
         margin-bottom: 0.6em;
         font-style: italic;
+    }
+
+    .picture-selection {
+        margin-bottom: 0.6em;
+    }
+
+    .picture-selection-heading {
+        margin-bottom: 0.6em;
+    }
+
+    .available-pictures {
+        display: inline-block;
     }
 }

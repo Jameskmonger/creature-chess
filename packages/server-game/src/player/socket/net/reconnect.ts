@@ -40,4 +40,4 @@ export const reconnectPlayerSocket = function*(socket: Socket, game: RoundInfoSt
     );
 
     yield put(newPlayerSocketEvent(socket));
-}
+};

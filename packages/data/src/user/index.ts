@@ -5,7 +5,7 @@ import { addWin } from "./addWin";
 import { create } from "./create";
 import { getById } from "./getById";
 import { getByNickname } from "./getByNickname";
-import { setNickname } from "./setNickname";
+import { setProfileInfo } from "./setProfileInfo";
 
 export type UserDatabaseFunctions = {
     create: (authId: string) => Promise<DatabaseUser | null>;
@@ -16,7 +16,7 @@ export type UserDatabaseFunctions = {
     addWin: (id: string) => Promise<DatabaseUser | null>;
     addGamePlayed: (id: string) => Promise<DatabaseUser | null>;
 
-    setNickname: (id: string, nickname: string) => Promise<DatabaseUser | null>;
+    setProfileInfo: (id: string, nickname: string, picture: number) => Promise<DatabaseUser> | null;
 };
 
 export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {
@@ -26,7 +26,7 @@ export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {
         getByNickname: getByNickname(client),
         addWin: addWin(client),
         addGamePlayed: addGamePlayed(client),
-        setNickname: setNickname(client)
+        setProfileInfo: setProfileInfo(client)
     };
 };
 

@@ -7,12 +7,12 @@ import { Game, Player, PlayerType } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
-
 import { createWinstonLogger } from "../log";
 import { DiscordApi } from "../discord";
 import { createMetricLogger } from "../metrics";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
+import { sortMembersByPlayerType } from "./utils/sortMembersByPlayerType";
 import { LobbyMember, LobbyMemberType } from "./lobby/lobbyMember";
 import { botLogicSaga } from "../player/bot/saga";
 import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
@@ -129,7 +129,10 @@ export class Matchmaking {
 
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
-        const players = members.map(lobbyMember => {
+
+        const membersOrderedByType = members.sort(sortMembersByPlayerType);
+
+        const players = membersOrderedByType.map(lobbyMember => {
             const profile = this.generateProfile(lobbyMember, pictures);
 
             if (lobbyMember.type === LobbyMemberType.BOT) {
