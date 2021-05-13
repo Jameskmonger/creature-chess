@@ -116,7 +116,7 @@ export class Game {
 	private getAllPlayers = () => this.players;
 
 	private dispatchPublicGameEvent = (event: GameEvent) => {
-		this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
+		this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT)
 			.forEach(p => p.receiveGameEvent(event));
 	}
 
