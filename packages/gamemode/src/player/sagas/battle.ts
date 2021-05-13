@@ -1,4 +1,4 @@
-import { all, takeLatest, put, fork } from "@redux-saga/core/effects";
+import { all, takeLatest, put, call } from "redux-saga/effects";
 import { select, getContext } from "typed-redux-saga";
 import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 
@@ -23,7 +23,7 @@ export const playerBattle = function*() {
 				yield put(PlayerInfoCommands.updateBattleCommand(finishedBattle(opponentId!, isHomePlayer, homeScore, awayScore)));
 			}
 		),
-		fork(playerMatchRewards),
-		fork(clientFinishMatch)
+		call(playerMatchRewards),
+		call(clientFinishMatch)
 	]);
 };

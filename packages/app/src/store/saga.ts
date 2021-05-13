@@ -1,4 +1,4 @@
-import { fork } from "@redux-saga/core/effects";
+import { all, call } from "redux-saga/effects";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { findGame } from "../networking";
@@ -9,6 +9,8 @@ export const rootSaga = function*(
 	loginWithRedirect: () => Promise<void>,
 	slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
-	yield fork(findGame, { getAccessTokenSilently, loginWithRedirect }, slices);
-	yield fork(gameSaga, slices);
+	yield all([
+		call(findGame, { getAccessTokenSilently, loginWithRedirect }, slices),
+		call(gameSaga, slices)
+	]);
 };

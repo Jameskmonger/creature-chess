@@ -1,6 +1,6 @@
 import pDefer = require("p-defer");
 import { v4 as uuid } from "uuid";
-import { fork, all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
+import { all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
 import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice, BoardSelectors } from "@creature-chess/board";
@@ -8,6 +8,7 @@ import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/ba
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 import { Player } from "../player";
 import { playerFinishMatchEvent } from "./events";
+import { call } from "redux-saga/effects";
 
 interface MatchState {
 	board: BoardState<PieceModel>;
@@ -131,7 +132,7 @@ export class Match {
 		const _this = this;
 		const rootSaga = function*() {
 			yield all([
-				fork(
+				call(
 					battleSagaFactory<MatchState>(state => state.board),
 					gameOptions, _this.board
 				),

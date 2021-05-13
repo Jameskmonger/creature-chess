@@ -1,4 +1,4 @@
-import { takeEvery, put, fork } from "@redux-saga/core/effects";
+import { takeEvery, put, call } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 import { PlayerInfoCommands, PlayerEvents, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
@@ -130,5 +130,5 @@ export const incomingGameNetworking = function*(
 		(opcode, handler) => socket.on(opcode, handler)
 	);
 
-	yield fork(readPacketsToActions, registry, socket, slices);
+	yield call(readPacketsToActions, registry, socket, slices);
 };

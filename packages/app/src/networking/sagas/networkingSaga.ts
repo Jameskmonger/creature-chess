@@ -1,4 +1,4 @@
-import { fork } from "@redux-saga/core/effects";
+import { all, call } from "redux-saga/effects";
 import { PieceModel } from "@creature-chess/models";
 import { BoardSlice } from "@creature-chess/board";
 import { lobbyNetworking } from "./lobby";
@@ -8,6 +8,8 @@ export const networkingSaga = function*(
 	socket: SocketIOClient.Socket,
 	slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
-	yield fork(lobbyNetworking, socket);
-	yield fork(gameNetworking, socket, slices);
+	yield all([
+		call(lobbyNetworking, socket),
+		call(gameNetworking, socket, slices)
+	]);
 };

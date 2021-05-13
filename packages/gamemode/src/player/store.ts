@@ -37,13 +37,13 @@ export const createPlayerStore = (
 	const rootSaga = function*() {
 		yield all([
 			call(playerPhases),
-			fork(playerGameActionsSaga),
-			fork(evolutionSagaFactory<PlayerState>(boardSlices)),
-			fork(healthSagaFactory<PlayerState>()),
-			fork(xpSagaFactory<PlayerState>(boardSlices)),
-			fork(fillBoardSagaFactory<PlayerState>(playerId)),
-			fork(setStatusOnQuit),
-			fork(playerBattle)
+			call(playerGameActionsSaga),
+			call(evolutionSagaFactory<PlayerState>(boardSlices)),
+			call(healthSagaFactory<PlayerState>()),
+			call(xpSagaFactory<PlayerState>(boardSlices)),
+			call(fillBoardSagaFactory<PlayerState>(playerId)),
+			call(setStatusOnQuit),
+			call(playerBattle)
 		]);
 	};
 

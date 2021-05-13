@@ -1,4 +1,4 @@
-import { take, put, fork } from "@redux-saga/core/effects";
+import { take, put, fork, call, all } from "redux-saga/effects";
 import { BoardSlice } from "@creature-chess/board";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
@@ -13,6 +13,8 @@ export const gameNetworking = function*(socket: SocketIOClient.Socket, slices: {
 
 	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
-	yield fork(outgoingGameNetworking, socket);
-	yield fork(incomingGameNetworking, socket, slices);
+	yield all([
+		call(outgoingGameNetworking, socket),
+		call(incomingGameNetworking, socket, slices)
+	]);
 };

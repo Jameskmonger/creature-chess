@@ -11,6 +11,7 @@ import {
 	lobbyConnectedEvent, LobbyConnectedEvent
 } from "../actions";
 import { networkingSaga } from "./networkingSaga";
+import { all } from "redux-saga/effects";
 
 export const findGame = function*(
 	auth: {
@@ -63,12 +64,15 @@ export const findGame = function*(
 
 	channel.close();
 
-	yield fork(networkingSaga, socket, slices);
-
-	if (lobby) {
-		yield put(LobbyCommands.setLobbyDetailsCommand(lobby.payload));
-		yield put(lobby);
-	} else if (game) {
-		yield put(game);
-	}
+	yield all([
+		call(networkingSaga, socket, slices),
+		call(function*() {
+			if (lobby) {
+				yield put(LobbyCommands.setLobbyDetailsCommand(lobby.payload));
+				yield put(lobby);
+			} else if (game) {
+				yield put(game);
+			}
+		})
+	]);
 };

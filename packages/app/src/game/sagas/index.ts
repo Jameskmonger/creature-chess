@@ -13,40 +13,43 @@ import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 
 import { LobbyEvents } from "../../lobby";
 import { roundUpdateSaga, clientBattleSaga, uiSaga } from "./events";
+import { all, call } from "redux-saga/effects";
 
 export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
 	const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([gameConnectedEvent.toString(), LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
-	yield fork(preventAccidentalClose);
-	yield fork(closeShopOnFirstBuySaga);
-	yield fork(clickToDropSaga);
+	yield all([
+		call(preventAccidentalClose),
+		call(closeShopOnFirstBuySaga),
+		call(clickToDropSaga),
+		call(roundUpdateSaga, slices),
+		call(clientBattleSaga, slices),
+		call(uiSaga),
+		call(function*() {
+			if (action && action.payload) {
+				const { payload: {
+					board,
+					bench,
+					players,
+					battleTurn,
+					game: { phase, phaseStartedAtSeconds },
+					playerInfo: { money, cards, level, xp }
+				} } = action as GameConnectedEvent;
 
-	yield fork(roundUpdateSaga, slices);
-	yield fork(clientBattleSaga, slices);
-	yield fork(uiSaga);
+				yield put(slices.boardSlice.commands.setBoardPiecesCommand(board));
+				yield put(slices.benchSlice.commands.setBoardPiecesCommand(bench));
+				yield put(PlayerInfoCommands.updateMoneyCommand(money));
+				yield put(PlayerCommands.updateCardsCommand(cards));
+				yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
+				yield put(PlayerListCommands.updatePlayerListCommand(players));
 
-	if (action && action.payload) {
-		const { payload: {
-			board,
-			bench,
-			players,
-			battleTurn,
-			game: { phase, phaseStartedAtSeconds },
-			playerInfo: { money, cards, level, xp }
-		} } = action as GameConnectedEvent;
+				const update = { phase, startedAt: phaseStartedAtSeconds };
+				yield put(RoundInfoCommands.setRoundInfoCommand(update));
 
-		yield put(slices.boardSlice.commands.setBoardPiecesCommand(board));
-		yield put(slices.benchSlice.commands.setBoardPiecesCommand(bench));
-		yield put(PlayerInfoCommands.updateMoneyCommand(money));
-		yield put(PlayerCommands.updateCardsCommand(cards));
-		yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
-		yield put(PlayerListCommands.updatePlayerListCommand(players));
-
-		const update = { phase, startedAt: phaseStartedAtSeconds };
-		yield put(RoundInfoCommands.setRoundInfoCommand(update));
-
-		if (battleTurn !== null) {
-			yield put(startBattle(battleTurn));
-		}
-	}
+				if (battleTurn !== null) {
+					yield put(startBattle(battleTurn));
+				}
+			}
+		})
+	]);
 };

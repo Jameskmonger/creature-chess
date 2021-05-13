@@ -1,4 +1,4 @@
-import { fork } from "@redux-saga/core/effects";
+import { all, call } from "redux-saga/effects";
 
 import { buyCardPlayerActionSaga, BuyCardPlayerAction, buyCardPlayerAction } from "./buyCard";
 export { BuyCardPlayerAction, buyCardPlayerAction };
@@ -25,12 +25,14 @@ import { dropPiecePlayerActionSaga, DropPiecePlayerAction, dropPiecePlayerAction
 export { DropPiecePlayerAction, dropPiecePlayerAction };
 
 export const playerGameActionsSaga = function*() {
-	yield fork(buyXpPlayerActionSaga);
-	yield fork(buyCardPlayerActionSaga);
-	yield fork(rerollCardsPlayerActionSaga);
-	yield fork(toggleShopLockPlayerActionSaga);
-	yield fork(sellPiecePlayerActionSaga);
-	yield fork(dropPiecePlayerActionSaga);
+	yield all([
+		call(buyXpPlayerActionSaga),
+		call(buyCardPlayerActionSaga),
+		call(rerollCardsPlayerActionSaga),
+		call(toggleShopLockPlayerActionSaga),
+		call(sellPiecePlayerActionSaga),
+		call(dropPiecePlayerActionSaga)
+	]);
 };
 
 export const PlayerGameActionTypesArray = [
