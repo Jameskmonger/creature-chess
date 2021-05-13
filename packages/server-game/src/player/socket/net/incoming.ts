@@ -3,14 +3,15 @@ import { take, takeEvery, put, all, call } from "redux-saga/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
 import { PlayerEvents, PlayerGameActions, PlayerSagaContext } from "@creature-chess/gamemode";
-import { ClientToServer, IncomingPacketRegistry } from "@creature-chess/networking";
+import { ClientToServer } from "@creature-chess/networking";
 
 import { receivePlayerActionsEvent, ReceivePlayerActionsEvent } from "../events";
+import { getPacketRegistries } from "./registries";
 
-export type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
-
-export const incomingNetworking = function*(registry: IncomingRegistry, socket: Socket) {
+export const incomingNetworking = function*(socket: Socket) {
 	const { getLogger } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
+
+	const { incoming: registry } = yield* getPacketRegistries();
 
 	const processIncomingPackets = function*() {
 		let expectedPacketIndex = 1;

@@ -22,7 +22,7 @@ type PlayerConnections = {
 		networkingSaga: Task | null,
 		lobbyRegistry: LobbyRegistry | null
 	};
-}
+};
 
 export class Lobby {
 	public readonly gameStartTime: number | null = null;

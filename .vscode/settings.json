@@ -3,8 +3,6 @@
 	"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
 	"typescript.preferences.quoteStyle": "double",
 	"javascript.preferences.quoteStyle": "double",
-	"typescript.preferences.importModuleSpecifier": "relative",
-	"typescript.preferences.importModuleSpecifierEnding": "minimal",
 	"typescript.preferences.useAliasesForRenames": false,
 	"editor.formatOnSave": true,
 	"editor.tabSize": 4,
