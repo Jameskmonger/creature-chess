@@ -19,11 +19,16 @@ export interface UserModel {
 
 export type Auth0User = User<UserAppMetadata, UserMetadata>;
 
-export const convertDatabaseUserToUserModel = (user: DatabaseUser): UserModel => ({
-    id: user.ref.id,
-    authId: user.data.authId,
-    stats: user.data.stats,
-    nickname: user.data.nickname ? user.data.nickname.value : null,
-    registered: Boolean(user.data.nickname && user.data.profile.picture),
-    profile: user.data.profile ? user.data.profile : null
-});
+export const convertDatabaseUserToUserModel = (user: DatabaseUser): UserModel => {
+    const nickname = user.data.nickname ? user.data.nickname.value : null;
+    const profile = user.data.profile ? user.data.profile : { title: null, picture: null };
+
+    return {
+        id: user.ref.id,
+        authId: user.data.authId,
+        stats: user.data.stats,
+        nickname,
+        profile,
+        registered: Boolean(nickname && profile.picture)
+    };
+};
