@@ -55,7 +55,7 @@ export class Lobby {
 
 		const index = this.members.push(member);
 
-		this.createOutgoingLobbyRegistry(member, socket);
+		this.connectLobbyPlayer(member, socket);
 
 		for (const other of this.members) {
 			if (other.id === member.id) {
@@ -88,24 +88,9 @@ export class Lobby {
 				return;
 			}
 
-			this.playerConnections[member.id]?.networkingSaga?.cancel();
-
-			const networkingSaga = player.runSaga(playerNetworking, socket);
-
-			player.runSaga(
-				reconnectPlayerSocket,
-				socket,
-				this.game.getRoundInfo(),
-				this.game.getPlayerListPlayers()
-			);
-
-			this.playerConnections[player.id] = {
-				socket,
-				lobbyRegistry: null,
-				networkingSaga
-			};
+			this.connectGamePlayer(player, this.game, socket)
 		} else {
-			this.createOutgoingLobbyRegistry(member, socket);
+			this.connectLobbyPlayer(member, socket);
 		}
 	}
 
@@ -124,6 +109,44 @@ export class Lobby {
 			(this.gameStarting || this.game !== null)
 				? 0
 				: MAX_PLAYERS_IN_GAME - this.members.length
+		);
+	}
+
+	private connectLobbyPlayer(player: LobbyPlayer, socket: Socket) {
+		const registry = new OutgoingPacketRegistry<
+			ServerToClient.Lobby.PacketDefinitions,
+			ServerToClient.Lobby.PacketAcknowledgements
+		>(
+			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
+		);
+
+		registry.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_CONNECTED, {
+			lobbyId: this.id,
+			players: [...this.members],
+			startTimestamp: this.gameStartTime!
+		});
+
+		this.playerConnections[player.id] = {
+			socket,
+			lobbyRegistry: registry,
+			networkingSaga: null
+		};
+	}
+
+	private connectGamePlayer(player: Player, game: Game, socket: Socket) {
+		this.playerConnections[player.id]?.networkingSaga?.cancel();
+
+		this.playerConnections[player.id] = {
+			socket,
+			lobbyRegistry: null,
+			networkingSaga: player.runSaga(playerNetworking, socket)
+		};
+
+		player.runSaga(
+			reconnectPlayerSocket,
+			socket,
+			game.getRoundInfo(),
+			game.getPlayerListPlayers()
 		);
 	}
 
@@ -155,7 +178,7 @@ export class Lobby {
 
 			const socket = this.playerConnections[player.id]?.socket;
 
-			player.runSaga(playerNetworking, socket);
+			this.playerConnections[player.id].networkingSaga = player.runSaga(playerNetworking, socket);
 
 			players.push(player);
 		}
@@ -187,27 +210,6 @@ export class Lobby {
 
 			this.events.emit("finish");
 		});
-	}
-
-	private createOutgoingLobbyRegistry(player: LobbyPlayer, socket: Socket) {
-		const registry = new OutgoingPacketRegistry<
-			ServerToClient.Lobby.PacketDefinitions,
-			ServerToClient.Lobby.PacketAcknowledgements
-		>(
-			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
-		);
-
-		registry.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_CONNECTED, {
-			lobbyId: this.id,
-			players: [...this.members],
-			startTimestamp: this.gameStartTime!
-		});
-
-		this.playerConnections[player.id] = {
-			socket,
-			lobbyRegistry: registry,
-			networkingSaga: null
-		};
 	}
 
 	private sendMemberLobbyUpdateEvent(member: LobbyPlayer, index: number, other: LobbyPlayer) {

@@ -10,4 +10,4 @@ export type PlayerRegistries = {
 };
 
 export const getPacketRegistries = () => getContext<PlayerRegistries>("packetRegistries");
-export const setPacketRegistries = (packetRegistries: PlayerRegistries) => setContext<{ packetRegistries: PlayerRegistries }>({ packetRegistries });
+export const setPacketRegistries = (packetRegistries: PlayerRegistries | null) => setContext<{ packetRegistries: PlayerRegistries | null }>({ packetRegistries });
