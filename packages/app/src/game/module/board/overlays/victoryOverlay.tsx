@@ -5,35 +5,35 @@ import { getPlayerById } from "../../playerList/components/selectors";
 import { BoardOverlay } from "./boardOverlay";
 
 const VictoryOverlay: React.FunctionComponent = () => {
-    const winnerName = useSelector<AppState, string>(state => {
-        const { winnerId } = state.game.ui;
+	const winnerName = useSelector<AppState, string>(state => {
+		const { winnerId } = state.game.ui;
 
-        if (!winnerId) {
-            return null;
-        }
+		if (!winnerId) {
+			return null;
+		}
 
-        // todo fix this selector
-        return getPlayerById(winnerId)(state).name;
-    });
+		// todo fix this selector
+		return getPlayerById(winnerId)(state).name;
+	});
 
-    if (!winnerName) {
-        return null;
-    }
+	if (!winnerName) {
+		return null;
+	}
 
-    return (
-        <BoardOverlay>
-            <div className="victory-overlay">
-                <h2 className="game-over">Game Over</h2>
-                <p className="winner"><span className="highlight">{winnerName}</span> wins!</p>
+	return (
+		<BoardOverlay>
+			<div className="victory-overlay">
+				<h2 className="game-over">Game Over</h2>
+				<p className="winner"><span className="highlight">{winnerName}</span> wins!</p>
 
-                <div className="discord-link">
-                    <p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
+				<div className="discord-link">
+					<p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
 
-                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
-                </div>
-            </div>
-        </BoardOverlay>
-    );
+					<a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
+				</div>
+			</div>
+		</BoardOverlay>
+	);
 };
 
 export { VictoryOverlay };

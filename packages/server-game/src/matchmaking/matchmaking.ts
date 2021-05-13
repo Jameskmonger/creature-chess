@@ -21,208 +21,208 @@ import { outgoingNetworking } from "../player/socket/net/outgoing";
 import { newPlayerSocketEvent } from "../player/socket/events";
 
 export class Matchmaking {
-    private lobbies = new Map<string, Lobby>();
-    private games = new Map<string, Game>();
-    private lobbyIdGenerator = new IdGenerator();
-    private metrics = createMetricLogger();
-    private searchingForGame: boolean = false;
+	private lobbies = new Map<string, Lobby>();
+	private games = new Map<string, Game>();
+	private lobbyIdGenerator = new IdGenerator();
+	private metrics = createMetricLogger();
+	private searchingForGame: boolean = false;
 
-    constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
-        setInterval(this.sendMetrics, 60 * 1000);
-    }
+	constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
+		setInterval(this.sendMetrics, 60 * 1000);
+	}
 
-    public async findGame(socket: io.Socket, user: UserModel) {
-        while (this.searchingForGame) {
-            await delay(250);
-        }
+	public async findGame(socket: io.Socket, user: UserModel) {
+		while (this.searchingForGame) {
+			await delay(250);
+		}
 
-        this.searchingForGame = true;
+		this.searchingForGame = true;
 
-        const { id, nickname, profile } = user;
+		const { id, nickname, profile } = user;
 
-        const playerInGame = this.getPlayerInGame(id);
+		const playerInGame = this.getPlayerInGame(id);
 
-        if (playerInGame) {
-            // todo cancel the old saga
-            playerInGame.player.runSaga(incomingNetworking);
-            playerInGame.player.runSaga(outgoingNetworking);
+		if (playerInGame) {
+			// todo cancel the old saga
+			playerInGame.player.runSaga(incomingNetworking);
+			playerInGame.player.runSaga(outgoingNetworking);
 
-            playerInGame.player.runSaga(
-                reconnectPlayerSocket,
-                socket,
-                playerInGame.game.getRoundInfo(),
-                playerInGame.game.getPlayerListPlayers()
-            );
+			playerInGame.player.runSaga(
+				reconnectPlayerSocket,
+				socket,
+				playerInGame.game.getRoundInfo(),
+				playerInGame.game.getPlayerListPlayers()
+			);
 
-            this.searchingForGame = false;
+			this.searchingForGame = false;
 
-            return;
-        }
+			return;
+		}
 
-        const lobby = this.getLobbyContainingPlayer(id);
+		const lobby = this.getLobbyContainingPlayer(id);
 
-        if (lobby) {
-            lobby.reconnect(id, socket);
+		if (lobby) {
+			lobby.reconnect(id, socket);
 
-            this.searchingForGame = false;
+			this.searchingForGame = false;
 
-            return;
-        }
+			return;
+		}
 
-        const { lobby: newLobby, created } = await this.findOrCreateLobby();
-        newLobby.addConnection(socket, id, nickname, profile);
+		const { lobby: newLobby, created } = await this.findOrCreateLobby();
+		newLobby.addConnection(socket, id, nickname, profile);
 
-        if (created) {
-            this.discordApi.startLobby(nickname);
-        }
+		if (created) {
+			this.discordApi.startLobby(nickname);
+		}
 
-        this.searchingForGame = false;
-    }
+		this.searchingForGame = false;
+	}
 
-    private getPlayerInGame(id: string) {
-        const games = Array.from<Game>(this.games.values());
+	private getPlayerInGame(id: string) {
+		const games = Array.from<Game>(this.games.values());
 
-        const matchingGame = games.find(g => g.getPlayerById(id));
+		const matchingGame = games.find(g => g.getPlayerById(id));
 
-        if (!matchingGame) {
-            return null;
-        }
+		if (!matchingGame) {
+			return null;
+		}
 
-        const playerInGame = matchingGame.getPlayerById(id);
+		const playerInGame = matchingGame.getPlayerById(id);
 
-        if (playerInGame.isDead()) {
-            return null;
-        }
+		if (playerInGame.isDead()) {
+			return null;
+		}
 
-        return {
-            game: matchingGame,
-            player: playerInGame
-        };
-    }
+		return {
+			game: matchingGame,
+			player: playerInGame
+		};
+	}
 
-    private getLobbyContainingPlayer(id: string) {
-        const lobbies = Array.from<Lobby>(this.lobbies.values());
+	private getLobbyContainingPlayer(id: string) {
+		const lobbies = Array.from<Lobby>(this.lobbies.values());
 
-        return lobbies.find(g => g.getMemberById(id)) || null;
-    }
+		return lobbies.find(g => g.getMemberById(id)) || null;
+	}
 
-    private getPictures(): number[] {
-        const pictures: number[] = [];
+	private getPictures(): number[] {
+		const pictures: number[] = [];
 
-        // todo tie this into definition provider
-        for (let i = 1; i <= 46; i++) {
-            pictures.push(i);
-        }
+		// todo tie this into definition provider
+		for (let i = 1; i <= 46; i++) {
+			pictures.push(i);
+		}
 
-        return shuffle(pictures);
-    }
+		return shuffle(pictures);
+	}
 
-    private generateProfile = (player: LobbyMember, pictures: number[]) => {
-        const picture = player.profile?.picture ?? pictures.pop();
-        const title = player.profile?.title ?? null;
+	private generateProfile = (player: LobbyMember, pictures: number[]) => {
+		const picture = player.profile?.picture ?? pictures.pop();
+		const title = player.profile?.title ?? null;
 
-        return {
-            picture,
-            title
-        };
-    }
+		return {
+			picture,
+			title
+		};
+	}
 
-    private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
-        const pictures = this.getPictures();
+	private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
+		const pictures = this.getPictures();
 
-        const membersOrderedByType = members.sort(sortMembersByPlayerType);
+		const membersOrderedByType = members.sort(sortMembersByPlayerType);
 
-        const players = membersOrderedByType.map(lobbyMember => {
-            const profile = this.generateProfile(lobbyMember, pictures);
+		const players = membersOrderedByType.map(lobbyMember => {
+			const profile = this.generateProfile(lobbyMember, pictures);
 
-            if (lobbyMember.type === LobbyMemberType.BOT) {
-                return new Player(PlayerType.BOT, lobbyMember.id, lobbyMember.name, profile);
-            }
+			if (lobbyMember.type === LobbyMemberType.BOT) {
+				return new Player(PlayerType.BOT, lobbyMember.id, lobbyMember.name, profile);
+			}
 
-            const player = new Player(PlayerType.USER, lobbyMember.id, lobbyMember.name, profile);
+			const player = new Player(PlayerType.USER, lobbyMember.id, lobbyMember.name, profile);
 
-            // todo keep track of these tasks so they can be cancelled later
-            player.runSaga(incomingNetworking);
-            player.runSaga(outgoingNetworking);
+			// todo keep track of these tasks so they can be cancelled later
+			player.runSaga(incomingNetworking);
+			player.runSaga(outgoingNetworking);
 
-            player.runSaga(function*() {
-                yield put(newPlayerSocketEvent(lobbyMember.net.socket));
-            });
+			player.runSaga(function*() {
+				yield put(newPlayerSocketEvent(lobbyMember.net.socket));
+			});
 
-            return player;
-        });
+			return player;
+		});
 
-        const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
+		const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
 
-        this.logger.info(`Game ${game.id} started from lobby ${id}`);
+		this.logger.info(`Game ${game.id} started from lobby ${id}`);
 
-        players
-            .forEach(player => {
-                if (player.type === PlayerType.USER) {
-                    // todo do this in 1 call
-                    this.database.user.addGamePlayed(player.id);
-                }
+		players
+			.forEach(player => {
+				if (player.type === PlayerType.USER) {
+					// todo do this in 1 call
+					this.database.user.addGamePlayed(player.id);
+				}
 
-                if (player.type === PlayerType.BOT) {
-                    // todo do this in 1 call
-                    this.database.bot.addGamePlayed(player.id);
+				if (player.type === PlayerType.BOT) {
+					// todo do this in 1 call
+					this.database.bot.addGamePlayed(player.id);
 
-                    player.runSaga(botLogicSaga);
-                }
-            });
+					player.runSaga(botLogicSaga);
+				}
+			});
 
-        game.onFinish((winner) => {
-            if (winner.type === PlayerType.USER) {
-                this.database.user.addWin(winner.id);
-            }
+		game.onFinish((winner) => {
+			if (winner.type === PlayerType.USER) {
+				this.database.user.addWin(winner.id);
+			}
 
-            if (winner.type === PlayerType.BOT) {
-                this.database.bot.addWin(winner.id);
-            }
+			if (winner.type === PlayerType.BOT) {
+				this.database.bot.addWin(winner.id);
+			}
 
-            this.games.delete(game.id);
-            this.sendMetrics();
-        });
+			this.games.delete(game.id);
+			this.sendMetrics();
+		});
 
-        this.games.set(game.id, game);
-        this.lobbies.delete(id);
+		this.games.set(game.id, game);
+		this.lobbies.delete(id);
 
-        this.sendMetrics();
-    }
+		this.sendMetrics();
+	}
 
-    private async findOrCreateLobby(): Promise<{ lobby: Lobby, created: boolean }> {
-        const lobbies = Array.from(this.lobbies.values())
-            .filter(lobby => lobby.canJoin());
+	private async findOrCreateLobby(): Promise<{ lobby: Lobby, created: boolean }> {
+		const lobbies = Array.from(this.lobbies.values())
+			.filter(lobby => lobby.canJoin());
 
-        if (lobbies.length === 0) {
-            return {
-                lobby: await this.createLobby(),
-                created: true
-            };
-        }
+		if (lobbies.length === 0) {
+			return {
+				lobby: await this.createLobby(),
+				created: true
+			};
+		}
 
-        lobbies.sort((a, b) => a.getFreeSlotCount() - b.getFreeSlotCount());
+		lobbies.sort((a, b) => a.getFreeSlotCount() - b.getFreeSlotCount());
 
-        return {
-            lobby: lobbies[0],
-            created: false
-        };
-    }
+		return {
+			lobby: lobbies[0],
+			created: false
+		};
+	}
 
-    private async createLobby() {
-        const bots = await this.database.bot.getLeastPlayedBots(MAX_PLAYERS_IN_GAME);
-        const lobby = new Lobby(this.lobbyIdGenerator, bots);
+	private async createLobby() {
+		const bots = await this.database.bot.getLeastPlayedBots(MAX_PLAYERS_IN_GAME);
+		const lobby = new Lobby(this.lobbyIdGenerator, bots);
 
-        lobby.onStartGame(this.onLobbyStart);
+		lobby.onStartGame(this.onLobbyStart);
 
-        this.lobbies.set(lobby.id, lobby);
+		this.lobbies.set(lobby.id, lobby);
 
-        this.logger.info(`[Lobby ${lobby.id}] created`);
+		this.logger.info(`[Lobby ${lobby.id}] created`);
 
-        return lobby;
-    }
+		return lobby;
+	}
 
-    private sendMetrics = () => {
-        this.metrics.sendGameCount(this.games.size);
-    }
+	private sendMetrics = () => {
+		this.metrics.sendGameCount(this.games.size);
+	}
 }

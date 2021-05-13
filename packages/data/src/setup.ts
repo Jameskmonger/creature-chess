@@ -4,9 +4,9 @@ import { setupBotDatabase } from "./bot";
 import { setupUserDatabase } from "./user";
 
 export const setup = async (client: FaunaDBClient) => {
-    console.log("Setting up database...");
+	console.log("Setting up database...");
 
-    await setupUserDatabase(client);
+	await setupUserDatabase(client);
 
-    await setupBotDatabase(client);
+	await setupBotDatabase(client);
 };

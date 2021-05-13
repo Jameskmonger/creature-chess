@@ -4,20 +4,20 @@ import { roundInfoReducer, RoundInfoState } from "./roundInfo";
 import { GameSagaContext } from "./sagas";
 
 export type GameState = {
-    roundInfo: RoundInfoState
+	roundInfo: RoundInfoState
 };
 
 export const createGameStore = (context: GameSagaContext) => {
-    const sagaMiddleware = createSagaMiddleware({
-        context
-    });
+	const sagaMiddleware = createSagaMiddleware({
+		context
+	});
 
-    const store: Store<GameState> = createStore(
-        combineReducers<GameState>({
-            roundInfo: roundInfoReducer,
-        }),
-        applyMiddleware(sagaMiddleware)
-    );
+	const store: Store<GameState> = createStore(
+		combineReducers<GameState>({
+			roundInfo: roundInfoReducer,
+		}),
+		applyMiddleware(sagaMiddleware)
+	);
 
-    return { store, sagaMiddleware };
+	return { store, sagaMiddleware };
 };

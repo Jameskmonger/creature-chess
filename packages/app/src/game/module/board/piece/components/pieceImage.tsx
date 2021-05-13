@@ -6,17 +6,17 @@ import { AppState } from "../../../../../store";
 import { CreatureImage } from "../../../../../display/creatureImage";
 
 interface PieceImageProps {
-    pieceId: string;
+	pieceId: string;
 }
 
 const PieceImage: React.FunctionComponent<PieceImageProps> = ({ pieceId }) => {
-    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
+	const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
 
-    if (!piece) {
-        return null;
-    }
+	if (!piece) {
+		return null;
+	}
 
-    return <CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} />;
+	return <CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} />;
 };
 
 export { PieceImage };

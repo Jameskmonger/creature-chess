@@ -2,48 +2,48 @@ import { PlayerProfile } from "./playerProfile";
 import { StreakType } from "./streakType";
 
 export enum PlayerBattleStatus {
-    IN_PROGRESS,
-    FINISHED
+	IN_PROGRESS,
+	FINISHED
 }
 
 export enum PlayerStatus {
-    CONNECTED,
-    DEAD,
-    QUIT
+	CONNECTED,
+	DEAD,
+	QUIT
 }
 
 export type PlayerBattle = {
-    status: PlayerBattleStatus.IN_PROGRESS;
-    opponentId: string;
+	status: PlayerBattleStatus.IN_PROGRESS;
+	opponentId: string;
 } | {
-    status: PlayerBattleStatus.FINISHED,
-    opponentId: string;
-    homeScore: number;
-    awayScore: number;
+	status: PlayerBattleStatus.FINISHED,
+	opponentId: string;
+	homeScore: number;
+	awayScore: number;
 } | null;
 
 export const inProgressBattle = (opponentId: string): PlayerBattle => ({
-    status: PlayerBattleStatus.IN_PROGRESS,
-    opponentId
+	status: PlayerBattleStatus.IN_PROGRESS,
+	opponentId
 });
 
 export const finishedBattle = (opponentId: string, homeScore: number, awayScore: number): PlayerBattle => ({
-    status: PlayerBattleStatus.FINISHED,
-    opponentId,
-    homeScore,
-    awayScore
+	status: PlayerBattleStatus.FINISHED,
+	opponentId,
+	homeScore,
+	awayScore
 });
 
 export interface PlayerListPlayer {
-    id: string;
-    name: string;
-    health: number;
-    money: number;
-    level: number;
-    ready: boolean;
-    streakType: StreakType | null;
-    streakAmount: number | null;
-    battle: PlayerBattle;
-    status: PlayerStatus;
-    profile: PlayerProfile | null;
+	id: string;
+	name: string;
+	health: number;
+	money: number;
+	level: number;
+	ready: boolean;
+	streakType: StreakType | null;
+	streakAmount: number | null;
+	battle: PlayerBattle;
+	status: PlayerStatus;
+	profile: PlayerProfile | null;
 }

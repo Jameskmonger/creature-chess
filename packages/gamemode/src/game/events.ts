@@ -21,9 +21,9 @@ export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
 export const playerFinishMatchEvent = createAction<{ homeScore: number, awayScore: number, isHomePlayer: boolean }, "playerFinishMatchEvent">("playerFinishMatchEvent");
 
 export type GameEvent =
-    GamePhaseStartedEvent
-    | GameFinishEvent
-    | PlayerListChangedEvent
-    | PlayerRunPreparingPhaseEvent
-    | PlayerRunReadyPhaseEvent
-    | PlayerFinishMatchEvent;
+	GamePhaseStartedEvent
+	| GameFinishEvent
+	| PlayerListChangedEvent
+	| PlayerRunPreparingPhaseEvent
+	| PlayerRunReadyPhaseEvent
+	| PlayerFinishMatchEvent;

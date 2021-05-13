@@ -7,12 +7,12 @@ export type ToggleShopLockPlayerAction = ReturnType<typeof toggleShopLockPlayerA
 export const toggleShopLockPlayerAction = createAction("toggleShopLockPlayerAction");
 
 export const toggleShopLockPlayerActionSaga = function*() {
-  yield takeEvery<ToggleShopLockPlayerAction>(
-    toggleShopLockPlayerAction.toString(),
-    function*() {
-      const currentLockState: boolean = yield select(isPlayerShopLocked);
+	yield takeEvery<ToggleShopLockPlayerAction>(
+		toggleShopLockPlayerAction.toString(),
+		function*() {
+			const currentLockState: boolean = yield select(isPlayerShopLocked);
 
-      yield put(updateShopLockCommand(!currentLockState));
-    }
-  );
+			yield put(updateShopLockCommand(!currentLockState));
+		}
+	);
 };

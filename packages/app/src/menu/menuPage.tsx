@@ -10,97 +10,97 @@ import { finishLoading, startLoading } from "./state";
 import { Footer, Loading } from "../display";
 
 interface DispatchProps {
-    onFindGame: (serverIP: string) => void;
-    setError: (error: string) => void;
+	onFindGame: (serverIP: string) => void;
+	setError: (error: string) => void;
 }
 
 interface MenuStageProps {
-    loading: boolean;
-    error: string;
+	loading: boolean;
+	error: string;
 }
 
 type Props = MenuStageProps & DispatchProps;
 
 const Navbar: React.FunctionComponent = () => {
-    const { logout } = useAuth0();
-    const onLogoutClick = () => logout();
+	const { logout } = useAuth0();
+	const onLogoutClick = () => logout();
 
-    return (
-        <nav className="navbar">
-            <button className="sign-out" onClick={onLogoutClick}>Log Out</button>
-        </nav>
-    );
+	return (
+		<nav className="navbar">
+			<button className="sign-out" onClick={onLogoutClick}>Log Out</button>
+		</nav>
+	);
 };
 
 class MenuPageUnconnected extends React.Component<Props> {
-    public render() {
-        if (this.props.loading) {
-            return <Loading />;
-        }
+	public render() {
+		if (this.props.loading) {
+			return <Loading />;
+		}
 
-        return (
-            <div className="menu">
-                <Navbar />
+		return (
+			<div className="menu">
+				<Navbar />
 
-                <div className="join-game">
-                    <h2 className="title">Creature Chess</h2>
+				<div className="join-game">
+					<h2 className="title">Creature Chess</h2>
 
-                    <div className="blurb">
-                        <p>More fun with friends! Press "Find Game" at the same time to play together</p>
-                        <p>Up to 8 players!</p>
-                    </div>
+					<div className="blurb">
+						<p>More fun with friends! Press "Find Game" at the same time to play together</p>
+						<p>Up to 8 players!</p>
+					</div>
 
-                    <button onClick={this.onFindGameClick} className="find-game">Find Game</button>
+					<button onClick={this.onFindGameClick} className="find-game">Find Game</button>
 
-                    <div className="blurb">
-                        <p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
-                    </div>
+					<div className="blurb">
+						<p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
+					</div>
 
-                    <a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
+					<a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
 
-                    <div className="blurb">
-                        <p>This is a <span className="highlight">multiplayer strategy game</span> in which you configure creatures on a board.</p>
-                        <p>Each round, your board is matched against an opponent's board. Defeat all their pieces to win the round.</p>
-                        <p>Every loss decreases your health bar. When your health reaches zero, you're out!</p>
-                        <p>Players will battle against eachother until only one player remains.</p>
-                        <p>Good luck! <span className="highlight">~ jkm</span></p>
-                    </div>
+					<div className="blurb">
+						<p>This is a <span className="highlight">multiplayer strategy game</span> in which you configure creatures on a board.</p>
+						<p>Each round, your board is matched against an opponent's board. Defeat all their pieces to win the round.</p>
+						<p>Every loss decreases your health bar. When your health reaches zero, you're out!</p>
+						<p>Players will battle against eachother until only one player remains.</p>
+						<p>Good luck! <span className="highlight">~ jkm</span></p>
+					</div>
 
-                    {
-                        this.props.error
-                        && <div className="error"><p>{this.props.error}</p></div>
-                    }
-                </div>
+					{
+						this.props.error
+						&& <div className="error"><p>{this.props.error}</p></div>
+					}
+				</div>
 
-                <Leaderboard />
+				<Leaderboard />
 
-                <Footer />
-            </div>
-        );
-    }
+				<Footer />
+			</div>
+		);
+	}
 
-    private onFindGameClick = () => {
-        const serverIP = getUrlParameter("server") || GAME_SERVER_URL;
+	private onFindGameClick = () => {
+		const serverIP = getUrlParameter("server") || GAME_SERVER_URL;
 
-        this.props.onFindGame(serverIP);
-    }
+		this.props.onFindGame(serverIP);
+	}
 }
 
 const mapStateToProps: MapStateToProps<MenuStageProps, {}, AppState> = state => ({
-    loading: state.menu.loading,
-    error: state.menu.error
+	loading: state.menu.loading,
+	error: state.menu.error
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-    onFindGame: (serverIP: string) => {
-        dispatch(startLoading());
-        dispatch(findGameAction(serverIP));
-    },
-    setError: (error: string) => dispatch(finishLoading(error))
+	onFindGame: (serverIP: string) => {
+		dispatch(startLoading());
+		dispatch(findGameAction(serverIP));
+	},
+	setError: (error: string) => dispatch(finishLoading(error))
 });
 
 const MenuPage = connect(mapStateToProps, mapDispatchToProps)(MenuPageUnconnected);
 
 export {
-    MenuPage
+	MenuPage
 };

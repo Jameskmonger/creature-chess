@@ -3,8 +3,8 @@ import { playerPreparingPhase } from "./preparing";
 import { playerReadyPhase } from "./ready";
 
 export const playerPhases = function*() {
-    yield all([
-        call(playerPreparingPhase),
-        call(playerReadyPhase)
-    ]);
+	yield all([
+		call(playerPreparingPhase),
+		call(playerReadyPhase)
+	]);
 };

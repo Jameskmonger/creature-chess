@@ -5,43 +5,43 @@ import { getOverlayClassName } from "./getOverlayClassName";
 import { useBelowPieceLimit, usePieces } from "../context";
 
 type DroppableTileProps = {
-    className: string;
-    x: number;
-    y: number;
-    onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
-    onClick: (x: number, y: number) => void;
+	className: string;
+	x: number;
+	y: number;
+	onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
+	onClick: (x: number, y: number) => void;
 }
 
 type PieceDragObject = DragObjectWithType & { piece: HasId };
 type DropTargetCollectProps = { canDrop: boolean, isDragging: boolean };
 
 const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className, x, y, onDrop, onClick }) => {
-    const belowPieceLimit = useBelowPieceLimit();
-    const pieces = usePieces();
+	const belowPieceLimit = useBelowPieceLimit();
+	const pieces = usePieces();
 
-    const [{ canDrop, isDragging }, drop] = useDrop<PieceDragObject, void, DropTargetCollectProps>({
-        accept: "Piece",
-        drop: item => onDrop(item, x, y),
-        canDrop: ({ piece }) => {
-            const pieceIsFromSameBoard = Boolean(pieces[piece.id])
-            return belowPieceLimit || pieceIsFromSameBoard
-        },
-        collect: monitor => ({
-            canDrop: !!monitor.canDrop(),
-            isDragging: !!monitor.getItem(),
-        }),
-    });
+	const [{ canDrop, isDragging }, drop] = useDrop<PieceDragObject, void, DropTargetCollectProps>({
+		accept: "Piece",
+		drop: item => onDrop(item, x, y),
+		canDrop: ({ piece }) => {
+			const pieceIsFromSameBoard = Boolean(pieces[piece.id])
+			return belowPieceLimit || pieceIsFromSameBoard
+		},
+		collect: monitor => ({
+			canDrop: !!monitor.canDrop(),
+			isDragging: !!monitor.getItem(),
+		}),
+	});
 
-    return (
-        <div
-            ref={drop}
-            className={`tile ${className}`}
-            touch-action="none"
-            onPointerUp={() => onClick(x, y)}
-        >
-            <div className={`${getOverlayClassName(isDragging, canDrop)}`} />
-        </div>
-    );
+	return (
+		<div
+			ref={drop}
+			className={`tile ${className}`}
+			touch-action="none"
+			onPointerUp={() => onClick(x, y)}
+		>
+			<div className={`${getOverlayClassName(isDragging, canDrop)}`} />
+		</div>
+	);
 };
 
 export { DroppableTile }

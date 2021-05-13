@@ -25,26 +25,26 @@ export type SelectPieceAction = ({ type: SELECT_PIECE, payload: { id: string } }
 export type ClearSelectedPieceAction = ({ type: CLEAR_SELECTED_PIECE });
 
 export const selectPiece = (id: string): SelectPieceAction => ({
-    type: SELECT_PIECE,
-    payload: {
-        id
-    }
+	type: SELECT_PIECE,
+	payload: {
+		id
+	}
 });
 
 export const clearSelectedPiece = (): ClearSelectedPieceAction => ({ type: CLEAR_SELECTED_PIECE });
 
 export const openOverlay = (overlay: Overlay): OpenOverlayAction => ({
-    type: OPEN_OVERLAY,
-    payload: {
-        overlay
-    }
+	type: OPEN_OVERLAY,
+	payload: {
+		overlay
+	}
 });
 
 export const closeOverlay = (): CloseOverlayAction => ({ type: CLOSE_OVERLAY });
 
 export const updateConnectionStatus = (status: ConnectionStatus): UpdateConnectionStatusAction => ({
-    type: UPDATE_CONNECTION_STATUS,
-    payload: {
-        status
-    }
+	type: UPDATE_CONNECTION_STATUS,
+	payload: {
+		status
+	}
 });

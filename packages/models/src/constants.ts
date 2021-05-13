@@ -1,14 +1,14 @@
 import { GamePhase } from "./game-phase";
 
 export const GRID_SIZE = {
-    width: 7,
-    height: 6 // THIS MUST BE AN EVEN NUMBER
+	width: 7,
+	height: 6 // THIS MUST BE AN EVEN NUMBER
 };
 
 export const PHASE_LENGTHS = {
-    [GamePhase.PREPARING]: 30,
-    [GamePhase.READY]: 5,
-    [GamePhase.PLAYING]: 30
+	[GamePhase.PREPARING]: 30,
+	[GamePhase.READY]: 5,
+	[GamePhase.PLAYING]: 30
 };
 export const REROLL_COST = 2;
 export const STARTING_MONEY = 3;
@@ -28,12 +28,12 @@ export const DAMAGE_RATIO = 7;
 export const MAX_NAME_LENGTH = 16;
 
 export const MAX_PLAYERS_IN_GAME = 8;
-export const LOBBY_WAIT_TIME = 90;
+export const LOBBY_WAIT_TIME = 5;
 
 export const AVAILABLE_PROFILE_PICTURES = {
-    1: "Budaye",
-    4: "Aardorn",
-    5: "Nut",
-    7: "Embra",
-    8: "Tweesher"
+	1: "Budaye",
+	4: "Aardorn",
+	5: "Nut",
+	7: "Embra",
+	8: "Tweesher"
 };

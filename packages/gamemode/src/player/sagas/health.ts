@@ -7,26 +7,26 @@ type HEALTH_SUBTRACT_COMMAND = typeof HEALTH_SUBTRACT_COMMAND;
 type HealthSubtractCommand = ({ type: HEALTH_SUBTRACT_COMMAND, payload: { amount: number } });
 
 export const subtractHealthCommand = (amount: number): HealthSubtractCommand => ({
-    type: HEALTH_SUBTRACT_COMMAND,
-    payload: { amount }
+	type: HEALTH_SUBTRACT_COMMAND,
+	payload: { amount }
 });
 
 export const healthSagaFactory = <TState extends PlayerState>() => {
-    return function*() {
-        yield all([
-            takeEvery<HealthSubtractCommand>(
-                HEALTH_SUBTRACT_COMMAND,
-                function*({ payload: { amount } }) {
-                    const state: TState = yield select();
+	return function*() {
+		yield all([
+			takeEvery<HealthSubtractCommand>(
+				HEALTH_SUBTRACT_COMMAND,
+				function*({ payload: { amount } }) {
+					const state: TState = yield select();
 
-                    const oldValue = state.playerInfo.health;
+					const oldValue = state.playerInfo.health;
 
-                    let newValue = oldValue - amount;
-                    newValue = (newValue < 0) ? 0 : newValue;
+					let newValue = oldValue - amount;
+					newValue = (newValue < 0) ? 0 : newValue;
 
-                    yield put(updateHealthCommand(newValue));
-                }
-            )
-        ]);
-    };
+					yield put(updateHealthCommand(newValue));
+				}
+			)
+		]);
+	};
 };

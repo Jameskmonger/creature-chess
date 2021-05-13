@@ -10,43 +10,43 @@ import { PlayerState } from "../../store";
 import { addXpCommand } from "../xp";
 
 export const playerPreparingPhase = function*() {
-    const { boardSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
+	const { boardSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
 
-    yield takeEvery<PlayerRunPreparingPhaseEvent>(
-        playerRunPreparingPhaseEvent.toString(),
-        function*() {
-            const alive = yield* select(isPlayerAlive);
+	yield takeEvery<PlayerRunPreparingPhaseEvent>(
+		playerRunPreparingPhaseEvent.toString(),
+		function*() {
+			const alive = yield* select(isPlayerAlive);
 
-            if (!alive) {
-                return;
-            }
+			if (!alive) {
+				return;
+			}
 
-            const matchRewards = yield* select((state: PlayerState) => state.playerInfo.matchRewards);
+			const matchRewards = yield* select((state: PlayerState) => state.playerInfo.matchRewards);
 
-            if (matchRewards) {
-                const currentMoney = yield* select((state: PlayerState) => state.playerInfo.money);
-                const totalMatchReward = yield* select((state: PlayerState) => state.playerInfo.matchRewards.rewardMoney.total);
+			if (matchRewards) {
+				const currentMoney = yield* select((state: PlayerState) => state.playerInfo.money);
+				const totalMatchReward = yield* select((state: PlayerState) => state.playerInfo.matchRewards.rewardMoney.total);
 
-                // todo make addMoneyCommand
-                yield put(updateMoneyCommand(currentMoney + totalMatchReward));
-                yield put(addXpCommand(1));
-            }
+				// todo make addMoneyCommand
+				yield put(updateMoneyCommand(currentMoney + totalMatchReward));
+				yield put(addXpCommand(1));
+			}
 
-            const locked = yield* select(isPlayerShopLocked);
+			const locked = yield* select(isPlayerShopLocked);
 
-            if (!locked) {
-                yield put(afterRerollCardsEvent());
-            }
+			if (!locked) {
+				yield put(afterRerollCardsEvent());
+			}
 
-            if (matchRewards) {
-                yield put(playerMatchRewardsEvent(null));
-                yield put(PlayerInfoCommands.clearOpponentCommand());
-            }
+			if (matchRewards) {
+				yield put(playerMatchRewardsEvent(null));
+				yield put(PlayerInfoCommands.clearOpponentCommand());
+			}
 
-            const level = yield* select(getPlayerLevel);
+			const level = yield* select(getPlayerLevel);
 
-            yield put(boardSlice.commands.setPieceLimitCommand(level));
-            yield put(boardSlice.commands.unlockBoardCommand());
-        }
-    );
+			yield put(boardSlice.commands.setPieceLimitCommand(level));
+			yield put(boardSlice.commands.unlockBoardCommand());
+		}
+	);
 };

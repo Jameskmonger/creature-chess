@@ -7,32 +7,32 @@ import { GameSagaContextPlayers } from "../../sagas";
 import { playerFinishMatchEvent } from "../../events";
 
 const waitForFinishMatchSaga = function*() {
-    yield take(playerFinishMatchEvent.toString());
+	yield take(playerFinishMatchEvent.toString());
 };
 
 export const runPlayingPhase = function*() {
-    const options: GameOptions = yield getContext("options");
-    const players: GameSagaContextPlayers = yield getContext("players");
+	const options: GameOptions = yield getContext("options");
+	const players: GameSagaContextPlayers = yield getContext("players");
 
-    const battleTimeoutDeferred = pDefer<void>();
+	const battleTimeoutDeferred = pDefer<void>();
 
-    const phase = GamePhase.PLAYING;
-    delay(options.phaseLengths[GamePhase.PLAYING] * 1000).then(() => battleTimeoutDeferred.resolve());
+	const phase = GamePhase.PLAYING;
+	delay(options.phaseLengths[GamePhase.PLAYING] * 1000).then(() => battleTimeoutDeferred.resolve());
 
-    const startedAt = Date.now() / 1000;
+	const startedAt = Date.now() / 1000;
 
-    yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
+	yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
 
-    const livingPlayers = players.getLiving();
+	const livingPlayers = players.getLiving();
 
-    const matches = [...new Set(livingPlayers.map(p => p.getMatch()))];
-    const finishMatchTasks = livingPlayers.map(p => p.runSaga(waitForFinishMatchSaga));
+	const matches = [...new Set(livingPlayers.map(p => p.getMatch()))];
+	const finishMatchTasks = livingPlayers.map(p => p.runSaga(waitForFinishMatchSaga));
 
-    matches.forEach(m => m.fight(battleTimeoutDeferred.promise));
+	matches.forEach(m => m.fight(battleTimeoutDeferred.promise));
 
-    yield Promise.all(finishMatchTasks.map(t => t.toPromise()));
+	yield Promise.all(finishMatchTasks.map(t => t.toPromise()));
 
-    // some battles go right up to the end, so it's nice to have a delay
-    // rather than jumping straight into the next phase
-    yield delay(5000);
+	// some battles go right up to the end, so it's nice to have a delay
+	// rather than jumping straight into the next phase
+	yield delay(5000);
 };

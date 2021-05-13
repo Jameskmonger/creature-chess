@@ -9,194 +9,194 @@ import { IdGenerator } from "../id-generator";
 import { LobbyMember, LobbyMemberType, PlayerLobbyMember } from "./lobbyMember";
 
 enum LobbyEvents {
-    START_GAME = "START_GAME"
+	START_GAME = "START_GAME"
 }
 
 export type LobbyStartEvent = {
-    id: string;
-    members: LobbyMember[];
+	id: string;
+	members: LobbyMember[];
 };
 
 export class Lobby {
-    public readonly id: string;
-    public readonly gameStartTime: number = null;
+	public readonly id: string;
+	public readonly gameStartTime: number = null;
 
-    private members: LobbyMember[];
+	private members: LobbyMember[];
 
-    private events = new EventEmitter();
-    private gameStarted: boolean = false;
+	private events = new EventEmitter();
+	private gameStarted: boolean = false;
 
-    constructor(idGenerator: IdGenerator, bots: { id: string, name: string }[]) {
-        this.id = idGenerator.generateId();
+	constructor(idGenerator: IdGenerator, bots: { id: string, name: string }[]) {
+		this.id = idGenerator.generateId();
 
-        this.members = [];
+		this.members = [];
 
-        this.addBots(bots);
+		this.addBots(bots);
 
-        const waitTimeMs = LOBBY_WAIT_TIME_SECONDS * 1000;
-        this.gameStartTime = Date.now() + waitTimeMs;
-        setTimeout(this.startGame, waitTimeMs);
-    }
+		const waitTimeMs = LOBBY_WAIT_TIME_SECONDS * 1000;
+		this.gameStartTime = Date.now() + waitTimeMs;
+		setTimeout(this.startGame, waitTimeMs);
+	}
 
-    public onStartGame(fn: (event: LobbyStartEvent) => void) {
-        this.events.on(LobbyEvents.START_GAME, fn);
-    }
+	public onStartGame(fn: (event: LobbyStartEvent) => void) {
+		this.events.on(LobbyEvents.START_GAME, fn);
+	}
 
-    public canJoin() {
-        if (this.getFreeSlotCount() === 0) {
-            console.log("no free slots");
-            console.log(this.members);
-        }
+	public canJoin() {
+		if (this.getFreeSlotCount() === 0) {
+			console.log("no free slots");
+			console.log(this.members);
+		}
 
-        return this.gameStarted === false && this.getFreeSlotCount() > 0;
-    }
+		return this.gameStarted === false && this.getFreeSlotCount() > 0;
+	}
 
-    public reconnect(id: string, socket: Socket) {
-        const matchingMemberIndex = this.members.findIndex(p => p.id === id);
+	public reconnect(id: string, socket: Socket) {
+		const matchingMemberIndex = this.members.findIndex(p => p.id === id);
 
-        if (matchingMemberIndex) {
-            console.error("No matching player");
-            return;
-        }
+		if (matchingMemberIndex) {
+			console.error("No matching player");
+			return;
+		}
 
-        const member = this.members[matchingMemberIndex];
+		const member = this.members[matchingMemberIndex];
 
-        if (member.type === LobbyMemberType.PLAYER) {
-            member.net.socket.disconnect();
-            member.net = {
-                socket,
-                outgoing: this.createOutgoingRegistry(socket)
-            };
-            this.sendMemberJoinEvent(socket, member);
-            return;
-        }
+		if (member.type === LobbyMemberType.PLAYER) {
+			member.net.socket.disconnect();
+			member.net = {
+				socket,
+				outgoing: this.createOutgoingRegistry(socket)
+			};
+			this.sendMemberJoinEvent(socket, member);
+			return;
+		}
 
-        console.error("Tried to replace non-connection player");
-    }
+		console.error("Tried to replace non-connection player");
+	}
 
-    public addConnection(socket: Socket, id: string, name: string, profile: PlayerProfile) {
-        if (this.canJoin() === false) {
-            throw Error(`Player ${id} tried to join game ${this.id} that was not joinable`);
-        }
+	public addConnection(socket: Socket, id: string, name: string, profile: PlayerProfile) {
+		if (this.canJoin() === false) {
+			throw Error(`Player ${id} tried to join game ${this.id} that was not joinable`);
+		}
 
-        const playerChangedIndex = this.createPlayerLobbyMember(socket, id, name, profile);
+		const playerChangedIndex = this.createPlayerLobbyMember(socket, id, name, profile);
 
-        const lobbyPlayer: LobbyPlayer = {
-            id,
-            name,
-            isBot: false,
-            profile
-        };
+		const lobbyPlayer: LobbyPlayer = {
+			id,
+			name,
+			isBot: false,
+			profile
+		};
 
-        for (const other of this.members) {
-            if (other.id === id || other.type !== LobbyMemberType.PLAYER) {
-                continue;
-            }
+		for (const other of this.members) {
+			if (other.id === id || other.type !== LobbyMemberType.PLAYER) {
+				continue;
+			}
 
-            this.sendMemberLobbyUpdateEvent(other, playerChangedIndex, lobbyPlayer);
-        }
+			this.sendMemberLobbyUpdateEvent(other, playerChangedIndex, lobbyPlayer);
+		}
 
-        if (this.getFreeSlotCount() === 0) {
-            this.startGame();
-        }
-    }
+		if (this.getFreeSlotCount() === 0) {
+			this.startGame();
+		}
+	}
 
-    public getMemberById(id: string) {
-        return this.members.find(m => m.type === LobbyMemberType.PLAYER && m.id === id);
-    }
+	public getMemberById(id: string) {
+		return this.members.find(m => m.type === LobbyMemberType.PLAYER && m.id === id);
+	}
 
-    public getFreeSlotCount() {
-        return this.members.filter(m => m.type === LobbyMemberType.BOT).length;
-    }
+	public getFreeSlotCount() {
+		return this.members.filter(m => m.type === LobbyMemberType.BOT).length;
+	}
 
-    private startGame = () => {
-        if (this.gameStarted) {
-            throw Error("Tried to start already-started game");
-        }
+	private startGame = () => {
+		if (this.gameStarted) {
+			throw Error("Tried to start already-started game");
+		}
 
-        this.members.filter(m => m.type === LobbyMemberType.PLAYER)
-            .forEach((player: PlayerLobbyMember) => {
-                player.net.outgoing.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
-            });
+		this.members.filter(m => m.type === LobbyMemberType.PLAYER)
+			.forEach((player: PlayerLobbyMember) => {
+				player.net.outgoing.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
+			});
 
-        this.gameStarted = true;
+		this.gameStarted = true;
 
-        const event: LobbyStartEvent = {
-            id: this.id,
-            members: this.members
-        };
-        this.events.emit(LobbyEvents.START_GAME, event);
-    }
+		const event: LobbyStartEvent = {
+			id: this.id,
+			members: this.members
+		};
+		this.events.emit(LobbyEvents.START_GAME, event);
+	}
 
-    private addBots(bots: { id: string, name: string }[]) {
-        const shuffledBots = shuffle(bots);
+	private addBots(bots: { id: string, name: string }[]) {
+		const shuffledBots = shuffle(bots);
 
-        for (const { id, name } of shuffledBots) {
-            this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}`, profile: undefined });
-        }
-    }
+		for (const { id, name } of shuffledBots) {
+			this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}`, profile: undefined });
+		}
+	}
 
-    private getLobbyPlayers(): LobbyPlayer[] {
-        return this.members.map(m => ({
-            id: m.id,
-            name: m.name,
-            isBot: m.type === LobbyMemberType.BOT,
-            profile: m.profile
-        }));
-    }
+	private getLobbyPlayers(): LobbyPlayer[] {
+		return this.members.map(m => ({
+			id: m.id,
+			name: m.name,
+			isBot: m.type === LobbyMemberType.BOT,
+			profile: m.profile
+		}));
+	}
 
-    private createPlayerLobbyMember(socket: Socket, id: string, name: string, profile: PlayerProfile) {
-        let index = null;
+	private createPlayerLobbyMember(socket: Socket, id: string, name: string, profile: PlayerProfile) {
+		let index = null;
 
-        for (let i = 0; i < this.members.length; i++) {
-            // skip real players
-            if (this.members[i].type === LobbyMemberType.PLAYER) {
-                continue;
-            }
+		for (let i = 0; i < this.members.length; i++) {
+			// skip real players
+			if (this.members[i].type === LobbyMemberType.PLAYER) {
+				continue;
+			}
 
-            index = i;
-            break;
-        }
+			index = i;
+			break;
+		}
 
-        const member: PlayerLobbyMember = {
-            type: LobbyMemberType.PLAYER,
-            id,
-            name,
-            profile,
-            net: {
-                socket,
-                outgoing: this.createOutgoingRegistry(socket)
-            }
-        };
+		const member: PlayerLobbyMember = {
+			type: LobbyMemberType.PLAYER,
+			id,
+			name,
+			profile,
+			net: {
+				socket,
+				outgoing: this.createOutgoingRegistry(socket)
+			}
+		};
 
-        this.members[index] = member;
+		this.members[index] = member;
 
-        this.sendMemberJoinEvent(socket, member);
+		this.sendMemberJoinEvent(socket, member);
 
-        return index;
-    }
+		return index;
+	}
 
-    private createOutgoingRegistry(socket: Socket) {
-        return new OutgoingPacketRegistry<
-            ServerToClient.Lobby.PacketDefinitions,
-            ServerToClient.Lobby.PacketAcknowledgements
-        >(
-            (opcode, payload, ack) => socket.emit(opcode, payload, ack)
-        );
-    }
+	private createOutgoingRegistry(socket: Socket) {
+		return new OutgoingPacketRegistry<
+			ServerToClient.Lobby.PacketDefinitions,
+			ServerToClient.Lobby.PacketAcknowledgements
+		>(
+			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
+		);
+	}
 
-    private sendMemberJoinEvent(socket: Socket, member: PlayerLobbyMember) {
-        // todo use a registry for this
-        socket.emit(ServerToClient.Menu.PacketOpcodes.LOBBY_CONNECTED, {
-            lobbyId: this.id,
-            players: this.getLobbyPlayers(),
-            startTimestamp: this.gameStartTime
-        });
-    }
+	private sendMemberJoinEvent(socket: Socket, member: PlayerLobbyMember) {
+		// todo use a registry for this
+		socket.emit(ServerToClient.Menu.PacketOpcodes.LOBBY_CONNECTED, {
+			lobbyId: this.id,
+			players: this.getLobbyPlayers(),
+			startTimestamp: this.gameStartTime
+		});
+	}
 
-    private sendMemberLobbyUpdateEvent(member: PlayerLobbyMember, index: number, player: LobbyPlayer) {
-        member.net.outgoing.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE, {
-            index, player
-        });
-    }
+	private sendMemberLobbyUpdateEvent(member: PlayerLobbyMember, index: number, player: LobbyPlayer) {
+		member.net.outgoing.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE, {
+			index, player
+		});
+	}
 }

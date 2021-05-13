@@ -18,107 +18,107 @@ import { sendPublicEventsSaga } from "./publicEvents";
 const finishGameEventKey = "FINISH_GAME";
 
 export class Game {
-    public readonly id: string;
+	public readonly id: string;
 
-    private options: GameOptions;
+	private options: GameOptions;
 
-    private opponentProvider: OpponentProvider;
-    private playerList = new PlayerList();
-    private players: Player[] = [];
-    private events = new EventEmitter();
-    private deck: CardDeck;
+	private opponentProvider: OpponentProvider;
+	private playerList = new PlayerList();
+	private players: Player[] = [];
+	private events = new EventEmitter();
+	private deck: CardDeck;
 
-    private store: Store<GameState>;
+	private store: Store<GameState>;
 
-    private logger: Logger;
+	private logger: Logger;
 
-    constructor(createLogger: (id: string) => Logger, players: Player[], options?: Partial<GameOptions>) {
-        this.id = uuid();
+	constructor(createLogger: (id: string) => Logger, players: Player[], options?: Partial<GameOptions>) {
+		this.id = uuid();
 
-        this.options = getOptions(options);
-        this.logger = createLogger(this.id);
+		this.options = getOptions(options);
+		this.logger = createLogger(this.id);
 
-        this.deck = new CardDeck(this.logger);
+		this.deck = new CardDeck(this.logger);
 
-        players.forEach(this.addPlayer);
+		players.forEach(this.addPlayer);
 
-        this.opponentProvider = new OpponentProvider(players);
-        this.playerList.onUpdate(newPlayers => {
-            this.dispatchPublicGameEvent(playerListChangedEvent({ players: newPlayers }));
-        });
+		this.opponentProvider = new OpponentProvider(players);
+		this.playerList.onUpdate(newPlayers => {
+			this.dispatchPublicGameEvent(playerListChangedEvent({ players: newPlayers }));
+		});
 
-        const { store, sagaMiddleware } = createGameStore({
-            options: this.options,
-            getMatchups: this.opponentProvider.getMatchups,
-            players: {
-                getAll: this.getAllPlayers,
-                getLiving: this.getLivingPlayers,
-                getById: this.getPlayerById,
-                broadcast: this.dispatchPublicGameEvent
-            },
-            logger: this.logger
-        });
-        this.store = store;
+		const { store, sagaMiddleware } = createGameStore({
+			options: this.options,
+			getMatchups: this.opponentProvider.getMatchups,
+			players: {
+				getAll: this.getAllPlayers,
+				getLiving: this.getLivingPlayers,
+				getById: this.getPlayerById,
+				broadcast: this.dispatchPublicGameEvent
+			},
+			logger: this.logger
+		});
+		this.store = store;
 
-        // todo fix these ugly typings
-        sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
-        sagaMiddleware.run(gameSaga as () => Generator);
-        sagaMiddleware.run(sendPublicEventsSaga);
-    }
+		// todo fix these ugly typings
+		sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
+		sagaMiddleware.run(gameSaga as () => Generator);
+		sagaMiddleware.run(sendPublicEventsSaga);
+	}
 
-    public getPlayerById = (playerId: string) => {
-        return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId) || null;
-    }
+	public getPlayerById = (playerId: string) => {
+		return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId) || null;
+	}
 
-    public onFinish(fn: (winner: Player) => void) {
-        this.events.on(finishGameEventKey, fn);
-    }
+	public onFinish(fn: (winner: Player) => void) {
+		this.events.on(finishGameEventKey, fn);
+	}
 
-    public getRoundInfo = () => this.store.getState().roundInfo;
-    public getPlayerListPlayers = () => this.playerList.getValue();
+	public getRoundInfo = () => this.store.getState().roundInfo;
+	public getPlayerListPlayers = () => this.playerList.getValue();
 
-    private gameTeardownSagaFactory = () => {
-        const broadcast = (event: GameFinishEvent) => {
-            this.dispatchPublicGameEvent(event);
-            this.events.emit(finishGameEventKey, event.payload.winnerId);
-        };
+	private gameTeardownSagaFactory = () => {
+		const broadcast = (event: GameFinishEvent) => {
+			this.dispatchPublicGameEvent(event);
+			this.events.emit(finishGameEventKey, event.payload.winnerId);
+		};
 
-        const teardown = () => {
-            // todo this is ugly
-            (this.opponentProvider as unknown as null) = null;
-            (this.deck as unknown as null) = null;
-            this.playerList.deconstructor();
-            (this.playerList as unknown as null) = null;
-            this.events.removeAllListeners();
-            (this.events as unknown as null) = null;
-        };
+		const teardown = () => {
+			// todo this is ugly
+			(this.opponentProvider as unknown as null) = null;
+			(this.deck as unknown as null) = null;
+			this.playerList.deconstructor();
+			(this.playerList as unknown as null) = null;
+			this.events.removeAllListeners();
+			(this.events as unknown as null) = null;
+		};
 
-        return function*() {
-            const event: GameFinishEvent = yield take(gameFinishEvent.toString());
+		return function*() {
+			const event: GameFinishEvent = yield take(gameFinishEvent.toString());
 
-            broadcast(event);
-            teardown();
-        };
-    }
+			broadcast(event);
+			teardown();
+		};
+	}
 
-    private addPlayer = (player: Player) => {
-        player.setLogger(this.logger);
+	private addPlayer = (player: Player) => {
+		player.setLogger(this.logger);
 
-        this.players.push(player);
-        this.playerList.addPlayer(player);
+		this.players.push(player);
+		this.playerList.addPlayer(player);
 
-        player.setGetRoundInfoState(() => this.store.getState().roundInfo);
-        player.setGetPlayerListPlayers(this.playerList.getValue);
+		player.setGetRoundInfoState(() => this.store.getState().roundInfo);
+		player.setGetPlayerListPlayers(this.playerList.getValue);
 
-        player.runSaga(playerGameDeckSagaFactory(this.deck));
-    }
+		player.runSaga(playerGameDeckSagaFactory(this.deck));
+	}
 
-    private getAllPlayers = () => this.players;
+	private getAllPlayers = () => this.players;
 
-    private dispatchPublicGameEvent = (event: GameEvent) => {
-        this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
-            .forEach(p => p.receiveGameEvent(event));
-    }
+	private dispatchPublicGameEvent = (event: GameEvent) => {
+		this.players.filter(p => p.getStatus() === PlayerStatus.CONNECTED)
+			.forEach(p => p.receiveGameEvent(event));
+	}
 
-    private getLivingPlayers = () => this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
+	private getLivingPlayers = () => this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
 }

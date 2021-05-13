@@ -25,31 +25,31 @@ import { dropPiecePlayerActionSaga, DropPiecePlayerAction, dropPiecePlayerAction
 export { DropPiecePlayerAction, dropPiecePlayerAction };
 
 export const playerGameActionsSaga = function*() {
-    yield fork(buyXpPlayerActionSaga);
-    yield fork(buyCardPlayerActionSaga);
-    yield fork(rerollCardsPlayerActionSaga);
-    yield fork(toggleShopLockPlayerActionSaga);
-    yield fork(sellPiecePlayerActionSaga);
-    yield fork(dropPiecePlayerActionSaga);
+	yield fork(buyXpPlayerActionSaga);
+	yield fork(buyCardPlayerActionSaga);
+	yield fork(rerollCardsPlayerActionSaga);
+	yield fork(toggleShopLockPlayerActionSaga);
+	yield fork(sellPiecePlayerActionSaga);
+	yield fork(dropPiecePlayerActionSaga);
 };
 
 export const PlayerGameActionTypesArray = [
-    buyXpPlayerAction.toString(),
-    buyCardPlayerAction.toString(),
-    rerollCardsPlayerAction.toString(),
-    toggleShopLockPlayerAction.toString(),
-    sellPiecePlayerAction.toString(),
-    readyUpPlayerAction.toString(),
-    quitGamePlayerAction.toString(),
-    dropPiecePlayerAction.toString()
+	buyXpPlayerAction.toString(),
+	buyCardPlayerAction.toString(),
+	rerollCardsPlayerAction.toString(),
+	toggleShopLockPlayerAction.toString(),
+	sellPiecePlayerAction.toString(),
+	readyUpPlayerAction.toString(),
+	quitGamePlayerAction.toString(),
+	dropPiecePlayerAction.toString()
 ];
 
 export type PlayerGameAction =
-    BuyXpPlayerAction
-    | BuyCardPlayerAction
-    | RerollCardsPlayerAction
-    | ToggleShopLockPlayerAction
-    | SellPiecePlayerAction
-    | ReadyUpPlayerAction
-    | QuitGamePlayerAction
-    | DropPiecePlayerAction;
+	BuyXpPlayerAction
+	| BuyCardPlayerAction
+	| RerollCardsPlayerAction
+	| ToggleShopLockPlayerAction
+	| SellPiecePlayerAction
+	| ReadyUpPlayerAction
+	| QuitGamePlayerAction
+	| DropPiecePlayerAction;

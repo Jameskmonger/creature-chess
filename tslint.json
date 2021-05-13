@@ -1,5 +1,12 @@
 {
-    "extends": [
-        "neworbit-tslint-config"
-    ]
+	"extends": [
+		"neworbit-tslint-config"
+	],
+	"rules": {
+		"indent": [
+			true,
+			"tabs",
+			4
+		]
+	}
 }

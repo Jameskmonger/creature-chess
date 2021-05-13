@@ -5,23 +5,23 @@ import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 
 interface StageIndicatorProps {
-    pieceId: string;
+	pieceId: string;
 }
 
 const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ pieceId }) => {
-    const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
+	const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
 
-    if (!piece || piece.stage === 0) {
-        return null;
-    }
+	if (!piece || piece.stage === 0) {
+		return null;
+	}
 
-    let stars: React.ReactNode[] = [];
+	let stars: React.ReactNode[] = [];
 
-    for (let i = 0; i <= piece.stage; i++) {
-        stars.push(<img key={i} src="https://creaturechess.jamesmonger.com/images/ui/star.svg" />);
-    }
+	for (let i = 0; i <= piece.stage; i++) {
+		stars.push(<img key={i} src="https://creaturechess.jamesmonger.com/images/ui/star.svg" />);
+	}
 
-    return <div className="piece-stage">{stars}</div>;
+	return <div className="piece-stage">{stars}</div>;
 };
 
 export { StageIndicator };

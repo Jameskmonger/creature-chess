@@ -9,28 +9,28 @@ export type RerollCardsPlayerAction = ReturnType<typeof rerollCardsPlayerAction>
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
 
 export const rerollCardsPlayerActionSaga = function*() {
-    yield takeEvery<RerollCardsPlayerAction>(
-        rerollCardsPlayerAction.toString(),
-        function*() {
-            const { getLogger } = yield getContext("dependencies");
+	yield takeEvery<RerollCardsPlayerAction>(
+		rerollCardsPlayerAction.toString(),
+		function*() {
+			const { getLogger } = yield getContext("dependencies");
 
-            const isAlive: boolean = yield select(isPlayerAlive);
+			const isAlive: boolean = yield select(isPlayerAlive);
 
-            if (isAlive === false) {
-                getLogger().info("Attempted to reroll, but dead");
-                return;
-            }
+			if (isAlive === false) {
+				getLogger().info("Attempted to reroll, but dead");
+				return;
+			}
 
-            const money: number = yield select(state => state.playerInfo.money);
+			const money: number = yield select(state => state.playerInfo.money);
 
-            // not enough money
-            if (money < REROLL_COST) {
-                getLogger().info(`Attempted to reroll costing $${REROLL_COST} but only had $${money}`);
-                return;
-            }
+			// not enough money
+			if (money < REROLL_COST) {
+				getLogger().info(`Attempted to reroll costing $${REROLL_COST} but only had $${money}`);
+				return;
+			}
 
-            yield put(updateMoneyCommand(money - REROLL_COST));
-            yield put(afterRerollCardsEvent());
-        }
-    );
+			yield put(updateMoneyCommand(money - REROLL_COST));
+			yield put(afterRerollCardsEvent());
+		}
+	);
 };

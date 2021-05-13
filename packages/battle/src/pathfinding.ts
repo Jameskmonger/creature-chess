@@ -7,85 +7,85 @@ import { BoardState } from "@creature-chess/board";
 import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
 
 const createEmptyWeightGrid = ({ width, height }: { width: number, height: number }) => {
-    const grid: number[][] = [];
+	const grid: number[][] = [];
 
-    // todo this is a weird way round
-    for (let x = 0; x < width; x++) {
-        const column = [];
+	// todo this is a weird way round
+	for (let x = 0; x < width; x++) {
+		const column = [];
 
-        for (let y = 0; y < height; y++) {
-            column.push(1);
-        }
+		for (let y = 0; y < height; y++) {
+			column.push(1);
+		}
 
-        grid.push(column);
-    }
+		grid.push(column);
+	}
 
-    return grid;
+	return grid;
 };
 
 const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
-    const grid = createEmptyWeightGrid(board.size);
+	const grid = createEmptyWeightGrid(board.size);
 
-    Object.entries(board.piecePositions)
-        .forEach(([position, pieceId]) => {
-            const [x, y] = position.split(",").map(p => parseInt(p, 10));
+	Object.entries(board.piecePositions)
+		.forEach(([position, pieceId]) => {
+			const [x, y] = position.split(",").map(p => parseInt(p, 10));
 
-            if (pieceId) {
-                grid[x][y] = 0;
-            }
-        });
+			if (pieceId) {
+				grid[x][y] = 0;
+			}
+		});
 
-    grid[start.x][start.y] = 1;
+	grid[start.x][start.y] = 1;
 
-    return grid;
+	return grid;
 };
 
 type Path = { stepCount: number, firstStep: TileCoordinates };
 
 const findPath = (
-    board: BoardState,
-    start: TileCoordinates,
-    end: TileCoordinates
+	board: BoardState,
+	start: TileCoordinates,
+	end: TileCoordinates
 ): Path | null => {
-    const weights = createWeightGrid(start, board);
-    const graph = new Graph(weights);
+	const weights = createWeightGrid(start, board);
+	const graph = new Graph(weights);
 
-    const startGraphItem = graph.grid[start.x][start.y];
-    const endGraphItem = graph.grid[end.x][end.y];
+	const startGraphItem = graph.grid[start.x][start.y];
+	const endGraphItem = graph.grid[end.x][end.y];
 
-    const path = astar.search(graph, startGraphItem, endGraphItem);
-    const firstPathNode = path[0];
+	const path = astar.search(graph, startGraphItem, endGraphItem);
+	const firstPathNode = path[0];
 
-    if (!firstPathNode) {
-        return null;
-    }
+	if (!firstPathNode) {
+		return null;
+	}
 
-    const firstStep: TileCoordinates = firstPathNode;
+	const firstStep: TileCoordinates = firstPathNode;
 
-    return {
-        stepCount: path.length,
-        firstStep
-    };
+	return {
+		stepCount: path.length,
+		firstStep
+	};
 };
 
 const pathNotNull = (path: Path | null): path is Path => path !== null;
 
 export const getNextPiecePosition = (
-    attackerPosition: TileCoordinates,
-    attackerStats: CreatureStats,
-    targetPosition: TileCoordinates,
-    board: BoardState
+	attackerPosition: TileCoordinates,
+	attackerStats: CreatureStats,
+	targetPosition: TileCoordinates,
+	board: BoardState
 ): TileCoordinates | null => {
-    const { attackType: { range: attackRange } } = attackerStats;
+	const { attackType: { range: attackRange } } = attackerStats;
 
-    const targetTiles = getTargetAttackPositions(board, targetPosition, attackRange);
-    const paths = targetTiles.map(pos => findPath(board, attackerPosition, pos)).filter(pathNotNull);
+	const targetTiles = getTargetAttackPositions(board, targetPosition, attackRange);
+	const paths = targetTiles.map(pos => findPath(board, attackerPosition, pos)).filter(pathNotNull);
 
-    if (paths.length === 0) {
-        return null;
-    }
+	if (paths.length === 0) {
+		return null;
+	}
 
-    paths.sort((a, b) => a.stepCount - b.stepCount);
+	paths.sort((a, b) => a.stepCount - b.stepCount);
 
-    return paths[0].firstStep;
+	return paths[0].firstStep;
 };

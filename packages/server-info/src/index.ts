@@ -14,23 +14,23 @@ const port = process.env.PORT || 3000;
 
 const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY!);
 const AUTH0_CONFIG = {
-    domain: config.auth0.domain,
-    clientId: config.auth0.machineToMachineClientId,
-    clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
+	domain: config.auth0.domain,
+	clientId: config.auth0.machineToMachineClientId,
+	clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 const authClient = new ManagementClient<UserAppMetadata>({
-    domain: AUTH0_CONFIG.domain,
-    clientId: AUTH0_CONFIG.clientId,
-    clientSecret: AUTH0_CONFIG.clientSecret
+	domain: AUTH0_CONFIG.domain,
+	clientId: AUTH0_CONFIG.clientId,
+	clientSecret: AUTH0_CONFIG.clientSecret
 });
 const filter = new Filter();
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,PATCH,DELETE,OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, sentry-trace");
-    next();
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Credentials", "true");
+	res.header("Access-Control-Allow-Methods", "GET,PUT,POST,PATCH,DELETE,OPTIONS");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, sentry-trace");
+	next();
 });
 
 app.use(jsonParser());
@@ -41,5 +41,5 @@ app.get("/user/current", userGetCurrent(database, authClient));
 app.patch("/user/current", userPatchCurrent(database, authClient, filter));
 
 app.listen(port, () => {
-    console.log(`server-info listening on port ${port}`);
+	console.log(`server-info listening on port ${port}`);
 });

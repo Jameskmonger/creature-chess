@@ -9,10 +9,10 @@ import { LobbyEvents } from "../../../lobby";
 import { ConnectionStatus } from "../../../game/connection-status";
 
 export const gameNetworking = function*(socket: SocketIOClient.Socket, slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
-    yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([ GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT ]);
+	yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([GAME_CONNECTED_EVENT, LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
-    yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
+	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
-    yield fork(outgoingGameNetworking, socket);
-    yield fork(incomingGameNetworking, socket, slices);
+	yield fork(outgoingGameNetworking, socket);
+	yield fork(incomingGameNetworking, socket, slices);
 };

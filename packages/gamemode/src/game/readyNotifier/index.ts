@@ -8,43 +8,43 @@ import { listenForPropertyUpdates } from "../playerPropertyUpdates";
 import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
 
 export const readyNotifier = (livingPlayers: Player[]) => {
-    const queue = limitedQueue<string>(livingPlayers.length);
+	const queue = limitedQueue<string>(livingPlayers.length);
 
-    const disposePlayerFns = livingPlayers.map(player => {
-        const disposeReady = listenForPropertyUpdates(player,
-            {
-                ready: (ready) => {
-                    if (ready) {
-                        queue.add(player.id);
-                    }
-                }
-            }
-        );
+	const disposePlayerFns = livingPlayers.map(player => {
+		const disposeReady = listenForPropertyUpdates(player,
+			{
+				ready: (ready) => {
+					if (ready) {
+						queue.add(player.id);
+					}
+				}
+			}
+		);
 
-        const watchQuitTask = player.runSaga(function*() {
-            yield take<QuitGamePlayerAction>(quitGamePlayerAction.toString());
+		const watchQuitTask = player.runSaga(function*() {
+			yield take<QuitGamePlayerAction>(quitGamePlayerAction.toString());
 
-            const isAlive = yield* select(isPlayerAlive);
-            const isReady = yield* select((state: PlayerState) => state.playerInfo.ready);
+			const isAlive = yield* select(isPlayerAlive);
+			const isReady = yield* select((state: PlayerState) => state.playerInfo.ready);
 
-            if (isAlive && !isReady) {
-                queue.add(player.id);
-            }
-        });
+			if (isAlive && !isReady) {
+				queue.add(player.id);
+			}
+		});
 
-        return () => {
-            disposeReady();
-            watchQuitTask.cancel();
-        };
-    });
+		return () => {
+			disposeReady();
+			watchQuitTask.cancel();
+		};
+	});
 
-    const deferred = deferLimitedQueue(queue);
+	const deferred = deferLimitedQueue(queue);
 
-    return {
-        promise: deferred.promise,
-        dispose: () => {
-            disposePlayerFns.forEach(fn => fn());
-            deferred.dispose();
-        }
-    };
+	return {
+		promise: deferred.promise,
+		dispose: () => {
+			disposePlayerFns.forEach(fn => fn());
+			deferred.dispose();
+		}
+	};
 };

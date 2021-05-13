@@ -18,111 +18,111 @@ import { PieceComponent } from "./piece/pieceComponent";
 import { playerClickTileAction } from "./clickToDropSaga";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
-    if (board) {
-        const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
+	if (board) {
+		const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
 
-        if (boardPiecePosition) {
-            return {
-                type: "board",
-                location: boardPiecePosition
-            }
-        }
-    }
+		if (boardPiecePosition) {
+			return {
+				type: "board",
+				location: boardPiecePosition
+			}
+		}
+	}
 
-    if (bench) {
-        const benchPiecePosition = BoardSelectors.getPiecePosition(bench, pieceId);
+	if (bench) {
+		const benchPiecePosition = BoardSelectors.getPiecePosition(bench, pieceId);
 
-        if (benchPiecePosition !== undefined) {
-            return {
-                type: "bench",
-                location: benchPiecePosition
-            }
-        }
-    }
+		if (benchPiecePosition !== undefined) {
+			return {
+				type: "bench",
+				location: benchPiecePosition
+			}
+		}
+	}
 
-    return null;
+	return null;
 };
 
 const onDropPiece = (dispatch: Dispatch<any>, locationType: "board" | "bench", board: BoardState, bench: BoardState) =>
-    (item: DragObjectWithType, x: number, y: number) => {
-        const piece: PieceModel = (item as any).piece;
-        const from = getLocationForPiece(piece.id, board, bench);
+	(item: DragObjectWithType, x: number, y: number) => {
+		const piece: PieceModel = (item as any).piece;
+		const from = getLocationForPiece(piece.id, board, bench);
 
-        const location: PlayerPieceLocation = {
-            type: locationType,
-            location: { x, y }
-        };
+		const location: PlayerPieceLocation = {
+			type: locationType,
+			location: { x, y }
+		};
 
-        // todo `from` is here as a safety check, is it needed?
-        dispatch(PlayerGameActions.dropPiecePlayerAction({
-            pieceId: piece.id,
-            from,
-            to: location
-        }));
-        dispatch(clearSelectedPiece());
-    };
+		// todo `from` is here as a safety check, is it needed?
+		dispatch(PlayerGameActions.dropPiecePlayerAction({
+			pieceId: piece.id,
+			from,
+			to: location
+		}));
+		dispatch(clearSelectedPiece());
+	};
 
 const onTileClick = (dispatch: Dispatch<any>, locationType: "board" | "bench") =>
-    (x: number, y: number) => dispatch(playerClickTileAction({ tile: { type: locationType, location: { x, y } } }));
+	(x: number, y: number) => dispatch(playerClickTileAction({ tile: { type: locationType, location: { x, y } } }));
 
 const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({ showNowPlaying = false }) => {
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-    // todo decouple this, make a playerDropPiece saga
-    const board = useSelector<AppState, BoardState>(state => state.game.board);
-    const bench = useSelector<AppState, BoardState>(state => state.game.bench);
+	// todo decouple this, make a playerDropPiece saga
+	const board = useSelector<AppState, BoardState>(state => state.game.board);
+	const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 
-    const selectedPieceId = useSelector<AppState, string>(state => state.game.ui.selectedPieceId);
-    const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
+	const selectedPieceId = useSelector<AppState, string>(state => state.game.ui.selectedPieceId);
+	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
-    return (
-        <div className="group board-container style-default">
-            { showNowPlaying && <NowPlaying />}
+	return (
+		<div className="group board-container style-default">
+			{showNowPlaying && <NowPlaying />}
 
-            <div className="chessboard">
-                {inPreparingPhase && <OpponentBoardPlaceholder />}
+			<div className="chessboard">
+				{inPreparingPhase && <OpponentBoardPlaceholder />}
 
-                <div className="board-tiles">
-                    <BoardGrid
-                        state={board}
-                        onDrop={onDropPiece(dispatch, "board", board, bench)}
-                        onClick={onTileClick(dispatch, "board")}
-                        renderItem={id => (
-                            <PieceComponent
-                                id={id}
-                                draggable={inPreparingPhase}
-                                animate={!inPreparingPhase}
-                                selected={id === selectedPieceId}
-                                pieceIsOnBench={false}
-                            />
-                        )}
-                    />
-                </div>
+				<div className="board-tiles">
+					<BoardGrid
+						state={board}
+						onDrop={onDropPiece(dispatch, "board", board, bench)}
+						onClick={onTileClick(dispatch, "board")}
+						renderItem={id => (
+							<PieceComponent
+								id={id}
+								draggable={inPreparingPhase}
+								animate={!inPreparingPhase}
+								selected={id === selectedPieceId}
+								pieceIsOnBench={false}
+							/>
+						)}
+					/>
+				</div>
 
-                <ReadyOverlay/>
-                <VictoryOverlay />
-                <MatchRewardsOverlay />
-                <ReconnectOverlay />
-            </div>
+				<ReadyOverlay />
+				<VictoryOverlay />
+				<MatchRewardsOverlay />
+				<ReconnectOverlay />
+			</div>
 
-            <div className="bench">
-                <BoardGrid
-                    state={bench}
-                    onDrop={onDropPiece(dispatch, "bench", board, bench)}
-                    onClick={onTileClick(dispatch, "bench")}
-                    renderItem={id => (
-                        <PieceComponent
-                            id={id}
-                            draggable
-                            animate={false}
-                            selected={id === selectedPieceId}
-                            pieceIsOnBench
-                        />
-                    )}
-                />
-            </div>
-        </div>
-    );
+			<div className="bench">
+				<BoardGrid
+					state={bench}
+					onDrop={onDropPiece(dispatch, "bench", board, bench)}
+					onClick={onTileClick(dispatch, "bench")}
+					renderItem={id => (
+						<PieceComponent
+							id={id}
+							draggable
+							animate={false}
+							selected={id === selectedPieceId}
+							pieceIsOnBench
+						/>
+					)}
+				/>
+			</div>
+		</div>
+	);
 };
 
 export { BoardContainer };

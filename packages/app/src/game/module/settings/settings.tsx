@@ -3,13 +3,13 @@ import { Footer } from "../../../display/footer";
 import { QuitGameButton } from "./quitGameButton";
 
 const Settings: React.FunctionComponent = () => {
-    return (
-        <div className="settings">
-            <QuitGameButton />
+	return (
+		<div className="settings">
+			<QuitGameButton />
 
-            <Footer />
-        </div>
-    );
+			<Footer />
+		</div>
+	);
 };
 
 export { Settings };

@@ -10,166 +10,166 @@ import { Player } from "../player";
 import { playerFinishMatchEvent } from "./events";
 
 interface MatchState {
-    board: BoardState<PieceModel>;
-    turn: number;
+	board: BoardState<PieceModel>;
+	turn: number;
 }
 
 const turnReducer: Reducer<number, BattleEvents.BattleTurnEvent> = (state = 0, event) => (
-    event.type === BattleEvents.BATTLE_TURN_EVENT ? event.payload.turn : state
+	event.type === BattleEvents.BATTLE_TURN_EVENT ? event.payload.turn : state
 );
 
 export class Match {
-    private store: Store<MatchState>;
-    private finalBoard!: BoardState<PieceModel>;
-    private boardId = uuid();
-    private board: BoardSlice<PieceModel> = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
+	private store: Store<MatchState>;
+	private finalBoard!: BoardState<PieceModel>;
+	private boardId = uuid();
+	private board: BoardSlice<PieceModel> = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
 
-    private serverFinishedMatch = pDefer();
-    private clientFinishedMatch = pDefer();
+	private serverFinishedMatch = pDefer();
+	private clientFinishedMatch = pDefer();
 
-    constructor(
-        public readonly home: Player,
-        public readonly away: Player,
-        private awayIsClone: boolean,
-        gameOptions: GameOptions
-    ) {
-        this.store = this.createStore(gameOptions);
+	constructor(
+		public readonly home: Player,
+		public readonly away: Player,
+		private awayIsClone: boolean,
+		gameOptions: GameOptions
+	) {
+		this.store = this.createStore(gameOptions);
 
-        const mergedBoard = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
+		const mergedBoard = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
 
-        const board: BoardState<PieceModel> = {
-            ...mergedBoard,
-            pieces: Object.entries(mergedBoard.pieces).reduce<BoardPiecesState<PieceModel>>(
-                (acc, [id, piece]) => ({
-                    ...acc,
-                    [id]: {
-                        ...piece,
-                        facingAway: (piece.ownerId === home.id)
-                    }
-                }),
-                {}
-            )
-        };
+		const board: BoardState<PieceModel> = {
+			...mergedBoard,
+			pieces: Object.entries(mergedBoard.pieces).reduce<BoardPiecesState<PieceModel>>(
+				(acc, [id, piece]) => ({
+					...acc,
+					[id]: {
+						...piece,
+						facingAway: (piece.ownerId === home.id)
+					}
+				}),
+				{}
+			)
+		};
 
-        this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
-    }
+		this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
+	}
 
-    public onClientFinishMatch() {
-        this.clientFinishedMatch.resolve();
-    }
+	public onClientFinishMatch() {
+		this.clientFinishedMatch.resolve();
+	}
 
-    public getBoardForPlayer(playerId: string): BoardState<PieceModel> {
-        const { board } = this.store.getState();
+	public getBoardForPlayer(playerId: string): BoardState<PieceModel> {
+		const { board } = this.store.getState();
 
-        // rotate the board for the away player, so that their pieces are shown on their own side
+		// rotate the board for the away player, so that their pieces are shown on their own side
 
-        if (playerId === this.away.id) {
-            const rotatedBoard = rotatePiecesAboutCenter(board);
+		if (playerId === this.away.id) {
+			const rotatedBoard = rotatePiecesAboutCenter(board);
 
-            // todo improve this
+			// todo improve this
 
-            const newState: BoardState<PieceModel> = {
-                ...rotatedBoard,
-                pieces: Object.entries(rotatedBoard.pieces).reduce<BoardPiecesState<PieceModel>>(
-                    (acc, [id, piece]) => ({
-                        ...acc,
-                        [id]: {
-                            ...piece,
-                            facingAway: !piece.facingAway
-                        }
-                    }),
-                    {}
-                )
-            };
+			const newState: BoardState<PieceModel> = {
+				...rotatedBoard,
+				pieces: Object.entries(rotatedBoard.pieces).reduce<BoardPiecesState<PieceModel>>(
+					(acc, [id, piece]) => ({
+						...acc,
+						[id]: {
+							...piece,
+							facingAway: !piece.facingAway
+						}
+					}),
+					{}
+				)
+			};
 
-            return newState;
-        }
+			return newState;
+		}
 
-        return board;
-    }
+		return board;
+	}
 
-    public getTurn() {
-        return this.store.getState().turn;
-    }
+	public getTurn() {
+		return this.store.getState().turn;
+	}
 
-    public getFinalBoard() {
-        return this.finalBoard;
-    }
+	public getFinalBoard() {
+		return this.finalBoard;
+	}
 
-    public async fight(battleTimeout: Promise<void>) {
-        this.store.dispatch(startBattle());
+	public async fight(battleTimeout: Promise<void>) {
+		this.store.dispatch(startBattle());
 
-        await Promise.race([
-            battleTimeout,
-            Promise.all([this.serverFinishedMatch.promise, this.clientFinishedMatch.promise])
-        ]);
+		await Promise.race([
+			battleTimeout,
+			Promise.all([this.serverFinishedMatch.promise, this.clientFinishedMatch.promise])
+		]);
 
-        this.finalBoard = this.store.getState().board;
+		this.finalBoard = this.store.getState().board;
 
-        const survivingPieces = BoardSelectors.getAllPieces(this.finalBoard).filter(p => p.currentHealth > 0);
+		const survivingPieces = BoardSelectors.getAllPieces(this.finalBoard).filter(p => p.currentHealth > 0);
 
-        const surviving = {
-            home: survivingPieces.filter(p => p.ownerId === this.home.id),
-            away: survivingPieces.filter(p => p.ownerId === this.away.id)
-        };
+		const surviving = {
+			home: survivingPieces.filter(p => p.ownerId === this.home.id),
+			away: survivingPieces.filter(p => p.ownerId === this.away.id)
+		};
 
-        const homeScore = surviving.home.length;
-        const awayScore = surviving.away.length;
+		const homeScore = surviving.home.length;
+		const awayScore = surviving.away.length;
 
-        this.home.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
+		this.home.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
 
-        if (!this.awayIsClone) {
-            this.away.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
-        }
+		if (!this.awayIsClone) {
+			this.away.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
+		}
 
-        return this.finalBoard;
-    }
+		return this.finalBoard;
+	}
 
-    private createStore(gameOptions: GameOptions) {
-        // required to preserve inside the generator
-        // tslint:disable-next-line:variable-name
-        const _this = this;
-        const rootSaga = function*() {
-            yield all([
-                fork(
-                    battleSagaFactory<MatchState>(state => state.board),
-                    gameOptions, _this.board
-                ),
-                takeEvery<BattleEvents.BattleFinishEvent>(
-                    BattleEvents.BATTLE_FINISH_EVENT,
-                    function*() {
-                        _this.onServerFinishMatch();
-                    }
-                ),
-                takeLatest<BattleEvents.BattleTurnEvent>(
-                    BattleEvents.BATTLE_TURN_EVENT,
-                    function*({ payload: { board } }: BattleEvents.BattleTurnEvent) {
-                        yield put(_this.board.commands.setBoardPiecesCommand({
-                            pieces: board.pieces,
-                            piecePositions: board.piecePositions,
-                            size: undefined // todo improve this
-                        }));
-                    }
-                )
-            ]);
-        };
+	private createStore(gameOptions: GameOptions) {
+		// required to preserve inside the generator
+		// tslint:disable-next-line:variable-name
+		const _this = this;
+		const rootSaga = function*() {
+			yield all([
+				fork(
+					battleSagaFactory<MatchState>(state => state.board),
+					gameOptions, _this.board
+				),
+				takeEvery<BattleEvents.BattleFinishEvent>(
+					BattleEvents.BATTLE_FINISH_EVENT,
+					function*() {
+						_this.onServerFinishMatch();
+					}
+				),
+				takeLatest<BattleEvents.BattleTurnEvent>(
+					BattleEvents.BATTLE_TURN_EVENT,
+					function*({ payload: { board } }: BattleEvents.BattleTurnEvent) {
+						yield put(_this.board.commands.setBoardPiecesCommand({
+							pieces: board.pieces,
+							piecePositions: board.piecePositions,
+							size: undefined // todo improve this
+						}));
+					}
+				)
+			]);
+		};
 
-        const sagaMiddleware = createSagaMiddleware();
+		const sagaMiddleware = createSagaMiddleware();
 
-        const store = createStore(
-            combineReducers<MatchState>({
-                board: this.board.boardReducer,
-                turn: turnReducer
-            }),
-            applyMiddleware(sagaMiddleware)
-        );
+		const store = createStore(
+			combineReducers<MatchState>({
+				board: this.board.boardReducer,
+				turn: turnReducer
+			}),
+			applyMiddleware(sagaMiddleware)
+		);
 
-        sagaMiddleware.run(rootSaga);
+		sagaMiddleware.run(rootSaga);
 
-        return store;
-    }
+		return store;
+	}
 
-    private onServerFinishMatch() {
-        this.serverFinishedMatch.resolve();
-    }
+	private onServerFinishMatch() {
+		this.serverFinishedMatch.resolve();
+	}
 }

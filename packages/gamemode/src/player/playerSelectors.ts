@@ -14,20 +14,20 @@ export const getOpponentId = (state: PlayerState) => state.playerInfo.opponentId
 
 // todo use piece limit from board, remove this
 export const getPlayerBelowPieceLimit = (state: PlayerState, playerId: string): boolean => {
-    const ownedBoardPieceCount = BoardSelectors.getAllPieces(state.board).filter(p => p.ownerId === playerId).length;
-    const level = getPlayerLevel(state);
+	const ownedBoardPieceCount = BoardSelectors.getAllPieces(state.board).filter(p => p.ownerId === playerId).length;
+	const level = getPlayerLevel(state);
 
-    return ownedBoardPieceCount < level;
+	return ownedBoardPieceCount < level;
 };
 
 export const getMostExpensiveBenchPiece = (state: PlayerState) => {
-    const benchPieces = Object.values(state.bench.pieces);
+	const benchPieces = Object.values(state.bench.pieces);
 
-    if (!benchPieces.length) {
-        return null;
-    }
+	if (!benchPieces.length) {
+		return null;
+	}
 
-    benchPieces.sort((a, b) => b.definition.cost - a.definition.cost);
+	benchPieces.sort((a, b) => b.definition.cost - a.definition.cost);
 
-    return benchPieces[0];
+	return benchPieces[0];
 };

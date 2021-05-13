@@ -3,7 +3,7 @@ import { GameState } from "../game";
 import { MenuState } from "../menu";
 
 export interface AppState {
-    menu: MenuState;
-    lobby: LobbyState;
-    game: GameState;
+	menu: MenuState;
+	lobby: LobbyState;
+	game: GameState;
 }

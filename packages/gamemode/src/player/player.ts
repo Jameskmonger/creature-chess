@@ -11,151 +11,151 @@ import { isPlayerAlive } from "./playerSelectors";
 import { GameEvent, playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
 
 export interface PlayerMatchResults {
-    homePlayer: Player;
-    opponentName: string;
-    homeScore: number;
-    awayScore: number;
+	homePlayer: Player;
+	opponentName: string;
+	homeScore: number;
+	awayScore: number;
 }
 
 export enum PlayerType {
-    BOT,
-    USER
+	BOT,
+	USER
 }
 
 export class Player {
-    public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
+	public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
 
-    protected match: Match | null = null;
-    protected store: PlayerStore;
+	protected match: Match | null = null;
+	protected store: PlayerStore;
 
-    protected getRoundInfoState!: () => RoundInfoState;
-    protected getPlayerListPlayers!: () => PlayerListPlayer[];
-    protected readonly boardSlice: BoardSlice<PieceModel>;
-    protected readonly benchSlice: BoardSlice<PieceModel>;
+	protected getRoundInfoState!: () => RoundInfoState;
+	protected getPlayerListPlayers!: () => PlayerListPlayer[];
+	protected readonly boardSlice: BoardSlice<PieceModel>;
+	protected readonly benchSlice: BoardSlice<PieceModel>;
 
-    private logger!: Logger;
+	private logger!: Logger;
 
-    constructor(
-        public readonly type: PlayerType,
-        public readonly id: string,
-        public readonly name: string,
-        public readonly profile: PlayerProfile | null
-    ) {
-        this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
-        this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
+	constructor(
+		public readonly type: PlayerType,
+		public readonly id: string,
+		public readonly name: string,
+		public readonly profile: PlayerProfile | null
+	) {
+		this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
+		this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
 
-        const { store, sagaMiddleware } = createPlayerStore(
-            this.getLogger,
-            () => this.match,
-            this.id,
-            this.name,
-            {
-                boardSlice: this.boardSlice,
-                benchSlice: this.benchSlice
-            }
-        );
-        this.store = store;
+		const { store, sagaMiddleware } = createPlayerStore(
+			this.getLogger,
+			() => this.match,
+			this.id,
+			this.name,
+			{
+				boardSlice: this.boardSlice,
+				benchSlice: this.benchSlice
+			}
+		);
+		this.store = store;
 
-        this.runSaga = sagaMiddleware.run;
+		this.runSaga = sagaMiddleware.run;
 
-        sagaMiddleware.run(this.matchSaga());
-    }
+		sagaMiddleware.run(this.matchSaga());
+	}
 
-    public setLogger(logger: Logger) {
-        this.logger = logger;
-    }
+	public setLogger(logger: Logger) {
+		this.logger = logger;
+	}
 
-    public getLogger = () => this.logger;
+	public getLogger = () => this.logger;
 
-    public receiveGameEvent(gameEvent: GameEvent) {
-        this.store.dispatch(gameEvent);
-    }
+	public receiveGameEvent(gameEvent: GameEvent) {
+		this.store.dispatch(gameEvent);
+	}
 
-    public setGetRoundInfoState(fn: () => RoundInfoState) {
-        this.getRoundInfoState = fn;
-    }
+	public setGetRoundInfoState(fn: () => RoundInfoState) {
+		this.getRoundInfoState = fn;
+	}
 
-    public setGetPlayerListPlayers(fn: () => PlayerListPlayer[]) {
-        this.getPlayerListPlayers = fn;
-    }
+	public setGetPlayerListPlayers(fn: () => PlayerListPlayer[]) {
+		this.getPlayerListPlayers = fn;
+	}
 
-    public getMatch = () => this.match;
+	public getMatch = () => this.match;
 
-    public getHealth() {
-        return this.store.getState().playerInfo.health;
-    }
+	public getHealth() {
+		return this.store.getState().playerInfo.health;
+	}
 
-    public getReady() {
-        return this.store.getState().playerInfo.ready;
-    }
+	public getReady() {
+		return this.store.getState().playerInfo.ready;
+	}
 
-    public getStreak() {
-        return this.store.getState().playerInfo.streak;
-    }
+	public getStreak() {
+		return this.store.getState().playerInfo.streak;
+	}
 
-    public getLevel() {
-        return this.store.getState().playerInfo.level;
-    }
+	public getLevel() {
+		return this.store.getState().playerInfo.level;
+	}
 
-    public getXp() {
-        return this.store.getState().playerInfo.xp;
-    }
+	public getXp() {
+		return this.store.getState().playerInfo.xp;
+	}
 
-    public getMoney() {
-        return this.store.getState().playerInfo.money;
-    }
+	public getMoney() {
+		return this.store.getState().playerInfo.money;
+	}
 
-    public getShopLocked() {
-        return this.store.getState().cardShop.locked;
-    }
+	public getShopLocked() {
+		return this.store.getState().cardShop.locked;
+	}
 
-    public getStatus() {
-        return this.store.getState().playerInfo.status;
-    }
+	public getStatus() {
+		return this.store.getState().playerInfo.status;
+	}
 
-    public getBattle() {
-        return this.store.getState().playerInfo.battle;
-    }
+	public getBattle() {
+		return this.store.getState().playerInfo.battle;
+	}
 
-    public isAlive() {
-        return isPlayerAlive(this.store.getState());
-    }
+	public isAlive() {
+		return isPlayerAlive(this.store.getState());
+	}
 
-    public isDead() {
-        return !this.isAlive();
-    }
+	public isDead() {
+		return !this.isAlive();
+	}
 
-    public getBoard() {
-        return this.store.getState().board;
-    }
+	public getBoard() {
+		return this.store.getState().board;
+	}
 
-    public getBench() {
-        return this.store.getState().bench;
-    }
+	public getBench() {
+		return this.store.getState().bench;
+	}
 
-    public getCards() {
-        return this.store.getState().cardShop.cards;
-    }
+	public getCards() {
+		return this.store.getState().cardShop.cards;
+	}
 
-    private matchSaga() {
-        const setMatch = (match: Match) => this.match = match;
-        const clearMatch = () => this.match;
+	private matchSaga() {
+		const setMatch = (match: Match) => this.match = match;
+		const clearMatch = () => this.match;
 
-        return function*() {
-            yield all([
-                takeEvery<PlayerRunReadyPhaseEvent>(
-                    playerRunReadyPhaseEvent.toString(),
-                    function*({ payload: { match } }) {
-                        setMatch(match);
-                    }
-                ),
-                takeEvery<PlayerFinishMatchEvent>(
-                    playerFinishMatchEvent.toString(),
-                    function*() {
-                        clearMatch();
-                    }
-                )
-            ]);
-        };
-    }
+		return function*() {
+			yield all([
+				takeEvery<PlayerRunReadyPhaseEvent>(
+					playerRunReadyPhaseEvent.toString(),
+					function*({ payload: { match } }) {
+						setMatch(match);
+					}
+				),
+				takeEvery<PlayerFinishMatchEvent>(
+					playerFinishMatchEvent.toString(),
+					function*() {
+						clearMatch();
+					}
+				)
+			]);
+		};
+	}
 }

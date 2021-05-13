@@ -4,44 +4,44 @@ import { DatabaseConnection } from "@creature-chess/data";
 import { convertDatabaseUserToUserModel, UserAppMetadata, UserModel } from "./user";
 
 export const authenticate = async (
-    managementClient: ManagementClient<UserAppMetadata>,
-    database: DatabaseConnection,
-    token: string
+	managementClient: ManagementClient<UserAppMetadata>,
+	database: DatabaseConnection,
+	token: string
 ): Promise<UserModel> => {
-    const decoded = await verifyDecodeJwt(token);
+	const decoded = await verifyDecodeJwt(token);
 
-    if (decoded === null) {
-        throw Error("Unable to decode token");
-    }
+	if (decoded === null) {
+		throw Error("Unable to decode token");
+	}
 
-    const { sub: userId } = decoded;
+	const { sub: userId } = decoded;
 
-    try {
-        const authUser = await managementClient.getUser({ id: userId });
+	try {
+		const authUser = await managementClient.getUser({ id: userId });
 
-        // todo lots of ! in this function, improve it
+		// todo lots of ! in this function, improve it
 
-        if (!authUser.app_metadata || !authUser.app_metadata.playerId) {
-            // need to create an account
-            const newUser = await database.user.create(authUser.user_id!);
+		if (!authUser.app_metadata || !authUser.app_metadata.playerId) {
+			// need to create an account
+			const newUser = await database.user.create(authUser.user_id!);
 
-            await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: newUser.ref.id, playerNickname: null, playerPicture: null });
+			await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: newUser.ref.id, playerNickname: null, playerPicture: null });
 
-            return convertDatabaseUserToUserModel(newUser!);
-        }
+			return convertDatabaseUserToUserModel(newUser!);
+		}
 
-        const dbUser = await database.user.getById(authUser.app_metadata.playerId);
+		const dbUser = await database.user.getById(authUser.app_metadata.playerId);
 
-        const userModel = convertDatabaseUserToUserModel(dbUser!);
+		const userModel = convertDatabaseUserToUserModel(dbUser!);
 
-        if (userModel.nickname && !authUser.app_metadata.playerNickname) {
-            await managementClient.updateAppMetadata(
-                { id: authUser.user_id }, { playerId: dbUser.ref.id, playerNickname: userModel.nickname, playerPicture: userModel.profile.picture }
-            );
-        }
+		if (userModel.nickname && !authUser.app_metadata.playerNickname) {
+			await managementClient.updateAppMetadata(
+				{ id: authUser.user_id }, { playerId: dbUser.ref.id, playerNickname: userModel.nickname, playerPicture: userModel.profile.picture }
+			);
+		}
 
-        return userModel;
-    } catch (e) {
-        throw e;
-    }
+		return userModel;
+	} catch (e) {
+		throw e;
+	}
 };

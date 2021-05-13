@@ -3,24 +3,24 @@ import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networki
 import { PlayerProfile } from "@creature-chess/models";
 
 export enum LobbyMemberType {
-    BOT,
-    PLAYER
+	BOT,
+	PLAYER
 }
 
 export type PlayerLobbyMember = {
-    type: LobbyMemberType.PLAYER,
-    id: string,
-    name: string,
-    profile: PlayerProfile | null,
-    net: {
-        socket: Socket,
-        outgoing: OutgoingPacketRegistry<
-            ServerToClient.Lobby.PacketDefinitions,
-            ServerToClient.Lobby.PacketAcknowledgements
-        >
-    }
+	type: LobbyMemberType.PLAYER,
+	id: string,
+	name: string,
+	profile: PlayerProfile | null,
+	net: {
+		socket: Socket,
+		outgoing: OutgoingPacketRegistry<
+			ServerToClient.Lobby.PacketDefinitions,
+			ServerToClient.Lobby.PacketAcknowledgements
+		>
+	}
 };
 
 export type LobbyMember =
-    { type: LobbyMemberType.BOT, id: string, name: string, profile: PlayerProfile | null }
-    | PlayerLobbyMember;
+	{ type: LobbyMemberType.BOT, id: string, name: string, profile: PlayerProfile | null }
+	| PlayerLobbyMember;

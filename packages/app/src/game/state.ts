@@ -8,29 +8,29 @@ import { playerListReducer } from "./module";
 import { UiState, uiReducer } from "./ui";
 
 export type GameState = {
-    ui: UiState;
+	ui: UiState;
 
-    roundInfo: RoundInfoState;
-    board: BoardState<PieceModel>;
-    bench: BoardState<PieceModel>;
+	roundInfo: RoundInfoState;
+	board: BoardState<PieceModel>;
+	bench: BoardState<PieceModel>;
 
-    playerInfo: PlayerInfoState;
-    cardShop: {
-        cards: Card[],
-        locked: boolean
-    };
-    playerList: PlayerListPlayer[];
+	playerInfo: PlayerInfoState;
+	cardShop: {
+		cards: Card[],
+		locked: boolean
+	};
+	playerList: PlayerListPlayer[];
 };
 
 export const createGameReducer = (
-    { boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+	{ boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ): Reducer<GameState, Action> =>
-    combineReducers({
-        roundInfo: roundInfoReducer,
-        board: boardSlice.boardReducer,
-        bench: benchSlice.boardReducer,
-        playerList: playerListReducer,
-        playerInfo: playerInfoReducer,
-        cardShop: PlayerReducers.cardShopReducer,
-        ui: uiReducer
-    });
+	combineReducers({
+		roundInfo: roundInfoReducer,
+		board: boardSlice.boardReducer,
+		bench: benchSlice.boardReducer,
+		playerList: playerListReducer,
+		playerInfo: playerInfoReducer,
+		cardShop: PlayerReducers.cardShopReducer,
+		ui: uiReducer
+	});

@@ -1,6 +1,6 @@
 import { PlayerTitle } from "./titles";
 
 export interface PlayerProfile {
-    title: PlayerTitle | null;
-    picture: number;
+	title: PlayerTitle | null;
+	picture: number;
 }

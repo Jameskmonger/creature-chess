@@ -1,5 +1,5 @@
 export enum ConnectionStatus {
-    NOT_CONNECTED,
-    CONNECTED,
-    DISCONNECTED,
+	NOT_CONNECTED,
+	CONNECTED,
+	DISCONNECTED,
 }

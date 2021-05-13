@@ -9,31 +9,31 @@ import { createDiscordApi } from "./discord";
 import { config } from "@creature-chess/gamemode";
 
 const AUTH0_CONFIG = {
-    domain: config.auth0.domain,
-    clientId: config.auth0.machineToMachineClientId,
-    clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
+	domain: config.auth0.domain,
+	clientId: config.auth0.machineToMachineClientId,
+	clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
 };
 
 export const startServer = async (logger: Logger, port: number) => {
-    process.on("unhandledRejection", (error) => {
-        logger.error("unhandled rejection:");
-        logger.error(error as any);
-    });
+	process.on("unhandledRejection", (error) => {
+		logger.error("unhandled rejection:");
+		logger.error(error as any);
+	});
 
-    const socketServer = openServer(logger, port);
-    const client = new ManagementClient<UserAppMetadata>({
-        domain: AUTH0_CONFIG.domain,
-        clientId: AUTH0_CONFIG.clientId,
-        clientSecret: AUTH0_CONFIG.clientSecret
-    });
+	const socketServer = openServer(logger, port);
+	const client = new ManagementClient<UserAppMetadata>({
+		domain: AUTH0_CONFIG.domain,
+		clientId: AUTH0_CONFIG.clientId,
+		clientSecret: AUTH0_CONFIG.clientSecret
+	});
 
-    const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
-    const discordApi = await createDiscordApi(logger, process.env.DISCORD_BOT_TOKEN);
-    const matchmaking = new Matchmaking(logger, database, discordApi);
+	const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
+	const discordApi = await createDiscordApi(logger, process.env.DISCORD_BOT_TOKEN);
+	const matchmaking = new Matchmaking(logger, database, discordApi);
 
-    // networking
-    const socketAuthenticator = new SocketAuthenticator(logger, client, database, socketServer);
-    socketAuthenticator.onSocketAuthenticated((socket, user) => {
-        matchmaking.findGame(socket, user);
-    });
+	// networking
+	const socketAuthenticator = new SocketAuthenticator(logger, client, database, socketServer);
+	socketAuthenticator.onSocketAuthenticated((socket, user) => {
+		matchmaking.findGame(socket, user);
+	});
 };

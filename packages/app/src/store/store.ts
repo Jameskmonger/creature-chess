@@ -8,19 +8,19 @@ import { rootSaga } from "./saga";
 import { PieceModel } from "@creature-chess/models";
 
 export const createAppStore = (getAccessTokenSilently: () => Promise<string>, loginWithRedirect: () => Promise<void>) => {
-    const sagaMiddleware = createSagaMiddleware();
+	const sagaMiddleware = createSagaMiddleware();
 
-    const boardSlice = createBoardSlice<PieceModel>(`local-board`, { width: 7, height: 3 });
-    const benchSlice = createBoardSlice<PieceModel>(`local-bench`, { width: 7, height: 1 });
+	const boardSlice = createBoardSlice<PieceModel>(`local-board`, { width: 7, height: 3 });
+	const benchSlice = createBoardSlice<PieceModel>(`local-bench`, { width: 7, height: 1 });
 
-    const store = createStore(
-        combineReducers<AppState>(createReducers({ boardSlice, benchSlice })),
-        composeWithDevTools(
-            applyMiddleware(sagaMiddleware)
-        )
-    );
+	const store = createStore(
+		combineReducers<AppState>(createReducers({ boardSlice, benchSlice })),
+		composeWithDevTools(
+			applyMiddleware(sagaMiddleware)
+		)
+	);
 
-    sagaMiddleware.run(rootSaga, getAccessTokenSilently, loginWithRedirect, { benchSlice, boardSlice });
+	sagaMiddleware.run(rootSaga, getAccessTokenSilently, loginWithRedirect, { benchSlice, boardSlice });
 
-    return store;
+	return store;
 };

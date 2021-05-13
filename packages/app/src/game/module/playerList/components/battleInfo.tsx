@@ -6,54 +6,54 @@ import { getPlayerById } from "./selectors";
 import { PlayerName } from "./playerName";
 
 interface Props {
-    playerId: string;
+	playerId: string;
 }
 
 const getBattleText = (battle: PlayerBattle) => {
-  if (battle.status === PlayerBattleStatus.IN_PROGRESS) {
-    return "Battling";
-  }
+	if (battle.status === PlayerBattleStatus.IN_PROGRESS) {
+		return "Battling";
+	}
 
-  if (battle.status === PlayerBattleStatus.FINISHED) {
-    return `${battle.homeScore} - ${battle.awayScore}`;
-  }
+	if (battle.status === PlayerBattleStatus.FINISHED) {
+		return `${battle.homeScore} - ${battle.awayScore}`;
+	}
 
-  return "";
+	return "";
 };
 
 const getBattleHighlightClass = (battle: PlayerBattle) => {
-  if (battle.status === PlayerBattleStatus.FINISHED) {
-    const { homeScore, awayScore } = battle;
+	if (battle.status === PlayerBattleStatus.FINISHED) {
+		const { homeScore, awayScore } = battle;
 
-    if (homeScore > awayScore) {
-      return " win";
-    }
+		if (homeScore > awayScore) {
+			return " win";
+		}
 
-    return " loss";
-  }
+		return " loss";
+	}
 
-  return "";
+	return "";
 };
 
 const BattleInfo: React.FunctionComponent<Props> = ({ playerId }) => {
-    const player = useSelector<AppState, PlayerListPlayer>(getPlayerById(playerId));
+	const player = useSelector<AppState, PlayerListPlayer>(getPlayerById(playerId));
 
-    if (!player || !player.battle) {
-        return null;
-    }
+	if (!player || !player.battle) {
+		return null;
+	}
 
-    const { battle } = player;
+	const { battle } = player;
 
-    const highlightClass = getBattleHighlightClass(battle);
-    const text = getBattleText(battle);
+	const highlightClass = getBattleHighlightClass(battle);
+	const text = getBattleText(battle);
 
-    return (
-      <div className="battle-info">
-        <span className={`highlight${highlightClass}`}>{text}</span>
-        &nbsp;vs&nbsp;
-        <span className="highlight opponent-name"><PlayerName playerId={battle.opponentId} /></span>
-      </div>
-    );
+	return (
+		<div className="battle-info">
+			<span className={`highlight${highlightClass}`}>{text}</span>
+			&nbsp;vs&nbsp;
+			<span className="highlight opponent-name"><PlayerName playerId={battle.opponentId} /></span>
+		</div>
+	);
 };
 
 export { BattleInfo };

@@ -8,54 +8,54 @@ import { LobbyCommands, LobbyEvents } from "../../lobby";
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClient.Lobby.PacketDefinitions, ServerToClient.Lobby.PacketAcknowledgements>;
 
 const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegistry) {
-    let channel: EventChannel<Action>;
+	let channel: EventChannel<Action>;
 
-    try {
-        channel = eventChannel(emit => {
-            registry.on(
-                ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE,
-                ({ index, player }) => {
-                    emit(LobbyCommands.updateLobbyPlayerCommand({ index, player }));
-                }
-            );
+	try {
+		channel = eventChannel(emit => {
+			registry.on(
+				ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE,
+				({ index, player }) => {
+					emit(LobbyCommands.updateLobbyPlayerCommand({ index, player }));
+				}
+			);
 
-            registry.on(
-                ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED,
-                () => {
-                    emit(LobbyEvents.lobbyGameStartedEvent());
-                }
-            );
+			registry.on(
+				ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED,
+				() => {
+					emit(LobbyEvents.lobbyGameStartedEvent());
+				}
+			);
 
-            // tslint:disable-next-line:no-empty
-            return () => {
-                // todo registry.off or registry.close
-            };
-        });
+			// tslint:disable-next-line:no-empty
+			return () => {
+				// todo registry.off or registry.close
+			};
+		});
 
-        while (true) {
-            const action = yield take(channel);
+		while (true) {
+			const action = yield take(channel);
 
-            yield put(action);
-        }
-    } finally {
-        if (yield cancelled()) {
-            channel.close();
-        }
-    }
+			yield put(action);
+		}
+	} finally {
+		if (yield cancelled()) {
+			channel.close();
+		}
+	}
 };
 
 export const lobbyNetworking = function*(
-    socket: SocketIOClient.Socket
+	socket: SocketIOClient.Socket
 ) {
-    yield take<LobbyConnectedEvent>(LOBBY_CONNECTED_EVENT);
+	yield take<LobbyConnectedEvent>(LOBBY_CONNECTED_EVENT);
 
-    const registry = new IncomingPacketRegistry<ServerToClient.Lobby.PacketDefinitions, ServerToClient.Lobby.PacketAcknowledgements>(
-        (opcode, handler) => socket.on(opcode, handler)
-    );
+	const registry = new IncomingPacketRegistry<ServerToClient.Lobby.PacketDefinitions, ServerToClient.Lobby.PacketAcknowledgements>(
+		(opcode, handler) => socket.on(opcode, handler)
+	);
 
-    const readPacketsTask = yield fork(readPacketsToActions, registry);
+	const readPacketsTask = yield fork(readPacketsToActions, registry);
 
-    yield take(LobbyEvents.LOBBY_GAME_STARTED_EVENT);
+	yield take(LobbyEvents.LOBBY_GAME_STARTED_EVENT);
 
-    yield cancel(readPacketsTask);
+	yield cancel(readPacketsTask);
 };

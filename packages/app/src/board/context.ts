@@ -8,31 +8,31 @@ export const BoardContextProvider = BoardContext.Provider;
 export const useBoard = () => useContext(BoardContext);
 
 export const useBelowPieceLimit = () => {
-    const board = useContext(BoardContext);
+	const board = useContext(BoardContext);
 
-    if (!board) {
-        return;
-    }
+	if (!board) {
+		return;
+	}
 
-    return board.pieceLimit === null || BoardSelectors.isBelowPieceLimit(board);
+	return board.pieceLimit === null || BoardSelectors.isBelowPieceLimit(board);
 };
 
 export const usePieces = () => {
-    const board = useContext(BoardContext);
+	const board = useContext(BoardContext);
 
-    if (!board) {
-        return null;
-    }
+	if (!board) {
+		return null;
+	}
 
-    return board.pieces;
+	return board.pieces;
 };
 
 export const usePiecePositions = () => {
-    const board = useContext(BoardContext);
+	const board = useContext(BoardContext);
 
-    if (!board) {
-        return null;
-    }
+	if (!board) {
+		return null;
+	}
 
-    return board.piecePositions;
+	return board.piecePositions;
 };

@@ -2,29 +2,29 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Card } from "@creature-chess/models";
 
 export type CardShopState = {
-    cards: (Card | null)[],
-    locked: boolean
+	cards: (Card | null)[],
+	locked: boolean
 };
 
 const initialState: CardShopState = {
-    cards: [],
-    locked: false
+	cards: [],
+	locked: false
 };
 
 export const {
-    actions: { updateCardsCommand, updateShopLockCommand },
-    reducer: cardShopReducer,
+	actions: { updateCardsCommand, updateShopLockCommand },
+	reducer: cardShopReducer,
 } = createSlice({
-    name: "cards",
-    initialState,
-    reducers: {
-        updateCardsCommand: (state, { payload: cards }: PayloadAction<(Card | null)[]>) => ({
-            ...state,
-            cards
-        }),
-        updateShopLockCommand: (state, { payload: locked }: PayloadAction<boolean>) => ({
-            ...state,
-            locked
-        }),
-    }
+	name: "cards",
+	initialState,
+	reducers: {
+		updateCardsCommand: (state, { payload: cards }: PayloadAction<(Card | null)[]>) => ({
+			...state,
+			cards
+		}),
+		updateShopLockCommand: (state, { payload: locked }: PayloadAction<boolean>) => ({
+			...state,
+			locked
+		}),
+	}
 });

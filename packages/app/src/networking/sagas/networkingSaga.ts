@@ -5,9 +5,9 @@ import { lobbyNetworking } from "./lobby";
 import { gameNetworking } from "./game";
 
 export const networkingSaga = function*(
-    socket: SocketIOClient.Socket,
-    slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+	socket: SocketIOClient.Socket,
+	slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ) {
-    yield fork(lobbyNetworking, socket);
-    yield fork(gameNetworking, socket, slices);
+	yield fork(lobbyNetworking, socket);
+	yield fork(gameNetworking, socket, slices);
 };

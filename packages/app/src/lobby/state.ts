@@ -3,38 +3,38 @@ import { LobbyPlayer } from "@creature-chess/models";
 import { LobbyConnectedEventPayload } from "../networking/actions";
 
 export type LobbyState = {
-    lobbyId: string;
-    players: LobbyPlayer[];
-    startingAtMs: number;
+	lobbyId: string;
+	players: LobbyPlayer[];
+	startingAtMs: number;
 }
 
 const initialState: LobbyState = {
-    lobbyId: null,
-    players: [],
-    startingAtMs: null
+	lobbyId: null,
+	players: [],
+	startingAtMs: null
 };
 
 export const { reducer, actions: LobbyCommands } = createSlice({
-    name: "lobby",
-    initialState,
-    reducers: {
-        setLobbyDetailsCommand: (state, action: PayloadAction<LobbyConnectedEventPayload>) => ({
-            ...state,
-            lobbyId: action.payload.lobbyId,
-            players: action.payload.players,
-            startingAtMs: action.payload.startTimestamp
-        }),
-        updateLobbyPlayerCommand: (state: LobbyState, action: PayloadAction<{ index: number, player: LobbyPlayer }>) => {
-            const cloned = {
-                ...state,
-                players: [
-                    ...state.players
-                ]
-            };
+	name: "lobby",
+	initialState,
+	reducers: {
+		setLobbyDetailsCommand: (state, action: PayloadAction<LobbyConnectedEventPayload>) => ({
+			...state,
+			lobbyId: action.payload.lobbyId,
+			players: action.payload.players,
+			startingAtMs: action.payload.startTimestamp
+		}),
+		updateLobbyPlayerCommand: (state: LobbyState, action: PayloadAction<{ index: number, player: LobbyPlayer }>) => {
+			const cloned = {
+				...state,
+				players: [
+					...state.players
+				]
+			};
 
-            cloned.players[action.payload.index] = action.payload.player;
+			cloned.players[action.payload.index] = action.payload.player;
 
-            return cloned;
-        }
-    }
+			return cloned;
+		}
+	}
 })

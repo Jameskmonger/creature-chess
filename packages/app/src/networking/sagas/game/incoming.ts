@@ -13,122 +13,122 @@ import { gameRoundUpdateEvent } from "../../../game/sagas/events";
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
 const readPacketsToActions = function*(
-    registry: ServerToClientPacketRegistry,
-    socket: SocketIOClient.Socket,
-    { benchSlice, boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }
+	registry: ServerToClientPacketRegistry,
+	socket: SocketIOClient.Socket,
+	{ benchSlice, boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }
 ) {
-    const channel = eventChannel<any>(emit => {
-        socket.on("reconnect_failed", () => {
-            emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
-        });
-        socket.on("reconnect_error", () => {
-            emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
-        });
+	const channel = eventChannel<any>(emit => {
+		socket.on("reconnect_failed", () => {
+			emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
+		});
+		socket.on("reconnect_error", () => {
+			emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
+		});
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE,
-            (packet) => {
-                emit(PlayerListCommands.updatePlayerListCommand(packet));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE,
+			(packet) => {
+				emit(PlayerListCommands.updatePlayerListCommand(packet));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.BOARD_UPDATE,
-            (newValue) => {
-                emit(boardSlice.commands.setBoardPiecesCommand(newValue));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.BOARD_UPDATE,
+			(newValue) => {
+				emit(boardSlice.commands.setBoardPiecesCommand(newValue));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.BENCH_UPDATE,
-            (newValue) => {
-                emit(benchSlice.commands.setBoardPiecesCommand(newValue));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.BENCH_UPDATE,
+			(newValue) => {
+				emit(benchSlice.commands.setBoardPiecesCommand(newValue));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.CARDS_UPDATE,
-            (newValue) => {
-                emit(PlayerCommands.updateCardsCommand(newValue));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.CARDS_UPDATE,
+			(newValue) => {
+				emit(PlayerCommands.updateCardsCommand(newValue));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE,
-            (newValue) => {
-                emit(PlayerCommands.updateShopLockCommand(newValue));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE,
+			(newValue) => {
+				emit(PlayerCommands.updateShopLockCommand(newValue));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.MONEY_UPDATE,
-            (newValue) => {
-                emit(PlayerInfoCommands.updateMoneyCommand(newValue));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.MONEY_UPDATE,
+			(newValue) => {
+				emit(PlayerInfoCommands.updateMoneyCommand(newValue));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE,
-            (newValue) => {
-                emit(PlayerInfoCommands.updateHealthCommand(newValue));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE,
+			(newValue) => {
+				emit(PlayerInfoCommands.updateHealthCommand(newValue));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE,
-            (packet) => {
-                emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
-                emit(boardSlice.commands.setPieceLimitCommand(packet.level));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE,
+			(packet) => {
+				emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
+				emit(boardSlice.commands.setPieceLimitCommand(packet.level));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.MATCH_REWARDS,
-            (payload) => {
-                emit(PlayerEvents.playerMatchRewardsEvent(payload));
-            }
-        );
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.MATCH_REWARDS,
+			(payload) => {
+				emit(PlayerEvents.playerMatchRewardsEvent(payload));
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.FINISH_GAME,
-            ({ winnerId }) => {
-                emit(setWinnerIdCommand({ winnerId }));
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.FINISH_GAME,
+			({ winnerId }) => {
+				emit(setWinnerIdCommand({ winnerId }));
 
-                socket.close();
-            }
-        );
+				socket.close();
+			}
+		);
 
-        registry.on(
-            ServerToClient.Game.PacketOpcodes.PHASE_UPDATE,
-            (packet) => {
-                const update = {
-                    phase: packet.phase,
-                    startedAt: packet.startedAtSeconds,
-                    ...(packet.phase === GamePhase.PREPARING ? { round: packet.payload.round } : undefined)
-                };
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.PHASE_UPDATE,
+			(packet) => {
+				const update = {
+					phase: packet.phase,
+					startedAt: packet.startedAtSeconds,
+					...(packet.phase === GamePhase.PREPARING ? { round: packet.payload.round } : undefined)
+				};
 
-                emit(RoundInfoCommands.setRoundInfoCommand(update));
-                emit(gameRoundUpdateEvent(packet));
-            }
-        );
+				emit(RoundInfoCommands.setRoundInfoCommand(update));
+				emit(gameRoundUpdateEvent(packet));
+			}
+		);
 
-        // todo registry off here
-        // tslint:disable-next-line:no-empty
-        return () => { };
-    });
+		// todo registry off here
+		// tslint:disable-next-line:no-empty
+		return () => { };
+	});
 
-    yield takeEvery(channel, function*(action) {
-        yield put(action);
-    });
+	yield takeEvery(channel, function*(action) {
+		yield put(action);
+	});
 };
 
 export const incomingGameNetworking = function*(
-    socket: SocketIOClient.Socket,
-    slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }
+	socket: SocketIOClient.Socket,
+	slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }
 ) {
-    const registry = new IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
-        (opcode, handler) => socket.on(opcode, handler)
-    );
+	const registry = new IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
+		(opcode, handler) => socket.on(opcode, handler)
+	);
 
-    yield fork(readPacketsToActions, registry, socket, slices);
+	yield fork(readPacketsToActions, registry, socket, slices);
 };

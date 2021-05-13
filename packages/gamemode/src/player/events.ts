@@ -18,25 +18,25 @@ export const playerDeathEvent = createAction("playerDeathEvent");
 export const PLAYER_MATCH_REWARDS_EVENT = "PLAYER_MATCH_REWARDS_EVENT";
 export type PLAYER_MATCH_REWARDS_EVENT = typeof PLAYER_MATCH_REWARDS_EVENT;
 export type PlayerMatchRewardsEvent = ({
-    type: PLAYER_MATCH_REWARDS_EVENT,
-    payload: {
-        damage: number;
-        justDied: boolean;
-        rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
-    } | null
+	type: PLAYER_MATCH_REWARDS_EVENT,
+	payload: {
+		damage: number;
+		justDied: boolean;
+		rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
+	} | null
 });
 export const playerMatchRewardsEvent = (payload: {
-    damage: number;
-    justDied: boolean;
-    rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
+	damage: number;
+	justDied: boolean;
+	rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
 } | null): PlayerMatchRewardsEvent => ({
-    type: PLAYER_MATCH_REWARDS_EVENT,
-    payload
+	type: PLAYER_MATCH_REWARDS_EVENT,
+	payload
 });
 
 export type PlayerEvent =
-    AfterSellPieceEvent
-    | AfterRerollCardsEvent
-    | ClientFinishMatchEvent
-    | PlayerDeathEvent
-    | PlayerMatchRewardsEvent;
+	AfterSellPieceEvent
+	| AfterRerollCardsEvent
+	| ClientFinishMatchEvent
+	| PlayerDeathEvent
+	| PlayerMatchRewardsEvent;

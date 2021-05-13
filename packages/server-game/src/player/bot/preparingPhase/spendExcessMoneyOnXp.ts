@@ -4,14 +4,14 @@ import { BOT_ACTION_TIME_MS } from "../constants";
 import { shouldBuyXp } from "../shop/shouldBuyXp";
 
 export const spendExcessMoneyOnXp = function*() {
-    while (true) {
-        const { playerInfo: { money, level, xp } }: PlayerState = yield select();
+	while (true) {
+		const { playerInfo: { money, level, xp } }: PlayerState = yield select();
 
-        if (shouldBuyXp(money, level, xp) === false) {
-            return;
-        }
+		if (shouldBuyXp(money, level, xp) === false) {
+			return;
+		}
 
-        yield put(PlayerGameActions.buyXpPlayerAction());
-        yield delay(BOT_ACTION_TIME_MS);
-    }
+		yield put(PlayerGameActions.buyXpPlayerAction());
+		yield delay(BOT_ACTION_TIME_MS);
+	}
 };

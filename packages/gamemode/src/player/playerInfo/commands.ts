@@ -26,15 +26,15 @@ export type UpdateMoneyCommand = ({ type: UPDATE_MONEY_COMMAND, payload: { money
 export type UpdateLevelCommand = ({ type: UPDATE_LEVEL_COMMAND; payload: { level: number, xp: number } });
 
 export type PlayerInfoCommand =
-    UpdateStatusCommand
-    | UpdateHealthCommand
-    | UpdateBattleCommand
-    | UpdateStreakCommand
-    | UpdateMoneyCommand
-    | ReadyUpPlayerAction
-    | UpdateOpponentCommand
-    | ClearOpponentCommand
-    | UpdateLevelCommand;
+	UpdateStatusCommand
+	| UpdateHealthCommand
+	| UpdateBattleCommand
+	| UpdateStreakCommand
+	| UpdateMoneyCommand
+	| ReadyUpPlayerAction
+	| UpdateOpponentCommand
+	| ClearOpponentCommand
+	| UpdateLevelCommand;
 
 export type UpdateStatusCommand = ReturnType<typeof updateStatusCommand>;
 export const updateStatusCommand = createAction<{ status: PlayerStatus }, "updateStatusCommand">("updateStatusCommand");
@@ -42,9 +42,9 @@ export const updateStatusCommand = createAction<{ status: PlayerStatus }, "updat
 export const updateBattleCommand = (battle: PlayerBattle): UpdateBattleCommand => ({ type: UPDATE_BATTLE_COMMAND, payload: { battle } });
 export const updateHealthCommand = (health: number): UpdateHealthCommand => ({ type: UPDATE_HEALTH_COMMAND, payload: { health } });
 export const updateStreakCommand = (type: StreakType, amount: number): UpdateStreakCommand =>
-    ({ type: UPDATE_STREAK_COMMAND, payload: { type, amount } });
+	({ type: UPDATE_STREAK_COMMAND, payload: { type, amount } });
 export const updateOpponentCommand = (opponentId: string): UpdateOpponentCommand => ({ type: UPDATE_OPPONENT_COMMAND, payload: { opponentId } });
 export const clearOpponentCommand = (): ClearOpponentCommand => ({ type: CLEAR_OPPONENT_COMMAND });
 export const updateMoneyCommand = (money: number): UpdateMoneyCommand => ({ type: UPDATE_MONEY_COMMAND, payload: { money } });
 export const updateLevelCommand = (level: number, xp: number): UpdateLevelCommand =>
-    ({ type: UPDATE_LEVEL_COMMAND, payload: { level, xp } });
+	({ type: UPDATE_LEVEL_COMMAND, payload: { level, xp } });

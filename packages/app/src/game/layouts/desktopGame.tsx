@@ -2,39 +2,39 @@ import * as React from "react";
 
 import { Footer } from "../../display";
 import {
-    BoardContainer, PlayerList, CardShop, Help,
-    Profile, RoundIndicator, PhaseInfo,
-    NowPlaying, QuitGameButton
+	BoardContainer, PlayerList, CardShop, Help,
+	Profile, RoundIndicator, PhaseInfo,
+	NowPlaying, QuitGameButton
 } from "../module";
 
 const DesktopGame: React.FunctionComponent = () => {
-    return (
-        <div className="game landscape">
-            <div className="group">
-                <RoundIndicator />
+	return (
+		<div className="game landscape">
+			<div className="group">
+				<RoundIndicator />
 
-                <PhaseInfo />
+				<PhaseInfo />
 
-                <NowPlaying />
+				<NowPlaying />
 
-                <PlayerList />
-            </div>
+				<PlayerList />
+			</div>
 
-            <BoardContainer />
+			<BoardContainer />
 
-            <div className="group right">
-                <QuitGameButton />
+			<div className="group right">
+				<QuitGameButton />
 
-                <CardShop showBalance />
+				<CardShop showBalance />
 
-                <Profile />
+				<Profile />
 
-                <div className="help-container"><Help hideFooter /></div>
+				<div className="help-container"><Help hideFooter /></div>
 
-                <Footer />
-            </div>
-        </div>
-    );
+				<Footer />
+			</div>
+		</div>
+	);
 };
 
 export { DesktopGame };

@@ -12,62 +12,62 @@ type FillBoardCommand = ({ type: FILL_BOARD_COMMAND });
 export const fillBoardCommand = (): FillBoardCommand => ({ type: FILL_BOARD_COMMAND });
 
 export const fillBoardSagaFactory = <TState extends PlayerState>(playerId: string) => {
-    return function*() {
-        yield takeEvery<FillBoardCommand>(
-            FILL_BOARD_COMMAND,
-            function*() {
-                const isAlive: boolean = yield select(isPlayerAlive);
+	return function*() {
+		yield takeEvery<FillBoardCommand>(
+			FILL_BOARD_COMMAND,
+			function*() {
+				const isAlive: boolean = yield select(isPlayerAlive);
 
-                if (!isAlive) {
-                    return;
-                }
+				if (!isAlive) {
+					return;
+				}
 
-                while (true) {
-                    const state: TState = yield select();
-                    const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+				while (true) {
+					const state: TState = yield select();
+					const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
 
-                    if (!belowPieceLimit) {
-                        return;
-                    }
+					if (!belowPieceLimit) {
+						return;
+					}
 
-                    const benchPiece = getMostExpensiveBenchPiece(state);
+					const benchPiece = getMostExpensiveBenchPiece(state);
 
-                    if (!benchPiece) {
-                        return;
-                    }
+					if (!benchPiece) {
+						return;
+					}
 
-                    const destination = BoardSelectors.getFirstEmptySlot(state.board);
+					const destination = BoardSelectors.getFirstEmptySlot(state.board);
 
-                    if (!destination) {
-                        return;
-                    }
+					if (!destination) {
+						return;
+					}
 
-                    const benchPiecePosition = BoardSelectors.getPiecePosition(state.bench, benchPiece.id);
+					const benchPiecePosition = BoardSelectors.getPiecePosition(state.bench, benchPiece.id);
 
-                    if (!benchPiecePosition) {
-                        return;
-                    }
+					if (!benchPiecePosition) {
+						return;
+					}
 
-                    const fromLocation: PlayerPieceLocation = {
-                        type: "bench",
-                        location: benchPiecePosition
-                    };
+					const fromLocation: PlayerPieceLocation = {
+						type: "bench",
+						location: benchPiecePosition
+					};
 
-                    const toLocation: PlayerPieceLocation = {
-                        type: "board",
-                        location: {
-                            x: destination.x,
-                            y: destination.y
-                        }
-                    };
+					const toLocation: PlayerPieceLocation = {
+						type: "board",
+						location: {
+							x: destination.x,
+							y: destination.y
+						}
+					};
 
-                    yield put(dropPiecePlayerAction({
-                        pieceId: benchPiece.id,
-                        from: fromLocation,
-                        to: toLocation
-                    }));
-                }
-            }
-        );
-    };
+					yield put(dropPiecePlayerAction({
+						pieceId: benchPiece.id,
+						from: fromLocation,
+						to: toLocation
+					}));
+				}
+			}
+		);
+	};
 };

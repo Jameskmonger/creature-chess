@@ -17,108 +17,108 @@ type StartBattleCommand = { type: START_BATTLE, payload: { turn?: number } };
 export const startBattle = (turn?: number): StartBattleCommand => ({ type: START_BATTLE, payload: { turn } });
 
 const duration = (ms: number) => {
-    const startTime = present();
+	const startTime = present();
 
-    return {
-        remaining: () => {
-            return new Promise<void>(resolve => {
-                const endTime = present();
-                const timePassed = endTime - startTime;
+	return {
+		remaining: () => {
+			return new Promise<void>(resolve => {
+				const endTime = present();
+				const timePassed = endTime - startTime;
 
-                const remaining = Math.max(ms - timePassed, 0);
+				const remaining = Math.max(ms - timePassed, 0);
 
-                if (remaining === 0) {
-                    resolve();
-                    return;
-                }
+				if (remaining === 0) {
+					resolve();
+					return;
+				}
 
-                setTimeout(() => resolve(), remaining);
-            });
-        }
-    };
+				setTimeout(() => resolve(), remaining);
+			});
+		}
+	};
 };
 
 const addCombatState = (pieces: IndexedPieces) => {
-    return Object.entries(pieces)
-        .reduce<IndexedPieces>((acc, [pieceId, piece]) => {
-            acc[pieceId] = {
-                ...piece,
-                combat: createPieceCombatState()
-            };
+	return Object.entries(pieces)
+		.reduce<IndexedPieces>((acc, [pieceId, piece]) => {
+			acc[pieceId] = {
+				...piece,
+				combat: createPieceCombatState()
+			};
 
-            return acc;
-        }, {});
+			return acc;
+		}, {});
 };
 
 const battleEventChannel = (
-    startingBoardState: BoardState<PieceModel>,
-    boardSlice: BoardSlice<PieceModel>,
-    startingTurn: number,
-    options: GameOptions,
-    bufferSize: number
+	startingBoardState: BoardState<PieceModel>,
+	boardSlice: BoardSlice<PieceModel>,
+	startingTurn: number,
+	options: GameOptions,
+	bufferSize: number
 ) => {
-    return eventChannel<BattleEvent>(emit => {
-        let cancelled = false;
+	return eventChannel<BattleEvent>(emit => {
+		let cancelled = false;
 
-        let board: BoardState<PieceModel> = {
-            id: startingBoardState.id,
-            pieces: addCombatState(startingBoardState.pieces),
-            piecePositions: {
-                ...startingBoardState.piecePositions
-            },
-            locked: startingBoardState.locked,
-            size: startingBoardState.size,
-            pieceLimit: null
-        };
+		let board: BoardState<PieceModel> = {
+			id: startingBoardState.id,
+			pieces: addCombatState(startingBoardState.pieces),
+			piecePositions: {
+				...startingBoardState.piecePositions
+			},
+			locked: startingBoardState.locked,
+			size: startingBoardState.size,
+			pieceLimit: null
+		};
 
-        const run = async () => {
-            let turnCount = startingTurn;
+		const run = async () => {
+			let turnCount = startingTurn;
 
-            while (true) {
-                const shouldStop = (
-                    cancelled
-                    || turnCount >= options.turnCount
-                    || isATeamDefeated(board)
-                );
+			while (true) {
+				const shouldStop = (
+					cancelled
+					|| turnCount >= options.turnCount
+					|| isATeamDefeated(board)
+				);
 
-                if (shouldStop) {
-                    await duration(1000).remaining();
+				if (shouldStop) {
+					await duration(1000).remaining();
 
-                    emit(battleFinishEvent(turnCount));
-                    break;
-                }
+					emit(battleFinishEvent(turnCount));
+					break;
+				}
 
-                const turnTimer = duration(options.turnDuration);
+				const turnTimer = duration(options.turnDuration);
 
-                board = simulateTurn(++turnCount, board, boardSlice);
-                emit(battleTurnEvent(turnCount, board));
+				board = simulateTurn(++turnCount, board, boardSlice);
+				emit(battleTurnEvent(turnCount, board));
 
-                await turnTimer.remaining();
-            }
-        };
+				await turnTimer.remaining();
+			}
+		};
 
-        run();
+		run();
 
-        return () => {
-            cancelled = true;
-        };
-    }, buffers.expanding(bufferSize));
+		return () => {
+			cancelled = true;
+		};
+	}, buffers.expanding(bufferSize));
 };
 
 export const battleSagaFactory = <TState>(
-    boardSelector: (state: TState) => BoardState<PieceModel>
+	boardSelector: (state: TState) => BoardState<PieceModel>
 ) => function*(gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
-    yield takeEvery<StartBattleCommand>(
-        START_BATTLE,
-        function*({ payload: { turn } }) {
-            const board: BoardState<PieceModel> = yield select(boardSelector);
+	yield takeEvery<StartBattleCommand>(
+		START_BATTLE,
+		function*({ payload: { turn } }) {
+			const board: BoardState<PieceModel> = yield select(boardSelector);
 
-            // todo no need for the channel here. this can just run synchronously in a loop
-            const battleChannel: EventChannel<BattleEvent> = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);
+			// todo no need for the channel here. this can just run synchronously in a loop
+			const battleChannel: EventChannel<BattleEvent> = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);
 
-            yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
-                yield put(battleAction);
-            });
-        }
-    );
+			yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
+				yield put(battleAction);
+			});
+		}
+	);
 };

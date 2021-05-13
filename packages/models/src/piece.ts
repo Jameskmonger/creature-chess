@@ -3,43 +3,43 @@ import { AttackType, CreatureDefinition } from "./creatureDefinition";
 import { PieceCombatState } from "./pieceCombat";
 
 export interface AttackDetails {
-    direction: TileCoordinates;
-    damage: number;
-    attackType: AttackType;
-    distance: number;
+	direction: TileCoordinates;
+	damage: number;
+	attackType: AttackType;
+	distance: number;
 }
 
 export interface HitDetails {
-    direction: TileCoordinates;
-    damage: number;
+	direction: TileCoordinates;
+	damage: number;
 }
 
 export interface MovementDetails {
-    direction: TileCoordinates;
+	direction: TileCoordinates;
 }
 
 export interface PieceModel {
-    id: string;
-    ownerId: string;
+	id: string;
+	ownerId: string;
 
-    definitionId: number;
-    definition: CreatureDefinition;
+	definitionId: number;
+	definition: CreatureDefinition;
 
-    stage: number;
+	stage: number;
 
-    facingAway: boolean;
-    attacking?: AttackDetails | null;
-    hit?: HitDetails | null;
-    maxHealth: number;
-    currentHealth: number;
+	facingAway: boolean;
+	attacking?: AttackDetails | null;
+	hit?: HitDetails | null;
+	maxHealth: number;
+	currentHealth: number;
 
-    combat?: PieceCombatState;
+	combat?: PieceCombatState;
 }
 
 export interface CombatPieceModel extends PieceModel {
-    combat: PieceCombatState;
+	combat: PieceCombatState;
 }
 
 export type IndexedPieces = {
-    [pieceId: string]: PieceModel;
+	[pieceId: string]: PieceModel;
 };

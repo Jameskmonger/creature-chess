@@ -5,47 +5,47 @@ import { getPiece, PlayerGameActions } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
 
 const selectedPieceSelector = (state: AppState): PieceModel =>
-    state.game.ui.selectedPieceId
-        ? getPiece(state.game, state.game.ui.selectedPieceId)
-        : null;
+	state.game.ui.selectedPieceId
+		? getPiece(state.game, state.game.ui.selectedPieceId)
+		: null;
 
 const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId }) => {
-    const dispatch = useDispatch();
-    const [areYouSure, setAreYouSure] = React.useState<boolean>(false);
+	const dispatch = useDispatch();
+	const [areYouSure, setAreYouSure] = React.useState<boolean>(false);
 
-    const onClick = (
-        areYouSure
-        ? () => {
-            dispatch(PlayerGameActions.sellPiecePlayerAction({ pieceId }));
-        }
-        : () => {
-            setAreYouSure(true);
-        }
-    );
+	const onClick = (
+		areYouSure
+			? () => {
+				dispatch(PlayerGameActions.sellPiecePlayerAction({ pieceId }));
+			}
+			: () => {
+				setAreYouSure(true);
+			}
+	);
 
-    React.useEffect(() => {
-        setAreYouSure(false);
-    }, [ pieceId ]);
+	React.useEffect(() => {
+		setAreYouSure(false);
+	}, [pieceId]);
 
-    if (!areYouSure) {
-        return <button className="ready-up" onClick={onClick}>Sell Piece</button>;
-    }
+	if (!areYouSure) {
+		return <button className="ready-up" onClick={onClick}>Sell Piece</button>;
+	}
 
-    return <button className="ready-up" onClick={onClick}>Confirm?</button>;
+	return <button className="ready-up" onClick={onClick}>Confirm?</button>;
 };
 
 const SelectedCreature: React.FunctionComponent = () => {
-    const selectedPiece = useSelector<AppState, PieceModel>(selectedPieceSelector);
+	const selectedPiece = useSelector<AppState, PieceModel>(selectedPieceSelector);
 
-    if (!selectedPiece) {
-        return null;
-    }
+	if (!selectedPiece) {
+		return null;
+	}
 
-    return (
-        <>
-            <SellPieceButton pieceId={selectedPiece.id} />
-        </>
-    );
+	return (
+		<>
+			<SellPieceButton pieceId={selectedPiece.id} />
+		</>
+	);
 };
 
 export { SelectedCreature };

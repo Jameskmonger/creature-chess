@@ -8,67 +8,67 @@ const getPieceCount = (state: PlayerState): number => getAllPieces(state).length
 const atPieceLimit = (state: PlayerState) => getPieceCount(state) >= state.playerInfo.level;
 
 export const buyBestPieces = function*() {
-    const cards = getCardViews(yield select());
+	const cards = getCardViews(yield select());
 
-    for (const card of cards) {
-        const pieces = getPieceViews(yield select());
-        const worstPiece = pieces.pop();
+	for (const card of cards) {
+		const pieces = getPieceViews(yield select());
+		const worstPiece = pieces.pop();
 
-        const pieceIsBetter = () => compareCardPieceViews(card, worstPiece) === 1;
+		const pieceIsBetter = () => compareCardPieceViews(card, worstPiece) === 1;
 
-        if (
-            !worstPiece
-            || worstPiece.definitionId === card.definitionId
-            || pieceIsBetter()
-        ) {
-            yield call(buyCardIfBelowLimit, card.index);
-            continue;
-        }
+		if (
+			!worstPiece
+			|| worstPiece.definitionId === card.definitionId
+			|| pieceIsBetter()
+		) {
+			yield call(buyCardIfBelowLimit, card.index);
+			continue;
+		}
 
-        const { playerInfo: { money: currentMoney } }: PlayerState = yield select();
-        const moneyAfterSelling = currentMoney + worstPiece.cost;
+		const { playerInfo: { money: currentMoney } }: PlayerState = yield select();
+		const moneyAfterSelling = currentMoney + worstPiece.cost;
 
-        // if we still can't afford, move to the next card
-        if (moneyAfterSelling < card.cost) {
-            continue;
-        }
+		// if we still can't afford, move to the next card
+		if (moneyAfterSelling < card.cost) {
+			continue;
+		}
 
-        const canCurrentlyAfford = currentMoney >= worstPiece.cost;
+		const canCurrentlyAfford = currentMoney >= worstPiece.cost;
 
-        // sell a piece to make room
-        if (atPieceLimit(yield select()) || !canCurrentlyAfford) {
-            yield put(PlayerGameActions.sellPiecePlayerAction({ pieceId: worstPiece.id }));
-            yield delay(BOT_ACTION_TIME_MS);
-        }
+		// sell a piece to make room
+		if (atPieceLimit(yield select()) || !canCurrentlyAfford) {
+			yield put(PlayerGameActions.sellPiecePlayerAction({ pieceId: worstPiece.id }));
+			yield delay(BOT_ACTION_TIME_MS);
+		}
 
-        yield call(buyCardIfBelowLimit, card.index);
-    }
+		yield call(buyCardIfBelowLimit, card.index);
+	}
 };
 
 const buyCardIfBelowLimit = function*(index: number) {
-    const state: PlayerState = yield select();
+	const state: PlayerState = yield select();
 
-    if (atPieceLimit(state)) {
-        return;
-    }
+	if (atPieceLimit(state)) {
+		return;
+	}
 
-    const card = state.cardShop.cards[index];
+	const card = state.cardShop.cards[index];
 
-    if (!card) {
-        const { getLogger } = yield getContext("dependencies");
+	if (!card) {
+		const { getLogger } = yield getContext("dependencies");
 
-        getLogger().warn(
-            `buyCardIfBelowLimit card was not found`,
-            { actor: { name: this.name } }
-        );
-        return;
-    }
+		getLogger().warn(
+			`buyCardIfBelowLimit card was not found`,
+			{ actor: { name: this.name } }
+		);
+		return;
+	}
 
-    const definition = getDefinitionById(card.definitionId);
+	const definition = getDefinitionById(card.definitionId);
 
-    yield put(PlayerGameActions.buyCardPlayerAction({
-        index,
-        sortPositions: PREFERRED_LOCATIONS[definition.class]
-    }));
-    yield delay(BOT_ACTION_TIME_MS);
+	yield put(PlayerGameActions.buyCardPlayerAction({
+		index,
+		sortPositions: PREFERRED_LOCATIONS[definition.class]
+	}));
+	yield delay(BOT_ACTION_TIME_MS);
 };

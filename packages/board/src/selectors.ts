@@ -3,17 +3,17 @@ import { BoardState, PiecePosition, SortPositionFn } from "./types";
 
 // todo add a position-for-id lookup to the board state to improve this
 export const getPiecePosition = (state: BoardState, pieceId: string): PiecePosition | null => {
-    const entry = Object.entries(state.piecePositions)
-        .find(([_, id]) => id === pieceId);
+	const entry = Object.entries(state.piecePositions)
+		.find(([_, id]) => id === pieceId);
 
-    if (!entry) {
-        return null;
-    }
+	if (!entry) {
+		return null;
+	}
 
-    const [x, y] = entry[0].split(",")
-        .map(val => parseInt(val, 10));
+	const [x, y] = entry[0].split(",")
+		.map(val => parseInt(val, 10));
 
-    return { x, y };
+	return { x, y };
 };
 
 export const getAllPieces = <TPiece>(state: BoardState<TPiece>): TPiece[] => Object.values(state.pieces);
@@ -21,31 +21,31 @@ export const getPiece = <TPiece>(state: BoardState<TPiece>, pieceId: string): TP
 export const isBelowPieceLimit = (state: BoardState) => state.pieceLimit === null || getAllPieces(state).length < state.pieceLimit;
 
 export const getPieceForPosition = <TPiece>(state: BoardState<TPiece>, x: number, y: number): TPiece | null =>
-    state.pieces[state.piecePositions[`${x},${y}`]] || null;
+	state.pieces[state.piecePositions[`${x},${y}`]] || null;
 
 export const getFirstEmptySlot = (state: BoardState, sortPositions: SortPositionFn = topToBottomMiddleSortPositions): (PiecePosition | null) => {
-    const emptyPositions: PiecePosition[] = [];
+	const emptyPositions: PiecePosition[] = [];
 
-    for (let y = 0; y < state.size.height; y++) {
-        for (let x = 0; x < state.size.width; x++) {
-            const boardPiece = getPieceForPosition(state, x, y);
+	for (let y = 0; y < state.size.height; y++) {
+		for (let x = 0; x < state.size.width; x++) {
+			const boardPiece = getPieceForPosition(state, x, y);
 
-            if (!boardPiece) {
-                emptyPositions.push({ x, y });
-            }
-        }
-    }
+			if (!boardPiece) {
+				emptyPositions.push({ x, y });
+			}
+		}
+	}
 
-    if (emptyPositions.length === 0) {
-        return null;
-    }
+	if (emptyPositions.length === 0) {
+		return null;
+	}
 
-    emptyPositions.sort(sortPositions);
+	emptyPositions.sort(sortPositions);
 
-    const position = emptyPositions[0];
+	const position = emptyPositions[0];
 
-    return {
-        x: position.x,
-        y: position.y
-    };
+	return {
+		x: position.x,
+		y: position.y
+	};
 };

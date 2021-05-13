@@ -7,11 +7,11 @@ import { putBenchOnBoard } from "./putBenchOnBoard";
 import { spendExcessMoneyOnXp } from "./spendExcessMoneyOnXp";
 
 export const preparingPhase = function*() {
-    yield call(buyBestPieces);
-    yield call(spendExcessMoneyOnXp);
-    yield call(putBenchOnBoard);
+	yield call(buyBestPieces);
+	yield call(spendExcessMoneyOnXp);
+	yield call(putBenchOnBoard);
 
-    yield delay(BOT_ACTION_TIME_MS);
+	yield delay(BOT_ACTION_TIME_MS);
 
-    yield put(PlayerGameActions.readyUpPlayerAction());
+	yield put(PlayerGameActions.readyUpPlayerAction());
 };

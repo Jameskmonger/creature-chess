@@ -3,6 +3,6 @@ export type FIND_GAME = typeof FIND_GAME;
 
 export type FindGameAction = { type: FIND_GAME, payload: { serverIP: string } };
 export const findGameAction = (serverIP: string): FindGameAction => ({
-    type: FIND_GAME,
-    payload: { serverIP }
+	type: FIND_GAME,
+	payload: { serverIP }
 });

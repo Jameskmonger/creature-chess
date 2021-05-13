@@ -8,23 +8,23 @@ import { StageIndicator } from "./components/StageIndicator";
 import { TypeIndicator } from "./components/TypeIndicator";
 
 const PieceMeta: React.FunctionComponent<{ id: string; pieceIsOnBench?: boolean }> = ({ id, pieceIsOnBench = false }) => {
-    const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
+	const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
 
-    return (
-        <div className="piece-meta-container">
-            <div className="piece-meta">
-                <TypeIndicator type={piece.definition.type} />
+	return (
+		<div className="piece-meta-container">
+			<div className="piece-meta">
+				<TypeIndicator type={piece.definition.type} />
 
-                <div className="health-bar-container">
-                    <Healthbar pieceId={id} vertical pieceIsOnBench={pieceIsOnBench} />
+				<div className="health-bar-container">
+					<Healthbar pieceId={id} vertical pieceIsOnBench={pieceIsOnBench} />
 
-                    <StageIndicator pieceId={id} />
-                </div>
-            </div>
-            <div className="piece-meta-top">
-            </div>
-        </div>
-    )
+					<StageIndicator pieceId={id} />
+				</div>
+			</div>
+			<div className="piece-meta-top">
+			</div>
+		</div>
+	)
 };
 
 export { PieceMeta };

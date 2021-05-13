@@ -11,28 +11,28 @@ export const sellPiecePlayerAction = createAction<{ pieceId: string }>("sellPiec
 const PIECES_FOR_STAGE = [1, 3, 9];
 
 export const sellPiecePlayerActionSaga = function*() {
-  yield takeEvery<SellPiecePlayerAction>(
-    sellPiecePlayerAction.toString(),
-    function*({ payload: { pieceId } }) {
-      const { boardSlice, benchSlice } = yield getContext("boardSlices");
+	yield takeEvery<SellPiecePlayerAction>(
+		sellPiecePlayerAction.toString(),
+		function*({ payload: { pieceId } }) {
+			const { boardSlice, benchSlice } = yield getContext("boardSlices");
 
-      const piece: PieceModel = yield select(state => getPiece(state, pieceId));
+			const piece: PieceModel = yield select(state => getPiece(state, pieceId));
 
-      if (!piece) {
-        // console.log(`Attempted to sell piece with id ${pieceId} but did not own it`);
-        return;
-      }
+			if (!piece) {
+				// console.log(`Attempted to sell piece with id ${pieceId} but did not own it`);
+				return;
+			}
 
-      const piecesUsed = PIECES_FOR_STAGE[piece.stage];
-      const pieceCost = piece.definition.cost;
-      const currentMoney: number = yield select(state => state.playerInfo.money);
+			const piecesUsed = PIECES_FOR_STAGE[piece.stage];
+			const pieceCost = piece.definition.cost;
+			const currentMoney: number = yield select(state => state.playerInfo.money);
 
-      yield put(updateMoneyCommand(currentMoney + (pieceCost * piecesUsed)));
+			yield put(updateMoneyCommand(currentMoney + (pieceCost * piecesUsed)));
 
-      yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
-      yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
+			yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
+			yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
 
-      yield put(afterSellPieceEvent({ piece }));
-    }
-  );
+			yield put(afterSellPieceEvent({ piece }));
+		}
+	);
 };
