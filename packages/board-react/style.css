@@ -1,0 +1,15 @@
+.board-items {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.tile-row {
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 0;
+    white-space: nowrap;
+}

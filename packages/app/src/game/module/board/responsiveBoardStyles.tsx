@@ -32,29 +32,6 @@ const getBoardInformation = (width: number, height: number) => {
 	};
 };
 
-const getTilePosition = (tileSize: number, x: number, y: number) => {
-	return {
-		left: (x * tileSize),
-		top: (y * tileSize)
-	};
-};
-
-const getPositionablePieceStyles = (tileSize: number) => {
-	const styles = [];
-	const TILE_BASE_Z_INDEX = 10;
-
-	for (let x = 0; x < Constants.GRID_SIZE.width; x++) {
-		for (let y = 0; y < Constants.GRID_SIZE.height; y++) {
-			const { left, top } = getTilePosition(tileSize, x, y);
-
-			styles.push(`.positionable-piece.x-${x} { left: ${left}px; }`);
-			styles.push(`.positionable-piece.y-${y} { top: ${top}px; z-index: ${TILE_BASE_Z_INDEX + y + 1}; }`);
-		}
-	}
-
-	return styles.join("\n");
-};
-
 const ResponsiveBoardStyles: React.FunctionComponent = () => {
 	const { width, height } = useWindowSize();
 
@@ -66,8 +43,6 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
 			? `{ width: ${boardWidth}; margin: 0 auto; }`
 			: `{ height: ${boardHeight}; width: ${boardWidth}; }`;
 
-	const positionablePieceStyles = getPositionablePieceStyles(tileSize);
-
 	return (
 		<style
 			dangerouslySetInnerHTML={{
@@ -78,8 +53,6 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
             .piece { width: ${tileSize}px; height: ${tileSize}px; }
 
             .board-container ${boardContainerStyle}
-
-            ${positionablePieceStyles}
 
             .chessboard { height: ${tileSize * Constants.GRID_SIZE.height}px; }
 

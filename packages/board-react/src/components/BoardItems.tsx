@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useBoard } from "./context";
+import { useBoard } from "../context";
 
 export type BoardItemRenderFn = (id: string, x: number, y: number) => React.ReactNode | React.ReactNode[];
 
@@ -33,7 +33,7 @@ const BoardItems: React.FunctionComponent<{ render: BoardItemRenderFn }> = ({ re
 		pieceElements.push(<BoardItem key={id} x={x} y={y}>{render(id, x, y)}</BoardItem>);
 	}
 
-	return <div className="board-items-container"><div className="board-items">{pieceElements}</div></div>;
+	return <>{pieceElements}</>;
 };
 
 export { BoardItems };

@@ -1,9 +1,9 @@
 import * as React from "react";
+import { DragObjectWithType } from "react-dnd";
 import { BoardState, HasId } from "@creature-chess/board";
-import { BoardContextProvider, useBoard } from "./context";
+import { BoardContextProvider, useBoard } from "../context";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";
-import { DragObjectWithType } from "react-dnd";
 import { BoardItems, BoardItemRenderFn } from "./BoardItems";
 
 type BoardGridProps = {
@@ -40,11 +40,37 @@ const BoardRows: React.FunctionComponent<Partial<BoardGridProps>> = ({ onDrop, o
 		rows.push(<div key={`row-${y}`} className="tile-row">{tiles}</div>);
 	}
 
-	return <>{rows}</>;
+	return <div>{rows}</div>;
+};
+
+const getTilePosition = (width: number, height: number, x: number, y: number) => {
+	return {
+		left: x / width,
+		top: y / height
+	};
+};
+
+const PositionablePieceStyle: React.FunctionComponent = () => {
+	const { size: { height, width } } = useBoard();
+	const styles = [];
+	const TILE_BASE_Z_INDEX = 10;
+
+	for (let x = 0; x < width; x++) {
+		for (let y = 0; y < height; y++) {
+			const { left, top } = getTilePosition(width, height, x, y);
+
+			styles.push(`.positionable-piece.x-${x} { left: ${(left * 100).toFixed(2)}%; }`);
+			styles.push(`.positionable-piece.y-${y} { top: ${(top * 100).toFixed(2)}%; z-index: ${TILE_BASE_Z_INDEX + y + 1}; }`);
+		}
+	}
+
+	return <style>{styles.join("\n")}</style>;
 };
 
 const BoardGrid: React.FunctionComponent<BoardGridProps> = ({ state, renderItem, onDrop, onClick }) => (
 	<BoardContextProvider value={state}>
+		<PositionablePieceStyle />
+
 		<BoardRows onDrop={onDrop} onClick={onClick} />
 
 		<BoardItems render={renderItem} />

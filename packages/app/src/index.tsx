@@ -8,6 +8,7 @@ import { Integrations } from "@sentry/tracing";
 
 import "pepjs";
 import "./display/style/index.scss";
+import "@creature-chess/board-react/style.css"
 
 import { createAppStore } from "./store/store";
 import { App } from "./app";

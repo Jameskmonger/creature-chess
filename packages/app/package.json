@@ -28,6 +28,7 @@
     "@auth0/auth0-react": "^1.5.0",
     "@creature-chess/battle": "^0.3.50",
     "@creature-chess/board": "^0.3.50",
+    "@creature-chess/board-react": "^0.3.50",
     "@creature-chess/gamemode": "^0.3.51",
     "@creature-chess/models": "^0.3.50",
     "@creature-chess/networking": "^0.3.51",

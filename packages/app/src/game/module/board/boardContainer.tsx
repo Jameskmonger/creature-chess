@@ -5,13 +5,13 @@ import { Dispatch } from "redux";
 import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerGameActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
+import { BoardGrid } from "@creature-chess/board-react";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
 import { ReadyOverlay } from "./overlays/readyOverlay"
-import { BoardGrid } from "../../../board/BoardGrid";
 import { clearSelectedPiece } from "../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
 import { PieceComponent } from "./piece/pieceComponent";

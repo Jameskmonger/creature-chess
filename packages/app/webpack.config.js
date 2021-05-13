@@ -112,7 +112,7 @@ module.exports = {
 
     plugins: [
         // todo tie this into `dependencies` from package.json
-        new NormalModuleReplacementPlugin(/^react$/gi, (res) => {
+        new NormalModuleReplacementPlugin(/^react$|^react-dnd$/gi, (res) => {
             const CONTEXT_REGEX = /\\+packages\\+([a-zA-Z\-]+)\\+/;
             const [_, requestingPackageName] = CONTEXT_REGEX.exec(res.context);
             const requestedPackage = res.request;

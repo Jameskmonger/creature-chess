@@ -1,8 +1,8 @@
 import * as React from "react";
 import { DragObjectWithType, useDrop } from "react-dnd";
 import { HasId } from "@creature-chess/board";
+import { useBelowPieceLimit, usePieces } from "../../context";
 import { getOverlayClassName } from "./getOverlayClassName";
-import { useBelowPieceLimit, usePieces } from "../context";
 
 type DroppableTileProps = {
 	className: string;

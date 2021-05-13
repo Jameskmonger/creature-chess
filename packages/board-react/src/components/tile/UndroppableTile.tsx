@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
-import { useBoard } from "../context";
+import { useBoard } from "../../context";
 import { getOverlayClassName } from "./getOverlayClassName";
 
 const UndroppableTile: React.FunctionComponent<{ className: string }> = ({ className }) => {
