@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const CnameWebpackPlugin = require("cname-webpack-plugin");
-const { DefinePlugin, EnvironmentPlugin } = require("webpack");
+const { DefinePlugin, EnvironmentPlugin, NormalModuleReplacementPlugin } = require("webpack");
 
 const getCookiebotScript = (id) => {
     if (!id) {
@@ -111,6 +111,18 @@ module.exports = {
     },
 
     plugins: [
+        // todo tie this into `dependencies` from package.json
+        new NormalModuleReplacementPlugin(/^react$/gi, (res) => {
+            const CONTEXT_REGEX = /\\+packages\\+([a-zA-Z\-]+)\\+/;
+            const [_, requestingPackageName] = CONTEXT_REGEX.exec(res.context);
+            const requestedPackage = res.request;
+
+            if (requestingPackageName !== "app") {
+                console.log('\x1b[35m%s\x1b[0m', `[REPLACEMENT]: using dependency <${requestedPackage}> from package [app] instead of [${requestingPackageName}]`);
+
+                res.request = path.resolve(__dirname, './node_modules/', requestedPackage);
+            }
+        }),
         new EnvironmentPlugin({
             NODE_ENV: 'production',
             SENTRY_DSN: ''
