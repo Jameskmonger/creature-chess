@@ -1,5 +1,5 @@
 import { all, takeLatest, put, fork } from "@redux-saga/core/effects";
-import { select } from "typed-redux-saga";
+import { select, getContext } from "typed-redux-saga";
 import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 
 import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../../game/events";
@@ -17,10 +17,10 @@ export const playerBattle = function*() {
 		),
 		takeLatest<PlayerFinishMatchEvent>(
 			playerFinishMatchEvent.toString(),
-			function*({ payload: { homeScore, awayScore } }) {
+			function*({ payload: { isHomePlayer, homeScore, awayScore } }) {
 				const opponentId = yield* select((state: HasPlayerInfo) => state.playerInfo.opponentId);
 
-				yield put(PlayerInfoCommands.updateBattleCommand(finishedBattle(opponentId!, homeScore, awayScore)));
+				yield put(PlayerInfoCommands.updateBattleCommand(finishedBattle(opponentId!, isHomePlayer, homeScore, awayScore)));
 			}
 		),
 		fork(playerMatchRewards),

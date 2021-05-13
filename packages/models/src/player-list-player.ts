@@ -20,6 +20,7 @@ export type PlayerBattle = {
 	opponentId: string;
 	homeScore: number;
 	awayScore: number;
+	isHomePlayer: boolean;
 } | null;
 
 export const inProgressBattle = (opponentId: string): PlayerBattle => ({
@@ -27,9 +28,10 @@ export const inProgressBattle = (opponentId: string): PlayerBattle => ({
 	opponentId
 });
 
-export const finishedBattle = (opponentId: string, homeScore: number, awayScore: number): PlayerBattle => ({
+export const finishedBattle = (opponentId: string, isHomePlayer: boolean, homeScore: number, awayScore: number): PlayerBattle => ({
 	status: PlayerBattleStatus.FINISHED,
 	opponentId,
+	isHomePlayer,
 	homeScore,
 	awayScore
 });

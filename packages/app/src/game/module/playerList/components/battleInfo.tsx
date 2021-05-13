@@ -23,9 +23,11 @@ const getBattleText = (battle: PlayerBattle) => {
 
 const getBattleHighlightClass = (battle: PlayerBattle) => {
 	if (battle.status === PlayerBattleStatus.FINISHED) {
-		const { homeScore, awayScore } = battle;
+		const { isHomePlayer, homeScore, awayScore } = battle;
 
-		if (homeScore > awayScore) {
+		const win = isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
+
+		if (win) {
 			return " win";
 		}
 
