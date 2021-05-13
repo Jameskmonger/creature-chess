@@ -3,8 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { validateNicknameFormat } from "@creature-chess/models";
 import { patchUser } from "./utils/patchUser";
 import { Auth0User } from "./user";
-import NicknameSelection from "./registration/NicknameSelection"
-import PictureSelection from "./registration/PictureSelection"
+import { NicknameSelection } from "./registration/NicknameSelection"
+import { PictureSelection } from "./registration/PictureSelection"
 import { hasNickname } from "./utils/isRegistered";
 
 
@@ -70,13 +70,13 @@ const RegistrationPage: React.FunctionComponent = () => {
                 !hasNickname(user) &&
                 <NicknameSelection
                     nickname={nickname}
-                    onNameChange={onNameChange}
+                    onChange={onNameChange}
                     loading={loading}
                 />
             }
             <PictureSelection
                 currentImage={currentImage}
-                handleImageChange={handleImageChange}
+                onChange={handleImageChange}
             />
             <button
                 className="register-button"
