@@ -1,22 +1,28 @@
 // tslint:disable: no-console
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
-import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, PlayerProfile, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
+import { Task } from "redux-saga";
+import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
 import { Game, Player, PlayerType } from "../../../gamemode/lib";
-import { incomingNetworking } from "../player/socket/net/incoming";
-import { outgoingNetworking } from "../player/socket/net/outgoing";
-import { put } from "redux-saga/effects";
-import { newPlayerSocketEvent } from "../player/socket/events";
 import { botLogicSaga } from "../player/bot/saga";
 import { createWinstonLogger } from "../log";
 import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
+import { playerNetworking } from "../player/socket/net";
 
-type OutgoingRegistry = OutgoingPacketRegistry<
+type LobbyRegistry = OutgoingPacketRegistry<
 	ServerToClient.Lobby.PacketDefinitions,
 	ServerToClient.Lobby.PacketAcknowledgements
 >;
+
+type PlayerConnections = {
+	[playerId: string]: {
+		socket: Socket,
+		networkingSaga: Task | null,
+		lobbyRegistry: LobbyRegistry | null
+	};
+}
 
 export class Lobby {
 	public readonly gameStartTime: number | null = null;
@@ -26,8 +32,8 @@ export class Lobby {
 
 	private gameStarting: boolean = false;
 	private game: Game | null = null;
-	private playerSockets: { [playerId: string]: Socket } = {};
-	private playerRegistries: { [playerId: string]: OutgoingRegistry } = {};
+
+	private playerConnections: PlayerConnections = {};
 
 	constructor(
 		public readonly id: string,
@@ -72,7 +78,7 @@ export class Lobby {
 			return;
 		}
 
-		this.playerSockets[member.id]?.disconnect();
+		this.playerConnections[member.id]?.socket.disconnect();
 
 		if (this.game) {
 			const player = this.game.getPlayerById(member.id);
@@ -82,9 +88,9 @@ export class Lobby {
 				return;
 			}
 
-			// todo tidy this up
-			player.runSaga(incomingNetworking);
-			player.runSaga(outgoingNetworking);
+			this.playerConnections[member.id]?.networkingSaga?.cancel();
+
+			const networkingSaga = player.runSaga(playerNetworking, socket);
 
 			player.runSaga(
 				reconnectPlayerSocket,
@@ -92,6 +98,12 @@ export class Lobby {
 				this.game.getRoundInfo(),
 				this.game.getPlayerListPlayers()
 			);
+
+			this.playerConnections[player.id] = {
+				socket,
+				lobbyRegistry: null,
+				networkingSaga
+			};
 		} else {
 			this.createOutgoingLobbyRegistry(member, socket);
 		}
@@ -124,7 +136,12 @@ export class Lobby {
 
 		this.members
 			.forEach(player => {
-				this.playerRegistries[player.id]?.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
+				this.playerConnections[player.id]?.lobbyRegistry?.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
+			});
+
+		Object.keys(this.playerConnections)
+			.forEach(playerId => {
+				this.playerConnections[playerId].lobbyRegistry = null;
 			});
 
 		this.gameStarting = true;
@@ -136,14 +153,9 @@ export class Lobby {
 
 			await this.database.user.addGamePlayed(player.id);
 
-			player.runSaga(incomingNetworking);
-			player.runSaga(outgoingNetworking);
+			const socket = this.playerConnections[player.id]?.socket;
 
-			const socket = this.playerSockets[member.id];
-
-			player.runSaga(function*() {
-				yield put(newPlayerSocketEvent(socket));
-			});
+			player.runSaga(playerNetworking, socket);
 
 			players.push(player);
 		}
@@ -185,18 +197,21 @@ export class Lobby {
 			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 		);
 
-		socket.emit(ServerToClient.Menu.PacketOpcodes.LOBBY_CONNECTED, {
+		registry.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_CONNECTED, {
 			lobbyId: this.id,
 			players: [...this.members],
-			startTimestamp: this.gameStartTime
+			startTimestamp: this.gameStartTime!
 		});
 
-		this.playerSockets[player.id] = socket;
-		this.playerRegistries[player.id] = registry;
+		this.playerConnections[player.id] = {
+			socket,
+			lobbyRegistry: registry,
+			networkingSaga: null
+		};
 	}
 
 	private sendMemberLobbyUpdateEvent(member: LobbyPlayer, index: number, other: LobbyPlayer) {
-		this.playerRegistries[member.id]?.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE, {
+		this.playerConnections[member.id]?.lobbyRegistry?.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE, {
 			index, player: other
 		});
 	}

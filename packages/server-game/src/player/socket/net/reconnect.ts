@@ -1,16 +1,14 @@
 import { Socket } from "socket.io";
-import { put } from "redux-saga/effects";
 import { getContext, select } from "typed-redux-saga";
 import { PlayerSagaContext, PlayerSelectors, RoundInfoState } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { PlayerListPlayer, } from "@creature-chess/models";
-import { newPlayerSocketEvent } from "../events";
 
 export const reconnectPlayerSocket = function*(socket: Socket, game: RoundInfoState, players: PlayerListPlayer[]) {
 	const playerId = yield* getContext<string>("playerId");
 	const { getMatch } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
 
-	const registry = new OutgoingPacketRegistry<ServerToClient.Menu.PacketDefinitions, ServerToClient.Menu.PacketAcknowledgements>(
+	const registry = new OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
 		(opcode, payload) => socket.emit(opcode, payload)
 	);
 
@@ -20,7 +18,7 @@ export const reconnectPlayerSocket = function*(socket: Socket, game: RoundInfoSt
 	const battleTurn = match ? match.getTurn() : null;
 
 	registry.emit(
-		ServerToClient.Menu.PacketOpcodes.GAME_CONNECTED,
+		ServerToClient.Game.PacketOpcodes.GAME_CONNECTED,
 		{
 			board,
 			bench: yield* select(PlayerSelectors.getPlayerBench),
@@ -38,6 +36,4 @@ export const reconnectPlayerSocket = function*(socket: Socket, game: RoundInfoSt
 			}
 		}
 	);
-
-	yield put(newPlayerSocketEvent(socket));
 };

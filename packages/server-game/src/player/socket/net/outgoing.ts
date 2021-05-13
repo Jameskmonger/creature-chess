@@ -1,22 +1,17 @@
-import { takeLatest, take, fork, all, delay } from "redux-saga/effects";
+import { takeLatest, all, call } from "redux-saga/effects";
 import { getContext, select } from "typed-redux-saga";
 import { Socket } from "socket.io";
 
-import { PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, PlayerGameActions, PlayerSagaContext } from "@creature-chess/gamemode";
+import { PlayerState, PlayerInfoCommands, PlayerCommands, GameEvents, PlayerEvents, PlayerSagaContext } from "@creature-chess/gamemode";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 import { GamePhase } from "@creature-chess/models";
 
-import { NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT } from "../events";
+export type OutgoingRegistry = OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
-type OutgoingRegistry = OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
-
-export const outgoingNetworking = function*() {
+export const outgoingNetworking = function*(registry: OutgoingRegistry, socket: Socket) {
 	const playerId = yield* getContext<string>("playerId");
 	const { getLogger, getMatch } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
 	const { boardSlice, benchSlice } = yield* getContext<PlayerSagaContext.PlayerBoardSlices>("boardSlices");
-
-	let registry: OutgoingRegistry;
-	let socket: Socket;
 
 	const sendGamePhaseUpdates = function*() {
 		yield takeLatest<GameEvents.GamePhaseStartedEvent>(
@@ -187,30 +182,10 @@ export const outgoingNetworking = function*() {
 		]);
 	};
 
-	yield takeLatest<NewPlayerSocketEvent>(
-		NEW_PLAYER_SOCKET_EVENT,
-		function*({ payload: { socket: newSocket } }) {
-			socket = newSocket;
-
-			registry = new OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
-				(opcode, payload, ack) => socket.emit(opcode, payload, ack)
-			);
-
-			yield fork(sendCommands);
-			yield fork(sendGamePhaseUpdates);
-			yield fork(sendAnnouncements);
-			yield fork(sendPlayerListUpdates);
-		}
-	);
-
-	yield take<PlayerGameActions.QuitGamePlayerAction | GameEvents.GameFinishEvent>([
-		PlayerGameActions.quitGamePlayerAction.toString(),
-		GameEvents.gameFinishEvent.toString()
+	yield all([
+		call(sendCommands),
+		call(sendGamePhaseUpdates),
+		call(sendAnnouncements),
+		call(sendPlayerListUpdates)
 	]);
-	yield delay(100);
-
-	socket!.removeAllListeners();
-	socket!.disconnect();
-	(socket! as unknown as null) = null;
-	(registry! as unknown as null) = null;
 };

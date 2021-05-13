@@ -1,22 +1,16 @@
 import { getContext } from "typed-redux-saga";
-import { takeLatest, take, fork, takeEvery, put, delay } from "redux-saga/effects";
+import { take, takeEvery, put, all, call } from "redux-saga/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
-import { PlayerEvents, GameEvents, PlayerGameActions, PlayerSagaContext } from "@creature-chess/gamemode";
+import { PlayerEvents, PlayerGameActions, PlayerSagaContext } from "@creature-chess/gamemode";
 import { ClientToServer, IncomingPacketRegistry } from "@creature-chess/networking";
 
-import {
-	NewPlayerSocketEvent, NEW_PLAYER_SOCKET_EVENT, receivePlayerActionsEvent,
-	ReceivePlayerActionsEvent
-} from "../events";
+import { receivePlayerActionsEvent, ReceivePlayerActionsEvent } from "../events";
 
-type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
+export type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
 
-export const incomingNetworking = function*() {
+export const incomingNetworking = function*(registry: IncomingRegistry, socket: Socket) {
 	const { getLogger } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
-
-	let registry: IncomingRegistry;
-	let socket: Socket;
 
 	const processIncomingPackets = function*() {
 		let expectedPacketIndex = 1;
@@ -79,32 +73,8 @@ export const incomingNetworking = function*() {
 			});
 	};
 
-	yield takeLatest<NewPlayerSocketEvent>(
-		NEW_PLAYER_SOCKET_EVENT,
-		function*({ payload: { socket: newSocket } }) {
-			if (socket) {
-				socket.removeAllListeners();
-			}
-
-			socket = newSocket;
-
-			registry = new IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>(
-				(opcode, handler) => socket.on(opcode, handler)
-			);
-
-			yield fork(processIncomingPackets);
-			yield fork(processFinishMatch);
-		}
-	);
-
-	yield take<PlayerGameActions.QuitGamePlayerAction | GameEvents.GameFinishEvent>([
-		PlayerGameActions.quitGamePlayerAction.toString(),
-		GameEvents.gameFinishEvent.toString()
+	yield all([
+		call(processIncomingPackets),
+		call(processFinishMatch)
 	]);
-	yield delay(100);
-
-	socket!.removeAllListeners();
-	socket!.disconnect();
-	(socket! as unknown as null) = null;
-	(registry! as unknown as null) = null;
 };

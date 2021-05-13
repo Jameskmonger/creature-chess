@@ -1,14 +1,14 @@
-import { race, call, takeEvery, put, take, select, fork } from "@redux-saga/core/effects";
+import { race, call, takeEvery, put, take, fork } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
-import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
+import { ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { LobbyCommands } from "../../lobby";
 import { MenuActions } from "../../menu";
 import { getSocket } from "../socket";
 import {
-	gameConnectedEvent, GameConnectedEvent, GAME_CONNECTED_EVENT,
-	lobbyConnectedEvent, LobbyConnectedEvent, LOBBY_CONNECTED_EVENT
+	gameConnectedEvent, GameConnectedEvent,
+	lobbyConnectedEvent, LobbyConnectedEvent
 } from "../actions";
 import { networkingSaga } from "./networkingSaga";
 
@@ -32,25 +32,17 @@ export const findGame = function*(
 		return;
 	}
 
-	const registry = new IncomingPacketRegistry<ServerToClient.Menu.PacketDefinitions, ServerToClient.Menu.PacketAcknowledgements>(
-		(opcode, handler) => socket.on(opcode, handler)
-	);
-
 	const channel = eventChannel<LobbyConnectedEvent | GameConnectedEvent>(emit => {
-		registry.on(
-			ServerToClient.Menu.PacketOpcodes.LOBBY_CONNECTED,
-			({ lobbyId, players, startTimestamp }) => {
-				emit(lobbyConnectedEvent(
-					lobbyId,
-					players,
-					startTimestamp
-				));
+		socket.on(
+			ServerToClient.Lobby.PacketOpcodes.LOBBY_CONNECTED,
+			(payload: ServerToClient.Lobby.LobbyConnectionPacket) => {
+				emit(lobbyConnectedEvent(payload));
 			}
 		);
 
-		registry.on(
-			ServerToClient.Menu.PacketOpcodes.GAME_CONNECTED,
-			(payload) => {
+		socket.on(
+			ServerToClient.Game.PacketOpcodes.GAME_CONNECTED,
+			(payload: ServerToClient.Game.GameConnectionPacket) => {
 				emit(gameConnectedEvent(payload));
 			}
 		);
@@ -65,8 +57,8 @@ export const findGame = function*(
 	});
 
 	const { lobby, game }: { lobby: LobbyConnectedEvent, game: GameConnectedEvent } = yield race({
-		lobby: take(LOBBY_CONNECTED_EVENT),
-		game: take(GAME_CONNECTED_EVENT)
+		lobby: take(lobbyConnectedEvent.toString()),
+		game: take(gameConnectedEvent.toString())
 	});
 
 	channel.close();

@@ -17,14 +17,3 @@ export const receivePlayerActionsEvent = (
 	type: RECEIVE_PLAYER_ACTIONS_EVENT,
 	payload: { index, actions }
 });
-
-export const NEW_PLAYER_SOCKET_EVENT = "NEW_PLAYER_SOCKET_EVENT";
-export type NEW_PLAYER_SOCKET_EVENT = typeof NEW_PLAYER_SOCKET_EVENT;
-export type NewPlayerSocketEvent = ({
-	type: NEW_PLAYER_SOCKET_EVENT,
-	payload: { socket: Socket }
-});
-export const newPlayerSocketEvent = (socket: Socket): NewPlayerSocketEvent => ({
-	type: NEW_PLAYER_SOCKET_EVENT,
-	payload: { socket }
-});

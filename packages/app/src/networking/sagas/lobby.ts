@@ -1,8 +1,8 @@
 import { Action } from "redux";
-import { put, fork, take, select, cancel, cancelled } from "@redux-saga/core/effects";
+import { put, fork, take, cancel, cancelled } from "@redux-saga/core/effects";
 import { EventChannel, eventChannel } from "redux-saga";
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
-import { LobbyConnectedEvent, LOBBY_CONNECTED_EVENT } from "../actions";
+import { lobbyConnectedEvent, LobbyConnectedEvent } from "../actions";
 import { LobbyCommands, LobbyEvents } from "../../lobby";
 
 type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClient.Lobby.PacketDefinitions, ServerToClient.Lobby.PacketAcknowledgements>;
@@ -47,7 +47,7 @@ const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegist
 export const lobbyNetworking = function*(
 	socket: SocketIOClient.Socket
 ) {
-	yield take<LobbyConnectedEvent>(LOBBY_CONNECTED_EVENT);
+	yield take<LobbyConnectedEvent>(lobbyConnectedEvent.toString());
 
 	const registry = new IncomingPacketRegistry<ServerToClient.Lobby.PacketDefinitions, ServerToClient.Lobby.PacketAcknowledgements>(
 		(opcode, handler) => socket.on(opcode, handler)
