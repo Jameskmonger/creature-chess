@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@creature-chess/server-info",
-  "version": "0.3.51",
+  "version": "0.3.52",
   "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
   "keywords": [],
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
@@ -24,10 +24,10 @@
   },
   "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
   "dependencies": {
-    "@creature-chess/auth-server": "^0.3.51",
-    "@creature-chess/data": "^0.3.50",
-    "@creature-chess/gamemode": "^0.3.51",
-    "@creature-chess/models": "^0.3.50",
+    "@creature-chess/auth-server": "^0.3.52",
+    "@creature-chess/data": "^0.3.52",
+    "@creature-chess/gamemode": "^0.3.52",
+    "@creature-chess/models": "^0.3.52",
     "@types/auth0": "^2.20.8",
     "@types/bad-words": "^3.0.0",
     "@types/express": "^4.17.8",
