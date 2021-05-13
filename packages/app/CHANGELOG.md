@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.53](https://github.com/Jameskmonger/creature-chess/compare/v0.3.52...v0.3.53) (2021-05-13)
+
+
+### Bug Fixes
+
+* fix player list colouring for away games ([bd18c4b](https://github.com/Jameskmonger/creature-chess/commit/bd18c4b54d900bf4cb3c90f75d2bc1d5375b57b5))
+
+
+
+
+
 ## [0.3.52](https://github.com/Jameskmonger/creature-chess/compare/v0.3.51...v0.3.52) (2021-05-13)
 
 **Note:** Version bump only for package @creature-chess/app
