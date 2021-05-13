@@ -7,19 +7,19 @@ const CnameWebpackPlugin = require("cname-webpack-plugin");
 const { DefinePlugin, EnvironmentPlugin, NormalModuleReplacementPlugin } = require("webpack");
 
 const getCookiebotScript = (id) => {
-    if (!id) {
-        return "";
-    }
+	if (!id) {
+		return "";
+	}
 
-    return `<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="${id}" data-blockingmode="auto" type="text/javascript"></script>`;
+	return `<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="${id}" data-blockingmode="auto" type="text/javascript"></script>`;
 };
 
 const getGAScript = (id) => {
-    if (!id) {
-        return "";
-    }
+	if (!id) {
+		return "";
+	}
 
-    return `    <!-- Global site tag (gtag.js) - Google Analytics -->
+	return `    <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=${id}" data-cookieconsent="statistics"></script>
     <script data-cookieconsent="statistics">
         window.dataLayer = window.dataLayer || [];
@@ -32,11 +32,11 @@ const getGAScript = (id) => {
 
 // we need to inject some redirect magic if deploying to GitHub pages
 const getGHPagesRedirectScript = (enabled) => {
-    if (!enabled) {
-        return "";
-    }
+	if (!enabled) {
+		return "";
+	}
 
-    return `    <!-- Single Page Apps for GitHub Pages -->
+	return `    <!-- Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
         // Single Page Apps for GitHub Pages
         // https://github.com/rafrex/spa-github-pages
@@ -71,106 +71,114 @@ const getGHPagesRedirectScript = (enabled) => {
 const outDir = path.resolve(__dirname, "public");
 
 module.exports = {
-    mode: "development",
-    devtool: false,
+	mode: "development",
+	devtool: false,
 
-    context: __dirname,
-    entry: "./src/index.tsx",
+	context: __dirname,
+	entry: "./src/index.tsx",
 
-    module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                use: "ts-loader",
-                exclude: /node_modules/
-            },
-            {
-                test: /\.scss$/,
-                use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader"]
-            },
-            {
-                test: /\.css$/,
-                use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"]
-            }
-        ]
-    },
+	module: {
+		rules: [
+			{
+				test: /\.tsx?$/,
+				use: "ts-loader",
+				exclude: /node_modules/
+			},
+			{
+				test: /\.scss$/,
+				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader"]
+			},
+			{
+				test: /\.css$/,
+				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"]
+			}
+		]
+	},
 
-    resolve: {
-        plugins: [
-            new TsConfigPathsPlugin()
-        ],
-        extensions: [".tsx", ".ts", ".js"],
-        fallback: {
-            "events": require.resolve("events/")
-        }
-    },
+	resolve: {
+		plugins: [
+			new TsConfigPathsPlugin()
+		],
+		extensions: [".tsx", ".ts", ".js"],
+		fallback: {
+			"events": require.resolve("events/")
+		}
+	},
 
-    output: {
-        filename: "bundle-[contenthash].js",
-        path: outDir
-    },
+	output: {
+		filename: "bundle-[contenthash].js",
+		path: outDir
+	},
 
-    plugins: [
-        // todo tie this into `dependencies` from package.json
-        new NormalModuleReplacementPlugin(/^react$|^react-dnd$/gi, (res) => {
-            const CONTEXT_REGEX = /\\+packages\\+([a-zA-Z\-]+)\\+/;
-            const [_, requestingPackageName] = CONTEXT_REGEX.exec(res.context);
-            const requestedPackage = res.request;
+	plugins: [
+		// todo tie this into `dependencies` from package.json
+		new NormalModuleReplacementPlugin(/^react$|^react-dnd$/gi, (res) => {
+			const CONTEXT_REGEX = /[\\|\/]+packages[\\|\/]+([a-zA-Z\-]+)[\\|\/]+/;
 
-            if (requestingPackageName !== "app") {
-                console.log('\x1b[35m%s\x1b[0m', `[REPLACEMENT]: using dependency <${requestedPackage}> from package [app] instead of [${requestingPackageName}]`);
+			const result = CONTEXT_REGEX.exec(res.context);
 
-                res.request = path.resolve(__dirname, './node_modules/', requestedPackage);
-            }
-        }),
-        new EnvironmentPlugin({
-            NODE_ENV: 'production',
-            SENTRY_DSN: ''
-        }),
-        new DefinePlugin({
-            APP_VERSION: JSON.stringify(require("./package.json").version)
-        }),
-        new HtmlWebpackPlugin({
-            template: "./index.ejs",
-            templateParameters: () => ({
-                googleAnalyticsScript: getGAScript(process.env.GA_ID),
-                ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES),
-                cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID)
-            }),
-            scriptLoading: "blocking"
-        }),
-        new MiniCssExtractPlugin({
-            filename: "app-[contenthash].css"
-        }),
-        new CircularDependencyPlugin({
-            // exclude detection of files based on a RegExp
-            exclude: /a\.js|node_modules/,
-            // add errors to webpack instead of warnings
-            failOnError: true,
-            // allow import cycles that include an asyncronous import,
-            // e.g. via import(/* webpackMode: "weak" */ './file.js')
-            allowAsyncCycles: false,
-            // set the current working directory for displaying module paths
-            cwd: process.cwd(),
-        }),
-        process.env.CNAME
-            ? new CnameWebpackPlugin({ domain: process.env.CNAME })
-            : null
-    ].filter(plugin => plugin !== null),
+			if (!result) {
+				console.warn("no replacement found", res.context);
+				return;
+			}
 
-    devServer: {
-        contentBase: outDir,
-        compress: true,
-        port: 8090,
-        historyApiFallback: true,
-        disableHostCheck: true,
-        https: true,
-        host: 'creaturechess.local-dev.com'
-    },
+			const [_, requestingPackageName] = result;
+			const requestedPackage = res.request;
 
-    optimization: {
-        splitChunks: {
-            chunks: "all"
-        }
-    }
+			if (requestingPackageName !== "app") {
+				console.log('\x1b[35m%s\x1b[0m', `[REPLACEMENT]: using dependency <${requestedPackage}> from package [app] instead of [${requestingPackageName}]`);
+
+				res.request = path.resolve(__dirname, './node_modules/', requestedPackage);
+			}
+		}),
+		new EnvironmentPlugin({
+			NODE_ENV: 'production',
+			SENTRY_DSN: ''
+		}),
+		new DefinePlugin({
+			APP_VERSION: JSON.stringify(require("./package.json").version)
+		}),
+		new HtmlWebpackPlugin({
+			template: "./index.ejs",
+			templateParameters: () => ({
+				googleAnalyticsScript: getGAScript(process.env.GA_ID),
+				ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES),
+				cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID)
+			}),
+			scriptLoading: "blocking"
+		}),
+		new MiniCssExtractPlugin({
+			filename: "app-[contenthash].css"
+		}),
+		new CircularDependencyPlugin({
+			// exclude detection of files based on a RegExp
+			exclude: /a\.js|node_modules/,
+			// add errors to webpack instead of warnings
+			failOnError: true,
+			// allow import cycles that include an asyncronous import,
+			// e.g. via import(/* webpackMode: "weak" */ './file.js')
+			allowAsyncCycles: false,
+			// set the current working directory for displaying module paths
+			cwd: process.cwd(),
+		}),
+		process.env.CNAME
+			? new CnameWebpackPlugin({ domain: process.env.CNAME })
+			: null
+	].filter(plugin => plugin !== null),
+
+	devServer: {
+		contentBase: outDir,
+		compress: true,
+		port: 8090,
+		historyApiFallback: true,
+		disableHostCheck: true,
+		https: true,
+		host: 'creaturechess.local-dev.com'
+	},
+
+	optimization: {
+		splitChunks: {
+			chunks: "all"
+		}
+	}
 };
