@@ -7,26 +7,29 @@ export const setProfileInfo = (client: FaunaDBClient) => {
             let userUpdate;
             if (nickname) {
                 userUpdate = {
-                        nickname : {
-                            value: nickname,
-                            uppercase: nickname.toUpperCase()
-                        }
+                    ...userUpdate,
+                    nickname: {
+                        value: nickname,
+                        uppercase: nickname.toUpperCase()
+                    }
                 };
             }
             if (picture) {
                 userUpdate = {
-                    data: {
-                        ...userUpdate,
-                        profile: {
-                            picture
-                        }
+                    ...userUpdate,
+                    profile: {
+                        picture
                     }
                 };
             }
             const user = await client.query<DatabaseUser>(
                 q.Update(
                     q.Ref(q.Collection("users"), id),
-                    userUpdate
+                    {
+                        data: {
+                            ...userUpdate
+                        }
+                    }
                 )
             );
             return user;
