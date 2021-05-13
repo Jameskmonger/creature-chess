@@ -8,7 +8,13 @@ export const shouldBuyXp = (money: number, level: number, xp: number): boolean =
 		return false;
 	}
 
-	const xpRequired = getXpToNextLevel(level) - xp;
+	const xpForNextLevel = getXpToNextLevel(level);
+
+	if (xpForNextLevel === null) {
+		return false;
+	}
+
+	const xpRequired = xpForNextLevel - xp;
 	const purchasesRequired = Math.ceil(xpRequired / BUY_XP_AMOUNT);
 	const cost = purchasesRequired * BUY_XP_COST;
 

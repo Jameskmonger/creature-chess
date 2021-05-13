@@ -20,7 +20,7 @@ export const playerBattle = function*() {
 			function*({ payload: { homeScore, awayScore } }) {
 				const opponentId = yield* select((state: HasPlayerInfo) => state.playerInfo.opponentId);
 
-				yield put(PlayerInfoCommands.updateBattleCommand(finishedBattle(opponentId, homeScore, awayScore)));
+				yield put(PlayerInfoCommands.updateBattleCommand(finishedBattle(opponentId!, homeScore, awayScore)));
 			}
 		),
 		fork(playerMatchRewards),

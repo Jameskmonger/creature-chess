@@ -1,12 +1,11 @@
-import React from "react"
-import { MAX_NAME_LENGTH } from "@creature-chess/models"
+import React from "react";
+import { MAX_NAME_LENGTH } from "@creature-chess/models";
 
 const NicknameSelection: React.FunctionComponent<{
 	nickname: string,
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 	loading: boolean
 }> = ({ nickname, onChange, loading }) => {
-
 	return (
 		<div className="nickname-selection">
 			<div className="nickname">
@@ -21,10 +20,8 @@ const NicknameSelection: React.FunctionComponent<{
 					className="name-input"
 					disabled={loading}
 				/>
-				<div>
-				</div>
 			</div>
 		</div>
-	)
-}
-export { NicknameSelection }
+	);
+};
+export { NicknameSelection };

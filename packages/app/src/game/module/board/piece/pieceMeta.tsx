@@ -21,10 +21,9 @@ const PieceMeta: React.FunctionComponent<{ id: string; pieceIsOnBench?: boolean 
 					<StageIndicator pieceId={id} />
 				</div>
 			</div>
-			<div className="piece-meta-top">
-			</div>
+			<div className="piece-meta-top" />
 		</div>
-	)
+	);
 };
 
 export { PieceMeta };

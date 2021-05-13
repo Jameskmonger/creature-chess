@@ -6,59 +6,58 @@ import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
 const getStreakType = (player: PlayerListPlayer): string => {
-	const streakType = player?.streakType
-	const streakAmount = player?.streakAmount
+	const streakType = player?.streakType;
+	const streakAmount = player?.streakAmount;
 
 	if (!player || streakAmount === 0) {
-		return ""
+		return "";
 	}
 	if (streakType === StreakType.WIN) {
-		return streakAmount === 1 ? "Win" : "Wins"
+		return streakAmount === 1 ? "Win" : "Wins";
 	}
-	return streakAmount === 1 ? "Loss" : "Losses"
-}
+	return streakAmount === 1 ? "Loss" : "Losses";
+};
 
 const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): number => {
-	return playerList.indexOf(player) + 1
-}
+	return playerList.indexOf(player) + 1;
+};
 
 const getPositionModifier = (position: number): string => {
 	if (position === 1) {
-		return "st"
+		return "st";
 	}
 	if (position === 2) {
-		return "nd"
+		return "nd";
 	}
 	if (position === 3) {
-		return "rd"
+		return "rd";
 	}
-	return "th"
-}
+	return "th";
+};
 
 const ReadyOverlay: React.FunctionComponent = () => {
-
-	const inReadyPhase = useSelector<AppState, Boolean>(state =>
+	const inReadyPhase = useSelector<AppState, boolean>(state =>
 		state.game.roundInfo.phase === GamePhase.READY
-	)
+	);
 
 	const playerList = useSelector((state: AppState) => {
-		return state.game.playerList
-	})
+		return state.game.playerList;
+	});
 
-	const localId = usePlayerId()
-	const playerInfo = playerList.find(p => p.id === localId)
+	const localId = usePlayerId();
+	const playerInfo = playerList.find(p => p.id === localId);
 
 	const opponentInfo: PlayerListPlayer = useSelector((state: AppState) => {
-		const id = state.game.playerInfo.opponentId
-		return state.game.playerList.find(p => p.id === id)
-	})
+		const id = state.game.playerInfo.opponentId;
+		return state.game.playerList.find(p => p.id === id);
+	});
 
 	if (!opponentInfo || !inReadyPhase) {
-		return null
+		return null;
 	}
 
-	const playerPosition = getPosition(playerInfo, playerList)
-	const opponentPosition = getPosition(opponentInfo, playerList)
+	const playerPosition = getPosition(playerInfo, playerList);
+	const opponentPosition = getPosition(opponentInfo, playerList);
 
 	return (
 		<BoardOverlay>
@@ -76,7 +75,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 				</ul>
 			</div>
 		</BoardOverlay>
-	)
-}
+	);
+};
 
-export { ReadyOverlay }
+export { ReadyOverlay };

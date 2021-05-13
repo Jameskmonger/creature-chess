@@ -11,13 +11,13 @@ import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
-import { ReadyOverlay } from "./overlays/readyOverlay"
+import { ReadyOverlay } from "./overlays/readyOverlay";
 import { clearSelectedPiece } from "../../ui/actions";
 import { NowPlaying } from "../nowPlaying";
 import { PieceComponent } from "./piece/pieceComponent";
 import { playerClickTileAction } from "./clickToDropSaga";
 
-const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
+const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation | null => {
 	if (board) {
 		const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
 
@@ -25,18 +25,18 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 			return {
 				type: "board",
 				location: boardPiecePosition
-			}
+			};
 		}
 	}
 
 	if (bench) {
 		const benchPiecePosition = BoardSelectors.getPiecePosition(bench, pieceId);
 
-		if (benchPiecePosition !== undefined) {
+		if (benchPiecePosition) {
 			return {
 				type: "bench",
 				location: benchPiecePosition
-			}
+			};
 		}
 	}
 
@@ -47,6 +47,10 @@ const onDropPiece = (dispatch: Dispatch<any>, locationType: "board" | "bench", b
 	(item: DragObjectWithType, x: number, y: number) => {
 		const piece: PieceModel = (item as any).piece;
 		const from = getLocationForPiece(piece.id, board, bench);
+
+		if (!from) {
+			return;
+		}
 
 		const location: PlayerPieceLocation = {
 			type: locationType,
@@ -72,8 +76,28 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 	const board = useSelector<AppState, BoardState>(state => state.game.board);
 	const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 
-	const selectedPieceId = useSelector<AppState, string>(state => state.game.ui.selectedPieceId);
+	const selectedPieceId = useSelector<AppState, string | null>(state => state.game.ui.selectedPieceId);
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
+
+	const renderBoardPiece = (id: string) => (
+		<PieceComponent
+			id={id}
+			draggable={inPreparingPhase}
+			animate={!inPreparingPhase}
+			selected={id === selectedPieceId}
+			pieceIsOnBench={false}
+		/>
+	);
+
+	const renderBenchPiece = (id: string) => (
+		<PieceComponent
+			id={id}
+			draggable
+			animate={false}
+			selected={id === selectedPieceId}
+			pieceIsOnBench
+		/>
+	);
 
 	return (
 		<div className="group board-container style-default">
@@ -87,15 +111,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 						state={board}
 						onDrop={onDropPiece(dispatch, "board", board, bench)}
 						onClick={onTileClick(dispatch, "board")}
-						renderItem={id => (
-							<PieceComponent
-								id={id}
-								draggable={inPreparingPhase}
-								animate={!inPreparingPhase}
-								selected={id === selectedPieceId}
-								pieceIsOnBench={false}
-							/>
-						)}
+						renderItem={renderBoardPiece}
 					/>
 				</div>
 
@@ -110,15 +126,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 					state={bench}
 					onDrop={onDropPiece(dispatch, "bench", board, bench)}
 					onClick={onTileClick(dispatch, "bench")}
-					renderItem={id => (
-						<PieceComponent
-							id={id}
-							draggable
-							animate={false}
-							selected={id === selectedPieceId}
-							pieceIsOnBench
-						/>
-					)}
+					renderItem={renderBenchPiece}
 				/>
 			</div>
 		</div>

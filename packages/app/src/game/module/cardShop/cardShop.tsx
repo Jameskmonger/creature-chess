@@ -34,7 +34,7 @@ const CurrentCard: React.FunctionComponent<{ card: CardModel, onBuy: () => void 
 				<button onClick={onBuy}>Buy (${card.cost})</button>
 			</div>
 		</>
-	)
+	);
 };
 
 const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
@@ -109,7 +109,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
 			</div>
 
 			<div className="cards">
-				<div className="tray"></div>
+				<div className="tray" />
 				{cards.map(createCard)}
 			</div>
 		</div>

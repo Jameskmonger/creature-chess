@@ -1,6 +1,6 @@
-import { LobbyMemberType } from "../lobby/lobbyMember";
+import { LobbyMember, LobbyMemberType } from "../lobby/lobbyMember";
 
-export const sortMembersByPlayerType = (a, b) => {
+export const sortMembersByPlayerType = (a: LobbyMember, b: LobbyMember) => {
 	if (a.type === LobbyMemberType.BOT && b.type === LobbyMemberType.PLAYER) {
 		return 1;
 	}

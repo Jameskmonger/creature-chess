@@ -8,7 +8,7 @@ export type MenuState = {
 const initialState: MenuState = {
 	loading: false,
 	error: null
-}
+};
 
 export const { reducer, actions: { startLoading, finishLoading } } = createSlice({
 	name: "menu",
@@ -18,4 +18,4 @@ export const { reducer, actions: { startLoading, finishLoading } } = createSlice
 		finishLoading: (state, { payload: error = null }: PayloadAction<string | null>) =>
 			({ ...state, loading: false, error })
 	}
-})
+});

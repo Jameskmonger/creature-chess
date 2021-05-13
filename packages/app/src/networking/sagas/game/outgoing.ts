@@ -1,4 +1,4 @@
-import { takeEvery, take, all, fork } from "@redux-saga/core/effects";
+import { call, takeEvery, take, all, fork } from "@redux-saga/core/effects";
 import { PlayerGameActions } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ClientToServer } from "@creature-chess/networking";
 
@@ -26,7 +26,7 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
 				registry.emit(ClientToServer.PacketOpcodes.FINISH_MATCH, { empty: true });
 			}
 		),
-		yield fork(sendPlayerActions, registry)
+		call(sendPlayerActions, registry)
 	]);
 };
 
@@ -35,5 +35,5 @@ export const outgoingGameNetworking = function*(socket: SocketIOClient.Socket) {
 		(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 	);
 
-	yield fork(writeActionsToPackets, registry);
+	yield call(writeActionsToPackets, registry);
 };

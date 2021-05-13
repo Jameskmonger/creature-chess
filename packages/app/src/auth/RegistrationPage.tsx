@@ -3,10 +3,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { validateNicknameFormat } from "@creature-chess/models";
 import { patchUser } from "./utils/patchUser";
 import { Auth0User } from "./user";
-import { NicknameSelection } from "./registration/NicknameSelection"
-import { PictureSelection } from "./registration/PictureSelection"
+import { NicknameSelection } from "./registration/NicknameSelection";
+import { PictureSelection } from "./registration/PictureSelection";
 import { hasNickname } from "./utils/isRegistered";
-
 
 const RegistrationPage: React.FunctionComponent = () => {
 
@@ -14,14 +13,14 @@ const RegistrationPage: React.FunctionComponent = () => {
 	const [nickname, setNickname] = React.useState<string>("");
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [error, setError] = React.useState<string | null>(null);
-	const [currentImage, setCurrentImage] = React.useState(1)
+	const [currentImage, setCurrentImage] = React.useState(1);
 	const { user } = useAuth0<Auth0User>();
 
 	React.useEffect(() => {
 		if (hasNickname(user)) {
-			setNickname(null)
+			setNickname(null);
 		}
-	})
+	});
 
 	const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => setNickname(event.target.value);
 
@@ -59,8 +58,8 @@ const RegistrationPage: React.FunctionComponent = () => {
 	};
 
 	const handleImageChange = (picture: number): void => {
-		setCurrentImage(picture)
-	}
+		setCurrentImage(picture);
+	};
 
 	return (
 		<div className="register">

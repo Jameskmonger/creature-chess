@@ -27,8 +27,8 @@ export const startServer = async (logger: Logger, port: number) => {
 		clientSecret: AUTH0_CONFIG.clientSecret
 	});
 
-	const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
-	const discordApi = await createDiscordApi(logger, process.env.DISCORD_BOT_TOKEN);
+	const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY!);
+	const discordApi = await createDiscordApi(logger, process.env.DISCORD_BOT_TOKEN!);
 	const matchmaking = new Matchmaking(logger, database, discordApi);
 
 	// networking

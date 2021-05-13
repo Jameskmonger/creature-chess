@@ -2,9 +2,10 @@ import { Client as FaunaDBClient, query as q } from "faunadb";
 import { DatabaseUser } from "./databaseUser";
 
 export const setProfileInfo = (client: FaunaDBClient) => {
-	return async (id: string, nickname: string, picture: number) => {
+	return async (id: string, nickname: string | null, picture: number | null) => {
 		try {
-			let userUpdate;
+			let userUpdate = {};
+
 			if (nickname) {
 				userUpdate = {
 					...userUpdate,
@@ -14,6 +15,7 @@ export const setProfileInfo = (client: FaunaDBClient) => {
 					}
 				};
 			}
+
 			if (picture) {
 				userUpdate = {
 					...userUpdate,
@@ -22,6 +24,7 @@ export const setProfileInfo = (client: FaunaDBClient) => {
 					}
 				};
 			}
+
 			const user = await client.query<DatabaseUser>(
 				q.Update(
 					q.Ref(q.Collection("users"), id),
@@ -32,6 +35,7 @@ export const setProfileInfo = (client: FaunaDBClient) => {
 					}
 				)
 			);
+
 			return user;
 
 		} catch (e) {

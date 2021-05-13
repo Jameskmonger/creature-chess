@@ -16,7 +16,7 @@ export type UserDatabaseFunctions = {
 	addWin: (id: string) => Promise<DatabaseUser | null>;
 	addGamePlayed: (id: string) => Promise<DatabaseUser | null>;
 
-	setProfileInfo: (id: string, nickname: string, picture: number) => Promise<DatabaseUser> | null;
+	setProfileInfo: (id: string, nickname: string | null, picture: number | null) => Promise<DatabaseUser | null>;
 };
 
 export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {

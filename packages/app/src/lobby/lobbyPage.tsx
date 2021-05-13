@@ -23,13 +23,12 @@ const countdownRender = (totalSecondsRemaining: number) => {
 
 const LobbyPage: React.FunctionComponent = () => {
 	const lobbyId = useSelector<AppState, string>(state => state.lobby.lobbyId);
+	const players = useSelector<AppState, LobbyPlayer[]>(state => state.lobby.players);
+	const lobbyStartingAtMs = useSelector<AppState, number>(state => state.lobby.startingAtMs);
 
 	if (lobbyId === null) {
 		return <div>An error occured, please refresh your page</div>;
 	}
-
-	const players = useSelector<AppState, LobbyPlayer[]>(state => state.lobby.players);
-	const lobbyStartingAtMs = useSelector<AppState, number>(state => state.lobby.startingAtMs);
 
 	return (
 		<div className="lobby">

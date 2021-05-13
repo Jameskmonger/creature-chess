@@ -28,7 +28,7 @@ const BoardItems: React.FunctionComponent<{ render: BoardItemRenderFn }> = ({ re
 			continue;
 		}
 
-		const [x, y] = position.split(",").map(x => parseInt(x, 10));
+		const [x, y] = position.split(",").map(i => parseInt(i, 10));
 
 		pieceElements.push(<BoardItem key={id} x={x} y={y}>{render(id, x, y)}</BoardItem>);
 	}

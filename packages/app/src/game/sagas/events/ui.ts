@@ -27,5 +27,5 @@ export const uiSaga = function*() {
 					return;
 			}
 		}
-	)
-}
+	);
+};

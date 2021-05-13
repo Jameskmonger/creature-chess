@@ -25,7 +25,7 @@ export const authenticate = async (
 			// need to create an account
 			const newUser = await database.user.create(authUser.user_id!);
 
-			await managementClient.updateAppMetadata({ id: authUser.user_id }, { playerId: newUser.ref.id, playerNickname: null, playerPicture: null });
+			await managementClient.updateAppMetadata({ id: authUser.user_id! }, { playerId: newUser!.ref.id, playerNickname: null, playerPicture: null });
 
 			return convertDatabaseUserToUserModel(newUser!);
 		}
@@ -34,9 +34,10 @@ export const authenticate = async (
 
 		const userModel = convertDatabaseUserToUserModel(dbUser!);
 
+		// todo remove this when DB gets wiped, it's to migrate people who were during the nickname changeover
 		if (userModel.nickname && !authUser.app_metadata.playerNickname) {
 			await managementClient.updateAppMetadata(
-				{ id: authUser.user_id }, { playerId: dbUser.ref.id, playerNickname: userModel.nickname, playerPicture: userModel.profile.picture }
+				{ id: authUser.user_id! }, { playerId: dbUser!.ref.id, playerNickname: userModel.nickname, playerPicture: userModel.profile?.picture || null }
 			);
 		}
 

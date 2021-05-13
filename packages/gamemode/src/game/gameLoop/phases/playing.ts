@@ -5,6 +5,7 @@ import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
 import { playerFinishMatchEvent } from "../../events";
+import { Match } from "../../match";
 
 const waitForFinishMatchSaga = function*() {
 	yield take(playerFinishMatchEvent.toString());
@@ -25,7 +26,13 @@ export const runPlayingPhase = function*() {
 
 	const livingPlayers = players.getLiving();
 
-	const matches = [...new Set(livingPlayers.map(p => p.getMatch()))];
+	const matches = [
+		...new Set(
+			livingPlayers
+				.map(p => p.getMatch())
+				.filter((match): match is Match => match !== null)
+		)
+	];
 	const finishMatchTasks = livingPlayers.map(p => p.runSaga(waitForFinishMatchSaga));
 
 	matches.forEach(m => m.fight(battleTimeoutDeferred.promise));

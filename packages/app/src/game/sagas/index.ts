@@ -43,7 +43,7 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
 		yield put(PlayerListCommands.updatePlayerListCommand(players));
 
 		const update = { phase, startedAt: phaseStartedAtSeconds };
-		yield put(RoundInfoCommands.setRoundInfoCommand(update))
+		yield put(RoundInfoCommands.setRoundInfoCommand(update));
 
 		if (battleTurn !== null) {
 			yield put(startBattle(battleTurn));

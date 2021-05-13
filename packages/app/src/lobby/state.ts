@@ -6,7 +6,7 @@ export type LobbyState = {
 	lobbyId: string;
 	players: LobbyPlayer[];
 	startingAtMs: number;
-}
+};
 
 const initialState: LobbyState = {
 	lobbyId: null,
@@ -37,4 +37,4 @@ export const { reducer, actions: LobbyCommands } = createSlice({
 			return cloned;
 		}
 	}
-})
+});

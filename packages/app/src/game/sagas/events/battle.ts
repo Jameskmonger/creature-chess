@@ -29,5 +29,5 @@ export const clientBattleSaga = function*(slices: { benchSlice: BoardSlice, boar
 				yield put(startBattle());
 			}
 		}
-	)
-}
+	);
+};

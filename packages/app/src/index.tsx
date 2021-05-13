@@ -8,7 +8,7 @@ import { Integrations } from "@sentry/tracing";
 
 import "pepjs";
 import "./display/style/index.scss";
-import "@creature-chess/board-react/style.css"
+import "@creature-chess/board-react/style.css";
 
 import { createAppStore } from "./store/store";
 import { App } from "./app";
@@ -17,7 +17,7 @@ import { auth0Config } from "./auth/config";
 if (process.env.SENTRY_DSN) {
 	Sentry.init({
 		dsn: process.env.SENTRY_DSN,
-		environment: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+		environment: process.env.NODE_ENV === "development" ? "development" : "production",
 		integrations: [new Integrations.BrowserTracing()],
 
 		// Set tracesSampleRate to 1.0 to capture 100%

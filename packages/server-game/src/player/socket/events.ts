@@ -7,17 +7,15 @@ export type ReceivePlayerActionsEvent = ({
 	type: RECEIVE_PLAYER_ACTIONS_EVENT,
 	payload: {
 		index: number,
-		actions: PlayerGameActions.PlayerGameAction[],
-		ack: (accepted: boolean, packetIndex?: number) => void
+		actions: PlayerGameActions.PlayerGameAction[]
 	}
 });
 export const receivePlayerActionsEvent = (
 	index: number,
-	actions: PlayerGameActions.PlayerGameAction[],
-	ack: (accepted: boolean, packetIndex?: number) => void
+	actions: PlayerGameActions.PlayerGameAction[]
 ): ReceivePlayerActionsEvent => ({
 	type: RECEIVE_PLAYER_ACTIONS_EVENT,
-	payload: { index, actions, ack }
+	payload: { index, actions }
 });
 
 export const NEW_PLAYER_SOCKET_EVENT = "NEW_PLAYER_SOCKET_EVENT";

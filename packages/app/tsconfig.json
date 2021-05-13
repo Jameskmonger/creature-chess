@@ -1,9 +1,10 @@
 {
-    "extends": "../../tsconfig.json",
-    "include": [
-        "./src/**/*"
-    ],
-    "compilerOptions": {
-        "esModuleInterop": true
-    }
+	"extends": "../../tsconfig.json",
+	"include": [
+		"./src/**/*"
+	],
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"strict": false
+	}
 }

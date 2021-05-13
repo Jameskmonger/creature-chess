@@ -23,4 +23,4 @@ const UndroppableTile: React.FunctionComponent<{ className: string }> = ({ class
 	);
 };
 
-export { UndroppableTile }
+export { UndroppableTile };

@@ -29,6 +29,8 @@ const Profile: React.FunctionComponent = () => {
 		return null;
 	}
 
+	const onBuyXp = () => dispatch(PlayerGameActions.buyXpPlayerAction());
+
 	return (
 		<div className="profile">
 			<div className="row">
@@ -53,8 +55,10 @@ const Profile: React.FunctionComponent = () => {
 					&& (
 						<button
 							className="buy-xp"
-							onClick={() => dispatch(PlayerGameActions.buyXpPlayerAction())}
-						>Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})</button>
+							onClick={onBuyXp}
+						>
+							Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})
+						</button>
 					)
 				}
 			</div>
@@ -63,7 +67,7 @@ const Profile: React.FunctionComponent = () => {
 				className="healthbar player-health"
 				current={health}
 				max={100}
-				renderContents={current => current.toString()}
+				renderContents={renderProgressBar}
 			/>
 		</div>
 	);

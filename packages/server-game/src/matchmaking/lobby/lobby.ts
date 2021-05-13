@@ -19,7 +19,7 @@ export type LobbyStartEvent = {
 
 export class Lobby {
 	public readonly id: string;
-	public readonly gameStartTime: number = null;
+	public readonly gameStartTime: number | null = null;
 
 	private members: LobbyMember[];
 
@@ -81,6 +81,10 @@ export class Lobby {
 
 		const playerChangedIndex = this.createPlayerLobbyMember(socket, id, name, profile);
 
+		if (playerChangedIndex === null) {
+			return;
+		}
+
 		const lobbyPlayer: LobbyPlayer = {
 			id,
 			name,
@@ -114,8 +118,9 @@ export class Lobby {
 			throw Error("Tried to start already-started game");
 		}
 
-		this.members.filter(m => m.type === LobbyMemberType.PLAYER)
-			.forEach((player: PlayerLobbyMember) => {
+		this.members
+			.filter((m): m is PlayerLobbyMember => m.type === LobbyMemberType.PLAYER)
+			.forEach(player => {
 				player.net.outgoing.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
 			});
 
@@ -132,7 +137,7 @@ export class Lobby {
 		const shuffledBots = shuffle(bots);
 
 		for (const { id, name } of shuffledBots) {
-			this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}`, profile: undefined });
+			this.members.push({ type: LobbyMemberType.BOT, id, name: `[BOT] ${name}`, profile: null });
 		}
 	}
 
@@ -156,6 +161,10 @@ export class Lobby {
 
 			index = i;
 			break;
+		}
+
+		if (index === null) {
+			return null;
 		}
 
 		const member: PlayerLobbyMember = {

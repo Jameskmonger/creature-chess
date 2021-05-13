@@ -1,5 +1,5 @@
-import React from "react"
-import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models"
+import React from "react";
+import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
 
 const PictureSelection: React.FunctionComponent<{
 	currentImage: number,
@@ -13,7 +13,9 @@ const PictureSelection: React.FunctionComponent<{
 			<form>
 				{
 					Object.entries(AVAILABLE_PROFILE_PICTURES).map(([pictureString, creatureName]) => {
-						const picture = parseInt(pictureString, 10)
+						const picture = parseInt(pictureString, 10);
+						const onSelect = () => onChange(picture);
+
 						return (
 							<div className="available-pictures" key={picture}>
 								<img
@@ -27,15 +29,15 @@ const PictureSelection: React.FunctionComponent<{
 									type="radio"
 									value={picture}
 									checked={currentImage === picture}
-									onChange={() => onChange(picture)}
+									onChange={onSelect}
 								/>
 							</div>
-						)
+						);
 					})
 				}
 			</form>
 		</div>
-	)
+	);
 };
 
 export { PictureSelection };

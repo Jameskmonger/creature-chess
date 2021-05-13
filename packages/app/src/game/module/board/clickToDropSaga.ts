@@ -14,7 +14,7 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 			return {
 				type: "board",
 				location: boardPiecePosition
-			}
+			};
 		}
 	}
 
@@ -25,7 +25,7 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 			return {
 				type: "bench",
 				location: benchPiecePosition
-			}
+			};
 		}
 	}
 
@@ -54,9 +54,9 @@ export const clickToDropSaga = function*() {
 		const piecePositionKey = `${tile.location.x},${tile.location.y}`;
 
 		if (tile.type === "bench") {
-			tileEmpty = !bench.piecePositions[piecePositionKey];;
+			tileEmpty = !bench.piecePositions[piecePositionKey];
 		} else if (tile.type === "board") {
-			tileEmpty = !board.piecePositions[piecePositionKey];;
+			tileEmpty = !board.piecePositions[piecePositionKey];
 		}
 
 		if (!tileEmpty) {

@@ -63,7 +63,7 @@ const AuthenticatedRoutes: React.FunctionComponent = () => {
 	);
 };
 
-ReactModal.setAppElement('#approot');
+ReactModal.setAppElement("#approot");
 
 const App: React.FunctionComponent = () => {
 	const { isAuthenticated, isLoading } = useAuth0();

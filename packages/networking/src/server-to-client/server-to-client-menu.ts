@@ -23,7 +23,7 @@ export type GameConnectionPacket = {
 		money: number;
 		level: number;
 		xp: number;
-		cards: Models.Card[];
+		cards: (Models.Card | null)[];
 	};
 
 	game: RoundInfoState;

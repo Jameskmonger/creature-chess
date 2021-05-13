@@ -1,12 +1,19 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "experimentalDecorators": true,
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "jsx": "react",
-        "lib": [ "es2017", "dom" ],
-        "downlevelIteration": true,
-        "types": [ "node", "jest" ]
-    }
+	"compilerOptions": {
+		"baseUrl": ".",
+		"experimentalDecorators": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"jsx": "react",
+		"lib": [
+			"es2017",
+			"dom"
+		],
+		"downlevelIteration": true,
+		"strict": true,
+		"types": [
+			"node",
+			"jest"
+		]
+	}
 }

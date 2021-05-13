@@ -27,7 +27,7 @@ interface Animation {
 	variables?: AnimationVariables;
 }
 
-type PieceDragObject = DragObjectWithType & { piece: PieceModel }
+type PieceDragObject = DragObjectWithType & { piece: PieceModel };
 
 const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props) => {
 	const { id, draggable, animate, selected, pieceIsOnBench = false } = props;

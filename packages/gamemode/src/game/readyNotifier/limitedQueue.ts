@@ -11,7 +11,7 @@ type LimitedQueue<T> = {
 
 export const limitedQueue = <T>(size: number): LimitedQueue<T> => {
 	const events = new EventEmitter();
-	let items = [];
+	let items: T[] = [];
 
 	const checkFull = () => {
 		if (items.length === size) {

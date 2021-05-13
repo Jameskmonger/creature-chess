@@ -27,6 +27,8 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 	return <div className={`streak-indicator ${type === StreakType.WIN ? "win" : "lose"}`}>{amount}</div>;
 };
 
+const renderHealthbar = (current: number) => current.toString();
+
 const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpponent, isLocal, showReadyIndicator = false, level = null, money = null }) => {
 	const player = useSelector<AppState, PlayerListPlayer>(state => state.game.playerList.find(p => p.id === playerId));
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
@@ -54,7 +56,7 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 							className="healthbar player-health"
 							current={player.health}
 							max={100}
-							renderContents={current => current.toString()}
+							renderContents={renderHealthbar}
 						/>
 					</div>
 				</div>

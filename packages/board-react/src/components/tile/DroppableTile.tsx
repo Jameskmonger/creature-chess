@@ -10,7 +10,7 @@ type DroppableTileProps = {
 	y: number;
 	onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
 	onClick: (x: number, y: number) => void;
-}
+};
 
 type PieceDragObject = DragObjectWithType & { piece: HasId };
 type DropTargetCollectProps = { canDrop: boolean, isDragging: boolean };
@@ -23,8 +23,8 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
 		accept: "Piece",
 		drop: item => onDrop(item, x, y),
 		canDrop: ({ piece }) => {
-			const pieceIsFromSameBoard = Boolean(pieces[piece.id])
-			return belowPieceLimit || pieceIsFromSameBoard
+			const pieceIsFromSameBoard = Boolean(pieces[piece.id]);
+			return belowPieceLimit || pieceIsFromSameBoard;
 		},
 		collect: monitor => ({
 			canDrop: !!monitor.canDrop(),
@@ -32,16 +32,18 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
 		}),
 	});
 
+	const onClickFn = () => onClick(x, y);
+
 	return (
 		<div
 			ref={drop}
 			className={`tile ${className}`}
 			touch-action="none"
-			onPointerUp={() => onClick(x, y)}
+			onPointerUp={onClickFn}
 		>
 			<div className={`${getOverlayClassName(isDragging, canDrop)}`} />
 		</div>
 	);
 };
 
-export { DroppableTile }
+export { DroppableTile };

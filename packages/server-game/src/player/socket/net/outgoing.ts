@@ -31,7 +31,7 @@ export const outgoingNetworking = function*() {
 						startedAtSeconds: startedAt,
 						phase: GamePhase.PREPARING,
 						payload: {
-							round,
+							round: round!,
 							pieces: {
 								board,
 								bench
@@ -209,8 +209,8 @@ export const outgoingNetworking = function*() {
 	]);
 	yield delay(100);
 
-	socket.removeAllListeners();
-	socket.disconnect();
-	socket = null;
-	registry = null;
+	socket!.removeAllListeners();
+	socket!.disconnect();
+	(socket! as unknown as null) = null;
+	(registry! as unknown as null) = null;
 };

@@ -132,7 +132,7 @@ export const patchCurrent = (
 		// update metadata if anything changed
 		if (outputUser !== user) {
 			await authClient.updateAppMetadata(
-				{ id: outputUser.authId }, { playerId: outputUser.id, playerNickname: outputUser.nickname, playerPicture: outputUser.profile.picture }
+				{ id: outputUser.authId }, { playerId: outputUser.id, playerNickname: outputUser.nickname, playerPicture: outputUser.profile?.picture || null }
 			);
 		}
 

@@ -15,7 +15,7 @@ import {
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
 	const dispatch = useDispatch();
 	const isActive = useSelector<AppState, boolean>(state => state.game.ui.currentOverlay === overlay);
-	const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health !== 0)
+	const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health !== 0);
 
 	const onClick = () => {
 		if (isActive) {
@@ -24,7 +24,7 @@ const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition 
 		}
 		if (overlay === Overlay.SHOP) {
 			if (!canUseShop) {
-				return
+				return;
 			}
 		}
 
@@ -49,7 +49,11 @@ const Navbar: React.FunctionComponent = () => {
 	);
 };
 
-const OverlayComponent: React.FunctionComponent<{ title: string, children: React.ReactNode, fullscreen?: boolean }> = ({ title, children, fullscreen = false }) => {
+const OverlayComponent: React.FunctionComponent<{
+	title: string,
+	children: React.ReactNode,
+	fullscreen?: boolean
+}> = ({ title, children, fullscreen = false }) => {
 	const dispatch = useDispatch();
 	const dispatchCloseOverlay = () => dispatch(closeOverlay());
 
@@ -105,7 +109,7 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
 };
 
 const MobileGameContentPane: React.FunctionComponent = () => {
-	const currentOverlay = useSelector<AppState, Overlay>(state => state.game.ui.currentOverlay);
+	const currentOverlay = useSelector<AppState, Overlay | null>(state => state.game.ui.currentOverlay);
 
 	if (currentOverlay === null) {
 		return (

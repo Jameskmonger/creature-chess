@@ -23,9 +23,8 @@ export const incomingNetworking = function*() {
 
 		const channel = eventChannel<ReceivePlayerActionsEvent>(emit => {
 			const onReceiveActions = (
-				{ index, actions }: ClientToServer.SendPlayerActionsPacket,
-				ack: (accepted: boolean, packetIndex?: number) => void
-			) => emit(receivePlayerActionsEvent(index, actions, ack));
+				{ index, actions }: ClientToServer.SendPlayerActionsPacket
+			) => emit(receivePlayerActionsEvent(index, actions));
 
 			registry.on(ClientToServer.PacketOpcodes.SEND_PLAYER_ACTIONS, onReceiveActions);
 
@@ -54,7 +53,7 @@ export const incomingNetworking = function*() {
 
 				// if there's an action for the expected index, process it and repeat
 				while (actionQueue[0]) {
-					const actionFromQueue = actionQueue.shift();
+					const actionFromQueue = actionQueue.shift()!;
 					expectedPacketIndex++;
 					yield put(actionFromQueue);
 				}
@@ -104,8 +103,8 @@ export const incomingNetworking = function*() {
 	]);
 	yield delay(100);
 
-	socket.removeAllListeners();
-	socket.disconnect();
-	socket = null;
-	registry = null;
+	socket!.removeAllListeners();
+	socket!.disconnect();
+	(socket! as unknown as null) = null;
+	(registry! as unknown as null) = null;
 };

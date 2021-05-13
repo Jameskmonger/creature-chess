@@ -6,7 +6,7 @@ import { PREFERRED_LOCATIONS } from "../preferredLocations";
 import { BOT_ACTION_TIME_MS } from "../constants";
 
 // todo selector
-const getFirstBenchPiece = (state: PlayerState): PieceModel => {
+const getFirstBenchPiece = (state: PlayerState): PieceModel | null => {
 	for (let x = 0; x < state.bench.size.width; x++) {
 		if (state.bench.piecePositions[`${x},0`]) {
 			return state.bench.pieces[state.bench.piecePositions[`${x},0`]];
@@ -16,7 +16,7 @@ const getFirstBenchPiece = (state: PlayerState): PieceModel => {
 	return null;
 };
 
-const getBenchSlotForPiece = (state: PlayerState, pieceId: string): number => {
+const getBenchSlotForPiece = (state: PlayerState, pieceId: string): number | null => {
 	for (let x = 0; x < state.bench.size.width; x++) {
 		if (state.bench.piecePositions[`${x},0`] === pieceId) {
 			return x;
@@ -47,6 +47,10 @@ export const putBenchOnBoard = function*() {
 		};
 
 		const benchPieceSlot = getBenchSlotForPiece(state, firstBenchPiece.id);
+
+		if (benchPieceSlot === null) {
+			return;
+		}
 
 		const benchPiecePosition: PlayerPieceLocation = {
 			type: "bench",

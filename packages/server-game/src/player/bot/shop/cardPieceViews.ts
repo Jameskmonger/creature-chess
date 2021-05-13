@@ -46,7 +46,7 @@ export const compareCardPieceViews = (a: CardPieceView, b: CardPieceView) => {
 export const getCardViews = (state: PlayerState): CardView[] => {
 	const { cards } = state.cardShop;
 
-	const views = cards.filter(c => c !== null).map(getCardViewFactory(state));
+	const views = cards.filter((card): card is Card => card !== null).map(getCardViewFactory(state));
 
 	views.sort(compareCardPieceViews);
 
@@ -77,7 +77,7 @@ const getCardViewFactory = (state: PlayerState) => (card: Card, index: number): 
 };
 
 const getPieceViewFactory = (state: PlayerState) => (piece: PieceModel): PieceView => {
-	const { cost } = getDefinitionById(piece.definitionId);
+	const { cost } = getDefinitionById(piece.definitionId)!;
 	const amountOwned = getPieceCountForDefinition(state, piece.definitionId);
 
 	return {

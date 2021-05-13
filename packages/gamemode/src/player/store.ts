@@ -29,7 +29,7 @@ export type PlayerStore = Store<PlayerState>;
 
 export const createPlayerStore = (
 	getLogger: () => Logger,
-	getMatch: () => Match,
+	getMatch: () => Match | null,
 	playerId: string,
 	playerName: string,
 	boardSlices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }

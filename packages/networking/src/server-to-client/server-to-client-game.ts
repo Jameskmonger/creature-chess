@@ -11,7 +11,7 @@ export type PreparingPhaseUpdatePacket = {
 			board: BoardState;
 			bench: BoardState;
 		};
-		cards: Card[];
+		cards: (Card | null)[];
 	}
 };
 
@@ -49,7 +49,7 @@ type MatchRewardsPacket = {
 	damage: number;
 	justDied: boolean;
 	rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
-};
+} | null;
 
 type BoardUpdatePacket = BoardState<PieceModel>;
 
@@ -71,7 +71,7 @@ export enum PacketOpcodes {
 export type PacketDefinitions = {
 	[PacketOpcodes.BENCH_UPDATE]: BoardUpdatePacket,
 	[PacketOpcodes.BOARD_UPDATE]: BoardUpdatePacket,
-	[PacketOpcodes.CARDS_UPDATE]: Card[],
+	[PacketOpcodes.CARDS_UPDATE]: (Card | null)[],
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[],
 	[PacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
 	[PacketOpcodes.MONEY_UPDATE]: number,

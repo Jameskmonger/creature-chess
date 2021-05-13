@@ -42,7 +42,7 @@ export class Matchmaking {
 
 		const playerInGame = this.getPlayerInGame(id);
 
-		if (playerInGame) {
+		if (playerInGame && playerInGame.player) {
 			// todo cancel the old saga
 			playerInGame.player.runSaga(incomingNetworking);
 			playerInGame.player.runSaga(outgoingNetworking);
@@ -70,10 +70,10 @@ export class Matchmaking {
 		}
 
 		const { lobby: newLobby, created } = await this.findOrCreateLobby();
-		newLobby.addConnection(socket, id, nickname, profile);
+		newLobby.addConnection(socket, id, nickname!, profile!);
 
 		if (created) {
-			this.discordApi.startLobby(nickname);
+			this.discordApi.startLobby(nickname!);
 		}
 
 		this.searchingForGame = false;
@@ -90,7 +90,7 @@ export class Matchmaking {
 
 		const playerInGame = matchingGame.getPlayerById(id);
 
-		if (playerInGame.isDead()) {
+		if (!playerInGame || playerInGame.isDead()) {
 			return null;
 		}
 
@@ -118,7 +118,7 @@ export class Matchmaking {
 	}
 
 	private generateProfile = (player: LobbyMember, pictures: number[]) => {
-		const picture = player.profile?.picture ?? pictures.pop();
+		const picture = player.profile?.picture ?? pictures.pop() ?? null;
 		const title = player.profile?.title ?? null;
 
 		return {
@@ -211,7 +211,7 @@ export class Matchmaking {
 
 	private async createLobby() {
 		const bots = await this.database.bot.getLeastPlayedBots(MAX_PLAYERS_IN_GAME);
-		const lobby = new Lobby(this.lobbyIdGenerator, bots);
+		const lobby = new Lobby(this.lobbyIdGenerator, bots!);
 
 		lobby.onStartGame(this.onLobbyStart);
 

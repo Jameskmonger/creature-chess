@@ -25,7 +25,7 @@ export const playerPreparingPhase = function*() {
 
 			if (matchRewards) {
 				const currentMoney = yield* select((state: PlayerState) => state.playerInfo.money);
-				const totalMatchReward = yield* select((state: PlayerState) => state.playerInfo.matchRewards.rewardMoney.total);
+				const totalMatchReward = matchRewards.rewardMoney.total;
 
 				// todo make addMoneyCommand
 				yield put(updateMoneyCommand(currentMoney + totalMatchReward));

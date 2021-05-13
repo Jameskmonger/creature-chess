@@ -11,12 +11,14 @@ type BoardGridProps = {
 	renderItem: BoardItemRenderFn;
 	onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
 	onClick: (x: number, y: number) => void;
-}
+};
 
+// tslint:disable-next-line no-bitwise
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
+
 const getTileColourClassName = (x: number, y: number) => isBoardTileDark(x, y) ? "dark" : "light";
 
-const BoardRows: React.FunctionComponent<Partial<BoardGridProps>> = ({ onDrop, onClick }) => {
+const BoardRows: React.FunctionComponent<Pick<BoardGridProps, "onDrop" | "onClick">> = ({ onDrop, onClick }) => {
 	const { locked, piecePositions, size: { width, height } } = useBoard();
 
 	const rows = [];

@@ -1,11 +1,14 @@
-import { getContext, select, delay, put, call } from "@redux-saga/core/effects";
-import { getDefinitionById, getAllPieces, PlayerGameActions, PlayerState } from "@creature-chess/gamemode";
+import { select, delay, put, call } from "redux-saga/effects";
+import { getContext } from "typed-redux-saga";
+import { getDefinitionById, getAllPieces, PlayerGameActions, PlayerState, PlayerSagaContext } from "@creature-chess/gamemode";
 import { BOT_ACTION_TIME_MS } from "../constants";
 import { compareCardPieceViews, getCardViews, getPieceViews } from "./cardPieceViews";
 import { PREFERRED_LOCATIONS } from "../preferredLocations";
 
 const getPieceCount = (state: PlayerState): number => getAllPieces(state).length;
 const atPieceLimit = (state: PlayerState) => getPieceCount(state) >= state.playerInfo.level;
+
+const PIECE_IS_BETTER = 1;
 
 export const buyBestPieces = function*() {
 	const cards = getCardViews(yield select());
@@ -14,12 +17,10 @@ export const buyBestPieces = function*() {
 		const pieces = getPieceViews(yield select());
 		const worstPiece = pieces.pop();
 
-		const pieceIsBetter = () => compareCardPieceViews(card, worstPiece) === 1;
-
 		if (
 			!worstPiece
 			|| worstPiece.definitionId === card.definitionId
-			|| pieceIsBetter()
+			|| compareCardPieceViews(card, worstPiece) === PIECE_IS_BETTER
 		) {
 			yield call(buyCardIfBelowLimit, card.index);
 			continue;
@@ -55,11 +56,12 @@ const buyCardIfBelowLimit = function*(index: number) {
 	const card = state.cardShop.cards[index];
 
 	if (!card) {
-		const { getLogger } = yield getContext("dependencies");
+		const { getLogger } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
+		const name = yield* getContext<string>("playerName");
 
 		getLogger().warn(
 			`buyCardIfBelowLimit card was not found`,
-			{ actor: { name: this.name } }
+			{ actor: { name } }
 		);
 		return;
 	}
@@ -68,7 +70,7 @@ const buyCardIfBelowLimit = function*(index: number) {
 
 	yield put(PlayerGameActions.buyCardPlayerAction({
 		index,
-		sortPositions: PREFERRED_LOCATIONS[definition.class]
+		sortPositions: PREFERRED_LOCATIONS[definition!.class]
 	}));
 	yield delay(BOT_ACTION_TIME_MS);
 };

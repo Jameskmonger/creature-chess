@@ -1,5 +1,4 @@
-import { Reducer } from "react";
-import { Action, combineReducers } from "redux";
+import { Reducer, Action, combineReducers } from "redux";
 import { BoardSlice, BoardState } from "@creature-chess/board";
 import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { RoundInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, roundInfoReducer } from "@creature-chess/gamemode";
@@ -16,7 +15,7 @@ export type GameState = {
 
 	playerInfo: PlayerInfoState;
 	cardShop: {
-		cards: Card[],
+		cards: (Card | null)[],
 		locked: boolean
 	};
 	playerList: PlayerListPlayer[];

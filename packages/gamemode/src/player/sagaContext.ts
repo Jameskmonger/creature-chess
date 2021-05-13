@@ -9,7 +9,7 @@ export type PlayerBoardSlices = {
 };
 export type PlayerSagaDependencies = {
 	getLogger: () => Logger;
-	getMatch: () => Match;
+	getMatch: () => Match | null;
 };
 
 export type PlayerSagaContext = {

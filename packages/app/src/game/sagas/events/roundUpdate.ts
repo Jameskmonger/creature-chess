@@ -44,5 +44,5 @@ export const roundUpdateSaga = function*({ benchSlice, boardSlice }: { benchSlic
 					return;
 			}
 		}
-	)
-}
+	);
+};

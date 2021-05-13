@@ -56,7 +56,7 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 					</div>
 				</div>
 			</BoardOverlay>
-		)
+		);
 	}
 
 	return (

@@ -8,9 +8,9 @@ import { Overlay } from "./overlay";
 
 export interface UiState {
 	connectionStatus: ConnectionStatus;
-	selectedPieceId: string;
+	selectedPieceId: string | null;
 	currentOverlay: Overlay | null;
-	winnerId: string;
+	winnerId: string | null;
 }
 
 const initialState: UiState = {

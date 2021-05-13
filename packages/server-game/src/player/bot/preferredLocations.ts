@@ -3,7 +3,7 @@ import { DefinitionClass, TileCoordinates } from "@creature-chess/models";
 const SORT_A_FIRST = -1;
 const SORT_A_SECOND = 1;
 // todo tie this into GRID_SIZE
-const ARCANE_ROW_PREFERENCE = {
+const ARCANE_ROW_PREFERENCE: { [key: number]: number } = {
 	[3]: 2,
 	[4]: 0,
 	[5]: 1
