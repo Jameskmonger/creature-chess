@@ -1,13 +1,10 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "./lib",
-        "importHelpers": true,
-        "paths": {
-            "tslib" : ["./node_modules/tslib/tslib"]
-        }
-    },
-    "include": [
-        "./src/**/*"
-    ]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./lib",
+		"importHelpers": true
+	},
+	"include": [
+		"./src/**/*"
+	]
 }

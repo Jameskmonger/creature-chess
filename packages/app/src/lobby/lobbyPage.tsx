@@ -30,6 +30,16 @@ const LobbyPage: React.FunctionComponent = () => {
 		return <div>An error occured, please refresh your page</div>;
 	}
 
+	const botElements: React.ReactNode[] = [];
+
+	for (let i = players.length; i < MAX_PLAYERS_IN_GAME; i++) {
+		botElements.push(
+			<div key={i} className="player bot">
+				<span className="name">empty slot</span>
+			</div>
+		);
+	}
+
 	return (
 		<div className="lobby">
 			<div className="lobby-info">
@@ -52,12 +62,14 @@ const LobbyPage: React.FunctionComponent = () => {
 				<div className="players">
 					{
 						players.map(p => (
-							<div key={p.id} className={`player${p.isBot ? " bot" : ""}`}>
+							<div key={p.id} className="player">
 								<span className="name">{p.name}</span>
 								{p.profile?.title && <span className={`player-profile-title ${TITLES[p.profile.title].className}`}>{TITLES[p.profile.title].text}</span>}
 							</div>
 						))
 					}
+
+					{botElements}
 				</div>
 
 				<p>
