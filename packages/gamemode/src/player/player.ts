@@ -9,6 +9,7 @@ import { Match } from "../game/match";
 import { PlayerStore, createPlayerStore } from "./store";
 import { isPlayerAlive } from "./playerSelectors";
 import { GameEvent, playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
+import { Game } from "../game";
 
 export interface PlayerMatchResults {
 	homePlayer: Player;
@@ -33,13 +34,13 @@ export class Player {
 	protected readonly boardSlice: BoardSlice<PieceModel>;
 	protected readonly benchSlice: BoardSlice<PieceModel>;
 
-	private logger!: Logger;
-
 	constructor(
 		public readonly type: PlayerType,
 		public readonly id: string,
 		public readonly name: string,
-		public readonly profile: PlayerProfile | null
+		public readonly profile: PlayerProfile,
+		public readonly game: Game,
+		private logger: Logger
 	) {
 		this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
 		this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
@@ -59,10 +60,6 @@ export class Player {
 		this.runSaga = sagaMiddleware.run;
 
 		sagaMiddleware.run(this.matchSaga());
-	}
-
-	public setLogger(logger: Logger) {
-		this.logger = logger;
 	}
 
 	public getLogger = () => this.logger;

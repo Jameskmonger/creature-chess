@@ -10,6 +10,7 @@ import { botLogicSaga } from "../player/bot/saga";
 import { createWinstonLogger } from "../log";
 import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
 import { playerNetworking } from "../player/socket/net";
+import { v4 as uuid } from "uuid";
 
 type LobbyRegistry = OutgoingPacketRegistry<
 	ServerToClient.Lobby.PacketDefinitions,
@@ -88,7 +89,7 @@ export class Lobby {
 				return;
 			}
 
-			this.connectGamePlayer(player, this.game, socket)
+			this.connectGamePlayer(player, this.game, socket);
 		} else {
 			this.connectLobbyPlayer(member, socket);
 		}
@@ -169,10 +170,14 @@ export class Lobby {
 
 		this.gameStarting = true;
 
+		const gameId = uuid();
+		const logger = createWinstonLogger(`match-${gameId}`);
+		this.game = new Game(gameId, logger);
+
 		const players: Player[] = [];
 
 		for (const member of this.members) {
-			const player = new Player(PlayerType.USER, member.id, member.name, member.profile);
+			const player = new Player(PlayerType.USER, member.id, member.name, member.profile, this.game, logger);
 
 			await this.database.user.addGamePlayed(player.id);
 
@@ -188,7 +193,7 @@ export class Lobby {
 			// get a random picture from one to 20 - temporary
 			const picture = Math.floor(Math.random() * 20) + 1;
 
-			const player = new Player(PlayerType.BOT, id, `[BOT] ${name}`, { title: null, picture });
+			const player = new Player(PlayerType.BOT, id, `[BOT] ${name}`, { title: null, picture }, this.game, logger);
 
 			await this.database.bot.addGamePlayed(player.id);
 
@@ -196,8 +201,6 @@ export class Lobby {
 
 			players.push(player);
 		}
-
-		this.game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
 
 		this.game.onFinish((winner) => {
 			if (winner.type === PlayerType.USER) {
@@ -210,6 +213,8 @@ export class Lobby {
 
 			this.events.emit("finish");
 		});
+
+		this.game.start(players);
 	}
 
 	private sendMemberLobbyUpdateEvent(member: LobbyPlayer, index: number, other: LobbyPlayer) {

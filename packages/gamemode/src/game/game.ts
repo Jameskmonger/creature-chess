@@ -1,5 +1,4 @@
 import { Logger } from "winston";
-import { v4 as uuid } from "uuid";
 import { EventEmitter } from "events";
 import { Store } from "redux";
 import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
@@ -18,28 +17,27 @@ import { sendPublicEventsSaga } from "./publicEvents";
 const finishGameEventKey = "FINISH_GAME";
 
 export class Game {
-	public readonly id: string;
-
 	private options: GameOptions;
 
-	private opponentProvider: OpponentProvider;
+	private opponentProvider?: OpponentProvider;
 	private playerList = new PlayerList();
 	private players: Player[] = [];
 	private events = new EventEmitter();
 	private deck: CardDeck;
 
-	private store: Store<GameState>;
+	private store?: Store<GameState>;
 
-	private logger: Logger;
-
-	constructor(createLogger: (id: string) => Logger, players: Player[], options?: Partial<GameOptions>) {
-		this.id = uuid();
-
+	constructor(
+		public readonly id: string,
+		private logger: Logger,
+		options?: Partial<GameOptions>
+	) {
 		this.options = getOptions(options);
-		this.logger = createLogger(this.id);
 
 		this.deck = new CardDeck(this.logger);
+	}
 
+	public start = (players: Player[]) => {
 		players.forEach(this.addPlayer);
 
 		this.opponentProvider = new OpponentProvider(players);
@@ -74,7 +72,7 @@ export class Game {
 		this.events.on(finishGameEventKey, fn);
 	}
 
-	public getRoundInfo = () => this.store.getState().roundInfo;
+	public getRoundInfo = () => this.store!.getState().roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
 
 	private gameTeardownSagaFactory = () => {
@@ -102,12 +100,10 @@ export class Game {
 	}
 
 	private addPlayer = (player: Player) => {
-		player.setLogger(this.logger);
-
 		this.players.push(player);
 		this.playerList.addPlayer(player);
 
-		player.setGetRoundInfoState(() => this.store.getState().roundInfo);
+		player.setGetRoundInfoState(() => this.store!.getState().roundInfo);
 		player.setGetPlayerListPlayers(this.playerList.getValue);
 
 		player.runSaga(playerGameDeckSagaFactory(this.deck));
