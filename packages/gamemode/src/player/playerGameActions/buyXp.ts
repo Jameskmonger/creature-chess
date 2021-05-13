@@ -1,18 +1,20 @@
-import { take, select, put, getContext } from "@redux-saga/core/effects";
+import { take, put } from "@redux-saga/core/effects";
+import { select, getContext } from "typed-redux-saga";
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models";
 import { isPlayerAlive } from "../playerSelectors";
 import { updateMoneyCommand } from "../playerInfo/commands";
 import { addXpCommand } from "../sagas/xp";
 import { createAction } from "@reduxjs/toolkit";
+import { PlayerSagaDependencies } from "../sagaContext";
 
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
 export const buyXpPlayerAction = createAction("buyXpPlayerAction");
 
 export const buyXpPlayerActionSaga = function*() {
     while (true) {
-        const playerId = yield getContext("playerId");
-        const name = yield getContext("playerName");
-        const { getLogger } = yield getContext("dependencies");
+        const playerId = yield* getContext<string>("playerId");
+        const name = yield* getContext<string>("playerName");
+        const { getLogger } = yield* getContext<PlayerSagaDependencies>("dependencies");
 
         yield take(buyXpPlayerAction.toString());
 
@@ -21,7 +23,7 @@ export const buyXpPlayerActionSaga = function*() {
             { actor: { playerId, name } }
         );
 
-        const isAlive: boolean = yield select(isPlayerAlive);
+        const isAlive = yield* select(isPlayerAlive);
 
         if (isAlive === false) {
             getLogger().info(
@@ -31,7 +33,7 @@ export const buyXpPlayerActionSaga = function*() {
             continue;
         }
 
-        const currentLevel: number = yield select(state => state.playerInfo.level);
+        const currentLevel = yield* select(state => state.playerInfo.level);
 
         if (currentLevel === MAX_PLAYER_LEVEL) {
             getLogger().info(
@@ -41,7 +43,7 @@ export const buyXpPlayerActionSaga = function*() {
             continue;
         }
 
-        const money: number = yield select(state => state.playerInfo.money);
+        const money = yield* select(state => state.playerInfo.money);
 
         // not enough money
         if (money < BUY_XP_COST) {

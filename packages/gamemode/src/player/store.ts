@@ -1,19 +1,21 @@
 import { Logger } from "winston";
 import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
-import { fork, all } from "@redux-saga/core/effects";
+import { fork, all, call } from "@redux-saga/core/effects";
 
 import { BoardState, BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import {
-    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory
+    fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory, setStatusOnQuit, playerBattle, playerMatchRewards
 } from "./sagas";
 import { roundInfoReducer, RoundInfoState } from "../game/roundInfo";
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { PlayerSagaContext } from "./sagaContext";
 import { playerGameActionsSaga } from "./playerGameActions";
+import { Match } from "../game/match";
+import { playerPhases } from "./sagas/phases";
 
 export interface PlayerState {
     board: BoardState<PieceModel>;
@@ -27,17 +29,21 @@ export type PlayerStore = Store<PlayerState>;
 
 export const createPlayerStore = (
     getLogger: () => Logger,
+    getMatch: () => Match,
     playerId: string,
     playerName: string,
     boardSlices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
     const rootSaga = function*() {
         yield all([
+            call(playerPhases),
             fork(playerGameActionsSaga),
             fork(evolutionSagaFactory<PlayerState>(boardSlices)),
             fork(healthSagaFactory<PlayerState>()),
             fork(xpSagaFactory<PlayerState>(boardSlices)),
-            fork(fillBoardSagaFactory<PlayerState>(playerId))
+            fork(fillBoardSagaFactory<PlayerState>(playerId)),
+            fork(setStatusOnQuit),
+            fork(playerBattle)
         ]);
     };
 
@@ -47,7 +53,8 @@ export const createPlayerStore = (
             playerName,
             boardSlices,
             dependencies: {
-                getLogger
+                getLogger,
+                getMatch
             }
         }
     });

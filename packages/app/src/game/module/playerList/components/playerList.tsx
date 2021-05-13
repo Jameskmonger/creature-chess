@@ -40,7 +40,7 @@ const PlayerList: React.FunctionComponent = () => {
                         return <StatusPlayerListItem key={p.id} playerId={p.id} status="Quit" />;
                     }
 
-                    if (p.roundDiedAt) {
+                    if (p.status === PlayerStatus.DEAD) {
                         return <StatusPlayerListItem key={p.id} playerId={p.id} status="Dead" subtitle={`${ordinal_suffix_of(index + 1)} place`} />;
                     }
 

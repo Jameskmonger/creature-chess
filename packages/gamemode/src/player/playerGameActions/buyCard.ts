@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { createAction } from "@reduxjs/toolkit";
-import { take, select, put, getContext } from "@redux-saga/core/effects";
+import { take, put } from "@redux-saga/core/effects";
+import { select, getContext } from "typed-redux-saga";
 import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
 import { PlayerState } from "../store";
@@ -8,12 +9,13 @@ import { getPlayerBelowPieceLimit } from "../playerSelectors";
 import { updateMoneyCommand } from "../playerInfo/commands";
 import { updateCardsCommand } from "../cardShop";
 import { getDefinitionById } from "../../definitions";
+import { PlayerBoardSlices, PlayerSagaDependencies } from "../sagaContext";
 
 const getCardDestination = (
     state: PlayerState,
     playerId: string,
     sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1
-    ): PlayerPieceLocation | null => {
+): PlayerPieceLocation | null => {
     const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
     const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
@@ -74,21 +76,17 @@ export const buyCardPlayerAction = createAction<{
 
 export const buyCardPlayerActionSaga = function*() {
     while (true) {
-        const playerId = yield getContext("playerId");
-        const name = yield getContext("playerName");
-        const { getLogger } = yield getContext("dependencies");
-        const { boardSlice, benchSlice } = yield getContext("boardSlices");
+        const playerId = yield* getContext<string>("playerId");
+        const name = yield* getContext<string>("playerName");
+        const { getLogger } = yield* getContext<PlayerSagaDependencies>("dependencies");
+        const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
 
         const action: BuyCardPlayerAction = yield take(buyCardPlayerAction.toString());
         const index = action.payload.index;
         const sortPositions = action.payload.sortPositions || undefined;
 
-        const state: PlayerState = yield select();
-
-        const {
-            cardShop: { cards },
-            playerInfo: { money }
-        } = state;
+        const cards = yield* select((state: PlayerState) => state.cardShop.cards);
+        const money = yield* select((state: PlayerState) => state.playerInfo.money);
 
         const card = cards[index];
 
@@ -119,7 +117,7 @@ export const buyCardPlayerActionSaga = function*() {
             continue;
         }
 
-        const destination = getCardDestination(state, playerId, sortPositions);
+        const destination = yield* select((state: PlayerState) => getCardDestination(state, playerId, sortPositions));
 
         // no valid slots
         if (destination === null) {

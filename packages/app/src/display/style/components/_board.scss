@@ -186,6 +186,7 @@
     $attack-duration: 200ms;
 
     &.attack-basic {
+        // stylelint-disable-next-line unit-disallowed-list
         $attack-movement-distance-multiplier: 3px;
         $attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
         @keyframes attack-basic {
@@ -212,6 +213,7 @@
         display: none;
     }
 
+    // stylelint-disable-next-line unit-disallowed-list
     $projectile-size: 10px;
 
     &.attack-shoot .projectile {

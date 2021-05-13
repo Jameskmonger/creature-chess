@@ -1,4 +1,5 @@
-import { takeLatest, select, take, delay, put } from "@redux-saga/core/effects";
+import { takeLatest, take, delay, put } from "@redux-saga/core/effects";
+import { select } from "typed-redux-saga";
 import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { BoardState, BoardSelectors, BoardSlice } from "@creature-chess/board";
 import * as pieceSelectors from "../pieceSelectors";
@@ -35,7 +36,7 @@ export const evolutionSagaFactory = <TState extends State>(
                     return;
                 }
 
-                const boardLocked: boolean = yield select((s: TState) => s.board.locked);
+                const boardLocked = yield* select((s: TState) => s.board.locked);
 
                 // if evolution is locked, wait for it to be unlocked
                 if (boardLocked) {
@@ -45,19 +46,17 @@ export const evolutionSagaFactory = <TState extends State>(
                     yield delay(500);
                 }
 
-                const state: TState = yield select();
-
                 const targetDefinitionId = piece.definitionId;
                 const targetStage = piece.stage;
 
                 const getCombinablePieces = (pieces: PieceModel[]) => pieces.filter(p => p.stage === targetStage);
 
-                const matchingBoardPieces = getCombinablePieces(
+                const matchingBoardPieces = yield* select((state: TState) => getCombinablePieces(
                     pieceSelectors.getPiecesForDefinition(state.board, targetDefinitionId)
-                );
-                const matchingBenchPieces = getCombinablePieces(
+                ));
+                const matchingBenchPieces = yield* select((state: TState) => getCombinablePieces(
                     pieceSelectors.getPiecesForDefinition(state.bench, targetDefinitionId)
-                );
+                ));
 
                 const totalInstances = matchingBoardPieces.length + matchingBenchPieces.length;
 
@@ -67,9 +66,14 @@ export const evolutionSagaFactory = <TState extends State>(
 
                 if (matchingBoardPieces.length > 0) {
                     // replace a board piece if it exists
-                    const pieceToReplace = matchingBoardPieces.pop() !;
+                    const pieceToReplace = matchingBoardPieces.pop()!;
 
-                    const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.board, pieceToReplace.id));
+                    const piecePosition = yield* select((s: TState) => BoardSelectors.getPiecePosition(s.board, pieceToReplace.id));
+
+                    if (!piecePosition) {
+                        return;
+                    }
+
                     const { x, y } = piecePosition;
 
                     // remove any remaining board pieces
@@ -94,7 +98,12 @@ export const evolutionSagaFactory = <TState extends State>(
                         stage: targetStage + 1
                     };
 
-                    const piecePosition = yield select((s: TState) => BoardSelectors.getPiecePosition(s.bench, piece.id));
+                    const piecePosition = yield* select((s: TState) => BoardSelectors.getPiecePosition(s.bench, piece.id));
+
+                    if (!piecePosition) {
+                        return;
+                    }
+
                     const { x, y } = piecePosition;
 
                     yield put(benchSlice.commands.removeBoardPiecesCommand([...benchPieceIds, piece.id]));

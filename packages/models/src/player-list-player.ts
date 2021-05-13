@@ -8,6 +8,7 @@ export enum PlayerBattleStatus {
 
 export enum PlayerStatus {
     CONNECTED,
+    DEAD,
     QUIT
 }
 
@@ -43,7 +44,6 @@ export interface PlayerListPlayer {
     streakType: StreakType | null;
     streakAmount: number | null;
     battle: PlayerBattle;
-    roundDiedAt: number | null;
     status: PlayerStatus;
     profile: PlayerProfile | null;
 }

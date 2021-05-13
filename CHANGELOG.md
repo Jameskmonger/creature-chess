@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.51](https://github.com/Jameskmonger/creature-chess/compare/v0.3.50...v0.3.51) (2021-05-12)
+
+
+### Bug Fixes
+
+* connect playerReadyPhase saga ([fae4f2a](https://github.com/Jameskmonger/creature-chess/commit/fae4f2afe96fd15f8253a040952d68e81469c119)), closes [#399](https://github.com/Jameskmonger/creature-chess/issues/399) [#400](https://github.com/Jameskmonger/creature-chess/issues/400)
+* make match rewards stay on screen ([9f0fb96](https://github.com/Jameskmonger/creature-chess/commit/9f0fb966fe3d45dc57690023f1a648759caef6cb)), closes [#398](https://github.com/Jameskmonger/creature-chess/issues/398)
+
+
+
+
+
+## [0.3.50](https://github.com/Jameskmonger/creature-chess/compare/v0.3.48...v0.3.50) (2021-05-12)
+
+
+### Bug Fixes
+
+* fix discord link image ([60f74e6](https://github.com/Jameskmonger/creature-chess/commit/60f74e65a3d6ad0a613348325a0e463376e331d7))
+
+
+
+
+
 ## [0.3.49](https://github.com/Jameskmonger/creature-chess/compare/v0.3.48...v0.3.49) (2021-05-11)
 
 

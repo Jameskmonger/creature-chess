@@ -13,7 +13,7 @@ export const getCurrent = (database: DatabaseConnection, authClient: ManagementC
         const { authorization } = req.headers;
 
         if (!authorization) {
-            res.send(null);
+            res.sendStatus(401);
 
             return;
         }
@@ -26,7 +26,7 @@ export const getCurrent = (database: DatabaseConnection, authClient: ManagementC
 };
 
 type NicknameError = { type: "invalid_nickname", error: string };
-type PictureError = {type: "invalid_picture_id", error: string};
+type PictureError = { type: "invalid_picture_id", error: string };
 type PatchResponse = SanitizedUser | NicknameError | PictureError;
 
 type PatchCurrentUserRequest = Request<{}, PatchResponse, { nickname: string, picture: number }>;
@@ -70,7 +70,7 @@ export const patchCurrent = (
         const { body, headers: { authorization } } = req;
 
         if (!authorization) {
-            res.send(null);
+            res.sendStatus(401);
             return;
         }
 
@@ -129,7 +129,7 @@ export const patchCurrent = (
         }
 
         const updatedUser = await database.user.setProfileInfo(user.id, nicknameUpdate, pictureUpdate);
-        outputUser = convertDatabaseUserToUserModel(updatedUser);
+        outputUser = convertDatabaseUserToUserModel(updatedUser!);
         // update metadata if anything changed
         if (outputUser !== user) {
             await authClient.updateAppMetadata(

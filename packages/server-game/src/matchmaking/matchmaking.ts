@@ -2,18 +2,23 @@ import { Logger } from "winston";
 import delay from "delay";
 import io = require("socket.io");
 import { shuffle } from "lodash";
-import { Game, PlayerType } from "@creature-chess/gamemode";
+import { put } from "redux-saga/effects";
+import { Game, Player, PlayerType } from "@creature-chess/gamemode";
 import { DatabaseConnection } from "@creature-chess/data";
 import { UserModel } from "@creature-chess/auth-server";
 import { MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { createWinstonLogger } from "../log";
 import { DiscordApi } from "../discord";
 import { createMetricLogger } from "../metrics";
-import { SocketPlayer, BotPlayer } from "../player";
 import { IdGenerator } from "./id-generator";
 import { Lobby, LobbyStartEvent } from "./lobby/lobby";
-import { LobbyMemberType } from "./lobby/lobbyMember";
 import { sortMembersByPlayerType } from "./utils/sortMembersByPlayerType";
+import { LobbyMember, LobbyMemberType } from "./lobby/lobbyMember";
+import { botLogicSaga } from "../player/bot/saga";
+import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
+import { incomingNetworking } from "../player/socket/net/incoming";
+import { outgoingNetworking } from "../player/socket/net/outgoing";
+import { newPlayerSocketEvent } from "../player/socket/events";
 
 export class Matchmaking {
     private lobbies = new Map<string, Lobby>();
@@ -38,7 +43,16 @@ export class Matchmaking {
         const playerInGame = this.getPlayerInGame(id);
 
         if (playerInGame) {
-            playerInGame.reconnectSocket(socket);
+            // todo cancel the old saga
+            playerInGame.player.runSaga(incomingNetworking);
+            playerInGame.player.runSaga(outgoingNetworking);
+
+            playerInGame.player.runSaga(
+                reconnectPlayerSocket,
+                socket,
+                playerInGame.game.getRoundInfo(),
+                playerInGame.game.getPlayerListPlayers()
+            );
 
             this.searchingForGame = false;
 
@@ -80,7 +94,10 @@ export class Matchmaking {
             return null;
         }
 
-        return playerInGame as SocketPlayer;
+        return {
+            game: matchingGame,
+            player: playerInGame
+        };
     }
 
     private getLobbyContainingPlayer(id: string) {
@@ -100,36 +117,39 @@ export class Matchmaking {
         return shuffle(pictures);
     }
 
-    private generateProfile = (player, picture) => {
-        return({
+    private generateProfile = (player: LobbyMember, pictures: number[]) => {
+        const picture = player.profile?.picture ?? pictures.pop();
+        const title = player.profile?.title ?? null;
+
+        return {
             picture,
-            title: player.profile?.title ? player.profile.title : null
-        });
+            title
+        };
     }
 
     private onLobbyStart = ({ id, members }: LobbyStartEvent) => {
         const pictures = this.getPictures();
 
-        const removePictureFromArray = (picture) => {
-            if (pictures.includes(picture)) {
-                const index = pictures.indexOf(picture);
-                pictures.splice(index, index);
-        }};
-
-        const assignPicture = (player) => player.profile?.picture || pictures.pop();
-
         const membersOrderedByType = members.sort(sortMembersByPlayerType);
 
-        const players = membersOrderedByType.map(m => {
-            const profilePicture = assignPicture(m);
+        const players = membersOrderedByType.map(lobbyMember => {
+            const profile = this.generateProfile(lobbyMember, pictures);
 
-            const profile = this.generateProfile(m, profilePicture);
-
-            if (m.type === LobbyMemberType.BOT) {
-                return new BotPlayer(m.id, m.name, profile);
+            if (lobbyMember.type === LobbyMemberType.BOT) {
+                return new Player(PlayerType.BOT, lobbyMember.id, lobbyMember.name, profile);
             }
-            removePictureFromArray(profilePicture);
-            return new SocketPlayer(m.net.socket, m.id, m.name, profile);
+
+            const player = new Player(PlayerType.USER, lobbyMember.id, lobbyMember.name, profile);
+
+            // todo keep track of these tasks so they can be cancelled later
+            player.runSaga(incomingNetworking);
+            player.runSaga(outgoingNetworking);
+
+            player.runSaga(function*() {
+                yield put(newPlayerSocketEvent(lobbyMember.net.socket));
+            });
+
+            return player;
         });
 
         const game = new Game(gameId => createWinstonLogger(`match-${gameId}`), players);
@@ -137,15 +157,17 @@ export class Matchmaking {
         this.logger.info(`Game ${game.id} started from lobby ${id}`);
 
         players
-            .forEach(p => {
-                if (p.type === PlayerType.USER) {
+            .forEach(player => {
+                if (player.type === PlayerType.USER) {
                     // todo do this in 1 call
-                    this.database.user.addGamePlayed(p.id);
+                    this.database.user.addGamePlayed(player.id);
                 }
 
-                if (p.type === PlayerType.BOT) {
+                if (player.type === PlayerType.BOT) {
                     // todo do this in 1 call
-                    this.database.bot.addGamePlayed(p.id);
+                    this.database.bot.addGamePlayed(player.id);
+
+                    player.runSaga(botLogicSaga);
                 }
             });
 

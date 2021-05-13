@@ -25,6 +25,10 @@ export const limitedQueue = <T>(size: number): LimitedQueue<T> => {
         onReachLimit: fn => events.on("reachLimit", fn),
         add: item => {
             if (items.length === size) {
+                if (items.includes(item)) {
+                    return;
+                }
+
                 throw Error(`Limit ${size} reached`);
             }
 

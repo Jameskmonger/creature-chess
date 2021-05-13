@@ -1,10 +1,14 @@
 import pDefer = require("p-defer");
-import { select, put, getContext } from "@redux-saga/core/effects";
+import { put, getContext, take } from "@redux-saga/core/effects";
 import delay from "delay";
-import { GameOptions, GamePhase, PlayerStatus } from "@creature-chess/models";
+import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
-import { GameState } from "../../store";
 import { GameSagaContextPlayers } from "../../sagas";
+import { playerFinishMatchEvent } from "../../events";
+
+const waitForFinishMatchSaga = function*() {
+    yield take(playerFinishMatchEvent.toString());
+};
 
 export const runPlayingPhase = function*() {
     const options: GameOptions = yield getContext("options");
@@ -19,15 +23,14 @@ export const runPlayingPhase = function*() {
 
     yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
 
-    const promises = players.getLiving().map(p => p.fightMatch(startedAt, battleTimeoutDeferred));
+    const livingPlayers = players.getLiving();
 
-    yield Promise.all(promises);
+    const matches = [...new Set(livingPlayers.map(p => p.getMatch()))];
+    const finishMatchTasks = livingPlayers.map(p => p.runSaga(waitForFinishMatchSaga));
 
-    const round: number = yield select((state: GameState) => state.roundInfo.round);
+    matches.forEach(m => m.fight(battleTimeoutDeferred.promise));
 
-    for (const player of players.getAll().filter(p => p.getStatus() !== PlayerStatus.QUIT && p.getRoundDiedAt() === round)) {
-        player.kill();
-    }
+    yield Promise.all(finishMatchTasks.map(t => t.toPromise()));
 
     // some battles go right up to the end, so it's nice to have a delay
     // rather than jumping straight into the next phase

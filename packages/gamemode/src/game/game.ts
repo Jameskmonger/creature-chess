@@ -60,8 +60,9 @@ export class Game {
         });
         this.store = store;
 
-        sagaMiddleware.run(this.gameTeardownSagaFactory());
-        sagaMiddleware.run(gameSaga);
+        // todo fix these ugly typings
+        sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
+        sagaMiddleware.run(gameSaga as () => Generator);
         sagaMiddleware.run(sendPublicEventsSaga);
     }
 
@@ -72,6 +73,9 @@ export class Game {
     public onFinish(fn: (winner: Player) => void) {
         this.events.on(finishGameEventKey, fn);
     }
+
+    public getRoundInfo = () => this.store.getState().roundInfo;
+    public getPlayerListPlayers = () => this.playerList.getValue();
 
     private gameTeardownSagaFactory = () => {
         const broadcast = (event: GameFinishEvent) => {

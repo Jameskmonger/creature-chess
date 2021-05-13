@@ -4,6 +4,7 @@ import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { PlayerInfoCommands } from "../player/playerInfo";
 import { readyUpPlayerAction, ReadyUpPlayerAction } from "../player/playerGameActions";
 import { Player } from "../player";
+import { PlayerRunPreparingPhaseEvent, playerRunPreparingPhaseEvent } from "./events";
 
 export const listenForPropertyUpdates = (
     player: Player,
@@ -38,7 +39,7 @@ export const listenForPropertyUpdates = (
 
         if (emitStatus) {
             sagas.push(takeLatest<PlayerInfoCommands.UpdateStatusCommand>(
-                PlayerInfoCommands.UPDATE_STATUS_COMMAND,
+                PlayerInfoCommands.updateStatusCommand.toString(),
                 function*({ payload: { status } }) {
                     emitStatus(status);
                 }
@@ -63,8 +64,8 @@ export const listenForPropertyUpdates = (
                 }
             ));
 
-            sagas.push(takeLatest<PlayerInfoCommands.ClearOpponentCommand>(
-                PlayerInfoCommands.CLEAR_OPPONENT_COMMAND,
+            sagas.push(takeLatest<PlayerRunPreparingPhaseEvent>(
+                playerRunPreparingPhaseEvent,
                 function*() {
                     emitReady(false);
                 }

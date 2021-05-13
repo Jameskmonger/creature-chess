@@ -12,7 +12,7 @@ import { config } from "@creature-chess/gamemode";
 const app = express();
 const port = process.env.PORT || 3000;
 
-const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY);
+const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY!);
 const AUTH0_CONFIG = {
     domain: config.auth0.domain,
     clientId: config.auth0.machineToMachineClientId,

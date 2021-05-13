@@ -5,8 +5,12 @@
 
     .piece-type {
         display: inline-block;
+
+        // todo consider use of px here
+        /* stylelint-disable unit-disallowed-list */
         width: 24px;
         height: 24px;
+        /* stylelint-enable unit-disallowed-list */
         margin-right: 0.5rem;
     }
 

@@ -1,7 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const StyleLintPlugin = require('stylelint-webpack-plugin');
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const CnameWebpackPlugin = require("cname-webpack-plugin");
@@ -130,9 +129,6 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "app-[contenthash].css"
-        }),
-        new StyleLintPlugin({
-            files: "**/*.scss"
         }),
         new CircularDependencyPlugin({
             // exclude detection of files based on a RegExp

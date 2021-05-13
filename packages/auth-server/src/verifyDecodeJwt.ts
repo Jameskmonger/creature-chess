@@ -20,13 +20,13 @@ interface DecodedToken {
 
 const verifyToken = async (token: string, publicKey: string) => {
     return new Promise<JWTPayload>((resolve, reject) => {
-        jwt.verify(token, publicKey, (err, payload: JWTPayload) => {
+        jwt.verify(token, publicKey, (err, payload) => {
             if (err) {
                 reject(err);
                 return;
             }
 
-            resolve(payload);
+            resolve(payload as JWTPayload);
         });
     });
 };

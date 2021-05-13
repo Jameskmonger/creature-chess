@@ -1,7 +1,8 @@
 import { Logger } from "winston";
 import { GameOptions } from "@creature-chess/models";
+import { call, delay, getContext, put } from "@redux-saga/core/effects";
+import { select } from "typed-redux-saga";
 import { Player } from "../player";
-import { call, delay, getContext, put, select } from "@redux-saga/core/effects";
 import { GameEvent, gameFinishEvent } from "./events";
 import { GameState } from "./store";
 import { gameLoopSaga } from "./gameLoop";
@@ -45,7 +46,7 @@ export const gameSaga = function*() {
 
     const duration = stopwatch(startTime);
 
-    const round = yield select((state: GameState) => state.roundInfo.round);
+    const round = yield* select((state: GameState) => state.roundInfo.round);
 
     logger.info(`Match complete in ${(duration)} ms (${round} rounds)`);
 

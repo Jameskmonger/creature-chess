@@ -1,4 +1,4 @@
-import { Card, GamePhase, PlayerListPlayer } from "@creature-chess/models";
+import { Card, GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "@creature-chess/board";
 import { EmptyPacket } from "../empty-packet";
 
@@ -41,10 +41,6 @@ type FinishGamePacket = {
   winnerId: string;
 };
 
-type ShopLockUpdatePacket = {
-  locked: boolean;
-};
-
 export type AuthenticateResponse = {
   error?: { type: "not_registered" } | { type: "authentication" };
 };
@@ -55,9 +51,7 @@ type MatchRewardsPacket = {
   rewardMoney: { total: number, base: number, winBonus: number, streakBonus: number, interest: number };
 };
 
-type BoardUpdatePacket = {
-  state: BoardState
-};
+type BoardUpdatePacket = BoardState<PieceModel>;
 
 export enum PacketOpcodes {
   BENCH_UPDATE = "benchUpdate",
@@ -84,7 +78,7 @@ export type PacketDefinitions = {
   [PacketOpcodes.HEALTH_UPDATE]: number,
   [PacketOpcodes.LEVEL_UPDATE]: LevelUpdatePacket,
   [PacketOpcodes.FINISH_GAME]: FinishGamePacket,
-  [PacketOpcodes.SHOP_LOCK_UPDATE]: ShopLockUpdatePacket,
+  [PacketOpcodes.SHOP_LOCK_UPDATE]: boolean,
   [PacketOpcodes.MATCH_REWARDS]: MatchRewardsPacket,
   [PacketOpcodes.PLAYER_DEAD]: EmptyPacket,
 };

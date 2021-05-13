@@ -1,5 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
+import { Match } from "./match";
 
 export type GamePhaseStartedEvent = ReturnType<typeof gamePhaseStartedEvent>;
 export const gamePhaseStartedEvent = createAction<{ phase: GamePhase, startedAt: number, round?: number }, "gamePhaseStartedEvent">("gamePhaseStartedEvent");
@@ -10,7 +11,19 @@ export const gameFinishEvent = createAction<{ winnerId: string }, "gameFinishEve
 export type PlayerListChangedEvent = ReturnType<typeof playerListChangedEvent>;
 export const playerListChangedEvent = createAction<{ players: PlayerListPlayer[] }, "playerListChangedEvent">("playerListChangedEvent");
 
+export type PlayerRunPreparingPhaseEvent = ReturnType<typeof playerRunPreparingPhaseEvent>;
+export const playerRunPreparingPhaseEvent = createAction("playerRunPreparingPhaseEvent");
+
+export type PlayerRunReadyPhaseEvent = ReturnType<typeof playerRunReadyPhaseEvent>;
+export const playerRunReadyPhaseEvent = createAction<{ match: Match }, "playerRunReadyPhaseEvent">("playerRunReadyPhaseEvent");
+
+export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
+export const playerFinishMatchEvent = createAction<{ homeScore: number, awayScore: number, isHomePlayer: boolean }, "playerFinishMatchEvent">("playerFinishMatchEvent");
+
 export type GameEvent =
     GamePhaseStartedEvent
     | GameFinishEvent
-    | PlayerListChangedEvent;
+    | PlayerListChangedEvent
+    | PlayerRunPreparingPhaseEvent
+    | PlayerRunReadyPhaseEvent
+    | PlayerFinishMatchEvent;

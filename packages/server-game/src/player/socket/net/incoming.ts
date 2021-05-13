@@ -1,8 +1,8 @@
-import { Logger } from "winston";
-import { takeLatest, take, fork, takeEvery, put, delay } from "@redux-saga/core/effects";
+import { getContext } from "typed-redux-saga";
+import { takeLatest, take, fork, takeEvery, put, delay } from "redux-saga/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
-import { PlayerEvents, GameEvents, PlayerGameActions } from "@creature-chess/gamemode";
+import { PlayerEvents, GameEvents, PlayerGameActions, PlayerSagaContext } from "@creature-chess/gamemode";
 import { ClientToServer, IncomingPacketRegistry } from "@creature-chess/networking";
 
 import {
@@ -12,7 +12,9 @@ import {
 
 type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
 
-export const incomingNetworking = function*(getLogger: () => Logger) {
+export const incomingNetworking = function*() {
+    const { getLogger } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
+
     let registry: IncomingRegistry;
     let socket: Socket;
 

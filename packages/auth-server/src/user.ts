@@ -4,15 +4,15 @@ import { PlayerProfile } from "@creature-chess/models";
 
 export interface UserAppMetadata {
     playerId: string;
-    playerNickname: string;
-    playerPicture: number;
+    playerNickname: string | null;
+    playerPicture: number | null;
 }
 
 export interface UserModel {
     id: string;
     authId: string;
     stats: { gamesPlayed: number; wins: number; };
-    nickname?: string;
+    nickname: string | null;
     registered: boolean;
     profile: PlayerProfile | null;
 }

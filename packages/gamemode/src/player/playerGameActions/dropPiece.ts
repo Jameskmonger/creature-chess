@@ -1,9 +1,11 @@
 import { createAction } from "@reduxjs/toolkit";
-import { takeEvery, select, put, getContext } from "@redux-saga/core/effects";
+import { takeEvery, put } from "@redux-saga/core/effects";
+import { select, getContext } from "typed-redux-saga";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { BoardSelectors } from "@creature-chess/board";
 import { PlayerState } from "../store";
 import { getPlayerBelowPieceLimit } from "../playerSelectors";
+import { PlayerBoardSlices } from "../sagaContext";
 
 const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
   if (location.type === "board") {
@@ -42,10 +44,10 @@ export const dropPiecePlayerActionSaga = function*() {
   yield takeEvery<DropPiecePlayerAction>(
     dropPiecePlayerAction.toString(),
     function*({ payload: { from, pieceId, to } }) {
-      const playerId = yield getContext("playerId");
-      const { boardSlice, benchSlice } = yield getContext("boardSlices");
+      const playerId = yield* getContext<string>("playerId");
+      const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
 
-      const state = yield select();
+      const state = yield* select((s: PlayerState) => s);
 
       if (isLocationLocked(state, from) || isLocationLocked(state, to)) {
         // source or destination is locked

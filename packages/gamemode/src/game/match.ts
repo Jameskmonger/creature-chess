@@ -3,10 +3,11 @@ import { v4 as uuid } from "uuid";
 import { fork, all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "redux";
-import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice } from "@creature-chess/board";
+import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice, BoardSelectors } from "@creature-chess/board";
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 import { Player } from "../player";
+import { playerFinishMatchEvent } from "./events";
 
 interface MatchState {
     board: BoardState<PieceModel>;
@@ -18,19 +19,20 @@ const turnReducer: Reducer<number, BattleEvents.BattleTurnEvent> = (state = 0, e
 );
 
 export class Match {
-    public readonly home: Player;
-    public readonly away: Player;
     private store: Store<MatchState>;
-    private finalBoard: BoardState<PieceModel>;
+    private finalBoard!: BoardState<PieceModel>;
     private boardId = uuid();
     private board: BoardSlice<PieceModel> = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
 
     private serverFinishedMatch = pDefer();
     private clientFinishedMatch = pDefer();
 
-    constructor(home: Player, away: Player, gameOptions: GameOptions) {
-        this.home = home;
-        this.away = away;
+    constructor(
+        public readonly home: Player,
+        public readonly away: Player,
+        private awayIsClone: boolean,
+        gameOptions: GameOptions
+    ) {
         this.store = this.createStore(gameOptions);
 
         const mergedBoard = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
@@ -103,6 +105,23 @@ export class Match {
         ]);
 
         this.finalBoard = this.store.getState().board;
+
+        const survivingPieces = BoardSelectors.getAllPieces(this.finalBoard).filter(p => p.currentHealth > 0);
+
+        const surviving = {
+            home: survivingPieces.filter(p => p.ownerId === this.home.id),
+            away: survivingPieces.filter(p => p.ownerId === this.away.id)
+        };
+
+        const homeScore = surviving.home.length;
+        const awayScore = surviving.away.length;
+
+        this.home.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
+
+        if (!this.awayIsClone) {
+            this.away.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
+        }
+
         return this.finalBoard;
     }
 
@@ -112,17 +131,17 @@ export class Match {
         const _this = this;
         const rootSaga = function*() {
             yield all([
-                yield fork(
+                fork(
                     battleSagaFactory<MatchState>(state => state.board),
                     gameOptions, _this.board
                 ),
-                yield takeEvery<BattleEvents.BattleFinishEvent>(
+                takeEvery<BattleEvents.BattleFinishEvent>(
                     BattleEvents.BATTLE_FINISH_EVENT,
                     function*() {
                         _this.onServerFinishMatch();
                     }
                 ),
-                yield takeLatest<BattleEvents.BattleTurnEvent>(
+                takeLatest<BattleEvents.BattleTurnEvent>(
                     BattleEvents.BATTLE_TURN_EVENT,
                     function*({ payload: { board } }: BattleEvents.BattleTurnEvent) {
                         yield put(_this.board.commands.setBoardPiecesCommand({
