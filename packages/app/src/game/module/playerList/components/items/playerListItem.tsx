@@ -39,7 +39,7 @@ const SpectateButton: React.FunctionComponent<{ playerId: string }> = (playerId)
 	}
 	return (
 		<div>
-			<button onClick={(event) => handleSpectate(event)}>Spectate</button>
+			<button onClick={handleSpectate}>Spectate</button>
 		</div>
 	)
 }
@@ -53,15 +53,9 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 	const [isExpanded, setIsExpanded] = useState<Boolean>(false)
 	useOnClickOutside(ref, () => setIsExpanded(false))
 
-
-
 	const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
 	const handleExpansion = (): void => {
-		setIsExpanded(!isExpanded)
-	}
-
-	const handleBlur = (): void => {
 		setIsExpanded(!isExpanded)
 	}
 
@@ -69,7 +63,6 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 		<div
 			className={className}
 			onClick={handleExpansion}
-			onBlur={handleBlur}
 			ref={ref}
 		>
 			<div className="picture">
