@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { Player } from "../player/player";
 import { listenForPropertyUpdates } from "./playerPropertyUpdates";
+import { PlayerSelectors } from "../player";
 
 const debounce = (func: () => void, wait: number) => {
 	let timeout: any;
@@ -101,18 +102,18 @@ export class PlayerList {
 		return this.players.map(({ id }) => {
 			const player = this.gamePlayers[id];
 
-			const streak = player.getStreak();
+			const streak = player.select(PlayerSelectors.getPlayerStreak);
 			return {
 				id: player.id,
 				name: player.name,
-				health: player.getHealth(),
-				ready: player.getReady(),
-				level: player.getLevel(),
-				money: player.getMoney(),
+				health: player.select(PlayerSelectors.getPlayerHealth),
+				ready: player.select(PlayerSelectors.isPlayerReady),
+				level: player.select(PlayerSelectors.getPlayerLevel),
+				money: player.select(PlayerSelectors.getPlayerMoney),
 				streakType: streak.type,
 				streakAmount: streak.amount,
-				battle: player.getBattle(),
-				status: player.getStatus(),
+				battle: player.select(PlayerSelectors.getPlayerBattle),
+				status: player.select(PlayerSelectors.getPlayerStatus),
 				profile: player.profile
 			};
 		});
@@ -123,8 +124,8 @@ export class PlayerList {
 			id: player.id,
 			position: null,
 			sortValues: {
-				health: player.getHealth(),
-				hasQuit: player.getStatus() === PlayerStatus.QUIT
+				health: player.select(PlayerSelectors.getPlayerHealth),
+				hasQuit: player.select(PlayerSelectors.getPlayerStatus) === PlayerStatus.QUIT
 			}
 		});
 

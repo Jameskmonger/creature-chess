@@ -1,4 +1,4 @@
-import { take, put, fork, call, all } from "redux-saga/effects";
+import { take, put, call, all } from "redux-saga/effects";
 import { BoardSlice } from "@creature-chess/board";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";

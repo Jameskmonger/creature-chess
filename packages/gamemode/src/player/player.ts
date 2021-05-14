@@ -1,13 +1,11 @@
 import { Logger } from "winston";
 import { Saga, Task } from "redux-saga";
 import { all, takeEvery } from "redux-saga/effects";
-import { PieceModel, PlayerListPlayer, PlayerProfile } from "@creature-chess/models";
+import { PieceModel, PlayerProfile } from "@creature-chess/models";
 import { BoardSlice, createBoardSlice } from "@creature-chess/board";
 
-import { RoundInfoState } from "../game/roundInfo";
 import { Match } from "../game/match";
-import { PlayerStore, createPlayerStore } from "./store";
-import { isPlayerAlive } from "./playerSelectors";
+import { PlayerStore, createPlayerStore, PlayerState } from "./store";
 import { GameEvent, playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
 import { Game } from "../game";
 
@@ -29,8 +27,6 @@ export class Player {
 	protected match: Match | null = null;
 	protected store: PlayerStore;
 
-	protected getRoundInfoState!: () => RoundInfoState;
-	protected getPlayerListPlayers!: () => PlayerListPlayer[];
 	protected readonly boardSlice: BoardSlice<PieceModel>;
 	protected readonly benchSlice: BoardSlice<PieceModel>;
 
@@ -47,7 +43,7 @@ export class Player {
 
 		const { store, sagaMiddleware } = createPlayerStore(
 			this.getLogger,
-			() => this.match,
+			this.getMatch,
 			this.id,
 			this.name,
 			{
@@ -62,77 +58,10 @@ export class Player {
 		sagaMiddleware.run(this.matchSaga());
 	}
 
+	public select = <T>(selector: (state: PlayerState) => T) => selector(this.store.getState());
+
 	public getLogger = () => this.logger;
-
-	public receiveGameEvent(gameEvent: GameEvent) {
-		this.store.dispatch(gameEvent);
-	}
-
-	public setGetRoundInfoState(fn: () => RoundInfoState) {
-		this.getRoundInfoState = fn;
-	}
-
-	public setGetPlayerListPlayers(fn: () => PlayerListPlayer[]) {
-		this.getPlayerListPlayers = fn;
-	}
-
 	public getMatch = () => this.match;
-
-	public getHealth() {
-		return this.store.getState().playerInfo.health;
-	}
-
-	public getReady() {
-		return this.store.getState().playerInfo.ready;
-	}
-
-	public getStreak() {
-		return this.store.getState().playerInfo.streak;
-	}
-
-	public getLevel() {
-		return this.store.getState().playerInfo.level;
-	}
-
-	public getXp() {
-		return this.store.getState().playerInfo.xp;
-	}
-
-	public getMoney() {
-		return this.store.getState().playerInfo.money;
-	}
-
-	public getShopLocked() {
-		return this.store.getState().cardShop.locked;
-	}
-
-	public getStatus() {
-		return this.store.getState().playerInfo.status;
-	}
-
-	public getBattle() {
-		return this.store.getState().playerInfo.battle;
-	}
-
-	public isAlive() {
-		return isPlayerAlive(this.store.getState());
-	}
-
-	public isDead() {
-		return !this.isAlive();
-	}
-
-	public getBoard() {
-		return this.store.getState().board;
-	}
-
-	public getBench() {
-		return this.store.getState().bench;
-	}
-
-	public getCards() {
-		return this.store.getState().cardShop.cards;
-	}
 
 	private matchSaga() {
 		const setMatch = (match: Match) => this.match = match;

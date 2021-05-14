@@ -16,7 +16,9 @@ export const runPreparingPhase = function*() {
 
 	yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt, round: round + 1 }));
 
-	players.getLiving().forEach(p => p.receiveGameEvent(playerRunPreparingPhaseEvent()));
+	players.getLiving().forEach(p => p.runSaga(function*() {
+		yield put(playerRunPreparingPhaseEvent());
+	}));
 
 	const notifier = readyNotifier(players.getLiving());
 

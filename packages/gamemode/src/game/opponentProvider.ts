@@ -1,6 +1,6 @@
 import { shuffle } from "lodash";
 import { PlayerStatus } from "@creature-chess/models";
-import { Player } from "../player";
+import { Player, PlayerSelectors } from "../player";
 
 const randomFromArray = <T>(array: T[]) => {
 	return array[Math.floor(Math.random() * array.length)];
@@ -17,7 +17,7 @@ export class OpponentProvider {
 	private getLivingPlayers: () => Player[];
 
 	constructor(players: Player[]) {
-		this.getLivingPlayers = () => players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
+		this.getLivingPlayers = () => players.filter(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.select(PlayerSelectors.isPlayerAlive));
 	}
 
 	public getMatchups = () => {

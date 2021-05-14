@@ -9,7 +9,7 @@ import { PlayerBoardSlices } from "../../player/sagaContext";
 import { PlayerState } from "../../player/store";
 import { CardDeck } from "../cardDeck";
 
-export const playerGameDeckSagaFactory = (deck: CardDeck) => {
+export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 	// when a player rerolls, get them some new cards from the deck
 	const pullNewCards = (
 		oldCards: Card[],
@@ -27,58 +27,56 @@ export const playerGameDeckSagaFactory = (deck: CardDeck) => {
 		deck.shuffle();
 	};
 
-	return function*() {
-		yield all([
-			takeEvery<PlayerEvents.PlayerDeathEvent>(
-				PlayerEvents.playerDeathEvent.toString(),
-				function*() {
-					const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
-					const cards = yield* select((s: PlayerState) => s.cardShop.cards);
-					const pieces = yield* select(getAllPieces);
+	yield all([
+		takeEvery<PlayerEvents.PlayerDeathEvent>(
+			PlayerEvents.playerDeathEvent.toString(),
+			function*() {
+				const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
+				const cards = yield* select((s: PlayerState) => s.cardShop.cards);
+				const pieces = yield* select(getAllPieces);
 
-					const remainingCards = cards.filter((card): card is Card => card !== null);
+				const remainingCards = cards.filter((card): card is Card => card !== null);
 
-					yield put(updateCardsCommand([]));
-					yield put(boardSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
-					yield put(benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
+				yield put(updateCardsCommand([]));
+				yield put(boardSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
+				yield put(benchSlice.commands.setBoardPiecesCommand({ pieces: {}, piecePositions: {} }));
 
-					addToDeck(pieces, remainingCards);
+				addToDeck(pieces, remainingCards);
+			}
+		),
+		takeEvery<PlayerEvents.AfterRerollCardsEvent>(
+			PlayerEvents.afterRerollCardsEvent.toString(),
+			function*() {
+				const state = yield* select((s: PlayerState) => s);
+
+				if (!isPlayerAlive(state)) {
+					return;
 				}
-			),
-			takeEvery<PlayerEvents.AfterRerollCardsEvent>(
-				PlayerEvents.afterRerollCardsEvent.toString(),
-				function*() {
-					const state = yield* select((s: PlayerState) => s);
 
-					if (!isPlayerAlive(state)) {
-						return;
-					}
+				const {
+					cardShop: { cards },
+					playerInfo: { level }
+				} = state;
 
-					const {
-						cardShop: { cards },
-						playerInfo: { level }
-					} = state;
+				const threeStarBoardPieces = getPiecesForStage(state.board, 2);
+				const threeStarBenchPieces = getPiecesForStage(state.bench, 2);
 
-					const threeStarBoardPieces = getPiecesForStage(state.board, 2);
-					const threeStarBenchPieces = getPiecesForStage(state.bench, 2);
+				const excludeIds = [...threeStarBoardPieces, ...threeStarBenchPieces].map(p => p.definitionId);
+				const blessCandidateIds = [... new Set(getPiecesExceptStage(state.board, 2).map(p => p.definitionId))];
 
-					const excludeIds = [...threeStarBoardPieces, ...threeStarBenchPieces].map(p => p.definitionId);
-					const blessCandidateIds = [... new Set(getPiecesExceptStage(state.board, 2).map(p => p.definitionId))];
+				const remainingCards = cards.filter((card): card is Card => card !== null);
+				const newCards = pullNewCards(remainingCards, level, excludeIds, blessCandidateIds);
 
-					const remainingCards = cards.filter((card): card is Card => card !== null);
-					const newCards = pullNewCards(remainingCards, level, excludeIds, blessCandidateIds);
-
-					yield put(PlayerCommands.updateCardsCommand(newCards));
-				}
-			),
-			takeEvery<PlayerEvents.AfterSellPieceEvent>(
-				PlayerEvents.afterSellPieceEvent.toString(),
-				function*({ payload: { piece } }) {
-					// when a player sells a piece, add it back to the deck
-					deck.addPiece(piece);
-					deck.shuffle();
-				}
-			)
-		]);
-	};
+				yield put(PlayerCommands.updateCardsCommand(newCards));
+			}
+		),
+		takeEvery<PlayerEvents.AfterSellPieceEvent>(
+			PlayerEvents.afterSellPieceEvent.toString(),
+			function*({ payload: { piece } }) {
+				// when a player sells a piece, add it back to the deck
+				deck.addPiece(piece);
+				deck.shuffle();
+			}
+		)
+	]);
 };

@@ -1,7 +1,7 @@
 import { Logger } from "winston";
 import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
-import { fork, all, call } from "@redux-saga/core/effects";
+import { all, call } from "@redux-saga/core/effects";
 
 import { BoardState, BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";

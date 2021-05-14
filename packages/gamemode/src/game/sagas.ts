@@ -16,7 +16,6 @@ export type GameSagaContext = {
 		getAll: () => Player[];
 		getLiving: () => Player[];
 		getById: (id: string) => Player | null;
-		broadcast: (event: GameEvent) => void;
 	};
 	logger: Logger;
 };

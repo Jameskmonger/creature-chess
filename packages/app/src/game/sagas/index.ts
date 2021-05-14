@@ -1,4 +1,4 @@
-import { take, fork, put } from "@redux-saga/core/effects";
+import { take, put } from "@redux-saga/core/effects";
 
 import { PlayerInfoCommands, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { BoardSlice } from "@creature-chess/board";

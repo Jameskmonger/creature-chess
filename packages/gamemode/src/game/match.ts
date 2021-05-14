@@ -6,7 +6,7 @@ import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "r
 import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice, BoardSelectors } from "@creature-chess/board";
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
-import { Player } from "../player";
+import { Player, PlayerSelectors } from "../player";
 import { playerFinishMatchEvent } from "./events";
 import { call } from "redux-saga/effects";
 
@@ -36,7 +36,7 @@ export class Match {
 	) {
 		this.store = this.createStore(gameOptions);
 
-		const mergedBoard = mergeBoards(this.boardId, home.getBoard(), away.getBoard());
+		const mergedBoard = mergeBoards(this.boardId, home.select(PlayerSelectors.getPlayerBoard), away.select(PlayerSelectors.getPlayerBoard));
 
 		const board: BoardState<PieceModel> = {
 			...mergedBoard,
@@ -117,10 +117,14 @@ export class Match {
 		const homeScore = surviving.home.length;
 		const awayScore = surviving.away.length;
 
-		this.home.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
+		this.home.runSaga(function*() {
+			yield put(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
+		});
 
 		if (!this.awayIsClone) {
-			this.away.receiveGameEvent(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
+			this.away.runSaga(function*() {
+				yield put(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
+			});
 		}
 
 		return this.finalBoard;

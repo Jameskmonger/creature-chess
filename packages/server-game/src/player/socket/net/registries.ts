@@ -7,9 +7,9 @@ export type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefin
 export type PlayerRegistries = {
 	incoming: IncomingRegistry,
 	outgoing: OutgoingRegistry
-} | null;
+};
 
 export const getPacketRegistries = () => getContext<PlayerRegistries>("packetRegistries");
 export const setPacketRegistries = (
-	packetRegistries: PlayerRegistries
-) => setContext<{ packetRegistries: PlayerRegistries }>({ packetRegistries });
+	packetRegistries: PlayerRegistries | null
+) => setContext<{ packetRegistries: PlayerRegistries | null }>({ packetRegistries });

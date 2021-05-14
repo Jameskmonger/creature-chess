@@ -23,10 +23,14 @@ export const runReadyPhase = function*() {
 
 		const match = new Match(homePlayer, awayPlayer, awayIsClone, options);
 
-		homePlayer.receiveGameEvent(playerRunReadyPhaseEvent({ match }));
+		homePlayer.runSaga(function*() {
+			yield put(playerRunReadyPhaseEvent({ match }));
+		});
 
 		if (!awayIsClone) {
-			awayPlayer.receiveGameEvent(playerRunReadyPhaseEvent({ match }));
+			awayPlayer.runSaga(function*() {
+				yield put(playerRunReadyPhaseEvent({ match }));
+			});
 		}
 	});
 

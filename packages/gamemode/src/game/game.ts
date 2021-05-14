@@ -3,16 +3,17 @@ import { EventEmitter } from "events";
 import { Store } from "redux";
 import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
-import { Player } from "../player";
+import { Player, PlayerSelectors } from "../player";
 import { OpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
 import { CardDeck } from "./cardDeck";
-import { GameEvent, gameFinishEvent, playerListChangedEvent, GameFinishEvent, GamePhaseStartedEvent } from "./events";
+import { gameFinishEvent, playerListChangedEvent, GameFinishEvent } from "./events";
 import { createGameStore, GameState } from "./store";
 import { take } from "@redux-saga/core/effects";
 import { gameSaga } from "./sagas";
 import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
 import { sendPublicEventsSaga } from "./publicEvents";
+import { put } from "redux-saga/effects";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -38,11 +39,22 @@ export class Game {
 	}
 
 	public start = (players: Player[]) => {
-		players.forEach(this.addPlayer);
+		players.forEach(player => {
+			this.players.push(player);
+			this.playerList.addPlayer(player);
+
+			player.runSaga(playerGameDeckSagaFactory, this.deck);
+		});
 
 		this.opponentProvider = new OpponentProvider(players);
+
+		// todo this is ugly
 		this.playerList.onUpdate(newPlayers => {
-			this.dispatchPublicGameEvent(playerListChangedEvent({ players: newPlayers }));
+			this.getConnectedPlayers().forEach(player => {
+				player.runSaga(function*() {
+					yield put(playerListChangedEvent({ players: newPlayers }));
+				});
+			});
 		});
 
 		const { store, sagaMiddleware } = createGameStore({
@@ -51,8 +63,7 @@ export class Game {
 			players: {
 				getAll: this.getAllPlayers,
 				getLiving: this.getLivingPlayers,
-				getById: this.getPlayerById,
-				broadcast: this.dispatchPublicGameEvent
+				getById: this.getPlayerById
 			},
 			logger: this.logger
 		});
@@ -65,19 +76,26 @@ export class Game {
 	}
 
 	public getPlayerById = (playerId: string) => {
-		return this.players.find(p => p.getStatus() !== PlayerStatus.QUIT && p.id === playerId) || null;
+		return this.players.find(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
 	}
 
 	public onFinish(fn: (winner: Player) => void) {
 		this.events.on(finishGameEventKey, fn);
 	}
 
+	public getConnectedPlayers = () => this.players.filter(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT);
+
 	public getRoundInfo = () => this.store!.getState().roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
 
 	private gameTeardownSagaFactory = () => {
 		const broadcast = (event: GameFinishEvent) => {
-			this.dispatchPublicGameEvent(event);
+			this.getConnectedPlayers().forEach(player => {
+				player.runSaga(function*() {
+					yield put(event);
+				});
+			});
+
 			this.events.emit(finishGameEventKey, event.payload.winnerId);
 		};
 
@@ -99,22 +117,11 @@ export class Game {
 		};
 	}
 
-	private addPlayer = (player: Player) => {
-		this.players.push(player);
-		this.playerList.addPlayer(player);
-
-		player.setGetRoundInfoState(() => this.store!.getState().roundInfo);
-		player.setGetPlayerListPlayers(this.playerList.getValue);
-
-		player.runSaga(playerGameDeckSagaFactory(this.deck));
-	}
-
 	private getAllPlayers = () => this.players;
 
-	private dispatchPublicGameEvent = (event: GameEvent) => {
-		this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT)
-			.forEach(p => p.receiveGameEvent(event));
-	}
-
-	private getLivingPlayers = () => this.players.filter(p => p.getStatus() !== PlayerStatus.QUIT && p.isAlive());
+	private getLivingPlayers = () =>
+		this.players.filter(p =>
+			p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT
+			&& p.select(PlayerSelectors.isPlayerAlive)
+		)
 }

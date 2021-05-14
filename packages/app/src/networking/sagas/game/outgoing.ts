@@ -1,4 +1,4 @@
-import { call, takeEvery, take, all, fork } from "@redux-saga/core/effects";
+import { call, takeEvery, take, all } from "@redux-saga/core/effects";
 import { PlayerGameActions } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ClientToServer } from "@creature-chess/networking";
 

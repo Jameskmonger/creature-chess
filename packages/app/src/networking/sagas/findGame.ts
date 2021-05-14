@@ -1,4 +1,4 @@
-import { race, call, takeEvery, put, take, fork } from "@redux-saga/core/effects";
+import { race, call, takeEvery, put, take } from "@redux-saga/core/effects";
 import { eventChannel } from "redux-saga";
 import { ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
