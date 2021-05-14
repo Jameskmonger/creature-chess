@@ -1,4 +1,4 @@
-export { Player, PlayerType } from "./player";
+export { Player } from "./player";
 
 export * as PlayerEvents from "./events";
 export * as PlayerSagas from "./sagas";

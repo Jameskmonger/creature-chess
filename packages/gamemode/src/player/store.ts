@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import { all, call } from "@redux-saga/core/effects";
 
-import { BoardState, BoardSlice } from "@creature-chess/board";
+import { BoardState, createBoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
@@ -31,10 +31,14 @@ export type PlayerStore = Store<PlayerState>;
 export const createPlayerStore = (
 	dependencies: PlayerSagaDependencies,
 	playerId: string,
-	playerName: string,
-	boardSlices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
-): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
+	playerName: string
+): { store: PlayerStore, runSaga: SagaMiddleware["run"] } => {
 	const playerVariables = createPlayerVariableStore<PlayerVariables>(defaultPlayerVariables());
+
+	const boardSlices = {
+		boardSlice: createBoardSlice<PieceModel>(`player-${playerId}-board`, { width: 7, height: 3 }),
+		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, { width: 7, height: 1 })
+	};
 
 	const sagaMiddleware = createSagaMiddleware<PlayerSagaContext>({
 		context: {
@@ -76,6 +80,6 @@ export const createPlayerStore = (
 
 	return {
 		store,
-		sagaMiddleware
+		runSaga: sagaMiddleware.run
 	};
 };

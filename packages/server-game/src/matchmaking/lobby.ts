@@ -5,7 +5,7 @@ import { Task } from "redux-saga";
 import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
-import { Game, Player, PlayerSelectors, PlayerType } from "../../../gamemode/lib";
+import { Game, Player, PlayerSelectors } from "../../../gamemode/lib";
 import { botLogicSaga } from "../player/bot/saga";
 import { createWinstonLogger } from "../log";
 import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
@@ -174,10 +174,11 @@ export class Lobby {
 		const logger = createWinstonLogger(`match-${gameId}`);
 		this.game = new Game(gameId, logger);
 
-		const players: Player[] = [];
+		const userPlayers: Player[] = [];
+		const botPlayers: Player[] = [];
 
 		for (const member of this.members) {
-			const player = new Player(PlayerType.USER, member.id, member.name, member.profile, this.game, logger);
+			const player = new Player(member.id, member.name, member.profile, this.game, logger);
 
 			await this.database.user.addGamePlayed(player.id);
 
@@ -185,7 +186,7 @@ export class Lobby {
 
 			this.playerConnections[player.id].networkingSaga = player.runSaga(playerNetworking, socket);
 
-			players.push(player);
+			userPlayers.push(player);
 		}
 
 		const bots = await this.database.bot.getLeastPlayedBots(botsRequired);
@@ -193,28 +194,31 @@ export class Lobby {
 			// get a random picture from one to 20 - temporary
 			const picture = Math.floor(Math.random() * 20) + 1;
 
-			const player = new Player(PlayerType.BOT, id, `[BOT] ${name}`, { title: null, picture }, this.game, logger);
+			const player = new Player(id, `[BOT] ${name}`, { title: null, picture }, this.game, logger);
 
 			await this.database.bot.addGamePlayed(player.id);
 
 			player.runSaga(botLogicSaga);
 
-			players.push(player);
+			botPlayers.push(player);
 		}
 
 		this.game.onFinish((winner) => {
-			if (winner.type === PlayerType.USER) {
+			if (userPlayers.includes(winner)) {
 				this.database.user.addWin(winner.id);
 			}
 
-			if (winner.type === PlayerType.BOT) {
+			if (botPlayers.includes(winner)) {
 				this.database.bot.addWin(winner.id);
 			}
 
 			this.events.emit("finish");
 		});
 
-		this.game.start(players);
+		this.game.start([
+			...userPlayers,
+			...botPlayers
+		]);
 	}
 
 	private sendMemberLobbyUpdateEvent(member: LobbyPlayer, index: number, other: LobbyPlayer) {

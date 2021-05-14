@@ -1,23 +1,9 @@
 import { Logger } from "winston";
-import { Saga, Task } from "redux-saga";
-import { PieceModel, PlayerProfile } from "@creature-chess/models";
-import { BoardSlice, createBoardSlice } from "@creature-chess/board";
+import { SagaMiddleware } from "redux-saga";
+import { PlayerProfile } from "@creature-chess/models";
 
-import { Match } from "../game/match";
-import { PlayerStore, createPlayerStore, PlayerState } from "./store";
+import { createPlayerStore, PlayerState } from "./store";
 import { Game } from "../game";
-
-export interface PlayerMatchResults {
-	homePlayer: Player;
-	opponentName: string;
-	homeScore: number;
-	awayScore: number;
-}
-
-export enum PlayerType {
-	BOT,
-	USER
-}
 
 export class Player {
 	/**
@@ -30,38 +16,7 @@ export class Player {
 	 *
 	 * @return
 	 */
-	public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
-	protected store: PlayerStore;
-
-	protected readonly boardSlice: BoardSlice<PieceModel>;
-	protected readonly benchSlice: BoardSlice<PieceModel>;
-
-	constructor(
-		public readonly type: PlayerType,
-		public readonly id: string,
-		public readonly name: string,
-		public readonly profile: PlayerProfile,
-		public readonly game: Game,
-		private logger: Logger
-	) {
-		this.boardSlice = createBoardSlice(`player-${this.id}-board`, { width: 7, height: 3 });
-		this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
-
-		const { store, sagaMiddleware } = createPlayerStore(
-			{
-				logger
-			},
-			this.id,
-			this.name,
-			{
-				boardSlice: this.boardSlice,
-				benchSlice: this.benchSlice
-			}
-		);
-		this.store = store;
-
-		this.runSaga = sagaMiddleware.run;
-	}
+	public readonly runSaga: SagaMiddleware["run"];
 
 	/**
 	 * Runs a selector on the {@link PlayerState} and returns the result.
@@ -70,5 +25,24 @@ export class Player {
 	 *
 	 * @returns The result of the selector.
 	 */
-	public select = <T>(selector: (state: PlayerState) => T) => selector(this.store.getState());
+	public readonly select: <T>(selector: (state: PlayerState) => T) => T;
+
+	constructor(
+		public readonly id: string,
+		public readonly name: string,
+		public readonly profile: PlayerProfile,
+		public readonly game: Game,
+		logger: Logger
+	) {
+		const { store, runSaga } = createPlayerStore(
+			{
+				logger
+			},
+			this.id,
+			this.name
+		);
+
+		this.runSaga = runSaga;
+		this.select = selector => selector(store.getState());
+	}
 }

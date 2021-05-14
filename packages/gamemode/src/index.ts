@@ -1,7 +1,7 @@
 export { Game } from "./game";
 
 export {
-	Player, PlayerType, PlayerEvents, PlayerSagas,
+	Player, PlayerEvents, PlayerSagas,
 	PlayerSelectors, PlayerCommands, PlayerReducers, PlayerGameActions,
 	PlayerSagaContext,
 

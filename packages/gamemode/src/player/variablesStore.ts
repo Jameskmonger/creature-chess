@@ -10,7 +10,7 @@ type UpdatePlayerVariablesFn<TVariables> = (patch: Partial<TVariables>) => void;
 export type PlayerVariablesStoreContext<TVariables> = {
 	getVariable: GetPlayerVariableFn<TVariables>;
 	updateVariables: UpdatePlayerVariablesFn<TVariables>;
-}
+};
 
 /**
  * Select a variable from the player variable store
@@ -65,4 +65,4 @@ export const createPlayerVariableStore = <TVariables>(defaultVariables: TVariabl
 			};
 		}
 	};
-}
+};
