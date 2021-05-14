@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { AppState } from "../../../../../store";
@@ -8,6 +8,7 @@ import { PlayerName } from "../playerName";
 import { PlayerTitle } from "../playerTitle";
 import { BattleInfo } from "../battleInfo";
 import { PlayerPicture } from "../playerPicture";
+import { useOnClickOutside } from "./useClickOutside"
 
 interface Props {
 	index: number;
@@ -31,10 +32,14 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 const renderHealthbar = (current: number) => current.toString();
 
 const SpectateButton: React.FunctionComponent<{ playerId: string }> = (playerId) => {
-
+	const handleSpectate = (e) => {
+		e.persist();
+		e.nativeEvent.stopImmediatePropagation();
+		e.stopPropagation();
+	}
 	return (
 		<div>
-			<button>Spectate</button>
+			<button onClick={(event) => handleSpectate(event)}>Spectate</button>
 		</div>
 	)
 }
@@ -44,15 +49,17 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 	const readyClassName = (player.ready && showReadyIndicator) ? "ready" : "not-ready";
 
+	const ref = useRef()
 	const [isExpanded, setIsExpanded] = useState<Boolean>(false)
+	useOnClickOutside(ref, () => setIsExpanded(false))
+
+
 
 	const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
 	const handleExpansion = (): void => {
-		setIsExpanded(true)
+		setIsExpanded(!isExpanded)
 	}
-
-	const handleDeExpansion = (): void => isExpanded && setIsExpanded(false)
 
 	const handleBlur = (): void => {
 		setIsExpanded(!isExpanded)
@@ -63,13 +70,14 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 			className={className}
 			onClick={handleExpansion}
 			onBlur={handleBlur}
+			ref={ref}
 		>
 			<div className="picture">
 				<PlayerPicture playerId={playerId} />
 			</div>
 			<div className="details">
 				<div className="row">
-					<div className="row-half name-container" onClick={handleDeExpansion}>
+					<div className="row-half name-container">
 						<span className="name">
 							{index + 1}.&nbsp;<PlayerName playerId={playerId} />
 						</span>
@@ -88,7 +96,7 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 					</div>
 				</div>
 				<div className="row">
-					<div className="row-half" onClick={handleDeExpansion}>
+					<div className="row-half">
 						<div className="badges">
 							<span className="badge money">${money ? money : player.money}</span>
 							<span className="badge">Lv {level ? level : player.level}</span>
