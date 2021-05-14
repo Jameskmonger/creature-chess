@@ -5,7 +5,7 @@ import { isPlayerAlive } from "../playerSelectors";
 import { updateMoneyCommand } from "../playerInfo/commands";
 import { addXpCommand } from "../sagas/xp";
 import { createAction } from "@reduxjs/toolkit";
-import { PlayerSagaDependencies } from "../sagaContext";
+import { getPlayerSagaDependencies, PlayerSagaDependencies } from "../sagaContext";
 
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
 export const buyXpPlayerAction = createAction("buyXpPlayerAction");
@@ -14,11 +14,11 @@ export const buyXpPlayerActionSaga = function*() {
 	while (true) {
 		const playerId = yield* getContext<string>("playerId");
 		const name = yield* getContext<string>("playerName");
-		const { getLogger } = yield* getContext<PlayerSagaDependencies>("dependencies");
+		const { logger } = yield* getPlayerSagaDependencies();
 
 		yield take(buyXpPlayerAction.toString());
 
-		getLogger().info(
+		logger.info(
 			"BUY_XP_ACTION received",
 			{ actor: { playerId, name } }
 		);
@@ -26,7 +26,7 @@ export const buyXpPlayerActionSaga = function*() {
 		const isAlive = yield* select(isPlayerAlive);
 
 		if (isAlive === false) {
-			getLogger().info(
+			logger.info(
 				"Player attempted to buy xp, but dead",
 				{ actor: { playerId, name } }
 			);
@@ -36,7 +36,7 @@ export const buyXpPlayerActionSaga = function*() {
 		const currentLevel = yield* select(state => state.playerInfo.level);
 
 		if (currentLevel === MAX_PLAYER_LEVEL) {
-			getLogger().info(
+			logger.info(
 				"Player attempted to buy xp, but at max level",
 				{ actor: { playerId, name } }
 			);
@@ -47,7 +47,7 @@ export const buyXpPlayerActionSaga = function*() {
 
 		// not enough money
 		if (money < BUY_XP_COST) {
-			getLogger().info(
+			logger.info(
 				"Not enough money to buy xp",
 				{
 					actor: { playerId, name },

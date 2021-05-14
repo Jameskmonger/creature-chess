@@ -9,7 +9,7 @@ import { getPlayerBelowPieceLimit } from "../playerSelectors";
 import { updateMoneyCommand } from "../playerInfo/commands";
 import { updateCardsCommand } from "../cardShop";
 import { getDefinitionById } from "../../definitions";
-import { PlayerBoardSlices, PlayerSagaDependencies } from "../sagaContext";
+import { getPlayerSagaDependencies, PlayerBoardSlices, PlayerSagaDependencies } from "../sagaContext";
 
 const getCardDestination = (
 	state: PlayerState,
@@ -78,7 +78,7 @@ export const buyCardPlayerActionSaga = function*() {
 	while (true) {
 		const playerId = yield* getContext<string>("playerId");
 		const name = yield* getContext<string>("playerName");
-		const { getLogger } = yield* getContext<PlayerSagaDependencies>("dependencies");
+		const { logger } = yield* getPlayerSagaDependencies();
 		const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
 
 		const action: BuyCardPlayerAction = yield take(buyCardPlayerAction.toString());
@@ -91,7 +91,7 @@ export const buyCardPlayerActionSaga = function*() {
 		const card = cards[index];
 
 		if (!card) {
-			getLogger().warn(
+			logger.warn(
 				`Player attempted to buy null/undefined card`,
 				{ actor: { playerId, name } }
 			);
@@ -103,7 +103,7 @@ export const buyCardPlayerActionSaga = function*() {
 		}
 
 		if (money < card.cost) {
-			getLogger().warn(
+			logger.warn(
 				"Not enough money to buy card",
 				{
 					actor: { playerId, name },
@@ -121,7 +121,7 @@ export const buyCardPlayerActionSaga = function*() {
 
 		// no valid slots
 		if (destination === null) {
-			getLogger().warn(
+			logger.warn(
 				`Player attempted to buy a card but has no available destination`,
 				{ actor: { playerId, name } }
 			);

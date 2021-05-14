@@ -28,7 +28,7 @@ export interface PlayerState {
 export type PlayerStore = Store<PlayerState>;
 
 export const createPlayerStore = (
-	getLogger: () => Logger,
+	logger: Logger,
 	getMatch: () => Match | null,
 	playerId: string,
 	playerName: string,
@@ -53,7 +53,7 @@ export const createPlayerStore = (
 			playerName,
 			boardSlices,
 			dependencies: {
-				getLogger,
+				logger,
 				getMatch
 			}
 		}

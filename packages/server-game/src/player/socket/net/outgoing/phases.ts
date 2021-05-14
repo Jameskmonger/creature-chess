@@ -32,7 +32,7 @@ const preparingPhase = function*(phase: GamePhase, startedAt: number, round: num
 const readyPhase = function*(startedAt: number) {
 	const { outgoing: registry } = yield* getPacketRegistries();
 	const playerId = yield* getContext<string>("playerId");
-	const { getLogger, getMatch } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
+	const { logger, getMatch } = yield* PlayerSagaContext.getPlayerSagaDependencies();
 
 	const bench = yield* select((state: PlayerState) => state.bench);
 	const health = yield* select((state: PlayerState) => state.playerInfo.health);
@@ -41,7 +41,7 @@ const readyPhase = function*(startedAt: number) {
 
 	if (!match) {
 		if (health > 0) {
-			getLogger().warn("No match found for living player when entering ready state");
+			logger.warn("No match found for living player when entering ready state");
 		}
 
 		return;

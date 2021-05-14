@@ -6,7 +6,7 @@ import { BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { Match } from "../game/match";
 import { PlayerStore, createPlayerStore, PlayerState } from "./store";
-import { GameEvent, playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
+import { playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
 import { Game } from "../game";
 
 export interface PlayerMatchResults {
@@ -42,7 +42,7 @@ export class Player {
 		this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
 
 		const { store, sagaMiddleware } = createPlayerStore(
-			this.getLogger,
+			this.logger,
 			this.getMatch,
 			this.id,
 			this.name,
@@ -60,7 +60,6 @@ export class Player {
 
 	public select = <T>(selector: (state: PlayerState) => T) => selector(this.store.getState());
 
-	public getLogger = () => this.logger;
 	public getMatch = () => this.match;
 
 	private matchSaga() {

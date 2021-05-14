@@ -56,10 +56,10 @@ const buyCardIfBelowLimit = function*(index: number) {
 	const card = state.cardShop.cards[index];
 
 	if (!card) {
-		const { getLogger } = yield* getContext<PlayerSagaContext.PlayerSagaDependencies>("dependencies");
+		const { logger } = yield* PlayerSagaContext.getPlayerSagaDependencies();
 		const name = yield* getContext<string>("playerName");
 
-		getLogger().warn(
+		logger.warn(
 			`buyCardIfBelowLimit card was not found`,
 			{ actor: { name } }
 		);
