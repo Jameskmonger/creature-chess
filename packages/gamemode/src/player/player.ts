@@ -1,12 +1,10 @@
 import { Logger } from "winston";
 import { Saga, Task } from "redux-saga";
-import { all, takeEvery } from "redux-saga/effects";
 import { PieceModel, PlayerProfile } from "@creature-chess/models";
 import { BoardSlice, createBoardSlice } from "@creature-chess/board";
 
 import { Match } from "../game/match";
 import { PlayerStore, createPlayerStore, PlayerState } from "./store";
-import { playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../game/events";
 import { Game } from "../game";
 
 export interface PlayerMatchResults {
@@ -22,9 +20,17 @@ export enum PlayerType {
 }
 
 export class Player {
+	/**
+	 * Run a saga on the Player object.
+	 *
+	 * @template S The type of Saga to run.
+	 *
+	 * @param saga - The saga to run, of type {@link S}
+	 * @param args - Optional arguments for the saga, of type {@link Parameters<S>}
+	 *
+	 * @return
+	 */
 	public readonly runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
-
-	protected match: Match | null = null;
 	protected store: PlayerStore;
 
 	protected readonly boardSlice: BoardSlice<PieceModel>;
@@ -42,8 +48,9 @@ export class Player {
 		this.benchSlice = createBoardSlice(`player-${this.id}-bench`, { width: 7, height: 1 });
 
 		const { store, sagaMiddleware } = createPlayerStore(
-			this.logger,
-			this.getMatch,
+			{
+				logger
+			},
 			this.id,
 			this.name,
 			{
@@ -54,33 +61,14 @@ export class Player {
 		this.store = store;
 
 		this.runSaga = sagaMiddleware.run;
-
-		sagaMiddleware.run(this.matchSaga());
 	}
 
+	/**
+	 * Runs a selector on the {@link PlayerState} and returns the result.
+	 *
+	 * @param selector - The selector to execute.
+	 *
+	 * @returns The result of the selector.
+	 */
 	public select = <T>(selector: (state: PlayerState) => T) => selector(this.store.getState());
-
-	public getMatch = () => this.match;
-
-	private matchSaga() {
-		const setMatch = (match: Match) => this.match = match;
-		const clearMatch = () => this.match;
-
-		return function*() {
-			yield all([
-				takeEvery<PlayerRunReadyPhaseEvent>(
-					playerRunReadyPhaseEvent.toString(),
-					function*({ payload: { match } }) {
-						setMatch(match);
-					}
-				),
-				takeEvery<PlayerFinishMatchEvent>(
-					playerFinishMatchEvent.toString(),
-					function*() {
-						clearMatch();
-					}
-				)
-			]);
-		};
-	}
 }

@@ -1,7 +1,7 @@
 import { call, takeLatest } from "redux-saga/effects";
 import { getContext, select } from "typed-redux-saga";
 
-import { PlayerState, GameEvents, PlayerSagaContext } from "@creature-chess/gamemode";
+import { PlayerState, GameEvents, PlayerSagaContext, getPlayerVariable, PlayerVariables, Match } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { GamePhase } from "@creature-chess/models";
 import { getPacketRegistries } from "../registries";
@@ -32,14 +32,14 @@ const preparingPhase = function*(phase: GamePhase, startedAt: number, round: num
 const readyPhase = function*(startedAt: number) {
 	const { outgoing: registry } = yield* getPacketRegistries();
 	const playerId = yield* getContext<string>("playerId");
-	const { logger, getMatch } = yield* PlayerSagaContext.getPlayerSagaDependencies();
+	const { logger } = yield* PlayerSagaContext.getPlayerSagaDependencies();
 
 	const bench = yield* select((state: PlayerState) => state.bench);
 	const health = yield* select((state: PlayerState) => state.playerInfo.health);
 
-	const match = getMatch();
+	const currentMatch = yield* getPlayerVariable<PlayerVariables, Match>(variables => variables.match!);
 
-	if (!match) {
+	if (!currentMatch) {
 		if (health > 0) {
 			logger.warn("No match found for living player when entering ready state");
 		}
@@ -47,12 +47,12 @@ const readyPhase = function*(startedAt: number) {
 		return;
 	}
 
-	const board = match.getBoardForPlayer(playerId);
+	const board = currentMatch.getBoardForPlayer(playerId);
 
 	const opponentId =
-		match.home.id === playerId
-			? match.away.id
-			: match.home.id;
+		currentMatch.home.id === playerId
+			? currentMatch.away.id
+			: currentMatch.home.id;
 
 	const packet: ServerToClient.Game.PhaseUpdatePacket = {
 		startedAtSeconds: startedAt,

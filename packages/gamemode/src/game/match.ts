@@ -9,6 +9,7 @@ import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 import { Player, PlayerSelectors } from "../player";
 import { playerFinishMatchEvent } from "./events";
 import { call } from "redux-saga/effects";
+import delay = require("delay");
 
 interface MatchState {
 	board: BoardState<PieceModel>;
@@ -26,7 +27,8 @@ export class Match {
 	private board: BoardSlice<PieceModel> = createBoardSlice<PieceModel>(this.boardId, GRID_SIZE);
 
 	private serverFinishedMatch = pDefer();
-	private clientFinishedMatch = pDefer();
+	private clientFinishedMatchHome = pDefer();
+	private clientFinishedMatchAway = pDefer();
 
 	constructor(
 		public readonly home: Player,
@@ -55,8 +57,12 @@ export class Match {
 		this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
 	}
 
-	public onClientFinishMatch() {
-		this.clientFinishedMatch.resolve();
+	public onClientFinishMatch(playerId: string) {
+		if (playerId === this.home.id) {
+			this.clientFinishedMatchHome.resolve();
+		} else if (playerId === this.away.id) {
+			this.clientFinishedMatchAway.resolve();
+		}
 	}
 
 	public getBoardForPlayer(playerId: string): BoardState<PieceModel> {
@@ -102,8 +108,14 @@ export class Match {
 
 		await Promise.race([
 			battleTimeout,
-			Promise.all([this.serverFinishedMatch.promise, this.clientFinishedMatch.promise])
+			Promise.all([
+				this.serverFinishedMatch.promise,
+				this.clientFinishedMatchHome.promise,
+				this.clientFinishedMatchAway.promise
+			])
 		]);
+
+		await delay(500);
 
 		this.finalBoard = this.store.getState().board;
 

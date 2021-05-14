@@ -1,4 +1,3 @@
-import { Logger } from "winston";
 import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import { all, call } from "@redux-saga/core/effects";
@@ -8,14 +7,16 @@ import { PieceModel } from "@creature-chess/models";
 
 import { PlayerInfoState, playerInfoReducer } from "./playerInfo";
 import {
-	fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory, setStatusOnQuit, playerBattle, playerMatchRewards
+	fillBoardSagaFactory, healthSagaFactory, xpSagaFactory, evolutionSagaFactory, setStatusOnQuit, playerBattle
 } from "./sagas";
 import { roundInfoReducer, RoundInfoState } from "../game/roundInfo";
 import { cardShopReducer, CardShopState } from "./cardShop";
-import { PlayerSagaContext } from "./sagaContext";
+import { PlayerSagaContext, PlayerSagaDependencies } from "./sagaContext";
 import { playerGameActionsSaga } from "./playerGameActions";
-import { Match } from "../game/match";
 import { playerPhases } from "./sagas/phases";
+import { createPlayerVariableStore } from "./variablesStore";
+import { featuresRootSaga } from "../features";
+import { defaultPlayerVariables, PlayerVariables } from "./variables";
 
 export interface PlayerState {
 	board: BoardState<PieceModel>;
@@ -28,34 +29,21 @@ export interface PlayerState {
 export type PlayerStore = Store<PlayerState>;
 
 export const createPlayerStore = (
-	logger: Logger,
-	getMatch: () => Match | null,
+	dependencies: PlayerSagaDependencies,
 	playerId: string,
 	playerName: string,
 	boardSlices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ): { store: PlayerStore, sagaMiddleware: SagaMiddleware } => {
-	const rootSaga = function*() {
-		yield all([
-			call(playerPhases),
-			call(playerGameActionsSaga),
-			call(evolutionSagaFactory<PlayerState>(boardSlices)),
-			call(healthSagaFactory<PlayerState>()),
-			call(xpSagaFactory<PlayerState>(boardSlices)),
-			call(fillBoardSagaFactory<PlayerState>(playerId)),
-			call(setStatusOnQuit),
-			call(playerBattle)
-		]);
-	};
+	const playerVariables = createPlayerVariableStore<PlayerVariables>(defaultPlayerVariables());
 
 	const sagaMiddleware = createSagaMiddleware<PlayerSagaContext>({
 		context: {
 			playerId,
 			playerName,
 			boardSlices,
-			dependencies: {
-				logger,
-				getMatch
-			}
+			dependencies,
+			getVariable: playerVariables.getVariable,
+			updateVariables: playerVariables.updateVariables
 		}
 	});
 
@@ -69,6 +57,20 @@ export const createPlayerStore = (
 		}),
 		applyMiddleware(sagaMiddleware)
 	);
+
+	const rootSaga = function*() {
+		yield all([
+			call(playerPhases),
+			call(playerGameActionsSaga),
+			call(evolutionSagaFactory<PlayerState>(boardSlices)),
+			call(healthSagaFactory<PlayerState>()),
+			call(xpSagaFactory<PlayerState>(boardSlices)),
+			call(fillBoardSagaFactory<PlayerState>(playerId)),
+			call(setStatusOnQuit),
+			call(playerBattle),
+			call(featuresRootSaga)
+		]);
+	};
 
 	sagaMiddleware.run(rootSaga);
 

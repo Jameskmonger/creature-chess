@@ -9,3 +9,6 @@ export * as PlayerReducers from "./reducers";
 export * as PlayerGameActions from "./playerGameActions";
 
 export * as PlayerSagaContext from "./sagaContext";
+
+export { PlayerVariables } from "./variables";
+export { getPlayerVariable, updatePlayerVariables } from "./variablesStore";

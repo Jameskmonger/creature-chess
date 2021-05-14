@@ -1,6 +1,13 @@
 export { Game } from "./game";
 
-export { Player, PlayerType, PlayerEvents, PlayerSagas, PlayerSelectors, PlayerCommands, PlayerReducers, PlayerGameActions, PlayerSagaContext } from "./player";
+export {
+	Player, PlayerType, PlayerEvents, PlayerSagas,
+	PlayerSelectors, PlayerCommands, PlayerReducers, PlayerGameActions,
+	PlayerSagaContext,
+
+	PlayerVariables, getPlayerVariable, updatePlayerVariables
+} from "./player";
+
 export { getPiece, getAllPieces } from "./player/pieceSelectors";
 export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./player/playerSelectors";
 export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, PlayerMatchRewards } from "./player/playerInfo";

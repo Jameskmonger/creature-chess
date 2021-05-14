@@ -6,6 +6,9 @@ import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
 import { playerFinishMatchEvent } from "../../events";
 import { Match } from "../../match";
+import { getMatch } from "../../../features/match";
+import { SagaGenerator, all, call } from "typed-redux-saga";
+import { getMatches } from "../../../features/match/selectors";
 
 const waitForFinishMatchSaga = function*() {
 	yield take(playerFinishMatchEvent.toString());
@@ -26,16 +29,16 @@ export const runPlayingPhase = function*() {
 
 	const livingPlayers = players.getLiving();
 
-	const matches = [
+	const matches = yield* call(getMatches, livingPlayers);
+
+	const uniqueMatches = [
 		...new Set(
-			livingPlayers
-				.map(p => p.getMatch())
-				.filter((match): match is Match => match !== null)
+			matches.filter((match): match is Match => match !== null)
 		)
 	];
 	const finishMatchTasks = livingPlayers.map(p => p.runSaga(waitForFinishMatchSaga));
 
-	matches.forEach(m => m.fight(battleTimeoutDeferred.promise));
+	uniqueMatches.forEach(m => m.fight(battleTimeoutDeferred.promise));
 
 	yield Promise.all(finishMatchTasks.map(t => t.toPromise()));
 

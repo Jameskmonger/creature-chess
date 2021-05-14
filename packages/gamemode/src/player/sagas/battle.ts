@@ -5,7 +5,6 @@ import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../../game/events";
 import { HasPlayerInfo, PlayerInfoCommands } from "../playerInfo";
 import { playerMatchRewards } from "./matchRewards";
-import { clientFinishMatch } from "./clientFinishMatch";
 
 export const playerBattle = function*() {
 	yield all([
@@ -23,7 +22,6 @@ export const playerBattle = function*() {
 				yield put(PlayerInfoCommands.updateBattleCommand(finishedBattle(opponentId!, isHomePlayer, homeScore, awayScore)));
 			}
 		),
-		call(playerMatchRewards),
-		call(clientFinishMatch)
+		call(playerMatchRewards)
 	]);
 };
