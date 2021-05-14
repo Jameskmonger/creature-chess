@@ -1,6 +1,6 @@
 {
   "name": "@creature-chess/networking",
-  "version": "0.3.53",
+  "version": "0.3.54",
   "private": true,
   "description": "Shared network definitions for Creature Chess",
   "author": "James Monger <jameskmonger@hotmail.co.uk>",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@creature-chess/board": "^0.3.52",
-    "@creature-chess/gamemode": "^0.3.53",
-    "@creature-chess/models": "^0.3.53"
+    "@creature-chess/gamemode": "^0.3.54",
+    "@creature-chess/models": "^0.3.54"
   }
 }
