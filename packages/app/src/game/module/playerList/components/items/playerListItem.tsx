@@ -51,9 +51,9 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 	const handleExpansion = (): void => {
 		setIsExpanded(true)
 	}
-	const handleDexpansion = () => {
-		setIsExpanded(false)
-	}
+
+	const handleDeExpansion = (): void => isExpanded && setIsExpanded(false)
+
 	const handleBlur = (): void => {
 		setIsExpanded(!isExpanded)
 	}
@@ -69,17 +69,13 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 			</div>
 			<div className="details">
 				<div className="row">
-					<div className="row-half name-container"
-
-					>
+					<div className="row-half name-container" onClick={handleDeExpansion}>
 						<span className="name">
 							{index + 1}.&nbsp;<PlayerName playerId={playerId} />
 						</span>
-
 						<PlayerTitle playerId={playerId} />
 					</div>
 					<div className="row-half">
-
 						{
 							!isExpanded &&
 							<ProgressBar
@@ -92,7 +88,7 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 					</div>
 				</div>
 				<div className="row">
-					<div className="row-half">
+					<div className="row-half" onClick={handleDeExpansion}>
 						<div className="badges">
 							<span className="badge money">${money ? money : player.money}</span>
 							<span className="badge">Lv {level ? level : player.level}</span>
