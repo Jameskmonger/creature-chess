@@ -26,7 +26,7 @@
 	},
 	"scripts": {
 		"build": "tsc -p ./tsconfig.json",
-		"test": "jest",
+		"test": "jest --passWithNoTests",
 		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
 	},
 	"bugs": {
