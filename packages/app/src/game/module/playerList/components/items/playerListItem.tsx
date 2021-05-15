@@ -58,7 +58,7 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 	const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
 	const toggleExpanded = () => {
-		setIsExpanded(!isExpanded);
+		//setIsExpanded(!isExpanded);
 	};
 
 	return (
