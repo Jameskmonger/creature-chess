@@ -6,7 +6,7 @@ import { PlayerCommands, PlayerEvents } from "../../player";
 import { updateCardsCommand } from "../../player/cardShop";
 import { getAllPieces, getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
 import { isPlayerAlive } from "../../player/playerSelectors";
-import { PlayerState } from "../../player/store";
+import { PlayerState } from "../../entities/player";
 import { CardDeck } from "../cardDeck";
 
 export const playerGameDeckSagaFactory = function*(deck: CardDeck) {

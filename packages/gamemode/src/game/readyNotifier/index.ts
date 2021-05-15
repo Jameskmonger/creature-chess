@@ -3,7 +3,7 @@ import { select } from "typed-redux-saga";
 import { PlayerEntity } from "../../entities";
 import { quitGamePlayerAction, QuitGamePlayerAction } from "../../entities/player/sagas/playerGameActions";
 import { isPlayerAlive } from "../../player/playerSelectors";
-import { PlayerState } from "../../player/store";
+import { PlayerState } from "../../entities/player/state";
 import { listenForPropertyUpdates } from "../playerPropertyUpdates";
 import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
 

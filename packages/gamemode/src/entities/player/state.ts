@@ -1,9 +1,9 @@
 import { BoardState } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
-import { PlayerInfoState } from "./playerInfo";
-import { RoundInfoState } from "../game/roundInfo";
-import { CardShopState } from "./cardShop";
+import { PlayerInfoState } from "../../player/playerInfo";
+import { RoundInfoState } from "../../game/roundInfo";
+import { CardShopState } from "../../player/cardShop";
 
 export interface PlayerState {
 	board: BoardState<PieceModel>;

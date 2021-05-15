@@ -5,7 +5,7 @@ import { PlayerVariables } from "../../player";
 import { cardShopReducer } from "../../player/cardShop";
 import { playerInfoReducer } from "../../player/playerInfo";
 import { PlayerSagaDependencies } from "../../player/sagaContext";
-import { PlayerState } from "../../player/store";
+import { PlayerState } from "./state";
 
 import { playerGameActionsSaga } from "./sagas/playerGameActions";
 import { evolutionSaga } from "./sagas/evolution";

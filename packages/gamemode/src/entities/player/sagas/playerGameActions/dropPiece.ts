@@ -3,7 +3,7 @@ import { takeEvery, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { BoardSelectors } from "@creature-chess/board";
-import { PlayerState } from "../../../../player/store";
+import { PlayerState } from "../../state";
 import { getPlayerBelowPieceLimit } from "../../../../player/playerSelectors";
 import { getBoardSlice, getBenchSlice } from "../../selectors";
 

@@ -4,7 +4,7 @@ import { take, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
-import { PlayerState } from "../../../../player/store";
+import { PlayerState } from "../../state";
 import { getPlayerBelowPieceLimit } from "../../../../player/playerSelectors";
 import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
 import { updateCardsCommand } from "../../../../player/cardShop";

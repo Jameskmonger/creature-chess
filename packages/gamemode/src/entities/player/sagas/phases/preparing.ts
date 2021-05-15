@@ -5,7 +5,7 @@ import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../../../play
 import { PlayerInfoCommands } from "../../../../player/playerInfo";
 import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
 import { getPlayerLevel, isPlayerAlive, isPlayerShopLocked } from "../../../../player/playerSelectors";
-import { PlayerState } from "../../../../player/store";
+import { PlayerState } from "../../state";
 import { getBoardSlice } from "../../selectors";
 import { addXpCommand } from "../xp";
 
