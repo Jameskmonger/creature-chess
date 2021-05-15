@@ -4,7 +4,6 @@ import { ServerToClient } from "@creature-chess/networking";
 import { GamePhase } from "@creature-chess/models";
 import { BoardSlice } from "@creature-chess/board";
 import { PlayerCommands, PlayerInfoCommands } from "@creature-chess/gamemode";
-import { startBattle } from "@creature-chess/battle";
 
 export type GameRoundUpdateEvent = ReturnType<typeof gameRoundUpdateEvent>;
 export const gameRoundUpdateEvent = createAction<ServerToClient.Game.PhaseUpdatePacket, "gameRoundUpdateEvent">("gameRoundUpdateEvent");
@@ -34,10 +33,6 @@ export const roundUpdateSaga = function*({ benchSlice, boardSlice }: { benchSlic
 					yield put(benchSlice.commands.setBoardPiecesCommand(bench));
 					yield put(boardSlice.commands.lockBoardCommand());
 					yield put(PlayerInfoCommands.updateOpponentCommand(opponentId));
-					return;
-				}
-				case GamePhase.PLAYING: {
-					yield put(startBattle());
 					return;
 				}
 				default:
