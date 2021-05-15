@@ -5,6 +5,9 @@ import { PlayerVariables } from "../../player";
 import { cardShopReducer } from "../../player/cardShop";
 import { playerInfoReducer } from "../../player/playerInfo";
 import { PlayerSagaDependencies } from "../../player/sagaContext";
+
+import { playerReducers } from "./state";
+
 import { PlayerState } from "./state";
 
 import { playerGameActionsSaga } from "./sagas/playerGameActions";
@@ -20,6 +23,7 @@ import { healthSaga } from "./sagas/health";
 export const playerEntity = entityFactory<PlayerState, PlayerSagaDependencies, PlayerVariables>(
 	({ boardSlices }) => ({
 		reducers: {
+			...playerReducers,
 			board: boardSlices.boardSlice.boardReducer,
 			bench: boardSlices.benchSlice.boardReducer,
 			playerInfo: playerInfoReducer,
