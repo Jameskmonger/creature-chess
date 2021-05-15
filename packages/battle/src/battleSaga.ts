@@ -1,5 +1,5 @@
 import { eventChannel, buffers, EventChannel } from "redux-saga";
-import { takeEvery, select, put, call } from "@redux-saga/core/effects";
+import { takeLatest, takeEvery, select, put, call, cancelled } from "@redux-saga/core/effects";
 // no typings so this needs a standard require
 // tslint:disable-next-line: no-var-requires
 const present = require("present");
@@ -50,75 +50,56 @@ const addCombatState = (pieces: IndexedPieces) => {
 		}, {});
 };
 
-const battleEventChannel = (
-	startingBoardState: BoardState<PieceModel>,
+const runBattle = function*(
+	initialBoard: BoardState<PieceModel>,
 	boardSlice: BoardSlice<PieceModel>,
 	startingTurn: number,
-	options: GameOptions,
-	bufferSize: number
-) => {
-	return eventChannel<BattleEvent>(emit => {
-		let cancelled = false;
+	options: GameOptions
+) {
+	let board: BoardState<PieceModel> = {
+		id: initialBoard.id,
+		pieces: addCombatState(initialBoard.pieces),
+		piecePositions: {
+			...initialBoard.piecePositions
+		},
+		locked: initialBoard.locked,
+		size: initialBoard.size,
+		pieceLimit: null
+	};
 
-		let board: BoardState<PieceModel> = {
-			id: startingBoardState.id,
-			pieces: addCombatState(startingBoardState.pieces),
-			piecePositions: {
-				...startingBoardState.piecePositions
-			},
-			locked: startingBoardState.locked,
-			size: startingBoardState.size,
-			pieceLimit: null
-		};
+	let turnCount = startingTurn;
 
-		const run = async () => {
-			let turnCount = startingTurn;
+	while (true) {
+		const shouldStop = (
+			turnCount >= options.turnCount
+			|| isATeamDefeated(board)
+		);
 
-			while (true) {
-				const shouldStop = (
-					cancelled
-					|| turnCount >= options.turnCount
-					|| isATeamDefeated(board)
-				);
+		if (shouldStop) {
+			yield duration(1000).remaining();
 
-				if (shouldStop) {
-					await duration(1000).remaining();
+			yield put(battleFinishEvent(turnCount));
+			break;
+		}
 
-					emit(battleFinishEvent(turnCount));
-					break;
-				}
+		const turnTimer = duration(options.turnDuration);
 
-				const turnTimer = duration(options.turnDuration);
+		board = simulateTurn(++turnCount, board, boardSlice);
+		yield put(battleTurnEvent(turnCount, board));
 
-				board = simulateTurn(++turnCount, board, boardSlice);
-				emit(battleTurnEvent(turnCount, board));
-
-				await turnTimer.remaining();
-			}
-		};
-
-		run();
-
-		return () => {
-			cancelled = true;
-		};
-	}, buffers.expanding(bufferSize));
+		yield turnTimer.remaining();
+	}
 };
 
 export const battleSagaFactory = <TState>(
 	boardSelector: (state: TState) => BoardState<PieceModel>
 ) => function*(gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
-	yield takeEvery<StartBattleCommand>(
+	yield takeLatest<StartBattleCommand>(
 		START_BATTLE,
 		function*({ payload: { turn } }) {
 			const board: BoardState<PieceModel> = yield select(boardSelector);
 
-			// todo no need for the channel here. this can just run synchronously in a loop
-			const battleChannel: EventChannel<BattleEvent> = yield call(battleEventChannel, board, boardSlice, turn || 0, gameOptions, 100);
-
-			yield takeEvery(battleChannel, function*(battleAction: BattleEvent) {
-				yield put(battleAction);
-			});
+			yield call(runBattle, board, boardSlice, turn || 0, gameOptions);
 		}
 	);
 };
