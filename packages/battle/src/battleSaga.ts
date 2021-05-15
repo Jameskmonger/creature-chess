@@ -1,15 +1,14 @@
-import { eventChannel, buffers, EventChannel } from "redux-saga";
-import { takeLatest, takeEvery, select, put, call, cancelled } from "@redux-saga/core/effects";
+import { takeLatest, select, put, call } from "@redux-saga/core/effects";
 // no typings so this needs a standard require
 // tslint:disable-next-line: no-var-requires
 const present = require("present");
 
 import { IndexedPieces, createPieceCombatState, PieceModel, GameOptions } from "@creature-chess/models";
-import { BoardState, BoardSlice } from "@creature-chess/board";
+import { BoardState, BoardSlice, BoardSelectors } from "@creature-chess/board";
 
 import { simulateTurn } from "./turnSimulator";
 import { isATeamDefeated } from "./utils/is-a-team-defeated";
-import { BattleEvent, battleFinishEvent, battleTurnEvent } from "./events";
+import { battleFinishEvent, battleTurnEvent } from "./events";
 
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;

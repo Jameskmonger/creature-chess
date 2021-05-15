@@ -5,10 +5,9 @@ import {
 	PlayerSagaContext, PlayerSelectors, PlayerState, PlayerCommands, GameEvents, Match
 } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
-import { BoardState } from "@creature-chess/board";
-import { PieceModel } from "@creature-chess/models";
 import { getPacketRegistries, OutgoingRegistry } from "../net/registries";
 import { subscribeToBoard } from "./subscribeToBoard";
+import { Task } from "redux-saga";
 
 const getSpectatingPlayer = function*() {
 	const spectatingId = yield* select((state: PlayerState) => state.spectating.id);
@@ -83,9 +82,16 @@ const spectatePlayerBoard = function*(registry: OutgoingRegistry) {
 const spectateOtherPlayer = function*(player: PlayerEntity) {
 	const { outgoing: registry } = yield* getPacketRegistries();
 
-	yield player.runSaga(function*() {
-		yield call(spectatePlayerBoard, registry);
-	}).toPromise<void>();
+	let task: Task | null = null;
+	try {
+		task = player.runSaga(function*() {
+			yield call(spectatePlayerBoard, registry);
+		})
+
+		yield task.toPromise<void>();
+	} finally {
+		task?.cancel();
+	}
 };
 
 const spectateLocalPlayer = function*() {
