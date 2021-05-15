@@ -4,6 +4,7 @@ import { BoardSlice } from "@creature-chess/board";
 import { BattleEvents, battleSagaFactory, startBattle } from "@creature-chess/battle";
 import { gameRoundUpdateEvent, GameRoundUpdateEvent } from "./roundUpdate";
 import { AppState } from "../../../store";
+import { setMatchBoard } from "../../module/match";
 
 export const clientBattleSaga = function*(slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
 	yield fork(
@@ -14,11 +15,7 @@ export const clientBattleSaga = function*(slices: { benchSlice: BoardSlice, boar
 	yield takeLatest<BattleEvents.BattleTurnEvent>(
 		BattleEvents.BATTLE_TURN_EVENT,
 		function*({ payload: { board } }: BattleEvents.BattleTurnEvent) {
-			yield put(slices.boardSlice.commands.setBoardPiecesCommand({
-				pieces: board.pieces,
-				piecePositions: board.piecePositions,
-				size: undefined // todo improve this
-			}));
+			yield put(setMatchBoard(board));
 		}
 	);
 
@@ -27,6 +24,10 @@ export const clientBattleSaga = function*(slices: { benchSlice: BoardSlice, boar
 		function*({ payload: { phase } }) {
 			if (phase === GamePhase.PLAYING) {
 				yield put(startBattle());
+			}
+
+			if (phase === GamePhase.PREPARING) {
+				yield put(setMatchBoard(null));
 			}
 		}
 	);

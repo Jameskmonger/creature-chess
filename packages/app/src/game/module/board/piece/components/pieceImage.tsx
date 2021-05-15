@@ -4,13 +4,20 @@ import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 import { CreatureImage } from "../../../../../display/creatureImage";
+import { BoardSelectors } from "@creature-chess/board";
 
 interface PieceImageProps {
 	pieceId: string;
 }
 
 const PieceImage: React.FunctionComponent<PieceImageProps> = ({ pieceId }) => {
-	const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
+	const piece = useSelector<AppState, PieceModel>(state => {
+		if (state.game.match.board) {
+			return BoardSelectors.getPiece(state.game.match.board, pieceId);
+		}
+
+		return getPiece(state.game, pieceId);
+	});
 
 	if (!piece) {
 		return null;

@@ -2,7 +2,6 @@ import { take, put } from "@redux-saga/core/effects";
 
 import { PlayerInfoCommands, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { BoardSlice } from "@creature-chess/board";
-import { startBattle } from "@creature-chess/battle";
 import { PieceModel } from "@creature-chess/models";
 
 import { gameConnectedEvent, GameConnectedEvent } from "../../networking/actions";
@@ -28,14 +27,10 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
 		call(function*() {
 			if (action && action.payload) {
 				const { payload: {
-					board,
 					players,
-					battleTurn,
 					game: { phase, phaseStartedAtSeconds },
 					playerInfo: { money, cards, level, xp }
 				} } = action as GameConnectedEvent;
-
-				yield put(slices.boardSlice.commands.setBoardPiecesCommand(board));
 				yield put(PlayerInfoCommands.updateMoneyCommand(money));
 				yield put(PlayerCommands.updateCardsCommand(cards));
 				yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
@@ -43,10 +38,6 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
 
 				const update = { phase, startedAt: phaseStartedAtSeconds };
 				yield put(RoundInfoCommands.setRoundInfoCommand(update));
-
-				if (battleTurn !== null) {
-					yield put(startBattle(battleTurn));
-				}
 			}
 		})
 	]);

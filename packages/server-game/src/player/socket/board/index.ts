@@ -1,9 +1,14 @@
-import { getDependency } from "@shoki/engine";
-import { all, call, race, take, select, delay } from "typed-redux-saga";
-import { PlayerEntity, PlayerEntitySelectors, PlayerGameActions, PlayerSagaContext, PlayerSelectors, PlayerState, PlayerCommands } from "@creature-chess/gamemode";
+import { getDependency, getVariable } from "@shoki/engine";
+import { all, call, race, take, select, delay, getContext } from "typed-redux-saga";
+import {
+	PlayerVariables, PlayerEntity, PlayerEntitySelectors, PlayerGameActions,
+	PlayerSagaContext, PlayerSelectors, PlayerState, PlayerCommands, GameEvents, Match
+} from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
-import { subscribeToBoard } from "./subscribeToBoard";
+import { BoardState } from "@creature-chess/board";
+import { PieceModel } from "@creature-chess/models";
 import { getPacketRegistries, OutgoingRegistry } from "../net/registries";
+import { subscribeToBoard } from "./subscribeToBoard";
 
 const getSpectatingPlayer = function*() {
 	const spectatingId = yield* select((state: PlayerState) => state.spectating.id);
@@ -16,11 +21,50 @@ const getSpectatingPlayer = function*() {
 	return game.getPlayerById(spectatingId) || null;
 };
 
+const getMatch = () => getVariable<PlayerVariables, Match | null>(variables => variables.match);
+
 const spectatePlayerBoard = function*(registry: OutgoingRegistry) {
+	const playerId = yield* getContext<string>("id");
 	const boardSlice = yield* PlayerEntitySelectors.getBoardSlice();
 	const benchSlice = yield* PlayerEntitySelectors.getBenchSlice();
 
+	const match = yield* getMatch();
+
+	if (match) {
+		registry.emit(
+			ServerToClient.Game.PacketOpcodes.MATCH_BOARD_UPDATE,
+			{
+				turn: match.getTurn(),
+				board: match.getBoardForPlayer(playerId)
+			}
+		);
+
+		// todo send opponentId
+	}
+
 	yield all([
+		call(function*() {
+			while (true) {
+				yield take(GameEvents.playerRunReadyPhaseEvent.toString());
+
+				// todo improve this, it's to allow the match variable to be set... maybe some `setMatchEvent`
+				yield delay(100);
+
+				const match = yield* getMatch();
+
+				if (match) {
+					registry.emit(
+						ServerToClient.Game.PacketOpcodes.MATCH_BOARD_UPDATE,
+						{
+							turn: null,
+							board: match.getBoardForPlayer(playerId)
+						}
+					);
+				}
+
+				yield take(GameEvents.playerFinishMatchEvent.toString());
+			}
+		}),
 		call(
 			subscribeToBoard,
 			boardSlice,

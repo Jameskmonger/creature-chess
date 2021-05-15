@@ -4,10 +4,7 @@ import { RoundInfoState } from "@creature-chess/gamemode";
 import { EmptyPacket } from "../empty-packet";
 
 export type GameConnectionPacket = {
-	board: BoardState<PieceModel>;
 	players: PlayerListPlayer[];
-
-	battleTurn: number | null;
 
 	// todo check which props we're sending here - no `ready` for example
 	playerInfo: {
@@ -73,11 +70,16 @@ type MatchRewardsPacket = {
 } | null;
 
 type BoardUpdatePacket = BoardState<PieceModel>;
+type MatchBoardUpdatePacket = {
+	turn: number | null,
+	board: BoardUpdatePacket
+};
 
 export enum PacketOpcodes {
 	GAME_CONNECTED = "gameConnected",
 	BENCH_UPDATE = "benchUpdate",
 	BOARD_UPDATE = "boardUpdate",
+	MATCH_BOARD_UPDATE = "matchBoardUpdate",
 	CARDS_UPDATE = "cardsUpdate",
 	PLAYER_LIST_UPDATE = "playerListUpdate",
 	PHASE_UPDATE = "phaseUpdate",
@@ -94,6 +96,7 @@ export type PacketDefinitions = {
 	[PacketOpcodes.GAME_CONNECTED]: GameConnectionPacket,
 	[PacketOpcodes.BENCH_UPDATE]: BoardUpdatePacket,
 	[PacketOpcodes.BOARD_UPDATE]: BoardUpdatePacket,
+	[PacketOpcodes.MATCH_BOARD_UPDATE]: MatchBoardUpdatePacket,
 	[PacketOpcodes.CARDS_UPDATE]: (Card | null)[],
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[],
 	[PacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
@@ -110,6 +113,7 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.GAME_CONNECTED]: never,
 	[PacketOpcodes.BENCH_UPDATE]: never,
 	[PacketOpcodes.BOARD_UPDATE]: never,
+	[PacketOpcodes.MATCH_BOARD_UPDATE]: never,
 	[PacketOpcodes.CARDS_UPDATE]: never,
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: never,
 	[PacketOpcodes.PHASE_UPDATE]: never,

@@ -3,13 +3,20 @@ import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
+import { BoardSelectors } from "@creature-chess/board";
 
 interface StageIndicatorProps {
 	pieceId: string;
 }
 
 const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ pieceId }) => {
-	const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
+	const piece = useSelector<AppState, PieceModel>(state => {
+		if (state.game.match.board) {
+			return BoardSelectors.getPiece(state.game.match.board, pieceId);
+		}
+
+		return getPiece(state.game, pieceId);
+	});
 
 	if (!piece || piece.stage === 0) {
 		return null;

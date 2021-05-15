@@ -5,6 +5,7 @@ import { RoundInfoState, PlayerInfoState, playerInfoReducer, roundInfoReducer, P
 
 import { playerListReducer } from "./module";
 import { UiState, uiReducer } from "./ui";
+import { matchReducer, MatchState } from "./module/match";
 
 export type GameState = PlayerState & {
 	ui: UiState;
@@ -13,18 +14,23 @@ export type GameState = PlayerState & {
 	board: BoardState<PieceModel>;
 	bench: BoardState<PieceModel>;
 
+	match: MatchState;
+
 	playerInfo: PlayerInfoState;
 	playerList: PlayerListPlayer[];
 };
 
+type Slices = { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> };
+
 export const createGameReducer = (
-	{ boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+	{ boardSlice, benchSlice }: Slices
 ): Reducer<GameState, Action> =>
 	combineReducers({
 		...playerReducers,
 		roundInfo: roundInfoReducer,
 		board: boardSlice.boardReducer,
 		bench: benchSlice.boardReducer,
+		match: matchReducer,
 		playerList: playerListReducer,
 		playerInfo: playerInfoReducer,
 		ui: uiReducer

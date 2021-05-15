@@ -13,17 +13,13 @@ export const reconnectPlayerSocket = function*(socket: Socket, game: RoundInfoSt
 	);
 
 	const currentMatch = yield* getVariable<PlayerVariables, Match>(variables => variables.match!);
-	const board = currentMatch ? currentMatch.getBoardForPlayer(playerId) : yield* select(PlayerSelectors.getPlayerBoard);
 	const opponentId = currentMatch?.away.id ?? null;
-	const battleTurn = currentMatch?.getTurn() ?? null;
 
 	registry.emit(
 		ServerToClient.Game.PacketOpcodes.GAME_CONNECTED,
 		{
-			board,
 			game,
 			players,
-			battleTurn,
 			playerInfo: {
 				cards: yield* select(PlayerSelectors.getPlayerCards),
 				health: yield* select(PlayerSelectors.getPlayerHealth),

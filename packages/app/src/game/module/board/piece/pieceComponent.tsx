@@ -3,6 +3,7 @@ import { DragObjectWithType, useDrag } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
+import { BoardSelectors } from "@creature-chess/board";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../display/animation";
 import { Projectile } from "../../../../display/projectile";
@@ -35,7 +36,13 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 	const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
 	const [oldPiece, setOldPiece] = React.useState<PieceModel | null>(null);
 	const localPlayerId = usePlayerId();
-	const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
+	const piece = useSelector<AppState, PieceModel>(state => {
+		if (state.game.match.board) {
+			return BoardSelectors.getPiece(state.game.match.board, id);
+		}
+
+		return getPiece(state.game, id);
+	});
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
 	const [{ }, drag] = useDrag<PieceDragObject, void, {}>({
@@ -96,6 +103,10 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 			setOldPiece(null);
 		}
 	}, [piece]);
+
+	if (!piece) {
+		return null;
+	}
 
 	const isDead = piece.currentHealth === 0;
 

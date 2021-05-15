@@ -8,8 +8,8 @@ type DroppableTileProps = {
 	className: string;
 	x: number;
 	y: number;
-	onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
-	onClick: (x: number, y: number) => void;
+	onDrop?: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
+	onClick?: (x: number, y: number) => void;
 };
 
 type PieceDragObject = DragObjectWithType & { piece: HasId };
@@ -21,7 +21,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
 
 	const [{ canDrop, isDragging }, drop] = useDrop<PieceDragObject, void, DropTargetCollectProps>({
 		accept: "Piece",
-		drop: item => onDrop(item, x, y),
+		drop: item => onDrop && onDrop(item, x, y), // todo make a wrapper that doesnt have any dnd on it
 		canDrop: ({ piece }) => {
 			const pieceIsFromSameBoard = Boolean(pieces[piece.id]);
 			return belowPieceLimit || pieceIsFromSameBoard;
@@ -32,7 +32,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
 		}),
 	});
 
-	const onClickFn = () => onClick(x, y);
+	const onClickFn = onClick ? () => onClick(x, y) : undefined;
 
 	return (
 		<div

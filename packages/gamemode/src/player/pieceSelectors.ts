@@ -1,17 +1,13 @@
 import { PieceModel } from "@creature-chess/models";
 import { BoardSelectors, BoardState } from "@creature-chess/board";
+import { PlayerState } from "../entities/player";
 
-interface PlayerPiecesState {
-	board: BoardState<PieceModel>;
-	bench: BoardState<PieceModel>;
-}
-
-export const getPiece = (state: PlayerPiecesState, pieceId: string): PieceModel | null =>
+export const getPiece = (state: PlayerState, pieceId: string): PieceModel | null =>
 	BoardSelectors.getPiece(state.board, pieceId)
 	|| BoardSelectors.getPiece(state.bench, pieceId)
 	|| null;
 
-export const getAllPieces = (state: PlayerPiecesState): PieceModel[] => [
+export const getAllPieces = (state: PlayerState): PieceModel[] => [
 	...BoardSelectors.getAllPieces(state.board),
 	...BoardSelectors.getAllPieces(state.bench)
 ];

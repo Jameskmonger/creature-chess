@@ -9,8 +9,8 @@ import { BoardItems, BoardItemRenderFn } from "./BoardItems";
 type BoardGridProps = {
 	state: BoardState;
 	renderItem: BoardItemRenderFn;
-	onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
-	onClick: (x: number, y: number) => void;
+	onDrop?: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
+	onClick?: (x: number, y: number) => void;
 };
 
 // tslint:disable-next-line no-bitwise

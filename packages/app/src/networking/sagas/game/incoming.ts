@@ -4,11 +4,13 @@ import { PlayerInfoCommands, PlayerEvents, PlayerCommands, RoundInfoCommands } f
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
+import { startBattle } from "@creature-chess/battle";
 
 import { setWinnerIdCommand, updateConnectionStatus } from "../../../game/ui/actions";
 import { PlayerListCommands } from "../../../game/module";
 import { ConnectionStatus } from "../../../game/connection-status";
 import { gameRoundUpdateEvent } from "../../../game/sagas/events";
+import { setMatchBoard } from "../../../game/module/match";
 
 type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
 
@@ -29,6 +31,17 @@ const readPacketsToActions = function*(
 			ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE,
 			(packet) => {
 				emit(PlayerListCommands.updatePlayerListCommand(packet));
+			}
+		);
+
+		registry.on(
+			ServerToClient.Game.PacketOpcodes.MATCH_BOARD_UPDATE,
+			({ board, turn }) => {
+				emit(setMatchBoard(board));
+
+				if (turn) {
+					emit(startBattle(turn));
+				}
 			}
 		);
 

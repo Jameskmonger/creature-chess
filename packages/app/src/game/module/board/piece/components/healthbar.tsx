@@ -2,6 +2,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
+import { BoardSelectors } from "@creature-chess/board";
 import { AppState } from "../../../../../store";
 import { ProgressBar } from "../../../../../display";
 import { usePlayerId } from "../../../../../auth";
@@ -19,7 +20,13 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
 		|| state.game.roundInfo.phase === GamePhase.PLAYING
 	));
 
-	const piece = useSelector<AppState, (PieceModel | null)>(state => getPiece(state.game, pieceId));
+	const piece = useSelector<AppState, PieceModel>(state => {
+		if (state.game.match.board) {
+			return BoardSelectors.getPiece(state.game.match.board, pieceId);
+		}
+
+		return getPiece(state.game, pieceId);
+	});
 
 	if (!showHealthbar || !piece || pieceIsOnBench) {
 		return null;
