@@ -72,7 +72,7 @@ const outDir = path.resolve(__dirname, "public");
 
 module.exports = {
 	mode: "development",
-	devtool: false,
+	devtool: "source-map",
 
 	context: __dirname,
 	entry: "./src/index.tsx",

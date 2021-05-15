@@ -7,6 +7,11 @@ import { AppState } from "./state";
 import { rootSaga } from "./saga";
 import { PieceModel } from "@creature-chess/models";
 
+const composeEnhancers = composeWithDevTools({
+	trace: true,
+	traceLimit: 20
+});
+
 export const createAppStore = (getAccessTokenSilently: () => Promise<string>, loginWithRedirect: () => Promise<void>) => {
 	const sagaMiddleware = createSagaMiddleware();
 
@@ -15,7 +20,7 @@ export const createAppStore = (getAccessTokenSilently: () => Promise<string>, lo
 
 	const store = createStore(
 		combineReducers<AppState>(createReducers({ boardSlice, benchSlice })),
-		composeWithDevTools(
+		composeEnhancers(
 			applyMiddleware(sagaMiddleware)
 		)
 	);
