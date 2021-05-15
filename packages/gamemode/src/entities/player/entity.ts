@@ -26,7 +26,7 @@ export const playerEntity = entityFactory<PlayerState, PlayerSagaDependencies, P
 			roundInfo: roundInfoReducer,
 			cardShop: cardShopReducer
 		},
-		rootSaga: function*() {
+		*rootSaga() {
 			yield all([
 				call(playerPhases),
 				call(playerGameActionsSaga),

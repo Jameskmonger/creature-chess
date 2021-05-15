@@ -140,8 +140,6 @@ export class Match {
 			});
 		}
 
-		console.log(`match between ${this.home.getVariable(v => v.name)} and ${this.away.getVariable(v => v.name)}${this.awayIsClone ? " (C) " : " "}finished ${homeScore} - ${awayScore}`)
-
 		return this.finalBoard;
 	}
 

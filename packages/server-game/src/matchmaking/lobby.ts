@@ -34,12 +34,12 @@ const createPlayer = (logger: Logger, game: Game, playerId: string, name: string
 	};
 
 	return playerEntity(
+		playerId,
 		{
 			logger,
 			game,
 			boardSlices
 		},
-		playerId,
 		{
 			match: null,
 			name,

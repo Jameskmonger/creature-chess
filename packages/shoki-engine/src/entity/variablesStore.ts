@@ -26,9 +26,7 @@ export type VariablesStoreContext<TVariables> = {
  */
 export const getVariable: <TVariables, TResult>(selector: (variables: TVariables) => TResult) => Generator<GetContextEffect, TResult>
 	= function*<TVariables, TResult>(selector: (variables: TVariables) => TResult) {
-		const getVariable = yield* getContext<GetVariableFn<TVariables>>("getVariable");
-
-		return getVariable(selector);
+		return (yield* getContext<GetVariableFn<TVariables>>("getVariable"))(selector);
 	};
 
 /**
@@ -42,9 +40,7 @@ export const getVariable: <TVariables, TResult>(selector: (variables: TVariables
  */
 export const updateVariables: <TVariables>(patch: Partial<TVariables>) => Generator<GetContextEffect, void>
 	= function*<TVariables>(patch: Partial<TVariables>) {
-		const updateVariables = yield* getContext<UpdateVariablesFn<TVariables>>("updateVariables");
-
-		return updateVariables(patch);
+		(yield* getContext<UpdateVariablesFn<TVariables>>("updateVariables"))(patch);
 	};
 
 /**

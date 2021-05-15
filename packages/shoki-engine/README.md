@@ -29,7 +29,6 @@ const rootSaga = function*() {
 
 const player = entity<PlayerState>(
 	{ reducers, rootSaga },
-	{},
 	"player-id"
 );
 
@@ -65,8 +64,8 @@ const rootSaga = function*() {
 
 const player = entity<PlayerState, PlayerDependencies>(
 	{ reducers, rootSaga },
-	{ logger },
-	"player-id"
+	"player-id",
+	{ logger }
 );
 ```
 
@@ -99,8 +98,8 @@ const rootSaga = function*() {
 
 const player = entity<PlayerState, {}, PlayerVariables>(
 	{ reducers, rootSaga },
-	{ },
 	"player-id",
+	{ },
 	vars
 );
 ```
@@ -127,7 +126,7 @@ const playerFactory = entityFactory<PlayerState, PlayerDependencies, PlayerVaria
 )
 
 // no need to pass reducers/rootSaga
-const player = playerFactory({ logger }, "player-id-123", { match: null });
+const player = playerFactory("player-id-123", { logger }, { match: null });
 ```
 
 You can also provide a function to `entityFactory`, which takes in the `dependencies` object, and must return `{ reducers, rootSaga }`. This can allow you to use those dependencies in your reducers/saga - such as using reducers from a `@reduxjs/toolkit` slice.
