@@ -24,4 +24,4 @@ export const playerReducers: ReducersMapObject<Pick<PlayerState, "spectating" | 
 
 export const PlayerCommands = {
 	setSpectatingIdCommand, updateCardsCommand, updateShopLockCommand
-}
+};
