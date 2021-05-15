@@ -9,6 +9,15 @@ export const sendPlayerInfoUpdates = function*() {
 	const { outgoing: registry } = yield* getPacketRegistries();
 
 	yield all([
+		// todo strongly type this
+		takeLatest(
+			PlayerCommands.setSpectatingIdCommand.toString(),
+			function*() {
+				const spectating = yield* select((state: PlayerState) => state.spectating.id);
+
+				registry.emit(ServerToClient.Game.PacketOpcodes.SPECTATING_PLAYER_UPDATE, spectating);
+			}
+		),
 		takeLatest(
 			PlayerCommands.updateCardsCommand,
 			function*() {

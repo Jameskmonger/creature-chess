@@ -60,6 +60,13 @@ const readPacketsToActions = function*(
 		);
 
 		registry.on(
+			ServerToClient.Game.PacketOpcodes.SPECTATING_PLAYER_UPDATE,
+			(newValue) => {
+				emit(PlayerCommands.setSpectatingIdCommand(newValue));
+			}
+		);
+
+		registry.on(
 			ServerToClient.Game.PacketOpcodes.CARDS_UPDATE,
 			(newValue) => {
 				emit(PlayerCommands.updateCardsCommand(newValue));
