@@ -29,5 +29,5 @@ export const subscribeToBoard = function*(
 			const state = yield* select(selector);
 			callback(state);
 		}
-	)
+	);
 };
