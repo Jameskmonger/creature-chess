@@ -19,6 +19,7 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
 		state.game.roundInfo.phase === GamePhase.READY
 		|| state.game.roundInfo.phase === GamePhase.PLAYING
 	));
+	const spectatingPlayerId = useSelector<AppState, string>(state => state.game.spectating.id);
 
 	const piece = useSelector<AppState, PieceModel>(state => {
 		if (state.game.match.board) {
@@ -33,7 +34,7 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
 	}
 
 	const { ownerId, currentHealth, maxHealth } = piece;
-	const friendly = (localPlayerId === ownerId);
+	const friendly = (localPlayerId === ownerId || spectatingPlayerId === ownerId);
 
 	return (
 		<ProgressBar
