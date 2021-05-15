@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { AppState } from "../../../../../store";
@@ -7,6 +8,7 @@ import { PlayerName } from "../playerName";
 import { PlayerTitle } from "../playerTitle";
 import { BattleInfo } from "../battleInfo";
 import { PlayerPicture } from "../playerPicture";
+import { useOnClickOutside } from "../../../../../hooks/useOnClickOutside";
 
 interface Props {
 	index: number;
@@ -29,15 +31,37 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 
 const renderHealthbar = (current: number) => current.toString();
 
+const SpectateButton: React.FunctionComponent<{ playerId: string }> = (playerId) => {
+	const onClick = (e: React.MouseEvent) => {
+		e.persist();
+		e.nativeEvent.stopImmediatePropagation();
+		e.stopPropagation();
+	};
+
+	return <button onClick={onClick}>Spectate</button>;
+};
+
 const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpponent, isLocal, showReadyIndicator = false, level = null, money = null }) => {
 	const player = useSelector<AppState, PlayerListPlayer>(state => state.game.playerList.find(p => p.id === playerId));
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 	const readyClassName = (player.ready && showReadyIndicator) ? "ready" : "not-ready";
 
+	const ref = useRef();
+	const [isExpanded, setIsExpanded] = useState<boolean>(false);
+	useOnClickOutside(ref, () => setIsExpanded(false));
+
 	const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
+	const toggleExpanded = () => {
+		setIsExpanded(!isExpanded);
+	};
+
 	return (
-		<div className={className}>
+		<div
+			className={className}
+			onClick={toggleExpanded}
+			ref={ref}
+		>
 			<div className="picture">
 				<PlayerPicture playerId={playerId} />
 			</div>
@@ -47,17 +71,18 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 						<span className="name">
 							{index + 1}.&nbsp;<PlayerName playerId={playerId} />
 						</span>
-
 						<PlayerTitle playerId={playerId} />
 					</div>
-
 					<div className="row-half">
-						<ProgressBar
-							className="healthbar player-health"
-							current={player.health}
-							max={100}
-							renderContents={renderHealthbar}
-						/>
+						{
+							!isExpanded &&
+							<ProgressBar
+								className="healthbar player-health"
+								current={player.health}
+								max={100}
+								renderContents={renderHealthbar}
+							/>
+						}
 					</div>
 				</div>
 				<div className="row">
@@ -69,8 +94,16 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 					</div>
 
 					<div className="row-half">
-						<BattleInfo playerId={playerId} />
-						<StreakIndicator type={player.streakType} amount={player.streakAmount} />
+						{
+							!isExpanded ?
+								<>
+									<BattleInfo playerId={playerId} />
+									<StreakIndicator type={player.streakType} amount={player.streakAmount} />
+								</>
+								:
+								<SpectateButton playerId={playerId} />
+						}
+
 					</div>
 				</div>
 			</div>
