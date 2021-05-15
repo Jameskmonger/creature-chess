@@ -1,9 +1,9 @@
 import { all, takeLatest, put, call } from "redux-saga/effects";
-import { select, getContext } from "typed-redux-saga";
+import { select } from "typed-redux-saga";
 import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 
-import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../../game/events";
-import { HasPlayerInfo, PlayerInfoCommands } from "../playerInfo";
+import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../../../game/events";
+import { HasPlayerInfo, PlayerInfoCommands } from "../../../player/playerInfo";
 import { playerMatchRewards } from "./matchRewards";
 
 export const playerBattle = function*() {

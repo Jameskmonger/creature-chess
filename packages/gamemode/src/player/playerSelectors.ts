@@ -3,6 +3,7 @@ import { PlayerStatus } from "@creature-chess/models";
 import { PlayerState } from "./store";
 
 export const getPlayerBoard = (state: PlayerState) => state.board;
+export const isPlayerBoardLocked = (state: PlayerState) => state.board.locked;
 export const getPlayerBench = (state: PlayerState) => state.bench;
 
 export const getPlayerMoney = (state: PlayerState): number => state.playerInfo.money;

@@ -1,12 +1,14 @@
 import { all, takeLatest } from "redux-saga/effects";
-import { getContext, select } from "typed-redux-saga";
+import { select } from "typed-redux-saga";
+import { PlayerSelectors, PlayerEntitySelectors } from "@creature-chess/gamemode";
 
-import { PlayerSagaContext, PlayerSelectors } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { getPacketRegistries } from "../registries";
 
 export const sendBoardUpdates = function*() {
-	const { boardSlice, benchSlice } = yield* getContext<PlayerSagaContext.PlayerBoardSlices>("boardSlices");
+	const boardSlice = yield* PlayerEntitySelectors.getBoardSlice();
+	const benchSlice = yield* PlayerEntitySelectors.getBenchSlice();
+
 	const { outgoing: registry } = yield* getPacketRegistries();
 
 	yield all([

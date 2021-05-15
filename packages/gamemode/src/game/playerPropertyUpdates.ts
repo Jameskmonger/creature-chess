@@ -2,12 +2,13 @@ import { all, takeLatest } from "@redux-saga/core/effects";
 import { PlayerStreak } from "../player/playerInfo/reducer";
 import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { PlayerInfoCommands } from "../player/playerInfo";
-import { readyUpPlayerAction, ReadyUpPlayerAction } from "../player/playerGameActions";
-import { Player } from "../player";
+import { readyUpPlayerAction, ReadyUpPlayerAction } from "../entities/player/sagas/playerGameActions";
 import { PlayerRunPreparingPhaseEvent, playerRunPreparingPhaseEvent } from "./events";
+import { PlayerEntity } from "../entities";
 
+// todo use sagas properly here
 export const listenForPropertyUpdates = (
-	player: Player,
+	player: PlayerEntity,
 	{ health: emitHealth, streak: emitStreak, status: emitStatus, battle: emitBattle, ready: emitReady }: {
 		health?: (health: number) => void;
 		streak?: (streak: PlayerStreak) => void;

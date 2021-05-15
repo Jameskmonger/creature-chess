@@ -1,7 +1,7 @@
 import { expectSaga } from "redux-saga-test-plan";
 import { select } from "redux-saga/effects";
-import { updateShopLockCommand } from "../cardShop";
-import { isPlayerShopLocked } from "../playerSelectors";
+import { updateShopLockCommand } from "../../../../player/cardShop";
+import { isPlayerShopLocked } from "../../../../player/playerSelectors";
 import { toggleShopLockPlayerAction, toggleShopLockPlayerActionSaga } from "./toggleShopLock";
 
 describe("toggleShopLockPlayerActionSagaFactory", () => {

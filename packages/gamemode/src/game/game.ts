@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import { Store } from "redux";
 import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
-import { Player, PlayerSelectors } from "../player";
+import { PlayerSelectors } from "../player";
 import { OpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
 import { CardDeck } from "./cardDeck";
@@ -14,6 +14,7 @@ import { gameSaga } from "./sagas";
 import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
 import { sendPublicEventsSaga } from "./publicEvents";
 import { put } from "redux-saga/effects";
+import { PlayerEntity } from "../entities";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -22,7 +23,7 @@ export class Game {
 
 	private opponentProvider?: OpponentProvider;
 	private playerList = new PlayerList();
-	private players: Player[] = [];
+	private players: PlayerEntity[] = [];
 	private events = new EventEmitter();
 	private deck: CardDeck;
 
@@ -38,7 +39,7 @@ export class Game {
 		this.deck = new CardDeck(this.logger);
 	}
 
-	public start = (players: Player[]) => {
+	public start = (players: PlayerEntity[]) => {
 		players.forEach(player => {
 			this.players.push(player);
 			this.playerList.addPlayer(player);
@@ -79,7 +80,7 @@ export class Game {
 		return this.players.find(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
 	}
 
-	public onFinish(fn: (winner: Player) => void) {
+	public onFinish(fn: (winner: PlayerEntity) => void) {
 		this.events.on(finishGameEventKey, fn);
 	}
 

@@ -1,6 +1,6 @@
 import { StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
-import { ReadyUpPlayerAction } from "../playerGameActions";
+import { ReadyUpPlayerAction } from "../../entities/player/sagas/playerGameActions";
 
 export const UPDATE_BATTLE_COMMAND = "UPDATE_BATTLE_COMMAND";
 export type UPDATE_BATTLE_COMMAND = typeof UPDATE_BATTLE_COMMAND;

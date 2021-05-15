@@ -1,9 +1,10 @@
 import { createAction } from "@reduxjs/toolkit";
-import { takeEvery, select, put, getContext } from "@redux-saga/core/effects";
+import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece } from "../pieceSelectors";
-import { updateMoneyCommand } from "../playerInfo/commands";
-import { afterSellPieceEvent } from "../events";
+import { getPiece } from "../../../../player/pieceSelectors";
+import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
+import { afterSellPieceEvent } from "../../../../player/events";
+import { getBoardSlice, getBenchSlice } from "../../selectors";
 
 export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;
 export const sellPiecePlayerAction = createAction<{ pieceId: string }>("sellPiecePlayerAction");
@@ -11,11 +12,12 @@ export const sellPiecePlayerAction = createAction<{ pieceId: string }>("sellPiec
 const PIECES_FOR_STAGE = [1, 3, 9];
 
 export const sellPiecePlayerActionSaga = function*() {
+	const boardSlice = yield* getBoardSlice();
+	const benchSlice = yield* getBenchSlice();
+
 	yield takeEvery<SellPiecePlayerAction>(
 		sellPiecePlayerAction.toString(),
 		function*({ payload: { pieceId } }) {
-			const { boardSlice, benchSlice } = yield getContext("boardSlices");
-
 			const piece: PieceModel = yield select(state => getPiece(state, pieceId));
 
 			if (!piece) {

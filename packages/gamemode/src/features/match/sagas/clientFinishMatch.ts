@@ -4,7 +4,7 @@ import { ClientFinishMatchEvent, CLIENT_FINISH_MATCH_EVENT } from "../../../play
 import { getMatch } from "../selectors";
 
 export const clientFinishMatch = function*() {
-	const playerId = yield* getContext<string>("playerId");
+	const playerId = yield* getContext<string>("id");
 
 	yield takeLatest<ClientFinishMatchEvent>(
 		CLIENT_FINISH_MATCH_EVENT,

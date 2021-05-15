@@ -1,13 +1,13 @@
 import { take } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
-import { Player } from "../../player";
-import { quitGamePlayerAction, QuitGamePlayerAction } from "../../player/playerGameActions";
+import { PlayerEntity } from "../../entities";
+import { quitGamePlayerAction, QuitGamePlayerAction } from "../../entities/player/sagas/playerGameActions";
 import { isPlayerAlive } from "../../player/playerSelectors";
 import { PlayerState } from "../../player/store";
 import { listenForPropertyUpdates } from "../playerPropertyUpdates";
 import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
 
-export const readyNotifier = (livingPlayers: Player[]) => {
+export const readyNotifier = (livingPlayers: PlayerEntity[]) => {
 	const queue = limitedQueue<string>(livingPlayers.length);
 
 	const disposePlayerFns = livingPlayers.map(player => {

@@ -1,11 +1,11 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { REROLL_COST } from "@creature-chess/models";
-import { isPlayerAlive } from "../playerSelectors";
-import { updateMoneyCommand } from "../playerInfo/commands";
+import { isPlayerAlive } from "../../../../player/playerSelectors";
+import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
 import { createAction } from "@reduxjs/toolkit";
-import { afterRerollCardsEvent } from "../events";
-import { getPlayerSagaDependencies } from "../sagaContext";
+import { afterRerollCardsEvent } from "../../../../player/events";
+import { getPlayerSagaDependencies } from "../../../../player/sagaContext";
 
 export type RerollCardsPlayerAction = ReturnType<typeof rerollCardsPlayerAction>;
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
