@@ -22,11 +22,11 @@ type EntityStaticProperties<TState> = {
 	rootSaga?: Saga
 }
 
-export const entity = <TState, TDependencies = {}, TVariables = {}>(
+export const entity = <TState, TDependencies = {}, TVariables extends {} = {}>(
 	{ reducers, rootSaga }: EntityStaticProperties<TState>,
 	dependencies: TDependencies,
 	id: string,
-	initialVariables: TVariables
+	initialVariables: TVariables = {} as TVariables
 ): Entity<TState, TVariables> => {
 	const variableStore = createVariableStore<TVariables>(initialVariables);
 

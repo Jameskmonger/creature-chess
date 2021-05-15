@@ -30,8 +30,7 @@ const rootSaga = function*() {
 const player = entity<PlayerState>(
 	{ reducers, rootSaga },
 	{},
-	"player-id",
-	{}
+	"player-id"
 );
 
 /*
@@ -67,8 +66,7 @@ const rootSaga = function*() {
 const player = entity<PlayerState, PlayerDependencies>(
 	{ reducers, rootSaga },
 	{ logger },
-	"player-id",
-	{}
+	"player-id"
 );
 ```
 
