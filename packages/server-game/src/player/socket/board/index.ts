@@ -1,58 +1,75 @@
 import { getDependency } from "@shoki/engine";
-import { all, call, race, SagaGenerator, take } from "typed-redux-saga";
-import { PlayerEntity, PlayerEntitySelectors, PlayerGameActions, PlayerSagaContext, PlayerSelectors } from "@creature-chess/gamemode";
+import { all, call, race, take, select } from "typed-redux-saga";
+import { PlayerEntity, PlayerEntitySelectors, PlayerGameActions, PlayerSagaContext, PlayerSelectors, PlayerState, PlayerCommands } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
-import { BoardSlice } from "@creature-chess/board";
-import { PieceModel } from "@creature-chess/models";
-import { spectateBoard } from "./spectateBoard";
+import { subscribeToBoard } from "./subscribeToBoard";
+import { getPacketRegistries, OutgoingRegistry } from "../net/registries";
 
-type Slices = { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> };
+const getSpectatingPlayer = function*() {
+	const spectatingId = yield* select((state: PlayerState) => state.spectating.id);
 
-export const getSlice = function*(
-	player: PlayerEntity,
-	selector: (typeof PlayerEntitySelectors.getBoardSlice | typeof PlayerEntitySelectors.getBenchSlice)
-) {
-	const result: BoardSlice<PieceModel> = yield player.runSaga(function*() {
-		return yield* selector();
-	}).toPromise<BoardSlice<PieceModel>>();
+	if (!spectatingId) {
+		return null;
+	}
 
-	return result;
+	const game = yield* getDependency<PlayerSagaContext.PlayerSagaDependencies, "game">("game");
+	return game.getPlayerById(spectatingId) || null;
 };
 
-export const playerBoard = function*() {
+const spectatePlayerBoard = function*(registry: OutgoingRegistry) {
 	const boardSlice = yield* PlayerEntitySelectors.getBoardSlice();
 	const benchSlice = yield* PlayerEntitySelectors.getBenchSlice();
 
-	let spectatingSlices: Slices | null = null;
+	yield all([
+		call(
+			subscribeToBoard,
+			boardSlice,
+			PlayerSelectors.getPlayerBoard,
+			board => registry.emit(ServerToClient.Game.PacketOpcodes.BOARD_UPDATE, board)
+		),
+		call(
+			subscribeToBoard,
+			benchSlice,
+			PlayerSelectors.getPlayerBench,
+			bench => registry.emit(ServerToClient.Game.PacketOpcodes.BENCH_UPDATE, bench)
+		)
+	]);
+};
+
+const spectateOtherPlayer = function*(player: PlayerEntity) {
+	const { outgoing: registry } = yield* getPacketRegistries();
+
+	yield player.runSaga(function*() {
+		yield call(spectatePlayerBoard, registry);
+	}).toPromise<void>();
+};
+
+const spectateLocalPlayer = function*() {
+	const { outgoing: registry } = yield* getPacketRegistries();
+	yield call(spectatePlayerBoard, registry);
+};
+
+/**
+ * Watch the local player board and bench, or that of the currently spectated player
+ */
+export const playerBoard = function*() {
+	let spectating = yield* call(getSpectatingPlayer);
 
 	while (true) {
-		const target = spectatingSlices || { boardSlice, benchSlice };
+		const { newSpectate }: { newSpectate?: PlayerGameActions.SpectatePlayerAction } = yield* race({
+			// todo strongly type this
+			newSpectate: take<any>(PlayerCommands.setSpectatingIdCommand.toString()),
 
-		const { newSpectate, forever } = yield* race({
-			newSpectate: take<PlayerGameActions.SpectatePlayerAction>(PlayerGameActions.spectatePlayerAction.toString()),
-			// newSpectate: take SPECTATE,
-			forever: all([
-				call(spectateBoard, target.boardSlice, PlayerSelectors.getPlayerBoard, ServerToClient.Game.PacketOpcodes.BOARD_UPDATE),
-				call(spectateBoard, target.benchSlice, PlayerSelectors.getPlayerBench, ServerToClient.Game.PacketOpcodes.BENCH_UPDATE)
-			])
+			forever:
+				spectating
+					? call(spectateOtherPlayer, spectating)
+					: call(spectateLocalPlayer)
 		});
 
-		if (!newSpectate || !newSpectate.payload.playerId) {
-			spectatingSlices = null;
+		if (!newSpectate) {
 			return;
 		}
 
-		const game = yield* getDependency<PlayerSagaContext.PlayerSagaDependencies, "game">("game");
-		const other = game.getPlayerById(newSpectate.payload.playerId);
-
-		if (!other) {
-			spectatingSlices = null;
-			return;
-		}
-
-		spectatingSlices = {
-			boardSlice: yield getSlice(other, PlayerEntitySelectors.getBoardSlice),
-			benchSlice: yield getSlice(other, PlayerEntitySelectors.getBenchSlice)
-		};
+		spectating = yield* call(getSpectatingPlayer);
 	}
 };
