@@ -1,18 +1,18 @@
 import { take, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models";
-import { isPlayerAlive } from "../playerSelectors";
-import { updateMoneyCommand } from "../playerInfo/commands";
-import { addXpCommand } from "../sagas/xp";
+import { isPlayerAlive } from "../../../../player/playerSelectors";
+import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
+import { addXpCommand } from "../xp";
 import { createAction } from "@reduxjs/toolkit";
-import { getPlayerSagaDependencies, PlayerSagaDependencies } from "../sagaContext";
+import { getPlayerSagaDependencies } from "../../../../player/sagaContext";
 
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
 export const buyXpPlayerAction = createAction("buyXpPlayerAction");
 
 export const buyXpPlayerActionSaga = function*() {
 	while (true) {
-		const playerId = yield* getContext<string>("playerId");
+		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
 		const { logger } = yield* getPlayerSagaDependencies();
 

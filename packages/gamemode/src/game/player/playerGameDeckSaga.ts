@@ -1,15 +1,18 @@
 import { Card, PieceModel } from "@creature-chess/models";
 import { all, put, takeEvery } from "@redux-saga/core/effects";
-import { getContext, select } from "typed-redux-saga";
+import { select } from "typed-redux-saga";
+import { getBenchSlice, getBoardSlice } from "../../entities/player/selectors";
 import { PlayerCommands, PlayerEvents } from "../../player";
 import { updateCardsCommand } from "../../player/cardShop";
 import { getAllPieces, getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
 import { isPlayerAlive } from "../../player/playerSelectors";
-import { PlayerBoardSlices } from "../../player/sagaContext";
 import { PlayerState } from "../../player/store";
 import { CardDeck } from "../cardDeck";
 
 export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
+	const boardSlice = yield* getBoardSlice();
+	const benchSlice = yield* getBenchSlice();
+
 	// when a player rerolls, get them some new cards from the deck
 	const pullNewCards = (
 		oldCards: Card[],
@@ -31,7 +34,6 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 		takeEvery<PlayerEvents.PlayerDeathEvent>(
 			PlayerEvents.playerDeathEvent.toString(),
 			function*() {
-				const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
 				const cards = yield* select((s: PlayerState) => s.cardShop.cards);
 				const pieces = yield* select(getAllPieces);
 

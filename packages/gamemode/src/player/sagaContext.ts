@@ -2,8 +2,7 @@ import { Logger } from "winston";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { getContext } from "typed-redux-saga";
-import { PlayerVariablesStoreContext } from "./variablesStore";
-import { PlayerVariables } from "./variables";
+import { Game } from "../game";
 
 export type PlayerBoardSlices = {
 	boardSlice: BoardSlice<PieceModel>,
@@ -11,13 +10,14 @@ export type PlayerBoardSlices = {
 };
 export type PlayerSagaDependencies = {
 	logger: Logger;
+	boardSlices: PlayerBoardSlices;
+	game: Game;
 };
 
 export type PlayerSagaContext = {
 	playerId: string;
 	playerName: string;
-	boardSlices: PlayerBoardSlices;
 	dependencies: PlayerSagaDependencies;
-} & PlayerVariablesStoreContext<PlayerVariables>;
+};
 
 export const getPlayerSagaDependencies = () => getContext<PlayerSagaDependencies>("dependencies");

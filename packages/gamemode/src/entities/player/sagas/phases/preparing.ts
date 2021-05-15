@@ -1,16 +1,16 @@
 import { put, takeEvery } from "redux-saga/effects";
-import { getContext, select } from "typed-redux-saga";
-import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../../../game/events";
-import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../events";
-import { PlayerInfoCommands } from "../../playerInfo";
-import { updateMoneyCommand } from "../../playerInfo/commands";
-import { getPlayerLevel, isPlayerAlive, isPlayerShopLocked } from "../../playerSelectors";
-import { PlayerBoardSlices } from "../../sagaContext";
-import { PlayerState } from "../../store";
+import { select } from "typed-redux-saga";
+import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../../../../game/events";
+import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../../../player/events";
+import { PlayerInfoCommands } from "../../../../player/playerInfo";
+import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
+import { getPlayerLevel, isPlayerAlive, isPlayerShopLocked } from "../../../../player/playerSelectors";
+import { PlayerState } from "../../../../player/store";
+import { getBoardSlice } from "../../selectors";
 import { addXpCommand } from "../xp";
 
 export const playerPreparingPhase = function*() {
-	const { boardSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
+	const boardSlice = yield* getBoardSlice();
 
 	yield takeEvery<PlayerRunPreparingPhaseEvent>(
 		playerRunPreparingPhaseEvent.toString(),

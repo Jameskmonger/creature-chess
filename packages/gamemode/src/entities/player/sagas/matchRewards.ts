@@ -2,13 +2,13 @@ import { take, takeLatest, put, call } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType } from "@creature-chess/models";
 
-import { playerMatchRewardsEvent, playerDeathEvent } from "../events";
-import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../game/events";
-import { updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../playerInfo/commands";
-import { HasPlayerInfo, PlayerStreak } from "../playerInfo/reducer";
+import { playerMatchRewardsEvent, playerDeathEvent } from "../../../player/events";
+import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../../game/events";
+import { updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../../../player/playerInfo/commands";
+import { HasPlayerInfo, PlayerStreak } from "../../../player/playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
-import { PlayerInfoCommands } from "../playerInfo";
-import { PlayerState } from "../store";
+import { PlayerInfoCommands } from "../../../player/playerInfo";
+import { PlayerState } from "../../../player/store";
 
 const getStreakBonus = (streak: number) => {
 	if (streak >= 9) {

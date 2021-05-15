@@ -1,6 +1,6 @@
 import { all, takeEvery } from "redux-saga/effects";
+import { updateVariables } from "@shoki/engine";
 import { playerFinishMatchEvent, PlayerFinishMatchEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../../../game/events";
-import { updatePlayerVariables } from "../../../player/variablesStore";
 import { PlayerVariables } from "../playerVariables";
 
 export const updateMatchVariable = function*() {
@@ -8,13 +8,13 @@ export const updateMatchVariable = function*() {
 		takeEvery<PlayerRunReadyPhaseEvent>(
 			playerRunReadyPhaseEvent.toString(),
 			function*({ payload: { match } }) {
-				yield* updatePlayerVariables<PlayerVariables>({ match });
+				yield* updateVariables<PlayerVariables>({ match });
 			}
 		),
 		takeEvery<PlayerFinishMatchEvent>(
 			playerFinishMatchEvent.toString(),
 			function*() {
-				yield* updatePlayerVariables<PlayerVariables>({ match: null });
+				yield* updateVariables<PlayerVariables>({ match: null });
 			}
 		)
 	]);

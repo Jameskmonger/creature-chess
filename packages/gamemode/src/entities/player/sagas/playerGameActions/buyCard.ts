@@ -4,12 +4,13 @@ import { take, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
-import { PlayerState } from "../store";
-import { getPlayerBelowPieceLimit } from "../playerSelectors";
-import { updateMoneyCommand } from "../playerInfo/commands";
-import { updateCardsCommand } from "../cardShop";
-import { getDefinitionById } from "../../definitions";
-import { getPlayerSagaDependencies, PlayerBoardSlices, PlayerSagaDependencies } from "../sagaContext";
+import { PlayerState } from "../../../../player/store";
+import { getPlayerBelowPieceLimit } from "../../../../player/playerSelectors";
+import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
+import { updateCardsCommand } from "../../../../player/cardShop";
+import { getDefinitionById } from "../../../../definitions";
+import { getPlayerSagaDependencies } from "../../../../player/sagaContext";
+import { getBenchSlice, getBoardSlice } from "../../selectors";
 
 const getCardDestination = (
 	state: PlayerState,
@@ -76,10 +77,11 @@ export const buyCardPlayerAction = createAction<{
 
 export const buyCardPlayerActionSaga = function*() {
 	while (true) {
-		const playerId = yield* getContext<string>("playerId");
+		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
 		const { logger } = yield* getPlayerSagaDependencies();
-		const { boardSlice, benchSlice } = yield* getContext<PlayerBoardSlices>("boardSlices");
+		const boardSlice = yield* getBoardSlice();
+		const benchSlice = yield* getBenchSlice();
 
 		const action: BuyCardPlayerAction = yield take(buyCardPlayerAction.toString());
 		const index = action.payload.index;

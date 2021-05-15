@@ -6,10 +6,11 @@ import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "r
 import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice, BoardSelectors } from "@creature-chess/board";
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
-import { Player, PlayerSelectors } from "../player";
+import { PlayerSelectors } from "../player";
 import { playerFinishMatchEvent } from "./events";
 import { call } from "redux-saga/effects";
 import delay = require("delay");
+import { PlayerEntity } from "../entities";
 
 interface MatchState {
 	board: BoardState<PieceModel>;
@@ -31,8 +32,8 @@ export class Match {
 	private clientFinishedMatchAway = pDefer();
 
 	constructor(
-		public readonly home: Player,
-		public readonly away: Player,
+		public readonly home: PlayerEntity,
+		public readonly away: PlayerEntity,
 		private awayIsClone: boolean,
 		gameOptions: GameOptions
 	) {

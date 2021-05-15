@@ -4,7 +4,7 @@ import {
 	UPDATE_LEVEL_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_BATTLE_COMMAND
 } from "./commands";
 import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../events";
-import { readyUpPlayerAction } from "../playerGameActions";
+import { readyUpPlayerAction } from "../../entities/player/sagas/playerGameActions";
 
 export interface PlayerStreak {
 	type: StreakType;

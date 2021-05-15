@@ -2,15 +2,17 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import { Task } from "redux-saga";
-import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
+import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN_GAME, PieceModel, PlayerProfile } from "@creature-chess/models";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
-import { Game, Player, PlayerSelectors } from "../../../gamemode/lib";
+import { Game, PlayerEntity, playerEntity, PlayerSelectors } from "@creature-chess/gamemode";
 import { botLogicSaga } from "../player/bot/saga";
 import { createWinstonLogger } from "../log";
 import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
 import { playerNetworking } from "../player/socket/net";
 import { v4 as uuid } from "uuid";
+import { createBoardSlice } from "@creature-chess/board";
+import { Logger } from "winston";
 
 type LobbyRegistry = OutgoingPacketRegistry<
 	ServerToClient.Lobby.PacketDefinitions,
@@ -23,6 +25,27 @@ type PlayerConnections = {
 		networkingSaga: Task | null,
 		lobbyRegistry: LobbyRegistry | null
 	};
+};
+
+const createPlayer = (logger: Logger, game: Game, playerId: string, name: string, profile: PlayerProfile) => {
+	const boardSlices = {
+		boardSlice: createBoardSlice<PieceModel>(`player-${playerId}-board`, { width: 7, height: 3 }),
+		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, { width: 7, height: 1 })
+	};
+
+	return playerEntity(
+		playerId,
+		{
+			logger,
+			game,
+			boardSlices
+		},
+		{
+			match: null,
+			name,
+			profile
+		}
+	);
 };
 
 export class Lobby {
@@ -134,7 +157,7 @@ export class Lobby {
 		};
 	}
 
-	private connectGamePlayer(player: Player, game: Game, socket: Socket) {
+	private connectGamePlayer(player: PlayerEntity, game: Game, socket: Socket) {
 		this.playerConnections[player.id]?.networkingSaga?.cancel();
 
 		this.playerConnections[player.id] = {
@@ -174,11 +197,11 @@ export class Lobby {
 		const logger = createWinstonLogger(`match-${gameId}`);
 		this.game = new Game(gameId, logger);
 
-		const userPlayers: Player[] = [];
-		const botPlayers: Player[] = [];
+		const userPlayers: PlayerEntity[] = [];
+		const botPlayers: PlayerEntity[] = [];
 
 		for (const member of this.members) {
-			const player = new Player(member.id, member.name, member.profile, this.game, logger);
+			const player = createPlayer(logger, this.game, member.id, member.name, member.profile);
 
 			await this.database.user.addGamePlayed(player.id);
 
@@ -194,7 +217,7 @@ export class Lobby {
 			// get a random picture from one to 20 - temporary
 			const picture = Math.floor(Math.random() * 20) + 1;
 
-			const player = new Player(id, `[BOT] ${name}`, { title: null, picture }, this.game, logger);
+			const player = createPlayer(logger, this.game, id, `[BOT] ${name}`, { title: null, picture });
 
 			await this.database.bot.addGamePlayed(player.id);
 

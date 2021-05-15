@@ -1,6 +1,7 @@
 import { shuffle } from "lodash";
 import { PlayerStatus } from "@creature-chess/models";
-import { Player, PlayerSelectors } from "../player";
+import { PlayerSelectors } from "../player";
+import { PlayerEntity } from "../entities";
 
 const randomFromArray = <T>(array: T[]) => {
 	return array[Math.floor(Math.random() * array.length)];
@@ -14,9 +15,9 @@ export class OpponentProvider {
 	private lastOddMatchupHomeId: string | null = null;
 	private lastOddMatchupAwayId: string | null = null;
 
-	private getLivingPlayers: () => Player[];
+	private getLivingPlayers: () => PlayerEntity[];
 
-	constructor(players: Player[]) {
+	constructor(players: PlayerEntity[]) {
 		this.getLivingPlayers = () => players.filter(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.select(PlayerSelectors.isPlayerAlive));
 	}
 
@@ -41,7 +42,7 @@ export class OpponentProvider {
 		return output;
 	}
 
-	private getMatchupsEven(livingPlayers: Player[]) {
+	private getMatchupsEven(livingPlayers: PlayerEntity[]) {
 		const matchups: ({ homeId: string, awayId: string, awayIsClone: boolean })[] = [];
 
 		let remainingPlayerIds = livingPlayers.map(p => p.id);
@@ -70,7 +71,7 @@ export class OpponentProvider {
 		return matchups;
 	}
 
-	private getMatchupsOdd(livingPlayers: Player[]) {
+	private getMatchupsOdd(livingPlayers: PlayerEntity[]) {
 		const cloneMatchup = this.getOddCloneMatchup(livingPlayers);
 
 		const otherPlayers = livingPlayers.filter(({ id }) => id !== cloneMatchup.homeId);
@@ -81,7 +82,7 @@ export class OpponentProvider {
 		];
 	}
 
-	private getOddCloneMatchup(livingPlayers: Player[]) {
+	private getOddCloneMatchup(livingPlayers: PlayerEntity[]) {
 		const potentialHomePlayers = livingPlayers.filter(({ id }) => id !== this.lastOddMatchupHomeId || this.lastOddMatchupHomeId === null);
 		const home = randomFromArray(potentialHomePlayers);
 
@@ -100,7 +101,7 @@ export class OpponentProvider {
 		};
 	}
 
-	private generateRotations(livingPlayers: Player[]) {
+	private generateRotations(livingPlayers: PlayerEntity[]) {
 		const rotations = [];
 
 		// in head-to-head rotation,

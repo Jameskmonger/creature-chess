@@ -1,8 +1,8 @@
 import { EventEmitter } from "events";
 import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
-import { Player } from "../player/player";
 import { listenForPropertyUpdates } from "./playerPropertyUpdates";
 import { PlayerSelectors } from "../player";
+import { PlayerEntity } from "../entities";
 
 const debounce = (func: () => void, wait: number) => {
 	let timeout: any;
@@ -74,7 +74,7 @@ const sortPlayers = (a: SortablePlayer, b: SortablePlayer) => {
 
 export class PlayerList {
 	private players: SortablePlayer[] = [];
-	private gamePlayers: { [playerId: string]: Player } = {};
+	private gamePlayers: { [playerId: string]: PlayerEntity } = {};
 	private events = new EventEmitter();
 
 	private emitUpdate = debounce(() => {
@@ -105,7 +105,7 @@ export class PlayerList {
 			const streak = player.select(PlayerSelectors.getPlayerStreak);
 			return {
 				id: player.id,
-				name: player.name,
+				name: player.getVariable(variables => variables.name),
 				health: player.select(PlayerSelectors.getPlayerHealth),
 				ready: player.select(PlayerSelectors.isPlayerReady),
 				level: player.select(PlayerSelectors.getPlayerLevel),
@@ -114,12 +114,12 @@ export class PlayerList {
 				streakAmount: streak.amount,
 				battle: player.select(PlayerSelectors.getPlayerBattle),
 				status: player.select(PlayerSelectors.getPlayerStatus),
-				profile: player.profile
+				profile: player.getVariable(variables => variables.profile),
 			};
 		});
 	}
 
-	public addPlayer(player: Player) {
+	public addPlayer(player: PlayerEntity) {
 		this.players.push({
 			id: player.id,
 			position: null,

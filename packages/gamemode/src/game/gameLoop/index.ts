@@ -21,7 +21,7 @@ export const gameLoopSaga = function*() {
 
 	const winner = players.getLiving()[0];
 
-	logger.info(`Game finished, won by ${winner.name}`);
+	logger.info(`Game finished, won by ${winner.getVariable(v => v.name)}`);
 
 	return {
 		winnerId: winner.id
