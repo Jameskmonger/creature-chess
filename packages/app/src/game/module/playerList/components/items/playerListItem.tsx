@@ -8,7 +8,7 @@ import { PlayerName } from "../playerName";
 import { PlayerTitle } from "../playerTitle";
 import { BattleInfo } from "../battleInfo";
 import { PlayerPicture } from "../playerPicture";
-import { useOnClickOutside } from "./useClickOutside"
+import { useOnClickOutside } from "../../../../../hooks/useOnClickOutside";
 
 interface Props {
 	index: number;
@@ -32,37 +32,34 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 const renderHealthbar = (current: number) => current.toString();
 
 const SpectateButton: React.FunctionComponent<{ playerId: string }> = (playerId) => {
-	const handleSpectate = (e) => {
+	const onClick = (e: React.MouseEvent) => {
 		e.persist();
 		e.nativeEvent.stopImmediatePropagation();
 		e.stopPropagation();
-	}
-	return (
-		<div>
-			<button onClick={handleSpectate}>Spectate</button>
-		</div>
-	)
-}
+	};
+
+	return <button onClick={onClick}>Spectate</button>;
+};
 
 const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpponent, isLocal, showReadyIndicator = false, level = null, money = null }) => {
 	const player = useSelector<AppState, PlayerListPlayer>(state => state.game.playerList.find(p => p.id === playerId));
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 	const readyClassName = (player.ready && showReadyIndicator) ? "ready" : "not-ready";
 
-	const ref = useRef()
-	const [isExpanded, setIsExpanded] = useState<Boolean>(false)
-	useOnClickOutside(ref, () => setIsExpanded(false))
+	const ref = useRef();
+	const [isExpanded, setIsExpanded] = useState<boolean>(false);
+	useOnClickOutside(ref, () => setIsExpanded(false));
 
 	const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
-	const handleExpansion = (): void => {
-		setIsExpanded(!isExpanded)
-	}
+	const toggleExpanded = () => {
+		setIsExpanded(!isExpanded);
+	};
 
 	return (
 		<div
 			className={className}
-			onClick={handleExpansion}
+			onClick={toggleExpanded}
 			ref={ref}
 		>
 			<div className="picture">
