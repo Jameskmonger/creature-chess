@@ -25,6 +25,7 @@ import { dropPiecePlayerActionSaga, DropPiecePlayerAction, dropPiecePlayerAction
 export { DropPiecePlayerAction, dropPiecePlayerAction };
 
 import { spectatePlayerActionSaga, SpectatePlayerAction, spectatePlayerAction } from "./spectate";
+export { SpectatePlayerAction, spectatePlayerAction };
 
 export const playerGameActionsSaga = function*() {
 	yield all([

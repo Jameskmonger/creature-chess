@@ -8,8 +8,8 @@ const initialState: SpectatingState = {
 	id: null
 };
 
-export const {
-	actions: { setSpectatingIdCommand },
+const {
+	actions,
 	reducer: spectatingReducer,
 } = createSlice({
 	name: "spectating",
@@ -21,3 +21,9 @@ export const {
 		})
 	}
 });
+
+// this stops the compiler from trying to export a type from @reduxjs/toolkit
+const setSpectatingIdCommand: (payload: string | null) => ({ type: string, payload: string | null })
+	= actions.setSpectatingIdCommand;
+
+export { setSpectatingIdCommand, spectatingReducer };

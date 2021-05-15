@@ -1,6 +1,6 @@
 import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { createAction } from "@reduxjs/toolkit";
-import { updateShopLockCommand } from "../../../../player/cardShop";
+import { updateShopLockCommand } from "../../state/cardShop";
 import { isPlayerShopLocked } from "../../../../player/playerSelectors";
 
 export type ToggleShopLockPlayerAction = ReturnType<typeof toggleShopLockPlayerAction>;

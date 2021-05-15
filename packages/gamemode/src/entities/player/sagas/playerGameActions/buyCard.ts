@@ -7,7 +7,7 @@ import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-che
 import { PlayerState } from "../../state";
 import { getPlayerBelowPieceLimit } from "../../../../player/playerSelectors";
 import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
-import { updateCardsCommand } from "../../../../player/cardShop";
+import { updateCardsCommand } from "../../state/cardShop";
 import { getDefinitionById } from "../../../../definitions";
 import { getPlayerSagaDependencies } from "../../../../player/sagaContext";
 import { getBenchSlice, getBoardSlice } from "../../selectors";

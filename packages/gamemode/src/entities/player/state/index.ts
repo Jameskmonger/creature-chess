@@ -1,11 +1,12 @@
-import { Reducer } from "redux";
-import { spectatingReducer, SpectatingState } from "./spectating";
+import { Reducer, ReducersMapObject } from "redux";
 import { BoardState } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { PlayerInfoState } from "../../../player/playerInfo";
 import { RoundInfoState } from "../../../game/roundInfo";
-import { CardShopState } from "../../../player/cardShop";
+
+import { updateCardsCommand, updateShopLockCommand, cardShopReducer, CardShopState } from "./cardShop";
+import { setSpectatingIdCommand, spectatingReducer, SpectatingState } from "./spectating";
 
 export interface PlayerState {
 	board: BoardState<PieceModel>;
@@ -16,6 +17,11 @@ export interface PlayerState {
 	spectating: SpectatingState;
 }
 
-export const playerReducers: { spectating: Reducer<SpectatingState> } = {
-	spectating: spectatingReducer
+export const playerReducers: ReducersMapObject<Pick<PlayerState, "spectating" | "cardShop">> = {
+	spectating: spectatingReducer,
+	cardShop: cardShopReducer
 };
+
+export const PlayerCommands = {
+	setSpectatingIdCommand, updateCardsCommand, updateShopLockCommand
+}

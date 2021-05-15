@@ -2,11 +2,11 @@ import { Card, PieceModel } from "@creature-chess/models";
 import { all, put, takeEvery } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { getBenchSlice, getBoardSlice } from "../../entities/player/selectors";
-import { PlayerCommands, PlayerEvents } from "../../player";
-import { updateCardsCommand } from "../../player/cardShop";
+import { PlayerEvents } from "../../player";
+import { updateCardsCommand } from "../../entities/player/state/cardShop";
 import { getAllPieces, getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
 import { isPlayerAlive } from "../../player/playerSelectors";
-import { PlayerState } from "../../entities/player";
+import { PlayerState, PlayerCommands } from "../../entities/player";
 import { CardDeck } from "../cardDeck";
 
 export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
