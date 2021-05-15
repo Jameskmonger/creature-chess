@@ -1,6 +1,6 @@
 {
 	"name": "@creature-chess/board-react",
-	"version": "0.3.52",
+	"version": "0.3.55",
 	"description": "React frontend for @creature-chess/board",
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.55](https://github.com/Jameskmonger/creature-chess/compare/v0.3.53...v0.3.55) (2021-05-15)
+
+
+### Features
+
+* add spectate button to PlayerListItem ([#413](https://github.com/Jameskmonger/creature-chess/issues/413)) ([900f23f](https://github.com/Jameskmonger/creature-chess/commit/900f23f3e55d0d289b1c2336ab3c5ab6a97eae3e))
+* initial spectate functionality ([#415](https://github.com/Jameskmonger/creature-chess/issues/415)) ([ce7c32d](https://github.com/Jameskmonger/creature-chess/commit/ce7c32d80462af0c5508a7b95956a12be6375a4a))
+
+
+
+
+
 ## [0.3.54](https://github.com/Jameskmonger/creature-chess/compare/v0.3.53...v0.3.54) (2021-05-14)
 
 **Note:** Version bump only for package creature-chess
