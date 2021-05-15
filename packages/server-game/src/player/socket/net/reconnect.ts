@@ -1,16 +1,17 @@
 import { Socket } from "socket.io";
-import { getContext, select } from "typed-redux-saga";
+import { select, put } from "typed-redux-saga";
 import { getVariable } from "@shoki/engine";
 import { PlayerVariables, PlayerSelectors, RoundInfoState, Match } from "@creature-chess/gamemode";
 import { OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { PlayerListPlayer, } from "@creature-chess/models";
+import { setSpectatingIdCommand } from "../../../../../gamemode/lib/entities/player/state/spectating";
 
 export const reconnectPlayerSocket = function*(socket: Socket, game: RoundInfoState, players: PlayerListPlayer[]) {
-	const playerId = yield* getContext<string>("id");
-
 	const registry = new OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
 		(opcode, payload) => socket.emit(opcode, payload)
 	);
+
+	yield put(setSpectatingIdCommand(null));
 
 	const currentMatch = yield* getVariable<PlayerVariables, Match>(variables => variables.match!);
 	const opponentId = currentMatch?.away.id ?? null;
