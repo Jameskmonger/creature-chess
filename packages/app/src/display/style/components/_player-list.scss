@@ -28,6 +28,15 @@ $player-list-gutter-size: 0.4em;
     }
 }
 
+.spectate-player {
+    padding: 0.25em 1em;
+    font-size: 1em;
+    color: #fff;
+    background: #1a1c2c;
+    // stylelint-disable-next-line
+    border: none;
+}
+
 .player-list-item {
     display: flex;
     flex-direction: row;
@@ -141,6 +150,11 @@ $player-list-gutter-size: 0.4em;
         .row-half {
             display: flex;
             width: 50%;
+        }
+
+        .center {
+            flex-direction: row;
+            justify-content: space-around;
         }
     }
 

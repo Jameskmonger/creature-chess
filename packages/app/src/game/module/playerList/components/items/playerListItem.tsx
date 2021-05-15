@@ -38,7 +38,7 @@ const SpectateButton: React.FunctionComponent<{ playerId: string }> = (playerId)
 		e.stopPropagation();
 	};
 
-	return <button onClick={onClick}>Spectate</button>;
+	return <button className="spectate" onClick={onClick}>Spectate</button>;
 };
 
 const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpponent, isLocal, showReadyIndicator = false, level = null, money = null }) => {
@@ -93,15 +93,15 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 						</div>
 					</div>
 
-					<div className="row-half">
+					<div className={`row-half ${isExpanded ? "center" : ""}`}>
 						{
-							!isExpanded ?
+							isExpanded
+								?
 								<>
 									<BattleInfo playerId={playerId} />
 									<StreakIndicator type={player.streakType} amount={player.streakAmount} />
 								</>
-								:
-								<SpectateButton playerId={playerId} />
+								: <SpectateButton playerId={playerId} />
 						}
 
 					</div>
