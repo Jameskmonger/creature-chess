@@ -5,7 +5,6 @@ import { EmptyPacket } from "../empty-packet";
 
 export type GameConnectionPacket = {
 	board: BoardState<PieceModel>;
-	bench: BoardState<PieceModel>;
 	players: PlayerListPlayer[];
 
 	battleTurn: number | null;

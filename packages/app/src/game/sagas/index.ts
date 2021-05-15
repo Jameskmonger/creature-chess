@@ -29,7 +29,6 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
 			if (action && action.payload) {
 				const { payload: {
 					board,
-					bench,
 					players,
 					battleTurn,
 					game: { phase, phaseStartedAtSeconds },
@@ -37,7 +36,6 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
 				} } = action as GameConnectedEvent;
 
 				yield put(slices.boardSlice.commands.setBoardPiecesCommand(board));
-				yield put(slices.benchSlice.commands.setBoardPiecesCommand(bench));
 				yield put(PlayerInfoCommands.updateMoneyCommand(money));
 				yield put(PlayerCommands.updateCardsCommand(cards));
 				yield put(PlayerInfoCommands.updateLevelCommand(level, xp));

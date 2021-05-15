@@ -21,7 +21,6 @@ export const reconnectPlayerSocket = function*(socket: Socket, game: RoundInfoSt
 		ServerToClient.Game.PacketOpcodes.GAME_CONNECTED,
 		{
 			board,
-			bench: yield* select(PlayerSelectors.getPlayerBench),
 			game,
 			players,
 			battleTurn,

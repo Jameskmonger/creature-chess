@@ -1,5 +1,5 @@
 import { getDependency } from "@shoki/engine";
-import { all, call, race, take, select } from "typed-redux-saga";
+import { all, call, race, take, select, delay } from "typed-redux-saga";
 import { PlayerEntity, PlayerEntitySelectors, PlayerGameActions, PlayerSagaContext, PlayerSelectors, PlayerState, PlayerCommands } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { subscribeToBoard } from "./subscribeToBoard";
@@ -53,6 +53,8 @@ const spectateLocalPlayer = function*() {
  * Watch the local player board and bench, or that of the currently spectated player
  */
 export const playerBoard = function*() {
+	yield delay(200); // todo (#418) remove the need for this
+
 	let spectating = yield* call(getSpectatingPlayer);
 
 	while (true) {
