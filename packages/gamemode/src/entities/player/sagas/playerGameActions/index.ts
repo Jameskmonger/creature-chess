@@ -24,6 +24,9 @@ export { QuitGamePlayerAction, quitGamePlayerAction };
 import { dropPiecePlayerActionSaga, DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
 export { DropPiecePlayerAction, dropPiecePlayerAction };
 
+import { spectatePlayerActionSaga, SpectatePlayerAction, spectatePlayerAction } from "./spectate";
+export { SpectatePlayerAction, spectatePlayerAction };
+
 export const playerGameActionsSaga = function*() {
 	yield all([
 		call(buyXpPlayerActionSaga),
@@ -31,7 +34,8 @@ export const playerGameActionsSaga = function*() {
 		call(rerollCardsPlayerActionSaga),
 		call(toggleShopLockPlayerActionSaga),
 		call(sellPiecePlayerActionSaga),
-		call(dropPiecePlayerActionSaga)
+		call(dropPiecePlayerActionSaga),
+		call(spectatePlayerActionSaga)
 	]);
 };
 
@@ -43,7 +47,8 @@ export const PlayerGameActionTypesArray = [
 	sellPiecePlayerAction.toString(),
 	readyUpPlayerAction.toString(),
 	quitGamePlayerAction.toString(),
-	dropPiecePlayerAction.toString()
+	dropPiecePlayerAction.toString(),
+	spectatePlayerAction.toString()
 ];
 
 export type PlayerGameAction =
@@ -54,4 +59,5 @@ export type PlayerGameAction =
 	| SellPiecePlayerAction
 	| ReadyUpPlayerAction
 	| QuitGamePlayerAction
-	| DropPiecePlayerAction;
+	| DropPiecePlayerAction
+	| SpectatePlayerAction;

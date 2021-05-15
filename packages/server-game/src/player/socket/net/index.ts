@@ -7,6 +7,7 @@ import { ClientToServer, IncomingPacketRegistry, OutgoingPacketRegistry, ServerT
 import { incomingNetworking } from "./incoming";
 import { outgoingNetworking } from "./outgoing";
 import { IncomingRegistry, OutgoingRegistry, setPacketRegistries } from "./registries";
+import { playerBoard } from "../board";
 
 const createIncomingRegistry = (socket: Socket): IncomingRegistry => new IncomingPacketRegistry<
 	ClientToServer.PacketDefinitions,
@@ -39,7 +40,8 @@ export const playerNetworking = function*(socket: Socket) {
 		yield race({
 			never: all([
 				call(incomingNetworking, socket),
-				call(outgoingNetworking)
+				call(outgoingNetworking),
+				call(playerBoard)
 			]),
 			quit: take<PlayerGameActions.QuitGamePlayerAction>(PlayerGameActions.quitGamePlayerAction.toString()),
 			finish: take<GameEvents.GameFinishEvent>(GameEvents.gameFinishEvent.toString())

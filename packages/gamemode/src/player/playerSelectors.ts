@@ -1,6 +1,6 @@
 import { BoardSelectors } from "@creature-chess/board";
 import { PlayerStatus } from "@creature-chess/models";
-import { PlayerState } from "./store";
+import { PlayerState } from "../entities/player";
 
 export const getPlayerBoard = (state: PlayerState) => state.board;
 export const isPlayerBoardLocked = (state: PlayerState) => state.board.locked;

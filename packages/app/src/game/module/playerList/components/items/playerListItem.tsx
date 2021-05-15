@@ -1,7 +1,8 @@
 import * as React from "react";
 import { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer, StreakType } from "@creature-chess/models";
+import { PlayerGameActions } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 import { ProgressBar } from "../../../../../display";
 import { PlayerName } from "../playerName";
@@ -31,14 +32,18 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 
 const renderHealthbar = (current: number) => current.toString();
 
-const SpectateButton: React.FunctionComponent<{ playerId: string }> = (playerId) => {
+const SpectateButton: React.FunctionComponent<{ playerId: string }> = ({ playerId }) => {
+	const dispatch = useDispatch();
+
 	const onClick = (e: React.MouseEvent) => {
+		dispatch(PlayerGameActions.spectatePlayerAction({ playerId }));
+
 		e.persist();
 		e.nativeEvent.stopImmediatePropagation();
 		e.stopPropagation();
 	};
 
-	return <button onClick={onClick}>Spectate</button>;
+	return <button className="spectate-player" onClick={onClick}>Spectate</button>;
 };
 
 const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpponent, isLocal, showReadyIndicator = false, level = null, money = null }) => {
@@ -53,7 +58,7 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 	const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
 	const toggleExpanded = () => {
-		setIsExpanded(!isExpanded);
+		// setIsExpanded(!isExpanded);
 	};
 
 	return (
@@ -93,15 +98,14 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 						</div>
 					</div>
 
-					<div className="row-half">
+					<div className={`row-half ${isExpanded ? "center" : ""}`}>
 						{
-							!isExpanded ?
-								<>
+							isExpanded
+								? <SpectateButton playerId={playerId} />
+								: <>
 									<BattleInfo playerId={playerId} />
 									<StreakIndicator type={player.streakType} amount={player.streakAmount} />
 								</>
-								:
-								<SpectateButton playerId={playerId} />
 						}
 
 					</div>

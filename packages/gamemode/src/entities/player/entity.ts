@@ -1,11 +1,11 @@
 import { Entity, entityFactory } from "@shoki/engine";
 import { all, call } from "redux-saga/effects";
-import { roundInfoReducer } from "../../game";
+import { roundInfoReducer } from "../../game/roundInfo";
 import { PlayerVariables } from "../../player";
-import { cardShopReducer } from "../../player/cardShop";
 import { playerInfoReducer } from "../../player/playerInfo";
 import { PlayerSagaDependencies } from "../../player/sagaContext";
-import { PlayerState } from "../../player/store";
+
+import { PlayerState, playerReducers } from "./state";
 
 import { playerGameActionsSaga } from "./sagas/playerGameActions";
 import { evolutionSaga } from "./sagas/evolution";
@@ -20,11 +20,11 @@ import { healthSaga } from "./sagas/health";
 export const playerEntity = entityFactory<PlayerState, PlayerSagaDependencies, PlayerVariables>(
 	({ boardSlices }) => ({
 		reducers: {
+			...playerReducers,
 			board: boardSlices.boardSlice.boardReducer,
 			bench: boardSlices.benchSlice.boardReducer,
 			playerInfo: playerInfoReducer,
 			roundInfo: roundInfoReducer,
-			cardShop: cardShopReducer
 		},
 		*rootSaga() {
 			yield all([

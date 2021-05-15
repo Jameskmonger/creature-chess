@@ -1,12 +1,12 @@
 import { Reducer, Action, combineReducers } from "redux";
 import { BoardSlice, BoardState } from "@creature-chess/board";
-import { Card, PieceModel, PlayerListPlayer } from "@creature-chess/models";
-import { RoundInfoState, PlayerInfoState, playerInfoReducer, PlayerReducers, roundInfoReducer } from "@creature-chess/gamemode";
+import { PieceModel, PlayerListPlayer } from "@creature-chess/models";
+import { RoundInfoState, PlayerInfoState, playerInfoReducer, roundInfoReducer, PlayerState, playerReducers } from "@creature-chess/gamemode";
 
 import { playerListReducer } from "./module";
 import { UiState, uiReducer } from "./ui";
 
-export type GameState = {
+export type GameState = PlayerState & {
 	ui: UiState;
 
 	roundInfo: RoundInfoState;
@@ -14,10 +14,6 @@ export type GameState = {
 	bench: BoardState<PieceModel>;
 
 	playerInfo: PlayerInfoState;
-	cardShop: {
-		cards: (Card | null)[],
-		locked: boolean
-	};
 	playerList: PlayerListPlayer[];
 };
 
@@ -25,11 +21,11 @@ export const createGameReducer = (
 	{ boardSlice, benchSlice }: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
 ): Reducer<GameState, Action> =>
 	combineReducers({
+		...playerReducers,
 		roundInfo: roundInfoReducer,
 		board: boardSlice.boardReducer,
 		bench: benchSlice.boardReducer,
 		playerList: playerListReducer,
 		playerInfo: playerInfoReducer,
-		cardShop: PlayerReducers.cardShopReducer,
 		ui: uiReducer
 	});

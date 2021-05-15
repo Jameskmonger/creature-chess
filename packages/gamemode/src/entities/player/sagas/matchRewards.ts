@@ -8,7 +8,7 @@ import { updateStreakCommand, UPDATE_HEALTH_COMMAND } from "../../../player/play
 import { HasPlayerInfo, PlayerStreak } from "../../../player/playerInfo/reducer";
 import { subtractHealthCommand } from "./health";
 import { PlayerInfoCommands } from "../../../player/playerInfo";
-import { PlayerState } from "../../../player/store";
+import { PlayerState } from "../state";
 
 const getStreakBonus = (streak: number) => {
 	if (streak >= 9) {

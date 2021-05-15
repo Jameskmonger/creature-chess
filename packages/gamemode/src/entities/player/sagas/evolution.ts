@@ -6,7 +6,7 @@ import * as pieceSelectors from "../../../player/pieceSelectors";
 import { getDefinitionById } from "../../../definitions";
 import { getPlayerSagaDependencies } from "../../../player/sagaContext";
 import { isPlayerBoardLocked } from "../../../player/playerSelectors";
-import { PlayerState } from "../../../player/store";
+import { PlayerState } from "../state";
 
 const pieceCanEvolve = (piece: PieceModel) => {
 	const definition = getDefinitionById(piece.definitionId);

@@ -1,5 +1,5 @@
 import { takeEvery, select, put, all } from "@redux-saga/core/effects";
-import { PlayerState } from "../../../player/store";
+import { PlayerState } from "../state";
 import { updateHealthCommand } from "../../../player/playerInfo/commands";
 
 const HEALTH_SUBTRACT_COMMAND = "HEALTH_SUBTRACT_COMMAND";

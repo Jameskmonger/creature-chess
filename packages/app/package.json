@@ -18,7 +18,7 @@
 		"build": "npm run copy-images && webpack",
 		"dev": "npm run copy-images && NODE_ENV=development webpack-dev-server",
 		"copy-images": "cpy \"./images/**/*\" \"./public/\" --parents",
-		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\" --fix && stylelint \"./src/**/*.scss\""
+		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\" && stylelint \"./src/**/*.scss\""
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"

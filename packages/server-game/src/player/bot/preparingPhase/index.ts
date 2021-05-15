@@ -7,6 +7,8 @@ import { putBenchOnBoard } from "./putBenchOnBoard";
 import { spendExcessMoneyOnXp } from "./spendExcessMoneyOnXp";
 
 export const preparingPhase = function*() {
+	yield delay(BOT_ACTION_TIME_MS);
+
 	yield call(buyBestPieces);
 	yield call(spendExcessMoneyOnXp);
 	yield call(putBenchOnBoard);

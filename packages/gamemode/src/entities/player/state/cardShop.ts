@@ -11,8 +11,8 @@ const initialState: CardShopState = {
 	locked: false
 };
 
-export const {
-	actions: { updateCardsCommand, updateShopLockCommand },
+const {
+	actions,
 	reducer: cardShopReducer,
 } = createSlice({
 	name: "cards",
@@ -28,3 +28,12 @@ export const {
 		}),
 	}
 });
+
+// this stops the compiler from trying to export a type from @reduxjs/toolkit
+const updateCardsCommand: (payload: (Card | null)[]) => ({ type: string, payload: (Card | null)[] })
+	= actions.updateCardsCommand;
+
+const updateShopLockCommand: (payload: boolean) => ({ type: string, payload: boolean })
+	= actions.updateShopLockCommand;
+
+export { updateCardsCommand, updateShopLockCommand, cardShopReducer };
