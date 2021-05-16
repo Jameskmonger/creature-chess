@@ -21,21 +21,22 @@ const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): 
 	return `${position}${getPositionModifier(position)}`;
 };
 
-const getStreak = (player: PlayerListPlayer): string => {
+const getStreak = (player: PlayerListPlayer) => {
+	const streakModifier = getStreakModifier(player);
+	return `${player.streakAmount} ${streakModifier}`;
+};
+
+const getStreakModifier = (player: PlayerListPlayer): string => {
 	const streakType = player?.streakType;
 	const streakAmount = player?.streakAmount;
-	let streakModifier: string;
 
 	if (!player || streakAmount === 0) {
 		return "";
 	}
 	if (streakType === StreakType.WIN) {
-		streakModifier = streakAmount === 1 ? "Win" : "Wins";
+		return streakAmount === 1 ? "Win" : "Wins";
 	}
-	if (streakType === StreakType.LOSS) {
-		streakModifier = streakAmount === 1 ? "Loss" : "Losses";
-	}
-	return `${streakAmount} ${streakModifier}`;
+	return streakAmount === 1 ? "Loss" : "Losses";
 };
 
 const HeadToHeadStats = ({ player, opponent }) => {
