@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/Jameskmonger/creature-chess/compare/v0.4.0...v0.4.1) (2021-05-16)
+
+
+### Features
+
+* style head to head screen ([#424](https://github.com/Jameskmonger/creature-chess/issues/424)) ([71f0f4e](https://github.com/Jameskmonger/creature-chess/commit/71f0f4eac4c7552aeadc8b71305ebf18f67590fe)), closes [#386](https://github.com/Jameskmonger/creature-chess/issues/386)
+
+
+
+
+
 # [0.4.0](https://github.com/Jameskmonger/creature-chess/compare/v0.3.56...v0.4.0) (2021-05-16)
 
 
