@@ -1,46 +1,45 @@
-import React from "react"
-import { useSelector } from "react-redux"
-import { PlayerListPlayer, StreakType } from "packages/models/lib"
+import React from "react";
+import { useSelector } from "react-redux";
+import { PlayerListPlayer, StreakType } from "packages/models/lib";
 import { AppState } from "../../../../../store";
 
 const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): number => {
-	return playerList.indexOf(player) + 1
-}
+	return playerList.indexOf(player) + 1;
+};
 
 const getPositionModifier = (position: number): string => {
 	if (position === 1) {
-		return "st"
+		return "st";
 	}
 	if (position === 2) {
-		return "nd"
+		return "nd";
 	}
 	if (position === 3) {
-		return "rd"
+		return "rd";
 	}
-	return "th"
-}
+	return "th";
+};
 
 const getStreakType = (player: PlayerListPlayer): string => {
-	const streakType = player?.streakType
-	const streakAmount = player?.streakAmount
+	const streakType = player?.streakType;
+	const streakAmount = player?.streakAmount;
 
 	if (!player || streakAmount === 0) {
-		return ""
+		return "";
 	}
 	if (streakType === StreakType.WIN) {
-		return streakAmount === 1 ? "Win" : "Wins"
+		return streakAmount === 1 ? "Win" : "Wins";
 	}
-	return streakAmount === 1 ? "Loss" : "Losses"
-}
-
+	return streakAmount === 1 ? "Loss" : "Losses";
+};
 
 const HeadToHeadStats = ({ player, opponent }) => {
 
 	const playerList = useSelector((state: AppState) => {
-		return state.game.playerList
-	})
-	const playerPosition = getPosition(player, playerList)
-	const opponentPosition = getPosition(opponent, playerList)
+		return state.game.playerList;
+	});
+	const playerPosition = getPosition(player, playerList);
+	const opponentPosition = getPosition(opponent, playerList);
 	return (
 		<div className="head-to-head-stats">
 			<div className="h2h-stat-div">
@@ -62,7 +61,7 @@ const HeadToHeadStats = ({ player, opponent }) => {
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export { HeadToHeadStats }
+export { HeadToHeadStats };
