@@ -11,9 +11,11 @@ export {
 export {
 	PlayerEntity, playerEntity,
 	PlayerEntitySelectors,
-	PlayerState, playerReducers, PlayerCommands,
-	PlayerGameActions
+	PlayerState, playerReducers, PlayerCommands
 } from "./entities/player";
+
+export { PlayerAction, PlayerActionTypesArray } from "./playerActions";
+export * as PlayerActions from "./playerActions";
 
 export { getPiece, getAllPieces } from "./player/pieceSelectors";
 export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./player/playerSelectors";

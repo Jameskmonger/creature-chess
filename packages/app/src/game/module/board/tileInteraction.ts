@@ -1,7 +1,7 @@
 import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { PlayerGameActions } from "@creature-chess/gamemode";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { clearSelectedPiece } from "../../ui/actions";
 import { playerClickTileAction } from "./clickToDropSaga";
@@ -47,7 +47,7 @@ export const onDropPiece = (dispatch: Dispatch<any>, locationType: "board" | "be
 		};
 
 		// todo `from` is here as a safety check, is it needed?
-		dispatch(PlayerGameActions.dropPiecePlayerAction({
+		dispatch(PlayerActions.dropPiecePlayerAction({
 			pieceId: piece.id,
 			from,
 			to: location

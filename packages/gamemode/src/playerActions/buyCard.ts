@@ -4,13 +4,13 @@ import { take, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
-import { PlayerState } from "../../state";
-import { getPlayerBelowPieceLimit } from "../../../../player/playerSelectors";
-import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
-import { updateCardsCommand } from "../../state/cardShop";
-import { getDefinitionById } from "../../../../definitions";
-import { getPlayerSagaDependencies } from "../../../../player/sagaContext";
-import { getBenchSlice, getBoardSlice } from "../../selectors";
+import { PlayerState } from "../entities/player/state";
+import { getPlayerBelowPieceLimit } from "../player/playerSelectors";
+import { updateMoneyCommand } from "../player/playerInfo/commands";
+import { updateCardsCommand } from "../entities/player/state/cardShop";
+import { getDefinitionById } from "../definitions";
+import { getPlayerSagaDependencies } from "../player/sagaContext";
+import { getBenchSlice, getBoardSlice } from "../entities/player/selectors";
 
 const getCardDestination = (
 	state: PlayerState,

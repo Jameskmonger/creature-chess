@@ -1,7 +1,7 @@
 import { take, delay, all, race, call } from "redux-saga/effects";
 import { cancelled } from "typed-redux-saga";
 import { Socket } from "socket.io";
-import { GameEvents, PlayerGameActions } from "@creature-chess/gamemode";
+import { GameEvents, PlayerActions } from "@creature-chess/gamemode";
 import { ClientToServer, IncomingPacketRegistry, OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 
 import { incomingNetworking } from "./incoming";
@@ -44,7 +44,7 @@ export const playerNetworking = function*(socket: Socket) {
 				call(outgoingNetworking),
 				call(playerBoard)
 			]),
-			quit: take<PlayerGameActions.QuitGamePlayerAction>(PlayerGameActions.quitGamePlayerAction.toString()),
+			quit: take<PlayerActions.QuitGamePlayerAction>(PlayerActions.quitGamePlayerAction.toString()),
 			finish: take<GameEvents.GameFinishEvent>(GameEvents.gameFinishEvent.toString())
 		});
 		yield delay(100);

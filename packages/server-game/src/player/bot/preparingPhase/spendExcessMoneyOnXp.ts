@@ -1,5 +1,5 @@
 import { select, delay, put } from "@redux-saga/core/effects";
-import { PlayerGameActions, PlayerState } from "@creature-chess/gamemode";
+import { PlayerActions, PlayerState } from "@creature-chess/gamemode";
 import { BOT_ACTION_TIME_MS } from "../constants";
 import { shouldBuyXp } from "../shop/shouldBuyXp";
 
@@ -11,7 +11,7 @@ export const spendExcessMoneyOnXp = function*() {
 			return;
 		}
 
-		yield put(PlayerGameActions.buyXpPlayerAction());
+		yield put(PlayerActions.buyXpPlayerAction());
 		yield delay(BOT_ACTION_TIME_MS);
 	}
 };

@@ -1,11 +1,11 @@
 import { take, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models";
-import { isPlayerAlive } from "../../../../player/playerSelectors";
-import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
-import { addXpCommand } from "../xp";
+import { isPlayerAlive } from "../player/playerSelectors";
+import { updateMoneyCommand } from "../player/playerInfo/commands";
+import { addXpCommand } from "../entities/player/sagas/xp";
 import { createAction } from "@reduxjs/toolkit";
-import { getPlayerSagaDependencies } from "../../../../player/sagaContext";
+import { getPlayerSagaDependencies } from "../player/sagaContext";
 
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
 export const buyXpPlayerAction = createAction("buyXpPlayerAction");

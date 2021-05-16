@@ -7,7 +7,7 @@ import { PlayerSagaDependencies } from "../../player/sagaContext";
 
 import { PlayerState, playerReducers } from "./state";
 
-import { playerGameActionsSaga } from "./sagas/playerGameActions";
+import { playerActionsSaga } from "../../playerActions/saga";
 import { evolutionSaga } from "./sagas/evolution";
 import { playerPhases } from "./sagas/phases";
 import { setStatusOnQuit } from "./sagas/setStatusOnQuit";
@@ -29,7 +29,7 @@ export const playerEntity = entityFactory<PlayerState, PlayerSagaDependencies, P
 		*rootSaga() {
 			yield all([
 				call(playerPhases),
-				call(playerGameActionsSaga),
+				call(playerActionsSaga),
 				call(evolutionSaga),
 				call(healthSaga),
 				call(playerXpSaga),

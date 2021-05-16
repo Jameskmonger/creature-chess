@@ -1,5 +1,5 @@
 import { take, select, put } from "@redux-saga/core/effects";
-import { getPiece, PlayerGameActions } from "@creature-chess/gamemode";
+import { getPiece, PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@creature-chess/board";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
@@ -65,7 +65,7 @@ export const clickToDropSaga = function*() {
 
 		const from: PlayerPieceLocation = getLocationForPiece(piece.id, board, bench);
 
-		yield put(PlayerGameActions.dropPiecePlayerAction({
+		yield put(PlayerActions.dropPiecePlayerAction({
 			pieceId: piece.id,
 			from,
 			to: tile

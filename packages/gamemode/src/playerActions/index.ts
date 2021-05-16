@@ -1,18 +1,16 @@
-import { all, call } from "redux-saga/effects";
-
-import { buyCardPlayerActionSaga, BuyCardPlayerAction, buyCardPlayerAction } from "./buyCard";
+import { BuyCardPlayerAction, buyCardPlayerAction } from "./buyCard";
 export { BuyCardPlayerAction, buyCardPlayerAction };
 
-import { buyXpPlayerActionSaga, BuyXpPlayerAction, buyXpPlayerAction } from "./buyXp";
+import { BuyXpPlayerAction, buyXpPlayerAction } from "./buyXp";
 export { BuyXpPlayerAction, buyXpPlayerAction };
 
-import { rerollCardsPlayerActionSaga, RerollCardsPlayerAction, rerollCardsPlayerAction } from "./rerollCards";
+import { RerollCardsPlayerAction, rerollCardsPlayerAction } from "./rerollCards";
 export { RerollCardsPlayerAction, rerollCardsPlayerAction };
 
-import { toggleShopLockPlayerActionSaga, ToggleShopLockPlayerAction, toggleShopLockPlayerAction } from "./toggleShopLock";
+import { ToggleShopLockPlayerAction, toggleShopLockPlayerAction } from "./toggleShopLock";
 export { ToggleShopLockPlayerAction, toggleShopLockPlayerAction };
 
-import { sellPiecePlayerActionSaga, SellPiecePlayerAction, sellPiecePlayerAction } from "./sellPiece";
+import { SellPiecePlayerAction, sellPiecePlayerAction } from "./sellPiece";
 export { SellPiecePlayerAction, sellPiecePlayerAction };
 
 import { ReadyUpPlayerAction, readyUpPlayerAction } from "./readyUp";
@@ -21,25 +19,13 @@ export { ReadyUpPlayerAction, readyUpPlayerAction };
 import { QuitGamePlayerAction, quitGamePlayerAction } from "./quitGame";
 export { QuitGamePlayerAction, quitGamePlayerAction };
 
-import { dropPiecePlayerActionSaga, DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
+import { DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
 export { DropPiecePlayerAction, dropPiecePlayerAction };
 
-import { spectatePlayerActionSaga, SpectatePlayerAction, spectatePlayerAction } from "./spectate";
+import { SpectatePlayerAction, spectatePlayerAction } from "./spectate";
 export { SpectatePlayerAction, spectatePlayerAction };
 
-export const playerGameActionsSaga = function*() {
-	yield all([
-		call(buyXpPlayerActionSaga),
-		call(buyCardPlayerActionSaga),
-		call(rerollCardsPlayerActionSaga),
-		call(toggleShopLockPlayerActionSaga),
-		call(sellPiecePlayerActionSaga),
-		call(dropPiecePlayerActionSaga),
-		call(spectatePlayerActionSaga)
-	]);
-};
-
-export const PlayerGameActionTypesArray = [
+export const PlayerActionTypesArray = [
 	buyXpPlayerAction.toString(),
 	buyCardPlayerAction.toString(),
 	rerollCardsPlayerAction.toString(),
@@ -51,7 +37,7 @@ export const PlayerGameActionTypesArray = [
 	spectatePlayerAction.toString()
 ];
 
-export type PlayerGameAction =
+export type PlayerAction =
 	BuyXpPlayerAction
 	| BuyCardPlayerAction
 	| RerollCardsPlayerAction

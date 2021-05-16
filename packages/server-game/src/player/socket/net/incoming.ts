@@ -1,7 +1,7 @@
 import { take, takeEvery, put, all, call } from "redux-saga/effects";
 import { Socket } from "socket.io";
 import { eventChannel } from "redux-saga";
-import { PlayerEvents, PlayerGameActions, PlayerSagaContext } from "@creature-chess/gamemode";
+import { PlayerEvents, PlayerAction, PlayerActionTypesArray, PlayerSagaContext } from "@creature-chess/gamemode";
 import { ClientToServer } from "@creature-chess/networking";
 
 import { receivePlayerActionsEvent, ReceivePlayerActionsEvent } from "../events";
@@ -26,13 +26,13 @@ export const incomingNetworking = function*(socket: Socket) {
 			return () => socket.off(ClientToServer.PacketOpcodes.SEND_PLAYER_ACTIONS, onReceiveActions);
 		});
 
-		const actionQueue: PlayerGameActions.PlayerGameAction[] = [];
+		const actionQueue: PlayerAction[] = [];
 
 		while (true) {
 			// todo refactor this client+server to make use of the array
 			const { payload: { index, actions: [action] } }: ReceivePlayerActionsEvent = yield take(channel);
 
-			const validAction = PlayerGameActions.PlayerGameActionTypesArray.includes(action.type);
+			const validAction = PlayerActionTypesArray.includes(action.type);
 			if (!validAction) {
 				logger.error(`Unhandled PlayerGameAction type: ${action.type}`);
 

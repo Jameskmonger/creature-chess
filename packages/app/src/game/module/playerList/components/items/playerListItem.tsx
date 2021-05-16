@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer, StreakType } from "@creature-chess/models";
-import { PlayerGameActions } from "@creature-chess/gamemode";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 import { ProgressBar } from "../../../../../display";
 import { PlayerName } from "../playerName";
@@ -38,7 +38,7 @@ const SpectateButton: React.FunctionComponent<{ currentlySpectating: boolean, pl
 	const onClick = (e: React.MouseEvent) => {
 		const action = currentlySpectating ? { playerId: null } : { playerId };
 
-		dispatch(PlayerGameActions.spectatePlayerAction(action));
+		dispatch(PlayerActions.spectatePlayerAction(action));
 
 		e.persist();
 		e.nativeEvent.stopImmediatePropagation();

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { PlayerGameActions } from "@creature-chess/gamemode";
+import { PlayerActions } from "@creature-chess/gamemode";
 
 const QuitGameButton: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
@@ -9,7 +9,7 @@ const QuitGameButton: React.FunctionComponent = () => {
 	const onClick = (
 		areYouSure
 			? () => {
-				dispatch(PlayerGameActions.quitGamePlayerAction());
+				dispatch(PlayerActions.quitGamePlayerAction());
 			}
 			: () => {
 				setAreYouSure(true);

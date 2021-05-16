@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../../../store";
 import { GamePhase } from "@creature-chess/models";
-import { PlayerGameActions } from "@creature-chess/gamemode";
+import { PlayerActions } from "@creature-chess/gamemode";
 
 const ReadyUpButton: React.FunctionComponent = () => {
 	const canReadyUp = useSelector<AppState, boolean>(
@@ -14,7 +14,7 @@ const ReadyUpButton: React.FunctionComponent = () => {
 		return null;
 	}
 
-	const onReadyUp = () => dispatch(PlayerGameActions.readyUpPlayerAction());
+	const onReadyUp = () => dispatch(PlayerActions.readyUpPlayerAction());
 
 	return <button className="ready-up" onClick={onReadyUp}>Ready</button>;
 };

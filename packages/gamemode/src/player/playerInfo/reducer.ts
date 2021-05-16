@@ -4,7 +4,6 @@ import {
 	UPDATE_LEVEL_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_BATTLE_COMMAND
 } from "./commands";
 import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../events";
-import { readyUpPlayerAction } from "../../entities/player/sagas/playerGameActions";
 
 export interface PlayerStreak {
 	type: StreakType;
@@ -67,6 +66,11 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 				...state,
 				status: command.payload.status
 			};
+		case "updateReadyCommand":
+			return {
+				...state,
+				ready: command.payload.ready
+			};
 		case UPDATE_BATTLE_COMMAND:
 			return {
 				...state,
@@ -99,18 +103,12 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 		case UPDATE_OPPONENT_COMMAND:
 			return {
 				...state,
-				opponentId: command.payload.opponentId,
-				ready: false
+				opponentId: command.payload.opponentId
 			};
 		case CLEAR_OPPONENT_COMMAND:
 			return {
 				...state,
 				opponentId: null
-			};
-		case readyUpPlayerAction.toString():
-			return {
-				...state,
-				ready: true
 			};
 		default:
 			return state;

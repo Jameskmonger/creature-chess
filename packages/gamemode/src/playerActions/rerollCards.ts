@@ -1,11 +1,11 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
-import { REROLL_COST } from "@creature-chess/models";
-import { isPlayerAlive } from "../../../../player/playerSelectors";
-import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
 import { createAction } from "@reduxjs/toolkit";
-import { afterRerollCardsEvent } from "../../../../player/events";
-import { getPlayerSagaDependencies } from "../../../../player/sagaContext";
+import { REROLL_COST } from "@creature-chess/models";
+import { isPlayerAlive } from "../player/playerSelectors";
+import { PlayerInfoCommands } from "../player/playerInfo";
+import { afterRerollCardsEvent } from "../player/events";
+import { getPlayerSagaDependencies } from "../player/sagaContext";
 
 export type RerollCardsPlayerAction = ReturnType<typeof rerollCardsPlayerAction>;
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
@@ -31,7 +31,7 @@ export const rerollCardsPlayerActionSaga = function*() {
 				return;
 			}
 
-			yield put(updateMoneyCommand(money - REROLL_COST));
+			yield put(PlayerInfoCommands.updateMoneyCommand(money - REROLL_COST));
 			yield put(afterRerollCardsEvent());
 		}
 	);

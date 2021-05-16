@@ -1,7 +1,7 @@
 import { getDependency, getVariable } from "@shoki/engine";
 import { all, call, race, take, select, delay, getContext } from "typed-redux-saga";
 import {
-	PlayerVariables, PlayerEntity, PlayerEntitySelectors, PlayerGameActions,
+	PlayerVariables, PlayerEntity, PlayerEntitySelectors, PlayerActions,
 	PlayerSagaContext, PlayerSelectors, PlayerState, PlayerCommands, GameEvents, Match
 } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
@@ -108,7 +108,7 @@ export const playerBoard = function*() {
 	let spectating = yield* call(getSpectatingPlayer);
 
 	while (true) {
-		const { newSpectate }: { newSpectate?: PlayerGameActions.SpectatePlayerAction } = yield* race({
+		const { newSpectate }: { newSpectate?: PlayerActions.SpectatePlayerAction } = yield* race({
 			// todo strongly type this
 			newSpectate: take<any>(PlayerCommands.setSpectatingIdCommand.toString()),
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece, PlayerGameActions } from "@creature-chess/gamemode";
+import { getPiece, PlayerActions } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
 
 const selectedPieceSelector = (state: AppState): PieceModel =>
@@ -16,7 +16,7 @@ const SellPieceButton: React.FunctionComponent<{ pieceId: string }> = ({ pieceId
 	const onClick = (
 		areYouSure
 			? () => {
-				dispatch(PlayerGameActions.sellPiecePlayerAction({ pieceId }));
+				dispatch(PlayerActions.sellPiecePlayerAction({ pieceId }));
 			}
 			: () => {
 				setAreYouSure(true);

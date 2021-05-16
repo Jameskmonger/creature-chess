@@ -1,4 +1,4 @@
-import { PlayerGameActions } from "@creature-chess/gamemode";
+import { PlayerAction } from "@creature-chess/gamemode";
 import { EmptyPacket } from "./empty-packet";
 
 export enum PacketOpcodes {
@@ -8,7 +8,7 @@ export enum PacketOpcodes {
 
 export type SendPlayerActionsPacket = {
 	index: number;
-	actions: PlayerGameActions.PlayerGameAction[];
+	actions: PlayerAction[];
 };
 
 export type PacketDefinitions = {

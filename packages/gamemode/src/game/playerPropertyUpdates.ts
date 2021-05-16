@@ -1,9 +1,7 @@
-import { all, takeLatest } from "@redux-saga/core/effects";
-import { PlayerStreak } from "../player/playerInfo/reducer";
+import { all, takeLatest } from "redux-saga/effects";
 import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
-import { PlayerInfoCommands } from "../player/playerInfo";
-import { readyUpPlayerAction, ReadyUpPlayerAction } from "../entities/player/sagas/playerGameActions";
-import { PlayerRunPreparingPhaseEvent, playerRunPreparingPhaseEvent } from "./events";
+import { PlayerStreak } from "../player/playerInfo/reducer";
+import { PlayerInfoCommands } from "../player";
 import { PlayerEntity } from "../entities";
 
 // todo use sagas properly here
@@ -57,18 +55,10 @@ export const listenForPropertyUpdates = (
 		}
 
 		if (emitReady) {
-			// todo create a single "READY_UPDATED" action
-			sagas.push(takeLatest<ReadyUpPlayerAction>(
-				readyUpPlayerAction.toString(),
-				function*() {
-					emitReady(true);
-				}
-			));
-
-			sagas.push(takeLatest<PlayerRunPreparingPhaseEvent>(
-				playerRunPreparingPhaseEvent,
-				function*() {
-					emitReady(false);
+			sagas.push(takeLatest<PlayerInfoCommands.UpdateReadyCommand>(
+				PlayerInfoCommands.updateReadyCommand.toString(),
+				function*({ payload: { ready } }) {
+					emitReady(ready);
 				}
 			));
 		}

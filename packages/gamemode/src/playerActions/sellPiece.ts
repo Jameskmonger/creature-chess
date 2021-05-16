@@ -1,10 +1,10 @@
+import { takeEvery, select, put } from "redux-saga/effects";
 import { createAction } from "@reduxjs/toolkit";
-import { takeEvery, select, put } from "@redux-saga/core/effects";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece } from "../../../../player/pieceSelectors";
-import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
-import { afterSellPieceEvent } from "../../../../player/events";
-import { getBoardSlice, getBenchSlice } from "../../selectors";
+import { getPiece } from "../player/pieceSelectors";
+import { updateMoneyCommand } from "../player/playerInfo/commands";
+import { afterSellPieceEvent } from "../player/events";
+import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
 
 export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;
 export const sellPiecePlayerAction = createAction<{ pieceId: string }>("sellPiecePlayerAction");

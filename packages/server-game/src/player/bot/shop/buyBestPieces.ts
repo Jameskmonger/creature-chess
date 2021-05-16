@@ -1,6 +1,6 @@
 import { select, delay, put, call } from "redux-saga/effects";
 import { getContext } from "typed-redux-saga";
-import { getDefinitionById, getAllPieces, PlayerGameActions, PlayerState, PlayerSagaContext } from "@creature-chess/gamemode";
+import { getDefinitionById, getAllPieces, PlayerActions, PlayerState, PlayerSagaContext } from "@creature-chess/gamemode";
 import { BOT_ACTION_TIME_MS } from "../constants";
 import { compareCardPieceViews, getCardViews, getPieceViews } from "./cardPieceViews";
 import { PREFERRED_LOCATIONS } from "../preferredLocations";
@@ -38,7 +38,7 @@ export const buyBestPieces = function*() {
 
 		// sell a piece to make room
 		if (atPieceLimit(yield select()) || !canCurrentlyAfford) {
-			yield put(PlayerGameActions.sellPiecePlayerAction({ pieceId: worstPiece.id }));
+			yield put(PlayerActions.sellPiecePlayerAction({ pieceId: worstPiece.id }));
 			yield delay(BOT_ACTION_TIME_MS);
 		}
 
@@ -68,7 +68,7 @@ const buyCardIfBelowLimit = function*(index: number) {
 
 	const definition = getDefinitionById(card.definitionId);
 
-	yield put(PlayerGameActions.buyCardPlayerAction({
+	yield put(PlayerActions.buyCardPlayerAction({
 		index,
 		sortPositions: PREFERRED_LOCATIONS[definition!.class]
 	}));

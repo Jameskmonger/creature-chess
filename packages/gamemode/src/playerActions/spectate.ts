@@ -1,9 +1,9 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { createAction } from "@reduxjs/toolkit";
 import { getDependency } from "@shoki/engine";
-import { PlayerSagaDependencies } from "../../../../player/sagaContext";
-import { setSpectatingIdCommand } from "../../state/spectating";
-import { PlayerSelectors } from "../../../../player";
+import { PlayerSagaDependencies } from "../player/sagaContext";
+import { setSpectatingIdCommand } from "../entities/player/state/spectating";
+import { PlayerSelectors } from "../player";
 
 export type SpectatePlayerAction = ReturnType<typeof spectatePlayerAction>;
 export const spectatePlayerAction = createAction<{ playerId: string | null }, "spectatePlayerAction">("spectatePlayerAction");

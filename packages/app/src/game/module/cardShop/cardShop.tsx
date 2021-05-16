@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card as CardModel } from "@creature-chess/models";
-import { getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
+import { getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
 import { Card } from "./components/card";
 import { AppState } from "../../../store";
 import { RerollButton } from "./components/rerollButton";
@@ -78,7 +78,7 @@ const CardShop: React.FunctionComponent<CardShopProps> = ({ showBalance }) => {
 			return;
 		}
 
-		dispatch(PlayerGameActions.buyCardPlayerAction({ index: currentCardIndex }));
+		dispatch(PlayerActions.buyCardPlayerAction({ index: currentCardIndex }));
 		setCurrentCardIndex(null);
 	};
 

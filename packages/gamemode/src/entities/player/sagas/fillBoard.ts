@@ -3,8 +3,8 @@ import { getContext, select } from "typed-redux-saga";
 import { PlayerState } from "../state";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { BoardSelectors } from "@creature-chess/board";
-import { getMostExpensiveBenchPiece, getPlayerBelowPieceLimit, isPlayerAlive } from "../../../player/playerSelectors";
-import { dropPiecePlayerAction } from "./playerGameActions";
+import { PlayerSelectors } from "../../../player";
+import { dropPiecePlayerAction } from "../../../playerActions";
 
 const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
 type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;
@@ -18,7 +18,7 @@ export const fillBoard = function*() {
 	yield takeEvery<FillBoardCommand>(
 		FILL_BOARD_COMMAND,
 		function*() {
-			const isAlive = yield* select(isPlayerAlive);
+			const isAlive = yield* select(PlayerSelectors.isPlayerAlive);
 
 			if (!isAlive) {
 				return;
@@ -26,13 +26,13 @@ export const fillBoard = function*() {
 
 			while (true) {
 				const state: PlayerState = yield* select();
-				const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+				const belowPieceLimit = PlayerSelectors.getPlayerBelowPieceLimit(state, playerId);
 
 				if (!belowPieceLimit) {
 					return;
 				}
 
-				const benchPiece = getMostExpensiveBenchPiece(state);
+				const benchPiece = PlayerSelectors.getMostExpensiveBenchPiece(state);
 
 				if (!benchPiece) {
 					return;

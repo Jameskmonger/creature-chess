@@ -1,6 +1,6 @@
 import { select, delay, put } from "@redux-saga/core/effects";
 import { BoardSelectors } from "@creature-chess/board";
-import { PlayerGameActions, PlayerState } from "@creature-chess/gamemode";
+import { PlayerActions, PlayerState } from "@creature-chess/gamemode";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PREFERRED_LOCATIONS } from "../preferredLocations";
 import { BOT_ACTION_TIME_MS } from "../constants";
@@ -60,7 +60,7 @@ export const putBenchOnBoard = function*() {
 			}
 		};
 
-		yield put(PlayerGameActions.dropPiecePlayerAction({
+		yield put(PlayerActions.dropPiecePlayerAction({
 			pieceId: firstBenchPiece.id,
 			from: benchPiecePosition,
 			to: boardPiecePosition

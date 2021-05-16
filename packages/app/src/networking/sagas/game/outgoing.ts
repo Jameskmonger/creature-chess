@@ -1,9 +1,8 @@
-import { call, takeEvery, take, all } from "@redux-saga/core/effects";
-import { PlayerGameActions } from "@creature-chess/gamemode";
+import { Socket } from "socket.io-client";
+import { call, takeEvery, take, all } from "redux-saga/effects";
 import { OutgoingPacketRegistry, ClientToServer } from "@creature-chess/networking";
 import { BattleEvents } from "@creature-chess/battle";
-
-import { Socket } from "socket.io-client";
+import { PlayerAction, PlayerActionTypesArray } from "@creature-chess/gamemode";
 
 type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
 
@@ -11,7 +10,7 @@ const sendPlayerActions = function*(registry: ClientToServerPacketRegsitry) {
 	let lastSentIndex = 0;
 
 	while (true) {
-		const action: PlayerGameActions.PlayerGameAction = yield take(PlayerGameActions.PlayerGameActionTypesArray);
+		const action: PlayerAction = yield take(PlayerActionTypesArray);
 
 		const index = ++lastSentIndex;
 

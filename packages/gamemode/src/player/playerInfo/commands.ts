@@ -1,6 +1,5 @@
 import { StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
-import { ReadyUpPlayerAction } from "../../entities/player/sagas/playerGameActions";
 
 export const UPDATE_BATTLE_COMMAND = "UPDATE_BATTLE_COMMAND";
 export type UPDATE_BATTLE_COMMAND = typeof UPDATE_BATTLE_COMMAND;
@@ -31,13 +30,15 @@ export type PlayerInfoCommand =
 	| UpdateBattleCommand
 	| UpdateStreakCommand
 	| UpdateMoneyCommand
-	| ReadyUpPlayerAction
+	| UpdateReadyCommand
 	| UpdateOpponentCommand
 	| ClearOpponentCommand
 	| UpdateLevelCommand;
 
 export type UpdateStatusCommand = ReturnType<typeof updateStatusCommand>;
 export const updateStatusCommand = createAction<{ status: PlayerStatus }, "updateStatusCommand">("updateStatusCommand");
+export type UpdateReadyCommand = ReturnType<typeof updateReadyCommand>;
+export const updateReadyCommand = createAction<{ ready: boolean }, "updateReadyCommand">("updateReadyCommand");
 
 export const updateBattleCommand = (battle: PlayerBattle): UpdateBattleCommand => ({ type: UPDATE_BATTLE_COMMAND, payload: { battle } });
 export const updateHealthCommand = (health: number): UpdateHealthCommand => ({ type: UPDATE_HEALTH_COMMAND, payload: { health } });

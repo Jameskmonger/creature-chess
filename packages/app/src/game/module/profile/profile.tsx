@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../../store";
 import { Constants, getXpToNextLevel } from "@creature-chess/models";
 import { PieceCount } from "./pieceCount";
-import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerGameActions } from "@creature-chess/gamemode";
+import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
 import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
 import { usePlayerId } from "../../../auth";
 
@@ -29,7 +29,7 @@ const Profile: React.FunctionComponent = () => {
 		return null;
 	}
 
-	const onBuyXp = () => dispatch(PlayerGameActions.buyXpPlayerAction());
+	const onBuyXp = () => dispatch(PlayerActions.buyXpPlayerAction());
 
 	return (
 		<div className="profile">
