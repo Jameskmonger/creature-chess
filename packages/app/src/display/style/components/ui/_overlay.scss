@@ -111,7 +111,6 @@
 }
 
 .ready-overlay-content {
-
     .h2h {
         margin-bottom: 0.5em;
         font-size: 1.4em;
@@ -125,53 +124,55 @@
 }
 
 .h2h-header {
-	text-align: center;
-	font-size: 1.2em;
-	margin-bottom: 0.3em;
+    margin-bottom: 0.3em;
+    font-size: 1.2em;
+    text-align: center;
 }
 
 .inner-profile-box {
-	display: flex;
-	flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .name-and-health {
-	font-family: Arial, sans-serif;
-	text-transform: capitalize;
-	display: flex;
-	flex-direction: column;
-	&.right {
-		justify-content: right;
-		align-items: right;
-	}
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    text-transform: capitalize;
+
+    &.right {
+        justify-content: right;
+        align-items: right;
+    }
 }
 
 .player-name {
-	font-family: Arial, sans-serif;
-	text-transform: uppercase;
-	font-weight: 550;
-	&.right {
-		text-align: right;
-	}
+    font-family: Arial, sans-serif;
+    font-weight: 550;
+    text-transform: uppercase;
+
+    &.right {
+        text-align: right;
+    }
 }
 
 .buffer {
-	width: 1em;
-	height: 0.6em;
+    width: 1em;
+    height: 0.6em;
 }
 
 .h2h-stat-div {
-	text-align: center;
-	margin-bottom: 0.6em;
+    margin-bottom: 0.6em;
+    text-align: center;
 }
 
 .h2h-info-header {
-	font-size: 0.7em;
-	margin-bottom: 0.2em;
+    margin-bottom: 0.2em;
+    font-size: 0.7em;
 }
 
 .h2h-info-text {
-	font-size: 1.1em;
+    font-size: 1.1em;
 }
 
 .victory-overlay {
