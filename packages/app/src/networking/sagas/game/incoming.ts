@@ -1,5 +1,6 @@
-import { takeEvery, put, call } from "redux-saga/effects";
+import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
+import { takeEvery, put, call } from "redux-saga/effects";
 import { PlayerInfoCommands, PlayerEvents, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
@@ -16,7 +17,7 @@ type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.P
 
 const readPacketsToActions = function*(
 	registry: ServerToClientPacketRegistry,
-	socket: SocketIOClient.Socket,
+	socket: Socket,
 	{ benchSlice, boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }
 ) {
 	const channel = eventChannel<any>(emit => {
@@ -143,11 +144,12 @@ const readPacketsToActions = function*(
 };
 
 export const incomingGameNetworking = function*(
-	socket: SocketIOClient.Socket,
+	socket: Socket,
 	slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }
 ) {
 	const registry = new IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
-		(opcode, handler) => socket.on(opcode, handler)
+		// todo fix typing here
+		(opcode, handler) => socket.on(opcode, handler as any)
 	);
 
 	yield call(readPacketsToActions, registry, socket, slices);

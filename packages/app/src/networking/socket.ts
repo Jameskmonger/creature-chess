@@ -1,4 +1,4 @@
-import io = require("socket.io-client");
+import { io, Socket } from "socket.io-client";
 import { ServerToClient } from "@creature-chess/networking";
 
 export const getSocket = (serverIP: string, idToken: string) => {
@@ -13,7 +13,7 @@ export const getSocket = (serverIP: string, idToken: string) => {
 		}
 	);
 
-	return new Promise<SocketIOClient.Socket>((resolve, reject) => {
+	return new Promise<Socket>((resolve, reject) => {
 		socket.on("connect", () => {
 			socket.emit("authenticate", { idToken });
 		});

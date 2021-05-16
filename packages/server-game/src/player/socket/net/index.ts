@@ -13,7 +13,8 @@ const createIncomingRegistry = (socket: Socket): IncomingRegistry => new Incomin
 	ClientToServer.PacketDefinitions,
 	ClientToServer.PacketAcknowledgements
 >(
-	(opcode, handler) => socket.on(opcode, handler)
+	// todo fix typings here
+	(opcode, handler) => socket.on(opcode, handler as any)
 );
 
 const createOutgoingRegistry = (socket: Socket): OutgoingRegistry => new OutgoingPacketRegistry<

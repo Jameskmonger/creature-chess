@@ -1,3 +1,4 @@
+import { Socket } from "socket.io-client";
 import { take, put, call, all } from "redux-saga/effects";
 import { BoardSlice } from "@creature-chess/board";
 import { incomingGameNetworking } from "./incoming";
@@ -8,7 +9,7 @@ import { gameConnectedEvent, GameConnectedEvent } from "../../actions";
 import { LobbyEvents } from "../../../lobby";
 import { ConnectionStatus } from "../../../game/connection-status";
 
-export const gameNetworking = function*(socket: SocketIOClient.Socket, slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
+export const gameNetworking = function*(socket: Socket, slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
 	yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([gameConnectedEvent.toString(), LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
 	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));

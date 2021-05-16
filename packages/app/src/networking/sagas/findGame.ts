@@ -1,5 +1,6 @@
-import { race, call, takeEvery, put, take } from "@redux-saga/core/effects";
+import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
+import { race, call, takeEvery, put, take } from "redux-saga/effects";
 import { ServerToClient } from "@creature-chess/networking";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
@@ -24,7 +25,7 @@ export const findGame = function*(
 
 	const idToken = yield call(auth.getAccessTokenSilently);
 
-	let socket: SocketIOClient.Socket = null;
+	let socket: Socket = null;
 
 	try {
 		socket = yield call(getSocket, findGameAction.payload.serverIP, idToken);

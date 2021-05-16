@@ -1,8 +1,14 @@
 import { Logger } from "winston";
-import io = require("socket.io");
+
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 export const openServer = (logger: Logger, port: number) => {
-	const server = io.listen(port, { transports: ["websocket", "polling"] });
+	const httpServer = createServer();
+
+	const server = new Server(httpServer, { transports: ["websocket", "polling"] });
+
+	httpServer.listen(port);
 
 	logger.info("Server listening on port " + port);
 
