@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "@creature-chess/data",
-	"version": "0.4.0",
+	"version": "0.4.2",
 	"description": "Database connections for Creature Chess",
 	"keywords": [],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
