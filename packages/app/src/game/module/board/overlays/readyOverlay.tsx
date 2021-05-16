@@ -20,25 +20,25 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	});
 
 	const localId = usePlayerId();
-	const playerInfo = playerList.find(p => p.id === localId);
+	const localPlayer = playerList.find(p => p.id === localId);
 
-	const opponentInfo: PlayerListPlayer = useSelector((state: AppState) => {
+	const opponent: PlayerListPlayer = useSelector((state: AppState) => {
 		const id = state.game.playerInfo.opponentId;
 		return state.game.playerList.find(p => p.id === id);
 	});
 
 	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
-	if (!opponentInfo || !inReadyPhase || spectatingPlayer) {
+	if (!opponent || !inReadyPhase || spectatingPlayer) {
 		return null;
 	}
 	const renderHealthbar = (current: number) => current.toString();
 
-	const returnTitleOrBuffer = (player) => {
+	const returnTitleOrSpacer = (player) => {
 		if (player.profile.title !== null) {
 			return <PlayerTitle playerId={player.id} />;
 		}
-		return <div className="buffer" />;
+		return <div className="spacer" />;
 	};
 
 	return (
@@ -48,35 +48,39 @@ const ReadyOverlay: React.FunctionComponent = () => {
 				<div className="outer-profile-box">
 					<div className="inner-profile-box">
 						<div className="player-picture">
-							<PlayerPicture playerId={playerInfo.id} />
+							<PlayerPicture playerId={localPlayer.id} />
 						</div>
 						<div className="name-and-health">
-							<p className="player-name">{playerInfo.name}</p>
-							{returnTitleOrBuffer(playerInfo)}
-							<ProgressBar
-								className="healthbar player-health h2h"
-								current={playerInfo.health}
-								max={100}
-								renderContents={renderHealthbar}
-							/>
+							<p className="player-name">{localPlayer.name}</p>
+							{returnTitleOrSpacer(localPlayer)}
+							<div className="healthbar-container">
+								<ProgressBar
+									className="healthbar player-health"
+									current={localPlayer.health}
+									max={100}
+									renderContents={renderHealthbar}
+								/>
+							</div>
 						</div>
-						<div className="buffer" />
+						<div className="spacer" />
 						<div className="name-and-health right">
-							<p className="player-name right">{opponentInfo.name}</p>
-							{returnTitleOrBuffer(opponentInfo)}
-							<ProgressBar
-								className="healthbar player-health h2h"
-								current={opponentInfo.health}
-								max={100}
-								renderContents={renderHealthbar}
-							/>
+							<p className="player-name right">{opponent.name}</p>
+							{returnTitleOrSpacer(opponent)}
+							<div className="healthbar-container">
+								<ProgressBar
+									className="healthbar player-health"
+									current={opponent.health}
+									max={100}
+									renderContents={renderHealthbar}
+								/>
+							</div>
 						</div>
 						<div className="player-picture">
-							<PlayerPicture playerId={opponentInfo.id} />
+							<PlayerPicture playerId={opponent.id} />
 						</div>
 					</div>
 				</div>
-				<HeadToHeadStats player={playerInfo} opponent={opponentInfo} />
+				<HeadToHeadStats player={localPlayer} opponent={opponent} />
 			</div>
 		</BoardOverlay>
 	);
