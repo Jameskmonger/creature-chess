@@ -23,7 +23,6 @@ const preparingPhase = function*(phase: GamePhase, startedAt: number, round: num
 
 const readyPhase = function*(startedAt: number) {
 	const { outgoing: registry } = yield* getPacketRegistries();
-	const playerId = yield* getContext<string>("id");
 	const { logger } = yield* PlayerSagaContext.getPlayerSagaDependencies();
 
 	const health = yield* select((state: PlayerState) => state.playerInfo.health);
@@ -38,17 +37,9 @@ const readyPhase = function*(startedAt: number) {
 		return;
 	}
 
-	const opponentId =
-		currentMatch.home.id === playerId
-			? currentMatch.away.id
-			: currentMatch.home.id;
-
 	const packet: ServerToClient.Game.PhaseUpdatePacket = {
 		startedAtSeconds: startedAt,
-		phase: GamePhase.READY,
-		payload: {
-			opponentId
-		}
+		phase: GamePhase.READY
 	};
 
 	registry.emit(ServerToClient.Game.PacketOpcodes.PHASE_UPDATE, packet);

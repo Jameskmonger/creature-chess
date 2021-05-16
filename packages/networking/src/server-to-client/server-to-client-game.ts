@@ -18,10 +18,7 @@ export type PreparingPhaseUpdatePacket = {
 
 export type ReadyPhaseUpdatePacket = {
 	startedAtSeconds: number,
-	phase: GamePhase.READY,
-	payload: {
-		opponentId: string
-	}
+	phase: GamePhase.READY
 };
 
 type PlayingPhaseUpdatePacket = ({ startedAtSeconds: number, phase: GamePhase.PLAYING });
