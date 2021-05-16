@@ -111,15 +111,63 @@
 }
 
 .ready-overlay-content {
-    .h2h {
-        margin-bottom: 0.5em;
-        font-size: 1.4em;
+    .h2h-header {
+        margin-bottom: 0.25em;
+        font-size: 1.5em;
         text-align: center;
+    }
 
-        .opponent {
-            font-weight: bold;
-            color: #ff6464;
+    .inner-profile-box {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .name-and-health {
+        display: flex;
+        flex-direction: column;
+        font-family: Arial, sans-serif;
+        text-transform: capitalize;
+
+        &.right {
+            justify-content: right;
+            align-items: right;
+            text-align: right;
         }
+
+        .healthbar-container {
+            width: 12em;
+        }
+    }
+
+    .player-name {
+        font-family: Arial, sans-serif;
+        font-weight: 550;
+        text-transform: uppercase;
+
+        &.right {
+            text-align: right;
+        }
+    }
+
+    .spacer {
+        width: 1em;
+        height: 0.625em;
+    }
+}
+
+.head-to-head-stats {
+    .h2h-stat-div {
+        margin-bottom: 0.5em;
+        text-align: center;
+    }
+
+    .h2h-info-header {
+        margin-bottom: 0.25em;
+        font-size: 0.7em;
+    }
+
+    .h2h-info-text {
+        font-size: 1.125em;
     }
 }
 
