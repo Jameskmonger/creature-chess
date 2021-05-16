@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.56](https://github.com/Jameskmonger/creature-chess/compare/v0.3.55...v0.3.56) (2021-05-16)
+
+
+### Bug Fixes
+
+* select battle board correctly ([fe171ca](https://github.com/Jameskmonger/creature-chess/commit/fe171ca3d3a10f6bbc5fa985b2d0b819303a1d04))
+
+
+
+
+
 ## [0.3.55](https://github.com/Jameskmonger/creature-chess/compare/v0.3.53...v0.3.55) (2021-05-15)
 
 **Note:** Version bump only for package @creature-chess/battle

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.56](https://github.com/Jameskmonger/creature-chess/compare/v0.3.55...v0.3.56) (2021-05-16)
+
+
+### Bug Fixes
+
+* clear spectating player on reconnect ([c08bbbd](https://github.com/Jameskmonger/creature-chess/commit/c08bbbdf245503142080d90a94f5abfc0126a35e))
+* select battle board correctly ([fe171ca](https://github.com/Jameskmonger/creature-chess/commit/fe171ca3d3a10f6bbc5fa985b2d0b819303a1d04))
+
+
+### Features
+
+* send SPECTATING_PLAYER_UPDATE packet ([d310c2f](https://github.com/Jameskmonger/creature-chess/commit/d310c2fc3364e80e708870528f98fb616e8bd407))
+* spectator mode ([d55561b](https://github.com/Jameskmonger/creature-chess/commit/d55561bee22e9b9638a397155b96f9d07167648a)), closes [#238](https://github.com/Jameskmonger/creature-chess/issues/238)
+
+
+
+
+
 ## [0.3.55](https://github.com/Jameskmonger/creature-chess/compare/v0.3.53...v0.3.55) (2021-05-15)
 
 
