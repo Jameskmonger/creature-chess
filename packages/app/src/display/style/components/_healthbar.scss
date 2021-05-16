@@ -30,4 +30,8 @@
     &.enemy .fill {
         background: $enemy-healthbar-color;
     }
+
+    &.spectating .fill {
+        background: $spectating-healthbar-color;
+    }
 }

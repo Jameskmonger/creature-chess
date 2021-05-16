@@ -51,8 +51,9 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		const id = state.game.playerInfo.opponentId;
 		return state.game.playerList.find(p => p.id === id);
 	});
+	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
-	if (!opponentInfo || !inReadyPhase) {
+	if (spectatingPlayer || !opponentInfo || !inReadyPhase) {
 		return null;
 	}
 

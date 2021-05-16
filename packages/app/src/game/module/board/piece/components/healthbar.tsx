@@ -13,6 +13,18 @@ interface HealthbarProps {
 	vertical?: boolean;
 }
 
+const getColourName = (friendly: boolean, spectating: boolean) => {
+	if (friendly) {
+		return "friendly";
+	}
+
+	if (spectating) {
+		return "spectating";
+	}
+
+	return "enemy";
+};
+
 const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical = false, pieceIsOnBench = false }) => {
 	const localPlayerId = usePlayerId();
 	const showHealthbar = useSelector<AppState, boolean>(state => (
@@ -34,11 +46,12 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
 	}
 
 	const { ownerId, currentHealth, maxHealth } = piece;
-	const friendly = (localPlayerId === ownerId || spectatingPlayerId === ownerId);
+	const friendly = localPlayerId === ownerId;
+	const spectating = spectatingPlayerId === ownerId;
 
 	return (
 		<ProgressBar
-			className={`healthbar ${friendly ? "friendly" : "enemy"} ${vertical ? "vertical" : ""}`}
+			className={`healthbar ${getColourName(friendly, spectating)} ${vertical ? "vertical" : ""}`}
 			current={currentHealth}
 			max={maxHealth}
 			vertical={vertical}

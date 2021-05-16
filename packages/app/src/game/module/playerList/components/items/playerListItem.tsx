@@ -32,22 +32,26 @@ const StreakIndicator: React.FunctionComponent<{ type: StreakType | null, amount
 
 const renderHealthbar = (current: number) => current.toString();
 
-const SpectateButton: React.FunctionComponent<{ playerId: string }> = ({ playerId }) => {
+const SpectateButton: React.FunctionComponent<{ currentlySpectating: boolean, playerId: string }> = ({ currentlySpectating, playerId }) => {
 	const dispatch = useDispatch();
 
 	const onClick = (e: React.MouseEvent) => {
-		dispatch(PlayerGameActions.spectatePlayerAction({ playerId }));
+		const action = currentlySpectating ? { playerId: null } : { playerId };
+
+		dispatch(PlayerGameActions.spectatePlayerAction(action));
 
 		e.persist();
 		e.nativeEvent.stopImmediatePropagation();
 		e.stopPropagation();
 	};
 
-	return <button className="spectate-player" onClick={onClick}>Spectate</button>;
+	return <button className="spectate-player" onClick={onClick}>{currentlySpectating ? "Stop spectating" : "Spectate"}</button>;
 };
 
 const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpponent, isLocal, showReadyIndicator = false, level = null, money = null }) => {
 	const player = useSelector<AppState, PlayerListPlayer>(state => state.game.playerList.find(p => p.id === playerId));
+
+	const currentlySpectating = useSelector<AppState, boolean>(state => state.game.spectating.id === playerId);
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 	const readyClassName = (player.ready && showReadyIndicator) ? "ready" : "not-ready";
 
@@ -58,7 +62,12 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 	const className = `player-list-item ${isLocal ? "local" : ""} ${isOpponent ? "opponent" : ""} ${inPreparingPhase ? readyClassName : "not-ready"}`;
 
 	const toggleExpanded = () => {
-		// setIsExpanded(!isExpanded);
+		// don't open for local player
+		if (isLocal) {
+			return;
+		}
+
+		setIsExpanded(!isExpanded);
 	};
 
 	return (
@@ -79,15 +88,12 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 						<PlayerTitle playerId={playerId} />
 					</div>
 					<div className="row-half">
-						{
-							!isExpanded &&
-							<ProgressBar
-								className="healthbar player-health"
-								current={player.health}
-								max={100}
-								renderContents={renderHealthbar}
-							/>
-						}
+						<ProgressBar
+							className="healthbar player-health"
+							current={player.health}
+							max={100}
+							renderContents={renderHealthbar}
+						/>
 					</div>
 				</div>
 				<div className="row">
@@ -98,16 +104,15 @@ const PlayerListItem: React.FunctionComponent<Props> = ({ index, playerId, isOpp
 						</div>
 					</div>
 
-					<div className={`row-half ${isExpanded ? "center" : ""}`}>
+					<div className={`row-half ${currentlySpectating || isExpanded ? "center" : ""}`}>
 						{
-							isExpanded
-								? <SpectateButton playerId={playerId} />
+							currentlySpectating || isExpanded
+								? <SpectateButton currentlySpectating={currentlySpectating} playerId={playerId} />
 								: <>
 									<BattleInfo playerId={playerId} />
 									<StreakIndicator type={player.streakType} amount={player.streakAmount} />
 								</>
 						}
-
 					</div>
 				</div>
 			</div>

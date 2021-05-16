@@ -27,14 +27,14 @@ const spectatePlayerBoard = function*(registry: OutgoingRegistry) {
 	const boardSlice = yield* PlayerEntitySelectors.getBoardSlice();
 	const benchSlice = yield* PlayerEntitySelectors.getBenchSlice();
 
-	const match = yield* getMatch();
+	const initialMatch = yield* getMatch();
 
-	if (match) {
+	if (initialMatch) {
 		registry.emit(
 			ServerToClient.Game.PacketOpcodes.MATCH_BOARD_UPDATE,
 			{
-				turn: match.getTurn(),
-				board: match.getBoardForPlayer(playerId)
+				turn: initialMatch.getTurn(),
+				board: initialMatch.getBoardForPlayer(playerId)
 			}
 		);
 
@@ -86,7 +86,7 @@ const spectateOtherPlayer = function*(player: PlayerEntity) {
 	try {
 		task = player.runSaga(function*() {
 			yield call(spectatePlayerBoard, registry);
-		})
+		});
 
 		yield task.toPromise<void>();
 	} finally {
