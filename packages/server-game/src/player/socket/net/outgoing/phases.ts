@@ -10,8 +10,6 @@ import { getPacketRegistries } from "../registries";
 const preparingPhase = function*(phase: GamePhase, startedAt: number, round: number) {
 	const { outgoing: registry } = yield* getPacketRegistries();
 
-	const board = yield* select((state: PlayerState) => state.board);
-	const bench = yield* select((state: PlayerState) => state.bench);
 	const cards = yield* select((state: PlayerState) => state.cardShop.cards);
 
 	const packet: ServerToClient.Game.PhaseUpdatePacket = {
@@ -19,10 +17,6 @@ const preparingPhase = function*(phase: GamePhase, startedAt: number, round: num
 		phase: GamePhase.PREPARING,
 		payload: {
 			round: round!,
-			pieces: {
-				board,
-				bench
-			},
 			cards
 		}
 	};
@@ -35,7 +29,6 @@ const readyPhase = function*(startedAt: number) {
 	const playerId = yield* getContext<string>("id");
 	const { logger } = yield* PlayerSagaContext.getPlayerSagaDependencies();
 
-	const bench = yield* select((state: PlayerState) => state.bench);
 	const health = yield* select((state: PlayerState) => state.playerInfo.health);
 
 	const currentMatch = yield* getVariable<PlayerVariables, Match>(variables => variables.match!);
@@ -48,8 +41,6 @@ const readyPhase = function*(startedAt: number) {
 		return;
 	}
 
-	const board = currentMatch.getBoardForPlayer(playerId);
-
 	const opponentId =
 		currentMatch.home.id === playerId
 			? currentMatch.away.id
@@ -59,8 +50,6 @@ const readyPhase = function*(startedAt: number) {
 		startedAtSeconds: startedAt,
 		phase: GamePhase.READY,
 		payload: {
-			bench,
-			board,
 			opponentId
 		}
 	};

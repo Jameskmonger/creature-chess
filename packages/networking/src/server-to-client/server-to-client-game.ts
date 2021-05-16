@@ -25,10 +25,6 @@ export type PreparingPhaseUpdatePacket = {
 	phase: GamePhase.PREPARING,
 	payload: {
 		round: number;
-		pieces: {
-			board: BoardState;
-			bench: BoardState;
-		};
 		cards: (Card | null)[];
 	}
 };
@@ -37,8 +33,6 @@ export type ReadyPhaseUpdatePacket = {
 	startedAtSeconds: number,
 	phase: GamePhase.READY,
 	payload: {
-		board: BoardState;
-		bench: BoardState;
 		opponentId: string
 	}
 };

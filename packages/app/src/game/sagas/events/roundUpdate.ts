@@ -14,23 +14,16 @@ export const roundUpdateSaga = function*({ benchSlice, boardSlice }: { benchSlic
 		function*({ payload: packet }) {
 			switch (packet.phase) {
 				case GamePhase.PREPARING: {
-					const { cards, pieces: { board, bench }, round } = packet.payload;
+					const { cards } = packet.payload;
 
-					yield put(boardSlice.commands.setBoardPiecesCommand(board));
-					yield put(benchSlice.commands.setBoardPiecesCommand(bench));
 					yield put(PlayerCommands.updateCardsCommand(cards));
 					yield put(PlayerInfoCommands.clearOpponentCommand());
 					yield put(boardSlice.commands.unlockBoardCommand());
 					return;
 				}
 				case GamePhase.READY: {
-					const { board, bench, opponentId } = packet.payload;
+					const { opponentId } = packet.payload;
 
-					if (board) {
-						yield put(boardSlice.commands.setBoardPiecesCommand(board));
-					}
-
-					yield put(benchSlice.commands.setBoardPiecesCommand(bench));
 					yield put(boardSlice.commands.lockBoardCommand());
 					yield put(PlayerInfoCommands.updateOpponentCommand(opponentId));
 					return;
