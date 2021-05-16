@@ -1,4 +1,5 @@
 // tslint:disable: no-console
+import { createLogger, transports } from "winston";
 import express = require("express");
 import { json as jsonParser } from "body-parser";
 import Filter = require("bad-words");
@@ -12,7 +13,10 @@ import { config } from "@creature-chess/gamemode";
 const app = express();
 const port = process.env.PORT || 3000;
 
-const database = createDatabaseConnection(process.env.CREATURE_CHESS_FAUNA_KEY!);
+const logger = createLogger();
+logger.add(new transports.Console());
+
+const database = createDatabaseConnection(logger, process.env.CREATURE_CHESS_FAUNA_KEY!);
 const AUTH0_CONFIG = {
 	domain: config.auth0.domain,
 	clientId: config.auth0.machineToMachineClientId,
@@ -41,5 +45,5 @@ app.get("/user/current", userGetCurrent(database, authClient));
 app.patch("/user/current", userPatchCurrent(database, authClient, filter));
 
 app.listen(port, () => {
-	console.log(`server-info listening on port ${port}`);
+	logger.info(`server-info listening on port ${port}`);
 });

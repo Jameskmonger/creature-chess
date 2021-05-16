@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import { Client as FaunaDBClient } from "faunadb";
 import { setup } from "./setup";
 import { userDatabase, UserDatabaseFunctions } from "./user";
@@ -10,14 +11,19 @@ export type DatabaseConnection = {
 	bot: BotDatabaseFunctions;
 };
 
-export const createDatabaseConnection = (faunaSecret: string): DatabaseConnection => {
+export const createDatabaseConnection = (logger: Logger, faunaSecret: string): DatabaseConnection => {
 	const client = new FaunaDBClient({ secret: faunaSecret });
 
-	setup(client);
+	try {
+		setup(client);
+	} catch (e) {
+		logger.error("Error in @cc/data setting up database", e);
+		throw e;
+	}
 
 	return {
-		user: userDatabase(client),
-		leaderboard: leaderboardDatabase(client),
-		bot: botDatabase(client)
+		user: userDatabase(logger, client),
+		leaderboard: leaderboardDatabase(logger, client),
+		bot: botDatabase(logger, client)
 	};
 };

@@ -1,4 +1,5 @@
-import { Client as FaunaDBClient, query as q } from "faunadb";
+import { Logger } from "winston";
+import { Client as FaunaDBClient } from "faunadb";
 import { DatabaseUser } from "./databaseUser";
 import { addGamePlayed } from "./addGamePlayed";
 import { addWin } from "./addWin";
@@ -19,14 +20,14 @@ export type UserDatabaseFunctions = {
 	setProfileInfo: (id: string, nickname: string | null, picture: number | null) => Promise<DatabaseUser | null>;
 };
 
-export const userDatabase = (client: FaunaDBClient): UserDatabaseFunctions => {
+export const userDatabase = (logger: Logger, client: FaunaDBClient): UserDatabaseFunctions => {
 	return {
-		create: create(client),
-		getById: getById(client),
-		getByNickname: getByNickname(client),
-		addWin: addWin(client),
-		addGamePlayed: addGamePlayed(client),
-		setProfileInfo: setProfileInfo(client)
+		create: create(logger, client),
+		getById: getById(logger, client),
+		getByNickname: getByNickname(logger, client),
+		addWin: addWin(logger, client),
+		addGamePlayed: addGamePlayed(logger, client),
+		setProfileInfo: setProfileInfo(logger, client)
 	};
 };
 

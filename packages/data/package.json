@@ -1,32 +1,33 @@
 {
-  "private": true,
-  "name": "@creature-chess/data",
-  "version": "0.4.0",
-  "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
-  "keywords": [],
-  "author": "James Monger <jameskmonger@hotmail.co.uk>",
-  "license": "ISC",
-  "main": "lib/index.js",
-  "files": [
-    "lib/"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Jameskmonger/creature-chess.git"
-  },
-  "scripts": {
-    "build": "tsc -p ./tsconfig.json",
-    "lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
-  },
-  "bugs": {
-    "url": "https://github.com/Jameskmonger/creature-chess/issues"
-  },
-  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
-  "dependencies": {
-    "@creature-chess/models": "^0.4.0",
-    "faunadb": "^3.0.1"
-  }
+	"private": true,
+	"name": "@creature-chess/data",
+	"version": "0.4.0",
+	"description": "Database connections for Creature Chess",
+	"keywords": [],
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"license": "ISC",
+	"main": "lib/index.js",
+	"files": [
+		"lib/"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"dependencies": {
+		"@creature-chess/models": "^0.4.0",
+		"faunadb": "^3.0.1",
+		"winston": "^3.3.3"
+	}
 }

@@ -1,7 +1,8 @@
+import { Logger } from "winston";
 import { Client as FaunaDBClient, query as q } from "faunadb";
 import { DatabaseUser } from "./databaseUser";
 
-export const addGamePlayed = (client: FaunaDBClient) => {
+export const addGamePlayed = (logger: Logger, client: FaunaDBClient) => {
 	return async (id: string) => {
 		try {
 			const user = await client.query<DatabaseUser>(
@@ -25,7 +26,7 @@ export const addGamePlayed = (client: FaunaDBClient) => {
 
 			return user;
 		} catch (e) {
-			// todo check the error here - maybe no connection
+			logger.error("Error in @cc/data user.addGamePlayed", e);
 			return null;
 		}
 	};

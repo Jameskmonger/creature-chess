@@ -1,3 +1,4 @@
+import { Logger } from "winston";
 import { Client as FaunaDBClient } from "faunadb";
 import { getLeastPlayedBots } from "./getLeastPlayedBots";
 import { addWin } from "./addWin";
@@ -11,11 +12,11 @@ export type BotDatabaseFunctions = {
 	addGamePlayed: (id: string) => Promise<object | null>;
 };
 
-export const botDatabase = (client: FaunaDBClient): BotDatabaseFunctions => {
+export const botDatabase = (logger: Logger, client: FaunaDBClient): BotDatabaseFunctions => {
 	return {
-		getLeastPlayedBots: getLeastPlayedBots(client),
-		addGamePlayed: addGamePlayed(client),
-		addWin: addWin(client)
+		getLeastPlayedBots: getLeastPlayedBots(logger, client),
+		addGamePlayed: addGamePlayed(logger, client),
+		addWin: addWin(logger, client)
 	};
 };
 

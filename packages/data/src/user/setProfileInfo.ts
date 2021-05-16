@@ -1,7 +1,8 @@
+import { Logger } from "winston";
 import { Client as FaunaDBClient, query as q } from "faunadb";
 import { DatabaseUser } from "./databaseUser";
 
-export const setProfileInfo = (client: FaunaDBClient) => {
+export const setProfileInfo = (logger: Logger, client: FaunaDBClient) => {
 	return async (id: string, nickname: string | null, picture: number | null) => {
 		try {
 			let userUpdate = {};
@@ -39,7 +40,7 @@ export const setProfileInfo = (client: FaunaDBClient) => {
 			return user;
 
 		} catch (e) {
-			// todo check the error here - maybe no connection
+			logger.error("Error in @cc/data user.setProfileInfo", e);
 			return null;
 		}
 	};

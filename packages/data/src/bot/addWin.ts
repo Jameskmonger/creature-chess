@@ -1,7 +1,8 @@
+import { Logger } from "winston";
 import { Client as FaunaDBClient, query as q } from "faunadb";
 import { COLLECTION_NAMES } from "../constants";
 
-export const addWin = (client: FaunaDBClient) => {
+export const addWin = (logger: Logger, client: FaunaDBClient) => {
 	return async (id: string) => {
 		try {
 			const bot = await client.query(
@@ -25,7 +26,7 @@ export const addWin = (client: FaunaDBClient) => {
 
 			return bot;
 		} catch (e) {
-			// todo check the error here - maybe no connection
+			logger.error("Error in @cc/data bots.addWin", e);
 			return null;
 		}
 	};

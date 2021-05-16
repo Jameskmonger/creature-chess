@@ -1,4 +1,5 @@
-import { Client as FaunaDBClient, query as q } from "faunadb";
+import { Logger } from "winston";
+import { Client as FaunaDBClient } from "faunadb";
 import { getPlayers } from "./getPlayers";
 
 // todo type these properly
@@ -6,8 +7,8 @@ export type LeaderboardDatabaseFunctions = {
 	getPlayers: () => Promise<{ name: string, wins: number }[] | null>;
 };
 
-export const leaderboardDatabase = (client: FaunaDBClient): LeaderboardDatabaseFunctions => {
+export const leaderboardDatabase = (logger: Logger, client: FaunaDBClient): LeaderboardDatabaseFunctions => {
 	return {
-		getPlayers: getPlayers(client)
+		getPlayers: getPlayers(logger, client)
 	};
 };

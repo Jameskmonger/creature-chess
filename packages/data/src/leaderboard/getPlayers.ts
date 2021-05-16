@@ -1,7 +1,8 @@
+import { Logger } from "winston";
 import { Client as FaunaDBClient, query as q } from "faunadb";
 import { INDEX_NAMES } from "../constants";
 
-export const getPlayers = (client: FaunaDBClient) => {
+export const getPlayers = (logger: Logger, client: FaunaDBClient) => {
 	return async () => {
 		try {
 			const users = await client.query<{ data: [number, string][] }>(
@@ -15,7 +16,7 @@ export const getPlayers = (client: FaunaDBClient) => {
 
 			return users.data.map(([wins, name]) => ({ wins, name }));
 		} catch (e) {
-			// todo check the error here - maybe no connection
+			logger.error("Error in @cc/data leaderboard.getPlayers", e);
 			return null;
 		}
 	};
