@@ -28,6 +28,8 @@ const VictoryOverlay: React.FunctionComponent = () => {
 				<p className="winner"><span className="highlight">{winnerName}</span> wins!</p>
 
 				<div className="discord-link">
+					<p className="spectate"><span className="highlight">new:</span> You can spectate players from the player list</p>
+
 					<p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
 
 					<a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
