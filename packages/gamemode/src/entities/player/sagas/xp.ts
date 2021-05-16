@@ -36,7 +36,7 @@ export const playerXpSaga = function*() {
 			}
 		}
 
-		yield put(updateLevelCommand(level, xp));
+		yield put(updateLevelCommand({ level, xp }));
 
 		if (level !== oldLevel) {
 			const inPreparingPhase: boolean = yield select((state: PlayerState) => state.roundInfo.phase === GamePhase.PREPARING);

@@ -19,7 +19,7 @@ export * as PlayerActions from "./playerActions";
 
 export { getPiece, getAllPieces } from "./player/pieceSelectors";
 export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./player/playerSelectors";
-export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, HasPlayerInfo, PlayerMatchRewards } from "./player/playerInfo";
+export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, PlayerMatchRewards } from "./player/playerInfo";
 
 export { RoundInfoState, roundInfoReducer, RoundInfoCommands } from "./game/roundInfo";
 export * as GameEvents from "./game/events";

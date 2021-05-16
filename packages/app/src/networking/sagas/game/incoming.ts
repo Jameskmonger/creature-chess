@@ -105,7 +105,7 @@ const readPacketsToActions = function*(
 		registry.on(
 			ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE,
 			(packet) => {
-				emit(PlayerInfoCommands.updateLevelCommand(packet.level, packet.xp));
+				emit(PlayerInfoCommands.updateLevelCommand(packet));
 				emit(boardSlice.commands.setPieceLimitCommand(packet.level));
 			}
 		);

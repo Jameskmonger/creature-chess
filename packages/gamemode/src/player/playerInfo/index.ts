@@ -1,3 +1,3 @@
 export * as PlayerInfoCommands from "./commands";
 
-export { playerInfoReducer, PlayerInfoState, HasPlayerInfo, PlayerMatchRewards } from "./reducer";
+export { playerInfoReducer, PlayerInfoState, PlayerMatchRewards } from "./reducer";

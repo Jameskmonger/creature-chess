@@ -1,5 +1,5 @@
-import { CreatureType } from "packages/models/lib";
 import * as React from "react";
+import { CreatureType } from "@creature-chess/models";
 import { Footer } from "../../display/footer";
 import { TypeIndicator } from "./board/piece/components/TypeIndicator";
 

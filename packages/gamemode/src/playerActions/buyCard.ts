@@ -5,7 +5,7 @@ import { select, getContext } from "typed-redux-saga";
 import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
 import { PlayerState } from "../entities/player/state";
-import { getPlayerBelowPieceLimit } from "../player/playerSelectors";
+import { getPlayerBelowPieceLimit, getPlayerCards, getPlayerMoney } from "../player/playerSelectors";
 import { updateMoneyCommand } from "../player/playerInfo/commands";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { getDefinitionById } from "../definitions";
@@ -87,8 +87,8 @@ export const buyCardPlayerActionSaga = function*() {
 		const index = action.payload.index;
 		const sortPositions = action.payload.sortPositions || undefined;
 
-		const cards = yield* select((state: PlayerState) => state.cardShop.cards);
-		const money = yield* select((state: PlayerState) => state.playerInfo.money);
+		const cards = yield* select(getPlayerCards);
+		const money = yield* select(getPlayerMoney);
 
 		const card = cards[index];
 

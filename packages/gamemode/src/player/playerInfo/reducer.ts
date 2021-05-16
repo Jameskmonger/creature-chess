@@ -7,8 +7,6 @@ export interface PlayerStreak {
 	amount: number;
 }
 
-export type HasPlayerInfo = { playerInfo: PlayerInfoState };
-
 export type PlayerMatchRewards = {
 	damage: number;
 	justDied: boolean;
@@ -61,17 +59,17 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 		case "updateStatusCommand":
 			return {
 				...state,
-				status: command.payload.status
+				status: command.payload
 			};
 		case "updateReadyCommand":
 			return {
 				...state,
-				ready: command.payload.ready
+				ready: command.payload
 			};
 		case "updateOpponentCommand":
 			return {
 				...state,
-				opponentId: command.payload.opponentId
+				opponentId: command.payload
 			};
 		case UPDATE_BATTLE_COMMAND:
 			return {
@@ -81,7 +79,7 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 		case "updateHealthCommand":
 			return {
 				...state,
-				health: command.payload.health
+				health: command.payload
 			};
 		case UPDATE_STREAK_COMMAND:
 			return {
@@ -100,7 +98,7 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 		case "updateMoneyCommand":
 			return {
 				...state,
-				money: command.payload.money
+				money: command.payload
 			};
 		default:
 			return state;

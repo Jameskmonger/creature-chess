@@ -5,7 +5,7 @@ import { getBenchSlice, getBoardSlice } from "../../entities/player/selectors";
 import { PlayerEvents } from "../../player";
 import { updateCardsCommand } from "../../entities/player/state/cardShop";
 import { getAllPieces, getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
-import { isPlayerAlive } from "../../player/playerSelectors";
+import { getPlayerCards, isPlayerAlive } from "../../player/playerSelectors";
 import { PlayerState, PlayerCommands } from "../../entities/player";
 import { CardDeck } from "../cardDeck";
 
@@ -34,7 +34,7 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 		takeEvery<PlayerEvents.PlayerDeathEvent>(
 			PlayerEvents.playerDeathEvent.toString(),
 			function*() {
-				const cards = yield* select((s: PlayerState) => s.cardShop.cards);
+				const cards = yield* select(getPlayerCards);
 				const pieces = yield* select(getAllPieces);
 
 				const remainingCards = cards.filter((card): card is Card => card !== null);

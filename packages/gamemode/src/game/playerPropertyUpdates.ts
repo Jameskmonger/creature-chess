@@ -20,8 +20,8 @@ export const listenForPropertyUpdates = (
 
 		if (emitHealth) {
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
-				PlayerInfoCommands.UPDATE_HEALTH_COMMAND,
-				function*({ payload: { health } }) {
+				PlayerInfoCommands.updateHealthCommand.toString(),
+				function*({ payload: health }) {
 					emitHealth(health);
 				}
 			));
@@ -39,7 +39,7 @@ export const listenForPropertyUpdates = (
 		if (emitStatus) {
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateStatusCommand>(
 				PlayerInfoCommands.updateStatusCommand.toString(),
-				function*({ payload: { status } }) {
+				function*({ payload: status }) {
 					emitStatus(status);
 				}
 			));
@@ -57,7 +57,7 @@ export const listenForPropertyUpdates = (
 		if (emitReady) {
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateReadyCommand>(
 				PlayerInfoCommands.updateReadyCommand.toString(),
-				function*({ payload: { ready } }) {
+				function*({ payload: ready }) {
 					emitReady(ready);
 				}
 			));

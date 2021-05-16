@@ -25,7 +25,7 @@ export const readyNotifier = (livingPlayers: PlayerEntity[]) => {
 			yield take<QuitGamePlayerAction>(quitGamePlayerAction.toString());
 
 			const isAlive = yield* select(PlayerSelectors.isPlayerAlive);
-			const isReady = yield* select((state: PlayerState) => state.playerInfo.ready);
+			const isReady = yield* select(PlayerSelectors.isPlayerReady);
 
 			if (isAlive && !isReady) {
 				queue.add(player.id);

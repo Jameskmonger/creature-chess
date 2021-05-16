@@ -1,6 +1,6 @@
-import { GamePhase } from "packages/models/lib";
 import * as React from "react";
 import { useSelector } from "react-redux";
+import { GamePhase } from "@creature-chess/models";
 import { AppState } from "../../store";
 
 const getOpponentName = (state: AppState): string =>

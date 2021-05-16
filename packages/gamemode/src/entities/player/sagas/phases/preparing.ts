@@ -4,7 +4,7 @@ import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../.
 import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../../../player/events";
 import { PlayerInfoCommands } from "../../../../player/playerInfo";
 import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
-import { getPlayerLevel, isPlayerAlive, isPlayerShopLocked } from "../../../../player/playerSelectors";
+import { getPlayerLevel, getPlayerMoney, isPlayerAlive, isPlayerShopLocked } from "../../../../player/playerSelectors";
 import { PlayerState } from "../../state";
 import { getBoardSlice } from "../../selectors";
 import { addXpCommand } from "../xp";
@@ -24,7 +24,7 @@ export const playerPreparingPhase = function*() {
 			const matchRewards = yield* select((state: PlayerState) => state.playerInfo.matchRewards);
 
 			if (matchRewards) {
-				const currentMoney = yield* select((state: PlayerState) => state.playerInfo.money);
+				const currentMoney = yield* select(getPlayerMoney);
 				const totalMatchReward = matchRewards.rewardMoney.total;
 
 				// todo make addMoneyCommand
@@ -40,7 +40,7 @@ export const playerPreparingPhase = function*() {
 
 			if (matchRewards) {
 				yield put(playerMatchRewardsEvent(null));
-				yield put(PlayerInfoCommands.clearOpponentCommand());
+				yield put(PlayerInfoCommands.updateOpponentCommand(null));
 			}
 
 			const level = yield* select(getPlayerLevel);
