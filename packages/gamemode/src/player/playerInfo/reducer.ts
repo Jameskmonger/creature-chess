@@ -1,8 +1,5 @@
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
-import {
-	UPDATE_MONEY_COMMAND, PlayerInfoCommand, UPDATE_OPPONENT_COMMAND, CLEAR_OPPONENT_COMMAND,
-	UPDATE_LEVEL_COMMAND, UPDATE_HEALTH_COMMAND, UPDATE_STREAK_COMMAND, UPDATE_BATTLE_COMMAND
-} from "./commands";
+import { PlayerInfoCommand, UPDATE_STREAK_COMMAND, UPDATE_BATTLE_COMMAND } from "./commands";
 import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../events";
 
 export interface PlayerStreak {
@@ -71,12 +68,17 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 				...state,
 				ready: command.payload.ready
 			};
+		case "updateOpponentCommand":
+			return {
+				...state,
+				opponentId: command.payload.opponentId
+			};
 		case UPDATE_BATTLE_COMMAND:
 			return {
 				...state,
 				battle: command.payload.battle
 			};
-		case UPDATE_HEALTH_COMMAND:
+		case "updateHealthCommand":
 			return {
 				...state,
 				health: command.payload.health
@@ -89,26 +91,16 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 					type: command.payload.type
 				}
 			};
-		case UPDATE_LEVEL_COMMAND:
+		case "updateLevelCommand":
 			return {
 				...state,
 				level: command.payload.level,
 				xp: command.payload.xp
 			};
-		case UPDATE_MONEY_COMMAND:
+		case "updateMoneyCommand":
 			return {
 				...state,
 				money: command.payload.money
-			};
-		case UPDATE_OPPONENT_COMMAND:
-			return {
-				...state,
-				opponentId: command.payload.opponentId
-			};
-		case CLEAR_OPPONENT_COMMAND:
-			return {
-				...state,
-				opponentId: null
 			};
 		default:
 			return state;
