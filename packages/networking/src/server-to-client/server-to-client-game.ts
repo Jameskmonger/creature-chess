@@ -5,18 +5,6 @@ import { EmptyPacket } from "../empty-packet";
 
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];
-
-	// todo check which props we're sending here - no `ready` for example
-	playerInfo: {
-		health: number;
-		opponentId: string | null;
-		shopLocked: boolean;
-		money: number;
-		level: number;
-		xp: number;
-		cards: (Card | null)[];
-	};
-
 	game: RoundInfoState;
 };
 
@@ -74,6 +62,7 @@ export enum PacketOpcodes {
 	BOARD_UPDATE = "boardUpdate",
 	MATCH_BOARD_UPDATE = "matchBoardUpdate",
 	SPECTATING_PLAYER_UPDATE = "spectatingPlayerUpdate",
+	OPPONENT_ID_UPDATE = "opponentIdUpdate",
 	CARDS_UPDATE = "cardsUpdate",
 	PLAYER_LIST_UPDATE = "playerListUpdate",
 	PHASE_UPDATE = "phaseUpdate",
@@ -92,6 +81,7 @@ export type PacketDefinitions = {
 	[PacketOpcodes.BOARD_UPDATE]: BoardUpdatePacket,
 	[PacketOpcodes.MATCH_BOARD_UPDATE]: MatchBoardUpdatePacket,
 	[PacketOpcodes.SPECTATING_PLAYER_UPDATE]: string | null,
+	[PacketOpcodes.OPPONENT_ID_UPDATE]: string | null,
 	[PacketOpcodes.CARDS_UPDATE]: (Card | null)[],
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[],
 	[PacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket,
@@ -110,6 +100,7 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.BOARD_UPDATE]: never,
 	[PacketOpcodes.MATCH_BOARD_UPDATE]: never,
 	[PacketOpcodes.SPECTATING_PLAYER_UPDATE]: never,
+	[PacketOpcodes.OPPONENT_ID_UPDATE]: never,
 	[PacketOpcodes.CARDS_UPDATE]: never,
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: never,
 	[PacketOpcodes.PHASE_UPDATE]: never,

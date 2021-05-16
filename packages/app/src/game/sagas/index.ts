@@ -1,6 +1,6 @@
 import { take, put } from "@redux-saga/core/effects";
 
-import { PlayerInfoCommands, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
+import { RoundInfoCommands } from "@creature-chess/gamemode";
 import { BoardSlice } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
@@ -29,11 +29,7 @@ export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, 
 				const { payload: {
 					players,
 					game: { phase, phaseStartedAtSeconds },
-					playerInfo: { money, cards, level, xp }
 				} } = action as GameConnectedEvent;
-				yield put(PlayerInfoCommands.updateMoneyCommand(money));
-				yield put(PlayerCommands.updateCardsCommand(cards));
-				yield put(PlayerInfoCommands.updateLevelCommand(level, xp));
 				yield put(PlayerListCommands.updatePlayerListCommand(players));
 
 				const update = { phase, startedAt: phaseStartedAtSeconds };

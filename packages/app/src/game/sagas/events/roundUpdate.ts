@@ -19,10 +19,7 @@ export const roundUpdateSaga = function*({ boardSlice }: { benchSlice: BoardSlic
 					return;
 				}
 				case GamePhase.READY: {
-					const { opponentId } = packet.payload;
-
 					yield put(boardSlice.commands.lockBoardCommand());
-					yield put(PlayerInfoCommands.updateOpponentCommand(opponentId));
 					return;
 				}
 				default:
