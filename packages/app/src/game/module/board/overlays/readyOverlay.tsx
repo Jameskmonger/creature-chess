@@ -1,5 +1,5 @@
 import { usePlayerId } from "packages/app/src/auth";
-import { GamePhase, PlayerListPlayer } from "packages/models/lib";
+import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { ProgressBar } from "../../../../display";
