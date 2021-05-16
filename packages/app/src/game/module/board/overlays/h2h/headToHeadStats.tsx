@@ -3,10 +3,6 @@ import { useSelector } from "react-redux";
 import { PlayerListPlayer, StreakType } from "packages/models/lib";
 import { AppState } from "../../../../../store";
 
-const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): number => {
-	return playerList.indexOf(player) + 1;
-};
-
 const getPositionModifier = (position: number): string => {
 	if (position === 1) {
 		return "st";
@@ -20,17 +16,26 @@ const getPositionModifier = (position: number): string => {
 	return "th";
 };
 
-const getStreakType = (player: PlayerListPlayer): string => {
+const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): string => {
+	const position = playerList.indexOf(player) + 1;
+	return `${position}${getPositionModifier(position)}`;
+};
+
+const getStreak = (player: PlayerListPlayer): string => {
 	const streakType = player?.streakType;
 	const streakAmount = player?.streakAmount;
+	let streakModifier: string;
 
 	if (!player || streakAmount === 0) {
 		return "";
 	}
 	if (streakType === StreakType.WIN) {
-		return streakAmount === 1 ? "Win" : "Wins";
+		streakModifier = streakAmount === 1 ? "Win" : "Wins";
 	}
-	return streakAmount === 1 ? "Loss" : "Losses";
+	if (streakType === StreakType.LOSS) {
+		streakModifier = streakAmount === 1 ? "Loss" : "Losses";
+	}
+	return `${streakAmount} ${streakModifier}`;
 };
 
 const HeadToHeadStats = ({ player, opponent }) => {
@@ -38,20 +43,19 @@ const HeadToHeadStats = ({ player, opponent }) => {
 	const playerList = useSelector((state: AppState) => {
 		return state.game.playerList;
 	});
-	const playerPosition = getPosition(player, playerList);
-	const opponentPosition = getPosition(opponent, playerList);
+
 	return (
 		<div className="head-to-head-stats">
 			<div className="h2h-stat-div">
 				<p className="h2h-info-header">Position</p>
 				<div className="h2h-position">
-					<p className="h2h-info-text">{playerPosition}{getPositionModifier(playerPosition)} vs {opponentPosition}{getPositionModifier(opponentPosition)}</p>
+					<p className="h2h-info-text">{getPosition(player, playerList)} vs {getPosition(opponent, playerList)}</p>
 				</div>
 			</div>
 			<div className="h2h-stat-div">
 				<p className="h2h-info-header">Streak</p>
 				<div className="h2h-streak">
-					<p className="h2h-info-text">{player.streakAmount} {getStreakType(player)} vs {opponent.streakAmount} {getStreakType(opponent)}</p>
+					<p className="h2h-info-text">{getStreak(player)} vs {getStreak(opponent)}</p>
 				</div>
 			</div>
 			<div className="h2h-stat-div">
