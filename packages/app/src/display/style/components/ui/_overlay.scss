@@ -111,6 +111,7 @@
 }
 
 .ready-overlay-content {
+
     .h2h {
         margin-bottom: 0.5em;
         font-size: 1.4em;
@@ -121,6 +122,56 @@
             color: #ff6464;
         }
     }
+}
+
+.h2h-header {
+	text-align: center;
+	font-size: 1.2em;
+	margin-bottom: 0.3em;
+}
+
+.inner-profile-box {
+	display: flex;
+	flex-direction: row;
+}
+
+.name-and-health {
+	font-family: Arial, sans-serif;
+	text-transform: capitalize;
+	display: flex;
+	flex-direction: column;
+	&.right {
+		justify-content: right;
+		align-items: right;
+	}
+}
+
+.player-name {
+	font-family: Arial, sans-serif;
+	text-transform: uppercase;
+	font-weight: 550;
+	&.right {
+		text-align: right;
+	}
+}
+
+.buffer {
+	width: 1em;
+	height: 0.6em;
+}
+
+.h2h-stat-div {
+	text-align: center;
+	margin-bottom: 0.6em;
+}
+
+.h2h-info-header {
+	font-size: 0.7em;
+	margin-bottom: 0.2em;
+}
+
+.h2h-info-text {
+	font-size: 1.1em;
 }
 
 .victory-overlay {

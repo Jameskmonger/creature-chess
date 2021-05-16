@@ -1,82 +1,83 @@
 import { usePlayerId } from "packages/app/src/auth";
-import { GamePhase, PlayerListPlayer, StreakType } from "packages/models/lib";
+import { GamePhase, PlayerListPlayer } from "packages/models/lib";
 import * as React from "react";
 import { useSelector } from "react-redux";
+import { ProgressBar } from "../../../../display";
 import { AppState } from "../../../../store";
+import { PlayerPicture } from "../../playerList/components/playerPicture";
+import { PlayerTitle } from "../../playerList/components/playerTitle";
 import { BoardOverlay } from "./boardOverlay";
-
-const getStreakType = (player: PlayerListPlayer): string => {
-	const streakType = player?.streakType;
-	const streakAmount = player?.streakAmount;
-
-	if (!player || streakAmount === 0) {
-		return "";
-	}
-	if (streakType === StreakType.WIN) {
-		return streakAmount === 1 ? "Win" : "Wins";
-	}
-	return streakAmount === 1 ? "Loss" : "Losses";
-};
-
-const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): number => {
-	return playerList.indexOf(player) + 1;
-};
-
-const getPositionModifier = (position: number): string => {
-	if (position === 1) {
-		return "st";
-	}
-	if (position === 2) {
-		return "nd";
-	}
-	if (position === 3) {
-		return "rd";
-	}
-	return "th";
-};
+import { HeadToHeadStats } from "./h2h/headToHeadStats"
 
 const ReadyOverlay: React.FunctionComponent = () => {
-	const inReadyPhase = useSelector<AppState, boolean>(state =>
+
+	const inReadyPhase = useSelector<AppState, Boolean>(state =>
 		state.game.roundInfo.phase === GamePhase.READY
-	);
+	)
 
 	const playerList = useSelector((state: AppState) => {
-		return state.game.playerList;
-	});
+		return state.game.playerList
+	})
 
-	const localId = usePlayerId();
-	const playerInfo = playerList.find(p => p.id === localId);
+	const localId = usePlayerId()
+	const playerInfo = playerList.find(p => p.id === localId)
 
 	const opponentInfo: PlayerListPlayer = useSelector((state: AppState) => {
-		const id = state.game.playerInfo.opponentId;
-		return state.game.playerList.find(p => p.id === id);
-	});
+		const id = state.game.playerInfo.opponentId
+		return state.game.playerList.find(p => p.id === id)
+	})
+
 	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
-	if (spectatingPlayer || !opponentInfo || !inReadyPhase) {
-		return null;
+	if (!opponentInfo || !inReadyPhase || spectatingPlayer) {
+		return null
 	}
+	const renderHealthbar = (current: number) => current.toString();
 
-	const playerPosition = getPosition(playerInfo, playerList);
-	const opponentPosition = getPosition(opponentInfo, playerList);
+	const returnTitleOrBuffer = (player) => {
+		if (player.profile.title !== null) {
+			return <PlayerTitle playerId={player.id} />
+		}
+		return <div className="buffer" />
+	}
 
 	return (
 		<BoardOverlay>
 			<div className="ready-overlay-content">
-				<h3>Now Playing {opponentInfo.name}</h3>
-				<ul className="h2h">
-					<li>Health: <span className="highlight">{playerInfo.health} </span>
-						vs. <span className="opponent">{opponentInfo.health}</span></li>
-					<li>Level: <span className="highlight">{playerInfo.level} </span>
-						vs. <span className="opponent">{opponentInfo.level}</span></li>
-					<li>Streak: <span className="highlight">{playerInfo.streakAmount} {getStreakType(playerInfo)} </span>
-						vs. <span className="opponent">{opponentInfo.streakAmount} {getStreakType(opponentInfo)}</span></li>
-					<li>Position: <span className="highlight">{playerPosition}{getPositionModifier(playerPosition)} </span>
-						vs. <span className="opponent">{opponentPosition}{getPositionModifier(opponentPosition)}</span></li>
-				</ul>
+				<p className="h2h-header">Now Playing:</p>
+				<div className="outer-profile-box">
+					<div className="inner-profile-box">
+						<div className="player-picture">
+							<PlayerPicture playerId={playerInfo.id} />
+						</div>
+						<div className="name-and-health">
+							<p className="player-name">{playerInfo.name}</p>
+							{returnTitleOrBuffer(playerInfo)}
+							<ProgressBar
+								className="healthbar player-health h2h"
+								current={playerInfo.health}
+								max={100}
+								renderContents={renderHealthbar} />
+						</div>
+						<div className="buffer" />
+						<div className="name-and-health right">
+							<p className="player-name right">{opponentInfo.name}</p>
+							{returnTitleOrBuffer(opponentInfo)}
+							<ProgressBar
+								className="healthbar player-health h2h"
+								current={opponentInfo.health}
+								max={100}
+								renderContents={renderHealthbar} />
+						</div>
+						<div className="player-picture">
+							<PlayerPicture playerId={opponentInfo.id} />
+						</div>
+					</div>
+				</div>
+				<HeadToHeadStats player={playerInfo} opponent={opponentInfo} />
 			</div>
 		</BoardOverlay>
-	);
-};
+	)
+}
 
-export { ReadyOverlay };
+export { ReadyOverlay }
