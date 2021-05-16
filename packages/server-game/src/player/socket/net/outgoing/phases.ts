@@ -10,14 +10,11 @@ import { getPacketRegistries } from "../registries";
 const preparingPhase = function*(phase: GamePhase, startedAt: number, round: number) {
 	const { outgoing: registry } = yield* getPacketRegistries();
 
-	const cards = yield* select((state: PlayerState) => state.cardShop.cards);
-
 	const packet: ServerToClient.Game.PhaseUpdatePacket = {
 		startedAtSeconds: startedAt,
 		phase: GamePhase.PREPARING,
 		payload: {
-			round: round!,
-			cards
+			round: round!
 		}
 	};
 

@@ -25,7 +25,6 @@ export type PreparingPhaseUpdatePacket = {
 	phase: GamePhase.PREPARING,
 	payload: {
 		round: number;
-		cards: (Card | null)[];
 	}
 };
 
