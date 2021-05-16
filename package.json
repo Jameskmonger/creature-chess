@@ -10,7 +10,6 @@
 		"release": "lerna version --conventional-commits",
 		"build:create-bin": "sh ./scripts/createBin.sh",
 		"build": "lerna run build --stream",
-		"build:for-server": "lerna run build --ignore=\"@creature-chess/@(app|server-info|models)\"",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",
 		"dev:app": "lerna run dev --scope=@creature-chess/app --stream",
 		"lint": "lerna run lint"
