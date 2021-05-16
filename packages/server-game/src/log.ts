@@ -17,7 +17,8 @@ const createWinstonLogger = (logStreamName: string) => {
 		logStreamName,
 		awsRegion: "eu-west-1",
 		awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
-		awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY
+		awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
+		messageFormatter: ({ level, message, meta }) => `[${level.toUpperCase()}] ${message} (meta: ${JSON.stringify(meta)})`
 	}));
 
 	newLogger.info("Sending Winston logs to Cloudwatch");
