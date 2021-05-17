@@ -11,6 +11,7 @@ https://github.com/typescript-eslint/tslint-to-eslint-config/blob/master/docs/FA
 
 Happy linting! 💖
 */
+
 module.exports = {
 	"env": {
 		"browser": true,
@@ -18,16 +19,14 @@ module.exports = {
 	},
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"sourceType": "module",
-		"project": "tsconfig.json"
+		"sourceType": "module"
 	},
 	"plugins": [
 		"eslint-plugin-jsdoc",
 		"eslint-plugin-prefer-arrow",
 		"eslint-plugin-import",
 		"eslint-plugin-react",
-		"@typescript-eslint",
-		"@typescript-eslint/tslint"
+		"@typescript-eslint"
 	],
 	"rules": {
 		"@typescript-eslint/adjacent-overload-signatures": "error",
@@ -59,13 +58,13 @@ module.exports = {
 					"Symbol": {
 						"message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
 					},
-					"{}": false
+					"{}": false,
+					"object": false
 				}
 			}
 		],
 		"@typescript-eslint/consistent-type-assertions": "error",
 		"@typescript-eslint/consistent-type-definitions": "off",
-		"@typescript-eslint/dot-notation": "error",
 		"@typescript-eslint/explicit-member-accessibility": [
 			"error",
 			{
@@ -347,26 +346,5 @@ module.exports = {
 		],
 		"use-isnan": "error",
 		"valid-typeof": "off",
-		"@typescript-eslint/tslint/config": [
-			"error",
-			{
-				"rules": {
-					"import-own-index": true,
-					"import-spacing": true,
-					"jsx-alignment": true,
-					"jsx-no-string-ref": true,
-					"react-hooks-nesting": true,
-					"whitespace": [
-						true,
-						"check-branch",
-						"check-decl",
-						"check-operator",
-						"check-separator",
-						"check-type",
-						"check-typecast"
-					]
-				}
-			}
-		]
 	}
 };
