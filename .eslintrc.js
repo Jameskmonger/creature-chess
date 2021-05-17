@@ -104,10 +104,15 @@ module.exports = {
 				"selector": "default",
 				"format": ["camelCase"]
 			},
+			{
+				"selector": "objectLiteralProperty",
+				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
+			},
 
 			{
 				"selector": "variable",
-				"format": ["camelCase", "UPPER_CASE"]
+				"format": ["camelCase", "UPPER_CASE", "PascalCase"],
+				"leadingUnderscore": "allow"
 			},
 			{
 				"selector": "parameter",
@@ -128,8 +133,23 @@ module.exports = {
 
 			{
 				"selector": "enum",
-				"format": ["camelCase", "UPPER_CASE"]
+				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
 
+			},
+			{
+				"selector": "enumMember",
+				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
+
+			},
+
+			{
+				"selector": "classProperty",
+				"format": ["camelCase", "UPPER_CASE"]
+			},
+
+			{
+				"selector": "typeAlias",
+				"format": ["PascalCase", "UPPER_CASE"]
 			}
 		],
 		"@typescript-eslint/no-empty-function": "error",
