@@ -7,7 +7,7 @@ export const GRID_SIZE = {
 
 export const PHASE_LENGTHS = {
 	[GamePhase.PREPARING]: 30,
-	[GamePhase.READY]: 15,
+	[GamePhase.READY]: 5,
 	[GamePhase.PLAYING]: 30
 };
 export const REROLL_COST = 2;
@@ -15,7 +15,7 @@ export const STARTING_MONEY = 3;
 export const STARTING_LEVEL = 1;
 export const STARTING_HEALTH = 100;
 export const MAX_PLAYER_LEVEL = 10;
-export const HEALTH_LOST_PER_PIECE = 33;
+export const HEALTH_LOST_PER_PIECE = 3;
 
 export const BUY_XP_COST = 5;
 export const BUY_XP_AMOUNT = 4;
@@ -28,7 +28,7 @@ export const DAMAGE_RATIO = 7;
 export const MAX_NAME_LENGTH = 16;
 
 export const MAX_PLAYERS_IN_GAME = 8;
-export const LOBBY_WAIT_TIME = 5;
+export const LOBBY_WAIT_TIME = 90;
 
 export const AVAILABLE_PROFILE_PICTURES = {
 	1: "Budaye",
