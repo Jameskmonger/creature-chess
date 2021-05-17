@@ -1,10 +1,9 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
-import { PlayerListPlayer, GamePhase, PlayerStatus } from "@creature-chess/models";
-import { getPlayerMoney, getPlayerLevel } from "@creature-chess/gamemode";
+import { useDispatch, useSelector } from "react-redux";
+import { PlayerListPlayer, GamePhase, PlayerStatus, PlayerBattle } from "@creature-chess/models";
+import { getPlayerMoney, getPlayerLevel, PlayerActions } from "@creature-chess/gamemode";
+import { StatusPlayerListItem, PlayerListItem } from "@creature-chess/ui";
 import { AppState } from "../../../../store";
-import { PlayerListItem } from "./items/playerListItem";
-import { StatusPlayerListItem } from "./items/statusPlayerListItem";
 import { usePlayerId } from "../../../../auth";
 
 // todo move this
@@ -23,7 +22,16 @@ function ordinal_suffix_of(i: number) {
 	return i + "th";
 }
 
+const getOpponentName = (battle: PlayerBattle, players: PlayerListPlayer[]) => {
+	if (!battle) {
+		return "";
+	}
+
+	return players.find(p => p.id === battle.opponentId)?.name || "";
+};
+
 const PlayerList: React.FunctionComponent = () => {
+	const dispatch = useDispatch();
 	const localPlayerId = usePlayerId();
 	const players = useSelector<AppState, PlayerListPlayer[]>(state => state.game.playerList);
 	const opponentId = useSelector<AppState, string>(state => state.game.playerInfo.opponentId);
@@ -32,28 +40,60 @@ const PlayerList: React.FunctionComponent = () => {
 	const localPlayerMoney = useSelector<AppState, number>(state => getPlayerMoney(state.game));
 	const localPlayerLevel = useSelector<AppState, number>(state => getPlayerLevel(state.game));
 
+	const currentlySpectatingId = useSelector<AppState, string | null>(state => state.game.spectating.id);
+
 	return (
 		<div className="player-list">
 			{
 				players.map((p, index) => {
+					const opponentName = getOpponentName(p.battle, players);
+
 					if (p.status === PlayerStatus.QUIT) {
-						return <StatusPlayerListItem key={p.id} playerId={p.id} status="Quit" />;
+						return (
+							<StatusPlayerListItem
+								key={p.id}
+								name={p.name}
+								opponentName={opponentName}
+								battle={p.battle}
+								status="Quit"
+							/>
+						);
 					}
 
 					if (p.status === PlayerStatus.DEAD) {
-						return <StatusPlayerListItem key={p.id} playerId={p.id} status="Dead" subtitle={`${ordinal_suffix_of(index + 1)} place`} />;
+						return (
+							<StatusPlayerListItem
+								key={p.id}
+								name={p.name}
+								opponentName={opponentName}
+								battle={p.battle}
+								status="Dead"
+								subtitle={`${ordinal_suffix_of(index + 1)} place`}
+							/>
+						);
 					}
+
+					const currentlySpectating = currentlySpectatingId === p.id
+
+					const onSpectateClick = () => {
+						dispatch(PlayerActions.spectatePlayerAction(
+							currentlySpectating
+								? { playerId: null }
+								: { playerId: p.id }
+						));
+					};
 
 					return (
 						<PlayerListItem
 							key={p.id}
-							playerId={p.id}
 							index={index}
-							isLocal={p.id === localPlayerId}
+							player={p}
 							isOpponent={p.id === opponentId}
+							isLocal={p.id === localPlayerId}
+							onSpectateClick={onSpectateClick}
+							opponentName={opponentName}
+							currentlySpectating={currentlySpectating}
 							showReadyIndicator={showReadyIndicators}
-							money={p.id === localPlayerId ? localPlayerMoney : p.money}
-							level={p.id === localPlayerId ? localPlayerLevel : p.level}
 						/>
 					);
 				})

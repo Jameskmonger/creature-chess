@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "../store";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME, TITLES } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
+import { Title } from "@creature-chess/ui";
 import { Countdown } from "../display/countdown";
 import { Footer } from "../display/footer";
 
@@ -64,7 +65,7 @@ const LobbyPage: React.FunctionComponent = () => {
 						players.map(p => (
 							<div key={p.id} className="player">
 								<span className="name">{p.name}</span>
-								{p.profile?.title && <span className={`player-profile-title ${TITLES[p.profile.title].className}`}>{TITLES[p.profile.title].text}</span>}
+								<Title titleId={p.profile?.title} />
 							</div>
 						))
 					}

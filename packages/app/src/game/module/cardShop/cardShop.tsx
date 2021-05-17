@@ -2,12 +2,12 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card as CardModel } from "@creature-chess/models";
 import { getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
-import { Card } from "./components/card";
+import { CreatureImage } from "@creature-chess/ui";
 import { AppState } from "../../../store";
+import { Card } from "./components/card";
 import { RerollButton } from "./components/rerollButton";
 import { BalanceDisplay } from "./components/balanceDisplay";
 import { ToggleLockButton } from "./components/toggleLockButton";
-import { CreatureImage } from "../../../display";
 
 interface CardShopProps {
 	showBalance: boolean;

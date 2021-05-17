@@ -1,37 +1,29 @@
+.healthbar-fill-vertical {
+	position: absolute;
+	bottom: 0;
+}
+
+.healthbar-fill-friendly {
+	background: $friendly-healthbar-color;
+}
+
+.healthbar-fill-enemy {
+	background: $enemy-healthbar-color;
+}
+
+.healthbar-fill-spectating {
+	background: $spectating-healthbar-color;
+}
+
 .healthbar {
-    width: 101%;
-    height: 100%;
-    box-sizing: border-box;
-    margin: 0 auto;
-    background: $healthbar-background;
+	margin: 0 auto;
+	background: $healthbar-background;
+}
 
-    &.vertical {
-        position: relative;
-        border-top: 1px solid #555;
-        border-right: 1px solid $healthbar-background;
-        border-bottom: 1px solid #555;
-        border-left: 1px solid $healthbar-background;
-
-        .fill {
-            position: absolute;
-            bottom: 0;
-        }
-    }
-
-    .fill {
-        width: 100%;
-        height: 100%;
-    }
-
-    &.friendly .fill {
-        background: $friendly-healthbar-color;
-    }
-
-    &.enemy .fill {
-        background: $enemy-healthbar-color;
-    }
-
-    &.spectating .fill {
-        background: $spectating-healthbar-color;
-    }
+.healthbar-vertical {
+	position: relative;
+	border-top: 1px solid #555;
+	border-right: 1px solid $healthbar-background;
+	border-bottom: 1px solid #555;
+	border-left: 1px solid $healthbar-background;
 }

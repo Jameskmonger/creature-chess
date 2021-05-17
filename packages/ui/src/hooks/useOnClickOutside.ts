@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import * as React from "react";
 
-const useOnClickOutside = (ref: React.MutableRefObject<any>, handler) => {
-	useEffect(
+const useOnClickOutside = (ref: React.MutableRefObject<any>, handler: any) => {
+	React.useEffect(
 		() => {
 			const listener = (event: MouseEvent | TouchEvent) => {
 				// Do nothing if clicking ref's element or descendent elements
@@ -26,4 +26,5 @@ const useOnClickOutside = (ref: React.MutableRefObject<any>, handler) => {
 		[ref, handler]
 	);
 };
+
 export { useOnClickOutside };

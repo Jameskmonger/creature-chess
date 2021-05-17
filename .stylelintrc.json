@@ -1,27 +1,35 @@
 {
-    "extends": "neworbit-stylelint-config",
-    "rules": {
-        "plugin/no-unsupported-browser-features": [
-            true,
-            {
-                "browsers": [
-                    "last 1 chrome version",
-                    "last 1 firefox version"
-                ]
-            }
-        ],
-        "unit-disallowed-list": [
-            [ "px" ],
-            {
-                "ignoreProperties": {
-
-                    "px": [ "/^border(-(top|bottom|left|right))?(-width)?$/", "box-shadow" ]
-                },
-                "ignoreMediaFeatureNames": {
-
-                    "px": [ "min-width", "max-width" ]
-                }
-            }
-        ]
-    }
+	"extends": "neworbit-stylelint-config",
+	"ignoreFiles": "packages/ui/*",
+	"rules": {
+		"indentation": "tab",
+		"plugin/no-unsupported-browser-features": [
+			true,
+			{
+				"browsers": [
+					"last 1 chrome version",
+					"last 1 firefox version"
+				]
+			}
+		],
+		"unit-disallowed-list": [
+			[
+				"px"
+			],
+			{
+				"ignoreProperties": {
+					"px": [
+						"/^border(-(top|bottom|left|right))?(-width)?$/",
+						"box-shadow"
+					]
+				},
+				"ignoreMediaFeatureNames": {
+					"px": [
+						"min-width",
+						"max-width"
+					]
+				}
+			}
+		]
+	}
 }

@@ -1,0 +1,16 @@
+.progressbar-story {
+	width: 200px;
+	height: 40px;
+}
+
+.progressbar-story .healthbar {
+	background: #636363;
+}
+
+.progressbar-story .fill {
+	background: #00c2f9;
+}
+
+.progressbar-story .contents {
+	color: #fff;
+}

@@ -5,7 +5,7 @@ export enum PlayerTitle {
 }
 
 export const TITLES = {
-	[PlayerTitle.Developer]: { className: "developer-001", text: "Developer" },
-	[PlayerTitle.Contributor]: { className: "contributor-001", text: "Contributor" },
-	[PlayerTitle.HallOfFame]: { className: "hall-of-fame-001", text: "Hall of Fame" },
+	[PlayerTitle.Developer]: { text: "Developer" },
+	[PlayerTitle.Contributor]: { text: "Contributor" },
+	[PlayerTitle.HallOfFame]: { text: "Hall of Fame" },
 };

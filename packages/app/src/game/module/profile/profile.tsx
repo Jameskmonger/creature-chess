@@ -1,12 +1,12 @@
 import * as React from "react";
-import { ProgressBar } from "../../../display/progressBar";
 import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "../../../store";
+import { ProgressBar, PlayerHealthbar } from "@creature-chess/ui";
 import { Constants, getXpToNextLevel } from "@creature-chess/models";
-import { PieceCount } from "./pieceCount";
 import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
 import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
+import { AppState } from "../../../store";
 import { usePlayerId } from "../../../auth";
+import { PieceCount } from "./pieceCount";
 
 const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
 
@@ -40,6 +40,8 @@ const Profile: React.FunctionComponent = () => {
 					&& (
 						<ProgressBar
 							className="xp-progress"
+							fillClassName="xp-progress-fill"
+							contentClassName="xp-progress-content"
 							current={xp}
 							max={getXpToNextLevel(level)}
 							renderContents={renderProgressBar}
@@ -63,12 +65,7 @@ const Profile: React.FunctionComponent = () => {
 				}
 			</div>
 
-			<ProgressBar
-				className="healthbar player-health"
-				current={health}
-				max={100}
-				renderContents={renderProgressBar}
-			/>
+			<PlayerHealthbar health={health} />
 		</div>
 	);
 };

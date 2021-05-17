@@ -1,11 +1,9 @@
-import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import * as React from "react";
 import { useSelector } from "react-redux";
+import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
+import { Avatar, Title, PlayerHealthbar } from "@creature-chess/ui";
 import { usePlayerId } from "../../../../auth";
-import { ProgressBar } from "../../../../display";
 import { AppState } from "../../../../store";
-import { PlayerPicture } from "../../playerList/components/playerPicture";
-import { PlayerTitle } from "../../playerList/components/playerTitle";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
 
@@ -15,9 +13,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		state.game.roundInfo.phase === GamePhase.READY
 	);
 
-	const playerList = useSelector((state: AppState) => {
-		return state.game.playerList;
-	});
+	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	const localId = usePlayerId();
 	const localPlayer = playerList.find(p => p.id === localId);
@@ -36,7 +32,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 
 	const returnTitleOrSpacer = (player) => {
 		if (player.profile.title !== null) {
-			return <PlayerTitle playerId={player.id} />;
+			return <Title titleId={player.profile.title} />;
 		}
 		return <div className="spacer" />;
 	};
@@ -48,18 +44,13 @@ const ReadyOverlay: React.FunctionComponent = () => {
 				<div className="outer-profile-box">
 					<div className="inner-profile-box">
 						<div className="player-picture">
-							<PlayerPicture playerId={localPlayer.id} />
+							<Avatar player={localPlayer} />
 						</div>
 						<div className="name-and-health">
 							<p className="player-name">{localPlayer.name}</p>
 							{returnTitleOrSpacer(localPlayer)}
 							<div className="healthbar-container">
-								<ProgressBar
-									className="healthbar player-health"
-									current={localPlayer.health}
-									max={100}
-									renderContents={renderHealthbar}
-								/>
+								<PlayerHealthbar health={localPlayer.health} />
 							</div>
 						</div>
 						<div className="spacer" />
@@ -67,16 +58,11 @@ const ReadyOverlay: React.FunctionComponent = () => {
 							<p className="player-name right">{opponent.name}</p>
 							{returnTitleOrSpacer(opponent)}
 							<div className="healthbar-container">
-								<ProgressBar
-									className="healthbar player-health"
-									current={opponent.health}
-									max={100}
-									renderContents={renderHealthbar}
-								/>
+								<PlayerHealthbar health={opponent.health} />
 							</div>
 						</div>
 						<div className="player-picture">
-							<PlayerPicture playerId={opponent.id} />
+							<Avatar player={opponent} />
 						</div>
 					</div>
 				</div>

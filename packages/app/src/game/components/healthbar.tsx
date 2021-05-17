@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
+import { ProgressBar } from "@creature-chess/ui";
 import { BoardSelectors } from "@shoki/board";
 import { AppState } from "../../store";
-import { ProgressBar } from "../../display";
 import { usePlayerId } from "../../auth";
 
 interface HealthbarProps {
@@ -14,14 +15,14 @@ interface HealthbarProps {
 
 const getColourName = (friendly: boolean, spectating: boolean) => {
 	if (friendly) {
-		return "friendly";
+		return "healthbar-fill-friendly";
 	}
 
 	if (spectating) {
-		return "spectating";
+		return "healthbar-fill-spectating";
 	}
 
-	return "enemy";
+	return "healthbar-fill-enemy";
 };
 
 const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical = false }) => {
@@ -52,9 +53,20 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = ({ pieceId, vertical 
 	const friendly = localPlayerId === ownerId;
 	const spectating = spectatingPlayerId === ownerId;
 
+	const className = classNames(
+		"healthbar",
+		vertical ? "healthbar-vertical" : ""
+	)
+
+	const fillClass = classNames(
+		vertical ? "healthbar-fill-vertical" : "",
+		getColourName(friendly, spectating)
+	);
+
 	return (
 		<ProgressBar
-			className={`healthbar ${getColourName(friendly, spectating)} ${vertical ? "vertical" : ""}`}
+			className={className}
+			fillClassName={fillClass}
 			current={currentHealth}
 			max={maxHealth}
 			vertical={vertical}

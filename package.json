@@ -13,6 +13,7 @@
 		"build": "lerna run build --stream",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",
 		"dev:app": "lerna run dev --scope=@creature-chess/app --stream",
+		"storybook": "lerna run storybook --scope=@creature-chess/ui --stream",
 		"lint": "eslint -c .eslintrc.js --ext .ts ./packages",
 		"lint:fix": "npm run lint -- --fix"
 	},

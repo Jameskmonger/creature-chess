@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../store";
-import { CreatureImage } from "../../../display/creatureImage";
+import { CreatureImage } from "@creature-chess/ui";
 import { BoardSelectors } from "@shoki/board";
 
 interface PieceImageProps {
