@@ -11,6 +11,7 @@
 		"build:create-bin:shoki": "sh ./scripts/createBin-shoki.sh",
 		"build:create-bin:server": "sh ./scripts/createBin-server.sh",
 		"build": "lerna run build --stream",
+		"build:storybook": "lerna run build-storybook --scope=@creature-chess/ui",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",
 		"dev:app": "lerna run dev --scope=@creature-chess/app --stream",
 		"storybook": "lerna run storybook --scope=@creature-chess/ui --stream",

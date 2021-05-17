@@ -1,0 +1,53 @@
+name: Deploy Storybook
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false # needed for the GitHub Pages deploy to work
+    - name: Use Node.js '10.x'
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - name: Delete app package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: /packages/app
+    - name: Delete gamemode package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: /packages/gamemode
+    - name: Delete server-game package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: /packages/server-game
+    - name: Delete server-info package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: /packages/server-info
+    - name: Delete shoki-engine package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: /packages/shoki-engine
+    - name: Install dependencies
+      run: npm install && npm run bootstrap
+    - name: Build application
+      run: npm run build
+    - name: Build Storybook
+      run: npm run build:storybook
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.4.1
+      with:
+        ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: packages/ui/docs
+        TARGET_FOLDER: storybook
