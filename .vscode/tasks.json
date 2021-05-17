@@ -7,8 +7,8 @@
 			"problemMatcher": [
 				"$eslint-stylish"
 			],
-			"label": "npm: lint",
-			"detail": "eslint -c .eslintrc.js --ext .ts ./packages --fix"
+			"label": "npm run lint",
+			"detail": "npm run lint"
 		}
 	]
 }
