@@ -24,7 +24,7 @@ export const { reducer, actions: LobbyCommands } = createSlice({
 			players: action.payload.players,
 			startingAtMs: action.payload.startTimestamp
 		}),
-		updateLobbyPlayerCommand: (state: LobbyState, action: PayloadAction<{ index: number, player: LobbyPlayer }>) => {
+		updateLobbyPlayerCommand: (state: LobbyState, action: PayloadAction<{ index: number; player: LobbyPlayer }>) => {
 			const cloned = {
 				...state,
 				players: [

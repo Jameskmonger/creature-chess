@@ -1,13 +1,11 @@
-export type TileCoordinates = { x: number, y: number };
+export type TileCoordinates = { x: number; y: number };
 export type SlotLocation = { slot: number };
 
 export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
-export const getDelta = (a: TileCoordinates, b: TileCoordinates) => {
-	return {
-		x: Math.abs(a.x - b.x),
-		y: Math.abs(a.y - b.y)
-	};
-};
+export const getDelta = (a: TileCoordinates, b: TileCoordinates) => ({
+	x: Math.abs(a.x - b.x),
+	y: Math.abs(a.y - b.y)
+});
 export const getDistance = (a: TileCoordinates, b: TileCoordinates) => {
 	const { x, y } = getDelta(a, b);
 
@@ -23,6 +21,7 @@ export const Directions = {
 
 /**
  * Returns the relative direction of position b from the perspective of position a
+ *
  * @param from The position to find the direction relative from
  * @param to The position to find the direction relative to
  */

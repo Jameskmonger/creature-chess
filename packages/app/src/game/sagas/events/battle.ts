@@ -6,7 +6,7 @@ import { gameRoundUpdateEvent, GameRoundUpdateEvent } from "./roundUpdate";
 import { AppState } from "../../../store";
 import { setMatchBoard } from "../../module/match";
 
-export const clientBattleSaga = function*(slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
+export const clientBattleSaga = function*(slices: { benchSlice: BoardSlice; boardSlice: BoardSlice }) {
 	yield fork(
 		battleSagaFactory<AppState>((state: AppState) => state.game.match?.board) as any,
 		defaultGameOptions, slices.boardSlice

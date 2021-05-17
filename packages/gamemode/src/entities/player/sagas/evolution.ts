@@ -22,8 +22,8 @@ export const evolutionSaga = function*() {
 	const { boardSlices: { boardSlice, benchSlice } } = yield* getPlayerEntityDependencies();
 
 	yield takeLatest<
-		ReturnType<typeof boardSlice.commands.addBoardPieceCommand>
-		| ReturnType<typeof benchSlice.commands.addBoardPieceCommand>
+	ReturnType<typeof boardSlice.commands.addBoardPieceCommand>
+	| ReturnType<typeof benchSlice.commands.addBoardPieceCommand>
 	>(
 		// need to check when bench/board pieces are added (could have come from shop)
 		// or when board piece is updated (could be due to a previous evolution)

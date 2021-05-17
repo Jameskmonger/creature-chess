@@ -16,7 +16,7 @@ export type PlayerBattle = {
 	status: PlayerBattleStatus.IN_PROGRESS;
 	opponentId: string;
 } | {
-	status: PlayerBattleStatus.FINISHED,
+	status: PlayerBattleStatus.FINISHED;
 	opponentId: string;
 	homeScore: number;
 	awayScore: number;

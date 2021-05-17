@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-function useOnClickOutside(ref: React.MutableRefObject<any>, handler) {
+const useOnClickOutside = (ref: React.MutableRefObject<any>, handler) => {
 	useEffect(
 		() => {
 			const listener = (event: MouseEvent | TouchEvent) => {
@@ -25,5 +25,5 @@ function useOnClickOutside(ref: React.MutableRefObject<any>, handler) {
 		// ... passing it into this hook.
 		[ref, handler]
 	);
-}
+};
 export { useOnClickOutside };

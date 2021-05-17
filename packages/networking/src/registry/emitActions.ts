@@ -15,11 +15,11 @@ export type EmitActionsPacket = {
 };
 
 type PacketDefinitions = {
-	[emitActionsOpcode]: EmitActionsPacket
+	[emitActionsOpcode]: EmitActionsPacket;
 };
 
 type PacketAcknowledgements = {
-	[emitActionsOpcode]: never
+	[emitActionsOpcode]: never;
 };
 
 /**

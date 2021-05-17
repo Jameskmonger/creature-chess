@@ -4,7 +4,7 @@ import { BoardSelectors, BoardState } from "@creature-chess/board";
 const getLivingEnemies = (piece: PieceModel, board: BoardState<PieceModel>): PieceModel[] =>
 	BoardSelectors.getAllPieces(board).filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
 
-type EnemyDelta = { enemy: PieceModel, delta: TileCoordinates };
+type EnemyDelta = { enemy: PieceModel; delta: TileCoordinates };
 
 const getEnemyDeltas = (board: BoardState, enemies: PieceModel[], attackerPosition: TileCoordinates): EnemyDelta[] => {
 	const enemyDeltas: EnemyDelta[] = [];

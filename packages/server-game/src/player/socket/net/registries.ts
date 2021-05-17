@@ -5,8 +5,8 @@ export type OutgoingRegistry = OutgoingPacketRegistry<ServerToClient.Game.Packet
 export type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
 
 export type PlayerRegistries = {
-	incoming: IncomingRegistry,
-	outgoing: OutgoingRegistry
+	incoming: IncomingRegistry;
+	outgoing: OutgoingRegistry;
 };
 
 export const getPacketRegistries = () => getContext<PlayerRegistries>("packetRegistries");

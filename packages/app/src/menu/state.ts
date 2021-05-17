@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type MenuState = {
-	loading: boolean,
-	error?: string
+	loading: boolean;
+	error?: string;
 };
 
 const initialState: MenuState = {

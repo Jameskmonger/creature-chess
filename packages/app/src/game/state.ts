@@ -20,7 +20,7 @@ export type GameState = PlayerState & {
 	playerList: PlayerListPlayer[];
 };
 
-type Slices = { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> };
+type Slices = { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> };
 
 export const createGameReducer = (
 	{ boardSlice, benchSlice }: Slices

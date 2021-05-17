@@ -6,11 +6,11 @@ export enum PacketOpcodes {
 }
 
 export type PacketDefinitions = {
-	[PacketOpcodes.FINISH_MATCH]: EmptyPacket,
-	[emitActionsOpcode]: EmitActionsPacket
+	[PacketOpcodes.FINISH_MATCH]: EmptyPacket;
+	[emitActionsOpcode]: EmitActionsPacket;
 };
 
 export type PacketAcknowledgements = {
-	[PacketOpcodes.FINISH_MATCH]: never,
-	[emitActionsOpcode]: never
+	[PacketOpcodes.FINISH_MATCH]: never;
+	[emitActionsOpcode]: never;
 };

@@ -35,7 +35,7 @@ const isHandBlessed = (level: number) => (Math.floor(Math.random() * 100) * 0.01
 export class CardDeck {
 	public deck: Card[][];
 
-	constructor(private logger: Logger) {
+	public constructor(private logger: Logger) {
 		this.deck = [
 			[], [], [], [], []
 		];
@@ -104,7 +104,7 @@ export class CardDeck {
 		let blessedHand = isHandBlessed(level);
 
 		if (blessedHand) {
-			this.logger.info(`Hand is blessed!`);
+			this.logger.info("Hand is blessed!");
 		}
 
 		for (let i = 0; i < count; i++) {
@@ -157,7 +157,7 @@ export class CardDeck {
 				return { card, blessed: true };
 			}
 
-			this.logger.warn(`- No card pulled for bless`);
+			this.logger.warn("- No card pulled for bless");
 		}
 
 		// start at 5 and work downwards
@@ -183,7 +183,7 @@ export class CardDeck {
 			}
 		}
 
-		this.logger.warn(`Falling back for second pass to find card`);
+		this.logger.warn("Falling back for second pass to find card");
 
 		// otherwise go back up and give them the first existing card
 		for (let cost = 1; cost <= CARD_COST_CHANCES.length; cost++) {
@@ -202,7 +202,7 @@ export class CardDeck {
 			}
 		}
 
-		this.logger.error(`No card found at all`);
+		this.logger.error("No card found at all");
 
 		return null;
 	}

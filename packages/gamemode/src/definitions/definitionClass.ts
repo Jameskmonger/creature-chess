@@ -24,14 +24,12 @@ export const classBuilds = {
 	}
 };
 
-const getBaseStats = (): Omit<CreatureStats, "attackType"> => {
-	return {
-		hp: 10,
-		attack: 10,
-		defense: 10,
-		speed: 10
-	};
-};
+const getBaseStats = (): Omit<CreatureStats, "attackType"> => ({
+	hp: 10,
+	attack: 10,
+	defense: 10,
+	speed: 10
+});
 
 const getPoints = (cost: number, stage: number): number => {
 	const COST_MODIFIER = 1.5;
@@ -51,9 +49,7 @@ const getPoints = (cost: number, stage: number): number => {
 	return 0;
 };
 
-const getStat = (baseStat: number, buildStat: number, availablePoints: number) => {
-	return baseStat + Math.ceil(buildStat * availablePoints);
-};
+const getStat = (baseStat: number, buildStat: number, availablePoints: number) => baseStat + Math.ceil(buildStat * availablePoints);
 
 const getStats = (definitionClass: DefinitionClass, cost: number, stage: number): CreatureStats => {
 	const baseStats = getBaseStats();
@@ -76,10 +72,8 @@ const getStats = (definitionClass: DefinitionClass, cost: number, stage: number)
 	};
 };
 
-export const getStages = (definitionClass: DefinitionClass, cost: number): CreatureStats[] => {
-	return [
-		getStats(definitionClass, cost, 0),
-		getStats(definitionClass, cost, 1),
-		getStats(definitionClass, cost, 2)
-	];
-};
+export const getStages = (definitionClass: DefinitionClass, cost: number): CreatureStats[] => [
+	getStats(definitionClass, cost, 0),
+	getStats(definitionClass, cost, 1),
+	getStats(definitionClass, cost, 2)
+];

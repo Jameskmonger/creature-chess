@@ -8,7 +8,7 @@ import { getPlayerEntityDependencies } from "../dependencies";
 
 const ADD_XP_COMMAND = "ADD_XP_COMMAND";
 type ADD_XP_COMMAND = typeof ADD_XP_COMMAND;
-type AddXpCommand = ({ type: ADD_XP_COMMAND, payload: { amount: number } });
+type AddXpCommand = ({ type: ADD_XP_COMMAND; payload: { amount: number } });
 export const addXpCommand = (amount: number): AddXpCommand => ({
 	type: ADD_XP_COMMAND,
 	payload: { amount }

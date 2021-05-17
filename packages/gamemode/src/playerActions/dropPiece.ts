@@ -37,7 +37,7 @@ const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => 
 
 export type DropPiecePlayerAction = ReturnType<typeof dropPiecePlayerAction>;
 export const dropPiecePlayerAction = createAction<{
-	pieceId: string, to: PlayerPieceLocation, from: PlayerPieceLocation
+	pieceId: string; to: PlayerPieceLocation; from: PlayerPieceLocation;
 }>("dropPiecePlayerAction");
 
 export const dropPiecePlayerActionSaga = function*() {

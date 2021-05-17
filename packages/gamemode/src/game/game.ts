@@ -29,7 +29,7 @@ export class Game {
 
 	private store?: Store<GameState>;
 
-	constructor(
+	public constructor(
 		public readonly id: string,
 		private logger: Logger,
 		options?: Partial<GameOptions>
@@ -74,11 +74,9 @@ export class Game {
 		sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
 		sagaMiddleware.run(gameSaga as () => Generator);
 		sagaMiddleware.run(sendPublicEventsSaga);
-	}
+	};
 
-	public getPlayerById = (playerId: string) => {
-		return this.players.find(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
-	}
+	public getPlayerById = (playerId: string) => this.players.find(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
 
 	public onFinish(fn: (winner: PlayerEntity) => void) {
 		this.events.on(finishGameEventKey, fn);
@@ -116,7 +114,7 @@ export class Game {
 			broadcast(event);
 			teardown();
 		};
-	}
+	};
 
 	private getAllPlayers = () => this.players;
 
@@ -124,5 +122,5 @@ export class Game {
 		this.players.filter(p =>
 			p.select(getPlayerStatus) !== PlayerStatus.QUIT
 			&& p.select(isPlayerAlive)
-		)
+		);
 }

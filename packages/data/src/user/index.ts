@@ -20,16 +20,14 @@ export type UserDatabaseFunctions = {
 	setProfileInfo: (id: string, nickname: string | null, picture: number | null) => Promise<DatabaseUser | null>;
 };
 
-export const userDatabase = (logger: Logger, client: FaunaDBClient): UserDatabaseFunctions => {
-	return {
-		create: create(logger, client),
-		getById: getById(logger, client),
-		getByNickname: getByNickname(logger, client),
-		addWin: addWin(logger, client),
-		addGamePlayed: addGamePlayed(logger, client),
-		setProfileInfo: setProfileInfo(logger, client)
-	};
-};
+export const userDatabase = (logger: Logger, client: FaunaDBClient): UserDatabaseFunctions => ({
+	create: create(logger, client),
+	getById: getById(logger, client),
+	getByNickname: getByNickname(logger, client),
+	addWin: addWin(logger, client),
+	addGamePlayed: addGamePlayed(logger, client),
+	setProfileInfo: setProfileInfo(logger, client)
+});
 
 export { setupUserDatabase } from "./_setup";
 export { DatabaseUser } from "./databaseUser";

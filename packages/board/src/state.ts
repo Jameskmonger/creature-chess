@@ -2,7 +2,7 @@ import { createSlice, ActionCreatorWithPayload, ActionCreatorWithoutPayload, Pay
 import { BoardState, HasId, PiecePosition, PiecePositionsState, PiecesState } from "./types";
 import { getPiecesWithoutIds, getPiecePositionsWithoutIds } from "./utils/filter";
 
-const createInitialState = <TPiece>(id: string, size: { width: number, height: number } = {
+const createInitialState = <TPiece>(id: string, size: { width: number; height: number } = {
 	width: 7,
 	height: 3
 }): BoardState<TPiece> => ({
@@ -48,7 +48,7 @@ export type BoardSliceCommands<TPiece extends HasId = HasId> = {
 	updateBoardPiecesCommand: ActionCreatorWithPayload<TPiece[]>;
 };
 
-export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { width: number, height: number }): BoardSlice<TPiece> => {
+export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { width: number; height: number }): BoardSlice<TPiece> => {
 	const {
 		reducer,
 		actions: {
@@ -66,7 +66,7 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 		name: `board-${id}`,
 		initialState: createInitialState<TPiece>(id, size),
 		reducers: {
-			setBoardSizeCommand: (state, { payload: { width, height } }: PayloadAction<{ width: number, height: number }>) => {
+			setBoardSizeCommand: (state, { payload: { width, height } }: PayloadAction<{ width: number; height: number }>) => {
 				const differenceWidth = width - state.size.width;
 				const differenceHeight = height - state.size.height;
 
@@ -103,31 +103,29 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 						piecePositions,
 						size: newSize
 					}
-				}: PayloadAction<{ pieces: PiecesState<TPiece>, piecePositions: PiecePositionsState, size?: { width: number, height: number } }>
+				}: PayloadAction<{ pieces: PiecesState<TPiece>; piecePositions: PiecePositionsState; size?: { width: number; height: number } }>
 			) => ({
 				...state,
 				pieces: { ...pieces },
 				piecePositions: { ...piecePositions },
 				...(newSize ? { size: { width: newSize.width, height: newSize.height } } : {})
 			}),
-			addBoardPieceCommand: (state, { payload: { x, y, piece } }: PayloadAction<{ x: number, y: number, piece: TPiece }>) => {
-				return {
-					...state,
-					pieces: {
-						...(state.pieces as PiecesState<TPiece>),
-						[piece.id]: piece
-					},
-					piecePositions: {
-						...state.piecePositions,
-						[`${x},${y}`]: piece.id
-					}
-				};
-			},
+			addBoardPieceCommand: (state, { payload: { x, y, piece } }: PayloadAction<{ x: number; y: number; piece: TPiece }>) => ({
+				...state,
+				pieces: {
+					...(state.pieces as PiecesState<TPiece>),
+					[piece.id]: piece
+				},
+				piecePositions: {
+					...state.piecePositions,
+					[`${x},${y}`]: piece.id
+				}
+			}),
 			moveBoardPieceCommand: (
 				state,
 				{
 					payload: { pieceId, from, to }
-				}: PayloadAction<{ pieceId: string, from: PiecePosition, to: PiecePosition }>
+				}: PayloadAction<{ pieceId: string; from: PiecePosition; to: PiecePosition }>
 			) => {
 				const piece = state.pieces[pieceId];
 				const fromString = `${from.x},${from.y}`;
@@ -152,13 +150,11 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 
 				return newState;
 			},
-			removeBoardPiecesCommand: (state, { payload: pieceIds }: PayloadAction<string[]>) => {
-				return {
-					...state,
-					pieces: getPiecesWithoutIds(state.pieces, pieceIds),
-					piecePositions: getPiecePositionsWithoutIds(state.piecePositions, pieceIds)
-				};
-			},
+			removeBoardPiecesCommand: (state, { payload: pieceIds }: PayloadAction<string[]>) => ({
+				...state,
+				pieces: getPiecesWithoutIds(state.pieces, pieceIds),
+				piecePositions: getPiecePositionsWithoutIds(state.piecePositions, pieceIds)
+			}),
 			updateBoardPiecesCommand: (state, { payload: pieces }: PayloadAction<TPiece[]>) => {
 				const newPieces: PiecesState<TPiece> = {
 					...state.pieces

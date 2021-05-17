@@ -16,10 +16,10 @@ import { all } from "redux-saga/effects";
 
 export const findGame = function*(
 	auth: {
-		getAccessTokenSilently: () => Promise<string>,
-		loginWithRedirect: () => Promise<void>,
+		getAccessTokenSilently: () => Promise<string>;
+		loginWithRedirect: () => Promise<void>;
 	},
-	slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+	slices: { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> }
 ) {
 	const findGameAction: MenuActions.FindGameAction = yield take(MenuActions.FIND_GAME);
 
@@ -50,7 +50,7 @@ export const findGame = function*(
 		);
 
 		// todo registry.off
-		// tslint:disable-next-line:no-empty
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		return () => { };
 	});
 
@@ -58,7 +58,7 @@ export const findGame = function*(
 		yield put(action);
 	});
 
-	const { lobby, game }: { lobby: LobbyConnectedEvent, game: GameConnectedEvent } = yield race({
+	const { lobby, game }: { lobby: LobbyConnectedEvent; game: GameConnectedEvent } = yield race({
 		lobby: take(lobbyConnectedEvent.toString()),
 		game: take(gameConnectedEvent.toString())
 	});

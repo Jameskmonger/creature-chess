@@ -15,8 +15,8 @@ const composeEnhancers = composeWithDevTools({
 export const createAppStore = (getAccessTokenSilently: () => Promise<string>, loginWithRedirect: () => Promise<void>) => {
 	const sagaMiddleware = createSagaMiddleware();
 
-	const boardSlice = createBoardSlice<PieceModel>(`local-board`, { width: 7, height: 3 });
-	const benchSlice = createBoardSlice<PieceModel>(`local-bench`, { width: 7, height: 1 });
+	const boardSlice = createBoardSlice<PieceModel>("local-board", { width: 7, height: 3 });
+	const benchSlice = createBoardSlice<PieceModel>("local-bench", { width: 7, height: 1 });
 
 	const store = createStore(
 		combineReducers<AppState>(createReducers({ boardSlice, benchSlice })),

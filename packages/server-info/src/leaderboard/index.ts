@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 export const leaderboard = (database: DatabaseConnection) => {
 	const createLeaderboardCache = () => {
 		const TIME_LIVE = 120 * 1000;
-		let cachedValue: { name: string, wins: number }[] | null = null;
+		let cachedValue: { name: string; wins: number }[] | null = null;
 		let cacheValidUntil = 0;
 
 		return async () => {

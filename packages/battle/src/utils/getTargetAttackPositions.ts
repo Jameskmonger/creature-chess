@@ -1,7 +1,7 @@
 import { createTileCoordinates, TileCoordinates } from "@creature-chess/models";
 import { BoardState } from "@creature-chess/board";
 
-const isInsideGrid = ({ width, height }: { width: number, height: number }) => (position: TileCoordinates) => {
+const isInsideGrid = ({ width, height }: { width: number; height: number }) => (position: TileCoordinates) => {
 	const { x, y } = position;
 
 	return x >= 0 && y >= 0 && x < width && y < height;

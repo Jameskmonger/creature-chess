@@ -5,13 +5,11 @@ import { isPlayerShopLocked } from "../entities/player/state/selectors";
 import { toggleShopLockPlayerAction, toggleShopLockPlayerActionSaga } from "./toggleShopLock";
 
 describe("toggleShopLockPlayerActionSagaFactory", () => {
-	test("should toggle lock state", () => {
-		return expectSaga(toggleShopLockPlayerActionSaga)
-			.provide([
-				[select(isPlayerShopLocked), false]
-			])
-			.put(updateShopLockCommand(true))
-			.dispatch(toggleShopLockPlayerAction())
-			.silentRun();
-	});
+	test("should toggle lock state", () => expectSaga(toggleShopLockPlayerActionSaga)
+		.provide([
+			[select(isPlayerShopLocked), false]
+		])
+		.put(updateShopLockCommand(true))
+		.dispatch(toggleShopLockPlayerAction())
+		.silentRun());
 });

@@ -17,7 +17,7 @@ export const { reducer, actions: { setRoundInfoCommand } } = createSlice({
 	name: "roundInfo",
 	initialState,
 	reducers: {
-		setRoundInfoCommand: (state, command: PayloadAction<{ phase: GamePhase, startedAt: number, round?: number }>) => {
+		setRoundInfoCommand: (state, command: PayloadAction<{ phase: GamePhase; startedAt: number; round?: number }>) => {
 			if (command.payload.round) {
 				return {
 					...state,

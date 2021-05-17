@@ -15,15 +15,15 @@ import { createBoardSlice } from "@creature-chess/board";
 import { Logger } from "winston";
 
 type LobbyRegistry = OutgoingPacketRegistry<
-	ServerToClient.Lobby.PacketDefinitions,
-	ServerToClient.Lobby.PacketAcknowledgements
+ServerToClient.Lobby.PacketDefinitions,
+ServerToClient.Lobby.PacketAcknowledgements
 >;
 
 type PlayerConnections = {
 	[playerId: string]: {
-		socket: Socket,
-		networkingSaga: Task | null,
-		lobbyRegistry: LobbyRegistry | null
+		socket: Socket;
+		networkingSaga: Task | null;
+		lobbyRegistry: LobbyRegistry | null;
 	};
 };
 
@@ -59,7 +59,7 @@ export class Lobby {
 
 	private playerConnections: PlayerConnections = {};
 
-	constructor(
+	public constructor(
 		public readonly id: string,
 		private database: DatabaseConnection
 	) {
@@ -138,8 +138,8 @@ export class Lobby {
 
 	private connectLobbyPlayer(player: LobbyPlayer, socket: Socket) {
 		const registry = new OutgoingPacketRegistry<
-			ServerToClient.Lobby.PacketDefinitions,
-			ServerToClient.Lobby.PacketAcknowledgements
+		ServerToClient.Lobby.PacketDefinitions,
+		ServerToClient.Lobby.PacketAcknowledgements
 		>(
 			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 		);
@@ -242,7 +242,7 @@ export class Lobby {
 			...userPlayers,
 			...botPlayers
 		]);
-	}
+	};
 
 	private sendMemberLobbyUpdateEvent(member: LobbyPlayer, index: number, other: LobbyPlayer) {
 		this.playerConnections[member.id]?.lobbyRegistry?.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE, {

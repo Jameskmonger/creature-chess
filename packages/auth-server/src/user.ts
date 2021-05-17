@@ -11,7 +11,7 @@ export interface UserAppMetadata {
 export interface UserModel {
 	id: string;
 	authId: string;
-	stats: { gamesPlayed: number; wins: number; };
+	stats: { gamesPlayed: number; wins: number };
 	nickname: string | null;
 	registered: boolean;
 	profile: PlayerProfile | null;

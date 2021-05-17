@@ -4,7 +4,7 @@ type RegisterListenerFn<TPayloads, TAcknowledgements> = <TOpcode extends keyof T
 ) => void;
 
 export class IncomingPacketRegistry<TPayloads, TAcknowledgements> {
-	constructor(private registerListener: RegisterListenerFn<TPayloads, TAcknowledgements>) {
+	public constructor(private registerListener: RegisterListenerFn<TPayloads, TAcknowledgements>) {
 
 	}
 

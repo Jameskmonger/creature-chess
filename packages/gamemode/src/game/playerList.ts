@@ -22,14 +22,14 @@ enum PlayerListEvents {
 }
 
 type SortablePlayerValues = {
-	health: number,
-	hasQuit: boolean
+	health: number;
+	hasQuit: boolean;
 };
 
 type SortablePlayer = {
-	id: string,
-	position: number | null,
-	sortValues: SortablePlayerValues
+	id: string;
+	position: number | null;
+	sortValues: SortablePlayerValues;
 };
 
 const sortPlayers = (a: SortablePlayer, b: SortablePlayer) => {
@@ -98,26 +98,24 @@ export class PlayerList {
 		this.events.on(PlayerListEvents.UPDATE, fn);
 	}
 
-	public getValue = (): PlayerListPlayer[] => {
-		return this.players.map(({ id }) => {
-			const player = this.gamePlayers[id];
+	public getValue = (): PlayerListPlayer[] => this.players.map(({ id }) => {
+		const player = this.gamePlayers[id];
 
-			const streak = player.select(PlayerStateSelectors.getPlayerStreak);
-			return {
-				id: player.id,
-				name: player.getVariable(variables => variables.name),
-				health: player.select(PlayerStateSelectors.getPlayerHealth),
-				ready: player.select(PlayerStateSelectors.isPlayerReady),
-				level: player.select(PlayerStateSelectors.getPlayerLevel),
-				money: player.select(PlayerStateSelectors.getPlayerMoney),
-				streakType: streak.type,
-				streakAmount: streak.amount,
-				battle: player.select(PlayerStateSelectors.getPlayerBattle),
-				status: player.select(PlayerStateSelectors.getPlayerStatus),
-				profile: player.getVariable(variables => variables.profile),
-			};
-		});
-	}
+		const streak = player.select(PlayerStateSelectors.getPlayerStreak);
+		return {
+			id: player.id,
+			name: player.getVariable(variables => variables.name),
+			health: player.select(PlayerStateSelectors.getPlayerHealth),
+			ready: player.select(PlayerStateSelectors.isPlayerReady),
+			level: player.select(PlayerStateSelectors.getPlayerLevel),
+			money: player.select(PlayerStateSelectors.getPlayerMoney),
+			streakType: streak.type,
+			streakAmount: streak.amount,
+			battle: player.select(PlayerStateSelectors.getPlayerBattle),
+			status: player.select(PlayerStateSelectors.getPlayerStatus),
+			profile: player.getVariable(variables => variables.profile),
+		};
+	});
 
 	public addPlayer(player: PlayerEntity) {
 		this.players.push({

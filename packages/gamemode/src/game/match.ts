@@ -31,7 +31,7 @@ export class Match {
 	private clientFinishedMatchHome = pDefer();
 	private clientFinishedMatchAway = pDefer();
 
-	constructor(
+	public constructor(
 		public readonly home: PlayerEntity,
 		public readonly away: PlayerEntity,
 		private awayIsClone: boolean,
@@ -145,7 +145,7 @@ export class Match {
 
 	private createStore(gameOptions: GameOptions) {
 		// required to preserve inside the generator
-		// tslint:disable-next-line:variable-name
+		// eslint-disable-next-line no-underscore-dangle
 		const _this = this;
 		const rootSaga = function*() {
 			yield all([

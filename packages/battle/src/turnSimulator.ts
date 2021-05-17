@@ -1,4 +1,13 @@
-import { CreatureType, PieceModel, CombatPieceModel, getRelativeDirection, TileCoordinates, Directions, getDistance, clonePieceCombatState } from "@creature-chess/models";
+import {
+	CreatureType,
+	PieceModel,
+	CombatPieceModel,
+	getRelativeDirection,
+	TileCoordinates,
+	Directions,
+	getDistance,
+	clonePieceCombatState
+} from "@creature-chess/models";
 import { BoardSelectors, BoardSlice, BoardState } from "@creature-chess/board";
 import { isOvercomeBy, isGeneratedBy } from "./utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";

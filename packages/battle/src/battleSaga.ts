@@ -1,6 +1,6 @@
 import { takeLatest, select, put, call } from "@redux-saga/core/effects";
 // no typings so this needs a standard require
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const present = require("present");
 
 import { IndexedPieces, createPieceCombatState, PieceModel, GameOptions } from "@creature-chess/models";
@@ -12,42 +12,38 @@ import { battleFinishEvent, battleTurnEvent } from "./events";
 
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;
-type StartBattleCommand = { type: START_BATTLE, payload: { turn?: number } };
+type StartBattleCommand = { type: START_BATTLE; payload: { turn?: number } };
 export const startBattle = (turn?: number): StartBattleCommand => ({ type: START_BATTLE, payload: { turn } });
 
 const duration = (ms: number) => {
 	const startTime = present();
 
 	return {
-		remaining: () => {
-			return new Promise<void>(resolve => {
-				const endTime = present();
-				const timePassed = endTime - startTime;
+		remaining: () => new Promise<void>(resolve => {
+			const endTime = present();
+			const timePassed = endTime - startTime;
 
-				const remaining = Math.max(ms - timePassed, 0);
+			const remaining = Math.max(ms - timePassed, 0);
 
-				if (remaining === 0) {
-					resolve();
-					return;
-				}
+			if (remaining === 0) {
+				resolve();
+				return;
+			}
 
-				setTimeout(() => resolve(), remaining);
-			});
-		}
+			setTimeout(() => resolve(), remaining);
+		})
 	};
 };
 
-const addCombatState = (pieces: IndexedPieces) => {
-	return Object.entries(pieces)
-		.reduce<IndexedPieces>((acc, [pieceId, piece]) => {
-			acc[pieceId] = {
-				...piece,
-				combat: createPieceCombatState()
-			};
+const addCombatState = (pieces: IndexedPieces) => Object.entries(pieces)
+	.reduce<IndexedPieces>((acc, [pieceId, piece]) => {
+	acc[pieceId] = {
+		...piece,
+		combat: createPieceCombatState()
+	};
 
-			return acc;
-		}, {});
-};
+	return acc;
+}, {});
 
 const runBattle = function*(
 	initialBoard: BoardState<PieceModel>,

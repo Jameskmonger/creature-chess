@@ -11,11 +11,11 @@ export type PlayerMatchRewards = {
 	damage: number;
 	justDied: boolean;
 	rewardMoney: {
-		total: number,
-		base: number,
-		winBonus: number,
-		streakBonus: number,
-		interest: number
+		total: number;
+		base: number;
+		winBonus: number;
+		streakBonus: number;
+		interest: number;
 	};
 };
 
@@ -49,58 +49,58 @@ const initialState: PlayerInfoState = {
 	xp: 0
 };
 
-export function playerInfoReducer(state: PlayerInfoState = initialState, command: PlayerInfoCommand | PlayerEvent): PlayerInfoState {
+export const playerInfoReducer = (state: PlayerInfoState = initialState, command: PlayerInfoCommand | PlayerEvent): PlayerInfoState => {
 	switch (command.type) {
-		case PLAYER_MATCH_REWARDS_EVENT:
-			return {
-				...state,
-				matchRewards: command.payload
-			};
-		case "updateStatusCommand":
-			return {
-				...state,
-				status: command.payload
-			};
-		case "updateReadyCommand":
-			return {
-				...state,
-				ready: command.payload
-			};
-		case "updateOpponentCommand":
-			return {
-				...state,
-				opponentId: command.payload
-			};
-		case UPDATE_BATTLE_COMMAND:
-			return {
-				...state,
-				battle: command.payload.battle
-			};
-		case "updateHealthCommand":
-			return {
-				...state,
-				health: command.payload
-			};
-		case UPDATE_STREAK_COMMAND:
-			return {
-				...state,
-				streak: {
-					amount: command.payload.amount,
-					type: command.payload.type
-				}
-			};
-		case "updateLevelCommand":
-			return {
-				...state,
-				level: command.payload.level,
-				xp: command.payload.xp
-			};
-		case "updateMoneyCommand":
-			return {
-				...state,
-				money: command.payload
-			};
-		default:
-			return state;
+	case PLAYER_MATCH_REWARDS_EVENT:
+		return {
+			...state,
+			matchRewards: command.payload
+		};
+	case "updateStatusCommand":
+		return {
+			...state,
+			status: command.payload
+		};
+	case "updateReadyCommand":
+		return {
+			...state,
+			ready: command.payload
+		};
+	case "updateOpponentCommand":
+		return {
+			...state,
+			opponentId: command.payload
+		};
+	case UPDATE_BATTLE_COMMAND:
+		return {
+			...state,
+			battle: command.payload.battle
+		};
+	case "updateHealthCommand":
+		return {
+			...state,
+			health: command.payload
+		};
+	case UPDATE_STREAK_COMMAND:
+		return {
+			...state,
+			streak: {
+				amount: command.payload.amount,
+				type: command.payload.type
+			}
+		};
+	case "updateLevelCommand":
+		return {
+			...state,
+			level: command.payload.level,
+			xp: command.payload.xp
+		};
+	case "updateMoneyCommand":
+		return {
+			...state,
+			money: command.payload
+		};
+	default:
+		return state;
 	}
-}
+};
