@@ -28,7 +28,7 @@ type UIAction =
 	| UpdateConnectionStatusAction
 	| SetWinnerIdCommand;
 
-export function reducer(state: UiState = initialState, action: UIAction) {
+export const reducer = (state: UiState = initialState, action: UIAction) => {
 	switch (action.type) {
 		case UPDATE_CONNECTION_STATUS:
 			return {
@@ -70,4 +70,4 @@ export function reducer(state: UiState = initialState, action: UIAction) {
 		default:
 			return state;
 	}
-}
+};

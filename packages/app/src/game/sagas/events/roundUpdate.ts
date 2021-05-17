@@ -8,7 +8,7 @@ import { PlayerInfoCommands } from "@creature-chess/gamemode";
 export type GameRoundUpdateEvent = ReturnType<typeof gameRoundUpdateEvent>;
 export const gameRoundUpdateEvent = createAction<ServerToClient.Game.PhaseUpdatePacket, "gameRoundUpdateEvent">("gameRoundUpdateEvent");
 
-export const roundUpdateSaga = function*({ boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }) {
+export const roundUpdateSaga = function*({ boardSlice }: { benchSlice: BoardSlice; boardSlice: BoardSlice }) {
 	yield takeLatest<GameRoundUpdateEvent>(
 		gameRoundUpdateEvent.toString(),
 		function*({ payload: packet }) {

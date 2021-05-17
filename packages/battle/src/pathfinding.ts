@@ -1,12 +1,12 @@
 // no typings so this needs a standard require
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { astar, Graph } = require("javascript-astar");
 
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";
 import { BoardState } from "@creature-chess/board";
 import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
 
-const createEmptyWeightGrid = ({ width, height }: { width: number, height: number }) => {
+const createEmptyWeightGrid = ({ width, height }: { width: number; height: number }) => {
 	const grid: number[][] = [];
 
 	// todo this is a weird way round
@@ -40,7 +40,7 @@ const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
 	return grid;
 };
 
-type Path = { stepCount: number, firstStep: TileCoordinates };
+type Path = { stepCount: number; firstStep: TileCoordinates };
 
 const findPath = (
 	board: BoardState,

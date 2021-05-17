@@ -23,7 +23,7 @@ const {
 });
 
 // this stops the compiler from trying to export a type from @reduxjs/toolkit
-const setSpectatingIdCommand: (payload: string | null) => ({ type: string, payload: string | null })
+const setSpectatingIdCommand: (payload: string | null) => ({ type: string; payload: string | null })
 	= actions.setSpectatingIdCommand;
 
 export { setSpectatingIdCommand, spectatingReducer };

@@ -18,7 +18,7 @@ type ServerToClientPacketRegistry = IncomingPacketRegistry<ServerToClient.Game.P
 const readPacketsToActions = function*(
 	registry: ServerToClientPacketRegistry,
 	socket: Socket,
-	{ benchSlice, boardSlice }: { benchSlice: BoardSlice, boardSlice: BoardSlice }
+	{ benchSlice, boardSlice }: { benchSlice: BoardSlice; boardSlice: BoardSlice }
 ) {
 	const channel = eventChannel<any>(emit => {
 		socket.on("reconnect_failed", () => {
@@ -141,7 +141,7 @@ const readPacketsToActions = function*(
 		);
 
 		// todo registry off here
-		// tslint:disable-next-line:no-empty
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		return () => { };
 	});
 
@@ -152,7 +152,7 @@ const readPacketsToActions = function*(
 
 export const incomingGameNetworking = function*(
 	socket: Socket,
-	slices: { benchSlice: BoardSlice, boardSlice: BoardSlice }
+	slices: { benchSlice: BoardSlice; boardSlice: BoardSlice }
 ) {
 	const registry = new IncomingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>(
 		// todo fix typing here

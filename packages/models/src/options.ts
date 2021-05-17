@@ -19,6 +19,4 @@ export const defaultOptions: GameOptions = {
 	turnDuration: DEFAULT_TURN_DURATION
 };
 
-export const getOptions = (options?: Partial<GameOptions>) => {
-	return { ...defaultOptions, ...options };
-};
+export const getOptions = (options?: Partial<GameOptions>) => ({ ...defaultOptions, ...options });

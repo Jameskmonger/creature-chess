@@ -5,11 +5,11 @@ enum Opcodes {
 }
 
 type Definitions = {
-	[Opcodes.MOCK_OPCODE]: { foo: number }
+	[Opcodes.MOCK_OPCODE]: { foo: number };
 };
 
 type Acknowledgements = {
-	[Opcodes.MOCK_OPCODE]: never
+	[Opcodes.MOCK_OPCODE]: never;
 };
 
 describe("IncomingPacketRegistry", () => {

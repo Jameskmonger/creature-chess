@@ -15,7 +15,7 @@ export class Matchmaking {
 	private metrics = createMetricLogger();
 	private searchingForGame: boolean = false;
 
-	constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
+	public constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
 		setInterval(this.sendMetrics, 60 * 1000);
 	}
 
@@ -60,7 +60,7 @@ export class Matchmaking {
 		return lobbies.find(g => g.getMemberById(id)) || null;
 	}
 
-	private async findOrCreateLobby(): Promise<{ lobby: Lobby, created: boolean }> {
+	private async findOrCreateLobby(): Promise<{ lobby: Lobby; created: boolean }> {
 		const lobbies = Array.from(this.lobbies.values())
 			.filter(lobby => lobby.getFreeSlotCount() > 0);
 
@@ -97,5 +97,5 @@ export class Matchmaking {
 
 	private sendMetrics = () => {
 		this.metrics.sendGameCount(this.lobbies.size);
-	}
+	};
 }

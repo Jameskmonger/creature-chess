@@ -18,18 +18,16 @@ interface DecodedToken {
 	payload: JWTPayload;
 }
 
-const verifyToken = async (token: string, publicKey: string) => {
-	return new Promise<JWTPayload>((resolve, reject) => {
-		jwt.verify(token, publicKey, (err, payload) => {
-			if (err) {
-				reject(err);
-				return;
-			}
+const verifyToken = async (token: string, publicKey: string) => new Promise<JWTPayload>((resolve, reject) => {
+	jwt.verify(token, publicKey, (err, payload) => {
+		if (err) {
+			reject(err);
+			return;
+		}
 
-			resolve(payload as JWTPayload);
-		});
+		resolve(payload as JWTPayload);
 	});
-};
+});
 
 export const verifyDecodeJwt = async (token: string) => {
 	try {

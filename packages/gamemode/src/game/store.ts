@@ -4,7 +4,7 @@ import { roundInfoReducer, RoundInfoState } from "./roundInfo";
 import { GameSagaContext } from "./sagas";
 
 export type GameState = {
-	roundInfo: RoundInfoState
+	roundInfo: RoundInfoState;
 };
 
 export const createGameStore = (context: GameSagaContext) => {

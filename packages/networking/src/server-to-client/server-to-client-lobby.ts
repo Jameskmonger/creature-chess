@@ -19,13 +19,13 @@ export enum PacketOpcodes {
 }
 
 export type PacketDefinitions = {
-	[PacketOpcodes.LOBBY_CONNECTED]: LobbyConnectionPacket,
-	[PacketOpcodes.LOBBY_GAME_STARTED]: EmptyPacket,
-	[PacketOpcodes.LOBBY_PLAYER_UPDATE]: LobbyPlayerUpdatePacket,
+	[PacketOpcodes.LOBBY_CONNECTED]: LobbyConnectionPacket;
+	[PacketOpcodes.LOBBY_GAME_STARTED]: EmptyPacket;
+	[PacketOpcodes.LOBBY_PLAYER_UPDATE]: LobbyPlayerUpdatePacket;
 };
 
 export type PacketAcknowledgements = {
-	[PacketOpcodes.LOBBY_CONNECTED]: never,
-	[PacketOpcodes.LOBBY_GAME_STARTED]: never,
-	[PacketOpcodes.LOBBY_PLAYER_UPDATE]: never,
+	[PacketOpcodes.LOBBY_CONNECTED]: never;
+	[PacketOpcodes.LOBBY_GAME_STARTED]: never;
+	[PacketOpcodes.LOBBY_PLAYER_UPDATE]: never;
 };

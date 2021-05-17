@@ -4,11 +4,9 @@ import { getPlayers } from "./getPlayers";
 
 // todo type these properly
 export type LeaderboardDatabaseFunctions = {
-	getPlayers: () => Promise<{ name: string, wins: number }[] | null>;
+	getPlayers: () => Promise<{ name: string; wins: number }[] | null>;
 };
 
-export const leaderboardDatabase = (logger: Logger, client: FaunaDBClient): LeaderboardDatabaseFunctions => {
-	return {
-		getPlayers: getPlayers(logger, client)
-	};
-};
+export const leaderboardDatabase = (logger: Logger, client: FaunaDBClient): LeaderboardDatabaseFunctions => ({
+	getPlayers: getPlayers(logger, client)
+});

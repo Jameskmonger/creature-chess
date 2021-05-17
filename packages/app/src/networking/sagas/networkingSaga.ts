@@ -7,7 +7,7 @@ import { gameNetworking } from "./game";
 
 export const networkingSaga = function*(
 	socket: Socket,
-	slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }
+	slices: { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> }
 ) {
 	yield all([
 		call(lobbyNetworking, socket),

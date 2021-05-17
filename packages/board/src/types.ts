@@ -4,7 +4,7 @@ export type PiecesState<TPiece> = {
 	[pieceId: string]: TPiece;
 };
 
-export type PiecePosition = { x: number, y: number };
+export type PiecePosition = { x: number; y: number };
 
 export type PiecePositionsState = {
 	[position: string]: string;
@@ -17,8 +17,8 @@ export type BoardState<TPiece = HasId> = {
 	locked: boolean;
 	pieceLimit: number | null;
 	size: {
-		width: number,
-		height: number
+		width: number;
+		height: number;
 	};
 };
 

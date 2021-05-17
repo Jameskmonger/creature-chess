@@ -10,16 +10,16 @@ import { IncomingRegistry, OutgoingRegistry, setPacketRegistries } from "./regis
 import { playerBoard } from "../board";
 
 const createIncomingRegistry = (socket: Socket): IncomingRegistry => new IncomingPacketRegistry<
-	ClientToServer.PacketDefinitions,
-	ClientToServer.PacketAcknowledgements
+ClientToServer.PacketDefinitions,
+ClientToServer.PacketAcknowledgements
 >(
 	// todo fix typings here
 	(opcode, handler) => socket.on(opcode, handler as any)
 );
 
 const createOutgoingRegistry = (socket: Socket): OutgoingRegistry => new OutgoingPacketRegistry<
-	ServerToClient.Game.PacketDefinitions,
-	ServerToClient.Game.PacketAcknowledgements
+ServerToClient.Game.PacketDefinitions,
+ServerToClient.Game.PacketAcknowledgements
 >(
 	(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 );

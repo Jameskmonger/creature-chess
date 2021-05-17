@@ -14,7 +14,7 @@ import { LobbyEvents } from "../../lobby";
 import { roundUpdateSaga, clientBattleSaga, uiSaga } from "./events";
 import { all, call } from "redux-saga/effects";
 
-export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>, benchSlice: BoardSlice<PieceModel> }) {
+export const gameSaga = function*(slices: { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> }) {
 	const action = yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([gameConnectedEvent.toString(), LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
 
 	yield all([

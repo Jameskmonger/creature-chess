@@ -17,7 +17,7 @@ export class SocketAuthenticator {
 		SOCKET_AUTHENTICATED: "socketAuthenticated"
 	};
 
-	constructor(
+	public constructor(
 		private logger: Logger,
 		private authClient: ManagementClient<UserAppMetadata>,
 		private database: DatabaseConnection,
@@ -45,7 +45,7 @@ export class SocketAuthenticator {
 
 			this.authenticateSocket(socket, idToken);
 		});
-	}
+	};
 
 	private failAuthentication(socket: io.Socket, response: ServerToClient.Game.AuthenticateResponse) {
 

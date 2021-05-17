@@ -7,7 +7,7 @@ import { GameState } from "./store";
 import { gameLoopSaga } from "./gameLoop";
 import { PlayerEntity } from "../entities";
 
-export type GetMatchupsFn = () => { homeId: string, awayId: string, awayIsClone: boolean }[];
+export type GetMatchupsFn = () => { homeId: string; awayId: string; awayIsClone: boolean }[];
 
 export type GameSagaContext = {
 	getMatchups: GetMatchupsFn;

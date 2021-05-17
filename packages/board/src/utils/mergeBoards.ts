@@ -1,7 +1,7 @@
 import { BoardState, HasId } from "../types";
 import { rotatePiecesAboutCenter } from "./rotateGridPosition";
 
-const expandBoard = <TState extends BoardState>(board: TState, { width, height }: { width: number, height: number }): TState => {
+const expandBoard = <TState extends BoardState>(board: TState, { width, height }: { width: number; height: number }): TState => {
 	const differenceWidth = width - board.size.width;
 	const differenceHeight = height - board.size.height;
 

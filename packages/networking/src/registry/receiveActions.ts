@@ -6,11 +6,11 @@ import { IncomingPacketRegistry } from "./incoming-packet-registry";
 type Action<T = any> = { type: T };
 
 type PacketDefinitions = {
-	[emitActionsOpcode]: EmitActionsPacket
+	[emitActionsOpcode]: EmitActionsPacket;
 };
 
 type PacketAcknowledgements = {
-	[emitActionsOpcode]: never
+	[emitActionsOpcode]: never;
 };
 
 /**

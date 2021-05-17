@@ -6,13 +6,11 @@ export type DiscordApi = {
 	startLobby: (playerName: string) => void;
 };
 
-const awaitClientReady = (client: Client) => {
-	return new Promise<void>(resolve => {
-		client.on("ready", () => {
-			resolve();
-		});
+const awaitClientReady = (client: Client) => new Promise<void>(resolve => {
+	client.on("ready", () => {
+		resolve();
 	});
-};
+});
 
 const LOBBY_NOTIFICATIONS_CHANNEL_ID = "794003654545375232";
 const LOBBY_NOTIFICATIONS_ROLE_ID = "793944131369304104";
@@ -51,6 +49,8 @@ export const createDiscordApi = async (logger: Logger, token: string): Promise<D
 
 	return {
 		startLobby: (playerName) => {
+			// can't see an easy way to bring this line down to 160 characters
+			// eslint-disable-next-line max-len
 			channel.send(`:bell: ${roleMention(LOBBY_NOTIFICATIONS_ROLE_ID)} :bell: - '**${playerName}**' has started a lobby - it will close in ${LOBBY_WAIT_TIME_SECONDS} seconds. https://creaturechess.jamesmonger.com/`);
 		}
 	};

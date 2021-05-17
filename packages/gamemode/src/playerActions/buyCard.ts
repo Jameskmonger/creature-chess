@@ -71,8 +71,8 @@ const createPieceFromCard = (
 
 export type BuyCardPlayerAction = ReturnType<typeof buyCardPlayerAction>;
 export const buyCardPlayerAction = createAction<{
-	index: number,
-	sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1
+	index: number;
+	sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1;
 }, "buyCardPlayerAction">("buyCardPlayerAction");
 
 export const buyCardPlayerActionSaga = function*() {
@@ -94,7 +94,7 @@ export const buyCardPlayerActionSaga = function*() {
 
 		if (!card) {
 			logger.warn(
-				`Player attempted to buy null/undefined card`,
+				"Player attempted to buy null/undefined card",
 				{ actor: { playerId, name } }
 			);
 
@@ -124,7 +124,7 @@ export const buyCardPlayerActionSaga = function*() {
 		// no valid slots
 		if (destination === null) {
 			logger.warn(
-				`Player attempted to buy a card but has no available destination`,
+				"Player attempted to buy a card but has no available destination",
 				{ actor: { playerId, name } }
 			);
 			continue;

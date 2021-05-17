@@ -11,11 +11,11 @@ export type PlayerMatchRewards = {
 	damage: number;
 	justDied: boolean;
 	rewardMoney: {
-		total: number,
-		base: number,
-		winBonus: number,
-		streakBonus: number,
-		interest: number
+		total: number;
+		base: number;
+		winBonus: number;
+		streakBonus: number;
+		interest: number;
 	};
 };
 
@@ -49,7 +49,7 @@ const initialState: PlayerInfoState = {
 	xp: 0
 };
 
-export function playerInfoReducer(state: PlayerInfoState = initialState, command: PlayerInfoCommand | PlayerEvent): PlayerInfoState {
+export const playerInfoReducer = (state: PlayerInfoState = initialState, command: PlayerInfoCommand | PlayerEvent): PlayerInfoState => {
 	switch (command.type) {
 		case PLAYER_MATCH_REWARDS_EVENT:
 			return {
@@ -103,4 +103,4 @@ export function playerInfoReducer(state: PlayerInfoState = initialState, command
 		default:
 			return state;
 	}
-}
+};

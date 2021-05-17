@@ -11,15 +11,15 @@ export type Entity<TState, TVariables> = {
 };
 
 type EntitySagaContext<TDependencies, TVariables> = {
-	id: string,
-	dependencies: TDependencies,
-	getVariable: GetVariableFn<TVariables>,
-	updateVariables: UpdateVariablesFn<TVariables>
+	id: string;
+	dependencies: TDependencies;
+	getVariable: GetVariableFn<TVariables>;
+	updateVariables: UpdateVariablesFn<TVariables>;
 };
 
 type EntityStaticProperties<TState> = {
-	reducers: ReducersMapObject<TState>,
-	rootSaga?: Saga
+	reducers: ReducersMapObject<TState>;
+	rootSaga?: Saga;
 };
 
 export const entity = <TState, TDependencies extends {} = {}, TVariables extends {} = {}>(
@@ -58,16 +58,14 @@ export const entity = <TState, TDependencies extends {} = {}, TVariables extends
 
 export const entityFactory = <TState, TDependencies extends {} = {}, TVariables extends {} = {}>(
 	statics: (EntityStaticProperties<TState> | ((dependencies: TDependencies) => EntityStaticProperties<TState>))
+) => (
+	id: string,
+	dependencies: TDependencies = {} as TDependencies,
+	initialVariables: TVariables = {} as TVariables
 ) => {
-	return (
-		id: string,
-		dependencies: TDependencies = {} as TDependencies,
-		initialVariables: TVariables = {} as TVariables
-	) => {
-		if (typeof statics === "function") {
-			return entity(statics(dependencies), id, dependencies, initialVariables);
-		}
+	if (typeof statics === "function") {
+		return entity(statics(dependencies), id, dependencies, initialVariables);
+	}
 
-		return entity(statics, id, dependencies, initialVariables);
-	};
+	return entity(statics, id, dependencies, initialVariables);
 };

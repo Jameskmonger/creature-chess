@@ -6,8 +6,8 @@ export type BATTLE_TURN_EVENT = typeof BATTLE_TURN_EVENT;
 export const BATTLE_FINISH_EVENT = "BATTLE_FINISH_EVENT";
 export type BATTLE_FINISH_EVENT = typeof BATTLE_FINISH_EVENT;
 
-export type BattleTurnEvent = ({ type: BATTLE_TURN_EVENT, payload: { turn: number, board: BoardState<PieceModel> } });
-export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT, payload: { turns: number } });
+export type BattleTurnEvent = ({ type: BATTLE_TURN_EVENT; payload: { turn: number; board: BoardState<PieceModel> } });
+export type BattleFinishEvent = ({ type: BATTLE_FINISH_EVENT; payload: { turns: number } });
 
 export type BattleEvent = BattleTurnEvent | BattleFinishEvent;
 

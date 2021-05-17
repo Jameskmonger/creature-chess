@@ -6,13 +6,13 @@ enum Opcodes {
 }
 
 type Definitions = {
-	[Opcodes.MOCK_OPCODE]: { foo: number },
-	[Opcodes.MOCK_OPCODE_WITH_ACK]: { bar: string }
+	[Opcodes.MOCK_OPCODE]: { foo: number };
+	[Opcodes.MOCK_OPCODE_WITH_ACK]: { bar: string };
 };
 
 type Acknowledgements = {
-	[Opcodes.MOCK_OPCODE]: never,
-	[Opcodes.MOCK_OPCODE_WITH_ACK]: () => void
+	[Opcodes.MOCK_OPCODE]: never;
+	[Opcodes.MOCK_OPCODE_WITH_ACK]: () => void;
 };
 
 describe("OutgoingPacketRegistry", () => {

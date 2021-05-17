@@ -5,7 +5,7 @@ type EmitFn<TPayloads, TAcknowledgements> = <TOpcode extends keyof TPayloads & k
 ) => void;
 
 export class OutgoingPacketRegistry<TPayloads, TAcknowledgements> {
-	constructor(private emitFn: EmitFn<TPayloads, TAcknowledgements>) {
+	public constructor(private emitFn: EmitFn<TPayloads, TAcknowledgements>) {
 
 	}
 

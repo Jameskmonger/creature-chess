@@ -3,7 +3,7 @@ import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import { Match } from "./match";
 
 export type GamePhaseStartedEvent = ReturnType<typeof gamePhaseStartedEvent>;
-export const gamePhaseStartedEvent = createAction<{ phase: GamePhase, startedAt: number, round?: number }, "gamePhaseStartedEvent">("gamePhaseStartedEvent");
+export const gamePhaseStartedEvent = createAction<{ phase: GamePhase; startedAt: number; round?: number }, "gamePhaseStartedEvent">("gamePhaseStartedEvent");
 
 export type GameFinishEvent = ReturnType<typeof gameFinishEvent>;
 export const gameFinishEvent = createAction<{ winnerId: string }, "gameFinishEvent">("gameFinishEvent");
@@ -18,7 +18,11 @@ export type PlayerRunReadyPhaseEvent = ReturnType<typeof playerRunReadyPhaseEven
 export const playerRunReadyPhaseEvent = createAction<{ match: Match }, "playerRunReadyPhaseEvent">("playerRunReadyPhaseEvent");
 
 export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
-export const playerFinishMatchEvent = createAction<{ homeScore: number, awayScore: number, isHomePlayer: boolean }, "playerFinishMatchEvent">("playerFinishMatchEvent");
+export const playerFinishMatchEvent = createAction<{
+	homeScore: number;
+	awayScore: number;
+	isHomePlayer: boolean;
+}, "playerFinishMatchEvent">("playerFinishMatchEvent");
 
 export type GameEvent =
 	GamePhaseStartedEvent

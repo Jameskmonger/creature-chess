@@ -3,9 +3,7 @@ import { PlayerStatus } from "@creature-chess/models";
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
 
-const randomFromArray = <T>(array: T[]) => {
-	return array[Math.floor(Math.random() * array.length)];
-};
+const randomFromArray = <T>(array: T[]) => array[Math.floor(Math.random() * array.length)];
 
 export class OpponentProvider {
 	private remainingRotations: number[] | null = null;
@@ -17,8 +15,9 @@ export class OpponentProvider {
 
 	private getLivingPlayers: () => PlayerEntity[];
 
-	constructor(players: PlayerEntity[]) {
-		this.getLivingPlayers = () => players.filter(p => p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.select(PlayerStateSelectors.isPlayerAlive));
+	public constructor(players: PlayerEntity[]) {
+		this.getLivingPlayers = () => players.filter(p =>
+			p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.select(PlayerStateSelectors.isPlayerAlive));
 	}
 
 	public getMatchups = () => {
@@ -40,10 +39,10 @@ export class OpponentProvider {
 		this.updateRotation();
 
 		return output;
-	}
+	};
 
 	private getMatchupsEven(livingPlayers: PlayerEntity[]) {
-		const matchups: ({ homeId: string, awayId: string, awayIsClone: boolean })[] = [];
+		const matchups: ({ homeId: string; awayId: string; awayIsClone: boolean })[] = [];
 
 		let remainingPlayerIds = livingPlayers.map(p => p.id);
 		while (remainingPlayerIds.length > 0) {

@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Card } from "@creature-chess/models";
 
 export type CardShopState = {
-	cards: (Card | null)[],
-	locked: boolean
+	cards: (Card | null)[];
+	locked: boolean;
 };
 
 const initialState: CardShopState = {
@@ -30,10 +30,10 @@ const {
 });
 
 // this stops the compiler from trying to export a type from @reduxjs/toolkit
-const updateCardsCommand: (payload: (Card | null)[]) => ({ type: string, payload: (Card | null)[] })
+const updateCardsCommand: (payload: (Card | null)[]) => ({ type: string; payload: (Card | null)[] })
 	= actions.updateCardsCommand;
 
-const updateShopLockCommand: (payload: boolean) => ({ type: string, payload: boolean })
+const updateShopLockCommand: (payload: boolean) => ({ type: string; payload: boolean })
 	= actions.updateShopLockCommand;
 
 export { updateCardsCommand, updateShopLockCommand, cardShopReducer };

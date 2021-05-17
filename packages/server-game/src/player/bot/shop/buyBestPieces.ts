@@ -60,7 +60,7 @@ const buyCardIfBelowLimit = function*(index: number) {
 		const name = yield* getContext<string>("playerName");
 
 		logger.warn(
-			`buyCardIfBelowLimit card was not found`,
+			"buyCardIfBelowLimit card was not found",
 			{ actor: { name } }
 		);
 		return;
