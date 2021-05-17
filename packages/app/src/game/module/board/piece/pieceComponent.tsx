@@ -38,7 +38,11 @@ const PieceComponent: React.FunctionComponent<DraggableBoardPieceProps> = (props
 	const localPlayerId = usePlayerId();
 	const piece = useSelector<AppState, PieceModel>(state => {
 		if (state.game.match.board) {
-			return BoardSelectors.getPiece(state.game.match.board, id);
+			const matchBoardPiece = BoardSelectors.getPiece(state.game.match.board, id);
+
+			if (matchBoardPiece) {
+				return matchBoardPiece;
+			}
 		}
 
 		return getPiece(state.game, id);
