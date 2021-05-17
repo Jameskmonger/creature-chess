@@ -28,6 +28,11 @@ module.exports = {
 		"eslint-plugin-react",
 		"@typescript-eslint"
 	],
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	},
 	"rules": {
 		"@typescript-eslint/adjacent-overload-signatures": "error",
 		"@typescript-eslint/array-type": [
