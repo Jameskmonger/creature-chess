@@ -93,11 +93,11 @@ module.exports = {
 			"error",
 			{
 				"multiline": {
-					"delimiter": "semi",
+					"delimiter": "comma",
 					"requireLast": true
 				},
 				"singleline": {
-					"delimiter": "semi",
+					"delimiter": "comma",
 					"requireLast": false
 				}
 			}
