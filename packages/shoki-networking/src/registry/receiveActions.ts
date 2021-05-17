@@ -9,10 +9,6 @@ type PacketDefinitions = {
 	[emitActionsOpcode]: EmitActionsPacket;
 };
 
-type PacketAcknowledgements = {
-	[emitActionsOpcode]: never;
-};
-
 /**
  * Listen to an {@link IncomingPacketRegistry} and emit any received actions to the store if they match a pattern
  *
@@ -20,9 +16,10 @@ type PacketAcknowledgements = {
  * @param actions The action pattern to emit to the store
  */
 export const receiveActionsSaga = function*<
+	TDefinitions extends PacketDefinitions,
 	TRegistry
-	extends IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>
-	= IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>
+	extends IncomingPacketRegistry<TDefinitions, any>
+	= IncomingPacketRegistry<TDefinitions, any>
 >(
 	registry: TRegistry,
 	actions: string[]

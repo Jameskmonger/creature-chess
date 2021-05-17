@@ -18,10 +18,6 @@ type PacketDefinitions = {
 	[emitActionsOpcode]: EmitActionsPacket;
 };
 
-type PacketAcknowledgements = {
-	[emitActionsOpcode]: never;
-};
-
 /**
  * Take a given action pattern and emit them to the registry under a given opcode
  *
@@ -29,9 +25,10 @@ type PacketAcknowledgements = {
  * @param actions The action pattern to emit
  */
 export const emitActionsSaga = function*<
+	TDefinitions extends PacketDefinitions,
 	TRegistry
-	extends OutgoingPacketRegistry<PacketDefinitions, PacketAcknowledgements>
-	= OutgoingPacketRegistry<PacketDefinitions, PacketAcknowledgements>
+	extends OutgoingPacketRegistry<TDefinitions, any>
+	= OutgoingPacketRegistry<TDefinitions, any>
 >(
 	registry: TRegistry,
 	actions: ActionPattern

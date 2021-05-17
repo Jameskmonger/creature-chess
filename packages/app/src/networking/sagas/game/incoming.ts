@@ -1,8 +1,9 @@
 import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
-import { takeEvery, put, call } from "redux-saga/effects";
-import { PlayerInfoCommands, PlayerEvents, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
+import { takeEvery, put, call, all } from "redux-saga/effects";
+import { PlayerEvents, PlayerCommands, RoundInfoCommands, PlayerInfoCommands } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
+import { receiveActionsSaga } from "@shoki/networking";
 import { BoardSlice } from "@shoki/board";
 import { GamePhase } from "@creature-chess/models";
 import { startBattle } from "@creature-chess/battle";
@@ -59,56 +60,6 @@ const readPacketsToActions = function*(
 		);
 
 		registry.on(
-			ServerToClient.Game.PacketOpcodes.SPECTATING_PLAYER_UPDATE,
-			(newValue) => {
-				emit(PlayerCommands.setSpectatingIdCommand(newValue));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.OPPONENT_ID_UPDATE,
-			(newValue) => {
-				emit(PlayerInfoCommands.updateOpponentCommand(newValue));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.CARDS_UPDATE,
-			(newValue) => {
-				emit(PlayerCommands.updateCardsCommand(newValue));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE,
-			(newValue) => {
-				emit(PlayerCommands.updateShopLockCommand(newValue));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.MONEY_UPDATE,
-			(newValue) => {
-				emit(PlayerInfoCommands.updateMoneyCommand(newValue));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE,
-			(newValue) => {
-				emit(PlayerInfoCommands.updateHealthCommand(newValue));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE,
-			(packet) => {
-				emit(PlayerInfoCommands.updateLevelCommand(packet));
-				emit(boardSlice.commands.setPieceLimitCommand(packet.level));
-			}
-		);
-
-		registry.on(
 			ServerToClient.Game.PacketOpcodes.MATCH_REWARDS,
 			(payload) => {
 				emit(PlayerEvents.playerMatchRewardsEvent(payload));
@@ -155,5 +106,16 @@ export const incomingGameNetworking = function*(
 	// todo fix typing
 	const registry = ServerToClient.Game.createIncomingRegistry((opcode, handler) => socket.on(opcode, handler as any));
 
-	yield call(readPacketsToActions, registry, socket, slices);
+	yield all([
+		call(readPacketsToActions, registry, socket, slices),
+		call(receiveActionsSaga, registry, [
+			PlayerCommands.setSpectatingIdCommand.toString(),
+			PlayerCommands.updateCardsCommand.toString(),
+			PlayerCommands.updateShopLockCommand.toString(),
+			PlayerInfoCommands.updateMoneyCommand.toString(),
+			PlayerInfoCommands.updateLevelCommand.toString(),
+			PlayerInfoCommands.updateHealthCommand.toString(),
+			PlayerInfoCommands.updateOpponentCommand.toString()
+		]),
+	]);
 };

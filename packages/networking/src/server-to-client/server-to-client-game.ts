@@ -1,4 +1,4 @@
-import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn } from "@shoki/networking";
+import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn, emitActionsOpcode, EmitActionsPacket } from "@shoki/networking";
 import { Card, GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "@shoki/board";
 import { RoundInfoState } from "@creature-chess/gamemode";
@@ -60,15 +60,9 @@ export enum PacketOpcodes {
 	BOARD_UPDATE = "boardUpdate",
 	MATCH_BOARD_UPDATE = "matchBoardUpdate",
 	SPECTATING_PLAYER_UPDATE = "spectatingPlayerUpdate",
-	OPPONENT_ID_UPDATE = "opponentIdUpdate",
-	CARDS_UPDATE = "cardsUpdate",
 	PLAYER_LIST_UPDATE = "playerListUpdate",
 	PHASE_UPDATE = "phaseUpdate",
-	MONEY_UPDATE = "moneyUpdate",
-	HEALTH_UPDATE = "healthUpdate",
-	LEVEL_UPDATE = "levelUpdate",
 	FINISH_GAME = "finishGame",
-	SHOP_LOCK_UPDATE = "shopLockUpdate",
 	MATCH_REWARDS = "matchRewards",
 	PLAYER_DEAD = "playerDead"
 }
@@ -79,17 +73,13 @@ export type PacketDefinitions = {
 	[PacketOpcodes.BOARD_UPDATE]: BoardUpdatePacket;
 	[PacketOpcodes.MATCH_BOARD_UPDATE]: MatchBoardUpdatePacket;
 	[PacketOpcodes.SPECTATING_PLAYER_UPDATE]: string | null;
-	[PacketOpcodes.OPPONENT_ID_UPDATE]: string | null;
-	[PacketOpcodes.CARDS_UPDATE]: (Card | null)[];
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[];
 	[PacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket;
-	[PacketOpcodes.MONEY_UPDATE]: number;
-	[PacketOpcodes.HEALTH_UPDATE]: number;
-	[PacketOpcodes.LEVEL_UPDATE]: LevelUpdatePacket;
 	[PacketOpcodes.FINISH_GAME]: FinishGamePacket;
-	[PacketOpcodes.SHOP_LOCK_UPDATE]: boolean;
 	[PacketOpcodes.MATCH_REWARDS]: MatchRewardsPacket;
 	[PacketOpcodes.PLAYER_DEAD]: EmptyPacket;
+
+	[emitActionsOpcode]: EmitActionsPacket;
 };
 
 export type PacketAcknowledgements = {
@@ -98,15 +88,9 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.BOARD_UPDATE]: never;
 	[PacketOpcodes.MATCH_BOARD_UPDATE]: never;
 	[PacketOpcodes.SPECTATING_PLAYER_UPDATE]: never;
-	[PacketOpcodes.OPPONENT_ID_UPDATE]: never;
-	[PacketOpcodes.CARDS_UPDATE]: never;
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: never;
 	[PacketOpcodes.PHASE_UPDATE]: never;
-	[PacketOpcodes.MONEY_UPDATE]: never;
-	[PacketOpcodes.HEALTH_UPDATE]: never;
-	[PacketOpcodes.LEVEL_UPDATE]: never;
 	[PacketOpcodes.FINISH_GAME]: never;
-	[PacketOpcodes.SHOP_LOCK_UPDATE]: never;
 	[PacketOpcodes.MATCH_REWARDS]: never;
 	[PacketOpcodes.PLAYER_DEAD]: never;
 };
