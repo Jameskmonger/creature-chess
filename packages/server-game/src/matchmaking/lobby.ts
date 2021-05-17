@@ -5,7 +5,7 @@ import { Task } from "redux-saga";
 import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN_GAME, PieceModel, PlayerProfile } from "@creature-chess/models";
 import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
-import { Game, PlayerEntity, playerEntity, PlayerSelectors } from "@creature-chess/gamemode";
+import { Game, PlayerEntity, playerEntity, PlayerStateSelectors } from "@creature-chess/gamemode";
 import { botLogicSaga } from "../player/bot/saga";
 import { createWinstonLogger } from "../log";
 import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
@@ -122,7 +122,7 @@ export class Lobby {
 		const game = this.game;
 
 		if (game) {
-			return this.members.find(m => m.id && game.getPlayerById(id)?.select(PlayerSelectors.isPlayerAlive));
+			return this.members.find(m => m.id && game.getPlayerById(id)?.select(PlayerStateSelectors.isPlayerAlive));
 		}
 
 		return this.members.find(m => m.id === id);

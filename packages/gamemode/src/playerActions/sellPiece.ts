@@ -3,7 +3,7 @@ import { createAction } from "@reduxjs/toolkit";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "../player/pieceSelectors";
 import { updateMoneyCommand } from "../player/playerInfo/commands";
-import { afterSellPieceEvent } from "../player/events";
+import { afterSellPieceEvent } from "../entities/player/events";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
 
 export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;

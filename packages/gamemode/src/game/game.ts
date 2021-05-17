@@ -3,7 +3,6 @@ import { EventEmitter } from "events";
 import { Store } from "redux";
 import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
-import { PlayerSelectors } from "../player";
 import { OpponentProvider } from "./opponentProvider";
 import { PlayerList } from "./playerList";
 import { CardDeck } from "./cardDeck";
@@ -15,6 +14,7 @@ import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
 import { sendPublicEventsSaga } from "./publicEvents";
 import { put } from "redux-saga/effects";
 import { PlayerEntity } from "../entities";
+import { getPlayerStatus, isPlayerAlive } from "../entities/player/state/selectors";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -77,14 +77,14 @@ export class Game {
 	}
 
 	public getPlayerById = (playerId: string) => {
-		return this.players.find(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
+		return this.players.find(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
 	}
 
 	public onFinish(fn: (winner: PlayerEntity) => void) {
 		this.events.on(finishGameEventKey, fn);
 	}
 
-	public getConnectedPlayers = () => this.players.filter(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT);
+	public getConnectedPlayers = () => this.players.filter(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT);
 
 	public getRoundInfo = () => this.store!.getState().roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
@@ -122,7 +122,7 @@ export class Game {
 
 	private getLivingPlayers = () =>
 		this.players.filter(p =>
-			p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT
-			&& p.select(PlayerSelectors.isPlayerAlive)
+			p.select(getPlayerStatus) !== PlayerStatus.QUIT
+			&& p.select(isPlayerAlive)
 		)
 }

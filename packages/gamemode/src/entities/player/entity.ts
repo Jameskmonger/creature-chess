@@ -1,9 +1,7 @@
-import { Entity, entityFactory } from "@shoki/engine";
 import { all, call } from "redux-saga/effects";
+import { Entity, entityFactory } from "@shoki/engine";
 import { roundInfoReducer } from "../../game/roundInfo";
-import { PlayerVariables } from "../../player";
 import { playerInfoReducer } from "../../player/playerInfo";
-import { PlayerSagaDependencies } from "../../player/sagaContext";
 
 import { PlayerState, playerReducers } from "./state";
 
@@ -16,8 +14,10 @@ import { playerBattle } from "./sagas/battle";
 import { playerXpSaga } from "./sagas/xp";
 import { fillBoard } from "./sagas/fillBoard";
 import { healthSaga } from "./sagas/health";
+import { PlayerVariables } from "./variables";
+import { PlayerEntityDependencies } from "./dependencies";
 
-export const playerEntity = entityFactory<PlayerState, PlayerSagaDependencies, PlayerVariables>(
+export const playerEntity = entityFactory<PlayerState, PlayerEntityDependencies, PlayerVariables>(
 	({ boardSlices }) => ({
 		reducers: {
 			...playerReducers,

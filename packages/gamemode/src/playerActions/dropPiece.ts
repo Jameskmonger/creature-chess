@@ -4,8 +4,8 @@ import { select, getContext } from "typed-redux-saga";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { BoardSelectors } from "@creature-chess/board";
 import { PlayerState } from "../entities/player";
-import { PlayerSelectors } from "../player";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
+import { getPlayerBelowPieceLimit } from "../entities/player/state/selectors";
 
 const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
 	if (location.type === "board") {
@@ -70,7 +70,7 @@ export const dropPiecePlayerActionSaga = function*() {
 			}
 
 			if (to.type === "board" && from.type !== "board") {
-				const belowPieceLimit = PlayerSelectors.getPlayerBelowPieceLimit(state, playerId);
+				const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
 
 				if (!belowPieceLimit) {
 					return;

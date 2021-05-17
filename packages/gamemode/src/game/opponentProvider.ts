@@ -1,7 +1,7 @@
 import { shuffle } from "lodash";
 import { PlayerStatus } from "@creature-chess/models";
-import { PlayerSelectors } from "../player";
 import { PlayerEntity } from "../entities";
+import { PlayerStateSelectors } from "../entities/player";
 
 const randomFromArray = <T>(array: T[]) => {
 	return array[Math.floor(Math.random() * array.length)];
@@ -18,7 +18,7 @@ export class OpponentProvider {
 	private getLivingPlayers: () => PlayerEntity[];
 
 	constructor(players: PlayerEntity[]) {
-		this.getLivingPlayers = () => players.filter(p => p.select(PlayerSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.select(PlayerSelectors.isPlayerAlive));
+		this.getLivingPlayers = () => players.filter(p => p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.select(PlayerStateSelectors.isPlayerAlive));
 	}
 
 	public getMatchups = () => {

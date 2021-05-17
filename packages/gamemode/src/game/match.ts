@@ -6,11 +6,11 @@ import { createStore, combineReducers, applyMiddleware, Store, Reducer } from "r
 import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, BoardPiecesState, BoardSlice, BoardSelectors } from "@creature-chess/board";
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
-import { PlayerSelectors } from "../player";
 import { playerFinishMatchEvent } from "./events";
 import { call } from "redux-saga/effects";
 import delay = require("delay");
 import { PlayerEntity } from "../entities";
+import { PlayerStateSelectors } from "../entities/player";
 
 interface MatchState {
 	board: BoardState<PieceModel>;
@@ -39,7 +39,7 @@ export class Match {
 	) {
 		this.store = this.createStore(gameOptions);
 
-		const mergedBoard = mergeBoards(this.boardId, home.select(PlayerSelectors.getPlayerBoard), away.select(PlayerSelectors.getPlayerBoard));
+		const mergedBoard = mergeBoards(this.boardId, home.select(PlayerStateSelectors.getPlayerBoard), away.select(PlayerStateSelectors.getPlayerBoard));
 
 		const board: BoardState<PieceModel> = {
 			...mergedBoard,

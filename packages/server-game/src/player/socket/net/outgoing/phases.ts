@@ -2,11 +2,10 @@ import { call, takeLatest } from "redux-saga/effects";
 import { getContext, select } from "typed-redux-saga";
 import { getVariable } from "@shoki/engine";
 
-import { GameEvents, PlayerSagaContext, PlayerVariables, Match } from "@creature-chess/gamemode";
+import { GameEvents, getPlayerEntityDependencies, PlayerVariables, Match, PlayerStateSelectors } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { GamePhase } from "@creature-chess/models";
 import { getPacketRegistries } from "../registries";
-import { getPlayerHealth } from "../../../../../../gamemode/lib/player/playerSelectors";
 
 const preparingPhase = function*(phase: GamePhase, startedAt: number, round: number) {
 	const { outgoing: registry } = yield* getPacketRegistries();
@@ -24,9 +23,9 @@ const preparingPhase = function*(phase: GamePhase, startedAt: number, round: num
 
 const readyPhase = function*(startedAt: number) {
 	const { outgoing: registry } = yield* getPacketRegistries();
-	const { logger } = yield* PlayerSagaContext.getPlayerSagaDependencies();
+	const { logger } = yield* getPlayerEntityDependencies();
 
-	const health = yield* select(getPlayerHealth);
+	const health = yield* select(PlayerStateSelectors.getPlayerHealth);
 
 	const currentMatch = yield* getVariable<PlayerVariables, Match>(variables => variables.match!);
 

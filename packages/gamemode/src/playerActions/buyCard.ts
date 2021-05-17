@@ -5,12 +5,12 @@ import { select, getContext } from "typed-redux-saga";
 import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
 import { PlayerState } from "../entities/player/state";
-import { getPlayerBelowPieceLimit, getPlayerCards, getPlayerMoney } from "../player/playerSelectors";
+import { getPlayerBelowPieceLimit, getPlayerCards, getPlayerMoney } from "../entities/player/state/selectors";
 import { updateMoneyCommand } from "../player/playerInfo/commands";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { getDefinitionById } from "../definitions";
-import { getPlayerSagaDependencies } from "../player/sagaContext";
 import { getBenchSlice, getBoardSlice } from "../entities/player/selectors";
+import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 
 const getCardDestination = (
 	state: PlayerState,
@@ -79,7 +79,7 @@ export const buyCardPlayerActionSaga = function*() {
 	while (true) {
 		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
-		const { logger } = yield* getPlayerSagaDependencies();
+		const { logger } = yield* getPlayerEntityDependencies();
 		const boardSlice = yield* getBoardSlice();
 		const benchSlice = yield* getBenchSlice();
 

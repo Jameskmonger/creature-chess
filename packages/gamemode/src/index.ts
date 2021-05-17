@@ -1,24 +1,17 @@
 export { Game } from "./game";
 
 export {
-	PlayerEvents,
-	PlayerSelectors,
-	PlayerSagaContext,
-
-	PlayerVariables
-} from "./player";
-
-export {
-	PlayerEntity, playerEntity,
-	PlayerEntitySelectors,
-	PlayerState, playerReducers, PlayerCommands
+	PlayerEntity, playerEntity, PlayerEntitySelectors,
+	PlayerState, PlayerStateSelectors, playerReducers, PlayerCommands,
+	getPlayerEntityDependencies, PlayerEntityDependencies,
+	PlayerEvents, PlayerVariables
 } from "./entities/player";
 
 export { PlayerAction, PlayerActionTypesArray } from "./playerActions";
 export * as PlayerActions from "./playerActions";
 
 export { getPiece, getAllPieces } from "./player/pieceSelectors";
-export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./player/playerSelectors";
+export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./entities/player/state/selectors";
 export { PlayerInfoCommands, PlayerInfoState, playerInfoReducer, PlayerMatchRewards } from "./player/playerInfo";
 
 export { RoundInfoState, roundInfoReducer, RoundInfoCommands } from "./game/roundInfo";

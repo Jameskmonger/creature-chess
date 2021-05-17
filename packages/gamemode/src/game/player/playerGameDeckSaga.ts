@@ -2,12 +2,16 @@ import { Card, PieceModel } from "@creature-chess/models";
 import { all, put, takeEvery } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { getBenchSlice, getBoardSlice } from "../../entities/player/selectors";
-import { PlayerEvents } from "../../player";
 import { updateCardsCommand } from "../../entities/player/state/cardShop";
 import { getAllPieces, getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
-import { getPlayerCards, isPlayerAlive } from "../../player/playerSelectors";
+import { getPlayerCards, isPlayerAlive } from "../../entities/player/state/selectors";
 import { PlayerState, PlayerCommands } from "../../entities/player";
 import { CardDeck } from "../cardDeck";
+import {
+	playerDeathEvent, PlayerDeathEvent,
+	afterRerollCardsEvent, AfterRerollCardsEvent,
+	afterSellPieceEvent, AfterSellPieceEvent
+} from "../../entities/player/events";
 
 export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 	const boardSlice = yield* getBoardSlice();
@@ -31,8 +35,8 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 	};
 
 	yield all([
-		takeEvery<PlayerEvents.PlayerDeathEvent>(
-			PlayerEvents.playerDeathEvent.toString(),
+		takeEvery<PlayerDeathEvent>(
+			playerDeathEvent.toString(),
 			function*() {
 				const cards = yield* select(getPlayerCards);
 				const pieces = yield* select(getAllPieces);
@@ -46,8 +50,8 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 				addToDeck(pieces, remainingCards);
 			}
 		),
-		takeEvery<PlayerEvents.AfterRerollCardsEvent>(
-			PlayerEvents.afterRerollCardsEvent.toString(),
+		takeEvery<AfterRerollCardsEvent>(
+			afterRerollCardsEvent.toString(),
 			function*() {
 				const state = yield* select((s: PlayerState) => s);
 
@@ -72,8 +76,8 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 				yield put(PlayerCommands.updateCardsCommand(newCards));
 			}
 		),
-		takeEvery<PlayerEvents.AfterSellPieceEvent>(
-			PlayerEvents.afterSellPieceEvent.toString(),
+		takeEvery<AfterSellPieceEvent>(
+			afterSellPieceEvent.toString(),
 			function*({ payload: { piece } }) {
 				// when a player sells a piece, add it back to the deck
 				deck.addPiece(piece);

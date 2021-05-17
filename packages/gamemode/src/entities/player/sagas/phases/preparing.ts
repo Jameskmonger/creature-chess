@@ -1,10 +1,10 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../../../../game/events";
-import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../../../player/events";
+import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../events";
 import { PlayerInfoCommands } from "../../../../player/playerInfo";
 import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
-import { getPlayerLevel, getPlayerMoney, isPlayerAlive, isPlayerShopLocked } from "../../../../player/playerSelectors";
+import { getPlayerLevel, getPlayerMoney, isPlayerAlive, isPlayerShopLocked } from "../../state/selectors";
 import { PlayerState } from "../../state";
 import { getBoardSlice } from "../../selectors";
 import { addXpCommand } from "../xp";

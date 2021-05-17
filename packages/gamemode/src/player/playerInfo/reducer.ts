@@ -1,6 +1,6 @@
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { PlayerInfoCommand, UPDATE_STREAK_COMMAND, UPDATE_BATTLE_COMMAND } from "./commands";
-import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../events";
+import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../../entities/player/events";
 
 export interface PlayerStreak {
 	type: StreakType;

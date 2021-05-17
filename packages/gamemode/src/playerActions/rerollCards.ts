@@ -2,10 +2,10 @@ import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { createAction } from "@reduxjs/toolkit";
 import { REROLL_COST } from "@creature-chess/models";
-import { isPlayerAlive } from "../player/playerSelectors";
+import { isPlayerAlive } from "../entities/player/state/selectors";
 import { PlayerInfoCommands } from "../player/playerInfo";
-import { afterRerollCardsEvent } from "../player/events";
-import { getPlayerSagaDependencies } from "../player/sagaContext";
+import { afterRerollCardsEvent } from "../entities/player/events";
+import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 
 export type RerollCardsPlayerAction = ReturnType<typeof rerollCardsPlayerAction>;
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
@@ -14,7 +14,7 @@ export const rerollCardsPlayerActionSaga = function*() {
 	yield takeEvery<RerollCardsPlayerAction>(
 		rerollCardsPlayerAction.toString(),
 		function*() {
-			const { logger } = yield* getPlayerSagaDependencies();
+			const { logger } = yield* getPlayerEntityDependencies();
 
 			const isAlive = yield* select(isPlayerAlive);
 

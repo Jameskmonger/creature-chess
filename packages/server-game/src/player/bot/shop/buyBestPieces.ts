@@ -1,6 +1,6 @@
 import { select, delay, put, call } from "redux-saga/effects";
 import { getContext } from "typed-redux-saga";
-import { getDefinitionById, getAllPieces, PlayerActions, PlayerState, PlayerSagaContext } from "@creature-chess/gamemode";
+import { getDefinitionById, getAllPieces, PlayerActions, PlayerState, getPlayerEntityDependencies } from "@creature-chess/gamemode";
 import { BOT_ACTION_TIME_MS } from "../constants";
 import { compareCardPieceViews, getCardViews, getPieceViews } from "./cardPieceViews";
 import { PREFERRED_LOCATIONS } from "../preferredLocations";
@@ -56,7 +56,7 @@ const buyCardIfBelowLimit = function*(index: number) {
 	const card = state.cardShop.cards[index];
 
 	if (!card) {
-		const { logger } = yield* PlayerSagaContext.getPlayerSagaDependencies();
+		const { logger } = yield* getPlayerEntityDependencies();
 		const name = yield* getContext<string>("playerName");
 
 		logger.warn(

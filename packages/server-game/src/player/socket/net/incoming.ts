@@ -1,12 +1,12 @@
 import { takeEvery, put, all, call } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
-import { PlayerEvents, PlayerActionTypesArray, PlayerSagaContext } from "@creature-chess/gamemode";
+import { PlayerEvents, PlayerActionTypesArray, getPlayerEntityDependencies } from "@creature-chess/gamemode";
 import { ClientToServer, receiveActionsSaga } from "@creature-chess/networking";
 
 import { getPacketRegistries } from "./registries";
 
 export const incomingNetworking = function*() {
-	const { logger } = yield* PlayerSagaContext.getPlayerSagaDependencies();
+	const { logger } = yield* getPlayerEntityDependencies();
 
 	const { incoming: registry } = yield* getPacketRegistries();
 

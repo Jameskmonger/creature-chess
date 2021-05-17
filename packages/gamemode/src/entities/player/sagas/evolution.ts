@@ -4,9 +4,9 @@ import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { BoardSelectors } from "@creature-chess/board";
 import * as pieceSelectors from "../../../player/pieceSelectors";
 import { getDefinitionById } from "../../../definitions";
-import { getPlayerSagaDependencies } from "../../../player/sagaContext";
-import { isPlayerBoardLocked } from "../../../player/playerSelectors";
+import { isPlayerBoardLocked } from "../state/selectors";
 import { PlayerState } from "../state";
+import { getPlayerEntityDependencies } from "../dependencies";
 
 const pieceCanEvolve = (piece: PieceModel) => {
 	const definition = getDefinitionById(piece.definitionId);
@@ -19,7 +19,7 @@ const pieceCanEvolve = (piece: PieceModel) => {
 };
 
 export const evolutionSaga = function*() {
-	const { boardSlices: { boardSlice, benchSlice } } = yield* getPlayerSagaDependencies();
+	const { boardSlices: { boardSlice, benchSlice } } = yield* getPlayerEntityDependencies();
 
 	yield takeLatest<
 		ReturnType<typeof boardSlice.commands.addBoardPieceCommand>

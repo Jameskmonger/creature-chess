@@ -1,8 +1,8 @@
 import { EventEmitter } from "events";
 import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
 import { listenForPropertyUpdates } from "./playerPropertyUpdates";
-import { PlayerSelectors } from "../player";
 import { PlayerEntity } from "../entities";
+import { PlayerStateSelectors } from "../entities/player";
 
 const debounce = (func: () => void, wait: number) => {
 	let timeout: any;
@@ -102,18 +102,18 @@ export class PlayerList {
 		return this.players.map(({ id }) => {
 			const player = this.gamePlayers[id];
 
-			const streak = player.select(PlayerSelectors.getPlayerStreak);
+			const streak = player.select(PlayerStateSelectors.getPlayerStreak);
 			return {
 				id: player.id,
 				name: player.getVariable(variables => variables.name),
-				health: player.select(PlayerSelectors.getPlayerHealth),
-				ready: player.select(PlayerSelectors.isPlayerReady),
-				level: player.select(PlayerSelectors.getPlayerLevel),
-				money: player.select(PlayerSelectors.getPlayerMoney),
+				health: player.select(PlayerStateSelectors.getPlayerHealth),
+				ready: player.select(PlayerStateSelectors.isPlayerReady),
+				level: player.select(PlayerStateSelectors.getPlayerLevel),
+				money: player.select(PlayerStateSelectors.getPlayerMoney),
 				streakType: streak.type,
 				streakAmount: streak.amount,
-				battle: player.select(PlayerSelectors.getPlayerBattle),
-				status: player.select(PlayerSelectors.getPlayerStatus),
+				battle: player.select(PlayerStateSelectors.getPlayerBattle),
+				status: player.select(PlayerStateSelectors.getPlayerStatus),
 				profile: player.getVariable(variables => variables.profile),
 			};
 		});
@@ -124,8 +124,8 @@ export class PlayerList {
 			id: player.id,
 			position: null,
 			sortValues: {
-				health: player.select(PlayerSelectors.getPlayerHealth),
-				hasQuit: player.select(PlayerSelectors.getPlayerStatus) === PlayerStatus.QUIT
+				health: player.select(PlayerStateSelectors.getPlayerHealth),
+				hasQuit: player.select(PlayerStateSelectors.getPlayerStatus) === PlayerStatus.QUIT
 			}
 		});
 

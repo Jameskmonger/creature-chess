@@ -1,30 +1,30 @@
 import { takeLatest, all } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 
-import { PlayerState, PlayerInfoCommands, PlayerCommands, PlayerSelectors } from "@creature-chess/gamemode";
+import { PlayerState, PlayerInfoCommands, PlayerCommands, PlayerStateSelectors } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { getPacketRegistries } from "../registries";
 
 export const sendPlayerInfoUpdates = function*() {
 	const { outgoing: registry } = yield* getPacketRegistries();
 
-	const initialCards = yield* select(PlayerSelectors.getPlayerCards);
+	const initialCards = yield* select(PlayerStateSelectors.getPlayerCards);
 	registry.emit(ServerToClient.Game.PacketOpcodes.CARDS_UPDATE, initialCards);
 
-	const initialLocked = yield* select(PlayerSelectors.isPlayerShopLocked);
+	const initialLocked = yield* select(PlayerStateSelectors.isPlayerShopLocked);
 	registry.emit(ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE, initialLocked);
 
-	const initialMoney = yield* select(PlayerSelectors.getPlayerMoney);
+	const initialMoney = yield* select(PlayerStateSelectors.getPlayerMoney);
 	registry.emit(ServerToClient.Game.PacketOpcodes.MONEY_UPDATE, initialMoney);
 
-	const initialLevel = yield* select(PlayerSelectors.getPlayerLevel);
-	const initialXp = yield* select(PlayerSelectors.getPlayerXp);
+	const initialLevel = yield* select(PlayerStateSelectors.getPlayerLevel);
+	const initialXp = yield* select(PlayerStateSelectors.getPlayerXp);
 	registry.emit(ServerToClient.Game.PacketOpcodes.LEVEL_UPDATE, { level: initialLevel, xp: initialXp });
 
-	const initialHealth = yield* select(PlayerSelectors.getPlayerHealth);
+	const initialHealth = yield* select(PlayerStateSelectors.getPlayerHealth);
 	registry.emit(ServerToClient.Game.PacketOpcodes.HEALTH_UPDATE, initialHealth);
 
-	const initialOpponentId = yield* select(PlayerSelectors.getOpponentId);
+	const initialOpponentId = yield* select(PlayerStateSelectors.getOpponentId);
 	registry.emit(ServerToClient.Game.PacketOpcodes.OPPONENT_ID_UPDATE, initialOpponentId);
 
 	yield all([
@@ -39,14 +39,14 @@ export const sendPlayerInfoUpdates = function*() {
 		takeLatest(
 			PlayerCommands.updateCardsCommand.toString(),
 			function*() {
-				const cards = yield* select(PlayerSelectors.getPlayerCards);
+				const cards = yield* select(PlayerStateSelectors.getPlayerCards);
 				registry.emit(ServerToClient.Game.PacketOpcodes.CARDS_UPDATE, cards);
 			}
 		),
 		takeLatest(
 			PlayerCommands.updateShopLockCommand.toString(),
 			function*() {
-				const locked = yield* select(PlayerSelectors.isPlayerShopLocked);
+				const locked = yield* select(PlayerStateSelectors.isPlayerShopLocked);
 				registry.emit(ServerToClient.Game.PacketOpcodes.SHOP_LOCK_UPDATE, locked);
 			}
 		),

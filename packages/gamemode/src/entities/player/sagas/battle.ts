@@ -5,7 +5,7 @@ import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../../../game/events";
 import { PlayerInfoCommands } from "../../../player/playerInfo";
 import { playerMatchRewards } from "./matchRewards";
-import { getOpponentId } from "../../../player/playerSelectors";
+import { getOpponentId } from "../state/selectors";
 
 export const playerBattle = function*() {
 	yield all([

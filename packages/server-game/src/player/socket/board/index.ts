@@ -2,7 +2,8 @@ import { getDependency, getVariable } from "@shoki/engine";
 import { all, call, race, take, select, delay, getContext } from "typed-redux-saga";
 import {
 	PlayerVariables, PlayerEntity, PlayerEntitySelectors, PlayerActions,
-	PlayerSagaContext, PlayerSelectors, PlayerState, PlayerCommands, GameEvents, Match
+	PlayerEntityDependencies, PlayerStateSelectors, PlayerState, PlayerCommands,
+	GameEvents, Match
 } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { getPacketRegistries, OutgoingRegistry } from "../net/registries";
@@ -16,7 +17,7 @@ const getSpectatingPlayer = function*() {
 		return null;
 	}
 
-	const game = yield* getDependency<PlayerSagaContext.PlayerSagaDependencies, "game">("game");
+	const game = yield* getDependency<PlayerEntityDependencies, "game">("game");
 	return game.getPlayerById(spectatingId) || null;
 };
 
@@ -67,13 +68,13 @@ const spectatePlayerBoard = function*(registry: OutgoingRegistry) {
 		call(
 			subscribeToBoard,
 			boardSlice,
-			PlayerSelectors.getPlayerBoard,
+			PlayerStateSelectors.getPlayerBoard,
 			board => registry.emit(ServerToClient.Game.PacketOpcodes.BOARD_UPDATE, board)
 		),
 		call(
 			subscribeToBoard,
 			benchSlice,
-			PlayerSelectors.getPlayerBench,
+			PlayerStateSelectors.getPlayerBench,
 			bench => registry.emit(ServerToClient.Game.PacketOpcodes.BENCH_UPDATE, bench)
 		)
 	]);
