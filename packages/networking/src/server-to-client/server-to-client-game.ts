@@ -1,5 +1,5 @@
 import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn, emitActionsOpcode, EmitActionsPacket } from "@shoki/networking";
-import { Card, GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
+import { GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "@shoki/board";
 import { RoundInfoState } from "@creature-chess/gamemode";
 import { EmptyPacket } from "../empty-packet";
@@ -28,11 +28,6 @@ export type PhaseUpdatePacket =
 	PreparingPhaseUpdatePacket
 	| ReadyPhaseUpdatePacket
 	| PlayingPhaseUpdatePacket;
-
-type LevelUpdatePacket = {
-	level: number;
-	xp: number;
-};
 
 type FinishGamePacket = {
 	winnerId: string;

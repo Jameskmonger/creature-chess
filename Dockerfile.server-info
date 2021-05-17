@@ -11,10 +11,8 @@ COPY packages/server-info/package*.json ./packages/server-info/
 COPY packages/auth-server/package*.json ./packages/auth-server/
 COPY packages/shoki-board/package*.json ./packages/shoki-board/
 COPY packages/shoki-engine/package*.json ./packages/shoki-engine/
-COPY packages/battle/package*.json ./packages/battle/
 COPY packages/models/package*.json ./packages/models/
 COPY packages/data/package*.json ./packages/data/
-COPY packages/gamemode/package*.json ./packages/gamemode/
 
 COPY lerna.json ./
 RUN npm run bootstrap
@@ -32,10 +30,6 @@ RUN npm run build -- --scope @creature-chess/models
 COPY packages/data ./packages/data
 RUN npm run build -- --scope @creature-chess/data
 
-COPY packages/battle ./packages/battle
-RUN npm run build -- --scope @creature-chess/battle
-COPY packages/gamemode ./packages/gamemode
-RUN npm run build -- --scope @creature-chess/gamemode
 COPY packages/auth-server ./packages/auth-server
 RUN npm run build -- --scope @creature-chess/auth-server
 

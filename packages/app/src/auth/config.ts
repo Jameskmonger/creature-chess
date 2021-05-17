@@ -1,4 +1,4 @@
-import { config } from "@creature-chess/gamemode";
+import { config } from "@creature-chess/models";
 
 export const auth0Config = {
 	domain: config.auth0.domain,

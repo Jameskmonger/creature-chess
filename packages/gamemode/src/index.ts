@@ -19,5 +19,3 @@ export * as GameEvents from "./game/events";
 export { getDefinitionById } from "./definitions";
 
 export { Match } from "./game/match";
-
-export { config } from "./config";

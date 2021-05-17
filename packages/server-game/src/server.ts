@@ -1,12 +1,13 @@
 import { Logger } from "winston";
 import { ManagementClient } from "auth0";
-import { SocketAuthenticator } from "./socket/socketAuthenticator";
+import { config } from "@creature-chess/models";
 import { createDatabaseConnection } from "@creature-chess/data";
+import { UserAppMetadata } from "@creature-chess/auth-server";
+
+import { SocketAuthenticator } from "./socket/socketAuthenticator";
 import { openServer } from "./socket/openServer";
 import { Matchmaking } from "./matchmaking/matchmaking";
-import { UserAppMetadata } from "@creature-chess/auth-server";
 import { createDiscordApi } from "./discord";
-import { config } from "@creature-chess/gamemode";
 
 const AUTH0_CONFIG = {
 	domain: config.auth0.domain,
