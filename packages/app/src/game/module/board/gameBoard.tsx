@@ -1,11 +1,14 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GamePhase } from "@creature-chess/models";
 import { BoardState } from "@shoki/board";
 import { BoardGrid } from "@shoki/board-react";
 import { AppState } from "../../../store";
-import { PieceComponent } from "./piece/pieceComponent";
 import { onDropPiece, onTileClick } from "./tileInteraction";
+import { InteractablePiece } from "../../components/piece/interactablePiece";
+import { AnimatedPiece } from "../../components/piece/animatedPiece";
+
+const renderAnimatedPiece = (id: string) => <AnimatedPiece id={id} />;
+const renderInteractablePiece = (id: string) => <InteractablePiece id={id} />;
 
 export const GameBoard: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
@@ -14,25 +17,12 @@ export const GameBoard: React.FunctionComponent = () => {
 	const board = useSelector<AppState, BoardState>(state => state.game.board);
 	const matchBoard = useSelector<AppState, BoardState>(state => state.game.match.board);
 
-	const selectedPieceId = useSelector<AppState, string | null>(state => state.game.ui.selectedPieceId);
-	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
-
-	const renderBoardPiece = (id: string) => (
-		<PieceComponent
-			id={id}
-			draggable={inPreparingPhase}
-			animate={!inPreparingPhase}
-			selected={id === selectedPieceId}
-			pieceIsOnBench={false}
-		/>
-	);
-
 	if (matchBoard) {
 		return (
 			<div className="board-tiles">
 				<BoardGrid
 					state={matchBoard}
-					renderItem={renderBoardPiece}
+					renderItem={renderAnimatedPiece}
 				/>
 			</div>
 		);
@@ -44,7 +34,7 @@ export const GameBoard: React.FunctionComponent = () => {
 				state={board}
 				onDrop={onDropPiece(dispatch, "board", board, bench)}
 				onClick={onTileClick(dispatch, "board")}
-				renderItem={renderBoardPiece}
+				renderItem={renderInteractablePiece}
 			/>
 		</div>
 	);

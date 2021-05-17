@@ -3,15 +3,19 @@ import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
 import { BoardSelectors } from "@shoki/board";
-import { AppState } from "../../../../store";
-import { Healthbar } from "./components/healthbar";
-import { StageIndicator } from "./components/StageIndicator";
-import { TypeIndicator } from "./components/TypeIndicator";
+import { AppState } from "../../../store";
+import { Healthbar } from "../healthbar";
+import { StageIndicator } from "../StageIndicator";
+import { TypeIndicator } from "../TypeIndicator";
 
-const PieceMeta: React.FunctionComponent<{ id: string; pieceIsOnBench?: boolean }> = ({ id, pieceIsOnBench = false }) => {
+const PieceMeta: React.FunctionComponent<{ id: string; hideHealthbar?: boolean }> = ({ id, hideHealthbar = false }) => {
 	const piece = useSelector<AppState, PieceModel>(state => {
 		if (state.game.match.board) {
-			return BoardSelectors.getPiece(state.game.match.board, id);
+			const matchPiece = BoardSelectors.getPiece(state.game.match.board, id);
+
+			if (matchPiece) {
+				return matchPiece;
+			}
 		}
 
 		return getPiece(state.game, id);
@@ -23,7 +27,7 @@ const PieceMeta: React.FunctionComponent<{ id: string; pieceIsOnBench?: boolean 
 				<TypeIndicator type={piece.definition.type} />
 
 				<div className="health-bar-container">
-					<Healthbar pieceId={id} vertical pieceIsOnBench={pieceIsOnBench} />
+					{!hideHealthbar && <Healthbar pieceId={id} vertical />}
 
 					<StageIndicator pieceId={id} />
 				</div>

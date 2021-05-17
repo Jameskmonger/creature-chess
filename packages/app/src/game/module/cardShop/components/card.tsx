@@ -4,7 +4,7 @@ import { getPlayerMoney } from "@creature-chess/gamemode";
 import { Card } from "@creature-chess/models";
 import { AppState } from "../../../../store";
 import { CreatureImage } from "../../../../display";
-import { TypeIndicator } from "../../board/piece/components/TypeIndicator";
+import { TypeIndicator } from "../../../components/TypeIndicator";
 
 interface CardProps {
 	card: Card;
