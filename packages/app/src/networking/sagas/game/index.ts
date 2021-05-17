@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { take, put, call, all } from "redux-saga/effects";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
 

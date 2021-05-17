@@ -2,7 +2,7 @@ import { takeEvery, put } from "redux-saga/effects";
 import { getContext, select } from "typed-redux-saga";
 import { PlayerState } from "../state";
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { BoardSelectors } from "@creature-chess/board";
+import { BoardSelectors } from "@shoki/board";
 import { dropPiecePlayerAction } from "../../../playerActions";
 import { isPlayerAlive, getPlayerBelowPieceLimit, getMostExpensiveBenchPiece } from "../state/selectors";
 

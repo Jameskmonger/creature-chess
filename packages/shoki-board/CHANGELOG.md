@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.4.0](https://github.com/Jameskmonger/creature-chess/compare/v0.3.56...v0.4.0) (2021-05-16)
 
-**Note:** Version bump only for package @creature-chess/board
+**Note:** Version bump only for package @shoki/board
 
 
 
@@ -13,7 +13,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.3.52](https://github.com/Jameskmonger/creature-chess/compare/v0.3.51...v0.3.52) (2021-05-13)
 
-**Note:** Version bump only for package @creature-chess/board
+**Note:** Version bump only for package @shoki/board
 
 
 
@@ -21,7 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.3.50](https://github.com/Jameskmonger/creature-chess/compare/v0.3.48...v0.3.50) (2021-05-12)
 
-**Note:** Version bump only for package @creature-chess/board
+**Note:** Version bump only for package @shoki/board
 
 
 
@@ -29,7 +29,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.3.42](https://github.com/Jameskmonger/creature-chess/compare/v0.3.41...v0.3.42) (2021-04-15)
 
-**Note:** Version bump only for package @creature-chess/board
+**Note:** Version bump only for package @shoki/board
 
 
 
@@ -37,7 +37,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.3.36](https://github.com/Jameskmonger/creature-chess/compare/v0.3.34...v0.3.36) (2021-04-12)
 
-**Note:** Version bump only for package @creature-chess/board
+**Note:** Version bump only for package @shoki/board
 
 
 
@@ -45,7 +45,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.3.35](https://github.com/Jameskmonger/creature-chess/compare/v0.3.34...v0.3.35) (2021-04-12)
 
-**Note:** Version bump only for package @creature-chess/board
+**Note:** Version bump only for package @shoki/board
 
 
 

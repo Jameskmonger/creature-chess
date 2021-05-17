@@ -1,6 +1,6 @@
 import { takeLatest, put, fork } from "@redux-saga/core/effects";
 import { defaultGameOptions, GamePhase } from "@creature-chess/models";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { BattleEvents, battleSagaFactory, startBattle } from "@creature-chess/battle";
 import { gameRoundUpdateEvent, GameRoundUpdateEvent } from "./roundUpdate";
 import { AppState } from "../../../store";

@@ -1,35 +1,35 @@
 {
-  "name": "@creature-chess/battle",
-  "version": "0.4.0",
-  "description": "Battle engine for Creature Chess",
-  "author": "James Monger <jameskmonger@hotmail.co.uk>",
-  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
-  "license": "MIT",
-  "main": "lib/index.js",
-  "files": [
-    "lib/"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Jameskmonger/creature-chess.git"
-  },
-  "scripts": {
-    "build": "tsc -p ./tsconfig.json",
-    "test": "jest",
-    "lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
-  },
-  "bugs": {
-    "url": "https://github.com/Jameskmonger/creature-chess/issues"
-  },
-  "dependencies": {
-    "@creature-chess/board": "^0.4.0",
-    "@creature-chess/models": "^0.4.0",
-    "@types/redux-saga": "^0.10.5",
-    "javascript-astar": "^0.4.1",
-    "present": "^1.0.0",
-    "redux-saga": "^1.0.2"
-  }
+	"name": "@creature-chess/battle",
+	"version": "0.4.0",
+	"description": "Battle engine for Creature Chess",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"main": "lib/index.js",
+	"files": [
+		"lib/"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "jest",
+		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"@shoki/board": "^0.4.0",
+		"@creature-chess/models": "^0.4.0",
+		"@types/redux-saga": "^0.10.5",
+		"javascript-astar": "^0.4.1",
+		"present": "^1.0.0",
+		"redux-saga": "^1.0.2"
+	}
 }

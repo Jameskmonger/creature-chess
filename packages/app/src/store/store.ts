@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { createBoardSlice } from "@creature-chess/board";
+import { createBoardSlice } from "@shoki/board";
 import { createReducers } from "./reducers";
 import { AppState } from "./state";
 import { rootSaga } from "./saga";

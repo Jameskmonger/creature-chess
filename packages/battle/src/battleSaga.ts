@@ -4,7 +4,7 @@ import { takeLatest, select, put, call } from "@redux-saga/core/effects";
 const present = require("present");
 
 import { IndexedPieces, createPieceCombatState, PieceModel, GameOptions } from "@creature-chess/models";
-import { BoardState, BoardSlice, BoardSelectors } from "@creature-chess/board";
+import { BoardState, BoardSlice, BoardSelectors } from "@shoki/board";
 
 import { simulateTurn } from "./turnSimulator";
 import { isATeamDefeated } from "./utils/is-a-team-defeated";

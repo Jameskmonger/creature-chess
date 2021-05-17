@@ -11,7 +11,7 @@ RUN npm ci --loglevel notice
 
 # package dependencies
 
-COPY packages/board/package*.json ./packages/board/
+COPY packages/shoki-board/package*.json ./packages/shoki-board/
 COPY packages/shoki-engine/package*.json ./packages/shoki-engine/
 COPY packages/shoki-networking/package*.json ./packages/shoki-networking/
 
@@ -31,8 +31,8 @@ FROM builder as built
 COPY tsconfig.json .
 
 # build dependencies - doing this manually improves docker caching
-COPY packages/board ./packages/board
-RUN npm run build -- --scope @creature-chess/board
+COPY packages/shoki-board ./packages/shoki-board
+RUN npm run build -- --scope @shoki/board
 COPY packages/shoki-engine ./packages/shoki-engine
 RUN npm run build -- --scope @shoki/engine
 COPY packages/shoki-networking ./packages/shoki-networking
@@ -59,7 +59,7 @@ FROM built as binary
 
 # run script to create binary
 COPY scripts/ ./scripts/
-RUN npm run build:create-bin:deps
+RUN npm run build:create-bin:shoki
 RUN npm run build:create-bin:server
 
 FROM node

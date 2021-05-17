@@ -3,7 +3,7 @@ import { eventChannel } from "redux-saga";
 import { takeEvery, put, call } from "redux-saga/effects";
 import { PlayerInfoCommands, PlayerEvents, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { GamePhase } from "@creature-chess/models";
 import { startBattle } from "@creature-chess/battle";
 

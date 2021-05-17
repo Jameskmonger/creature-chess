@@ -1,5 +1,5 @@
 import { PieceModel } from "@creature-chess/models";
-import { BoardSelectors, BoardState } from "@creature-chess/board";
+import { BoardSelectors, BoardState } from "@shoki/board";
 
 export const isATeamDefeated = (board: BoardState<PieceModel>) => {
 	const pieceOwnerIds = BoardSelectors.getAllPieces(board).map(p => p.ownerId);

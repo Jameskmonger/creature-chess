@@ -3,9 +3,9 @@ import { put, takeLatest } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { getDependency, getVariable } from "@shoki/engine";
 import { GamePhase } from "@creature-chess/models";
-import { getPlayerEntityDependencies, PlayerEntityDependencies } from "../entities/player/dependencies";
 import { isPlayerAlive, isPlayerReady } from "../entities/player/state/selectors";
 import { updateReadyCommand } from "../player/playerInfo/commands";
+import { getPlayerEntityDependencies, PlayerEntityDependencies } from "../entities/player/dependencies";
 import { PlayerVariables } from "../entities/player/variables";
 
 export type ReadyUpPlayerAction = ReturnType<typeof readyUpPlayerAction>;

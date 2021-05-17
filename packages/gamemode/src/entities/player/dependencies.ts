@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 import { getContext } from "typed-redux-saga";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { Game } from "../../game";

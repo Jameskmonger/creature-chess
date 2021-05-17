@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
-import { BoardSelectors } from "@creature-chess/board";
+import { BoardSelectors } from "@shoki/board";
 import { AppState } from "../../../../store";
 import { Healthbar } from "./components/healthbar";
 import { StageIndicator } from "./components/StageIndicator";

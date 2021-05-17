@@ -1,6 +1,6 @@
 import { take, select, put } from "@redux-saga/core/effects";
 import { getPiece, PlayerActions } from "@creature-chess/gamemode";
-import { BoardState, BoardSelectors } from "@creature-chess/board";
+import { BoardState, BoardSelectors } from "@shoki/board";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
 import { clearSelectedPiece } from "../../ui/actions";

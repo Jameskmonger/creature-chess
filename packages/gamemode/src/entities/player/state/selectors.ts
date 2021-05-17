@@ -1,4 +1,4 @@
-import { BoardSelectors } from "@creature-chess/board";
+import { BoardSelectors } from "@shoki/board";
 import { PlayerStatus } from "@creature-chess/models";
 import { PlayerState } from "..";
 

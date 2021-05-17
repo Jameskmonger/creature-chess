@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { getPlayerLevel } from "@creature-chess/gamemode";
 import { AppState } from "../../../store";
-import { BoardSelectors, BoardState } from "@creature-chess/board";
+import { BoardSelectors, BoardState } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { usePlayerId } from "../../../auth";
 

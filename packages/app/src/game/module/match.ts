@@ -1,4 +1,4 @@
-import { BoardState } from "@creature-chess/board";
+import { BoardState } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 

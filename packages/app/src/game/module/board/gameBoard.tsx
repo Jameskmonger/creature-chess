@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GamePhase } from "@creature-chess/models";
-import { BoardState } from "@creature-chess/board";
-import { BoardGrid } from "@creature-chess/board-react";
+import { BoardState } from "@shoki/board";
+import { BoardGrid } from "@shoki/board-react";
 import { AppState } from "../../../store";
 import { PieceComponent } from "./piece/pieceComponent";
 import { onDropPiece, onTileClick } from "./tileInteraction";

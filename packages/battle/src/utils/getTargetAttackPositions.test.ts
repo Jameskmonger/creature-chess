@@ -1,5 +1,5 @@
 import { createTileCoordinates } from "@creature-chess/models";
-import { BoardState } from "@creature-chess/board";
+import { BoardState } from "@shoki/board";
 import { getTargetAttackPositions } from "./getTargetAttackPositions";
 
 describe("getTargetAttackPositions", () => {

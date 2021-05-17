@@ -11,7 +11,7 @@ import { createWinstonLogger } from "../log";
 import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
 import { playerNetworking } from "../player/socket/net";
 import { v4 as uuid } from "uuid";
-import { createBoardSlice } from "@creature-chess/board";
+import { createBoardSlice } from "@shoki/board";
 import { Logger } from "winston";
 
 type PlayerConnections = {

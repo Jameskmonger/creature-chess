@@ -8,7 +8,7 @@
 		"bootstrap": "lerna bootstrap",
 		"test": "lerna run test",
 		"release": "lerna version --conventional-commits",
-		"build:create-bin:deps": "sh ./scripts/createBin-deps.sh",
+		"build:create-bin:shoki": "sh ./scripts/createBin-shoki.sh",
 		"build:create-bin:server": "sh ./scripts/createBin-server.sh",
 		"build": "lerna run build --stream",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",

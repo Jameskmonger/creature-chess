@@ -27,8 +27,8 @@
 	"dependencies": {
 		"@auth0/auth0-react": "^1.5.0",
 		"@creature-chess/battle": "^0.4.0",
-		"@creature-chess/board": "^0.4.0",
-		"@creature-chess/board-react": "^0.4.0",
+		"@shoki/board": "^0.4.0",
+		"@shoki/board-react": "^0.4.0",
 		"@creature-chess/gamemode": "^0.4.2",
 		"@creature-chess/models": "^0.4.0",
 		"@creature-chess/networking": "^0.4.2",
