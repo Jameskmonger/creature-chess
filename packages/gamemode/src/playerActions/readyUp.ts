@@ -14,7 +14,7 @@ export const readyUpPlayerActionSaga = function*() {
 	yield takeLatest<ReadyUpPlayerAction>(
 		readyUpPlayerAction.toString(),
 		function*() {
-			const name = yield* getVariable<PlayerVariables, string>(variables => variables.name)
+			const name = yield* getVariable<PlayerVariables, string>(variables => variables.name);
 			const { logger } = yield* getPlayerEntityDependencies();
 
 			const isAlive = yield* select(isPlayerAlive);

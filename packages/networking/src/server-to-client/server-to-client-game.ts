@@ -111,12 +111,8 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.PLAYER_DEAD]: never;
 };
 
-export type IncomingRegistry = IncomingPacketRegistry<
-	PacketDefinitions, PacketAcknowledgements
->;
-export type OutgoingRegistry = OutgoingPacketRegistry<
-	PacketDefinitions, PacketAcknowledgements
->;
+export type IncomingRegistry = IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>;
+export type OutgoingRegistry = OutgoingPacketRegistry<PacketDefinitions, PacketAcknowledgements>;
 
 export const createIncomingRegistry = (
 	registerListener: RegisterListenerFn<PacketDefinitions, PacketAcknowledgements>
