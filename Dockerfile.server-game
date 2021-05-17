@@ -11,10 +11,12 @@ RUN npm ci --loglevel notice
 
 # package dependencies
 
-COPY packages/server-game/package*.json ./packages/server-game/
-COPY packages/auth-server/package*.json ./packages/auth-server/
 COPY packages/board/package*.json ./packages/board/
 COPY packages/shoki-engine/package*.json ./packages/shoki-engine/
+COPY packages/shoki-networking/package*.json ./packages/shoki-networking/
+
+COPY packages/server-game/package*.json ./packages/server-game/
+COPY packages/auth-server/package*.json ./packages/auth-server/
 COPY packages/battle/package*.json ./packages/battle/
 COPY packages/models/package*.json ./packages/models/
 COPY packages/data/package*.json ./packages/data/
@@ -33,6 +35,9 @@ COPY packages/board ./packages/board
 RUN npm run build -- --scope @creature-chess/board
 COPY packages/shoki-engine ./packages/shoki-engine
 RUN npm run build -- --scope @shoki/engine
+COPY packages/shoki-networking ./packages/shoki-networking
+RUN npm run build -- --scope @shoki/networking
+
 COPY packages/models ./packages/models
 RUN npm run build -- --scope @creature-chess/models
 COPY packages/data ./packages/data
@@ -54,7 +59,8 @@ FROM built as binary
 
 # run script to create binary
 COPY scripts/ ./scripts/
-RUN npm run build:create-bin
+RUN npm run build:create-bin:deps
+RUN npm run build:create-bin:server
 
 FROM node
 

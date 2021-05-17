@@ -26,6 +26,7 @@ COPY packages/board ./packages/board
 RUN npm run build -- --scope @creature-chess/board
 COPY packages/shoki-engine ./packages/shoki-engine
 RUN npm run build -- --scope @shoki/engine
+
 COPY packages/models ./packages/models
 RUN npm run build -- --scope @creature-chess/models
 COPY packages/data ./packages/data

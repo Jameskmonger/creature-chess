@@ -1,12 +1,11 @@
 import { Socket } from "socket.io-client";
 import { call, takeEvery, all } from "redux-saga/effects";
-import { OutgoingPacketRegistry, ClientToServer, emitActionsSaga } from "@creature-chess/networking";
+import { emitActionsSaga } from "@shoki/networking";
+import { ClientToServer } from "@creature-chess/networking";
 import { BattleEvents } from "@creature-chess/battle";
 import { PlayerActionTypesArray } from "@creature-chess/gamemode";
 
-type ClientToServerPacketRegsitry = OutgoingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
-
-const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) {
+const writeActionsToPackets = function*(registry: ClientToServer.OutgoingRegistry) {
 	yield all([
 		takeEvery(
 			BattleEvents.BATTLE_FINISH_EVENT,
@@ -19,7 +18,7 @@ const writeActionsToPackets = function*(registry: ClientToServerPacketRegsitry) 
 };
 
 export const outgoingGameNetworking = function*(socket: Socket) {
-	const registry = new OutgoingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>(
+	const registry = ClientToServer.createOutgoingRegistry(
 		(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 	);
 

@@ -1,4 +1,4 @@
-type RegisterListenerFn<TPayloads, TAcknowledgements> = <TOpcode extends keyof TPayloads & keyof TAcknowledgements>(
+export type RegisterListenerFn<TPayloads, TAcknowledgements> = <TOpcode extends keyof TPayloads & keyof TAcknowledgements>(
 	opcode: TOpcode,
 	handler: (payload: TPayloads[TOpcode], ack?: TAcknowledgements[TOpcode]) => void
 ) => void;

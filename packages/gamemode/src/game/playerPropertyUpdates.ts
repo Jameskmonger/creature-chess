@@ -1,8 +1,10 @@
 import { all, takeLatest } from "redux-saga/effects";
+import { select } from "typed-redux-saga";
 import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { PlayerStreak } from "../player/playerInfo/reducer";
 import { PlayerInfoCommands } from "../player";
 import { PlayerEntity } from "../entities";
+import { PlayerStateSelectors } from "../entities/player";
 
 // todo use sagas properly here
 export const listenForPropertyUpdates = (
@@ -19,6 +21,9 @@ export const listenForPropertyUpdates = (
 		const sagas = [];
 
 		if (emitHealth) {
+			const initialHealth = yield* select(PlayerStateSelectors.getPlayerHealth);
+			emitHealth(initialHealth);
+
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
 				PlayerInfoCommands.updateHealthCommand.toString(),
 				function*({ payload: health }) {
@@ -28,6 +33,9 @@ export const listenForPropertyUpdates = (
 		}
 
 		if (emitStreak) {
+			const initialStreak = yield* select(PlayerStateSelectors.getPlayerStreak);
+			emitStreak(initialStreak);
+
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateStreakCommand>(
 				PlayerInfoCommands.UPDATE_STREAK_COMMAND,
 				function*({ payload: streak }) {
@@ -37,6 +45,9 @@ export const listenForPropertyUpdates = (
 		}
 
 		if (emitStatus) {
+			const initialStatus = yield* select(PlayerStateSelectors.getPlayerStatus);
+			emitStatus(initialStatus);
+
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateStatusCommand>(
 				PlayerInfoCommands.updateStatusCommand.toString(),
 				function*({ payload: status }) {
@@ -46,6 +57,9 @@ export const listenForPropertyUpdates = (
 		}
 
 		if (emitBattle) {
+			const initialBattle = yield* select(PlayerStateSelectors.getPlayerBattle);
+			emitBattle(initialBattle);
+
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateBattleCommand>(
 				PlayerInfoCommands.UPDATE_BATTLE_COMMAND,
 				function*({ payload: { battle } }) {
@@ -55,6 +69,9 @@ export const listenForPropertyUpdates = (
 		}
 
 		if (emitReady) {
+			const initialReady = yield* select(PlayerStateSelectors.isPlayerReady);
+			emitReady(initialReady);
+
 			sagas.push(takeLatest<PlayerInfoCommands.UpdateReadyCommand>(
 				PlayerInfoCommands.updateReadyCommand.toString(),
 				function*({ payload: ready }) {

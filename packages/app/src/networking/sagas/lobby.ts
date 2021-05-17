@@ -2,14 +2,12 @@ import { Action } from "redux";
 import { EventChannel, eventChannel } from "redux-saga";
 import { put, take, cancelled } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
-import { IncomingPacketRegistry, ServerToClient } from "@creature-chess/networking";
+import { ServerToClient } from "@creature-chess/networking";
 import { lobbyConnectedEvent, LobbyConnectedEvent } from "../actions";
 import { LobbyCommands, LobbyEvents } from "../../lobby";
 import { call, race } from "redux-saga/effects";
 
-type ServerToClientLobbyPacketRegistry = IncomingPacketRegistry<ServerToClient.Lobby.PacketDefinitions, ServerToClient.Lobby.PacketAcknowledgements>;
-
-const readPacketsToActions = function*(registry: ServerToClientLobbyPacketRegistry) {
+const readPacketsToActions = function*(registry: ServerToClient.Lobby.IncomingRegistry) {
 	let channel: EventChannel<Action>;
 
 	try {
@@ -51,10 +49,8 @@ export const lobbyNetworking = function*(
 ) {
 	yield take<LobbyConnectedEvent>(lobbyConnectedEvent.toString());
 
-	const registry = new IncomingPacketRegistry<ServerToClient.Lobby.PacketDefinitions, ServerToClient.Lobby.PacketAcknowledgements>(
-		// todo fix typing here
-		(opcode, handler) => socket.on(opcode, handler as any)
-	);
+	// todo fix typing
+	const registry = ServerToClient.Lobby.createIncomingRegistry((opcode, handler) => socket.on(opcode, handler as any));
 
 	yield race({
 		never: call(readPacketsToActions, registry),

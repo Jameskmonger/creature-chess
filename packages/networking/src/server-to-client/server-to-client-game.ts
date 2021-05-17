@@ -1,3 +1,4 @@
+import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn } from "@shoki/networking";
 import { Card, GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
 import { BoardState } from "@creature-chess/board";
 import { RoundInfoState } from "@creature-chess/gamemode";
@@ -109,3 +110,20 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.MATCH_REWARDS]: never;
 	[PacketOpcodes.PLAYER_DEAD]: never;
 };
+
+export type IncomingRegistry = IncomingPacketRegistry<
+	PacketDefinitions, PacketAcknowledgements
+>;
+export type OutgoingRegistry = OutgoingPacketRegistry<
+	PacketDefinitions, PacketAcknowledgements
+>;
+
+export const createIncomingRegistry = (
+	registerListener: RegisterListenerFn<PacketDefinitions, PacketAcknowledgements>
+): IncomingRegistry =>
+	new IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>(registerListener);
+
+export const createOutgoingRegistry = (
+	emit: EmitFn<PacketDefinitions, PacketAcknowledgements>
+): OutgoingRegistry =>
+	new OutgoingPacketRegistry<PacketDefinitions, PacketAcknowledgements>(emit);

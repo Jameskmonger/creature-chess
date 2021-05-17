@@ -7,6 +7,7 @@ import { toggleShopLockPlayerActionSaga } from "./toggleShopLock";
 import { sellPiecePlayerActionSaga } from "./sellPiece";
 import { dropPiecePlayerActionSaga } from "./dropPiece";
 import { spectatePlayerActionSaga } from "./spectate";
+import { readyUpPlayerActionSaga } from "./readyUp";
 
 export const playerActionsSaga = function*() {
 	yield all([
@@ -16,6 +17,7 @@ export const playerActionsSaga = function*() {
 		call(toggleShopLockPlayerActionSaga),
 		call(sellPiecePlayerActionSaga),
 		call(dropPiecePlayerActionSaga),
-		call(spectatePlayerActionSaga)
+		call(spectatePlayerActionSaga),
+		call(readyUpPlayerActionSaga)
 	]);
 };

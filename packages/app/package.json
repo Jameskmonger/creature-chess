@@ -38,6 +38,7 @@
 		"@reduxjs/toolkit": "^1.5.1",
 		"@sentry/react": "^6.2.5",
 		"@sentry/tracing": "^6.2.5",
+		"@shoki/networking": "^0.4.0",
 		"@types/react": "^16.8.7",
 		"@types/react-dom": "^16.8.2",
 		"@types/react-redux": "^7.1.2",

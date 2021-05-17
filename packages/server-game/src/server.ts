@@ -15,9 +15,11 @@ const AUTH0_CONFIG = {
 };
 
 export const startServer = async (logger: Logger, port: number) => {
-	process.on("unhandledRejection", (error) => {
+	process.on("unhandledRejection", (error, p) => {
 		logger.error("unhandled rejection:");
-		logger.error(error as any);
+
+		console.log("THE ERROR IS ", (error as any).stack);
+		console.log("THE PROMISE IS ", p);
 	});
 
 	const socketServer = openServer(logger, port);

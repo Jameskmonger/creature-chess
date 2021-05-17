@@ -1,14 +1,25 @@
-import { put, delay, getContext } from "@redux-saga/core/effects";
+import { all, put, delay, getContext } from "redux-saga/effects";
 import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { Match } from "../../match";
 import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
-import { playerRunReadyPhaseEvent } from "../../events";
+import { playerBeforeReadyPhaseEvent, playerRunReadyPhaseEvent } from "../../events";
 
 export const runReadyPhase = function*() {
 	const options: GameOptions = yield getContext("options");
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
+
+	// todo turn this into a `call` so it waits for all players
+
+	const tasks = players.getAll().map(p => p.runSaga(function*() {
+		yield put(playerBeforeReadyPhaseEvent());
+	}).toPromise());
+
+	yield all([
+		all(tasks),
+		delay(500)
+	]);
 
 	const matchups = getMatchups();
 

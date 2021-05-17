@@ -2,32 +2,17 @@ import { take, delay, all, race, call } from "redux-saga/effects";
 import { cancelled } from "typed-redux-saga";
 import { Socket } from "socket.io";
 import { GameEvents, PlayerActions } from "@creature-chess/gamemode";
-import { ClientToServer, IncomingPacketRegistry, OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
+import { ClientToServer, ServerToClient } from "@creature-chess/networking";
 
 import { incomingNetworking } from "./incoming";
 import { outgoingNetworking } from "./outgoing";
-import { IncomingRegistry, OutgoingRegistry, setPacketRegistries } from "./registries";
+import { setPacketRegistries } from "./registries";
 import { playerBoard } from "../board";
-
-const createIncomingRegistry = (socket: Socket): IncomingRegistry => new IncomingPacketRegistry<
-ClientToServer.PacketDefinitions,
-ClientToServer.PacketAcknowledgements
->(
-	// todo fix typings here
-	(opcode, handler) => socket.on(opcode, handler as any)
-);
-
-const createOutgoingRegistry = (socket: Socket): OutgoingRegistry => new OutgoingPacketRegistry<
-ServerToClient.Game.PacketDefinitions,
-ServerToClient.Game.PacketAcknowledgements
->(
-	(opcode, payload, ack) => socket.emit(opcode, payload, ack)
-);
 
 export const playerNetworking = function*(socket: Socket) {
 	yield* setPacketRegistries({
-		incoming: createIncomingRegistry(socket),
-		outgoing: createOutgoingRegistry(socket)
+		incoming: ClientToServer.createIncomingRegistry((opcode, handler) => socket.on(opcode, handler as any)),
+		outgoing: ServerToClient.Game.createOutgoingRegistry((opcode, payload, ack) => socket.emit(opcode, payload, ack))
 	});
 
 	const teardown = function*() {
