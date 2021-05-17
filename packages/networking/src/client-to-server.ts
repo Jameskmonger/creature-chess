@@ -1,22 +1,16 @@
-import { PlayerAction } from "@creature-chess/gamemode";
+import { emitActionsOpcode, EmitActionsPacket } from "./registry/emitActions";
 import { EmptyPacket } from "./empty-packet";
 
 export enum PacketOpcodes {
-	FINISH_MATCH = "finishMatch",
-	SEND_PLAYER_ACTIONS = "sendPlayerActions"
+	FINISH_MATCH = "finishMatch"
 }
-
-export type SendPlayerActionsPacket = {
-	index: number;
-	actions: PlayerAction[];
-};
 
 export type PacketDefinitions = {
 	[PacketOpcodes.FINISH_MATCH]: EmptyPacket,
-	[PacketOpcodes.SEND_PLAYER_ACTIONS]: SendPlayerActionsPacket
+	[emitActionsOpcode]: EmitActionsPacket
 };
 
 export type PacketAcknowledgements = {
 	[PacketOpcodes.FINISH_MATCH]: never,
-	[PacketOpcodes.SEND_PLAYER_ACTIONS]: never
+	[emitActionsOpcode]: never
 };

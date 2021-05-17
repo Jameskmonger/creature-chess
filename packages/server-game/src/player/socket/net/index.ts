@@ -40,7 +40,7 @@ export const playerNetworking = function*(socket: Socket) {
 	try {
 		yield race({
 			never: all([
-				call(incomingNetworking, socket),
+				call(incomingNetworking),
 				call(outgoingNetworking),
 				call(playerBoard)
 			]),

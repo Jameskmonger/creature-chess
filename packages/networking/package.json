@@ -1,33 +1,35 @@
 {
-  "name": "@creature-chess/networking",
-  "version": "0.4.2",
-  "private": true,
-  "description": "Shared network definitions for Creature Chess",
-  "author": "James Monger <jameskmonger@hotmail.co.uk>",
-  "homepage": "https://github.com/Jameskmonger/creature-chess#readme",
-  "license": "MIT",
-  "main": "lib/index.js",
-  "files": [
-    "lib/"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Jameskmonger/creature-chess.git"
-  },
-  "scripts": {
-    "build": "tsc -p ./tsconfig.json",
-    "test": "jest",
-    "lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
-  },
-  "bugs": {
-    "url": "https://github.com/Jameskmonger/creature-chess/issues"
-  },
-  "dependencies": {
-    "@creature-chess/board": "^0.4.0",
-    "@creature-chess/gamemode": "^0.4.2",
-    "@creature-chess/models": "^0.4.0"
-  }
+	"name": "@creature-chess/networking",
+	"version": "0.4.2",
+	"private": true,
+	"description": "Shared network definitions for Creature Chess",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"main": "lib/index.js",
+	"files": [
+		"lib/"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "jest",
+		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"@creature-chess/board": "^0.4.0",
+		"@creature-chess/gamemode": "^0.4.2",
+		"@creature-chess/models": "^0.4.0",
+		"@types/redux-saga": "^0.10.5",
+		"redux-saga": "^1.1.3"
+	}
 }
