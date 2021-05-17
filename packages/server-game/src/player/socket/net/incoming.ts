@@ -1,7 +1,8 @@
 import { takeEvery, put, all, call } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 import { PlayerEvents, PlayerActionTypesArray, getPlayerEntityDependencies } from "@creature-chess/gamemode";
-import { ClientToServer, receiveActionsSaga } from "@creature-chess/networking";
+import { ClientToServer } from "@creature-chess/networking";
+import { receiveActionsSaga } from "@shoki/networking";
 
 import { getPacketRegistries } from "./registries";
 

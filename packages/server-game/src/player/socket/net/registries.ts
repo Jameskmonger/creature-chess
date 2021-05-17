@@ -1,12 +1,9 @@
 import { getContext, setContext } from "typed-redux-saga";
-import { ClientToServer, IncomingPacketRegistry, OutgoingPacketRegistry, ServerToClient } from "@creature-chess/networking";
-
-export type OutgoingRegistry = OutgoingPacketRegistry<ServerToClient.Game.PacketDefinitions, ServerToClient.Game.PacketAcknowledgements>;
-export type IncomingRegistry = IncomingPacketRegistry<ClientToServer.PacketDefinitions, ClientToServer.PacketAcknowledgements>;
+import { ClientToServer, ServerToClient } from "@creature-chess/networking";
 
 export type PlayerRegistries = {
-	incoming: IncomingRegistry;
-	outgoing: OutgoingRegistry;
+	incoming: ClientToServer.IncomingRegistry;
+	outgoing: ServerToClient.Game.OutgoingRegistry;
 };
 
 export const getPacketRegistries = () => getContext<PlayerRegistries>("packetRegistries");

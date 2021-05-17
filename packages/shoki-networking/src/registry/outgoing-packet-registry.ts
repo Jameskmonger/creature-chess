@@ -1,4 +1,4 @@
-type EmitFn<TPayloads, TAcknowledgements> = <TOpcode extends keyof TPayloads & keyof TAcknowledgements>(
+export type EmitFn<TPayloads, TAcknowledgements> = <TOpcode extends keyof TPayloads & keyof TAcknowledgements>(
 	opcode: TOpcode,
 	payload: TPayloads[TOpcode],
 	ack?: TAcknowledgements[TOpcode]

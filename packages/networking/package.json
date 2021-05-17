@@ -29,6 +29,7 @@
 		"@creature-chess/board": "^0.4.0",
 		"@creature-chess/gamemode": "^0.4.2",
 		"@creature-chess/models": "^0.4.0",
+		"@shoki/networking": "^0.4.0",
 		"@types/redux-saga": "^0.10.5",
 		"redux-saga": "^1.1.3"
 	}

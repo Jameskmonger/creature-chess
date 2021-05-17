@@ -35,6 +35,7 @@
 		"@creature-chess/models": "^0.4.0",
 		"@creature-chess/networking": "^0.4.2",
 		"@shoki/engine": "^0.4.0",
+		"@shoki/networking": "^0.4.0",
 		"@types/auth0": "^2.20.8",
 		"@types/lodash": "^4.14.168",
 		"@types/redux-saga": "^0.10.5",

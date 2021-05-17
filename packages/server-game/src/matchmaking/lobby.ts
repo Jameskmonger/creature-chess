@@ -3,7 +3,7 @@ import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import { Task } from "redux-saga";
 import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN_GAME, PieceModel, PlayerProfile } from "@creature-chess/models";
-import { ServerToClient, OutgoingPacketRegistry } from "@creature-chess/networking";
+import { ServerToClient } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
 import { Game, PlayerEntity, playerEntity, PlayerStateSelectors } from "@creature-chess/gamemode";
 import { botLogicSaga } from "../player/bot/saga";
@@ -14,16 +14,11 @@ import { v4 as uuid } from "uuid";
 import { createBoardSlice } from "@creature-chess/board";
 import { Logger } from "winston";
 
-type LobbyRegistry = OutgoingPacketRegistry<
-ServerToClient.Lobby.PacketDefinitions,
-ServerToClient.Lobby.PacketAcknowledgements
->;
-
 type PlayerConnections = {
 	[playerId: string]: {
 		socket: Socket;
 		networkingSaga: Task | null;
-		lobbyRegistry: LobbyRegistry | null;
+		lobbyRegistry: ServerToClient.Lobby.OutgoingRegistry | null;
 	};
 };
 
@@ -137,10 +132,7 @@ export class Lobby {
 	}
 
 	private connectLobbyPlayer(player: LobbyPlayer, socket: Socket) {
-		const registry = new OutgoingPacketRegistry<
-		ServerToClient.Lobby.PacketDefinitions,
-		ServerToClient.Lobby.PacketAcknowledgements
-		>(
+		const registry = ServerToClient.Lobby.createOutgoingRegistry(
 			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 		);
 

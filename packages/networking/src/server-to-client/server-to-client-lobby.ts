@@ -1,15 +1,16 @@
-import * as Models from "@creature-chess/models";
+import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn } from "@shoki/networking";
+import { LobbyPlayer } from "@creature-chess/models";
 import { EmptyPacket } from "../empty-packet";
 
 export type LobbyConnectionPacket = {
 	lobbyId: string;
-	players: Models.LobbyPlayer[];
+	players: LobbyPlayer[];
 	startTimestamp: number;
 };
 
 type LobbyPlayerUpdatePacket = {
 	index: number;
-	player: Models.LobbyPlayer;
+	player: LobbyPlayer;
 };
 
 export enum PacketOpcodes {
@@ -29,3 +30,16 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.LOBBY_GAME_STARTED]: never;
 	[PacketOpcodes.LOBBY_PLAYER_UPDATE]: never;
 };
+
+export type IncomingRegistry = IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>;
+export type OutgoingRegistry = OutgoingPacketRegistry<PacketDefinitions, PacketAcknowledgements>;
+
+export const createIncomingRegistry = (
+	registerListener: RegisterListenerFn<PacketDefinitions, PacketAcknowledgements>
+): IncomingRegistry =>
+	new IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>(registerListener);
+
+export const createOutgoingRegistry = (
+	emit: EmitFn<PacketDefinitions, PacketAcknowledgements>
+): OutgoingRegistry =>
+	new OutgoingPacketRegistry<PacketDefinitions, PacketAcknowledgements>(emit);

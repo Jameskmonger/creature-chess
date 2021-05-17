@@ -6,7 +6,7 @@ import {
 	GameEvents, Match
 } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
-import { getPacketRegistries, OutgoingRegistry } from "../net/registries";
+import { getPacketRegistries } from "../net/registries";
 import { subscribeToBoard } from "./subscribeToBoard";
 import { Task } from "redux-saga";
 
@@ -23,7 +23,7 @@ const getSpectatingPlayer = function*() {
 
 const getMatch = () => getVariable<PlayerVariables, Match | null>(variables => variables.match);
 
-const spectatePlayerBoard = function*(registry: OutgoingRegistry) {
+const spectatePlayerBoard = function*(registry: ServerToClient.Game.OutgoingRegistry) {
 	const playerId = yield* getContext<string>("id");
 	const boardSlice = yield* PlayerEntitySelectors.getBoardSlice();
 	const benchSlice = yield* PlayerEntitySelectors.getBenchSlice();
