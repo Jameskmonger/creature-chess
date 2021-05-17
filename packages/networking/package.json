@@ -19,14 +19,14 @@
 	},
 	"scripts": {
 		"build": "tsc -p ./tsconfig.json",
-		"test": "jest",
+		"test": "jest --passWithNoTests",
 		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@creature-chess/board": "^0.4.0",
+		"@shoki/board": "^0.4.0",
 		"@creature-chess/gamemode": "^0.4.2",
 		"@creature-chess/models": "^0.4.0",
 		"@shoki/networking": "^0.4.0",

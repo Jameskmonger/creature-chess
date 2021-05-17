@@ -3,7 +3,7 @@ import { createAction } from "@reduxjs/toolkit";
 import { take, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
-import { BoardSelectors, topLeftToBottomRightSortPositions } from "@creature-chess/board";
+import { BoardSelectors, topLeftToBottomRightSortPositions } from "@shoki/board";
 import { PlayerState } from "../entities/player/state";
 import { getPlayerBelowPieceLimit, getPlayerCards, getPlayerMoney } from "../entities/player/state/selectors";
 import { updateMoneyCommand } from "../player/playerInfo/commands";

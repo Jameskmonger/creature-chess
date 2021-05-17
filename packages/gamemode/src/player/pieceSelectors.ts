@@ -1,5 +1,5 @@
 import { PieceModel } from "@creature-chess/models";
-import { BoardSelectors, BoardState } from "@creature-chess/board";
+import { BoardSelectors, BoardState } from "@shoki/board";
 import { PlayerState } from "../entities/player";
 
 export const getPiece = (state: PlayerState, pieceId: string): PieceModel | null =>

@@ -1,7 +1,7 @@
 import { takeLatest, take, delay, put } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
-import { BoardSelectors } from "@creature-chess/board";
+import { BoardSelectors } from "@shoki/board";
 import * as pieceSelectors from "../../../player/pieceSelectors";
 import { getDefinitionById } from "../../../definitions";
 import { isPlayerBoardLocked } from "../state/selectors";

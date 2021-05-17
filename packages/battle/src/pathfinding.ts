@@ -3,7 +3,7 @@
 const { astar, Graph } = require("javascript-astar");
 
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";
-import { BoardState } from "@creature-chess/board";
+import { BoardState } from "@shoki/board";
 import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
 
 const createEmptyWeightGrid = ({ width, height }: { width: number; height: number }) => {

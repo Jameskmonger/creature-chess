@@ -1,5 +1,5 @@
 import { PieceModel, getDelta, TileCoordinates } from "@creature-chess/models";
-import { BoardSelectors, BoardState } from "@creature-chess/board";
+import { BoardSelectors, BoardState } from "@shoki/board";
 
 const getLivingEnemies = (piece: PieceModel, board: BoardState<PieceModel>): PieceModel[] =>
 	BoardSelectors.getAllPieces(board).filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);

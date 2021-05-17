@@ -8,7 +8,7 @@ import {
 	getDistance,
 	clonePieceCombatState
 } from "@creature-chess/models";
-import { BoardSelectors, BoardSlice, BoardState } from "@creature-chess/board";
+import { BoardSelectors, BoardSlice, BoardState } from "@shoki/board";
 import { isOvercomeBy, isGeneratedBy } from "./utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
 import { findTargetId } from "./utils/findTargetId";

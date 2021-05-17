@@ -2,7 +2,7 @@ import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/gamemode";
-import { BoardState, BoardSelectors } from "@creature-chess/board";
+import { BoardState, BoardSelectors } from "@shoki/board";
 import { clearSelectedPiece } from "../../ui/actions";
 import { playerClickTileAction } from "./clickToDropSaga";
 

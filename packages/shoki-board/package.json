@@ -1,7 +1,7 @@
 {
-	"name": "@creature-chess/battle",
+	"name": "@shoki/board",
 	"version": "0.4.0",
-	"description": "Battle engine for Creature Chess",
+	"description": "Board used in Creature Chess",
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"license": "MIT",
@@ -25,11 +25,6 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@shoki/board": "^0.4.0",
-		"@creature-chess/models": "^0.4.0",
-		"@types/redux-saga": "^0.10.5",
-		"javascript-astar": "^0.4.1",
-		"present": "^1.0.0",
-		"redux-saga": "^1.0.2"
+		"@reduxjs/toolkit": "^1.5.1"
 	}
 }

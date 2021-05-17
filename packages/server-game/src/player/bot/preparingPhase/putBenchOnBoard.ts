@@ -1,5 +1,5 @@
 import { select, delay, put } from "@redux-saga/core/effects";
-import { BoardSelectors } from "@creature-chess/board";
+import { BoardSelectors } from "@shoki/board";
 import { PlayerActions, PlayerState } from "@creature-chess/gamemode";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PREFERRED_LOCATIONS } from "../preferredLocations";

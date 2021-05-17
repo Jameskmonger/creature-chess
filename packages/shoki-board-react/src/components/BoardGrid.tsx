@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DragObjectWithType } from "react-dnd";
-import { BoardState, HasId } from "@creature-chess/board";
+import { BoardState, HasId } from "@shoki/board";
 import { BoardContextProvider, useBoard } from "../context";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";

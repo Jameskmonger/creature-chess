@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { BoardSelectors, BoardState } from "@creature-chess/board";
+import { BoardSelectors, BoardState } from "@shoki/board";
 
 const BoardContext = createContext<BoardState>(null!);
 BoardContext.displayName = "BoardContext";

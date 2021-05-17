@@ -3,7 +3,7 @@ import { DragObjectWithType, useDrag } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
-import { BoardSelectors } from "@creature-chess/board";
+import { BoardSelectors } from "@shoki/board";
 import { AppState } from "../../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../../../display/animation";
 import { Projectile } from "../../../../display/projectile";

@@ -1,5 +1,5 @@
 import { all, call } from "redux-saga/effects";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { findGame } from "../networking";
 import { gameSaga } from "../game";

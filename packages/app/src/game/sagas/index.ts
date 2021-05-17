@@ -1,7 +1,7 @@
 import { take, put } from "@redux-saga/core/effects";
 
 import { RoundInfoCommands } from "@creature-chess/gamemode";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { gameConnectedEvent, GameConnectedEvent } from "../../networking/actions";

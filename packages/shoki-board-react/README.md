@@ -1,6 +1,6 @@
-# `@creature-chess/board-react`
+# `@shoki/board-react`
 
-React drag-and-drop implementation of @creature-chess/board
+React drag-and-drop implementation of @shoki/board
 
 Takes in a `BoardState` of your choosing, renders the pieces, and exposes click/drop listeners. See _Props_ below for more information.
 
@@ -8,7 +8,7 @@ Takes in a `BoardState` of your choosing, renders the pieces, and exposes click/
 
 ```tsx
 import { DragObjectWithType } from "react-dnd";
-import { BoardState } from "@creature-chess/board";
+import { BoardState } from "@shoki/board";
 
 type ChessPiece = {};
 

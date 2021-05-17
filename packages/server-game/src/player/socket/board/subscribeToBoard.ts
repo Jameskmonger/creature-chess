@@ -1,5 +1,5 @@
 import { select, takeLatest } from "typed-redux-saga";
-import { BoardSlice, BoardState } from "@creature-chess/board";
+import { BoardSlice, BoardState } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { PlayerState } from "@creature-chess/gamemode";
 

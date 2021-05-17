@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { race, call, takeEvery, put, take } from "redux-saga/effects";
 import { ServerToClient } from "@creature-chess/networking";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { LobbyCommands } from "../../lobby";
 import { MenuActions } from "../../menu";

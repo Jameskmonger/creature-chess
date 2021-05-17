@@ -1,4 +1,4 @@
-import { BoardState } from "@creature-chess/board";
+import { BoardState } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 
 export const BATTLE_TURN_EVENT = "BATTLE_TURN_EVENT";

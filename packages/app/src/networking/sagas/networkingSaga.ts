@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { all, call } from "redux-saga/effects";
 import { PieceModel } from "@creature-chess/models";
-import { BoardSlice } from "@creature-chess/board";
+import { BoardSlice } from "@shoki/board";
 import { lobbyNetworking } from "./lobby";
 import { gameNetworking } from "./game";
 

@@ -4,7 +4,7 @@ import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
 import { AppState } from "../../../../../store";
 import { CreatureImage } from "../../../../../display/creatureImage";
-import { BoardSelectors } from "@creature-chess/board";
+import { BoardSelectors } from "@shoki/board";
 
 interface PieceImageProps {
 	pieceId: string;
