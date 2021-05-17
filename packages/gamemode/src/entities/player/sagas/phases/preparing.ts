@@ -2,8 +2,7 @@ import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../../../../game/events";
 import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../events";
-import { PlayerInfoCommands } from "../../../../player/playerInfo";
-import { updateMoneyCommand } from "../../../../player/playerInfo/commands";
+import { updateMoneyCommand, updateOpponentCommand } from "../../state/commands";
 import { getPlayerLevel, getPlayerMoney, isPlayerAlive, isPlayerShopLocked } from "../../state/selectors";
 import { PlayerState } from "../../state";
 import { getBoardSlice } from "../../selectors";
@@ -40,7 +39,7 @@ export const playerPreparingPhase = function*() {
 
 			if (matchRewards) {
 				yield put(playerMatchRewardsEvent(null));
-				yield put(PlayerInfoCommands.updateOpponentCommand(null));
+				yield put(updateOpponentCommand(null));
 			}
 
 			const level = yield* select(getPlayerLevel);

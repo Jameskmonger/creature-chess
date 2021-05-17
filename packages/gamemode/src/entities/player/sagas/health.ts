@@ -1,6 +1,6 @@
 import { takeEvery, select, put, all } from "@redux-saga/core/effects";
 import { PlayerState } from "../state";
-import { updateHealthCommand } from "../../../player/playerInfo/commands";
+import { updateHealthCommand } from "../state/commands";
 
 const HEALTH_SUBTRACT_COMMAND = "HEALTH_SUBTRACT_COMMAND";
 type HEALTH_SUBTRACT_COMMAND = typeof HEALTH_SUBTRACT_COMMAND;

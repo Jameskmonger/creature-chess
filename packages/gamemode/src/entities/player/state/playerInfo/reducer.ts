@@ -1,6 +1,6 @@
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
-import { PlayerInfoCommand, UPDATE_STREAK_COMMAND, UPDATE_BATTLE_COMMAND } from "./commands";
-import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../../entities/player/events";
+import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../../events";
+import { PlayerCommand } from "../commands";
 
 export interface PlayerStreak {
 	type: StreakType;
@@ -49,7 +49,7 @@ const initialState: PlayerInfoState = {
 	xp: 0
 };
 
-export const playerInfoReducer = (state: PlayerInfoState = initialState, command: PlayerInfoCommand | PlayerEvent): PlayerInfoState => {
+export const playerInfoReducer = (state: PlayerInfoState = initialState, command: PlayerCommand | PlayerEvent): PlayerInfoState => {
 	switch (command.type) {
 		case PLAYER_MATCH_REWARDS_EVENT:
 			return {
@@ -71,17 +71,17 @@ export const playerInfoReducer = (state: PlayerInfoState = initialState, command
 				...state,
 				opponentId: command.payload
 			};
-		case UPDATE_BATTLE_COMMAND:
+		case "updateBattleCommand":
 			return {
 				...state,
-				battle: command.payload.battle
+				battle: command.payload
 			};
 		case "updateHealthCommand":
 			return {
 				...state,
 				health: command.payload
 			};
-		case UPDATE_STREAK_COMMAND:
+		case "updateStreakCommand":
 			return {
 				...state,
 				streak: {

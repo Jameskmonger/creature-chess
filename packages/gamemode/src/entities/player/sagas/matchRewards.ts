@@ -4,10 +4,9 @@ import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType } from "@creature-chess
 
 import { playerMatchRewardsEvent, playerDeathEvent } from "../events";
 import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../../game/events";
-import { updateStreakCommand, updateHealthCommand } from "../../../player/playerInfo/commands";
+import { updateStreakCommand, updateHealthCommand, updateStatusCommand } from "../state/commands";
 import { subtractHealthCommand } from "./health";
-import { PlayerStreak } from "../../../player/playerInfo/reducer";
-import { PlayerInfoCommands } from "../../../player/playerInfo";
+import { PlayerStreak } from "../state/playerInfo/reducer";
 import { getPlayerHealth, getPlayerMoney, getPlayerStreak } from "../state/selectors";
 
 const getStreakBonus = (streak: number) => {
@@ -45,7 +44,7 @@ const updateStreak = function*(win: boolean) {
 
 	const newAmount = (type === existingStreak.type) ? existingStreak.amount + 1 : 0;
 
-	yield put(updateStreakCommand(type, newAmount));
+	yield put(updateStreakCommand({ type, amount: newAmount }));
 };
 
 export const playerMatchRewards = function*() {
@@ -71,7 +70,7 @@ export const playerMatchRewards = function*() {
 
 			const justDied = (newValue === 0 && oldValue !== 0);
 			if (justDied) {
-				yield put(PlayerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
+				yield put(updateStatusCommand(PlayerStatus.DEAD));
 				yield put(playerDeathEvent());
 			}
 

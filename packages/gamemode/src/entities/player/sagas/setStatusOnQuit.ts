@@ -1,9 +1,9 @@
 import { put, take } from "redux-saga/effects";
 import { PlayerStatus } from "@creature-chess/models";
 import { quitGamePlayerAction, QuitGamePlayerAction } from "../../../playerActions";
-import { PlayerInfoCommands } from "../../../player";
+import { updateStatusCommand } from "../state/commands";
 
 export const setStatusOnQuit = function*() {
 	yield take<QuitGamePlayerAction>(quitGamePlayerAction.toString());
-	yield put(PlayerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
+	yield put(updateStatusCommand(PlayerStatus.QUIT));
 };

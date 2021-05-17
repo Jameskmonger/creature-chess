@@ -1,8 +1,7 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { getContext } from "typed-redux-saga";
 import { playerBeforeReadyPhaseEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../../../../game/events";
-import { PlayerInfoCommands } from "../../../../player/playerInfo";
-import { updateReadyCommand } from "../../../../player/playerInfo/commands";
+import { updateReadyCommand, updateOpponentCommand } from "../../state/commands";
 import { getBoardSlice } from "../../selectors";
 import { fillBoardCommand } from "../fillBoard";
 
@@ -27,7 +26,7 @@ export const playerReadyPhase = function*() {
 				? match.away.id
 				: match.home.id;
 
-			yield put(PlayerInfoCommands.updateOpponentCommand(opponentId));
+			yield put(updateOpponentCommand(opponentId));
 		}
 	);
 };

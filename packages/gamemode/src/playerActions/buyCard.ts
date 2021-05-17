@@ -6,7 +6,7 @@ import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } fro
 import { BoardSelectors, topLeftToBottomRightSortPositions } from "@shoki/board";
 import { PlayerState } from "../entities/player/state";
 import { getPlayerBelowPieceLimit, getPlayerCards, getPlayerMoney } from "../entities/player/state/selectors";
-import { updateMoneyCommand } from "../player/playerInfo/commands";
+import { updateMoneyCommand } from "../entities/player/state/commands";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { getDefinitionById } from "../definitions";
 import { getBenchSlice, getBoardSlice } from "../entities/player/selectors";

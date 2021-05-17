@@ -2,7 +2,7 @@ import { take, put } from "@redux-saga/core/effects";
 import { select, getContext } from "typed-redux-saga";
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL } from "@creature-chess/models";
 import { isPlayerAlive } from "../entities/player/state/selectors";
-import { updateMoneyCommand } from "../player/playerInfo/commands";
+import { updateMoneyCommand } from "../entities/player/state/commands";
 import { addXpCommand } from "../entities/player/sagas/xp";
 import { createAction } from "@reduxjs/toolkit";
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";

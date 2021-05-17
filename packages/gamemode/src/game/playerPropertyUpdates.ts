@@ -1,10 +1,9 @@
 import { all, takeLatest } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
-import { PlayerStreak } from "../player/playerInfo/reducer";
-import { PlayerInfoCommands } from "../player";
+import { PlayerStreak } from "../entities/player/state/playerInfo/reducer";
 import { PlayerEntity } from "../entities";
-import { PlayerStateSelectors } from "../entities/player";
+import { PlayerCommands, PlayerStateSelectors } from "../entities/player";
 
 // todo use sagas properly here
 export const listenForPropertyUpdates = (
@@ -24,8 +23,8 @@ export const listenForPropertyUpdates = (
 			const initialHealth = yield* select(PlayerStateSelectors.getPlayerHealth);
 			emitHealth(initialHealth);
 
-			sagas.push(takeLatest<PlayerInfoCommands.UpdateHealthCommand>(
-				PlayerInfoCommands.updateHealthCommand.toString(),
+			sagas.push(takeLatest<PlayerCommands.UpdateHealthCommand>(
+				PlayerCommands.updateHealthCommand.toString(),
 				function*({ payload: health }) {
 					emitHealth(health);
 				}
@@ -36,8 +35,8 @@ export const listenForPropertyUpdates = (
 			const initialStreak = yield* select(PlayerStateSelectors.getPlayerStreak);
 			emitStreak(initialStreak);
 
-			sagas.push(takeLatest<PlayerInfoCommands.UpdateStreakCommand>(
-				PlayerInfoCommands.UPDATE_STREAK_COMMAND,
+			sagas.push(takeLatest<PlayerCommands.UpdateStreakCommand>(
+				PlayerCommands.updateStreakCommand.toString(),
 				function*({ payload: streak }) {
 					emitStreak(streak);
 				}
@@ -48,8 +47,8 @@ export const listenForPropertyUpdates = (
 			const initialStatus = yield* select(PlayerStateSelectors.getPlayerStatus);
 			emitStatus(initialStatus);
 
-			sagas.push(takeLatest<PlayerInfoCommands.UpdateStatusCommand>(
-				PlayerInfoCommands.updateStatusCommand.toString(),
+			sagas.push(takeLatest<PlayerCommands.UpdateStatusCommand>(
+				PlayerCommands.updateStatusCommand.toString(),
 				function*({ payload: status }) {
 					emitStatus(status);
 				}
@@ -60,9 +59,9 @@ export const listenForPropertyUpdates = (
 			const initialBattle = yield* select(PlayerStateSelectors.getPlayerBattle);
 			emitBattle(initialBattle);
 
-			sagas.push(takeLatest<PlayerInfoCommands.UpdateBattleCommand>(
-				PlayerInfoCommands.UPDATE_BATTLE_COMMAND,
-				function*({ payload: { battle } }) {
+			sagas.push(takeLatest<PlayerCommands.UpdateBattleCommand>(
+				PlayerCommands.updateBattleCommand.toString(),
+				function*({ payload: battle }) {
 					emitBattle(battle);
 				}
 			));
@@ -72,8 +71,8 @@ export const listenForPropertyUpdates = (
 			const initialReady = yield* select(PlayerStateSelectors.isPlayerReady);
 			emitReady(initialReady);
 
-			sagas.push(takeLatest<PlayerInfoCommands.UpdateReadyCommand>(
-				PlayerInfoCommands.updateReadyCommand.toString(),
+			sagas.push(takeLatest<PlayerCommands.UpdateReadyCommand>(
+				PlayerCommands.updateReadyCommand.toString(),
 				function*({ payload: ready }) {
 					emitReady(ready);
 				}

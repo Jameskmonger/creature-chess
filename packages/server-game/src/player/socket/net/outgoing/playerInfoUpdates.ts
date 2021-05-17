@@ -1,7 +1,7 @@
 import { call } from "typed-redux-saga";
 
 import { emitActionsSaga } from "@shoki/networking";
-import { PlayerInfoCommands, PlayerCommands } from "@creature-chess/gamemode";
+import { PlayerCommands } from "@creature-chess/gamemode";
 import { getPacketRegistries } from "../registries";
 
 export const sendPlayerInfoUpdates = function*() {
@@ -14,10 +14,10 @@ export const sendPlayerInfoUpdates = function*() {
 			PlayerCommands.setSpectatingIdCommand.toString(),
 			PlayerCommands.updateCardsCommand.toString(),
 			PlayerCommands.updateShopLockCommand.toString(),
-			PlayerInfoCommands.updateMoneyCommand.toString(),
-			PlayerInfoCommands.updateLevelCommand.toString(),
-			PlayerInfoCommands.updateHealthCommand.toString(),
-			PlayerInfoCommands.updateOpponentCommand.toString()
+			PlayerCommands.updateMoneyCommand.toString(),
+			PlayerCommands.updateLevelCommand.toString(),
+			PlayerCommands.updateHealthCommand.toString(),
+			PlayerCommands.updateOpponentCommand.toString()
 		]
 	);
 };

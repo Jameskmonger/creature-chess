@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { takeEvery, put, call, all } from "redux-saga/effects";
-import { PlayerEvents, PlayerCommands, RoundInfoCommands, PlayerInfoCommands } from "@creature-chess/gamemode";
+import { PlayerEvents, RoundInfoCommands, PlayerCommands } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { receiveActionsSaga } from "@shoki/networking";
 import { BoardSlice } from "@shoki/board";
@@ -112,10 +112,10 @@ export const incomingGameNetworking = function*(
 			PlayerCommands.setSpectatingIdCommand.toString(),
 			PlayerCommands.updateCardsCommand.toString(),
 			PlayerCommands.updateShopLockCommand.toString(),
-			PlayerInfoCommands.updateMoneyCommand.toString(),
-			PlayerInfoCommands.updateLevelCommand.toString(),
-			PlayerInfoCommands.updateHealthCommand.toString(),
-			PlayerInfoCommands.updateOpponentCommand.toString()
+			PlayerCommands.updateMoneyCommand.toString(),
+			PlayerCommands.updateLevelCommand.toString(),
+			PlayerCommands.updateHealthCommand.toString(),
+			PlayerCommands.updateOpponentCommand.toString()
 		]),
 	]);
 };

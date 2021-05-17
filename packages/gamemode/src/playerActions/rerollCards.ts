@@ -3,9 +3,9 @@ import { select } from "typed-redux-saga";
 import { createAction } from "@reduxjs/toolkit";
 import { REROLL_COST } from "@creature-chess/models";
 import { isPlayerAlive } from "../entities/player/state/selectors";
-import { PlayerInfoCommands } from "../player/playerInfo";
 import { afterRerollCardsEvent } from "../entities/player/events";
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
+import { updateMoneyCommand } from "../entities/player/state/commands";
 
 export type RerollCardsPlayerAction = ReturnType<typeof rerollCardsPlayerAction>;
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
@@ -31,7 +31,7 @@ export const rerollCardsPlayerActionSaga = function*() {
 				return;
 			}
 
-			yield put(PlayerInfoCommands.updateMoneyCommand(money - REROLL_COST));
+			yield put(updateMoneyCommand(money - REROLL_COST));
 			yield put(afterRerollCardsEvent());
 		}
 	);

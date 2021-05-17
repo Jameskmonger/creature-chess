@@ -2,7 +2,7 @@ import { takeEvery, select, put } from "redux-saga/effects";
 import { createAction } from "@reduxjs/toolkit";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "../player/pieceSelectors";
-import { updateMoneyCommand } from "../player/playerInfo/commands";
+import { updateMoneyCommand } from "../entities/player/state/commands";
 import { afterSellPieceEvent } from "../entities/player/events";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
 

@@ -2,7 +2,7 @@ import { take, put } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { GamePhase, getXpToNextLevel } from "@creature-chess/models";
 import { PlayerState } from "../state";
-import { updateLevelCommand } from "../../../player/playerInfo/commands";
+import { updateLevelCommand } from "../state/commands";
 import { getPlayerLevel, getPlayerXp } from "../state/selectors";
 import { getPlayerEntityDependencies } from "../dependencies";
 

@@ -1,6 +1,6 @@
 import { all, call, put, delay } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
-import { PlayerCommands, PlayerInfoCommands, PlayerStateSelectors } from "@creature-chess/gamemode";
+import { PlayerCommands, PlayerStateSelectors } from "@creature-chess/gamemode";
 
 import { sendGamePhaseUpdates } from "./phases";
 import { sendPlayerListUpdates } from "./playerList";
@@ -19,17 +19,17 @@ const sendInitialState = function*() {
 	yield put(PlayerCommands.updateShopLockCommand(locked));
 
 	const money = yield* select(PlayerStateSelectors.getPlayerMoney);
-	yield put(PlayerInfoCommands.updateMoneyCommand(money));
+	yield put(PlayerCommands.updateMoneyCommand(money));
 
 	const level = yield* select(PlayerStateSelectors.getPlayerLevel);
 	const xp = yield* select(PlayerStateSelectors.getPlayerXp);
-	yield put(PlayerInfoCommands.updateLevelCommand({ level, xp }));
+	yield put(PlayerCommands.updateLevelCommand({ level, xp }));
 
 	const health = yield* select(PlayerStateSelectors.getPlayerHealth);
-	yield put(PlayerInfoCommands.updateHealthCommand(health));
+	yield put(PlayerCommands.updateHealthCommand(health));
 
 	const opponentId = yield* select(PlayerStateSelectors.getOpponentId);
-	yield put(PlayerInfoCommands.updateOpponentCommand(opponentId));
+	yield put(PlayerCommands.updateOpponentCommand(opponentId));
 };
 
 export const outgoingNetworking = function*() {
