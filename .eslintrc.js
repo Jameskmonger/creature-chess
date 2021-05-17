@@ -75,6 +75,7 @@ module.exports = {
 			"error",
 			"tab",
 			{
+				"SwitchCase": 1,
 				"FunctionDeclaration": {
 					"parameters": "first"
 				},

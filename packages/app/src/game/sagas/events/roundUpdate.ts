@@ -13,17 +13,17 @@ export const roundUpdateSaga = function*({ boardSlice }: { benchSlice: BoardSlic
 		gameRoundUpdateEvent.toString(),
 		function*({ payload: packet }) {
 			switch (packet.phase) {
-			case GamePhase.PREPARING: {
-				yield put(PlayerInfoCommands.updateOpponentCommand(null));
-				yield put(boardSlice.commands.unlockBoardCommand());
-				return;
-			}
-			case GamePhase.READY: {
-				yield put(boardSlice.commands.lockBoardCommand());
-				return;
-			}
-			default:
-				return;
+				case GamePhase.PREPARING: {
+					yield put(PlayerInfoCommands.updateOpponentCommand(null));
+					yield put(boardSlice.commands.unlockBoardCommand());
+					return;
+				}
+				case GamePhase.READY: {
+					yield put(boardSlice.commands.lockBoardCommand());
+					return;
+				}
+				default:
+					return;
 			}
 		}
 	);

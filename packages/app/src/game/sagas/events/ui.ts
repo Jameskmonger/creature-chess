@@ -9,22 +9,22 @@ export const uiSaga = function*() {
 		gameRoundUpdateEvent.toString(),
 		function*({ payload: { phase } }) {
 			switch (phase) {
-			case GamePhase.PREPARING: {
-				const isDead: boolean = yield select((state: AppState) => state.game.playerInfo.health === 0);
+				case GamePhase.PREPARING: {
+					const isDead: boolean = yield select((state: AppState) => state.game.playerInfo.health === 0);
 
-				if (!isDead) {
-					yield put(openOverlay(Overlay.SHOP));
+					if (!isDead) {
+						yield put(openOverlay(Overlay.SHOP));
+						return;
+					}
+				}
+
+				case GamePhase.READY: {
+					yield put(closeOverlay());
+					yield put(clearSelectedPiece());
 					return;
 				}
-			}
-
-			case GamePhase.READY: {
-				yield put(closeOverlay());
-				yield put(clearSelectedPiece());
-				return;
-			}
-			default:
-				return;
+				default:
+					return;
 			}
 		}
 	);
