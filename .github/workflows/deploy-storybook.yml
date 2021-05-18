@@ -67,7 +67,7 @@ jobs:
       with:
         path: ./packages/shoki-networking
     - name: Install dependencies
-      run: npm install && npm run bootstrap
+      run: npm ci && npm run bootstrap
     - name: Build application
       run: npm run build
     - name: Build Storybook
