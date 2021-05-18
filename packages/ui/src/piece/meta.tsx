@@ -5,7 +5,6 @@ import { TypeIndicator } from "../display";
 import { Healthbar } from "./healthbar";
 import { createUseStyles } from "react-jss";
 import { Layout } from "../layout";
-import classNames from "classnames";
 
 type Props = {
 	piece: PieceModel;
@@ -14,25 +13,27 @@ type Props = {
 };
 
 const useStyles = createUseStyles({
-	"container": {
-
-	},
 	"meta": {
 
 	},
 	"typeIndicator": {
 		marginBottom: "0.25em",
+		width: "100%",
 	},
 	"healthbarContainer": {
 		flex: 1,
 		position: "relative",
 	},
 	"stage": {
-		position: "absolute",
-		top: "10%",
-		left: "7%",
-		width: "86%",
-		height: "80%",
+		"position": "absolute",
+		"top": "10%",
+		"left": "7%",
+		"width": "86%",
+		"height": "80%",
+
+		"& > img": {
+			width: "100%",
+		}
 	},
 	"metaTop": {
 		flex: 1,
@@ -61,7 +62,7 @@ const PieceMeta: React.FunctionComponent<Props> = ({ piece, className, healthbar
 	const classes = useStyles();
 
 	return (
-		<Layout direction="row" className={classNames(classes.container, className)} noSpacer>
+		<Layout direction="row" className={className} noSpacer>
 			<Layout direction="column" className={classes.meta} noSpacer>
 				<TypeIndicator className={classes.typeIndicator} type={piece.definition.type} />
 
