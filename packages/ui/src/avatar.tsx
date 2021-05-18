@@ -8,7 +8,7 @@ type Props = {
 
 const useStyles = createUseStyles({
 	image: {
-		height: "48px"
+		height: "64px"
 	}
 });
 
