@@ -1,0 +1,21 @@
+.piece-story-tiles {
+	width: 640px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.piece-story {
+	width: 128px;
+	height: 128px;
+
+	box-sizing: border-box;
+}
+
+.piece-story.dark {
+	background: #38b764;
+}
+
+.piece-story.light {
+	background: #a7f070;
+}

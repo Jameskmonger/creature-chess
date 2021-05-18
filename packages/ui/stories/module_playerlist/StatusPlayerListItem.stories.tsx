@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { finishedBattle } from "@creature-chess/models";
-import { StatusPlayerListItem } from '../../src/playerListItem/statusPlayerListItem';
+import { StatusPlayerListItem } from '../../src/playerList';
 
 export default {
 	title: 'Module - Player List/StatusPlayerListItem',

@@ -3,4 +3,5 @@ export { PlayerHealthbar, PlayerName, PlayerProfile, PlayerAvatar, Title } from 
 export { CardShop } from "./cardShop";
 
 export { CreatureImage, ProgressBar, TypeIndicator, Label } from "./display";
-export { PlayerListItem, StatusPlayerListItem } from "./playerListItem";
+export { PlayerListItem, StatusPlayerListItem } from "./playerList";
+export { Piece } from "./piece";

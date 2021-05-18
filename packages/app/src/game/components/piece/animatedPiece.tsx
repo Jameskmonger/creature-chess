@@ -2,11 +2,11 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { BoardSelectors } from "@shoki/board";
+import { Piece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../animation";
-import { PieceMeta } from "./pieceMeta";
-import { PieceImage } from "./pieceImage";
 import { Projectile } from "../projectile";
+import { usePlayerId } from "../../../auth";
 
 const dyingAnimation = "dying";
 
@@ -15,11 +15,23 @@ interface Animation {
 	variables?: AnimationVariables;
 }
 
+const getHealthbar = (ownerId: string, localId: string, spectatingId: string) => (
+	ownerId === localId
+		? "friendly"
+		: (
+			ownerId === spectatingId
+				? "spectating"
+				: "enemy"
+		)
+);
+
 export const AnimatedPiece: React.FunctionComponent<{ id: string }> = (props) => {
 	const { id } = props;
+	const playerId = usePlayerId();
 	const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
 	const [oldPiece, setOldPiece] = React.useState<PieceModel | null>(null);
 	const piece = useSelector<AppState, PieceModel>(state => BoardSelectors.getPiece(state.game.match.board, id));
+	const spectatingId = useSelector<AppState, string>(state => state.game.spectating.id);
 
 	const runAnimation = (name: string, variables?: AnimationVariables) => setCurrentAnimations(oldAnimations => [...oldAnimations, { name, variables }]);
 
@@ -71,6 +83,7 @@ export const AnimatedPiece: React.FunctionComponent<{ id: string }> = (props) =>
 
 	const className = `piece ${currentAnimations.map(a => a.name).join(" ")} ${isDead ? dyingAnimation : ""}`;
 
+
 	return (
 		<div
 			className={className}
@@ -78,11 +91,13 @@ export const AnimatedPiece: React.FunctionComponent<{ id: string }> = (props) =>
 			// eslint-disable-next-line react/jsx-no-bind
 			onAnimationEnd={onAnimationEnd}
 		>
-			<PieceMeta id={id} />
-
-			<PieceImage pieceId={id} />
-
-			<Projectile />
+			<Piece
+				className={className}
+				piece={piece}
+				healthbar={getHealthbar(piece.ownerId, playerId, spectatingId)}
+			>
+				<Projectile />
+			</Piece>
 		</div>
 	);
 };

@@ -3,7 +3,7 @@ import { createUseStyles } from "react-jss";
 import classNames from "classnames";
 
 interface Props {
-	className: string;
+	className?: string;
 	fillClassName?: string;
 	contentClassName?: string;
 
@@ -45,12 +45,11 @@ const useStyles = createUseStyles({
 	}
 });
 
-// todo expose multiple className props rather than using "healthbar" "fill" etc
 const ProgressBar: React.FC<Props> = (props) => {
 	const classes = useStyles(props);
 	const {
 		className, fillClassName = "", contentClassName = "",
-		current, max, renderContents
+		current, max, renderContents, children
 	} = props;
 
 	return (
@@ -61,6 +60,8 @@ const ProgressBar: React.FC<Props> = (props) => {
 				renderContents
 				&& <span className={classNames(classes.contents, contentClassName)}>{renderContents(current, max)}</span>
 			}
+
+			{children}
 		</div>
 	);
 };

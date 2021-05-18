@@ -2,9 +2,8 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
+import { Piece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
-import { PieceMeta } from "./pieceMeta";
-import { PieceImage } from "./pieceImage";
 import { Projectile } from "../projectile";
 import { DragObjectWithType, useDrag } from "react-dnd";
 import { selectPiece } from "../../ui/actions";
@@ -33,18 +32,16 @@ const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	}
 
 	return (
-		<div
+		<Piece
 			ref={drag}
 			className={className}
+			piece={piece}
+			healthbar="none"
 			// eslint-disable-next-line react/jsx-no-bind
 			onClick={onClick}
 		>
-			<PieceMeta id={id} hideHealthbar />
-
-			<PieceImage pieceId={id} />
-
 			<Projectile />
-		</div>
+		</Piece>
 	);
 };
 

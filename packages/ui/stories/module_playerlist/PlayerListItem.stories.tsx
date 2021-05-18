@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { finishedBattle, inProgressBattle, PlayerBattle, PlayerListPlayer, PlayerStatus, PlayerTitle, StreakType } from "@creature-chess/models";
-import { PlayerListItem } from '../../src/playerListItem/playerListItem';
+import { PlayerListItem } from '../../src/playerList';
 
 export default {
 	title: 'Module - Player List/PlayerListItem',
@@ -21,7 +21,6 @@ export default {
 };
 
 const Template = (args) => <div style={{ maxWidth: "400px" }}><PlayerListItem {...args} /></div>;
-
 
 const createPlayer = (battle: PlayerBattle, others?: Partial<PlayerListPlayer> = {}): PlayerListPlayer => ({
 	id: '1234',
