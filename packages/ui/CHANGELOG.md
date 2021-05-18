@@ -5,12 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.4.4](https://github.com/Jameskmonger/creature-chess/compare/v0.4.3...v0.4.4) (2021-05-18)
 
-**Note:** Version bump only for package @shoki/networking
 
+### Bug Fixes
 
-
-
-
-## [0.4.3](https://github.com/Jameskmonger/creature-chess/compare/v0.4.2...v0.4.3) (2021-05-17)
-
-**Note:** Version bump only for package @shoki/networking
+* add 100% width to stars and type indicator ([15beb8b](https://github.com/Jameskmonger/creature-chess/commit/15beb8b910ffe0e79962c16d16a0f4315b2263ec))

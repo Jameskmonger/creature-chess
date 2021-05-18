@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/Jameskmonger/creature-chess/compare/v0.4.3...v0.4.4) (2021-05-18)
+
+
+### Bug Fixes
+
+* show bench pieces during match ([7bc94e6](https://github.com/Jameskmonger/creature-chess/commit/7bc94e6d9c630f1c12d5a53024c1a9a9158fd713)), closes [#421](https://github.com/Jameskmonger/creature-chess/issues/421)
+
+
+
+
+
 ## [0.4.3](https://github.com/Jameskmonger/creature-chess/compare/v0.4.2...v0.4.3) (2021-05-17)
 
 **Note:** Version bump only for package @creature-chess/app

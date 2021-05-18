@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/Jameskmonger/creature-chess/compare/v0.4.3...v0.4.4) (2021-05-18)
+
+
+### Bug Fixes
+
+* add 100% width to stars and type indicator ([15beb8b](https://github.com/Jameskmonger/creature-chess/commit/15beb8b910ffe0e79962c16d16a0f4315b2263ec))
+* show bench pieces during match ([7bc94e6](https://github.com/Jameskmonger/creature-chess/commit/7bc94e6d9c630f1c12d5a53024c1a9a9158fd713)), closes [#421](https://github.com/Jameskmonger/creature-chess/issues/421)
+
+
+
+
+
 ## [0.4.3](https://github.com/Jameskmonger/creature-chess/compare/v0.4.2...v0.4.3) (2021-05-17)
 
 **Note:** Version bump only for package creature-chess
