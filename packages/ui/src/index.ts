@@ -1,8 +1,6 @@
 export * as Layout from "./layout";
-export { PlayerHealthbar } from "./player";
+export { PlayerHealthbar, PlayerName, PlayerProfile, PlayerAvatar, Title } from "./player";
+export { CardShop } from "./cardShop";
 
-export { CreatureImage } from "./creatureImage";
+export { CreatureImage, ProgressBar, TypeIndicator, Label } from "./display";
 export { PlayerListItem, StatusPlayerListItem } from "./playerListItem";
-export { Avatar } from "./avatar";
-export { Title } from "./title";
-export { ProgressBar } from "./progressBar";

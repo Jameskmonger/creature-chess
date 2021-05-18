@@ -3,7 +3,7 @@ import { PlayerBattle } from "@creature-chess/models";
 import { createUseStyles } from "react-jss";
 
 import { BattleInfo } from "./battleInfo";
-import { Label } from "../label";
+import { Label } from "../display";
 
 type Props = {
 	name: string;

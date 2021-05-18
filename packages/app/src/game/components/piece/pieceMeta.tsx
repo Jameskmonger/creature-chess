@@ -2,11 +2,11 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
+import { TypeIndicator } from "@creature-chess/ui";
 import { BoardSelectors } from "@shoki/board";
 import { AppState } from "../../../store";
 import { Healthbar } from "../healthbar";
 import { StageIndicator } from "../StageIndicator";
-import { TypeIndicator } from "../TypeIndicator";
 
 const PieceMeta: React.FunctionComponent<{ id: string; hideHealthbar?: boolean }> = ({ id, hideHealthbar = false }) => {
 	const piece = useSelector<AppState, PieceModel>(state => {

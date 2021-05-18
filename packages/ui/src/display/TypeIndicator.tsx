@@ -13,10 +13,6 @@ const ICON_FOR_TYPE = {
 	[CreatureType.Wood]: "http://creaturechess.jamesmonger.com/images/ui/type-wood.svg"
 };
 
-const TypeIndicator: React.FunctionComponent<TypeIndicatorProps> = ({ type }) => (
-	<div className="piece-type">
-		<img src={ICON_FOR_TYPE[type]} />
-	</div>
-);
+const TypeIndicator: React.FunctionComponent<TypeIndicatorProps> = ({ type }) => <img src={ICON_FOR_TYPE[type]} />;
 
 export { TypeIndicator };

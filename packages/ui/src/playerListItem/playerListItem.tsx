@@ -7,10 +7,8 @@ import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import { Button } from "../button";
 import { StreakIndicator } from "./streakIndicator";
 
-import { Label } from "../label";
-import { PlayerHealthbar } from "../player/healthbar";
-import { PlayerProfile } from "./playerProfile";
-import { Avatar } from "../avatar";
+import { Label } from "../display";
+import { PlayerHealthbar, PlayerProfile, PlayerAvatar } from "../player";
 import { Half, Layout } from "../layout";
 
 interface Props {
@@ -86,7 +84,7 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 		>
 			<Layout direction="row" noSpacer>
 				<div className="picture">
-					<Avatar player={player} />
+					<PlayerAvatar player={player} />
 				</div>
 				<div className={classes.details}>
 					<Layout direction="row" noSpacer>

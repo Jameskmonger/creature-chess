@@ -2,7 +2,10 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { PlayerTitle, TITLES } from "@creature-chess/models";
 
-type Props = { titleId: PlayerTitle | null };
+type Props = {
+	titleId: PlayerTitle | null;
+	size?: "large" | "small";
+};
 
 const getColor = (titleId: PlayerTitle | null) => {
 	switch (titleId) {
@@ -20,7 +23,7 @@ const getColor = (titleId: PlayerTitle | null) => {
 const useStyles = createUseStyles({
 	title: {
 		fontFamily: "Arial, sans-serif",
-		fontSize: "0.65rem",
+		fontSize: ({ size = "small" }: Props) => size === "small" ? "0.65rem" : "1rem",
 		fontWeight: 700,
 		color: ({ titleId }: Props) => getColor(titleId),
 		textAlign: "inherit",

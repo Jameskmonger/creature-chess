@@ -84,7 +84,7 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ cur
 	if (currentOverlay === Overlay.SHOP) {
 		return (
 			<OverlayComponent title={`Balance: $${currentBalance}`} fullscreen>
-				<CardShop showBalance={false} />
+				<CardShop />
 			</OverlayComponent>
 		);
 	}

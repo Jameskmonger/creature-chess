@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
-import { ProgressBar } from "../progressBar";
+import { ProgressBar } from "../display";
 
 type Props = {
 	health: number;

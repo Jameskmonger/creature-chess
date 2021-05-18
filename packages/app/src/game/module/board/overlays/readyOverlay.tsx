@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
-import { Avatar, Title, PlayerHealthbar } from "@creature-chess/ui";
+import { PlayerAvatar, Title, PlayerHealthbar } from "@creature-chess/ui";
 import { usePlayerId } from "../../../../auth";
 import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
@@ -28,7 +28,6 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	if (!opponent || !inReadyPhase || spectatingPlayer) {
 		return null;
 	}
-	const renderHealthbar = (current: number) => current.toString();
 
 	const returnTitleOrSpacer = (player) => {
 		if (player.profile.title !== null) {
@@ -44,7 +43,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 				<div className="outer-profile-box">
 					<div className="inner-profile-box">
 						<div className="player-picture">
-							<Avatar player={localPlayer} />
+							<PlayerAvatar player={localPlayer} />
 						</div>
 						<div className="name-and-health">
 							<p className="player-name">{localPlayer.name}</p>
@@ -62,7 +61,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 							</div>
 						</div>
 						<div className="player-picture">
-							<Avatar player={opponent} />
+							<PlayerAvatar player={opponent} />
 						</div>
 					</div>
 				</div>

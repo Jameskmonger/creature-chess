@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
-import { PlayerListPlayer } from "../../../models/lib";
-import { Title } from "../title";
-import { PlayerName } from "./playerName";
+import { PlayerListPlayer } from "@creature-chess/models";
+import { Title } from "./title";
+import { PlayerName } from "./name";
 
 type Props = {
 	player: PlayerListPlayer;

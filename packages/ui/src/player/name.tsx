@@ -4,10 +4,10 @@ import { createUseStyles } from "react-jss";
 type Props = {
 	name: string;
 	position: number;
-	isLocal: boolean;
+	isLocal?: boolean;
 };
 
-const getLocalStyles = ({ isLocal }: Props): { fontStyle: string; color: string } | {} =>
+const getLocalStyles = ({ isLocal = false }: Props): { fontStyle: string; color: string } | {} =>
 	isLocal ? { fontStyle: "italic", color: "#ffcd75" } : {};
 
 const useStyles = createUseStyles({

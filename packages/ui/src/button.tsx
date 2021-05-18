@@ -2,7 +2,8 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 
 interface Props {
-	style?: "primary" | "secondary";
+	disabled?: boolean;
+	type?: "primary" | "secondary";
 	onClick?: (e: React.MouseEvent) => void;
 	children: React.ReactNode | React.ReactNode[];
 }
@@ -15,16 +16,24 @@ const useStyles = createUseStyles({
 	button: (props: Props) => ({
 		padding: "0.25em 1em",
 		fontSize: "1em",
-		color: getColor(props.style!),
-		background: getBackground(props.style!),
-		border: "none"
+		color: getColor(props.type!),
+		background: getBackground(props.type!),
+		border: "none",
+		cursor: "pointer",
+
+		"&:disabled": {
+			background: "#575758",
+			cursor: "not-allowed"
+		}
 	})
 });
 
 const Button: React.FunctionComponent<Props> = (props) => {
 	const classes = useStyles(props);
 
-	return <button className={classes.button} onClick={props.onClick}>{props.children}</button>;
+	const { onClick, disabled = false, children } = props;
+
+	return <button className={classes.button} onClick={!disabled ? onClick : undefined} disabled={disabled} >{children}</button>;
 };
 
 export { Button };

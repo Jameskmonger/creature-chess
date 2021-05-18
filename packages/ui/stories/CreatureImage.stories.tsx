@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CreatureImage } from '../src/creatureImage';
+import { CreatureImage } from '../src/display';
 
 export default {
 	title: 'Creature/Image',

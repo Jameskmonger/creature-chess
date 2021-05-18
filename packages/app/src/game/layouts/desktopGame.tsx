@@ -25,7 +25,7 @@ const DesktopGame: React.FunctionComponent = () => {
 			<div className="group right">
 				<QuitGameButton />
 
-				<CardShop showBalance />
+				<CardShop />
 
 				<Profile />
 

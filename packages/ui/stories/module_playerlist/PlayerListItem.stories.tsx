@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { finishedBattle, inProgressBattle, PlayerBattle, PlayerListPlayer, PlayerStatus, PlayerTitle, StreakType } from "@creature-chess/models";
-import { PlayerListItem } from '../src/playerListItem/playerListItem';
+import { PlayerListItem } from '../../src/playerListItem/playerListItem';
 
 export default {
-	title: 'Player/PlayerListItem',
+	title: 'Module - Player List/PlayerListItem',
 	component: PlayerListItem,
 	argTypes: {
 		currentlySpectating: {
@@ -41,44 +41,69 @@ const createPlayer = (battle: PlayerBattle, others?: Partial<PlayerListPlayer> =
 	...others
 })
 
-export const NoBattle = Template.bind({});
-NoBattle.args = {
+export const LocalNoBattle = Template.bind({});
+LocalNoBattle.args = {
 	index: 0,
 
-	isOpponent: true,
-	isLocal: false,
+	isOpponent: false,
+	isLocal: true,
 
-	opponentName: "Jeff",
 	currentlySpectating: false,
 	showReadyIndicator: true,
 
-	player: createPlayer(null, { ready: true, streakAmount: 0 })
+	player: createPlayer(
+		null,
+		{ name: "Cool Mom227", ready: true, streakAmount: 0, profile: { picture: 4, title: null } }
+	)
 };
 
-export const InProgressBattle = Template.bind({});
-InProgressBattle.args = {
+export const OpponentInProgressBattle = Template.bind({});
+OpponentInProgressBattle.args = {
 	index: 5,
 
 	isOpponent: true,
 	isLocal: false,
 
-	opponentName: "Jeff",
+	opponentName: "[BOT] Lucky",
 	currentlySpectating: false,
 	showReadyIndicator: true,
 
-	player: createPlayer(inProgressBattle('5678'), { money: 4, level: 9, health: 4 })
+	player: createPlayer(
+		inProgressBattle('5678'),
+		{ money: 4, level: 9, health: 4 }
+	)
 };
 
 export const FinishedBattle = Template.bind({});
 FinishedBattle.args = {
 	index: 0,
 
-	isOpponent: true,
+	isOpponent: false,
 	isLocal: false,
 
 	opponentName: "Jeff",
 	currentlySpectating: false,
 	showReadyIndicator: true,
 
-	player: createPlayer(finishedBattle('5678', false, 3, 0))
+	player: createPlayer(
+		finishedBattle('5678', false, 3, 0),
+		{ name: "[BOT] Bicycle", streakType: StreakType.LOSS, profile: { picture: 13, title: PlayerTitle.HallOfFame } }
+	)
+};
+
+export const CurrentlySpectating = Template.bind({});
+CurrentlySpectating.args = {
+	index: 0,
+
+	isOpponent: false,
+	isLocal: false,
+
+	opponentName: "[BOT] Lucky",
+	currentlySpectating: true,
+	showReadyIndicator: true,
+
+	player: createPlayer(
+		null,
+		{ name: "Purepker895", ready: true, streakAmount: 0, profile: { picture: 20, title: null } }
+	)
 };

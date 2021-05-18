@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CreatureType } from "@creature-chess/models";
+import { TypeIndicator } from "@creature-chess/ui";
 import { Footer } from "../../display/footer";
-import { TypeIndicator } from "../components/TypeIndicator";
 
 const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = false }) => (
 	<div className="help">
@@ -29,11 +29,21 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = 
 			</ul>
 			<h3 className="subheader">Types</h3>
 			<ul>
-				<li><span className="list-header"><TypeIndicator type={CreatureType.Earth} /> Earth:</span> Overcomes water.</li>
-				<li><span className="list-header"><TypeIndicator type={CreatureType.Metal} />Metal:</span> Overcomes wood.</li>
-				<li><span className="list-header"><TypeIndicator type={CreatureType.Water} />Water:</span> Overcomes fire.</li>
-				<li><span className="list-header"><TypeIndicator type={CreatureType.Wood} />Wood:</span> Overcomes earth.</li>
-				<li><span className="list-header"><TypeIndicator type={CreatureType.Fire} />Fire:</span> Overcomes metal.</li>
+				<li><span className="list-header">
+					<div className="piece-type"><TypeIndicator type={CreatureType.Earth} /></div>
+					Earth:</span> Overcomes water.</li>
+				<li><span className="list-header">
+					<div className="piece-type"><TypeIndicator type={CreatureType.Metal} /></div>
+					Metal:</span> Overcomes wood.</li>
+				<li><span className="list-header">
+					<div className="piece-type"><TypeIndicator type={CreatureType.Water} /></div>
+					Water:</span> Overcomes fire.</li>
+				<li><span className="list-header">
+					<div className="piece-type"><TypeIndicator type={CreatureType.Wood} /></div>
+					Wood:</span> Overcomes earth.</li>
+				<li><span className="list-header">
+					<div className="piece-type"><TypeIndicator type={CreatureType.Fire} /></div>
+					Fire:</span> Overcomes metal.</li>
 			</ul>
 		</div>
 		<div className="section">
