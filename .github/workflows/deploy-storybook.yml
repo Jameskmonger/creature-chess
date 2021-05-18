@@ -22,10 +22,26 @@ jobs:
       uses: JesseTG/rm@v1.0.2
       with:
         path: ./packages/app
+    - name: Delete auth-server package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: ./packages/auth-server
+    - name: Delete battle package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: ./packages/battle
+    - name: Delete data package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: ./packages/data
     - name: Delete gamemode package
       uses: JesseTG/rm@v1.0.2
       with:
         path: ./packages/gamemode
+    - name: Delete networking package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: ./packages/networking
     - name: Delete server-game package
       uses: JesseTG/rm@v1.0.2
       with:
@@ -34,10 +50,22 @@ jobs:
       uses: JesseTG/rm@v1.0.2
       with:
         path: ./packages/server-info
+    - name: Delete shoki-board package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: ./packages/shoki-board
+    - name: Delete shoki-board-react package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: ./packages/shoki-board-react
     - name: Delete shoki-engine package
       uses: JesseTG/rm@v1.0.2
       with:
         path: ./packages/shoki-engine
+    - name: Delete shoki-networking package
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: ./packages/shoki-networking
     - name: Install dependencies
       run: npm install && npm run bootstrap
     - name: Build application
