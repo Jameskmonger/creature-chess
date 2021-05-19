@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/Jameskmonger/creature-chess/compare/v0.4.4...v0.4.5) (2021-05-19)
+
+
+### Bug Fixes
+
+* apply antialiasing to pieces and avatars ([5bf3257](https://github.com/Jameskmonger/creature-chess/commit/5bf32575d04b8bedac35f16d888693913fda7225))
+
+
+
+
+
 ## [0.4.4](https://github.com/Jameskmonger/creature-chess/compare/v0.4.3...v0.4.4) (2021-05-18)
 
 
