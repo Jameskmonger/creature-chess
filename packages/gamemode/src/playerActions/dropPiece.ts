@@ -79,18 +79,31 @@ export const dropPiecePlayerActionSaga = function*() {
 
 			if (from.type === "board" && to.type === "board") {
 				yield put(boardSlice.commands.moveBoardPieceCommand({ pieceId, from: from.location, to: to.location }));
-			} else if (from.type !== "board" && to.type !== "board") {
+			} else if (from.type === "bench" && to.type === "bench") {
 				const fromBench = { x: from.location.x, y: 0 };
 				const toBench = { x: to.location.x, y: 0 };
 
 				yield put(benchSlice.commands.moveBoardPieceCommand({ pieceId, from: fromBench, to: toBench }));
-			} else if (from.type === "board" && to.type !== "board") {
+			} else if (from.type === "board" && to.type === "bench") {
 				yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
-				yield put(benchSlice.commands.addBoardPieceCommand({ piece: fromPiece, x: to.location.x, y: 0 }));
-			} else if (from.type !== "board" && to.type === "board") {
+				yield put(benchSlice.commands.addBoardPieceCommand({
+					piece: {
+						...fromPiece,
+						facingAway: false
+					},
+					x: to.location.x,
+					y: 0
+				}));
+			} else if (from.type === "bench" && to.type === "board") {
 				yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
 				const { x, y } = to.location;
-				yield put(boardSlice.commands.addBoardPieceCommand({ piece: fromPiece, x, y }));
+				yield put(boardSlice.commands.addBoardPieceCommand({
+					piece: {
+						...fromPiece,
+						facingAway: true
+					},
+					x, y
+				}));
 			}
 		}
 	);

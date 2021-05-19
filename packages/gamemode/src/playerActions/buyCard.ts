@@ -62,7 +62,7 @@ const createPieceFromCard = (
 		ownerId,
 		definitionId,
 		definition,
-		facingAway: true,
+		facingAway: false,
 		maxHealth: stats.hp,
 		currentHealth: stats.hp,
 		stage: 0
