@@ -21,10 +21,10 @@ const useStyles = createUseStyles({
 		"height": "100%",
 
 		"& > img": {
-			position: "absolute",
-			bottom: 0,
-			right: 0,
-			width: "80%",
+			"position": "absolute",
+			"bottom": 0,
+			"right": 0,
+			"width": "80%",
 		}
 	},
 	metaContainer: {

@@ -7,7 +7,7 @@ interface Props {
 }
 
 const CreatureImage: React.FunctionComponent<Props> = ({ baseUrl = "", facing, definitionId }) => (
-	<img className="image" src={`${baseUrl}/images/${facing || "front"}/${definitionId}.png`} />
+	<img className="image creature-image" src={`${baseUrl}/images/${facing || "front"}/${definitionId}.png`} />
 );
 
 export { CreatureImage };
