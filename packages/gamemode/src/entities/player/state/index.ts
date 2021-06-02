@@ -1,9 +1,8 @@
 import { ReducersMapObject } from "redux";
 import { BoardState } from "@shoki/board";
-import { PieceModel } from "@creature-chess/models";
+import { PieceModel, RoundInfoState } from "@creature-chess/models";
 
 import { playerInfoReducer, PlayerInfoState } from "./playerInfo";
-import { RoundInfoState } from "../../../game/roundInfo";
 
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { spectatingReducer, SpectatingState } from "./spectating";

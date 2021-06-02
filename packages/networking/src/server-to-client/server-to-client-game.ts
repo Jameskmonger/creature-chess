@@ -1,7 +1,6 @@
 import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn, emitActionsOpcode, EmitActionsPacket } from "@shoki/networking";
-import { GamePhase, PieceModel, PlayerListPlayer } from "@creature-chess/models";
+import { GamePhase, PieceModel, PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
 import { BoardState } from "@shoki/board";
-import { RoundInfoState } from "@creature-chess/gamemode";
 import { EmptyPacket } from "../empty-packet";
 
 export type GameConnectionPacket = {

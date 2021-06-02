@@ -1,7 +1,7 @@
 import { Reducer, Action, combineReducers } from "redux";
 import { BoardSlice, BoardState } from "@shoki/board";
-import { PieceModel, PlayerListPlayer } from "@creature-chess/models";
-import { RoundInfoState, PlayerInfoState, playerInfoReducer, roundInfoReducer, PlayerState, playerReducers } from "@creature-chess/gamemode";
+import { PieceModel, PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
+import { PlayerInfoState, playerInfoReducer, roundInfoReducer, PlayerState, playerReducers } from "@creature-chess/gamemode";
 
 import { playerListReducer } from "./module";
 import { UiState, uiReducer } from "./ui";
