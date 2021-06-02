@@ -28,10 +28,9 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	if (!opponent || !inReadyPhase || spectatingPlayer) {
 		return null;
 	}
-	const renderHealthbar = (current: number) => current.toString();
 
 	const returnTitleOrSpacer = (player) => {
-		if (player.profile.title !== null) {
+		if (player.profile.title) {
 			return <Title titleId={player.profile.title} />;
 		}
 		return <div className="spacer" />;
