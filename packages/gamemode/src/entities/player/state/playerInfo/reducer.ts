@@ -1,11 +1,6 @@
-import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
+import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus, PlayerStreak } from "@creature-chess/models";
 import { PlayerEvent, PLAYER_MATCH_REWARDS_EVENT } from "../../events";
 import { PlayerCommand } from "../commands";
-
-export interface PlayerStreak {
-	type: StreakType;
-	amount: number;
-}
 
 export type PlayerMatchRewards = {
 	damage: number;

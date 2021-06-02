@@ -1,7 +1,6 @@
 import { all, takeLatest } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
-import { PlayerBattle, PlayerStatus } from "@creature-chess/models";
-import { PlayerStreak } from "../entities/player/state/playerInfo/reducer";
+import { PlayerBattle, PlayerStatus, PlayerStreak } from "@creature-chess/models";
 import { PlayerEntity } from "../entities";
 import { PlayerCommands, PlayerStateSelectors } from "../entities/player";
 

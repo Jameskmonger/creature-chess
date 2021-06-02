@@ -1,12 +1,11 @@
 import { take, takeLatest, put, call } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
-import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType } from "@creature-chess/models";
+import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType, PlayerStreak } from "@creature-chess/models";
 
 import { playerMatchRewardsEvent, playerDeathEvent } from "../events";
 import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../../game/events";
 import { updateStreakCommand, updateHealthCommand, updateStatusCommand } from "../state/commands";
 import { subtractHealthCommand } from "./health";
-import { PlayerStreak } from "../state/playerInfo/reducer";
 import { getPlayerHealth, getPlayerMoney, getPlayerStreak } from "../state/selectors";
 
 const getStreakBonus = (streak: number) => {
