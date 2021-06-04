@@ -12,6 +12,7 @@ export * from "./constants";
 
 export { validateNicknameFormat } from "./nickname";
 export { GamePhase } from "./game-phase";
+export { RoundInfoState } from "./roundInfoState";
 export { PlayerTitle, TITLES } from "./titles";
 export { PlayerProfile } from "./playerProfile";
 export { SanitizedUser } from "./user";

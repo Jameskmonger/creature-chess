@@ -1,6 +1,7 @@
 import { applyMiddleware, combineReducers, createStore, Store } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { roundInfoReducer, RoundInfoState } from "./roundInfo";
+import { roundInfoReducer } from "./roundInfo";
+import { RoundInfoState } from "@creature-chess/models";
 import { GameSagaContext } from "./sagas";
 
 export type GameState = {

@@ -1,1 +1,1 @@
-export { RoundInfoState, RoundInfoCommands, reducer as roundInfoReducer, SetRoundInfoCommand } from "./state";
+export { RoundInfoCommands, reducer as roundInfoReducer, SetRoundInfoCommand } from "./state";
