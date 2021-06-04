@@ -30,7 +30,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	}
 
 	const returnTitleOrSpacer = (player) => {
-		if (player.profile.title !== null) {
+		if (player.profile.title) {
 			return <Title titleId={player.profile.title} />;
 		}
 		return <div className="spacer" />;
