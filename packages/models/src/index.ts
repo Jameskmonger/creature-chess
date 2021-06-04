@@ -2,6 +2,7 @@ export { Card } from "./card";
 export { PieceModel, CombatPieceModel, IndexedPieces } from "./piece";
 export { PlayerListPlayer, PlayerStatus, PlayerBattle, PlayerBattleStatus, inProgressBattle, finishedBattle } from "./player-list-player";
 export { StreakType } from "./streakType";
+export { PlayerStreak } from "./playerStreak";
 export { LobbyPlayer } from "./lobby-player";
 export { PlayerPieceLocation } from "./playerPieceLocation";
 
