@@ -16,6 +16,7 @@ const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition 
 	const dispatch = useDispatch();
 	const isActive = useSelector<AppState, boolean>(state => state.game.ui.currentOverlay === overlay);
 	const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health !== 0);
+	const isSpectating = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
 	const onClick = () => {
 		if (isActive) {
@@ -23,7 +24,7 @@ const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition 
 			return;
 		}
 		if (overlay === Overlay.SHOP) {
-			if (!canUseShop) {
+			if (!canUseShop || isSpectating) {
 				return;
 			}
 		}

@@ -12,8 +12,9 @@ const CardShop: React.FunctionComponent = () => {
 	const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
 	const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health > 0);
 	const shopLocked = useSelector<AppState, boolean>(state => state.game.cardShop.locked);
+	const isSpectating = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
-	if (cards === null || canUseShop === false) {
+	if (cards === null || canUseShop === false || isSpectating) {
 		return null;
 	}
 
