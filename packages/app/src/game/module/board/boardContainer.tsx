@@ -42,10 +42,11 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 				<MatchRewardsOverlay />
 				<ReconnectOverlay />
 			</div>
-			{
-				isSpectating ?
-					<SpectatingOverlay /> :
-					<div className="bench">
+			<div className="bench">
+				{
+					isSpectating ?
+						<SpectatingOverlay />
+						:
 						<BoardGrid
 							state={bench}
 							onDrop={onDropPiece(dispatch, "bench", board, bench)}
@@ -53,8 +54,8 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 							// eslint-disable-next-line react/jsx-no-bind
 							renderItem={renderBenchPiece}
 						/>
-					</div>
-			}
+				}
+			</div>
 
 		</div>
 	);

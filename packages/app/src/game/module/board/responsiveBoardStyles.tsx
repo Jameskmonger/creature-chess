@@ -58,6 +58,8 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
 
             .bench { height: ${tileSize}px; }
 
+			.spectating-overlay { height: ${tileSize}px; }
+
             .opponent-board-placeholder { height: ${tileSize * Constants.GRID_SIZE.height / 2}px; }
             `}}
 		/>

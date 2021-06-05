@@ -16,8 +16,10 @@ const SpectatingOverlay: React.FunctionComponent = () => {
 	};
 	return (
 		<section className="spectating-overlay">
-			<h1 className="spectating-header">SPECTATING</h1>
-			<p>You are currently spectating {spectatingName} </p>
+			<div className="text-items">
+				<h1 className="spectating-header">SPECTATING</h1>
+				<p>You are currently spectating {spectatingName} </p>
+			</div>
 			<button onClick={stopSpectating}>Stop Spectating</button>
 		</section>
 	);
