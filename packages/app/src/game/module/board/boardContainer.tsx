@@ -9,6 +9,7 @@ import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
 import { ReadyOverlay } from "./overlays/readyOverlay";
+import { SpectatingOverlay } from "./overlays/spectatingOverlay";
 import { NowPlaying } from "../nowPlaying";
 import { onDropPiece, onTileClick } from "./tileInteraction";
 import { GameBoard } from "./gameBoard";
@@ -23,6 +24,7 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 	const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
+	const isSpectating = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
 	const renderBenchPiece = (id: string) => <InteractablePiece id={id} />;
 
@@ -40,16 +42,20 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 				<MatchRewardsOverlay />
 				<ReconnectOverlay />
 			</div>
+			{
+				isSpectating ?
+					<SpectatingOverlay /> :
+					<div className="bench">
+						<BoardGrid
+							state={bench}
+							onDrop={onDropPiece(dispatch, "bench", board, bench)}
+							onClick={onTileClick(dispatch, "bench")}
+							// eslint-disable-next-line react/jsx-no-bind
+							renderItem={renderBenchPiece}
+						/>
+					</div>
+			}
 
-			<div className="bench">
-				<BoardGrid
-					state={bench}
-					onDrop={onDropPiece(dispatch, "bench", board, bench)}
-					onClick={onTileClick(dispatch, "bench")}
-					// eslint-disable-next-line react/jsx-no-bind
-					renderItem={renderBenchPiece}
-				/>
-			</div>
 		</div>
 	);
 };
