@@ -4,18 +4,12 @@ import { OutgoingPacketRegistry } from "./outgoing-packet-registry";
 
 type Action<T = any> = { type: T };
 
-export const emitActionsOpcode = "emitActions";
-
 /**
  * The packet used to emit a set of actions.
  */
 export type EmitActionsPacket = {
 	index: number;
 	actions: Action[];
-};
-
-type PacketDefinitions = {
-	[emitActionsOpcode]: EmitActionsPacket;
 };
 
 /**
@@ -25,12 +19,11 @@ type PacketDefinitions = {
  * @param actions The action pattern to emit
  */
 export const emitActionsSaga = function*<
-	TDefinitions extends PacketDefinitions,
-	TRegistry
-	extends OutgoingPacketRegistry<TDefinitions, any>
-	= OutgoingPacketRegistry<TDefinitions, any>
+	TOpcode extends string,
+	TDefinitions extends { [opcode in TOpcode]: EmitActionsPacket }
 >(
-	registry: TRegistry,
+	opcode: TOpcode,
+	registry: OutgoingPacketRegistry<TDefinitions, any>,
 	actions: ActionPattern
 ) {
 	let lastSentIndex = 0;
@@ -43,6 +36,6 @@ export const emitActionsSaga = function*<
 
 		const payload: EmitActionsPacket = { index, actions: [action] };
 
-		registry.emit(emitActionsOpcode, payload);
+		registry.emit(opcode, payload as TDefinitions[TOpcode]);
 	}
 };

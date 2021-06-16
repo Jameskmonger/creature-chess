@@ -108,14 +108,19 @@ export const incomingGameNetworking = function*(
 
 	yield all([
 		call(readPacketsToActions, registry, socket, slices),
-		call(receiveActionsSaga, registry, [
-			PlayerCommands.setSpectatingIdCommand.toString(),
-			PlayerCommands.updateCardsCommand.toString(),
-			PlayerCommands.updateShopLockCommand.toString(),
-			PlayerCommands.updateMoneyCommand.toString(),
-			PlayerCommands.updateLevelCommand.toString(),
-			PlayerCommands.updateHealthCommand.toString(),
-			PlayerCommands.updateOpponentCommand.toString()
-		]),
+		call(
+			receiveActionsSaga as any, // todo improve this typing
+			ServerToClient.Game.PacketOpcodes.PLAYER_INFO_UPDATES,
+			registry,
+			[
+				PlayerCommands.setSpectatingIdCommand.toString(),
+				PlayerCommands.updateCardsCommand.toString(),
+				PlayerCommands.updateShopLockCommand.toString(),
+				PlayerCommands.updateMoneyCommand.toString(),
+				PlayerCommands.updateLevelCommand.toString(),
+				PlayerCommands.updateHealthCommand.toString(),
+				PlayerCommands.updateOpponentCommand.toString()
+			]
+		),
 	]);
 };

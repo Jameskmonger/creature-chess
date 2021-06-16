@@ -1,14 +1,14 @@
-import { takeEvery, put, all, call } from "redux-saga/effects";
+import { all, call } from "typed-redux-saga";
+
+import { takeEvery, put } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
-import { PlayerEvents, PlayerActionTypesArray, getPlayerEntityDependencies } from "@creature-chess/gamemode";
+import { PlayerEvents, PlayerActionTypesArray } from "@creature-chess/gamemode";
 import { ClientToServer } from "@creature-chess/networking";
-import { receiveActionsSaga } from "@shoki/networking";
+import { IncomingPacketRegistry, receiveActionsSaga } from "@shoki/networking";
 
 import { getPacketRegistries } from "./registries";
 
 export const incomingNetworking = function*() {
-	const { logger } = yield* getPlayerEntityDependencies();
-
 	const { incoming: registry } = yield* getPacketRegistries();
 
 	const processFinishMatch = function*() {
@@ -28,8 +28,13 @@ export const incomingNetworking = function*() {
 			});
 	};
 
-	yield all([
-		call(receiveActionsSaga, registry, PlayerActionTypesArray),
+	yield* all([
+		call(
+			receiveActionsSaga as any, // todo improve this typing
+			ClientToServer.PacketOpcodes.SEND_PLAYER_ACTIONS,
+			registry,
+			PlayerActionTypesArray
+		),
 		call(processFinishMatch)
 	]);
 };

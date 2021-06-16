@@ -13,7 +13,12 @@ const writeActionsToPackets = function*(registry: ClientToServer.OutgoingRegistr
 				registry.emit(ClientToServer.PacketOpcodes.FINISH_MATCH, { empty: true });
 			}
 		),
-		call(emitActionsSaga, registry, PlayerActionTypesArray)
+		call(
+			emitActionsSaga as any, // todo improve this typing
+			ClientToServer.PacketOpcodes.SEND_PLAYER_ACTIONS,
+			registry,
+			PlayerActionTypesArray
+		)
 	]);
 };
 

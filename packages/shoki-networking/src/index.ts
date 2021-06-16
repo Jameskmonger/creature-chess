@@ -1,6 +1,6 @@
 export {
 	OutgoingPacketRegistry, EmitFn,
-	EmitActionsPacket, emitActionsOpcode, emitActionsSaga,
+	EmitActionsPacket, emitActionsSaga,
 	IncomingPacketRegistry, RegisterListenerFn,
 	receiveActionsSaga
 } from "./registry";

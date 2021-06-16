@@ -1,4 +1,4 @@
-import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn, emitActionsOpcode, EmitActionsPacket } from "@shoki/networking";
+import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn, EmitActionsPacket } from "@shoki/networking";
 import { GamePhase, PieceModel, PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
 import { BoardState } from "@shoki/board";
 import { EmptyPacket } from "../empty-packet";
@@ -58,7 +58,9 @@ export enum PacketOpcodes {
 	PHASE_UPDATE = "phaseUpdate",
 	FINISH_GAME = "finishGame",
 	MATCH_REWARDS = "matchRewards",
-	PLAYER_DEAD = "playerDead"
+	PLAYER_DEAD = "playerDead",
+
+	PLAYER_INFO_UPDATES = "playerInfoUpdates"
 }
 
 export type PacketDefinitions = {
@@ -73,7 +75,7 @@ export type PacketDefinitions = {
 	[PacketOpcodes.MATCH_REWARDS]: MatchRewardsPacket;
 	[PacketOpcodes.PLAYER_DEAD]: EmptyPacket;
 
-	[emitActionsOpcode]: EmitActionsPacket;
+	[PacketOpcodes.PLAYER_INFO_UPDATES]: EmitActionsPacket;
 };
 
 export type PacketAcknowledgements = {

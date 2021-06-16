@@ -1,13 +1,9 @@
 import { eventChannel } from "redux-saga";
 import { put, take } from "redux-saga/effects";
-import { emitActionsOpcode, EmitActionsPacket } from "./emitActions";
+import { EmitActionsPacket } from "./emitActions";
 import { IncomingPacketRegistry } from "./incoming-packet-registry";
 
 type Action<T = any> = { type: T };
-
-type PacketDefinitions = {
-	[emitActionsOpcode]: EmitActionsPacket;
-};
 
 /**
  * Listen to an {@link IncomingPacketRegistry} and emit any received actions to the store if they match a pattern
@@ -16,12 +12,11 @@ type PacketDefinitions = {
  * @param actions The action pattern to emit to the store
  */
 export const receiveActionsSaga = function*<
-	TDefinitions extends PacketDefinitions,
-	TRegistry
-	extends IncomingPacketRegistry<TDefinitions, any>
-	= IncomingPacketRegistry<TDefinitions, any>
+	TOpcode extends string,
+	TDefinitions extends { [opcode in TOpcode]: EmitActionsPacket }
 >(
-	registry: TRegistry,
+	opcode: TOpcode,
+	registry: IncomingPacketRegistry<TDefinitions, any>,
 	actions: string[]
 ) {
 	let expectedPacketIndex = 1;
@@ -29,9 +24,9 @@ export const receiveActionsSaga = function*<
 	const channel = eventChannel<EmitActionsPacket>(emit => {
 		const onReceiveActions = (packet: EmitActionsPacket) => emit(packet);
 
-		registry.on(emitActionsOpcode, onReceiveActions);
+		registry.on(opcode, onReceiveActions);
 
-		return () => registry.off(emitActionsOpcode, onReceiveActions);
+		return () => registry.off(opcode, onReceiveActions);
 	});
 
 	const actionQueue: Action[] = [];

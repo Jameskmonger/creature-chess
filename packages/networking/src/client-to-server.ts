@@ -1,19 +1,23 @@
 import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn } from "@shoki/networking";
-import { emitActionsOpcode, EmitActionsPacket } from "@shoki/networking";
+import { EmitActionsPacket } from "@shoki/networking";
 import { EmptyPacket } from "./empty-packet";
 
 export enum PacketOpcodes {
-	FINISH_MATCH = "finishMatch"
+	FINISH_MATCH = "finishMatch",
+
+	SEND_PLAYER_ACTIONS = "sendPlayerActions"
 }
 
 export type PacketDefinitions = {
 	[PacketOpcodes.FINISH_MATCH]: EmptyPacket;
-	[emitActionsOpcode]: EmitActionsPacket;
+
+	[PacketOpcodes.SEND_PLAYER_ACTIONS]: EmitActionsPacket;
 };
 
 export type PacketAcknowledgements = {
 	[PacketOpcodes.FINISH_MATCH]: never;
-	[emitActionsOpcode]: never;
+
+	[PacketOpcodes.SEND_PLAYER_ACTIONS]: never;
 };
 
 export type IncomingRegistry = IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>;
