@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.6](https://github.com/Jameskmonger/creature-chess/compare/v0.4.5...v0.4.6) (2021-06-16)
+
+
+### Bug Fixes
+
+* make bench pieces face forwards ([660b572](https://github.com/Jameskmonger/creature-chess/commit/660b5724215e474cea0e3297c2454b1583cdf2e1)), closes [#393](https://github.com/Jameskmonger/creature-chess/issues/393)
+
+
+
+
+
 ## [0.4.4](https://github.com/Jameskmonger/creature-chess/compare/v0.4.3...v0.4.4) (2021-05-18)
 
 **Note:** Version bump only for package @creature-chess/gamemode

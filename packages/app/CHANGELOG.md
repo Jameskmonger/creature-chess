@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.6](https://github.com/Jameskmonger/creature-chess/compare/v0.4.5...v0.4.6) (2021-06-16)
+
+
+### Bug Fixes
+
+* add spacer to overlay screen ([#433](https://github.com/Jameskmonger/creature-chess/issues/433)) ([40df0b6](https://github.com/Jameskmonger/creature-chess/commit/40df0b6addf617cfeae94ca6809d1660f720114d))
+* prevent shop being opened when specating ([#436](https://github.com/Jameskmonger/creature-chess/issues/436)) ([2055fc4](https://github.com/Jameskmonger/creature-chess/commit/2055fc40f859a5fd8a2a12f99bd1ad89514090da))
+
+
+### Features
+
+* spectating overlay ([#438](https://github.com/Jameskmonger/creature-chess/issues/438)) ([52d8941](https://github.com/Jameskmonger/creature-chess/commit/52d8941040064e05c6707342d646b976f544b465))
+
+
+
+
+
 ## [0.4.5](https://github.com/Jameskmonger/creature-chess/compare/v0.4.4...v0.4.5) (2021-05-19)
 
 
