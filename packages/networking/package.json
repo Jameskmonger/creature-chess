@@ -26,7 +26,6 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@creature-chess/gamemode": "^0.4.6",
 		"@creature-chess/models": "^0.4.6",
 		"@shoki/board": "^0.4.3",
 		"@shoki/networking": "^0.4.4",
