@@ -28,10 +28,6 @@ export type PhaseUpdatePacket =
 	| ReadyPhaseUpdatePacket
 	| PlayingPhaseUpdatePacket;
 
-type FinishGamePacket = {
-	winnerId: string;
-};
-
 export type AuthenticateResponse = {
 	error?: { type: "not_registered" } | { type: "authentication" };
 };
@@ -56,10 +52,11 @@ export enum PacketOpcodes {
 	SPECTATING_PLAYER_UPDATE = "spectatingPlayerUpdate",
 	PLAYER_LIST_UPDATE = "playerListUpdate",
 	PHASE_UPDATE = "phaseUpdate",
-	FINISH_GAME = "finishGame",
 	MATCH_REWARDS = "matchRewards",
 	PLAYER_DEAD = "playerDead",
 
+	SEND_GAME_EVENTS = "sendGameEvents",
+	SEND_LOCAL_PLAYER_EVENTS = "sendLocalPlayerEvents",
 	PLAYER_INFO_UPDATES = "playerInfoUpdates"
 }
 
@@ -71,7 +68,6 @@ export type PacketDefinitions = {
 	[PacketOpcodes.SPECTATING_PLAYER_UPDATE]: string | null;
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: PlayerListPlayer[];
 	[PacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket;
-	[PacketOpcodes.FINISH_GAME]: FinishGamePacket;
 	[PacketOpcodes.MATCH_REWARDS]: MatchRewardsPacket;
 	[PacketOpcodes.PLAYER_DEAD]: EmptyPacket;
 
@@ -86,7 +82,6 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.SPECTATING_PLAYER_UPDATE]: never;
 	[PacketOpcodes.PLAYER_LIST_UPDATE]: never;
 	[PacketOpcodes.PHASE_UPDATE]: never;
-	[PacketOpcodes.FINISH_GAME]: never;
 	[PacketOpcodes.MATCH_REWARDS]: never;
 	[PacketOpcodes.PLAYER_DEAD]: never;
 };

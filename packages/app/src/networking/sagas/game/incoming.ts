@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { takeEvery, put, call, all } from "redux-saga/effects";
-import { PlayerEvents, RoundInfoCommands, PlayerCommands } from "@creature-chess/gamemode";
+import { PlayerEvents, RoundInfoCommands, PlayerCommands, GameEvents } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { receiveActionsSaga } from "@shoki/networking";
 import { BoardSlice } from "@shoki/board";
@@ -69,15 +69,6 @@ const readPacketsToActions = function*(
 		);
 
 		registry.on(
-			ServerToClient.Game.PacketOpcodes.FINISH_GAME,
-			({ winnerId }) => {
-				emit(setWinnerIdCommand({ winnerId }));
-
-				socket.close();
-			}
-		);
-
-		registry.on(
 			ServerToClient.Game.PacketOpcodes.PHASE_UPDATE,
 			(packet) => {
 				const update = {
@@ -111,6 +102,12 @@ export const incomingGameNetworking = function*(
 
 	yield all([
 		call(readPacketsToActions, registry, socket, board, bench),
+		call(
+			receiveActionsSaga as any, // todo improve this typing
+			ServerToClient.Game.PacketOpcodes.SEND_GAME_EVENTS,
+			registry,
+			GameEvents.GameEventActionTypesArray
+		),
 		call(
 			receiveActionsSaga as any, // todo improve this typing
 			ServerToClient.Game.PacketOpcodes.PLAYER_INFO_UPDATES,

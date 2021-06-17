@@ -27,6 +27,10 @@ export const playerFinishMatchEvent = createAction<{
 	isHomePlayer: boolean;
 }, "playerFinishMatchEvent">("playerFinishMatchEvent");
 
+export const GameEventActionTypesArray = [
+	gameFinishEvent.toString(),
+];
+
 export type GameEvent =
 	GamePhaseStartedEvent
 	| GameFinishEvent

@@ -4,7 +4,7 @@ import { takeEvery, put } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 import { PlayerEvents, PlayerActionTypesArray } from "@creature-chess/gamemode";
 import { ClientToServer } from "@creature-chess/networking";
-import { IncomingPacketRegistry, receiveActionsSaga } from "@shoki/networking";
+import { receiveActionsSaga } from "@shoki/networking";
 
 import { getPacketRegistries } from "./registries";
 

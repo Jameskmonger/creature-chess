@@ -1,6 +1,6 @@
 import { takeLatest, all } from "redux-saga/effects";
 
-import { GameEvents, PlayerEvents } from "@creature-chess/gamemode";
+import { PlayerEvents } from "@creature-chess/gamemode";
 import { ServerToClient } from "@creature-chess/networking";
 import { getPacketRegistries } from "../registries";
 
@@ -18,12 +18,6 @@ export const sendAnnouncements = function*() {
 			PlayerEvents.PLAYER_MATCH_REWARDS_EVENT,
 			function*({ payload }: PlayerEvents.PlayerMatchRewardsEvent) {
 				registry.emit(ServerToClient.Game.PacketOpcodes.MATCH_REWARDS, payload);
-			}
-		),
-		takeLatest<GameEvents.GameFinishEvent>(
-			GameEvents.gameFinishEvent.toString(),
-			function*({ payload: { winnerId } }) {
-				registry.emit(ServerToClient.Game.PacketOpcodes.FINISH_GAME, { winnerId });
 			}
 		)
 	]);

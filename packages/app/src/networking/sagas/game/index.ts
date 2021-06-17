@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
-import { take, put, call, all } from "redux-saga/effects";
+import { take, put, call, all, race } from "redux-saga/effects";
+import { GameEvents } from "@creature-chess/gamemode";
 import { incomingGameNetworking } from "./incoming";
 import { outgoingGameNetworking } from "./outgoing";
 
@@ -13,8 +14,15 @@ export const gameNetworking = function*(socket: Socket) {
 
 	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
-	yield all([
-		call(outgoingGameNetworking, socket),
-		call(incomingGameNetworking, socket)
+	yield race([
+		all([
+			call(outgoingGameNetworking, socket),
+			call(incomingGameNetworking, socket)
+		]),
+		call(function*() {
+			yield take(GameEvents.gameFinishEvent.toString());
+		})
 	]);
+
+	socket.close();
 };
