@@ -46,6 +46,7 @@ export type BoardSliceCommands<TPiece extends HasId = HasId> = {
 	}>;
 	removeBoardPiecesCommand: ActionCreatorWithPayload<string[]>;
 	updateBoardPiecesCommand: ActionCreatorWithPayload<TPiece[]>;
+	swapPiecesCommand: ActionCreatorWithPayload<{ aId: string; bId: string }>;
 };
 
 export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { width: number; height: number }): BoardSlice<TPiece> => {
@@ -60,7 +61,8 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 			addBoardPieceCommand,
 			moveBoardPieceCommand,
 			removeBoardPiecesCommand,
-			updateBoardPiecesCommand
+			updateBoardPiecesCommand,
+			swapPiecesCommand
 		}
 	} = createSlice({
 		name: `board-${id}`,
@@ -168,7 +170,40 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 					...state,
 					pieces: newPieces
 				};
-			}
+			},
+			swapPiecesCommand: (state, { payload: { aId, bId } }: PayloadAction<{ aId: string; bId: string }>) => {
+				if (!aId || !bId) {
+					return state;
+				}
+
+				const a = state.pieces[aId];
+				const b = state.pieces[bId];
+
+				if (!a || !b) {
+					return state;
+				}
+
+				const positions = Object.entries(state.piecePositions);
+
+				const aPosition = positions.find(([pieceId]) => pieceId === aId);
+				const bPosition = positions.find(([pieceId]) => pieceId === bId);
+
+				if (!aPosition || !bPosition) {
+					return state;
+				}
+
+				const [aX, aY] = aPosition;
+				const [bX, bY] = bPosition;
+
+				return {
+					...state,
+					piecePositions: {
+						...state.piecePositions,
+						[`${aX},${aY}`]: b.id,
+						[`${bX},${bY}`]: a.id
+					}
+				};
+			},
 		}
 	});
 
@@ -183,7 +218,8 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 			addBoardPieceCommand,
 			moveBoardPieceCommand,
 			removeBoardPiecesCommand,
-			updateBoardPiecesCommand
+			updateBoardPiecesCommand,
+			swapPiecesCommand
 		}
 	};
 };
