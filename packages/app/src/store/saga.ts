@@ -1,16 +1,10 @@
 import { all, call } from "redux-saga/effects";
-import { BoardSlice } from "@shoki/board";
-import { PieceModel } from "@creature-chess/models";
 import { findGame } from "../networking";
 import { gameSaga } from "../game";
 
-export const rootSaga = function*(
-	getAccessTokenSilently: () => Promise<string>,
-	loginWithRedirect: () => Promise<void>,
-	slices: { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> }
-) {
+export const rootSaga = function*() {
 	yield all([
-		call(findGame, { getAccessTokenSilently, loginWithRedirect }, slices),
-		call(gameSaga, slices)
+		call(findGame),
+		call(gameSaga)
 	]);
 };

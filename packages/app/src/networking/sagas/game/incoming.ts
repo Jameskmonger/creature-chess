@@ -13,11 +13,13 @@ import { PlayerListCommands } from "../../../game/module";
 import { ConnectionStatus } from "../../../game/connection-status";
 import { gameRoundUpdateEvent } from "../../../game/sagas/events";
 import { setMatchBoard } from "../../../game/module/match";
+import { getPlayerSlices } from "../../../store/sagaContext";
 
 const readPacketsToActions = function*(
 	registry: ServerToClient.Game.IncomingRegistry,
 	socket: Socket,
-	{ benchSlice, boardSlice }: { benchSlice: BoardSlice; boardSlice: BoardSlice }
+	boardSlice: BoardSlice,
+	benchSlice: BoardSlice
 ) {
 	const channel = eventChannel<any>(emit => {
 		socket.on("reconnect_failed", () => {
@@ -101,13 +103,14 @@ const readPacketsToActions = function*(
 
 export const incomingGameNetworking = function*(
 	socket: Socket,
-	slices: { benchSlice: BoardSlice; boardSlice: BoardSlice }
 ) {
+	const { board, bench } = yield* getPlayerSlices();
+
 	// todo fix typing
 	const registry = ServerToClient.Game.createIncomingRegistry((opcode, handler) => socket.on(opcode, handler as any));
 
 	yield all([
-		call(readPacketsToActions, registry, socket, slices),
+		call(readPacketsToActions, registry, socket, board, bench),
 		call(
 			receiveActionsSaga as any, // todo improve this typing
 			ServerToClient.Game.PacketOpcodes.PLAYER_INFO_UPDATES,

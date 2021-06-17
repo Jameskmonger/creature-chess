@@ -6,6 +6,7 @@ import { createReducers } from "./reducers";
 import { AppState } from "./state";
 import { rootSaga } from "./saga";
 import { PieceModel } from "@creature-chess/models";
+import { SagaContext } from "./sagaContext";
 
 const composeEnhancers = composeWithDevTools({
 	trace: true,
@@ -13,10 +14,21 @@ const composeEnhancers = composeWithDevTools({
 });
 
 export const createAppStore = (getAccessTokenSilently: () => Promise<string>, loginWithRedirect: () => Promise<void>) => {
-	const sagaMiddleware = createSagaMiddleware();
-
 	const boardSlice = createBoardSlice<PieceModel>("local-board", { width: 7, height: 3 });
 	const benchSlice = createBoardSlice<PieceModel>("local-bench", { width: 7, height: 1 });
+
+	const sagaMiddleware = createSagaMiddleware<SagaContext>({
+		context: {
+			slices: {
+				board: boardSlice,
+				bench: benchSlice
+			},
+			auth: {
+				getAccessTokenSilently,
+				loginWithRedirect
+			}
+		}
+	});
 
 	const store = createStore(
 		combineReducers<AppState>(createReducers({ boardSlice, benchSlice })),
@@ -25,7 +37,7 @@ export const createAppStore = (getAccessTokenSilently: () => Promise<string>, lo
 		)
 	);
 
-	sagaMiddleware.run(rootSaga, getAccessTokenSilently, loginWithRedirect, { benchSlice, boardSlice });
+	sagaMiddleware.run(rootSaga);
 
 	return store;
 };

@@ -2,8 +2,6 @@ import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { race, call, takeEvery, put, take } from "redux-saga/effects";
 import { ServerToClient } from "@creature-chess/networking";
-import { BoardSlice } from "@shoki/board";
-import { PieceModel } from "@creature-chess/models";
 import { LobbyCommands } from "../../lobby";
 import { MenuActions } from "../../menu";
 import { getSocket } from "../socket";
@@ -13,24 +11,21 @@ import {
 } from "../actions";
 import { networkingSaga } from "./networkingSaga";
 import { all } from "redux-saga/effects";
+import { getAuth } from "../../store/sagaContext";
 
-export const findGame = function*(
-	auth: {
-		getAccessTokenSilently: () => Promise<string>;
-		loginWithRedirect: () => Promise<void>;
-	},
-	slices: { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> }
-) {
+export const findGame = function*() {
+	const { getAccessTokenSilently, loginWithRedirect } = yield* getAuth();
+
 	const findGameAction: MenuActions.FindGameAction = yield take(MenuActions.FIND_GAME);
 
-	const idToken = yield call(auth.getAccessTokenSilently);
+	const idToken = yield call(getAccessTokenSilently);
 
 	let socket: Socket = null;
 
 	try {
 		socket = yield call(getSocket, findGameAction.payload.serverIP, idToken);
 	} catch (error) {
-		auth.loginWithRedirect();
+		loginWithRedirect();
 		return;
 	}
 
@@ -66,7 +61,7 @@ export const findGame = function*(
 	channel.close();
 
 	yield all([
-		call(networkingSaga, socket, slices),
+		call(networkingSaga, socket),
 		call(function*() {
 			if (lobby) {
 				yield put(LobbyCommands.setLobbyDetailsCommand(lobby.payload));
