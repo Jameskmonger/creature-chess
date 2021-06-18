@@ -1,4 +1,5 @@
 import { getDependency, getVariable } from "@shoki/engine";
+import { OutgoingRegistry } from "@shoki/networking";
 import { all, call, race, take, select, delay, getContext } from "typed-redux-saga";
 import {
 	PlayerVariables, PlayerEntity, PlayerEntitySelectors, PlayerActions,
@@ -9,7 +10,6 @@ import { GameServerToClient } from "@creature-chess/networking";
 import { getPacketRegistries } from "../net/registries";
 import { subscribeToBoard } from "./subscribeToBoard";
 import { Task } from "redux-saga";
-import { OutgoingRegistry } from "../../../../../shoki-networking/lib";
 
 const getSpectatingPlayer = function*() {
 	const spectatingId = yield* select((state: PlayerState) => state.spectating.id);

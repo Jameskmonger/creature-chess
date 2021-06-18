@@ -4,7 +4,7 @@ import { ManagementClient } from "auth0";
 import { EventEmitter } from "events";
 import { GameServerToClient } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
-import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth-server";
+import { authenticate, UserAppMetadata, UserModel } from "@creature-chess/auth";
 
 /**
  * Listens for new connections to the server,

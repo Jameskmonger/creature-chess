@@ -3,7 +3,7 @@ import { ManagementClient } from "auth0";
 import { Request, Response } from "express";
 import Filter = require("bad-words");
 import { DatabaseConnection } from "@creature-chess/data";
-import { authenticate, convertDatabaseUserToUserModel, UserAppMetadata } from "@creature-chess/auth-server";
+import { authenticate, convertDatabaseUserToUserModel, UserAppMetadata } from "@creature-chess/auth";
 import { sanitize } from "./utils/sanitize";
 import { SanitizedUser, validateNicknameFormat, AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
 

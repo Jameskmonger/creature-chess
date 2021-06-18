@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import { ManagementClient } from "auth0";
 import { config } from "@creature-chess/models";
 import { createDatabaseConnection } from "@creature-chess/data";
-import { UserAppMetadata } from "@creature-chess/auth-server";
+import { UserAppMetadata } from "@creature-chess/auth";
 
 import { SocketAuthenticator } from "./socket/socketAuthenticator";
 import { openServer } from "./socket/openServer";

@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import delay from "delay";
 import io = require("socket.io");
 import { DatabaseConnection } from "@creature-chess/data";
-import { UserModel } from "@creature-chess/auth-server";
+import { UserModel } from "@creature-chess/auth";
 import { LobbyPlayer } from "@creature-chess/models";
 import { DiscordApi } from "../discord";
 import { createMetricLogger } from "../metrics";

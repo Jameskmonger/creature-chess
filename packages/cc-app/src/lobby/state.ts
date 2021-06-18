@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LobbyPlayer } from "@creature-chess/models";
-import { LobbyServerToClient } from "../../../networking/lib";
+import { LobbyServerToClient } from "@creature-chess/networking";
 
 export type LobbyState = {
 	lobbyId: string;
