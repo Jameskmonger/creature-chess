@@ -2,10 +2,10 @@ import { all, takeLatest, put, call } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 
-import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../../../game/events";
-import { playerMatchRewards } from "./matchRewards";
 import { getOpponentId } from "../state/selectors";
 import { updateBattleCommand, UpdateOpponentCommand, updateOpponentCommand } from "../state/commands";
+import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../events";
+import { playerMatchRewards } from "./matchRewards";
 
 export const playerBattle = function*() {
 	yield all([

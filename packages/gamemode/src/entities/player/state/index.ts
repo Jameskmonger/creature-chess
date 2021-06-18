@@ -1,4 +1,4 @@
-import { ReducersMapObject } from "redux";
+import { AnyAction, Reducer, ReducersMapObject } from "redux";
 import { BoardState } from "@shoki/board";
 import { PieceModel, RoundInfoState } from "@creature-chess/models";
 
@@ -21,5 +21,5 @@ export interface PlayerState {
 export const playerReducers: ReducersMapObject<Pick<PlayerState, "spectating" | "cardShop" | "playerInfo">> = {
 	spectating: spectatingReducer,
 	cardShop: cardShopReducer,
-	playerInfo: playerInfoReducer
+	playerInfo: playerInfoReducer as Reducer<PlayerInfoState, AnyAction>
 };

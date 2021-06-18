@@ -13,6 +13,9 @@ export type OpenOverlayAction = { type: OPEN_OVERLAY; payload: { overlay: Overla
 export type CloseOverlayAction = { type: CLOSE_OVERLAY };
 export type UpdateConnectionStatusAction = ({ type: UPDATE_CONNECTION_STATUS; payload: { status: ConnectionStatus } });
 
+export type SetInGameCommand = ReturnType<typeof setInGameCommand>;
+export const setInGameCommand = createAction("setInGameCommand");
+
 export type SetWinnerIdCommand = ReturnType<typeof setWinnerIdCommand>;
 export const setWinnerIdCommand = createAction<{ winnerId: string }, "setWinnerIdCommand">("setWinnerIdCommand");
 

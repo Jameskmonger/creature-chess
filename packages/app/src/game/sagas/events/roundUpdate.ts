@@ -1,19 +1,22 @@
 import { takeLatest, put } from "@redux-saga/core/effects";
-import { createAction } from "@reduxjs/toolkit";
-import { ServerToClient } from "@creature-chess/networking";
 import { GamePhase } from "@creature-chess/models";
-import { PlayerCommands } from "@creature-chess/gamemode";
+import { GameEvents, PlayerCommands, RoundInfoCommands } from "@creature-chess/gamemode";
 import { getPlayerSlices } from "../../../store/sagaContext";
-
-export type GameRoundUpdateEvent = ReturnType<typeof gameRoundUpdateEvent>;
-export const gameRoundUpdateEvent = createAction<ServerToClient.Game.PhaseUpdatePacket, "gameRoundUpdateEvent">("gameRoundUpdateEvent");
 
 export const roundUpdateSaga = function*() {
 	const { board } = yield* getPlayerSlices();
 
-	yield takeLatest<GameRoundUpdateEvent>(
-		gameRoundUpdateEvent.toString(),
+	yield takeLatest<GameEvents.GamePhaseStartedEvent>(
+		GameEvents.gamePhaseStartedEvent.toString(),
 		function*({ payload: packet }) {
+			const update = {
+				phase: packet.phase,
+				startedAt: packet.startedAt,
+				...(packet.phase === GamePhase.PREPARING ? { round: packet.round } : undefined)
+			};
+
+			yield put(RoundInfoCommands.setRoundInfoCommand(update));
+
 			switch (packet.phase) {
 				case GamePhase.PREPARING: {
 					yield put(PlayerCommands.updateOpponentCommand(null));

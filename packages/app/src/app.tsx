@@ -10,13 +10,9 @@ import { MenuPage } from "./menu";
 import { Auth0User, isRegistered, LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
 
-const UnauthenticatedRoutes: React.FunctionComponent = () => {
-	return (
-		<>
-			<Route exact path="/" component={LoginPage} />
-		</>
-	);
-};
+const UnauthenticatedRoutes: React.FunctionComponent = () => (
+	<Route exact path="/" component={LoginPage} />
+);
 
 enum GameState {
 	MENU = 0,
@@ -55,13 +51,9 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
 	return <MenuPage />;
 };
 
-const AuthenticatedRoutes: React.FunctionComponent = () => {
-	return (
-		<>
-			<Route exact path="/" component={AuthenticatedRootPage} />
-		</>
-	);
-};
+const AuthenticatedRoutes: React.FunctionComponent = () => (
+	<Route exact path="/" component={AuthenticatedRootPage} />
+);
 
 ReactModal.setAppElement("#approot");
 

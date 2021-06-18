@@ -1,10 +1,10 @@
 import { takeLatest, put, fork } from "@redux-saga/core/effects";
 import { defaultGameOptions, GamePhase } from "@creature-chess/models";
 import { BattleEvents, battleSagaFactory, startBattle } from "@creature-chess/battle";
-import { gameRoundUpdateEvent, GameRoundUpdateEvent } from "./roundUpdate";
 import { AppState } from "../../../store";
 import { setMatchBoard } from "../../module/match";
 import { getPlayerSlices } from "../../../store/sagaContext";
+import { GameEvents } from "../../../../../gamemode/lib";
 
 export const clientBattleSaga = function*() {
 	const { board } = yield* getPlayerSlices();
@@ -21,8 +21,8 @@ export const clientBattleSaga = function*() {
 		}
 	);
 
-	yield takeLatest<GameRoundUpdateEvent>(
-		gameRoundUpdateEvent.toString(),
+	yield takeLatest<GameEvents.GamePhaseStartedEvent>(
+		GameEvents.gamePhaseStartedEvent.toString(),
 		function*({ payload: { phase } }) {
 			if (phase === GamePhase.PLAYING) {
 				yield put(startBattle());

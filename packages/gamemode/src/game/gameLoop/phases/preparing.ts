@@ -14,6 +14,7 @@ export const runPreparingPhase = function*() {
 	const phase = GamePhase.PREPARING;
 	const startedAt = Date.now() / 1000;
 
+	// todo put gamePhaseStartedEvent here?
 	yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt, round: round + 1 }));
 
 	players.getLiving().forEach(p => p.runSaga(function*() {

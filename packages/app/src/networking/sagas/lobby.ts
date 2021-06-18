@@ -2,25 +2,26 @@ import { Action } from "redux";
 import { EventChannel, eventChannel } from "redux-saga";
 import { put, take, cancelled } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
-import { ServerToClient } from "@creature-chess/networking";
+import { IncomingRegistry } from "@shoki/networking";
+import { LobbyServerToClient } from "@creature-chess/networking";
 import { lobbyConnectedEvent, LobbyConnectedEvent } from "../actions";
 import { LobbyCommands, LobbyEvents } from "../../lobby";
 import { call, race } from "redux-saga/effects";
 
-const readPacketsToActions = function*(registry: ServerToClient.Lobby.IncomingRegistry) {
+const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToClient.PacketSet>) {
 	let channel: EventChannel<Action>;
 
 	try {
 		channel = eventChannel(emit => {
 			registry.on(
-				ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE,
+				"lobbyPlayerUpdate",
 				({ index, player }) => {
 					emit(LobbyCommands.updateLobbyPlayerCommand({ index, player }));
 				}
 			);
 
 			registry.on(
-				ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED,
+				"gameStarted",
 				() => {
 					emit(LobbyEvents.lobbyGameStartedEvent());
 				}
@@ -50,7 +51,10 @@ export const lobbyNetworking = function*(
 	yield take<LobbyConnectedEvent>(lobbyConnectedEvent.toString());
 
 	// todo fix typing
-	const registry = ServerToClient.Lobby.createIncomingRegistry((opcode, handler) => socket.on(opcode, handler as any));
+	const registry = LobbyServerToClient.incoming(
+		(opcode, handler) => socket.on(opcode, handler as any),
+		(opcode, handler) => socket.off(opcode, handler)
+	);
 
 	yield race({
 		never: call(readPacketsToActions, registry),

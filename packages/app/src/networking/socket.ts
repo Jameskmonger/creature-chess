@@ -1,5 +1,5 @@
 import { io, Socket } from "socket.io-client";
-import { ServerToClient } from "@creature-chess/networking";
+import { GameServerToClient } from "@creature-chess/networking";
 
 export const getSocket = (serverIP: string, idToken: string) => {
 	// force to websocket for now until CORS is sorted
@@ -18,7 +18,7 @@ export const getSocket = (serverIP: string, idToken: string) => {
 			socket.emit("authenticate", { idToken });
 		});
 
-		const onAuthenticated = ({ error }: ServerToClient.Game.AuthenticateResponse) => {
+		const onAuthenticated = ({ error }: GameServerToClient.AuthenticateResponse) => {
 			if (!error) {
 				socket.off("authenticate_response", onAuthenticated);
 

@@ -1,22 +1,20 @@
 import pDefer = require("p-defer");
-import { put, getContext, take } from "@redux-saga/core/effects";
+import { call, take, put, getContext } from "typed-redux-saga";
 import delay from "delay";
 import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
-import { playerFinishMatchEvent } from "../../events";
 import { Match } from "../../match";
-import { getMatch } from "../../../features/match";
-import { SagaGenerator, all, call } from "typed-redux-saga";
 import { getMatches } from "../../../features/match/selectors";
+import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../../entities/player/events";
 
 const waitForFinishMatchSaga = function*() {
-	yield take(playerFinishMatchEvent.toString());
+	yield* take<PlayerFinishMatchEvent>(playerFinishMatchEvent.toString());
 };
 
 export const runPlayingPhase = function*() {
-	const options: GameOptions = yield getContext("options");
-	const players: GameSagaContextPlayers = yield getContext("players");
+	const options = yield* getContext<GameOptions>("options");
+	const players = yield* getContext<GameSagaContextPlayers>("players");
 
 	const battleTimeoutDeferred = pDefer<void>();
 

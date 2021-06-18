@@ -1,29 +1,30 @@
 import { Socket } from "socket.io-client";
 import { call, takeEvery, all } from "redux-saga/effects";
-import { emitActionsSaga } from "@shoki/networking";
+import { ActionStream, OutgoingRegistry } from "@shoki/networking";
 import { ClientToServer } from "@creature-chess/networking";
 import { BattleEvents } from "@creature-chess/battle";
 import { PlayerActionTypesArray } from "@creature-chess/gamemode";
 
-const writeActionsToPackets = function*(registry: ClientToServer.OutgoingRegistry) {
+const writeActionsToPackets = function*(registry: OutgoingRegistry<ClientToServer.PacketSet>) {
 	yield all([
 		takeEvery(
 			BattleEvents.BATTLE_FINISH_EVENT,
 			function*() {
-				registry.emit(ClientToServer.PacketOpcodes.FINISH_MATCH, { empty: true });
+				registry.send("finishMatch", { empty: true });
 			}
 		),
 		call(
-			emitActionsSaga as any, // todo improve this typing
-			ClientToServer.PacketOpcodes.SEND_PLAYER_ACTIONS,
-			registry,
-			PlayerActionTypesArray
+			ActionStream.outgoingSaga<ClientToServer.PacketSet, "sendPlayerActions">(
+				registry,
+				"sendPlayerActions",
+				PlayerActionTypesArray
+			)
 		)
 	]);
 };
 
-export const outgoingGameNetworking = function*(socket: Socket) {
-	const registry = ClientToServer.createOutgoingRegistry(
+export const outgoingGameServerToClient = function*(socket: Socket) {
+	const registry = ClientToServer.outgoing(
 		(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 	);
 

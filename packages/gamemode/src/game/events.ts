@@ -20,15 +20,10 @@ export const playerBeforeReadyPhaseEvent = createAction("playerBeforeReadyPhaseE
 export type PlayerRunReadyPhaseEvent = ReturnType<typeof playerRunReadyPhaseEvent>;
 export const playerRunReadyPhaseEvent = createAction<{ match: Match }, "playerRunReadyPhaseEvent">("playerRunReadyPhaseEvent");
 
-export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
-export const playerFinishMatchEvent = createAction<{
-	homeScore: number;
-	awayScore: number;
-	isHomePlayer: boolean;
-}, "playerFinishMatchEvent">("playerFinishMatchEvent");
-
 export const GameEventActionTypesArray = [
 	gameFinishEvent.toString(),
+	gamePhaseStartedEvent.toString(),
+	playerListChangedEvent.toString()
 ];
 
 export type GameEvent =
@@ -37,5 +32,4 @@ export type GameEvent =
 	| PlayerListChangedEvent
 	| PlayerRunPreparingPhaseEvent
 	| PlayerBeforeReadyPhaseEvent
-	| PlayerRunReadyPhaseEvent
-	| PlayerFinishMatchEvent;
+	| PlayerRunReadyPhaseEvent;

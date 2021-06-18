@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { race, call, takeEvery, put, take } from "redux-saga/effects";
-import { ServerToClient } from "@creature-chess/networking";
+import { GameServerToClient, LobbyServerToClient } from "@creature-chess/networking";
 import { LobbyCommands } from "../../lobby";
 import { MenuActions } from "../../menu";
 import { getSocket } from "../socket";
@@ -30,16 +30,20 @@ export const findGame = function*() {
 	}
 
 	const channel = eventChannel<LobbyConnectedEvent | GameConnectedEvent>(emit => {
+		// todo !!! USE REGISTRY HERE
+
+		const lobbyOpcode: keyof LobbyServerToClient.PacketSet = "connected";
 		socket.on(
-			ServerToClient.Lobby.PacketOpcodes.LOBBY_CONNECTED,
-			(payload: ServerToClient.Lobby.LobbyConnectionPacket) => {
+			lobbyOpcode,
+			(payload: LobbyServerToClient.LobbyConnectionPacket) => {
 				emit(lobbyConnectedEvent(payload));
 			}
 		);
 
+		const gameOpcode: keyof GameServerToClient.PacketSet = "gameConnected";
 		socket.on(
-			ServerToClient.Game.PacketOpcodes.GAME_CONNECTED,
-			(payload: ServerToClient.Game.GameConnectionPacket) => {
+			gameOpcode,
+			(payload: GameServerToClient.GameConnectionPacket) => {
 				emit(gameConnectedEvent(payload));
 			}
 		);

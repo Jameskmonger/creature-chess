@@ -1,22 +1,19 @@
 import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { takeEvery, put, call, all } from "redux-saga/effects";
-import { PlayerEvents, RoundInfoCommands, PlayerCommands, GameEvents } from "@creature-chess/gamemode";
-import { ServerToClient } from "@creature-chess/networking";
-import { receiveActionsSaga } from "@shoki/networking";
+import { PlayerEvents, PlayerCommands, GameEvents } from "@creature-chess/gamemode";
+import { GameServerToClient } from "@creature-chess/networking";
+import { ActionStream, IncomingRegistry } from "@shoki/networking";
 import { BoardSlice } from "@shoki/board";
-import { GamePhase } from "@creature-chess/models";
 import { startBattle } from "@creature-chess/battle";
 
-import { setWinnerIdCommand, updateConnectionStatus } from "../../../game/ui/actions";
-import { PlayerListCommands } from "../../../game/module";
+import { updateConnectionStatus } from "../../../game/ui/actions";
 import { ConnectionStatus } from "../../../game/connection-status";
-import { gameRoundUpdateEvent } from "../../../game/sagas/events";
 import { setMatchBoard } from "../../../game/module/match";
 import { getPlayerSlices } from "../../../store/sagaContext";
 
 const readPacketsToActions = function*(
-	registry: ServerToClient.Game.IncomingRegistry,
+	registry: IncomingRegistry<GameServerToClient.PacketSet>,
 	socket: Socket,
 	boardSlice: BoardSlice,
 	benchSlice: BoardSlice
@@ -30,14 +27,7 @@ const readPacketsToActions = function*(
 		});
 
 		registry.on(
-			ServerToClient.Game.PacketOpcodes.PLAYER_LIST_UPDATE,
-			(packet) => {
-				emit(PlayerListCommands.updatePlayerListCommand(packet));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.MATCH_BOARD_UPDATE,
+			"matchBoardUpdate",
 			({ board, turn }) => {
 				emit(setMatchBoard(board));
 
@@ -48,37 +38,16 @@ const readPacketsToActions = function*(
 		);
 
 		registry.on(
-			ServerToClient.Game.PacketOpcodes.BOARD_UPDATE,
+			"boardUpdate",
 			(newValue) => {
 				emit(boardSlice.commands.setBoardPiecesCommand(newValue));
 			}
 		);
 
 		registry.on(
-			ServerToClient.Game.PacketOpcodes.BENCH_UPDATE,
+			"benchUpdate",
 			(newValue) => {
 				emit(benchSlice.commands.setBoardPiecesCommand(newValue));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.MATCH_REWARDS,
-			(payload) => {
-				emit(PlayerEvents.playerMatchRewardsEvent(payload));
-			}
-		);
-
-		registry.on(
-			ServerToClient.Game.PacketOpcodes.PHASE_UPDATE,
-			(packet) => {
-				const update = {
-					phase: packet.phase,
-					startedAt: packet.startedAtSeconds,
-					...(packet.phase === GamePhase.PREPARING ? { round: packet.payload.round } : undefined)
-				};
-
-				emit(RoundInfoCommands.setRoundInfoCommand(update));
-				emit(gameRoundUpdateEvent(packet));
 			}
 		);
 
@@ -92,35 +61,50 @@ const readPacketsToActions = function*(
 	});
 };
 
-export const incomingGameNetworking = function*(
+export const incomingGameServerToClient = function*(
 	socket: Socket,
 ) {
 	const { board, bench } = yield* getPlayerSlices();
 
 	// todo fix typing
-	const registry = ServerToClient.Game.createIncomingRegistry((opcode, handler) => socket.on(opcode, handler as any));
+	const registry = GameServerToClient.incoming(
+		(opcode, handler) => socket.on(opcode, handler as any),
+		(opcode, handler) => socket.off(opcode, handler)
+	);
 
 	yield all([
 		call(readPacketsToActions, registry, socket, board, bench),
+
 		call(
-			receiveActionsSaga as any, // todo improve this typing
-			ServerToClient.Game.PacketOpcodes.SEND_GAME_EVENTS,
-			registry,
-			GameEvents.GameEventActionTypesArray
+			ActionStream.incomingSaga<GameServerToClient.PacketSet, "sendGameEvents">(
+				registry,
+				"sendGameEvents",
+				GameEvents.GameEventActionTypesArray
+			)
 		),
+
 		call(
-			receiveActionsSaga as any, // todo improve this typing
-			ServerToClient.Game.PacketOpcodes.PLAYER_INFO_UPDATES,
-			registry,
-			[
-				PlayerCommands.setSpectatingIdCommand.toString(),
-				PlayerCommands.updateCardsCommand.toString(),
-				PlayerCommands.updateShopLockCommand.toString(),
-				PlayerCommands.updateMoneyCommand.toString(),
-				PlayerCommands.updateLevelCommand.toString(),
-				PlayerCommands.updateHealthCommand.toString(),
-				PlayerCommands.updateOpponentCommand.toString()
-			]
+			ActionStream.incomingSaga<GameServerToClient.PacketSet, "sendLocalPlayerEvents">(
+				registry,
+				"sendLocalPlayerEvents",
+				PlayerEvents.PlayerEventActionTypesArray
+			)
+		),
+
+		call(
+			ActionStream.incomingSaga<GameServerToClient.PacketSet, "playerInfoUpdates">(
+				registry,
+				"playerInfoUpdates",
+				[
+					PlayerCommands.setSpectatingIdCommand.toString(),
+					PlayerCommands.updateCardsCommand.toString(),
+					PlayerCommands.updateShopLockCommand.toString(),
+					PlayerCommands.updateMoneyCommand.toString(),
+					PlayerCommands.updateLevelCommand.toString(),
+					PlayerCommands.updateHealthCommand.toString(),
+					PlayerCommands.updateOpponentCommand.toString()
+				]
+			)
 		),
 	]);
 };

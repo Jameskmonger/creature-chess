@@ -11,10 +11,10 @@ import { createGameStore, GameState } from "./store";
 import { take } from "@redux-saga/core/effects";
 import { gameSaga } from "./sagas";
 import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
-import { sendPublicEventsSaga } from "./publicEvents";
 import { put } from "redux-saga/effects";
 import { PlayerEntity } from "../entities";
 import { getPlayerStatus, isPlayerAlive } from "../entities/player/state/selectors";
+import { sendPublicEventsSaga } from "./publicEvents";
 
 const finishGameEventKey = "FINISH_GAME";
 

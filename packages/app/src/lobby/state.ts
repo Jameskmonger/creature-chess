@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LobbyPlayer } from "@creature-chess/models";
-import { ServerToClient } from "../../../networking/lib";
+import { LobbyServerToClient } from "../../../networking/lib";
 
 export type LobbyState = {
 	lobbyId: string;
@@ -18,7 +18,7 @@ export const { reducer, actions: LobbyCommands } = createSlice({
 	name: "lobby",
 	initialState,
 	reducers: {
-		setLobbyDetailsCommand: (state, action: PayloadAction<ServerToClient.Lobby.LobbyConnectionPacket>) => ({
+		setLobbyDetailsCommand: (state, action: PayloadAction<LobbyServerToClient.LobbyConnectionPacket>) => ({
 			...state,
 			lobbyId: action.payload.lobbyId,
 			players: action.payload.players,
