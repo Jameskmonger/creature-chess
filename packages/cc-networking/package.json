@@ -1,6 +1,6 @@
 {
 	"name": "@creature-chess/networking",
-	"version": "0.4.8",
+	"version": "0.4.9",
 	"private": true,
 	"description": "Shared network definitions for Creature Chess",
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
@@ -26,9 +26,9 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@creature-chess/models": "^0.4.8",
-		"@shoki/board": "^0.4.7",
-		"@shoki/networking": "^0.4.7",
+		"@creature-chess/models": "^0.4.9",
+		"@shoki/board": "^0.4.9",
+		"@shoki/networking": "^0.4.9",
 		"@types/redux-saga": "^0.10.5",
 		"redux-saga": "^1.1.3"
 	}
