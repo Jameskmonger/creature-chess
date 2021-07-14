@@ -1,6 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import { Match } from "./match";
+import { QuickChatValue } from "@creature-chess/models";
 
 export type GamePhaseStartedEvent = ReturnType<typeof gamePhaseStartedEvent>;
 export const gamePhaseStartedEvent = createAction<{ phase: GamePhase; startedAt: number; round?: number }, "gamePhaseStartedEvent">("gamePhaseStartedEvent");
@@ -27,6 +28,13 @@ export const playerFinishMatchEvent = createAction<{
 	isHomePlayer: boolean;
 }, "playerFinishMatchEvent">("playerFinishMatchEvent");
 
+export type PlayerReceiveQuickChatEvent = ReturnType<typeof playerReceiveQuickChatEvent>;
+export const playerReceiveQuickChatEvent = createAction<{
+	sendingPlayerId: string;
+	receivingPlayerId: string;
+	chatValue: QuickChatValue;
+}, "playerReceiveQuickChatEvent">("playerReceiveQuickChatEvent");
+
 export type GameEvent =
 	GamePhaseStartedEvent
 	| GameFinishEvent
@@ -34,4 +42,5 @@ export type GameEvent =
 	| PlayerRunPreparingPhaseEvent
 	| PlayerBeforeReadyPhaseEvent
 	| PlayerRunReadyPhaseEvent
-	| PlayerFinishMatchEvent;
+	| PlayerFinishMatchEvent
+	| PlayerReceiveQuickChatEvent;
