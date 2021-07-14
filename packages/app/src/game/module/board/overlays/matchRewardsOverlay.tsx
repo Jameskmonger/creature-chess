@@ -1,18 +1,30 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { PlayerMatchRewards } from "@creature-chess/gamemode";
+import { PlayerActions, PlayerMatchRewards } from "@creature-chess/gamemode";
 import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
+import { QuickChatValue, QuickChatOption } from "@creature-chess/models";
+import { usePlayerId } from "../../../../auth";
+import { quickChatPlayerAction } from "../../../../../../gamemode/lib/playerActions";
 
 const MatchRewardsOverlay: React.FunctionComponent = () => {
 	const matchRewards = useSelector<AppState, PlayerMatchRewards>(state => state.game.playerInfo.matchRewards);
 	const victoryOverlayShowing = useSelector<AppState, boolean>(state => state.game.ui.winnerId !== null);
 	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
+	const sendingPlayerId = usePlayerId();
+	const receivingPlayerId = useSelector<AppState, string>(state => state.game.playerInfo.opponentId);
+
 	if (!matchRewards || victoryOverlayShowing || spectatingPlayer) {
 		return null;
 	}
-
+	const sendQuickChat = (chatOption: QuickChatOption) => {
+		const chatValue: QuickChatValue = {
+			phrase: chatOption
+		};
+		console.log(`sending: ${sendingPlayerId}, receiving: ${receivingPlayerId}, value: ${chatValue}`);
+		PlayerActions.quickChatPlayerAction({ sendingPlayerId, receivingPlayerId, chatValue });
+	};
 	const {
 		damage,
 		justDied,
@@ -34,6 +46,7 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 
 						<a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
 					</div>
+					<button onClick={() => sendQuickChat(QuickChatOption.GG)}>chat</button>
 				</div>
 			</BoardOverlay>
 		);
@@ -54,6 +67,7 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 							<li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
 							<li>Interest (10%): <span className="highlight">${interest}</span></li>
 						</ul>
+						<button onClick={() => sendQuickChat(QuickChatOption.GG)}>chat</button>
 					</div>
 				</div>
 			</BoardOverlay>
@@ -75,6 +89,7 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 						<li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
 						<li>Interest (10%): <span className="highlight">${interest}</span></li>
 					</ul>
+					<button onClick={() => sendQuickChat(QuickChatOption.GG)}>chat</button>
 				</div>
 			</div>
 		</BoardOverlay>
