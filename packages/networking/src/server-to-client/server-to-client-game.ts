@@ -1,5 +1,5 @@
 import { IncomingPacketRegistry, OutgoingPacketRegistry, RegisterListenerFn, EmitFn, emitActionsOpcode, EmitActionsPacket } from "@shoki/networking";
-import { GamePhase, PieceModel, PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
+import { GamePhase, PieceModel, PlayerListPlayer, QuickChatValue, RoundInfoState } from "@creature-chess/models";
 import { BoardState } from "@shoki/board";
 import { EmptyPacket } from "../empty-packet";
 
@@ -47,6 +47,11 @@ type MatchBoardUpdatePacket = {
 	turn: number | null;
 	board: BoardUpdatePacket;
 };
+type QuickChatPacket = {
+	sendingPlayerId: string;
+	receivingPlayerId: string;
+	chatValue: QuickChatValue;
+};
 
 export enum PacketOpcodes {
 	GAME_CONNECTED = "gameConnected",
@@ -58,7 +63,8 @@ export enum PacketOpcodes {
 	PHASE_UPDATE = "phaseUpdate",
 	FINISH_GAME = "finishGame",
 	MATCH_REWARDS = "matchRewards",
-	PLAYER_DEAD = "playerDead"
+	PLAYER_DEAD = "playerDead",
+	QUICK_CHAT = "quickChat"
 }
 
 export type PacketDefinitions = {
@@ -71,6 +77,7 @@ export type PacketDefinitions = {
 	[PacketOpcodes.PHASE_UPDATE]: PhaseUpdatePacket;
 	[PacketOpcodes.FINISH_GAME]: FinishGamePacket;
 	[PacketOpcodes.MATCH_REWARDS]: MatchRewardsPacket;
+	[PacketOpcodes.QUICK_CHAT]: QuickChatPacket;
 	[PacketOpcodes.PLAYER_DEAD]: EmptyPacket;
 
 	[emitActionsOpcode]: EmitActionsPacket;
@@ -87,6 +94,7 @@ export type PacketAcknowledgements = {
 	[PacketOpcodes.FINISH_GAME]: never;
 	[PacketOpcodes.MATCH_REWARDS]: never;
 	[PacketOpcodes.PLAYER_DEAD]: never;
+	[PacketOpcodes.QUICK_CHAT]: never;
 };
 
 export type IncomingRegistry = IncomingPacketRegistry<PacketDefinitions, PacketAcknowledgements>;

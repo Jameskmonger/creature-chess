@@ -5,6 +5,7 @@ import { sendPlayerListUpdates } from "./playerList";
 import { sendPlayerInfoUpdates } from "./playerInfoUpdates";
 import { sendAnnouncements } from "./announcements";
 import { sendInitialState } from "./initialState";
+import { sendQuickChat } from "./chat";
 
 export const outgoingNetworking = function*() {
 	yield all([
@@ -12,6 +13,7 @@ export const outgoingNetworking = function*() {
 		call(sendPlayerListUpdates),
 		call(sendAnnouncements),
 		call(sendPlayerInfoUpdates),
-		call(sendInitialState)
+		call(sendInitialState),
+		call(sendQuickChat)
 	]);
 };
