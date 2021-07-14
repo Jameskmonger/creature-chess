@@ -5,6 +5,7 @@ export { StreakType } from "./streakType";
 export { PlayerStreak } from "./playerStreak";
 export { LobbyPlayer } from "./lobby-player";
 export { PlayerPieceLocation } from "./playerPieceLocation";
+export { QuickChatValue, QuickChatOption } from "./quickChat";
 
 import * as Constants from "./constants";
 export { Constants };
@@ -28,5 +29,6 @@ export { createPieceCombatState, clonePieceCombatState, PieceCombatState } from 
 
 export { getOptions, GameOptions, defaultOptions as defaultGameOptions } from "./options";
 export { getXpToNextLevel } from "./getXpToNextLevel";
+
 
 export { config } from "./config";

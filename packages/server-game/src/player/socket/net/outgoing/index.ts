@@ -4,6 +4,7 @@ import { GameEvents, PlayerCommands, PlayerEvents } from "@creature-chess/gamemo
 import { GameServerToClient } from "@creature-chess/networking";
 
 import { sendInitialState } from "./initialState";
+import { sendQuickChat } from "./chat";
 import { getPacketRegistries } from "../registries";
 
 export const outgoingNetworking = function*() {

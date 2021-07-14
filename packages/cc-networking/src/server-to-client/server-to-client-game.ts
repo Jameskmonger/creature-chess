@@ -1,6 +1,6 @@
 import { protocol, ActionStream } from "@shoki/networking";
 import { BoardState } from "@shoki/board";
-import { PieceModel, PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
+import { PieceModel, PlayerListPlayer, RoundInfoState, QuickChatValue } from "@creature-chess/models";
 
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];
@@ -16,6 +16,13 @@ type MatchBoardUpdatePacket = {
 	turn: number | null;
 	board: BoardUpdatePacket;
 };
+
+type QuickChatPacket = {
+	sendingPlayerId: string;
+	receivingPlayerId: string;
+	chatValue: QuickChatValue;
+};
+
 
 export type PacketSet = {
 	gameConnected: {
@@ -36,6 +43,10 @@ export type PacketSet = {
 	};
 	spectatingPlayerUpdate: {
 		payload: string | null;
+		ack: never;
+	};
+	quickChat: {
+		payload: QuickChatPacket;
 		ack: never;
 	};
 

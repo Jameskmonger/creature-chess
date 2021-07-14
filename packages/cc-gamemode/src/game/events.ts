@@ -26,6 +26,7 @@ export const GameEventActionTypesArray = [
 	playerListChangedEvent.toString()
 ];
 
+
 export type GameEvent =
 	GamePhaseStartedEvent
 	| GameFinishEvent

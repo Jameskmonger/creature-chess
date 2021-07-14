@@ -8,6 +8,7 @@ import { sellPiecePlayerActionSaga } from "./sellPiece";
 import { dropPiecePlayerActionSaga } from "./dropPiece";
 import { spectatePlayerActionSaga } from "./spectate";
 import { readyUpPlayerActionSaga } from "./readyUp";
+import { quickChatPlayerActionSaga } from "./quickChat";
 
 export const playerActionsSaga = function*() {
 	yield all([
@@ -18,6 +19,7 @@ export const playerActionsSaga = function*() {
 		call(sellPiecePlayerActionSaga),
 		call(dropPiecePlayerActionSaga),
 		call(spectatePlayerActionSaga),
-		call(readyUpPlayerActionSaga)
+		call(readyUpPlayerActionSaga),
+		call(quickChatPlayerActionSaga)
 	]);
 };
