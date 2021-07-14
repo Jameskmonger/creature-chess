@@ -2,7 +2,7 @@ import { takeLatest, put } from "@redux-saga/core/effects";
 import { createAction } from "@reduxjs/toolkit";
 import { getDependency } from "@shoki/engine/lib";
 import { PlayerEntityDependencies } from "../entities/player";
-import { playerReceiveQuickChatEvent } from "../game/events";
+import { playerReceiveQuickChatEvent } from "../entities/player/events";
 import { QuickChatValue } from "@creature-chess/models";
 
 
