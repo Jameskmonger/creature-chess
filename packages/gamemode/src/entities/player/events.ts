@@ -1,4 +1,4 @@
-import { PieceModel } from "@creature-chess/models";
+import { PieceModel, QuickChatValue } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 
 export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;
@@ -34,9 +34,17 @@ export const playerMatchRewardsEvent = (payload: {
 	payload
 });
 
+export type PlayerReceiveQuickChatEvent = ReturnType<typeof playerReceiveQuickChatEvent>;
+export const playerReceiveQuickChatEvent = createAction<{
+	sendingPlayerId: string;
+	receivingPlayerId: string;
+	chatValue: QuickChatValue;
+}, "playerReceiveQuickChatEvent">("playerReceiveQuickChatEvent");
+
 export type PlayerEvent =
 	AfterSellPieceEvent
 	| AfterRerollCardsEvent
 	| ClientFinishMatchEvent
 	| PlayerDeathEvent
-	| PlayerMatchRewardsEvent;
+	| PlayerMatchRewardsEvent
+	| PlayerReceiveQuickChatEvent;

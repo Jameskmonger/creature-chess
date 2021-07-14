@@ -15,13 +15,14 @@ COPY packages/shoki-board/package*.json ./packages/shoki-board/
 COPY packages/shoki-engine/package*.json ./packages/shoki-engine/
 COPY packages/shoki-networking/package*.json ./packages/shoki-networking/
 
+COPY packages/cc-auth/package*.json ./packages/cc-auth/
+COPY packages/cc-battle/package*.json ./packages/cc-battle/
+COPY packages/cc-models/package*.json ./packages/cc-models/
+COPY packages/cc-data/package*.json ./packages/cc-data/
+COPY packages/cc-networking/package*.json ./packages/cc-networking/
+
+COPY packages/cc-gamemode/package*.json ./packages/cc-gamemode/
 COPY packages/server-game/package*.json ./packages/server-game/
-COPY packages/auth-server/package*.json ./packages/auth-server/
-COPY packages/battle/package*.json ./packages/battle/
-COPY packages/models/package*.json ./packages/models/
-COPY packages/data/package*.json ./packages/data/
-COPY packages/gamemode/package*.json ./packages/gamemode/
-COPY packages/networking/package*.json ./packages/networking/
 
 COPY lerna.json ./
 RUN npm run bootstrap
@@ -38,18 +39,18 @@ RUN npm run build -- --scope @shoki/engine
 COPY packages/shoki-networking ./packages/shoki-networking
 RUN npm run build -- --scope @shoki/networking
 
-COPY packages/models ./packages/models
+COPY packages/cc-models ./packages/cc-models
 RUN npm run build -- --scope @creature-chess/models
-COPY packages/data ./packages/data
+COPY packages/cc-data ./packages/cc-data
 RUN npm run build -- --scope @creature-chess/data
-COPY packages/battle ./packages/battle
+COPY packages/cc-battle ./packages/cc-battle
 RUN npm run build -- --scope @creature-chess/battle
-COPY packages/gamemode ./packages/gamemode
+COPY packages/cc-gamemode ./packages/cc-gamemode
 RUN npm run build -- --scope @creature-chess/gamemode
-COPY packages/networking ./packages/networking
+COPY packages/cc-networking ./packages/cc-networking
 RUN npm run build -- --scope @creature-chess/networking
-COPY packages/auth-server ./packages/auth-server
-RUN npm run build -- --scope @creature-chess/auth-server
+COPY packages/cc-auth ./packages/cc-auth
+RUN npm run build -- --scope @creature-chess/auth
 
 # build main package
 COPY packages/server-game ./packages/server-game

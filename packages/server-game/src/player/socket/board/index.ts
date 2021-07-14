@@ -1,11 +1,12 @@
 import { getDependency, getVariable } from "@shoki/engine";
+import { OutgoingRegistry } from "@shoki/networking";
 import { all, call, race, take, select, delay, getContext } from "typed-redux-saga";
 import {
 	PlayerVariables, PlayerEntity, PlayerEntitySelectors, PlayerActions,
 	PlayerEntityDependencies, PlayerStateSelectors, PlayerState, PlayerCommands,
-	GameEvents, Match
+	GameEvents, Match, PlayerEvents
 } from "@creature-chess/gamemode";
-import { ServerToClient } from "@creature-chess/networking";
+import { GameServerToClient } from "@creature-chess/networking";
 import { getPacketRegistries } from "../net/registries";
 import { subscribeToBoard } from "./subscribeToBoard";
 import { Task } from "redux-saga";
@@ -23,7 +24,7 @@ const getSpectatingPlayer = function*() {
 
 const getMatch = () => getVariable<PlayerVariables, Match | null>(variables => variables.match);
 
-const spectatePlayerBoard = function*(registry: ServerToClient.Game.OutgoingRegistry) {
+const spectatePlayerBoard = function*(registry: OutgoingRegistry<GameServerToClient.PacketSet>) {
 	const playerId = yield* getContext<string>("id");
 	const boardSlice = yield* PlayerEntitySelectors.getBoardSlice();
 	const benchSlice = yield* PlayerEntitySelectors.getBenchSlice();
@@ -31,8 +32,8 @@ const spectatePlayerBoard = function*(registry: ServerToClient.Game.OutgoingRegi
 	const initialMatch = yield* getMatch();
 
 	if (initialMatch) {
-		registry.emit(
-			ServerToClient.Game.PacketOpcodes.MATCH_BOARD_UPDATE,
+		registry.send(
+			"matchBoardUpdate",
 			{
 				turn: initialMatch.getTurn(),
 				board: initialMatch.getBoardForPlayer(playerId)
@@ -53,8 +54,8 @@ const spectatePlayerBoard = function*(registry: ServerToClient.Game.OutgoingRegi
 				const match = yield* getMatch();
 
 				if (match) {
-					registry.emit(
-						ServerToClient.Game.PacketOpcodes.MATCH_BOARD_UPDATE,
+					registry.send(
+						"matchBoardUpdate",
 						{
 							turn: null,
 							board: match.getBoardForPlayer(playerId)
@@ -62,20 +63,20 @@ const spectatePlayerBoard = function*(registry: ServerToClient.Game.OutgoingRegi
 					);
 				}
 
-				yield take(GameEvents.playerFinishMatchEvent.toString());
+				yield take(PlayerEvents.playerFinishMatchEvent.toString());
 			}
 		}),
 		call(
 			subscribeToBoard,
 			boardSlice,
 			PlayerStateSelectors.getPlayerBoard,
-			board => registry.emit(ServerToClient.Game.PacketOpcodes.BOARD_UPDATE, board)
+			board => registry.send("boardUpdate", board)
 		),
 		call(
 			subscribeToBoard,
 			benchSlice,
 			PlayerStateSelectors.getPlayerBench,
-			bench => registry.emit(ServerToClient.Game.PacketOpcodes.BENCH_UPDATE, bench)
+			bench => registry.send("benchUpdate", bench)
 		)
 	]);
 };

@@ -29,12 +29,12 @@ jobs:
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         GH_PAGES: true
     - name: Copy privacy policy
-      run: cp packages/app/privacy.html packages/app/public/privacy.html
+      run: cp packages/cc-app/privacy.html packages/cc-app/public/privacy.html
     - name: Copy 404 page
-      run: cp packages/app/404.html packages/app/public/404.html
+      run: cp packages/cc-app/404.html packages/cc-app/public/404.html
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.4.1
       with:
         ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: packages/app/public
+        FOLDER: packages/cc-app/public

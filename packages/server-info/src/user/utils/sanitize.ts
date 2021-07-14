@@ -1,4 +1,4 @@
-import { UserModel } from "@creature-chess/auth-server";
+import { UserModel } from "@creature-chess/auth";
 import { SanitizedUser } from "@creature-chess/models";
 
 export const sanitize = (user: UserModel): SanitizedUser => {

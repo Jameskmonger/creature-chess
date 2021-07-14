@@ -4,7 +4,7 @@ import express = require("express");
 import { json as jsonParser } from "body-parser";
 import Filter = require("bad-words");
 import { ManagementClient } from "auth0";
-import { UserAppMetadata } from "@creature-chess/auth-server";
+import { UserAppMetadata } from "@creature-chess/auth";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { config } from "@creature-chess/models";
 import { leaderboard } from "./leaderboard";

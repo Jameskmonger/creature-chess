@@ -57,7 +57,7 @@ The game is then accessible at `https://creaturechess.local-dev.com:8090`. You m
 If the package has a README, you can click on its name here for a link.
 
 ### Clients
-- [**app**](./packages/app/README.md) - React app
+- [**app**](./packages/cc-app/README.md) - React app
 - **server-game** - websocket gameserver
 - **server-info** - express API server
 

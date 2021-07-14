@@ -7,12 +7,14 @@ RUN npm ci --loglevel notice
 
 # package dependencies
 
-COPY packages/server-info/package*.json ./packages/server-info/
-COPY packages/auth-server/package*.json ./packages/auth-server/
 COPY packages/shoki-board/package*.json ./packages/shoki-board/
 COPY packages/shoki-engine/package*.json ./packages/shoki-engine/
-COPY packages/models/package*.json ./packages/models/
-COPY packages/data/package*.json ./packages/data/
+
+COPY packages/cc-auth/package*.json ./packages/cc-auth/
+COPY packages/cc-models/package*.json ./packages/cc-models/
+COPY packages/cc-data/package*.json ./packages/cc-data/
+
+COPY packages/server-info/package*.json ./packages/server-info/
 
 COPY lerna.json ./
 RUN npm run bootstrap
@@ -25,13 +27,13 @@ RUN npm run build -- --scope @shoki/board
 COPY packages/shoki-engine ./packages/shoki-engine
 RUN npm run build -- --scope @shoki/engine
 
-COPY packages/models ./packages/models
+COPY packages/cc-models ./packages/cc-models
 RUN npm run build -- --scope @creature-chess/models
-COPY packages/data ./packages/data
+COPY packages/cc-data ./packages/cc-data
 RUN npm run build -- --scope @creature-chess/data
 
-COPY packages/auth-server ./packages/auth-server
-RUN npm run build -- --scope @creature-chess/auth-server
+COPY packages/cc-auth ./packages/cc-auth
+RUN npm run build -- --scope @creature-chess/auth
 
 # build main package
 COPY packages/server-info ./packages/server-info

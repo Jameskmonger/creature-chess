@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.10](https://github.com/Jameskmonger/creature-chess/compare/v0.4.9...v0.4.10) (2021-06-24)
+
+**Note:** Version bump only for package creature-chess
+
+
+
+
+
+## [0.4.9](https://github.com/Jameskmonger/creature-chess/compare/v0.4.8...v0.4.9) (2021-06-24)
+
+
+### Bug Fixes
+
+* delete child package-lock.jsons (keep top-level one) ([c3a70ba](https://github.com/Jameskmonger/creature-chess/commit/c3a70bae41f7ef34026bfd2c404f8120c6760d39))
+
+
+
+
+
+## [0.4.8](https://github.com/Jameskmonger/creature-chess/compare/v0.4.7...v0.4.8) (2021-06-24)
+
+
+### Bug Fixes
+
+* make build scripts respect /cc-app/, update lockfiles ([f8c4b07](https://github.com/Jameskmonger/creature-chess/commit/f8c4b07625141430b0d8db0f2e129773e7eef300))
+
+
+
+
+
+## [0.4.7](https://github.com/Jameskmonger/creature-chess/compare/v0.4.6...v0.4.7) (2021-06-18)
+
+**Note:** Version bump only for package creature-chess
+
+
+
+
+
+## [0.4.6](https://github.com/Jameskmonger/creature-chess/compare/v0.4.5...v0.4.6) (2021-06-16)
+
+
+### Bug Fixes
+
+* add spacer to overlay screen ([#433](https://github.com/Jameskmonger/creature-chess/issues/433)) ([40df0b6](https://github.com/Jameskmonger/creature-chess/commit/40df0b6addf617cfeae94ca6809d1660f720114d))
+* make bench pieces face forwards ([660b572](https://github.com/Jameskmonger/creature-chess/commit/660b5724215e474cea0e3297c2454b1583cdf2e1)), closes [#393](https://github.com/Jameskmonger/creature-chess/issues/393)
+* prevent shop being opened when specating ([#436](https://github.com/Jameskmonger/creature-chess/issues/436)) ([2055fc4](https://github.com/Jameskmonger/creature-chess/commit/2055fc40f859a5fd8a2a12f99bd1ad89514090da))
+
+
+### Features
+
+* spectating overlay ([#438](https://github.com/Jameskmonger/creature-chess/issues/438)) ([52d8941](https://github.com/Jameskmonger/creature-chess/commit/52d8941040064e05c6707342d646b976f544b465))
+
+
+
+
+
 ## [0.4.5](https://github.com/Jameskmonger/creature-chess/compare/v0.4.4...v0.4.5) (2021-05-19)
 
 

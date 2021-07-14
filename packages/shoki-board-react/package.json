@@ -1,6 +1,6 @@
 {
 	"name": "@shoki/board-react",
-	"version": "0.4.3",
+	"version": "0.4.9",
 	"description": "React frontend for @shoki/board",
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
@@ -26,7 +26,7 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@shoki/board": "^0.4.3",
+		"@shoki/board": "^0.4.9",
 		"@types/react": "^16.8.7"
 	},
 	"peerDependencies": {

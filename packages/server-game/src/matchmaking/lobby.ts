@@ -2,8 +2,9 @@
 import { Socket } from "socket.io";
 import { EventEmitter } from "events";
 import { Task } from "redux-saga";
+import { OutgoingRegistry } from "@shoki/networking";
 import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN_GAME, PieceModel, PlayerProfile } from "@creature-chess/models";
-import { ServerToClient } from "@creature-chess/networking";
+import { LobbyServerToClient } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
 import { Game, PlayerEntity, playerEntity, PlayerStateSelectors } from "@creature-chess/gamemode";
 import { botLogicSaga } from "../player/bot/saga";
@@ -18,7 +19,7 @@ type PlayerConnections = {
 	[playerId: string]: {
 		socket: Socket;
 		networkingSaga: Task | null;
-		lobbyRegistry: ServerToClient.Lobby.OutgoingRegistry | null;
+		lobbyRegistry: OutgoingRegistry<LobbyServerToClient.PacketSet> | null;
 	};
 };
 
@@ -132,11 +133,11 @@ export class Lobby {
 	}
 
 	private connectLobbyPlayer(player: LobbyPlayer, socket: Socket) {
-		const registry = ServerToClient.Lobby.createOutgoingRegistry(
+		const registry = LobbyServerToClient.outgoing(
 			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 		);
 
-		registry.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_CONNECTED, {
+		registry.send("connected", {
 			lobbyId: this.id,
 			players: [...this.members],
 			startTimestamp: this.gameStartTime!
@@ -175,7 +176,7 @@ export class Lobby {
 
 		this.members
 			.forEach(player => {
-				this.playerConnections[player.id]?.lobbyRegistry?.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_GAME_STARTED, { empty: true });
+				this.playerConnections[player.id]?.lobbyRegistry?.send("gameStarted", { empty: true });
 			});
 
 		Object.keys(this.playerConnections)
@@ -237,8 +238,9 @@ export class Lobby {
 	};
 
 	private sendMemberLobbyUpdateEvent(member: LobbyPlayer, index: number, other: LobbyPlayer) {
-		this.playerConnections[member.id]?.lobbyRegistry?.emit(ServerToClient.Lobby.PacketOpcodes.LOBBY_PLAYER_UPDATE, {
-			index, player: other
-		});
+		this.playerConnections[member.id]?.lobbyRegistry?.send(
+			"lobbyPlayerUpdate",
+			{ index, player: other }
+		);
 	}
 }

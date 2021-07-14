@@ -1,0 +1,49 @@
+{
+	"private": true,
+	"name": "@creature-chess/gamemode",
+	"version": "0.4.10",
+	"description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
+	"keywords": [],
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"license": "ISC",
+	"main": "lib/index.js",
+	"files": [
+		"lib"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "jest",
+		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"dependencies": {
+		"@creature-chess/battle": "^0.4.10",
+		"@creature-chess/models": "^0.4.9",
+		"@reduxjs/toolkit": "^1.5.1",
+		"@shoki/board": "^0.4.9",
+		"@shoki/engine": "^0.4.9",
+		"@types/lodash": "^4.14.168",
+		"@types/redux": "^3.6.0",
+		"@types/redux-saga": "^0.10.5",
+		"@types/uuid": "^8.3.0",
+		"delay": "^4.1.0",
+		"lodash": "^4.17.21",
+		"p-defer": "^2.1.0",
+		"redux": "^4.1.0",
+		"redux-saga": "^1.1.3",
+		"redux-saga-test-plan": "^4.0.1",
+		"typed-redux-saga": "^1.3.1",
+		"uuid": "^8.3.1",
+		"winston": "^3.3.3"
+	}
+}
