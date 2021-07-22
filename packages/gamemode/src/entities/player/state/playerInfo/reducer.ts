@@ -1,7 +1,7 @@
 import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus, PlayerStreak } from "@creature-chess/models";
 import { Reducer } from "redux";
 import { PlayerEvent } from "../../events";
-import { PlayerCommand } from "../commands";
+import { PlayerInfoUpdateCommand } from "../commands";
 
 export type PlayerMatchRewards = {
 	damage: number;
@@ -45,7 +45,7 @@ const initialState: PlayerInfoState = {
 	xp: 0
 };
 
-export const playerInfoReducer: Reducer<PlayerInfoState, PlayerCommand | PlayerEvent> =
+export const playerInfoReducer: Reducer<PlayerInfoState, PlayerInfoUpdateCommand | PlayerEvent> =
 	(state = initialState, command) => {
 		switch (command.type) {
 			case "playerMatchRewardsEvent":

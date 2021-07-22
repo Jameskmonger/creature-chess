@@ -95,15 +95,7 @@ export const incomingGameServerToClient = function*(
 			ActionStream.incomingSaga<GameServerToClient.PacketSet, "playerInfoUpdates">(
 				registry,
 				"playerInfoUpdates",
-				[
-					PlayerCommands.setSpectatingIdCommand.toString(),
-					PlayerCommands.updateCardsCommand.toString(),
-					PlayerCommands.updateShopLockCommand.toString(),
-					PlayerCommands.updateMoneyCommand.toString(),
-					PlayerCommands.updateLevelCommand.toString(),
-					PlayerCommands.updateHealthCommand.toString(),
-					PlayerCommands.updateOpponentCommand.toString()
-				]
+				PlayerCommands.PlayerInfoUpdateCommandActionTypesArray
 			)
 		),
 	]);

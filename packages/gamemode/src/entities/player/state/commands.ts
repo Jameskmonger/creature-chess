@@ -1,8 +1,11 @@
 import { StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 
-export { updateCardsCommand, updateShopLockCommand } from "./cardShop";
-export { setSpectatingIdCommand } from "./spectating";
+import { updateCardsCommand, updateShopLockCommand } from "./cardShop";
+export { updateCardsCommand, updateShopLockCommand };
+
+import { setSpectatingIdCommand } from "./spectating";
+export { setSpectatingIdCommand };
 
 export type UpdateBattleCommand = ReturnType<typeof updateBattleCommand>;
 export const updateBattleCommand = createAction<PlayerBattle, "updateBattleCommand">("updateBattleCommand");
@@ -21,7 +24,7 @@ export const updateReadyCommand = createAction<boolean, "updateReadyCommand">("u
 export type UpdateOpponentCommand = ReturnType<typeof updateOpponentCommand>;
 export const updateOpponentCommand = createAction<string | null, "updateOpponentCommand">("updateOpponentCommand");
 
-export type PlayerCommand =
+export type PlayerInfoUpdateCommand =
 	UpdateStatusCommand
 	| UpdateHealthCommand
 	| UpdateBattleCommand
@@ -30,3 +33,13 @@ export type PlayerCommand =
 	| UpdateReadyCommand
 	| UpdateOpponentCommand
 	| UpdateLevelCommand;
+
+export const PlayerInfoUpdateCommandActionTypesArray = [
+	setSpectatingIdCommand.toString(),
+	updateCardsCommand.toString(),
+	updateShopLockCommand.toString(),
+	updateMoneyCommand.toString(),
+	updateLevelCommand.toString(),
+	updateHealthCommand.toString(),
+	updateOpponentCommand.toString(),
+];
