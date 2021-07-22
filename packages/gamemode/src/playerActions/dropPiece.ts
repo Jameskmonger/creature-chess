@@ -7,7 +7,7 @@ import { PlayerState } from "../entities/player";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
 import { getPlayerBelowPieceLimit } from "../entities/player/state/selectors";
 
-const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
+export const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
 	if (location.type === "board") {
 		const { x, y } = location.location;
 
@@ -23,7 +23,7 @@ const findPiece = (state: PlayerState, location: PlayerPieceLocation) => {
 	return null;
 };
 
-const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => {
+export const isLocationLocked = (state: PlayerState, location: PlayerPieceLocation) => {
 	if (location.type === "board") {
 		return state.board.locked;
 	}

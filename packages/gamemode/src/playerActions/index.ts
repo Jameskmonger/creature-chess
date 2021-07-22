@@ -22,6 +22,9 @@ export { QuitGamePlayerAction, quitGamePlayerAction };
 import { DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
 export { DropPiecePlayerAction, dropPiecePlayerAction };
 
+import { SwapPiecePlayerAction, swapPiecePlayerAction } from "./swapPiece";
+export { SwapPiecePlayerAction, swapPiecePlayerAction };
+
 import { SpectatePlayerAction, spectatePlayerAction } from "./spectate";
 export { SpectatePlayerAction, spectatePlayerAction };
 
@@ -34,6 +37,7 @@ export const PlayerActionTypesArray = [
 	readyUpPlayerAction.toString(),
 	quitGamePlayerAction.toString(),
 	dropPiecePlayerAction.toString(),
+	swapPiecePlayerAction.toString(),
 	spectatePlayerAction.toString()
 ];
 
@@ -46,4 +50,5 @@ export type PlayerAction =
 	| ReadyUpPlayerAction
 	| QuitGamePlayerAction
 	| DropPiecePlayerAction
+	| SwapPiecePlayerAction
 	| SpectatePlayerAction;
