@@ -5,7 +5,7 @@ import { useBelowPieceLimit, usePieces } from "../../context";
 import { getOverlayClassName } from "./getOverlayClassName";
 
 type DroppableTileProps = {
-	className: string;
+	isDark: boolean;
 	x: number;
 	y: number;
 	onDrop?: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
@@ -13,9 +13,12 @@ type DroppableTileProps = {
 };
 
 type PieceDragObject = DragObjectWithType & { piece: HasId };
-type DropTargetCollectProps = { canDrop: boolean, isDragging: boolean };
+type DropTargetCollectProps = {
+	canDrop: boolean;
+	isDragging: boolean;
+};
 
-const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className, x, y, onDrop, onClick }) => {
+const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ isDark, x, y, onDrop, onClick }) => {
 	const belowPieceLimit = useBelowPieceLimit();
 	const pieces = usePieces();
 
@@ -32,12 +35,21 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ className,
 		}),
 	});
 
-	const onClickFn = onClick ? () => onClick(x, y) : undefined;
+	const onClickFn = React.useCallback(
+		() => {
+			if (!onClick) {
+				return;
+			}
+
+			onClick(x, y);
+		},
+		[x, y, onClick]
+	);
 
 	return (
 		<div
 			ref={drop}
-			className={`tile ${className}`}
+			className={`tile ${isDark ? "dark" : "light"}`}
 			touch-action="none"
 			onPointerUp={onClickFn}
 		>

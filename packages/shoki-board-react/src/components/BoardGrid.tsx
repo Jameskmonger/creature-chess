@@ -13,10 +13,8 @@ type BoardGridProps = {
 	onClick?: (x: number, y: number) => void;
 };
 
-// tslint:disable-next-line no-bitwise
+// eslint-disable-next-line no-bitwise
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
-
-const getTileColourClassName = (x: number, y: number) => isBoardTileDark(x, y) ? "dark" : "light";
 
 const BoardRows: React.FunctionComponent<Pick<BoardGridProps, "onDrop" | "onClick">> = ({ onDrop, onClick }) => {
 	const { locked, piecePositions, size: { width, height } } = useBoard();
@@ -27,15 +25,15 @@ const BoardRows: React.FunctionComponent<Pick<BoardGridProps, "onDrop" | "onClic
 		const tiles = [];
 
 		for (let x = 0; x < width; x++) {
-			const className = getTileColourClassName(x, y);
+			const isDark = isBoardTileDark(x, y);
 			const piecePositionKey = `${x},${y}`;
 
 			const tileContainsPiece = Boolean(piecePositions[piecePositionKey]);
 
 			tiles.push(
 				(!tileContainsPiece && !locked)
-					? <DroppableTile key={`tile-${x}`} className={className} x={x} y={y} onDrop={onDrop} onClick={onClick} />
-					: <UndroppableTile key={`tile-${x}`} className={className} />
+					? <DroppableTile key={`tile-${x}`} isDark={isDark} x={x} y={y} onDrop={onDrop} onClick={onClick} />
+					: <UndroppableTile key={`tile-${x}`} isDark={isDark} />
 			);
 		}
 
@@ -45,12 +43,10 @@ const BoardRows: React.FunctionComponent<Pick<BoardGridProps, "onDrop" | "onClic
 	return <div>{rows}</div>;
 };
 
-const getTilePosition = (width: number, height: number, x: number, y: number) => {
-	return {
-		left: x / width,
-		top: y / height
-	};
-};
+const getTilePosition = (width: number, height: number, x: number, y: number) => ({
+	left: x / width,
+	top: y / height
+});
 
 const PositionablePieceStyle: React.FunctionComponent = () => {
 	const { size: { height, width } } = useBoard();
