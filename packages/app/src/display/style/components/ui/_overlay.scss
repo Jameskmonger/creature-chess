@@ -164,12 +164,22 @@
 
 	.quick-chat-box-container {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		width: 100%;
 		align-items: center;
 		justify-content: center;
 		align-content: center;
 		justify-items: center;
+		text-align: center;
+
+		.quick-chat-buttons {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			justify-content: center;
+			align-content: center;
+			justify-items: center;
+		}
 	}
 }
 

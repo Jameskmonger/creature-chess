@@ -85,12 +85,15 @@ const ReadyOverlay: React.FunctionComponent = () => {
 					</div>
 				</div>
 				<HeadToHeadStats player={localPlayer} opponent={opponent} />
-				<QuickChatBox />
 				<div className="quick-chat-box-container">
-					<button onClick={() => sendQuickChat(QuickChatOption.GG)}>GG</button>
-					<button onClick={() => sendQuickChat(QuickChatOption.ANGRY)}>Angry</button>
-					<button onClick={() => sendQuickChat(QuickChatOption.HAPPY)}>Happy</button>
-					<button onClick={() => sendQuickChat(QuickChatOption.SHOCKED)}>Shocked</button>
+					<QuickChatBox />
+
+					<div className="quick-chat-buttons">
+						<button onClick={() => sendQuickChat(QuickChatOption.GG)}>GG</button>
+						<button onClick={() => sendQuickChat(QuickChatOption.ANGRY)}>Angry</button>
+						<button onClick={() => sendQuickChat(QuickChatOption.HAPPY)}>Happy</button>
+						<button onClick={() => sendQuickChat(QuickChatOption.SHOCKED)}>Shocked</button>
+					</div>
 				</div>
 			</div>
 		</BoardOverlay>
