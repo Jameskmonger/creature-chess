@@ -6,18 +6,14 @@ import { QuickChatOption } from "@creature-chess/models";
 const QuickChatBox: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 	const currentQuickChat = useSelector<AppState, any | null>(state => state.game.playerInfo.quickChat);
-	const chatIsValid = Date.now() - currentQuickChat.receivedAt > 5000 ? false : true;
-
 
 	return (
 		<div className="quick-chat-box">
 			<h1>Quick Chat</h1>
-			{
-				chatIsValid &&
-				<div>
-					<p>{currentQuickChat.value}</p>
-				</div>
-			}
+			<div>
+				<p>{currentQuickChat.value}</p>
+			</div>
+
 		</div>
 	);
 };
