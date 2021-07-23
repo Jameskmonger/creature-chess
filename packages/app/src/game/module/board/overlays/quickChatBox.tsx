@@ -11,6 +11,7 @@ const QuickChatBox: React.FunctionComponent = () => {
 
 	return (
 		<div className="quick-chat-box">
+			<h1>Quick Chat</h1>
 			{
 				chatIsValid &&
 				<div>
