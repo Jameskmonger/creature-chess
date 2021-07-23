@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { put } from "redux-saga/effects";
-import { select, getContext, take } from "typed-redux-saga";
+import { select, take } from "typed-redux-saga";
 import { PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerState } from "../entities/player";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
@@ -23,12 +23,11 @@ export const swapPiecePlayerActionSaga = function*() {
 			payload: { pieceAId, pieceALocation, pieceBId, pieceBLocation }
 		} = yield* take<SwapPiecePlayerAction>(swapPiecePlayerAction.toString());
 
-		const playerId = yield* getContext<string>("id");
 		const state = yield* select((s: PlayerState) => s);
 
 		if (isLocationLocked(state, pieceALocation) || isLocationLocked(state, pieceBLocation)) {
 			// source or destination is locked
-			return;
+			continue;
 		}
 
 		const pieceA = findPiece(state, pieceALocation);
@@ -36,7 +35,7 @@ export const swapPiecePlayerActionSaga = function*() {
 		if (!pieceA || pieceA.id !== pieceAId) {
 			// piece A not found or id wrong (position mismatch?)
 			// todo log
-			return;
+			continue;
 		}
 
 		const pieceB = findPiece(state, pieceBLocation);
@@ -44,7 +43,7 @@ export const swapPiecePlayerActionSaga = function*() {
 		if (!pieceB || pieceB.id !== pieceBId) {
 			// piece B not found or id wrong (position mismatch?)
 			// todo log
-			return;
+			continue;
 		}
 
 		if (pieceALocation.type === "board" && pieceBLocation.type === "board") {

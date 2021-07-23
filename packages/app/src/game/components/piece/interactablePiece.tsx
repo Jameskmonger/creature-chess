@@ -6,14 +6,14 @@ import { Piece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
 import { Projectile } from "../projectile";
 import { DragObjectWithType, useDrag } from "react-dnd";
-import { selectPiece } from "../../ui/actions";
+import { playerClickPieceAction } from "../../module/board/sagas/clickPieceSaga";
 
 type PieceDragObject = DragObjectWithType & { piece: PieceModel };
 
 const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	const { id } = props;
 	const dispatch = useDispatch();
-	const isSelected = useSelector<AppState, boolean>(state => state.game.ui.selectedPieceId === id);
+	const selectedPieceId = useSelector<AppState, string>(state => state.game.ui.selectedPieceId);
 	const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
 
 	const [{ }, drag] = useDrag<PieceDragObject, void, {}>({
@@ -21,9 +21,10 @@ const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	});
 
 	const onClick = () => {
-		dispatch(selectPiece(id));
+		dispatch(playerClickPieceAction({ pieceId: id }));
 	};
 
+	const isSelected = selectedPieceId === id;
 	const className = `piece ${isSelected ? "selected" : ""}`;
 
 	if (!piece) {

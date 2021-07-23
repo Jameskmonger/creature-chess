@@ -35,16 +35,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ isDark, x,
 		}),
 	});
 
-	const onClickFn = React.useCallback(
-		() => {
-			if (!onClick) {
-				return;
-			}
-
-			onClick(x, y);
-		},
-		[x, y, onClick]
-	);
+	const onClickFn = onClick ? () => onClick(x, y) : undefined;
 
 	return (
 		<div

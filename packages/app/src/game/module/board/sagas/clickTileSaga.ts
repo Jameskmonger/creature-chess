@@ -2,11 +2,12 @@ import { take, select, put } from "@redux-saga/core/effects";
 import { getPiece, PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@shoki/board";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { AppState } from "../../../store";
-import { clearSelectedPiece } from "../../ui/actions";
+import { AppState } from "../../../../store";
+import { clearSelectedPiece } from "../../../ui/actions";
 import { createAction } from "@reduxjs/toolkit";
 
-const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
+// todo move this to a player selector
+export const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
 	if (board) {
 		const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
 
@@ -35,21 +36,25 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 export type PlayerClickTileAction = ReturnType<typeof playerClickTileAction>;
 export const playerClickTileAction = createAction<{ tile: PlayerPieceLocation }>("playerClickTileAction");
 
-export const clickToDropSaga = function*() {
+export const clickTileSaga = function*() {
 	while (true) {
 		const action: PlayerClickTileAction = yield take(playerClickTileAction.toString());
 
 		const { tile } = action.payload;
 
-		const piece: PieceModel = yield select((state: AppState) => state.game.ui.selectedPieceId ? getPiece(state.game, state.game.ui.selectedPieceId) : null);
+		const selectedPiece: PieceModel = yield select(
+			(state: AppState) => state.game.ui.selectedPieceId
+				? getPiece(state.game, state.game.ui.selectedPieceId)
+				: null
+		);
 
-		if (!piece) {
+		if (!selectedPiece) {
 			continue;
 		}
 
 		let tileEmpty = false;
-		const bench: BoardState = yield select((state: AppState) => state.game.bench);
 		const board: BoardState = yield select((state: AppState) => state.game.board);
+		const bench: BoardState = yield select((state: AppState) => state.game.bench);
 
 		const piecePositionKey = `${tile.location.x},${tile.location.y}`;
 
@@ -60,16 +65,19 @@ export const clickToDropSaga = function*() {
 		}
 
 		if (!tileEmpty) {
+			// click raised for non-empty tile, should never happen
+			// todo maybe log it?
 			continue;
 		}
 
-		const from: PlayerPieceLocation = getLocationForPiece(piece.id, board, bench);
+		const from: PlayerPieceLocation = getLocationForPiece(selectedPiece.id, board, bench);
 
 		yield put(PlayerActions.dropPiecePlayerAction({
-			pieceId: piece.id,
+			pieceId: selectedPiece.id,
 			from,
 			to: tile
 		}));
+
 		yield put(clearSelectedPiece());
 	}
 };
