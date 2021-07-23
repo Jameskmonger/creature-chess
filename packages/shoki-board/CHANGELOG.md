@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.8](https://github.com/Jameskmonger/creature-chess/compare/v0.4.7...v0.4.8) (2021-07-23)
+
+
+### Features
+
+* piece swapping ([#443](https://github.com/Jameskmonger/creature-chess/issues/443)) ([e6ceada](https://github.com/Jameskmonger/creature-chess/commit/e6ceada88216d0427983101bd0267afafcddef8e))
+
+
+
+
+
 ## [0.4.7](https://github.com/Jameskmonger/creature-chess/compare/v0.4.6...v0.4.7) (2021-07-19)
 
 **Note:** Version bump only for package @shoki/board
