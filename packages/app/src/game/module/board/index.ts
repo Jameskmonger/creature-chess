@@ -1,3 +1,4 @@
 export { BoardContainer } from "./boardContainer";
-export { clickToDropSaga } from "./clickToDropSaga";
+export { clickTileSaga } from "./sagas/clickTileSaga";
+export { clickPieceSaga } from "./sagas/clickPieceSaga";
 export { ResponsiveBoardStyles } from "./responsiveBoardStyles";

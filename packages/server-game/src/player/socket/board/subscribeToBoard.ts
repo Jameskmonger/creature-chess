@@ -23,7 +23,8 @@ export const subscribeToBoard = function*(
 			slice.commands.addBoardPieceCommand,
 			slice.commands.moveBoardPieceCommand,
 			slice.commands.removeBoardPiecesCommand,
-			slice.commands.updateBoardPiecesCommand
+			slice.commands.updateBoardPiecesCommand,
+			slice.commands.swapPiecesCommand
 		],
 		function*() {
 			const state = yield* select(selector);

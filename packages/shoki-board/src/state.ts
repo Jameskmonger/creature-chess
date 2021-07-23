@@ -185,22 +185,22 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 
 				const positions = Object.entries(state.piecePositions);
 
-				const aPosition = positions.find(([pieceId]) => pieceId === aId);
-				const bPosition = positions.find(([pieceId]) => pieceId === bId);
+				const aPositionEntry = positions.find(([, pieceId]) => pieceId === aId);
+				const bPositionEntry = positions.find(([, pieceId]) => pieceId === bId);
 
-				if (!aPosition || !bPosition) {
+				if (!aPositionEntry || !bPositionEntry) {
 					return state;
 				}
 
-				const [aX, aY] = aPosition;
-				const [bX, bY] = bPosition;
+				const [aPosition] = aPositionEntry;
+				const [bPosition] = bPositionEntry;
 
 				return {
 					...state,
 					piecePositions: {
 						...state.piecePositions,
-						[`${aX},${aY}`]: b.id,
-						[`${bX},${bY}`]: a.id
+						[aPosition]: b.id,
+						[bPosition]: a.id
 					}
 				};
 			},

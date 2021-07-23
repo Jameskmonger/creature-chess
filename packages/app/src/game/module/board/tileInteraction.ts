@@ -4,7 +4,7 @@ import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@shoki/board";
 import { clearSelectedPiece } from "../../ui/actions";
-import { playerClickTileAction } from "./clickToDropSaga";
+import { playerClickTileAction } from "./sagas/clickTileSaga";
 
 const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation | null => {
 	if (board) {
