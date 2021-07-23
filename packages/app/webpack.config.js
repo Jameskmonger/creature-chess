@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -68,6 +69,31 @@ const getGHPagesRedirectScript = (enabled) => {
     </script>`;
 };
 
+const createDependencyReplacementPlugin = (dependencyRegex) =>
+	new NormalModuleReplacementPlugin(dependencyRegex, (res) => {
+		const CONTEXT_REGEX = /[\\|\/]+packages[\\|\/]+([a-zA-Z\-]+)[\\|\/]+/;
+
+		const result = CONTEXT_REGEX.exec(res.context);
+
+		if (!result) {
+			console.warn("no replacement found", res.context);
+			return;
+		}
+
+		const [_, requestingPackageName] = result;
+		const requestedPackage = res.request;
+		const requestingFileName = path.basename(res.contextInfo.issuer);
+
+		if (requestingPackageName !== "app") {
+			console.log(
+				"\x1b[35m%s\x1b[0m",
+				`[REPLACEMENT]: using dependency <${requestedPackage}> from package [app] instead of [${requestingPackageName}] (${requestingFileName})`
+			);
+
+			res.request = path.resolve(__dirname, "./node_modules/", requestedPackage);
+		}
+	});
+
 const outDir = path.resolve(__dirname, "public");
 
 module.exports = {
@@ -101,7 +127,7 @@ module.exports = {
 		],
 		extensions: [".tsx", ".ts", ".js"],
 		fallback: {
-			"events": require.resolve("events/")
+			events: require.resolve("events/")
 		}
 	},
 
@@ -112,28 +138,12 @@ module.exports = {
 
 	plugins: [
 		// todo tie this into `dependencies` from package.json
-		new NormalModuleReplacementPlugin(/^react$|^react-dnd$|^redux-saga$/gi, (res) => {
-			const CONTEXT_REGEX = /[\\|\/]+packages[\\|\/]+([a-zA-Z\-]+)[\\|\/]+/;
-
-			const result = CONTEXT_REGEX.exec(res.context);
-
-			if (!result) {
-				console.warn("no replacement found", res.context);
-				return;
-			}
-
-			const [_, requestingPackageName] = result;
-			const requestedPackage = res.request;
-
-			if (requestingPackageName !== "app") {
-				console.log('\x1b[35m%s\x1b[0m', `[REPLACEMENT]: using dependency <${requestedPackage}> from package [app] instead of [${requestingPackageName}]`);
-
-				res.request = path.resolve(__dirname, './node_modules/', requestedPackage);
-			}
-		}),
+		createDependencyReplacementPlugin(/^react$/gi),
+		createDependencyReplacementPlugin(/^react-dnd$/gi),
+		createDependencyReplacementPlugin(/^redux-saga$/gi),
 		new EnvironmentPlugin({
-			NODE_ENV: 'production',
-			SENTRY_DSN: ''
+			NODE_ENV: "production",
+			SENTRY_DSN: ""
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("./package.json").version)
@@ -173,7 +183,7 @@ module.exports = {
 		historyApiFallback: true,
 		disableHostCheck: true,
 		https: true,
-		host: 'creaturechess.local-dev.com'
+		host: "creaturechess.local-dev.com"
 	},
 
 	optimization: {
