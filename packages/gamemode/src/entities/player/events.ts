@@ -1,4 +1,4 @@
-import { PieceModel } from "@creature-chess/models";
+import { PieceModel, QuickChatValue } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 import { PlayerMatchRewards } from "./state/playerInfo/reducer";
 
@@ -24,9 +24,18 @@ export const playerFinishMatchEvent = createAction<{
 	isHomePlayer: boolean;
 }, "playerFinishMatchEvent">("playerFinishMatchEvent");
 
+export type PlayerReceiveQuickChatEvent = ReturnType<typeof playerReceiveQuickChatEvent>;
+export const playerReceiveQuickChatEvent = createAction<{
+	sendingPlayerId: string;
+	receivingPlayerId: string;
+	chatValue: QuickChatValue;
+}, "playerReceiveQuickChatEvent">("playerReceiveQuickChatEvent");
+
+
 export const PlayerEventActionTypesArray = [
 	playerDeathEvent.toString(),
-	playerMatchRewardsEvent.toString()
+	playerMatchRewardsEvent.toString(),
+	playerReceiveQuickChatEvent.toString()
 ];
 
 export type PlayerEvent =
@@ -35,4 +44,5 @@ export type PlayerEvent =
 	| ClientFinishMatchEvent
 	| PlayerDeathEvent
 	| PlayerMatchRewardsEvent
-	| PlayerFinishMatchEvent;
+	| PlayerFinishMatchEvent
+	| PlayerReceiveQuickChatEvent;

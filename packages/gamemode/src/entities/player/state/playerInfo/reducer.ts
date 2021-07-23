@@ -1,4 +1,4 @@
-import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus, PlayerStreak } from "@creature-chess/models";
+import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus, PlayerStreak, QuickChatOption } from "@creature-chess/models";
 import { Reducer } from "redux";
 import { PlayerEvent } from "../../events";
 import { PlayerInfoUpdateCommand } from "../commands";
@@ -27,6 +27,10 @@ export interface PlayerInfoState {
 	ready: boolean;
 	level: number;
 	xp: number;
+	quickChat: {
+		value: QuickChatOption | null;
+		receivedAt: number | null;
+	};
 }
 
 const initialState: PlayerInfoState = {
@@ -42,7 +46,11 @@ const initialState: PlayerInfoState = {
 	money: STARTING_MONEY,
 	ready: false,
 	level: STARTING_LEVEL,
-	xp: 0
+	xp: 0,
+	quickChat: {
+		value: null,
+		receivedAt: null
+	}
 };
 
 export const playerInfoReducer: Reducer<PlayerInfoState, PlayerInfoUpdateCommand | PlayerEvent> =
@@ -96,6 +104,14 @@ export const playerInfoReducer: Reducer<PlayerInfoState, PlayerInfoUpdateCommand
 				return {
 					...state,
 					money: command.payload
+				};
+			case "playerReceiveQuickChatEvent":
+				return {
+					...state,
+					quickChat: {
+						value: command.payload.chatValue.phrase,
+						receivedAt: Date.now()
+					}
 				};
 			default:
 				return state;
