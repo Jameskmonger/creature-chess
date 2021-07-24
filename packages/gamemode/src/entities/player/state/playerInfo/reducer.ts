@@ -27,10 +27,6 @@ export interface PlayerInfoState {
 	ready: boolean;
 	level: number;
 	xp: number;
-	quickChat: {
-		value: QuickChatOption | null;
-		receivedAt: number | null;
-	};
 }
 
 const initialState: PlayerInfoState = {
@@ -46,11 +42,7 @@ const initialState: PlayerInfoState = {
 	money: STARTING_MONEY,
 	ready: false,
 	level: STARTING_LEVEL,
-	xp: 0,
-	quickChat: {
-		value: null,
-		receivedAt: null
-	}
+	xp: 0
 };
 
 export const playerInfoReducer: Reducer<PlayerInfoState, PlayerInfoUpdateCommand | PlayerEvent> =
@@ -105,14 +97,7 @@ export const playerInfoReducer: Reducer<PlayerInfoState, PlayerInfoUpdateCommand
 					...state,
 					money: command.payload
 				};
-			case "playerReceiveQuickChatEvent":
-				return {
-					...state,
-					quickChat: {
-						value: command.payload.chatValue.phrase,
-						receivedAt: Date.now()
-					}
-				};
+
 			default:
 				return state;
 		}
