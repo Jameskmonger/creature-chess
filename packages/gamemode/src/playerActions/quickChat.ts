@@ -27,15 +27,8 @@ export const quickChatPlayerActionSaga = function*() {
 			if (!opponent || !player) {
 				return;
 			}
-
-			opponent.runSaga(function*() {
-				yield put(playerReceiveQuickChatEvent({ sendingPlayerId, chatValue }));
-			});
-
-			player.runSaga(function*() {
-				yield put(playerReceiveQuickChatEvent({ sendingPlayerId, chatValue }));
-			});
-
+			opponent.put(playerReceiveQuickChatEvent({ sendingPlayerId, chatValue }));
+			player.put(playerReceiveQuickChatEvent({ sendingPlayerId, chatValue }));
 		}
 	);
 };
