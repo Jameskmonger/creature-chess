@@ -6,9 +6,10 @@ import { usePlayerId } from "../../../../auth";
 import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
-import { PlayerActions } from "@creature-chess/gamemode";
 import { QuickChatValue, QuickChatOption } from "@creature-chess/models";
 import { QuickChatBox } from "./quickChatBox";
+import { quickChatCommands } from "../../chat";
+import { QuickChatButton } from "./quickChatButton";
 
 const ReadyOverlay: React.FunctionComponent = () => {
 
@@ -40,7 +41,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		const chatValue: QuickChatValue = {
 			phrase: chatOption
 		};
-		dispatch(PlayerActions.quickChatPlayerAction({
+		dispatch(quickChatCommands.setPlayerChat({
 			sendingPlayerId,
 			receivingPlayerId,
 			chatValue
@@ -63,6 +64,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 					<div className="inner-profile-box">
 						<div className="player-picture">
 							<PlayerAvatar player={localPlayer} />
+							<QuickChatBox sendingPlayerId={sendingPlayerId} />
 						</div>
 						<div className="name-and-health">
 							<p className="player-name">{localPlayer.name}</p>
@@ -81,15 +83,16 @@ const ReadyOverlay: React.FunctionComponent = () => {
 						</div>
 						<div className="player-picture">
 							<PlayerAvatar player={opponent} />
+							<QuickChatBox sendingPlayerId={receivingPlayerId} />
 						</div>
 					</div>
 				</div>
 				<HeadToHeadStats player={localPlayer} opponent={opponent} />
 				<div className="quick-chat-box-container">
-					<QuickChatBox />
+
 
 					<div className="quick-chat-buttons">
-						<button onClick={() => sendQuickChat(QuickChatOption.GG)}>GG</button>
+						<QuickChatButton chatOption={QuickChatOption.GG} />
 						<button onClick={() => sendQuickChat(QuickChatOption.ANGRY)}>Angry</button>
 						<button onClick={() => sendQuickChat(QuickChatOption.HAPPY)}>Happy</button>
 						<button onClick={() => sendQuickChat(QuickChatOption.SHOCKED)}>Shocked</button>
