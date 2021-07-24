@@ -1,5 +1,5 @@
 import { take, delay, select, put } from "redux-saga/effects";
-import { quickChatCommands } from ".";
+import { commands as quickChatCommands } from "./state";
 import { PlayerEvents } from "@creature-chess/gamemode";
 
 
