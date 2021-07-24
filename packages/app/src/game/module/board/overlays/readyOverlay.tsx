@@ -94,9 +94,9 @@ const ReadyOverlay: React.FunctionComponent = () => {
 
 					<div className="quick-chat-buttons">
 						<QuickChatButton chatOption={QuickChatOption.GG} />
-						<button onClick={() => sendQuickChat(QuickChatOption.ANGRY)}>Angry</button>
-						<button onClick={() => sendQuickChat(QuickChatOption.HAPPY)}>Happy</button>
-						<button onClick={() => sendQuickChat(QuickChatOption.SHOCKED)}>Shocked</button>
+						<QuickChatButton chatOption={QuickChatOption.ANGRY} />
+						<QuickChatButton chatOption={QuickChatOption.HAPPY} />
+						<QuickChatButton chatOption={QuickChatOption.SHOCKED} />
 					</div>
 				</div>
 			</div>
