@@ -24,10 +24,6 @@ const QuickChatButton: React.FunctionComponent<{ chatOption: QuickChatOption }>
 				chatValue
 			}));
 		};
-		return (
-			<>
-				<button onClick={onClick}>{chatOption.toString()}</button>
-			</>
-		);
+		return (<button onClick={onClick}>{chatOption.toString()}</button>);
 	};
 export { QuickChatButton };
