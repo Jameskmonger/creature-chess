@@ -1,4 +1,4 @@
-import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus, PlayerStreak, QuickChatOption } from "@creature-chess/models";
+import { STARTING_HEALTH, STARTING_LEVEL, STARTING_MONEY, StreakType, PlayerBattle, PlayerStatus, PlayerStreak } from "@creature-chess/models";
 import { Reducer } from "redux";
 import { PlayerEvent } from "../../events";
 import { PlayerInfoUpdateCommand } from "../commands";
