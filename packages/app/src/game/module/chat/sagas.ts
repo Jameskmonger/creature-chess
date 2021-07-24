@@ -1,16 +1,31 @@
 import { take, delay, select, put } from "redux-saga/effects";
-import { PlayerActions, PlayerEvents } from "@creature-chess/gamemode";
+import { quickChatCommands } from ".";
 
 
 export const handleQuickChat = function*() {
 	while (true) {
-		yield take(PlayerEvents.playerReceiveQuickChatEvent.toString());
-		const chatValue = yield select(state => state.game.playerInfo.quickChat.value);
-		console.log(chatValue);
+		const action = yield take(quickChatCommands.setPlayerChat.toString());
+		const { sendingPlayerId, receivingPlayerId, chatValue } = action.payload;
 		if (!chatValue) {
 			return;
 		}
-		yield delay(3000);
-		yield put(PlayerEvents.playerReceiveQuickChatEvent({ sendingPlayerId: null, receivingPlayerId: null, chatValue: { phrase: null } }));
+
+		let chatToCheck = chatValue;
+		while (true) {
+
+			yield delay(3000);
+			// stops chat being cleared before 3 seconds if it has changed in that time frame
+			// may be able to get rid of below using take latest?
+
+			const currentChat = yield select(state => state.game.quickChat.find(chatObject => chatObject.id === sendingPlayerId));
+			const isSameChat = currentChat?.value?.phrase === chatToCheck?.phrase;
+
+			if (!isSameChat) {
+				chatToCheck = currentChat.value;
+				continue;
+			}
+			yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, receivingPlayerId, chatValue: null }));
+			break;
+		}
 	}
 };

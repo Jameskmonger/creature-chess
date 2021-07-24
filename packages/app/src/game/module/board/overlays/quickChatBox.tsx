@@ -3,15 +3,20 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { QuickChatOption } from "@creature-chess/models";
 
-const QuickChatBox: React.FunctionComponent = () => {
-	const dispatch = useDispatch();
-	const currentQuickChat = useSelector<AppState, any | null>(state => state.game.playerInfo.quickChat);
+const QuickChatBox: React.FunctionComponent<{ sendingPlayerId: string }> = ({ sendingPlayerId }) => {
 
+	const currentChat = useSelector<AppState, any>(state => state.game.quickChat.find(chat =>
+		chat.id === sendingPlayerId));
 	return (
 		<div className="quick-chat-box">
 			<h1>Quick Chat</h1>
 			<div>
-				<p>{currentQuickChat.value}</p>
+				{
+					currentChat ?
+						<p>{currentChat?.value?.phrase}</p>
+						:
+						<div className="emoji-spacer" />
+				}
 			</div>
 
 		</div>

@@ -1,12 +1,13 @@
+/* eslint-disable react/jsx-no-bind */
 import React from "react";
 import { QuickChatOption } from "@creature-chess/models";
 import { useDispatch, useSelector } from "react-redux";
-import { PlayerActions } from "../../../../../../gamemode/lib";
 import { usePlayerId } from "../../../../auth";
 import { AppState } from "../../../../store";
+import { quickChatCommands } from "../../chat/index";
 
-const QuickChatButton: React.FunctionComponent<QuickChatOption>
-	= (chatOption) => {
+const QuickChatButton: React.FunctionComponent<{ chatOption: QuickChatOption }>
+	= ({ chatOption }) => {
 		const dispatch = useDispatch();
 
 		const sendingPlayerId = usePlayerId();
@@ -15,8 +16,9 @@ const QuickChatButton: React.FunctionComponent<QuickChatOption>
 		const chatValue = {
 			phrase: chatOption
 		};
+
 		const onClick = () => {
-			dispatch(PlayerActions.quickChatPlayerAction({
+			dispatch(quickChatCommands.setPlayerChat({
 				sendingPlayerId,
 				receivingPlayerId,
 				chatValue
