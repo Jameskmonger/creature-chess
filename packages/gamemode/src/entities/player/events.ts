@@ -1,4 +1,4 @@
-import { PieceModel, QuickChatValue } from "@creature-chess/models";
+import { PieceModel, QuickChatOption, QuickChatValue } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 import { PlayerMatchRewards } from "./state/playerInfo/reducer";
 
@@ -27,8 +27,7 @@ export const playerFinishMatchEvent = createAction<{
 export type PlayerReceiveQuickChatEvent = ReturnType<typeof playerReceiveQuickChatEvent>;
 export const playerReceiveQuickChatEvent = createAction<{
 	sendingPlayerId: string;
-	receivingPlayerId: string;
-	chatValue: QuickChatValue;
+	chatValue: QuickChatOption;
 }, "playerReceiveQuickChatEvent">("playerReceiveQuickChatEvent");
 
 

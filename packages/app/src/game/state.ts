@@ -18,7 +18,7 @@ export type GameState = PlayerState & {
 
 	playerInfo: PlayerInfoState;
 	playerList: PlayerListPlayer[];
-	quickChat: QuickChat[];
+	quickChat: QuickChat;
 };
 
 type Slices = { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> };

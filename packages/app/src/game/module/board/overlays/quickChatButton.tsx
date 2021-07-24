@@ -11,17 +11,11 @@ const QuickChatButton: React.FunctionComponent<{ chatOption: QuickChatOption }>
 		const dispatch = useDispatch();
 
 		const sendingPlayerId = usePlayerId();
-		const receivingPlayerId = useSelector<AppState, string>(state => state.game.playerInfo.opponentId);
-
-		const chatValue = {
-			phrase: chatOption
-		};
 
 		const onClick = () => {
 			dispatch(PlayerActions.quickChatPlayerAction({
 				sendingPlayerId,
-				receivingPlayerId,
-				chatValue
+				chatValue: chatOption
 			}));
 		};
 		return (<button onClick={onClick}>{chatOption.toString()}</button>);

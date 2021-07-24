@@ -11,7 +11,7 @@ export const handleQuickChat = function*() {
 		if (!chatValue) {
 			return;
 		}
-		yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, receivingPlayerId, chatValue }));
+		yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, chatValue }));
 		const { newChat, timeout } = yield race({
 			newChat: take(PlayerEvents.playerReceiveQuickChatEvent.toString()),
 			timeout: delay(3000)
@@ -20,7 +20,7 @@ export const handleQuickChat = function*() {
 			action = newChat;
 			continue;
 		}
-		yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, receivingPlayerId, chatValue: null }));
+		yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, chatValue: null }));
 
 		action = yield take(PlayerEvents.playerReceiveQuickChatEvent.toString());
 	}
