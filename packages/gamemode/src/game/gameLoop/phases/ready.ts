@@ -1,4 +1,4 @@
-import { all, put, delay, getContext } from "redux-saga/effects";
+import { put, delay, getContext } from "redux-saga/effects";
 import { GameOptions, GamePhase } from "@creature-chess/models";
 import { RoundInfoCommands } from "../../roundInfo";
 import { Match } from "../../match";
@@ -12,14 +12,9 @@ export const runReadyPhase = function*() {
 
 	// todo turn this into a `call` so it waits for all players
 
-	const tasks = players.getAll().map(p => p.runSaga(function*() {
-		yield put(playerBeforeReadyPhaseEvent());
-	}).toPromise());
+	players.getAll().forEach(p => p.put(playerBeforeReadyPhaseEvent()));
 
-	yield all([
-		all(tasks),
-		delay(500)
-	]);
+	yield delay(500);
 
 	const matchups = getMatchups();
 
@@ -34,14 +29,10 @@ export const runReadyPhase = function*() {
 
 		const match = new Match(homePlayer, awayPlayer, awayIsClone, options);
 
-		homePlayer.runSaga(function*() {
-			yield put(playerRunReadyPhaseEvent({ match }));
-		});
+		homePlayer.put(playerRunReadyPhaseEvent({ match }));
 
 		if (!awayIsClone) {
-			awayPlayer.runSaga(function*() {
-				yield put(playerRunReadyPhaseEvent({ match }));
-			});
+			awayPlayer.put(playerRunReadyPhaseEvent({ match }));
 		}
 	});
 

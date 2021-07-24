@@ -17,9 +17,7 @@ export const runPreparingPhase = function*() {
 	// todo put gamePhaseStartedEvent here?
 	yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt, round: round + 1 }));
 
-	players.getLiving().forEach(p => p.runSaga(function*() {
-		yield put(playerRunPreparingPhaseEvent());
-	}));
+	players.getLiving().forEach(p => p.put(playerRunPreparingPhaseEvent()));
 
 	const notifier = readyNotifier(players.getLiving());
 
