@@ -38,24 +38,12 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		return null;
 	}
 
-	const sendQuickChat = (chatOption: QuickChatOption) => {
-		const chatValue: QuickChatValue = {
-			phrase: chatOption
-		};
-		dispatch(PlayerActions.quickChatPlayerAction({
-			sendingPlayerId,
-			receivingPlayerId,
-			chatValue
-		}));
-	};
-
 	const returnTitleOrSpacer = (player) => {
 		if (player.profile.title) {
 			return <Title titleId={player.profile.title} />;
 		}
 		return <div className="spacer" />;
 	};
-
 
 	return (
 		<BoardOverlay>
@@ -89,15 +77,11 @@ const ReadyOverlay: React.FunctionComponent = () => {
 					</div>
 				</div>
 				<HeadToHeadStats player={localPlayer} opponent={opponent} />
-				<div className="quick-chat-box-container">
-
-
-					<div className="quick-chat-buttons">
-						<QuickChatButton chatOption={QuickChatOption.GG} />
-						<QuickChatButton chatOption={QuickChatOption.ANGRY} />
-						<QuickChatButton chatOption={QuickChatOption.HAPPY} />
-						<QuickChatButton chatOption={QuickChatOption.SHOCKED} />
-					</div>
+				<div className="quick-chat-button-container">
+					<QuickChatButton chatOption={QuickChatOption.GG} />
+					<QuickChatButton chatOption={QuickChatOption.ANGRY} />
+					<QuickChatButton chatOption={QuickChatOption.HAPPY} />
+					<QuickChatButton chatOption={QuickChatOption.SHOCKED} />
 				</div>
 			</div>
 		</BoardOverlay>
