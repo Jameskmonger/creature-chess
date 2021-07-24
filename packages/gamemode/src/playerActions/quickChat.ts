@@ -27,13 +27,11 @@ export const quickChatPlayerActionSaga = function*() {
 			if (!opponent || !player) {
 				return;
 			}
-			// this can be expanded to send to all player by using getConnectedPlayers instead of getPlayerById
-			// then looping through all players in that array and putting receiveQuickChatEvent for each of them
+
 			opponent.runSaga(function*() {
 				yield put(playerReceiveQuickChatEvent({ sendingPlayerId, receivingPlayerId, chatValue }));
 			});
 
-			// this is purely for testing purposes to see if actions are being created - cannot access opponent actions:
 			player.runSaga(function*() {
 				yield put(playerReceiveQuickChatEvent({ sendingPlayerId, receivingPlayerId, chatValue }));
 			});
