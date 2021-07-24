@@ -1,6 +1,6 @@
 import { take, delay, select, put } from "redux-saga/effects";
 import { quickChatCommands } from ".";
-import { PlayerActions, PlayerEvents } from "../../../../../gamemode/lib";
+import { PlayerEvents } from "@creature-chess/gamemode";
 
 
 export const handleQuickChat = function*() {
