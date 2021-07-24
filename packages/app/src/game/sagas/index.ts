@@ -2,7 +2,7 @@ import { all, call, take, put } from "redux-saga/effects";
 import { RoundInfoCommands } from "@creature-chess/gamemode";
 
 import { gameConnectedEvent, GameConnectedEvent } from "../../networking/actions";
-import { PlayerListCommands, clickToDropSaga, closeShopOnFirstBuySaga } from "../module";
+import { PlayerListCommands, clickTileSaga, clickPieceSaga, closeShopOnFirstBuySaga } from "../module";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
 import { handleQuickChat } from "../module/chat/sagas";
 import { LobbyEvents } from "../../lobby";
@@ -14,7 +14,8 @@ export const gameSaga = function*() {
 	yield all([
 		call(preventAccidentalClose),
 		call(closeShopOnFirstBuySaga),
-		call(clickToDropSaga),
+		call(clickTileSaga),
+		call(clickPieceSaga),
 		call(roundUpdateSaga),
 		call(clientBattleSaga),
 		call(uiSaga),

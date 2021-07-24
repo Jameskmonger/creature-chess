@@ -6,6 +6,7 @@ import { rerollCardsPlayerActionSaga } from "./rerollCards";
 import { toggleShopLockPlayerActionSaga } from "./toggleShopLock";
 import { sellPiecePlayerActionSaga } from "./sellPiece";
 import { dropPiecePlayerActionSaga } from "./dropPiece";
+import { swapPiecePlayerActionSaga } from "./swapPiece";
 import { spectatePlayerActionSaga } from "./spectate";
 import { readyUpPlayerActionSaga } from "./readyUp";
 import { quickChatPlayerActionSaga } from "./quickChat";
@@ -18,6 +19,7 @@ export const playerActionsSaga = function*() {
 		call(toggleShopLockPlayerActionSaga),
 		call(sellPiecePlayerActionSaga),
 		call(dropPiecePlayerActionSaga),
+		call(swapPiecePlayerActionSaga),
 		call(spectatePlayerActionSaga),
 		call(readyUpPlayerActionSaga),
 		call(quickChatPlayerActionSaga)

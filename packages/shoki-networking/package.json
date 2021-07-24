@@ -1,7 +1,7 @@
 {
 	"private": "true",
 	"name": "@shoki/networking",
-	"version": "0.4.7",
+	"version": "0.4.8",
 	"description": "Shoki networking toolset",
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
