@@ -10,6 +10,7 @@ import { QuickChatValue, QuickChatOption } from "@creature-chess/models";
 import { QuickChatBox } from "./quickChatBox";
 import { quickChatCommands } from "../../chat";
 import { QuickChatButton } from "./quickChatButton";
+import { PlayerActions, PlayerEvents } from "@creature-chess/gamemode";
 
 const ReadyOverlay: React.FunctionComponent = () => {
 
@@ -41,7 +42,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		const chatValue: QuickChatValue = {
 			phrase: chatOption
 		};
-		dispatch(quickChatCommands.setPlayerChat({
+		dispatch(PlayerActions.quickChatPlayerAction({
 			sendingPlayerId,
 			receivingPlayerId,
 			chatValue

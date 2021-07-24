@@ -1,15 +1,16 @@
 import { take, delay, select, put } from "redux-saga/effects";
 import { quickChatCommands } from ".";
+import { PlayerActions, PlayerEvents } from "../../../../../gamemode/lib";
 
 
 export const handleQuickChat = function*() {
 	while (true) {
-		const action = yield take(quickChatCommands.setPlayerChat.toString());
+		const action = yield take(PlayerEvents.playerReceiveQuickChatEvent.toString());
 		const { sendingPlayerId, receivingPlayerId, chatValue } = action.payload;
 		if (!chatValue) {
 			return;
 		}
-
+		yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, receivingPlayerId, chatValue }));
 		let chatToCheck = chatValue;
 		while (true) {
 
@@ -21,7 +22,7 @@ export const handleQuickChat = function*() {
 			const isSameChat = currentChat?.value?.phrase === chatToCheck?.phrase;
 
 			if (!isSameChat) {
-				chatToCheck = currentChat.value;
+				chatToCheck = currentChat?.value;
 				continue;
 			}
 			yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, receivingPlayerId, chatValue: null }));
