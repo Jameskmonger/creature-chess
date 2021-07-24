@@ -11,7 +11,6 @@ import { createGameStore, GameState } from "./store";
 import { take } from "@redux-saga/core/effects";
 import { gameSaga } from "./sagas";
 import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
-import { put } from "redux-saga/effects";
 import { PlayerEntity } from "../entities";
 import { getPlayerStatus, isPlayerAlive } from "../entities/player/state/selectors";
 import { sendPublicEventsSaga } from "./publicEvents";
@@ -52,9 +51,7 @@ export class Game {
 		// todo this is ugly
 		this.playerList.onUpdate(newPlayers => {
 			this.getConnectedPlayers().forEach(player => {
-				player.runSaga(function*() {
-					yield put(playerListChangedEvent({ players: newPlayers }));
-				});
+				player.put(playerListChangedEvent({ players: newPlayers }));
 			});
 		});
 
@@ -90,9 +87,7 @@ export class Game {
 	private gameTeardownSagaFactory = () => {
 		const broadcast = (event: GameFinishEvent) => {
 			this.getConnectedPlayers().forEach(player => {
-				player.runSaga(function*() {
-					yield put(event);
-				});
+				player.put(event);
 			});
 
 			this.events.emit(finishGameEventKey, event.payload.winnerId);

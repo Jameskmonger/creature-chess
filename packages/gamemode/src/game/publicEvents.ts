@@ -1,5 +1,4 @@
 import { getContext, takeLatest } from "@redux-saga/core/effects";
-import { put } from "redux-saga/effects";
 import { isNotQuit } from "../entities/player/state/selectors";
 import { gamePhaseStartedEvent } from "./events";
 import { RoundInfoCommands, SetRoundInfoCommand } from "./roundInfo";
@@ -10,9 +9,7 @@ export const sendPublicEventsSaga = function*() {
 		const { getAll }: GameSagaContextPlayers = yield getContext("players");
 
 		getAll().filter(p => p.select(isNotQuit)).forEach(player => {
-			player.runSaga(function*() {
-				yield put(gamePhaseStartedEvent(payload));
-			});
+			player.put(gamePhaseStartedEvent(payload));
 		});
 	});
 };

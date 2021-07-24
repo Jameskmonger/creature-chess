@@ -130,14 +130,10 @@ export class Match {
 		const homeScore = surviving.home.length;
 		const awayScore = surviving.away.length;
 
-		this.home.runSaga(function*() {
-			yield put(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
-		});
+		this.home.put(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true }));
 
 		if (!this.awayIsClone) {
-			this.away.runSaga(function*() {
-				yield put(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
-			});
+			this.away.put(playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false }));
 		}
 
 		return this.finalBoard;

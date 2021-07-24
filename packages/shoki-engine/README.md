@@ -37,6 +37,9 @@ const player = entity<PlayerState>(
  */
 player.runSaga(someOtherSaga);
 const h = player.select(state => state.health);
+
+// you can also dispatch actions from outside
+player.put(someAction(1, 2));
 ```
 
 The `rootSaga` will run immediately and allow for the creation of rich behaviours. Check out the [Redux Saga](https://redux-saga.js.org/) documentation for more information.
