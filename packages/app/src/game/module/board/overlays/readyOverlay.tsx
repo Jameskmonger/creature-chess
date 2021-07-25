@@ -42,8 +42,6 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		return <div className="spacer" />;
 	};
 
-	const quickChatArray = Object.values(QuickChatOption).map(option => option);
-
 	return (
 		<BoardOverlay>
 			<div className="ready-overlay-content">
@@ -76,7 +74,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 					</div>
 				</div>
 				<HeadToHeadStats player={localPlayer} opponent={opponent} />
-				<QuickChatButtonArray chatOptions={quickChatArray} />
+				<QuickChatButtonArray />
 			</div>
 		</BoardOverlay>
 	);

@@ -1,5 +1,5 @@
 export enum QuickChatOption {
-	GG = "GG",
+	GL = "GL",
 	HAPPY = "😃",
 	SHOCKED = "😱",
 	ANGRY = "😠"
