@@ -6,7 +6,7 @@ import { QuickChatOption } from "@creature-chess/models";
 const QuickChatButtonArray: React.FunctionComponent = () => {
 	// to have different options for different overlays etc., pass the Options enum as a parameter to this component
 	// and map to array as below.
-	const quickChatArray = Object.values(QuickChatOption).map(option => option);
+	const quickChatArray = Object.values(QuickChatOption);
 	return (
 		<div className="quick-chat-button-container">
 			{
