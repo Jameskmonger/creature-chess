@@ -9,7 +9,6 @@ const QuickChatButtonArray: React.FunctionComponent = () => {
 	const quickChatArray = Object.values(QuickChatOption);
 	return (
 		<div>
-			<h1 className="quick-chat-button-header">Quick Chat</h1>
 			<div className="spacer" />
 			<div className="quick-chat-button-container">
 
