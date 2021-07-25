@@ -4,6 +4,7 @@ import { RoundInfoCommands } from "@creature-chess/gamemode";
 import { gameConnectedEvent, GameConnectedEvent } from "../../networking/actions";
 import { PlayerListCommands, clickTileSaga, clickPieceSaga, closeShopOnFirstBuySaga } from "../module";
 import { preventAccidentalClose } from "./actions/preventAccidentalClose";
+import { handleQuickChat } from "../module/chat/sagas";
 import { LobbyEvents } from "../../lobby";
 import { roundUpdateSaga, clientBattleSaga, uiSaga } from "./events";
 
@@ -18,6 +19,7 @@ export const gameSaga = function*() {
 		call(roundUpdateSaga),
 		call(clientBattleSaga),
 		call(uiSaga),
+		call(handleQuickChat),
 		call(function*() {
 			if (action && action.payload) {
 				const { payload: {

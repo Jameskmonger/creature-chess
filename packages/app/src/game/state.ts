@@ -3,7 +3,7 @@ import { BoardSlice, BoardState } from "@shoki/board";
 import { PieceModel, PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
 import { PlayerInfoState, playerInfoReducer, roundInfoReducer, PlayerState, playerReducers } from "@creature-chess/gamemode";
 
-import { playerListReducer } from "./module";
+import { playerListReducer, quickChatReducer, QuickChat } from "./module";
 import { UiState, uiReducer } from "./ui";
 import { matchReducer, MatchState } from "./module/match";
 
@@ -18,6 +18,7 @@ export type GameState = PlayerState & {
 
 	playerInfo: PlayerInfoState;
 	playerList: PlayerListPlayer[];
+	quickChat: QuickChat;
 };
 
 type Slices = { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> };
@@ -33,5 +34,6 @@ export const createGameReducer = (
 		match: matchReducer,
 		playerList: playerListReducer,
 		playerInfo: playerInfoReducer,
-		ui: uiReducer
+		ui: uiReducer,
+		quickChat: quickChatReducer
 	});

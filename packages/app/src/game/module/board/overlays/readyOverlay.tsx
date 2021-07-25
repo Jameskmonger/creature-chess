@@ -6,6 +6,10 @@ import { usePlayerId } from "../../../../auth";
 import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
+import { QuickChatOption } from "@creature-chess/models";
+import { QuickChatBox } from "./quickChat/quickChatBox";
+import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+
 
 const ReadyOverlay: React.FunctionComponent = () => {
 
@@ -16,12 +20,14 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	const localId = usePlayerId();
+	const sendingPlayerId = localId;
 	const localPlayer = playerList.find(p => p.id === localId);
 
 	const opponent: PlayerListPlayer = useSelector((state: AppState) => {
 		const id = state.game.playerInfo.opponentId;
 		return state.game.playerList.find(p => p.id === id);
 	});
+	const receivingPlayerId = opponent?.id;
 
 	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
@@ -44,6 +50,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 					<div className="inner-profile-box">
 						<div className="player-picture">
 							<PlayerAvatar player={localPlayer} />
+							<QuickChatBox sendingPlayerId={sendingPlayerId} />
 						</div>
 						<div className="name-and-health">
 							<p className="player-name">{localPlayer.name}</p>
@@ -62,10 +69,12 @@ const ReadyOverlay: React.FunctionComponent = () => {
 						</div>
 						<div className="player-picture">
 							<PlayerAvatar player={opponent} />
+							<QuickChatBox sendingPlayerId={receivingPlayerId} />
 						</div>
 					</div>
 				</div>
 				<HeadToHeadStats player={localPlayer} opponent={opponent} />
+				<QuickChatButtonArray />
 			</div>
 		</BoardOverlay>
 	);

@@ -97,6 +97,7 @@ export const playerInfoReducer: Reducer<PlayerInfoState, PlayerInfoUpdateCommand
 					...state,
 					money: command.payload
 				};
+
 			default:
 				return state;
 		}

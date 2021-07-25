@@ -29,4 +29,6 @@ export { createPieceCombatState, clonePieceCombatState, PieceCombatState } from 
 export { getOptions, GameOptions, defaultOptions as defaultGameOptions } from "./options";
 export { getXpToNextLevel } from "./getXpToNextLevel";
 
+export { QuickChatOption, QuickChatValue } from "./quickChat";
+
 export { config } from "./config";

@@ -111,6 +111,14 @@
 }
 
 .ready-overlay-content {
+	button {
+		font-size: 1rem;
+		background-color: rgb(26, 28, 44);
+		border-style: none;
+		color: white;
+		padding: 1em;
+		margin: auto;
+	}
 	.h2h-header {
 		margin-bottom: 0.25em;
 		font-size: 1.5em;
@@ -152,6 +160,22 @@
 	.spacer {
 		width: 1em;
 		height: 0.625em;
+	}
+	.emoji-spacer {
+		width: 1em;
+		height: 1em;
+	}
+
+	.quick-chat-button-container {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		justify-content: center;
+
+		.emoji-spacer {
+			width: 1em;
+			height: 1em;
+		}
 	}
 }
 
