@@ -11,6 +11,6 @@ export const createBuyXpAction = (state: PlayerState): BrainAction | null => {
 	return {
 		name: "buy xp",
 		action: PlayerActions.buyXpPlayerAction,
-		value: BrainActionValue.MEDIUM_VALUE,
+		value: BrainActionValue.EXTREMELY_HIGH_VALUE,
 	};
 };
