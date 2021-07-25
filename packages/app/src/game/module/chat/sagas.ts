@@ -9,7 +9,8 @@ export const handleQuickChat = function*() {
 
 		const { sendingPlayerId, chatValue } = action.payload;
 		if (!chatValue) {
-			return;
+			action = yield take(PlayerEvents.playerReceiveQuickChatEvent.toString());
+			continue;
 		}
 		yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, chatValue }));
 		const { newChat, timeout } = yield race({
