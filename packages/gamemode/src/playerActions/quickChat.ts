@@ -1,6 +1,6 @@
 import { takeLatest, put } from "@redux-saga/core/effects";
 import { createAction } from "@reduxjs/toolkit";
-import { getDependency } from "@shoki/engine/lib";
+import { getDependency } from "@shoki/engine";
 import { PlayerEntityDependencies } from "../entities/player";
 import { playerReceiveQuickChatEvent } from "../entities/player/events";
 import { QuickChatOption } from "@creature-chess/models";
