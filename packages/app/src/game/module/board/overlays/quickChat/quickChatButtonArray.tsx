@@ -8,16 +8,21 @@ const QuickChatButtonArray: React.FunctionComponent = () => {
 	// and map to array as below.
 	const quickChatArray = Object.values(QuickChatOption);
 	return (
-		<div className="quick-chat-button-container">
-			{
-				Object.values(quickChatArray).map(chat => (
-					<QuickChatButton
-						chatOption={chat}
-						key={chat}
-					/>
-				)
-				)
-			}
+		<div>
+			<h1 className="quick-chat-button-header">Quick Chat</h1>
+			<div className="spacer" />
+			<div className="quick-chat-button-container">
+
+				{
+					Object.values(quickChatArray).map(chat => (
+						<QuickChatButton
+							chatOption={chat}
+							key={chat}
+						/>
+					)
+					)
+				}
+			</div>
 		</div>
 	);
 };

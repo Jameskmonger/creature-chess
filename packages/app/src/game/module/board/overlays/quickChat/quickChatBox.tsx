@@ -8,7 +8,7 @@ const QuickChatBox: React.FunctionComponent<{ sendingPlayerId: string }> = ({ se
 	const currentChat = useSelector<AppState, any>(state => state.game.quickChat[sendingPlayerId]);
 	return (
 		<div className="quick-chat-box">
-			<h1>Quick Chat</h1>
+
 			<div>
 				{
 					currentChat ?
