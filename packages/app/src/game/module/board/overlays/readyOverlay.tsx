@@ -1,20 +1,17 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import { PlayerAvatar, Title, PlayerHealthbar } from "@creature-chess/ui";
 import { usePlayerId } from "../../../../auth";
 import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
-import { QuickChatValue, QuickChatOption } from "@creature-chess/models";
-import { QuickChatBox } from "./quickChatBox";
-import { quickChatCommands } from "../../chat";
-import { QuickChatButton } from "./quickChatButton";
-import { PlayerActions, PlayerEvents } from "@creature-chess/gamemode";
+import { QuickChatOption } from "@creature-chess/models";
+import { QuickChatBox } from "./quickChat/quickChatBox";
+import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+
 
 const ReadyOverlay: React.FunctionComponent = () => {
-
-	const dispatch = useDispatch();
 
 	const inReadyPhase = useSelector<AppState, boolean>(state =>
 		state.game.roundInfo.phase === GamePhase.READY
@@ -44,6 +41,8 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		}
 		return <div className="spacer" />;
 	};
+
+	const quickChatArray = Object.values(QuickChatOption).map(option => option);
 
 	return (
 		<BoardOverlay>
@@ -77,12 +76,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 					</div>
 				</div>
 				<HeadToHeadStats player={localPlayer} opponent={opponent} />
-				<div className="quick-chat-button-container">
-					<QuickChatButton chatOption={QuickChatOption.GG} />
-					<QuickChatButton chatOption={QuickChatOption.ANGRY} />
-					<QuickChatButton chatOption={QuickChatOption.HAPPY} />
-					<QuickChatButton chatOption={QuickChatOption.SHOCKED} />
-				</div>
+				<QuickChatButtonArray chatOptions={quickChatArray} />
 			</div>
 		</BoardOverlay>
 	);

@@ -2,8 +2,7 @@
 import React from "react";
 import { QuickChatOption } from "@creature-chess/models";
 import { useDispatch, useSelector } from "react-redux";
-import { usePlayerId } from "../../../../auth";
-import { AppState } from "../../../../store";
+import { usePlayerId } from "../../../../../auth";
 import { PlayerActions } from "@creature-chess/gamemode";
 
 const QuickChatButton: React.FunctionComponent<{ chatOption: QuickChatOption }>
