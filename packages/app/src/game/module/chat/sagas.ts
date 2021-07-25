@@ -7,7 +7,7 @@ export const handleQuickChat = function*() {
 	let action = yield take(PlayerEvents.playerReceiveQuickChatEvent.toString());
 	while (true) {
 
-		const { sendingPlayerId, receivingPlayerId, chatValue } = action.payload;
+		const { sendingPlayerId, chatValue } = action.payload;
 		if (!chatValue) {
 			return;
 		}
@@ -20,7 +20,7 @@ export const handleQuickChat = function*() {
 			action = newChat;
 			continue;
 		}
-		yield put(quickChatCommands.setPlayerChat({ sendingPlayerId, chatValue: null }));
+		yield put(quickChatCommands.clearPlayerChat({ sendingPlayerId }));
 
 		action = yield take(PlayerEvents.playerReceiveQuickChatEvent.toString());
 	}

@@ -14,6 +14,10 @@ export type QuickChatAction = {
 	chatValue: QuickChatOption | null;
 };
 
+export type ClearQuickChatAction = {
+	sendingPlayerId: string;
+};
+
 const initialState: QuickChat = {};
 
 export const { reducer, actions: commands } = createSlice({
@@ -28,6 +32,13 @@ export const { reducer, actions: commands } = createSlice({
 			[sendingPlayerId]: {
 				value: chatValue,
 				receivedAt: Date.now()
+			}
+		}),
+		clearPlayerChat: (state, { payload: { sendingPlayerId } }: PayloadAction<ClearQuickChatAction>) => ({
+			...state,
+			[sendingPlayerId]: {
+				value: null,
+				receivedAt: null
 			}
 		})
 	}
