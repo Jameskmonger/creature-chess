@@ -1,19 +1,37 @@
-import { call, put } from "@redux-saga/core/effects";
-import { PlayerActions } from "@creature-chess/gamemode";
+import { select, put, call } from "redux-saga/effects";
+import { getVariable } from "@shoki/engine";
+import { PlayerActions, PlayerState, PlayerVariables } from "@creature-chess/gamemode";
 import delay from "delay";
 import { BOT_ACTION_TIME_MS } from "../constants";
-import { buyBestPieces } from "../shop/buyBestPieces";
-import { putBenchOnBoard } from "./putBenchOnBoard";
-import { spendExcessMoneyOnXp } from "./spendExcessMoneyOnXp";
+import { getActions } from "../actions";
+import { putBenchOnBoard } from "../putBenchOnBoard";
 
 export const preparingPhase = function*() {
-	yield delay(BOT_ACTION_TIME_MS);
-
-	yield call(buyBestPieces);
-	yield call(spendExcessMoneyOnXp);
-	yield call(putBenchOnBoard);
+	const name = yield* getVariable<PlayerVariables, string>(v => v.name);
 
 	yield delay(BOT_ACTION_TIME_MS);
+
+	while (true) {
+		const state: PlayerState = yield select();
+
+		const actions = getActions(state);
+
+		if (actions.length === 0) {
+			break;
+		}
+
+		const [mostValuable] = actions;
+
+		console.log(`- ${name} executing '${mostValuable.name}'`);
+
+		yield put(mostValuable.action());
+
+		yield delay(BOT_ACTION_TIME_MS);
+
+		yield call(putBenchOnBoard);
+	}
+
+	console.log(`- ${name} finished actions`);
 
 	yield put(PlayerActions.readyUpPlayerAction());
 };

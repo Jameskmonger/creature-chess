@@ -16,7 +16,7 @@ export const getPiecePosition = (state: BoardState, pieceId: string): PiecePosit
 	return { x, y };
 };
 
-export const getAllPieces = <TPiece>(state: BoardState<TPiece>): TPiece[] => Object.values(state.pieces);
+export const getAllPieces = <TPiece>(state: BoardState<TPiece>): TPiece[] => Object.values(state.pieces).filter(p => p !== null);
 export const getPiece = <TPiece>(state: BoardState<TPiece>, pieceId: string): TPiece | null => state.pieces[pieceId] || null;
 export const isBelowPieceLimit = (state: BoardState) => state.pieceLimit === null || getAllPieces(state).length < state.pieceLimit;
 

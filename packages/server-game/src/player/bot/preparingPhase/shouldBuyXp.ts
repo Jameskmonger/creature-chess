@@ -1,9 +1,12 @@
 import { BUY_XP_AMOUNT, BUY_XP_COST, MAX_PLAYER_LEVEL, getXpToNextLevel } from "@creature-chess/models";
+import { PlayerState } from "@creature-chess/gamemode";
 
 // don't go under this amount
 const MINIMUM_MONEY = 10;
 
-export const shouldBuyXp = (money: number, level: number, xp: number): boolean => {
+export const shouldBuyXp = (state: PlayerState): boolean => {
+	const { playerInfo: { money, level, xp } } = state;
+
 	if (level === MAX_PLAYER_LEVEL) {
 		return false;
 	}

@@ -1,9 +1,10 @@
-import { select, delay, put } from "@redux-saga/core/effects";
+import { select, delay, put } from "redux-saga/effects";
 import { BoardSelectors } from "@shoki/board";
-import { PlayerActions, PlayerState } from "@creature-chess/gamemode";
+import { PlayerActions, PlayerState, PlayerStateSelectors, PlayerVariables } from "@creature-chess/gamemode";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { PREFERRED_LOCATIONS } from "../preferredLocations";
-import { BOT_ACTION_TIME_MS } from "../constants";
+import { getVariable } from "@shoki/engine";
+import { PREFERRED_LOCATIONS } from "./preferredLocations";
+import { BOT_ACTION_TIME_MS } from "./constants";
 
 // todo selector
 const getFirstBenchPiece = (state: PlayerState): PieceModel | null => {
@@ -27,11 +28,19 @@ const getBenchSlotForPiece = (state: PlayerState, pieceId: string): number | nul
 };
 
 export const putBenchOnBoard = function*() {
+	const name = yield* getVariable<PlayerVariables, string>(v => v.name);
+
 	while (true) {
 		const state: PlayerState = yield select();
 		const firstBenchPiece = getFirstBenchPiece(state);
 
 		if (firstBenchPiece === null) {
+			break;
+		}
+
+		const hasFreeSlot = BoardSelectors.getAllPieces(state.board).length < PlayerStateSelectors.getPlayerLevel(state);
+
+		if (!hasFreeSlot) {
 			break;
 		}
 
@@ -49,8 +58,10 @@ export const putBenchOnBoard = function*() {
 		const benchPieceSlot = getBenchSlotForPiece(state, firstBenchPiece.id);
 
 		if (benchPieceSlot === null) {
-			return;
+			break;
 		}
+
+		console.log(`-- ${name} moving bench piece`);
 
 		const benchPiecePosition: PlayerPieceLocation = {
 			type: "bench",
