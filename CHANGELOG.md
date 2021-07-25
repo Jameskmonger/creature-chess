@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.10](https://github.com/Jameskmonger/creature-chess/compare/v0.4.9...v0.4.10) (2021-07-25)
+
+
+### Features
+
+* add quick chat to 'now playing' screen ([#442](https://github.com/Jameskmonger/creature-chess/issues/442)) ([8a82649](https://github.com/Jameskmonger/creature-chess/commit/8a82649fd88a94eb0a2cb5628445e993e197b5b9))
+* **shoki:** add `put` method to entity to dispatch actions from outside ([4d740bd](https://github.com/Jameskmonger/creature-chess/commit/4d740bd7a1d1702f9205a31689d84f330950036d))
+
+
+
+
+
 ## [0.4.9](https://github.com/Jameskmonger/creature-chess/compare/v0.4.8...v0.4.9) (2021-07-23)
 
 **Note:** Version bump only for package creature-chess

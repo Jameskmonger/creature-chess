@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.10](https://github.com/Jameskmonger/creature-chess/compare/v0.4.9...v0.4.10) (2021-07-25)
+
+
+### Features
+
+* **shoki:** add `put` method to entity to dispatch actions from outside ([4d740bd](https://github.com/Jameskmonger/creature-chess/commit/4d740bd7a1d1702f9205a31689d84f330950036d))
+
+
+
+
+
 ## [0.4.3](https://github.com/Jameskmonger/creature-chess/compare/v0.4.2...v0.4.3) (2021-05-17)
 
 **Note:** Version bump only for package @shoki/engine
