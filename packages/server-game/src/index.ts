@@ -1,5 +1,5 @@
 import { createWinstonLogger } from "./log";
-import { startServer } from "./server";
+import { startServer } from "./networking";
 
 const logger = createWinstonLogger("global");
 

@@ -3,11 +3,10 @@ import { ManagementClient } from "auth0";
 import { config } from "@creature-chess/models";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { UserAppMetadata } from "@creature-chess/auth-server";
-
-import { SocketAuthenticator } from "./socket/socketAuthenticator";
-import { openServer } from "./socket/openServer";
-import { Matchmaking } from "./matchmaking/matchmaking";
-import { createDiscordApi } from "./discord";
+import { Matchmaking } from "../matchmaking";
+import { createDiscordApi } from "../discord";
+import { openServer } from "./openServer";
+import { SocketAuthenticator } from "./socketAuthenticator";
 
 const AUTH0_CONFIG = {
 	domain: config.auth0.domain,
