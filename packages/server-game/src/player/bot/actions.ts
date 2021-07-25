@@ -2,11 +2,12 @@ import { PlayerState } from "@creature-chess/gamemode";
 import { BoardSelectors } from "@shoki/board";
 import { BrainAction } from "./brain";
 import { BrainActionValue } from "./brain/action";
-import { createBuyXpAction, createBuyCardAction, createSellPieceAction } from "./preparingPhase/actions";
+import { createBuyXpAction, createBuyCardAction, createSellPieceAction, createRerollCardsAction } from "./preparingPhase/actions";
 
 export const getActions = (state: PlayerState): BrainAction[] => {
 	const actions: (BrainAction | null)[] = [
-		createBuyXpAction(state)
+		createBuyXpAction(state),
+		createRerollCardsAction(state)
 	];
 
 	const {
