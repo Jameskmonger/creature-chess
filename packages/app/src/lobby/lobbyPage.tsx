@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../store";
-import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME, TITLES } from "@creature-chess/models";
+import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
-import { PlayerAvatar, Title } from "@creature-chess/ui";
+import { Title } from "@creature-chess/ui";
 import { Countdown } from "../display/countdown";
 import { Footer } from "../display/footer";
 
