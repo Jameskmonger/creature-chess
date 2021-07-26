@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.13](https://github.com/Jameskmonger/creature-chess/compare/v0.4.12...v0.4.13) (2021-07-26)
+
+
+### Bug Fixes
+
+* fix getLeastPlayedBots query ([b0d53d3](https://github.com/Jameskmonger/creature-chess/commit/b0d53d32c58f2f41d23344aa9dc1b07c91bedec9))
+
+
+
+
+
 ## [0.4.12](https://github.com/Jameskmonger/creature-chess/compare/v0.4.10...v0.4.12) (2021-07-26)
 
 

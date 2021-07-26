@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.13](https://github.com/Jameskmonger/creature-chess/compare/v0.4.12...v0.4.13) (2021-07-26)
+
+
+### Features
+
+* use utility system for all bot actions ([dec38b2](https://github.com/Jameskmonger/creature-chess/commit/dec38b29c8ef65c89eb8fca3e58e6907d2ef2920))
+
+
+
+
+
 ## [0.4.12](https://github.com/Jameskmonger/creature-chess/compare/v0.4.10...v0.4.12) (2021-07-26)
 
 
