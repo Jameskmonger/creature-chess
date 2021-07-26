@@ -5,7 +5,7 @@ import { DatabaseBot } from "./databaseBot";
 
 export const getLeastPlayedBots = (logger: Logger, client: FaunaDBClient) => async (count: number) => {
 	try {
-		const bots = await client.query<DatabaseBot[]>(
+		const bots = await client.query<{ data: DatabaseBot[] }>(
 			q.Map(
 				q.Paginate(
 					q.Match(q.Index(INDEX_NAMES.BOTS_BY_LOWEST_GAMES_PLAYED)),
@@ -20,7 +20,7 @@ export const getLeastPlayedBots = (logger: Logger, client: FaunaDBClient) => asy
 			)
 		);
 
-		return bots;
+		return bots.data;
 	} catch (e) {
 		logger.error("Error in @cc/data bots.getLeastPlayedBots", e);
 		return null;
