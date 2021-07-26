@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "../store";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME, TITLES } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
-import { Title } from "@creature-chess/ui";
+import { PlayerAvatar, Title } from "@creature-chess/ui";
 import { Countdown } from "../display/countdown";
 import { Footer } from "../display/footer";
 
@@ -36,7 +36,11 @@ const LobbyPage: React.FunctionComponent = () => {
 	for (let i = players.length; i < MAX_PLAYERS_IN_GAME; i++) {
 		botElements.push(
 			<div key={i} className="player bot">
-				<span className="name">empty slot</span>
+				<span className="name">
+					<img src={"https://creaturechess.jamesmonger.com/images/ui/no_player_img.png"}
+						alt="no player image" />
+					<div className="spacer" />
+					empty slot</span>
 			</div>
 		);
 	}
@@ -64,7 +68,12 @@ const LobbyPage: React.FunctionComponent = () => {
 					{
 						players.map(p => (
 							<div key={p.id} className="player">
-								<span className="name">{p.name}</span>
+
+								<span
+									className="name"
+								><img src={`https://creaturechess.jamesmonger.com/images/front/${p.profile?.picture}.png`} alt="avatar" />
+									<div className="spacer" />
+									{p.name} </span>
 								<Title titleId={p.profile?.title} />
 							</div>
 						))
