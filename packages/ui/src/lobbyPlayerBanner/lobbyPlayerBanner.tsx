@@ -13,7 +13,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 			<div key={Math.floor(Math.random() * 1000)} className="player bot">
 				<span className="name-and-image">
 					<img
-						src={"https://creaturechess.local-dev.com:8090/images/ui/no_player_img.png"}
+						src={"https://creaturechess.jamesmonger.com/images/ui/no_player_img.png"}
 						alt="no player image"
 					/>
 					<div className="spacer" />
