@@ -146,3 +146,9 @@ const playerFactory = entityFactory<PlayerState, Deps, PlayerVariables>(
 	})
 );
 ```
+
+### Utility
+
+Allows you to create utility values from a number of inputs, with those inputs interacting in different ways.
+
+Take a look at the [README for the utility system](./src/utility/README.md) for more information.
