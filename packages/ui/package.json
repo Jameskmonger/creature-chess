@@ -32,8 +32,6 @@
 		"@types/react": "^16.8.7",
 		"@types/react-dom": "^16.8.2",
 		"classnames": "^2.3.1",
-		"react": "^16.8.4",
-		"react-dom": "^16.8.4",
 		"react-jss": "^10.6.0"
 	},
 	"devDependencies": {
@@ -45,8 +43,14 @@
 		"@storybook/react": "^6.2.9",
 		"babel-loader": "^8.2.2",
 		"css-loader": "^5.2.4",
+		"react": "^16.8.4",
+		"react-dom": "^16.8.4",
 		"sass": "^1.32.13",
 		"sass-loader": "^10.1.1",
 		"style-loader": "^2.0.0"
+	},
+	"peerDependencies": {
+		"react": "^16.8.4",
+		"react-dom": "^16.8.4"
 	}
 }
