@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.12](https://github.com/Jameskmonger/creature-chess/compare/v0.4.10...v0.4.12) (2021-07-26)
+
+
+### Features
+
+* add personalities to bots in db ([ad83af4](https://github.com/Jameskmonger/creature-chess/commit/ad83af4548554a349fde1dd20f8d7915b0bb4370))
+* add utility api to shoki engine ([da4faf9](https://github.com/Jameskmonger/creature-chess/commit/da4faf9e933e05f1af71a01f7f0d5878c7b93648))
+* make bots more eager to buy xp ([28739f6](https://github.com/Jameskmonger/creature-chess/commit/28739f63142a64b81f631e0a6f26c12af075d376))
+* make bots reroll cards if they clear the shop ([606e3f4](https://github.com/Jameskmonger/creature-chess/commit/606e3f4955ebaa9071c428366dc737fbf97c06c3))
+* reduce number of bots in db ([0bf2df7](https://github.com/Jameskmonger/creature-chess/commit/0bf2df7ee817e7d43479f388e981c9a41f278892))
+* utility ai system for bots ([98e65fa](https://github.com/Jameskmonger/creature-chess/commit/98e65faac5d21097b73510eda53417eec1d9929a))
+
+
+
+
+
 ## [0.4.11](https://github.com/Jameskmonger/creature-chess/compare/v0.4.10...v0.4.11) (2021-07-26)
 
 

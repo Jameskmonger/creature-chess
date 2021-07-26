@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.12](https://github.com/Jameskmonger/creature-chess/compare/v0.4.10...v0.4.12) (2021-07-26)
+
+
+### Features
+
+* add personalities to bots in db ([ad83af4](https://github.com/Jameskmonger/creature-chess/commit/ad83af4548554a349fde1dd20f8d7915b0bb4370))
+* reduce number of bots in db ([0bf2df7](https://github.com/Jameskmonger/creature-chess/commit/0bf2df7ee817e7d43479f388e981c9a41f278892))
+
+
+
+
+
 ## [0.4.10](https://github.com/Jameskmonger/creature-chess/compare/v0.4.9...v0.4.10) (2021-07-25)
 
 **Note:** Version bump only for package @creature-chess/data

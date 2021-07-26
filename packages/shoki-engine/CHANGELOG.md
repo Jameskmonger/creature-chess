@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.12](https://github.com/Jameskmonger/creature-chess/compare/v0.4.10...v0.4.12) (2021-07-26)
+
+
+### Features
+
+* add utility api to shoki engine ([da4faf9](https://github.com/Jameskmonger/creature-chess/commit/da4faf9e933e05f1af71a01f7f0d5878c7b93648))
+
+
+
+
+
 ## [0.4.10](https://github.com/Jameskmonger/creature-chess/compare/v0.4.9...v0.4.10) (2021-07-25)
 
 
