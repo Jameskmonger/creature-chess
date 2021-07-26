@@ -4,14 +4,13 @@ import { LobbyPlayer } from "@creature-chess/models";
 
 
 type Props = {
-	player: LobbyPlayer;
-	isBot: boolean;
+	player: LobbyPlayer | null;
 };
 
-const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player, isBot }) => {
-	if (isBot) {
+const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
+	if (!player) {
 		return (
-			<div key={player.id} className="player bot">
+			<div key={Math.floor(Math.random() * 1000)} className="player bot">
 				<span className="name-and-image">
 					<img
 						src={"https://creaturechess.local-dev.com:8090/images/ui/no_player_img.png"}
@@ -24,7 +23,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player, isBot }) =>
 		);
 	}
 	return (
-		<div key={player.id} className="player">
+		<div key={player?.id} className="player">
 			<span className="name-and-image">
 				<img
 					src={`https://creaturechess.jamesmonger.com/images/front/${player.profile?.picture}.png`}

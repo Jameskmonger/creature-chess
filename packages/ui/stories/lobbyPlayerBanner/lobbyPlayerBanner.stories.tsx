@@ -13,27 +13,29 @@ export default {
 
 const Template = (args) => <LobbyPlayerBanner {...args} />;
 
-const createLobbyPlayer = (title: PlayerTitle): LobbyPlayer => ({
-	id: "12300234",
-	name: "BigManEdam",
-	profile: {
-		title: title,
-		picture: 5
+const createLobbyPlayer = (title: PlayerTitle, isBot: boolean): LobbyPlayer | null => {
+	if (isBot) {
+		return null;
 	}
-})
+	return ({
+		id: "12300234",
+		name: "BigManEdam",
+		profile: {
+			title: title,
+			picture: 5
+		}
+	})
+}
 
 export const StandardPlayer = Template.bind({});
 StandardPlayer.args = {
-	player: createLobbyPlayer(null),
-	isBot: false
+	player: createLobbyPlayer(null, false)
 }
 export const Developer = Template.bind({});
 Developer.args = {
-	player: createLobbyPlayer(PlayerTitle.Developer),
-	isBot: false
+	player: createLobbyPlayer(PlayerTitle.Developer, false)
 }
 export const BotPlayer = Template.bind({});
 BotPlayer.args = {
-	player: createLobbyPlayer(null),
-	isBot: true
+	player: createLobbyPlayer(null, true)
 }
