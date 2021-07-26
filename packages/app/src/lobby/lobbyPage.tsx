@@ -36,7 +36,7 @@ const LobbyPage: React.FunctionComponent = () => {
 	for (let i = players.length; i < MAX_PLAYERS_IN_GAME; i++) {
 		botElements.push(
 			<div key={i} className="player bot">
-				<span className="name">
+				<span className="name-and-image">
 					<img src={"https://creaturechess.jamesmonger.com/images/ui/no_player_img.png"}
 						alt="no player image" />
 					<div className="spacer" />
@@ -70,7 +70,7 @@ const LobbyPage: React.FunctionComponent = () => {
 							<div key={p.id} className="player">
 
 								<span
-									className="name"
+									className="name-and-image"
 								><img src={`https://creaturechess.jamesmonger.com/images/front/${p.profile?.picture}.png`} alt="avatar" />
 									<div className="spacer" />
 									{p.name} </span>
