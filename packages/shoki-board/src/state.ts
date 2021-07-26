@@ -2,7 +2,7 @@ import { createSlice, ActionCreatorWithPayload, ActionCreatorWithoutPayload, Pay
 import { BoardState, HasId, PiecePosition, PiecePositionsState, PiecesState } from "./types";
 import { getPiecesWithoutIds, getPiecePositionsWithoutIds } from "./utils/filter";
 
-const createInitialState = <TPiece>(id: string, size: { width: number; height: number } = {
+export const createInitialBoardState = <TPiece>(id: string, size: { width: number; height: number } = {
 	width: 7,
 	height: 3
 }): BoardState<TPiece> => ({
@@ -66,7 +66,7 @@ export const createBoardSlice = <TPiece extends HasId>(id: string, size?: { widt
 		}
 	} = createSlice({
 		name: `board-${id}`,
-		initialState: createInitialState<TPiece>(id, size),
+		initialState: createInitialBoardState<TPiece>(id, size),
 		reducers: {
 			setBoardSizeCommand: (state, { payload: { width, height } }: PayloadAction<{ width: number; height: number }>) => {
 				const differenceWidth = width - state.size.width;

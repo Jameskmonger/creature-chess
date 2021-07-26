@@ -21,6 +21,11 @@ export const isPlayerAlive = (state: PlayerState): boolean => state.playerInfo.h
 export const getPlayerCards = (state: PlayerState) => state.cardShop.cards;
 export const isPlayerShopLocked = (state: PlayerState): boolean => state.cardShop.locked;
 
+export const getAllPieceCount = (state: PlayerState) => [
+	...BoardSelectors.getAllPieces(state.board),
+	...BoardSelectors.getAllPieces(state.bench)
+].length;
+
 // todo use piece limit from board, remove this
 export const getPlayerBelowPieceLimit = (state: PlayerState, playerId: string): boolean => {
 	const ownedBoardPieceCount = BoardSelectors.getAllPieces(state.board).filter(p => p.ownerId === playerId).length;

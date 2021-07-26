@@ -1,10 +1,10 @@
+import { createAction } from "@reduxjs/toolkit";
 import { take, select, put } from "@redux-saga/core/effects";
 import { getPiece, PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@shoki/board";
-import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 import { AppState } from "../../../../store";
 import { clearSelectedPiece } from "../../../ui/actions";
-import { createAction } from "@reduxjs/toolkit";
 import { UIActions } from "../../../ui";
 import { getLocationForPiece } from "./clickTileSaga";
 
