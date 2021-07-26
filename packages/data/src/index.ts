@@ -1,3 +1,3 @@
 export { createDatabaseConnection, DatabaseConnection } from "./databaseConnection";
 export { DatabaseUser } from "./user";
-export { DatabaseBot } from "./bot";
+export { DatabaseBot, BotPersonality, BotPersonalityValue } from "./bot";

@@ -19,4 +19,4 @@ export const botDatabase = (logger: Logger, client: FaunaDBClient): BotDatabaseF
 });
 
 export { setupBotDatabase } from "./_setup";
-export { DatabaseBot } from "./databaseBot";
+export { DatabaseBot, BotPersonality, BotPersonalityValue } from "./databaseBot";

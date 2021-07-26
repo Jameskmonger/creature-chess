@@ -1,6 +1,7 @@
 // tslint:disable: no-console
 import { Client as FaunaDBClient, query as q } from "faunadb";
 import { COLLECTION_NAMES, INDEX_NAMES } from "../constants";
+import { BotData, BotPersonalityValue, DatabaseBot } from "./databaseBot";
 
 const INSTANCE_ALREADY_EXISTS = "instance already exists";
 
@@ -32,6 +33,8 @@ const BOT_NAMES = [
 	"Yew",
 	"Zero"
 ];
+
+const randomPersonalityValue = () => (Math.floor(Math.random() * 10 + 1) * 20) as BotPersonalityValue;
 
 export const setupBotDatabase = async (client: FaunaDBClient) => {
 	let shouldCreateBots = false;
@@ -93,18 +96,23 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
 
 	if (shouldCreateBots) {
 		for (const name of BOT_NAMES) {
-			await client.query(
+			const data: BotData = {
+				nickname: name,
+				stats: {
+					gamesPlayed: 0,
+					wins: 0
+				},
+				personality: {
+					ambition: randomPersonalityValue(),
+					composure: randomPersonalityValue(),
+					vision: randomPersonalityValue()
+				}
+			};
+
+			await client.query<DatabaseBot>(
 				q.Create(
 					q.Collection(COLLECTION_NAMES.BOTS),
-					{
-						data: {
-							nickname: name,
-							stats: {
-								gamesPlayed: 0,
-								wins: 0
-							}
-						}
-					}
+					{ data }
 				)
 			);
 
