@@ -139,8 +139,10 @@ module.exports = {
 	plugins: [
 		// todo tie this into `dependencies` from package.json
 		createDependencyReplacementPlugin(/^react$/gi),
+		createDependencyReplacementPlugin(/^react-dom$/gi),
 		createDependencyReplacementPlugin(/^react-dnd$/gi),
 		createDependencyReplacementPlugin(/^redux-saga$/gi),
+		createDependencyReplacementPlugin(/^\@reduxjs\/toolkit$/gi),
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
 			SENTRY_DSN: ""
