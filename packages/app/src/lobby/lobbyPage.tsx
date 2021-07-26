@@ -4,7 +4,6 @@ import { AppState } from "../store";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
 import { LobbyPlayerBanner } from "@creature-chess/ui";
-import { Title } from "@creature-chess/ui";
 import { Countdown } from "../display/countdown";
 import { Footer } from "../display/footer";
 
