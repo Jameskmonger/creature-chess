@@ -1,6 +1,8 @@
+import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 import { PlayerState, PlayerStateSelectors, PlayerActions, getAllPieces } from "@creature-chess/gamemode";
 import { Card, PieceModel } from "@creature-chess/models";
-import { BrainAction, BrainActionValue } from "../../brain";
+import { BotPersonality } from "@creature-chess/data";
+import { BrainAction } from "../../brain";
 import { PREFERRED_LOCATIONS } from "../../preferredLocations";
 
 const getAverageCost = (pieces: PieceModel[]): number => (
@@ -8,36 +10,39 @@ const getAverageCost = (pieces: PieceModel[]): number => (
 	/ pieces.length
 );
 
-const getValue = (state: PlayerState, card: Card): BrainActionValue => {
+const shouldBuy = (state: PlayerState, card: Card) => {
 	const allPieces = getAllPieces(state);
 	const alreadyOwnPiece = allPieces.some(p => p.definitionId === card.definitionId);
 
 	if (alreadyOwnPiece) {
-		return BrainActionValue.EXTREMELY_HIGH_VALUE;
+		return true;
 	}
 
 	const averageCost = getAverageCost(allPieces);
 	const improvesAverageCost = card.cost > averageCost;
+	const hasEmptySlot = allPieces.length < (PlayerStateSelectors.getPlayerLevel(state) + 3); // board + 3 bench pieces
 
-	if (improvesAverageCost) {
-		return BrainActionValue.HIGH_VALUE;
-	}
-
-	const hasEmptySlot = allPieces.length < PlayerStateSelectors.getPlayerLevel(state);
-
-	if (hasEmptySlot) {
-		return BrainActionValue.MEDIUM_VALUE;
-	}
-
-	return BrainActionValue.USELESS;
+	return improvesAverageCost && hasEmptySlot;
 };
 
-export const createBuyCardAction = (state: PlayerState, index: number, card: Card | null): BrainAction | null => {
+export const createBuyCardAction = (
+	state: PlayerState,
+	personality: BotPersonality,
+	index: number,
+	card: Card | null
+): BrainAction | null => {
 	const playerMoney = PlayerStateSelectors.getPlayerMoney(state);
 
-	if (card === null || playerMoney < card.cost) {
+	if (
+		card === null
+		|| playerMoney < card.cost
+		|| shouldBuy(state, card)
+	) {
 		return null;
 	}
+
+	const health = PlayerStateSelectors.getPlayerHealth(state);
+	const money = PlayerStateSelectors.getPlayerMoney(state);
 
 	return ({
 		name: `buy card [${card.name}]`,
@@ -45,6 +50,20 @@ export const createBuyCardAction = (state: PlayerState, index: number, card: Car
 			index,
 			sortPositions: PREFERRED_LOCATIONS[card.class]
 		}),
-		value: getValue(state, card)
+		value: createUtilityValue([
+			{
+				value: health,
+				range: [1, 100],
+
+				// utility score should be higher if health is low
+				direction: ScoringDirection.Low,
+
+				// more important with low composure
+				weighting: {
+					value: personality.composure,
+					direction: ScoringDirection.Low
+				}
+			}
+		])
 	});
 };

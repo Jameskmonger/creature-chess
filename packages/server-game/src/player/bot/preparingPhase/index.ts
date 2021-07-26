@@ -15,7 +15,7 @@ export const preparingPhase = function*(personality: BotPersonality) {
 	while (true) {
 		const state: PlayerState = yield select();
 
-		const actions = getActions(state);
+		const actions = getActions(state, personality);
 
 		if (actions.length === 0) {
 			break;
