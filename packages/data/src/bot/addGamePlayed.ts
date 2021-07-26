@@ -1,10 +1,11 @@
 import { Logger } from "winston";
 import { Client as FaunaDBClient, query as q } from "faunadb";
 import { COLLECTION_NAMES } from "../constants";
+import { DatabaseBot } from "./databaseBot";
 
 export const addGamePlayed = (logger: Logger, client: FaunaDBClient) => async (id: string) => {
 	try {
-		const bot = await client.query(
+		const bot = await client.query<DatabaseBot>(
 			q.Update(
 				q.Ref(q.Collection(COLLECTION_NAMES.BOTS), id),
 				{

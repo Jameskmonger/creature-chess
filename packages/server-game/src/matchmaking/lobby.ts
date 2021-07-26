@@ -206,11 +206,11 @@ export class Lobby {
 		}
 
 		const bots = await this.database.bot.getLeastPlayedBots(botsRequired);
-		for (const { id, name } of bots!) {
+		for (const { ref: { id }, data: { nickname } } of bots!) {
 			// get a random picture from one to 20 - temporary
 			const picture = Math.floor(Math.random() * 20) + 1;
 
-			const player = createPlayer(logger, this.game, id, `[BOT] ${name}`, { title: null, picture });
+			const player = createPlayer(logger, this.game, id, `[BOT] ${nickname}`, { title: null, picture });
 
 			await this.database.bot.addGamePlayed(player.id);
 

@@ -3,13 +3,13 @@ import { Client as FaunaDBClient } from "faunadb";
 import { getLeastPlayedBots } from "./getLeastPlayedBots";
 import { addWin } from "./addWin";
 import { addGamePlayed } from "./addGamePlayed";
+import { DatabaseBot } from "./databaseBot";
 
-// todo type these properly
 export type BotDatabaseFunctions = {
-	getLeastPlayedBots: (count: number) => Promise<{ id: string; name: string }[] | null>;
+	getLeastPlayedBots: (count: number) => Promise<DatabaseBot[] | null>;
 
-	addWin: (id: string) => Promise<object | null>;
-	addGamePlayed: (id: string) => Promise<object | null>;
+	addWin: (id: string) => Promise<DatabaseBot | null>;
+	addGamePlayed: (id: string) => Promise<DatabaseBot | null>;
 };
 
 export const botDatabase = (logger: Logger, client: FaunaDBClient): BotDatabaseFunctions => ({
@@ -19,3 +19,4 @@ export const botDatabase = (logger: Logger, client: FaunaDBClient): BotDatabaseF
 });
 
 export { setupBotDatabase } from "./_setup";
+export { DatabaseBot } from "./databaseBot";
