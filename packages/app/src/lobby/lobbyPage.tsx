@@ -36,6 +36,7 @@ const LobbyPage: React.FunctionComponent = () => {
 	for (let i = players.length; i < MAX_PLAYERS_IN_GAME; i++) {
 		botElements.push(
 			<LobbyPlayerBanner
+				key={i}
 				player={null}
 			/>
 		);

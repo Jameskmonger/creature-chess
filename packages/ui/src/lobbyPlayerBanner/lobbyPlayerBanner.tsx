@@ -10,7 +10,7 @@ type Props = {
 const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 	if (!player) {
 		return (
-			<div key={Math.floor(Math.random() * 1000)} className="player bot">
+			<div className="player bot">
 				<span className="name-and-image">
 					<img
 						src={"https://creaturechess.jamesmonger.com/images/ui/no_player_img.png"}
@@ -23,7 +23,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 		);
 	}
 	return (
-		<div key={player?.id} className="player">
+		<div className="player">
 			<span className="name-and-image">
 				<img
 					src={`https://creaturechess.jamesmonger.com/images/front/${player.profile?.picture}.png`}
