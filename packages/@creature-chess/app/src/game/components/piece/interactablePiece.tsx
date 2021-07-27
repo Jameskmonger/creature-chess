@@ -5,10 +5,10 @@ import { getPiece } from "@creature-chess/gamemode";
 import { Piece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
 import { Projectile } from "../projectile";
-import { DragObjectWithType, useDrag } from "react-dnd";
+import { useDrag } from "react-dnd";
 import { playerClickPieceAction } from "../../module/board/sagas/clickPieceSaga";
 
-type PieceDragObject = DragObjectWithType & { piece: PieceModel };
+type PieceDragObject = { piece: PieceModel };
 
 const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	const { id } = props;
@@ -17,7 +17,8 @@ const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
 
 	const [{ }, drag] = useDrag<PieceDragObject, void, {}>({
-		item: { type: "Piece", piece }
+		type: "Piece",
+		item: { piece }
 	});
 
 	const onClick = () => {

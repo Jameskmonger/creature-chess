@@ -1,5 +1,4 @@
 import * as React from "react";
-import { DragObjectWithType } from "react-dnd";
 import { BoardState, HasId } from "@shoki/board";
 import { BoardContextProvider, useBoard } from "../context";
 import { UndroppableTile } from "./tile/UndroppableTile";
@@ -9,7 +8,7 @@ import { BoardItems, BoardItemRenderFn } from "./BoardItems";
 type BoardGridProps = {
 	state: BoardState;
 	renderItem: BoardItemRenderFn;
-	onDrop?: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
+	onDrop?: <TPiece extends HasId>(item: { piece: TPiece }, x: number, y: number) => void;
 	onClick?: (x: number, y: number) => void;
 };
 

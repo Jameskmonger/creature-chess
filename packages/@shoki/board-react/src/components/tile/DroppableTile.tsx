@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DragObjectWithType, useDrop } from "react-dnd";
+import { useDrop } from "react-dnd";
 import { HasId } from "@shoki/board";
 import { useBelowPieceLimit, usePieces } from "../../context";
 import { getOverlayClassName } from "./getOverlayClassName";
@@ -8,11 +8,11 @@ type DroppableTileProps = {
 	isDark: boolean;
 	x: number;
 	y: number;
-	onDrop?: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
+	onDrop?: <TPiece extends HasId>(item: { piece: TPiece }, x: number, y: number) => void;
 	onClick?: (x: number, y: number) => void;
 };
 
-type PieceDragObject = DragObjectWithType & { piece: HasId };
+type PieceDragObject = { piece: HasId };
 type DropTargetCollectProps = {
 	canDrop: boolean;
 	isDragging: boolean;

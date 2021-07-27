@@ -19,8 +19,7 @@
 	},
 	"scripts": {
 		"build": "tsc -p ./tsconfig.json",
-		"test": "jest --passWithNoTests",
-		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
+		"test": "jest --passWithNoTests"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
@@ -29,7 +28,7 @@
 		"@shoki/board": "file:../board"
 	},
 	"peerDependencies": {
-		"react": "^16.8.4",
-		"react-dnd": "^10.0.2"
+		"react": "^17.0.2",
+		"react-dnd": "^14.0.2"
 	}
 }

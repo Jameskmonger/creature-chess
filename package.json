@@ -5,7 +5,7 @@
 	"description": "Creature Chess",
 	"main": "index.js",
 	"scripts": {
-		"bootstrap": "lerna bootstrap",
+		"outdated": "npm outdated && lerna exec --no-bail -- npm outdated",
 		"test": "lerna run test",
 		"release": "lerna version --conventional-commits",
 		"build:create-bin": "sh ./scripts/createBin.sh",
@@ -20,12 +20,15 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"@creature-chess/app": "file:packages/@creature-chess/app",
 		"@creature-chess/auth-server": "file:packages/@creature-chess/auth-server",
 		"@creature-chess/battle": "file:packages/@creature-chess/battle",
 		"@creature-chess/data": "file:packages/@creature-chess/data",
 		"@creature-chess/gamemode": "file:packages/@creature-chess/gamemode",
 		"@creature-chess/models": "file:packages/@creature-chess/models",
 		"@creature-chess/networking": "file:packages/@creature-chess/networking",
+		"@creature-chess/server-info": "file:packages/@creature-chess/server-info",
+		"@creature-chess/server-game": "file:packages/@creature-chess/server-game",
 		"@creature-chess/ui": "file:packages/@creature-chess/ui",
 		"@shoki/board": "file:packages/@shoki/board",
 		"@shoki/board-react": "file:packages/@shoki/board-react",
@@ -34,7 +37,6 @@
 		"@types/jest": "^26.0.24",
 		"@types/node": "^16.4.3",
 		"@typescript-eslint/eslint-plugin": "^4.28.5",
-		"@typescript-eslint/eslint-plugin-tslint": "^4.28.5",
 		"@typescript-eslint/parser": "^4.28.5",
 		"eslint": "^7.31.0",
 		"eslint-plugin-import": "^2.23.4",
@@ -53,13 +55,13 @@
 		"typescript": "^4.3.5"
 	},
 	"dependencies": {
-		"@types/react": "^16.8.7",
-		"@types/react-dom": "^16.8.2",
+		"@types/react": "^17.0.15",
+		"@types/react-dom": "^17.0.9",
 		"@types/redux": "^3.6.0",
 		"@types/redux-saga": "^0.10.5",
-		"react": "^16.8.4",
-		"react-dnd": "^10.0.2",
-		"react-dom": "^16.8.4",
+		"react": "^17.0.2",
+		"react-dnd": "^14.0.2",
+		"react-dom": "^17.0.2",
 		"redux": "^4.1.0",
 		"redux-saga": "^1.1.3"
 	}

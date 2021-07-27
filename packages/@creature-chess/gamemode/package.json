@@ -17,11 +17,6 @@
 		"type": "git",
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
-	"scripts": {
-		"build": "tsc -p ./tsconfig.json",
-		"test": "jest",
-		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
-	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},

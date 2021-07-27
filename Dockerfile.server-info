@@ -25,8 +25,6 @@ COPY packages/@shoki/networking/package*.json ./packages/@shoki/networking/
 
 RUN npm ci --loglevel notice
 
-RUN npm run bootstrap
-
 COPY tsconfig.json .
 
 # build dependencies - doing this manually improves docker caching

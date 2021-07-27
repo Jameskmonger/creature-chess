@@ -27,8 +27,7 @@
 	},
 	"scripts": {
 		"build": "tsc -p ./tsconfig.json",
-		"test": "jest --passWithNoTests",
-		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
+		"test": "jest --passWithNoTests"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"

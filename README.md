@@ -31,8 +31,8 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 ### Running
 
 ```shell
-# install and link dependencies
-$ npm install && npm run bootstrap
+# install dependencies
+$ npm install
 
 # run the frontend in dev mode
 $ npm run dev:app

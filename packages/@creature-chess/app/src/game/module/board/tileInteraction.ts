@@ -1,4 +1,3 @@
-import { DragObjectWithType } from "react-dnd";
 import { Dispatch } from "redux";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/gamemode";
@@ -33,8 +32,7 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 };
 
 export const onDropPiece = (dispatch: Dispatch<any>, locationType: "board" | "bench", board: BoardState, bench: BoardState) =>
-	(item: DragObjectWithType, x: number, y: number) => {
-		const piece: PieceModel = (item as any).piece;
+	({ piece }: { piece: PieceModel }, x: number, y: number) => {
 		const from = getLocationForPiece(piece.id, board, bench);
 
 		if (!from) {

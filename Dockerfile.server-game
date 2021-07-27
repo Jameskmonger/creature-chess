@@ -18,11 +18,7 @@ RUN npm ci --loglevel notice
 COPY tsconfig.json .
 COPY scripts/ ./scripts/
 
-FROM server-deps AS linker
-
-RUN npm run bootstrap
-
-FROM linker AS builder
+FROM server-deps AS builder
 
 RUN npm run build
 

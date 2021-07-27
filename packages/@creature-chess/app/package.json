@@ -77,9 +77,9 @@
 		"webpack-dev-server": "^3.2.1"
 	},
 	"peerDependencies": {
-		"react": "^16.8.4",
-		"react-dnd": "^10.0.2",
-		"react-dom": "^16.8.4",
+		"react": "^17.0.2",
+		"react-dnd": "^14.0.2",
+		"react-dom": "^17.0.2",
 		"redux": "^4.1.0",
 		"redux-saga": "^1.1.3"
 	}
