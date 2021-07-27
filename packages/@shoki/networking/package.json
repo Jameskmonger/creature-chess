@@ -1,0 +1,35 @@
+{
+	"private": "true",
+	"name": "@shoki/networking",
+	"version": "0.4.8",
+	"description": "Shoki networking toolset",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"files": [
+		"lib"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "jest --passWithNoTests",
+		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\""
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"@types/redux-saga": "^0.10.5"
+	},
+	"peerDependencies": {
+		"redux-saga": "^1.1.3"
+	}
+}

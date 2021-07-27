@@ -1,0 +1,54 @@
+{
+	"name": "@creature-chess/ui",
+	"version": "0.4.16",
+	"description": "Creature Chess UI library",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "ISC",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"files": [
+		"lib"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "jest --passWithNoTests",
+		"lint": "tslint -c ../../tslint.json \"./src/**/*.{ts,tsx}\"",
+		"storybook": "start-storybook -p 6006",
+		"build-storybook": "build-storybook -o ./docs"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"@creature-chess/models": "file:../models",
+		"classnames": "^2.3.1",
+		"react-jss": "^10.6.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.14.3",
+		"@storybook/addon-actions": "^6.4.0-alpha.21",
+		"@storybook/addon-essentials": "^6.4.0-alpha.21",
+		"@storybook/addon-links": "^6.4.0-alpha.21",
+		"@storybook/builder-webpack5": "^6.4.0-alpha.21",
+		"@storybook/manager-webpack5": "^6.4.0-alpha.21",
+		"@storybook/preset-scss": "^1.0.3",
+		"@storybook/react": "^6.4.0-alpha.21",
+		"babel-loader": "^8.2.2",
+		"css-loader": "^6.2.0",
+		"sass": "^1.32.13",
+		"sass-loader": "^12.1.0",
+		"style-loader": "^2.0.0"
+	},
+	"peerDependencies": {
+		"react": "^16.8.4",
+		"react-dom": "^16.8.4"
+	}
+}

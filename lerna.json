@@ -1,6 +1,7 @@
 {
-  "packages": [
-    "packages/*"
-  ],
-  "version": "0.4.11"
+	"packages": [
+		"packages/@creature-chess/*",
+		"packages/@shoki/*"
+	],
+	"version": "0.4.16"
 }

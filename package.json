@@ -8,8 +8,7 @@
 		"bootstrap": "lerna bootstrap",
 		"test": "lerna run test",
 		"release": "lerna version --conventional-commits",
-		"build:create-bin:shoki": "sh ./scripts/createBin-shoki.sh",
-		"build:create-bin:server": "sh ./scripts/createBin-server.sh",
+		"build:create-bin": "sh ./scripts/createBin.sh",
 		"build": "lerna run build --stream",
 		"build:storybook": "lerna run build-storybook --scope=@creature-chess/ui",
 		"start:app": "lerna run start --scope=@creature-chess/app --stream",
@@ -21,6 +20,17 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"@creature-chess/auth-server": "file:packages/@creature-chess/auth-server",
+		"@creature-chess/battle": "file:packages/@creature-chess/battle",
+		"@creature-chess/data": "file:packages/@creature-chess/data",
+		"@creature-chess/gamemode": "file:packages/@creature-chess/gamemode",
+		"@creature-chess/models": "file:packages/@creature-chess/models",
+		"@creature-chess/networking": "file:packages/@creature-chess/networking",
+		"@creature-chess/ui": "file:packages/@creature-chess/ui",
+		"@shoki/board": "file:packages/@shoki/board",
+		"@shoki/board-react": "file:packages/@shoki/board-react",
+		"@shoki/engine": "file:packages/@shoki/engine",
+		"@shoki/networking": "file:packages/@shoki/networking",
 		"@types/jest": "^26.0.23",
 		"@types/node": "^11.11.3",
 		"@typescript-eslint/eslint-plugin": "^4.23.0",
@@ -42,5 +52,15 @@
 		"ts-jest": "^26.4.1",
 		"typescript": "^4.2.4"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"@types/react": "^16.8.7",
+		"@types/react-dom": "^16.8.2",
+		"@types/redux": "^3.6.0",
+		"@types/redux-saga": "^0.10.5",
+		"react": "^16.8.4",
+		"react-dnd": "^10.0.2",
+		"react-dom": "^16.8.4",
+		"redux": "^4.1.0",
+		"redux-saga": "^1.1.3"
+	}
 }

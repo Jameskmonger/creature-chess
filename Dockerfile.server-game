@@ -1,6 +1,6 @@
 FROM node:12-alpine AS node
 
-FROM node AS builder
+FROM node AS server-deps
 
 WORKDIR /usr/src/cc-server
 
@@ -8,78 +8,26 @@ WORKDIR /usr/src/cc-server
 
 COPY lerna.json ./
 COPY package.json package-lock.json ./
+
+# packages
+
+COPY packages/ ./packages/
+
 RUN npm ci --loglevel notice
 
 COPY tsconfig.json .
 COPY scripts/ ./scripts/
 
-# package dependencies
-
-FROM builder AS shoki
-
-COPY packages/shoki-board/package*.json ./packages/shoki-board/
-COPY packages/shoki-engine/package*.json ./packages/shoki-engine/
-COPY packages/shoki-networking/package*.json ./packages/shoki-networking/
+FROM server-deps AS linker
 
 RUN npm run bootstrap
 
-COPY packages/shoki-board ./packages/shoki-board
-RUN npm run build -- --scope @shoki/board
-COPY packages/shoki-engine ./packages/shoki-engine
-RUN npm run build -- --scope @shoki/engine
-COPY packages/shoki-networking ./packages/shoki-networking
-RUN npm run build -- --scope @shoki/networking
+FROM linker AS builder
 
-FROM shoki AS shoki-binary
+RUN npm run build
 
-# run script to create binary
-RUN npm run build:create-bin:shoki
-
-FROM shoki AS server-deps
-
-COPY packages/auth-server/package*.json ./packages/auth-server/
-COPY packages/battle/package*.json ./packages/battle/
-COPY packages/models/package*.json ./packages/models/
-COPY packages/data/package*.json ./packages/data/
-COPY packages/gamemode/package*.json ./packages/gamemode/
-COPY packages/networking/package*.json ./packages/networking/
-
-RUN npm run bootstrap
-
-COPY packages/models ./packages/models
-RUN npm run build -- --scope @creature-chess/models
-COPY packages/data ./packages/data
-RUN npm run build -- --scope @creature-chess/data
-COPY packages/battle ./packages/battle
-RUN npm run build -- --scope @creature-chess/battle
-COPY packages/gamemode ./packages/gamemode
-RUN npm run build -- --scope @creature-chess/gamemode
-COPY packages/networking ./packages/networking
-RUN npm run build -- --scope @creature-chess/networking
-COPY packages/auth-server ./packages/auth-server
-RUN npm run build -- --scope @creature-chess/auth-server
-
-FROM server-deps AS server
-
-COPY packages/server-game/package*.json ./packages/server-game/
-
-RUN npm run bootstrap
-
-COPY packages/server-game ./packages/server-game
-RUN npm run build -- --scope @creature-chess/server-game
-
-FROM server as server-binary
-
-RUN npm run build:create-bin:server
-
-FROM node
-
-WORKDIR /usr/src/cc-server-bin
-
-# copy binary only
-COPY --from=shoki-binary /usr/src/cc-server/bin/ ./
-COPY --from=server-binary /usr/src/cc-server/bin/ ./
+FROM builder as server
 
 EXPOSE 3000
 
-CMD [ "node", "server-game/lib/index.js", "3000" ]
+CMD [ "node", "packages/@creature-chess/server-game/lib/index.js", "3000" ]
