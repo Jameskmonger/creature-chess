@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const CnameWebpackPlugin = require("cname-webpack-plugin");
-const { DefinePlugin, EnvironmentPlugin, NormalModuleReplacementPlugin } = require("webpack");
+const { DefinePlugin, EnvironmentPlugin } = require("webpack");
 
 const getCookiebotScript = (id) => {
 	if (!id) {
@@ -69,31 +69,6 @@ const getGHPagesRedirectScript = (enabled) => {
     </script>`;
 };
 
-const createDependencyReplacementPlugin = (dependencyRegex) =>
-	new NormalModuleReplacementPlugin(dependencyRegex, (res) => {
-		const CONTEXT_REGEX = /[\\|\/]+packages[\\|\/]+([a-zA-Z\-]+)[\\|\/]+/;
-
-		const result = CONTEXT_REGEX.exec(res.context);
-
-		if (!result) {
-			console.warn("no replacement found", res.context);
-			return;
-		}
-
-		const [_, requestingPackageName] = result;
-		const requestedPackage = res.request;
-		const requestingFileName = path.basename(res.contextInfo.issuer);
-
-		if (requestingPackageName !== "app") {
-			console.log(
-				"\x1b[35m%s\x1b[0m",
-				`[REPLACEMENT]: using dependency <${requestedPackage}> from package [app] instead of [${requestingPackageName}] (${requestingFileName})`
-			);
-
-			res.request = path.resolve(__dirname, "./node_modules/", requestedPackage);
-		}
-	});
-
 const outDir = path.resolve(__dirname, "public");
 
 module.exports = {
@@ -137,12 +112,6 @@ module.exports = {
 	},
 
 	plugins: [
-		// todo tie this into `dependencies` from package.json
-		createDependencyReplacementPlugin(/^react$/gi),
-		createDependencyReplacementPlugin(/^react-dom$/gi),
-		createDependencyReplacementPlugin(/^react-dnd$/gi),
-		createDependencyReplacementPlugin(/^redux-saga$/gi),
-		createDependencyReplacementPlugin(/^\@reduxjs\/toolkit$/gi),
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
 			SENTRY_DSN: ""
