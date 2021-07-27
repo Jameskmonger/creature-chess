@@ -26,14 +26,9 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@shoki/board": "^0.4.16",
-		"@types/react": "^16.8.7"
+		"@shoki/board": "^0.4.16"
 	},
 	"peerDependencies": {
-		"react": "^16.8.4",
-		"react-dnd": "^10.0.2"
-	},
-	"devDependencies": {
 		"react": "^16.8.4",
 		"react-dnd": "^10.0.2"
 	}

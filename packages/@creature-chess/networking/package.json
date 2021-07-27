@@ -29,7 +29,9 @@
 		"@creature-chess/models": "^0.4.10",
 		"@shoki/board": "^0.4.16",
 		"@shoki/networking": "^0.4.8",
-		"@types/redux-saga": "^0.10.5",
+		"@types/redux-saga": "^0.10.5"
+	},
+	"peerDependencies": {
 		"redux-saga": "^1.1.3"
 	}
 }
