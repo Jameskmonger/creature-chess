@@ -1,0 +1,38 @@
+.name-and-image {
+	display: flex;
+	align-items: center;
+	justify-content: stretch;
+	margin-bottom: 0.25rem;
+}
+
+.player {
+	display: flex;
+	flex-direction: column;
+	width: 38%;
+}
+.player {
+	padding: 0.4em 1em;
+	margin-bottom: 0.4em;
+	font-weight: 700;
+	text-align: left;
+	background: #59616b;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+}
+
+.player.bot {
+	font-style: italic;
+	color: #d0d0d0;
+}
+
+img {
+	height: 2em;
+	width: 2em;
+	display: inline;
+}
+p {
+	margin-bottom: 0.5rem;
+}
+.spacer {
+	width: 1em;
+}

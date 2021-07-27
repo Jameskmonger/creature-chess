@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../store";
-import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME, TITLES } from "@creature-chess/models";
+import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
-import { Title } from "@creature-chess/ui";
+import { LobbyPlayerBanner } from "@creature-chess/ui";
 import { Countdown } from "../display/countdown";
 import { Footer } from "../display/footer";
 
@@ -35,9 +35,10 @@ const LobbyPage: React.FunctionComponent = () => {
 
 	for (let i = players.length; i < MAX_PLAYERS_IN_GAME; i++) {
 		botElements.push(
-			<div key={i} className="player bot">
-				<span className="name">empty slot</span>
-			</div>
+			<LobbyPlayerBanner
+				key={i}
+				player={null}
+			/>
 		);
 	}
 
@@ -63,10 +64,10 @@ const LobbyPage: React.FunctionComponent = () => {
 				<div className="players">
 					{
 						players.map(p => (
-							<div key={p.id} className="player">
-								<span className="name">{p.name}</span>
-								<Title titleId={p.profile?.title} />
-							</div>
+							<LobbyPlayerBanner
+								key={p.id}
+								player={p}
+							/>
 						))
 					}
 
