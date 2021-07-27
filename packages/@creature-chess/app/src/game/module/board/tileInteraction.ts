@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/gamemode";
-import { BoardState, BoardSelectors } from "@shoki/board";
+import { BoardState, BoardSelectors, HasId } from "@shoki/board";
 import { clearSelectedPiece } from "../../ui/actions";
 import { playerClickTileAction } from "./sagas/clickTileSaga";
 
@@ -32,7 +32,7 @@ const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardSta
 };
 
 export const onDropPiece = (dispatch: Dispatch<any>, locationType: "board" | "bench", board: BoardState, bench: BoardState) =>
-	({ piece }: { piece: PieceModel }, x: number, y: number) => {
+	({ piece }: { piece: HasId }, x: number, y: number) => {
 		const from = getLocationForPiece(piece.id, board, bench);
 
 		if (!from) {

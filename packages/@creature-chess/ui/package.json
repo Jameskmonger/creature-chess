@@ -17,6 +17,12 @@
 		"type": "git",
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "jest --passWithNoTests",
+		"storybook": "start-storybook -p 6006",
+		"build-storybook": "build-storybook -o ./docs"
+	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
