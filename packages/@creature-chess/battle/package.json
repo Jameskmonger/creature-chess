@@ -25,8 +25,8 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@creature-chess/models": "^0.4.10",
-		"@shoki/board": "^0.4.16",
+		"@creature-chess/models": "file:../models",
+		"@shoki/board": "file:../../@shoki/board",
 		"@types/redux-saga": "^0.10.5",
 		"javascript-astar": "^0.4.1",
 		"present": "^1.0.0"

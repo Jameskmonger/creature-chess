@@ -28,7 +28,7 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@creature-chess/models": "^0.4.10",
+		"@creature-chess/models": "file:../models",
 		"classnames": "^2.3.1",
 		"react-jss": "^10.6.0"
 	},

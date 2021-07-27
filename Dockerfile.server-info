@@ -2,8 +2,8 @@ FROM node:12-alpine
 
 WORKDIR /usr/src/app
 
+COPY lerna.json ./
 COPY package.json package-lock.json ./
-RUN npm ci --loglevel notice
 
 # package dependencies
 
@@ -15,7 +15,16 @@ COPY packages/@creature-chess/auth-server/package*.json ./packages/@creature-che
 COPY packages/@creature-chess/models/package*.json ./packages/@creature-chess/models/
 COPY packages/@creature-chess/data/package*.json ./packages/@creature-chess/data/
 
-COPY lerna.json ./
+# these are needed to satisfy the devDependencies in package.json - put there so lerna makes symlinks
+COPY packages/@creature-chess/ui/package*.json ./packages/@creature-chess/ui/
+COPY packages/@creature-chess/battle/package*.json ./packages/@creature-chess/battle/
+COPY packages/@creature-chess/gamemode/package*.json ./packages/@creature-chess/gamemode/
+COPY packages/@creature-chess/networking/package*.json ./packages/@creature-chess/networking/
+COPY packages/@shoki/board-react/package*.json ./packages/@shoki/board-react/
+COPY packages/@shoki/networking/package*.json ./packages/@shoki/networking/
+
+RUN npm ci --loglevel notice
+
 RUN npm run bootstrap
 
 COPY tsconfig.json .
