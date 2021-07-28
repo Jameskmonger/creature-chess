@@ -16,6 +16,8 @@ COPY packages/@creature-chess/models/package*.json ./packages/@creature-chess/mo
 COPY packages/@creature-chess/data/package*.json ./packages/@creature-chess/data/
 
 # these are needed to satisfy the devDependencies in package.json - put there so lerna makes symlinks
+COPY packages/@creature-chess/app/package*.json ./packages/@creature-chess/app/
+COPY packages/@creature-chess/server-game/package*.json ./packages/@creature-chess/server-game/
 COPY packages/@creature-chess/ui/package*.json ./packages/@creature-chess/ui/
 COPY packages/@creature-chess/battle/package*.json ./packages/@creature-chess/battle/
 COPY packages/@creature-chess/gamemode/package*.json ./packages/@creature-chess/gamemode/

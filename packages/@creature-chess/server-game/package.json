@@ -21,6 +21,11 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"start": "node ./lib/index.js 3000",
+		"test": "jest --passWithNoTests"
+	},
 	"dependencies": {
 		"@creature-chess/auth-server": "file:../auth-server",
 		"@creature-chess/data": "file:../data",
