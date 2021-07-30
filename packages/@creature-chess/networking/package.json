@@ -27,7 +27,7 @@
 	"dependencies": {
 		"@creature-chess/models": "file:../models",
 		"@shoki/board": "file:../../@shoki/board",
-		"@shoki/networking": "file:../../@shoki/networking",
+		"@shoki/engine": "file:../../@shoki/engine",
 		"@types/redux-saga": "^0.10.5"
 	},
 	"peerDependencies": {
