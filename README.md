@@ -43,6 +43,12 @@ $ docker-compose build && docker-compose up
 
 The game is then accessible at `https://creaturechess.local-dev.com:8090`. You might need to add `creaturechess.local-dev.com` to your host file (or remove `host` from `webpack.config.js`)
 
+### Dev toolkit
+
+```shell
+$ npm run tools
+```
+
 ### Publishing
 
 - Use `npm run release` to create a new release - create a tag and commit, and push to Git
