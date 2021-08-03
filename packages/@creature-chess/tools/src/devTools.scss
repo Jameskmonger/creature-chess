@@ -1,0 +1,125 @@
+* {
+	border-width: 5px;
+}
+
+.dev-tools {
+	background: #333c57;
+	color: #fff;
+
+	.spacer {
+		height: 1em;
+		width: 1em;
+	}
+}
+
+.inputs-container {
+	justify-content: space-evenly;
+	align-content: center;
+	align-items: center;
+
+	button {
+		border-style: none;
+		height: 69px;
+		width: 20%;
+		background-color: forestgreen;
+	}
+	h1 {
+		display: inline;
+	}
+	.inputs-header {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background-color: rgb(26, 28, 44);
+	}
+}
+.left-hand-side {
+	width: 35%;
+	border-style: solid;
+	border-color: rgb(26, 28, 44);
+	border-width: 8px;
+
+	.hidden {
+		display: none;
+		button {
+			height: 69px;
+		}
+	}
+	.inputs {
+		.state-inputs-header {
+			background-color: rgb(26, 28, 44);
+			position: sticky;
+			top: 0;
+		}
+		.state-inputs {
+			/*remove this - just for demo purposes */
+			height: 40vh;
+			border-style: solid;
+			border-color: rgb(26, 28, 44);
+			overflow: auto;
+		}
+
+		.state-input {
+			text-decoration: none;
+			display: inline;
+		}
+		.trait-inputs-header {
+			background-color: rgb(26, 28, 44);
+			position: sticky;
+			top: 0;
+		}
+		.trait-inputs {
+			/*remove this - just for demo purposes */
+			height: 35vh;
+			border-style: solid;
+			border-color: rgb(26, 28, 44);
+			overflow: auto;
+
+			.trait-input {
+				display: inline;
+			}
+		}
+	}
+}
+.right-hand-side {
+	width: 65%;
+	border-style: solid;
+	border-width: 8px;
+	border-color: rgb(26, 28, 44);
+}
+.board-and-bench {
+	overflow: auto;
+	align-items: center;
+	border-style: solid;
+	border-color: rgb(26, 28, 44);
+}
+.card-shop-container {
+	max-width: 50%;
+	max-height: 30%;
+}
+.actions {
+	align-items: center;
+	text-align: left;
+	/*remove this - just for demo purposes */
+	height: 15em;
+	border-style: solid;
+	border-color: rgb(26, 28, 44);
+	overflow: auto;
+
+	.actions-banner {
+		max-height: 20%;
+		display: flex;
+		justify-content: space-between;
+		padding: 0;
+		margin: 0;
+		position: sticky;
+		top: 0;
+		background-color: rgb(26, 28, 44);
+
+		h1 {
+			padding: 0;
+			margin: 0;
+		}
+	}
+}
