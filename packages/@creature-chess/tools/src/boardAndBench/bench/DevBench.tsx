@@ -1,22 +1,22 @@
 import React from "react";
-import { BoardGrid } from "@shoki/board-react";
 import { useSelector } from "react-redux";
-import { DevState } from "../../store/store";
+import { DevState } from "../..";
+import { BoardGrid } from "../../../../../@shoki/board-react/lib";
 import { BoardState } from "../../../../../@shoki/board/lib";
+import { PieceModel } from "../../../../models/lib";
 import { UninteractablePiece } from "../../uninteractablePiece/uninteractablePiece";
 
 const renderUninteractablePiece = (id: string) => (<UninteractablePiece id={id} />);
 
-const DevBoard: React.FunctionComponent = () => {
-	const board = useSelector<DevState, BoardState>(state => state.board);
+const DevBench: React.FunctionComponent = () => {
+	const bench = useSelector<DevState, BoardState>(state => state.bench);
 	const onClick = (one: number, two: number) => {
-		console.log("YAY!");
+		console.log("Yaaaay");
 	}
 	return (
-		<div className="dev-board">
-			<h1>Board</h1>
+		<div>
 			<BoardGrid
-				state={board}
+				state={bench}
 				renderItem={renderUninteractablePiece}
 				onClick={onClick}
 			/>
@@ -25,4 +25,4 @@ const DevBoard: React.FunctionComponent = () => {
 };
 
 
-export { DevBoard };
+export { DevBench };
