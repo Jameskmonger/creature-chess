@@ -1,0 +1,262 @@
+$tile-size: 90px;
+$sprite-size: 60px;
+$healthbar-height: 12px;
+$spacer: 1em;
+
+$dark-tile: #38b764;
+$light-tile: #a7f070;
+$bench-tile: #9e9e9e;
+
+$piece-z-index: 3;
+$card-image-size: 50px;
+
+$outer-border-width: 3px;
+$inner-border-width: 2px;
+
+.tile-row {
+	width: 100%;
+	box-sizing: border-box;
+	line-height: 0;
+	white-space: nowrap;
+}
+
+.bench {
+	.tile {
+		background: $bench-tile;
+		box-shadow: inset 0 0 2px darken($bench-tile, 50);
+	}
+}
+
+.board-tiles {
+	position: relative;
+}
+
+.board-pieces {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.bench {
+	position: relative;
+
+	.image {
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.tile {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	user-select: none;
+	width: 90px;
+	height: 90px;
+	&.dark {
+		background: $dark-tile;
+	}
+
+	&.light {
+		background: $light-tile;
+	}
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+
+		&.not-allowed {
+			background: #484848;
+			opacity: 0.4;
+		}
+	}
+}
+
+.positionable-piece {
+	position: absolute;
+	/* stylelint-disable-next-line */
+	transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s;
+}
+
+.opponent-board-placeholder {
+	display: flex;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 0.4rem;
+	font-size: 1rem;
+	text-align: center;
+	background: #717171;
+	border: 3px solid #2d2d2d;
+
+	.o-group {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+
+		&.stretch {
+			flex: 1;
+			margin-right: 0.4rem;
+			justify-content: center;
+		}
+	}
+}
+
+.piece-meta-container {
+	.piece-meta-top {
+		.piece-stage {
+			height: 100%;
+		}
+
+		// stylelint-disable-next-line
+		img {
+			height: 100%;
+		}
+	}
+
+	.health-bar-container {
+		position: relative;
+		flex: 1;
+	}
+
+	.piece-stage {
+		position: absolute;
+		top: 15%;
+		left: 15%;
+		display: flex;
+		flex-direction: column;
+		width: 70%;
+		height: 70%;
+		justify-content: space-evenly;
+	}
+
+	.healthbar {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.board-container {
+	position: relative;
+
+	.now-playing {
+		position: absolute;
+		top: 0;
+		z-index: 19;
+		width: 100%;
+	}
+}
+
+.piece {
+	position: relative;
+	z-index: $piece-z-index;
+	width: 100%;
+	height: 100%;
+
+	&.selected {
+		box-sizing: border-box;
+		border: 2px solid #ff5200;
+	}
+
+	.image {
+		position: absolute;
+		bottom: 0;
+		left: 14%;
+		width: 80%;
+	}
+
+	$attack-duration: 200ms;
+
+	&.attack-basic {
+		// stylelint-disable-next-line unit-disallowed-list
+		$attack-movement-distance-multiplier: 3px;
+		$attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
+		@keyframes attack-basic {
+			0% {
+				top: 0;
+				left: 0;
+			}
+
+			50% {
+				top: calc(#{$attack-movement-distance} * var(--attackYDirection));
+				left: calc(#{$attack-movement-distance} * var(--attackXDirection));
+			}
+
+			100% {
+				top: 0;
+				left: 0;
+			}
+		}
+		animation-name: attack-basic;
+		animation-duration: $attack-duration;
+	}
+
+	.projectile {
+		display: none;
+	}
+
+	// stylelint-disable-next-line unit-disallowed-list
+	$projectile-size: 10px;
+
+	&.attack-shoot .projectile {
+		@keyframes attack-shoot {
+			0% {
+				top: calc(50% - (#{$projectile-size} / 2));
+				left: calc(50% - (#{$projectile-size} / 2));
+			}
+
+			100% {
+				top: calc(((100% * var(--attackDistance) * var(--attackYDirection)) + 50%) - (#{$projectile-size} / 2));
+				// stylelint-disable-next-line
+				left: calc(
+					((100% * var(--attackDistance) * var(--attackXDirection)) + 50%) - (#{$projectile-size} / 2)
+				);
+			}
+		}
+		position: absolute;
+		display: block;
+		animation-name: attack-shoot;
+		animation-duration: $attack-duration;
+	}
+
+	&.hit {
+		$hit-rotation-multiplier: 1deg;
+		$hit-rotation: calc(#{$hit-rotation-multiplier} * var(--hitPower));
+		@keyframes hit {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			25% {
+				transform: rotate(calc(#{$hit-rotation} * -1));
+			}
+
+			75% {
+				transform: rotate($hit-rotation);
+			}
+
+			100% {
+				transform: rotate(0deg);
+			}
+		}
+		animation-name: hit;
+		animation-duration: 200ms;
+	}
+
+	@keyframes dying {
+		100% {
+			transform: scale(0);
+		}
+	}
+
+	&.dying {
+		animation-name: dying;
+		animation-duration: 1000ms;
+		animation-fill-mode: forwards;
+		animation-iteration-count: 1;
+	}
+}
