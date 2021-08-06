@@ -1,13 +1,13 @@
 import React from "react";
-import * as constants from "@creature-chess/models";
-import { BoardAndBench } from "./boardAndBench/BoardAndBench";
-import "./devTools.scss";
-import { Layout } from "@creature-chess/ui/lib/layout";
-import { FillerList } from "./snippets/fillerList";
-import { Inputs } from "./inputs/Inputs";
 
-const DevTools: React.FunctionComponent = () => {
-	const one = 1;
+import { BoardAndBench } from "./boardAndBench/BoardAndBench";
+import { Layout } from "@creature-chess/ui/lib/layout";
+import { Inputs } from "./inputs/Inputs";
+import { ActionsDisplay } from "./actionsDisplay/ActionsDisplay";
+
+import "./devTools.scss";
+
+const DevTools: React.FunctionComponent = () => { // eslint-disable-line
 
 	return (
 		<Layout
@@ -27,13 +27,7 @@ const DevTools: React.FunctionComponent = () => {
 			>
 				<BoardAndBench />
 				<div className="spacer" />
-				<section className="actions">
-					<div className="actions-banner">
-						<h1>Actions</h1>
-					</div>
-
-					<FillerList />
-				</section>
+				<ActionsDisplay />
 			</Layout>
 		</Layout>
 	);
