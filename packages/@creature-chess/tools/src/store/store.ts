@@ -7,6 +7,7 @@ import { BoardSlice, BoardState, createBoardSlice, createInitialBoardState } fro
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { playerInfoReducer, initialPlayerInfoState } from "./playerInfo";
 import { botInfoReducer } from "./botInfo";
+import { devSaga } from "./saga";
 
 export type DevState = {
 	board: BoardState<PieceModel>;
@@ -76,3 +77,4 @@ const sagaMiddleware = createSagaMiddleware<SagaContext>({
 export const store = createStore(devReducer, composeEnhancers(
 	applyMiddleware(sagaMiddleware)
 ));
+sagaMiddleware.run(devSaga);
