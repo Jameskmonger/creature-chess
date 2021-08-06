@@ -15,5 +15,8 @@
 			"node",
 			"jest"
 		]
-	}
+	},
+	"exclude": [
+		"./lib"
+	]
 }
