@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAllDefinitions } from "../../../../gamemode/lib";
 import { v4 as uuid } from "uuid";
-import { DevState } from "../../store/store";
-import { Card } from "@creature-chess/models";
 
-import { removeCardCommand, replaceCardCommand } from "../../store/cardShop";
+import { removeCardCommand, addCardCommand } from "../../store/cardShop";
 
 
 const CardShop: React.FunctionComponent = () => {
@@ -24,10 +22,9 @@ const CardShop: React.FunctionComponent = () => {
 		setHidden("hidden");
 	};
 
-	const oldCard = useSelector<DevState, Card>(state => state.cardShop.cards[0]);
 	const setCardTo = (id: number) => {
 		const newCard = returnCard(creatureDefinitions[id.toString()]);
-		dispatch(replaceCardCommand({ oldCard, newCard }));
+		dispatch(addCardCommand({ newCard }));
 	};
 
 	const returnCard = (definition) => ({

@@ -7,7 +7,6 @@ export type CardShopState = {
 };
 
 type ReplaceCards = {
-	oldCard: Card;
 	newCard: Card;
 };
 
@@ -59,13 +58,8 @@ const {
 	name: "cards",
 	initialState,
 	reducers: {
-		replaceCardCommand: (state, { payload: { oldCard, newCard } }: PayloadAction<ReplaceCards>) => {
-			// const newCards = state.cards.filter(card => card.id !== oldCard.id);
+		addCardCommand: (state, { payload: { newCard } }: PayloadAction<ReplaceCards>) => {
 			state.cards.push(newCard);
-			//return ({
-			//	...state,
-			//		cards: newCards
-			//	});
 		},
 		removeCardCommand: (state, { payload: id }: PayloadAction<string>) => {
 			state.cards.pop();
@@ -84,11 +78,11 @@ const {
 // this stops the compiler from trying to export a type from @reduxjs/toolkit
 const updateCardsCommand: (payload: (Card | null)[]) => ({ type: string; payload: (Card | null)[] })
 	= actions.updateCardsCommand;
-const replaceCardCommand: (payload: ReplaceCards) => ({ type: string; payload: ReplaceCards })
-	= actions.replaceCardCommand;
+const addCardCommand: (payload: ReplaceCards) => ({ type: string; payload: ReplaceCards })
+	= actions.addCardCommand;
 const removeCardCommand: (payload: string) => ({ type: string; payload: string })
 	= actions.removeCardCommand;
 const updateShopLockCommand: (payload: boolean) => ({ type: string; payload: boolean })
 	= actions.updateShopLockCommand;
 
-export { updateCardsCommand, updateShopLockCommand, removeCardCommand, replaceCardCommand, cardShopReducer };
+export { updateCardsCommand, updateShopLockCommand, removeCardCommand, addCardCommand, cardShopReducer };
