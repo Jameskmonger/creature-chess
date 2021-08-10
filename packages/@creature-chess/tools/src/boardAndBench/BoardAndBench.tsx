@@ -7,13 +7,11 @@ import { DndProvider } from "react-dnd";
 import MultiBackend from "react-dnd-multi-backend";
 import HTML5toTouch from "react-dnd-multi-backend/dist/esm/HTML5toTouch";
 
-import "./_board.scss";
+import "./board/_board.scss";
 import { DevBench } from "./bench/DevBench";
 
 
-const BoardAndBench: React.FunctionComponent = () => {
-	const money = 100;
-
+const BoardAndBench: React.FunctionComponent = () => { //eslint-disable-line
 	return (
 		<DndProvider backend={MultiBackend} options={HTML5toTouch}>
 
@@ -22,8 +20,12 @@ const BoardAndBench: React.FunctionComponent = () => {
 				direction="column"
 			>
 				<h3>UserInterface</h3>
-				<DevBoard />
-				<DevBench />
+				<div className="board-container">
+					<DevBoard />
+				</div>
+				<div className="board-container">
+					<DevBench />
+				</div>
 				<div className="card-shop-container">
 					<CardShop
 						devMode={true}

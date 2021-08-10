@@ -4,17 +4,37 @@ import { PieceModel, PlayerBattle, PlayerStreak, RoundInfoState, StreakType } fr
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PlayerInfoState, PlayerMatchRewards, PlayerState } from "@creature-chess/gamemode";
 import { BoardSlice, BoardState, createBoardSlice, createInitialBoardState } from "../../../../@shoki/board/lib";
-import { cardShopReducer, CardShopState } from "./cardShop";
+import { cardShopReducer, CardShopState } from "./devCardShop";
 import { playerInfoReducer, initialPlayerInfoState } from "./playerInfo";
 import { botInfoReducer } from "./botInfo";
+import { uiReducer, BoardType } from "./ui";
 import { devSaga } from "./saga";
 
+export enum Overlay {
+	CARD_SELECTION,
+	NOTIFICATION
+}
+
 export type DevState = {
-	board: BoardState<PieceModel>;
-	bench: BoardState<PieceModel>;
-	cardShop: CardShopState;
-	playerInfo: PlayerInfoState;
-	roundInfo: RoundInfoState;
+	scenario: {
+		board: BoardState<PieceModel>;
+		bench: BoardState<PieceModel>;
+		cardShop: CardShopState;
+		playerInfo: PlayerInfoState;
+		roundInfo: RoundInfoState;
+	};
+	actions: string[];
+	ui: {
+		overlay: Overlay | null;
+		boardParameters: {
+			boardPosition: {
+				one: number;
+				two: number;
+			};
+			boardType: BoardType;
+		} | null;
+
+	};
 };
 export interface DevPlayerInfoState {
 	status: number;
@@ -35,35 +55,37 @@ const composeEnhancers = composeWithDevTools({
 });
 
 type Slices = { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> };
-const boardSlice = createBoardSlice<PieceModel>("local-board", { width: 7, height: 3 });
-const benchSlice = createBoardSlice<PieceModel>("local-bench", { width: 7, height: 1 });
+export const boardSlice = createBoardSlice<PieceModel>("local-board", { width: 7, height: 3 });
+export const benchSlice = createBoardSlice<PieceModel>("local-bench", { width: 7, height: 1 });
 
 const boardReducer = boardSlice.boardReducer;
 const benchReducer = benchSlice.boardReducer;
 
-const boardState = createInitialBoardState("dev-board", { width: 7, height: 3 });
 
-const initialState: DevState = {
-	board: null,
-	bench: null,
-	cardShop: null,
-	playerInfo: initialPlayerInfoState,
-	roundInfo: {
-		round: 1,
-		phase: 0,
-		phaseStartedAtSeconds: 100
-	}
-};
 export type SagaContext = {
 	slices: Slices;
 };
 
-const devReducer = combineReducers({
+const actionsReducer = (state = {}, action) => {
+	switch (action.type) {
+		default:
+			return state;
+	}
+};
+
+
+const scenarioReducer = combineReducers({
 	board: boardReducer,
 	bench: benchReducer,
 	playerInfo: playerInfoReducer,
 	cardShop: cardShopReducer,
 	botInfo: botInfoReducer
+});
+const devReducer = combineReducers({
+	scenario: scenarioReducer,
+	ui: uiReducer,
+	actions: actionsReducer,
+
 });
 const sagaMiddleware = createSagaMiddleware<SagaContext>({
 	context: {

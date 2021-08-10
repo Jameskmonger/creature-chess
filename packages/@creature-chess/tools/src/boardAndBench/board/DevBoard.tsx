@@ -1,20 +1,34 @@
 import React from "react";
 import { BoardGrid } from "@shoki/board-react";
-import { useSelector } from "react-redux";
-import { DevState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { DevState, Overlay } from "../../store/store";
 import { BoardState } from "../../../../../@shoki/board/lib";
 import { UninteractablePiece } from "../../uninteractablePiece/uninteractablePiece";
+import { CardSelectionOverlay } from "../CardSelectionOverlay.tsx/cardSelectionOverlay";
+import { BoardType, uiActions } from "../../store/ui";
 
 const renderUninteractablePiece = (id: string) => (<UninteractablePiece id={id} />);
 
 const DevBoard: React.FunctionComponent = () => {
-	const board = useSelector<DevState, BoardState>(state => state.board);
+	const dispatch = useDispatch();
+	const board = useSelector<DevState, BoardState>(state => state.scenario.board);
+
 	const onClick = (one: number, two: number) => {
-		console.log("YAY!");
-	}
+		const boardPosition = {
+			one,
+			two
+		};
+		const boardType = BoardType.BOARD;
+		const boardParameters = {
+			boardPosition,
+			boardType
+		};
+		dispatch(uiActions.openCardSelectionOverlay(boardParameters));
+		console.log("yes");
+	};
 	return (
 		<div className="dev-board">
-			<h1>Board</h1>
+			<CardSelectionOverlay />
 			<BoardGrid
 				state={board}
 				renderItem={renderUninteractablePiece}

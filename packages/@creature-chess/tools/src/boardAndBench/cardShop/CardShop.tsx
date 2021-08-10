@@ -13,10 +13,10 @@ type Props = {
 const CardShop: React.FunctionComponent<Props> = ({ devMode }) => {
 	const dispatch = useDispatch();
 
-	const cards = useSelector<DevState, CardModel[]>(state => state.cardShop.cards);
-	const money = useSelector<DevState, number>(state => state.playerInfo.money);
-	const canUseShop = useSelector<DevState, boolean>(state => state.playerInfo.health > 0);
-	const shopLocked = useSelector<DevState, boolean>(state => state.cardShop.locked);
+	const cards = useSelector<DevState, CardModel[]>(state => state.scenario.cardShop.cards);
+	const money = useSelector<DevState, number>(state => state.scenario.playerInfo.money);
+	const canUseShop = useSelector<DevState, boolean>(state => state.scenario.playerInfo.health > 0);
+	const shopLocked = useSelector<DevState, boolean>(state => state.scenario.cardShop.locked);
 
 	if (canUseShop === false) {
 		return null;

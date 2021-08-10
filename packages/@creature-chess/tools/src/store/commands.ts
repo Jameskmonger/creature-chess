@@ -1,7 +1,7 @@
 import { StreakType, PlayerBattle, PlayerStatus } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 
-import { updateCardsCommand, updateShopLockCommand } from "./cardShop";
+import { updateCardsCommand, updateShopLockCommand } from "./devCardShop";
 export { updateCardsCommand, updateShopLockCommand };
 
 export type UpdateHealthCommand = ReturnType<typeof updateHealthCommand>;
