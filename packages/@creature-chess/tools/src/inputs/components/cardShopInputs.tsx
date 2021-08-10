@@ -3,10 +3,10 @@ import { useDispatch } from "react-redux";
 import { getAllDefinitions } from "../../../../gamemode/lib";
 import { v4 as uuid } from "uuid";
 
-import { removeCardCommand, addCardCommand } from "../../store/cardShop";
+import { removeCardCommand, addCardCommand } from "../../store/devCardShop";
 
 
-const CardShop: React.FunctionComponent = () => {
+const CardShopInputs: React.FunctionComponent = () => {
 
 	const dispatch = useDispatch();
 
@@ -22,7 +22,7 @@ const CardShop: React.FunctionComponent = () => {
 		setHidden("hidden");
 	};
 
-	const setCardTo = (id: number) => {
+	const addCardToShop = (id: number) => {
 		const newCard = returnCard(creatureDefinitions[id.toString()]);
 		dispatch(addCardCommand({ newCard }));
 	};
@@ -50,7 +50,7 @@ const CardShop: React.FunctionComponent = () => {
 
 							<button
 								key={definition.id}
-								onClick={() => setCardTo(definition.id - 1)}>
+								onClick={() => addCardToShop(definition.id - 1)}>
 								<img
 									src={`https://creaturechess.jamesmonger.com/images/front/${definition.id.toString()}.png`}
 									alt="creature-avatar"
@@ -69,4 +69,4 @@ const CardShop: React.FunctionComponent = () => {
 };
 
 
-export { CardShop };
+export { CardShopInputs };
