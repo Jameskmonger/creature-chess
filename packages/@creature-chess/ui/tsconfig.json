@@ -6,6 +6,10 @@
 		"declarationMap": true
 	},
 	"include": [
-		"./src/**/*"
+		"./src/**/*",
+		"../tools/src/uninteractablePiece"
+	],
+	"exclude": [
+		"./lib/**"
 	]
 }
