@@ -60,12 +60,7 @@ const {
 	initialState,
 	reducers: {
 		replaceCardCommand: (state, { payload: { oldCard, newCard } }: PayloadAction<ReplaceCards>) => {
-			// const newCards = state.cards.filter(card => card.id !== oldCard.id);
 			state.cards.push(newCard);
-			//return ({
-			//	...state,
-			//		cards: newCards
-			//	});
 		},
 		removeCardCommand: (state, { payload: id }: PayloadAction<string>) => {
 			state.cards.pop();
