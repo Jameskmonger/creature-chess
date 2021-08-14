@@ -1,5 +1,4 @@
 import { CardShop } from "./cardShop/CardShop";
-import { Card as CardModel, CreatureType, DefinitionClass } from "@creature-chess/models";
 import React from "react";
 import { Layout } from "@creature-chess/ui/lib/layout";
 

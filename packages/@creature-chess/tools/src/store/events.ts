@@ -1,4 +1,4 @@
-import { PieceModel, QuickChatOption, QuickChatValue, StreakType } from "@creature-chess/models";
+import { PieceModel, StreakType } from "@creature-chess/models";
 import { createAction } from "@reduxjs/toolkit";
 
 export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;

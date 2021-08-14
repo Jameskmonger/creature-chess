@@ -1,6 +1,5 @@
 import React from "react";
 import { CardShop } from "./components/cardShop";
-import { useField } from "../hooks/useField";
 import { PlayerInfo } from "./components/playerInfoInputs";
 
 interface Props {
