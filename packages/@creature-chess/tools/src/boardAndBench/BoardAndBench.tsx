@@ -1,13 +1,13 @@
 import { CardShop } from "./cardShop/CardShop";
 import React from "react";
-import { Layout } from "@creature-chess/ui/lib/layout";
+import { Layout } from "@creature-chess/ui";
 
 
 const BoardAndBench: React.FunctionComponent = () => {
 	const money = 100;
 
 	return (
-		<Layout
+		<Layout.Layout
 			className="board-and-bench"
 			direction="column"
 		>
@@ -20,7 +20,7 @@ const BoardAndBench: React.FunctionComponent = () => {
 					devMode={true}
 				/>
 			</div>
-		</Layout>
+		</Layout.Layout>
 	);
 };
 

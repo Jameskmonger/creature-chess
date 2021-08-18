@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout } from "@creature-chess/ui/src/layout";
+import { Layout } from "@creature-chess/ui";
 
 interface Props {
 	runScenario: () => void;
@@ -7,14 +7,14 @@ interface Props {
 
 const Header: React.FunctionComponent<Props> = ({ runScenario }) => (
 
-	<Layout
+	<Layout.Layout
 		className="inputs-header"
 		direction="row"
 		justifyContent="space-between"
 	>
 		<h1>Inputs</h1>
 		<button onClick={runScenario}>RUN</button>
-	</Layout>
+	</Layout.Layout>
 );
 
 

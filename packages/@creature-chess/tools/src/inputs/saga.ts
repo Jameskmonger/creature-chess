@@ -1,8 +1,12 @@
-import { put, call, take } from "@redux-saga/core/effects";
+import { put, take } from "@redux-saga/core/effects";
 import { all } from "redux-saga/effects";
-import { updateLevelCommand, updateStreakCommand } from "../../../gamemode/lib/entities/player/state/commands";
 import { botInfoActions } from "../store/botInfo";
-import { updateHealthCommand, updateMoneyCommand } from "../store/commands";
+import {
+	updateHealthCommand,
+	updateMoneyCommand,
+	updateLevelCommand,
+	updateStreakCommand
+} from "../store/commands";
 import { runScenarioEvent } from "../store/events";
 
 export const runScenarioSaga = function*() {

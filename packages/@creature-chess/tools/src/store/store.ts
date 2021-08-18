@@ -1,9 +1,9 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { PieceModel, PlayerStreak, RoundInfoState } from "../../../models/lib";
+import { PieceModel, PlayerStreak, RoundInfoState } from "@creature-chess/models";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { PlayerInfoState } from "@creature-chess/gamemode";
-import { BoardSlice, BoardState, createBoardSlice, createInitialBoardState } from "../../../../@shoki/board/lib";
+import { BoardSlice, BoardState, createBoardSlice, createInitialBoardState } from "@shoki/board";
 import { cardShopReducer, CardShopState } from "./cardShop";
 import { playerInfoReducer, initialPlayerInfoState } from "./playerInfo";
 import { botInfoReducer } from "./botInfo";

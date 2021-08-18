@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 
-import { Layout } from "@creature-chess/ui/src/layout";
+import { Layout } from "@creature-chess/ui";
 import { StreakType } from "@creature-chess/models";
 import { Header } from "./components/header";
 import { useField } from "../hooks/useField";
@@ -61,7 +61,7 @@ const Inputs: React.FunctionComponent = () => {
 			<Header
 				runScenario={runScenario}
 			/>
-			<Layout
+			<Layout.Layout
 				className="inputs"
 				direction="column"
 				justifyContent="space-evenly"
@@ -75,7 +75,7 @@ const Inputs: React.FunctionComponent = () => {
 				<TraitInputs
 					traitFields={traitFields}
 				/>
-			</Layout>
+			</Layout.Layout>
 
 		</section >
 	);
