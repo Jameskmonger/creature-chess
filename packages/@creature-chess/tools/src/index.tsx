@@ -8,4 +8,5 @@ ReactDOM.render(
 	<Provider store={store}>
 		<DevTools />
 	</Provider>,
-	document.getElementById("root"));
+	document.getElementById("root")
+);

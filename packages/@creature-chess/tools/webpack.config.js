@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 
-
 module.exports = {
 	entry: "./src/index.tsx",
 	output: {
