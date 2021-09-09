@@ -10,7 +10,6 @@ export { PlayerInfoState, playerInfoReducer, PlayerMatchRewards } from "./entiti
 export { PlayerAction, PlayerActionTypesArray } from "./playerActions";
 export * as PlayerActions from "./playerActions";
 
-export { CardDeck } from "./game/cardDeck";
 export { getPiece, getAllPieces } from "./player/pieceSelectors";
 export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./entities/player/state/selectors";
 
