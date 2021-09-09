@@ -15,7 +15,7 @@ import "./_board.scss";
 
 import { DevState } from "../store/store";
 import { BoardType, uiActions } from "../store/ui";
-import { CardSelectionOverlay } from "./CardSelectionOverlay.tsx/cardSelectionOverlay";
+import { CardSelectionOverlay } from "./cardSelection/cardSelectionOverlay";
 
 const BoardAndBench: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
