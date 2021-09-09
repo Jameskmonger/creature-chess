@@ -85,9 +85,7 @@ const BoardAndBench: React.FunctionComponent = () => {
 					/>
 				</div>
 				<div className="card-shop-container">
-					<CardShop
-						devMode={true}
-					/>
+					<CardShop />
 				</div>
 			</Layout.Layout>
 		</DndProvider>

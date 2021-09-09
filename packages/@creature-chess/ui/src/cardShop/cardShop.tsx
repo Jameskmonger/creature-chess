@@ -14,7 +14,7 @@ type Props = {
 	onReroll?: () => void;
 	onToggleLock?: () => void;
 	onBuy?: (index: number) => void;
-	devMode?: boolean;
+	showSelectedCard?: boolean;
 };
 
 const useStyles = createUseStyles({
@@ -33,7 +33,7 @@ const useStyles = createUseStyles({
 	}
 });
 
-const CardShop: React.FunctionComponent<Props> = ({ cards, money, isLocked = false, onReroll, onToggleLock, onBuy, devMode = false }) => {
+const CardShop: React.FunctionComponent<Props> = ({ cards, money, isLocked = false, onReroll, onToggleLock, onBuy, showSelectedCard = true }) => {
 	const classes = useStyles();
 	const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
 
@@ -57,7 +57,7 @@ const CardShop: React.FunctionComponent<Props> = ({ cards, money, isLocked = fal
 				{
 					selectedIndex !== null
 					&& cards[selectedIndex]
-					&& !devMode
+					&& showSelectedCard
 					&& <CurrentCard card={cards[selectedIndex]} onBuy={onBuyCurrentCard} />
 				}
 			</Layout>

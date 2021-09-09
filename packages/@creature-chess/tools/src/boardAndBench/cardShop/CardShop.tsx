@@ -3,14 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card as CardModel } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/gamemode";
 import { CardShop as CardShopModule } from "@creature-chess/ui";
+
 import { DevState } from "../../store/store";
 
-type Props = {
-	devMode: boolean;
-};
-
-
-const CardShop: React.FunctionComponent<Props> = ({ devMode }) => {
+const CardShop: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
 	const cards = useSelector<DevState, CardModel[]>(state => state.scenario.cardShop.cards);
@@ -34,7 +30,7 @@ const CardShop: React.FunctionComponent<Props> = ({ devMode }) => {
 			onToggleLock={onToggleLock}
 			onReroll={onReroll}
 			onBuy={onBuy}
-			devMode={devMode}
+			showSelectedCard={false}
 		/>
 	);
 };
