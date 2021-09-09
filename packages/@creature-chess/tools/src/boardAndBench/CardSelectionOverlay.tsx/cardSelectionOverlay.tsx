@@ -86,9 +86,7 @@ const CardSelectionOverlay: React.FunctionComponent = () => {
 		return null;
 	}
 	return (
-
 		<BoardOverlay>
-			<h1>OVERLAY</h1>
 			{
 				definitions.map(definition => (
 

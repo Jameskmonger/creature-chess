@@ -83,6 +83,20 @@ $inner-border-width: 2px;
 	z-index: 5;
 }
 
+.bot-board {
+	.positionable-piece {
+		width: calc(100% / 7);
+		height: calc(100% / 3);
+	}
+}
+
+.bot-bench {
+	.positionable-piece {
+		width: calc(100% / 7);
+		height: 100%;
+	}
+}
+
 .piece-meta-container {
 	.piece-meta-top {
 		.piece-stage {
