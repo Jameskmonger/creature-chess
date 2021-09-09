@@ -1,11 +1,10 @@
 import { createStore, combineReducers, applyMiddleware, Reducer } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { PieceModel, PlayerBattle, PlayerStreak, RoundInfoState, StreakType } from "../../../models/lib";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { PlayerInfoState, PlayerMatchRewards, PlayerState } from "@creature-chess/gamemode";
-import { BoardSlice, BoardState, createBoardSlice, createInitialBoardState } from "../../../../@shoki/board/lib";
+import { PieceModel, PlayerBattle, PlayerStreak, RoundInfoState, StreakType } from "@creature-chess/models";
+import { playerInfoReducer, PlayerInfoState, PlayerMatchRewards, PlayerState } from "@creature-chess/gamemode";
+import { BoardSlice, BoardState, createBoardSlice, createInitialBoardState } from "@shoki/board";
 import { cardShopReducer, CardShopState } from "./devCardShop";
-import { playerInfoReducer, initialPlayerInfoState } from "./playerInfo";
 import { botInfoReducer } from "./botInfo";
 import { uiReducer, BoardType } from "./ui";
 import { devSaga } from "./saga";
@@ -36,18 +35,6 @@ export type DevState = {
 
 	};
 };
-export interface DevPlayerInfoState {
-	status: number;
-	health: number;
-	streak: PlayerStreak;
-	battle: null;
-	matchRewards: null;
-	opponentId: null;
-	money: number;
-	ready: boolean;
-	level: number;
-	xp: number;
-}
 
 const composeEnhancers = composeWithDevTools({
 	trace: true,
@@ -73,7 +60,6 @@ const actionsReducer = (state = {}, action) => {
 	}
 };
 
-
 const scenarioReducer = combineReducers({
 	board: boardReducer,
 	bench: benchReducer,
@@ -81,12 +67,13 @@ const scenarioReducer = combineReducers({
 	cardShop: cardShopReducer,
 	botInfo: botInfoReducer
 });
+
 const devReducer = combineReducers({
 	scenario: scenarioReducer,
 	ui: uiReducer,
 	actions: actionsReducer,
-
 });
+
 const sagaMiddleware = createSagaMiddleware<SagaContext>({
 	context: {
 		slices: {
@@ -99,4 +86,5 @@ const sagaMiddleware = createSagaMiddleware<SagaContext>({
 export const store = createStore(devReducer, composeEnhancers(
 	applyMiddleware(sagaMiddleware)
 ));
+
 sagaMiddleware.run(devSaga);

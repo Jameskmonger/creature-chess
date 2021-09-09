@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { getAllDefinitions } from "../../../../gamemode/lib";
+import { getAllDefinitions } from "@creature-chess/gamemode";
 import { v4 as uuid } from "uuid";
 
 import { removeCardCommand, addCardCommand } from "../../store/devCardShop";

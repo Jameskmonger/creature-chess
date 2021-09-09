@@ -6,9 +6,9 @@ import { Overlay, DevState, boardSlice, benchSlice } from "../../store/store";
 
 import "./_overlay.scss";
 import { BoardType, uiActions } from "../../store/ui";
-import { getAllDefinitions } from "../../../../gamemode/lib";
+import { getAllDefinitions } from "@creature-chess/gamemode";
 import { v4 as uuid } from "uuid";
-import { BoardState } from "../../../../../@shoki/board/lib";
+import { BoardState } from "@shoki/board";
 
 
 const BoardOverlay: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {

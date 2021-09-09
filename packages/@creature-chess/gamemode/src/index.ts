@@ -7,7 +7,6 @@ export {
 	PlayerEvents, PlayerVariables
 } from "./entities/player";
 export { PlayerInfoState, playerInfoReducer, PlayerMatchRewards } from "./entities/player/state/playerInfo";
-export { PlayerInfoUpdateCommand } from "./entities/player/state/commands";
 export { PlayerAction, PlayerActionTypesArray } from "./playerActions";
 export * as PlayerActions from "./playerActions";
 

@@ -1,8 +1,7 @@
 import { put, call, take } from "@redux-saga/core/effects";
 import { all } from "redux-saga/effects";
-import { updateLevelCommand, updateStreakCommand } from "../../../gamemode/lib/entities/player/state/commands";
+import { PlayerCommands } from "@creature-chess/gamemode";
 import { botInfoActions } from "../store/botInfo";
-import { updateHealthCommand, updateMoneyCommand } from "../store/commands";
 import { runScenarioEvent } from "../store/events";
 
 export const runScenarioSaga = function*() {
@@ -23,10 +22,10 @@ export const runScenarioSaga = function*() {
 		} = action.payload;
 
 		yield all([
-			put(updateMoneyCommand(money)),
-			put(updateHealthCommand(health)),
-			put(updateLevelCommand({ level, xp })),
-			put(updateStreakCommand({ type: streakType, amount: streakAmount })),
+			put(PlayerCommands.updateMoneyCommand(money)),
+			put(PlayerCommands.updateHealthCommand(health)),
+			put(PlayerCommands.updateLevelCommand({ level, xp })),
+			put(PlayerCommands.updateStreakCommand({ type: streakType, amount: streakAmount })),
 			put(botInfoActions.updateAmbitionCommand(ambition)),
 			put(botInfoActions.updateCompetencyCommand(competency)),
 			put(botInfoActions.updateComposureCommand(composure)),

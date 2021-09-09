@@ -1,8 +1,8 @@
 import React from "react";
-import { BoardGrid } from "@shoki/board-react";
 import { useDispatch, useSelector } from "react-redux";
+import { BoardGrid } from "@shoki/board-react";
+import { BoardState } from "@shoki/board";
 import { DevState, Overlay } from "../../store/store";
-import { BoardState } from "../../../../../@shoki/board/lib";
 import { UninteractablePiece } from "../../uninteractablePiece/uninteractablePiece";
 import { CardSelectionOverlay } from "../CardSelectionOverlay.tsx/cardSelectionOverlay";
 import { BoardType, uiActions } from "../../store/ui";
