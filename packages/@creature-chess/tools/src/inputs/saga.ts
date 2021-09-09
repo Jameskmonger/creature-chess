@@ -7,7 +7,7 @@ import { runScenarioEvent } from "../store/events";
 export const runScenarioSaga = function*() {
 	while (true) {
 		const action = yield take(runScenarioEvent.toString());
-		yield call(console.log, "Running scenario:");
+
 		const {
 			health,
 			money,

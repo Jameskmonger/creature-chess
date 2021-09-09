@@ -1,15 +1,13 @@
+import { v4 as uuid } from "uuid";
 import React from "react";
-import { Card } from "@creature-chess/models";
 import ReactModal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
+import { getAllDefinitions } from "@creature-chess/gamemode";
+
 import { Overlay, DevState, boardSlice, benchSlice } from "../../store/store";
+import { BoardType, uiActions } from "../../store/ui";
 
 import "./_overlay.scss";
-import { BoardType, uiActions } from "../../store/ui";
-import { getAllDefinitions } from "@creature-chess/gamemode";
-import { v4 as uuid } from "uuid";
-import { BoardState } from "@shoki/board";
-
 
 const BoardOverlay: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
 	const parentSelector = () => document.querySelector(".dev-tools") as HTMLElement;
@@ -28,37 +26,17 @@ const BoardOverlay: React.FunctionComponent<{ children: React.ReactNode }> = ({ 
 	);
 };
 
-
-const returnCard = (definition) => ({
-	id: uuid(),
-	definitionId: definition.id,
-	cost: definition.cost,
-	name: definition.name,
-	type: definition.type,
-	class: definition.class
-});
-
 const CardSelectionOverlay: React.FunctionComponent = () => {
+	const dispatch = useDispatch();
 
 	const definitions = getAllDefinitions();
 
 	const boardParameters = useSelector<DevState, any>(state => state.ui.boardParameters);
 
-
-	const dispatch = useDispatch();
-
 	const displayOverlay = useSelector<DevState, boolean>(state => state.ui.overlay === Overlay.CARD_SELECTION);
-
-	const makePieceFromCard = (card: Card) => {
-		console.log(card);
-		return {
-			piece: 1
-		};
-	};
 
 	const createPiece = (definition) => {
 		const stats = definition.stages[0];
-		console.log(definition);
 		return {
 			id: uuid(),
 			ownerId: "local",
@@ -81,10 +59,11 @@ const CardSelectionOverlay: React.FunctionComponent = () => {
 		}
 		dispatch(uiActions.closeOverlay());
 	};
+
 	if (!displayOverlay) {
-		console.log("No overlay");
 		return null;
 	}
+
 	return (
 		<BoardOverlay>
 			{
