@@ -1,0 +1,156 @@
+$tile-size: 90px;
+$sprite-size: 60px;
+$spacer: 1em;
+
+$dark-tile: #38b764;
+$light-tile: #a7f070;
+$bench-tile: #9e9e9e;
+
+$piece-z-index: 3;
+$card-image-size: 50px;
+
+$outer-border-width: 3px;
+$inner-border-width: 2px;
+
+.tile-row {
+	width: 100%;
+	box-sizing: border-box;
+	line-height: 0;
+	white-space: nowrap;
+}
+
+.bench {
+	.tile {
+		background: $bench-tile;
+		box-shadow: inset 0 0 2px darken($bench-tile, 50);
+	}
+}
+
+.board-tiles {
+	position: relative;
+}
+
+.board-pieces {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.bench {
+	position: relative;
+
+	.image {
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.tile {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	user-select: none;
+	width: 90px;
+	height: 90px;
+	&.dark {
+		background: $dark-tile;
+	}
+
+	&.light {
+		background: $light-tile;
+	}
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+
+		&.not-allowed {
+			background: #484848;
+			opacity: 0.4;
+		}
+	}
+}
+
+.positionable-piece {
+	position: absolute;
+	/* stylelint-disable-next-line */
+	transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s;
+	z-index: 5;
+}
+
+.bot-board {
+	.positionable-piece {
+		width: calc(100% / 7);
+		height: calc(100% / 3);
+	}
+}
+
+.bot-bench {
+	.positionable-piece {
+		width: calc(100% / 7);
+		height: 100%;
+	}
+}
+
+.piece-meta-container {
+	.piece-meta-top {
+		.piece-stage {
+			height: 100%;
+		}
+
+		// stylelint-disable-next-line
+		img {
+			height: 100%;
+		}
+	}
+
+	.piece-stage {
+		position: absolute;
+		top: 15%;
+		left: 15%;
+		display: flex;
+		flex-direction: column;
+		width: 70%;
+		height: 70%;
+		justify-content: space-evenly;
+	}
+
+	.healthbar {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.board-container {
+	position: relative;
+
+	.now-playing {
+		position: absolute;
+		top: 0;
+		z-index: 19;
+		width: 100%;
+	}
+}
+
+.piece {
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	&.selected {
+		box-sizing: border-box;
+		border: 2px solid #ff5200;
+	}
+
+	.image {
+		position: absolute;
+		bottom: 0;
+		left: 14%;
+		width: 80%;
+	}
+}

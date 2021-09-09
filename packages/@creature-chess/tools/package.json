@@ -4,14 +4,15 @@
 	"description": "",
 	"main": "src/index.tsx",
 	"scripts": {
-		"test": "echo \"Error: no test specified\"",
-		"build": "webpack --mode=development",
+		"test": "echo \"no tests for tools\"",
+		"build:webpack": "webpack --mode=development",
 		"start": "NODE_ENV=development webpack serve"
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"@auth0/auth0-react": "^1.5.0",
+		"@creature-chess/app": "file:../app",
 		"@creature-chess/battle": "file:../battle",
 		"@creature-chess/gamemode": "file:../gamemode",
 		"@creature-chess/models": "file:../models",

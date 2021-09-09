@@ -7,7 +7,6 @@ export {
 	PlayerEvents, PlayerVariables
 } from "./entities/player";
 export { PlayerInfoState, playerInfoReducer, PlayerMatchRewards } from "./entities/player/state/playerInfo";
-
 export { PlayerAction, PlayerActionTypesArray } from "./playerActions";
 export * as PlayerActions from "./playerActions";
 
@@ -16,6 +15,6 @@ export { getPlayerLevel, getPlayerMoney, getPlayerXp, isPlayerAlive } from "./en
 
 export { roundInfoReducer, RoundInfoCommands } from "./game/roundInfo";
 export * as GameEvents from "./game/events";
-export { getDefinitionById } from "./definitions";
+export { getDefinitionById, getAllDefinitions } from "./definitions";
 
 export { Match } from "./game/match";
