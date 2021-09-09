@@ -1,17 +1,17 @@
 import React from "react";
 import { InputListItem } from "./inputListItem";
 
-interface Props {
+type Props = {
 	stateFields: {
 		label: string;
 		value: any;
 		onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	}[];
-}
+};
 
 const PlayerInfo: React.FunctionComponent<Props> = ({ stateFields }) => (
-
-	<li>Player Info:
+	<li>
+		Player Info:
 		<ul>
 			{
 				stateFields.map(field => (
@@ -27,6 +27,5 @@ const PlayerInfo: React.FunctionComponent<Props> = ({ stateFields }) => (
 		</ul>
 	</li>
 );
-
 
 export { PlayerInfo };

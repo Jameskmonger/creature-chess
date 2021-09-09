@@ -6,7 +6,6 @@ type Props = {
 	onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-
 const InputListItem: React.FunctionComponent<Props> = ({ heading, value, onChange }) => (
 	<>
 		<li>
@@ -22,6 +21,5 @@ const InputListItem: React.FunctionComponent<Props> = ({ heading, value, onChang
 		</li>
 	</>
 );
-
 
 export { InputListItem };

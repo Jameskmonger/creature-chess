@@ -1,18 +1,16 @@
 import React from "react";
 import { CardShopInputs } from "./components/cardShopInputs";
-import { useField } from "../hooks/useField";
 import { PlayerInfo } from "./components/playerInfoInputs";
 
-interface Props {
+type Props = {
 	stateFields: {
 		label: string;
 		value: any;
 		onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	}[];
-}
+};
 
 const StateInputs: React.FunctionComponent<Props> = ({ stateFields }) => (
-
 	<section className="state-inputs">
 		<div className="state-inputs-header">
 			<h1>State</h1>
@@ -25,6 +23,5 @@ const StateInputs: React.FunctionComponent<Props> = ({ stateFields }) => (
 		</ul>
 	</section >
 );
-
 
 export { StateInputs };

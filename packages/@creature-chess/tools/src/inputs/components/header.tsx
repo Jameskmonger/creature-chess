@@ -1,12 +1,11 @@
 import React from "react";
 import { Layout } from "@creature-chess/ui/src/layout";
 
-interface Props {
+type Props = {
 	runScenario: () => void;
-}
+};
 
 const Header: React.FunctionComponent<Props> = ({ runScenario }) => (
-
 	<Layout
 		className="inputs-header"
 		direction="row"
@@ -16,6 +15,5 @@ const Header: React.FunctionComponent<Props> = ({ runScenario }) => (
 		<button onClick={runScenario}>RUN</button>
 	</Layout>
 );
-
 
 export { Header };

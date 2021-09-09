@@ -5,21 +5,14 @@ import { v4 as uuid } from "uuid";
 
 import { removeCardCommand, addCardCommand } from "../../store/devCardShop";
 
-
 const CardShopInputs: React.FunctionComponent = () => {
-
 	const dispatch = useDispatch();
 
 	const creatureDefinitions = getAllDefinitions();
-	const [hidden, setHidden] = useState("hidden");
+	const [hidden, setHidden] = useState(false);
 
-
-	const hideOrDisplay = () => {
-		if (hidden === "hidden") {
-			setHidden("displayed");
-			return;
-		}
-		setHidden("hidden");
+	const toggleHidden = () => {
+		setHidden(!hidden);
 	};
 
 	const addCardToShop = (id: number) => {
@@ -38,13 +31,13 @@ const CardShopInputs: React.FunctionComponent = () => {
 
 
 	return (
-		<li>Card Shop:
+		<li>
+			Card Shop:
 			<ul>
-				<li onClick={hideOrDisplay}>
+				<li onClick={toggleHidden}>
 					Change available cards:
 				</li>
-				<div className={hidden}>
-
+				<div className={hidden ? "hidden" : "displayed"}>
 					{
 						creatureDefinitions.map(definition => (
 
@@ -67,6 +60,5 @@ const CardShopInputs: React.FunctionComponent = () => {
 		</li>
 	);
 };
-
 
 export { CardShopInputs };

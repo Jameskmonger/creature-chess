@@ -1,13 +1,13 @@
 import React from "react";
 import { InputListItem } from "./components/inputListItem";
 
-interface Props {
+type Props = {
 	traitFields: {
 		value: any;
 		label: string;
 		onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	}[];
-}
+};
 
 const TraitInputs: React.FunctionComponent<Props> = ({ traitFields }) => (
 	<section className="trait-inputs">
@@ -29,6 +29,5 @@ const TraitInputs: React.FunctionComponent<Props> = ({ traitFields }) => (
 		</ul>
 	</section>
 );
-
 
 export { TraitInputs };

@@ -9,7 +9,6 @@ import { StateInputs } from "./stateInputs";
 import { TraitInputs } from "./traitInputs";
 import { runScenarioEvent } from "../store/events";
 
-
 const Inputs: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
@@ -58,28 +57,22 @@ const Inputs: React.FunctionComponent = () => {
 
 	return (
 		<section className="inputs-container">
-			<Header
-				runScenario={runScenario}
-			/>
+			<Header runScenario={runScenario} />
+
 			<Layout
 				className="inputs"
 				direction="column"
 				justifyContent="space-evenly"
 			>
-				<StateInputs
-					stateFields={stateFields}
-				/>
+				<StateInputs stateFields={stateFields} />
 
 				<div className="spacer" />
 
-				<TraitInputs
-					traitFields={traitFields}
-				/>
+				<TraitInputs traitFields={traitFields} />
 			</Layout>
 
 		</section >
 	);
 };
-
 
 export { Inputs };
