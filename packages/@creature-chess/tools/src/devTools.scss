@@ -1,10 +1,21 @@
+@import "./reset";
+
 * {
 	border-width: 5px;
+}
+
+html,
+body,
+#root {
+	width: 100%;
+	height: 100%;
 }
 
 .dev-tools {
 	background: #333c57;
 	color: #fff;
+	min-height: 100vh;
+	box-sizing: border-box;
 
 	.spacer {
 		height: 1em;
@@ -93,29 +104,4 @@
 .card-shop-container {
 	max-width: 50%;
 	max-height: 30%;
-}
-.actions {
-	align-items: center;
-	text-align: left;
-	/*remove this - just for demo purposes */
-	height: 15em;
-	border-style: solid;
-	border-color: rgb(26, 28, 44);
-	overflow: auto;
-
-	.actions-banner {
-		max-height: 20%;
-		display: flex;
-		justify-content: space-between;
-		padding: 0;
-		margin: 0;
-		position: sticky;
-		top: 0;
-		background-color: rgb(26, 28, 44);
-
-		h1 {
-			padding: 0;
-			margin: 0;
-		}
-	}
 }

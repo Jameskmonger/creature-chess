@@ -52,6 +52,8 @@ const PositionablePieceStyle: React.FunctionComponent = () => {
 	const styles = [];
 	const TILE_BASE_Z_INDEX = 10;
 
+	styles.push(`.positionable-piece { width: calc(100% / ${width}); height: calc(100% / ${height}); }`);
+
 	for (let x = 0; x < width; x++) {
 		for (let y = 0; y < height; y++) {
 			const { left, top } = getTilePosition(width, height, x, y);
