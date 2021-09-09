@@ -17,7 +17,7 @@ import { DevState } from "../store/store";
 import { BoardType, uiActions } from "../store/ui";
 import { CardSelectionOverlay } from "./cardSelection/cardSelectionOverlay";
 
-const BoardAndBench: React.FunctionComponent = () => {
+const Board: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
 	const board = useSelector<DevState, BoardState<PieceModel>>(state => state.scenario.board);
@@ -93,4 +93,4 @@ const BoardAndBench: React.FunctionComponent = () => {
 };
 
 
-export { BoardAndBench };
+export { Board };
