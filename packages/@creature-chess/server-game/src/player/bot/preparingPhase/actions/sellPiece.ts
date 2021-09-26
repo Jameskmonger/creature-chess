@@ -4,18 +4,24 @@ import { PlayerState, PlayerStateSelectors, PlayerActions } from "@creature-ches
 import { PieceModel } from "@creature-chess/models";
 import { BotPersonality } from "@creature-chess/data";
 import { BrainAction } from "../../brain";
+import { isStrategicTypePiece } from "./utils/getStrategicTypes";
 
 export const createSellPieceAction = (state: PlayerState, personality: BotPersonality, piece: PieceModel): BrainAction | null => {
-	// to prevent mistakes, bots won't sell a piece if it will put them under their limit
+
 	const pieceCount = PlayerStateSelectors.getAllPieceCount(state);
-
-	if ((pieceCount - 1) < PlayerStateSelectors.getPlayerLevel(state)) {
-		return null;
-	}
-
 	const boardPieces = BoardSelectors.getAllPieces(state.board);
 	const hasMatchingPieceOnBoard = boardPieces.some(p => p.definitionId === piece.definitionId);
 
+	// to prevent mistakes, bots won't sell a piece if it will put them under their limit
+	if ((pieceCount - 1) < PlayerStateSelectors.getPlayerLevel(state)) {
+		return null;
+	}
+	// don't sell piece if it is a strategically sound piece
+	if (isStrategicTypePiece(piece, state)) {
+		// for debugging - remove log statement
+		console.log(`Strategic piece ${piece} not being sold`);
+		return null;
+	}
 	// don't sell bench pieces for which we have a piece on the board
 	if (hasMatchingPieceOnBoard) {
 		return null;
