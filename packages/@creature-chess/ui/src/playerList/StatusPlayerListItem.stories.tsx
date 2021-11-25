@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 import { finishedBattle } from "@creature-chess/models";
-import { StatusPlayerListItem } from '../../src/playerList';
+import { StatusPlayerListItem } from "./statusPlayerListItem";
 
 export default {
-	title: 'Module - Player List/StatusPlayerListItem',
+	title: "Player List/StatusPlayerListItem",
 	component: StatusPlayerListItem
 };
 

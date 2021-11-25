@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 
 import { finishedBattle, inProgressBattle, PlayerBattle, PlayerListPlayer, PlayerStatus, PlayerTitle, StreakType } from "@creature-chess/models";
-import { PlayerListItem } from '../../src/playerList';
+import { PlayerListItem } from "./playerListItem";
 
 export default {
-	title: 'Module - Player List/PlayerListItem',
+	title: "Player List/PlayerListItem",
 	component: PlayerListItem,
 	argTypes: {
 		currentlySpectating: {
 			control: {
-				type: 'boolean'
+				type: "boolean"
 			}
 		},
 		showReadyIndicator: {
 			control: {
-				type: 'boolean'
+				type: "boolean"
 			}
 		}
 	}
@@ -23,8 +23,8 @@ export default {
 const Template = (args) => <div style={{ maxWidth: "400px" }}><PlayerListItem {...args} /></div>;
 
 const createPlayer = (battle: PlayerBattle, others?: Partial<PlayerListPlayer> = {}): PlayerListPlayer => ({
-	id: '1234',
-	name: 'jkm',
+	id: "1234",
+	name: "jkm",
 	health: 69,
 	ready: false,
 	status: PlayerStatus.CONNECTED,
@@ -68,7 +68,7 @@ OpponentInProgressBattle.args = {
 	showReadyIndicator: true,
 
 	player: createPlayer(
-		inProgressBattle('5678'),
+		inProgressBattle("5678"),
 		{ money: 4, level: 9, health: 4 }
 	)
 };
@@ -85,7 +85,7 @@ FinishedBattle.args = {
 	showReadyIndicator: true,
 
 	player: createPlayer(
-		finishedBattle('5678', false, 3, 0),
+		finishedBattle("5678", false, 3, 0),
 		{ name: "[BOT] Bicycle", streakType: StreakType.LOSS, profile: { picture: 13, title: PlayerTitle.HallOfFame } }
 	)
 };

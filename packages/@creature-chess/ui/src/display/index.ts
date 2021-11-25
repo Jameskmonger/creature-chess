@@ -1,4 +1,4 @@
-export { CreatureImage } from "./creatureImage";
+export { CreatureImage } from "./CreatureImage";
 export { Label } from "./label";
-export { ProgressBar } from "./progressBar";
+export { ProgressBar } from "./ProgressBar";
 export { TypeIndicator } from "./TypeIndicator";

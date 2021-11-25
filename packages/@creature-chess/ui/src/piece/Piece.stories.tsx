@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
 import { CreatureType, DefinitionClass, PieceModel } from "@creature-chess/models";
-import { Piece } from "../../src/piece";
+import { Piece } from "./piece";
 
 import "./Piece.stories.css";
 
 export default {
-	title: 'Module - Piece/Piece',
+	title: "Piece",
 	component: Piece,
 	argTypes: {
 
@@ -36,8 +36,8 @@ const createProps = (args: any): any => {
 	return {
 		healthbar: args.healthbar,
 		piece: {
-			id: '123',
-			ownerId: '123',
+			id: "123",
+			ownerId: "123",
 			definitionId: args.definitionId || 10,
 			definition: {
 				id: args.definitionId || 10,

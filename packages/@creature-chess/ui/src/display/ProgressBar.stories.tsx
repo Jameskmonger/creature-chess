@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { ProgressBar } from '../src/display';
+import { ProgressBar } from "./ProgressBar";
 import "./ProgressBar.stories.css";
 
 export default {

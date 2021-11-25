@@ -54,7 +54,6 @@ const ProgressBar: React.FC<Props> = (props) => {
 
 	return (
 		<div className={classNames(classes.container, className)}>
-			{/* tslint:disable-next-line:jsx-ban-props */}
 			<div className={classNames(classes.fill, fillClassName)} />
 			{
 				renderContents

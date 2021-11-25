@@ -1,63 +1,69 @@
-import React from 'react';
+import React from "react";
 
 import { Card as CardModel, CreatureType, DefinitionClass } from "@creature-chess/models";
-import { CardSelector } from '../../src/cardShop';
+import { CardShop } from "./cardShop";
 
-import "./cardSelector.stories.css";
+import "./cardShop.stories.css";
 
 export default {
-	title: 'Module - Card Shop/CardSelector',
-	component: CardSelector,
+	title: "Card Shop/CardShop",
+	component: CardShop,
 	argTypes: {
-		selectedCardIndex: {
+		money: {
 			control: {
-				type: 'number'
+				type: "number"
+			}
+		},
+		isLocked: {
+			control: {
+				type: "boolean"
 			}
 		}
 	}
 };
 
-const Template = (args) => <div className="card-selector-story"><CardSelector {...args} /></div>;
+const Template = (args) => <div className="card-shop-story"><CardShop {...args} /></div>;
 
 const cards: CardModel[] = [{
-	id: '0001',
+	id: "0005",
+	definitionId: 37,
+	name: "Arbelder",
+	type: CreatureType.Wood,
+	class: DefinitionClass.VALIANT,
+	cost: 5
+}, {
+	id: "0001",
 	definitionId: 10,
 	name: "Chenipode",
 	type: CreatureType.Earth,
 	class: DefinitionClass.CUNNING,
 	cost: 2
 }, {
-	id: '0002',
+	id: "0002",
 	definitionId: 24,
 	name: "Ruption",
 	type: CreatureType.Fire,
 	class: DefinitionClass.ARCANE,
 	cost: 3
 }, {
-	id: '0003',
+	id: "0003",
 	definitionId: 32,
 	name: "Cairfrey",
 	type: CreatureType.Metal,
 	class: DefinitionClass.ARCANE,
 	cost: 3
 }, {
-	id: '0004',
+	id: "0004",
 	definitionId: 46,
 	name: "Eaglace",
 	type: CreatureType.Water,
 	class: DefinitionClass.CUNNING,
 	cost: 5
-}, {
-	id: '0005',
-	definitionId: 37,
-	name: "Arbelder",
-	type: CreatureType.Wood,
-	class: DefinitionClass.VALIANT,
-	cost: 5
 }];
 
-export const Selector = Template.bind({});
-Selector.args = {
+export const Shop = Template.bind({});
+Shop.args = {
 	cards,
-	selectedCardIndex: 2
+	isLocked: false,
+	money: 14
 };

@@ -1,11 +1,11 @@
 import React from "react";
 import { LobbyPlayer, PlayerTitle } from "@creature-chess/models";
-import { LobbyPlayerBanner } from "../../src/lobbyPlayerBanner/lobbyPlayerBanner";
+import { LobbyPlayerBanner } from "./lobbyPlayerBanner";
 
 import "./lobbyPlayerBanner.stories.css";
 
 export default {
-	title: "Lobby/LobbyPlayerBanner",
+	title: "LobbyPlayerBanner",
 	component: LobbyPlayerBanner,
 	argTypes: {
 	}
@@ -15,13 +15,21 @@ const Template = (args) => <LobbyPlayerBanner {...args} />;
 
 const createLobbyPlayer = (title: PlayerTitle, isBot: boolean): LobbyPlayer | null => {
 	if (isBot) {
-		return null;
+		return ({
+			id: "12300234",
+			name: "[BOT] BigManEdam",
+			profile: {
+				title,
+				picture: 1
+			}
+		});
 	}
+
 	return ({
 		id: "12300234",
 		name: "BigManEdam",
 		profile: {
-			title: title,
+			title,
 			picture: 5
 		}
 	})

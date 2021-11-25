@@ -1,12 +1,13 @@
-import React from 'react';
+import React from "react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
 
-import { Layout, Half } from '../src/layout';
+import { Layout } from "./layout";
+import { Half } from "./half";
 import "./Layout.stories.css";
 
 export default {
-	title: 'Layout',
+	title: "Layout",
 };
 
 const useStyles = createUseStyles({

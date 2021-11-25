@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import { CreatureImage } from '../src/display';
+import { CreatureImage } from "./CreatureImage";
 
 export default {
-	title: 'Creature/Image',
+	title: 'Display/CreatureImage',
 	component: CreatureImage,
 	argTypes: {
 		definitionId: { type: 'number', required: true },
