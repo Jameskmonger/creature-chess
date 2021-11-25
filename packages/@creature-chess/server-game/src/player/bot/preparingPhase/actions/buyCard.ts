@@ -4,7 +4,7 @@ import { Card, PieceModel } from "@creature-chess/models";
 import { BotPersonality } from "@creature-chess/data";
 import { BrainAction } from "../../brain";
 import { PREFERRED_LOCATIONS } from "../../preferredLocations";
-import { isStrategicTypeCard } from "./utils/getStrategicTypes";
+import { isStrategicCard } from "./utils/creatureType";
 
 const getAverageCost = (pieces: PieceModel[]): number => (
 	pieces.reduce((acc, cur) => acc + cur.definition.cost, 0)
@@ -24,7 +24,7 @@ const shouldBuy = (state: PlayerState, card: Card) => {
 	const improvesAverageCost = card.cost > averageCost;
 
 	// only buy card if it is strategically sound.
-	return improvesAverageCost && isStrategicTypeCard(card, state) && hasEmptySlot;
+	return improvesAverageCost && isStrategicCard(card, allPieces) && hasEmptySlot;
 };
 
 export const createBuyCardAction = (

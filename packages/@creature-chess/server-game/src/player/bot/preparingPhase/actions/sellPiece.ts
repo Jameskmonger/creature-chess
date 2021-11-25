@@ -1,14 +1,15 @@
 import { BoardSelectors } from "@shoki/board";
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
-import { PlayerState, PlayerStateSelectors, PlayerActions } from "@creature-chess/gamemode";
+import { PlayerState, PlayerStateSelectors, PlayerActions, getAllPieces } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 import { BotPersonality } from "@creature-chess/data";
 import { BrainAction } from "../../brain";
-import { isStrategicTypePiece } from "./utils/getStrategicTypes";
+import { isStrategicPiece } from "./utils/creatureType";
 
 export const createSellPieceAction = (state: PlayerState, personality: BotPersonality, piece: PieceModel): BrainAction | null => {
 
 	const pieceCount = PlayerStateSelectors.getAllPieceCount(state);
+	const allPieces = getAllPieces(state);
 	const boardPieces = BoardSelectors.getAllPieces(state.board);
 	const hasMatchingPieceOnBoard = boardPieces.some(p => p.definitionId === piece.definitionId);
 
@@ -17,7 +18,7 @@ export const createSellPieceAction = (state: PlayerState, personality: BotPerson
 		return null;
 	}
 	// don't sell piece if it is a strategically sound piece
-	if (isStrategicTypePiece(piece, state)) {
+	if (isStrategicPiece(piece, allPieces)) {
 		// for debugging - remove log statement
 		console.log(`Strategic piece ${piece} not being sold`);
 		return null;
