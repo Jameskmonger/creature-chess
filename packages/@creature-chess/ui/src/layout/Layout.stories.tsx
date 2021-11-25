@@ -1,4 +1,5 @@
 import React from "react";
+import { Meta, Story } from "@storybook/react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
 
@@ -8,7 +9,7 @@ import "./Layout.stories.css";
 
 export default {
 	title: "Layout",
-};
+} as Meta;
 
 const useStyles = createUseStyles({
 	layout: {
@@ -22,7 +23,7 @@ const useStyles = createUseStyles({
 	}
 });
 
-const Template = (args) => {
+const Template: Story<any> = (args) => {
 	const classes = useStyles();
 
 	if (args.row) {

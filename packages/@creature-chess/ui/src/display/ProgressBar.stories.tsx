@@ -1,25 +1,26 @@
 import React from "react";
+import { Meta, Story } from "@storybook/react";
 
 import { ProgressBar } from "./ProgressBar";
 import "./ProgressBar.stories.css";
 
 export default {
-	title: 'Display/ProgressBar',
+	title: "Display/ProgressBar",
 	component: ProgressBar,
 	argTypes: {
 		current: {
 			control: {
-				type: 'number'
+				type: "number"
 			}
 		},
 		max: {
 			control: {
-				type: 'number'
+				type: "number"
 			}
 		},
 		vertical: {
 			control: {
-				type: 'boolean'
+				type: "boolean"
 			}
 		},
 		className: {
@@ -38,13 +39,15 @@ export default {
 			}
 		}
 	},
-};
+} as Meta;
 
 const renderContents = (current: number) => current.toString();
 
-const Template = (args) => <div className="progressbar-story">
-	<ProgressBar {...args} renderContents={renderContents} className="healthbar" fillClassName="fill" contentClassName="contents" />
-</div>;
+const Template: Story<any> = (args) => (
+	<div className="progressbar-story">
+		<ProgressBar {...args} renderContents={renderContents} className="healthbar" fillClassName="fill" contentClassName="contents" />
+	</div>
+);
 
 export const Healthbar = Template.bind({});
 Healthbar.args = {

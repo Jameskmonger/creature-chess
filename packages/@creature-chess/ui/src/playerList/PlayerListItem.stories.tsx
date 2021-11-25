@@ -1,4 +1,5 @@
 import React from "react";
+import { Meta, Story } from "@storybook/react";
 
 import { finishedBattle, inProgressBattle, PlayerBattle, PlayerListPlayer, PlayerStatus, PlayerTitle, StreakType } from "@creature-chess/models";
 import { PlayerListItem } from "./playerListItem";
@@ -18,11 +19,11 @@ export default {
 			}
 		}
 	}
-};
+} as Meta;
 
-const Template = (args) => <div style={{ maxWidth: "400px" }}><PlayerListItem {...args} /></div>;
+const Template: Story<any> = (args) => <div style={{ maxWidth: "400px" }}><PlayerListItem {...args} /></div>;
 
-const createPlayer = (battle: PlayerBattle, others?: Partial<PlayerListPlayer> = {}): PlayerListPlayer => ({
+const createPlayer = (battle: PlayerBattle, others: Partial<PlayerListPlayer> = {}): PlayerListPlayer => ({
 	id: "1234",
 	name: "jkm",
 	health: 69,
@@ -38,7 +39,7 @@ const createPlayer = (battle: PlayerBattle, others?: Partial<PlayerListPlayer> =
 	},
 	battle,
 	...others
-})
+});
 
 export const LocalNoBattle = Template.bind({});
 LocalNoBattle.args = {

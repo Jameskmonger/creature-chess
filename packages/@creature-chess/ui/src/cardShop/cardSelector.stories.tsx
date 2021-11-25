@@ -1,4 +1,5 @@
 import React from "react";
+import { Meta, Story } from "@storybook/react";
 
 import { Card as CardModel, CreatureType, DefinitionClass } from "@creature-chess/models";
 import { CardSelector } from "./cardSelector";
@@ -15,9 +16,9 @@ export default {
 			}
 		}
 	}
-};
+} as Meta;
 
-const Template = (args) => <div className="card-selector-story"><CardSelector {...args} /></div>;
+const Template: Story<any> = (args) => <div className="card-selector-story"><CardSelector {...args} /></div>;
 
 const cards: CardModel[] = [{
 	id: "0001",

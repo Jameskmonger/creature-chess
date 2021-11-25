@@ -1,4 +1,5 @@
 import React from "react";
+import { Meta, Story } from "@storybook/react";
 import { LobbyPlayer, PlayerTitle } from "@creature-chess/models";
 import { LobbyPlayerBanner } from "./lobbyPlayerBanner";
 
@@ -9,20 +10,13 @@ export default {
 	component: LobbyPlayerBanner,
 	argTypes: {
 	}
-};
+} as Meta;
 
-const Template = (args) => <LobbyPlayerBanner {...args} />;
+const Template: Story<any> = (args) => <LobbyPlayerBanner {...args} />;
 
-const createLobbyPlayer = (title: PlayerTitle, isBot: boolean): LobbyPlayer | null => {
+const createLobbyPlayer = (title: PlayerTitle | null, isBot: boolean): LobbyPlayer | null => {
 	if (isBot) {
-		return ({
-			id: "12300234",
-			name: "[BOT] BigManEdam",
-			profile: {
-				title,
-				picture: 1
-			}
-		});
+		return null;
 	}
 
 	return ({
@@ -32,18 +26,20 @@ const createLobbyPlayer = (title: PlayerTitle, isBot: boolean): LobbyPlayer | nu
 			title,
 			picture: 5
 		}
-	})
-}
+	});
+};
 
 export const StandardPlayer = Template.bind({});
 StandardPlayer.args = {
 	player: createLobbyPlayer(null, false)
-}
+};
+
 export const Developer = Template.bind({});
 Developer.args = {
 	player: createLobbyPlayer(PlayerTitle.Developer, false)
-}
+};
+
 export const BotPlayer = Template.bind({});
 BotPlayer.args = {
 	player: createLobbyPlayer(null, true)
-}
+};
