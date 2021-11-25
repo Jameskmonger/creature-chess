@@ -1,7 +1,7 @@
 {
 	"private": "true",
 	"name": "@shoki/engine",
-	"version": "0.4.12",
+	"version": "0.4.17",
 	"description": "Shoki game engine",
 	"keywords": [
 		"shoki",

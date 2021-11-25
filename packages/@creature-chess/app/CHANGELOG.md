@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.17](https://github.com/Jameskmonger/creature-chess/compare/v0.4.16...v0.4.17) (2021-11-25)
+
+
+### Bug Fixes
+
+* fix build and dev:app after lerna changes ([#450](https://github.com/Jameskmonger/creature-chess/issues/450)) ([a7c9ba7](https://github.com/Jameskmonger/creature-chess/commit/a7c9ba7565a3c04e47cc7782e870f6719a408b0f))
+
+
+### Features
+
+* profile picture shown in lobby ([#446](https://github.com/Jameskmonger/creature-chess/issues/446)) ([b79cd97](https://github.com/Jameskmonger/creature-chess/commit/b79cd97bb0ea1f4743fc1ff80f8433de7c2575be))
+
+
+
+
+
 ## [0.4.16](https://github.com/Jameskmonger/creature-chess/compare/v0.4.15...v0.4.16) (2021-07-27)
 
 **Note:** Version bump only for package @creature-chess/app

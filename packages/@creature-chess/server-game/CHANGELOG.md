@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.17](https://github.com/Jameskmonger/creature-chess/compare/v0.4.16...v0.4.17) (2021-11-25)
+
+
+### Bug Fixes
+
+* fix build and dev:app after lerna changes ([#450](https://github.com/Jameskmonger/creature-chess/issues/450)) ([a7c9ba7](https://github.com/Jameskmonger/creature-chess/commit/a7c9ba7565a3c04e47cc7782e870f6719a408b0f))
+
+
+### Features
+
+* make bot consider how strategic a piece's type is ([#458](https://github.com/Jameskmonger/creature-chess/issues/458)) ([ec71f5c](https://github.com/Jameskmonger/creature-chess/commit/ec71f5ceb5df1e654f0148a8849f82bab3b169cd))
+
+
+
+
+
 ## [0.4.16](https://github.com/Jameskmonger/creature-chess/compare/v0.4.15...v0.4.16) (2021-07-27)
 
 **Note:** Version bump only for package @creature-chess/server-game

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.17](https://github.com/Jameskmonger/creature-chess/compare/v0.4.16...v0.4.17) (2021-11-25)
+
+
+### Bug Fixes
+
+* fix @shoki/board dependency ([4294659](https://github.com/Jameskmonger/creature-chess/commit/4294659a17b645d587c899a51fd0ac690c5a6ced))
+* fix build and dev:app after lerna changes ([#450](https://github.com/Jameskmonger/creature-chess/issues/450)) ([a7c9ba7](https://github.com/Jameskmonger/creature-chess/commit/a7c9ba7565a3c04e47cc7782e870f6719a408b0f))
+
+
+### Features
+
+* Add board, bench and inputs to dev tools ([#451](https://github.com/Jameskmonger/creature-chess/issues/451)) ([9d1063d](https://github.com/Jameskmonger/creature-chess/commit/9d1063de29a6cbc0b6edf9f3049bfcce0c2947ea))
+* Create initial dev tools package ([#456](https://github.com/Jameskmonger/creature-chess/issues/456)) ([1ba9861](https://github.com/Jameskmonger/creature-chess/commit/1ba98614118757bf22398cddbe8c15d118eb9db1))
+* make bot consider how strategic a piece's type is ([#458](https://github.com/Jameskmonger/creature-chess/issues/458)) ([ec71f5c](https://github.com/Jameskmonger/creature-chess/commit/ec71f5ceb5df1e654f0148a8849f82bab3b169cd))
+* profile picture shown in lobby ([#446](https://github.com/Jameskmonger/creature-chess/issues/446)) ([b79cd97](https://github.com/Jameskmonger/creature-chess/commit/b79cd97bb0ea1f4743fc1ff80f8433de7c2575be))
+* Reinstall storybook ([#459](https://github.com/Jameskmonger/creature-chess/issues/459)) ([09520fe](https://github.com/Jameskmonger/creature-chess/commit/09520fee0f4fe187b6407a62be24774b24cf81fe))
+
+
+
+
+
 ## [0.4.16](https://github.com/Jameskmonger/creature-chess/compare/v0.4.15...v0.4.16) (2021-07-27)
 
 **Note:** Version bump only for package creature-chess

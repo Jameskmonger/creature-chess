@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.17](https://github.com/Jameskmonger/creature-chess/compare/v0.4.16...v0.4.17) (2021-11-25)
+
+
+### Features
+
+* Add board, bench and inputs to dev tools ([#451](https://github.com/Jameskmonger/creature-chess/issues/451)) ([9d1063d](https://github.com/Jameskmonger/creature-chess/commit/9d1063de29a6cbc0b6edf9f3049bfcce0c2947ea))
+* profile picture shown in lobby ([#446](https://github.com/Jameskmonger/creature-chess/issues/446)) ([b79cd97](https://github.com/Jameskmonger/creature-chess/commit/b79cd97bb0ea1f4743fc1ff80f8433de7c2575be))
+* Reinstall storybook ([#459](https://github.com/Jameskmonger/creature-chess/issues/459)) ([09520fe](https://github.com/Jameskmonger/creature-chess/commit/09520fee0f4fe187b6407a62be24774b24cf81fe))
+
+
+
+
+
 ## [0.4.16](https://github.com/Jameskmonger/creature-chess/compare/v0.4.15...v0.4.16) (2021-07-27)
 
 **Note:** Version bump only for package @creature-chess/ui
