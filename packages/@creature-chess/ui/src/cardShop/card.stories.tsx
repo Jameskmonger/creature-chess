@@ -1,19 +1,20 @@
-import React from 'react';
+import React from "react";
+import { Meta, Story } from "@storybook/react";
 
 import { Card as CardModel, CreatureType, DefinitionClass } from "@creature-chess/models";
-import { Card } from '../../src/cardShop';
+import { Card } from "./card";
 
 import "./card.stories.css";
 
 export default {
-	title: 'Module - Card Shop/Card',
+	title: "Card Shop/Card",
 	component: Card
-};
+} as Meta;
 
-const Template = (args) => <div className="card-story"><Card {...args} /></div>;
+const Template: Story<any> = (args) => <div className="card-story"><Card {...args} /></div>;
 
 const card: CardModel = {
-	id: '1234',
+	id: "1234",
 	definitionId: 10,
 	name: "Chenipode",
 	type: CreatureType.Earth,

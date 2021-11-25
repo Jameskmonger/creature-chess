@@ -1,13 +1,15 @@
-import React from 'react';
+import React from "react";
+import { Meta, Story } from "@storybook/react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
 
-import { Layout, Half } from '../src/layout';
+import { Layout } from "./layout";
+import { Half } from "./half";
 import "./Layout.stories.css";
 
 export default {
-	title: 'Layout',
-};
+	title: "Layout",
+} as Meta;
 
 const useStyles = createUseStyles({
 	layout: {
@@ -21,7 +23,7 @@ const useStyles = createUseStyles({
 	}
 });
 
-const Template = (args) => {
+const Template: Story<any> = (args) => {
 	const classes = useStyles();
 
 	if (args.row) {

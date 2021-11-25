@@ -21,7 +21,7 @@
 		"build": "tsc -p ./tsconfig.json",
 		"test": "jest --passWithNoTests",
 		"storybook": "start-storybook -p 6006",
-		"build-storybook": "build-storybook -o ./docs"
+		"build-storybook": "build-storybook -o ./output"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
@@ -32,19 +32,12 @@
 		"react-jss": "^10.6.0"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.14.3",
-		"@storybook/addon-actions": "^6.4.0-alpha.21",
-		"@storybook/addon-essentials": "^6.4.0-alpha.21",
-		"@storybook/addon-links": "^6.4.0-alpha.21",
-		"@storybook/builder-webpack5": "^6.4.0-alpha.21",
-		"@storybook/manager-webpack5": "^6.4.0-alpha.21",
-		"@storybook/preset-scss": "^1.0.3",
-		"@storybook/react": "^6.4.0-alpha.21",
-		"babel-loader": "^8.2.2",
-		"css-loader": "^6.2.0",
-		"sass": "^1.32.13",
-		"sass-loader": "^12.1.0",
-		"style-loader": "^2.0.0"
+		"@babel/core": "^7.16.0",
+		"@storybook/addon-actions": "^6.3.12",
+		"@storybook/addon-essentials": "^6.3.12",
+		"@storybook/addon-links": "^6.3.12",
+		"@storybook/react": "^6.3.12",
+		"babel-loader": "^8.2.3"
 	},
 	"peerDependencies": {
 		"react": "^17.0.2",

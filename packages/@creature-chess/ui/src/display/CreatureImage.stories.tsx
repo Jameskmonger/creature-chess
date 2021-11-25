@@ -1,16 +1,17 @@
-import React from 'react';
+import React from "react";
+import { Meta, Story } from "@storybook/react";
 
-import { CreatureImage } from '../src/display';
+import { CreatureImage } from "./creatureImage";
 
 export default {
-	title: 'Creature/Image',
+	title: "Display/CreatureImage",
 	component: CreatureImage,
 	argTypes: {
-		definitionId: { type: 'number', required: true },
+		definitionId: { type: "number", required: true },
 		facing: {
 			control: {
-				type: 'radio',
-				options: ['front', 'back']
+				type: "radio",
+				options: ["front", "back"]
 			}
 		},
 		baseUrl: {
@@ -19,9 +20,9 @@ export default {
 			}
 		}
 	},
-};
+} as Meta;
 
-const Template = (args) => <CreatureImage {...args} />;
+const Template: Story<any> = (args) => <CreatureImage {...args} />;
 
 export const Kirkanon = Template.bind({});
 Kirkanon.args = {
