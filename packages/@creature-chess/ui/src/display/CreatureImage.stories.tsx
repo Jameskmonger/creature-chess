@@ -1,7 +1,7 @@
 import React from "react";
 import { Meta, Story } from "@storybook/react";
 
-import { CreatureImage } from "./CreatureImage";
+import { CreatureImage } from "./creatureImage";
 
 export default {
 	title: "Display/CreatureImage",
