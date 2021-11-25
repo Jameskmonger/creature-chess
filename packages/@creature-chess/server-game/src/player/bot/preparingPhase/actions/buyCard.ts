@@ -4,6 +4,7 @@ import { Card, PieceModel } from "@creature-chess/models";
 import { BotPersonality } from "@creature-chess/data";
 import { BrainAction } from "../../brain";
 import { PREFERRED_LOCATIONS } from "../../preferredLocations";
+import { isStrategicCard } from "./utils/creatureType";
 
 const getAverageCost = (pieces: PieceModel[]): number => (
 	pieces.reduce((acc, cur) => acc + cur.definition.cost, 0)
@@ -13,16 +14,17 @@ const getAverageCost = (pieces: PieceModel[]): number => (
 const shouldBuy = (state: PlayerState, card: Card) => {
 	const allPieces = getAllPieces(state);
 	const alreadyOwnPiece = allPieces.some(p => p.definitionId === card.definitionId);
+	const hasEmptySlot = allPieces.length < (PlayerStateSelectors.getPlayerLevel(state) + 3); // board + 3 bench pieces
 
-	if (alreadyOwnPiece) {
+	if (alreadyOwnPiece && hasEmptySlot) {
 		return true;
 	}
 
 	const averageCost = getAverageCost(allPieces);
 	const improvesAverageCost = card.cost > averageCost;
-	const hasEmptySlot = allPieces.length < (PlayerStateSelectors.getPlayerLevel(state) + 3); // board + 3 bench pieces
 
-	return improvesAverageCost && hasEmptySlot;
+	// only buy card if it is strategically sound.
+	return improvesAverageCost && isStrategicCard(card, allPieces) && hasEmptySlot;
 };
 
 export const createBuyCardAction = (
