@@ -29,5 +29,5 @@ jobs:
       with:
         ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: packages/ui/output
+        FOLDER: packages/@creature-chess/ui/output
         TARGET_FOLDER: storybook
