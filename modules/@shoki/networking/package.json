@@ -19,9 +19,6 @@
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
-	"dependencies": {
-		"@types/redux-saga": "^0.10.5"
-	},
 	"peerDependencies": {
 		"redux-saga": "^1.1.3"
 	}

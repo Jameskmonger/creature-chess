@@ -69,7 +69,7 @@ export const incomingGameServerToClient = function*(
 	// todo fix typing
 	const registry = GameServerToClient.incoming(
 		(opcode, handler) => socket.on(opcode, handler as any),
-		(opcode, handler) => socket.off(opcode, handler)
+		(opcode, handler) => socket.off(opcode, handler as any)
 	);
 
 	yield all([

@@ -1,6 +1,6 @@
 import * as React from "react";
 import ReactModal from "react-modal";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AppState } from "./store";
@@ -11,7 +11,9 @@ import { Auth0User, isRegistered, LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => (
-	<Route exact path="/" component={LoginPage} />
+	<Routes>
+		<Route path="/" element={<LoginPage />} />
+	</Routes>
 );
 
 enum GameState {
@@ -52,7 +54,9 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
 };
 
 const AuthenticatedRoutes: React.FunctionComponent = () => (
-	<Route exact path="/" component={AuthenticatedRootPage} />
+	<Routes>
+		<Route path="/" element={<AuthenticatedRootPage />} />
+	</Routes>
 );
 
 ReactModal.setAppElement("#approot");

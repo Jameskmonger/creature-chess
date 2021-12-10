@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider as ReduxProvider } from "react-redux";
-import { BrowserRouter, useHistory } from "react-router-dom";
+import { BrowserRouter, useNavigate } from "react-router-dom";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
@@ -28,11 +28,11 @@ if (process.env.SENTRY_DSN) {
 }
 
 const BrowserRouterChild: React.FunctionComponent = () => {
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const onRedirectCallback = (appState) => {
 		// Use the router's history module to replace the url
-		history.replace(appState?.returnTo || window.location.pathname);
+		navigate(appState?.returnTo || window.location.pathname);
 	};
 
 	return (

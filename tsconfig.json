@@ -10,14 +10,13 @@
 			"es2017",
 			"dom"
 		],
+		"declaration": true,
+		"declarationMap": true,
 		"downlevelIteration": true,
 		"strict": true,
 		"types": [
 			"node",
 			"jest"
 		]
-	},
-	"exclude": [
-		"./lib"
-	]
+	}
 }

@@ -100,10 +100,7 @@ module.exports = {
 		plugins: [
 			new TsConfigPathsPlugin()
 		],
-		extensions: [".tsx", ".ts", ".js"],
-		fallback: {
-			events: require.resolve("events/")
-		}
+		extensions: [".tsx", ".ts", ".js"]
 	},
 
 	output: {
@@ -148,11 +145,10 @@ module.exports = {
 	].filter(plugin => plugin !== null),
 
 	devServer: {
-		contentBase: outDir,
+		static: outDir,
 		compress: true,
 		port: 8090,
 		historyApiFallback: true,
-		disableHostCheck: true,
 		https: true,
 		host: "creaturechess.local-dev.com"
 	},
