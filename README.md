@@ -12,10 +12,9 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 
 ### Prerequisites
 
-Yarn (`npm i -g yarn && yarn set version berry`)
-
 - Node.js
 - Docker w/ docker-compose
+- Yarn (`npm i -g yarn && yarn set version berry`)
 - A Fauna database with an access key in environment variable `CREATURE_CHESS_FAUNA_KEY`
   - You can use [Fauna Dev](https://docs.fauna.com/fauna/current/integrations/dev.html) for this
 - An Auth0 app for the server
@@ -34,13 +33,13 @@ Yarn (`npm i -g yarn && yarn set version berry`)
 
 ```shell
 # install dependencies
-$ npm install
+$ yarn
 
 # run the frontend in dev mode
-$ npm run dev:app
+$ yarn dev:web
 
 # run the server (do this in a separate console)
-$ docker-compose build && docker-compose up
+$ yarn dockerup
 ```
 
 The game is then accessible at `https://creaturechess.local-dev.com:8090`. You might need to add `creaturechess.local-dev.com` to your host file (or remove `host` from `webpack.config.js`)
@@ -48,7 +47,7 @@ The game is then accessible at `https://creaturechess.local-dev.com:8090`. You m
 ### Dev toolkit
 
 ```shell
-$ npm run tools
+$ yarn dev:tools
 ```
 
 ### Publishing
