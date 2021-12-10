@@ -145,7 +145,6 @@ module.exports = {
 	].filter(plugin => plugin !== null),
 
 	devServer: {
-		static: outDir,
 		compress: true,
 		port: 8090,
 		historyApiFallback: true,
