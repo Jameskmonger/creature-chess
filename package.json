@@ -3,7 +3,6 @@
 	"name": "creature-chess",
 	"version": "1.0.0",
 	"description": "Creature Chess",
-	"main": "index.js",
 	"scripts": {
 		"outdated": "npm outdated && lerna exec --no-bail -- npm outdated",
 		"test": "lerna run test",
