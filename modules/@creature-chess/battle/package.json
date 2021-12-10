@@ -1,0 +1,32 @@
+{
+	"name": "@creature-chess/battle",
+	"version": "0.4.17",
+	"description": "Battle engine for Creature Chess",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"@creature-chess/models": "workspace:*",
+		"@shoki/board": "workspace:*",
+		"@types/redux-saga": "^0.10.5",
+		"javascript-astar": "^0.4.1",
+		"present": "^1.0.0"
+	},
+	"peerDependencies": {
+		"redux-saga": "^1.1.3"
+	}
+}

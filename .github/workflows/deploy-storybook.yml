@@ -17,17 +17,15 @@ jobs:
     - name: Use Node.js '14.x'
       uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: '14.x'
     - name: Install dependencies
-      run: npm ci
-    - name: Build application
-      run: npm run build
+      run: yarn
     - name: Build Storybook
-      run: npm run build:storybook
+      run: yarn workspace @creature-chess/ui build-storybook
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.4.1
       with:
         ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: packages/@creature-chess/ui/output
+        FOLDER: modules/@creature-chess/ui/output
         TARGET_FOLDER: storybook

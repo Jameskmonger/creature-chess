@@ -14,6 +14,7 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 
 - Node.js
 - Docker w/ docker-compose
+- Yarn (`npm i -g yarn && yarn set version berry`)
 - A Fauna database with an access key in environment variable `CREATURE_CHESS_FAUNA_KEY`
   - You can use [Fauna Dev](https://docs.fauna.com/fauna/current/integrations/dev.html) for this
 - An Auth0 app for the server
@@ -32,13 +33,13 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 
 ```shell
 # install dependencies
-$ npm install
+$ yarn
 
 # run the frontend in dev mode
-$ npm run dev:app
+$ yarn dev:web
 
 # run the server (do this in a separate console)
-$ docker-compose build && docker-compose up
+$ yarn dockerup
 ```
 
 The game is then accessible at `https://creaturechess.local-dev.com:8090`. You might need to add `creaturechess.local-dev.com` to your host file (or remove `host` from `webpack.config.js`)
@@ -46,7 +47,7 @@ The game is then accessible at `https://creaturechess.local-dev.com:8090`. You m
 ### Dev toolkit
 
 ```shell
-$ npm run tools
+$ yarn dev:tools
 ```
 
 ### Publishing
@@ -58,27 +59,39 @@ $ npm run tools
   - This publishes Heroku (`server-info`)
   - You may have to run this in Bash
 
-## Packages
+## Apps
 
-If the package has a README, you can click on its name here for a link.
+End-clients. Servers and UIs
 
-### Clients
-- [**app**](./packages/app/README.md) - React app
-- **server-game** - websocket gameserver
-- **server-info** - express API server
+- [**web**](./apps/web/README.md) - React app for the game
+- [**server-game**](./apps/server-game/README.md) - websocket gameserver
+- [**server-info**](./apps/server-info/README.md) - express API server
+- [**tools**](./apps/tools/README.md) - Dev tools
+
+## Modules
+
+Reusable logic
+
+### UI
+- \@creature-chess/**ui** - reusable components
 
 ### Server/Client bindings
-- **models** - type library for all shared/domain-centered models
-- **networking** - packet definitions etc shared between app and server
+- \@creature-chess/**models** - type library for all shared/domain-centered models
+- \@creature-chess/**networking** - packet definitions etc shared between app and server
 
 ### Gamemode
-- **board** - Redux reducer and commands for the board
-- **gamemode** - the gamemode
-- **battle** - battle logic
+- \@creature-chess/**gamemode** - the gamemode
+- \@creature-chess/**battle** - battle logic
 
 ### Utilities
-- **auth-server** - shared code for auth0 on the server
-- **data** - database access
+- \@creature-chess/**auth-server** - shared code for auth0 on the server
+- \@creature-chess/**data** - database access
+
+### Shoki
+- \@shoki/**board**
+- \@shoki/**board-react**
+- \@shoki/**engine**
+- \@shoki/**networking**
 
 ## License
 

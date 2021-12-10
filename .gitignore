@@ -7,3 +7,15 @@ lerna-debug.log
 lib/
 bin/
 coverage/
+
+*.d.ts
+*.d.ts.map
+
+#yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
