@@ -20,6 +20,10 @@
 		"lint": "eslint -c .eslintrc.js --ext .ts ./packages",
 		"lint:fix": "npm run lint -- --fix"
 	},
+	"workspaces": [
+		"packages/@creature-chess/*",
+		"packages/@shoki/*"
+	],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {

@@ -6,11 +6,6 @@
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"license": "MIT",
-	"main": "lib/index.js",
-	"types": "lib/index.d.ts",
-	"files": [
-		"lib"
-	],
 	"publishConfig": {
 		"access": "public"
 	},
