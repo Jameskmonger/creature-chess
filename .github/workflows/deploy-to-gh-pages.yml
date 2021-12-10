@@ -19,22 +19,18 @@ jobs:
       with:
         node-version: '14.x'
     - name: Install dependencies
-      run: npm ci
+      run: yarn
     - name: Build application
-      run: npm run build
+      run: yarn workspace @creature-chess/web build
       env:
         GA_ID: ${{ secrets.GA_ID }}
         COOKIEBOT_ID: ${{ secrets.COOKIEBOT_ID }}
         CNAME: ${{ secrets.CNAME }}
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         GH_PAGES: true
-    - name: Copy privacy policy
-      run: cp packages/app/privacy.html packages/app/public/privacy.html
-    - name: Copy 404 page
-      run: cp packages/app/404.html packages/app/public/404.html
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.4.1
       with:
         ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: packages/app/public
+        FOLDER: apps/web/public
