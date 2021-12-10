@@ -12,6 +12,8 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 
 ### Prerequisites
 
+Yarn (`npm i -g yarn && yarn set version berry`)
+
 - Node.js
 - Docker w/ docker-compose
 - A Fauna database with an access key in environment variable `CREATURE_CHESS_FAUNA_KEY`

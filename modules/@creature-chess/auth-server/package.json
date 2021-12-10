@@ -21,8 +21,8 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"@creature-chess/data": "file:../data",
-		"@creature-chess/models": "file:../models",
+		"@creature-chess/data": "workspace:*",
+		"@creature-chess/models": "workspace:*",
 		"@types/auth0": "^2.20.8",
 		"@types/jsonwebtoken": "^8.5.0",
 		"auth0": "^2.34.2",

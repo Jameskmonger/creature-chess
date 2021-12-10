@@ -28,21 +28,6 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@babel/core": "^7.16.0",
-		"@creature-chess/app": "file:packages/@creature-chess/app",
-		"@creature-chess/auth-server": "file:packages/@creature-chess/auth-server",
-		"@creature-chess/battle": "file:packages/@creature-chess/battle",
-		"@creature-chess/data": "file:packages/@creature-chess/data",
-		"@creature-chess/gamemode": "file:packages/@creature-chess/gamemode",
-		"@creature-chess/models": "file:packages/@creature-chess/models",
-		"@creature-chess/networking": "file:packages/@creature-chess/networking",
-		"@creature-chess/server-game": "file:packages/@creature-chess/server-game",
-		"@creature-chess/server-info": "file:packages/@creature-chess/server-info",
-		"@creature-chess/tools": "file:packages/@creature-chess/tools",
-		"@creature-chess/ui": "file:packages/@creature-chess/ui",
-		"@shoki/board": "file:packages/@shoki/board",
-		"@shoki/board-react": "file:packages/@shoki/board-react",
-		"@shoki/engine": "file:packages/@shoki/engine",
-		"@shoki/networking": "file:packages/@shoki/networking",
 		"@storybook/addon-actions": "^6.3.12",
 		"@storybook/addon-essentials": "^6.3.12",
 		"@storybook/addon-links": "^6.3.12",
@@ -88,12 +73,11 @@
 	"dependencies": {
 		"@types/react": "^17.0.15",
 		"@types/react-dom": "^17.0.9",
-		"@types/redux": "^3.6.0",
-		"@types/redux-saga": "^0.10.5",
 		"react": "^17.0.2",
 		"react-dnd": "^14.0.2",
 		"react-dom": "^17.0.2",
 		"redux": "^4.1.0",
 		"redux-saga": "^1.1.3"
-	}
+	},
+	"packageManager": "yarn@3.1.1"
 }

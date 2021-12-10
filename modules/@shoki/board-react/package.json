@@ -20,7 +20,7 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@shoki/board": "file:../board"
+		"@shoki/board": "workspace:*"
 	},
 	"peerDependencies": {
 		"react": "^17.0.2",
