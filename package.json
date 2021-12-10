@@ -21,8 +21,9 @@
 		"lint:fix": "npm run lint -- --fix"
 	},
 	"workspaces": [
-		"packages/@creature-chess/*",
-		"packages/@shoki/*"
+		"modules/@creature-chess/*",
+		"modules/@shoki/*",
+		"apps/*"
 	],
 	"author": "",
 	"license": "ISC",
