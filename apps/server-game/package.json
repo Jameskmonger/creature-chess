@@ -20,7 +20,7 @@
 	"scripts": {
 		"build": "tsc -p ./tsconfig.json",
 		"start": "node ./lib/index.js 3000",
-		"test": "jest --passWithNoTests"
+		"test": "yarn run -T jest --passWithNoTests"
 	},
 	"dependencies": {
 		"@creature-chess/auth-server": "workspace:*",
