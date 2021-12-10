@@ -59,27 +59,39 @@ $ yarn dev:tools
   - This publishes Heroku (`server-info`)
   - You may have to run this in Bash
 
-## Packages
+## Apps
 
-If the package has a README, you can click on its name here for a link.
+End-clients. Servers and UIs
 
-### Clients
-- [**app**](./packages/app/README.md) - React app
-- **server-game** - websocket gameserver
-- **server-info** - express API server
+- [**web**](./apps/web/README.md) - React app for the game
+- [**server-game**](./apps/server-game/README.md) - websocket gameserver
+- [**server-info**](./apps/server-info/README.md) - express API server
+- [**tools**](./apps/tools/README.md) - Dev tools
+
+## Modules
+
+Reusable logic
+
+### UI
+- \@creature-chess/**ui** - reusable components
 
 ### Server/Client bindings
-- **models** - type library for all shared/domain-centered models
-- **networking** - packet definitions etc shared between app and server
+- \@creature-chess/**models** - type library for all shared/domain-centered models
+- \@creature-chess/**networking** - packet definitions etc shared between app and server
 
 ### Gamemode
-- **board** - Redux reducer and commands for the board
-- **gamemode** - the gamemode
-- **battle** - battle logic
+- \@creature-chess/**gamemode** - the gamemode
+- \@creature-chess/**battle** - battle logic
 
 ### Utilities
-- **auth-server** - shared code for auth0 on the server
-- **data** - database access
+- \@creature-chess/**auth-server** - shared code for auth0 on the server
+- \@creature-chess/**data** - database access
+
+### Shoki
+- \@shoki/**board**
+- \@shoki/**board-react**
+- \@shoki/**engine**
+- \@shoki/**networking**
 
 ## License
 
