@@ -11,7 +11,7 @@ export const setupUserDatabase = async (client: FaunaDBClient) => {
 		}));
 
 		console.log(` - Created collection '${COLLECTION_NAMES.USERS}'`);
-	} catch (e) {
+	} catch (e: any) {
 		if (e.message === INSTANCE_ALREADY_EXISTS) {
 			console.log(` - Collection '${COLLECTION_NAMES.USERS}' already exists`);
 		} else {
@@ -34,7 +34,7 @@ export const setupUserDatabase = async (client: FaunaDBClient) => {
 		}));
 
 		console.log(` - Created index '${INDEX_NAMES.USERS_BY_NICKNAME_UPPERCASE}'`);
-	} catch (e) {
+	} catch (e: any) {
 		if (e.message === INSTANCE_ALREADY_EXISTS) {
 			console.log(` - Index '${INDEX_NAMES.USERS_BY_NICKNAME_UPPERCASE}' already exists`);
 		} else {
@@ -69,7 +69,7 @@ export const setupUserDatabase = async (client: FaunaDBClient) => {
 		}));
 
 		console.log(` - Created index '${INDEX_NAMES.USERS_BY_WINS}'`);
-	} catch (e) {
+	} catch (e: any) {
 		if (e.message === INSTANCE_ALREADY_EXISTS) {
 			console.log(` - Index '${INDEX_NAMES.USERS_BY_WINS}' already exists`);
 		} else {

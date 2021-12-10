@@ -18,7 +18,7 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"scripts": {
-		"build": "tsc -p ./tsconfig.json",
+		"build": "yarn run -T tsc -p ./tsconfig.json",
 		"start": "node ./lib/index.js 3000",
 		"test": "yarn run -T jest --passWithNoTests"
 	},

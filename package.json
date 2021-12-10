@@ -6,8 +6,9 @@
 	"scripts": {
 		"dev:web": "yarn workspace @creature-chess/web dev",
 		"dev:tools": "yarn workspace @creature-chess/tools start",
+		"start:server-game": "ts-node apps/server-game/index.ts 3000",
+		"start:server-info": "ts-node apps/server-info/index.ts 3000",
 		"test": "yarn workspaces foreach run test",
-		"build": "yarn workspaces foreach run build",
 		"dockerup": "docker-compose build && docker-compose up",
 		"storybook": "yarn workspace @creature-chess/ui storybook",
 		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\""
@@ -46,7 +47,8 @@
 		"react-dnd": "^14.0.2",
 		"react-dom": "^17.0.2",
 		"redux": "^4.1.0",
-		"redux-saga": "^1.1.3"
+		"redux-saga": "^1.1.3",
+		"ts-node": "^10.4.0"
 	},
 	"packageManager": "yarn@3.1.1"
 }

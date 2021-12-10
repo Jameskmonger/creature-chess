@@ -48,7 +48,7 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
 
 		// if we just created the collection, create bots
 		shouldCreateBots = true;
-	} catch (e) {
+	} catch (e: any) {
 		if (e.message === INSTANCE_ALREADY_EXISTS) {
 			console.log(` - Collection '${COLLECTION_NAMES.BOTS}' already exists`);
 		} else {
@@ -86,7 +86,7 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
 		}));
 
 		console.log(` - Created index '${INDEX_NAMES.BOTS_BY_LOWEST_GAMES_PLAYED}'`);
-	} catch (e) {
+	} catch (e: any) {
 		if (e.message === INSTANCE_ALREADY_EXISTS) {
 			console.log(` - Index '${INDEX_NAMES.BOTS_BY_LOWEST_GAMES_PLAYED}' already exists`);
 		} else {
