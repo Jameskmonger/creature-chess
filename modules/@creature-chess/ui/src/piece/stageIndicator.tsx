@@ -14,7 +14,7 @@ const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ stage, c
 	}
 
 	for (let i = 0; i <= stage; i++) {
-		stars.push(<img key={i} src="https://creaturechess.jamesmonger.com/images/ui/star.svg" />);
+		stars.push(<img key={i} src="https://creaturechess.com/images/ui/star.svg" />);
 	}
 
 	return <Layout className={className} direction="column" justifyContent="center" noSpacer>{stars}</Layout>;

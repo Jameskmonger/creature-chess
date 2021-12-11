@@ -73,7 +73,7 @@ const CardSelectionOverlay: React.FunctionComponent = () => {
 						key={definition.id}
 						onClick={() => closeOverlay(definition)}>
 						<img
-							src={`https://creaturechess.jamesmonger.com/images/front/${definition.id.toString()}.png`}
+							src={`https://creaturechess.com/images/front/${definition.id.toString()}.png`}
 							alt="creature-avatar"
 						/>
 					</button>

@@ -29,7 +29,7 @@ const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ pieceId 
 	const stars: React.ReactNode[] = [];
 
 	for (let i = 0; i <= piece.stage; i++) {
-		stars.push(<img key={i} src="https://creaturechess.jamesmonger.com/images/ui/star.svg" />);
+		stars.push(<img key={i} src="https://creaturechess.com/images/ui/star.svg" />);
 	}
 
 	return <div className="piece-stage">{stars}</div>;

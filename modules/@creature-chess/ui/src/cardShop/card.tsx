@@ -70,7 +70,7 @@ const Card: React.FunctionComponent<Props> = (props) => {
 						<span>${cost}</span>
 					</div>
 				</Layout>
-				<CreatureImage definitionId={definitionId} baseUrl="https://creaturechess.jamesmonger.com/" />
+				<CreatureImage definitionId={definitionId} baseUrl="https://creaturechess.com/" />
 				<h2 className={classes.name}>{name}</h2>
 				<div className={classes.cardMeta}>
 					<span className={classes.metaItem}>{cardClass}</span>

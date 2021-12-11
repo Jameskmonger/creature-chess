@@ -20,7 +20,7 @@ const PictureSelection: React.FunctionComponent<{
 							<div className="available-pictures" key={picture}>
 								<img
 									className="picture-selector-element"
-									src={`https://creaturechess.jamesmonger.com/images/front/${picture}.png`}
+									src={`https://creaturechess.com/images/front/${picture}.png`}
 									alt={creatureName}
 								/>
 								<p>{creatureName}</p>

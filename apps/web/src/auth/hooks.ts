@@ -3,5 +3,5 @@ import { Auth0User } from "./user";
 
 export const usePlayerId = (): string => {
 	const { user } = useAuth0<Auth0User>();
-	return user["https://creaturechess.jamesmonger.com/playerId"];
+	return user["https://creaturechess.com/playerId"];
 };

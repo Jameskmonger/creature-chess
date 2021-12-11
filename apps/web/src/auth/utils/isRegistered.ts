@@ -1,6 +1,6 @@
 import { Auth0User } from "../user";
 
-const namespace = "https://creaturechess.jamesmonger.com";
+const namespace = "https://creaturechess.com";
 
 export const hasNickname = (user: Auth0User): boolean => (user[`${namespace}/playerNickname`] !== null);
 export const isRegistered = (user: Auth0User): boolean => (user[`${namespace}/playerNickname`] !== null && user[`${namespace}/playerPicture`] !== null);

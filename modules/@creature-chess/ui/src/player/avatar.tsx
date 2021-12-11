@@ -20,7 +20,7 @@ const PlayerAvatar: React.FunctionComponent<Props> = ({ player }) => {
 		return null;
 	}
 
-	return <img className={classnames(classes.image, "avatar")} src={`https://creaturechess.jamesmonger.com/images/front/${player.profile.picture}.png`} />;
+	return <img className={classnames(classes.image, "avatar")} src={`https://creaturechess.com/images/front/${player.profile.picture}.png`} />;
 };
 
 export { PlayerAvatar };

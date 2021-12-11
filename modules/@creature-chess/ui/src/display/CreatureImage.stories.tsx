@@ -28,12 +28,12 @@ export const Kirkanon = Template.bind({});
 Kirkanon.args = {
 	definitionId: 47,
 	facing: "front",
-	baseUrl: "https://creaturechess.jamesmonger.com/"
+	baseUrl: "https://creaturechess.com/"
 };
 
 export const CardilingFacingAway = Template.bind({});
 CardilingFacingAway.args = {
 	definitionId: 13,
 	facing: "back",
-	baseUrl: "https://creaturechess.jamesmonger.com/"
+	baseUrl: "https://creaturechess.com/"
 };

@@ -9,7 +9,7 @@ export const Footer: React.FunctionComponent = () => {
 			{" - "}
 			<a href="https://reddit.com/r/creaturechess/">/r/CreatureChess</a>
 			{" - "}
-			<a href="https://creaturechess.jamesmonger.com/privacy">Privacy Policy</a>
+			<a href="https://creaturechess.com/privacy">Privacy Policy</a>
 			{" - "}
 			<a href="https://github.com/Jameskmonger/creature-chess">Licenses on GitHub</a>
 		</div>

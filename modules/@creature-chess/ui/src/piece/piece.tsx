@@ -52,7 +52,7 @@ const Piece = React.forwardRef((props: Props, ref) => {
 		>
 			<PieceMeta piece={piece} healthbarColor={healthbar} className={classes.metaContainer} />
 
-			<CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} baseUrl="https://creaturechess.jamesmonger.com" />
+			<CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} baseUrl="https://creaturechess.com" />
 
 			{children}
 		</div>
