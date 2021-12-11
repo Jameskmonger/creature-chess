@@ -2,7 +2,6 @@ import * as React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AppState } from "../store";
-import { GAME_SERVER_URL } from "../auth/config";
 import { getUrlParameter } from "./get-url-parameter";
 import { Leaderboard } from "./leaderboard";
 import { findGameAction } from "./actions";
@@ -80,7 +79,7 @@ class MenuPageUnconnected extends React.Component<Props> {
 	}
 
 	private onFindGameClick = () => {
-		const serverIP = getUrlParameter("server") || GAME_SERVER_URL;
+		const serverIP = getUrlParameter("server") || process.env.GAME_SERVER_URL;
 
 		this.props.onFindGame(serverIP);
 	}

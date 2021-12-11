@@ -5,6 +5,5 @@ export const config = {
 		machineToMachineClientId: "gWNTtsTNepgyyqE7QAEC4e7nt5A3ZZ4k"
 	},
 	appUrl: "https://creaturechess.com",
-	serverUrl: "https://cc-server.jamesmonger.com",
 	serverInfoUrl: "https://cc-server-info.herokuapp.com"
 };

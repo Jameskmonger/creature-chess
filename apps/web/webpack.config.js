@@ -111,7 +111,8 @@ module.exports = {
 	plugins: [
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
-			SENTRY_DSN: ""
+			SENTRY_DSN: "",
+			GAME_SERVER_URL: "ws://localhost:3000"
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("./package.json").version)

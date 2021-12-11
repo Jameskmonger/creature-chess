@@ -27,6 +27,7 @@ jobs:
         COOKIEBOT_ID: ${{ secrets.COOKIEBOT_ID }}
         CNAME: ${{ secrets.CNAME }}
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        GAME_SERVER_URL: ${{ secrets.GAME_SERVER_URL }}
         GH_PAGES: true
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.4.1

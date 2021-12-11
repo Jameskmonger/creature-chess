@@ -9,6 +9,5 @@ export const auth0Config = {
 	scope: "openid profile email"
 };
 
-export const GAME_SERVER_URL = config.serverUrl;
 export const CURRENT_USER_ENDPOINT = `${config.serverInfoUrl}/user/current`;
 export const LEADERBOARD_ENDPOINT = `${config.serverInfoUrl}/leaderboard`;
