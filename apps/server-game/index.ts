@@ -1,16 +1,16 @@
+import { createServer } from "http";
+import { Server } from "socket.io";
 import { createWinstonLogger } from "./src/log";
-import { startServer } from "./src/networking";
+import { startServer } from "./src/server";
 
 const logger = createWinstonLogger("global");
 
-if (process.argv[2] === undefined) {
-	logger.error("Arguments: [port]");
-	process.exit(1);
-}
+const port = parseInt(process.env.PORT || "3000", 10);
 
-const port = parseInt(process.argv[2], 10);
+const httpServer = createServer();
+const io = new Server(httpServer, { /* options */ });
 
-logger.info("Server running with settings:");
-logger.info("   PORT: " + port);
+httpServer.listen(port, "0.0.0.0");
+logger.info(`Server running on port ${port}`);
 
-startServer(logger, port);
+startServer({ io, logger });

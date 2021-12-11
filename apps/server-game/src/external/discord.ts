@@ -19,7 +19,9 @@ const roleMention = (roleId: string) => `<@&${roleId}>`;
 
 const noopApi: DiscordApi = { startLobby: () => { /* empty */ } };
 
-export const createDiscordApi = async (logger: Logger, token: string): Promise<DiscordApi> => {
+export const createDiscordApi = async (logger: Logger): Promise<DiscordApi> => {
+	const token = process.env.DISCORD_BOT_TOKEN!;
+
 	if (!token) {
 		logger.error("No Discord bot token provided");
 		return noopApi;

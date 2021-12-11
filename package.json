@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev:web": "yarn workspace @creature-chess/web dev",
 		"dev:tools": "yarn workspace @creature-chess/tools start",
-		"start:server-game": "ts-node apps/server-game/index.ts 3000",
+		"start:server-game": "ts-node apps/server-game/index.ts",
 		"start:server-info": "ts-node apps/server-info/index.ts 3000",
 		"test": "yarn workspaces foreach run test",
 		"dockerup": "docker-compose build && docker-compose up",

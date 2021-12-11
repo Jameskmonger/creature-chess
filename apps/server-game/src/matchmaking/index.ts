@@ -1,13 +1,12 @@
 import { Logger } from "winston";
 import delay from "delay";
-import io = require("socket.io");
 import { DatabaseConnection } from "@creature-chess/data";
-import { UserModel } from "@creature-chess/auth-server";
 import { LobbyPlayer } from "@creature-chess/models";
-import { DiscordApi } from "../discord";
+import { DiscordApi } from "../external/discord";
 import { createMetricLogger } from "../metrics";
 import { IdGenerator } from "./id-generator";
 import { Lobby } from "./lobby";
+import { AuthenticatedSocket } from "../socket";
 
 export class Matchmaking {
 	private lobbies = new Map<string, Lobby>();
@@ -19,14 +18,14 @@ export class Matchmaking {
 		setInterval(this.sendMetrics, 60 * 1000);
 	}
 
-	public async findGame(socket: io.Socket, user: UserModel) {
+	public async findGame(socket: AuthenticatedSocket) {
 		while (this.searchingForGame) {
 			await delay(250);
 		}
 
 		this.searchingForGame = true;
 
-		const { id, nickname, profile } = user;
+		const { id, nickname, profile } = socket.data as Required<typeof socket.data>;
 
 		const lobby = this.getLobbyContainingPlayer(id);
 

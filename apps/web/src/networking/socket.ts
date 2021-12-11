@@ -15,12 +15,12 @@ export const getSocket = (serverIP: string, idToken: string) => {
 
 	return new Promise<Socket>((resolve, reject) => {
 		socket.on("connect", () => {
-			socket.emit("authenticate", { idToken });
+			socket.emit("handshake", { idToken });
 		});
 
 		const onAuthenticated = ({ error }: GameServerToClient.AuthenticateResponse) => {
 			if (!error) {
-				socket.off("authenticate_response", onAuthenticated);
+				socket.off("handshake_response", onAuthenticated);
 
 				resolve(socket);
 
@@ -33,6 +33,6 @@ export const getSocket = (serverIP: string, idToken: string) => {
 			reject(error);
 		};
 
-		socket.on("authenticate_response", onAuthenticated);
+		socket.on("handshake_response", onAuthenticated);
 	});
 };
