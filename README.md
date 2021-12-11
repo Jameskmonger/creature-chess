@@ -93,6 +93,13 @@ Reusable logic
 - \@shoki/**engine**
 - \@shoki/**networking**
 
+## Publishing
+
+- Update `package.json` version
+- Make a commit with the message as version number (e.g. "v0.0.1")
+- Make a new tag "v0.0.1"
+- Push
+
 ## License
 
 Creature Chess is licensed under the [AGPL v3 License](LICENSE).
