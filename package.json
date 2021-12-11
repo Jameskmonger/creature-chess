@@ -11,7 +11,8 @@
 		"test": "yarn workspaces foreach run test",
 		"dockerup": "docker-compose build && docker-compose up",
 		"storybook": "yarn workspace @creature-chess/ui storybook",
-		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\""
+		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\"",
+		"release:patch": "lerna version --conventional-commits patch"
 	},
 	"workspaces": [
 		"modules/@creature-chess/*",
