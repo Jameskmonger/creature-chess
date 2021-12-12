@@ -3,7 +3,6 @@ import delay from "delay";
 import { DatabaseConnection } from "@creature-chess/data";
 import { LobbyPlayer } from "@creature-chess/models";
 import { DiscordApi } from "../external/discord";
-import { createMetricLogger } from "../metrics";
 import { IdGenerator } from "./id-generator";
 import { Lobby } from "./lobby";
 import { AuthenticatedSocket } from "../socket";
@@ -11,11 +10,9 @@ import { AuthenticatedSocket } from "../socket";
 export class Matchmaking {
 	private lobbies = new Map<string, Lobby>();
 	private lobbyIdGenerator = new IdGenerator();
-	private metrics = createMetricLogger();
 	private searchingForGame: boolean = false;
 
 	public constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
-		setInterval(this.sendMetrics, 60 * 1000);
 	}
 
 	public async findGame(socket: AuthenticatedSocket) {
@@ -85,16 +82,10 @@ export class Matchmaking {
 
 		lobby.onFinish(() => {
 			this.lobbies.delete(lobby.id);
-
-			this.sendMetrics();
 		});
 
 		this.logger.info(`[Lobby ${lobby.id}] created`);
 
 		return lobby;
 	}
-
-	private sendMetrics = () => {
-		this.metrics.sendGameCount(this.lobbies.size);
-	};
 }
