@@ -16,7 +16,7 @@
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/networking": "workspace:*",
 		"@creature-chess/ui": "workspace:*",
-		"@creature-chess/web": "workspace:*",
+		"@creature-chess/web-menu": "workspace:*",
 		"@fortawesome/fontawesome-svg-core": "^1.2.30",
 		"@fortawesome/free-solid-svg-icons": "^5.14.0",
 		"@fortawesome/react-fontawesome": "^0.1.11",
