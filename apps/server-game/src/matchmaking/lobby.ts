@@ -7,10 +7,10 @@ import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS, LobbyPlayer, MAX_PLAYERS_IN
 import { LobbyServerToClient } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
 import { Game, PlayerEntity, playerEntity, PlayerStateSelectors } from "@creature-chess/gamemode";
-import { botLogicSaga } from "../player/bot/saga";
+import { botLogicSaga } from "@creature-chess/bot";
 import { createWinstonLogger } from "../log";
-import { reconnectPlayerSocket } from "../player/socket/net/reconnect";
-import { playerNetworking } from "../player/socket/net";
+import { reconnectPlayerSocket } from "../socket/net/reconnect";
+import { playerNetworking } from "../socket/net";
 import { v4 as uuid } from "uuid";
 import { createBoardSlice } from "@shoki/board";
 import { Logger } from "winston";

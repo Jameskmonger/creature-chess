@@ -1622,6 +1622,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@creature-chess/bot@workspace:*, @creature-chess/bot@workspace:modules/@creature-chess/bot":
+  version: 0.0.0-use.local
+  resolution: "@creature-chess/bot@workspace:modules/@creature-chess/bot"
+  dependencies:
+    "@creature-chess/data": "workspace:*"
+    "@creature-chess/gamemode": "workspace:*"
+    "@creature-chess/models": "workspace:*"
+    "@shoki/board": "workspace:*"
+    "@shoki/engine": "workspace:*"
+    delay: ^4.1.0
+  peerDependencies:
+    redux: ^4.1.0
+    redux-saga: ^1.1.3
+  languageName: unknown
+  linkType: soft
+
 "@creature-chess/data@workspace:*, @creature-chess/data@workspace:modules/@creature-chess/data":
   version: 0.0.0-use.local
   resolution: "@creature-chess/data@workspace:modules/@creature-chess/data"
@@ -1680,6 +1696,7 @@ __metadata:
   resolution: "@creature-chess/server-game@workspace:apps/server-game"
   dependencies:
     "@creature-chess/auth-server": "workspace:*"
+    "@creature-chess/bot": "workspace:*"
     "@creature-chess/data": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
