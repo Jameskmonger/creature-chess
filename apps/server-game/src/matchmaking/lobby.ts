@@ -8,11 +8,10 @@ import { LobbyServerToClient } from "@creature-chess/networking";
 import { DatabaseConnection } from "@creature-chess/data";
 import { Game, PlayerEntity, playerEntity, PlayerStateSelectors } from "@creature-chess/gamemode";
 import { botLogicSaga } from "@creature-chess/bot";
-import { createWinstonLogger } from "../log";
+import { logger } from "../log";
 import { playerNetworking, reconnectPlayerSocket } from "../player";
 import { v4 as uuid } from "uuid";
 import { createBoardSlice } from "@shoki/board";
-import { Logger } from "winston";
 
 type PlayerConnections = {
 	[playerId: string]: {
@@ -22,7 +21,7 @@ type PlayerConnections = {
 	};
 };
 
-const createPlayer = (logger: Logger, game: Game, playerId: string, name: string, profile: PlayerProfile) => {
+const createPlayer = (game: Game, playerId: string, name: string, profile: PlayerProfile) => {
 	const boardSlices = {
 		boardSlice: createBoardSlice<PieceModel>(`player-${playerId}-board`, { width: 7, height: 3 }),
 		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, { width: 7, height: 1 })
@@ -186,14 +185,13 @@ export class Lobby {
 		this.gameStarting = true;
 
 		const gameId = uuid();
-		const logger = createWinstonLogger(`match-${gameId}`);
 		this.game = new Game(gameId, logger);
 
 		const userPlayers: PlayerEntity[] = [];
 		const botPlayers: PlayerEntity[] = [];
 
 		for (const member of this.members) {
-			const player = createPlayer(logger, this.game, member.id, member.name, member.profile);
+			const player = createPlayer(this.game, member.id, member.name, member.profile);
 
 			await this.database.user.addGamePlayed(player.id);
 
@@ -209,7 +207,7 @@ export class Lobby {
 			// get a random picture from one to 20 - temporary
 			const picture = Math.floor(Math.random() * 20) + 1;
 
-			const player = createPlayer(logger, this.game, id, `[BOT] ${nickname}`, { title: null, picture });
+			const player = createPlayer(this.game, id, `[BOT] ${nickname}`, { title: null, picture });
 
 			await this.database.bot.addGamePlayed(player.id);
 

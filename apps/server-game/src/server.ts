@@ -1,22 +1,20 @@
 import { Server } from "socket.io";
-import { Logger } from "winston";
 import { createManagementClient } from "./external/auth0";
 import { createDatabaseConnection } from "./external/database";
 import { createDiscordApi } from "./external/discord";
 import { onHandshakeSuccess } from "./handshake";
 import { Matchmaking } from "./matchmaking";
 
-export const startServer = async ({ io, logger }: { io: Server; logger: Logger }) => {
+export const startServer = async ({ io }: { io: Server }) => {
 	const managementClient = createManagementClient();
-	const database = createDatabaseConnection(logger);
-	const discordApi = await createDiscordApi(logger);
+	const database = createDatabaseConnection();
+	const discordApi = await createDiscordApi();
 
-	const matchmaking = new Matchmaking(logger, database, discordApi);
+	const matchmaking = new Matchmaking(database, discordApi);
 
 	onHandshakeSuccess(
 		{
 			io,
-			logger,
 			authClient: managementClient,
 			database
 		},

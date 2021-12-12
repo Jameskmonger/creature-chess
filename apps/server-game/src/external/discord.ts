@@ -1,6 +1,6 @@
-import { Logger } from "winston";
 import { Client, TextChannel } from "discord.js";
 import { LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models";
+import { logger } from "../log";
 
 export type DiscordApi = {
 	startLobby: (playerName: string) => void;
@@ -19,7 +19,7 @@ const roleMention = (roleId: string) => `<@&${roleId}>`;
 
 const noopApi: DiscordApi = { startLobby: () => { /* empty */ } };
 
-export const createDiscordApi = async (logger: Logger): Promise<DiscordApi> => {
+export const createDiscordApi = async (): Promise<DiscordApi> => {
 	const token = process.env.DISCORD_BOT_TOKEN!;
 
 	if (!token) {

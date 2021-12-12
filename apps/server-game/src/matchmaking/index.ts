@@ -1,4 +1,3 @@
-import { Logger } from "winston";
 import delay from "delay";
 import { DatabaseConnection } from "@creature-chess/data";
 import { LobbyPlayer } from "@creature-chess/models";
@@ -6,13 +5,14 @@ import { DiscordApi } from "../external/discord";
 import { IdGenerator } from "./id-generator";
 import { Lobby } from "./lobby";
 import { AuthenticatedSocket } from "../socket";
+import { logger } from "../log";
 
 export class Matchmaking {
 	private lobbies = new Map<string, Lobby>();
 	private lobbyIdGenerator = new IdGenerator();
 	private searchingForGame: boolean = false;
 
-	public constructor(private logger: Logger, private database: DatabaseConnection, private discordApi: DiscordApi) {
+	public constructor(private database: DatabaseConnection, private discordApi: DiscordApi) {
 	}
 
 	public async findGame(socket: AuthenticatedSocket) {
@@ -84,7 +84,7 @@ export class Matchmaking {
 			this.lobbies.delete(lobby.id);
 		});
 
-		this.logger.info(`[Lobby ${lobby.id}] created`);
+		logger.info(`[Lobby ${lobby.id}] created`);
 
 		return lobby;
 	}

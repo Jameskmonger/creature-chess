@@ -1,4 +1,5 @@
 import { authenticate } from "@creature-chess/auth-server";
+import { logger } from "../log";
 import { AuthenticatedSocket } from "../socket";
 import { handshakeListener } from "./listener";
 import { failHandshake, successHandshake } from "./response";
@@ -13,7 +14,7 @@ export const onHandshakeSuccess = (
 	deps: HandshakeListenerDependencies,
 	onReceive: (socket: AuthenticatedSocket) => void
 ) => {
-	const { logger, authClient, database } = deps;
+	const { authClient, database } = deps;
 
 	handshakeListener(
 		deps,
