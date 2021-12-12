@@ -4,10 +4,10 @@ import { Socket } from "socket.io";
 import { GameEvents, PlayerActions } from "@creature-chess/gamemode";
 import { ClientToServer, GameServerToClient } from "@creature-chess/networking";
 
-import { incomingNetworking } from "./incoming";
-import { outgoingNetworking } from "./outgoing";
-import { setPacketRegistries } from "./registries";
-import { playerBoard } from "../board";
+import { incomingNetworking, outgoingNetworking, setPacketRegistries } from "./net";
+import { playerBoard } from "./board";
+
+export { reconnectPlayerSocket } from "../player/net/reconnect";
 
 export const playerNetworking = function*(socket: Socket) {
 	yield* setPacketRegistries({
