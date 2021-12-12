@@ -12,7 +12,8 @@
 	"files.trimFinalNewlines": true,
 	"files.insertFinalNewline": true,
 	"conventionalCommits.scopes": [
-		"shoki"
+		"shoki",
+		"server-game"
 	],
 	"search.exclude": {
 		"**/.yarn": true,
