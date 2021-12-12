@@ -1,25 +1,25 @@
 {
-  "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
-  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
-  "typescript.preferences.quoteStyle": "double",
-  "javascript.preferences.quoteStyle": "double",
-  "typescript.preferences.useAliasesForRenames": false,
-  "editor.formatOnSave": true,
-  "editor.tabSize": 4,
-  "editor.insertSpaces": false,
-  "editor.detectIndentation": false,
-  "files.trimTrailingWhitespace": true,
-  "files.trimFinalNewlines": true,
-  "files.insertFinalNewline": true,
-  "conventionalCommits.scopes": [
-    "shoki"
-  ],
-  "search.exclude": {
-    "**/.yarn": true,
-    "**/.pnp.*": true
-  },
-  "eslint.nodePath": ".yarn/sdks",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "stylelint.stylelintPath": ".yarn/sdks/stylelint/lib/index.js"
+	"typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+	"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+	"typescript.preferences.quoteStyle": "double",
+	"javascript.preferences.quoteStyle": "double",
+	"typescript.preferences.useAliasesForRenames": false,
+	"editor.formatOnSave": true,
+	"editor.tabSize": 4,
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"files.trimTrailingWhitespace": true,
+	"files.trimFinalNewlines": true,
+	"files.insertFinalNewline": true,
+	"conventionalCommits.scopes": [
+		"shoki"
+	],
+	"search.exclude": {
+		"**/.yarn": true,
+		"**/.pnp.*": true
+	},
+	"eslint.nodePath": ".yarn/sdks",
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"stylelint.stylelintPath": ".yarn/sdks/stylelint/lib/index.js"
 }
