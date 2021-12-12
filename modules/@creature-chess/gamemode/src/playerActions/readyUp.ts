@@ -25,7 +25,7 @@ export const readyUpPlayerActionSaga = function*() {
 				return;
 			}
 
-			const game = yield* getDependency<PlayerEntityDependencies, "game">("game");
+			const game = yield* getDependency<PlayerEntityDependencies, "gamemode">("gamemode");
 
 			if (game.getRoundInfo().phase !== GamePhase.PREPARING) {
 				logger.info("Attempted to ready up, but not in preparing phase", { actor: { name } });

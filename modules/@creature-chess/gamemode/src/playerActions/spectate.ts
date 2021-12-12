@@ -17,7 +17,7 @@ export const spectatePlayerActionSaga = function*() {
 				return;
 			}
 
-			const game = yield* getDependency<PlayerEntityDependencies, "game">("game");
+			const game = yield* getDependency<PlayerEntityDependencies, "gamemode">("gamemode");
 
 			const other = game.getPlayerById(playerId);
 

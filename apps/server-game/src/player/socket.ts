@@ -7,4 +7,6 @@ type AuthenticatedSocketData = {
 	nickname: string | null;
 	profile: PlayerProfile | null;
 };
-export type AuthenticatedSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, AuthenticatedSocketData>;
+export type AuthenticatedSocket =
+	Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, AuthenticatedSocketData>
+	& { data: Required<AuthenticatedSocketData> };

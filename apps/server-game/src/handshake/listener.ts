@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+import { logger } from "../log";
 import { HandshakeListenerDependencies, HandshakeRequest } from "./types";
 
 /**
@@ -8,7 +9,7 @@ export const handshakeListener = (
 	deps: HandshakeListenerDependencies,
 	onReceive: (socket: Socket, request: HandshakeRequest) => void
 ) => {
-	const { io, logger } = deps;
+	const { io } = deps;
 
 	io.on(
 		"connection",

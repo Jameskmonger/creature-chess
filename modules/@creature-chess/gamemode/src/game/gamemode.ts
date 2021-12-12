@@ -17,7 +17,7 @@ import { sendPublicEventsSaga } from "./publicEvents";
 
 const finishGameEventKey = "FINISH_GAME";
 
-export class Game {
+export class Gamemode {
 	private options: GameOptions;
 
 	private opponentProvider?: OpponentProvider;

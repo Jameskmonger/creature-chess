@@ -3,7 +3,7 @@ import { getContext } from "typed-redux-saga";
 import { BoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 
-import { Game } from "../../game";
+import { Gamemode } from "../../game";
 
 type PlayerBoardSlices = {
 	boardSlice: BoardSlice<PieceModel>;
@@ -13,7 +13,7 @@ type PlayerBoardSlices = {
 export type PlayerEntityDependencies = {
 	logger: Logger;
 	boardSlices: PlayerBoardSlices;
-	game: Game;
+	gamemode: Gamemode;
 };
 
 export const getPlayerEntityDependencies = () => getContext<PlayerEntityDependencies>("dependencies");

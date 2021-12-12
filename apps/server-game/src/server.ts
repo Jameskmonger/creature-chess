@@ -1,25 +1,90 @@
+import { DatabaseConnection } from "@creature-chess/data";
+import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { Server } from "socket.io";
 import { createManagementClient } from "./external/auth0";
+import { getBots } from "./external/bots";
 import { createDatabaseConnection } from "./external/database";
 import { createDiscordApi } from "./external/discord";
+import { Game, PlayerGameParticipant } from "./game";
 import { onHandshakeSuccess } from "./handshake";
-import { Matchmaking } from "./matchmaking";
+import { Lobby } from "./lobby";
+import { logger } from "./log";
+import { AuthenticatedSocket } from "./player/socket";
+
+const startGame = async (
+	database: DatabaseConnection,
+	players: PlayerGameParticipant[],
+	onFinish: () => void
+) => {
+	const botsRequired = MAX_PLAYERS_IN_GAME - players.length;
+
+	const bots = await getBots(database, botsRequired);
+
+	for (const { player: { id } } of players) {
+		await database.user.addGamePlayed(id);
+	}
+
+	const game = new Game(
+		{ players, bots },
+		{
+			onFinish: winner => {
+				logger.info(`Game won by ${winner.getVariable(t => t.name)}`);
+
+				onFinish();
+			}
+		}
+	);
+
+	return game;
+};
 
 export const startServer = async ({ io }: { io: Server }) => {
-	const managementClient = createManagementClient();
+	const authClient = createManagementClient();
 	const database = createDatabaseConnection();
 	const discordApi = await createDiscordApi();
 
-	const matchmaking = new Matchmaking(database, discordApi);
+	let lobbies: Lobby[] = [];
+	let games: Game[] = [];
+
+	const matchmaking = (socket: AuthenticatedSocket) => {
+		const matchingLobby = lobbies.find(l => l.isInLobby(socket.data.id));
+
+		if (matchingLobby) {
+			matchingLobby.connect(socket);
+			return;
+		}
+
+		const matchingGame = games.find(l => l.isInGame(socket.data.id));
+
+		if (matchingGame) {
+			matchingGame.connect(socket);
+			return;
+		}
+
+		const lobby = new Lobby({
+			waitTimeMs: LOBBY_WAIT_TIME * 1000,
+			maxPlayers: MAX_PLAYERS_IN_GAME,
+			onStart: async players => {
+				lobbies = lobbies.filter(other => other !== lobby);
+				discordApi.startLobby();
+
+				const game = await startGame(
+					database,
+					players,
+					() => {
+						games = games.filter(other => other !== game);
+					}
+				);
+
+				games.push(game);
+			}
+		});
+
+		lobbies.push(lobby);
+	};
 
 	onHandshakeSuccess(
-		{
-			io,
-			authClient: managementClient,
-			database
-		},
-		socket => {
-			matchmaking.findGame(socket);
-		}
+		{ io, authClient, database },
+		matchmaking
 	);
 };

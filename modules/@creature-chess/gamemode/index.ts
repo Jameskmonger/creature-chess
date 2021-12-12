@@ -1,4 +1,4 @@
-export { Game } from "./src/game";
+export { Gamemode } from "./src/game";
 
 export {
 	PlayerEntity, playerEntity, PlayerEntitySelectors,

@@ -18,7 +18,7 @@ const getSpectatingPlayer = function*() {
 		return null;
 	}
 
-	const game = yield* getDependency<PlayerEntityDependencies, "game">("game");
+	const game = yield* getDependency<PlayerEntityDependencies, "gamemode">("gamemode");
 	return game.getPlayerById(spectatingId) || null;
 };
 

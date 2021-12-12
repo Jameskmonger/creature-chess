@@ -1,6 +1,6 @@
 import { authenticate } from "@creature-chess/auth-server";
 import { logger } from "../log";
-import { AuthenticatedSocket } from "../socket";
+import { AuthenticatedSocket } from "../player/socket";
 import { handshakeListener } from "./listener";
 import { failHandshake, successHandshake } from "./response";
 import { HandshakeListenerDependencies } from "./types";

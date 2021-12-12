@@ -20,7 +20,7 @@ export const quickChatPlayerActionSaga = function*() {
 			if (sendingPlayerId === null || chatValue === null) {
 				return;
 			}
-			const game = yield* getDependency<PlayerEntityDependencies, "game">("game");
+			const game = yield* getDependency<PlayerEntityDependencies, "gamemode">("gamemode");
 			const player = game.getPlayerById(sendingPlayerId);
 			const opponentId: string = yield select(state => state.playerInfo.opponentId);
 			const opponent = game.getPlayerById(opponentId);
