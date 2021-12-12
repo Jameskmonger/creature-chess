@@ -29,6 +29,7 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
 - **(optional)** A Sentry.io DSN in environment variable `SENTRY_DSN`
 - **(optional)** A game server URL in environment variable `GAME_SERVER_URL`
+- **(optional)** An info server URL in environment variable `API_INFO_URL`
 
 ### Running
 

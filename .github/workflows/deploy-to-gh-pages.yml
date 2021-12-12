@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy menu to GitHub Pages
 
 on:
   push:
@@ -21,17 +21,18 @@ jobs:
     - name: Install dependencies
       run: yarn
     - name: Build application
-      run: yarn workspace @creature-chess/web build
+      run: yarn workspace @creature-chess/web-menu build
       env:
         GA_ID: ${{ secrets.GA_ID }}
         COOKIEBOT_ID: ${{ secrets.COOKIEBOT_ID }}
         CNAME: ${{ secrets.CNAME }}
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         GAME_SERVER_URL: ${{ secrets.GAME_SERVER_URL }}
+        API_INFO_URL: ${{ secrets.API_INFO_URL }}
         GH_PAGES: true
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.4.1
       with:
         ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: apps/web/public
+        FOLDER: apps/web-menu/public

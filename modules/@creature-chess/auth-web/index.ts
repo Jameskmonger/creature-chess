@@ -1,0 +1,19 @@
+import { useAuth0 } from "@auth0/auth0-react";
+import { AuthProvider } from "./provider";
+
+export type Auth0User = {
+	"https://creaturechess.com/playerId": string | null;
+	"https://creaturechess.com/playerNickname": string | null;
+};
+
+export const usePlayerId = (): string => {
+	const { user } = useAuth0<Auth0User>();
+
+	if (!user) {
+		return "";
+	}
+
+	return user["https://creaturechess.com/playerId"]!;
+};
+
+export { AuthProvider };
