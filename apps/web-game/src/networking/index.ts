@@ -1,1 +1,1 @@
-export { findGame } from "./sagas/findGame";
+export { openConnection, connect } from "./sagas/connect";

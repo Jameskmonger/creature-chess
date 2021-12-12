@@ -7,8 +7,24 @@ import Media from "react-media";
 import { ResponsiveBoardStyles } from "./module";
 import { MobileGame } from "./layouts/mobileGame";
 import { DesktopGame } from "./layouts/desktopGame";
+import { useDispatch } from "react-redux";
+import { openConnection } from "../networking";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const GamePage: React.FunctionComponent = () => {
+	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		const open = async () => {
+			const idToken = await getAccessTokenSilently();
+
+			dispatch(openConnection({ idToken }));
+		};
+
+		open();
+	}, [isAuthenticated, getAccessTokenSilently]);
+
 	return (
 		<DndProvider backend={MultiBackend} options={HTML5toTouch}>
 			<ResponsiveBoardStyles />

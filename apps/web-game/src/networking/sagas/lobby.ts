@@ -1,12 +1,13 @@
 import { Action } from "redux";
 import { EventChannel, eventChannel } from "redux-saga";
-import { put, take, cancelled } from "redux-saga/effects";
+import { put, take } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
 import { IncomingRegistry } from "@shoki/networking";
 import { LobbyServerToClient } from "@creature-chess/networking";
 import { lobbyConnectedEvent, LobbyConnectedEvent } from "../actions";
 import { LobbyCommands, LobbyEvents } from "../../lobby";
 import { call, race } from "redux-saga/effects";
+import { cancelled } from "typed-redux-saga";
 
 const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToClient.PacketSet>) {
 	let channel: EventChannel<Action>;
@@ -39,7 +40,7 @@ const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToC
 			yield put(action);
 		}
 	} finally {
-		if (yield cancelled()) {
+		if (yield* cancelled()) {
 			channel.close();
 		}
 	}

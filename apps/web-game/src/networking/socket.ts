@@ -1,17 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { GameServerToClient } from "@creature-chess/networking";
 
-export const getSocket = (serverIP: string, idToken: string) => {
-	// force to websocket for now until CORS is sorted
-	const socket = io(
-		serverIP,
-		{
-			transports: ["websocket", "xhr-polling"],
-			reconnectionAttempts: 15,
-			reconnectionDelay: 100,
-			reconnectionDelayMax: 1000
-		}
-	);
+export const getSocket = (idToken: string) => {
+	const socket = io();
 
 	return new Promise<Socket>((resolve, reject) => {
 		socket.on("connect", () => {

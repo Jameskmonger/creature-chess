@@ -48,6 +48,7 @@ module.exports = {
 	plugins: [
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
+			SENTRY_DSN: "",
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("./package.json").version)
@@ -71,6 +72,14 @@ module.exports = {
 			cwd: process.cwd(),
 		}),
 	].filter(plugin => plugin !== null),
+
+	devServer: {
+		compress: true,
+		port: 8090,
+		historyApiFallback: true,
+		https: true,
+		host: "creaturechess.local-dev.com"
+	},
 
 	optimization: {
 		splitChunks: {
