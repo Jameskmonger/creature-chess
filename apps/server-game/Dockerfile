@@ -7,6 +7,7 @@ RUN yarn set version berry
 ADD . /code
 
 RUN yarn
+RUN yarn build:web-game && cp -r apps/web-game/public apps/server-game
 
 EXPOSE 3000
 
