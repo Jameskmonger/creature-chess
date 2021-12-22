@@ -16,22 +16,14 @@ export const { reducer, actions: LobbyCommands } = createSlice({
 	name: "lobby",
 	initialState,
 	reducers: {
-		setLobbyDetailsCommand: (state, action: PayloadAction<LobbyServerToClient.LobbyConnectionPacket>) => ({
+		connectToLobby: (state, action: PayloadAction<LobbyServerToClient.LobbyConnectionPacket>) => ({
 			...state,
 			players: action.payload.players,
 			startingAtMs: action.payload.startTimestamp
 		}),
-		updateLobbyPlayerCommand: (state: LobbyState, action: PayloadAction<{ index: number; player: LobbyPlayer }>) => {
-			const cloned = {
-				...state,
-				players: [
-					...state.players
-				]
-			};
-
-			cloned.players[action.payload.index] = action.payload.player;
-
-			return cloned;
-		}
+		updatePlayers: (state, action: PayloadAction<LobbyServerToClient.LobbyUpdatePacket>) => ({
+			...state,
+			players: action.payload.players,
+		}),
 	}
 });

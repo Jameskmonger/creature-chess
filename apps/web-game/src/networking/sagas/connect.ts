@@ -2,10 +2,9 @@ import { eventChannel } from "redux-saga";
 import { all, call, put, take } from "typed-redux-saga";
 import { Socket } from "socket.io-client";
 import { LobbyServerToClient, GameServerToClient } from "@creature-chess/networking";
-import { lobbyConnectedEvent, gameConnectedEvent } from "../actions";
+import { lobbyConnectedEvent, gameConnectedEvent } from "../events";
 import { getSocket } from "../socket";
 import { networkingSaga } from "./networkingSaga";
-import { LobbyCommands } from "../../lobby";
 import { createAction } from "@reduxjs/toolkit";
 
 type ConnectionResult = {

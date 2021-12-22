@@ -5,12 +5,11 @@ import { incomingGameServerToClient } from "./incoming";
 import { outgoingGameServerToClient } from "./outgoing";
 
 import { setInGameCommand, updateConnectionStatus } from "../../../game/ui/actions";
-import { gameConnectedEvent, GameConnectedEvent } from "../../actions";
-import { LobbyEvents } from "../../../lobby";
+import { gameConnectedEvent, GameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../../events";
 import { ConnectionStatus } from "../../../game/connection-status";
 
 export const gameNetworking = function*(socket: Socket) {
-	yield take<GameConnectedEvent | LobbyEvents.LobbyGameStartedEvent>([gameConnectedEvent.toString(), LobbyEvents.LOBBY_GAME_STARTED_EVENT]);
+	yield take<GameConnectedEvent | LobbyConnectedEvent>([gameConnectedEvent.toString(), lobbyConnectedEvent.toString()]);
 
 	yield put(setInGameCommand());
 	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));

@@ -1,7 +1,6 @@
 import { LobbyPlayer, PlayerProfile } from "@creature-chess/models";
 import { LobbyServerToClient } from "@creature-chess/networking";
 import { OutgoingRegistry } from "@shoki/networking";
-import { logger } from "./log";
 import { AuthenticatedSocket } from "./player/socket";
 
 type LobbyMember = {
@@ -48,7 +47,7 @@ export class Lobby {
 		if (existing) {
 			existing.socket?.disconnect(true);
 		} else {
-			const index = this.members.push({
+			const newMember = {
 				player: {
 					id: socket.data.id,
 					name: socket.data.nickname!,
@@ -56,9 +55,10 @@ export class Lobby {
 				},
 				socket,
 				registry
-			}) - 1;
+			};
 
-			this.notifyOthers(index);
+			this.members.push(newMember);
+			this.notifyOthers(newMember);
 		}
 
 		this.sendConnected(registry);
@@ -79,39 +79,23 @@ export class Lobby {
 		);
 
 		this.options.onStart(members);
-		this.notifyStart();
 
 		this.members = [];
 	};
 
-	private notifyOthers(memberIndex: number) {
-		const member = this.members[memberIndex];
-
-		if (!member) {
-			logger.warn("No member found", { memberIndex });
-			return;
-		}
-
+	private notifyOthers(member: LobbyMember) {
 		for (const other of this.members) {
-			if (!other) {
+			if (!other || other === member) {
 				continue;
 			}
 
-			if (other.player.id === member.player.id) {
-				continue;
-			}
-
-			this.sendOtherMemberUpdate(other, memberIndex, member);
+			member.registry?.send(
+				"lobbyUpdate",
+				{
+					players: this.getLobbyPlayers()
+				}
+			);
 		}
-	}
-
-	/**
-	 * Send an event to notify all LobbyMembers of game start
-	 */
-	private notifyStart() {
-		this.members.forEach(m =>
-			m.registry?.send("gameStarted", { empty: true })
-		);
 	}
 
 	private sendConnected(registry: OutgoingRegistry<LobbyServerToClient.PacketSet>) {
@@ -132,13 +116,6 @@ export class Lobby {
 				name: nickname as string,
 				profile: profile as PlayerProfile
 			})
-		);
-	}
-
-	private sendOtherMemberUpdate(member: LobbyMember, index: number, other: LobbyMember) {
-		member.registry?.send(
-			"lobbyPlayerUpdate",
-			{ index, player: other.player }
 		);
 	}
 }

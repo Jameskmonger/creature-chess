@@ -3,7 +3,7 @@ import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
 import { logger } from "./log";
 import { AuthenticatedSocket } from "./player/socket";
 import { Task } from "redux-saga";
-import { playerNetworking, reconnectPlayerSocket } from "./player";
+import { playerNetworking } from "./player";
 import { BotPersonality } from "@creature-chess/data";
 import { LobbyPlayer } from "@creature-chess/models";
 import { createPlayerEntity } from "./player/entity";
@@ -79,15 +79,7 @@ export class Game {
 
 		existing.networkingSaga?.cancel();
 
-		existing.networkingSaga = entity.runSaga(playerNetworking, socket);
-
-		// todo reconsider this
-		entity.runSaga(
-			reconnectPlayerSocket,
-			socket,
-			this.gamemode.getRoundInfo(),
-			this.gamemode.getPlayerListPlayers()
-		);
+		existing.networkingSaga = this.runPlayerNetworking(entity, socket);
 	}
 
 	private registerPlayer(player: PlayerGameParticipant) {
@@ -103,7 +95,7 @@ export class Game {
 		this.members.push({
 			type: "PLAYER",
 			id: player.player.id,
-			networkingSaga: entity.runSaga(playerNetworking, socket),
+			networkingSaga: this.runPlayerNetworking(entity, socket),
 			entity
 		});
 	}
@@ -124,5 +116,16 @@ export class Game {
 			id: player.player.id,
 			entity
 		});
+	}
+
+	private runPlayerNetworking(entity: PlayerEntity, socket: AuthenticatedSocket) {
+		return entity.runSaga(
+			playerNetworking,
+			socket,
+			{
+				getRoundInfo: this.gamemode.getRoundInfo,
+				getPlayers: this.gamemode.getPlayerListPlayers
+			}
+		);
 	}
 }
