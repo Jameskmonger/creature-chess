@@ -2,16 +2,16 @@ import { io, Socket } from "socket.io-client";
 import { GameServerToClient } from "@creature-chess/networking";
 
 export const getSocket = (idToken: string) => {
-	const socket = io();
+	const socket = io({ path: "/game/socket.io" });
 
 	return new Promise<Socket>((resolve, reject) => {
 		socket.on("connect", () => {
-			socket.emit("handshake", { idToken });
+			socket.emit("authenticate", { idToken });
 		});
 
 		const onAuthenticated = ({ error }: GameServerToClient.AuthenticateResponse) => {
 			if (!error) {
-				socket.off("handshake_response", onAuthenticated);
+				socket.off("authenticate_response", onAuthenticated);
 
 				resolve(socket);
 
@@ -24,6 +24,6 @@ export const getSocket = (idToken: string) => {
 			reject(error);
 		};
 
-		socket.on("handshake_response", onAuthenticated);
+		socket.on("authenticate_response", onAuthenticated);
 	});
 };

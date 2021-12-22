@@ -1,6 +1,7 @@
 import { LobbyPlayer, PlayerProfile } from "@creature-chess/models";
 import { LobbyServerToClient } from "@creature-chess/networking";
 import { OutgoingRegistry } from "@shoki/networking";
+import { logger } from "./log";
 import { AuthenticatedSocket } from "./player/socket";
 
 type LobbyMember = {
@@ -55,7 +56,7 @@ export class Lobby {
 				},
 				socket,
 				registry
-			});
+			}) - 1;
 
 			this.notifyOthers(index);
 		}
@@ -86,7 +87,16 @@ export class Lobby {
 	private notifyOthers(memberIndex: number) {
 		const member = this.members[memberIndex];
 
+		if (!member) {
+			logger.warn("No member found", { memberIndex });
+			return;
+		}
+
 		for (const other of this.members) {
+			if (!other) {
+				continue;
+			}
+
 			if (other.player.id === member.player.id) {
 				continue;
 			}

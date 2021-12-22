@@ -15,6 +15,7 @@ export const AuthProvider: React.FC<Props> = ({ children, onRedirectCallback }) 
 		redirectUri={auth0Config.redirectUri}
 		audience={auth0Config.audience}
 		scope={auth0Config.scope}
+		cacheLocation="localstorage"
 		onRedirectCallback={onRedirectCallback}
 	>
 		{children}

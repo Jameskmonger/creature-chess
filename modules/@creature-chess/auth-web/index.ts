@@ -1,9 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { AuthProvider } from "./provider";
+export { AuthProvider } from "./provider";
+export { isRegistered, hasNickname } from "./isRegistered";
 
 export type Auth0User = {
-	"https://creaturechess.com/playerId": string | null;
-	"https://creaturechess.com/playerNickname": string | null;
+	"https://creaturechess.jamesmonger.com/playerId": string | null;
+	"https://creaturechess.jamesmonger.com/playerNickname": string | null;
 };
 
 export const usePlayerId = (): string => {
@@ -13,7 +14,5 @@ export const usePlayerId = (): string => {
 		return "";
 	}
 
-	return user["https://creaturechess.com/playerId"]!;
+	return user["https://creaturechess.jamesmonger.com/playerId"]!;
 };
-
-export { AuthProvider };

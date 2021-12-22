@@ -5,7 +5,7 @@ __metadata:
   version: 5
   cacheKey: 8
 
-"@auth0/auth0-react@npm:^1.5.0":
+"@auth0/auth0-react@npm:^1.8.0":
   version: 1.8.0
   resolution: "@auth0/auth0-react@npm:1.8.0"
   dependencies:
@@ -1612,7 +1612,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/auth-web@workspace:modules/@creature-chess/auth-web"
   dependencies:
-    "@auth0/auth0-react": ^1.5.0
+    "@auth0/auth0-react": ^1.8.0
     "@creature-chess/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
   peerDependencies:
@@ -1724,6 +1724,7 @@ __metadata:
     delay: ^4.1.0
     discord.js: ^12.5.1
     express: ^4.17.1
+    express-winston: ^4.2.0
     lodash: ^4.17.21
     socket.io: ^4.4.0
     tslib: ^2.2.0
@@ -1758,7 +1759,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/tools@workspace:apps/tools"
   dependencies:
-    "@auth0/auth0-react": ^1.5.0
+    "@auth0/auth0-react": ^1.8.0
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
@@ -1823,7 +1824,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/web-game@workspace:apps/web-game"
   dependencies:
-    "@auth0/auth0-react": ^1.5.0
+    "@auth0/auth0-react": ^1.8.0
     "@creature-chess/auth-web": "workspace:*"
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
@@ -1882,7 +1883,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/web-menu@workspace:apps/web-menu"
   dependencies:
-    "@auth0/auth0-react": ^1.5.0
+    "@auth0/auth0-react": ^1.8.0
     "@creature-chess/auth-web": "workspace:*"
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
@@ -6987,7 +6988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:2.4.2, chalk@npm:^2.0.0, chalk@npm:^2.0.1, chalk@npm:^2.1.0, chalk@npm:^2.4.1":
+"chalk@npm:2.4.2, chalk@npm:^2.0.0, chalk@npm:^2.0.1, chalk@npm:^2.1.0, chalk@npm:^2.4.1, chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
   dependencies:
@@ -9563,6 +9564,18 @@ __metadata:
     jest-message-util: ^27.4.2
     jest-regex-util: ^27.4.0
   checksum: 5eba0f348fd234420d7b4f09968d30d0b19e9e73579ad060e5e635be879671dfb9bed472befe1d5fe8749b6beefc08beba0e034d5aad2aca11e4d5ac43873326
+  languageName: node
+  linkType: hard
+
+"express-winston@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "express-winston@npm:4.2.0"
+  dependencies:
+    chalk: ^2.4.2
+    lodash: ^4.17.21
+  peerDependencies:
+    winston: ">=3.x <4"
+  checksum: 029529107f0bb72363c87d83d8c05a997bcbb4f8431d47dd2ab7f61fa165a56747c1e2e3c8621cbacb0190798a9b5cb9975506dcdfd6e27036fab1d8d193ec09
   languageName: node
   linkType: hard
 

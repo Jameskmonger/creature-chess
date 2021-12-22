@@ -112,7 +112,7 @@ module.exports = {
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
 			SENTRY_DSN: "",
-			GAME_SERVER_URL: "ws://localhost:3000",
+			GAME_SERVER_URL: "http://localhost:8080/game/",
 			API_INFO_URL: "http://localhost:3001"
 		}),
 		new DefinePlugin({
@@ -150,8 +150,6 @@ module.exports = {
 		compress: true,
 		port: 8090,
 		historyApiFallback: true,
-		https: true,
-		host: "creaturechess.local-dev.com"
 	},
 
 	optimization: {

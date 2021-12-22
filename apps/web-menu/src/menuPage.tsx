@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Leaderboard } from "./leaderboard";
-import { Footer, Loading } from "./display";
+import { Footer } from "./display";
 
 const Navbar: React.FunctionComponent = () => {
 	const { logout } = useAuth0();
@@ -15,15 +15,9 @@ const Navbar: React.FunctionComponent = () => {
 };
 
 export const MenuPage: React.FC<{ error?: string }> = ({ error }) => {
-	const [loading, setLoading] = React.useState(false);
-
 	const onFindGameClick = () => {
-
+		window.location.href = process.env.GAME_SERVER_URL;
 	};
-
-	if (loading) {
-		return <Loading />;
-	}
 
 	return (
 		<div className="menu">

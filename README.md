@@ -23,8 +23,8 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 - An Auth0 app for the frontend
   - Set up a [single page app](https://auth0.com/docs/applications/set-up-an-application/register-single-page-app)
   - In Auth0 config for SPA
-    - Set `Allowed Callback URLs` = "https://creaturechess.local-dev.com:8090"
-    - Set `Allowed Web Origins` = "https://creaturechess.local-dev.com:8090"
+    - Set `Allowed Callback URLs` = "http://localhost:8080"
+    - Set `Allowed Web Origins` = "http://localhost:8080"
   - Modify `packages/gamemode/src/config/config.local.ts` and change `auth0` config to match your two auth0 apps
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
 - **(optional)** A Sentry.io DSN in environment variable `SENTRY_DSN`
@@ -44,7 +44,7 @@ $ yarn dev:web
 $ yarn dockerup
 ```
 
-The game is then accessible at `https://creaturechess.local-dev.com:8090`. You might need to add `creaturechess.local-dev.com` to your host file (or remove `host` from `webpack.config.js`)
+The game is then accessible at `http://localhost:8080`.
 
 ### Dev toolkit
 

@@ -49,7 +49,9 @@ const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToC
 export const lobbyNetworking = function*(
 	socket: Socket
 ) {
-	yield take<LobbyConnectedEvent>(lobbyConnectedEvent.toString());
+	const event: LobbyConnectedEvent = yield take<LobbyConnectedEvent>(lobbyConnectedEvent.toString());
+
+	yield put(LobbyCommands.setLobbyDetailsCommand(event.payload));
 
 	// todo fix typing
 	const registry = LobbyServerToClient.incoming(

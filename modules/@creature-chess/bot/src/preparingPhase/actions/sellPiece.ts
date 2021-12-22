@@ -19,8 +19,6 @@ export const createSellPieceAction = (state: PlayerState, personality: BotPerson
 	}
 	// don't sell piece if it is a strategically sound piece
 	if (isStrategicPiece(piece, allPieces)) {
-		// for debugging - remove log statement
-		console.log(`Strategic piece ${piece} not being sold`);
 		return null;
 	}
 	// don't sell bench pieces for which we have a piece on the board

@@ -4,6 +4,7 @@ import { existsSync } from "fs";
 import express from "express";
 import { Server } from "socket.io";
 import { logger } from "./src/log";
+import { logger as expressWinston } from "express-winston";
 import { startServer } from "./src/server";
 
 const port = parseInt(process.env.PORT || "3000", 10);
@@ -16,9 +17,10 @@ if (!existsSync(publicPath)) {
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, { path: "/socket.io" });
 
 app.use(express.static(publicPath));
+app.use(expressWinston({ winstonInstance: logger }));
 
 startServer({ io });
 

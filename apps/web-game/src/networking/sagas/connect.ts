@@ -41,16 +41,15 @@ const listenForConnection = function*(socket: Socket) {
 	return connection;
 };
 
-type OpenConnectionAction = { idToken: string };
-export const openConnection = createAction<OpenConnectionAction>("openConnection");
+type OpenConnectionAction = ReturnType<typeof openConnection>;
+export const openConnection = createAction<{ idToken: string }>("openConnection");
 
 export const connect = function*() {
-	const { idToken } = yield* take<OpenConnectionAction>(openConnection.toString() as any);
+	const { payload: { idToken } } = yield* take<OpenConnectionAction>(openConnection.toString() as any);
 
 	let socket: Socket;
 
 	try {
-		console.log("Attempting to connect");
 		socket = yield* call(getSocket, idToken);
 	} catch (error) {
 		console.error("error getting socket", error);
@@ -64,7 +63,6 @@ export const connect = function*() {
 		call(function*() {
 			if (connection.type === "lobby") {
 				yield put(lobbyConnectedEvent(connection.payload));
-				yield put(LobbyCommands.setLobbyDetailsCommand(connection.payload));
 			} else if (connection.type === "game") {
 				yield put(gameConnectedEvent(connection.payload));
 			}

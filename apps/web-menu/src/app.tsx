@@ -3,7 +3,8 @@ import ReactModal from "react-modal";
 import { Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { MenuPage } from "./menuPage";
-import { Auth0User, isRegistered, LoginPage, RegistrationPage } from "./auth";
+import { Auth0User, isRegistered } from "@creature-chess/auth-web";
+import { LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => (

@@ -10,7 +10,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@auth0/auth0-react": "^1.5.0",
+		"@auth0/auth0-react": "^1.8.0",
 		"@creature-chess/battle": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",

@@ -1,11 +1,10 @@
 import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { validateNicknameFormat } from "@creature-chess/models";
+import { Auth0User, hasNickname } from "@creature-chess/auth-web";
 import { patchUser } from "./utils/patchUser";
-import { Auth0User } from "@creature-chess/auth-web";
 import { NicknameSelection } from "./registration/NicknameSelection";
 import { PictureSelection } from "./registration/PictureSelection";
-import { hasNickname } from "./utils/isRegistered";
 
 const RegistrationPage: React.FunctionComponent = () => {
 

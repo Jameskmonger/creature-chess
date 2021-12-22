@@ -42,7 +42,7 @@ export const onHandshakeSuccess = (
 
 				onReceive(authenticatedSocket);
 			} catch (e) {
-				logger.error(`[socket ${socket.id}] Handshake failed ${e}`);
+				logger.error(`[socket ${socket.id}] Handshake failed`, { error: e });
 				failHandshake(socket, { error: { type: "authentication" } });
 			}
 		}
