@@ -47,9 +47,13 @@ export const startServer = async ({ io }: { io: Server }) => {
 	let games: Game[] = [];
 
 	const matchmaking = (socket: AuthenticatedSocket) => {
+		logger.info(`[Matchmaking (${socket.data.nickname})] Beginning matchmaking`);
+
 		const matchingLobby = lobbies.find(l => l.isInLobby(socket.data.id));
 
 		if (matchingLobby) {
+			logger.info(`[Matchmaking (${socket.data.nickname})] Lobby found`);
+
 			matchingLobby.connect(socket);
 			return;
 		}
@@ -57,6 +61,8 @@ export const startServer = async ({ io }: { io: Server }) => {
 		const matchingGame = games.find(l => l.isInGame(socket.data.id));
 
 		if (matchingGame) {
+			logger.info(`[Matchmaking (${socket.data.nickname})] Game found`);
+
 			matchingGame.connect(socket);
 			return;
 		}
@@ -81,6 +87,9 @@ export const startServer = async ({ io }: { io: Server }) => {
 		});
 
 		lobbies.push(lobby);
+
+		logger.info(`[Matchmaking (${socket.data.nickname})] New lobby created`);
+		lobby.connect(socket);
 	};
 
 	onHandshakeSuccess(

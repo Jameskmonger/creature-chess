@@ -9,24 +9,26 @@ import { CardDeck } from "./cardDeck";
 import { gameFinishEvent, playerListChangedEvent, GameFinishEvent } from "./events";
 import { createGameStore, GameState } from "./store";
 import { take } from "@redux-saga/core/effects";
-import { gameSaga } from "./sagas";
+import { gameSaga, GameSagaContext } from "./sagas";
 import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
 import { PlayerEntity } from "../entities";
 import { getPlayerStatus, isPlayerAlive } from "../entities/player/state/selectors";
 import { sendPublicEventsSaga } from "./publicEvents";
+import { SagaMiddleware } from "redux-saga";
 
 const finishGameEventKey = "FINISH_GAME";
 
 export class Gamemode {
 	private options: GameOptions;
 
-	private opponentProvider?: OpponentProvider;
+	private opponentProvider: OpponentProvider = new OpponentProvider();
 	private playerList = new PlayerList();
 	private players: PlayerEntity[] = [];
 	private events = new EventEmitter();
 	private deck: CardDeck;
 
-	private store?: Store<GameState>;
+	private store: Store<GameState>;
+	private sagaMiddleware: SagaMiddleware<GameSagaContext>;
 
 	public constructor(
 		public readonly id: string,
@@ -36,24 +38,6 @@ export class Gamemode {
 		this.options = getOptions(options);
 
 		this.deck = new CardDeck(this.logger);
-	}
-
-	public start = (players: PlayerEntity[]) => {
-		players.forEach(player => {
-			this.players.push(player);
-			this.playerList.addPlayer(player);
-
-			player.runSaga(playerGameDeckSagaFactory, this.deck);
-		});
-
-		this.opponentProvider = new OpponentProvider(players);
-
-		// todo this is ugly
-		this.playerList.onUpdate(newPlayers => {
-			this.getConnectedPlayers().forEach(player => {
-				player.put(playerListChangedEvent({ players: newPlayers }));
-			});
-		});
 
 		const { store, sagaMiddleware } = createGameStore({
 			options: this.options,
@@ -66,11 +50,30 @@ export class Gamemode {
 			logger: this.logger
 		});
 		this.store = store;
+		this.sagaMiddleware = sagaMiddleware;
+	}
+
+	public start = (players: PlayerEntity[]) => {
+		players.forEach(player => {
+			this.players.push(player);
+			this.playerList.addPlayer(player);
+
+			player.runSaga(playerGameDeckSagaFactory, this.deck);
+		});
+
+		this.opponentProvider.setPlayers(players);
+
+		// todo this is ugly
+		this.playerList.onUpdate(newPlayers => {
+			this.getConnectedPlayers().forEach(player => {
+				player.put(playerListChangedEvent({ players: newPlayers }));
+			});
+		});
 
 		// todo fix these ugly typings
-		sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
-		sagaMiddleware.run(gameSaga as () => Generator);
-		sagaMiddleware.run(sendPublicEventsSaga);
+		this.sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
+		this.sagaMiddleware.run(gameSaga as () => Generator);
+		this.sagaMiddleware.run(sendPublicEventsSaga);
 	};
 
 	public getPlayerById = (playerId: string) => this.players.find(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
@@ -81,7 +84,7 @@ export class Gamemode {
 
 	public getConnectedPlayers = () => this.players.filter(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT);
 
-	public getRoundInfo = () => this.store!.getState().roundInfo;
+	public getRoundInfo = () => this.store.getState().roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
 
 	private gameTeardownSagaFactory = () => {

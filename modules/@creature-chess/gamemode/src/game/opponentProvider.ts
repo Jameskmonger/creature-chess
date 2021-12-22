@@ -13,11 +13,10 @@ export class OpponentProvider {
 	private lastOddMatchupHomeId: string | null = null;
 	private lastOddMatchupAwayId: string | null = null;
 
-	private getLivingPlayers: () => PlayerEntity[];
+	private players: PlayerEntity[] | null = null;
 
-	public constructor(players: PlayerEntity[]) {
-		this.getLivingPlayers = () => players.filter(p =>
-			p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT && p.select(PlayerStateSelectors.isPlayerAlive));
+	public setPlayers(players: PlayerEntity[]) {
+		this.players = players;
 	}
 
 	public getMatchups = () => {
@@ -40,6 +39,16 @@ export class OpponentProvider {
 
 		return output;
 	};
+
+	private getLivingPlayers() {
+		if (!this.players) {
+			return [];
+		}
+		return this.players.filter(p =>
+			p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT
+			&& p.select(PlayerStateSelectors.isPlayerAlive)
+		);
+	}
 
 	private getMatchupsEven(livingPlayers: PlayerEntity[]) {
 		const matchups: ({ homeId: string; awayId: string; awayIsClone: boolean })[] = [];

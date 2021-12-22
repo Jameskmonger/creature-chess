@@ -1,0 +1,51 @@
+.help {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1rem;
+	color: #fff;
+
+	.piece-type {
+		display: inline-block;
+
+		// todo consider use of px here
+		/* stylelint-disable unit-disallowed-list */
+		width: 24px;
+		height: 24px;
+		/* stylelint-enable unit-disallowed-list */
+		margin-right: 0.5rem;
+	}
+
+	.section {
+		margin-bottom: 0.4rem;
+
+		.header {
+			margin-bottom: 0.4rem;
+			font-size: 1.4rem;
+			font-weight: 700;
+			color: #ccc;
+		}
+
+		.subheader {
+			margin-bottom: 0.4rem;
+			font-size: 1.2rem;
+			font-weight: 700;
+			color: #ccc;
+		}
+	}
+
+	/* stylelint-disable-next-line selector-max-type */
+	ul {
+		margin-left: 1.4rem;
+		list-style-type: disc;
+	}
+
+	/* stylelint-disable-next-line selector-max-type,selector-list-comma-newline-after */
+	p,
+	ul {
+		margin-bottom: 1rem;
+	}
+
+	.list-header {
+		font-weight: 700;
+		color: #ccc;
+	}
+}

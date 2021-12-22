@@ -23,7 +23,7 @@ export const preparingPhase = function*(personality: BotPersonality) {
 
 		const [mostValuable] = actions;
 
-		console.log(`- ${name} executing '${mostValuable.name}'`);
+		// console.log(`- ${name} executing '${mostValuable.name}'`);
 
 		yield put(mostValuable.action());
 
@@ -32,7 +32,7 @@ export const preparingPhase = function*(personality: BotPersonality) {
 		yield call(putBenchOnBoard);
 	}
 
-	console.log(`- ${name} finished actions`);
+	// console.log(`- ${name} finished actions`);
 
 	yield put(PlayerActions.readyUpPlayerAction());
 };

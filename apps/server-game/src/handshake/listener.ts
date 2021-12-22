@@ -16,8 +16,8 @@ export const handshakeListener = (
 		socket => {
 			logger.info(`[socket ${socket.id}] New connection received`);
 
-			socket.on("handshake", (request: HandshakeRequest) => {
-				logger.info(`[socket ${socket.id}] Handshake request recieved`);
+			socket.on("authenticate", (request: HandshakeRequest) => {
+				logger.info(`[socket ${socket.id}] Handshake request received`);
 
 				onReceive(socket, request);
 			});

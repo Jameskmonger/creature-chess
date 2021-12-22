@@ -1,16 +1,21 @@
-import { take, delay, all, race, call } from "redux-saga/effects";
+import { take, delay, all, race, call, put } from "redux-saga/effects";
 import { cancelled } from "typed-redux-saga";
 import { Socket } from "socket.io";
-import { GameEvents, PlayerActions } from "@creature-chess/gamemode";
+import { GameEvents, PlayerActions, PlayerCommands } from "@creature-chess/gamemode";
 import { ClientToServer, GameServerToClient } from "@creature-chess/networking";
 
 import { incomingNetworking, outgoingNetworking, setPacketRegistries } from "./net";
 import { playerBoard } from "./board";
+import { PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
+import { logger } from "../log";
 
-export { reconnectPlayerSocket } from "../player/net/reconnect";
+type Parameters = {
+	getRoundInfo: () => RoundInfoState;
+	getPlayers: () => PlayerListPlayer[];
+};
 
-export const playerNetworking = function*(socket: Socket) {
-	yield* setPacketRegistries({
+export const playerNetworking = function*(socket: Socket, { getRoundInfo, getPlayers }: Parameters) {
+	const registries = {
 		incoming: ClientToServer.incoming(
 			(opcode, handler) => socket.on(opcode, handler as any),
 			(opcode, handler) => socket.off(opcode, handler)
@@ -18,7 +23,9 @@ export const playerNetworking = function*(socket: Socket) {
 		outgoing: GameServerToClient.outgoing(
 			(opcode, payload, ack) => socket.emit(opcode, payload, ack)
 		)
-	});
+	};
+
+	yield* setPacketRegistries(registries);
 
 	const teardown = function*() {
 		socket!.removeAllListeners();
@@ -26,6 +33,16 @@ export const playerNetworking = function*(socket: Socket) {
 
 		yield* setPacketRegistries(null);
 	};
+
+	yield put(PlayerCommands.setSpectatingIdCommand(null));
+
+	registries.outgoing.send(
+		"gameConnected",
+		{
+			game: getRoundInfo(),
+			players: getPlayers()
+		}
+	);
 
 	try {
 		yield race({

@@ -47,7 +47,7 @@ export class Lobby {
 		if (existing) {
 			existing.socket?.disconnect(true);
 		} else {
-			const index = this.members.push({
+			const newMember = {
 				player: {
 					id: socket.data.id,
 					name: socket.data.nickname!,
@@ -55,9 +55,10 @@ export class Lobby {
 				},
 				socket,
 				registry
-			});
+			};
 
-			this.notifyOthers(index);
+			this.members.push(newMember);
+			this.notifyOthers(newMember);
 		}
 
 		this.sendConnected(registry);
@@ -78,35 +79,27 @@ export class Lobby {
 		);
 
 		this.options.onStart(members);
-		this.notifyStart();
 
 		this.members = [];
 	};
 
-	private notifyOthers(memberIndex: number) {
-		const member = this.members[memberIndex];
-
+	private notifyOthers(member: LobbyMember) {
 		for (const other of this.members) {
-			if (other.player.id === member.player.id) {
+			if (!other || other === member) {
 				continue;
 			}
 
-			this.sendOtherMemberUpdate(other, memberIndex, member);
+			member.registry?.send(
+				"lobbyUpdate",
+				{
+					players: this.getLobbyPlayers()
+				}
+			);
 		}
-	}
-
-	/**
-	 * Send an event to notify all LobbyMembers of game start
-	 */
-	private notifyStart() {
-		this.members.forEach(m =>
-			m.registry?.send("gameStarted", { empty: true })
-		);
 	}
 
 	private sendConnected(registry: OutgoingRegistry<LobbyServerToClient.PacketSet>) {
 		registry.send("connected", {
-			lobbyId: "0",
 			players: this.getLobbyPlayers(),
 			startTimestamp: this.gameStartTime!
 		});
@@ -123,13 +116,6 @@ export class Lobby {
 				name: nickname as string,
 				profile: profile as PlayerProfile
 			})
-		);
-	}
-
-	private sendOtherMemberUpdate(member: LobbyMember, index: number, other: LobbyMember) {
-		member.registry?.send(
-			"lobbyPlayerUpdate",
-			{ index, player: other.player }
 		);
 	}
 }

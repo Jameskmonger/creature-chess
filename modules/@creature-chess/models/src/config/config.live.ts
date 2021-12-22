@@ -4,6 +4,5 @@ export const config = {
 		spaClientId: "HNUYYyRCtFJsA3xKGp964Kgy4jwx8bW1",
 		machineToMachineClientId: "gWNTtsTNepgyyqE7QAEC4e7nt5A3ZZ4k"
 	},
-	appUrl: "https://creaturechess.com",
-	serverInfoUrl: "https://cc-server-info.herokuapp.com"
+	appUrl: "https://creaturechess.com"
 };
