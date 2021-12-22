@@ -3,7 +3,6 @@ import { LobbyPlayer } from "@creature-chess/models";
 import { EmptyPacket } from "../empty-packet";
 
 export type LobbyConnectionPacket = {
-	lobbyId: string;
 	players: LobbyPlayer[];
 	startTimestamp: number;
 };

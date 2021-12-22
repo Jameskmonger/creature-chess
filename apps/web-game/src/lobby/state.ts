@@ -3,13 +3,11 @@ import { LobbyPlayer } from "@creature-chess/models";
 import { LobbyServerToClient } from "@creature-chess/networking";
 
 export type LobbyState = {
-	lobbyId: string;
 	players: LobbyPlayer[];
-	startingAtMs: number;
+	startingAtMs: number | null;
 };
 
 const initialState: LobbyState = {
-	lobbyId: null,
 	players: [],
 	startingAtMs: null
 };
@@ -20,7 +18,6 @@ export const { reducer, actions: LobbyCommands } = createSlice({
 	reducers: {
 		setLobbyDetailsCommand: (state, action: PayloadAction<LobbyServerToClient.LobbyConnectionPacket>) => ({
 			...state,
-			lobbyId: action.payload.lobbyId,
 			players: action.payload.players,
 			startingAtMs: action.payload.startTimestamp
 		}),

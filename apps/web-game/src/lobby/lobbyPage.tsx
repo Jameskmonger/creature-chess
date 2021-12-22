@@ -21,11 +21,10 @@ const countdownRender = (totalSecondsRemaining: number) => {
 };
 
 const LobbyPage: React.FunctionComponent = () => {
-	const lobbyId = useSelector<AppState, string>(state => state.lobby.lobbyId);
-	const players = useSelector<AppState, LobbyPlayer[]>(state => state.lobby.players);
-	const lobbyStartingAtMs = useSelector<AppState, number>(state => state.lobby.startingAtMs);
+	const players = useSelector<AppState, LobbyPlayer[] | null>(state => state.lobby.players);
+	const lobbyStartingAtMs = useSelector<AppState, number | null>(state => state.lobby.startingAtMs);
 
-	if (lobbyId === null) {
+	if (lobbyStartingAtMs === null) {
 		return <div>An error occured, please refresh your page</div>;
 	}
 
@@ -52,8 +51,6 @@ const LobbyPage: React.FunctionComponent = () => {
 						/>
 					)
 				}
-
-				<h2 className="lobby-id">Lobby ID: {lobbyId}</h2>
 
 				<p><strong>tip:</strong> you can always sell your pieces back for their costs. Don't be afraid to change your team!</p>
 

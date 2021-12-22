@@ -116,7 +116,6 @@ export class Lobby {
 
 	private sendConnected(registry: OutgoingRegistry<LobbyServerToClient.PacketSet>) {
 		registry.send("connected", {
-			lobbyId: "0",
 			players: this.getLobbyPlayers(),
 			startTimestamp: this.gameStartTime!
 		});

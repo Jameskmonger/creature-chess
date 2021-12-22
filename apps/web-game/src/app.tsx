@@ -13,7 +13,7 @@ ReactModal.setAppElement("#approot");
 const App: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-	const hasLobbyId = useSelector<AppState>(state => state.lobby.lobbyId !== null);
+	const isInLobby = useSelector<AppState>(state => state.lobby.startingAtMs !== null);
 	const isInGame = useSelector<AppState>(state => state.game.ui.inGame);
 
 	React.useEffect(() => {
@@ -30,7 +30,7 @@ const App: React.FunctionComponent = () => {
 		return <GamePage />;
 	}
 
-	if (hasLobbyId) {
+	if (isInLobby) {
 		return <LobbyPage />;
 	}
 
