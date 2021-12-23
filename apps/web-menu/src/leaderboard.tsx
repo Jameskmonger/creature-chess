@@ -32,13 +32,13 @@ const LeaderboardContents: React.FunctionComponent<{ data: any }> = ({ data }) =
 const LEADERBOARD_ENDPOINT = `${process.env.API_INFO_URL}/leaderboard`;
 
 const Leaderboard: React.FunctionComponent = () => {
-	const { loading, error, data = [] } = useFetch(LEADERBOARD_ENDPOINT, {}, []);
+	// const { loading, error, data = [] } = useFetch(LEADERBOARD_ENDPOINT, {}, []);
 
 	return (
 		<div className="segment">
 			<div className="header">Leaderboard</div>
 			<div className="content">
-				{
+				{/* {
 					loading
 					&& <span>Loading</span>
 				}
@@ -46,7 +46,8 @@ const Leaderboard: React.FunctionComponent = () => {
 				{
 					!loading
 					&& <LeaderboardContents data={data} />
-				}
+				} */}
+				<span>Down for maintenance</span>
 			</div>
 		</div>
 	);
