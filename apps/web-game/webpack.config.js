@@ -51,7 +51,7 @@ module.exports = {
 			SENTRY_DSN: "",
 		}),
 		new DefinePlugin({
-			APP_VERSION: JSON.stringify(require("./package.json").version)
+			APP_VERSION: JSON.stringify(require("../../package.json").version)
 		}),
 		new HtmlWebpackPlugin({
 			template: "./index.ejs",

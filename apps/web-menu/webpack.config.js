@@ -116,7 +116,7 @@ module.exports = {
 			API_INFO_URL: "http://localhost:3001"
 		}),
 		new DefinePlugin({
-			APP_VERSION: JSON.stringify(require("./package.json").version)
+			APP_VERSION: JSON.stringify(require("../../package.json").version)
 		}),
 		new HtmlWebpackPlugin({
 			template: "./index.ejs",
