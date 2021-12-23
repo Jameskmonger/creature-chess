@@ -1,3 +1,5 @@
 build:
-    docker:
-      web: ./Dockerfile.server-info
+  config:
+    APP_DIR: server-info
+  docker:
+    web: ./apps/Dockerfile
