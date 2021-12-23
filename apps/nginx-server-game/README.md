@@ -1,4 +1,4 @@
-# server-game-nginx
+# nginx-server-game
 
 nginx server to be deployed as part of the server-game service
 

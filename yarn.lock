@@ -1722,9 +1722,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@creature-chess/server-game-nginx@workspace:apps/server-game-nginx":
+"@creature-chess/nginx-server-game@workspace:apps/nginx-server-game":
   version: 0.0.0-use.local
-  resolution: "@creature-chess/server-game-nginx@workspace:apps/server-game-nginx"
+  resolution: "@creature-chess/nginx-server-game@workspace:apps/nginx-server-game"
   languageName: unknown
   linkType: soft
 

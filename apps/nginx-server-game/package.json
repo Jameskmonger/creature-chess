@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "@creature-chess/server-game-nginx",
+	"name": "@creature-chess/nginx-server-game",
 	"version": "0.0.1",
 	"description": "nginx config for gameserver",
 	"keywords": [],
