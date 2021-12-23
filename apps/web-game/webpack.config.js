@@ -54,7 +54,6 @@ module.exports = {
 			APP_VERSION: JSON.stringify(require("../../package.json").version)
 		}),
 		new HtmlWebpackPlugin({
-			publicPath: "/",
 			template: "./index.ejs",
 			scriptLoading: "blocking"
 		}),
