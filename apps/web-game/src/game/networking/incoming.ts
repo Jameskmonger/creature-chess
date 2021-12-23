@@ -7,10 +7,10 @@ import { ActionStream, IncomingRegistry } from "@shoki/networking";
 import { BoardSlice } from "@shoki/board";
 import { startBattle } from "@creature-chess/battle";
 
-import { updateConnectionStatus } from "../../../game/ui/actions";
-import { ConnectionStatus } from "../../../game/connection-status";
-import { setMatchBoard } from "../../../game/module/match";
-import { getPlayerSlices } from "../../../store/sagaContext";
+import { updateConnectionStatus } from "../ui/actions";
+import { ConnectionStatus } from "../connection-status";
+import { setMatchBoard } from "../module/match";
+import { getPlayerSlices } from "../../store/sagaContext";
 
 const readPacketsToActions = function*(
 	registry: IncomingRegistry<GameServerToClient.PacketSet>,

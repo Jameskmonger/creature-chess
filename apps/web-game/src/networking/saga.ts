@@ -1,11 +1,12 @@
 import { eventChannel } from "redux-saga";
 import { all, call, put, take } from "typed-redux-saga";
+import { createAction } from "@reduxjs/toolkit";
 import { Socket } from "socket.io-client";
 import { LobbyServerToClient, GameServerToClient } from "@creature-chess/networking";
-import { lobbyConnectedEvent, gameConnectedEvent } from "../events";
-import { getSocket } from "../socket";
-import { networkingSaga } from "./networkingSaga";
-import { createAction } from "@reduxjs/toolkit";
+import { lobbyNetworking } from "../lobby";
+import { gameNetworking } from "../game";
+import { lobbyConnectedEvent, gameConnectedEvent } from "./events";
+import { getSocket } from "./socket";
 
 type ConnectionResult = {
 	type: "lobby";
@@ -43,7 +44,7 @@ const listenForConnection = function*(socket: Socket) {
 type OpenConnectionAction = ReturnType<typeof openConnection>;
 export const openConnection = createAction<{ idToken: string }>("openConnection");
 
-export const connect = function*() {
+export const networkingSaga = function*() {
 	const { payload: { idToken } } = yield* take<OpenConnectionAction>(openConnection.toString() as any);
 
 	let socket: Socket;
@@ -58,7 +59,8 @@ export const connect = function*() {
 	const connection = yield* call(listenForConnection, socket);
 
 	yield* all([
-		call(networkingSaga, socket),
+		call(lobbyNetworking, socket),
+		call(gameNetworking, socket),
 		call(function*() {
 			if (connection.type === "lobby") {
 				yield put(lobbyConnectedEvent(connection.payload));

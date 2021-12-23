@@ -4,8 +4,8 @@ import { put, take } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
 import { IncomingRegistry } from "@shoki/networking";
 import { LobbyServerToClient } from "@creature-chess/networking";
-import { gameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../events";
-import { LobbyCommands } from "../../lobby";
+import { gameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../networking/events";
+import { LobbyCommands } from ".";
 import { call, race } from "redux-saga/effects";
 import { cancelled } from "typed-redux-saga";
 
@@ -52,8 +52,11 @@ export const lobbyNetworking = function*(
 		(opcode, handler) => socket.off(opcode, handler as any)
 	);
 
+	const runForever = call(readPacketsToActions, registry);
+	const connectedToGame = take(gameConnectedEvent.toString());
+
 	yield race({
-		never: call(readPacketsToActions, registry),
-		gameConnected: take(gameConnectedEvent.toString())
+		runForever,
+		connectedToGame
 	});
 };

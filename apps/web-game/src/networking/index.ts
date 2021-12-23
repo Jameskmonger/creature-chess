@@ -1,1 +1,1 @@
-export { openConnection, connect } from "./sagas/connect";
+export { openConnection, networkingSaga } from "./saga";

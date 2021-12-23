@@ -4,9 +4,9 @@ import { GameEvents } from "@creature-chess/gamemode";
 import { incomingGameServerToClient } from "./incoming";
 import { outgoingGameServerToClient } from "./outgoing";
 
-import { setInGameCommand, updateConnectionStatus } from "../../../game/ui/actions";
-import { gameConnectedEvent, GameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../../events";
-import { ConnectionStatus } from "../../../game/connection-status";
+import { setInGameCommand, updateConnectionStatus } from "../ui/actions";
+import { gameConnectedEvent, GameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../../networking/events";
+import { ConnectionStatus } from "../connection-status";
 
 export const gameNetworking = function*(socket: Socket) {
 	yield take<GameConnectedEvent | LobbyConnectedEvent>([gameConnectedEvent.toString(), lobbyConnectedEvent.toString()]);
