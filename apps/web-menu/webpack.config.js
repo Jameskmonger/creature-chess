@@ -141,9 +141,6 @@ module.exports = {
 			// set the current working directory for displaying module paths
 			cwd: process.cwd(),
 		}),
-		process.env.CNAME
-			? new CnameWebpackPlugin({ domain: process.env.CNAME })
-			: null
 	].filter(plugin => plugin !== null),
 
 	devServer: {
