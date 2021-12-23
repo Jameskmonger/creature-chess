@@ -1,8 +1,8 @@
 {
 	"private": true,
-	"name": "@creature-chess/models",
+	"name": "@creature-chess/server-game-nginx",
 	"version": "0.0.1",
-	"description": "Shared models",
+	"description": "nginx config for gameserver",
 	"keywords": [],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"license": "ISC",
@@ -13,11 +13,10 @@
 		"type": "git",
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
-	"scripts": {
-		"build": "tsc -p ./tsconfig.json"
-	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
-	"homepage": "https://github.com/Jameskmonger/creature-chess#readme"
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"scripts": {},
+	"dependencies": {}
 }
