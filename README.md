@@ -46,14 +46,17 @@ The game is then accessible at `http://localhost:8080`.
 $ yarn dev-tools
 ```
 
-### Publishing
+## Publishing
 
-- Use `npm run release` to create a new release - create a tag and commit, and push to Git
-  - This publishes GitHub pages (`app`) and Docker Hub (`server-game`)
-- Push to Heroku with `git push -f heroku v0.2.2^{}:master`
-  - Replace v0.2.2 with tag from last step
-  - This publishes Heroku (`server-info`)
-  - You may have to run this in Bash
+- Update the root package.json version
+- Run the following commands (substitute your version number):
+
+	```
+	git add package.json && git commit -m "v0.4.22" && git tag -a v0.4.22 -m "v0.4.22" && git push origin v0.4.22
+	```
+- Run `yarn ecr-push`
+- Update the ECS task definition
+- Update the ECS service to use the new task definition
 
 ## Apps
 
