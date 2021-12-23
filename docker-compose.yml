@@ -1,11 +1,12 @@
 version: "3.8"
 services:
   nginx:
-    image: nginx:latest
+    build:
+      context: .
+      dockerfile: apps/nginx-local-dev/Dockerfile
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./nginx/error.log:/etc/nginx/error_log.log
-      - ./nginx/access.log:/etc/nginx/access_log.log
+      - ./apps/nginx-local-dev/nginx/error.log:/etc/nginx/error_log.log
+      - ./apps/nginx-local-dev/nginx/access.log:/etc/nginx/access_log.log
     ports:
       - 8080:8080
   web-menu:
