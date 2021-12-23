@@ -4,7 +4,7 @@
 	"description": "",
 	"scripts": {
 		"test": "echo \"no tests for tools\"",
-		"build:webpack": "webpack --mode=development",
+		"build-webpack": "webpack --mode=development",
 		"start": "NODE_ENV=development webpack serve"
 	},
 	"author": "",

@@ -34,13 +34,7 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 ### Running
 
 ```shell
-# install dependencies
 $ yarn
-
-# run the frontend in dev mode
-$ yarn dev:web
-
-# run the server (do this in a separate console)
 $ yarn dockerup
 ```
 
@@ -49,7 +43,7 @@ The game is then accessible at `http://localhost:8080`.
 ### Dev toolkit
 
 ```shell
-$ yarn dev:tools
+$ yarn dev-tools
 ```
 
 ### Publishing
