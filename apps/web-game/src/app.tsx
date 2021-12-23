@@ -16,10 +16,14 @@ const App: React.FunctionComponent = () => {
 	const isInLobby = useSelector<AppState>(state => state.lobby.startingAtMs !== null);
 	const isInGame = useSelector<AppState>(state => state.game.ui.inGame);
 
+	const [loadingMessage, setLoadingMessage] = React.useState("loading...");
+
 	React.useEffect(() => {
 		const open = async () => {
+			setLoadingMessage("getting access token");
 			const idToken = await getAccessTokenSilently();
 
+			setLoadingMessage("opening connection");
 			dispatch(openConnection({ idToken }));
 		};
 
@@ -34,7 +38,12 @@ const App: React.FunctionComponent = () => {
 		return <LobbyPage />;
 	}
 
-	return <Loading />;
+	return (
+		<>
+			<span>({loadingMessage})</span>
+			<Loading />
+		</>
+	);
 };
 
 export { App };
