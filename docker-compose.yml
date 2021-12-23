@@ -11,9 +11,11 @@ services:
   web-menu:
     build:
       context: .
-      dockerfile: ./apps/web-menu/Dockerfile
+      dockerfile: apps/Dockerfile
+      args:
+        - APP_DIR=web-menu
     ports:
-      - "8090:8090"
+      - "8090:3000"
   server-game:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
@@ -22,7 +24,9 @@ services:
       - NODE_ENV=development
     build:
       context: .
-      dockerfile: ./apps/server-game/Dockerfile
+      dockerfile: apps/Dockerfile
+      args:
+        - APP_DIR=server-game
     ports:
       - "3000:3000"
   server-info:
@@ -32,6 +36,8 @@ services:
       - NODE_ENV=development
     build:
       context: .
-      dockerfile: ./apps/server-info/Dockerfile
+      dockerfile: apps/Dockerfile
+      args:
+        - APP_DIR=server-info
     ports:
       - "3001:3000"
