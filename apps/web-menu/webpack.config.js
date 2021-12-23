@@ -113,7 +113,7 @@ module.exports = {
 			NODE_ENV: "production",
 			SENTRY_DSN: "",
 			GAME_SERVER_URL: "http://localhost:8080/game/",
-			API_INFO_URL: "http://localhost:3001"
+			API_INFO_URL: "http://localhost:8080/info/"
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("../../package.json").version)

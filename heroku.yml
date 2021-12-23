@@ -1,5 +1,0 @@
-build:
-  config:
-    APP_DIR: server-info
-  docker:
-    web: ./apps/Dockerfile
