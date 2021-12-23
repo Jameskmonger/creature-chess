@@ -16,7 +16,7 @@ services:
       args:
         - APP_DIR=web-menu
     ports:
-      - "8090:3000"
+      - "3000"
   server-game:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
@@ -29,7 +29,7 @@ services:
       args:
         - APP_DIR=server-game
     ports:
-      - "3000:3000"
+      - "3000"
   server-info:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
@@ -41,4 +41,4 @@ services:
       args:
         - APP_DIR=server-info
     ports:
-      - "3001:3000"
+      - "3000"

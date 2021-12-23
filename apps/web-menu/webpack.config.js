@@ -144,8 +144,9 @@ module.exports = {
 	].filter(plugin => plugin !== null),
 
 	devServer: {
-		compress: true,
-		port: 8090,
+		host: "0.0.0.0",
+		port: 3000,
+		allowedHosts: "all",
 		historyApiFallback: true,
 	},
 

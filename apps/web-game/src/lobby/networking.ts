@@ -5,9 +5,10 @@ import { Socket } from "socket.io-client";
 import { IncomingRegistry } from "@shoki/networking";
 import { LobbyServerToClient } from "@creature-chess/networking";
 import { gameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../networking/events";
-import { LobbyCommands } from ".";
 import { call, race } from "redux-saga/effects";
 import { cancelled } from "typed-redux-saga";
+import { LobbyCommands } from "./state";
+import { GameConnectionPacket } from "@creature-chess/networking/src/server-to-client/server-to-client-game";
 
 const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToClient.PacketSet>) {
 	let channel: EventChannel<Action>;
@@ -18,6 +19,14 @@ const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToC
 				"lobbyUpdate",
 				({ players }) => {
 					emit(LobbyCommands.updatePlayers({ players }));
+				}
+			);
+
+			// todo move this
+			registry.on(
+				"gameConnected" as any,
+				(packet: GameConnectionPacket) => {
+					emit(gameConnectedEvent(packet));
 				}
 			);
 
@@ -55,8 +64,12 @@ export const lobbyNetworking = function*(
 	const runForever = call(readPacketsToActions, registry);
 	const connectedToGame = take(gameConnectedEvent.toString());
 
-	yield race({
+	const result = yield race({
 		runForever,
 		connectedToGame
 	});
+
+	if (result.connectedToGame) {
+		yield put(result.connectedToGame);
+	}
 };
