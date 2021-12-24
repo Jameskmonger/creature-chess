@@ -3,7 +3,7 @@ import { all, put, takeEvery } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { getBenchSlice, getBoardSlice } from "../../entities/player/selectors";
 import { updateCardsCommand } from "../../entities/player/state/cardShop";
-import { getAllPieces, getPiecesForStage } from "../../player/pieceSelectors";
+import { getAllPieces } from "../../player/pieceSelectors";
 import { getPlayerCards, isPlayerAlive } from "../../entities/player/state/selectors";
 import { PlayerState, PlayerCommands } from "../../entities/player";
 import { CardDeck } from "../cardDeck";
@@ -63,10 +63,8 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 					playerInfo: { level }
 				} = state;
 
-				const threeStarBoardPieces = getPiecesForStage(state.board, 2);
-				const threeStarBenchPieces = getPiecesForStage(state.bench, 2);
-
-				const excludeIds = [...threeStarBoardPieces, ...threeStarBenchPieces].map(p => p.definitionId);
+				const threeStarPieces = getAllPieces(state, p => p.stage === 2);
+				const excludeIds = threeStarPieces.map(p => p.definitionId);
 
 				const remainingCards = cards.filter((card): card is Card => card !== null);
 				const newCards = pullNewCards(remainingCards, level, excludeIds);
