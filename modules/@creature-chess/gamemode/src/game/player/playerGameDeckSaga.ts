@@ -3,7 +3,7 @@ import { all, put, takeEvery } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { getBenchSlice, getBoardSlice } from "../../entities/player/selectors";
 import { updateCardsCommand } from "../../entities/player/state/cardShop";
-import { getAllPieces, getPiecesExceptStage, getPiecesForStage } from "../../player/pieceSelectors";
+import { getAllPieces, getPiecesForStage } from "../../player/pieceSelectors";
 import { getPlayerCards, isPlayerAlive } from "../../entities/player/state/selectors";
 import { PlayerState, PlayerCommands } from "../../entities/player";
 import { CardDeck } from "../cardDeck";
@@ -21,9 +21,8 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 	const pullNewCards = (
 		oldCards: Card[],
 		level: number,
-		excludeIds: number[],
-		blessCandidateIds: number[]
-	) => deck.reroll(oldCards, 5, level, blessCandidateIds, excludeIds);
+		excludeIds: number[]
+	) => deck.reroll(oldCards, 5, level, excludeIds);
 
 	// when a player dies, add their cards and pieces back to the deck
 	const addToDeck = (pieces: PieceModel[], cards: Card[]) => {
@@ -68,10 +67,9 @@ export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 				const threeStarBenchPieces = getPiecesForStage(state.bench, 2);
 
 				const excludeIds = [...threeStarBoardPieces, ...threeStarBenchPieces].map(p => p.definitionId);
-				const blessCandidateIds = [... new Set(getPiecesExceptStage(state.board, 2).map(p => p.definitionId))];
 
 				const remainingCards = cards.filter((card): card is Card => card !== null);
-				const newCards = pullNewCards(remainingCards, level, excludeIds, blessCandidateIds);
+				const newCards = pullNewCards(remainingCards, level, excludeIds);
 
 				yield put(PlayerCommands.updateCardsCommand(newCards));
 			}

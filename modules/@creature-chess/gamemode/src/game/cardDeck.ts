@@ -29,9 +29,6 @@ const canTakeCardAtCost = (level: number, cost: number): boolean => {
 	return roll <= chance;
 };
 
-const BLESSED_HAND_CHANCE = [0, 0.1, 0.2, 0.15, 0.15, 0.23, 0.23, 0.1, 0.1, 0.1];
-const isHandBlessed = (level: number) => (Math.floor(Math.random() * 100) * 0.01) <= BLESSED_HAND_CHANCE[level - 1];
-
 export class CardDeck {
 	public deck: Card[][];
 
@@ -49,11 +46,11 @@ export class CardDeck {
 		this.shuffle();
 	}
 
-	public reroll(input: Card[], count: number, level: number, blessCandidates: number[], excludeCards: number[] = []) {
+	public reroll(input: Card[], count: number, level: number, excludeCards: number[] = []) {
 		this.addCards(input);
 		this.shuffle();
 
-		return this.take(count, level, blessCandidates, excludeCards);
+		return this.take(count, level, excludeCards);
 	}
 
 	public addCards(cards: Card[]) {
@@ -98,68 +95,23 @@ export class CardDeck {
 		return this.deck[cost - 1];
 	}
 
-	private take(count: number, level: number, blessCandidates: number[], excludeCards: number[] = []) {
+	private take(count: number, level: number, excludeCards: number[] = []) {
 		const output: Card[] = [];
 
-		let blessedHand = isHandBlessed(level);
-
-		if (blessedHand) {
-			this.logger.info("Hand is blessed!");
-		}
-
 		for (let i = 0; i < count; i++) {
-			const takenCard = this.takeCard(level, blessedHand, blessCandidates, excludeCards);
+			const takenCard = this.takeCard(level, excludeCards);
 
 			if (!takenCard) {
 				continue;
 			}
 
-			output.push(takenCard.card);
-
-			// clear blessed if it was used
-			if (takenCard.blessed) {
-				blessedHand = false;
-			}
+			output.push(takenCard);
 		}
 
 		return output;
 	}
 
-	private takeCard(level: number, isBlessed: boolean, blessCandidates: number[], excludeDefinitions: number[]) {
-		if (isBlessed && blessCandidates.length > 0) {
-			for (const candidate of shuffle(blessCandidates)) {
-				const definition = getDefinitionById(candidate);
-
-				if (!definition) {
-					continue;
-				}
-
-				const deck = this.getDeckForCost(definition.cost);
-
-				const index = deck.findIndex(c => c.definitionId === candidate);
-
-				if (!index) {
-					continue;
-				}
-
-				const [card] = deck.splice(index, 1);
-
-				if (card.definitionId !== candidate) {
-					deck.push(card);
-
-					this.logger.warn(`- Definition ${card.definitionId} mismatch, pulled for bless candidate ${candidate}`);
-
-					continue;
-				}
-
-				this.logger.info(`- Bless pulled ${definition.name}, worth $${definition.cost}!`);
-
-				return { card, blessed: true };
-			}
-
-			this.logger.warn("- No card pulled for bless");
-		}
-
+	private takeCard(level: number, excludeDefinitions: number[]) {
 		// start at 5 and work downwards
 		for (let cost = CARD_COST_CHANCES.length; cost >= 1; cost--) {
 			const roll = canTakeCardAtCost(level, cost);
@@ -175,7 +127,7 @@ export class CardDeck {
 
 				if (card) {
 					if (!excludeDefinitions.includes(card.definitionId)) {
-						return { card, blessed: false };
+						return card;
 					}
 
 					this.addCards([card]);
@@ -194,7 +146,7 @@ export class CardDeck {
 
 				if (card) {
 					if (!excludeDefinitions.includes(card.definitionId)) {
-						return { card, blessed: false };
+						return card;
 					}
 
 					this.addCards([card]);
