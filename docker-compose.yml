@@ -3,10 +3,10 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: apps/nginx-local-dev/Dockerfile
+      dockerfile: nginx/local-dev/Dockerfile
     volumes:
-      - ./apps/nginx-local-dev/nginx/error.log:/etc/nginx/error_log.log
-      - ./apps/nginx-local-dev/nginx/access.log:/etc/nginx/access_log.log
+      - ./nginx/local-dev/nginx/error.log:/etc/nginx/error_log.log
+      - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
     ports:
       - 8080:8080
   web-menu:

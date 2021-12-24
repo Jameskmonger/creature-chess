@@ -1716,18 +1716,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@creature-chess/nginx-local-dev@workspace:apps/nginx-local-dev":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/nginx-local-dev@workspace:apps/nginx-local-dev"
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess/nginx-server-game@workspace:apps/nginx-server-game":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/nginx-server-game@workspace:apps/nginx-server-game"
-  languageName: unknown
-  linkType: soft
-
 "@creature-chess/server-game@workspace:apps/server-game":
   version: 0.0.0-use.local
   resolution: "@creature-chess/server-game@workspace:apps/server-game"

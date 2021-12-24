@@ -11,8 +11,6 @@ RUN yarn set version berry
 ADD package.json yarn.lock .yarnrc.yml ./
 ADD .yarn/ ./.yarn/
 
-ADD apps/nginx-local-dev/package.json ./apps/nginx-local-dev/
-ADD apps/nginx-server-game/package.json ./apps/nginx-server-game/
 ADD apps/server-game/package.json ./apps/server-game/
 ADD apps/server-info/package.json ./apps/server-info/
 ADD apps/tools/package.json ./apps/tools/

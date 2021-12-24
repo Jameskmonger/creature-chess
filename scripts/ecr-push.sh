@@ -1,4 +1,4 @@
-docker build -t cc-server-game-nginx -f apps/nginx-server-game/Dockerfile .
+docker build -t cc-server-game-nginx -f nginx/server-game/Dockerfile .
 docker tag cc-server-game-nginx:latest 352494607378.dkr.ecr.eu-west-2.amazonaws.com/cc-server-game-nginx:latest
 docker push 352494607378.dkr.ecr.eu-west-2.amazonaws.com/cc-server-game-nginx:latest
 
