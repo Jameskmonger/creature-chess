@@ -29,13 +29,13 @@ const XP_TO_NEXT_LEVEL =
 
 export const getXpToNextLevel = (level: number) => {
 	if (level === MAX_PLAYER_LEVEL) {
-		return null;
+		return 0;
 	}
 
 	const result = XP_TO_NEXT_LEVEL[level - 1];
 
 	if (result === undefined) {
-		return null;
+		return 0;
 	}
 
 	return result;

@@ -15,7 +15,7 @@ interface Animation {
 	variables?: AnimationVariables;
 }
 
-const getHealthbar = (ownerId: string, localId: string, spectatingId: string) => (
+const getHealthbar = (ownerId: string, localId: string, spectatingId: string | null) => (
 	ownerId === localId
 		? "friendly"
 		: (
@@ -30,8 +30,8 @@ export const AnimatedPiece: React.FunctionComponent<{ id: string }> = (props) =>
 	const playerId = usePlayerId();
 	const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
 	const [oldPiece, setOldPiece] = React.useState<PieceModel | null>(null);
-	const piece = useSelector<AppState, PieceModel>(state => BoardSelectors.getPiece(state.game.match.board, id));
-	const spectatingId = useSelector<AppState, string>(state => state.game.spectating.id);
+	const piece = useSelector<AppState, PieceModel | null>(state => BoardSelectors.getPiece(state.game.match.board!, id));
+	const spectatingId = useSelector<AppState, string | null>(state => state.game.spectating.id);
 
 	const runAnimation = (name: string, variables?: AnimationVariables) => setCurrentAnimations(oldAnimations => [...oldAnimations, { name, variables }]);
 

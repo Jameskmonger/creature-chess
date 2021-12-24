@@ -24,7 +24,7 @@ const LobbyPage: React.FunctionComponent = () => {
 	const players = useSelector<AppState, LobbyPlayer[] | null>(state => state.lobby.players);
 	const lobbyStartingAtMs = useSelector<AppState, number | null>(state => state.lobby.startingAtMs);
 
-	if (lobbyStartingAtMs === null) {
+	if (!players || !lobbyStartingAtMs) {
 		return <div>An error occured, please refresh your page</div>;
 	}
 

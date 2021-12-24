@@ -6,7 +6,7 @@ import { Card } from "./card";
 import classNames from "classnames";
 
 type Props = {
-	cards: CardModel[];
+	cards: (CardModel | null)[];
 	money: number;
 	selectedCardIndex: number | null;
 	onSelectCard?: (index: number | null) => void;
@@ -36,7 +36,7 @@ const useStyles = createUseStyles({
 const CardSelector: React.FunctionComponent<Props> = ({ cards, money, selectedCardIndex, onSelectCard }) => {
 	const classes = useStyles();
 
-	const createCard = (card: CardModel, index: number) => {
+	const createCard = (card: CardModel | null, index: number) => {
 		if (card === null) {
 			return null;
 		}

@@ -73,7 +73,8 @@ export const incomingGameServerToClient = function*(
 	);
 
 	yield all([
-		call(readPacketsToActions, registry, socket, board, bench),
+		// todo fix typing here
+		call(readPacketsToActions as any, registry, socket, board, bench),
 
 		call(
 			ActionStream.incomingSaga<GameServerToClient.PacketSet, "sendGameEvents">(

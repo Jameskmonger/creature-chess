@@ -3,7 +3,7 @@ import { PieceModel } from "@creature-chess/models";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type MatchState = {
-	board: BoardState<PieceModel>;
+	board: BoardState<PieceModel> | null;
 };
 
 const initialState: MatchState = { board: null };

@@ -11,6 +11,7 @@ import delay = require("delay");
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
 import { playerFinishMatchEvent } from "../entities/player/events";
+import { Logger } from "winston";
 
 interface MatchState {
 	board: BoardState<PieceModel>;
@@ -35,6 +36,7 @@ export class Match {
 		public readonly home: PlayerEntity,
 		public readonly away: PlayerEntity,
 		private awayIsClone: boolean,
+		private logger: Logger,
 		gameOptions: GameOptions
 	) {
 		this.store = this.createStore(gameOptions);
@@ -151,8 +153,19 @@ export class Match {
 				),
 				takeEvery<BattleEvents.BattleFinishEvent>(
 					BattleEvents.BATTLE_FINISH_EVENT,
-					function*() {
+					function*({ payload: { turns } }) {
 						_this.onServerFinishMatch();
+
+						_this.logger.info(
+							"Battle finished",
+							{
+								meta: {
+									home: _this.home.getVariable(v => v.name),
+									away: _this.away.getVariable(v => v.name),
+									turns
+								}
+							}
+						);
 					}
 				),
 				takeLatest<BattleEvents.BattleTurnEvent>(

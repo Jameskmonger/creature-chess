@@ -8,7 +8,7 @@ import { Button } from "../button";
 import { Label } from "../display";
 
 type Props = {
-	cards: CardModel[];
+	cards: (CardModel | null)[];
 	money: number;
 	isLocked?: boolean;
 	onReroll?: () => void;
@@ -39,26 +39,27 @@ const CardShop: React.FunctionComponent<Props> = ({ cards, money, isLocked = fal
 
 	const onBuyCurrentCard = () => onBuy && selectedIndex !== null && onBuy(selectedIndex);
 
+	const selectedCard = selectedIndex !== null ? cards[selectedIndex] : null;
+
 	React.useEffect(() => {
-		if (selectedIndex === null || !cards[selectedIndex]) {
+		if (!selectedCard) {
 			return;
 		}
 
-		const canAfford = cards[selectedIndex].cost <= money;
+		const canAfford = selectedCard.cost <= money;
 
 		if (!canAfford) {
 			setSelectedIndex(null);
 		}
-	}, [money]);
+	}, [selectedCard, money]);
 
 	return (
 		<Layout className={classes.container} direction="column" >
 			<Layout direction="column" justifyContent="center" className={classes.grow}>
 				{
-					selectedIndex !== null
-					&& cards[selectedIndex]
+					selectedCard
 					&& showSelectedCard
-					&& <CurrentCard card={cards[selectedIndex]} onBuy={onBuyCurrentCard} />
+					&& <CurrentCard card={selectedCard} onBuy={onBuyCurrentCard} />
 				}
 			</Layout>
 

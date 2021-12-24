@@ -61,8 +61,6 @@ export const putBenchOnBoard = function*() {
 			break;
 		}
 
-		console.log(`-- ${name} moving bench piece`);
-
 		const benchPiecePosition: PlayerPieceLocation = {
 			type: "bench",
 			location: {

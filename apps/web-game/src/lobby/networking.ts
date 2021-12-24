@@ -1,17 +1,17 @@
 import { Action } from "redux";
 import { EventChannel, eventChannel } from "redux-saga";
-import { put, take } from "redux-saga/effects";
+import { put } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
 import { IncomingRegistry } from "@shoki/networking";
 import { LobbyServerToClient } from "@creature-chess/networking";
 import { gameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../networking/events";
-import { call, race } from "redux-saga/effects";
-import { cancelled } from "typed-redux-saga";
+import { call } from "redux-saga/effects";
+import { cancelled, race, take } from "typed-redux-saga";
 import { LobbyCommands } from "./state";
 import { GameConnectionPacket } from "@creature-chess/networking/src/server-to-client/server-to-client-game";
 
 const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToClient.PacketSet>) {
-	let channel: EventChannel<Action>;
+	let channel: EventChannel<Action> | null = null;
 
 	try {
 		channel = eventChannel(emit => {
@@ -37,13 +37,13 @@ const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToC
 		});
 
 		while (true) {
-			const action = yield take(channel);
+			const action = yield* take(channel);
 
 			yield put(action);
 		}
 	} finally {
 		if (yield* cancelled()) {
-			channel.close();
+			channel?.close();
 		}
 	}
 };
@@ -64,12 +64,12 @@ export const lobbyNetworking = function*(
 	const runForever = call(readPacketsToActions, registry);
 	const connectedToGame = take(gameConnectedEvent.toString());
 
-	const result = yield race({
+	const result = yield* race({
 		runForever,
 		connectedToGame
 	});
 
 	if (result.connectedToGame) {
-		yield put(result.connectedToGame);
+		yield put(result.connectedToGame as unknown as Action<any>);
 	}
 };

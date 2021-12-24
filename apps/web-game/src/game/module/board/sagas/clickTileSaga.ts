@@ -7,7 +7,7 @@ import { clearSelectedPiece } from "../../../ui/actions";
 import { createAction } from "@reduxjs/toolkit";
 
 // todo move this to a player selector
-export const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation => {
+export const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation | null => {
 	if (board) {
 		const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
 
@@ -22,7 +22,7 @@ export const getLocationForPiece = (pieceId: string, board: BoardState, bench: B
 	if (bench) {
 		const benchPiecePosition = BoardSelectors.getPiecePosition(bench, pieceId);
 
-		if (benchPiecePosition !== undefined) {
+		if (benchPiecePosition) {
 			return {
 				type: "bench",
 				location: benchPiecePosition
@@ -70,7 +70,13 @@ export const clickTileSaga = function*() {
 			continue;
 		}
 
-		const from: PlayerPieceLocation = getLocationForPiece(selectedPiece.id, board, bench);
+		const from = getLocationForPiece(selectedPiece.id, board, bench);
+
+		if (!from) {
+			// couldnt find position
+			// todo maybe log it?
+			continue;
+		}
 
 		yield put(PlayerActions.dropPiecePlayerAction({
 			pieceId: selectedPiece.id,

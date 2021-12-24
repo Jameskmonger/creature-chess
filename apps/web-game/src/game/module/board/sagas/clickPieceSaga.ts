@@ -42,6 +42,12 @@ export const clickPieceSaga = function*() {
 		if (selectedPiece) {
 			const selectedPieceLocation = getLocationForPiece(selectedPiece.id, board, bench);
 
+			if (!selectedPieceLocation || !pieceLocation) {
+				// piece doesn't exist should never happen
+				// todo maybe log it?
+				continue;
+			}
+
 			yield put(PlayerActions.swapPiecePlayerAction({
 				pieceAId: selectedPiece.id,
 				pieceALocation: selectedPieceLocation,

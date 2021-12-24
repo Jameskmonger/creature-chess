@@ -2,12 +2,12 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePlayerId } from "@creature-chess/auth-web";
 import { PlayerListPlayer, GamePhase, PlayerStatus, PlayerBattle } from "@creature-chess/models";
-import { getPlayerMoney, getPlayerLevel, PlayerActions } from "@creature-chess/gamemode";
+import { PlayerActions } from "@creature-chess/gamemode";
 import { StatusPlayerListItem, PlayerListItem } from "@creature-chess/ui";
 import { AppState } from "../../../../store";
 
 // todo move this
-function ordinal_suffix_of(i: number) {
+const getOrdinalSuffix = (i: number) => {
 	const j = i % 10;
 	const k = i % 100;
 	if (j === 1 && k !== 11) {
@@ -20,7 +20,7 @@ function ordinal_suffix_of(i: number) {
 		return i + "rd";
 	}
 	return i + "th";
-}
+};
 
 const getOpponentName = (battle: PlayerBattle, players: PlayerListPlayer[]) => {
 	if (!battle) {
@@ -34,7 +34,7 @@ const PlayerList: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 	const localPlayerId = usePlayerId();
 	const players = useSelector<AppState, PlayerListPlayer[]>(state => state.game.playerList);
-	const opponentId = useSelector<AppState, string>(state => state.game.playerInfo.opponentId);
+	const opponentId = useSelector<AppState, string | null>(state => state.game.playerInfo.opponentId);
 	const showReadyIndicators = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 
 	const currentlySpectatingId = useSelector<AppState, string | null>(state => state.game.spectating.id);
@@ -65,12 +65,12 @@ const PlayerList: React.FunctionComponent = () => {
 								opponentName={opponentName}
 								battle={p.battle}
 								status="Dead"
-								subtitle={`${ordinal_suffix_of(index + 1)} place`}
+								subtitle={`${getOrdinalSuffix(index + 1)} place`}
 							/>
 						);
 					}
 
-					const currentlySpectating = currentlySpectatingId === p.id
+					const currentlySpectating = currentlySpectatingId === p.id;
 
 					const onSpectateClick = () => {
 						dispatch(PlayerActions.spectatePlayerAction(

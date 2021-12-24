@@ -7,9 +7,8 @@ import { NicknameSelection } from "./registration/NicknameSelection";
 import { PictureSelection } from "./registration/PictureSelection";
 
 const RegistrationPage: React.FunctionComponent = () => {
-
 	const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
-	const [nickname, setNickname] = React.useState<string>("");
+	const [nickname, setNickname] = React.useState<string | null>("");
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [error, setError] = React.useState<string | null>(null);
 	const [currentImage, setCurrentImage] = React.useState(1);
@@ -67,7 +66,7 @@ const RegistrationPage: React.FunctionComponent = () => {
 			{
 				!hasNickname(user) &&
 				<NicknameSelection
-					nickname={nickname}
+					nickname={nickname || ""}
 					onChange={onNameChange}
 					loading={loading}
 				/>

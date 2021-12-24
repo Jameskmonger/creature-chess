@@ -10,7 +10,7 @@ export const clientBattleSaga = function*() {
 	const { board } = yield* getPlayerSlices();
 
 	yield fork(
-		battleSagaFactory<AppState>((state: AppState) => state.game.match?.board) as any,
+		battleSagaFactory<AppState>(state => state.game.match?.board!) as any,
 		defaultGameOptions, board
 	);
 

@@ -1,9 +1,9 @@
 import { takeLatest, put, select, all } from "redux-saga/effects";
 import { GamePhase } from "@creature-chess/models";
 import { GameEvents } from "@creature-chess/gamemode";
-import { clearSelectedPiece, openOverlay, closeOverlay, Overlay } from "../../ui";
-import { AppState } from "../../../store";
-import { PlayerListCommands } from "../../module/playerList";
+import { clearSelectedPiece, openOverlay, closeOverlay, Overlay } from "../ui";
+import { AppState } from "../../store";
+import { PlayerListCommands } from "../module/playerList";
 
 export const uiSaga = function*() {
 	yield all([

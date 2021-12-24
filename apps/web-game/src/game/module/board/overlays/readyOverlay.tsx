@@ -6,10 +6,8 @@ import { PlayerAvatar, Title, PlayerHealthbar } from "@creature-chess/ui";
 import { AppState } from "../../../../store";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
-import { QuickChatOption } from "@creature-chess/models";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
-
 
 const ReadyOverlay: React.FunctionComponent = () => {
 
@@ -23,20 +21,19 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	const sendingPlayerId = localId;
 	const localPlayer = playerList.find(p => p.id === localId);
 
-	const opponent: PlayerListPlayer = useSelector((state: AppState) => {
+	const opponent = useSelector((state: AppState) => {
 		const id = state.game.playerInfo.opponentId;
 		return state.game.playerList.find(p => p.id === id);
 	});
-	const receivingPlayerId = opponent?.id;
 
 	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
-	if (!opponent || !inReadyPhase || spectatingPlayer) {
+	if (!localPlayer || !opponent || !inReadyPhase || spectatingPlayer) {
 		return null;
 	}
 
-	const returnTitleOrSpacer = (player) => {
-		if (player.profile.title) {
+	const returnTitleOrSpacer = (player: PlayerListPlayer) => {
+		if (player.profile?.title) {
 			return <Title titleId={player.profile.title} />;
 		}
 		return <div className="spacer" />;
@@ -69,7 +66,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 						</div>
 						<div className="player-picture">
 							<PlayerAvatar player={opponent} />
-							<QuickChatBox sendingPlayerId={receivingPlayerId} />
+							<QuickChatBox sendingPlayerId={opponent.id} />
 						</div>
 					</div>
 				</div>

@@ -13,12 +13,12 @@ type PieceDragObject = { piece: PieceModel };
 const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	const { id } = props;
 	const dispatch = useDispatch();
-	const selectedPieceId = useSelector<AppState, string>(state => state.game.ui.selectedPieceId);
-	const piece = useSelector<AppState, PieceModel>(state => getPiece(state.game, id));
+	const selectedPieceId = useSelector<AppState, string | null>(state => state.game.ui.selectedPieceId);
+	const piece = useSelector<AppState, PieceModel | null>(state => getPiece(state.game, id));
 
 	const [{ }, drag] = useDrag<PieceDragObject, void, {}>({
 		type: "Piece",
-		item: { piece }
+		item: { piece: piece as PieceModel }
 	});
 
 	const onClick = () => {

@@ -8,7 +8,7 @@ import { AppState } from "../../../store";
 const CardShop: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
-	const cards = useSelector<AppState, CardModel[]>(state => state.game.cardShop.cards);
+	const cards = useSelector<AppState, (CardModel | null)[]>(state => state.game.cardShop.cards);
 	const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
 	const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health > 0);
 	const shopLocked = useSelector<AppState, boolean>(state => state.game.cardShop.locked);

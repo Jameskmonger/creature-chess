@@ -15,7 +15,7 @@ export const GameBoard: React.FunctionComponent = () => {
 
 	const bench = useSelector<AppState, BoardState>(state => state.game.bench);
 	const board = useSelector<AppState, BoardState>(state => state.game.board);
-	const matchBoard = useSelector<AppState, BoardState>(state => state.game.match.board);
+	const matchBoard = useSelector<AppState, BoardState>(state => state.game.match.board!);
 
 	if (matchBoard) {
 		return (

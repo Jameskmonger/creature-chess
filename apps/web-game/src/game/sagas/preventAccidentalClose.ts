@@ -9,7 +9,7 @@ export const preventAccidentalClose = function*() {
 
 	// just to allow the packets to send
 	setTimeout(() => {
-		window.onbeforeunload = undefined;
+		window.onbeforeunload = null;
 		location.reload();
 	}, 100);
 };

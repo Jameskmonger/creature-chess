@@ -39,11 +39,8 @@ const getStreakModifier = (player: PlayerListPlayer): string => {
 	return streakAmount === 1 ? "Loss" : "Losses";
 };
 
-const HeadToHeadStats = ({ player, opponent }) => {
-
-	const playerList = useSelector((state: AppState) => {
-		return state.game.playerList;
-	});
+const HeadToHeadStats: React.FC<{ player: PlayerListPlayer; opponent: PlayerListPlayer }> = ({ player, opponent }) => {
+	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	return (
 		<div className="head-to-head-stats">

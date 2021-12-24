@@ -4,11 +4,13 @@ import { RoundInfoCommands } from "../../roundInfo";
 import { Match } from "../../match";
 import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
 import { playerBeforeReadyPhaseEvent, playerRunReadyPhaseEvent } from "../../events";
+import { Logger } from "winston";
 
 export const runReadyPhase = function*() {
 	const options: GameOptions = yield getContext("options");
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
+	const logger: Logger = yield getContext("logger");
 
 	// todo turn this into a `call` so it waits for all players
 
@@ -27,7 +29,7 @@ export const runReadyPhase = function*() {
 			return;
 		}
 
-		const match = new Match(homePlayer, awayPlayer, awayIsClone, options);
+		const match = new Match(homePlayer, awayPlayer, awayIsClone, logger, options);
 
 		homePlayer.put(playerRunReadyPhaseEvent({ match }));
 

@@ -32,6 +32,10 @@ export const gameSaga = function*() {
 				} = action;
 				yield put(PlayerListCommands.updatePlayerListCommand(players));
 
+				if (!phase || !phaseStartedAtSeconds) {
+					return;
+				}
+
 				const update = { phase, startedAt: phaseStartedAtSeconds };
 				yield put(RoundInfoCommands.setRoundInfoCommand(update));
 			}

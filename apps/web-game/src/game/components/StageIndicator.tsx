@@ -10,7 +10,7 @@ interface StageIndicatorProps {
 }
 
 const StageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ pieceId }) => {
-	const piece = useSelector<AppState, PieceModel>(state => {
+	const piece = useSelector<AppState, PieceModel | null>(state => {
 		if (state.game.match.board) {
 			const matchPiece = BoardSelectors.getPiece(state.game.match.board, pieceId);
 

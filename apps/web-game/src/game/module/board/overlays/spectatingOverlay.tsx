@@ -1,19 +1,23 @@
-import { AppState } from "@auth0/auth0-react";
 import { PlayerActions } from "@creature-chess/gamemode";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "../../../../store";
 
 const SpectatingOverlay: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
-	const spectatingId = useSelector<AppState, string>(state => state.game.spectating.id);
-	const spectatingName = useSelector<AppState, string>(state =>
-		state.game.playerList.find(player =>
-			player.id === spectatingId).name
+	const spectatingId = useSelector<AppState, string | null>(state => state.game.spectating.id);
+	const spectatingName = useSelector<AppState, string | null>(state =>
+		state.game.playerList.find(player => player?.id === spectatingId)?.name || null
 	);
 
 	const stopSpectating = () => {
 		dispatch(PlayerActions.spectatePlayerAction({ playerId: null }));
 	};
+
+	if (!spectatingId || !spectatingName) {
+		return null;
+	}
+
 	return (
 		<section className="spectating-overlay">
 			<div className="text-items">

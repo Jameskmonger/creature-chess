@@ -15,7 +15,7 @@ const Navbar: React.FunctionComponent = () => {
 
 export const MenuPage: React.FC<{ error?: string }> = ({ error }) => {
 	const onFindGameClick = () => {
-		window.location.href = process.env.GAME_SERVER_URL;
+		window.location.href = process.env.GAME_SERVER_URL!;
 	};
 
 	return (

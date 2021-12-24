@@ -18,11 +18,6 @@ export const buyXpPlayerActionSaga = function*() {
 
 		yield take(buyXpPlayerAction.toString());
 
-		logger.info(
-			"BUY_XP_ACTION received",
-			{ actor: { playerId, name } }
-		);
-
 		const isAlive = yield* select(isPlayerAlive);
 
 		if (isAlive === false) {

@@ -37,13 +37,13 @@ const duration = (ms: number) => {
 
 const addCombatState = (pieces: IndexedPieces) => Object.entries(pieces)
 	.reduce<IndexedPieces>((acc, [pieceId, piece]) => {
-	acc[pieceId] = {
-		...piece,
-		combat: createPieceCombatState()
-	};
+		acc[pieceId] = {
+			...piece,
+			combat: createPieceCombatState()
+		};
 
-	return acc;
-}, {});
+		return acc;
+	}, {});
 
 const runBattle = function*(
 	initialBoard: BoardState<PieceModel>,

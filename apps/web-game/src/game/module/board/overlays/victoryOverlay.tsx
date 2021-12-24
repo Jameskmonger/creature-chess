@@ -6,7 +6,7 @@ import { BoardOverlay } from "./boardOverlay";
 
 const VictoryOverlay: React.FunctionComponent = () => {
 	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
-	const winnerName = useSelector<AppState, string>(state => {
+	const winnerName = useSelector<AppState, string | null>(state => {
 		const { winnerId } = state.game.ui;
 
 		if (!winnerId) {
@@ -14,7 +14,7 @@ const VictoryOverlay: React.FunctionComponent = () => {
 		}
 
 		// todo fix this selector
-		return getPlayerById(winnerId)(state).name;
+		return getPlayerById(winnerId)(state)?.name || null;
 	});
 
 	if (!winnerName || spectatingPlayer) {

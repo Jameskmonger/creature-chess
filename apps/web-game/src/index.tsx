@@ -29,7 +29,7 @@ if (process.env.SENTRY_DSN) {
 const BrowserRouterChild: React.FunctionComponent = () => {
 	const navigate = useNavigate();
 
-	const onRedirectCallback = (appState) => {
+	const onRedirectCallback = (appState: any) => {
 		// Use the router's history module to replace the url
 		navigate(appState?.returnTo || window.location.pathname);
 	};
