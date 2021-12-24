@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Leaderboard } from "./leaderboard";
 import { Footer } from "./display";
 
 const Navbar: React.FunctionComponent = () => {
@@ -52,8 +51,6 @@ export const MenuPage: React.FC<{ error?: string }> = ({ error }) => {
 					&& <div className="error"><p>{error}</p></div>
 				}
 			</div>
-
-			<Leaderboard />
 
 			<Footer />
 		</div>

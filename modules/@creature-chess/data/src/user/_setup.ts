@@ -41,39 +41,4 @@ export const setupUserDatabase = async (client: FaunaDBClient) => {
 			throw e;
 		}
 	}
-
-	try {
-		await client.query(q.CreateIndex({
-			name: INDEX_NAMES.USERS_BY_WINS,
-			serialized: true,
-			source: {
-				collection: q.Collection(COLLECTION_NAMES.USERS),
-				fields: {
-					wins: q.Query(
-						q.Lambda(
-							"document",
-							q.Select(["data", "stats", "wins"], q.Var("document"))
-						)
-					)
-				}
-			},
-			values: [
-				{
-					binding: "wins",
-					reverse: true
-				},
-				{
-					field: ["data", "nickname", "value"]
-				}
-			]
-		}));
-
-		console.log(` - Created index '${INDEX_NAMES.USERS_BY_WINS}'`);
-	} catch (e: any) {
-		if (e.message === INSTANCE_ALREADY_EXISTS) {
-			console.log(` - Index '${INDEX_NAMES.USERS_BY_WINS}' already exists`);
-		} else {
-			throw e;
-		}
-	}
 };

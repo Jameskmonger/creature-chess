@@ -7,7 +7,6 @@ import { ManagementClient } from "auth0";
 import { UserAppMetadata } from "@creature-chess/auth-server";
 import { createDatabaseConnection } from "@creature-chess/data";
 import { config } from "@creature-chess/models";
-import { leaderboard } from "./src/leaderboard";
 import { userGetCurrent, userPatchCurrent } from "./src/user";
 
 const app = express();
@@ -38,8 +37,6 @@ app.use((req, res, next) => {
 });
 
 app.use(jsonParser());
-
-app.get("/leaderboard", leaderboard(database));
 
 app.get("/user/current", userGetCurrent(database, authClient));
 app.patch("/user/current", userPatchCurrent(database, authClient, filter));
