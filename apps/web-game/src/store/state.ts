@@ -1,7 +1,7 @@
-import { LobbyState } from "../lobby";
+import { LobbyState } from "../../lobby";
 import { GameState } from "../game";
 
-export interface AppState {
+export type AppState = {
 	lobby: LobbyState;
 	game: GameState;
-}
+};

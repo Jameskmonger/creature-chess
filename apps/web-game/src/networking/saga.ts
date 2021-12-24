@@ -3,7 +3,7 @@ import { all, call, put, take } from "typed-redux-saga";
 import { createAction } from "@reduxjs/toolkit";
 import { Socket } from "socket.io-client";
 import { LobbyServerToClient, GameServerToClient } from "@creature-chess/networking";
-import { lobbyNetworking } from "../lobby";
+import { lobbyNetworking } from "../../lobby";
 import { gameNetworking } from "../game";
 import { lobbyConnectedEvent, gameConnectedEvent } from "./events";
 import { getSocket } from "./socket";

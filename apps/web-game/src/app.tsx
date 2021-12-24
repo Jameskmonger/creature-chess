@@ -5,16 +5,16 @@ import { Loading } from "./display/loading";
 import { GamePage } from "./game";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "./store";
-import { LobbyPage } from "./lobby";
 import { openConnection } from "./networking";
+import { LobbyContextProvider, LobbyPage } from "@creature-chess/ui";
 
 ReactModal.setAppElement("#approot");
 
 const App: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-	const isInLobby = useSelector<AppState>(state => state.lobby.startingAtMs !== null);
-	const isInGame = useSelector<AppState>(state => state.game.ui.inGame);
+	const lobbyInfo = useSelector((state: AppState) => state.lobby);
+	const isInGame = useSelector((state: AppState) => state.game.ui.inGame);
 
 	const [loadingMessage, setLoadingMessage] = React.useState("loading...");
 
@@ -34,8 +34,12 @@ const App: React.FunctionComponent = () => {
 		return <GamePage />;
 	}
 
-	if (isInLobby) {
-		return <LobbyPage />;
+	if (lobbyInfo) {
+		return (
+			<LobbyContextProvider value={lobbyInfo}>
+				<LobbyPage />
+			</LobbyContextProvider>
+		);
 	}
 
 	return (

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { GamePhase, Constants } from "@creature-chess/models";
+import { Countdown } from "@creature-chess/ui";
 import { AppState } from "../../store";
-import { Countdown } from "../../display";
 
 const renderPhaseInfoCountdown = (secondsRemaining: number) => <span className="highlight">({secondsRemaining})</span>;
 

@@ -1,18 +1,20 @@
 import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { LobbyPlayer, PlayerTitle } from "@creature-chess/models";
-import { LobbyPlayerBanner } from "./lobbyPlayerBanner";
-
-import "./lobbyPlayerBanner.stories.css";
+import { LobbyPlayerBanner } from "./LobbyPlayerBanner";
 
 export default {
-	title: "LobbyPlayerBanner",
+	title: "Pages/LobbyPage/LobbyPlayerBanner",
 	component: LobbyPlayerBanner,
 	argTypes: {
 	}
 } as Meta;
 
-const Template: Story<any> = (args) => <LobbyPlayerBanner {...args} />;
+const Template: Story<any> = (args) => (
+	<div style={{ width: "320px", height: "80px" }}>
+		<LobbyPlayerBanner {...args} />
+	</div>
+);
 
 const createLobbyPlayer = (title: PlayerTitle | null, isBot: boolean): LobbyPlayer | null => {
 	if (isBot) {

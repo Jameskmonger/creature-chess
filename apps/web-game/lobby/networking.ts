@@ -3,12 +3,11 @@ import { EventChannel, eventChannel } from "redux-saga";
 import { put } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
 import { IncomingRegistry } from "@shoki/networking";
-import { LobbyServerToClient } from "@creature-chess/networking";
-import { gameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../networking/events";
+import { GameServerToClient, LobbyServerToClient } from "@creature-chess/networking";
+import { gameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../src/networking/events";
 import { call } from "redux-saga/effects";
 import { cancelled, race, take } from "typed-redux-saga";
 import { LobbyCommands } from "./state";
-import { GameConnectionPacket } from "@creature-chess/networking/src/server-to-client/server-to-client-game";
 
 const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToClient.PacketSet>) {
 	let channel: EventChannel<Action> | null = null;
@@ -25,7 +24,7 @@ const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToC
 			// todo move this
 			registry.on(
 				"gameConnected" as any,
-				(packet: GameConnectionPacket) => {
+				(packet: GameServerToClient.GameConnectionPacket) => {
 					emit(gameConnectedEvent(packet));
 				}
 			);
