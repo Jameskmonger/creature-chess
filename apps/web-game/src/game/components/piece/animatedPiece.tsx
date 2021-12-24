@@ -3,10 +3,9 @@ import { useSelector } from "react-redux";
 import { usePlayerId } from "@creature-chess/auth-web";
 import { PieceModel } from "@creature-chess/models";
 import { BoardSelectors } from "@shoki/board";
-import { Piece } from "@creature-chess/ui";
+import { Piece, Projectile } from "@creature-chess/ui";
 import { AppState } from "../../../store";
 import { AnimationVariables, getAnimationCssVariables } from "../../animation";
-import { Projectile } from "../projectile";
 
 const dyingAnimation = "dying";
 

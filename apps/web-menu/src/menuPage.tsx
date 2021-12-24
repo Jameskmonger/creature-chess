@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Footer } from "./display";
+import { Footer } from "@creature-chess/ui";
 
 const Navbar: React.FunctionComponent = () => {
 	const { logout } = useAuth0();

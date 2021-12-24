@@ -2,9 +2,8 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
 import { getPiece } from "@creature-chess/gamemode";
-import { Piece } from "@creature-chess/ui";
+import { Piece, Projectile } from "@creature-chess/ui";
 import { AppState } from "../../../store";
-import { Projectile } from "../projectile";
 import { useDrag } from "react-dnd";
 import { playerClickPieceAction } from "../../module/board/sagas/clickPieceSaga";
 

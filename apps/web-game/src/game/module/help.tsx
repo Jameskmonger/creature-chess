@@ -1,7 +1,6 @@
 import * as React from "react";
 import { CreatureType } from "@creature-chess/models";
-import { TypeIndicator } from "@creature-chess/ui";
-import { Footer } from "../../display";
+import { Footer, TypeIndicator } from "@creature-chess/ui";
 
 const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = false }) => (
 	<div className="help">

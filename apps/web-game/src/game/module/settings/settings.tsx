@@ -1,15 +1,13 @@
 import * as React from "react";
-import { Footer } from "../../../display";
+import { Footer } from "@creature-chess/ui";
 import { QuitGameButton } from "./quitGameButton";
 
-const Settings: React.FunctionComponent = () => {
-	return (
-		<div className="settings">
-			<QuitGameButton />
+const Settings: React.FunctionComponent = () => (
+	<div className="settings">
+		<QuitGameButton />
 
-			<Footer />
-		</div>
-	);
-};
+		<Footer />
+	</div>
+);
 
 export { Settings };
