@@ -48,18 +48,18 @@ const getTilePosition = (width: number, height: number, x: number, y: number) =>
 });
 
 const PositionablePieceStyle: React.FunctionComponent = () => {
-	const { size: { height, width } } = useBoard();
+	const { id: boardId, size: { height, width } } = useBoard();
 	const styles = [];
 	const TILE_BASE_Z_INDEX = 10;
 
-	styles.push(`.positionable-piece { width: calc(100% / ${width}); height: calc(100% / ${height}); }`);
+	styles.push(`.positionable-piece-${boardId} { width: calc(100% / ${width}); height: calc(100% / ${height}); }`);
 
 	for (let x = 0; x < width; x++) {
 		for (let y = 0; y < height; y++) {
 			const { left, top } = getTilePosition(width, height, x, y);
 
-			styles.push(`.positionable-piece.x-${x} { left: ${(left * 100).toFixed(2)}%; }`);
-			styles.push(`.positionable-piece.y-${y} { top: ${(top * 100).toFixed(2)}%; z-index: ${TILE_BASE_Z_INDEX + y + 1}; }`);
+			styles.push(`.positionable-piece-${boardId}.x-${x} { left: ${(left * 100).toFixed(2)}%; }`);
+			styles.push(`.positionable-piece-${boardId}.y-${y} { top: ${(top * 100).toFixed(2)}%; z-index: ${TILE_BASE_Z_INDEX + y + 1}; }`);
 		}
 	}
 

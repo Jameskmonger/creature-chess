@@ -49,7 +49,6 @@ const ResponsiveBoardStyles: React.FunctionComponent = () => {
 				__html: `
             #approot { height: 100%; }
             .tile { width: ${tileSize}px; height: ${tileSize}px; }
-            .positionable-piece { width: ${tileSize}px; height: ${tileSize}px; }
             .piece { width: ${tileSize}px; height: ${tileSize}px; }
 
             .board-container ${boardContainerStyle}

@@ -6,16 +6,17 @@ export type BoardItemRenderFn = (id: string, x: number, y: number) => React.Reac
 interface BoardItemProps {
 	x: number;
 	y: number;
+	boardId: string;
 
 	children: ReturnType<BoardItemRenderFn>;
 }
 
-const BoardItem: React.FunctionComponent<BoardItemProps> = ({ x, y, children }) => (
-	<div className={`positionable-piece x-${x} y-${y}`}>{children}</div>
+const BoardItem: React.FunctionComponent<BoardItemProps> = ({ boardId, x, y, children }) => (
+	<div className={`positionable-piece positionable-piece-${boardId} x-${x} y-${y}`}>{children}</div>
 );
 
 const BoardItems: React.FunctionComponent<{ render: BoardItemRenderFn }> = ({ render }) => {
-	const { piecePositions } = useBoard();
+	const { id: boardId, piecePositions } = useBoard();
 
 	const pieceElements: React.ReactNode[] = [];
 
@@ -30,7 +31,7 @@ const BoardItems: React.FunctionComponent<{ render: BoardItemRenderFn }> = ({ re
 
 		const [x, y] = position.split(",").map(i => parseInt(i, 10));
 
-		pieceElements.push(<BoardItem key={id} x={x} y={y}>{render(id, x, y)}</BoardItem>);
+		pieceElements.push(<BoardItem key={id} boardId={boardId} x={x} y={y}>{render(id, x, y)}</BoardItem>);
 	}
 
 	return <>{pieceElements}</>;
