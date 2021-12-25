@@ -9,7 +9,7 @@ RUN yarn set version berry
 # copy package.json files separately to allow for yarn installation before copying code
 # this enables better docker caching and a nicer dev experience
 ADD package.json yarn.lock .yarnrc.yml ./
-ADD .yarn/ ./.yarn/
+ADD .yarn/plugins/ ./.yarn/plugins/
 
 ADD apps/server-game/package.json ./apps/server-game/
 ADD apps/server-info/package.json ./apps/server-info/
@@ -32,7 +32,7 @@ ADD modules/@shoki/board-react/package.json ./modules/@shoki/board-react/
 ADD modules/@shoki/engine/package.json ./modules/@shoki/engine/
 ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
 
-RUN yarn install
+RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 ADD . .
 
