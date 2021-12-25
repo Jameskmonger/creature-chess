@@ -1798,7 +1798,6 @@ __metadata:
     react-media: ^1.9.2
     react-modal: ^3.12.1
     react-redux: ^7.1.1
-    react-router-dom: ^6.1.0
     redux-devtools-extension: ^2.13.8
     reselect: ^4.0.0
     socket.io-client: ^4.1.1
@@ -1872,7 +1871,6 @@ __metadata:
     react-media: ^1.9.2
     react-modal: ^3.12.1
     react-redux: ^7.1.1
-    react-router-dom: ^6.1.0
     redux-devtools-extension: ^2.13.8
     reselect: ^4.0.0
     sass-loader: ^12.1.0
@@ -1925,7 +1923,6 @@ __metadata:
     html-webpack-plugin: ^5.0.0-beta.5
     mini-css-extract-plugin: ^2.1.0
     react-media: ^1.9.2
-    react-router-dom: ^6.1.0
     reselect: ^4.0.0
     sass-loader: ^12.1.0
     ts-loader: ^9.1.2
@@ -16717,7 +16714,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.0.0, react-router-dom@npm:^6.1.0":
+"react-router-dom@npm:^6.0.0":
   version: 6.2.1
   resolution: "react-router-dom@npm:6.2.1"
   dependencies:

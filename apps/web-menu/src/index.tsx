@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { BrowserRouter, useNavigate } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { AuthProvider } from "@creature-chess/auth-web";
@@ -20,12 +19,9 @@ if (process.env.SENTRY_DSN) {
 	});
 }
 
-const BrowserRouterChild: React.FunctionComponent = () => {
-	const navigate = useNavigate();
-
+const AppRoot: React.FunctionComponent = () => {
 	const onRedirectCallback = (appState: any) => {
-		// Use the router's history module to replace the url
-		navigate(appState?.returnTo || window.location.pathname);
+		window.location.href = (appState?.returnTo || window.location.pathname);
 	};
 
 	return (
@@ -35,9 +31,4 @@ const BrowserRouterChild: React.FunctionComponent = () => {
 	);
 };
 
-ReactDOM.render(
-	<BrowserRouter>
-		<BrowserRouterChild />
-	</BrowserRouter>,
-	document.getElementById("approot")
-);
+ReactDOM.render(<AppRoot />, document.getElementById("approot"));

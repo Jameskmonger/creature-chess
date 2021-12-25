@@ -1,6 +1,5 @@
 import * as React from "react";
 import ReactModal from "react-modal";
-import { Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Auth0User, isRegistered } from "@creature-chess/auth-web";
 import { MenuPage, MenuPageContextProvider, RegistrationPage, LoginPage, useGlobalStyles } from "@creature-chess/ui";
@@ -11,12 +10,6 @@ const UnauthenticatedRootPage: React.FunctionComponent = () => {
 
 	return <LoginPage isLoading={isLoading} onSignInClick={loginWithRedirect} />;
 };
-
-const UnauthenticatedRoutes: React.FunctionComponent = () => (
-	<Routes>
-		<Route path="/" element={<UnauthenticatedRootPage />} />
-	</Routes>
-);
 
 const AuthenticatedRootPage: React.FunctionComponent = () => {
 	const { user, logout, getAccessTokenSilently, getIdTokenClaims } = useAuth0<Auth0User>();
@@ -66,12 +59,6 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
 	);
 };
 
-const AuthenticatedRoutes: React.FunctionComponent = () => (
-	<Routes>
-		<Route path="/" element={<AuthenticatedRootPage />} />
-	</Routes>
-);
-
 ReactModal.setAppElement("#approot");
 
 const App: React.FunctionComponent = () => {
@@ -84,10 +71,10 @@ const App: React.FunctionComponent = () => {
 	}
 
 	if (isAuthenticated) {
-		return <AuthenticatedRoutes />;
+		return <AuthenticatedRootPage />;
 	}
 
-	return <UnauthenticatedRoutes />;
+	return <UnauthenticatedRootPage />;
 };
 
 export { App };
