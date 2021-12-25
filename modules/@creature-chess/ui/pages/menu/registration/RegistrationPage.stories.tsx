@@ -7,7 +7,6 @@ export default {
 	title: "Pages/MenuPage/RegistrationPage",
 	component: RegistrationPage,
 	argTypes: {
-		updateUser: { action: "updateUser" },
 	}
 } as Meta;
 

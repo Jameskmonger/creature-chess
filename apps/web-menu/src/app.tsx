@@ -3,14 +3,19 @@ import ReactModal from "react-modal";
 import { Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Auth0User, isRegistered } from "@creature-chess/auth-web";
-import { MenuPage, MenuPageContextProvider, RegistrationPage, RegistrationPageContextProvider } from "@creature-chess/ui";
-import { LoginPage } from "./auth";
+import { MenuPage, MenuPageContextProvider, RegistrationPage, LoginPage } from "@creature-chess/ui";
 import { Loading } from "./display/loading";
 import { patchUser } from "./auth/utils/patchUser";
 
+const UnauthenticatedRootPage: React.FunctionComponent = () => {
+	const { loginWithRedirect, isLoading } = useAuth0();
+
+	return <LoginPage isLoading={isLoading} onSignInClick={loginWithRedirect} />;
+};
+
 const UnauthenticatedRoutes: React.FunctionComponent = () => (
 	<Routes>
-		<Route path="/" element={<LoginPage />} />
+		<Route path="/" element={UnauthenticatedRootPage} />
 	</Routes>
 );
 
@@ -20,33 +25,27 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
 	// todo move the contexts out of here
 
 	if (!isRegistered(user)) {
-		const registrationPageContext = {
-			updateUser: async (nickname: string, image: number) => {
-				const token = await getAccessTokenSilently();
-				const response = await patchUser(token, nickname, image);
+		const updateUser = async (nickname: string, image: number) => {
+			const token = await getAccessTokenSilently();
+			const response = await patchUser(token, nickname, image);
 
-				if (response.status === 400) {
-					const { error } = await response.json();
+			if (response.status === 400) {
+				const { error } = await response.json();
 
-					return { error };
-				}
-
-				if (response.status === 200) {
-					await getAccessTokenSilently({ ignoreCache: true });
-					await getIdTokenClaims();
-
-					return { error: null };
-				}
-
-				return { error: "An unknown error occured" };
+				return { error };
 			}
+
+			if (response.status === 200) {
+				await getAccessTokenSilently({ ignoreCache: true });
+				await getIdTokenClaims();
+
+				return { error: null };
+			}
+
+			return { error: "An unknown error occured" };
 		};
 
-		return (
-			<RegistrationPageContextProvider value={registrationPageContext}>
-				<RegistrationPage />
-			</RegistrationPageContextProvider>
-		);
+		return <RegistrationPage updateUser={updateUser} />;
 	}
 
 	const onLogoutClick = () => logout();
