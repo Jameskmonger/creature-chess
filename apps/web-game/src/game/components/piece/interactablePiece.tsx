@@ -1,19 +1,28 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PieceModel } from "@creature-chess/models";
-import { getPiece } from "@creature-chess/gamemode";
-import { Piece, Projectile } from "@creature-chess/ui";
+import { Piece, Projectile, usePiece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
 import { useDrag } from "react-dnd";
 import { playerClickPieceAction } from "../../module/board/sagas/clickPieceSaga";
+import { createUseStyles } from "react-jss";
 
 type PieceDragObject = { piece: PieceModel };
 
+const useStyles = createUseStyles({
+	selected: {
+		boxSizing: "border-box",
+		border: "2px solid #ff5200"
+	}
+});
+
 const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
-	const { id } = props;
+	const styles = useStyles();
+
+	const { piece } = usePiece();
+
 	const dispatch = useDispatch();
 	const selectedPieceId = useSelector<AppState, string | null>(state => state.game.ui.selectedPieceId);
-	const piece = useSelector<AppState, PieceModel | null>(state => getPiece(state.game, id));
 
 	const [{ }, drag] = useDrag<PieceDragObject, void, {}>({
 		type: "Piece",
@@ -21,24 +30,21 @@ const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	});
 
 	const onClick = () => {
-		dispatch(playerClickPieceAction({ pieceId: id }));
+		dispatch(playerClickPieceAction({ pieceId: piece.id }));
 	};
 
-	const isSelected = selectedPieceId === id;
-	const className = `piece ${isSelected ? "selected" : ""}`;
+	const isSelected = selectedPieceId === piece.id;
 
 	if (!piece) {
-		console.log("no InteractablePiece found for id ", id);
 		return null;
 	}
 
 	return (
 		<Piece
 			ref={drag}
-			className={className}
+			className={isSelected ? styles.selected : ""}
 			piece={piece}
 			healthbar="none"
-			// eslint-disable-next-line react/jsx-no-bind
 			onClick={onClick}
 		>
 			<Projectile />
