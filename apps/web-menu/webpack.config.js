@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const { DefinePlugin, EnvironmentPlugin } = require("webpack");
@@ -83,14 +82,6 @@ module.exports = {
 				test: /\.tsx?$/,
 				use: "ts-loader",
 				exclude: /node_modules/
-			},
-			{
-				test: /\.scss$/,
-				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader"]
-			},
-			{
-				test: /\.css$/,
-				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"]
 			}
 		]
 	},
@@ -124,9 +115,6 @@ module.exports = {
 				cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID)
 			}),
 			scriptLoading: "blocking"
-		}),
-		new MiniCssExtractPlugin({
-			filename: "app-[contenthash].css"
 		}),
 		new CircularDependencyPlugin({
 			// exclude detection of files based on a RegExp
