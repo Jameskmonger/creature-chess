@@ -3,9 +3,8 @@ import ReactModal from "react-modal";
 import { Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Auth0User, isRegistered } from "@creature-chess/auth-web";
-import { MenuPage, MenuPageContextProvider, RegistrationPage, LoginPage } from "@creature-chess/ui";
-import { Loading } from "./display/loading";
-import { patchUser } from "./auth/utils/patchUser";
+import { MenuPage, MenuPageContextProvider, RegistrationPage, LoginPage, useGlobalStyles } from "@creature-chess/ui";
+import { patchUser } from "./patchUser";
 
 const UnauthenticatedRootPage: React.FunctionComponent = () => {
 	const { loginWithRedirect, isLoading } = useAuth0();
@@ -15,7 +14,7 @@ const UnauthenticatedRootPage: React.FunctionComponent = () => {
 
 const UnauthenticatedRoutes: React.FunctionComponent = () => (
 	<Routes>
-		<Route path="/" element={UnauthenticatedRootPage} />
+		<Route path="/" element={<UnauthenticatedRootPage />} />
 	</Routes>
 );
 
@@ -78,8 +77,10 @@ ReactModal.setAppElement("#approot");
 const App: React.FunctionComponent = () => {
 	const { isAuthenticated, isLoading } = useAuth0();
 
+	useGlobalStyles();
+
 	if (isLoading) {
-		return <Loading />;
+		return <span>Loading</span>;
 	}
 
 	if (isAuthenticated) {

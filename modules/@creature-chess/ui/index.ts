@@ -9,5 +9,6 @@ export { Piece, Projectile } from "./src/piece";
 export { Footer } from "./src/Footer";
 
 export * from "./pages";
+export { useGlobalStyles } from "./styles";
 
 export { Countdown } from "./src/countdown";
