@@ -118,7 +118,6 @@ module.exports = {
 			APP_VERSION: JSON.stringify(require("../../package.json").version)
 		}),
 		new HtmlWebpackPlugin({
-			template: "./index.ejs",
 			templateParameters: () => ({
 				googleAnalyticsScript: getGAScript(process.env.GA_ID),
 				ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES),
