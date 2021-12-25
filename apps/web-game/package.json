@@ -44,9 +44,6 @@
 		"classnames": "^2.3.1",
 		"delay": "^4.4.1",
 		"pepjs": "^0.5.3",
-		"react-dnd-html5-backend": "^14.0.2",
-		"react-dnd-multi-backend": "^6.0.2",
-		"react-dnd-touch-backend": "^14.1.1",
 		"react-media": "^1.10.0",
 		"react-modal": "^3.14.4",
 		"react-redux": "^7.2.6",
@@ -74,6 +71,9 @@
 	"peerDependencies": {
 		"react": "^17.0.2",
 		"react-dnd": "^14.0.4",
+		"react-dnd-html5-backend": "^14.0.2",
+		"react-dnd-multi-backend": "^6.0.2",
+		"react-dnd-touch-backend": "^14.1.1",
 		"react-dom": "^17.0.2",
 		"redux": "^4.1.0",
 		"redux-saga": "^1.1.3"
