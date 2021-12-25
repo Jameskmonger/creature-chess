@@ -1857,7 +1857,6 @@ __metadata:
     babel-loader: ^8.2.3
     circular-dependency-plugin: ^5.2.2
     classnames: ^2.3.1
-    cname-webpack-plugin: ^2.0.1
     cpy-cli: ^2.0.0
     css-loader: ^6.5.1
     delay: ^4.4.1
@@ -1915,7 +1914,6 @@ __metadata:
     babel-loader: ^8.2.3
     circular-dependency-plugin: ^5.2.2
     classnames: ^2.3.1
-    cname-webpack-plugin: ^2.0.1
     cpy-cli: ^2.0.0
     css-loader: ^6.5.1
     delay: ^4.4.1
@@ -7257,13 +7255,6 @@ __metadata:
   version: 1.1.1
   resolution: "clsx@npm:1.1.1"
   checksum: ff052650329773b9b245177305fc4c4dc3129f7b2be84af4f58dc5defa99538c61d4207be7419405a5f8f3d92007c954f4daba5a7b74e563d5de71c28c830063
-  languageName: node
-  linkType: hard
-
-"cname-webpack-plugin@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "cname-webpack-plugin@npm:2.0.1"
-  checksum: 7fe88b31ceb3635732e63538faf288cf3ae43640c65e499bace8e56d5d9f8df6b02d812cf9b5f0983dea0e8cc58f78bee69c9d456ffce7f0d4204dfc89daff3d
   languageName: node
   linkType: hard
 

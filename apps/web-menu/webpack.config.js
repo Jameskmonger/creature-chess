@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const CnameWebpackPlugin = require("cname-webpack-plugin");
 const { DefinePlugin, EnvironmentPlugin } = require("webpack");
 
 const getCookiebotScript = (id) => {

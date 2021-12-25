@@ -50,7 +50,6 @@
 		"awesome-typescript-loader": "^5.2.1",
 		"babel-loader": "^8.2.3",
 		"circular-dependency-plugin": "^5.2.2",
-		"cname-webpack-plugin": "^2.0.1",
 		"cpy-cli": "^2.0.0",
 		"css-loader": "^6.5.1",
 		"dotenv-webpack": "^7.0.3",
