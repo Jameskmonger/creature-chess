@@ -50,7 +50,12 @@ const Template: Story<any> = (args) => {
 		<DndProvider options={HTML5toTouch}>
 			<div style={{ width: "500px", height: "800px" }}>
 				<GameBoardContextProvider value={context}>
-					<GameBoard renderBoardPiece={renderPiece} renderBenchPiece={renderPiece} onClick={args.onClick} />
+					<GameBoard
+						renderBoardPiece={renderPiece}
+						renderBenchPiece={renderPiece}
+						onClick={args.onClick}
+						onDropPiece={args.onDropPiece}
+					/>
 				</GameBoardContextProvider>
 			</div>
 		</DndProvider>

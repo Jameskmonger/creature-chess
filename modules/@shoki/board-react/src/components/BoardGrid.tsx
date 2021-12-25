@@ -1,15 +1,16 @@
 import * as React from "react";
 import { BoardState, HasId } from "@shoki/board";
 import { BoardContextProvider } from "../context";
-import { BoardItems, BoardItemRenderFn } from "./BoardItems";
+import { BoardItems } from "./items/BoardItems";
 import { createUseStyles } from "react-jss";
 import { BoardGridRows } from "./BoardGridRows";
+import { BoardItemRenderFn } from "./items/renderItem";
 
 type BoardGridProps = {
 	state: BoardState;
 	scaleMode?: "width";
 	renderItem: BoardItemRenderFn;
-	onDrop?: <TPiece extends HasId>(item: { piece: TPiece }, x: number, y: number) => void;
+	onDrop?: (id: string, x: number, y: number) => void;
 	onClick?: (x: number, y: number) => void;
 };
 

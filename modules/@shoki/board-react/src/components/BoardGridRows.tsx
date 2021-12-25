@@ -1,12 +1,11 @@
 import React from "react";
-import { HasId } from "@shoki/board";
 import { useBoard } from "../context";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";
 import { createUseStyles } from "react-jss";
 
 type BoardGridRowsProps = {
-	onDrop?: <TPiece extends HasId>(item: { piece: TPiece }, x: number, y: number) => void;
+	onDrop?: (id: string, x: number, y: number) => void;
 	onClick?: (x: number, y: number) => void;
 };
 

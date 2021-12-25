@@ -1,14 +1,10 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { PieceModel } from "@creature-chess/models";
 import { Piece, Projectile, usePiece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
-import { useDrag } from "react-dnd";
 import { playerClickPieceAction } from "../../module/board/sagas/clickPieceSaga";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
-
-type PieceDragObject = { piece: PieceModel };
 
 const useStyles = createUseStyles({
 	pieceContainer: {
@@ -29,11 +25,6 @@ export const InteractablePiece: React.FC = () => {
 	const dispatch = useDispatch();
 	const selectedPieceId = useSelector<AppState, string | null>(state => state.game.ui.selectedPieceId);
 
-	const [{ }, drag] = useDrag<PieceDragObject, void, {}>({
-		type: "Piece",
-		item: { piece: piece as PieceModel }
-	});
-
 	const onClick = () => {
 		dispatch(playerClickPieceAction({ pieceId: piece.id }));
 	};
@@ -52,8 +43,6 @@ export const InteractablePiece: React.FC = () => {
 	return (
 		<div className={className}>
 			<Piece
-				ref={drag}
-				piece={piece}
 				healthbar="none"
 				onClick={onClick}
 			>

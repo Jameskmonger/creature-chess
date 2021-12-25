@@ -16,12 +16,12 @@ type GameBoardLocation = {
 
 type GameBoardClickEvent = { location: GameBoardLocation };
 type GameBoardDropPieceEvent = {
+	id: string;
 	location: GameBoardLocation;
-	piece: PieceModel;
 };
 
 const createClickEvent = (location: GameBoardLocation): GameBoardClickEvent => ({ location });
-const createDropPieceEvent = (piece: PieceModel, location: GameBoardLocation): GameBoardDropPieceEvent => ({ piece, location });
+const createDropPieceEvent = (id: string, location: GameBoardLocation): GameBoardDropPieceEvent => ({ id, location });
 
 type GameBoardProps = {
 	renderBoardPiece?: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
@@ -84,7 +84,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
 		};
 
 	const createHandleDrop = (locationType: "board" | "bench") =>
-		({ piece }: { piece: HasId }, x: number, yPosition: number) => {
+		(id: string, x: number, yPosition: number) => {
 			if (!onDropPiece) {
 				return;
 			}
@@ -94,18 +94,24 @@ const GameBoard: React.FC<GameBoardProps> = ({
 				: undefined;
 
 			onDropPiece(
-				createDropPieceEvent(piece as PieceModel, { locationType, x, y })
+				createDropPieceEvent(id, { locationType, x, y })
 			);
 		};
 
 	const createRenderer = (locationType: "board" | "bench") => {
 		return (id: string) => {
-			const state = locationType === "board" ? board : bench;
+			const isBoard = locationType === "board";
+
+			const state = isBoard ? board : bench;
 			const piece = BoardSelectors.getPiece(state, id);
 
-			const renderer = locationType === "board" ? renderBoardPiece : renderBenchPiece;
+			const renderer = isBoard ? renderBoardPiece : renderBenchPiece;
+			const draggable = !state.locked;
 
-			return renderer(piece);
+			return {
+				item: renderer(piece),
+				draggable
+			};
 		};
 	};
 
