@@ -4,9 +4,9 @@ import classNames from "classnames";
 import { PieceModel } from "@creature-chess/models";
 import { CreatureImage } from "../src/display";
 import { PieceMeta } from "./meta";
+import { usePiece } from ".";
 
 interface Props {
-	piece: PieceModel;
 	healthbar: "none" | "friendly" | "enemy" | "spectating";
 
 	className?: string;
@@ -49,7 +49,8 @@ const useStyles = createUseStyles({
 
 const Piece = React.forwardRef((props: Props, ref) => {
 	const classes = useStyles();
-	const { piece, healthbar, children, className, onClick } = props;
+	const { piece } = usePiece();
+	const { healthbar, children, className, onClick } = props;
 
 	return (
 		<div

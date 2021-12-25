@@ -24,8 +24,7 @@
 	"dependencies": {
 		"@creature-chess/models": "workspace:*",
 		"@shoki/board": "workspace:*",
-		"@shoki/board-react": "workspace:*",
-		"classnames": "^2.3.1"
+		"@shoki/board-react": "workspace:*"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.16.5",
@@ -37,6 +36,7 @@
 		"babel-loader": "^8.2.3"
 	},
 	"peerDependencies": {
+		"classnames": "^2.3.1",
 		"react": "^17.0.2",
 		"react-dnd": "^14.0.4",
 		"react-dnd-html5-backend": "^14.0.2",

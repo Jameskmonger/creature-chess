@@ -3,14 +3,11 @@ import * as React from "react";
 import { DndProvider } from "react-dnd-multi-backend";
 import HTML5toTouch from "react-dnd-multi-backend/dist/esm/HTML5toTouch";
 import Media from "react-media";
-import { ResponsiveBoardStyles } from "./module";
 import { MobileGame } from "./layouts/mobileGame";
 import { DesktopGame } from "./layouts/desktopGame";
 
 const GamePage: React.FunctionComponent = () => (
 	<DndProvider options={HTML5toTouch}>
-		<ResponsiveBoardStyles />
-
 		<Media query="(orientation: landscape) and (min-width: 1200px)">
 			<DesktopGame />
 		</Media>

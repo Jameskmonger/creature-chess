@@ -2,10 +2,9 @@ import * as React from "react";
 import { useDrop } from "react-dnd";
 import { HasId } from "@shoki/board";
 import { useBelowPieceLimit, usePieces } from "../../context";
-import { getOverlayClassName } from "./getOverlayClassName";
+import { Tile } from "./Tile";
 
 type DroppableTileProps = {
-	isDark: boolean;
 	x: number;
 	y: number;
 	onDrop?: <TPiece extends HasId>(item: { piece: TPiece }, x: number, y: number) => void;
@@ -18,11 +17,11 @@ type DropTargetCollectProps = {
 	isDragging: boolean;
 };
 
-const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ isDark, x, y, onDrop, onClick }) => {
+const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ x, y, onDrop, onClick }) => {
 	const belowPieceLimit = useBelowPieceLimit();
 	const pieces = usePieces();
 
-	const [{ canDrop, isDragging }, drop] = useDrop<PieceDragObject, void, DropTargetCollectProps>({
+	const [{ }, drop] = useDrop<PieceDragObject, void, DropTargetCollectProps>({
 		accept: "Piece",
 		drop: item => onDrop && onDrop(item, x, y), // todo make a wrapper that doesnt have any dnd on it
 		canDrop: ({ piece }) => {
@@ -35,18 +34,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ isDark, x,
 		}),
 	});
 
-	const onClickFn = onClick ? () => onClick(x, y) : undefined;
-
-	return (
-		<div
-			ref={drop}
-			className={`tile ${isDark ? "dark" : "light"}`}
-			touch-action="none"
-			onPointerUp={onClickFn}
-		>
-			<div className={`${getOverlayClassName(isDragging, canDrop)}`} />
-		</div>
-	);
+	return <Tile ref={drop} x={x} y={y} onClick={onClick} />;
 };
 
 export { DroppableTile };

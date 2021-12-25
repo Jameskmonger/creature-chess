@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
-import { HasId } from "@shoki/board";
+import { BoardSelectors, HasId } from "@shoki/board";
 import { BoardGrid } from "@shoki/board-react";
 import { PieceModel } from "@creature-chess/models";
 import { useGameBoard } from "./GameBoardContext";
@@ -42,6 +42,7 @@ const useStyles = createUseStyles({
 	boardGrid: {
 		"position": "relative",
 		"marginBottom": "0.5rem",
+		"width": "100%",
 
 		"& .tile.dark": {
 			background: "#38b764"
@@ -52,6 +53,7 @@ const useStyles = createUseStyles({
 	},
 	benchGrid: {
 		"position": "relative",
+		"width": "100%",
 		"& .tile": {
 			background: "#9e9e9e",
 			boxShadow: "inset 0 0 2px darken($bench-tile, 50)"
@@ -96,6 +98,17 @@ const GameBoard: React.FC<GameBoardProps> = ({
 			);
 		};
 
+	const createRenderer = (locationType: "board" | "bench") => {
+		return (id: string) => {
+			const state = locationType === "board" ? board : bench;
+			const piece = BoardSelectors.getPiece(state, id);
+
+			const renderer = locationType === "board" ? renderBoardPiece : renderBenchPiece;
+
+			return renderer(piece);
+		};
+	};
+
 	return (
 		<div className={styles.gameBoard}>
 			<div className={styles.chessboard}>
@@ -104,7 +117,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
 						state={board}
 						onDrop={createHandleDrop("board")}
 						onClick={createHandleClick("board")}
-						renderItem={renderBoardPiece}
+						renderItem={createRenderer("board")}
 					/>
 				</div>
 
@@ -112,8 +125,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
 					<BoardGrid
 						state={bench}
 						onDrop={createHandleDrop("bench")}
-						onClick={createHandleClick("board")}
-						renderItem={renderBenchPiece}
+						onClick={createHandleClick("bench")}
+						renderItem={createRenderer("bench")}
 					/>
 				</div>
 			</div>

@@ -55,27 +55,6 @@ $inner-border-width: 2px;
 	}
 }
 
-.positionable-piece {
-	position: absolute;
-	/* stylelint-disable-next-line */
-	transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s;
-	z-index: 5;
-}
-
-.bot-board {
-	.positionable-piece {
-		width: calc(100% / 7);
-		height: calc(100% / 3);
-	}
-}
-
-.bot-bench {
-	.positionable-piece {
-		width: calc(100% / 7);
-		height: 100%;
-	}
-}
-
 .board-container {
 	position: relative;
 

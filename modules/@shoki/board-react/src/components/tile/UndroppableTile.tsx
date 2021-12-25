@@ -1,26 +1,16 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
-import { useBoard } from "../../context";
-import { getOverlayClassName } from "./getOverlayClassName";
+import { Tile } from "./Tile";
 
-const UndroppableTile: React.FunctionComponent<{ isDark: boolean }> = ({ isDark }) => {
-	const { id } = useBoard();
-	const [{ isDragging }, drop] = useDrop({
+const UndroppableTile: React.FC<{ x: number; y: number }> = ({ x, y }) => {
+	const [{ }, drop] = useDrop({
 		accept: "Piece",
 		collect: monitor => ({
 			isDragging: !!monitor.getItem(),
 		}),
 	});
 
-	return (
-		<div
-			ref={drop}
-			className={`board-${id}-tile tile ${isDark ? "dark" : "light"} style-default`}
-			touch-action="none"
-		>
-			<div className={`${getOverlayClassName(isDragging, false)}`} />
-		</div>
-	);
+	return <Tile ref={drop} x={x} y={y} />;
 };
 
 export { UndroppableTile };

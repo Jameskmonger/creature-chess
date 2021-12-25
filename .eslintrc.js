@@ -323,7 +323,7 @@ module.exports = {
 			"never"
 		],
 		"react/jsx-key": "error",
-		"react/jsx-no-bind": "error",
+		"react/jsx-no-bind": "none",
 		"react/jsx-tag-spacing": [
 			"error",
 			{
