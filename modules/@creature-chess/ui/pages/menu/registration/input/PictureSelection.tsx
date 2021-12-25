@@ -1,7 +1,7 @@
 import React from "react";
+import { createUseStyles } from "react-jss";
 import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
 import { BaseRegistrationInput } from "./BaseRegistrationInput";
-import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
 	pictureList: {
@@ -28,13 +28,11 @@ const PictureSelection: React.FunctionComponent<{
 					return (
 						<div className={styles.pictureList} key={picture}>
 							<img
-								className="picture-selector-element"
 								src={`https://creaturechess.com/images/front/${picture}.png`}
 								alt={creatureName}
 							/>
 							<p>{creatureName}</p>
 							<input
-								className="picture-selector-element"
 								type="radio"
 								value={picture}
 								checked={currentImage === picture}

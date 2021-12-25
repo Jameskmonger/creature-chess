@@ -1,7 +1,7 @@
 import React from "react";
+import { createUseStyles } from "react-jss";
 import { MAX_NAME_LENGTH } from "@creature-chess/models";
 import { BaseRegistrationInput } from "./BaseRegistrationInput";
-import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
 	nameInput: {
