@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, Story } from "@storybook/react";
 import { Builders } from "@creature-chess/models";
 
@@ -35,15 +35,29 @@ const Board: React.FC = ({ children }) => (
 	</>
 );
 
-const piece = Builders.buildPieceModel();
+const Template: Story<any> = (args) => {
+	const [piece, setPiece] = useState(Builders.buildPieceModel());
+	const handleKillClick = () => setPiece({ ...piece, currentHealth: 0 });
+	const handleRestoreClick = () => setPiece(Builders.buildPieceModel());
 
-const Template: Story<any> = (args) => (
-	<Board>
-		<PieceContextProvider value={{ piece, viewingPlayerId: piece?.ownerId }}>
-			<AnimatedPiece />
-		</PieceContextProvider>
-	</Board>
-);
+	return (
+		<>
+			<Board>
+				<PieceContextProvider value={{ piece, viewingPlayerId: piece?.ownerId }}>
+					<AnimatedPiece />
+				</PieceContextProvider>
+			</Board>
+
+			<div>
+				<button onClick={handleKillClick}>Kill</button>
+			</div>
+
+			<div>
+				<button onClick={handleRestoreClick}>Restore</button>
+			</div>
+		</>
+	);
+};
 
 export const Default = Template.bind({});
 Default.args = {

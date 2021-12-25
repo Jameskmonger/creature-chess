@@ -40,15 +40,16 @@ const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 	}
 
 	return (
-		<Piece
-			ref={drag}
-			className={isSelected ? styles.selected : ""}
-			piece={piece}
-			healthbar="none"
-			onClick={onClick}
-		>
-			<Projectile />
-		</Piece>
+		<div className={isSelected ? styles.selected : ""}>
+			<Piece
+				ref={drag}
+				piece={piece}
+				healthbar="none"
+				onClick={onClick}
+			>
+				<Projectile />
+			</Piece>
+		</div>
 	);
 };
 

@@ -21,10 +21,10 @@ const useStyles = createUseStyles({
 		"height": "100%",
 
 		"& > img": {
-			"position": "absolute",
-			"bottom": 0,
-			"right": 0,
-			"width": "80%",
+			position: "absolute",
+			bottom: 0,
+			right: 0,
+			width: "80%",
 		}
 	},
 	metaContainer: {
@@ -50,7 +50,9 @@ const Piece = React.forwardRef((props: Props, ref) => {
 			ref={ref as any /* todo what to do here? */}
 			onClick={onClick}
 		>
-			<PieceMeta piece={piece} healthbarColor={healthbar} className={classes.metaContainer} />
+			<div className={classes.metaContainer}>
+				<PieceMeta piece={piece} healthbarColor={healthbar} />
+			</div>
 
 			<CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} baseUrl="https://creaturechess.com" />
 

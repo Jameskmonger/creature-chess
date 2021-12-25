@@ -1,8 +1,16 @@
 import { createUseStyles } from "react-jss";
 
 export const useAnimationStyles = createUseStyles({
-	dying: {
-
+	"@keyframes dying": {
+		"100%": {
+			transform: "scale(0)"
+		}
+	},
+	"dying": {
+		animationName: "$dying",
+		animationDuration: "1000ms",
+		animationFillMode: "forwards",
+		animationIterationCount: "1"
 	}
 });
 

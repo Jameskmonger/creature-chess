@@ -24,12 +24,15 @@ export const AnimatedPiece: React.FC = () => {
 			return [...oldAnimations, newAnimation];
 		});
 
+	const removeAnimation = (name: string) =>
+		setCurrentAnimations(oldAnimations => oldAnimations.filter(animation => animation.name !== name));
+
 	const onAnimationEnd = ({ animationName }: React.AnimationEvent<HTMLDivElement>) => {
 		setCurrentAnimations(oldAnimations => oldAnimations.filter(a => a.name !== animationName && !a.name.startsWith("move-")));
 	};
 
 	const runAnimations = (newPiece: PieceModel) => {
-		const { attacking, hit } = newPiece;
+		const { attacking, hit, currentHealth } = newPiece;
 
 		if (!lastRenderedPiece) {
 			setLastRenderedPiece(newPiece);
@@ -52,6 +55,14 @@ export const AnimatedPiece: React.FC = () => {
 			runAnimation("hit", { hitPower: hit.damage });
 		}
 
+		if (currentHealth === 0) {
+			if (lastRenderedPiece.currentHealth !== 0) {
+				runAnimation("dying");
+			}
+		} else {
+			removeAnimation("dying");
+		}
+
 		setLastRenderedPiece(newPiece);
 	};
 
@@ -69,10 +80,6 @@ export const AnimatedPiece: React.FC = () => {
 
 	const animationClasses = currentAnimations.map(a => (animationStyles as any)[a.name]);
 
-	if (piece.currentHealth === 0) {
-		animationClasses.push(animationStyles.dying);
-	}
-
 	const className = classNames(
 		styles.piece,
 		...animationClasses
@@ -86,7 +93,6 @@ export const AnimatedPiece: React.FC = () => {
 			onAnimationEnd={onAnimationEnd}
 		>
 			<Piece
-				className={className}
 				piece={piece}
 				healthbar={getHealthbar(piece.ownerId, viewingPlayerId)}
 			>
