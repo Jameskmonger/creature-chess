@@ -2,7 +2,6 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 
 import { RegistrationPage } from "./RegistrationPage";
-import { RegistrationPageContextProvider, RegistrationPageInfo } from "./RegistrationPageContext";
 
 export default {
 	title: "Pages/MenuPage/RegistrationPage",
@@ -12,11 +11,7 @@ export default {
 	}
 } as Meta;
 
-const Template: Story<RegistrationPageInfo> = ({ updateUser }) => (
-	<RegistrationPageContextProvider value={{ updateUser }}>
-		<RegistrationPage />
-	</RegistrationPageContextProvider>
-);
+const Template: Story<React.ComponentProps<typeof RegistrationPage>> = (args) => <RegistrationPage {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

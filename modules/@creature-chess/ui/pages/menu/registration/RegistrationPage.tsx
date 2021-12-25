@@ -2,12 +2,14 @@ import * as React from "react";
 import { validateNicknameFormat } from "@creature-chess/models";
 import { NicknameSelection } from "./input/NicknameSelection";
 import { PictureSelection } from "./input/PictureSelection";
-import { useRegistrationPage } from "./RegistrationPageContext";
 import { useStyles } from "./RegistrationPage.styles";
 
-const RegistrationPage: React.FunctionComponent = () => {
+type RegistrationPageProps = {
+	updateUser: (nickname: string, image: number) => Promise<{ error?: string }>;
+};
+
+const RegistrationPage: React.FunctionComponent<RegistrationPageProps> = ({ updateUser }) => {
 	const styles = useStyles();
-	const { updateUser } = useRegistrationPage();
 	const [nickname, setNickname] = React.useState<string>("");
 	const [currentImage, setCurrentImage] = React.useState(1);
 	const [loading, setLoading] = React.useState<boolean>(false);
