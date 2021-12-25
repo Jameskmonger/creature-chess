@@ -8,7 +8,7 @@ export { Piece, Projectile } from "./src/piece";
 
 export { Footer } from "./src/Footer";
 
-export { LobbyContextProvider, useLobby, LobbyInfo } from "./context";
-export { LobbyPage } from "./pages";
+export * from "./pages";
+export { useGlobalStyles } from "./styles";
 
 export { Countdown } from "./src/countdown";

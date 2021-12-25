@@ -5,10 +5,6 @@ import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { AuthProvider } from "@creature-chess/auth-web";
 
-import "pepjs";
-import "./display/style/index.scss";
-import "@shoki/board-react/style.css";
-
 import { App } from "./app";
 
 if (process.env.SENTRY_DSN) {

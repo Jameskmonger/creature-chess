@@ -1,8 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LobbyInfo } from "@creature-chess/ui";
 import { LobbyServerToClient } from "@creature-chess/networking";
+import { LobbyPlayer } from "@creature-chess/models";
 
-export type LobbyState = LobbyInfo | null;
+export type LobbyState = {
+	players: LobbyPlayer[];
+	startingAtMs: number;
+} | null;
 
 const initialState = null as LobbyState;
 
