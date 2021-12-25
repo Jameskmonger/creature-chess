@@ -1,9 +1,9 @@
 import React from "react";
 import { Meta, Story } from "@storybook/react";
+import { PlayerTitle } from "@creature-chess/models";
 
 import { LobbyPage } from "./LobbyPage";
 import { LobbyContextProvider, LobbyInfo } from "../../context/LobbyContext";
-import { PlayerTitle } from "@creature-chess/models";
 
 export default {
 	title: "Pages/LobbyPage",

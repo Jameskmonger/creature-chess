@@ -2,8 +2,8 @@ import * as React from "react";
 import ReactModal from "react-modal";
 import { Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { MenuPage } from "./menuPage";
 import { Auth0User, isRegistered } from "@creature-chess/auth-web";
+import { MenuPage, MenuContextProvider } from "@creature-chess/ui";
 import { LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
 
@@ -14,13 +14,29 @@ const UnauthenticatedRoutes: React.FunctionComponent = () => (
 );
 
 const AuthenticatedRootPage: React.FunctionComponent = () => {
-	const { user } = useAuth0<Auth0User>();
+	const { user, logout } = useAuth0<Auth0User>();
 
 	if (!isRegistered(user)) {
 		return <RegistrationPage />;
 	}
 
-	return <MenuPage />;
+	const onLogoutClick = () => logout();
+	const onFindGameClick = () => {
+		window.location.href = process.env.GAME_SERVER_URL!;
+	};
+
+	const menuContext = {
+		findGame: onFindGameClick,
+		auth: {
+			logout: onLogoutClick,
+		},
+	};
+
+	return (
+		<MenuContextProvider value={menuContext}>
+			<MenuPage />
+		</MenuContextProvider>
+	);
 };
 
 const AuthenticatedRoutes: React.FunctionComponent = () => (
