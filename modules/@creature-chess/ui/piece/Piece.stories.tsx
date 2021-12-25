@@ -2,7 +2,7 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 
 import { CreatureType, DefinitionClass } from "@creature-chess/models";
-import { Piece } from "./piece";
+import { Piece } from "./Piece";
 
 import "./Piece.stories.css";
 

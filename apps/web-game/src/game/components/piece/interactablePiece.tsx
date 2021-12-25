@@ -6,17 +6,22 @@ import { AppState } from "../../../store";
 import { useDrag } from "react-dnd";
 import { playerClickPieceAction } from "../../module/board/sagas/clickPieceSaga";
 import { createUseStyles } from "react-jss";
+import classNames from "classnames";
 
 type PieceDragObject = { piece: PieceModel };
 
 const useStyles = createUseStyles({
+	pieceContainer: {
+		width: "100%",
+		height: "100%",
+	},
 	selected: {
 		boxSizing: "border-box",
 		border: "2px solid #ff5200"
 	}
 });
 
-const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
+const InteractablePiece: React.FC = () => {
 	const styles = useStyles();
 
 	const { piece } = usePiece();
@@ -39,8 +44,13 @@ const InteractablePiece: React.FunctionComponent<{ id: string }> = (props) => {
 		return null;
 	}
 
+	const className = classNames(
+		styles.pieceContainer,
+		{ [styles.selected]: isSelected }
+	);
+
 	return (
-		<div className={isSelected ? styles.selected : ""}>
+		<div className={className}>
 			<Piece
 				ref={drag}
 				piece={piece}

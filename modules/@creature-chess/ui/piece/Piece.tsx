@@ -2,7 +2,7 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
 import { PieceModel } from "@creature-chess/models";
-import { CreatureImage } from "../display";
+import { CreatureImage } from "../src/display";
 import { PieceMeta } from "./meta";
 
 interface Props {
@@ -33,10 +33,17 @@ const useStyles = createUseStyles({
 		left: 0,
 		display: "flex",
 		flexDirection: "row",
-		width: "100%",
+		width: "20%",
 		height: "100%",
 		boxSizing: "border-box",
 		padding: "2%",
+	},
+	imageContainer: {
+		position: "absolute",
+		bottom: "0",
+		left: "14%",
+		width: "80%",
+		height: "80%",
 	}
 });
 
@@ -54,7 +61,9 @@ const Piece = React.forwardRef((props: Props, ref) => {
 				<PieceMeta piece={piece} healthbarColor={healthbar} />
 			</div>
 
-			<CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} baseUrl="https://creaturechess.com" />
+			<div className={classes.imageContainer}>
+				<CreatureImage definitionId={piece.definitionId} facing={piece.facingAway ? "back" : "front"} baseUrl="https://creaturechess.com" />
+			</div>
 
 			{children}
 		</div>

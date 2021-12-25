@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
-import { ProgressBar } from "../display";
+import { ProgressBar } from "../../src/display";
 
 interface HealthbarProps {
 	color: "friendly" | "enemy" | "spectating";
@@ -20,7 +20,7 @@ const getFillBackground = ({ color }: HealthbarProps) => {
 	}
 
 	return "#3887ca";
-}
+};
 
 const useStyles = createUseStyles({
 	fill: {
@@ -30,7 +30,7 @@ const useStyles = createUseStyles({
 	}
 });
 
-const Healthbar: React.FunctionComponent<HealthbarProps> = (props) => {
+const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
 	const classes = useStyles(props);
 
 	return (
@@ -43,4 +43,4 @@ const Healthbar: React.FunctionComponent<HealthbarProps> = (props) => {
 	);
 };
 
-export { Healthbar };
+export { PieceHealthbar };

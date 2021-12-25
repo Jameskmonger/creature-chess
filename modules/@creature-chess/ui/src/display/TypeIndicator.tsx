@@ -3,7 +3,6 @@ import { CreatureType } from "@creature-chess/models";
 
 interface TypeIndicatorProps {
 	type: CreatureType;
-	className?: string;
 }
 
 const ICON_FOR_TYPE = {
@@ -14,6 +13,6 @@ const ICON_FOR_TYPE = {
 	[CreatureType.Wood]: "http://creaturechess.com/images/ui/type-wood.svg"
 };
 
-const TypeIndicator: React.FunctionComponent<TypeIndicatorProps> = ({ type, className }) => <img className={className} src={ICON_FOR_TYPE[type]} />;
+const TypeIndicator: React.FunctionComponent<TypeIndicatorProps> = ({ type }) => <img src={ICON_FOR_TYPE[type]} />;
 
 export { TypeIndicator };

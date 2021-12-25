@@ -26,6 +26,8 @@ const useStyles = createUseStyles({
 		display: "flex",
 		justifyContent,
 		flexDirection: direction,
+		width: "100%",
+		height: "100%",
 		...getSpacer(noSpacer)
 	})
 });

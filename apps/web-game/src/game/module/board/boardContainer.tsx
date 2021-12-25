@@ -14,19 +14,23 @@ import { NowPlaying } from "../nowPlaying";
 import { onDropPiece, onTileClick } from "./tileInteraction";
 import { GameBoard } from "./gameBoard";
 import { InteractablePiece } from "../../components/piece/interactablePiece";
+import { PieceWrapper } from "./PieceWrapper";
+
+const boardSelector = (state: AppState) => state.game.board;
+const benchSelector = (state: AppState) => state.game.bench;
 
 const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({ showNowPlaying = false }) => {
 	const dispatch = useDispatch();
 
 	// todo decouple this, make a playerDropPiece saga
 
-	const board = useSelector<AppState, BoardState>(state => state.game.board);
-	const bench = useSelector<AppState, BoardState>(state => state.game.bench);
+	const board = useSelector(boardSelector);
+	const bench = useSelector(benchSelector);
 
 	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
 	const isSpectating = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
 
-	const renderBenchPiece = (id: string) => <InteractablePiece id={id} />;
+	const renderBenchPiece = (id: string) => <PieceWrapper id={id} boardSelectors={[benchSelector]}><InteractablePiece /></PieceWrapper>;
 
 	return (
 		<div className="group board-container style-default">

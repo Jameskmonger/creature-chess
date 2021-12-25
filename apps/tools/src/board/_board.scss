@@ -97,35 +97,6 @@ $inner-border-width: 2px;
 	}
 }
 
-.piece-meta-container {
-	.piece-meta-top {
-		.piece-stage {
-			height: 100%;
-		}
-
-		// stylelint-disable-next-line
-		img {
-			height: 100%;
-		}
-	}
-
-	.piece-stage {
-		position: absolute;
-		top: 15%;
-		left: 15%;
-		display: flex;
-		flex-direction: column;
-		width: 70%;
-		height: 70%;
-		justify-content: space-evenly;
-	}
-
-	.healthbar {
-		width: 100%;
-		height: 100%;
-	}
-}
-
 .board-container {
 	position: relative;
 

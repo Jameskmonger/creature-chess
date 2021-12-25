@@ -1,37 +1,27 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BoardSelectors, BoardState } from "@shoki/board";
 import { BoardGrid } from "@shoki/board-react";
-import { AnimatedPiece, PieceContextProvider } from "@creature-chess/ui";
+import { AnimatedPiece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
 import { onDropPiece, onTileClick } from "./tileInteraction";
 import { InteractablePiece } from "../../components/piece/interactablePiece";
-import { PieceModel } from "@creature-chess/models";
-import { usePlayerId } from "@creature-chess/auth-web";
+import { PieceWrapper } from "./PieceWrapper";
 
-const AnimatedPieceWrapper: React.FC<{ id: string }> = ({ id }) => {
-	const playerId = usePlayerId();
-	const spectatingId = useSelector<AppState, string | null>(state => state.game.spectating.id);
-	const piece = useSelector<AppState, PieceModel>(state => BoardSelectors.getPiece(state.game.match.board!, id)!);
+const boardSelector = (state: AppState) => state.game.board;
+const benchSelector = (state: AppState) => state.game.bench;
+const matchBoardSelector = (state: AppState) => state.game.match.board!;
 
-	const viewingPlayerId = spectatingId || playerId;
+const boardBenchSelectors = [boardSelector, benchSelector];
 
-	return (
-		<PieceContextProvider value={{ piece, viewingPlayerId }}>
-			<AnimatedPiece />
-		</PieceContextProvider>
-	);
-};
-
-const renderAnimatedPiece = (id: string) => <AnimatedPieceWrapper id={id} />;
-const renderInteractablePiece = (id: string) => <InteractablePiece id={id} />;
+const renderAnimatedPiece = (id: string) => <PieceWrapper id={id} boardSelectors={[matchBoardSelector]}><AnimatedPiece /></PieceWrapper>;
+const renderInteractablePiece = (id: string) => <PieceWrapper id={id} boardSelectors={boardBenchSelectors}><InteractablePiece /></PieceWrapper>;
 
 export const GameBoard: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
-	const bench = useSelector<AppState, BoardState>(state => state.game.bench);
-	const board = useSelector<AppState, BoardState>(state => state.game.board);
-	const matchBoard = useSelector<AppState, BoardState>(state => state.game.match.board!);
+	const board = useSelector(boardSelector);
+	const bench = useSelector(benchSelector);
+	const matchBoard = useSelector(matchBoardSelector);
 
 	if (matchBoard) {
 		return (
