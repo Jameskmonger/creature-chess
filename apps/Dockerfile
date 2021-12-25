@@ -1,4 +1,4 @@
-FROM node:12-alpine AS node
+FROM node:14-alpine AS node
 ARG APP_DIR
 ENV APP_DIR ${APP_DIR}
 
