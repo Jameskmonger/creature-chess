@@ -2,7 +2,7 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 
 import { MenuPage } from "./MenuPage";
-import { MenuContextProvider } from "../../context/MenuContext";
+import { MenuPageContextProvider } from "./MenuPageContext";
 
 export default {
 	title: "Pages/MenuPage",
@@ -14,9 +14,9 @@ export default {
 } as Meta;
 
 const Template: Story<{ logout: () => void; findGame: () => void }> = ({ logout, findGame }) => (
-	<MenuContextProvider value={{ auth: { logout }, findGame }}>
+	<MenuPageContextProvider value={{ auth: { logout }, findGame }}>
 		<MenuPage />
-	</MenuContextProvider>
+	</MenuPageContextProvider>
 );
 
 export const Default = Template.bind({});
