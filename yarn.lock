@@ -90,7 +90,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.1.0, @babel/core@npm:^7.12.10, @babel/core@npm:^7.12.3, @babel/core@npm:^7.16.0, @babel/core@npm:^7.7.2, @babel/core@npm:^7.7.5":
+"@babel/core@npm:^7.1.0, @babel/core@npm:^7.12.10, @babel/core@npm:^7.12.3, @babel/core@npm:^7.16.5, @babel/core@npm:^7.7.2, @babel/core@npm:^7.7.5":
   version: 7.16.5
   resolution: "@babel/core@npm:7.16.5"
   dependencies:
@@ -1613,11 +1613,11 @@ __metadata:
   dependencies:
     "@creature-chess/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
-    "@types/auth0": ^2.20.8
-    "@types/jsonwebtoken": ^8.5.0
-    auth0: ^2.34.2
+    "@types/auth0": ^2.34.9
+    "@types/jsonwebtoken": ^8.5.6
+    auth0: ^2.37.0
     jsonwebtoken: ^8.5.1
-    jwks-rsa: ^2.0.3
+    jwks-rsa: ^2.0.5
   languageName: unknown
   linkType: soft
 
@@ -1656,7 +1656,7 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@shoki/board": "workspace:*"
     "@shoki/engine": "workspace:*"
-    delay: ^4.1.0
+    delay: ^4.4.1
   peerDependencies:
     redux: ^4.1.0
     redux-saga: ^1.1.3
@@ -1679,15 +1679,15 @@ __metadata:
   dependencies:
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/models": "workspace:*"
-    "@reduxjs/toolkit": ^1.6.1
+    "@reduxjs/toolkit": ^1.7.1
     "@shoki/board": "workspace:*"
     "@shoki/engine": "workspace:*"
-    "@types/lodash": ^4.14.168
-    "@types/uuid": ^8.3.1
-    delay: ^4.1.0
+    "@types/lodash": ^4.14.178
+    "@types/uuid": ^8.3.3
+    delay: ^4.4.1
     lodash: ^4.17.21
     p-defer: ^2.1.0
-    redux-saga-test-plan: ^4.0.1
+    redux-saga-test-plan: ^4.0.4
     typed-redux-saga: ^1.3.1
     uuid: ^8.3.2
     winston: ^3.3.3
@@ -1726,21 +1726,21 @@ __metadata:
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
-    "@reduxjs/toolkit": ^1.6.1
+    "@reduxjs/toolkit": ^1.7.1
     "@shoki/board": "workspace:*"
     "@shoki/engine": "workspace:*"
     "@shoki/networking": "workspace:*"
-    "@types/auth0": ^2.20.8
-    "@types/lodash": ^4.14.168
-    "@types/uuid": ^8.3.1
-    auth0: ^2.34.2
-    delay: ^4.1.0
+    "@types/auth0": ^2.34.9
+    "@types/lodash": ^4.14.178
+    "@types/uuid": ^8.3.3
+    auth0: ^2.37.0
+    delay: ^4.4.1
     discord.js: ^12.5.1
-    express: ^4.17.1
+    express: ^4.17.2
     express-winston: ^4.2.0
     lodash: ^4.17.21
     socket.io: ^4.4.0
-    tslib: ^2.2.0
+    tslib: ^2.3.1
     typed-redux-saga: ^1.3.1
     uuid: ^8.3.2
     winston: ^3.3.3
@@ -1757,13 +1757,13 @@ __metadata:
     "@creature-chess/auth-server": "workspace:*"
     "@creature-chess/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
-    "@types/auth0": ^2.20.8
-    "@types/bad-words": ^3.0.0
-    "@types/express": ^4.17.8
-    auth0: ^2.34.2
-    bad-words: ^3.0.3
-    body-parser: ^1.19.0
-    express: ^4.17.1
+    "@types/auth0": ^2.34.9
+    "@types/bad-words": ^3.0.1
+    "@types/express": ^4.17.13
+    auth0: ^2.37.0
+    bad-words: ^3.0.4
+    body-parser: ^1.19.1
+    express: ^4.17.2
     winston: ^3.3.3
   languageName: unknown
   linkType: soft
@@ -1779,30 +1779,30 @@ __metadata:
     "@creature-chess/networking": "workspace:*"
     "@creature-chess/ui": "workspace:*"
     "@creature-chess/web-menu": "workspace:*"
-    "@fortawesome/fontawesome-svg-core": ^1.2.30
-    "@fortawesome/free-solid-svg-icons": ^5.14.0
-    "@fortawesome/react-fontawesome": ^0.1.11
-    "@reduxjs/toolkit": ^1.6.1
-    "@sentry/react": ^6.2.5
-    "@sentry/tracing": ^6.2.5
+    "@fortawesome/fontawesome-svg-core": ^1.2.36
+    "@fortawesome/free-solid-svg-icons": ^5.15.4
+    "@fortawesome/react-fontawesome": ^0.1.16
+    "@reduxjs/toolkit": ^1.7.1
+    "@sentry/react": ^6.16.1
+    "@sentry/tracing": ^6.16.1
     "@shoki/board": "workspace:*"
     "@shoki/board-react": "workspace:*"
     "@shoki/networking": "workspace:*"
-    "@types/react-redux": ^7.1.2
+    "@types/react-redux": ^7.1.21
     classnames: ^2.3.1
-    delay: ^4.1.0
-    pepjs: ^0.5.2
+    delay: ^4.4.1
+    pepjs: ^0.5.3
     react-dnd-html5-backend: ^14.0.2
     react-dnd-multi-backend: ^6.0.2
     react-dnd-touch-backend: ^14.1.1
-    react-media: ^1.9.2
-    react-modal: ^3.12.1
-    react-redux: ^7.1.1
-    redux-devtools-extension: ^2.13.8
-    reselect: ^4.0.0
-    socket.io-client: ^4.1.1
+    react-media: ^1.10.0
+    react-modal: ^3.14.4
+    react-redux: ^7.2.6
+    redux-devtools-extension: ^2.13.9
+    reselect: ^4.1.5
+    socket.io-client: ^4.4.0
     typed-redux-saga: ^1.3.1
-    use-http: ^1.0.15
+    use-http: ^1.0.26
   peerDependencies:
     react: ^17.0.2
     react-dnd: ^14.0.4
@@ -1816,13 +1816,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/ui@workspace:modules/@creature-chess/ui"
   dependencies:
-    "@babel/core": ^7.16.0
+    "@babel/core": ^7.16.5
     "@creature-chess/models": "workspace:*"
-    "@storybook/addon-actions": ^6.3.12
-    "@storybook/addon-essentials": ^6.3.12
-    "@storybook/addon-links": ^6.3.12
-    "@storybook/builder-webpack5": ^6.4.0-rc.7
-    "@storybook/react": ^6.3.12
+    "@storybook/addon-actions": ^6.4.9
+    "@storybook/addon-essentials": ^6.4.9
+    "@storybook/addon-links": ^6.4.9
+    "@storybook/builder-webpack5": ^6.4.9
+    "@storybook/react": ^6.4.9
     babel-loader: ^8.2.3
     classnames: ^2.3.1
   peerDependencies:
@@ -1842,17 +1842,17 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
     "@creature-chess/ui": "workspace:*"
-    "@fortawesome/fontawesome-svg-core": ^1.2.30
-    "@fortawesome/free-solid-svg-icons": ^5.14.0
-    "@fortawesome/react-fontawesome": ^0.1.11
-    "@reduxjs/toolkit": ^1.6.1
-    "@sentry/react": ^6.2.5
-    "@sentry/tracing": ^6.2.5
+    "@fortawesome/fontawesome-svg-core": ^1.2.36
+    "@fortawesome/free-solid-svg-icons": ^5.15.4
+    "@fortawesome/react-fontawesome": ^0.1.16
+    "@reduxjs/toolkit": ^1.7.1
+    "@sentry/react": ^6.16.1
+    "@sentry/tracing": ^6.16.1
     "@shoki/board": "workspace:*"
     "@shoki/board-react": "workspace:*"
     "@shoki/networking": "workspace:*"
     "@types/react-dnd-multi-backend": ^6.0.1
-    "@types/react-redux": ^7.1.2
+    "@types/react-redux": ^7.1.21
     awesome-typescript-loader: ^5.2.1
     babel-loader: ^8.2.3
     circular-dependency-plugin: ^5.2.2
@@ -1860,27 +1860,27 @@ __metadata:
     cname-webpack-plugin: ^2.0.1
     cpy-cli: ^2.0.0
     css-loader: ^6.2.0
-    delay: ^4.1.0
+    delay: ^4.4.1
     dotenv-webpack: ^7.0.3
-    html-webpack-plugin: ^5.0.0-beta.5
-    mini-css-extract-plugin: ^2.1.0
-    pepjs: ^0.5.2
+    html-webpack-plugin: ^5.5.0
+    mini-css-extract-plugin: ^2.4.5
+    pepjs: ^0.5.3
     react-dnd-html5-backend: ^14.0.2
     react-dnd-multi-backend: ^6.0.2
     react-dnd-touch-backend: ^14.1.1
-    react-media: ^1.9.2
-    react-modal: ^3.12.1
-    react-redux: ^7.1.1
-    redux-devtools-extension: ^2.13.8
-    reselect: ^4.0.0
+    react-media: ^1.10.0
+    react-modal: ^3.14.4
+    react-redux: ^7.2.6
+    redux-devtools-extension: ^2.13.9
+    reselect: ^4.1.5
     sass-loader: ^12.1.0
     socket.io-client: ^4.4.0
-    ts-loader: ^9.1.2
+    ts-loader: ^9.2.6
     typed-redux-saga: ^1.3.1
-    use-http: ^1.0.15
+    use-http: ^1.0.26
     webpack: ^5.65.0
     webpack-cli: ^4.9.1
-    webpack-dev-server: ^4.6.0
+    webpack-dev-server: ^4.7.1
   peerDependencies:
     react: ^17.0.2
     react-dnd: ^14.0.4
@@ -1901,16 +1901,16 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
     "@creature-chess/ui": "workspace:*"
-    "@fortawesome/fontawesome-svg-core": ^1.2.30
-    "@fortawesome/free-solid-svg-icons": ^5.14.0
-    "@fortawesome/react-fontawesome": ^0.1.11
-    "@reduxjs/toolkit": ^1.6.1
-    "@sentry/react": ^6.2.5
-    "@sentry/tracing": ^6.2.5
+    "@fortawesome/fontawesome-svg-core": ^1.2.36
+    "@fortawesome/free-solid-svg-icons": ^5.15.4
+    "@fortawesome/react-fontawesome": ^0.1.16
+    "@reduxjs/toolkit": ^1.7.1
+    "@sentry/react": ^6.16.1
+    "@sentry/tracing": ^6.16.1
     "@shoki/board": "workspace:*"
     "@shoki/board-react": "workspace:*"
     "@shoki/networking": "workspace:*"
-    "@types/react-redux": ^7.1.2
+    "@types/react-redux": ^7.1.21
     awesome-typescript-loader: ^5.2.1
     babel-loader: ^8.2.3
     circular-dependency-plugin: ^5.2.2
@@ -1918,18 +1918,18 @@ __metadata:
     cname-webpack-plugin: ^2.0.1
     cpy-cli: ^2.0.0
     css-loader: ^6.2.0
-    delay: ^4.1.0
+    delay: ^4.4.1
     dotenv-webpack: ^7.0.3
-    html-webpack-plugin: ^5.0.0-beta.5
-    mini-css-extract-plugin: ^2.1.0
-    react-media: ^1.9.2
-    reselect: ^4.0.0
+    html-webpack-plugin: ^5.5.0
+    mini-css-extract-plugin: ^2.4.5
+    react-media: ^1.10.0
+    reselect: ^4.1.5
     sass-loader: ^12.1.0
-    ts-loader: ^9.1.2
-    use-http: ^1.0.15
+    ts-loader: ^9.2.6
+    use-http: ^1.0.26
     webpack: ^5.65.0
     webpack-cli: ^4.9.1
-    webpack-dev-server: ^4.6.0
+    webpack-dev-server: ^4.7.1
   peerDependencies:
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -2161,7 +2161,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-svg-core@npm:^1.2.30":
+"@fortawesome/fontawesome-svg-core@npm:^1.2.36":
   version: 1.2.36
   resolution: "@fortawesome/fontawesome-svg-core@npm:1.2.36"
   dependencies:
@@ -2170,7 +2170,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/free-solid-svg-icons@npm:^5.14.0":
+"@fortawesome/free-solid-svg-icons@npm:^5.15.4":
   version: 5.15.4
   resolution: "@fortawesome/free-solid-svg-icons@npm:5.15.4"
   dependencies:
@@ -2179,7 +2179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/react-fontawesome@npm:^0.1.11":
+"@fortawesome/react-fontawesome@npm:^0.1.16":
   version: 0.1.16
   resolution: "@fortawesome/react-fontawesome@npm:0.1.16"
   dependencies:
@@ -2735,7 +2735,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reduxjs/toolkit@npm:^1.6.1":
+"@reduxjs/toolkit@npm:^1.7.1":
   version: 1.7.1
   resolution: "@reduxjs/toolkit@npm:1.7.1"
   dependencies:
@@ -2802,7 +2802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react@npm:^6.2.5":
+"@sentry/react@npm:^6.16.1":
   version: 6.16.1
   resolution: "@sentry/react@npm:6.16.1"
   dependencies:
@@ -2818,7 +2818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/tracing@npm:^6.2.5":
+"@sentry/tracing@npm:^6.16.1":
   version: 6.16.1
   resolution: "@sentry/tracing@npm:6.16.1"
   dependencies:
@@ -2863,7 +2863,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@shoki/board@workspace:modules/@shoki/board"
   dependencies:
-    "@reduxjs/toolkit": ^1.6.1
+    "@reduxjs/toolkit": ^1.7.1
   languageName: unknown
   linkType: soft
 
@@ -2912,7 +2912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-actions@npm:6.4.9, @storybook/addon-actions@npm:^6.3.12":
+"@storybook/addon-actions@npm:6.4.9, @storybook/addon-actions@npm:^6.4.9":
   version: 6.4.9
   resolution: "@storybook/addon-actions@npm:6.4.9"
   dependencies:
@@ -3101,7 +3101,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-essentials@npm:^6.3.12":
+"@storybook/addon-essentials@npm:^6.4.9":
   version: 6.4.9
   resolution: "@storybook/addon-essentials@npm:6.4.9"
   dependencies:
@@ -3145,7 +3145,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-links@npm:^6.3.12":
+"@storybook/addon-links@npm:^6.4.9":
   version: 6.4.9
   resolution: "@storybook/addon-links@npm:6.4.9"
   dependencies:
@@ -3406,7 +3406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/builder-webpack5@npm:^6.4.0-rc.7":
+"@storybook/builder-webpack5@npm:^6.4.9":
   version: 6.4.9
   resolution: "@storybook/builder-webpack5@npm:6.4.9"
   dependencies:
@@ -3932,7 +3932,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react@npm:^6.3.12":
+"@storybook/react@npm:^6.4.9":
   version: 6.4.9
   resolution: "@storybook/react@npm:6.4.9"
   dependencies:
@@ -4128,10 +4128,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/auth0@npm:^2.20.8":
-  version: 2.34.8
-  resolution: "@types/auth0@npm:2.34.8"
-  checksum: 5a106d8ab0098f7d37f4cb41ab0aa3ce0d2f74fd6e471e0fa0786e8207a4812f4997f97bdf031c06c2a678c578f4cc43fa65423c6c10643fa2147a12abb55214
+"@types/auth0@npm:^2.34.9":
+  version: 2.34.9
+  resolution: "@types/auth0@npm:2.34.9"
+  checksum: eb915e37558c90a29f991f4feba209792ec28071c1bef511db9ad4715a8ad15190c212528d3df81577682544423458de82e3bbfd604327fc014f3bdc32bd8983
   languageName: node
   linkType: hard
 
@@ -4176,7 +4176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bad-words@npm:^3.0.0":
+"@types/bad-words@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/bad-words@npm:3.0.1"
   checksum: c700fadd2bafef153812137220466ca3148425228915ddb6e7e80bc339fa983d2ddef098cacf00196fbd7467181ae5b9747d8fd383fc5ed17f8bf5e62e89d425
@@ -4315,7 +4315,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:^4.17.8":
+"@types/express@npm:*, @types/express@npm:^4.17.13":
   version: 4.17.13
   resolution: "@types/express@npm:4.17.13"
   dependencies:
@@ -4420,13 +4420,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^26.0.24":
-  version: 26.0.24
-  resolution: "@types/jest@npm:26.0.24"
+"@types/jest@npm:^27.0.3":
+  version: 27.0.3
+  resolution: "@types/jest@npm:27.0.3"
   dependencies:
-    jest-diff: ^26.0.0
-    pretty-format: ^26.0.0
-  checksum: ae39675412f08d884926254e9b12bfd2b5a4e4d204c94d3148cb942174a474930d0c60540133c968f22241d4712b7940c96cbc883096eb326a4d5b206fb78bd0
+    jest-diff: ^27.0.0
+    pretty-format: ^27.0.0
+  checksum: 3683a9945821966f6dccddf337219a5d682633687c9d30df859223db553589f63e9b2c34e69f0cc845c86ffcf115742f25c12ea03c8d33d2244890fdc0af61e2
   languageName: node
   linkType: hard
 
@@ -4444,7 +4444,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsonwebtoken@npm:^8.5.0":
+"@types/jsonwebtoken@npm:^8.5.6":
   version: 8.5.6
   resolution: "@types/jsonwebtoken@npm:8.5.6"
   dependencies:
@@ -4453,7 +4453,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.168":
+"@types/lodash@npm:^4.14.178":
   version: 4.14.178
   resolution: "@types/lodash@npm:4.14.178"
   checksum: a69a04a60bfc5257c3130a554b4efa0c383f0141b7b3db8ab7cf07ad2a46ea085fce66d0242da41da7e5647b133d5dfb2c15add9cbed8d7fef955e4a1e5b3128
@@ -4507,7 +4507,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.4.3":
+"@types/node@npm:^16.11.17":
   version: 16.11.17
   resolution: "@types/node@npm:16.11.17"
   checksum: 86ed84f79450f6aba1a6ef09f8407c10076966c3cc7cc4eb3d35b8ae4f47817e525641396ef0a667fa0a88fcdf484f6182812c074601403083bdf3b5e1ac0313
@@ -4595,7 +4595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^17.0.9":
+"@types/react-dom@npm:^17.0.11":
   version: 17.0.11
   resolution: "@types/react-dom@npm:17.0.11"
   dependencies:
@@ -4604,7 +4604,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-modal@npm:^3.12.0":
+"@types/react-modal@npm:^3.13.1":
   version: 3.13.1
   resolution: "@types/react-modal@npm:3.13.1"
   dependencies:
@@ -4613,7 +4613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-redux@npm:^7.1.2, @types/react-redux@npm:^7.1.20":
+"@types/react-redux@npm:^7.1.20":
   version: 7.1.20
   resolution: "@types/react-redux@npm:7.1.20"
   dependencies:
@@ -4622,6 +4622,18 @@ __metadata:
     hoist-non-react-statics: ^3.3.0
     redux: ^4.0.0
   checksum: 5e0405d0d312f1b5e2dd48ab5833d3226295931fe8d276bd0891fafe4dd7ba9efbc74b1e8b30685ba96e9dc1a63d57444ae335785ce6fda96900d5fc9f800dcf
+  languageName: node
+  linkType: hard
+
+"@types/react-redux@npm:^7.1.21":
+  version: 7.1.21
+  resolution: "@types/react-redux@npm:7.1.21"
+  dependencies:
+    "@types/hoist-non-react-statics": ^3.3.0
+    "@types/react": "*"
+    hoist-non-react-statics: ^3.3.0
+    redux: ^4.0.0
+  checksum: 5104e818ef718d2ed454a66da0fd5a61350aa67b948d117f1d93a6135d9808f9f90a60ffcc97a4b008059048cc154a6fc2c24cc57db4e76b6e89e207edb48023
   languageName: node
   linkType: hard
 
@@ -4634,7 +4646,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^17.0.15":
+"@types/react@npm:*, @types/react@npm:^17.0.38":
   version: 17.0.38
   resolution: "@types/react@npm:17.0.38"
   dependencies:
@@ -4747,7 +4759,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^8.3.1":
+"@types/uuid@npm:^8.3.3":
   version: 8.3.3
   resolution: "@types/uuid@npm:8.3.3"
   checksum: 3f340155bb1161f9ffa7163926d6222fea8f3505c23619b72bcc230883354926672c08a06510c7a543f73553c792a84444cc1744cff631b4ba988763e4bd7a8f
@@ -4829,7 +4841,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.28.5":
+"@typescript-eslint/eslint-plugin@npm:^4.33.0":
   version: 4.33.0
   resolution: "@typescript-eslint/eslint-plugin@npm:4.33.0"
   dependencies:
@@ -4867,7 +4879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.28.5":
+"@typescript-eslint/parser@npm:^4.33.0":
   version: 4.33.0
   resolution: "@typescript-eslint/parser@npm:4.33.0"
   dependencies:
@@ -5983,7 +5995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0@npm:^2.34.2":
+"auth0@npm:^2.37.0":
   version: 2.37.0
   resolution: "auth0@npm:2.37.0"
   dependencies:
@@ -6308,7 +6320,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bad-words@npm:^3.0.3":
+"bad-words@npm:^3.0.4":
   version: 3.0.4
   resolution: "bad-words@npm:3.0.4"
   dependencies:
@@ -6466,7 +6478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"body-parser@npm:1.19.1, body-parser@npm:^1.19.0":
+"body-parser@npm:1.19.1, body-parser@npm:^1.19.1":
   version: 1.19.1
   resolution: "body-parser@npm:1.19.1"
   dependencies:
@@ -7862,32 +7874,32 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "creature-chess@workspace:."
   dependencies:
-    "@babel/core": ^7.16.0
-    "@types/jest": ^26.0.24
-    "@types/node": ^16.4.3
-    "@types/react": ^17.0.15
-    "@types/react-dom": ^17.0.9
-    "@types/react-modal": ^3.12.0
+    "@babel/core": ^7.16.5
+    "@types/jest": ^27.0.3
+    "@types/node": ^16.11.17
+    "@types/react": ^17.0.38
+    "@types/react-dom": ^17.0.11
+    "@types/react-modal": ^3.13.1
     "@types/ws": ^7.4.7
-    "@typescript-eslint/eslint-plugin": ^4.28.5
-    "@typescript-eslint/parser": ^4.28.5
-    eslint: ^7.31.0
-    eslint-plugin-import: ^2.23.4
-    eslint-plugin-jsdoc: ^36.0.4
+    "@typescript-eslint/eslint-plugin": ^4.33.0
+    "@typescript-eslint/parser": ^4.33.0
+    eslint: ^7.32.0
+    eslint-plugin-import: ^2.25.3
+    eslint-plugin-jsdoc: ^36.1.1
     eslint-plugin-prefer-arrow: ^1.2.3
-    eslint-plugin-react: ^7.24.0
-    jest: ^27.0.6
+    eslint-plugin-react: ^7.28.0
+    jest: ^27.4.5
     jest-standard-reporter: ^2.0.0
-    node-sass: ^4.12.0
+    node-sass: ^4.14.1
     react: ^17.0.2
     react-dnd: ^14.0.4
     react-dom: ^17.0.2
-    react-jss: ^10.6.0
-    redux: ^4.1.0
+    react-jss: ^10.9.0
+    redux: ^4.1.2
     redux-saga: ^1.1.3
-    ts-jest: ^27.0.4
+    ts-jest: ^27.1.2
     ts-node-dev: ^1.1.8
-    typescript: ^4.3.5
+    typescript: ^4.5.4
   languageName: unknown
   linkType: soft
 
@@ -8326,7 +8338,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"delay@npm:^4.1.0":
+"delay@npm:^4.4.1":
   version: 4.4.1
   resolution: "delay@npm:4.4.1"
   checksum: 97b001126a3979a398b6c5f33e437d78acda3b19731d9e6f991a05e2e09e7a410d655b8fdcaedc05743928bb533c0ac9401826cccb2af71c81d2cab50e199351
@@ -8417,13 +8429,6 @@ __metadata:
     detect: ./bin/detect-port
     detect-port: ./bin/detect-port
   checksum: 93c40febe714f56711d1fedc2b7a9cc4cbaa0fcddec0509876c46b9dd6099ed6bfd6662a4f35e5fa0301660f48ed516829253ab0fc90b9e79b823dd77786b379
-  languageName: node
-  linkType: hard
-
-"diff-sequences@npm:^26.6.2":
-  version: 26.6.2
-  resolution: "diff-sequences@npm:26.6.2"
-  checksum: 79af871776ef149a7ff3345d6b1bf37fe6e81f68632aa5542787851f6f60fba19b0be22fdd1e06046f56ae7382763ccfe94a982c39ee72bd107aef435ecbc0cf
   languageName: node
   linkType: hard
 
@@ -9204,7 +9209,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.23.4":
+"eslint-plugin-import@npm:^2.25.3":
   version: 2.25.3
   resolution: "eslint-plugin-import@npm:2.25.3"
   dependencies:
@@ -9227,7 +9232,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:^36.0.4":
+"eslint-plugin-jsdoc@npm:^36.1.1":
   version: 36.1.1
   resolution: "eslint-plugin-jsdoc@npm:36.1.1"
   dependencies:
@@ -9255,7 +9260,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.24.0":
+"eslint-plugin-react@npm:^7.28.0":
   version: 7.28.0
   resolution: "eslint-plugin-react@npm:7.28.0"
   dependencies:
@@ -9333,7 +9338,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.31.0":
+"eslint@npm:^7.32.0":
   version: 7.32.0
   resolution: "eslint@npm:7.32.0"
   dependencies:
@@ -9587,7 +9592,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:^4.17.1":
+"express@npm:^4.17.1, express@npm:^4.17.2":
   version: 4.17.2
   resolution: "express@npm:4.17.2"
   dependencies:
@@ -11109,7 +11114,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-webpack-plugin@npm:^5.0.0, html-webpack-plugin@npm:^5.0.0-beta.5":
+"html-webpack-plugin@npm:^5.0.0, html-webpack-plugin@npm:^5.5.0":
   version: 5.5.0
   resolution: "html-webpack-plugin@npm:5.5.0"
   dependencies:
@@ -12326,19 +12331,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^26.0.0":
-  version: 26.6.2
-  resolution: "jest-diff@npm:26.6.2"
-  dependencies:
-    chalk: ^4.0.0
-    diff-sequences: ^26.6.2
-    jest-get-type: ^26.3.0
-    pretty-format: ^26.6.2
-  checksum: d00d297f31e1ac0252127089892432caa7a11c69bde29cf3bb6c7a839c8afdb95cf1fd401f9df16a4422745da2e6a5d94b428b30666a2540c38e1c5699915c2d
-  languageName: node
-  linkType: hard
-
-"jest-diff@npm:^27.4.2":
+"jest-diff@npm:^27.0.0, jest-diff@npm:^27.4.2":
   version: 27.4.2
   resolution: "jest-diff@npm:27.4.2"
   dependencies:
@@ -12398,13 +12391,6 @@ __metadata:
     jest-mock: ^27.4.2
     jest-util: ^27.4.2
   checksum: 12de67100d35dcdab012220d5c9663e3ad6ac0b164b0a89e998a30c41b71c96abd77256f4fbfcd0ec48f8acb1dbb084050a5d17fe0ad4b4a81e311e05b54a89d
-  languageName: node
-  linkType: hard
-
-"jest-get-type@npm:^26.3.0":
-  version: 26.3.0
-  resolution: "jest-get-type@npm:26.3.0"
-  checksum: 1cc6465ae4f5e880be22ba52fd270fa64c21994915f81b41f8f7553a7957dd8e077cc8d03035de9412e2d739f8bad6a032ebb5dab5805692a5fb9e20dd4ea666
   languageName: node
   linkType: hard
 
@@ -12820,7 +12806,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^27.0.6":
+"jest@npm:^27.4.5":
   version: 27.4.5
   resolution: "jest@npm:27.4.5"
   dependencies:
@@ -13302,7 +13288,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jwks-rsa@npm:^2.0.3":
+"jwks-rsa@npm:^2.0.5":
   version: 2.0.5
   resolution: "jwks-rsa@npm:2.0.5"
   dependencies:
@@ -14221,7 +14207,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mini-css-extract-plugin@npm:^2.1.0":
+"mini-css-extract-plugin@npm:^2.4.5":
   version: 2.4.5
   resolution: "mini-css-extract-plugin@npm:2.4.5"
   dependencies:
@@ -14666,7 +14652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-sass@npm:^4.12.0":
+"node-sass@npm:^4.14.1":
   version: 4.14.1
   resolution: "node-sass@npm:4.14.1"
   dependencies:
@@ -15577,7 +15563,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pepjs@npm:^0.5.2":
+"pepjs@npm:^0.5.3":
   version: 0.5.3
   resolution: "pepjs@npm:0.5.3"
   checksum: 70ed9e65413d272d8cd055de7224b4c4a94fca12aed27fc5fe7bfd3a0f8e8c1ce172a944acfcafd7e00de06f86044a561c411563c62533d5bbf1c90d287c0086
@@ -15935,7 +15921,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^26.0.0, pretty-format@npm:^26.6.2":
+"pretty-format@npm:^26.6.2":
   version: 26.6.2
   resolution: "pretty-format@npm:26.6.2"
   dependencies:
@@ -15947,7 +15933,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.4.2":
+"pretty-format@npm:^27.0.0, pretty-format@npm:^27.4.2":
   version: 27.4.2
   resolution: "pretty-format@npm:27.4.2"
   dependencies:
@@ -16602,7 +16588,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-jss@npm:^10.6.0":
+"react-jss@npm:^10.9.0":
   version: 10.9.0
   resolution: "react-jss@npm:10.9.0"
   dependencies:
@@ -16630,7 +16616,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-media@npm:^1.9.2":
+"react-media@npm:^1.10.0":
   version: 1.10.0
   resolution: "react-media@npm:1.10.0"
   dependencies:
@@ -16644,7 +16630,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-modal@npm:^3.12.1":
+"react-modal@npm:^3.14.4":
   version: 3.14.4
   resolution: "react-modal@npm:3.14.4"
   dependencies:
@@ -16686,7 +16672,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-redux@npm:^7.1.1":
+"react-redux@npm:^7.2.6":
   version: 7.2.6
   resolution: "react-redux@npm:7.2.6"
   dependencies:
@@ -16937,7 +16923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux-devtools-extension@npm:^2.13.8":
+"redux-devtools-extension@npm:^2.13.9":
   version: 2.13.9
   resolution: "redux-devtools-extension@npm:2.13.9"
   peerDependencies:
@@ -16946,7 +16932,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux-saga-test-plan@npm:^4.0.1":
+"redux-saga-test-plan@npm:^4.0.4":
   version: 4.0.4
   resolution: "redux-saga-test-plan@npm:4.0.4"
   dependencies:
@@ -16981,7 +16967,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.0, redux@npm:^4.0.4, redux@npm:^4.1.0, redux@npm:^4.1.1, redux@npm:^4.1.2":
+"redux@npm:^4.0.0, redux@npm:^4.0.4, redux@npm:^4.1.1, redux@npm:^4.1.2":
   version: 4.1.2
   resolution: "redux@npm:4.1.2"
   dependencies:
@@ -17298,7 +17284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reselect@npm:^4.0.0, reselect@npm:^4.1.5":
+"reselect@npm:^4.1.5":
   version: 4.1.5
   resolution: "reselect@npm:4.1.5"
   checksum: 54c13c1e795b2ea70cba8384138aebe78adda00cbea303cc94b64da0a70d74c896cc9a03115ae38b8bff990e7a60dcd6452ab68cbec01b0b38c1afda70714cf0
@@ -18060,7 +18046,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:^4.1.1, socket.io-client@npm:^4.4.0":
+"socket.io-client@npm:^4.4.0":
   version: 4.4.0
   resolution: "socket.io-client@npm:4.4.0"
   dependencies:
@@ -19289,7 +19275,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^27.0.4":
+"ts-jest@npm:^27.1.2":
   version: 27.1.2
   resolution: "ts-jest@npm:27.1.2"
   dependencies:
@@ -19323,7 +19309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-loader@npm:^9.1.2":
+"ts-loader@npm:^9.2.6":
   version: 9.2.6
   resolution: "ts-loader@npm:9.2.6"
   dependencies:
@@ -19427,7 +19413,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.2.0, tslib@npm:^2.3.0":
+"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.3.0, tslib@npm:^2.3.1":
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
@@ -19610,7 +19596,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.3.5":
+"typescript@npm:^4.5.4":
   version: 4.5.4
   resolution: "typescript@npm:4.5.4"
   bin:
@@ -19620,7 +19606,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
   version: 4.5.4
   resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=493e53"
   bin:
@@ -19947,7 +19933,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-http@npm:^1.0.15":
+"use-http@npm:^1.0.26":
   version: 1.0.26
   resolution: "use-http@npm:1.0.26"
   dependencies:
@@ -20364,7 +20350,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-dev-server@npm:^4.6.0":
+"webpack-dev-server@npm:^4.7.1":
   version: 4.7.1
   resolution: "webpack-dev-server@npm:4.7.1"
   dependencies:

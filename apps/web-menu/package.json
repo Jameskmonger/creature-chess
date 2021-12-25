@@ -30,21 +30,21 @@
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/networking": "workspace:*",
 		"@creature-chess/ui": "workspace:*",
-		"@fortawesome/fontawesome-svg-core": "^1.2.30",
-		"@fortawesome/free-solid-svg-icons": "^5.14.0",
-		"@fortawesome/react-fontawesome": "^0.1.11",
-		"@reduxjs/toolkit": "^1.6.1",
-		"@sentry/react": "^6.2.5",
-		"@sentry/tracing": "^6.2.5",
+		"@fortawesome/fontawesome-svg-core": "^1.2.36",
+		"@fortawesome/free-solid-svg-icons": "^5.15.4",
+		"@fortawesome/react-fontawesome": "^0.1.16",
+		"@reduxjs/toolkit": "^1.7.1",
+		"@sentry/react": "^6.16.1",
+		"@sentry/tracing": "^6.16.1",
 		"@shoki/board": "workspace:*",
 		"@shoki/board-react": "workspace:*",
 		"@shoki/networking": "workspace:*",
-		"@types/react-redux": "^7.1.2",
+		"@types/react-redux": "^7.1.21",
 		"classnames": "^2.3.1",
-		"delay": "^4.1.0",
-		"react-media": "^1.9.2",
-		"reselect": "^4.0.0",
-		"use-http": "^1.0.15"
+		"delay": "^4.4.1",
+		"react-media": "^1.10.0",
+		"reselect": "^4.1.5",
+		"use-http": "^1.0.26"
 	},
 	"devDependencies": {
 		"awesome-typescript-loader": "^5.2.1",
@@ -54,16 +54,17 @@
 		"cpy-cli": "^2.0.0",
 		"css-loader": "^6.2.0",
 		"dotenv-webpack": "^7.0.3",
-		"html-webpack-plugin": "^5.0.0-beta.5",
-		"mini-css-extract-plugin": "^2.1.0",
+		"html-webpack-plugin": "^5.5.0",
+		"mini-css-extract-plugin": "^2.4.5",
 		"sass-loader": "^12.1.0",
-		"ts-loader": "^9.1.2",
+		"ts-loader": "^9.2.6",
 		"webpack": "^5.65.0",
 		"webpack-cli": "^4.9.1",
-		"webpack-dev-server": "^4.6.0"
+		"webpack-dev-server": "^4.7.1"
 	},
 	"peerDependencies": {
 		"react": "^17.0.2",
-		"react-dom": "^17.0.2"
+		"react-dom": "^17.0.2",
+		"redux-saga": "^1.1.3"
 	}
 }

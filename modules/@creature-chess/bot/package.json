@@ -27,7 +27,7 @@
 		"@creature-chess/models": "workspace:*",
 		"@shoki/board": "workspace:*",
 		"@shoki/engine": "workspace:*",
-		"delay": "^4.1.0"
+		"delay": "^4.4.1"
 	},
 	"peerDependencies": {
 		"redux": "^4.1.0",

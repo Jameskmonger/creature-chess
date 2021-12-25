@@ -20,6 +20,6 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@reduxjs/toolkit": "^1.6.1"
+		"@reduxjs/toolkit": "^1.7.1"
 	}
 }
