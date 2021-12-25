@@ -4,7 +4,7 @@ import { BoardGrid } from "@shoki/board-react";
 import { AnimatedPiece } from "@creature-chess/ui";
 import { AppState } from "../../../store";
 import { onDropPiece, onTileClick } from "./tileInteraction";
-import { InteractablePiece } from "../../components/piece/interactablePiece";
+import { InteractablePiece } from "./InteractablePiece";
 import { PieceWrapper } from "./PieceWrapper";
 
 const boardSelector = (state: AppState) => state.game.board;

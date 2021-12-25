@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GamePhase } from "@creature-chess/models";
-import { BoardState } from "@shoki/board";
 import { BoardGrid } from "@shoki/board-react";
 import { AppState } from "../../../store";
 import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
@@ -13,8 +12,8 @@ import { SpectatingOverlay } from "./overlays/spectatingOverlay";
 import { NowPlaying } from "../nowPlaying";
 import { onDropPiece, onTileClick } from "./tileInteraction";
 import { GameBoard } from "./gameBoard";
-import { InteractablePiece } from "../../components/piece/interactablePiece";
 import { PieceWrapper } from "./PieceWrapper";
+import { InteractablePiece } from "./InteractablePiece";
 
 const boardSelector = (state: AppState) => state.game.board;
 const benchSelector = (state: AppState) => state.game.bench;

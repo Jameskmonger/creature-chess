@@ -21,7 +21,7 @@ const useStyles = createUseStyles({
 	}
 });
 
-const InteractablePiece: React.FC = () => {
+export const InteractablePiece: React.FC = () => {
 	const styles = useStyles();
 
 	const { piece } = usePiece();
@@ -62,5 +62,3 @@ const InteractablePiece: React.FC = () => {
 		</div>
 	);
 };
-
-export { InteractablePiece };
