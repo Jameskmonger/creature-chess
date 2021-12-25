@@ -11,6 +11,7 @@ export { Footer } from "./src/Footer";
 export * from "./pages";
 export { useGlobalStyles } from "./styles";
 
+export * from "./gameBoard";
 export * from "./piece";
 
 export { Countdown } from "./src/countdown";

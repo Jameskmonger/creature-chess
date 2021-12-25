@@ -1,7 +1,5 @@
 import React from "react";
 import { Meta, Story } from "@storybook/react";
-import { DndProvider } from "react-dnd-multi-backend";
-import HTML5toTouch from "react-dnd-multi-backend/dist/esm/HTML5toTouch";
 import { Builders, GRID_SIZE, PieceModel } from "@creature-chess/models";
 
 import { GameBoard } from "./GameBoard";
@@ -47,18 +45,16 @@ const Template: Story<any> = (args) => {
 	};
 
 	return (
-		<DndProvider options={HTML5toTouch}>
-			<div style={{ width: "500px", height: "800px" }}>
-				<GameBoardContextProvider value={context}>
-					<GameBoard
-						renderBoardPiece={renderPiece}
-						renderBenchPiece={renderPiece}
-						onClick={args.onClick}
-						onDropPiece={args.onDropPiece}
-					/>
-				</GameBoardContextProvider>
-			</div>
-		</DndProvider>
+		<div style={{ width: "500px", height: "800px" }}>
+			<GameBoardContextProvider value={context}>
+				<GameBoard
+					renderBoardPiece={renderPiece}
+					renderBenchPiece={renderPiece}
+					onClick={args.onClick}
+					onDropPiece={args.onDropPiece}
+				/>
+			</GameBoardContextProvider>
+		</div>
 	);
 };
 

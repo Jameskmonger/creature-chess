@@ -20,11 +20,15 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@shoki/board": "workspace:*"
+		"@shoki/board": "workspace:*",
+		"@types/react-dnd-multi-backend": "^6.0.1",
+		"react-dnd": "^14.0.4",
+		"react-dnd-html5-backend": "^14.0.2",
+		"react-dnd-multi-backend": "^6.0.2",
+		"react-dnd-touch-backend": "^14.1.1"
 	},
 	"peerDependencies": {
 		"classnames": "^2.3.1",
-		"react": "^17.0.2",
-		"react-dnd": "^14.0.4"
+		"react": "^17.0.2"
 	}
 }

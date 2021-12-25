@@ -1,6 +1,6 @@
+import * as React from "react";
 import { PieceModel } from "@creature-chess/models";
 import classNames from "classnames";
-import * as React from "react";
 import { Projectile } from "../../src/piece";
 import { Piece } from "../Piece";
 import { usePiece } from "../PieceContext";
@@ -93,10 +93,7 @@ export const AnimatedPiece: React.FC = () => {
 			// eslint-disable-next-line react/jsx-no-bind
 			onAnimationEnd={onAnimationEnd}
 		>
-			<Piece
-				piece={piece}
-				healthbar={getHealthbar(piece.ownerId, viewingPlayerId)}
-			>
+			<Piece healthbar={getHealthbar(piece.ownerId, viewingPlayerId)}>
 				<Projectile />
 			</Piece>
 		</div>

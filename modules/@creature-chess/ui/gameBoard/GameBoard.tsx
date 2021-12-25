@@ -5,7 +5,7 @@ import { BoardGrid } from "@shoki/board-react";
 import { PieceModel } from "@creature-chess/models";
 import { useGameBoard } from "./GameBoardContext";
 
-type GameBoardLocation = {
+export type GameBoardLocation = {
 	locationType: "board";
 	x: number;
 	y: number;
@@ -24,8 +24,8 @@ const createClickEvent = (location: GameBoardLocation): GameBoardClickEvent => (
 const createDropPieceEvent = (id: string, location: GameBoardLocation): GameBoardDropPieceEvent => ({ id, location });
 
 type GameBoardProps = {
-	renderBoardPiece?: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
-	renderBenchPiece?: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
+	renderBoardPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
+	renderBenchPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
 	onClick?: (event: GameBoardClickEvent) => void;
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
 };
@@ -79,7 +79,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
 				: undefined;
 
 			onClick(
-				createClickEvent({ locationType, x, y })
+				createClickEvent({ locationType, x, y: (y as unknown as number) })
 			);
 		};
 
@@ -91,19 +91,20 @@ const GameBoard: React.FC<GameBoardProps> = ({
 
 			const y = locationType === "board"
 				? yPosition
-				: undefined;
+				: undefined as unknown as number;
 
 			onDropPiece(
-				createDropPieceEvent(id, { locationType, x, y })
+				createDropPieceEvent(id, { locationType, x, y: (y as unknown as number) })
 			);
 		};
 
 	const createRenderer = (locationType: "board" | "bench") => {
-		return (id: string) => {
+		return (item: HasId) => {
+			const piece = item as PieceModel;
+
 			const isBoard = locationType === "board";
 
 			const state = isBoard ? board : bench;
-			const piece = BoardSelectors.getPiece(state, id);
 
 			const renderer = isBoard ? renderBoardPiece : renderBenchPiece;
 			const draggable = !state.locked;

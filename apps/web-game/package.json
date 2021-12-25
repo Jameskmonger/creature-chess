@@ -39,7 +39,6 @@
 		"@shoki/board": "workspace:*",
 		"@shoki/board-react": "workspace:*",
 		"@shoki/networking": "workspace:*",
-		"@types/react-dnd-multi-backend": "^6.0.1",
 		"@types/react-redux": "^7.1.21",
 		"delay": "^4.4.1",
 		"pepjs": "^0.5.3",
@@ -70,10 +69,6 @@
 	"peerDependencies": {
 		"classnames": "^2.3.1",
 		"react": "^17.0.2",
-		"react-dnd": "^14.0.4",
-		"react-dnd-html5-backend": "^14.0.2",
-		"react-dnd-multi-backend": "^6.0.2",
-		"react-dnd-touch-backend": "^14.1.1",
 		"react-dom": "^17.0.2",
 		"redux": "^4.1.0",
 		"redux-saga": "^1.1.3"

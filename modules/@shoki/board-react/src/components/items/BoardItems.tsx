@@ -5,7 +5,7 @@ import { DraggableBoardItem } from "./DraggableBoardItem";
 import { BoardItemRenderFn } from "./renderItem";
 
 const BoardItems: React.FC<{ render: BoardItemRenderFn }> = ({ render }) => {
-	const { piecePositions } = useBoard();
+	const { pieces, piecePositions } = useBoard();
 
 	const pieceElements: React.ReactNode[] = [];
 
@@ -20,7 +20,7 @@ const BoardItems: React.FC<{ render: BoardItemRenderFn }> = ({ render }) => {
 
 		const [x, y] = position.split(",").map(i => parseInt(i, 10));
 
-		const { item, draggable = false } = render(id, x, y);
+		const { item, draggable = false } = render(pieces[id], x, y);
 
 		if (draggable) {
 			pieceElements.push(<DraggableBoardItem key={id} id={id} x={x} y={y}>{item}</DraggableBoardItem>);

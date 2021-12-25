@@ -1,10 +1,9 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
-import { PieceModel } from "@creature-chess/models";
 import { CreatureImage } from "../src/display";
 import { PieceMeta } from "./meta";
-import { usePiece } from ".";
+import { usePiece } from "./PieceContext";
 
 interface Props {
 	healthbar: "none" | "friendly" | "enemy" | "spectating";
