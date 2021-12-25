@@ -1,2 +1,2 @@
-export { LobbyPage } from "./lobby/LobbyPage";
-export { MenuPage } from "./menu/MenuPage";
+export * from "./lobby";
+export * from "./menu";

@@ -1,66 +1,66 @@
 .register {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 1rem;
-    margin-top: 1em;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: #566c86;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 1rem;
+	margin-top: 1em;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background: #566c86;
 
-    .register-heading {
-        margin-bottom: 1rem;
-        font-size: 2em;
-    }
+	.register-heading {
+		margin-bottom: 1rem;
+		font-size: 2em;
+	}
 
-    .section-heading {
-        margin-bottom: 0.5rem;
-        font-size: 1.4em;
-    }
+	.section-heading {
+		margin-bottom: 0.5rem;
+		font-size: 1.4em;
+	}
 
-    .name-input {
-        padding: 0.5rem 1rem;
-        margin-bottom: 1em;
-    }
+	.name-input {
+		padding: 0.5rem 1rem;
+		margin-bottom: 1em;
+	}
 
-    .register-button {
-        padding: 0.5rem 2rem;
-        font-size: 1.25rem;
-        color: #fff;
-        cursor: pointer;
-        background: #b13e53;
-        // stylelint-disable-next-line
-        border: none;
-    }
+	.register-button {
+		padding: 0.5rem 2rem;
+		font-size: 1.25rem;
+		color: #fff;
+		cursor: pointer;
+		background: #b13e53;
+		// stylelint-disable-next-line
+		border: none;
+	}
 
-    .register-error {
-        padding: 0.5rem 1rem;
-        margin-bottom: 1rem;
-        border: 2px solid #a01515;
-    }
+	.register-error {
+		padding: 0.5rem 1rem;
+		margin-bottom: 1rem;
+		border: 2px solid #a01515;
+	}
 
-    .nickname-info {
-        margin-top: 0.6em;
-    }
+	.nickname-info {
+		margin-top: 0.6em;
+	}
 
-    .nickname-warning {
-        margin-top: 0.6em;
-        margin-bottom: 0.6em;
-        font-style: italic;
-    }
+	.nickname-warning {
+		margin-top: 0.6em;
+		margin-bottom: 0.6em;
+		font-style: italic;
+	}
 
-    .picture-selection {
-        margin-bottom: 0.6em;
-    }
+	.picture-selection {
+		margin-bottom: 0.6em;
+	}
 
-    .picture-selection-heading {
-        margin-bottom: 0.6em;
-    }
+	.picture-selection-heading {
+		margin-bottom: 0.6em;
+	}
 
-    .available-pictures {
-        display: inline-block;
-    }
+	.available-pictures {
+		display: inline-block;
+	}
 }

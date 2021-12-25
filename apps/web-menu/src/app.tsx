@@ -3,7 +3,7 @@ import ReactModal from "react-modal";
 import { Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Auth0User, isRegistered } from "@creature-chess/auth-web";
-import { MenuPage, MenuContextProvider } from "@creature-chess/ui";
+import { MenuPage, MenuPageContextProvider } from "@creature-chess/ui";
 import { LoginPage, RegistrationPage } from "./auth";
 import { Loading } from "./display/loading";
 
@@ -25,7 +25,7 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
 		window.location.href = process.env.GAME_SERVER_URL!;
 	};
 
-	const menuContext = {
+	const menuPageContext = {
 		findGame: onFindGameClick,
 		auth: {
 			logout: onLogoutClick,
@@ -33,9 +33,9 @@ const AuthenticatedRootPage: React.FunctionComponent = () => {
 	};
 
 	return (
-		<MenuContextProvider value={menuContext}>
+		<MenuPageContextProvider value={menuPageContext}>
 			<MenuPage />
-		</MenuContextProvider>
+		</MenuPageContextProvider>
 	);
 };
 

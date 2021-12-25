@@ -8,7 +8,6 @@ export { Piece, Projectile } from "./src/piece";
 
 export { Footer } from "./src/Footer";
 
-export * from "./context";
 export * from "./pages";
 
 export { Countdown } from "./src/countdown";

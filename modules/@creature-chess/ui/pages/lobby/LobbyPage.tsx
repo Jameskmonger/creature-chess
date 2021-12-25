@@ -1,11 +1,11 @@
 import * as React from "react";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
 import { Countdown } from "../../src/countdown";
-import { useLobby } from "../../context/LobbyContext";
 import { useStyles } from "./LobbyPage.styles";
 
 import { LobbyPlayerBanner } from "./LobbyPlayerBanner/LobbyPlayerBanner";
 import { Footer } from "../../src/Footer";
+import { useLobbyPage } from "./LobbyPageContext";
 
 const padNumberToTwo = (val: number) => val < 10 ? `0${val}` : val.toString();
 
@@ -25,7 +25,7 @@ const countdownRender = (styles: ReturnType<typeof useStyles>) => (totalSecondsR
 const LobbyPage: React.FunctionComponent = () => {
 	const styles = useStyles();
 
-	const { players, startingAtMs } = useLobby();
+	const { players, startingAtMs } = useLobbyPage();
 
 	const botElements: React.ReactNode[] = [];
 

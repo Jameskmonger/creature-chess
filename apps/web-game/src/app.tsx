@@ -6,7 +6,7 @@ import { GamePage } from "./game";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "./store";
 import { openConnection } from "./networking";
-import { LobbyContextProvider, LobbyPage } from "@creature-chess/ui";
+import { LobbyPageContextProvider, LobbyPage } from "@creature-chess/ui";
 
 ReactModal.setAppElement("#approot");
 
@@ -36,9 +36,9 @@ const App: React.FunctionComponent = () => {
 
 	if (lobbyInfo) {
 		return (
-			<LobbyContextProvider value={lobbyInfo}>
+			<LobbyPageContextProvider value={lobbyInfo}>
 				<LobbyPage />
-			</LobbyContextProvider>
+			</LobbyPageContextProvider>
 		);
 	}
 

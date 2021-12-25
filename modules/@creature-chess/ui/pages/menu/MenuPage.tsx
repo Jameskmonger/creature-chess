@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Footer } from "../../src/Footer";
-import { useMenuInfo } from "../../context/MenuContext";
+import { useMenuPage } from "./MenuPageContext";
 import { useStyles } from "./MenuPage.styles";
 import { createUseStyles } from "react-jss";
 
@@ -28,7 +28,7 @@ const useNavbarStyles = createUseStyles({
 
 const Navbar: React.FunctionComponent = () => {
 	const styles = useNavbarStyles();
-	const { auth: { logout } } = useMenuInfo();
+	const { auth: { logout } } = useMenuPage();
 
 	return (
 		<nav className={styles.navbar}>
@@ -39,7 +39,7 @@ const Navbar: React.FunctionComponent = () => {
 
 export const MenuPage: React.FC<{ error?: string }> = ({ error }) => {
 	const styles = useStyles();
-	const { findGame } = useMenuInfo();
+	const { findGame } = useMenuPage();
 
 	return (
 		<div className={styles.menu}>

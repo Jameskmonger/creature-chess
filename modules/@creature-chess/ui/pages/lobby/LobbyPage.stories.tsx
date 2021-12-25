@@ -3,7 +3,7 @@ import { Meta, Story } from "@storybook/react";
 import { PlayerTitle } from "@creature-chess/models";
 
 import { LobbyPage } from "./LobbyPage";
-import { LobbyContextProvider, LobbyInfo } from "../../context/LobbyContext";
+import { LobbyPageContextProvider } from "./LobbyPageContext";
 
 export default {
 	title: "Pages/LobbyPage",
@@ -13,7 +13,7 @@ export default {
 	}
 } as Meta;
 
-const lobbyInfo: LobbyInfo = {
+const lobbyInfo = {
 	players: [
 		{
 			id: "1234",
@@ -36,9 +36,9 @@ const lobbyInfo: LobbyInfo = {
 };
 
 const Template: Story<any> = (args) => (
-	<LobbyContextProvider value={lobbyInfo}>
+	<LobbyPageContextProvider value={lobbyInfo}>
 		<LobbyPage />
-	</LobbyContextProvider>
+	</LobbyPageContextProvider>
 );
 
 export const Default = Template.bind({});
