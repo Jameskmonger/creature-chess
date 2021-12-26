@@ -52,7 +52,7 @@ $ yarn dev-tools
 - Run the following commands (substitute your version number):
 
 	```
-	git add package.json && git commit -m "v0.4.22" && git tag -a v0.4.22 -m "v0.4.22" && git push origin v0.4.22
+	git add package.json && git commit -m "v0.4.22" && git push origin head && git tag -a v0.4.22 -m "v0.4.22" && git push origin v0.4.22
 	```
 - Run `yarn ecr-push`
 - Update the ECS task definition
