@@ -72,7 +72,6 @@ export const startServer = async ({ io }: { io: Server }) => {
 			maxPlayers: MAX_PLAYERS_IN_GAME,
 			onStart: async players => {
 				lobbies = lobbies.filter(other => other !== lobby);
-				discordApi.startLobby();
 
 				const game = await startGame(
 					database,
@@ -89,6 +88,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 		lobbies.push(lobby);
 
 		logger.info(`[Matchmaking (${socket.data.nickname})] New lobby created`);
+		discordApi.startLobby();
 		lobby.connect(socket);
 	};
 
