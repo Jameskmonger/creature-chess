@@ -2,7 +2,7 @@ import * as React from "react";
 import ReactModal from "react-modal";
 
 const BoardOverlay: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
-	const parentSelector = () => document.querySelector(".chessboard") as HTMLElement;
+	const parentSelector = () => document.querySelector(".board-container") as HTMLElement;
 
 	return (
 		<ReactModal
