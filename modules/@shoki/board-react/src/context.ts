@@ -1,38 +1,48 @@
 import { createContext, useContext } from "react";
 import { BoardSelectors, BoardState } from "@shoki/board";
 
-const BoardContext = createContext<BoardState>(null!);
+type BoardContextValue = {
+	state: BoardState,
+	ui: {
+		scaleMode: "width" | "height"
+	}
+}
+
+const BoardContext = createContext<BoardContextValue>(null!);
 BoardContext.displayName = "BoardContext";
 
 export const BoardContextProvider = BoardContext.Provider;
-export const useBoard = () => useContext(BoardContext);
+
+const useBoard = () => useContext(BoardContext);
+export const useBoardState = () => useBoard().state;
+export const useScaleMode = () => useBoard().ui.scaleMode;
 
 export const useBelowPieceLimit = () => {
-	const board = useContext(BoardContext);
+	const boardState = useBoardState();
 
-	if (!board) {
+	if (!boardState) {
 		return false;
 	}
 
-	return board.pieceLimit === null || BoardSelectors.isBelowPieceLimit(board);
+	return boardState.pieceLimit === null || BoardSelectors.isBelowPieceLimit(boardState);
 };
 
 export const usePieces = () => {
-	const board = useContext(BoardContext);
+	const boardState = useBoardState();
 
-	if (!board) {
+	if (!boardState) {
 		return {};
 	}
 
-	return board.pieces;
+	return boardState.pieces;
 };
 
 export const usePiecePositions = () => {
-	const board = useContext(BoardContext);
+	const boardState = useBoardState();
 
-	if (!board) {
+	if (!boardState) {
 		return {};
 	}
 
-	return board.piecePositions;
+	return boardState.piecePositions;
 };

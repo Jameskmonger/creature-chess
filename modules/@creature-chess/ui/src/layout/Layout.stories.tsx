@@ -20,7 +20,11 @@ const useStyles = createUseStyles({
 	},
 	columnLayout: {
 		height: "400px"
-	}
+	},
+	layoutStory: {
+		maxWidth: "600px",
+		maxHeight: "600px",
+	},
 });
 
 const Template: Story<any> = (args) => {

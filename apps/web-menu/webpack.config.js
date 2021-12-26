@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const CnameWebpackPlugin = require("cname-webpack-plugin");
 const { DefinePlugin, EnvironmentPlugin } = require("webpack");
 
 const getCookiebotScript = (id) => {
@@ -84,14 +82,6 @@ module.exports = {
 				test: /\.tsx?$/,
 				use: "ts-loader",
 				exclude: /node_modules/
-			},
-			{
-				test: /\.scss$/,
-				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader"]
-			},
-			{
-				test: /\.css$/,
-				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"]
 			}
 		]
 	},
@@ -119,16 +109,12 @@ module.exports = {
 			APP_VERSION: JSON.stringify(require("../../package.json").version)
 		}),
 		new HtmlWebpackPlugin({
-			template: "./index.ejs",
 			templateParameters: () => ({
 				googleAnalyticsScript: getGAScript(process.env.GA_ID),
 				ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES),
 				cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID)
 			}),
 			scriptLoading: "blocking"
-		}),
-		new MiniCssExtractPlugin({
-			filename: "app-[contenthash].css"
 		}),
 		new CircularDependencyPlugin({
 			// exclude detection of files based on a RegExp

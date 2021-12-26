@@ -12,20 +12,24 @@ type Props = {
 	justifyContent?: Property.JustifyContent;
 	direction: FlexDirection;
 	noSpacer?: boolean;
+	grow?: boolean;
 };
 
 const isVertical = (direction: Property.FlexDirection) => direction === "column" || direction === "column-reverse";
 const getSpacer = (noSpacer: boolean) => noSpacer ? {} : { padding: "0.25em" }
+const getSize = (grow: boolean) => grow ? { width: "100%", height: "100%" } : {};
 
 const useStyles = createUseStyles({
 	layout: ({
 		direction,
 		justifyContent = "space-between",
-		noSpacer = false
+		noSpacer = false,
+		grow = false
 	}: Props) => ({
 		display: "flex",
 		justifyContent,
 		flexDirection: direction,
+		...getSize(grow),
 		...getSpacer(noSpacer)
 	})
 });
