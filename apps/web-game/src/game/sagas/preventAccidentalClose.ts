@@ -10,6 +10,6 @@ export const preventAccidentalClose = function*() {
 	// just to allow the packets to send
 	setTimeout(() => {
 		window.onbeforeunload = null;
-		location.reload();
+		window.location.href = "https://creaturechess.com";
 	}, 100);
 };

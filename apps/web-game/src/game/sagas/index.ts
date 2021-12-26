@@ -9,11 +9,13 @@ import { handleQuickChat } from "../module/chat/sagas";
 import { roundUpdateSaga } from "./roundUpdate";
 import { clientBattleSaga } from "./battle";
 import { uiSaga } from "./ui";
+import { goToMenuAfterGame } from "./goToMenuAfterGame";
 
 export const gameSaga = function*() {
 	const action = yield* take<GameConnectedEvent>(gameConnectedEvent.toString());
 
 	yield all([
+		call(goToMenuAfterGame),
 		call(preventAccidentalClose),
 		call(closeShopOnFirstBuySaga),
 		call(clickTileSaga),
