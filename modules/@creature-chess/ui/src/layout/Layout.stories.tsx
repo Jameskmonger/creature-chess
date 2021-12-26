@@ -5,7 +5,6 @@ import classNames from "classnames";
 
 import { Layout } from "./layout";
 import { Half } from "./half";
-import "./Layout.stories.css";
 
 export default {
 	title: "Layout",
