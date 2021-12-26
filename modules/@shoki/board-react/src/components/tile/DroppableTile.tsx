@@ -1,13 +1,14 @@
 import * as React from "react";
 import { useDrop } from "react-dnd";
 import { useBelowPieceLimit, usePieces } from "../../context";
+import { ClickBoardTileEvent, DropBoardItemEvent } from "../../events";
 import { Tile } from "./Tile";
 
 type DroppableTileProps = {
 	x: number;
 	y: number;
-	onDrop?: (id: string, x: number, y: number) => void;
-	onClick?: (x: number, y: number) => void;
+	onDrop?: (event: DropBoardItemEvent) => void;
+	onClick?: (event: ClickBoardTileEvent) => void;
 };
 
 type DropTargetCollectProps = {
@@ -26,7 +27,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ x, y, onDr
 				return;
 			}
 
-			onDrop(id, x, y);
+			onDrop({ id, x, y });
 		},
 		canDrop: ({ id }) => {
 			const pieceIsFromSameBoard = Boolean(pieces[id]);

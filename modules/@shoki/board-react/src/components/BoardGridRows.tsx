@@ -1,12 +1,13 @@
 import React from "react";
+import { createUseStyles } from "react-jss";
 import { useBoard } from "../context";
+import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";
-import { createUseStyles } from "react-jss";
 
 type BoardGridRowsProps = {
-	onDrop?: (id: string, x: number, y: number) => void;
-	onClick?: (x: number, y: number) => void;
+	onDropItem?: (event: DropBoardItemEvent) => void;
+	onClickTile?: (event: ClickBoardTileEvent) => void;
 };
 
 const useStyles = createUseStyles<string, { width: number; height: number }>({
@@ -19,7 +20,7 @@ const useStyles = createUseStyles<string, { width: number; height: number }>({
 	}),
 });
 
-export const BoardGridRows: React.FunctionComponent<BoardGridRowsProps> = ({ onDrop, onClick }) => {
+export const BoardGridRows: React.FunctionComponent<BoardGridRowsProps> = ({ onDropItem, onClickTile }) => {
 	const { locked, piecePositions, size: { width, height } } = useBoard();
 	const styles = useStyles({ width, height });
 
@@ -36,7 +37,7 @@ export const BoardGridRows: React.FunctionComponent<BoardGridRowsProps> = ({ onD
 
 			tiles.push(
 				canDropPiece
-					? <DroppableTile key={`tile-${x}`} x={x} y={y} onDrop={onDrop} onClick={onClick} />
+					? <DroppableTile key={`tile-${x}`} x={x} y={y} onDrop={onDropItem} onClick={onClickTile} />
 					: <UndroppableTile key={`tile-${x}`} x={x} y={y} />
 			);
 		}

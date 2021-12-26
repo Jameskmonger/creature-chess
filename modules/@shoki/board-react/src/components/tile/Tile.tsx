@@ -2,12 +2,13 @@ import React, { useRef } from "react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
 import { useBoard } from "../../context";
+import { ClickBoardTileEvent } from "../../events";
 import { useTileWidth } from "./useTileWidth";
 
 type TileProps = {
 	x: number;
 	y: number;
-	onClick?: (x: number, y: number) => void;
+	onClick?: (event: ClickBoardTileEvent) => void;
 };
 
 // eslint-disable-next-line no-bitwise
@@ -38,7 +39,7 @@ export const Tile = React.forwardRef<any, TileProps>(({ x, y, onClick }, ref) =>
 	const styles = useStyles({ boardWidth, tileWidth });
 	const isDark = isBoardTileDark(x, y);
 
-	const handleClick = onClick ? () => onClick(x, y) : undefined;
+	const handleClick = onClick ? () => onClick({ x, y }) : undefined;
 
 	const className = classNames(
 		styles.tile,

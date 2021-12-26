@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
-import { BoardSelectors, HasId } from "@shoki/board";
-import { BoardGrid } from "@shoki/board-react";
+import { HasId } from "@shoki/board";
+import { BoardGrid, ClickBoardTileEvent, DropBoardItemEvent } from "@shoki/board-react";
 import { PieceModel } from "@creature-chess/models";
 import { useGameBoard } from "./GameBoardContext";
 
@@ -69,37 +69,29 @@ const GameBoard: React.FC<GameBoardProps> = ({
 	const { board, bench } = useGameBoard();
 
 	const createHandleClick = (locationType: "board" | "bench") =>
-		(x: number, yPosition?: number) => {
+		({ x, y }: ClickBoardTileEvent) => {
 			if (!onClick) {
 				return;
 			}
 
-			const y = locationType === "board"
-				? yPosition
-				: undefined;
-
 			onClick(
-				createClickEvent({ locationType, x, y: (y as unknown as number) })
+				createClickEvent({ locationType, x, y })
 			);
 		};
 
 	const createHandleDrop = (locationType: "board" | "bench") =>
-		(id: string, x: number, yPosition: number) => {
+		({ id, x, y }: DropBoardItemEvent) => {
 			if (!onDropPiece) {
 				return;
 			}
 
-			const y = locationType === "board"
-				? yPosition
-				: undefined as unknown as number;
-
 			onDropPiece(
-				createDropPieceEvent(id, { locationType, x, y: (y as unknown as number) })
+				createDropPieceEvent(id, { locationType, x, y })
 			);
 		};
 
-	const createRenderer = (locationType: "board" | "bench") => {
-		return (item: HasId) => {
+	const createRenderer = (locationType: "board" | "bench") =>
+		(item: HasId) => {
 			const piece = item as PieceModel;
 
 			const isBoard = locationType === "board";
@@ -114,7 +106,6 @@ const GameBoard: React.FC<GameBoardProps> = ({
 				draggable
 			};
 		};
-	};
 
 	return (
 		<div className={styles.gameBoard}>
@@ -122,8 +113,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
 				<div className={styles.boardGrid}>
 					<BoardGrid
 						state={board}
-						onDrop={createHandleDrop("board")}
-						onClick={createHandleClick("board")}
+						onDropItem={createHandleDrop("board")}
+						onClickTile={createHandleClick("board")}
 						renderItem={createRenderer("board")}
 					/>
 				</div>
@@ -131,8 +122,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
 				<div className={styles.benchGrid}>
 					<BoardGrid
 						state={bench}
-						onDrop={createHandleDrop("bench")}
-						onClick={createHandleClick("bench")}
+						onDropItem={createHandleDrop("bench")}
+						onClickTile={createHandleClick("bench")}
 						renderItem={createRenderer("bench")}
 					/>
 				</div>
