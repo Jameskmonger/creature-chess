@@ -1,11 +1,11 @@
 import * as React from "react";
-import { useBoard } from "../../context";
+import { useBoardState } from "../../context";
 import { BoardItem } from "./BoardItem";
 import { DraggableBoardItem } from "./DraggableBoardItem";
 import { BoardItemRenderFn } from "./renderItem";
 
 const BoardItems: React.FC<{ render: BoardItemRenderFn }> = ({ render }) => {
-	const { pieces, piecePositions } = useBoard();
+	const { pieces, piecePositions } = useBoardState();
 
 	const pieceElements: React.ReactNode[] = [];
 

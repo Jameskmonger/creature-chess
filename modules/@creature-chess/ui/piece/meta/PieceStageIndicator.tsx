@@ -16,7 +16,7 @@ const PieceStageIndicator: React.FunctionComponent<StageIndicatorProps> = ({ sta
 		stars.push(<img key={i} src="https://creaturechess.com/images/ui/star.svg" />);
 	}
 
-	return <Layout direction="column" justifyContent="center" noSpacer>{stars}</Layout>;
+	return <Layout grow direction="column" justifyContent="center" noSpacer>{stars}</Layout>;
 };
 
 export { PieceStageIndicator };

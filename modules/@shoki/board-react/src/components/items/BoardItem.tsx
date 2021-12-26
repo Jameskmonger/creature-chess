@@ -1,6 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { useBoard } from "../../context";
+import { useBoardState } from "../../context";
 
 type BoardItemProps = {
 	children: React.ReactNode;
@@ -32,7 +32,7 @@ const useStyles = createUseStyles<string, StylesProps>({
 });
 
 export const BoardItem = React.forwardRef<any, BoardItemProps>(({ x, y, children }, ref) => {
-	const { size: { width: boardWidth, height: boardHeight } } = useBoard();
+	const { size: { width: boardWidth, height: boardHeight } } = useBoardState();
 	const styles = useStyles({ boardWidth, boardHeight, x, y });
 
 	return (

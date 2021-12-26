@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
-import { useBoard } from "../../context";
+import { useBoardState } from "../../context";
 import { ClickBoardTileEvent } from "../../events";
 import { useTileWidth } from "./useTileWidth";
 
@@ -31,7 +31,7 @@ const useStyles = createUseStyles<string, { boardWidth: number; tileWidth: numbe
 });
 
 export const Tile = React.forwardRef<any, TileProps>(({ x, y, onClick }, ref) => {
-	const { size: { width: boardWidth } } = useBoard();
+	const { size: { width: boardWidth } } = useBoardState();
 
 	const tileInnerRef = useRef<HTMLDivElement>(null);
 	const tileWidth = useTileWidth(tileInnerRef);

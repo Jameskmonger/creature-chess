@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GamePhase, PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 import { AppState } from "../../../store";
-import { OpponentBoardPlaceholder } from "./overlays/opponentBoardPlaceholder";
 import { VictoryOverlay } from "./overlays/victoryOverlay";
 import { ReconnectOverlay } from "./overlays/reconnectOverlay";
 import { MatchRewardsOverlay } from "./overlays/matchRewardsOverlay";
@@ -16,6 +15,7 @@ import { BoardState } from "@shoki/board";
 import { getLocationForPiece } from "./getLocationForPiece";
 import { clearSelectedPiece } from "../../ui";
 import { playerClickTileAction } from "./sagas/clickTileSaga";
+import { ReadyUpButton } from "./overlays/readyUpButton";
 
 const boardSelector = (state: AppState) => state.game.board;
 const benchSelector = (state: AppState) => state.game.bench;
@@ -79,14 +79,13 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 	const onClickTile = useOnClickTile();
 	const onDropPiece = useOnDropPiece(boardToUse, bench);
 
-	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
-
 	const renderPiece = (piece: PieceModel) => <PieceContextProvider value={{ piece, viewingPlayerId }}><InteractablePiece /></PieceContextProvider>;
 
 	return (
 		<div className="group board-container style-default">
 			{showNowPlaying && <NowPlaying />}
-			{inPreparingPhase && <OpponentBoardPlaceholder />}
+
+			<ReadyUpButton />
 
 			<GameBoardContextProvider
 				value={{

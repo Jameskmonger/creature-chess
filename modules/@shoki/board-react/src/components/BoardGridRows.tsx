@@ -1,6 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { useBoard } from "../context";
+import { useBoardState } from "../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
 import { UndroppableTile } from "./tile/UndroppableTile";
 import { DroppableTile } from "./tile/DroppableTile";
@@ -21,7 +21,7 @@ const useStyles = createUseStyles<string, { width: number; height: number }>({
 });
 
 export const BoardGridRows: React.FunctionComponent<BoardGridRowsProps> = ({ onDropItem, onClickTile }) => {
-	const { locked, piecePositions, size: { width, height } } = useBoard();
+	const { locked, piecePositions, size: { width, height } } = useBoardState();
 	const styles = useStyles({ width, height });
 
 	const rows = [];

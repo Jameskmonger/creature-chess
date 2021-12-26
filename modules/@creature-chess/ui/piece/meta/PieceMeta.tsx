@@ -44,7 +44,7 @@ const PieceMeta: React.FunctionComponent<Props> = ({ piece, healthbarColor = "no
 	);
 
 	return (
-		<Layout direction="column" noSpacer>
+		<Layout grow direction="column" noSpacer>
 			<div className={classes.typeIndicatorContainer}>
 				<TypeIndicator type={piece.definition.type} />
 			</div>

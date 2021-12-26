@@ -29,10 +29,17 @@ const BoardGrid: React.FunctionComponent<BoardGridProps> = (props) => {
 	const styles = useStyles(props);
 	const { state, scaleMode = "width", renderItem, onDropItem, onClickTile } = props;
 
+	const boardContext = {
+		state,
+		ui: {
+			scaleMode
+		}
+	}
+
 	return (
 		<div className={styles.boardGrid}>
 			<DndProvider options={HTML5toTouch}>
-				<BoardContextProvider value={state}>
+				<BoardContextProvider value={boardContext}>
 					<BoardGridRows onDropItem={onDropItem} onClickTile={onClickTile} />
 
 					<BoardItems render={renderItem} />
