@@ -13,5 +13,6 @@ export { useGlobalStyles } from "./styles";
 
 export * from "./gameBoard";
 export * from "./piece";
+export * from "./player";
 
 export { Countdown } from "./src/countdown";

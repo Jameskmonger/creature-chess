@@ -1,16 +1,13 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { BoardSelectors, BoardState } from "@shoki/board";
 import { usePlayerId } from "@creature-chess/auth-web";
-import { ProgressBar, PlayerHealthbar } from "@creature-chess/ui";
-import { Constants, getXpToNextLevel } from "@creature-chess/models";
+import { PlayerGameProfile } from "@creature-chess/ui";
+import { PieceModel } from "@creature-chess/models";
 import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
-import { MAX_PLAYER_LEVEL } from "@creature-chess/models";
 import { AppState } from "../../../store";
-import { PieceCount } from "./pieceCount";
 
-const renderProgressBar = (current: number, max: number) => `${current} / ${max} xp`;
-
-const Profile: React.FunctionComponent = () => {
+export const Profile: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
 	const playerId = usePlayerId();
@@ -25,51 +22,20 @@ const Profile: React.FunctionComponent = () => {
 		return player ? player.health : null;
 	});
 
-	if (health === null) {
-		return null;
-	}
+	const board = useSelector<AppState, BoardState<PieceModel>>(state => state.game.board);
+	const pieceCount = BoardSelectors.getAllPieces(board).filter(p => p.ownerId === playerId).length;
 
 	const onBuyXp = () => dispatch(PlayerActions.buyXpPlayerAction());
 
 	return (
-		<div className="profile">
-			<div className="row">
-				<p className="item level">Level {level} <span className="highlight">${money}</span></p>
-				{
-					level !== MAX_PLAYER_LEVEL
-					&& (
-						<ProgressBar
-							className="xp-progress"
-							fillClassName="xp-progress-fill"
-							contentClassName="xp-progress-content"
-							current={xp}
-							max={getXpToNextLevel(level)}
-							renderContents={renderProgressBar}
-						/>
-					)
-				}
-			</div>
+		<PlayerGameProfile
+			health={health}
+			level={level}
+			xp={xp}
+			money={money}
+			pieceCount={pieceCount}
 
-			<div className="row">
-				<PieceCount />
-				{
-					level !== MAX_PLAYER_LEVEL
-					&& (
-						<button
-							className="buy-xp"
-							onClick={onBuyXp}
-						>
-							Buy {Constants.BUY_XP_AMOUNT} xp (${Constants.BUY_XP_COST})
-						</button>
-					)
-				}
-			</div>
-
-			<PlayerHealthbar health={health} />
-		</div>
-	);
-};
-
-export {
-	Profile
+			onBuyXpClick={onBuyXp}
+		/>
+	)
 };
