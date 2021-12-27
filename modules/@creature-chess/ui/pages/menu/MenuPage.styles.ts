@@ -4,6 +4,10 @@ export const useStyles = createUseStyles({
 	menu: {
 		"display": "flex",
 		"flexDirection": "column",
+		"height": "100%",
+		"width": "100%",
+		"overflow": "scroll",
+		"paddingTop": "2em",
 		"fontFamily": "Arial, Helvetica, sans-serif",
 		"color": "#fff",
 		"alignItems": "center",

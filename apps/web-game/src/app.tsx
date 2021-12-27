@@ -6,7 +6,7 @@ import { GamePage } from "./game";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "./store";
 import { openConnection } from "./networking";
-import { LobbyPageContextProvider, LobbyPage } from "@creature-chess/ui";
+import { LobbyPageContextProvider, LobbyPage, useGlobalStyles } from "@creature-chess/ui";
 
 ReactModal.setAppElement("#approot");
 
@@ -29,6 +29,8 @@ const App: React.FunctionComponent = () => {
 
 		open();
 	}, [isAuthenticated, getAccessTokenSilently]);
+
+	useGlobalStyles();
 
 	if (isInGame) {
 		return <GamePage />;

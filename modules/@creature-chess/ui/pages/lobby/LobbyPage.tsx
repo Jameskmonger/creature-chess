@@ -38,7 +38,7 @@ const LobbyPage: React.FunctionComponent = () => {
 	}
 
 	return (
-		<div className={styles.lobby}>
+		<div className={styles.lobbyPage}>
 			<div className={styles.lobbyInfo}>
 				{
 					startingAtMs

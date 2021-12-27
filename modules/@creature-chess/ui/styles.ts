@@ -45,8 +45,9 @@ const useGlobalGameStyles = createUseStyles({
 			userSelect: "none",
 		},
 		".approot": {
+			position: "fixed",
 			width: "100%",
-			height: "100vh",
+			height: "100%",
 		},
 		"body": {
 			background: "#333c57",
