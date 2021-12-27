@@ -36,7 +36,7 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 ADD . .
 
-RUN yarn build-$APP_DIR
+RUN yarn build-$APP_DIR && yarn cache clean
 
 EXPOSE 3000
 
