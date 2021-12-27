@@ -36,7 +36,7 @@ const useOnDropPiece = (board: BoardState<PieceModel>, bench: BoardState<PieceMo
 			type: location.locationType,
 			location: {
 				x: location.x,
-				y: (location as any).y || null
+				y: (location as any).y || 0
 			}
 		};
 
