@@ -16,10 +16,14 @@ export const onHandshakeSuccess = (
 ) => {
 	const { authClient, database } = deps;
 
+	logger.info("Listening for successful handshakes");
+
 	handshakeListener(
 		deps,
 		async (socket, { idToken }) => {
 			try {
+				logger.info("Authenticating new handshake", { meta: { socketId: socket.id } });
+
 				const user = await authenticate(authClient, database, idToken);
 
 				if (!user.registered) {

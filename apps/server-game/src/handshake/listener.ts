@@ -11,6 +11,8 @@ export const handshakeListener = (
 ) => {
 	const { io } = deps;
 
+	logger.info("Listening for successful handshakes - inner");
+
 	io.on(
 		"connection",
 		socket => {
