@@ -9,6 +9,7 @@ Takes in a `BoardState` of your choosing, renders the pieces, and exposes click/
 ```tsx
 import { DragObjectWithType } from "react-dnd";
 import { BoardState } from "@shoki/board";
+import { BoardGrid } from "@shoki/board-react";
 
 type ChessPiece = {};
 
@@ -32,6 +33,12 @@ const ChessBoard = () => {
         />
     )
 };
+```
+
+You must wrap your app in a `DndProvider`
+
+```tsx
+import { DndProvider } from "@shoki/board-react";
 ```
 
 ### Props

@@ -1,7 +1,5 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
-import { DndProvider } from "react-dnd-multi-backend";
-import HTML5toTouch from "react-dnd-multi-backend/dist/esm/HTML5toTouch";
 import { BoardState } from "@shoki/board";
 import { BoardContextProvider } from "../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
@@ -38,13 +36,11 @@ const BoardGrid: React.FunctionComponent<BoardGridProps> = (props) => {
 
 	return (
 		<div className={styles.boardGrid}>
-			<DndProvider options={HTML5toTouch}>
-				<BoardContextProvider value={boardContext}>
-					<BoardGridRows onDropItem={onDropItem} onClickTile={onClickTile} />
+			<BoardContextProvider value={boardContext}>
+				<BoardGridRows onDropItem={onDropItem} onClickTile={onClickTile} />
 
-					<BoardItems render={renderItem} />
-				</BoardContextProvider>
-			</DndProvider>
+				<BoardItems render={renderItem} />
+			</BoardContextProvider>
 		</div>
 	);
 };

@@ -16,6 +16,7 @@ import { getLocationForPiece } from "./getLocationForPiece";
 import { clearSelectedPiece } from "../../ui";
 import { playerClickTileAction } from "./sagas/clickTileSaga";
 import { ReadyUpButton } from "./overlays/readyUpButton";
+import { DndProvider } from "@shoki/board-react";
 
 const boardSelector = (state: AppState) => state.game.board;
 const benchSelector = (state: AppState) => state.game.bench;
@@ -82,31 +83,33 @@ const BoardContainer: React.FunctionComponent<{ showNowPlaying?: boolean }> = ({
 	const renderPiece = (piece: PieceModel) => <PieceContextProvider value={{ piece, viewingPlayerId }}><InteractablePiece /></PieceContextProvider>;
 
 	return (
-		<div className="group board-container style-default">
-			{showNowPlaying && <NowPlaying />}
+		<DndProvider>
+			<div className="group board-container style-default">
+				{showNowPlaying && <NowPlaying />}
 
-			<ReadyUpButton />
+				<ReadyUpButton />
 
-			<GameBoardContextProvider
-				value={{
-					board: boardToUse,
-					bench
-				}}
-			>
-				<GameBoard
-					onClick={onClickTile}
-					onDropPiece={onDropPiece}
+				<GameBoardContextProvider
+					value={{
+						board: boardToUse,
+						bench
+					}}
+				>
+					<GameBoard
+						onClick={onClickTile}
+						onDropPiece={onDropPiece}
 
-					renderBoardPiece={renderPiece}
-					renderBenchPiece={renderPiece}
-				/>
-			</GameBoardContextProvider>
+						renderBoardPiece={renderPiece}
+						renderBenchPiece={renderPiece}
+					/>
+				</GameBoardContextProvider>
 
-			<ReadyOverlay />
-			<VictoryOverlay />
-			<MatchRewardsOverlay />
-			<ReconnectOverlay />
-		</div >
+				<ReadyOverlay />
+				<VictoryOverlay />
+				<MatchRewardsOverlay />
+				<ReconnectOverlay />
+			</div >
+		</DndProvider>
 	);
 };
 
