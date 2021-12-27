@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "creature-chess",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "Creature Chess",
 	"scripts": {
 		"build-web-game": "yarn workspace @creature-chess/web-game build",
