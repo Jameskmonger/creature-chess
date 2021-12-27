@@ -36,7 +36,8 @@ const BOT_NAMES = [
 
 const randomPersonalityValue = () => (Math.floor(Math.random() * 10 + 1) * 20) as BotPersonalityValue;
 
-export const setupBotDatabase = async (client: FaunaDBClient) => {
+export const setupBotDatabase = async (client: FaunaDBClient): Promise<boolean> => {
+	let changesMade = false;
 	let shouldCreateBots = false;
 
 	try {
@@ -48,10 +49,9 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
 
 		// if we just created the collection, create bots
 		shouldCreateBots = true;
+		changesMade = true;
 	} catch (e: any) {
-		if (e.message === INSTANCE_ALREADY_EXISTS) {
-			console.log(` - Collection '${COLLECTION_NAMES.BOTS}' already exists`);
-		} else {
+		if (e.message !== INSTANCE_ALREADY_EXISTS) {
 			throw e;
 		}
 	}
@@ -86,10 +86,9 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
 		}));
 
 		console.log(` - Created index '${INDEX_NAMES.BOTS_BY_LOWEST_GAMES_PLAYED}'`);
+		changesMade = true;
 	} catch (e: any) {
-		if (e.message === INSTANCE_ALREADY_EXISTS) {
-			console.log(` - Index '${INDEX_NAMES.BOTS_BY_LOWEST_GAMES_PLAYED}' already exists`);
-		} else {
+		if (e.message !== INSTANCE_ALREADY_EXISTS) {
 			throw e;
 		}
 	}
@@ -119,4 +118,6 @@ export const setupBotDatabase = async (client: FaunaDBClient) => {
 			console.log(` - Created bot '${name}'`);
 		}
 	}
+
+	return changesMade;
 };

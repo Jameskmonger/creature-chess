@@ -4,17 +4,18 @@ import { COLLECTION_NAMES, INDEX_NAMES } from "../constants";
 
 const INSTANCE_ALREADY_EXISTS = "instance already exists";
 
-export const setupUserDatabase = async (client: FaunaDBClient) => {
+export const setupUserDatabase = async (client: FaunaDBClient): Promise<boolean> => {
+	let changesMade = false;
+
 	try {
 		await client.query(q.CreateCollection({
 			name: COLLECTION_NAMES.USERS
 		}));
 
 		console.log(` - Created collection '${COLLECTION_NAMES.USERS}'`);
+		changesMade = true;
 	} catch (e: any) {
-		if (e.message === INSTANCE_ALREADY_EXISTS) {
-			console.log(` - Collection '${COLLECTION_NAMES.USERS}' already exists`);
-		} else {
+		if (e.message !== INSTANCE_ALREADY_EXISTS) {
 			throw e;
 		}
 	}
@@ -34,11 +35,12 @@ export const setupUserDatabase = async (client: FaunaDBClient) => {
 		}));
 
 		console.log(` - Created index '${INDEX_NAMES.USERS_BY_NICKNAME_UPPERCASE}'`);
+		changesMade = true;
 	} catch (e: any) {
-		if (e.message === INSTANCE_ALREADY_EXISTS) {
-			console.log(` - Index '${INDEX_NAMES.USERS_BY_NICKNAME_UPPERCASE}' already exists`);
-		} else {
+		if (e.message !== INSTANCE_ALREADY_EXISTS) {
 			throw e;
 		}
 	}
+
+	return changesMade;
 };

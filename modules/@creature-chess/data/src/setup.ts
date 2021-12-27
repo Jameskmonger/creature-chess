@@ -4,9 +4,10 @@ import { setupBotDatabase } from "./bot";
 import { setupUserDatabase } from "./user";
 
 export const setup = async (client: FaunaDBClient) => {
-	console.log("Setting up database...");
+	const userChangesMade = await setupUserDatabase(client);
+	const botChangesMade = await setupBotDatabase(client);
 
-	await setupUserDatabase(client);
-
-	await setupBotDatabase(client);
+	if (!userChangesMade && !botChangesMade) {
+		console.log("Database up to date, no changes required");
+	}
 };
