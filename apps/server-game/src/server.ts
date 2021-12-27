@@ -39,9 +39,13 @@ const startGame = async (
 };
 
 export const startServer = async ({ io }: { io: Server }) => {
+	logger.info("Starting server...");
 	const authClient = createManagementClient();
+	logger.info("Management client created");
 	const database = createDatabaseConnection();
+	logger.info("Database connection created");
 	const discordApi = await createDiscordApi();
+	logger.info("Discord client created");
 
 	let lobbies: Lobby[] = [];
 	let games: Game[] = [];
@@ -96,4 +100,6 @@ export const startServer = async ({ io }: { io: Server }) => {
 		{ io, authClient, database },
 		matchmaking
 	);
+
+	logger.info("Listening for successful handshakes");
 };

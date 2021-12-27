@@ -16,7 +16,7 @@ export const onHandshakeSuccess = (
 ) => {
 	const { authClient, database } = deps;
 
-	logger.info("Listening for successful handshakes");
+	logger.info("Listening for successful handshakes - inner A");
 
 	handshakeListener(
 		deps,
