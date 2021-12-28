@@ -55,17 +55,6 @@ $inner-border-width: 2px;
 	}
 }
 
-.board-container {
-	position: relative;
-
-	.now-playing {
-		position: absolute;
-		top: 0;
-		z-index: 19;
-		width: 100%;
-	}
-}
-
 .piece {
 	position: relative;
 	width: 100%;
