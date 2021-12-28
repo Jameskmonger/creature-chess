@@ -86,7 +86,9 @@ export const AnimatedPiece: React.FC = () => {
 				runAnimation(animationStyles.dying, "dying");
 			}
 		} else {
-			removeAnimation(animationStyles.dying);
+			if (lastRenderedPiece.currentHealth === 0) {
+				removeAnimation(animationStyles.dying);
+			}
 		}
 
 		setLastRenderedPiece(newPiece);
