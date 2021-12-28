@@ -44,7 +44,8 @@
 		"jest-standard-reporter": "^2.0.0",
 		"node-sass": "^7.0.0",
 		"ts-jest": "^27.1.2",
-		"typescript": "^4.5.4"
+		"typescript": "^4.5.4",
+		"unimported": "^1.19.1"
 	},
 	"dependencies": {
 		"@types/react": "^17.0.38",
