@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
-import { AppState } from "../../../../store";
+import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
 const MatchRewardsOverlay: React.FunctionComponent = () => {

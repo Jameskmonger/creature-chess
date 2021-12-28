@@ -1,0 +1,1 @@
+export { SelectablePiece } from "./SelectablePiece";

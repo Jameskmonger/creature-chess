@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { PlayerListPlayer, StreakType } from "@creature-chess/models";
-import { AppState } from "../../../../../store";
+import { AppState } from "../../../../store";
 
 const getPositionModifier = (position: number): string => {
 	if (position === 1) {

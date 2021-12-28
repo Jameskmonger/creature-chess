@@ -1,7 +1,6 @@
 export { PlayerList, playerListReducer, PlayerListCommands } from "./playerList";
 export { quickChatReducer, quickChatCommands, QuickChat } from "./chat";
 
-export { BoardContainer, clickTileSaga, clickPieceSaga } from "./board";
 export { CardShop, closeShopOnFirstBuySaga } from "./cardShop";
 export { Profile } from "./profile";
 export { Settings, QuitGameButton } from "./settings";

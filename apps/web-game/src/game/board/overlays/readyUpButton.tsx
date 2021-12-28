@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AppState } from "../../../../store";
+import { AppState } from "../../../store";
 import { GamePhase } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/gamemode";
 

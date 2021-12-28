@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { AppState } from "../../../../store";
-import { getPlayerById } from "../../playerList/components/selectors";
+import { AppState } from "../../../store";
+import { getPlayerById } from "../../module/playerList/components/selectors";
 import { BoardOverlay } from "./boardOverlay";
 
 const VictoryOverlay: React.FunctionComponent = () => {

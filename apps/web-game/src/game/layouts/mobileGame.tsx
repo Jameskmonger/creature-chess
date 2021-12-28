@@ -8,9 +8,10 @@ import { Overlay } from "../ui/overlay";
 import { closeOverlay, openOverlay } from "../ui/actions";
 
 import {
-	BoardContainer, PlayerList, CardShop, Help,
+	PlayerList, CardShop, Help,
 	Settings, Profile, RoundIndicator, PhaseInfo
 } from "../module";
+import { BoardContainer } from "../board";
 
 const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
 	const dispatch = useDispatch();
@@ -117,7 +118,7 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 			<div className="content-pane">
 				<Profile />
 
-				<BoardContainer showNowPlaying />
+				<BoardContainer />
 			</div>
 		);
 	}

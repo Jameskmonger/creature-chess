@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Piece, Projectile, usePiece } from "@creature-chess/ui";
-import { AppState } from "../../../store";
-import { playerClickPieceAction } from "../../module/board/sagas/clickPieceSaga";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
+import { Piece, usePiece } from "@creature-chess/ui";
+import { AppState } from "../../../store";
+import { playerClickPieceAction } from "../sagas/clickPieceSaga";
 
 const useStyles = createUseStyles({
-	pieceContainer: {
+	selectablePiece: {
 		width: "100%",
 		height: "100%",
 	},
@@ -17,7 +17,7 @@ const useStyles = createUseStyles({
 	}
 });
 
-export const InteractablePiece: React.FC = () => {
+export const SelectablePiece: React.FC = () => {
 	const styles = useStyles();
 
 	const { piece } = usePiece();
@@ -36,7 +36,7 @@ export const InteractablePiece: React.FC = () => {
 	}
 
 	const className = classNames(
-		styles.pieceContainer,
+		styles.selectablePiece,
 		{ [styles.selected]: isSelected }
 	);
 
@@ -45,9 +45,7 @@ export const InteractablePiece: React.FC = () => {
 			<Piece
 				healthbar="none"
 				onClick={onClick}
-			>
-				<Projectile />
-			</Piece>
+			/>
 		</div>
 	);
 };

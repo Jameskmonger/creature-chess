@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { usePlayerId } from "@creature-chess/auth-web";
 import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
 import { PlayerAvatar, Title, PlayerHealthbar } from "@creature-chess/ui";
-import { AppState } from "../../../../store";
+import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
 import { QuickChatBox } from "./quickChat/quickChatBox";

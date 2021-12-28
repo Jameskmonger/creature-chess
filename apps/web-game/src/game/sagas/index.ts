@@ -3,13 +3,14 @@ import { take } from "typed-redux-saga";
 import { RoundInfoCommands } from "@creature-chess/gamemode";
 
 import { gameConnectedEvent, GameConnectedEvent } from "../../networking/events";
-import { PlayerListCommands, clickTileSaga, clickPieceSaga, closeShopOnFirstBuySaga } from "../module";
+import { PlayerListCommands, closeShopOnFirstBuySaga } from "../module";
 import { preventAccidentalClose } from "./preventAccidentalClose";
 import { handleQuickChat } from "../module/chat/sagas";
 import { roundUpdateSaga } from "./roundUpdate";
 import { clientBattleSaga } from "./battle";
 import { uiSaga } from "./ui";
 import { goToMenuAfterGame } from "./goToMenuAfterGame";
+import { clickPieceSaga, clickTileSaga } from "../board";
 
 export const gameSaga = function*() {
 	const action = yield* take<GameConnectedEvent>(gameConnectedEvent.toString());

@@ -2,10 +2,11 @@ import * as React from "react";
 
 import { Footer } from "@creature-chess/ui";
 import {
-	BoardContainer, PlayerList, CardShop, Help,
+	PlayerList, CardShop, Help,
 	Profile, RoundIndicator, PhaseInfo,
 	NowPlaying, QuitGameButton
 } from "../module";
+import { BoardContainer } from "../board";
 
 const DesktopGame: React.FunctionComponent = () => (
 	<div className="game landscape">

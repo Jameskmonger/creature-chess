@@ -1,37 +1,11 @@
+import { createAction } from "@reduxjs/toolkit";
 import { take, select, put } from "@redux-saga/core/effects";
 import { getPiece, PlayerActions } from "@creature-chess/gamemode";
-import { BoardState, BoardSelectors } from "@shoki/board";
+import { BoardState } from "@shoki/board";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
-import { AppState } from "../../../../store";
-import { clearSelectedPiece } from "../../../ui/actions";
-import { createAction } from "@reduxjs/toolkit";
-
-// todo move this to a player selector
-export const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation | null => {
-	if (board) {
-		const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
-
-		if (boardPiecePosition) {
-			return {
-				type: "board",
-				location: boardPiecePosition
-			};
-		}
-	}
-
-	if (bench) {
-		const benchPiecePosition = BoardSelectors.getPiecePosition(bench, pieceId);
-
-		if (benchPiecePosition) {
-			return {
-				type: "bench",
-				location: benchPiecePosition
-			};
-		}
-	}
-
-	return null;
-};
+import { AppState } from "../../../store";
+import { clearSelectedPiece } from "../../ui/actions";
+import { getLocationForPiece } from "../getLocationForPiece";
 
 export type PlayerClickTileAction = ReturnType<typeof playerClickTileAction>;
 export const playerClickTileAction = createAction<{ tile: PlayerPieceLocation }>("playerClickTileAction");

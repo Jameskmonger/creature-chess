@@ -3,10 +3,10 @@ import { take, select, put } from "@redux-saga/core/effects";
 import { getPiece, PlayerActions } from "@creature-chess/gamemode";
 import { BoardState, BoardSelectors } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
-import { AppState } from "../../../../store";
-import { clearSelectedPiece } from "../../../ui/actions";
-import { UIActions } from "../../../ui";
-import { getLocationForPiece } from "./clickTileSaga";
+import { AppState } from "../../../store";
+import { clearSelectedPiece } from "../../ui/actions";
+import { UIActions } from "../../ui";
+import { getLocationForPiece } from "../getLocationForPiece";
 
 export type PlayerClickPieceAction = ReturnType<typeof playerClickPieceAction>;
 export const playerClickPieceAction = createAction<{ pieceId: string }>("playerClickPieceAction");
