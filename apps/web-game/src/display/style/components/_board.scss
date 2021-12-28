@@ -27,30 +27,6 @@
 .piece {
 	$attack-duration: 200ms;
 
-	&.attack-basic {
-		// stylelint-disable-next-line unit-disallowed-list
-		$attack-movement-distance-multiplier: 3px;
-		$attack-movement-distance: calc(#{$attack-movement-distance-multiplier} * var(--attackPower));
-		@keyframes attack-basic {
-			0% {
-				top: 0;
-				left: 0;
-			}
-
-			50% {
-				top: calc(#{$attack-movement-distance} * var(--attackYDirection));
-				left: calc(#{$attack-movement-distance} * var(--attackXDirection));
-			}
-
-			100% {
-				top: 0;
-				left: 0;
-			}
-		}
-		animation-name: attack-basic;
-		animation-duration: $attack-duration;
-	}
-
 	.projectile {
 		display: none;
 	}

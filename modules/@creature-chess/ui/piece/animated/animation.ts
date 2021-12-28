@@ -2,6 +2,7 @@ import { CSSProperties } from "react";
 
 export type Animation = {
 	name: string;
+	keyframesName?: string;
 	variables?: AnimationVariables;
 };
 

@@ -1,5 +1,5 @@
 export { Card } from "./src/card";
-export { PieceModel, CombatPieceModel, IndexedPieces } from "./src/piece";
+export { PieceModel, CombatPieceModel, IndexedPieces, AttackDetails } from "./src/piece";
 export { PlayerListPlayer, PlayerStatus, PlayerBattle, PlayerBattleStatus, inProgressBattle, finishedBattle } from "./src/player-list-player";
 export { StreakType } from "./src/streakType";
 export { PlayerStreak } from "./src/playerStreak";

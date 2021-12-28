@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PieceModel } from "@creature-chess/models";
+import { attackTypes, PieceModel } from "@creature-chess/models";
 import classNames from "classnames";
 import { Projectile } from "../../src/piece";
 import { Piece } from "../Piece";
@@ -10,6 +10,9 @@ import { Animation, AnimationVariables, getAnimationCssVariables } from "./anima
 const getHealthbar = (ownerId: string, viewingPlayerId: string) =>
 	ownerId === viewingPlayerId ? "friendly" : "enemy";
 
+const animationEventMatchesAnimation = (event: React.AnimationEvent<HTMLDivElement>, animation: Animation): boolean =>
+	event.animationName.includes(`piece-${animation.keyframesName}-anim`);
+
 export const AnimatedPiece: React.FC = () => {
 	const { piece, viewingPlayerId } = usePiece();
 	const animationStyles = useAnimationStyles();
@@ -18,9 +21,14 @@ export const AnimatedPiece: React.FC = () => {
 	const [currentAnimations, setCurrentAnimations] = React.useState<Animation[]>([]);
 	const [lastRenderedPiece, setLastRenderedPiece] = React.useState<PieceModel | null>(null);
 
-	const runAnimation = (name: string, variables?: AnimationVariables) =>
+	const runAnimation = (name: string, keyframesName: string, variables?: AnimationVariables) =>
 		setCurrentAnimations(oldAnimations => {
-			const newAnimation: Animation = { name, variables };
+			// dont apply styles twice
+			if (oldAnimations.some(a => a.name === name)) {
+				return oldAnimations;
+			}
+
+			const newAnimation: Animation = { name, keyframesName, variables };
 
 			return [...oldAnimations, newAnimation];
 		});
@@ -28,8 +36,8 @@ export const AnimatedPiece: React.FC = () => {
 	const removeAnimation = (name: string) =>
 		setCurrentAnimations(oldAnimations => oldAnimations.filter(animation => animation.name !== name));
 
-	const onAnimationEnd = ({ animationName }: React.AnimationEvent<HTMLDivElement>) => {
-		setCurrentAnimations(oldAnimations => oldAnimations.filter(a => a.name !== animationName && !a.name.startsWith("move-")));
+	const onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
+		setCurrentAnimations(oldAnimations => oldAnimations.filter(a => !animationEventMatchesAnimation(event, a)));
 	};
 
 	const runAnimations = (newPiece: PieceModel) => {
@@ -41,27 +49,39 @@ export const AnimatedPiece: React.FC = () => {
 		}
 
 		if (attacking && !lastRenderedPiece.attacking) {
-			runAnimation(
-				`attack-${attacking.attackType.name}`,
-				{
-					attackPower: attacking.damage,
-					attackXDirection: attacking.direction.x,
-					attackYDirection: attacking.direction.y,
-					attackDistance: attacking.distance
-				}
-			);
+			if (attacking.attackType === attackTypes.basic) {
+				runAnimation(
+					animationStyles["attack-basic"],
+					"attack-basic",
+					{
+						attackPower: attacking.damage,
+						attackXDirection: attacking.direction.x,
+						attackYDirection: attacking.direction.y,
+					}
+				);
+			} else {
+				// runAnimation(
+				// 	`attack-${attacking.attackType.name}`,
+				// 	{
+				// 		attackPower: attacking.damage,
+				// 		attackXDirection: attacking.direction.x,
+				// 		attackYDirection: attacking.direction.y,
+				// 		attackDistance: attacking.distance
+				// 	}
+				// );
+			}
 		}
 
 		if (hit && !lastRenderedPiece.hit) {
-			runAnimation("hit", { hitPower: hit.damage });
+			// runAnimation("hit", { hitPower: hit.damage });
 		}
 
 		if (currentHealth === 0) {
 			if (lastRenderedPiece.currentHealth !== 0) {
-				runAnimation("dying");
+				runAnimation(animationStyles.dying, "dying");
 			}
 		} else {
-			removeAnimation("dying");
+			removeAnimation(animationStyles.dying);
 		}
 
 		setLastRenderedPiece(newPiece);
@@ -79,7 +99,7 @@ export const AnimatedPiece: React.FC = () => {
 		return null;
 	}
 
-	const animationClasses = currentAnimations.map(a => (animationStyles as any)[a.name]);
+	const animationClasses = currentAnimations.map(a => a.name);
 
 	const className = classNames(
 		styles.piece,
