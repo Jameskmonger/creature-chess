@@ -23,14 +23,13 @@ export const AnimatedPiece: React.FC = () => {
 
 	const runAnimation = (name: string, keyframesName: string, variables?: AnimationVariables) =>
 		setCurrentAnimations(oldAnimations => {
-			// dont apply styles twice
-			if (oldAnimations.some(a => a.name === name)) {
-				return oldAnimations;
-			}
-
 			const newAnimation: Animation = { name, keyframesName, variables };
 
-			return [...oldAnimations, newAnimation];
+			return [
+				// replace previous instance of this animation
+				...oldAnimations.filter(a => a.name !== name),
+				newAnimation
+			];
 		});
 
 	const removeAnimation = (name: string) =>
@@ -49,7 +48,7 @@ export const AnimatedPiece: React.FC = () => {
 		}
 
 		if (attacking && !lastRenderedPiece.attacking) {
-			if (attacking.attackType === attackTypes.basic) {
+			if (attacking.attackType.name === attackTypes.basic.name) {
 				runAnimation(
 					animationStyles.attackBasic,
 					"attack-basic",
