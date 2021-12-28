@@ -54,28 +54,4 @@
 		animation-name: attack-shoot;
 		animation-duration: $attack-duration;
 	}
-
-	&.hit {
-		$hit-rotation-multiplier: 1deg;
-		$hit-rotation: calc(#{$hit-rotation-multiplier} * var(--hitPower));
-		@keyframes hit {
-			0% {
-				transform: rotate(0deg);
-			}
-
-			25% {
-				transform: rotate(calc(#{$hit-rotation} * -1));
-			}
-
-			75% {
-				transform: rotate($hit-rotation);
-			}
-
-			100% {
-				transform: rotate(0deg);
-			}
-		}
-		animation-name: hit;
-		animation-duration: 200ms;
-	}
 }

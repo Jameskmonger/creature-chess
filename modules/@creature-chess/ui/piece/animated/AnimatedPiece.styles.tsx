@@ -2,6 +2,7 @@ import { createUseStyles } from "react-jss";
 
 const ATTACK_DURATION_MS = 200;
 const ATTACK_MOVEMENT_MULTIPLIER_PX = 3;
+const HIT_ROTATION_MULTIPLIER_DEG = 1;
 
 export const useAnimationStyles = createUseStyles({
 	"@keyframes piece-dying-anim": {
@@ -31,8 +32,27 @@ export const useAnimationStyles = createUseStyles({
 			left: "0",
 		},
 	},
-	"attack-basic": {
+	"attackBasic": {
 		animationName: "$piece-attack-basic-anim",
+		animationDuration: `${ATTACK_DURATION_MS}ms`,
+	},
+
+	"@keyframes piece-receive-hit-anim": {
+		"0%": {
+			"transform": "rotate(0deg)"
+		},
+		"25%": {
+			"transform": `rotate(calc(${HIT_ROTATION_MULTIPLIER_DEG}deg * var(--hitPower) * -1))`
+		},
+		"75%": {
+			"transform": `rotate(calc(${HIT_ROTATION_MULTIPLIER_DEG}deg * var(--hitPower)))`
+		},
+		"100%": {
+			"transform": "rotate(0deg)"
+		}
+	},
+	"receiveHit": {
+		animationName: "$piece-receive-hit-anim",
 		animationDuration: `${ATTACK_DURATION_MS}ms`,
 	},
 });

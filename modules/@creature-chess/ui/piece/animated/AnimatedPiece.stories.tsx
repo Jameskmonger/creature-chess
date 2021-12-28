@@ -85,7 +85,7 @@ const useBasicAttackButtons = (piece: PieceModel, setPiece: (value: React.SetSta
 					...piece,
 					attacking: null,
 				});
-			}, 100);
+			}, 200);
 		};
 
 	return {
@@ -96,6 +96,25 @@ const useBasicAttackButtons = (piece: PieceModel, setPiece: (value: React.SetSta
 	}
 };
 
+const createHandleReceiveHitClick = (piece: PieceModel, setPiece: (value: React.SetStateAction<PieceModel>) => void, damage: number) => {
+	return () => {
+		setPiece({
+			...piece,
+			hit: {
+				direction: Directions.UP,
+				damage
+			}
+		});
+
+		setTimeout(() => {
+			setPiece({
+				...piece,
+				hit: null,
+			});
+		}, 200);
+	};
+};
+
 const Template: Story<any> = (args) => {
 	const styles = useStyles();
 
@@ -103,9 +122,11 @@ const Template: Story<any> = (args) => {
 	const handleKillClick = () => setPiece({ ...piece, currentHealth: 0 });
 	const handleRestoreClick = () => setPiece(Builders.buildPieceModel());
 
-	const [damage, setDamage] = useState("5");
+	const [basicAttackDamage, setBasicAttackDamage] = useState("5");
+	const [receiveHitDamage, setReceiveHitDamage] = useState("5");
 
-	const { onClickUp, onClickDown, onClickLeft, onClickRight } = useBasicAttackButtons(piece, setPiece, parseInt(damage || "0", 10));
+	const handleReceiveHit = createHandleReceiveHitClick(piece, setPiece, parseInt(receiveHitDamage || "0", 10));
+	const { onClickUp, onClickDown, onClickLeft, onClickRight } = useBasicAttackButtons(piece, setPiece, parseInt(basicAttackDamage || "0", 10));
 
 	return (
 		<div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
@@ -129,7 +150,7 @@ const Template: Story<any> = (args) => {
 
 					<div className={styles.buttonGroup}>
 						<span className={styles.label}>Damage</span>
-						<input value={damage} onChange={event => setDamage(event.target.value)} />
+						<input value={basicAttackDamage} onChange={event => setBasicAttackDamage(event.target.value)} />
 					</div>
 
 
@@ -138,6 +159,20 @@ const Template: Story<any> = (args) => {
 						<button onClick={onClickDown}>Down</button>
 						<button onClick={onClickLeft}>Left</button>
 						<button onClick={onClickRight}>Right</button>
+					</div>
+				</div>
+
+				<div className={styles.control}>
+					<h3>Receive Hit</h3>
+
+					<div className={styles.buttonGroup}>
+						<span className={styles.label}>Damage</span>
+						<input value={receiveHitDamage} onChange={event => setReceiveHitDamage(event.target.value)} />
+					</div>
+
+
+					<div className={styles.buttonGroup}>
+						<button onClick={handleReceiveHit}>Hit</button>
 					</div>
 				</div>
 			</div>

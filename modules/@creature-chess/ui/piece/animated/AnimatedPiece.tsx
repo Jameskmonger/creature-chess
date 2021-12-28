@@ -51,7 +51,7 @@ export const AnimatedPiece: React.FC = () => {
 		if (attacking && !lastRenderedPiece.attacking) {
 			if (attacking.attackType === attackTypes.basic) {
 				runAnimation(
-					animationStyles["attack-basic"],
+					animationStyles.attackBasic,
 					"attack-basic",
 					{
 						attackPower: attacking.damage,
@@ -73,7 +73,13 @@ export const AnimatedPiece: React.FC = () => {
 		}
 
 		if (hit && !lastRenderedPiece.hit) {
-			// runAnimation("hit", { hitPower: hit.damage });
+			runAnimation(
+				animationStyles.receiveHit,
+				"receive-hit",
+				{
+					hitPower: hit.damage
+				}
+			);
 		}
 
 		if (currentHealth === 0) {
