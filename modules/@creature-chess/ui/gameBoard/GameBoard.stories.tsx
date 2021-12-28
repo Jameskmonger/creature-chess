@@ -6,6 +6,7 @@ import { GameBoard } from "./GameBoard";
 import { GameBoardContextProvider } from "./GameBoardContext";
 import { createInitialBoardState } from "@shoki/board";
 import { Piece, PieceContextProvider } from "../piece";
+import { DndProvider } from "@shoki/board-react";
 
 export default {
 	title: "GameBoard",
@@ -45,16 +46,18 @@ const Template: Story<any> = (args) => {
 	};
 
 	return (
-		<div style={{ width: "500px", height: "800px" }}>
-			<GameBoardContextProvider value={context}>
-				<GameBoard
-					renderBoardPiece={renderPiece}
-					renderBenchPiece={renderPiece}
-					onClick={args.onClick}
-					onDropPiece={args.onDropPiece}
-				/>
-			</GameBoardContextProvider>
-		</div>
+		<DndProvider>
+			<div style={{ width: "500px", height: "800px" }}>
+				<GameBoardContextProvider value={context}>
+					<GameBoard
+						renderBoardPiece={renderPiece}
+						renderBenchPiece={renderPiece}
+						onClick={args.onClick}
+						onDropPiece={args.onDropPiece}
+					/>
+				</GameBoardContextProvider>
+			</div>
+		</DndProvider>
 	);
 };
 
