@@ -1,1 +1,0 @@
-export { AnimatedPiece } from "./AnimatedPiece";
