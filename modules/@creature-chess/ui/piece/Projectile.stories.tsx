@@ -1,7 +1,7 @@
 import React from "react";
 import { Meta, Story } from "@storybook/react";
 
-import { Projectile } from "./projectile";
+import { Projectile } from "./Projectile";
 
 export default {
 	title: "Piece/Projectile",

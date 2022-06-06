@@ -1,7 +1,7 @@
 import * as React from "react";
 import { attackTypes, PieceModel } from "@creature-chess/models";
 import classNames from "classnames";
-import { Projectile } from "../../src/piece";
+import { Projectile } from "../../piece";
 import { Piece } from "../Piece";
 import { usePiece } from "../PieceContext";
 import { useAnimationStyles, usePieceStyles } from "./MatchPiece.styles";
@@ -72,16 +72,13 @@ export const MatchPiece: React.FC = () => {
           attackXDirection: attacking.direction.x,
           attackYDirection: attacking.direction.y,
         });
-      } else {
-        // runAnimation(
-        // 	`attack-${attacking.attackType.name}`,
-        // 	{
-        // 		attackPower: attacking.damage,
-        // 		attackXDirection: attacking.direction.x,
-        // 		attackYDirection: attacking.direction.y,
-        // 		attackDistance: attacking.distance
-        // 	}
-        // );
+      } else if (attacking.attackType.name === attackTypes.shoot.name) {
+		runAnimation(animationStyles.attackShoot, "attack-shoot", {
+		  attackPower: attacking.damage,
+          attackXDirection: attacking.direction.x,
+          attackYDirection: attacking.direction.y,
+          attackDistance: attacking.distance
+		});
       }
     }
 
@@ -128,7 +125,7 @@ export const MatchPiece: React.FC = () => {
       onAnimationEnd={onAnimationEnd}
     >
       <Piece healthbar={getHealthbar(piece.ownerId, viewingPlayerId)}>
-        <Projectile />
+		  <Projectile className={animationStyles.projectile} />
       </Piece>
     </div>
   );

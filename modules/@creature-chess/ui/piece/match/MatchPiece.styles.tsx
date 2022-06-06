@@ -4,6 +4,8 @@ const ATTACK_DURATION_MS = 200;
 const ATTACK_MOVEMENT_MULTIPLIER_PX = 3;
 const HIT_ROTATION_MULTIPLIER_DEG = 1;
 
+const projectileSize = '10px'
+
 export const useAnimationStyles = createUseStyles({
 	"@keyframes piece-dying-anim": {
 		"100%": {
@@ -16,6 +18,7 @@ export const useAnimationStyles = createUseStyles({
 		animationFillMode: "forwards",
 		animationIterationCount: "1"
 	},
+
 	"@keyframes piece-attack-basic-anim": {
 		"0%": {
 			top: "0",
@@ -35,6 +38,37 @@ export const useAnimationStyles = createUseStyles({
 	"attackBasic": {
 		animationName: "$piece-attack-basic-anim",
 		animationDuration: `${ATTACK_DURATION_MS}ms`,
+	},
+
+	"@keyframes piece-attack-shoot-anim": {
+		"0%": {
+			top: `calc(50% - (${projectileSize} / 2))`,
+			left: `calc(50% - (${projectileSize} / 2))`,
+		},
+
+		"100%": {
+			top: `calc(
+				((100% * var(--attackDistance) * var(--attackYDirection)) + 50%) -
+				  (${projectileSize} / 2)
+			  )`,
+			left: `calc(
+				((100% * var(--attackDistance) * var(--attackXDirection)) + 50%) -
+				  (${projectileSize} / 2)
+			  )`,
+		},
+	},
+	"projectile": {
+		display: "none",
+		position: "absolute",
+		top: `calc(50% - (${projectileSize} / 2))`,
+		left: `calc(50% - (${projectileSize} / 2))`,
+	},
+	"attackShoot": {
+		"& $projectile": {
+			display: "block",
+			animationName: "$piece-attack-shoot-anim",
+			animationDuration: `${ATTACK_DURATION_MS}ms`,
+		}
 	},
 
 	"@keyframes piece-receive-hit-anim": {

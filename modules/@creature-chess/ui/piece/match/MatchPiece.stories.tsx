@@ -148,6 +148,18 @@ const Template: Story<any> = (args) => {
       parseInt(basicAttackDamage || "0", 10)
     );
 
+  const handleShootProjectile = () => {
+    setPiece({
+      ...piece,
+      attacking: {
+        attackType: attackTypes.shoot,
+        damage: 5,
+        direction: Directions.LEFT,
+        distance: 1,
+      },
+    })
+  };
+
   return (
     <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
       <div style={{ flex: 1 }}>
@@ -199,6 +211,14 @@ const Template: Story<any> = (args) => {
 
           <div className={styles.buttonGroup}>
             <button onClick={handleReceiveHit}>Hit</button>
+          </div>
+        </div>
+
+        <div className={styles.control}>
+          <h3>Shoot Projectile</h3>
+
+          <div className={styles.buttonGroup}>
+            <button onClick={handleShootProjectile}>Shoot</button>
           </div>
         </div>
       </div>
