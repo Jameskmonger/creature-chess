@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import pDefer = require("p-defer");
+import pDefer from 'p-defer';
 
 type LimitedQueue<T> = {
 	clear: () => void;

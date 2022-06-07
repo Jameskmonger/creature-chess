@@ -1,4 +1,4 @@
-import pDefer = require("p-defer");
+import pDefer from 'p-defer';
 import { call, take, put, getContext } from "typed-redux-saga";
 import delay from "delay";
 import { GameOptions, GamePhase } from "@creature-chess/models";
