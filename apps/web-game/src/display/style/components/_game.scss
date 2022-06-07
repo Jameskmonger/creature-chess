@@ -65,18 +65,4 @@ body {
 	.shop-container {
 		display: flex;
 	}
-
-	.phase-info,
-	.round-indicator {
-		margin-bottom: 0.6em;
-		font-family: Arial, sans-serif;
-		font-size: 1.2em;
-		color: #fff;
-		text-align: center;
-		text-transform: uppercase;
-
-		.highlight {
-			color: #ffcd75;
-		}
-	}
 }

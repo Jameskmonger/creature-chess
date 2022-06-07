@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../store";
+import { InfoChip } from "./InfoChip";
 
 const RoundIndicator: React.FunctionComponent = () => {
 	const round = useSelector<AppState, number | null>(state => state.game.roundInfo.round);
@@ -9,7 +10,7 @@ const RoundIndicator: React.FunctionComponent = () => {
 		return null;
 	}
 
-	return <div className="round-indicator">Round <span className="highlight">{round}</span></div>;
+	return <InfoChip>Round {round}</InfoChip>;
 };
 
 export { RoundIndicator };

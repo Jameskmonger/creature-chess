@@ -20,7 +20,7 @@ export default {
 const mockedState: GameState = {
 	ui: {
 		connectionStatus: ConnectionStatus.CONNECTED,
-		currentOverlay: Overlay.PLAYERS,
+		currentOverlay: null,
 		inGame: true,
 		selectedPieceId: null,
 		winnerId: null,
