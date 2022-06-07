@@ -10,6 +10,7 @@ RUN yarn set version berry
 # this enables better docker caching and a nicer dev experience
 ADD package.json yarn.lock .yarnrc.yml ./
 ADD .yarn/plugins/ ./.yarn/plugins/
+ADD .yarn/releases/ ./.yarn/releases/
 
 ADD apps/server-game/package.json ./apps/server-game/
 ADD apps/server-info/package.json ./apps/server-info/
