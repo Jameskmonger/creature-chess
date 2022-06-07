@@ -4,7 +4,6 @@ export { CardShop, Card } from "./src/cardShop";
 
 export { CreatureImage, ProgressBar, TypeIndicator, Label } from "./src/display";
 export { PlayerListItem, StatusPlayerListItem } from "./src/playerList";
-export { Projectile } from "./src/piece";
 
 export { Footer } from "./src/Footer";
 

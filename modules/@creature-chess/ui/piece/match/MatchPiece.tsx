@@ -1,7 +1,7 @@
 import * as React from "react";
 import { attackTypes, PieceModel } from "@creature-chess/models";
 import classNames from "classnames";
-import { Projectile } from "../../piece";
+import { Projectile } from "../Projectile";
 import { Piece } from "../Piece";
 import { usePiece } from "../PieceContext";
 import { useAnimationStyles, usePieceStyles } from "./MatchPiece.styles";
