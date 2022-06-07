@@ -12,6 +12,7 @@ import { OverlayComponent } from "./OverlayComponent";
 import { TopBar } from "./TopBar";
 import { NavBar } from "./NavBar";
 import { MobileContentPane } from "./MobileContentPane";
+import { createUseStyles } from "react-jss";
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({ currentOverlay }) => {
 	const currentBalance = useSelector<AppState, number>(state => getPlayerMoney(state.game));
@@ -71,9 +72,22 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 	);
 };
 
+const useStyles = createUseStyles({
+	portraitGame: {
+		"display": "flex",
+		"overflowY": "hidden",
+		"flexDirection": "column",
+		"width": "100%",
+		"height": "100%",
+		"padding": "0",
+	}
+})
+
 const MobileGame: React.FunctionComponent = () => {
+	const styles = useStyles();
+
 	return (
-		<div className="game portrait">
+		<div className={styles.portraitGame}>
 			<TopBar />
 
 			<MobileGameContentPane />

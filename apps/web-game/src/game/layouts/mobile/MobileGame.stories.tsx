@@ -4,6 +4,7 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Meta, Story } from "@storybook/react";
 import { createInitialBoardState } from "@shoki/board";
 import { GamePhase, inProgressBattle, PlayerStatus, StreakType } from "@creature-chess/models";
+import { useGlobalStyles } from "@creature-chess/ui";
 
 import { MobileGame } from "./MobileGame";
 import { GameState } from "../../state";
@@ -17,10 +18,10 @@ export default {
 } as Meta;
 
 
-const mockedState: GameState = {
+const createMockedState = (currentOverlay: Overlay): GameState => ({
 	ui: {
 		connectionStatus: ConnectionStatus.CONNECTED,
-		currentOverlay: null,
+		currentOverlay,
 		inGame: true,
 		selectedPieceId: null,
 		winnerId: null,
@@ -124,17 +125,47 @@ const mockedState: GameState = {
 	spectating: {
 		id: null
 	}
-};
+});
 
-const Template: Story<any> = (args) => (
-	<Provider
-		store={configureStore({
-			reducer: createSlice({ name: "mock slice", initialState: { game: mockedState }, reducers: {} }).reducer
-		})}
-	>
-		<MobileGame />
-	</Provider>
+const createMockStore = (currentOverlay: Overlay) => (
+	configureStore({
+		reducer: createSlice({ name: "mock slice", initialState: { game: createMockedState(currentOverlay) }, reducers: {} }).reducer
+	})
 );
 
-export const Default = Template.bind({});
-Default.args = {};
+const Template: Story<any> = (args) => {
+	useGlobalStyles();
+
+	return (
+		<Provider
+			store={createMockStore(args.overlay)}
+		>
+			<MobileGame />
+		</Provider>
+	);
+};
+
+export const No_Overlay = Template.bind({});
+No_Overlay.args = {
+	overlay: null
+};
+
+export const Help_Overlay = Template.bind({});
+Help_Overlay.args = {
+	overlay: Overlay.HELP
+};
+
+export const Players_Overlay = Template.bind({});
+Players_Overlay.args = {
+	overlay: Overlay.PLAYERS
+};
+
+export const Shop_Overlay = Template.bind({});
+Shop_Overlay.args = {
+	overlay: Overlay.SHOP
+};
+
+export const Settings_Overlay = Template.bind({});
+Settings_Overlay.args = {
+	overlay: Overlay.SETTINGS
+};
