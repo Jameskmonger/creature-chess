@@ -1,24 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Text } from "@creature-chess/ui/text";
 import { AppState } from "../../../../store";
 
-
-const QuickChatBox: React.FunctionComponent<{ sendingPlayerId: string }> = ({ sendingPlayerId }) => {
-
+export function QuickChatBox({ sendingPlayerId }: { sendingPlayerId: string }) {
 	const currentChat = useSelector<AppState, any>(state => state.game.quickChat[sendingPlayerId]);
-	return (
-		<div className="quick-chat-box">
 
-			<div>
-				{
-					currentChat ?
-						<p>{currentChat.value}</p>
-						:
-						<div className="emoji-spacer" />
-				}
-			</div>
+	if (!currentChat) {
+		return null;
+	}
 
-		</div>
-	);
-};
-export { QuickChatBox };
+	return <Text>{currentChat.value}</Text>;
+}
