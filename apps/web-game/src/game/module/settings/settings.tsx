@@ -3,7 +3,7 @@ import { Footer } from "@creature-chess/ui";
 import { QuitGameButton } from "./quitGameButton";
 
 const Settings: React.FunctionComponent = () => (
-	<div className="settings">
+	<div>
 		<QuitGameButton />
 
 		<Footer />

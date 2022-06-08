@@ -40,7 +40,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 						src={"https://creaturechess.com/images/ui/no_player_img.png"}
 						alt="no player image"
 					/>
-					<div className="spacer" />
+					<div />
 					empty slot
 				</span>
 			</div >
@@ -54,7 +54,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 					src={`https://creaturechess.com/images/front/${player.profile?.picture}.png`}
 					alt="avatar"
 				/>
-				<div className="spacer" />
+				<div />
 				{player.name}
 			</span>
 			<Title titleId={player.profile?.title} />

@@ -6,8 +6,8 @@ import {
 	PlayerList, CardShop, Help,
 	Profile, RoundIndicator, PhaseInfo,
 	NowPlaying, QuitGameButton
-} from "../module";
-import { BoardContainer } from "../board";
+} from "../../module";
+import { BoardContainer } from "../../board";
 
 const useStyles = createUseStyles({
 	helpContainer: {

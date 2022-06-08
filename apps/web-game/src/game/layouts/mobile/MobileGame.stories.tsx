@@ -19,7 +19,7 @@ const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
 	const store = createMockStore(
-		args.halfBoard,
+		args.phase === GamePhase.PREPARING,
 		state => ({
 			...state,
 			ui: {
@@ -38,8 +38,6 @@ const Template: Story<any> = (args) => {
 			},
 		})
 	)
-
-	console.log({ args, state: store.getState() })
 
 	return (
 		<Provider

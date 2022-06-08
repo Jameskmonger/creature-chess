@@ -2,7 +2,7 @@
 import * as React from "react";
 import Media from "react-media";
 import { MobileGame } from "./layouts/mobile/MobileGame";
-import { DesktopGame } from "./layouts/desktopGame";
+import { DesktopGame } from "./layouts/desktop/DesktopGame";
 
 const GamePage: React.FunctionComponent = () => (
 	<>
