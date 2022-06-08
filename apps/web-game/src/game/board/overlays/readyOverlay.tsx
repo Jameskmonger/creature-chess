@@ -25,8 +25,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
-	// TODO JM FIX THIS
-	const localId = usePlayerId() || "1234";
+	const localId = usePlayerId();
 	const localPlayer = playerList.find(p => p.id === localId);
 
 	const opponent = useSelector((state: AppState) => {
@@ -35,8 +34,6 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	});
 
 	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
-
-	console.log({ localId, localPlayer, opponent, inReadyPhase, spectatingPlayer });
 
 	if (!localPlayer || !opponent || !inReadyPhase || spectatingPlayer) {
 		return null;

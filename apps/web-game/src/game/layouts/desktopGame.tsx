@@ -1,6 +1,7 @@
 import * as React from "react";
+import { createUseStyles } from "react-jss";
 
-import { Footer, Group } from "@creature-chess/ui";
+import { Footer, Group, Layout } from "@creature-chess/ui";
 import {
 	PlayerList, CardShop, Help,
 	Profile, RoundIndicator, PhaseInfo,
@@ -8,32 +9,47 @@ import {
 } from "../module";
 import { BoardContainer } from "../board";
 
-const DesktopGame: React.FunctionComponent = () => (
-	<div className="game landscape">
-		<Group>
-			<RoundIndicator />
+const useStyles = createUseStyles({
+	helpContainer: {
+		"overflowY": "scroll",
+		"padding": "0.5em",
+		"background": "#566c86",
+	},
+	rightLayout: {
+		flex: "1",
+	}
+});
 
-			<PhaseInfo />
+const DesktopGame: React.FunctionComponent = () => {
+	const styles = useStyles();
 
-			<NowPlaying />
+	return (
+		<Layout direction="row">
+			<Group>
+				<RoundIndicator />
 
-			<PlayerList />
-		</Group>
+				<PhaseInfo />
 
-		<BoardContainer />
+				<NowPlaying />
 
-		<Group className="right-group-legacy">
-			<QuitGameButton />
+				<PlayerList />
+			</Group>
 
-			<CardShop />
+			<BoardContainer />
 
-			<Profile />
+			<Layout direction="column" className={styles.rightLayout}>
+				<QuitGameButton />
 
-			<div className="help-container"><Help hideFooter /></div>
+				<CardShop />
 
-			<Footer />
-		</Group>
-	</div>
-);
+				<Profile />
+
+				<div className={styles.helpContainer}><Help hideFooter /></div>
+
+				<Footer />
+			</Layout>
+		</Layout>
+	);
+};
 
 export { DesktopGame };

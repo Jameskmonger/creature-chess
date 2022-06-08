@@ -6,13 +6,21 @@ import { LocalBoard } from "./LocalBoard";
 import { ReadyUpButton, ReadyOverlay, VictoryOverlay, MatchRewardsOverlay, ReconnectOverlay } from "./overlays";
 import { NowPlaying } from "../module/nowPlaying";
 import { Group } from "@creature-chess/ui";
+import { createUseStyles } from "react-jss";
+
+const useStyles = createUseStyles({
+	boardContainer: {
+		flex: 2
+	}
+})
 
 export const BoardContainer: React.FC = () => {
+	const styles = useStyles();
 	const matchBoard = useGameMatchBoard();
 
 	return (
 		<DndProvider>
-			<Group className="board-container">
+			<Group className={styles.boardContainer}>
 				<NowPlaying />
 
 				<ReadyUpButton />

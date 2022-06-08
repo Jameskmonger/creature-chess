@@ -81,7 +81,7 @@ const useStyles = createUseStyles({
 		"height": "100%",
 		"padding": "0",
 	}
-})
+});
 
 const MobileGame: React.FunctionComponent = () => {
 	const styles = useStyles();

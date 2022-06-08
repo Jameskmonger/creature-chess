@@ -2,9 +2,9 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { BoardState, createInitialBoardState } from "@shoki/board";
 import { CreatureType, DefinitionClass, GamePhase, inProgressBattle, PieceModel, PlayerStatus, QuickChatOption, StreakType } from "@creature-chess/models";
 import { getDefinitionById } from "@creature-chess/gamemode";
-import { ConnectionStatus } from "../../connection-status";
-import { GameState } from "../../state";
-import { Overlay } from "../../ui";
+import { ConnectionStatus } from "../connection-status";
+import { GameState } from "../state";
+import { Overlay } from "../ui";
 
 const createPlayer = (id: string, name: string, picture: number, title: number | null, opponentId: string) => ({
 	id,

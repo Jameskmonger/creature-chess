@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { usePlayerId } from "@creature-chess/auth-web";
 import { PlayerListPlayer, GamePhase, PlayerStatus, PlayerBattle } from "@creature-chess/models";
 import { PlayerActions } from "@creature-chess/gamemode";
-import { StatusPlayerListItem, PlayerListItem } from "@creature-chess/ui";
+import { StatusPlayerListItem, PlayerListItem, Layout } from "@creature-chess/ui";
 import { AppState } from "../../../../store";
 
 // todo move this
@@ -40,7 +40,7 @@ const PlayerList: React.FunctionComponent = () => {
 	const currentlySpectatingId = useSelector<AppState, string | null>(state => state.game.spectating.id);
 
 	return (
-		<div className="player-list">
+		<Layout direction="column">
 			{
 				players.map((p, index) => {
 					const opponentName = getOpponentName(p.battle, players);
@@ -95,7 +95,7 @@ const PlayerList: React.FunctionComponent = () => {
 					);
 				})
 			}
-		</div>
+		</Layout>
 	);
 };
 
