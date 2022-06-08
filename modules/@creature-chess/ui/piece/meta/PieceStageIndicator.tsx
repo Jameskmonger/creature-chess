@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Layout } from "../../src/layout";
+import { Layout } from "../../layout";
 
 interface StageIndicatorProps {
 	stage: number;

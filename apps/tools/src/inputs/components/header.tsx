@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout } from "@creature-chess/ui/src/layout";
+import { Layout } from "@creature-chess/ui";
 
 type Props = {
 	runScenario: () => void;

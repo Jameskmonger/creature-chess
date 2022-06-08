@@ -9,7 +9,7 @@ import { StreakIndicator } from "./streakIndicator";
 
 import { Label } from "../display";
 import { PlayerHealthbar, PlayerProfile, PlayerAvatar } from "../player";
-import { Half, Layout } from "../layout";
+import { Half, Layout } from "../../layout";
 
 interface Props {
 	index: number;
