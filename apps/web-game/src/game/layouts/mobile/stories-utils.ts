@@ -1,6 +1,6 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { BoardState, createInitialBoardState } from "@shoki/board";
-import { GamePhase, inProgressBattle, PieceModel, PlayerStatus, QuickChatOption, StreakType } from "@creature-chess/models";
+import { CreatureType, DefinitionClass, GamePhase, inProgressBattle, PieceModel, PlayerStatus, QuickChatOption, StreakType } from "@creature-chess/models";
 import { getDefinitionById } from "@creature-chess/gamemode";
 import { ConnectionStatus } from "../../connection-status";
 import { GameState } from "../../state";
@@ -108,7 +108,34 @@ const createMockedState = (currentOverlay: Overlay, phase: GamePhase): GameState
 		},
 	},
 	cardShop: {
-		cards: [ null, null, null, null, null ],
+		cards: [
+			{
+				id: 'card-1',
+				definitionId: 10,
+				cost: 3,
+				class: DefinitionClass.ARCANE,
+				name: "Foo",
+				type: CreatureType.Fire
+			},
+			{
+				id: 'card-2',
+				definitionId: 20,
+				cost: 1,
+				class: DefinitionClass.CUNNING,
+				name: "John Smith",
+				type: CreatureType.Water
+			},
+			{
+				id: 'card-3',
+				definitionId: 30,
+				cost: 5,
+				class: DefinitionClass.VALIANT,
+				name: "Terry",
+				type: CreatureType.Earth
+			},
+			null,
+			null,
+		],
 		locked: false
 	},
 	match: {

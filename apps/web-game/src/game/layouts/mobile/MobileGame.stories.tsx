@@ -26,33 +26,33 @@ const Template: Story<any> = (args) => {
 	);
 };
 
-export const Ready_Phase = Template.bind({});
-Ready_Phase.args = {
+export const Phase_0_Preparing = Template.bind({});
+Phase_0_Preparing.args = {
+	overlay: null
+};
+
+export const Phase_1_Ready = Template.bind({});
+Phase_1_Ready.args = {
 	overlay: null,
 	phase: GamePhase.READY
 };
 
-export const No_Overlay = Template.bind({});
-No_Overlay.args = {
-	overlay: null
-};
-
-export const Help_Overlay = Template.bind({});
-Help_Overlay.args = {
-	overlay: Overlay.HELP
-};
-
-export const Players_Overlay = Template.bind({});
-Players_Overlay.args = {
+export const Tab_1_Players_Overlay = Template.bind({});
+Tab_1_Players_Overlay.args = {
 	overlay: Overlay.PLAYERS
 };
 
-export const Shop_Overlay = Template.bind({});
-Shop_Overlay.args = {
+export const Tab_2_Shop_Overlay = Template.bind({});
+Tab_2_Shop_Overlay.args = {
 	overlay: Overlay.SHOP
 };
 
-export const Settings_Overlay = Template.bind({});
-Settings_Overlay.args = {
+export const Tab_3_Help_Overlay = Template.bind({});
+Tab_3_Help_Overlay.args = {
+	overlay: Overlay.HELP
+};
+
+export const Tab_4_Settings_Overlay = Template.bind({});
+Tab_4_Settings_Overlay.args = {
 	overlay: Overlay.SETTINGS
 };
