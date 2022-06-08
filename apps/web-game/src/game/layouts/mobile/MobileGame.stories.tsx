@@ -2,9 +2,10 @@ import React from "react";
 import { Provider } from "react-redux";
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Meta, Story } from "@storybook/react";
-import { createInitialBoardState } from "@shoki/board";
-import { GamePhase, inProgressBattle, PlayerStatus, StreakType } from "@creature-chess/models";
+import { BoardState, createInitialBoardState } from "@shoki/board";
+import { GamePhase, inProgressBattle, PieceModel, PlayerStatus, StreakType } from "@creature-chess/models";
 import { useGlobalStyles } from "@creature-chess/ui";
+import { getDefinitionById } from "@creature-chess/gamemode";
 
 import { MobileGame } from "./MobileGame";
 import { GameState } from "../../state";
@@ -17,6 +18,76 @@ export default {
   argTypes: {},
 } as Meta;
 
+const createPlayer = (id: string, name: string, picture: number, opponentId: string) => ({
+	id,
+	name,
+	health: 100,
+	ready: false,
+	status: PlayerStatus.CONNECTED,
+	streakType: StreakType.WIN,
+	streakAmount: 3,
+	money: 20,
+	level: 4,
+	profile: {
+		picture,
+		title: null
+	},
+	battle: inProgressBattle(opponentId)
+});
+
+const createBoardState = (): BoardState<PieceModel> => {
+	const state = createInitialBoardState<PieceModel>("local-board", { width: 7, height: 3 });
+
+	const definition = getDefinitionById(1)!;
+	const piece = {
+		id: 'piece-1-id',
+		ownerId: 'player-1-id',
+		definitionId: 1,
+		definition,
+		facingAway: false,
+		maxHealth: definition.stages[0].hp,
+		currentHealth: definition.stages[0].hp,
+		stage: 0
+	};
+
+	return {
+		...state,
+		pieces: {
+			...state.pieces,
+			[piece.id]: piece
+		},
+		piecePositions: {
+			[`3,0`]: piece.id
+		}
+	}
+}
+
+const createBenchState = (): BoardState<PieceModel> => {
+	const state = createInitialBoardState<PieceModel>("local-bench", { width: 7, height: 1 });
+
+	const definition = getDefinitionById(1)!;
+	const piece = {
+		id: 'bpiece-1-id',
+		ownerId: 'player-1-id',
+		definitionId: 5,
+		definition,
+		facingAway: false,
+		maxHealth: definition.stages[0].hp,
+		currentHealth: definition.stages[0].hp,
+		stage: 0
+	};
+
+	return {
+		...state,
+		pieces: {
+			...state.pieces,
+			[piece.id]: piece
+		},
+		piecePositions: {
+			[`1,0`]: piece.id
+		}
+	}
+}
 
 const createMockedState = (currentOverlay: Overlay): GameState => ({
 	ui: {
@@ -31,8 +102,8 @@ const createMockedState = (currentOverlay: Overlay): GameState => ({
 		phaseStartedAtSeconds: Date.now() / 1000,
 		round: 1,
 	},
-	board: createInitialBoardState("local-board", { width: 7, height: 3 }),
-	bench: createInitialBoardState("local-bench", { width: 7, height: 1 }),
+	board: createBoardState(),
+	bench: createBenchState(),
 	playerInfo: {
 		opponentId: null,
 		battle: null,
@@ -56,70 +127,10 @@ const createMockedState = (currentOverlay: Overlay): GameState => ({
 		board: null
 	},
 	playerList: [
-		{
-			id: "1234",
-			name: "jkm",
-			health: 69,
-			ready: false,
-			status: PlayerStatus.CONNECTED,
-			streakType: StreakType.WIN,
-			streakAmount: 3,
-			money: 20,
-			level: 4,
-			profile: {
-				picture: 1,
-				title: 1
-			},
-			battle: inProgressBattle("5678")
-		},
-		{
-			id: "5678",
-			name: "Jeff",
-			health: 20,
-			ready: false,
-			status: PlayerStatus.CONNECTED,
-			streakType: StreakType.LOSS,
-			streakAmount: 1,
-			money: 3,
-			level: 5,
-			profile: {
-				picture: 12,
-				title: null
-			},
-			battle: inProgressBattle("1234")
-		},
-		{
-			id: "abcd",
-			name: "Bob the Cat",
-			health: 60,
-			ready: false,
-			status: PlayerStatus.CONNECTED,
-			streakType: StreakType.WIN,
-			streakAmount: 2,
-			money: 15,
-			level: 4,
-			profile: {
-				picture: 8,
-				title: null
-			},
-			battle: inProgressBattle("ab99")
-		},
-		{
-			id: "ab99",
-			name: "Derek the Dog",
-			health: 55,
-			ready: false,
-			status: PlayerStatus.CONNECTED,
-			streakType: StreakType.WIN,
-			streakAmount: 2,
-			money: 8,
-			level: 4,
-			profile: {
-				picture: 20,
-				title: null
-			},
-			battle: inProgressBattle("abcd")
-		},
+		createPlayer("1234", "jkm", 1, "5678"),
+		createPlayer("5678", "Jeff", 12, "1234"),
+		createPlayer("abcd", "Bob the Cat", 12, "ab99"),
+		createPlayer("ab99", "Derek the Dog", 20, "abcd"),
 	],
 	quickChat: {},
 	spectating: {
