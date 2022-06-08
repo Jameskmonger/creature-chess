@@ -10,13 +10,6 @@ body {
 	padding: 0.4em;
 	overflow-y: hidden;
 
-	.game-id {
-		margin-bottom: 1em;
-		font-family: Arial, sans-serif;
-		color: #fff;
-		text-align: center;
-	}
-
 	&.landscape {
 		flex-direction: row;
 		height: 100%;
@@ -25,20 +18,5 @@ body {
 		.profile {
 			margin-bottom: 0.5rem;
 		}
-	}
-
-	.ready-up {
-		box-sizing: border-box;
-		padding: 2rem;
-		font-size: 1.6rem;
-		color: $ready-up-button-text;
-		cursor: pointer;
-		background: $ready-up-button;
-		// stylelint-disable-next-line
-		border: none;
-	}
-
-	.shop-container {
-		display: flex;
 	}
 }
