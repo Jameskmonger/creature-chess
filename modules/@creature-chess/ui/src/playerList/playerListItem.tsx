@@ -83,9 +83,7 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 			ref={ref as any}
 		>
 			<Layout direction="row" noSpacer>
-				<div className="picture">
-					<PlayerAvatar player={player} />
-				</div>
+				<PlayerAvatar player={player} />
 				<div className={classes.details}>
 					<Layout direction="row" noSpacer>
 						<Half><PlayerProfile position={index + 1} player={player} isLocal={isLocal} /></Half>
