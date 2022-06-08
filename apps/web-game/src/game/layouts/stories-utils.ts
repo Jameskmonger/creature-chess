@@ -23,8 +23,8 @@ const createPlayer = (id: string, name: string, picture: number, title: number |
 	battle: inProgressBattle(opponentId)
 });
 
-const createBoardState = (): BoardState<PieceModel> => {
-	const state = createInitialBoardState<PieceModel>("local-board", { width: 7, height: 3 });
+const createBoardState = (halfBoard: boolean): BoardState<PieceModel> => {
+	const state = createInitialBoardState<PieceModel>("local-board", { width: 7, height: halfBoard ? 3 : 6 });
 
 	const definition = getDefinitionById(1)!;
 	const piece = {
@@ -45,7 +45,7 @@ const createBoardState = (): BoardState<PieceModel> => {
 			[piece.id]: piece
 		},
 		piecePositions: {
-			[`3,0`]: piece.id
+			[halfBoard ? `3,0` : `3,3`]: piece.id
 		}
 	}
 }
@@ -77,7 +77,7 @@ const createBenchState = (): BoardState<PieceModel> => {
 	}
 }
 
-const createMockedState = (currentOverlay: Overlay, phase: GamePhase): GameState => ({
+const createMockedState = (currentOverlay: Overlay, phase: GamePhase, halfBoard: boolean): GameState => ({
 	ui: {
 		connectionStatus: ConnectionStatus.CONNECTED,
 		currentOverlay,
@@ -90,7 +90,7 @@ const createMockedState = (currentOverlay: Overlay, phase: GamePhase): GameState
 		phaseStartedAtSeconds: Date.now() / 1000,
 		round: 1,
 	},
-	board: createBoardState(),
+	board: createBoardState(halfBoard),
 	bench: createBenchState(),
 	playerInfo: {
 		opponentId: "5678",
@@ -162,8 +162,14 @@ const createMockedState = (currentOverlay: Overlay, phase: GamePhase): GameState
 	}
 });
 
-export const createMockStore = (currentOverlay: Overlay, phase = GamePhase.PREPARING) => (
+export const createMockStore = (currentOverlay: Overlay, phase: GamePhase, halfBoard: boolean) => (
 	configureStore({
-		reducer: createSlice({ name: "mock slice", initialState: { game: createMockedState(currentOverlay, phase) }, reducers: {} }).reducer
+		reducer: createSlice({
+			name: "mock slice",
+			initialState: {
+				game: createMockedState(currentOverlay, phase, halfBoard)
+			},
+			reducers: {}
+		}).reducer
 	})
 );

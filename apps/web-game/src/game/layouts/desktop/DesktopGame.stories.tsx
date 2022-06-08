@@ -18,7 +18,7 @@ const Template: Story<any> = (args) => {
 
 	return (
 		<Provider
-			store={createMockStore(args.overlay, args.phase)}
+			store={createMockStore(args.overlay, args.phase, args.halfBoard)}
 		>
 			<DesktopGame />
 		</Provider>
@@ -27,15 +27,18 @@ const Template: Story<any> = (args) => {
 
 export const Phase_0_Preparing = Template.bind({});
 Phase_0_Preparing.args = {
-	phase: GamePhase.PREPARING
+	phase: GamePhase.PREPARING,
+	halfBoard: true,
 };
 
 export const Phase_1_Ready = Template.bind({});
 Phase_1_Ready.args = {
-	phase: GamePhase.READY
+	phase: GamePhase.READY,
+	halfBoard: false,
 };
 
 export const Phase_2_Playing = Template.bind({});
 Phase_2_Playing.args = {
-	phase: GamePhase.PLAYING
+	phase: GamePhase.PLAYING,
+	halfBoard: false,
 };

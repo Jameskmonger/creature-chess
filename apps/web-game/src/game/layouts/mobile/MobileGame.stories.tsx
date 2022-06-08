@@ -19,7 +19,7 @@ const Template: Story<any> = (args) => {
 
 	return (
 		<Provider
-			store={createMockStore(args.overlay, args.phase)}
+			store={createMockStore(args.overlay, args.phase, args.halfBoard)}
 		>
 			<MobileGame />
 		</Provider>
@@ -28,37 +28,45 @@ const Template: Story<any> = (args) => {
 
 export const Phase_0_Preparing = Template.bind({});
 Phase_0_Preparing.args = {
-	overlay: null
+	overlay: null,
+	phase: GamePhase.PREPARING,
+	halfBoard: true,
 };
 
 export const Phase_1_Ready = Template.bind({});
 Phase_1_Ready.args = {
 	overlay: null,
-	phase: GamePhase.READY
+	phase: GamePhase.READY,
+	halfBoard: false,
 };
 
 export const Phase_2_Playing = Template.bind({});
 Phase_2_Playing.args = {
 	overlay: null,
-	phase: GamePhase.PLAYING
+	phase: GamePhase.PLAYING,
+	halfBoard: false,
 };
 
 export const Tab_1_Players_Overlay = Template.bind({});
 Tab_1_Players_Overlay.args = {
+	phase: GamePhase.PREPARING,
 	overlay: Overlay.PLAYERS
 };
 
 export const Tab_2_Shop_Overlay = Template.bind({});
 Tab_2_Shop_Overlay.args = {
+	phase: GamePhase.PREPARING,
 	overlay: Overlay.SHOP
 };
 
 export const Tab_3_Help_Overlay = Template.bind({});
 Tab_3_Help_Overlay.args = {
+	phase: GamePhase.PREPARING,
 	overlay: Overlay.HELP
 };
 
 export const Tab_4_Settings_Overlay = Template.bind({});
 Tab_4_Settings_Overlay.args = {
+	phase: GamePhase.PREPARING,
 	overlay: Overlay.SETTINGS
 };
