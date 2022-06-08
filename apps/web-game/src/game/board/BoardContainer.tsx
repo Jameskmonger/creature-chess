@@ -15,7 +15,7 @@ const useStyles = createUseStyles({
 	}
 })
 
-export const BoardContainer: React.FC = () => {
+export function BoardContainer() {
 	const styles = useStyles();
 	const matchBoard = useGameMatchBoard();
 

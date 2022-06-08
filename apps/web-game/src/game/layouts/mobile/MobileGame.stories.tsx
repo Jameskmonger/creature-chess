@@ -7,6 +7,7 @@ import { GamePhase } from "@creature-chess/models";
 import { MobileGame } from "./MobileGame";
 import { Overlay } from "../../ui";
 import { createMockStore } from "../stories-utils";
+import { ConnectionStatus } from "../../connection-status";
 
 export default {
   title: "Game/MobileGame",
@@ -25,6 +26,7 @@ const Template: Story<any> = (args) => {
 				...state.ui,
 				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
 				currentOverlay: args.overlay,
+				connectionStatus: args.connectionStatus ? args.connectionStatus : state.ui.connectionStatus,
 			},
 			roundInfo: {
 				...state.roundInfo,
@@ -36,6 +38,8 @@ const Template: Story<any> = (args) => {
 			},
 		})
 	)
+
+	console.log({ args, state: store.getState() })
 
 	return (
 		<Provider
@@ -120,6 +124,13 @@ Phase_4_Victory.args = {
 	overlay: null,
 	phase: GamePhase.PLAYING,
 	winnerId: "1234",
+};
+
+export const Phase_4_Disconnected = Template.bind({});
+Phase_4_Disconnected.args = {
+	overlay: null,
+	phase: GamePhase.PLAYING,
+	connectionStatus: ConnectionStatus.DISCONNECTED,
 };
 
 export const Tab_1_Players_Overlay = Template.bind({});
