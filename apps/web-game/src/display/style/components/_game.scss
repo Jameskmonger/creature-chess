@@ -22,28 +22,9 @@ body {
 		height: 100%;
 		box-sizing: border-box;
 
-		.group {
-			&:not(:first-child) {
-				margin-left: $spacer;
-			}
-		}
-
 		.profile {
 			margin-bottom: 0.5rem;
 		}
-	}
-
-	&.portrait {
-		.group {
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-		}
-	}
-
-	.group {
-		flex: 1;
-		box-sizing: border-box;
 	}
 
 	.ready-up {

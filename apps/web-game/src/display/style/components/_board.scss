@@ -9,12 +9,9 @@
   }
 }
 
-.game .board-container.group {
-  flex: 2;
-}
-
 .board-container {
   position: relative;
+  flex: 2;
 
   .now-playing {
     position: absolute;

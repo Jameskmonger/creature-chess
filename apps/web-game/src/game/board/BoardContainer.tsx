@@ -5,13 +5,14 @@ import { MatchBoard } from "./MatchBoard";
 import { LocalBoard } from "./LocalBoard";
 import { ReadyUpButton, ReadyOverlay, VictoryOverlay, MatchRewardsOverlay, ReconnectOverlay } from "./overlays";
 import { NowPlaying } from "../module/nowPlaying";
+import { Group } from "@creature-chess/ui";
 
 export const BoardContainer: React.FC = () => {
 	const matchBoard = useGameMatchBoard();
 
 	return (
 		<DndProvider>
-			<div className="group board-container">
+			<Group className="board-container">
 				<NowPlaying />
 
 				<ReadyUpButton />
@@ -28,7 +29,7 @@ export const BoardContainer: React.FC = () => {
 					<MatchRewardsOverlay />
 					<ReconnectOverlay />
 				</>
-			</div>
+			</Group>
 		</DndProvider>
 	);
 }

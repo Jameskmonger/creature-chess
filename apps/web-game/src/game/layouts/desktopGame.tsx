@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Footer } from "@creature-chess/ui";
+import { Footer, Group } from "@creature-chess/ui";
 import {
 	PlayerList, CardShop, Help,
 	Profile, RoundIndicator, PhaseInfo,
@@ -10,7 +10,7 @@ import { BoardContainer } from "../board";
 
 const DesktopGame: React.FunctionComponent = () => (
 	<div className="game landscape">
-		<div className="group">
+		<Group>
 			<RoundIndicator />
 
 			<PhaseInfo />
@@ -18,11 +18,11 @@ const DesktopGame: React.FunctionComponent = () => (
 			<NowPlaying />
 
 			<PlayerList />
-		</div>
+		</Group>
 
 		<BoardContainer />
 
-		<div className="group right">
+		<Group className="right-group-legacy">
 			<QuitGameButton />
 
 			<CardShop />
@@ -32,7 +32,7 @@ const DesktopGame: React.FunctionComponent = () => (
 			<div className="help-container"><Help hideFooter /></div>
 
 			<Footer />
-		</div>
+		</Group>
 	</div>
 );
 
