@@ -17,6 +17,13 @@ const useStyles = createUseStyles({
 		"justifyContent": "center",
 		"flexDirection": "column",
 	},
+	"@media (orientation: portrait)": {
+		"group": {
+			"&:not(:first-child)": {
+				"margin-top": SPACER,
+			}
+		},
+	},
 	"@media (orientation: landscape)": {
 		"group": {
 			"&:not(:first-child)": {

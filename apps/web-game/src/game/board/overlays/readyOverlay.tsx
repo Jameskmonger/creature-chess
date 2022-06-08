@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { usePlayerId } from "@creature-chess/auth-web";
-import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
-import { PlayerAvatar, Title, PlayerHealthbar, Layout, Half } from "@creature-chess/ui";
+import { GamePhase } from "@creature-chess/models";
+import { PlayerAvatar, Title, PlayerHealthbar, Layout, Group } from "@creature-chess/ui";
 import { Header2, Header4 } from "@creature-chess/ui/text";
 import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";
@@ -42,45 +42,36 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		return null;
 	}
 
-	const returnTitleOrSpacer = (player: PlayerListPlayer) => {
-		if (player.profile?.title) {
-			return <Title titleId={player.profile.title} />;
-		}
-		return <div className="spacer" />;
-	};
-
 	return (
 		<BoardOverlay>
 			<div className={styles.textCenter}>
 				<Layout direction="column">
 					<Header2>Now Playing</Header2>
-					<div>
+					<Group>
 						<Layout direction="row">
-							<div>
-								<PlayerAvatar player={localPlayer} />
-							</div>
-							<div>
+							<PlayerAvatar player={localPlayer} />
+
+							<Group>
 								<Header4>{localPlayer.name}</Header4>
-								{returnTitleOrSpacer(localPlayer)}
+								<Title titleId={localPlayer.profile?.title || null} />
 								<PlayerHealthbar health={localPlayer.health} />
 								<QuickChatBox sendingPlayerId={localId} />
-							</div>
+							</Group>
 						</Layout>
-					</div>
+					</Group>
 					<Header2>vs.</Header2>
-					<div>
+					<Group>
 						<Layout direction="row">
-							<div>
+							<Group>
 								<Header4>{opponent.name}</Header4>
-								{returnTitleOrSpacer(opponent)}
+								<Title titleId={opponent.profile?.title || null} />
 								<PlayerHealthbar health={opponent.health} />
 								<QuickChatBox sendingPlayerId={opponent.id} />
-							</div>
-							<div>
-								<PlayerAvatar player={opponent} />
-							</div>
+							</Group>
+
+							<PlayerAvatar player={opponent} />
 						</Layout>
-					</div>
+					</Group>
 
 					<HeadToHeadStats player={localPlayer} opponent={opponent} />
 					<QuickChatButtonArray />

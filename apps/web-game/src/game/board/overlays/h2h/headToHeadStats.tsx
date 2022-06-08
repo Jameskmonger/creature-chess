@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Layout } from "@creature-chess/ui";
+import { Group, Layout } from "@creature-chess/ui";
 import { Text, Header4 } from "@creature-chess/ui/text";
 import { PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { AppState } from "../../../../store";
@@ -46,12 +46,18 @@ const HeadToHeadStats: React.FC<{ player: PlayerListPlayer; opponent: PlayerList
 
 	return (
 		<Layout direction="column">
-			<Header4>Position</Header4>
-			<Text>{getPosition(player, playerList)} vs {getPosition(opponent, playerList)}</Text>
-			<Header4>Streak</Header4>
-			<Text>{getStreak(player)} vs {getStreak(opponent)}</Text>
-			<Header4>Level</Header4>
-			<Text>{player.level} vs {opponent.level}</Text>
+			<Group>
+				<Header4>Position</Header4>
+				<Text>{getPosition(player, playerList)} vs {getPosition(opponent, playerList)}</Text>
+			</Group>
+			<Group>
+				<Header4>Streak</Header4>
+				<Text>{getStreak(player)} vs {getStreak(opponent)}</Text>
+			</Group>
+			<Group>
+				<Header4>Level</Header4>
+				<Text>{player.level} vs {opponent.level}</Text>
+			</Group>
 		</Layout>
 	);
 };
