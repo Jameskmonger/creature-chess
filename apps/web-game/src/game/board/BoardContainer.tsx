@@ -7,6 +7,7 @@ import { ReadyUpButton, ReadyOverlay, VictoryOverlay, MatchRewardsOverlay, Recon
 import { NowPlaying } from "../module/nowPlaying";
 import { Group } from "@creature-chess/ui";
 import { createUseStyles } from "react-jss";
+import classNames from "classnames";
 
 const useStyles = createUseStyles({
 	boardContainer: {
@@ -20,7 +21,7 @@ export const BoardContainer: React.FC = () => {
 
 	return (
 		<DndProvider>
-			<Group className={styles.boardContainer}>
+			<Group className={classNames(styles.boardContainer, "board-container")}>
 				<NowPlaying />
 
 				<ReadyUpButton />

@@ -16,10 +16,23 @@ export default {
 const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
+	const store = createMockStore(
+		args.halfBoard,
+		state => ({
+			...state,
+			ui: {
+				...state.ui,
+				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
+			},
+			roundInfo: {
+				...state.roundInfo,
+				phase: args.phase
+			}
+		})
+	)
+
 	return (
-		<Provider
-			store={createMockStore(args.overlay, args.phase, args.halfBoard)}
-		>
+		<Provider store={store}>
 			<DesktopGame />
 		</Provider>
 	);
@@ -40,5 +53,12 @@ Phase_1_Ready.args = {
 export const Phase_2_Playing = Template.bind({});
 Phase_2_Playing.args = {
 	phase: GamePhase.PLAYING,
+	halfBoard: false,
+};
+
+export const Phase_3_Victory = Template.bind({});
+Phase_3_Victory.args = {
+	phase: GamePhase.PLAYING,
+	winnerId: "1234",
 	halfBoard: false,
 };

@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
+import { Group, Layout } from "@creature-chess/ui";
+import { DiscordIcon } from "@creature-chess/ui/misc";
+import { Header2, Header4 } from "@creature-chess/ui/text";
 import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
@@ -24,17 +27,11 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 	if (justDied) {
 		return (
 			<BoardOverlay>
-				<div className="match-rewards-content">
-					<h2>You Died</h2>
-
-					<p className="health"><span className="highlight">{damage}</span> health lost</p>
-
-					<div className="discord-link">
-						<p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
-
-						<a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
-					</div>
-				</div>
+				<Layout direction="column">
+					<Header2>You died</Header2>
+					<Header4>{damage} health lost</Header4>
+					<DiscordIcon />
+				</Layout>
 			</BoardOverlay>
 		);
 	}
@@ -42,41 +39,39 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 	if (damage === 0) {
 		return (
 			<BoardOverlay>
-				<div className="match-rewards-content">
-					<h2>Round Won</h2>
-
-					<div className="money">
-						<h3><span className="highlight">${total}</span> gained</h3>
+				<Layout direction="column">
+					<Header2>Round Won</Header2>
+					<Group>
+						<Header4>${total} gained</Header4>
 
 						<ul>
-							<li>Base: <span className="highlight">${base}</span></li>
-							<li>Win Bonus: <span className="highlight">${winBonus}</span></li>
-							<li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
-							<li>Interest (10%): <span className="highlight">${interest}</span></li>
+							<li>Base: ${base}</li>
+							<li>Win Bonus: ${winBonus}</li>
+							<li>Streak Bonus: ${streakBonus}</li>
+							<li>Interest (10%): ${interest}</li>
 						</ul>
-					</div>
-				</div>
+					</Group>
+				</Layout>
 			</BoardOverlay>
 		);
 	}
 
 	return (
 		<BoardOverlay>
-			<div className="match-rewards-content">
-				<h2>Round Lost</h2>
-				<p className="health"><span className="highlight">{damage}</span> health lost</p>
-
-				<div className="money">
-					<h3><span className="highlight">${total}</span> gained</h3>
+			<Layout direction="column">
+				<Header2>Round Lost</Header2>
+				<Header4>{damage} health lost</Header4>
+				<Group>
+					<Header4>${total} gained</Header4>
 
 					<ul>
-						<li>Base: <span className="highlight">${base}</span></li>
-						<li>Win Bonus: <span className="highlight">${winBonus}</span></li>
-						<li>Streak Bonus: <span className="highlight">${streakBonus}</span></li>
-						<li>Interest (10%): <span className="highlight">${interest}</span></li>
+						<li>Base: ${base}</li>
+						<li>Win Bonus: ${winBonus}</li>
+						<li>Streak Bonus: ${streakBonus}</li>
+						<li>Interest (10%): ${interest}</li>
 					</ul>
-				</div>
-			</div>
+				</Group>
+			</Layout>
 		</BoardOverlay>
 	);
 };

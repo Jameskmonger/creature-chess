@@ -17,9 +17,29 @@ export default {
 const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
+	const store = createMockStore(
+		args.halfBoard,
+		state => ({
+			...state,
+			ui: {
+				...state.ui,
+				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
+				currentOverlay: args.overlay,
+			},
+			roundInfo: {
+				...state.roundInfo,
+				phase: args.phase
+			},
+			playerInfo: {
+				...state.playerInfo,
+				matchRewards: args.matchRewards ? args.matchRewards : state.playerInfo.matchRewards,
+			},
+		})
+	)
+
 	return (
 		<Provider
-			store={createMockStore(args.overlay, args.phase, args.halfBoard)}
+			store={store}
 		>
 			<MobileGame />
 		</Provider>
@@ -30,43 +50,98 @@ export const Phase_0_Preparing = Template.bind({});
 Phase_0_Preparing.args = {
 	overlay: null,
 	phase: GamePhase.PREPARING,
-	halfBoard: true,
 };
 
 export const Phase_1_Ready = Template.bind({});
 Phase_1_Ready.args = {
 	overlay: null,
 	phase: GamePhase.READY,
-	halfBoard: false,
 };
 
 export const Phase_2_Playing = Template.bind({});
 Phase_2_Playing.args = {
 	overlay: null,
 	phase: GamePhase.PLAYING,
-	halfBoard: false,
+};
+
+export const Phase_3_MatchRewards_Won = Template.bind({});
+Phase_3_MatchRewards_Won.args = {
+	overlay: null,
+	phase: GamePhase.PLAYING,
+	matchRewards: {
+		damage: 0,
+		justDied: false,
+		rewardMoney: {
+			total: 6,
+			base: 3,
+			winBonus: 1,
+			streakBonus: 1,
+			interest: 1,
+		},
+	},
+};
+
+export const Phase_3_MatchRewards_Lost = Template.bind({});
+Phase_3_MatchRewards_Lost.args = {
+	overlay: null,
+	phase: GamePhase.PLAYING,
+	matchRewards: {
+		damage: 5,
+		justDied: false,
+		rewardMoney: {
+			total: 5,
+			base: 3,
+			winBonus: 1,
+			streakBonus: 1,
+			interest: 0,
+		},
+	},
+};
+
+export const Phase_3_MatchRewards_Died = Template.bind({});
+Phase_3_MatchRewards_Died.args = {
+	overlay: null,
+	phase: GamePhase.PLAYING,
+	matchRewards: {
+		damage: 5,
+		justDied: true,
+		rewardMoney: {
+			total: 5,
+			base: 3,
+			winBonus: 1,
+			streakBonus: 1,
+			interest: 0,
+		},
+	},
+};
+
+export const Phase_4_Victory = Template.bind({});
+Phase_4_Victory.args = {
+	overlay: null,
+	phase: GamePhase.PLAYING,
+	winnerId: "1234",
 };
 
 export const Tab_1_Players_Overlay = Template.bind({});
 Tab_1_Players_Overlay.args = {
 	phase: GamePhase.PREPARING,
-	overlay: Overlay.PLAYERS
+	overlay: Overlay.PLAYERS,
 };
 
 export const Tab_2_Shop_Overlay = Template.bind({});
 Tab_2_Shop_Overlay.args = {
 	phase: GamePhase.PREPARING,
-	overlay: Overlay.SHOP
+	overlay: Overlay.SHOP,
 };
 
 export const Tab_3_Help_Overlay = Template.bind({});
 Tab_3_Help_Overlay.args = {
 	phase: GamePhase.PREPARING,
-	overlay: Overlay.HELP
+	overlay: Overlay.HELP,
 };
 
 export const Tab_4_Settings_Overlay = Template.bind({});
 Tab_4_Settings_Overlay.args = {
 	phase: GamePhase.PREPARING,
-	overlay: Overlay.SETTINGS
+	overlay: Overlay.SETTINGS,
 };

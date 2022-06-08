@@ -77,16 +77,16 @@ const createBenchState = (): BoardState<PieceModel> => {
 	}
 }
 
-const createMockedState = (currentOverlay: Overlay, phase: GamePhase, halfBoard: boolean): GameState => ({
+const createMockedState = (halfBoard: boolean): GameState => ({
 	ui: {
 		connectionStatus: ConnectionStatus.CONNECTED,
-		currentOverlay,
+		currentOverlay: null,
 		inGame: true,
 		selectedPieceId: null,
 		winnerId: null,
 	},
 	roundInfo: {
-		phase,
+		phase: GamePhase.PREPARING,
 		phaseStartedAtSeconds: Date.now() / 1000,
 		round: 1,
 	},
@@ -162,12 +162,16 @@ const createMockedState = (currentOverlay: Overlay, phase: GamePhase, halfBoard:
 	}
 });
 
-export const createMockStore = (currentOverlay: Overlay, phase: GamePhase, halfBoard: boolean) => (
+export const createMockStore = (halfBoard: boolean, decorateState?: (state: GameState) => GameState) => (
 	configureStore({
 		reducer: createSlice({
 			name: "mock slice",
 			initialState: {
-				game: createMockedState(currentOverlay, phase, halfBoard)
+				game: (
+					decorateState
+					? decorateState(createMockedState(halfBoard))
+					: createMockedState(halfBoard)
+				)
 			},
 			reducers: {}
 		}).reducer
