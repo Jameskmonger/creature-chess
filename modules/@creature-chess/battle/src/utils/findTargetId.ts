@@ -1,12 +1,22 @@
-import { PieceModel, getDelta, TileCoordinates } from "@creature-chess/models";
 import { BoardSelectors, BoardState } from "@shoki/board";
 
-const getLivingEnemies = (piece: PieceModel, board: BoardState<PieceModel>): PieceModel[] =>
-	BoardSelectors.getAllPieces(board).filter(other => other.ownerId !== piece.ownerId && other.currentHealth > 0);
+import { PieceModel, getDelta, TileCoordinates } from "@creature-chess/models";
+
+const getLivingEnemies = (
+	piece: PieceModel,
+	board: BoardState<PieceModel>
+): PieceModel[] =>
+	BoardSelectors.getAllPieces(board).filter(
+		(other) => other.ownerId !== piece.ownerId && other.currentHealth > 0
+	);
 
 type EnemyDelta = { enemy: PieceModel; delta: TileCoordinates };
 
-const getEnemyDeltas = (board: BoardState, enemies: PieceModel[], attackerPosition: TileCoordinates): EnemyDelta[] => {
+const getEnemyDeltas = (
+	board: BoardState,
+	enemies: PieceModel[],
+	attackerPosition: TileCoordinates
+): EnemyDelta[] => {
 	const enemyDeltas: EnemyDelta[] = [];
 
 	for (const enemy of enemies) {
@@ -18,14 +28,17 @@ const getEnemyDeltas = (board: BoardState, enemies: PieceModel[], attackerPositi
 
 		enemyDeltas.push({
 			enemy,
-			delta: getDelta(attackerPosition, enemyPosition)
+			delta: getDelta(attackerPosition, enemyPosition),
 		});
 	}
 
 	return enemyDeltas;
 };
 
-export const findTargetId = (piece: PieceModel, board: BoardState<PieceModel>): string | null => {
+export const findTargetId = (
+	piece: PieceModel,
+	board: BoardState<PieceModel>
+): string | null => {
 	const enemies = getLivingEnemies(piece, board);
 
 	if (enemies.length === 0) {

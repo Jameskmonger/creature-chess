@@ -1,5 +1,9 @@
 import { PlayerProfile } from "@creature-chess/models";
-import { FeaturesPlayerVariables, defaultFeaturesPlayerVariables } from "../../features";
+
+import {
+	FeaturesPlayerVariables,
+	defaultFeaturesPlayerVariables,
+} from "../../features";
 
 export type PlayerVariables = {
 	name: string;
@@ -9,5 +13,5 @@ export type PlayerVariables = {
 export const defaultPlayerVariables = (): PlayerVariables => ({
 	name: "",
 	profile: { title: null, picture: 1 },
-	...defaultFeaturesPlayerVariables()
+	...defaultFeaturesPlayerVariables(),
 });

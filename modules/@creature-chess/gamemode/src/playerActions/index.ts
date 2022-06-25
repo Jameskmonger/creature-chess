@@ -1,36 +1,42 @@
 import { BuyCardPlayerAction, buyCardPlayerAction } from "./buyCard";
+import { BuyXpPlayerAction, buyXpPlayerAction } from "./buyXp";
+import { DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
+import { QuickChatPlayerAction, quickChatPlayerAction } from "./quickChat";
+import { QuitGamePlayerAction, quitGamePlayerAction } from "./quitGame";
+import { ReadyUpPlayerAction, readyUpPlayerAction } from "./readyUp";
+import {
+	RerollCardsPlayerAction,
+	rerollCardsPlayerAction,
+} from "./rerollCards";
+import { SellPiecePlayerAction, sellPiecePlayerAction } from "./sellPiece";
+import { SpectatePlayerAction, spectatePlayerAction } from "./spectate";
+import { SwapPiecePlayerAction, swapPiecePlayerAction } from "./swapPiece";
+import {
+	ToggleShopLockPlayerAction,
+	toggleShopLockPlayerAction,
+} from "./toggleShopLock";
+
 export { BuyCardPlayerAction, buyCardPlayerAction };
 
-import { BuyXpPlayerAction, buyXpPlayerAction } from "./buyXp";
 export { BuyXpPlayerAction, buyXpPlayerAction };
 
-import { RerollCardsPlayerAction, rerollCardsPlayerAction } from "./rerollCards";
 export { RerollCardsPlayerAction, rerollCardsPlayerAction };
 
-import { ToggleShopLockPlayerAction, toggleShopLockPlayerAction } from "./toggleShopLock";
 export { ToggleShopLockPlayerAction, toggleShopLockPlayerAction };
 
-import { SellPiecePlayerAction, sellPiecePlayerAction } from "./sellPiece";
 export { SellPiecePlayerAction, sellPiecePlayerAction };
 
-import { ReadyUpPlayerAction, readyUpPlayerAction } from "./readyUp";
 export { ReadyUpPlayerAction, readyUpPlayerAction };
 
-import { QuitGamePlayerAction, quitGamePlayerAction } from "./quitGame";
 export { QuitGamePlayerAction, quitGamePlayerAction };
 
-import { DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
 export { DropPiecePlayerAction, dropPiecePlayerAction };
 
-import { SwapPiecePlayerAction, swapPiecePlayerAction } from "./swapPiece";
 export { SwapPiecePlayerAction, swapPiecePlayerAction };
 
-import { SpectatePlayerAction, spectatePlayerAction } from "./spectate";
 export { SpectatePlayerAction, spectatePlayerAction };
 
-import { QuickChatPlayerAction, quickChatPlayerAction } from "./quickChat";
 export { QuickChatPlayerAction, quickChatPlayerAction };
-
 
 export const PlayerActionTypesArray = [
 	buyXpPlayerAction.toString(),
@@ -43,11 +49,11 @@ export const PlayerActionTypesArray = [
 	dropPiecePlayerAction.toString(),
 	spectatePlayerAction.toString(),
 	quickChatPlayerAction.toString(),
-	spectatePlayerAction.toString()
+	spectatePlayerAction.toString(),
 ];
 
 export type PlayerAction =
-	BuyXpPlayerAction
+	| BuyXpPlayerAction
 	| BuyCardPlayerAction
 	| RerollCardsPlayerAction
 	| ToggleShopLockPlayerAction

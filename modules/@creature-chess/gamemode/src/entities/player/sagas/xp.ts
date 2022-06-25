@@ -1,24 +1,30 @@
 import { take, put } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
+
 import { GamePhase, getXpToNextLevel } from "@creature-chess/models";
+
+import { getPlayerEntityDependencies } from "../dependencies";
 import { PlayerState } from "../state";
 import { updateLevelCommand } from "../state/commands";
 import { getPlayerLevel, getPlayerXp } from "../state/selectors";
-import { getPlayerEntityDependencies } from "../dependencies";
 
 const ADD_XP_COMMAND = "ADD_XP_COMMAND";
 type ADD_XP_COMMAND = typeof ADD_XP_COMMAND;
-type AddXpCommand = ({ type: ADD_XP_COMMAND; payload: { amount: number } });
+type AddXpCommand = { type: ADD_XP_COMMAND; payload: { amount: number } };
 export const addXpCommand = (amount: number): AddXpCommand => ({
 	type: ADD_XP_COMMAND,
-	payload: { amount }
+	payload: { amount },
 });
 
-export const playerXpSaga = function*() {
-	const { boardSlices: { boardSlice, benchSlice } } = yield* getPlayerEntityDependencies();
+export const playerXpSaga = function* () {
+	const {
+		boardSlices: { boardSlice, benchSlice },
+	} = yield* getPlayerEntityDependencies();
 
 	while (true) {
-		const { payload: { amount } }: AddXpCommand = yield take(ADD_XP_COMMAND);
+		const {
+			payload: { amount },
+		}: AddXpCommand = yield take(ADD_XP_COMMAND);
 		let level = yield* select(getPlayerLevel);
 		let xp = yield* select(getPlayerXp);
 
@@ -39,7 +45,9 @@ export const playerXpSaga = function*() {
 		yield put(updateLevelCommand({ level, xp }));
 
 		if (level !== oldLevel) {
-			const inPreparingPhase: boolean = yield select((state: PlayerState) => state.roundInfo.phase === GamePhase.PREPARING);
+			const inPreparingPhase: boolean = yield select(
+				(state: PlayerState) => state.roundInfo.phase === GamePhase.PREPARING
+			);
 
 			if (inPreparingPhase) {
 				yield put(boardSlice.commands.setPieceLimitCommand(level));

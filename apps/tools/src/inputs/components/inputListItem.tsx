@@ -6,18 +6,17 @@ type Props = {
 	onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-const InputListItem: React.FunctionComponent<Props> = ({ heading, value, onChange }) => (
+const InputListItem: React.FunctionComponent<Props> = ({
+	heading,
+	value,
+	onChange,
+}) => (
 	<>
 		<li>
 			<h1>{heading}</h1>
 		</li>
 		<li className="state-input">
-			<input
-				type="text"
-				value={value}
-				id={heading}
-				onChange={onChange}
-			/>
+			<input type="text" value={value} id={heading} onChange={onChange} />
 		</li>
 	</>
 );

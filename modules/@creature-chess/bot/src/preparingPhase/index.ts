@@ -1,14 +1,21 @@
-import { select, put, call } from "redux-saga/effects";
-import { getVariable } from "@shoki/engine";
-import { PlayerActions, PlayerState, PlayerVariables } from "@creature-chess/gamemode";
-import { BotPersonality } from "@creature-chess/data";
 import delay from "delay";
-import { BOT_ACTION_TIME_MS } from "../constants";
+import { select, put, call } from "redux-saga/effects";
+
+import { getVariable } from "@shoki/engine";
+
+import { BotPersonality } from "@creature-chess/data";
+import {
+	PlayerActions,
+	PlayerState,
+	PlayerVariables,
+} from "@creature-chess/gamemode";
+
 import { getActions } from "../actions";
+import { BOT_ACTION_TIME_MS } from "../constants";
 import { putBenchOnBoard } from "../putBenchOnBoard";
 
-export const preparingPhase = function*(personality: BotPersonality) {
-	const name = yield* getVariable<PlayerVariables, string>(v => v.name);
+export const preparingPhase = function* (personality: BotPersonality) {
+	const name = yield* getVariable<PlayerVariables, string>((v) => v.name);
 
 	yield delay(BOT_ACTION_TIME_MS);
 

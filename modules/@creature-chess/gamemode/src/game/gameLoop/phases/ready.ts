@@ -1,12 +1,17 @@
 import { put, delay, getContext } from "redux-saga/effects";
-import { GameOptions, GamePhase } from "@creature-chess/models";
-import { RoundInfoCommands } from "../../roundInfo";
-import { Match } from "../../match";
-import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
-import { playerBeforeReadyPhaseEvent, playerRunReadyPhaseEvent } from "../../events";
 import { Logger } from "winston";
 
-export const runReadyPhase = function*() {
+import { GameOptions, GamePhase } from "@creature-chess/models";
+
+import {
+	playerBeforeReadyPhaseEvent,
+	playerRunReadyPhaseEvent,
+} from "../../events";
+import { Match } from "../../match";
+import { RoundInfoCommands } from "../../roundInfo";
+import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
+
+export const runReadyPhase = function* () {
 	const options: GameOptions = yield getContext("options");
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
@@ -14,7 +19,7 @@ export const runReadyPhase = function*() {
 
 	// todo turn this into a `call` so it waits for all players
 
-	players.getAll().forEach(p => p.put(playerBeforeReadyPhaseEvent()));
+	players.getAll().forEach((p) => p.put(playerBeforeReadyPhaseEvent()));
 
 	yield delay(500);
 
@@ -29,7 +34,13 @@ export const runReadyPhase = function*() {
 			return;
 		}
 
-		const match = new Match(homePlayer, awayPlayer, awayIsClone, logger, options);
+		const match = new Match(
+			homePlayer,
+			awayPlayer,
+			awayIsClone,
+			logger,
+			options
+		);
 
 		homePlayer.put(playerRunReadyPhaseEvent({ match }));
 

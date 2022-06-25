@@ -1,39 +1,50 @@
 import * as React from "react";
+
+import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+
 import { usePlayerId } from "@creature-chess/auth-web";
 import { GamePhase } from "@creature-chess/models";
-import { PlayerAvatar, Title, PlayerHealthbar, Layout, Group } from "@creature-chess/ui";
+import {
+	PlayerAvatar,
+	Title,
+	PlayerHealthbar,
+	Layout,
+	Group,
+} from "@creature-chess/ui";
 import { Header2, Header4 } from "@creature-chess/ui/text";
+
 import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
-import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
 	textCenter: {
-		"textAlign": "center",
+		textAlign: "center",
 	},
 });
 
 const ReadyOverlay: React.FunctionComponent = () => {
 	const styles = useStyles();
-	const inReadyPhase = useSelector<AppState, boolean>(state =>
-		state.game.roundInfo.phase === GamePhase.READY
+	const inReadyPhase = useSelector<AppState, boolean>(
+		(state) => state.game.roundInfo.phase === GamePhase.READY
 	);
 
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	const localId = usePlayerId();
-	const localPlayer = playerList.find(p => p.id === localId);
+	const localPlayer = playerList.find((p) => p.id === localId);
 
 	const opponent = useSelector((state: AppState) => {
 		const id = state.game.playerInfo.opponentId;
-		return state.game.playerList.find(p => p.id === id);
+		return state.game.playerList.find((p) => p.id === id);
 	});
 
-	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
+	const spectatingPlayer = useSelector<AppState, boolean>(
+		(state) => state.game.spectating.id !== null
+	);
 
 	if (!localPlayer || !opponent || !inReadyPhase || spectatingPlayer) {
 		return null;

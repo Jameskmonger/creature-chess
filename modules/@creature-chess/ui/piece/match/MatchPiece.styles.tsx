@@ -4,19 +4,19 @@ const ATTACK_DURATION_MS = 200;
 const ATTACK_MOVEMENT_MULTIPLIER_PX = 3;
 const HIT_ROTATION_MULTIPLIER_DEG = 1;
 
-const projectileSize = '10px'
+const projectileSize = "10px";
 
 export const useAnimationStyles = createUseStyles({
 	"@keyframes piece-dying-anim": {
 		"100%": {
-			transform: "scale(0)"
-		}
+			transform: "scale(0)",
+		},
 	},
-	"dying": {
+	dying: {
 		animationName: "$piece-dying-anim",
 		animationDuration: "1000ms",
 		animationFillMode: "forwards",
-		animationIterationCount: "1"
+		animationIterationCount: "1",
 	},
 
 	"@keyframes piece-attack-basic-anim": {
@@ -35,7 +35,7 @@ export const useAnimationStyles = createUseStyles({
 			left: "0",
 		},
 	},
-	"attackBasic": {
+	attackBasic: {
 		animationName: "$piece-attack-basic-anim",
 		animationDuration: `${ATTACK_DURATION_MS}ms`,
 	},
@@ -57,35 +57,35 @@ export const useAnimationStyles = createUseStyles({
 			  )`,
 		},
 	},
-	"projectile": {
+	projectile: {
 		display: "none",
 		position: "absolute",
 		top: `calc(50% - (${projectileSize} / 2))`,
 		left: `calc(50% - (${projectileSize} / 2))`,
 	},
-	"attackShoot": {
+	attackShoot: {
 		"& $projectile": {
 			display: "block",
 			animationName: "$piece-attack-shoot-anim",
 			animationDuration: `${ATTACK_DURATION_MS}ms`,
-		}
+		},
 	},
 
 	"@keyframes piece-receive-hit-anim": {
 		"0%": {
-			"transform": "rotate(0deg)"
+			transform: "rotate(0deg)",
 		},
 		"25%": {
-			"transform": `rotate(calc(${HIT_ROTATION_MULTIPLIER_DEG}deg * var(--hitPower) * -1))`
+			transform: `rotate(calc(${HIT_ROTATION_MULTIPLIER_DEG}deg * var(--hitPower) * -1))`,
 		},
 		"75%": {
-			"transform": `rotate(calc(${HIT_ROTATION_MULTIPLIER_DEG}deg * var(--hitPower)))`
+			transform: `rotate(calc(${HIT_ROTATION_MULTIPLIER_DEG}deg * var(--hitPower)))`,
 		},
 		"100%": {
-			"transform": "rotate(0deg)"
-		}
+			transform: "rotate(0deg)",
+		},
 	},
-	"receiveHit": {
+	receiveHit: {
 		animationName: "$piece-receive-hit-anim",
 		animationDuration: `${ATTACK_DURATION_MS}ms`,
 	},
@@ -97,5 +97,5 @@ export const usePieceStyles = createUseStyles({
 		zIndex: 50,
 		width: "100%",
 		height: "100%",
-	}
+	},
 });

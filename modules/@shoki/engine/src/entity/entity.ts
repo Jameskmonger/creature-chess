@@ -1,7 +1,18 @@
+import {
+	Action,
+	applyMiddleware,
+	combineReducers,
+	createStore,
+	ReducersMapObject,
+} from "redux";
 import createSagaMiddleware from "redux-saga";
-import { createVariableStore, GetVariableFn, UpdateVariablesFn } from "./variablesStore";
-import { Action, applyMiddleware, combineReducers, createStore, ReducersMapObject } from "redux";
+
 import { Saga, Task } from "../effects";
+import {
+	createVariableStore,
+	GetVariableFn,
+	UpdateVariablesFn,
+} from "./variablesStore";
 
 export type Entity<TState, TVariables> = {
 	readonly id: string;
@@ -23,7 +34,11 @@ type EntityStaticProperties<TState> = {
 	rootSaga?: Saga;
 };
 
-export const entity = <TState, TDependencies extends {} = {}, TVariables extends {} = {}>(
+export const entity = <
+	TState,
+	TDependencies extends {} = {},
+	TVariables extends {} = {}
+>(
 	{ reducers, rootSaga }: EntityStaticProperties<TState>,
 	id: string,
 	dependencies: TDependencies = {} as TDependencies,
@@ -31,13 +46,15 @@ export const entity = <TState, TDependencies extends {} = {}, TVariables extends
 ): Entity<TState, TVariables> => {
 	const variableStore = createVariableStore<TVariables>(initialVariables);
 
-	const sagaMiddleware = createSagaMiddleware<EntitySagaContext<TDependencies, TVariables>>({
+	const sagaMiddleware = createSagaMiddleware<
+		EntitySagaContext<TDependencies, TVariables>
+	>({
 		context: {
 			id,
 			dependencies,
 			getVariable: variableStore.getVariable,
-			updateVariables: variableStore.updateVariables
-		}
+			updateVariables: variableStore.updateVariables,
+		},
 	});
 
 	const store = createStore(
@@ -54,13 +71,16 @@ export const entity = <TState, TDependencies extends {} = {}, TVariables extends
 		select: <T>(selector: (state: TState) => T) => selector(store.getState()),
 		getVariable: variableStore.getVariable,
 		runSaga: sagaMiddleware.run,
-		put: (action: Action) => store.dispatch(action)
+		put: (action: Action) => store.dispatch(action),
 	};
 };
 
-export const entityFactory = <TState, TDependencies extends {} = {}, TVariables extends {} = {}>(
-	statics: (EntityStaticProperties<TState> | ((dependencies: TDependencies) => EntityStaticProperties<TState>))
-) =>
+export const entityFactory =
+	<TState, TDependencies extends {} = {}, TVariables extends {} = {}>(
+		statics:
+			| EntityStaticProperties<TState>
+			| ((dependencies: TDependencies) => EntityStaticProperties<TState>)
+	) =>
 	(
 		id: string,
 		dependencies: TDependencies = {} as TDependencies,

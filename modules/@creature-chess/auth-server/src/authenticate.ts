@@ -1,7 +1,13 @@
 import { ManagementClient } from "auth0";
-import { verifyDecodeJwt } from "./verifyDecodeJwt";
+
 import { DatabaseConnection } from "@creature-chess/data";
-import { convertDatabaseUserToUserModel, UserAppMetadata, UserModel } from "./user";
+
+import {
+	convertDatabaseUserToUserModel,
+	UserAppMetadata,
+	UserModel,
+} from "./user";
+import { verifyDecodeJwt } from "./verifyDecodeJwt";
 
 export const authenticate = async (
 	managementClient: ManagementClient<UserAppMetadata>,
@@ -25,7 +31,10 @@ export const authenticate = async (
 			// need to create an account
 			const newUser = await database.user.create(authUser.user_id!);
 
-			await managementClient.updateAppMetadata({ id: authUser.user_id! }, { playerId: newUser!.ref.id, playerNickname: null, playerPicture: null });
+			await managementClient.updateAppMetadata(
+				{ id: authUser.user_id! },
+				{ playerId: newUser!.ref.id, playerNickname: null, playerPicture: null }
+			);
 
 			return convertDatabaseUserToUserModel(newUser!);
 		}
@@ -37,7 +46,12 @@ export const authenticate = async (
 		// todo remove this when DB gets wiped, it's to migrate people who were during the nickname changeover
 		if (userModel.nickname && !authUser.app_metadata.playerNickname) {
 			await managementClient.updateAppMetadata(
-				{ id: authUser.user_id! }, { playerId: dbUser!.ref.id, playerNickname: userModel.nickname, playerPicture: userModel.profile?.picture || null }
+				{ id: authUser.user_id! },
+				{
+					playerId: dbUser!.ref.id,
+					playerNickname: userModel.nickname,
+					playerPicture: userModel.profile?.picture || null,
+				}
 			);
 		}
 

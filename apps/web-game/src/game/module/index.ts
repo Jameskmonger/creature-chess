@@ -1,4 +1,8 @@
-export { PlayerList, playerListReducer, PlayerListCommands } from "./playerList";
+export {
+	PlayerList,
+	playerListReducer,
+	PlayerListCommands,
+} from "./playerList";
 export { quickChatReducer, quickChatCommands, QuickChat } from "./chat";
 
 export { CardShop, closeShopOnFirstBuySaga } from "./cardShop";

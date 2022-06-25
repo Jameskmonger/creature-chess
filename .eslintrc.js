@@ -13,149 +13,148 @@ Happy linting! 💖
 */
 
 module.exports = {
-	"env": {
-		"browser": true,
-		"node": true
+	env: {
+		browser: true,
+		node: true,
 	},
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"sourceType": "module"
+	parser: "@typescript-eslint/parser",
+	parserOptions: {
+		sourceType: "module",
 	},
-	"plugins": [
+	plugins: [
 		"eslint-plugin-jsdoc",
 		"eslint-plugin-prefer-arrow",
 		"eslint-plugin-import",
 		"eslint-plugin-react",
-		"@typescript-eslint"
+		"@typescript-eslint",
 	],
-	"settings": {
-		"react": {
-			"version": "detect"
-		}
+	settings: {
+		react: {
+			version: "detect",
+		},
 	},
-	"rules": {
+	rules: {
 		"@typescript-eslint/adjacent-overload-signatures": "error",
 		"@typescript-eslint/array-type": [
 			"error",
 			{
-				"default": "array"
-			}
+				default: "array",
+			},
 		],
 		"@typescript-eslint/ban-types": [
 			"error",
 			{
-				"types": {
-					"Object": {
-						"message": "Avoid using the `Object` type. Did you mean `object`?"
+				types: {
+					Object: {
+						message: "Avoid using the `Object` type. Did you mean `object`?",
 					},
-					"Function": {
-						"message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+					Function: {
+						message:
+							"Avoid using the `Function` type. Prefer a specific function type, like `() => void`.",
 					},
-					"Boolean": {
-						"message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
+					Boolean: {
+						message: "Avoid using the `Boolean` type. Did you mean `boolean`?",
 					},
-					"Number": {
-						"message": "Avoid using the `Number` type. Did you mean `number`?"
+					Number: {
+						message: "Avoid using the `Number` type. Did you mean `number`?",
 					},
-					"String": {
-						"message": "Avoid using the `String` type. Did you mean `string`?"
+					String: {
+						message: "Avoid using the `String` type. Did you mean `string`?",
 					},
-					"Symbol": {
-						"message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
+					Symbol: {
+						message: "Avoid using the `Symbol` type. Did you mean `symbol`?",
 					},
 					"{}": false,
-					"object": false
-				}
-			}
+					object: false,
+				},
+			},
 		],
 		"@typescript-eslint/consistent-type-assertions": "error",
 		"@typescript-eslint/consistent-type-definitions": "off",
 		"@typescript-eslint/explicit-member-accessibility": [
 			"error",
 			{
-				"accessibility": "explicit"
-			}
+				accessibility: "explicit",
+			},
 		],
 		"@typescript-eslint/indent": [
 			"error",
 			"tab",
 			{
-				"SwitchCase": 1,
-				"FunctionDeclaration": {
-					"parameters": "first"
+				SwitchCase: 1,
+				FunctionDeclaration: {
+					parameters: "first",
 				},
-				"FunctionExpression": {
-					"parameters": "first"
-				}
-			}
+				FunctionExpression: {
+					parameters: "first",
+				},
+			},
 		],
 		"@typescript-eslint/member-delimiter-style": [
 			"error",
 			{
-				"multiline": {
-					"delimiter": "semi",
-					"requireLast": true
+				multiline: {
+					delimiter: "semi",
+					requireLast: true,
 				},
-				"singleline": {
-					"delimiter": "semi",
-					"requireLast": false
-				}
-			}
+				singleline: {
+					delimiter: "semi",
+					requireLast: false,
+				},
+			},
 		],
 		"@typescript-eslint/member-ordering": "error",
 		"@typescript-eslint/naming-convention": [
 			"error",
 			{
-				"selector": "default",
-				"format": ["camelCase"]
+				selector: "default",
+				format: ["camelCase"],
 			},
 			{
-				"selector": "objectLiteralProperty",
-				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
-			},
-
-			{
-				"selector": "variable",
-				"format": ["camelCase", "UPPER_CASE", "PascalCase"],
-				"leadingUnderscore": "allow"
-			},
-			{
-				"selector": "parameter",
-				"format": ["camelCase"],
-				"leadingUnderscore": "allow"
+				selector: "objectLiteralProperty",
+				format: ["camelCase", "UPPER_CASE", "PascalCase"],
 			},
 
 			{
-				"selector": "memberLike",
-				"modifiers": ["private"],
-				"format": ["camelCase"]
+				selector: "variable",
+				format: ["camelCase", "UPPER_CASE", "PascalCase"],
+				leadingUnderscore: "allow",
+			},
+			{
+				selector: "parameter",
+				format: ["camelCase"],
+				leadingUnderscore: "allow",
 			},
 
 			{
-				"selector": "typeLike",
-				"format": ["PascalCase"]
+				selector: "memberLike",
+				modifiers: ["private"],
+				format: ["camelCase"],
 			},
 
 			{
-				"selector": "enum",
-				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
-
-			},
-			{
-				"selector": "enumMember",
-				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
-
+				selector: "typeLike",
+				format: ["PascalCase"],
 			},
 
 			{
-				"selector": "classProperty",
-				"format": ["camelCase", "UPPER_CASE"]
+				selector: "enum",
+				format: ["camelCase", "UPPER_CASE", "PascalCase"],
+			},
+			{
+				selector: "enumMember",
+				format: ["camelCase", "UPPER_CASE", "PascalCase"],
 			},
 
 			{
-				"selector": "typeAlias",
-				"format": ["PascalCase", "UPPER_CASE"]
-			}
+				selector: "classProperty",
+				format: ["camelCase", "UPPER_CASE"],
+			},
+
+			{
+				selector: "typeAlias",
+				format: ["PascalCase", "UPPER_CASE"],
+			},
 		],
 		"@typescript-eslint/no-empty-function": "error",
 		"@typescript-eslint/no-empty-interface": "error",
@@ -167,8 +166,8 @@ module.exports = {
 		"@typescript-eslint/no-shadow": [
 			"error",
 			{
-				"hoist": "all"
-			}
+				hoist: "all",
+			},
 		],
 		"@typescript-eslint/no-unused-expressions": "error",
 		"@typescript-eslint/no-use-before-define": "off",
@@ -180,42 +179,30 @@ module.exports = {
 			"error",
 			"double",
 			{
-				"avoidEscape": true
-			}
+				avoidEscape: true,
+			},
 		],
-		"@typescript-eslint/semi": [
-			"error",
-			"always"
-		],
+		"@typescript-eslint/semi": ["error", "always"],
 		"@typescript-eslint/triple-slash-reference": [
 			"error",
 			{
-				"path": "always",
-				"types": "prefer-import",
-				"lib": "always"
-			}
+				path: "always",
+				types: "prefer-import",
+				lib: "always",
+			},
 		],
 		"@typescript-eslint/type-annotation-spacing": "error",
 		"@typescript-eslint/unified-signatures": "error",
 		"arrow-body-style": "error",
-		"arrow-parens": [
-			"off",
-			"always"
-		],
-		"brace-style": [
-			"error",
-			"1tbs"
-		],
+		"arrow-parens": ["off", "always"],
+		"brace-style": ["error", "1tbs"],
 		"comma-dangle": "off",
-		"complexity": "off",
+		complexity: "off",
 		"constructor-super": "error",
-		"curly": "error",
+		curly: "error",
 		"default-case": "error",
 		"eol-last": "error",
-		"eqeqeq": [
-			"error",
-			"smart"
-		],
+		eqeqeq: ["error", "smart"],
 		"guard-for-in": "error",
 		"id-blacklist": [
 			"error",
@@ -227,7 +214,7 @@ module.exports = {
 			"Boolean",
 			"boolean",
 			"Undefined",
-			"undefined"
+			"undefined",
 		],
 		"id-match": "error",
 		"import/no-default-export": "warn",
@@ -235,15 +222,12 @@ module.exports = {
 		"jsdoc/check-alignment": "error",
 		"jsdoc/check-indentation": "error",
 		"jsdoc/newline-after-description": "error",
-		"max-classes-per-file": [
-			"error",
-			1
-		],
+		"max-classes-per-file": ["error", 1],
 		"max-len": [
 			"error",
 			{
-				"code": 160
-			}
+				code: 160,
+			},
 		],
 		"new-parens": "error",
 		"no-bitwise": "error",
@@ -252,7 +236,7 @@ module.exports = {
 		"no-console": [
 			"error",
 			{
-				"allow": [
+				allow: [
 					"log",
 					"warn",
 					"dir",
@@ -271,9 +255,9 @@ module.exports = {
 					"profile",
 					"profileEnd",
 					"timeStamp",
-					"context"
-				]
-			}
+					"context",
+				],
+			},
 		],
 		"no-debugger": "error",
 		"no-empty": "error",
@@ -290,67 +274,52 @@ module.exports = {
 		"no-unused-labels": "error",
 		"no-var": "error",
 		"object-shorthand": "error",
-		"one-var": [
-			"error",
-			"never"
-		],
+		"one-var": ["error", "never"],
 		"prefer-arrow/prefer-arrow-functions": "error",
 		"prefer-const": "error",
-		"quote-props": [
-			"error",
-			"consistent-as-needed"
-		],
-		"radix": "error",
+		"quote-props": ["error", "consistent-as-needed"],
+		radix: "error",
 		"react/forbid-component-props": [
 			"error",
 			{
-				"forbid": [
-					"className", "style"
-				]
-			}
+				forbid: ["className", "style"],
+			},
 		],
-		"react/jsx-boolean-value": [
-			0
-		],
+		"react/jsx-boolean-value": [0],
 		"react/jsx-curly-spacing": [
 			"error",
 			{
-				"when": "never"
-			}
+				when: "never",
+			},
 		],
-		"react/jsx-equals-spacing": [
-			"error",
-			"never"
-		],
+		"react/jsx-equals-spacing": ["error", "never"],
 		"react/jsx-key": "error",
 		"react/jsx-no-bind": "none",
 		"react/jsx-tag-spacing": [
 			"error",
 			{
-				"afterOpening": "allow",
-				"closingSlash": "allow"
-			}
+				afterOpening: "allow",
+				closingSlash: "allow",
+			},
 		],
 		"react/jsx-wrap-multilines": "error",
 		"react/self-closing-comp": "error",
 		"space-before-function-paren": [
 			"error",
 			{
-				"anonymous": "never",
-				"asyncArrow": "always",
-				"named": "never"
-			}
+				anonymous: "never",
+				asyncArrow: "always",
+				named: "never",
+			},
 		],
 		"spaced-comment": [
 			"error",
 			"always",
 			{
-				"markers": [
-					"/"
-				]
-			}
+				markers: ["/"],
+			},
 		],
 		"use-isnan": "error",
 		"valid-typeof": "off",
-	}
+	},
 };

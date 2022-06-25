@@ -1,9 +1,9 @@
 export const COLLECTION_NAMES = {
 	USERS: "users",
-	BOTS: "bots"
+	BOTS: "bots",
 };
 
 export const INDEX_NAMES = {
 	USERS_BY_NICKNAME_UPPERCASE: "users_by_nickname_uppercase",
-	BOTS_BY_LOWEST_GAMES_PLAYED: "bots_by_lowest_games_played"
+	BOTS_BY_LOWEST_GAMES_PLAYED: "bots_by_lowest_games_played",
 };

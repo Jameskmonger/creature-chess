@@ -37,8 +37,8 @@ The `incoming` and `outgoing` exports are factories to create "registries" - whi
 ### Subscription
 
 ```ts
-import { Socket } from "socket-io.client";
 import { incoming } from "@my-cool-project/shared";
+import { Socket } from "socket-io.client";
 
 export const createRegistry = (socket: Socket) =>
 	incoming(
@@ -52,12 +52,9 @@ It's as simple as that - `createRegistry(socket)` will now create a `@shoki/netw
 ```ts
 const registry = createRegistry(socket);
 
-registry.on(
-	"moneyUpdate",
-	value => {
-		// value from server
-	}
-);
+registry.on("moneyUpdate", (value) => {
+	// value from server
+});
 ```
 
 The type of `value` will be inferred from the `PacketSet`.
@@ -69,13 +66,11 @@ The type of `value` will be inferred from the `PacketSet`.
 This code goes into the server and will be used to publish messages according to the `PacketSet`.
 
 ```ts
-import { Socket } from "socket-io";
 import { outgoing } from "@my-cool-project/shared";
+import { Socket } from "socket-io";
 
 export const createRegistry = (socket: Socket) =>
-	outgoing(
-		(opcode, payload, ack) => socket.emit(opcode, payload, ack)
-	);
+	outgoing((opcode, payload, ack) => socket.emit(opcode, payload, ack));
 ```
 
 Sending packets using this registry is equally easy as subcribing to them.
@@ -108,24 +103,17 @@ type PacketSet = {
 Then, on the sender's side, you will have to add a callback function to `send`:
 
 ```ts
-registry.send(
-	"moneyUpdate",
-	5,
-	message => {
-		console.log(`Acknowledgment received: '${message}'`);
-	}
-);
+registry.send("moneyUpdate", 5, (message) => {
+	console.log(`Acknowledgment received: '${message}'`);
+});
 ```
 
 And lastly, on the receiver's side, you will have access to this `ack` function to call it with the desired data.
 
 ```ts
-registry.on(
-	"moneyUpdate",
-	(value, ack) => {
-		ack(`Thank you for sending me ${value} gold coins`);
-	}
-);
+registry.on("moneyUpdate", (value, ack) => {
+	ack(`Thank you for sending me ${value} gold coins`);
+});
 ```
 
 ## ActionStream
@@ -153,17 +141,18 @@ You also need to declare a list of action types to subscribe to.
 export const SharedActionTypesArray = [
 	"MONEY_UPDATE",
 	"HEALTH_UPDATE",
-	"COLOR_UPDATE"
+	"COLOR_UPDATE",
 ];
 ```
 
 Then, on the receiver's side, you must call the incoming saga from one of your own sagas:
 
 ```ts
-import { ActionStream } from "@shoki/networking";
 import { PacketSet, SharedActionTypesArray } from "@my-cool-project/shared";
 
-export const myCoolSaga = function*() {
+import { ActionStream } from "@shoki/networking";
+
+export const myCoolSaga = function* () {
 	yield call(
 		ActionStream.incomingSaga<PacketSet, "sendSharedActions">(
 			registry,
@@ -177,10 +166,11 @@ export const myCoolSaga = function*() {
 And lastly, on the sender's side, you must do the same thing for the outgoing saga:
 
 ```ts
-import { ActionStream } from "@shoki/networking";
 import { PacketSet, SharedActionTypesArray } from "@my-cool-project/shared";
 
-export const anotherCoolSaga = function*() {
+import { ActionStream } from "@shoki/networking";
+
+export const anotherCoolSaga = function* () {
 	yield call(
 		ActionStream.outgoingSaga<PacketSet, "sendSharedActions">(
 			registry,

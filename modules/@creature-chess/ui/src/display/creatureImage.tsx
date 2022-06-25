@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
 
 interface Props {
@@ -14,27 +15,34 @@ const useStyles = createUseStyles({
 		imageRendering: "pixelated",
 		fallbacks: [
 			{
-				imageRendering: "optimize-contrast"
+				imageRendering: "optimize-contrast",
 			},
 			{
-				imageRendering: "-webkit-optimize-contrast"
+				imageRendering: "-webkit-optimize-contrast",
 			},
 			{
-				imageRendering: "-o-crisp-edges"
+				imageRendering: "-o-crisp-edges",
 			},
 			{
-				imageRendering: "-moz-crisp-edges"
+				imageRendering: "-moz-crisp-edges",
 			},
 			{
-				imageRendering: "optimizeSpeed"
-			}
+				imageRendering: "optimizeSpeed",
+			},
 		] as any,
-		msInterpolationMode: "nearest-neighbor"
-	}
+		msInterpolationMode: "nearest-neighbor",
+	},
 });
 
-const CreatureImage: React.FunctionComponent<Props> = ({ baseUrl = "", facing, definitionId }) => (
-	<img className={useStyles().image} src={`${baseUrl}/images/${facing || "front"}/${definitionId}.png`} />
+const CreatureImage: React.FunctionComponent<Props> = ({
+	baseUrl = "",
+	facing,
+	definitionId,
+}) => (
+	<img
+		className={useStyles().image}
+		src={`${baseUrl}/images/${facing || "front"}/${definitionId}.png`}
+	/>
 );
 
 export { CreatureImage };

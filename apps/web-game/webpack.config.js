@@ -20,29 +20,31 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				use: "ts-loader",
-				exclude: /node_modules/
+				exclude: /node_modules/,
 			},
 			{
 				test: /\.scss$/,
-				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader"]
+				use: [
+					{ loader: MiniCssExtractPlugin.loader },
+					"css-loader",
+					"sass-loader",
+				],
 			},
 			{
 				test: /\.css$/,
-				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"]
-			}
-		]
+				use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"],
+			},
+		],
 	},
 
 	resolve: {
-		plugins: [
-			new TsConfigPathsPlugin()
-		],
-		extensions: [".tsx", ".ts", ".js"]
+		plugins: [new TsConfigPathsPlugin()],
+		extensions: [".tsx", ".ts", ".js"],
 	},
 
 	output: {
 		filename: "bundle-[contenthash].js",
-		path: outDir
+		path: outDir,
 	},
 
 	plugins: [
@@ -51,13 +53,13 @@ module.exports = {
 			SENTRY_DSN: "",
 		}),
 		new DefinePlugin({
-			APP_VERSION: JSON.stringify(require("../../package.json").version)
+			APP_VERSION: JSON.stringify(require("../../package.json").version),
 		}),
 		new HtmlWebpackPlugin({
-			scriptLoading: "blocking"
+			scriptLoading: "blocking",
 		}),
 		new MiniCssExtractPlugin({
-			filename: "app-[contenthash].css"
+			filename: "app-[contenthash].css",
 		}),
 		new CircularDependencyPlugin({
 			// exclude detection of files based on a RegExp
@@ -70,19 +72,19 @@ module.exports = {
 			// set the current working directory for displaying module paths
 			cwd: process.cwd(),
 		}),
-	].filter(plugin => plugin !== null),
+	].filter((plugin) => plugin !== null),
 
 	devServer: {
 		compress: true,
 		port: 8090,
 		historyApiFallback: true,
 		https: true,
-		host: "creaturechess.local-dev.com"
+		host: "creaturechess.local-dev.com",
 	},
 
 	optimization: {
 		splitChunks: {
-			chunks: "all"
-		}
-	}
+			chunks: "all",
+		},
+	},
 };

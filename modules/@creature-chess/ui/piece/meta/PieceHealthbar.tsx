@@ -1,5 +1,7 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { ProgressBar } from "../../src/display";
 
 interface HealthbarProps {
@@ -27,7 +29,7 @@ const useStyles = createUseStyles({
 		background: getFillBackground,
 		position: "absolute",
 		bottom: 0,
-	}
+	},
 });
 
 const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
@@ -39,7 +41,9 @@ const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
 			current={props.current}
 			max={props.max}
 			vertical
-		>{props.children}</ProgressBar>
+		>
+			{props.children}
+		</ProgressBar>
 	);
 };
 

@@ -1,8 +1,13 @@
 import { Packet, PacketSet } from "../packet";
 
-export type HandlerFn<T extends Packet> = (payload: T["payload"], ack?: T["ack"]) => void;
+export type HandlerFn<T extends Packet> = (
+	payload: T["payload"],
+	ack?: T["ack"]
+) => void;
 
-export type RegisterHandlerFn<TPackets extends PacketSet> = <TOpcode extends keyof TPackets>(
+export type RegisterHandlerFn<TPackets extends PacketSet> = <
+	TOpcode extends keyof TPackets
+>(
 	opcode: TOpcode,
 	handler: HandlerFn<TPackets[TOpcode]>
 ) => void;
@@ -12,10 +17,12 @@ export type IncomingRegistry<TPackets extends PacketSet> = {
 	off: RegisterHandlerFn<TPackets>;
 };
 
-export const incoming = <TPackets extends PacketSet>() => (
-	register: RegisterHandlerFn<TPackets>,
-	unregister: RegisterHandlerFn<TPackets>
-): IncomingRegistry<TPackets> => ({
-	on: register,
-	off: unregister
-});
+export const incoming =
+	<TPackets extends PacketSet>() =>
+	(
+		register: RegisterHandlerFn<TPackets>,
+		unregister: RegisterHandlerFn<TPackets>
+	): IncomingRegistry<TPackets> => ({
+		on: register,
+		off: unregister,
+	});

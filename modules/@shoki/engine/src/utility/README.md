@@ -20,8 +20,8 @@ createUtilityValue([
 		// more important with low composure
 		weighting: {
 			value: personality.composure,
-			direction: ScoringDirection.Low
-		}
+			direction: ScoringDirection.Low,
+		},
 	},
 	{
 		value: inputs.money,
@@ -33,9 +33,9 @@ createUtilityValue([
 		// more important with high ambition
 		weighting: {
 			value: personality.ambition,
-			direction: ScoringDirection.High
-		}
-	}
+			direction: ScoringDirection.High,
+		},
+	},
 ]);
 ```
 

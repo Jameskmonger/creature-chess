@@ -1,62 +1,52 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Layout, Piece } from "@creature-chess/ui";
-import { PieceModel } from "@creature-chess/models";
-import { BoardSelectors, BoardState } from "@shoki/board";
-import { BoardGrid } from "@shoki/board-react";
+import React from "react";
 
 import { DndProvider } from "react-dnd";
 import MultiBackend from "react-dnd-multi-backend";
 import HTML5toTouch from "react-dnd-multi-backend/dist/esm/HTML5toTouch";
+import { useDispatch, useSelector } from "react-redux";
 
-import { CardShop } from "./cardShop/CardShop";
-import React from "react";
+import { BoardSelectors, BoardState } from "@shoki/board";
+import { BoardGrid } from "@shoki/board-react";
 
-import "./_board.scss";
+import { PieceModel } from "@creature-chess/models";
+import { Layout, Piece } from "@creature-chess/ui";
 
 import { DevState } from "../store/store";
 import { BoardType, uiActions } from "../store/ui";
+import "./_board.scss";
 import { CardSelectionOverlay } from "./cardSelection/cardSelectionOverlay";
+import { CardShop } from "./cardShop/CardShop";
 
 const Board: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
-	const board = useSelector<DevState, BoardState<PieceModel>>(state => state.scenario.board);
+	const board = useSelector<DevState, BoardState<PieceModel>>(
+		(state) => state.scenario.board
+	);
 	const renderBoardPiece = (id: string) => {
 		const piece = BoardSelectors.getPiece(board, id);
 
-		return piece
-			? (
-				<Piece
-					piece={piece}
-					healthbar="none"
-				/>
-			)
-			: null;
+		return piece ? <Piece piece={piece} healthbar="none" /> : null;
 	};
 
-	const bench = useSelector<DevState, BoardState<PieceModel>>(state => state.scenario.bench);
+	const bench = useSelector<DevState, BoardState<PieceModel>>(
+		(state) => state.scenario.bench
+	);
 	const renderBenchPiece = (id: string) => {
 		const piece = BoardSelectors.getPiece(bench, id);
 
-		return piece
-			? (
-				<Piece
-					piece={piece}
-					healthbar="none"
-				/>
-			)
-			: null;
+		return piece ? <Piece piece={piece} healthbar="none" /> : null;
 	};
 
 	const onTileClick = (boardType: BoardType) => (one: number, two: number) => {
 		const boardPosition = {
 			one,
-			two
+			two,
 		};
 
 		const boardParameters = {
 			boardPosition,
-			boardType
+			boardType,
 		};
 
 		dispatch(uiActions.openCardSelectionOverlay(boardParameters));
@@ -64,10 +54,7 @@ const Board: React.FunctionComponent = () => {
 
 	return (
 		<DndProvider backend={MultiBackend} options={HTML5toTouch}>
-			<Layout.Layout
-				className="board-and-bench"
-				direction="column"
-			>
+			<Layout.Layout className="board-and-bench" direction="column">
 				<CardSelectionOverlay />
 				<div className="board-container bot-board">
 					<BoardGrid
@@ -91,6 +78,5 @@ const Board: React.FunctionComponent = () => {
 		</DndProvider>
 	);
 };
-
 
 export { Board };

@@ -6,5 +6,5 @@ export const auth0Config = {
 	redirectUri: config.appUrl,
 	logoutRedirectUri: config.appUrl,
 	audience: `https://${config.auth0.domain}/api/v2/`,
-	scope: "openid profile email"
+	scope: "openid profile email",
 };

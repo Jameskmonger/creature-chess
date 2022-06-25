@@ -3,5 +3,5 @@ export enum CreatureType {
 	Earth = "Earth",
 	Water = "Water",
 	Fire = "Fire",
-	Metal = "Metal"
+	Metal = "Metal",
 }

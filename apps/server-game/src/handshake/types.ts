@@ -1,5 +1,6 @@
-import { Server } from "socket.io";
 import { ManagementClient } from "auth0";
+import { Server } from "socket.io";
+
 import { UserAppMetadata } from "@creature-chess/auth-server";
 import { DatabaseConnection } from "@creature-chess/data";
 

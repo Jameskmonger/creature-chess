@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+
 import { useDispatch } from "react-redux";
-import { getAllDefinitions } from "@creature-chess/gamemode";
 import { v4 as uuid } from "uuid";
+
+import { getAllDefinitions } from "@creature-chess/gamemode";
 
 import { removeCardCommand, addCardCommand } from "../../store/devCardShop";
 
@@ -26,36 +28,30 @@ const CardShopInputs: React.FunctionComponent = () => {
 		cost: definition.cost,
 		name: definition.name,
 		type: definition.type,
-		class: definition.class
+		class: definition.class,
 	});
-
 
 	return (
 		<li>
 			Card Shop:
 			<ul>
-				<li onClick={toggleHidden}>
-					Change available cards:
-				</li>
+				<li onClick={toggleHidden}>Change available cards:</li>
 				<div className={hidden ? "hidden" : "displayed"}>
-					{
-						creatureDefinitions.map(definition => (
-
-							<button
-								key={definition.id}
-								onClick={() => addCardToShop(definition.id - 1)}>
-								<img
-									src={`https://creaturechess.com/images/front/${definition.id.toString()}.png`}
-									alt="creature-avatar"
-								/>
-							</button>
-						))
-					}
+					{creatureDefinitions.map((definition) => (
+						<button
+							key={definition.id}
+							onClick={() => addCardToShop(definition.id - 1)}
+						>
+							<img
+								src={`https://creaturechess.com/images/front/${definition.id.toString()}.png`}
+								alt="creature-avatar"
+							/>
+						</button>
+					))}
 					<button onClick={() => dispatch(removeCardCommand("test"))}>
 						Remove card
 					</button>
 				</div>
-
 			</ul>
 		</li>
 	);

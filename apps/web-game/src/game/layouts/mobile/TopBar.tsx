@@ -1,13 +1,15 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { Layout } from "@creature-chess/ui";
 
 import { PhaseInfo, RoundIndicator } from "../../module";
 
 const useStyles = createUseStyles({
 	topBar: {
-		"background": "#1d1d1d",
-	}
+		background: "#1d1d1d",
+	},
 });
 
 export function TopBar() {
@@ -20,4 +22,4 @@ export function TopBar() {
 			<PhaseInfo />
 		</Layout>
 	);
-};
+}

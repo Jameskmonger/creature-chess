@@ -1,25 +1,32 @@
-import pDefer from 'p-defer';
-import { call, take, put, getContext } from "typed-redux-saga";
 import delay from "delay";
+import pDefer from "p-defer";
+import { call, take, put, getContext } from "typed-redux-saga";
+
 import { GameOptions, GamePhase } from "@creature-chess/models";
+
+import {
+	PlayerFinishMatchEvent,
+	playerFinishMatchEvent,
+} from "../../../entities/player/events";
+import { getMatches } from "../../../features/match/selectors";
+import { Match } from "../../match";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
-import { Match } from "../../match";
-import { getMatches } from "../../../features/match/selectors";
-import { PlayerFinishMatchEvent, playerFinishMatchEvent } from "../../../entities/player/events";
 
-const waitForFinishMatchSaga = function*() {
+const waitForFinishMatchSaga = function* () {
 	yield* take<PlayerFinishMatchEvent>(playerFinishMatchEvent.toString());
 };
 
-export const runPlayingPhase = function*() {
+export const runPlayingPhase = function* () {
 	const options = yield* getContext<GameOptions>("options");
 	const players = yield* getContext<GameSagaContextPlayers>("players");
 
 	const battleTimeoutDeferred = pDefer<void>();
 
 	const phase = GamePhase.PLAYING;
-	delay(options.phaseLengths[GamePhase.PLAYING] * 1000).then(() => battleTimeoutDeferred.resolve());
+	delay(options.phaseLengths[GamePhase.PLAYING] * 1000).then(() =>
+		battleTimeoutDeferred.resolve()
+	);
 
 	const startedAt = Date.now() / 1000;
 
@@ -30,15 +37,15 @@ export const runPlayingPhase = function*() {
 	const matches = yield* call(getMatches, livingPlayers);
 
 	const uniqueMatches = [
-		...new Set(
-			matches.filter((match): match is Match => match !== null)
-		)
+		...new Set(matches.filter((match): match is Match => match !== null)),
 	];
-	const finishMatchTasks = livingPlayers.map(p => p.runSaga(waitForFinishMatchSaga));
+	const finishMatchTasks = livingPlayers.map((p) =>
+		p.runSaga(waitForFinishMatchSaga)
+	);
 
-	uniqueMatches.forEach(m => m.fight(battleTimeoutDeferred.promise));
+	uniqueMatches.forEach((m) => m.fight(battleTimeoutDeferred.promise));
 
-	yield Promise.all(finishMatchTasks.map(t => t.toPromise()));
+	yield Promise.all(finishMatchTasks.map((t) => t.toPromise()));
 
 	// some battles go right up to the end, so it's nice to have a delay
 	// rather than jumping straight into the next phase

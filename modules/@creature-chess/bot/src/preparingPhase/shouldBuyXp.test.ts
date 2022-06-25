@@ -1,6 +1,14 @@
-import { BUY_XP_AMOUNT, GamePhase, getXpToNextLevel, PlayerStatus, StreakType } from "@creature-chess/models";
-import { PlayerState } from "@creature-chess/gamemode";
 import { createInitialBoardState } from "@shoki/board";
+
+import { PlayerState } from "@creature-chess/gamemode";
+import {
+	BUY_XP_AMOUNT,
+	GamePhase,
+	getXpToNextLevel,
+	PlayerStatus,
+	StreakType,
+} from "@creature-chess/models";
+
 import { shouldBuyXp } from "./shouldBuyXp";
 
 const createInitialPlayerState = (): PlayerState => ({
@@ -8,7 +16,7 @@ const createInitialPlayerState = (): PlayerState => ({
 	bench: createInitialBoardState("board", { width: 7, height: 1 }),
 	cardShop: {
 		cards: [],
-		locked: false
+		locked: false,
 	},
 	playerInfo: {
 		health: 100,
@@ -19,18 +27,18 @@ const createInitialPlayerState = (): PlayerState => ({
 		ready: false,
 		streak: {
 			amount: 2,
-			type: StreakType.WIN
+			type: StreakType.WIN,
 		},
 		battle: null,
 		matchRewards: null,
-		opponentId: null
+		opponentId: null,
 	},
 	roundInfo: {
 		phase: GamePhase.PREPARING,
 		round: 3,
-		phaseStartedAtSeconds: 1000000
+		phaseStartedAtSeconds: 1000000,
 	},
-	spectating: { id: null }
+	spectating: { id: null },
 });
 
 describe("shouldBuyXp", () => {
@@ -47,8 +55,8 @@ describe("shouldBuyXp", () => {
 				playerInfo: {
 					...state.playerInfo,
 					money: 9999,
-					level: 10
-				}
+					level: 10,
+				},
 			};
 		});
 
@@ -65,8 +73,8 @@ describe("shouldBuyXp", () => {
 				...state,
 				playerInfo: {
 					...state.playerInfo,
-					level: 9
-				}
+					level: 9,
+				},
 			};
 		});
 
@@ -76,8 +84,8 @@ describe("shouldBuyXp", () => {
 					...state,
 					playerInfo: {
 						...state.playerInfo,
-						money: 14
-					}
+						money: 14,
+					},
 				};
 			});
 
@@ -89,8 +97,8 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - BUY_XP_AMOUNT
-						}
+							xp: xpRequired - BUY_XP_AMOUNT,
+						},
 					};
 				});
 
@@ -108,8 +116,8 @@ describe("shouldBuyXp", () => {
 					...state,
 					playerInfo: {
 						...state.playerInfo,
-						money: 15
-					}
+						money: 15,
+					},
 				};
 			});
 
@@ -121,8 +129,8 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - BUY_XP_AMOUNT
-						}
+							xp: xpRequired - BUY_XP_AMOUNT,
+						},
 					};
 				});
 
@@ -141,8 +149,8 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - (2 * BUY_XP_AMOUNT)
-						}
+							xp: xpRequired - 2 * BUY_XP_AMOUNT,
+						},
 					};
 				});
 
@@ -160,8 +168,8 @@ describe("shouldBuyXp", () => {
 					...state,
 					playerInfo: {
 						...state.playerInfo,
-						money: 25
-					}
+						money: 25,
+					},
 				};
 			});
 
@@ -173,8 +181,8 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - BUY_XP_AMOUNT
-						}
+							xp: xpRequired - BUY_XP_AMOUNT,
+						},
 					};
 				});
 
@@ -193,8 +201,8 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - (2 * BUY_XP_AMOUNT)
-						}
+							xp: xpRequired - 2 * BUY_XP_AMOUNT,
+						},
 					};
 				});
 
@@ -213,8 +221,8 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - (3 * BUY_XP_AMOUNT)
-						}
+							xp: xpRequired - 3 * BUY_XP_AMOUNT,
+						},
 					};
 				});
 
@@ -233,8 +241,8 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - (4 * BUY_XP_AMOUNT)
-						}
+							xp: xpRequired - 4 * BUY_XP_AMOUNT,
+						},
 					};
 				});
 

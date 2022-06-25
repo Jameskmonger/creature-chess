@@ -1,4 +1,5 @@
 import { protocol as shokiProtocol } from "@shoki/networking";
+
 import { LobbyPlayer } from "@creature-chess/models";
 
 export type LobbyConnectionPacket = {

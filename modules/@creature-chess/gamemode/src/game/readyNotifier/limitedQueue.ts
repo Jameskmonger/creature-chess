@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import pDefer from 'p-defer';
+import pDefer from "p-defer";
 
 type LimitedQueue<T> = {
 	clear: () => void;
@@ -20,10 +20,10 @@ export const limitedQueue = <T>(size: number): LimitedQueue<T> => {
 	};
 
 	return {
-		clear: () => items = [],
+		clear: () => (items = []),
 		isFull: () => items.length === size,
-		onReachLimit: fn => events.on("reachLimit", fn),
-		add: item => {
+		onReachLimit: (fn) => events.on("reachLimit", fn),
+		add: (item) => {
 			if (items.length === size) {
 				if (items.includes(item)) {
 					return;
@@ -35,7 +35,7 @@ export const limitedQueue = <T>(size: number): LimitedQueue<T> => {
 			items.push(item);
 			checkFull();
 		},
-		dispose: () => events.removeAllListeners()
+		dispose: () => events.removeAllListeners(),
 	};
 };
 
@@ -49,6 +49,6 @@ export const deferLimitedQueue = <T>(queue: LimitedQueue<T>) => {
 
 	return {
 		promise: deferred.promise,
-		dispose: queue.dispose
+		dispose: queue.dispose,
 	};
 };

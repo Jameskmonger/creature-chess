@@ -1,13 +1,15 @@
 import React from "react";
+
 import { useDispatch } from "react-redux";
 
-import { Layout } from "@creature-chess/ui";
 import { StreakType } from "@creature-chess/models";
-import { Header } from "./components/header";
+import { Layout } from "@creature-chess/ui";
+
 import { useField } from "../hooks/useField";
+import { runScenarioEvent } from "../store/events";
+import { Header } from "./components/header";
 import { StateInputs } from "./stateInputs";
 import { TraitInputs } from "./traitInputs";
-import { runScenarioEvent } from "../store/events";
 
 const Inputs: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
@@ -19,40 +21,30 @@ const Inputs: React.FunctionComponent = () => {
 	const level = useField("Level", 1);
 	const xp = useField("XP", 0);
 
-	const stateFields = [
-		health,
-		streakType,
-		streakAmount,
-		money,
-		level,
-		xp
-	];
+	const stateFields = [health, streakType, streakAmount, money, level, xp];
 
 	const ambition = useField("Ambition", 100);
 	const competency = useField("Competency", 100);
 	const composure = useField("Composure", 100);
 	const vision = useField("Vision", 100);
 
-	const traitFields = [
-		ambition,
-		competency,
-		composure,
-		vision
-	];
+	const traitFields = [ambition, competency, composure, vision];
 
 	const runScenario = () => {
-		dispatch(runScenarioEvent({
-			health: Number(health.value),
-			xp: Number(xp.value),
-			level: Number(level.value),
-			streakAmount: Number(streakAmount.value),
-			streakType: streakType.value,
-			money: Number(money.value),
-			ambition: Number(ambition.value),
-			composure: Number(composure.value),
-			competency: Number(competency.value),
-			vision: Number(vision.value)
-		}));
+		dispatch(
+			runScenarioEvent({
+				health: Number(health.value),
+				xp: Number(xp.value),
+				level: Number(level.value),
+				streakAmount: Number(streakAmount.value),
+				streakType: streakType.value,
+				money: Number(money.value),
+				ambition: Number(ambition.value),
+				composure: Number(composure.value),
+				competency: Number(competency.value),
+				vision: Number(vision.value),
+			})
+		);
 	};
 
 	return (
@@ -70,8 +62,7 @@ const Inputs: React.FunctionComponent = () => {
 
 				<TraitInputs traitFields={traitFields} />
 			</Layout>
-
-		</section >
+		</section>
 	);
 };
 

@@ -1,13 +1,15 @@
 import React from "react";
+
 import { Meta, Story } from "@storybook/react";
+
 import { LobbyPlayer, PlayerTitle } from "@creature-chess/models";
+
 import { LobbyPlayerBanner } from "./LobbyPlayerBanner";
 
 export default {
 	title: "Pages/LobbyPage/LobbyPlayerBanner",
 	component: LobbyPlayerBanner,
-	argTypes: {
-	}
+	argTypes: {},
 } as Meta;
 
 const Template: Story<any> = (args) => (
@@ -16,32 +18,35 @@ const Template: Story<any> = (args) => (
 	</div>
 );
 
-const createLobbyPlayer = (title: PlayerTitle | null, isBot: boolean): LobbyPlayer | null => {
+const createLobbyPlayer = (
+	title: PlayerTitle | null,
+	isBot: boolean
+): LobbyPlayer | null => {
 	if (isBot) {
 		return null;
 	}
 
-	return ({
+	return {
 		id: "12300234",
 		name: "BigManEdam",
 		profile: {
 			title,
-			picture: 5
-		}
-	});
+			picture: 5,
+		},
+	};
 };
 
 export const StandardPlayer = Template.bind({});
 StandardPlayer.args = {
-	player: createLobbyPlayer(null, false)
+	player: createLobbyPlayer(null, false),
 };
 
 export const Developer = Template.bind({});
 Developer.args = {
-	player: createLobbyPlayer(PlayerTitle.Developer, false)
+	player: createLobbyPlayer(PlayerTitle.Developer, false),
 };
 
 export const BotPlayer = Template.bind({});
 BotPlayer.args = {
-	player: createLobbyPlayer(null, true)
+	player: createLobbyPlayer(null, true),
 };

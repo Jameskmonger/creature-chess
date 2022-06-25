@@ -1,4 +1,5 @@
 import React from "react";
+
 import { InputListItem } from "./components/inputListItem";
 
 type Props = {
@@ -15,17 +16,15 @@ const TraitInputs: React.FunctionComponent<Props> = ({ traitFields }) => (
 			<h1>Traits</h1>
 		</div>
 		<ul>
-			{
-				traitFields.map(field => (
-					<li key={field.label}>
-						<InputListItem
-							heading={field.label}
-							value={field.value}
-							onChange={field.onChange}
-						/>
-					</li>
-				))
-			}
+			{traitFields.map((field) => (
+				<li key={field.label}>
+					<InputListItem
+						heading={field.label}
+						value={field.value}
+						onChange={field.onChange}
+					/>
+				</li>
+			))}
 		</ul>
 	</section>
 );

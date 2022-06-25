@@ -1,5 +1,7 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { StreakType } from "@creature-chess/models";
 
 type Props = {
@@ -7,7 +9,8 @@ type Props = {
 	amount: number | null;
 };
 
-const getBackground = (type: StreakType | null) => type === StreakType.WIN ? "#38b764" : "#b13e53";
+const getBackground = (type: StreakType | null) =>
+	type === StreakType.WIN ? "#38b764" : "#b13e53";
 
 const useStyles = createUseStyles({
 	indicator: (props: Props) => ({
@@ -21,7 +24,7 @@ const useStyles = createUseStyles({
 		color: "#fff",
 		background: getBackground(props.type),
 		borderRadius: "50%",
-	})
+	}),
 });
 
 const StreakIndicator: React.FunctionComponent<Props> = (props) => {

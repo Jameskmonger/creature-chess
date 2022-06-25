@@ -1,24 +1,30 @@
-import { Socket } from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { takeEvery, put, call, all } from "redux-saga/effects";
-import { PlayerEvents, PlayerCommands, GameEvents } from "@creature-chess/gamemode";
-import { GameServerToClient } from "@creature-chess/networking";
-import { ActionStream, IncomingRegistry } from "@shoki/networking";
-import { BoardSlice } from "@shoki/board";
-import { startBattle } from "@creature-chess/battle";
+import { Socket } from "socket.io-client";
 
-import { updateConnectionStatus } from "../ui/actions";
+import { BoardSlice } from "@shoki/board";
+import { ActionStream, IncomingRegistry } from "@shoki/networking";
+
+import { startBattle } from "@creature-chess/battle";
+import {
+	PlayerEvents,
+	PlayerCommands,
+	GameEvents,
+} from "@creature-chess/gamemode";
+import { GameServerToClient } from "@creature-chess/networking";
+
+import { getPlayerSlices } from "../../store/sagaContext";
 import { ConnectionStatus } from "../connection-status";
 import { setMatchBoard } from "../module/match";
-import { getPlayerSlices } from "../../store/sagaContext";
+import { updateConnectionStatus } from "../ui/actions";
 
-const readPacketsToActions = function*(
+const readPacketsToActions = function* (
 	registry: IncomingRegistry<GameServerToClient.PacketSet>,
 	socket: Socket,
 	boardSlice: BoardSlice,
 	benchSlice: BoardSlice
 ) {
-	const channel = eventChannel<any>(emit => {
+	const channel = eventChannel<any>((emit) => {
 		socket.on("reconnect_failed", () => {
 			emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
 		});
@@ -26,44 +32,33 @@ const readPacketsToActions = function*(
 			emit(updateConnectionStatus(ConnectionStatus.DISCONNECTED));
 		});
 
-		registry.on(
-			"matchBoardUpdate",
-			({ board, turn }) => {
-				emit(setMatchBoard(board));
+		registry.on("matchBoardUpdate", ({ board, turn }) => {
+			emit(setMatchBoard(board));
 
-				if (turn) {
-					emit(startBattle(turn));
-				}
+			if (turn) {
+				emit(startBattle(turn));
 			}
-		);
+		});
 
-		registry.on(
-			"boardUpdate",
-			(newValue) => {
-				emit(boardSlice.commands.setBoardPiecesCommand(newValue));
-			}
-		);
+		registry.on("boardUpdate", (newValue) => {
+			emit(boardSlice.commands.setBoardPiecesCommand(newValue));
+		});
 
-		registry.on(
-			"benchUpdate",
-			(newValue) => {
-				emit(benchSlice.commands.setBoardPiecesCommand(newValue));
-			}
-		);
+		registry.on("benchUpdate", (newValue) => {
+			emit(benchSlice.commands.setBoardPiecesCommand(newValue));
+		});
 
 		// todo registry off here
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		return () => { };
+		return () => {};
 	});
 
-	yield takeEvery(channel, function*(action) {
+	yield takeEvery(channel, function* (action) {
 		yield put(action);
 	});
 };
 
-export const incomingGameServerToClient = function*(
-	socket: Socket,
-) {
+export const incomingGameServerToClient = function* (socket: Socket) {
 	const { board, bench } = yield* getPlayerSlices();
 
 	// todo fix typing
@@ -85,7 +80,10 @@ export const incomingGameServerToClient = function*(
 		),
 
 		call(
-			ActionStream.incomingSaga<GameServerToClient.PacketSet, "sendLocalPlayerEvents">(
+			ActionStream.incomingSaga<
+				GameServerToClient.PacketSet,
+				"sendLocalPlayerEvents"
+			>(
 				registry,
 				"sendLocalPlayerEvents",
 				PlayerEvents.PlayerEventActionTypesArray
@@ -93,7 +91,10 @@ export const incomingGameServerToClient = function*(
 		),
 
 		call(
-			ActionStream.incomingSaga<GameServerToClient.PacketSet, "playerInfoUpdates">(
+			ActionStream.incomingSaga<
+				GameServerToClient.PacketSet,
+				"playerInfoUpdates"
+			>(
 				registry,
 				"playerInfoUpdates",
 				PlayerCommands.PlayerInfoUpdateCommandActionTypesArray

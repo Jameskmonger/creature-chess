@@ -1,8 +1,9 @@
 import React from "react";
+
 import { Meta, Story } from "@storybook/react";
 
-import { ProgressBar } from "./progressBar";
 import "./ProgressBar.stories.css";
+import { ProgressBar } from "./progressBar";
 
 export default {
 	title: "Display/ProgressBar",
@@ -10,34 +11,34 @@ export default {
 	argTypes: {
 		current: {
 			control: {
-				type: "number"
-			}
+				type: "number",
+			},
 		},
 		max: {
 			control: {
-				type: "number"
-			}
+				type: "number",
+			},
 		},
 		vertical: {
 			control: {
-				type: "boolean"
-			}
+				type: "boolean",
+			},
 		},
 		className: {
 			control: {
-				type: null
-			}
+				type: null,
+			},
 		},
 		fillClassName: {
 			control: {
-				type: null
-			}
+				type: null,
+			},
 		},
 		contentClassName: {
 			control: {
-				type: null
-			}
-		}
+				type: null,
+			},
+		},
 	},
 } as Meta;
 
@@ -45,12 +46,18 @@ const renderContents = (current: number) => current.toString();
 
 const Template: Story<any> = (args) => (
 	<div className="progressbar-story">
-		<ProgressBar {...args} renderContents={renderContents} className="healthbar" fillClassName="fill" contentClassName="contents" />
+		<ProgressBar
+			{...args}
+			renderContents={renderContents}
+			className="healthbar"
+			fillClassName="fill"
+			contentClassName="contents"
+		/>
 	</div>
 );
 
 export const Healthbar = Template.bind({});
 Healthbar.args = {
 	current: 20,
-	max: 100
+	max: 100,
 };

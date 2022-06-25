@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { Footer } from "../../../src/Footer";
 import { useStyles } from "./LoginPage.styles";
 
@@ -7,7 +8,10 @@ type LoginPageProps = {
 	onSignInClick: () => void;
 };
 
-const LoginPage: React.FunctionComponent<LoginPageProps> = ({ isLoading, onSignInClick }) => {
+const LoginPage: React.FunctionComponent<LoginPageProps> = ({
+	isLoading,
+	onSignInClick,
+}) => {
 	const styles = useStyles();
 	const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
 
@@ -29,17 +33,31 @@ const LoginPage: React.FunctionComponent<LoginPageProps> = ({ isLoading, onSignI
 
 	return (
 		<div className={styles.login}>
-			<div className={styles.banner}><img src="https://i.imgur.com/7FAcFwZ.png" /></div>
+			<div className={styles.banner}>
+				<img src="https://i.imgur.com/7FAcFwZ.png" />
+			</div>
 
 			<div className={styles.groups}>
 				<div className="group">
-					<p>Creature Chess is a multiplayer game, so you need an account to play</p>
+					<p>
+						Creature Chess is a multiplayer game, so you need an account to play
+					</p>
 
-					<button onClick={handleSignInClick} className={styles.loginButton}>Log in / Sign up</button>
+					<button onClick={handleSignInClick} className={styles.loginButton}>
+						Log in / Sign up
+					</button>
 
-					<p>Join us on Discord to find other players and give feedback on the game</p>
+					<p>
+						Join us on Discord to find other players and give feedback on the
+						game
+					</p>
 
-					<a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className={styles.discordButton} /></a>
+					<a href="https://discord.gg/FhMm6saehb">
+						<img
+							src="https://i.imgur.com/OBo2QRd.png"
+							className={styles.discordButton}
+						/>
+					</a>
 				</div>
 			</div>
 

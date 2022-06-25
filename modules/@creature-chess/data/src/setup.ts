@@ -1,5 +1,6 @@
 // tslint:disable: no-console
 import { Client as FaunaDBClient, query as q } from "faunadb";
+
 import { setupBotDatabase } from "./bot";
 import { setupUserDatabase } from "./user";
 

@@ -1,23 +1,30 @@
-import { createAction } from "@reduxjs/toolkit";
 import { take, select, put } from "@redux-saga/core/effects";
-import { getPiece, PlayerActions } from "@creature-chess/gamemode";
+import { createAction } from "@reduxjs/toolkit";
+
 import { BoardState } from "@shoki/board";
+
+import { getPiece, PlayerActions } from "@creature-chess/gamemode";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+
 import { AppState } from "../../../store";
 import { clearSelectedPiece } from "../../ui/actions";
 import { getLocationForPiece } from "../getLocationForPiece";
 
 export type PlayerClickTileAction = ReturnType<typeof playerClickTileAction>;
-export const playerClickTileAction = createAction<{ tile: PlayerPieceLocation }>("playerClickTileAction");
+export const playerClickTileAction = createAction<{
+	tile: PlayerPieceLocation;
+}>("playerClickTileAction");
 
-export const clickTileSaga = function*() {
+export const clickTileSaga = function* () {
 	while (true) {
-		const action: PlayerClickTileAction = yield take(playerClickTileAction.toString());
+		const action: PlayerClickTileAction = yield take(
+			playerClickTileAction.toString()
+		);
 
 		const { tile } = action.payload;
 
-		const selectedPiece: PieceModel = yield select(
-			(state: AppState) => state.game.ui.selectedPieceId
+		const selectedPiece: PieceModel = yield select((state: AppState) =>
+			state.game.ui.selectedPieceId
 				? getPiece(state.game, state.game.ui.selectedPieceId)
 				: null
 		);
@@ -27,8 +34,12 @@ export const clickTileSaga = function*() {
 		}
 
 		let tileEmpty = false;
-		const board: BoardState = yield select((state: AppState) => state.game.board);
-		const bench: BoardState = yield select((state: AppState) => state.game.bench);
+		const board: BoardState = yield select(
+			(state: AppState) => state.game.board
+		);
+		const bench: BoardState = yield select(
+			(state: AppState) => state.game.bench
+		);
 
 		const piecePositionKey = `${tile.location.x},${tile.location.y}`;
 
@@ -52,11 +63,13 @@ export const clickTileSaga = function*() {
 			continue;
 		}
 
-		yield put(PlayerActions.dropPiecePlayerAction({
-			pieceId: selectedPiece.id,
-			from,
-			to: tile
-		}));
+		yield put(
+			PlayerActions.dropPiecePlayerAction({
+				pieceId: selectedPiece.id,
+				from,
+				to: tile,
+			})
+		);
 
 		yield put(clearSelectedPiece());
 	}

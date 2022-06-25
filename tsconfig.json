@@ -6,16 +6,10 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"jsx": "react",
-		"lib": [
-			"es2017",
-			"dom"
-		],
+		"lib": ["es2017", "dom"],
 		"downlevelIteration": true,
 		"strict": true,
-		"types": [
-			"node",
-			"jest"
-		],
+		"types": ["node", "jest"],
 		"allowSyntheticDefaultImports": true
 	}
 }

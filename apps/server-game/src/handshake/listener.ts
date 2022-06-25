@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+
 import { logger } from "../log";
 import { HandshakeListenerDependencies, HandshakeRequest } from "./types";
 
@@ -13,16 +14,13 @@ export const handshakeListener = (
 
 	logger.info("Listening for successful handshakes - inner B");
 
-	io.on(
-		"connection",
-		socket => {
-			logger.info(`[socket ${socket.id}] New connection received`);
+	io.on("connection", (socket) => {
+		logger.info(`[socket ${socket.id}] New connection received`);
 
-			socket.on("authenticate", (request: HandshakeRequest) => {
-				logger.info(`[socket ${socket.id}] Handshake request received`);
+		socket.on("authenticate", (request: HandshakeRequest) => {
+			logger.info(`[socket ${socket.id}] Handshake request received`);
 
-				onReceive(socket, request);
-			});
-		}
-	);
+			onReceive(socket, request);
+		});
+	});
 };

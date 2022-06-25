@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import { auth0Config } from "./config";
@@ -8,7 +9,10 @@ type Props = {
 	onRedirectCallback?: (appState: any) => void;
 };
 
-export const AuthProvider: React.FC<Props> = ({ children, onRedirectCallback }) => (
+export const AuthProvider: React.FC<Props> = ({
+	children,
+	onRedirectCallback,
+}) => (
 	<Auth0Provider
 		domain={auth0Config.domain}
 		clientId={auth0Config.clientID}

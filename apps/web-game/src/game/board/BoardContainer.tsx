@@ -1,19 +1,29 @@
 import React from "react";
-import { DndProvider } from "@shoki/board-react";
-import { useGameMatchBoard } from "./hooks";
-import { MatchBoard } from "./MatchBoard";
-import { LocalBoard } from "./LocalBoard";
-import { ReadyUpButton, ReadyOverlay, VictoryOverlay, MatchRewardsOverlay, ReconnectOverlay } from "./overlays";
-import { NowPlaying } from "../module/nowPlaying";
-import { Group } from "@creature-chess/ui";
-import { createUseStyles } from "react-jss";
+
 import classNames from "classnames";
+import { createUseStyles } from "react-jss";
+
+import { DndProvider } from "@shoki/board-react";
+
+import { Group } from "@creature-chess/ui";
+
+import { NowPlaying } from "../module/nowPlaying";
+import { LocalBoard } from "./LocalBoard";
+import { MatchBoard } from "./MatchBoard";
+import { useGameMatchBoard } from "./hooks";
+import {
+	ReadyUpButton,
+	ReadyOverlay,
+	VictoryOverlay,
+	MatchRewardsOverlay,
+	ReconnectOverlay,
+} from "./overlays";
 
 const useStyles = createUseStyles({
 	boardContainer: {
-		flex: 2
-	}
-})
+		flex: 2,
+	},
+});
 
 export function BoardContainer() {
 	const styles = useStyles();
@@ -26,11 +36,7 @@ export function BoardContainer() {
 
 				<ReadyUpButton />
 
-				{
-					matchBoard
-						? <MatchBoard />
-						: <LocalBoard />
-				}
+				{matchBoard ? <MatchBoard /> : <LocalBoard />}
 
 				<>
 					<ReadyOverlay />

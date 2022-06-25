@@ -4,30 +4,39 @@ import { CreatureType } from "@creature-chess/models";
 export const typeInteractions = {
 	[CreatureType.Earth]: {
 		generatedBy: CreatureType.Fire,
-		overcomeBy: CreatureType.Wood
+		overcomeBy: CreatureType.Wood,
 	},
 	[CreatureType.Metal]: {
 		generatedBy: CreatureType.Earth,
-		overcomeBy: CreatureType.Fire
+		overcomeBy: CreatureType.Fire,
 	},
 	[CreatureType.Water]: {
 		generatedBy: CreatureType.Metal,
-		overcomeBy: CreatureType.Earth
+		overcomeBy: CreatureType.Earth,
 	},
 	[CreatureType.Wood]: {
 		generatedBy: CreatureType.Water,
-		overcomeBy: CreatureType.Metal
+		overcomeBy: CreatureType.Metal,
 	},
 	[CreatureType.Fire]: {
 		generatedBy: CreatureType.Wood,
-		overcomeBy: CreatureType.Water
-	}
+		overcomeBy: CreatureType.Water,
+	},
 };
 
-export const isGeneratedBy = (defender: CreatureType, attacker: CreatureType): boolean => typeInteractions[defender].generatedBy === attacker;
-export const isOvercomeBy = (defender: CreatureType, attacker: CreatureType): boolean => typeInteractions[defender].overcomeBy === attacker;
+export const isGeneratedBy = (
+	defender: CreatureType,
+	attacker: CreatureType
+): boolean => typeInteractions[defender].generatedBy === attacker;
+export const isOvercomeBy = (
+	defender: CreatureType,
+	attacker: CreatureType
+): boolean => typeInteractions[defender].overcomeBy === attacker;
 
-export const getTypeAttackBonus = (attackType: CreatureType, defenceType: CreatureType) => {
+export const getTypeAttackBonus = (
+	attackType: CreatureType,
+	defenceType: CreatureType
+) => {
 	// an attack is strong against the element it overcomes, and weak against things that overcome the attacker
 
 	const defenderInteractions = typeInteractions[defenceType];

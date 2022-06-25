@@ -1,5 +1,7 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { ProgressBar } from "../display";
 
 type Props = {
@@ -11,10 +13,10 @@ const useStyles = createUseStyles({
 		position: "relative",
 		display: "block",
 		width: "100%",
-		height: "16px"
+		height: "16px",
 	},
 	fill: {
-		background: "#20b720"
+		background: "#20b720",
 	},
 	content: {
 		position: "absolute",

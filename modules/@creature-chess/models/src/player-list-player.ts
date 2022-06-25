@@ -3,37 +3,45 @@ import { StreakType } from "./streakType";
 
 export enum PlayerBattleStatus {
 	IN_PROGRESS,
-	FINISHED
+	FINISHED,
 }
 
 export enum PlayerStatus {
 	CONNECTED,
 	DEAD,
-	QUIT
+	QUIT,
 }
 
-export type PlayerBattle = {
-	status: PlayerBattleStatus.IN_PROGRESS;
-	opponentId: string;
-} | {
-	status: PlayerBattleStatus.FINISHED;
-	opponentId: string;
-	homeScore: number;
-	awayScore: number;
-	isHomePlayer: boolean;
-} | null;
+export type PlayerBattle =
+	| {
+			status: PlayerBattleStatus.IN_PROGRESS;
+			opponentId: string;
+	  }
+	| {
+			status: PlayerBattleStatus.FINISHED;
+			opponentId: string;
+			homeScore: number;
+			awayScore: number;
+			isHomePlayer: boolean;
+	  }
+	| null;
 
 export const inProgressBattle = (opponentId: string): PlayerBattle => ({
 	status: PlayerBattleStatus.IN_PROGRESS,
-	opponentId
+	opponentId,
 });
 
-export const finishedBattle = (opponentId: string, isHomePlayer: boolean, homeScore: number, awayScore: number): PlayerBattle => ({
+export const finishedBattle = (
+	opponentId: string,
+	isHomePlayer: boolean,
+	homeScore: number,
+	awayScore: number
+): PlayerBattle => ({
 	status: PlayerBattleStatus.FINISHED,
 	opponentId,
 	isHomePlayer,
 	homeScore,
-	awayScore
+	awayScore,
 });
 
 export interface PlayerListPlayer {

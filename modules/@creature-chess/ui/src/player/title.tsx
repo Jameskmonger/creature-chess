@@ -1,5 +1,7 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { PlayerTitle, TITLES } from "@creature-chess/models";
 
 type Props = {
@@ -23,12 +25,13 @@ const getColor = (titleId: PlayerTitle | null) => {
 const useStyles = createUseStyles({
 	title: {
 		fontFamily: "Arial, sans-serif",
-		fontSize: ({ size = "small" }: Props) => size === "small" ? "0.65rem" : "1rem",
+		fontSize: ({ size = "small" }: Props) =>
+			size === "small" ? "0.65rem" : "1rem",
 		fontWeight: 700,
 		color: ({ titleId }: Props) => getColor(titleId),
 		textAlign: "inherit",
 		textTransform: "uppercase",
-	}
+	},
 });
 
 const Title: React.FunctionComponent<Props> = (props) => {

@@ -4,8 +4,5 @@
 		"outDir": "./lib",
 		"importHelpers": true
 	},
-	"include": [
-		"./src/**/*",
-		"index.ts"
-	]
+	"include": ["./src/**/*", "index.ts"]
 }

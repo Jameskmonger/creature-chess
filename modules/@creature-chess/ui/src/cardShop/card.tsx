@@ -1,8 +1,11 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { Card as CardModel } from "@creature-chess/models";
-import { CreatureImage, TypeIndicator } from "../display";
+
 import { Layout } from "../../layout";
+import { CreatureImage, TypeIndicator } from "../display";
 
 type Props = {
 	card: CardModel;
@@ -16,7 +19,8 @@ const useStyles = createUseStyles({
 		fontFamily: "Arial, sans-serif",
 		color: "#fff",
 		textAlign: "center",
-		cursor: ({ disabled = false }: Props) => disabled ? "not-allowed" : "pointer",
+		cursor: ({ disabled = false }: Props) =>
+			disabled ? "not-allowed" : "pointer",
 		userSelect: "none",
 		background: "#4e4e4e",
 		paddingBottom: "0.5em",
@@ -30,7 +34,7 @@ const useStyles = createUseStyles({
 		marginTop: "-0.5em",
 		marginLeft: "-0.125em",
 		width: "24px",
-		height: "24px"
+		height: "24px",
 	},
 	cost: {
 		padding: "0.125em",
@@ -47,7 +51,7 @@ const useStyles = createUseStyles({
 		fontSize: "0.6rem",
 		fontWeight: 700,
 		textTransform: "uppercase",
-	}
+	},
 });
 
 const Card: React.FunctionComponent<Props> = (props) => {
@@ -56,11 +60,14 @@ const Card: React.FunctionComponent<Props> = (props) => {
 	const {
 		card: { name, definitionId, type, cost, class: cardClass },
 		onClick,
-		disabled = false
+		disabled = false,
 	} = props;
 
 	return (
-		<div className={classes.card} onClick={!disabled ? onClick || undefined : undefined}>
+		<div
+			className={classes.card}
+			onClick={!disabled ? onClick || undefined : undefined}
+		>
 			<Layout direction="column" noSpacer>
 				<Layout direction="row" noSpacer>
 					<div className={classes.typeIndicator}>
@@ -70,7 +77,10 @@ const Card: React.FunctionComponent<Props> = (props) => {
 						<span>${cost}</span>
 					</div>
 				</Layout>
-				<CreatureImage definitionId={definitionId} baseUrl="https://creaturechess.com/" />
+				<CreatureImage
+					definitionId={definitionId}
+					baseUrl="https://creaturechess.com/"
+				/>
 				<h2 className={classes.name}>{name}</h2>
 				<div className={classes.cardMeta}>
 					<span className={classes.metaItem}>{cardClass}</span>

@@ -1,9 +1,11 @@
 import * as React from "react";
-import { PlayerBattle } from "@creature-chess/models";
+
 import { createUseStyles } from "react-jss";
 
-import { BattleInfo } from "./battleInfo";
+import { PlayerBattle } from "@creature-chess/models";
+
 import { Label } from "../display";
+import { BattleInfo } from "./battleInfo";
 
 type Props = {
 	name: string;
@@ -56,10 +58,16 @@ const useStyles = createUseStyles({
 		fontSize: "1.8em",
 		fontStyle: "italic",
 		color: "#cecece",
-	}
+	},
 });
 
-const StatusPlayerListItem: React.FunctionComponent<Props> = ({ name, opponentName, battle, status, subtitle }) => {
+const StatusPlayerListItem: React.FunctionComponent<Props> = ({
+	name,
+	opponentName,
+	battle,
+	status,
+	subtitle,
+}) => {
 	const classes = useStyles();
 
 	return (
@@ -74,6 +82,6 @@ const StatusPlayerListItem: React.FunctionComponent<Props> = ({ name, opponentNa
 			</div>
 		</div>
 	);
-}
+};
 
 export { StatusPlayerListItem };

@@ -1,12 +1,19 @@
 import * as React from "react";
-import ReactModal from "react-modal";
+
 import { useAuth0 } from "@auth0/auth0-react";
+import ReactModal from "react-modal";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+	LobbyPageContextProvider,
+	LobbyPage,
+	useGlobalStyles,
+} from "@creature-chess/ui";
+
 import { Loading } from "./display/loading";
 import { GamePage } from "./game";
-import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "./store";
 import { openConnection } from "./networking";
-import { LobbyPageContextProvider, LobbyPage, useGlobalStyles } from "@creature-chess/ui";
+import { AppState } from "./store";
 
 ReactModal.setAppElement("#approot");
 

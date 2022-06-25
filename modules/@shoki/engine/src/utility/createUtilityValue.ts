@@ -2,13 +2,14 @@ import { clampToUtilityNumber } from "./clamp";
 import { getRangeValue } from "./getRangeValue";
 import { UtilityInput, UtilityNumberValue, ScoringDirection } from "./types";
 
-const getWeightingValue = (value: UtilityNumberValue, direction: ScoringDirection) => (
-	direction === ScoringDirection.High
-		? value / 200
-		: 1 - (value / 200)
-);
+const getWeightingValue = (
+	value: UtilityNumberValue,
+	direction: ScoringDirection
+) => (direction === ScoringDirection.High ? value / 200 : 1 - value / 200);
 
-export const createUtilityValue = (inputs: UtilityInput[]): UtilityNumberValue => {
+export const createUtilityValue = (
+	inputs: UtilityInput[]
+): UtilityNumberValue => {
 	let totalValue = 0;
 
 	for (const input of inputs) {
@@ -21,10 +22,9 @@ export const createUtilityValue = (inputs: UtilityInput[]): UtilityNumberValue =
 			continue;
 		}
 
-		totalValue += value * getWeightingValue(weighting.value, weighting.direction);
+		totalValue +=
+			value * getWeightingValue(weighting.value, weighting.direction);
 	}
 
-	return clampToUtilityNumber(
-		Math.floor(totalValue / inputs.length)
-	);
+	return clampToUtilityNumber(Math.floor(totalValue / inputs.length));
 };

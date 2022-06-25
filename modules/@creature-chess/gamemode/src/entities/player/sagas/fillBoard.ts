@@ -1,74 +1,85 @@
 import { takeEvery, put } from "redux-saga/effects";
 import { getContext, select } from "typed-redux-saga";
-import { PlayerState } from "../state";
-import { PlayerPieceLocation } from "@creature-chess/models";
+
 import { BoardSelectors } from "@shoki/board";
+
+import { PlayerPieceLocation } from "@creature-chess/models";
+
 import { dropPiecePlayerAction } from "../../../playerActions";
-import { isPlayerAlive, getPlayerBelowPieceLimit, getMostExpensiveBenchPiece } from "../state/selectors";
+import { PlayerState } from "../state";
+import {
+	isPlayerAlive,
+	getPlayerBelowPieceLimit,
+	getMostExpensiveBenchPiece,
+} from "../state/selectors";
 
 const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
 type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;
-type FillBoardCommand = ({ type: FILL_BOARD_COMMAND });
+type FillBoardCommand = { type: FILL_BOARD_COMMAND };
 
-export const fillBoardCommand = (): FillBoardCommand => ({ type: FILL_BOARD_COMMAND });
+export const fillBoardCommand = (): FillBoardCommand => ({
+	type: FILL_BOARD_COMMAND,
+});
 
-export const fillBoard = function*() {
+export const fillBoard = function* () {
 	const playerId = yield* getContext<string>("id");
 
-	yield takeEvery<FillBoardCommand>(
-		FILL_BOARD_COMMAND,
-		function*() {
-			const isAlive = yield* select(isPlayerAlive);
+	yield takeEvery<FillBoardCommand>(FILL_BOARD_COMMAND, function* () {
+		const isAlive = yield* select(isPlayerAlive);
 
-			if (!isAlive) {
+		if (!isAlive) {
+			return;
+		}
+
+		while (true) {
+			const state: PlayerState = yield* select();
+			const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+
+			if (!belowPieceLimit) {
 				return;
 			}
 
-			while (true) {
-				const state: PlayerState = yield* select();
-				const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+			const benchPiece = getMostExpensiveBenchPiece(state);
 
-				if (!belowPieceLimit) {
-					return;
-				}
+			if (!benchPiece) {
+				return;
+			}
 
-				const benchPiece = getMostExpensiveBenchPiece(state);
+			const destination = BoardSelectors.getFirstEmptySlot(state.board);
 
-				if (!benchPiece) {
-					return;
-				}
+			if (!destination) {
+				return;
+			}
 
-				const destination = BoardSelectors.getFirstEmptySlot(state.board);
+			const benchPiecePosition = BoardSelectors.getPiecePosition(
+				state.bench,
+				benchPiece.id
+			);
 
-				if (!destination) {
-					return;
-				}
+			if (!benchPiecePosition) {
+				return;
+			}
 
-				const benchPiecePosition = BoardSelectors.getPiecePosition(state.bench, benchPiece.id);
+			const fromLocation: PlayerPieceLocation = {
+				type: "bench",
+				location: benchPiecePosition,
+			};
 
-				if (!benchPiecePosition) {
-					return;
-				}
+			const toLocation: PlayerPieceLocation = {
+				type: "board",
+				location: {
+					x: destination.x,
+					y: destination.y,
+				},
+			};
 
-				const fromLocation: PlayerPieceLocation = {
-					type: "bench",
-					location: benchPiecePosition
-				};
-
-				const toLocation: PlayerPieceLocation = {
-					type: "board",
-					location: {
-						x: destination.x,
-						y: destination.y
-					}
-				};
-
-				yield put(dropPiecePlayerAction({
+			yield put(
+				dropPiecePlayerAction({
 					pieceId: benchPiece.id,
 					from: fromLocation,
-					to: toLocation
-				}));
-			}
+					to: toLocation,
+				})
+			);
 		}
-	);
+	});
 };

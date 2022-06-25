@@ -1,19 +1,29 @@
 import { BoardSelectors } from "@shoki/board";
-import { PlayerState } from "@creature-chess/gamemode";
+
 import { BotPersonality } from "@creature-chess/data";
+import { PlayerState } from "@creature-chess/gamemode";
+
 import { BrainAction } from "./brain";
 import { BrainActionValue } from "./brain/action";
-import { createBuyXpAction, createBuyCardAction, createSellPieceAction, createRerollCardsAction } from "./preparingPhase/actions";
+import {
+	createBuyXpAction,
+	createBuyCardAction,
+	createSellPieceAction,
+	createRerollCardsAction,
+} from "./preparingPhase/actions";
 
-export const getActions = (state: PlayerState, personality: BotPersonality): BrainAction[] => {
+export const getActions = (
+	state: PlayerState,
+	personality: BotPersonality
+): BrainAction[] => {
 	const actions: (BrainAction | null)[] = [
 		createBuyXpAction(state, personality),
-		createRerollCardsAction(state, personality)
+		createRerollCardsAction(state, personality),
 	];
 
 	const {
 		bench,
-		cardShop: { cards }
+		cardShop: { cards },
 	} = state;
 
 	// create an action to buy every card in the shop
@@ -28,7 +38,8 @@ export const getActions = (state: PlayerState, personality: BotPersonality): Bra
 	}
 
 	const filtered = actions.filter(
-		(action): action is BrainAction => action !== null && action.value > BrainActionValue.USELESS
+		(action): action is BrainAction =>
+			action !== null && action.value > BrainActionValue.USELESS
 	);
 
 	filtered.sort((a, b) => b.value - a.value);

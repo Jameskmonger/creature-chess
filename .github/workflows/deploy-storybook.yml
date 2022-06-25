@@ -10,22 +10,22 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        persist-credentials: false # needed for the GitHub Pages deploy to work
-    - name: Use Node.js '16.x'
-      uses: actions/setup-node@v1
-      with:
-        node-version: '16.x'
-    - name: Install dependencies
-      run: yarn
-    - name: Build Storybook
-      run: yarn workspace @creature-chess/ui build-storybook
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@3.4.1
-      with:
-        ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: modules/@creature-chess/ui/output
-        TARGET_FOLDER: storybook
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false # needed for the GitHub Pages deploy to work
+      - name: Use Node.js '16.x'
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: Install dependencies
+        run: yarn
+      - name: Build Storybook
+        run: yarn workspace @creature-chess/ui build-storybook
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.4.1
+        with:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: modules/@creature-chess/ui/output
+          TARGET_FOLDER: storybook

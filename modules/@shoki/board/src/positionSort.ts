@@ -2,7 +2,10 @@ import { PiecePosition } from "./types";
 
 const SORT_A_FIRST = -1;
 const SORT_A_SECOND = 1;
-export const topToBottomMiddleSortPositions = (a: PiecePosition, b: PiecePosition) => {
+export const topToBottomMiddleSortPositions = (
+	a: PiecePosition,
+	b: PiecePosition
+) => {
 	if (a.y < b.y) {
 		return SORT_A_FIRST;
 	}
@@ -26,7 +29,10 @@ export const topToBottomMiddleSortPositions = (a: PiecePosition, b: PiecePositio
 	return SORT_A_FIRST;
 };
 
-export const topLeftToBottomRightSortPositions = (a: PiecePosition, b: PiecePosition) => {
+export const topLeftToBottomRightSortPositions = (
+	a: PiecePosition,
+	b: PiecePosition
+) => {
 	if (a.y < b.y) {
 		return SORT_A_FIRST;
 	}

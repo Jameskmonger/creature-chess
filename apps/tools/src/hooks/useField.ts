@@ -10,7 +10,7 @@ const useField = (label: string, initialValue: any) => {
 	return {
 		label,
 		value,
-		onChange
+		onChange,
 	};
 };
 

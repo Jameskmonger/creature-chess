@@ -1,8 +1,11 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createUseStyles } from "react-jss";
+
 import classNames from "classnames";
+import { createUseStyles } from "react-jss";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Piece, usePiece } from "@creature-chess/ui";
+
 import { AppState } from "../../../store";
 import { playerClickPieceAction } from "../sagas/clickPieceSaga";
 
@@ -13,8 +16,8 @@ const useStyles = createUseStyles({
 	},
 	selected: {
 		boxSizing: "border-box",
-		border: "2px solid #ff5200"
-	}
+		border: "2px solid #ff5200",
+	},
 });
 
 export const SelectablePiece: React.FC = () => {
@@ -23,7 +26,9 @@ export const SelectablePiece: React.FC = () => {
 	const { piece } = usePiece();
 
 	const dispatch = useDispatch();
-	const selectedPieceId = useSelector<AppState, string | null>(state => state.game.ui.selectedPieceId);
+	const selectedPieceId = useSelector<AppState, string | null>(
+		(state) => state.game.ui.selectedPieceId
+	);
 
 	const onClick = () => {
 		dispatch(playerClickPieceAction({ pieceId: piece.id }));
@@ -35,17 +40,13 @@ export const SelectablePiece: React.FC = () => {
 		return null;
 	}
 
-	const className = classNames(
-		styles.selectablePiece,
-		{ [styles.selected]: isSelected }
-	);
+	const className = classNames(styles.selectablePiece, {
+		[styles.selected]: isSelected,
+	});
 
 	return (
 		<div className={className}>
-			<Piece
-				healthbar="none"
-				onClick={onClick}
-			/>
+			<Piece healthbar="none" onClick={onClick} />
 		</div>
 	);
 };

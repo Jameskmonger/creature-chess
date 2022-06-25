@@ -6,5 +6,7 @@ export type Packet = {
 export type PacketSet = { [opcode: string]: Packet };
 
 export type OpcodesForPacket<TPacketSet extends PacketSet, TPacket> = {
-	[TOpcode in keyof TPacketSet]?: TPacketSet[TOpcode] extends TPacket ? TPacketSet[TOpcode] : never
+	[TOpcode in keyof TPacketSet]?: TPacketSet[TOpcode] extends TPacket
+		? TPacketSet[TOpcode]
+		: never;
 };

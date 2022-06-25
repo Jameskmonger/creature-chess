@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { useBoardState } from "../../context";
 import { BoardItem } from "./BoardItem";
 import { DraggableBoardItem } from "./DraggableBoardItem";
@@ -18,14 +19,22 @@ const BoardItems: React.FC<{ render: BoardItemRenderFn }> = ({ render }) => {
 			continue;
 		}
 
-		const [x, y] = position.split(",").map(i => parseInt(i, 10));
+		const [x, y] = position.split(",").map((i) => parseInt(i, 10));
 
 		const { item, draggable = false } = render(pieces[id], x, y);
 
 		if (draggable) {
-			pieceElements.push(<DraggableBoardItem key={id} id={id} x={x} y={y}>{item}</DraggableBoardItem>);
+			pieceElements.push(
+				<DraggableBoardItem key={id} id={id} x={x} y={y}>
+					{item}
+				</DraggableBoardItem>
+			);
 		} else {
-			pieceElements.push(<BoardItem key={id} x={x} y={y}>{item}</BoardItem>);
+			pieceElements.push(
+				<BoardItem key={id} x={x} y={y}>
+					{item}
+				</BoardItem>
+			);
 		}
 	}
 

@@ -1,12 +1,20 @@
+import { BoardState } from "@shoki/board";
+
+import { TileCoordinates, CreatureStats } from "@creature-chess/models";
+
+import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
+
 // no typings so this needs a standard require
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { astar, Graph } = require("javascript-astar");
 
-import { TileCoordinates, CreatureStats } from "@creature-chess/models";
-import { BoardState } from "@shoki/board";
-import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
-
-const createEmptyWeightGrid = ({ width, height }: { width: number; height: number }) => {
+const createEmptyWeightGrid = ({
+	width,
+	height,
+}: {
+	width: number;
+	height: number;
+}) => {
 	const grid: number[][] = [];
 
 	// todo this is a weird way round
@@ -26,14 +34,13 @@ const createEmptyWeightGrid = ({ width, height }: { width: number; height: numbe
 const createWeightGrid = (start: TileCoordinates, board: BoardState) => {
 	const grid = createEmptyWeightGrid(board.size);
 
-	Object.entries(board.piecePositions)
-		.forEach(([position, pieceId]) => {
-			const [x, y] = position.split(",").map(p => parseInt(p, 10));
+	Object.entries(board.piecePositions).forEach(([position, pieceId]) => {
+		const [x, y] = position.split(",").map((p) => parseInt(p, 10));
 
-			if (pieceId) {
-				grid[x][y] = 0;
-			}
-		});
+		if (pieceId) {
+			grid[x][y] = 0;
+		}
+	});
 
 	grid[start.x][start.y] = 1;
 
@@ -64,7 +71,7 @@ const findPath = (
 
 	return {
 		stepCount: path.length,
-		firstStep
+		firstStep,
 	};
 };
 
@@ -76,10 +83,18 @@ export const getNextPiecePosition = (
 	targetPosition: TileCoordinates,
 	board: BoardState
 ): TileCoordinates | null => {
-	const { attackType: { range: attackRange } } = attackerStats;
+	const {
+		attackType: { range: attackRange },
+	} = attackerStats;
 
-	const targetTiles = getTargetAttackPositions(board, targetPosition, attackRange);
-	const paths = targetTiles.map(pos => findPath(board, attackerPosition, pos)).filter(pathNotNull);
+	const targetTiles = getTargetAttackPositions(
+		board,
+		targetPosition,
+		attackRange
+	);
+	const paths = targetTiles
+		.map((pos) => findPath(board, attackerPosition, pos))
+		.filter(pathNotNull);
 
 	if (paths.length === 0) {
 		return null;

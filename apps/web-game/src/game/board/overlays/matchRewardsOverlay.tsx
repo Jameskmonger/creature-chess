@@ -1,16 +1,25 @@
 import * as React from "react";
+
 import { useSelector } from "react-redux";
+
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
 import { Group, Layout } from "@creature-chess/ui";
 import { DiscordIcon } from "@creature-chess/ui/misc";
 import { Header2, Header4 } from "@creature-chess/ui/text";
+
 import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";
 
 const MatchRewardsOverlay: React.FunctionComponent = () => {
-	const matchRewards = useSelector<AppState, PlayerMatchRewards | null>(state => state.game.playerInfo.matchRewards);
-	const victoryOverlayShowing = useSelector<AppState, boolean>(state => state.game.ui.winnerId !== null);
-	const spectatingPlayer = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
+	const matchRewards = useSelector<AppState, PlayerMatchRewards | null>(
+		(state) => state.game.playerInfo.matchRewards
+	);
+	const victoryOverlayShowing = useSelector<AppState, boolean>(
+		(state) => state.game.ui.winnerId !== null
+	);
+	const spectatingPlayer = useSelector<AppState, boolean>(
+		(state) => state.game.spectating.id !== null
+	);
 
 	if (!matchRewards || victoryOverlayShowing || spectatingPlayer) {
 		return null;
@@ -19,9 +28,7 @@ const MatchRewardsOverlay: React.FunctionComponent = () => {
 	const {
 		damage,
 		justDied,
-		rewardMoney: {
-			total, base, winBonus, streakBonus, interest
-		}
+		rewardMoney: { total, base, winBonus, streakBonus, interest },
 	} = matchRewards;
 
 	if (justDied) {

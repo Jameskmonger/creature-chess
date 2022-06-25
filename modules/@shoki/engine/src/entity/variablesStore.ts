@@ -1,8 +1,13 @@
 import { getContext } from "typed-redux-saga";
+
 import { GetContextEffect } from "../effects";
 
-export type GetVariableFn<TVariables> = <TResult>(selector: (variables: TVariables) => TResult) => TResult;
-export type UpdateVariablesFn<TVariables> = (patch: Partial<TVariables>) => void;
+export type GetVariableFn<TVariables> = <TResult>(
+	selector: (variables: TVariables) => TResult
+) => TResult;
+export type UpdateVariablesFn<TVariables> = (
+	patch: Partial<TVariables>
+) => void;
 
 /**
  * @param getVariable - Select a variable from the variable store
@@ -24,10 +29,15 @@ export type VariablesStoreContext<TVariables> = {
  * @param selector - The selector function
  * @returns The selected variable from the variable store
  */
-export const getVariable: <TVariables, TResult>(selector: (variables: TVariables) => TResult) => Generator<GetContextEffect, TResult>
-	= function*<TVariables, TResult>(selector: (variables: TVariables) => TResult) {
-		return (yield* getContext<GetVariableFn<TVariables>>("getVariable"))(selector);
-	};
+export const getVariable: <TVariables, TResult>(
+	selector: (variables: TVariables) => TResult
+) => Generator<GetContextEffect, TResult> = function* <TVariables, TResult>(
+	selector: (variables: TVariables) => TResult
+) {
+	return (yield* getContext<GetVariableFn<TVariables>>("getVariable"))(
+		selector
+	);
+};
 
 /**
  * Update a/some variable(s) in the variable store
@@ -38,10 +48,13 @@ export const getVariable: <TVariables, TResult>(selector: (variables: TVariables
  *
  * @param patch - The variables to update
  */
-export const updateVariables: <TVariables>(patch: Partial<TVariables>) => Generator<GetContextEffect, void>
-	= function*<TVariables>(patch: Partial<TVariables>) {
-		(yield* getContext<UpdateVariablesFn<TVariables>>("updateVariables"))(patch);
-	};
+export const updateVariables: <TVariables>(
+	patch: Partial<TVariables>
+) => Generator<GetContextEffect, void> = function* <TVariables>(
+	patch: Partial<TVariables>
+) {
+	(yield* getContext<UpdateVariablesFn<TVariables>>("updateVariables"))(patch);
+};
 
 /**
  * Create a variable store.
@@ -52,16 +65,18 @@ export const updateVariables: <TVariables>(patch: Partial<TVariables>) => Genera
  *
  * @returns A variable store context {@link VariablesStoreContext}
  */
-export const createVariableStore = <TVariables>(defaultVariables: TVariables): VariablesStoreContext<TVariables> => {
+export const createVariableStore = <TVariables>(
+	defaultVariables: TVariables
+): VariablesStoreContext<TVariables> => {
 	let state: TVariables = defaultVariables;
 
 	return {
-		getVariable: selector => selector(state),
-		updateVariables: patch => {
+		getVariable: (selector) => selector(state),
+		updateVariables: (patch) => {
 			state = {
 				...state,
-				...patch
+				...patch,
 			};
-		}
+		},
 	};
 };

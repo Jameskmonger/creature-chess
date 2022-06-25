@@ -1,6 +1,8 @@
-import classnames from "classnames";
 import * as React from "react";
+
+import classnames from "classnames";
 import { createUseStyles } from "react-jss";
+
 import { PlayerListPlayer } from "@creature-chess/models";
 
 type Props = {
@@ -9,8 +11,8 @@ type Props = {
 
 const useStyles = createUseStyles({
 	image: {
-		height: "64px"
-	}
+		height: "64px",
+	},
 });
 
 const PlayerAvatar: React.FunctionComponent<Props> = ({ player }) => {
@@ -20,7 +22,12 @@ const PlayerAvatar: React.FunctionComponent<Props> = ({ player }) => {
 		return null;
 	}
 
-	return <img className={classnames(classes.image, "avatar")} src={`https://creaturechess.com/images/front/${player.profile.picture}.png`} />;
+	return (
+		<img
+			className={classnames(classes.image, "avatar")}
+			src={`https://creaturechess.com/images/front/${player.profile.picture}.png`}
+		/>
+	);
 };
 
 export { PlayerAvatar };

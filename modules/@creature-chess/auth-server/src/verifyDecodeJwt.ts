@@ -1,12 +1,13 @@
+import { config } from "@creature-chess/models";
+
 import jwt = require("jsonwebtoken");
 import jwksClient = require("jwks-rsa");
-import { config } from "@creature-chess/models";
 
 const client = jwksClient({
 	cache: true,
 	rateLimit: true,
 	jwksRequestsPerMinute: 5,
-	jwksUri: `https://${config.auth0.domain}/.well-known/jwks.json`
+	jwksUri: `https://${config.auth0.domain}/.well-known/jwks.json`,
 });
 
 interface JWTPayload {
@@ -18,20 +19,23 @@ interface DecodedToken {
 	payload: JWTPayload;
 }
 
-const verifyToken = async (token: string, publicKey: string) => new Promise<JWTPayload>((resolve, reject) => {
-	jwt.verify(token, publicKey, (err, payload) => {
-		if (err) {
-			reject(err);
-			return;
-		}
+const verifyToken = async (token: string, publicKey: string) =>
+	new Promise<JWTPayload>((resolve, reject) => {
+		jwt.verify(token, publicKey, (err, payload) => {
+			if (err) {
+				reject(err);
+				return;
+			}
 
-		resolve(payload as JWTPayload);
+			resolve(payload as JWTPayload);
+		});
 	});
-});
 
 export const verifyDecodeJwt = async (token: string) => {
 	try {
-		const dtoken: DecodedToken | null = (jwt.decode(token, { complete: true }) || null) as DecodedToken | null;
+		const dtoken: DecodedToken | null = (jwt.decode(token, {
+			complete: true,
+		}) || null) as DecodedToken | null;
 
 		if (dtoken === null) {
 			return null;

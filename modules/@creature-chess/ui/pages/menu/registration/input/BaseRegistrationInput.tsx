@@ -1,4 +1,5 @@
 import React from "react";
+
 import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
@@ -14,7 +15,10 @@ const useStyles = createUseStyles({
 	},
 });
 
-const BaseRegistrationInput: React.FunctionComponent<{ heading: string; info: string }> = ({ heading, info, children }) => {
+const BaseRegistrationInput: React.FunctionComponent<{
+	heading: string;
+	info: string;
+}> = ({ heading, info, children }) => {
 	const styles = useStyles();
 
 	return (

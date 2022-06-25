@@ -1,9 +1,12 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { Card as CardModel } from "@creature-chess/models";
-import { CreatureImage } from "../display";
+
 import { Layout } from "../../layout";
 import { Button } from "../button";
+import { CreatureImage } from "../display";
 
 type Props = {
 	card: CardModel;
@@ -25,12 +28,12 @@ const useStyles = createUseStyles({
 		fontWeight: 700,
 		color: "#fff",
 		fontSize: "0.7em",
-		textTransform: "uppercase"
+		textTransform: "uppercase",
 	},
 	cardName: {
 		textTransform: "none",
-		marginBottom: "0.35em"
-	}
+		marginBottom: "0.35em",
+	},
 });
 
 const CurrentCard: React.FunctionComponent<Props> = ({ card, onBuy }) => {
@@ -38,9 +41,17 @@ const CurrentCard: React.FunctionComponent<Props> = ({ card, onBuy }) => {
 
 	return (
 		<>
-			<Layout direction="row" justifyContent="center" noSpacer className={classes.currentCard}>
+			<Layout
+				direction="row"
+				justifyContent="center"
+				noSpacer
+				className={classes.currentCard}
+			>
 				<div>
-					<CreatureImage definitionId={card.definitionId} baseUrl="https://creaturechess.com/" />
+					<CreatureImage
+						definitionId={card.definitionId}
+						baseUrl="https://creaturechess.com/"
+					/>
 				</div>
 				<Layout direction="column" className={classes.cardText}>
 					<h2 className={classes.cardName}>{card.name}</h2>
@@ -50,7 +61,9 @@ const CurrentCard: React.FunctionComponent<Props> = ({ card, onBuy }) => {
 			</Layout>
 
 			<div className={classes.buyCard}>
-				<Button type="primary" onClick={onBuy}>Buy (${card.cost})</Button>
+				<Button type="primary" onClick={onBuy}>
+					Buy (${card.cost})
+				</Button>
 			</div>
 		</>
 	);

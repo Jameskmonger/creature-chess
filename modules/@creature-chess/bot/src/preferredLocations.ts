@@ -6,11 +6,11 @@ const SORT_A_SECOND = 1;
 const ARCANE_ROW_PREFERENCE: { [key: number]: number } = {
 	[3]: 2,
 	[4]: 0,
-	[5]: 1
+	[5]: 1,
 };
 
 export const PREFERRED_LOCATIONS: {
-	[key in DefinitionClass]: (a: TileCoordinates, b: TileCoordinates) => -1 | 1
+	[key in DefinitionClass]: (a: TileCoordinates, b: TileCoordinates) => -1 | 1;
 } = {
 	[DefinitionClass.VALIANT]: (a, b) => {
 		if (a.y < b.y) {

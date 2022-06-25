@@ -1,51 +1,62 @@
 import { takeLatest, select, put, call } from "@redux-saga/core/effects";
+
+import { BoardState, BoardSlice, BoardSelectors } from "@shoki/board";
+
+import {
+	IndexedPieces,
+	createPieceCombatState,
+	PieceModel,
+	GameOptions,
+} from "@creature-chess/models";
+
+import { battleFinishEvent, battleTurnEvent } from "./events";
+import { simulateTurn } from "./turnSimulator";
+import { isATeamDefeated } from "./utils/is-a-team-defeated";
+
 // no typings so this needs a standard require
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const present = require("present");
 
-import { IndexedPieces, createPieceCombatState, PieceModel, GameOptions } from "@creature-chess/models";
-import { BoardState, BoardSlice, BoardSelectors } from "@shoki/board";
-
-import { simulateTurn } from "./turnSimulator";
-import { isATeamDefeated } from "./utils/is-a-team-defeated";
-import { battleFinishEvent, battleTurnEvent } from "./events";
-
 const START_BATTLE = "START_BATTLE";
 type START_BATTLE = typeof START_BATTLE;
 type StartBattleCommand = { type: START_BATTLE; payload: { turn?: number } };
-export const startBattle = (turn?: number): StartBattleCommand => ({ type: START_BATTLE, payload: { turn } });
+export const startBattle = (turn?: number): StartBattleCommand => ({
+	type: START_BATTLE,
+	payload: { turn },
+});
 
 const duration = (ms: number) => {
 	const startTime = present();
 
 	return {
-		remaining: () => new Promise<void>(resolve => {
-			const endTime = present();
-			const timePassed = endTime - startTime;
+		remaining: () =>
+			new Promise<void>((resolve) => {
+				const endTime = present();
+				const timePassed = endTime - startTime;
 
-			const remaining = Math.max(ms - timePassed, 0);
+				const remaining = Math.max(ms - timePassed, 0);
 
-			if (remaining === 0) {
-				resolve();
-				return;
-			}
+				if (remaining === 0) {
+					resolve();
+					return;
+				}
 
-			setTimeout(() => resolve(), remaining);
-		})
+				setTimeout(() => resolve(), remaining);
+			}),
 	};
 };
 
-const addCombatState = (pieces: IndexedPieces) => Object.entries(pieces)
-	.reduce<IndexedPieces>((acc, [pieceId, piece]) => {
+const addCombatState = (pieces: IndexedPieces) =>
+	Object.entries(pieces).reduce<IndexedPieces>((acc, [pieceId, piece]) => {
 		acc[pieceId] = {
 			...piece,
-			combat: createPieceCombatState()
+			combat: createPieceCombatState(),
 		};
 
 		return acc;
 	}, {});
 
-const runBattle = function*(
+const runBattle = function* (
 	initialBoard: BoardState<PieceModel>,
 	boardSlice: BoardSlice<PieceModel>,
 	startingTurn: number,
@@ -55,20 +66,17 @@ const runBattle = function*(
 		id: initialBoard.id,
 		pieces: addCombatState(initialBoard.pieces),
 		piecePositions: {
-			...initialBoard.piecePositions
+			...initialBoard.piecePositions,
 		},
 		locked: initialBoard.locked,
 		size: initialBoard.size,
-		pieceLimit: null
+		pieceLimit: null,
 	};
 
 	let turnCount = startingTurn;
 
 	while (true) {
-		const shouldStop = (
-			turnCount >= options.turnCount
-			|| isATeamDefeated(board)
-		);
+		const shouldStop = turnCount >= options.turnCount || isATeamDefeated(board);
 
 		if (shouldStop) {
 			yield duration(1000).remaining();
@@ -88,13 +96,14 @@ const runBattle = function*(
 
 export const battleSagaFactory = <TState>(
 	boardSelector: (state: TState) => BoardState<PieceModel>
-) => function*(gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
-	yield takeLatest<StartBattleCommand>(
-		START_BATTLE,
-		function*({ payload: { turn } }) {
-			const board: BoardState<PieceModel> = yield select(boardSelector);
+) =>
+	function* (gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
+		yield takeLatest<StartBattleCommand>(
+			START_BATTLE,
+			function* ({ payload: { turn } }) {
+				const board: BoardState<PieceModel> = yield select(boardSelector);
 
-			yield call(runBattle, board, boardSlice, turn || 0, gameOptions);
-		}
-	);
-};
+				yield call(runBattle, board, boardSlice, turn || 0, gameOptions);
+			}
+		);
+	};

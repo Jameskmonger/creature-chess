@@ -9,7 +9,10 @@ const INITIAL_VALUE = {
 };
 
 export const getOwnedPieceTypes = (allPieces: PieceModel[]) =>
-	allPieces.reduce((acc, cur) => ({
-		...acc,
-		[cur.definition.type]: acc[cur.definition.type] + 1
-	}), INITIAL_VALUE);
+	allPieces.reduce(
+		(acc, cur) => ({
+			...acc,
+			[cur.definition.type]: acc[cur.definition.type] + 1,
+		}),
+		INITIAL_VALUE
+	);

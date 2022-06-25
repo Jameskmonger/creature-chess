@@ -1,8 +1,11 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { PlayerListPlayer } from "@creature-chess/models";
-import { Title } from "./title";
+
 import { PlayerName } from "./name";
+import { Title } from "./title";
 
 type Props = {
 	player: PlayerListPlayer;
@@ -18,7 +21,7 @@ const useStyles = createUseStyles({
 	},
 	name: {
 		marginBottom: "0.25rem",
-	}
+	},
 });
 
 const PlayerProfile: React.FunctionComponent<Props> = (props) => {

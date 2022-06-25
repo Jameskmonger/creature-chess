@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
-import { createUseStyles } from "react-jss";
+
 import classNames from "classnames";
+import { createUseStyles } from "react-jss";
+
 import { useBoardState } from "../../context";
 import { ClickBoardTileEvent } from "../../events";
 import { useTileWidth } from "./useTileWidth";
@@ -14,8 +16,11 @@ type TileProps = {
 // eslint-disable-next-line no-bitwise
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 
-const useStyles = createUseStyles<string, { boardWidth: number; tileWidth: number }>({
-	tile: props => ({
+const useStyles = createUseStyles<
+	string,
+	{ boardWidth: number; tileWidth: number }
+>({
+	tile: (props) => ({
 		width: `${(100 / props.boardWidth).toFixed(2)}%`,
 		height: `${props.tileWidth}px`,
 
@@ -27,37 +32,37 @@ const useStyles = createUseStyles<string, { boardWidth: number; tileWidth: numbe
 	tileInner: {
 		width: "100%",
 		height: "100%",
-	}
+	},
 });
 
-export const Tile = React.forwardRef<any, TileProps>(({ x, y, onClick }, ref) => {
-	const { size: { width: boardWidth } } = useBoardState();
+export const Tile = React.forwardRef<any, TileProps>(
+	({ x, y, onClick }, ref) => {
+		const {
+			size: { width: boardWidth },
+		} = useBoardState();
 
-	const tileInnerRef = useRef<HTMLDivElement>(null);
-	const tileWidth = useTileWidth(tileInnerRef);
+		const tileInnerRef = useRef<HTMLDivElement>(null);
+		const tileWidth = useTileWidth(tileInnerRef);
 
-	const styles = useStyles({ boardWidth, tileWidth });
-	const isDark = isBoardTileDark(x, y);
+		const styles = useStyles({ boardWidth, tileWidth });
+		const isDark = isBoardTileDark(x, y);
 
-	const handleClick = onClick ? () => onClick({ x, y }) : undefined;
+		const handleClick = onClick ? () => onClick({ x, y }) : undefined;
 
-	const className = classNames(
-		styles.tile,
-		"tile",
-		{
+		const className = classNames(styles.tile, "tile", {
 			dark: isDark,
-			light: !isDark
-		}
-	);
+			light: !isDark,
+		});
 
-	return (
-		<div
-			ref={ref}
-			className={className}
-			touch-action="none"
-			onPointerUp={handleClick}
-		>
-			<div ref={tileInnerRef} className={styles.tileInner} />
-		</div>
-	);
-});
+		return (
+			<div
+				ref={ref}
+				className={className}
+				touch-action="none"
+				onPointerUp={handleClick}
+			>
+				<div ref={tileInnerRef} className={styles.tileInner} />
+			</div>
+		);
+	}
+);

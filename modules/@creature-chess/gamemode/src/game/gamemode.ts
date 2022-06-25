@@ -1,20 +1,28 @@
-import { Logger } from "winston";
+import { take } from "@redux-saga/core/effects";
 import { EventEmitter } from "events";
 import { Store } from "redux";
+import { SagaMiddleware } from "redux-saga";
+import { Logger } from "winston";
+
 import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
 
-import { OpponentProvider } from "./opponentProvider";
-import { PlayerList } from "./playerList";
-import { CardDeck } from "./cardDeck";
-import { gameFinishEvent, playerListChangedEvent, GameFinishEvent } from "./events";
-import { createGameStore, GameState } from "./store";
-import { take } from "@redux-saga/core/effects";
-import { gameSaga, GameSagaContext } from "./sagas";
-import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
 import { PlayerEntity } from "../entities";
-import { getPlayerStatus, isPlayerAlive } from "../entities/player/state/selectors";
+import {
+	getPlayerStatus,
+	isPlayerAlive,
+} from "../entities/player/state/selectors";
+import { CardDeck } from "./cardDeck";
+import {
+	gameFinishEvent,
+	playerListChangedEvent,
+	GameFinishEvent,
+} from "./events";
+import { OpponentProvider } from "./opponentProvider";
+import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
+import { PlayerList } from "./playerList";
 import { sendPublicEventsSaga } from "./publicEvents";
-import { SagaMiddleware } from "redux-saga";
+import { gameSaga, GameSagaContext } from "./sagas";
+import { createGameStore, GameState } from "./store";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -45,16 +53,16 @@ export class Gamemode {
 			players: {
 				getAll: this.getAllPlayers,
 				getLiving: this.getLivingPlayers,
-				getById: this.getPlayerById
+				getById: this.getPlayerById,
 			},
-			logger: this.logger
+			logger: this.logger,
 		});
 		this.store = store;
 		this.sagaMiddleware = sagaMiddleware;
 	}
 
 	public start = (players: PlayerEntity[]) => {
-		players.forEach(player => {
+		players.forEach((player) => {
 			this.players.push(player);
 			this.playerList.addPlayer(player);
 
@@ -64,8 +72,8 @@ export class Gamemode {
 		this.opponentProvider.setPlayers(players);
 
 		// todo this is ugly
-		this.playerList.onUpdate(newPlayers => {
-			this.getConnectedPlayers().forEach(player => {
+		this.playerList.onUpdate((newPlayers) => {
+			this.getConnectedPlayers().forEach((player) => {
 				player.put(playerListChangedEvent({ players: newPlayers }));
 			});
 		});
@@ -76,20 +84,25 @@ export class Gamemode {
 		this.sagaMiddleware.run(sendPublicEventsSaga);
 	};
 
-	public getPlayerById = (playerId: string) => this.players.find(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId) || null;
+	public getPlayerById = (playerId: string) =>
+		this.players.find(
+			(p) =>
+				p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId
+		) || null;
 
 	public onFinish(fn: (winner: PlayerEntity) => void) {
 		this.events.on(finishGameEventKey, fn);
 	}
 
-	public getConnectedPlayers = () => this.players.filter(p => p.select(getPlayerStatus) !== PlayerStatus.QUIT);
+	public getConnectedPlayers = () =>
+		this.players.filter((p) => p.select(getPlayerStatus) !== PlayerStatus.QUIT);
 
 	public getRoundInfo = () => this.store.getState().roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
 
 	private gameTeardownSagaFactory = () => {
 		const broadcast = (event: GameFinishEvent) => {
-			this.getConnectedPlayers().forEach(player => {
+			this.getConnectedPlayers().forEach((player) => {
 				player.put(event);
 			});
 
@@ -106,7 +119,7 @@ export class Gamemode {
 			(this.events as unknown as null) = null;
 		};
 
-		return function*() {
+		return function* () {
 			const event: GameFinishEvent = yield take(gameFinishEvent.toString());
 
 			broadcast(event);
@@ -117,8 +130,9 @@ export class Gamemode {
 	private getAllPlayers = () => this.players;
 
 	private getLivingPlayers = () =>
-		this.players.filter(p =>
-			p.select(getPlayerStatus) !== PlayerStatus.QUIT
-			&& p.select(isPlayerAlive)
+		this.players.filter(
+			(p) =>
+				p.select(getPlayerStatus) !== PlayerStatus.QUIT &&
+				p.select(isPlayerAlive)
 		);
 }

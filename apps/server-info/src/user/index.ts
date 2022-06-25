@@ -1,4 +1,4 @@
 export {
 	getCurrent as userGetCurrent,
-	patchCurrent as userPatchCurrent
+	patchCurrent as userPatchCurrent,
 } from "./current";

@@ -1,10 +1,11 @@
 import { AnyAction, Reducer, ReducersMapObject } from "redux";
+
 import { BoardState } from "@shoki/board";
+
 import { PieceModel, RoundInfoState } from "@creature-chess/models";
 
-import { playerInfoReducer, PlayerInfoState } from "./playerInfo";
-
 import { cardShopReducer, CardShopState } from "./cardShop";
+import { playerInfoReducer, PlayerInfoState } from "./playerInfo";
 import { spectatingReducer, SpectatingState } from "./spectating";
 
 export * as PlayerCommands from "./commands";
@@ -18,8 +19,10 @@ export interface PlayerState {
 	spectating: SpectatingState;
 }
 
-export const playerReducers: ReducersMapObject<Pick<PlayerState, "spectating" | "cardShop" | "playerInfo">> = {
+export const playerReducers: ReducersMapObject<
+	Pick<PlayerState, "spectating" | "cardShop" | "playerInfo">
+> = {
 	spectating: spectatingReducer,
 	cardShop: cardShopReducer,
-	playerInfo: playerInfoReducer as Reducer<PlayerInfoState, AnyAction>
+	playerInfo: playerInfoReducer as Reducer<PlayerInfoState, AnyAction>,
 };

@@ -1,10 +1,11 @@
 import { put, delay } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
+
 import { PlayerCommands, PlayerStateSelectors } from "@creature-chess/gamemode";
 
 // send a command for each of the initial states so that networking sends it out
 // todo rethink this
-export const sendInitialState = function*() {
+export const sendInitialState = function* () {
 	// give players time to initialise.. ugly but it works
 	// todo improve this
 	yield delay(200);

@@ -1,7 +1,9 @@
 import * as React from "react";
-import { createUseStyles, ThemeProvider } from "react-jss";
-import { Property } from "csstype";
+
 import classNames from "classnames";
+import { Property } from "csstype";
+import { createUseStyles, ThemeProvider } from "react-jss";
+
 import { LayoutTheme } from "./theme";
 
 type FlexDirection = "column" | "column-reverse" | "row" | "row-reverse";
@@ -15,23 +17,26 @@ type Props = {
 	grow?: boolean;
 };
 
-const isVertical = (direction: Property.FlexDirection) => direction === "column" || direction === "column-reverse";
-const getSpacer = (noSpacer: boolean) => noSpacer ? {} : { padding: "0.25em" }
-const getSize = (grow: boolean) => grow ? { width: "100%", height: "100%" } : {};
+const isVertical = (direction: Property.FlexDirection) =>
+	direction === "column" || direction === "column-reverse";
+const getSpacer = (noSpacer: boolean) =>
+	noSpacer ? {} : { padding: "0.25em" };
+const getSize = (grow: boolean) =>
+	grow ? { width: "100%", height: "100%" } : {};
 
 const useStyles = createUseStyles({
 	layout: ({
 		direction,
 		justifyContent = "space-between",
 		noSpacer = false,
-		grow = false
+		grow = false,
 	}: Props) => ({
 		display: "flex",
 		justifyContent,
 		flexDirection: direction,
 		...getSize(grow),
-		...getSpacer(noSpacer)
-	})
+		...getSpacer(noSpacer),
+	}),
 });
 
 const Layout: React.FunctionComponent<Props> = (props) => {
@@ -41,9 +46,7 @@ const Layout: React.FunctionComponent<Props> = (props) => {
 
 	return (
 		<div className={classNames(classes.layout, props.className)}>
-			<ThemeProvider theme={theme}>
-				{props.children}
-			</ThemeProvider>
+			<ThemeProvider theme={theme}>{props.children}</ThemeProvider>
 		</div>
 	);
 };

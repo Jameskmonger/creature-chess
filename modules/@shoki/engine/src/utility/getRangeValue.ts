@@ -24,14 +24,17 @@ const getPositionInRange = (min: number, max: number, input: number) => {
  *
  * @returns A weighted output value
  */
-export const getRangeValue = ({ value, range: [min, max], direction }: UtilityInput): UtilityNumberValue => {
+export const getRangeValue = ({
+	value,
+	range: [min, max],
+	direction,
+}: UtilityInput): UtilityNumberValue => {
 	const inputValuePosition = getPositionInRange(min, max, value);
 
-	const inputOutput = direction === ScoringDirection.High
-		? inputValuePosition * 200
-		: 200 - (inputValuePosition * 200);
+	const inputOutput =
+		direction === ScoringDirection.High
+			? inputValuePosition * 200
+			: 200 - inputValuePosition * 200;
 
-	return clampToUtilityNumber(
-		Math.floor(inputOutput)
-	);
+	return clampToUtilityNumber(Math.floor(inputOutput));
 };

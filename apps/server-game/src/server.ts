@@ -1,6 +1,8 @@
+import { Server } from "socket.io";
+
 import { DatabaseConnection } from "@creature-chess/data";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
-import { Server } from "socket.io";
+
 import { createManagementClient } from "./external/auth0";
 import { getBots } from "./external/bots";
 import { createDatabaseConnection } from "./external/database";
@@ -20,18 +22,20 @@ const startGame = async (
 
 	const bots = await getBots(database, botsRequired);
 
-	for (const { player: { id } } of players) {
+	for (const {
+		player: { id },
+	} of players) {
 		await database.user.addGamePlayed(id);
 	}
 
 	const game = new Game(
 		{ players, bots },
 		{
-			onFinish: winner => {
-				logger.info(`Game won by ${winner.getVariable(t => t.name)}`);
+			onFinish: (winner) => {
+				logger.info(`Game won by ${winner.getVariable((t) => t.name)}`);
 
 				onFinish();
-			}
+			},
 		}
 	);
 
@@ -51,9 +55,11 @@ export const startServer = async ({ io }: { io: Server }) => {
 	let games: Game[] = [];
 
 	const matchmaking = (socket: AuthenticatedSocket) => {
-		logger.info(`[Matchmaking (${socket.data.nickname})] Beginning matchmaking`);
+		logger.info(
+			`[Matchmaking (${socket.data.nickname})] Beginning matchmaking`
+		);
 
-		const matchingLobby = lobbies.find(l => l.isInLobby(socket.data.id));
+		const matchingLobby = lobbies.find((l) => l.isInLobby(socket.data.id));
 
 		if (matchingLobby) {
 			logger.info(`[Matchmaking (${socket.data.nickname})] Lobby found`);
@@ -62,7 +68,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 			return;
 		}
 
-		const matchingGame = games.find(l => l.isInGame(socket.data.id));
+		const matchingGame = games.find((l) => l.isInGame(socket.data.id));
 
 		if (matchingGame) {
 			logger.info(`[Matchmaking (${socket.data.nickname})] Game found`);
@@ -74,19 +80,15 @@ export const startServer = async ({ io }: { io: Server }) => {
 		const lobby = new Lobby({
 			waitTimeMs: LOBBY_WAIT_TIME * 1000,
 			maxPlayers: MAX_PLAYERS_IN_GAME,
-			onStart: async players => {
-				lobbies = lobbies.filter(other => other !== lobby);
+			onStart: async (players) => {
+				lobbies = lobbies.filter((other) => other !== lobby);
 
-				const game = await startGame(
-					database,
-					players,
-					() => {
-						games = games.filter(other => other !== game);
-					}
-				);
+				const game = await startGame(database, players, () => {
+					games = games.filter((other) => other !== game);
+				});
 
 				games.push(game);
-			}
+			},
 		});
 
 		lobbies.push(lobby);
@@ -96,10 +98,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 		lobby.connect(socket);
 	};
 
-	onHandshakeSuccess(
-		{ io, authClient, database },
-		matchmaking
-	);
+	onHandshakeSuccess({ io, authClient, database }, matchmaking);
 
 	logger.info("Listening for successful handshakes");
 };

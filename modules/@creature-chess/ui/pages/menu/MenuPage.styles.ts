@@ -2,23 +2,23 @@ import { createUseStyles } from "react-jss";
 
 export const useStyles = createUseStyles({
 	menu: {
-		"display": "flex",
-		"flexDirection": "column",
-		"height": "100%",
-		"width": "100%",
-		"overflow": "scroll",
-		"paddingTop": "2em",
-		"fontFamily": "Arial, Helvetica, sans-serif",
-		"color": "#fff",
-		"alignItems": "center",
-		"justifyContent": "center",
+		display: "flex",
+		flexDirection: "column",
+		height: "100%",
+		width: "100%",
+		overflow: "scroll",
+		paddingTop: "2em",
+		fontFamily: "Arial, Helvetica, sans-serif",
+		color: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
 
 		"& h2": {
 			marginBottom: "1rem",
 			fontSize: "2em",
 			textAlign: "center",
 			userSelect: "none",
-		}
+		},
 	},
 	findGameButton: {
 		padding: "0.8em 2em",
@@ -42,7 +42,7 @@ export const useStyles = createUseStyles({
 		cursor: "pointer",
 	},
 	blurb: {
-		"marginBottom": "0.5rem",
+		marginBottom: "0.5rem",
 		"& p": {
 			marginTop: "0",
 			marginBottom: "0.25rem",
@@ -52,7 +52,7 @@ export const useStyles = createUseStyles({
 			fontStyle: "italic",
 			fontWeight: "700",
 			color: "#bfbfbf",
-		}
+		},
 	},
 	error: {
 		padding: "1em 0.5em",
@@ -60,5 +60,5 @@ export const useStyles = createUseStyles({
 		color: "#db2828",
 		background: "#ffe8e6",
 		boxShadow: "0 0 0 1px #db2828 inset, 0 0 0 0 transparent",
-	}
+	},
 });

@@ -1,10 +1,15 @@
 import React from "react";
+
 import { useSelector } from "react-redux";
+
 import { Text } from "@creature-chess/ui/text";
+
 import { AppState } from "../../../../store";
 
 export function QuickChatBox({ sendingPlayerId }: { sendingPlayerId: string }) {
-	const currentChat = useSelector<AppState, any>(state => state.game.quickChat[sendingPlayerId]);
+	const currentChat = useSelector<AppState, any>(
+		(state) => state.game.quickChat[sendingPlayerId]
+	);
 
 	if (!currentChat) {
 		return null;

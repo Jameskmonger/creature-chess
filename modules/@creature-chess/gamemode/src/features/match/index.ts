@@ -1,6 +1,6 @@
 export {
 	PlayerVariables as MatchPlayerVariables,
-	defaultPlayerVariables as defaultMatchPlayerVariables
+	defaultPlayerVariables as defaultMatchPlayerVariables,
 } from "./playerVariables";
 export { rootSaga as matchRootSaga } from "./sagas/root";
 export { getMatch } from "./selectors";

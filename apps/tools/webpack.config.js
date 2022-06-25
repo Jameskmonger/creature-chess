@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 
-
 module.exports = {
 	entry: "./src/index.tsx",
 	output: {
@@ -12,15 +11,20 @@ module.exports = {
 		filename: "dev-tools-bundles.js",
 	},
 	module: {
-		rules: [{
-			test: /\.tsx?$/,
-			use: "ts-loader",
-			exclude: /node_modules/
-		},
-		{
-			test: /\.scss$/,
-			use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader", "sass-loader"]
-		}
+		rules: [
+			{
+				test: /\.tsx?$/,
+				use: "ts-loader",
+				exclude: /node_modules/,
+			},
+			{
+				test: /\.scss$/,
+				use: [
+					{ loader: MiniCssExtractPlugin.loader },
+					"css-loader",
+					"sass-loader",
+				],
+			},
 		],
 	},
 	plugins: [
@@ -28,16 +32,14 @@ module.exports = {
 			template: "./src/index.html",
 		}),
 		new MiniCssExtractPlugin({
-			filename: "app-[contenthash].css"
+			filename: "app-[contenthash].css",
 		}),
 	],
 	resolve: {
-		plugins: [
-			new TsConfigPathsPlugin()
-		],
+		plugins: [new TsConfigPathsPlugin()],
 		extensions: [".js", ".jsx", ".ts", ".tsx"],
 		fallback: {
-			events: require.resolve("events/")
-		}
-	}
+			events: require.resolve("events/"),
+		},
+	},
 };

@@ -1,11 +1,23 @@
 import { Reducer, Action, combineReducers } from "redux";
+
 import { BoardSlice, BoardState } from "@shoki/board";
-import { PieceModel, PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
-import { PlayerInfoState, playerInfoReducer, roundInfoReducer, PlayerState, playerReducers } from "@creature-chess/gamemode";
+
+import {
+	PlayerInfoState,
+	playerInfoReducer,
+	roundInfoReducer,
+	PlayerState,
+	playerReducers,
+} from "@creature-chess/gamemode";
+import {
+	PieceModel,
+	PlayerListPlayer,
+	RoundInfoState,
+} from "@creature-chess/models";
 
 import { playerListReducer, quickChatReducer, QuickChat } from "./module";
-import { UiState, uiReducer } from "./ui";
 import { matchReducer, MatchState } from "./module/match";
+import { UiState, uiReducer } from "./ui";
 
 export type GameState = PlayerState & {
 	ui: UiState;
@@ -21,11 +33,15 @@ export type GameState = PlayerState & {
 	quickChat: QuickChat;
 };
 
-type Slices = { boardSlice: BoardSlice<PieceModel>; benchSlice: BoardSlice<PieceModel> };
+type Slices = {
+	boardSlice: BoardSlice<PieceModel>;
+	benchSlice: BoardSlice<PieceModel>;
+};
 
-export const createGameReducer = (
-	{ boardSlice, benchSlice }: Slices
-): Reducer<GameState, Action> =>
+export const createGameReducer = ({
+	boardSlice,
+	benchSlice,
+}: Slices): Reducer<GameState, Action> =>
 	combineReducers({
 		...playerReducers,
 		roundInfo: roundInfoReducer,
@@ -35,5 +51,5 @@ export const createGameReducer = (
 		playerList: playerListReducer,
 		playerInfo: playerInfoReducer,
 		ui: uiReducer,
-		quickChat: quickChatReducer
+		quickChat: quickChatReducer,
 	});

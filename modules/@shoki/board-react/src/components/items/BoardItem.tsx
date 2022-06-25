@@ -1,5 +1,7 @@
 import React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { useBoardState } from "../../context";
 
 type BoardItemProps = {
@@ -18,7 +20,7 @@ type StylesProps = {
 const TILE_BASE_Z_INDEX = 50;
 
 const useStyles = createUseStyles<string, StylesProps>({
-	boardItem: props => ({
+	boardItem: (props) => ({
 		position: "absolute",
 		transition: "all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s",
 
@@ -31,11 +33,17 @@ const useStyles = createUseStyles<string, StylesProps>({
 	}),
 });
 
-export const BoardItem = React.forwardRef<any, BoardItemProps>(({ x, y, children }, ref) => {
-	const { size: { width: boardWidth, height: boardHeight } } = useBoardState();
-	const styles = useStyles({ boardWidth, boardHeight, x, y });
+export const BoardItem = React.forwardRef<any, BoardItemProps>(
+	({ x, y, children }, ref) => {
+		const {
+			size: { width: boardWidth, height: boardHeight },
+		} = useBoardState();
+		const styles = useStyles({ boardWidth, boardHeight, x, y });
 
-	return (
-		<div ref={ref} className={styles.boardItem}>{children}</div>
-	);
-});
+		return (
+			<div ref={ref} className={styles.boardItem}>
+				{children}
+			</div>
+		);
+	}
+);

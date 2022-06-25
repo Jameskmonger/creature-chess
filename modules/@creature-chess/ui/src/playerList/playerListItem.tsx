@@ -1,15 +1,17 @@
 import * as React from "react";
 import { useState, useRef } from "react";
-import { createUseStyles } from "react-jss";
-import { PlayerListPlayer } from "@creature-chess/models";
-import { BattleInfo } from "./battleInfo";
-import { useOnClickOutside } from "../../hooks";
-import { Button } from "../button";
-import { StreakIndicator } from "./streakIndicator";
 
+import { createUseStyles } from "react-jss";
+
+import { PlayerListPlayer } from "@creature-chess/models";
+
+import { useOnClickOutside } from "../../hooks";
+import { Half, Layout } from "../../layout";
+import { Button } from "../button";
 import { Label } from "../display";
 import { PlayerHealthbar, PlayerProfile, PlayerAvatar } from "../player";
-import { Half, Layout } from "../../layout";
+import { BattleInfo } from "./battleInfo";
+import { StreakIndicator } from "./streakIndicator";
 
 interface Props {
 	index: number;
@@ -25,30 +27,32 @@ interface Props {
 	showReadyIndicator?: boolean;
 }
 
-const getDetailReadyColor = ({ player: { ready }, showReadyIndicator = false }: Props) =>
-	(ready && showReadyIndicator) ? "#20b720" : "#ccc";
+const getDetailReadyColor = ({
+	player: { ready },
+	showReadyIndicator = false,
+}: Props) => (ready && showReadyIndicator ? "#20b720" : "#ccc");
 
 const useStyles = createUseStyles({
 	container: (props: Props) => ({
-		"border": props.isOpponent ? "3px solid #b13e53" : "",
-		"boxSizing": "border-box",
-		"padding": "0.5rem",
-		"background": "#566c86",
+		border: props.isOpponent ? "3px solid #b13e53" : "",
+		boxSizing: "border-box",
+		padding: "0.5rem",
+		background: "#566c86",
 
 		"&:not(:last-child)": {
-			marginBottom: "0.25em"
-		}
+			marginBottom: "0.25em",
+		},
 	}),
 	details: (props: Props) => ({
 		flex: 1,
 		paddingLeft: "0.5em",
-		borderLeft: `5px solid ${getDetailReadyColor(props)}`
+		borderLeft: `5px solid ${getDetailReadyColor(props)}`,
 	}),
 	badges: {
 		"&>:not(:last-child)": {
 			marginRight: "0.25em",
-		}
-	}
+		},
+	},
 });
 
 const PlayerListItem: React.FunctionComponent<Props> = (props) => {
@@ -60,7 +64,7 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 		opponentName,
 		isLocal,
 		onSpectateClick,
-		currentlySpectating = false
+		currentlySpectating = false,
 	} = props;
 
 	const ref = useRef();
@@ -86,8 +90,16 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 				<PlayerAvatar player={player} />
 				<div className={classes.details}>
 					<Layout direction="row" noSpacer>
-						<Half><PlayerProfile position={index + 1} player={player} isLocal={isLocal} /></Half>
-						<Half><PlayerHealthbar health={player.health} /></Half>
+						<Half>
+							<PlayerProfile
+								position={index + 1}
+								player={player}
+								isLocal={isLocal}
+							/>
+						</Half>
+						<Half>
+							<PlayerHealthbar health={player.health} />
+						</Half>
 					</Layout>
 					<Layout direction="row">
 						<Half className={classes.badges}>
@@ -95,14 +107,22 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 							<Label>Lv {player.level}</Label>
 						</Half>
 						<Half>
-							{
-								currentlySpectating || isExpanded
-									? <Button onClick={onSpectateClick}>{currentlySpectating ? "Stop spectating" : "Spectate"}</Button>
-									: <Layout direction="row" noSpacer>
-										<BattleInfo battle={player.battle} opponentName={opponentName} />
-										<StreakIndicator type={player.streakType} amount={player.streakAmount} />
-									</Layout>
-							}
+							{currentlySpectating || isExpanded ? (
+								<Button onClick={onSpectateClick}>
+									{currentlySpectating ? "Stop spectating" : "Spectate"}
+								</Button>
+							) : (
+								<Layout direction="row" noSpacer>
+									<BattleInfo
+										battle={player.battle}
+										opponentName={opponentName}
+									/>
+									<StreakIndicator
+										type={player.streakType}
+										amount={player.streakAmount}
+									/>
+								</Layout>
+							)}
 						</Half>
 					</Layout>
 				</div>

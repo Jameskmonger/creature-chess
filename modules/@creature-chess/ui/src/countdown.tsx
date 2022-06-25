@@ -5,8 +5,13 @@ interface Props {
 	render?: (secondsRemaining: number) => React.ReactElement;
 }
 
-const Countdown: React.FunctionComponent<Props> = ({ countdownToSeconds, render }) => {
-	const [secondsRemaining, setSecondsRemaining] = React.useState<number | null>(null);
+const Countdown: React.FunctionComponent<Props> = ({
+	countdownToSeconds,
+	render,
+}) => {
+	const [secondsRemaining, setSecondsRemaining] = React.useState<number | null>(
+		null
+	);
 
 	const updateSecondsRemaining = () => {
 		if (countdownToSeconds === null) {
@@ -15,9 +20,7 @@ const Countdown: React.FunctionComponent<Props> = ({ countdownToSeconds, render 
 
 		const currentSeconds = Date.now() / 1000;
 
-		setSecondsRemaining(
-			Math.ceil(countdownToSeconds - currentSeconds)
-		);
+		setSecondsRemaining(Math.ceil(countdownToSeconds - currentSeconds));
 	};
 
 	React.useEffect(() => {
@@ -26,7 +29,6 @@ const Countdown: React.FunctionComponent<Props> = ({ countdownToSeconds, render 
 		const intervalId = setInterval(updateSecondsRemaining, 1000);
 
 		return () => clearInterval(intervalId);
-
 	}, [countdownToSeconds]);
 
 	if (secondsRemaining === null) {

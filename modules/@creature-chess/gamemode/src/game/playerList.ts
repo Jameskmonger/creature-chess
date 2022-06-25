@@ -1,8 +1,10 @@
 import { EventEmitter } from "events";
+
 import { PlayerListPlayer, PlayerStatus } from "@creature-chess/models";
-import { listenForPropertyUpdates } from "./playerPropertyUpdates";
+
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
+import { listenForPropertyUpdates } from "./playerPropertyUpdates";
 
 const debounce = (func: () => void, wait: number) => {
 	let timeout: any;
@@ -18,7 +20,7 @@ const debounce = (func: () => void, wait: number) => {
 };
 
 enum PlayerListEvents {
-	UPDATE = "UPDATE"
+	UPDATE = "UPDATE",
 }
 
 type SortablePlayerValues = {
@@ -98,24 +100,25 @@ export class PlayerList {
 		this.events.on(PlayerListEvents.UPDATE, fn);
 	}
 
-	public getValue = (): PlayerListPlayer[] => this.players.map(({ id }) => {
-		const player = this.gamePlayers[id];
+	public getValue = (): PlayerListPlayer[] =>
+		this.players.map(({ id }) => {
+			const player = this.gamePlayers[id];
 
-		const streak = player.select(PlayerStateSelectors.getPlayerStreak);
-		return {
-			id: player.id,
-			name: player.getVariable(variables => variables.name),
-			health: player.select(PlayerStateSelectors.getPlayerHealth),
-			ready: player.select(PlayerStateSelectors.isPlayerReady),
-			level: player.select(PlayerStateSelectors.getPlayerLevel),
-			money: player.select(PlayerStateSelectors.getPlayerMoney),
-			streakType: streak.type,
-			streakAmount: streak.amount,
-			battle: player.select(PlayerStateSelectors.getPlayerBattle),
-			status: player.select(PlayerStateSelectors.getPlayerStatus),
-			profile: player.getVariable(variables => variables.profile),
-		};
-	});
+			const streak = player.select(PlayerStateSelectors.getPlayerStreak);
+			return {
+				id: player.id,
+				name: player.getVariable((variables) => variables.name),
+				health: player.select(PlayerStateSelectors.getPlayerHealth),
+				ready: player.select(PlayerStateSelectors.isPlayerReady),
+				level: player.select(PlayerStateSelectors.getPlayerLevel),
+				money: player.select(PlayerStateSelectors.getPlayerMoney),
+				streakType: streak.type,
+				streakAmount: streak.amount,
+				battle: player.select(PlayerStateSelectors.getPlayerBattle),
+				status: player.select(PlayerStateSelectors.getPlayerStatus),
+				profile: player.getVariable((variables) => variables.profile),
+			};
+		});
 
 	public addPlayer(player: PlayerEntity) {
 		this.players.push({
@@ -123,26 +126,28 @@ export class PlayerList {
 			position: null,
 			sortValues: {
 				health: player.select(PlayerStateSelectors.getPlayerHealth),
-				hasQuit: player.select(PlayerStateSelectors.getPlayerStatus) === PlayerStatus.QUIT
-			}
+				hasQuit:
+					player.select(PlayerStateSelectors.getPlayerStatus) ===
+					PlayerStatus.QUIT,
+			},
 		});
 
 		this.gamePlayers[player.id] = player;
 
-		listenForPropertyUpdates(
-			player,
-			{
-				health: health => this.updateSortedValue(player.id, { health }),
-				status: status => this.updateSortedValue(player.id, { hasQuit: status === PlayerStatus.QUIT }),
-				streak: this.emitUpdate,
-				battle: this.emitUpdate,
-				ready: this.emitUpdate,
-			}
-		);
+		listenForPropertyUpdates(player, {
+			health: (health) => this.updateSortedValue(player.id, { health }),
+			status: (status) =>
+				this.updateSortedValue(player.id, {
+					hasQuit: status === PlayerStatus.QUIT,
+				}),
+			streak: this.emitUpdate,
+			battle: this.emitUpdate,
+			ready: this.emitUpdate,
+		});
 	}
 
 	private updateSortedValue(id: string, patch: Partial<SortablePlayerValues>) {
-		const index = this.players.findIndex(p => p.id === id);
+		const index = this.players.findIndex((p) => p.id === id);
 
 		if (index === -1) {
 			return;
@@ -152,8 +157,8 @@ export class PlayerList {
 			...this.players[index],
 			sortValues: {
 				...this.players[index].sortValues,
-				...patch
-			}
+				...patch,
+			},
 		};
 
 		const newPlayers = [...this.players];
@@ -168,8 +173,8 @@ export class PlayerList {
 				...acc,
 				{
 					...cur,
-					position: i + 1
-				}
+					position: i + 1,
+				},
 			];
 		}, []);
 

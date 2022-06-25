@@ -1,18 +1,22 @@
 import { takeLatest, put, select, all } from "redux-saga/effects";
-import { GamePhase } from "@creature-chess/models";
+
 import { GameEvents } from "@creature-chess/gamemode";
-import { clearSelectedPiece, openOverlay, closeOverlay, Overlay } from "../ui";
+import { GamePhase } from "@creature-chess/models";
+
 import { AppState } from "../../store";
 import { PlayerListCommands } from "../module/playerList";
+import { clearSelectedPiece, openOverlay, closeOverlay, Overlay } from "../ui";
 
-export const uiSaga = function*() {
+export const uiSaga = function* () {
 	yield all([
 		takeLatest<GameEvents.GamePhaseStartedEvent>(
 			GameEvents.gamePhaseStartedEvent.toString(),
-			function*({ payload: { phase } }) {
+			function* ({ payload: { phase } }) {
 				switch (phase) {
 					case GamePhase.PREPARING: {
-						const isDead: boolean = yield select((state: AppState) => state.game.playerInfo.health === 0);
+						const isDead: boolean = yield select(
+							(state: AppState) => state.game.playerInfo.health === 0
+						);
 
 						if (!isDead) {
 							yield put(openOverlay(Overlay.SHOP));
@@ -33,9 +37,9 @@ export const uiSaga = function*() {
 		// todo get rid of this event and just sync the command
 		takeLatest<GameEvents.PlayerListChangedEvent>(
 			GameEvents.playerListChangedEvent.toString(),
-			function*({ payload: { players } }) {
+			function* ({ payload: { players } }) {
 				yield put(PlayerListCommands.updatePlayerListCommand(players));
 			}
-		)
+		),
 	]);
 };

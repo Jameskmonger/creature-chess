@@ -1,4 +1,4 @@
 export enum StreakType {
 	WIN,
-	LOSS
+	LOSS,
 }

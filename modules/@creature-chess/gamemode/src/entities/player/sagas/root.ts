@@ -1,16 +1,16 @@
 import { all, call, take, put } from "redux-saga/effects";
 
-import { playerActionsSaga } from "../../../playerActions/saga";
-import { evolutionSaga } from "./evolution";
-import { playerPhases } from "./phases";
-import { setStatusOnQuit } from "./setStatusOnQuit";
 import { featuresRootSaga } from "../../../features";
+import { playerActionsSaga } from "../../../playerActions/saga";
 import { playerBattle } from "./battle";
-import { playerXpSaga } from "./xp";
+import { evolutionSaga } from "./evolution";
 import { fillBoard } from "./fillBoard";
 import { healthSaga } from "./health";
+import { playerPhases } from "./phases";
+import { setStatusOnQuit } from "./setStatusOnQuit";
+import { playerXpSaga } from "./xp";
 
-export const playerRootSaga = function*() {
+export const playerRootSaga = function* () {
 	yield all([
 		call(playerPhases),
 		call(playerActionsSaga),
@@ -20,6 +20,6 @@ export const playerRootSaga = function*() {
 		call(fillBoard),
 		call(setStatusOnQuit),
 		call(playerBattle),
-		call(featuresRootSaga)
+		call(featuresRootSaga),
 	]);
 };

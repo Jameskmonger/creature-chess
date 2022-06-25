@@ -14,7 +14,7 @@ describe("getRangeValue", () => {
 				const result = getRangeValue({
 					value: input,
 					range: inputRange,
-					direction
+					direction,
 				});
 
 				expect(result).toEqual(200);
@@ -28,7 +28,7 @@ describe("getRangeValue", () => {
 				const result = getRangeValue({
 					value: input,
 					range: inputRange,
-					direction
+					direction,
 				});
 
 				expect(result).toEqual(1);
@@ -46,7 +46,7 @@ describe("getRangeValue", () => {
 				const result = getRangeValue({
 					value: input,
 					range: inputRange,
-					direction
+					direction,
 				});
 
 				expect(result).toEqual(1);
@@ -60,7 +60,7 @@ describe("getRangeValue", () => {
 				const result = getRangeValue({
 					value: input,
 					range: inputRange,
-					direction
+					direction,
 				});
 
 				expect(result).toEqual(200);
@@ -78,7 +78,7 @@ describe("getRangeValue", () => {
 				const result = getRangeValue({
 					value: input,
 					range: inputRange,
-					direction
+					direction,
 				});
 
 				expect(result).toEqual(100);
@@ -92,12 +92,11 @@ describe("getRangeValue", () => {
 				const result = getRangeValue({
 					value: input,
 					range: inputRange,
-					direction
+					direction,
 				});
 
 				expect(result).toEqual(100);
 			});
 		});
 	});
-
 });

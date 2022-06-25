@@ -1,17 +1,25 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { getContext } from "typed-redux-saga";
-import { playerBeforeReadyPhaseEvent, playerRunReadyPhaseEvent, PlayerRunReadyPhaseEvent } from "../../../../game/events";
-import { updateReadyCommand, updateOpponentCommand } from "../../state/commands";
+
+import {
+	playerBeforeReadyPhaseEvent,
+	playerRunReadyPhaseEvent,
+	PlayerRunReadyPhaseEvent,
+} from "../../../../game/events";
 import { getBoardSlice } from "../../selectors";
+import {
+	updateReadyCommand,
+	updateOpponentCommand,
+} from "../../state/commands";
 import { fillBoardCommand } from "../fillBoard";
 
-export const playerReadyPhase = function*() {
+export const playerReadyPhase = function* () {
 	const playerId = yield* getContext<string>("id");
 	const boardSlice = yield* getBoardSlice();
 
 	yield takeEvery<PlayerRunReadyPhaseEvent>(
 		playerBeforeReadyPhaseEvent.toString(),
-		function*() {
+		function* () {
 			yield put(fillBoardCommand());
 			yield put(updateReadyCommand(false));
 		}
@@ -19,12 +27,11 @@ export const playerReadyPhase = function*() {
 
 	yield takeEvery<PlayerRunReadyPhaseEvent>(
 		playerRunReadyPhaseEvent.toString(),
-		function*({ payload: { match } }) {
+		function* ({ payload: { match } }) {
 			yield put(boardSlice.commands.lockBoardCommand());
 
-			const opponentId = match.home.id === playerId
-				? match.away.id
-				: match.home.id;
+			const opponentId =
+				match.home.id === playerId ? match.away.id : match.home.id;
 
 			yield put(updateOpponentCommand(opponentId));
 		}
