@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 
-import { Layout } from "@creature-chess/ui/src/layout";
+import { Layout } from "@creature-chess/ui";
 import { StreakType } from "@creature-chess/models";
 import { Header } from "./components/header";
 import { useField } from "../hooks/useField";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { Card as CardModel, REROLL_COST } from "@creature-chess/models";
-import { Layout } from "../layout";
+import { Layout } from "../../layout";
 import { CardSelector } from "./cardSelector";
 import { CurrentCard } from "./currentCard";
 import { Button } from "../button";

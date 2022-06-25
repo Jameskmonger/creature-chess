@@ -18,7 +18,7 @@ const NowPlaying: React.FunctionComponent = () => {
 		return null;
 	}
 
-	return <div className="now-playing"><span className="label">Now Playing: {opponentName}</span></div>;
+	return <span>Now Playing: {opponentName}</span>;
 };
 
 export { NowPlaying };

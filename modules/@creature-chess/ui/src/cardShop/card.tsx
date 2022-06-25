@@ -2,7 +2,7 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { Card as CardModel } from "@creature-chess/models";
 import { CreatureImage, TypeIndicator } from "../display";
-import { Layout } from "../layout";
+import { Layout } from "../../layout";
 
 type Props = {
 	card: CardModel;

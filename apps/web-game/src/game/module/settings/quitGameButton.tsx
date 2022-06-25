@@ -17,10 +17,10 @@ const QuitGameButton: React.FunctionComponent = () => {
 	);
 
 	if (!areYouSure) {
-		return <button onClick={onClick} className="button">Quit Game</button>;
+		return <button onClick={onClick}>Quit Game</button>;
 	}
 
-	return <button onClick={onClick} className="button">Click again to quit</button>;
+	return <button onClick={onClick}>Click again to quit</button>;
 };
 
 export { QuitGameButton };

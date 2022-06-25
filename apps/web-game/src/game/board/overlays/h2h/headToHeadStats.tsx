@@ -1,5 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Group, Layout } from "@creature-chess/ui";
+import { Text, Header4 } from "@creature-chess/ui/text";
 import { PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { AppState } from "../../../../store";
 
@@ -43,26 +45,20 @@ const HeadToHeadStats: React.FC<{ player: PlayerListPlayer; opponent: PlayerList
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	return (
-		<div className="head-to-head-stats">
-			<div className="h2h-stat-div">
-				<p className="h2h-info-header">Position</p>
-				<div className="h2h-position">
-					<p className="h2h-info-text">{getPosition(player, playerList)} vs {getPosition(opponent, playerList)}</p>
-				</div>
-			</div>
-			<div className="h2h-stat-div">
-				<p className="h2h-info-header">Streak</p>
-				<div className="h2h-streak">
-					<p className="h2h-info-text">{getStreak(player)} vs {getStreak(opponent)}</p>
-				</div>
-			</div>
-			<div className="h2h-stat-div">
-				<p className="h2h-info-header">Level</p>
-				<div className="h2h-level">
-					<p className="h2h-info-text">{player.level} vs {opponent.level}</p>
-				</div>
-			</div>
-		</div>
+		<Layout direction="column">
+			<Group>
+				<Header4>Position</Header4>
+				<Text>{getPosition(player, playerList)} vs {getPosition(opponent, playerList)}</Text>
+			</Group>
+			<Group>
+				<Header4>Streak</Header4>
+				<Text>{getStreak(player)} vs {getStreak(opponent)}</Text>
+			</Group>
+			<Group>
+				<Header4>Level</Header4>
+				<Text>{player.level} vs {opponent.level}</Text>
+			</Group>
+		</Layout>
 	);
 };
 

@@ -1,4 +1,4 @@
-import pDefer = require("p-defer");
+import pDefer from 'p-defer';
 import { v4 as uuid } from "uuid";
 import { all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
 import createSagaMiddleware from "redux-saga";
@@ -7,7 +7,7 @@ import { BoardState, mergeBoards, rotatePiecesAboutCenter, createBoardSlice, Boa
 import { battleSagaFactory, startBattle, BattleEvents } from "@creature-chess/battle";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 import { call } from "redux-saga/effects";
-import delay = require("delay");
+import delay from "delay";
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
 import { playerFinishMatchEvent } from "../entities/player/events";

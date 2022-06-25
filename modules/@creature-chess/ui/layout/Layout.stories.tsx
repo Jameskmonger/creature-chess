@@ -3,8 +3,8 @@ import { Meta, Story } from "@storybook/react";
 import { createUseStyles } from "react-jss";
 import classNames from "classnames";
 
-import { Layout } from "./layout";
-import { Half } from "./half";
+import { Layout } from "./Layout";
+import { Half } from "./Half";
 
 export default {
 	title: "Layout",

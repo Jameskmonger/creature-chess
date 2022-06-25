@@ -59,7 +59,7 @@ const useStyles = createUseStyles({
 		"width": "100%",
 		"& .tile": {
 			background: "#9e9e9e",
-			boxShadow: "inset 0 0 2px darken($bench-tile, 50)"
+			boxShadow: "inset 0 0 2px #404040"
 		}
 	}
 });

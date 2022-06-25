@@ -1,5 +1,8 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
+import { Layout } from "@creature-chess/ui";
+import { Header2, Header4 } from "@creature-chess/ui/text";
+import { DiscordIcon } from "@creature-chess/ui/misc"
 import { AppState } from "../../../store";
 import { getPlayerById } from "../../module/playerList/components/selectors";
 import { BoardOverlay } from "./boardOverlay";
@@ -23,18 +26,15 @@ const VictoryOverlay: React.FunctionComponent = () => {
 
 	return (
 		<BoardOverlay>
-			<div className="victory-overlay">
-				<h2 className="game-over">Game Over</h2>
-				<p className="winner"><span className="highlight">{winnerName}</span> wins!</p>
+			<Layout direction="column">
+				<Header2>Game Over</Header2>
 
-				<div className="discord-link">
-					<p className="spectate"><span className="highlight">new:</span> You can spectate players from the player list</p>
+				<Header4>{winnerName} wins!</Header4>
 
-					<p>Join us on Discord to receive notifications when someone starts a lobby, and more!</p>
+				<p>new: You can spectate players from the player list</p>
 
-					<a href="https://discord.gg/FhMm6saehb"><img src="https://i.imgur.com/OBo2QRd.png" className="discord-button" /></a>
-				</div>
-			</div>
+				<DiscordIcon />
+			</Layout>
 		</BoardOverlay>
 	);
 };

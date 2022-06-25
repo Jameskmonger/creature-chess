@@ -1,16 +1,24 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { usePlayerId } from "@creature-chess/auth-web";
-import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
-import { PlayerAvatar, Title, PlayerHealthbar } from "@creature-chess/ui";
+import { GamePhase } from "@creature-chess/models";
+import { PlayerAvatar, Title, PlayerHealthbar, Layout, Group } from "@creature-chess/ui";
+import { Header2, Header4 } from "@creature-chess/ui/text";
 import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+import { createUseStyles } from "react-jss";
+
+const useStyles = createUseStyles({
+	textCenter: {
+		"textAlign": "center",
+	},
+});
 
 const ReadyOverlay: React.FunctionComponent = () => {
-
+	const styles = useStyles();
 	const inReadyPhase = useSelector<AppState, boolean>(state =>
 		state.game.roundInfo.phase === GamePhase.READY
 	);
@@ -18,7 +26,6 @@ const ReadyOverlay: React.FunctionComponent = () => {
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	const localId = usePlayerId();
-	const sendingPlayerId = localId;
 	const localPlayer = playerList.find(p => p.id === localId);
 
 	const opponent = useSelector((state: AppState) => {
@@ -32,46 +39,40 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		return null;
 	}
 
-	const returnTitleOrSpacer = (player: PlayerListPlayer) => {
-		if (player.profile?.title) {
-			return <Title titleId={player.profile.title} />;
-		}
-		return <div className="spacer" />;
-	};
-
 	return (
 		<BoardOverlay>
-			<div className="ready-overlay-content">
-				<p className="h2h-header">Now Playing:</p>
-				<div className="outer-profile-box">
-					<div className="inner-profile-box">
-						<div className="player-picture">
+			<div className={styles.textCenter}>
+				<Layout direction="column">
+					<Header2>Now Playing</Header2>
+					<Group>
+						<Layout direction="row">
 							<PlayerAvatar player={localPlayer} />
-							<QuickChatBox sendingPlayerId={sendingPlayerId} />
-						</div>
-						<div className="name-and-health">
-							<p className="player-name">{localPlayer.name}</p>
-							{returnTitleOrSpacer(localPlayer)}
-							<div className="healthbar-container">
+
+							<Group>
+								<Header4>{localPlayer.name}</Header4>
+								<Title titleId={localPlayer.profile?.title || null} />
 								<PlayerHealthbar health={localPlayer.health} />
-							</div>
-						</div>
-						<div className="spacer" />
-						<div className="name-and-health right">
-							<p className="player-name right">{opponent.name}</p>
-							{returnTitleOrSpacer(opponent)}
-							<div className="healthbar-container">
+								<QuickChatBox sendingPlayerId={localId} />
+							</Group>
+						</Layout>
+					</Group>
+					<Header2>vs.</Header2>
+					<Group>
+						<Layout direction="row">
+							<Group>
+								<Header4>{opponent.name}</Header4>
+								<Title titleId={opponent.profile?.title || null} />
 								<PlayerHealthbar health={opponent.health} />
-							</div>
-						</div>
-						<div className="player-picture">
+								<QuickChatBox sendingPlayerId={opponent.id} />
+							</Group>
+
 							<PlayerAvatar player={opponent} />
-							<QuickChatBox sendingPlayerId={opponent.id} />
-						</div>
-					</div>
-				</div>
-				<HeadToHeadStats player={localPlayer} opponent={opponent} />
-				<QuickChatButtonArray />
+						</Layout>
+					</Group>
+
+					<HeadToHeadStats player={localPlayer} opponent={opponent} />
+					<QuickChatButtonArray />
+				</Layout>
 			</div>
 		</BoardOverlay>
 	);

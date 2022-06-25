@@ -5,13 +5,23 @@ import { MatchBoard } from "./MatchBoard";
 import { LocalBoard } from "./LocalBoard";
 import { ReadyUpButton, ReadyOverlay, VictoryOverlay, MatchRewardsOverlay, ReconnectOverlay } from "./overlays";
 import { NowPlaying } from "../module/nowPlaying";
+import { Group } from "@creature-chess/ui";
+import { createUseStyles } from "react-jss";
+import classNames from "classnames";
 
-export const BoardContainer: React.FC = () => {
+const useStyles = createUseStyles({
+	boardContainer: {
+		flex: 2
+	}
+})
+
+export function BoardContainer() {
+	const styles = useStyles();
 	const matchBoard = useGameMatchBoard();
 
 	return (
 		<DndProvider>
-			<div className="group board-container">
+			<Group className={classNames(styles.boardContainer, "board-container")}>
 				<NowPlaying />
 
 				<ReadyUpButton />
@@ -28,7 +38,7 @@ export const BoardContainer: React.FC = () => {
 					<MatchRewardsOverlay />
 					<ReconnectOverlay />
 				</>
-			</div>
+			</Group>
 		</DndProvider>
 	);
 }

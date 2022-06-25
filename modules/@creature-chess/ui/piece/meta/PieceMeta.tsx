@@ -2,7 +2,7 @@ import * as React from "react";
 import { PieceModel } from "@creature-chess/models";
 import { TypeIndicator } from "../../src/display";
 import { createUseStyles } from "react-jss";
-import { Layout } from "../../src/layout";
+import { Layout } from "../../layout";
 import { PieceHealthbar } from "./PieceHealthbar";
 import { PieceStageIndicator } from "./PieceStageIndicator";
 

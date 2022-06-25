@@ -1,4 +1,4 @@
-export * as Layout from "./src/layout";
+export * from "./layout";
 export { PlayerHealthbar, PlayerName, PlayerProfile, PlayerAvatar, Title } from "./src/player";
 export { CardShop, Card } from "./src/cardShop";
 
