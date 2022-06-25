@@ -19,7 +19,8 @@
 		"storybook": "yarn workspace @creature-chess/ui storybook",
 		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\"",
 		"ecr-push": "sh ./scripts/ecr-push.sh",
-		"prettier": "prettier -w ./"
+		"prettier": "prettier -w ./",
+		"prettier-check": "prettier -c ./"
 	},
 	"workspaces": [
 		"modules/@creature-chess/*",
