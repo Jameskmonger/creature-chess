@@ -1,5 +1,5 @@
 export enum GamePhase {
 	PREPARING,
 	READY,
-	PLAYING
+	PLAYING,
 }

@@ -12,33 +12,31 @@ export const useStyles = createUseStyles({
 		background: "#566c86",
 	},
 	banner: {
-		"maxWidth": "700px",
-		"marginTop": "1rem",
-		"marginBottom": "1rem",
-		"userSelect": "none",
+		maxWidth: "700px",
+		marginTop: "1rem",
+		marginBottom: "1rem",
+		userSelect: "none",
 
 		"& img": {
 			width: "100%",
 			userSelect: "none",
 		},
 	},
-	group: {
-
-	},
+	group: {},
 	groups: {
-		"display": "flex",
-		"width": "100%",
-		"maxWidth": "700px",
+		display: "flex",
+		width: "100%",
+		maxWidth: "700px",
 
 		"& .group": {
 			width: "50%",
-			textAlign: "center"
+			textAlign: "center",
 		},
 
 		"& p": {
 			marginBottom: "0.5rem",
 			fontSize: "0.8em",
-		}
+		},
 	},
 	loginButton: {
 		padding: "0.6em 1.2em",
@@ -47,7 +45,7 @@ export const useStyles = createUseStyles({
 		color: "#fff",
 		cursor: "pointer",
 		background: "#b13e53",
-		border: "none"
+		border: "none",
 	},
 	discordButton: {
 		maxWidth: "12em",

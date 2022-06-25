@@ -1,8 +1,11 @@
 import { PiecesState } from "../types";
 
-export const getPiecesWithoutIds = <TPiece>(pieces: PiecesState<TPiece>, ids: string[]) => {
+export const getPiecesWithoutIds = <TPiece>(
+	pieces: PiecesState<TPiece>,
+	ids: string[]
+) => {
 	const newPieces: PiecesState<TPiece> = {
-		...pieces
+		...pieces,
 	};
 
 	for (const pieceId of ids) {
@@ -17,15 +20,16 @@ export const getPiecesWithoutIds = <TPiece>(pieces: PiecesState<TPiece>, ids: st
 export const getPiecePositionsWithoutIds = (
 	piecePositions: { [position: string]: string },
 	ids: string[]
-) => Object.entries(piecePositions).reduce<{ [position: string]: string }>(
-	(newPiecePositions, [position, pieceId]) => {
-		// skip the desired piece
-		if (!pieceId || ids.includes(pieceId)) {
-			return newPiecePositions;
-		}
+) =>
+	Object.entries(piecePositions).reduce<{ [position: string]: string }>(
+		(newPiecePositions, [position, pieceId]) => {
+			// skip the desired piece
+			if (!pieceId || ids.includes(pieceId)) {
+				return newPiecePositions;
+			}
 
-		newPiecePositions[position] = pieceId;
-		return newPiecePositions;
-	},
-	{}
-);
+			newPiecePositions[position] = pieceId;
+			return newPiecePositions;
+		},
+		{}
+	);

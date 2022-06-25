@@ -1,7 +1,10 @@
 import * as React from "react";
-import { LobbyPlayer } from "@creature-chess/models";
-import { Title } from "../../../src/player/title";
+
 import { createUseStyles } from "react-jss";
+
+import { LobbyPlayer } from "@creature-chess/models";
+
+import { Title } from "../../../src/player/title";
 
 type Props = {
 	player: LobbyPlayer | null;
@@ -43,9 +46,9 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 					<div />
 					empty slot
 				</span>
-			</div >
+			</div>
 		);
-	};
+	}
 
 	return (
 		<div className={styles.player}>

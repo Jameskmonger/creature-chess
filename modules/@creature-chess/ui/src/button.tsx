@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
 
 interface Props {
@@ -9,8 +10,10 @@ interface Props {
 }
 
 // todo implement primary style
-const getColor = (style: "primary" | "secondary") => style === "primary" ? "#fff" : "#fff";
-const getBackground = (style: "primary" | "secondary") => style === "primary" ? "#1a1c2c" : "#1a1c2c";
+const getColor = (style: "primary" | "secondary") =>
+	style === "primary" ? "#fff" : "#fff";
+const getBackground = (style: "primary" | "secondary") =>
+	style === "primary" ? "#1a1c2c" : "#1a1c2c";
 
 const useStyles = createUseStyles({
 	button: (props: Props) => ({
@@ -23,9 +26,9 @@ const useStyles = createUseStyles({
 
 		"&:disabled": {
 			background: "#575758",
-			cursor: "not-allowed"
-		}
-	})
+			cursor: "not-allowed",
+		},
+	}),
 });
 
 const Button: React.FunctionComponent<Props> = (props) => {
@@ -33,7 +36,15 @@ const Button: React.FunctionComponent<Props> = (props) => {
 
 	const { onClick, disabled = false, children } = props;
 
-	return <button className={classes.button} onClick={!disabled ? onClick : undefined} disabled={disabled} >{children}</button>;
+	return (
+		<button
+			className={classes.button}
+			onClick={!disabled ? onClick : undefined}
+			disabled={disabled}
+		>
+			{children}
+		</button>
+	);
 };
 
 export { Button };

@@ -81,21 +81,19 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				use: "ts-loader",
-				exclude: /node_modules/
-			}
-		]
+				exclude: /node_modules/,
+			},
+		],
 	},
 
 	resolve: {
-		plugins: [
-			new TsConfigPathsPlugin()
-		],
-		extensions: [".tsx", ".ts", ".js"]
+		plugins: [new TsConfigPathsPlugin()],
+		extensions: [".tsx", ".ts", ".js"],
 	},
 
 	output: {
 		filename: "bundle-[contenthash].js",
-		path: outDir
+		path: outDir,
 	},
 
 	plugins: [
@@ -103,18 +101,18 @@ module.exports = {
 			NODE_ENV: "production",
 			SENTRY_DSN: "",
 			GAME_SERVER_URL: "http://localhost:8080/game/",
-			API_INFO_URL: "http://localhost:8080/info/"
+			API_INFO_URL: "http://localhost:8080/info/",
 		}),
 		new DefinePlugin({
-			APP_VERSION: JSON.stringify(require("../../package.json").version)
+			APP_VERSION: JSON.stringify(require("../../package.json").version),
 		}),
 		new HtmlWebpackPlugin({
 			templateParameters: () => ({
 				googleAnalyticsScript: getGAScript(process.env.GA_ID),
 				ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES),
-				cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID)
+				cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID),
 			}),
-			scriptLoading: "blocking"
+			scriptLoading: "blocking",
 		}),
 		new CircularDependencyPlugin({
 			// exclude detection of files based on a RegExp
@@ -127,7 +125,7 @@ module.exports = {
 			// set the current working directory for displaying module paths
 			cwd: process.cwd(),
 		}),
-	].filter(plugin => plugin !== null),
+	].filter((plugin) => plugin !== null),
 
 	devServer: {
 		host: "0.0.0.0",
@@ -138,7 +136,7 @@ module.exports = {
 
 	optimization: {
 		splitChunks: {
-			chunks: "all"
-		}
-	}
+			chunks: "all",
+		},
+	},
 };

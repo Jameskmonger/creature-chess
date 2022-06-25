@@ -1,18 +1,22 @@
 import { Builders, CreatureType } from "@creature-chess/models";
+
 import { isStrategicCard, isStrategicPiece } from "./isStrategic";
 
 describe("utils/creatureType/isStrategic", () => {
 	const types = [
-		CreatureType.Earth, CreatureType.Earth,
-		CreatureType.Fire, CreatureType.Fire, CreatureType.Fire,
+		CreatureType.Earth,
+		CreatureType.Earth,
+		CreatureType.Fire,
+		CreatureType.Fire,
+		CreatureType.Fire,
 		CreatureType.Water,
 	];
 
-	const pieces = types.map(t =>
+	const pieces = types.map((t) =>
 		Builders.buildPieceModel({
 			definition: Builders.buildDefinition({
-				type: t
-			})
+				type: t,
+			}),
 		})
 	);
 
@@ -42,8 +46,8 @@ describe("utils/creatureType/isStrategic", () => {
 		describe("piece for unowned type", () => {
 			const piece = Builders.buildPieceModel({
 				definition: Builders.buildDefinition({
-					type: CreatureType.Wood
-				})
+					type: CreatureType.Wood,
+				}),
 			});
 
 			test("should return true", () => {
@@ -56,8 +60,8 @@ describe("utils/creatureType/isStrategic", () => {
 		describe("piece for type with many owned", () => {
 			const piece = Builders.buildPieceModel({
 				definition: Builders.buildDefinition({
-					type: CreatureType.Fire
-				})
+					type: CreatureType.Fire,
+				}),
 			});
 
 			test("should return false", () => {
@@ -70,8 +74,8 @@ describe("utils/creatureType/isStrategic", () => {
 		describe("piece for type with one owned", () => {
 			const piece = Builders.buildPieceModel({
 				definition: Builders.buildDefinition({
-					type: CreatureType.Water
-				})
+					type: CreatureType.Water,
+				}),
 			});
 
 			test("should return true", () => {

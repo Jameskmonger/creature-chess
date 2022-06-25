@@ -1,6 +1,6 @@
-import { TileCoordinates } from "./position";
 import { AttackType, CreatureDefinition } from "./creatureDefinition";
 import { PieceCombatState } from "./pieceCombat";
+import { TileCoordinates } from "./position";
 
 export interface AttackDetails {
 	direction: TileCoordinates;

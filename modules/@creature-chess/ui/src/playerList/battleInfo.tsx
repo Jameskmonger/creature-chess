@@ -1,6 +1,8 @@
 import * as React from "react";
-import { createUseStyles } from "react-jss";
+
 import classnames from "classnames";
+import { createUseStyles } from "react-jss";
+
 import { PlayerBattle, PlayerBattleStatus } from "@creature-chess/models";
 
 type Props = { battle: PlayerBattle; opponentName?: string };
@@ -22,7 +24,11 @@ const getBattleText = (battle: PlayerBattle) => {
 };
 
 const getResultColor = (props: Props) => {
-	if (!props || !props.battle || props.battle.status !== PlayerBattleStatus.FINISHED) {
+	if (
+		!props ||
+		!props.battle ||
+		props.battle.status !== PlayerBattleStatus.FINISHED
+	) {
 		return "#ffcd74";
 	}
 
@@ -48,7 +54,7 @@ const useStyles = createUseStyles({
 		color: "#fff",
 		textTransform: "uppercase",
 	},
-	result: (props: Props) => ({ color: getResultColor(props) })
+	result: (props: Props) => ({ color: getResultColor(props) }),
 });
 
 const BattleInfo: React.FunctionComponent<Props> = (props) => {
@@ -61,7 +67,9 @@ const BattleInfo: React.FunctionComponent<Props> = (props) => {
 
 	return (
 		<div className={classes.battleInfo}>
-			<span className={classnames(classes.highlight, classes.result)}>{text}</span>
+			<span className={classnames(classes.highlight, classes.result)}>
+				{text}
+			</span>
 			&nbsp;vs&nbsp;
 			<span className={classes.highlight}>{props.opponentName || ""}</span>
 		</div>

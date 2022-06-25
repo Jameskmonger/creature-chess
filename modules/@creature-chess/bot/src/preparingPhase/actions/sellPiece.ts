@@ -1,20 +1,32 @@
 import { BoardSelectors } from "@shoki/board";
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
-import { PlayerState, PlayerStateSelectors, PlayerActions, getAllPieces } from "@creature-chess/gamemode";
-import { PieceModel } from "@creature-chess/models";
+
 import { BotPersonality } from "@creature-chess/data";
+import {
+	PlayerState,
+	PlayerStateSelectors,
+	PlayerActions,
+	getAllPieces,
+} from "@creature-chess/gamemode";
+import { PieceModel } from "@creature-chess/models";
+
 import { BrainAction } from "../../brain";
 import { isStrategicPiece } from "./utils/creatureType";
 
-export const createSellPieceAction = (state: PlayerState, personality: BotPersonality, piece: PieceModel): BrainAction | null => {
-
+export const createSellPieceAction = (
+	state: PlayerState,
+	personality: BotPersonality,
+	piece: PieceModel
+): BrainAction | null => {
 	const pieceCount = PlayerStateSelectors.getAllPieceCount(state);
 	const allPieces = getAllPieces(state);
 	const boardPieces = BoardSelectors.getAllPieces(state.board);
-	const hasMatchingPieceOnBoard = boardPieces.some(p => p.definitionId === piece.definitionId);
+	const hasMatchingPieceOnBoard = boardPieces.some(
+		(p) => p.definitionId === piece.definitionId
+	);
 
 	// to prevent mistakes, bots won't sell a piece if it will put them under their limit
-	if ((pieceCount - 1) < PlayerStateSelectors.getPlayerLevel(state)) {
+	if (pieceCount - 1 < PlayerStateSelectors.getPlayerLevel(state)) {
 		return null;
 	}
 	// don't sell piece if it is a strategically sound piece
@@ -28,7 +40,7 @@ export const createSellPieceAction = (state: PlayerState, personality: BotPerson
 
 	const money = PlayerStateSelectors.getPlayerMoney(state);
 
-	return ({
+	return {
 		name: `sell piece [${piece.definition.name}]`,
 		action: () => PlayerActions.sellPiecePlayerAction({ pieceId: piece.id }),
 		value: createUtilityValue([
@@ -42,8 +54,8 @@ export const createSellPieceAction = (state: PlayerState, personality: BotPerson
 				// more important with low composure
 				weighting: {
 					value: personality.composure,
-					direction: ScoringDirection.Low
-				}
+					direction: ScoringDirection.Low,
+				},
 			},
 			{
 				value: piece.definition.cost,
@@ -55,9 +67,9 @@ export const createSellPieceAction = (state: PlayerState, personality: BotPerson
 				// more important with high ambition
 				weighting: {
 					value: personality.ambition,
-					direction: ScoringDirection.High
-				}
-			}
-		])
-	});
+					direction: ScoringDirection.High,
+				},
+			},
+		]),
+	};
 };

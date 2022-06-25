@@ -1,9 +1,12 @@
 import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { AppState } from "../../../store";
-import { GamePhase } from "@creature-chess/models";
-import { PlayerActions } from "@creature-chess/gamemode";
+
 import { createUseStyles } from "react-jss";
+import { useSelector, useDispatch } from "react-redux";
+
+import { PlayerActions } from "@creature-chess/gamemode";
+import { GamePhase } from "@creature-chess/models";
+
+import { AppState } from "../../../store";
 
 const COLOR_READY_BUTTON = "#38b764";
 const COLOR_READY_BUTTON_TEXT = "#000000";
@@ -11,21 +14,25 @@ const COLOR_READY_BUTTON_TEXT = "#000000";
 const useStyles = createUseStyles({
 	readyButton: {
 		"box-sizing": "border-box",
-		"padding": "2rem",
+		padding: "2rem",
 		"font-size": "1.6rem",
-		"color": COLOR_READY_BUTTON_TEXT,
-		"cursor": "pointer",
-		"background": COLOR_READY_BUTTON,
-		"border": "none",
-	}
-})
+		color: COLOR_READY_BUTTON_TEXT,
+		cursor: "pointer",
+		background: COLOR_READY_BUTTON,
+		border: "none",
+	},
+});
 
 const ReadyUpButton: React.FC = () => {
 	const dispatch = useDispatch();
 	const styles = useStyles();
 
-	const inPreparingPhase = useSelector<AppState, boolean>(state => state.game.roundInfo.phase === GamePhase.PREPARING);
-	const notReady = useSelector<AppState, boolean>(state => state.game.playerInfo.ready === false);
+	const inPreparingPhase = useSelector<AppState, boolean>(
+		(state) => state.game.roundInfo.phase === GamePhase.PREPARING
+	);
+	const notReady = useSelector<AppState, boolean>(
+		(state) => state.game.playerInfo.ready === false
+	);
 
 	const canReadyUp = inPreparingPhase && notReady;
 
@@ -35,7 +42,11 @@ const ReadyUpButton: React.FC = () => {
 
 	const onReadyUp = () => dispatch(PlayerActions.readyUpPlayerAction());
 
-	return <button className={styles.readyButton} onClick={onReadyUp}>Ready</button>;
+	return (
+		<button className={styles.readyButton} onClick={onReadyUp}>
+			Ready
+		</button>
+	);
 };
 
 export { ReadyUpButton };

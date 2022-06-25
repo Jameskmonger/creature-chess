@@ -9,8 +9,9 @@ Game engine using sagas
 An entity is a behavioural object, containing some state (using Redux reducers) and allowing for state-based behaviour (using Redux Sagas).
 
 ```typescript
-import { entity } from "@shoki/engine";
 import { select } from "redux-saga/effects";
+
+import { entity } from "@shoki/engine";
 
 type PlayerState = {
 	health: number;
@@ -18,25 +19,22 @@ type PlayerState = {
 
 // a `ReducersMapObject` like you would pass to `combineReducers` - for the internal entity state
 const reducers = {
-	health: healthReducer
+	health: healthReducer,
 };
 
-const rootSaga = function*() {
-	const health = yield select(state => state.health);
+const rootSaga = function* () {
+	const health = yield select((state) => state.health);
 
 	console.log("my health is now ", health);
 };
 
-const player = entity<PlayerState>(
-	{ reducers, rootSaga },
-	"player-id"
-);
+const player = entity<PlayerState>({ reducers, rootSaga }, "player-id");
 
 /*
  * run sagas, and query the entity state, from outside
  */
 player.runSaga(someOtherSaga);
-const h = player.select(state => state.health);
+const h = player.select((state) => state.health);
 
 // you can also dispatch actions from outside
 player.put(someAction(1, 2));
@@ -52,14 +50,14 @@ You can pass dependencies into your entity, to be used inside the saga, such as 
 import { entity, getDependency } from "@shoki/engine";
 
 type PlayerDependencies = {
-	logger: Logger
+	logger: Logger;
 };
 
 const dependencies: PlayerDependencies = {
-	logger: winston.createLogger()
+	logger: winston.createLogger(),
 };
 
-const rootSaga = function*() {
+const rootSaga = function* () {
 	const logger = yield getDependency<PlayerDependencies, "logger">("logger");
 
 	logger.info("hello! using a dependency");
@@ -80,21 +78,25 @@ Variables are a set of properties on an entity that can be read/modified any sag
 import { entity, getVariable, updateVariables } from "@shoki/engine";
 
 type PlayerVariables = {
-	match: Match | null
+	match: Match | null;
 };
 
 const vars: PlayerVariables = {
-	match: null
+	match: null,
 };
 
-const rootSaga = function*() {
-	const match = yield* getVariable<PlayerVariables, Match | null>(v => v.match);
+const rootSaga = function* () {
+	const match = yield* getVariable<PlayerVariables, Match | null>(
+		(v) => v.match
+	);
 
 	// match is null
 
 	yield updateVariables<PlayerVariables>({ match: new Match() });
 
-	const anotherMatch = yield* getVariable<PlayerVariables, Match | null>(v => v.match);
+	const anotherMatch = yield* getVariable<PlayerVariables, Match | null>(
+		(v) => v.match
+	);
 
 	// anotherMatch is new Match()
 };
@@ -102,7 +104,7 @@ const rootSaga = function*() {
 const player = entity<PlayerState, {}, PlayerVariables>(
 	{ reducers, rootSaga },
 	"player-id",
-	{ },
+	{},
 	vars
 );
 ```
@@ -117,16 +119,18 @@ type PlayerState = {
 };
 
 type PlayerDependencies = {
-	logger: Logger
+	logger: Logger;
 };
 
 type PlayerVariables = {
-	match: Match | null
+	match: Match | null;
 };
 
-const playerFactory = entityFactory<PlayerState, PlayerDependencies, PlayerVariables>(
-	{ reducers, rootSaga }
-)
+const playerFactory = entityFactory<
+	PlayerState,
+	PlayerDependencies,
+	PlayerVariables
+>({ reducers, rootSaga });
 
 // no need to pass reducers/rootSaga
 const player = playerFactory("player-id-123", { logger }, { match: null });
@@ -135,14 +139,14 @@ const player = playerFactory("player-id-123", { logger }, { match: null });
 You can also provide a function to `entityFactory`, which takes in the `dependencies` object, and must return `{ reducers, rootSaga }`. This can allow you to use those dependencies in your reducers/saga - such as using reducers from a `@reduxjs/toolkit` slice.
 
 ```typescript
-type Deps = { healthSlice: Slice<number> }
+type Deps = { healthSlice: Slice<number> };
 
 const playerFactory = entityFactory<PlayerState, Deps, PlayerVariables>(
 	({ healthSlice }) => ({
 		reducers: {
-			health: healthSlice.reducer
+			health: healthSlice.reducer,
 		},
-		rootSaga
+		rootSaga,
 	})
 );
 ```

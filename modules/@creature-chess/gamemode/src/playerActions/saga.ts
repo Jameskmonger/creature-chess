@@ -2,16 +2,16 @@ import { all, call } from "redux-saga/effects";
 
 import { buyCardPlayerActionSaga } from "./buyCard";
 import { buyXpPlayerActionSaga } from "./buyXp";
-import { rerollCardsPlayerActionSaga } from "./rerollCards";
-import { toggleShopLockPlayerActionSaga } from "./toggleShopLock";
-import { sellPiecePlayerActionSaga } from "./sellPiece";
 import { dropPiecePlayerActionSaga } from "./dropPiece";
-import { swapPiecePlayerActionSaga } from "./swapPiece";
-import { spectatePlayerActionSaga } from "./spectate";
-import { readyUpPlayerActionSaga } from "./readyUp";
 import { quickChatPlayerActionSaga } from "./quickChat";
+import { readyUpPlayerActionSaga } from "./readyUp";
+import { rerollCardsPlayerActionSaga } from "./rerollCards";
+import { sellPiecePlayerActionSaga } from "./sellPiece";
+import { spectatePlayerActionSaga } from "./spectate";
+import { swapPiecePlayerActionSaga } from "./swapPiece";
+import { toggleShopLockPlayerActionSaga } from "./toggleShopLock";
 
-export const playerActionsSaga = function*() {
+export const playerActionsSaga = function* () {
 	yield all([
 		call(buyXpPlayerActionSaga),
 		call(buyCardPlayerActionSaga),
@@ -22,6 +22,6 @@ export const playerActionsSaga = function*() {
 		call(swapPiecePlayerActionSaga),
 		call(spectatePlayerActionSaga),
 		call(readyUpPlayerActionSaga),
-		call(quickChatPlayerActionSaga)
+		call(quickChatPlayerActionSaga),
 	]);
 };

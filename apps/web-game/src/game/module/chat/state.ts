@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { QuickChatOption } from "@creature-chess/models";
 
 export type QuickChat = {
@@ -23,22 +24,27 @@ export const { reducer, actions: commands } = createSlice({
 	name: "quickChat",
 	initialState,
 	reducers: {
-		setPlayerChat: (state, { payload: {
-			sendingPlayerId,
-			chatValue
-		} }: PayloadAction<QuickChatAction>) => ({
+		setPlayerChat: (
+			state,
+			{
+				payload: { sendingPlayerId, chatValue },
+			}: PayloadAction<QuickChatAction>
+		) => ({
 			...state,
 			[sendingPlayerId]: {
 				value: chatValue,
-				receivedAt: Date.now()
-			}
+				receivedAt: Date.now(),
+			},
 		}),
-		clearPlayerChat: (state, { payload: { sendingPlayerId } }: PayloadAction<ClearQuickChatAction>) => {
+		clearPlayerChat: (
+			state,
+			{ payload: { sendingPlayerId } }: PayloadAction<ClearQuickChatAction>
+		) => {
 			const newState = { ...state };
 
 			delete newState[sendingPlayerId];
 
 			return newState;
-		}
-	}
+		},
+	},
 });

@@ -1,11 +1,30 @@
 import { take, takeLatest, put, call } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
-import { HEALTH_LOST_PER_PIECE, PlayerStatus, StreakType, PlayerStreak } from "@creature-chess/models";
 
-import { playerMatchRewardsEvent, playerDeathEvent, playerFinishMatchEvent, PlayerFinishMatchEvent } from "../events";
-import { updateStreakCommand, updateHealthCommand, updateStatusCommand } from "../state/commands";
+import {
+	HEALTH_LOST_PER_PIECE,
+	PlayerStatus,
+	StreakType,
+	PlayerStreak,
+} from "@creature-chess/models";
+
+import {
+	playerMatchRewardsEvent,
+	playerDeathEvent,
+	playerFinishMatchEvent,
+	PlayerFinishMatchEvent,
+} from "../events";
+import {
+	updateStreakCommand,
+	updateHealthCommand,
+	updateStatusCommand,
+} from "../state/commands";
+import {
+	getPlayerHealth,
+	getPlayerMoney,
+	getPlayerStreak,
+} from "../state/selectors";
 import { subtractHealthCommand } from "./health";
-import { getPlayerHealth, getPlayerMoney, getPlayerStreak } from "../state/selectors";
 
 const getStreakBonus = (streak: number) => {
 	if (streak >= 9) {
@@ -23,7 +42,11 @@ const getStreakBonus = (streak: number) => {
 	return 0;
 };
 
-const getMoneyForMatch = (currentMoney: number, streak: number, win: boolean) => {
+const getMoneyForMatch = (
+	currentMoney: number,
+	streak: number,
+	win: boolean
+) => {
 	const base = 3;
 	const winBonus = win ? 1 : 0;
 	const streakBonus = getStreakBonus(streak);
@@ -35,20 +58,21 @@ const getMoneyForMatch = (currentMoney: number, streak: number, win: boolean) =>
 	return { total, base, winBonus, streakBonus, interest };
 };
 
-const updateStreak = function*(win: boolean) {
+const updateStreak = function* (win: boolean) {
 	const type = win ? StreakType.WIN : StreakType.LOSS;
 
 	const existingStreak: PlayerStreak = yield select(getPlayerStreak);
 
-	const newAmount = (type === existingStreak.type) ? existingStreak.amount + 1 : 0;
+	const newAmount =
+		type === existingStreak.type ? existingStreak.amount + 1 : 0;
 
 	yield put(updateStreakCommand({ type, amount: newAmount }));
 };
 
-export const playerMatchRewards = function*() {
+export const playerMatchRewards = function* () {
 	yield takeLatest<PlayerFinishMatchEvent>(
 		playerFinishMatchEvent.toString(),
-		function*({ payload: { homeScore, awayScore, isHomePlayer } }) {
+		function* ({ payload: { homeScore, awayScore, isHomePlayer } }) {
 			const win = isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
 
 			yield call(updateStreak, win);
@@ -66,7 +90,7 @@ export const playerMatchRewards = function*() {
 
 			const newValue = yield* select(getPlayerHealth);
 
-			const justDied = (newValue === 0 && oldValue !== 0);
+			const justDied = newValue === 0 && oldValue !== 0;
 			if (justDied) {
 				yield put(updateStatusCommand(PlayerStatus.DEAD));
 				yield put(playerDeathEvent());
@@ -75,13 +99,19 @@ export const playerMatchRewards = function*() {
 			const currentMoney = yield* select(getPlayerMoney);
 			const streak = yield* select(getPlayerStreak);
 
-			const { total, base, winBonus, streakBonus, interest } = getMoneyForMatch(currentMoney, streak.amount, win);
+			const { total, base, winBonus, streakBonus, interest } = getMoneyForMatch(
+				currentMoney,
+				streak.amount,
+				win
+			);
 
-			yield put(playerMatchRewardsEvent({
-				damage,
-				justDied,
-				rewardMoney: { total, base, winBonus, streakBonus, interest }
-			}));
+			yield put(
+				playerMatchRewardsEvent({
+					damage,
+					justDied,
+					rewardMoney: { total, base, winBonus, streakBonus, interest },
+				})
+			);
 		}
 	);
 };

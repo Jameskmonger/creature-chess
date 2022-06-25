@@ -1,10 +1,19 @@
 import * as React from "react";
+
 import { useDispatch, useSelector } from "react-redux";
+
 import { BoardSelectors, BoardState } from "@shoki/board";
+
 import { usePlayerId } from "@creature-chess/auth-web";
-import { PlayerGameProfile } from "@creature-chess/ui";
+import {
+	getPlayerLevel,
+	getPlayerXp,
+	getPlayerMoney,
+	PlayerActions,
+} from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
-import { getPlayerLevel, getPlayerXp, getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
+import { PlayerGameProfile } from "@creature-chess/ui";
+
 import { AppState } from "../../../store";
 
 export const Profile: React.FunctionComponent = () => {
@@ -12,18 +21,26 @@ export const Profile: React.FunctionComponent = () => {
 
 	const playerId = usePlayerId();
 
-	const level = useSelector<AppState, number>(state => getPlayerLevel(state.game));
-	const xp = useSelector<AppState, number>(state => getPlayerXp(state.game));
-	const money = useSelector<AppState, number>(state => getPlayerMoney(state.game));
+	const level = useSelector<AppState, number>((state) =>
+		getPlayerLevel(state.game)
+	);
+	const xp = useSelector<AppState, number>((state) => getPlayerXp(state.game));
+	const money = useSelector<AppState, number>((state) =>
+		getPlayerMoney(state.game)
+	);
 	// todo reselect
-	const health = useSelector<AppState, number | null>(state => {
-		const player = state.game.playerList.find(p => p.id === playerId);
+	const health = useSelector<AppState, number | null>((state) => {
+		const player = state.game.playerList.find((p) => p.id === playerId);
 
 		return player ? player.health : null;
 	});
 
-	const board = useSelector<AppState, BoardState<PieceModel>>(state => state.game.board);
-	const pieceCount = BoardSelectors.getAllPieces(board).filter(p => p.ownerId === playerId).length;
+	const board = useSelector<AppState, BoardState<PieceModel>>(
+		(state) => state.game.board
+	);
+	const pieceCount = BoardSelectors.getAllPieces(board).filter(
+		(p) => p.ownerId === playerId
+	).length;
 
 	const onBuyXp = () => dispatch(PlayerActions.buyXpPlayerAction());
 
@@ -34,8 +51,7 @@ export const Profile: React.FunctionComponent = () => {
 			xp={xp}
 			money={money}
 			pieceCount={pieceCount}
-
 			onBuyXpClick={onBuyXp}
 		/>
-	)
+	);
 };

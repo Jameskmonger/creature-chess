@@ -1,16 +1,32 @@
-import { v4 as uuid } from "uuid";
-import { createAction } from "@reduxjs/toolkit";
 import { take, put } from "@redux-saga/core/effects";
+import { createAction } from "@reduxjs/toolkit";
 import { select, getContext } from "typed-redux-saga";
-import { Card, GamePhase, PieceModel, PlayerPieceLocation, TileCoordinates } from "@creature-chess/models";
-import { BoardSelectors, topLeftToBottomRightSortPositions } from "@shoki/board";
-import { PlayerState } from "../entities/player/state";
-import { getPlayerBelowPieceLimit, getPlayerCards, getPlayerMoney } from "../entities/player/state/selectors";
-import { updateMoneyCommand } from "../entities/player/state/commands";
-import { updateCardsCommand } from "../entities/player/state/cardShop";
+import { v4 as uuid } from "uuid";
+
+import {
+	BoardSelectors,
+	topLeftToBottomRightSortPositions,
+} from "@shoki/board";
+
+import {
+	Card,
+	GamePhase,
+	PieceModel,
+	PlayerPieceLocation,
+	TileCoordinates,
+} from "@creature-chess/models";
+
 import { getDefinitionById } from "../definitions";
-import { getBenchSlice, getBoardSlice } from "../entities/player/selectors";
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
+import { getBenchSlice, getBoardSlice } from "../entities/player/selectors";
+import { PlayerState } from "../entities/player/state";
+import { updateCardsCommand } from "../entities/player/state/cardShop";
+import { updateMoneyCommand } from "../entities/player/state/commands";
+import {
+	getPlayerBelowPieceLimit,
+	getPlayerCards,
+	getPlayerMoney,
+} from "../entities/player/state/selectors";
 
 const getCardDestination = (
 	state: PlayerState,
@@ -21,22 +37,28 @@ const getCardDestination = (
 	const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
 	if (belowPieceLimit && inPreparingPhase) {
-		const boardSlot = BoardSelectors.getFirstEmptySlot(state.board, sortPositions);
+		const boardSlot = BoardSelectors.getFirstEmptySlot(
+			state.board,
+			sortPositions
+		);
 
 		if (boardSlot) {
 			return {
 				type: "board",
-				location: boardSlot
+				location: boardSlot,
 			};
 		}
 	}
 
-	const benchSlot = BoardSelectors.getFirstEmptySlot(state.bench, topLeftToBottomRightSortPositions);
+	const benchSlot = BoardSelectors.getFirstEmptySlot(
+		state.bench,
+		topLeftToBottomRightSortPositions
+	);
 
 	if (benchSlot !== null) {
 		return {
 			type: "bench",
-			location: benchSlot
+			location: benchSlot,
 		};
 	}
 
@@ -65,17 +87,20 @@ const createPieceFromCard = (
 		facingAway: false,
 		maxHealth: stats.hp,
 		currentHealth: stats.hp,
-		stage: 0
+		stage: 0,
 	};
 };
 
 export type BuyCardPlayerAction = ReturnType<typeof buyCardPlayerAction>;
-export const buyCardPlayerAction = createAction<{
-	index: number;
-	sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1;
-}, "buyCardPlayerAction">("buyCardPlayerAction");
+export const buyCardPlayerAction = createAction<
+	{
+		index: number;
+		sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1;
+	},
+	"buyCardPlayerAction"
+>("buyCardPlayerAction");
 
-export const buyCardPlayerActionSaga = function*() {
+export const buyCardPlayerActionSaga = function* () {
 	while (true) {
 		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
@@ -83,7 +108,9 @@ export const buyCardPlayerActionSaga = function*() {
 		const boardSlice = yield* getBoardSlice();
 		const benchSlice = yield* getBenchSlice();
 
-		const action: BuyCardPlayerAction = yield take(buyCardPlayerAction.toString());
+		const action: BuyCardPlayerAction = yield take(
+			buyCardPlayerAction.toString()
+		);
 		const index = action.payload.index;
 		const sortPositions = action.payload.sortPositions || undefined;
 
@@ -93,10 +120,9 @@ export const buyCardPlayerActionSaga = function*() {
 		const card = cards[index];
 
 		if (!card) {
-			logger.warn(
-				"Player attempted to buy null/undefined card",
-				{ actor: { playerId, name } }
-			);
+			logger.warn("Player attempted to buy null/undefined card", {
+				actor: { playerId, name },
+			});
 
 			yield put(updateMoneyCommand(money));
 			yield put(updateCardsCommand(cards));
@@ -105,13 +131,10 @@ export const buyCardPlayerActionSaga = function*() {
 		}
 
 		if (money < card.cost) {
-			logger.warn(
-				"Not enough money to buy card",
-				{
-					actor: { playerId, name },
-					details: { index }
-				}
-			);
+			logger.warn("Not enough money to buy card", {
+				actor: { playerId, name },
+				details: { index },
+			});
 
 			yield put(updateMoneyCommand(money));
 			yield put(updateCardsCommand(cards));
@@ -119,7 +142,9 @@ export const buyCardPlayerActionSaga = function*() {
 			continue;
 		}
 
-		const destination = yield* select((state: PlayerState) => getCardDestination(state, playerId, sortPositions));
+		const destination = yield* select((state: PlayerState) =>
+			getCardDestination(state, playerId, sortPositions)
+		);
 
 		// no valid slots
 		if (destination === null) {
@@ -136,13 +161,19 @@ export const buyCardPlayerActionSaga = function*() {
 			return;
 		}
 
-		const remainingCards = cards.map(c => c === card ? null : c);
+		const remainingCards = cards.map((c) => (c === card ? null : c));
 
 		if (destination.type === "board") {
 			const { x, y } = destination.location;
 			yield put(boardSlice.commands.addBoardPieceCommand({ piece, x, y }));
 		} else if (destination.type === "bench") {
-			yield put(benchSlice.commands.addBoardPieceCommand({ piece, x: destination.location.x, y: 0 }));
+			yield put(
+				benchSlice.commands.addBoardPieceCommand({
+					piece,
+					x: destination.location.x,
+					y: 0,
+				})
+			);
 		}
 
 		yield put(updateMoneyCommand(money - card.cost));

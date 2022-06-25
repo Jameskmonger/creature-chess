@@ -1,4 +1,8 @@
-import { DEFAULT_TURN_COUNT, DEFAULT_TURN_DURATION, PHASE_LENGTHS } from "./constants";
+import {
+	DEFAULT_TURN_COUNT,
+	DEFAULT_TURN_DURATION,
+	PHASE_LENGTHS,
+} from "./constants";
 import { GamePhase } from "./game-phase";
 
 type PhaseLengths = {
@@ -16,7 +20,10 @@ export type GameOptions = {
 export const defaultOptions: GameOptions = {
 	phaseLengths: PHASE_LENGTHS,
 	turnCount: DEFAULT_TURN_COUNT,
-	turnDuration: DEFAULT_TURN_DURATION
+	turnDuration: DEFAULT_TURN_DURATION,
 };
 
-export const getOptions = (options?: Partial<GameOptions>) => ({ ...defaultOptions, ...options });
+export const getOptions = (options?: Partial<GameOptions>) => ({
+	...defaultOptions,
+	...options,
+});

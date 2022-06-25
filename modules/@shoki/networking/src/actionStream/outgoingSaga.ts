@@ -1,5 +1,6 @@
 import { ActionPattern } from "@redux-saga/types";
 import { take } from "redux-saga/effects";
+
 import { OpcodesForPacket, PacketSet } from "../packet";
 import { OutgoingRegistry } from "../registry/outgoing";
 import { Action, ActionStreamPacket, ActionStreamPayload } from "./packet";
@@ -18,17 +19,18 @@ export const outgoingSaga = <
 	registry: OutgoingRegistry<TPacketSet>,
 	opcode: TOpcode,
 	actions: ActionPattern
-) => function*() {
-	let lastSentIndex = 0;
+) =>
+	function* () {
+		let lastSentIndex = 0;
 
-	while (true) {
-		// todo make this send multiple at once, or remove that feature
-		const action: Action = yield take(actions);
+		while (true) {
+			// todo make this send multiple at once, or remove that feature
+			const action: Action = yield take(actions);
 
-		const index = ++lastSentIndex;
+			const index = ++lastSentIndex;
 
-		const payload: ActionStreamPayload = { index, actions: [action] };
+			const payload: ActionStreamPayload = { index, actions: [action] };
 
-		registry.send(opcode, payload);
-	}
-};
+			registry.send(opcode, payload);
+		}
+	};

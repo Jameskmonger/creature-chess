@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+
 import { PieceModel } from "@creature-chess/models";
 
 export type PieceContext = {
@@ -6,7 +7,9 @@ export type PieceContext = {
 	viewingPlayerId: string;
 };
 
-const PieceContext = createContext<PieceContext>(null as unknown as PieceContext);
+const PieceContext = createContext<PieceContext>(
+	null as unknown as PieceContext
+);
 PieceContext.displayName = "PieceContext";
 
 export const PieceContextProvider = PieceContext.Provider;

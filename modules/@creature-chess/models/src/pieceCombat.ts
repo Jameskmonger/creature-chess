@@ -15,9 +15,9 @@ export const createPieceCombatState = (): PieceCombatState => ({
 		canMoveAtTurn: null,
 		canBeAttackedAtTurn: 0,
 		canAttackAtTurn: null,
-		removeFromBoardAtTurn: null
+		removeFromBoardAtTurn: null,
 	},
-	targetId: null
+	targetId: null,
 });
 
 export const clonePieceCombatState = (combat?: PieceCombatState) => {
@@ -28,7 +28,7 @@ export const clonePieceCombatState = (combat?: PieceCombatState) => {
 	return {
 		...combat,
 		board: {
-			...combat.board
-		}
+			...combat.board,
+		},
 	};
 };

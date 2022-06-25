@@ -1,16 +1,18 @@
 import React from "react";
-import { Provider } from "react-redux";
-import { Meta, Story } from "@storybook/react";
-import { useGlobalStyles } from "@creature-chess/ui";
-import { GamePhase } from "@creature-chess/models";
 
-import { DesktopGame } from "./DesktopGame";
+import { Meta, Story } from "@storybook/react";
+import { Provider } from "react-redux";
+
+import { GamePhase } from "@creature-chess/models";
+import { useGlobalStyles } from "@creature-chess/ui";
+
 import { createMockStore } from "../stories-utils";
+import { DesktopGame } from "./DesktopGame";
 
 export default {
-  title: "Game/DesktopGame",
-  component: DesktopGame,
-  argTypes: {},
+	title: "Game/DesktopGame",
+	component: DesktopGame,
+	argTypes: {},
 } as Meta;
 
 const Template: Story<any> = (args) => {
@@ -18,7 +20,7 @@ const Template: Story<any> = (args) => {
 
 	const store = createMockStore(
 		args.phase === GamePhase.PREPARING,
-		state => ({
+		(state) => ({
 			...state,
 			ui: {
 				...state.ui,
@@ -26,10 +28,10 @@ const Template: Story<any> = (args) => {
 			},
 			roundInfo: {
 				...state.roundInfo,
-				phase: args.phase
-			}
+				phase: args.phase,
+			},
 		})
-	)
+	);
 
 	return (
 		<Provider store={store}>

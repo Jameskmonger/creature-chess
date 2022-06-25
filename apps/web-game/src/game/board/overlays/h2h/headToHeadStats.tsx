@@ -1,8 +1,11 @@
 import React from "react";
+
 import { useSelector } from "react-redux";
+
+import { PlayerListPlayer, StreakType } from "@creature-chess/models";
 import { Group, Layout } from "@creature-chess/ui";
 import { Text, Header4 } from "@creature-chess/ui/text";
-import { PlayerListPlayer, StreakType } from "@creature-chess/models";
+
 import { AppState } from "../../../../store";
 
 const getPositionModifier = (position: number): string => {
@@ -18,7 +21,10 @@ const getPositionModifier = (position: number): string => {
 	return "th";
 };
 
-const getPosition = (player: PlayerListPlayer, playerList: PlayerListPlayer[]): string => {
+const getPosition = (
+	player: PlayerListPlayer,
+	playerList: PlayerListPlayer[]
+): string => {
 	const position = playerList.indexOf(player) + 1;
 	return `${position}${getPositionModifier(position)}`;
 };
@@ -41,22 +47,32 @@ const getStreakModifier = (player: PlayerListPlayer): string => {
 	return streakAmount === 1 ? "Loss" : "Losses";
 };
 
-const HeadToHeadStats: React.FC<{ player: PlayerListPlayer; opponent: PlayerListPlayer }> = ({ player, opponent }) => {
+const HeadToHeadStats: React.FC<{
+	player: PlayerListPlayer;
+	opponent: PlayerListPlayer;
+}> = ({ player, opponent }) => {
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	return (
 		<Layout direction="column">
 			<Group>
 				<Header4>Position</Header4>
-				<Text>{getPosition(player, playerList)} vs {getPosition(opponent, playerList)}</Text>
+				<Text>
+					{getPosition(player, playerList)} vs{" "}
+					{getPosition(opponent, playerList)}
+				</Text>
 			</Group>
 			<Group>
 				<Header4>Streak</Header4>
-				<Text>{getStreak(player)} vs {getStreak(opponent)}</Text>
+				<Text>
+					{getStreak(player)} vs {getStreak(opponent)}
+				</Text>
 			</Group>
 			<Group>
 				<Header4>Level</Header4>
-				<Text>{player.level} vs {opponent.level}</Text>
+				<Text>
+					{player.level} vs {opponent.level}
+				</Text>
 			</Group>
 		</Layout>
 	);

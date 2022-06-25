@@ -4,5 +4,5 @@ const base = require("../../../jest.config.base.js");
 module.exports = {
 	...base,
 	name: "@shoki/engine",
-	displayName: "@shoki/engine"
+	displayName: "@shoki/engine",
 };

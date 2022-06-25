@@ -1,13 +1,20 @@
-import { createTileCoordinates, TileCoordinates } from "@creature-chess/models";
 import { BoardState } from "@shoki/board";
 
-const isInsideGrid = ({ width, height }: { width: number; height: number }) => (position: TileCoordinates) => {
-	const { x, y } = position;
+import { createTileCoordinates, TileCoordinates } from "@creature-chess/models";
 
-	return x >= 0 && y >= 0 && x < width && y < height;
-};
+const isInsideGrid =
+	({ width, height }: { width: number; height: number }) =>
+	(position: TileCoordinates) => {
+		const { x, y } = position;
 
-export const getTargetAttackPositions = (board: BoardState, { x: positionX, y: positionY }: TileCoordinates, range = 1) => {
+		return x >= 0 && y >= 0 && x < width && y < height;
+	};
+
+export const getTargetAttackPositions = (
+	board: BoardState,
+	{ x: positionX, y: positionY }: TileCoordinates,
+	range = 1
+) => {
 	const positions: TileCoordinates[] = [];
 
 	for (let x = positionX - range; x <= positionX + range; x++) {

@@ -1,6 +1,8 @@
-import { Logger } from "winston";
 import { getContext } from "typed-redux-saga";
+import { Logger } from "winston";
+
 import { BoardSlice } from "@shoki/board";
+
 import { PieceModel } from "@creature-chess/models";
 
 import { Gamemode } from "../../game";
@@ -16,4 +18,5 @@ export type PlayerEntityDependencies = {
 	gamemode: Gamemode;
 };
 
-export const getPlayerEntityDependencies = () => getContext<PlayerEntityDependencies>("dependencies");
+export const getPlayerEntityDependencies = () =>
+	getContext<PlayerEntityDependencies>("dependencies");

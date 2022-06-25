@@ -1,4 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
+
 export { AuthProvider } from "./provider";
 export { isRegistered, hasNickname } from "./isRegistered";
 

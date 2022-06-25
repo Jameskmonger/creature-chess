@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { createUseStyles } from "react-jss";
 
 type Props = {
@@ -7,7 +8,9 @@ type Props = {
 	isLocal?: boolean;
 };
 
-const getLocalStyles = ({ isLocal = false }: Props): { fontStyle: string; color: string } | {} =>
+const getLocalStyles = ({
+	isLocal = false,
+}: Props): { fontStyle: string; color: string } | {} =>
 	isLocal ? { fontStyle: "italic", color: "#ffcd75" } : {};
 
 const useStyles = createUseStyles({
@@ -17,14 +20,18 @@ const useStyles = createUseStyles({
 		fontWeight: 700,
 		color: "#fff",
 		textTransform: "uppercase",
-		...getLocalStyles(props)
-	})
+		...getLocalStyles(props),
+	}),
 });
 
 const PlayerName: React.FunctionComponent<Props> = (props) => {
 	const classes = useStyles(props);
 
-	return <span className={classes.name}>{props.position}.&nbsp;{props.name}</span>;
+	return (
+		<span className={classes.name}>
+			{props.position}.&nbsp;{props.name}
+		</span>
+	);
 };
 
 export { PlayerName };

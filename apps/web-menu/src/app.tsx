@@ -1,8 +1,17 @@
 import * as React from "react";
-import ReactModal from "react-modal";
+
 import { useAuth0 } from "@auth0/auth0-react";
+import ReactModal from "react-modal";
+
 import { Auth0User, isRegistered } from "@creature-chess/auth-web";
-import { MenuPage, MenuPageContextProvider, RegistrationPage, LoginPage, useGlobalStyles } from "@creature-chess/ui";
+import {
+	MenuPage,
+	MenuPageContextProvider,
+	RegistrationPage,
+	LoginPage,
+	useGlobalStyles,
+} from "@creature-chess/ui";
+
 import { patchUser } from "./patchUser";
 
 const UnauthenticatedRootPage: React.FunctionComponent = () => {
@@ -12,7 +21,8 @@ const UnauthenticatedRootPage: React.FunctionComponent = () => {
 };
 
 const AuthenticatedRootPage: React.FunctionComponent = () => {
-	const { user, logout, getAccessTokenSilently, getIdTokenClaims } = useAuth0<Auth0User>();
+	const { user, logout, getAccessTokenSilently, getIdTokenClaims } =
+		useAuth0<Auth0User>();
 
 	// todo move the contexts out of here
 

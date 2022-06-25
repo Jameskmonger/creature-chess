@@ -1,12 +1,13 @@
 import { createContext, useContext } from "react";
+
 import { BoardSelectors, BoardState } from "@shoki/board";
 
 type BoardContextValue = {
-	state: BoardState,
+	state: BoardState;
 	ui: {
-		scaleMode: "width" | "height"
-	}
-}
+		scaleMode: "width" | "height";
+	};
+};
 
 const BoardContext = createContext<BoardContextValue>(null!);
 BoardContext.displayName = "BoardContext";
@@ -24,7 +25,10 @@ export const useBelowPieceLimit = () => {
 		return false;
 	}
 
-	return boardState.pieceLimit === null || BoardSelectors.isBelowPieceLimit(boardState);
+	return (
+		boardState.pieceLimit === null ||
+		BoardSelectors.isBelowPieceLimit(boardState)
+	);
 };
 
 export const usePieces = () => {

@@ -1,10 +1,10 @@
 module.exports = {
-	"overrides": [
+	overrides: [
 		{
-			"files": ["*.stories.tsx"],
-			"rules": {
+			files: ["*.stories.tsx"],
+			rules: {
 				"import/no-default-export": "off",
-			}
-		}
-	]
-}
+			},
+		},
+	],
+};

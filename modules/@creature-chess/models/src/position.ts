@@ -1,10 +1,13 @@
 export type TileCoordinates = { x: number; y: number };
 export type SlotLocation = { slot: number };
 
-export const createTileCoordinates = (x: number, y: number): TileCoordinates => ({ x, y });
+export const createTileCoordinates = (
+	x: number,
+	y: number
+): TileCoordinates => ({ x, y });
 export const getDelta = (a: TileCoordinates, b: TileCoordinates) => ({
 	x: Math.abs(a.x - b.x),
-	y: Math.abs(a.y - b.y)
+	y: Math.abs(a.y - b.y),
 });
 export const getDistance = (a: TileCoordinates, b: TileCoordinates) => {
 	const { x, y } = getDelta(a, b);
@@ -16,7 +19,7 @@ export const Directions = {
 	UP: { x: 0, y: -1 },
 	RIGHT: { x: 1, y: 0 },
 	DOWN: { x: 0, y: 1 },
-	LEFT: { x: -1, y: 0 }
+	LEFT: { x: -1, y: 0 },
 };
 
 /**
@@ -25,7 +28,10 @@ export const Directions = {
  * @param from The position to find the direction relative from
  * @param to The position to find the direction relative to
  */
-export const getRelativeDirection = (from: TileCoordinates, to: TileCoordinates) => {
+export const getRelativeDirection = (
+	from: TileCoordinates,
+	to: TileCoordinates
+) => {
 	if (from.x < to.x) {
 		return Directions.RIGHT;
 	}
@@ -43,5 +49,5 @@ export const getRelativeDirection = (from: TileCoordinates, to: TileCoordinates)
 
 export enum TileType {
 	BOARD,
-	BENCH
+	BENCH,
 }

@@ -3,7 +3,9 @@ import { CreatureDefinition, DefinitionClass } from "../creatureDefinition";
 import { CreatureType } from "../creatureType";
 import { PieceModel } from "../piece";
 
-export const buildDefinition = (definition: Partial<CreatureDefinition> = {}): CreatureDefinition => ({
+export const buildDefinition = (
+	definition: Partial<CreatureDefinition> = {}
+): CreatureDefinition => ({
 	id: 1,
 	name: "Creature",
 	type: CreatureType.Earth,
@@ -13,7 +15,9 @@ export const buildDefinition = (definition: Partial<CreatureDefinition> = {}): C
 	...definition,
 });
 
-export const buildPieceModel = (piece: Partial<PieceModel> = {}): PieceModel => ({
+export const buildPieceModel = (
+	piece: Partial<PieceModel> = {}
+): PieceModel => ({
 	id: "123",
 	ownerId: "abc",
 	definitionId: 1,

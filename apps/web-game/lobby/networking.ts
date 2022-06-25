@@ -1,25 +1,34 @@
 import { Action } from "redux";
 import { EventChannel, eventChannel } from "redux-saga";
 import { put } from "redux-saga/effects";
-import { Socket } from "socket.io-client";
-import { IncomingRegistry } from "@shoki/networking";
-import { GameServerToClient, LobbyServerToClient } from "@creature-chess/networking";
-import { gameConnectedEvent, lobbyConnectedEvent, LobbyConnectedEvent } from "../src/networking/events";
 import { call } from "redux-saga/effects";
+import { Socket } from "socket.io-client";
 import { cancelled, race, take } from "typed-redux-saga";
+
+import { IncomingRegistry } from "@shoki/networking";
+
+import {
+	GameServerToClient,
+	LobbyServerToClient,
+} from "@creature-chess/networking";
+
+import {
+	gameConnectedEvent,
+	lobbyConnectedEvent,
+	LobbyConnectedEvent,
+} from "../src/networking/events";
 import { LobbyCommands } from "./state";
 
-const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToClient.PacketSet>) {
+const readPacketsToActions = function* (
+	registry: IncomingRegistry<LobbyServerToClient.PacketSet>
+) {
 	let channel: EventChannel<Action> | null = null;
 
 	try {
-		channel = eventChannel(emit => {
-			registry.on(
-				"lobbyUpdate",
-				({ players }) => {
-					emit(LobbyCommands.updatePlayers({ players }));
-				}
-			);
+		channel = eventChannel((emit) => {
+			registry.on("lobbyUpdate", ({ players }) => {
+				emit(LobbyCommands.updatePlayers({ players }));
+			});
 
 			// todo move this
 			registry.on(
@@ -47,10 +56,10 @@ const readPacketsToActions = function*(registry: IncomingRegistry<LobbyServerToC
 	}
 };
 
-export const lobbyNetworking = function*(
-	socket: Socket
-) {
-	const event: LobbyConnectedEvent = yield take<LobbyConnectedEvent>(lobbyConnectedEvent.toString());
+export const lobbyNetworking = function* (socket: Socket) {
+	const event: LobbyConnectedEvent = yield take<LobbyConnectedEvent>(
+		lobbyConnectedEvent.toString()
+	);
 
 	yield put(LobbyCommands.connectToLobby(event.payload));
 
@@ -65,7 +74,7 @@ export const lobbyNetworking = function*(
 
 	const result = yield* race({
 		runForever,
-		connectedToGame
+		connectedToGame,
 	});
 
 	if (result.connectedToGame) {

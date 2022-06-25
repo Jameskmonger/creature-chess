@@ -1,4 +1,5 @@
 import React from "react";
+
 import { InputListItem } from "./inputListItem";
 
 type Props = {
@@ -13,17 +14,15 @@ const PlayerInfo: React.FunctionComponent<Props> = ({ stateFields }) => (
 	<li>
 		Player Info:
 		<ul>
-			{
-				stateFields.map(field => (
-					<li key={field.label}>
-						<InputListItem
-							heading={field.label}
-							value={field.value}
-							onChange={field.onChange}
-						/>
-					</li>
-				))
-			}
+			{stateFields.map((field) => (
+				<li key={field.label}>
+					<InputListItem
+						heading={field.label}
+						value={field.value}
+						onChange={field.onChange}
+					/>
+				</li>
+			))}
 		</ul>
 	</li>
 );

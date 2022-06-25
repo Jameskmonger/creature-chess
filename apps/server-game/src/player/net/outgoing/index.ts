@@ -1,12 +1,18 @@
 import { all, call } from "redux-saga/effects";
+
 import { ActionStream } from "@shoki/networking";
-import { GameEvents, PlayerCommands, PlayerEvents } from "@creature-chess/gamemode";
+
+import {
+	GameEvents,
+	PlayerCommands,
+	PlayerEvents,
+} from "@creature-chess/gamemode";
 import { GameServerToClient } from "@creature-chess/networking";
 
-import { sendInitialState } from "./initialState";
 import { getPacketRegistries } from "../registries";
+import { sendInitialState } from "./initialState";
 
-export const outgoingNetworking = function*() {
+export const outgoingNetworking = function* () {
 	const { outgoing: registry } = yield* getPacketRegistries();
 
 	yield all([
@@ -21,7 +27,10 @@ export const outgoingNetworking = function*() {
 		),
 
 		call(
-			ActionStream.outgoingSaga<GameServerToClient.PacketSet, "sendLocalPlayerEvents">(
+			ActionStream.outgoingSaga<
+				GameServerToClient.PacketSet,
+				"sendLocalPlayerEvents"
+			>(
 				registry,
 				"sendLocalPlayerEvents",
 				PlayerEvents.PlayerEventActionTypesArray
@@ -29,11 +38,14 @@ export const outgoingNetworking = function*() {
 		),
 
 		call(
-			ActionStream.outgoingSaga<GameServerToClient.PacketSet, "playerInfoUpdates">(
+			ActionStream.outgoingSaga<
+				GameServerToClient.PacketSet,
+				"playerInfoUpdates"
+			>(
 				registry,
 				"playerInfoUpdates",
 				PlayerCommands.PlayerInfoUpdateCommandActionTypesArray
 			)
-		)
+		),
 	]);
 };

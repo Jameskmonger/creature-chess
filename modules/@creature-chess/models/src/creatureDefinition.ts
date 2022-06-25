@@ -3,7 +3,7 @@ import { CreatureType } from "./creatureType";
 export enum DefinitionClass {
 	VALIANT = "Valiant",
 	ARCANE = "Arcane",
-	CUNNING = "Cunning"
+	CUNNING = "Cunning",
 }
 
 export interface CreatureDefinition {
@@ -32,5 +32,5 @@ type AttackTypeName = "basic" | "shoot";
 
 export const attackTypes: { [name in AttackTypeName]: AttackType } = {
 	basic: { name: "basic", range: 1 },
-	shoot: { name: "shoot", range: 2 }
+	shoot: { name: "shoot", range: 2 },
 };

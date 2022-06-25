@@ -1,6 +1,7 @@
 import * as React from "react";
-import { createUseStyles } from "react-jss";
+
 import classNames from "classnames";
+import { createUseStyles } from "react-jss";
 
 type Props = {
 	children: React.ReactNode | React.ReactNode[];
@@ -10,28 +11,28 @@ type Props = {
 const SPACER = "1em";
 
 const useStyles = createUseStyles({
-	"group": {
-		"display": "flex",
-		"flex": "1",
-		"boxSizing": "border-box",
-		"justifyContent": "center",
-		"flexDirection": "column",
+	group: {
+		display: "flex",
+		flex: "1",
+		boxSizing: "border-box",
+		justifyContent: "center",
+		flexDirection: "column",
 	},
 	"@media (orientation: portrait)": {
-		"group": {
+		group: {
 			"&:not(:first-child)": {
 				"margin-top": SPACER,
-			}
+			},
 		},
 	},
 	"@media (orientation: landscape)": {
-		"group": {
+		group: {
 			"&:not(:first-child)": {
 				"margin-left": SPACER,
-			}
+			},
 		},
 	},
-})
+});
 
 export function Group({ children, className }: Props) {
 	const styles = useStyles();

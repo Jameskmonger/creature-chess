@@ -1,26 +1,40 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
-import { playerRunPreparingPhaseEvent, PlayerRunPreparingPhaseEvent } from "../../../../game/events";
+
+import {
+	playerRunPreparingPhaseEvent,
+	PlayerRunPreparingPhaseEvent,
+} from "../../../../game/events";
 import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../events";
-import { updateMoneyCommand, updateOpponentCommand } from "../../state/commands";
-import { getPlayerLevel, getPlayerMoney, isPlayerAlive, isPlayerShopLocked } from "../../state/selectors";
-import { PlayerState } from "../../state";
 import { getBoardSlice } from "../../selectors";
+import { PlayerState } from "../../state";
+import {
+	updateMoneyCommand,
+	updateOpponentCommand,
+} from "../../state/commands";
+import {
+	getPlayerLevel,
+	getPlayerMoney,
+	isPlayerAlive,
+	isPlayerShopLocked,
+} from "../../state/selectors";
 import { addXpCommand } from "../xp";
 
-export const playerPreparingPhase = function*() {
+export const playerPreparingPhase = function* () {
 	const boardSlice = yield* getBoardSlice();
 
 	yield takeEvery<PlayerRunPreparingPhaseEvent>(
 		playerRunPreparingPhaseEvent.toString(),
-		function*() {
+		function* () {
 			const alive = yield* select(isPlayerAlive);
 
 			if (!alive) {
 				return;
 			}
 
-			const matchRewards = yield* select((state: PlayerState) => state.playerInfo.matchRewards);
+			const matchRewards = yield* select(
+				(state: PlayerState) => state.playerInfo.matchRewards
+			);
 
 			if (matchRewards) {
 				const currentMoney = yield* select(getPlayerMoney);

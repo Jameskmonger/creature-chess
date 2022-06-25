@@ -1,18 +1,20 @@
 import React from "react";
-import { Provider } from "react-redux";
-import { Meta, Story } from "@storybook/react";
-import { useGlobalStyles } from "@creature-chess/ui";
-import { GamePhase } from "@creature-chess/models";
 
-import { MobileGame } from "./MobileGame";
+import { Meta, Story } from "@storybook/react";
+import { Provider } from "react-redux";
+
+import { GamePhase } from "@creature-chess/models";
+import { useGlobalStyles } from "@creature-chess/ui";
+
+import { ConnectionStatus } from "../../connection-status";
 import { Overlay } from "../../ui";
 import { createMockStore } from "../stories-utils";
-import { ConnectionStatus } from "../../connection-status";
+import { MobileGame } from "./MobileGame";
 
 export default {
-  title: "Game/MobileGame",
-  component: MobileGame,
-  argTypes: {},
+	title: "Game/MobileGame",
+	component: MobileGame,
+	argTypes: {},
 } as Meta;
 
 const Template: Story<any> = (args) => {
@@ -20,29 +22,31 @@ const Template: Story<any> = (args) => {
 
 	const store = createMockStore(
 		args.phase === GamePhase.PREPARING,
-		state => ({
+		(state) => ({
 			...state,
 			ui: {
 				...state.ui,
 				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
 				currentOverlay: args.overlay,
-				connectionStatus: args.connectionStatus ? args.connectionStatus : state.ui.connectionStatus,
+				connectionStatus: args.connectionStatus
+					? args.connectionStatus
+					: state.ui.connectionStatus,
 			},
 			roundInfo: {
 				...state.roundInfo,
-				phase: args.phase
+				phase: args.phase,
 			},
 			playerInfo: {
 				...state.playerInfo,
-				matchRewards: args.matchRewards ? args.matchRewards : state.playerInfo.matchRewards,
+				matchRewards: args.matchRewards
+					? args.matchRewards
+					: state.playerInfo.matchRewards,
 			},
 		})
-	)
+	);
 
 	return (
-		<Provider
-			store={store}
-		>
+		<Provider store={store}>
 			<MobileGame />
 		</Provider>
 	);

@@ -1,19 +1,23 @@
+import { createAction } from "@reduxjs/toolkit";
 import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
-import { createAction } from "@reduxjs/toolkit";
-import { REROLL_COST } from "@creature-chess/models";
-import { isPlayerAlive } from "../entities/player/state/selectors";
-import { afterRerollCardsEvent } from "../entities/player/events";
-import { getPlayerEntityDependencies } from "../entities/player/dependencies";
-import { updateMoneyCommand } from "../entities/player/state/commands";
 
-export type RerollCardsPlayerAction = ReturnType<typeof rerollCardsPlayerAction>;
+import { REROLL_COST } from "@creature-chess/models";
+
+import { getPlayerEntityDependencies } from "../entities/player/dependencies";
+import { afterRerollCardsEvent } from "../entities/player/events";
+import { updateMoneyCommand } from "../entities/player/state/commands";
+import { isPlayerAlive } from "../entities/player/state/selectors";
+
+export type RerollCardsPlayerAction = ReturnType<
+	typeof rerollCardsPlayerAction
+>;
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
 
-export const rerollCardsPlayerActionSaga = function*() {
+export const rerollCardsPlayerActionSaga = function* () {
 	yield takeEvery<RerollCardsPlayerAction>(
 		rerollCardsPlayerAction.toString(),
-		function*() {
+		function* () {
 			const { logger } = yield* getPlayerEntityDependencies();
 
 			const isAlive = yield* select(isPlayerAlive);
@@ -23,11 +27,13 @@ export const rerollCardsPlayerActionSaga = function*() {
 				return;
 			}
 
-			const money: number = yield select(state => state.playerInfo.money);
+			const money: number = yield select((state) => state.playerInfo.money);
 
 			// not enough money
 			if (money < REROLL_COST) {
-				logger.info(`Attempted to reroll costing $${REROLL_COST} but only had $${money}`);
+				logger.info(
+					`Attempted to reroll costing $${REROLL_COST} but only had $${money}`
+				);
 				return;
 			}
 

@@ -1,25 +1,29 @@
 import * as React from "react";
+
+import { createUseStyles } from "react-jss";
+
 import { CreatureType } from "@creature-chess/models";
 import { Footer, Group, Layout, TypeIndicator } from "@creature-chess/ui";
 import { Header2, Header4 } from "@creature-chess/ui/text";
-import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
 	pieceType: {
-		"display": "inline-block",
+		display: "inline-block",
 		// todo consider use of px here
-		"width": "24px",
-		"height": "24px",
-		"marginRight": "0.5rem",
+		width: "24px",
+		height: "24px",
+		marginRight: "0.5rem",
 	},
 	list: {
-		"marginBottom": "1rem",
-		"marginLeft": "1.5rem",
+		marginBottom: "1rem",
+		marginLeft: "1.5rem",
 		"list-style-type": "disc",
-	}
-})
+	},
+});
 
-const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = false }) => {
+const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({
+	hideFooter = false,
+}) => {
 	const styles = useStyles();
 
 	return (
@@ -27,25 +31,31 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = 
 			<Group>
 				<Header2>The Game</Header2>
 				<p>
-					Buy pieces and place them on the board.
-					Your board then battles another random player's board.
+					Buy pieces and place them on the board. Your board then battles
+					another random player's board.
 				</p>
-					<br />
+				<br />
 				<p>
-					If you lose, your health will decrease. If your health hits 0, you will be
-					knocked out.
+					If you lose, your health will decrease. If your health hits 0, you
+					will be knocked out.
 				</p>
-					<br />
+				<br />
 				<p>The winner is the last player remaining!</p>
 			</Group>
 			<Group>
 				<Header2>Creatures</Header2>
-				<p>Three creatures (level 1) will combine to make a stronger creature (level 2).
-					Three level 2 creatures can then evolve into a level 3 creature.</p>
-					<br />
-				<p>Each creature has a class and a type. Their class determines their fighting style,
-					and types give some boost/reduction to damage when fighting other types.</p>
-					<br />
+				<p>
+					Three creatures (level 1) will combine to make a stronger creature
+					(level 2). Three level 2 creatures can then evolve into a level 3
+					creature.
+				</p>
+				<br />
+				<p>
+					Each creature has a class and a type. Their class determines their
+					fighting style, and types give some boost/reduction to damage when
+					fighting other types.
+				</p>
+				<br />
 				<Header4>Classes</Header4>
 				<ul className={styles.list}>
 					<li>Valiant: All-round melee.</li>
@@ -55,23 +65,33 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = 
 				<Header4>Types</Header4>
 				<ul className={styles.list}>
 					<li>
-						<div className={styles.pieceType}><TypeIndicator type={CreatureType.Earth} /></div>
+						<div className={styles.pieceType}>
+							<TypeIndicator type={CreatureType.Earth} />
+						</div>
 						Earth: Overcomes water.
 					</li>
 					<li>
-						<div className={styles.pieceType}><TypeIndicator type={CreatureType.Metal} /></div>
+						<div className={styles.pieceType}>
+							<TypeIndicator type={CreatureType.Metal} />
+						</div>
 						Metal: Overcomes wood.
 					</li>
 					<li>
-						<div className={styles.pieceType}><TypeIndicator type={CreatureType.Water} /></div>
+						<div className={styles.pieceType}>
+							<TypeIndicator type={CreatureType.Water} />
+						</div>
 						Water: Overcomes fire.
 					</li>
 					<li>
-						<div className={styles.pieceType}><TypeIndicator type={CreatureType.Wood} /></div>
+						<div className={styles.pieceType}>
+							<TypeIndicator type={CreatureType.Wood} />
+						</div>
 						Wood: Overcomes earth.
 					</li>
 					<li>
-						<div className={styles.pieceType}><TypeIndicator type={CreatureType.Fire} /></div>
+						<div className={styles.pieceType}>
+							<TypeIndicator type={CreatureType.Fire} />
+						</div>
 						Fire: Overcomes metal.
 					</li>
 				</ul>
@@ -89,6 +109,6 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({ hideFooter = 
 			{!hideFooter && <Footer />}
 		</Layout>
 	);
-}
+};
 
 export { Help };

@@ -1,6 +1,9 @@
 import React from "react";
+
 import { createUseStyles } from "react-jss";
+
 import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
+
 import { BaseRegistrationInput } from "./BaseRegistrationInput";
 
 const useStyles = createUseStyles({
@@ -20,8 +23,8 @@ const PictureSelection: React.FunctionComponent<{
 			heading="Profile Picture"
 			info="Choose a profile picture - more can be unlocked!"
 		>
-			{
-				Object.entries(AVAILABLE_PROFILE_PICTURES).map(([pictureString, creatureName]) => {
+			{Object.entries(AVAILABLE_PROFILE_PICTURES).map(
+				([pictureString, creatureName]) => {
 					const picture = parseInt(pictureString, 10);
 					const onSelect = () => onChange(picture);
 
@@ -40,8 +43,8 @@ const PictureSelection: React.FunctionComponent<{
 							/>
 						</div>
 					);
-				})
-			}
+				}
+			)}
 		</BaseRegistrationInput>
 	);
 };

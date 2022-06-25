@@ -1,4 +1,5 @@
 import { io, Socket } from "socket.io-client";
+
 import { GameServerToClient } from "@creature-chess/networking";
 
 export const getSocket = (idToken: string) => {
@@ -17,7 +18,9 @@ export const getSocket = (idToken: string) => {
 			socket.emit("authenticate", { idToken });
 		});
 
-		const onAuthenticated = ({ error }: GameServerToClient.AuthenticateResponse) => {
+		const onAuthenticated = ({
+			error,
+		}: GameServerToClient.AuthenticateResponse) => {
 			if (!error) {
 				socket.off("authenticate_response", onAuthenticated);
 

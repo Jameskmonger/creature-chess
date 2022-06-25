@@ -51,9 +51,10 @@ $ yarn dev-tools
 - Update the root package.json version
 - Run the following commands (substitute your version number):
 
-	```
-	git add package.json && git commit -m "v0.4.22" && git push origin head && git tag -a v0.4.22 -m "v0.4.22" && git push origin v0.4.22
-	```
+  ```
+  git add package.json && git commit -m "v0.4.22" && git push origin head && git tag -a v0.4.22 -m "v0.4.22" && git push origin v0.4.22
+  ```
+
 - Run `yarn ecr-push`
 - Update the ECS task definition
 - Update the ECS service to use the new task definition
@@ -72,21 +73,26 @@ End-clients. Servers and UIs
 Reusable logic
 
 ### UI
+
 - \@creature-chess/**ui** - reusable components
 
 ### Server/Client bindings
+
 - \@creature-chess/**models** - type library for all shared/domain-centered models
 - \@creature-chess/**networking** - packet definitions etc shared between app and server
 
 ### Gamemode
+
 - \@creature-chess/**gamemode** - the gamemode
 - \@creature-chess/**battle** - battle logic
 
 ### Utilities
+
 - \@creature-chess/**auth-server** - shared code for auth0 on the server
 - \@creature-chess/**data** - database access
 
 ### Shoki
+
 - \@shoki/**board**
 - \@shoki/**board-react**
 - \@shoki/**engine**

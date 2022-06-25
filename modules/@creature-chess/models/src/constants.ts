@@ -2,13 +2,13 @@ import { GamePhase } from "./game-phase";
 
 export const GRID_SIZE = {
 	width: 7,
-	height: 6 // THIS MUST BE AN EVEN NUMBER
+	height: 6, // THIS MUST BE AN EVEN NUMBER
 };
 
 export const PHASE_LENGTHS = {
 	[GamePhase.PREPARING]: 30,
 	[GamePhase.READY]: 5,
-	[GamePhase.PLAYING]: 30
+	[GamePhase.PLAYING]: 30,
 };
 export const REROLL_COST = 2;
 export const STARTING_MONEY = 3;
@@ -35,5 +35,5 @@ export const AVAILABLE_PROFILE_PICTURES = {
 	4: "Aardorn",
 	5: "Nut",
 	7: "Embra",
-	8: "Tweesher"
+	8: "Tweesher",
 };

@@ -8,30 +8,37 @@ Takes in a `BoardState` of your choosing, renders the pieces, and exposes click/
 
 ```tsx
 import { DragObjectWithType } from "react-dnd";
+
 import { BoardState } from "@shoki/board";
 import { BoardGrid } from "@shoki/board-react";
 
 type ChessPiece = {};
 
-const onDrop = (item: DragObjectWithType & { piece: ChessPiece }, x: number, y: number) => {
-    /* dispatch to redux etc here */
+const onDrop = (
+	item: DragObjectWithType & { piece: ChessPiece },
+	x: number,
+	y: number
+) => {
+	/* dispatch to redux etc here */
 };
 
 const onClick = (x: number, y: number) => {
-    /* dispatch to redux etc here */
+	/* dispatch to redux etc here */
 };
 
 const ChessBoard = () => {
-    const board = useSelector<State, BoardState<ChessPiece>>(state => state.board);
+	const board = useSelector<State, BoardState<ChessPiece>>(
+		(state) => state.board
+	);
 
-    return (
-        <BoardGrid
-            state={board}
-            renderItem={id => <ChessPiece id={id} />}
-            onDrop={onDrop}
-            onClick={onClick}
-        />
-    )
+	return (
+		<BoardGrid
+			state={board}
+			renderItem={(id) => <ChessPiece id={id} />}
+			onDrop={onDrop}
+			onClick={onClick}
+		/>
+	);
 };
 ```
 
@@ -54,7 +61,11 @@ The board to be rendered.
 #### renderItem
 
 ```typescript
-const renderItem: (id: string, x: number, y: number) => React.ReactNode | React.ReactNode[];
+const renderItem: (
+	id: string,
+	x: number,
+	y: number
+) => React.ReactNode | React.ReactNode[];
 ```
 
 A render function called for every piece on the board. You can render a component using the id, then inside that component you can read from the Redux store, for example, to render accordingly.
@@ -62,7 +73,11 @@ A render function called for every piece on the board. You can render a componen
 #### onDrop
 
 ```typescript
-const onDrop: <TPiece extends HasId>(item: DragObjectWithType & { piece: TPiece }, x: number, y: number) => void;
+const onDrop: <TPiece extends HasId>(
+	item: DragObjectWithType & { piece: TPiece },
+	x: number,
+	y: number
+) => void;
 ```
 
 This function is called whenever an item with type `"Piece"` is dropped onto an empty tile of an unlocked board.

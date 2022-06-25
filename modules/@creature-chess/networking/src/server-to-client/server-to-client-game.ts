@@ -1,6 +1,12 @@
-import { protocol, ActionStream } from "@shoki/networking";
 import { BoardState } from "@shoki/board";
-import { PieceModel, PlayerListPlayer, QuickChatOption, RoundInfoState } from "@creature-chess/models";
+import { protocol, ActionStream } from "@shoki/networking";
+
+import {
+	PieceModel,
+	PlayerListPlayer,
+	QuickChatOption,
+	RoundInfoState,
+} from "@creature-chess/models";
 
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];

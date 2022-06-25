@@ -1,9 +1,19 @@
-import {
-	OpenOverlayAction, CloseOverlayAction, OPEN_OVERLAY, CLOSE_OVERLAY,
-	UpdateConnectionStatusAction, UPDATE_CONNECTION_STATUS,
-	SelectPieceAction, ClearSelectedPieceAction, SELECT_PIECE, CLEAR_SELECTED_PIECE, setWinnerIdCommand, SetWinnerIdCommand, SetInGameCommand
-} from "./actions";
 import { ConnectionStatus } from "../connection-status";
+import {
+	OpenOverlayAction,
+	CloseOverlayAction,
+	OPEN_OVERLAY,
+	CLOSE_OVERLAY,
+	UpdateConnectionStatusAction,
+	UPDATE_CONNECTION_STATUS,
+	SelectPieceAction,
+	ClearSelectedPieceAction,
+	SELECT_PIECE,
+	CLEAR_SELECTED_PIECE,
+	setWinnerIdCommand,
+	SetWinnerIdCommand,
+	SetInGameCommand,
+} from "./actions";
 import { Overlay } from "./overlay";
 
 export interface UiState {
@@ -19,11 +29,11 @@ const initialState: UiState = {
 	currentOverlay: null,
 	selectedPieceId: null,
 	winnerId: null,
-	connectionStatus: ConnectionStatus.NOT_CONNECTED
+	connectionStatus: ConnectionStatus.NOT_CONNECTED,
 };
 
 type UIAction =
-	OpenOverlayAction
+	| OpenOverlayAction
 	| CloseOverlayAction
 	| SelectPieceAction
 	| ClearSelectedPieceAction
@@ -36,44 +46,45 @@ export const reducer = (state: UiState = initialState, action: UIAction) => {
 		case UPDATE_CONNECTION_STATUS:
 			return {
 				...state,
-				connectionStatus: action.payload.status
+				connectionStatus: action.payload.status,
 			};
 		case OPEN_OVERLAY: {
 			return {
 				...state,
-				currentOverlay: action.payload.overlay
+				currentOverlay: action.payload.overlay,
 			};
 		}
 		case CLOSE_OVERLAY: {
 			return {
 				...state,
-				currentOverlay: null
+				currentOverlay: null,
 			};
 		}
 		case SELECT_PIECE: {
-			const isSamePiece = state.selectedPieceId && state.selectedPieceId === action.payload.id;
+			const isSamePiece =
+				state.selectedPieceId && state.selectedPieceId === action.payload.id;
 
 			return {
 				...state,
-				selectedPieceId: isSamePiece ? null : action.payload.id
+				selectedPieceId: isSamePiece ? null : action.payload.id,
 			};
 		}
 		case CLEAR_SELECTED_PIECE: {
 			return {
 				...state,
-				selectedPieceId: null
+				selectedPieceId: null,
 			};
 		}
 		case "setWinnerIdCommand": {
 			return {
 				...state,
-				winnerId: action.payload.winnerId
+				winnerId: action.payload.winnerId,
 			};
 		}
 		case "setInGameCommand": {
 			return {
 				...state,
-				inGame: true
+				inGame: true,
 			};
 		}
 		default:

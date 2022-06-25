@@ -1,5 +1,7 @@
 import * as React from "react";
+
 import { useDrop } from "react-dnd";
+
 import { useBelowPieceLimit, usePieces } from "../../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../../events";
 import { Tile } from "./Tile";
@@ -16,11 +18,16 @@ type DropTargetCollectProps = {
 	isDragging: boolean;
 };
 
-const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ x, y, onDrop, onClick }) => {
+const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({
+	x,
+	y,
+	onDrop,
+	onClick,
+}) => {
 	const belowPieceLimit = useBelowPieceLimit();
 	const pieces = usePieces();
 
-	const [{ }, drop] = useDrop<{ id: string }, void, DropTargetCollectProps>({
+	const [{}, drop] = useDrop<{ id: string }, void, DropTargetCollectProps>({
 		accept: "BoardItem",
 		drop: ({ id }) => {
 			if (!onDrop) {
@@ -33,7 +40,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({ x, y, onDr
 			const pieceIsFromSameBoard = Boolean(pieces[id]);
 			return belowPieceLimit || pieceIsFromSameBoard;
 		},
-		collect: monitor => ({
+		collect: (monitor) => ({
 			canDrop: !!monitor.canDrop(),
 			isDragging: !!monitor.getItem(),
 		}),

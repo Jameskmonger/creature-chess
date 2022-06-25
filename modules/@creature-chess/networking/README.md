@@ -8,6 +8,7 @@ You can import one of the given protocols from the package and then register inc
 
 ```ts
 import { Socket } from "socket-io.client";
+
 import { GameServerToClient } from "@creature-chess/networking";
 
 const createIncomingRegistry = (socket: Socket) =>

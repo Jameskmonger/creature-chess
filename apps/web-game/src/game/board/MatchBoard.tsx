@@ -1,6 +1,15 @@
-import { GameBoard, GameBoardContextProvider } from "@creature-chess/ui";
 import React from "react";
-import { useGameBench, useGameMatchBoard, useRenderBenchPiece, useRenderMatchBoardPiece, useOnClickTile, useOnDropPiece } from "./hooks";
+
+import { GameBoard, GameBoardContextProvider } from "@creature-chess/ui";
+
+import {
+	useGameBench,
+	useGameMatchBoard,
+	useRenderBenchPiece,
+	useRenderMatchBoardPiece,
+	useOnClickTile,
+	useOnDropPiece,
+} from "./hooks";
 
 export const MatchBoard: React.FC = () => {
 	const board = useGameMatchBoard();
@@ -17,16 +26,13 @@ export const MatchBoard: React.FC = () => {
 	}
 
 	return (
-		<GameBoardContextProvider
-			value={{ board, bench }}
-		>
+		<GameBoardContextProvider value={{ board, bench }}>
 			<GameBoard
 				onClick={onClickTile}
 				onDropPiece={onDropPiece}
-
 				renderBoardPiece={renderBoardPiece}
 				renderBenchPiece={renderBenchPiece}
 			/>
 		</GameBoardContextProvider>
-	)
+	);
 };

@@ -1,14 +1,19 @@
 import { BoardState, BoardSelectors } from "@shoki/board";
+
 import { PlayerPieceLocation } from "@creature-chess/models";
 
-export const getLocationForPiece = (pieceId: string, board: BoardState, bench: BoardState): PlayerPieceLocation | null => {
+export const getLocationForPiece = (
+	pieceId: string,
+	board: BoardState,
+	bench: BoardState
+): PlayerPieceLocation | null => {
 	if (board) {
 		const boardPiecePosition = BoardSelectors.getPiecePosition(board, pieceId);
 
 		if (boardPiecePosition) {
 			return {
 				type: "board",
-				location: boardPiecePosition
+				location: boardPiecePosition,
 			};
 		}
 	}
@@ -19,7 +24,7 @@ export const getLocationForPiece = (pieceId: string, board: BoardState, bench: B
 		if (benchPiecePosition) {
 			return {
 				type: "bench",
-				location: benchPiecePosition
+				location: benchPiecePosition,
 			};
 		}
 	}

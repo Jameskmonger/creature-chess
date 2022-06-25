@@ -1,8 +1,10 @@
 // tslint:disable:jsx-ban-props
 import * as React from "react";
+
 import Media from "react-media";
-import { MobileGame } from "./layouts/mobile/MobileGame";
+
 import { DesktopGame } from "./layouts/desktop/DesktopGame";
+import { MobileGame } from "./layouts/mobile/MobileGame";
 
 const GamePage: React.FunctionComponent = () => (
 	<>
@@ -20,6 +22,4 @@ const GamePage: React.FunctionComponent = () => (
 	</>
 );
 
-export {
-	GamePage
-};
+export { GamePage };

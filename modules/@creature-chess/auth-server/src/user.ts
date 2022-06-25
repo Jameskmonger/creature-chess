@@ -1,4 +1,5 @@
 import { User, UserMetadata } from "auth0";
+
 import { DatabaseUser } from "@creature-chess/data";
 import { PlayerProfile } from "@creature-chess/models";
 
@@ -19,9 +20,13 @@ export interface UserModel {
 
 export type Auth0User = User<UserAppMetadata, UserMetadata>;
 
-export const convertDatabaseUserToUserModel = (user: DatabaseUser): UserModel => {
+export const convertDatabaseUserToUserModel = (
+	user: DatabaseUser
+): UserModel => {
 	const nickname = user.data.nickname ? user.data.nickname.value : null;
-	const profile = user.data.profile ? user.data.profile : { title: null, picture: null };
+	const profile = user.data.profile
+		? user.data.profile
+		: { title: null, picture: null };
 
 	return {
 		id: user.ref.id,
@@ -29,6 +34,6 @@ export const convertDatabaseUserToUserModel = (user: DatabaseUser): UserModel =>
 		stats: user.data.stats,
 		nickname,
 		profile,
-		registered: Boolean(nickname && profile.picture)
+		registered: Boolean(nickname && profile.picture),
 	};
 };

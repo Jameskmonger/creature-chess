@@ -1,5 +1,7 @@
 import React from "react";
+
 import { Meta, Story } from "@storybook/react";
+
 import { PlayerTitle } from "@creature-chess/models";
 
 import { LobbyPage } from "./LobbyPage";
@@ -8,9 +10,7 @@ import { LobbyPageContextProvider } from "./LobbyPageContext";
 export default {
 	title: "Pages/LobbyPage",
 	component: LobbyPage,
-	argTypes: {
-
-	}
+	argTypes: {},
 } as Meta;
 
 const lobbyInfo = {
@@ -20,19 +20,19 @@ const lobbyInfo = {
 			name: "Jeff",
 			profile: {
 				picture: 20,
-				title: null
-			}
+				title: null,
+			},
 		},
 		{
 			id: "1234",
 			name: "William Pickle",
 			profile: {
 				picture: 37,
-				title: PlayerTitle.HallOfFame
-			}
-		}
+				title: PlayerTitle.HallOfFame,
+			},
+		},
 	],
-	startingAtMs: Date.now() + 60_000
+	startingAtMs: Date.now() + 60_000,
 };
 
 const Template: Story<any> = (args) => (
@@ -42,5 +42,4 @@ const Template: Story<any> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = {
-};
+Default.args = {};

@@ -1,7 +1,7 @@
 module.exports = {
-  stories: ["../../../../**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
-  previewHead: (head) => `
+	stories: ["../../../../**/*.stories.@(js|jsx|ts|tsx)"],
+	addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
+	previewHead: (head) => `
 		${head}
 		<style>
 		body {

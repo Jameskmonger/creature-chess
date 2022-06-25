@@ -1,7 +1,14 @@
-import { Logger } from "winston";
-import { v4 as uuid } from "uuid";
 import { shuffle } from "lodash";
-import { CreatureDefinition, Card, PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
+import { v4 as uuid } from "uuid";
+import { Logger } from "winston";
+
+import {
+	CreatureDefinition,
+	Card,
+	PieceModel,
+	PIECES_TO_EVOLVE,
+} from "@creature-chess/models";
+
 import { getAllDefinitions, getDefinitionById } from "../definitions";
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
@@ -10,7 +17,7 @@ const CARD_COST_CHANCES = [
 	[0, 30, 35, 35, 35, 30, 30, 30, 30, 25],
 	[0, 0, 5, 15, 23, 30, 30, 30, 25, 25],
 	[0, 0, 0, 2, 5, 9, 12, 16, 20, 25],
-	[0, 0, 0, 0, 1, 3, 5, 7, 10, 14]
+	[0, 0, 0, 0, 1, 3, 5, 7, 10, 14],
 ];
 
 const CARD_LEVEL_QUANTITIES = [45, 30, 25, 15, 10];
@@ -33,20 +40,29 @@ export class CardDeck {
 	public deck: Card[][];
 
 	public constructor(private logger: Logger) {
-		this.deck = [
-			[], [], [], [], []
-		];
+		this.deck = [[], [], [], [], []];
 
-		getAllDefinitions().filter(d => d.cost).forEach(d => {
-			for (let count = 0; count < CARD_LEVEL_QUANTITIES[d.cost - 1]; count++) {
-				this.addDefinition(d);
-			}
-		});
+		getAllDefinitions()
+			.filter((d) => d.cost)
+			.forEach((d) => {
+				for (
+					let count = 0;
+					count < CARD_LEVEL_QUANTITIES[d.cost - 1];
+					count++
+				) {
+					this.addDefinition(d);
+				}
+			});
 
 		this.shuffle();
 	}
 
-	public reroll(input: Card[], count: number, level: number, excludeCards: number[] = []) {
+	public reroll(
+		input: Card[],
+		count: number,
+		level: number,
+		excludeCards: number[] = []
+	) {
 		this.addCards(input);
 		this.shuffle();
 
@@ -54,7 +70,7 @@ export class CardDeck {
 	}
 
 	public addCards(cards: Card[]) {
-		const cardsToAdd = cards.filter(card => card !== null);
+		const cardsToAdd = cards.filter((card) => card !== null);
 
 		for (const card of cardsToAdd) {
 			this.getDeckForCost(card.cost).push(card);
@@ -166,7 +182,7 @@ export class CardDeck {
 			cost: definition.cost,
 			name: definition.name,
 			type: definition.type,
-			class: definition.class
+			class: definition.class,
 		};
 
 		this.getDeckForCost(definition.cost).push(card);

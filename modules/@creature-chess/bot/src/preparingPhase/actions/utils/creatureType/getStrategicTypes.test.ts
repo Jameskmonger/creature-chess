@@ -1,18 +1,22 @@
 import { Builders, CreatureType } from "@creature-chess/models";
+
 import { getStrategicTypes } from "./getStrategicTypes";
 
 describe("utils/creatureType/getStrategicTypes", () => {
 	const types = [
-		CreatureType.Earth, CreatureType.Earth,
-		CreatureType.Fire, CreatureType.Fire, CreatureType.Fire,
+		CreatureType.Earth,
+		CreatureType.Earth,
+		CreatureType.Fire,
+		CreatureType.Fire,
+		CreatureType.Fire,
 		CreatureType.Water,
 	];
 
-	const pieces = types.map(t =>
+	const pieces = types.map((t) =>
 		Builders.buildPieceModel({
 			definition: Builders.buildDefinition({
-				type: t
-			})
+				type: t,
+			}),
 		})
 	);
 

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { CardShopInputs } from "./components/cardShopInputs";
 import { PlayerInfo } from "./components/playerInfoInputs";
 
@@ -16,12 +17,10 @@ const StateInputs: React.FunctionComponent<Props> = ({ stateFields }) => (
 			<h1>State</h1>
 		</div>
 		<ul>
-			<PlayerInfo
-				stateFields={stateFields}
-			/>
+			<PlayerInfo stateFields={stateFields} />
 			<CardShopInputs />
 		</ul>
-	</section >
+	</section>
 );
 
 export { StateInputs };

@@ -9,11 +9,17 @@ Contains a Redux reducer and associated commands.
 ```ts
 import { BoardState, createBoardSlice } from "@shoki/board";
 
-type Piece = { id: string, name: string }
+type Piece = { id: string; name: string };
 
-const { boardReducer, commands } = createBoardSlice<Piece>("board", { width: 8, height: 8 });
+const { boardReducer, commands } = createBoardSlice<Piece>("board", {
+	width: 8,
+	height: 8,
+});
 
 const piece: Piece = { id: "123", name: "bob" };
 
-const state: BoardState<Piece> = boardReducer(null, commands.addBoardPieceCommand({ x: 3, y: 0, piece }));
+const state: BoardState<Piece> = boardReducer(
+	null,
+	commands.addBoardPieceCommand({ x: 3, y: 0, piece })
+);
 ```

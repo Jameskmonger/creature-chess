@@ -5,16 +5,14 @@
 	"javascript.preferences.quoteStyle": "double",
 	"typescript.preferences.useAliasesForRenames": false,
 	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.tabSize": 4,
 	"editor.insertSpaces": false,
 	"editor.detectIndentation": false,
 	"files.trimTrailingWhitespace": true,
 	"files.trimFinalNewlines": true,
 	"files.insertFinalNewline": true,
-	"conventionalCommits.scopes": [
-		"shoki",
-		"server-game"
-	],
+	"conventionalCommits.scopes": ["shoki", "server-game"],
 	"search.exclude": {
 		"**/.yarn": true,
 		"**/.pnp.*": true

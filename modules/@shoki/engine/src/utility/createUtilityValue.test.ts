@@ -4,12 +4,12 @@ import { ScoringDirection, UtilityNumberValue } from "./types";
 describe("createUtilityValue", () => {
 	const inputs = {
 		health: 50,
-		money: 5
+		money: 5,
 	};
 
 	const personality = {
 		ambition: 50 as UtilityNumberValue,
-		composure: 150 as UtilityNumberValue
+		composure: 150 as UtilityNumberValue,
 	};
 
 	test("should return the correct value", () => {
@@ -24,8 +24,8 @@ describe("createUtilityValue", () => {
 				// more important with low composure
 				weighting: {
 					value: personality.composure,
-					direction: ScoringDirection.Low
-				}
+					direction: ScoringDirection.Low,
+				},
 			},
 			{
 				value: inputs.money,
@@ -37,20 +37,20 @@ describe("createUtilityValue", () => {
 				// more important with high ambition
 				weighting: {
 					value: personality.ambition,
-					direction: ScoringDirection.High
-				}
-			}
+					direction: ScoringDirection.High,
+				},
+			},
 		]);
 
 		// these calculations are applied due to the provided directions
-		const hV = ((inputs.health - 1) / 99);
-		const cV = 1 - (personality.composure / 200);
+		const hV = (inputs.health - 1) / 99;
+		const cV = 1 - personality.composure / 200;
 
-		const mV = ((inputs.money - 1) / 54);
+		const mV = (inputs.money - 1) / 54;
 		const aV = personality.ambition / 200;
 
-		const healthValue = (hV * 200) * cV;
-		const moneyValue = (mV * 200) * aV;
+		const healthValue = hV * 200 * cV;
+		const moneyValue = mV * 200 * aV;
 
 		/*
 			health value = 0.5

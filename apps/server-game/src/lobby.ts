@@ -1,6 +1,8 @@
+import { OutgoingRegistry } from "@shoki/networking";
+
 import { LobbyPlayer, PlayerProfile } from "@creature-chess/models";
 import { LobbyServerToClient } from "@creature-chess/networking";
-import { OutgoingRegistry } from "@shoki/networking";
+
 import { AuthenticatedSocket } from "./player/socket";
 
 type LobbyMember = {
@@ -10,14 +12,16 @@ type LobbyMember = {
 };
 
 const createRegistry = (socket: AuthenticatedSocket) =>
-	LobbyServerToClient.outgoing(
-		(opcode, payload, ack) => socket.emit(opcode, payload, ack)
+	LobbyServerToClient.outgoing((opcode, payload, ack) =>
+		socket.emit(opcode, payload, ack)
 	);
 
 type LobbyOptions = {
 	waitTimeMs: number;
 	maxPlayers: number;
-	onStart: (members: ({ player: LobbyPlayer; socket: AuthenticatedSocket })[]) => void;
+	onStart: (
+		members: { player: LobbyPlayer; socket: AuthenticatedSocket }[]
+	) => void;
 };
 
 export class Lobby {
@@ -37,13 +41,13 @@ export class Lobby {
 	}
 
 	public isInLobby(playerId: string) {
-		return this.members.some(m => m.player.id === playerId);
+		return this.members.some((m) => m.player.id === playerId);
 	}
 
 	public connect(socket: AuthenticatedSocket) {
 		const registry = createRegistry(socket);
 
-		const existing = this.members.find(m => m.player.id === socket.data.id);
+		const existing = this.members.find((m) => m.player.id === socket.data.id);
 		if (existing) {
 			existing.socket?.disconnect(true);
 		} else {
@@ -54,7 +58,7 @@ export class Lobby {
 					profile: socket.data.profile!,
 				},
 				socket,
-				registry
+				registry,
 			};
 
 			this.members.push(newMember);
@@ -71,12 +75,10 @@ export class Lobby {
 	private start = () => {
 		clearTimeout(this.autoStart);
 
-		const members = this.members.map(
-			m => ({
-				player: m.player,
-				socket: m.socket
-			})
-		);
+		const members = this.members.map((m) => ({
+			player: m.player,
+			socket: m.socket,
+		}));
 
 		this.options.onStart(members);
 
@@ -89,19 +91,18 @@ export class Lobby {
 				continue;
 			}
 
-			member.registry?.send(
-				"lobbyUpdate",
-				{
-					players: this.getLobbyPlayers()
-				}
-			);
+			member.registry?.send("lobbyUpdate", {
+				players: this.getLobbyPlayers(),
+			});
 		}
 	}
 
-	private sendConnected(registry: OutgoingRegistry<LobbyServerToClient.PacketSet>) {
+	private sendConnected(
+		registry: OutgoingRegistry<LobbyServerToClient.PacketSet>
+	) {
 		registry.send("connected", {
 			players: this.getLobbyPlayers(),
-			startTimestamp: this.gameStartTime!
+			startTimestamp: this.gameStartTime!,
 		});
 	}
 
@@ -109,12 +110,12 @@ export class Lobby {
 		return this.members.map(
 			({
 				socket: {
-					data: { id, nickname, profile }
-				}
+					data: { id, nickname, profile },
+				},
 			}) => ({
 				id,
 				name: nickname as string,
-				profile: profile as PlayerProfile
+				profile: profile as PlayerProfile,
 			})
 		);
 	}

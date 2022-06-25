@@ -1,12 +1,20 @@
 import { getPiecePosition } from "../selectors";
 import { BoardState, HasId, PiecePosition } from "../types";
 
-export const rotateGridPosition = (gridSize: { width: number; height: number }, position: PiecePosition): PiecePosition => ({
+export const rotateGridPosition = (
+	gridSize: { width: number; height: number },
+	position: PiecePosition
+): PiecePosition => ({
 	x: gridSize.width - 1 - position.x,
-	y: gridSize.height - 1 - position.y
+	y: gridSize.height - 1 - position.y,
 });
 
-export const rotatePiecesAboutCenter = <TPiece extends HasId, TState extends BoardState<TPiece>>(state: TState): TState => {
+export const rotatePiecesAboutCenter = <
+	TPiece extends HasId,
+	TState extends BoardState<TPiece>
+>(
+	state: TState
+): TState => {
 	const newPositions: { pieceId: string; position: string }[] = [];
 
 	for (const [pieceId] of Object.entries(state.pieces)) {
@@ -27,9 +35,9 @@ export const rotatePiecesAboutCenter = <TPiece extends HasId, TState extends Boa
 		piecePositions: newPositions.reduce<{ [position: string]: string }>(
 			(acc, { pieceId, position }) => ({
 				...acc,
-				[position]: pieceId
+				[position]: pieceId,
 			}),
 			{}
-		)
+		),
 	};
 };

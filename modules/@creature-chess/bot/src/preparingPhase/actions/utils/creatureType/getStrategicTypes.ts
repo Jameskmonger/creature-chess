@@ -1,4 +1,5 @@
 import { CreatureType, PieceModel } from "@creature-chess/models";
+
 import { getOwnedPieceTypes } from "./getOwnedTypes";
 
 const ALL_TYPES = [
@@ -6,14 +7,16 @@ const ALL_TYPES = [
 	CreatureType.Fire,
 	CreatureType.Metal,
 	CreatureType.Water,
-	CreatureType.Wood
+	CreatureType.Wood,
 ];
 
 export const getStrategicTypes = (allPieces: PieceModel[]) => {
 	const ownedPieceTypes = getOwnedPieceTypes(allPieces);
-	const averageNumberOfEachType = Math.ceil(allPieces.length / ALL_TYPES.length);
+	const averageNumberOfEachType = Math.ceil(
+		allPieces.length / ALL_TYPES.length
+	);
 
-	return ALL_TYPES.filter(type => {
+	return ALL_TYPES.filter((type) => {
 		const ownedCount = ownedPieceTypes[type];
 
 		return ownedCount === 0 || ownedCount < averageNumberOfEachType;

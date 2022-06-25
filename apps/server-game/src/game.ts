@@ -1,13 +1,15 @@
-import { v4 as uuid } from "uuid";
-import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
-import { logger } from "./log";
-import { AuthenticatedSocket } from "./player/socket";
 import { Task } from "redux-saga";
-import { playerNetworking } from "./player";
-import { BotPersonality } from "@creature-chess/data";
-import { LobbyPlayer } from "@creature-chess/models";
-import { createPlayerEntity } from "./player/entity";
+import { v4 as uuid } from "uuid";
+
 import { botLogicSaga } from "@creature-chess/bot";
+import { BotPersonality } from "@creature-chess/data";
+import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
+import { LobbyPlayer } from "@creature-chess/models";
+
+import { logger } from "./log";
+import { playerNetworking } from "./player";
+import { createPlayerEntity } from "./player/entity";
+import { AuthenticatedSocket } from "./player/socket";
 
 type GameMember = {
 	type: "BOT" | "PLAYER";
@@ -56,7 +58,7 @@ export class Game {
 
 		this.gamemode.onFinish(onFinish);
 
-		const entities = this.members.map(m => m.entity);
+		const entities = this.members.map((m) => m.entity);
 		this.gamemode.start(entities);
 	}
 
@@ -65,16 +67,20 @@ export class Game {
 	}
 
 	public connect(socket: AuthenticatedSocket) {
-		const existing = this.members.find(m => m.id === socket.data.id);
+		const existing = this.members.find((m) => m.id === socket.data.id);
 
 		if (!existing) {
-			throw Error(`GameMember couldn't be found when connecting to Game: ${socket.data.nickname}`);
+			throw Error(
+				`GameMember couldn't be found when connecting to Game: ${socket.data.nickname}`
+			);
 		}
 
 		const entity = this.gamemode.getPlayerById(socket.data.id);
 
 		if (!entity) {
-			throw Error(`PlayerEntity couldn't be found when connecting to Game: ${socket.data.nickname}`);
+			throw Error(
+				`PlayerEntity couldn't be found when connecting to Game: ${socket.data.nickname}`
+			);
 		}
 
 		existing.networkingSaga?.cancel();
@@ -84,10 +90,8 @@ export class Game {
 
 	private registerPlayer(player: PlayerGameParticipant) {
 		const {
-			player: {
-				id, name, profile
-			},
-			socket
+			player: { id, name, profile },
+			socket,
 		} = player;
 
 		const entity = createPlayerEntity(this.gamemode, id, name, profile);
@@ -96,16 +100,14 @@ export class Game {
 			type: "PLAYER",
 			id: player.player.id,
 			networkingSaga: this.runPlayerNetworking(entity, socket),
-			entity
+			entity,
 		});
 	}
 
 	private registerBot(player: BotGameParticipant) {
 		const {
-			player: {
-				id, name, profile
-			},
-			personality
+			player: { id, name, profile },
+			personality,
 		} = player;
 
 		const entity = createPlayerEntity(this.gamemode, id, name, profile);
@@ -114,18 +116,17 @@ export class Game {
 		this.members.push({
 			type: "BOT",
 			id: player.player.id,
-			entity
+			entity,
 		});
 	}
 
-	private runPlayerNetworking(entity: PlayerEntity, socket: AuthenticatedSocket) {
-		return entity.runSaga(
-			playerNetworking,
-			socket,
-			{
-				getRoundInfo: this.gamemode.getRoundInfo,
-				getPlayers: this.gamemode.getPlayerListPlayers
-			}
-		);
+	private runPlayerNetworking(
+		entity: PlayerEntity,
+		socket: AuthenticatedSocket
+	) {
+		return entity.runSaga(playerNetworking, socket, {
+			getRoundInfo: this.gamemode.getRoundInfo,
+			getPlayers: this.gamemode.getPlayerListPlayers,
+		});
 	}
 }

@@ -1,20 +1,36 @@
 import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import classnames from "classnames";
+
+import {
+	faCog,
+	faQuestionCircle,
+	faShoppingCart,
+	faUsers,
+	IconDefinition,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCog, faQuestionCircle, faShoppingCart, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import classnames from "classnames";
+import { useSelector, useDispatch } from "react-redux";
 
 import { AppState } from "../../../store";
 import { closeOverlay, openOverlay } from "../../ui/actions";
 import { Overlay } from "../../ui/overlay";
 import { useStyles } from "./NavBar.styles";
 
-const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition }> = ({ overlay, icon }) => {
+const NavItem: React.FunctionComponent<{
+	overlay: Overlay;
+	icon: IconDefinition;
+}> = ({ overlay, icon }) => {
 	const styles = useStyles();
 	const dispatch = useDispatch();
-	const isActive = useSelector<AppState, boolean>(state => state.game.ui.currentOverlay === overlay);
-	const canUseShop = useSelector<AppState, boolean>(state => state.game.playerInfo.health !== 0);
-	const isSpectating = useSelector<AppState, boolean>(state => state.game.spectating.id !== null);
+	const isActive = useSelector<AppState, boolean>(
+		(state) => state.game.ui.currentOverlay === overlay
+	);
+	const canUseShop = useSelector<AppState, boolean>(
+		(state) => state.game.playerInfo.health !== 0
+	);
+	const isSpectating = useSelector<AppState, boolean>(
+		(state) => state.game.spectating.id !== null
+	);
 
 	const onClick = () => {
 		if (isActive) {
@@ -31,7 +47,12 @@ const NavItem: React.FunctionComponent<{ overlay: Overlay, icon: IconDefinition 
 	};
 
 	return (
-		<button className={classnames(styles.navBarItem, { [styles.navBarItemActive]: isActive })} onClick={onClick}>
+		<button
+			className={classnames(styles.navBarItem, {
+				[styles.navBarItemActive]: isActive,
+			})}
+			onClick={onClick}
+		>
 			<FontAwesomeIcon icon={icon} />
 		</button>
 	);

@@ -1,9 +1,12 @@
 import * as React from "react";
+
+import classNames from "classnames";
 import { createUseStyles } from "react-jss";
+
 import { Card as CardModel } from "@creature-chess/models";
+
 import { Layout } from "../../layout";
 import { Card } from "./card";
-import classNames from "classnames";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -30,10 +33,15 @@ const useStyles = createUseStyles({
 	},
 	selected: {
 		marginTop: "-1em",
-	}
+	},
 });
 
-const CardSelector: React.FunctionComponent<Props> = ({ cards, money, selectedCardIndex, onSelectCard }) => {
+const CardSelector: React.FunctionComponent<Props> = ({
+	cards,
+	money,
+	selectedCardIndex,
+	onSelectCard,
+}) => {
 	const classes = useStyles();
 
 	const createCard = (card: CardModel | null, index: number) => {
@@ -52,7 +60,11 @@ const CardSelector: React.FunctionComponent<Props> = ({ cards, money, selectedCa
 		};
 
 		return (
-			<div className={classNames(classes.cardContainer, { [classes.selected]: isSelected })}>
+			<div
+				className={classNames(classes.cardContainer, {
+					[classes.selected]: isSelected,
+				})}
+			>
 				<Card
 					key={`${index}-${card.definitionId}`}
 					disabled={money < card.cost}
@@ -64,7 +76,12 @@ const CardSelector: React.FunctionComponent<Props> = ({ cards, money, selectedCa
 	};
 
 	return (
-		<Layout className={classes.container} direction="row" justifyContent="space-around" noSpacer>
+		<Layout
+			className={classes.container}
+			direction="row"
+			justifyContent="space-around"
+			noSpacer
+		>
 			<div className={classes.tray} />
 
 			{cards.map(createCard)}

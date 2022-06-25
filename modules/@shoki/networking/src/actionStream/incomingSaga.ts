@@ -1,5 +1,6 @@
 import { eventChannel } from "redux-saga";
 import { put, take } from "redux-saga/effects";
+
 import { OpcodesForPacket, PacketSet } from "../packet";
 import { IncomingRegistry } from "../registry/incoming";
 import { Action, ActionStreamPacket, ActionStreamPayload } from "./packet";
@@ -18,42 +19,50 @@ export const incomingSaga = <
 	registry: IncomingRegistry<TPacketSet>,
 	opcode: TOpcode,
 	actions: string[]
-) => function*() {
-	let expectedPacketIndex = 1;
+) =>
+	function* () {
+		let expectedPacketIndex = 1;
 
-	const channel = eventChannel<ActionStreamPacket>(emit => {
-		const onReceiveActions = (packet: ActionStreamPacket) => emit(packet);
+		const channel = eventChannel<ActionStreamPacket>((emit) => {
+			const onReceiveActions = (packet: ActionStreamPacket) => emit(packet);
 
-		registry.on(opcode, onReceiveActions);
+			registry.on(opcode, onReceiveActions);
 
-		return () => registry.off(opcode, onReceiveActions);
-	});
+			return () => registry.off(opcode, onReceiveActions);
+		});
 
-	const actionQueue: Action[] = [];
+		const actionQueue: Action[] = [];
 
-	while (true) {
-		// todo refactor this client+server to make use of the array
-		const { index, actions: [action] }: ActionStreamPayload = yield take(channel);
+		while (true) {
+			// todo refactor this client+server to make use of the array
+			const {
+				index,
+				actions: [action],
+			}: ActionStreamPayload = yield take(channel);
 
-		const validAction = actions.includes(action.type);
-		if (!validAction) {
-			console.error(`Unhandled action type: ${action.type} (for opcode ${opcode})`);
+			const validAction = actions.includes(action.type);
+			if (!validAction) {
+				console.error(
+					`Unhandled action type: ${action.type} (for opcode ${opcode})`
+				);
 
-			continue;
-		}
+				continue;
+			}
 
-		if (index < expectedPacketIndex) {
-			console.warn(`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex} (for opcode ${opcode})`);
-		} else {
-			// queue future actions and execute them after the expected one arrives
-			actionQueue[index - expectedPacketIndex] = action;
+			if (index < expectedPacketIndex) {
+				console.warn(
+					`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex} (for opcode ${opcode})`
+				);
+			} else {
+				// queue future actions and execute them after the expected one arrives
+				actionQueue[index - expectedPacketIndex] = action;
 
-			// if there's an action for the expected index, process it and repeat
-			while (actionQueue[0]) {
-				const actionFromQueue = actionQueue.shift()!;
-				expectedPacketIndex++;
-				yield put(actionFromQueue);
+				// if there's an action for the expected index, process it and repeat
+				while (actionQueue[0]) {
+					const actionFromQueue = actionQueue.shift()!;
+					expectedPacketIndex++;
+					yield put(actionFromQueue);
+				}
 			}
 		}
-	}
-};
+	};

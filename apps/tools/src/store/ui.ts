@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 export enum Overlay {
 	CARD_SELECTION,
-	NOTIFICATION
+	NOTIFICATION,
 }
 export enum BoardType {
 	BOARD,
-	BENCH
+	BENCH,
 }
 
 export type UIState = {
@@ -17,13 +18,11 @@ export type UIState = {
 		};
 		boardType: BoardType;
 	} | null;
-
 };
 
 const initialState: UIState = {
 	overlay: null,
-	boardParameters: null
-
+	boardParameters: null,
 };
 
 interface BoardPosition {
@@ -35,29 +34,25 @@ export interface BoardParameters {
 	boardType: BoardType;
 }
 
-const {
-	reducer,
-	actions,
-} = createSlice({
+const { reducer, actions } = createSlice({
 	name: "ui",
 	initialState,
 	reducers: {
-		openCardSelectionOverlay: (state, { payload: boardParameters }: PayloadAction<BoardParameters>) => ({
+		openCardSelectionOverlay: (
+			state,
+			{ payload: boardParameters }: PayloadAction<BoardParameters>
+		) => ({
 			overlay: Overlay.CARD_SELECTION,
 			boardParameters: {
 				boardPosition: boardParameters.boardPosition,
-				boardType: boardParameters.boardType
-			}
-
+				boardType: boardParameters.boardType,
+			},
 		}),
-		closeOverlay: state => ({
+		closeOverlay: (state) => ({
 			...state,
-			overlay: null
-		})
-	}
+			overlay: null,
+		}),
+	},
 });
 
-export {
-	reducer as uiReducer,
-	actions as uiActions
-};
+export { reducer as uiReducer, actions as uiActions };

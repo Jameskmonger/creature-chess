@@ -1,9 +1,12 @@
 import { shuffle } from "lodash";
+
 import { PlayerStatus } from "@creature-chess/models";
+
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
 
-const randomFromArray = <T>(array: T[]) => array[Math.floor(Math.random() * array.length)];
+const randomFromArray = <T>(array: T[]) =>
+	array[Math.floor(Math.random() * array.length)];
 
 export class OpponentProvider {
 	private remainingRotations: number[] | null = null;
@@ -28,12 +31,17 @@ export class OpponentProvider {
 			this.remainingRotations = null;
 		}
 
-		if (this.remainingRotations === null || this.remainingRotations.length === 0) {
+		if (
+			this.remainingRotations === null ||
+			this.remainingRotations.length === 0
+		) {
 			this.generateRotations(livingPlayers);
 		}
 
 		const isEven = livingPlayers.length % 2 === 0;
-		const output = isEven ? this.getMatchupsEven(livingPlayers) : this.getMatchupsOdd(livingPlayers);
+		const output = isEven
+			? this.getMatchupsEven(livingPlayers)
+			: this.getMatchupsOdd(livingPlayers);
 
 		this.updateRotation();
 
@@ -44,16 +52,18 @@ export class OpponentProvider {
 		if (!this.players) {
 			return [];
 		}
-		return this.players.filter(p =>
-			p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT
-			&& p.select(PlayerStateSelectors.isPlayerAlive)
+		return this.players.filter(
+			(p) =>
+				p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT &&
+				p.select(PlayerStateSelectors.isPlayerAlive)
 		);
 	}
 
 	private getMatchupsEven(livingPlayers: PlayerEntity[]) {
-		const matchups: ({ homeId: string; awayId: string; awayIsClone: boolean })[] = [];
+		const matchups: { homeId: string; awayId: string; awayIsClone: boolean }[] =
+			[];
 
-		let remainingPlayerIds = livingPlayers.map(p => p.id);
+		let remainingPlayerIds = livingPlayers.map((p) => p.id);
 		while (remainingPlayerIds.length > 0) {
 			// increment rotation by 1 if it would pick player 0
 			const rotation =
@@ -64,10 +74,12 @@ export class OpponentProvider {
 			const playerA = remainingPlayerIds[0];
 			const playerB = remainingPlayerIds[rotation % remainingPlayerIds.length];
 
-			remainingPlayerIds = remainingPlayerIds.filter(id => id !== playerA && id !== playerB);
+			remainingPlayerIds = remainingPlayerIds.filter(
+				(id) => id !== playerA && id !== playerB
+			);
 
 			// dice roll
-			const playerAIsHome = (Math.floor(Math.random() * Math.floor(2))) === 0;
+			const playerAIsHome = Math.floor(Math.random() * Math.floor(2)) === 0;
 
 			if (playerAIsHome) {
 				matchups.push({ homeId: playerA, awayId: playerB, awayIsClone: false });
@@ -82,20 +94,24 @@ export class OpponentProvider {
 	private getMatchupsOdd(livingPlayers: PlayerEntity[]) {
 		const cloneMatchup = this.getOddCloneMatchup(livingPlayers);
 
-		const otherPlayers = livingPlayers.filter(({ id }) => id !== cloneMatchup.homeId);
+		const otherPlayers = livingPlayers.filter(
+			({ id }) => id !== cloneMatchup.homeId
+		);
 
-		return [
-			cloneMatchup,
-			...this.getMatchupsEven(otherPlayers)
-		];
+		return [cloneMatchup, ...this.getMatchupsEven(otherPlayers)];
 	}
 
 	private getOddCloneMatchup(livingPlayers: PlayerEntity[]) {
-		const potentialHomePlayers = livingPlayers.filter(({ id }) => id !== this.lastOddMatchupHomeId || this.lastOddMatchupHomeId === null);
+		const potentialHomePlayers = livingPlayers.filter(
+			({ id }) =>
+				id !== this.lastOddMatchupHomeId || this.lastOddMatchupHomeId === null
+		);
 		const home = randomFromArray(potentialHomePlayers);
 
 		const potentialAwayPlayers = livingPlayers.filter(
-			({ id }) => id !== home.id && (id !== this.lastOddMatchupAwayId || this.lastOddMatchupAwayId === null)
+			({ id }) =>
+				id !== home.id &&
+				(id !== this.lastOddMatchupAwayId || this.lastOddMatchupAwayId === null)
 		);
 		const away = randomFromArray(potentialAwayPlayers);
 
@@ -105,7 +121,7 @@ export class OpponentProvider {
 		return {
 			homeId: home.id,
 			awayId: away.id,
-			awayIsClone: true
+			awayIsClone: true,
 		};
 	}
 
@@ -130,7 +146,9 @@ export class OpponentProvider {
 
 		const chosen = randomFromArray(this.remainingRotations);
 
-		this.remainingRotations = this.remainingRotations.filter(i => i !== chosen);
+		this.remainingRotations = this.remainingRotations.filter(
+			(i) => i !== chosen
+		);
 
 		this.rotation = chosen;
 	}

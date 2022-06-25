@@ -1,2 +1,6 @@
 export { GameBoard, GameBoardLocation } from "./GameBoard";
-export { GameBoardContext, GameBoardContextProvider, useGameBoard } from "./GameBoardContext";
+export {
+	GameBoardContext,
+	GameBoardContextProvider,
+	useGameBoard,
+} from "./GameBoardContext";

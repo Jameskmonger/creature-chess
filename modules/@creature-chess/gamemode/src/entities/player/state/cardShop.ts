@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { Card } from "@creature-chess/models";
 
 export type CardShopState = {
@@ -8,32 +9,39 @@ export type CardShopState = {
 
 const initialState: CardShopState = {
 	cards: [],
-	locked: false
+	locked: false,
 };
 
-const {
-	actions,
-	reducer: cardShopReducer,
-} = createSlice({
+const { actions, reducer: cardShopReducer } = createSlice({
 	name: "cards",
 	initialState,
 	reducers: {
-		updateCardsCommand: (state, { payload: cards }: PayloadAction<(Card | null)[]>) => ({
+		updateCardsCommand: (
+			state,
+			{ payload: cards }: PayloadAction<(Card | null)[]>
+		) => ({
 			...state,
-			cards
+			cards,
 		}),
-		updateShopLockCommand: (state, { payload: locked }: PayloadAction<boolean>) => ({
+		updateShopLockCommand: (
+			state,
+			{ payload: locked }: PayloadAction<boolean>
+		) => ({
 			...state,
-			locked
+			locked,
 		}),
-	}
+	},
 });
 
 // this stops the compiler from trying to export a type from @reduxjs/toolkit
-const updateCardsCommand: (payload: (Card | null)[]) => ({ type: string; payload: (Card | null)[] })
-	= actions.updateCardsCommand;
+const updateCardsCommand: (payload: (Card | null)[]) => {
+	type: string;
+	payload: (Card | null)[];
+} = actions.updateCardsCommand;
 
-const updateShopLockCommand: (payload: boolean) => ({ type: string; payload: boolean })
-	= actions.updateShopLockCommand;
+const updateShopLockCommand: (payload: boolean) => {
+	type: string;
+	payload: boolean;
+} = actions.updateShopLockCommand;
 
 export { updateCardsCommand, updateShopLockCommand, cardShopReducer };
