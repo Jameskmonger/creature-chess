@@ -1,4 +1,4 @@
-import hello from "@functions/hello";
+import { getCurrentUser } from "@functions/index";
 import type { AWS } from "@serverless/typescript";
 
 const serverlessConfiguration: AWS = {
@@ -18,7 +18,7 @@ const serverlessConfiguration: AWS = {
 		},
 	},
 	// import the function via paths
-	functions: { hello },
+	functions: { getCurrentUser },
 	package: { individually: true },
 	custom: {
 		esbuild: {
