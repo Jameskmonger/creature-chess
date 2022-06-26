@@ -12,11 +12,11 @@ import { LocalBoard } from "./LocalBoard";
 import { MatchBoard } from "./MatchBoard";
 import { useGameMatchBoard } from "./hooks";
 import {
-	ReadyUpButton,
 	ReadyOverlay,
 	VictoryOverlay,
 	MatchRewardsOverlay,
 	ReconnectOverlay,
+	Controls,
 } from "./overlays";
 
 const useStyles = createUseStyles({
@@ -34,7 +34,7 @@ export function BoardContainer() {
 			<Group className={classNames(styles.boardContainer, "board-container")}>
 				<NowPlaying />
 
-				<ReadyUpButton />
+				<Controls />
 
 				{matchBoard ? <MatchBoard /> : <LocalBoard />}
 

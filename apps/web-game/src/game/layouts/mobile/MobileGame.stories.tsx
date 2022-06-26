@@ -31,6 +31,9 @@ const Template: Story<any> = (args) => {
 				connectionStatus: args.connectionStatus
 					? args.connectionStatus
 					: state.ui.connectionStatus,
+				selectedPieceId: args.selectedPiece
+					? Object.values(state.board.pieces)[0].id
+					: state.ui.selectedPieceId,
 			},
 			roundInfo: {
 				...state.roundInfo,
@@ -56,6 +59,13 @@ export const Phase_0_Preparing = Template.bind({});
 Phase_0_Preparing.args = {
 	overlay: null,
 	phase: GamePhase.PREPARING,
+};
+
+export const Phase_0_Preparing_Selected_Piece = Template.bind({});
+Phase_0_Preparing_Selected_Piece.args = {
+	overlay: null,
+	phase: GamePhase.PREPARING,
+	selectedPiece: true,
 };
 
 export const Phase_1_Ready = Template.bind({});
