@@ -24,7 +24,8 @@
 	"workspaces": [
 		"modules/@creature-chess/*",
 		"modules/@shoki/*",
-		"apps/*"
+		"apps/*",
+		"lambda/*"
 	],
 	"author": "",
 	"license": "ISC",
