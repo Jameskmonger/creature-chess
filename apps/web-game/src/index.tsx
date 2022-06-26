@@ -6,12 +6,9 @@ import "pepjs";
 import * as ReactDOM from "react-dom";
 import { Provider as ReduxProvider } from "react-redux";
 
-import "@shoki/board-react/style.css";
-
 import { AuthProvider } from "@creature-chess/auth-web";
 
 import { App } from "./app";
-import "./display/style/index.scss";
 import { createAppStore } from "./store";
 
 if (process.env.SENTRY_DSN) {
