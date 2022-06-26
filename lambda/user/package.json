@@ -10,8 +10,14 @@
 		"node": ">=14.15.0"
 	},
 	"dependencies": {
+		"@creature-chess/auth-server": "workspace:*",
+		"@creature-chess/data": "workspace:*",
+		"@creature-chess/models": "workspace:*",
 		"@middy/core": "^2.5.3",
-		"@middy/http-json-body-parser": "^2.5.3"
+		"@middy/http-json-body-parser": "^2.5.3",
+		"@types/auth0": "^2.34.9",
+		"auth0": "^2.37.0",
+		"winston": "^3.3.3"
 	},
 	"devDependencies": {
 		"@serverless/typescript": "^3.0.0",
