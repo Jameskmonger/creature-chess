@@ -7,7 +7,7 @@ export default {
 	events: [
 		{
 			http: {
-				method: "post",
+				method: "patch",
 				path: "updateCurrentUser",
 				request: {
 					schemas: {
