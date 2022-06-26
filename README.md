@@ -65,7 +65,6 @@ End-clients. Servers and UIs
 
 - [**web**](./apps/web/README.md) - React app for the game
 - [**server-game**](./apps/server-game/README.md) - websocket gameserver
-- [**server-info**](./apps/server-info/README.md) - express API server
 
 ## Modules
 

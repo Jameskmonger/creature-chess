@@ -2138,24 +2138,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@creature-chess/server-info@workspace:apps/server-info":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/server-info@workspace:apps/server-info"
-  dependencies:
-    "@creature-chess/auth-server": "workspace:*"
-    "@creature-chess/data": "workspace:*"
-    "@creature-chess/models": "workspace:*"
-    "@types/auth0": ^2.34.9
-    "@types/bad-words": ^3.0.1
-    "@types/express": ^4.17.13
-    auth0: ^2.37.0
-    bad-words: ^3.0.4
-    body-parser: ^1.19.1
-    express: ^4.17.2
-    winston: ^3.3.3
-  languageName: unknown
-  linkType: soft
-
 "@creature-chess/ui@workspace:*, @creature-chess/ui@workspace:modules/@creature-chess/ui":
   version: 0.0.0-use.local
   resolution: "@creature-chess/ui@workspace:modules/@creature-chess/ui"
@@ -4577,13 +4559,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bad-words@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@types/bad-words@npm:3.0.1"
-  checksum: c700fadd2bafef153812137220466ca3148425228915ddb6e7e80bc339fa983d2ddef098cacf00196fbd7467181ae5b9747d8fd383fc5ed17f8bf5e62e89d425
-  languageName: node
-  linkType: hard
-
 "@types/body-parser@npm:*":
   version: 1.19.2
   resolution: "@types/body-parser@npm:1.19.2"
@@ -4729,7 +4704,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:^4.17.13":
+"@types/express@npm:*":
   version: 4.17.13
   resolution: "@types/express@npm:4.17.13"
   dependencies:
@@ -6847,22 +6822,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bad-words@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "bad-words@npm:3.0.4"
-  dependencies:
-    badwords-list: ^1.0.0
-  checksum: 49595ab6ce5012b2dd5c4237839e450e4bbd349fccc7c66f11f06a1ab91cddfaa65e9855b63536297be6e0a22e3868b26b6012659a2cea0968f3caebf026bc9d
-  languageName: node
-  linkType: hard
-
-"badwords-list@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "badwords-list@npm:1.0.0"
-  checksum: fa7a4fbf3428aa15a86c303e0dd794cb9acda521e28c9eb83875f000b63f7940127c9d26368defe550a261ea546d5e8baeba2eaf5eebaf14f3c0774f69738ac8
-  languageName: node
-  linkType: hard
-
 "bail@npm:^1.0.0":
   version: 1.0.5
   resolution: "bail@npm:1.0.5"
@@ -7032,7 +6991,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"body-parser@npm:1.19.1, body-parser@npm:^1.19.1":
+"body-parser@npm:1.19.1":
   version: 1.19.1
   resolution: "body-parser@npm:1.19.1"
   dependencies:
