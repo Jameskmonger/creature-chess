@@ -7,8 +7,8 @@ export default {
 	events: [
 		{
 			http: {
-				method: "get",
-				path: "getCurrentUser",
+				method: "post",
+				path: "updateCurrentUser",
 				request: {
 					schemas: {
 						"application/json": schema,

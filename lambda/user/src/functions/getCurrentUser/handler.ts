@@ -1,16 +1,13 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
+import { sanitize } from "@libs/sanitize-user";
 import { ManagementClient } from "auth0";
 import { createLogger, transports } from "winston";
 
-import {
-	authenticate,
-	UserModel,
-	UserAppMetadata,
-} from "@creature-chess/auth-server";
+import { authenticate, UserAppMetadata } from "@creature-chess/auth-server";
 import { createDatabaseConnection } from "@creature-chess/data";
-import { config, SanitizedUser } from "@creature-chess/models";
+import { config } from "@creature-chess/models";
 
 import schema from "./schema";
 
@@ -31,17 +28,6 @@ const authClient = new ManagementClient<UserAppMetadata>({
 	clientSecret: AUTH0_CONFIG.clientSecret,
 });
 
-const sanitize = (user: UserModel): SanitizedUser => {
-	const { id, nickname, stats, registered } = user;
-
-	return {
-		id,
-		nickname,
-		stats,
-		registered,
-	};
-};
-
 const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	typeof schema
 > = async (event) => {
@@ -59,10 +45,9 @@ const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	}
 
 	const user = await authenticate(authClient, database, Authorization);
-	const sanitized = sanitize(user);
 
 	return formatJSONResponse({
-		user: sanitized,
+		user: sanitize(user),
 	});
 };
 
