@@ -14,7 +14,6 @@ ADD .yarn/releases/ ./.yarn/releases/
 
 ADD apps/server-game/package.json ./apps/server-game/
 ADD apps/server-info/package.json ./apps/server-info/
-ADD apps/tools/package.json ./apps/tools/
 ADD apps/web-game/package.json ./apps/web-game/
 ADD apps/web-menu/package.json ./apps/web-menu/
 

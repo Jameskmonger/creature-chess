@@ -10,7 +10,6 @@
 		"build-web-menu": "",
 		"dev-web-game": "yarn workspace @creature-chess/web-game dev",
 		"dev-web-menu": "yarn workspace @creature-chess/web-menu dev",
-		"dev-tools": "yarn workspace @creature-chess/tools start",
 		"start-server-game": "ts-node-dev apps/server-game/index.ts",
 		"start-server-info": "ts-node-dev apps/server-info/index.ts 3000",
 		"start-web-menu": "yarn workspace @creature-chess/web-menu dev",

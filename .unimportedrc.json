@@ -1,7 +1,6 @@
 {
 	"entry": [
 		"apps/server-*/index.ts",
-		"apps/tools/src/index.tsx",
 		"apps/web-*/src/index.tsx",
 		"modules/@creature-chess/*/index.ts",
 		"modules/@shoki/*/index.ts"
@@ -28,7 +27,6 @@
 	"ignoreUnimported": [
 		"apps/server-game/index.ts",
 		"apps/server-info/index.ts",
-		"apps/tools/src/index.tsx",
 		"apps/web-game/src/index.tsx",
 		"apps/web-menu/src/index.tsx",
 		"modules/@creature-chess/auth-server/index.ts",
