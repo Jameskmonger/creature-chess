@@ -1,16 +1,28 @@
 import * as React from "react";
 
+import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
 import { GamePhase } from "@creature-chess/models";
 
 import { AppState } from "../../store";
 
+const useStyles = createUseStyles({
+	nowPlaying: {
+		color: "#ffffff",
+		width: "100%",
+		textAlign: "center",
+		fontFamily: "Arial, sans-serif",
+		marginTop: "0.5em",
+	},
+});
+
 const getOpponentName = (state: AppState) =>
 	state.game.playerList.find((p) => p.id === state.game.playerInfo.opponentId)
 		?.name || null;
 
-const NowPlaying: React.FunctionComponent = () => {
+export function NowPlaying() {
+	const styles = useStyles();
 	const phase = useSelector<AppState, GamePhase | null>(
 		(state) => state.game.roundInfo.phase
 	);
@@ -24,7 +36,5 @@ const NowPlaying: React.FunctionComponent = () => {
 		return null;
 	}
 
-	return <span>Now Playing: {opponentName}</span>;
-};
-
-export { NowPlaying };
+	return <span className={styles.nowPlaying}>Now Playing: {opponentName}</span>;
+}
