@@ -5,17 +5,17 @@ import { createUseStyles } from "react-jss";
 
 import { PlayerListPlayer } from "@creature-chess/models";
 
-type Props = {
-	player: PlayerListPlayer;
-};
-
 const useStyles = createUseStyles({
 	image: {
 		height: "64px",
 	},
 });
 
-const PlayerAvatar: React.FunctionComponent<Props> = ({ player }) => {
+export function PlayerAvatar({
+	player,
+}: {
+	player: Pick<PlayerListPlayer, "profile">;
+}) {
 	const classes = useStyles();
 
 	if (!player || !player.profile?.picture) {
@@ -25,9 +25,7 @@ const PlayerAvatar: React.FunctionComponent<Props> = ({ player }) => {
 	return (
 		<img
 			className={classnames(classes.image, "avatar")}
-			src={`https://creaturechess.com/images/front/${player.profile.picture}.png`}
+			src={`images/front/${player.profile.picture}.png`}
 		/>
 	);
-};
-
-export { PlayerAvatar };
+}

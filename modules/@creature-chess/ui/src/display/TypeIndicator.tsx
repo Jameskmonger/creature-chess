@@ -7,11 +7,11 @@ interface TypeIndicatorProps {
 }
 
 const ICON_FOR_TYPE = {
-	[CreatureType.Fire]: "http://creaturechess.com/images/ui/type-fire.svg",
-	[CreatureType.Earth]: "http://creaturechess.com/images/ui/type-earth.svg",
-	[CreatureType.Metal]: "http://creaturechess.com/images/ui/type-metal.svg",
-	[CreatureType.Water]: "http://creaturechess.com/images/ui/type-water.svg",
-	[CreatureType.Wood]: "http://creaturechess.com/images/ui/type-wood.svg",
+	[CreatureType.Fire]: "images/ui/type-fire.svg",
+	[CreatureType.Earth]: "images/ui/type-earth.svg",
+	[CreatureType.Metal]: "images/ui/type-metal.svg",
+	[CreatureType.Water]: "images/ui/type-water.svg",
+	[CreatureType.Wood]: "images/ui/type-wood.svg",
 };
 
 const TypeIndicator: React.FunctionComponent<TypeIndicatorProps> = ({

@@ -48,10 +48,7 @@ const CurrentCard: React.FunctionComponent<Props> = ({ card, onBuy }) => {
 				className={classes.currentCard}
 			>
 				<div>
-					<CreatureImage
-						definitionId={card.definitionId}
-						baseUrl="https://creaturechess.com/"
-					/>
+					<CreatureImage definitionId={card.definitionId} />
 				</div>
 				<Layout direction="column" className={classes.cardText}>
 					<h2 className={classes.cardName}>{card.name}</h2>

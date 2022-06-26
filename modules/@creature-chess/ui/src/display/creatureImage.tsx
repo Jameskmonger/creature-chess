@@ -34,15 +34,11 @@ const useStyles = createUseStyles({
 	},
 });
 
-const CreatureImage: React.FunctionComponent<Props> = ({
-	baseUrl = "",
-	facing,
-	definitionId,
-}) => (
-	<img
-		className={useStyles().image}
-		src={`${baseUrl}/images/${facing || "front"}/${definitionId}.png`}
-	/>
-);
-
-export { CreatureImage };
+export function CreatureImage({ facing, definitionId }: Props) {
+	return (
+		<img
+			className={useStyles().image}
+			src={`images/${facing || "front"}/${definitionId}.png`}
+		/>
+	);
+}

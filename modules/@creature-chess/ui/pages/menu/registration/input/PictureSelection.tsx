@@ -30,10 +30,7 @@ const PictureSelection: React.FunctionComponent<{
 
 					return (
 						<div className={styles.pictureList} key={picture}>
-							<img
-								src={`https://creaturechess.com/images/front/${picture}.png`}
-								alt={creatureName}
-							/>
+							<img src={`images/front/${picture}.png`} alt={creatureName} />
 							<p>{creatureName}</p>
 							<input
 								type="radio"

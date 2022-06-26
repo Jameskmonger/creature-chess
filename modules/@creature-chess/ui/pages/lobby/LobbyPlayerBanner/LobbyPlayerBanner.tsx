@@ -4,6 +4,7 @@ import { createUseStyles } from "react-jss";
 
 import { LobbyPlayer } from "@creature-chess/models";
 
+import { PlayerAvatar } from "../../../src/player/avatar";
 import { Title } from "../../../src/player/title";
 
 type Props = {
@@ -39,10 +40,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 		return (
 			<div className={`${styles.player} ${styles.bot}`}>
 				<span className={styles.nameAndImage}>
-					<img
-						src={"https://creaturechess.com/images/ui/no_player_img.png"}
-						alt="no player image"
-					/>
+					<img src={"images/ui/no_player_img.png"} alt="no player image" />
 					<div />
 					empty slot
 				</span>
@@ -53,10 +51,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 	return (
 		<div className={styles.player}>
 			<span className={styles.nameAndImage}>
-				<img
-					src={`https://creaturechess.com/images/front/${player.profile?.picture}.png`}
-					alt="avatar"
-				/>
+				<PlayerAvatar player={player} />
 				<div />
 				{player.name}
 			</span>

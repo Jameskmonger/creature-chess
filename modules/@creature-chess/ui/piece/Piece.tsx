@@ -67,7 +67,6 @@ const Piece = React.forwardRef((props: Props, ref) => {
 				<CreatureImage
 					definitionId={piece.definitionId}
 					facing={piece.facingAway ? "back" : "front"}
-					baseUrl="https://creaturechess.com"
 				/>
 			</div>
 
