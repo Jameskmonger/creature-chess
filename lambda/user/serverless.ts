@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@functions/index";
+import { getCurrentUser, updateCurrentUser } from "@functions/index";
 import type { AWS } from "@serverless/typescript";
 
 const serverlessConfiguration: AWS = {
@@ -22,7 +22,7 @@ const serverlessConfiguration: AWS = {
 		},
 	},
 	// import the function via paths
-	functions: { getCurrentUser },
+	functions: { getCurrentUser, updateCurrentUser },
 	package: { individually: true },
 	custom: {
 		esbuild: {

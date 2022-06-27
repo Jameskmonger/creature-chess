@@ -4559,6 +4559,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bad-words@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@types/bad-words@npm:3.0.1"
+  checksum: c700fadd2bafef153812137220466ca3148425228915ddb6e7e80bc339fa983d2ddef098cacf00196fbd7467181ae5b9747d8fd383fc5ed17f8bf5e62e89d425
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.2
   resolution: "@types/body-parser@npm:1.19.2"
@@ -6819,6 +6826,22 @@ __metadata:
   version: 1.0.2
   resolution: "backo2@npm:1.0.2"
   checksum: fda8d0a0f4810068d23715f2f45153146d6ee8f62dd827ce1e0b6cc3c8328e84ad61e11399a83931705cef702fe7cbb457856bf99b9bd10c4ed57b0786252385
+  languageName: node
+  linkType: hard
+
+"bad-words@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "bad-words@npm:3.0.4"
+  dependencies:
+    badwords-list: ^1.0.0
+  checksum: 49595ab6ce5012b2dd5c4237839e450e4bbd349fccc7c66f11f06a1ab91cddfaa65e9855b63536297be6e0a22e3868b26b6012659a2cea0968f3caebf026bc9d
+  languageName: node
+  linkType: hard
+
+"badwords-list@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "badwords-list@npm:1.0.0"
+  checksum: fa7a4fbf3428aa15a86c303e0dd794cb9acda521e28c9eb83875f000b63f7940127c9d26368defe550a261ea546d5e8baeba2eaf5eebaf14f3c0774f69738ac8
   languageName: node
   linkType: hard
 
@@ -22285,8 +22308,10 @@ __metadata:
     "@serverless/typescript": ^3.0.0
     "@types/auth0": ^2.34.9
     "@types/aws-lambda": ^8.10.71
+    "@types/bad-words": ^3.0.1
     "@types/node": ^14.14.25
     auth0: ^2.37.0
+    bad-words: ^3.0.4
     esbuild: ^0.14.11
     json-schema-to-ts: ^1.5.0
     serverless: ^3.0.0

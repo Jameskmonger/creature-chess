@@ -4,7 +4,8 @@
 	"description": "Creature Chess User service",
 	"main": "serverless.ts",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"deploy:live": "serverless deploy -s live"
 	},
 	"engines": {
 		"node": ">=14.15.0"
@@ -16,7 +17,9 @@
 		"@middy/core": "^2.5.3",
 		"@middy/http-json-body-parser": "^2.5.3",
 		"@types/auth0": "^2.34.9",
+		"@types/bad-words": "^3.0.1",
 		"auth0": "^2.37.0",
+		"bad-words": "^3.0.4",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {

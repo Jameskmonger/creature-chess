@@ -4,5 +4,4 @@ export default {
 		nickname: { type: "string" },
 		picture: { type: "number" },
 	},
-	required: [],
 } as const;
