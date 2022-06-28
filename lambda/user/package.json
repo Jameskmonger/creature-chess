@@ -1,10 +1,11 @@
 {
-	"name": "user",
+	"name": "@cc-lambda/user",
 	"version": "1.0.0",
 	"description": "Creature Chess User service",
 	"main": "serverless.ts",
 	"scripts": {
-		"deploy:live": "serverless deploy -s live"
+		"deploy:live": "serverless deploy -s live",
+		"dev": "serverless offline --httpPort 8081"
 	},
 	"engines": {
 		"node": ">=14.15.0"
