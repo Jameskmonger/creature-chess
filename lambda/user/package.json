@@ -4,7 +4,6 @@
 	"description": "Creature Chess User service",
 	"main": "serverless.ts",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"deploy:live": "serverless deploy -s live"
 	},
 	"engines": {
