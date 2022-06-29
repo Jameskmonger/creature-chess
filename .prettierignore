@@ -1,3 +1,4 @@
 .yarn/
 apps/**/public/
 yarn.lock
+*.tfstate

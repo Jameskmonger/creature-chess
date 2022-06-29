@@ -12,8 +12,10 @@ ADD package.json yarn.lock .yarnrc.yml ./
 ADD .yarn/plugins/ ./.yarn/plugins/
 ADD .yarn/releases/ ./.yarn/releases/
 
+# TODO we shouldn't have to copy this here.
+ADD lambda/user/package.json ./lambda/user/
+
 ADD apps/server-game/package.json ./apps/server-game/
-ADD apps/server-info/package.json ./apps/server-info/
 ADD apps/web-game/package.json ./apps/web-game/
 ADD apps/web-menu/package.json ./apps/web-menu/
 

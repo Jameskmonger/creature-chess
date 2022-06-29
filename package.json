@@ -6,12 +6,11 @@
 	"scripts": {
 		"build-web-game": "yarn workspace @creature-chess/web-game build",
 		"build-server-game": "yarn build-web-game && cp -r apps/web-game/public apps/server-game",
-		"build-server-info": "",
 		"build-web-menu": "",
 		"dev-web-game": "yarn workspace @creature-chess/web-game dev",
 		"dev-web-menu": "yarn workspace @creature-chess/web-menu dev",
+		"dev:user": "yarn workspace @cc-lambda/user dev",
 		"start-server-game": "ts-node-dev apps/server-game/index.ts",
-		"start-server-info": "ts-node-dev apps/server-info/index.ts 3000",
 		"start-web-menu": "yarn workspace @creature-chess/web-menu dev",
 		"test": "yarn workspaces foreach run test",
 		"dockerup": "docker-compose build && docker-compose up",
@@ -24,7 +23,8 @@
 	"workspaces": [
 		"modules/@creature-chess/*",
 		"modules/@shoki/*",
-		"apps/*"
+		"apps/*",
+		"lambda/*"
 	],
 	"author": "",
 	"license": "ISC",

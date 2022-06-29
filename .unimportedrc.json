@@ -26,7 +26,6 @@
 	"ignoreUnused": ["@types/react", "@types/react-dom", "ts-node-dev"],
 	"ignoreUnimported": [
 		"apps/server-game/index.ts",
-		"apps/server-info/index.ts",
 		"apps/web-game/src/index.tsx",
 		"apps/web-menu/src/index.tsx",
 		"modules/@creature-chess/auth-server/index.ts",

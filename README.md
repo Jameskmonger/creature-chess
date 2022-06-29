@@ -31,14 +31,23 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 - **(optional)** A game server URL in environment variable `GAME_SERVER_URL`
 - **(optional)** An info server URL in environment variable `API_INFO_URL`
 
+### Setup
+
+Run `yarn` in the project root.
+
 ### Running
 
 ```shell
-$ yarn
 $ yarn dockerup
 ```
 
 The game is then accessible at `http://localhost:8080`.
+
+In another console, you will need to run the following command to run the User service locally.
+
+```shell
+$ yarn dev:user
+```
 
 ### Dev toolkit
 
@@ -65,7 +74,6 @@ End-clients. Servers and UIs
 
 - [**web**](./apps/web/README.md) - React app for the game
 - [**server-game**](./apps/server-game/README.md) - websocket gameserver
-- [**server-info**](./apps/server-info/README.md) - express API server
 
 ## Modules
 
