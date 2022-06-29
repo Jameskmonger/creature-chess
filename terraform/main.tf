@@ -25,3 +25,7 @@ provider "aws" {
   region = var.cert_aws_region
   alias  = "main_cert"
 }
+
+module "server_game" {
+  source = "./modules/server_game"
+}
