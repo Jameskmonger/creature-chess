@@ -57,6 +57,24 @@ resource "aws_route53_record" "user-service" {
   }
 }
 
+resource "aws_route53_record" "menu" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = var.url
+  type    = "A"
+  ttl     = 60
+
+  records = ["185.199.108.153", "185.199.109.153", "185.199.110.153", "185.199.111.153"]
+}
+
+resource "aws_route53_record" "menu-www" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = format("www.%s", var.url)
+  type    = "CNAME"
+  ttl     = 60
+
+  records = ["jameskmonger.github.io"]
+}
+
 resource "aws_acm_certificate_validation" "main" {
   provider = aws.main_cert
 
