@@ -5,7 +5,7 @@
 	"main": "serverless.ts",
 	"scripts": {
 		"deploy:live": "serverless deploy -s live",
-		"dev": "serverless offline --httpPort 8081"
+		"dev": "serverless offline start --httpPort 8081 --printOutput"
 	},
 	"engines": {
 		"node": ">=14.15.0"
@@ -30,6 +30,7 @@
 		"json-schema-to-ts": "^1.5.0",
 		"serverless": "^3.0.0",
 		"serverless-esbuild": "^1.23.3",
+		"serverless-offline": "^8.4.0",
 		"ts-node": "^10.4.0",
 		"tsconfig-paths": "^3.9.0",
 		"typescript": "^4.1.3"

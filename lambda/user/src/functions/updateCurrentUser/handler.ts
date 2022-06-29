@@ -76,15 +76,13 @@ const getPictureIdError = (picture: number) => {
 	return null;
 };
 
-const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
+const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	typeof schema
 > = async (event) => {
 	const { Authorization } = event.headers;
 	const { nickname, picture } = event.body;
 
 	if (!Authorization) {
-		console.log(event.headers);
-
 		return formatJSONResponse(
 			{
 				message: "No token",
@@ -135,6 +133,7 @@ const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 			database,
 			trimmedNickname
 		);
+		console.log(`setting nickname to ${trimmedNickname}`);
 
 		if (nicknameError) {
 			return formatJSONResponse(
@@ -150,6 +149,8 @@ const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	}
 
 	if (picture) {
+		console.log(`setting nickname to ${picture}`);
+
 		const pictureIdError = getPictureIdError(picture);
 
 		if (pictureIdError) {
@@ -165,6 +166,10 @@ const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 		pictureUpdate = picture;
 	}
 
+	console.log(
+		`about to set nickname ${nicknameUpdate} and picture ${pictureUpdate}`
+	);
+
 	const updatedUser = await database.user.setProfileInfo(
 		user.id,
 		nicknameUpdate,
@@ -173,21 +178,20 @@ const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 
 	outputUser = convertDatabaseUserToUserModel(updatedUser!);
 
-	// update metadata if anything changed
-	if (outputUser !== user) {
-		await authClient.updateAppMetadata(
-			{ id: outputUser.authId },
-			{
-				playerId: outputUser.id,
-				playerNickname: outputUser.nickname,
-				playerPicture: outputUser.profile?.picture || null,
-			}
-		);
-	}
+	console.log(`new nick is ${outputUser.nickname}`);
+
+	await authClient.updateAppMetadata(
+		{ id: outputUser.authId },
+		{
+			playerId: outputUser.id,
+			playerNickname: outputUser.nickname,
+			playerPicture: outputUser.profile?.picture || null,
+		}
+	);
 
 	return formatJSONResponse({
 		user: sanitize(user),
 	});
 };
 
-export const main = middyfy(getCurrentUser);
+export const main = middyfy(updateCurrentUser);

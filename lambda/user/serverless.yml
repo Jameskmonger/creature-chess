@@ -5,6 +5,7 @@ frameworkVersion: "3"
 plugins:
   - serverless-esbuild
   - serverless-offline
+  - ./plugins/offline-invalidate
 
 provider:
   name: aws
@@ -43,6 +44,8 @@ custom:
     target: node14
     platform: node
     concurrency: 10
+  serverless-offline:
+    useChildProcesses: true
 
 package:
   individually: true
