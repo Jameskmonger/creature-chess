@@ -33,16 +33,18 @@ export function ReadyUpButton() {
 	);
 
 	const canReadyUp = inPreparingPhase && notReady;
+	const onReadyUp = React.useCallback(() => {
+		if (!canReadyUp) {
+			return;
+		}
+
+		dispatch(PlayerActions.readyUpPlayerAction());
+	}, []);
 
 	if (!canReadyUp) {
 		// To keep the Sell button in the same place
 		return <div></div>;
 	}
-
-	const onReadyUp = React.useCallback(
-		() => dispatch(PlayerActions.readyUpPlayerAction()),
-		[]
-	);
 
 	return (
 		<button className={styles.readyButton} onClick={onReadyUp}>
