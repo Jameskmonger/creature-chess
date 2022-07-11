@@ -105,6 +105,7 @@ resource "aws_lb_target_group" "main" {
   }
 }
 
+# Redirects non-HTTPS requests to HTTPS
 resource "aws_lb_listener" "https_redirect" {
   load_balancer_arn = aws_lb.main.arn
   port              = "80"
@@ -125,6 +126,7 @@ resource "aws_lb_listener" "https_redirect" {
   }
 }
 
+# Redirects HTTPS requests to our target group
 resource "aws_lb_listener" "server_game" {
   load_balancer_arn = aws_lb.main.arn
   port              = "443"
@@ -158,6 +160,7 @@ resource "aws_ecs_service" "game" {
     assign_public_ip = true
   }
 
+  # Registers the service with the target group
   load_balancer {
     target_group_arn = aws_lb_target_group.main.arn
     container_name   = "nginx"

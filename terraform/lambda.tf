@@ -17,7 +17,7 @@ data "aws_arn" "user-service-api-gateway" {
 # add domain to api gateway
 resource "aws_api_gateway_domain_name" "live" {
   domain_name     = format("user-api.%s", var.url)
-  certificate_arn = aws_acm_certificate_validation.main.certificate_arn
+  certificate_arn = aws_acm_certificate_validation.cert_apigateway.certificate_arn
 }
 
 resource "aws_api_gateway_base_path_mapping" "live" {
