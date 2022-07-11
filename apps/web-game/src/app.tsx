@@ -27,11 +27,19 @@ const App: React.FunctionComponent = () => {
 
 	React.useEffect(() => {
 		const open = async () => {
-			setLoadingMessage("getting access token");
-			const idToken = await getAccessTokenSilently();
+			console.log({ isAuthenticated });
 
-			setLoadingMessage("opening connection");
-			dispatch(openConnection({ idToken }));
+			setLoadingMessage("getting access token");
+			try {
+				const idToken = await getAccessTokenSilently();
+
+				console.log({ idToken });
+
+				setLoadingMessage("opening connection");
+				dispatch(openConnection({ idToken }));
+			} catch (e) {
+				console.log({ error: e });
+			}
 		};
 
 		open();
