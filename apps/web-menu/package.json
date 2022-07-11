@@ -23,7 +23,7 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"@auth0/auth0-react": "^1.8.0",
+		"@auth0/auth0-react": "^1.10.2",
 		"@creature-chess/auth-web": "workspace:*",
 		"@creature-chess/ui": "workspace:*",
 		"@sentry/react": "^6.16.1",
