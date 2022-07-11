@@ -10,9 +10,7 @@ type RegistrationPageProps = {
 	updateUser: (nickname: string, image: number) => Promise<{ error?: string }>;
 };
 
-const RegistrationPage: React.FunctionComponent<RegistrationPageProps> = ({
-	updateUser,
-}) => {
+export function RegistrationPage({ updateUser }: RegistrationPageProps) {
 	const styles = useStyles();
 	const [nickname, setNickname] = React.useState<string>("");
 	const [currentImage, setCurrentImage] = React.useState(1);
@@ -76,6 +74,4 @@ const RegistrationPage: React.FunctionComponent<RegistrationPageProps> = ({
 			</button>
 		</div>
 	);
-};
-
-export { RegistrationPage };
+}

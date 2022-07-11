@@ -5,14 +5,6 @@ const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const { DefinePlugin, EnvironmentPlugin } = require("webpack");
 
-const getCookiebotScript = (id) => {
-	if (!id) {
-		return "";
-	}
-
-	return `<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="${id}" data-blockingmode="auto" type="text/javascript"></script>`;
-};
-
 const getGAScript = (id) => {
 	if (!id) {
 		return "";
@@ -110,7 +102,6 @@ module.exports = {
 			templateParameters: () => ({
 				googleAnalyticsScript: getGAScript(process.env.GA_ID),
 				ghPagesRedirectScript: getGHPagesRedirectScript(process.env.GH_PAGES),
-				cookiebotScript: getCookiebotScript(process.env.COOKIEBOT_ID),
 			}),
 			scriptLoading: "blocking",
 		}),
