@@ -27,14 +27,6 @@ provider "aws" {
   alias  = "us-east-1"
 }
 
-module "github_pages" {
-  source = "./modules/github_pages"
-
-  domain_name            = var.url
-  route53_zone_id        = aws_route53_zone.main.zone_id
-  github_pages_io_domain = var.github_pages_url
-}
-
 module "vpc" {
   source = "./modules/vpc"
 
@@ -44,7 +36,7 @@ module "vpc" {
 module "server_game" {
   source = "./modules/server_game"
 
-  domain_name     = format("game.%s", var.url)
+  domain_name     = var.url
   route53_zone_id = aws_route53_zone.main.zone_id
   vpc_id          = module.vpc.vpc_id
   subnet_ids      = module.vpc.subnet_ids

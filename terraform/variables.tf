@@ -43,13 +43,6 @@ variable "url" {
   default = "creaturechess.com"
 }
 
-variable "github_pages_url" {
-  description = "URL for GitHub pages (used for www)"
-
-  type    = string
-  default = "jameskmonger.github.io"
-}
-
 variable "stage_name" {
   description = "Stage name"
 
