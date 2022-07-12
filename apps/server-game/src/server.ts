@@ -77,6 +77,18 @@ export const startServer = async ({ io }: { io: Server }) => {
 			return;
 		}
 
+		const openLobby = lobbies.find((l) => l.getFreeSlotCount() > 0);
+
+		if (openLobby) {
+			logger.info(
+				`[Matchmaking (${socket.data.nickname})] Joined existing lobby`
+			);
+
+			openLobby.connect(socket);
+
+			return;
+		}
+
 		const lobby = new Lobby({
 			waitTimeMs: LOBBY_WAIT_TIME * 1000,
 			maxPlayers: MAX_PLAYERS_IN_GAME,
