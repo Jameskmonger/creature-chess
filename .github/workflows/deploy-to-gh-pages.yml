@@ -2,8 +2,8 @@ name: Deploy menu to GitHub Pages
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - master
 
 jobs:
   build-deploy:
