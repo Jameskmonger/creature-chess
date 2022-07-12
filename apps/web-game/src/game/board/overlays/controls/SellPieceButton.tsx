@@ -46,10 +46,12 @@ export function SellPieceButton() {
 		if (!selectedPiece) {
 			return;
 		}
+
 		dispatch(
 			PlayerActions.sellPiecePlayerAction({ pieceId: selectedPiece.id })
 		);
-	}, []);
+	}, [dispatch, selectedPiece]);
+
 	if (!selectedPiece) {
 		return null;
 	}
