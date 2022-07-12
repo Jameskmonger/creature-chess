@@ -38,6 +38,7 @@ export const verifyDecodeJwt = async (token: string) => {
 		}) || null) as DecodedToken | null;
 
 		if (dtoken === null) {
+			console.log("jwt.decode failed");
 			return null;
 		}
 
@@ -48,6 +49,7 @@ export const verifyDecodeJwt = async (token: string) => {
 
 		return decoded;
 	} catch (err) {
+		console.log(err);
 		return null;
 	}
 };
