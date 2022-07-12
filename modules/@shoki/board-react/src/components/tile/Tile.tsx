@@ -22,7 +22,7 @@ const useStyles = createUseStyles<
 >({
 	tile: (props) => ({
 		width: `${(100 / props.boardWidth).toFixed(2)}%`,
-		height: `${props.tileWidth}px`,
+		height: `100%`,
 
 		position: "relative",
 		display: "inline-block",

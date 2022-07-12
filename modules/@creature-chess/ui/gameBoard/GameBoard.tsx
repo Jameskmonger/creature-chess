@@ -45,22 +45,24 @@ type GameBoardProps = {
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
 };
 
-const useStyles = createUseStyles({
-	gameBoard: {
-		width: "100%",
-		height: "100%",
-	},
-	chessboard: {
+const useStyles = createUseStyles<
+	string,
+	{ portrait: boolean; halfHeight: boolean }
+>({
+	boardContainer: ({ portrait }) => ({
 		width: "100%",
 		height: "100%",
 		display: "flex",
-		flexDirection: "column",
+		flexDirection: portrait ? "column" : "row",
 		justifyContent: "center",
-	},
-	boardGrid: {
+	}),
+	boardGrid: ({ halfHeight }) => ({
 		position: "relative",
 		marginBottom: "0.5rem",
 		width: "100%",
+
+		// TODO this should be based on GRID_SIZE
+		height: halfHeight ? "41.5%" : "83%",
 
 		"& .tile.dark": {
 			background: "#38b764",
@@ -68,15 +70,32 @@ const useStyles = createUseStyles({
 		"& .tile.light": {
 			background: "#a7f070",
 		},
-	},
+	}),
 	benchGrid: {
 		position: "relative",
 		width: "100%",
+
+		// TODO this should be based on GRID_SIZE
+		height: "17%",
+
 		"& .tile": {
 			background: "#9e9e9e",
 			boxShadow: "inset 0 0 2px #404040",
 		},
 	},
+});
+
+const useChessboardStyles = createUseStyles<
+	string,
+	{ width: string; height: string }
+>({
+	chessboard: ({ width, height }) => ({
+		width,
+		height,
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+	}),
 });
 
 const GameBoard: React.FC<GameBoardProps> = ({
@@ -85,8 +104,16 @@ const GameBoard: React.FC<GameBoardProps> = ({
 	onClick,
 	onDropPiece,
 }) => {
-	const styles = useStyles();
 	const { board, bench } = useGameBoard();
+	const [clientHeight, setClientHeight] = React.useState(0);
+	const [clientWidth, setClientWidth] = React.useState(0);
+	const isPortrait = clientWidth <= clientHeight;
+	const isHalfHeight = board.size.height === 3;
+	const styles = useStyles({ portrait: isPortrait, halfHeight: isHalfHeight });
+	const chessboardStyles = useChessboardStyles({
+		width: isPortrait ? `${clientWidth}px` : `${clientHeight}px`,
+		height: isPortrait ? `${clientWidth}px` : "100%",
+	});
 
 	const createHandleClick =
 		(locationType: "board" | "bench") =>
@@ -124,9 +151,24 @@ const GameBoard: React.FC<GameBoardProps> = ({
 		};
 	};
 
+	const chessboardRef = React.useRef<HTMLDivElement>(null);
+
+	React.useLayoutEffect(() => {
+		if (!chessboardRef.current?.parentElement) {
+			return;
+		}
+
+		const { clientWidth, clientHeight } = chessboardRef.current.parentElement;
+
+		setClientHeight(clientHeight);
+		setClientWidth(clientWidth);
+
+		// TODO handle resize here
+	}, [chessboardRef.current]);
+
 	return (
-		<div className={styles.gameBoard}>
-			<div className={styles.chessboard}>
+		<div className={styles.boardContainer}>
+			<div className={chessboardStyles.chessboard} ref={chessboardRef}>
 				<div className={styles.boardGrid}>
 					<BoardGrid
 						state={board}

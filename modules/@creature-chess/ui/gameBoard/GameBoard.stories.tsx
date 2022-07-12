@@ -50,7 +50,13 @@ const Template: Story<any> = (args) => {
 
 	return (
 		<DndProvider>
-			<div style={{ width: "500px", height: "800px" }}>
+			<div
+				style={{
+					width: args.width,
+					height: args.height,
+					border: "2px solid red",
+				}}
+			>
 				<GameBoardContextProvider value={context}>
 					<GameBoard
 						renderBoardPiece={renderPiece}
@@ -64,5 +70,14 @@ const Template: Story<any> = (args) => {
 	);
 };
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Portrait = Template.bind({});
+Portrait.args = {
+	width: "300px",
+	height: "500px",
+};
+
+export const Landscape = Template.bind({});
+Landscape.args = {
+	width: "500px",
+	height: "300px",
+};
