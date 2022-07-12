@@ -2,6 +2,7 @@ import { createInitialBoardState } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
 import {
+	BENCH_SLOT_COUNT,
 	BUY_XP_AMOUNT,
 	GamePhase,
 	getXpToNextLevel,
@@ -13,7 +14,10 @@ import { shouldBuyXp } from "./shouldBuyXp";
 
 const createInitialPlayerState = (): PlayerState => ({
 	board: createInitialBoardState("board", { width: 7, height: 3 }),
-	bench: createInitialBoardState("board", { width: 7, height: 1 }),
+	bench: createInitialBoardState("bench", {
+		width: BENCH_SLOT_COUNT,
+		height: 1,
+	}),
 	cardShop: {
 		cards: [],
 		locked: false,

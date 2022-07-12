@@ -1,7 +1,11 @@
 import { createBoardSlice } from "@shoki/board";
 
 import { Gamemode, playerEntity } from "@creature-chess/gamemode";
-import { PlayerProfile, PieceModel } from "@creature-chess/models";
+import {
+	PlayerProfile,
+	PieceModel,
+	BENCH_SLOT_COUNT,
+} from "@creature-chess/models";
 
 import { logger } from "../log";
 
@@ -17,7 +21,7 @@ export const createPlayerEntity = (
 			height: 3,
 		}),
 		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, {
-			width: 7,
+			width: BENCH_SLOT_COUNT,
 			height: 1,
 		}),
 	};

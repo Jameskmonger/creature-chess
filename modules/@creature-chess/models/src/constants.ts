@@ -5,6 +5,8 @@ export const GRID_SIZE = {
 	height: 6, // THIS MUST BE AN EVEN NUMBER
 };
 
+export const BENCH_SLOT_COUNT = 9;
+
 export const PHASE_LENGTHS = {
 	[GamePhase.PREPARING]: 30,
 	[GamePhase.READY]: 5,

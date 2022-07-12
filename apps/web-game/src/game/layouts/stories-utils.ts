@@ -4,6 +4,7 @@ import { BoardState, createInitialBoardState } from "@shoki/board";
 
 import { getDefinitionById } from "@creature-chess/gamemode";
 import {
+	BENCH_SLOT_COUNT,
 	CreatureType,
 	DefinitionClass,
 	GamePhase,
@@ -73,7 +74,7 @@ const createBoardState = (halfBoard: boolean): BoardState<PieceModel> => {
 
 const createBenchState = (): BoardState<PieceModel> => {
 	const state = createInitialBoardState<PieceModel>("local-bench", {
-		width: 7,
+		width: BENCH_SLOT_COUNT,
 		height: 1,
 	});
 

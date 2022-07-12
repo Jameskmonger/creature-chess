@@ -4,7 +4,7 @@ import createSagaMiddleware from "redux-saga";
 
 import { createBoardSlice } from "@shoki/board";
 
-import { PieceModel } from "@creature-chess/models";
+import { BENCH_SLOT_COUNT, PieceModel } from "@creature-chess/models";
 
 import { createReducers } from "./reducers";
 import { rootSaga } from "./saga";
@@ -22,7 +22,7 @@ export const createAppStore = () => {
 		height: 3,
 	});
 	const benchSlice = createBoardSlice<PieceModel>("local-bench", {
-		width: 7,
+		width: BENCH_SLOT_COUNT,
 		height: 1,
 	});
 
