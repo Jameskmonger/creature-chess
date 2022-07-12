@@ -25,6 +25,11 @@ functions:
       - http:
           path: user/current/
           method: get
+          cors:
+            origin: "https://creaturechess.com"
+            headers:
+              - Content-Type
+              - Authorization
   UpdateCurrentUser:
     handler: handler.updateCurrentUser
 
@@ -32,6 +37,11 @@ functions:
       - http:
           path: user/current/
           method: patch
+          cors:
+            origin: "https://creaturechess.com"
+            headers:
+              - Content-Type
+              - Authorization
 
 custom:
   esbuild:

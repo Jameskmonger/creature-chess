@@ -31,6 +31,11 @@ const authClient = new ManagementClient<UserAppMetadata>({
 const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	typeof schema
 > = async (event) => {
+	const headers = {
+		"Access-Control-Allow-Origin": "https://creaturechess.com",
+		"Access-Control-Allow-Credentials": true,
+	};
+
 	const { Authorization } = event.headers;
 
 	if (!Authorization) {
@@ -40,15 +45,19 @@ const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 			{
 				message: "No token",
 			},
+			headers,
 			401
 		);
 	}
 
 	const user = await authenticate(authClient, database, Authorization);
 
-	return formatJSONResponse({
-		user: sanitize(user),
-	});
+	return formatJSONResponse(
+		{
+			user: sanitize(user),
+		},
+		headers
+	);
 };
 
 export const main = middyfy(getCurrentUser);

@@ -82,11 +82,17 @@ const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	const { Authorization } = event.headers;
 	const { nickname, picture } = event.body;
 
+	const headers = {
+		"Access-Control-Allow-Origin": "https://creaturechess.com",
+		"Access-Control-Allow-Credentials": true,
+	};
+
 	if (!Authorization) {
 		return formatJSONResponse(
 			{
 				message: "No token",
 			},
+			headers,
 			401
 		);
 	}
@@ -96,6 +102,7 @@ const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 			{
 				message: "No body",
 			},
+			headers,
 			400
 		);
 	}
@@ -107,6 +114,7 @@ const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 			{
 				message: "Unauthorized",
 			},
+			headers,
 			401
 		);
 	}
@@ -117,6 +125,7 @@ const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 			{
 				message: "Forbidden",
 			},
+			headers,
 			403
 		);
 	}
@@ -141,6 +150,7 @@ const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 					type: "invalid_nickname",
 					error: nicknameError,
 				},
+				headers,
 				400
 			);
 		}
@@ -159,6 +169,7 @@ const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 					type: "invalid_picture_id",
 					error: pictureIdError,
 				},
+				headers,
 				400
 			);
 		}
@@ -189,9 +200,12 @@ const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 		}
 	);
 
-	return formatJSONResponse({
-		user: sanitize(user),
-	});
+	return formatJSONResponse(
+		{
+			user: sanitize(user),
+		},
+		headers
+	);
 };
 
 export const main = middyfy(updateCurrentUser);
