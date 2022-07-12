@@ -26,7 +26,7 @@ const ReconnectOverlay: React.FunctionComponent = () => {
 				{connectionStatus === ConnectionStatus.DISCONNECTED && (
 					<>
 						<p>You've been disconnected - but you can get back in!</p>
-						<p>Please refresh the page and press 'Find Game' to rejoin</p>
+						<p>Please refresh the page to rejoin</p>
 					</>
 				)}
 			</Group>

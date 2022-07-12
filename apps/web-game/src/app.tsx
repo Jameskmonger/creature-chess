@@ -3,6 +3,7 @@ import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import ReactModal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
+import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
 import {
 	LobbyPageContextProvider,
@@ -17,7 +18,9 @@ import { AppState } from "./store";
 
 ReactModal.setAppElement("#approot");
 
-const App: React.FunctionComponent = () => {
+export const App = withErrorBoundary(() => {
+	const [error, resetError] = useErrorBoundary();
+
 	const dispatch = useDispatch();
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 	const lobbyInfo = useSelector((state: AppState) => state.lobby);
@@ -43,6 +46,18 @@ const App: React.FunctionComponent = () => {
 
 	useGlobalStyles();
 
+	if (error) {
+		return (
+			<div>
+				<p>{(error as Error).message}</p>
+
+				<p>{(error as Error).stack}</p>
+
+				<button onClick={() => window.location.reload()}>Try again</button>
+			</div>
+		);
+	}
+
 	if (isInGame) {
 		return <GamePage />;
 	}
@@ -61,6 +76,4 @@ const App: React.FunctionComponent = () => {
 			<Loading />
 		</>
 	);
-};
-
-export { App };
+});

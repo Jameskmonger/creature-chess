@@ -2220,6 +2220,7 @@ __metadata:
     react-media: ^1.10.0
     react-modal: ^3.14.4
     react-redux: ^7.2.6
+    react-use-error-boundary: ^3.0.0
     redux-devtools-extension: ^2.13.9
     reselect: ^4.1.5
     socket.io-client: ^4.4.0
@@ -19334,6 +19335,15 @@ __metadata:
   peerDependencies:
     react: ">= 0.14.0"
   checksum: c082b48f30f8ba8d0c55ed1d761910630860077c7ff5793c4c912adcb5760df06436ed0ad62be0de28113aac9ad2af55eccd995f8eee98df53382e4ced2072fb
+  languageName: node
+  linkType: hard
+
+"react-use-error-boundary@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "react-use-error-boundary@npm:3.0.0"
+  peerDependencies:
+    react: ">= 16.8"
+  checksum: b34f0df6293ae16405d0fb0af7cba1769b83e84e1a34ed19e2cca4858f10c7535d130d6a6f831a95a51efabfd7d99ae8e83af7e06c867488d65a5aea5ca3cda2
   languageName: node
   linkType: hard
 
