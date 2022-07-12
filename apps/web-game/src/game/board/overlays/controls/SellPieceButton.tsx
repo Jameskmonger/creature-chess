@@ -42,18 +42,17 @@ export function SellPieceButton() {
 		);
 	});
 
+	const onSell = React.useCallback(() => {
+		if (!selectedPiece) {
+			return;
+		}
+		dispatch(
+			PlayerActions.sellPiecePlayerAction({ pieceId: selectedPiece.id })
+		);
+	}, []);
 	if (!selectedPiece) {
 		return null;
 	}
-
-	const onSell = React.useCallback(
-		() =>
-			dispatch(
-				PlayerActions.sellPiecePlayerAction({ pieceId: selectedPiece.id })
-			),
-		[]
-	);
-
 	return (
 		<button className={styles.sellPieceButton} onClick={onSell}>
 			Sell (${selectedPiece.definition.cost})
