@@ -116,6 +116,10 @@ export const setupBotDatabase = async (
 					composure: randomPersonalityValue(),
 					vision: randomPersonalityValue(),
 				},
+				ranking: {
+					elo: 1600,
+					gamesPlayed: 0,
+				},
 			};
 
 			await client.query<DatabaseBot>(

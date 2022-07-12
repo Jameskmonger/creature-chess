@@ -21,7 +21,7 @@ export const getBots = async (database: DatabaseConnection, count: number) => {
 			},
 		};
 
-		await database.bot.addGamePlayed(id);
+		await database.player.recordGameStart("bot", id);
 
 		output.push({ player, personality });
 	}

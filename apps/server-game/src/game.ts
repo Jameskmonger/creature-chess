@@ -34,7 +34,7 @@ type Participants = {
 };
 
 type GameOptions = {
-	onFinish: (winner: PlayerEntity) => void;
+	onFinish: (finishOrderIds: string[]) => void;
 };
 
 export class Game {

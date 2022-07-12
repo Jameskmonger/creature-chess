@@ -1,0 +1,27 @@
+{
+	"name": "@shoki/elo",
+	"version": "0.0.1",
+	"description": "Shoki ELO engine",
+	"keywords": [
+		"shoki",
+		"game",
+		"engine"
+	],
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	}
+}

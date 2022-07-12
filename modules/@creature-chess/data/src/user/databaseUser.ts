@@ -12,6 +12,10 @@ export type DatabaseUser = {
 			value: string;
 			uppercase: string;
 		};
-		profile: PlayerProfile | null;
+		profile?: PlayerProfile | null;
+		ranking?: {
+			elo: number;
+			gamesPlayed: number;
+		};
 	};
 };

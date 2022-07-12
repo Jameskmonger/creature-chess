@@ -1,13 +1,15 @@
 import { Client as FaunaDBClient } from "faunadb";
 import { Logger } from "winston";
 
-import { botDatabase, BotDatabaseFunctions } from "./bot";
+import { botDatabase } from "./bot";
+import { playerDatabase } from "./player";
 import { setup } from "./setup";
-import { userDatabase, UserDatabaseFunctions } from "./user";
+import { userDatabase } from "./user";
 
 export type DatabaseConnection = {
-	user: UserDatabaseFunctions;
-	bot: BotDatabaseFunctions;
+	user: ReturnType<typeof userDatabase>;
+	bot: ReturnType<typeof botDatabase>;
+	player: ReturnType<typeof playerDatabase>;
 };
 
 export const createDatabaseConnection = (
@@ -26,5 +28,6 @@ export const createDatabaseConnection = (
 	return {
 		user: userDatabase(logger, client),
 		bot: botDatabase(logger, client),
+		player: playerDatabase(logger, client),
 	};
 };

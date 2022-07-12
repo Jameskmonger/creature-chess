@@ -213,6 +213,11 @@ export type BotData = {
 		wins: number;
 	};
 	personality: BotPersonality;
+
+	ranking: {
+		elo: number;
+		gamesPlayed: number;
+	};
 };
 
 export type DatabaseBot = {

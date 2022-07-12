@@ -7,11 +7,42 @@ import { createManagementClient } from "./external/auth0";
 import { getBots } from "./external/bots";
 import { createDatabaseConnection } from "./external/database";
 import { createDiscordApi } from "./external/discord";
-import { Game, PlayerGameParticipant } from "./game";
+import { BotGameParticipant, Game, PlayerGameParticipant } from "./game";
 import { onHandshakeSuccess } from "./handshake";
 import { Lobby } from "./lobby";
 import { logger } from "./log";
 import { AuthenticatedSocket } from "./player/socket";
+
+const calculateElo = (aRating: number, bRating: number, aWin: boolean) => ({
+	a: 0,
+	b: 0,
+});
+
+const getById = (
+	players: PlayerGameParticipant[],
+	bots: BotGameParticipant[],
+	id: string
+) => {
+	const player = players.find((p) => p.player.id === id);
+
+	if (player) {
+		return {
+			type: "user" as const,
+			id,
+		};
+	}
+
+	const bot = bots.find((p) => p.player.id === id);
+
+	if (bot) {
+		return {
+			type: "bot" as const,
+			id,
+		};
+	}
+
+	return null;
+};
 
 const startGame = async (
 	database: DatabaseConnection,
@@ -25,14 +56,72 @@ const startGame = async (
 	for (const {
 		player: { id },
 	} of players) {
-		await database.user.addGamePlayed(id);
+		await database.player.recordGameStart("user", id);
 	}
 
 	const game = new Game(
 		{ players, bots },
 		{
-			onFinish: (winner) => {
-				logger.info(`Game won by ${winner.getVariable((t) => t.name)}`);
+			onFinish: async (finishOrderIds) => {
+				const totalEloChanges = finishOrderIds.map((id) => ({
+					id,
+					type: "" as "bot" | "user",
+					change: 0,
+				}));
+
+				for (
+					let thisIndex = 0;
+					thisIndex < finishOrderIds.length;
+					thisIndex++
+				) {
+					for (
+						let otherIndex = 0;
+						otherIndex < finishOrderIds.length;
+						otherIndex++
+					) {
+						if (thisIndex === otherIndex) {
+							continue;
+						}
+
+						const aId = finishOrderIds[thisIndex];
+						const bId = finishOrderIds[otherIndex];
+
+						const a = getById(players, bots, aId);
+						const b = getById(players, bots, bId);
+
+						if (!a || !b) {
+							logger.error(`Could not record matchup for ${aId} and ${bId}`);
+							continue;
+						}
+
+						const aElo = await database.player.getElo(a.type, a.id);
+						const bElo = await database.player.getElo(b.type, b.id);
+
+						const eloChanges = calculateElo(
+							aElo || 1600,
+							bElo || 1600,
+							thisIndex < otherIndex
+						);
+
+						totalEloChanges[thisIndex].type += a.type;
+						totalEloChanges[thisIndex].change += eloChanges.a;
+						totalEloChanges[otherIndex].type += b.type;
+						totalEloChanges[otherIndex].change += eloChanges.b;
+					}
+				}
+
+				for (let i = 0; i < totalEloChanges.length; i++) {
+					const { type, id, change } = totalEloChanges[i];
+
+					await database.player.recordGameFinish(type, id, {
+						eloChange: change,
+						win: i === 0,
+					});
+				}
+
+				console.log({
+					totalEloChanges,
+				});
 
 				onFinish();
 			},

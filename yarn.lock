@@ -3570,6 +3570,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@shoki/elo@workspace:modules/@shoki/elo":
+  version: 0.0.0-use.local
+  resolution: "@shoki/elo@workspace:modules/@shoki/elo"
+  languageName: unknown
+  linkType: soft
+
 "@shoki/engine@workspace:*, @shoki/engine@workspace:modules/@shoki/engine":
   version: 0.0.0-use.local
   resolution: "@shoki/engine@workspace:modules/@shoki/engine"
