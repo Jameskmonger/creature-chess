@@ -48,8 +48,8 @@ export const startServer = async ({ io }: { io: Server }) => {
 	logger.info("Management client created");
 	const database = createDatabaseConnection();
 	logger.info("Database connection created");
-	const discordApi = await createDiscordApi();
-	logger.info("Discord client created");
+	// const discordApi = await createDiscordApi();
+	// logger.info("Discord client created");
 
 	let lobbies: Lobby[] = [];
 	let games: Game[] = [];
@@ -106,7 +106,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 		lobbies.push(lobby);
 
 		logger.info(`[Matchmaking (${socket.data.nickname})] New lobby created`);
-		discordApi.startLobby();
+		// discordApi.startLobby();
 		lobby.connect(socket);
 	};
 
