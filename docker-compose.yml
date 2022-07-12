@@ -9,6 +9,9 @@ services:
       - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
     ports:
       - 8080:8080
+    depends_on:
+      - web-menu
+      - server-game
   web-menu:
     build:
       context: .
