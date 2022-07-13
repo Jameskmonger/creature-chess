@@ -3,7 +3,7 @@ import { takeLatest, put, fork } from "@redux-saga/core/effects";
 import {
 	BattleCommands,
 	BattleEvents,
-	battleSagaFactory,
+	battleSaga,
 } from "@creature-chess/battle";
 import { GameEvents } from "@creature-chess/gamemode";
 import { defaultGameOptions, GamePhase } from "@creature-chess/models";
@@ -16,7 +16,8 @@ export const clientBattleSaga = function* () {
 	const { board } = yield* getPlayerSlices();
 
 	yield fork(
-		battleSagaFactory<AppState>((state) => state.game.match?.board!) as any,
+		battleSaga as any,
+		(state: AppState) => state.game.match?.board!,
 		defaultGameOptions,
 		board
 	);

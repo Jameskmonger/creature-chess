@@ -6,9 +6,9 @@ import { PieceModel, GameOptions } from "@creature-chess/models";
 
 import { StartBattleCommand, startBattleCommand } from "./commands";
 import { battleFinishEvent, battleTurnEvent } from "./events";
+import { simulateTurn } from "./simulator";
 import { PieceCombatState } from "./state/state";
 import { pieceInfoStore } from "./state/store";
-import { simulateTurn } from "./turnSimulator";
 import { duration } from "./utils/duration";
 import { isATeamDefeated } from "./utils/isATeamDefeated";
 
@@ -62,16 +62,17 @@ const runBattle = function* (
 	}
 };
 
-export const battleSagaFactory = <TState>(
-	boardSelector: (state: TState) => BoardState<PieceModel>
-) =>
-	function* (gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
-		yield takeLatest<StartBattleCommand>(
-			startBattleCommand,
-			function* ({ payload: { turn } }) {
-				const board: BoardState<PieceModel> = yield select(boardSelector);
+export const battleSaga = function* (
+	boardSelector: <TState>(state: TState) => BoardState<PieceModel>,
+	gameOptions: GameOptions,
+	boardSlice: BoardSlice<PieceModel>
+) {
+	yield takeLatest<StartBattleCommand>(
+		startBattleCommand,
+		function* ({ payload: { turn } }) {
+			const board: BoardState<PieceModel> = yield select(boardSelector);
 
-				yield call(runBattle, board, boardSlice, turn || 0, gameOptions);
-			}
-		);
-	};
+			yield call(runBattle, board, boardSlice, turn || 0, gameOptions);
+		}
+	);
+};

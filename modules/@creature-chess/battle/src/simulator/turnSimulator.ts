@@ -8,11 +8,11 @@ import {
 	getDistance,
 } from "@creature-chess/models";
 
-import { getNextPiecePosition } from "./pathfinding";
-import { PieceCombatState, PieceInfoStore } from "./state";
-import { findTargetId } from "./utils/findTargetId";
-import { inAttackRange } from "./utils/inAttackRange";
-import { getTypeAttackBonus } from "./utils/typeRelations";
+import { getNextPiecePosition } from "../pathfinding";
+import { PieceCombatState, PieceInfoStore } from "../state";
+import { findTargetId } from "../utils/findTargetId";
+import { inAttackRange } from "../utils/inAttackRange";
+import { getTypeAttackBonus } from "../utils/typeRelations";
 
 const DYING_DURATION = 10;
 const ATTACK_TURN_DURATION = 2;

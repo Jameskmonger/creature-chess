@@ -24,7 +24,7 @@ import {
 } from "@shoki/board";
 
 import {
-	battleSagaFactory,
+	battleSaga,
 	BattleEvents,
 	BattleCommands,
 } from "@creature-chess/battle";
@@ -188,7 +188,8 @@ export class Match {
 		const rootSaga = function* () {
 			yield all([
 				call(
-					battleSagaFactory<MatchState>((state) => state.board),
+					battleSaga as any,
+					(state: MatchState) => state.board,
 					gameOptions,
 					_this.board
 				),

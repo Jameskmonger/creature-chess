@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 
-import { BattleEvents, battleSagaFactory } from "@creature-chess/battle";
+import { BattleEvents, battleSaga } from "@creature-chess/battle";
 import { defaultGameOptions } from "@creature-chess/models";
 import { GameBoard } from "@creature-chess/ui";
 
@@ -34,7 +34,8 @@ const makeStore = () => {
 
 	sagaMiddleware.run(function* () {
 		yield fork(
-			battleSagaFactory((state: BattleTesterState) => state.board) as any,
+			battleSaga as any,
+			(state: BattleTesterState) => state.board,
 			defaultGameOptions,
 			board
 		);
