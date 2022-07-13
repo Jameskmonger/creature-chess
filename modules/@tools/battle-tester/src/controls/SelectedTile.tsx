@@ -3,6 +3,7 @@ import React from "react";
 import { BoardSelectors } from "@shoki/board";
 
 import { useAppSelector } from "../state";
+import { PiecePicker } from "./PiecePicker";
 
 export function SelectedTileInfo() {
 	const tile = useAppSelector((state) => state.controls.selectedTile);
@@ -25,6 +26,8 @@ export function SelectedTileInfo() {
 			{tile && <div>{`${tile.x}, ${tile.y}`}</div>}
 
 			{selectedPiece && <div>{selectedPiece.definition.name}</div>}
+
+			<PiecePicker />
 		</>
 	);
 }
