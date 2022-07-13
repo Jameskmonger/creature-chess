@@ -16,7 +16,6 @@ import { inAttackRange } from "../utils/inAttackRange";
 import { getTypeAttackBonus } from "../utils/typeRelations";
 import { simulatePiece } from "./piece/simulate";
 
-const DYING_DURATION = 10;
 const ATTACK_TURN_DURATION = 2;
 
 type Stores = { combatStore: PieceInfoStore<PieceCombatState> };
@@ -57,29 +56,6 @@ const takePieceTurn = (
 	}
 
 	const combatState = combatStore.getPiece(pieceId);
-
-	// todo move to a 'dying' state
-	if (combatState.board.removeFromBoardAtTurn === currentTurn) {
-		return boardSlice.boardReducer(
-			board,
-			boardSlice.commands.removeBoardPiecesCommand([pieceId])
-		);
-	}
-
-	if (piece.currentHealth === 0) {
-		if (combatState.board.removeFromBoardAtTurn) {
-			return board;
-		}
-
-		const removeFromBoardAtTurn = currentTurn + DYING_DURATION;
-
-		combatStore.updatePiecePartial(pieceId, {
-			board: { ...combatState.board, removeFromBoardAtTurn },
-		});
-
-		return board;
-	}
-	// todo end dying state
 
 	// create a new piece object, reset combat properties
 	const attacker: PieceModel = {

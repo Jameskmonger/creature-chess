@@ -7,8 +7,9 @@ import { PieceAction } from "../actions";
 
 export type AttackState = { type: "attacking"; payload: { targetId: string } };
 export type WanderState = { type: "wandering" };
+export type DyingState = { type: "dying"; payload: { dieAtTurn: number } };
 
-export type PieceState = WanderState | AttackState;
+export type PieceState = WanderState | DyingState | AttackState;
 
 export type StateResult = [PieceState] | [PieceState, PieceAction[]];
 

@@ -5,14 +5,42 @@ import { PieceModel } from "@creature-chess/models";
 import { Stores } from "../types";
 import { doActions } from "./doActions";
 import { doAttack } from "./state/attack";
-import { StateFunction } from "./state/types";
+import { doDying } from "./state/dying";
+import { PieceState, StateFunction } from "./state/types";
 import { doWander } from "./state/wander";
+
+const DYING_DURATION = 10;
 
 const stateFunctions = {
 	wandering: doWander,
 	attacking: doAttack,
+	dying: doDying,
 };
 
+/**
+ * Get the current state of the piece.
+ *
+ * Overrides the state of the piece if it's dying.
+ */
+function getPieceState(
+	currentTurn: number,
+	piece: PieceModel,
+	{ combatStore }: Stores
+): PieceState {
+	const combatState = combatStore.getPiece(piece.id);
+
+	if (piece.currentHealth === 0 && combatState.state.type !== "dying") {
+		const removeFromBoardAtTurn = currentTurn + DYING_DURATION;
+
+		return { type: "dying", payload: { dieAtTurn: removeFromBoardAtTurn } };
+	}
+
+	return combatState.state;
+}
+
+/**
+ * Simulate the turn of a single piece on the board, and return the new board state.
+ */
 export function simulatePiece(
 	currentTurn: number,
 	board: BoardState<PieceModel>,
@@ -21,7 +49,7 @@ export function simulatePiece(
 	piecePosition: PiecePosition,
 	{ combatStore }: Stores
 ) {
-	const { state } = combatStore.getPiece(piece.id);
+	const state = getPieceState(currentTurn, piece, { combatStore });
 
 	const fn = stateFunctions[state.type] as StateFunction;
 
