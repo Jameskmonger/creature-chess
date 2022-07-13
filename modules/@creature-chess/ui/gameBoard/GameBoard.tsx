@@ -105,14 +105,13 @@ const GameBoard: React.FC<GameBoardProps> = ({
 	onDropPiece,
 }) => {
 	const { board, bench } = useGameBoard();
-	const [clientHeight, setClientHeight] = React.useState(0);
-	const [clientWidth, setClientWidth] = React.useState(0);
-	const isPortrait = clientWidth <= clientHeight;
+	const [size, setSize] = React.useState([0, 0]);
+	const isPortrait = size[0] <= size[1];
 	const isHalfHeight = board.size.height === 3;
 	const styles = useStyles({ portrait: isPortrait, halfHeight: isHalfHeight });
 	const chessboardStyles = useChessboardStyles({
-		width: isPortrait ? `${clientWidth}px` : `${clientHeight}px`,
-		height: isPortrait ? `${clientWidth}px` : "100%",
+		width: isPortrait ? `${size[0]}px` : `${size[1]}px`,
+		height: isPortrait ? `${size[0]}px` : "100%",
 	});
 
 	const createHandleClick =
@@ -154,17 +153,22 @@ const GameBoard: React.FC<GameBoardProps> = ({
 	const chessboardRef = React.useRef<HTMLDivElement>(null);
 
 	React.useLayoutEffect(() => {
-		if (!chessboardRef.current?.parentElement) {
-			return;
+		function updateSize() {
+			if (!chessboardRef.current?.parentElement) {
+				return;
+			}
+
+			const { clientWidth, clientHeight } = chessboardRef.current.parentElement;
+
+			setSize([clientWidth, clientHeight]);
 		}
 
-		const { clientWidth, clientHeight } = chessboardRef.current.parentElement;
+		window.addEventListener("resize", updateSize);
 
-		setClientHeight(clientHeight);
-		setClientWidth(clientWidth);
+		updateSize();
 
-		// TODO handle resize here
-	}, [chessboardRef.current]);
+		return () => window.removeEventListener("resize", updateSize);
+	}, [chessboardRef.current, setSize]);
 
 	return (
 		<div className={styles.boardContainer}>
