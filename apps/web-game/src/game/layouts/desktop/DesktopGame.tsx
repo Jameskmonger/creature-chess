@@ -3,6 +3,7 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 
 import { Footer, Group, Layout } from "@creature-chess/ui";
+import { LandscapeGameScreen } from "@creature-chess/ui/gameScreen";
 
 import { BoardContainer } from "../../board";
 import {
@@ -22,8 +23,8 @@ const useStyles = createUseStyles({
 		padding: "0.5em",
 		background: "#566c86",
 	},
-	rightLayout: {
-		flex: "1",
+	rightColumn: {
+		height: "100%",
 	},
 });
 
@@ -31,33 +32,35 @@ const DesktopGame: React.FunctionComponent = () => {
 	const styles = useStyles();
 
 	return (
-		<Layout direction="row">
-			<Group>
-				<RoundIndicator />
+		<LandscapeGameScreen
+			leftColumnContent={
+				<Group>
+					<RoundIndicator />
 
-				<PhaseInfo />
+					<PhaseInfo />
 
-				<NowPlaying />
+					<NowPlaying />
 
-				<PlayerList />
-			</Group>
+					<PlayerList />
+				</Group>
+			}
+			middleColumnContent={<BoardContainer />}
+			rightColumnContent={
+				<Layout direction="column" className={styles.rightColumn}>
+					<QuitGameButton />
 
-			<BoardContainer />
+					<CardShop />
 
-			<Layout direction="column" className={styles.rightLayout}>
-				<QuitGameButton />
+					<Profile />
 
-				<CardShop />
+					<div className={styles.helpContainer}>
+						<Help hideFooter />
+					</div>
 
-				<Profile />
-
-				<div className={styles.helpContainer}>
-					<Help hideFooter />
-				</div>
-
-				<Footer />
-			</Layout>
-		</Layout>
+					<Footer />
+				</Layout>
+			}
+		/>
 	);
 };
 

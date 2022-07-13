@@ -34,9 +34,11 @@ const Template: Story<any> = (args) => {
 	);
 
 	return (
-		<Provider store={store}>
-			<DesktopGame />
-		</Provider>
+		<div style={{ width: "90%", height: "90%", border: "2px solid red" }}>
+			<Provider store={store}>
+				<DesktopGame />
+			</Provider>
+		</div>
 	);
 };
 

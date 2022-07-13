@@ -15,14 +15,18 @@ const useStyles = createUseStyles({
 		width: "100%",
 		height: "100%",
 		boxSizing: "border-box",
+		padding: "0",
 	},
 	top: {
-		marginBottom: "0.5rem",
+		marginBottom: "1rem",
+		flex: "initial",
 	},
 	middle: {
+		marginBottom: "1rem",
+		padding: "0 0.5rem",
+	},
+	bottom: {
 		flex: "initial",
-		height: "60%",
-		marginBottom: "0.5rem",
 	},
 });
 
@@ -41,7 +45,9 @@ export function PortraitGameScreen({
 			<Group spacer={false} className={styles.middle}>
 				{middleRowContent}
 			</Group>
-			<Group spacer={false}>{bottomRowContent}</Group>
+			<Group spacer={false} className={styles.bottom}>
+				{bottomRowContent}
+			</Group>
 		</Layout>
 	);
 }

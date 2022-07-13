@@ -17,12 +17,17 @@ const useStyles = createUseStyles({
 		boxSizing: "border-box",
 	},
 	left: {
+		height: "100%",
 		marginRight: "0.5rem",
 	},
 	middle: {
 		flex: "initial",
+		height: "100%",
 		width: "50%",
 		marginRight: "0.5rem",
+	},
+	right: {
+		height: "100%",
 	},
 });
 
@@ -41,7 +46,9 @@ export function LandscapeGameScreen({
 			<Group spacer={false} className={styles.middle}>
 				{middleColumnContent}
 			</Group>
-			<Group spacer={false}>{rightColumnContent}</Group>
+			<Group spacer={false} className={styles.right}>
+				{rightColumnContent}
+			</Group>
 		</Layout>
 	);
 }

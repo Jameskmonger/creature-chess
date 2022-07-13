@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
 import { getPlayerMoney } from "@creature-chess/gamemode";
+import { PortraitGameScreen } from "@creature-chess/ui/gameScreen";
 
 import { AppState } from "../../../store";
 import { BoardContainer } from "../../board";
@@ -78,28 +78,13 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 	);
 };
 
-const useStyles = createUseStyles({
-	portraitGame: {
-		display: "flex",
-		overflowY: "hidden",
-		flexDirection: "column",
-		width: "100%",
-		height: "100%",
-		padding: "0",
-	},
-});
-
-const MobileGame: React.FunctionComponent = () => {
-	const styles = useStyles();
-
+const MobileGame = () => {
 	return (
-		<div className={styles.portraitGame}>
-			<TopBar />
-
-			<MobileGameContentPane />
-
-			<NavBar />
-		</div>
+		<PortraitGameScreen
+			topRowContent={<TopBar />}
+			middleRowContent={<MobileGameContentPane />}
+			bottomRowContent={<NavBar />}
+		/>
 	);
 };
 
