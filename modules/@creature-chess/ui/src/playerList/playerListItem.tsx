@@ -47,16 +47,30 @@ const useStyles = createUseStyles({
 		flex: 1,
 		paddingLeft: "0.5em",
 		borderLeft: `5px solid ${getDetailReadyColor(props)}`,
+		display: "flex",
+		flexDirection: "column",
 	}),
+	grow: {
+		flex: 1,
+	},
+	battleContainer: {
+		width: "100%",
+	},
 	badges: {
 		"&>:not(:last-child)": {
 			marginRight: "0.25em",
 		},
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		padding: "0 1em",
+		boxSizing: "border-box",
+		alignItems: "center",
 	},
 });
 
 const PlayerListItem: React.FunctionComponent<Props> = (props) => {
-	const classes = useStyles(props);
+	const styles = useStyles(props);
 
 	const {
 		index,
@@ -81,14 +95,10 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 	};
 
 	return (
-		<div
-			className={classes.container}
-			onClick={toggleExpanded}
-			ref={ref as any}
-		>
+		<div className={styles.container} onClick={toggleExpanded} ref={ref as any}>
 			<Layout direction="row" noSpacer>
 				<PlayerAvatar player={player} />
-				<div className={classes.details}>
+				<div className={styles.details}>
 					<Layout direction="row" noSpacer>
 						<Half>
 							<PlayerProfile
@@ -101,8 +111,12 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 							<PlayerHealthbar health={player.health} />
 						</Half>
 					</Layout>
-					<Layout direction="row">
-						<Half className={classes.badges}>
+					<Layout direction="row" className={styles.grow}>
+						<Half className={styles.badges}>
+							<StreakIndicator
+								type={player.streakType}
+								amount={player.streakAmount}
+							/>
 							<Label type="highlight">${player.money}</Label>
 							<Label>Lv {player.level}</Label>
 						</Half>
@@ -112,14 +126,15 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 									{currentlySpectating ? "Stop spectating" : "Spectate"}
 								</Button>
 							) : (
-								<Layout direction="row" noSpacer>
+								<Layout
+									direction="row"
+									noSpacer
+									justifyContent="center"
+									className={styles.battleContainer}
+								>
 									<BattleInfo
 										battle={player.battle}
 										opponentName={opponentName}
-									/>
-									<StreakIndicator
-										type={player.streakType}
-										amount={player.streakAmount}
 									/>
 								</Layout>
 							)}

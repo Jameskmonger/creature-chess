@@ -40,11 +40,9 @@ const getResultColor = (props: Props) => {
 
 const useStyles = createUseStyles({
 	battleInfo: {
-		width: "fit-content",
-		padding: "0.4em 1.2em",
-		margin: "0 auto",
+		padding: "0.25em 0.5em",
 		fontFamily: "Arial, sans-serif",
-		fontSize: "0.75em",
+		fontSize: "0.625em",
 		color: "#c3c3c3",
 		textAlign: "center",
 		background: "#333",
@@ -70,7 +68,7 @@ const BattleInfo: React.FunctionComponent<Props> = (props) => {
 			<span className={classnames(classes.highlight, classes.result)}>
 				{text}
 			</span>
-			&nbsp;vs&nbsp;
+			<span>&nbsp;vs&nbsp;</span>
 			<span className={classes.highlight}>{props.opponentName || ""}</span>
 		</div>
 	);
