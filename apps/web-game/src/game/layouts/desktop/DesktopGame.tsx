@@ -34,7 +34,7 @@ const DesktopGame: React.FunctionComponent = () => {
 	return (
 		<LandscapeGameScreen
 			leftColumnContent={
-				<Group>
+				<>
 					<RoundIndicator />
 
 					<PhaseInfo />
@@ -42,7 +42,7 @@ const DesktopGame: React.FunctionComponent = () => {
 					<NowPlaying />
 
 					<PlayerList />
-				</Group>
+				</>
 			}
 			middleColumnContent={<BoardContainer />}
 			rightColumnContent={

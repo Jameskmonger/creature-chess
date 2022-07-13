@@ -22,6 +22,7 @@ import {
 const useStyles = createUseStyles({
 	boardContainer: {
 		flex: 2,
+		position: "relative",
 	},
 });
 
