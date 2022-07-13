@@ -115,48 +115,6 @@ const takePieceTurn = (
 	// const target = BoardSelectors.getPiece(board, attackerTargetId);
 	// const targetCombat = combatStore.getPiece(attackerTargetId);
 
-	// // if we can't attack yet, wait for cooldown
-	// if (!target || attackerBoardState.canAttackAtTurn > currentTurn) {
-	// 	// todo check if attacker has been changed
-	// 	return boardSlice.boardReducer(
-	// 		board,
-	// 		boardSlice.commands.updateBoardPiecesCommand([attacker])
-	// 	);
-	// }
-
-	// // if the enemy can't be attacked yet, wait
-	// // todo consider breaking and choosing different target..
-	// if (targetCombat.board.canBeAttackedAtTurn > currentTurn) {
-	// 	return boardSlice.boardReducer(
-	// 		board,
-	// 		boardSlice.commands.updateBoardPiecesCommand([attacker])
-	// 	);
-	// }
-
-	// const targetPosition = BoardSelectors.getPiecePosition(
-	// 	board,
-	// 	attackerTargetId
-	// );
-	// const targetAlive = target.currentHealth > 0;
-
-	// if (!targetAlive || !targetPosition) {
-	// 	// target is dead, so clear target
-	// 	// todo should we increment canAttackAtTurn here?
-	// 	combatStore.updatePiecePartial(pieceId, {
-	// 		targetId: null,
-	// 	});
-
-	// 	return boardSlice.boardReducer(
-	// 		board,
-	// 		boardSlice.commands.updateBoardPiecesCommand([attacker])
-	// 	);
-	// }
-
-	// const inRange = inAttackRange(
-	// 	attackerPosition,
-	// 	targetPosition,
-	// 	attackerStats.attackType
-	// );
 	// if (inRange) {
 	// 	// target is in range, so attack
 	// 	const damage = getAttackDamage(attacker, target);
@@ -209,28 +167,6 @@ const takePieceTurn = (
 	// 		boardSlice.commands.updateBoardPiecesCommand([newAttacker, defender])
 	// 	);
 	// } else {
-	// 	// target is out of range, so move towards
-	// 	if (attackerBoardState.canMoveAtTurn > currentTurn) {
-	// 		return boardSlice.boardReducer(
-	// 			board,
-	// 			boardSlice.commands.updateBoardPiecesCommand([attacker])
-	// 		);
-	// 	}
-
-	// 	const nextPosition = getNextPiecePosition(
-	// 		attackerPosition,
-	// 		attackerStats,
-	// 		targetPosition,
-	// 		board
-	// 	);
-
-	// 	if (!nextPosition) {
-	// 		return boardSlice.boardReducer(
-	// 			board,
-	// 			boardSlice.commands.updateBoardPiecesCommand([attacker])
-	// 		);
-	// 	}
-
 	// 	const attackerDirection = getRelativeDirection(
 	// 		attackerPosition,
 	// 		targetPosition
@@ -248,19 +184,6 @@ const takePieceTurn = (
 	// 	attackerBoardState.canBeAttackedAtTurn =
 	// 		currentTurn + MOVE_TURN_DURATION + 2;
 	// 	attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
-
-	// 	return boardSlice.boardReducer(
-	// 		boardSlice.boardReducer(
-	// 			board,
-	// 			boardSlice.commands.moveBoardPieceCommand({
-	// 				pieceId,
-	// 				from: attackerPosition,
-	// 				to: nextPosition,
-	// 			})
-	// 		),
-	// 		boardSlice.commands.updateBoardPiecesCommand([attacker])
-	// 	);
-	// }
 };
 
 const getNewAttackerFacingAway = (

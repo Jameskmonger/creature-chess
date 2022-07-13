@@ -6,9 +6,7 @@ export type PieceCombatState = {
 	 */
 	state: PieceState;
 
-	targetId: string | null;
-
-	canMoveAtTurn: number | null;
+	canMoveAtTurn: number;
 	canBeAttackedAtTurn: number; // used to stop pieces being hit as soon as they land
-	canAttackAtTurn: number | null;
+	canAttackAtTurn: number;
 };

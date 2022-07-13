@@ -10,7 +10,7 @@ export type DeleteAction = { type: "delete" };
 
 export type PieceAction = MoveAction | DeleteAction;
 
-export type ActionFunction = (
+export type ActionHandler = (
 	currentTurn: number,
 	board: BoardState<PieceModel>,
 	boardSlice: BoardSlice<PieceModel>,

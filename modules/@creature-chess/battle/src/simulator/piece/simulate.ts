@@ -6,15 +6,15 @@ import { Stores } from "../types";
 import { doActions } from "./doActions";
 import { doAttack } from "./state/attack";
 import { doDying } from "./state/dying";
-import { PieceState, StateFunction } from "./state/types";
+import { PieceState, StateHandler } from "./state/types";
 import { doWander } from "./state/wander";
 
 const DYING_DURATION = 10;
 
-const stateFunctions = {
-	wandering: doWander,
-	attacking: doAttack,
-	dying: doDying,
+const stateFunctions: { [key: string]: StateHandler } = {
+	wandering: doWander as StateHandler,
+	attacking: doAttack as StateHandler,
+	dying: doDying as StateHandler,
 };
 
 /**
@@ -51,9 +51,7 @@ export function simulatePiece(
 ) {
 	const state = getPieceState(currentTurn, piece, { combatStore });
 
-	const fn = stateFunctions[state.type] as StateFunction;
-
-	const [newState, actions] = fn(
+	const [newState, actions] = stateFunctions[state.type](
 		currentTurn,
 		board,
 		state,

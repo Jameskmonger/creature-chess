@@ -13,7 +13,7 @@ export type PieceState = WanderState | DyingState | AttackState;
 
 export type StateResult = [PieceState] | [PieceState, PieceAction[]];
 
-export type StateFunction = (
+export type StateHandler = (
 	currentTurn: number,
 	board: BoardState<PieceModel>,
 	state: PieceState,

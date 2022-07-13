@@ -5,6 +5,7 @@ import { PieceModel } from "@creature-chess/models";
 import { getTargetAttackPositions } from "../../../utils/getTargetAttackPositions";
 import { Stores } from "../../types";
 import { MoveAction } from "../actions";
+import { findBestState } from "./findBestState";
 import { StateResult, WanderState } from "./types";
 
 export function doWander(
@@ -16,6 +17,18 @@ export function doWander(
 	{ combatStore }: Stores
 ): StateResult {
 	// TODO search for a better state here and return early
+	const bestState = findBestState(
+		currentTurn,
+		board,
+		state,
+		piece,
+		piecePosition,
+		{ combatStore }
+	);
+
+	if (bestState.type !== "wandering") {
+		return [bestState];
+	}
 
 	const combatState = combatStore.getPiece(piece.id);
 
@@ -41,8 +54,6 @@ export function doWander(
 			y: emptyPositions[0].y,
 		},
 	};
-
-	console.log("moving in wander state", { moveAction });
 
 	return [state, [moveAction]];
 }
