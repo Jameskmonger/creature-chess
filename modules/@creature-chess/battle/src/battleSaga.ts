@@ -34,6 +34,7 @@ const runBattle = function* (
 	let turnCount = startingTurn;
 
 	const combatStore = pieceInfoStore<PieceCombatState>({
+		state: { type: "wandering" },
 		board: {
 			canMoveAtTurn: null,
 			canBeAttackedAtTurn: 0,

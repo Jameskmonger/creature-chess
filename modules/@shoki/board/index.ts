@@ -2,6 +2,7 @@ export {
 	BoardState,
 	PiecesState as BoardPiecesState,
 	HasId,
+	PiecePosition,
 } from "./src/types";
 export {
 	BoardSlice,
