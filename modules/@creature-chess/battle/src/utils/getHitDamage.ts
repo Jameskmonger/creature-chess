@@ -14,5 +14,7 @@ export const getHitDamage = (
 		attacker.definition.type,
 		defender.definition.type
 	);
-	return (attackerStats.attack / defenderStats.defense) * attackBonus * 8; // todo tweak this
+	return Math.ceil(
+		(attackerStats.attack / defenderStats.defense) * attackBonus * 8
+	); // todo tweak this
 };

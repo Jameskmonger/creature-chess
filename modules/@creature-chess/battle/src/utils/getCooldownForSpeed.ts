@@ -1,2 +1,3 @@
 // todo tune this
-export const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
+export const getCooldownForSpeed = (speed: number) =>
+	Math.ceil((180 - speed) / 24);
