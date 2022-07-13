@@ -25,7 +25,7 @@ export function PlayerAvatar({
 	return (
 		<img
 			className={classnames(classes.image, "avatar")}
-			src={`images/front/${player.profile.picture}.png`}
+			src={`https://creaturechess.com/game/images/front/${player.profile.picture}.png`}
 		/>
 	);
 }
