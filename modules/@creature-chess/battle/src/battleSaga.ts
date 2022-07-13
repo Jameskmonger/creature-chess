@@ -10,7 +10,7 @@ import { PieceCombatState } from "./state/state";
 import { pieceInfoStore } from "./state/store";
 import { simulateTurn } from "./turnSimulator";
 import { duration } from "./utils/duration";
-import { isATeamDefeated } from "./utils/is-a-team-defeated";
+import { isATeamDefeated } from "./utils/isATeamDefeated";
 
 const runBattle = function* (
 	initialBoard: BoardState<PieceModel>,

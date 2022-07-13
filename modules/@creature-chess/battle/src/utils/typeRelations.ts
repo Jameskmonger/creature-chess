@@ -33,6 +33,9 @@ export const isOvercomeBy = (
 	attacker: CreatureType
 ): boolean => typeInteractions[defender].overcomeBy === attacker;
 
+const STRONG_ATTACK_MODIFIER = 1.7;
+const WEAK_ATTACK_MODIFIER = 0.3;
+
 export const getTypeAttackBonus = (
 	attackType: CreatureType,
 	defenceType: CreatureType
@@ -42,13 +45,13 @@ export const getTypeAttackBonus = (
 	const defenderInteractions = typeInteractions[defenceType];
 
 	if (defenderInteractions.overcomeBy === attackType) {
-		return 1.4;
+		return STRONG_ATTACK_MODIFIER;
 	}
 
 	const attackerInteractions = typeInteractions[defenceType];
 
 	if (attackerInteractions.overcomeBy === defenceType) {
-		return 0.7;
+		return WEAK_ATTACK_MODIFIER;
 	}
 
 	return 1;

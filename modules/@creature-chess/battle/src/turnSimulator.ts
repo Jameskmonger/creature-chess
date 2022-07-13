@@ -1,7 +1,6 @@
 import { BoardSelectors, BoardSlice, BoardState } from "@shoki/board";
 
 import {
-	CreatureType,
 	PieceModel,
 	getRelativeDirection,
 	TileCoordinates,
@@ -12,8 +11,8 @@ import {
 import { getNextPiecePosition } from "./pathfinding";
 import { PieceCombatState, PieceInfoStore } from "./state";
 import { findTargetId } from "./utils/findTargetId";
-import { isOvercomeBy, isGeneratedBy } from "./utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
+import { getTypeAttackBonus } from "./utils/typeRelations";
 
 const DYING_DURATION = 10;
 const ATTACK_TURN_DURATION = 2;
@@ -21,9 +20,6 @@ const MOVE_TURN_DURATION = 2;
 
 // todo tune this
 const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
-
-const STRONG_ATTACK_MODIFIER = 1.7;
-const WEAK_ATTACK_MODIFIER = 0.3;
 
 const getStats = (piece: PieceModel) => piece.definition.stages[piece.stage];
 
@@ -297,23 +293,6 @@ const getNewAttackerFacingAway = (
 	return false;
 };
 
-const getAttackBonus = (attacker: CreatureType, defender: CreatureType) => {
-	const isDefenderOvercome = isOvercomeBy(defender, attacker);
-
-	if (isDefenderOvercome) {
-		return STRONG_ATTACK_MODIFIER;
-	}
-
-	const isDefenderGenerated = isGeneratedBy(defender, attacker);
-	const isAttackerOvercome = isOvercomeBy(attacker, defender);
-
-	if (isDefenderGenerated || isAttackerOvercome) {
-		return WEAK_ATTACK_MODIFIER;
-	}
-
-	return 1;
-};
-
 const getAttackDamage = (
 	attacker: PieceModel,
 	defender: PieceModel
@@ -321,7 +300,7 @@ const getAttackDamage = (
 	const attackerStats = getStats(attacker);
 	const defenderStats = getStats(defender);
 
-	const attackBonus = getAttackBonus(
+	const attackBonus = getTypeAttackBonus(
 		attacker.definition.type,
 		defender.definition.type
 	);
