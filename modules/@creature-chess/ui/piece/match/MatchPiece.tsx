@@ -55,6 +55,11 @@ export const MatchPiece: React.FC = () => {
 		);
 
 	const onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
+		// don't remove dying animation
+		if (event.animationName.includes("piece-dying-anim")) {
+			return;
+		}
+
 		setCurrentAnimations((oldAnimations) =>
 			oldAnimations.filter((a) => !animationEventMatchesAnimation(event, a))
 		);
