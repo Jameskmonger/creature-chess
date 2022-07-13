@@ -86,12 +86,6 @@ export const Phase_1_Ready = Template.bind({});
 Phase_1_Ready.args = {
 	overlay: null,
 	phase: GamePhase.READY,
-};
-
-export const Phase_1_Ready_Overlay = Template.bind({});
-Phase_1_Ready_Overlay.args = {
-	overlay: null,
-	phase: GamePhase.READY,
 	opponentId: "5678",
 };
 

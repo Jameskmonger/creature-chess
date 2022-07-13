@@ -19,6 +19,10 @@ const useStyles = createUseStyles({
 		marginLeft: "1.5rem",
 		"list-style-type": "disc",
 	},
+	help: {
+		color: "#fff",
+		fontFamily: "Arial, sans-serif",
+	},
 });
 
 const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({
@@ -27,7 +31,7 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({
 	const styles = useStyles();
 
 	return (
-		<Layout direction="column">
+		<Layout direction="column" className={styles.help}>
 			<Group>
 				<Header2>The Game</Header2>
 				<p>

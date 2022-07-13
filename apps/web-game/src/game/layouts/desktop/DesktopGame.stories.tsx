@@ -67,11 +67,6 @@ Phase_0_Preparing.args = {
 export const Phase_1_Ready = Template.bind({});
 Phase_1_Ready.args = {
 	phase: GamePhase.READY,
-};
-
-export const Phase_1_Ready_Overlay = Template.bind({});
-Phase_1_Ready_Overlay.args = {
-	phase: GamePhase.READY,
 	opponentId: "5678",
 };
 
