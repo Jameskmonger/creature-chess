@@ -5,12 +5,13 @@ import { createUseStyles } from "react-jss";
 
 type Props = {
 	children: React.ReactNode | React.ReactNode[];
+	spacer?: boolean;
 	className?: string;
 };
 
 const SPACER = "1em";
 
-const useStyles = createUseStyles({
+const useStyles = createUseStyles<string, { spacer: boolean }>({
 	group: {
 		display: "flex",
 		flex: "1",
@@ -19,23 +20,29 @@ const useStyles = createUseStyles({
 		flexDirection: "column",
 	},
 	"@media (orientation: portrait)": {
-		group: {
-			"&:not(:first-child)": {
-				"margin-top": SPACER,
-			},
-		},
+		group: ({ spacer }) =>
+			spacer
+				? {
+						"&:not(:first-child)": {
+							"margin-top": SPACER,
+						},
+				  }
+				: undefined,
 	},
 	"@media (orientation: landscape)": {
-		group: {
-			"&:not(:first-child)": {
-				"margin-left": SPACER,
-			},
-		},
+		group: ({ spacer }) =>
+			spacer
+				? {
+						"&:not(:first-child)": {
+							"margin-left": SPACER,
+						},
+				  }
+				: undefined,
 	},
 });
 
-export function Group({ children, className }: Props) {
-	const styles = useStyles();
+export function Group({ children, className, spacer = true }: Props) {
+	const styles = useStyles({ spacer });
 
 	return <div className={classNames(styles.group, className)}>{children}</div>;
 }
