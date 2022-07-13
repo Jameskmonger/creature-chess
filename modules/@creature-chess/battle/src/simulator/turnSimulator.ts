@@ -1,19 +1,9 @@
 import { BoardSelectors, BoardSlice, BoardState } from "@shoki/board";
 
-import {
-	PieceModel,
-	getRelativeDirection,
-	TileCoordinates,
-	Directions,
-	getDistance,
-} from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 
-import { getNextPiecePosition } from "../pathfinding";
 import { PieceCombatState, PieceInfoStore } from "../state";
-import { findTargetId } from "../utils/findTargetId";
 import { getStats } from "../utils/getStats";
-import { inAttackRange } from "../utils/inAttackRange";
-import { getTypeAttackBonus } from "../utils/typeRelations";
 import { simulatePiece } from "./piece/simulate";
 
 type Stores = { combatStore: PieceInfoStore<PieceCombatState> };
@@ -53,9 +43,6 @@ const takePieceTurn = (
 		return board;
 	}
 
-	const combatState = combatStore.getPiece(pieceId);
-
-	// create a new piece object, reset combat properties
 	const attacker: PieceModel = {
 		...piece,
 		attacking: null,
@@ -76,58 +63,4 @@ const takePieceTurn = (
 		attackerPosition,
 		{ combatStore }
 	);
-
-	// const attackerTargetId = attackerCombatState.targetId;
-	// const attackerBoardState = attackerCombatState.board;
-	// const attackerStats = getStats(attacker);
-
-	// // board management
-
-	// const cooldown = getCooldownForSpeed(attackerStats.speed);
-
-	// if (attackerBoardState.canMoveAtTurn === null) {
-	// 	attackerBoardState.canMoveAtTurn = currentTurn + cooldown;
-	// }
-
-	// if (attackerBoardState.canAttackAtTurn === null) {
-	// 	attackerBoardState.canAttackAtTurn = currentTurn + cooldown;
-	// }
-
-	// // combat logic
-
-	// if (!attackerTargetId) {
-	// 	const targetId = findTargetId(attacker, board);
-
-	// 	if (targetId) {
-	// 		combatStore.updatePiecePartial(pieceId, {
-	// 			targetId,
-	// 		});
-	// 	}
-
-	// 	return boardSlice.boardReducer(
-	// 		board,
-	// 		boardSlice.commands.updateBoardPiecesCommand([attacker])
-	// 	);
-	// }
-
-	// const target = BoardSelectors.getPiece(board, attackerTargetId);
-	// const targetCombat = combatStore.getPiece(attackerTargetId);
-
-	// 	const attackerDirection = getRelativeDirection(
-	// 		attackerPosition,
-	// 		targetPosition
-	// 	);
-
-	// 	attacker.facingAway = getNewAttackerFacingAway(
-	// 		attacker.facingAway,
-	// 		attackerDirection
-	// 	);
-
-	// 	attackerBoardState.canMoveAtTurn =
-	// 		currentTurn +
-	// 		MOVE_TURN_DURATION +
-	// 		getCooldownForSpeed(attackerStats.speed);
-	// 	attackerBoardState.canBeAttackedAtTurn =
-	// 		currentTurn + MOVE_TURN_DURATION + 2;
-	// 	attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 };

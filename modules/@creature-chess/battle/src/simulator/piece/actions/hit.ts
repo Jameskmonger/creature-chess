@@ -20,6 +20,7 @@ import { Stores } from "../../types";
 import { HitAction } from "./types";
 
 const ATTACK_TURN_DURATION = 2;
+const MOVE_TURN_DURATION = 2;
 
 export function doHit(
 	currentTurn: number,
@@ -69,8 +70,17 @@ export function doHit(
 		currentTurn +
 		ATTACK_TURN_DURATION +
 		getCooldownForSpeed(attackerStats.speed);
+	const canMoveAtTurn =
+		currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(attackerStats.speed);
 
-	combatStore.updatePiecePartial(attacker.id, { canAttackAtTurn });
+	combatStore.updatePiecePartial(attacker.id, {
+		canAttackAtTurn,
+		canMoveAtTurn,
+	});
+
+	const canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
+
+	combatStore.updatePiecePartial(target.id, { canBeAttackedAtTurn });
 
 	const newAttacker = {
 		...attacker,
