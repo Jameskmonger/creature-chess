@@ -2028,6 +2028,7 @@ __metadata:
   resolution: "@creature-chess-tools/battle-tester@workspace:modules/@tools/battle-tester"
   dependencies:
     "@creature-chess/battle": "workspace:*"
+    "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/ui": "workspace:*"
     "@shoki/board": "workspace:*"
