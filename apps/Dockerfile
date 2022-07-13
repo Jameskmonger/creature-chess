@@ -34,6 +34,8 @@ ADD modules/@shoki/board-react/package.json ./modules/@shoki/board-react/
 ADD modules/@shoki/engine/package.json ./modules/@shoki/engine/
 ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
 
+ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
+
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 ADD . .
