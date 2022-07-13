@@ -20,7 +20,7 @@ export function doWander(
 	const combatState = combatStore.getPiece(piece.id);
 
 	// if the piece can't move yet, don't do anything
-	if ((combatState.board.canMoveAtTurn || 0) > currentTurn) {
+	if ((combatState.canMoveAtTurn || 0) > currentTurn) {
 		return [state];
 	}
 

@@ -1,14 +1,14 @@
 import { PieceState } from "../simulator/piece/state";
 
-type PieceBoardState = {
+export type PieceCombatState = {
+	/**
+	 * Overall piece state used to control behavior.
+	 */
+	state: PieceState;
+
+	targetId: string | null;
+
 	canMoveAtTurn: number | null;
 	canBeAttackedAtTurn: number; // used to stop pieces being hit as soon as they land
 	canAttackAtTurn: number | null;
-	removeFromBoardAtTurn: number | null;
-};
-
-export type PieceCombatState = {
-	state: PieceState;
-	targetId: string | null;
-	board: PieceBoardState;
 };

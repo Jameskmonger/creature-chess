@@ -23,7 +23,7 @@ export function doMove(
 	const combatState = combatStore.getPiece(piece.id);
 
 	// if the piece can't move yet, don't do anything
-	if ((combatState.board.canMoveAtTurn || 0) > currentTurn) {
+	if ((combatState.canMoveAtTurn || 0) > currentTurn) {
 		return board;
 	}
 
@@ -33,10 +33,7 @@ export function doMove(
 		currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(stats.speed);
 
 	combatStore.updatePiecePartial(piece.id, {
-		board: {
-			...combatState.board,
-			canMoveAtTurn,
-		},
+		canMoveAtTurn,
 	});
 
 	return boardSlice.boardReducer(

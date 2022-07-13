@@ -30,9 +30,9 @@ function getPieceState(
 	const combatState = combatStore.getPiece(piece.id);
 
 	if (piece.currentHealth === 0 && combatState.state.type !== "dying") {
-		const removeFromBoardAtTurn = currentTurn + DYING_DURATION;
+		const dieAtTurn = currentTurn + DYING_DURATION;
 
-		return { type: "dying", payload: { dieAtTurn: removeFromBoardAtTurn } };
+		return { type: "dying", payload: { dieAtTurn: dieAtTurn } };
 	}
 
 	return combatState.state;
