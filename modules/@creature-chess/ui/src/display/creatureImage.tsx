@@ -38,7 +38,9 @@ export function CreatureImage({ facing, definitionId }: Props) {
 	return (
 		<img
 			className={useStyles().image}
-			src={`images/${facing || "front"}/${definitionId}.png`}
+			src={`https://creaturechess.com/game/images/${
+				facing || "front"
+			}/${definitionId}.png`}
 		/>
 	);
 }

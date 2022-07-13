@@ -1,0 +1,34 @@
+{
+	"name": "@creature-chess-tools/battle-tester",
+	"version": "0.0.1",
+	"description": "Tools to test Creature Chess battle engine",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"@creature-chess/battle": "workspace:*",
+		"@creature-chess/gamemode": "workspace:*",
+		"@creature-chess/models": "workspace:*",
+		"@creature-chess/ui": "workspace:*",
+		"@shoki/board": "workspace:*",
+		"@shoki/engine": "workspace:*",
+		"@types/redux-saga": "^0.10.5"
+	},
+	"peerDependencies": {
+		"redux-saga": "^1.1.3"
+	}
+}

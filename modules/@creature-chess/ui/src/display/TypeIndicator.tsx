@@ -16,6 +16,6 @@ const ICON_FOR_TYPE = {
 
 const TypeIndicator: React.FunctionComponent<TypeIndicatorProps> = ({
 	type,
-}) => <img src={ICON_FOR_TYPE[type]} />;
+}) => <img src={"https://creaturechess.com/game/" + ICON_FOR_TYPE[type]} />;
 
 export { TypeIndicator };
