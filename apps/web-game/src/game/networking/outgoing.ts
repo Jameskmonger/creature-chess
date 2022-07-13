@@ -11,7 +11,7 @@ const writeActionsToPackets = function* (
 	registry: OutgoingRegistry<ClientToServer.PacketSet>
 ) {
 	yield all([
-		takeEvery(BattleEvents.BATTLE_FINISH_EVENT, function* () {
+		takeEvery(BattleEvents.battleTurnEvent, function* () {
 			registry.send("finishMatch", { empty: true });
 		}),
 		call(

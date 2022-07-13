@@ -2,7 +2,7 @@ import React from "react";
 
 import { useDispatch } from "react-redux";
 
-import { startBattle } from "@creature-chess/battle";
+import { BattleCommands } from "@creature-chess/battle";
 
 import { initialBoardPieces } from "../piece";
 import { board } from "../state";
@@ -12,7 +12,7 @@ export function BattleControls() {
 	const dispatch = useDispatch();
 
 	const onClickStart = React.useCallback(
-		() => dispatch(startBattle()),
+		() => dispatch(BattleCommands.startBattleCommand({})),
 		[dispatch]
 	);
 

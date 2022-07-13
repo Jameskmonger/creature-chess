@@ -9,6 +9,7 @@ import {
 	GameOptions,
 } from "@creature-chess/models";
 
+import { StartBattleCommand, startBattleCommand } from "./commands";
 import { battleFinishEvent, battleTurnEvent } from "./events";
 import { simulateTurn } from "./turnSimulator";
 import { isATeamDefeated } from "./utils/is-a-team-defeated";
@@ -16,14 +17,6 @@ import { isATeamDefeated } from "./utils/is-a-team-defeated";
 // no typings so this needs a standard require
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const present = require("present");
-
-const START_BATTLE = "START_BATTLE";
-type START_BATTLE = typeof START_BATTLE;
-type StartBattleCommand = { type: START_BATTLE; payload: { turn?: number } };
-export const startBattle = (turn?: number): StartBattleCommand => ({
-	type: START_BATTLE,
-	payload: { turn },
-});
 
 const duration = (ms: number) => {
 	const startTime = present();
@@ -81,14 +74,14 @@ const runBattle = function* (
 		if (shouldStop) {
 			yield duration(1000).remaining();
 
-			yield put(battleFinishEvent(turnCount));
+			yield put(battleFinishEvent({ turn: turnCount }));
 			break;
 		}
 
 		const turnTimer = duration(options.turnDuration);
 
 		board = simulateTurn(++turnCount, board, boardSlice);
-		yield put(battleTurnEvent(turnCount, board));
+		yield put(battleTurnEvent({ turn: turnCount, board }));
 
 		yield turnTimer.remaining();
 	}
@@ -99,7 +92,7 @@ export const battleSagaFactory = <TState>(
 ) =>
 	function* (gameOptions: GameOptions, boardSlice: BoardSlice<PieceModel>) {
 		yield takeLatest<StartBattleCommand>(
-			START_BATTLE,
+			startBattleCommand,
 			function* ({ payload: { turn } }) {
 				const board: BoardState<PieceModel> = yield select(boardSelector);
 

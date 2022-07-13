@@ -40,7 +40,7 @@ const makeStore = () => {
 		);
 
 		yield takeLatest<BattleEvents.BattleTurnEvent>(
-			BattleEvents.BATTLE_TURN_EVENT,
+			BattleEvents.battleTurnEvent,
 			function* ({
 				payload: { board: newBoard },
 			}: BattleEvents.BattleTurnEvent) {

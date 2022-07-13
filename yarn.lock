@@ -2071,6 +2071,7 @@ __metadata:
   resolution: "@creature-chess/battle@workspace:modules/@creature-chess/battle"
   dependencies:
     "@creature-chess/models": "workspace:*"
+    "@reduxjs/toolkit": ^1.7.1
     "@shoki/board": "workspace:*"
     "@types/redux-saga": ^0.10.5
     javascript-astar: ^0.4.1
