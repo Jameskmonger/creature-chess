@@ -1,2 +1,3 @@
 export * as BattleEvents from "./src/events";
-export { battleSagaFactory, startBattle } from "./src/battleSaga";
+export * as BattleCommands from "./src/commands";
+export { battleSaga } from "./src/battleSaga";

@@ -1,12 +1,7 @@
 import * as Constants from "./src/constants";
 
 export { Card } from "./src/card";
-export {
-	PieceModel,
-	CombatPieceModel,
-	IndexedPieces,
-	AttackDetails,
-} from "./src/piece";
+export { PieceModel, IndexedPieces, AttackDetails } from "./src/piece";
 export {
 	PlayerListPlayer,
 	PlayerStatus,
@@ -48,12 +43,6 @@ export {
 	DefinitionClass,
 } from "./src/creatureDefinition";
 export { CreatureType } from "./src/creatureType";
-
-export {
-	createPieceCombatState,
-	clonePieceCombatState,
-	PieceCombatState,
-} from "./src/pieceCombat";
 
 export {
 	getOptions,

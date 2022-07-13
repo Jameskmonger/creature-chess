@@ -2,19 +2,33 @@ import React from "react";
 
 import { useDispatch } from "react-redux";
 
-import { startBattle } from "@creature-chess/battle";
+import { BattleCommands } from "@creature-chess/battle";
 
 import { initialBoardPieces } from "../piece";
 import { board } from "../state";
+import { BoardLogger } from "./BoardLogger";
 import { SelectedTileInfo } from "./SelectedTile";
 
 export function BattleControls() {
 	const dispatch = useDispatch();
+	const [isPaused, setIsPaused] = React.useState(false);
 
-	const onClickStart = React.useCallback(
-		() => dispatch(startBattle()),
-		[dispatch]
-	);
+	const onClickStart = React.useCallback(() => {
+		dispatch(BattleCommands.startBattleCommand({}));
+		setIsPaused(false);
+	}, [dispatch]);
+
+	const onClickPause = React.useCallback(() => {
+		dispatch(BattleCommands.pauseBattleCommand());
+
+		setIsPaused(true);
+	}, [dispatch]);
+
+	const onClickResume = React.useCallback(() => {
+		dispatch(BattleCommands.resumeBattleCommand());
+
+		setIsPaused(false);
+	}, [dispatch]);
 
 	const onClickReset = React.useCallback(
 		() => dispatch(board.commands.setBoardPiecesCommand(initialBoardPieces)),
@@ -25,7 +39,14 @@ export function BattleControls() {
 		<div>
 			<h1>Controls</h1>
 			<button onClick={onClickStart}>Start Battle</button>
+			<button onClick={isPaused ? onClickResume : onClickPause}>
+				{isPaused ? "Resume" : "Pause"} Battle
+			</button>
 			<button onClick={onClickReset}>Reset</button>
+
+			<hr />
+
+			<BoardLogger />
 
 			<hr />
 

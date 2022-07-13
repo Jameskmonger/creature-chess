@@ -1,9 +1,9 @@
 import { takeLatest, put, fork } from "@redux-saga/core/effects";
 
 import {
+	BattleCommands,
 	BattleEvents,
-	battleSagaFactory,
-	startBattle,
+	battleSaga,
 } from "@creature-chess/battle";
 import { GameEvents } from "@creature-chess/gamemode";
 import { defaultGameOptions, GamePhase } from "@creature-chess/models";
@@ -16,13 +16,14 @@ export const clientBattleSaga = function* () {
 	const { board } = yield* getPlayerSlices();
 
 	yield fork(
-		battleSagaFactory<AppState>((state) => state.game.match?.board!) as any,
+		battleSaga as any,
+		(state: AppState) => state.game.match?.board!,
 		defaultGameOptions,
 		board
 	);
 
 	yield takeLatest<BattleEvents.BattleTurnEvent>(
-		BattleEvents.BATTLE_TURN_EVENT,
+		BattleEvents.battleTurnEvent,
 		function* ({ payload: { board: newBoard } }: BattleEvents.BattleTurnEvent) {
 			yield put(setMatchBoard(newBoard));
 		}
@@ -32,7 +33,7 @@ export const clientBattleSaga = function* () {
 		GameEvents.gamePhaseStartedEvent.toString(),
 		function* ({ payload: { phase } }) {
 			if (phase === GamePhase.PLAYING) {
-				yield put(startBattle());
+				yield put(BattleCommands.startBattleCommand({}));
 			}
 
 			if (phase === GamePhase.PREPARING) {

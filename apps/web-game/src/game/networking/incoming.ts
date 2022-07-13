@@ -5,7 +5,7 @@ import { Socket } from "socket.io-client";
 import { BoardSlice } from "@shoki/board";
 import { ActionStream, IncomingRegistry } from "@shoki/networking";
 
-import { startBattle } from "@creature-chess/battle";
+import { BattleCommands } from "@creature-chess/battle";
 import {
 	PlayerEvents,
 	PlayerCommands,
@@ -36,7 +36,7 @@ const readPacketsToActions = function* (
 			emit(setMatchBoard(board));
 
 			if (turn) {
-				emit(startBattle(turn));
+				emit(BattleCommands.startBattleCommand({ turn }));
 			}
 		});
 

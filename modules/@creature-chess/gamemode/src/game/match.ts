@@ -24,10 +24,11 @@ import {
 } from "@shoki/board";
 
 import {
-	battleSagaFactory,
-	startBattle,
+	battleSaga,
 	BattleEvents,
+	BattleCommands,
 } from "@creature-chess/battle";
+import { battleTurnEvent } from "@creature-chess/battle/src/events";
 import { GRID_SIZE, PieceModel, GameOptions } from "@creature-chess/models";
 
 import { PlayerEntity } from "../entities";
@@ -42,8 +43,7 @@ interface MatchState {
 const turnReducer: Reducer<number, BattleEvents.BattleTurnEvent> = (
 	state = 0,
 	event
-) =>
-	event.type === BattleEvents.BATTLE_TURN_EVENT ? event.payload.turn : state;
+) => (event.type === battleTurnEvent.toString() ? event.payload.turn : state);
 
 export class Match {
 	private store: Store<MatchState>;
@@ -141,7 +141,7 @@ export class Match {
 	}
 
 	public async fight(battleTimeout: Promise<void>) {
-		this.store.dispatch(startBattle());
+		this.store.dispatch(BattleCommands.startBattleCommand({}));
 
 		await Promise.race([
 			battleTimeout,
@@ -188,26 +188,27 @@ export class Match {
 		const rootSaga = function* () {
 			yield all([
 				call(
-					battleSagaFactory<MatchState>((state) => state.board),
+					battleSaga as any,
+					(state: MatchState) => state.board,
 					gameOptions,
 					_this.board
 				),
 				takeEvery<BattleEvents.BattleFinishEvent>(
-					BattleEvents.BATTLE_FINISH_EVENT,
-					function* ({ payload: { turns } }) {
+					BattleEvents.battleFinishEvent,
+					function* ({ payload: { turn } }) {
 						_this.onServerFinishMatch();
 
 						_this.logger.info("Battle finished", {
 							meta: {
 								home: _this.home.getVariable((v) => v.name),
 								away: _this.away.getVariable((v) => v.name),
-								turns,
+								turns: turn,
 							},
 						});
 					}
 				),
 				takeLatest<BattleEvents.BattleTurnEvent>(
-					BattleEvents.BATTLE_TURN_EVENT,
+					BattleEvents.battleTurnEvent,
 					function* ({ payload: { board } }: BattleEvents.BattleTurnEvent) {
 						yield put(
 							_this.board.commands.setBoardPiecesCommand({
