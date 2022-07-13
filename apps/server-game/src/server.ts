@@ -68,7 +68,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 			return;
 		}
 
-		const matchingGame = games.find((l) => l.isInGame(socket.data.id));
+		const matchingGame = games.find((l) => l.canJoinGame(socket.data.id));
 
 		if (matchingGame) {
 			logger.info(`[Matchmaking (${socket.data.nickname})] Game found`);

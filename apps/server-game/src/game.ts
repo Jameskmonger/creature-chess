@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { botLogicSaga } from "@creature-chess/bot";
 import { BotPersonality } from "@creature-chess/data";
 import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
-import { LobbyPlayer } from "@creature-chess/models";
+import { LobbyPlayer, PlayerStatus } from "@creature-chess/models";
 
 import { logger } from "./log";
 import { playerNetworking } from "./player";
@@ -62,8 +62,18 @@ export class Game {
 		this.gamemode.start(entities);
 	}
 
-	public isInGame(playerId: string) {
-		return this.gamemode.getPlayerById(playerId) !== null;
+	public canJoinGame(playerId: string) {
+		const existing = this.gamemode.getPlayerById(playerId);
+
+		if (!existing) {
+			return false;
+		}
+
+		return existing.select(
+			(state) =>
+				state.playerInfo.health > 0 &&
+				state.playerInfo.status === PlayerStatus.CONNECTED
+		);
 	}
 
 	public connect(socket: AuthenticatedSocket) {
