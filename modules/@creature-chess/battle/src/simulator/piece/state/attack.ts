@@ -4,6 +4,7 @@ import { PieceModel } from "@creature-chess/models";
 
 import { getNextPiecePosition } from "../../../pathfinding";
 import { getStats } from "../../../utils/getStats";
+import { findEnemyInAttackRange } from "../../../utils/getTargetAttackPositions";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { AttackState, StateResult } from "./types";
@@ -51,6 +52,20 @@ export function doAttack(
 		return [
 			state,
 			[{ type: "hit", payload: { targetId: state.payload.targetId } }],
+		];
+	}
+
+	// if we can't hit our target, is there a target immediately in range?
+	const otherEnemyInRange = findEnemyInAttackRange(
+		board,
+		piece.ownerId,
+		piecePosition,
+		attackerStats.attackType.range
+	);
+
+	if (otherEnemyInRange) {
+		return [
+			{ type: "attacking", payload: { targetId: otherEnemyInRange.piece.id } },
 		];
 	}
 

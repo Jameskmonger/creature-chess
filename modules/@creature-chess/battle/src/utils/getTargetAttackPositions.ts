@@ -1,6 +1,10 @@
-import { BoardState } from "@shoki/board";
+import { BoardSelectors, BoardState } from "@shoki/board";
 
-import { createTileCoordinates, TileCoordinates } from "@creature-chess/models";
+import {
+	createTileCoordinates,
+	PieceModel,
+	TileCoordinates,
+} from "@creature-chess/models";
 
 const isInsideGrid =
 	({ width, height }: { width: number; height: number }) =>
@@ -9,6 +13,29 @@ const isInsideGrid =
 
 		return x >= 0 && y >= 0 && x < width && y < height;
 	};
+
+export function findEnemyInAttackRange(
+	board: BoardState<PieceModel>,
+	friendlyOwnerId: string,
+	position: TileCoordinates,
+	range = 1
+) {
+	const attackPositions = getTargetAttackPositions(board, position, range);
+
+	for (const position of attackPositions) {
+		const piece = BoardSelectors.getPieceForPosition(
+			board,
+			position.x,
+			position.y
+		);
+
+		if (piece && piece.ownerId !== friendlyOwnerId) {
+			return { piece, position };
+		}
+	}
+
+	return null;
+}
 
 export const getTargetAttackPositions = (
 	board: BoardState,
