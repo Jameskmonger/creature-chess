@@ -3,6 +3,7 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
+import { AuthContextProvider } from "@creature-chess/auth-web";
 import { GamePhase } from "@creature-chess/models";
 import { useGlobalStyles } from "@creature-chess/ui";
 
@@ -44,14 +45,27 @@ const Template: Story<any> = (args) => {
 				matchRewards: args.matchRewards
 					? args.matchRewards
 					: state.playerInfo.matchRewards,
+				opponentId: args.opponentId
+					? args.opponentId
+					: state.playerInfo.opponentId,
 			},
 		})
 	);
 
 	return (
-		<Provider store={store}>
-			<MobileGame />
-		</Provider>
+		<AuthContextProvider
+			value={{
+				user: {
+					"https://creaturechess.jamesmonger.com/playerId": "1234",
+					"https://creaturechess.jamesmonger.com/playerNickname": "jkm",
+					"https://creaturechess.jamesmonger.com/playerPicture": 1,
+				},
+			}}
+		>
+			<Provider store={store}>
+				<MobileGame />
+			</Provider>
+		</AuthContextProvider>
 	);
 };
 
@@ -72,6 +86,13 @@ export const Phase_1_Ready = Template.bind({});
 Phase_1_Ready.args = {
 	overlay: null,
 	phase: GamePhase.READY,
+};
+
+export const Phase_1_Ready_Overlay = Template.bind({});
+Phase_1_Ready_Overlay.args = {
+	overlay: null,
+	phase: GamePhase.READY,
+	opponentId: "5678",
 };
 
 export const Phase_2_Playing = Template.bind({});

@@ -11,7 +11,7 @@ const QuickChatButtonArray: React.FunctionComponent = () => {
 	const quickChatArray = Object.values(QuickChatOption);
 	return (
 		<Layout direction="row">
-			{Object.values(quickChatArray).map((chat) => (
+			{quickChatArray.map((chat) => (
 				<QuickChatButton chatOption={chat} key={chat} />
 			))}
 		</Layout>

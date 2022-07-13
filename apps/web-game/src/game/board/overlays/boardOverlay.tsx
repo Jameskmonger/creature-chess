@@ -27,13 +27,16 @@ const useStyles = createUseStyles({
 	},
 	modal: {
 		position: "absolute",
-		display: "flex",
-		padding: "2em",
 		overflow: "auto",
+		boxSizing: "border-box",
+		display: "flex",
+		height: "100%",
+		minWidth: "80%",
+		padding: "2em",
+		outline: "none",
 		fontFamily: "Arial, sans-serif",
 		color: "#fff",
 		background: "#333c57",
-		outline: "none",
 	},
 });
 

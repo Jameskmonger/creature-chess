@@ -1,5 +1,6 @@
 import React from "react";
 
+import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
 import { PlayerListPlayer, StreakType } from "@creature-chess/models";
@@ -29,53 +30,31 @@ const getPosition = (
 	return `${position}${getPositionModifier(position)}`;
 };
 
-const getStreak = (player: PlayerListPlayer) => {
-	const streakModifier = getStreakModifier(player);
-	return `${player.streakAmount} ${streakModifier}`;
-};
+const useStyles = createUseStyles({
+	segment: {
+		marginBottom: "0.5em",
+	},
+});
 
-const getStreakModifier = (player: PlayerListPlayer): string => {
-	const streakType = player?.streakType;
-	const streakAmount = player?.streakAmount;
-
-	if (!player || streakAmount === 0) {
-		return "";
-	}
-	if (streakType === StreakType.WIN) {
-		return streakAmount === 1 ? "Win" : "Wins";
-	}
-	return streakAmount === 1 ? "Loss" : "Losses";
-};
-
-const HeadToHeadStats: React.FC<{
+export function HeadToHeadStats({
+	player,
+	opponent,
+}: {
 	player: PlayerListPlayer;
 	opponent: PlayerListPlayer;
-}> = ({ player, opponent }) => {
+}) {
+	const styles = useStyles();
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
 	return (
 		<Layout direction="column">
-			<Group>
+			<Group className={styles.segment}>
 				<Header4>Position</Header4>
 				<Text>
 					{getPosition(player, playerList)} vs{" "}
 					{getPosition(opponent, playerList)}
 				</Text>
 			</Group>
-			<Group>
-				<Header4>Streak</Header4>
-				<Text>
-					{getStreak(player)} vs {getStreak(opponent)}
-				</Text>
-			</Group>
-			<Group>
-				<Header4>Level</Header4>
-				<Text>
-					{player.level} vs {opponent.level}
-				</Text>
-			</Group>
 		</Layout>
 	);
-};
-
-export { HeadToHeadStats };
+}

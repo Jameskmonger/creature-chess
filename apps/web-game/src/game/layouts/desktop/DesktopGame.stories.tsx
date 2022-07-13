@@ -3,6 +3,7 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
+import { AuthContextProvider } from "@creature-chess/auth-web";
 import { GamePhase } from "@creature-chess/models";
 import { useGlobalStyles } from "@creature-chess/ui";
 
@@ -30,14 +31,30 @@ const Template: Story<any> = (args) => {
 				...state.roundInfo,
 				phase: args.phase,
 			},
+			playerInfo: {
+				...state.playerInfo,
+				opponentId: args.opponentId
+					? args.opponentId
+					: state.playerInfo.opponentId,
+			},
 		})
 	);
 
 	return (
 		<div style={{ width: "90%", height: "90%", border: "2px solid red" }}>
-			<Provider store={store}>
-				<DesktopGame />
-			</Provider>
+			<AuthContextProvider
+				value={{
+					user: {
+						"https://creaturechess.jamesmonger.com/playerId": "1234",
+						"https://creaturechess.jamesmonger.com/playerNickname": "jkm",
+						"https://creaturechess.jamesmonger.com/playerPicture": 1,
+					},
+				}}
+			>
+				<Provider store={store}>
+					<DesktopGame />
+				</Provider>
+			</AuthContextProvider>
 		</div>
 	);
 };
@@ -50,6 +67,12 @@ Phase_0_Preparing.args = {
 export const Phase_1_Ready = Template.bind({});
 Phase_1_Ready.args = {
 	phase: GamePhase.READY,
+};
+
+export const Phase_1_Ready_Overlay = Template.bind({});
+Phase_1_Ready_Overlay.args = {
+	phase: GamePhase.READY,
+	opponentId: "5678",
 };
 
 export const Phase_2_Playing = Template.bind({});

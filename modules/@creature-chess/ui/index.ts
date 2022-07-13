@@ -14,7 +14,11 @@ export {
 	TypeIndicator,
 	Label,
 } from "./src/display";
-export { PlayerListItem, StatusPlayerListItem } from "./src/playerList";
+export {
+	PlayerListItem,
+	StatusPlayerListItem,
+	StreakIndicator,
+} from "./src/playerList";
 
 export { Footer } from "./src/Footer";
 
