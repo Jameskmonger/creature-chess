@@ -1,12 +1,7 @@
 import * as Constants from "./src/constants";
 
 export { Card } from "./src/card";
-export {
-	PieceModel,
-	CombatPieceModel,
-	IndexedPieces,
-	AttackDetails,
-} from "./src/piece";
+export { PieceModel, IndexedPieces, AttackDetails } from "./src/piece";
 export {
 	PlayerListPlayer,
 	PlayerStatus,
