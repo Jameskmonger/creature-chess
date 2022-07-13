@@ -3,6 +3,7 @@ import { BoardState, PiecePosition } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { findTargetId } from "../../../utils/findTargetId";
+import { getStats } from "../../../utils/getStats";
 import { Stores } from "../../types";
 import { WanderState, PieceState } from "./types";
 
@@ -17,7 +18,8 @@ export function findBestState(
 	const combatState = combatStore.getPiece(piece.id);
 
 	if (combatState.canAttackAtTurn <= currentTurn) {
-		const targetId = findTargetId(piece, board);
+		const attackerStats = getStats(piece);
+		const targetId = findTargetId(piece, board, attackerStats.attackType.range);
 
 		if (targetId) {
 			return { type: "attacking", payload: { targetId } };

@@ -2,6 +2,8 @@ import { BoardSelectors, BoardState } from "@shoki/board";
 
 import { PieceModel, getDelta, TileCoordinates } from "@creature-chess/models";
 
+import { getTargetAttackPositions } from "./getTargetAttackPositions";
+
 const getLivingEnemies = (
 	piece: PieceModel,
 	board: BoardState<PieceModel>
@@ -15,7 +17,8 @@ type EnemyDelta = { enemy: PieceModel; delta: TileCoordinates };
 const getEnemyDeltas = (
 	board: BoardState,
 	enemies: PieceModel[],
-	attackerPosition: TileCoordinates
+	attackerPosition: TileCoordinates,
+	attackRange: number
 ): EnemyDelta[] => {
 	const enemyDeltas: EnemyDelta[] = [];
 
@@ -26,10 +29,19 @@ const getEnemyDeltas = (
 			continue;
 		}
 
-		enemyDeltas.push({
-			enemy,
-			delta: getDelta(attackerPosition, enemyPosition),
-		});
+		// find all positions from which we can attack
+		const attackPositions = getTargetAttackPositions(
+			board,
+			enemyPosition,
+			attackRange
+		);
+
+		for (const position of attackPositions) {
+			enemyDeltas.push({
+				enemy,
+				delta: getDelta(attackerPosition, position),
+			});
+		}
 	}
 
 	return enemyDeltas;
@@ -37,7 +49,8 @@ const getEnemyDeltas = (
 
 export const findTargetId = (
 	piece: PieceModel,
-	board: BoardState<PieceModel>
+	board: BoardState<PieceModel>,
+	attackRange = 1
 ): string | null => {
 	const enemies = getLivingEnemies(piece, board);
 
@@ -51,7 +64,12 @@ export const findTargetId = (
 		return null;
 	}
 
-	const enemyDeltas = getEnemyDeltas(board, enemies, attackerPosition);
+	const enemyDeltas = getEnemyDeltas(
+		board,
+		enemies,
+		attackerPosition,
+		attackRange
+	);
 
 	// sort by column then by row
 	enemyDeltas.sort((a, b) => {
