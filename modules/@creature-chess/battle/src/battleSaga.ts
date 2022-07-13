@@ -1,10 +1,15 @@
-import { takeLatest, select, put, call } from "@redux-saga/core/effects";
+import { takeLatest, select, put, call, all } from "@redux-saga/core/effects";
 
 import { BoardState, BoardSlice } from "@shoki/board";
 
 import { PieceModel, GameOptions } from "@creature-chess/models";
 
-import { StartBattleCommand, startBattleCommand } from "./commands";
+import {
+	pauseBattleCommand,
+	resumeBattleCommand,
+	StartBattleCommand,
+	startBattleCommand,
+} from "./commands";
 import { battleFinishEvent, battleTurnEvent } from "./events";
 import { simulateTurn } from "./simulator";
 import { PieceCombatState } from "./state/state";
@@ -13,6 +18,7 @@ import { duration } from "./utils/duration";
 import { isATeamDefeated } from "./utils/isATeamDefeated";
 
 const runBattle = function* (
+	controls: { paused: false },
 	initialBoard: BoardState<PieceModel>,
 	boardSlice: BoardSlice<PieceModel>,
 	startingTurn: number,
@@ -51,6 +57,10 @@ const runBattle = function* (
 			break;
 		}
 
+		while (controls.paused) {
+			yield duration(1000).remaining();
+		}
+
 		const turnTimer = duration(options.turnDuration);
 
 		board = simulateTurn(++turnCount, board, boardSlice, { combatStore });
@@ -70,7 +80,24 @@ export const battleSaga = function* (
 		function* ({ payload: { turn } }) {
 			const board: BoardState<PieceModel> = yield select(boardSelector);
 
-			yield call(runBattle, board, boardSlice, turn || 0, gameOptions);
+			const controls = { paused: false };
+
+			yield all([
+				takeLatest(pauseBattleCommand, function* () {
+					controls.paused = true;
+				}),
+				takeLatest(resumeBattleCommand, function* () {
+					controls.paused = false;
+				}),
+				call(
+					runBattle as any,
+					controls,
+					board,
+					boardSlice,
+					turn || 0,
+					gameOptions
+				),
+			]);
 		}
 	);
 };

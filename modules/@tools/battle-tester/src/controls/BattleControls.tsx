@@ -16,6 +16,16 @@ export function BattleControls() {
 		[dispatch]
 	);
 
+	const onClickPause = React.useCallback(
+		() => dispatch(BattleCommands.pauseBattleCommand()),
+		[dispatch]
+	);
+
+	const onClickResume = React.useCallback(
+		() => dispatch(BattleCommands.resumeBattleCommand()),
+		[dispatch]
+	);
+
 	const onClickReset = React.useCallback(
 		() => dispatch(board.commands.setBoardPiecesCommand(initialBoardPieces)),
 		[dispatch]
@@ -25,6 +35,8 @@ export function BattleControls() {
 		<div>
 			<h1>Controls</h1>
 			<button onClick={onClickStart}>Start Battle</button>
+			<button onClick={onClickPause}>Pause Battle</button>
+			<button onClick={onClickResume}>Resume Battle</button>
 			<button onClick={onClickReset}>Reset</button>
 
 			<hr />

@@ -45,7 +45,6 @@ const makeStore = () => {
 			function* ({
 				payload: { board: newBoard },
 			}: BattleEvents.BattleTurnEvent) {
-				console.log("turn event");
 				yield put(board.commands.setBoardPiecesCommand(newBoard));
 			}
 		);
