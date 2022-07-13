@@ -36,9 +36,9 @@ const runBattle = function* (
 	const combatStore = pieceInfoStore<PieceCombatState>({
 		state: { type: "wandering" },
 
-		canMoveAtTurn: 10,
+		canMoveAtTurn: 15,
 		canBeAttackedAtTurn: 0,
-		canAttackAtTurn: 20,
+		canAttackAtTurn: 15,
 	});
 
 	while (true) {
