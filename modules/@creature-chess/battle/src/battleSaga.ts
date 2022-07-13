@@ -2,52 +2,15 @@ import { takeLatest, select, put, call } from "@redux-saga/core/effects";
 
 import { BoardState, BoardSlice, BoardSelectors } from "@shoki/board";
 
-import {
-	IndexedPieces,
-	createPieceCombatState,
-	PieceModel,
-	GameOptions,
-} from "@creature-chess/models";
+import { PieceModel, GameOptions } from "@creature-chess/models";
 
 import { StartBattleCommand, startBattleCommand } from "./commands";
 import { battleFinishEvent, battleTurnEvent } from "./events";
+import { PieceCombatState } from "./state/state";
+import { pieceInfoStore } from "./state/store";
 import { simulateTurn } from "./turnSimulator";
+import { duration } from "./utils/duration";
 import { isATeamDefeated } from "./utils/is-a-team-defeated";
-
-// no typings so this needs a standard require
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const present = require("present");
-
-const duration = (ms: number) => {
-	const startTime = present();
-
-	return {
-		remaining: () =>
-			new Promise<void>((resolve) => {
-				const endTime = present();
-				const timePassed = endTime - startTime;
-
-				const remaining = Math.max(ms - timePassed, 0);
-
-				if (remaining === 0) {
-					resolve();
-					return;
-				}
-
-				setTimeout(() => resolve(), remaining);
-			}),
-	};
-};
-
-const addCombatState = (pieces: IndexedPieces) =>
-	Object.entries(pieces).reduce<IndexedPieces>((acc, [pieceId, piece]) => {
-		acc[pieceId] = {
-			...piece,
-			combat: createPieceCombatState(),
-		};
-
-		return acc;
-	}, {});
 
 const runBattle = function* (
 	initialBoard: BoardState<PieceModel>,
@@ -57,7 +20,9 @@ const runBattle = function* (
 ) {
 	let board: BoardState<PieceModel> = {
 		id: initialBoard.id,
-		pieces: addCombatState(initialBoard.pieces),
+		pieces: {
+			...initialBoard.pieces,
+		},
 		piecePositions: {
 			...initialBoard.piecePositions,
 		},
@@ -67,6 +32,16 @@ const runBattle = function* (
 	};
 
 	let turnCount = startingTurn;
+
+	const combatStore = pieceInfoStore<PieceCombatState>({
+		board: {
+			canMoveAtTurn: null,
+			canBeAttackedAtTurn: 0,
+			canAttackAtTurn: null,
+			removeFromBoardAtTurn: null,
+		},
+		targetId: null,
+	});
 
 	while (true) {
 		const shouldStop = turnCount >= options.turnCount || isATeamDefeated(board);
@@ -80,7 +55,7 @@ const runBattle = function* (
 
 		const turnTimer = duration(options.turnDuration);
 
-		board = simulateTurn(++turnCount, board, boardSlice);
+		board = simulateTurn(++turnCount, board, boardSlice, { combatStore });
 		yield put(battleTurnEvent({ turn: turnCount, board }));
 
 		yield turnTimer.remaining();

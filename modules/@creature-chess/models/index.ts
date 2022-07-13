@@ -50,12 +50,6 @@ export {
 export { CreatureType } from "./src/creatureType";
 
 export {
-	createPieceCombatState,
-	clonePieceCombatState,
-	PieceCombatState,
-} from "./src/pieceCombat";
-
-export {
 	getOptions,
 	GameOptions,
 	defaultOptions as defaultGameOptions,

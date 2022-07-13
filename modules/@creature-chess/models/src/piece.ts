@@ -1,5 +1,4 @@
 import { AttackType, CreatureDefinition } from "./creatureDefinition";
-import { PieceCombatState } from "./pieceCombat";
 import { TileCoordinates } from "./position";
 
 export interface AttackDetails {
@@ -32,12 +31,6 @@ export interface PieceModel {
 	hit?: HitDetails | null;
 	maxHealth: number;
 	currentHealth: number;
-
-	combat?: PieceCombatState;
-}
-
-export interface CombatPieceModel extends PieceModel {
-	combat: PieceCombatState;
 }
 
 export type IndexedPieces = {

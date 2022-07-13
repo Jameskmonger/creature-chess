@@ -3,15 +3,14 @@ import { BoardSelectors, BoardSlice, BoardState } from "@shoki/board";
 import {
 	CreatureType,
 	PieceModel,
-	CombatPieceModel,
 	getRelativeDirection,
 	TileCoordinates,
 	Directions,
 	getDistance,
-	clonePieceCombatState,
 } from "@creature-chess/models";
 
 import { getNextPiecePosition } from "./pathfinding";
+import { PieceCombatState, PieceInfoStore } from "./state";
 import { findTargetId } from "./utils/findTargetId";
 import { isOvercomeBy, isGeneratedBy } from "./utils/get-type-attack-bonus";
 import { inAttackRange } from "./utils/inAttackRange";
@@ -28,10 +27,13 @@ const WEAK_ATTACK_MODIFIER = 0.3;
 
 const getStats = (piece: PieceModel) => piece.definition.stages[piece.stage];
 
+type Stores = { combatStore: PieceInfoStore<PieceCombatState> };
+
 export const simulateTurn = (
 	currentTurn: number,
 	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>
+	boardSlice: BoardSlice<PieceModel>,
+	stores: Stores
 ) => {
 	const pieceEntries = Object.entries(board.pieces);
 
@@ -43,7 +45,8 @@ export const simulateTurn = (
 	});
 
 	return pieceEntries.reduce(
-		(b, [pieceId]) => takePieceTurn(currentTurn, pieceId, b, boardSlice),
+		(b, [pieceId]) =>
+			takePieceTurn(currentTurn, pieceId, b, boardSlice, stores),
 		board
 	);
 };
@@ -52,7 +55,8 @@ const takePieceTurn = (
 	currentTurn: number,
 	pieceId: string,
 	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>
+	boardSlice: BoardSlice<PieceModel>,
+	{ combatStore }: Stores
 ): BoardState<PieceModel> => {
 	const originalPiece = BoardSelectors.getPiece(board, pieceId);
 
@@ -60,13 +64,12 @@ const takePieceTurn = (
 		return board;
 	}
 
-	const attackerCombatState = clonePieceCombatState(originalPiece.combat);
+	const attackerCombatState = combatStore.getPiece(pieceId);
 	// create a new piece object, reset combat properties
-	const attacker: CombatPieceModel = {
+	const attacker: PieceModel = {
 		...originalPiece,
 		attacking: null,
 		hit: null,
-		combat: attackerCombatState,
 	};
 
 	const attackerPosition = BoardSelectors.getPiecePosition(board, pieceId);
@@ -113,7 +116,13 @@ const takePieceTurn = (
 	// combat logic
 
 	if (!attackerTargetId) {
-		attacker.combat.targetId = findTargetId(attacker, board);
+		const targetId = findTargetId(attacker, board);
+
+		if (targetId) {
+			combatStore.updatePiecePartial(pieceId, {
+				targetId,
+			});
+		}
 
 		return boardSlice.boardReducer(
 			board,
@@ -121,10 +130,8 @@ const takePieceTurn = (
 		);
 	}
 
-	const target = BoardSelectors.getPiece(
-		board,
-		attackerTargetId
-	) as CombatPieceModel;
+	const target = BoardSelectors.getPiece(board, attackerTargetId);
+	const targetCombat = combatStore.getPiece(attackerTargetId);
 
 	// if we can't attack yet, wait for cooldown
 	if (!target || attackerBoardState.canAttackAtTurn > currentTurn) {
@@ -137,7 +144,7 @@ const takePieceTurn = (
 
 	// if the enemy can't be attacked yet, wait
 	// todo consider breaking and choosing different target..
-	if (target.combat.board.canBeAttackedAtTurn > currentTurn) {
+	if (targetCombat.board.canBeAttackedAtTurn > currentTurn) {
 		return boardSlice.boardReducer(
 			board,
 			boardSlice.commands.updateBoardPiecesCommand([attacker])
@@ -153,7 +160,9 @@ const takePieceTurn = (
 	if (!targetAlive || !targetPosition) {
 		// target is dead, so clear target
 		// todo should we increment canAttackAtTurn here?
-		attacker.combat.targetId = null;
+		combatStore.updatePiecePartial(pieceId, {
+			targetId: null,
+		});
 
 		return boardSlice.boardReducer(
 			board,
@@ -181,20 +190,20 @@ const takePieceTurn = (
 			attackerDirection
 		);
 
+		combatStore.updatePiecePartial(pieceId, {
+			board: {
+				...attackerCombatState.board,
+
+				// attack cooldown
+				canAttackAtTurn:
+					currentTurn +
+					ATTACK_TURN_DURATION +
+					getCooldownForSpeed(attackerStats.speed),
+			},
+		});
+
 		const newAttacker = {
 			...attacker,
-			combat: {
-				...attacker.combat,
-				board: {
-					...attacker.combat.board,
-
-					// attack cooldown
-					canAttackAtTurn:
-						currentTurn +
-						ATTACK_TURN_DURATION +
-						getCooldownForSpeed(attackerStats.speed),
-				},
-			},
 			attacking: {
 				attackType: attackerStats.attackType,
 				distance: attackerDistance,
