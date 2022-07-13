@@ -1,4 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+	PieceCombatState,
+	PieceInfoStore,
+} from "modules/@creature-chess/battle";
 import { useSelector } from "react-redux";
 
 import { BoardState, createBoardSlice } from "@shoki/board";
@@ -7,6 +11,7 @@ import { getAllDefinitions } from "@creature-chess/gamemode";
 import { GRID_SIZE, PieceModel } from "@creature-chess/models";
 
 export type BattleTesterState = {
+	currentTurn: number;
 	controls: {
 		selectedTile: {
 			x: number;
@@ -14,6 +19,7 @@ export type BattleTesterState = {
 		} | null;
 	};
 	board: BoardState<PieceModel>;
+	combatStore: PieceInfoStore<PieceCombatState> | null;
 };
 
 export const useAppSelector = <TValue>(

@@ -10,7 +10,7 @@ import {
 	StartBattleCommand,
 	startBattleCommand,
 } from "./commands";
-import { battleFinishEvent, battleTurnEvent } from "./events";
+import { battleFinishEvent, battleTurnEvent, exposeStoreEvent } from "./events";
 import { simulateTurn } from "./simulator";
 import { PieceCombatState } from "./state/state";
 import { pieceInfoStore } from "./state/store";
@@ -47,6 +47,8 @@ const runBattle = function* (
 		canAttackAtTurn: 15,
 	});
 
+	yield put(exposeStoreEvent({ stores: { combat: combatStore } }));
+
 	while (true) {
 		const shouldStop = turnCount >= options.turnCount || isATeamDefeated(board);
 
@@ -64,7 +66,12 @@ const runBattle = function* (
 		const turnTimer = duration(options.turnDuration);
 
 		board = simulateTurn(++turnCount, board, boardSlice, { combatStore });
-		yield put(battleTurnEvent({ turn: turnCount, board }));
+		yield put(
+			battleTurnEvent({
+				turn: turnCount,
+				board,
+			})
+		);
 
 		yield turnTimer.remaining();
 	}

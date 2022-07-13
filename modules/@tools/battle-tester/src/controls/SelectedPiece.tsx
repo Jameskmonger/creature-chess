@@ -3,8 +3,10 @@ import React from "react";
 import { BoardSelectors } from "@shoki/board";
 
 import { useAppSelector } from "../state";
+import { PieceCombatInfo } from "./PieceCombatInfo";
 
 export function SelectedPiece() {
+	const combatStore = useAppSelector((state) => state.combatStore);
 	const tile = useAppSelector((state) => state.controls.selectedTile);
 	const selectedPiece = useAppSelector((state) => {
 		if (!tile) {
@@ -29,16 +31,44 @@ export function SelectedPiece() {
 			<p>
 				{selectedPiece.definition.name} ({selectedPiece.id})
 			</p>
-			<pre
+
+			<div
 				style={{
+					width: "100%",
 					height: "240px",
-					overflowY: "scroll",
 					fontSize: "0.9em",
-					background: "#ccc",
+					display: "flex",
+					flexDirection: "row",
 				}}
 			>
-				{pieceToPrint}
-			</pre>
+				<div
+					style={{
+						width: "49%",
+						height: "100%",
+						background: "#ccc",
+					}}
+				>
+					<pre
+						style={{
+							height: "100%",
+							overflowY: "scroll",
+						}}
+					>
+						{pieceToPrint}
+					</pre>
+				</div>
+
+				<div
+					style={{
+						width: "49%",
+						height: "100%",
+						overflowY: "scroll",
+						background: "#ccc",
+					}}
+				>
+					<PieceCombatInfo piece={selectedPiece} />
+				</div>
+			</div>
 		</>
 	);
 }

@@ -1,12 +1,18 @@
 import React from "react";
 
 import { takeLatest, put, fork } from "@redux-saga/core/effects";
+import { createAction } from "@reduxjs/toolkit";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 
-import { BattleEvents, battleSaga } from "@creature-chess/battle";
+import {
+	BattleEvents,
+	battleSaga,
+	PieceCombatState,
+	PieceInfoStore,
+} from "@creature-chess/battle";
 import { defaultGameOptions } from "@creature-chess/models";
 import { GameBoard } from "@creature-chess/ui";
 
@@ -28,6 +34,24 @@ const makeStore = () => {
 		combineReducers<BattleTesterState>({
 			board: board.boardReducer,
 			controls: controlSlice.reducer,
+			currentTurn: (s, a) => {
+				if (a.type !== BattleEvents.battleTurnEvent.toString()) {
+					return s || 0;
+				}
+
+				const action = a as BattleEvents.BattleTurnEvent;
+
+				return action.payload.turn;
+			},
+			combatStore: (s, a) => {
+				if (a.type !== BattleEvents.exposeStoreEvent.toString()) {
+					return s || null;
+				}
+
+				const action = a as BattleEvents.ExposeStoreEvent;
+
+				return action.payload.stores.combat;
+			},
 		}),
 		applyMiddleware(sagaMiddleware)
 	);

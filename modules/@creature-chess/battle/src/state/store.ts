@@ -2,6 +2,7 @@ export type PieceInfoStore<TState> = {
 	getPiece: (pieceId: string) => TState;
 	updatePiece: (pieceId: string, state: TState) => void;
 	updatePiecePartial: (pieceId: string, state: Partial<TState>) => void;
+	_getMap: () => Map<string, TState>;
 };
 
 export function pieceInfoStore<TState>(
@@ -30,5 +31,6 @@ export function pieceInfoStore<TState>(
 				map.set(pieceId, { ...currentState, ...state });
 			}
 		},
+		_getMap: () => map,
 	};
 }

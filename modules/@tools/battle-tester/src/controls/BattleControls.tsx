@@ -5,13 +5,14 @@ import { useDispatch } from "react-redux";
 import { BattleCommands } from "@creature-chess/battle";
 
 import { initialBoardPieces } from "../piece";
-import { board } from "../state";
+import { board, useAppSelector } from "../state";
 import { BoardLogger } from "./BoardLogger";
 import { SelectedTileInfo } from "./SelectedTile";
 
 export function BattleControls() {
 	const dispatch = useDispatch();
 	const [isPaused, setIsPaused] = React.useState(false);
+	const currentTurn = useAppSelector((state) => state.currentTurn);
 
 	const onClickStart = React.useCallback(() => {
 		dispatch(BattleCommands.startBattleCommand({}));
@@ -49,6 +50,8 @@ export function BattleControls() {
 			<BoardLogger />
 
 			<hr />
+
+			<span>Turn {currentTurn}</span>
 
 			<SelectedTileInfo />
 		</div>
