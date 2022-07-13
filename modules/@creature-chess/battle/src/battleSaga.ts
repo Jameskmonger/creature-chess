@@ -1,6 +1,6 @@
 import { takeLatest, select, put, call } from "@redux-saga/core/effects";
 
-import { BoardState, BoardSlice, BoardSelectors } from "@shoki/board";
+import { BoardState, BoardSlice } from "@shoki/board";
 
 import { PieceModel, GameOptions } from "@creature-chess/models";
 

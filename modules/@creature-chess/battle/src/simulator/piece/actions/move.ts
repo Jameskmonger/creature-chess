@@ -2,14 +2,12 @@ import { BoardSlice, BoardState, PiecePosition } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
 
+import { getCooldownForSpeed } from "../../../utils/getCooldownForSpeed";
 import { getStats } from "../../../utils/getStats";
 import { Stores } from "../../types";
 import { MoveAction } from "../actions";
 
 const MOVE_TURN_DURATION = 2;
-
-// todo tune this
-const getCooldownForSpeed = (speed: number) => (180 - speed) / 24;
 
 export function doMove(
 	currentTurn: number,

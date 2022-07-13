@@ -47,22 +47,25 @@ export function doAttack(
 		attackerStats.attackType
 	);
 
-	if (!inRange) {
-		const nextPosition = getNextPiecePosition(
-			piecePosition,
-			attackerStats,
-			targetPosition,
-			board
-		);
-
-		// can't move towards target, wait
-		// TODO we should probably break here and find a new target
-		if (!nextPosition) {
-			return [state];
-		}
-
-		return [state, [{ type: "move", payload: nextPosition }]];
+	if (inRange) {
+		return [
+			state,
+			[{ type: "hit", payload: { targetId: state.payload.targetId } }],
+		];
 	}
 
-	return [state];
+	const nextPosition = getNextPiecePosition(
+		piecePosition,
+		attackerStats,
+		targetPosition,
+		board
+	);
+
+	// can't move towards target, wait
+	// TODO we should probably break here and find a new target
+	if (!nextPosition) {
+		return [state];
+	}
+
+	return [state, [{ type: "move", payload: nextPosition }]];
 }

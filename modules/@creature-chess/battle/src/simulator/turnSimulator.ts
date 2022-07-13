@@ -16,8 +16,6 @@ import { inAttackRange } from "../utils/inAttackRange";
 import { getTypeAttackBonus } from "../utils/typeRelations";
 import { simulatePiece } from "./piece/simulate";
 
-const ATTACK_TURN_DURATION = 2;
-
 type Stores = { combatStore: PieceInfoStore<PieceCombatState> };
 
 export const simulateTurn = (
@@ -115,58 +113,6 @@ const takePieceTurn = (
 	// const target = BoardSelectors.getPiece(board, attackerTargetId);
 	// const targetCombat = combatStore.getPiece(attackerTargetId);
 
-	// if (inRange) {
-	// 	// target is in range, so attack
-	// 	const damage = getAttackDamage(attacker, target);
-	// 	const newDefenderHealth = Math.max(target.currentHealth - damage, 0);
-
-	// 	const attackerDirection = getRelativeDirection(
-	// 		attackerPosition,
-	// 		targetPosition
-	// 	);
-	// 	const attackerDistance = getDistance(attackerPosition, targetPosition);
-	// 	const attackerFacingAway = getNewAttackerFacingAway(
-	// 		attacker.facingAway,
-	// 		attackerDirection
-	// 	);
-
-	// 	combatStore.updatePiecePartial(pieceId, {
-	// 		board: {
-	// 			...attackerCombatState.board,
-
-	// 			// attack cooldown
-	// 			canAttackAtTurn:
-	// 				currentTurn +
-	// 				ATTACK_TURN_DURATION +
-	// 				getCooldownForSpeed(attackerStats.speed),
-	// 		},
-	// 	});
-
-	// 	const newAttacker = {
-	// 		...attacker,
-	// 		attacking: {
-	// 			attackType: attackerStats.attackType,
-	// 			distance: attackerDistance,
-	// 			direction: attackerDirection,
-	// 			damage,
-	// 		},
-	// 		facingAway: attackerFacingAway,
-	// 	};
-
-	// 	const defender: PieceModel = {
-	// 		...target,
-	// 		currentHealth: newDefenderHealth,
-	// 		hit: {
-	// 			direction: getRelativeDirection(targetPosition, attackerPosition),
-	// 			damage,
-	// 		},
-	// 	};
-
-	// 	return boardSlice.boardReducer(
-	// 		board,
-	// 		boardSlice.commands.updateBoardPiecesCommand([newAttacker, defender])
-	// 	);
-	// } else {
 	// 	const attackerDirection = getRelativeDirection(
 	// 		attackerPosition,
 	// 		targetPosition
@@ -184,34 +130,4 @@ const takePieceTurn = (
 	// 	attackerBoardState.canBeAttackedAtTurn =
 	// 		currentTurn + MOVE_TURN_DURATION + 2;
 	// 	attackerBoardState.canAttackAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
-};
-
-const getNewAttackerFacingAway = (
-	oldFacingAway: boolean,
-	direction: TileCoordinates
-) => {
-	if (direction === Directions.LEFT || direction === Directions.RIGHT) {
-		// if it's left or right we don't need to change it
-		return oldFacingAway;
-	}
-
-	if (direction === Directions.UP) {
-		return true;
-	}
-
-	return false;
-};
-
-const getAttackDamage = (
-	attacker: PieceModel,
-	defender: PieceModel
-): number => {
-	const attackerStats = getStats(attacker);
-	const defenderStats = getStats(defender);
-
-	const attackBonus = getTypeAttackBonus(
-		attacker.definition.type,
-		defender.definition.type
-	);
-	return (attackerStats.attack / defenderStats.defense) * attackBonus * 8; // todo tweak this
 };
