@@ -32,7 +32,14 @@ function getPieceState(
 	if (piece.currentHealth === 0 && combatState.state.type !== "dying") {
 		const dieAtTurn = currentTurn + DYING_DURATION;
 
-		return { type: "dying", payload: { dieAtTurn: dieAtTurn } };
+		const newState = {
+			type: "dying" as const,
+			payload: { dieAtTurn: dieAtTurn },
+		};
+
+		combatStore.updatePiecePartial(piece.id, { state: newState });
+
+		return newState;
 	}
 
 	return combatState.state;
