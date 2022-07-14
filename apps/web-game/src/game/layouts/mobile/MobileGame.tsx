@@ -7,6 +7,7 @@ import { PortraitGameScreen } from "@creature-chess/ui/gameScreen";
 
 import { AppState } from "../../../store";
 import { BoardContainer } from "../../board";
+import { Controls } from "../../board/overlays";
 import { PlayerList, CardShop, Help, Settings, Profile } from "../../module";
 import { Overlay } from "../../ui/overlay";
 import { MobileContentPane } from "./MobileContentPane";
@@ -66,7 +67,11 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 			<MobileContentPane>
 				<Profile />
 
-				<BoardContainer scaleMode="width" />
+				<div style={{ height: "1em" }}>
+					<Controls />
+				</div>
+
+				<BoardContainer />
 			</MobileContentPane>
 		);
 	}

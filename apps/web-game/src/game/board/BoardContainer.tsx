@@ -16,7 +16,6 @@ import {
 	VictoryOverlay,
 	MatchRewardsOverlay,
 	ReconnectOverlay,
-	Controls,
 } from "./overlays";
 
 const useStyles = createUseStyles({
@@ -34,8 +33,6 @@ export function BoardContainer() {
 		<DndProvider>
 			<Group className={classNames(styles.boardContainer, "board-container")}>
 				<NowPlaying />
-
-				<Controls />
 
 				{matchBoard ? <MatchBoard /> : <LocalBoard />}
 

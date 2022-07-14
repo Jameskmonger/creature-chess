@@ -6,6 +6,7 @@ import { Footer, Group, Layout } from "@creature-chess/ui";
 import { LandscapeGameScreen } from "@creature-chess/ui/gameScreen";
 
 import { BoardContainer } from "../../board";
+import { Controls } from "../../board/overlays";
 import {
 	PlayerList,
 	CardShop,
@@ -44,7 +45,7 @@ const DesktopGame: React.FunctionComponent = () => {
 					<PlayerList />
 				</>
 			}
-			middleColumnContent={<BoardContainer scaleMode="width" />}
+			middleColumnContent={<BoardContainer />}
 			rightColumnContent={
 				<Layout direction="column" className={styles.rightColumn}>
 					<QuitGameButton />
@@ -52,6 +53,8 @@ const DesktopGame: React.FunctionComponent = () => {
 					<CardShop />
 
 					<Profile />
+
+					<Controls />
 
 					<div className={styles.helpContainer}>
 						<Help hideFooter />

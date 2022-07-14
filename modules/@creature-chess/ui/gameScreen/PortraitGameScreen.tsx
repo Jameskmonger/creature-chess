@@ -10,24 +10,37 @@ type PortraitGameScreenProps = {
 	bottomRowContent: React.ReactNode | React.ReactNode[];
 };
 
+// TODO remove the absolute positioning here
+// but I am tired of battling with mobile devices
 const useStyles = createUseStyles({
 	wrapper: {
+		display: "block",
+		position: "relative",
+
 		width: "100%",
 		height: "100%",
 		boxSizing: "border-box",
 		padding: "0",
 	},
 	top: {
-		flex: "0",
-		marginBottom: "1rem",
+		position: "absolute",
+		top: "0",
+		height: "4%",
+		width: "100%",
 	},
 	middle: {
-		flex: "1",
-		marginBottom: "1rem",
+		position: "absolute",
+		top: "6%",
+		height: "82%",
+		width: "100%",
+		boxSizing: "border-box",
 		padding: "0 0.5rem",
 	},
 	bottom: {
-		flex: "0",
+		position: "absolute",
+		bottom: "0",
+		height: "10%",
+		width: "100%",
 	},
 });
 

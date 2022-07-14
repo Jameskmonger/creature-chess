@@ -28,6 +28,10 @@ const useStyles = createUseStyles<
 		width,
 		height: (scaleMode || "height") === "height" ? "100%" : "inherit",
 	}),
+	boardGridInner: {
+		width: "100%",
+		height: "100%",
+	},
 });
 
 function useResponsiveStyles(context: BoardContextValue) {
@@ -53,33 +57,35 @@ function useResponsiveStyles(context: BoardContextValue) {
 	};
 }
 
-const BoardGrid: React.FunctionComponent<BoardGridProps> = (props) => {
-	const {
-		state,
-		scaleMode = "width",
-		renderItem,
-		onDropItem,
-		onClickTile,
-	} = props;
+export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
+	(props, forwardRef) => {
+		const {
+			state,
+			scaleMode = "width",
+			renderItem,
+			onDropItem,
+			onClickTile,
+		} = props;
 
-	const boardContext = {
-		state,
-		ui: {
-			scaleMode,
-		},
-	};
+		const boardContext = {
+			state,
+			ui: {
+				scaleMode,
+			},
+		};
 
-	const { styles, ref } = useResponsiveStyles(boardContext);
+		const { styles, ref } = useResponsiveStyles(boardContext);
 
-	return (
-		<div className={styles.boardGrid} ref={ref}>
-			<BoardContextProvider value={boardContext}>
-				<BoardGridRows onDropItem={onDropItem} onClickTile={onClickTile} />
+		return (
+			<div className={styles.boardGrid} ref={forwardRef}>
+				<div className={styles.boardGridInner} ref={ref}>
+					<BoardContextProvider value={boardContext}>
+						<BoardGridRows onDropItem={onDropItem} onClickTile={onClickTile} />
 
-				<BoardItems render={renderItem} />
-			</BoardContextProvider>
-		</div>
-	);
-};
-
-export { BoardGrid };
+						<BoardItems render={renderItem} />
+					</BoardContextProvider>
+				</div>
+			</div>
+		);
+	}
+);

@@ -8,7 +8,7 @@ const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 		overflowY: "hidden",
-		justifyDontent: "space-between",
+		justifyContent: "space-between",
 	},
 });
 

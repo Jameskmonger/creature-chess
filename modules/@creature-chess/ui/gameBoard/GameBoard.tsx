@@ -135,7 +135,10 @@ function useRenderers({
 	return { boardPieceRenderer, benchPieceRenderer };
 }
 
-const useStyles = createUseStyles<string, { isPortrait: boolean }>({
+const useStyles = createUseStyles<
+	string,
+	{ isPortrait: boolean; boardWidth: number }
+>({
 	gameBoard: {
 		height: "100%",
 		width: "100%",
@@ -152,10 +155,17 @@ const useStyles = createUseStyles<string, { isPortrait: boolean }>({
 		},
 	},
 	board: ({ isPortrait }) => ({
-		...(isPortrait ? {} : { height: "74%" }),
+		...(isPortrait ? {} : { height: "78%" }),
+
+		display: "flex",
+		justifyContent: "center",
+
+		marginBottom: "1em",
 	}),
-	bench: ({ isPortrait }) => ({
-		...(isPortrait ? {} : { height: "26%" }),
+	bench: ({ isPortrait, boardWidth }) => ({
+		...(isPortrait ? {} : { height: "14%" }),
+		width: `${boardWidth}px`,
+		margin: "0 auto",
 
 		"& .tile": {
 			background: "#9e9e9e !important",
@@ -182,7 +192,11 @@ export function GameBoard({
 	});
 
 	const { ref, isPortrait, size } = useElementSize();
-	const styles = useStyles({ isPortrait });
+
+	// listen to the board width and set the bench to be the same width
+	const { ref: boardRef, size: boardSize } = useElementSize();
+
+	const styles = useStyles({ isPortrait, boardWidth: boardSize.width });
 
 	return (
 		<div className={styles.gameBoard} ref={ref}>
@@ -192,6 +206,8 @@ export function GameBoard({
 					onDropItem={onDropBoard}
 					onClickTile={onClickBoard}
 					renderItem={boardPieceRenderer}
+					scaleMode={isPortrait ? "width" : "height"}
+					ref={boardRef}
 				/>
 			</div>
 

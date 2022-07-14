@@ -2234,6 +2234,7 @@ __metadata:
     dotenv-webpack: ^7.0.3
     html-webpack-plugin: ^5.5.0
     pepjs: ^0.5.3
+    react-div-100vh: ^0.7.0
     react-media: ^1.10.0
     react-modal: ^3.14.4
     react-redux: ^7.2.6
@@ -19031,6 +19032,15 @@ __metadata:
   version: 0.2.5
   resolution: "react-display-name@npm:0.2.5"
   checksum: ba27778c975e09afea2bfb58c4052b9e12121329a5115391564085ec64293f2b54d3408b841ad04600142c37d40493442676bf1124d0cc0e68f2f1e02762812b
+  languageName: node
+  linkType: hard
+
+"react-div-100vh@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "react-div-100vh@npm:0.7.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 3adc7ac3a8363a6bcaa5b8b3b287f5c842ee64aff29d00ab8910d968dde0d130fbbd4d4d2cb5c9e35624df6bff28154e6dd577ef8ce9062821cca3d11b9b161e
   languageName: node
   linkType: hard
 
