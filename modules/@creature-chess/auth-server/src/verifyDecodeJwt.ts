@@ -23,6 +23,7 @@ const verifyToken = async (token: string, publicKey: string) =>
 	new Promise<JWTPayload>((resolve, reject) => {
 		jwt.verify(token, publicKey, (err, payload) => {
 			if (err) {
+				console.log(err)
 				reject(err);
 				return;
 			}
