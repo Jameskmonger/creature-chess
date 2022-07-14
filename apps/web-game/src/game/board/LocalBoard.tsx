@@ -11,7 +11,7 @@ import {
 	useOnDropPiece,
 } from "./hooks";
 
-export const LocalBoard: React.FC = () => {
+export function LocalBoard() {
 	const board = useGameBoard();
 	const bench = useGameBench();
 
@@ -35,4 +35,4 @@ export const LocalBoard: React.FC = () => {
 			/>
 		</GameBoardContextProvider>
 	);
-};
+}

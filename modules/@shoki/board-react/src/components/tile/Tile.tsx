@@ -5,7 +5,6 @@ import { createUseStyles } from "react-jss";
 
 import { useBoardState } from "../../context";
 import { ClickBoardTileEvent } from "../../events";
-import { useTileWidth } from "./useTileWidth";
 
 type TileProps = {
 	x: number;
@@ -16,10 +15,7 @@ type TileProps = {
 // eslint-disable-next-line no-bitwise
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 
-const useStyles = createUseStyles<
-	string,
-	{ boardWidth: number; tileWidth: number }
->({
+const useStyles = createUseStyles<string, { boardWidth: number }>({
 	tile: (props) => ({
 		width: `${(100 / props.boardWidth).toFixed(2)}%`,
 		height: `100%`,
@@ -42,9 +38,8 @@ export const Tile = React.forwardRef<any, TileProps>(
 		} = useBoardState();
 
 		const tileInnerRef = useRef<HTMLDivElement>(null);
-		const tileWidth = useTileWidth(tileInnerRef);
 
-		const styles = useStyles({ boardWidth, tileWidth });
+		const styles = useStyles({ boardWidth });
 		const isDark = isBoardTileDark(x, y);
 
 		const handleClick = onClick ? () => onClick({ x, y }) : undefined;

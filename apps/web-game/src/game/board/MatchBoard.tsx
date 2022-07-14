@@ -11,7 +11,7 @@ import {
 	useOnDropPiece,
 } from "./hooks";
 
-export const MatchBoard: React.FC = () => {
+export function MatchBoard() {
 	const board = useGameMatchBoard();
 	const bench = useGameBench();
 
@@ -35,4 +35,4 @@ export const MatchBoard: React.FC = () => {
 			/>
 		</GameBoardContextProvider>
 	);
-};
+}

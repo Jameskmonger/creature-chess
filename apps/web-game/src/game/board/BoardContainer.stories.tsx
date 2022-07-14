@@ -1,0 +1,47 @@
+import React from "react";
+
+import { Meta, Story } from "@storybook/react";
+import { Provider } from "react-redux";
+
+import { AuthContextProvider } from "@creature-chess/auth-web";
+import { GamePhase } from "@creature-chess/models";
+import { useGlobalStyles } from "@creature-chess/ui";
+
+import { createMockStore } from "../layouts/stories-utils";
+import { BoardContainer } from "./BoardContainer";
+
+export default {
+	title: "@game / BoardContainer",
+	component: BoardContainer,
+	argTypes: {},
+} as Meta;
+
+const Template: Story<any> = (args) => {
+	useGlobalStyles();
+
+	const store = createMockStore(false);
+
+	return (
+		<div
+			style={{
+				width: "500px",
+				height: "400px",
+				border: "2px solid red",
+			}}
+		>
+			<Provider store={store}>
+				<BoardContainer />
+			</Provider>
+		</div>
+	);
+};
+
+export const Scale_Height = Template.bind({});
+Scale_Height.args = {
+	scaleMode: "height",
+};
+
+export const Scale_Width = Template.bind({});
+Scale_Width.args = {
+	scaleMode: "width",
+};

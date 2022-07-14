@@ -4,30 +4,56 @@ import { createUseStyles } from "react-jss";
 
 import { BoardState } from "@shoki/board";
 
-import { BoardContextProvider } from "../context";
+import { BoardContextProvider, BoardContextValue } from "../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
+import { useElementSize } from "../useElementSize";
 import { BoardGridRows } from "./BoardGridRows";
 import { BoardItems } from "./items/BoardItems";
 import { BoardItemRenderFn } from "./items/renderItem";
 
 type BoardGridProps = {
 	state: BoardState;
-	scaleMode?: "width";
+	scaleMode?: "width" | "height";
 	renderItem: BoardItemRenderFn;
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;
 };
 
-const useStyles = createUseStyles<string, BoardGridProps>({
-	boardGrid: (props) => ({
+const useStyles = createUseStyles<
+	string,
+	{ scaleMode: "width" | "height"; width: string }
+>({
+	boardGrid: ({ scaleMode, width }) => ({
 		position: "relative",
-		width: (props.scaleMode || "width") === "width" ? "100%" : "inherit",
-		height: (props.scaleMode || "height") === "height" ? "100%" : "inherit",
+		width,
+		height: (scaleMode || "height") === "height" ? "100%" : "inherit",
 	}),
 });
 
+function useResponsiveStyles(context: BoardContextValue) {
+	const {
+		state: {
+			size: { width, height },
+		},
+		ui: { scaleMode },
+	} = context;
+
+	const { ref, size } = useElementSize();
+
+	const styleWidth =
+		(scaleMode || "width") === "width"
+			? "100%"
+			: `${(size.height / height) * width}px`;
+
+	const styles = useStyles({ scaleMode, width: styleWidth });
+
+	return {
+		styles,
+		ref,
+	};
+}
+
 const BoardGrid: React.FunctionComponent<BoardGridProps> = (props) => {
-	const styles = useStyles(props);
 	const {
 		state,
 		scaleMode = "width",
@@ -43,8 +69,10 @@ const BoardGrid: React.FunctionComponent<BoardGridProps> = (props) => {
 		},
 	};
 
+	const { styles, ref } = useResponsiveStyles(boardContext);
+
 	return (
-		<div className={styles.boardGrid}>
+		<div className={styles.boardGrid} ref={ref}>
 			<BoardContextProvider value={boardContext}>
 				<BoardGridRows onDropItem={onDropItem} onClickTile={onClickTile} />
 

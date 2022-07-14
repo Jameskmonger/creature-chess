@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 import { BoardSelectors, BoardState } from "@shoki/board";
 
-type BoardContextValue = {
+export type BoardContextValue = {
 	state: BoardState;
 	ui: {
 		scaleMode: "width" | "height";

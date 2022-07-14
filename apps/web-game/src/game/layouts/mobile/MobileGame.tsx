@@ -66,7 +66,7 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 			<MobileContentPane>
 				<Profile />
 
-				<BoardContainer />
+				<BoardContainer scaleMode="width" />
 			</MobileContentPane>
 		);
 	}

@@ -63,6 +63,7 @@ const Template: Story<any> = (args) => {
 						renderBenchPiece={renderPiece}
 						onClick={args.onClick}
 						onDropPiece={args.onDropPiece}
+						scaleMode={args.scaleMode}
 					/>
 				</GameBoardContextProvider>
 			</div>
@@ -74,10 +75,12 @@ export const Portrait = Template.bind({});
 Portrait.args = {
 	width: "300px",
 	height: "500px",
+	scaleMode: "width",
 };
 
 export const Landscape = Template.bind({});
 Landscape.args = {
 	width: "500px",
 	height: "300px",
+	scaleMode: "height",
 };

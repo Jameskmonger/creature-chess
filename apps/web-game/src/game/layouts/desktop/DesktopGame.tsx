@@ -44,7 +44,7 @@ const DesktopGame: React.FunctionComponent = () => {
 					<PlayerList />
 				</>
 			}
-			middleColumnContent={<BoardContainer />}
+			middleColumnContent={<BoardContainer scaleMode="width" />}
 			rightColumnContent={
 				<Layout direction="column" className={styles.rightColumn}>
 					<QuitGameButton />

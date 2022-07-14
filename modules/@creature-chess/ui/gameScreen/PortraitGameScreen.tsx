@@ -18,15 +18,16 @@ const useStyles = createUseStyles({
 		padding: "0",
 	},
 	top: {
+		flex: "0",
 		marginBottom: "1rem",
-		flex: "initial",
 	},
 	middle: {
+		flex: "1",
 		marginBottom: "1rem",
 		padding: "0 0.5rem",
 	},
 	bottom: {
-		flex: "initial",
+		flex: "0",
 	},
 });
 

@@ -8,6 +8,7 @@ import {
 	ClickBoardTileEvent,
 	DropBoardItemEvent,
 } from "@shoki/board-react";
+import { useElementSize } from "@shoki/board-react/src/useElementSize";
 
 import { PieceModel } from "@creature-chess/models";
 
@@ -45,24 +46,103 @@ type GameBoardProps = {
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
 };
 
-const useStyles = createUseStyles<
-	string,
-	{ portrait: boolean; halfHeight: boolean }
->({
-	boardContainer: ({ portrait }) => ({
-		width: "100%",
+function useEvents({
+	onClick,
+	onDropPiece,
+}: Pick<GameBoardProps, "onClick" | "onDropPiece">) {
+	const onClickBoard = React.useCallback(
+		({ x, y }: ClickBoardTileEvent) => {
+			if (!onClick) {
+				return;
+			}
+
+			onClick(createClickEvent({ locationType: "board", x, y }));
+		},
+		[onClick]
+	);
+
+	const onClickBench = React.useCallback(
+		({ x }: ClickBoardTileEvent) => {
+			if (!onClick) {
+				return;
+			}
+
+			onClick(createClickEvent({ locationType: "bench", x }));
+		},
+		[onClick]
+	);
+
+	const onDropBoard = React.useCallback(
+		({ id, x, y }: DropBoardItemEvent) => {
+			if (!onDropPiece) {
+				return;
+			}
+
+			onDropPiece(createDropPieceEvent(id, { locationType: "board", x, y }));
+		},
+		[onDropPiece]
+	);
+
+	const onDropBench = React.useCallback(
+		({ id, x }: DropBoardItemEvent) => {
+			if (!onDropPiece) {
+				return;
+			}
+
+			onDropPiece(createDropPieceEvent(id, { locationType: "bench", x }));
+		},
+		[onDropPiece]
+	);
+
+	return {
+		onClickBoard,
+		onClickBench,
+		onDropBoard,
+		onDropBench,
+	};
+}
+
+function useRenderers({
+	renderBoardPiece,
+	renderBenchPiece,
+}: Pick<GameBoardProps, "renderBoardPiece" | "renderBenchPiece">) {
+	const { board, bench } = useGameBoard();
+
+	const boardPieceRenderer = React.useMemo(() => {
+		return (item: HasId) => {
+			const piece = item as PieceModel;
+			const draggable = !board.locked;
+
+			return {
+				item: renderBoardPiece(piece),
+				draggable,
+			};
+		};
+	}, [renderBoardPiece]);
+
+	const benchPieceRenderer = React.useMemo(() => {
+		return (item: HasId) => {
+			const piece = item as PieceModel;
+			const draggable = !bench.locked;
+
+			return {
+				item: renderBenchPiece(piece),
+				draggable,
+			};
+		};
+	}, [renderBoardPiece]);
+
+	return { boardPieceRenderer, benchPieceRenderer };
+}
+
+const useStyles = createUseStyles<string, { isPortrait: boolean }>({
+	gameBoard: {
 		height: "100%",
-		display: "flex",
-		flexDirection: portrait ? "column" : "row",
-		justifyContent: "center",
-	}),
-	boardGrid: ({ halfHeight }) => ({
-		position: "relative",
-		marginBottom: "0.5rem",
 		width: "100%",
 
-		// TODO this should be based on GRID_SIZE
-		height: halfHeight ? "41.5%" : "83%",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
 
 		"& .tile.dark": {
 			background: "#38b764",
@@ -70,129 +150,59 @@ const useStyles = createUseStyles<
 		"& .tile.light": {
 			background: "#a7f070",
 		},
+	},
+	board: ({ isPortrait }) => ({
+		...(isPortrait ? {} : { height: "74%" }),
 	}),
-	benchGrid: {
-		position: "relative",
-		width: "100%",
-
-		// TODO this should be based on GRID_SIZE
-		height: "17%",
+	bench: ({ isPortrait }) => ({
+		...(isPortrait ? {} : { height: "26%" }),
 
 		"& .tile": {
-			background: "#9e9e9e",
+			background: "#9e9e9e !important",
 			boxShadow: "inset 0 0 2px #404040",
 		},
-	},
-});
-
-const useChessboardStyles = createUseStyles<
-	string,
-	{ width: string; height: string }
->({
-	chessboard: ({ width, height }) => ({
-		width,
-		height,
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "center",
 	}),
 });
 
-const GameBoard: React.FC<GameBoardProps> = ({
+export function GameBoard({
 	renderBoardPiece,
 	renderBenchPiece,
 	onClick,
 	onDropPiece,
-}) => {
+}: GameBoardProps) {
 	const { board, bench } = useGameBoard();
-	const [size, setSize] = React.useState([0, 0]);
-	const isPortrait = size[0] <= size[1];
-	const isHalfHeight = board.size.height === 3;
-	const styles = useStyles({ portrait: isPortrait, halfHeight: isHalfHeight });
-	const chessboardStyles = useChessboardStyles({
-		width: isPortrait ? `${size[0]}px` : `${size[1]}px`,
-		height: isPortrait ? `${size[0]}px` : "100%",
+
+	const { boardPieceRenderer, benchPieceRenderer } = useRenderers({
+		renderBoardPiece,
+		renderBenchPiece,
+	});
+	const { onClickBoard, onClickBench, onDropBoard, onDropBench } = useEvents({
+		onClick,
+		onDropPiece,
 	});
 
-	const createHandleClick =
-		(locationType: "board" | "bench") =>
-		({ x, y }: ClickBoardTileEvent) => {
-			if (!onClick) {
-				return;
-			}
-
-			onClick(createClickEvent({ locationType, x, y }));
-		};
-
-	const createHandleDrop =
-		(locationType: "board" | "bench") =>
-		({ id, x, y }: DropBoardItemEvent) => {
-			if (!onDropPiece) {
-				return;
-			}
-
-			onDropPiece(createDropPieceEvent(id, { locationType, x, y }));
-		};
-
-	const createRenderer = (locationType: "board" | "bench") => (item: HasId) => {
-		const piece = item as PieceModel;
-
-		const isBoard = locationType === "board";
-
-		const state = isBoard ? board : bench;
-
-		const renderer = isBoard ? renderBoardPiece : renderBenchPiece;
-		const draggable = !state.locked;
-
-		return {
-			item: renderer(piece),
-			draggable,
-		};
-	};
-
-	const chessboardRef = React.useRef<HTMLDivElement>(null);
-
-	React.useLayoutEffect(() => {
-		function updateSize() {
-			if (!chessboardRef.current?.parentElement) {
-				return;
-			}
-
-			const { clientWidth, clientHeight } = chessboardRef.current.parentElement;
-
-			setSize([clientWidth, clientHeight]);
-		}
-
-		window.addEventListener("resize", updateSize);
-
-		updateSize();
-
-		return () => window.removeEventListener("resize", updateSize);
-	}, [chessboardRef.current, setSize]);
+	const { ref, isPortrait, size } = useElementSize();
+	const styles = useStyles({ isPortrait });
 
 	return (
-		<div className={styles.boardContainer}>
-			<div className={chessboardStyles.chessboard} ref={chessboardRef}>
-				<div className={styles.boardGrid}>
-					<BoardGrid
-						state={board}
-						onDropItem={createHandleDrop("board")}
-						onClickTile={createHandleClick("board")}
-						renderItem={createRenderer("board")}
-					/>
-				</div>
+		<div className={styles.gameBoard} ref={ref}>
+			<div className={styles.board}>
+				<BoardGrid
+					state={board}
+					onDropItem={onDropBoard}
+					onClickTile={onClickBoard}
+					renderItem={boardPieceRenderer}
+				/>
+			</div>
 
-				<div className={styles.benchGrid}>
-					<BoardGrid
-						state={bench}
-						onDropItem={createHandleDrop("bench")}
-						onClickTile={createHandleClick("bench")}
-						renderItem={createRenderer("bench")}
-					/>
-				</div>
+			<div className={styles.bench}>
+				<BoardGrid
+					state={bench}
+					onDropItem={onDropBench}
+					onClickTile={onClickBench}
+					renderItem={benchPieceRenderer}
+				/>
 			</div>
 		</div>
 	);
-};
-
-export { GameBoard };
+}
