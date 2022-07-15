@@ -15,8 +15,8 @@ const useStyles = createUseStyles({
 		marginRight: "0.5rem",
 	},
 	list: {
-		marginBottom: "1rem",
-		marginLeft: "1.5rem",
+		"marginBottom": "1rem",
+		"marginLeft": "1.5rem",
 		"list-style-type": "disc",
 	},
 	help: {

@@ -44,9 +44,9 @@ const Board: React.FC = ({ children }) => (
 
 const useStyles = createUseStyles({
 	control: {
-		marginBottom: "1em",
-		border: "2px solid #eee",
-		padding: "0.5rem",
+		"marginBottom": "1em",
+		"border": "2px solid #eee",
+		"padding": "0.5rem",
 
 		"& button": {
 			padding: "1rem",
@@ -57,8 +57,8 @@ const useStyles = createUseStyles({
 		},
 	},
 	buttonGroup: {
-		display: "flex",
-		flexDirection: "row",
+		"display": "flex",
+		"flexDirection": "row",
 
 		"&:not(:last-child)": {
 			marginBottom: "1rem",
@@ -109,8 +109,7 @@ const createHandleReceiveHitClick = (
 	piece: PieceModel,
 	setPiece: (value: React.SetStateAction<PieceModel>) => void,
 	damage: number
-) => {
-	return () => {
+) => () => {
 		setPiece({
 			...piece,
 			hit: {
@@ -126,7 +125,6 @@ const createHandleReceiveHitClick = (
 			});
 		}, 200);
 	};
-};
 
 const Template: Story<any> = (args) => {
 	const styles = useStyles();

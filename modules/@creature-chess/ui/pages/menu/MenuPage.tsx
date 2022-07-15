@@ -8,14 +8,14 @@ import { useMenuPage } from "./MenuPageContext";
 
 const useNavbarStyles = createUseStyles({
 	navbar: {
-		position: "fixed",
-		top: "0",
-		display: "flex",
-		flexDirection: "row",
-		width: "100%",
-		height: "2em",
-		background: "#985763",
-		justifyContent: "flex-end",
+		"position": "fixed",
+		"top": "0",
+		"display": "flex",
+		"flexDirection": "row",
+		"width": "100%",
+		"height": "2em",
+		"background": "#985763",
+		"justifyContent": "flex-end",
 
 		"& button": {
 			fontWeight: "700",

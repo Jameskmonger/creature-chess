@@ -9089,6 +9089,7 @@ __metadata:
     eslint-plugin-jsdoc: ^36.1.1
     eslint-plugin-prefer-arrow: ^1.2.3
     eslint-plugin-react: ^7.28.0
+    eslint-plugin-react-hooks: ^4.6.0
     jest: ^27.4.5
     jest-standard-reporter: ^2.0.0
     node-sass: ^7.0.0
@@ -10867,6 +10868,15 @@ __metadata:
   peerDependencies:
     eslint: ">=2.0.0"
   checksum: 3cdae574121c4a683d77e329ee193103b2bf418d7a8c85831b274000ae4aba64cb4d302fe69a44ae4d729b90f5130c968e4a9e43852a5de940d00283e61f92fc
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-hooks@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "eslint-plugin-react-hooks@npm:4.6.0"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 23001801f14c1d16bf0a837ca7970d9dd94e7b560384b41db378b49b6e32dc43d6e2790de1bd737a652a86f81a08d6a91f402525061b47719328f586a57e86c3
   languageName: node
   linkType: hard
 

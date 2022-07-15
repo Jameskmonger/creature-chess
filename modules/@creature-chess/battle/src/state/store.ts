@@ -2,6 +2,7 @@ export type PieceInfoStore<TState> = {
 	getPiece: (pieceId: string) => TState;
 	updatePiece: (pieceId: string, state: TState) => void;
 	updatePiecePartial: (pieceId: string, state: Partial<TState>) => void;
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	_getMap: () => Map<string, TState>;
 };
 
@@ -31,6 +32,7 @@ export function pieceInfoStore<TState>(
 				map.set(pieceId, { ...currentState, ...state });
 			}
 		},
+		// eslint-disable-next-line @typescript-eslint/naming-convention
 		_getMap: () => map,
 	};
 }

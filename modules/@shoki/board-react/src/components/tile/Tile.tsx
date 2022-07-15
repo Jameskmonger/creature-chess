@@ -18,7 +18,7 @@ const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 const useStyles = createUseStyles<string, { boardWidth: number }>({
 	tile: (props) => ({
 		width: `${(100 / props.boardWidth).toFixed(2)}%`,
-		height: `100%`,
+		height: "100%",
 
 		position: "relative",
 		display: "inline-block",

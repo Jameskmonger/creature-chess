@@ -8,9 +8,9 @@ export const useStyles = createUseStyles({
 		background: "#566c86",
 	},
 	row: {
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
+		"display": "flex",
+		"flexDirection": "row",
+		"alignItems": "center",
 
 		"&:not(:last-child)": {
 			marginBottom: "0.4em",
@@ -33,11 +33,11 @@ export const useStyles = createUseStyles({
 		border: "none",
 	},
 	level: {
-		display: "flex",
-		justifyContent: "space-evenly",
-		alignItems: "center",
-		flexDirection: "row",
-		fontWeight: "700",
+		"display": "flex",
+		"justifyContent": "space-evenly",
+		"alignItems": "center",
+		"flexDirection": "row",
+		"fontWeight": "700",
 
 		"& > span": {
 			color: "#ffcd75",

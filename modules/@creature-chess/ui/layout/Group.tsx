@@ -12,7 +12,7 @@ type Props = {
 const SPACER = "1em";
 
 const useStyles = createUseStyles<string, { spacer: boolean }>({
-	group: {
+	"group": {
 		display: "flex",
 		flex: "1",
 		boxSizing: "border-box",

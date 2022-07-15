@@ -12,10 +12,10 @@ export const useStyles = createUseStyles({
 		background: "#566c86",
 	},
 	banner: {
-		maxWidth: "700px",
-		marginTop: "1rem",
-		marginBottom: "1rem",
-		userSelect: "none",
+		"maxWidth": "700px",
+		"marginTop": "1rem",
+		"marginBottom": "1rem",
+		"userSelect": "none",
 
 		"& img": {
 			width: "100%",
@@ -24,9 +24,9 @@ export const useStyles = createUseStyles({
 	},
 	group: {},
 	groups: {
-		display: "flex",
-		width: "100%",
-		maxWidth: "700px",
+		"display": "flex",
+		"width": "100%",
+		"maxWidth": "700px",
 
 		"& .group": {
 			width: "50%",

@@ -12,12 +12,12 @@ import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
 const useStyles = createUseStyles({
 	readyButton: {
 		"box-sizing": "border-box",
-		padding: "2rem",
+		"padding": "2rem",
 		"font-size": "1.6rem",
-		color: COLOR_READY_BUTTON_TEXT,
-		cursor: "pointer",
-		background: COLOR_READY_BUTTON,
-		border: "none",
+		"color": COLOR_READY_BUTTON_TEXT,
+		"cursor": "pointer",
+		"background": COLOR_READY_BUTTON,
+		"border": "none",
 	},
 });
 
@@ -39,11 +39,11 @@ export function ReadyUpButton() {
 		}
 
 		dispatch(PlayerActions.readyUpPlayerAction());
-	}, [dispatch, canReadyUp]);
+	}, []);
 
 	if (!canReadyUp) {
 		// To keep the Sell button in the same place
-		return <div></div>;
+		return <div />;
 	}
 
 	return (

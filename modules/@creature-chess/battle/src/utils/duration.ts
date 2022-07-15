@@ -4,6 +4,7 @@ const present = require("present");
 
 /**
  * Start a timer, and allow for the creation of a promise at-will to wait until that timer has ended.
+ *
  * @param ms the number of milliseconds to wait
  * @returns {{remaining: () => Promise<void>}} A promise that resolves when the timer has ended.
  */

@@ -12,7 +12,7 @@ export const useAnimationStyles = createUseStyles({
 			transform: "scale(0)",
 		},
 	},
-	dying: {
+	"dying": {
 		animationName: "$piece-dying-anim",
 		animationDuration: "1000ms",
 		animationFillMode: "forwards",
@@ -35,7 +35,7 @@ export const useAnimationStyles = createUseStyles({
 			left: "0",
 		},
 	},
-	attackBasic: {
+	"attackBasic": {
 		animationName: "$piece-attack-basic-anim",
 		animationDuration: `${ATTACK_DURATION_MS}ms`,
 	},
@@ -57,13 +57,13 @@ export const useAnimationStyles = createUseStyles({
 			  )`,
 		},
 	},
-	projectile: {
+	"projectile": {
 		display: "none",
 		position: "absolute",
 		top: `calc(50% - (${projectileSize} / 2))`,
 		left: `calc(50% - (${projectileSize} / 2))`,
 	},
-	attackShoot: {
+	"attackShoot": {
 		"& $projectile": {
 			display: "block",
 			animationName: "$piece-attack-shoot-anim",
@@ -85,7 +85,7 @@ export const useAnimationStyles = createUseStyles({
 			transform: "rotate(0deg)",
 		},
 	},
-	receiveHit: {
+	"receiveHit": {
 		animationName: "$piece-receive-hit-anim",
 		animationDuration: `${ATTACK_DURATION_MS}ms`,
 	},

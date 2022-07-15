@@ -22,10 +22,11 @@ module.exports = {
 		sourceType: "module",
 	},
 	plugins: [
-		"eslint-plugin-jsdoc",
-		"eslint-plugin-prefer-arrow",
-		"eslint-plugin-import",
-		"eslint-plugin-react",
+		"jsdoc",
+		"prefer-arrow",
+		"import",
+		"react",
+		"react-hooks",
 		"@typescript-eslint",
 	],
 	settings: {
@@ -45,27 +46,27 @@ module.exports = {
 			"error",
 			{
 				types: {
-					Object: {
+					"Object": {
 						message: "Avoid using the `Object` type. Did you mean `object`?",
 					},
-					Function: {
+					"Function": {
 						message:
 							"Avoid using the `Function` type. Prefer a specific function type, like `() => void`.",
 					},
-					Boolean: {
+					"Boolean": {
 						message: "Avoid using the `Boolean` type. Did you mean `boolean`?",
 					},
-					Number: {
+					"Number": {
 						message: "Avoid using the `Number` type. Did you mean `number`?",
 					},
-					String: {
+					"String": {
 						message: "Avoid using the `String` type. Did you mean `string`?",
 					},
-					Symbol: {
+					"Symbol": {
 						message: "Avoid using the `Symbol` type. Did you mean `symbol`?",
 					},
 					"{}": false,
-					object: false,
+					"object": false,
 				},
 			},
 		],
@@ -77,19 +78,7 @@ module.exports = {
 				accessibility: "explicit",
 			},
 		],
-		"@typescript-eslint/indent": [
-			"error",
-			"tab",
-			{
-				SwitchCase: 1,
-				FunctionDeclaration: {
-					parameters: "first",
-				},
-				FunctionExpression: {
-					parameters: "first",
-				},
-			},
-		],
+		"@typescript-eslint/indent": "off",
 		"@typescript-eslint/member-delimiter-style": [
 			"error",
 			{
@@ -104,58 +93,7 @@ module.exports = {
 			},
 		],
 		"@typescript-eslint/member-ordering": "error",
-		"@typescript-eslint/naming-convention": [
-			"error",
-			{
-				selector: "default",
-				format: ["camelCase"],
-			},
-			{
-				selector: "objectLiteralProperty",
-				format: ["camelCase", "UPPER_CASE", "PascalCase"],
-			},
-
-			{
-				selector: "variable",
-				format: ["camelCase", "UPPER_CASE", "PascalCase"],
-				leadingUnderscore: "allow",
-			},
-			{
-				selector: "parameter",
-				format: ["camelCase"],
-				leadingUnderscore: "allow",
-			},
-
-			{
-				selector: "memberLike",
-				modifiers: ["private"],
-				format: ["camelCase"],
-			},
-
-			{
-				selector: "typeLike",
-				format: ["PascalCase"],
-			},
-
-			{
-				selector: "enum",
-				format: ["camelCase", "UPPER_CASE", "PascalCase"],
-			},
-			{
-				selector: "enumMember",
-				format: ["camelCase", "UPPER_CASE", "PascalCase"],
-			},
-
-			{
-				selector: "classProperty",
-				format: ["camelCase", "UPPER_CASE"],
-			},
-
-			{
-				selector: "typeAlias",
-				format: ["PascalCase", "UPPER_CASE"],
-			},
-		],
+		"@typescript-eslint/naming-convention": "off",
 		"@typescript-eslint/no-empty-function": "error",
 		"@typescript-eslint/no-empty-interface": "error",
 		"@typescript-eslint/no-explicit-any": "off",
@@ -197,12 +135,12 @@ module.exports = {
 		"arrow-parens": ["off", "always"],
 		"brace-style": ["error", "1tbs"],
 		"comma-dangle": "off",
-		complexity: "off",
+		"complexity": "off",
 		"constructor-super": "error",
-		curly: "error",
+		"curly": "error",
 		"default-case": "error",
 		"eol-last": "error",
-		eqeqeq: ["error", "smart"],
+		"eqeqeq": ["error", "smart"],
 		"guard-for-in": "error",
 		"id-blacklist": [
 			"error",
@@ -275,14 +213,14 @@ module.exports = {
 		"no-var": "error",
 		"object-shorthand": "error",
 		"one-var": ["error", "never"],
-		"prefer-arrow/prefer-arrow-functions": "error",
+		"prefer-arrow/prefer-arrow-functions": "off",
 		"prefer-const": "error",
 		"quote-props": ["error", "consistent-as-needed"],
-		radix: "error",
+		"radix": "error",
 		"react/forbid-component-props": [
 			"error",
 			{
-				forbid: ["className", "style"],
+				forbid: ["style"],
 			},
 		],
 		"react/jsx-boolean-value": [0],
@@ -294,7 +232,7 @@ module.exports = {
 		],
 		"react/jsx-equals-spacing": ["error", "never"],
 		"react/jsx-key": "error",
-		"react/jsx-no-bind": "none",
+		"react/jsx-no-bind": "off",
 		"react/jsx-tag-spacing": [
 			"error",
 			{
@@ -304,14 +242,7 @@ module.exports = {
 		],
 		"react/jsx-wrap-multilines": "error",
 		"react/self-closing-comp": "error",
-		"space-before-function-paren": [
-			"error",
-			{
-				anonymous: "never",
-				asyncArrow: "always",
-				named: "never",
-			},
-		],
+		"space-before-function-paren": "off",
 		"spaced-comment": [
 			"error",
 			"always",

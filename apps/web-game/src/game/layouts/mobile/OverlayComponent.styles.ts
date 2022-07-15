@@ -11,16 +11,16 @@ export const useStyles = createUseStyles({
 		background: "#9da5bd",
 	},
 	header: {
-		display: "flex",
-		flexDirection: "row",
+		"display": "flex",
+		"flexDirection": "row",
 
 		"& h2": {
-			flex: "1",
-			fontFamily: "Arial, sans-serif",
+			"flex": "1",
+			"fontFamily": "Arial, sans-serif",
 			"font-size": "1.5rem",
-			color: "#fff",
-			textAlign: "center",
-			textDecoration: "underline",
+			"color": "#fff",
+			"textAlign": "center",
+			"textDecoration": "underline",
 		},
 	},
 	closeButton: {

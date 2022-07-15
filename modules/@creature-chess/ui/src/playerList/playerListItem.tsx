@@ -34,10 +34,10 @@ const getDetailReadyColor = ({
 
 const useStyles = createUseStyles({
 	container: (props: Props) => ({
-		border: props.isOpponent ? "3px solid #b13e53" : "",
-		boxSizing: "border-box",
-		padding: "0.5rem",
-		background: "#566c86",
+		"border": props.isOpponent ? "3px solid #b13e53" : "",
+		"boxSizing": "border-box",
+		"padding": "0.5rem",
+		"background": "#566c86",
 
 		"&:not(:last-child)": {
 			marginBottom: "0.25em",
@@ -60,12 +60,12 @@ const useStyles = createUseStyles({
 		"&>:not(:last-child)": {
 			marginRight: "0.25em",
 		},
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		padding: "0 1em",
-		boxSizing: "border-box",
-		alignItems: "center",
+		"display": "flex",
+		"flexDirection": "row",
+		"justifyContent": "space-between",
+		"padding": "0 1em",
+		"boxSizing": "border-box",
+		"alignItems": "center",
 	},
 });
 

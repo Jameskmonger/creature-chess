@@ -83,14 +83,12 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 	);
 };
 
-const MobileGame = () => {
-	return (
+const MobileGame = () => (
 		<PortraitGameScreen
 			topRowContent={<TopBar />}
 			middleRowContent={<MobileGameContentPane />}
 			bottomRowContent={<NavBar />}
 		/>
 	);
-};
 
 export { MobileGame };

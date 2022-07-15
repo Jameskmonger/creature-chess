@@ -108,8 +108,7 @@ function useRenderers({
 }: Pick<GameBoardProps, "renderBoardPiece" | "renderBenchPiece">) {
 	const { board, bench } = useGameBoard();
 
-	const boardPieceRenderer = React.useMemo(() => {
-		return (item: HasId) => {
+	const boardPieceRenderer = React.useMemo(() => (item: HasId) => {
 			const piece = item as PieceModel;
 			const draggable = !board.locked;
 
@@ -117,11 +116,9 @@ function useRenderers({
 				item: renderBoardPiece(piece),
 				draggable,
 			};
-		};
-	}, [renderBoardPiece]);
+		}, [renderBoardPiece]);
 
-	const benchPieceRenderer = React.useMemo(() => {
-		return (item: HasId) => {
+	const benchPieceRenderer = React.useMemo(() => (item: HasId) => {
 			const piece = item as PieceModel;
 			const draggable = !bench.locked;
 
@@ -129,8 +126,7 @@ function useRenderers({
 				item: renderBenchPiece(piece),
 				draggable,
 			};
-		};
-	}, [renderBoardPiece]);
+		}, [renderBoardPiece]);
 
 	return { boardPieceRenderer, benchPieceRenderer };
 }
@@ -140,12 +136,12 @@ const useStyles = createUseStyles<
 	{ isPortrait: boolean; boardWidth: number }
 >({
 	gameBoard: {
-		height: "100%",
-		width: "100%",
+		"height": "100%",
+		"width": "100%",
 
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "center",
+		"display": "flex",
+		"flexDirection": "column",
+		"justifyContent": "center",
 
 		"& .tile.dark": {
 			background: "#38b764",
@@ -164,8 +160,8 @@ const useStyles = createUseStyles<
 	}),
 	bench: ({ isPortrait, boardWidth }) => ({
 		...(isPortrait ? {} : { height: "14%" }),
-		width: `${boardWidth}px`,
-		margin: "0 auto",
+		"width": `${boardWidth}px`,
+		"margin": "0 auto",
 
 		"& .tile": {
 			background: "#9e9e9e !important",

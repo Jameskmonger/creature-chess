@@ -67,7 +67,7 @@ const createBoardState = (halfBoard: boolean): BoardState<PieceModel> => {
 			[piece.id]: piece,
 		},
 		piecePositions: {
-			[halfBoard ? `3,0` : `3,3`]: piece.id,
+			[halfBoard ? "3,0" : "3,3"]: piece.id,
 		},
 	};
 };
@@ -97,7 +97,7 @@ const createBenchState = (): BoardState<PieceModel> => {
 			[piece.id]: piece,
 		},
 		piecePositions: {
-			[`1,0`]: piece.id,
+			["1,0"]: piece.id,
 		},
 	};
 };

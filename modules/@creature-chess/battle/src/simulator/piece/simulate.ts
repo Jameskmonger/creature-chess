@@ -34,7 +34,7 @@ function getPieceState(
 
 		const newState = {
 			type: "dying" as const,
-			payload: { dieAtTurn: dieAtTurn },
+			payload: { dieAtTurn },
 		};
 
 		combatStore.updatePiecePartial(piece.id, { state: newState });

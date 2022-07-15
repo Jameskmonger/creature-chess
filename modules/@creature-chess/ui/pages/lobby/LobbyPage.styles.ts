@@ -1,7 +1,7 @@
 import { createUseStyles } from "react-jss";
 
 export const useStyles = createUseStyles({
-	lobbyPage: {
+	"lobbyPage": {
 		display: "flex",
 		flexDirection: "column",
 		height: "100%",
@@ -13,7 +13,7 @@ export const useStyles = createUseStyles({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	lobbyInfo: {
+	"lobbyInfo": {
 		display: "flex",
 		flexDirection: "column",
 		padding: "1rem",
@@ -21,22 +21,22 @@ export const useStyles = createUseStyles({
 		textAlign: "center",
 		background: "#566c86",
 	},
-	timeRemaining: {
+	"timeRemaining": {
 		padding: "0.5em 0.6em",
 		marginBottom: "1em",
 		textTransform: "uppercase",
 		background: "#333",
 	},
-	timeRemainingHighlight: {
+	"timeRemainingHighlight": {
 		fontWeight: "700",
 	},
-	players: {
+	"players": {
 		flex: "1 0 0",
 		display: "flex",
 		justifyContent: "space-between",
 		flexWrap: "wrap",
 	},
-	playerWrapper: {
+	"playerWrapper": {
 		display: "flex",
 		flexDirection: "column",
 		width: "100%",

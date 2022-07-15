@@ -4,9 +4,9 @@
 
 export interface Effect<T = any, P = any> {
 	"@@redux-saga/IO": true;
-	combinator: boolean;
-	type: T;
-	payload: P;
+	"combinator": boolean;
+	"type": T;
+	"payload": P;
 }
 
 export interface SimpleEffect<T, P = any> extends Effect<T, P> {

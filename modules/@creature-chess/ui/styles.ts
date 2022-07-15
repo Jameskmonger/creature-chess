@@ -20,7 +20,7 @@ const useResetStyles = createUseStyles({
 			{
 				display: "block",
 			},
-		body: {
+		"body": {
 			lineHeight: "1",
 		},
 		"ol, ul": {
@@ -32,7 +32,7 @@ const useResetStyles = createUseStyles({
 		"blockquote::before, blockquote::after, q::before, q::after": {
 			content: "none",
 		},
-		table: {
+		"table": {
 			borderSpacing: "0",
 			borderCollapse: "collapse",
 		},
@@ -49,7 +49,7 @@ const useGlobalGameStyles = createUseStyles({
 			width: "100vw",
 			height: "100vh",
 		},
-		body: {
+		"body": {
 			background: "#333c57",
 		},
 	},

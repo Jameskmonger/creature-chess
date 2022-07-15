@@ -17,8 +17,8 @@ import {
 
 import { controlSlice, useAppSelector } from "./state";
 
-const renderPiece = (onClickPiece: any) => (piece: PieceModel) => {
-	return (
+const renderPiece = (onClickPiece: any) => (piece: PieceModel) =>
+	(
 		<PieceContextProvider value={{ piece, viewingPlayerId: "A" }}>
 			<div
 				style={{ width: "100%", height: "100%" }}
@@ -28,7 +28,6 @@ const renderPiece = (onClickPiece: any) => (piece: PieceModel) => {
 			</div>
 		</PieceContextProvider>
 	);
-};
 
 export function BattleBoard() {
 	const dispatch = useDispatch();
@@ -84,7 +83,9 @@ export function BattleBoard() {
 					renderBoardPiece={renderPiece(onClickPiece)}
 					renderBenchPiece={renderPiece(onClickPiece)}
 					onClick={onClickTile}
-					onDropPiece={() => {}}
+					onDropPiece={() => {
+						/* empty */
+					}}
 				/>
 			</GameBoardContextProvider>
 		</DndProvider>

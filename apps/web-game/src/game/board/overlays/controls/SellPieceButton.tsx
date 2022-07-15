@@ -14,12 +14,12 @@ import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
 const useStyles = createUseStyles({
 	sellPieceButton: {
 		"box-sizing": "border-box",
-		padding: "2rem",
+		"padding": "2rem",
 		"font-size": "1.6rem",
-		color: COLOR_READY_BUTTON_TEXT,
-		cursor: "pointer",
-		background: COLOR_READY_BUTTON,
-		border: "none",
+		"color": COLOR_READY_BUTTON_TEXT,
+		"cursor": "pointer",
+		"background": COLOR_READY_BUTTON,
+		"border": "none",
 	},
 });
 

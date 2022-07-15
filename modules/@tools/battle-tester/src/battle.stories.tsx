@@ -30,7 +30,7 @@ export default {
 const makeStore = () => {
 	const sagaMiddleware = createSagaMiddleware();
 
-	const store = createStore(
+	const newStore = createStore(
 		combineReducers<BattleTesterState>({
 			board: board.boardReducer,
 			controls: controlSlice.reducer,
@@ -76,25 +76,23 @@ const makeStore = () => {
 		yield put(board.commands.setBoardPiecesCommand(initialBoardPieces));
 	});
 
-	return store;
+	return newStore;
 };
 
 const store = makeStore();
 
-const Template: Story<any> = (args) => {
-	return (
-		<Provider store={store}>
-			<div style={{ display: "flex", width: "100%", height: "100%" }}>
-				<div style={{ width: "60%", height: "100%", border: "2px solid grey" }}>
-					<BattleBoard />
-				</div>
-				<div style={{ width: "40%", height: "100%", border: "2px solid grey" }}>
-					<BattleControls />
-				</div>
+const Template: Story<any> = (args) => (
+	<Provider store={store}>
+		<div style={{ display: "flex", width: "100%", height: "100%" }}>
+			<div style={{ width: "60%", height: "100%", border: "2px solid grey" }}>
+				<BattleBoard />
 			</div>
-		</Provider>
-	);
-};
+			<div style={{ width: "40%", height: "100%", border: "2px solid grey" }}>
+				<BattleControls />
+			</div>
+		</div>
+	</Provider>
+);
 
 export const Default = Template.bind({});
 Default.args = {};

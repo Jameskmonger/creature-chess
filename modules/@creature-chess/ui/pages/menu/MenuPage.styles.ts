@@ -2,16 +2,16 @@ import { createUseStyles } from "react-jss";
 
 export const useStyles = createUseStyles({
 	menu: {
-		display: "flex",
-		flexDirection: "column",
-		height: "100%",
-		width: "100%",
-		overflow: "scroll",
-		paddingTop: "2em",
-		fontFamily: "Arial, Helvetica, sans-serif",
-		color: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
+		"display": "flex",
+		"flexDirection": "column",
+		"height": "100%",
+		"width": "100%",
+		"overflow": "scroll",
+		"paddingTop": "2em",
+		"fontFamily": "Arial, Helvetica, sans-serif",
+		"color": "#fff",
+		"alignItems": "center",
+		"justifyContent": "center",
 
 		"& h2": {
 			marginBottom: "1rem",
@@ -42,7 +42,7 @@ export const useStyles = createUseStyles({
 		cursor: "pointer",
 	},
 	blurb: {
-		marginBottom: "0.5rem",
+		"marginBottom": "0.5rem",
 		"& p": {
 			marginTop: "0",
 			marginBottom: "0.25rem",

@@ -17,12 +17,12 @@ const getBackground = (style: "primary" | "secondary") =>
 
 const useStyles = createUseStyles({
 	button: (props: Props) => ({
-		padding: "0.25em 1em",
-		fontSize: "1em",
-		color: getColor(props.type!),
-		background: getBackground(props.type!),
-		border: "none",
-		cursor: "pointer",
+		"padding": "0.25em 1em",
+		"fontSize": "1em",
+		"color": getColor(props.type!),
+		"background": getBackground(props.type!),
+		"border": "none",
+		"cursor": "pointer",
 
 		"&:disabled": {
 			background: "#575758",

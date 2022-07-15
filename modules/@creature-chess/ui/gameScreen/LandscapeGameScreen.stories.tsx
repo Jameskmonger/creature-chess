@@ -14,8 +14,7 @@ const Expander = ({ background }: { background: string }) => (
 	<div style={{ width: "100%", height: "100%", background }} />
 );
 
-const Template: Story<any> = (args) => {
-	return (
+const Template: Story<any> = (args) => (
 		<div
 			style={{
 				width: args.width,
@@ -30,7 +29,6 @@ const Template: Story<any> = (args) => {
 			/>
 		</div>
 	);
-};
 
 export const Portrait = Template.bind({});
 Portrait.args = {

@@ -17,10 +17,10 @@ const isInsideGrid =
 export function findEnemyInAttackRange(
 	board: BoardState<PieceModel>,
 	friendlyOwnerId: string,
-	position: TileCoordinates,
+	piecePosition: TileCoordinates,
 	range = 1
 ) {
-	const attackPositions = getTargetAttackPositions(board, position, range);
+	const attackPositions = getTargetAttackPositions(board, piecePosition, range);
 
 	for (const position of attackPositions) {
 		const piece = BoardSelectors.getPieceForPosition(

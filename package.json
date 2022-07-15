@@ -15,7 +15,7 @@
 		"test": "yarn workspaces foreach run test",
 		"dockerup": "docker-compose --env-file ./.env.dev build && docker-compose --env-file ./.env.dev up",
 		"storybook": "yarn workspace @creature-chess/ui storybook",
-		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\"",
+		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\" \"apps/**/*.tsx\" \"modules/**/*.tsx\"",
 		"ecr-push": "sh ./scripts/ecr-push.sh",
 		"prettier": "prettier -w ./",
 		"prettier-check": "prettier -c ./"
@@ -43,6 +43,7 @@
 		"eslint-plugin-jsdoc": "^36.1.1",
 		"eslint-plugin-prefer-arrow": "^1.2.3",
 		"eslint-plugin-react": "^7.28.0",
+		"eslint-plugin-react-hooks": "^4.6.0",
 		"jest": "^27.4.5",
 		"jest-standard-reporter": "^2.0.0",
 		"node-sass": "^7.0.0",

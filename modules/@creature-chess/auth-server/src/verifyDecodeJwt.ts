@@ -8,14 +8,12 @@ function makeClient() {
 		throw new Error("AUTH0_DOMAIN is not set");
 	}
 
-	const client = jwksClient({
+	return jwksClient({
 		cache: true,
 		rateLimit: true,
 		jwksRequestsPerMinute: 5,
 		jwksUri: `https://${AUTH0_DOMAIN}/.well-known/jwks.json`,
 	});
-
-	return client;
 }
 
 const client = makeClient();

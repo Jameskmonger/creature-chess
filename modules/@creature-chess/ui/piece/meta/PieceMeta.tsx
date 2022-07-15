@@ -25,11 +25,11 @@ const useStyles = createUseStyles({
 		position: "relative",
 	},
 	stage: {
-		position: "absolute",
-		top: "10%",
-		left: "7%",
-		width: "86%",
-		height: "80%",
+		"position": "absolute",
+		"top": "10%",
+		"left": "7%",
+		"width": "86%",
+		"height": "80%",
 
 		"& > img": {
 			width: "100%",

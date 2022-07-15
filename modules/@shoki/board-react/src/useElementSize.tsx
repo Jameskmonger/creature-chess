@@ -45,6 +45,6 @@ export function useElementSize() {
 	return {
 		isPortrait,
 		size: { width: size[0], height: size[1] },
-		ref: ref,
+		ref,
 	};
 }
