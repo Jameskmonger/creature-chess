@@ -41,7 +41,11 @@ module "server_game" {
   vpc_id          = module.vpc.vpc_id
   subnet_ids      = module.vpc.subnet_ids
 
-  auth0_management_client_secret = var.auth0_management_client_secret
-  creature_chess_fauna_key       = var.creature_chess_fauna_key
-  discord_bot_token              = var.discord_bot_token
+  AUTH0_DOMAIN                       = var.AUTH0_DOMAIN
+  AUTH0_SPA_CLIENT_ID                = var.AUTH0_SPA_CLIENT_ID
+  AUTH0_MACHINE_TO_MACHINE_CLIENT_ID = var.AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
+  AUTH0_MANAGEMENT_CLIENT_SECRET     = var.AUTH0_MANAGEMENT_CLIENT_SECRET
+  APP_URL                            = var.APP_URL
+  CREATURE_CHESS_FAUNA_KEY           = var.CREATURE_CHESS_FAUNA_KEY
+  discord_bot_token                  = var.discord_bot_token
 }

@@ -53,6 +53,4 @@ export { getXpToNextLevel } from "./src/getXpToNextLevel";
 
 export { QuickChatOption, QuickChatValue } from "./src/quickChat";
 
-export { config } from "./src/config";
-
 export * as Builders from "./src/builders";

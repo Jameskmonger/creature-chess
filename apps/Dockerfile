@@ -40,8 +40,8 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 ADD . .
 
-RUN yarn build-$APP_DIR && yarn cache clean
+# we need to do the build here, because the app requires process.env vars
+# do you know a better way? please make a PR
+CMD yarn build-$APP_DIR && yarn cache clean && yarn start-${APP_DIR}
 
 EXPOSE 3000
-
-CMD yarn start-${APP_DIR}

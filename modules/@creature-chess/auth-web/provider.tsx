@@ -12,17 +12,33 @@ type Props = {
 export const AuthProvider: React.FC<Props> = ({
 	children,
 	onRedirectCallback,
-}) => (
-	<Auth0Provider
-		domain={auth0Config.domain}
-		clientId={auth0Config.clientID}
-		redirectUri={auth0Config.redirectUri}
-		audience={auth0Config.audience}
-		scope={auth0Config.scope}
-		cacheLocation="localstorage"
-		onRedirectCallback={onRedirectCallback}
-		useRefreshTokens
-	>
-		{children}
-	</Auth0Provider>
-);
+}) => {
+	const { domain, clientID, redirectUri } = auth0Config;
+
+	if (!domain) {
+		throw Error("no auth0 domain");
+	}
+
+	if (!clientID) {
+		throw Error("no auth0 clientID");
+	}
+
+	if (!redirectUri) {
+		throw Error("no auth0 redirectUri");
+	}
+
+	return (
+		<Auth0Provider
+			domain={domain}
+			clientId={clientID}
+			redirectUri={auth0Config.redirectUri}
+			audience={auth0Config.audience}
+			scope={auth0Config.scope}
+			cacheLocation="localstorage"
+			onRedirectCallback={onRedirectCallback}
+			useRefreshTokens
+		>
+			{children}
+		</Auth0Provider>
+	);
+};

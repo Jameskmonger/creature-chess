@@ -2,7 +2,7 @@ import { ManagementClient } from "auth0";
 
 import { UserAppMetadata } from "@creature-chess/auth-server";
 
-export const createManagementClient = (): ManagementClient<UserAppMetadata> => {
+export function getManagementClient() {
 	const {
 		AUTH0_DOMAIN,
 		AUTH0_MACHINE_TO_MACHINE_CLIENT_ID,
@@ -26,4 +26,4 @@ export const createManagementClient = (): ManagementClient<UserAppMetadata> => {
 	// todo error if invalid
 
 	return client;
-};
+}

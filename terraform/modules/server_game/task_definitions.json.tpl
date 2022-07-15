@@ -29,12 +29,28 @@
 		"image": "${REPOSITORY_URL_GAME}:latest",
 		"environment": [
 			{
+				"name": "CREATURE_CHESS_FAUNA_KEY",
+				"value": "${CREATURE_CHESS_FAUNA_KEY}"
+			},
+			{
+				"name": "AUTH0_DOMAIN",
+				"value": "${AUTH0_DOMAIN}"
+			},
+			{
+				"name": "AUTH0_SPA_CLIENT_ID",
+				"value": "${AUTH0_SPA_CLIENT_ID}"
+			},
+			{
+				"name": "AUTH0_MACHINE_TO_MACHINE_CLIENT_ID",
+				"value": "${AUTH0_MACHINE_TO_MACHINE_CLIENT_ID}"
+			},
+			{
 				"name": "AUTH0_MANAGEMENT_CLIENT_SECRET",
 				"value": "${AUTH0_MANAGEMENT_CLIENT_SECRET}"
 			},
 			{
-				"name": "CREATURE_CHESS_FAUNA_KEY",
-				"value": "${CREATURE_CHESS_FAUNA_KEY}"
+				"name": "APP_URL",
+				"value": "${APP_URL}"
 			},
 			{
 				"name": "DISCORD_BOT_TOKEN",

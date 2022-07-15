@@ -3,7 +3,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const { DefinePlugin, EnvironmentPlugin } = require("webpack");
+const { DefinePlugin, EnvironmentPlugin, ProvidePlugin } = require("webpack");
 
 const getGAScript = (id) => {
 	if (!id) {
@@ -89,11 +89,17 @@ module.exports = {
 	},
 
 	plugins: [
+		new ProvidePlugin({
+			process: "process/browser",
+		}),
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
 			SENTRY_DSN: "",
 			GAME_SERVER_URL: "http://localhost:8080/game/",
 			API_INFO_URL: "http://localhost:8081/dev",
+			AUTH0_DOMAIN: "",
+			AUTH0_SPA_CLIENT_ID: "",
+			APP_URL: "",
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("../../package.json").version),

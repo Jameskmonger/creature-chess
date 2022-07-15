@@ -3,7 +3,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const { DefinePlugin, EnvironmentPlugin } = require("webpack");
+const { DefinePlugin, EnvironmentPlugin, ProvidePlugin } = require("webpack");
 
 const outDir = path.resolve(__dirname, "public");
 
@@ -35,9 +35,15 @@ module.exports = {
 	},
 
 	plugins: [
+		new ProvidePlugin({
+			process: "process/browser",
+		}),
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
 			SENTRY_DSN: "",
+			AUTH0_DOMAIN: "",
+			AUTH0_SPA_CLIENT_ID: "",
+			APP_URL: "",
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("../../package.json").version),

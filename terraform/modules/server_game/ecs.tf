@@ -14,12 +14,16 @@ data "template_file" "task_definition_template" {
   template = file("${path.module}/task_definitions.json.tpl")
 
   vars = {
-    REPOSITORY_URL_GAME            = aws_ecr_repository.server_game.repository_url
-    REPOSITORY_URL_NGINX           = aws_ecr_repository.server_game_nginx.repository_url
-    AWS_REGION                     = "eu-west-1"
-    AUTH0_MANAGEMENT_CLIENT_SECRET = var.auth0_management_client_secret
-    CREATURE_CHESS_FAUNA_KEY       = var.creature_chess_fauna_key
-    DISCORD_BOT_TOKEN              = var.discord_bot_token
+    REPOSITORY_URL_GAME                = aws_ecr_repository.server_game.repository_url
+    REPOSITORY_URL_NGINX               = aws_ecr_repository.server_game_nginx.repository_url
+    AWS_REGION                         = "eu-west-1"
+    AUTH0_DOMAIN                       = var.AUTH0_DOMAIN
+    AUTH0_SPA_CLIENT_ID                = var.AUTH0_SPA_CLIENT_ID
+    AUTH0_MACHINE_TO_MACHINE_CLIENT_ID = var.AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
+    AUTH0_MANAGEMENT_CLIENT_SECRET     = var.AUTH0_MANAGEMENT_CLIENT_SECRET
+    APP_URL                            = var.APP_URL
+    CREATURE_CHESS_FAUNA_KEY           = var.CREATURE_CHESS_FAUNA_KEY
+    DISCORD_BOT_TOKEN                  = var.discord_bot_token
   }
 }
 

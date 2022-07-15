@@ -17,19 +17,61 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 - Yarn (`npm i -g yarn && yarn set version berry`)
 - A Fauna database with an access key in environment variable `CREATURE_CHESS_FAUNA_KEY`
   - You can use [Fauna Dev](https://docs.fauna.com/fauna/current/integrations/dev.html) for this
-- An Auth0 app for the server
-  - Set up a [machine to machine app](https://auth0.com/docs/applications/set-up-an-application/register-machine-to-machine-applications)
-  - Store the client secret in environment variable `AUTH0_MANAGEMENT_CLIENT_SECRET`
-- An Auth0 app for the frontend
-  - Set up a [single page app](https://auth0.com/docs/applications/set-up-an-application/register-single-page-app)
-  - In Auth0 config for SPA
-    - Set `Allowed Callback URLs` = "http://localhost:8080"
-    - Set `Allowed Web Origins` = "http://localhost:8080"
-  - Modify `packages/gamemode/src/config/config.local.ts` and change `auth0` config to match your two auth0 apps
+- Auth0 set up (see below)
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
 - **(optional)** A Sentry.io DSN in environment variable `SENTRY_DSN`
 - **(optional)** A game server URL in environment variable `GAME_SERVER_URL`
 - **(optional)** An info server URL in environment variable `API_INFO_URL`
+
+### Environment variables
+
+Create a `.env.dev` file in the project root to store environment variables.
+
+The contents should be like so:
+
+```
+NODE_ENV=development
+CREATURE_CHESS_FAUNA_KEY=
+AUTH0_DOMAIN=
+AUTH0_SPA_CLIENT_ID=
+AUTH0_MACHINE_TO_MACHINE_CLIENT_ID=
+AUTH0_MANAGEMENT_CLIENT_SECRET=
+```
+
+These will be automatically picked up and used by the build scripts.
+
+### Local app url
+
+Set the environment variable `CREATURE_CHESS_APP_URL` to `http://localhost:8080`
+
+### Auth0 Setup
+
+You will need to set up an Auth0 tenant in order to run Creature Chess locally.
+
+See "Environment variables" below for info on how to store them.
+
+- Set up a [machine to machine app](https://auth0.com/docs/applications/set-up-an-application/register-machine-to-machine-applications)
+
+  This is used by the backends
+
+  - Store the **client id** in environment variable `AUTH0_MACHINE_TO_MACHINE_CLIENT_ID`
+  - Store the **client secret** in environment variable `AUTH0_MANAGEMENT_CLIENT_SECRET`
+
+- Set up a [single page app](https://auth0.com/docs/applications/set-up-an-application/register-single-page-app)
+
+  This is used by the frontend
+
+  There are some steps that you need to take on the Auth0 config for this:
+
+  - Set `Allowed Callback URLs` = "http://localhost:8080"
+  - Set `Allowed Web Origins` = "http://localhost:8080"
+
+  Then, set the following environment variables
+
+  - **domain** as `AUTH0_DOMAIN`
+  - **client id** as `AUTH0_SPA_CLIENT_ID`
+
+(btw, I am not really happy that we need all this just to test locally, but equally, I don't want to have a "guest mode" locally and not test the auth0 pre-prod. Auth0 sadly doesn't offer a local version. Open to any ideas on it!)
 
 ### Setup
 

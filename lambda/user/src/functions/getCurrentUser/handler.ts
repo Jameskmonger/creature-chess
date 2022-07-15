@@ -1,13 +1,12 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
+import { getManagementClient } from "@libs/auth0";
 import { middyfy } from "@libs/lambda";
 import { sanitize } from "@libs/sanitize-user";
-import { ManagementClient } from "auth0";
 import { createLogger, transports } from "winston";
 
-import { authenticate, UserAppMetadata } from "@creature-chess/auth-server";
+import { authenticate } from "@creature-chess/auth-server";
 import { createDatabaseConnection } from "@creature-chess/data";
-import { config } from "@creature-chess/models";
 
 import schema from "./schema";
 
@@ -17,16 +16,8 @@ const database = createDatabaseConnection(
 	logger,
 	process.env.CREATURE_CHESS_FAUNA_KEY!
 );
-const AUTH0_CONFIG = {
-	domain: config.auth0.domain,
-	clientId: config.auth0.machineToMachineClientId,
-	clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET,
-};
-const authClient = new ManagementClient<UserAppMetadata>({
-	domain: AUTH0_CONFIG.domain,
-	clientId: AUTH0_CONFIG.clientId,
-	clientSecret: AUTH0_CONFIG.clientSecret,
-});
+
+const authClient = getManagementClient();
 
 const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	typeof schema

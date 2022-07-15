@@ -1,13 +1,12 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
+import { getManagementClient } from "@libs/auth0";
 import { middyfy } from "@libs/lambda";
 import { sanitize } from "@libs/sanitize-user";
-import { ManagementClient } from "auth0";
 import { createLogger, transports } from "winston";
 
 import {
 	authenticate,
-	UserAppMetadata,
 	convertDatabaseUserToUserModel,
 } from "@creature-chess/auth-server";
 import {
@@ -16,7 +15,6 @@ import {
 } from "@creature-chess/data";
 import {
 	AVAILABLE_PROFILE_PICTURES,
-	config,
 	validateNicknameFormat,
 } from "@creature-chess/models";
 
@@ -30,16 +28,8 @@ const database = createDatabaseConnection(
 	logger,
 	process.env.CREATURE_CHESS_FAUNA_KEY!
 );
-const AUTH0_CONFIG = {
-	domain: config.auth0.domain,
-	clientId: config.auth0.machineToMachineClientId,
-	clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET,
-};
-const authClient = new ManagementClient<UserAppMetadata>({
-	domain: AUTH0_CONFIG.domain,
-	clientId: AUTH0_CONFIG.clientId,
-	clientSecret: AUTH0_CONFIG.clientSecret,
-});
+
+const authClient = getManagementClient();
 const filter = new Filter();
 
 const getNicknameError = async (

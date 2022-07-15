@@ -1,10 +1,34 @@
-variable "auth0_management_client_secret" {
+variable "AUTH0_DOMAIN" {
+  description = "Auth0 domain"
+
+  type = string
+}
+
+variable "AUTH0_SPA_CLIENT_ID" {
+  description = "SPA Client ID for Auth0"
+
+  type = string
+}
+
+variable "AUTH0_MACHINE_TO_MACHINE_CLIENT_ID" {
+  description = "Machine-to-machine Client ID for Auth0"
+
+  type = string
+}
+
+variable "AUTH0_MANAGEMENT_CLIENT_SECRET" {
   description = "Management client secret for Auth0"
 
   type = string
 }
 
-variable "creature_chess_fauna_key" {
+variable "APP_URL" {
+  description = "Application URL"
+
+  type = string
+}
+
+variable "CREATURE_CHESS_FAUNA_KEY" {
   description = "FaunaDB API key"
 
   type = string

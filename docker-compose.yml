@@ -13,6 +13,15 @@ services:
       - web-menu
       - server-game
   web-menu:
+    environment:
+      - CREATURE_CHESS_FAUNA_KEY
+      - DISCORD_BOT_TOKEN
+      - AUTH0_DOMAIN
+      - AUTH0_SPA_CLIENT_ID
+      - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
+      - AUTH0_MANAGEMENT_CLIENT_SECRET
+      - APP_URL
+      - NODE_ENV=development
     build:
       context: .
       dockerfile: apps/Dockerfile
@@ -23,8 +32,12 @@ services:
   server-game:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
-      - AUTH0_MANAGEMENT_CLIENT_SECRET
       - DISCORD_BOT_TOKEN
+      - AUTH0_DOMAIN
+      - AUTH0_SPA_CLIENT_ID
+      - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
+      - AUTH0_MANAGEMENT_CLIENT_SECRET
+      - APP_URL
       - NODE_ENV=development
     build:
       context: .

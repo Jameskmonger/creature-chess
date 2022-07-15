@@ -1,14 +1,24 @@
-import { config } from "@creature-chess/models";
-
 import jwt = require("jsonwebtoken");
 import jwksClient = require("jwks-rsa");
 
-const client = jwksClient({
-	cache: true,
-	rateLimit: true,
-	jwksRequestsPerMinute: 5,
-	jwksUri: `https://${config.auth0.domain}/.well-known/jwks.json`,
-});
+function makeClient() {
+	const { AUTH0_DOMAIN } = process.env;
+
+	if (!AUTH0_DOMAIN) {
+		throw new Error("AUTH0_DOMAIN is not set");
+	}
+
+	const client = jwksClient({
+		cache: true,
+		rateLimit: true,
+		jwksRequestsPerMinute: 5,
+		jwksUri: `https://${AUTH0_DOMAIN}/.well-known/jwks.json`,
+	});
+
+	return client;
+}
+
+const client = makeClient();
 
 interface JWTPayload {
 	sub: string;

@@ -13,7 +13,7 @@
 		"start-server-game": "ts-node-dev apps/server-game/index.ts",
 		"start-web-menu": "yarn workspace @creature-chess/web-menu dev",
 		"test": "yarn workspaces foreach run test",
-		"dockerup": "docker-compose build && docker-compose up",
+		"dockerup": "docker-compose --env-file ./.env.dev build && docker-compose --env-file ./.env.dev up",
 		"storybook": "yarn workspace @creature-chess/ui storybook",
 		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\"",
 		"ecr-push": "sh ./scripts/ecr-push.sh",
@@ -47,6 +47,7 @@
 		"jest-standard-reporter": "^2.0.0",
 		"node-sass": "^7.0.0",
 		"prettier": "^2.7.1",
+		"process": "^0.11.10",
 		"ts-jest": "^27.1.2",
 		"typescript": "^4.5.4",
 		"unimported": "^1.19.1"
