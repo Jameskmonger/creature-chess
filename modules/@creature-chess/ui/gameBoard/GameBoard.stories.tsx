@@ -12,7 +12,7 @@ import { GameBoard } from "./GameBoard";
 import { GameBoardContextProvider } from "./GameBoardContext";
 
 export default {
-	title: "GameBoard",
+	title: "@ui / Game / GameBoard",
 	component: GameBoard,
 	argTypes: {
 		onClick: { action: "onClick" },
@@ -30,7 +30,7 @@ const Template: Story<any> = (args) => {
 	const context = {
 		board: createInitialBoardState<PieceModel>("board", {
 			width: GRID_SIZE.width,
-			height: GRID_SIZE.height,
+			height: args.boardHeight,
 		}),
 		bench: createInitialBoardState<PieceModel>("bench", {
 			width: GRID_SIZE.width,
@@ -63,7 +63,6 @@ const Template: Story<any> = (args) => {
 						renderBenchPiece={renderPiece}
 						onClick={args.onClick}
 						onDropPiece={args.onDropPiece}
-						scaleMode={args.scaleMode}
 					/>
 				</GameBoardContextProvider>
 			</div>
@@ -71,16 +70,44 @@ const Template: Story<any> = (args) => {
 	);
 };
 
-export const Portrait = Template.bind({});
-Portrait.args = {
+export const Portrait_HalfBoard = Template.bind({});
+Portrait_HalfBoard.args = {
 	width: "300px",
 	height: "500px",
-	scaleMode: "width",
+	boardHeight: GRID_SIZE.height / 2,
 };
 
-export const Landscape = Template.bind({});
-Landscape.args = {
+export const Portrait_FullBoard = Template.bind({});
+Portrait_FullBoard.args = {
+	width: "300px",
+	height: "500px",
+	boardHeight: GRID_SIZE.height,
+};
+
+export const Landscape_HalfBoard = Template.bind({});
+Landscape_HalfBoard.args = {
 	width: "500px",
 	height: "300px",
-	scaleMode: "height",
+	boardHeight: GRID_SIZE.height / 2,
+};
+
+export const Landscape_FullBoard = Template.bind({});
+Landscape_FullBoard.args = {
+	width: "500px",
+	height: "300px",
+	boardHeight: GRID_SIZE.height,
+};
+
+export const Square_HalfBoard = Template.bind({});
+Square_HalfBoard.args = {
+	width: "400px",
+	height: "400px",
+	boardHeight: GRID_SIZE.height / 2,
+};
+
+export const Square_FullBoard = Template.bind({});
+Square_FullBoard.args = {
+	width: "400px",
+	height: "400px",
+	boardHeight: GRID_SIZE.height,
 };
