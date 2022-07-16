@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { LandscapeGameScreen } from "./LandscapeGameScreen";
 
 export default {
-	title: "@ui/Game Screen/LandscapeGameScreen",
+	title: "@ui / Game Screen/LandscapeGameScreen",
 	component: LandscapeGameScreen,
 	argTypes: {},
 } as Meta;
@@ -15,20 +15,20 @@ const Expander = ({ background }: { background: string }) => (
 );
 
 const Template: Story<any> = (args) => (
-		<div
-			style={{
-				width: args.width,
-				height: args.height,
-				border: "2px solid red",
-			}}
-		>
-			<LandscapeGameScreen
-				leftColumnContent={<Expander background="#566c86" />}
-				middleColumnContent={<Expander background="#566c86" />}
-				rightColumnContent={<Expander background="#566c86" />}
-			/>
-		</div>
-	);
+	<div
+		style={{
+			width: args.width,
+			height: args.height,
+			border: "2px solid red",
+		}}
+	>
+		<LandscapeGameScreen
+			leftColumnContent={<Expander background="#566c86" />}
+			middleColumnContent={<Expander background="#566c86" />}
+			rightColumnContent={<Expander background="#566c86" />}
+		/>
+	</div>
+);
 
 export const Portrait = Template.bind({});
 Portrait.args = {

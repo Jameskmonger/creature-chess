@@ -1,11 +1,11 @@
-import { ComponentProps } from "react";
+import React, { ComponentProps } from "react";
 
 import { Meta, Story } from "@storybook/react";
 
 import { PlayerGameProfile } from "./PlayerGameProfile";
 
 export default {
-	title: "Player/PlayerGameProfile",
+	title: "@ui / Player / PlayerGameProfile",
 	component: PlayerGameProfile,
 	argTypes: {},
 } as Meta;

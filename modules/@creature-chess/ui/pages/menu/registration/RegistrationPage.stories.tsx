@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { RegistrationPage } from "./RegistrationPage";
 
 export default {
-	title: "Pages/MenuPage/RegistrationPage",
+	title: "@ui / Pages / MenuPage / RegistrationPage",
 	component: RegistrationPage,
 	argTypes: {},
 } as Meta;

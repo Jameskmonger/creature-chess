@@ -12,7 +12,7 @@ import { GameBoard } from "./GameBoard";
 import { GameBoardContextProvider } from "./GameBoardContext";
 
 export default {
-	title: "@ui / Game / GameBoard",
+	title: "@ui / GameBoard",
 	component: GameBoard,
 	argTypes: {
 		onClick: { action: "onClick" },

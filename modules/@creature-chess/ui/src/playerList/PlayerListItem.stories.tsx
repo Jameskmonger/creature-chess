@@ -15,7 +15,7 @@ import {
 import { PlayerListItem } from "./playerListItem";
 
 export default {
-	title: "Player List/PlayerListItem",
+	title: "@ui / Player List / PlayerListItem",
 	component: PlayerListItem,
 	argTypes: {
 		currentlySpectating: {

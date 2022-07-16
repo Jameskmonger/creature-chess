@@ -7,7 +7,7 @@ import { LobbyPlayer, PlayerTitle } from "@creature-chess/models";
 import { LobbyPlayerBanner } from "./LobbyPlayerBanner";
 
 export default {
-	title: "Pages/LobbyPage/LobbyPlayerBanner",
+	title: "@ui / Pages / LobbyPage / LobbyPlayerBanner",
 	component: LobbyPlayerBanner,
 	argTypes: {},
 } as Meta;

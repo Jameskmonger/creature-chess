@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { Projectile } from "./Projectile";
 
 export default {
-	title: "Piece/Projectile",
+	title: "@ui / Piece / Projectile",
 	component: Projectile,
 	argTypes: {},
 } as Meta;

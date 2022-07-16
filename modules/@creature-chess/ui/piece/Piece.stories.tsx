@@ -9,7 +9,7 @@ import "./Piece.stories.css";
 import { PieceContextProvider } from "./PieceContext";
 
 export default {
-	title: "Piece",
+	title: "@ui / Piece",
 	component: Piece,
 	argTypes: {},
 } as Meta;

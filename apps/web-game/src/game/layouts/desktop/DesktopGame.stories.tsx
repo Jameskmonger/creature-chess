@@ -11,7 +11,7 @@ import { createMockStore } from "../stories-utils";
 import { DesktopGame } from "./DesktopGame";
 
 export default {
-	title: "Game/DesktopGame",
+	title: "@game / DesktopGame",
 	component: DesktopGame,
 	argTypes: {},
 } as Meta;

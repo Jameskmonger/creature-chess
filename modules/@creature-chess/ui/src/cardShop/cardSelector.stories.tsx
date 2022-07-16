@@ -12,7 +12,7 @@ import { CardSelector } from "./cardSelector";
 import "./cardSelector.stories.css";
 
 export default {
-	title: "Card Shop/CardSelector",
+	title: "@ui / Card Shop / CardSelector",
 	component: CardSelector,
 	argTypes: {
 		selectedCardIndex: {

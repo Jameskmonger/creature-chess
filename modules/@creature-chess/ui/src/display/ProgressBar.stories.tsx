@@ -6,7 +6,7 @@ import "./ProgressBar.stories.css";
 import { ProgressBar } from "./progressBar";
 
 export default {
-	title: "Display/ProgressBar",
+	title: "@ui / Display / ProgressBar",
 	component: ProgressBar,
 	argTypes: {
 		current: {

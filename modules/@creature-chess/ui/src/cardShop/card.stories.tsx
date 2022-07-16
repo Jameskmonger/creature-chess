@@ -12,7 +12,7 @@ import { Card } from "./card";
 import "./card.stories.css";
 
 export default {
-	title: "Card Shop/Card",
+	title: "@ui / Card Shop / Card",
 	component: Card,
 } as Meta;
 

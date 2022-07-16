@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { LoginPage } from "./LoginPage";
 
 export default {
-	title: "Pages/MenuPage/LoginPage",
+	title: "@ui / Pages / MenuPage / LoginPage",
 	component: LoginPage,
 	argTypes: {
 		updateUser: { action: "updateUser" },

@@ -15,7 +15,7 @@ import { PieceContextProvider } from "../PieceContext";
 import { MatchPiece } from "./MatchPiece";
 
 export default {
-	title: "Piece/MatchPiece",
+	title: "@ui / Piece / MatchPiece",
 	component: MatchPiece,
 	argTypes: {},
 } as Meta;
@@ -105,11 +105,13 @@ const useBasicAttackButtons = (
 	};
 };
 
-const createHandleReceiveHitClick = (
-	piece: PieceModel,
-	setPiece: (value: React.SetStateAction<PieceModel>) => void,
-	damage: number
-) => () => {
+const createHandleReceiveHitClick =
+	(
+		piece: PieceModel,
+		setPiece: (value: React.SetStateAction<PieceModel>) => void,
+		damage: number
+	) =>
+	() => {
 		setPiece({
 			...piece,
 			hit: {

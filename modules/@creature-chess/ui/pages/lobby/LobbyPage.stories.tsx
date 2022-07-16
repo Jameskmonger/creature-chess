@@ -8,7 +8,7 @@ import { LobbyPage } from "./LobbyPage";
 import { LobbyPageContextProvider } from "./LobbyPageContext";
 
 export default {
-	title: "Pages/LobbyPage",
+	title: "@ui / Pages / LobbyPage",
 	component: LobbyPage,
 	argTypes: {},
 } as Meta;

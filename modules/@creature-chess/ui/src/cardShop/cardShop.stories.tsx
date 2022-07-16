@@ -12,7 +12,7 @@ import { CardShop } from "./cardShop";
 import "./cardShop.stories.css";
 
 export default {
-	title: "Card Shop/CardShop",
+	title: "@ui / Card Shop / CardShop",
 	component: CardShop,
 	argTypes: {
 		money: {

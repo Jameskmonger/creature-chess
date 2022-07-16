@@ -13,7 +13,7 @@ import { createMockStore } from "../stories-utils";
 import { MobileGame } from "./MobileGame";
 
 export default {
-	title: "Game/MobileGame",
+	title: "@game / MobileGame",
 	component: MobileGame,
 	argTypes: {},
 } as Meta;

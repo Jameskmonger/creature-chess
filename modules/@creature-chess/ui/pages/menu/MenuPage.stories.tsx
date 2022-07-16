@@ -6,7 +6,7 @@ import { MenuPage } from "./MenuPage";
 import { MenuPageContextProvider } from "./MenuPageContext";
 
 export default {
-	title: "Pages/MenuPage",
+	title: "@ui / Pages / MenuPage",
 	component: MenuPage,
 	argTypes: {
 		logout: { action: "logoutClicked" },
