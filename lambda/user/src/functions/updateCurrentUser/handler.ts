@@ -24,10 +24,6 @@ import Filter = require("bad-words");
 
 const logger = createLogger();
 logger.add(new transports.Console());
-const database = createDatabaseConnection(
-	logger,
-	process.env.CREATURE_CHESS_FAUNA_KEY!
-);
 
 const authClient = getManagementClient();
 const filter = new Filter();
@@ -69,6 +65,8 @@ const getPictureIdError = (picture: number) => {
 const updateCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	typeof schema
 > = async (event) => {
+	const database = await createDatabaseConnection(logger);
+
 	const { Authorization } = event.headers;
 	const { nickname, picture } = event.body;
 

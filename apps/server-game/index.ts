@@ -33,7 +33,10 @@ const io = new Server(server, { path: "/socket.io" });
 app.use(express.static(publicPath));
 app.use(expressWinston({ winstonInstance: logger }));
 
-startServer({ io });
+startServer({ io }).catch((e) => {
+	logger.error("An error occurred while starting the server", e);
+	process.exit(1);
+});
 
 server.listen(port, "0.0.0.0");
 logger.info(`Server running on port ${port}`);

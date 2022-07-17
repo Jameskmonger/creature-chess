@@ -12,16 +12,14 @@ import schema from "./schema";
 
 const logger = createLogger();
 logger.add(new transports.Console());
-const database = createDatabaseConnection(
-	logger,
-	process.env.CREATURE_CHESS_FAUNA_KEY!
-);
 
 const authClient = getManagementClient();
 
 const getCurrentUser: ValidatedEventAPIGatewayProxyEvent<
 	typeof schema
 > = async (event) => {
+	const database = await createDatabaseConnection(logger);
+
 	const headers = {
 		"Access-Control-Allow-Origin": "https://creaturechess.com",
 		"Access-Control-Allow-Credentials": true,
