@@ -20,3 +20,5 @@ coverage/
 !.yarn/versions
 
 .env.*
+
+.faunadb/

@@ -15,8 +15,6 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 - Node.js
 - Docker w/ docker-compose
 - Yarn (`npm i -g yarn && yarn set version berry`)
-- A Fauna database with an access key in environment variable `CREATURE_CHESS_FAUNA_KEY`
-  - You can use [Fauna Dev](https://docs.fauna.com/fauna/current/integrations/dev.html) for this
 - Auth0 set up (see below)
 - **(optional)** A Docker bot with a token in environment variable `DISCORD_BOT_TOKEN`
 - **(optional)** A Sentry.io DSN in environment variable `SENTRY_DSN`
@@ -48,9 +46,13 @@ Set the environment variable `CREATURE_CHESS_APP_URL` to `http://localhost:8080`
 
 You will need to set up an Auth0 tenant in order to run Creature Chess locally.
 
-See "Environment variables" below for info on how to store them.
+See "Environment variables" above for info on how to store them.
 
 - Set up a [machine to machine app](https://auth0.com/docs/applications/set-up-an-application/register-machine-to-machine-applications)
+
+  The app needs the following permissions:
+
+  - `client_credentials` (under Advanced Settings -> OAuth)
 
   This is used by the backends
 
