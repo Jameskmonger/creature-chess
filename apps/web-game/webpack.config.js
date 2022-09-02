@@ -43,7 +43,7 @@ module.exports = {
 			SENTRY_DSN: "",
 			AUTH0_DOMAIN: "",
 			AUTH0_SPA_CLIENT_ID: "",
-			APP_URL: "",
+			CREATURE_CHESS_APP_URL: "",
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("../../package.json").version),
