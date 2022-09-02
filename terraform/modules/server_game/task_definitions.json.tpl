@@ -49,8 +49,8 @@
 				"value": "${AUTH0_MANAGEMENT_CLIENT_SECRET}"
 			},
 			{
-				"name": "APP_URL",
-				"value": "${APP_URL}"
+				"name": "CREATURE_CHESS_APP_URL",
+				"value": "${CREATURE_CHESS_APP_URL}"
 			},
 			{
 				"name": "DISCORD_BOT_TOKEN",
