@@ -21,7 +21,7 @@ data "template_file" "task_definition_template" {
     AUTH0_SPA_CLIENT_ID                = var.AUTH0_SPA_CLIENT_ID
     AUTH0_MACHINE_TO_MACHINE_CLIENT_ID = var.AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
     AUTH0_MANAGEMENT_CLIENT_SECRET     = var.AUTH0_MANAGEMENT_CLIENT_SECRET
-    APP_URL                            = var.APP_URL
+    CREATURE_CHESS_APP_URL                            = var.CREATURE_CHESS_APP_URL
     CREATURE_CHESS_FAUNA_KEY           = var.CREATURE_CHESS_FAUNA_KEY
     DISCORD_BOT_TOKEN                  = var.discord_bot_token
   }

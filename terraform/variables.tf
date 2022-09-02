@@ -26,7 +26,7 @@ variable "AUTH0_MANAGEMENT_CLIENT_SECRET" {
   type = string
 }
 
-variable "APP_URL" {
+variable "CREATURE_CHESS_APP_URL" {
   description = "Application URL"
 
   type = string
