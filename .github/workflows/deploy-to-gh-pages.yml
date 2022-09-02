@@ -30,7 +30,7 @@ jobs:
           API_INFO_URL: ${{ secrets.API_INFO_URL }}
           AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
           AUTH0_SPA_CLIENT_ID: ${{ secrets.AUTH0_SPA_CLIENT_ID }}
-          APP_URL: ${{ secrets.APP_URL }}
+          CREATURE_CHESS_APP_URL: ${{ secrets.CREATURE_CHESS_APP_URL }}
           GH_PAGES: true
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.4.1
