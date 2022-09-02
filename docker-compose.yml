@@ -34,7 +34,7 @@ services:
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
-      - APP_URL
+      - CREATURE_CHESS_APP_URL
       - NODE_ENV=development
     build:
       context: .
@@ -54,7 +54,7 @@ services:
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
-      - APP_URL
+      - CREATURE_CHESS_APP_URL
       - NODE_ENV=development
     build:
       context: .
