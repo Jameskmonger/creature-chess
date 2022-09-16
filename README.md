@@ -75,7 +75,7 @@ See "Environment variables" above for info on how to store them.
 
 - Add a new Empty Rule to Auth0
 
-  This is to check to see whether the incoming user has meta data set against their User in Auth0.
+  This exposes the user's Auth0 metadata.
 
   - Go to your Auth0 Portal
   - Find: Auth Pipeline > Rules in the left side navigation.
