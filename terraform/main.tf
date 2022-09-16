@@ -45,7 +45,7 @@ module "server_game" {
   AUTH0_SPA_CLIENT_ID                = var.AUTH0_SPA_CLIENT_ID
   AUTH0_MACHINE_TO_MACHINE_CLIENT_ID = var.AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
   AUTH0_MANAGEMENT_CLIENT_SECRET     = var.AUTH0_MANAGEMENT_CLIENT_SECRET
-  CREATURE_CHESS_APP_URL                            = var.CREATURE_CHESS_APP_URL
+  CREATURE_CHESS_APP_URL             = var.CREATURE_CHESS_APP_URL
   CREATURE_CHESS_FAUNA_KEY           = var.CREATURE_CHESS_FAUNA_KEY
   discord_bot_token                  = var.discord_bot_token
 }
