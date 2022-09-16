@@ -73,6 +73,15 @@ See "Environment variables" above for info on how to store them.
   - **domain** as `AUTH0_DOMAIN`
   - **client id** as `AUTH0_SPA_CLIENT_ID`
 
+- Add a new Empty Rule to Auth0
+
+  This is to check to see whether the incoming user has meta data set against their User in Auth0.
+
+  - Go to your Auth0 Portal
+  - Find: Auth Pipeline > Rules in the left side navigation.
+  - Create a new Empty Rule
+  - Copy and paste the contents of: .auth0/rules/rule.js into this section.
+
 (btw, I am not really happy that we need all this just to test locally, but equally, I don't want to have a "guest mode" locally and not test the auth0 pre-prod. Auth0 sadly doesn't offer a local version. Open to any ideas on it!)
 
 ### Setup
