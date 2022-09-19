@@ -80,7 +80,7 @@ See "Environment variables" above for info on how to store them.
   - Go to your Auth0 Portal
   - Find: Auth Pipeline > Rules in the left side navigation.
   - Create a new Empty Rule
-  - Copy and paste the contents of: .auth0/rules/rule.js into this section.
+  - Copy and paste the contents of: `.auth0/rules/attach-metadata.js` into this section.
 
 (btw, I am not really happy that we need all this just to test locally, but equally, I don't want to have a "guest mode" locally and not test the auth0 pre-prod. Auth0 sadly doesn't offer a local version. Open to any ideas on it!)
 
