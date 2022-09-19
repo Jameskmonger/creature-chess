@@ -99,7 +99,7 @@ module.exports = {
 			API_INFO_URL: "http://localhost:8081/dev",
 			AUTH0_DOMAIN: "",
 			AUTH0_SPA_CLIENT_ID: "",
-			APP_URL: "",
+			CREATURE_CHESS_APP_URL: "",
 		}),
 		new DefinePlugin({
 			APP_VERSION: JSON.stringify(require("../../package.json").version),

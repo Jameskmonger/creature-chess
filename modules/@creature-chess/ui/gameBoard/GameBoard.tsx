@@ -108,7 +108,8 @@ function useRenderers({
 }: Pick<GameBoardProps, "renderBoardPiece" | "renderBenchPiece">) {
 	const { board, bench } = useGameBoard();
 
-	const boardPieceRenderer = React.useMemo(() => (item: HasId) => {
+	const boardPieceRenderer = React.useMemo(
+		() => (item: HasId) => {
 			const piece = item as PieceModel;
 			const draggable = !board.locked;
 
@@ -116,9 +117,12 @@ function useRenderers({
 				item: renderBoardPiece(piece),
 				draggable,
 			};
-		}, [renderBoardPiece]);
+		},
+		[renderBoardPiece]
+	);
 
-	const benchPieceRenderer = React.useMemo(() => (item: HasId) => {
+	const benchPieceRenderer = React.useMemo(
+		() => (item: HasId) => {
 			const piece = item as PieceModel;
 			const draggable = !bench.locked;
 
@@ -126,7 +130,9 @@ function useRenderers({
 				item: renderBenchPiece(piece),
 				draggable,
 			};
-		}, [renderBoardPiece]);
+		},
+		[renderBoardPiece]
+	);
 
 	return { boardPieceRenderer, benchPieceRenderer };
 }

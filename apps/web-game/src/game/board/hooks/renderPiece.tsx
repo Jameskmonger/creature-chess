@@ -10,10 +10,10 @@ const useRenderSelectablePiece = () => {
 	const viewingPlayerId = usePlayerId();
 
 	return (piece: PieceModel): React.ReactNode => (
-			<PieceContextProvider value={{ piece, viewingPlayerId }}>
-				<SelectablePiece />
-			</PieceContextProvider>
-		);
+		<PieceContextProvider value={{ piece, viewingPlayerId }}>
+			<SelectablePiece />
+		</PieceContextProvider>
+	);
 };
 
 export const useRenderBoardPiece = useRenderSelectablePiece;
@@ -23,8 +23,8 @@ export const useRenderMatchBoardPiece = () => {
 	const viewingPlayerId = usePlayerId();
 
 	return (piece: PieceModel): React.ReactNode => (
-			<PieceContextProvider value={{ piece, viewingPlayerId }}>
-				<MatchPiece />
-			</PieceContextProvider>
-		);
+		<PieceContextProvider value={{ piece, viewingPlayerId }}>
+			<MatchPiece />
+		</PieceContextProvider>
+	);
 };
