@@ -21,7 +21,7 @@ import {
 import { getAllPieces } from "../../player/pieceSelectors";
 import { CardDeck } from "../cardDeck";
 
-export const playerGameDeckSagaFactory = function* (deck: CardDeck) {
+export const playerGameDeckSagaFactory = function*(deck: CardDeck) {
 	const boardSlice = yield* getBoardSlice();
 	const benchSlice = yield* getBenchSlice();
 
@@ -38,11 +38,11 @@ export const playerGameDeckSagaFactory = function* (deck: CardDeck) {
 			deck.addPiece(piece);
 		}
 		deck.addCards(cards);
-		deck.shuffle();
+		deck.shuffleAllDecks();
 	};
 
 	yield all([
-		takeEvery<PlayerDeathEvent>(playerDeathEvent.toString(), function* () {
+		takeEvery<PlayerDeathEvent>(playerDeathEvent.toString(), function*() {
 			const cards = yield* select(getPlayerCards);
 			const pieces = yield* select(getAllPieces);
 
@@ -68,7 +68,7 @@ export const playerGameDeckSagaFactory = function* (deck: CardDeck) {
 		}),
 		takeEvery<AfterRerollCardsEvent>(
 			afterRerollCardsEvent.toString(),
-			function* () {
+			function*() {
 				const state = yield* select((s: PlayerState) => s);
 
 				if (!isPlayerAlive(state)) {
@@ -93,10 +93,10 @@ export const playerGameDeckSagaFactory = function* (deck: CardDeck) {
 		),
 		takeEvery<AfterSellPieceEvent>(
 			afterSellPieceEvent.toString(),
-			function* ({ payload: { piece } }) {
+			function*({ payload: { piece } }) {
 				// when a player sells a piece, add it back to the deck
 				deck.addPiece(piece);
-				deck.shuffle();
+				deck.shuffleAllDecks();
 			}
 		),
 	]);

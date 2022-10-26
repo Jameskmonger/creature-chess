@@ -1,0 +1,36 @@
+{
+	"name": "@shoki/card-deck",
+	"version": "1.0.0",
+	"description": "TypeScript deck of cards",
+	"keywords": [
+		"shoki",
+		"game",
+		"engine",
+		"cards",
+		"card deck",
+		"playing cards"
+	],
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"lodash.shuffle": "^4.2.0"
+	},
+	"devDependencies": {
+		"@types/lodash.shuffle": "^4.2.7"
+	}
+}

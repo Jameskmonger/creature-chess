@@ -2115,6 +2115,7 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@reduxjs/toolkit": ^1.7.1
     "@shoki/board": "workspace:*"
+    "@shoki/card-deck": "workspace:*"
     "@shoki/engine": "workspace:*"
     "@types/lodash": ^4.14.178
     "@types/uuid": ^8.3.3
@@ -3586,6 +3587,15 @@ __metadata:
   resolution: "@shoki/board@workspace:modules/@shoki/board"
   dependencies:
     "@reduxjs/toolkit": ^1.7.1
+  languageName: unknown
+  linkType: soft
+
+"@shoki/card-deck@workspace:*, @shoki/card-deck@workspace:modules/@shoki/card-deck":
+  version: 0.0.0-use.local
+  resolution: "@shoki/card-deck@workspace:modules/@shoki/card-deck"
+  dependencies:
+    "@types/lodash.shuffle": ^4.2.7
+    lodash.shuffle: ^4.2.0
   languageName: unknown
   linkType: soft
 
@@ -5260,6 +5270,22 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e009a2bfb50e90ca9b7c6e8f648f8464067271fd99116f881073fa6fa76dc8d0133181dd65e6614d5fb1220d671d67b0124aef7d97dc02d7e342ab143a47779d
+  languageName: node
+  linkType: hard
+
+"@types/lodash.shuffle@npm:^4.2.7":
+  version: 4.2.7
+  resolution: "@types/lodash.shuffle@npm:4.2.7"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: b6417a358159982a93273a96ade01801923628bf4f288f686200501cae664d8d04deb492ec072b435a0837e6a2b671e1ae868aeaeb047242ff447fabec53d4a5
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.186
+  resolution: "@types/lodash@npm:4.14.186"
+  checksum: ee0c1368a8100bb6efb88335107473a41928fc307ff1ef4ff1278868ccddba9c04c68c36d1ffe3a0392ef4a956e1955f7de3203ec09df4f1655dd1b88485c549
   languageName: node
   linkType: hard
 
@@ -15883,6 +15909,13 @@ __metadata:
   version: 4.1.1
   resolution: "lodash.once@npm:4.1.1"
   checksum: d768fa9f9b4e1dc6453be99b753906f58990e0c45e7b2ca5a3b40a33111e5d17f6edf2f768786e2716af90a8e78f8f91431ab8435f761fef00f9b0c256f6d245
+  languageName: node
+  linkType: hard
+
+"lodash.shuffle@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "lodash.shuffle@npm:4.2.0"
+  checksum: 3d451e16c18cd7e7c4c265199c87f0a1fff2976b8bf14d94de20a445e76f61a5c39b62181e5660e8f3a1602518b15a3d7d54732067cdef9d446e47d1e8f48938
   languageName: node
   linkType: hard
 

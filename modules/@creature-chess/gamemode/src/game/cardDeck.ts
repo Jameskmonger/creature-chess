@@ -2,6 +2,8 @@ import { shuffle } from "lodash";
 import { v4 as uuid } from "uuid";
 import { Logger } from "winston";
 
+import { CardDeck as ShokiCardDeck } from "@shoki/card-deck";
+
 import {
 	CreatureDefinition,
 	Card,
@@ -37,10 +39,17 @@ const canTakeCardAtCost = (level: number, cost: number): boolean => {
 };
 
 export class CardDeck {
-	public deck: Card[][];
+	public decks: ShokiCardDeck<Card>[];
 
 	public constructor(private logger: Logger) {
-		this.deck = [[], [], [], [], []];
+		// TODO (James) customisable number of decks
+		this.decks = [
+			new ShokiCardDeck<Card>(),
+			new ShokiCardDeck<Card>(),
+			new ShokiCardDeck<Card>(),
+			new ShokiCardDeck<Card>(),
+			new ShokiCardDeck<Card>(),
+		];
 
 		getAllDefinitions()
 			.filter((d) => d.cost)
@@ -54,7 +63,7 @@ export class CardDeck {
 				}
 			});
 
-		this.shuffle();
+		this.shuffleAllDecks();
 	}
 
 	public reroll(
@@ -64,7 +73,7 @@ export class CardDeck {
 		excludeCards: number[] = []
 	) {
 		this.addCards(input);
-		this.shuffle();
+		this.shuffleAllDecks();
 
 		return this.take(count, level, excludeCards);
 	}
@@ -73,10 +82,10 @@ export class CardDeck {
 		const cardsToAdd = cards.filter((card) => card !== null);
 
 		for (const card of cardsToAdd) {
-			this.getDeckForCost(card.cost).push(card);
+			this.getDeckForCost(card.cost).addCards(card, false);
 		}
 
-		this.shuffle();
+		this.shuffleAllDecks();
 	}
 
 	public addPiece(piece: PieceModel) {
@@ -92,7 +101,7 @@ export class CardDeck {
 			this.addDefinition(definition);
 		}
 
-		this.shuffle();
+		this.shuffleAllDecks();
 	}
 
 	public addPieces(pieces: PieceModel[]) {
@@ -101,14 +110,14 @@ export class CardDeck {
 		}
 	}
 
-	public shuffle() {
-		for (let i = 0; i < this.deck.length; i++) {
-			this.deck[i] = shuffle(this.deck[i]);
+	public shuffleAllDecks() {
+		for (const deck of this.decks) {
+			deck.shuffle();
 		}
 	}
 
-	private getDeckForCost(cost: number): Card[] {
-		return this.deck[cost - 1];
+	private getDeckForCost(cost: number) {
+		return this.decks[cost - 1];
 	}
 
 	private take(count: number, level: number, excludeCards: number[] = []) {
@@ -139,7 +148,7 @@ export class CardDeck {
 			// try 3 times to get a non-excluded card
 			// todo rethink this as below
 			for (let i = 0; i < 3; i++) {
-				const card = this.getDeckForCost(cost).pop();
+				const card = this.getDeckForCost(cost).take();
 
 				if (card) {
 					if (!excludeDefinitions.includes(card.definitionId)) {
@@ -158,7 +167,7 @@ export class CardDeck {
 			// try 3 times to get a non-excluded card
 			// todo rethink this as above
 			for (let i = 0; i < 3; i++) {
-				const card = this.getDeckForCost(cost).pop();
+				const card = this.getDeckForCost(cost).take();
 
 				if (card) {
 					if (!excludeDefinitions.includes(card.definitionId)) {
@@ -185,6 +194,6 @@ export class CardDeck {
 			class: definition.class,
 		};
 
-		this.getDeckForCost(definition.cost).push(card);
+		this.getDeckForCost(definition.cost).addCards(card, false);
 	}
 }
