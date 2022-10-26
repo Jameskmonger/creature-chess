@@ -1,4 +1,5 @@
 {
+	"private": true,
 	"name": "@creature-chess-tools/battle-tester",
 	"version": "0.0.1",
 	"description": "Tools to test Creature Chess battle engine",

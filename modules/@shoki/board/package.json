@@ -1,4 +1,5 @@
 {
+	"private": true,
 	"name": "@shoki/board",
 	"version": "0.0.1",
 	"description": "Board used in Creature Chess",

@@ -1,4 +1,5 @@
 {
+	"private": true,
 	"name": "@shoki/board-react",
 	"version": "0.0.1",
 	"description": "React frontend for @shoki/board",

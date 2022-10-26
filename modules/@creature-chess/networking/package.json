@@ -1,7 +1,7 @@
 {
+	"private": true,
 	"name": "@creature-chess/networking",
 	"version": "0.0.1",
-	"private": true,
 	"description": "Shared network definitions for Creature Chess",
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
