@@ -31,6 +31,7 @@ ADD modules/@creature-chess/ui/package.json ./modules/@creature-chess/ui/
 
 ADD modules/@shoki/board/package.json ./modules/@shoki/board/
 ADD modules/@shoki/board-react/package.json ./modules/@shoki/board-react/
+ADD modules/@shoki/card-deck/package.json ./modules/@shoki/card-deck/
 ADD modules/@shoki/engine/package.json ./modules/@shoki/engine/
 ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
 
