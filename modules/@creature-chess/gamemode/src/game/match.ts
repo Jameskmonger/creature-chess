@@ -90,6 +90,11 @@ export class Match {
 		};
 
 		this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
+
+		// auto-resolve the match from the "away" side if they are a clone
+		if (awayIsClone) {
+			this.clientFinishedMatchAway.resolve();
+		}
 	}
 
 	public onClientFinishMatch(playerId: string) {
@@ -185,7 +190,7 @@ export class Match {
 		// required to preserve inside the generator
 		// eslint-disable-next-line no-underscore-dangle
 		const _this = this;
-		const rootSaga = function* () {
+		const rootSaga = function*() {
 			yield all([
 				call(
 					battleSaga as any,
@@ -195,7 +200,7 @@ export class Match {
 				),
 				takeEvery<BattleEvents.BattleFinishEvent>(
 					BattleEvents.battleFinishEvent,
-					function* ({ payload: { turn } }) {
+					function*({ payload: { turn } }) {
 						_this.onServerFinishMatch();
 
 						_this.logger.info("Battle finished", {
@@ -209,7 +214,7 @@ export class Match {
 				),
 				takeLatest<BattleEvents.BattleTurnEvent>(
 					BattleEvents.battleTurnEvent,
-					function* ({ payload: { board } }: BattleEvents.BattleTurnEvent) {
+					function*({ payload: { board } }: BattleEvents.BattleTurnEvent) {
 						yield put(
 							_this.board.commands.setBoardPiecesCommand({
 								pieces: board.pieces,
