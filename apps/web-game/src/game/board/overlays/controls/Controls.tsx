@@ -9,6 +9,7 @@ const useStyles = createUseStyles({
 	controls: {
 		display: "flex",
 		justifyContent: "space-between",
+		zIndex: 9999,
 	},
 });
 

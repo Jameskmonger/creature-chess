@@ -67,7 +67,7 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 			<MobileContentPane>
 				<Profile />
 
-				<div style={{ height: "1em" }}>
+				<div style={{ height: "1em", zIndex: 9999 }}>
 					<Controls />
 				</div>
 
