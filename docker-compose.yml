@@ -21,7 +21,8 @@ services:
       - ./nginx/local-dev/nginx/error.log:/etc/nginx/error_log.log
       - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
     ports:
-      - 8080:8080
+      - 80:80
+      - 443:443
     depends_on:
       - web-menu
       - server-game
@@ -35,7 +36,7 @@ services:
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
-      - CREATURE_CHESS_APP_URL
+      - CREATURE_CHESS_APP_URL=http://localhost
       - NODE_ENV=development
     build:
       context: .
@@ -55,7 +56,7 @@ services:
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
-      - CREATURE_CHESS_APP_URL
+      - CREATURE_CHESS_APP_URL=http://localhost
       - NODE_ENV=development
     build:
       context: .
