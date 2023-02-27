@@ -23,7 +23,13 @@ export class CardDeck<TCard> {
 	public take(count?: 1): TCard;
 	public take(count: number): TCard[];
 	public take(count: number = 1): TCard | TCard[] {
-		return this.deck.splice(this.deck.length - count, count);
+		const results = this.deck.splice(this.deck.length - count, count);
+
+		if (count === 1) {
+			return results[0];
+		}
+
+		return results;
 	}
 
 	/**

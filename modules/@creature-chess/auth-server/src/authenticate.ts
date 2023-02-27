@@ -25,37 +25,24 @@ export const authenticate = async (
 	try {
 		const authUser = await managementClient.getUser({ id: userId });
 
-		// todo lots of ! in this function, improve it
-
-		if (!authUser.app_metadata || !authUser.app_metadata.playerId) {
-			// need to create an account
-			const newUser = await database.user.create(authUser.user_id!);
-
-			await managementClient.updateAppMetadata(
-				{ id: authUser.user_id! },
-				{ playerId: newUser!.ref.id, playerNickname: null, playerPicture: null }
-			);
-
-			return convertDatabaseUserToUserModel(newUser!);
+		if (!authUser || !authUser.user_id) {
+			throw Error("Unable to get user from auth0");
 		}
 
-		const dbUser = await database.user.getById(authUser.app_metadata.playerId);
+		const databaseUser = await database.user.getByAuthId(authUser.user_id);
 
-		const userModel = convertDatabaseUserToUserModel(dbUser!);
-
-		// todo remove this when DB gets wiped, it's to migrate people who were during the nickname changeover
-		if (userModel.nickname && !authUser.app_metadata.playerNickname) {
-			await managementClient.updateAppMetadata(
-				{ id: authUser.user_id! },
-				{
-					playerId: dbUser!.ref.id,
-					playerNickname: userModel.nickname,
-					playerPicture: userModel.profile?.picture || null,
-				}
-			);
+		if (databaseUser) {
+			return convertDatabaseUserToUserModel(databaseUser);
 		}
 
-		return userModel;
+		// otherwise, we need to create a user
+		const newUser = await database.user.create(userId);
+
+		if (!newUser) {
+			throw Error("Unable to create user");
+		}
+
+		return convertDatabaseUserToUserModel(newUser);
 	} catch (e) {
 		throw e;
 	}

@@ -1,5 +1,4 @@
 export { AuthProvider } from "./provider";
-export { isRegistered, hasNickname } from "./isRegistered";
 
 export {
 	AuthContextProvider,
