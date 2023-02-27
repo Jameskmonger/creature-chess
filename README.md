@@ -38,10 +38,6 @@ AUTH0_MANAGEMENT_CLIENT_SECRET=
 
 These will be automatically picked up and used by the build scripts.
 
-### Local app url
-
-Set the environment variable `CREATURE_CHESS_APP_URL` to `http://localhost:8080`
-
 ### Auth0 Setup
 
 You will need to set up an Auth0 tenant in order to run Creature Chess locally.
@@ -65,8 +61,8 @@ See "Environment variables" above for info on how to store them.
 
   There are some steps that you need to take on the Auth0 config for this:
 
-  - Set `Allowed Callback URLs` = "http://localhost:8080"
-  - Set `Allowed Web Origins` = "http://localhost:8080"
+  - Set `Allowed Callback URLs` = "http://localhost"
+  - Set `Allowed Web Origins` = "http://localhost"
 
   Then, set the following environment variables
 
@@ -85,7 +81,7 @@ Run `yarn` in the project root.
 $ yarn dockerup
 ```
 
-The game is then accessible at `http://localhost:8080`.
+The game is then accessible at `http://localhost`.
 
 In another console, you will need to run the following command to run the User service locally.
 
