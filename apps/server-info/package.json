@@ -27,7 +27,7 @@
 		"@creature-chess/models": "workspace:*",
 		"@types/bad-words": "^3.0.1",
 		"bad-words": "^3.0.4",
-		"express": "^4.17.2",
+		"express": "^4.17.3",
 		"express-winston": "^4.2.0",
 		"winston": "^3.3.3"
 	}
