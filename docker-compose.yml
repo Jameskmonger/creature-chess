@@ -25,6 +25,7 @@ services:
     depends_on:
       - web-menu
       - server-game
+      - server-info
   web-menu:
     environment:
       - CREATURE_CHESS_FAUNA_KEY=secret
@@ -61,6 +62,25 @@ services:
       dockerfile: apps/Dockerfile
       args:
         - APP_DIR=server-game
+    ports:
+      - "3000"
+    depends_on:
+      - faunadb
+    restart: always
+  server-info:
+    environment:
+      - CREATURE_CHESS_FAUNA_KEY=secret
+      - CREATURE_CHESS_FAUNA_DOMAIN=faunadb
+      - AUTH0_DOMAIN
+      - AUTH0_SPA_CLIENT_ID
+      - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
+      - AUTH0_MANAGEMENT_CLIENT_SECRET
+      - NODE_ENV=development
+    build:
+      context: .
+      dockerfile: apps/Dockerfile
+      args:
+        - APP_DIR=server-info
     ports:
       - "3000"
     depends_on:

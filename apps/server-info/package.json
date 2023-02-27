@@ -1,0 +1,34 @@
+{
+	"private": true,
+	"name": "@creature-chess/server-info",
+	"version": "0.0.1",
+	"description": "HTTP info server",
+	"keywords": [],
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"license": "ISC",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"scripts": {
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests"
+	},
+	"dependencies": {
+		"@creature-chess/auth-server": "workspace:*",
+		"@creature-chess/data": "workspace:*",
+		"@creature-chess/models": "workspace:*",
+		"@types/bad-words": "^3.0.1",
+		"bad-words": "^3.0.4",
+		"express": "^4.17.2",
+		"express-winston": "^4.2.0",
+		"winston": "^3.3.3"
+	}
+}
