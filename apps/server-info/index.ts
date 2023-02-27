@@ -1,19 +1,24 @@
-import { authenticate, convertDatabaseUserToUserModel } from "@creature-chess/auth-server";
-import { createDatabaseConnection, DatabaseConnection } from "@creature-chess/data";
+import express from "express";
+import { logger as expressWinston } from "express-winston";
+
+import {
+	authenticate,
+	convertDatabaseUserToUserModel,
+} from "@creature-chess/auth-server";
+import {
+	createDatabaseConnection,
+	DatabaseConnection,
+} from "@creature-chess/data";
 import {
 	AVAILABLE_PROFILE_PICTURES,
 	validateNicknameFormat,
 } from "@creature-chess/models";
 
-
-import express from "express";
-import { logger as expressWinston } from "express-winston";
-
-import Filter = require("bad-words");
-
 import { logger } from "./src/log";
 import { getManagementClient } from "./src/util/auth0";
 import { sanitize } from "./src/util/sanitize-user";
+
+import Filter = require("bad-words");
 
 const app = express();
 const PORT = 3000;
@@ -22,8 +27,11 @@ const PORT = 3000;
 app.use(express.json());
 app.use(expressWinston({ winstonInstance: logger }));
 
-async function getNicknameUpdate(database: DatabaseConnection, filter: Filter,
-	body: { nickname?: string }): Promise<{ error: string | null; nickname: string | null }> {
+async function getNicknameUpdate(
+	database: DatabaseConnection,
+	filter: Filter,
+	body: { nickname?: string }
+): Promise<{ error: string | null; nickname: string | null }> {
 	const { nickname } = body;
 
 	if (!nickname) {
@@ -36,7 +44,7 @@ async function getNicknameUpdate(database: DatabaseConnection, filter: Filter,
 
 	if (nicknameError) {
 		return { error: nicknameError, nickname: null };
-	};
+	}
 
 	if (filter.isProfane(nickname)) {
 		return { error: "Profanity filter", nickname: null };
@@ -51,7 +59,9 @@ async function getNicknameUpdate(database: DatabaseConnection, filter: Filter,
 	return { error: null, nickname: trimmedNickname };
 }
 
-async function getPictureUpdate(body: { picture?: string }): Promise<{ error: string | null; picture: number | null }> {
+async function getPictureUpdate(body: {
+	picture?: string;
+}): Promise<{ error: string | null; picture: number | null }> {
 	const { picture } = body;
 
 	if (!picture) {
@@ -88,7 +98,11 @@ async function startServer() {
 			});
 		}
 
-		const user = await authenticate(authClient, database, authorization as string);
+		const user = await authenticate(
+			authClient,
+			database,
+			authorization as string
+		);
 
 		res.status(200).json(sanitize(user));
 	});
@@ -104,7 +118,11 @@ async function startServer() {
 			});
 		}
 
-		const user = await authenticate(authClient, database, authorization as string);
+		const user = await authenticate(
+			authClient,
+			database,
+			authorization as string
+		);
 
 		if (!user) {
 			logger.info("No user found");
@@ -159,8 +177,7 @@ async function startServer() {
 	});
 }
 
-startServer()
-	.catch((e) => {
-		logger.error("An error occurred while starting the server", e);
-		process.exit(1);
-	});
+startServer().catch((e) => {
+	logger.error("An error occurred while starting the server", e);
+	process.exit(1);
+});

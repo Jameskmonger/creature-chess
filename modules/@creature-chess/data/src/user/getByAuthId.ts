@@ -7,12 +7,7 @@ export const getByAuthId =
 	(logger: Logger, client: FaunaDBClient) => async (authId: string) => {
 		try {
 			const user = await client.query<DatabaseUser>(
-				q.Get(
-					q.Match(
-						q.Index("users_by_auth_id"),
-						authId
-					)
-				)
+				q.Get(q.Match(q.Index("users_by_auth_id"), authId))
 			);
 
 			return user;

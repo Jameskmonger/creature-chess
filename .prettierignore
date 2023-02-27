@@ -3,3 +3,4 @@ apps/**/public/
 yarn.lock
 *.tfstate
 .auth0
+.faunadb/

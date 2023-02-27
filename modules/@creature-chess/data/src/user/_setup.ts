@@ -50,9 +50,7 @@ async function createIndices(client: FaunaDBClient) {
 			})
 		);
 
-		console.log(
-			` - Created index '${INDEX_NAMES.USERS_BY_AUTH_ID}'`
-		);
+		console.log(` - Created index '${INDEX_NAMES.USERS_BY_AUTH_ID}'`);
 		changesMade = true;
 	} catch (e: any) {
 		if (e.message !== INSTANCE_ALREADY_EXISTS) {

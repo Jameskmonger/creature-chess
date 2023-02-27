@@ -6,11 +6,11 @@ const createWinstonLogger = () => {
 	const newLogger = winston.createLogger({
 		format: devMode
 			? winston.format.combine(
-				winston.format.errors({ stack: true }),
-				winston.format.colorize(),
-				winston.format.timestamp(),
-				winston.format.prettyPrint()
-			)
+					winston.format.errors({ stack: true }),
+					winston.format.colorize(),
+					winston.format.timestamp(),
+					winston.format.prettyPrint()
+			  )
 			: undefined,
 	});
 
