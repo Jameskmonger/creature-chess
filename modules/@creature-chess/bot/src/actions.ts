@@ -10,6 +10,7 @@ import {
 	createBuyCardAction,
 	createSellPieceAction,
 	createRerollCardsAction,
+	createSellBoardPieceAction
 } from "./preparingPhase/actions";
 
 export const getActions = (
@@ -22,6 +23,7 @@ export const getActions = (
 	];
 
 	const {
+		board,
 		bench,
 		cardShop: { cards },
 	} = state;
@@ -35,6 +37,11 @@ export const getActions = (
 	// create an action to sell all pieces on the bench
 	for (const piece of BoardSelectors.getAllPieces(bench)) {
 		actions.push(createSellPieceAction(state, personality, piece));
+	}
+
+	// create an action to sell all pieces on the board
+	for (const piece of BoardSelectors.getAllPieces(board)) {
+		actions.push(createSellBoardPieceAction(state, personality, piece));
 	}
 
 	const filtered = actions.filter(
