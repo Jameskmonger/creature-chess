@@ -16,25 +16,48 @@ import { isStrategicCard } from "./utils/creatureType";
 const getAverageCost = (pieces: PieceModel[]): number =>
 	pieces.reduce((acc, cur) => acc + cur.definition.cost, 0) / pieces.length;
 
+const getBenchUsageForHealth = (health: number) => {
+	if (health <= 30) {
+		return 8;
+	}
+
+	if (health <= 50) {
+		return 6;
+	}
+
+	if (health <= 70) {
+		return 4;
+	}
+
+	return 3;
+};
+
 const shouldBuy = (state: PlayerState, card: Card) => {
 	const allPieces = getAllPieces(state);
 	const alreadyOwnPiece = allPieces.some(
 		(p) => p.definitionId === card.definitionId
 	);
-	const hasEmptySlot =
-		allPieces.length < PlayerStateSelectors.getPlayerLevel(state) + 3; // board + 3 bench pieces
 
-	if (alreadyOwnPiece && hasEmptySlot) {
+	if (alreadyOwnPiece) {
 		return true;
 	}
 
-	const averageCost = getAverageCost(allPieces);
+	// bots will use more of their bench if they are low on health
+	const health = PlayerStateSelectors.getPlayerHealth(state);
+	const benchUsage = getBenchUsageForHealth(health);
+
+	const hasEmptySlot =
+		allPieces.length < PlayerStateSelectors.getPlayerLevel(state) + benchUsage;
+
+	if (!hasEmptySlot) {
+		return false;
+	}
+
+	const averageCost = getAverageCost(allPieces) || 0;
 	const improvesAverageCost = card.cost > averageCost;
 
 	// only buy card if it is strategically sound.
-	return (
-		improvesAverageCost && isStrategicCard(card, allPieces) && hasEmptySlot
-	);
+	return improvesAverageCost || isStrategicCard(card, allPieces);
 };
 
 export const createBuyCardAction = (
