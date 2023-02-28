@@ -20,15 +20,14 @@ export const createDatabaseConnection = async (
 	}
 
 	const domain = CREATURE_CHESS_FAUNA_DOMAIN || undefined;
-	const scheme = CREATURE_CHESS_FAUNA_DOMAIN ? "http" : undefined;
-	const port = CREATURE_CHESS_FAUNA_DOMAIN ? 8443 : undefined;
+	// TODO (James) this possibly isn't the most flexible, check how it works with fauna dev
+	const scheme = CREATURE_CHESS_FAUNA_DOMAIN ? "https" : undefined;
 
 	try {
 		const client = new FaunaDBClient({
 			secret: CREATURE_CHESS_FAUNA_KEY,
-			domain,
-			scheme,
-			port,
+			...(domain !== undefined ? { domain } : {}),
+			...(scheme !== undefined ? { scheme } : {})
 		});
 
 		await setup(logger, client);

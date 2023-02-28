@@ -22,7 +22,7 @@
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
 		"@creature-chess/models": "workspace:*",
-		"faunadb": "^3.0.1",
+		"faunadb": "^4.8.0",
 		"winston": "^3.3.3"
 	}
 }

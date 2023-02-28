@@ -29,8 +29,8 @@ services:
       - server-info
   web-menu:
     environment:
-      - CREATURE_CHESS_FAUNA_KEY=secret
-      - CREATURE_CHESS_FAUNA_DOMAIN=faunadb
+      - CREATURE_CHESS_FAUNA_KEY
+      - CREATURE_CHESS_FAUNA_DOMAIN
       - DISCORD_BOT_TOKEN
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
@@ -51,8 +51,8 @@ services:
       - faunadb
   server-game:
     environment:
-      - CREATURE_CHESS_FAUNA_KEY=secret
-      - CREATURE_CHESS_FAUNA_DOMAIN=faunadb
+      - CREATURE_CHESS_FAUNA_KEY
+      - CREATURE_CHESS_FAUNA_DOMAIN
       - DISCORD_BOT_TOKEN
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
@@ -72,8 +72,8 @@ services:
     restart: always
   server-info:
     environment:
-      - CREATURE_CHESS_FAUNA_KEY=secret
-      - CREATURE_CHESS_FAUNA_DOMAIN=faunadb
+      - CREATURE_CHESS_FAUNA_KEY
+      - CREATURE_CHESS_FAUNA_DOMAIN
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
