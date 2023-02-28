@@ -3,7 +3,7 @@ import * as React from "react";
 import classnames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { PlayerListPlayer } from "@creature-chess/models";
+import { APP_BASE_URL, PlayerListPlayer } from "@creature-chess/models";
 
 const useStyles = createUseStyles({
 	image: {
@@ -22,10 +22,11 @@ export function PlayerAvatar({
 		return null;
 	}
 
+	// TODO these shouldn't come from /game/ server
 	return (
 		<img
 			className={classnames(classes.image, "avatar")}
-			src={`https://creaturechess.com/game/images/front/${player.profile.picture}.png`}
+			src={`${APP_BASE_URL}game/images/front/${player.profile.picture}.png`}
 		/>
 	);
 }

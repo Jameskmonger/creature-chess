@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
 	PieceCombatState,
 	PieceInfoStore,
-} from "modules/@creature-chess/battle";
+} from "@creature-chess/battle";
 import { useSelector } from "react-redux";
 
 import { BoardState, createBoardSlice } from "@shoki/board";

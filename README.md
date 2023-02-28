@@ -4,7 +4,7 @@ An open-source auto chess game written in TypeScript using React and Node.
 
 ## Playing
 
-To try the game, head to [creaturechess.com](https://creaturechess.com), register an account and click "Find Game".
+To try the game, head to [creaturechess.gg](https://creaturechess.gg), register an account and click "Find Game".
 
 This is just on a tiny server for demo purposes so it might not work all the time - please [get in touch](mailto:jameskmonger@hotmail.co.uk) if you have a better server that we can use :heart:
 

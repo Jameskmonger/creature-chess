@@ -4,6 +4,7 @@ import { createUseStyles } from "react-jss";
 
 import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
 
+import { CreatureImage } from "../../../../src/display/creatureImage";
 import { BaseRegistrationInput } from "./BaseRegistrationInput";
 
 const useStyles = createUseStyles({
@@ -30,7 +31,7 @@ const PictureSelection: React.FunctionComponent<{
 
 					return (
 						<div className={styles.pictureList} key={picture}>
-							<img src={`images/front/${picture}.png`} alt={creatureName} />
+							<CreatureImage definitionId={picture} />
 							<p>{creatureName}</p>
 							<input
 								type="radio"

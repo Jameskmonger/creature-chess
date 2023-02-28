@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PieceModel } from "modules/@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 
 import { useAppSelector } from "../state";
 

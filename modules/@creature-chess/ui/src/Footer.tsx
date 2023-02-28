@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
+import { APP_BASE_URL } from "@creature-chess/models";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const APP_VERSION = require("../../../../package.json").version;
 
@@ -30,7 +32,7 @@ export const Footer: React.FunctionComponent = () => {
 				/r/CreatureChess
 			</a>
 			{" - "}
-			<a className={classes.item} href="https://creaturechess.com/privacy">
+			<a className={classes.item} href={`${APP_BASE_URL}privacy`}>
 				Privacy Policy
 			</a>
 			{" - "}

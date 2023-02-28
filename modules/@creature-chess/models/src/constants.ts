@@ -1,5 +1,11 @@
 import { GamePhase } from "./game-phase";
 
+export const APP_BASE_URL = process.env.CREATURE_CHESS_APP_URL as string;
+
+if (!APP_BASE_URL) {
+	throw new Error("No APP_BASE_URL set");
+}
+
 export const GRID_SIZE = {
 	width: 7,
 	height: 6, // THIS MUST BE AN EVEN NUMBER

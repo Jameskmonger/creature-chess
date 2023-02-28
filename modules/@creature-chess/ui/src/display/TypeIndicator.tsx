@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { CreatureType } from "@creature-chess/models";
+import { APP_BASE_URL, CreatureType } from "@creature-chess/models";
 
 interface TypeIndicatorProps {
 	type: CreatureType;
@@ -14,8 +14,9 @@ const ICON_FOR_TYPE = {
 	[CreatureType.Wood]: "images/ui/type-wood.svg",
 };
 
+// TODO these shouldn't come from /game/ server
 const TypeIndicator: React.FunctionComponent<TypeIndicatorProps> = ({
 	type,
-}) => <img src={"https://creaturechess.com/game/" + ICON_FOR_TYPE[type]} />;
+}) => <img src={APP_BASE_URL + "game/" + ICON_FOR_TYPE[type]} />;
 
 export { TypeIndicator };
