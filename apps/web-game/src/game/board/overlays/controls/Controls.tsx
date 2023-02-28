@@ -9,7 +9,7 @@ const useStyles = createUseStyles({
 	controls: {
 		display: "flex",
 		justifyContent: "space-between",
-		zIndex: 9999,
+		height: "100%",
 	},
 });
 
@@ -18,8 +18,12 @@ export function Controls() {
 
 	return (
 		<div className={styles.controls}>
-			<ReadyUpButton />
-			<SellPieceButton />
+			<div style={{ width: "48%" }}>
+				<ReadyUpButton />
+			</div>
+			<div style={{ width: "48%" }}>
+				<SellPieceButton />
+			</div>
 		</div>
 	);
 }

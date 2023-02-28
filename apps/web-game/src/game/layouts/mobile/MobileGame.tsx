@@ -65,13 +65,13 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 	if (currentOverlay === null) {
 		return (
 			<MobileContentPane>
+				<BoardContainer />
+
 				<Profile />
 
-				<div style={{ height: "1em", zIndex: 9999 }}>
+				<div style={{ height: "2em", paddingTop: "0.5em" }}>
 					<Controls />
 				</div>
-
-				<BoardContainer />
 			</MobileContentPane>
 		);
 	}

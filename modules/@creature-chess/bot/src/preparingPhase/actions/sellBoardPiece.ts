@@ -34,7 +34,9 @@ export const createSellBoardPieceAction = (
 	if (isStrategicPiece(piece, allPieces)) {
 		const betterStrategicPieceOnBench = benchPieces.find((benchPiece) => {
 			// TODO (James) this doesn't take piece evolution into account
-			const isBetter = isStrategicPiece(benchPiece, allPieces) && benchPiece.definition.cost > piece.definition.cost;
+			const isBetter =
+				isStrategicPiece(benchPiece, allPieces) &&
+				benchPiece.definition.cost > piece.definition.cost;
 			return isBetter;
 		});
 

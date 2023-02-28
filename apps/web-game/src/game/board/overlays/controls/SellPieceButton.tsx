@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
 import { useSelector, useDispatch } from "react-redux";
 
 import { BoardSelectors } from "@shoki/board";
@@ -9,19 +8,7 @@ import { PlayerActions } from "@creature-chess/gamemode";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 
 import { AppState } from "../../../../store";
-import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
-
-const useStyles = createUseStyles({
-	sellPieceButton: {
-		"box-sizing": "border-box",
-		"padding": "2rem",
-		"font-size": "1.6rem",
-		"color": COLOR_READY_BUTTON_TEXT,
-		"cursor": "pointer",
-		"background": COLOR_READY_BUTTON,
-		"border": "none",
-	},
-});
+import { useStyles } from "./styles";
 
 export function SellPieceButton() {
 	const dispatch = useDispatch();
@@ -56,7 +43,7 @@ export function SellPieceButton() {
 		return null;
 	}
 	return (
-		<button className={styles.sellPieceButton} onClick={onSell}>
+		<button className={styles.controlButton} onClick={onSell}>
 			Sell (${selectedPiece.definition.cost})
 		</button>
 	);

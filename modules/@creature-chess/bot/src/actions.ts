@@ -10,7 +10,7 @@ import {
 	createBuyCardAction,
 	createSellPieceAction,
 	createRerollCardsAction,
-	createSellBoardPieceAction
+	createSellBoardPieceAction,
 } from "./preparingPhase/actions";
 
 export const getActions = (
