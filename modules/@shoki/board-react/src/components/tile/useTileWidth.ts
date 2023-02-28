@@ -1,15 +1,15 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useCallback } from "react";
 
 export const useTileWidth = (tileInnerRef: React.RefObject<HTMLDivElement>) => {
 	const [tileWidth, setTileWidth] = useState(0);
 
-	const handleResize = () => {
+	const handleResize = useCallback(() => {
 		if (!tileInnerRef.current) {
 			return;
 		}
 
 		setTileWidth(tileInnerRef.current.offsetWidth);
-	};
+	}, [tileInnerRef]);
 
 	useLayoutEffect(() => {
 		if (!tileInnerRef.current) {
@@ -33,7 +33,7 @@ export const useTileWidth = (tileInnerRef: React.RefObject<HTMLDivElement>) => {
 		return () => {
 			window.removeEventListener("resize", handleResize);
 		};
-	}, [tileInnerRef.current]);
+	}, [handleResize, tileInnerRef]);
 
 	return tileWidth;
 };

@@ -42,7 +42,7 @@ export const App = withErrorBoundary(() => {
 		};
 
 		open();
-	}, [isAuthenticated, getAccessTokenSilently]);
+	}, [isAuthenticated, getAccessTokenSilently, dispatch]);
 
 	useGlobalStyles();
 

@@ -13,7 +13,7 @@ const Countdown: React.FunctionComponent<Props> = ({
 		null
 	);
 
-	const updateSecondsRemaining = () => {
+	const updateSecondsRemaining = React.useCallback(() => {
 		if (countdownToSeconds === null) {
 			return;
 		}
@@ -21,7 +21,7 @@ const Countdown: React.FunctionComponent<Props> = ({
 		const currentSeconds = Date.now() / 1000;
 
 		setSecondsRemaining(Math.ceil(countdownToSeconds - currentSeconds));
-	};
+	}, [countdownToSeconds]);
 
 	React.useEffect(() => {
 		updateSecondsRemaining();
@@ -29,7 +29,7 @@ const Countdown: React.FunctionComponent<Props> = ({
 		const intervalId = setInterval(updateSecondsRemaining, 1000);
 
 		return () => clearInterval(intervalId);
-	}, [countdownToSeconds]);
+	}, [countdownToSeconds, updateSecondsRemaining]);
 
 	if (secondsRemaining === null) {
 		return null;

@@ -38,9 +38,9 @@ export function useElementSize() {
 		return () => {
 			window.removeEventListener("resize", storeSize);
 		};
-	}, [ref]);
+	}, [ref, storeSize]);
 
-	const isPortrait = React.useMemo(() => size[1] > size[0], [ref, size]);
+	const isPortrait = React.useMemo(() => size[1] > size[0], [size]);
 
 	return {
 		isPortrait,

@@ -118,7 +118,7 @@ function useRenderers({
 				draggable,
 			};
 		},
-		[renderBoardPiece]
+		[board.locked, renderBoardPiece]
 	);
 
 	const benchPieceRenderer = React.useMemo(
@@ -131,7 +131,7 @@ function useRenderers({
 				draggable,
 			};
 		},
-		[renderBoardPiece]
+		[bench.locked, renderBenchPiece]
 	);
 
 	return { boardPieceRenderer, benchPieceRenderer };

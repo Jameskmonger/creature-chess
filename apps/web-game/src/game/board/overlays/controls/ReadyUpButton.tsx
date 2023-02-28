@@ -39,7 +39,7 @@ export function ReadyUpButton() {
 		}
 
 		dispatch(PlayerActions.readyUpPlayerAction());
-	}, [canReadyUp]);
+	}, [canReadyUp, dispatch]);
 
 	if (!canReadyUp) {
 		// To keep the Sell button in the same place

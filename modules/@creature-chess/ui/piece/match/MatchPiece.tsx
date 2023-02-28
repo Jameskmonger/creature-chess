@@ -65,49 +65,58 @@ export const MatchPiece: React.FC = () => {
 		);
 	};
 
-	const runAnimations = (newPiece: PieceModel) => {
-		const { attacking, hit, currentHealth } = newPiece;
+	const runAnimations = React.useCallback(
+		(newPiece: PieceModel) => {
+			const { attacking, hit, currentHealth } = newPiece;
 
-		if (!lastRenderedPiece) {
+			if (!lastRenderedPiece) {
+				setLastRenderedPiece(newPiece);
+				return;
+			}
+
+			if (attacking && !lastRenderedPiece.attacking) {
+				if (attacking.attackType.name === attackTypes.basic.name) {
+					runAnimation(animationStyles.attackBasic, "attack-basic", {
+						attackPower: attacking.damage,
+						attackXDirection: attacking.direction.x,
+						attackYDirection: attacking.direction.y,
+					});
+				} else if (attacking.attackType.name === attackTypes.shoot.name) {
+					runAnimation(animationStyles.attackShoot, "attack-shoot", {
+						attackPower: attacking.damage,
+						attackXDirection: attacking.direction.x,
+						attackYDirection: attacking.direction.y,
+						attackDistance: attacking.distance,
+					});
+				}
+			}
+
+			if (hit && !lastRenderedPiece.hit) {
+				runAnimation(animationStyles.receiveHit, "receive-hit", {
+					hitPower: hit.damage,
+				});
+			}
+
+			if (currentHealth === 0) {
+				if (lastRenderedPiece.currentHealth !== 0) {
+					runAnimation(animationStyles.dying, "dying");
+				}
+			} else {
+				if (lastRenderedPiece.currentHealth === 0) {
+					removeAnimation(animationStyles.dying);
+				}
+			}
+
 			setLastRenderedPiece(newPiece);
-			return;
-		}
-
-		if (attacking && !lastRenderedPiece.attacking) {
-			if (attacking.attackType.name === attackTypes.basic.name) {
-				runAnimation(animationStyles.attackBasic, "attack-basic", {
-					attackPower: attacking.damage,
-					attackXDirection: attacking.direction.x,
-					attackYDirection: attacking.direction.y,
-				});
-			} else if (attacking.attackType.name === attackTypes.shoot.name) {
-				runAnimation(animationStyles.attackShoot, "attack-shoot", {
-					attackPower: attacking.damage,
-					attackXDirection: attacking.direction.x,
-					attackYDirection: attacking.direction.y,
-					attackDistance: attacking.distance,
-				});
-			}
-		}
-
-		if (hit && !lastRenderedPiece.hit) {
-			runAnimation(animationStyles.receiveHit, "receive-hit", {
-				hitPower: hit.damage,
-			});
-		}
-
-		if (currentHealth === 0) {
-			if (lastRenderedPiece.currentHealth !== 0) {
-				runAnimation(animationStyles.dying, "dying");
-			}
-		} else {
-			if (lastRenderedPiece.currentHealth === 0) {
-				removeAnimation(animationStyles.dying);
-			}
-		}
-
-		setLastRenderedPiece(newPiece);
-	};
+		},
+		[
+			animationStyles.attackBasic,
+			animationStyles.attackShoot,
+			animationStyles.dying,
+			animationStyles.receiveHit,
+			lastRenderedPiece,
+		]
+	);
 
 	React.useEffect(() => {
 		if (piece) {
@@ -115,7 +124,7 @@ export const MatchPiece: React.FC = () => {
 		} else {
 			setLastRenderedPiece(null);
 		}
-	}, [piece]);
+	}, [piece, runAnimations]);
 
 	if (!piece) {
 		return null;
