@@ -3,6 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 
 import { getPlayerMoney } from "@creature-chess/gamemode";
+import { GamePhase } from "@creature-chess/models";
 import { PortraitGameScreen } from "@creature-chess/ui/gameScreen";
 
 import { AppState } from "../../../store";
@@ -22,6 +23,12 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 		getPlayerMoney(state.game)
 	);
 
+	const inPlayingOrReadyPhase = useSelector<AppState, boolean>(
+		(state) =>
+			state.game.roundInfo.phase === GamePhase.PLAYING ||
+			state.game.roundInfo.phase === GamePhase.READY
+	);
+
 	if (currentOverlay === Overlay.PLAYERS) {
 		return (
 			<OverlayComponent title="Players">
@@ -34,6 +41,14 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 		return (
 			<OverlayComponent title={`Balance: $${currentBalance}`} fullscreen>
 				<CardShop />
+
+				{inPlayingOrReadyPhase && (
+					<>
+						<Profile />
+
+						{/* TODO show controls here too? to sell pieces maybe? */}
+					</>
+				)}
 			</OverlayComponent>
 		);
 	}
@@ -62,16 +77,26 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 		(state) => state.game.ui.currentOverlay
 	);
 
+	const inPlayingOrReadyPhase = useSelector<AppState, boolean>(
+		(state) =>
+			state.game.roundInfo.phase === GamePhase.PLAYING ||
+			state.game.roundInfo.phase === GamePhase.READY
+	);
+
 	if (currentOverlay === null) {
 		return (
 			<MobileContentPane>
 				<BoardContainer />
 
-				<Profile />
+				{!inPlayingOrReadyPhase && (
+					<>
+						<Profile />
 
-				<div style={{ height: "2em", paddingTop: "0.5em" }}>
-					<Controls />
-				</div>
+						<div style={{ height: "2em", paddingTop: "0.5em" }}>
+							<Controls />
+						</div>
+					</>
+				)}
 			</MobileContentPane>
 		);
 	}
