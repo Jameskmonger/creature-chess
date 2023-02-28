@@ -37,7 +37,9 @@ ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
 
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 
-ADD . .
+ADD apps/ ./apps/
+ADD modules/ ./modules/
+ADD tsconfig.json ./
 
 # we need to do the build here, because the app requires process.env vars
 # do you know a better way? please make a PR
