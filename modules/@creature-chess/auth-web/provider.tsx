@@ -3,6 +3,7 @@ import React from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import { auth0Config } from "./config";
+import { GameAuthContextProvider } from "./context";
 
 type Props = {
 	children: React.ReactNode;
@@ -38,7 +39,7 @@ export const AuthProvider: React.FC<Props> = ({
 			onRedirectCallback={onRedirectCallback}
 			useRefreshTokens
 		>
-			{children}
+			<GameAuthContextProvider>{children}</GameAuthContextProvider>
 		</Auth0Provider>
 	);
 };

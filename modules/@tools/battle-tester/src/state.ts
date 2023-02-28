@@ -1,12 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-	PieceCombatState,
-	PieceInfoStore,
-} from "@creature-chess/battle";
 import { useSelector } from "react-redux";
 
 import { BoardState, createBoardSlice } from "@shoki/board";
 
+import { PieceCombatState, PieceInfoStore } from "@creature-chess/battle";
 import { getAllDefinitions } from "@creature-chess/gamemode";
 import { GRID_SIZE, PieceModel } from "@creature-chess/models";
 

@@ -45,9 +45,13 @@ const Template: Story<any> = (args) => {
 			<AuthContextProvider
 				value={{
 					user: {
-						"https://creaturechess.jamesmonger.com/playerId": "1234",
-						"https://creaturechess.jamesmonger.com/playerNickname": "jkm",
-						"https://creaturechess.jamesmonger.com/playerPicture": 1,
+						id: "1234",
+						nickname: "jkm",
+						stats: {
+							wins: 0,
+							gamesPlayed: 0,
+						},
+						registered: true,
 					},
 				}}
 			>

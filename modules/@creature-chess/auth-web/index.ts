@@ -2,7 +2,8 @@ export { AuthProvider } from "./provider";
 
 export {
 	AuthContextProvider,
-	Auth0ContextProvider,
+	GameAuthContextProvider,
 	usePlayerId,
 } from "./context";
 export { Auth0User } from "./types";
+export { useUser } from "./useUser";

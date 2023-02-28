@@ -41,6 +41,7 @@ module.exports = {
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
 			SENTRY_DSN: "",
+			API_INFO_URL: "http://localhost/api",
 			AUTH0_DOMAIN: "",
 			AUTH0_SPA_CLIENT_ID: "",
 			CREATURE_CHESS_APP_URL: "",

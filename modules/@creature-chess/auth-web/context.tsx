@@ -1,38 +1,38 @@
 import * as React from "react";
 
-import { useAuth0 } from "@auth0/auth0-react";
+import { SanitizedUser } from "@creature-chess/models";
 
-import { Auth0User } from "./types";
+import { useUser } from "./useUser";
 
-type AuthContextValue = {
-	user: Auth0User | null;
-};
+const GameAuthContext = React.createContext<{
+	user: SanitizedUser | null;
+}>({
+	user: null,
+});
+GameAuthContext.displayName = "GameAuthContext";
 
-const AuthContext = React.createContext<AuthContextValue>({ user: null });
-AuthContext.displayName = "AuthContext";
+export const AuthContextProvider = GameAuthContext.Provider;
 
-export const AuthContextProvider = AuthContext.Provider;
-
-export function Auth0ContextProvider({
+export function GameAuthContextProvider({
 	children,
 }: {
 	children: React.ReactNode | React.ReactNode[];
 }) {
-	const { user } = useAuth0<Auth0User>();
+	const { user } = useUser();
 
 	return (
-		<AuthContext.Provider value={{ user: user || null }}>
+		<GameAuthContext.Provider value={{ user: user || null }}>
 			{children}
-		</AuthContext.Provider>
+		</GameAuthContext.Provider>
 	);
 }
 
 export const usePlayerId = (): string => {
-	const { user } = React.useContext(AuthContext);
+	const { user } = React.useContext(GameAuthContext);
 
 	if (!user) {
 		return "";
 	}
 
-	return user["https://creaturechess.jamesmonger.com/playerId"]!;
+	return user.id;
 };

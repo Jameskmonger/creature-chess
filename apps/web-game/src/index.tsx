@@ -6,7 +6,7 @@ import "pepjs";
 import * as ReactDOM from "react-dom";
 import { Provider as ReduxProvider } from "react-redux";
 
-import { Auth0ContextProvider, AuthProvider } from "@creature-chess/auth-web";
+import { AuthProvider } from "@creature-chess/auth-web";
 
 import { App } from "./app";
 import { createAppStore } from "./store";
@@ -34,11 +34,9 @@ const AppRoot: React.FunctionComponent = () => {
 
 	return (
 		<AuthProvider onRedirectCallback={onRedirectCallback}>
-			<Auth0ContextProvider>
-				<ReduxProvider store={store}>
-					<App />
-				</ReduxProvider>
-			</Auth0ContextProvider>
+			<ReduxProvider store={store}>
+				<App />
+			</ReduxProvider>
 		</AuthProvider>
 	);
 };

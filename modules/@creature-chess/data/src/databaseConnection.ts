@@ -17,7 +17,7 @@ export const createDatabaseConnection = async (
 		CREATURE_CHESS_FAUNA_KEY,
 		CREATURE_CHESS_FAUNA_DOMAIN,
 		CREATURE_CHESS_FAUNA_SCHEME,
-		CREATURE_CHESS_FAUNA_PORT
+		CREATURE_CHESS_FAUNA_PORT,
 	} = process.env;
 
 	if (!CREATURE_CHESS_FAUNA_KEY) {
@@ -26,21 +26,15 @@ export const createDatabaseConnection = async (
 
 	const domain = CREATURE_CHESS_FAUNA_DOMAIN || undefined;
 	const port = CREATURE_CHESS_FAUNA_PORT || undefined;
-	const scheme = (CREATURE_CHESS_FAUNA_SCHEME as "http" | "https" | undefined) || undefined;
-
-	console.log({
-		secret: CREATURE_CHESS_FAUNA_KEY,
-		...(domain !== undefined ? { domain } : {}),
-		...(port !== undefined ? { port: parseInt(port, 10) } : {}),
-		...(scheme !== undefined ? { scheme } : {})
-	})
+	const scheme =
+		(CREATURE_CHESS_FAUNA_SCHEME as "http" | "https" | undefined) || undefined;
 
 	try {
 		const client = new FaunaDBClient({
 			secret: CREATURE_CHESS_FAUNA_KEY,
 			...(domain !== undefined ? { domain } : {}),
 			...(port !== undefined ? { port: parseInt(port, 10) } : {}),
-			...(scheme !== undefined ? { scheme } : {})
+			...(scheme !== undefined ? { scheme } : {}),
 		});
 
 		await setup(logger, client);
