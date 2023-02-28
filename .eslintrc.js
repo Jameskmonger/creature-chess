@@ -21,14 +21,8 @@ module.exports = {
 	parserOptions: {
 		sourceType: "module",
 	},
-	plugins: [
-		"jsdoc",
-		"prefer-arrow",
-		"import",
-		"react",
-		"react-hooks",
-		"@typescript-eslint",
-	],
+	plugins: ["jsdoc", "prefer-arrow", "import", "react", "@typescript-eslint"],
+	extends: ["plugin:react-hooks/recommended"],
 	settings: {
 		react: {
 			version: "detect",
