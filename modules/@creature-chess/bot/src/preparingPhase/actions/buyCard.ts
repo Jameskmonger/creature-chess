@@ -43,14 +43,13 @@ export const createBuyCardAction = (
 	index: number,
 	card: Card | null
 ): BrainAction | null => {
-	const playerMoney = PlayerStateSelectors.getPlayerMoney(state);
+	const money = PlayerStateSelectors.getPlayerMoney(state);
 
-	if (card === null || playerMoney < card.cost || shouldBuy(state, card)) {
+	if (card === null || money < card.cost || !shouldBuy(state, card)) {
 		return null;
 	}
 
 	const health = PlayerStateSelectors.getPlayerHealth(state);
-	const money = PlayerStateSelectors.getPlayerMoney(state);
 
 	return {
 		name: `buy card [${card.name}]`,
