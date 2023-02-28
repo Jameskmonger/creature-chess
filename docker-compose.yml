@@ -30,15 +30,15 @@ services:
   web-menu:
     environment:
       - CREATURE_CHESS_FAUNA_KEY=secret
-      - CREATURE_CHESS_FAUNA_DOMAIN=http://localhost:8443
+      - CREATURE_CHESS_FAUNA_DOMAIN=faunadb
       - DISCORD_BOT_TOKEN
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
-      - CREATURE_CHESS_APP_URL=http://localhost
-      - GAME_SERVER_URL=http://localhost/game/
-      - API_INFO_URL=http://localhost/api
+      - CREATURE_CHESS_APP_URL
+      - GAME_SERVER_URL
+      - API_INFO_URL
       - NODE_ENV=development
     build:
       context: .
@@ -58,7 +58,7 @@ services:
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
-      - CREATURE_CHESS_APP_URL=http://localhost
+      - CREATURE_CHESS_APP_URL
       - NODE_ENV=development
     build:
       context: .
@@ -78,6 +78,7 @@ services:
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
+      - CREATURE_CHESS_APP_URL
       - NODE_ENV=development
     build:
       context: .
