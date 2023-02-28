@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { LobbyPlayer } from "@creature-chess/models";
+import { IMAGE_BASE_URL, LobbyPlayer } from "@creature-chess/models";
 
 import { PlayerAvatar } from "../../../src/player/avatar";
 import { Title } from "../../../src/player/title";
@@ -33,6 +33,8 @@ const useStyles = createUseStyles({
 	},
 });
 
+const NO_PLAYER_IMAGE = `${IMAGE_BASE_URL}/ui/no_player_img.png`;
+
 const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 	const styles = useStyles();
 
@@ -40,7 +42,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 		return (
 			<div className={`${styles.player} ${styles.bot}`}>
 				<span className={styles.nameAndImage}>
-					<img src={"images/ui/no_player_img.png"} alt="no player image" />
+					<img src={NO_PLAYER_IMAGE} alt="no player image" />
 					<div />
 					empty slot
 				</span>

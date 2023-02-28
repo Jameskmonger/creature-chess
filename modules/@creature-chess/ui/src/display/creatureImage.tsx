@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { APP_BASE_URL } from "@creature-chess/models";
+import { IMAGE_BASE_URL } from "@creature-chess/models";
 
 interface Props {
 	baseUrl?: string;
@@ -36,14 +36,15 @@ const useStyles = createUseStyles({
 	},
 });
 
+function getCreatureUrl(facing: "front" | "back", definitionId: number) {
+	return `${IMAGE_BASE_URL}/creatures/${facing}/${definitionId}.png`;
+}
+
 export function CreatureImage({ facing, definitionId }: Props) {
-	// TODO these shouldn't come from /game/ server
 	return (
 		<img
 			className={useStyles().image}
-			src={`${APP_BASE_URL}game/images/${
-				facing || "front"
-			}/${definitionId}.png`}
+			src={getCreatureUrl(facing || "front", definitionId)}
 		/>
 	);
 }

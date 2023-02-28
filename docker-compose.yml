@@ -35,6 +35,7 @@ services:
       - CREATURE_CHESS_APP_URL
       - GAME_SERVER_URL
       - API_INFO_URL
+      - CREATURE_CHESS_IMAGE_URL
       - NODE_ENV=development
     build:
       context: .
@@ -58,6 +59,7 @@ services:
       - AUTH0_MANAGEMENT_CLIENT_SECRET
       - CREATURE_CHESS_APP_URL
       - API_INFO_URL
+      - CREATURE_CHESS_IMAGE_URL
       - NODE_ENV=development
     build:
       context: .

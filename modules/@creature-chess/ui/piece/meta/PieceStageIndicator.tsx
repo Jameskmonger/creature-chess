@@ -1,10 +1,14 @@
 import * as React from "react";
 
+import { IMAGE_BASE_URL } from "@creature-chess/models";
+
 import { Layout } from "../../layout";
 
 interface StageIndicatorProps {
 	stage: number;
 }
+
+const STAR = `${IMAGE_BASE_URL}/ui/star.svg`;
 
 const PieceStageIndicator: React.FunctionComponent<StageIndicatorProps> = ({
 	stage,
@@ -16,7 +20,7 @@ const PieceStageIndicator: React.FunctionComponent<StageIndicatorProps> = ({
 	}
 
 	for (let i = 0; i <= stage; i++) {
-		stars.push(<img key={i} src="images/ui/star.svg" />);
+		stars.push(<img key={i} src={STAR} />);
 	}
 
 	return (
