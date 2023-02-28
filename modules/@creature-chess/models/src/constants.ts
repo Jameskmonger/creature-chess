@@ -45,3 +45,4 @@ export const AVAILABLE_PROFILE_PICTURES = {
 	7: "Embra",
 	8: "Tweesher",
 };
+export const PIECES_FOR_STAGE = [1, 3, 9];

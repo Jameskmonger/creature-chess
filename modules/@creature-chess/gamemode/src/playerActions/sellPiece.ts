@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import { takeEvery, select, put } from "redux-saga/effects";
 
-import { PieceModel } from "@creature-chess/models";
+import { PieceModel, PIECES_FOR_STAGE } from "@creature-chess/models";
 
 import { afterSellPieceEvent } from "../entities/player/events";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
@@ -13,15 +13,13 @@ export const sellPiecePlayerAction = createAction<{ pieceId: string }>(
 	"sellPiecePlayerAction"
 );
 
-const PIECES_FOR_STAGE = [1, 3, 9];
-
-export const sellPiecePlayerActionSaga = function* () {
+export const sellPiecePlayerActionSaga = function*() {
 	const boardSlice = yield* getBoardSlice();
 	const benchSlice = yield* getBenchSlice();
 
 	yield takeEvery<SellPiecePlayerAction>(
 		sellPiecePlayerAction.toString(),
-		function* ({ payload: { pieceId } }) {
+		function*({ payload: { pieceId } }) {
 			const piece: PieceModel = yield select((state) =>
 				getPiece(state, pieceId)
 			);
@@ -37,6 +35,8 @@ export const sellPiecePlayerActionSaga = function* () {
 				(state) => state.playerInfo.money
 			);
 
+			// TODO (Jameskmonger) this possibly isn't safe.. can the money be updated
+			// 			in between the `select` and the `put`?
 			yield put(updateMoneyCommand(currentMoney + pieceCost * piecesUsed));
 
 			yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
