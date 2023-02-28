@@ -13,20 +13,33 @@ export type DatabaseConnection = {
 export const createDatabaseConnection = async (
 	logger: Logger
 ): Promise<DatabaseConnection> => {
-	const { CREATURE_CHESS_FAUNA_KEY, CREATURE_CHESS_FAUNA_DOMAIN } = process.env;
+	const {
+		CREATURE_CHESS_FAUNA_KEY,
+		CREATURE_CHESS_FAUNA_DOMAIN,
+		CREATURE_CHESS_FAUNA_SCHEME,
+		CREATURE_CHESS_FAUNA_PORT
+	} = process.env;
 
 	if (!CREATURE_CHESS_FAUNA_KEY) {
 		throw Error("No CREATURE_CHESS_FAUNA_KEY environment variable found");
 	}
 
 	const domain = CREATURE_CHESS_FAUNA_DOMAIN || undefined;
-	// TODO (James) this possibly isn't the most flexible, check how it works with fauna dev
-	const scheme = CREATURE_CHESS_FAUNA_DOMAIN ? "https" : undefined;
+	const port = CREATURE_CHESS_FAUNA_PORT || undefined;
+	const scheme = (CREATURE_CHESS_FAUNA_SCHEME as "http" | "https" | undefined) || undefined;
+
+	console.log({
+		secret: CREATURE_CHESS_FAUNA_KEY,
+		...(domain !== undefined ? { domain } : {}),
+		...(port !== undefined ? { port: parseInt(port, 10) } : {}),
+		...(scheme !== undefined ? { scheme } : {})
+	})
 
 	try {
 		const client = new FaunaDBClient({
 			secret: CREATURE_CHESS_FAUNA_KEY,
 			...(domain !== undefined ? { domain } : {}),
+			...(port !== undefined ? { port: parseInt(port, 10) } : {}),
 			...(scheme !== undefined ? { scheme } : {})
 		});
 
