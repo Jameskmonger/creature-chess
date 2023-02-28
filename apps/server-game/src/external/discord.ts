@@ -1,6 +1,9 @@
 import { Client, TextChannel } from "discord.js";
 
-import { APP_BASE_URL, LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS } from "@creature-chess/models";
+import {
+	APP_BASE_URL,
+	LOBBY_WAIT_TIME as LOBBY_WAIT_TIME_SECONDS,
+} from "@creature-chess/models";
 
 import { logger } from "../log";
 

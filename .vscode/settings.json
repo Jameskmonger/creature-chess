@@ -12,10 +12,7 @@
 	"files.trimTrailingWhitespace": true,
 	"files.trimFinalNewlines": true,
 	"files.insertFinalNewline": true,
-	"conventionalCommits.scopes": [
-		"shoki",
-		"server-game"
-	],
+	"conventionalCommits.scopes": ["shoki", "server-game"],
 	"search.exclude": {
 		"**/.yarn": true,
 		"**/.pnp.*": true
@@ -23,5 +20,5 @@
 	"eslint.nodePath": ".yarn/sdks",
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
-	"stylelint.stylelintPath": ".yarn/sdks/stylelint/lib/index.js",
+	"stylelint.stylelintPath": ".yarn/sdks/stylelint/lib/index.js"
 }
