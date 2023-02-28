@@ -1,18 +1,5 @@
 version: "3.8"
 services:
-  faunadb:
-    image: fauna/faunadb
-    volumes:
-      - ./.faunadb/lib/:/var/lib/faunadb
-      - ./.faunadb/log/:/var/log/faunadb
-    ports:
-      - 8443:8443
-      - 8084:8084
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8443"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
   nginx:
     build:
       context: .
@@ -44,8 +31,6 @@ services:
         - APP_DIR=web-menu
     ports:
       - "3000"
-    depends_on:
-      - faunadb
   server-game:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
@@ -68,8 +53,6 @@ services:
         - APP_DIR=server-game
     ports:
       - "3000"
-    depends_on:
-      - faunadb
     restart: always
   server-info:
     environment:
@@ -82,7 +65,7 @@ services:
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
       - CREATURE_CHESS_APP_URL
-      - NODE_ENV=development
+      - NODE_ENV
     build:
       context: .
       dockerfile: apps/Dockerfile
@@ -90,6 +73,4 @@ services:
         - APP_DIR=server-info
     ports:
       - "3000"
-    depends_on:
-      - faunadb
     restart: always
