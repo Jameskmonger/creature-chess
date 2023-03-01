@@ -2170,11 +2170,6 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@shoki/board": "workspace:*"
     "@shoki/board-react": "workspace:*"
-    "@storybook/addon-actions": ^6.5.7
-    "@storybook/addon-essentials": ^6.5.7
-    "@storybook/addon-links": ^6.5.7
-    "@storybook/builder-webpack5": ^6.5.7
-    "@storybook/react": ^6.5.7
     babel-loader: ^8.2.3
   peerDependencies:
     classnames: ^2.3.1
@@ -8083,6 +8078,11 @@ __metadata:
   resolution: "creature-chess@workspace:."
   dependencies:
     "@babel/core": ^7.16.5
+    "@storybook/addon-actions": ^6.5.7
+    "@storybook/addon-essentials": ^6.5.7
+    "@storybook/addon-links": ^6.5.7
+    "@storybook/builder-webpack5": ^6.5.7
+    "@storybook/react": ^6.5.7
     "@trivago/prettier-plugin-sort-imports": ^3.2.0
     "@types/jest": ^27.0.3
     "@types/node": ^16.11.17

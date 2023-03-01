@@ -17,7 +17,8 @@
 		"test": "yarn workspaces foreach run test",
 		"dockerup": "docker-compose --env-file ./.env -f docker-compose.yml -f docker-compose.local.yml build && docker-compose --env-file ./.env -f docker-compose.yml -f docker-compose.local.yml up",
 		"dockerup-live": "docker-compose --env-file ./.env.live build && docker-compose --env-file ./.env.live up -d",
-		"storybook": "yarn workspace @creature-chess/ui storybook",
+		"storybook": "start-storybook -p 6006",
+		"build-storybook": "build-storybook -o ./output",
 		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\" \"apps/**/*.tsx\" \"modules/**/*.tsx\"",
 		"ecr-push": "sh ./scripts/ecr-push.sh",
 		"prettier": "prettier -w ./",
@@ -57,6 +58,11 @@
 		"unimported": "^1.19.1"
 	},
 	"dependencies": {
+		"@storybook/addon-actions": "^6.5.7",
+		"@storybook/addon-essentials": "^6.5.7",
+		"@storybook/addon-links": "^6.5.7",
+		"@storybook/builder-webpack5": "^6.5.7",
+		"@storybook/react": "^6.5.7",
 		"@types/react": "^17.0.38",
 		"@types/react-dom": "^17.0.11",
 		"classnames": "^2.3.1",
