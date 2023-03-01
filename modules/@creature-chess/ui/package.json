@@ -14,7 +14,7 @@
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
 	"scripts": {
-		"build": "tsc -p ./tsconfig.json",
+		"build": "yarn run -T tsc -p ./tsconfig.json",
 		"test": "yarn run -T jest --passWithNoTests",
 		"storybook": "start-storybook -p 6006",
 		"build-storybook": "build-storybook -o ./output"

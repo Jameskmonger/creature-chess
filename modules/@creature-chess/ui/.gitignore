@@ -1,1 +1,4 @@
 output/
+
+*.js
+!jest.config.js

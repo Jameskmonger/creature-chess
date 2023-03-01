@@ -14,7 +14,7 @@
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
 	"scripts": {
-		"build": "tsc -p ./tsconfig.json"
+		"build": "yarn run -T tsc -p ./tsconfig.json"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
