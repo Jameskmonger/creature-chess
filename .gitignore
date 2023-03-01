@@ -19,6 +19,8 @@ coverage/
 !.yarn/sdks
 !.yarn/versions
 
+
+.env
 .env.*
 
 .faunadb/

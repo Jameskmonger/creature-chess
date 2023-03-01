@@ -23,7 +23,7 @@ This is just on a tiny server for demo purposes so it might not work all the tim
 
 ### Environment variables
 
-Create a `.env.dev` file in the project root to store environment variables.
+Create a `.env` file in the project root to store environment variables.
 
 The contents should be like so:
 
