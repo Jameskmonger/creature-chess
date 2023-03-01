@@ -5,3 +5,8 @@ public/
 ./images/
 
 **/*.md
+
+**/Dockerfile
+**/*.Dockerfile
+**/docker-compose.yml
+**/docker-compose.*.yml

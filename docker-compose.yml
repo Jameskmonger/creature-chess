@@ -1,5 +1,10 @@
 version: "3.8"
 services:
+  nodejs-builder:
+    build:
+      context: .
+      dockerfile: apps/nodejs-builder.Dockerfile
+    image: nodejs-builder
   nginx:
     build:
       context: .
@@ -32,6 +37,8 @@ services:
         - APP_DIR=web-menu
     ports:
       - "3000"
+    depends_on:
+      - nodejs-builder
   server-game:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
@@ -55,6 +62,8 @@ services:
     ports:
       - "3000"
     restart: always
+    depends_on:
+      - nodejs-builder
   server-info:
     environment:
       - CREATURE_CHESS_FAUNA_KEY
@@ -75,3 +84,5 @@ services:
     ports:
       - "3000"
     restart: always
+    depends_on:
+      - nodejs-builder

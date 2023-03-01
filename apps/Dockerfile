@@ -1,47 +1,11 @@
-FROM node:16-alpine AS node
+# Extend our base NodeJS builder image (see apps/nodejs-builder.Dockerfile)
+FROM nodejs-builder
 ARG APP_DIR
 ENV APP_DIR ${APP_DIR}
 
 WORKDIR /code
 
-RUN yarn set version berry
-
-# copy package.json files separately to allow for yarn installation before copying code
-# this enables better docker caching and a nicer dev experience
-ADD package.json yarn.lock .yarnrc.yml ./
-ADD .yarn/plugins/ ./.yarn/plugins/
-ADD .yarn/releases/ ./.yarn/releases/
-
-ADD apps/server-game/package.json ./apps/server-game/
-ADD apps/server-info/package.json ./apps/server-info/
-ADD apps/web-game/package.json ./apps/web-game/
-ADD apps/web-menu/package.json ./apps/web-menu/
-
-ADD modules/@creature-chess/auth-server/package.json ./modules/@creature-chess/auth-server/
-ADD modules/@creature-chess/auth-web/package.json ./modules/@creature-chess/auth-web/
-ADD modules/@creature-chess/battle/package.json ./modules/@creature-chess/battle/
-ADD modules/@creature-chess/bot/package.json ./modules/@creature-chess/bot/
-ADD modules/@creature-chess/data/package.json ./modules/@creature-chess/data/
-ADD modules/@creature-chess/gamemode/package.json ./modules/@creature-chess/gamemode/
-ADD modules/@creature-chess/models/package.json ./modules/@creature-chess/models/
-ADD modules/@creature-chess/networking/package.json ./modules/@creature-chess/networking/
-ADD modules/@creature-chess/ui/package.json ./modules/@creature-chess/ui/
-
-ADD modules/@shoki/board/package.json ./modules/@shoki/board/
-ADD modules/@shoki/board-react/package.json ./modules/@shoki/board-react/
-ADD modules/@shoki/card-deck/package.json ./modules/@shoki/card-deck/
-ADD modules/@shoki/engine/package.json ./modules/@shoki/engine/
-ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
-
-ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
-
-RUN yarn install --frozen-lockfile --network-timeout 1000000
-
-ADD apps/ ./apps/
-ADD modules/ ./modules/
-ADD tsconfig.json ./
-
-# we need to do the build here, because the app requires process.env vars
+# we need to do the `build` here, because the app requires process.env vars
 # do you know a better way? please make a PR
 CMD yarn build-$APP_DIR && yarn cache clean && yarn start-${APP_DIR}
 
