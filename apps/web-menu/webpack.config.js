@@ -59,7 +59,7 @@ const getGHPagesRedirectScript = (enabled) => {
     </script>`;
 };
 
-const outDir = path.resolve(__dirname, "public");
+const outDir = path.resolve(__dirname, "dist");
 
 module.exports = {
 	mode: "development",

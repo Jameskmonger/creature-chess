@@ -1,5 +1,6 @@
 node_modules/
 public/
+dist/
 test/
 /gh-pages/
 _metrics/

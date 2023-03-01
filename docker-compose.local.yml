@@ -1,5 +1,6 @@
 version: "3.8"
 services:
+  # we use faunadb dev for local development
   faunadb:
     image: fauna/faunadb
     volumes:
@@ -8,14 +9,13 @@ services:
     ports:
       - 8443:8443
       - 8084:8084
+    # TODO (James) fix this healthcheck
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8443"]
       interval: 30s
       timeout: 5s
       retries: 5
-  web-menu:
-    depends_on:
-      - faunadb
+  # in `docker-compose.local`, manually apply faunadb config for the dev db above
   server-game:
     environment:
       - CREATURE_CHESS_FAUNA_KEY=secret
@@ -25,6 +25,7 @@ services:
     depends_on:
       - faunadb
     restart: always
+  # in `docker-compose.local`, manually apply faunadb config for the dev db above
   server-info:
     environment:
       - CREATURE_CHESS_FAUNA_KEY=secret

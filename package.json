@@ -5,9 +5,9 @@
 	"description": "Creature Chess",
 	"scripts": {
 		"build-web-game": "yarn workspace @creature-chess/web-game build",
-		"build-server-game": "yarn build-web-game && cp -r apps/web-game/public apps/server-game",
+		"build-web-menu": "yarn workspace @creature-chess/web-menu build",
+		"build-server-game": "",
 		"build-server-info": "",
-		"build-web-menu": "",
 		"dev-web-game": "yarn workspace @creature-chess/web-game dev",
 		"dev-web-menu": "yarn workspace @creature-chess/web-menu dev",
 		"dev:user": "yarn workspace @cc-lambda/user dev",

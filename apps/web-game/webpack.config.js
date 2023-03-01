@@ -5,7 +5,7 @@ const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const { DefinePlugin, EnvironmentPlugin, ProvidePlugin } = require("webpack");
 
-const outDir = path.resolve(__dirname, "public");
+const outDir = path.resolve(__dirname, "dist");
 
 module.exports = {
 	mode: "development",

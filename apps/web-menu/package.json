@@ -16,7 +16,7 @@
 	"scripts": {
 		"build": "webpack && npm run copy-pages",
 		"dev": "NODE_ENV=development webpack serve",
-		"copy-pages": " cpy 404.html ./public/ && cpy privacy.html ./public/"
+		"copy-pages": " cpy 404.html ./dist/ && cpy privacy.html ./dist/"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"

@@ -1,6 +1,5 @@
 node_modules
 npm-debug.log
-public/
 .faunadb/
 ./images/
 
@@ -10,3 +9,5 @@ public/
 **/*.Dockerfile
 **/docker-compose.yml
 **/docker-compose.*.yml
+
+apps/**/dist/
