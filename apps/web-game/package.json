@@ -14,9 +14,8 @@
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
 	"scripts": {
-		"build": "npm run copy-images && webpack",
-		"dev": "npm run copy-images && NODE_ENV=development webpack serve",
-		"copy-images": "cpy \"./images/**/*\" \"./public/\" --parents"
+		"build": "webpack",
+		"dev": "NODE_ENV=development webpack serve"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
@@ -57,7 +56,6 @@
 		"awesome-typescript-loader": "^5.2.1",
 		"babel-loader": "^8.2.3",
 		"circular-dependency-plugin": "^5.2.2",
-		"cpy-cli": "^2.0.0",
 		"dotenv-webpack": "^7.0.3",
 		"html-webpack-plugin": "^5.5.0",
 		"ts-loader": "^9.2.6",

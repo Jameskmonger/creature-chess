@@ -2202,7 +2202,6 @@ __metadata:
     awesome-typescript-loader: ^5.2.1
     babel-loader: ^8.2.3
     circular-dependency-plugin: ^5.2.2
-    cpy-cli: ^2.0.0
     delay: ^4.4.1
     dotenv-webpack: ^7.0.3
     html-webpack-plugin: ^5.5.0

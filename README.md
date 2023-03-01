@@ -40,7 +40,7 @@ AUTH0_MANAGEMENT_CLIENT_SECRET=
 CREATURE_CHESS_APP_URL=http://localhost
 GAME_SERVER_URL=http://localhost/game/
 API_INFO_URL=http://localhost/api
-CREATURE_CHESS_IMAGE_URL=http://localhost/game/images
+CREATURE_CHESS_IMAGE_URL=http://localhost/images
 ```
 
 These will be automatically picked up and used by the build scripts.
@@ -158,6 +158,12 @@ Reusable logic
 - Make a commit with the message as version number (e.g. "v0.0.1")
 - Make a new tag "v0.0.1"
 - Push
+
+## Creature images
+
+When you run `yarn dockerup`, the creature images will be hosted at `http://localhost/images`.
+
+You can set the `CREATURE_CHESS_IMAGE_URL` environment variable to change this, for instance to use a CDN.
 
 ## License
 

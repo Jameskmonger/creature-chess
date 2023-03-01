@@ -7,6 +7,7 @@ services:
     volumes:
       - ./nginx/local-dev/nginx/error.log:/etc/nginx/error_log.log
       - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
+      - ./images:/usr/share/nginx/html/images
     ports:
       - 80:80
       - 443:443
