@@ -20,7 +20,6 @@
 		"storybook": "start-storybook -p 6006",
 		"build-storybook": "build-storybook -o ./output",
 		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\" \"apps/**/*.tsx\" \"modules/**/*.tsx\"",
-		"ecr-push": "sh ./scripts/ecr-push.sh",
 		"prettier": "prettier -w ./",
 		"prettier-check": "prettier -c ./"
 	},
