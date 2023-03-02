@@ -38,7 +38,7 @@
 		"auth0": "^2.37.0",
 		"delay": "^4.4.1",
 		"discord.js": "^12.5.1",
-		"express": "^4.17.2",
+		"express": "^4.17.3",
 		"express-winston": "^4.2.0",
 		"lodash": "^4.17.21",
 		"socket.io": "^4.5.1",
