@@ -32,6 +32,7 @@ export function useUser() {
 
 	const refresh = React.useCallback(() => {
 		setShouldRefresh(true);
+		setError(null);
 	}, []);
 
 	React.useEffect(() => {
@@ -48,6 +49,10 @@ export function useUser() {
 				return;
 			}
 
+			if (error) {
+				return;
+			}
+
 			setIsFetching(true);
 			const token = await getAccessTokenSilently();
 			const response = await getCurrentUser(token);
@@ -55,10 +60,15 @@ export function useUser() {
 			setShouldRefresh(false);
 
 			if (response.status !== 200) {
-				const { message } = await response.json();
+				try {
+					const { message } = await response.json();
 
-				setError(message);
-				return;
+					setError(message);
+					return;
+				} catch (e) {
+					setError("An unknown error occurred");
+					return;
+				}
 			}
 
 			const user = await response.json();
@@ -72,6 +82,7 @@ export function useUser() {
 		getAccessTokenSilently,
 		isFetching,
 		shouldRefresh,
+		error,
 	]);
 
 	return { user: currentUser, isFetching, error, refresh };
