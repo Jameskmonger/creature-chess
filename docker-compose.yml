@@ -1,5 +1,21 @@
 version: "3.8"
 services:
+  # postgres db
+  postgres:
+    image: postgres:13.9
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 15s
+      timeout: 5s
+      start_period: 10s
+      retries: 20
+
   # this is the base image for all nodejs-based apps
   nodejs-builder:
     build:
@@ -70,9 +86,9 @@ services:
       web-menu-builder:
         condition: service_started
       server-game:
-        condition: service_healthy
+        condition: service_started
       server-info:
-        condition: service_healthy
+        condition: service_started
   # this is the nodejs websocket server for the game
   server-game:
     environment:
@@ -98,17 +114,10 @@ services:
       - "3000"
     restart: always
     depends_on:
-      - nodejs-builder
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "echo",
-          "sleeping 40s to allow server to start...",
-          "&&",
-          "sleep",
-          "40s",
-        ]
+      postgres:
+        condition: service_healthy
+      nodejs-builder:
+        condition: service_started
   # this is the API server
   server-info:
     environment:
@@ -131,17 +140,7 @@ services:
       - "3000"
     restart: always
     depends_on:
+      postgres:
+        condition: service_healthy
       nodejs-builder:
         condition: service_started
-      server-game:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "echo",
-          "sleeping 30s to allow server to start...",
-          "&&",
-          "sleep",
-          "30s",
-        ]
