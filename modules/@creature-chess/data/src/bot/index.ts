@@ -1,4 +1,4 @@
-import { Client as FaunaDBClient } from "faunadb";
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
 import { addGamePlayed } from "./addGamePlayed";
@@ -9,13 +9,13 @@ import { getLeastPlayedBots } from "./getLeastPlayedBots";
 export type BotDatabaseFunctions = {
 	getLeastPlayedBots: (count: number) => Promise<DatabaseBot[] | null>;
 
-	addWin: (id: string) => Promise<DatabaseBot | null>;
-	addGamePlayed: (id: string) => Promise<DatabaseBot | null>;
+	addWin: (id: number) => Promise<DatabaseBot | null>;
+	addGamePlayed: (id: number) => Promise<DatabaseBot | null>;
 };
 
 export const botDatabase = (
 	logger: Logger,
-	client: FaunaDBClient
+	client: PrismaClient
 ): BotDatabaseFunctions => ({
 	getLeastPlayedBots: getLeastPlayedBots(logger, client),
 	addGamePlayed: addGamePlayed(logger, client),

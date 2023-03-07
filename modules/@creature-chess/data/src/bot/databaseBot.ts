@@ -1,3 +1,5 @@
+import { bots } from "@prisma/client";
+
 export type BotPersonalityValue =
 	| 1
 	| 2
@@ -206,16 +208,4 @@ export type BotPersonality = {
 	vision: BotPersonalityValue;
 };
 
-export type BotData = {
-	nickname: string;
-	stats: {
-		gamesPlayed: number;
-		wins: number;
-	};
-	personality: BotPersonality;
-};
-
-export type DatabaseBot = {
-	ref: { id: string };
-	data: BotData;
-};
+export type DatabaseBot = bots;
