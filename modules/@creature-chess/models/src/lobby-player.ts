@@ -1,7 +1,7 @@
 import { PlayerProfile } from "./playerProfile";
 
 export interface LobbyPlayer {
-	id: string;
+	id: number;
 	name: string;
 	profile: PlayerProfile;
 }

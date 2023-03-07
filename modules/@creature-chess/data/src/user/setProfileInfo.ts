@@ -1,44 +1,42 @@
-import { Client as FaunaDBClient, query as q } from "faunadb";
 import { Logger } from "winston";
-
-import { DatabaseUser } from "./databaseUser";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export const setProfileInfo =
-	(logger: Logger, client: FaunaDBClient) =>
-	async (id: string, nickname: string | null, picture: number | null) => {
-		try {
-			let userUpdate = {};
+	(logger: Logger, client: PrismaClient) =>
+		async (id: number, nickname: string | null, picture: number | null) => {
+			try {
+				logger.info(`setProfileInfo for user ${id}`);
+				logger.info(`nickname: ${nickname}`);
+				logger.info(`picture: ${picture}`);
 
-			if (nickname) {
-				userUpdate = {
-					...userUpdate,
-					nickname: {
-						value: nickname,
-						uppercase: nickname.toUpperCase(),
-					},
-				};
-			}
+				let userUpdate: Prisma.usersUpdateInput = {};
 
-			if (picture) {
-				userUpdate = {
-					...userUpdate,
-					profile: {
-						picture,
-					},
-				};
-			}
-
-			const user = await client.query<DatabaseUser>(
-				q.Update(q.Ref(q.Collection("users"), id), {
-					data: {
+				if (nickname) {
+					userUpdate = {
 						...userUpdate,
-					},
-				})
-			);
+						nickname,
+					};
+				}
 
-			return user;
-		} catch (e) {
-			logger.error("Error in @cc/data user.setProfileInfo", e);
-			return null;
-		}
-	};
+				if (picture) {
+					userUpdate = {
+						...userUpdate,
+						profile_picture: picture,
+					};
+				}
+
+				logger.info(`userUpdate: ${JSON.stringify(userUpdate)}`);
+
+				return await client.users.update({
+					where: {
+						id,
+					},
+					data: {
+						...userUpdate
+					},
+				});
+			} catch (e) {
+				logger.error("Error in @cc/data user.setProfileInfo", e);
+				return null;
+			}
+		};

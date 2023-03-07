@@ -40,7 +40,7 @@ export class Lobby {
 		return this.options.maxPlayers - this.members.length;
 	}
 
-	public isInLobby(playerId: string) {
+	public isInLobby(playerId: number) {
 		return this.members.some((m) => m.player.id === playerId);
 	}
 

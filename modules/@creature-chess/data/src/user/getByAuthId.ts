@@ -1,16 +1,16 @@
-import { Client as FaunaDBClient, query as q } from "faunadb";
 import { Logger } from "winston";
 
-import { DatabaseUser } from "./databaseUser";
+import { PrismaClient } from "@prisma/client";
 
 export const getByAuthId =
-	(logger: Logger, client: FaunaDBClient) => async (authId: string) => {
+	(logger: Logger, client: PrismaClient) => async (authId: string) => {
 		try {
-			const user = await client.query<DatabaseUser>(
-				q.Get(q.Match(q.Index("users_by_auth_id"), authId))
-			);
-
-			return user;
+			// TODO (James) is findFirstOrThrow a good idea? We catch and return null anyway
+			return await client.users.findFirstOrThrow({
+				where: {
+					auth_id: authId
+				}
+			});
 		} catch (e) {
 			logger.error("Error in @cc/data user.getByAuthId", e);
 			return null;

@@ -4,7 +4,7 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { PlayerProfile } from "@creature-chess/models";
 
 type AuthenticatedSocketData = {
-	id: string;
+	id: number;
 	nickname: string | null;
 	profile: PlayerProfile | null;
 };

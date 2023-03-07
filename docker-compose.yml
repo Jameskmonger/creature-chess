@@ -92,10 +92,6 @@ services:
   # this is the nodejs websocket server for the game
   server-game:
     environment:
-      - CREATURE_CHESS_FAUNA_KEY
-      - CREATURE_CHESS_FAUNA_DOMAIN
-      - CREATURE_CHESS_FAUNA_SCHEME
-      - CREATURE_CHESS_FAUNA_PORT
       - DISCORD_BOT_TOKEN
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
@@ -105,6 +101,7 @@ services:
       - API_INFO_URL
       - CREATURE_CHESS_IMAGE_URL
       - NODE_ENV
+      - DATABASE_URL
     build:
       context: .
       dockerfile: apps/Dockerfile
@@ -121,16 +118,13 @@ services:
   # this is the API server
   server-info:
     environment:
-      - CREATURE_CHESS_FAUNA_KEY
-      - CREATURE_CHESS_FAUNA_DOMAIN
-      - CREATURE_CHESS_FAUNA_SCHEME
-      - CREATURE_CHESS_FAUNA_PORT
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
       - CREATURE_CHESS_APP_URL
       - NODE_ENV
+      - DATABASE_URL
     build:
       context: .
       dockerfile: apps/Dockerfile

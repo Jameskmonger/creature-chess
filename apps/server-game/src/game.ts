@@ -62,8 +62,8 @@ export class Game {
 		this.gamemode.start(entities);
 	}
 
-	public canJoinGame(playerId: string) {
-		const existing = this.gamemode.getPlayerById(playerId);
+	public canJoinGame(playerId: number) {
+		const existing = this.gamemode.getPlayerById(playerId.toString());
 
 		if (!existing) {
 			return false;
@@ -77,7 +77,9 @@ export class Game {
 	}
 
 	public connect(socket: AuthenticatedSocket) {
-		const existing = this.members.find((m) => m.id === socket.data.id);
+		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
+		const socketIdAsString = socket.data.id.toString();
+		const existing = this.members.find((m) => m.id === socketIdAsString);
 
 		if (!existing) {
 			throw Error(
@@ -85,7 +87,7 @@ export class Game {
 			);
 		}
 
-		const entity = this.gamemode.getPlayerById(socket.data.id);
+		const entity = this.gamemode.getPlayerById(socketIdAsString);
 
 		if (!entity) {
 			throw Error(
@@ -104,11 +106,14 @@ export class Game {
 			socket,
 		} = player;
 
-		const entity = createPlayerEntity(this.gamemode, id, name, profile);
+		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
+		const playerIdAsString = id.toString();
+
+		const entity = createPlayerEntity(this.gamemode, playerIdAsString, name, profile);
 
 		this.members.push({
 			type: "PLAYER",
-			id: player.player.id,
+			id: playerIdAsString,
 			networkingSaga: this.runPlayerNetworking(entity, socket),
 			entity,
 		});
@@ -120,12 +125,15 @@ export class Game {
 			personality,
 		} = player;
 
-		const entity = createPlayerEntity(this.gamemode, id, name, profile);
+		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
+		const playerIdAsString = id.toString();
+
+		const entity = createPlayerEntity(this.gamemode, playerIdAsString, name, profile);
 		entity.runSaga(botLogicSaga, personality);
 
 		this.members.push({
 			type: "BOT",
-			id: player.player.id,
+			id: playerIdAsString,
 			entity,
 		});
 	}

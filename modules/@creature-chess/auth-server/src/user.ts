@@ -10,7 +10,7 @@ export interface UserAppMetadata {
 }
 
 export interface UserModel {
-	id: string;
+	id: number;
 	authId: string;
 	stats: { gamesPlayed: number; wins: number };
 	nickname: string | null;
@@ -23,15 +23,22 @@ export type Auth0User = User<UserAppMetadata, UserMetadata>;
 export const convertDatabaseUserToUserModel = (
 	user: DatabaseUser
 ): UserModel => {
-	const nickname = user.data.nickname ? user.data.nickname.value : null;
-	const profile = user.data.profile
-		? user.data.profile
-		: { title: null, picture: null };
+	const nickname = user.nickname || null;
+
+	const profile = {
+		title: user.profile_title || null,
+		picture: user.profile_picture || null,
+	};
+
+	const stats = {
+		gamesPlayed: user.games_played,
+		wins: user.wins,
+	};
 
 	return {
-		id: user.ref.id,
-		authId: user.data.authId,
-		stats: user.data.stats,
+		id: user.id,
+		authId: user.auth_id,
+		stats,
 		nickname,
 		profile,
 		registered: Boolean(nickname && profile.picture),
