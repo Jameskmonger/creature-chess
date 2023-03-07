@@ -26,7 +26,8 @@ services:
       #         rather than a bind mount
       - ./dist/web-game:/code/apps/web-game/dist
     depends_on:
-      - nodejs-builder
+      nodejs-builder:
+        condition: service_completed_successfully
   # this image builds the web-menu app
   # TODO (James) we could extend this in local dev to also watch for changes
   web-menu-builder:
@@ -48,7 +49,8 @@ services:
       #         rather than a bind mount
       - ./dist/web-menu:/code/apps/web-menu/dist
     depends_on:
-      - nodejs-builder
+      nodejs-builder:
+        condition: service_completed_successfully
   # nginx is used to serve the web apps as well as proxy requests to the servers
   # the web app contents are passed in the volumes
   nginx:
@@ -66,9 +68,9 @@ services:
       - 443:443
     depends_on:
       web-game-builder:
-        condition: service_started
+        condition: service_completed_successfully
       web-menu-builder:
-        condition: service_started
+        condition: service_completed_successfully
       server-game:
         condition: service_healthy
       server-info:
@@ -98,17 +100,8 @@ services:
       - "3000"
     restart: always
     depends_on:
-      - nodejs-builder
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "echo",
-          "sleeping 40s to allow server to start...",
-          "&&",
-          "sleep",
-          "40s",
-        ]
+      nodejs-builder:
+        condition: service_completed_successfully
   # this is the API server
   server-info:
     environment:
@@ -132,16 +125,4 @@ services:
     restart: always
     depends_on:
       nodejs-builder:
-        condition: service_started
-      server-game:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "echo",
-          "sleeping 30s to allow server to start...",
-          "&&",
-          "sleep",
-          "30s",
-        ]
+        condition: service_completed_successfully
