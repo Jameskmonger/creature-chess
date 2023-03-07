@@ -1,6 +1,5 @@
-import { Logger } from "winston";
-
 import { PrismaClient } from "@prisma/client";
+import { Logger } from "winston";
 
 export const addWin =
 	(logger: Logger, client: PrismaClient) => async (id: number) => {

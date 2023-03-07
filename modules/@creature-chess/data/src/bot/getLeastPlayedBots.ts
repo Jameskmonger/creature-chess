@@ -1,5 +1,5 @@
-import { Logger } from "winston";
 import { PrismaClient } from "@prisma/client";
+import { Logger } from "winston";
 
 export const getLeastPlayedBots =
 	(logger: Logger, client: PrismaClient) => async (count: number) => {

@@ -1,10 +1,10 @@
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
 import { addGamePlayed } from "./addGamePlayed";
 import { addWin } from "./addWin";
 import { DatabaseBot } from "./databaseBot";
 import { getLeastPlayedBots } from "./getLeastPlayedBots";
-import { PrismaClient } from "@prisma/client";
 
 export type BotDatabaseFunctions = {
 	getLeastPlayedBots: (count: number) => Promise<DatabaseBot[] | null>;

@@ -1,7 +1,7 @@
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
 import { setupBotDatabase } from "./bot";
-import { PrismaClient } from "@prisma/client";
 
 export const setup = async (logger: Logger, client: PrismaClient) => {
 	const botChangesMade = await setupBotDatabase(client);

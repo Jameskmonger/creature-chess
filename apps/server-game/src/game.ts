@@ -109,7 +109,12 @@ export class Game {
 		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
 		const playerIdAsString = id.toString();
 
-		const entity = createPlayerEntity(this.gamemode, playerIdAsString, name, profile);
+		const entity = createPlayerEntity(
+			this.gamemode,
+			playerIdAsString,
+			name,
+			profile
+		);
 
 		this.members.push({
 			type: "PLAYER",
@@ -128,7 +133,12 @@ export class Game {
 		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
 		const playerIdAsString = id.toString();
 
-		const entity = createPlayerEntity(this.gamemode, playerIdAsString, name, profile);
+		const entity = createPlayerEntity(
+			this.gamemode,
+			playerIdAsString,
+			name,
+			profile
+		);
 		entity.runSaga(botLogicSaga, personality);
 
 		this.members.push({

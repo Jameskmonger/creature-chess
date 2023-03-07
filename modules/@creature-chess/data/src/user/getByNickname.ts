@@ -1,5 +1,5 @@
-import { Logger } from "winston";
 import { PrismaClient } from "@prisma/client";
+import { Logger } from "winston";
 
 export const getByNickname =
 	(logger: Logger, client: PrismaClient) => async (nickname: string) => {
@@ -11,9 +11,9 @@ export const getByNickname =
 					nickname: {
 						equals: nickname,
 						// TODO (James) we should consider making an index for this if there are performance issues
-						mode: "insensitive"
-					}
-				}
+						mode: "insensitive",
+					},
+				},
 			});
 		} catch (e) {
 			logger.error("Error in @cc/data user.getByNickname", e);

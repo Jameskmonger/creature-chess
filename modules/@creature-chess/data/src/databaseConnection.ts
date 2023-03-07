@@ -1,9 +1,9 @@
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
 import { botDatabase, BotDatabaseFunctions } from "./bot";
 import { setup } from "./setup";
 import { userDatabase, UserDatabaseFunctions } from "./user";
-import { PrismaClient } from "@prisma/client";
 
 export type DatabaseConnection = {
 	user: UserDatabaseFunctions;

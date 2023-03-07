@@ -1,7 +1,7 @@
 // tslint:disable: no-console
+import { PrismaClient } from "@prisma/client";
 
 import { BotPersonalityValue } from "./databaseBot";
-import { PrismaClient } from "@prisma/client";
 
 const BOT_NAMES = [
 	"Aggie",
@@ -50,7 +50,7 @@ export const setupBotDatabase = async (
 					ambition: randomPersonalityValue(),
 					composure: randomPersonalityValue(),
 					vision: randomPersonalityValue(),
-				}
+				},
 			});
 
 			console.log(` - Created bot '${name}'`);

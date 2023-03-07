@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
 import { addGamePlayed } from "./addGamePlayed";
@@ -8,7 +9,6 @@ import { getByAuthId } from "./getByAuthId";
 import { getById } from "./getById";
 import { getByNickname } from "./getByNickname";
 import { setProfileInfo } from "./setProfileInfo";
-import { PrismaClient } from "@prisma/client";
 
 export type UserDatabaseFunctions = {
 	create: (authId: string) => Promise<DatabaseUser | null>;
