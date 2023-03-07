@@ -1,4 +1,9 @@
 version: "3.8"
+
+volumes:
+  pgdata:
+  pgadmin:
+
 services:
   # this is the base image for all nodejs-based apps
   nodejs-builder:
@@ -70,16 +75,12 @@ services:
       web-menu-builder:
         condition: service_started
       server-game:
-        condition: service_healthy
+        condition: service_started
       server-info:
-        condition: service_healthy
+        condition: service_started
   # this is the nodejs websocket server for the game
   server-game:
     environment:
-      - CREATURE_CHESS_FAUNA_KEY
-      - CREATURE_CHESS_FAUNA_DOMAIN
-      - CREATURE_CHESS_FAUNA_SCHEME
-      - CREATURE_CHESS_FAUNA_PORT
       - DISCORD_BOT_TOKEN
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
@@ -89,6 +90,7 @@ services:
       - API_INFO_URL
       - CREATURE_CHESS_IMAGE_URL
       - NODE_ENV
+      - DATABASE_URL
     build:
       context: .
       dockerfile: apps/Dockerfile
@@ -98,30 +100,18 @@ services:
       - "3000"
     restart: always
     depends_on:
-      - nodejs-builder
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "echo",
-          "sleeping 40s to allow server to start...",
-          "&&",
-          "sleep",
-          "40s",
-        ]
+      nodejs-builder:
+        condition: service_started
   # this is the API server
   server-info:
     environment:
-      - CREATURE_CHESS_FAUNA_KEY
-      - CREATURE_CHESS_FAUNA_DOMAIN
-      - CREATURE_CHESS_FAUNA_SCHEME
-      - CREATURE_CHESS_FAUNA_PORT
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
       - AUTH0_MANAGEMENT_CLIENT_SECRET
       - CREATURE_CHESS_APP_URL
       - NODE_ENV
+      - DATABASE_URL
     build:
       context: .
       dockerfile: apps/Dockerfile
@@ -133,15 +123,3 @@ services:
     depends_on:
       nodejs-builder:
         condition: service_started
-      server-game:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "echo",
-          "sleeping 30s to allow server to start...",
-          "&&",
-          "sleep",
-          "30s",
-        ]

@@ -1,4 +1,4 @@
-import { Client as FaunaDBClient } from "faunadb";
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
 import { addGamePlayed } from "./addGamePlayed";
@@ -15,14 +15,14 @@ export type UserDatabaseFunctions = {
 
 	getByAuthId: (authId: string) => Promise<DatabaseUser | null>;
 
-	getById: (id: string) => Promise<DatabaseUser | null>;
+	getById: (id: number) => Promise<DatabaseUser | null>;
 	getByNickname: (nickname: string) => Promise<DatabaseUser | null>;
 
-	addWin: (id: string) => Promise<DatabaseUser | null>;
-	addGamePlayed: (id: string) => Promise<DatabaseUser | null>;
+	addWin: (id: number) => Promise<DatabaseUser | null>;
+	addGamePlayed: (id: number) => Promise<DatabaseUser | null>;
 
 	setProfileInfo: (
-		id: string,
+		id: number,
 		nickname: string | null,
 		picture: number | null
 	) => Promise<DatabaseUser | null>;
@@ -30,7 +30,7 @@ export type UserDatabaseFunctions = {
 
 export const userDatabase = (
 	logger: Logger,
-	client: FaunaDBClient
+	client: PrismaClient
 ): UserDatabaseFunctions => ({
 	create: create(logger, client),
 	getById: getById(logger, client),
@@ -41,5 +41,4 @@ export const userDatabase = (
 	setProfileInfo: setProfileInfo(logger, client),
 });
 
-export { setupUserDatabase } from "./_setup";
 export { DatabaseUser } from "./databaseUser";

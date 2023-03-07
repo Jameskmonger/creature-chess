@@ -1,21 +1,20 @@
-import { Client as FaunaDBClient, query as q } from "faunadb";
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
-import { DatabaseUser } from "./databaseUser";
-
 export const getByNickname =
-	(logger: Logger, client: FaunaDBClient) => async (nickname: string) => {
+	(logger: Logger, client: PrismaClient) => async (nickname: string) => {
 		try {
-			const user = await client.query<DatabaseUser>(
-				q.Get(
-					q.Match(
-						q.Index("users_by_nickname_uppercase"),
-						nickname.toUpperCase()
-					)
-				)
-			);
-
-			return user;
+			// TODO (James) is findFirstOrThrow appropriate here? We use this to check if a nickname is taken
+			//             maybe a boolean function would be better?
+			return await client.users.findFirstOrThrow({
+				where: {
+					nickname: {
+						equals: nickname,
+						// TODO (James) we should consider making an index for this if there are performance issues
+						mode: "insensitive",
+					},
+				},
+			});
 		} catch (e) {
 			logger.error("Error in @cc/data user.getByNickname", e);
 			return null;

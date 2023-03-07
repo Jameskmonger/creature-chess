@@ -29,10 +29,6 @@ The contents should be like so:
 
 ```
 NODE_ENV=development
-CREATURE_CHESS_FAUNA_KEY=secret
-CREATURE_CHESS_FAUNA_DOMAIN=faunadb
-CREATURE_CHESS_FAUNA_SCHEME=http
-CREATURE_CHESS_FAUNA_PORT=8443
 AUTH0_DOMAIN=
 AUTH0_SPA_CLIENT_ID=
 AUTH0_MACHINE_TO_MACHINE_CLIENT_ID=
@@ -81,6 +77,20 @@ See "Environment variables" above for info on how to store them.
 ### Setup
 
 Run `yarn` in the project root.
+
+### Initial run
+
+For the first run you need to set up the database and run the migrations.
+
+```shell
+yarn dockerup-db
+```
+
+then
+
+```shell
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres?schema=public yarn workspace @creature-chess/data prisma-migrate reset
+```
 
 ### Running
 

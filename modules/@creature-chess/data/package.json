@@ -14,6 +14,9 @@
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
 	"scripts": {
+		"prisma-db-pull": "prisma db pull",
+		"prisma-migrate": "prisma migrate",
+		"prisma-generate": "prisma generate",
 		"build": "yarn run -T tsc -p ./tsconfig.json"
 	},
 	"bugs": {
@@ -22,7 +25,10 @@
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
 		"@creature-chess/models": "workspace:*",
-		"faunadb": "^4.8.0",
+		"@prisma/client": "^4.11.0",
 		"winston": "^3.3.3"
+	},
+	"devDependencies": {
+		"prisma": "^4.11.0"
 	}
 }

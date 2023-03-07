@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import { logger } from "./src/log";
 import { startServer } from "./src/server";
 
-process.on("unhandledRejection", function(reason, p) {
+process.on("unhandledRejection", function (reason, p) {
 	console.log(
 		"Possibly Unhandled Rejection at: Promise ",
 		p,

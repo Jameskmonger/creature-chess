@@ -13,13 +13,13 @@ export const sellPiecePlayerAction = createAction<{ pieceId: string }>(
 	"sellPiecePlayerAction"
 );
 
-export const sellPiecePlayerActionSaga = function*() {
+export const sellPiecePlayerActionSaga = function* () {
 	const boardSlice = yield* getBoardSlice();
 	const benchSlice = yield* getBenchSlice();
 
 	yield takeEvery<SellPiecePlayerAction>(
 		sellPiecePlayerAction.toString(),
-		function*({ payload: { pieceId } }) {
+		function* ({ payload: { pieceId } }) {
 			const piece: PieceModel = yield select((state) =>
 				getPiece(state, pieceId)
 			);

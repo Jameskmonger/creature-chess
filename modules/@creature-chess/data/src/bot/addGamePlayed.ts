@@ -1,29 +1,19 @@
-import { Client as FaunaDBClient, query as q } from "faunadb";
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
-import { COLLECTION_NAMES } from "../constants";
-import { DatabaseBot } from "./databaseBot";
-
 export const addGamePlayed =
-	(logger: Logger, client: FaunaDBClient) => async (id: string) => {
+	(logger: Logger, client: PrismaClient) => async (id: number) => {
 		try {
-			const bot = await client.query<DatabaseBot>(
-				q.Update(q.Ref(q.Collection(COLLECTION_NAMES.BOTS), id), {
-					data: {
-						stats: {
-							gamesPlayed: q.Add(
-								q.Select(
-									["data", "stats", "gamesPlayed"],
-									q.Get(q.Ref(q.Collection(COLLECTION_NAMES.BOTS), id))
-								),
-								1
-							),
-						},
+			return await client.bots.update({
+				where: {
+					id,
+				},
+				data: {
+					games_played: {
+						increment: 1,
 					},
-				})
-			);
-
-			return bot;
+				},
+			});
 		} catch (e) {
 			logger.error("Error in @cc/data bots.addGamePlayed", e);
 			return null;
