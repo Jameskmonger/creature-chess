@@ -78,6 +78,20 @@ See "Environment variables" above for info on how to store them.
 
 Run `yarn` in the project root.
 
+### Initial run
+
+For the first run you need to set up the database and run the migrations.
+
+```shell
+yarn dockerup-db
+```
+
+then
+
+```shell
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres?schema=public yarn workspace @creature-chess/data prisma-migrate reset
+```
+
 ### Running
 
 ```shell
