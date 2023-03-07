@@ -1,21 +1,5 @@
 version: "3.8"
 services:
-  # postgres db
-  postgres:
-    image: postgres:13.9
-    environment:
-      - POSTGRES_DB
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 15s
-      timeout: 5s
-      start_period: 10s
-      retries: 20
-
   # this is the base image for all nodejs-based apps
   nodejs-builder:
     build:
@@ -111,8 +95,6 @@ services:
       - "3000"
     restart: always
     depends_on:
-      postgres:
-        condition: service_healthy
       nodejs-builder:
         condition: service_started
   # this is the API server
@@ -134,7 +116,5 @@ services:
       - "3000"
     restart: always
     depends_on:
-      postgres:
-        condition: service_healthy
       nodejs-builder:
         condition: service_started
