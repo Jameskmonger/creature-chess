@@ -1,9 +1,5 @@
 version: "3.8"
 
-volumes:
-  pgdata:
-  pgadmin:
-
 services:
   # this is the base image for all nodejs-based apps
   nodejs-builder:
