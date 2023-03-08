@@ -37,6 +37,11 @@ CREATURE_CHESS_APP_URL=http://localhost
 GAME_SERVER_URL=http://localhost/game/
 API_INFO_URL=http://localhost/api
 CREATURE_CHESS_IMAGE_URL=http://localhost/images
+
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres?schema=public
 ```
 
 These will be automatically picked up and used by the build scripts.
