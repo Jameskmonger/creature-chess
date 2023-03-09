@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "@creature-chess/web-menu",
+	"name": "@creature-chess-app/web-menu",
 	"version": "0.0.1",
 	"description": "Menu frontend for Creature Chess",
 	"keywords": [],

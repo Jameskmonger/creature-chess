@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "@creature-chess/server-game",
+	"name": "@creature-chess-app/server-game",
 	"version": "0.0.1",
 	"description": "Websocket gameserver",
 	"keywords": [],

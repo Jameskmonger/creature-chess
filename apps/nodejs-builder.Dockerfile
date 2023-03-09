@@ -54,5 +54,7 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 # install every time one of these steps has a different result
 
 ADD tsconfig.json ./
-ADD apps/ ./apps/
 ADD modules/ ./modules/
+
+RUN yarn workspace @creature-chess/data prisma-generate
+RUN yarn workspaces foreach --exclude "@creature-chess-app/*" run build

@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "@creature-chess/web-game",
+	"name": "@creature-chess-app/web-game",
 	"version": "0.0.1",
 	"description": "Web frontend for the game",
 	"keywords": [],
