@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "@creature-chess/server-info",
+	"name": "@creature-chess-app/server-info",
 	"version": "0.0.1",
 	"description": "HTTP info server",
 	"keywords": [],

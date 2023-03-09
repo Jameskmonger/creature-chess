@@ -3,6 +3,6 @@ const base = require("../../jest.config.base.js");
 
 module.exports = {
 	...base,
-	name: "@creature-chess/server-game",
-	displayName: "@creature-chess/server-game",
+	name: "@creature-chess-app/server-game",
+	displayName: "@creature-chess-app/server-game",
 };

@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Build application
-        run: yarn workspace @creature-chess/web-menu build
+        run: yarn workspace @creature-chess-app/web-menu build
         env:
           GA_ID: ${{ secrets.GA_ID }}
           COOKIEBOT_ID: ${{ secrets.COOKIEBOT_ID }}

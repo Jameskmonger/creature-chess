@@ -97,6 +97,8 @@ then
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres?schema=public yarn workspace @creature-chess/data prisma-migrate reset
 ```
 
+(note that this `DATA_BASE_URL` is different to the one in the `.env` file - this is because the database is running in a docker container, so the host is `localhost` instead of `postgres`)
+
 ### Running
 
 ```shell
