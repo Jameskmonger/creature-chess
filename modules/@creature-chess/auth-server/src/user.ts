@@ -1,13 +1,5 @@
-import { User, UserMetadata } from "auth0";
-
 import { DatabaseUser } from "@creature-chess/data";
 import { PlayerProfile } from "@creature-chess/models";
-
-export interface UserAppMetadata {
-	playerId: string;
-	playerNickname: string | null;
-	playerPicture: number | null;
-}
 
 export interface UserModel {
 	id: number;

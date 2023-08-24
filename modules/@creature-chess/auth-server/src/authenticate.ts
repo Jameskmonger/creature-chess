@@ -4,13 +4,12 @@ import { DatabaseConnection } from "@creature-chess/data";
 
 import {
 	convertDatabaseUserToUserModel,
-	UserAppMetadata,
 	UserModel,
 } from "./user";
 import { verifyDecodeJwt } from "./verifyDecodeJwt";
 
 export const authenticate = async (
-	managementClient: ManagementClient<UserAppMetadata>,
+	managementClient: ManagementClient,
 	database: DatabaseConnection,
 	token: string
 ): Promise<UserModel> => {
