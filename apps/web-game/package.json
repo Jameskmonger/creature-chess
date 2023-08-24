@@ -33,8 +33,6 @@
 		"@fortawesome/free-solid-svg-icons": "^5.15.4",
 		"@fortawesome/react-fontawesome": "^0.1.16",
 		"@reduxjs/toolkit": "^1.7.1",
-		"@sentry/react": "^6.16.1",
-		"@sentry/tracing": "^6.16.1",
 		"@shoki/board": "workspace:*",
 		"@shoki/board-react": "workspace:*",
 		"@shoki/networking": "workspace:*",
