@@ -3,7 +3,7 @@ import * as React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import ReactModal from "react-modal";
 
-import { Auth0User, useUser } from "@creature-chess/auth-web";
+import { useUser } from "@creature-chess/auth-web";
 import {
 	MenuPage,
 	MenuPageContextProvider,
@@ -21,8 +21,7 @@ const UnauthenticatedRootPage: React.FunctionComponent = () => {
 };
 
 const AuthenticatedRootPage: React.FunctionComponent = () => {
-	const { logout, getAccessTokenSilently, getIdTokenClaims } =
-		useAuth0<Auth0User>();
+	const { logout, getAccessTokenSilently, getIdTokenClaims } = useAuth0();
 
 	const { user, isFetching, refresh } = useUser();
 

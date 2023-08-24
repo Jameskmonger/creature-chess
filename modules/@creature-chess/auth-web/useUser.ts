@@ -5,7 +5,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { SanitizedUser } from "@creature-chess/models";
 
 import { getCurrentUser } from "./getCurrentUser";
-import { Auth0User } from "./types";
 
 /**
  * Calls the current user endpoint and returns the user
@@ -20,7 +19,7 @@ import { Auth0User } from "./types";
  * - refresh: a function to refresh the user
  */
 export function useUser() {
-	const { user: auth0User, getAccessTokenSilently } = useAuth0<Auth0User>();
+	const { user: auth0User, getAccessTokenSilently } = useAuth0();
 
 	const [currentUser, setCurrentUser] = React.useState<SanitizedUser | null>(
 		null
