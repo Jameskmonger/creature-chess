@@ -79,7 +79,6 @@ services:
   # this is the nodejs websocket server for the game
   server-game:
     environment:
-      - DISCORD_BOT_TOKEN
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
       - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
