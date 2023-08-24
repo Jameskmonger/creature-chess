@@ -16,7 +16,7 @@ import {
 
 import { logger } from "./src/log";
 import { getManagementClient } from "./src/util/auth0";
-import { sanitize } from "./src/util/sanitize-user";
+import { userModelToDto } from "./src/util/user-model-to-dto";
 
 import Filter = require("bad-words");
 
@@ -104,7 +104,7 @@ async function startServer() {
 			authorization as string
 		);
 
-		res.status(200).json(sanitize(user));
+		res.status(200).json(userModelToDto(user));
 	});
 
 	app.patch("/user/current", async (req, res) => {
@@ -168,7 +168,7 @@ async function startServer() {
 			});
 		}
 
-		res.status(200).json(sanitize(convertDatabaseUserToUserModel(updatedUser)));
+		res.status(200).json(userModelToDto(convertDatabaseUserToUserModel(updatedUser)));
 	});
 
 	// Start the server

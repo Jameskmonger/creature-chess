@@ -1,7 +1,7 @@
 import { UserModel } from "@creature-chess/auth-server";
-import { SanitizedUser } from "@creature-chess/models";
+import { UserDTO } from "@creature-chess/models/dto/user";
 
-export const sanitize = (user: UserModel): SanitizedUser => {
+export const userModelToDto = (user: UserModel): UserDTO => {
 	const { id, nickname, stats, registered } = user;
 
 	return {
