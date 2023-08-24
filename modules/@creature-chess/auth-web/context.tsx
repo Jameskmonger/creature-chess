@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { SanitizedUser } from "@creature-chess/models";
+import { UserDTO } from "@creature-chess/models/dto/user";
 
 import { useUser } from "./useUser";
 
 const GameAuthContext = React.createContext<{
-	user: SanitizedUser | null;
+	user: UserDTO | null;
 }>({
 	user: null,
 });
