@@ -107,12 +107,6 @@ $ yarn dockerup
 
 The game is then accessible at `http://localhost`.
 
-In another console, you will need to run the following command to run the User service locally.
-
-```shell
-$ yarn dev:user
-```
-
 ### Dev toolkit
 
 ```shell

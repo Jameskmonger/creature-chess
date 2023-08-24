@@ -10,7 +10,6 @@
 		"build-server-info": "",
 		"dev-web-game": "yarn workspace @creature-chess-app/web-game dev",
 		"dev-web-menu": "yarn workspace @creature-chess-app/web-menu dev",
-		"dev:user": "yarn workspace @cc-lambda/user dev",
 		"start-server-game": "ts-node-dev apps/server-game/index.ts",
 		"start-server-info": "ts-node-dev apps/server-info/index.ts",
 		"start-web-menu": "yarn workspace @creature-chess-app/web-menu dev",
@@ -29,8 +28,7 @@
 		"modules/@creature-chess/*",
 		"modules/@shoki/*",
 		"modules/@tools/*",
-		"apps/*",
-		"lambda/*"
+		"apps/*"
 	],
 	"author": "",
 	"license": "ISC",
