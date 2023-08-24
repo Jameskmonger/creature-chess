@@ -27,6 +27,10 @@ const LoginPage: React.FunctionComponent<LoginPageProps> = ({
 		onSignInClick();
 	};
 
+	const handlePlayAsGuestClick = () => {
+		window.location.href = process.env.GAME_SERVER_URL! + "?guest=1";
+	};
+
 	if (currentlyLoading) {
 		return <span>Loading</span>;
 	}
@@ -40,13 +44,23 @@ const LoginPage: React.FunctionComponent<LoginPageProps> = ({
 			<div className={styles.groups}>
 				<div className="group">
 					<p>
-						Creature Chess is a multiplayer game, so you need an account to play
+						Creature Chess is a multiplayer auto-chess battler
 					</p>
 
 					<button onClick={handleSignInClick} className={styles.loginButton}>
-						Log in / Sign up
+						Create Account
 					</button>
 
+					<button onClick={handleSignInClick} className={styles.loginButton}>
+						Log In
+					</button>
+
+					<button onClick={handlePlayAsGuestClick} className={styles.guestButton}>
+						Play as Guest
+					</button>
+				</div>
+
+				<div className="group">
 					<p>
 						Join us on Discord to find other players and give feedback on the
 						game
