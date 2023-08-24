@@ -15,9 +15,9 @@ export const GRID_SIZE = {
 export const BENCH_SLOT_COUNT = 9;
 
 export const PHASE_LENGTHS = {
-	[GamePhase.PREPARING]: 30,
-	[GamePhase.READY]: 5,
-	[GamePhase.PLAYING]: 30,
+	[GamePhase.PREPARING]: 40,
+	[GamePhase.READY]: 3,
+	[GamePhase.PLAYING]: 35,
 };
 export const REROLL_COST = 2;
 export const STARTING_MONEY = 3;
