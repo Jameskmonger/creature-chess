@@ -23,5 +23,6 @@ coverage/
 
 .env
 .env.*
+!.env.example
 
 .faunadb/
