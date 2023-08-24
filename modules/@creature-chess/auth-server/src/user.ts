@@ -18,8 +18,6 @@ export interface UserModel {
 	profile: PlayerProfile | null;
 }
 
-export type Auth0User = User<UserAppMetadata, UserMetadata>;
-
 export const convertDatabaseUserToUserModel = (
 	user: DatabaseUser
 ): UserModel => {
