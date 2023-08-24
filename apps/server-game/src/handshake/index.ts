@@ -19,13 +19,32 @@ export const onHandshakeSuccess = (
 
 	logger.info("Listening for successful handshakes - inner A");
 
-	handshakeListener(deps, async (socket, { idToken }) => {
+	handshakeListener(deps, async (socket, request) => {
 		try {
 			logger.info("Authenticating new handshake", {
 				meta: { socketId: socket.id },
 			});
 
-			const user = await authenticate(authClient, database, idToken);
+			// TODO: Remove this once the client is updated to use the new handshake.
+			if (request.type === "guest") {
+				successHandshake(socket);
+
+				const guestSocket = socket as AuthenticatedSocket;
+
+				guestSocket.data = {
+					id: -1,
+					nickname: "Guest",
+					profile: {
+						picture: 16,
+						title: null
+					},
+				};
+
+				onReceive(guestSocket);
+				return;
+			}
+
+			const user = await authenticate(authClient, database, request.data.accessToken);
 
 			if (!user.registered) {
 				failHandshake(socket, { error: { type: "not_registered" } });

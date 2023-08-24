@@ -9,5 +9,3 @@ export type HandshakeListenerDependencies = {
 	authClient: ManagementClient<UserAppMetadata>;
 	database: DatabaseConnection;
 };
-
-export type HandshakeRequest = { idToken: string };

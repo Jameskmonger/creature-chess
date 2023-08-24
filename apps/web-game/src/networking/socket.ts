@@ -1,8 +1,8 @@
 import { io, Socket } from "socket.io-client";
 
-import { GameServerToClient } from "@creature-chess/networking";
+import { GameServerToClient, GameServerHandshake } from "@creature-chess/networking";
 
-export const getSocket = (idToken: string) => {
+export const getSocket = (payload: GameServerHandshake.InitConnectionRequest) => {
 	const socket = (io as any)(
 		{
 			path: "/game/socket.io",
@@ -15,7 +15,7 @@ export const getSocket = (idToken: string) => {
 
 	return new Promise<Socket>((resolve, reject) => {
 		socket.on("connect", () => {
-			socket.emit("authenticate", { idToken });
+			socket.emit("authenticate", payload);
 		});
 
 		const onAuthenticated = ({

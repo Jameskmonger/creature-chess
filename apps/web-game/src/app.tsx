@@ -11,9 +11,9 @@ import {
 	useGlobalStyles,
 } from "@creature-chess/ui";
 
+import { useGameAuth } from "./auth";
 import { Loading } from "./display/loading";
 import { GamePage } from "./game";
-import { openConnection } from "./networking";
 import { AppState } from "./store";
 
 ReactModal.setAppElement("#approot");
@@ -21,7 +21,6 @@ ReactModal.setAppElement("#approot");
 export const App = withErrorBoundary(() => {
 	const [error, resetError] = useErrorBoundary();
 
-	const dispatch = useDispatch();
 	const lobbyInfo = useSelector((state: AppState) => state.lobby);
 	const isInGame = useSelector((state: AppState) => state.game.ui.inGame);
 

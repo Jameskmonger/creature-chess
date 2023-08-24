@@ -12,18 +12,19 @@ import { lobbyNetworking } from "../../lobby";
 import { gameNetworking } from "../game";
 import { lobbyConnectedEvent, gameConnectedEvent } from "./events";
 import { getSocket } from "./socket";
+import { InitConnectionRequest } from "modules/@creature-chess/networking/src/handshake";
 
 type ConnectionResult =
 	| {
-			type: "lobby";
-			payload: LobbyServerToClient.LobbyConnectionPacket;
-	  }
+		type: "lobby";
+		payload: LobbyServerToClient.LobbyConnectionPacket;
+	}
 	| {
-			type: "game";
-			payload: GameServerToClient.GameConnectionPacket;
-	  };
+		type: "game";
+		payload: GameServerToClient.GameConnectionPacket;
+	};
 
-const listenForConnection = function* (socket: Socket) {
+const listenForConnection = function*(socket: Socket) {
 	const channel = eventChannel<ConnectionResult>((emit) => {
 		const onLobbyConnected = (
 			payload: LobbyServerToClient.LobbyConnectionPacket
@@ -53,19 +54,19 @@ const listenForConnection = function* (socket: Socket) {
 };
 
 type OpenConnectionAction = ReturnType<typeof openConnection>;
-export const openConnection = createAction<{ idToken: string }>(
+export const openConnection = createAction<InitConnectionRequest>(
 	"openConnection"
 );
 
-export const networkingSaga = function* () {
+export const networkingSaga = function*() {
 	const {
-		payload: { idToken },
+		payload,
 	} = yield* take<OpenConnectionAction>(openConnection.toString() as any);
 
 	let socket: Socket;
 
 	try {
-		socket = yield* call(getSocket, idToken);
+		socket = yield* call(getSocket, payload);
 	} catch (error) {
 		console.error("error getting socket", error);
 		return;
@@ -76,7 +77,7 @@ export const networkingSaga = function* () {
 	yield* all([
 		call(lobbyNetworking, socket),
 		call(gameNetworking, socket),
-		call(function* () {
+		call(function*() {
 			if (connection.type === "lobby") {
 				yield put(lobbyConnectedEvent(connection.payload));
 			} else if (connection.type === "game") {
