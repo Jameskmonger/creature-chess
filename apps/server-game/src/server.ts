@@ -49,8 +49,6 @@ export const startServer = async ({ io }: { io: Server }) => {
 	logger.info("Management client created");
 	const database = await createDatabaseConnection(logger);
 	logger.info("Database connection created");
-	// const discordApi = await createDiscordApi();
-	// logger.info("Discord client created");
 
 	let lobbies: Lobby[] = [];
 	let games: Game[] = [];
