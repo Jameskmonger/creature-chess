@@ -25,7 +25,6 @@ jobs:
         env:
           GA_ID: ${{ secrets.GA_ID }}
           COOKIEBOT_ID: ${{ secrets.COOKIEBOT_ID }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           GAME_SERVER_URL: ${{ secrets.GAME_SERVER_URL }}
           API_INFO_URL: ${{ secrets.API_INFO_URL }}
           AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}

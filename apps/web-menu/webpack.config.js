@@ -94,7 +94,6 @@ module.exports = {
 		}),
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
-			SENTRY_DSN: "",
 			GAME_SERVER_URL: "http://localhost/game/",
 			API_INFO_URL: "http://localhost/api",
 			AUTH0_DOMAIN: "",

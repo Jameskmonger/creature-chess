@@ -14,7 +14,6 @@ To try the game, head to [creaturechess.gg](https://creaturechess.gg), register 
 - Docker w/ docker-compose
 - Yarn (`npm i -g yarn && yarn set version berry`)
 - Auth0 set up (see below)
-- **(optional)** A Sentry.io DSN in environment variable `SENTRY_DSN`
 - **(optional)** A game server URL in environment variable `GAME_SERVER_URL`
 - **(optional)** An info server URL in environment variable `API_INFO_URL`
 
