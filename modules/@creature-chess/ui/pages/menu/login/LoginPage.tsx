@@ -5,26 +5,30 @@ import { useStyles } from "./LoginPage.styles";
 
 type LoginPageProps = {
 	isLoading: boolean;
-	onSignInClick: () => void;
+	auth0Enabled: boolean;
+	onSignInClick?: () => void;
 };
 
-const LoginPage: React.FunctionComponent<LoginPageProps> = ({
+const LoginPage = ({
+	auth0Enabled,
 	isLoading,
 	onSignInClick,
-}) => {
+}: LoginPageProps) => {
 	const styles = useStyles();
 	const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
 
 	const currentlyLoading = isLoading || loadingSignIn;
 
 	const handleSignInClick = () => {
-		if (currentlyLoading) {
+		if (!auth0Enabled || currentlyLoading) {
 			return;
 		}
 
 		setLoadingSignIn(true);
 
-		onSignInClick();
+		if (onSignInClick) {
+			onSignInClick();
+		}
 	};
 
 	if (currentlyLoading) {
@@ -43,9 +47,22 @@ const LoginPage: React.FunctionComponent<LoginPageProps> = ({
 						Creature Chess is a multiplayer game, so you need an account to play
 					</p>
 
-					<button onClick={handleSignInClick} className={styles.loginButton}>
-						Log in / Sign up
-					</button>
+					{auth0Enabled && (
+						<>
+							<button
+								onClick={handleSignInClick}
+								className={styles.loginButton}
+							>
+								Sign In
+							</button>
+							<button
+								onClick={handleSignInClick}
+								className={styles.loginButton}
+							>
+								Create Account
+							</button>
+						</>
+					)}
 
 					<p>
 						Join us on Discord to find other players and give feedback on the

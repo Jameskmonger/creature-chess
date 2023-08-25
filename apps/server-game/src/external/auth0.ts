@@ -1,6 +1,11 @@
+import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
 import { ManagementClient } from "auth0";
 
 export const createManagementClient = (): ManagementClient => {
+	if (!AUTH0_ENABLED) {
+		return null as any;
+	}
+
 	const {
 		AUTH0_DOMAIN,
 		AUTH0_MACHINE_TO_MACHINE_CLIENT_ID,

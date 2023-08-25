@@ -3,8 +3,6 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
-import { AuthContextProvider } from "@creature-chess/auth-web";
-import { GamePhase } from "@creature-chess/models";
 import { useGlobalStyles } from "@creature-chess/ui";
 
 import { createMockStore } from "../layouts/stories-utils";

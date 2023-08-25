@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { usePlayerId } from "@creature-chess/auth-web";
+import { useLocalPlayerId } from "@creature-chess/auth-web/context";
 import { PlayerActions } from "@creature-chess/gamemode";
 import {
 	PlayerListPlayer,
@@ -44,7 +44,7 @@ const getOpponentName = (battle: PlayerBattle, players: PlayerListPlayer[]) => {
 
 const PlayerList: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
-	const localPlayerId = usePlayerId();
+	const localPlayerId = useLocalPlayerId();
 	const players = useSelector<AppState, PlayerListPlayer[]>(
 		(state) => state.game.playerList
 	);

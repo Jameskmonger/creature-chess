@@ -6,13 +6,20 @@ import {
 	convertDatabaseUserToUserModel,
 	UserModel,
 } from "./user";
-import { verifyDecodeJwt } from "./verifyDecodeJwt";
+
+import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const verifyDecodeJwt = AUTH0_ENABLED ? require("./verifyDecodeJwt").verifyDecodeJwt : null;
 
 export const authenticate = async (
 	managementClient: ManagementClient,
 	database: DatabaseConnection,
 	token: string
 ): Promise<UserModel> => {
+	if (!verifyDecodeJwt) {
+		throw new Error("todo");
+	}
+
 	const decoded = await verifyDecodeJwt(token);
 
 	if (decoded === null) {
