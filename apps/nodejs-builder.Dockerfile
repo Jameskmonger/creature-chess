@@ -57,4 +57,6 @@ ADD tsconfig.json ./
 ADD modules/ ./modules/
 
 RUN yarn workspace @creature-chess/data prisma-generate
-RUN yarn workspaces foreach --exclude "@creature-chess-app/*" run build
+
+RUN yarn workspaces foreach --include "@shoki/*" --exclude "@shoki/board-react" run build
+RUN yarn workspaces foreach --include "@creature-chess/*" run build
