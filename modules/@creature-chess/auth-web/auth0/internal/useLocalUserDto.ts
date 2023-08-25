@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 import { UserDTO } from "@creature-chess/models/dto/user";
 
-import { getCurrentUser } from "./getCurrentUser";
+import { getCurrentUser } from "../../http/getCurrentUser";
 
 /**
  * Calls the current user endpoint and returns the user
@@ -18,7 +18,7 @@ import { getCurrentUser } from "./getCurrentUser";
  * - error: any error that occurred
  * - refresh: a function to refresh the user
  */
-export function useUser() {
+export function useLocalUserDTO() {
 	const { user: auth0User, getAccessTokenSilently } = useAuth0();
 
 	const [currentUser, setCurrentUser] = React.useState<UserDTO | null>(

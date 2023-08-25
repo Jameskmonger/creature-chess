@@ -3,14 +3,19 @@ import React from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import { auth0Config } from "./config";
-import { GameAuthContextProvider } from "./context";
+import { Auth0LocalUserProvider } from "./internal/localUserProvider";
 
 type Props = {
 	children: React.ReactNode;
 	onRedirectCallback?: (appState: any) => void;
 };
 
-export const AuthProvider: React.FC<Props> = ({
+/**
+ * Handles authentication with auth0 and loading of user data from the API
+ *
+ * This file should be conditionally imported based on whether or not auth0 is enabled
+ */
+export const Auth0AuthProvider: React.FC<Props> = ({
 	children,
 	onRedirectCallback,
 }) => {
@@ -39,7 +44,7 @@ export const AuthProvider: React.FC<Props> = ({
 			onRedirectCallback={onRedirectCallback}
 			useRefreshTokens
 		>
-			<GameAuthContextProvider>{children}</GameAuthContextProvider>
+			<Auth0LocalUserProvider>{children}</Auth0LocalUserProvider>
 		</Auth0Provider>
 	);
 };

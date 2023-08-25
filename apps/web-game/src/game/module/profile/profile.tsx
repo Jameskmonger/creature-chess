@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { BoardSelectors, BoardState } from "@shoki/board";
 
-import { usePlayerId } from "@creature-chess/auth-web";
+import { useLocalPlayerId } from "@creature-chess/auth-web/context";
 import {
 	getPlayerLevel,
 	getPlayerXp,
@@ -19,7 +19,7 @@ import { AppState } from "../../../store";
 export const Profile: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
-	const playerId = usePlayerId();
+	const playerId = useLocalPlayerId();
 
 	const level = useSelector<AppState, number>((state) =>
 		getPlayerLevel(state.game)

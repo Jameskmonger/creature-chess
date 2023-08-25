@@ -3,7 +3,7 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
-import { AuthContextProvider } from "@creature-chess/auth-web";
+import { LocalPlayerContextProvider } from "@creature-chess/auth-web/context";
 import { GamePhase } from "@creature-chess/models";
 import { useGlobalStyles } from "@creature-chess/ui";
 
@@ -53,23 +53,22 @@ const Template: Story<any> = (args) => {
 	);
 
 	return (
-		<AuthContextProvider
+		<LocalPlayerContextProvider
 			value={{
-				user: {
-					id: "1234",
-					nickname: "jkm",
-					stats: {
-						wins: 0,
-						gamesPlayed: 0,
-					},
-					registered: true,
+				type: "user" as const,
+				id: "1234",
+				nickname: "jkm",
+				stats: {
+					wins: 0,
+					gamesPlayed: 0,
 				},
+				registered: true,
 			}}
 		>
 			<Provider store={store}>
 				<MobileGame />
 			</Provider>
-		</AuthContextProvider>
+		</LocalPlayerContextProvider>
 	);
 };
 
