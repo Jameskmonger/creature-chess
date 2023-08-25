@@ -4,15 +4,17 @@ import { Footer } from "../../../src/Footer";
 import { useStyles } from "./LoginPage.styles";
 
 type LoginPageProps = {
-	isLoading: boolean;
-	auth0Enabled: boolean;
+	isLoading?: boolean;
+	auth0Enabled?: boolean;
 	onSignInClick?: () => void;
+	onPlayAsGuestClick?: () => void;
 };
 
 const LoginPage = ({
-	auth0Enabled,
-	isLoading,
+	auth0Enabled = false,
+	isLoading = false,
 	onSignInClick,
+	onPlayAsGuestClick,
 }: LoginPageProps) => {
 	const styles = useStyles();
 	const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
@@ -31,6 +33,12 @@ const LoginPage = ({
 		}
 	};
 
+	const handlePlayAsGuestClick = () => {
+		if (onPlayAsGuestClick) {
+			onPlayAsGuestClick();
+		}
+	};
+
 	if (currentlyLoading) {
 		return <span>Loading</span>;
 	}
@@ -43,9 +51,7 @@ const LoginPage = ({
 
 			<div className={styles.groups}>
 				<div className="group">
-					<p>
-						Creature Chess is a multiplayer game, so you need an account to play
-					</p>
+					<p>Creature Chess is a multiplayer auto-chess battler</p>
 
 					{auth0Enabled && (
 						<>
@@ -63,6 +69,13 @@ const LoginPage = ({
 							</button>
 						</>
 					)}
+
+					<button
+						onClick={handlePlayAsGuestClick}
+						className={styles.guestButton}
+					>
+						Play Now as Guest
+					</button>
 
 					<p>
 						Join us on Discord to find other players and give feedback on the
