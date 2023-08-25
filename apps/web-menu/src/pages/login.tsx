@@ -8,7 +8,7 @@ const useAuth0 = AUTH0_ENABLED ? require("@auth0/auth0-react").useAuth0 : null;
 
 export const MenuLoginPage = () => {
 	const onPlayAsGuestClick = () => {
-		window.location.href = process.env.GAME_SERVER_URL!;
+		window.location.href = process.env.GAME_SERVER_URL! + "?guest=true";
 	};
 
 	if (useAuth0) {
