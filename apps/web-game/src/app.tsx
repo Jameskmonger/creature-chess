@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import { useAuth0 } from "@auth0/auth0-react";
 import ReactModal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
+import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
 import {
 	LobbyPageContextProvider,
 	LobbyPage,
@@ -16,26 +16,26 @@ import { GamePage } from "./game";
 import { openConnection } from "./networking";
 import { AppState } from "./store";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const useAuth0 = AUTH0_ENABLED ? require("@auth0/auth0-react").useAuth0 : null;
+
 ReactModal.setAppElement("#approot");
 
-export const App = withErrorBoundary(() => {
-	const [error, resetError] = useErrorBoundary();
+function useIsGuestRequest() {
+	const query = new URLSearchParams(window.location.search);
 
-	const dispatch = useDispatch();
+	return query.get("guest") === "true";
+}
+
+function useOpenAuth0Connection() {
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-	const lobbyInfo = useSelector((state: AppState) => state.lobby);
-	const isInGame = useSelector((state: AppState) => state.game.ui.inGame);
-
-	const [loadingMessage, setLoadingMessage] = React.useState("loading...");
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		const open = async () => {
-			setLoadingMessage("getting access token");
 			try {
-				const idToken = await getAccessTokenSilently();
-
-				setLoadingMessage("opening connection");
-				dispatch(openConnection({ idToken }));
+				const accessToken = await getAccessTokenSilently();
+				dispatch(openConnection({ type: "auth0", data: { accessToken } }));
 			} catch (e) {
 				console.log({ error: e });
 			}
@@ -43,6 +43,45 @@ export const App = withErrorBoundary(() => {
 
 		open();
 	}, [isAuthenticated, getAccessTokenSilently, dispatch]);
+}
+
+function useOpenGuestConnection() {
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		const open = async () => {
+			try {
+				dispatch(openConnection({ type: "guest" }));
+			} catch (e) {
+				console.log({ error: e });
+			}
+		};
+
+		open();
+	}, [dispatch]);
+}
+
+function useOpenConnection() {
+	if (useIsGuestRequest()) {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		return useOpenGuestConnection();
+	}
+
+	if (useAuth0) {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		return useOpenAuth0Connection();
+	}
+
+	throw new Error("No connection method available");
+}
+
+export const App = withErrorBoundary(() => {
+	const [error, resetError] = useErrorBoundary();
+
+	const lobbyInfo = useSelector((state: AppState) => state.lobby);
+	const isInGame = useSelector((state: AppState) => state.game.ui.inGame);
+
+	useOpenConnection();
 
 	useGlobalStyles();
 
@@ -72,7 +111,6 @@ export const App = withErrorBoundary(() => {
 
 	return (
 		<>
-			<span>({loadingMessage})</span>
 			<Loading />
 		</>
 	);

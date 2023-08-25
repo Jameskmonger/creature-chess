@@ -1,7 +1,9 @@
 import { Socket } from "socket.io";
 
+import { HandshakeRequest } from "@creature-chess/networking/handshake";
+
 import { logger } from "../log";
-import { HandshakeListenerDependencies, HandshakeRequest } from "./types";
+import { HandshakeListenerDependencies } from "./types";
 
 /**
  * Attaches to the socket server and raises incoming handshake requests.
