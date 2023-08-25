@@ -47,6 +47,15 @@ export const useStyles = createUseStyles({
 		background: "#b13e53",
 		border: "none",
 	},
+	guestButton: {
+		padding: "0.6em 1.2em",
+		marginBottom: "1rem",
+		fontSize: "1.4em",
+		color: "#393939",
+		cursor: "pointer",
+		background: "#e1cab9",
+		border: "none",
+	},
 	discordButton: {
 		maxWidth: "12em",
 		marginBottom: "1rem",

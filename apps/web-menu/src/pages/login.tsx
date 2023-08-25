@@ -7,12 +7,17 @@ import { LoginPage } from "@creature-chess/ui";
 const useAuth0 = AUTH0_ENABLED ? require("@auth0/auth0-react").useAuth0 : null;
 
 export const MenuLoginPage = () => {
+	const onPlayAsGuestClick = () => {
+		window.location.href = process.env.GAME_SERVER_URL!;
+	};
+
 	if (useAuth0) {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const { loginWithRedirect, isLoading } = useAuth0();
 
 		return (
 			<LoginPage
+				onPlayAsGuestClick={onPlayAsGuestClick}
 				auth0Enabled={true}
 				isLoading={isLoading}
 				onSignInClick={loginWithRedirect}
@@ -20,5 +25,5 @@ export const MenuLoginPage = () => {
 		);
 	}
 
-	return <LoginPage auth0Enabled={false} isLoading={false} />;
+	return <LoginPage onPlayAsGuestClick={onPlayAsGuestClick} />;
 };
