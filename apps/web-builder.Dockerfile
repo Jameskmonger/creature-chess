@@ -5,6 +5,8 @@ ENV APP_DIR ${APP_DIR}
 
 WORKDIR /code
 
+RUN yarn workspace @shoki/board-react run build
+
 ADD apps/$APP_DIR/ ./apps/$APP_DIR/
 
 VOLUME /code/apps/$APP_DIR/dist
