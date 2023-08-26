@@ -1,5 +1,10 @@
 version: "3.8"
 
+networks:
+  creature-chess:
+    name: creature-chess
+    driver: bridge
+
 volumes:
   pgdata:
   pgadmin:
@@ -22,6 +27,8 @@ services:
       timeout: 5s
       start_period: 10s
       retries: 20
+    networks:
+      - creature-chess
   # pgadmin, a local web UI for managing the DB
   pgadmin:
     image: dpage/pgadmin4
@@ -33,6 +40,8 @@ services:
       - POSTGRES_PASSWORD
     ports:
       - 5050:80
+    networks:
+      - creature-chess
     volumes:
       - pgadmin:/root/.pgadmin
     depends_on:
