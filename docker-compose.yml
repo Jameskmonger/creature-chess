@@ -101,7 +101,7 @@ services:
       - DATABASE_URL
     build:
       context: .
-      dockerfile: apps/Dockerfile
+      dockerfile: apps/server.Dockerfile
       args:
         - APP_DIR=server-game
     ports:
@@ -124,7 +124,7 @@ services:
       - DATABASE_URL
     build:
       context: .
-      dockerfile: apps/Dockerfile
+      dockerfile: apps/server.Dockerfile
       args:
         - APP_DIR=server-info
     ports:
