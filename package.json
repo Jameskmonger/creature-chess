@@ -18,8 +18,7 @@
 		"build-storybook": "build-storybook -o ./output",
 		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\" \"apps/**/*.tsx\" \"modules/**/*.tsx\"",
 		"prettier": "prettier -w ./",
-		"prettier-check": "prettier -c ./",
-		"build": "yarn workspaces foreach run build"
+		"prettier-check": "prettier -c ./"
 	},
 	"workspaces": [
 		"modules/@creature-chess/*",
