@@ -17,7 +17,7 @@ export const authenticate = async (
 	token: string
 ): Promise<UserModel> => {
 	if (!verifyDecodeJwt) {
-		throw new Error("todo");
+		throw new Error("Attempted to use auth0 when it is not enabled");
 	}
 
 	const decoded = await verifyDecodeJwt(token);

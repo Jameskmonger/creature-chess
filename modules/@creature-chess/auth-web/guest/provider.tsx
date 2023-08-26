@@ -52,7 +52,7 @@ export function GuestAuthProvider({ children }: { children: React.ReactNode }) {
 		() => ({
 			type: "guest",
 			id: session?.id || "",
-			nickname: "Guest",
+			nickname: "Guest " + (session?.id || ""),
 		}),
 		[session]
 	);
