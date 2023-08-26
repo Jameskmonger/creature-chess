@@ -1,5 +1,10 @@
 version: "3.8"
 
+networks:
+  creature-chess:
+    name: creature-chess
+    external: true
+
 services:
   # this is the base image for all nodejs-based apps
   nodejs-builder:
@@ -7,6 +12,8 @@ services:
       context: .
       dockerfile: apps/nodejs-builder.Dockerfile
     image: nodejs-builder
+    networks:
+      - creature-chess
   # this image builds the web-game app
   # TODO (James) we could extend this in local dev to also watch for changes
   web-game-builder:
@@ -68,6 +75,8 @@ services:
     ports:
       - 80:80
       - 443:443
+    networks:
+      - creature-chess
     depends_on:
       web-game-builder:
         condition: service_completed_successfully
@@ -96,6 +105,8 @@ services:
         - APP_DIR=server-game
     ports:
       - "3000"
+    networks:
+      - creature-chess
     restart: always
     depends_on:
       nodejs-builder:
@@ -117,6 +128,8 @@ services:
         - APP_DIR=server-info
     ports:
       - "3000"
+    networks:
+      - creature-chess
     restart: always
     depends_on:
       nodejs-builder:

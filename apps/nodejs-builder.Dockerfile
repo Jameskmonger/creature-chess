@@ -46,7 +46,6 @@ ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
 ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
 
 # Run the install now that we have the package.json and yarn.lock files
-
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 # Finally, copy the rest of the source code into the image
@@ -54,9 +53,20 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 # install every time one of these steps has a different result
 
 ADD tsconfig.json ./
-ADD modules/ ./modules/
 
-RUN yarn workspace @creature-chess/data prisma-generate
-
+# Copy and build the `@shoki` packages (excluding board-react)
+ADD modules/@shoki/ ./modules/@shoki/
 RUN yarn workspaces foreach --include "@shoki/*" --exclude "@shoki/board-react" run build
-RUN yarn workspaces foreach --include "@creature-chess/*" run build
+
+# Copy and build the @creature-chess/models
+ADD modules/@creature-chess/models/ ./modules/@creature-chess/models/
+RUN yarn workspace @creature-chess/models run build
+
+# Copy and build the @creature-chess/data
+ADD modules/@creature-chess/data/ ./modules/@creature-chess/data/
+RUN yarn workspace @creature-chess/data prisma-generate
+RUN yarn workspace @creature-chess/data run build
+
+# Copy and build the remaining `@creature-chess` packages
+ADD modules/@creature-chess/ ./modules/@creature-chess/
+RUN yarn workspaces foreach --include "@creature-chess/*" --exclude "@creature-chess/models" --exclude "@creature-chess/data" run build
