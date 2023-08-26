@@ -50,6 +50,9 @@ export class Lobby {
 		const existing = this.members.find((m) => m.player.id === socket.data.id);
 		if (existing) {
 			existing.socket?.disconnect(true);
+
+			existing.socket = socket;
+			existing.registry = registry;
 		} else {
 			const defaultProfile: PlayerProfile = {
 				picture: 1,
