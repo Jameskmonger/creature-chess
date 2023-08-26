@@ -1,7 +1,7 @@
 import React from "react";
 
-import { useLocalPlayer } from "@creature-chess/auth-web/context";
-import { MenuPage, MenuPageContextProvider } from "@creature-chess/ui";
+import { useLocalPlayer } from "@cc-web/auth/context";
+import { MenuPage, MenuPageContextProvider } from "@cc-web/ui";
 
 import { MenuRegistrationPage } from "./register";
 

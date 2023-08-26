@@ -1966,6 +1966,64 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cc-server/auth@workspace:*, @cc-server/auth@workspace:modules/@cc-server/auth":
+  version: 0.0.0-use.local
+  resolution: "@cc-server/auth@workspace:modules/@cc-server/auth"
+  dependencies:
+    "@creature-chess/data": "workspace:*"
+    "@creature-chess/models": "workspace:*"
+    "@types/auth0": ^2.34.9
+    "@types/jsonwebtoken": ^8.5.6
+    auth0: ^2.37.0
+    jsonwebtoken: ^8.5.1
+    jwks-rsa: ^2.0.5
+  languageName: unknown
+  linkType: soft
+
+"@cc-server/bot@workspace:*, @cc-server/bot@workspace:modules/@cc-server/bot":
+  version: 0.0.0-use.local
+  resolution: "@cc-server/bot@workspace:modules/@cc-server/bot"
+  dependencies:
+    "@creature-chess/data": "workspace:*"
+    "@creature-chess/gamemode": "workspace:*"
+    "@creature-chess/models": "workspace:*"
+    "@shoki/board": "workspace:*"
+    "@shoki/engine": "workspace:*"
+    delay: ^4.4.1
+  peerDependencies:
+    redux: ^4.1.0
+    redux-saga: ^1.1.3
+  languageName: unknown
+  linkType: soft
+
+"@cc-web/auth@workspace:*, @cc-web/auth@workspace:modules/@cc-web/auth":
+  version: 0.0.0-use.local
+  resolution: "@cc-web/auth@workspace:modules/@cc-web/auth"
+  dependencies:
+    "@auth0/auth0-react": ^1.10.2
+    "@creature-chess/models": "workspace:*"
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  languageName: unknown
+  linkType: soft
+
+"@cc-web/ui@workspace:*, @cc-web/ui@workspace:modules/@cc-web/ui":
+  version: 0.0.0-use.local
+  resolution: "@cc-web/ui@workspace:modules/@cc-web/ui"
+  dependencies:
+    "@babel/core": ^7.16.5
+    "@creature-chess/models": "workspace:*"
+    "@shoki-web/board-react": "workspace:*"
+    "@shoki/board": "workspace:*"
+    babel-loader: ^8.2.3
+  peerDependencies:
+    classnames: ^2.3.1
+    react: ^17.0.2
+    react-dom: ^17.0.2
+  languageName: unknown
+  linkType: soft
+
 "@cnakazawa/watch@npm:^1.0.3":
   version: 1.0.4
   resolution: "@cnakazawa/watch@npm:1.0.4"
@@ -1989,8 +2047,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess-app/server-game@workspace:apps/server-game"
   dependencies:
-    "@creature-chess/auth-server": "workspace:*"
-    "@creature-chess/bot": "workspace:*"
+    "@cc-server/auth": "workspace:*"
+    "@cc-server/bot": "workspace:*"
     "@creature-chess/data": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
@@ -2023,7 +2081,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess-app/server-info@workspace:apps/server-info"
   dependencies:
-    "@creature-chess/auth-server": "workspace:*"
+    "@cc-server/auth": "workspace:*"
     "@creature-chess/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@types/bad-words": ^3.0.1
@@ -2039,12 +2097,12 @@ __metadata:
   resolution: "@creature-chess-app/web-game@workspace:apps/web-game"
   dependencies:
     "@auth0/auth0-react": ^1.10.2
-    "@creature-chess/auth-web": "workspace:*"
+    "@cc-web/auth": "workspace:*"
+    "@cc-web/ui": "workspace:*"
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
-    "@creature-chess/ui": "workspace:*"
     "@fortawesome/fontawesome-svg-core": ^1.2.36
     "@fortawesome/free-solid-svg-icons": ^5.15.4
     "@fortawesome/react-fontawesome": ^0.1.16
@@ -2088,8 +2146,8 @@ __metadata:
   resolution: "@creature-chess-app/web-menu@workspace:apps/web-menu"
   dependencies:
     "@auth0/auth0-react": ^1.10.2
-    "@creature-chess/auth-web": "workspace:*"
-    "@creature-chess/ui": "workspace:*"
+    "@cc-web/auth": "workspace:*"
+    "@cc-web/ui": "workspace:*"
     awesome-typescript-loader: ^5.2.1
     circular-dependency-plugin: ^5.2.2
     cpy-cli: ^2.0.0
@@ -2109,42 +2167,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess-tools/battle-tester@workspace:modules/@tools/battle-tester"
   dependencies:
+    "@cc-web/ui": "workspace:*"
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
-    "@creature-chess/ui": "workspace:*"
     "@shoki/board": "workspace:*"
     "@shoki/engine": "workspace:*"
     "@types/redux-saga": ^0.10.5
   peerDependencies:
     redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess/auth-server@workspace:*, @creature-chess/auth-server@workspace:modules/@creature-chess/auth-server":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/auth-server@workspace:modules/@creature-chess/auth-server"
-  dependencies:
-    "@creature-chess/data": "workspace:*"
-    "@creature-chess/models": "workspace:*"
-    "@types/auth0": ^2.34.9
-    "@types/jsonwebtoken": ^8.5.6
-    auth0: ^2.37.0
-    jsonwebtoken: ^8.5.1
-    jwks-rsa: ^2.0.5
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess/auth-web@workspace:*, @creature-chess/auth-web@workspace:modules/@creature-chess/auth-web":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/auth-web@workspace:modules/@creature-chess/auth-web"
-  dependencies:
-    "@auth0/auth0-react": ^1.10.2
-    "@creature-chess/data": "workspace:*"
-    "@creature-chess/models": "workspace:*"
-  peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
   languageName: unknown
   linkType: soft
 
@@ -2159,22 +2190,6 @@ __metadata:
     javascript-astar: ^0.4.1
     present: ^1.0.0
   peerDependencies:
-    redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess/bot@workspace:*, @creature-chess/bot@workspace:modules/@creature-chess/bot":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/bot@workspace:modules/@creature-chess/bot"
-  dependencies:
-    "@creature-chess/data": "workspace:*"
-    "@creature-chess/gamemode": "workspace:*"
-    "@creature-chess/models": "workspace:*"
-    "@shoki/board": "workspace:*"
-    "@shoki/engine": "workspace:*"
-    delay: ^4.4.1
-  peerDependencies:
-    redux: ^4.1.0
     redux-saga: ^1.1.3
   languageName: unknown
   linkType: soft
@@ -2231,22 +2246,6 @@ __metadata:
     "@types/redux-saga": ^0.10.5
   peerDependencies:
     redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess/ui@workspace:*, @creature-chess/ui@workspace:modules/@creature-chess/ui":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/ui@workspace:modules/@creature-chess/ui"
-  dependencies:
-    "@babel/core": ^7.16.5
-    "@creature-chess/models": "workspace:*"
-    "@shoki-web/board-react": "workspace:*"
-    "@shoki/board": "workspace:*"
-    babel-loader: ^8.2.3
-  peerDependencies:
-    classnames: ^2.3.1
-    react: ^17.0.2
-    react-dom: ^17.0.2
   languageName: unknown
   linkType: soft
 

@@ -1,4 +1,4 @@
-import { authenticate } from "@creature-chess/auth-server";
+import { authenticate } from "@cc-server/auth";
 
 import { logger } from "../log";
 import { AuthenticatedSocket } from "../player/socket";

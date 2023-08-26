@@ -1,4 +1,4 @@
-import { UserModel } from "@creature-chess/auth-server";
+import { UserModel } from "@cc-server/auth";
 import { UserDTO } from "@creature-chess/models/dto/user";
 
 export const userModelToDto = (user: UserModel): UserDTO => {

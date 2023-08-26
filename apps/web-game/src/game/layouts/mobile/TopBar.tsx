@@ -1,8 +1,7 @@
 import * as React from "react";
 
+import { Layout } from "@cc-web/ui";
 import { createUseStyles } from "react-jss";
-
-import { Layout } from "@creature-chess/ui";
 
 import { PhaseInfo, RoundIndicator } from "../../module";
 

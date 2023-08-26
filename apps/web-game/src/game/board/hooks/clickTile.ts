@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 
 import { PlayerPieceLocation } from "@creature-chess/models";
-import { GameBoardLocation } from "@creature-chess/ui";
+import { GameBoardLocation } from "@cc-web/ui";
 
 import { playerClickTileAction } from "../sagas/clickTileSaga";
 

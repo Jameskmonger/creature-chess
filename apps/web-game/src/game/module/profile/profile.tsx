@@ -1,10 +1,11 @@
 import * as React from "react";
 
+import { useLocalPlayerId } from "@cc-web/auth/context";
+import { PlayerGameProfile } from "@cc-web/ui";
 import { useDispatch, useSelector } from "react-redux";
 
 import { BoardSelectors, BoardState } from "@shoki/board";
 
-import { useLocalPlayerId } from "@creature-chess/auth-web/context";
 import {
 	getPlayerLevel,
 	getPlayerXp,
@@ -12,7 +13,6 @@ import {
 	PlayerActions,
 } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
-import { PlayerGameProfile } from "@creature-chess/ui";
 
 import { AppState } from "../../../store";
 

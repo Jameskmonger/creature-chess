@@ -1,10 +1,9 @@
 import * as React from "react";
 
+import { Layout } from "@cc-web/ui";
+import { DiscordIcon } from "@cc-web/ui/misc";
+import { Header2, Header4 } from "@cc-web/ui/text";
 import { useSelector } from "react-redux";
-
-import { Layout } from "@creature-chess/ui";
-import { DiscordIcon } from "@creature-chess/ui/misc";
-import { Header2, Header4 } from "@creature-chess/ui/text";
 
 import { AppState } from "../../../store";
 import { getPlayerById } from "../../module/playerList/components/selectors";

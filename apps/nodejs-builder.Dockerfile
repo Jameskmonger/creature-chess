@@ -27,15 +27,17 @@ ADD apps/server-info/package.json ./apps/server-info/
 ADD apps/web-game/package.json ./apps/web-game/
 ADD apps/web-menu/package.json ./apps/web-menu/
 
-ADD modules/@creature-chess/auth-server/package.json ./modules/@creature-chess/auth-server/
-ADD modules/@creature-chess/auth-web/package.json ./modules/@creature-chess/auth-web/
 ADD modules/@creature-chess/battle/package.json ./modules/@creature-chess/battle/
-ADD modules/@creature-chess/bot/package.json ./modules/@creature-chess/bot/
 ADD modules/@creature-chess/data/package.json ./modules/@creature-chess/data/
 ADD modules/@creature-chess/gamemode/package.json ./modules/@creature-chess/gamemode/
 ADD modules/@creature-chess/models/package.json ./modules/@creature-chess/models/
 ADD modules/@creature-chess/networking/package.json ./modules/@creature-chess/networking/
-ADD modules/@creature-chess/ui/package.json ./modules/@creature-chess/ui/
+
+ADD modules/@cc-server/auth/package.json ./modules/@cc-server/auth/
+ADD modules/@cc-server/bot/package.json ./modules/@cc-server/bot/
+
+ADD modules/@cc-web/auth/package.json ./modules/@cc-web/auth/
+ADD modules/@cc-web/ui/package.json ./modules/@cc-web/ui/
 
 ADD modules/@shoki/board/package.json ./modules/@shoki/board/
 ADD modules/@shoki/card-deck/package.json ./modules/@shoki/card-deck/

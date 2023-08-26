@@ -1,9 +1,8 @@
 import React from "react";
 
+import { useGlobalStyles } from "@cc-web/ui";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
-
-import { useGlobalStyles } from "@creature-chess/ui";
 
 import { createMockStore } from "../layouts/stories-utils";
 import { BoardContainer } from "./BoardContainer";

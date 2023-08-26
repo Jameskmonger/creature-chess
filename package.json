@@ -22,6 +22,8 @@
 	},
 	"workspaces": [
 		"modules/@creature-chess/*",
+		"modules/@cc-server/*",
+		"modules/@cc-web/*",
 		"modules/@shoki/*",
 		"modules/@shoki-web/*",
 		"modules/@tools/*",

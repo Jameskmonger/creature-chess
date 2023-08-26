@@ -1,9 +1,8 @@
 import * as React from "react";
 
+import { Footer, Group, Layout } from "@cc-web/ui";
+import { LandscapeGameScreen } from "@cc-web/ui/gameScreen";
 import { createUseStyles } from "react-jss";
-
-import { Footer, Group, Layout } from "@creature-chess/ui";
-import { LandscapeGameScreen } from "@creature-chess/ui/gameScreen";
 
 import { BoardContainer } from "../../board";
 import { Controls } from "../../board/overlays";

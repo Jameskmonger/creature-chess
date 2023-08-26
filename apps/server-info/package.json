@@ -22,7 +22,7 @@
 		"test": "yarn run -T jest --passWithNoTests"
 	},
 	"dependencies": {
-		"@creature-chess/auth-server": "workspace:*",
+		"@cc-server/auth": "workspace:*",
 		"@creature-chess/data": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@types/bad-words": "^3.0.1",

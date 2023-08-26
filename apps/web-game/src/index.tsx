@@ -1,11 +1,10 @@
 import * as React from "react";
 
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
+import { GuestAuthProvider } from "@cc-web/auth/guest/provider";
 import "pepjs";
 import * as ReactDOM from "react-dom";
 import { Provider as ReduxProvider } from "react-redux";
-
-import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
-import { GuestAuthProvider } from "@creature-chess/auth-web/guest/provider";
 
 import { App } from "./app";
 import { useGuestMode } from "./guest";
@@ -18,7 +17,7 @@ const Auth0AppRoot = ({ children }: { children: React.ReactNode }) => {
 
 	const Auth0AuthProvider = React.useMemo(
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		() => require("@creature-chess/auth-web/auth0/provider").Auth0AuthProvider,
+		() => require("@cc-web/auth/auth0/provider").Auth0AuthProvider,
 		[]
 	);
 

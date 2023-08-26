@@ -5,6 +5,11 @@ ENV APP_DIR ${APP_DIR}
 
 WORKDIR /code
 
+# Copy and build the @cc-server packages
+ADD modules/@cc-server/ ./modules/@cc-server/
+RUN yarn workspaces foreach --include "@cc-server/*" run build
+
+
 ADD apps/$APP_DIR/ ./apps/$APP_DIR/
 
 # TODO (James) we need to do the `build` here, because the app requires process.env vars

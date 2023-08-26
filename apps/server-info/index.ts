@@ -4,7 +4,7 @@ import { logger as expressWinston } from "express-winston";
 import {
 	authenticate,
 	convertDatabaseUserToUserModel,
-} from "@creature-chess/auth-server";
+} from "@cc-server/auth";
 import {
 	createDatabaseConnection,
 	DatabaseConnection,

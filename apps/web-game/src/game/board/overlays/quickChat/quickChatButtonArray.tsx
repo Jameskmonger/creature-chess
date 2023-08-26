@@ -1,7 +1,8 @@
 import React from "react";
 
+import { Layout } from "@cc-web/ui";
+
 import { QuickChatOption } from "@creature-chess/models";
-import { Layout } from "@creature-chess/ui";
 
 import { QuickChatButton } from "./quickChatButton";
 

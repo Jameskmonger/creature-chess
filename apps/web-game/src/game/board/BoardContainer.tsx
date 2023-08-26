@@ -1,10 +1,9 @@
 import React from "react";
 
+import { Group } from "@cc-web/ui";
 import { DndProvider } from "@shoki-web/board-react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
-
-import { Group } from "@creature-chess/ui";
 
 import { NowPlaying } from "../module/nowPlaying";
 import { LocalBoard } from "./LocalBoard";

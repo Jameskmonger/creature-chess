@@ -1,8 +1,8 @@
 {
 	"private": true,
-	"name": "@creature-chess/bot",
+	"name": "@cc-web/auth",
 	"version": "0.0.1",
-	"description": "Bot logic for Creature Chess",
+	"description": "Authentication utils for web",
 	"keywords": [],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"license": "ISC",
@@ -14,23 +14,18 @@
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
 	"scripts": {
-		"build": "yarn run -T tsc -p ./tsconfig.json",
-		"test": "yarn run -T jest --passWithNoTests"
+		"build": "yarn run -T tsc -p ./tsconfig.json"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"@creature-chess/data": "workspace:*",
-		"@creature-chess/gamemode": "workspace:*",
-		"@creature-chess/models": "workspace:*",
-		"@shoki/board": "workspace:*",
-		"@shoki/engine": "workspace:*",
-		"delay": "^4.4.1"
+		"@auth0/auth0-react": "^1.10.2",
+		"@creature-chess/models": "workspace:*"
 	},
 	"peerDependencies": {
-		"redux": "^4.1.0",
-		"redux-saga": "^1.1.3"
+		"react": "^17 || ^18",
+		"react-dom": "^17 || ^18"
 	}
 }

@@ -1,8 +1,8 @@
 {
 	"private": true,
-	"name": "@creature-chess/auth-web",
+	"name": "@cc-server/auth",
 	"version": "0.0.1",
-	"description": "Authentication utils for web",
+	"description": "Authentication utils for server",
 	"keywords": [],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"license": "ISC",
@@ -21,12 +21,12 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"@auth0/auth0-react": "^1.10.2",
 		"@creature-chess/data": "workspace:*",
-		"@creature-chess/models": "workspace:*"
-	},
-	"peerDependencies": {
-		"react": "^17 || ^18",
-		"react-dom": "^17 || ^18"
+		"@creature-chess/models": "workspace:*",
+		"@types/auth0": "^2.34.9",
+		"@types/jsonwebtoken": "^8.5.6",
+		"auth0": "^2.37.0",
+		"jsonwebtoken": "^8.5.1",
+		"jwks-rsa": "^2.0.5"
 	}
 }

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
-import { RegistrationPage } from "@creature-chess/ui";
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
+import { RegistrationPage } from "@cc-web/ui";
 
 import { patchUser } from "../patchUser";
 

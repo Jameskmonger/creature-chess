@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GameBoard, GameBoardContextProvider } from "@creature-chess/ui";
+import { GameBoard, GameBoardContextProvider } from "@cc-web/ui";
 
 import {
 	useGameBench,

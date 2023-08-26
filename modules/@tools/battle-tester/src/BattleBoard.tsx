@@ -1,11 +1,5 @@
 import React from "react";
 
-import { DndProvider } from "@shoki-web/board-react";
-import { useDispatch } from "react-redux";
-
-import { BoardSelectors } from "@shoki/board";
-
-import { BENCH_SLOT_COUNT, PieceModel } from "@creature-chess/models";
 import {
 	GameBoardContextProvider,
 	GameBoardContext,
@@ -13,7 +7,13 @@ import {
 	PieceContextProvider,
 	MatchPiece,
 	GameBoardLocation,
-} from "@creature-chess/ui";
+} from "@cc-web/ui";
+import { DndProvider } from "@shoki-web/board-react";
+import { useDispatch } from "react-redux";
+
+import { BoardSelectors } from "@shoki/board";
+
+import { BENCH_SLOT_COUNT, PieceModel } from "@creature-chess/models";
 
 import { controlSlice, useAppSelector } from "./state";
 

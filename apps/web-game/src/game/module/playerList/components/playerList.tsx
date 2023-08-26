@@ -1,8 +1,9 @@
 import * as React from "react";
 
+import { useLocalPlayerId } from "@cc-web/auth/context";
+import { StatusPlayerListItem, PlayerListItem, Layout } from "@cc-web/ui";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useLocalPlayerId } from "@creature-chess/auth-web/context";
 import { PlayerActions } from "@creature-chess/gamemode";
 import {
 	PlayerListPlayer,
@@ -10,11 +11,6 @@ import {
 	PlayerStatus,
 	PlayerBattle,
 } from "@creature-chess/models";
-import {
-	StatusPlayerListItem,
-	PlayerListItem,
-	Layout,
-} from "@creature-chess/ui";
 
 import { AppState } from "../../../../store";
 

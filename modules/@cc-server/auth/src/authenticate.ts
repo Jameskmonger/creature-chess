@@ -7,7 +7,7 @@ import {
 	UserModel,
 } from "./user";
 
-import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const verifyDecodeJwt = AUTH0_ENABLED ? require("./verifyDecodeJwt").verifyDecodeJwt : null;
 

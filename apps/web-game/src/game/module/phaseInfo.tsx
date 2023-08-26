@@ -1,9 +1,9 @@
 import * as React from "react";
 
+import { Countdown } from "@cc-web/ui";
 import { useSelector } from "react-redux";
 
 import { GamePhase, Constants } from "@creature-chess/models";
-import { Countdown } from "@creature-chess/ui";
 
 import { AppState } from "../../store";
 import { InfoChip } from "./InfoChip";

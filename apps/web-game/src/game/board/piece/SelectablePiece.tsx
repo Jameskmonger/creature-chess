@@ -1,10 +1,9 @@
 import * as React from "react";
 
+import { Piece, usePiece } from "@cc-web/ui";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
-
-import { Piece, usePiece } from "@creature-chess/ui";
 
 import { AppState } from "../../../store";
 import { playerClickPieceAction } from "../sagas/clickPieceSaga";

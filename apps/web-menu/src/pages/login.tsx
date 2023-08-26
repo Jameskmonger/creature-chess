@@ -1,7 +1,7 @@
 import React from "react";
 
-import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
-import { LoginPage } from "@creature-chess/ui";
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
+import { LoginPage } from "@cc-web/ui";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const useAuth0 = AUTH0_ENABLED ? require("@auth0/auth0-react").useAuth0 : null;

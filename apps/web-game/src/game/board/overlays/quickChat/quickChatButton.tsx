@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-no-bind */
 import React from "react";
 
+import { useLocalPlayerId } from "@cc-web/auth/context";
 import { createUseStyles } from "react-jss";
 import { useDispatch } from "react-redux";
 
-import { useLocalPlayerId } from "@creature-chess/auth-web/context";
 import { PlayerActions } from "@creature-chess/gamemode";
 import { QuickChatOption } from "@creature-chess/models";
 

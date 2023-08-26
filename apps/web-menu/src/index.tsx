@@ -1,9 +1,8 @@
 import * as React from "react";
 
-import { LocalPlayerContextProvider } from "modules/@creature-chess/auth-web/context";
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
+import { LocalPlayerContextProvider } from "modules/@cc-web/auth/context";
 import * as ReactDOM from "react-dom";
-
-import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
 
 import { App } from "./app";
 
@@ -14,7 +13,7 @@ const Auth0AppRoot = ({ children }: { children: React.ReactNode }) => {
 
 	const Auth0AuthProvider = React.useMemo(
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		() => require("@creature-chess/auth-web/auth0/provider").Auth0AuthProvider,
+		() => require("@cc-web/auth/auth0/provider").Auth0AuthProvider,
 		[]
 	);
 

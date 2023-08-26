@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Footer } from "@creature-chess/ui";
+import { Footer } from "@cc-web/ui";
 
 import { QuitGameButton } from "./quitGameButton";
 

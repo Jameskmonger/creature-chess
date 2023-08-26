@@ -1,4 +1,4 @@
-import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 import { ManagementClient } from "auth0";
 
 export function getManagementClient() {

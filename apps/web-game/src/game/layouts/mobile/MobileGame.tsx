@@ -1,10 +1,10 @@
 import * as React from "react";
 
+import { PortraitGameScreen } from "@cc-web/ui/gameScreen";
 import { useSelector } from "react-redux";
 
 import { getPlayerMoney } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-import { PortraitGameScreen } from "@creature-chess/ui/gameScreen";
 
 import { AppState } from "../../../store";
 import { BoardContainer } from "../../board";

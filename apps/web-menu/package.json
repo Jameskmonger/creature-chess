@@ -24,8 +24,8 @@
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
 		"@auth0/auth0-react": "^1.10.2",
-		"@creature-chess/auth-web": "workspace:*",
-		"@creature-chess/ui": "workspace:*"
+		"@cc-web/auth": "workspace:*",
+		"@cc-web/ui": "workspace:*"
 	},
 	"devDependencies": {
 		"awesome-typescript-loader": "^5.2.1",

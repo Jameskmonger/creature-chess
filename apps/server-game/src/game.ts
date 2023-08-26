@@ -1,7 +1,7 @@
 import { Task } from "redux-saga";
 import { v4 as uuid } from "uuid";
 
-import { botLogicSaga } from "@creature-chess/bot";
+import { botLogicSaga } from "@cc-server/bot";
 import { BotPersonality } from "@creature-chess/data";
 import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
 import { LobbyPlayer, PlayerStatus } from "@creature-chess/models";

@@ -1,11 +1,11 @@
 import React from "react";
 
+import { LocalPlayerContextProvider } from "@cc-web/auth/context";
+import { useGlobalStyles } from "@cc-web/ui";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
-import { LocalPlayerContextProvider } from "@creature-chess/auth-web/context";
 import { GamePhase } from "@creature-chess/models";
-import { useGlobalStyles } from "@creature-chess/ui";
 
 import { createMockStore } from "../stories-utils";
 import { DesktopGame } from "./DesktopGame";

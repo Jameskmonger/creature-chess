@@ -1,8 +1,7 @@
 import React from "react";
 
+import { Text } from "@cc-web/ui/text";
 import { useSelector } from "react-redux";
-
-import { Text } from "@creature-chess/ui/text";
 
 import { AppState } from "../../../../store";
 

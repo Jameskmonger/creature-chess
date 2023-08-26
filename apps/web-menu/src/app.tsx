@@ -1,9 +1,8 @@
 import * as React from "react";
 
+import { useLocalPlayer } from "@cc-web/auth/context";
+import { useGlobalStyles } from "@cc-web/ui";
 import ReactModal from "react-modal";
-
-import { useLocalPlayer } from "@creature-chess/auth-web/context";
-import { useGlobalStyles } from "@creature-chess/ui";
 
 import { MenuHomePage } from "./pages/home";
 import { MenuLoginPage } from "./pages/login";
