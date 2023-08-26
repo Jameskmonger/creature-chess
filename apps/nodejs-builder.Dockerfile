@@ -22,10 +22,12 @@ ADD package.json yarn.lock .yarnrc.yml ./
 ADD .yarn/plugins/ ./.yarn/plugins/
 ADD .yarn/releases/ ./.yarn/releases/
 
-ADD apps/server-game/package.json ./apps/server-game/
-ADD apps/server-info/package.json ./apps/server-info/
-ADD apps/web-game/package.json ./apps/web-game/
-ADD apps/web-menu/package.json ./apps/web-menu/
+ADD modules/@shoki/board/package.json ./modules/@shoki/board/
+ADD modules/@shoki/card-deck/package.json ./modules/@shoki/card-deck/
+ADD modules/@shoki/engine/package.json ./modules/@shoki/engine/
+ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
+
+ADD modules/@shoki-web/board-react/package.json ./modules/@shoki-web/board-react/
 
 ADD modules/@creature-chess/battle/package.json ./modules/@creature-chess/battle/
 ADD modules/@creature-chess/data/package.json ./modules/@creature-chess/data/
@@ -39,14 +41,12 @@ ADD modules/@cc-server/bot/package.json ./modules/@cc-server/bot/
 ADD modules/@cc-web/auth/package.json ./modules/@cc-web/auth/
 ADD modules/@cc-web/ui/package.json ./modules/@cc-web/ui/
 
-ADD modules/@shoki/board/package.json ./modules/@shoki/board/
-ADD modules/@shoki/card-deck/package.json ./modules/@shoki/card-deck/
-ADD modules/@shoki/engine/package.json ./modules/@shoki/engine/
-ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
-
-ADD modules/@shoki-web/board-react/package.json ./modules/@shoki-web/board-react/
-
 ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
+
+ADD apps/server-game/package.json ./apps/server-game/
+ADD apps/server-info/package.json ./apps/server-info/
+ADD apps/web-game/package.json ./apps/web-game/
+ADD apps/web-menu/package.json ./apps/web-menu/
 
 # Run the install now that we have the package.json and yarn.lock files
 RUN yarn install --frozen-lockfile --network-timeout 1000000
