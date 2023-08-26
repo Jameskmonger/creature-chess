@@ -15,14 +15,14 @@ export type UserDatabaseFunctions = {
 
 	getByAuthId: (authId: string) => Promise<DatabaseUser | null>;
 
-	getById: (id: number) => Promise<DatabaseUser | null>;
+	getById: (id: string) => Promise<DatabaseUser | null>;
 	getByNickname: (nickname: string) => Promise<DatabaseUser | null>;
 
-	addWin: (id: number) => Promise<DatabaseUser | null>;
-	addGamePlayed: (id: number) => Promise<DatabaseUser | null>;
+	addWin: (id: string) => Promise<DatabaseUser | null>;
+	addGamePlayed: (id: string) => Promise<DatabaseUser | null>;
 
 	setProfileInfo: (
-		id: number,
+		id: string,
 		nickname: string | null,
 		picture: number | null
 	) => Promise<DatabaseUser | null>;

@@ -1,13 +1,14 @@
 import * as React from "react";
 
-import { LocalPlayerContextProvider } from "modules/@creature-chess/auth-web/context";
 import "pepjs";
 import * as ReactDOM from "react-dom";
 import { Provider as ReduxProvider } from "react-redux";
 
 import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
+import { GuestAuthProvider } from "@creature-chess/auth-web/guest/provider";
 
 import { App } from "./app";
+import { useGuestMode } from "./guest";
 import { createAppStore } from "./store";
 
 const Auth0AppRoot = ({ children }: { children: React.ReactNode }) => {
@@ -30,6 +31,17 @@ const Auth0AppRoot = ({ children }: { children: React.ReactNode }) => {
 
 const AppRoot = () => {
 	const store = createAppStore();
+	const guestMode = useGuestMode();
+
+	if (guestMode) {
+		return (
+			<GuestAuthProvider>
+				<ReduxProvider store={store}>
+					<App />
+				</ReduxProvider>
+			</GuestAuthProvider>
+		);
+	}
 
 	if (AUTH0_ENABLED) {
 		return (
@@ -41,13 +53,7 @@ const AppRoot = () => {
 		);
 	}
 
-	return (
-		<LocalPlayerContextProvider value={null}>
-			<ReduxProvider store={store}>
-				<App />
-			</ReduxProvider>
-		</LocalPlayerContextProvider>
-	);
+	return <span>error: no suitable auth provider</span>;
 };
 
 ReactDOM.render(<AppRoot />, document.getElementById("approot"));

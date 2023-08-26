@@ -8,7 +8,7 @@ datasource db {
 }
 
 model bots {
-  id           Int    @id @default(autoincrement())
+  id           String @id @default(uuid())
   nickname     String @db.VarChar(20)
   games_played Int    @default(0)
   wins         Int    @default(0)
@@ -18,11 +18,22 @@ model bots {
 }
 
 model users {
-  id              Int     @id @default(autoincrement())
+  id           	  String  @id @default(uuid())
   auth_id         String  @db.VarChar(64)
   nickname        String? @db.VarChar(20)
   profile_title   Int?
   profile_picture Int?
   games_played    Int     @default(0)
   wins            Int     @default(0)
+}
+
+model guests {
+  id           		String @id @default(uuid())
+  created_at    	DateTime @default(now())
+  updated_at    	DateTime @default(now()) @updatedAt
+
+  token        		String @unique
+  expires_at    	DateTime
+
+  profile_picture 	Int?
 }
