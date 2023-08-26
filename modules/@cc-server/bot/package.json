@@ -22,7 +22,7 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"@creature-chess/data": "workspace:*",
+		"@cc-server/data": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@shoki/board": "workspace:*",

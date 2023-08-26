@@ -8,7 +8,7 @@ import {
 import {
 	createDatabaseConnection,
 	DatabaseConnection,
-} from "@creature-chess/data";
+} from "@cc-server/data";
 import {
 	AVAILABLE_PROFILE_PICTURES,
 	validateNicknameFormat,

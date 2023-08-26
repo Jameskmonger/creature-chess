@@ -1,6 +1,6 @@
 import { ManagementClient } from "auth0";
 
-import { DatabaseConnection } from "@creature-chess/data";
+import { DatabaseConnection } from "@cc-server/data";
 
 import {
 	convertDatabaseUserToUserModel,

@@ -23,7 +23,7 @@
 	},
 	"dependencies": {
 		"@cc-server/auth": "workspace:*",
-		"@creature-chess/data": "workspace:*",
+		"@cc-server/data": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@types/bad-words": "^3.0.1",
 		"bad-words": "^3.0.4",

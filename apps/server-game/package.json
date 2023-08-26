@@ -24,7 +24,7 @@
 	"dependencies": {
 		"@cc-server/auth": "workspace:*",
 		"@cc-server/bot": "workspace:*",
-		"@creature-chess/data": "workspace:*",
+		"@cc-server/data": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/networking": "workspace:*",

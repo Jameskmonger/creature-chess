@@ -30,7 +30,7 @@ ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
 ADD modules/@shoki-web/board-react/package.json ./modules/@shoki-web/board-react/
 
 ADD modules/@creature-chess/battle/package.json ./modules/@creature-chess/battle/
-ADD modules/@creature-chess/data/package.json ./modules/@creature-chess/data/
+ADD modules/@cc-server/data/package.json ./modules/@cc-server/data/
 ADD modules/@creature-chess/gamemode/package.json ./modules/@creature-chess/gamemode/
 ADD modules/@creature-chess/models/package.json ./modules/@creature-chess/models/
 ADD modules/@creature-chess/networking/package.json ./modules/@creature-chess/networking/
@@ -65,11 +65,11 @@ RUN yarn workspaces foreach --include "@shoki/*" run build
 ADD modules/@creature-chess/models/ ./modules/@creature-chess/models/
 RUN yarn workspace @creature-chess/models run build
 
-# Copy and build the @creature-chess/data
-ADD modules/@creature-chess/data/ ./modules/@creature-chess/data/
-RUN yarn workspace @creature-chess/data prisma-generate
-RUN yarn workspace @creature-chess/data run build
+# Copy and build the @cc-server/data
+ADD modules/@cc-server/data/ ./modules/@cc-server/data/
+RUN yarn workspace @cc-server/data prisma-generate
+RUN yarn workspace @cc-server/data run build
 
 # Copy and build the remaining `@creature-chess` packages
 ADD modules/@creature-chess/ ./modules/@creature-chess/
-RUN yarn workspaces foreach --include "@creature-chess/*" --exclude "@creature-chess/models" --exclude "@creature-chess/data" run build
+RUN yarn workspaces foreach --include "@creature-chess/*" --exclude "@creature-chess/models" --exclude "@cc-server/data" run build

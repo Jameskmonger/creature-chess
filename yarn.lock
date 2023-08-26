@@ -1970,7 +1970,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@cc-server/auth@workspace:modules/@cc-server/auth"
   dependencies:
-    "@creature-chess/data": "workspace:*"
+    "@cc-server/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@types/auth0": ^2.34.9
     "@types/jsonwebtoken": ^8.5.6
@@ -1984,7 +1984,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@cc-server/bot@workspace:modules/@cc-server/bot"
   dependencies:
-    "@creature-chess/data": "workspace:*"
+    "@cc-server/data": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@shoki/board": "workspace:*"
@@ -1993,6 +1993,17 @@ __metadata:
   peerDependencies:
     redux: ^4.1.0
     redux-saga: ^1.1.3
+  languageName: unknown
+  linkType: soft
+
+"@cc-server/data@workspace:*, @cc-server/data@workspace:modules/@cc-server/data":
+  version: 0.0.0-use.local
+  resolution: "@cc-server/data@workspace:modules/@cc-server/data"
+  dependencies:
+    "@creature-chess/models": "workspace:*"
+    "@prisma/client": ^4.11.0
+    prisma: ^4.11.0
+    winston: ^3.3.3
   languageName: unknown
   linkType: soft
 
@@ -2049,7 +2060,7 @@ __metadata:
   dependencies:
     "@cc-server/auth": "workspace:*"
     "@cc-server/bot": "workspace:*"
-    "@creature-chess/data": "workspace:*"
+    "@cc-server/data": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
@@ -2082,7 +2093,7 @@ __metadata:
   resolution: "@creature-chess-app/server-info@workspace:apps/server-info"
   dependencies:
     "@cc-server/auth": "workspace:*"
-    "@creature-chess/data": "workspace:*"
+    "@cc-server/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@types/bad-words": ^3.0.1
     bad-words: ^3.0.4
@@ -2191,17 +2202,6 @@ __metadata:
     present: ^1.0.0
   peerDependencies:
     redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess/data@workspace:*, @creature-chess/data@workspace:modules/@creature-chess/data":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess/data@workspace:modules/@creature-chess/data"
-  dependencies:
-    "@creature-chess/models": "workspace:*"
-    "@prisma/client": ^4.11.0
-    prisma: ^4.11.0
-    winston: ^3.3.3
   languageName: unknown
   linkType: soft
 

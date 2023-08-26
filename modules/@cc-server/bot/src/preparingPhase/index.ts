@@ -3,7 +3,7 @@ import { select, put, call } from "redux-saga/effects";
 
 import { getVariable } from "@shoki/engine";
 
-import { BotPersonality } from "@creature-chess/data";
+import { BotPersonality } from "@cc-server/data";
 import {
 	PlayerActions,
 	PlayerState,
@@ -14,7 +14,7 @@ import { getActions } from "../actions";
 import { BOT_ACTION_TIME_MS } from "../constants";
 import { putBenchOnBoard } from "../putBenchOnBoard";
 
-export const preparingPhase = function* (personality: BotPersonality) {
+export const preparingPhase = function*(personality: BotPersonality) {
 	const name = yield* getVariable<PlayerVariables, string>((v) => v.name);
 
 	yield delay(BOT_ACTION_TIME_MS);

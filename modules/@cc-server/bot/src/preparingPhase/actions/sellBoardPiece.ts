@@ -1,7 +1,7 @@
 import { BoardSelectors } from "@shoki/board";
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
-import { BotPersonality } from "@creature-chess/data";
+import { BotPersonality } from "@cc-server/data";
 import {
 	PlayerState,
 	PlayerStateSelectors,

@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "@creature-chess/data",
+	"name": "@cc-server/data",
 	"version": "0.0.1",
 	"description": "Database connections for Creature Chess",
 	"keywords": [],

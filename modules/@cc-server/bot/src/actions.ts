@@ -1,6 +1,6 @@
 import { BoardSelectors } from "@shoki/board";
 
-import { BotPersonality } from "@creature-chess/data";
+import { BotPersonality } from "@cc-server/data";
 import { PlayerState } from "@creature-chess/gamemode";
 
 import { BrainAction } from "./brain";

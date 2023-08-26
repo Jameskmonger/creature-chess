@@ -1,4 +1,4 @@
-import { DatabaseUser } from "@creature-chess/data";
+import { DatabaseUser } from "@cc-server/data";
 import { PlayerProfile } from "@creature-chess/models";
 
 export interface UserModel {
