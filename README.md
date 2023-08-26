@@ -21,11 +21,11 @@ Copy `.env.example` to `.env` in the root of the repo.
 
 These will be automatically picked up and used by the game.
 
-### Auth0 Setup
+### Auth0 Setup (optional)
 
-You will need to set up an Auth0 tenant in order to run Creature Chess locally.
+You can optionally configure Auth0 to manage users and authentication.
 
-See "Environment variables" above for info on how to store them.
+You will need to set up an Auth0 tenant and store some environment variables.
 
 - Set up a [machine to machine app](https://auth0.com/docs/applications/set-up-an-application/register-machine-to-machine-applications)
 
