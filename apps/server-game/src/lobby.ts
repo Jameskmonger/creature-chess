@@ -73,11 +73,13 @@ export class Lobby {
 			this.notifyOthers(newMember);
 		}
 
-		this.sendConnected(registry);
+		setTimeout(() => {
+			this.sendConnected(registry);
 
-		if (this.members.length === this.options.maxPlayers) {
-			this.start();
-		}
+			if (this.members.length === this.options.maxPlayers) {
+				this.start();
+			}
+		}, 500);
 	}
 
 	private start = () => {
