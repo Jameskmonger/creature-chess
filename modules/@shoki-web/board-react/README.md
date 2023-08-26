@@ -1,4 +1,4 @@
-# `@shoki/board-react`
+# `@shoki-web/board-react`
 
 React drag-and-drop implementation of @shoki/board
 
@@ -7,10 +7,10 @@ Takes in a `BoardState` of your choosing, renders the pieces, and exposes click/
 ## Usage
 
 ```tsx
+import { BoardGrid } from "@shoki-web/board-react";
 import { DragObjectWithType } from "react-dnd";
 
 import { BoardState } from "@shoki/board";
-import { BoardGrid } from "@shoki/board-react";
 
 type ChessPiece = {};
 
@@ -45,7 +45,7 @@ const ChessBoard = () => {
 You must wrap your app in a `DndProvider`
 
 ```tsx
-import { DndProvider } from "@shoki/board-react";
+import { DndProvider } from "@shoki-web/board-react";
 ```
 
 ### Props

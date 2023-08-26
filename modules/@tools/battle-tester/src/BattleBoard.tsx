@@ -1,9 +1,9 @@
 import React from "react";
 
+import { DndProvider } from "@shoki-web/board-react";
 import { useDispatch } from "react-redux";
 
 import { BoardSelectors } from "@shoki/board";
-import { DndProvider } from "@shoki/board-react";
 
 import { BENCH_SLOT_COUNT, PieceModel } from "@creature-chess/models";
 import {

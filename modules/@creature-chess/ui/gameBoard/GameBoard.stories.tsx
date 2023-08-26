@@ -1,9 +1,9 @@
 import React from "react";
 
+import { DndProvider } from "@shoki-web/board-react";
 import { Meta, Story } from "@storybook/react";
 
 import { createInitialBoardState } from "@shoki/board";
-import { DndProvider } from "@shoki/board-react";
 
 import { Builders, GRID_SIZE, PieceModel } from "@creature-chess/models";
 

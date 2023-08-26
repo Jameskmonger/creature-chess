@@ -38,10 +38,11 @@ ADD modules/@creature-chess/networking/package.json ./modules/@creature-chess/ne
 ADD modules/@creature-chess/ui/package.json ./modules/@creature-chess/ui/
 
 ADD modules/@shoki/board/package.json ./modules/@shoki/board/
-ADD modules/@shoki/board-react/package.json ./modules/@shoki/board-react/
 ADD modules/@shoki/card-deck/package.json ./modules/@shoki/card-deck/
 ADD modules/@shoki/engine/package.json ./modules/@shoki/engine/
 ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
+
+ADD modules/@shoki-web/board-react/package.json ./modules/@shoki-web/board-react/
 
 ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
 
@@ -54,9 +55,9 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 ADD tsconfig.json ./
 
-# Copy and build the `@shoki` packages (excluding board-react)
+# Copy and build the `@shoki` packages
 ADD modules/@shoki/ ./modules/@shoki/
-RUN yarn workspaces foreach --include "@shoki/*" --exclude "@shoki/board-react" run build
+RUN yarn workspaces foreach --include "@shoki/*" run build
 
 # Copy and build the @creature-chess/models
 ADD modules/@creature-chess/models/ ./modules/@creature-chess/models/

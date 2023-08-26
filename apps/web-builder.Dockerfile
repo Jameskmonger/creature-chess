@@ -5,7 +5,8 @@ ENV APP_DIR ${APP_DIR}
 
 WORKDIR /code
 
-RUN yarn workspace @shoki/board-react run build
+ADD modules/@shoki-web/ ./modules/@shoki-web/
+RUN yarn workspaces foreach --include "@shoki-web/*" run build
 
 ADD apps/$APP_DIR/ ./apps/$APP_DIR/
 

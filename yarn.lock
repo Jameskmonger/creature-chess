@@ -2049,8 +2049,8 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": ^5.15.4
     "@fortawesome/react-fontawesome": ^0.1.16
     "@reduxjs/toolkit": ^1.7.1
+    "@shoki-web/board-react": "workspace:*"
     "@shoki/board": "workspace:*"
-    "@shoki/board-react": "workspace:*"
     "@shoki/networking": "workspace:*"
     "@types/react-redux": ^7.1.21
     awesome-typescript-loader: ^5.2.1
@@ -2240,8 +2240,8 @@ __metadata:
   dependencies:
     "@babel/core": ^7.16.5
     "@creature-chess/models": "workspace:*"
+    "@shoki-web/board-react": "workspace:*"
     "@shoki/board": "workspace:*"
-    "@shoki/board-react": "workspace:*"
     babel-loader: ^8.2.3
   peerDependencies:
     classnames: ^2.3.1
@@ -2999,9 +2999,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shoki/board-react@workspace:*, @shoki/board-react@workspace:modules/@shoki/board-react":
+"@shoki-web/board-react@workspace:*, @shoki-web/board-react@workspace:modules/@shoki-web/board-react":
   version: 0.0.0-use.local
-  resolution: "@shoki/board-react@workspace:modules/@shoki/board-react"
+  resolution: "@shoki-web/board-react@workspace:modules/@shoki-web/board-react"
   dependencies:
     "@shoki/board": "workspace:*"
     "@types/react-dnd-multi-backend": ^6.0.1

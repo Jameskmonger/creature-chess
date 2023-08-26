@@ -1,9 +1,8 @@
 import React from "react";
 
+import { DndProvider } from "@shoki-web/board-react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
-
-import { DndProvider } from "@shoki/board-react";
 
 import { Group } from "@creature-chess/ui";
 

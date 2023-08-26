@@ -22,8 +22,8 @@
 	},
 	"dependencies": {
 		"@creature-chess/models": "workspace:*",
-		"@shoki/board": "workspace:*",
-		"@shoki/board-react": "workspace:*"
+		"@shoki-web/board-react": "workspace:*",
+		"@shoki/board": "workspace:*"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.16.5",

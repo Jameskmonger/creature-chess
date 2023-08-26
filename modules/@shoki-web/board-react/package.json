@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "@shoki/board-react",
+	"name": "@shoki-web/board-react",
 	"version": "0.0.1",
 	"description": "React frontend for @shoki/board",
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
