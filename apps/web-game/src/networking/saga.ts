@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import { eventChannel } from "redux-saga";
 import { Socket } from "socket.io-client";
-import { all, call, put, take } from "typed-redux-saga";
+import { all, call, cancel, fork, take } from "typed-redux-saga";
 
 import {
 	LobbyServerToClient,
@@ -10,8 +10,7 @@ import {
 import { HandshakeRequest } from "@creature-chess/networking/handshake";
 
 import { lobbyNetworking } from "../../lobby";
-import { gameNetworking } from "../game";
-import { lobbyConnectedEvent, gameConnectedEvent } from "./events";
+import { gameNetworking, gameSaga } from "../game";
 import { getSocket } from "./socket";
 
 type ConnectionResult =
@@ -29,11 +28,13 @@ const listenForConnection = function*(socket: Socket) {
 		const onLobbyConnected = (
 			payload: LobbyServerToClient.LobbyConnectionPacket
 		) => {
+			console.log("Lobby connected");
 			emit({ type: "lobby", payload });
 		};
 		const onGameConnected = (
 			payload: GameServerToClient.GameConnectionPacket
 		) => {
+			console.log("Game connected");
 			emit({ type: "game", payload });
 		};
 
@@ -41,18 +42,29 @@ const listenForConnection = function*(socket: Socket) {
 		socket.on("gameConnected", onGameConnected);
 
 		return () => {
+			console.log("Cleaning up listeners");
 			socket.off("connected", onLobbyConnected);
 			socket.off("gameConnected", onGameConnected);
 		};
 	});
 
-	const connection = yield* take(channel);
+	let lobbyTask;
 
-	channel.close();
-
-	return connection;
+	while (true) {
+		const connection = yield* take(channel);
+		if (connection.type === "lobby") {
+			lobbyTask = yield* fork(lobbyNetworking, socket, connection.payload);
+		} else if (connection.type === "game") {
+			if (lobbyTask) {
+				yield cancel(lobbyTask); // Cancel the lobby networking task
+			}
+			yield all([
+				call(gameNetworking, socket, connection.payload),
+				call(gameSaga, connection.payload)
+			]);
+		}
+	}
 };
-
 
 type OpenConnectionAction = ReturnType<typeof openConnection>;
 export const openConnection = createAction<HandshakeRequest>(
@@ -67,23 +79,13 @@ export const networkingSaga = function*() {
 	let socket: Socket;
 
 	try {
+		console.log("Getting socket");
 		socket = yield* call(getSocket, request);
 	} catch (error) {
 		console.error("error getting socket", error);
 		return;
 	}
 
-	const connection = yield* call(listenForConnection, socket);
-
-	yield* all([
-		call(lobbyNetworking, socket),
-		call(gameNetworking, socket),
-		call(function*() {
-			if (connection.type === "lobby") {
-				yield put(lobbyConnectedEvent(connection.payload));
-			} else if (connection.type === "game") {
-				yield put(gameConnectedEvent(connection.payload));
-			}
-		}),
-	]);
+	console.log("Listening for connection");
+	yield* call(listenForConnection, socket);
 };

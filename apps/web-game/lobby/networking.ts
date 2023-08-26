@@ -1,25 +1,18 @@
 import { Action } from "redux";
 import { EventChannel, eventChannel } from "redux-saga";
 import { put } from "redux-saga/effects";
-import { call } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
-import { cancelled, race, take } from "typed-redux-saga";
+import { cancelled, fork, take } from "typed-redux-saga";
 
 import { IncomingRegistry } from "@shoki/networking";
 
 import {
-	GameServerToClient,
 	LobbyServerToClient,
 } from "@creature-chess/networking";
 
-import {
-	gameConnectedEvent,
-	lobbyConnectedEvent,
-	LobbyConnectedEvent,
-} from "../src/networking/events";
 import { LobbyCommands } from "./state";
 
-const readPacketsToActions = function* (
+const readPacketsToActions = function*(
 	registry: IncomingRegistry<LobbyServerToClient.PacketSet>
 ) {
 	let channel: EventChannel<Action> | null = null;
@@ -29,14 +22,6 @@ const readPacketsToActions = function* (
 			registry.on("lobbyUpdate", ({ players }) => {
 				emit(LobbyCommands.updatePlayers({ players }));
 			});
-
-			// todo move this
-			registry.on(
-				"gameConnected" as any,
-				(packet: GameServerToClient.GameConnectionPacket) => {
-					emit(gameConnectedEvent(packet));
-				}
-			);
 
 			// tslint:disable-next-line:no-empty
 			return () => {
@@ -56,12 +41,8 @@ const readPacketsToActions = function* (
 	}
 };
 
-export const lobbyNetworking = function* (socket: Socket) {
-	const event: LobbyConnectedEvent = yield take<LobbyConnectedEvent>(
-		lobbyConnectedEvent.toString()
-	);
-
-	yield put(LobbyCommands.connectToLobby(event.payload));
+export const lobbyNetworking = function*(socket: Socket, payload: LobbyServerToClient.LobbyConnectionPacket) {
+	yield put(LobbyCommands.connectToLobby(payload));
 
 	// todo fix typing
 	const registry = LobbyServerToClient.incoming(
@@ -69,15 +50,5 @@ export const lobbyNetworking = function* (socket: Socket) {
 		(opcode, handler) => socket.off(opcode, handler as any)
 	);
 
-	const runForever = call(readPacketsToActions, registry);
-	const connectedToGame = take(gameConnectedEvent.toString());
-
-	const result = yield* race({
-		runForever,
-		connectedToGame,
-	});
-
-	if (result.connectedToGame) {
-		yield put(result.connectedToGame as unknown as Action<any>);
-	}
+	yield fork(readPacketsToActions, registry);
 };
