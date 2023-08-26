@@ -54,13 +54,13 @@ See "Environment variables" above for info on how to store them.
 
 ### Setup
 
-You can use the following `make` commands to set up the project:
+To build and run the project, you can use `make`:
 
-- `make install` - install dependencies
-- `make db` - seed the database
-  - take the `DATABASE_URL` from `.env` and input it when asked.
-  - you may need to configure the connection string to use `localhost` instead of `postgres` as the host, depending on your setup.
-- `make server` - build and run the docker containers
+```shell
+make
+```
+
+If you change the server, you can run `make rebuild` to rebuild and restart the server.
 
 ### Dev toolkit
 
