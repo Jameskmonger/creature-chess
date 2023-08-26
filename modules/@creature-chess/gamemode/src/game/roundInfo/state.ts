@@ -3,9 +3,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
 
 const initialState: RoundInfoState = {
-	round: null,
-	phase: null,
-	phaseStartedAtSeconds: null,
+	round: 1,
+	phase: GamePhase.PREPARING,
+	phaseStartedAtSeconds: 0,
 };
 
 export const {
