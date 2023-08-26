@@ -42,6 +42,7 @@ module.exports = {
 			NODE_ENV: "production",
 			GAME_SERVER_URL: "http://localhost/game/",
 			API_INFO_URL: "http://localhost/api",
+			AUTH0_ENABLED: "false",
 			AUTH0_DOMAIN: "",
 			AUTH0_SPA_CLIENT_ID: "",
 			CREATURE_CHESS_APP_URL: "",
