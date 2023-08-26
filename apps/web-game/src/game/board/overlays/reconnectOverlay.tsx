@@ -1,7 +1,8 @@
 import * as React from "react";
 
-import { Group } from "@cc-web/ui";
 import { useSelector } from "react-redux";
+
+import { Group } from "@cc-web/ui";
 
 import { AppState } from "../../../store";
 import { ConnectionStatus } from "../../connection-status";

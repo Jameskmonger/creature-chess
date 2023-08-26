@@ -1,5 +1,6 @@
-import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 import { ManagementClient } from "auth0";
+
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 
 export const createManagementClient = (): ManagementClient => {
 	if (!AUTH0_ENABLED) {

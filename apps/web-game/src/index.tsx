@@ -1,10 +1,11 @@
 import * as React from "react";
 
-import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
-import { GuestAuthProvider } from "@cc-web/auth/guest/provider";
 import "pepjs";
 import * as ReactDOM from "react-dom";
 import { Provider as ReduxProvider } from "react-redux";
+
+import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
+import { GuestAuthProvider } from "@cc-web/auth/guest/provider";
 
 import { App } from "./app";
 import { useGuestMode } from "./guest";

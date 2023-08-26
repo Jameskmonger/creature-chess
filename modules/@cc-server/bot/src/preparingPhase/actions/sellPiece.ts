@@ -1,7 +1,6 @@
 import { BoardSelectors } from "@shoki/board";
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
-import { BotPersonality } from "@cc-server/data";
 import {
 	PlayerState,
 	PlayerStateSelectors,
@@ -9,6 +8,8 @@ import {
 	getAllPieces,
 } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
+
+import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
 import { isStrategicPiece } from "./utils/creatureType";

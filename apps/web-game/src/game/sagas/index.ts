@@ -1,5 +1,8 @@
 import { all, call } from "redux-saga/effects";
+import { put } from "typed-redux-saga";
 
+import { RoundInfoCommands } from "@creature-chess/gamemode";
+import { GameServerToClient } from "@creature-chess/networking";
 
 import { clickPieceSaga, clickTileSaga } from "../board";
 import { PlayerListCommands, closeShopOnFirstBuySaga } from "../module";
@@ -9,11 +12,10 @@ import { goToMenuAfterGame } from "./goToMenuAfterGame";
 import { preventAccidentalClose } from "./preventAccidentalClose";
 import { roundUpdateSaga } from "./roundUpdate";
 import { uiSaga } from "./ui";
-import { GameServerToClient } from "@creature-chess/networking";
-import { put } from "typed-redux-saga";
-import { RoundInfoCommands } from "@creature-chess/gamemode";
 
-export const gameSaga = function*(payload: GameServerToClient.GameConnectionPacket) {
+export const gameSaga = function* (
+	payload: GameServerToClient.GameConnectionPacket
+) {
 	yield all([
 		call(goToMenuAfterGame),
 		call(preventAccidentalClose),
@@ -24,8 +26,11 @@ export const gameSaga = function*(payload: GameServerToClient.GameConnectionPack
 		call(clientBattleSaga),
 		call(uiSaga),
 		call(handleQuickChat),
-		call(function*() {
-			const { players, game: { phase, phaseStartedAtSeconds } } = payload;
+		call(function* () {
+			const {
+				players,
+				game: { phase, phaseStartedAtSeconds },
+			} = payload;
 			yield put(PlayerListCommands.updatePlayerListCommand(players));
 
 			const update = { phase, startedAt: phaseStartedAtSeconds };

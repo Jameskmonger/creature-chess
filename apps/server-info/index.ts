@@ -2,17 +2,12 @@ import express from "express";
 import { logger as expressWinston } from "express-winston";
 
 import {
-	authenticate,
-	convertDatabaseUserToUserModel,
-} from "@cc-server/auth";
-import {
-	createDatabaseConnection,
-	DatabaseConnection,
-} from "@cc-server/data";
-import {
 	AVAILABLE_PROFILE_PICTURES,
 	validateNicknameFormat,
 } from "@creature-chess/models";
+
+import { authenticate, convertDatabaseUserToUserModel } from "@cc-server/auth";
+import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";
 
 import { logger } from "./src/log";
 import { getManagementClient } from "./src/util/auth0";
@@ -28,7 +23,9 @@ app.use(express.json());
 app.use(expressWinston({ winstonInstance: logger }));
 
 app.use((req, res, next) => {
-	const { headers: { cookie } } = req;
+	const {
+		headers: { cookie },
+	} = req;
 	if (cookie) {
 		const values = cookie.split(";").reduce((acc, item) => {
 			const data = item.trim().split("=");
@@ -121,15 +118,17 @@ async function startServer() {
 
 		do {
 			// TODO make this secure
-			const newToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+			const newToken =
+				Math.random().toString(36).substring(2, 15) +
+				Math.random().toString(36).substring(2, 15);
 
 			const existing = await database.prisma.guests.findFirst({
 				where: {
 					token: newToken,
 					expires_at: {
-						gte: new Date()
-					}
-				}
+						gte: new Date(),
+					},
+				},
 			});
 
 			if (!existing) {
@@ -145,12 +144,14 @@ async function startServer() {
 
 		do {
 			// random between 0001 and 9999 as string with leading zeros
-			const newId = (Math.floor(Math.random() * 10000) + 1).toString().padStart(4, "0");
+			const newId = (Math.floor(Math.random() * 10000) + 1)
+				.toString()
+				.padStart(4, "0");
 
 			const existing = await database.prisma.guests.findFirst({
 				where: {
-					id: newId
-				}
+					id: newId,
+				},
 			});
 
 			if (!existing) {
@@ -164,7 +165,7 @@ async function startServer() {
 	app.get("/guest/session", async (req, res) => {
 		const token = res.locals.cookie["guest-token"];
 
-		let account: ({ id: string }) | null = null;
+		let account: { id: string } | null = null;
 
 		if (token) {
 			// check its valid
@@ -172,9 +173,9 @@ async function startServer() {
 				where: {
 					token,
 					expires_at: {
-						gte: new Date()
-					}
-				}
+						gte: new Date(),
+					},
+				},
 			});
 
 			account ??= null;
@@ -192,8 +193,8 @@ async function startServer() {
 				data: {
 					id,
 					token: newToken,
-					expires_at: expiryDate
-				}
+					expires_at: expiryDate,
+				},
 			});
 
 			// set cookie "guest-token" to the token
@@ -201,12 +202,12 @@ async function startServer() {
 				expires: expiryDate,
 
 				// TODO improve security here, this is a temporary solution as it's only for guests
-				httpOnly: false
+				httpOnly: false,
 			});
 		}
 
 		res.status(200).json({
-			id: account.id
+			id: account.id,
 		});
 	});
 
@@ -291,7 +292,9 @@ async function startServer() {
 			});
 		}
 
-		res.status(200).json(userModelToDto(convertDatabaseUserToUserModel(updatedUser)));
+		res
+			.status(200)
+			.json(userModelToDto(convertDatabaseUserToUserModel(updatedUser)));
 	});
 
 	// Start the server

@@ -6,13 +6,11 @@ import { cancelled, fork, take } from "typed-redux-saga";
 
 import { IncomingRegistry } from "@shoki/networking";
 
-import {
-	LobbyServerToClient,
-} from "@creature-chess/networking";
+import { LobbyServerToClient } from "@creature-chess/networking";
 
 import { LobbyCommands } from "./state";
 
-const readPacketsToActions = function*(
+const readPacketsToActions = function* (
 	registry: IncomingRegistry<LobbyServerToClient.PacketSet>
 ) {
 	let channel: EventChannel<Action> | null = null;
@@ -41,7 +39,10 @@ const readPacketsToActions = function*(
 	}
 };
 
-export const lobbyNetworking = function*(socket: Socket, payload: LobbyServerToClient.LobbyConnectionPacket) {
+export const lobbyNetworking = function* (
+	socket: Socket,
+	payload: LobbyServerToClient.LobbyConnectionPacket
+) {
 	yield put(LobbyCommands.connectToLobby(payload));
 
 	// todo fix typing

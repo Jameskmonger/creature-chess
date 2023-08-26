@@ -1,14 +1,15 @@
 import * as React from "react";
 
+import { createUseStyles } from "react-jss";
+
+import { HasId } from "@shoki/board";
+
 import {
 	BoardGrid,
 	ClickBoardTileEvent,
 	DropBoardItemEvent,
 } from "@shoki-web/board-react";
 import { useElementSize } from "@shoki-web/board-react/src/useElementSize";
-import { createUseStyles } from "react-jss";
-
-import { HasId } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
 

@@ -4,6 +4,7 @@ import { BoardState } from "@shoki/board";
 
 import { PlayerActions } from "@creature-chess/gamemode";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+
 import { GameBoardLocation } from "@cc-web/ui";
 
 import { clearSelectedPiece } from "../../ui";

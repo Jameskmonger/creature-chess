@@ -1,10 +1,8 @@
 import { Server } from "socket.io";
 
-import {
-	createDatabaseConnection,
-	DatabaseConnection,
-} from "@cc-server/data";
 import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
+
+import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";
 
 import { createManagementClient } from "./external/auth0";
 import { getBots } from "./external/bots";

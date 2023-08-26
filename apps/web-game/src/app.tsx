@@ -1,5 +1,9 @@
 import * as React from "react";
 
+import ReactModal from "react-modal";
+import { useDispatch, useSelector } from "react-redux";
+import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
+
 import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 import { useLocalPlayer } from "@cc-web/auth/context";
 import {
@@ -7,9 +11,6 @@ import {
 	LobbyPage,
 	useGlobalStyles,
 } from "@cc-web/ui";
-import ReactModal from "react-modal";
-import { useDispatch, useSelector } from "react-redux";
-import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
 import { Loading } from "./display/loading";
 import { GamePage } from "./game";

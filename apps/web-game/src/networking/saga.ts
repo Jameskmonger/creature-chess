@@ -15,15 +15,15 @@ import { getSocket } from "./socket";
 
 type ConnectionResult =
 	| {
-		type: "lobby";
-		payload: LobbyServerToClient.LobbyConnectionPacket;
-	}
+			type: "lobby";
+			payload: LobbyServerToClient.LobbyConnectionPacket;
+	  }
 	| {
-		type: "game";
-		payload: GameServerToClient.GameConnectionPacket;
-	};
+			type: "game";
+			payload: GameServerToClient.GameConnectionPacket;
+	  };
 
-const listenForConnection = function*(socket: Socket) {
+const listenForConnection = function* (socket: Socket) {
 	const channel = eventChannel<ConnectionResult>((emit) => {
 		const onLobbyConnected = (
 			payload: LobbyServerToClient.LobbyConnectionPacket
@@ -60,21 +60,19 @@ const listenForConnection = function*(socket: Socket) {
 			}
 			yield all([
 				call(gameNetworking, socket, connection.payload),
-				call(gameSaga, connection.payload)
+				call(gameSaga, connection.payload),
 			]);
 		}
 	}
 };
 
 type OpenConnectionAction = ReturnType<typeof openConnection>;
-export const openConnection = createAction<HandshakeRequest>(
-	"openConnection"
-);
+export const openConnection = createAction<HandshakeRequest>("openConnection");
 
-export const networkingSaga = function*() {
-	const {
-		payload: request,
-	} = yield* take<OpenConnectionAction>(openConnection.toString() as any);
+export const networkingSaga = function* () {
+	const { payload: request } = yield* take<OpenConnectionAction>(
+		openConnection.toString() as any
+	);
 
 	let socket: Socket;
 

@@ -32,7 +32,7 @@ export const onHandshakeSuccess = (
 						expires_at: {
 							gte: new Date(),
 						},
-					}
+					},
 				});
 
 				if (!guest) {
@@ -52,8 +52,8 @@ export const onHandshakeSuccess = (
 					nickname: `Guest ${guest.id}`,
 					profile: {
 						picture: 1,
-						title: null
-					}
+						title: null,
+					},
 				};
 
 				onReceive(guestSocket);
@@ -61,7 +61,11 @@ export const onHandshakeSuccess = (
 				return;
 			}
 
-			const user = await authenticate(authClient, database, request.data.accessToken);
+			const user = await authenticate(
+				authClient,
+				database,
+				request.data.accessToken
+			);
 
 			if (!user.registered) {
 				failHandshake(socket, { error: { type: "not_registered" } });

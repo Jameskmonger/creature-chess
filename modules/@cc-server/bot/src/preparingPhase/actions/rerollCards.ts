@@ -1,12 +1,13 @@
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
-import { BotPersonality } from "@cc-server/data";
 import {
 	PlayerActions,
 	PlayerState,
 	PlayerStateSelectors,
 } from "@creature-chess/gamemode";
 import { Constants } from "@creature-chess/models";
+
+import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
 

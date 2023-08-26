@@ -1,6 +1,5 @@
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
-import { BotPersonality } from "@cc-server/data";
 import {
 	PlayerState,
 	PlayerStateSelectors,
@@ -8,6 +7,8 @@ import {
 	getAllPieces,
 } from "@creature-chess/gamemode";
 import { Card, PieceModel } from "@creature-chess/models";
+
+import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
 import { PREFERRED_LOCATIONS } from "../../preferredLocations";

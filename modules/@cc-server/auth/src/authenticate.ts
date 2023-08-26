@@ -2,14 +2,13 @@ import { ManagementClient } from "auth0";
 
 import { DatabaseConnection } from "@cc-server/data";
 
-import {
-	convertDatabaseUserToUserModel,
-	UserModel,
-} from "./user";
 import { AUTH0_ENABLED } from "./auth0";
+import { convertDatabaseUserToUserModel, UserModel } from "./user";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const verifyDecodeJwt = AUTH0_ENABLED ? require("./verifyDecodeJwt").verifyDecodeJwt : null;
+const verifyDecodeJwt = AUTH0_ENABLED
+	? require("./verifyDecodeJwt").verifyDecodeJwt
+	: null;
 
 export const authenticate = async (
 	managementClient: ManagementClient,

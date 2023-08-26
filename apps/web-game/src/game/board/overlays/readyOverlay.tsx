@@ -1,5 +1,10 @@
 import * as React from "react";
 
+import { createUseStyles } from "react-jss";
+import { useSelector } from "react-redux";
+
+import { GamePhase } from "@creature-chess/models";
+
 import { useLocalPlayerId } from "@cc-web/auth/context";
 import { Label, StreakIndicator } from "@cc-web/ui";
 import {
@@ -11,10 +16,6 @@ import {
 	Half,
 } from "@cc-web/ui";
 import { Header2, Header4 } from "@cc-web/ui/text";
-import { createUseStyles } from "react-jss";
-import { useSelector } from "react-redux";
-
-import { GamePhase } from "@creature-chess/models";
 
 import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";

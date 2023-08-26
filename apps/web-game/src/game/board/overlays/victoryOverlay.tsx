@@ -1,9 +1,10 @@
 import * as React from "react";
 
+import { useSelector } from "react-redux";
+
 import { Layout } from "@cc-web/ui";
 import { DiscordIcon } from "@cc-web/ui/misc";
 import { Header2, Header4 } from "@cc-web/ui/text";
-import { useSelector } from "react-redux";
 
 import { AppState } from "../../../store";
 import { getPlayerById } from "../../module/playerList/components/selectors";

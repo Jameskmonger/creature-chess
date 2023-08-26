@@ -7,10 +7,11 @@ Takes in a `BoardState` of your choosing, renders the pieces, and exposes click/
 ## Usage
 
 ```tsx
-import { BoardGrid } from "@shoki-web/board-react";
 import { DragObjectWithType } from "react-dnd";
 
 import { BoardState } from "@shoki/board";
+
+import { BoardGrid } from "@shoki-web/board-react";
 
 type ChessPiece = {};
 

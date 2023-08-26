@@ -1,11 +1,12 @@
 import * as React from "react";
 
-import { Group, Layout } from "@cc-web/ui";
-import { DiscordIcon } from "@cc-web/ui/misc";
-import { Header2, Header4 } from "@cc-web/ui/text";
 import { useSelector } from "react-redux";
 
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
+
+import { Group, Layout } from "@cc-web/ui";
+import { DiscordIcon } from "@cc-web/ui/misc";
+import { Header2, Header4 } from "@cc-web/ui/text";
 
 import { AppState } from "../../../store";
 import { BoardOverlay } from "./boardOverlay";

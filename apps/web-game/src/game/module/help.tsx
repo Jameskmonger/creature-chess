@@ -1,10 +1,11 @@
 import * as React from "react";
 
-import { Footer, Group, Layout, TypeIndicator } from "@cc-web/ui";
-import { Header2, Header4 } from "@cc-web/ui/text";
 import { createUseStyles } from "react-jss";
 
 import { CreatureType } from "@creature-chess/models";
+
+import { Footer, Group, Layout, TypeIndicator } from "@cc-web/ui";
+import { Header2, Header4 } from "@cc-web/ui/text";
 
 const useStyles = createUseStyles({
 	pieceType: {

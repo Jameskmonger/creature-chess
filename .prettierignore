@@ -1,5 +1,6 @@
 .yarn/
 apps/**/public/
+dist/
 yarn.lock
 *.tfstate
 .auth0

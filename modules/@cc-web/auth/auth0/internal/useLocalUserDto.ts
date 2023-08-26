@@ -21,9 +21,7 @@ import { getCurrentUser } from "../../http/getCurrentUser";
 export function useLocalUserDTO() {
 	const { user: auth0User, getAccessTokenSilently } = useAuth0();
 
-	const [currentUser, setCurrentUser] = React.useState<UserDTO | null>(
-		null
-	);
+	const [currentUser, setCurrentUser] = React.useState<UserDTO | null>(null);
 	const [isFetching, setIsFetching] = React.useState(false);
 	const [error, setError] = React.useState<string | null>(null);
 

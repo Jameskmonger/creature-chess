@@ -1,8 +1,9 @@
 import * as React from "react";
 
+import * as ReactDOM from "react-dom";
+
 import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 import { LocalPlayerContextProvider } from "@cc-web/auth/context";
-import * as ReactDOM from "react-dom";
 
 import { App } from "./app";
 

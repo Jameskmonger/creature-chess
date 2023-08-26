@@ -56,7 +56,7 @@ export class Lobby {
 		} else {
 			const defaultProfile: PlayerProfile = {
 				picture: 1,
-				title: null
+				title: null,
 			};
 
 			const newMember = {

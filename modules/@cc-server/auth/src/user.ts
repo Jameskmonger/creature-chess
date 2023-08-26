@@ -1,5 +1,6 @@
-import { DatabaseUser } from "@cc-server/data";
 import { PlayerProfile } from "@creature-chess/models";
+
+import { DatabaseUser } from "@cc-server/data";
 
 export interface UserModel {
 	id: string;

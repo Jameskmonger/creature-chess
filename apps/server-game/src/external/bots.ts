@@ -1,5 +1,6 @@
-import { BotPersonality, DatabaseConnection } from "@cc-server/data";
 import { LobbyPlayer } from "@creature-chess/models";
+
+import { BotPersonality, DatabaseConnection } from "@cc-server/data";
 
 export const getBots = async (database: DatabaseConnection, count: number) => {
 	const output: { player: LobbyPlayer; personality: BotPersonality }[] = [];

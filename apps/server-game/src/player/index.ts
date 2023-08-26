@@ -22,7 +22,7 @@ type Parameters = {
 	getPlayers: () => PlayerListPlayer[];
 };
 
-export const playerNetworking = function*(
+export const playerNetworking = function* (
 	socket: Socket,
 	{ getRoundInfo, getPlayers }: Parameters
 ) {
@@ -38,7 +38,7 @@ export const playerNetworking = function*(
 
 	yield* setPacketRegistries(registries);
 
-	const teardown = function*() {
+	const teardown = function* () {
 		socket!.removeAllListeners();
 		socket!.disconnect();
 

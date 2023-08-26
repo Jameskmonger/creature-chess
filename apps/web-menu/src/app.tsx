@@ -1,8 +1,9 @@
 import * as React from "react";
 
+import ReactModal from "react-modal";
+
 import { useLocalPlayer } from "@cc-web/auth/context";
 import { useGlobalStyles } from "@cc-web/ui";
-import ReactModal from "react-modal";
 
 import { MenuHomePage } from "./pages/home";
 import { MenuLoginPage } from "./pages/login";

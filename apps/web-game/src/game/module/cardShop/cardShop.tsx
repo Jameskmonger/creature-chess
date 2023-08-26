@@ -1,10 +1,11 @@
 import * as React from "react";
 
-import { CardShop as CardShopModule } from "@cc-web/ui";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
 import { Card as CardModel } from "@creature-chess/models";
+
+import { CardShop as CardShopModule } from "@cc-web/ui";
 
 import { AppState } from "../../../store";
 

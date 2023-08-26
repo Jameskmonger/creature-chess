@@ -1,6 +1,5 @@
 import React from "react";
 
-import { GameBoard } from "@cc-web/ui";
 import { takeLatest, put, fork } from "@redux-saga/core/effects";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
@@ -9,6 +8,8 @@ import createSagaMiddleware from "redux-saga";
 
 import { BattleEvents, battleSaga } from "@creature-chess/battle";
 import { defaultGameOptions } from "@creature-chess/models";
+
+import { GameBoard } from "@cc-web/ui";
 
 import { BattleBoard } from "./BattleBoard";
 import { BattleControls } from "./controls/BattleControls";

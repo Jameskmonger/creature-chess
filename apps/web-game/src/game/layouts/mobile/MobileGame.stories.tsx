@@ -1,11 +1,12 @@
 import React from "react";
 
-import { LocalPlayerContextProvider } from "@cc-web/auth/context";
-import { useGlobalStyles } from "@cc-web/ui";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
 import { GamePhase } from "@creature-chess/models";
+
+import { LocalPlayerContextProvider } from "@cc-web/auth/context";
+import { useGlobalStyles } from "@cc-web/ui";
 
 import { ConnectionStatus } from "../../connection-status";
 import { Overlay } from "../../ui";
