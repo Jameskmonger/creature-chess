@@ -4,16 +4,22 @@ import { DatabaseConnection } from "@creature-chess/data";
 
 import {
 	convertDatabaseUserToUserModel,
-	UserAppMetadata,
 	UserModel,
 } from "./user";
-import { verifyDecodeJwt } from "./verifyDecodeJwt";
+
+import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const verifyDecodeJwt = AUTH0_ENABLED ? require("./verifyDecodeJwt").verifyDecodeJwt : null;
 
 export const authenticate = async (
-	managementClient: ManagementClient<UserAppMetadata>,
+	managementClient: ManagementClient,
 	database: DatabaseConnection,
 	token: string
 ): Promise<UserModel> => {
+	if (!verifyDecodeJwt) {
+		throw new Error("Attempted to use auth0 when it is not enabled");
+	}
+
 	const decoded = await verifyDecodeJwt(token);
 
 	if (decoded === null) {

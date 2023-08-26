@@ -2,10 +2,9 @@ import React from "react";
 
 import { useAuth0 } from "@auth0/auth0-react";
 
-import { SanitizedUser } from "@creature-chess/models";
+import { UserDTO } from "@creature-chess/models/dto/user";
 
-import { getCurrentUser } from "./getCurrentUser";
-import { Auth0User } from "./types";
+import { getCurrentUser } from "../../http/getCurrentUser";
 
 /**
  * Calls the current user endpoint and returns the user
@@ -19,10 +18,10 @@ import { Auth0User } from "./types";
  * - error: any error that occurred
  * - refresh: a function to refresh the user
  */
-export function useUser() {
-	const { user: auth0User, getAccessTokenSilently } = useAuth0<Auth0User>();
+export function useLocalUserDTO() {
+	const { user: auth0User, getAccessTokenSilently } = useAuth0();
 
-	const [currentUser, setCurrentUser] = React.useState<SanitizedUser | null>(
+	const [currentUser, setCurrentUser] = React.useState<UserDTO | null>(
 		null
 	);
 	const [isFetching, setIsFetching] = React.useState(false);

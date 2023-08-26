@@ -40,7 +40,7 @@ export class Lobby {
 		return this.options.maxPlayers - this.members.length;
 	}
 
-	public isInLobby(playerId: number) {
+	public isInLobby(playerId: string) {
 		return this.members.some((m) => m.player.id === playerId);
 	}
 
@@ -50,12 +50,20 @@ export class Lobby {
 		const existing = this.members.find((m) => m.player.id === socket.data.id);
 		if (existing) {
 			existing.socket?.disconnect(true);
+
+			existing.socket = socket;
+			existing.registry = registry;
 		} else {
+			const defaultProfile: PlayerProfile = {
+				picture: 1,
+				title: null
+			};
+
 			const newMember = {
 				player: {
 					id: socket.data.id,
 					name: socket.data.nickname!,
-					profile: socket.data.profile!,
+					profile: socket.data.profile ?? defaultProfile,
 				},
 				socket,
 				registry,
@@ -65,11 +73,13 @@ export class Lobby {
 			this.notifyOthers(newMember);
 		}
 
-		this.sendConnected(registry);
+		setTimeout(() => {
+			this.sendConnected(registry);
 
-		if (this.members.length === this.options.maxPlayers) {
-			this.start();
-		}
+			if (this.members.length === this.options.maxPlayers) {
+				this.start();
+			}
+		}, 500);
 	}
 
 	private start = () => {

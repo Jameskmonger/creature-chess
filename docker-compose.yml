@@ -24,6 +24,7 @@ services:
         - APP_DIR=web-game
     environment:
       - NODE_ENV
+      - AUTH0_ENABLED
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
       - API_INFO_URL

@@ -19,13 +19,49 @@ export const onHandshakeSuccess = (
 
 	logger.info("Listening for successful handshakes - inner A");
 
-	handshakeListener(deps, async (socket, { idToken }) => {
+	handshakeListener(deps, async (socket, request) => {
 		try {
 			logger.info("Authenticating new handshake", {
 				meta: { socketId: socket.id },
 			});
 
-			const user = await authenticate(authClient, database, idToken);
+			if (request.type === "guest") {
+				const guest = await database.prisma.guests.findFirst({
+					where: {
+						token: request.data.accessToken,
+						expires_at: {
+							gte: new Date(),
+						},
+					}
+				});
+
+				if (!guest) {
+					failHandshake(socket, { error: { type: "authentication" } });
+					return;
+				}
+
+				logger.info(`[socket ${socket.id}] Handshake successful for guest`);
+
+				successHandshake(socket);
+
+				const guestSocket = socket as AuthenticatedSocket;
+
+				guestSocket.data = {
+					type: "guest",
+					id: guest.id,
+					nickname: `Guest ${guest.id}`,
+					profile: {
+						picture: 1,
+						title: null
+					}
+				};
+
+				onReceive(guestSocket);
+
+				return;
+			}
+
+			const user = await authenticate(authClient, database, request.data.accessToken);
 
 			if (!user.registered) {
 				failHandshake(socket, { error: { type: "not_registered" } });
@@ -42,6 +78,7 @@ export const onHandshakeSuccess = (
 			const authenticatedSocket = socket as AuthenticatedSocket;
 
 			authenticatedSocket.data = {
+				type: "player",
 				id: user.id,
 				nickname: user.nickname,
 				profile: user.profile,

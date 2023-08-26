@@ -23,7 +23,6 @@ export { GamePhase } from "./src/game-phase";
 export { RoundInfoState } from "./src/roundInfoState";
 export { PlayerTitle, TITLES } from "./src/titles";
 export { PlayerProfile } from "./src/playerProfile";
-export { SanitizedUser } from "./src/user";
 
 export {
 	TileType,

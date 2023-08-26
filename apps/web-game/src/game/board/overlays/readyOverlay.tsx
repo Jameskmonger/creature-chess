@@ -3,7 +3,7 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
-import { usePlayerId } from "@creature-chess/auth-web";
+import { useLocalPlayerId } from "@creature-chess/auth-web/context";
 import { GamePhase } from "@creature-chess/models";
 import { Label, StreakIndicator } from "@creature-chess/ui";
 import {
@@ -56,7 +56,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 
 	const playerList = useSelector((state: AppState) => state.game.playerList);
 
-	const localId = usePlayerId();
+	const localId = useLocalPlayerId();
 	const localPlayer = playerList.find((p) => p.id === localId);
 
 	const opponent = useSelector((state: AppState) => {

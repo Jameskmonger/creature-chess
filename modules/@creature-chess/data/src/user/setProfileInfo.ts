@@ -3,7 +3,7 @@ import { Logger } from "winston";
 
 export const setProfileInfo =
 	(logger: Logger, client: PrismaClient) =>
-	async (id: number, nickname: string | null, picture: number | null) => {
+	async (id: string, nickname: string | null, picture: number | null) => {
 		try {
 			logger.info(`setProfileInfo for user ${id}`);
 			logger.info(`nickname: ${nickname}`);

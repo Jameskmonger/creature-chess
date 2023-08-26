@@ -1,4 +1,4 @@
-export interface SanitizedUser {
+export interface UserDTO {
 	id: string;
 	nickname: string | null;
 	stats: {

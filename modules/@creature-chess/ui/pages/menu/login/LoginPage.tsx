@@ -4,27 +4,39 @@ import { Footer } from "../../../src/Footer";
 import { useStyles } from "./LoginPage.styles";
 
 type LoginPageProps = {
-	isLoading: boolean;
-	onSignInClick: () => void;
+	isLoading?: boolean;
+	auth0Enabled?: boolean;
+	onSignInClick?: () => void;
+	onPlayAsGuestClick?: () => void;
 };
 
-const LoginPage: React.FunctionComponent<LoginPageProps> = ({
-	isLoading,
+const LoginPage = ({
+	auth0Enabled = false,
+	isLoading = false,
 	onSignInClick,
-}) => {
+	onPlayAsGuestClick,
+}: LoginPageProps) => {
 	const styles = useStyles();
 	const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
 
 	const currentlyLoading = isLoading || loadingSignIn;
 
 	const handleSignInClick = () => {
-		if (currentlyLoading) {
+		if (!auth0Enabled || currentlyLoading) {
 			return;
 		}
 
 		setLoadingSignIn(true);
 
-		onSignInClick();
+		if (onSignInClick) {
+			onSignInClick();
+		}
+	};
+
+	const handlePlayAsGuestClick = () => {
+		if (onPlayAsGuestClick) {
+			onPlayAsGuestClick();
+		}
 	};
 
 	if (currentlyLoading) {
@@ -39,12 +51,30 @@ const LoginPage: React.FunctionComponent<LoginPageProps> = ({
 
 			<div className={styles.groups}>
 				<div className="group">
-					<p>
-						Creature Chess is a multiplayer game, so you need an account to play
-					</p>
+					<p>Creature Chess is a multiplayer auto-chess battler</p>
 
-					<button onClick={handleSignInClick} className={styles.loginButton}>
-						Log in / Sign up
+					{auth0Enabled && (
+						<>
+							<button
+								onClick={handleSignInClick}
+								className={styles.loginButton}
+							>
+								Sign In
+							</button>
+							<button
+								onClick={handleSignInClick}
+								className={styles.loginButton}
+							>
+								Create Account
+							</button>
+						</>
+					)}
+
+					<button
+						onClick={handlePlayAsGuestClick}
+						className={styles.guestButton}
+					>
+						Play Now as Guest
 					</button>
 
 					<p>

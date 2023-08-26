@@ -3,18 +3,13 @@ import { Socket } from "socket.io-client";
 
 import { GameEvents } from "@creature-chess/gamemode";
 
-import {
-	gameConnectedEvent,
-	GameConnectedEvent,
-} from "../../networking/events";
 import { ConnectionStatus } from "../connection-status";
 import { setInGameCommand, updateConnectionStatus } from "../ui/actions";
 import { incomingGameServerToClient } from "./incoming";
 import { outgoingGameServerToClient } from "./outgoing";
+import { GameServerToClient } from "@creature-chess/networking";
 
-export const gameNetworking = function* (socket: Socket) {
-	yield take<GameConnectedEvent>(gameConnectedEvent.toString());
-
+export const gameNetworking = function*(socket: Socket, payload: GameServerToClient.GameConnectionPacket) {
 	yield put(setInGameCommand());
 	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 
@@ -23,7 +18,7 @@ export const gameNetworking = function* (socket: Socket) {
 			call(outgoingGameServerToClient, socket),
 			call(incomingGameServerToClient, socket),
 		]),
-		call(function* () {
+		call(function*() {
 			yield take(GameEvents.gameFinishEvent.toString());
 		}),
 	]);
