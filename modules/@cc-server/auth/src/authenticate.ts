@@ -6,8 +6,8 @@ import {
 	convertDatabaseUserToUserModel,
 	UserModel,
 } from "./user";
+import { AUTH0_ENABLED } from "./auth0";
 
-import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const verifyDecodeJwt = AUTH0_ENABLED ? require("./verifyDecodeJwt").verifyDecodeJwt : null;
 
