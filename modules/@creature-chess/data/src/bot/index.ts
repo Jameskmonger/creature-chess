@@ -9,8 +9,8 @@ import { getLeastPlayedBots } from "./getLeastPlayedBots";
 export type BotDatabaseFunctions = {
 	getLeastPlayedBots: (count: number) => Promise<DatabaseBot[] | null>;
 
-	addWin: (id: number) => Promise<DatabaseBot | null>;
-	addGamePlayed: (id: number) => Promise<DatabaseBot | null>;
+	addWin: (id: string) => Promise<DatabaseBot | null>;
+	addGamePlayed: (id: string) => Promise<DatabaseBot | null>;
 };
 
 export const botDatabase = (

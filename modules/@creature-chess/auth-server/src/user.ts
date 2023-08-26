@@ -2,7 +2,7 @@ import { DatabaseUser } from "@creature-chess/data";
 import { PlayerProfile } from "@creature-chess/models";
 
 export interface UserModel {
-	id: number;
+	id: string;
 	authId: string;
 	stats: { gamesPlayed: number; wins: number };
 	nickname: string | null;

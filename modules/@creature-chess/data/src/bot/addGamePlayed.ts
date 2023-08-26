@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Logger } from "winston";
 
 export const addGamePlayed =
-	(logger: Logger, client: PrismaClient) => async (id: number) => {
+	(logger: Logger, client: PrismaClient) => async (id: string) => {
 		try {
 			return await client.bots.update({
 				where: {

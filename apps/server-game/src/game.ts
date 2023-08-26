@@ -62,8 +62,8 @@ export class Game {
 		this.gamemode.start(entities);
 	}
 
-	public canJoinGame(playerId: number) {
-		const existing = this.gamemode.getPlayerById(playerId.toString());
+	public canJoinGame(playerId: string) {
+		const existing = this.gamemode.getPlayerById(playerId);
 
 		if (!existing) {
 			return false;

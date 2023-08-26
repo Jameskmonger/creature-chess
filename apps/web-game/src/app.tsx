@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
 import { AUTH0_ENABLED } from "@creature-chess/auth-web/auth0/config";
+import { useLocalPlayer } from "@creature-chess/auth-web/context";
 import {
 	LobbyPageContextProvider,
 	LobbyPage,
@@ -20,12 +21,6 @@ import { AppState } from "./store";
 const useAuth0 = AUTH0_ENABLED ? require("@auth0/auth0-react").useAuth0 : null;
 
 ReactModal.setAppElement("#approot");
-
-function useIsGuestRequest() {
-	const query = new URLSearchParams(window.location.search);
-
-	return query.get("guest") === "true";
-}
 
 function useOpenAuth0Connection() {
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -45,29 +40,77 @@ function useOpenAuth0Connection() {
 	}, [isAuthenticated, getAccessTokenSilently, dispatch]);
 }
 
+/**
+ * Hook to read a cookie value
+ *
+ * TODO move this
+ */
+function useCookie(cookieName: string) {
+	const [cookie, setCookie] = React.useState(() => getCookieValue(cookieName));
+
+	React.useEffect(() => {
+		function handleCookieChange() {
+			setCookie(getCookieValue(cookieName));
+		}
+
+		window.addEventListener("cookieChange", handleCookieChange);
+		return () => {
+			window.removeEventListener("cookieChange", handleCookieChange);
+		};
+	}, [cookieName]);
+
+	return cookie;
+}
+
+function getCookieValue(name: string) {
+	const value = "; " + document.cookie;
+	const parts = value.split("; " + name + "=");
+	if (parts.length === 2) {
+		return parts.pop()!.split(";").shift();
+	}
+
+	return null;
+}
+
 function useOpenGuestConnection() {
 	const dispatch = useDispatch();
 
+	// read cookie "guest-token"
+	const cookie = useCookie("guest-token");
+
 	React.useEffect(() => {
+		if (!cookie) {
+			console.error("tries to open guest connection without cookie");
+			return;
+		}
+
 		const open = async () => {
 			try {
-				dispatch(openConnection({ type: "guest" }));
+				dispatch(
+					openConnection({ type: "guest", data: { accessToken: cookie } })
+				);
 			} catch (e) {
 				console.log({ error: e });
 			}
 		};
 
 		open();
-	}, [dispatch]);
+	}, [cookie, dispatch]);
 }
 
 function useOpenConnection() {
-	if (useIsGuestRequest()) {
+	const localPlayer = useLocalPlayer();
+
+	if (!localPlayer) {
+		return <span>Loading</span>;
+	}
+
+	if (localPlayer.type === "guest") {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		return useOpenGuestConnection();
 	}
 
-	if (useAuth0) {
+	if (localPlayer.type === "user" && useAuth0) {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		return useOpenAuth0Connection();
 	}

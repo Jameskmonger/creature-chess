@@ -40,7 +40,7 @@ export class Lobby {
 		return this.options.maxPlayers - this.members.length;
 	}
 
-	public isInLobby(playerId: number) {
+	public isInLobby(playerId: string) {
 		return this.members.some((m) => m.player.id === playerId);
 	}
 
@@ -51,11 +51,16 @@ export class Lobby {
 		if (existing) {
 			existing.socket?.disconnect(true);
 		} else {
+			const defaultProfile: PlayerProfile = {
+				picture: 1,
+				title: null
+			};
+
 			const newMember = {
 				player: {
 					id: socket.data.id,
 					name: socket.data.nickname!,
-					profile: socket.data.profile!,
+					profile: socket.data.profile ?? defaultProfile,
 				},
 				socket,
 				registry,

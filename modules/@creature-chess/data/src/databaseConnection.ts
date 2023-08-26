@@ -6,6 +6,7 @@ import { setup } from "./setup";
 import { userDatabase, UserDatabaseFunctions } from "./user";
 
 export type DatabaseConnection = {
+	prisma: PrismaClient;
 	user: UserDatabaseFunctions;
 	bot: BotDatabaseFunctions;
 };
@@ -19,6 +20,7 @@ export const createDatabaseConnection = async (
 		await setup(logger, prisma);
 
 		return {
+			prisma,
 			user: userDatabase(logger, prisma),
 			bot: botDatabase(logger, prisma),
 		};

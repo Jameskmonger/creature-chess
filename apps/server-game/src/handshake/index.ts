@@ -26,6 +26,20 @@ export const onHandshakeSuccess = (
 			});
 
 			if (request.type === "guest") {
+				const guest = await database.prisma.guests.findFirst({
+					where: {
+						token: request.data.accessToken,
+						expires_at: {
+							gte: new Date(),
+						},
+					}
+				});
+
+				if (!guest) {
+					failHandshake(socket, { error: { type: "authentication" } });
+					return;
+				}
+
 				logger.info(`[socket ${socket.id}] Handshake successful for guest`);
 
 				successHandshake(socket);
@@ -33,12 +47,13 @@ export const onHandshakeSuccess = (
 				const guestSocket = socket as AuthenticatedSocket;
 
 				guestSocket.data = {
-					id: -1,
-					nickname: "Guest",
+					type: "guest",
+					id: guest.id,
+					nickname: `Guest ${guest.id}`,
 					profile: {
-						picture: 17,
+						picture: 1,
 						title: null
-					},
+					}
 				};
 
 				onReceive(guestSocket);
@@ -63,6 +78,7 @@ export const onHandshakeSuccess = (
 			const authenticatedSocket = socket as AuthenticatedSocket;
 
 			authenticatedSocket.data = {
+				type: "player",
 				id: user.id,
 				nickname: user.nickname,
 				profile: user.profile,
