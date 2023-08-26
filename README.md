@@ -34,6 +34,7 @@ If you change the server, you can run `make rebuild` to rebuild and restart the 
 ### Documentation
 
 - [Auth0 Setup](docs/auth0.md)
+- [Monorepo / Modules](docs/monorepo.md)
 
 ## Creature images
 
