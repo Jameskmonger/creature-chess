@@ -6,7 +6,12 @@ import { createInitialBoardState } from "@shoki/board";
 
 import { DndProvider } from "@shoki-web/board-react";
 
-import { Builders, GRID_SIZE, PieceModel } from "@creature-chess/models";
+import {
+	BENCH_SLOT_COUNT,
+	Builders,
+	GRID_SIZE,
+	PieceModel,
+} from "@creature-chess/models";
 
 import { Piece, PieceContextProvider } from "../piece";
 import { GameBoard } from "./GameBoard";
@@ -34,7 +39,7 @@ const Template: Story<any> = (args) => {
 			height: args.boardHeight,
 		}),
 		bench: createInitialBoardState<PieceModel>("bench", {
-			width: GRID_SIZE.width,
+			width: BENCH_SLOT_COUNT,
 			height: 1,
 		}),
 	};
@@ -45,8 +50,11 @@ const Template: Story<any> = (args) => {
 		[piece.id]: piece,
 	};
 
+	const pieceX = GRID_SIZE.width - 1;
+	const pieceY = args.boardHeight - 1;
+
 	context.board.piecePositions = {
-		"4,4": piece.id,
+		[`${pieceX},${pieceY}`]: piece.id,
 	};
 
 	return (

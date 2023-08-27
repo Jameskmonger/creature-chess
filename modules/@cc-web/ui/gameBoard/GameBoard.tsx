@@ -9,10 +9,10 @@ import {
 	ClickBoardTileEvent,
 	DropBoardItemEvent,
 } from "@shoki-web/board-react";
-import { useElementSize } from "@shoki-web/board-react/src/useElementSize";
 
 import { PieceModel } from "@creature-chess/models";
 
+import { DynamicAspectRatioComponent } from "./DynamicAspectRatioComponent";
 import { useGameBoard } from "./GameBoardContext";
 
 export type GameBoardLocation =
@@ -138,10 +138,7 @@ function useRenderers({
 	return { boardPieceRenderer, benchPieceRenderer };
 }
 
-const useStyles = createUseStyles<
-	string,
-	{ isPortrait: boolean; boardWidth: number }
->({
+const useStyles = createUseStyles<string>({
 	gameBoard: {
 		"height": "100%",
 		"width": "100%",
@@ -157,24 +154,18 @@ const useStyles = createUseStyles<
 			background: "#a7f070",
 		},
 	},
-	board: ({ isPortrait }) => ({
-		...(isPortrait ? {} : { height: "78%" }),
-
+	board: {
 		display: "flex",
 		justifyContent: "center",
 
 		marginBottom: "1em",
-	}),
-	bench: ({ isPortrait, boardWidth }) => ({
-		...(isPortrait ? {} : { height: "14%" }),
-		"width": `${boardWidth}px`,
-		"margin": "0 auto",
-
+	},
+	bench: {
 		"& .tile": {
 			background: "#9e9e9e !important",
 			boxShadow: "inset 0 0 2px #404040",
 		},
-	}),
+	},
 });
 
 export function GameBoard({
@@ -194,34 +185,39 @@ export function GameBoard({
 		onDropPiece,
 	});
 
-	const { ref, isPortrait, size } = useElementSize();
+	const styles = useStyles();
 
-	// listen to the board width and set the bench to be the same width
-	const { ref: boardRef, size: boardSize } = useElementSize();
+	/**
+	 * How much space, in tiles, to leave between the board and the bench.
+	 */
+	const SPACER_TILE_HEIGHT = 0.2;
 
-	const styles = useStyles({ isPortrait, boardWidth: boardSize.width });
+	const aspectRatio =
+		board.size.width /
+		(board.size.height + bench.size.height + SPACER_TILE_HEIGHT);
 
 	return (
-		<div className={styles.gameBoard} ref={ref}>
-			<div className={styles.board}>
-				<BoardGrid
-					state={board}
-					onDropItem={onDropBoard}
-					onClickTile={onClickBoard}
-					renderItem={boardPieceRenderer}
-					scaleMode={isPortrait ? "width" : "height"}
-					ref={boardRef}
-				/>
-			</div>
+		<div className={styles.gameBoard}>
+			<DynamicAspectRatioComponent aspectRatio={aspectRatio}>
+				<div className={styles.board}>
+					<BoardGrid
+						state={board}
+						onDropItem={onDropBoard}
+						onClickTile={onClickBoard}
+						renderItem={boardPieceRenderer}
+						scaleMode={"width"}
+					/>
+				</div>
 
-			<div className={styles.bench}>
-				<BoardGrid
-					state={bench}
-					onDropItem={onDropBench}
-					onClickTile={onClickBench}
-					renderItem={benchPieceRenderer}
-				/>
-			</div>
+				<div className={styles.bench}>
+					<BoardGrid
+						state={bench}
+						onDropItem={onDropBench}
+						onClickTile={onClickBench}
+						renderItem={benchPieceRenderer}
+					/>
+				</div>
+			</DynamicAspectRatioComponent>
 		</div>
 	);
 }
