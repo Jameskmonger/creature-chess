@@ -101,7 +101,7 @@ export class Lobby {
 				continue;
 			}
 
-			member.registry?.send("lobbyUpdate", {
+			other.registry?.send("lobbyUpdate", {
 				players: this.getLobbyPlayers(),
 			});
 		}
