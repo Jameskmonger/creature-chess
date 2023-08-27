@@ -50,8 +50,11 @@ const Template: Story<any> = (args) => {
 		[piece.id]: piece,
 	};
 
+	const pieceX = GRID_SIZE.width - 1;
+	const pieceY = args.boardHeight - 1;
+
 	context.board.piecePositions = {
-		"4,4": piece.id,
+		[`${pieceX},${pieceY}`]: piece.id,
 	};
 
 	return (
