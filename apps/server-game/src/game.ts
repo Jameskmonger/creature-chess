@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 
 import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
 import { LobbyPlayer, PlayerStatus } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { botLogicSaga } from "@cc-server/bot";
 import { BotPersonality } from "@cc-server/data";
@@ -47,7 +48,7 @@ export class Game {
 		{ onFinish }: GameOptions
 	) {
 		const gameId = uuid();
-		this.gamemode = new Gamemode(gameId, logger);
+		this.gamemode = new Gamemode(gameId, logger, DEFAULT_GAME_OPTIONS);
 
 		for (const player of players) {
 			this.registerPlayer(player);

@@ -4,7 +4,7 @@ import { Store } from "redux";
 import { SagaMiddleware } from "redux-saga";
 import { Logger } from "winston";
 
-import { PlayerStatus, GameOptions, getOptions } from "@creature-chess/models";
+import { PlayerStatus } from "@creature-chess/models";
 
 import { PlayerEntity } from "../entities";
 import {
@@ -23,6 +23,7 @@ import { PlayerList } from "./playerList";
 import { sendPublicEventsSaga } from "./publicEvents";
 import { gameSaga, GameSagaContext } from "./sagas";
 import { createGameStore, GameState } from "./store";
+import { GameOptions } from "@creature-chess/models/config";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -41,9 +42,9 @@ export class Gamemode {
 	public constructor(
 		public readonly id: string,
 		private logger: Logger,
-		options?: Partial<GameOptions>
+		options: GameOptions
 	) {
-		this.options = getOptions(options);
+		this.options = options;
 
 		this.deck = new CardDeck(this.logger);
 
@@ -119,7 +120,7 @@ export class Gamemode {
 			(this.events as unknown as null) = null;
 		};
 
-		return function* () {
+		return function*() {
 			const event: GameFinishEvent = yield take(gameFinishEvent.toString());
 
 			broadcast(event);

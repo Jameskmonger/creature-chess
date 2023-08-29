@@ -29,8 +29,8 @@ import {
 	BattleCommands,
 } from "@creature-chess/battle";
 import { battleTurnEvent } from "@creature-chess/battle/src/events";
-import { PieceModel, GameOptions } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS, GameOptions } from "@creature-chess/models/config";
 
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";

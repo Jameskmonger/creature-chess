@@ -2,7 +2,7 @@ import delay from "delay";
 import pDefer from "p-defer";
 import { call, take, put, getContext } from "typed-redux-saga";
 
-import { GameOptions, GamePhase } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 
 import {
 	PlayerFinishMatchEvent,
@@ -12,19 +12,20 @@ import { getMatches } from "../../../features/match/selectors";
 import { Match } from "../../match";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
+import { GameOptions } from "@creature-chess/models/config";
 
-const waitForFinishMatchSaga = function* () {
+const waitForFinishMatchSaga = function*() {
 	yield* take<PlayerFinishMatchEvent>(playerFinishMatchEvent.toString());
 };
 
-export const runPlayingPhase = function* () {
+export const runPlayingPhase = function*() {
 	const options = yield* getContext<GameOptions>("options");
 	const players = yield* getContext<GameSagaContextPlayers>("players");
 
 	const battleTimeoutDeferred = pDefer<void>();
 
 	const phase = GamePhase.PLAYING;
-	delay(options.phaseLengths[GamePhase.PLAYING] * 1000).then(() =>
+	delay(options.game.phaseLengths[GamePhase.PLAYING] * 1000).then(() =>
 		battleTimeoutDeferred.resolve()
 	);
 

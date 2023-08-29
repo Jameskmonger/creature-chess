@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { useSelector } from "react-redux";
 
-import { GamePhase, Constants } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { Countdown } from "@cc-web/ui";
 
@@ -13,7 +14,7 @@ const renderPhaseInfoCountdown = (secondsRemaining: number) => (
 	<span>({secondsRemaining})</span>
 );
 
-const PhaseInfo: React.FunctionComponent = () => {
+const PhaseInfo = () => {
 	const phase = useSelector<AppState, GamePhase | null>(
 		(state) => state.game.roundInfo.phase
 	);
@@ -32,7 +33,8 @@ const PhaseInfo: React.FunctionComponent = () => {
 		return null;
 	}
 
-	const phaseEndTime = Constants.PHASE_LENGTHS[phase] + phaseStartedAtSeconds;
+	const phaseEndTime =
+		DEFAULT_GAME_OPTIONS.game.phaseLengths[phase] + phaseStartedAtSeconds;
 
 	return (
 		<InfoChip>

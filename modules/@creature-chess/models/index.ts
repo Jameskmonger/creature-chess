@@ -43,11 +43,6 @@ export {
 } from "./src/creatureDefinition";
 export { CreatureType } from "./src/creatureType";
 
-export {
-	getOptions,
-	GameOptions,
-	defaultOptions as defaultGameOptions,
-} from "./src/options";
 export { getXpToNextLevel } from "./src/getXpToNextLevel";
 
 export { QuickChatOption, QuickChatValue } from "./src/quickChat";

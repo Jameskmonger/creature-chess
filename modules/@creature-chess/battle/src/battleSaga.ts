@@ -2,7 +2,8 @@ import { takeLatest, select, put, call, all } from "@redux-saga/core/effects";
 
 import { BoardState, BoardSlice } from "@shoki/board";
 
-import { PieceModel, GameOptions } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
+import { GameOptions } from "@creature-chess/models/config";
 
 import {
 	pauseBattleCommand,
@@ -17,7 +18,7 @@ import { pieceInfoStore } from "./state/store";
 import { duration } from "./utils/duration";
 import { isATeamDefeated } from "./utils/isATeamDefeated";
 
-const runBattle = function* (
+const runBattle = function*(
 	controls: { paused: false },
 	initialBoard: BoardState<PieceModel>,
 	boardSlice: BoardSlice<PieceModel>,
@@ -50,7 +51,7 @@ const runBattle = function* (
 	yield put(exposeStoreEvent({ stores: { combat: combatStore } }));
 
 	while (true) {
-		const shouldStop = turnCount >= options.turnCount || isATeamDefeated(board);
+		const shouldStop = turnCount >= options.battle.turnCount || isATeamDefeated(board);
 
 		if (shouldStop) {
 			yield duration(1000).remaining();
@@ -63,7 +64,7 @@ const runBattle = function* (
 			yield duration(1000).remaining();
 		}
 
-		const turnTimer = duration(options.turnDuration);
+		const turnTimer = duration(options.battle.turnDuration);
 
 		board = simulateTurn(++turnCount, board, boardSlice, { combatStore });
 		yield put(
@@ -77,23 +78,23 @@ const runBattle = function* (
 	}
 };
 
-export const battleSaga = function* (
+export const battleSaga = function*(
 	boardSelector: <TState>(state: TState) => BoardState<PieceModel>,
 	gameOptions: GameOptions,
 	boardSlice: BoardSlice<PieceModel>
 ) {
 	yield takeLatest<StartBattleCommand>(
 		startBattleCommand,
-		function* ({ payload: { turn } }) {
+		function*({ payload: { turn } }) {
 			const board: BoardState<PieceModel> = yield select(boardSelector);
 
 			const controls = { paused: false };
 
 			yield all([
-				takeLatest(pauseBattleCommand, function* () {
+				takeLatest(pauseBattleCommand, function*() {
 					controls.paused = true;
 				}),
-				takeLatest(resumeBattleCommand, function* () {
+				takeLatest(resumeBattleCommand, function*() {
 					controls.paused = false;
 				}),
 				call(

@@ -6,32 +6,33 @@ import {
 	battleSaga,
 } from "@creature-chess/battle";
 import { GameEvents } from "@creature-chess/gamemode";
-import { defaultGameOptions, GamePhase } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 
 import { AppState } from "../../store";
 import { getPlayerSlices } from "../../store/sagaContext";
 import { setMatchBoard } from "../module/match";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
-export const clientBattleSaga = function* () {
+export const clientBattleSaga = function*() {
 	const { board } = yield* getPlayerSlices();
 
 	yield fork(
 		battleSaga as any,
 		(state: AppState) => state.game.match?.board!,
-		defaultGameOptions,
+		DEFAULT_GAME_OPTIONS,
 		board
 	);
 
 	yield takeLatest<BattleEvents.BattleTurnEvent>(
 		BattleEvents.battleTurnEvent,
-		function* ({ payload: { board: newBoard } }: BattleEvents.BattleTurnEvent) {
+		function*({ payload: { board: newBoard } }: BattleEvents.BattleTurnEvent) {
 			yield put(setMatchBoard(newBoard));
 		}
 	);
 
 	yield takeLatest<GameEvents.GamePhaseStartedEvent>(
 		GameEvents.gamePhaseStartedEvent.toString(),
-		function* ({ payload: { phase } }) {
+		function*({ payload: { phase } }) {
 			if (phase === GamePhase.PLAYING) {
 				yield put(BattleCommands.startBattleCommand({}));
 			}

@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 
 import { BattleEvents, battleSaga } from "@creature-chess/battle";
-import { defaultGameOptions } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { GameBoard } from "@cc-web/ui";
 
@@ -55,7 +55,7 @@ const makeStore = () => {
 		yield fork(
 			battleSaga as any,
 			(state: BattleTesterState) => state.board,
-			defaultGameOptions,
+			DEFAULT_GAME_OPTIONS,
 			board
 		);
 
