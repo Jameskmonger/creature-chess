@@ -4,12 +4,13 @@ import createSagaMiddleware from "redux-saga";
 
 import { createBoardSlice } from "@shoki/board";
 
-import { BENCH_SLOT_COUNT, PieceModel } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 
 import { createReducers } from "./reducers";
 import { rootSaga } from "./saga";
 import { SagaContext } from "./sagaContext";
 import { AppState } from "./state";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 const composeEnhancers = composeWithDevTools({
 	trace: true,
@@ -18,11 +19,11 @@ const composeEnhancers = composeWithDevTools({
 
 export const createAppStore = () => {
 	const boardSlice = createBoardSlice<PieceModel>("local-board", {
-		width: 7,
-		height: 3,
+		width: DEFAULT_GAME_OPTIONS.boardSize.width,
+		height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 	});
 	const benchSlice = createBoardSlice<PieceModel>("local-bench", {
-		width: BENCH_SLOT_COUNT,
+		width: DEFAULT_GAME_OPTIONS.benchSize,
 		height: 1,
 	});
 

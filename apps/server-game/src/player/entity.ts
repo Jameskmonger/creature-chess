@@ -4,10 +4,10 @@ import { Gamemode, playerEntity } from "@creature-chess/gamemode";
 import {
 	PlayerProfile,
 	PieceModel,
-	BENCH_SLOT_COUNT,
 } from "@creature-chess/models";
 
 import { logger } from "../log";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 export const createPlayerEntity = (
 	gamemode: Gamemode,
@@ -17,11 +17,11 @@ export const createPlayerEntity = (
 ) => {
 	const boardSlices = {
 		boardSlice: createBoardSlice<PieceModel>(`player-${playerId}-board`, {
-			width: 7,
-			height: 3,
+			width: DEFAULT_GAME_OPTIONS.boardSize.width,
+			height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 		}),
 		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, {
-			width: BENCH_SLOT_COUNT,
+			width: DEFAULT_GAME_OPTIONS.benchSize,
 			height: 1,
 		}),
 	};

@@ -7,13 +7,6 @@ if (!APP_BASE_URL) {
 	throw new Error("No APP_BASE_URL set");
 }
 
-export const GRID_SIZE = {
-	width: 7,
-	height: 6, // THIS MUST BE AN EVEN NUMBER
-};
-
-export const BENCH_SLOT_COUNT = 9;
-
 export const PHASE_LENGTHS = {
 	[GamePhase.PREPARING]: 40,
 	[GamePhase.READY]: 3,

@@ -6,7 +6,8 @@ import { BoardSelectors } from "@shoki/board";
 
 import { DndProvider } from "@shoki-web/board-react";
 
-import { BENCH_SLOT_COUNT, PieceModel } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import {
 	GameBoardContextProvider,
@@ -40,7 +41,7 @@ export function BattleBoard() {
 		bench: {
 			id: "",
 			locked: false,
-			size: { width: BENCH_SLOT_COUNT, height: 1 },
+			size: { width: DEFAULT_GAME_OPTIONS.benchSize, height: 1 },
 			pieces: {},
 			piecePositions: {},
 			pieceLimit: 0,

@@ -5,7 +5,8 @@ import { BoardState, createBoardSlice } from "@shoki/board";
 
 import { PieceCombatState, PieceInfoStore } from "@creature-chess/battle";
 import { getAllDefinitions } from "@creature-chess/gamemode";
-import { GRID_SIZE, PieceModel } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 export type BattleTesterState = {
 	currentTurn: number;
@@ -38,6 +39,6 @@ export const controlSlice = createSlice({
 	},
 });
 
-export const board = createBoardSlice<PieceModel>("battle-tester", GRID_SIZE);
+export const board = createBoardSlice<PieceModel>("battle-tester", DEFAULT_GAME_OPTIONS.boardSize);
 
 export const definitions = getAllDefinitions();

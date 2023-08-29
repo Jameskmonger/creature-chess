@@ -6,12 +6,8 @@ import { createInitialBoardState } from "@shoki/board";
 
 import { DndProvider } from "@shoki-web/board-react";
 
-import {
-	BENCH_SLOT_COUNT,
-	Builders,
-	GRID_SIZE,
-	PieceModel,
-} from "@creature-chess/models";
+import { Builders, PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { Piece, PieceContextProvider } from "../piece";
 import { GameBoard } from "./GameBoard";
@@ -35,11 +31,11 @@ const renderPiece = (piece: PieceModel) => (
 const Template: Story<any> = (args) => {
 	const context = {
 		board: createInitialBoardState<PieceModel>("board", {
-			width: GRID_SIZE.width,
+			width: DEFAULT_GAME_OPTIONS.boardSize.width,
 			height: args.boardHeight,
 		}),
 		bench: createInitialBoardState<PieceModel>("bench", {
-			width: BENCH_SLOT_COUNT,
+			width: DEFAULT_GAME_OPTIONS.benchSize,
 			height: 1,
 		}),
 	};
@@ -50,7 +46,7 @@ const Template: Story<any> = (args) => {
 		[piece.id]: piece,
 	};
 
-	const pieceX = GRID_SIZE.width - 1;
+	const pieceX = DEFAULT_GAME_OPTIONS.boardSize.width - 1;
 	const pieceY = args.boardHeight - 1;
 
 	context.board.piecePositions = {
@@ -83,40 +79,40 @@ export const Portrait_HalfBoard = Template.bind({});
 Portrait_HalfBoard.args = {
 	width: "300px",
 	height: "500px",
-	boardHeight: GRID_SIZE.height / 2,
+	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 };
 
 export const Portrait_FullBoard = Template.bind({});
 Portrait_FullBoard.args = {
 	width: "300px",
 	height: "500px",
-	boardHeight: GRID_SIZE.height,
+	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height,
 };
 
 export const Landscape_HalfBoard = Template.bind({});
 Landscape_HalfBoard.args = {
 	width: "500px",
 	height: "300px",
-	boardHeight: GRID_SIZE.height / 2,
+	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 };
 
 export const Landscape_FullBoard = Template.bind({});
 Landscape_FullBoard.args = {
 	width: "500px",
 	height: "300px",
-	boardHeight: GRID_SIZE.height,
+	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height,
 };
 
 export const Square_HalfBoard = Template.bind({});
 Square_HalfBoard.args = {
 	width: "400px",
 	height: "400px",
-	boardHeight: GRID_SIZE.height / 2,
+	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 };
 
 export const Square_FullBoard = Template.bind({});
 Square_FullBoard.args = {
 	width: "400px",
 	height: "400px",
-	boardHeight: GRID_SIZE.height,
+	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height,
 };

@@ -1,4 +1,5 @@
-import { Builders, GRID_SIZE } from "@creature-chess/models";
+import { Builders } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { definitions } from "./state";
 
@@ -35,5 +36,5 @@ export const initialBoardPieces = {
 		["3,3"]: "102",
 		["4,3"]: "103",
 	},
-	size: GRID_SIZE,
+	size: DEFAULT_GAME_OPTIONS.boardSize,
 };
