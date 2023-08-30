@@ -1,4 +1,3 @@
-import { shuffle } from "lodash";
 import { v4 as uuid } from "uuid";
 import { Logger } from "winston";
 
@@ -8,8 +7,8 @@ import {
 	CreatureDefinition,
 	Card,
 	PieceModel,
-	PIECES_TO_EVOLVE,
 } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { getAllDefinitions, getDefinitionById } from "../definitions";
 
@@ -95,7 +94,7 @@ export class CardDeck {
 			return;
 		}
 
-		const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
+		const cardCount = (piece.stage + 1) * DEFAULT_GAME_OPTIONS.game.piecesToEvolve;
 
 		for (let i = 0; i < cardCount; i++) {
 			this.addDefinition(definition);

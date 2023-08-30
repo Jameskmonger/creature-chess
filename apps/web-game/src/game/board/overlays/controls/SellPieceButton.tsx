@@ -5,11 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { BoardSelectors } from "@shoki/board";
 
 import { PlayerActions } from "@creature-chess/gamemode";
-import {
-	GamePhase,
-	PieceModel,
-	PIECES_FOR_STAGE,
-} from "@creature-chess/models";
+import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
+import { GamePhase, PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { AppState } from "../../../../store";
 import { useStyles } from "./styles";
@@ -47,7 +45,10 @@ export function SellPieceButton() {
 		return null;
 	}
 
-	const piecesUsed = PIECES_FOR_STAGE[selectedPiece.stage];
+	const piecesUsed = getPiecesForStage(
+		selectedPiece.stage,
+		DEFAULT_GAME_OPTIONS.game.piecesToEvolve
+	);
 	const pieceCost = selectedPiece.definition.cost;
 
 	return (

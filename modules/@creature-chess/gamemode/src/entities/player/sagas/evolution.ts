@@ -3,7 +3,8 @@ import { select } from "typed-redux-saga";
 
 import { BoardSelectors } from "@shoki/board";
 
-import { PieceModel, PIECES_TO_EVOLVE } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { getDefinitionById } from "../../../definitions";
 import * as pieceSelectors from "../../../player/pieceSelectors";
@@ -21,7 +22,7 @@ const pieceCanEvolve = (piece: PieceModel) => {
 	return piece.stage < definition.stages.length - 1;
 };
 
-export const evolutionSaga = function* () {
+export const evolutionSaga = function*() {
 	const {
 		boardSlices: { boardSlice, benchSlice },
 	} = yield* getPlayerEntityDependencies();
@@ -36,7 +37,7 @@ export const evolutionSaga = function* () {
 			boardSlice.commands.addBoardPieceCommand,
 			benchSlice.commands.addBoardPieceCommand,
 		],
-		function* ({ payload: { piece } }) {
+		function*({ payload: { piece } }) {
 			if (!pieceCanEvolve(piece)) {
 				return;
 			}
@@ -71,7 +72,7 @@ export const evolutionSaga = function* () {
 			const totalInstances =
 				matchingBoardPieces.length + matchingBenchPieces.length;
 
-			if (totalInstances < PIECES_TO_EVOLVE) {
+			if (totalInstances < DEFAULT_GAME_OPTIONS.game.piecesToEvolve) {
 				return;
 			}
 

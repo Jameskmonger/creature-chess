@@ -27,6 +27,7 @@ export interface GameOptions {
 		rerollCost: number;
 		buyXpCost: number;
 		buyXpAmount: number;
+		piecesToEvolve: number;
 	};
 
 	battle: {
@@ -56,6 +57,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 		rerollCost: 2,
 		buyXpCost: 5,
 		buyXpAmount: 4,
+		piecesToEvolve: 3
 	},
 
 	battle: {

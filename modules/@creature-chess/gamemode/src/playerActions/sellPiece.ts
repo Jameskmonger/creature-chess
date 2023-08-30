@@ -1,25 +1,27 @@
 import { createAction } from "@reduxjs/toolkit";
 import { takeEvery, select, put } from "redux-saga/effects";
 
-import { PieceModel, PIECES_FOR_STAGE } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { afterSellPieceEvent } from "../entities/player/events";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
 import { updateMoneyCommand } from "../entities/player/state/commands";
 import { getPiece } from "../player/pieceSelectors";
+import { getPiecesForStage } from "../game/evolution";
 
 export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;
 export const sellPiecePlayerAction = createAction<{ pieceId: string }>(
 	"sellPiecePlayerAction"
 );
 
-export const sellPiecePlayerActionSaga = function* () {
+export const sellPiecePlayerActionSaga = function*() {
 	const boardSlice = yield* getBoardSlice();
 	const benchSlice = yield* getBenchSlice();
 
 	yield takeEvery<SellPiecePlayerAction>(
 		sellPiecePlayerAction.toString(),
-		function* ({ payload: { pieceId } }) {
+		function*({ payload: { pieceId } }) {
 			const piece: PieceModel = yield select((state) =>
 				getPiece(state, pieceId)
 			);
@@ -29,7 +31,7 @@ export const sellPiecePlayerActionSaga = function* () {
 				return;
 			}
 
-			const piecesUsed = PIECES_FOR_STAGE[piece.stage];
+			const piecesUsed = getPiecesForStage(piece.stage, DEFAULT_GAME_OPTIONS.game.piecesToEvolve);
 			const pieceCost = piece.definition.cost;
 			const currentMoney: number = yield select(
 				(state) => state.playerInfo.money

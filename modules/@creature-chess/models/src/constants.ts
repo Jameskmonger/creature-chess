@@ -5,8 +5,6 @@ if (!APP_BASE_URL) {
 	throw new Error("No APP_BASE_URL set");
 }
 
-export const PIECES_TO_EVOLVE = 3;
-
 export const MAX_NAME_LENGTH = 16;
 
 export const MAX_PLAYERS_IN_GAME = 8;
@@ -19,4 +17,3 @@ export const AVAILABLE_PROFILE_PICTURES = {
 	7: "Embra",
 	8: "Tweesher",
 };
-export const PIECES_FOR_STAGE = [1, 3, 9];
