@@ -34,7 +34,7 @@ const PlayerProfile: React.FunctionComponent<Props> = (props) => {
 			<div className={classes.name}>
 				<PlayerName position={position} name={player.name} isLocal={isLocal} />
 			</div>
-			<Title titleId={player.profile?.title || null} />
+			<Title title={player.profile?.title || null} />
 		</div>
 	);
 };

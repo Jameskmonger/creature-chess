@@ -2,46 +2,26 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { PlayerTitle, TITLES } from "@creature-chess/models";
-
-type Props = {
-	titleId: PlayerTitle | null;
-	size?: "large" | "small";
-};
-
-const getColor = (titleId: PlayerTitle | null) => {
-	switch (titleId) {
-		case PlayerTitle.Developer:
-			return "#79ffe0";
-		case PlayerTitle.Contributor:
-			return "#e89292";
-		case PlayerTitle.HallOfFame:
-			return "#f7ee85";
-		default:
-			return "#d6d0d0";
-	}
-};
+import { PlayerTitle } from "@creature-chess/models/player/title";
 
 const useStyles = createUseStyles({
 	title: {
 		fontFamily: "Arial, sans-serif",
-		fontSize: ({ size = "small" }: Props) =>
-			size === "small" ? "0.65rem" : "1rem",
+		fontSize: "0.65rem",
 		fontWeight: 700,
-		color: ({ titleId }: Props) => getColor(titleId),
+		color: ({ title }: React.ComponentProps<typeof Title>) =>
+			title ? `#${title.color.toString(16)}` : "inherit",
 		textAlign: "inherit",
 		textTransform: "uppercase",
 	},
 });
 
-const Title: React.FunctionComponent<Props> = (props) => {
+export function Title(props: { title: PlayerTitle | null }) {
 	const classes = useStyles(props);
 
-	if (!props.titleId) {
+	if (!props.title) {
 		return null;
 	}
 
-	return <span className={classes.title}>{TITLES[props.titleId].text}</span>;
-};
-
-export { Title };
+	return <span className={classes.title}>{props.title.text}</span>;
+}

@@ -59,7 +59,7 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 				<div />
 				{player.name}
 			</span>
-			<Title titleId={player.profile?.title} />
+			<Title title={player.profile?.title} />
 		</div>
 	);
 };

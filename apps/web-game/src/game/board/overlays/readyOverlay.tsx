@@ -90,7 +90,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 									<Half>
 										<Group>
 											<Header4>{localPlayer.name}</Header4>
-											<Title titleId={localPlayer.profile?.title || null} />
+											<Title title={localPlayer.profile?.title || null} />
 										</Group>
 										<Group className={styles.healthbar}>
 											<PlayerHealthbar health={localPlayer.health} />
@@ -126,7 +126,7 @@ const ReadyOverlay: React.FunctionComponent = () => {
 									<Half>
 										<Group>
 											<Header4>{opponent.name}</Header4>
-											<Title titleId={opponent.profile?.title || null} />
+											<Title title={opponent.profile?.title || null} />
 										</Group>
 										<Group className={styles.healthbar}>
 											<PlayerHealthbar health={opponent.health} />

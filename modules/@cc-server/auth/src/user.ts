@@ -16,8 +16,9 @@ export const convertDatabaseUserToUserModel = (
 ): UserModel => {
 	const nickname = user.nickname || null;
 
+	// TODO reimplement Title (load from DB)
 	const profile = {
-		title: user.profile_title || null,
+		title: null, // user.profile_title || null,
 		picture: user.profile_picture || null,
 	};
 

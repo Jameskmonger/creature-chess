@@ -17,12 +17,13 @@ import {
 import { ConnectionStatus } from "../connection-status";
 import { GameState } from "../state";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { PlayerTitle } from "@creature-chess/models/player/title";
 
 const createPlayer = (
 	id: string,
 	name: string,
 	picture: number,
-	title: number | null,
+	title: PlayerTitle | null,
 	opponentId: string
 ) => ({
 	id,
@@ -166,11 +167,11 @@ const createMockedState = (halfBoard: boolean): GameState => ({
 		board: null,
 	},
 	playerList: [
-		createPlayer("1234", "jkm", 1, 1, "5678"),
+		createPlayer("1234", "jkm", 1, { color: 0x79ffe0, text: "Developer" }, "5678"),
 		createPlayer("5678", "Jeff", 12, null, "1234"),
 		createPlayer("abcd", "Bob the Cat", 12, null, "ab99"),
 		createPlayer("ab99", "Derek the Dog", 20, null, "abcd"),
-		createPlayer("1235", "Eric123", 1, 1, "5678"),
+		createPlayer("1235", "Eric123", 1, { color: 0xe89292, text: "Contributor" }, "5678"),
 		createPlayer("5679", "Ignius_Rex", 12, null, "1234"),
 		createPlayer("abce", "AlfaCenTauri", 12, null, "ab99"),
 		createPlayer("ab90", "what this game", 20, null, "abcd"),

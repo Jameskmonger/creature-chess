@@ -2,7 +2,8 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import { LobbyPlayer, PlayerTitle } from "@creature-chess/models";
+import { LobbyPlayer } from "@creature-chess/models";
+import { PlayerTitle } from "@creature-chess/models/player/title";
 
 import { LobbyPlayerBanner } from "./LobbyPlayerBanner";
 
@@ -43,7 +44,17 @@ StandardPlayer.args = {
 
 export const Developer = Template.bind({});
 Developer.args = {
-	player: createLobbyPlayer(PlayerTitle.Developer, false),
+	player: createLobbyPlayer({ color: 0x79ffe0, text: "Developer" }, false),
+};
+
+export const Contributor = Template.bind({});
+Contributor.args = {
+	player: createLobbyPlayer({ color: 0xe89292, text: "Contributor" }, false),
+};
+
+export const HallOfFame = Template.bind({});
+HallOfFame.args = {
+	player: createLobbyPlayer({ color: 0xf7ee85, text: "HallOfFame" }, false),
 };
 
 export const BotPlayer = Template.bind({});

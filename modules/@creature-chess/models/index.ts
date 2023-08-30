@@ -15,7 +15,6 @@ export { PlayerPieceLocation } from "./src/playerPieceLocation";
 
 export { GamePhase } from "./src/game-phase";
 export { RoundInfoState } from "./src/roundInfoState";
-export { PlayerTitle, TITLES } from "./src/titles";
 export { PlayerProfile } from "./src/playerProfile";
 
 export {

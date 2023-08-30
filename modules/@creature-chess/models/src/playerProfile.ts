@@ -1,4 +1,4 @@
-import { PlayerTitle } from "./titles";
+import { PlayerTitle } from "../player/title";
 
 export interface PlayerProfile {
 	title: PlayerTitle | null;
