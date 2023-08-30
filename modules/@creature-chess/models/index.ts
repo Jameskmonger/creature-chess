@@ -43,8 +43,6 @@ export {
 } from "./src/creatureDefinition";
 export { CreatureType } from "./src/creatureType";
 
-export { getXpToNextLevel } from "./src/getXpToNextLevel";
-
 export { QuickChatOption, QuickChatValue } from "./src/quickChat";
 
 export * as Builders from "./src/builders";

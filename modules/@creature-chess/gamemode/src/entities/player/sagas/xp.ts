@@ -1,12 +1,13 @@
 import { take, put } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 
-import { GamePhase, getXpToNextLevel } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 
 import { getPlayerEntityDependencies } from "../dependencies";
 import { PlayerState } from "../state";
 import { updateLevelCommand } from "../state/commands";
 import { getPlayerLevel, getPlayerXp } from "../state/selectors";
+import { getXpToNextLevel } from "../../../player/xp";
 
 const ADD_XP_COMMAND = "ADD_XP_COMMAND";
 type ADD_XP_COMMAND = typeof ADD_XP_COMMAND;
@@ -16,7 +17,7 @@ export const addXpCommand = (amount: number): AddXpCommand => ({
 	payload: { amount },
 });
 
-export const playerXpSaga = function* () {
+export const playerXpSaga = function*() {
 	const {
 		boardSlices: { boardSlice, benchSlice },
 	} = yield* getPlayerEntityDependencies();

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import classNames from "classnames";
 
-import { Constants, getXpToNextLevel } from "@creature-chess/models";
+import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { ProgressBar } from "../src/display/progressBar";

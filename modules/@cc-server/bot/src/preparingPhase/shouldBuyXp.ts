@@ -1,7 +1,7 @@
 import { BoardSelectors } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
-import { getXpToNextLevel } from "@creature-chess/models";
+import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 // don't go under this amount
