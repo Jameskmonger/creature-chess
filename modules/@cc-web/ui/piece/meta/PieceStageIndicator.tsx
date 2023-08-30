@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { IMAGE_BASE_URL } from "@creature-chess/models";
+import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
 import { Layout } from "../../layout";
 

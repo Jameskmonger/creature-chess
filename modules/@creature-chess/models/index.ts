@@ -1,5 +1,3 @@
-import * as Constants from "./src/constants";
-
 export { Card } from "./src/card";
 export { PieceModel, IndexedPieces, AttackDetails } from "./src/piece";
 export {
@@ -14,9 +12,6 @@ export { StreakType } from "./src/streakType";
 export { PlayerStreak } from "./src/playerStreak";
 export { LobbyPlayer } from "./src/lobby-player";
 export { PlayerPieceLocation } from "./src/playerPieceLocation";
-
-export { Constants };
-export * from "./src/constants";
 
 export { GamePhase } from "./src/game-phase";
 export { RoundInfoState } from "./src/roundInfoState";

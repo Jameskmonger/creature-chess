@@ -2,7 +2,9 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { IMAGE_BASE_URL, LobbyPlayer } from "@creature-chess/models";
+import { LobbyPlayer } from "@creature-chess/models";
+
+import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
 import { PlayerAvatar } from "../../../src/player/avatar";
 import { Title } from "../../../src/player/title";

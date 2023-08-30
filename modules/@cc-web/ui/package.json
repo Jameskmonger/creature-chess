@@ -21,6 +21,7 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
+		"@cc-web/shared": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/user": "workspace:*",
 		"@shoki-web/board-react": "workspace:*",

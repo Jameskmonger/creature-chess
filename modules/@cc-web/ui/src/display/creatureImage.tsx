@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { IMAGE_BASE_URL } from "@creature-chess/models";
+import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
 interface Props {
 	baseUrl?: string;

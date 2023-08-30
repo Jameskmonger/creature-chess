@@ -40,6 +40,7 @@ ADD modules/@cc-server/bot/package.json ./modules/@cc-server/bot/
 ADD modules/@cc-server/data/package.json ./modules/@cc-server/data/
 
 ADD modules/@cc-web/auth/package.json ./modules/@cc-web/auth/
+ADD modules/@cc-web/shared/package.json ./modules/@cc-web/shared/
 ADD modules/@cc-web/ui/package.json ./modules/@cc-web/ui/
 
 ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/

@@ -2012,10 +2012,17 @@ __metadata:
   resolution: "@cc-web/auth@workspace:modules/@cc-web/auth"
   dependencies:
     "@auth0/auth0-react": ^1.10.2
+    "@cc-web/shared": "workspace:*"
     "@creature-chess/models": "workspace:*"
   peerDependencies:
     react: ^17 || ^18
     react-dom: ^17 || ^18
+  languageName: unknown
+  linkType: soft
+
+"@cc-web/shared@workspace:*, @cc-web/shared@workspace:modules/@cc-web/shared":
+  version: 0.0.0-use.local
+  resolution: "@cc-web/shared@workspace:modules/@cc-web/shared"
   languageName: unknown
   linkType: soft
 
@@ -2024,6 +2031,7 @@ __metadata:
   resolution: "@cc-web/ui@workspace:modules/@cc-web/ui"
   dependencies:
     "@babel/core": ^7.16.5
+    "@cc-web/shared": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/user": "workspace:*"
     "@shoki-web/board-react": "workspace:*"
@@ -2111,6 +2119,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": ^1.10.2
     "@cc-web/auth": "workspace:*"
+    "@cc-web/shared": "workspace:*"
     "@cc-web/ui": "workspace:*"
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"

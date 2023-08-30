@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { APP_BASE_URL } from "@creature-chess/models";
+import { APP_BASE_URL } from "@cc-web/shared/constants";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const APP_VERSION = require("../../../../package.json").version;

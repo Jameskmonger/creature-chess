@@ -3,7 +3,9 @@ import * as React from "react";
 import classnames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { IMAGE_BASE_URL, PlayerListPlayer } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models";
+
+import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
 const useStyles = createUseStyles({
 	image: {

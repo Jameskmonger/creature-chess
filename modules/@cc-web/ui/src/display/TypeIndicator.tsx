@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { CreatureType, IMAGE_BASE_URL } from "@creature-chess/models";
+import { CreatureType } from "@creature-chess/models";
+import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
 interface TypeIndicatorProps {
 	type: CreatureType;

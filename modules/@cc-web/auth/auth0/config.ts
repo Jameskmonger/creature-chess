@@ -1,4 +1,4 @@
-import { APP_BASE_URL } from "@creature-chess/models";
+import { APP_BASE_URL } from "@cc-web/shared/constants";
 
 export const AUTH0_ENABLED = process.env.AUTH0_ENABLED === "true";
 

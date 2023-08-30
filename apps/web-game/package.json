@@ -24,6 +24,7 @@
 	"dependencies": {
 		"@auth0/auth0-react": "^1.10.2",
 		"@cc-web/auth": "workspace:*",
+		"@cc-web/shared": "workspace:*",
 		"@cc-web/ui": "workspace:*",
 		"@creature-chess/battle": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
