@@ -2,7 +2,7 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/models";
+import { AVAILABLE_PROFILE_PICTURES } from "@creature-chess/user/profile";
 
 import { CreatureImage } from "../../../../src/display/creatureImage";
 import { BaseRegistrationInput } from "./BaseRegistrationInput";
