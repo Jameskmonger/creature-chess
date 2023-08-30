@@ -5,15 +5,7 @@ if (!APP_BASE_URL) {
 	throw new Error("No APP_BASE_URL set");
 }
 
-export const REROLL_COST = 2;
-export const STARTING_MONEY = 3;
-export const STARTING_LEVEL = 1;
 export const STARTING_HEALTH = 100;
-export const MAX_PLAYER_LEVEL = 10;
-export const HEALTH_LOST_PER_PIECE = 3;
-
-export const BUY_XP_COST = 5;
-export const BUY_XP_AMOUNT = 4;
 
 export const PIECES_TO_EVOLVE = 3;
 

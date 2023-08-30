@@ -1,12 +1,8 @@
 import { BoardSelectors } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
-import {
-	BUY_XP_AMOUNT,
-	BUY_XP_COST,
-	MAX_PLAYER_LEVEL,
-	getXpToNextLevel,
-} from "@creature-chess/models";
+import { getXpToNextLevel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 // don't go under this amount
 const MINIMUM_MONEY = 10;
@@ -19,7 +15,7 @@ export const shouldBuyXp = (state: PlayerState): boolean => {
 		playerInfo: { money, level, xp },
 	} = state;
 
-	if (level === MAX_PLAYER_LEVEL) {
+	if (level === DEFAULT_GAME_OPTIONS.game.maxLevel) {
 		return false;
 	}
 
@@ -30,8 +26,8 @@ export const shouldBuyXp = (state: PlayerState): boolean => {
 	}
 
 	const xpRequired = xpForNextLevel - xp;
-	const purchasesRequired = Math.ceil(xpRequired / BUY_XP_AMOUNT);
-	const cost = purchasesRequired * BUY_XP_COST;
+	const purchasesRequired = Math.ceil(xpRequired / DEFAULT_GAME_OPTIONS.game.buyXpAmount);
+	const cost = purchasesRequired * DEFAULT_GAME_OPTIONS.game.buyXpCost;
 
 	if (purchasesRequired === 1 && hasPieceOnBench) {
 		return money - cost >= MINIMUM_MONEY_IF_NEXT_LEVEL_PRACTICAL;

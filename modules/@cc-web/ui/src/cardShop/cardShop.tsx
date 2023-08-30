@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Card as CardModel, REROLL_COST } from "@creature-chess/models";
+import { Card as CardModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { Layout } from "../../layout";
 import { Button } from "../button";
@@ -88,9 +89,9 @@ const CardShop: React.FunctionComponent<Props> = ({
 				<Button
 					type="primary"
 					onClick={onReroll}
-					disabled={money < REROLL_COST}
+					disabled={money < DEFAULT_GAME_OPTIONS.game.rerollCost}
 				>
-					New (${REROLL_COST})
+					New (${DEFAULT_GAME_OPTIONS.game.rerollCost})
 				</Button>
 
 				<div className={classes.balance}>

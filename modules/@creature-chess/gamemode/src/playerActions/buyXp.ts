@@ -2,11 +2,7 @@ import { take, put } from "@redux-saga/core/effects";
 import { createAction } from "@reduxjs/toolkit";
 import { select, getContext } from "typed-redux-saga";
 
-import {
-	BUY_XP_AMOUNT,
-	BUY_XP_COST,
-	MAX_PLAYER_LEVEL,
-} from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 import { addXpCommand } from "../entities/player/sagas/xp";
@@ -16,7 +12,7 @@ import { isPlayerAlive } from "../entities/player/state/selectors";
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
 export const buyXpPlayerAction = createAction("buyXpPlayerAction");
 
-export const buyXpPlayerActionSaga = function* () {
+export const buyXpPlayerActionSaga = function*() {
 	while (true) {
 		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
@@ -35,7 +31,7 @@ export const buyXpPlayerActionSaga = function* () {
 
 		const currentLevel = yield* select((state) => state.playerInfo.level);
 
-		if (currentLevel === MAX_PLAYER_LEVEL) {
+		if (currentLevel === DEFAULT_GAME_OPTIONS.game.maxLevel) {
 			logger.info("Player attempted to buy xp, but at max level", {
 				actor: { playerId, name },
 			});
@@ -45,12 +41,12 @@ export const buyXpPlayerActionSaga = function* () {
 		const money = yield* select((state) => state.playerInfo.money);
 
 		// not enough money
-		if (money < BUY_XP_COST) {
+		if (money < DEFAULT_GAME_OPTIONS.game.buyXpCost) {
 			logger.info("Not enough money to buy xp", {
 				actor: { playerId, name },
 				details: {
 					money,
-					cost: BUY_XP_COST,
+					cost: DEFAULT_GAME_OPTIONS.game.buyXpCost,
 				},
 			});
 
@@ -59,7 +55,7 @@ export const buyXpPlayerActionSaga = function* () {
 			continue;
 		}
 
-		yield put(addXpCommand(BUY_XP_AMOUNT));
-		yield put(updateMoneyCommand(money - BUY_XP_COST));
+		yield put(addXpCommand(DEFAULT_GAME_OPTIONS.game.buyXpAmount));
+		yield put(updateMoneyCommand(money - DEFAULT_GAME_OPTIONS.game.buyXpCost));
 	}
 };

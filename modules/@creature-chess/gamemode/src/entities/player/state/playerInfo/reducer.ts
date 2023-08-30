@@ -2,13 +2,13 @@ import { Reducer } from "redux";
 
 import {
 	STARTING_HEALTH,
-	STARTING_LEVEL,
-	STARTING_MONEY,
 	StreakType,
 	PlayerBattle,
 	PlayerStatus,
 	PlayerStreak,
 } from "@creature-chess/models";
+
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { PlayerEvent } from "../../events";
 import { PlayerInfoUpdateCommand } from "../commands";
@@ -49,9 +49,9 @@ const initialState: PlayerInfoState = {
 	battle: null,
 	matchRewards: null,
 	opponentId: null,
-	money: STARTING_MONEY,
+	money: DEFAULT_GAME_OPTIONS.game.startingMoney,
 	ready: false,
-	level: STARTING_LEVEL,
+	level: DEFAULT_GAME_OPTIONS.game.startingLevel,
 	xp: 0,
 };
 

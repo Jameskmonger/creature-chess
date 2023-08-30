@@ -19,6 +19,13 @@ export interface GameOptions {
 
 	game: {
 		phaseLengths: PhaseLengths;
+		startingMoney: number;
+		startingLevel: number;
+		maxLevel: number;
+		healthLostPerPiece: number;
+		rerollCost: number;
+		buyXpCost: number;
+		buyXpAmount: number;
 	};
 
 	battle: {
@@ -40,6 +47,13 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 			[GamePhase.READY]: 3,
 			[GamePhase.PLAYING]: 35,
 		},
+		startingMoney: 3,
+		startingLevel: 1,
+		maxLevel: 10,
+		healthLostPerPiece: 3,
+		rerollCost: 2,
+		buyXpCost: 5,
+		buyXpAmount: 4,
 	},
 
 	battle: {

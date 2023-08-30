@@ -1,4 +1,4 @@
-import { MAX_PLAYER_LEVEL } from "./constants";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 const LOWER_XP = true;
 
@@ -7,7 +7,7 @@ const XP_TO_NEXT_LEVEL = LOWER_XP
 	: [1, 1, 2, 4, 8, 16, 24, 32, 40];
 
 export const getXpToNextLevel = (level: number) => {
-	if (level === MAX_PLAYER_LEVEL) {
+	if (level === DEFAULT_GAME_OPTIONS.game.maxLevel) {
 		return 0;
 	}
 

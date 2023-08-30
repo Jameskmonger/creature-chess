@@ -2,15 +2,14 @@ import { createInitialBoardState } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
 import {
-	BUY_XP_AMOUNT,
 	GamePhase,
 	getXpToNextLevel,
 	PlayerStatus,
 	StreakType,
 } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { shouldBuyXp } from "./shouldBuyXp";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 const createInitialPlayerState = (): PlayerState => ({
 	board: createInitialBoardState("board", { width: DEFAULT_GAME_OPTIONS.boardSize.width, height: DEFAULT_GAME_OPTIONS.boardSize.height / 2 }),
@@ -101,7 +100,7 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - BUY_XP_AMOUNT,
+							xp: xpRequired - DEFAULT_GAME_OPTIONS.game.buyXpAmount,
 						},
 					};
 				});
@@ -133,7 +132,7 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - BUY_XP_AMOUNT,
+							xp: xpRequired - DEFAULT_GAME_OPTIONS.game.buyXpAmount,
 						},
 					};
 				});
@@ -153,7 +152,7 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 2 * BUY_XP_AMOUNT,
+							xp: xpRequired - 2 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
 						},
 					};
 				});
@@ -185,7 +184,7 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - BUY_XP_AMOUNT,
+							xp: xpRequired - DEFAULT_GAME_OPTIONS.game.buyXpAmount,
 						},
 					};
 				});
@@ -205,7 +204,7 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 2 * BUY_XP_AMOUNT,
+							xp: xpRequired - 2 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
 						},
 					};
 				});
@@ -225,7 +224,7 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 3 * BUY_XP_AMOUNT,
+							xp: xpRequired - 3 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
 						},
 					};
 				});
@@ -245,7 +244,7 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 4 * BUY_XP_AMOUNT,
+							xp: xpRequired - 4 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
 						},
 					};
 				});
