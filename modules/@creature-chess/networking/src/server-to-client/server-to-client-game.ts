@@ -3,10 +3,10 @@ import { protocol, ActionStream } from "@shoki/networking";
 
 import {
 	PieceModel,
-	PlayerListPlayer,
 	QuickChatOption,
 	RoundInfoState,
 } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];

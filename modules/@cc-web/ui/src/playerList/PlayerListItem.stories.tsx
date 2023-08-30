@@ -3,14 +3,17 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 
 import {
-	finishedBattle,
-	inProgressBattle,
+	PlayerStatus,
 	PlayerBattle,
 	PlayerListPlayer,
-	PlayerStatus,
+	inProgressBattle,
+	finishedBattle,
+} from "@creature-chess/models/game/playerList";
+import {
 	PlayerTitle,
 	StreakType,
-} from "@creature-chess/models";
+	PlayerStreak,
+} from "@creature-chess/models/player";
 
 import { PlayerListItem } from "./playerListItem";
 

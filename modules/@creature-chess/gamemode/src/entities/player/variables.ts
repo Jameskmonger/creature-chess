@@ -1,4 +1,4 @@
-import { PlayerProfile } from "@creature-chess/models";
+import { PlayerProfile } from "@creature-chess/models/player";
 
 import {
 	FeaturesPlayerVariables,

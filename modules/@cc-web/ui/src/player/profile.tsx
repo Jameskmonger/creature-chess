@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { PlayerListPlayer } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { PlayerName } from "./name";
 import { Title } from "./title";

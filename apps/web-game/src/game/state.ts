@@ -9,11 +9,8 @@ import {
 	PlayerState,
 	playerReducers,
 } from "@creature-chess/gamemode";
-import {
-	PieceModel,
-	PlayerListPlayer,
-	RoundInfoState,
-} from "@creature-chess/models";
+import { PieceModel, RoundInfoState } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { playerListReducer, quickChatReducer, QuickChat } from "./module";
 import { matchReducer, MatchState } from "./module/match";

@@ -1,12 +1,9 @@
 import { take, takeLatest, put, call } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 
-import {
-	PlayerStatus,
-	StreakType,
-	PlayerStreak,
-} from "@creature-chess/models";
+import { StreakType, PlayerStreak } from "@creature-chess/models/player";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { PlayerStatus } from "@creature-chess/models/game/playerList";
 
 import {
 	playerMatchRewardsEvent,

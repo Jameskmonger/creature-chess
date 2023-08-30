@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { StreakType } from "@creature-chess/models";
+import { StreakType } from "@creature-chess/models/player";
 
 type Props = {
 	type: StreakType | null;

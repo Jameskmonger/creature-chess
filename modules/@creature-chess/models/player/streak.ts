@@ -1,4 +1,7 @@
-import { StreakType } from "./streakType";
+export enum StreakType {
+	WIN,
+	LOSS,
+}
 
 export interface PlayerStreak {
 	type: StreakType;

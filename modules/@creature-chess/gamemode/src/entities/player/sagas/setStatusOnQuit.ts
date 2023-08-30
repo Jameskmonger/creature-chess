@@ -1,6 +1,6 @@
 import { put, take } from "redux-saga/effects";
 
-import { PlayerStatus } from "@creature-chess/models";
+import { PlayerStatus } from "@creature-chess/models/game/playerList";
 
 import {
 	quitGamePlayerAction,

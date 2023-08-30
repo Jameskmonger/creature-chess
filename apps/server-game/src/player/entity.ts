@@ -1,10 +1,8 @@
 import { createBoardSlice } from "@shoki/board";
 
 import { Gamemode, playerEntity } from "@creature-chess/gamemode";
-import {
-	PlayerProfile,
-	PieceModel,
-} from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
+import { PlayerProfile } from "@creature-chess/models/player";
 
 import { logger } from "../log";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";

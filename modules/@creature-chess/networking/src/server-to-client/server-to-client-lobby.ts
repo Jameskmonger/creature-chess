@@ -1,6 +1,6 @@
 import { protocol as shokiProtocol } from "@shoki/networking";
 
-import { LobbyPlayer } from "@creature-chess/models";
+import { LobbyPlayer } from "@creature-chess/models/lobby";
 
 /**
  * TODO this code is duplicated in @cc-web, see LobbyPageContext

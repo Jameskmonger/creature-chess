@@ -3,7 +3,7 @@ import React from "react";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
-import { PlayerListPlayer, StreakType } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { Group, Layout } from "@cc-web/ui";
 import { Text, Header4 } from "@cc-web/ui/text";

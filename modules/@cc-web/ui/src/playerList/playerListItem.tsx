@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { PlayerListPlayer } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { useOnClickOutside } from "../../hooks";
 import { Half, Layout } from "../../layout";

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { LobbyPlayer } from "@creature-chess/models";
+import { LobbyPlayer } from "@creature-chess/models/lobby";
 
 import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 

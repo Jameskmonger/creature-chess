@@ -7,7 +7,8 @@ import {
 	PlayerActions,
 	PlayerCommands,
 } from "@creature-chess/gamemode";
-import { PlayerListPlayer, RoundInfoState } from "@creature-chess/models";
+import { RoundInfoState } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 import { ClientToServer, GameServerToClient } from "@creature-chess/networking";
 
 import { playerBoard } from "./board";
@@ -22,7 +23,7 @@ type Parameters = {
 	getPlayers: () => PlayerListPlayer[];
 };
 
-export const playerNetworking = function* (
+export const playerNetworking = function*(
 	socket: Socket,
 	{ getRoundInfo, getPlayers }: Parameters
 ) {
@@ -38,7 +39,7 @@ export const playerNetworking = function* (
 
 	yield* setPacketRegistries(registries);
 
-	const teardown = function* () {
+	const teardown = function*() {
 		socket!.removeAllListeners();
 		socket!.disconnect();
 

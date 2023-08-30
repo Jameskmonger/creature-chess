@@ -1,6 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { GamePhase, PlayerListPlayer } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
+import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { Match } from "./match";
 

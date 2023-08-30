@@ -1,6 +1,7 @@
 import { OutgoingRegistry } from "@shoki/networking";
 
-import { LobbyPlayer, PlayerProfile } from "@creature-chess/models";
+import { LobbyPlayer } from "@creature-chess/models/lobby";
+import { PlayerProfile } from "@creature-chess/models/player";
 import { LobbyServerToClient } from "@creature-chess/networking";
 
 import { AuthenticatedSocket } from "./player/socket";

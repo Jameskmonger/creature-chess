@@ -1,6 +1,6 @@
 import { BoardSelectors } from "@shoki/board";
 
-import { PlayerStatus } from "@creature-chess/models";
+import { PlayerStatus } from "@creature-chess/models/game/playerList";
 
 import { PlayerState } from "..";
 

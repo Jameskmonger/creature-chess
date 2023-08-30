@@ -2,11 +2,9 @@ import { createInitialBoardState } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
-import {
-	GamePhase,
-	PlayerStatus,
-	StreakType,
-} from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
+import { StreakType, PlayerStreak } from "@creature-chess/models/player";
+import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { shouldBuyXp } from "./shouldBuyXp";

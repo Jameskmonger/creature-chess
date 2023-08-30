@@ -1,11 +1,8 @@
 import { all, takeLatest } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 
-import {
-	PlayerBattle,
-	PlayerStatus,
-	PlayerStreak,
-} from "@creature-chess/models";
+import { PlayerStreak } from "@creature-chess/models/player";
+import { PlayerStatus, PlayerBattle } from "@creature-chess/models/game/playerList";
 
 import { PlayerEntity } from "../entities";
 import { PlayerCommands, PlayerStateSelectors } from "../entities/player";
@@ -27,7 +24,7 @@ export const listenForPropertyUpdates = (
 		ready?: (ready: boolean) => void;
 	}
 ) => {
-	const saga = player.runSaga(function* () {
+	const saga = player.runSaga(function*() {
 		const sagas = [];
 
 		if (emitHealth) {
@@ -37,7 +34,7 @@ export const listenForPropertyUpdates = (
 			sagas.push(
 				takeLatest<PlayerCommands.UpdateHealthCommand>(
 					PlayerCommands.updateHealthCommand.toString(),
-					function* ({ payload: health }) {
+					function*({ payload: health }) {
 						emitHealth(health);
 					}
 				)
@@ -51,7 +48,7 @@ export const listenForPropertyUpdates = (
 			sagas.push(
 				takeLatest<PlayerCommands.UpdateStreakCommand>(
 					PlayerCommands.updateStreakCommand.toString(),
-					function* ({ payload: streak }) {
+					function*({ payload: streak }) {
 						emitStreak(streak);
 					}
 				)
@@ -65,7 +62,7 @@ export const listenForPropertyUpdates = (
 			sagas.push(
 				takeLatest<PlayerCommands.UpdateStatusCommand>(
 					PlayerCommands.updateStatusCommand.toString(),
-					function* ({ payload: status }) {
+					function*({ payload: status }) {
 						emitStatus(status);
 					}
 				)
@@ -79,7 +76,7 @@ export const listenForPropertyUpdates = (
 			sagas.push(
 				takeLatest<PlayerCommands.UpdateBattleCommand>(
 					PlayerCommands.updateBattleCommand.toString(),
-					function* ({ payload: battle }) {
+					function*({ payload: battle }) {
 						emitBattle(battle);
 					}
 				)
@@ -93,7 +90,7 @@ export const listenForPropertyUpdates = (
 			sagas.push(
 				takeLatest<PlayerCommands.UpdateReadyCommand>(
 					PlayerCommands.updateReadyCommand.toString(),
-					function* ({ payload: ready }) {
+					function*({ payload: ready }) {
 						emitReady(ready);
 					}
 				)

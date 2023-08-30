@@ -1,9 +1,7 @@
 {
 	"extends": "../../../tsconfig.json",
 	"include": [
-		"./src/**/*",
-		"./src/*",
-		"./index.ts",
-		"../user/profile/nickname.test.ts"
+		"./**/*.ts",
+		"./*.ts"
 	]
 }

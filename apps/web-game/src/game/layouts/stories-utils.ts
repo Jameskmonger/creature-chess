@@ -7,12 +7,11 @@ import {
 	CreatureType,
 	DefinitionClass,
 	GamePhase,
-	inProgressBattle,
 	PieceModel,
-	PlayerStatus,
-	QuickChatOption,
-	StreakType,
+	QuickChatOption
 } from "@creature-chess/models";
+import { StreakType } from "@creature-chess/models/player";
+import { PlayerStatus, inProgressBattle } from "@creature-chess/models/game/playerList";
 
 import { ConnectionStatus } from "../connection-status";
 import { GameState } from "../state";

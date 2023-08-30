@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { LobbyPlayer } from "@creature-chess/models";
+import { LobbyPlayer } from "@creature-chess/models/lobby";
 
 type LobbyInfo = {
 	players: LobbyPlayer[];

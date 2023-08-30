@@ -4,7 +4,9 @@ import { Store } from "redux";
 import { SagaMiddleware } from "redux-saga";
 import { Logger } from "winston";
 
-import { PlayerStatus } from "@creature-chess/models";
+import {
+	PlayerStatus
+} from "@creature-chess/models/game/playerList";
 
 import { PlayerEntity } from "../entities";
 import {

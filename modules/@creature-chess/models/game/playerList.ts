@@ -1,5 +1,5 @@
-import { PlayerProfile } from "./playerProfile";
-import { StreakType } from "./streakType";
+import { PlayerProfile } from "../player/profile";
+import { StreakType } from "../player/streak";
 
 export enum PlayerBattleStatus {
 	IN_PROGRESS,
@@ -14,16 +14,16 @@ export enum PlayerStatus {
 
 export type PlayerBattle =
 	| {
-			status: PlayerBattleStatus.IN_PROGRESS;
-			opponentId: string;
-	  }
+		status: PlayerBattleStatus.IN_PROGRESS;
+		opponentId: string;
+	}
 	| {
-			status: PlayerBattleStatus.FINISHED;
-			opponentId: string;
-			homeScore: number;
-			awayScore: number;
-			isHomePlayer: boolean;
-	  }
+		status: PlayerBattleStatus.FINISHED;
+		opponentId: string;
+		homeScore: number;
+		awayScore: number;
+		isHomePlayer: boolean;
+	}
 	| null;
 
 export const inProgressBattle = (opponentId: string): PlayerBattle => ({

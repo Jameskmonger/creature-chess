@@ -1,11 +1,10 @@
 import { Reducer } from "redux";
 
+import { StreakType, PlayerStreak } from "@creature-chess/models/player";
 import {
-	StreakType,
-	PlayerBattle,
 	PlayerStatus,
-	PlayerStreak,
-} from "@creature-chess/models";
+	PlayerBattle
+} from "@creature-chess/models/game/playerList";
 
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 

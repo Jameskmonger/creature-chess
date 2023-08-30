@@ -1,4 +1,4 @@
-import { PlayerProfile } from "./playerProfile";
+import { PlayerProfile } from "../player/profile";
 
 export interface LobbyPlayer {
 	id: string;
