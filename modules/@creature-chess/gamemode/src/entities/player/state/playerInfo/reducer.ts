@@ -1,7 +1,6 @@
 import { Reducer } from "redux";
 
 import {
-	STARTING_HEALTH,
 	StreakType,
 	PlayerBattle,
 	PlayerStatus,
@@ -41,7 +40,7 @@ export interface PlayerInfoState {
 
 const initialState: PlayerInfoState = {
 	status: PlayerStatus.CONNECTED,
-	health: STARTING_HEALTH,
+	health: DEFAULT_GAME_OPTIONS.game.maxHealth,
 	streak: {
 		type: StreakType.WIN,
 		amount: 0,

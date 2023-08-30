@@ -5,8 +5,6 @@ if (!APP_BASE_URL) {
 	throw new Error("No APP_BASE_URL set");
 }
 
-export const STARTING_HEALTH = 100;
-
 export const PIECES_TO_EVOLVE = 3;
 
 export const MAX_NAME_LENGTH = 16;

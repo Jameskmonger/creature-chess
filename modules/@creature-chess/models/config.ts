@@ -22,6 +22,7 @@ export interface GameOptions {
 		startingMoney: number;
 		startingLevel: number;
 		maxLevel: number;
+		maxHealth: number;
 		healthLostPerPiece: number;
 		rerollCost: number;
 		buyXpCost: number;
@@ -50,6 +51,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 		startingMoney: 3,
 		startingLevel: 1,
 		maxLevel: 10,
+		maxHealth: 100,
 		healthLostPerPiece: 3,
 		rerollCost: 2,
 		buyXpCost: 5,
