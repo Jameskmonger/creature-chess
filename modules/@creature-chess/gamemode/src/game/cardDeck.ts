@@ -159,8 +159,6 @@ export class CardDeck {
 			}
 		}
 
-		this.logger.warn("Falling back for second pass to find card");
-
 		// otherwise go back up and give them the first existing card
 		for (let cost = 1; cost <= CARD_COST_CHANCES.length; cost++) {
 			// try 3 times to get a non-excluded card
