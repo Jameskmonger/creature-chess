@@ -5,6 +5,8 @@ import { LobbyPlayer } from "@creature-chess/models";
 type LobbyInfo = {
 	players: LobbyPlayer[];
 	startingAtMs: number;
+	maxPlayers: number;
+	lobbyWaitTimeSeconds: number;
 };
 
 const LobbyPageContext = createContext<LobbyInfo>(null as unknown as LobbyInfo);

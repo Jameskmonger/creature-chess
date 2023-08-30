@@ -17,7 +17,7 @@ const createRegistry = (socket: AuthenticatedSocket) =>
 	);
 
 type LobbyOptions = {
-	waitTimeMs: number;
+	waitTimeS: number;
 	maxPlayers: number;
 	onStart: (
 		members: { player: LobbyPlayer; socket: AuthenticatedSocket }[]
@@ -31,9 +31,9 @@ export class Lobby {
 	private autoStart: NodeJS.Timeout;
 
 	public constructor(private options: LobbyOptions) {
-		this.gameStartTime = Date.now() + this.options.waitTimeMs;
+		this.gameStartTime = Date.now() + (this.options.waitTimeS * 1000);
 
-		this.autoStart = setTimeout(this.start, this.options.waitTimeMs);
+		this.autoStart = setTimeout(this.start, this.options.waitTimeS * 1000);
 	}
 
 	public getFreeSlotCount() {
@@ -113,6 +113,9 @@ export class Lobby {
 		registry.send("connected", {
 			players: this.getLobbyPlayers(),
 			startTimestamp: this.gameStartTime!,
+
+			maxPlayers: this.options.maxPlayers,
+			lobbyWaitTimeSeconds: this.options.waitTimeS
 		});
 	}
 

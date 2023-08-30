@@ -2,9 +2,14 @@ import { protocol as shokiProtocol } from "@shoki/networking";
 
 import { LobbyPlayer } from "@creature-chess/models";
 
+/**
+ * TODO this code is duplicated in @cc-web, see LobbyPageContext
+ */
 export type LobbyConnectionPacket = {
 	players: LobbyPlayer[];
 	startTimestamp: number;
+	maxPlayers: number;
+	lobbyWaitTimeSeconds: number;
 };
 
 export type LobbyUpdatePacket = {

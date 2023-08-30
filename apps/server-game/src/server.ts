@@ -1,7 +1,5 @@
 import { Server } from "socket.io";
 
-import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
-
 import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";
 
 import { createManagementClient } from "./external/auth0";
@@ -12,12 +10,16 @@ import { Lobby } from "./lobby";
 import { logger } from "./log";
 import { AuthenticatedSocket } from "./player/socket";
 
+// TODO make these configurable
+const MAX_PLAYERS = 8;
+const LOBBY_WAIT_TIME = 30;
+
 const startGame = async (
 	database: DatabaseConnection,
 	players: PlayerGameParticipant[],
 	onFinish: () => void
 ) => {
-	const botsRequired = MAX_PLAYERS_IN_GAME - players.length;
+	const botsRequired = MAX_PLAYERS - players.length;
 
 	const bots = await getBots(database, botsRequired);
 
@@ -87,8 +89,8 @@ export const startServer = async ({ io }: { io: Server }) => {
 		}
 
 		const lobby = new Lobby({
-			waitTimeMs: LOBBY_WAIT_TIME * 1000,
-			maxPlayers: MAX_PLAYERS_IN_GAME,
+			waitTimeS: LOBBY_WAIT_TIME,
+			maxPlayers: MAX_PLAYERS,
 			onStart: async (players) => {
 				lobbies = lobbies.filter((other) => other !== lobby);
 

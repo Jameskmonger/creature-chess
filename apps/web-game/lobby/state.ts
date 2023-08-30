@@ -3,9 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LobbyPlayer } from "@creature-chess/models";
 import { LobbyServerToClient } from "@creature-chess/networking";
 
+/**
+ * TODO this code is duplicated in @cc-web, see LobbyPageContext
+ */
 export type LobbyState = {
 	players: LobbyPlayer[];
 	startingAtMs: number;
+	maxPlayers: number;
+	lobbyWaitTimeSeconds: number;
 } | null;
 
 const initialState = null as LobbyState;
@@ -20,6 +25,8 @@ export const { reducer, actions: LobbyCommands } = createSlice({
 		) => ({
 			players: action.payload.players,
 			startingAtMs: action.payload.startTimestamp,
+			lobbyWaitTimeSeconds: action.payload.lobbyWaitTimeSeconds,
+			maxPlayers: action.payload.maxPlayers,
 		}),
 		updatePlayers: (
 			state,

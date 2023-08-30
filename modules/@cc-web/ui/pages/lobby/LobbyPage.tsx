@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { LOBBY_WAIT_TIME, MAX_PLAYERS_IN_GAME } from "@creature-chess/models";
-
 import { Footer } from "../../src/Footer";
 import { Countdown } from "../../src/countdown";
 import { useStyles } from "./LobbyPage.styles";
@@ -25,20 +23,25 @@ const countdownRender =
 		);
 	};
 
-const LobbyPage: React.FunctionComponent = () => {
+export function LobbyPage() {
 	const styles = useStyles();
 
-	const { players, startingAtMs } = useLobbyPage();
+	const { players, startingAtMs, maxPlayers, lobbyWaitTimeSeconds } =
+		useLobbyPage();
 
-	const botElements: React.ReactNode[] = [];
+	const botElements = React.useMemo(() => {
+		const output: React.ReactNode[] = [];
 
-	for (let i = players.length; i < MAX_PLAYERS_IN_GAME; i++) {
-		botElements.push(
-			<div key={i} className={styles.playerWrapper}>
-				<LobbyPlayerBanner player={null} />
-			</div>
-		);
-	}
+		for (let i = players.length; i < maxPlayers; i++) {
+			output.push(
+				<div key={i} className={styles.playerWrapper}>
+					<LobbyPlayerBanner player={null} />
+				</div>
+			);
+		}
+
+		return output;
+	}, [maxPlayers, players.length, styles.playerWrapper]);
 
 	return (
 		<div className={styles.lobbyPage}>
@@ -61,14 +64,12 @@ const LobbyPage: React.FunctionComponent = () => {
 				</div>
 
 				<p>
-					The game will start {LOBBY_WAIT_TIME} seconds after the lobby is
-					created, or immediately when there are {MAX_PLAYERS_IN_GAME} players
+					The game will start {lobbyWaitTimeSeconds} seconds after the lobby is
+					created, or immediately when there are {maxPlayers} players
 				</p>
 			</div>
 
 			<Footer />
 		</div>
 	);
-};
-
-export { LobbyPage };
+}
