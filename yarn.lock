@@ -2025,6 +2025,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.16.5
     "@creature-chess/models": "workspace:*"
+    "@creature-chess/user": "workspace:*"
     "@shoki-web/board-react": "workspace:*"
     "@shoki/board": "workspace:*"
     babel-loader: ^8.2.3
@@ -2095,6 +2096,7 @@ __metadata:
     "@cc-server/auth": "workspace:*"
     "@cc-server/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
+    "@creature-chess/user": "workspace:*"
     "@types/bad-words": ^3.0.1
     bad-words: ^3.0.4
     express: ^4.17.2
@@ -2246,6 +2248,12 @@ __metadata:
     "@types/redux-saga": ^0.10.5
   peerDependencies:
     redux-saga: ^1.1.3
+  languageName: unknown
+  linkType: soft
+
+"@creature-chess/user@workspace:*, @creature-chess/user@workspace:modules/@creature-chess/user":
+  version: 0.0.0-use.local
+  resolution: "@creature-chess/user@workspace:modules/@creature-chess/user"
   languageName: unknown
   linkType: soft
 

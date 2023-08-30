@@ -1,6 +1,4 @@
-import { MAX_NAME_LENGTH } from "./constants";
-
-const NAME_REGEX = /^[a-zA-Z0-9\ ]*$/;
+import { MAX_NAME_LENGTH, NAME_REGEX } from "./constants";
 
 export const validateNicknameFormat = (nickname: string | null) => {
 	if (!nickname || !nickname.length || nickname.length < 4) {

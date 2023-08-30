@@ -2,8 +2,6 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { MAX_NAME_LENGTH } from "@creature-chess/models";
-
 import { BaseRegistrationInput } from "./BaseRegistrationInput";
 
 const useStyles = createUseStyles({
@@ -13,11 +11,12 @@ const useStyles = createUseStyles({
 	},
 });
 
-const NicknameSelection: React.FunctionComponent<{
+export function NicknameSelection({ nickname, maxLength, onChange, loading }: {
 	nickname: string;
+	maxLength: number;
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	loading: boolean;
-}> = ({ nickname, onChange, loading }) => {
+}) {
 	const styles = useStyles();
 
 	return (
@@ -27,7 +26,7 @@ const NicknameSelection: React.FunctionComponent<{
 		>
 			<input
 				className={styles.nameInput}
-				maxLength={MAX_NAME_LENGTH}
+				maxLength={maxLength}
 				disabled={loading}
 				value={nickname}
 				placeholder="Nickname"
@@ -36,5 +35,3 @@ const NicknameSelection: React.FunctionComponent<{
 		</BaseRegistrationInput>
 	);
 };
-
-export { NicknameSelection };

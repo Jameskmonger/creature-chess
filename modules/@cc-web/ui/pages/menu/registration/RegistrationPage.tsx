@@ -1,6 +1,9 @@
 import * as React from "react";
 
-import { validateNicknameFormat } from "@creature-chess/models";
+import {
+	MAX_NAME_LENGTH,
+	validateNicknameFormat,
+} from "@creature-chess/user/profile";
 
 import { useStyles } from "./RegistrationPage.styles";
 import { NicknameSelection } from "./input/NicknameSelection";
@@ -57,6 +60,7 @@ export function RegistrationPage({ updateUser }: RegistrationPageProps) {
 			{error && <p className={styles.error}>{error}</p>}
 			<NicknameSelection
 				nickname={nickname || ""}
+				maxLength={MAX_NAME_LENGTH}
 				onChange={handleNameChange}
 				loading={loading}
 			/>

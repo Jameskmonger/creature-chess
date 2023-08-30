@@ -25,6 +25,7 @@
 		"@cc-server/auth": "workspace:*",
 		"@cc-server/data": "workspace:*",
 		"@creature-chess/models": "workspace:*",
+		"@creature-chess/user": "workspace:*",
 		"@types/bad-words": "^3.0.1",
 		"bad-words": "^3.0.4",
 		"express": "^4.17.2",

@@ -5,8 +5,6 @@ if (!APP_BASE_URL) {
 	throw new Error("No APP_BASE_URL set");
 }
 
-export const MAX_NAME_LENGTH = 16;
-
 export const MAX_PLAYERS_IN_GAME = 8;
 export const LOBBY_WAIT_TIME = 30;
 

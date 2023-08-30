@@ -30,13 +30,14 @@ ADD modules/@shoki/networking/package.json ./modules/@shoki/networking/
 ADD modules/@shoki-web/board-react/package.json ./modules/@shoki-web/board-react/
 
 ADD modules/@creature-chess/battle/package.json ./modules/@creature-chess/battle/
-ADD modules/@cc-server/data/package.json ./modules/@cc-server/data/
 ADD modules/@creature-chess/gamemode/package.json ./modules/@creature-chess/gamemode/
 ADD modules/@creature-chess/models/package.json ./modules/@creature-chess/models/
 ADD modules/@creature-chess/networking/package.json ./modules/@creature-chess/networking/
+ADD modules/@creature-chess/user/package.json ./modules/@creature-chess/user/
 
 ADD modules/@cc-server/auth/package.json ./modules/@cc-server/auth/
 ADD modules/@cc-server/bot/package.json ./modules/@cc-server/bot/
+ADD modules/@cc-server/data/package.json ./modules/@cc-server/data/
 
 ADD modules/@cc-web/auth/package.json ./modules/@cc-web/auth/
 ADD modules/@cc-web/ui/package.json ./modules/@cc-web/ui/

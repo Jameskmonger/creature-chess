@@ -2,9 +2,10 @@ import express from "express";
 import { logger as expressWinston } from "express-winston";
 
 import {
-	AVAILABLE_PROFILE_PICTURES,
-	validateNicknameFormat,
+	AVAILABLE_PROFILE_PICTURES
 } from "@creature-chess/models";
+
+import { validateNicknameFormat } from "@creature-chess/user/profile";
 
 import { authenticate, convertDatabaseUserToUserModel } from "@cc-server/auth";
 import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";

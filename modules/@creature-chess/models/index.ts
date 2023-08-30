@@ -18,7 +18,6 @@ export { PlayerPieceLocation } from "./src/playerPieceLocation";
 export { Constants };
 export * from "./src/constants";
 
-export { validateNicknameFormat } from "./src/nickname";
 export { GamePhase } from "./src/game-phase";
 export { RoundInfoState } from "./src/roundInfoState";
 export { PlayerTitle, TITLES } from "./src/titles";
