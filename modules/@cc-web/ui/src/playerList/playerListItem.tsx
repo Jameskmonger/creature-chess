@@ -57,15 +57,12 @@ const useStyles = createUseStyles({
 		width: "100%",
 	},
 	badges: {
-		"&>:not(:last-child)": {
-			marginRight: "0.25em",
-		},
-		"display": "flex",
-		"flexDirection": "row",
-		"justifyContent": "space-between",
-		"padding": "0 1em",
-		"boxSizing": "border-box",
-		"alignItems": "center",
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		padding: "0 0.25em",
+		boxSizing: "border-box",
+		alignItems: "center",
 	},
 });
 
