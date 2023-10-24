@@ -12,7 +12,7 @@ FROM node:16-alpine
 
 WORKDIR /code
 
-RUN yarn set version berry
+RUN yarn set version 3.4.1
 
 # By copying the package.json and yarn.lock files first, we can take advantage of
 # Docker's caching. This means that we don't have to re-run yarn install every
