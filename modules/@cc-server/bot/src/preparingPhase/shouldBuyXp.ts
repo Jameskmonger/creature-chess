@@ -26,7 +26,9 @@ export const shouldBuyXp = (state: PlayerState): boolean => {
 	}
 
 	const xpRequired = xpForNextLevel - xp;
-	const purchasesRequired = Math.ceil(xpRequired / DEFAULT_GAME_OPTIONS.game.buyXpAmount);
+	const purchasesRequired = Math.ceil(
+		xpRequired / DEFAULT_GAME_OPTIONS.game.buyXpAmount
+	);
 	const cost = purchasesRequired * DEFAULT_GAME_OPTIONS.game.buyXpCost;
 
 	if (purchasesRequired === 1 && hasPieceOnBench) {

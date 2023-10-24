@@ -39,6 +39,9 @@ export const controlSlice = createSlice({
 	},
 });
 
-export const board = createBoardSlice<PieceModel>("battle-tester", DEFAULT_GAME_OPTIONS.boardSize);
+export const board = createBoardSlice<PieceModel>(
+	"battle-tester",
+	DEFAULT_GAME_OPTIONS.boardSize
+);
 
 export const definitions = getAllDefinitions();

@@ -5,12 +5,12 @@ import createSagaMiddleware from "redux-saga";
 import { createBoardSlice } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { createReducers } from "./reducers";
 import { rootSaga } from "./saga";
 import { SagaContext } from "./sagaContext";
 import { AppState } from "./state";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 const composeEnhancers = composeWithDevTools({
 	trace: true,

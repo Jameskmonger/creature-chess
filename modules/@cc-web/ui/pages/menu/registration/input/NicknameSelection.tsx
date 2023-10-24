@@ -11,7 +11,12 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function NicknameSelection({ nickname, maxLength, onChange, loading }: {
+export function NicknameSelection({
+	nickname,
+	maxLength,
+	onChange,
+	loading,
+}: {
 	nickname: string;
 	maxLength: number;
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -34,4 +39,4 @@ export function NicknameSelection({ nickname, maxLength, onChange, loading }: {
 			/>
 		</BaseRegistrationInput>
 	);
-};
+}

@@ -3,14 +3,17 @@ import { createInitialBoardState } from "@shoki/board";
 import { PlayerState } from "@creature-chess/gamemode";
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { GamePhase } from "@creature-chess/models";
-import { StreakType, PlayerStreak } from "@creature-chess/models/player";
-import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { PlayerStatus } from "@creature-chess/models/game/playerList";
+import { StreakType, PlayerStreak } from "@creature-chess/models/player";
 
 import { shouldBuyXp } from "./shouldBuyXp";
 
 const createInitialPlayerState = (): PlayerState => ({
-	board: createInitialBoardState("board", { width: DEFAULT_GAME_OPTIONS.boardSize.width, height: DEFAULT_GAME_OPTIONS.boardSize.height / 2 }),
+	board: createInitialBoardState("board", {
+		width: DEFAULT_GAME_OPTIONS.boardSize.width,
+		height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
+	}),
 	bench: createInitialBoardState("bench", {
 		width: DEFAULT_GAME_OPTIONS.benchSize,
 		height: 1,

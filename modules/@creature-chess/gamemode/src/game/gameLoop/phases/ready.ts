@@ -2,6 +2,7 @@ import { put, delay, getContext } from "redux-saga/effects";
 import { Logger } from "winston";
 
 import { GamePhase } from "@creature-chess/models";
+import { GameOptions } from "@creature-chess/models/config";
 
 import {
 	playerBeforeReadyPhaseEvent,
@@ -10,9 +11,8 @@ import {
 import { Match } from "../../match";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
-import { GameOptions } from "@creature-chess/models/config";
 
-export const runReadyPhase = function*() {
+export const runReadyPhase = function* () {
 	const options: GameOptions = yield getContext("options");
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");

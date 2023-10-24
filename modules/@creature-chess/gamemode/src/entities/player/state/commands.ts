@@ -1,10 +1,10 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { StreakType, PlayerStreak } from "@creature-chess/models/player";
 import {
 	PlayerStatus,
-	PlayerBattle
+	PlayerBattle,
 } from "@creature-chess/models/game/playerList";
+import { StreakType, PlayerStreak } from "@creature-chess/models/player";
 
 import { updateCardsCommand, updateShopLockCommand } from "./cardShop";
 import { setSpectatingIdCommand } from "./spectating";

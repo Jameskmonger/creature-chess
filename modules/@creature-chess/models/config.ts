@@ -57,11 +57,11 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 		rerollCost: 2,
 		buyXpCost: 5,
 		buyXpAmount: 4,
-		piecesToEvolve: 3
+		piecesToEvolve: 3,
 	},
 
 	battle: {
 		turnCount: 300,
 		turnDuration: 100,
-	}
+	},
 };
