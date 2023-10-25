@@ -2,10 +2,8 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import { PlayerTitle } from "@creature-chess/models";
-
 import { LobbyPage } from "./LobbyPage";
-import { LobbyPageContextProvider } from "./LobbyPageContext";
+import { LobbyPageContext, LobbyPageContextProvider } from "./LobbyPageContext";
 
 export default {
 	title: "@ui / Pages / LobbyPage",
@@ -13,7 +11,8 @@ export default {
 	argTypes: {},
 } as Meta;
 
-const lobbyInfo = {
+const lobbyInfo: React.ContextType<typeof LobbyPageContext> = {
+	maxPlayers: 8,
 	players: [
 		{
 			id: "1234",
@@ -28,10 +27,14 @@ const lobbyInfo = {
 			name: "William Pickle",
 			profile: {
 				picture: 37,
-				title: PlayerTitle.HallOfFame,
+				title: {
+					color: 0xf7ee85,
+					text: "Hall of Fame",
+				},
 			},
 		},
 	],
+	lobbyWaitTimeSeconds: 60,
 	startingAtMs: Date.now() + 60_000,
 };
 

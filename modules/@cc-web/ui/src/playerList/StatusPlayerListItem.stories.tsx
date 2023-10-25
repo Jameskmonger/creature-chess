@@ -2,7 +2,7 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import { finishedBattle } from "@creature-chess/models";
+import { finishedBattle } from "@creature-chess/models/game/playerList";
 
 import { StatusPlayerListItem } from "./statusPlayerListItem";
 

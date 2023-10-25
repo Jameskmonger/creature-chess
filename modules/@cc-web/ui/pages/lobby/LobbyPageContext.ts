@@ -9,7 +9,9 @@ type LobbyInfo = {
 	lobbyWaitTimeSeconds: number;
 };
 
-const LobbyPageContext = createContext<LobbyInfo>(null as unknown as LobbyInfo);
+export const LobbyPageContext = createContext<LobbyInfo>(
+	null as unknown as LobbyInfo
+);
 LobbyPageContext.displayName = "LobbyContext";
 
 export const LobbyPageContextProvider = LobbyPageContext.Provider;
