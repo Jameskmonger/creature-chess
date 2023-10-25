@@ -12,7 +12,7 @@ import { isPlayerAlive } from "../entities/player/state/selectors";
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
 export const buyXpPlayerAction = createAction("buyXpPlayerAction");
 
-export const buyXpPlayerActionSaga = function*() {
+export const buyXpPlayerActionSaga = function* () {
 	while (true) {
 		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");

@@ -2,10 +2,10 @@ import { createBoardSlice } from "@shoki/board";
 
 import { Gamemode, playerEntity } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerProfile } from "@creature-chess/models/player";
 
 import { logger } from "../log";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 export const createPlayerEntity = (
 	gamemode: Gamemode,

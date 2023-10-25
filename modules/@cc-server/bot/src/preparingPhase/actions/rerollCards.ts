@@ -5,11 +5,11 @@ import {
 	PlayerState,
 	PlayerStateSelectors,
 } from "@creature-chess/gamemode";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 export const createRerollCardsAction = (
 	state: PlayerState,

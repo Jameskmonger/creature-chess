@@ -1,14 +1,14 @@
 import { select, race, put, delay, getContext } from "@redux-saga/core/effects";
 
 import { GamePhase } from "@creature-chess/models";
+import { GameOptions } from "@creature-chess/models/config";
 
 import { playerRunPreparingPhaseEvent } from "../../events";
 import { readyNotifier } from "../../readyNotifier";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
-import { GameOptions } from "@creature-chess/models/config";
 
-export const runPreparingPhase = function*() {
+export const runPreparingPhase = function* () {
 	const options: GameOptions = yield getContext("options");
 	const players: GameSagaContextPlayers = yield getContext("players");
 

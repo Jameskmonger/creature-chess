@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { PlayerActions } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-import { PlayerListPlayer, PlayerStatus, PlayerBattle } from "@creature-chess/models/game/playerList";
+import {
+	PlayerListPlayer,
+	PlayerStatus,
+	PlayerBattle,
+} from "@creature-chess/models/game/playerList";
 
 import { useLocalPlayerId } from "@cc-web/auth/context";
 import { StatusPlayerListItem, PlayerListItem, Layout } from "@cc-web/ui";

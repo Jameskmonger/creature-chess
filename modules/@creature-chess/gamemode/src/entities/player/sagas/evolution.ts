@@ -22,7 +22,7 @@ const pieceCanEvolve = (piece: PieceModel) => {
 	return piece.stage < definition.stages.length - 1;
 };
 
-export const evolutionSaga = function*() {
+export const evolutionSaga = function* () {
 	const {
 		boardSlices: { boardSlice, benchSlice },
 	} = yield* getPlayerEntityDependencies();
@@ -37,7 +37,7 @@ export const evolutionSaga = function*() {
 			boardSlice.commands.addBoardPieceCommand,
 			benchSlice.commands.addBoardPieceCommand,
 		],
-		function*({ payload: { piece } }) {
+		function* ({ payload: { piece } }) {
 			if (!pieceCanEvolve(piece)) {
 				return;
 			}

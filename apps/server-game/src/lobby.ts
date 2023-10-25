@@ -32,7 +32,7 @@ export class Lobby {
 	private autoStart: NodeJS.Timeout;
 
 	public constructor(private options: LobbyOptions) {
-		this.gameStartTime = Date.now() + (this.options.waitTimeS * 1000);
+		this.gameStartTime = Date.now() + this.options.waitTimeS * 1000;
 
 		this.autoStart = setTimeout(this.start, this.options.waitTimeS * 1000);
 	}
@@ -116,7 +116,7 @@ export class Lobby {
 			startTimestamp: this.gameStartTime!,
 
 			maxPlayers: this.options.maxPlayers,
-			lobbyWaitTimeSeconds: this.options.waitTimeS
+			lobbyWaitTimeSeconds: this.options.waitTimeS,
 		});
 	}
 

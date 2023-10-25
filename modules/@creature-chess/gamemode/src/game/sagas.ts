@@ -2,11 +2,12 @@ import { call, delay, getContext, put } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { Logger } from "winston";
 
+import { GameOptions } from "@creature-chess/models/config";
+
 import { PlayerEntity } from "../entities";
 import { gameFinishEvent } from "./events";
 import { gameLoopSaga } from "./gameLoop";
 import { GameState } from "./store";
-import { GameOptions } from "@creature-chess/models/config";
 
 export type GetMatchupsFn = () => {
 	homeId: string;
@@ -34,7 +35,7 @@ const stopwatch = (start: [number, number]) => {
 	return Math.round(end[0] * 1000 + end[1] / 1000000);
 };
 
-export const gameSaga = function*() {
+export const gameSaga = function* () {
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const logger: Logger = yield getContext("logger");
 

@@ -14,10 +14,10 @@ export type RerollCardsPlayerAction = ReturnType<
 >;
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
 
-export const rerollCardsPlayerActionSaga = function*() {
+export const rerollCardsPlayerActionSaga = function* () {
 	yield takeEvery<RerollCardsPlayerAction>(
 		rerollCardsPlayerAction.toString(),
-		function*() {
+		function* () {
 			const { logger } = yield* getPlayerEntityDependencies();
 
 			const isAlive = yield* select(isPlayerAlive);
@@ -37,7 +37,9 @@ export const rerollCardsPlayerActionSaga = function*() {
 				return;
 			}
 
-			yield put(updateMoneyCommand(money - DEFAULT_GAME_OPTIONS.game.rerollCost));
+			yield put(
+				updateMoneyCommand(money - DEFAULT_GAME_OPTIONS.game.rerollCost)
+			);
 			yield put(afterRerollCardsEvent());
 		}
 	);

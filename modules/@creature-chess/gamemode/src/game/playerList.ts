@@ -1,6 +1,9 @@
 import { EventEmitter } from "events";
 
-import { PlayerStatus, PlayerListPlayer } from "@creature-chess/models/game/playerList";
+import {
+	PlayerStatus,
+	PlayerListPlayer,
+} from "@creature-chess/models/game/playerList";
 
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
