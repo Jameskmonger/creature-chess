@@ -4667,10 +4667,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.17":
-  version: 16.11.17
-  resolution: "@types/node@npm:16.11.17"
-  checksum: 86ed84f79450f6aba1a6ef09f8407c10076966c3cc7cc4eb3d35b8ae4f47817e525641396ef0a667fa0a88fcdf484f6182812c074601403083bdf3b5e1ac0313
+"@types/node@npm:^18.16.0":
+  version: 18.18.6
+  resolution: "@types/node@npm:18.18.6"
+  checksum: a847639b8455fd3dfa6dbc2917274c82c9db789f1d41aaf69f94ac6c9e54c3c1dd29be6e1e1ccd7c17e54db3d78d7011bc4e70544c6447ceca253dccc0a187e1
   languageName: node
   linkType: hard
 
@@ -7845,7 +7845,7 @@ __metadata:
     "@storybook/react": ^6.5.7
     "@trivago/prettier-plugin-sort-imports": ^3.2.0
     "@types/jest": ^27.0.3
-    "@types/node": ^16.11.17
+    "@types/node": ^18.16.0
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     "@types/react-modal": ^3.13.1
