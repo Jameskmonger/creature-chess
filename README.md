@@ -12,8 +12,7 @@ To try the game, head to [creaturechess.gg](https://creaturechess.gg), register 
 
 - Node.js 18
 - Docker w/ docker-compose
-- Yarn (`npm i -g yarn && yarn set version 3.4.1`)
-- Auth0 set up (see below)
+- Yarn (`npm i -g yarn && yarn set version 4.0.2`)
 
 ### Environment variables
 
