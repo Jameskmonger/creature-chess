@@ -44,3 +44,7 @@ add-migration:
 	docker stop $$CONTAINER_ID; \
 	docker rm $$CONTAINER_ID; \
 	yarn workspace @cc-server/data prisma generate
+
+prisma-generate:
+	@echo "Generating prisma client"
+	yarn workspace @cc-server/data run prisma-generate

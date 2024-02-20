@@ -20,7 +20,15 @@ Copy `.env.example` to `.env` in the root of the repo.
 
 These will be automatically picked up and used by the game.
 
-### Setup
+### Generate Prisma client
+
+If you are aiming to work on the code locally, you must generate the Prisma client so that TypeScript understands the available types.
+
+```shell
+make prisma-generate
+```
+
+### Running it in Docker
 
 To build and run the project, you can use `make`:
 
