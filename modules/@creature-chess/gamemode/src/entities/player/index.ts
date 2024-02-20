@@ -1,10 +1,10 @@
-export { PlayerEntity, playerEntity } from "./entity";
+export { type PlayerEntity, playerEntity } from "./entity";
 export * as PlayerEntitySelectors from "./selectors";
-export { PlayerState, PlayerCommands, playerReducers } from "./state";
+export { type PlayerState, PlayerCommands, playerReducers } from "./state";
 export * as PlayerStateSelectors from "./state/selectors";
 export * as PlayerEvents from "./events";
-export { PlayerVariables } from "./variables";
+export { type PlayerVariables } from "./variables";
 export {
 	getPlayerEntityDependencies,
-	PlayerEntityDependencies,
+	type PlayerEntityDependencies,
 } from "./dependencies";

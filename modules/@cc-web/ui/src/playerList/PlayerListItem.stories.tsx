@@ -9,11 +9,7 @@ import {
 	inProgressBattle,
 	finishedBattle,
 } from "@creature-chess/models/game/playerList";
-import {
-	PlayerTitle,
-	StreakType,
-	PlayerStreak,
-} from "@creature-chess/models/player";
+import { StreakType } from "@creature-chess/models/player";
 
 import { PlayerListItem } from "./playerListItem";
 
@@ -55,7 +51,10 @@ const createPlayer = (
 	level: 4,
 	profile: {
 		picture: 1,
-		title: { color: 0xe89292, text: "Contributor" },
+		title: {
+			color: 0xe89292,
+			text: "Contributor",
+		},
 	},
 	battle,
 	...others,
@@ -111,7 +110,13 @@ FinishedBattle.args = {
 	player: createPlayer(finishedBattle("5678", false, 3, 0), {
 		name: "[BOT] Bicycle",
 		streakType: StreakType.LOSS,
-		profile: { picture: 13, title: { color: 0xf7ee85, text: "HallOfFame" } },
+		profile: {
+			picture: 13,
+			title: {
+				color: 0xf7ee85,
+				text: "Hall of Fame",
+			},
+		},
 	}),
 };
 

@@ -1,5 +1,5 @@
 export {
 	reducer as quickChatReducer,
 	commands as quickChatCommands,
-	QuickChat,
+	type QuickChat,
 } from "./state";

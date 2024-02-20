@@ -1,4 +1,5 @@
 export { Piece } from "./Piece";
-export { PieceContextProvider, PieceContext, usePiece } from "./PieceContext";
+export type { PieceContext } from "./PieceContext";
+export { PieceContextProvider, usePiece } from "./PieceContext";
 export * from "./match";
 export { Projectile } from "./Projectile";

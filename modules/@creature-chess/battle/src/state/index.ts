@@ -1,2 +1,2 @@
-export { PieceCombatState } from "./state";
-export { PieceInfoStore, pieceInfoStore } from "./store";
+export type { PieceCombatState } from "./state";
+export { type PieceInfoStore, pieceInfoStore } from "./store";

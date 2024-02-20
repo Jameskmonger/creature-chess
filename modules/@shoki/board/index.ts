@@ -1,11 +1,11 @@
-export {
+export type {
 	BoardState,
 	PiecesState as BoardPiecesState,
 	HasId,
 	PiecePosition,
 } from "./src/types";
 export {
-	BoardSlice,
+	type BoardSlice,
 	createInitialBoardState,
 	createBoardSlice,
 } from "./src/state";

@@ -1,18 +1,18 @@
-import { BuyCardPlayerAction, buyCardPlayerAction } from "./buyCard";
-import { BuyXpPlayerAction, buyXpPlayerAction } from "./buyXp";
-import { DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
-import { QuickChatPlayerAction, quickChatPlayerAction } from "./quickChat";
-import { QuitGamePlayerAction, quitGamePlayerAction } from "./quitGame";
-import { ReadyUpPlayerAction, readyUpPlayerAction } from "./readyUp";
+import { type BuyCardPlayerAction, buyCardPlayerAction } from "./buyCard";
+import { type BuyXpPlayerAction, buyXpPlayerAction } from "./buyXp";
+import { type DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
+import { type QuickChatPlayerAction, quickChatPlayerAction } from "./quickChat";
+import { type QuitGamePlayerAction, quitGamePlayerAction } from "./quitGame";
+import { type ReadyUpPlayerAction, readyUpPlayerAction } from "./readyUp";
 import {
-	RerollCardsPlayerAction,
+	type RerollCardsPlayerAction,
 	rerollCardsPlayerAction,
 } from "./rerollCards";
-import { SellPiecePlayerAction, sellPiecePlayerAction } from "./sellPiece";
-import { SpectatePlayerAction, spectatePlayerAction } from "./spectate";
-import { SwapPiecePlayerAction, swapPiecePlayerAction } from "./swapPiece";
+import { type SellPiecePlayerAction, sellPiecePlayerAction } from "./sellPiece";
+import { type SpectatePlayerAction, spectatePlayerAction } from "./spectate";
+import { type SwapPiecePlayerAction, swapPiecePlayerAction } from "./swapPiece";
 import {
-	ToggleShopLockPlayerAction,
+	type ToggleShopLockPlayerAction,
 	toggleShopLockPlayerAction,
 } from "./toggleShopLock";
 

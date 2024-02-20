@@ -2,6 +2,8 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
+import { PlayerTitle } from "@creature-chess/models/player/title";
+
 import { LobbyPage } from "./LobbyPage";
 import { LobbyPageContext, LobbyPageContextProvider } from "./LobbyPageContext";
 
@@ -30,7 +32,7 @@ const lobbyInfo: React.ContextType<typeof LobbyPageContext> = {
 				title: {
 					color: 0xf7ee85,
 					text: "Hall of Fame",
-				},
+				} as PlayerTitle,
 			},
 		},
 	],

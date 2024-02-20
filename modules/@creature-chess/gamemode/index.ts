@@ -1,24 +1,24 @@
 export { Gamemode } from "./src/game";
 
 export {
-	PlayerEntity,
+	type PlayerEntity,
 	playerEntity,
 	PlayerEntitySelectors,
-	PlayerState,
+	type PlayerState,
 	PlayerStateSelectors,
 	playerReducers,
 	PlayerCommands,
 	getPlayerEntityDependencies,
-	PlayerEntityDependencies,
+	type PlayerEntityDependencies,
 	PlayerEvents,
-	PlayerVariables,
+	type PlayerVariables,
 } from "./src/entities/player";
 export {
-	PlayerInfoState,
+	type PlayerInfoState,
 	playerInfoReducer,
-	PlayerMatchRewards,
+	type PlayerMatchRewards,
 } from "./src/entities/player/state/playerInfo";
-export { PlayerAction, PlayerActionTypesArray } from "./src/playerActions";
+export { type PlayerAction, PlayerActionTypesArray } from "./src/playerActions";
 export * as PlayerActions from "./src/playerActions";
 
 export { getPiece, getAllPieces } from "./src/player/pieceSelectors";

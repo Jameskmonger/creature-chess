@@ -1,2 +1,2 @@
 export { createUtilityValue } from "./createUtilityValue";
-export { ScoringDirection, UtilityNumberValue } from "./types";
+export { ScoringDirection, type UtilityNumberValue } from "./types";

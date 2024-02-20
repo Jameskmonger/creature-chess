@@ -3,7 +3,7 @@ export {
 	playerListReducer,
 	PlayerListCommands,
 } from "./playerList";
-export { quickChatReducer, quickChatCommands, QuickChat } from "./chat";
+export { quickChatReducer, quickChatCommands, type QuickChat } from "./chat";
 
 export { CardShop, closeShopOnFirstBuySaga } from "./cardShop";
 export { Profile } from "./profile";

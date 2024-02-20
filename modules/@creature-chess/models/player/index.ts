@@ -1,3 +1,3 @@
-export { PlayerProfile } from "./profile";
-export { PlayerStreak, StreakType } from "./streak";
-export { PlayerTitle } from "./title";
+export type { PlayerProfile } from "./profile";
+export { type PlayerStreak, StreakType } from "./streak";
+export type { PlayerTitle } from "./title";

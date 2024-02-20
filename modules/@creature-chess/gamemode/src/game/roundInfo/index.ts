@@ -1,5 +1,5 @@
 export {
 	RoundInfoCommands,
 	reducer as roundInfoReducer,
-	SetRoundInfoCommand,
+	type SetRoundInfoCommand,
 } from "./state";

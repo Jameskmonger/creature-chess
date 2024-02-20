@@ -1,6 +1,6 @@
-export { GameBoard, GameBoardLocation } from "./GameBoard";
+export { GameBoard, type GameBoardLocation } from "./GameBoard";
 export {
-	GameBoardContext,
+	type GameBoardContext,
 	GameBoardContextProvider,
 	useGameBoard,
 } from "./GameBoardContext";

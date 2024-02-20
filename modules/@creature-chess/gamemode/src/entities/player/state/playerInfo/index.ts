@@ -1,5 +1,5 @@
 export {
 	playerInfoReducer,
-	PlayerInfoState,
-	PlayerMatchRewards,
+	type PlayerInfoState,
+	type PlayerMatchRewards,
 } from "./reducer";
