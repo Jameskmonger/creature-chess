@@ -7,7 +7,7 @@ WORKDIR /code
 
 # Copy and build the @cc-server packages
 ADD modules/@cc-server/ ./modules/@cc-server/
-RUN yarn workspaces foreach --include "@cc-server/*" run build
+RUN yarn workspaces foreach --all --include "@cc-server/*" run build
 
 
 ADD apps/$APP_DIR/ ./apps/$APP_DIR/

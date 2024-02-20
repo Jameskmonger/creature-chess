@@ -16,7 +16,7 @@ build:
 db:
 	@echo "Setting up the database and running migrations..."
 	docker compose -f docker-compose.db.yml up -d postgres
-	# This step runs a server-info container because it contains the @cc-server/data package
+# This step runs a server-info container because it contains the @cc-server/data package
 	docker compose run -e DATABASE_URL server-info yarn workspace @cc-server/data prisma migrate deploy
 
 server:

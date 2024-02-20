@@ -8,11 +8,11 @@
 # yarn install.
 ###
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /code
 
-RUN yarn set version 3.4.1
+RUN yarn set version 4.0.2
 
 # By copying the package.json and yarn.lock files first, we can take advantage of
 # Docker's caching. This means that we don't have to re-run yarn install every
@@ -61,7 +61,7 @@ ADD tsconfig.json ./
 
 # Copy and build the `@shoki` packages
 ADD modules/@shoki/ ./modules/@shoki/
-RUN yarn workspaces foreach --include "@shoki/*" run build
+RUN yarn workspaces foreach --all --include "@shoki/*" run build
 
 # Copy and build the @creature-chess/models
 ADD modules/@creature-chess/models/ ./modules/@creature-chess/models/
@@ -74,4 +74,4 @@ RUN yarn workspace @cc-server/data run build
 
 # Copy and build the remaining `@creature-chess` packages
 ADD modules/@creature-chess/ ./modules/@creature-chess/
-RUN yarn workspaces foreach --include "@creature-chess/*" --exclude "@creature-chess/models" --exclude "@cc-server/data" run build
+RUN yarn workspaces foreach --all --include "@creature-chess/*" --exclude "@creature-chess/models" --exclude "@cc-server/data" run build
