@@ -22,7 +22,7 @@ module.exports = {
 		sourceType: "module",
 	},
 	plugins: ["jsdoc", "prefer-arrow", "import", "react", "@typescript-eslint"],
-	extends: ["plugin:react-hooks/recommended"],
+	extends: ["plugin:react-hooks/recommended", "plugin:storybook/recommended"],
 	settings: {
 		react: {
 			version: "detect",
