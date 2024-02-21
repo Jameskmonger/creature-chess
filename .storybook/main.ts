@@ -37,7 +37,21 @@ const config: StorybookConfig = {
 	env: config => ({
 		...config,
 		CREATURE_CHESS_IMAGE_URL: "http://localhost:6006/images"
-	})
+	}),
+	previewHead: (head) => `
+		${head}
+		<style>
+		body {
+			padding: 0 !important;
+			height: 100vh !important;
+		}
+
+		#storybook-root {
+			height: 100%;
+			width: 100%;
+		}
+		</style>
+	`,
 };
 
 export default config;
