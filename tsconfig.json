@@ -10,6 +10,7 @@
 		"downlevelIteration": true,
 		"strict": true,
 		"types": ["node", "jest"],
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"target": "ES2015"
 	}
 }
