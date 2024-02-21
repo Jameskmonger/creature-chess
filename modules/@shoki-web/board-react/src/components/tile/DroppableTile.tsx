@@ -48,7 +48,9 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({
 		}),
 	});
 
-	return <Tile ref={drop} x={x} y={y} tileSizePx={tileSizePx} onClick={onClick} />;
+	return (
+		<Tile ref={drop} x={x} y={y} tileSizePx={tileSizePx} onClick={onClick} />
+	);
 };
 
 export { DroppableTile };

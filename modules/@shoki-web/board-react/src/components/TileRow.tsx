@@ -22,7 +22,12 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function TileRow({ y, tileSizePx, onDropItem, onClickTile }: TileRowProps) {
+export function TileRow({
+	y,
+	tileSizePx,
+	onDropItem,
+	onClickTile,
+}: TileRowProps) {
 	const {
 		locked,
 		piecePositions,

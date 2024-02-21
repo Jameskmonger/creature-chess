@@ -1,8 +1,14 @@
 import React from "react";
+
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { BoardState } from "@shoki/board";
-import { ClickBoardTileEvent, DndProvider, DropBoardItemEvent } from "@shoki-web/board-react";
+
+import {
+	ClickBoardTileEvent,
+	DndProvider,
+	DropBoardItemEvent,
+} from "@shoki-web/board-react";
 
 import { BoardGrid } from "./BoardGrid";
 
@@ -20,25 +26,27 @@ function ChessBoardStoryTemplate({
 	containerHeightPx = 500,
 }: ChessBoardStoryTemplateProps) {
 	return (
-		<div style={{
-			width: `${containerWidthPx}px`,
-			height: `${containerHeightPx}px`,
-			border: "2px solid black"
-		}}>
+		<div
+			style={{
+				width: `${containerWidthPx}px`,
+				height: `${containerHeightPx}px`,
+				border: "2px solid black",
+			}}
+		>
 			<ExampleStyling />
 			<DndProvider>
 				<BoardGrid
 					state={board}
 					renderItem={(item) => ({
-						item: (
-							<span style={{ background: "#FF0000" }}>
-								{item.id}
-							</span>
-						),
-						draggable
+						item: <span style={{ background: "#FF0000" }}>{item.id}</span>,
+						draggable,
 					})}
-					onDropItem={(event: DropBoardItemEvent) => { /* ... */}}
-					onClickTile={(event: ClickBoardTileEvent) => { /* ... */}}
+					onDropItem={(event: DropBoardItemEvent) => {
+						/* ... */
+					}}
+					onClickTile={(event: ClickBoardTileEvent) => {
+						/* ... */
+					}}
 				/>
 			</DndProvider>
 		</div>

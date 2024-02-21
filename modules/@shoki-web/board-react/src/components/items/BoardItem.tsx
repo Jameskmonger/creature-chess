@@ -30,10 +30,10 @@ export const BoardItem = React.forwardRef<any, BoardItemProps>(
 					width: `${tileSizePx}px`,
 					height: `${tileSizePx}px`,
 
-					left: `${(x * tileSizePx)}px`,
-					top: `${(y * tileSizePx)}px`,
+					left: `${x * tileSizePx}px`,
+					top: `${y * tileSizePx}px`,
 
-					zIndex: TILE_BASE_Z_INDEX + y + 1
+					zIndex: TILE_BASE_Z_INDEX + y + 1,
 				}}
 			>
 				{children}

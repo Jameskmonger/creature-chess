@@ -17,7 +17,7 @@ export const DraggableBoardItem: React.FC<DraggableBoardItemProps> = ({
 	id,
 	x,
 	y,
-	tileSizePx
+	tileSizePx,
 }) => {
 	const [{}, drag] = useDrag<{ id: string }, void, {}>({
 		type: "BoardItem",

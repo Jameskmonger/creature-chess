@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
 import { BoardState } from "@shoki/board";
@@ -10,7 +11,6 @@ import { useElementSize } from "../useElementSize";
 import { BoardGridRows } from "./BoardGridRows";
 import { BoardItems } from "./items/BoardItems";
 import { BoardItemRenderFn } from "./items/renderItem";
-import classNames from "classnames";
 
 type BoardGridProps = {
 	state: BoardState;
@@ -31,7 +31,7 @@ const useStyles = createUseStyles({
 	},
 	board: {
 		position: "relative",
-	}
+	},
 });
 
 function useTileSize(
@@ -49,22 +49,20 @@ function useTileSize(
 
 export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
 	(props, forwardRef) => {
-		const {
-			state,
-			renderItem,
-			onDropItem,
-			onClickTile,
-		} = props;
+		const { state, renderItem, onDropItem, onClickTile } = props;
 
 		const boardContext = {
-			state
+			state,
 		};
 
 		const styles = useStyles();
 		const { ref, size } = useElementSize();
 		const tileSize = useTileSize(size, state.size);
 
-		const containerClass = classNames(styles.boardContainer, props.containerClassName);
+		const containerClass = classNames(
+			styles.boardContainer,
+			props.containerClassName
+		);
 		const boardClass = classNames(styles.board, props.boardClassName);
 
 		return (
@@ -77,7 +75,11 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
 					}}
 				>
 					<BoardContextProvider value={boardContext}>
-						<BoardGridRows onDropItem={onDropItem} onClickTile={onClickTile} tileSizePx={tileSize} />
+						<BoardGridRows
+							onDropItem={onDropItem}
+							onClickTile={onClickTile}
+							tileSizePx={tileSize}
+						/>
 
 						<BoardItems render={renderItem} tileSizePx={tileSize} />
 					</BoardContextProvider>

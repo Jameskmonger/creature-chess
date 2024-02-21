@@ -1,5 +1,4 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
-
 import { join, dirname } from "path";
 
 /**
@@ -11,9 +10,7 @@ function getAbsolutePath(value: string): any {
 }
 
 const config: StorybookConfig = {
-	stories: [
-		"../**/*.stories.@(js|jsx|ts|tsx)",
-	],
+	stories: ["../**/*.stories.@(js|jsx|ts|tsx)"],
 	addons: [
 		getAbsolutePath("@storybook/addon-links"),
 		getAbsolutePath("@storybook/addon-essentials"),
@@ -31,12 +28,10 @@ const config: StorybookConfig = {
 	docs: {
 		autodocs: "tag",
 	},
-	staticDirs: [
-		{ from: "../images", to: "/images" },
-	],
-	env: config => ({
+	staticDirs: [{ from: "../images", to: "/images" }],
+	env: (config) => ({
 		...config,
-		CREATURE_CHESS_IMAGE_URL: "http://localhost:6006/images"
+		CREATURE_CHESS_IMAGE_URL: "http://localhost:6006/images",
 	}),
 	previewHead: (head) => `
 		${head}

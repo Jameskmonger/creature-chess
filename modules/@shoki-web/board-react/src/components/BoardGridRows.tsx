@@ -22,7 +22,12 @@ export const BoardGridRows: React.FunctionComponent<BoardGridRowsProps> = ({
 
 	for (let y = 0; y < height; y++) {
 		rows.push(
-			<TileRow y={y} onDropItem={onDropItem} onClickTile={onClickTile} tileSizePx={tileSizePx} />
+			<TileRow
+				y={y}
+				onDropItem={onDropItem}
+				onClickTile={onClickTile}
+				tileSizePx={tileSizePx}
+			/>
 		);
 	}
 

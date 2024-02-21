@@ -176,7 +176,7 @@ const useStyles = createUseStyles<string>({
 	benchBoard: {
 		position: "absolute",
 		bottom: "0",
-	}
+	},
 });
 
 export function GameBoard({

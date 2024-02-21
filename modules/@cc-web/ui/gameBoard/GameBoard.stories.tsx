@@ -55,10 +55,13 @@ const Template: Story<any> = (args) => {
 	};
 
 	context.board.piecePositions = {
-		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 1},${args.boardHeight - 1}`]: piece1.id,
-		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 2},${args.boardHeight - 1}`]: piece2.id,
+		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 1},${args.boardHeight - 1}`]:
+			piece1.id,
+		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 2},${args.boardHeight - 1}`]:
+			piece2.id,
 		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 4},0`]: piece3.id,
-		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 4},${args.boardHeight - 1}`]: piece4.id,
+		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 4},${args.boardHeight - 1}`]:
+			piece4.id,
 		["0,0"]: piece5.id,
 	};
 
