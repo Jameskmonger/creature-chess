@@ -43,7 +43,7 @@ export const incomingSaga = <
 			const validAction = actions.includes(action.type);
 			if (!validAction) {
 				console.error(
-					`Unhandled action type: ${action.type} (for opcode ${opcode})`
+					`Unhandled action type: ${action.type} (for opcode ${String(opcode)})`
 				);
 
 				continue;
@@ -51,7 +51,7 @@ export const incomingSaga = <
 
 			if (index < expectedPacketIndex) {
 				console.warn(
-					`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex} (for opcode ${opcode})`
+					`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex} (for opcode ${String(opcode)})`
 				);
 			} else {
 				// queue future actions and execute them after the expected one arrives
