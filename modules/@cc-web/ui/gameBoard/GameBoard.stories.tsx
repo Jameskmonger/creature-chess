@@ -40,17 +40,39 @@ const Template: Story<any> = (args) => {
 		}),
 	};
 
-	const piece = Builders.buildPieceModel();
+	const piece1 = Builders.buildPieceModel({ id: "1" });
+	const piece2 = Builders.buildPieceModel({ id: "2" });
+	const piece3 = Builders.buildPieceModel({ id: "3" });
+	const piece4 = Builders.buildPieceModel({ id: "4" });
+	const piece5 = Builders.buildPieceModel({ id: "5" });
 
 	context.board.pieces = {
-		[piece.id]: piece,
+		[piece1.id]: piece1,
+		[piece2.id]: piece2,
+		[piece3.id]: piece3,
+		[piece4.id]: piece4,
+		[piece5.id]: piece5,
 	};
 
-	const pieceX = DEFAULT_GAME_OPTIONS.boardSize.width - 1;
-	const pieceY = args.boardHeight - 1;
-
 	context.board.piecePositions = {
-		[`${pieceX},${pieceY}`]: piece.id,
+		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 1},${args.boardHeight - 1}`]: piece1.id,
+		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 2},${args.boardHeight - 1}`]: piece2.id,
+		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 4},0`]: piece3.id,
+		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 4},${args.boardHeight - 1}`]: piece4.id,
+		["0,0"]: piece5.id,
+	};
+
+	const benchPiece1 = Builders.buildPieceModel({ id: "6" });
+	const benchPiece2 = Builders.buildPieceModel({ id: "6" });
+
+	context.bench.pieces = {
+		[benchPiece1.id]: benchPiece1,
+		[benchPiece2.id]: benchPiece2,
+	};
+
+	context.bench.piecePositions = {
+		["0,0"]: benchPiece1.id,
+		[`${DEFAULT_GAME_OPTIONS.benchSize - 1},0`]: benchPiece2.id,
 	};
 
 	return (
