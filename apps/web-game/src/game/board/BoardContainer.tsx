@@ -22,6 +22,8 @@ const useStyles = createUseStyles({
 	boardContainer: {
 		flex: 2,
 		position: "relative",
+		width: "100%",
+		height: "100%",
 	},
 });
 

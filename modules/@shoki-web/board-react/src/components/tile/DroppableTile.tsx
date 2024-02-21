@@ -9,6 +9,7 @@ import { Tile } from "./Tile";
 type DroppableTileProps = {
 	x: number;
 	y: number;
+	tileSizePx: number;
 	onDrop?: (event: DropBoardItemEvent) => void;
 	onClick?: (event: ClickBoardTileEvent) => void;
 };
@@ -21,6 +22,7 @@ type DropTargetCollectProps = {
 const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({
 	x,
 	y,
+	tileSizePx,
 	onDrop,
 	onClick,
 }) => {
@@ -46,7 +48,7 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({
 		}),
 	});
 
-	return <Tile ref={drop} x={x} y={y} onClick={onClick} />;
+	return <Tile ref={drop} x={x} y={y} tileSizePx={tileSizePx} onClick={onClick} />;
 };
 
 export { DroppableTile };

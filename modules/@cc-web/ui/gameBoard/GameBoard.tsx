@@ -158,14 +158,25 @@ const useStyles = createUseStyles<string>({
 		display: "flex",
 		justifyContent: "center",
 
-		marginBottom: "1em",
+		width: "100%",
+		height: "78%",
 	},
 	bench: {
+		"position": "absolute",
+		"bottom": "0",
+
+		"width": "100%",
+		"height": "20%",
+
 		"& .tile": {
 			background: "#9e9e9e !important",
 			boxShadow: "inset 0 0 2px #404040",
 		},
 	},
+	benchBoard: {
+		position: "absolute",
+		bottom: "0",
+	}
 });
 
 export function GameBoard({
@@ -187,6 +198,8 @@ export function GameBoard({
 
 	const styles = useStyles();
 
+	const ref = React.useRef<HTMLDivElement>(null);
+
 	/**
 	 * How much space, in tiles, to leave between the board and the bench.
 	 */
@@ -197,15 +210,14 @@ export function GameBoard({
 		(board.size.height + bench.size.height + SPACER_TILE_HEIGHT);
 
 	return (
-		<div className={styles.gameBoard}>
-			<DynamicAspectRatioComponent aspectRatio={aspectRatio}>
+		<div className={styles.gameBoard} ref={ref}>
+			<DynamicAspectRatioComponent aspectRatio={aspectRatio} containerRef={ref}>
 				<div className={styles.board}>
 					<BoardGrid
 						state={board}
 						onDropItem={onDropBoard}
 						onClickTile={onClickBoard}
 						renderItem={boardPieceRenderer}
-						scaleMode={"width"}
 					/>
 				</div>
 
@@ -215,6 +227,7 @@ export function GameBoard({
 						onDropItem={onDropBench}
 						onClickTile={onClickBench}
 						renderItem={benchPieceRenderer}
+						boardClassName={styles.benchBoard}
 					/>
 				</div>
 			</DynamicAspectRatioComponent>

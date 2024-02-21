@@ -4,9 +4,6 @@ import { BoardSelectors, BoardState } from "@shoki/board";
 
 export type BoardContextValue = {
 	state: BoardState;
-	ui: {
-		scaleMode: "width" | "height";
-	};
 };
 
 const BoardContext = createContext<BoardContextValue>(null!);
@@ -16,7 +13,6 @@ export const BoardContextProvider = BoardContext.Provider;
 
 const useBoard = () => useContext(BoardContext);
 export const useBoardState = () => useBoard().state;
-export const useScaleMode = () => useBoard().ui.scaleMode;
 
 export const useBelowPieceLimit = () => {
 	const boardState = useBoardState();

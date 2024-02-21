@@ -4,7 +4,7 @@ import { useDrop } from "react-dnd";
 
 import { Tile } from "./Tile";
 
-const UndroppableTile: React.FC<{ x: number; y: number }> = ({ x, y }) => {
+const UndroppableTile: React.FC<{ x: number; y: number; tileSizePx: number }> = ({ x, y, tileSizePx }) => {
 	const [{}, drop] = useDrop({
 		accept: "Piece",
 		collect: (monitor) => ({
@@ -12,7 +12,7 @@ const UndroppableTile: React.FC<{ x: number; y: number }> = ({ x, y }) => {
 		}),
 	});
 
-	return <Tile ref={drop} x={x} y={y} />;
+	return <Tile ref={drop} x={x} y={y} tileSizePx={tileSizePx} />;
 };
 
 export { UndroppableTile };

@@ -3,28 +3,25 @@ import React, { useRef } from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { useBoardState } from "../../context";
 import { ClickBoardTileEvent } from "../../events";
 
 type TileProps = {
 	x: number;
 	y: number;
+	tileSizePx: number;
 	onClick?: (event: ClickBoardTileEvent) => void;
 };
 
 // eslint-disable-next-line no-bitwise
 const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 
-const useStyles = createUseStyles<string, { boardWidth: number }>({
-	tile: (props) => ({
-		width: `${(100 / props.boardWidth).toFixed(2)}%`,
-		height: "100%",
-
+const useStyles = createUseStyles({
+	tile: {
 		position: "relative",
 		display: "inline-block",
 		boxSizing: "border-box",
 		userSelect: "none",
-	}),
+	},
 	tileInner: {
 		width: "100%",
 		height: "100%",
@@ -32,14 +29,10 @@ const useStyles = createUseStyles<string, { boardWidth: number }>({
 });
 
 export const Tile = React.forwardRef<any, TileProps>(
-	({ x, y, onClick }, ref) => {
-		const {
-			size: { width: boardWidth },
-		} = useBoardState();
-
+	({ x, y, tileSizePx, onClick }, ref) => {
 		const tileInnerRef = useRef<HTMLDivElement>(null);
 
-		const styles = useStyles({ boardWidth });
+		const styles = useStyles();
 		const isDark = isBoardTileDark(x, y);
 
 		const handleClick = onClick ? () => onClick({ x, y }) : undefined;
@@ -55,6 +48,10 @@ export const Tile = React.forwardRef<any, TileProps>(
 				className={className}
 				touch-action="none"
 				onPointerUp={handleClick}
+				style={{
+					width: `${tileSizePx}px`,
+					height: `${tileSizePx}px`,
+				}}
 			>
 				<div ref={tileInnerRef} className={styles.tileInner} />
 			</div>

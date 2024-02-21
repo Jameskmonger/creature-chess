@@ -5,11 +5,13 @@ import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
 import { TileRow } from "./TileRow";
 
 type BoardGridRowsProps = {
+	tileSizePx: number;
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;
 };
 
 export const BoardGridRows: React.FunctionComponent<BoardGridRowsProps> = ({
+	tileSizePx,
 	onDropItem,
 	onClickTile,
 }) => {
@@ -20,7 +22,7 @@ export const BoardGridRows: React.FunctionComponent<BoardGridRowsProps> = ({
 
 	for (let y = 0; y < height; y++) {
 		rows.push(
-			<TileRow y={y} onDropItem={onDropItem} onClickTile={onClickTile} />
+			<TileRow y={y} onDropItem={onDropItem} onClickTile={onClickTile} tileSizePx={tileSizePx} />
 		);
 	}
 

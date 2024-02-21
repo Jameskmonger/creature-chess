@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
 
 /**
  * This component will adjust its size to maintain the given aspect ratio,
@@ -9,11 +9,15 @@ import React, { useRef, useEffect, useCallback } from "react";
 export function DynamicAspectRatioComponent({
 	aspectRatio,
 	children,
+	containerRef,
 }: {
 	aspectRatio: number;
 	children: React.ReactNode;
+	containerRef: React.RefObject<HTMLElement>;
 }) {
-	const containerRef = useRef<HTMLDivElement>(null);
+	const [width, setWidth] = useState("100%");
+	const [height, setHeight] = useState("100%");
+
 	const componentRef = useRef<HTMLDivElement>(null);
 
 	const adjustComponentSize = useCallback(() => {
@@ -27,15 +31,15 @@ export function DynamicAspectRatioComponent({
 
 			if (aspectRatio > containerAspectRatio) {
 				// Width bound
-				component.style.width = "100%";
-				component.style.height = `${containerWidth / aspectRatio}px`;
+				setWidth("100%");
+				setHeight(`${containerWidth / aspectRatio}px`);
 			} else {
 				// Height bound
-				component.style.height = "100%";
-				component.style.width = `${containerHeight * aspectRatio}px`;
+				setWidth(`${containerHeight * aspectRatio}px`);
+				setHeight("100%");
 			}
 		}
-	}, [aspectRatio]);
+	}, [aspectRatio, containerRef]);
 
 	useEffect(() => {
 		// Initial adjustment
@@ -57,19 +61,18 @@ export function DynamicAspectRatioComponent({
 			window.removeEventListener("resize", adjustComponentSize);
 			resizeObserver.disconnect();
 		};
-	}, [adjustComponentSize]);
+	}, [adjustComponentSize, containerRef]);
 
 	return (
 		<div
-			ref={containerRef}
-			style={{ width: "100%", height: "100%", position: "relative" }}
+			ref={componentRef}
+			style={{
+				width,
+				height,
+				position: "relative",
+			}}
 		>
-			<div
-				ref={componentRef}
-				// style={{ position: "absolute", background: "lightblue" }}
-			>
-				{children}
-			</div>
+			{children}
 		</div>
 	);
 }
