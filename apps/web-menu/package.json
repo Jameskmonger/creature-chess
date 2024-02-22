@@ -25,7 +25,8 @@
 	"dependencies": {
 		"@auth0/auth0-react": "^1.10.2",
 		"@cc-web/auth": "workspace:*",
-		"@cc-web/ui": "workspace:*"
+		"@cc-web/ui": "workspace:*",
+		"process": "0.11.10"
 	},
 	"devDependencies": {
 		"awesome-typescript-loader": "^5.2.1",

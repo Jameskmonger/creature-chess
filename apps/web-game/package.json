@@ -40,6 +40,7 @@
 		"@types/react-redux": "^7.1.21",
 		"delay": "^4.4.1",
 		"pepjs": "^0.5.3",
+		"process": "0.11.10",
 		"react-div-100vh": "^0.7.0",
 		"react-media": "^1.10.0",
 		"react-modal": "^3.16.1",

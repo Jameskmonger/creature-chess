@@ -27,6 +27,9 @@ module.exports = {
 	resolve: {
 		plugins: [new TsConfigPathsPlugin()],
 		extensions: [".tsx", ".ts", ".js"],
+		fallback: {
+			"process/browser": require.resolve("process/browser"),
+		}
 	},
 
 	output: {
