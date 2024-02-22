@@ -31,7 +31,7 @@ export function PiecePicker() {
 		}
 
 		dispatch(board.commands.removeBoardPiecesCommand([selectedPiece.id]));
-	}, [selectedPiece]);
+	}, [selectedPiece, dispatch]);
 
 	React.useEffect(() => {
 		if (selectedPiece) {

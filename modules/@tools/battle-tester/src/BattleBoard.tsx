@@ -76,7 +76,7 @@ export function BattleBoard() {
 				})
 			);
 		},
-		[board]
+		[board, dispatch]
 	);
 
 	return (
