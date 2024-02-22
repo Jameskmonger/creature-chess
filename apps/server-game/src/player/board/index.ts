@@ -9,6 +9,7 @@ import {
 	getContext,
 } from "typed-redux-saga";
 
+import { BoardState } from "@shoki/board";
 import { getDependency, getVariable } from "@shoki/engine";
 import { OutgoingRegistry } from "@shoki/networking";
 
@@ -25,6 +26,7 @@ import {
 	Match,
 	PlayerEvents,
 } from "@creature-chess/gamemode";
+import { PieceModel } from "@creature-chess/models";
 import { GameServerToClient } from "@creature-chess/networking";
 
 import { getPacketRegistries } from "../net/registries";
@@ -90,13 +92,13 @@ const spectatePlayerBoard = function* (
 			subscribeToBoard,
 			boardSlice,
 			PlayerStateSelectors.getPlayerBoard,
-			(board) => registry.send("boardUpdate", board)
+			(board: BoardState<PieceModel>) => registry.send("boardUpdate", board)
 		),
 		call(
 			subscribeToBoard,
 			benchSlice,
 			PlayerStateSelectors.getPlayerBench,
-			(bench) => registry.send("benchUpdate", bench)
+			(bench: BoardState<PieceModel>) => registry.send("benchUpdate", bench)
 		),
 	]);
 };
