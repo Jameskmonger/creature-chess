@@ -4,7 +4,7 @@ import * as React from "react";
 export function Text({
 	children,
 }: {
-	children: string | string[] | { toString(): string }[];
+	children: React.ReactNode;
 }) {
 	return <span>{children}</span>;
 }

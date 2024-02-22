@@ -13,6 +13,7 @@ interface Props {
 
 	vertical?: boolean;
 	renderContents?: (current: number, max: number) => string | JSX.Element;
+	children?: React.ReactNode;
 }
 
 const getPercentage = (current: number, max: number) =>

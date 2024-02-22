@@ -18,6 +18,7 @@ const useStyles = createUseStyles({
 const BaseRegistrationInput: React.FunctionComponent<{
 	heading: string;
 	info: string;
+	children: React.ReactNode;
 }> = ({ heading, info, children }) => {
 	const styles = useStyles();
 

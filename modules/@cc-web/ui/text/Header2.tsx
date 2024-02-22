@@ -13,7 +13,7 @@ const useStyles = createUseStyles({
 export function Header2({
 	children,
 }: {
-	children: string | string[] | { toString(): string }[];
+	children: React.ReactNode;
 }) {
 	const styles = useStyles();
 
