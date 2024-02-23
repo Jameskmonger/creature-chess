@@ -22,6 +22,7 @@ const useStyles = createUseStyles({
 		background: "#59616b",
 		fontFamily: "Arial, Helvetica, sans-serif",
 		color: "#fff",
+		userSelect: "none",
 	},
 	nameAndImage: {
 		display: "flex",
