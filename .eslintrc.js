@@ -30,12 +30,12 @@ module.exports = {
 	},
 	overrides: [
 		{
-		  files: ['*.stories.tsx'],
-		  rules: {
-			'import/no-default-export': 'off',
-		  },
+			files: ["*.stories.tsx"],
+			rules: {
+				"import/no-default-export": "off",
+			},
 		},
-	  ],
+	],
 	rules: {
 		"@typescript-eslint/adjacent-overload-signatures": "error",
 		"@typescript-eslint/array-type": [

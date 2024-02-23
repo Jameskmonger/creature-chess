@@ -10,11 +10,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function Header4({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export function Header4({ children }: { children: React.ReactNode }) {
 	const styles = useStyles();
 
 	return <h4 className={styles.h2}>{children}</h4>;

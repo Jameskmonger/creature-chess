@@ -29,7 +29,7 @@ module.exports = {
 		extensions: [".tsx", ".ts", ".js"],
 		fallback: {
 			"process/browser": require.resolve("process/browser"),
-		}
+		},
 	},
 
 	output: {

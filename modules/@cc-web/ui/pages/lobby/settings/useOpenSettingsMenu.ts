@@ -50,8 +50,11 @@ export function useOpenSettingsMenu() {
 
 	useOnClickOutside(targetRef, onTargetClickOutside);
 
-	return useMemo(() => ({
-		targetRef,
-		menuOpen,
-	}), [ targetRef, menuOpen ]);
+	return useMemo(
+		() => ({
+			targetRef,
+			menuOpen,
+		}),
+		[targetRef, menuOpen]
+	);
 }

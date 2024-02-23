@@ -51,7 +51,9 @@ export const incomingSaga = <
 
 			if (index < expectedPacketIndex) {
 				console.warn(
-					`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex} (for opcode ${String(opcode)})`
+					`Received packet index ${index} before lastReceivedPacketIndex ${expectedPacketIndex} (for opcode ${String(
+						opcode
+					)})`
 				);
 			} else {
 				// queue future actions and execute them after the expected one arrives
