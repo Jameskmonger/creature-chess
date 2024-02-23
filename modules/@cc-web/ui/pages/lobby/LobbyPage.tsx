@@ -29,19 +29,24 @@ export function LobbyPage() {
 	const { players, startingAtMs, maxPlayers, lobbyWaitTimeSeconds } =
 		useLobbyPage();
 
-	const botElements = React.useMemo(() => {
+	const playerItems = React.useMemo(() => {
 		const output: React.ReactNode[] = [];
 
-		for (let i = players.length; i < maxPlayers; i++) {
+		for (let i = 0; i < maxPlayers; i++) {
+			const player = players[i];
+
 			output.push(
-				<div key={i} className={styles.playerWrapper}>
-					<LobbyPlayerBanner player={null} />
+				<div
+					key={player ? player.id : i}
+					className={styles.playerWrapper}
+				>
+					<LobbyPlayerBanner player={player ?? null} />
 				</div>
 			);
 		}
 
 		return output;
-	}, [maxPlayers, players.length, styles.playerWrapper]);
+	}, [maxPlayers, players, styles.playerWrapper]);
 
 	return (
 		<div className={styles.lobbyPage}>
@@ -54,13 +59,7 @@ export function LobbyPage() {
 				)}
 
 				<div className={styles.players}>
-					{players.map((p) => (
-						<div key={p.id} className={styles.playerWrapper}>
-							<LobbyPlayerBanner player={p} />
-						</div>
-					))}
-
-					{botElements}
+					{playerItems}
 				</div>
 
 				<p>
