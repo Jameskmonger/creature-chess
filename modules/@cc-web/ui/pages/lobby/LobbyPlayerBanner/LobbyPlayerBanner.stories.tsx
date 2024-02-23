@@ -54,7 +54,7 @@ Contributor.args = {
 
 export const HallOfFame = Template.bind({});
 HallOfFame.args = {
-	player: createLobbyPlayer({ color: 0xf7ee85, text: "HallOfFame" }, false),
+	player: createLobbyPlayer({ color: 0xf7ee85, text: "Hall of Fame" }, false),
 };
 
 export const BotPlayer = Template.bind({});
