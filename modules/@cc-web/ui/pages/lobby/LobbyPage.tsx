@@ -5,6 +5,8 @@ import { Countdown } from "../../src/countdown";
 import { useStyles } from "./LobbyPage.styles";
 import { useLobbyPage } from "./LobbyPageContext";
 import { LobbyPlayerBanner } from "./LobbyPlayerBanner/LobbyPlayerBanner";
+import { useOpenSettingsMenu } from "./settings/useOpenSettingsMenu";
+import { SettingsMenu } from "./settings/SettingsMenu";
 
 const padNumberToTwo = (val: number) => (val < 10 ? `0${val}` : val.toString());
 
@@ -29,6 +31,9 @@ export function LobbyPage() {
 	const { players, startingAtMs, maxPlayers, lobbyWaitTimeSeconds } =
 		useLobbyPage();
 
+	const { targetRef: finalPlayerRef, menuOpen } =
+		useOpenSettingsMenu();
+
 	const playerItems = React.useMemo(() => {
 		const output: React.ReactNode[] = [];
 
@@ -39,6 +44,7 @@ export function LobbyPage() {
 				<div
 					key={player ? player.id : i}
 					className={styles.playerWrapper}
+					ref={i === maxPlayers - 1 ? finalPlayerRef : undefined}
 				>
 					<LobbyPlayerBanner player={player ?? null} />
 				</div>
@@ -46,7 +52,7 @@ export function LobbyPage() {
 		}
 
 		return output;
-	}, [maxPlayers, players, styles.playerWrapper]);
+	}, [maxPlayers, players, styles.playerWrapper, finalPlayerRef]);
 
 	return (
 		<div className={styles.lobbyPage}>
@@ -66,6 +72,10 @@ export function LobbyPage() {
 					The game will start {lobbyWaitTimeSeconds} seconds after the lobby is
 					created, or immediately when there are {maxPlayers} players
 				</p>
+
+				{
+					menuOpen && <SettingsMenu />
+				}
 			</div>
 
 			<Footer />
