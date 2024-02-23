@@ -2,12 +2,16 @@ import { Action } from "redux";
 import { EventChannel, eventChannel } from "redux-saga";
 import { put } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
-import { cancelled, fork, take } from "typed-redux-saga";
+import { all, call, cancelled, take, takeEvery } from "typed-redux-saga";
 
-import { IncomingRegistry } from "@shoki/networking";
+import { IncomingRegistry, OutgoingRegistry } from "@shoki/networking";
 
-import { LobbyServerToClient } from "@creature-chess/networking";
+import {
+	LobbyServerToClient,
+	LobbyClientToServer,
+} from "@creature-chess/networking";
 
+import { lobbyStartNowEvent } from "./actions";
 import { LobbyCommands } from "./state";
 
 const readPacketsToActions = function* (
@@ -39,17 +43,32 @@ const readPacketsToActions = function* (
 	}
 };
 
+const writeActionsToPackets = function* (
+	registry: OutgoingRegistry<LobbyClientToServer.PacketSet>
+) {
+	yield all([
+		takeEvery(lobbyStartNowEvent, function* () {
+			registry.send("startNow", { empty: true });
+		}),
+	]);
+};
+
 export const lobbyNetworking = function* (
 	socket: Socket,
 	payload: LobbyServerToClient.LobbyConnectionPacket
 ) {
 	yield put(LobbyCommands.connectToLobby(payload));
 
-	// todo fix typing
-	const registry = LobbyServerToClient.incoming(
+	const incomingRegistry = LobbyServerToClient.incoming(
 		(opcode, handler) => socket.on(opcode, handler as any),
 		(opcode, handler) => socket.off(opcode, handler as any)
 	);
+	const outgoingRegistry = LobbyClientToServer.outgoing(
+		(opcode, outgoingPayload, ack) => socket.emit(opcode, outgoingPayload, ack)
+	);
 
-	yield fork(readPacketsToActions, registry);
+	yield all([
+		call(readPacketsToActions, incomingRegistry),
+		call(writeActionsToPackets, outgoingRegistry),
+	]);
 };

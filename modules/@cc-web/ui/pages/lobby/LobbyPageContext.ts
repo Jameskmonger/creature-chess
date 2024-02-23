@@ -7,6 +7,7 @@ type LobbyInfo = {
 	startingAtMs: number;
 	maxPlayers: number;
 	lobbyWaitTimeSeconds: number;
+	onStartNow: () => void;
 };
 
 export const LobbyPageContext = createContext<LobbyInfo>(

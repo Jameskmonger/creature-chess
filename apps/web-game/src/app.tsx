@@ -12,6 +12,7 @@ import {
 	useGlobalStyles,
 } from "@cc-web/ui";
 
+import { lobbyStartNowEvent } from "../lobby/actions";
 import { Loading } from "./display/loading";
 import { GamePage } from "./game";
 import { openConnection } from "./networking";
@@ -118,10 +119,38 @@ function useOpenConnection() {
 	throw new Error("No connection method available");
 }
 
+/**
+ * Set up the lobby context
+ *
+ * TODO (jkm) refactor this, it contains too much
+ */
+function useLobbyContext() {
+	const dispatch = useDispatch();
+	const lobbyInfo = useSelector((state: AppState) => state.lobby);
+
+	const onStartNow = React.useCallback(() => {
+		dispatch(lobbyStartNowEvent());
+	}, [dispatch]);
+
+	return React.useMemo(() => {
+		if (!lobbyInfo) {
+			return null;
+		}
+
+		return {
+			players: lobbyInfo.players,
+			startingAtMs: lobbyInfo.startingAtMs,
+			maxPlayers: lobbyInfo.maxPlayers,
+			lobbyWaitTimeSeconds: lobbyInfo.lobbyWaitTimeSeconds,
+			onStartNow,
+		};
+	}, [lobbyInfo, onStartNow]);
+}
+
 export const App = withErrorBoundary(() => {
 	const [error, resetError] = useErrorBoundary();
 
-	const lobbyInfo = useSelector((state: AppState) => state.lobby);
+	const lobbyContext = useLobbyContext();
 	const isInGame = useSelector((state: AppState) => state.game.ui.inGame);
 
 	useOpenConnection();
@@ -144,9 +173,9 @@ export const App = withErrorBoundary(() => {
 		return <GamePage />;
 	}
 
-	if (lobbyInfo) {
+	if (lobbyContext) {
 		return (
-			<LobbyPageContextProvider value={lobbyInfo}>
+			<LobbyPageContextProvider value={lobbyContext}>
 				<LobbyPage />
 			</LobbyPageContextProvider>
 		);
