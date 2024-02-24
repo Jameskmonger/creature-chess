@@ -3,6 +3,10 @@ import { IncomingRegistry, OutgoingRegistry } from "@shoki/networking";
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 import { PlayerProfile } from "@creature-chess/models/player";
 import {
+	GamemodeSettings,
+	GamemodeSettingsPresets,
+} from "@creature-chess/models/settings";
+import {
 	LobbyClientToServer,
 	LobbyServerToClient,
 } from "@creature-chess/networking";
@@ -31,6 +35,7 @@ type LobbyOptions = {
 	waitTimeS: number;
 	maxPlayers: number;
 	onStart: (
+		settings: GamemodeSettings,
 		members: { player: LobbyPlayer; socket: AuthenticatedSocket }[]
 	) => void;
 };
@@ -38,6 +43,10 @@ type LobbyOptions = {
 export class Lobby {
 	private members: LobbyMember[] = [];
 	private gameStartTime: number;
+
+	private gamemodeSettings: GamemodeSettings = {
+		...GamemodeSettingsPresets["default"],
+	};
 
 	private autoStart: NodeJS.Timeout;
 
@@ -104,6 +113,10 @@ export class Lobby {
 				logger.info("Lobby start requested by player");
 				this.start();
 			});
+
+			incoming.on("updateSetting", ({ key, value }) => {
+				this.updateSetting(key, value);
+			});
 		}, 500);
 	}
 
@@ -115,7 +128,7 @@ export class Lobby {
 			socket: m.socket,
 		}));
 
-		this.options.onStart(members);
+		this.options.onStart(this.gamemodeSettings, members);
 
 		this.members = [];
 	};
@@ -141,6 +154,7 @@ export class Lobby {
 
 			maxPlayers: this.options.maxPlayers,
 			lobbyWaitTimeSeconds: this.options.waitTimeS,
+			settings: this.gamemodeSettings,
 		});
 	}
 
@@ -156,5 +170,33 @@ export class Lobby {
 				profile: profile as PlayerProfile,
 			})
 		);
+	}
+
+	private updateSetting(key: keyof GamemodeSettings, value: string) {
+		if (Object.keys(this.gamemodeSettings).includes(key) === false) {
+			logger.error("Invalid gamemode setting key", { key });
+			return;
+		}
+
+		if (typeof this.gamemodeSettings[key] === "number") {
+			const parsed = parseInt(value, 10);
+
+			if (isNaN(parsed)) {
+				logger.error("Invalid gamemode setting value", { key, value });
+				return;
+			}
+
+			this.gamemodeSettings[key] = parsed;
+		} else {
+			// TODO (jkm) validate other types
+			// @ts-ignore
+			this.gamemodeSettings[key] = value;
+		}
+
+		for (const member of this.members) {
+			member.outgoingRegistry?.send("settingsUpdate", {
+				settings: this.gamemodeSettings,
+			});
+		}
 	}
 }

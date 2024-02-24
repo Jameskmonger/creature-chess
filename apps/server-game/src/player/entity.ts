@@ -4,6 +4,7 @@ import { Gamemode, playerEntity } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerProfile } from "@creature-chess/models/player";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { logger } from "../log";
 
@@ -11,7 +12,8 @@ export const createPlayerEntity = (
 	gamemode: Gamemode,
 	playerId: string,
 	name: string,
-	profile: PlayerProfile
+	profile: PlayerProfile,
+	settings: GamemodeSettings
 ) => {
 	const boardSlices = {
 		boardSlice: createBoardSlice<PieceModel>(`player-${playerId}-board`, {
@@ -26,7 +28,7 @@ export const createPlayerEntity = (
 
 	return playerEntity(
 		playerId,
-		{ logger, gamemode, boardSlices },
+		{ logger, gamemode, boardSlices, settings },
 		{ match: null, name, profile }
 	);
 };

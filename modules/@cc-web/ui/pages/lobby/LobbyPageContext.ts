@@ -1,13 +1,17 @@
 import { createContext, useContext } from "react";
 
 import { LobbyPlayer } from "@creature-chess/models/lobby";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 type LobbyInfo = {
 	players: LobbyPlayer[];
 	startingAtMs: number;
 	maxPlayers: number;
 	lobbyWaitTimeSeconds: number;
+
+	settings: GamemodeSettings;
 	onStartNow: () => void;
+	onUpdateSetting: (key: keyof GamemodeSettings, value: string) => void;
 };
 
 export const LobbyPageContext = createContext<LobbyInfo>(

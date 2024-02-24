@@ -1,5 +1,7 @@
 import { Server } from "socket.io";
 
+import { GamemodeSettings } from "@creature-chess/models/settings";
+
 import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";
 
 import { createManagementClient } from "./external/auth0";
@@ -16,6 +18,7 @@ const LOBBY_WAIT_TIME = 30;
 
 const startGame = async (
 	database: DatabaseConnection,
+	settings: GamemodeSettings,
 	players: PlayerGameParticipant[],
 	onFinish: () => void
 ) => {
@@ -30,6 +33,7 @@ const startGame = async (
 	}
 
 	const game = new Game(
+		settings,
 		{ players, bots },
 		{
 			onFinish: (winner) => {
@@ -91,10 +95,10 @@ export const startServer = async ({ io }: { io: Server }) => {
 		const lobby = new Lobby({
 			waitTimeS: LOBBY_WAIT_TIME,
 			maxPlayers: MAX_PLAYERS,
-			onStart: async (players) => {
+			onStart: async (settings, players) => {
 				lobbies = lobbies.filter((other) => other !== lobby);
 
-				const game = await startGame(database, players, () => {
+				const game = await startGame(database, settings, players, () => {
 					games = games.filter((other) => other !== game);
 				});
 

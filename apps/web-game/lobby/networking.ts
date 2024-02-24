@@ -11,7 +11,7 @@ import {
 	LobbyClientToServer,
 } from "@creature-chess/networking";
 
-import { lobbyStartNowEvent } from "./actions";
+import { lobbyStartNowEvent, lobbyUpdateSettingEvent } from "./actions";
 import { LobbyCommands } from "./state";
 
 const readPacketsToActions = function* (
@@ -23,6 +23,10 @@ const readPacketsToActions = function* (
 		channel = eventChannel((emit) => {
 			registry.on("lobbyUpdate", ({ players }) => {
 				emit(LobbyCommands.updatePlayers({ players }));
+			});
+
+			registry.on("settingsUpdate", ({ settings }) => {
+				emit(LobbyCommands.updateSettings({ settings }));
 			});
 
 			// tslint:disable-next-line:no-empty
@@ -49,6 +53,12 @@ const writeActionsToPackets = function* (
 	yield all([
 		takeEvery(lobbyStartNowEvent, function* () {
 			registry.send("startNow", { empty: true });
+		}),
+		takeEvery(lobbyUpdateSettingEvent, function* (action) {
+			registry.send("updateSetting", {
+				key: action.payload.key,
+				value: action.payload.value,
+			});
 		}),
 	]);
 };

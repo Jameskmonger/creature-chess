@@ -4,6 +4,8 @@ import ReactModal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
+import { GamemodeSettings } from "@creature-chess/models/settings";
+
 import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 import { useLocalPlayer } from "@cc-web/auth/context";
 import {
@@ -12,7 +14,7 @@ import {
 	useGlobalStyles,
 } from "@cc-web/ui";
 
-import { lobbyStartNowEvent } from "../lobby/actions";
+import { lobbyStartNowEvent, lobbyUpdateSettingEvent } from "../lobby/actions";
 import { Loading } from "./display/loading";
 import { GamePage } from "./game";
 import { openConnection } from "./networking";
@@ -132,6 +134,13 @@ function useLobbyContext() {
 		dispatch(lobbyStartNowEvent());
 	}, [dispatch]);
 
+	const onUpdateSetting = React.useCallback(
+		(key: keyof GamemodeSettings, value: string) => {
+			dispatch(lobbyUpdateSettingEvent({ key, value }));
+		},
+		[dispatch]
+	);
+
 	return React.useMemo(() => {
 		if (!lobbyInfo) {
 			return null;
@@ -142,9 +151,11 @@ function useLobbyContext() {
 			startingAtMs: lobbyInfo.startingAtMs,
 			maxPlayers: lobbyInfo.maxPlayers,
 			lobbyWaitTimeSeconds: lobbyInfo.lobbyWaitTimeSeconds,
+			settings: lobbyInfo.settings,
 			onStartNow,
+			onUpdateSetting,
 		};
-	}, [lobbyInfo, onStartNow]);
+	}, [lobbyInfo, onStartNow, onUpdateSetting]);
 }
 
 export const App = withErrorBoundary(() => {

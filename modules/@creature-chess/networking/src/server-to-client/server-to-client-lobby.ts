@@ -1,6 +1,7 @@
 import { protocol as shokiProtocol } from "@shoki/networking";
 
 import { LobbyPlayer } from "@creature-chess/models/lobby";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 /**
  * TODO this code is duplicated in @cc-web, see LobbyPageContext
@@ -10,10 +11,15 @@ export type LobbyConnectionPacket = {
 	startTimestamp: number;
 	maxPlayers: number;
 	lobbyWaitTimeSeconds: number;
+	settings: GamemodeSettings;
 };
 
 export type LobbyUpdatePacket = {
 	players: LobbyPlayer[];
+};
+
+export type LobbySettingsUpdatePacket = {
+	settings: GamemodeSettings;
 };
 
 export type PacketSet = {
@@ -23,6 +29,10 @@ export type PacketSet = {
 	};
 	lobbyUpdate: {
 		payload: LobbyUpdatePacket;
+		ack: never;
+	};
+	settingsUpdate: {
+		payload: LobbySettingsUpdatePacket;
 		ack: never;
 	};
 };

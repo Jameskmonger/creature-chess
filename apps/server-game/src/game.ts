@@ -5,6 +5,7 @@ import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { LobbyPlayer } from "@creature-chess/models/lobby";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { botLogicSaga } from "@cc-server/bot";
 import { BotPersonality } from "@cc-server/data";
@@ -43,11 +44,15 @@ type GameOptions = {
 export class Game {
 	private members: GameMember[] = [];
 	private gamemode: Gamemode;
+	private settings: GamemodeSettings;
 
 	public constructor(
+		_settings: GamemodeSettings,
 		{ players, bots }: Participants,
 		{ onFinish }: GameOptions
 	) {
+		this.settings = _settings;
+
 		const gameId = uuid();
 		this.gamemode = new Gamemode(gameId, logger, DEFAULT_GAME_OPTIONS);
 
@@ -116,7 +121,8 @@ export class Game {
 			this.gamemode,
 			playerIdAsString,
 			name,
-			profile
+			profile,
+			this.settings
 		);
 
 		this.members.push({
@@ -140,7 +146,8 @@ export class Game {
 			this.gamemode,
 			playerIdAsString,
 			name,
-			profile
+			profile,
+			this.settings
 		);
 		entity.runSaga(botLogicSaga, personality);
 
