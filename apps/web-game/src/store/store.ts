@@ -1,4 +1,3 @@
-import { GamemodeSettingsPresets } from "modules/@creature-chess/models/settings";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
@@ -7,6 +6,7 @@ import { createBoardSlice } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { createReducers } from "./reducers";
 import { rootSaga } from "./saga";

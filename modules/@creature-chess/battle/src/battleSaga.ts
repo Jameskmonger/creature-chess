@@ -3,7 +3,7 @@ import { takeLatest, select, put, call, all } from "@redux-saga/core/effects";
 import { BoardState, BoardSlice } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
-import { GameOptions } from "@creature-chess/models/config";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import {
 	pauseBattleCommand,
@@ -23,7 +23,7 @@ const runBattle = function* (
 	initialBoard: BoardState<PieceModel>,
 	boardSlice: BoardSlice<PieceModel>,
 	startingTurn: number,
-	options: GameOptions
+	settings: GamemodeSettings
 ) {
 	let board: BoardState<PieceModel> = {
 		id: initialBoard.id,
@@ -52,7 +52,7 @@ const runBattle = function* (
 
 	while (true) {
 		const shouldStop =
-			turnCount >= options.battle.turnCount || isATeamDefeated(board);
+			turnCount >= settings.battleTurnCount || isATeamDefeated(board);
 
 		if (shouldStop) {
 			yield duration(1000).remaining();
@@ -65,7 +65,7 @@ const runBattle = function* (
 			yield duration(1000).remaining();
 		}
 
-		const turnTimer = duration(options.battle.turnDuration);
+		const turnTimer = duration(settings.battleTurnDuration);
 
 		board = simulateTurn(++turnCount, board, boardSlice, { combatStore });
 		yield put(
@@ -81,7 +81,7 @@ const runBattle = function* (
 
 export const battleSaga = function* (
 	boardSelector: <TState>(state: TState) => BoardState<PieceModel>,
-	gameOptions: GameOptions,
+	settings: GamemodeSettings,
 	boardSlice: BoardSlice<PieceModel>
 ) {
 	yield takeLatest<StartBattleCommand>(
@@ -104,7 +104,7 @@ export const battleSaga = function* (
 					board,
 					boardSlice,
 					turn || 0,
-					gameOptions
+					settings
 				),
 			]);
 		}

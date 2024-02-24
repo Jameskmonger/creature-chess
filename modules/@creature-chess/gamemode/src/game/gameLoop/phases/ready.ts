@@ -3,6 +3,7 @@ import { Logger } from "winston";
 
 import { GamePhase } from "@creature-chess/models";
 import { GameOptions } from "@creature-chess/models/config";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import {
 	playerBeforeReadyPhaseEvent,
@@ -17,6 +18,7 @@ export const runReadyPhase = function* () {
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
 	const logger: Logger = yield getContext("logger");
+	const settings: GamemodeSettings = yield getContext("settings");
 
 	// todo turn this into a `call` so it waits for all players
 
@@ -40,7 +42,7 @@ export const runReadyPhase = function* () {
 			awayPlayer,
 			awayIsClone,
 			logger,
-			options
+			settings
 		);
 
 		homePlayer.put(playerRunReadyPhaseEvent({ match }));

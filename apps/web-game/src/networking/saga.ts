@@ -1,10 +1,11 @@
 import { createAction } from "@reduxjs/toolkit";
-import { PieceModel } from "modules/@creature-chess/models";
-import { BoardSlice } from "modules/@shoki/board";
 import { eventChannel } from "redux-saga";
 import { Socket } from "socket.io-client";
 import { all, call, cancel, fork, take } from "typed-redux-saga";
 
+import { BoardSlice } from "@shoki/board";
+
+import { PieceModel } from "@creature-chess/models";
 import {
 	LobbyServerToClient,
 	GameServerToClient,

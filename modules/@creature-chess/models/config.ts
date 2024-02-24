@@ -28,11 +28,6 @@ export interface GameOptions {
 		maxHealth: number;
 		piecesToEvolve: number;
 	};
-
-	battle: {
-		turnCount: number;
-		turnDuration: number;
-	};
 }
 
 export const DEFAULT_GAME_OPTIONS: GameOptions = {
@@ -50,10 +45,5 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 		maxLevel: 10,
 		maxHealth: 100,
 		piecesToEvolve: 3,
-	},
-
-	battle: {
-		turnCount: 300,
-		turnDuration: 100,
 	},
 };

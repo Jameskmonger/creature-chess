@@ -30,10 +30,8 @@ import {
 } from "@creature-chess/battle";
 import { battleTurnEvent } from "@creature-chess/battle/src/events";
 import { PieceModel } from "@creature-chess/models";
-import {
-	DEFAULT_GAME_OPTIONS,
-	GameOptions,
-} from "@creature-chess/models/config";
+import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
@@ -67,9 +65,9 @@ export class Match {
 		public readonly away: PlayerEntity,
 		private awayIsClone: boolean,
 		private logger: Logger,
-		gameOptions: GameOptions
+		settings: GamemodeSettings
 	) {
-		this.store = this.createStore(gameOptions);
+		this.store = this.createStore(settings);
 
 		const mergedBoard = mergeBoards(
 			this.boardId,
@@ -190,7 +188,7 @@ export class Match {
 		return this.finalBoard;
 	}
 
-	private createStore(gameOptions: GameOptions) {
+	private createStore(settings: GamemodeSettings) {
 		// required to preserve inside the generator
 		// eslint-disable-next-line no-underscore-dangle
 		const _this = this;
@@ -199,7 +197,7 @@ export class Match {
 				call(
 					battleSaga as any,
 					(state: MatchState) => state.board,
-					gameOptions,
+					settings,
 					_this.board
 				),
 				takeEvery<BattleEvents.BattleFinishEvent>(

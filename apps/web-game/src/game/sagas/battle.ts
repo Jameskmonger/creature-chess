@@ -1,25 +1,29 @@
 import { takeLatest, put, fork } from "@redux-saga/core/effects";
+import { select } from "typed-redux-saga";
 
 import {
 	BattleCommands,
 	BattleEvents,
 	battleSaga,
 } from "@creature-chess/battle";
-import { GameEvents } from "@creature-chess/gamemode";
+import {
+	GameEvents,
+	getPlayerEntityDependencies,
+} from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { AppState } from "../../store";
 import { getPlayerSlices } from "../../store/sagaContext";
 import { setMatchBoard } from "../module/match";
 
 export const clientBattleSaga = function* () {
+	const settings = yield* select((state: AppState) => state.game.settings);
 	const { board } = yield* getPlayerSlices();
 
 	yield fork(
 		battleSaga as any,
 		(state: AppState) => state.game.match?.board!,
-		DEFAULT_GAME_OPTIONS,
+		settings,
 		board
 	);
 

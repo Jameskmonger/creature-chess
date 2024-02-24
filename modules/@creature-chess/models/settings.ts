@@ -10,6 +10,18 @@ export type GamemodeSettings = {
 	buyXpAmount: number;
 
 	benchSize: number;
+
+	/**
+	 * The number of turns before a battle ends in a draw.
+	 *
+	 * Deliberately not exposed to the frontend settings menu.
+	 */
+	battleTurnCount: number;
+
+	/**
+	 * The duration, in milliseconds, of each turn in a battle.
+	 */
+	battleTurnDuration: number;
 };
 
 export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
@@ -21,5 +33,7 @@ export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
 		buyXpCost: 5,
 		buyXpAmount: 4,
 		benchSize: 9,
+		battleTurnCount: 300,
+		battleTurnDuration: 100,
 	},
 };

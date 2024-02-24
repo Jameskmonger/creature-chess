@@ -43,6 +43,9 @@ export function SettingsMenu() {
 			<div>
 				<LobbySettingInput type="number" settingsKey="benchSize" />
 			</div>
+			<div>
+				<LobbySettingInput type="number" settingsKey="battleTurnDuration" />
+			</div>
 		</div>
 	);
 }

@@ -59,7 +59,12 @@ export class Game {
 		this.settings = _settings;
 
 		const gameId = uuid();
-		this.gamemode = new Gamemode(gameId, logger, DEFAULT_GAME_OPTIONS);
+		this.gamemode = new Gamemode(
+			gameId,
+			logger,
+			_settings,
+			DEFAULT_GAME_OPTIONS
+		);
 
 		for (const player of players) {
 			this.registerPlayer(player);

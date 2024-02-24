@@ -1,9 +1,10 @@
-import { PieceModel } from "modules/@creature-chess/models";
-import { BoardSlice } from "modules/@shoki/board";
 import { all, call } from "redux-saga/effects";
 import { put } from "typed-redux-saga";
 
+import { BoardSlice } from "@shoki/board";
+
 import { RoundInfoCommands } from "@creature-chess/gamemode";
+import { PieceModel } from "@creature-chess/models";
 import { GameServerToClient } from "@creature-chess/networking";
 
 import { clickPieceSaga, clickTileSaga } from "../board";
@@ -25,6 +26,30 @@ export const gameSaga = function* (
 		benchSlice: BoardSlice<PieceModel>;
 	}
 ) {
+	const {
+		players,
+		game: { phase, phaseStartedAtSeconds },
+		settings,
+	} = payload;
+	yield put(PlayerListCommands.updatePlayerListCommand(players));
+
+	const update = { phase, startedAt: phaseStartedAtSeconds };
+	yield put(RoundInfoCommands.setRoundInfoCommand(update));
+
+	yield put(SettingsCommands.setSettingsCommand(settings));
+
+	yield put(
+		slices.benchSlice.commands.setBoardSizeCommand({
+			width: settings.benchSize,
+			height: 1,
+		})
+	);
+
+	yield put(setInGameCommand());
+	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
+
+	// everything is initialized, so start the client's "game loop"
+
 	yield all([
 		call(goToMenuAfterGame),
 		call(preventAccidentalClose),
@@ -35,28 +60,5 @@ export const gameSaga = function* (
 		call(clientBattleSaga),
 		call(uiSaga),
 		call(handleQuickChat),
-		call(function* () {
-			const {
-				players,
-				game: { phase, phaseStartedAtSeconds },
-				settings,
-			} = payload;
-			yield put(PlayerListCommands.updatePlayerListCommand(players));
-
-			const update = { phase, startedAt: phaseStartedAtSeconds };
-			yield put(RoundInfoCommands.setRoundInfoCommand(update));
-
-			yield put(SettingsCommands.setSettingsCommand(settings));
-
-			yield put(
-				slices.benchSlice.commands.setBoardSizeCommand({
-					width: settings.benchSize,
-					height: 1,
-				})
-			);
-
-			yield put(setInGameCommand());
-			yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
-		}),
 	]);
 };

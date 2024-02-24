@@ -3,6 +3,7 @@ import { select } from "typed-redux-saga";
 import { Logger } from "winston";
 
 import { GameOptions } from "@creature-chess/models/config";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { PlayerEntity } from "../entities";
 import { gameFinishEvent } from "./events";
@@ -24,6 +25,7 @@ export type GameSagaContext = {
 		getById: (id: string) => PlayerEntity | null;
 	};
 	logger: Logger;
+	settings: GamemodeSettings;
 };
 
 export type GameSagaContextPlayers = GameSagaContext["players"];
