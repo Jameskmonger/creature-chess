@@ -16,7 +16,7 @@ export const buyXpPlayerActionSaga = function* () {
 	while (true) {
 		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
-		const { logger } = yield* getPlayerEntityDependencies();
+		const { logger, settings } = yield* getPlayerEntityDependencies();
 
 		yield take(buyXpPlayerAction.toString());
 
@@ -41,12 +41,12 @@ export const buyXpPlayerActionSaga = function* () {
 		const money = yield* select((state) => state.playerInfo.money);
 
 		// not enough money
-		if (money < DEFAULT_GAME_OPTIONS.game.buyXpCost) {
+		if (money < settings.buyXpCost) {
 			logger.info("Not enough money to buy xp", {
 				actor: { playerId, name },
 				details: {
 					money,
-					cost: DEFAULT_GAME_OPTIONS.game.buyXpCost,
+					cost: settings.buyXpCost,
 				},
 			});
 
@@ -55,7 +55,7 @@ export const buyXpPlayerActionSaga = function* () {
 			continue;
 		}
 
-		yield put(addXpCommand(DEFAULT_GAME_OPTIONS.game.buyXpAmount));
-		yield put(updateMoneyCommand(money - DEFAULT_GAME_OPTIONS.game.buyXpCost));
+		yield put(addXpCommand(settings.buyXpAmount));
+		yield put(updateMoneyCommand(money - settings.buyXpCost));
 	}
 };

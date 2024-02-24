@@ -21,7 +21,7 @@ export const getActions = (
 	settings: GamemodeSettings
 ): BrainAction[] => {
 	const actions: (BrainAction | null)[] = [
-		createBuyXpAction(state, personality),
+		createBuyXpAction(state, personality, settings),
 		createRerollCardsAction(state, personality, settings),
 	];
 

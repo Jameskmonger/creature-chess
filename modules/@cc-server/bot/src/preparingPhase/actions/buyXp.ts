@@ -5,6 +5,7 @@ import {
 	PlayerState,
 	PlayerStateSelectors,
 } from "@creature-chess/gamemode";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -14,9 +15,10 @@ import { shouldBuyXp } from "../shouldBuyXp";
 // todo make this use values, rather than a flat "shouldBuyXp"
 export const createBuyXpAction = (
 	state: PlayerState,
-	personality: BotPersonality
+	personality: BotPersonality,
+	settings: GamemodeSettings
 ): BrainAction | null => {
-	if (!shouldBuyXp(state)) {
+	if (!shouldBuyXp(state, settings)) {
 		return null;
 	}
 

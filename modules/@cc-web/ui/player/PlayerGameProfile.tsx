@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
+import { useGamemodeSettings } from "../GamemodeSettingsContext";
 import { ProgressBar } from "../src/display/progressBar";
 import { PlayerHealthbar } from "../src/player/healthbar";
 import { useStyles } from "./PlayerGameProfile.styles";
@@ -57,6 +58,7 @@ export const PlayerGameProfile: React.FC<PlayerGameProfileProps> = ({
 	onBuyXpClick,
 }) => {
 	const styles = useStyles();
+	const { buyXpAmount, buyXpCost } = useGamemodeSettings();
 
 	if (health === null) {
 		return null;
@@ -85,8 +87,8 @@ export const PlayerGameProfile: React.FC<PlayerGameProfileProps> = ({
 
 				{level !== DEFAULT_GAME_OPTIONS.game.maxLevel && (
 					<button className={styles.buyXpButton} onClick={onBuyXpClick}>
-						Buy {DEFAULT_GAME_OPTIONS.game.buyXpAmount} xp ($
-						{DEFAULT_GAME_OPTIONS.game.buyXpCost})
+						Buy {buyXpAmount} xp ($
+						{buyXpCost})
 					</button>
 				)}
 			</div>

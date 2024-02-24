@@ -1,3 +1,5 @@
+import { GamemodeSettingsPresets } from "modules/@creature-chess/models/settings";
+
 import { createInitialBoardState } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
@@ -65,7 +67,7 @@ describe("shouldBuyXp", () => {
 		});
 
 		test("should return false", () => {
-			const result = shouldBuyXp(state);
+			const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 			expect(result).toBe(false);
 		});
@@ -101,13 +103,13 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - DEFAULT_GAME_OPTIONS.game.buyXpAmount,
+							xp: xpRequired - GamemodeSettingsPresets["default"].buyXpAmount,
 						},
 					};
 				});
 
 				test("should return false", () => {
-					const result = shouldBuyXp(state);
+					const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 					expect(result).toBe(false);
 				});
@@ -133,13 +135,13 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - DEFAULT_GAME_OPTIONS.game.buyXpAmount,
+							xp: xpRequired - GamemodeSettingsPresets["default"].buyXpAmount,
 						},
 					};
 				});
 
 				test("should return true", () => {
-					const result = shouldBuyXp(state);
+					const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 					expect(result).toBe(true);
 				});
@@ -153,13 +155,14 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 2 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
+							xp:
+								xpRequired - 2 * GamemodeSettingsPresets["default"].buyXpAmount,
 						},
 					};
 				});
 
 				test("should return false", () => {
-					const result = shouldBuyXp(state);
+					const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 					expect(result).toBe(false);
 				});
@@ -185,13 +188,13 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - DEFAULT_GAME_OPTIONS.game.buyXpAmount,
+							xp: xpRequired - GamemodeSettingsPresets["default"].buyXpAmount,
 						},
 					};
 				});
 
 				test("should return true", () => {
-					const result = shouldBuyXp(state);
+					const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 					expect(result).toBe(true);
 				});
@@ -205,13 +208,14 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 2 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
+							xp:
+								xpRequired - 2 * GamemodeSettingsPresets["default"].buyXpAmount,
 						},
 					};
 				});
 
 				test("should return true", () => {
-					const result = shouldBuyXp(state);
+					const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 					expect(result).toBe(true);
 				});
@@ -225,13 +229,14 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 3 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
+							xp:
+								xpRequired - 3 * GamemodeSettingsPresets["default"].buyXpAmount,
 						},
 					};
 				});
 
 				test("should return true", () => {
-					const result = shouldBuyXp(state);
+					const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 					expect(result).toBe(true);
 				});
@@ -245,13 +250,14 @@ describe("shouldBuyXp", () => {
 						...state,
 						playerInfo: {
 							...state.playerInfo,
-							xp: xpRequired - 4 * DEFAULT_GAME_OPTIONS.game.buyXpAmount,
+							xp:
+								xpRequired - 4 * GamemodeSettingsPresets["default"].buyXpAmount,
 						},
 					};
 				});
 
 				test("should return false", () => {
-					const result = shouldBuyXp(state);
+					const result = shouldBuyXp(state, GamemodeSettingsPresets["default"]);
 
 					expect(result).toBe(false);
 				});
