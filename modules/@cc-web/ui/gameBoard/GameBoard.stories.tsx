@@ -8,6 +8,7 @@ import { DndProvider } from "@shoki-web/board-react";
 
 import { Builders, PieceModel } from "@creature-chess/models";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { Piece, PieceContextProvider } from "../piece";
 import { GameBoard } from "./GameBoard";
@@ -35,7 +36,7 @@ const Template: Story<any> = (args) => {
 			height: args.boardHeight,
 		}),
 		bench: createInitialBoardState<PieceModel>("bench", {
-			width: DEFAULT_GAME_OPTIONS.benchSize,
+			width: GamemodeSettingsPresets["default"].benchSize,
 			height: 1,
 		}),
 	};
@@ -75,7 +76,7 @@ const Template: Story<any> = (args) => {
 
 	context.bench.piecePositions = {
 		["0,0"]: benchPiece1.id,
-		[`${DEFAULT_GAME_OPTIONS.benchSize - 1},0`]: benchPiece2.id,
+		[`${GamemodeSettingsPresets["default"].benchSize - 1},0`]: benchPiece2.id,
 	};
 
 	return (

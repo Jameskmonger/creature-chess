@@ -21,7 +21,7 @@ export const createPlayerEntity = (
 			height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 		}),
 		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, {
-			width: DEFAULT_GAME_OPTIONS.benchSize,
+			width: settings.benchSize,
 			height: 1,
 		}),
 	};

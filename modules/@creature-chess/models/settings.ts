@@ -8,6 +8,8 @@ export type GamemodeSettings = {
 	rerollCost: number;
 	buyXpCost: number;
 	buyXpAmount: number;
+
+	benchSize: number;
 };
 
 export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
@@ -18,5 +20,6 @@ export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
 		rerollCost: 2,
 		buyXpCost: 5,
 		buyXpAmount: 4,
+		benchSize: 9,
 	},
 };

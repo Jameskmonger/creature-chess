@@ -7,7 +7,7 @@ import { BoardSelectors } from "@shoki/board";
 import { DndProvider } from "@shoki-web/board-react";
 
 import { PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import {
 	GameBoardContextProvider,
@@ -41,7 +41,7 @@ export function BattleBoard() {
 		bench: {
 			id: "",
 			locked: false,
-			size: { width: DEFAULT_GAME_OPTIONS.benchSize, height: 1 },
+			size: { width: GamemodeSettingsPresets["default"].benchSize, height: 1 },
 			pieces: {},
 			piecePositions: {},
 			pieceLimit: 0,

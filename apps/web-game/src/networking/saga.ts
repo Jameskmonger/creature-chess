@@ -1,4 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import { PieceModel } from "modules/@creature-chess/models";
+import { BoardSlice } from "modules/@shoki/board";
 import { eventChannel } from "redux-saga";
 import { Socket } from "socket.io-client";
 import { all, call, cancel, fork, take } from "typed-redux-saga";
@@ -23,7 +25,12 @@ type ConnectionResult =
 			payload: GameServerToClient.GameConnectionPacket;
 	  };
 
-const listenForConnection = function* (socket: Socket) {
+type BoardSlices = {
+	boardSlice: BoardSlice<PieceModel>;
+	benchSlice: BoardSlice<PieceModel>;
+};
+
+const listenForConnection = function* (socket: Socket, slices: BoardSlices) {
 	const channel = eventChannel<ConnectionResult>((emit) => {
 		const onLobbyConnected = (
 			payload: LobbyServerToClient.LobbyConnectionPacket
@@ -60,7 +67,7 @@ const listenForConnection = function* (socket: Socket) {
 			}
 			yield all([
 				call(gameNetworking, socket, connection.payload),
-				call(gameSaga, connection.payload),
+				call(gameSaga, connection.payload, slices),
 			]);
 		}
 	}
@@ -69,7 +76,7 @@ const listenForConnection = function* (socket: Socket) {
 type OpenConnectionAction = ReturnType<typeof openConnection>;
 export const openConnection = createAction<HandshakeRequest>("openConnection");
 
-export const networkingSaga = function* () {
+export const networkingSaga = function* (slices: BoardSlices) {
 	const { payload: request } = yield* take<OpenConnectionAction>(
 		openConnection.toString() as any
 	);
@@ -85,5 +92,5 @@ export const networkingSaga = function* () {
 	}
 
 	console.log("Listening for connection");
-	yield* call(listenForConnection, socket);
+	yield* call(listenForConnection, socket, slices);
 };

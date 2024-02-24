@@ -1,3 +1,4 @@
+import { GamemodeSettingsPresets } from "modules/@creature-chess/models/settings";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
@@ -23,7 +24,7 @@ export const createAppStore = () => {
 		height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 	});
 	const benchSlice = createBoardSlice<PieceModel>("local-bench", {
-		width: DEFAULT_GAME_OPTIONS.benchSize,
+		width: GamemodeSettingsPresets["default"].benchSize,
 		height: 1,
 	});
 
@@ -36,12 +37,14 @@ export const createAppStore = () => {
 		},
 	});
 
+	const slices = { boardSlice, benchSlice };
+
 	const store = createStore(
-		combineReducers<AppState>(createReducers({ boardSlice, benchSlice })),
+		combineReducers<AppState>(createReducers(slices)),
 		composeEnhancers(applyMiddleware(sagaMiddleware))
 	);
 
-	sagaMiddleware.run(rootSaga);
+	sagaMiddleware.run(rootSaga, slices);
 
 	return store;
 };

@@ -10,13 +10,13 @@ import {
 	PieceModel,
 	QuickChatOption,
 } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import {
 	PlayerStatus,
 	inProgressBattle,
 } from "@creature-chess/models/game/playerList";
 import { StreakType } from "@creature-chess/models/player";
 import { PlayerTitle } from "@creature-chess/models/player/title";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { ConnectionStatus } from "../connection-status";
 import { GameState } from "../state";
@@ -77,7 +77,7 @@ const createBoardState = (halfBoard: boolean): BoardState<PieceModel> => {
 
 const createBenchState = (): BoardState<PieceModel> => {
 	const state = createInitialBoardState<PieceModel>("local-bench", {
-		width: DEFAULT_GAME_OPTIONS.benchSize,
+		width: GamemodeSettingsPresets["default"].benchSize,
 		height: 1,
 	});
 
@@ -106,6 +106,7 @@ const createBenchState = (): BoardState<PieceModel> => {
 };
 
 const createMockedState = (halfBoard: boolean): GameState => ({
+	settings: GamemodeSettingsPresets["default"],
 	ui: {
 		connectionStatus: ConnectionStatus.CONNECTED,
 		currentOverlay: null,

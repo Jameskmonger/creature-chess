@@ -16,7 +16,7 @@ const createInitialPlayerState = (): PlayerState => ({
 		height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
 	}),
 	bench: createInitialBoardState("bench", {
-		width: DEFAULT_GAME_OPTIONS.benchSize,
+		width: GamemodeSettingsPresets["default"].benchSize,
 		height: 1,
 	}),
 	cardShop: {
