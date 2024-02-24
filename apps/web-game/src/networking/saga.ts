@@ -79,7 +79,7 @@ export const openConnection = createAction<HandshakeRequest>("openConnection");
 
 export const networkingSaga = function* (slices: BoardSlices) {
 	const { payload: request } = yield* take<OpenConnectionAction>(
-		openConnection.toString() as any
+		openConnection.toString()
 	);
 
 	let socket: Socket;

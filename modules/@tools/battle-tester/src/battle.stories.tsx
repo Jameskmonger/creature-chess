@@ -53,7 +53,7 @@ const makeStore = () => {
 
 	sagaMiddleware.run(function* () {
 		yield fork(
-			battleSaga as any,
+			battleSaga,
 			(state: BattleTesterState) => state.board,
 			GamemodeSettingsPresets["default"],
 			board

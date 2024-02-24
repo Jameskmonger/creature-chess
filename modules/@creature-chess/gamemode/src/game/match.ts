@@ -196,7 +196,7 @@ export class Match {
 		const rootSaga = function* () {
 			yield all([
 				call(
-					battleSaga as any,
+					battleSaga,
 					(state: MatchState) => state.board,
 					settings,
 					_this.board

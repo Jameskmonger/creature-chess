@@ -78,7 +78,7 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 		currentlySpectating = false,
 	} = props;
 
-	const ref = useRef();
+	const ref = useRef<HTMLDivElement>(null);
 	const [isExpanded, setIsExpanded] = useState<boolean>(false);
 	useOnClickOutside(ref, () => setIsExpanded(false));
 
@@ -92,7 +92,7 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 	};
 
 	return (
-		<div className={styles.container} onClick={toggleExpanded} ref={ref as any}>
+		<div className={styles.container} onClick={toggleExpanded} ref={ref}>
 			<Layout direction="row" noSpacer>
 				<PlayerAvatar player={player} />
 				<div className={styles.details}>

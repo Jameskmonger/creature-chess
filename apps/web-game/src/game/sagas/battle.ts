@@ -6,10 +6,7 @@ import {
 	BattleEvents,
 	battleSaga,
 } from "@creature-chess/battle";
-import {
-	GameEvents,
-	getPlayerEntityDependencies,
-} from "@creature-chess/gamemode";
+import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import { AppState } from "../../store";
@@ -21,7 +18,7 @@ export const clientBattleSaga = function* () {
 	const { board } = yield* getPlayerSlices();
 
 	yield fork(
-		battleSaga as any,
+		battleSaga,
 		(state: AppState) => state.game.match?.board!,
 		settings,
 		board

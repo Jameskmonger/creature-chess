@@ -80,7 +80,7 @@ const runBattle = function* (
 };
 
 export const battleSaga = function* (
-	boardSelector: <TState>(state: TState) => BoardState<PieceModel>,
+	boardSelector: (state: any) => BoardState<PieceModel>,
 	settings: GamemodeSettings,
 	boardSlice: BoardSlice<PieceModel>
 ) {

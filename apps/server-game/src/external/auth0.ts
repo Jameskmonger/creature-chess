@@ -4,7 +4,7 @@ import { AUTH0_ENABLED } from "@cc-server/auth/src/auth0";
 
 export const createManagementClient = (): ManagementClient => {
 	if (!AUTH0_ENABLED) {
-		return null as any;
+		return null as unknown as ManagementClient;
 	}
 
 	const {
