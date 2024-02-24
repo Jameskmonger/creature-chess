@@ -50,6 +50,23 @@ export class Lobby {
 
 	private autoStart: NodeJS.Timeout;
 
+	private availableGuestNames = [
+		"A",
+		"B",
+		"C",
+		"D",
+		"E",
+		"F",
+		"G",
+		"H",
+		"I",
+		"J",
+		"K",
+		"L",
+		"M",
+		"N",
+	];
+
 	public constructor(private options: LobbyOptions) {
 		this.gameStartTime = Date.now() + this.options.waitTimeS * 1000;
 
@@ -84,10 +101,15 @@ export class Lobby {
 				title: null,
 			};
 
+			const name =
+				socket.data.type === "guest"
+					? `Guest ${this.getGuestName()}`
+					: socket.data.nickname!;
+
 			const newMember = {
 				player: {
 					id: socket.data.id,
-					name: socket.data.nickname!,
+					name,
 					profile: socket.data.profile ?? defaultProfile,
 					type: socket.data.type,
 				},
@@ -119,6 +141,10 @@ export class Lobby {
 				this.updateSetting(key, value);
 			});
 		}, 500);
+	}
+
+	private getGuestName() {
+		return this.availableGuestNames.shift();
 	}
 
 	private start = () => {
