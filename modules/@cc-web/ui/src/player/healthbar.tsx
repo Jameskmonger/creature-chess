@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { MAX_HEALTH } from "@creature-chess/models/config";
 
 import { ProgressBar } from "../display";
 
@@ -42,7 +42,7 @@ const PlayerHealthbar: React.FunctionComponent<Props> = ({ health }) => {
 			fillClassName={classes.fill}
 			contentClassName={classes.content}
 			current={health}
-			max={DEFAULT_GAME_OPTIONS.game.maxHealth}
+			max={MAX_HEALTH}
 			renderContents={renderHealthbar}
 		/>
 	);

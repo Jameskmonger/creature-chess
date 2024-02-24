@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 import { takeEvery, select, put } from "redux-saga/effects";
 
 import { PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
 import { afterSellPieceEvent } from "../entities/player/events";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
@@ -31,10 +31,7 @@ export const sellPiecePlayerActionSaga = function* () {
 				return;
 			}
 
-			const piecesUsed = getPiecesForStage(
-				piece.stage,
-				DEFAULT_GAME_OPTIONS.game.piecesToEvolve
-			);
+			const piecesUsed = getPiecesForStage(piece.stage, PIECES_TO_EVOLVE);
 			const pieceCost = piece.definition.cost;
 			const currentMoney: number = yield select(
 				(state) => state.playerInfo.money

@@ -2,7 +2,7 @@ import { BoardSelectors } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { MAX_LEVEL } from "@creature-chess/models/config";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 // don't go under this amount
@@ -19,7 +19,7 @@ export const shouldBuyXp = (
 		playerInfo: { money, level, xp },
 	} = state;
 
-	if (level === DEFAULT_GAME_OPTIONS.game.maxLevel) {
+	if (level === MAX_LEVEL) {
 		return false;
 	}
 

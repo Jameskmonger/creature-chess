@@ -7,7 +7,7 @@ import { BoardSelectors } from "@shoki/board";
 import { PlayerActions } from "@creature-chess/gamemode";
 import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
 import { GamePhase, PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
 import { AppState } from "../../../../store";
 import { useStyles } from "./styles";
@@ -45,10 +45,7 @@ export function SellPieceButton() {
 		return null;
 	}
 
-	const piecesUsed = getPiecesForStage(
-		selectedPiece.stage,
-		DEFAULT_GAME_OPTIONS.game.piecesToEvolve
-	);
+	const piecesUsed = getPiecesForStage(selectedPiece.stage, PIECES_TO_EVOLVE);
 	const pieceCost = selectedPiece.definition.cost;
 
 	return (

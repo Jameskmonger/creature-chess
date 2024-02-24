@@ -1,6 +1,6 @@
 import { Reducer } from "redux";
 
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { MAX_HEALTH } from "@creature-chess/models/config";
 import {
 	PlayerStatus,
 	PlayerBattle,
@@ -38,7 +38,7 @@ export interface PlayerInfoState {
 
 const initialState: PlayerInfoState = {
 	status: PlayerStatus.CONNECTED,
-	health: DEFAULT_GAME_OPTIONS.game.maxHealth,
+	health: MAX_HEALTH,
 	streak: {
 		type: StreakType.WIN,
 		amount: 0,

@@ -6,31 +6,12 @@ type PhaseLengths = {
 	[GamePhase.PLAYING]: number;
 };
 
-/**
- * DEPRECATED
- *
- * This is the configuration for the game.
- *
- * It should be split into "visible" and "hidden" settings.
- */
-export interface GameOptions {
-	game: {
-		maxLevel: number;
-		maxHealth: number;
-		piecesToEvolve: number;
-	};
-}
-
 export const GAME_PHASE_LENGTHS: PhaseLengths = {
 	[GamePhase.PREPARING]: 40,
 	[GamePhase.READY]: 3,
 	[GamePhase.PLAYING]: 35,
 };
 
-export const DEFAULT_GAME_OPTIONS: GameOptions = {
-	game: {
-		maxLevel: 10,
-		maxHealth: 100,
-		piecesToEvolve: 3,
-	},
-};
+export const MAX_LEVEL = 10;
+export const MAX_HEALTH = 100;
+export const PIECES_TO_EVOLVE = 3;

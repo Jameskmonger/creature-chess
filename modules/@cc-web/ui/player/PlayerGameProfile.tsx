@@ -3,7 +3,7 @@ import * as React from "react";
 import classNames from "classnames";
 
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { MAX_LEVEL } from "@creature-chess/models/config";
 
 import { useGamemodeSettings } from "../GamemodeSettingsContext";
 import { ProgressBar } from "../src/display/progressBar";
@@ -70,7 +70,7 @@ export const PlayerGameProfile: React.FC<PlayerGameProfileProps> = ({
 				<p className={classNames(styles.item, styles.level)}>
 					Level {level} <span>${money}</span>
 				</p>
-				{level !== DEFAULT_GAME_OPTIONS.game.maxLevel && (
+				{level !== MAX_LEVEL && (
 					<ProgressBar
 						className={styles.xpProgress}
 						fillClassName={styles.xpProgressFill}
@@ -85,7 +85,7 @@ export const PlayerGameProfile: React.FC<PlayerGameProfileProps> = ({
 			<div className={styles.row}>
 				<PieceCount level={level} pieceCount={pieceCount} />
 
-				{level !== DEFAULT_GAME_OPTIONS.game.maxLevel && (
+				{level !== MAX_LEVEL && (
 					<button className={styles.buyXpButton} onClick={onBuyXpClick}>
 						Buy {buyXpAmount} xp ($
 						{buyXpCost})

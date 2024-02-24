@@ -2,7 +2,7 @@ import { take, put } from "@redux-saga/core/effects";
 import { createAction } from "@reduxjs/toolkit";
 import { select, getContext } from "typed-redux-saga";
 
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { MAX_LEVEL } from "@creature-chess/models/config";
 
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 import { addXpCommand } from "../entities/player/sagas/xp";
@@ -31,7 +31,7 @@ export const buyXpPlayerActionSaga = function* () {
 
 		const currentLevel = yield* select((state) => state.playerInfo.level);
 
-		if (currentLevel === DEFAULT_GAME_OPTIONS.game.maxLevel) {
+		if (currentLevel === MAX_LEVEL) {
 			logger.info("Player attempted to buy xp, but at max level", {
 				actor: { playerId, name },
 			});

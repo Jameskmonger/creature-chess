@@ -4,7 +4,7 @@ import { select } from "typed-redux-saga";
 import { BoardSelectors } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
 import { getDefinitionById } from "../../../definitions";
 import * as pieceSelectors from "../../../player/pieceSelectors";
@@ -72,7 +72,7 @@ export const evolutionSaga = function* () {
 			const totalInstances =
 				matchingBoardPieces.length + matchingBenchPieces.length;
 
-			if (totalInstances < DEFAULT_GAME_OPTIONS.game.piecesToEvolve) {
+			if (totalInstances < PIECES_TO_EVOLVE) {
 				return;
 			}
 
