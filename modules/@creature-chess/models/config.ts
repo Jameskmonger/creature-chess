@@ -26,7 +26,6 @@ export interface GameOptions {
 
 	game: {
 		phaseLengths: PhaseLengths;
-		startingMoney: number;
 		startingLevel: number;
 		maxLevel: number;
 		maxHealth: number;
@@ -55,7 +54,6 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 			[GamePhase.READY]: 3,
 			[GamePhase.PLAYING]: 35,
 		},
-		startingMoney: 3,
 		startingLevel: 1,
 		maxLevel: 10,
 		maxHealth: 100,

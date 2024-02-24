@@ -46,12 +46,13 @@ const initialState: PlayerInfoState = {
 	battle: null,
 	matchRewards: null,
 	opponentId: null,
-	money: DEFAULT_GAME_OPTIONS.game.startingMoney,
+	money: 0,
 	ready: false,
 	level: DEFAULT_GAME_OPTIONS.game.startingLevel,
 	xp: 0,
 };
 
+// TODO convert to redux toolkit
 export const playerInfoReducer: Reducer<
 	PlayerInfoState,
 	PlayerInfoUpdateCommand | PlayerEvent

@@ -1,7 +1,12 @@
 import { Task } from "redux-saga";
+import { put } from "typed-redux-saga";
 import { v4 as uuid } from "uuid";
 
-import { Gamemode, PlayerEntity } from "@creature-chess/gamemode";
+import {
+	Gamemode,
+	PlayerCommands,
+	PlayerEntity,
+} from "@creature-chess/gamemode";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { LobbyPlayer } from "@creature-chess/models/lobby";
@@ -125,6 +130,8 @@ export class Game {
 			this.settings
 		);
 
+		this.initialisePlayer(entity);
+
 		this.members.push({
 			type: "PLAYER",
 			id: playerIdAsString,
@@ -149,12 +156,23 @@ export class Game {
 			profile,
 			this.settings
 		);
+
+		this.initialisePlayer(entity);
+
 		entity.runSaga(botLogicSaga, personality);
 
 		this.members.push({
 			type: "BOT",
 			id: playerIdAsString,
 			entity,
+		});
+	}
+
+	private initialisePlayer(entity: PlayerEntity) {
+		const settings = this.settings;
+
+		entity.runSaga(function* () {
+			yield put(PlayerCommands.updateMoneyCommand(settings.startingMoney));
 		});
 	}
 

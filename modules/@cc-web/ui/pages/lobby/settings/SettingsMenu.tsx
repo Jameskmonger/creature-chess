@@ -31,6 +31,7 @@ export function SettingsMenu() {
 				<Button onClick={onStartNow}>Start Now</Button>
 			</div>
 			<div>
+				<LobbySettingInput type="number" settingsKey="startingMoney" />
 				<LobbySettingInput type="number" settingsKey="healthLostPerPiece" />
 			</div>
 		</div>
