@@ -186,9 +186,14 @@ export class Game {
 		entity: PlayerEntity,
 		socket: AuthenticatedSocket
 	) {
-		return entity.runSaga(playerNetworking, socket, {
-			getRoundInfo: this.gamemode.getRoundInfo,
-			getPlayers: this.gamemode.getPlayerListPlayers,
-		});
+		return entity.runSaga(
+			playerNetworking,
+			socket,
+			{
+				getRoundInfo: this.gamemode.getRoundInfo,
+				getPlayers: this.gamemode.getPlayerListPlayers,
+			},
+			this.settings
+		);
 	}
 }

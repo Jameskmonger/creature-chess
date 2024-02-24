@@ -11,9 +11,11 @@ import {
 } from "@creature-chess/gamemode";
 import { PieceModel, RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { playerListReducer, quickChatReducer, QuickChat } from "./module";
 import { matchReducer, MatchState } from "./module/match";
+import { settingsReducer } from "./module/settings";
 import { UiState, uiReducer } from "./ui";
 
 export type GameState = PlayerState & {
@@ -28,6 +30,8 @@ export type GameState = PlayerState & {
 	playerInfo: PlayerInfoState;
 	playerList: PlayerListPlayer[];
 	quickChat: QuickChat;
+
+	settings: GamemodeSettings;
 };
 
 type Slices = {
@@ -49,4 +53,5 @@ export const createGameReducer = ({
 		playerInfo: playerInfoReducer,
 		ui: uiReducer,
 		quickChat: quickChatReducer,
+		settings: settingsReducer,
 	});

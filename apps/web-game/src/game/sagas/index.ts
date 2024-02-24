@@ -7,6 +7,7 @@ import { GameServerToClient } from "@creature-chess/networking";
 import { clickPieceSaga, clickTileSaga } from "../board";
 import { PlayerListCommands, closeShopOnFirstBuySaga } from "../module";
 import { handleQuickChat } from "../module/chat/sagas";
+import { SettingsCommands } from "../module/settings";
 import { clientBattleSaga } from "./battle";
 import { goToMenuAfterGame } from "./goToMenuAfterGame";
 import { preventAccidentalClose } from "./preventAccidentalClose";
@@ -30,11 +31,14 @@ export const gameSaga = function* (
 			const {
 				players,
 				game: { phase, phaseStartedAtSeconds },
+				settings,
 			} = payload;
 			yield put(PlayerListCommands.updatePlayerListCommand(players));
 
 			const update = { phase, startedAt: phaseStartedAtSeconds };
 			yield put(RoundInfoCommands.setRoundInfoCommand(update));
+
+			yield put(SettingsCommands.setSettingsCommand(settings));
 		}),
 	]);
 };

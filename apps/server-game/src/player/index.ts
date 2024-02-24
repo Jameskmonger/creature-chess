@@ -1,3 +1,4 @@
+import { GamemodeSettings } from "modules/@creature-chess/models/settings";
 import { take, delay, all, race, call, put } from "redux-saga/effects";
 import { Socket } from "socket.io";
 import { cancelled } from "typed-redux-saga";
@@ -25,7 +26,8 @@ type Parameters = {
 
 export const playerNetworking = function* (
 	socket: Socket,
-	{ getRoundInfo, getPlayers }: Parameters
+	{ getRoundInfo, getPlayers }: Parameters,
+	settings: GamemodeSettings
 ) {
 	const registries = {
 		incoming: ClientToServer.incoming(
@@ -53,6 +55,7 @@ export const playerNetworking = function* (
 	registries.outgoing.send("gameConnected", {
 		game: getRoundInfo(),
 		players: getPlayers(),
+		settings,
 	});
 
 	try {
