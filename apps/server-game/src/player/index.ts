@@ -1,4 +1,3 @@
-import { GamemodeSettings } from "modules/@creature-chess/models/settings";
 import { take, delay, all, race, call, put } from "redux-saga/effects";
 import { Socket } from "socket.io";
 import { cancelled } from "typed-redux-saga";
@@ -10,6 +9,7 @@ import {
 } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 import { ClientToServer, GameServerToClient } from "@creature-chess/networking";
 
 import { playerBoard } from "./board";

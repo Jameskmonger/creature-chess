@@ -1,5 +1,3 @@
-import { GamemodeSettings } from "modules/@creature-chess/models/settings";
-
 import { BoardState } from "@shoki/board";
 import { protocol, ActionStream } from "@shoki/networking";
 
@@ -9,6 +7,7 @@ import {
 	RoundInfoState,
 } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];

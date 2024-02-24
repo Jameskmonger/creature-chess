@@ -1,5 +1,3 @@
-import { GamemodeSettingsPresets } from "modules/@creature-chess/models/settings";
-
 import { createInitialBoardState } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
@@ -8,6 +6,7 @@ import { GamePhase } from "@creature-chess/models";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { StreakType, PlayerStreak } from "@creature-chess/models/player";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { shouldBuyXp } from "./shouldBuyXp";
 
