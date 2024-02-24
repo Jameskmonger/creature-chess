@@ -11,6 +11,9 @@ export type GamemodeSettings = {
 
 	benchSize: number;
 
+	boardWidth: number;
+	boardHalfHeight: number;
+
 	/**
 	 * The number of turns before a battle ends in a draw.
 	 *
@@ -32,6 +35,8 @@ export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
 		rerollCost: 2,
 		buyXpCost: 5,
 		buyXpAmount: 4,
+		boardWidth: 7,
+		boardHalfHeight: 3,
 		benchSize: 9,
 		battleTurnCount: 300,
 		battleTurnDuration: 100,

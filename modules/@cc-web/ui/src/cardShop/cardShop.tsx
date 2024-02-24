@@ -3,7 +3,6 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 
 import { Card as CardModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
 import { useGamemodeSettings } from "../../GamemodeSettingsContext";
 import { Layout } from "../../layout";

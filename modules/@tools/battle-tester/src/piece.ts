@@ -1,5 +1,5 @@
 import { Builders } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { definitions } from "./state";
 
@@ -36,5 +36,8 @@ export const initialBoardPieces = {
 		["3,3"]: "102",
 		["4,3"]: "103",
 	},
-	size: DEFAULT_GAME_OPTIONS.boardSize,
+	size: {
+		width: GamemodeSettingsPresets["default"].boardWidth,
+		height: GamemodeSettingsPresets["default"].boardHalfHeight * 2,
+	},
 };

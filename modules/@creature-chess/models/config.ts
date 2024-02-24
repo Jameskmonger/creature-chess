@@ -14,14 +14,6 @@ type PhaseLengths = {
  * It should be split into "visible" and "hidden" settings.
  */
 export interface GameOptions {
-	boardSize: {
-		width: number;
-		/**
-		 * THIS MUST BE AN EVEN NUMBER
-		 */
-		height: number;
-	};
-
 	game: {
 		maxLevel: number;
 		maxHealth: number;
@@ -36,11 +28,6 @@ export const GAME_PHASE_LENGTHS: PhaseLengths = {
 };
 
 export const DEFAULT_GAME_OPTIONS: GameOptions = {
-	boardSize: {
-		width: 7,
-		height: 6, // THIS MUST BE AN EVEN NUMBER
-	},
-
 	game: {
 		maxLevel: 10,
 		maxHealth: 100,

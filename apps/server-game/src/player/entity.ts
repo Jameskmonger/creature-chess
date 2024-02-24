@@ -2,7 +2,6 @@ import { createBoardSlice } from "@shoki/board";
 
 import { Gamemode, playerEntity } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerProfile } from "@creature-chess/models/player";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
@@ -17,8 +16,8 @@ export const createPlayerEntity = (
 ) => {
 	const boardSlices = {
 		boardSlice: createBoardSlice<PieceModel>(`player-${playerId}-board`, {
-			width: DEFAULT_GAME_OPTIONS.boardSize.width,
-			height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
+			width: settings.boardWidth,
+			height: settings.boardHalfHeight,
 		}),
 		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, {
 			width: settings.benchSize,

@@ -41,6 +41,8 @@ export function SettingsMenu() {
 				<LobbySettingInput type="number" settingsKey="buyXpAmount" />
 			</div>
 			<div>
+				<LobbySettingInput type="number" settingsKey="boardWidth" />
+				<LobbySettingInput type="number" settingsKey="boardHalfHeight" />
 				<LobbySettingInput type="number" settingsKey="benchSize" />
 			</div>
 			<div>

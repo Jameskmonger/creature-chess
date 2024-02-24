@@ -2,8 +2,6 @@ import { createAction } from "@reduxjs/toolkit";
 import { put, takeEvery } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
-
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 import { afterRerollCardsEvent } from "../entities/player/events";
 import { updateMoneyCommand } from "../entities/player/state/commands";

@@ -45,6 +45,13 @@ export const gameSaga = function* (
 		})
 	);
 
+	yield put(
+		slices.boardSlice.commands.setBoardSizeCommand({
+			width: settings.boardWidth,
+			height: settings.boardHalfHeight,
+		})
+	);
+
 	yield put(setInGameCommand());
 	yield put(updateConnectionStatus(ConnectionStatus.CONNECTED));
 

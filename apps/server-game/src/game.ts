@@ -7,7 +7,6 @@ import {
 	PlayerCommands,
 	PlayerEntity,
 } from "@creature-chess/gamemode";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 import { GamemodeSettings } from "@creature-chess/models/settings";
@@ -59,12 +58,7 @@ export class Game {
 		this.settings = _settings;
 
 		const gameId = uuid();
-		this.gamemode = new Gamemode(
-			gameId,
-			logger,
-			_settings,
-			DEFAULT_GAME_OPTIONS
-		);
+		this.gamemode = new Gamemode(gameId, logger, _settings);
 
 		for (const player of players) {
 			this.registerPlayer(player);

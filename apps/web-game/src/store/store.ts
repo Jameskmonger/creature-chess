@@ -5,7 +5,6 @@ import createSagaMiddleware from "redux-saga";
 import { createBoardSlice } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { createReducers } from "./reducers";
@@ -20,8 +19,8 @@ const composeEnhancers = composeWithDevTools({
 
 export const createAppStore = () => {
 	const boardSlice = createBoardSlice<PieceModel>("local-board", {
-		width: DEFAULT_GAME_OPTIONS.boardSize.width,
-		height: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
+		width: GamemodeSettingsPresets["default"].boardWidth,
+		height: GamemodeSettingsPresets["default"].boardHalfHeight,
 	});
 	const benchSlice = createBoardSlice<PieceModel>("local-bench", {
 		width: GamemodeSettingsPresets["default"].benchSize,

@@ -7,7 +7,6 @@ import { createInitialBoardState } from "@shoki/board";
 import { DndProvider } from "@shoki-web/board-react";
 
 import { Builders, PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { Piece, PieceContextProvider } from "../piece";
@@ -32,7 +31,7 @@ const renderPiece = (piece: PieceModel) => (
 const Template: Story<any> = (args) => {
 	const context = {
 		board: createInitialBoardState<PieceModel>("board", {
-			width: DEFAULT_GAME_OPTIONS.boardSize.width,
+			width: GamemodeSettingsPresets["default"].boardWidth,
 			height: args.boardHeight,
 		}),
 		bench: createInitialBoardState<PieceModel>("bench", {
@@ -56,13 +55,16 @@ const Template: Story<any> = (args) => {
 	};
 
 	context.board.piecePositions = {
-		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 1},${args.boardHeight - 1}`]:
-			piece1.id,
-		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 2},${args.boardHeight - 1}`]:
-			piece2.id,
-		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 4},0`]: piece3.id,
-		[`${DEFAULT_GAME_OPTIONS.boardSize.width - 4},${args.boardHeight - 1}`]:
-			piece4.id,
+		[`${GamemodeSettingsPresets["default"].boardWidth - 1},${
+			args.boardHeight - 1
+		}`]: piece1.id,
+		[`${GamemodeSettingsPresets["default"].boardWidth - 2},${
+			args.boardHeight - 1
+		}`]: piece2.id,
+		[`${GamemodeSettingsPresets["default"].boardWidth - 4},0`]: piece3.id,
+		[`${GamemodeSettingsPresets["default"].boardWidth - 4},${
+			args.boardHeight - 1
+		}`]: piece4.id,
 		["0,0"]: piece5.id,
 	};
 
@@ -105,40 +107,40 @@ export const Portrait_HalfBoard = Template.bind({});
 Portrait_HalfBoard.args = {
 	width: "300px",
 	height: "500px",
-	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
+	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight,
 };
 
 export const Portrait_FullBoard = Template.bind({});
 Portrait_FullBoard.args = {
 	width: "300px",
 	height: "500px",
-	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height,
+	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight * 2,
 };
 
 export const Landscape_HalfBoard = Template.bind({});
 Landscape_HalfBoard.args = {
 	width: "500px",
 	height: "300px",
-	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
+	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight,
 };
 
 export const Landscape_FullBoard = Template.bind({});
 Landscape_FullBoard.args = {
 	width: "500px",
 	height: "300px",
-	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height,
+	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight * 2,
 };
 
 export const Square_HalfBoard = Template.bind({});
 Square_HalfBoard.args = {
 	width: "400px",
 	height: "400px",
-	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height / 2,
+	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight,
 };
 
 export const Square_FullBoard = Template.bind({});
 Square_FullBoard.args = {
 	width: "400px",
 	height: "400px",
-	boardHeight: DEFAULT_GAME_OPTIONS.boardSize.height,
+	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight * 2,
 };

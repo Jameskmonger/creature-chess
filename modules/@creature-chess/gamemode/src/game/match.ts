@@ -30,7 +30,6 @@ import {
 } from "@creature-chess/battle";
 import { battleTurnEvent } from "@creature-chess/battle/src/events";
 import { PieceModel } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { PlayerEntity } from "../entities";
@@ -51,10 +50,7 @@ export class Match {
 	private store: Store<MatchState>;
 	private finalBoard!: BoardState<PieceModel>;
 	private boardId = uuid();
-	private board: BoardSlice<PieceModel> = createBoardSlice<PieceModel>(
-		this.boardId,
-		DEFAULT_GAME_OPTIONS.boardSize
-	);
+	private board: BoardSlice<PieceModel>;
 
 	private serverFinishedMatch = pDefer();
 	private clientFinishedMatchHome = pDefer();
@@ -67,6 +63,11 @@ export class Match {
 		private logger: Logger,
 		settings: GamemodeSettings
 	) {
+		this.board = createBoardSlice<PieceModel>(this.boardId, {
+			width: settings.boardWidth,
+			height: settings.boardHalfHeight * 2,
+		});
+
 		this.store = this.createStore(settings);
 
 		const mergedBoard = mergeBoards(
