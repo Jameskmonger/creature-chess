@@ -27,9 +27,11 @@ const startGame = async (
 	const bots = await getBots(database, botsRequired);
 
 	for (const {
-		player: { id },
+		player: { id, type },
 	} of players) {
-		await database.user.addGamePlayed(id);
+		if (type === "player") {
+			await database.user.addGamePlayed(id);
+		}
 	}
 
 	const game = new Game(

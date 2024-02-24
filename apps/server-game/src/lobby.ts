@@ -89,6 +89,7 @@ export class Lobby {
 					id: socket.data.id,
 					name: socket.data.nickname!,
 					profile: socket.data.profile ?? defaultProfile,
+					type: socket.data.type,
 				},
 				socket,
 				incomingRegistry: incoming,
@@ -162,12 +163,13 @@ export class Lobby {
 		return this.members.map(
 			({
 				socket: {
-					data: { id, nickname, profile },
+					data: { id, nickname, profile, type },
 				},
 			}) => ({
 				id,
 				name: nickname as string,
 				profile: profile as PlayerProfile,
+				type,
 			})
 		);
 	}

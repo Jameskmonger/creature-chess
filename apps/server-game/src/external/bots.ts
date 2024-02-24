@@ -23,6 +23,7 @@ export const getBots = async (database: DatabaseConnection, count: number) => {
 				title: null,
 				picture,
 			},
+			type: "bot" as const,
 		};
 
 		await database.bot.addGamePlayed(id);
