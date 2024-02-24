@@ -34,7 +34,9 @@ export const getActions = (
 	// create an action to buy every card in the shop
 	for (let index = 0; index < cards.length; index++) {
 		const card = cards[index];
-		actions.push(createBuyCardAction(state, personality, index, card));
+		actions.push(
+			createBuyCardAction(state, personality, settings, index, card)
+		);
 	}
 
 	// create an action to sell all pieces on the bench

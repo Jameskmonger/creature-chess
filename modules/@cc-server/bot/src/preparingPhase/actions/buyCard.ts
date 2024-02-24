@@ -7,6 +7,7 @@ import {
 	getAllPieces,
 } from "@creature-chess/gamemode";
 import { Card, PieceModel } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -33,24 +34,39 @@ const getBenchUsageForHealth = (health: number) => {
 	return 3;
 };
 
-const shouldBuy = (state: PlayerState, card: Card) => {
+const shouldBuy = (
+	state: PlayerState,
+	card: Card,
+	settings: GamemodeSettings
+) => {
 	const allPieces = getAllPieces(state);
+
+	// don't buy a piece if we can't fit it anywhere
+	const maxPossiblePieces =
+		PlayerStateSelectors.getPlayerLevel(state) + settings.benchSize;
+	if (allPieces.length >= maxPossiblePieces) {
+		return false;
+	}
+
+	// otherwise, if we already own the piece, always buy it
 	const alreadyOwnPiece = allPieces.some(
 		(p) => p.definitionId === card.definitionId
 	);
-
 	if (alreadyOwnPiece) {
 		return true;
 	}
 
 	// bots will use more of their bench if they are low on health
 	const health = PlayerStateSelectors.getPlayerHealth(state);
-	const benchUsage = getBenchUsageForHealth(health);
+	const healthBasedBenchSize = Math.min(
+		getBenchUsageForHealth(health),
+		settings.benchSize
+	);
 
-	const hasEmptySlot =
-		allPieces.length < PlayerStateSelectors.getPlayerLevel(state) + benchUsage;
-
-	if (!hasEmptySlot) {
+	if (
+		allPieces.length >=
+		PlayerStateSelectors.getPlayerLevel(state) + healthBasedBenchSize
+	) {
 		return false;
 	}
 
@@ -64,12 +80,13 @@ const shouldBuy = (state: PlayerState, card: Card) => {
 export const createBuyCardAction = (
 	state: PlayerState,
 	personality: BotPersonality,
+	settings: GamemodeSettings,
 	index: number,
 	card: Card | null
 ): BrainAction | null => {
 	const money = PlayerStateSelectors.getPlayerMoney(state);
 
-	if (card === null || money < card.cost || !shouldBuy(state, card)) {
+	if (card === null || money < card.cost || !shouldBuy(state, card, settings)) {
 		return null;
 	}
 
