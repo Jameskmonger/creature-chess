@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import "pepjs";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 
 import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
@@ -56,4 +56,7 @@ const AppRoot = () => {
 	return <span>error: no suitable auth provider</span>;
 };
 
-ReactDOM.render(<AppRoot />, document.getElementById("approot"));
+const container = document.getElementById("approot");
+const root = createRoot(container!);
+
+root.render(<AppRoot />);
