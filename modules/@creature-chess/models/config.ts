@@ -6,6 +6,13 @@ type PhaseLengths = {
 	[GamePhase.PLAYING]: number;
 };
 
+/**
+ * DEPRECATED
+ *
+ * This is the configuration for the game.
+ *
+ * It should be split into "visible" and "hidden" settings.
+ */
 export interface GameOptions {
 	boardSize: {
 		width: number;
@@ -23,7 +30,6 @@ export interface GameOptions {
 		startingLevel: number;
 		maxLevel: number;
 		maxHealth: number;
-		healthLostPerPiece: number;
 		rerollCost: number;
 		buyXpCost: number;
 		buyXpAmount: number;
@@ -53,7 +59,6 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 		startingLevel: 1,
 		maxLevel: 10,
 		maxHealth: 100,
-		healthLostPerPiece: 3,
 		rerollCost: 2,
 		buyXpCost: 5,
 		buyXpAmount: 4,

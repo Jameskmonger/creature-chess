@@ -5,6 +5,7 @@ import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { StreakType, PlayerStreak } from "@creature-chess/models/player";
 
+import { getPlayerEntityDependencies } from "../dependencies";
 import {
 	playerMatchRewardsEvent,
 	playerDeathEvent,
@@ -67,6 +68,8 @@ const updateStreak = function* (win: boolean) {
 };
 
 export const playerMatchRewards = function* () {
+	const { settings } = yield* getPlayerEntityDependencies();
+
 	yield takeLatest<PlayerFinishMatchEvent>(
 		playerFinishMatchEvent.toString(),
 		function* ({ payload: { homeScore, awayScore, isHomePlayer } }) {
@@ -75,8 +78,7 @@ export const playerMatchRewards = function* () {
 			yield call(updateStreak, win);
 
 			const enemyPiecesRemaining = isHomePlayer ? awayScore : homeScore;
-			const damage =
-				enemyPiecesRemaining * DEFAULT_GAME_OPTIONS.game.healthLostPerPiece;
+			const damage = enemyPiecesRemaining * settings.healthLostPerPiece;
 
 			const oldValue = yield* select(getPlayerHealth);
 
