@@ -19,14 +19,18 @@ const CARD_COST_CHANCES = [
 
 const CARD_LEVEL_QUANTITIES = [45, 30, 25, 15, 10];
 
-const canTakeCardAtCost = (level: number, cost: number): boolean => {
+const canTakeCardAtCost = (
+	level: number,
+	cost: number,
+	multiplier: number
+): boolean => {
 	const chance = CARD_COST_CHANCES[cost - 1][level - 1];
 
 	if (!chance) {
 		return false;
 	}
 
-	const roll = Math.floor(Math.random() * 100);
+	const roll = Math.floor(Math.random() * 100) * (multiplier / 100);
 
 	// roll is 0 - 100, but chance is out of 100
 	// so if chance is 30, roll must be under 30 to score
@@ -65,12 +69,13 @@ export class CardDeck {
 		input: Card[],
 		count: number,
 		level: number,
+		multiplier: number,
 		excludeCards: number[] = []
 	) {
 		this.addCards(input);
 		this.shuffleAllDecks();
 
-		return this.take(count, level, excludeCards);
+		return this.take(count, level, multiplier, excludeCards);
 	}
 
 	public addCards(cards: Card[]) {
@@ -115,11 +120,16 @@ export class CardDeck {
 		return this.decks[cost - 1];
 	}
 
-	private take(count: number, level: number, excludeCards: number[] = []) {
+	private take(
+		count: number,
+		level: number,
+		multiplier: number,
+		excludeCards: number[] = []
+	) {
 		const output: Card[] = [];
 
 		for (let i = 0; i < count; i++) {
-			const takenCard = this.takeCard(level, excludeCards);
+			const takenCard = this.takeCard(level, excludeCards, multiplier);
 
 			if (!takenCard) {
 				continue;
@@ -131,10 +141,14 @@ export class CardDeck {
 		return output;
 	}
 
-	private takeCard(level: number, excludeDefinitions: number[]) {
+	private takeCard(
+		level: number,
+		excludeDefinitions: number[],
+		multiplier: number
+	) {
 		// start at 5 and work downwards
 		for (let cost = CARD_COST_CHANCES.length; cost >= 1; cost--) {
-			const roll = canTakeCardAtCost(level, cost);
+			const roll = canTakeCardAtCost(level, cost, multiplier);
 
 			if (!roll) {
 				continue;

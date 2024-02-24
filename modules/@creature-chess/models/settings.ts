@@ -6,6 +6,7 @@ export type GamemodeSettings = {
 	startingMoney: number;
 	startingLevel: number;
 	rerollCost: number;
+	rerollMultiplier: number;
 	buyXpCost: number;
 	buyXpAmount: number;
 
@@ -33,6 +34,7 @@ export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
 		startingMoney: 3,
 		startingLevel: 1,
 		rerollCost: 2,
+		rerollMultiplier: 100,
 		buyXpCost: 5,
 		buyXpAmount: 4,
 		boardWidth: 7,

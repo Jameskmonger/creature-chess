@@ -37,6 +37,7 @@ export function SettingsMenu() {
 			</div>
 			<div>
 				<LobbySettingInput type="number" settingsKey="rerollCost" />
+				<LobbySettingInput type="number" settingsKey="rerollMultiplier" />
 				<LobbySettingInput type="number" settingsKey="buyXpCost" />
 				<LobbySettingInput type="number" settingsKey="buyXpAmount" />
 			</div>

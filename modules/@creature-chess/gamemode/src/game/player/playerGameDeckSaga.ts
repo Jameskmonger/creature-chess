@@ -21,7 +21,10 @@ import {
 import { getAllPieces } from "../../player/pieceSelectors";
 import { CardDeck } from "../cardDeck";
 
-export const playerGameDeckSagaFactory = function* (deck: CardDeck) {
+export const playerGameDeckSagaFactory = function* (
+	deck: CardDeck,
+	rerollMultiplier: number
+) {
 	const boardSlice = yield* getBoardSlice();
 	const benchSlice = yield* getBenchSlice();
 
@@ -30,7 +33,7 @@ export const playerGameDeckSagaFactory = function* (deck: CardDeck) {
 		oldCards: Card[],
 		level: number,
 		excludeIds: number[]
-	) => deck.reroll(oldCards, 5, level, excludeIds);
+	) => deck.reroll(oldCards, 5, level, rerollMultiplier, excludeIds);
 
 	// when a player dies, add their cards and pieces back to the deck
 	const addToDeck = (pieces: PieceModel[], cards: Card[]) => {

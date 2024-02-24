@@ -63,7 +63,11 @@ export class Gamemode {
 			this.players.push(player);
 			this.playerList.addPlayer(player);
 
-			player.runSaga(playerGameDeckSagaFactory, this.deck);
+			player.runSaga(
+				playerGameDeckSagaFactory,
+				this.deck,
+				this.settings.rerollMultiplier
+			);
 		});
 
 		this.opponentProvider.setPlayers(players);
