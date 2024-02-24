@@ -28,7 +28,6 @@ export interface GameOptions {
 		phaseLengths: PhaseLengths;
 		maxLevel: number;
 		maxHealth: number;
-		rerollCost: number;
 		buyXpCost: number;
 		buyXpAmount: number;
 		piecesToEvolve: number;
@@ -55,7 +54,6 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 		},
 		maxLevel: 10,
 		maxHealth: 100,
-		rerollCost: 2,
 		buyXpCost: 5,
 		buyXpAmount: 4,
 		piecesToEvolve: 3,

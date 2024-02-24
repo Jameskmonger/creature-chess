@@ -35,6 +35,9 @@ export function SettingsMenu() {
 				<LobbySettingInput type="number" settingsKey="startingMoney" />
 				<LobbySettingInput type="number" settingsKey="healthLostPerPiece" />
 			</div>
+			<div>
+				<LobbySettingInput type="number" settingsKey="rerollCost" />
+			</div>
 		</div>
 	);
 }

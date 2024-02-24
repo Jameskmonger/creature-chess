@@ -18,7 +18,7 @@ export const rerollCardsPlayerActionSaga = function* () {
 	yield takeEvery<RerollCardsPlayerAction>(
 		rerollCardsPlayerAction.toString(),
 		function* () {
-			const { logger } = yield* getPlayerEntityDependencies();
+			const { logger, settings } = yield* getPlayerEntityDependencies();
 
 			const isAlive = yield* select(isPlayerAlive);
 
@@ -30,16 +30,14 @@ export const rerollCardsPlayerActionSaga = function* () {
 			const money: number = yield select((state) => state.playerInfo.money);
 
 			// not enough money
-			if (money < DEFAULT_GAME_OPTIONS.game.rerollCost) {
+			if (money < settings.rerollCost) {
 				logger.info(
-					`Attempted to reroll costing $${DEFAULT_GAME_OPTIONS.game.rerollCost} but only had $${money}`
+					`Attempted to reroll costing $${settings.rerollCost} but only had $${money}`
 				);
 				return;
 			}
 
-			yield put(
-				updateMoneyCommand(money - DEFAULT_GAME_OPTIONS.game.rerollCost)
-			);
+			yield put(updateMoneyCommand(money - settings.rerollCost));
 			yield put(afterRerollCardsEvent());
 		}
 	);

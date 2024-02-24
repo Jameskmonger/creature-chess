@@ -5,7 +5,7 @@ import {
 	PlayerState,
 	PlayerStateSelectors,
 } from "@creature-chess/gamemode";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -13,7 +13,8 @@ import { BrainAction } from "../../brain";
 
 export const createRerollCardsAction = (
 	state: PlayerState,
-	personality: BotPersonality
+	personality: BotPersonality,
+	settings: GamemodeSettings
 ): BrainAction | null => {
 	const cards = PlayerStateSelectors.getPlayerCards(state).filter(
 		(c) => c !== null
@@ -21,7 +22,7 @@ export const createRerollCardsAction = (
 	const health = PlayerStateSelectors.getPlayerHealth(state);
 	const money = PlayerStateSelectors.getPlayerMoney(state);
 
-	const canAfford = money > 13 + DEFAULT_GAME_OPTIONS.game.rerollCost;
+	const canAfford = money > 13 + settings.rerollCost;
 
 	// bots, for now, will only reroll if the shop is completely empty and they have more money than 13 + reroll cost
 	if (cards.length !== 0 || !canAfford) {

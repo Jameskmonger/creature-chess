@@ -7,7 +7,9 @@ import {
 	CreatureType,
 	DefinitionClass,
 } from "@creature-chess/models";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
+import { GamemodeSettingsContextProvider } from "../../GamemodeSettingsContext";
 import { CardShop } from "./cardShop";
 import "./cardShop.stories.css";
 
@@ -29,9 +31,11 @@ export default {
 } as Meta;
 
 const Template: Story<any> = (args) => (
-	<div className="card-shop-story">
-		<CardShop {...args} />
-	</div>
+	<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
+		<div className="card-shop-story">
+			<CardShop {...args} />
+		</div>
+	</GamemodeSettingsContextProvider>
 );
 
 const cards: CardModel[] = [

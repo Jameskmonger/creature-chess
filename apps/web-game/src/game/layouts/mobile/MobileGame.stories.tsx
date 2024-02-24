@@ -4,9 +4,11 @@ import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
 import { GamePhase } from "@creature-chess/models";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { LocalPlayerContextProvider } from "@cc-web/auth/context";
 import { useGlobalStyles } from "@cc-web/ui";
+import { GamemodeSettingsContextProvider } from "@cc-web/ui/GamemodeSettingsContext";
 
 import { ConnectionStatus } from "../../connection-status";
 import { Overlay } from "../../ui";
@@ -54,22 +56,24 @@ const Template: Story<any> = (args) => {
 	);
 
 	return (
-		<LocalPlayerContextProvider
-			value={{
-				type: "user" as const,
-				id: "1234",
-				nickname: "jkm",
-				stats: {
-					wins: 0,
-					gamesPlayed: 0,
-				},
-				registered: true,
-			}}
-		>
-			<Provider store={store}>
-				<MobileGame />
-			</Provider>
-		</LocalPlayerContextProvider>
+		<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
+			<LocalPlayerContextProvider
+				value={{
+					type: "user" as const,
+					id: "1234",
+					nickname: "jkm",
+					stats: {
+						wins: 0,
+						gamesPlayed: 0,
+					},
+					registered: true,
+				}}
+			>
+				<Provider store={store}>
+					<MobileGame />
+				</Provider>
+			</LocalPlayerContextProvider>
+		</GamemodeSettingsContextProvider>
 	);
 };
 

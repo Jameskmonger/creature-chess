@@ -1,6 +1,7 @@
 import { BoardSelectors } from "@shoki/board";
 
 import { PlayerState } from "@creature-chess/gamemode";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -16,11 +17,12 @@ import {
 
 export const getActions = (
 	state: PlayerState,
-	personality: BotPersonality
+	personality: BotPersonality,
+	settings: GamemodeSettings
 ): BrainAction[] => {
 	const actions: (BrainAction | null)[] = [
 		createBuyXpAction(state, personality),
-		createRerollCardsAction(state, personality),
+		createRerollCardsAction(state, personality, settings),
 	];
 
 	const {

@@ -5,6 +5,7 @@ export type GamemodeSettings = {
 	healthLostPerPiece: number;
 	startingMoney: number;
 	startingLevel: number;
+	rerollCost: number;
 };
 
 export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
@@ -12,5 +13,6 @@ export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
 		healthLostPerPiece: 3,
 		startingMoney: 3,
 		startingLevel: 1,
+		rerollCost: 2,
 	},
 };

@@ -5,6 +5,7 @@ import { createUseStyles } from "react-jss";
 import { Card as CardModel } from "@creature-chess/models";
 import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
 
+import { useGamemodeSettings } from "../../GamemodeSettingsContext";
 import { Layout } from "../../layout";
 import { Button } from "../button";
 import { Label } from "../display";
@@ -66,6 +67,8 @@ const CardShop: React.FunctionComponent<Props> = ({
 		}
 	}, [selectedCard, money]);
 
+	const { rerollCost } = useGamemodeSettings();
+
 	return (
 		<Layout className={classes.container} direction="column">
 			<Layout
@@ -86,12 +89,8 @@ const CardShop: React.FunctionComponent<Props> = ({
 			/>
 
 			<Layout direction="row" justifyContent="space-between">
-				<Button
-					type="primary"
-					onClick={onReroll}
-					disabled={money < DEFAULT_GAME_OPTIONS.game.rerollCost}
-				>
-					New (${DEFAULT_GAME_OPTIONS.game.rerollCost})
+				<Button type="primary" onClick={onReroll} disabled={money < rerollCost}>
+					New (${rerollCost})
 				</Button>
 
 				<div className={classes.balance}>
