@@ -2,7 +2,7 @@ import { put, delay, getContext } from "redux-saga/effects";
 import { Logger } from "winston";
 
 import { GamePhase } from "@creature-chess/models";
-import { GameOptions } from "@creature-chess/models/config";
+import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import {
@@ -14,7 +14,6 @@ import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
 
 export const runReadyPhase = function* () {
-	const options: GameOptions = yield getContext("options");
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
 	const logger: Logger = yield getContext("logger");
@@ -56,5 +55,5 @@ export const runReadyPhase = function* () {
 	const startedAt = Date.now() / 1000;
 	yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
 
-	yield delay(options.game.phaseLengths[GamePhase.READY] * 1000);
+	yield delay(GAME_PHASE_LENGTHS[GamePhase.READY] * 1000);
 };

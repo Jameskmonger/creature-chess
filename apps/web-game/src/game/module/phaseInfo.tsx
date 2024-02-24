@@ -3,7 +3,10 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 
 import { GamePhase } from "@creature-chess/models";
-import { DEFAULT_GAME_OPTIONS } from "@creature-chess/models/config";
+import {
+	DEFAULT_GAME_OPTIONS,
+	GAME_PHASE_LENGTHS,
+} from "@creature-chess/models/config";
 
 import { Countdown } from "@cc-web/ui";
 
@@ -33,8 +36,7 @@ const PhaseInfo = () => {
 		return null;
 	}
 
-	const phaseEndTime =
-		DEFAULT_GAME_OPTIONS.game.phaseLengths[phase] + phaseStartedAtSeconds;
+	const phaseEndTime = GAME_PHASE_LENGTHS[phase] + phaseStartedAtSeconds;
 
 	return (
 		<InfoChip>

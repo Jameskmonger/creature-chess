@@ -4,7 +4,6 @@ import { Store } from "redux";
 import { SagaMiddleware } from "redux-saga";
 import { Logger } from "winston";
 
-import { GameOptions } from "@creature-chess/models/config";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
@@ -29,8 +28,6 @@ import { createGameStore, GameState } from "./store";
 const finishGameEventKey = "FINISH_GAME";
 
 export class Gamemode {
-	private options: GameOptions;
-
 	private opponentProvider: OpponentProvider = new OpponentProvider();
 	private playerList = new PlayerList();
 	private players: PlayerEntity[] = [];
@@ -43,15 +40,11 @@ export class Gamemode {
 	public constructor(
 		public readonly id: string,
 		private logger: Logger,
-		private settings: GamemodeSettings,
-		options: GameOptions
+		private settings: GamemodeSettings
 	) {
-		this.options = options;
-
 		this.deck = new CardDeck(this.logger);
 
 		const { store, sagaMiddleware } = createGameStore({
-			options: this.options,
 			getMatchups: this.opponentProvider.getMatchups,
 			players: {
 				getAll: this.getAllPlayers,

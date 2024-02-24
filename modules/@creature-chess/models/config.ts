@@ -23,12 +23,17 @@ export interface GameOptions {
 	};
 
 	game: {
-		phaseLengths: PhaseLengths;
 		maxLevel: number;
 		maxHealth: number;
 		piecesToEvolve: number;
 	};
 }
+
+export const GAME_PHASE_LENGTHS: PhaseLengths = {
+	[GamePhase.PREPARING]: 40,
+	[GamePhase.READY]: 3,
+	[GamePhase.PLAYING]: 35,
+};
 
 export const DEFAULT_GAME_OPTIONS: GameOptions = {
 	boardSize: {
@@ -37,11 +42,6 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 	},
 
 	game: {
-		phaseLengths: {
-			[GamePhase.PREPARING]: 40,
-			[GamePhase.READY]: 3,
-			[GamePhase.PLAYING]: 35,
-		},
 		maxLevel: 10,
 		maxHealth: 100,
 		piecesToEvolve: 3,

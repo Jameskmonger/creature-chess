@@ -2,7 +2,6 @@ import { call, delay, getContext, put } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
 import { Logger } from "winston";
 
-import { GameOptions } from "@creature-chess/models/config";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { PlayerEntity } from "../entities";
@@ -18,7 +17,6 @@ export type GetMatchupsFn = () => {
 
 export type GameSagaContext = {
 	getMatchups: GetMatchupsFn;
-	options: GameOptions;
 	players: {
 		getAll: () => PlayerEntity[];
 		getLiving: () => PlayerEntity[];

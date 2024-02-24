@@ -1,7 +1,7 @@
 import { select, race, put, delay, getContext } from "@redux-saga/core/effects";
 
 import { GamePhase } from "@creature-chess/models";
-import { GameOptions } from "@creature-chess/models/config";
+import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 
 import { playerRunPreparingPhaseEvent } from "../../events";
 import { readyNotifier } from "../../readyNotifier";
@@ -9,7 +9,6 @@ import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers } from "../../sagas";
 
 export const runPreparingPhase = function* () {
-	const options: GameOptions = yield getContext("options");
 	const players: GameSagaContextPlayers = yield getContext("players");
 
 	const round: number = yield select((state) => state.roundInfo.round);
@@ -32,7 +31,7 @@ export const runPreparingPhase = function* () {
 
 	yield race([
 		notifier.promise,
-		delay(options.game.phaseLengths[GamePhase.PREPARING] * 1000),
+		delay(GAME_PHASE_LENGTHS[GamePhase.PREPARING] * 1000),
 	]);
 
 	notifier.dispose();
