@@ -48,7 +48,7 @@ const initialState: PlayerInfoState = {
 	opponentId: null,
 	money: 0,
 	ready: false,
-	level: DEFAULT_GAME_OPTIONS.game.startingLevel,
+	level: 0,
 	xp: 0,
 };
 

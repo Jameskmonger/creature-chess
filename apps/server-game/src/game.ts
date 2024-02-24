@@ -173,6 +173,12 @@ export class Game {
 
 		entity.runSaga(function* () {
 			yield put(PlayerCommands.updateMoneyCommand(settings.startingMoney));
+			yield put(
+				PlayerCommands.updateLevelCommand({
+					level: settings.startingLevel,
+					xp: 0,
+				})
+			);
 		});
 	}
 

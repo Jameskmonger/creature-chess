@@ -26,7 +26,6 @@ export interface GameOptions {
 
 	game: {
 		phaseLengths: PhaseLengths;
-		startingLevel: number;
 		maxLevel: number;
 		maxHealth: number;
 		rerollCost: number;
@@ -54,7 +53,6 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
 			[GamePhase.READY]: 3,
 			[GamePhase.PLAYING]: 35,
 		},
-		startingLevel: 1,
 		maxLevel: 10,
 		maxHealth: 100,
 		rerollCost: 2,
