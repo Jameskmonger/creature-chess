@@ -2,6 +2,9 @@ import React, { ComponentProps } from "react";
 
 import { Meta, Story } from "@storybook/react";
 
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+
+import { GamemodeSettingsContextProvider } from "../GamemodeSettingsContext";
 import { PlayerGameProfile } from "./PlayerGameProfile";
 
 export default {
@@ -11,7 +14,9 @@ export default {
 } as Meta;
 
 const Template: Story<ComponentProps<typeof PlayerGameProfile>> = (args) => (
-	<PlayerGameProfile {...args} />
+	<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
+		<PlayerGameProfile {...args} />
+	</GamemodeSettingsContextProvider>
 );
 export const Default = Template.bind({});
 Default.args = {
