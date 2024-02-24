@@ -11,6 +11,7 @@ import {
 	PlayerCommands,
 	GameEvents,
 } from "@creature-chess/gamemode";
+import { PieceModel } from "@creature-chess/models";
 import { GameServerToClient } from "@creature-chess/networking";
 
 import { getPlayerSlices } from "../../store/sagaContext";
@@ -21,8 +22,8 @@ import { updateConnectionStatus } from "../ui/actions";
 const readPacketsToActions = function* (
 	registry: IncomingRegistry<GameServerToClient.PacketSet>,
 	socket: Socket,
-	boardSlice: BoardSlice,
-	benchSlice: BoardSlice
+	boardSlice: BoardSlice<PieceModel>,
+	benchSlice: BoardSlice<PieceModel>
 ) {
 	const channel = eventChannel<any>((emit) => {
 		socket.on("reconnect_failed", () => {
@@ -68,8 +69,7 @@ export const incomingGameServerToClient = function* (socket: Socket) {
 	);
 
 	yield all([
-		// todo fix typing here
-		call(readPacketsToActions as any, registry, socket, board, bench),
+		call(readPacketsToActions, registry, socket, board, bench),
 
 		call(
 			ActionStream.incomingSaga<GameServerToClient.PacketSet, "sendGameEvents">(

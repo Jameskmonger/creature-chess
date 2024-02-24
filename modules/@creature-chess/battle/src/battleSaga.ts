@@ -19,7 +19,7 @@ import { duration } from "./utils/duration";
 import { isATeamDefeated } from "./utils/isATeamDefeated";
 
 const runBattle = function* (
-	controls: { paused: false },
+	controls: { paused: boolean },
 	initialBoard: BoardState<PieceModel>,
 	boardSlice: BoardSlice<PieceModel>,
 	startingTurn: number,
@@ -98,14 +98,7 @@ export const battleSaga = function* (
 				takeLatest(resumeBattleCommand, function* () {
 					controls.paused = false;
 				}),
-				call(
-					runBattle as any,
-					controls,
-					board,
-					boardSlice,
-					turn || 0,
-					settings
-				),
+				call(runBattle, controls, board, boardSlice, turn || 0, settings),
 			]);
 		}
 	);
