@@ -207,7 +207,7 @@ export class Match {
 					function* ({ payload: { turn } }) {
 						_this.onServerFinishMatch();
 
-						_this.logger.info("Battle finished", {
+						_this.logger.debug("Battle finished", {
 							meta: {
 								home: _this.home.getVariable((v) => v.name),
 								away: _this.away.getVariable((v) => v.name),

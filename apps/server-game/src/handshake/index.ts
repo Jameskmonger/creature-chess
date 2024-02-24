@@ -17,14 +17,8 @@ export const onHandshakeSuccess = (
 ) => {
 	const { authClient, database } = deps;
 
-	logger.info("Listening for successful handshakes - inner A");
-
 	handshakeListener(deps, async (socket, request) => {
 		try {
-			logger.info("Authenticating new handshake", {
-				meta: { socketId: socket.id },
-			});
-
 			if (request.type === "guest") {
 				const guest = await database.prisma.guests.findFirst({
 					where: {
