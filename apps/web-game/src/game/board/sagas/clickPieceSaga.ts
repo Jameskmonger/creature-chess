@@ -17,10 +17,14 @@ export const playerClickPieceAction = createAction<{ pieceId: string }>(
 );
 
 export const clickPieceSaga = function* () {
+	console.log("[clickPieceSaga] started");
+
 	while (true) {
 		const action: PlayerClickPieceAction = yield take(
 			playerClickPieceAction.toString()
 		);
+
+		console.log("[clickPieceSaga] received playerClickPieceAction");
 
 		const { pieceId } = action.payload;
 
@@ -37,6 +41,8 @@ export const clickPieceSaga = function* () {
 			null;
 
 		if (!piece) {
+			console.log("[clickPieceSaga] no piece");
+
 			// piece doesn't exist should never happen
 			// todo maybe log it?
 			continue;
@@ -52,18 +58,27 @@ export const clickPieceSaga = function* () {
 
 		// swap the pieces if there's one selected, otherwise select it
 		if (selectedPiece) {
+			console.log("[clickPieceSaga] selectedPiece present");
+
 			const selectedPieceLocation = getLocationForPiece(
 				selectedPiece.id,
 				board,
 				bench
 			);
 
-			if (!selectedPieceLocation || !pieceLocation) {
+			if (!selectedPieceLocation) {
 				// piece doesn't exist should never happen
 				// todo maybe log it?
+				console.log("[clickPieceSaga] no selectedPieceLocation");
 				continue;
 			}
 
+			if (!pieceLocation) {
+				console.log("[clickPieceSaga] no pieceLocation");
+				continue;
+			}
+
+			console.log("[clickPieceSaga] putting swapPiecePlayerAction");
 			yield put(
 				PlayerActions.swapPiecePlayerAction({
 					pieceAId: selectedPiece.id,

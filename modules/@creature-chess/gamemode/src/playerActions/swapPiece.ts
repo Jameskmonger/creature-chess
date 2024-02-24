@@ -21,10 +21,14 @@ export const swapPiecePlayerActionSaga = function* () {
 	const boardSlice = yield* getBoardSlice();
 	const benchSlice = yield* getBenchSlice();
 
+	console.log("[swapPiecePlayerActionSaga] started");
+
 	while (true) {
 		const {
 			payload: { pieceAId, pieceALocation, pieceBId, pieceBLocation },
 		} = yield* take<SwapPiecePlayerAction>(swapPiecePlayerAction.toString());
+
+		console.log("[swapPiecePlayerActionSaga] action received");
 
 		const state = yield* select((s: PlayerState) => s);
 
