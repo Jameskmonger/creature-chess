@@ -48,17 +48,13 @@ const useStyles = createUseStyles({
 	},
 });
 
-const Piece = React.forwardRef((props: Props, ref) => {
+export function Piece(props: Props) {
 	const classes = useStyles();
 	const { piece } = usePiece();
 	const { healthbar, children, className, onClick } = props;
 
 	return (
-		<div
-			className={classNames(classes.piece, className)}
-			ref={ref as any /* todo what to do here? */}
-			onClick={onClick}
-		>
+		<div className={classNames(classes.piece, className)} onClick={onClick}>
 			<div className={classes.metaContainer}>
 				<PieceMeta piece={piece} healthbarColor={healthbar} />
 			</div>
@@ -73,6 +69,4 @@ const Piece = React.forwardRef((props: Props, ref) => {
 			{children}
 		</div>
 	);
-});
-
-export { Piece };
+}

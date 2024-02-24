@@ -47,44 +47,42 @@ function useTileSize(
 	return Math.min(tileWidth, tileHeight);
 }
 
-export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
-	(props, forwardRef) => {
-		const { state, renderItem, onDropItem, onClickTile } = props;
+export function BoardGrid(props: BoardGridProps) {
+	const { state, renderItem, onDropItem, onClickTile } = props;
 
-		const boardContext = {
-			state,
-		};
+	const boardContext = {
+		state,
+	};
 
-		const styles = useStyles();
-		const { ref, size } = useElementSize();
-		const tileSize = useTileSize(size, state.size);
+	const styles = useStyles();
+	const { ref, size } = useElementSize();
+	const tileSize = useTileSize(size, state.size);
 
-		const containerClass = classNames(
-			styles.boardContainer,
-			props.containerClassName
-		);
-		const boardClass = classNames(styles.board, props.boardClassName);
+	const containerClass = classNames(
+		styles.boardContainer,
+		props.containerClassName
+	);
+	const boardClass = classNames(styles.board, props.boardClassName);
 
-		return (
-			<div className={containerClass} ref={ref}>
-				<div
-					className={boardClass}
-					style={{
-						width: `${tileSize * state.size.width}px`,
-						height: `${tileSize * state.size.height}px`,
-					}}
-				>
-					<BoardContextProvider value={boardContext}>
-						<BoardGridRows
-							onDropItem={onDropItem}
-							onClickTile={onClickTile}
-							tileSizePx={tileSize}
-						/>
+	return (
+		<div className={containerClass} ref={ref}>
+			<div
+				className={boardClass}
+				style={{
+					width: `${tileSize * state.size.width}px`,
+					height: `${tileSize * state.size.height}px`,
+				}}
+			>
+				<BoardContextProvider value={boardContext}>
+					<BoardGridRows
+						onDropItem={onDropItem}
+						onClickTile={onClickTile}
+						tileSizePx={tileSize}
+					/>
 
-						<BoardItems render={renderItem} tileSizePx={tileSize} />
-					</BoardContextProvider>
-				</div>
+					<BoardItems render={renderItem} tileSizePx={tileSize} />
+				</BoardContextProvider>
 			</div>
-		);
-	}
-);
+		</div>
+	);
+}
