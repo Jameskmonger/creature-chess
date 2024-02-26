@@ -16,8 +16,16 @@ export const useStyles = createUseStyles({
 			marginBottom: "0.4em",
 		},
 	},
+	personal: {
+		flex: "1",
+	},
 	item: {
 		flex: "1",
+	},
+	name: {
+		display: "flex",
+		alignItems: "center",
+		flexDirection: "column",
 	},
 	buyXpButton: {
 		width: "50%",
@@ -38,6 +46,9 @@ export const useStyles = createUseStyles({
 		"alignItems": "center",
 		"flexDirection": "row",
 		"fontWeight": "700",
+
+		"marginTop": "0.5em",
+		"marginBottom": "0.5em",
 
 		"& > span": {
 			color: "#ffcd75",
@@ -68,5 +79,6 @@ export const useStyles = createUseStyles({
 		color: "#ff6464",
 		background: "#ffd2d2",
 		border: "2px solid #ff6464",
+		margin: "0.5em 0",
 	},
 });

@@ -6,11 +6,15 @@ import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { MAX_LEVEL } from "@creature-chess/models/config";
 
 import { useGamemodeSettings } from "../GamemodeSettingsContext";
+import { Layout } from "../layout";
 import { ProgressBar } from "../src/display/progressBar";
+import { PlayerName } from "../src/player";
 import { PlayerHealthbar } from "../src/player/healthbar";
 import { useStyles } from "./PlayerGameProfile.styles";
 
 type PlayerGameProfileProps = {
+	name: string;
+	position: number;
 	level: number;
 	xp: number;
 	money: number;
@@ -50,6 +54,8 @@ const PieceCount: React.FC<
 };
 
 export const PlayerGameProfile: React.FC<PlayerGameProfileProps> = ({
+	name,
+	position,
 	health,
 	level,
 	xp,
@@ -67,9 +73,16 @@ export const PlayerGameProfile: React.FC<PlayerGameProfileProps> = ({
 	return (
 		<div className={styles.profile}>
 			<div className={styles.row}>
-				<p className={classNames(styles.item, styles.level)}>
-					Level {level} <span>${money}</span>
-				</p>
+				<Layout direction="column" className={styles.personal}>
+					<p className={classNames(styles.item, styles.level)}>
+						Level {level} <span>${money}</span>
+					</p>
+
+					<div className={styles.name}>
+						<PlayerName name={name} position={position} isLocal />
+					</div>
+				</Layout>
+
 				{level !== MAX_LEVEL && (
 					<ProgressBar
 						className={styles.xpProgress}

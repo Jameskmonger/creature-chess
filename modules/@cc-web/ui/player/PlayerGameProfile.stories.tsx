@@ -20,6 +20,8 @@ const Template: Story<ComponentProps<typeof PlayerGameProfile>> = (args) => (
 );
 export const Default = Template.bind({});
 Default.args = {
+	name: "Jeff",
+	position: 2,
 	health: 73,
 	level: 4,
 	xp: 2,

@@ -22,6 +22,14 @@ export const Profile: React.FunctionComponent = () => {
 
 	const playerId = useLocalPlayerId();
 
+	const name = useSelector<AppState, string>(
+		(state) => state.game.playerList.find((p) => p.id === playerId)?.name || ""
+	);
+
+	const position = useSelector<AppState, number>(
+		(state) => state.game.playerList.findIndex((p) => p.id === playerId) + 1
+	);
+
 	const level = useSelector<AppState, number>((state) =>
 		getPlayerLevel(state.game)
 	);
@@ -47,6 +55,8 @@ export const Profile: React.FunctionComponent = () => {
 
 	return (
 		<PlayerGameProfile
+			name={name}
+			position={position}
 			health={health}
 			level={level}
 			xp={xp}
