@@ -13,6 +13,7 @@ import { CurrentCard } from "./currentCard";
 
 type Props = {
 	cards: (CardModel | null)[];
+	ownedDefinitionIds: number[];
 	money: number;
 	isLocked?: boolean;
 	onReroll?: () => void;
@@ -39,6 +40,7 @@ const useStyles = createUseStyles({
 
 const CardShop: React.FunctionComponent<Props> = ({
 	cards,
+	ownedDefinitionIds,
 	money,
 	isLocked = false,
 	onReroll,
@@ -76,7 +78,13 @@ const CardShop: React.FunctionComponent<Props> = ({
 				className={classes.grow}
 			>
 				{selectedCard && showSelectedCard && (
-					<CurrentCard card={selectedCard} onBuy={onBuyCurrentCard} />
+					<CurrentCard
+						card={selectedCard}
+						alreadyOwned={ownedDefinitionIds.includes(
+							selectedCard.definitionId
+						)}
+						onBuy={onBuyCurrentCard}
+					/>
 				)}
 			</Layout>
 
@@ -85,6 +93,7 @@ const CardShop: React.FunctionComponent<Props> = ({
 				money={money}
 				selectedCardIndex={selectedIndex}
 				onSelectCard={setSelectedIndex}
+				ownedDefinitionIds={ownedDefinitionIds}
 			/>
 
 			<Layout direction="row" justifyContent="space-between">

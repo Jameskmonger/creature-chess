@@ -10,6 +10,7 @@ import { CreatureImage } from "../display";
 
 type Props = {
 	card: CardModel;
+	alreadyOwned: boolean;
 	onBuy?: () => void;
 };
 
@@ -18,6 +19,8 @@ const useStyles = createUseStyles({
 		textAlign: "center",
 		padding: "1em",
 		background: "#4e4e4e",
+		display: "flex",
+		flexDirection: "column",
 	},
 	currentCard: {
 		background: "#2f2f2f",
@@ -36,7 +39,11 @@ const useStyles = createUseStyles({
 	},
 });
 
-const CurrentCard: React.FunctionComponent<Props> = ({ card, onBuy }) => {
+const CurrentCard: React.FunctionComponent<Props> = ({
+	card,
+	alreadyOwned,
+	onBuy,
+}) => {
 	const classes = useStyles();
 
 	return (
@@ -61,6 +68,7 @@ const CurrentCard: React.FunctionComponent<Props> = ({ card, onBuy }) => {
 				<Button type="primary" onClick={onBuy}>
 					Buy (${card.cost})
 				</Button>
+				{alreadyOwned && <span>Already owned</span>}
 			</div>
 		</>
 	);

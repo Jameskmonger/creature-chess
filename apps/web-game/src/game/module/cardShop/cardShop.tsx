@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import { BoardSelectors } from "@shoki/board";
+
 import { getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
 import { Card as CardModel } from "@creature-chess/models";
 
@@ -28,6 +30,15 @@ const CardShop: React.FunctionComponent = () => {
 		(state) => state.game.spectating.id !== null
 	);
 
+	const ownedDefinitionIds = useSelector<AppState, number[]>((state) => [
+		...BoardSelectors.getAllPieces(state.game.board).map(
+			(piece) => piece.definitionId
+		),
+		...BoardSelectors.getAllPieces(state.game.bench).map(
+			(piece) => piece.definitionId
+		),
+	]);
+
 	if (cards === null || canUseShop === false || isSpectating) {
 		return null;
 	}
@@ -41,6 +52,7 @@ const CardShop: React.FunctionComponent = () => {
 	return (
 		<CardShopModule
 			cards={cards}
+			ownedDefinitionIds={ownedDefinitionIds}
 			money={money}
 			isLocked={shopLocked}
 			onToggleLock={onToggleLock}

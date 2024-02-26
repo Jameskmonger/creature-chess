@@ -9,6 +9,7 @@ import { CreatureImage, TypeIndicator } from "../display";
 
 type Props = {
 	card: CardModel;
+	alreadyOwned: boolean;
 	onClick?: () => void;
 	disabled?: boolean;
 };
@@ -22,7 +23,8 @@ const useStyles = createUseStyles({
 		cursor: ({ disabled = false }: Props) =>
 			disabled ? "not-allowed" : "pointer",
 		userSelect: "none",
-		background: "#4e4e4e",
+		background: ({ alreadyOwned }: Props) =>
+			alreadyOwned ? "#587261" : "#4e4e4e",
 		paddingBottom: "0.5em",
 	},
 	name: {

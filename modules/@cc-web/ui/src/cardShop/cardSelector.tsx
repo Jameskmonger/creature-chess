@@ -10,6 +10,7 @@ import { Card } from "./card";
 
 type Props = {
 	cards: (CardModel | null)[];
+	ownedDefinitionIds: number[];
 	money: number;
 	selectedCardIndex: number | null;
 	onSelectCard?: (index: number | null) => void;
@@ -38,6 +39,7 @@ const useStyles = createUseStyles({
 
 const CardSelector: React.FunctionComponent<Props> = ({
 	cards,
+	ownedDefinitionIds,
 	money,
 	selectedCardIndex,
 	onSelectCard,
@@ -50,6 +52,7 @@ const CardSelector: React.FunctionComponent<Props> = ({
 		}
 
 		const isSelected = selectedCardIndex === index;
+		const isOwned = ownedDefinitionIds.includes(card.definitionId);
 
 		const onClick = () => {
 			if (!onSelectCard) {
@@ -67,6 +70,7 @@ const CardSelector: React.FunctionComponent<Props> = ({
 			>
 				<Card
 					key={`${index}-${card.definitionId}`}
+					alreadyOwned={isOwned}
 					disabled={money < card.cost}
 					card={card}
 					onClick={onSelectCard ? onClick : undefined}
