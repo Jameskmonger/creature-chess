@@ -21,7 +21,7 @@ const useStyles = createUseStyles({
 		padding: "0.25em",
 		color: "#fff",
 		fontFamily: "Arial, sans-serif",
-		height: "3em",
+		height: "3.2em",
 	},
 	hidden: {
 		visibility: "hidden",
