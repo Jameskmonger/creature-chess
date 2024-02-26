@@ -1,5 +1,6 @@
 import React from "react";
 
+import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
@@ -20,6 +21,10 @@ const useStyles = createUseStyles({
 		padding: "0.5em",
 		color: "#fff",
 		fontFamily: "Arial, sans-serif",
+		height: "3em",
+	},
+	hidden: {
+		visibility: "hidden",
 	},
 	name: {
 		fontWeight: "700",
@@ -55,13 +60,13 @@ export function SelectedPieceInfo() {
 	);
 
 	if (selectedPiece === null) {
-		return null;
+		return <div className={classNames(styles.info, styles.hidden)} />;
 	}
 
 	const definition = getDefinitionById(selectedPiece.definitionId);
 
 	if (!definition) {
-		return null;
+		return <div className={classNames(styles.info, styles.hidden)} />;
 	}
 
 	const stats = definition.stages[selectedPiece.stage];
