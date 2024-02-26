@@ -3,6 +3,8 @@ import React from "react";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
+import { BoardSelectors } from "@shoki/board";
+
 import { getDefinitionById } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 
@@ -45,7 +47,11 @@ export function SelectedPieceInfo() {
 	);
 
 	const selectedPiece = useSelector<AppState, PieceModel | null>((state) =>
-		selectedPieceId ? state.game.board.pieces[selectedPieceId] : null
+		selectedPieceId
+			? BoardSelectors.getPiece(state.game.board, selectedPieceId) ||
+			  BoardSelectors.getPiece(state.game.bench, selectedPieceId) ||
+			  null
+			: null
 	);
 
 	if (selectedPiece === null) {
