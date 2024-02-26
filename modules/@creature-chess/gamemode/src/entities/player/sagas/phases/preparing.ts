@@ -11,6 +11,7 @@ import { PlayerState } from "../../state";
 import {
 	updateMoneyCommand,
 	updateOpponentCommand,
+	updateShopLockCommand,
 } from "../../state/commands";
 import {
 	getPlayerLevel,
@@ -50,6 +51,8 @@ export const playerPreparingPhase = function* () {
 			if (!locked) {
 				yield put(afterRerollCardsEvent());
 			}
+
+			yield put(updateShopLockCommand(false));
 
 			if (matchRewards) {
 				yield put(playerMatchRewardsEvent(null));
