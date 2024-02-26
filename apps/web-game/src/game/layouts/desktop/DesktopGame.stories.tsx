@@ -22,13 +22,18 @@ export default {
 const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
-	const store = createMockStore(
-		args.phase === GamePhase.PREPARING,
-		(state) => ({
+	const store = createMockStore(args.phase === GamePhase.PREPARING, (state) => {
+		const newState = {
 			...state,
 			ui: {
 				...state.ui,
 				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
+				connectionStatus: args.connectionStatus
+					? args.connectionStatus
+					: state.ui.connectionStatus,
+				selectedPieceId: args.selectedPiece
+					? Object.values(state.board.pieces)[0].id
+					: state.ui.selectedPieceId,
 			},
 			roundInfo: {
 				...state.roundInfo,
@@ -36,12 +41,24 @@ const Template: Story<any> = (args) => {
 			},
 			playerInfo: {
 				...state.playerInfo,
+				matchRewards: args.matchRewards
+					? args.matchRewards
+					: state.playerInfo.matchRewards,
 				opponentId: args.opponentId
 					? args.opponentId
 					: state.playerInfo.opponentId,
 			},
-		})
-	);
+		};
+
+		if (args.selectedPieceStage && newState.ui.selectedPieceId) {
+			const piece =
+				newState.board.pieces[newState.ui.selectedPieceId as string];
+
+			piece.stage = args.selectedPieceStage;
+		}
+
+		return newState;
+	});
 
 	return (
 		<div style={{ width: "90%", height: "90%", border: "2px solid red" }}>
@@ -72,6 +89,21 @@ const Template: Story<any> = (args) => {
 export const Phase_0_Preparing = Template.bind({});
 Phase_0_Preparing.args = {
 	phase: GamePhase.PREPARING,
+};
+
+export const Phase_0_Preparing_Selected_Piece = Template.bind({});
+Phase_0_Preparing_Selected_Piece.args = {
+	overlay: null,
+	phase: GamePhase.PREPARING,
+	selectedPiece: true,
+};
+
+export const Phase_0_Preparing_Selected_Piece_Stage2 = Template.bind({});
+Phase_0_Preparing_Selected_Piece_Stage2.args = {
+	overlay: null,
+	phase: GamePhase.PREPARING,
+	selectedPiece: true,
+	selectedPieceStage: 2,
 };
 
 export const Phase_1_Ready = Template.bind({});

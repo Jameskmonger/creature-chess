@@ -24,9 +24,8 @@ export default {
 const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
-	const store = createMockStore(
-		args.phase === GamePhase.PREPARING,
-		(state) => ({
+	const store = createMockStore(args.phase === GamePhase.PREPARING, (state) => {
+		const newState = {
 			...state,
 			ui: {
 				...state.ui,
@@ -52,8 +51,17 @@ const Template: Story<any> = (args) => {
 					? args.opponentId
 					: state.playerInfo.opponentId,
 			},
-		})
-	);
+		};
+
+		if (args.selectedPieceStage && newState.ui.selectedPieceId) {
+			const piece =
+				newState.board.pieces[newState.ui.selectedPieceId as string];
+
+			piece.stage = args.selectedPieceStage;
+		}
+
+		return newState;
+	});
 
 	return (
 		<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
@@ -88,6 +96,14 @@ Phase_0_Preparing_Selected_Piece.args = {
 	overlay: null,
 	phase: GamePhase.PREPARING,
 	selectedPiece: true,
+};
+
+export const Phase_0_Preparing_Selected_Piece_Stage2 = Template.bind({});
+Phase_0_Preparing_Selected_Piece_Stage2.args = {
+	overlay: null,
+	phase: GamePhase.PREPARING,
+	selectedPiece: true,
+	selectedPieceStage: 2,
 };
 
 export const Phase_1_Ready = Template.bind({});
