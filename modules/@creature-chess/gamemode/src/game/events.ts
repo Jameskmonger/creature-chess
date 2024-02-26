@@ -13,7 +13,13 @@ export const gamePhaseStartedEvent = createAction<
 
 export type GameFinishEvent = ReturnType<typeof gameFinishEvent>;
 export const gameFinishEvent = createAction<
-	{ winnerId: string },
+	{
+		players: {
+			id: string;
+			position: number;
+			finishRound: number;
+		}[];
+	},
 	"gameFinishEvent"
 >("gameFinishEvent");
 

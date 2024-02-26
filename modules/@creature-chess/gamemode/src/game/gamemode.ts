@@ -91,7 +91,7 @@ export class Gamemode {
 				p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId
 		) || null;
 
-	public onFinish(fn: (winner: PlayerEntity) => void) {
+	public onFinish(fn: (event: GameFinishEvent["payload"]) => void) {
 		this.events.on(finishGameEventKey, fn);
 	}
 
@@ -107,7 +107,7 @@ export class Gamemode {
 				player.put(event);
 			});
 
-			this.events.emit(finishGameEventKey, event.payload.winnerId);
+			this.events.emit(finishGameEventKey, event.payload);
 		};
 
 		const teardown = () => {

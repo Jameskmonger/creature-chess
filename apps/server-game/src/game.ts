@@ -7,6 +7,7 @@ import {
 	PlayerCommands,
 	PlayerEntity,
 } from "@creature-chess/gamemode";
+import { GameFinishEvent } from "@creature-chess/gamemode/src/game/events";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 import { GamemodeSettings } from "@creature-chess/models/settings";
@@ -42,7 +43,7 @@ type Participants = {
 };
 
 type GameOptions = {
-	onFinish: (winner: PlayerEntity) => void;
+	onFinish: (event: GameFinishEvent["payload"]) => void;
 };
 
 export class Game {

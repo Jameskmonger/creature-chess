@@ -28,6 +28,6 @@ export const createPlayerEntity = (
 	return playerEntity(
 		playerId,
 		{ logger, gamemode, boardSlices, settings },
-		{ match: null, name, profile }
+		{ match: null, name, profile, finishPosition: -1, finishRound: -1 }
 	);
 };

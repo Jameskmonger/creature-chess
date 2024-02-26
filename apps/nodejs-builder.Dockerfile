@@ -44,6 +44,7 @@ ADD modules/@cc-web/shared/package.json ./modules/@cc-web/shared/
 ADD modules/@cc-web/ui/package.json ./modules/@cc-web/ui/
 
 ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
+ADD modules/@tools/bot-analysis/package.json ./modules/@tools/bot-analysis/
 
 ADD apps/server-game/package.json ./apps/server-game/
 ADD apps/server-info/package.json ./apps/server-info/

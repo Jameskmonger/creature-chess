@@ -1,0 +1,40 @@
+{
+	"private": true,
+	"name": "@creature-chess-tools/bot-analysis",
+	"version": "0.0.1",
+	"description": "Tools to analyse Creature Chess bots",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests",
+		"start": "node -r ts-node/register --max-old-space-size=24000 src/analyser.ts",
+		"start-cluster": "node -r ts-node/register --max-old-space-size=24000 src/cluster.ts"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"dependencies": {
+		"@cc-server/bot": "workspace:*",
+		"@creature-chess/battle": "workspace:*",
+		"@creature-chess/gamemode": "workspace:*",
+		"@creature-chess/models": "workspace:*",
+		"@shoki/board": "workspace:*",
+		"@shoki/engine": "workspace:*",
+		"@types/redux-saga": "^0.10.5",
+		"@types/uuid": "^8.3.3",
+		"uuid": "^8.3.2",
+		"winston": "^3.3.3"
+	},
+	"peerDependencies": {
+		"redux-saga": "^1.1.3"
+	}
+}

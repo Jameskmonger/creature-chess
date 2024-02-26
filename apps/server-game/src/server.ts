@@ -38,8 +38,8 @@ const startGame = async (
 		settings,
 		{ players, bots },
 		{
-			onFinish: (winner) => {
-				logger.info(`Game won by ${winner.getVariable((t) => t.name)}`);
+			onFinish: () => {
+				logger.info("Game finished");
 
 				onFinish();
 			},
