@@ -18,7 +18,7 @@ const useStyles = createUseStyles({
 		border: "1px solid #fff",
 		borderRadius: "4px",
 		marginBottom: "0.25em",
-		padding: "0.5em",
+		padding: "0.25em",
 		color: "#fff",
 		fontFamily: "Arial, sans-serif",
 		height: "3em",
@@ -40,8 +40,12 @@ const useStyles = createUseStyles({
 		color: "#d1d1d1",
 		fontSize: "0.875em",
 		fontStyle: "italic",
+		marginRight: "0.25em",
 	},
-	stat: {},
+	stat: {
+		fontSize: "0.75em",
+		marginRight: "0.25em",
+	},
 });
 
 export function SelectedPieceInfo() {
@@ -85,13 +89,9 @@ export function SelectedPieceInfo() {
 				<span className={styles.stage}>
 					( stage {selectedPiece.stage + 1} ):
 				</span>
-				&nbsp;
 				<span className={styles.stat}>[ ATK: {stats.attack} ]</span>
-				&nbsp;&mdash;&nbsp;
 				<span className={styles.stat}>[ DEF: {stats.defense} ]</span>
-				&nbsp;&mdash;&nbsp;
 				<span className={styles.stat}>[ SPD: {stats.speed} ]</span>
-				&nbsp;&mdash;&nbsp;
 				<span className={styles.stat}>[ HP: {stats.hp} ]</span>
 			</Layout>
 		</div>
