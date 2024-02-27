@@ -45,6 +45,7 @@ ADD modules/@cc-web/ui/package.json ./modules/@cc-web/ui/
 
 ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
 ADD modules/@tools/bot-analysis/package.json ./modules/@tools/bot-analysis/
+ADD modules/@tools/bot-brain-tester/package.json ./modules/@tools/bot-brain-tester/
 
 ADD apps/server-game/package.json ./apps/server-game/
 ADD apps/server-info/package.json ./apps/server-info/

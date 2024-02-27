@@ -126,6 +126,7 @@ export const createBoardSlice = <TPiece extends HasId>(
 				...state,
 				pieceLimit: limit,
 			}),
+			// TODO (jkm) remove `size` from here
 			setBoardPiecesCommand: (
 				state,
 				{
