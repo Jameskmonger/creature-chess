@@ -50,6 +50,10 @@ export function BattleBoard() {
 
 	const onClickTile = React.useCallback(
 		(event: { location: GameBoardLocation }) => {
+			if (event.location.locationType === "bench") {
+				return;
+			}
+
 			dispatch(
 				controlSlice.actions.setSelectedTile({
 					tile: { x: event.location.x, y: (event.location as any).y },
