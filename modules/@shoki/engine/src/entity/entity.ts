@@ -37,7 +37,7 @@ type EntityStaticProperties<TState> = {
 export const entity = <
 	TState,
 	TDependencies extends {} = {},
-	TVariables extends {} = {}
+	TVariables extends {} = {},
 >(
 	{ reducers, rootSaga }: EntityStaticProperties<TState>,
 	id: string,

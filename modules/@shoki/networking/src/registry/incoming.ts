@@ -6,7 +6,7 @@ export type HandlerFn<T extends Packet> = (
 ) => void;
 
 export type RegisterHandlerFn<TPackets extends PacketSet> = <
-	TOpcode extends keyof TPackets
+	TOpcode extends keyof TPackets,
 >(
 	opcode: TOpcode,
 	handler: HandlerFn<TPackets[TOpcode]>

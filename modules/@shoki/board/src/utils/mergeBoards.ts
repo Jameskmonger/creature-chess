@@ -29,7 +29,7 @@ const expandBoard = <TState extends BoardState>(
 
 export const mergeBoards = <
 	TPiece extends HasId,
-	TState extends BoardState<TPiece>
+	TState extends BoardState<TPiece>,
 >(
 	id: string,
 	home: TState,

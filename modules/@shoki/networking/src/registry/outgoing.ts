@@ -1,7 +1,7 @@
 import { PacketSet } from "../packet";
 
 export type EmitFn<TPackets extends PacketSet> = <
-	TOpcode extends keyof TPackets
+	TOpcode extends keyof TPackets,
 >(
 	opcode: TOpcode,
 	payload: TPackets[TOpcode]["payload"],

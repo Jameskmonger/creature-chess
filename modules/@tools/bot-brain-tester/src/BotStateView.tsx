@@ -15,19 +15,18 @@ import {
 import { useBotBrain } from "./context";
 import { useAppSelector } from "./state";
 
-const renderPiece = () => (piece: PieceModel) =>
-	(
-		<PieceContextProvider value={{ piece, viewingPlayerId: "A" }}>
-			<div
-				style={{ width: "100%", height: "100%" }}
-				onClick={() => {
-					/* empty */
-				}}
-			>
-				<Piece healthbar="none" />
-			</div>
-		</PieceContextProvider>
-	);
+const renderPiece = () => (piece: PieceModel) => (
+	<PieceContextProvider value={{ piece, viewingPlayerId: "A" }}>
+		<div
+			style={{ width: "100%", height: "100%" }}
+			onClick={() => {
+				/* empty */
+			}}
+		>
+			<Piece healthbar="none" />
+		</div>
+	</PieceContextProvider>
+);
 
 function BotMetaState() {
 	const {

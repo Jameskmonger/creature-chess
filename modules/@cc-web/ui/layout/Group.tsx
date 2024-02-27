@@ -26,7 +26,7 @@ const useStyles = createUseStyles<string, { spacer: boolean }>({
 						"&:not(:first-child)": {
 							"margin-top": SPACER,
 						},
-				  }
+					}
 				: undefined,
 	},
 	"@media (orientation: landscape)": {
@@ -36,7 +36,7 @@ const useStyles = createUseStyles<string, { spacer: boolean }>({
 						"&:not(:first-child)": {
 							"margin-left": SPACER,
 						},
-				  }
+					}
 				: undefined,
 	},
 });

@@ -20,17 +20,16 @@ import {
 
 import { controlSlice, useAppSelector } from "./state";
 
-const renderPiece = (onClickPiece: any) => (piece: PieceModel) =>
-	(
-		<PieceContextProvider value={{ piece, viewingPlayerId: "A" }}>
-			<div
-				style={{ width: "100%", height: "100%" }}
-				onClick={() => onClickPiece(piece.id)}
-			>
-				<MatchPiece />
-			</div>
-		</PieceContextProvider>
-	);
+const renderPiece = (onClickPiece: any) => (piece: PieceModel) => (
+	<PieceContextProvider value={{ piece, viewingPlayerId: "A" }}>
+		<div
+			style={{ width: "100%", height: "100%" }}
+			onClick={() => onClickPiece(piece.id)}
+		>
+			<MatchPiece />
+		</div>
+	</PieceContextProvider>
+);
 
 export function BattleBoard() {
 	const dispatch = useDispatch();

@@ -58,8 +58,8 @@ export function SelectedPieceInfo() {
 	const selectedPiece = useSelector<AppState, PieceModel | null>((state) =>
 		selectedPieceId
 			? BoardSelectors.getPiece(state.game.board, selectedPieceId) ||
-			  BoardSelectors.getPiece(state.game.bench, selectedPieceId) ||
-			  null
+				BoardSelectors.getPiece(state.game.bench, selectedPieceId) ||
+				null
 			: null
 	);
 

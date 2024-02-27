@@ -10,7 +10,7 @@ const createWinstonLogger = () => {
 					winston.format.colorize(),
 					winston.format.timestamp(),
 					winston.format.prettyPrint()
-			  )
+				)
 			: undefined,
 	});
 

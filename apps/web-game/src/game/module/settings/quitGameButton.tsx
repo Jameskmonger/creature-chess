@@ -11,10 +11,10 @@ const QuitGameButton: React.FunctionComponent = () => {
 	const onClick = areYouSure
 		? () => {
 				dispatch(PlayerActions.quitGamePlayerAction());
-		  }
+			}
 		: () => {
 				setAreYouSure(true);
-		  };
+			};
 
 	if (!areYouSure) {
 		return <button onClick={onClick}>Quit Game</button>;

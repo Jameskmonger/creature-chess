@@ -20,7 +20,7 @@ type ShokiProtocol<TPackets extends PacketSet> = {
 };
 
 export const protocol = <
-	TPackets extends PacketSet
+	TPackets extends PacketSet,
 >(): ShokiProtocol<TPackets> => ({
 	outgoing: outgoing<TPackets>(),
 	incoming: incoming<TPackets>(),

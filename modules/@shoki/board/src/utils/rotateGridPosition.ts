@@ -11,7 +11,7 @@ export const rotateGridPosition = (
 
 export const rotatePiecesAboutCenter = <
 	TPiece extends HasId,
-	TState extends BoardState<TPiece>
+	TState extends BoardState<TPiece>,
 >(
 	state: TState
 ): TState => {

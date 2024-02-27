@@ -14,7 +14,7 @@ import { Action, ActionStreamPacket, ActionStreamPayload } from "./packet";
  */
 export const incomingSaga = <
 	TPacketSet extends PacketSet,
-	TOpcode extends keyof OpcodesForPacket<TPacketSet, ActionStreamPacket>
+	TOpcode extends keyof OpcodesForPacket<TPacketSet, ActionStreamPacket>,
 >(
 	registry: IncomingRegistry<TPacketSet>,
 	opcode: TOpcode,
