@@ -6,7 +6,7 @@ import { GamePhase } from "@creature-chess/models";
 import { getXpToNextLevel } from "../../../player/xp";
 import { getPlayerEntityDependencies } from "../dependencies";
 import { PlayerState } from "../state";
-import { updateLevelCommand } from "../state/commands";
+import { playerInfoCommands } from "../state/commands";
 import { getPlayerLevel, getPlayerXp } from "../state/selectors";
 
 const ADD_XP_COMMAND = "ADD_XP_COMMAND";
@@ -43,7 +43,7 @@ export const playerXpSaga = function* () {
 			}
 		}
 
-		yield put(updateLevelCommand({ level, xp }));
+		yield put(playerInfoCommands.updateLevelCommand({ level, xp }));
 
 		if (level !== oldLevel) {
 			const inPreparingPhase: boolean = yield select(

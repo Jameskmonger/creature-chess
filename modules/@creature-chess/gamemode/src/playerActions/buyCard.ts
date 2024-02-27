@@ -21,7 +21,7 @@ import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 import { getBenchSlice, getBoardSlice } from "../entities/player/selectors";
 import { PlayerState } from "../entities/player/state";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
-import { updateMoneyCommand } from "../entities/player/state/commands";
+import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
 import {
 	getPlayerBelowPieceLimit,
 	getPlayerCards,
@@ -124,7 +124,7 @@ export const buyCardPlayerActionSaga = function* () {
 				actor: { playerId, name },
 			});
 
-			yield put(updateMoneyCommand(money));
+			yield put(playerInfoCommands.updateMoneyCommand(money));
 			yield put(updateCardsCommand(cards));
 
 			continue;
@@ -136,7 +136,7 @@ export const buyCardPlayerActionSaga = function* () {
 				details: { index },
 			});
 
-			yield put(updateMoneyCommand(money));
+			yield put(playerInfoCommands.updateMoneyCommand(money));
 			yield put(updateCardsCommand(cards));
 
 			continue;
@@ -176,7 +176,7 @@ export const buyCardPlayerActionSaga = function* () {
 			);
 		}
 
-		yield put(updateMoneyCommand(money - card.cost));
+		yield put(playerInfoCommands.updateMoneyCommand(money - card.cost));
 		yield put(updateCardsCommand(remainingCards));
 	}
 };

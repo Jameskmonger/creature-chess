@@ -6,7 +6,6 @@ import { useAppSelector } from "../state";
 import { PieceCombatInfo } from "./PieceCombatInfo";
 
 export function SelectedPiece() {
-	const combatStore = useAppSelector((state) => state.combatStore);
 	const tile = useAppSelector((state) => state.controls.selectedTile);
 	const selectedPiece = useAppSelector((state) => {
 		if (!tile) {

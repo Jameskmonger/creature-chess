@@ -1,4 +1,4 @@
-import { Reducer } from "redux";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { MAX_HEALTH } from "@creature-chess/models/config";
 import {
@@ -6,9 +6,6 @@ import {
 	PlayerBattle,
 } from "@creature-chess/models/game/playerList";
 import { StreakType, PlayerStreak } from "@creature-chess/models/player";
-
-import { PlayerEvent } from "../../events";
-import { PlayerInfoUpdateCommand } from "../commands";
 
 export type PlayerMatchRewards = {
 	damage: number;
@@ -52,63 +49,49 @@ const initialState: PlayerInfoState = {
 	xp: 0,
 };
 
-// TODO convert to redux toolkit
-export const playerInfoReducer: Reducer<
-	PlayerInfoState,
-	PlayerInfoUpdateCommand | PlayerEvent
-> = (state = initialState, command) => {
-	switch (command.type) {
-		case "playerMatchRewardsEvent":
-			return {
-				...state,
-				matchRewards: command.payload,
-			};
-		case "updateStatusCommand":
-			return {
-				...state,
-				status: command.payload,
-			};
-		case "updateReadyCommand":
-			return {
-				...state,
-				ready: command.payload,
-			};
-		case "updateOpponentCommand":
-			return {
-				...state,
-				opponentId: command.payload,
-			};
-		case "updateBattleCommand":
-			return {
-				...state,
-				battle: command.payload,
-			};
-		case "updateHealthCommand":
-			return {
-				...state,
-				health: command.payload,
-			};
-		case "updateStreakCommand":
-			return {
-				...state,
-				streak: {
-					amount: command.payload.amount,
-					type: command.payload.type,
-				},
-			};
-		case "updateLevelCommand":
-			return {
-				...state,
-				level: command.payload.level,
-				xp: command.payload.xp,
-			};
-		case "updateMoneyCommand":
-			return {
-				...state,
-				money: command.payload,
-			};
+const playerInfoSlice = createSlice({
+	name: "playerInfo",
+	initialState,
+	reducers: {
+		playerMatchRewardsEvent: (
+			state,
+			action: PayloadAction<PlayerMatchRewards | null>
+		) => {
+			state.matchRewards = action.payload;
+		},
+		updateStatusCommand: (state, action: PayloadAction<PlayerStatus>) => {
+			state.status = action.payload;
+		},
+		updateReadyCommand: (state, action: PayloadAction<boolean>) => {
+			state.ready = action.payload;
+		},
+		updateOpponentCommand: (state, action: PayloadAction<string | null>) => {
+			state.opponentId = action.payload;
+		},
+		updateBattleCommand: (
+			state,
+			action: PayloadAction<PlayerBattle | null>
+		) => {
+			state.battle = action.payload;
+		},
+		updateHealthCommand: (state, action: PayloadAction<number>) => {
+			state.health = action.payload;
+		},
+		updateStreakCommand: (state, action: PayloadAction<PlayerStreak>) => {
+			state.streak = action.payload;
+		},
+		updateLevelCommand: (
+			state,
+			action: PayloadAction<{ level: number; xp: number }>
+		) => {
+			state.level = action.payload.level;
+			state.xp = action.payload.xp;
+		},
+		updateMoneyCommand: (state, action: PayloadAction<number>) => {
+			state.money = action.payload;
+		},
+	},
+});
 
-		default:
-			return state;
-	}
-};
+export const playerInfoReducer = playerInfoSlice.reducer;
+export const playerInfoCommands = playerInfoSlice.actions;

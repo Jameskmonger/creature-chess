@@ -1,7 +1,7 @@
 import { takeEvery, select, put, all } from "@redux-saga/core/effects";
 
 import { PlayerState } from "../state";
-import { updateHealthCommand } from "../state/commands";
+import { playerInfoCommands } from "../state/commands";
 
 const HEALTH_SUBTRACT_COMMAND = "HEALTH_SUBTRACT_COMMAND";
 type HEALTH_SUBTRACT_COMMAND = typeof HEALTH_SUBTRACT_COMMAND;
@@ -29,7 +29,7 @@ export const healthSaga = function* () {
 				let newValue = oldValue - amount;
 				newValue = newValue < 0 ? 0 : newValue;
 
-				yield put(updateHealthCommand(newValue));
+				yield put(playerInfoCommands.updateHealthCommand(newValue));
 			}
 		),
 	]);

@@ -1,12 +1,8 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import {
-	PieceModel,
-	QuickChatOption,
-	QuickChatValue,
-} from "@creature-chess/models";
+import { PieceModel, QuickChatOption } from "@creature-chess/models";
 
-import { PlayerMatchRewards } from "./state/playerInfo/reducer";
+import { playerInfoCommands } from "./state/playerInfo/reducer";
 
 export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;
 export const afterSellPieceEvent = createAction<
@@ -22,14 +18,6 @@ export const clientFinishMatchEvent = createAction("clientFinishMatchEvent");
 
 export type PlayerDeathEvent = ReturnType<typeof playerDeathEvent>;
 export const playerDeathEvent = createAction("playerDeathEvent");
-
-export type PlayerMatchRewardsEvent = ReturnType<
-	typeof playerMatchRewardsEvent
->;
-export const playerMatchRewardsEvent = createAction<
-	PlayerMatchRewards | null,
-	"playerMatchRewardsEvent"
->("playerMatchRewardsEvent");
 
 export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
 export const playerFinishMatchEvent = createAction<
@@ -54,7 +42,6 @@ export const playerReceiveQuickChatEvent = createAction<
 
 export const PlayerEventActionTypesArray = [
 	playerDeathEvent.toString(),
-	playerMatchRewardsEvent.toString(),
 	playerReceiveQuickChatEvent.toString(),
 ];
 
@@ -63,6 +50,5 @@ export type PlayerEvent =
 	| AfterRerollCardsEvent
 	| ClientFinishMatchEvent
 	| PlayerDeathEvent
-	| PlayerMatchRewardsEvent
 	| PlayerFinishMatchEvent
 	| PlayerReceiveQuickChatEvent;

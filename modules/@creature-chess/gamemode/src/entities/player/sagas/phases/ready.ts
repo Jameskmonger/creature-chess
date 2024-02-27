@@ -7,10 +7,7 @@ import {
 	PlayerRunReadyPhaseEvent,
 } from "../../../../game/events";
 import { getBoardSlice } from "../../selectors";
-import {
-	updateReadyCommand,
-	updateOpponentCommand,
-} from "../../state/commands";
+import { playerInfoCommands } from "../../state/commands";
 import { fillBoardCommand } from "../fillBoard";
 
 export const playerReadyPhase = function* () {
@@ -21,7 +18,7 @@ export const playerReadyPhase = function* () {
 		playerBeforeReadyPhaseEvent.toString(),
 		function* () {
 			yield put(fillBoardCommand());
-			yield put(updateReadyCommand(false));
+			yield put(playerInfoCommands.updateReadyCommand(false));
 		}
 	);
 
@@ -33,7 +30,7 @@ export const playerReadyPhase = function* () {
 			const opponentId =
 				match.home.id === playerId ? match.away.id : match.home.id;
 
-			yield put(updateOpponentCommand(opponentId));
+			yield put(playerInfoCommands.updateOpponentCommand(opponentId));
 		}
 	);
 };

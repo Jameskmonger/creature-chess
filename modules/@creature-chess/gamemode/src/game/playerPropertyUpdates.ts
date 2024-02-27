@@ -1,5 +1,4 @@
-import { all, takeLatest } from "redux-saga/effects";
-import { select } from "typed-redux-saga";
+import { select, all, takeLatest } from "typed-redux-saga";
 
 import {
 	PlayerStatus,
@@ -35,8 +34,8 @@ export const listenForPropertyUpdates = (
 			emitHealth(initialHealth);
 
 			sagas.push(
-				takeLatest<PlayerCommands.UpdateHealthCommand>(
-					PlayerCommands.updateHealthCommand.toString(),
+				takeLatest(
+					PlayerCommands.playerInfoCommands.updateHealthCommand,
 					function* ({ payload: health }) {
 						emitHealth(health);
 					}
@@ -49,8 +48,8 @@ export const listenForPropertyUpdates = (
 			emitStreak(initialStreak);
 
 			sagas.push(
-				takeLatest<PlayerCommands.UpdateStreakCommand>(
-					PlayerCommands.updateStreakCommand.toString(),
+				takeLatest(
+					PlayerCommands.playerInfoCommands.updateStreakCommand,
 					function* ({ payload: streak }) {
 						emitStreak(streak);
 					}
@@ -63,8 +62,8 @@ export const listenForPropertyUpdates = (
 			emitStatus(initialStatus);
 
 			sagas.push(
-				takeLatest<PlayerCommands.UpdateStatusCommand>(
-					PlayerCommands.updateStatusCommand.toString(),
+				takeLatest(
+					PlayerCommands.playerInfoCommands.updateStatusCommand,
 					function* ({ payload: status }) {
 						emitStatus(status);
 					}
@@ -77,8 +76,8 @@ export const listenForPropertyUpdates = (
 			emitBattle(initialBattle);
 
 			sagas.push(
-				takeLatest<PlayerCommands.UpdateBattleCommand>(
-					PlayerCommands.updateBattleCommand.toString(),
+				takeLatest(
+					PlayerCommands.playerInfoCommands.updateBattleCommand,
 					function* ({ payload: battle }) {
 						emitBattle(battle);
 					}
@@ -91,8 +90,8 @@ export const listenForPropertyUpdates = (
 			emitReady(initialReady);
 
 			sagas.push(
-				takeLatest<PlayerCommands.UpdateReadyCommand>(
-					PlayerCommands.updateReadyCommand.toString(),
+				takeLatest(
+					PlayerCommands.playerInfoCommands.updateReadyCommand,
 					function* ({ payload: ready }) {
 						emitReady(ready);
 					}

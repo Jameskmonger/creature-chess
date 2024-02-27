@@ -17,15 +17,19 @@ export const sendInitialState = function* () {
 	yield put(PlayerCommands.updateShopLockCommand(locked));
 
 	const money = yield* select(PlayerStateSelectors.getPlayerMoney);
-	yield put(PlayerCommands.updateMoneyCommand(money));
+	yield put(PlayerCommands.playerInfoCommands.updateMoneyCommand(money));
 
 	const level = yield* select(PlayerStateSelectors.getPlayerLevel);
 	const xp = yield* select(PlayerStateSelectors.getPlayerXp);
-	yield put(PlayerCommands.updateLevelCommand({ level, xp }));
+	yield put(
+		PlayerCommands.playerInfoCommands.updateLevelCommand({ level, xp })
+	);
 
 	const health = yield* select(PlayerStateSelectors.getPlayerHealth);
-	yield put(PlayerCommands.updateHealthCommand(health));
+	yield put(PlayerCommands.playerInfoCommands.updateHealthCommand(health));
 
 	const opponentId = yield* select(PlayerStateSelectors.getOpponentId);
-	yield put(PlayerCommands.updateOpponentCommand(opponentId));
+	yield put(
+		PlayerCommands.playerInfoCommands.updateOpponentCommand(opponentId)
+	);
 };

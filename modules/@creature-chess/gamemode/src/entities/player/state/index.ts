@@ -1,4 +1,4 @@
-import { AnyAction, Reducer, ReducersMapObject } from "redux";
+import { AnyAction, Reducer, ReducersMapObject } from "@reduxjs/toolkit";
 
 import { BoardState } from "@shoki/board";
 

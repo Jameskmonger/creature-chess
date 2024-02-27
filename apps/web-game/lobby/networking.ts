@@ -1,4 +1,4 @@
-import { Action } from "redux";
+import { Action } from "@reduxjs/toolkit";
 import { EventChannel, eventChannel } from "redux-saga";
 import { put } from "redux-saga/effects";
 import { Socket } from "socket.io-client";

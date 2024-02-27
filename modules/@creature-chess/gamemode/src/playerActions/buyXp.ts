@@ -6,7 +6,7 @@ import { MAX_LEVEL } from "@creature-chess/models/config";
 
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 import { addXpCommand } from "../entities/player/sagas/xp";
-import { updateMoneyCommand } from "../entities/player/state/commands";
+import { playerInfoCommands } from "../entities/player/state/commands";
 import { isPlayerAlive } from "../entities/player/state/selectors";
 
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
@@ -50,12 +50,14 @@ export const buyXpPlayerActionSaga = function* () {
 				},
 			});
 
-			yield put(updateMoneyCommand(money));
+			yield put(playerInfoCommands.updateMoneyCommand(money));
 
 			continue;
 		}
 
 		yield put(addXpCommand(settings.buyXpAmount));
-		yield put(updateMoneyCommand(money - settings.buyXpCost));
+		yield put(
+			playerInfoCommands.updateMoneyCommand(money - settings.buyXpCost)
+		);
 	}
 };

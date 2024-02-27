@@ -1,16 +1,15 @@
-import { put, takeEvery } from "redux-saga/effects";
-import { select } from "typed-redux-saga";
+import { put } from "redux-saga/effects";
+import { select, takeEvery } from "typed-redux-saga";
 
 import {
 	playerRunPreparingPhaseEvent,
 	PlayerRunPreparingPhaseEvent,
 } from "../../../../game/events";
-import { afterRerollCardsEvent, playerMatchRewardsEvent } from "../../events";
+import { afterRerollCardsEvent } from "../../events";
 import { getBoardSlice } from "../../selectors";
 import { PlayerState } from "../../state";
 import {
-	updateMoneyCommand,
-	updateOpponentCommand,
+	playerInfoCommands,
 	updateShopLockCommand,
 } from "../../state/commands";
 import {
@@ -42,7 +41,9 @@ export const playerPreparingPhase = function* () {
 				const totalMatchReward = matchRewards.rewardMoney.total;
 
 				// todo make addMoneyCommand
-				yield put(updateMoneyCommand(currentMoney + totalMatchReward));
+				yield put(
+					playerInfoCommands.updateMoneyCommand(currentMoney + totalMatchReward)
+				);
 				yield put(addXpCommand(1));
 			}
 
@@ -55,8 +56,8 @@ export const playerPreparingPhase = function* () {
 			yield put(updateShopLockCommand(false));
 
 			if (matchRewards) {
-				yield put(playerMatchRewardsEvent(null));
-				yield put(updateOpponentCommand(null));
+				yield put(playerInfoCommands.playerMatchRewardsEvent(null));
+				yield put(playerInfoCommands.updateOpponentCommand(null));
 			}
 
 			const level = yield* select(getPlayerLevel);

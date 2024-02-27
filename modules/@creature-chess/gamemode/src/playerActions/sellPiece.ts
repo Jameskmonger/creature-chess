@@ -6,7 +6,7 @@ import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
 import { afterSellPieceEvent } from "../entities/player/events";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
-import { updateMoneyCommand } from "../entities/player/state/commands";
+import { playerInfoCommands } from "../entities/player/state/commands";
 import { getPiecesForStage } from "../game/evolution";
 import { getPiece } from "../player/pieceSelectors";
 
@@ -39,7 +39,11 @@ export const sellPiecePlayerActionSaga = function* () {
 
 			// TODO (Jameskmonger) this possibly isn't safe.. can the money be updated
 			// 			in between the `select` and the `put`?
-			yield put(updateMoneyCommand(currentMoney + pieceCost * piecesUsed));
+			yield put(
+				playerInfoCommands.updateMoneyCommand(
+					currentMoney + pieceCost * piecesUsed
+				)
+			);
 
 			yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
 			yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));

@@ -1,5 +1,5 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { configureStore } from "@reduxjs/toolkit";
+import { lobbyReducer } from "apps/web-game/lobby";
 import createSagaMiddleware from "redux-saga";
 
 import { createBoardSlice } from "@shoki/board";
@@ -7,15 +7,10 @@ import { createBoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { createReducers } from "./reducers";
+import { createGameReducer } from "../game";
 import { rootSaga } from "./saga";
 import { SagaContext } from "./sagaContext";
 import { AppState } from "./state";
-
-const composeEnhancers = composeWithDevTools({
-	trace: true,
-	traceLimit: 20,
-});
 
 export const createAppStore = () => {
 	const boardSlice = createBoardSlice<PieceModel>("local-board", {
@@ -38,10 +33,21 @@ export const createAppStore = () => {
 
 	const slices = { boardSlice, benchSlice };
 
-	const store = createStore(
-		combineReducers<AppState>(createReducers(slices)),
-		composeEnhancers(applyMiddleware(sagaMiddleware))
-	);
+	const store = configureStore<AppState>({
+		reducer: {
+			lobby: lobbyReducer,
+			game: createGameReducer(slices),
+		},
+		middleware: (getDefaultMiddleware) =>
+			getDefaultMiddleware({
+				thunk: false,
+				serializableCheck: false,
+			}).concat(sagaMiddleware),
+		devTools: {
+			trace: true,
+			traceLimit: 20,
+		},
+	});
 
 	sagaMiddleware.run(rootSaga, slices);
 

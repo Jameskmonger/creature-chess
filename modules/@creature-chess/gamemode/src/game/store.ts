@@ -1,4 +1,4 @@
-import { applyMiddleware, combineReducers, createStore, Store } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
 import { RoundInfoState } from "@creature-chess/models";
@@ -15,12 +15,16 @@ export const createGameStore = (context: GameSagaContext) => {
 		context,
 	});
 
-	const store: Store<GameState> = createStore(
-		combineReducers<GameState>({
+	const store = configureStore<GameState>({
+		reducer: {
 			roundInfo: roundInfoReducer,
-		}),
-		applyMiddleware(sagaMiddleware)
-	);
+		},
+		middleware: (getDefaultMiddleware) =>
+			getDefaultMiddleware({
+				thunk: false,
+				serializableCheck: false,
+			}).concat(sagaMiddleware),
+	});
 
 	return { store, sagaMiddleware };
 };

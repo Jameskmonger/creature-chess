@@ -1,4 +1,4 @@
-import { Reducer, Action, combineReducers } from "redux";
+import { Reducer, Action, combineReducers } from "@reduxjs/toolkit";
 
 import { BoardSlice, BoardState } from "@shoki/board";
 
@@ -51,7 +51,7 @@ export const createGameReducer = ({
 		match: matchReducer,
 		playerList: playerListReducer,
 		playerInfo: playerInfoReducer,
-		ui: uiReducer,
+		ui: uiReducer as Reducer<UiState>,
 		quickChat: quickChatReducer,
 		settings: settingsReducer,
 	});

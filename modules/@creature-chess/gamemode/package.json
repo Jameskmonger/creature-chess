@@ -24,7 +24,7 @@
 	"dependencies": {
 		"@creature-chess/battle": "workspace:*",
 		"@creature-chess/models": "workspace:*",
-		"@reduxjs/toolkit": "^1.7.1",
+		"@reduxjs/toolkit": "^2.2.1",
 		"@shoki/board": "workspace:*",
 		"@shoki/card-deck": "workspace:*",
 		"@shoki/engine": "workspace:*",
@@ -33,8 +33,8 @@
 		"delay": "^4.4.1",
 		"lodash": "^4.17.21",
 		"p-defer": "^2.1.0",
-		"redux-saga-test-plan": "^4.0.4",
-		"typed-redux-saga": "^1.3.1",
+		"redux-saga-test-plan": "^4.0.6",
+		"typed-redux-saga": "^1.5.0",
 		"uuid": "^8.3.2",
 		"winston": "^3.3.3"
 	},

@@ -1,10 +1,5 @@
-import {
-	Action,
-	applyMiddleware,
-	combineReducers,
-	createStore,
-	ReducersMapObject,
-} from "redux";
+import { Action, ReducersMapObject } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
 import { Saga, Task } from "../effects";
@@ -57,10 +52,14 @@ export const entity = <
 		},
 	});
 
-	const store = createStore(
-		combineReducers<TState>(reducers),
-		applyMiddleware(sagaMiddleware)
-	);
+	const store = configureStore({
+		reducer: reducers,
+		middleware: (getDefaultMiddleware) =>
+			getDefaultMiddleware({
+				thunk: false,
+				serializableCheck: false,
+			}).concat(sagaMiddleware),
+	});
 
 	if (rootSaga) {
 		sagaMiddleware.run(rootSaga);

@@ -1,13 +1,12 @@
 import { all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
-import delay from "delay";
-import pDefer from "p-defer";
 import {
-	createStore,
-	combineReducers,
-	applyMiddleware,
 	Store,
 	Reducer,
-} from "redux";
+	UnknownAction,
+	configureStore,
+} from "@reduxjs/toolkit";
+import delay from "delay";
+import pDefer from "p-defer";
 import createSagaMiddleware from "redux-saga";
 import { call } from "redux-saga/effects";
 import { v4 as uuid } from "uuid";
@@ -232,13 +231,18 @@ export class Match {
 
 		const sagaMiddleware = createSagaMiddleware();
 
-		const store = createStore(
-			combineReducers<MatchState>({
+		const store = configureStore<MatchState>({
+			reducer: {
 				board: this.board.boardReducer,
-				turn: turnReducer,
-			}),
-			applyMiddleware(sagaMiddleware)
-		);
+				// TODO (jkm) remove cast
+				turn: turnReducer as Reducer<number, UnknownAction>,
+			},
+			middleware: (getDefaultMiddleware) =>
+				getDefaultMiddleware({
+					thunk: false,
+					serializableCheck: false,
+				}).concat(sagaMiddleware),
+		});
 
 		sagaMiddleware.run(rootSaga);
 

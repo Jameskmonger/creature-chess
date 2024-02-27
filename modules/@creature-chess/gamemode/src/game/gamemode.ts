@@ -1,6 +1,6 @@
 import { take } from "@redux-saga/core/effects";
+import { Store } from "@reduxjs/toolkit";
 import { EventEmitter } from "events";
-import { Store } from "redux";
 import { SagaMiddleware } from "redux-saga";
 import { Logger } from "winston";
 

@@ -172,9 +172,13 @@ export class Game {
 		const settings = this.settings;
 
 		entity.runSaga(function* () {
-			yield put(PlayerCommands.updateMoneyCommand(settings.startingMoney));
 			yield put(
-				PlayerCommands.updateLevelCommand({
+				PlayerCommands.playerInfoCommands.updateMoneyCommand(
+					settings.startingMoney
+				)
+			);
+			yield put(
+				PlayerCommands.playerInfoCommands.updateLevelCommand({
 					level: settings.startingLevel,
 					xp: 0,
 				})

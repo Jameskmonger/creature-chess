@@ -33,15 +33,7 @@ const { actions, reducer: cardShopReducer } = createSlice({
 	},
 });
 
-// this stops the compiler from trying to export a type from @reduxjs/toolkit
-const updateCardsCommand: (payload: (Card | null)[]) => {
-	type: string;
-	payload: (Card | null)[];
-} = actions.updateCardsCommand;
+export const updateCardsCommand = actions.updateCardsCommand;
+export const updateShopLockCommand = actions.updateShopLockCommand;
 
-const updateShopLockCommand: (payload: boolean) => {
-	type: string;
-	payload: boolean;
-} = actions.updateShopLockCommand;
-
-export { updateCardsCommand, updateShopLockCommand, cardShopReducer };
+export { cardShopReducer };

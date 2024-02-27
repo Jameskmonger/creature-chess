@@ -4,7 +4,7 @@ import { select } from "typed-redux-saga";
 
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 import { afterRerollCardsEvent } from "../entities/player/events";
-import { updateMoneyCommand } from "../entities/player/state/commands";
+import { playerInfoCommands } from "../entities/player/state/commands";
 import { isPlayerAlive } from "../entities/player/state/selectors";
 
 export type RerollCardsPlayerAction = ReturnType<
@@ -35,7 +35,9 @@ export const rerollCardsPlayerActionSaga = function* () {
 				return;
 			}
 
-			yield put(updateMoneyCommand(money - settings.rerollCost));
+			yield put(
+				playerInfoCommands.updateMoneyCommand(money - settings.rerollCost)
+			);
 			yield put(afterRerollCardsEvent());
 		}
 	);

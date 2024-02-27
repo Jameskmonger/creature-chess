@@ -1,21 +1,16 @@
-import { take, takeLatest, put, call } from "@redux-saga/core/effects";
-import { select } from "typed-redux-saga";
+import { put, call } from "@redux-saga/core/effects";
+import { select, take, takeLatest } from "typed-redux-saga";
 
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { StreakType, PlayerStreak } from "@creature-chess/models/player";
 
 import { getPlayerEntityDependencies } from "../dependencies";
 import {
-	playerMatchRewardsEvent,
 	playerDeathEvent,
 	playerFinishMatchEvent,
 	PlayerFinishMatchEvent,
 } from "../events";
-import {
-	updateStreakCommand,
-	updateHealthCommand,
-	updateStatusCommand,
-} from "../state/commands";
+import { playerInfoCommands } from "../state/commands";
 import {
 	getPlayerHealth,
 	getPlayerMoney,
@@ -63,7 +58,9 @@ const updateStreak = function* (win: boolean) {
 	const newAmount =
 		type === existingStreak.type ? existingStreak.amount + 1 : 0;
 
-	yield put(updateStreakCommand({ type, amount: newAmount }));
+	yield put(
+		playerInfoCommands.updateStreakCommand({ type, amount: newAmount })
+	);
 };
 
 export const playerMatchRewards = function* () {
@@ -85,13 +82,13 @@ export const playerMatchRewards = function* () {
 
 			// subtractHealthCommand emits an UPDATE_HEALTH_COMMAND so need to wait for that.
 			// todo this is ugly
-			yield take(updateHealthCommand.toString());
+			yield take(playerInfoCommands.updateHealthCommand);
 
 			const newValue = yield* select(getPlayerHealth);
 
 			const justDied = newValue === 0 && oldValue !== 0;
 			if (justDied) {
-				yield put(updateStatusCommand(PlayerStatus.DEAD));
+				yield put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
 				yield put(playerDeathEvent());
 			}
 
@@ -105,7 +102,7 @@ export const playerMatchRewards = function* () {
 			);
 
 			yield put(
-				playerMatchRewardsEvent({
+				playerInfoCommands.playerMatchRewardsEvent({
 					damage,
 					justDied,
 					rewardMoney: { total, base, winBonus, streakBonus, interest },

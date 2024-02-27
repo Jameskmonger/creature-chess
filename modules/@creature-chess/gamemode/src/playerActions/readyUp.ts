@@ -10,7 +10,7 @@ import {
 	getPlayerEntityDependencies,
 	PlayerEntityDependencies,
 } from "../entities/player/dependencies";
-import { updateReadyCommand } from "../entities/player/state/commands";
+import { playerInfoCommands } from "../entities/player/state/commands";
 import {
 	isPlayerAlive,
 	isPlayerReady,
@@ -56,7 +56,7 @@ export const readyUpPlayerActionSaga = function* () {
 				return;
 			}
 
-			yield put(updateReadyCommand(true));
+			yield put(playerInfoCommands.updateReadyCommand(true));
 		}
 	);
 };

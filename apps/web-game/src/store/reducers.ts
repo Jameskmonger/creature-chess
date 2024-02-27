@@ -1,4 +1,4 @@
-import { ReducersMapObject } from "redux";
+import { ReducersMapObject } from "@reduxjs/toolkit";
 
 import { BoardSlice } from "@shoki/board";
 

@@ -48,6 +48,10 @@ const runBattle = function* (
 		canAttackAtTurn: 15,
 	});
 
+	/**
+	 * TODO (jkm) come up with a better way to expose the store
+	 * https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants
+	 */
 	yield put(exposeStoreEvent({ stores: { combat: combatStore } }));
 
 	while (true) {

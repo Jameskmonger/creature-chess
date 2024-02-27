@@ -41,6 +41,7 @@ type UIAction =
 	| SetWinnerIdCommand
 	| SetInGameCommand;
 
+// TODO convert to redux toolkit
 export const reducer = (state: UiState = initialState, action: UIAction) => {
 	switch (action.type) {
 		case UPDATE_CONNECTION_STATUS:
