@@ -1,15 +1,15 @@
-import * as React from "react";
+import React from "react";
 
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createUseStyles } from "react-jss";
 
 import { Card as CardModel } from "@creature-chess/models";
 
-import { useGamemodeSettings } from "../../GamemodeSettingsContext";
-import { Layout } from "../../layout";
+import { useGamemodeSettings } from "@cc-web/ui/GamemodeSettingsContext";
+
 import { Button } from "../button";
-import { Label } from "../display";
-import { CardSelector } from "./cardSelector";
-import { CurrentCard } from "./currentCard";
+import { Card } from "./card";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -19,98 +19,110 @@ type Props = {
 	onReroll?: () => void;
 	onToggleLock?: () => void;
 	onBuy?: (index: number) => void;
-	showSelectedCard?: boolean;
 };
 
 const useStyles = createUseStyles({
-	container: {
-		width: "100%",
+	shop: {
+		display: "flex",
+		flexDirection: "column",
+
+		height: "100%",
+		boxSizing: "border-box",
+
+		fontFamily: "Arial, sans-serif",
+	},
+	cards: {
+		display: "flex",
+		flexDirection: "column",
+		padding: "2%",
+		background: "#797979",
 		height: "100%",
 	},
-	grow: {
-		flex: 1,
-		marginBottom: "2em",
+	card: {
+		"height": "18%",
+
+		"&:not(:last-child)": {
+			marginBottom: "2%",
+		},
 	},
-	balance: {
-		background: "#2f2f2f",
-		padding: "0 1em",
-		lineHeight: "1.5em",
+	controls: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		padding: "2%",
+		background: "#303030",
+	},
+	control: {
+		"border": "none",
+
+		"cursor": "pointer",
+		"background": "#38b764",
+		"borderRadius": "4px",
+
+		"fontFamily": '"Roboto", "sans-serif"',
+		"fontOpticalSizing": "auto",
+		"fontWeight": 700,
+		"fontStyle": "normal",
+		"fontSize": "16px",
+
+		"padding": "4% 6%",
+
+		"&[disabled]": {
+			background: "#303030",
+			cursor: "not-allowed",
+		},
+
+		"&:hover": {
+			background: "#4aeb82",
+		},
+
+		"transition": "background 0.2s ease-in-out",
 	},
 });
 
-const CardShop: React.FunctionComponent<Props> = ({
+export function CardShop({
 	cards,
-	ownedDefinitionIds,
 	money,
-	isLocked = false,
 	onReroll,
 	onToggleLock,
 	onBuy,
-	showSelectedCard = true,
-}) => {
+	isLocked,
+}: Props) {
 	const classes = useStyles();
-	const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
-
-	const onBuyCurrentCard = () =>
-		onBuy && selectedIndex !== null && onBuy(selectedIndex);
-
-	const selectedCard = selectedIndex !== null ? cards[selectedIndex] : null;
-
-	React.useEffect(() => {
-		if (!selectedCard) {
-			return;
-		}
-
-		const canAfford = selectedCard.cost <= money;
-
-		if (!canAfford) {
-			setSelectedIndex(null);
-		}
-	}, [selectedCard, money]);
 
 	const { rerollCost } = useGamemodeSettings();
 
 	return (
-		<Layout className={classes.container} direction="column">
-			<Layout
-				direction="column"
-				justifyContent="center"
-				className={classes.grow}
-			>
-				{selectedCard && showSelectedCard && (
-					<CurrentCard
-						card={selectedCard}
-						alreadyOwned={ownedDefinitionIds.includes(
-							selectedCard.definitionId
+		<div className={classes.shop}>
+			<div className={classes.cards}>
+				{cards.map((card, index) => (
+					<div className={classes.card} key={card ? card.id : `empty-${index}`}>
+						{card !== null && (
+							<Card
+								key={card!.id}
+								card={card}
+								money={money}
+								onBuy={() => onBuy?.(index)}
+							/>
 						)}
-						onBuy={onBuyCurrentCard}
-					/>
-				)}
-			</Layout>
+					</div>
+				))}
+			</div>
 
-			<CardSelector
-				cards={cards}
-				money={money}
-				selectedCardIndex={selectedIndex}
-				onSelectCard={setSelectedIndex}
-				ownedDefinitionIds={ownedDefinitionIds}
-			/>
-
-			<Layout direction="row" justifyContent="space-between">
-				<Button type="primary" onClick={onReroll} disabled={money < rerollCost}>
-					New (${rerollCost})
-				</Button>
-
-				<div className={classes.balance}>
-					<Label>Balance:</Label> <Label type="highlight">${money}</Label>
-				</div>
-
-				<Button type="primary" onClick={onToggleLock}>
+			<div className={classes.controls}>
+				<button className={classes.control} onClick={onToggleLock}>
 					{isLocked ? "Unlock" : "Lock (1 turn)"}
-				</Button>
-			</Layout>
-		</Layout>
-	);
-};
+				</button>
 
-export { CardShop };
+				<button
+					className={classes.control}
+					onClick={onReroll}
+					disabled={money < rerollCost}
+				>
+					<FontAwesomeIcon icon={faArrowsRotate} />
+					&nbsp;${rerollCost}
+				</button>
+			</div>
+		</div>
+	);
+}

@@ -6,7 +6,7 @@ export {
 	PlayerAvatar,
 	Title,
 } from "./src/player";
-export { CardShop, Card } from "./src/cardShop";
+export { CardShop } from "./src/cardShop";
 
 export {
 	CreatureImage,

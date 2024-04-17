@@ -12,7 +12,11 @@ import { Card } from "./card";
 import "./card.stories.css";
 
 export default {
+<<<<<<< HEAD:modules/@cc-web/ui/src/cardShop/card.stories.tsx
 	title: "@ui / Card Shop / Card",
+=======
+	title: "@cc-web / ui / CardShop / 3d / Card",
+>>>>>>> ed8a6636 (feat: new 2d shop ui):modules/@cc-web/ui/src/cardShop/3d/card.stories.tsx
 	component: Card,
 } as Meta;
 

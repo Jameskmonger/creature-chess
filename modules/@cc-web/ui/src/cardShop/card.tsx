@@ -1,93 +1,207 @@
-import * as React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Card as CardModel } from "@creature-chess/models";
+import { Card, DefinitionClass } from "@creature-chess/models";
 
-import { Layout } from "../../layout";
 import { CreatureImage, TypeIndicator } from "../display";
 
-type Props = {
-	card: CardModel;
-	alreadyOwned: boolean;
-	onClick?: () => void;
-	disabled?: boolean;
+type CardShopCardProps = {
+	card: Card | null;
+	money: number;
+	onBuy?: () => void;
 };
 
-const useStyles = createUseStyles({
+const useStyles = createUseStyles<string, CardShopCardProps>({
 	card: {
-		boxSizing: "border-box",
-		fontFamily: "Arial, sans-serif",
-		color: "#fff",
-		textAlign: "center",
-		cursor: ({ disabled = false }: Props) =>
-			disabled ? "not-allowed" : "pointer",
+		display: "flex",
+		flexDirection: "row",
+
 		userSelect: "none",
-		background: ({ alreadyOwned }: Props) =>
-			alreadyOwned ? "#587261" : "#4e4e4e",
-		paddingBottom: "0.5em",
 	},
-	name: {
-		fontSize: "0.8em",
-		fontWeight: 700,
+	imageContainer: {
+		aspectRatio: "1/1",
+		background: "#303030",
+		padding: "2% 4% 2% 2%",
+
+		position: "relative",
 	},
-	typeIndicator: {
-		zIndex: 20,
-		marginTop: "-0.5em",
-		marginLeft: "-0.125em",
-		width: "24px",
-		height: "24px",
+	image: {
+		width: "64px",
+		height: "64px",
+
+		zIndex: 10,
+
+		position: "relative",
 	},
-	cost: {
-		padding: "0.125em",
-		marginTop: "-0.5em",
-		marginRight: "-0.1em",
-		background: "rgb(128, 128, 128)",
+	shadow: {
+		position: "absolute",
+
+		width: "64px",
+		height: "64px",
+
+		backgroundColor: "#1c1c1c",
+		borderRadius: "50%",
+
+		filter: "blur(4px)",
+		zIndex: 9,
 	},
-	cardMeta: {
+	info: {
+		flex: 1,
+
 		display: "flex",
 		flexDirection: "column",
-		justifyContent: "space-around",
+
+		background: "#303030",
 	},
-	metaItem: {
-		fontSize: "0.6rem",
-		fontWeight: 700,
-		textTransform: "uppercase",
+	name: {
+		color: "#fff",
+
+		fontFamily: '"Caveat Brush", cursive',
+		fontWeight: 400,
+		fontStyle: "normal",
+		fontSize: "24px",
+
+		paddingLeft: "5%",
+		marginLeft: "-5%",
+		background: "#101010",
+		paddingBottom: "2%",
+
+		zIndex: 11,
+
+		borderWidth: "0 0 2px",
+		borderStyle: "solid",
+		borderBottomWidth: "3px",
+		borderBottomColor: (props) => {
+			switch (props.card!.cost) {
+				case 1:
+					return "#b4b4b4";
+				case 2:
+					return "#4eba4e";
+				case 3:
+					return "#4690ff";
+				case 4:
+					return "#993899";
+				case 5:
+					return "#e09429";
+				default:
+					return "#ff0000";
+			}
+		},
+	},
+	traits: {
+		"flex": 1,
+		"display": "flex",
+		"flexDirection": "row",
+		"alignItems": "center",
+		"justifyContent": "space-between",
+
+		"& > img": {
+			height: "24px",
+		},
+	},
+	class: {
+		color: "#d7d7d7",
+
+		fontFamily: '"Roboto", "sans-serif"',
+		fontOpticalSizing: "auto",
+		fontWeight: 400,
+		fontStyle: "normal",
+		fontSize: "14px",
+		marginRight: "5%",
+	},
+	buyContainer: {
+		background: "#101010",
+		width: "20%",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	buy: {
+		"border": "none",
+
+		"height": "75%",
+		"width": "75%",
+
+		"cursor": "pointer",
+		"background": "#38b764",
+		"borderRadius": "12.5%",
+
+		"fontFamily": '"Roboto", "sans-serif"',
+		"fontOpticalSizing": "auto",
+		"fontWeight": 700,
+		"fontStyle": "normal",
+		"fontSize": "18px",
+		"letterSpacing": "-1px",
+
+		"&[disabled]": {
+			background: "#303030",
+			cursor: "not-allowed",
+		},
+
+		"&:hover": {
+			background: "#4aeb82",
+		},
+
+		"transition": "background 0.2s ease-in-out",
 	},
 });
 
-const Card: React.FunctionComponent<Props> = (props) => {
+export function Card(props: CardShopCardProps) {
 	const classes = useStyles(props);
 
-	const {
-		card: { name, definitionId, type, cost, class: cardClass },
-		onClick,
-		disabled = false,
-	} = props;
+	const { card, money } = props;
+
+	const [shuffleAmount, setShuffleAmount] = useState(0);
+
+	useEffect(() => {
+		if (card) {
+			const multiplier = card.cost * 4;
+			const amount = Math.random() * multiplier - multiplier / 2;
+
+			setShuffleAmount(amount);
+		}
+	}, [card]);
+
+	const onBuy = useCallback(() => {
+		if (!props.onBuy || !card || card.cost > money) {
+			return;
+		}
+
+		props.onBuy();
+	}, [props, card, money]);
 
 	return (
-		<div
-			className={classes.card}
-			onClick={!disabled ? onClick || undefined : undefined}
-		>
-			<Layout direction="column" noSpacer>
-				<Layout direction="row" noSpacer>
-					<div className={classes.typeIndicator}>
-						<TypeIndicator type={type} />
-					</div>
-					<div className={classes.cost}>
-						<span>${cost}</span>
-					</div>
-				</Layout>
-				<CreatureImage definitionId={definitionId} />
-				<h2 className={classes.name}>{name}</h2>
-				<div className={classes.cardMeta}>
-					<span className={classes.metaItem}>{cardClass}</span>
-					<span className={classes.metaItem}>{type}</span>
+		<div key={card!.id} className={classes.card}>
+			<div className={classes.imageContainer}>
+				<div className={classes.shadow} />
+
+				<CreatureImage
+					definitionId={card!.definitionId}
+					className={classes.image}
+				/>
+			</div>
+			<div className={classes.info}>
+				<span className={classes.name}>{card!.name}</span>
+				<div className={classes.traits}>
+					<TypeIndicator type={card!.type} />
+
+					<span className={classes.class}>
+						{card!.class === DefinitionClass.VALIANT && "Valiant"}
+						{card!.class === DefinitionClass.CUNNING && "Cunning"}
+						{card!.class === DefinitionClass.ARCANE && "Arcane"}
+					</span>
 				</div>
-			</Layout>
+			</div>
+			<div className={classes.buyContainer}>
+				<button
+					className={classes.buy}
+					disabled={card!.cost > money}
+					onClick={onBuy}
+				>
+					<div style={{ rotate: `${shuffleAmount}deg` }}>$ {card!.cost}</div>
+				</button>
+			</div>
 		</div>
 	);
-};
-
-export { Card };
+}

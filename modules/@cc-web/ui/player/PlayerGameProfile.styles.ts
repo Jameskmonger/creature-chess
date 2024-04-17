@@ -6,6 +6,7 @@ export const useStyles = createUseStyles({
 		fontFamily: "Arial, sans-serif",
 		color: "#fff",
 		background: "#566c86",
+		margin: "1em 0",
 	},
 	row: {
 		"display": "flex",
