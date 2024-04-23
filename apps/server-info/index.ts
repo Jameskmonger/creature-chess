@@ -194,6 +194,8 @@ async function startServer() {
 					id,
 					token: newToken,
 					expires_at: expiryDate,
+
+					profile_picture: Math.floor(Math.random() * 36) + 1,
 				},
 			});
 
