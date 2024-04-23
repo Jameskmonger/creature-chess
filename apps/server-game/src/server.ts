@@ -14,7 +14,7 @@ import { AuthenticatedSocket } from "./player/socket";
 
 // TODO make these configurable
 const MAX_PLAYERS = 8;
-const LOBBY_WAIT_TIME = 30;
+const LOBBY_WAIT_TIME = 60;
 
 const startGame = async (
 	database: DatabaseConnection,
