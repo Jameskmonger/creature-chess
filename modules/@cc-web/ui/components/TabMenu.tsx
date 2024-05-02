@@ -7,11 +7,15 @@ type TabMenuProps = {
 		label: string;
 		content: React.ReactNode;
 	}[];
+	className?: string;
 };
 
 const useStyles = createUseStyles({
-	tabMenu: {},
-
+	tabMenu: {
+		display: "flex",
+		flexDirection: "column",
+		minHeight: 0,
+	},
 	tabs: {
 		listStyle: "none",
 		padding: 0,
@@ -40,11 +44,14 @@ const useStyles = createUseStyles({
 		},
 	},
 	content: {
+		flex: 1,
+		minHeight: 0,
+		overflowY: "auto",
 		padding: "0.5em",
 	},
 });
 
-export function TabMenu({ tabs }: TabMenuProps) {
+export function TabMenu({ tabs, className }: TabMenuProps) {
 	const classes = useStyles();
 
 	const [activeTab, setActiveTab] = React.useState(0);
@@ -54,7 +61,7 @@ export function TabMenu({ tabs }: TabMenuProps) {
 	};
 
 	return (
-		<div className={classes.tabMenu}>
+		<div className={`${classes.tabMenu} ${className}`}>
 			<ul className={classes.tabs}>
 				{tabs.map((tab, index) => (
 					<li

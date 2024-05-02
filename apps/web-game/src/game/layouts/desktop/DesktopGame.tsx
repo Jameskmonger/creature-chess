@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Footer, Group, Layout } from "@cc-web/ui";
+import { Footer, Layout } from "@cc-web/ui";
+import { TabMenu } from "@cc-web/ui/components/TabMenu";
 import { LandscapeGameScreen } from "@cc-web/ui/gameScreen";
 
 import { BoardContainer } from "../../board";
@@ -20,9 +21,16 @@ import {
 
 const useStyles = createUseStyles({
 	helpContainer: {
-		overflowY: "scroll",
 		padding: "0.5em",
 		background: "#566c86",
+	},
+	leftColumn: {
+		height: "100%",
+		display: "flex",
+		flexDirection: "column",
+	},
+	tabMenu: {
+		flex: 1,
 	},
 	rightColumn: {
 		height: "100%",
@@ -32,18 +40,39 @@ const useStyles = createUseStyles({
 const DesktopGame: React.FunctionComponent = () => {
 	const styles = useStyles();
 
+	const leftTabs = React.useMemo(
+		() => [
+			{
+				label: "Players",
+				content: <PlayerList />,
+			},
+			{
+				label: "Help",
+				content: (
+					<div className={styles.helpContainer}>
+						<Help hideFooter />
+						<Footer />
+					</div>
+				),
+			},
+		],
+		[styles.helpContainer]
+	);
+
 	return (
 		<LandscapeGameScreen
 			leftColumnContent={
-				<>
+				<div className={styles.leftColumn}>
 					<RoundIndicator />
 
 					<PhaseInfo />
 
 					<NowPlaying />
 
-					<PlayerList />
-				</>
+					<TabMenu tabs={leftTabs} className={styles.tabMenu} />
+
+					<QuitGameButton />
+				</div>
 			}
 			middleColumnContent={<BoardContainer />}
 			rightColumnContent={
@@ -53,14 +82,6 @@ const DesktopGame: React.FunctionComponent = () => {
 					<CardShop />
 
 					<Profile />
-
-					<Controls />
-
-					<div className={styles.helpContainer}>
-						<Help hideFooter />
-					</div>
-
-					<Footer />
 				</Layout>
 			}
 		/>
