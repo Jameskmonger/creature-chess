@@ -19,7 +19,9 @@ import { useStyles } from "./NavBar.styles";
 const NavItem: React.FunctionComponent<{
 	overlay: Overlay;
 	icon: IconDefinition;
-}> = ({ overlay, icon }) => {
+	chipText?: string;
+	chipTextClassName?: string;
+}> = ({ overlay, icon, chipText, chipTextClassName }) => {
 	const styles = useStyles();
 	const dispatch = useDispatch();
 	const isActive = useSelector<AppState, boolean>(
@@ -53,6 +55,13 @@ const NavItem: React.FunctionComponent<{
 			})}
 			onClick={onClick}
 		>
+			{chipText && (
+				<div className={styles.chip}>
+					<span className={classnames(styles.chipText, chipTextClassName)}>
+						{chipText}
+					</span>
+				</div>
+			)}
 			<FontAwesomeIcon icon={icon} />
 		</button>
 	);
@@ -61,10 +70,19 @@ const NavItem: React.FunctionComponent<{
 export const NavBar: React.FunctionComponent = () => {
 	const styles = useStyles();
 
+	const shopLocked = useSelector<AppState, boolean>(
+		(state) => state.game.cardShop.locked
+	);
+
 	return (
 		<nav className={styles.navBar}>
 			<NavItem overlay={Overlay.PLAYERS} icon={faUsers} />
-			<NavItem overlay={Overlay.SHOP} icon={faShoppingCart} />
+			<NavItem
+				overlay={Overlay.SHOP}
+				icon={faShoppingCart}
+				chipText={shopLocked ? "LOCKED" : undefined}
+				chipTextClassName={styles.shopLockChip}
+			/>
 			<NavItem overlay={Overlay.HELP} icon={faQuestionCircle} />
 			<NavItem overlay={Overlay.SETTINGS} icon={faCog} />
 		</nav>

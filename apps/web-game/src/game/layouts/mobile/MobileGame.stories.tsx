@@ -11,6 +11,7 @@ import { useGlobalStyles } from "@cc-web/ui";
 import { GamemodeSettingsContextProvider } from "@cc-web/ui/GamemodeSettingsContext";
 
 import { ConnectionStatus } from "../../connection-status";
+import { GameState } from "../../state";
 import { Overlay } from "../../ui";
 import { createMockStore } from "../stories-utils";
 import { MobileGame } from "./MobileGame";
@@ -25,7 +26,7 @@ const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
 	const store = createMockStore(args.phase === GamePhase.PREPARING, (state) => {
-		const newState = {
+		const newState: GameState = {
 			...state,
 			ui: {
 				...state.ui,
@@ -50,6 +51,10 @@ const Template: Story<any> = (args) => {
 				opponentId: args.opponentId
 					? args.opponentId
 					: state.playerInfo.opponentId,
+			},
+			cardShop: {
+				...state.cardShop,
+				...args.cardShop,
 			},
 		};
 
@@ -194,6 +199,17 @@ export const Tab_2_Shop_Overlay = Template.bind({});
 Tab_2_Shop_Overlay.args = {
 	phase: GamePhase.PREPARING,
 	overlay: Overlay.SHOP,
+	cardShop: {
+		locked: false,
+	},
+};
+export const Tab_2_Shop_Overlay_Locked = Template.bind({});
+Tab_2_Shop_Overlay_Locked.args = {
+	phase: GamePhase.PREPARING,
+	overlay: Overlay.SHOP,
+	cardShop: {
+		locked: true,
+	},
 };
 
 export const Tab_3_Help_Overlay = Template.bind({});
