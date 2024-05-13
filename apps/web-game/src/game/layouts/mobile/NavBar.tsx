@@ -83,8 +83,7 @@ export const NavBar: React.FunctionComponent = () => {
 				chipText={shopLocked ? "LOCKED" : undefined}
 				chipTextClassName={styles.shopLockChip}
 			/>
-			<NavItem overlay={Overlay.HELP} icon={faQuestionCircle} />
-			<NavItem overlay={Overlay.SETTINGS} icon={faCog} />
+			<NavItem overlay={Overlay.SETTINGS} icon={faQuestionCircle} />
 		</nav>
 	);
 };

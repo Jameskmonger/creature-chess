@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { getPlayerMoney } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
+import { TabMenu } from "@cc-web/ui/components/TabMenu";
 import { PortraitGameScreen } from "@cc-web/ui/gameScreen";
 
 import { AppState } from "../../../store";
@@ -54,18 +55,21 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 		);
 	}
 
-	if (currentOverlay === Overlay.HELP) {
-		return (
-			<OverlayComponent title="Help">
-				<Help />
-			</OverlayComponent>
-		);
-	}
-
 	if (currentOverlay === Overlay.SETTINGS) {
 		return (
-			<OverlayComponent title="Settings">
-				<Settings />
+			<OverlayComponent title="Options">
+				<TabMenu
+					tabs={[
+						{
+							label: "Help",
+							content: <Help />,
+						},
+						{
+							label: "Settings",
+							content: <Settings />,
+						},
+					]}
+				/>
 			</OverlayComponent>
 		);
 	}

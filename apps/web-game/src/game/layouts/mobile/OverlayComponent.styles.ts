@@ -32,7 +32,7 @@ export const useStyles = createUseStyles({
 	},
 
 	overlayContent: {
-		overflow: "scroll",
+		overflow: "auto",
 	},
 
 	overlayContentFullscreen: {

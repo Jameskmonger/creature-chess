@@ -212,14 +212,8 @@ Tab_2_Shop_Overlay_Locked.args = {
 	},
 };
 
-export const Tab_3_Help_Overlay = Template.bind({});
-Tab_3_Help_Overlay.args = {
-	phase: GamePhase.PREPARING,
-	overlay: Overlay.HELP,
-};
-
-export const Tab_4_Settings_Overlay = Template.bind({});
-Tab_4_Settings_Overlay.args = {
+export const Tab_3_Options_Overlay = Template.bind({});
+Tab_3_Options_Overlay.args = {
 	phase: GamePhase.PREPARING,
 	overlay: Overlay.SETTINGS,
 };
