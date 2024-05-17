@@ -83,6 +83,7 @@ const useStyles = createUseStyles({
 export function CardShop({
 	cards,
 	money,
+	ownedDefinitionIds,
 	onReroll,
 	onToggleLock,
 	onBuy,
@@ -102,6 +103,7 @@ export function CardShop({
 								key={card!.id}
 								card={card}
 								money={money}
+								owned={ownedDefinitionIds.includes(card.definitionId)}
 								onBuy={() => onBuy?.(index)}
 							/>
 						)}

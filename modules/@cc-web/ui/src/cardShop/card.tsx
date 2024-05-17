@@ -5,10 +5,13 @@ import { createUseStyles } from "react-jss";
 import { Card, DefinitionClass } from "@creature-chess/models";
 
 import { CreatureImage, TypeIndicator } from "../display";
+import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
+
 
 type CardShopCardProps = {
 	card: Card | null;
 	money: number;
+	owned: boolean;
 	onBuy?: () => void;
 };
 
@@ -54,13 +57,12 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 
 		background: "#303030",
 	},
-	name: {
-		color: "#fff",
 
-		fontFamily: '"Caveat Brush", cursive',
-		fontWeight: 400,
-		fontStyle: "normal",
-		fontSize: "24px",
+	nameBar: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
 
 		paddingLeft: "5%",
 		marginLeft: "-5%",
@@ -88,6 +90,14 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 					return "#ff0000";
 			}
 		},
+	},
+	name: {
+		color: "#fff",
+
+		fontFamily: '"Caveat Brush", cursive',
+		fontWeight: 400,
+		fontStyle: "normal",
+		fontSize: "24px",
 	},
 	traits: {
 		"flex": 1,
@@ -145,6 +155,10 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 
 		"transition": "background 0.2s ease-in-out",
 	},
+	ownedIcon: {
+		width: "24px",
+		height: "24px",
+	},
 });
 
 export function Card(props: CardShopCardProps) {
@@ -176,13 +190,20 @@ export function Card(props: CardShopCardProps) {
 			<div className={classes.imageContainer}>
 				<div className={classes.shadow} />
 
-				<CreatureImage
-					definitionId={card!.definitionId}
-					className={classes.image}
-				/>
+				<div className={classes.image}>
+					<CreatureImage definitionId={card!.definitionId} />
+				</div>
 			</div>
 			<div className={classes.info}>
-				<span className={classes.name}>{card!.name}</span>
+				<div className={classes.nameBar}>
+					<span className={classes.name}>{card!.name}</span>
+					{props.owned && (
+						<img
+							className={classes.ownedIcon}
+							src={`${IMAGE_BASE_URL}/ui/arrow_up_green.png`}
+						/>
+					)}
+				</div>
 				<div className={classes.traits}>
 					<TypeIndicator type={card!.type} />
 
