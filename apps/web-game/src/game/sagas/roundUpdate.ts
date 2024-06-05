@@ -28,7 +28,9 @@ export const roundUpdateSaga = function* () {
 			switch (packet.phase) {
 				case GamePhase.PREPARING: {
 					yield put(
-						PlayerCommands.playerInfoCommands.updateOpponentCommand(null)
+						PlayerCommands.playerInfoCommands.updateOpponentCommand({
+							id: null,
+						})
 					);
 					yield put(board.commands.unlockBoardCommand());
 					return;

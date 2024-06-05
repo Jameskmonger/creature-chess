@@ -51,6 +51,9 @@ const Template: Story<any> = (args) => {
 				opponentId: args.opponentId
 					? args.opponentId
 					: state.playerInfo.opponentId,
+				opponentIsClone: args.opponentIsClone
+					? args.opponentIsClone
+					: state.playerInfo.opponentIsClone,
 			},
 			cardShop: {
 				...state.cardShop,
@@ -116,6 +119,14 @@ Phase_1_Ready.args = {
 	overlay: null,
 	phase: GamePhase.READY,
 	opponentId: "5678",
+};
+
+export const Phase_1_Ready_vs_Clone = Template.bind({});
+Phase_1_Ready_vs_Clone.args = {
+	overlay: null,
+	phase: GamePhase.READY,
+	opponentId: "5678",
+	opponentIsClone: true,
 };
 
 export const Phase_2_Playing = Template.bind({});

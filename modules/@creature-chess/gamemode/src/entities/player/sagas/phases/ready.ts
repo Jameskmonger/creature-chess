@@ -27,10 +27,21 @@ export const playerReadyPhase = function* () {
 		function* ({ payload: { match } }) {
 			yield put(boardSlice.commands.lockBoardCommand());
 
-			const opponentId =
-				match.home.id === playerId ? match.away.id : match.home.id;
-
-			yield put(playerInfoCommands.updateOpponentCommand(opponentId));
+			if (match.home.id === playerId) {
+				yield put(
+					playerInfoCommands.updateOpponentCommand({
+						id: match.away.id,
+						isClone: match.awayIsClone,
+					})
+				);
+			} else {
+				yield put(
+					playerInfoCommands.updateOpponentCommand({
+						id: match.home.id,
+						isClone: false,
+					})
+				);
+			}
 		}
 	);
 };

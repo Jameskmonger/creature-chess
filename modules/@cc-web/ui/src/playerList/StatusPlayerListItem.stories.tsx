@@ -21,7 +21,7 @@ export const DeadPlayer = Template.bind({});
 DeadPlayer.args = {
 	name: "JKM",
 	opponentName: "Jeff",
-	battle: finishedBattle("1234", true, 0, 3),
+	battle: finishedBattle("1234", false, true, 0, 3),
 	status: "Dead",
 	subtitle: "8th place",
 };

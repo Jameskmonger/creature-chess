@@ -27,6 +27,7 @@ export interface PlayerInfoState {
 	matchRewards: PlayerMatchRewards | null;
 
 	opponentId: string | null;
+	opponentIsClone: boolean;
 	money: number;
 	ready: boolean;
 	level: number;
@@ -43,6 +44,7 @@ const initialState: PlayerInfoState = {
 	battle: null,
 	matchRewards: null,
 	opponentId: null,
+	opponentIsClone: false,
 	money: 0,
 	ready: false,
 	level: 0,
@@ -65,8 +67,15 @@ const playerInfoSlice = createSlice({
 		updateReadyCommand: (state, action: PayloadAction<boolean>) => {
 			state.ready = action.payload;
 		},
-		updateOpponentCommand: (state, action: PayloadAction<string | null>) => {
-			state.opponentId = action.payload;
+		updateOpponentCommand: (
+			state,
+			action: PayloadAction<{
+				id: string | null;
+				isClone?: boolean;
+			}>
+		) => {
+			state.opponentId = action.payload.id;
+			state.opponentIsClone = action.payload.isClone ?? false;
 		},
 		updateBattleCommand: (
 			state,

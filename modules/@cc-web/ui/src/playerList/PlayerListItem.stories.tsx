@@ -89,7 +89,25 @@ OpponentInProgressBattle.args = {
 	currentlySpectating: false,
 	showReadyIndicator: true,
 
-	player: createPlayer(inProgressBattle("5678"), {
+	player: createPlayer(inProgressBattle("5678", false), {
+		money: 4,
+		level: 9,
+		health: 4,
+	}),
+};
+
+export const OpponentInProgressBattleVsClone = Template.bind({});
+OpponentInProgressBattleVsClone.args = {
+	index: 5,
+
+	isOpponent: true,
+	isLocal: false,
+
+	opponentName: "[BOT] Lucky",
+	currentlySpectating: false,
+	showReadyIndicator: true,
+
+	player: createPlayer(inProgressBattle("5678", true), {
 		money: 4,
 		level: 9,
 		health: 4,
@@ -107,7 +125,31 @@ FinishedBattle.args = {
 	currentlySpectating: false,
 	showReadyIndicator: true,
 
-	player: createPlayer(finishedBattle("5678", false, 3, 0), {
+	player: createPlayer(finishedBattle("5678", false, false, 3, 0), {
+		name: "[BOT] Bicycle",
+		streakType: StreakType.LOSS,
+		profile: {
+			picture: 13,
+			title: {
+				color: 0xf7ee85,
+				text: "Hall of Fame",
+			},
+		},
+	}),
+};
+
+export const FinishedBattleVsClone = Template.bind({});
+FinishedBattleVsClone.args = {
+	index: 0,
+
+	isOpponent: false,
+	isLocal: false,
+
+	opponentName: "Jeff",
+	currentlySpectating: false,
+	showReadyIndicator: true,
+
+	player: createPlayer(finishedBattle("5678", true, false, 3, 0), {
 		name: "[BOT] Bicycle",
 		streakType: StreakType.LOSS,
 		profile: {

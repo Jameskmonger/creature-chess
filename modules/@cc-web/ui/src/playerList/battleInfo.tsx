@@ -72,7 +72,10 @@ const BattleInfo: React.FunctionComponent<Props> = (props) => {
 				{text}
 			</span>
 			<span>&nbsp;vs&nbsp;</span>
-			<span className={classes.highlight}>{props.opponentName || ""}</span>
+			<span className={classes.highlight}>
+				{props.opponentName || ""}
+				{props.battle.opponentIsClone && <>&nbsp;(C)</>}
+			</span>
 		</div>
 	);
 };

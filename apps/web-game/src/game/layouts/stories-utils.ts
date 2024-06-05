@@ -27,6 +27,7 @@ const createPlayer = (
 	picture: number,
 	title: PlayerTitle | null,
 	opponentId: string,
+	opponentIsClone: boolean = false,
 	streak: { type: StreakType; amount: number } | null = null
 ) => ({
 	id,
@@ -42,7 +43,7 @@ const createPlayer = (
 		picture,
 		title,
 	},
-	battle: inProgressBattle(opponentId),
+	battle: inProgressBattle(opponentId, opponentIsClone),
 });
 
 const createBoardState = (halfBoard: boolean): BoardState<PieceModel> => {
@@ -123,6 +124,7 @@ const createMockedState = (halfBoard: boolean): GameState => ({
 	bench: createBenchState(),
 	playerInfo: {
 		opponentId: "5678",
+		opponentIsClone: false,
 		battle: null,
 		health: 100,
 		level: 3,
@@ -185,6 +187,7 @@ const createMockedState = (halfBoard: boolean): GameState => ({
 			1,
 			{ color: 0x79ffe0, text: "Developer" },
 			"5678",
+			false,
 			{ type: StreakType.WIN, amount: 6 }
 		),
 		createPlayer("5678", "Jeff", 12, null, "1234"),
@@ -198,11 +201,11 @@ const createMockedState = (halfBoard: boolean): GameState => ({
 			"5678"
 		),
 		createPlayer("5679", "Ignius_Rex", 12, null, "1234"),
-		createPlayer("abce", "AlfaCenTauri", 12, null, "ab99", {
+		createPlayer("abce", "AlfaCenTauri", 12, null, "ab99", false, {
 			type: StreakType.WIN,
 			amount: 3,
 		}),
-		createPlayer("ab90", "what this game", 20, null, "abcd", {
+		createPlayer("ab90", "what this game", 20, null, "abcd", false, {
 			type: StreakType.LOSS,
 			amount: 2,
 		}),

@@ -29,7 +29,13 @@ export const sendInitialState = function* () {
 	yield put(PlayerCommands.playerInfoCommands.updateHealthCommand(health));
 
 	const opponentId = yield* select(PlayerStateSelectors.getOpponentId);
+	const opponentIsClone = yield* select(
+		PlayerStateSelectors.getOpponentIsClone
+	);
 	yield put(
-		PlayerCommands.playerInfoCommands.updateOpponentCommand(opponentId)
+		PlayerCommands.playerInfoCommands.updateOpponentCommand({
+			id: opponentId,
+			isClone: opponentIsClone,
+		})
 	);
 };
