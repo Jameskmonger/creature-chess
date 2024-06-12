@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import {
-	faCog,
+	faChartColumn,
 	faQuestionCircle,
 	faShoppingCart,
 	faUsers,
@@ -83,6 +83,7 @@ export const NavBar: React.FunctionComponent = () => {
 				chipText={shopLocked ? "LOCKED" : undefined}
 				chipTextClassName={styles.shopLockChip}
 			/>
+			<NavItem overlay={Overlay.STATS} icon={faChartColumn} />
 			<NavItem overlay={Overlay.SETTINGS} icon={faQuestionCircle} />
 		</nav>
 	);

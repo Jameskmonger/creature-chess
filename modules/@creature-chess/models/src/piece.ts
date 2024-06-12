@@ -31,6 +31,12 @@ export interface PieceModel {
 	hit?: HitDetails | null;
 	maxHealth: number;
 	currentHealth: number;
+
+	lastBattleStats: {
+		damageDealt: number;
+		damageTaken: number;
+		turnsSurvived: number;
+	} | null;
 }
 
 export type IndexedPieces = {

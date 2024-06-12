@@ -12,6 +12,7 @@ import { GamePhase } from "@creature-chess/models";
 import { AppState } from "../../store";
 import { getPlayerSlices } from "../../store/sagaContext";
 import { setMatchBoard } from "../module/match";
+import { setStats } from "../module/stats";
 
 export const clientBattleSaga = function* () {
 	const settings = yield* select((state: AppState) => state.game.settings);
@@ -28,6 +29,7 @@ export const clientBattleSaga = function* () {
 		BattleEvents.battleTurnEvent,
 		function* ({ payload: { board: newBoard } }: BattleEvents.BattleTurnEvent) {
 			yield put(setMatchBoard(newBoard));
+			yield put(setStats(newBoard));
 		}
 	);
 

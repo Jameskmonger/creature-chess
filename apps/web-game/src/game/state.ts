@@ -16,6 +16,7 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 import { playerListReducer, quickChatReducer, QuickChat } from "./module";
 import { matchReducer, MatchState } from "./module/match";
 import { settingsReducer } from "./module/settings";
+import { StatsState, statsReducer } from "./module/stats";
 import { UiState, uiReducer } from "./ui";
 
 export type GameState = PlayerState & {
@@ -26,6 +27,8 @@ export type GameState = PlayerState & {
 	bench: BoardState<PieceModel>;
 
 	match: MatchState;
+
+	stats: StatsState;
 
 	playerInfo: PlayerInfoState;
 	playerList: PlayerListPlayer[];
@@ -49,6 +52,7 @@ export const createGameReducer = ({
 		board: boardSlice.boardReducer,
 		bench: benchSlice.boardReducer,
 		match: matchReducer,
+		stats: statsReducer,
 		playerList: playerListReducer,
 		playerInfo: playerInfoReducer,
 		ui: uiReducer as Reducer<UiState>,

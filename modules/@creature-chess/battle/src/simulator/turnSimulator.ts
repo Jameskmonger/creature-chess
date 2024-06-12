@@ -14,7 +14,19 @@ export const simulateTurn = (
 	boardSlice: BoardSlice<PieceModel>,
 	stores: Stores
 ) => {
-	const pieceEntries = Object.entries(board.pieces);
+	const pieceEntries = Object.entries(board.pieces).map(
+		([pieceId, piece]) =>
+			[
+				pieceId,
+				{
+					...piece,
+					lastBattleStats: {
+						...piece.lastBattleStats!,
+						turnsSurvived: piece.lastBattleStats!.turnsSurvived + 1,
+					},
+				},
+			] as [string, PieceModel]
+	);
 
 	pieceEntries.sort(([, aPiece], [, bPiece]) => {
 		const aStats = getStats(aPiece);

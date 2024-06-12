@@ -19,6 +19,7 @@ import { PlayerTitle } from "@creature-chess/models/player/title";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { ConnectionStatus } from "../connection-status";
+import { StatsState } from "../module/stats";
 import { GameState } from "../state";
 
 const createPlayer = (
@@ -52,26 +53,46 @@ const createBoardState = (halfBoard: boolean): BoardState<PieceModel> => {
 		height: halfBoard ? 3 : 6,
 	});
 
-	const definition = getDefinitionById(1)!;
-	const piece = {
+	const definition1 = getDefinitionById(1)!;
+	const piece1: PieceModel = {
 		id: "piece-1-id",
-		ownerId: "player-1-id",
+		ownerId: "1234",
 		definitionId: 1,
-		definition,
+		definition: definition1,
 		facingAway: false,
-		maxHealth: definition.stages[0].hp,
-		currentHealth: definition.stages[0].hp,
+		maxHealth: definition1.stages[0].hp,
+		currentHealth: definition1.stages[0].hp,
 		stage: 0,
+		lastBattleStats: {
+			damageDealt: Math.floor(Math.random() * 100),
+			damageTaken: Math.floor(Math.random() * 100),
+			turnsSurvived: Math.floor(Math.random() * 10),
+		},
+	};
+
+	const definition2 = getDefinitionById(2)!;
+	const piece2: PieceModel = {
+		id: "piece-2-id",
+		ownerId: "1234",
+		definitionId: 2,
+		definition: definition2,
+		facingAway: false,
+		maxHealth: definition2.stages[0].hp,
+		currentHealth: definition2.stages[0].hp,
+		stage: 0,
+		lastBattleStats: null,
 	};
 
 	return {
 		...state,
 		pieces: {
 			...state.pieces,
-			[piece.id]: piece,
+			[piece1.id]: piece1,
+			[piece2.id]: piece2,
 		},
 		piecePositions: {
-			[halfBoard ? "3,0" : "3,3"]: piece.id,
+			[halfBoard ? "3,0" : "3,3"]: piece1.id,
+			[halfBoard ? "4,0" : "4,3"]: piece2.id,
 		},
 	};
 };
@@ -82,16 +103,21 @@ const createBenchState = (): BoardState<PieceModel> => {
 		height: 1,
 	});
 
-	const definition = getDefinitionById(1)!;
-	const piece = {
+	const definition = getDefinitionById(5)!;
+	const piece: PieceModel = {
 		id: "bpiece-1-id",
-		ownerId: "player-1-id",
+		ownerId: "1234",
 		definitionId: 5,
 		definition,
 		facingAway: false,
 		maxHealth: definition.stages[0].hp,
 		currentHealth: definition.stages[0].hp,
 		stage: 0,
+		lastBattleStats: {
+			damageDealt: Math.floor(Math.random() * 100),
+			damageTaken: Math.floor(Math.random() * 100),
+			turnsSurvived: Math.floor(Math.random() * 10),
+		},
 	};
 
 	return {
@@ -106,124 +132,140 @@ const createBenchState = (): BoardState<PieceModel> => {
 	};
 };
 
-const createMockedState = (halfBoard: boolean): GameState => ({
-	settings: GamemodeSettingsPresets["default"],
-	ui: {
-		connectionStatus: ConnectionStatus.CONNECTED,
-		currentOverlay: null,
-		inGame: true,
-		selectedPieceId: null,
-		winnerId: null,
-	},
-	roundInfo: {
-		phase: GamePhase.PREPARING,
-		phaseStartedAtSeconds: Date.now() / 1000,
-		round: 1,
-	},
-	board: createBoardState(halfBoard),
-	bench: createBenchState(),
-	playerInfo: {
-		opponentId: "5678",
-		opponentIsClone: false,
-		battle: null,
-		health: 100,
-		level: 3,
-		xp: 2,
-		matchRewards: null,
-		money: 5,
-		ready: false,
-		status: PlayerStatus.CONNECTED,
-		streak: {
-			amount: 1,
-			type: StreakType.WIN,
+const createMockedState = (halfBoard: boolean): GameState => {
+	const board = createBoardState(halfBoard);
+	const bench = createBenchState();
+
+	return {
+		settings: GamemodeSettingsPresets["default"],
+		ui: {
+			connectionStatus: ConnectionStatus.CONNECTED,
+			currentOverlay: null,
+			inGame: true,
+			selectedPieceId: null,
+			winnerId: null,
 		},
-	},
-	cardShop: {
-		cards: [
-			{
-				id: "card-1",
-				definitionId: 10,
-				cost: 3,
-				class: DefinitionClass.ARCANE,
-				name: "Foo",
-				type: CreatureType.Fire,
+		roundInfo: {
+			phase: GamePhase.PREPARING,
+			phaseStartedAtSeconds: Date.now() / 1000,
+			round: 1,
+		},
+		board,
+		bench,
+		playerInfo: {
+			opponentId: "5678",
+			opponentIsClone: false,
+			battle: null,
+			health: 100,
+			level: 3,
+			xp: 2,
+			matchRewards: null,
+			money: 5,
+			ready: false,
+			status: PlayerStatus.CONNECTED,
+			streak: {
+				amount: 1,
+				type: StreakType.WIN,
 			},
-			{
-				id: "card-2",
-				definitionId: 20,
-				cost: 1,
-				class: DefinitionClass.CUNNING,
-				name: "John Smith",
-				type: CreatureType.Water,
-			},
-			{
-				id: "card-3",
-				definitionId: 30,
-				cost: 5,
-				class: DefinitionClass.VALIANT,
-				name: "Terry",
-				type: CreatureType.Earth,
-			},
-			{
-				id: "card-4",
-				definitionId: 1,
-				cost: 1,
-				class: DefinitionClass.VALIANT,
-				name: "Budaye",
-				type: CreatureType.Wood,
-			},
-			null,
-			null,
+		},
+		cardShop: {
+			cards: [
+				{
+					id: "card-1",
+					definitionId: 10,
+					cost: 3,
+					class: DefinitionClass.ARCANE,
+					name: "Foo",
+					type: CreatureType.Fire,
+				},
+				{
+					id: "card-2",
+					definitionId: 20,
+					cost: 1,
+					class: DefinitionClass.CUNNING,
+					name: "John Smith",
+					type: CreatureType.Water,
+				},
+				{
+					id: "card-3",
+					definitionId: 30,
+					cost: 5,
+					class: DefinitionClass.VALIANT,
+					name: "Terry",
+					type: CreatureType.Earth,
+				},
+				{
+					id: "card-4",
+					definitionId: 1,
+					cost: 1,
+					class: DefinitionClass.VALIANT,
+					name: "Budaye",
+					type: CreatureType.Wood,
+				},
+				null,
+				null,
+			],
+			locked: false,
+		},
+		match: {
+			board: null,
+		},
+		stats: [
+			...Object.values(board.pieces),
+			...Object.values(bench.pieces),
+		].reduce((acc, piece) => {
+			acc[piece.id] = {
+				damageDealt: Math.floor(Math.random() * 100),
+				damageTaken: Math.floor(Math.random() * 100),
+				turnsSurvived: Math.floor(Math.random() * 10),
+			};
+			return acc;
+		}, {} as StatsState),
+		playerList: [
+			createPlayer(
+				"1234",
+				"jkm",
+				1,
+				{ color: 0x79ffe0, text: "Developer" },
+				"5678",
+				false,
+				{ type: StreakType.WIN, amount: 6 }
+			),
+			createPlayer("5678", "Jeff", 12, null, "1234"),
+			createPlayer("abcd", "Bob the Cat", 12, null, "ab99"),
+			createPlayer("ab99", "Derek the Dog", 20, null, "abcd"),
+			createPlayer(
+				"1235",
+				"Eric123",
+				1,
+				{ color: 0xe89292, text: "Contributor" },
+				"5678"
+			),
+			createPlayer("5679", "Ignius_Rex", 12, null, "1234"),
+			createPlayer("abce", "AlfaCenTauri", 12, null, "ab99", false, {
+				type: StreakType.WIN,
+				amount: 3,
+			}),
+			createPlayer("ab90", "what this game", 20, null, "abcd", false, {
+				type: StreakType.LOSS,
+				amount: 2,
+			}),
 		],
-		locked: false,
-	},
-	match: {
-		board: null,
-	},
-	playerList: [
-		createPlayer(
-			"1234",
-			"jkm",
-			1,
-			{ color: 0x79ffe0, text: "Developer" },
-			"5678",
-			false,
-			{ type: StreakType.WIN, amount: 6 }
-		),
-		createPlayer("5678", "Jeff", 12, null, "1234"),
-		createPlayer("abcd", "Bob the Cat", 12, null, "ab99"),
-		createPlayer("ab99", "Derek the Dog", 20, null, "abcd"),
-		createPlayer(
-			"1235",
-			"Eric123",
-			1,
-			{ color: 0xe89292, text: "Contributor" },
-			"5678"
-		),
-		createPlayer("5679", "Ignius_Rex", 12, null, "1234"),
-		createPlayer("abce", "AlfaCenTauri", 12, null, "ab99", false, {
-			type: StreakType.WIN,
-			amount: 3,
-		}),
-		createPlayer("ab90", "what this game", 20, null, "abcd", false, {
-			type: StreakType.LOSS,
-			amount: 2,
-		}),
-	],
-	quickChat: {
-		["1234"]: {
-			value: QuickChatOption.HAPPY,
-			receivedAt: Date.now(),
+		quickChat: {
+			["1234"]: {
+				value: QuickChatOption.HAPPY,
+				receivedAt: Date.now(),
+			},
+			["5678"]: {
+				value: QuickChatOption.ANGRY,
+				receivedAt: Date.now(),
+			},
 		},
-		["5678"]: {
-			value: QuickChatOption.ANGRY,
-			receivedAt: Date.now(),
+		spectating: {
+			id: null,
 		},
-	},
-	spectating: {
-		id: null,
-	},
-});
+	};
+};
 
 export const createMockStore = (
 	halfBoard: boolean,
