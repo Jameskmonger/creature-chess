@@ -4,6 +4,7 @@ import { createServer } from "http";
 import { register } from "prom-client";
 import { Server } from "socket.io";
 
+import { basicAuth } from "./src/basicAuth";
 import { logger } from "./src/log";
 import { startServer } from "./src/server";
 
@@ -25,10 +26,20 @@ const io = new Server(server, { path: "/socket.io" });
 
 app.use(expressWinston({ winstonInstance: logger }));
 
-app.get("/metrics", async (req, res) => {
-	res.setHeader("Content-Type", register.contentType);
-	res.end(await register.metrics());
-});
+if (process.env.METRICS_USERNAME && process.env.METRICS_PASSWORD) {
+	app.get(
+		"/metrics",
+		basicAuth(process.env.METRICS_USERNAME, process.env.METRICS_PASSWORD),
+		async (req, res) => {
+			res.setHeader("Content-Type", register.contentType);
+			res.end(await register.metrics());
+		}
+	);
+} else {
+	console.warn(
+		"Metrics endpoint is not active. Please set METRICS_USERNAME and METRICS_PASSWORD environment variables."
+	);
+}
 
 startServer({ io }).catch((e) => {
 	logger.error("An error occurred while starting the server", e);
