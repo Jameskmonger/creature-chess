@@ -1,3 +1,4 @@
+import { collectDefaultMetrics, register } from "prom-client";
 import { Server } from "socket.io";
 
 import { GamemodeSettings } from "@creature-chess/models/settings";
@@ -11,6 +12,12 @@ import { onHandshakeSuccess } from "./handshake";
 import { Lobby } from "./lobby";
 import { logger } from "./log";
 import { AuthenticatedSocket } from "./player/socket";
+
+register.setDefaultLabels({
+	nodeId: process.env.NODE_APP_INSTANCE || "default",
+});
+
+collectDefaultMetrics({ register });
 
 // TODO make these configurable
 const MAX_PLAYERS = 8;

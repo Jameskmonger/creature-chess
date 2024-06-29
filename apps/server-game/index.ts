@@ -1,6 +1,7 @@
 import express from "express";
 import { logger as expressWinston } from "express-winston";
 import { createServer } from "http";
+import { register } from "prom-client";
 import { Server } from "socket.io";
 
 import { logger } from "./src/log";
@@ -23,6 +24,11 @@ const server = createServer(app);
 const io = new Server(server, { path: "/socket.io" });
 
 app.use(expressWinston({ winstonInstance: logger }));
+
+app.get("/metrics", async (req, res) => {
+	res.setHeader("Content-Type", register.contentType);
+	res.end(await register.metrics());
+});
 
 startServer({ io }).catch((e) => {
 	logger.error("An error occurred while starting the server", e);
