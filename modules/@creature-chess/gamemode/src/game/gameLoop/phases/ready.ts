@@ -13,7 +13,11 @@ import { Match } from "../../match";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
 
-export const runReadyPhase = function* () {
+type Callbacks = {
+	onTurnComplete?: (timeMs: number) => void;
+};
+
+export const runReadyPhase = function* (callbacks: Callbacks = {}) {
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
 	const logger: Logger = yield getContext("logger");
@@ -41,7 +45,8 @@ export const runReadyPhase = function* () {
 			awayPlayer,
 			awayIsClone,
 			logger,
-			settings
+			settings,
+			callbacks.onTurnComplete
 		);
 
 		homePlayer.put(playerRunReadyPhaseEvent({ match }));

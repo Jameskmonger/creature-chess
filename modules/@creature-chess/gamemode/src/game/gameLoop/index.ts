@@ -10,7 +10,13 @@ import { GameSagaContextPlayers } from "../sagas";
 import { GameState } from "../store";
 import { runPlayingPhase, runPreparingPhase, runReadyPhase } from "./phases";
 
-export const gameLoopSaga = function* () {
+type Callbacks = {
+	onTurnComplete?: (timeMs: number) => void;
+	onMatchStart?: () => void;
+	onMatchEnd?: () => void;
+};
+
+export const gameLoopSaga = function* (callbacks: Callbacks = {}) {
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const logger: Logger = yield getContext("logger");
 
@@ -35,8 +41,8 @@ export const gameLoopSaga = function* () {
 
 		currentRound = yield* select((state: GameState) => state.roundInfo.round);
 
-		yield call(runReadyPhase);
-		yield call(runPlayingPhase);
+		yield call(runReadyPhase, callbacks);
+		yield call(runPlayingPhase, callbacks);
 
 		if (players.getLiving().length < 2) {
 			break;

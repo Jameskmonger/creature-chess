@@ -27,6 +27,12 @@ import { createGameStore, GameState } from "./store";
 
 const finishGameEventKey = "FINISH_GAME";
 
+type GamemodeCallbacks = {
+	onTurnComplete?: (timeMs: number) => void;
+	onMatchStart?: () => void;
+	onMatchEnd?: () => void;
+};
+
 export class Gamemode {
 	private opponentProvider: OpponentProvider = new OpponentProvider();
 	private playerList = new PlayerList();
@@ -40,7 +46,8 @@ export class Gamemode {
 	public constructor(
 		public readonly id: string,
 		private logger: Logger,
-		private settings: GamemodeSettings
+		private settings: GamemodeSettings,
+		private callbacks: GamemodeCallbacks = {}
 	) {
 		this.deck = new CardDeck(this.logger);
 
@@ -81,7 +88,7 @@ export class Gamemode {
 
 		// todo fix these ugly typings
 		this.sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
-		this.sagaMiddleware.run(gameSaga as () => Generator);
+		this.sagaMiddleware.run(gameSaga as any, this.callbacks);
 		this.sagaMiddleware.run(sendPublicEventsSaga);
 	};
 

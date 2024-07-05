@@ -18,7 +18,12 @@ const waitForFinishMatchSaga = function* () {
 	yield* take<PlayerFinishMatchEvent>(playerFinishMatchEvent.toString());
 };
 
-export const runPlayingPhase = function* () {
+type Callbacks = {
+	onMatchStart?: () => void;
+	onMatchEnd?: () => void;
+};
+
+export const runPlayingPhase = function* (callbacks: Callbacks = {}) {
 	const players = yield* getContext<GameSagaContextPlayers>("players");
 
 	const battleTimeoutDeferred = pDefer<void>();
@@ -43,7 +48,17 @@ export const runPlayingPhase = function* () {
 		p.runSaga(waitForFinishMatchSaga)
 	);
 
-	uniqueMatches.forEach((m) => m.fight(battleTimeoutDeferred.promise));
+	uniqueMatches.forEach((m) => {
+		if (callbacks.onMatchStart) {
+			callbacks.onMatchStart();
+		}
+
+		m.fight(battleTimeoutDeferred.promise).then(() => {
+			if (callbacks.onMatchEnd) {
+				callbacks.onMatchEnd();
+			}
+		});
+	});
 
 	yield Promise.all(finishMatchTasks.map((t) => t.toPromise()));
 
