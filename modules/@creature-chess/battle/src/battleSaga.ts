@@ -72,12 +72,13 @@ const runBattle = function* (
 		const turnTimer = duration(settings.battleTurnDuration);
 
 		board = simulateTurn(++turnCount, board, boardSlice, { combatStore });
-		const { promise } = turnTimer.remaining();
+		const { ms, promise } = turnTimer.remaining();
 
 		yield put(
 			battleTurnEvent({
 				turn: turnCount,
 				board,
+				timeMs: settings.battleTurnDuration - ms,
 			})
 		);
 

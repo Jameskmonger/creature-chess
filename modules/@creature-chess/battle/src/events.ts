@@ -10,6 +10,7 @@ export type BattleTurnEvent = ReturnType<typeof battleTurnEvent>;
 export const battleTurnEvent = createAction<{
 	turn: number;
 	board: BoardState<PieceModel>;
+	timeMs: number;
 }>("battleTurnEvent");
 
 export type ExposeStoreEvent = ReturnType<typeof exposeStoreEvent>;
