@@ -15,6 +15,13 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 import { botLogicSaga } from "@cc-server/bot";
 import { BotPersonality } from "@cc-server/data";
 
+import {
+	activeBattles,
+	activeGames,
+	battlesStarted,
+	gamesStarted,
+	turnDurationMs,
+} from "./Metrics";
 import { logger } from "./log";
 import { playerNetworking } from "./player";
 import { createPlayerEntity } from "./player/entity";
@@ -59,7 +66,18 @@ export class Game {
 		this.settings = _settings;
 
 		const gameId = uuid();
-		this.gamemode = new Gamemode(gameId, logger, _settings);
+		this.gamemode = new Gamemode(gameId, logger, _settings, {
+			onTurnComplete(timeMs) {
+				turnDurationMs.observe(timeMs);
+			},
+			onMatchStart() {
+				activeBattles.inc();
+				battlesStarted.inc();
+			},
+			onMatchEnd() {
+				activeBattles.dec();
+			},
+		});
 
 		for (const player of players) {
 			this.registerPlayer(player);
@@ -69,10 +87,17 @@ export class Game {
 			this.registerBot(bot);
 		}
 
-		this.gamemode.onFinish(onFinish);
+		this.gamemode.onFinish((event) => {
+			activeGames.dec();
+
+			onFinish(event);
+		});
 
 		const entities = this.members.map((m) => m.entity);
 		this.gamemode.start(entities);
+
+		activeGames.inc();
+		gamesStarted.inc();
 	}
 
 	public canJoinGame(playerId: string) {
