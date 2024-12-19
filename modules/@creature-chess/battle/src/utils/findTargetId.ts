@@ -31,7 +31,7 @@ const getEnemyDeltas = (
 
 		// find all positions from which we can attack
 		const attackPositions = getTargetAttackPositions(
-			board,
+			board.size,
 			enemyPosition,
 			attackRange
 		);

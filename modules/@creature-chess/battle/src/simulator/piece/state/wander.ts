@@ -37,7 +37,7 @@ export function doWander(
 		return [state];
 	}
 
-	const adjacentPositions = getTargetAttackPositions(board, piecePosition);
+	const adjacentPositions = getTargetAttackPositions(board.size, piecePosition);
 	const emptyPositions = adjacentPositions.filter(
 		(p) => BoardSelectors.getPieceForPosition(board, p.x, p.y) === null
 	);

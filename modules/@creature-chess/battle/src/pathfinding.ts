@@ -90,7 +90,7 @@ export const getNextPiecePosition = (
 	} = attackerStats;
 
 	const targetTiles = getTargetAttackPositions(
-		board,
+		board.size,
 		targetPosition,
 		attackRange
 	);
