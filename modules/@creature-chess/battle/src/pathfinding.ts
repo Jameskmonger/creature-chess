@@ -1,12 +1,10 @@
+import { astar, Graph } from "javascript-astar";
+
 import { BoardState } from "@shoki/board";
 
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
-
-// no typings so this needs a standard require
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { astar, Graph } = require("javascript-astar");
 
 const createEmptyWeightGrid = ({
 	width,

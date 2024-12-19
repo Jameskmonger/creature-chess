@@ -1,4 +1,12 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["./src/**/*"]
+	"include": ["./src/**/*"],
+	"compilerOptions": {
+		"typeRoots": [
+			"../../node_modules/@types",
+			"./node_modules/@types",
+			"../../modules/@creature-chess/battle/types",
+			"./types"
+		]
+	}
 }
