@@ -7,6 +7,7 @@ import { BattleCommands } from "@creature-chess/battle";
 import { initialBoardPieces } from "../piece";
 import { board, useAppSelector } from "../state";
 import { BoardLogger } from "./BoardLogger";
+import { PathfinderControls } from "./PathfinderControls";
 import { SelectedTileInfo } from "./SelectedTile";
 
 export function BattleControls() {
@@ -44,6 +45,10 @@ export function BattleControls() {
 				{isPaused ? "Resume" : "Pause"} Battle
 			</button>
 			<button onClick={onClickReset}>Reset</button>
+
+			<hr />
+
+			<PathfinderControls />
 
 			<hr />
 
