@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { HasId } from "@shoki/board";
+import { HasId, PiecePosition } from "@shoki/board";
 
 import {
 	BoardGrid,
@@ -43,6 +43,7 @@ const createDropPieceEvent = (
 type GameBoardProps = {
 	renderBoardPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
 	renderBenchPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
+	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
 	onClick?: (event: GameBoardClickEvent) => void;
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
 };
@@ -147,10 +148,10 @@ const useStyles = createUseStyles<string>({
 		"flexDirection": "column",
 		"justifyContent": "center",
 
-		"& .tile.dark": {
+		"& .tile .dark": {
 			background: "#38b764",
 		},
-		"& .tile.light": {
+		"& .tile .light": {
 			background: "#a7f070",
 		},
 	},
@@ -182,6 +183,7 @@ const useStyles = createUseStyles<string>({
 export function GameBoard({
 	renderBoardPiece,
 	renderBenchPiece,
+	renderTileBackground,
 	onClick,
 	onDropPiece,
 }: GameBoardProps) {
@@ -218,6 +220,7 @@ export function GameBoard({
 						onDropItem={onDropBoard}
 						onClickTile={onClickBoard}
 						renderItem={boardPieceRenderer}
+						renderTileBackground={renderTileBackground}
 					/>
 				</div>
 
@@ -228,6 +231,7 @@ export function GameBoard({
 						onClickTile={onClickBench}
 						renderItem={benchPieceRenderer}
 						boardClassName={styles.benchBoard}
+						renderTileBackground={() => null}
 					/>
 				</div>
 			</DynamicAspectRatioComponent>

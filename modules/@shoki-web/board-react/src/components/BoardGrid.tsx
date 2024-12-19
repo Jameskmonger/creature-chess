@@ -3,20 +3,22 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { BoardState } from "@shoki/board";
+import { BoardState, PiecePosition } from "@shoki/board";
 
-import { BoardContextProvider } from "../context";
+import { BoardContextProvider, BoardContextValue } from "../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
 import { useElementSize } from "../useElementSize";
 import { BoardGridRows } from "./BoardGridRows";
 import { BoardItems } from "./items/BoardItems";
 import { BoardItemRenderFn } from "./items/renderItem";
+import { useDefaultRenderer } from "./useDefaultRenderer";
 
 type BoardGridProps = {
 	state: BoardState;
 	containerClassName?: string;
 	boardClassName?: string;
 	renderItem: BoardItemRenderFn;
+	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;
 };
@@ -49,9 +51,12 @@ function useTileSize(
 
 export function BoardGrid(props: BoardGridProps) {
 	const { state, renderItem, onDropItem, onClickTile } = props;
+	const defaultRenderTileBackground = useDefaultRenderer();
 
-	const boardContext = {
+	const boardContext: BoardContextValue = {
 		state,
+		tileBackgroundRenderer:
+			props.renderTileBackground || defaultRenderTileBackground,
 	};
 
 	const styles = useStyles();
