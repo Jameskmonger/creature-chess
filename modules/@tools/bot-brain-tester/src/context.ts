@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { Card } from "modules/@creature-chess/models";
-
+import { Card } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { BotPersonality } from "@cc-server/data";
