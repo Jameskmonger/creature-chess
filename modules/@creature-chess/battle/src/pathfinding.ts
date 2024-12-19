@@ -77,6 +77,10 @@ const pathNotNull = (path: Path | null): path is Path => path !== null;
 
 export const getNextPiecePosition = (
 	attackerPosition: TileCoordinates,
+	/**
+	 * Is the attacker looking up the board? (i.e. facing negative y)
+	 */
+	attackerFacingUp: boolean,
 	attackerStats: CreatureStats,
 	targetPosition: TileCoordinates,
 	board: BoardState
@@ -98,7 +102,40 @@ export const getNextPiecePosition = (
 		return null;
 	}
 
-	paths.sort((a, b) => a.stepCount - b.stepCount);
+	sortPaths(paths, attackerPosition, attackerFacingUp);
+
+	if (paths[0].firstStep.x < 0 || paths[0].firstStep.y < 0) {
+		throw new Error("Invalid path");
+	}
 
 	return paths[0].firstStep;
 };
+
+export function sortPaths(
+	paths: Path[],
+	startPos: TileCoordinates,
+	facingNorth: boolean
+) {
+	// Forward is negative y if facing upwards, otherwise positive y
+	const forwardY = facingNorth ? -1 : 1;
+	const directionPriority = [
+		{ x: 0, y: forwardY }, // Forward
+		{ x: forwardY, y: 0 }, // Right
+		{ x: 0, y: -forwardY }, // Backward
+		{ x: -forwardY, y: 0 }, // Left
+	];
+
+	// Function to calculate the priority index of a step
+	const getPriority = (step: TileCoordinates) => {
+		const dx = step.x - startPos.x;
+		const dy = step.y - startPos.y;
+		return directionPriority.findIndex((dir) => dir.x === dx && dir.y === dy);
+	};
+
+	paths.sort((a, b) => {
+		if (a.stepCount !== b.stepCount) {
+			return a.stepCount - b.stepCount;
+		}
+		return getPriority(a.firstStep) - getPriority(b.firstStep);
+	});
+}

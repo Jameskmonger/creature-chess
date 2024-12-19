@@ -71,6 +71,7 @@ export function doAttack(
 
 	const nextPosition = getNextPiecePosition(
 		piecePosition,
+		piece.facingAway,
 		attackerStats,
 		targetPosition,
 		board
