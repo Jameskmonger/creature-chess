@@ -190,6 +190,8 @@ describe("pathfinding", () => {
 
 		const rotated = rotateBoard(board);
 
+		const pathfinder = new Pathfinder(board.size);
+
 		test.each(
 			// test each piece against each opponent
 			Object.keys(board.pieces).flatMap((pieceId) => {
@@ -200,6 +202,7 @@ describe("pathfinding", () => {
 			"it should move pieces to the correct positions (%s -> %s)",
 			(pieceId, targetId) => {
 				const homePosition = getNextPiecePosition(
+					pathfinder,
 					BoardSelectors.getPiecePosition(board, pieceId)!,
 					BoardSelectors.getPiece(board, pieceId)!.facingAway,
 					{

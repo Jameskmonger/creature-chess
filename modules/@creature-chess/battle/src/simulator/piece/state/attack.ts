@@ -2,7 +2,7 @@ import { BoardSelectors, BoardState, PiecePosition } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
 
-import { getNextPiecePosition } from "../../../pathfinding";
+import { Pathfinder, getNextPiecePosition } from "../../../pathfinding";
 import { getStats } from "../../../utils/getStats";
 import { findEnemyInAttackRange } from "../../../utils/getTargetAttackPositions";
 import { inAttackRange } from "../../../utils/inAttackRange";
@@ -69,7 +69,10 @@ export function doAttack(
 		];
 	}
 
+	const pathfinder = new Pathfinder(board.size);
+
 	const nextPosition = getNextPiecePosition(
+		pathfinder,
 		piecePosition,
 		piece.facingAway,
 		attackerStats,
