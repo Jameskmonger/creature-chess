@@ -26,6 +26,9 @@ export interface PieceModel {
 
 	stage: number;
 
+	/**
+	 * Is the piece facing away from the viewer (i.e. looking "north")
+	 */
 	facingAway: boolean;
 	attacking?: AttackDetails | null;
 	hit?: HitDetails | null;
