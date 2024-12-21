@@ -76,4 +76,5 @@ export const Selector = Template.bind({});
 Selector.args = {
 	cards,
 	selectedCardIndex: 2,
+	ownedDefinitionIds: [46, 37],
 };
