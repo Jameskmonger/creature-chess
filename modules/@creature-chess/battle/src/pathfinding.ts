@@ -85,7 +85,6 @@ export function sortPaths(
 		{ x: -forwardY, y: 0 }, // Left
 	];
 
-	// Function to calculate the priority index of a step
 	const getPriority = (step: TileCoordinates) => {
 		const dx = step.x - startPos.x;
 		const dy = step.y - startPos.y;
@@ -144,8 +143,6 @@ export class Pathfinder {
 
 		const path = astar.search(this.graph, startGraphItem, endGraphItem);
 
-		console.log(start, end, path);
-
 		if (path.length === 0) {
 			return null;
 		}
@@ -158,21 +155,11 @@ export class Pathfinder {
 	}
 
 	private setWeights(board: BoardState) {
-		let x = 0;
-		let y = 0;
-		for (const [position, pieceId] of Object.entries(board.piecePositions)) {
-			[x, y] = position.split(",").map((p) => parseInt(p, 10));
-
-			if (pieceId) {
-				this.graph.grid[x][y].weight = 0;
-			}
-		}
-	}
-
-	private resetWeights() {
 		for (let x = 0; x < this.size.width; x++) {
 			for (let y = 0; y < this.size.height; y++) {
-				this.graph.grid[x][y].weight = 1;
+				this.graph.grid[x][y].weight = board.piecePositions[`${x},${y}`]
+					? 0
+					: 1;
 			}
 		}
 	}
