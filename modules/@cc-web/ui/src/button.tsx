@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 	type?: "primary" | "secondary";
 	onClick?: (e: React.MouseEvent) => void;
 	children: React.ReactNode | React.ReactNode[];
+	className?: string;
 }
 
 // todo implement primary style
@@ -38,7 +40,7 @@ const Button: React.FunctionComponent<Props> = (props) => {
 
 	return (
 		<button
-			className={classes.button}
+			className={classNames(classes.button, props.className)}
 			onClick={!disabled ? onClick : undefined}
 			disabled={disabled}
 		>

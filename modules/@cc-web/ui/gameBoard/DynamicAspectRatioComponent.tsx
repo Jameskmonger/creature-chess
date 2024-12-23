@@ -10,10 +10,12 @@ export function DynamicAspectRatioComponent({
 	aspectRatio,
 	children,
 	containerRef,
+	className,
 }: {
 	aspectRatio: number;
 	children: React.ReactNode;
 	containerRef: React.RefObject<HTMLElement>;
+	className?: string;
 }) {
 	const [width, setWidth] = useState("100%");
 	const [height, setHeight] = useState("100%");
@@ -71,6 +73,7 @@ export function DynamicAspectRatioComponent({
 				height,
 				position: "relative",
 			}}
+			className={className}
 		>
 			{children}
 		</div>

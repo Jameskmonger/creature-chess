@@ -20,29 +20,43 @@ const useStyles = createUseStyles({
 		fontFamily: "Arial, sans-serif",
 		color: "#fff",
 		textAlign: "center",
-		cursor: ({ disabled = false }: Props) =>
-			disabled ? "not-allowed" : "pointer",
 		userSelect: "none",
 		background: ({ alreadyOwned }: Props) =>
-			alreadyOwned ? "#587261" : "#4e4e4e",
+			alreadyOwned ? "#587261" : "#303030",
+		borderColor: ({ alreadyOwned }: Props) =>
+			alreadyOwned ? "#587261" : "#303030",
 		paddingBottom: "0.5em",
+		borderWidth: "10px",
+		borderStyle: "solid",
+		borderRadius: "10px",
 	},
 	name: {
-		fontSize: "0.8em",
+		marginBottom: 0,
+		marginTop: "-0.5em",
+		paddingTop: "0.25em",
+		paddingBottom: "0.25em",
+		paddingLeft: "1em",
+		paddingRight: "1em",
+		background: "rgb(48, 48, 48)",
+		borderRadius: "5px",
+		fontSize: "1em",
 		fontWeight: 700,
 	},
 	typeIndicator: {
 		zIndex: 20,
 		marginTop: "-0.5em",
-		marginLeft: "-0.125em",
+		marginLeft: "-0.5em",
 		width: "24px",
 		height: "24px",
 	},
 	cost: {
-		padding: "0.125em",
-		marginTop: "-0.5em",
-		marginRight: "-0.1em",
-		background: "rgb(128, 128, 128)",
+		position: "absolute",
+		padding: "0.25em 0.5em",
+		top: "-5%",
+		right: "5%",
+		background: "#38b764",
+		borderRadius: "3px",
+		lineHeight: "1.5em",
 	},
 	cardMeta: {
 		display: "flex",
@@ -50,9 +64,28 @@ const useStyles = createUseStyles({
 		justifyContent: "space-around",
 	},
 	metaItem: {
-		fontSize: "0.6rem",
+		fontSize: "0.75rem",
 		fontWeight: 700,
 		textTransform: "uppercase",
+		marginBottom: "0.25em",
+	},
+	cardImage: {
+		width: "80%",
+		height: "80%",
+		position: "relative",
+		left: "10%",
+		paddingBottom: "1em",
+	},
+	cardInfo: {
+		background: "#808080",
+		paddingBottom: "1em",
+		borderRadius: "4px",
+		marginTop: "-0.5em",
+	},
+	cardInfoTopBar: {
+		marginLeft: "1em",
+		marginRight: "1em",
+		marginBottom: "0.5em",
 	},
 });
 
@@ -71,19 +104,24 @@ const Card: React.FunctionComponent<Props> = (props) => {
 			onClick={!disabled ? onClick || undefined : undefined}
 		>
 			<Layout direction="column" noSpacer>
-				<Layout direction="row" noSpacer>
-					<div className={classes.typeIndicator}>
-						<TypeIndicator type={type} />
+				<div className={classes.cost}>
+					<span>${cost}</span>
+				</div>
+				<CreatureImage
+					definitionId={definitionId}
+					className={classes.cardImage}
+				/>
+				<div className={classes.cardInfo}>
+					<Layout direction="row" noSpacer className={classes.cardInfoTopBar}>
+						<div className={classes.typeIndicator}>
+							<TypeIndicator type={type} />
+						</div>
+						<h2 className={classes.name}>{name}</h2>
+					</Layout>
+					<div className={classes.cardMeta}>
+						<span className={classes.metaItem}>{cardClass}</span>
+						<span className={classes.metaItem}>{type}</span>
 					</div>
-					<div className={classes.cost}>
-						<span>${cost}</span>
-					</div>
-				</Layout>
-				<CreatureImage definitionId={definitionId} />
-				<h2 className={classes.name}>{name}</h2>
-				<div className={classes.cardMeta}>
-					<span className={classes.metaItem}>{cardClass}</span>
-					<span className={classes.metaItem}>{type}</span>
 				</div>
 			</Layout>
 		</div>

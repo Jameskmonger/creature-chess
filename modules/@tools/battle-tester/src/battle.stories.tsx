@@ -33,9 +33,9 @@ const makeStore = (initial: any) => {
 
 	const newStore = createStore(
 		combineReducers<BattleTesterState>({
-			board: board.boardReducer,
-			controls: controlSlice.reducer,
-			currentTurn: (s, a) => {
+			board: board.boardReducer as any,
+			controls: controlSlice.reducer as any,
+			currentTurn: ((s: BattleTesterState, a: any) => {
 				if (a.type !== BattleEvents.battleTurnEvent.toString()) {
 					return s || 0;
 				}
@@ -43,8 +43,8 @@ const makeStore = (initial: any) => {
 				const action = a as BattleEvents.BattleTurnEvent;
 
 				return action.payload.turn;
-			},
-			combatStore: (s, a) => {
+			}) as any,
+			combatStore: ((s: BattleTesterState, a: any) => {
 				if (a.type !== BattleEvents.exposeStoreEvent.toString()) {
 					return s || null;
 				}
@@ -52,7 +52,7 @@ const makeStore = (initial: any) => {
 				const action = a as BattleEvents.ExposeStoreEvent;
 
 				return action.payload.stores.combat;
-			},
+			}) as any,
 		}),
 		applyMiddleware(sagaMiddleware)
 	);
@@ -93,25 +93,25 @@ const Template = (state: any) => (args: any) => (
 	</Provider>
 );
 
-export const Default = Template(initialBoardPieces).bind({});
+export const Default: any = Template(initialBoardPieces).bind({});
 Default.args = {};
 
-export const HomeVsAwayT1Home = Template(HOME_VS_AWAY_TEST_T1_HOME_VIEW).bind(
-	{}
-);
+export const HomeVsAwayT1Home: any = Template(
+	HOME_VS_AWAY_TEST_T1_HOME_VIEW
+).bind({});
 HomeVsAwayT1Home.args = {};
 
-export const HomeVsAwayT2Home = Template(HOME_VS_AWAY_TEST_T2_HOME_VIEW).bind(
-	{}
-);
+export const HomeVsAwayT2Home: any = Template(
+	HOME_VS_AWAY_TEST_T2_HOME_VIEW
+).bind({});
 HomeVsAwayT2Home.args = {};
 
-export const HomeVsAwayT1Away = Template(HOME_VS_AWAY_TEST_T1_AWAY_VIEW).bind(
-	{}
-);
+export const HomeVsAwayT1Away: any = Template(
+	HOME_VS_AWAY_TEST_T1_AWAY_VIEW
+).bind({});
 HomeVsAwayT1Away.args = {};
 
-export const HomeVsAwayT2Away = Template(HOME_VS_AWAY_TEST_T2_AWAY_VIEW).bind(
-	{}
-);
+export const HomeVsAwayT2Away: any = Template(
+	HOME_VS_AWAY_TEST_T2_AWAY_VIEW
+).bind({});
 HomeVsAwayT2Away.args = {};

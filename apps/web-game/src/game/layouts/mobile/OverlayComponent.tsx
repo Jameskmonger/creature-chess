@@ -10,7 +10,7 @@ export function OverlayComponent({
 	children,
 	fullscreen = false,
 }: {
-	title: string;
+	title: string | React.ReactNode;
 	children: React.ReactNode;
 	fullscreen?: boolean;
 }) {
@@ -21,7 +21,11 @@ export function OverlayComponent({
 	return (
 		<div className={styles.overlay}>
 			<div className={styles.header}>
-				<h2>{title}</h2>
+				{typeof title === "string" ? (
+					<h2>{title}</h2>
+				) : (
+					<div className={styles.titleChild}>{title}</div>
+				)}
 				<button className={styles.closeButton} onClick={dispatchCloseOverlay}>
 					X
 				</button>
