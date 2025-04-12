@@ -9,12 +9,12 @@ import {
 } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { GamemodeSettingsContextProvider } from "../../GamemodeSettingsContext";
-import { CardShop } from "./CardShop";
-import "./CardShop.stories.css";
+import { GamemodeSettingsContextProvider } from "../../../GamemodeSettingsContext";
+import { CardShop } from "./cardShop";
+import "./cardShop.stories.css";
 
 export default {
-	title: "@cc-web / ui / CardShop / CardShop",
+	title: "@cc-web / ui / Card Shop / 2d / CardShop",
 	component: CardShop,
 	argTypes: {
 		money: {

@@ -6,9 +6,12 @@ export const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 		padding: "0.5rem 0.25rem",
-		overflowY: "scroll",
+		overflowY: "auto",
 		fontFamily: "Arial, sans-serif",
 		background: "#9da5bd",
+	},
+	titleChild: {
+		flex: "1",
 	},
 	header: {
 		"display": "flex",
@@ -36,10 +39,8 @@ export const useStyles = createUseStyles({
 	},
 
 	overlayContentFullscreen: {
-		overflow: "scroll",
+		overflow: "auto",
 		height: "100%",
 		boxSizing: "border-box",
-		padding: "0 0.25em",
-		marginTop: "1em",
 	},
 });

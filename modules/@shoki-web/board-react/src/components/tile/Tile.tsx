@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
+import { useTileBackgroundRenderer } from "../../context";
 import { ClickBoardTileEvent } from "../../events";
 
 type TileProps = {
@@ -10,10 +11,8 @@ type TileProps = {
 	y: number;
 	tileSizePx: number;
 	onClick?: (event: ClickBoardTileEvent) => void;
+	children?: React.ReactNode;
 };
-
-// eslint-disable-next-line no-bitwise
-const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 
 const useStyles = createUseStyles({
 	tile: {
@@ -22,25 +21,16 @@ const useStyles = createUseStyles({
 		boxSizing: "border-box",
 		userSelect: "none",
 	},
-	tileInner: {
-		width: "100%",
-		height: "100%",
-	},
 });
 
 export const Tile = React.forwardRef<any, TileProps>(
-	({ x, y, tileSizePx, onClick }, ref) => {
-		const tileInnerRef = useRef<HTMLDivElement>(null);
-
+	({ x, y, tileSizePx, children, onClick }, ref) => {
 		const styles = useStyles();
-		const isDark = isBoardTileDark(x, y);
+		const tileBackgroundRenderer = useTileBackgroundRenderer();
 
 		const handleClick = onClick ? () => onClick({ x, y }) : undefined;
 
-		const className = classNames(styles.tile, "tile", {
-			dark: isDark,
-			light: !isDark,
-		});
+		const className = classNames(styles.tile, "tile");
 
 		return (
 			<div
@@ -53,7 +43,8 @@ export const Tile = React.forwardRef<any, TileProps>(
 					height: `${tileSizePx}px`,
 				}}
 			>
-				<div ref={tileInnerRef} className={styles.tileInner} />
+				{tileBackgroundRenderer && tileBackgroundRenderer({ x, y })}
+				{children}
 			</div>
 		);
 	}

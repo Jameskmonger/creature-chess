@@ -9,7 +9,6 @@ import { Tile } from "./Tile";
 type DroppableTileProps = {
 	x: number;
 	y: number;
-	tileSizePx: number;
 	onDrop?: (event: DropBoardItemEvent) => void;
 	onClick?: (event: ClickBoardTileEvent) => void;
 };
@@ -19,19 +18,13 @@ type DropTargetCollectProps = {
 	isDragging: boolean;
 };
 
-const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({
-	x,
-	y,
-	tileSizePx,
-	onDrop,
-	onClick,
-}) => {
+export function DroppableTile({ x, y, onDrop, onClick }: DroppableTileProps) {
 	const belowPieceLimit = useBelowPieceLimit();
 	const pieces = usePieces();
 
 	const [{}, drop] = useDrop<{ id: string }, void, DropTargetCollectProps>({
 		accept: "BoardItem",
-		drop: ({ id }) => {
+		drop: ({ id }, monitor: any) => {
 			if (!onDrop) {
 				return;
 			}
@@ -48,9 +41,25 @@ const DroppableTile: React.FunctionComponent<DroppableTileProps> = ({
 		}),
 	});
 
-	return (
-		<Tile ref={drop} x={x} y={y} tileSizePx={tileSizePx} onClick={onClick} />
-	);
-};
+	const onTileClick = React.useCallback(() => {
+		if (!onClick) {
+			return;
+		}
 
-export { DroppableTile };
+		onClick({ x, y });
+	}, [onClick, x, y]);
+
+	return (
+		<div
+			ref={drop}
+			style={{
+				width: "100%",
+				height: "100%",
+				position: "absolute",
+				top: 0,
+				left: 0,
+			}}
+			onClick={onTileClick}
+		/>
+	);
+}

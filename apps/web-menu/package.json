@@ -14,9 +14,10 @@
 		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
 	},
 	"scripts": {
-		"build": "webpack && npm run copy-pages",
+		"build": "webpack",
+		"build_legal": "webpack && npm run copy-pages",
 		"dev": "NODE_ENV=development webpack serve",
-		"copy-pages": " cpy 404.html ./dist/ && cpy privacy.html ./dist/"
+		"copy-pages": "cpy 404.html ./dist/ && cpy privacy.html ./dist/"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"

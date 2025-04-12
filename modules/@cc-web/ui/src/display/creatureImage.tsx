@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
 import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
@@ -8,6 +9,7 @@ interface Props {
 	baseUrl?: string;
 	definitionId: number;
 	facing?: "front" | "back";
+	className?: string;
 }
 
 const useStyles = createUseStyles({
@@ -40,10 +42,10 @@ function getCreatureUrl(facing: "front" | "back", definitionId: number) {
 	return `${IMAGE_BASE_URL}/creatures/${facing}/${definitionId}.png`;
 }
 
-export function CreatureImage({ facing, definitionId }: Props) {
+export function CreatureImage({ facing, definitionId, className }: Props) {
 	return (
 		<img
-			className={useStyles().image}
+			className={classNames(useStyles().image, className)}
 			src={getCreatureUrl(facing || "front", definitionId)}
 		/>
 	);

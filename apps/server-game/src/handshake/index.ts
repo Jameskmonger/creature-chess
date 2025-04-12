@@ -45,7 +45,7 @@ export const onHandshakeSuccess = (
 					id: guest.id,
 					nickname: `Guest ${guest.id}`,
 					profile: {
-						picture: 1,
+						picture: guest.profile_picture,
 						title: null,
 					},
 				};

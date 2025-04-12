@@ -12,7 +12,7 @@ import { CardSelector } from "./cardSelector";
 import "./cardSelector.stories.css";
 
 export default {
-	title: "@ui / Card Shop / CardSelector",
+	title: "@cc-web / ui / Card Shop / 3d / CardSelector",
 	component: CardSelector,
 	argTypes: {
 		selectedCardIndex: {
@@ -76,4 +76,5 @@ export const Selector = Template.bind({});
 Selector.args = {
 	cards,
 	selectedCardIndex: 2,
+	ownedDefinitionIds: [46, 37],
 };

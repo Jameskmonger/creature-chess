@@ -10,6 +10,7 @@ import { GamePhase, PieceModel } from "@creature-chess/models";
 import { useLocalPlayerId } from "@cc-web/auth/context";
 import { TabMenu } from "@cc-web/ui/components/TabMenu";
 import { PortraitGameScreen } from "@cc-web/ui/gameScreen";
+import { BalanceChip } from "@cc-web/ui/src/cardShop";
 import { PieceBattleStats } from "@cc-web/ui/src/stats/PieceBattleStats";
 
 import { AppState } from "../../../store";
@@ -56,7 +57,10 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 
 	if (currentOverlay === Overlay.SHOP) {
 		return (
-			<OverlayComponent title={`Balance: $${currentBalance}`} fullscreen>
+			<OverlayComponent
+				title={<BalanceChip balance={currentBalance} />}
+				fullscreen
+			>
 				<CardShop />
 
 				{inPlayingOrReadyPhase && (

@@ -20,7 +20,11 @@ export function findEnemyInAttackRange(
 	piecePosition: TileCoordinates,
 	range = 1
 ) {
-	const attackPositions = getTargetAttackPositions(board, piecePosition, range);
+	const attackPositions = getTargetAttackPositions(
+		board.size,
+		piecePosition,
+		range
+	);
 
 	for (const position of attackPositions) {
 		const piece = BoardSelectors.getPieceForPosition(
@@ -38,7 +42,7 @@ export function findEnemyInAttackRange(
 }
 
 export const getTargetAttackPositions = (
-	board: BoardState,
+	size: BoardState["size"],
 	{ x: positionX, y: positionY }: TileCoordinates,
 	range = 1
 ) => {
@@ -61,5 +65,5 @@ export const getTargetAttackPositions = (
 	}
 
 	// filter out any that are outside the grid
-	return positions.filter(isInsideGrid(board.size));
+	return positions.filter(isInsideGrid(size));
 };

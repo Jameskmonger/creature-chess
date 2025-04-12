@@ -12,6 +12,12 @@ import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 import { GameBoard } from "@cc-web/ui";
 
 import { BattleBoard } from "./BattleBoard";
+import {
+	HOME_VS_AWAY_TEST_T1_AWAY_VIEW,
+	HOME_VS_AWAY_TEST_T1_HOME_VIEW,
+	HOME_VS_AWAY_TEST_T2_AWAY_VIEW,
+	HOME_VS_AWAY_TEST_T2_HOME_VIEW,
+} from "./cases/home-vs-away";
 import { BattleControls } from "./controls/BattleControls";
 import { initialBoardPieces } from "./piece";
 import { BattleTesterState, board, controlSlice } from "./state";
@@ -22,14 +28,14 @@ export default {
 	argTypes: {},
 } as Meta;
 
-const makeStore = () => {
+const makeStore = (initial: any) => {
 	const sagaMiddleware = createSagaMiddleware();
 
 	const newStore = createStore(
 		combineReducers<BattleTesterState>({
-			board: board.boardReducer,
-			controls: controlSlice.reducer,
-			currentTurn: (s, a) => {
+			board: board.boardReducer as any,
+			controls: controlSlice.reducer as any,
+			currentTurn: ((s: BattleTesterState, a: any) => {
 				if (a.type !== BattleEvents.battleTurnEvent.toString()) {
 					return s || 0;
 				}
@@ -37,8 +43,8 @@ const makeStore = () => {
 				const action = a as BattleEvents.BattleTurnEvent;
 
 				return action.payload.turn;
-			},
-			combatStore: (s, a) => {
+			}) as any,
+			combatStore: ((s: BattleTesterState, a: any) => {
 				if (a.type !== BattleEvents.exposeStoreEvent.toString()) {
 					return s || null;
 				}
@@ -46,7 +52,7 @@ const makeStore = () => {
 				const action = a as BattleEvents.ExposeStoreEvent;
 
 				return action.payload.stores.combat;
-			},
+			}) as any,
 		}),
 		applyMiddleware(sagaMiddleware)
 	);
@@ -68,16 +74,14 @@ const makeStore = () => {
 			}
 		);
 
-		yield put(board.commands.setBoardPiecesCommand(initialBoardPieces));
+		yield put(board.commands.setBoardPiecesCommand(initial));
 	});
 
 	return newStore;
 };
 
-const store = makeStore();
-
-const Template: Story<any> = (args) => (
-	<Provider store={store}>
+const Template = (state: any) => (args: any) => (
+	<Provider store={makeStore(state)}>
 		<div style={{ display: "flex", width: "100%", height: "100%" }}>
 			<div style={{ width: "60%", height: "100%", border: "2px solid grey" }}>
 				<BattleBoard />
@@ -89,5 +93,25 @@ const Template: Story<any> = (args) => (
 	</Provider>
 );
 
-export const Default = Template.bind({});
+export const Default: any = Template(initialBoardPieces).bind({});
 Default.args = {};
+
+export const HomeVsAwayT1Home: any = Template(
+	HOME_VS_AWAY_TEST_T1_HOME_VIEW
+).bind({});
+HomeVsAwayT1Home.args = {};
+
+export const HomeVsAwayT2Home: any = Template(
+	HOME_VS_AWAY_TEST_T2_HOME_VIEW
+).bind({});
+HomeVsAwayT2Home.args = {};
+
+export const HomeVsAwayT1Away: any = Template(
+	HOME_VS_AWAY_TEST_T1_AWAY_VIEW
+).bind({});
+HomeVsAwayT1Away.args = {};
+
+export const HomeVsAwayT2Away: any = Template(
+	HOME_VS_AWAY_TEST_T2_AWAY_VIEW
+).bind({});
+HomeVsAwayT2Away.args = {};

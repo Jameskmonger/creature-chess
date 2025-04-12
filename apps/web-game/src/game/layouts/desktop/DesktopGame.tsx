@@ -44,6 +44,10 @@ const useStyles = createUseStyles({
 	rightColumn: {
 		height: "100%",
 	},
+	actionBar: {
+		width: "100%",
+		height: "10%",
+	},
 });
 
 const DesktopGame: React.FunctionComponent = () => {
@@ -106,11 +110,17 @@ const DesktopGame: React.FunctionComponent = () => {
 					<QuitGameButton />
 				</div>
 			}
-			middleColumnContent={<BoardContainer />}
+			middleColumnContent={
+				<>
+					<BoardContainer />
+
+					<div className={styles.actionBar}>
+						<Controls />
+					</div>
+				</>
+			}
 			rightColumnContent={
 				<Layout direction="column" className={styles.rightColumn}>
-					<QuitGameButton />
-
 					<CardShop />
 
 					<Profile />

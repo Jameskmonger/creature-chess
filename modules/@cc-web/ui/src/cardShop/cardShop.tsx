@@ -1,15 +1,11 @@
 import React from "react";
 
-import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { createUseStyles } from "react-jss";
-
 import { Card as CardModel } from "@creature-chess/models";
 
-import { useGamemodeSettings } from "@cc-web/ui/GamemodeSettingsContext";
+import { CardShop as CardShop2D } from "./2d/cardShop";
+import { CardShop as CardShop3D } from "./3d/cardShop";
 
-import { Button } from "../button";
-import { Card } from "./card";
+const CARD_SHOP_TYPE: "2d" | "3d" = "2d";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -21,110 +17,14 @@ type Props = {
 	onBuy?: (index: number) => void;
 };
 
-const useStyles = createUseStyles({
-	shop: {
-		display: "flex",
-		flexDirection: "column",
+export function CardShop(props: Props) {
+	if (CARD_SHOP_TYPE === "2d") {
+		return <CardShop2D {...props} />;
+	}
 
-		height: "100%",
-		boxSizing: "border-box",
+	if (CARD_SHOP_TYPE === "3d") {
+		return <CardShop3D {...props} />;
+	}
 
-		fontFamily: "Arial, sans-serif",
-	},
-	cards: {
-		display: "flex",
-		flexDirection: "column",
-		padding: "2%",
-		background: "#797979",
-		height: "100%",
-	},
-	card: {
-		"height": "18%",
-
-		"&:not(:last-child)": {
-			marginBottom: "2%",
-		},
-	},
-	controls: {
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		padding: "2%",
-		background: "#303030",
-	},
-	control: {
-		"border": "none",
-
-		"cursor": "pointer",
-		"background": "#38b764",
-		"borderRadius": "4px",
-
-		"fontFamily": '"Roboto", "sans-serif"',
-		"fontOpticalSizing": "auto",
-		"fontWeight": 700,
-		"fontStyle": "normal",
-		"fontSize": "16px",
-
-		"padding": "4% 6%",
-
-		"&[disabled]": {
-			background: "#303030",
-			cursor: "not-allowed",
-		},
-
-		"&:hover": {
-			background: "#4aeb82",
-		},
-
-		"transition": "background 0.2s ease-in-out",
-	},
-});
-
-export function CardShop({
-	cards,
-	money,
-	ownedDefinitionIds,
-	onReroll,
-	onToggleLock,
-	onBuy,
-	isLocked,
-}: Props) {
-	const classes = useStyles();
-
-	const { rerollCost } = useGamemodeSettings();
-
-	return (
-		<div className={classes.shop}>
-			<div className={classes.cards}>
-				{cards.map((card, index) => (
-					<div className={classes.card} key={card ? card.id : `empty-${index}`}>
-						{card !== null && (
-							<Card
-								key={card!.id}
-								card={card}
-								money={money}
-								owned={ownedDefinitionIds.includes(card.definitionId)}
-								onBuy={() => onBuy?.(index)}
-							/>
-						)}
-					</div>
-				))}
-			</div>
-
-			<div className={classes.controls}>
-				<button className={classes.control} onClick={onToggleLock}>
-					{isLocked ? "Unlock" : "Lock (1 turn)"}
-				</button>
-
-				<button
-					className={classes.control}
-					onClick={onReroll}
-					disabled={money < rerollCost}
-				>
-					<FontAwesomeIcon icon={faArrowsRotate} />
-					&nbsp;${rerollCost}
-				</button>
-			</div>
-		</div>
-	);
+	return null;
 }

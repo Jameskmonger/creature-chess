@@ -4,7 +4,7 @@ import { createUseStyles } from "react-jss";
 
 import { Card, DefinitionClass } from "@creature-chess/models";
 
-import { CreatureImage, TypeIndicator } from "../display";
+import { CreatureImage, TypeIndicator } from "../../display";
 import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
 

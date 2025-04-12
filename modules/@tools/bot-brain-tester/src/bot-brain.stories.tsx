@@ -41,8 +41,8 @@ const makeStore = (args: Args) => {
 
 	const newStore = createStore(
 		combineReducers<BotBrainTesterState>({
-			board: board.boardReducer,
-			bench: bench.boardReducer,
+			board: board.boardReducer as any,
+			bench: bench.boardReducer as any,
 		}),
 		applyMiddleware(sagaMiddleware)
 	);

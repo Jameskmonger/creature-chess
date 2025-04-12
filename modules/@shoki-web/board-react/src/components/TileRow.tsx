@@ -5,6 +5,7 @@ import { createUseStyles } from "react-jss";
 import { useBoardState } from "../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
 import { DroppableTile } from "./tile/DroppableTile";
+import { Tile } from "./tile/Tile";
 import { UndroppableTile } from "./tile/UndroppableTile";
 
 type TileRowProps = {
@@ -36,7 +37,7 @@ export function TileRow({
 
 	const styles = useStyles();
 
-	const tiles = [];
+	const tiles: React.ReactNode[] = [];
 
 	for (let x = 0; x < width; x++) {
 		const piecePositionKey = `${x},${y}`;
@@ -45,23 +46,18 @@ export function TileRow({
 		const canDropPiece = !tileContainsPiece && !locked;
 
 		tiles.push(
-			canDropPiece ? (
-				<DroppableTile
-					key={`tile-${x}`}
-					x={x}
-					y={y}
-					tileSizePx={tileSizePx}
-					onDrop={onDropItem}
-					onClick={onClickTile}
-				/>
-			) : (
-				<UndroppableTile
-					key={`tile-${x}`}
-					x={x}
-					y={y}
-					tileSizePx={tileSizePx}
-				/>
-			)
+			<Tile key={`tile-${x}`} x={x} y={y} tileSizePx={tileSizePx}>
+				{canDropPiece ? (
+					<DroppableTile
+						x={x}
+						y={y}
+						onDrop={onDropItem}
+						onClick={onClickTile}
+					/>
+				) : (
+					<UndroppableTile />
+				)}
+			</Tile>
 		);
 	}
 

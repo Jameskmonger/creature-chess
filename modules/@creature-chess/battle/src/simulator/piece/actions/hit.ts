@@ -82,7 +82,7 @@ export function doHit(
 
 	combatStore.updatePiecePartial(target.id, { canBeAttackedAtTurn });
 
-	const newAttacker = {
+	const newAttacker: PieceModel = {
 		...attacker,
 		attacking: {
 			attackType: attackerStats.attackType,
