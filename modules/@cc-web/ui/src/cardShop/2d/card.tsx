@@ -4,9 +4,9 @@ import { createUseStyles } from "react-jss";
 
 import { Card, DefinitionClass } from "@creature-chess/models";
 
-import { CreatureImage, TypeIndicator } from "../../display";
 import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
+import { CreatureImage, TypeIndicator } from "../../display";
 
 type CardShopCardProps = {
 	card: Card | null;
@@ -161,7 +161,7 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 	},
 });
 
-export function Card(props: CardShopCardProps) {
+export function Card2D(props: CardShopCardProps) {
 	const classes = useStyles(props);
 
 	const { card, money } = props;

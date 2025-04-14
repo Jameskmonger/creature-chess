@@ -8,8 +8,7 @@ import { Card as CardModel } from "@creature-chess/models";
 
 import { useGamemodeSettings } from "@cc-web/ui/GamemodeSettingsContext";
 
-import { Button } from "../../button";
-import { Card } from "./card";
+import { Card2D as Card } from "./card";
 
 type Props = {
 	cards: (CardModel | null)[];

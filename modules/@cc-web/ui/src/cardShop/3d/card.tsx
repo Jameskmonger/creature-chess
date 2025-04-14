@@ -89,7 +89,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-const Card: React.FunctionComponent<Props> = (props) => {
+export function Card3D(props: Props) {
 	const classes = useStyles(props);
 
 	const {
@@ -126,6 +126,4 @@ const Card: React.FunctionComponent<Props> = (props) => {
 			</Layout>
 		</div>
 	);
-};
-
-export { Card };
+}

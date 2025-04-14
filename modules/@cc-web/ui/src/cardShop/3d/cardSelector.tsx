@@ -9,7 +9,7 @@ import { Card as CardModel } from "@creature-chess/models";
 
 import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
-import { Card } from "./card";
+import { Card3D as Card } from "./card";
 
 type Props = {
 	cards: (CardModel | null)[];
