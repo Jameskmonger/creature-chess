@@ -60,7 +60,8 @@ export class Match {
 		public readonly away: PlayerEntity,
 		private awayIsClone: boolean,
 		private logger: Logger,
-		settings: GamemodeSettings
+		settings: GamemodeSettings,
+		private onTurnComplete?: (timeMs: number) => void
 	) {
 		this.board = createBoardSlice<PieceModel>(this.boardId, {
 			width: settings.boardWidth,
@@ -216,7 +217,13 @@ export class Match {
 				),
 				takeLatest<BattleEvents.BattleTurnEvent>(
 					BattleEvents.battleTurnEvent,
-					function* ({ payload: { board } }: BattleEvents.BattleTurnEvent) {
+					function* ({
+						payload: { board, timeMs },
+					}: BattleEvents.BattleTurnEvent) {
+						if (_this.onTurnComplete) {
+							_this.onTurnComplete(timeMs);
+						}
+
 						yield put(
 							_this.board.commands.setBoardPiecesCommand({
 								pieces: board.pieces,

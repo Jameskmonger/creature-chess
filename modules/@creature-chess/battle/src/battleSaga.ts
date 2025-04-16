@@ -59,27 +59,30 @@ const runBattle = function* (
 			turnCount >= settings.battleTurnCount || isATeamDefeated(board);
 
 		if (shouldStop) {
-			yield duration(1000).remaining();
+			yield duration(1000).remaining().promise;
 
 			yield put(battleFinishEvent({ turn: turnCount }));
 			break;
 		}
 
 		while (controls.paused) {
-			yield duration(1000).remaining();
+			yield duration(1000).remaining().promise;
 		}
 
 		const turnTimer = duration(settings.battleTurnDuration);
 
 		board = simulateTurn(++turnCount, board, boardSlice, { combatStore });
+		const { ms, promise } = turnTimer.remaining();
+
 		yield put(
 			battleTurnEvent({
 				turn: turnCount,
 				board,
+				timeMs: settings.battleTurnDuration - ms,
 			})
 		);
 
-		yield turnTimer.remaining();
+		yield promise;
 	}
 };
 

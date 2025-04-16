@@ -35,7 +35,13 @@ const stopwatch = (start: [number, number]) => {
 	return Math.round(end[0] * 1000 + end[1] / 1000000);
 };
 
-export const gameSaga = function* () {
+type Callbacks = {
+	onTurnComplete?: (timeMs: number) => void;
+	onMatchStart?: () => void;
+	onMatchEnd?: () => void;
+};
+
+export const gameSaga = function* (callbacks: Callbacks = {}) {
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const logger: Logger = yield getContext("logger");
 
@@ -52,7 +58,7 @@ export const gameSaga = function* () {
 
 	const startTime = startStopwatch();
 
-	const gameResults = yield* call(gameLoopSaga);
+	const gameResults = yield* call(gameLoopSaga, callbacks);
 
 	const duration = stopwatch(startTime);
 

@@ -12,19 +12,25 @@ export const duration = (ms: number) => {
 	const startTime = present();
 
 	return {
-		remaining: () =>
-			new Promise<void>((resolve) => {
-				const endTime = present();
-				const timePassed = endTime - startTime;
+		remaining: () => {
+			const endTime = present();
+			const timePassed = endTime - startTime;
 
-				const remaining = Math.max(ms - timePassed, 0);
+			const remaining = Math.max(ms - timePassed, 0);
 
+			const promise = new Promise<void>((resolve) => {
 				if (remaining === 0) {
 					resolve();
 					return;
 				}
 
 				setTimeout(() => resolve(), remaining);
-			}),
+			});
+
+			return {
+				promise,
+				ms: remaining,
+			};
+		},
 	};
 };

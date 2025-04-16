@@ -99,6 +99,9 @@ services:
       - CREATURE_CHESS_IMAGE_URL
       - NODE_ENV
       - DATABASE_URL
+      - NODE_APP_INSTANCE
+      - METRICS_USERNAME
+      - METRICS_PASSWORD
     build:
       context: .
       dockerfile: apps/server.Dockerfile
