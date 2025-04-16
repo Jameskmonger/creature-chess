@@ -49,6 +49,14 @@ When you run `make server`, the creature images will be hosted at `http://localh
 
 You can set the `CREATURE_CHESS_IMAGE_URL` environment variable to change this, for instance to use a CDN.
 
+## Metrics
+
+The game server is configured to send metrics via Prometheus.
+
+Metrics are available at `/game/metrics` behind Basic Auth. You **must** configure the `METRICS_USERNAME` and `METRICS_PASSWORD` environment variables in your `.env` file, or metrics will not be available.
+
+You can set a default label by setting the `NODE_APP_INSTANCE` environment variable.
+
 ## License
 
 Creature Chess is licensed under the [AGPL v3 License](LICENSE).
