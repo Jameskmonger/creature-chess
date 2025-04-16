@@ -1,15 +1,16 @@
 import * as React from "react";
 
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createUseStyles } from "react-jss";
 
 import { Card as CardModel } from "@creature-chess/models";
 
 import { useGamemodeSettings } from "../../GamemodeSettingsContext";
+import { DynamicAspectRatioComponent } from "../../gameBoard/DynamicAspectRatioComponent";
 import { Layout } from "../../layout";
 import { Button } from "../button";
-import { Label } from "../display";
 import { CardSelector } from "./cardSelector";
-import { CurrentCard } from "./currentCard";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -19,22 +20,36 @@ type Props = {
 	onReroll?: () => void;
 	onToggleLock?: () => void;
 	onBuy?: (index: number) => void;
-	showSelectedCard?: boolean;
 };
 
 const useStyles = createUseStyles({
 	container: {
 		width: "100%",
 		height: "100%",
+		alignItems: "center",
+		justifyContent: "center",
 	},
-	grow: {
-		flex: 1,
-		marginBottom: "2em",
+	aspectWrapper: {
+		display: "flex",
+		flexDirection: "column",
 	},
-	balance: {
-		background: "#2f2f2f",
-		padding: "0 1em",
-		lineHeight: "1.5em",
+	purchase: {
+		background: "#38b764",
+		padding: "0 1.5em",
+		marginTop: "-2.5em",
+		zIndex: 30,
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		borderRadius: "4px",
+		fontWeight: 700,
+		cursor: "pointer",
+		fontFamily: "Arial, sans-serif",
+	},
+	controls: {
+		padding: 0,
+		marginTop: "0.25em",
+		userSelect: "none",
 	},
 });
 
@@ -46,7 +61,6 @@ const CardShop: React.FunctionComponent<Props> = ({
 	onReroll,
 	onToggleLock,
 	onBuy,
-	showSelectedCard = true,
 }) => {
 	const classes = useStyles();
 	const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
@@ -54,61 +68,48 @@ const CardShop: React.FunctionComponent<Props> = ({
 	const onBuyCurrentCard = () =>
 		onBuy && selectedIndex !== null && onBuy(selectedIndex);
 
-	const selectedCard = selectedIndex !== null ? cards[selectedIndex] : null;
-
-	React.useEffect(() => {
-		if (!selectedCard) {
-			return;
-		}
-
-		const canAfford = selectedCard.cost <= money;
-
-		if (!canAfford) {
-			setSelectedIndex(null);
-		}
-	}, [selectedCard, money]);
-
 	const { rerollCost } = useGamemodeSettings();
 
+	const ref = React.useRef<HTMLDivElement>(null);
+	const ASPECT_RATIO = 1 / 1;
+
 	return (
-		<Layout className={classes.container} direction="column">
-			<Layout
-				direction="column"
-				justifyContent="center"
-				className={classes.grow}
+		<Layout className={classes.container} direction="column" ref={ref}>
+			<DynamicAspectRatioComponent
+				aspectRatio={ASPECT_RATIO}
+				containerRef={ref}
+				className={classes.aspectWrapper}
 			>
-				{selectedCard && showSelectedCard && (
-					<CurrentCard
-						card={selectedCard}
-						alreadyOwned={ownedDefinitionIds.includes(
-							selectedCard.definitionId
-						)}
-						onBuy={onBuyCurrentCard}
-					/>
-				)}
-			</Layout>
+				<CardSelector
+					cards={cards}
+					money={money}
+					onSelectCard={setSelectedIndex}
+					ownedDefinitionIds={ownedDefinitionIds}
+				/>
 
-			<CardSelector
-				cards={cards}
-				money={money}
-				selectedCardIndex={selectedIndex}
-				onSelectCard={setSelectedIndex}
-				ownedDefinitionIds={ownedDefinitionIds}
-			/>
+				<Layout
+					className={classes.controls}
+					direction="row"
+					justifyContent="space-between"
+				>
+					<Button
+						type="primary"
+						onClick={onReroll}
+						disabled={money < rerollCost}
+					>
+						<FontAwesomeIcon icon={faArrowsRotate} />
+						&nbsp;${rerollCost}
+					</Button>
 
-			<Layout direction="row" justifyContent="space-between">
-				<Button type="primary" onClick={onReroll} disabled={money < rerollCost}>
-					New (${rerollCost})
-				</Button>
+					<div className={classes.purchase} onClick={onBuyCurrentCard}>
+						<span>Purchase</span>
+					</div>
 
-				<div className={classes.balance}>
-					<Label>Balance:</Label> <Label type="highlight">${money}</Label>
-				</div>
-
-				<Button type="primary" onClick={onToggleLock}>
-					{isLocked ? "Unlock" : "Lock (1 turn)"}
-				</Button>
-			</Layout>
+					<Button type="primary" onClick={onToggleLock}>
+						{isLocked ? "Unlock" : "Lock"}
+					</Button>
+				</Layout>
+			</DynamicAspectRatioComponent>
 		</Layout>
 	);
 };

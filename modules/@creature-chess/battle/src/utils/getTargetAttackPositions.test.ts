@@ -20,7 +20,7 @@ describe("getTargetAttackPositions", () => {
 	describe("when range is not provided", () => {
 		test("should give adjacent positions", () => {
 			const positions = getTargetAttackPositions(
-				board,
+				board.size,
 				createTileCoordinates(3, 3)
 			);
 
@@ -34,7 +34,7 @@ describe("getTargetAttackPositions", () => {
 	describe("when range is 2", () => {
 		test("should give all points in range 2", () => {
 			const positions = getTargetAttackPositions(
-				board,
+				board.size,
 				createTileCoordinates(3, 3),
 				2
 			);

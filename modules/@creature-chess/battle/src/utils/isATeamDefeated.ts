@@ -7,6 +7,6 @@ export const isATeamDefeated = (board: BoardState<PieceModel>) => {
 		.filter((p) => p.currentHealth > 0)
 		.map((p) => p.ownerId);
 
-	// if there are only pieces belonging to 1 player, then we have a winner
-	return new Set(pieceOwnerIds).size === 1;
+	// if there are only pieces belonging to 1 or 0 players, then we have a winner
+	return new Set(pieceOwnerIds).size <= 1;
 };

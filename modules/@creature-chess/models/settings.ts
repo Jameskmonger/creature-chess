@@ -28,7 +28,7 @@ export type GamemodeSettings = {
 	battleTurnDuration: number;
 };
 
-export const GamemodeSettingsPresets: Record<string, GamemodeSettings> = {
+export const GamemodeSettingsPresets: Record<"default", GamemodeSettings> = {
 	default: {
 		healthLostPerPiece: 3,
 		startingMoney: 3,

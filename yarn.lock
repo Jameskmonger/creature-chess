@@ -1670,6 +1670,7 @@ __metadata:
     "@cc-web/shared": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/user": "workspace:*"
+    "@fortawesome/react-fontawesome": "npm:^0.2.0"
     "@shoki-web/board-react": "workspace:*"
     "@shoki/board": "workspace:*"
     babel-loader: "npm:^8.2.3"

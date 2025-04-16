@@ -1,4 +1,5 @@
 .card-shop-story {
-	max-width: 450px;
-	height: 450px;
+	height: 568px;
+	width: 320px;
+	border: 2px solid red;
 }

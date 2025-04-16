@@ -41,7 +41,7 @@ export const Profile: React.FunctionComponent = () => {
 	const health = useSelector<AppState, number | null>((state) => {
 		const player = state.game.playerList.find((p) => p.id === playerId);
 
-		return player ? player.health : null;
+		return player?.health || null;
 	});
 
 	const board = useSelector<AppState, BoardState<PieceModel>>(

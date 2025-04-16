@@ -12,6 +12,10 @@ export function ReadyUpButton() {
 	const dispatch = useDispatch();
 	const styles = useStyles();
 
+	const isDead = useSelector<AppState, boolean>(
+		(state) => state.game.playerInfo.health === 0
+	);
+
 	const inPreparingPhase = useSelector<AppState, boolean>(
 		(state) => state.game.roundInfo.phase === GamePhase.PREPARING
 	);
@@ -19,7 +23,7 @@ export function ReadyUpButton() {
 		(state) => state.game.playerInfo.ready === false
 	);
 
-	const canReadyUp = inPreparingPhase && notReady;
+	const canReadyUp = inPreparingPhase && notReady && !isDead;
 	const onReadyUp = React.useCallback(() => {
 		if (!canReadyUp) {
 			return;

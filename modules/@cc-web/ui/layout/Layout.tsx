@@ -34,21 +34,20 @@ const useStyles = createUseStyles({
 		display: "flex",
 		justifyContent,
 		flexDirection: direction,
+		boxSizing: "border-box",
 		...getSize(grow),
 		...getSpacer(noSpacer),
 	}),
 });
 
-const Layout: React.FunctionComponent<Props> = (props) => {
+export const Layout = React.forwardRef<any, Props>((props, ref) => {
 	const classes = useStyles(props);
 
 	const theme: LayoutTheme = { isVertical: isVertical(props.direction) };
 
 	return (
-		<div className={classNames(classes.layout, props.className)}>
+		<div ref={ref} className={classNames(classes.layout, props.className)}>
 			<ThemeProvider theme={theme}>{props.children}</ThemeProvider>
 		</div>
 	);
-};
-
-export { Layout };
+});

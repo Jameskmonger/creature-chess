@@ -1,9 +1,11 @@
-import { createContext, useContext } from "react";
+import React, { createContext, useContext } from "react";
 
-import { BoardSelectors, BoardState } from "@shoki/board";
+import { BoardSelectors, BoardState, PiecePosition } from "@shoki/board";
 
 export type BoardContextValue = {
 	state: BoardState;
+
+	tileBackgroundRenderer?: (position: PiecePosition) => React.ReactNode;
 };
 
 const BoardContext = createContext<BoardContextValue>(null!);
@@ -46,3 +48,9 @@ export const usePiecePositions = () => {
 
 	return boardState.piecePositions;
 };
+
+export function useTileBackgroundRenderer() {
+	const context = useBoard();
+
+	return context.tileBackgroundRenderer ?? null;
+}

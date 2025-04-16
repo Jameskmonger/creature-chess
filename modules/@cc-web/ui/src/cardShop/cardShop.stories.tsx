@@ -86,4 +86,5 @@ Shop.args = {
 	cards,
 	isLocked: false,
 	money: 14,
+	ownedDefinitionIds: [32],
 };

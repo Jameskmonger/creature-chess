@@ -62,11 +62,11 @@ function ExampleStyling() {
 						border: 1px solid black;
 					}
 
-					.tile.dark {
+					.tile .dark {
 						background-color: #d18b47;
 					}
 
-					.tile.light {
+					.tile .light {
 						background-color: #ffce9e;
 					}
 				`,

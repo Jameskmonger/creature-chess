@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Footer, Group, Layout } from "@cc-web/ui";
+import { Footer, Layout } from "@cc-web/ui";
 import { LandscapeGameScreen } from "@cc-web/ui/gameScreen";
 
 import { BoardContainer } from "../../board";
@@ -27,6 +27,10 @@ const useStyles = createUseStyles({
 	rightColumn: {
 		height: "100%",
 	},
+	actionBar: {
+		width: "100%",
+		height: "10%",
+	},
 });
 
 const DesktopGame: React.FunctionComponent = () => {
@@ -43,24 +47,29 @@ const DesktopGame: React.FunctionComponent = () => {
 					<NowPlaying />
 
 					<PlayerList />
+
+					<QuitGameButton />
 				</>
 			}
-			middleColumnContent={<BoardContainer />}
+			middleColumnContent={
+				<>
+					<BoardContainer />
+
+					<div className={styles.actionBar}>
+						<Controls />
+					</div>
+				</>
+			}
 			rightColumnContent={
 				<Layout direction="column" className={styles.rightColumn}>
-					<QuitGameButton />
-
 					<CardShop />
 
 					<Profile />
 
-					<Controls />
-
 					<div className={styles.helpContainer}>
 						<Help hideFooter />
+						<Footer />
 					</div>
-
-					<Footer />
 				</Layout>
 			}
 		/>

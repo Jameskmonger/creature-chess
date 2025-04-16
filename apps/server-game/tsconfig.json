@@ -2,7 +2,13 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"outDir": "./lib",
-		"importHelpers": true
+		"importHelpers": true,
+		"typeRoots": [
+			"../../node_modules/@types",
+			"./node_modules/@types",
+			"../../modules/@creature-chess/battle/types",
+			"./types"
+		]
 	},
 	"include": ["./src/**/*", "index.ts"]
 }

@@ -20,4 +20,5 @@ export const PlayerInfoUpdateCommandActionTypesArray = [
 	playerInfoCommands.updateLevelCommand.toString(),
 	playerInfoCommands.updateHealthCommand.toString(),
 	playerInfoCommands.updateOpponentCommand.toString(),
+	playerInfoCommands.updateReadyCommand.toString(),
 ];
