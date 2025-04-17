@@ -58,6 +58,7 @@ describe("pathfinding", () => {
 					currentHealth: 130,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"90c0ee33-aeae-4ebe-a985-23207f9facc0": {
 					id: "90c0ee33-aeae-4ebe-a985-23207f9facc0",
@@ -70,6 +71,7 @@ describe("pathfinding", () => {
 					currentHealth: 262,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"913d506f-3524-4481-904d-2106be40e825": {
 					id: "913d506f-3524-4481-904d-2106be40e825",
@@ -82,6 +84,7 @@ describe("pathfinding", () => {
 					currentHealth: 34,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"9d4b15d9-03b6-4906-8af8-5a215e0d0792": {
 					id: "9d4b15d9-03b6-4906-8af8-5a215e0d0792",
@@ -94,6 +97,7 @@ describe("pathfinding", () => {
 					currentHealth: 46,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"4374fce7-8be7-433a-87d9-7568deb0dddc": {
 					id: "4374fce7-8be7-433a-87d9-7568deb0dddc",
@@ -106,6 +110,7 @@ describe("pathfinding", () => {
 					currentHealth: 640,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"7977b429-db02-4b5a-a576-5f9916497a24": {
 					id: "7977b429-db02-4b5a-a576-5f9916497a24",
@@ -118,6 +123,7 @@ describe("pathfinding", () => {
 					currentHealth: 34,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"5196ed28-794e-4db4-8653-8fd3340f5990": {
 					id: "5196ed28-794e-4db4-8653-8fd3340f5990",
@@ -130,6 +136,7 @@ describe("pathfinding", () => {
 					currentHealth: 70,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"6434e4f9-5905-47b9-9840-d8364e2deb62": {
 					id: "6434e4f9-5905-47b9-9840-d8364e2deb62",
@@ -142,6 +149,7 @@ describe("pathfinding", () => {
 					currentHealth: 154,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"b3a0546c-4c1e-462f-99cd-6ae308819830": {
 					id: "b3a0546c-4c1e-462f-99cd-6ae308819830",
@@ -154,6 +162,7 @@ describe("pathfinding", () => {
 					currentHealth: 106,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 				"e297fa3c-5cbc-4003-bcc2-66ba521acd4d": {
 					id: "e297fa3c-5cbc-4003-bcc2-66ba521acd4d",
@@ -166,6 +175,7 @@ describe("pathfinding", () => {
 					currentHealth: 70,
 					attacking: null,
 					hit: null,
+					lastBattleStats: null,
 				},
 			},
 			piecePositions: {

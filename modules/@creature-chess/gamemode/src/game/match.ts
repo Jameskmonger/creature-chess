@@ -58,7 +58,7 @@ export class Match {
 	public constructor(
 		public readonly home: PlayerEntity,
 		public readonly away: PlayerEntity,
-		private awayIsClone: boolean,
+		public readonly awayIsClone: boolean,
 		private logger: Logger,
 		settings: GamemodeSettings,
 		private onTurnComplete?: (timeMs: number) => void

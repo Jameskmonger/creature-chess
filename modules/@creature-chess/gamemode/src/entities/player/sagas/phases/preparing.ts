@@ -57,7 +57,11 @@ export const playerPreparingPhase = function* () {
 
 			if (matchRewards) {
 				yield put(playerInfoCommands.playerMatchRewardsEvent(null));
-				yield put(playerInfoCommands.updateOpponentCommand(null));
+				yield put(
+					playerInfoCommands.updateOpponentCommand({
+						id: null,
+					})
+				);
 			}
 
 			const level = yield* select(getPlayerLevel);

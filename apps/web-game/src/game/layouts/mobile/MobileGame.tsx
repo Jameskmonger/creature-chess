@@ -2,16 +2,22 @@ import * as React from "react";
 
 import { useSelector } from "react-redux";
 
-import { getPlayerMoney } from "@creature-chess/gamemode";
-import { GamePhase } from "@creature-chess/models";
+import { BoardSelectors } from "@shoki/board";
 
+import { getPlayerMoney } from "@creature-chess/gamemode";
+import { GamePhase, PieceModel } from "@creature-chess/models";
+
+import { useLocalPlayerId } from "@cc-web/auth/context";
+import { TabMenu } from "@cc-web/ui/components/TabMenu";
 import { PortraitGameScreen } from "@cc-web/ui/gameScreen";
 import { BalanceChip } from "@cc-web/ui/src/cardShop";
+import { PieceBattleStats } from "@cc-web/ui/src/stats/PieceBattleStats";
 
 import { AppState } from "../../../store";
 import { BoardContainer } from "../../board";
 import { Controls } from "../../board/overlays";
 import { PlayerList, CardShop, Help, Settings, Profile } from "../../module";
+import { StatsState } from "../../module/stats";
 import { Overlay } from "../../ui/overlay";
 import { MobileContentPane } from "./MobileContentPane";
 import { NavBar } from "./NavBar";
@@ -21,6 +27,8 @@ import { TopBar } from "./TopBar";
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	currentOverlay,
 }) => {
+	const localPlayerId = useLocalPlayerId();
+
 	const currentBalance = useSelector<AppState, number>((state) =>
 		getPlayerMoney(state.game)
 	);
@@ -30,6 +38,14 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 			state.game.roundInfo.phase === GamePhase.PLAYING ||
 			state.game.roundInfo.phase === GamePhase.READY
 	);
+
+	const ownedPieces = useSelector<AppState, PieceModel[]>((state) =>
+		[
+			...BoardSelectors.getAllPieces(state.game.board),
+			...BoardSelectors.getAllPieces(state.game.bench),
+		].filter((p) => p.ownerId === localPlayerId)
+	);
+	const stats = useSelector<AppState, StatsState>((state) => state.game.stats);
 
 	if (currentOverlay === Overlay.PLAYERS) {
 		return (
@@ -58,18 +74,29 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 		);
 	}
 
-	if (currentOverlay === Overlay.HELP) {
+	if (currentOverlay === Overlay.SETTINGS) {
 		return (
-			<OverlayComponent title="Help">
-				<Help />
+			<OverlayComponent title="Options">
+				<TabMenu
+					tabs={[
+						{
+							label: "Help",
+							content: <Help />,
+						},
+						{
+							label: "Settings",
+							content: <Settings />,
+						},
+					]}
+				/>
 			</OverlayComponent>
 		);
 	}
 
-	if (currentOverlay === Overlay.SETTINGS) {
+	if (currentOverlay === Overlay.STATS) {
 		return (
-			<OverlayComponent title="Settings">
-				<Settings />
+			<OverlayComponent title="Stats">
+				<PieceBattleStats pieces={ownedPieces} stats={stats} />
 			</OverlayComponent>
 		);
 	}

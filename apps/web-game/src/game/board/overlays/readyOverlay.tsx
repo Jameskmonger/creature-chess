@@ -47,6 +47,12 @@ const useStyles = createUseStyles({
 	healthbar: {
 		marginBottom: "0.25em",
 	},
+	cloneTag: {
+		background: "#333333",
+		marginLeft: "0.5em",
+		padding: "0 0.5em",
+		fontStyle: "italic",
+	},
 });
 
 const ReadyOverlay: React.FunctionComponent = () => {
@@ -64,6 +70,10 @@ const ReadyOverlay: React.FunctionComponent = () => {
 		const id = state.game.playerInfo.opponentId;
 		return state.game.playerList.find((p) => p.id === id);
 	});
+
+	const opponentIsClone = useSelector(
+		(state: AppState) => state.game.playerInfo.opponentIsClone
+	);
 
 	const spectatingPlayer = useSelector<AppState, boolean>(
 		(state) => state.game.spectating.id !== null
@@ -125,7 +135,12 @@ const ReadyOverlay: React.FunctionComponent = () => {
 									</Half>
 									<Half>
 										<Group>
-											<Header4>{opponent.name}</Header4>
+											<Header4>
+												{opponent.name}
+												{opponentIsClone && (
+													<span className={styles.cloneTag}>CLONE</span>
+												)}
+											</Header4>
 											<Title title={opponent.profile?.title || null} />
 										</Group>
 										<Group className={styles.healthbar}>

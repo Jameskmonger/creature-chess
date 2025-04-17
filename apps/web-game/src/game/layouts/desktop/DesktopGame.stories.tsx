@@ -112,6 +112,13 @@ Phase_1_Ready.args = {
 	opponentId: "5678",
 };
 
+export const Phase_1_Ready_vs_Clone = Template.bind({});
+Phase_1_Ready_vs_Clone.args = {
+	phase: GamePhase.READY,
+	opponentId: "5678",
+	opponentIsClone: true,
+};
+
 export const Phase_2_Playing = Template.bind({});
 Phase_2_Playing.args = {
 	phase: GamePhase.PLAYING,

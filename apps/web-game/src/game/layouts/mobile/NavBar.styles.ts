@@ -18,9 +18,24 @@ export const useStyles = createUseStyles({
 		"&:not(:last-child)": {
 			borderRight: "3px solid #3c3c3c",
 		},
+
+		"position": "relative",
 	},
 	navBarItemActive: {
 		textDecoration: "underline",
 		background: "#3c3c3c",
+	},
+	chip: {
+		position: "absolute",
+		top: "2.5%",
+		width: "100%",
+	},
+	chipText: {
+		fontSize: "12px",
+		padding: "0.25em",
+		borderRadius: "4px",
+	},
+	shopLockChip: {
+		background: "#b13e53",
 	},
 });

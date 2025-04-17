@@ -11,6 +11,7 @@ import { useGlobalStyles } from "@cc-web/ui";
 import { GamemodeSettingsContextProvider } from "@cc-web/ui/GamemodeSettingsContext";
 
 import { ConnectionStatus } from "../../connection-status";
+import { GameState } from "../../state";
 import { Overlay } from "../../ui";
 import { createMockStore } from "../stories-utils";
 import { MobileGame } from "./MobileGame";
@@ -25,7 +26,7 @@ const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
 	const store = createMockStore(args.phase === GamePhase.PREPARING, (state) => {
-		const newState = {
+		const newState: GameState = {
 			...state,
 			ui: {
 				...state.ui,
@@ -50,6 +51,13 @@ const Template: Story<any> = (args) => {
 				opponentId: args.opponentId
 					? args.opponentId
 					: state.playerInfo.opponentId,
+				opponentIsClone: args.opponentIsClone
+					? args.opponentIsClone
+					: state.playerInfo.opponentIsClone,
+			},
+			cardShop: {
+				...state.cardShop,
+				...args.cardShop,
 			},
 		};
 
@@ -111,6 +119,14 @@ Phase_1_Ready.args = {
 	overlay: null,
 	phase: GamePhase.READY,
 	opponentId: "5678",
+};
+
+export const Phase_1_Ready_vs_Clone = Template.bind({});
+Phase_1_Ready_vs_Clone.args = {
+	overlay: null,
+	phase: GamePhase.READY,
+	opponentId: "5678",
+	opponentIsClone: true,
 };
 
 export const Phase_2_Playing = Template.bind({});
@@ -194,16 +210,27 @@ export const Tab_2_Shop_Overlay = Template.bind({});
 Tab_2_Shop_Overlay.args = {
 	phase: GamePhase.PREPARING,
 	overlay: Overlay.SHOP,
+	cardShop: {
+		locked: false,
+	},
 };
-
-export const Tab_3_Help_Overlay = Template.bind({});
-Tab_3_Help_Overlay.args = {
+export const Tab_2_Shop_Overlay_Locked = Template.bind({});
+Tab_2_Shop_Overlay_Locked.args = {
 	phase: GamePhase.PREPARING,
-	overlay: Overlay.HELP,
+	overlay: Overlay.SHOP,
+	cardShop: {
+		locked: true,
+	},
 };
 
-export const Tab_4_Settings_Overlay = Template.bind({});
-Tab_4_Settings_Overlay.args = {
+export const Tab_3_Stats_Overlay = Template.bind({});
+Tab_3_Stats_Overlay.args = {
+	phase: GamePhase.PREPARING,
+	overlay: Overlay.STATS,
+};
+
+export const Tab_4_Options_Overlay = Template.bind({});
+Tab_4_Options_Overlay.args = {
 	phase: GamePhase.PREPARING,
 	overlay: Overlay.SETTINGS,
 };

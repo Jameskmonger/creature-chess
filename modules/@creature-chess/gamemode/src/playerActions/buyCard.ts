@@ -88,6 +88,7 @@ const createPieceFromCard = (
 		maxHealth: stats.hp,
 		currentHealth: stats.hp,
 		stage: 0,
+		lastBattleStats: null,
 	};
 };
 

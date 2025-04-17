@@ -36,6 +36,7 @@ const createInitialPlayerState = (): PlayerState => ({
 		battle: null,
 		matchRewards: null,
 		opponentId: null,
+		opponentIsClone: false,
 	},
 	roundInfo: {
 		phase: GamePhase.PREPARING,

@@ -16,29 +16,37 @@ export type PlayerBattle =
 	| {
 			status: PlayerBattleStatus.IN_PROGRESS;
 			opponentId: string;
+			opponentIsClone: boolean;
 	  }
 	| {
 			status: PlayerBattleStatus.FINISHED;
 			opponentId: string;
+			opponentIsClone: boolean;
 			homeScore: number;
 			awayScore: number;
 			isHomePlayer: boolean;
 	  }
 	| null;
 
-export const inProgressBattle = (opponentId: string): PlayerBattle => ({
+export const inProgressBattle = (
+	opponentId: string,
+	opponentIsClone: boolean
+): PlayerBattle => ({
 	status: PlayerBattleStatus.IN_PROGRESS,
 	opponentId,
+	opponentIsClone,
 });
 
 export const finishedBattle = (
 	opponentId: string,
+	opponentIsClone: boolean,
 	isHomePlayer: boolean,
 	homeScore: number,
 	awayScore: number
 ): PlayerBattle => ({
 	status: PlayerBattleStatus.FINISHED,
 	opponentId,
+	opponentIsClone,
 	isHomePlayer,
 	homeScore,
 	awayScore,

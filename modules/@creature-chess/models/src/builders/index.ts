@@ -26,6 +26,7 @@ export const buildPieceModel = (
 	maxHealth: 100,
 	currentHealth: 100,
 	stage: 0,
+	lastBattleStats: null,
 	...piece,
 });
 

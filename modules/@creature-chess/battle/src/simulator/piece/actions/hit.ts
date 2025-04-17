@@ -91,6 +91,10 @@ export function doHit(
 			damage,
 		},
 		facingAway: attackerFacingAway,
+		lastBattleStats: {
+			...attacker.lastBattleStats!,
+			damageDealt: attacker.lastBattleStats!.damageDealt + damage,
+		},
 	};
 
 	const defender: PieceModel = {
@@ -99,6 +103,10 @@ export function doHit(
 		hit: {
 			direction: getRelativeDirection(targetPosition, attackerPosition),
 			damage,
+		},
+		lastBattleStats: {
+			...target.lastBattleStats!,
+			damageTaken: target.lastBattleStats!.damageTaken + damage,
 		},
 	};
 

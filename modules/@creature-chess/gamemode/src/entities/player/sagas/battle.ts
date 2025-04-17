@@ -8,18 +8,20 @@ import {
 
 import { playerFinishMatchEvent, PlayerFinishMatchEvent } from "../events";
 import { playerInfoCommands } from "../state/commands";
-import { getOpponentId } from "../state/selectors";
+import { getOpponentId, getOpponentIsClone } from "../state/selectors";
 import { playerMatchRewards } from "./matchRewards";
 
 export const playerBattle = function* () {
 	yield all([
 		takeLatest(
 			playerInfoCommands.updateOpponentCommand,
-			function* ({ payload: opponentId }) {
+			function* ({ payload: { id, isClone } }) {
 				// todo make this listen to a playerStartMatchEvent
-				if (opponentId) {
+				if (id) {
 					yield put(
-						playerInfoCommands.updateBattleCommand(inProgressBattle(opponentId))
+						playerInfoCommands.updateBattleCommand(
+							inProgressBattle(id, isClone ?? false)
+						)
 					);
 				}
 			}
@@ -28,10 +30,18 @@ export const playerBattle = function* () {
 			playerFinishMatchEvent,
 			function* ({ payload: { isHomePlayer, homeScore, awayScore } }) {
 				const opponentId = yield* select<typeof getOpponentId>(getOpponentId);
+				const opponentIsClone =
+					yield* select<typeof getOpponentIsClone>(getOpponentIsClone);
 
 				yield put(
 					playerInfoCommands.updateBattleCommand(
-						finishedBattle(opponentId!, isHomePlayer, homeScore, awayScore)
+						finishedBattle(
+							opponentId!,
+							opponentIsClone,
+							isHomePlayer,
+							homeScore,
+							awayScore
+						)
 					)
 				);
 			}

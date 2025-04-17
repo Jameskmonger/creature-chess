@@ -9,12 +9,12 @@ import {
 } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { GamemodeSettingsContextProvider } from "../../GamemodeSettingsContext";
+import { GamemodeSettingsContextProvider } from "../../../GamemodeSettingsContext";
 import { CardShop } from "./cardShop";
 import "./cardShop.stories.css";
 
 export default {
-	title: "@ui / Card Shop / CardShop",
+	title: "@cc-web / ui / Card Shop / 2d / CardShop",
 	component: CardShop,
 	argTypes: {
 		money: {
@@ -57,11 +57,11 @@ const cards: CardModel[] = [
 	},
 	{
 		id: "0002",
-		definitionId: 24,
-		name: "Ruption",
-		type: CreatureType.Fire,
-		class: DefinitionClass.ARCANE,
-		cost: 3,
+		definitionId: 4,
+		name: "Aardorn",
+		type: CreatureType.Earth,
+		class: DefinitionClass.CUNNING,
+		cost: 1,
 	},
 	{
 		id: "0003",
@@ -73,17 +73,25 @@ const cards: CardModel[] = [
 	},
 	{
 		id: "0004",
-		definitionId: 46,
-		name: "Eaglace",
-		type: CreatureType.Water,
-		class: DefinitionClass.CUNNING,
-		cost: 5,
+		definitionId: 30,
+		name: "Hubursa",
+		type: CreatureType.Earth,
+		class: DefinitionClass.ARCANE,
+		cost: 4,
 	},
 ];
 
 export const Shop = Template.bind({});
 Shop.args = {
 	cards,
+	isLocked: false,
+	money: 14,
+	ownedDefinitionIds: [32],
+};
+
+export const SomeMissing = Template.bind({});
+SomeMissing.args = {
+	cards: [...cards.map((card, index) => (index === 3 ? null : card))],
 	isLocked: false,
 	money: 14,
 	ownedDefinitionIds: [32],

@@ -27,9 +27,19 @@ const runBattle = function* (
 ) {
 	let board: BoardState<PieceModel> = {
 		id: initialBoard.id,
-		pieces: {
-			...initialBoard.pieces,
-		},
+		pieces: Object.fromEntries(
+			Object.entries(initialBoard.pieces).map(([id, piece]) => [
+				id,
+				{
+					...piece,
+					lastBattleStats: {
+						damageDealt: 0,
+						damageTaken: 0,
+						turnsSurvived: 0,
+					},
+				},
+			])
+		),
 		piecePositions: {
 			...initialBoard.piecePositions,
 		},

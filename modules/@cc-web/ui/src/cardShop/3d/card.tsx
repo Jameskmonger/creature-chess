@@ -4,8 +4,8 @@ import { createUseStyles } from "react-jss";
 
 import { Card as CardModel } from "@creature-chess/models";
 
-import { Layout } from "../../layout";
-import { CreatureImage, TypeIndicator } from "../display";
+import { Layout } from "../../../layout";
+import { CreatureImage, TypeIndicator } from "../../display";
 
 type Props = {
 	card: CardModel;
@@ -89,7 +89,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-const Card: React.FunctionComponent<Props> = (props) => {
+export function Card3D(props: Props) {
 	const classes = useStyles(props);
 
 	const {
@@ -126,6 +126,4 @@ const Card: React.FunctionComponent<Props> = (props) => {
 			</Layout>
 		</div>
 	);
-};
-
-export { Card };
+}
