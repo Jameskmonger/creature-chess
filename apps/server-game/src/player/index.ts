@@ -68,9 +68,15 @@ export const playerNetworking = function* (
 			quit: take<PlayerActions.QuitGamePlayerAction>(
 				PlayerActions.quitGamePlayerAction.toString()
 			),
-			finish: take<GameEvents.GameFinishEvent>(
-				GameEvents.gameFinishEvent.toString()
-			),
+			finish: call(function* () {
+				yield take<GameEvents.GameFinishEvent>(
+					GameEvents.gameFinishEvent.toString()
+				);
+
+				// wait 1 second before closing the networking
+				// to allow the game finish event to be sent
+				yield delay(1000);
+			}),
 		});
 		yield delay(100);
 	} finally {
