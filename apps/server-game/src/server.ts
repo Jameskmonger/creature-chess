@@ -5,6 +5,14 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";
 
+import {
+	activeBattles,
+	activeGames,
+	battlesStarted,
+	gamesStarted,
+	socketInBytes,
+	socketOutBytes,
+} from "./Metrics";
 import { createManagementClient } from "./external/auth0";
 import { getBots } from "./external/bots";
 import { Game, PlayerGameParticipant } from "./game";
@@ -64,6 +72,13 @@ export const startServer = async ({ io }: { io: Server }) => {
 
 	let lobbies: Lobby[] = [];
 	let games: Game[] = [];
+
+	gamesStarted.reset();
+	activeGames.reset();
+	battlesStarted.reset();
+	activeBattles.reset();
+	socketInBytes.reset();
+	socketOutBytes.reset();
 
 	const matchmaking = (socket: AuthenticatedSocket) => {
 		logger.info(

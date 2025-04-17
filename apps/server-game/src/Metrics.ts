@@ -25,3 +25,15 @@ export const activeBattles = new Gauge({
 	name: "active_battles",
 	help: "Number of active battles on the server",
 });
+
+export const socketInBytes = new Counter({
+	name: "socket_io_in_bytes_total",
+	help: "Total number of bytes received via socket.io",
+	labelNames: ["event"],
+});
+
+export const socketOutBytes = new Counter({
+	name: "socket_io_out_bytes_total",
+	help: "Total number of bytes sent via socket.io",
+	labelNames: ["event"],
+});
