@@ -46,7 +46,7 @@ const LoginPage = ({
 	return (
 		<div className={styles.login}>
 			<div className={styles.banner}>
-				<img src="https://i.imgur.com/7FAcFwZ.png" />
+				<img src={`${APP_IMAGE_ROOT}/ui/logo.png`} />
 			</div>
 
 			<div className={styles.groups}>

@@ -4,7 +4,6 @@ import { createUseStyles } from "react-jss";
 
 type Props = {
 	message?: string;
-	logoSrc: string;
 };
 
 const useStyles = createUseStyles({
@@ -18,6 +17,7 @@ const useStyles = createUseStyles({
 		"height": "100dvh",
 		"width": "100%",
 		"padding": 16,
+		"boxSizing": "border-box",
 		"@container (min-width: 700px)": {
 			flexDirection: "row",
 		},
@@ -76,12 +76,16 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function LoadingScreen({ message, logoSrc }: Props) {
+export function LoadingScreen({ message }: Props) {
 	const classes = useStyles();
 
 	return (
 		<div className={classes.root}>
-			<img src={logoSrc} alt="Creature Chess" className={classes.logo} />
+			<img
+				src={`${APP_IMAGE_ROOT}/ui/logo.png`}
+				alt="Creature Chess"
+				className={classes.logo}
+			/>
 			<div className={classes.loadingArea}>
 				<div className={classes.spinner} />
 				{message && <p className={classes.message}>{message}</p>}

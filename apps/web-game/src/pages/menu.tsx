@@ -89,12 +89,7 @@ export function MenuPage({ error }: { error?: string }) {
 	);
 
 	if (loadingMessage) {
-		return (
-			<LoadingScreen
-				message={loadingMessage}
-				logoSrc="https://i.imgur.com/7FAcFwZ.png"
-			/>
-		);
+		return <LoadingScreen message={loadingMessage} />;
 	}
 
 	return (
