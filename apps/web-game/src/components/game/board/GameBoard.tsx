@@ -147,6 +147,7 @@ const useStyles = createUseStyles<string>({
 		"display": "flex",
 		"flexDirection": "column",
 		"justifyContent": "center",
+		"alignItems": "center",
 
 		"& .tile .dark": {
 			background: "#38b764",
