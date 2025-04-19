@@ -1,5 +1,17 @@
 import React from "react";
 
+import { useDispatch } from "react-redux";
+
+import { BoardSelectors, PiecePosition } from "@shoki/board";
+import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
+
+import { DndProvider } from "@shoki-web/board-react";
+
+import { Pathfinder, sortPaths } from "@creature-chess/battle/src/pathfinding";
+import { getTargetAttackPositions } from "@creature-chess/battle/src/utils/getTargetAttackPositions";
+import { PieceModel, TileCoordinates } from "@creature-chess/models";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+
 import {
 	GameBoard,
 	GameBoardLocation,
@@ -12,17 +24,6 @@ import {
 	PieceContextProvider,
 	MatchPiece,
 } from "@creature-chess-app/web-game/src/components/game/board/piece";
-import { useDispatch } from "react-redux";
-
-import { BoardSelectors, PiecePosition } from "@shoki/board";
-import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
-
-import { DndProvider } from "@shoki-web/board-react";
-
-import { Pathfinder, sortPaths } from "@creature-chess/battle/src/pathfinding";
-import { getTargetAttackPositions } from "@creature-chess/battle/src/utils/getTargetAttackPositions";
-import { PieceModel, TileCoordinates } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { controlSlice, useAppSelector } from "./state";
 

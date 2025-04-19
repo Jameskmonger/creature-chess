@@ -1,5 +1,9 @@
 import React from "react";
 
+import { DndProvider } from "@shoki-web/board-react";
+
+import { PieceModel } from "@creature-chess/models";
+
 import { GameBoard } from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
 import {
 	GameBoardContext,
@@ -9,10 +13,6 @@ import {
 	PieceContextProvider,
 	Piece,
 } from "@creature-chess-app/web-game/src/components/game/board/piece";
-
-import { DndProvider } from "@shoki-web/board-react";
-
-import { PieceModel } from "@creature-chess/models";
 
 import { useBotBrain } from "./context";
 import { useAppSelector } from "./state";
