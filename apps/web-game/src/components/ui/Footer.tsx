@@ -4,9 +4,6 @@ import { createUseStyles } from "react-jss";
 
 import { APP_BASE_URL } from "@creature-chess-app/web-game/src/constants";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const APP_VERSION = require("../../../package.json").version;
-
 const useStyles = createUseStyles({
 	footer: {
 		marginTop: "0.5em",
