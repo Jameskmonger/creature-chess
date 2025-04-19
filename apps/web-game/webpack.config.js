@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
+const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const { DefinePlugin, EnvironmentPlugin, ProvidePlugin } = require("webpack");
 
 const outDir = path.resolve(__dirname, "dist");
+const rootPackageJson = path.resolve(__dirname, "../../package.json");
 
 module.exports = {
 	mode: "development",
@@ -51,7 +53,12 @@ module.exports = {
 			CREATURE_CHESS_IMAGE_URL: "",
 		}),
 		new DefinePlugin({
-			APP_VERSION: JSON.stringify(require("../../package.json").version),
+			APP_VERSION: DefinePlugin.runtimeValue(
+				() => JSON.parse(fs.readFileSync(rootPackageJson, "utf8")).version,
+				{
+					fileDependencies: [rootPackageJson],
+				}
+			),
 		}),
 		new HtmlWebpackPlugin({
 			scriptLoading: "blocking",
