@@ -4,8 +4,6 @@ import { createUseStyles } from "react-jss";
 
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 
-import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 import { PlayerAvatar, Title } from "../ui/player";
 
 type Props = {
@@ -35,7 +33,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-const NO_PLAYER_IMAGE = `${IMAGE_BASE_URL}/ui/no_player_img.png`;
+const NO_PLAYER_IMAGE = `${APP_IMAGE_ROOT}/ui/no_player_img.png`;
 
 const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 	const styles = useStyles();

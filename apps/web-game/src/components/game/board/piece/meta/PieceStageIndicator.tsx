@@ -1,14 +1,12 @@
 import * as React from "react";
 
-import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 import { Layout } from "../../../../../components/ui/layout";
 
 interface StageIndicatorProps {
 	stage: number;
 }
 
-const STAR = `${IMAGE_BASE_URL}/ui/star.svg`;
+const STAR = `${APP_IMAGE_ROOT}/ui/star.svg`;
 
 const PieceStageIndicator: React.FunctionComponent<StageIndicatorProps> = ({
 	stage,

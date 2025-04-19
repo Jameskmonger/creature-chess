@@ -4,8 +4,6 @@ import { createUseStyles } from "react-jss";
 
 import { Card } from "@creature-chess/models";
 
-import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 import { TraitIcon } from "../../../ui/TraitIcon";
 import { CreatureImage } from "../../../ui/creatureImage";
 
@@ -194,7 +192,7 @@ export function Card2D(props: CardShopCardProps) {
 					{props.owned && (
 						<img
 							className={classes.ownedIcon}
-							src={`${IMAGE_BASE_URL}/ui/arrow_up_green.png`}
+							src={`${APP_IMAGE_ROOT}/ui/arrow_up_green.png`}
 						/>
 					)}
 				</div>

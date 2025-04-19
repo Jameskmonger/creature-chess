@@ -49,16 +49,19 @@ module.exports = {
 			AUTH0_DOMAIN: "",
 			AUTH0_ENABLED: "false",
 			AUTH0_SPA_CLIENT_ID: "",
-			CREATURE_CHESS_APP_URL: "",
-			CREATURE_CHESS_IMAGE_URL: "",
 		}),
 		new DefinePlugin({
 			APP_VERSION: DefinePlugin.runtimeValue(
-				() => JSON.parse(fs.readFileSync(rootPackageJson, "utf8")).version,
+				() =>
+					JSON.stringify(
+						JSON.parse(fs.readFileSync(rootPackageJson, "utf8")).version
+					),
 				{
 					fileDependencies: [rootPackageJson],
 				}
 			),
+			APP_URL: JSON.stringify(process.env.CREATURE_CHESS_APP_URL),
+			APP_IMAGE_ROOT: JSON.stringify(process.env.CREATURE_CHESS_IMAGE_URL),
 		}),
 		new HtmlWebpackPlugin({
 			scriptLoading: "blocking",

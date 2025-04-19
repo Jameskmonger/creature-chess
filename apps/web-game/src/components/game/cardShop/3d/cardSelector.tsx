@@ -7,8 +7,6 @@ import { createUseStyles } from "react-jss";
 
 import { Card as CardModel } from "@creature-chess/models";
 
-import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 import { Card3D as Card } from "./card";
 
 type Props = {
@@ -23,7 +21,7 @@ const useStyles = createUseStyles<string, { rotations: number[] }>({
 		position: "relative",
 		overflow: "hidden",
 		border: "4px solid #303030",
-		backgroundImage: `url(${IMAGE_BASE_URL}/ui/textures/velvet.jpg)`,
+		backgroundImage: `url(${APP_IMAGE_ROOT}/ui/textures/velvet.jpg)`,
 		flex: 1,
 	},
 	cardStack: {

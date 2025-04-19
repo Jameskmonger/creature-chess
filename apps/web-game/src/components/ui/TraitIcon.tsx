@@ -5,8 +5,6 @@ import { createUseStyles } from "react-jss";
 
 import { TraitId } from "@creature-chess/models/gamemode/traits";
 
-import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 interface Props {
 	trait: TraitId;
 	className?: string;
@@ -14,7 +12,7 @@ interface Props {
 }
 
 function getIconUrl(iconName: string) {
-	return `${IMAGE_BASE_URL}/ui/${iconName}`;
+	return `${APP_IMAGE_ROOT}/ui/${iconName}`;
 }
 
 const ICON_FOR_TRAIT: Record<TraitId, string> = {

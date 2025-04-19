@@ -3,8 +3,6 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 interface Props {
 	baseUrl?: string;
 	definitionId: number;
@@ -39,7 +37,7 @@ const useStyles = createUseStyles({
 });
 
 function getCreatureUrl(facing: "front" | "back", definitionId: number) {
-	return `${IMAGE_BASE_URL}/creatures/${facing}/${definitionId}.png`;
+	return `${APP_IMAGE_ROOT}/creatures/${facing}/${definitionId}.png`;
 }
 
 export function CreatureImage({ facing, definitionId, className }: Props) {
