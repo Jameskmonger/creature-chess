@@ -1,5 +1,5 @@
-import { LobbyState } from "../../lobby";
-import { GameState } from "../game";
+import { GameState } from "./game/state";
+import { LobbyState } from "./lobby/state";
 
 export type AppState = {
 	lobby: LobbyState;

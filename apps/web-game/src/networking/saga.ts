@@ -12,8 +12,9 @@ import {
 } from "@creature-chess/networking";
 import { HandshakeRequest } from "@creature-chess/networking/handshake";
 
-import { lobbyNetworking } from "../../lobby";
-import { gameNetworking, gameSaga } from "../game";
+import { gameSaga } from "../sagas";
+import { gameNetworking } from "./game";
+import { lobbyNetworking } from "./lobby/networking";
 import { getSocket } from "./socket";
 
 type ConnectionResult =

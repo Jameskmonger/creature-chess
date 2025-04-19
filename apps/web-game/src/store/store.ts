@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { lobbyReducer } from "apps/web-game/lobby";
 import createSagaMiddleware from "redux-saga";
 
 import { createBoardSlice } from "@shoki/board";
@@ -7,7 +6,8 @@ import { createBoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { createGameReducer } from "../game";
+import { createGameReducer } from "./game/state";
+import { lobbyReducer } from "./lobby/state";
 import { rootSaga } from "./saga";
 import { SagaContext } from "./sagaContext";
 import { AppState } from "./state";

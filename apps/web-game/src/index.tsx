@@ -7,9 +7,9 @@ import { Provider as ReduxProvider } from "react-redux";
 import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
 import { GuestAuthProvider } from "@cc-web/auth/guest/provider";
 
-import { App } from "./app";
+import { App } from "../src/app";
 import { Auth0AppRoot } from "./auth/auth0";
-import { useGuestMode } from "./guest";
+import { useGuestMode } from "./auth/guest";
 import { createAppStore } from "./store";
 
 const AppRoot = () => {
