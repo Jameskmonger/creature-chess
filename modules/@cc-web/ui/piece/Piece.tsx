@@ -98,7 +98,7 @@ export function Piece(props: Props) {
 			<div className={classes.healthbarContainer}>
 				{healthbar !== "none" && (
 					<PieceHealthbar
-						color={"enemy"}
+						color={healthbar}
 						current={piece.currentHealth}
 						max={piece.maxHealth}
 					>
