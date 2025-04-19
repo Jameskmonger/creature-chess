@@ -20,6 +20,9 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 		flexDirection: "row",
 
 		userSelect: "none",
+
+		containerType: "inline-size",
+		containerName: "card",
 	},
 	imageContainer: {
 		aspectRatio: "1/1",
@@ -83,10 +86,14 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 		"flexDirection": "row",
 		"alignItems": "center",
 
-		"height": "64px",
+		"height": "48px",
 		"paddingBottom": "8px",
 
-		"@media (max-width: 375px)": {
+		"@container card (min-height: 112px)": {
+			height: "64px",
+		},
+
+		"@media (orientation: portrait) and (max-width: 375px)": {
 			height: "32px",
 			paddingBottom: 0,
 		},
