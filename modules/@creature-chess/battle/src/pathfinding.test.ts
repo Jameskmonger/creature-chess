@@ -7,6 +7,7 @@ import {
 import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
 
 import { PieceModel, attackTypes } from "@creature-chess/models";
+import { buildPieceModel } from "@creature-chess/models/src/builders";
 
 import { getNextPiecePosition, Pathfinder } from "./pathfinding";
 
@@ -47,7 +48,7 @@ describe("pathfinding", () => {
 		const board: BoardState<PieceModel> = {
 			id: "away",
 			pieces: {
-				"18cc443d-807f-467e-a4b4-d554da2329fe": {
+				"18cc443d-807f-467e-a4b4-d554da2329fe": buildPieceModel({
 					id: "18cc443d-807f-467e-a4b4-d554da2329fe",
 					ownerId: "A",
 					definitionId: 47,
@@ -59,8 +60,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"90c0ee33-aeae-4ebe-a985-23207f9facc0": {
+				}),
+				"90c0ee33-aeae-4ebe-a985-23207f9facc0": buildPieceModel({
 					id: "90c0ee33-aeae-4ebe-a985-23207f9facc0",
 					ownerId: "A",
 					definitionId: 14,
@@ -72,8 +73,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"913d506f-3524-4481-904d-2106be40e825": {
+				}),
+				"913d506f-3524-4481-904d-2106be40e825": buildPieceModel({
 					id: "913d506f-3524-4481-904d-2106be40e825",
 					ownerId: "B",
 					definitionId: 13,
@@ -85,8 +86,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"9d4b15d9-03b6-4906-8af8-5a215e0d0792": {
+				}),
+				"9d4b15d9-03b6-4906-8af8-5a215e0d0792": buildPieceModel({
 					id: "9d4b15d9-03b6-4906-8af8-5a215e0d0792",
 					ownerId: "B",
 					definitionId: 17,
@@ -98,8 +99,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"4374fce7-8be7-433a-87d9-7568deb0dddc": {
+				}),
+				"4374fce7-8be7-433a-87d9-7568deb0dddc": buildPieceModel({
 					id: "4374fce7-8be7-433a-87d9-7568deb0dddc",
 					ownerId: "B",
 					definitionId: 37,
@@ -111,8 +112,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"7977b429-db02-4b5a-a576-5f9916497a24": {
+				}),
+				"7977b429-db02-4b5a-a576-5f9916497a24": buildPieceModel({
 					id: "7977b429-db02-4b5a-a576-5f9916497a24",
 					ownerId: "B",
 					definitionId: 8,
@@ -124,8 +125,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"5196ed28-794e-4db4-8653-8fd3340f5990": {
+				}),
+				"5196ed28-794e-4db4-8653-8fd3340f5990": buildPieceModel({
 					id: "5196ed28-794e-4db4-8653-8fd3340f5990",
 					ownerId: "B",
 					definitionId: 46,
@@ -137,8 +138,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"6434e4f9-5905-47b9-9840-d8364e2deb62": {
+				}),
+				"6434e4f9-5905-47b9-9840-d8364e2deb62": buildPieceModel({
 					id: "6434e4f9-5905-47b9-9840-d8364e2deb62",
 					ownerId: "B",
 					definitionId: 20,
@@ -150,8 +151,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"b3a0546c-4c1e-462f-99cd-6ae308819830": {
+				}),
+				"b3a0546c-4c1e-462f-99cd-6ae308819830": buildPieceModel({
 					id: "b3a0546c-4c1e-462f-99cd-6ae308819830",
 					ownerId: "B",
 					definitionId: 14,
@@ -163,8 +164,8 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
-				"e297fa3c-5cbc-4003-bcc2-66ba521acd4d": {
+				}),
+				"e297fa3c-5cbc-4003-bcc2-66ba521acd4d": buildPieceModel({
 					id: "e297fa3c-5cbc-4003-bcc2-66ba521acd4d",
 					ownerId: "B",
 					definitionId: 42,
@@ -176,7 +177,7 @@ describe("pathfinding", () => {
 					attacking: null,
 					hit: null,
 					lastBattleStats: null,
-				},
+				}),
 			},
 			piecePositions: {
 				"5,5": "7977b429-db02-4b5a-a576-5f9916497a24",

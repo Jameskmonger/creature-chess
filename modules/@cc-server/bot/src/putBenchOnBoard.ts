@@ -59,7 +59,9 @@ export const putBenchOnBoard = function* () {
 
 		const firstEmptyPosition = BoardSelectors.getFirstEmptySlot(
 			state.board,
-			PREFERRED_LOCATIONS[firstBenchPiece.definition.class]
+			PREFERRED_LOCATIONS[
+				firstBenchPiece.traits[1] as "arcane" | "valiant" | "cunning"
+			]
 		);
 
 		if (firstEmptyPosition === null) {

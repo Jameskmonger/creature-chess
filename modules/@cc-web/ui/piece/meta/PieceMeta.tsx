@@ -4,71 +4,32 @@ import { createUseStyles } from "react-jss";
 
 import { PieceModel } from "@creature-chess/models";
 
-import { Layout } from "../../layout";
-import { TypeIndicator } from "../../src/display";
-import { PieceHealthbar } from "./PieceHealthbar";
-import { PieceStageIndicator } from "./PieceStageIndicator";
+import { TraitIcon } from "../../src/display/TraitIcon";
 
 type Props = {
 	piece: PieceModel;
-	className?: string;
-	healthbarColor?: "none" | "friendly" | "enemy" | "spectating";
 };
 
 const useStyles = createUseStyles({
 	typeIndicatorContainer: {
-		marginBottom: "0.25em",
 		width: "100%",
 	},
-	healthbarContainer: {
-		flex: 1,
-		position: "relative",
-	},
-	stage: {
-		"position": "absolute",
-		"top": "10%",
-		"left": "7%",
-		"width": "86%",
-		"height": "80%",
-
-		"& > img": {
-			width: "100%",
+	traitIcon: {
+		"&:not(:last-child)": {
+			marginBottom: "4px",
 		},
 	},
 });
 
-const PieceMeta: React.FunctionComponent<Props> = ({
-	piece,
-	healthbarColor = "none",
-}) => {
+const PieceMeta: React.FunctionComponent<Props> = ({ piece }) => {
 	const classes = useStyles();
 
-	const stageIndicator = (
-		<div className={classes.stage}>
-			<PieceStageIndicator stage={piece.stage} />
-		</div>
-	);
-
 	return (
-		<Layout grow direction="column" noSpacer>
-			<div className={classes.typeIndicatorContainer}>
-				<TypeIndicator type={piece.definition.type} />
-			</div>
-
-			<div className={classes.healthbarContainer}>
-				{healthbarColor !== "none" && (
-					<PieceHealthbar
-						color={healthbarColor}
-						current={piece.currentHealth}
-						max={piece.maxHealth}
-					>
-						{stageIndicator}
-					</PieceHealthbar>
-				)}
-
-				{healthbarColor === "none" && stageIndicator}
-			</div>
-		</Layout>
+		<div className={classes.typeIndicatorContainer}>
+			{piece.traits.map((trait) => (
+				<TraitIcon key={trait} trait={trait} className={classes.traitIcon} />
+			))}
+		</div>
 	);
 };
 

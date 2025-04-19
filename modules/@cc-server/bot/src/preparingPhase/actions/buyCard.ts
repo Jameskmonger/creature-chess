@@ -74,7 +74,13 @@ const shouldBuy = (
 	const improvesAverageCost = card.cost > averageCost;
 
 	// only buy card if it is strategically sound.
-	return improvesAverageCost || isStrategicCard(card, allPieces);
+	return (
+		improvesAverageCost ||
+		isStrategicCard(
+			card.traits,
+			allPieces.flatMap((p) => p.traits)
+		)
+	);
 };
 
 export const createBuyCardAction = (
@@ -97,7 +103,10 @@ export const createBuyCardAction = (
 		action: () =>
 			PlayerActions.buyCardPlayerAction({
 				index,
-				sortPositions: PREFERRED_LOCATIONS[card.class],
+				sortPositions:
+					PREFERRED_LOCATIONS[
+						card.traits[1] as "valiant" | "arcane" | "cunning"
+					],
 			}),
 		value: createUtilityValue([
 			{

@@ -2,8 +2,6 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import { CreatureType, DefinitionClass } from "@creature-chess/models";
-
 import { Piece } from "./Piece";
 import "./Piece.stories.css";
 import { PieceContextProvider } from "./PieceContext";
@@ -60,8 +58,7 @@ const createProps = (args: any) => ({
 		definition: {
 			id: args.definitionId || 10,
 			name: "",
-			class: args.creatureClass || DefinitionClass.VALIANT,
-			type: args.creatureType || CreatureType.Fire,
+			traits: args.traits,
 			cost: args.creatureCost || 5,
 			stages: [],
 		},
@@ -69,6 +66,7 @@ const createProps = (args: any) => ({
 		maxHealth: args.maxHealth || 100,
 		currentHealth: args.currentHealth || 50,
 		stage: args.stage || 0,
+		lastBattleStats: null,
 	},
 });
 
@@ -80,7 +78,6 @@ Friendly.args = {
 	maxHealth: 100,
 	stage: 1,
 	facingAway: false,
-	creatureClass: DefinitionClass.VALIANT,
-	creatureType: CreatureType.Earth,
+	traits: ["earth", "valiant"],
 	creatureCost: 3,
 };

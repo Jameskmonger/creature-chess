@@ -1,56 +1,57 @@
-import { CreatureType } from "@creature-chess/models";
+import { TraitId } from "@creature-chess/models/gamemode/traits";
 
 // overcome / generated are Tuxemon language
-export const typeInteractions = {
-	[CreatureType.Earth]: {
-		generatedBy: CreatureType.Fire,
-		overcomeBy: CreatureType.Wood,
+export const typeInteractions: Partial<
+	Record<TraitId, { generatedBy: TraitId; overcomeBy: TraitId }>
+> = {
+	["earth"]: {
+		generatedBy: "fire",
+		overcomeBy: "wood",
 	},
-	[CreatureType.Metal]: {
-		generatedBy: CreatureType.Earth,
-		overcomeBy: CreatureType.Fire,
+	["metal"]: {
+		generatedBy: "earth",
+		overcomeBy: "fire",
 	},
-	[CreatureType.Water]: {
-		generatedBy: CreatureType.Metal,
-		overcomeBy: CreatureType.Earth,
+	["water"]: {
+		generatedBy: "metal",
+		overcomeBy: "earth",
 	},
-	[CreatureType.Wood]: {
-		generatedBy: CreatureType.Water,
-		overcomeBy: CreatureType.Metal,
+	["wood"]: {
+		generatedBy: "water",
+		overcomeBy: "metal",
 	},
-	[CreatureType.Fire]: {
-		generatedBy: CreatureType.Wood,
-		overcomeBy: CreatureType.Water,
+	["fire"]: {
+		generatedBy: "wood",
+		overcomeBy: "water",
 	},
 };
 
-export const isGeneratedBy = (
-	defender: CreatureType,
-	attacker: CreatureType
-): boolean => typeInteractions[defender].generatedBy === attacker;
-export const isOvercomeBy = (
-	defender: CreatureType,
-	attacker: CreatureType
-): boolean => typeInteractions[defender].overcomeBy === attacker;
+export const isGeneratedBy = (defender: TraitId, attacker: TraitId): boolean =>
+	typeInteractions[defender]?.generatedBy === attacker;
+export const isOvercomeBy = (defender: TraitId, attacker: TraitId): boolean =>
+	typeInteractions[defender]?.overcomeBy === attacker;
 
 const STRONG_ATTACK_MODIFIER = 1.7;
 const WEAK_ATTACK_MODIFIER = 0.3;
 
 export const getTypeAttackBonus = (
-	attackType: CreatureType,
-	defenceType: CreatureType
+	attackerTraits: TraitId[],
+	defenderTraits: TraitId[]
 ) => {
-	// an attack is strong against the element it overcomes, and weak against things that overcome the attacker
+	// are any of the defenders traits overcome by the attackers traits?
+	const defenderOvercome = defenderTraits.some((defenceType) =>
+		attackerTraits.some((attackType) => isOvercomeBy(defenceType, attackType))
+	);
 
-	const defenderInteractions = typeInteractions[defenceType];
-
-	if (defenderInteractions.overcomeBy === attackType) {
+	if (defenderOvercome) {
 		return STRONG_ATTACK_MODIFIER;
 	}
 
-	const attackerInteractions = typeInteractions[defenceType];
-
-	if (attackerInteractions.overcomeBy === defenceType) {
+	// are any of the attackers traits overcome by the defenders traits?
+	const attackerOvercome = attackerTraits.some((attackType) =>
+		defenderTraits.some((defenceType) => isOvercomeBy(defenceType, attackType))
+	);
+	if (attackerOvercome) {
 		return WEAK_ATTACK_MODIFIER;
 	}
 

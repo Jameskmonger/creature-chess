@@ -2,9 +2,8 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { CreatureType } from "@creature-chess/models";
-
-import { Footer, Group, Layout, TypeIndicator } from "@cc-web/ui";
+import { Footer, Group, Layout } from "@cc-web/ui";
+import { TraitIcon } from "@cc-web/ui/src/display/TraitIcon";
 import { Header2, Header4 } from "@cc-web/ui/text";
 
 const useStyles = createUseStyles({
@@ -63,39 +62,54 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({
 				<br />
 				<Header4>Classes</Header4>
 				<ul className={styles.list}>
-					<li>Valiant: All-round melee.</li>
-					<li>Cunning: High damage, low-health melee.</li>
-					<li>Arcane: Ranged.</li>
+					<li>
+						<div className={styles.pieceType}>
+							<TraitIcon trait="valiant" />
+						</div>
+						Valiant: All-round melee.
+					</li>
+					<li>
+						<div className={styles.pieceType}>
+							<TraitIcon trait="cunning" />
+						</div>
+						Cunning: High damage, low-health melee.
+					</li>
+					<li>
+						<div className={styles.pieceType}>
+							<TraitIcon trait="arcane" />
+						</div>
+						Arcane: Ranged.
+					</li>
 				</ul>
 				<Header4>Types</Header4>
 				<ul className={styles.list}>
 					<li>
 						<div className={styles.pieceType}>
-							<TypeIndicator type={CreatureType.Earth} />
+							<TraitIcon trait="earth" />
 						</div>
 						Earth: Overcomes water.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
-							<TypeIndicator type={CreatureType.Metal} />
+							<TraitIcon trait="metal" />
 						</div>
 						Metal: Overcomes wood.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
-							<TypeIndicator type={CreatureType.Water} />
+							<TraitIcon trait="water" />
 						</div>
 						Water: Overcomes fire.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
-							<TypeIndicator type={CreatureType.Wood} />
+							<TraitIcon trait="wood" />
 						</div>
 						Wood: Overcomes earth.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
-							<TypeIndicator type={CreatureType.Fire} />
+							<TraitIcon trait="fire" />
 						</div>
 						Fire: Overcomes metal.
 					</li>

@@ -1,17 +1,14 @@
-import { PieceModel, Card } from "@creature-chess/models";
+import { TraitId } from "modules/@creature-chess/models/gamemode/traits";
 
-import { getOwnedPieceTypes } from "./getOwnedTypes";
-import { getStrategicTypes } from "./getStrategicTypes";
+import { PieceModel } from "@creature-chess/models";
 
-export const isStrategicCard = ({ type }: Card, allPieces: PieceModel[]) =>
-	getStrategicTypes(allPieces).includes(type);
+export function isStrategicCard(cardTraits: TraitId[], ownedTraits: TraitId[]) {
+	return cardTraits.some((t) => ownedTraits.includes(t) === false);
+}
 
 export const isStrategicPiece = (
-	{ definition: { type } }: PieceModel,
-	allPieces: PieceModel[]
-) => {
-	const strategicTypes = getStrategicTypes(allPieces);
-	const pieceTypes = getOwnedPieceTypes(allPieces);
-
-	return pieceTypes[type] === 1 || strategicTypes.includes(type);
-};
+	pieceTraits: TraitId[],
+	ownedTraits: TraitId[]
+) =>
+	// the piece is our only piece of some trait
+	pieceTraits.some((t) => ownedTraits.filter((o) => o === t).length === 1);

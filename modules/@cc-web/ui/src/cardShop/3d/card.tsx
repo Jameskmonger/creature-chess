@@ -5,7 +5,8 @@ import { createUseStyles } from "react-jss";
 import { Card as CardModel } from "@creature-chess/models";
 
 import { Layout } from "../../../layout";
-import { CreatureImage, TypeIndicator } from "../../display";
+import { CreatureImage } from "../../display";
+import { TraitIcon } from "../../display/TraitIcon";
 
 type Props = {
 	card: CardModel;
@@ -93,7 +94,7 @@ export function Card3D(props: Props) {
 	const classes = useStyles(props);
 
 	const {
-		card: { name, definitionId, type, cost, class: cardClass },
+		card: { name, definitionId, cost, traits },
 		onClick,
 		disabled = false,
 	} = props;
@@ -114,13 +115,16 @@ export function Card3D(props: Props) {
 				<div className={classes.cardInfo}>
 					<Layout direction="row" noSpacer className={classes.cardInfoTopBar}>
 						<div className={classes.typeIndicator}>
-							<TypeIndicator type={type} />
+							{traits.map((trait) => (
+								<TraitIcon key={trait} trait={trait} />
+							))}
 						</div>
 						<h2 className={classes.name}>{name}</h2>
 					</Layout>
 					<div className={classes.cardMeta}>
-						<span className={classes.metaItem}>{cardClass}</span>
-						<span className={classes.metaItem}>{type}</span>
+						{traits.map((trait) => (
+							<TraitIcon key={trait} trait={trait} />
+						))}
 					</div>
 				</div>
 			</Layout>

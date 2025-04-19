@@ -1,27 +1,23 @@
-import {
-	CreatureStats,
-	AttackType,
-	attackTypes,
-	DefinitionClass,
-} from "@creature-chess/models";
+import { CreatureStats, AttackType, attackTypes } from "@creature-chess/models";
+import { TraitId } from "@creature-chess/models/gamemode/traits";
 
-// each class has points to assign
+// each trait has points to assign
 // these are then used, along with piece cost and stage, to get stats
-// the decimals here indicate how the points are assigned for each class
-export const classBuilds = {
-	[DefinitionClass.VALIANT]: {
+// the decimals here indicate how the points are assigned for each trait
+const traitBuilds: Partial<Record<TraitId, ReturnType<typeof getBaseStats>>> = {
+	["valiant"]: {
 		hp: 0.4,
 		attack: 0.2,
 		defense: 0.3,
 		speed: 0.2,
 	},
-	[DefinitionClass.ARCANE]: {
+	["arcane"]: {
 		hp: 0.2,
 		attack: 0.4,
 		defense: 0.2,
 		speed: 0.3,
 	},
-	[DefinitionClass.CUNNING]: {
+	["cunning"]: {
 		hp: 0.1,
 		attack: 0.4,
 		defense: 0.1,
@@ -61,19 +57,25 @@ const getStat = (
 ) => baseStat + Math.ceil(buildStat * availablePoints);
 
 const getStats = (
-	definitionClass: DefinitionClass,
+	traits: TraitId[],
 	cost: number,
 	stage: number
 ): CreatureStats => {
 	const baseStats = getBaseStats();
 	const availablePoints = getPoints(cost, stage);
 
-	const build = classBuilds[definitionClass];
+	// TODO: currently pieces have 2 traits and the 2nd one is used to determine build
+	const combatTrait = traits[1];
+
+	const build = traitBuilds[combatTrait] ?? {
+		hp: 0.01,
+		attack: 0.01,
+		defense: 0.01,
+		speed: 0.01,
+	};
 
 	const attackType: AttackType =
-		definitionClass === DefinitionClass.ARCANE
-			? attackTypes.shoot
-			: attackTypes.basic;
+		combatTrait === "arcane" ? attackTypes.shoot : attackTypes.basic;
 
 	return {
 		hp: getStat(baseStats.hp, build.hp, availablePoints),
@@ -84,11 +86,8 @@ const getStats = (
 	};
 };
 
-export const getStages = (
-	definitionClass: DefinitionClass,
-	cost: number
-): CreatureStats[] => [
-	getStats(definitionClass, cost, 0),
-	getStats(definitionClass, cost, 1),
-	getStats(definitionClass, cost, 2),
+export const getStages = (traits: TraitId[], cost: number): CreatureStats[] => [
+	getStats(traits, cost, 0),
+	getStats(traits, cost, 1),
+	getStats(traits, cost, 2),
 ];
