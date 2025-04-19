@@ -5,10 +5,10 @@ import { useSelector } from "react-redux";
 import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
 import { useLocalPlayer } from "./auth/context";
-import { Loading } from "./components/ui/loading";
 import { useOpenConnection } from "./networking/hooks";
 import { GamePage } from "./pages/game";
 import { LobbyPage } from "./pages/lobby";
+import { MenuPage } from "./pages/menu";
 import { AppState } from "./store";
 import { useGlobalStyles } from "./styles";
 
@@ -45,9 +45,5 @@ export const App = withErrorBoundary(() => {
 		return <LobbyPage />;
 	}
 
-	return (
-		<>
-			<Loading />
-		</>
-	);
+	return <MenuPage />;
 });
