@@ -4,8 +4,6 @@ import ReactModal from "react-modal";
 import { useSelector } from "react-redux";
 import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
-import { useLocalPlayer } from "./auth/context";
-import { useOpenConnection } from "./networking/hooks";
 import { GamePage } from "./pages/game";
 import { LobbyPage } from "./pages/lobby";
 import { MenuPage } from "./pages/menu";
@@ -19,9 +17,6 @@ export const App = withErrorBoundary(() => {
 
 	const isInGame = useSelector((state: AppState) => state.game.ui.inGame);
 	const isInLobby = useSelector((state: AppState) => state.lobby !== null);
-
-	const localPlayer = useLocalPlayer();
-	useOpenConnection(localPlayer);
 
 	useGlobalStyles();
 

@@ -57,16 +57,8 @@ export function GuestAuthProvider({ children }: { children: React.ReactNode }) {
 		[session]
 	);
 
-	if (error) {
-		return <div>{error}</div>;
-	}
-
-	if (loading) {
-		return <div>Loading...</div>;
-	}
-
-	if (!session) {
-		return <div>Failed to create guest session</div>;
+	if (error || loading || !session) {
+		return null;
 	}
 
 	return (

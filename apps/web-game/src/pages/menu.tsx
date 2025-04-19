@@ -1,8 +1,12 @@
 import * as React from "react";
 
 import { createUseStyles } from "react-jss";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Footer } from "../components/ui/Footer";
+import { LoadingScreen } from "../components/ui/LoadingScreen";
+import { openConnection } from "../networking";
+import { AppState } from "../store";
 
 const useStyles = createUseStyles({
 	menu: {
@@ -65,13 +69,32 @@ const useStyles = createUseStyles({
 		background: "#ffe8e6",
 		boxShadow: "0 0 0 1px #db2828 inset, 0 0 0 0 transparent",
 	},
+	loadingWrapper: {
+		height: "100%",
+		width: "100%",
+	},
 });
 
 export function MenuPage({ error }: { error?: string }) {
 	const styles = useStyles();
+	const dispatch = useDispatch();
 
-	function findGame() {
-		console.log("find game");
+	const loadingMessage = useSelector(
+		(state: AppState) => state.menu.loadingMessage
+	);
+
+	const onFindGameClick = React.useCallback(
+		() => dispatch(openConnection()),
+		[dispatch]
+	);
+
+	if (loadingMessage) {
+		return (
+			<LoadingScreen
+				message={loadingMessage}
+				logoSrc="https://i.imgur.com/7FAcFwZ.png"
+			/>
+		);
 	}
 
 	return (
@@ -87,7 +110,7 @@ export function MenuPage({ error }: { error?: string }) {
 					<p>Up to 8 players!</p>
 				</div>
 
-				<button onClick={findGame} className={styles.findGameButton}>
+				<button onClick={onFindGameClick} className={styles.findGameButton}>
 					Find Game
 				</button>
 

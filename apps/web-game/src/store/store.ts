@@ -6,9 +6,10 @@ import { createBoardSlice } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
+import { networkingSaga } from "../networking";
 import { createGameReducer } from "./game/state";
 import { lobbyReducer } from "./lobby/state";
-import { rootSaga } from "./saga";
+import { menuReducer } from "./menu/state";
 import { SagaContext } from "./sagaContext";
 import { AppState } from "./state";
 
@@ -37,6 +38,7 @@ export const createAppStore = () => {
 		reducer: {
 			lobby: lobbyReducer,
 			game: createGameReducer(slices),
+			menu: menuReducer,
 		},
 		middleware: (getDefaultMiddleware) =>
 			getDefaultMiddleware({
@@ -49,7 +51,7 @@ export const createAppStore = () => {
 		},
 	});
 
-	sagaMiddleware.run(rootSaga, slices);
+	sagaMiddleware.run(networkingSaga, slices);
 
 	return store;
 };
