@@ -15,7 +15,7 @@ import { PieceContextProvider } from "../PieceContext";
 import { MatchPiece } from "./MatchPiece";
 
 export default {
-	title: "@ui / Piece / MatchPiece",
+	title: "@creature-chess / game / Board / Piece / MatchPiece",
 	component: MatchPiece,
 	argTypes: {},
 } as Meta;

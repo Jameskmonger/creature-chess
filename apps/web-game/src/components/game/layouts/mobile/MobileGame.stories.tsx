@@ -1,22 +1,21 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Provider } from "react-redux";
 
 import { GamePhase } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
+import { GameStateProvider } from "../../../../../.storybook/GameStateProvider";
 import { LocalPlayerContextProvider } from "../../../../auth/context";
 import { GamemodeSettingsContextProvider } from "../../../../contexts/GamemodeSettingsContext";
 import { ConnectionStatus } from "../../../../networking/connection-status";
 import { GameState } from "../../../../store/game/state";
 import { Overlay } from "../../../../store/game/ui/overlay";
 import { useGlobalStyles } from "../../../../styles";
-import { createMockStore } from "../../../../utils/stories-utils";
 import { MobileGame } from "./MobileGame";
 
 export default {
-	title: "@game / MobileGame",
+	title: "@creature-chess / game / MobileGame",
 	component: MobileGame,
 	argTypes: {},
 } as Meta;
@@ -24,74 +23,76 @@ export default {
 const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
-	const store = createMockStore(
-		args.phase === GamePhase.PREPARING,
-		(state: GameState) => {
-			const newState: GameState = {
-				...state,
-				ui: {
-					...state.ui,
-					winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
-					currentOverlay: args.overlay,
-					connectionStatus: args.connectionStatus
-						? args.connectionStatus
-						: state.ui.connectionStatus,
-					selectedPieceId: args.selectedPiece
-						? Object.values(state.board.pieces)[0].id
-						: state.ui.selectedPieceId,
-				},
-				roundInfo: {
-					...state.roundInfo,
-					phase: args.phase,
-				},
-				playerInfo: {
-					...state.playerInfo,
-					matchRewards: args.matchRewards
-						? args.matchRewards
-						: state.playerInfo.matchRewards,
-					opponentId: args.opponentId
-						? args.opponentId
-						: state.playerInfo.opponentId,
-					opponentIsClone: args.opponentIsClone
-						? args.opponentIsClone
-						: state.playerInfo.opponentIsClone,
-				},
-				cardShop: {
-					...state.cardShop,
-					...args.cardShop,
-				},
-			};
+	const decorateState = (state: GameState) => {
+		const newState: GameState = {
+			...state,
+			ui: {
+				...state.ui,
+				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
+				currentOverlay: args.overlay,
+				connectionStatus: args.connectionStatus
+					? args.connectionStatus
+					: state.ui.connectionStatus,
+				selectedPieceId: args.selectedPiece
+					? Object.values(state.board.pieces)[0].id
+					: state.ui.selectedPieceId,
+			},
+			roundInfo: {
+				...state.roundInfo,
+				phase: args.phase,
+			},
+			playerInfo: {
+				...state.playerInfo,
+				matchRewards: args.matchRewards
+					? args.matchRewards
+					: state.playerInfo.matchRewards,
+				opponentId: args.opponentId
+					? args.opponentId
+					: state.playerInfo.opponentId,
+				opponentIsClone: args.opponentIsClone
+					? args.opponentIsClone
+					: state.playerInfo.opponentIsClone,
+			},
+			cardShop: {
+				...state.cardShop,
+				...args.cardShop,
+			},
+		};
 
-			if (args.selectedPieceStage && newState.ui.selectedPieceId) {
-				const piece =
-					newState.board.pieces[newState.ui.selectedPieceId as string];
+		if (args.selectedPieceStage && newState.ui.selectedPieceId) {
+			const piece =
+				newState.board.pieces[newState.ui.selectedPieceId as string];
 
-				piece.stage = args.selectedPieceStage;
-			}
-
-			return newState;
+			piece.stage = args.selectedPieceStage;
 		}
-	);
+
+		return newState;
+	};
 
 	return (
-		<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
-			<LocalPlayerContextProvider
-				value={{
-					type: "user" as const,
-					id: "1234",
-					nickname: "jkm",
-					stats: {
-						wins: 0,
-						gamesPlayed: 0,
-					},
-					registered: true,
-				}}
+		<GameStateProvider
+			halfBoard={args.phase === GamePhase.PREPARING}
+			decorateState={decorateState}
+		>
+			<GamemodeSettingsContextProvider
+				value={GamemodeSettingsPresets["default"]}
 			>
-				<Provider store={store}>
+				<LocalPlayerContextProvider
+					value={{
+						type: "user" as const,
+						id: "1234",
+						nickname: "jkm",
+						stats: {
+							wins: 0,
+							gamesPlayed: 0,
+						},
+						registered: true,
+					}}
+				>
 					<MobileGame />
-				</Provider>
-			</LocalPlayerContextProvider>
-		</GamemodeSettingsContextProvider>
+				</LocalPlayerContextProvider>
+			</GamemodeSettingsContextProvider>
+		</GameStateProvider>
 	);
 };
 

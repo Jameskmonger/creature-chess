@@ -14,7 +14,7 @@ import { StreakType } from "@creature-chess/models/player";
 import { PlayerListItem } from "./playerListItem";
 
 export default {
-	title: "@ui / Player List / PlayerListItem",
+	title: "@creature-chess / game / Player List / PlayerListItem",
 	component: PlayerListItem,
 	argTypes: {
 		currentlySpectating: {

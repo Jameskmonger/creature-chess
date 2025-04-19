@@ -5,7 +5,7 @@ import { Meta, StoryFn } from "@storybook/react";
 import { DynamicAspectRatioComponent } from "./DynamicAspectRatioComponent";
 
 export default {
-	title: "@ui / DynamicAspectRatioComponent",
+	title: "@creature-chess / game / Board / DynamicAspectRatioComponent",
 	component: DynamicAspectRatioComponent,
 } as Meta;
 

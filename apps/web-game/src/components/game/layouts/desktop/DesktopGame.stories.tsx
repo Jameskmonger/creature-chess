@@ -1,20 +1,19 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Provider } from "react-redux";
 
 import { GamePhase } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { GamemodeSettingsContextProvider } from "../../../..//contexts/GamemodeSettingsContext";
+import { GameStateProvider } from "../../../../../.storybook/GameStateProvider";
 import { LocalPlayerContextProvider } from "../../../../auth/context";
+import { GamemodeSettingsContextProvider } from "../../../../contexts/GamemodeSettingsContext";
 import { GameState } from "../../../../store/game/state";
 import { useGlobalStyles } from "../../../../styles";
-import { createMockStore } from "../../../../utils/stories-utils";
 import { DesktopGame } from "./DesktopGame";
 
 export default {
-	title: "@game / DesktopGame",
+	title: "@creature-chess / game / DesktopGame",
 	component: DesktopGame,
 	argTypes: {},
 } as Meta;
@@ -22,70 +21,70 @@ export default {
 const Template: Story<any> = (args) => {
 	useGlobalStyles();
 
-	const store = createMockStore(
-		args.phase === GamePhase.PREPARING,
-		(state: GameState) => {
-			const newState = {
-				...state,
-				ui: {
-					...state.ui,
-					winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
-					connectionStatus: args.connectionStatus
-						? args.connectionStatus
-						: state.ui.connectionStatus,
-					selectedPieceId: args.selectedPiece
-						? Object.values(state.board.pieces)[0].id
-						: state.ui.selectedPieceId,
-				},
-				roundInfo: {
-					...state.roundInfo,
-					phase: args.phase,
-				},
-				playerInfo: {
-					...state.playerInfo,
-					matchRewards: args.matchRewards
-						? args.matchRewards
-						: state.playerInfo.matchRewards,
-					opponentId: args.opponentId
-						? args.opponentId
-						: state.playerInfo.opponentId,
-				},
-			};
+	const decorateState = (state: GameState) => {
+		const newState = {
+			...state,
+			ui: {
+				...state.ui,
+				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
+				connectionStatus: args.connectionStatus
+					? args.connectionStatus
+					: state.ui.connectionStatus,
+				selectedPieceId: args.selectedPiece
+					? Object.values(state.board.pieces)[0].id
+					: state.ui.selectedPieceId,
+			},
+			roundInfo: {
+				...state.roundInfo,
+				phase: args.phase,
+			},
+			playerInfo: {
+				...state.playerInfo,
+				matchRewards: args.matchRewards
+					? args.matchRewards
+					: state.playerInfo.matchRewards,
+				opponentId: args.opponentId
+					? args.opponentId
+					: state.playerInfo.opponentId,
+			},
+		};
 
-			if (args.selectedPieceStage && newState.ui.selectedPieceId) {
-				const piece =
-					newState.board.pieces[newState.ui.selectedPieceId as string];
+		if (args.selectedPieceStage && newState.ui.selectedPieceId) {
+			const piece =
+				newState.board.pieces[newState.ui.selectedPieceId as string];
 
-				piece.stage = args.selectedPieceStage;
-			}
-
-			return newState;
+			piece.stage = args.selectedPieceStage;
 		}
-	);
+
+		return newState;
+	};
 
 	return (
-		<div style={{ width: "90%", height: "90%", border: "2px solid red" }}>
-			<GamemodeSettingsContextProvider
-				value={GamemodeSettingsPresets["default"]}
-			>
-				<LocalPlayerContextProvider
-					value={{
-						type: "user" as const,
-						id: "1234",
-						nickname: "jkm",
-						stats: {
-							wins: 0,
-							gamesPlayed: 0,
-						},
-						registered: true,
-					}}
+		<GameStateProvider
+			halfBoard={args.phase === GamePhase.PREPARING}
+			decorateState={decorateState}
+		>
+			<div style={{ width: "90%", height: "90%", border: "2px solid red" }}>
+				<GamemodeSettingsContextProvider
+					value={GamemodeSettingsPresets["default"]}
 				>
-					<Provider store={store}>
+					<LocalPlayerContextProvider
+						value={{
+							type: "user" as const,
+							id: "1234",
+							nickname: "jkm",
+							stats: {
+								wins: 0,
+								gamesPlayed: 0,
+							},
+							registered: true,
+						}}
+					>
 						<DesktopGame />
-					</Provider>
-				</LocalPlayerContextProvider>
-			</GamemodeSettingsContextProvider>
-		</div>
+					</LocalPlayerContextProvider>
+				</GamemodeSettingsContextProvider>
+			</div>
+		</GameStateProvider>
 	);
 };
 

@@ -7,7 +7,7 @@ import "./Piece.stories.css";
 import { PieceContextProvider } from "./PieceContext";
 
 export default {
-	title: "@ui / Piece",
+	title: "@creature-chess / game / Board / Piece / Piece",
 	component: Piece,
 	argTypes: {},
 } as Meta;

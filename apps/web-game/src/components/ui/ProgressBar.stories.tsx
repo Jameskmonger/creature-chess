@@ -6,7 +6,7 @@ import "./ProgressBar.stories.css";
 import { ProgressBar } from "./progressBar";
 
 export default {
-	title: "@ui / Display / ProgressBar",
+	title: "@creature-chess / ui / ProgressBar",
 	component: ProgressBar,
 	argTypes: {
 		current: {

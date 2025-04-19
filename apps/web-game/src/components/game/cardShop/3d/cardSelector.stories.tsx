@@ -8,7 +8,7 @@ import { CardSelector } from "./cardSelector";
 import "./cardSelector.stories.css";
 
 export default {
-	title: "@cc-web / ui / Card Shop / 3d / CardSelector",
+	title: "@creature-chess / game / CardShop / 3d / CardSelector",
 	component: CardSelector,
 	argTypes: {
 		selectedCardIndex: {

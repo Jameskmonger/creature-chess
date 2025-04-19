@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { Footer } from "./Footer";
 
 export default {
-	title: "@ui / Footer",
+	title: "@creature-chess / ui / Footer",
 	component: Footer,
 	argTypes: {},
 } as Meta;

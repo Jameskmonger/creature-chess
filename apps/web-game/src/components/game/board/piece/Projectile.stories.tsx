@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { Projectile } from "./Projectile";
 
 export default {
-	title: "@ui / Piece / Projectile",
+	title: "@creature-chess / game / Board / Piece / Projectile",
 	component: Projectile,
 	argTypes: {},
 } as Meta;

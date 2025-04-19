@@ -5,13 +5,13 @@ import { Provider } from "react-redux";
 
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
+import { createMockStore } from "../../../../.storybook/utils";
 import { LocalPlayerContextProvider } from "../../../auth/context";
 import { GamemodeSettingsContextProvider } from "../../../contexts/GamemodeSettingsContext";
-import { createMockStore } from "../../../utils/stories-utils";
 import { PlayerGameProfile } from "./PlayerGameProfile";
 
 export default {
-	title: "@ui / Player / PlayerGameProfile",
+	title: "@creature-chess / game / Profile / PlayerGameProfile",
 	component: PlayerGameProfile,
 	argTypes: {},
 } as Meta;

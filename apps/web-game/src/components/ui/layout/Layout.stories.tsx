@@ -8,7 +8,7 @@ import { Half } from "./Half";
 import { Layout } from "./Layout";
 
 export default {
-	title: "@ui / Layout",
+	title: "@creature-chess / ui / Layout",
 } as Meta;
 
 const useStyles = createUseStyles({

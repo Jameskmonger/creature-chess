@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { CreatureImage } from "./creatureImage";
 
 export default {
-	title: "@ui / Display / CreatureImage",
+	title: "@creature-chess / ui / CreatureImage",
 	component: CreatureImage,
 	argTypes: {
 		definitionId: { type: "number", required: true },

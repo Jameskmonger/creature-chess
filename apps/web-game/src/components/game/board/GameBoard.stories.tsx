@@ -14,7 +14,7 @@ import { GameBoardContextProvider } from "./GameBoardContext";
 import { Piece, PieceContextProvider } from "./piece";
 
 export default {
-	title: "@ui / GameBoard",
+	title: "@creature-chess / game / Board / GameBoard",
 	component: GameBoard,
 	argTypes: {
 		onClick: { action: "onClick" },

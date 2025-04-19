@@ -1,37 +1,26 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Provider } from "react-redux";
 
-import { useGlobalStyles } from "../../../styles";
-import { createMockStore } from "../../../utils/stories-utils";
 import { BoardContainer } from "./BoardContainer";
 
 export default {
-	title: "@game / BoardContainer",
+	title: "@creature-chess / game / Board / BoardContainer",
 	component: BoardContainer,
 	argTypes: {},
 } as Meta;
 
-const Template: Story<any> = (args) => {
-	useGlobalStyles();
-
-	const store = createMockStore(false);
-
-	return (
-		<div
-			style={{
-				width: "500px",
-				height: "400px",
-				border: "2px solid red",
-			}}
-		>
-			<Provider store={store}>
-				<BoardContainer />
-			</Provider>
-		</div>
-	);
-};
+const Template: Story<any> = (args) => (
+	<div
+		style={{
+			width: "500px",
+			height: "400px",
+			border: "2px solid red",
+		}}
+	>
+		<BoardContainer />
+	</div>
+);
 
 export const Scale_Height = Template.bind({});
 Scale_Height.args = {

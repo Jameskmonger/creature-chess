@@ -7,7 +7,7 @@ import { finishedBattle } from "@creature-chess/models/game/playerList";
 import { StatusPlayerListItem } from "./statusPlayerListItem";
 
 export default {
-	title: "@ui / Player List / StatusPlayerListItem",
+	title: "@creature-chess / game / Player List / StatusPlayerListItem",
 	component: StatusPlayerListItem,
 } as Meta;
 

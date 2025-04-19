@@ -3,7 +3,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import { LoadingScreen } from "./LoadingScreen";
 
 const meta: Meta<typeof LoadingScreen> = {
-	title: "@game / LoadingScreen",
+	title: "@creature-chess / ui / LoadingScreen",
 	component: LoadingScreen,
 };
 

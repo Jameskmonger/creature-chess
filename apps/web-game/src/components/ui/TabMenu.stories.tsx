@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { TabMenu } from "./TabMenu";
 
 const meta: Meta<typeof TabMenu> = {
-	title: "@cc-web / ui / components / TabMenu",
+	title: "@creature-chess / ui / TabMenu",
 	component: TabMenu,
 };
 export default meta;

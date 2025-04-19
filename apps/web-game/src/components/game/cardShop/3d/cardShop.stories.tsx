@@ -10,7 +10,7 @@ import { CardShop } from "./cardShop";
 import "./cardShop.stories.css";
 
 export default {
-	title: "@cc-web / ui / Card Shop / 3d / CardShop",
+	title: "@creature-chess / game / CardShop / 3d / CardShop",
 	component: CardShop,
 	argTypes: {
 		money: {

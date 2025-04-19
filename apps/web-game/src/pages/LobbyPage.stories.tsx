@@ -4,15 +4,20 @@ import { Meta, Story } from "@storybook/react";
 
 import { PlayerTitle } from "@creature-chess/models/player/title";
 
+import { LobbyStateProvider } from "../../.storybook/LobbyStateProvider";
 import { LobbyPage } from "./lobby";
 
 export default {
-	title: "@ui / Pages / LobbyPage",
+	title: "@creature-chess / lobby / LobbyPage",
 	component: LobbyPage,
 	argTypes: {},
 } as Meta;
 
-const Template: Story<any> = (args) => <LobbyPage {...args} />;
+const Template: Story<any> = (args) => (
+	<LobbyStateProvider>
+		<LobbyPage {...args} />
+	</LobbyStateProvider>
+);
 
 export const Default = Template.bind({});
 Default.args = {

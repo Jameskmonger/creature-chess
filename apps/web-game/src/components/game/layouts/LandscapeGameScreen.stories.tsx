@@ -5,7 +5,7 @@ import { Meta, Story } from "@storybook/react";
 import { LandscapeGameScreen } from "./LandscapeGameScreen";
 
 export default {
-	title: "@ui / Game Screen/LandscapeGameScreen",
+	title: "@creature-chess / game / Layouts / LandscapeGameScreen",
 	component: LandscapeGameScreen,
 	argTypes: {},
 } as Meta;
