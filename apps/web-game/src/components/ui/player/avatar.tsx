@@ -17,8 +17,10 @@ function getCreatureUrl(definitionId: number) {
 
 export function PlayerAvatar({
 	player,
+	className,
 }: {
 	player: Pick<PlayerListPlayer, "profile">;
+	className?: string;
 }) {
 	const classes = useStyles();
 
@@ -28,7 +30,7 @@ export function PlayerAvatar({
 
 	return (
 		<img
-			className={classnames(classes.image, "avatar")}
+			className={classnames(classes.image, "avatar", className)}
 			src={getCreatureUrl(player.profile.picture)}
 		/>
 	);

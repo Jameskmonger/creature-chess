@@ -3,6 +3,7 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
+import { Page } from "../components/Page";
 import { LobbyPlayerBanner } from "../components/lobby/LobbyPlayerBanner";
 import { SettingsMenu } from "../components/lobby/SettingsMenu";
 import { useOpenSettingsMenu } from "../components/lobby/hooks/useOpenSettingsMenu";
@@ -28,50 +29,61 @@ const countdownRender =
 	};
 
 const useStyles = createUseStyles({
-	"lobbyPage": {
-		display: "flex",
-		flexDirection: "column",
-		height: "100%",
-		width: "100%",
-		overflow: "scroll",
-		paddingTop: "2em",
-		fontFamily: "Arial, Helvetica, sans-serif",
-		color: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
+	lobbyInfo: {
+		"flex": 1,
+
+		"display": "flex",
+		"flexDirection": "column",
+		"textAlign": "center",
+		"fontFamily": '"Roboto", "sans-serif"',
+		"color": "#fff",
+		"width": "100%",
+
+		"@media (orientation: portrait) and (max-width: 376px)": {
+			gap: "8px",
+			marginBottom: "8px",
+		},
+
+		"@media (orientation: portrait) and (min-width: 377px)": {
+			gap: "16px",
+			marginBottom: "16px",
+		},
+
+		"@media (orientation: landscape)": {
+			gap: "16px",
+			marginBottom: "16px",
+		},
 	},
-	"lobbyInfo": {
-		display: "flex",
-		flexDirection: "column",
-		padding: "1rem",
-		marginTop: "1rem",
-		textAlign: "center",
-		background: "#566c86",
-	},
-	"timeRemaining": {
+	timeRemaining: {
 		padding: "0.5em 0.6em",
-		marginBottom: "1em",
 		textTransform: "uppercase",
 		background: "#333",
 	},
-	"timeRemainingHighlight": {
+	timeRemainingHighlight: {
 		fontWeight: "700",
 	},
-	"players": {
-		flex: "1 0 0",
-		display: "flex",
-		justifyContent: "space-between",
-		flexWrap: "wrap",
+	players: {
+		"flex": 1,
+
+		"display": "grid",
+		"gridTemplateColumns": "repeat(2, 1fr)",
+		"gridTemplateRows": "repeat(4, auto)",
+
+		"@media (orientation: portrait) and (max-width: 376px)": {
+			gap: "8px",
+		},
+
+		"@media (orientation: portrait) and (min-width: 377px)": {
+			gap: "12px",
+		},
+
+		"@media (orientation: landscape)": {
+			gap: "12px",
+		},
 	},
-	"playerWrapper": {
+	playerWrapper: {
 		display: "flex",
 		flexDirection: "column",
-		width: "100%",
-	},
-	"@media (min-width: 1024px)": {
-		playerWrapper: {
-			width: "40%",
-		},
 	},
 });
 
@@ -112,7 +124,7 @@ export function LobbyPage() {
 	const { startTimestamp, maxPlayers, lobbyWaitTimeSeconds } = lobbyInfo;
 
 	return (
-		<div className={styles.lobbyPage}>
+		<Page hasBackground>
 			<div className={styles.lobbyInfo}>
 				{startTimestamp && (
 					<Countdown
@@ -124,14 +136,13 @@ export function LobbyPage() {
 				<div className={styles.players}>{playerItems}</div>
 
 				<p>
-					The game will start {lobbyWaitTimeSeconds} seconds after the lobby is
-					created, or immediately when there are {maxPlayers} players
+					The game will start immediately when there are {maxPlayers} players
 				</p>
 
 				{menuOpen && <SettingsMenu />}
 			</div>
 
 			<Footer />
-		</div>
+		</Page>
 	);
 }

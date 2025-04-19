@@ -14,14 +14,13 @@ export default {
 } as Meta;
 
 const Template: Story<any> = (args) => (
-	<LobbyStateProvider>
-		<LobbyPage {...args} />
+	<LobbyStateProvider players={args.players}>
+		<LobbyPage />
 	</LobbyStateProvider>
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	maxPlayers: 8,
 	players: [
 		{
 			id: "1234",
@@ -43,6 +42,4 @@ Default.args = {
 			},
 		},
 	],
-	lobbyWaitTimeSeconds: 60,
-	startingAtMs: Date.now() + 60_000,
 };
