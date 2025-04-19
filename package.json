@@ -57,7 +57,8 @@
 		"storybook": "^7.6.17",
 		"ts-jest": "^29.1.2",
 		"ts-node": "^10.9.2",
-		"typescript": "^5.3.3"
+		"typescript": "^5.3.3",
+		"webpack": "^5.65.0"
 	},
 	"dependencies": {
 		"@types/react": "^18.2.57",

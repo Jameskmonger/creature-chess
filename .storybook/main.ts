@@ -1,5 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
 import { join, dirname } from "path";
+import { DefinePlugin } from "webpack";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -29,10 +30,6 @@ const config: StorybookConfig = {
 		autodocs: "tag",
 	},
 	staticDirs: [{ from: "../images", to: "/images" }],
-	env: (config) => ({
-		...config,
-		CREATURE_CHESS_IMAGE_URL: "http://localhost:6006/images",
-	}),
 	previewHead: (head) => `
 		${head}
 		<style>
@@ -47,6 +44,18 @@ const config: StorybookConfig = {
 		}
 		</style>
 	`,
+	webpackFinal: (config) => ({
+		...config,
+		plugins: [
+			...(config.plugins ?? []),
+			new DefinePlugin({
+				APP_VERSION: JSON.stringify("0.0.1"),
+				APP_URL: JSON.stringify("https://example.com"),
+				APP_API_URL: JSON.stringify("https://example.com"),
+				APP_IMAGE_ROOT: JSON.stringify("http://localhost:6006/images"),
+			}),
+		],
+	}),
 };
 
 export default config;
