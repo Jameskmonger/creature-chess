@@ -1,9 +1,24 @@
 import React from "react";
 
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import type { Preview } from "@storybook/react";
 import { DecoratorFunction } from "@storybook/types";
 
 import webGamePreview from "../apps/web-game/.storybook/preview";
+
+const viewports = Object.entries(INITIAL_VIEWPORTS)
+	.filter(([key]) =>
+		[
+			"pixel",
+			"pixelxl",
+			"iphone5",
+			"iphone6",
+			"ipad",
+			"ipad10p",
+			"ipad12p",
+		].includes(key)
+	)
+	.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 
 const preview: Preview = {
 	parameters: {
@@ -13,6 +28,9 @@ const preview: Preview = {
 				color: /(background|color)$/i,
 				date: /Date$/i,
 			},
+		},
+		viewport: {
+			viewports,
 		},
 	},
 	decorators: [
