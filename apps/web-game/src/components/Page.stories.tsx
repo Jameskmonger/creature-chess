@@ -1,4 +1,7 @@
+import React from "react";
+
 import type { Meta, StoryObj } from "@storybook/react";
+import { createUseStyles } from "react-jss";
 
 import { Page } from "./Page";
 
@@ -10,16 +13,33 @@ export default meta;
 
 type Story = StoryObj<typeof Page>;
 
+const useLandingStyles = createUseStyles({
+	landing: {
+		color: "#fff",
+		fontFamily: '"Roboto", sans-serif',
+	},
+});
+
+function StorybookLandingPage() {
+	const classes = useLandingStyles();
+	return (
+		<div className={classes.landing}>
+			<h1>Hello!</h1>
+			<p>Welcome to Storybook.</p>
+		</div>
+	);
+}
+
 export const Default: Story = {
 	args: {
-		children: "Hello",
+		children: <StorybookLandingPage />,
 		hasBackground: true,
 	},
 };
 
 export const NoBackground: Story = {
 	args: {
-		children: "Hello",
+		children: <StorybookLandingPage />,
 		hasBackground: false,
 	},
 };
