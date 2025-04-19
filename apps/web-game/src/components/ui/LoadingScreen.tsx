@@ -2,40 +2,21 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
+import { Page } from "../Page";
+
 type Props = {
 	message?: string;
 };
 
 const useStyles = createUseStyles({
-	"root": {
-		"containerType": "inline-size",
-		"display": "flex",
-		"alignItems": "center",
-		"justifyContent": "center",
-		"flexDirection": "column",
-		"gap": 32,
-		"height": "100dvh",
-		"width": "100%",
-		"padding": 16,
-		"boxSizing": "border-box",
-		"@container (min-width: 700px)": {
-			flexDirection: "row",
-		},
-	},
-	"logo": {
-		"width": "65%",
-		"maxWidth": 320,
-		"@container (min-width: 700px)": {
-			width: "50%",
-			maxWidth: 420,
-		},
-	},
 	"loadingArea": {
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
+		justifyContent: "center",
 		gap: "32px",
 		width: "100%",
+		height: "100%",
 	},
 	"spinner": {
 		width: 48,
@@ -46,13 +27,17 @@ const useStyles = createUseStyles({
 		animation: "$spin 1.6s linear infinite",
 	},
 	"message": {
-		fontFamily: '"Roboto", "sans-serif"',
-		fontSize: "1.5em",
-		textTransform: "uppercase",
-		letterSpacing: "4px",
-		color: "#fff",
-		fontWeight: 700,
-		textAlign: "center",
+		"fontFamily": '"Roboto", "sans-serif"',
+		"fontSize": "1.5em",
+		"textTransform": "uppercase",
+		"letterSpacing": "4px",
+		"color": "#fff",
+		"fontWeight": 700,
+		"textAlign": "center",
+
+		"@media (orientation: portrait) and (max-width: 412px)": {
+			fontSize: "1.2em",
+		},
 	},
 	"@keyframes spin": {
 		from: { transform: "rotate(0deg)" },
@@ -64,16 +49,11 @@ export function LoadingScreen({ message }: Props) {
 	const classes = useStyles();
 
 	return (
-		<div className={classes.root}>
-			<img
-				src={`${APP_IMAGE_ROOT}/ui/logo.png`}
-				alt="Creature Chess"
-				className={classes.logo}
-			/>
+		<Page hasBackground>
 			<div className={classes.loadingArea}>
 				<div className={classes.spinner} />
 				{message && <p className={classes.message}>{message}</p>}
 			</div>
-		</div>
+		</Page>
 	);
 }
