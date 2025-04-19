@@ -39,10 +39,6 @@ ADD modules/@cc-server/auth/package.json ./modules/@cc-server/auth/
 ADD modules/@cc-server/bot/package.json ./modules/@cc-server/bot/
 ADD modules/@cc-server/data/package.json ./modules/@cc-server/data/
 
-ADD modules/@cc-web/auth/package.json ./modules/@cc-web/auth/
-ADD modules/@cc-web/shared/package.json ./modules/@cc-web/shared/
-ADD modules/@cc-web/ui/package.json ./modules/@cc-web/ui/
-
 ADD modules/@tools/battle-tester/package.json ./modules/@tools/battle-tester/
 ADD modules/@tools/bot-analysis/package.json ./modules/@tools/bot-analysis/
 ADD modules/@tools/bot-brain-tester/package.json ./modules/@tools/bot-brain-tester/
@@ -50,7 +46,6 @@ ADD modules/@tools/bot-brain-tester/package.json ./modules/@tools/bot-brain-test
 ADD apps/server-game/package.json ./apps/server-game/
 ADD apps/server-info/package.json ./apps/server-info/
 ADD apps/web-game/package.json ./apps/web-game/
-ADD apps/web-menu/package.json ./apps/web-menu/
 
 # Run the install now that we have the package.json and yarn.lock files
 RUN yarn install --frozen-lockfile --network-timeout 1000000

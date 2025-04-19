@@ -1,13 +1,12 @@
 import * as React from "react";
 
+import { Header2, Header4 } from "apps/web-game/src/components/ui/text";
 import { useSelector } from "react-redux";
-
-import { Layout } from "@cc-web/ui";
-import { DiscordIcon } from "@cc-web/ui/misc";
-import { Header2, Header4 } from "@cc-web/ui/text";
 
 import { AppState } from "../../../../store";
 import { getPlayerById } from "../../../../store/selectors";
+import { DiscordIcon } from "../../../ui/DiscordIcon";
+import { Layout } from "../../../ui/layout";
 import { BoardOverlay } from "./boardOverlay";
 
 const VictoryOverlay: React.FunctionComponent = () => {

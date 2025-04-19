@@ -5,9 +5,8 @@ import Div100vh from "react-div-100vh";
 import Media from "react-media";
 import { useSelector } from "react-redux";
 
-import { GamemodeSettingsContextProvider } from "@cc-web/ui/GamemodeSettingsContext";
-
 import { DesktopGame, MobileGame } from "../components/game";
+import { GamemodeSettingsContextProvider } from "../contexts/GamemodeSettingsContext";
 import { AppState } from "../store";
 
 export function GamePage() {

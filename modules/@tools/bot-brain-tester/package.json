@@ -23,7 +23,7 @@
 	"dependencies": {
 		"@cc-server/bot": "workspace:*",
 		"@cc-server/data": "workspace:*",
-		"@cc-web/ui": "workspace:*",
+		"@creature-chess-app/web-game": "workspace:*",
 		"@creature-chess/battle": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",

@@ -4,10 +4,10 @@ import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Piece, usePiece } from "@cc-web/ui";
-
 import { playerClickPieceAction } from "../../../../sagas/board/clickPieceSaga";
 import { AppState } from "../../../../store";
+import { Piece } from "./Piece";
+import { usePiece } from "./PieceContext";
 
 const useStyles = createUseStyles({
 	selectablePiece: {

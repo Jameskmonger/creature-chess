@@ -5,9 +5,8 @@ import { useSelector } from "react-redux";
 
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
-import { Group, Layout } from "@cc-web/ui";
-import { Text, Header4 } from "@cc-web/ui/text";
-
+import { Group, Layout } from "../../../../../components/ui/layout";
+import { Text, Header4 } from "../../../../../components/ui/text";
 import { AppState } from "../../../../../store";
 
 const getPositionModifier = (position: number): string => {

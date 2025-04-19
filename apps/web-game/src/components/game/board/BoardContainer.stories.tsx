@@ -3,8 +3,7 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 
-import { useGlobalStyles } from "@cc-web/ui";
-
+import { useGlobalStyles } from "../../../styles";
 import { createMockStore } from "../../../utils/stories-utils";
 import { BoardContainer } from "./BoardContainer";
 

@@ -2,8 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Layout } from "@cc-web/ui";
-
+import { Layout } from "../../../ui/layout";
 import { PhaseInfo } from "../../phaseInfo";
 import { RoundIndicator } from "../../roundIndicator";
 

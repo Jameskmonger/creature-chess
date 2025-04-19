@@ -6,13 +6,12 @@ import { Provider } from "react-redux";
 import { GamePhase } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { LocalPlayerContextProvider } from "@cc-web/auth/context";
-import { useGlobalStyles } from "@cc-web/ui";
-import { GamemodeSettingsContextProvider } from "@cc-web/ui/GamemodeSettingsContext";
-
+import { LocalPlayerContextProvider } from "../../../../auth/context";
+import { GamemodeSettingsContextProvider } from "../../../../contexts/GamemodeSettingsContext";
 import { ConnectionStatus } from "../../../../networking/connection-status";
 import { GameState } from "../../../../store/game/state";
 import { Overlay } from "../../../../store/game/ui/overlay";
+import { useGlobalStyles } from "../../../../styles";
 import { createMockStore } from "../../../../utils/stories-utils";
 import { MobileGame } from "./MobileGame";
 

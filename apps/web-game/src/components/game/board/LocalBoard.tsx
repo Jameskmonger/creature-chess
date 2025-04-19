@@ -1,7 +1,7 @@
 import React from "react";
 
-import { GameBoard, GameBoardContextProvider } from "@cc-web/ui";
-
+import { GameBoard } from "./GameBoard";
+import { GameBoardContextProvider } from "./GameBoardContext";
 import {
 	useGameBench,
 	useGameBoard,

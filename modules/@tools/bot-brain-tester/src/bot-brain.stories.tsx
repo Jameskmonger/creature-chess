@@ -1,5 +1,6 @@
 import React from "react";
 
+import { GameBoard } from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
 import { applyMiddleware, combineReducers, createStore } from "redux";
@@ -11,8 +12,6 @@ import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { BotPersonality } from "@cc-server/data";
-
-import { GameBoard } from "@cc-web/ui";
 
 import { BotStateView } from "./BotStateView";
 import { BotBrainInfo } from "./brain/BotBrainInfo";

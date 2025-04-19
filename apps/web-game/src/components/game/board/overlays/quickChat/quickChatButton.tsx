@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { PlayerActions } from "@creature-chess/gamemode";
 import { QuickChatOption } from "@creature-chess/models";
 
-import { useLocalPlayerId } from "@cc-web/auth/context";
+import { useLocalPlayerId } from "../../../../../auth/context";
 
 const useStyles = createUseStyles({
 	button: {

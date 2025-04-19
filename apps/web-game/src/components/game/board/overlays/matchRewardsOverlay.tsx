@@ -1,14 +1,13 @@
 import * as React from "react";
 
+import { Header2, Header4 } from "apps/web-game/src/components/ui/text";
 import { useSelector } from "react-redux";
 
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
 
-import { Group, Layout } from "@cc-web/ui";
-import { DiscordIcon } from "@cc-web/ui/misc";
-import { Header2, Header4 } from "@cc-web/ui/text";
-
 import { AppState } from "../../../../store";
+import { DiscordIcon } from "../../../ui/DiscordIcon";
+import { Group, Layout } from "../../../ui/layout";
 import { BoardOverlay } from "./boardOverlay";
 
 const MatchRewardsOverlay: React.FunctionComponent = () => {

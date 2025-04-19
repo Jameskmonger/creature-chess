@@ -1,6 +1,17 @@
 import React from "react";
 
-import { astar, Graph } from "javascript-astar";
+import {
+	GameBoard,
+	GameBoardLocation,
+} from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
+import {
+	GameBoardContext,
+	GameBoardContextProvider,
+} from "@creature-chess-app/web-game/src/components/game/board/GameBoardContext";
+import {
+	PieceContextProvider,
+	MatchPiece,
+} from "@creature-chess-app/web-game/src/components/game/board/piece";
 import { useDispatch } from "react-redux";
 
 import { BoardSelectors, PiecePosition } from "@shoki/board";
@@ -8,25 +19,11 @@ import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
 
 import { DndProvider } from "@shoki-web/board-react";
 
-import {
-	Path,
-	Pathfinder,
-	sortPaths,
-} from "@creature-chess/battle/src/pathfinding";
+import { Pathfinder, sortPaths } from "@creature-chess/battle/src/pathfinding";
 import { getTargetAttackPositions } from "@creature-chess/battle/src/utils/getTargetAttackPositions";
 import { PieceModel, TileCoordinates } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import {
-	GameBoardContextProvider,
-	GameBoardContext,
-	GameBoard,
-	PieceContextProvider,
-	MatchPiece,
-	GameBoardLocation,
-} from "@cc-web/ui";
-
-import { PathfinderControls } from "./controls/PathfinderControls";
 import { controlSlice, useAppSelector } from "./state";
 
 const renderPiece = (onClickPiece: any) => (piece: PieceModel) => (

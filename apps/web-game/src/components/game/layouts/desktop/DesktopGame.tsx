@@ -7,23 +7,23 @@ import { BoardSelectors } from "@shoki/board";
 
 import { GamePhase, PieceModel } from "@creature-chess/models";
 
-import { useLocalPlayerId } from "@cc-web/auth/context";
-import { Footer, Layout } from "@cc-web/ui";
-import { TabMenu } from "@cc-web/ui/components/TabMenu";
-import { LandscapeGameScreen } from "@cc-web/ui/gameScreen";
-import { PieceBattleStats } from "@cc-web/ui/src/stats/PieceBattleStats";
-
+import { useLocalPlayerId } from "../../../../auth/context";
 import { AppState } from "../../../../store";
 import { StatsState } from "../../../../store/game/stats/state";
+import { Footer } from "../../../ui/Footer";
+import { TabMenu } from "../../../ui/TabMenu";
+import { Layout } from "../../../ui/layout";
+import { PieceBattleStats } from "../../PieceBattleStats";
 import { BoardContainer } from "../../board";
 import { Controls, NowPlaying } from "../../board/overlays";
-import { CardShop } from "../../cardShop";
+import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { PhaseInfo } from "../../phaseInfo";
-import { PlayerList } from "../../playerList";
-import { Profile } from "../../profile";
+import { PlayerList } from "../../playerList/playerList";
+import { PlayerGameProfile } from "../../profile";
 import { RoundIndicator } from "../../roundIndicator";
 import { QuitGameButton } from "../../settings";
+import { LandscapeGameScreen } from "../LandscapeGameScreen";
 
 const useStyles = createUseStyles({
 	helpContainer: {
@@ -120,7 +120,7 @@ const DesktopGame: React.FunctionComponent = () => {
 				<Layout direction="column" className={styles.rightColumn}>
 					<CardShop />
 
-					<Profile />
+					<PlayerGameProfile />
 				</Layout>
 			}
 		/>

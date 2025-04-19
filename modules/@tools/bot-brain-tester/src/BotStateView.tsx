@@ -1,16 +1,18 @@
 import React from "react";
 
+import { GameBoard } from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
+import {
+	GameBoardContext,
+	GameBoardContextProvider,
+} from "@creature-chess-app/web-game/src/components/game/board/GameBoardContext";
+import {
+	PieceContextProvider,
+	Piece,
+} from "@creature-chess-app/web-game/src/components/game/board/piece";
+
 import { DndProvider } from "@shoki-web/board-react";
 
 import { PieceModel } from "@creature-chess/models";
-
-import {
-	GameBoardContextProvider,
-	GameBoardContext,
-	GameBoard,
-	PieceContextProvider,
-	Piece,
-} from "@cc-web/ui";
 
 import { useBotBrain } from "./context";
 import { useAppSelector } from "./state";

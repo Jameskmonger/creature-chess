@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Footer } from "@cc-web/ui";
-
+import { Footer } from "../../ui/Footer";
 import { QuitGameButton } from "./quitGameButton";
 
 const Settings: React.FunctionComponent = () => (

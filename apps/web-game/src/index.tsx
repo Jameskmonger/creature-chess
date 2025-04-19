@@ -4,12 +4,10 @@ import "pepjs";
 import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 
-import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
-import { GuestAuthProvider } from "@cc-web/auth/guest/provider";
-
 import { App } from "../src/app";
-import { Auth0AppRoot } from "./auth/auth0";
-import { useGuestMode } from "./auth/guest";
+import { AUTH0_ENABLED } from "./auth/auth0/config";
+import { Auth0AuthProvider } from "./auth/auth0/provider";
+import { GuestAuthProvider, useGuestMode } from "./auth/guest";
 import { createAppStore } from "./store";
 
 const AppRoot = () => {
@@ -28,11 +26,11 @@ const AppRoot = () => {
 
 	if (AUTH0_ENABLED) {
 		return (
-			<Auth0AppRoot>
+			<Auth0AuthProvider>
 				<ReduxProvider store={store}>
 					<App />
 				</ReduxProvider>
-			</Auth0AppRoot>
+			</Auth0AuthProvider>
 		);
 	}
 

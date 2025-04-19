@@ -2,10 +2,8 @@ import React from "react";
 
 import { PieceModel } from "@creature-chess/models";
 
-import { useLocalPlayerId } from "@cc-web/auth/context";
-import { MatchPiece, PieceContextProvider } from "@cc-web/ui";
-
-import { SelectablePiece } from "../piece";
+import { useLocalPlayerId } from "../../../../auth/context";
+import { MatchPiece, PieceContextProvider, SelectablePiece } from "../piece";
 
 const useRenderSelectablePiece = () => {
 	const viewingPlayerId = useLocalPlayerId();

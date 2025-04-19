@@ -8,9 +8,6 @@ WORKDIR /code
 ADD modules/@shoki-web/ ./modules/@shoki-web/
 RUN yarn workspaces foreach --all --include "@shoki-web/*" run build
 
-ADD modules/@cc-web/ ./modules/@cc-web/
-RUN yarn workspaces foreach --all --include "@shoki-web/*" run build
-
 ADD apps/$APP_DIR/ ./apps/$APP_DIR/
 
 VOLUME /code/apps/$APP_DIR/dist

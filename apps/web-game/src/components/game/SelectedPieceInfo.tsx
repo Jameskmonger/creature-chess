@@ -9,10 +9,9 @@ import { BoardSelectors } from "@shoki/board";
 import { getDefinitionById } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 
-import { Layout } from "@cc-web/ui";
-import { TraitIcon } from "@cc-web/ui/src/display/TraitIcon";
-
 import { AppState } from "../../store";
+import { TraitIcon } from "../ui/TraitIcon";
+import { Layout } from "../ui/layout";
 
 const useStyles = createUseStyles({
 	info: {

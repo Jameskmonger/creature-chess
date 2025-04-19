@@ -5,14 +5,11 @@
 	"description": "Creature Chess",
 	"scripts": {
 		"build-web-game": "yarn workspace @creature-chess-app/web-game build",
-		"build-web-menu": "yarn workspace @creature-chess-app/web-menu build",
 		"build-server-game": "",
 		"build-server-info": "",
 		"dev-web-game": "yarn workspace @creature-chess-app/web-game dev",
-		"dev-web-menu": "yarn workspace @creature-chess-app/web-menu dev",
 		"start-server-game": "ts-node-dev apps/server-game/index.ts",
 		"start-server-info": "ts-node-dev apps/server-info/index.ts",
-		"start-web-menu": "yarn workspace @creature-chess-app/web-menu dev",
 		"test": "yarn workspaces foreach --all run test",
 		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\" \"apps/**/*.tsx\" \"modules/**/*.tsx\"",
 		"prettier": "prettier -w ./",
@@ -23,7 +20,6 @@
 	"workspaces": [
 		"modules/@creature-chess/*",
 		"modules/@cc-server/*",
-		"modules/@cc-web/*",
 		"modules/@shoki/*",
 		"modules/@shoki-web/*",
 		"modules/@tools/*",

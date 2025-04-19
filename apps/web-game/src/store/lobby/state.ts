@@ -1,21 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { LobbyPlayer } from "@creature-chess/models/lobby";
-import { GamemodeSettings } from "@creature-chess/models/settings";
 import { LobbyServerToClient } from "@creature-chess/networking";
 
-/**
- * TODO this code is duplicated in @cc-web, see LobbyPageContext
- */
-export type LobbyState = {
-	players: LobbyPlayer[];
-	startingAtMs: number;
-	maxPlayers: number;
-	lobbyWaitTimeSeconds: number;
-	settings: GamemodeSettings;
-} | null;
+export type LobbyState = LobbyServerToClient.LobbyConnectionPacket | null;
 
-const initialState = null as LobbyState;
+const initialState = null as LobbyState | null;
 
 export const { reducer: lobbyReducer, actions: LobbyCommands } = createSlice({
 	name: "lobby",
@@ -25,11 +14,7 @@ export const { reducer: lobbyReducer, actions: LobbyCommands } = createSlice({
 			state,
 			action: PayloadAction<LobbyServerToClient.LobbyConnectionPacket>
 		) => ({
-			players: action.payload.players,
-			startingAtMs: action.payload.startTimestamp,
-			lobbyWaitTimeSeconds: action.payload.lobbyWaitTimeSeconds,
-			maxPlayers: action.payload.maxPlayers,
-			settings: action.payload.settings,
+			...action.payload,
 		}),
 		updatePlayers: (
 			state,

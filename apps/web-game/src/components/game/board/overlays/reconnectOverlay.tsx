@@ -2,10 +2,9 @@ import * as React from "react";
 
 import { useSelector } from "react-redux";
 
-import { Group } from "@cc-web/ui";
-
 import { ConnectionStatus } from "../../../../networking/connection-status";
 import { AppState } from "../../../../store";
+import { Group } from "../../../ui/layout";
 import { BoardOverlay } from "./boardOverlay";
 
 const ReconnectOverlay: React.FunctionComponent = () => {

@@ -5,9 +5,8 @@ import { useSelector } from "react-redux";
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 
-import { Countdown } from "@cc-web/ui";
-
 import { AppState } from "../../store";
+import { Countdown } from "../ui/countdown";
 import { InfoChip } from "./InfoChip";
 
 const renderPhaseInfoCountdown = (secondsRemaining: number) => (

@@ -7,22 +7,21 @@ import { BoardSelectors } from "@shoki/board";
 import { getPlayerMoney } from "@creature-chess/gamemode";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 
-import { useLocalPlayerId } from "@cc-web/auth/context";
-import { TabMenu } from "@cc-web/ui/components/TabMenu";
-import { PortraitGameScreen } from "@cc-web/ui/gameScreen";
-import { BalanceChip } from "@cc-web/ui/src/cardShop";
-import { PieceBattleStats } from "@cc-web/ui/src/stats/PieceBattleStats";
-
+import { useLocalPlayerId } from "../../../../auth/context";
 import { AppState } from "../../../../store";
 import { StatsState } from "../../../../store/game/stats/state";
 import { Overlay } from "../../../../store/game/ui";
+import { TabMenu } from "../../../ui/TabMenu";
+import { PieceBattleStats } from "../../PieceBattleStats";
 import { BoardContainer } from "../../board";
 import { Controls } from "../../board/overlays";
-import { CardShop } from "../../cardShop";
+import { BalanceChip } from "../../cardShop/BalanceChip";
+import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
-import { PlayerList } from "../../playerList";
-import { Profile } from "../../profile";
+import { PlayerList } from "../../playerList/playerList";
+import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
+import { PortraitGameScreen } from "../PortraitGameScreen";
 import { MobileContentPane } from "./MobileContentPane";
 import { NavBar } from "./NavBar";
 import { OverlayComponent } from "./OverlayComponent";
@@ -69,7 +68,7 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 
 				{inPlayingOrReadyPhase && (
 					<>
-						<Profile />
+						<PlayerGameProfile />
 
 						{/* TODO show controls here too? to sell pieces maybe? */}
 					</>
@@ -126,7 +125,7 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 
 				{!inPlayingOrReadyPhase && (
 					<>
-						<Profile />
+						<PlayerGameProfile />
 
 						<div style={{ height: "2em", paddingTop: "0.5em" }}>
 							<Controls />

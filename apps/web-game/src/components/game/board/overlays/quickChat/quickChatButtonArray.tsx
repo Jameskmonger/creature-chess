@@ -2,8 +2,7 @@ import React from "react";
 
 import { QuickChatOption } from "@creature-chess/models";
 
-import { Layout } from "@cc-web/ui";
-
+import { Layout } from "../../../../ui/layout";
 import { QuickChatButton } from "./quickChatButton";
 
 const QuickChatButtonArray: React.FunctionComponent = () => {

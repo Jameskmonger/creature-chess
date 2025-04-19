@@ -8,9 +8,8 @@ import { DndProvider } from "@shoki-web/board-react";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { Group } from "@cc-web/ui";
-
 import { AppState } from "../../../store";
+import { Group } from "../../ui/layout";
 import { SelectedPieceInfo } from "../SelectedPieceInfo";
 import { LocalBoard } from "./LocalBoard";
 import { MatchBoard } from "./MatchBoard";

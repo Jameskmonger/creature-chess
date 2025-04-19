@@ -1,23 +1,17 @@
 import * as React from "react";
 
+import { Header2, Header4 } from "apps/web-game/src/components/ui/text";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { useLocalPlayerId } from "@cc-web/auth/context";
-import { Label, StreakIndicator } from "@cc-web/ui";
-import {
-	PlayerAvatar,
-	Title,
-	PlayerHealthbar,
-	Layout,
-	Group,
-	Half,
-} from "@cc-web/ui";
-import { Header2, Header4 } from "@cc-web/ui/text";
-
+import { useLocalPlayerId } from "../../../../auth/context";
 import { AppState } from "../../../../store";
+import { Label } from "../../../ui/label";
+import { Group, Half, Layout } from "../../../ui/layout";
+import { Title, PlayerHealthbar, PlayerAvatar } from "../../../ui/player";
+import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";
 import { QuickChatBox } from "./quickChat/quickChatBox";

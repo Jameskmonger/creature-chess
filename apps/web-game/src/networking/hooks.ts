@@ -2,9 +2,8 @@ import React from "react";
 
 import { useDispatch } from "react-redux";
 
-import { AUTH0_ENABLED } from "@cc-web/auth/auth0/config";
-import { LocalPlayer } from "@cc-web/auth/player";
-
+import { LocalPlayer } from "../auth/LocalPlayer";
+import { AUTH0_ENABLED } from "../auth/auth0/config";
 import { useCookie } from "../hooks/useCookie";
 import { openConnection } from "./saga";
 
