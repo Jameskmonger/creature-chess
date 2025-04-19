@@ -78,7 +78,7 @@ const listenForConnection = function* (socket: Socket, slices: BoardSlices) {
 };
 
 async function getGuestSession() {
-	const response = await fetch(process.env.API_INFO_URL + "/guest/session", {
+	const response = await fetch(APP_API_URL + "/guest/session", {
 		headers: {
 			"Content-Type": "application/json",
 		},

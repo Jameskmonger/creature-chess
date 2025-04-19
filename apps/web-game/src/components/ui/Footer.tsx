@@ -2,11 +2,6 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { APP_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const APP_VERSION = require("../../../package.json").version;
-
 const useStyles = createUseStyles({
 	footer: {
 		marginTop: "0.5em",
@@ -30,10 +25,6 @@ export const Footer: React.FunctionComponent = () => {
 			{" - "}
 			<a className={classes.item} href="https://reddit.com/r/creaturechess/">
 				/r/CreatureChess
-			</a>
-			{" - "}
-			<a className={classes.item} href={`${APP_BASE_URL}privacy`}>
-				Privacy Policy
 			</a>
 			{" - "}
 			<a

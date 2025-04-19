@@ -13,14 +13,11 @@ function useGuestSession() {
 
 	useEffect(() => {
 		async function get() {
-			const response = await fetch(
-				process.env.API_INFO_URL + "/guest/session",
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
+			const response = await fetch(APP_API_URL + "/guest/session", {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
 
 			if (!response.ok) {
 				setLoading(false);

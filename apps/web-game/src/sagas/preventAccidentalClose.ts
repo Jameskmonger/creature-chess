@@ -2,8 +2,6 @@ import { take } from "@redux-saga/core/effects";
 
 import { PlayerActions } from "@creature-chess/gamemode";
 
-import { APP_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 export const preventAccidentalClose = function* () {
 	// display an "Are you sure you want to leave this page?" dialog
 	window.onbeforeunload = () =>
@@ -14,6 +12,6 @@ export const preventAccidentalClose = function* () {
 	// just to allow the packets to send
 	setTimeout(() => {
 		window.onbeforeunload = null;
-		window.location.href = APP_BASE_URL;
+		window.location.href = APP_URL;
 	}, 100);
 };

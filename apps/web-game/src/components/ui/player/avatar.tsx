@@ -5,8 +5,6 @@ import { createUseStyles } from "react-jss";
 
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
-import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
-
 const useStyles = createUseStyles({
 	image: {
 		height: "64px",
@@ -14,7 +12,7 @@ const useStyles = createUseStyles({
 });
 
 function getCreatureUrl(definitionId: number) {
-	return `${IMAGE_BASE_URL}/creatures/front/${definitionId}.png`;
+	return `${APP_IMAGE_ROOT}/creatures/front/${definitionId}.png`;
 }
 
 export function PlayerAvatar({

@@ -1,4 +1,4 @@
-const CURRENT_USER_ENDPOINT = `${process.env.API_INFO_URL}/user/current`;
+const CURRENT_USER_ENDPOINT = `${APP_API_URL}/user/current`;
 
 export const getCurrentUser = (token: string) =>
 	fetch(CURRENT_USER_ENDPOINT, {

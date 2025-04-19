@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
+const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const { DefinePlugin, EnvironmentPlugin, ProvidePlugin } = require("webpack");
 
 const outDir = path.resolve(__dirname, "dist");
+const rootPackageJson = path.resolve(__dirname, "../../package.json");
 
 module.exports = {
 	mode: "development",
@@ -43,15 +45,23 @@ module.exports = {
 		}),
 		new EnvironmentPlugin({
 			NODE_ENV: "production",
-			API_INFO_URL: "http://localhost/api",
-			AUTH0_DOMAIN: "",
-			AUTH0_ENABLED: "false",
-			AUTH0_SPA_CLIENT_ID: "",
-			CREATURE_CHESS_APP_URL: "",
-			CREATURE_CHESS_IMAGE_URL: "",
 		}),
 		new DefinePlugin({
-			APP_VERSION: JSON.stringify(require("../../package.json").version),
+			APP_VERSION: DefinePlugin.runtimeValue(
+				() =>
+					JSON.stringify(
+						JSON.parse(fs.readFileSync(rootPackageJson, "utf8")).version
+					),
+				{
+					fileDependencies: [rootPackageJson],
+				}
+			),
+			APP_URL: JSON.stringify(process.env.CREATURE_CHESS_APP_URL),
+			APP_API_URL: JSON.stringify(process.env.API_INFO_URL),
+			APP_IMAGE_ROOT: JSON.stringify(process.env.CREATURE_CHESS_IMAGE_URL),
+			APP_AUTH0_ENABLED: JSON.stringify(process.env.AUTH0_ENABLED),
+			APP_AUTH0_DOMAIN: JSON.stringify(process.env.AUTH0_DOMAIN),
+			APP_AUTH0_SPA_CLIENT_ID: JSON.stringify(process.env.AUTH0_SPA_CLIENT_ID),
 		}),
 		new HtmlWebpackPlugin({
 			scriptLoading: "blocking",
