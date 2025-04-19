@@ -1,0 +1,8 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .bg { fill: #ADD8E6; }
+    .scimitar { fill: #990000; stroke: #990000; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <circle class="bg" cx="128" cy="128" r="128"/>
+  <path class="scimitar" d="M64 200c40-80 100-120 128-136-32 40-48 80-40 112-16 8-48 8-88 24z"/>
+</svg>

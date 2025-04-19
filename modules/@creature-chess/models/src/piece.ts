@@ -1,3 +1,4 @@
+import { TraitId } from "../gamemode/traits";
 import { AttackType, CreatureDefinition } from "./creatureDefinition";
 import { TileCoordinates } from "./position";
 
@@ -23,6 +24,8 @@ export interface PieceModel {
 
 	definitionId: number;
 	definition: CreatureDefinition;
+
+	traits: TraitId[];
 
 	stage: number;
 

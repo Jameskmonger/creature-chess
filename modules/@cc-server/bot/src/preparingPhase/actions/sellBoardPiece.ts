@@ -31,12 +31,14 @@ export const createSellBoardPieceAction = (
 		return null;
 	}
 
+	const allTraits = allPieces.flatMap((p) => p.traits);
+
 	// don't sell piece if it is a strategically sound piece
-	if (isStrategicPiece(piece, allPieces)) {
+	if (isStrategicPiece(piece.traits, allTraits)) {
 		const betterStrategicPieceOnBench = benchPieces.find((benchPiece) => {
 			// TODO (James) this doesn't take piece evolution into account
 			const isBetter =
-				isStrategicPiece(benchPiece, allPieces) &&
+				isStrategicPiece(benchPiece.traits, allTraits) &&
 				benchPiece.definition.cost > piece.definition.cost;
 			return isBetter;
 		});

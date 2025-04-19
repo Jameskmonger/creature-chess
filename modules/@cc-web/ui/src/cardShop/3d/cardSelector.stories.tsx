@@ -2,11 +2,7 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import {
-	Card as CardModel,
-	CreatureType,
-	DefinitionClass,
-} from "@creature-chess/models";
+import { Card as CardModel } from "@creature-chess/models";
 
 import { CardSelector } from "./cardSelector";
 import "./cardSelector.stories.css";
@@ -34,40 +30,35 @@ const cards: CardModel[] = [
 		id: "0001",
 		definitionId: 10,
 		name: "Chenipode",
-		type: CreatureType.Earth,
-		class: DefinitionClass.CUNNING,
+		traits: ["earth", "cunning"],
 		cost: 2,
 	},
 	{
 		id: "0002",
 		definitionId: 24,
 		name: "Ruption",
-		type: CreatureType.Fire,
-		class: DefinitionClass.ARCANE,
+		traits: ["fire", "arcane"],
 		cost: 3,
 	},
 	{
 		id: "0003",
 		definitionId: 32,
 		name: "Cairfrey",
-		type: CreatureType.Metal,
-		class: DefinitionClass.ARCANE,
+		traits: ["metal", "arcane"],
 		cost: 3,
 	},
 	{
 		id: "0004",
 		definitionId: 46,
 		name: "Eaglace",
-		type: CreatureType.Water,
-		class: DefinitionClass.CUNNING,
+		traits: ["water", "cunning"],
 		cost: 5,
 	},
 	{
 		id: "0005",
 		definitionId: 37,
 		name: "Arbelder",
-		type: CreatureType.Wood,
-		class: DefinitionClass.VALIANT,
+		traits: ["wood", "cunning"],
 		cost: 5,
 	},
 ];

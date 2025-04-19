@@ -1,11 +1,10 @@
-import { DefinitionClass } from "./creatureDefinition";
-import { CreatureType } from "./creatureType";
+import { TraitId } from "../gamemode/traits";
 
 export interface Card {
 	id: string;
 	definitionId: number;
 	cost: number;
 	name: string;
-	type: CreatureType;
-	class: DefinitionClass;
+
+	traits: TraitId[];
 }

@@ -31,9 +31,16 @@ export const createSellPieceAction = (
 		return null;
 	}
 	// don't sell piece if it is a strategically sound piece
-	if (isStrategicPiece(piece, allPieces)) {
+
+	if (
+		isStrategicPiece(
+			piece.traits,
+			allPieces.flatMap((p) => p.traits)
+		)
+	) {
 		return null;
 	}
+
 	// don't sell bench pieces for which we have a piece on the board
 	if (hasMatchingPieceOnBoard) {
 		return null;

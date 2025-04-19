@@ -2,11 +2,7 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import {
-	Card as CardModel,
-	CreatureType,
-	DefinitionClass,
-} from "@creature-chess/models";
+import { Card as CardModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { GamemodeSettingsContextProvider } from "../../../GamemodeSettingsContext";
@@ -43,40 +39,35 @@ const cards: CardModel[] = [
 		id: "0005",
 		definitionId: 37,
 		name: "Arbelder",
-		type: CreatureType.Wood,
-		class: DefinitionClass.VALIANT,
+		traits: ["wood", "valiant"],
 		cost: 5,
 	},
 	{
 		id: "0001",
 		definitionId: 10,
 		name: "Chenipode",
-		type: CreatureType.Earth,
-		class: DefinitionClass.CUNNING,
+		traits: ["earth", "cunning"],
 		cost: 2,
 	},
 	{
 		id: "0002",
 		definitionId: 4,
 		name: "Aardorn",
-		type: CreatureType.Earth,
-		class: DefinitionClass.CUNNING,
+		traits: ["earth", "cunning"],
 		cost: 1,
 	},
 	{
 		id: "0003",
 		definitionId: 32,
 		name: "Cairfrey",
-		type: CreatureType.Metal,
-		class: DefinitionClass.ARCANE,
+		traits: ["metal", "arcane"],
 		cost: 3,
 	},
 	{
 		id: "0004",
 		definitionId: 30,
 		name: "Hubursa",
-		type: CreatureType.Earth,
-		class: DefinitionClass.ARCANE,
+		traits: ["earth", "arcane"],
 		cost: 4,
 	},
 ];

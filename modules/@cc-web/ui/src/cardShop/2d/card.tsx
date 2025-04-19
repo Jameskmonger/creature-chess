@@ -2,11 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Card, DefinitionClass } from "@creature-chess/models";
+import { Card } from "@creature-chess/models";
 
 import { IMAGE_BASE_URL } from "@cc-web/shared/constants";
 
-import { CreatureImage, TypeIndicator } from "../../display";
+import { CreatureImage } from "../../display";
+import { TraitIcon } from "../../display/TraitIcon";
 
 type CardShopCardProps = {
 	card: Card | null;
@@ -57,39 +58,19 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 
 		background: "#303030",
 	},
-
 	nameBar: {
 		display: "flex",
-		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-
-		paddingLeft: "5%",
-		marginLeft: "-5%",
+		padding: "1% 5%",
 		background: "#101010",
-		paddingBottom: "2%",
-
 		zIndex: 11,
-
-		borderWidth: "0 0 2px",
-		borderStyle: "solid",
-		borderBottomWidth: "3px",
-		borderBottomColor: (props) => {
-			switch (props.card!.cost) {
-				case 1:
-					return "#b4b4b4";
-				case 2:
-					return "#4eba4e";
-				case 3:
-					return "#4690ff";
-				case 4:
-					return "#993899";
-				case 5:
-					return "#e09429";
-				default:
-					return "#ff0000";
-			}
-		},
+		borderBottom: (props) =>
+			`6px solid ${
+				["", "#b4b4b4", "#4eba4e", "#4690ff", "#993899", "#e09429"][
+					props.card!.cost
+				] || "#ff0000"
+			}`,
 	},
 	name: {
 		color: "#fff",
@@ -100,25 +81,34 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 		fontSize: "24px",
 	},
 	traits: {
-		"flex": 1,
 		"display": "flex",
 		"flexDirection": "row",
 		"alignItems": "center",
-		"justifyContent": "space-between",
 
-		"& > img": {
-			height: "24px",
+		"height": "64px",
+		"paddingBottom": "8px",
+
+		"@media (max-width: 375px)": {
+			height: "32px",
+			paddingBottom: 0,
+		},
+
+		"@media (min-width: 376px) and (max-width: 430px)": {
+			height: "48px",
 		},
 	},
-	class: {
-		color: "#d7d7d7",
+	traitIcon: {
+		"height": "70%",
 
-		fontFamily: '"Roboto", "sans-serif"',
-		fontOpticalSizing: "auto",
-		fontWeight: 400,
-		fontStyle: "normal",
-		fontSize: "14px",
-		marginRight: "5%",
+		"&:not(:last-child)": {
+			marginRight: "16px",
+		},
+
+		"@media (max-width: 375px)": {
+			"&:not(:last-child)": {
+				marginRight: "8px",
+			},
+		},
 	},
 	buyContainer: {
 		background: "#101010",
@@ -185,18 +175,22 @@ export function Card2D(props: CardShopCardProps) {
 		props.onBuy();
 	}, [props, card, money]);
 
+	if (!card) {
+		return null;
+	}
+
 	return (
-		<div key={card!.id} className={classes.card}>
+		<div className={classes.card}>
 			<div className={classes.imageContainer}>
 				<div className={classes.shadow} />
-
 				<div className={classes.image}>
-					<CreatureImage definitionId={card!.definitionId} />
+					<CreatureImage definitionId={card.definitionId} />
 				</div>
 			</div>
+
 			<div className={classes.info}>
 				<div className={classes.nameBar}>
-					<span className={classes.name}>{card!.name}</span>
+					<span className={classes.name}>{card.name}</span>
 					{props.owned && (
 						<img
 							className={classes.ownedIcon}
@@ -204,23 +198,26 @@ export function Card2D(props: CardShopCardProps) {
 						/>
 					)}
 				</div>
-				<div className={classes.traits}>
-					<TypeIndicator type={card!.type} />
 
-					<span className={classes.class}>
-						{card!.class === DefinitionClass.VALIANT && "Valiant"}
-						{card!.class === DefinitionClass.CUNNING && "Cunning"}
-						{card!.class === DefinitionClass.ARCANE && "Arcane"}
-					</span>
+				<div className={classes.traits}>
+					{card.traits.map((trait) => (
+						<TraitIcon
+							key={trait}
+							className={classes.traitIcon}
+							trait={trait}
+							label
+						/>
+					))}
 				</div>
 			</div>
+
 			<div className={classes.buyContainer}>
 				<button
 					className={classes.buy}
-					disabled={card!.cost > money}
+					disabled={card.cost > money}
 					onClick={onBuy}
 				>
-					<div style={{ rotate: `${shuffleAmount}deg` }}>$ {card!.cost}</div>
+					<div style={{ rotate: `${shuffleAmount}deg` }}>$ {card.cost}</div>
 				</button>
 			</div>
 		</div>

@@ -10,6 +10,7 @@ import { getDefinitionById } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 
 import { Layout } from "@cc-web/ui";
+import { TraitIcon } from "@cc-web/ui/src/display/TraitIcon";
 
 import { AppState } from "../../../store";
 
@@ -21,16 +22,12 @@ const useStyles = createUseStyles({
 		padding: "0.25em",
 		color: "#fff",
 		fontFamily: "Arial, sans-serif",
-		height: "3.2em",
 	},
 	hidden: {
 		visibility: "hidden",
 	},
 	name: {
 		fontWeight: "700",
-	},
-	highlight: {
-		textTransform: "uppercase",
 	},
 	price: {
 		color: "#ffcd75",
@@ -45,6 +42,21 @@ const useStyles = createUseStyles({
 	stat: {
 		fontSize: "0.75em",
 		marginRight: "0.25em",
+	},
+	traits: {
+		"height": "48px",
+		"paddingBottom": "8px",
+
+		"display": "flex",
+		"flexDirection": "row",
+
+		"& > *:not(:last-child)": {
+			marginRight: "0.25em",
+		},
+
+		"@media (max-width: 414px)": {
+			height: "32px",
+		},
 	},
 });
 
@@ -81,9 +93,11 @@ export function SelectedPieceInfo() {
 				<span className={styles.name}>{definition.name}</span>&nbsp;
 				<span className={styles.price}>${definition.cost}</span>
 				&nbsp;&mdash;&nbsp;
-				<span className={styles.highlight}>{definition.type}</span>
-				&nbsp;&mdash;&nbsp;
-				<span className={styles.highlight}>{definition.class}</span>
+				<div className={styles.traits}>
+					{selectedPiece.traits.map((trait) => (
+						<TraitIcon key={trait} trait={trait} label />
+					))}
+				</div>
 			</Layout>
 			<Layout direction="row" justifyContent="left">
 				<span className={styles.stage}>

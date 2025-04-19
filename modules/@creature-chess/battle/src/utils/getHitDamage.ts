@@ -10,11 +10,9 @@ export const getHitDamage = (
 	const attackerStats = getStats(attacker);
 	const defenderStats = getStats(defender);
 
-	const attackBonus = getTypeAttackBonus(
-		attacker.definition.type,
-		defender.definition.type
-	);
+	const attackBonus = getTypeAttackBonus(attacker.traits, defender.traits);
+
 	return Math.ceil(
 		(attackerStats.attack / defenderStats.defense) * attackBonus * 8
-	); // todo tweak this
+	);
 };

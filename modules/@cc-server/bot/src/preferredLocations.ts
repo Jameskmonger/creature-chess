@@ -1,4 +1,4 @@
-import { DefinitionClass, TileCoordinates } from "@creature-chess/models";
+import { TileCoordinates } from "@creature-chess/models";
 
 const SORT_A_FIRST = -1;
 const SORT_A_SECOND = 1;
@@ -9,10 +9,11 @@ const ARCANE_ROW_PREFERENCE: { [key: number]: number } = {
 	[5]: 1,
 };
 
-export const PREFERRED_LOCATIONS: {
-	[key in DefinitionClass]: (a: TileCoordinates, b: TileCoordinates) => -1 | 1;
-} = {
-	[DefinitionClass.VALIANT]: (a, b) => {
+export const PREFERRED_LOCATIONS: Record<
+	"valiant" | "arcane" | "cunning",
+	(a: TileCoordinates, b: TileCoordinates) => -1 | 1
+> = {
+	valiant: (a, b) => {
 		if (a.y < b.y) {
 			return SORT_A_FIRST;
 		}
@@ -35,7 +36,7 @@ export const PREFERRED_LOCATIONS: {
 
 		return SORT_A_FIRST;
 	},
-	[DefinitionClass.CUNNING]: (a, b) => {
+	cunning: (a, b) => {
 		if (a.y < b.y) {
 			return SORT_A_FIRST;
 		}
@@ -58,7 +59,7 @@ export const PREFERRED_LOCATIONS: {
 
 		return SORT_A_FIRST;
 	},
-	[DefinitionClass.ARCANE]: (a, b) => {
+	arcane: (a, b) => {
 		if (ARCANE_ROW_PREFERENCE[a.y] < ARCANE_ROW_PREFERENCE[b.y]) {
 			return SORT_A_FIRST;
 		}

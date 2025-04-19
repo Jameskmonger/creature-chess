@@ -8,12 +8,7 @@ export {
 } from "./src/player";
 export { CardShop } from "./src/cardShop";
 
-export {
-	CreatureImage,
-	ProgressBar,
-	TypeIndicator,
-	Label,
-} from "./src/display";
+export { CreatureImage, ProgressBar, Label } from "./src/display";
 export {
 	PlayerListItem,
 	StatusPlayerListItem,

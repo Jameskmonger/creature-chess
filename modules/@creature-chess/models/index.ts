@@ -20,9 +20,7 @@ export {
 	type CreatureStats,
 	type AttackType,
 	attackTypes,
-	DefinitionClass,
 } from "./src/creatureDefinition";
-export { CreatureType } from "./src/creatureType";
 
 export { QuickChatOption, type QuickChatValue } from "./src/quickChat";
 

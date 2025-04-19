@@ -197,8 +197,7 @@ export class CardDeck {
 			definitionId: definition.id,
 			cost: definition.cost,
 			name: definition.name,
-			type: definition.type,
-			class: definition.class,
+			traits: definition.traits,
 		};
 
 		this.getDeckForCost(definition.cost).addCards(card, false);

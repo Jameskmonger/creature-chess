@@ -1,17 +1,10 @@
-import { CreatureType } from "./creatureType";
-
-export enum DefinitionClass {
-	VALIANT = "Valiant",
-	ARCANE = "Arcane",
-	CUNNING = "Cunning",
-}
+import { TraitId } from "../gamemode/traits";
 
 export interface CreatureDefinition {
 	id: number;
 	name: string;
 	cost: number;
-	type: CreatureType;
-	class: DefinitionClass;
+	traits: TraitId[];
 	stages: CreatureStats[];
 }
 
