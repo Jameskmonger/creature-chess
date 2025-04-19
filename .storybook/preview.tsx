@@ -30,7 +30,25 @@ const preview: Preview = {
 			},
 		},
 		viewport: {
-			viewports,
+			viewports: {
+				...viewports,
+				["pixel6"]: {
+					name: "Pixel 6",
+					styles: {
+						width: "412px",
+						height: "915px",
+					},
+					type: "mobile",
+				},
+				["pixel5"]: {
+					name: "Pixel 5",
+					styles: {
+						width: "393px",
+						height: "851px",
+					},
+					type: "mobile",
+				},
+			},
 		},
 	},
 	decorators: [
