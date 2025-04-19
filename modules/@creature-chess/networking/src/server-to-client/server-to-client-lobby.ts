@@ -3,9 +3,6 @@ import { protocol as shokiProtocol } from "@shoki/networking";
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
-/**
- * TODO this code is duplicated in @cc-web, see LobbyPageContext
- */
 export type LobbyConnectionPacket = {
 	players: LobbyPlayer[];
 	startTimestamp: number;

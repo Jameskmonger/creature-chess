@@ -9,7 +9,7 @@ module.exports = {
 		"^@shoki-web/.+$",
 		"^@creature-chess/.+$",
 		"^@cc-server/.+$",
-		"^@cc-web/.+$",
+		"^@creature-chess-app/.+$",
 		"^[./]",
 	],
 	importOrderSeparation: true,

@@ -4,8 +4,9 @@ import { BoardSlice } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
 
-import { lobbyReducer } from "../../lobby";
-import { createGameReducer } from "../game";
+import { createGameReducer } from "./game/state";
+import { lobbyReducer } from "./lobby/state";
+import { menuReducer } from "./menu/state";
 import { AppState } from "./state";
 
 export const createReducers = (slices: {
@@ -14,4 +15,5 @@ export const createReducers = (slices: {
 }): ReducersMapObject<AppState> => ({
 	lobby: lobbyReducer,
 	game: createGameReducer(slices),
+	menu: menuReducer,
 });

@@ -12,7 +12,7 @@ import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { BotPersonality } from "@cc-server/data";
 
-import { GameBoard } from "@cc-web/ui";
+import { GameBoard } from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
 
 import { BotStateView } from "./BotStateView";
 import { BotBrainInfo } from "./brain/BotBrainInfo";

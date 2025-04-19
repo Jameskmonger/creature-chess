@@ -4,13 +4,15 @@ import { DndProvider } from "@shoki-web/board-react";
 
 import { PieceModel } from "@creature-chess/models";
 
+import { GameBoard } from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
 import {
-	GameBoardContextProvider,
 	GameBoardContext,
-	GameBoard,
+	GameBoardContextProvider,
+} from "@creature-chess-app/web-game/src/components/game/board/GameBoardContext";
+import {
 	PieceContextProvider,
 	Piece,
-} from "@cc-web/ui";
+} from "@creature-chess-app/web-game/src/components/game/board/piece";
 
 import { useBotBrain } from "./context";
 import { useAppSelector } from "./state";

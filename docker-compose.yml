@@ -37,30 +37,6 @@ services:
     depends_on:
       nodejs-builder:
         condition: service_completed_successfully
-  # this image builds the web-menu app
-  # TODO (James) we could extend this in local dev to also watch for changes
-  web-menu-builder:
-    build:
-      context: .
-      dockerfile: apps/web-builder.Dockerfile
-      args:
-        - APP_DIR=web-menu
-    environment:
-      - NODE_ENV
-      - AUTH0_ENABLED
-      - AUTH0_DOMAIN
-      - AUTH0_SPA_CLIENT_ID
-      - API_INFO_URL
-      - CREATURE_CHESS_APP_URL
-      - CREATURE_CHESS_IMAGE_URL
-      - GAME_SERVER_URL
-    volumes:
-      # TODO (James) consider whether we should use an actual volume here
-      #         rather than a bind mount
-      - ./dist/web-menu:/code/apps/web-menu/dist
-    depends_on:
-      nodejs-builder:
-        condition: service_completed_successfully
   # nginx is used to serve the web apps as well as proxy requests to the servers
   # the web app contents are passed in the volumes
   nginx:
@@ -72,7 +48,6 @@ services:
       - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
       - ./images:/usr/share/nginx/html/images # images e.g. ui and creatures
       - ./dist/web-game:/usr/share/nginx/html/web-game # web-game app
-      - ./dist/web-menu:/usr/share/nginx/html/web-menu # web-menu app
     ports:
       - 80:80
       - 443:443
@@ -80,8 +55,6 @@ services:
       - creature-chess
     depends_on:
       web-game-builder:
-        condition: service_completed_successfully
-      web-menu-builder:
         condition: service_completed_successfully
       server-game:
         condition: service_started

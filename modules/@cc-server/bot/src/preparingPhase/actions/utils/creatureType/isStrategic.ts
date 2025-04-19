@@ -1,6 +1,4 @@
-import { TraitId } from "modules/@creature-chess/models/gamemode/traits";
-
-import { PieceModel } from "@creature-chess/models";
+import { TraitId } from "@creature-chess/models/gamemode/traits";
 
 export function isStrategicCard(cardTraits: TraitId[], ownedTraits: TraitId[]) {
 	return cardTraits.some((t) => ownedTraits.includes(t) === false);

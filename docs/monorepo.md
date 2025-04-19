@@ -26,12 +26,6 @@ Apps are entry points for the project - they aren't necessarily a server or a cl
 
   This is not a server, rather the artifact is a static website that can be served by any web server.
 
-- [`web-menu`](/apps/web-menu/README.md)
-
-  This is a web client that contains the login and home screens.
-
-  This is not a server, rather the artifact is a static website that can be served by any web server.
-
 ### Modules
 
 Modules are libraries that are used by the apps. They are grouped into a number of parents.
@@ -40,11 +34,9 @@ Modules are libraries that are used by the apps. They are grouped into a number 
 
   Contains shared code relating to the game.
 
-- [`@cc-web`](/modules/@cc-web/) and [`@cc-server`](/modules/@cc-server/)
+- [`@cc-server`](/modules/@cc-server/)
 
-  Contains shared code relating to the web and server apps respectively.
-
-  This is split into two modules because the web and server apps have different dependencies.
+  Contains reusable server code.
 
 - [`@shoki`](/modules/@shoki/) and [`@shoki-web`](/modules/@shoki-web/)
 

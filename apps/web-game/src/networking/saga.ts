@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import { eventChannel } from "redux-saga";
 import { Socket } from "socket.io-client";
-import { all, call, cancel, fork, take } from "typed-redux-saga";
+import { all, call, cancel, fork, put, take } from "typed-redux-saga";
 
 import { BoardSlice } from "@shoki/board";
 
@@ -12,8 +12,11 @@ import {
 } from "@creature-chess/networking";
 import { HandshakeRequest } from "@creature-chess/networking/handshake";
 
-import { lobbyNetworking } from "../../lobby";
-import { gameNetworking, gameSaga } from "../game";
+import { gameSaga } from "../sagas";
+import { MenuCommands } from "../store/menu/state";
+import { getCookieValue } from "../utils/getCookieValue";
+import { gameNetworking } from "./game";
+import { lobbyNetworking } from "./lobby/networking";
 import { getSocket } from "./socket";
 
 type ConnectionResult =
@@ -74,15 +77,53 @@ const listenForConnection = function* (socket: Socket, slices: BoardSlices) {
 	}
 };
 
-type OpenConnectionAction = ReturnType<typeof openConnection>;
-export const openConnection = createAction<HandshakeRequest>("openConnection");
+async function getGuestSession() {
+	const response = await fetch(process.env.API_INFO_URL + "/guest/session", {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	if (!response.ok) {
+		return null;
+	}
+
+	const { id } = await response.json();
+
+	return id as string;
+}
+
+// todo: add auth0 back ?
+export const openConnection = createAction("openConnection");
 
 export const networkingSaga = function* (slices: BoardSlices) {
-	const { payload: request } = yield* take<OpenConnectionAction>(
-		openConnection.toString()
-	);
+	yield* take(openConnection.toString());
+
+	yield put(MenuCommands.setLoadingMessage("Connecting..."));
+
+	yield put(MenuCommands.setLoadingMessage("Opening guest session..."));
+
+	const session = yield* call(getGuestSession);
+	const token = getCookieValue("guest-token");
+
+	if (!session) {
+		yield put(MenuCommands.setLoadingMessage("ERROR: Failed to open session!"));
+		return;
+	}
+
+	if (!token) {
+		yield put(MenuCommands.setLoadingMessage("ERROR: No guest token!"));
+		return;
+	}
 
 	let socket: Socket;
+
+	const request: HandshakeRequest = {
+		type: "guest",
+		data: {
+			accessToken: token,
+		},
+	};
 
 	try {
 		console.log("Getting socket");

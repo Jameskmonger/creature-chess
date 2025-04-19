@@ -9,7 +9,7 @@ import createSagaMiddleware from "redux-saga";
 import { BattleEvents, battleSaga } from "@creature-chess/battle";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { GameBoard } from "@cc-web/ui";
+import { GameBoard } from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
 
 import { BattleBoard } from "./BattleBoard";
 import {
