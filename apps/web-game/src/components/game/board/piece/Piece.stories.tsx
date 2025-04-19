@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { PieceModel } from "modules/@creature-chess/models";
 
 import { Piece } from "./Piece";
 import "./Piece.stories.css";

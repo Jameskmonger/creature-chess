@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { Header2, Header4 } from "apps/web-game/src/components/ui/text";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
@@ -11,6 +10,7 @@ import { AppState } from "../../../../store";
 import { Label } from "../../../ui/label";
 import { Group, Half, Layout } from "../../../ui/layout";
 import { Title, PlayerHealthbar, PlayerAvatar } from "../../../ui/player";
+import { Header2, Header4 } from "../../../ui/text";
 import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { HeadToHeadStats } from "./h2h/headToHeadStats";

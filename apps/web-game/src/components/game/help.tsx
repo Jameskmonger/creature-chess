@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { Header2, Header4 } from "apps/web-game/src/components/ui/text";
 import { createUseStyles } from "react-jss";
 
 import { Footer } from "../ui/Footer";
 import { TraitIcon } from "../ui/TraitIcon";
 import { Group, Layout } from "../ui/layout";
+import { Header2, Header4 } from "../ui/text";
 
 const useStyles = createUseStyles({
 	pieceType: {

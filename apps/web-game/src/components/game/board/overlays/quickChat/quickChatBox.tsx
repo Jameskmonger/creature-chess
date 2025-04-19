@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Text } from "apps/web-game/src/components/ui/text";
 import { useSelector } from "react-redux";
 
 import { AppState } from "../../../../../store";
+import { Text } from "../../../../ui/text";
 
 export function QuickChatBox({ sendingPlayerId }: { sendingPlayerId: string }) {
 	const currentChat = useSelector<AppState, any>(

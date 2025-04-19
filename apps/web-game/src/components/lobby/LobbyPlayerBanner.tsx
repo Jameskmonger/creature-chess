@@ -1,12 +1,12 @@
 import * as React from "react";
 
-import { PlayerAvatar } from "apps/web-game/src/components/ui/player/avatar";
-import { Title } from "apps/web-game/src/components/ui/player/title";
 import { createUseStyles } from "react-jss";
 
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 
 import { IMAGE_BASE_URL } from "@creature-chess-app/web-game/src/constants";
+
+import { PlayerAvatar, Title } from "../ui/player";
 
 type Props = {
 	player: LobbyPlayer | null;

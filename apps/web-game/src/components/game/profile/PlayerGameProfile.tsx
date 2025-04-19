@@ -1,25 +1,25 @@
 import * as React from "react";
 
-import { useLocalPlayerId } from "apps/web-game/src/auth/context";
-import { PlayerHealthbar } from "apps/web-game/src/components/ui/player/healthbar";
-import { AppState } from "apps/web-game/src/store";
 import classNames from "classnames";
+import { useDispatch, useSelector } from "react-redux";
+
+import { BoardSelectors, BoardState } from "@shoki/board";
+
 import {
 	PlayerActions,
 	getPlayerLevel,
 	getPlayerMoney,
 	getPlayerXp,
-} from "modules/@creature-chess/gamemode";
-import { PieceModel } from "modules/@creature-chess/models";
-import { BoardSelectors, BoardState } from "modules/@shoki/board";
-import { useDispatch, useSelector } from "react-redux";
-
+} from "@creature-chess/gamemode";
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
+import { PieceModel } from "@creature-chess/models";
 import { MAX_LEVEL } from "@creature-chess/models/config";
 
+import { useLocalPlayerId } from "../../../auth/context";
 import { useGamemodeSettings } from "../../../contexts/GamemodeSettingsContext";
+import { AppState } from "../../../store";
 import { Layout } from "../../ui/layout";
-import { PlayerName } from "../../ui/player";
+import { PlayerHealthbar, PlayerName } from "../../ui/player";
 import { ProgressBar } from "../../ui/progressBar";
 import { useStyles } from "./PlayerGameProfile.styles";
 
