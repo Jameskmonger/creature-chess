@@ -4,8 +4,6 @@ import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
 	footer: {
-		marginTop: "0.5em",
-		marginBottom: "0.5em",
 		textAlign: "center",
 	},
 	item: {
@@ -23,15 +21,11 @@ export const Footer: React.FunctionComponent = () => {
 		<div className={classes.footer}>
 			<span className={classes.item}>v{APP_VERSION || "-.-.-"}</span>
 			{" - "}
-			<a className={classes.item} href="https://reddit.com/r/creaturechess/">
-				/r/CreatureChess
-			</a>
-			{" - "}
 			<a
 				className={classes.item}
 				href="https://github.com/Jameskmonger/creature-chess"
 			>
-				Licenses on GitHub
+				GitHub
 			</a>
 		</div>
 	);

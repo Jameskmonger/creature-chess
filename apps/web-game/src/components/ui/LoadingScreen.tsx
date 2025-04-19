@@ -54,22 +54,6 @@ const useStyles = createUseStyles({
 		fontWeight: 700,
 		textAlign: "center",
 	},
-	"playBtn": {
-		"fontSize": 18,
-		"padding": "12px 24px",
-		"border": "none",
-		"borderRadius": 12,
-		"background": "#4caf50",
-		"color": "#fff",
-		"cursor": "pointer",
-		"transition": "transform 80ms ease",
-		"&:active": {
-			transform: "scale(0.96)",
-		},
-		"@container (min-width: 700px)": {
-			fontSize: 20,
-		},
-	},
 	"@keyframes spin": {
 		from: { transform: "rotate(0deg)" },
 		to: { transform: "rotate(360deg)" },

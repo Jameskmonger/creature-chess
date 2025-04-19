@@ -3,60 +3,39 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Page } from "../components/Page";
 import { Footer } from "../components/ui/Footer";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
+import { Text } from "../components/ui/text";
 import { openConnection } from "../networking";
 import { AppState } from "../store";
 
 const useStyles = createUseStyles({
-	menu: {
-		"display": "flex",
-		"flexDirection": "column",
-		"height": "100%",
-		"width": "100%",
-		"overflow": "scroll",
-		"paddingTop": "2em",
-		"fontFamily": "Arial, Helvetica, sans-serif",
-		"color": "#fff",
-		"alignItems": "center",
-		"justifyContent": "center",
-
-		"& h2": {
-			marginBottom: "1rem",
-			fontSize: "2em",
-			textAlign: "center",
-			userSelect: "none",
-		},
-	},
 	findGameButton: {
-		padding: "0.8em 2em",
+		padding: "1em 2em",
 		marginBottom: "1rem",
-		fontSize: "1.4rem",
+		fontSize: "1.2rem",
 		fontWeight: "700",
 		color: "#fff",
 		cursor: "pointer",
 		background: "#b13e53",
 		border: "none",
 	},
-	joinGame: {
-		padding: "1rem",
-		marginTop: "3em",
-		textAlign: "center",
-		background: "#566c86",
-	},
 	discordButton: {
-		maxWidth: "12em",
-		marginBottom: "1rem",
-		cursor: "pointer",
+		"maxWidth": "12em",
+		"cursor": "pointer",
+
+		"& img": {
+			width: "100%",
+			height: "auto",
+		},
 	},
 	blurb: {
 		"marginBottom": "0.5rem",
-		"& p": {
-			marginTop: "0",
-			marginBottom: "0.25rem",
+		"& p:not(:last-child)": {
+			marginBottom: "0.5rem",
 		},
 		"& span": {
-			fontSize: "1.2em",
 			fontStyle: "italic",
 			fontWeight: "700",
 			color: "#bfbfbf",
@@ -69,9 +48,16 @@ const useStyles = createUseStyles({
 		background: "#ffe8e6",
 		boxShadow: "0 0 0 1px #db2828 inset, 0 0 0 0 transparent",
 	},
-	loadingWrapper: {
-		height: "100%",
+	footer: {
 		width: "100%",
+		display: "flex",
+		flexDirection: "row",
+	},
+	half: {
+		width: "50%",
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });
 
@@ -93,65 +79,68 @@ export function MenuPage({ error }: { error?: string }) {
 	}
 
 	return (
-		<div className={styles.menu}>
-			<div className={styles.joinGame}>
-				<h2>Creature Chess</h2>
+		<Page hasBackground>
+			<Text tag="p" light center>
+				Welcome to&nbsp;&nbsp;
+				<Text size="lg" font="cursive" light>
+					Creature Chess
+				</Text>
+				&nbsp;!
+			</Text>
 
-				<div className={styles.blurb}>
-					<p>
-						More fun with friends! Press "Find Game" at the same time to play
-						together
-					</p>
-					<p>Up to 8 players!</p>
-				</div>
-
-				<button onClick={onFindGameClick} className={styles.findGameButton}>
-					Find Game
-				</button>
-
-				<div className={styles.blurb}>
-					<p>
-						Join us on Discord to receive notifications when someone starts a
-						lobby, and more!
-					</p>
-				</div>
-
-				<a href="https://discord.gg/FhMm6saehb">
-					<img
-						src="https://i.imgur.com/OBo2QRd.png"
-						className={styles.discordButton}
-					/>
-				</a>
-
-				<div className={styles.blurb}>
-					<p>
-						This is a <span>multiplayer strategy game</span> in which you
-						configure creatures on a board.
-					</p>
-					<p>
-						Each round, your board is matched against an opponent's board.
-						Defeat all their pieces to win the round.
-					</p>
-					<p>
-						Every loss decreases your health bar. When your health reaches zero,
-						you're out!
-					</p>
-					<p>
-						Players will battle against eachother until only one player remains.
-					</p>
-					<p>
-						Good luck! <span>~ jkm</span>
-					</p>
-				</div>
-
-				{error && (
-					<div className={styles.error}>
-						<p>{error}</p>
-					</div>
-				)}
+			<div className={styles.blurb}>
+				<Text tag="p" size="sm" light>
+					This is a <span>multiplayer strategy game</span> in which you
+					configure creatures on a board.
+				</Text>
+				<Text tag="p" size="sm" light>
+					Each round, your board is matched against an opponent's board. Defeat
+					all their pieces to win the round.
+				</Text>
+				<Text tag="p" size="sm" light>
+					Every loss decreases your health bar. When your health reaches zero,
+					you're out!
+				</Text>
+				<Text tag="p" size="sm" light>
+					Players will battle against eachother until only one player remains.
+				</Text>
+				<Text tag="p" size="md" light>
+					Good luck! <span>~ jkm</span>
+				</Text>
 			</div>
 
-			<Footer />
-		</div>
+			<button onClick={onFindGameClick} className={styles.findGameButton}>
+				Find Game
+			</button>
+
+			<Text tag="p" light font="cursive" center>
+				More fun with friends!
+			</Text>
+
+			<Text tag="p" light center>
+				Press "Find Game" at the same time to play together
+			</Text>
+
+			{error && (
+				<div className={styles.error}>
+					<p>{error}</p>
+				</div>
+			)}
+
+			<div className={styles.footer}>
+				<div className={styles.half}>
+					<Footer />
+				</div>
+
+				<div className={styles.half}>
+					<a
+						href="https://discord.gg/FhMm6saehb"
+						className={styles.discordButton}
+					>
+						<img src="https://i.imgur.com/OBo2QRd.png" />
+					</a>
+				</div>
+			</div>
+		</Page>
 	);
 }

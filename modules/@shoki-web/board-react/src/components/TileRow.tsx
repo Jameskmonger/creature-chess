@@ -13,6 +13,7 @@ type TileRowProps = {
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;
 	tileSizePx: number;
+	dragDrop: boolean;
 };
 
 const useStyles = createUseStyles({
@@ -26,6 +27,7 @@ const useStyles = createUseStyles({
 export function TileRow({
 	y,
 	tileSizePx,
+	dragDrop,
 	onDropItem,
 	onClickTile,
 }: TileRowProps) {
@@ -43,7 +45,7 @@ export function TileRow({
 		const piecePositionKey = `${x},${y}`;
 
 		const tileContainsPiece = Boolean(piecePositions[piecePositionKey]);
-		const canDropPiece = !tileContainsPiece && !locked;
+		const canDropPiece = dragDrop && !tileContainsPiece && !locked;
 
 		tiles.push(
 			<Tile key={`tile-${x}`} x={x} y={y} tileSizePx={tileSizePx}>

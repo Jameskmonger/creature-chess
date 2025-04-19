@@ -21,6 +21,7 @@ type BoardGridProps = {
 	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;
+	dragDrop?: boolean;
 };
 
 const useStyles = createUseStyles({
@@ -50,7 +51,7 @@ function useTileSize(
 }
 
 export function BoardGrid(props: BoardGridProps) {
-	const { state, renderItem, onDropItem, onClickTile } = props;
+	const { state, renderItem, onDropItem, onClickTile, dragDrop = true } = props;
 	const defaultRenderTileBackground = useDefaultRenderer();
 
 	const boardContext: BoardContextValue = {
@@ -83,9 +84,14 @@ export function BoardGrid(props: BoardGridProps) {
 						onDropItem={onDropItem}
 						onClickTile={onClickTile}
 						tileSizePx={tileSize}
+						dragDrop={dragDrop}
 					/>
 
-					<BoardItems render={renderItem} tileSizePx={tileSize} />
+					<BoardItems
+						render={renderItem}
+						tileSizePx={tileSize}
+						dragDrop={dragDrop}
+					/>
 				</BoardContextProvider>
 			</div>
 		</div>

@@ -8,7 +8,8 @@ import { BoardItemRenderFn } from "./renderItem";
 const BoardItems: React.FC<{
 	render: BoardItemRenderFn;
 	tileSizePx: number;
-}> = ({ render, tileSizePx }) => {
+	dragDrop?: boolean;
+}> = ({ render, tileSizePx, dragDrop }) => {
 	const { pieces, piecePositions } = useBoardState();
 
 	const pieceElements: React.ReactNode[] = [];
@@ -26,7 +27,7 @@ const BoardItems: React.FC<{
 
 		const { item, draggable = false } = render(pieces[id], x, y);
 
-		if (draggable) {
+		if (dragDrop && draggable) {
 			pieceElements.push(
 				<DraggableBoardItem
 					key={id}
