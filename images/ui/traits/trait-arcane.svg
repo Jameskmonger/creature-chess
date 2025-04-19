@@ -1,0 +1,8 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .bg { fill: #ADD8E6; }
+    .sparkle { fill: #9933CC; }
+  </style>
+  <circle class="bg" cx="128" cy="128" r="128"/>
+  <path class="sparkle" d="M128 56l20 60 60 20-60 20-20 60-20-60-60-20 60-20z"/>
+</svg>

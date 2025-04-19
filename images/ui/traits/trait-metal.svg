@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px" y="0px" viewBox="0 0 256 256"
+	style="enable-background:new 0 0 256 256;"
+	xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#ADD8E6;}
+	.st1{fill:#9e9e9e;}
+	.st2{fill:#8f8f8f;}
+	.st3{fill:#7d7d7d;}
+</style>
+<circle class="st0" cx="128" cy="128" r="128"/>
+<!-- Enlarged isometric cuboid (metal ingot) -->
+<polygon class="st1" points="48,88 168,64 216,90 108,126"/>
+<polygon class="st2" points="216,90 216,152 110,190 108,126"/>
+<polygon class="st3" points="48,88 108,126 110,190 48,150"/>
+</svg>
