@@ -24,11 +24,26 @@ const getFillBackground = ({ color }: HealthbarProps) => {
 	return "#3887ca";
 };
 
-const useStyles = createUseStyles({
+const getBorderColor = ({ color }: HealthbarProps) => {
+	if (color === "spectating") {
+		return "#491338";
+	}
+
+	if (color === "enemy") {
+		return "#a81a47";
+	}
+
+	return "#296599";
+};
+
+const useStyles = createUseStyles<string, HealthbarProps>({
 	fill: {
 		background: getFillBackground,
 		position: "absolute",
 		bottom: 0,
+		borderWidth: "2px",
+		borderStyle: "solid",
+		borderColor: getBorderColor,
 	},
 });
 
