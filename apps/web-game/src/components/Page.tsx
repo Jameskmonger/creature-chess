@@ -26,40 +26,11 @@ const useStyles = createUseStyles<string, Props>({
 		"display": "flex",
 		"justifyContent": "center",
 		"flexDirection": "column",
-		"height": "100dvh",
-		"width": "100%",
-		"padding": 16,
+		"width": "clamp(272px, 60%, 1000px)",
+		"height": "clamp(272px, 60%, 1000px)",
 		"boxSizing": "border-box",
 		"@container (min-width: 700px)": {
 			flexDirection: "row",
-		},
-
-		"@media (orientation: portrait) and (max-width: 320px)": {
-			padding: "24px",
-		},
-
-		"@media (orientation: portrait) and (min-width: 321px) and (max-width: 539px)":
-			{
-				padding: "36px",
-			},
-
-		"@media (orientation: portrait) and (min-width: 540px) and (max-width: 719px)":
-			{
-				padding: "64px",
-			},
-
-		"@media (orientation: portrait) and (min-width: 720px) and (max-width: 767px)":
-			{
-				padding: "96px",
-			},
-
-		"@media (orientation: portrait) and (min-width: 768px)": {
-			padding: "196px 128px",
-		},
-
-		"@media (min-aspect-ratio: 16/9) and (min-width: 1600px)": {
-			maxWidth: "1000px",
-			maxHeight: "800px",
 		},
 	},
 	header: {
