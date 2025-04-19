@@ -23,6 +23,10 @@ export interface PieceModel {
 	ownerId: string;
 
 	definitionId: number;
+
+	/**
+	 * @deprecated The definition data should be instantiated onto the piece itself.
+	 */
 	definition: CreatureDefinition;
 
 	traits: TraitId[];
@@ -31,13 +35,31 @@ export interface PieceModel {
 
 	/**
 	 * Is the piece facing away from the viewer (i.e. looking "north")
+	 *
+	 * @deprecated State/position data should be stored separately from the core piece data.
 	 */
 	facingAway: boolean;
+
+	/**
+	 * @deprecated State/position data should be stored separately from the core piece data.
+	 */
 	attacking?: AttackDetails | null;
+
+	/**
+	 * @deprecated State/position data should be stored separately from the core piece data.
+	 */
 	hit?: HitDetails | null;
+
 	maxHealth: number;
+
+	/**
+	 * @deprecated State/position data should be stored separately from the core piece data.
+	 */
 	currentHealth: number;
 
+	/**
+	 * @deprecated State/position data should be stored separately from the core piece data.
+	 */
 	lastBattleStats: {
 		damageDealt: number;
 		damageTaken: number;
