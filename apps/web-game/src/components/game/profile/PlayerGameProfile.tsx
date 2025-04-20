@@ -45,16 +45,21 @@ const useStyles = createUseStyles({
 		flexDirection: "column",
 	},
 	buyXpButton: {
-		width: "100%",
-		height: "32px",
-		boxSizing: "border-box",
-		padding: "0.5em 1em",
-		fontSize: "1em",
-		lineHeight: "1em",
-		color: "#000000",
-		cursor: "pointer",
-		background: "#38b764",
-		border: "none",
+		"width": "100%",
+		"height": "32px",
+		"boxSizing": "border-box",
+		"padding": "0.5em 1em",
+		"fontSize": "1em",
+		"lineHeight": "1em",
+		"color": "#000000",
+		"cursor": "pointer",
+		"background": "#38b764",
+		"border": "none",
+
+		"&:disabled": {
+			background: "#636363",
+			cursor: "not-allowed",
+		},
 	},
 	level: {
 		"flex": "1",
@@ -131,6 +136,8 @@ export function PlayerGameProfile() {
 			</div>
 
 			<div className={classNames(styles.column, styles.right)}>
+				{level === MAX_LEVEL && <div>You are max level!</div>}
+
 				{level !== MAX_LEVEL && (
 					<ProgressBar
 						className={styles.xpProgress}
@@ -143,7 +150,11 @@ export function PlayerGameProfile() {
 				)}
 
 				{level !== MAX_LEVEL && (
-					<button className={styles.buyXpButton} onClick={onBuyXp}>
+					<button
+						className={styles.buyXpButton}
+						onClick={onBuyXp}
+						disabled={money < buyXpCost}
+					>
 						Buy {buyXpAmount} xp ($
 						{buyXpCost})
 					</button>
