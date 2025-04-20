@@ -3,10 +3,13 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
+import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
+import { LevelIcon } from "~/components/ui/icon/LevelIcon";
+import { CloneChip } from "~/components/ui/player/CloneChip";
+import { PositionChip } from "~/components/ui/player/PositionChip";
 import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
-import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { Label } from "../../../ui/label";
 import { Title, PlayerHealthbar, PlayerAvatar } from "../../../ui/player";
@@ -70,7 +73,7 @@ const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
-		flex: 1,
+		flex: 2,
 		gap: "4px",
 	},
 	playerAvatar: {
@@ -85,32 +88,23 @@ const useStyles = createUseStyles({
 			padding: "4px",
 		},
 	},
+	nameWrapper: {
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		flexWrap: "wrap",
+		gap: "8px",
+	},
 	playerName: {
 		fontSize: "12px",
-		fontWeight: "bolder",
+	},
+	tags: {
+		display: "flex",
+		flexDirection: "row",
+		gap: "4px",
 	},
 });
-
-const getPositionModifier = (position: number): string => {
-	if (position === 1) {
-		return "st";
-	}
-	if (position === 2) {
-		return "nd";
-	}
-	if (position === 3) {
-		return "rd";
-	}
-	return "th";
-};
-
-const getPosition = (
-	player: PlayerListPlayer,
-	playerList: PlayerListPlayer[]
-): string => {
-	const position = playerList.indexOf(player) + 1;
-	return `${position}${getPositionModifier(position)}`;
-};
 
 const ReadyOverlay: React.FunctionComponent = () => {
 	const styles = useStyles();
@@ -146,9 +140,10 @@ const ReadyOverlay: React.FunctionComponent = () => {
 				<div className={styles.wrapper}>
 					<div className={styles.player}>
 						<div className={styles.playerDetails}>
-							<span className={styles.playerName}>
-								{localPlayer.name} ({getPosition(localPlayer, playerList)})
-							</span>
+							<div className={styles.nameWrapper}>
+								<span className={styles.playerName}>{localPlayer.name}</span>
+								<PositionChip position={playerList.indexOf(localPlayer) + 1} />
+							</div>
 							<Title title={localPlayer.profile?.title || null} />
 							<PlayerHealthbar health={localPlayer.health} />
 							<div className={styles.badges}>
@@ -156,8 +151,8 @@ const ReadyOverlay: React.FunctionComponent = () => {
 									type={localPlayer.streakType}
 									amount={localPlayer.streakAmount}
 								/>
-								<Label type="highlight">${localPlayer.money}</Label>
-								<Label>Lv {localPlayer.level}</Label>
+								<BalanceIcon amount={localPlayer.money} />
+								<LevelIcon amount={localPlayer.level} />
 							</div>
 						</div>
 						<div className={styles.playerAvatar}>
@@ -172,12 +167,13 @@ const ReadyOverlay: React.FunctionComponent = () => {
 							<QuickChatBox sendingPlayerId={opponent.id} />
 						</div>
 						<div className={styles.playerDetails}>
-							<span className={styles.playerName}>
-								{opponent.name} ({getPosition(opponent, playerList)})
-								{opponentIsClone && (
-									<span className={styles.cloneTag}>CLONE</span>
-								)}
-							</span>
+							<div className={styles.nameWrapper}>
+								<span className={styles.playerName}>{opponent.name}</span>
+								<div className={styles.tags}>
+									<PositionChip position={playerList.indexOf(opponent) + 1} />
+									{opponentIsClone && <CloneChip />}
+								</div>
+							</div>
 							<Title title={opponent.profile?.title || null} />
 							<PlayerHealthbar health={opponent.health} />
 							<div className={styles.badges}>
@@ -185,8 +181,8 @@ const ReadyOverlay: React.FunctionComponent = () => {
 									type={opponent.streakType}
 									amount={opponent.streakAmount}
 								/>
-								<Label type="highlight">${opponent.money}</Label>
-								<Label>Lv {opponent.level}</Label>
+								<BalanceIcon amount={opponent.money} />
+								<LevelIcon amount={opponent.level} />
 							</div>
 						</div>
 					</div>

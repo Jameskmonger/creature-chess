@@ -62,8 +62,8 @@ const useStyles = createUseStyles({
 		"fontSize": "32px",
 		"letterSpacing": "3px",
 
-		"@media (orientation: portrait) and (max-width: 376px)": {
-			fontSize: "24px",
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "18px",
 		},
 	},
 	balanceIcon: {
@@ -141,9 +141,7 @@ export function CardShop({
 
 			<div className={classes.bottomBar}>
 				<div className={classes.balance}>
-					<span>
-						<BalanceIcon className={classes.balanceIcon} /> {money}
-					</span>
+					<BalanceIcon className={classes.balanceIcon} amount={money} />
 				</div>
 				<button className={classes.control} onClick={onToggleLock}>
 					{isLocked ? (

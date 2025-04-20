@@ -104,8 +104,7 @@ export function TopBar() {
 				</div>
 
 				<div className={classNames(styles.segment, styles.right)}>
-					<span>{money}</span>
-					<BalanceIcon />
+					<BalanceIcon amount={money} />
 				</div>
 			</div>
 			<PlayerHealthbar health={health} />
