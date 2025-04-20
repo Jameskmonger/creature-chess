@@ -3,8 +3,6 @@ import * as React from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 
-import { BoardSelectors, BoardState } from "@shoki/board";
-
 import {
 	PlayerActions,
 	getPlayerLevel,
@@ -12,7 +10,6 @@ import {
 	getPlayerXp,
 } from "@creature-chess/gamemode";
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
-import { PieceModel } from "@creature-chess/models";
 import { MAX_LEVEL } from "@creature-chess/models/config";
 
 import { useLocalPlayerId } from "../../../auth/context";
@@ -23,46 +20,8 @@ import { PlayerName } from "../../ui/player";
 import { ProgressBar } from "../../ui/progressBar";
 import { useStyles } from "./PlayerGameProfile.styles";
 
-type PlayerGameProfileProps = {
-	name: string;
-	position: number;
-	level: number;
-	xp: number;
-	money: number;
-	health: number | null;
-	pieceCount: number;
-
-	onBuyXpClick?: () => void;
-};
-
 const renderProgressBar = (current: number, max: number) =>
 	`${current} / ${max} xp`;
-
-const PieceCount: React.FC<
-	Pick<PlayerGameProfileProps, "level" | "pieceCount">
-> = ({ level, pieceCount }) => {
-	const styles = useStyles();
-
-	if (pieceCount < level) {
-		return (
-			<p
-				className={classNames(
-					styles.item,
-					styles.pieceCount,
-					styles.pieceCountWarning
-				)}
-			>
-				{pieceCount} / {level} pieces (board not full!)
-			</p>
-		);
-	}
-
-	return (
-		<p className={classNames(styles.item, styles.pieceCount)}>
-			{pieceCount} / {level} pieces
-		</p>
-	);
-};
 
 export function PlayerGameProfile() {
 	const styles = useStyles();
@@ -93,13 +52,6 @@ export function PlayerGameProfile() {
 
 		return player?.health || null;
 	});
-
-	const board = useSelector<AppState, BoardState<PieceModel>>(
-		(state) => state.game.board
-	);
-	const pieceCount = BoardSelectors.getAllPieces(board).filter(
-		(p) => p.ownerId === playerId
-	).length;
 
 	const onBuyXp = () => dispatch(PlayerActions.buyXpPlayerAction());
 
@@ -133,8 +85,6 @@ export function PlayerGameProfile() {
 			</div>
 
 			<div className={styles.row}>
-				<PieceCount level={level} pieceCount={pieceCount} />
-
 				{level !== MAX_LEVEL && (
 					<button className={styles.buyXpButton} onClick={onBuyXp}>
 						Buy {buyXpAmount} xp ($

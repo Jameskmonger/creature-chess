@@ -21,6 +21,7 @@ import {
 	ReconnectOverlay,
 	NowPlaying,
 } from "./overlays";
+import { PieceCount } from "./overlays/PieceCount";
 
 const useStyles = createUseStyles({
 	boardContainer: {
@@ -38,6 +39,8 @@ export function BoardContainer() {
 	const children = (
 		<>
 			<NowPlaying />
+
+			<PieceCount />
 			<ReadyOverlay />
 			<VictoryOverlay />
 			<MatchRewardsOverlay />

@@ -66,19 +66,4 @@ export const useStyles = createUseStyles({
 	xpProgressContent: {
 		color: "#1a1c2c",
 	},
-
-	pieceCount: {
-		fontSize: "0.85em",
-		fontStyle: "italic",
-		textAlign: "center",
-	},
-	pieceCountWarning: {
-		width: "fit-content",
-		padding: "0.2em 0.4em",
-		fontWeight: "700",
-		color: "#ff6464",
-		background: "#ffd2d2",
-		border: "2px solid #ff6464",
-		margin: "0.5em 0",
-	},
 });
