@@ -1735,7 +1735,6 @@ __metadata:
     process: "npm:0.11.10"
     react-div-100vh: "npm:^0.7.0"
     react-media: "npm:^1.10.0"
-    react-modal: "npm:^3.16.1"
     react-redux: "npm:^9.1.0"
     react-use-error-boundary: "npm:^3.0.0"
     reselect: "npm:^4.1.5"
@@ -5162,15 +5161,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-modal@npm:^3.13.1":
-  version: 3.16.3
-  resolution: "@types/react-modal@npm:3.16.3"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 9622d1983ade28864a85baffcf068722b24f02ac3ec1485dab6a9005a2e0b2f8af78f860be494523d90ba5e182744d1151461a4cc42120a32ed57ec3b7a4cab9
-  languageName: node
-  linkType: hard
-
 "@types/react-redux@npm:^7.1.33":
   version: 7.1.33
   resolution: "@types/react-redux@npm:7.1.33"
@@ -7662,7 +7652,6 @@ __metadata:
     "@types/node": "npm:^16.11.17"
     "@types/react": "npm:^18.2.57"
     "@types/react-dom": "npm:^18.2.19"
-    "@types/react-modal": "npm:^3.13.1"
     "@types/ws": "npm:^7.4.7"
     "@typescript-eslint/eslint-plugin": "npm:^7.1.0"
     "@typescript-eslint/parser": "npm:^7.1.0"
@@ -9275,13 +9264,6 @@ __metadata:
     signal-exit: "npm:^4.1.0"
     strip-final-newline: "npm:^3.0.0"
   checksum: d2ab5fe1e2bb92b9788864d0713f1fce9a07c4594e272c0c97bc18c90569897ab262e4ea58d27a694d288227a2e24f16f5e2575b44224ad9983b799dc7f1098d
-  languageName: node
-  linkType: hard
-
-"exenv@npm:^1.2.0":
-  version: 1.2.2
-  resolution: "exenv@npm:1.2.2"
-  checksum: 6840185e421394bcb143debb866d31d19c3e4a4bca87d2f319d68d61afff353b3c678f2eb389e3b98ab9aecbec19f6bebbdc4193984378af0a3366c498a7efc8
   languageName: node
   linkType: hard
 
@@ -14787,13 +14769,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-lifecycles-compat@npm:^3.0.0":
-  version: 3.0.4
-  resolution: "react-lifecycles-compat@npm:3.0.4"
-  checksum: c66b9c98c15cd6b0d0a4402df5f665e8cc7562fb7033c34508865bea51fd7b623f7139b5b7e708515d3cd665f264a6a9403e1fa7e6d61a05759066f5e9f07783
-  languageName: node
-  linkType: hard
-
 "react-media@npm:^1.10.0":
   version: 1.10.0
   resolution: "react-media@npm:1.10.0"
@@ -14805,21 +14780,6 @@ __metadata:
   peerDependencies:
     react: ">=15 || ^0.14.7"
   checksum: 0816ca6065c25f7526f9940b17b5b73738a5084ab781dbba23ad320003fa8e67cde67098ad33bf3d7ad3f828ef9f8066476f76eee105fcf96b730ad0a1ed345f
-  languageName: node
-  linkType: hard
-
-"react-modal@npm:^3.16.1":
-  version: 3.16.1
-  resolution: "react-modal@npm:3.16.1"
-  dependencies:
-    exenv: "npm:^1.2.0"
-    prop-types: "npm:^15.7.2"
-    react-lifecycles-compat: "npm:^3.0.0"
-    warning: "npm:^4.0.3"
-  peerDependencies:
-    react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
-    react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
-  checksum: 79787ed2754f65168fccefcef50b509fa1cbc2b44907f92dcfd78ea6f9702668c70604f192a4bb45badb664902fb100179d6d191e478310be94e656271963905
   languageName: node
   linkType: hard
 
@@ -17637,15 +17597,6 @@ __metadata:
   dependencies:
     makeerror: "npm:1.0.12"
   checksum: ad7a257ea1e662e57ef2e018f97b3c02a7240ad5093c392186ce0bcf1f1a60bbadd520d073b9beb921ed99f64f065efb63dfc8eec689a80e569f93c1c5d5e16c
-  languageName: node
-  linkType: hard
-
-"warning@npm:^4.0.3":
-  version: 4.0.3
-  resolution: "warning@npm:4.0.3"
-  dependencies:
-    loose-envify: "npm:^1.0.0"
-  checksum: e7842aff036e2e07ce7a6cc3225e707775b969fe3d0577ad64bd24660e3a9ce3017f0b8c22a136566dcd3a151f37b8ed1ccee103b3bd82bd8a571bf80b247bc4
   languageName: node
   linkType: hard
 
