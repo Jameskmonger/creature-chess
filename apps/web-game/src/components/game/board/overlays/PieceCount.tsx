@@ -17,9 +17,11 @@ const useStyles = createUseStyles({
 		fontSize: "14px",
 		fontStyle: "italic",
 		textAlign: "center",
+		width: "fit-content",
+		fontWeight: "700",
 
 		position: "absolute",
-		top: "4px",
+		top: "-32px",
 		left: "4px",
 		padding: "4px 8px",
 
@@ -29,11 +31,14 @@ const useStyles = createUseStyles({
 		letterSpacing: "2px",
 	},
 	pieceCountWarning: {
-		width: "fit-content",
-		fontWeight: "700",
 		color: "#ff6464",
 		background: "#ffd2d2",
 		border: "2px solid #ff6464",
+	},
+	pieceCountStandard: {
+		color: "#fff",
+		background: "#1d1d1d",
+		border: "2px solid #121212",
 	},
 });
 
@@ -69,7 +74,7 @@ export function PieceCount() {
 	}
 
 	return (
-		<p className={styles.pieceCount}>
+		<p className={classNames(styles.pieceCount, styles.pieceCountStandard)}>
 			{pieceCount} / {level} pieces
 		</p>
 	);
