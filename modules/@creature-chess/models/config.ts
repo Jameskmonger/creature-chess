@@ -8,7 +8,7 @@ type PhaseLengths = {
 
 export const GAME_PHASE_LENGTHS: PhaseLengths = {
 	[GamePhase.PREPARING]: 40,
-	[GamePhase.READY]: 3,
+	[GamePhase.READY]: 6,
 	[GamePhase.PLAYING]: 35,
 };
 
