@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { BoardSelectors } from "@shoki/board";
 
 import { getPlayerLevel } from "@creature-chess/gamemode";
+import { GamePhase } from "@creature-chess/models";
 
 import { useLocalPlayerId } from "../../../../auth/context";
 import { AppState } from "../../../../store";
@@ -50,6 +51,14 @@ export function PieceCount() {
 	const level = useSelector<AppState, number>((state) =>
 		getPlayerLevel(state.game)
 	);
+
+	const inPreparingPhase = useSelector<AppState, boolean>(
+		(state) => state.game.roundInfo.phase === GamePhase.PREPARING
+	);
+
+	if (!inPreparingPhase) {
+		return null;
+	}
 
 	if (pieceCount < level) {
 		return (
