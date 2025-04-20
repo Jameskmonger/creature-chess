@@ -9,20 +9,30 @@ import { GamePhase } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { Label } from "../../../ui/label";
-import { Group, Half, Layout } from "../../../ui/layout";
 import { Title, PlayerHealthbar, PlayerAvatar } from "../../../ui/player";
-import { Header2, Header4 } from "../../../ui/text";
 import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
 
 const useStyles = createUseStyles({
+	root: {
+		"display": "flex",
+		"flexDirection": "column",
+		"justifyContent": "center",
+		"width": "100%",
+		"gap": "16px",
+
+		"@media (orientation: portrait) and (min-width: 431px)": {
+			gap: "32px",
+		},
+	},
 	wrapper: {
 		"textAlign": "center",
 		"flex": 1,
 		"display": "flex",
 		"flexDirection": "column",
+		"justifyContent": "center",
 		"background": "#566c86",
 		"border": "2px solid #b13e53",
 
@@ -132,50 +142,52 @@ const ReadyOverlay: React.FunctionComponent = () => {
 
 	return (
 		<BoardOverlay>
-			<div className={styles.wrapper}>
-				<div className={styles.player}>
-					<div className={styles.playerDetails}>
-						<span className={styles.playerName}>
-							{localPlayer.name} ({getPosition(localPlayer, playerList)})
-						</span>
-						<Title title={localPlayer.profile?.title || null} />
-						<PlayerHealthbar health={localPlayer.health} />
-						<div className={styles.badges}>
-							<StreakIndicator
-								type={localPlayer.streakType}
-								amount={localPlayer.streakAmount}
-							/>
-							<Label type="highlight">${localPlayer.money}</Label>
-							<Label>Lv {localPlayer.level}</Label>
+			<div className={styles.root}>
+				<div className={styles.wrapper}>
+					<div className={styles.player}>
+						<div className={styles.playerDetails}>
+							<span className={styles.playerName}>
+								{localPlayer.name} ({getPosition(localPlayer, playerList)})
+							</span>
+							<Title title={localPlayer.profile?.title || null} />
+							<PlayerHealthbar health={localPlayer.health} />
+							<div className={styles.badges}>
+								<StreakIndicator
+									type={localPlayer.streakType}
+									amount={localPlayer.streakAmount}
+								/>
+								<Label type="highlight">${localPlayer.money}</Label>
+								<Label>Lv {localPlayer.level}</Label>
+							</div>
+						</div>
+						<div className={styles.playerAvatar}>
+							<PlayerAvatar player={localPlayer} />
+							<QuickChatBox sendingPlayerId={localId} />
 						</div>
 					</div>
-					<div className={styles.playerAvatar}>
-						<PlayerAvatar player={localPlayer} />
-						<QuickChatBox sendingPlayerId={localId} />
-					</div>
-				</div>
-				<div className={styles.vsHeader}>vs.</div>
-				<div className={styles.player}>
-					<div className={styles.playerAvatar}>
-						<PlayerAvatar player={opponent} />
-						<QuickChatBox sendingPlayerId={opponent.id} />
-					</div>
-					<div className={styles.playerDetails}>
-						<span className={styles.playerName}>
-							{opponent.name} ({getPosition(opponent, playerList)})
-							{opponentIsClone && (
-								<span className={styles.cloneTag}>CLONE</span>
-							)}
-						</span>
-						<Title title={opponent.profile?.title || null} />
-						<PlayerHealthbar health={opponent.health} />
-						<div className={styles.badges}>
-							<StreakIndicator
-								type={opponent.streakType}
-								amount={opponent.streakAmount}
-							/>
-							<Label type="highlight">${opponent.money}</Label>
-							<Label>Lv {opponent.level}</Label>
+					<div className={styles.vsHeader}>vs.</div>
+					<div className={styles.player}>
+						<div className={styles.playerAvatar}>
+							<PlayerAvatar player={opponent} />
+							<QuickChatBox sendingPlayerId={opponent.id} />
+						</div>
+						<div className={styles.playerDetails}>
+							<span className={styles.playerName}>
+								{opponent.name} ({getPosition(opponent, playerList)})
+								{opponentIsClone && (
+									<span className={styles.cloneTag}>CLONE</span>
+								)}
+							</span>
+							<Title title={opponent.profile?.title || null} />
+							<PlayerHealthbar health={opponent.health} />
+							<div className={styles.badges}>
+								<StreakIndicator
+									type={opponent.streakType}
+									amount={opponent.streakAmount}
+								/>
+								<Label type="highlight">${opponent.money}</Label>
+								<Label>Lv {opponent.level}</Label>
+							</div>
 						</div>
 					</div>
 				</div>
