@@ -13,11 +13,13 @@ import { StatsState } from "../../../../store/game/stats/state";
 import { Overlay } from "../../../../store/game/ui";
 import { TabMenu } from "../../../ui/TabMenu";
 import { PieceBattleStats } from "../../PieceBattleStats";
+import { SelectedPieceInfo } from "../../SelectedPieceInfo";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { Controls } from "../../board/overlays";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
+import { useSelectedPiece } from "../../hooks/useSelectedPiece";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
@@ -109,6 +111,8 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 			state.game.roundInfo.phase === GamePhase.READY
 	);
 
+	const selectedPiece = useSelectedPiece();
+
 	if (currentOverlay === null) {
 		return (
 			<MobileContentPane>
@@ -116,7 +120,7 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 
 				{!inPlayingOrReadyPhase && (
 					<>
-						<PlayerGameProfile />
+						{selectedPiece ? <SelectedPieceInfo /> : <PlayerGameProfile />}
 
 						<div style={{ height: "2em", paddingTop: "0.5em" }}>
 							<Controls />

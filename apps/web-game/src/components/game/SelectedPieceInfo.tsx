@@ -12,6 +12,7 @@ import { PieceModel } from "@creature-chess/models";
 import { AppState } from "../../store";
 import { TraitIcon } from "../ui/TraitIcon";
 import { Layout } from "../ui/layout";
+import { useSelectedPiece } from "./hooks/useSelectedPiece";
 
 const useStyles = createUseStyles({
 	info: {
@@ -61,27 +62,16 @@ const useStyles = createUseStyles({
 
 export function SelectedPieceInfo() {
 	const styles = useStyles();
-
-	const selectedPieceId = useSelector<AppState, string | null>(
-		(state) => state.game.ui.selectedPieceId
-	);
-
-	const selectedPiece = useSelector<AppState, PieceModel | null>((state) =>
-		selectedPieceId
-			? BoardSelectors.getPiece(state.game.board, selectedPieceId) ||
-				BoardSelectors.getPiece(state.game.bench, selectedPieceId) ||
-				null
-			: null
-	);
+	const selectedPiece = useSelectedPiece();
 
 	if (selectedPiece === null) {
-		return <div className={classNames(styles.info, styles.hidden)} />;
+		return null;
 	}
 
 	const definition = getDefinitionById(selectedPiece.definitionId);
 
 	if (!definition) {
-		return <div className={classNames(styles.info, styles.hidden)} />;
+		return null;
 	}
 
 	const stats = definition.stages[selectedPiece.stage];

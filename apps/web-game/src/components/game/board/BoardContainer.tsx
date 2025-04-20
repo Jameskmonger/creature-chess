@@ -35,18 +35,10 @@ export function BoardContainer() {
 	const styles = useStyles();
 	const matchBoard = useGameMatchBoard();
 
-	const inPlayingOrReadyPhase = useSelector<AppState, boolean>(
-		(state) =>
-			state.game.roundInfo.phase === GamePhase.PLAYING ||
-			state.game.roundInfo.phase === GamePhase.READY
-	);
-
 	return (
 		<DndProvider>
-			<Group className={classNames(styles.boardContainer, "board-container")}>
+			<div className={classNames(styles.boardContainer, "board-container")}>
 				<NowPlaying />
-				{!inPlayingOrReadyPhase && <SelectedPieceInfo />}
-
 				{matchBoard ? <MatchBoard /> : <LocalBoard />}
 
 				<>
@@ -55,7 +47,7 @@ export function BoardContainer() {
 					<MatchRewardsOverlay />
 					<ReconnectOverlay />
 				</>
-			</Group>
+			</div>
 		</DndProvider>
 	);
 }

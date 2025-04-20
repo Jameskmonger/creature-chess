@@ -14,11 +14,13 @@ import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
 import { Layout } from "../../../ui/layout";
 import { PieceBattleStats } from "../../PieceBattleStats";
+import { SelectedPieceInfo } from "../../SelectedPieceInfo";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { Controls, NowPlaying } from "../../board/overlays";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
+import { useSelectedPiece } from "../../hooks/useSelectedPiece";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { QuitGameButton } from "../../settings";
@@ -29,20 +31,41 @@ const useStyles = createUseStyles({
 		padding: "0.5em",
 		background: "#566c86",
 	},
+	game: {
+		width: "100%",
+		height: "100%",
+		display: "flex",
+		flexDirection: "row",
+		gap: "16px",
+	},
+	board: {
+		flex: 2,
+	},
 	leftColumn: {
 		height: "100%",
 		display: "flex",
 		flexDirection: "column",
+		flex: 1,
+		gap: "16px",
+	},
+	rightColumn: {
+		height: "100%",
+		display: "flex",
+		flexDirection: "column",
+		flex: 1,
+		gap: "16px",
+	},
+	controls: {
+		height: "128px",
 	},
 	tabMenu: {
 		flex: 1,
 	},
-	rightColumn: {
-		height: "100%",
-	},
-	actionBar: {
-		width: "100%",
-		height: "10%",
+	fixed: {
+		height: "256px",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
 	},
 });
 
@@ -82,6 +105,7 @@ const DesktopGame: React.FunctionComponent = () => {
 				label: "Help",
 				content: (
 					<div className={styles.helpContainer}>
+						<QuitGameButton />
 						<Help hideFooter />
 						<Footer />
 					</div>
@@ -91,40 +115,31 @@ const DesktopGame: React.FunctionComponent = () => {
 		[inPreparingPhase, ownedPieces, stats, styles.helpContainer]
 	);
 
-	const round = useSelector<AppState, number | null>(
-		(state) => state.game.roundInfo.round
-	);
+	const selectedPiece = useSelectedPiece();
 
 	return (
-		<LandscapeGameScreen
-			leftColumnContent={
-				<div className={styles.leftColumn}>
-					<TopBar />
+		<div className={styles.game}>
+			<div className={styles.leftColumn}>
+				<NowPlaying />
 
-					<NowPlaying />
+				<TabMenu tabs={leftTabs} className={styles.tabMenu} />
 
-					<TabMenu tabs={leftTabs} className={styles.tabMenu} />
-
-					<QuitGameButton />
+				<div className={styles.fixed}>
+					{selectedPiece ? <SelectedPieceInfo /> : <PlayerGameProfile />}
 				</div>
-			}
-			middleColumnContent={
-				<>
-					<BoardContainer />
+			</div>
+			<div className={styles.board}>
+				<TopBar />
+				<BoardContainer />
+			</div>
+			<div className={styles.rightColumn}>
+				<CardShop />
 
-					<div className={styles.actionBar}>
-						<Controls />
-					</div>
-				</>
-			}
-			rightColumnContent={
-				<Layout direction="column" className={styles.rightColumn}>
-					<CardShop />
-
-					<PlayerGameProfile />
-				</Layout>
-			}
-		/>
+				<div className={styles.controls}>
+					<Controls />
+				</div>
+			</div>
+		</div>
 	);
 };
 
