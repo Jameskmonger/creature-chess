@@ -1,5 +1,5 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
-import { join, dirname } from "path";
+import path, { join, dirname } from "path";
 import { DefinePlugin } from "webpack";
 
 /**
@@ -58,6 +58,13 @@ const config: StorybookConfig = {
 				APP_IMAGE_ROOT: JSON.stringify("http://localhost:6006/images"),
 			}),
 		],
+		resolve: {
+			alias: { "~": path.resolve(__dirname, "../apps/web-game/src") },
+			extensions: [".tsx", ".ts", ".js"],
+			fallback: {
+				"process/browser": require.resolve("process/browser"),
+			},
+		},
 	}),
 };
 
