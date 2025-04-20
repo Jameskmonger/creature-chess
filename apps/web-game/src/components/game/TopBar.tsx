@@ -10,17 +10,22 @@ import { getPlayerMoney } from "@creature-chess/gamemode";
 
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { PlayerHealthbar } from "../ui/player";
+import { PositionChip } from "../ui/player/PositionChip";
 import { PhaseInfo } from "./phaseInfo";
 
 const useStyles = createUseStyles({
 	topBar: {
-		background: "#1d1d1d",
-		padding: "8px 12px",
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		fontSize: "12px",
+		"background": "#1d1d1d",
+		"padding": "8px 12px",
+		"display": "flex",
+		"flexDirection": "row",
+		"justifyContent": "space-between",
+		"alignItems": "center",
+		"fontSize": "12px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "10px",
+		},
 	},
 	segment: {
 		flex: 1,
@@ -43,6 +48,17 @@ const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 	},
+	name: {
+		"display": "flex",
+		"flexDirection": "row",
+		"gap": "8px",
+		"alignItems": "center",
+		"justifyContent": "center",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			gap: "4px",
+		},
+	},
 });
 
 export function TopBar() {
@@ -64,6 +80,14 @@ export function TopBar() {
 		return player?.health ?? 0;
 	});
 
+	const name = useSelector<AppState, string>(
+		(state) => state.game.playerList.find((p) => p.id === playerId)?.name || ""
+	);
+
+	const position = useSelector<AppState, number>(
+		(state) => state.game.playerList.findIndex((p) => p.id === playerId) + 1
+	);
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.topBar}>
@@ -73,6 +97,11 @@ export function TopBar() {
 
 				<div className={styles.segment}>
 					<PhaseInfo />
+				</div>
+
+				<div className={classNames(styles.segment, styles.name)}>
+					<PositionChip position={position} />
+					<span>{name}</span>
 				</div>
 
 				<div className={classNames(styles.segment, styles.right)}>

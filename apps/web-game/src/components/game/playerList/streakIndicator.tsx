@@ -14,24 +14,46 @@ const getBackground = (type: StreakType | null) =>
 
 const useStyles = createUseStyles({
 	indicator: (props: Props) => ({
-		position: "relative",
-		width: "1.2em",
-		height: "1.2em",
-		overflow: "hidden",
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-		background: getBackground(props.type),
-		border: "2px solid darkgray",
-		boxShadow: "1px 1px 3px #888888",
+		"position": "relative",
+
+		"aspectRatio": "1 / 1",
+
+		"width": "26px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			width: "24px",
+		},
+
+		"height": "auto",
+		"overflow": "hidden",
+		"display": "flex",
+		"alignItems": "center",
+		"justifyContent": "center",
+		"background": getBackground(props.type),
+		"border": "2px solid darkgray",
+		"boxSizing": "border-box",
+		"boxShadow": "1px 1px 3px #888888",
 	}),
+	spacer: {
+		"aspectRatio": "1 / 1",
+
+		"width": "26px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			width: "24px",
+		},
+	},
 	amount: {
-		position: "absolute",
-		top: "52%",
-		fontFamily: "Arial, sans-serif",
-		fontSize: "0.8rem",
-		lineHeight: 0,
-		color: "#fff",
+		"position": "absolute",
+		"top": "52%",
+		"fontFamily": '"Roboto", sans-serif',
+		"fontSize": "14px",
+		"lineHeight": 0,
+		"color": "#fff",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "12px",
+		},
 	},
 	sheen: {
 		position: "absolute",
@@ -79,7 +101,7 @@ export function StreakIndicator(props: Props) {
 	}, [props.amount]);
 
 	if (props.type === null || !props.amount || props.amount === 1) {
-		return null;
+		return <div className={classes.spacer} />;
 	}
 
 	return (

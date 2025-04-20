@@ -16,8 +16,6 @@ import {
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { MAX_LEVEL } from "@creature-chess/models/config";
 
-import { Layout } from "../../ui/layout";
-import { PlayerName } from "../../ui/player";
 import { ProgressBar } from "../../ui/progressBar";
 import { ReadyUpButton } from "../board/overlays/controls/ReadyUpButton";
 
@@ -101,14 +99,6 @@ export function PlayerGameProfile() {
 
 	const playerId = useLocalPlayerId();
 
-	const name = useSelector<AppState, string>(
-		(state) => state.game.playerList.find((p) => p.id === playerId)?.name || ""
-	);
-
-	const position = useSelector<AppState, number>(
-		(state) => state.game.playerList.findIndex((p) => p.id === playerId) + 1
-	);
-
 	const level = useSelector<AppState, number>((state) =>
 		getPlayerLevel(state.game)
 	);
@@ -132,9 +122,6 @@ export function PlayerGameProfile() {
 	return (
 		<div className={styles.profile}>
 			<div className={styles.column}>
-				<div className={styles.name}>
-					<PlayerName name={name} position={position} isLocal />
-				</div>
 				<p className={classNames(styles.item, styles.level)}>
 					Level {level} <span>${money}</span>
 				</p>
