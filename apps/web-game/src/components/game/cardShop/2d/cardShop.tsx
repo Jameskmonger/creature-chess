@@ -39,7 +39,7 @@ const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 		padding: "2%",
-		background: "#797979",
+		background: "#404040",
 		height: "100%",
 		justifyContent: "space-between",
 	},
