@@ -20,23 +20,20 @@ export function OverlayComponent({
 
 	return (
 		<div className={styles.overlay}>
-			<div className={styles.header}>
-				{typeof title === "string" ? (
-					<h2>{title}</h2>
-				) : (
-					<div className={styles.titleChild}>{title}</div>
-				)}
-				<button className={styles.closeButton} onClick={dispatchCloseOverlay}>
-					X
-				</button>
-			</div>
-			<div
-				className={
-					fullscreen ? styles.overlayContentFullscreen : styles.overlayContent
-				}
-			>
-				{children}
-			</div>
+			{fullscreen ? null : (
+				<div className={styles.header}>
+					{typeof title === "string" ? (
+						<h2>{title}</h2>
+					) : (
+						<div className={styles.titleChild}>{title}</div>
+					)}
+					<button className={styles.closeButton} onClick={dispatchCloseOverlay}>
+						X
+					</button>
+				</div>
+			)}
+
+			<div className={styles.overlayContent}>{children}</div>
 		</div>
 	);
 }

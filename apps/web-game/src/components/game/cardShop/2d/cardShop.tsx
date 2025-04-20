@@ -1,12 +1,18 @@
 import React from "react";
 
-import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import {
+	faArrowsRotate,
+	faCoins,
+	faLock,
+	faLockOpen,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createUseStyles } from "react-jss";
 
 import { Card as CardModel } from "@creature-chess/models";
 
 import { useGamemodeSettings } from "../../../../contexts/GamemodeSettingsContext";
+import { BalanceIcon } from "../../../ui/icon/BalanceIcon";
 import { Card2D as Card } from "./card";
 
 type Props = {
@@ -43,12 +49,29 @@ const useStyles = createUseStyles({
 			marginBottom: "2%",
 		},
 	},
-	controls: {
+	bottomBar: {
+		"display": "flex",
+		"flexDirection": "row",
+		"justifyContent": "space-between",
+		"padding": "2%",
+		"background": "#303030",
+		"gap": "16px",
+
+		"& > button": {
+			flex: 1,
+		},
+	},
+	balance: {
+		flex: 1,
 		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		padding: "2%",
-		background: "#303030",
+		justifyContent: "center",
+		alignItems: "center",
+		color: "#ffffff",
+		fontSize: "32px",
+		letterSpacing: "3px",
+	},
+	balanceIcon: {
+		marginRight: "8px",
 	},
 	control: {
 		"border": "none",
@@ -75,6 +98,11 @@ const useStyles = createUseStyles({
 		},
 
 		"transition": "background 0.2s ease-in-out",
+
+		"& > span": {
+			fontSize: "14px",
+			marginLeft: "6px",
+		},
 	},
 });
 
@@ -109,9 +137,21 @@ export function CardShop({
 				))}
 			</div>
 
-			<div className={classes.controls}>
+			<div className={classes.bottomBar}>
+				<div className={classes.balance}>
+					<span>
+						<BalanceIcon className={classes.balanceIcon} /> {money}
+					</span>
+				</div>
 				<button className={classes.control} onClick={onToggleLock}>
-					{isLocked ? "Unlock" : "Lock (1 turn)"}
+					{isLocked ? (
+						<FontAwesomeIcon icon={faLockOpen} />
+					) : (
+						<>
+							<FontAwesomeIcon icon={faLock} />
+							<span>(1 turn)</span>
+						</>
+					)}
 				</button>
 
 				<button
@@ -120,7 +160,7 @@ export function CardShop({
 					disabled={money < rerollCost}
 				>
 					<FontAwesomeIcon icon={faArrowsRotate} />
-					&nbsp;${rerollCost}
+					<span>${rerollCost}</span>
 				</button>
 			</div>
 		</div>

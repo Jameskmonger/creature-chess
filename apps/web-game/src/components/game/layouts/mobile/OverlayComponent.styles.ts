@@ -5,7 +5,6 @@ export const useStyles = createUseStyles({
 		flex: "1",
 		display: "flex",
 		flexDirection: "column",
-		padding: "0.5rem 0.25rem",
 		overflowY: "auto",
 		fontFamily: "Arial, sans-serif",
 		background: "#9da5bd",
@@ -35,11 +34,6 @@ export const useStyles = createUseStyles({
 	},
 
 	overlayContent: {
-		overflow: "auto",
-	},
-
-	overlayContentFullscreen: {
-		overflow: "auto",
 		height: "100%",
 		boxSizing: "border-box",
 	},

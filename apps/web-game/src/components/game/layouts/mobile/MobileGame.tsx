@@ -15,7 +15,6 @@ import { TabMenu } from "../../../ui/TabMenu";
 import { PieceBattleStats } from "../../PieceBattleStats";
 import { BoardContainer } from "../../board";
 import { Controls } from "../../board/overlays";
-import { BalanceChip } from "../../cardShop/BalanceChip";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
@@ -60,10 +59,7 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 
 	if (currentOverlay === Overlay.SHOP) {
 		return (
-			<OverlayComponent
-				title={<BalanceChip balance={currentBalance} />}
-				fullscreen
-			>
+			<OverlayComponent title="Card Shop" fullscreen>
 				<CardShop />
 
 				{inPlayingOrReadyPhase && (
