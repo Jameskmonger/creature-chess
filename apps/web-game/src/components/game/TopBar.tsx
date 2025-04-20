@@ -6,9 +6,10 @@ import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
 import { AppState } from "~/store";
 
-import { getPlayerMoney } from "@creature-chess/gamemode";
+import { getPlayerLevel, getPlayerMoney } from "@creature-chess/gamemode";
 
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
+import { LevelIcon } from "../ui/icon/LevelIcon";
 import { PlayerHealthbar } from "../ui/player";
 import { PositionChip } from "../ui/player/PositionChip";
 import { PhaseTimer } from "./PhaseTimer";
@@ -28,7 +29,6 @@ const useStyles = createUseStyles({
 		},
 	},
 	segment: {
-		flex: 1,
 		color: "#fff",
 		textAlign: "center",
 		textTransform: "uppercase",
@@ -38,7 +38,11 @@ const useStyles = createUseStyles({
 
 		// dirty
 		"& > span:not(:last-child)": {
-			marginRight: "8px",
+			"marginRight": "8px",
+
+			"@media (orientation: portrait) and (max-width: 400px)": {
+				marginRight: "4px",
+			},
 		},
 	},
 	right: {
@@ -53,7 +57,6 @@ const useStyles = createUseStyles({
 		flexDirection: "column",
 	},
 	name: {
-		"flex": 2,
 		"display": "flex",
 		"flexDirection": "row",
 		"gap": "8px",
@@ -63,6 +66,11 @@ const useStyles = createUseStyles({
 		"@media (orientation: portrait) and (max-width: 400px)": {
 			gap: "4px",
 		},
+	},
+	levelIcon: {
+		fontSize: "10px",
+		letterSpacing: 0,
+		background: "#333",
 	},
 });
 
@@ -76,6 +84,9 @@ export function TopBar() {
 	);
 	const money = useSelector<AppState, number>((state) =>
 		getPlayerMoney(state.game)
+	);
+	const level = useSelector<AppState, number>((state) =>
+		getPlayerLevel(state.game)
 	);
 
 	// todo reselect
@@ -97,14 +108,17 @@ export function TopBar() {
 		<div className={styles.container}>
 			<div className={styles.topBar}>
 				<div className={classNames(styles.segment, styles.left)}>
-					<span>Round {round}</span>
+					<span>Rnd {round}</span>
 					<PhaseTimer />
 				</div>
 
+				<PositionChip position={position} />
+
 				<div className={classNames(styles.segment, styles.name)}>
-					<PositionChip position={position} />
 					<span>{name}</span>
 				</div>
+
+				<LevelIcon amount={level} className={styles.levelIcon} />
 
 				<div className={classNames(styles.segment, styles.right)}>
 					<BalanceIcon amount={money} />
