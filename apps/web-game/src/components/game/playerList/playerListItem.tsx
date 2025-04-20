@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useRef } from "react";
 
 import { createUseStyles } from "react-jss";
+import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 
@@ -165,7 +166,7 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 							type={player.streakType}
 							amount={player.streakAmount}
 						/>
-						<Label type="highlight">${player.money}</Label>
+						<BalanceIcon amount={player.money} />
 						<LevelIcon amount={player.level} />
 					</div>
 				</div>

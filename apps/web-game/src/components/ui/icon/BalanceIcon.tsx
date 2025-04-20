@@ -18,6 +18,7 @@ const useStyles = createUseStyles({
 		alignItems: "center",
 		gap: "4px",
 		letterSpacing: "2px",
+		color: "#fff",
 	},
 	icon: {
 		color: "#ddc160",
