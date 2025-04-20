@@ -68,9 +68,12 @@ const useStyles = createUseStyles({
 		},
 	},
 	levelIcon: {
-		fontSize: "10px",
-		letterSpacing: 0,
-		background: "#333",
+		"letterSpacing": 0,
+		"background": "#333",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "10px",
+		},
 	},
 });
 
