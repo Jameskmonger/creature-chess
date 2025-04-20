@@ -23,6 +23,7 @@ const useStyles = createUseStyles<string, Props>({
 		fontSize: "12px",
 		padding: "4px 6px",
 		background: "#1d1d1d",
+		color: "#fff",
 	},
 	icon: {
 		// 2 levels per colour

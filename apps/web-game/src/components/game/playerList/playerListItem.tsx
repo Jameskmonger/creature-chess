@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useRef } from "react";
 
 import { createUseStyles } from "react-jss";
+import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
@@ -9,7 +10,6 @@ import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside";
 import { Button } from "../../ui/Button";
 import { Label } from "../../ui/label";
-import { Layout } from "../../ui/layout";
 import { PlayerAvatar, PlayerHealthbar, Title } from "../../ui/player";
 import { BattleInfo } from "./battleInfo";
 import { StreakIndicator } from "./streakIndicator";
@@ -166,7 +166,7 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 							amount={player.streakAmount}
 						/>
 						<Label type="highlight">${player.money}</Label>
-						<Label>Lv {player.level}</Label>
+						<LevelIcon amount={player.level} />
 					</div>
 				</div>
 
