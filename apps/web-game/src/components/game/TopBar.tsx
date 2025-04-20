@@ -11,7 +11,7 @@ import { getPlayerMoney } from "@creature-chess/gamemode";
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { PlayerHealthbar } from "../ui/player";
 import { PositionChip } from "../ui/player/PositionChip";
-import { PhaseInfo } from "./phaseInfo";
+import { PhaseTimer } from "./PhaseTimer";
 
 const useStyles = createUseStyles({
 	topBar: {
@@ -34,7 +34,12 @@ const useStyles = createUseStyles({
 		textTransform: "uppercase",
 	},
 	left: {
-		textAlign: "left",
+		"textAlign": "left",
+
+		// dirty
+		"& > span:not(:last-child)": {
+			marginRight: "8px",
+		},
 	},
 	right: {
 		display: "flex",
@@ -48,6 +53,7 @@ const useStyles = createUseStyles({
 		flexDirection: "column",
 	},
 	name: {
+		"flex": 2,
 		"display": "flex",
 		"flexDirection": "row",
 		"gap": "8px",
@@ -92,10 +98,7 @@ export function TopBar() {
 			<div className={styles.topBar}>
 				<div className={classNames(styles.segment, styles.left)}>
 					<span>Round {round}</span>
-				</div>
-
-				<div className={styles.segment}>
-					<PhaseInfo />
+					<PhaseTimer />
 				</div>
 
 				<div className={classNames(styles.segment, styles.name)}>

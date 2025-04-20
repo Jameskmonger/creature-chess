@@ -12,7 +12,7 @@ const renderPhaseInfoCountdown = (secondsRemaining: number) => (
 	<span>({secondsRemaining})</span>
 );
 
-const PhaseInfo = () => {
+export function PhaseTimer() {
 	const phase = useSelector<AppState, GamePhase | null>(
 		(state) => state.game.roundInfo.phase
 	);
@@ -35,13 +35,10 @@ const PhaseInfo = () => {
 
 	return (
 		<span>
-			{GamePhase[phase]}{" "}
 			<Countdown
 				countdownToSeconds={phaseEndTime}
 				render={renderPhaseInfoCountdown}
 			/>
 		</span>
 	);
-};
-
-export { PhaseInfo };
+}
