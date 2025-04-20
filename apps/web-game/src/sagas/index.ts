@@ -19,7 +19,7 @@ import { clickPieceSaga } from "./board/clickPieceSaga";
 import { clickTileSaga } from "./board/clickTileSaga";
 import { handleQuickChat } from "./chat/quickChat";
 import { closeShopOnFirstBuySaga } from "./closeShopOnFirstBuySaga";
-import { goToMenuAfterGame } from "./goToMenuAfterGame";
+import { finishGame } from "./finishGame";
 import { preventAccidentalClose } from "./preventAccidentalClose";
 import { roundUpdateSaga } from "./roundUpdate";
 import { uiSaga } from "./ui";
@@ -63,7 +63,7 @@ export const gameSaga = function* (
 	// everything is initialized, so start the client's "game loop"
 
 	yield all([
-		call(goToMenuAfterGame),
+		call(finishGame),
 		call(preventAccidentalClose),
 		call(closeShopOnFirstBuySaga),
 		call(clickTileSaga),

@@ -28,19 +28,15 @@ const useStyles = createUseStyles({
 		},
 	},
 	wrapper: {
-		"textAlign": "center",
-		"flex": 1,
-		"display": "flex",
-		"flexDirection": "column",
-		"justifyContent": "center",
-		"background": "#566c86",
-		"border": "2px solid #b13e53",
+		textAlign: "center",
+		flex: 1,
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		background: "#566c86",
+		border: "2px solid #b13e53",
 
-		"fontFamily": '"Roboto", sans-serif',
-
-		"@media (orientation: portrait) and (min-width: 431px)": {
-			padding: "8px",
-		},
+		fontFamily: '"Roboto", sans-serif',
 	},
 	vsHeader: {
 		"borderTop": "2px solid #b13e53",
@@ -213,12 +209,6 @@ export function MatchRewardsOverlay() {
 
 	const { damage, justDied } = matchRewards;
 
-	if (!opponent || !opponentPosition) {
-		return (
-			<BoardOverlay>Please report this bug on Discord or GitHub.</BoardOverlay>
-		);
-	}
-
 	const title = justDied
 		? "Game Over!"
 		: damage > 0
@@ -230,31 +220,35 @@ export function MatchRewardsOverlay() {
 			<div className={styles.root}>
 				<div className={styles.wrapper}>
 					<div className={styles.title}>{title}</div>
-					<div className={styles.vsHeader}>vs.</div>
-					<div className={styles.opponent}>
-						<div className={styles.playerAvatar}>
-							<PlayerAvatar player={opponent} />
-							<QuickChatBox sendingPlayerId={opponent.id} />
-						</div>
-						<div className={styles.playerDetails}>
-							<div className={styles.nameWrapper}>
-								<span className={styles.playerName}>{opponent.name}</span>
-								<div className={styles.tags}>
-									<PositionChip position={opponentPosition} />
+					{opponent && opponentPosition && (
+						<>
+							<div className={styles.vsHeader}>vs.</div>
+							<div className={styles.opponent}>
+								<div className={styles.playerAvatar}>
+									<PlayerAvatar player={opponent} />
+									<QuickChatBox sendingPlayerId={opponent.id} />
+								</div>
+								<div className={styles.playerDetails}>
+									<div className={styles.nameWrapper}>
+										<span className={styles.playerName}>{opponent.name}</span>
+										<div className={styles.tags}>
+											<PositionChip position={opponentPosition} />
+										</div>
+									</div>
+									<Title title={opponent.profile?.title || null} />
+									<PlayerHealthbar health={opponent.health} />
+									<div className={styles.badges}>
+										<StreakIndicator
+											type={opponent.streakType}
+											amount={opponent.streakAmount}
+										/>
+										<BalanceIcon amount={opponent.money} />
+										<LevelIcon amount={opponent.level} />
+									</div>
 								</div>
 							</div>
-							<Title title={opponent.profile?.title || null} />
-							<PlayerHealthbar health={opponent.health} />
-							<div className={styles.badges}>
-								<StreakIndicator
-									type={opponent.streakType}
-									amount={opponent.streakAmount}
-								/>
-								<BalanceIcon amount={opponent.money} />
-								<LevelIcon amount={opponent.level} />
-							</div>
-						</div>
-					</div>
+						</>
+					)}
 					<div className={styles.outcomes}>
 						{!justDied && (
 							<>
