@@ -24,7 +24,6 @@ const useStyles = createUseStyles({
 		position: "absolute",
 		top: "-2px",
 		right: "8px",
-		fontFamily: '"Roboto", sans-serif',
 		fontSize: "12px",
 		fontWeight: 700,
 		color: "#000",

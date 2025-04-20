@@ -6,7 +6,6 @@ export const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 		overflowY: "auto",
-		fontFamily: "Arial, sans-serif",
 		background: "#9da5bd",
 	},
 	titleChild: {
@@ -18,7 +17,7 @@ export const useStyles = createUseStyles({
 
 		"& h2": {
 			"flex": "1",
-			"fontFamily": "Arial, sans-serif",
+			"fontFamily": '"Roboto", sans-serif',
 			"font-size": "1.5rem",
 			"color": "#fff",
 			"textAlign": "center",

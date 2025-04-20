@@ -6,7 +6,6 @@ import { PlayerTitle } from "@creature-chess/models/player/title";
 
 const useStyles = createUseStyles({
 	title: {
-		fontFamily: "Arial, sans-serif",
 		fontSize: "0.65rem",
 		fontWeight: 700,
 		color: ({ title }: React.ComponentProps<typeof Title>) =>

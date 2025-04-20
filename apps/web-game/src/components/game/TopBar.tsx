@@ -29,7 +29,6 @@ const useStyles = createUseStyles({
 	},
 	segment: {
 		flex: 1,
-		fontFamily: '"Roboto", sans-serif',
 		color: "#fff",
 		textAlign: "center",
 		textTransform: "uppercase",

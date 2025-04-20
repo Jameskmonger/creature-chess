@@ -7,7 +7,6 @@ const useStyles = createUseStyles({
 		textAlign: "center",
 	},
 	item: {
-		fontFamily: "Arial, sans-serif",
 		fontSize: "0.8em",
 		fontStyle: "italic",
 		color: "#fff",

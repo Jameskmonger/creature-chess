@@ -18,7 +18,6 @@ type Props = {
 const useStyles = createUseStyles({
 	card: {
 		boxSizing: "border-box",
-		fontFamily: "Arial, sans-serif",
 		color: "#fff",
 		textAlign: "center",
 		userSelect: "none",

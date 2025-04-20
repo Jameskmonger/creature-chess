@@ -32,8 +32,6 @@ const useStyles = createUseStyles({
 
 		height: "100%",
 		boxSizing: "border-box",
-
-		fontFamily: "Arial, sans-serif",
 	},
 	cards: {
 		display: "flex",

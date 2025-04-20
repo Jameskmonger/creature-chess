@@ -25,7 +25,7 @@ const useStyles = createUseStyles({
 		"width": "80%",
 		"padding": "8px",
 		"outline": "none",
-		"fontFamily": "Arial, sans-serif",
+		"fontFamily": '"Roboto", sans-serif',
 		"color": "#fff",
 		"background": "#333c57",
 

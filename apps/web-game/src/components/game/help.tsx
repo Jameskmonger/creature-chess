@@ -22,7 +22,6 @@ const useStyles = createUseStyles({
 	},
 	help: {
 		color: "#fff",
-		fontFamily: "Arial, sans-serif",
 	},
 });
 

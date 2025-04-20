@@ -16,7 +16,6 @@ type Story = StoryObj<typeof Page>;
 const useLandingStyles = createUseStyles({
 	landing: {
 		color: "#fff",
-		fontFamily: '"Roboto", sans-serif',
 	},
 });
 

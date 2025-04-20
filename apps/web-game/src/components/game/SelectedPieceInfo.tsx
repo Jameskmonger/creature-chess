@@ -21,7 +21,6 @@ const useStyles = createUseStyles({
 		marginBottom: "0.25em",
 		padding: "0.25em",
 		color: "#fff",
-		fontFamily: "Arial, sans-serif",
 	},
 	hidden: {
 		visibility: "hidden",

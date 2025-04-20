@@ -19,7 +19,6 @@ const useStyles = createUseStyles({
 		padding: "0.25em",
 		borderRadius: "4px",
 		background: "#b13e53",
-		fontFamily: '"Roboto", sans-serif',
 		letterSpacing: "1px",
 	},
 });

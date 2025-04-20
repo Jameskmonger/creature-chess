@@ -44,7 +44,6 @@ const useStyles = createUseStyles({
 		borderRadius: "4px",
 		fontWeight: 700,
 		cursor: "pointer",
-		fontFamily: "Arial, sans-serif",
 	},
 	controls: {
 		padding: 0,

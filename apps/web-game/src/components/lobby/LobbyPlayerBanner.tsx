@@ -24,7 +24,7 @@ const useStyles = createUseStyles({
 		"fontWeight": "700",
 		"textAlign": "right",
 		"background": "#59616b",
-		"fontFamily": "Arial, Helvetica, sans-serif",
+		"fontFamily": '"Roboto", sans-serif',
 		"color": "#fff",
 		"userSelect": "none",
 

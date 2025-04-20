@@ -25,7 +25,6 @@ const useStyles = createUseStyles({
 		flexDirection: "row",
 		color: "#fff",
 		background: "#566c86",
-		fontFamily: '"Roboto", sans-serif',
 		padding: "8px",
 		gap: "16px",
 	},

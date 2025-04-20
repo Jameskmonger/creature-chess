@@ -13,7 +13,6 @@ const useStyles = createUseStyles({
 	settingsMenu: {
 		padding: "1em",
 		border: "1px solid #b13e53",
-		fontFamily: "Arial, sans-serif",
 		textAlign: "left",
 	},
 	header: {

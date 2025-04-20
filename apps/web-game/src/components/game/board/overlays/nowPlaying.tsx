@@ -13,7 +13,6 @@ const useStyles = createUseStyles({
 		color: "#ffffff",
 		width: "100%",
 		textAlign: "center",
-		fontFamily: '"Roboto", sans-serif',
 		padding: "4px",
 		boxSizing: "border-box",
 		background: "rgba(0, 0, 0, 0.8)",

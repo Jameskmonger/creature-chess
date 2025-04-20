@@ -26,7 +26,6 @@ const useStyles = createUseStyles({
 
 		zIndex: 400,
 
-		fontFamily: '"Roboto", sans-serif',
 		letterSpacing: "2px",
 	},
 	pieceCountWarning: {

@@ -5,7 +5,6 @@ export const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 		height: "100%",
-		fontFamily: "Arial, Helvetica, sans-serif",
 		color: "#fff",
 		alignItems: "center",
 		justifyContent: "center",

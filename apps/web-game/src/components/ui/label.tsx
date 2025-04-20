@@ -9,7 +9,6 @@ type Props = {
 
 const useStyles = createUseStyles({
 	label: {
-		fontFamily: "Arial, sans-serif",
 		fontSize: "0.8rem",
 		fontWeight: 700,
 		color: (props: Props) => (props.type === "highlight" ? "#ffcd75" : "#fff"),

@@ -7,7 +7,7 @@ export const useStyles = createUseStyles({
 		"height": "100%",
 		"padding": "1rem",
 		"marginTop": "1em",
-		"fontFamily": "Arial, Helvetica, sans-serif",
+		"fontFamily": '"Roboto", sans-serif',
 		"color": "#fff",
 		"alignItems": "center",
 		"justifyContent": "center",

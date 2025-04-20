@@ -23,7 +23,6 @@ const useStyles = createUseStyles({
 		boxSizing: "border-box",
 		padding: "0.4rem",
 		marginBottom: "0.25em",
-		fontFamily: "Arial, sans-serif",
 		fontSize: "1.2em",
 		fontWeight: "700",
 		color: "#fff",
@@ -44,7 +43,6 @@ const useStyles = createUseStyles({
 	subtitle: {
 		padding: "0.5em 0",
 		marginTop: "0.5em",
-		fontFamily: "Arial, sans-serif",
 		fontSize: "0.9em",
 		fontWeight: 700,
 		color: "#847878",

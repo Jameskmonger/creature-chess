@@ -44,7 +44,6 @@ const getResultColor = (props: Props) => {
 const useStyles = createUseStyles({
 	battleInfo: {
 		padding: "0.25em 0.5em",
-		fontFamily: "Arial, sans-serif",
 		fontSize: "0.625em",
 		color: "#c3c3c3",
 		textAlign: "center",
