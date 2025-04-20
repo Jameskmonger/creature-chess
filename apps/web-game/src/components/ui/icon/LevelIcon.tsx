@@ -36,7 +36,7 @@ export function LevelIcon(props: Props) {
 
 	return (
 		<div className={classNames(classes.wrapper, className)}>
-			<span>{amount}</span>
+			<span>lvl {amount}</span>
 			<FontAwesomeIcon
 				icon={faSquareCaretUp}
 				className={classNames(classes.icon, iconClassName)}
