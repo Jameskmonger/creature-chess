@@ -35,18 +35,24 @@ export function BoardContainer() {
 	const styles = useStyles();
 	const matchBoard = useGameMatchBoard();
 
+	const children = (
+		<>
+			<NowPlaying />
+			<ReadyOverlay />
+			<VictoryOverlay />
+			<MatchRewardsOverlay />
+			<ReconnectOverlay />
+		</>
+	);
+
 	return (
 		<DndProvider>
-			<div className={classNames(styles.boardContainer, "board-container")}>
-				<NowPlaying />
-				{matchBoard ? <MatchBoard /> : <LocalBoard />}
-
-				<>
-					<ReadyOverlay />
-					<VictoryOverlay />
-					<MatchRewardsOverlay />
-					<ReconnectOverlay />
-				</>
+			<div className={styles.boardContainer}>
+				{matchBoard ? (
+					<MatchBoard>{children}</MatchBoard>
+				) : (
+					<LocalBoard>{children}</LocalBoard>
+				)}
 			</div>
 		</DndProvider>
 	);

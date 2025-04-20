@@ -40,7 +40,6 @@
 		"process": "0.11.10",
 		"react-div-100vh": "^0.7.0",
 		"react-media": "^1.10.0",
-		"react-modal": "^3.16.1",
 		"react-redux": "^9.1.0",
 		"react-use-error-boundary": "^3.0.0",
 		"reselect": "^4.1.5",

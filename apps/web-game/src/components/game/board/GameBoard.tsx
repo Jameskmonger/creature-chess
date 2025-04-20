@@ -46,6 +46,7 @@ type GameBoardProps = {
 	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
 	onClick?: (event: GameBoardClickEvent) => void;
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
+	children?: React.ReactNode;
 };
 
 function useEvents({
@@ -187,6 +188,7 @@ export function GameBoard({
 	renderTileBackground,
 	onClick,
 	onDropPiece,
+	children,
 }: GameBoardProps) {
 	const { board, bench } = useGameBoard();
 
@@ -222,7 +224,9 @@ export function GameBoard({
 						onClickTile={onClickBoard}
 						renderItem={boardPieceRenderer}
 						renderTileBackground={renderTileBackground}
-					/>
+					>
+						{children}
+					</BoardGrid>
 				</div>
 
 				<div className={styles.bench}>

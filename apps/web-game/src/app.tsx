@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import ReactModal from "react-modal";
 import { useSelector } from "react-redux";
 import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 
@@ -9,8 +8,6 @@ import { LobbyPage } from "./pages/lobby";
 import { MenuPage } from "./pages/menu";
 import { AppState } from "./store";
 import { useGlobalStyles } from "./styles";
-
-ReactModal.setAppElement("#approot");
 
 export const App = withErrorBoundary(() => {
 	const [error, resetError] = useErrorBoundary();

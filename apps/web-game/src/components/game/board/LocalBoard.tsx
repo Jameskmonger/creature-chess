@@ -11,7 +11,7 @@ import {
 	useOnDropPiece,
 } from "./hooks";
 
-export function LocalBoard() {
+export function LocalBoard({ children }: { children?: React.ReactNode }) {
 	const board = useGameBoard();
 	const bench = useGameBench();
 
@@ -32,7 +32,9 @@ export function LocalBoard() {
 				onDropPiece={onDropPiece}
 				renderBoardPiece={renderBoardPiece}
 				renderBenchPiece={renderBenchPiece}
-			/>
+			>
+				{children}
+			</GameBoard>
 		</GameBoardContextProvider>
 	);
 }

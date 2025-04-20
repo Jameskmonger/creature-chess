@@ -11,7 +11,7 @@ import {
 	useOnDropPiece,
 } from "./hooks";
 
-export function MatchBoard() {
+export function MatchBoard({ children }: { children?: React.ReactNode }) {
 	const board = useGameMatchBoard();
 	const bench = useGameBench();
 
@@ -32,7 +32,9 @@ export function MatchBoard() {
 				onDropPiece={onDropPiece}
 				renderBoardPiece={renderBoardPiece}
 				renderBenchPiece={renderBenchPiece}
-			/>
+			>
+				{children}
+			</GameBoard>
 		</GameBoardContextProvider>
 	);
 }

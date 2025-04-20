@@ -9,11 +9,16 @@ import { AppState } from "../../../../store";
 
 const useStyles = createUseStyles({
 	nowPlaying: {
+		position: "absolute",
+		top: 0,
 		color: "#ffffff",
 		width: "100%",
 		textAlign: "center",
-		fontFamily: "Arial, sans-serif",
-		marginTop: "0.5em",
+		fontFamily: '"Roboto", sans-serif',
+		padding: "4px",
+		boxSizing: "border-box",
+		background: "rgba(0, 0, 0, 0.8)",
+		zIndex: 400,
 	},
 });
 
@@ -36,5 +41,5 @@ export function NowPlaying() {
 		return null;
 	}
 
-	return <span className={styles.nowPlaying}>Now Playing: {opponentName}</span>;
+	return <div className={styles.nowPlaying}>Now Playing: {opponentName}</div>;
 }
