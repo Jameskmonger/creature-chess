@@ -3,12 +3,12 @@ import React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
 
 import { DndProvider } from "@shoki-web/board-react";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { AppState } from "../../../store";
 import { Group } from "../../ui/layout";
 import { SelectedPieceInfo } from "../SelectedPieceInfo";
 import { LocalBoard } from "./LocalBoard";

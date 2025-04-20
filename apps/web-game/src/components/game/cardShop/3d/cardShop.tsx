@@ -3,10 +3,10 @@ import * as React from "react";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createUseStyles } from "react-jss";
+import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
 
 import { Card as CardModel } from "@creature-chess/models";
 
-import { useGamemodeSettings } from "../../../../contexts/GamemodeSettingsContext";
 import { Button } from "../../../ui/Button";
 import { Layout } from "../../../ui/layout";
 import { DynamicAspectRatioComponent } from "../../board/DynamicAspectRatioComponent";

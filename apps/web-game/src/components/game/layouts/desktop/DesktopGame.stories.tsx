@@ -1,14 +1,14 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
+import { LocalPlayerContextProvider } from "~/auth/context";
+import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
+import { GameState } from "~/store/game/state";
 
 import { GamePhase } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { GameStateProvider } from "../../../../../.storybook/GameStateProvider";
-import { LocalPlayerContextProvider } from "../../../../auth/context";
-import { GamemodeSettingsContextProvider } from "../../../../contexts/GamemodeSettingsContext";
-import { GameState } from "../../../../store/game/state";
 import { useGlobalStyles } from "../../../../styles";
 import { DesktopGame } from "./DesktopGame";
 

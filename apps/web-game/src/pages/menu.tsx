@@ -2,13 +2,12 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
-
-import { Page } from "../components/Page";
-import { Footer } from "../components/ui/Footer";
-import { LoadingScreen } from "../components/ui/LoadingScreen";
-import { Text } from "../components/ui/text";
-import { openConnection } from "../networking";
-import { AppState } from "../store";
+import { Page } from "~/components/Page";
+import { Footer } from "~/components/ui/Footer";
+import { LoadingScreen } from "~/components/ui/LoadingScreen";
+import { Text } from "~/components/ui/text";
+import { openConnection } from "~/networking";
+import { AppState } from "~/store";
 
 const useStyles = createUseStyles({
 	findGameButton: {

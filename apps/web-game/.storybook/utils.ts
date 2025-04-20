@@ -1,4 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { ConnectionStatus } from "~/networking/connection-status";
+import { GameState } from "~/store/game/state";
+import { StatsState } from "~/store/game/stats/state";
 
 import { BoardState, createInitialBoardState } from "@shoki/board";
 
@@ -11,10 +14,6 @@ import {
 import { StreakType } from "@creature-chess/models/player";
 import { PlayerTitle } from "@creature-chess/models/player/title";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
-
-import { ConnectionStatus } from "../src/networking/connection-status";
-import { GameState } from "../src/store/game/state";
-import { StatsState } from "../src/store/game/stats/state";
 
 const createPlayer = (
 	id: string,

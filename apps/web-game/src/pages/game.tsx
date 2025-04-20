@@ -4,11 +4,10 @@ import * as React from "react";
 import Div100vh from "react-div-100vh";
 import Media from "react-media";
 import { useSelector } from "react-redux";
-
-import { GuestAuthProvider } from "../auth/guest";
-import { DesktopGame, MobileGame } from "../components/game";
-import { GamemodeSettingsContextProvider } from "../contexts/GamemodeSettingsContext";
-import { AppState } from "../store";
+import { GuestAuthProvider } from "~/auth/guest";
+import { DesktopGame, MobileGame } from "~/components/game";
+import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
+import { AppState } from "~/store";
 
 export function GamePage() {
 	const settings = useSelector((state: AppState) => state.game.settings);

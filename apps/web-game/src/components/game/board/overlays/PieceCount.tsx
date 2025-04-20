@@ -3,14 +3,13 @@ import React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { useLocalPlayerId } from "~/auth/context";
+import { AppState } from "~/store";
 
 import { BoardSelectors } from "@shoki/board";
 
 import { getPlayerLevel } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-
-import { useLocalPlayerId } from "../../../../auth/context";
-import { AppState } from "../../../../store";
 
 const useStyles = createUseStyles({
 	pieceCount: {

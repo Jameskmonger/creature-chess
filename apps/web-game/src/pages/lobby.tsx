@@ -2,14 +2,13 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
-
-import { Page } from "../components/Page";
-import { LobbyPlayerBanner } from "../components/lobby/LobbyPlayerBanner";
-import { SettingsMenu } from "../components/lobby/SettingsMenu";
-import { useOpenSettingsMenu } from "../components/lobby/hooks/useOpenSettingsMenu";
-import { Footer } from "../components/ui/Footer";
-import { Countdown } from "../components/ui/countdown";
-import { AppState } from "../store";
+import { Page } from "~/components/Page";
+import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
+import { SettingsMenu } from "~/components/lobby/SettingsMenu";
+import { useOpenSettingsMenu } from "~/components/lobby/hooks/useOpenSettingsMenu";
+import { Footer } from "~/components/ui/Footer";
+import { Countdown } from "~/components/ui/countdown";
+import { AppState } from "~/store";
 
 const padNumberToTwo = (val: number) => (val < 10 ? `0${val}` : val.toString());
 

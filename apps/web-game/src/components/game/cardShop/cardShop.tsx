@@ -1,13 +1,13 @@
 import * as React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "~/store";
 
 import { BoardSelectors } from "@shoki/board";
 
 import { getPlayerMoney, PlayerActions } from "@creature-chess/gamemode";
 import { Card as CardModel } from "@creature-chess/models";
 
-import { AppState } from "../../../store";
 import { CardShop as CardShop2D } from "./2d/cardShop";
 import { CardShop as CardShop3D } from "./3d/cardShop";
 

@@ -2,12 +2,12 @@ import React, { ComponentProps } from "react";
 
 import { Meta, Story } from "@storybook/react";
 import { Provider } from "react-redux";
+import { LocalPlayerContextProvider } from "~/auth/context";
+import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
 
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { createMockStore } from "../../../../.storybook/utils";
-import { LocalPlayerContextProvider } from "../../../auth/context";
-import { GamemodeSettingsContextProvider } from "../../../contexts/GamemodeSettingsContext";
 import { PlayerGameProfile } from "./PlayerGameProfile";
 
 export default {

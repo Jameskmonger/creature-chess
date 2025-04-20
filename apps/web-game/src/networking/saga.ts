@@ -2,6 +2,9 @@ import { createAction } from "@reduxjs/toolkit";
 import { eventChannel } from "redux-saga";
 import { Socket } from "socket.io-client";
 import { all, call, cancel, fork, put, take } from "typed-redux-saga";
+import { gameSaga } from "~/sagas";
+import { MenuCommands } from "~/store/menu/state";
+import { getCookieValue } from "~/utils/getCookieValue";
 
 import { BoardSlice } from "@shoki/board";
 
@@ -12,9 +15,6 @@ import {
 } from "@creature-chess/networking";
 import { HandshakeRequest } from "@creature-chess/networking/handshake";
 
-import { gameSaga } from "../sagas";
-import { MenuCommands } from "../store/menu/state";
-import { getCookieValue } from "../utils/getCookieValue";
 import { gameNetworking } from "./game";
 import { lobbyNetworking } from "./lobby/networking";
 import { getSocket } from "./socket";

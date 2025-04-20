@@ -1,11 +1,10 @@
 import React, { useCallback } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "~/store";
+import { lobbyUpdateSettingEvent } from "~/store/lobby/actions";
 
 import { GamemodeSettings } from "@creature-chess/models/settings";
-
-import { AppState } from "../../store";
-import { lobbyUpdateSettingEvent } from "../../store/lobby/actions";
 
 type LobbySettingInputProps = {
 	type: "text" | "number";

@@ -1,12 +1,12 @@
 import React from "react";
 
 import { createUseStyles } from "react-jss";
+import { getRandomBoardState } from "~/utils/getRandomBoardState";
 
 import { BoardGrid } from "@shoki-web/board-react";
 
 import { PieceModel } from "@creature-chess/models";
 
-import { getRandomBoardState } from "../utils/getRandomBoardState";
 import { PieceContextProvider, Piece } from "./game/board/piece";
 
 const useBackgroundStyles = createUseStyles({

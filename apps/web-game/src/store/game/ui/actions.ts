@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import { ConnectionStatus } from "~/networking/connection-status";
 
-import { ConnectionStatus } from "../../../networking/connection-status";
 import { Overlay } from "./overlay";
 
 export const OPEN_OVERLAY = "OPEN_OVERLAY";

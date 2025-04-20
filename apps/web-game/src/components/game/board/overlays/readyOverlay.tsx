@@ -2,12 +2,12 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { useLocalPlayerId } from "~/auth/context";
+import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
-import { useLocalPlayerId } from "../../../../auth/context";
-import { AppState } from "../../../../store";
 import { Label } from "../../../ui/label";
 import { Group, Half, Layout } from "../../../ui/layout";
 import { Title, PlayerHealthbar, PlayerAvatar } from "../../../ui/player";

@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { useSelector, useDispatch } from "react-redux";
+import { AppState } from "~/store";
 
 import { BoardSelectors } from "@shoki/board";
 
@@ -9,7 +10,6 @@ import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
-import { AppState } from "../../../../../store";
 import { useStyles } from "./styles";
 
 export function SellPieceButton() {

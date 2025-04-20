@@ -5,13 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classnames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
-
-import { AppState } from "../../../../../store";
-import {
-	Overlay,
-	closeOverlay,
-	openOverlay,
-} from "../../../../../store/game/ui";
+import { AppState } from "~/store";
+import { Overlay, closeOverlay, openOverlay } from "~/store/game/ui";
 
 type Props = {
 	overlay: Overlay;

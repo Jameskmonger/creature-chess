@@ -2,11 +2,15 @@
 	"extends": "../../tsconfig.json",
 	"include": ["./src/**/*", "./@types/**/*", "./.storybook/**/*"],
 	"compilerOptions": {
+		"baseUrl": "./",
 		"typeRoots": [
 			"../../node_modules/@types",
 			"./node_modules/@types",
 			"../../modules/@creature-chess/battle/types",
 			"./@types"
-		]
+		],
+		"paths": {
+			"~/*": ["./src/*"]
+		}
 	}
 }

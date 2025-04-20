@@ -1,16 +1,16 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
+import { LocalPlayerContextProvider } from "~/auth/context";
+import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
+import { ConnectionStatus } from "~/networking/connection-status";
+import { GameState } from "~/store/game/state";
+import { Overlay } from "~/store/game/ui/overlay";
 
 import { GamePhase } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { GameStateProvider } from "../../../../../.storybook/GameStateProvider";
-import { LocalPlayerContextProvider } from "../../../../auth/context";
-import { GamemodeSettingsContextProvider } from "../../../../contexts/GamemodeSettingsContext";
-import { ConnectionStatus } from "../../../../networking/connection-status";
-import { GameState } from "../../../../store/game/state";
-import { Overlay } from "../../../../store/game/ui/overlay";
 import { useGlobalStyles } from "../../../../styles";
 import { MobileGame } from "./MobileGame";
 

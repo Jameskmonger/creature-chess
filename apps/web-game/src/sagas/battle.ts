@@ -1,5 +1,9 @@
 import { takeLatest, put, fork } from "@redux-saga/core/effects";
 import { select } from "typed-redux-saga";
+import { AppState } from "~/store";
+import { setMatchBoard } from "~/store/game/match/state";
+import { setStats } from "~/store/game/stats/state";
+import { getPlayerSlices } from "~/store/sagaContext";
 
 import {
 	BattleCommands,
@@ -8,11 +12,6 @@ import {
 } from "@creature-chess/battle";
 import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-
-import { AppState } from "../store";
-import { setMatchBoard } from "../store/game/match/state";
-import { setStats } from "../store/game/stats/state";
-import { getPlayerSlices } from "../store/sagaContext";
 
 export const clientBattleSaga = function* () {
 	const settings = yield* select((state: AppState) => state.game.settings);

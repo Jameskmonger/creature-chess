@@ -1,6 +1,6 @@
 import { Reducer } from "redux";
+import { ConnectionStatus } from "~/networking/connection-status";
 
-import { ConnectionStatus } from "../../../networking/connection-status";
 import {
 	OpenOverlayAction,
 	CloseOverlayAction,

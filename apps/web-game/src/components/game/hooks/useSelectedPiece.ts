@@ -1,10 +1,9 @@
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
 
 import { BoardSelectors } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
-
-import { AppState } from "../../../store";
 
 export function useSelectedPiece() {
 	return useSelector<AppState, PieceModel | null>((state) =>

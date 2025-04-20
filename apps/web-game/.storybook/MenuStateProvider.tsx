@@ -2,9 +2,8 @@ import React from "react";
 
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-
-import { MenuState } from "../src/store/menu/state";
-import { useGlobalStyles } from "../src/styles";
+import { MenuState } from "~/store/menu/state";
+import { useGlobalStyles } from "~/styles";
 
 export function MenuStateProvider({ children }: { children: React.ReactNode }) {
 	useGlobalStyles();

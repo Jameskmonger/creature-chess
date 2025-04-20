@@ -2,10 +2,10 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useDispatch } from "react-redux";
+import { lobbyStartNowEvent } from "~/store/lobby/actions";
 
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
-import { lobbyStartNowEvent } from "../../store/lobby/actions";
 import { Button } from "../ui/Button";
 import { LobbySettingInput } from "./LobbySettingInput";
 

@@ -2,12 +2,11 @@ import React from "react";
 
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
+import { LobbyState } from "~/store/lobby/state";
+import { useGlobalStyles } from "~/styles";
 
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
-
-import { LobbyState } from "../src/store/lobby/state";
-import { useGlobalStyles } from "../src/styles";
 
 export function LobbyStateProvider({
 	children,

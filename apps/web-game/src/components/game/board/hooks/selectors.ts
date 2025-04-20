@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
-
-import { AppState } from "../../../../store";
+import { AppState } from "~/store";
 
 export const useGameBoard = () =>
 	useSelector((state: AppState) => state.game.board);

@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import { useDispatch } from "react-redux";
+import { closeOverlay } from "~/store/game/ui";
 
-import { closeOverlay } from "../../../../store/game/ui";
 import { useStyles } from "./OverlayComponent.styles";
 
 export function OverlayComponent({

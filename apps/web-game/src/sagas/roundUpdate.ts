@@ -1,4 +1,5 @@
 import { takeLatest, put } from "@redux-saga/core/effects";
+import { getPlayerSlices } from "~/store/sagaContext";
 
 import {
 	GameEvents,
@@ -6,8 +7,6 @@ import {
 	RoundInfoCommands,
 } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-
-import { getPlayerSlices } from "../store/sagaContext";
 
 export const roundUpdateSaga = function* () {
 	const { board } = yield* getPlayerSlices();

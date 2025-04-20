@@ -2,14 +2,14 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { useLocalPlayerId } from "~/auth/context";
+import { AppState } from "~/store";
+import { StatsState } from "~/store/game/stats/state";
 
 import { BoardSelectors } from "@shoki/board";
 
 import { GamePhase, PieceModel } from "@creature-chess/models";
 
-import { useLocalPlayerId } from "../../../../auth/context";
-import { AppState } from "../../../../store";
-import { StatsState } from "../../../../store/game/stats/state";
 import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
 import { PieceBattleStats } from "../../PieceBattleStats";

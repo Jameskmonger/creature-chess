@@ -1,6 +1,6 @@
 import React from "react";
 
-import { getCookieValue } from "../utils/getCookieValue";
+import { getCookieValue } from "~/utils/getCookieValue";
 
 export function useCookie(cookieName: string) {
 	const [cookie, setCookie] = React.useState(() => getCookieValue(cookieName));

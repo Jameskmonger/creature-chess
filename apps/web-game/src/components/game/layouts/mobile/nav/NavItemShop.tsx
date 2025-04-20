@@ -3,9 +3,9 @@ import React from "react";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
+import { Overlay } from "~/store/game/ui";
 
-import { AppState } from "../../../../../store";
-import { Overlay } from "../../../../../store/game/ui";
 import { NavItem } from "./NavItem";
 
 const useStyles = createUseStyles({

@@ -1,9 +1,9 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
+import { getPlayerById } from "~/store/selectors";
 
-import { AppState } from "../../../../store";
-import { getPlayerById } from "../../../../store/selectors";
 import { DiscordIcon } from "../../../ui/DiscordIcon";
 import { Layout } from "../../../ui/layout";
 import { Header2, Header4 } from "../../../ui/text";

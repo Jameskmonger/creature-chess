@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
+import { playerClickTileAction } from "~/sagas/board/clickTileSaga";
 
 import { PlayerPieceLocation } from "@creature-chess/models";
 
-import { playerClickTileAction } from "../../../../sagas/board/clickTileSaga";
 import { GameBoardLocation } from "../GameBoard";
 
 export const useOnClickTile = ({

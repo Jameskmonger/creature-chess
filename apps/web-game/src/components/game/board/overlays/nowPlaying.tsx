@@ -2,10 +2,9 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
-
-import { AppState } from "../../../../store";
 
 const useStyles = createUseStyles({
 	nowPlaying: {

@@ -3,6 +3,11 @@ import { EventChannel, eventChannel } from "redux-saga";
 import { put } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
 import { all, call, cancelled, take, takeEvery } from "typed-redux-saga";
+import {
+	lobbyStartNowEvent,
+	lobbyUpdateSettingEvent,
+} from "~/store/lobby/actions";
+import { LobbyCommands } from "~/store/lobby/state";
 
 import { IncomingRegistry, OutgoingRegistry } from "@shoki/networking";
 
@@ -10,12 +15,6 @@ import {
 	LobbyServerToClient,
 	LobbyClientToServer,
 } from "@creature-chess/networking";
-
-import {
-	lobbyStartNowEvent,
-	lobbyUpdateSettingEvent,
-} from "../../store/lobby/actions";
-import { LobbyCommands } from "../../store/lobby/state";
 
 const readPacketsToActions = function* (
 	registry: IncomingRegistry<LobbyServerToClient.PacketSet>

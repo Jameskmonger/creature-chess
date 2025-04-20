@@ -8,10 +8,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createUseStyles } from "react-jss";
+import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
 
 import { Card as CardModel } from "@creature-chess/models";
 
-import { useGamemodeSettings } from "../../../../contexts/GamemodeSettingsContext";
 import { BalanceIcon } from "../../../ui/icon/BalanceIcon";
 import { Card2D as Card } from "./card";
 

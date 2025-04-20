@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
 
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
 
-import { AppState } from "../../../../store";
 import { DiscordIcon } from "../../../ui/DiscordIcon";
 import { Group, Layout } from "../../../ui/layout";
 import { Header2, Header4 } from "../../../ui/text";

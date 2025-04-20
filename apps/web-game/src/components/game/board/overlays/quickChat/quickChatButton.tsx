@@ -3,11 +3,10 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useDispatch } from "react-redux";
+import { useLocalPlayerId } from "~/auth/context";
 
 import { PlayerActions } from "@creature-chess/gamemode";
 import { QuickChatOption } from "@creature-chess/models";
-
-import { useLocalPlayerId } from "../../../../../auth/context";
 
 const useStyles = createUseStyles({
 	button: {

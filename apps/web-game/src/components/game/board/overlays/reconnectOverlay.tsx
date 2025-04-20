@@ -1,9 +1,9 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
+import { ConnectionStatus } from "~/networking/connection-status";
+import { AppState } from "~/store";
 
-import { ConnectionStatus } from "../../../../networking/connection-status";
-import { AppState } from "../../../../store";
 import { Group } from "../../../ui/layout";
 import { BoardOverlay } from "./boardOverlay";
 

@@ -1,5 +1,12 @@
 import { all, call } from "redux-saga/effects";
 import { put } from "typed-redux-saga";
+import { ConnectionStatus } from "~/networking/connection-status";
+import { PlayerListCommands } from "~/store/game/playerList/state";
+import { SettingsCommands } from "~/store/game/settings/state";
+import {
+	setInGameCommand,
+	updateConnectionStatus,
+} from "~/store/game/ui/actions";
 
 import { BoardSlice } from "@shoki/board";
 
@@ -7,13 +14,6 @@ import { RoundInfoCommands } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 import { GameServerToClient } from "@creature-chess/networking";
 
-import { ConnectionStatus } from "../networking/connection-status";
-import { PlayerListCommands } from "../store/game/playerList/state";
-import { SettingsCommands } from "../store/game/settings/state";
-import {
-	setInGameCommand,
-	updateConnectionStatus,
-} from "../store/game/ui/actions";
 import { clientBattleSaga } from "./battle";
 import { clickPieceSaga } from "./board/clickPieceSaga";
 import { clickTileSaga } from "./board/clickTileSaga";

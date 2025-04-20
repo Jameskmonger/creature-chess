@@ -3,11 +3,11 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { useLocalPlayerId } from "~/auth/context";
+import { AppState } from "~/store";
 
 import { getPlayerMoney } from "@creature-chess/gamemode";
 
-import { useLocalPlayerId } from "../../auth/context";
-import { AppState } from "../../store";
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { PlayerHealthbar } from "../ui/player";
 import { PhaseInfo } from "./phaseInfo";

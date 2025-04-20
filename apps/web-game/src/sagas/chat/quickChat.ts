@@ -1,9 +1,8 @@
 import { delay, put, race } from "redux-saga/effects";
 import { take } from "typed-redux-saga";
+import { QuickChatCommands } from "~/store/game/chat/state";
 
 import { PlayerEvents } from "@creature-chess/gamemode";
-
-import { QuickChatCommands } from "../../store/game/chat/state";
 
 const takeQuickChat = () =>
 	take<PlayerEvents.PlayerReceiveQuickChatEvent>(

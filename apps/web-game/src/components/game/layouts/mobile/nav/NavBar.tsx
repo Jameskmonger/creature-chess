@@ -6,8 +6,8 @@ import {
 	faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { createUseStyles } from "react-jss";
+import { Overlay } from "~/store/game/ui";
 
-import { Overlay } from "../../../../../store/game/ui";
 import { NavItem } from "./NavItem";
 import { NavItemShop } from "./NavItemShop";
 

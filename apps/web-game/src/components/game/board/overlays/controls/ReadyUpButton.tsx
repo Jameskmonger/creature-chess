@@ -1,11 +1,11 @@
 import * as React from "react";
 
 import { useSelector, useDispatch } from "react-redux";
+import { AppState } from "~/store";
 
 import { PlayerActions } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
-import { AppState } from "../../../../../store";
 import { useStyles } from "./styles";
 
 export function ReadyUpButton() {

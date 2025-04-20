@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
+import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
 
 import { Card as CardModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { GamemodeSettingsContextProvider } from "../../../../contexts/GamemodeSettingsContext";
 import { CardShop } from "./cardShop";
 import "./cardShop.stories.css";
 

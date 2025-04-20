@@ -3,6 +3,9 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocalPlayerId } from "~/auth/context";
+import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
+import { AppState } from "~/store";
 
 import {
 	PlayerActions,
@@ -13,9 +16,6 @@ import {
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { MAX_LEVEL } from "@creature-chess/models/config";
 
-import { useLocalPlayerId } from "../../../auth/context";
-import { useGamemodeSettings } from "../../../contexts/GamemodeSettingsContext";
-import { AppState } from "../../../store";
 import { Layout } from "../../ui/layout";
 import { PlayerName } from "../../ui/player";
 import { ProgressBar } from "../../ui/progressBar";

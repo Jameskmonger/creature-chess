@@ -3,13 +3,13 @@ import React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
 
 import { BoardSelectors } from "@shoki/board";
 
 import { getDefinitionById } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 
-import { AppState } from "../../store";
 import { TraitIcon } from "../ui/TraitIcon";
 import { Layout } from "../ui/layout";
 import { useSelectedPiece } from "./hooks/useSelectedPiece";

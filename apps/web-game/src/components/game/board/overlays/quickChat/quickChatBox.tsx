@@ -1,8 +1,8 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
+import { AppState } from "~/store";
 
-import { AppState } from "../../../../../store";
 import { Text } from "../../../../ui/text";
 
 export function QuickChatBox({ sendingPlayerId }: { sendingPlayerId: string }) {

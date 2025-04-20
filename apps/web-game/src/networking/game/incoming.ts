@@ -1,6 +1,9 @@
 import { eventChannel } from "redux-saga";
 import { takeEvery, put, call, all } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
+import { setMatchBoard } from "~/store/game/match/state";
+import { updateConnectionStatus } from "~/store/game/ui/actions";
+import { getPlayerSlices } from "~/store/sagaContext";
 
 import { BoardSlice } from "@shoki/board";
 import { ActionStream, IncomingRegistry } from "@shoki/networking";
@@ -14,9 +17,6 @@ import {
 import { PieceModel } from "@creature-chess/models";
 import { GameServerToClient } from "@creature-chess/networking";
 
-import { setMatchBoard } from "../../store/game/match/state";
-import { updateConnectionStatus } from "../../store/game/ui/actions";
-import { getPlayerSlices } from "../../store/sagaContext";
 import { ConnectionStatus } from "../connection-status";
 
 const readPacketsToActions = function* (

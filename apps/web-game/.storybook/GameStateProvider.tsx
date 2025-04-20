@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Provider } from "react-redux";
+import { GameState } from "~/store/game/state";
+import { useGlobalStyles } from "~/styles";
 
-import { GameState } from "../src/store/game/state";
-import { useGlobalStyles } from "../src/styles";
 import { createMockStore } from "./utils";
 
 export function GameStateProvider({

@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
+import { networkingSaga } from "~/networking";
 
 import { createBoardSlice } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { networkingSaga } from "../networking";
 import { createGameReducer } from "./game/state";
 import { lobbyReducer } from "./lobby/state";
 import { menuReducer } from "./menu/state";
