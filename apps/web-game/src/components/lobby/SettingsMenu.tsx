@@ -21,12 +21,14 @@ const useStyles = createUseStyles({
 	},
 });
 
-const settings = [
-	["startingLevel", "startingMoney", "healthLostPerPiece"],
-	["rerollCost", "rerollMultiplier", "buyXpCost", "buyXpAmount"],
-	["boardWidth", "boardHalfHeight", "benchSize"],
-	["battleTurnDuration"],
-];
+// const settings = [
+// 	["startingLevel", "startingMoney", "healthLostPerPiece"],
+// 	["rerollCost", "rerollMultiplier", "buyXpCost", "buyXpAmount"],
+// 	["boardWidth", "boardHalfHeight", "benchSize"],
+// 	["battleTurnDuration"],
+// ];
+
+const settings = [["healthLostPerPiece"]];
 
 export function SettingsMenu() {
 	const dispatch = useDispatch();
