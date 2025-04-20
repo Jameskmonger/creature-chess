@@ -6,8 +6,10 @@ import { useSelector } from "react-redux";
 
 import { getPlayerMoney } from "@creature-chess/gamemode";
 
+import { useLocalPlayerId } from "../../auth/context";
 import { AppState } from "../../store";
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
+import { PlayerHealthbar } from "../ui/player";
 import { PhaseInfo } from "./phaseInfo";
 
 const useStyles = createUseStyles({
@@ -37,10 +39,17 @@ const useStyles = createUseStyles({
 		justifyContent: "end",
 		fontSize: "16px",
 	},
+	container: {
+		display: "flex",
+		flexDirection: "column",
+	},
 });
 
 export function TopBar() {
 	const styles = useStyles();
+
+	const playerId = useLocalPlayerId();
+
 	const round = useSelector<AppState, number | null>(
 		(state) => state.game.roundInfo.round
 	);
@@ -48,20 +57,30 @@ export function TopBar() {
 		getPlayerMoney(state.game)
 	);
 
+	// todo reselect
+	const health = useSelector<AppState, number>((state) => {
+		const player = state.game.playerList.find((p) => p.id === playerId);
+
+		return player?.health ?? 0;
+	});
+
 	return (
-		<div className={styles.topBar}>
-			<div className={classNames(styles.segment, styles.left)}>
-				<span>Round {round}</span>
-			</div>
+		<div className={styles.container}>
+			<div className={styles.topBar}>
+				<div className={classNames(styles.segment, styles.left)}>
+					<span>Round {round}</span>
+				</div>
 
-			<div className={styles.segment}>
-				<PhaseInfo />
-			</div>
+				<div className={styles.segment}>
+					<PhaseInfo />
+				</div>
 
-			<div className={classNames(styles.segment, styles.right)}>
-				<span>{money}</span>
-				<BalanceIcon />
+				<div className={classNames(styles.segment, styles.right)}>
+					<span>{money}</span>
+					<BalanceIcon />
+				</div>
 			</div>
+			<PlayerHealthbar health={health} />
 		</div>
 	);
 }

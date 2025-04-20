@@ -22,16 +22,16 @@ const useStyles = createUseStyles({
 	},
 	content: {
 		position: "absolute",
-		top: 0,
-		right: "0.25em",
-		fontFamily: "Arial, sans-serif",
-		fontSize: "0.8em",
+		top: "-2px",
+		right: "8px",
+		fontFamily: '"Roboto", sans-serif',
+		fontSize: "12px",
 		fontWeight: 700,
 		color: "#000",
 	},
 });
 
-const renderHealthbar = (current: number) => current.toString();
+const renderHealthbar = (current: number) => `${current} / ${MAX_HEALTH} hp`;
 
 const PlayerHealthbar: React.FunctionComponent<Props> = ({ health }) => {
 	const classes = useStyles();

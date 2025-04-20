@@ -19,7 +19,7 @@ import { useLocalPlayerId } from "../../../auth/context";
 import { useGamemodeSettings } from "../../../contexts/GamemodeSettingsContext";
 import { AppState } from "../../../store";
 import { Layout } from "../../ui/layout";
-import { PlayerHealthbar, PlayerName } from "../../ui/player";
+import { PlayerName } from "../../ui/player";
 import { ProgressBar } from "../../ui/progressBar";
 import { useStyles } from "./PlayerGameProfile.styles";
 
@@ -142,8 +142,6 @@ export function PlayerGameProfile() {
 					</button>
 				)}
 			</div>
-
-			<PlayerHealthbar health={health} />
 		</div>
 	);
 }
