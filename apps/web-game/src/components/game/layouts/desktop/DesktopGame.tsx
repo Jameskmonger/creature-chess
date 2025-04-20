@@ -12,19 +12,17 @@ import { AppState } from "../../../../store";
 import { StatsState } from "../../../../store/game/stats/state";
 import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
-import { Layout } from "../../../ui/layout";
 import { PieceBattleStats } from "../../PieceBattleStats";
 import { SelectedPieceInfo } from "../../SelectedPieceInfo";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
-import { Controls, NowPlaying } from "../../board/overlays";
+import { Controls } from "../../board/overlays";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { useSelectedPiece } from "../../hooks/useSelectedPiece";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { QuitGameButton } from "../../settings";
-import { LandscapeGameScreen } from "../LandscapeGameScreen";
 
 const useStyles = createUseStyles({
 	helpContainer: {
@@ -120,8 +118,6 @@ const DesktopGame: React.FunctionComponent = () => {
 	return (
 		<div className={styles.game}>
 			<div className={styles.leftColumn}>
-				<NowPlaying />
-
 				<TabMenu tabs={leftTabs} className={styles.tabMenu} />
 
 				<div className={styles.fixed}>
