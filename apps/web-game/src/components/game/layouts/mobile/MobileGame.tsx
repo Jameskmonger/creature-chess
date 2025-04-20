@@ -1,10 +1,10 @@
 import * as React from "react";
 
+import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 
 import { BoardSelectors } from "@shoki/board";
 
-import { getPlayerMoney } from "@creature-chess/gamemode";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 
 import { useLocalPlayerId } from "../../../../auth/context";
@@ -20,20 +20,15 @@ import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
-import { PortraitGameScreen } from "../PortraitGameScreen";
 import { MobileContentPane } from "./MobileContentPane";
-import { NavBar } from "./NavBar";
 import { OverlayComponent } from "./OverlayComponent";
 import { TopBar } from "./TopBar";
+import { NavBar } from "./nav/NavBar";
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	currentOverlay,
 }) => {
 	const localPlayerId = useLocalPlayerId();
-
-	const currentBalance = useSelector<AppState, number>((state) =>
-		getPlayerMoney(state.game)
-	);
 
 	const inPlayingOrReadyPhase = useSelector<AppState, boolean>(
 		(state) =>
@@ -139,12 +134,40 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 	);
 };
 
-const MobileGame = () => (
-	<PortraitGameScreen
-		topRowContent={<TopBar />}
-		middleRowContent={<MobileGameContentPane />}
-		bottomRowContent={<NavBar />}
-	/>
-);
+const useStyles = createUseStyles({
+	game: {
+		display: "flex",
+		height: "100%",
+		width: "100%",
+		flexDirection: "column",
+		gap: "8px",
+	},
+	topBar: {
+		height: "max(4%, 8px)",
+		width: "100%",
+		flex: 0,
+	},
+	content: {
+		flex: 1,
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		overflow: "hidden",
+	},
+});
 
-export { MobileGame };
+export function MobileGame() {
+	const styles = useStyles();
+
+	return (
+		<div className={styles.game}>
+			<div className={styles.topBar}>
+				<TopBar />
+			</div>
+			<div className={styles.content}>
+				<MobileGameContentPane />
+			</div>
+			<NavBar />
+		</div>
+	);
+}
