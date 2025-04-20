@@ -18,57 +18,93 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 	card: {
 		display: "flex",
 		flexDirection: "row",
+		alignItems: "center",
 
 		userSelect: "none",
 
 		containerType: "inline-size",
 		containerName: "card",
+		background: (props) =>
+			["", "#696969", "#2e762e", "#2e89ff", "#931093", "#e09429"][
+				props.card!.cost
+			] || "#ff0000",
 	},
 	imageContainer: {
 		aspectRatio: "1/1",
-		background: "#303030",
-		padding: "2% 4% 2% 2%",
+		height: "100%",
+
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
 
 		position: "relative",
 	},
 	image: {
-		width: "64px",
-		height: "64px",
+		"width": "64px",
+		"height": "64px",
 
-		zIndex: 10,
+		"zIndex": 10,
 
-		position: "relative",
+		"position": "relative",
+
+		"@media (orientation: portrait) and (max-width: 375px)": {
+			width: "48px",
+			height: "48px",
+		},
 	},
 	shadow: {
-		position: "absolute",
+		"position": "absolute",
 
-		width: "64px",
-		height: "64px",
+		"width": (props) =>
+			["0px", "10px", "24px", "36px", "52px", "62px"][props.card!.cost] ||
+			"0px",
+		"height": (props) =>
+			["0px", "10px", "24px", "36px", "52px", "62px"][props.card!.cost] ||
+			"0px",
 
-		backgroundColor: "#1c1c1c",
-		borderRadius: "50%",
+		"@media (orientation: portrait) and (max-width: 375px)": {
+			width: (props) =>
+				["0px", "6px", "10px", "20px", "36px", "46px"][props.card!.cost] ||
+				"0px",
+			height: (props) =>
+				["0px", "6px", "10px", "20px", "36px", "46px"][props.card!.cost] ||
+				"0px",
+		},
 
-		filter: "blur(4px)",
-		zIndex: 9,
+		"aspectRatio": "1/1",
+
+		"background":
+			"radial-gradient(hsl(0 0% 60% / 1), hsl(0 0% 20% / 1), hsl(0 0% 12% / 1))",
+		"borderRadius": "50%",
+
+		"filter": (props) =>
+			`blur(${
+				["0px", "12px", "8px", "4px", "2px", "0px"][props.card!.cost] || "0px"
+			})`,
+		"zIndex": 9,
 	},
 	info: {
 		flex: 1,
 
 		display: "flex",
 		flexDirection: "column",
-
-		background: "#303030",
 	},
 	nameBar: {
-		display: "flex",
-		justifyContent: "space-between",
-		alignItems: "center",
-		padding: "1% 5%",
-		background: "#101010",
-		zIndex: 11,
-		borderBottom: (props) =>
-			`6px solid ${
-				["", "#b4b4b4", "#4eba4e", "#4690ff", "#993899", "#e09429"][
+		"display": "flex",
+		"justifyContent": "space-between",
+		"alignItems": "center",
+		"padding": "2px 8px",
+
+		"@container card (min-height: 112px)": {
+			padding: "4px 8px",
+			borderBottomWidth: "6px",
+		},
+
+		"background": "#101010",
+		"zIndex": 11,
+		"borderBottom": (props) =>
+			`4px solid ${
+				["", "#b4b4b4", "#4eba4e", "#0258d9", "#c94fbd", "#b86d05"][
 					props.card!.cost
 				] || "#ff0000"
 			}`,
@@ -86,20 +122,25 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 		"flexDirection": "row",
 		"alignItems": "center",
 
-		"height": "48px",
+		"height": "64px",
 		"paddingBottom": "8px",
 
 		"@container card (min-height: 112px)": {
 			height: "64px",
 		},
 
-		"@media (orientation: portrait) and (max-width: 375px)": {
+		"@media (orientation: portrait) and (max-width: 374px)": {
 			height: "32px",
 			paddingBottom: 0,
 		},
 
-		"@media (min-width: 376px) and (max-width: 430px)": {
-			height: "48px",
+		"@media (orientation: portrait) and (min-width: 375px) and (max-width: 429px)":
+			{
+				height: "48px",
+			},
+
+		"@media (orientation: portrait) and (min-width: 430px)": {
+			height: "64px",
 		},
 	},
 	traitIcon: {
@@ -118,6 +159,7 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 	buyContainer: {
 		background: "#101010",
 		width: "20%",
+		height: "100%",
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
@@ -188,9 +230,10 @@ export function Card2D(props: CardShopCardProps) {
 		<div className={classes.card}>
 			<div className={classes.imageContainer}>
 				<div className={classes.shadow} />
-				<div className={classes.image}>
-					<CreatureImage definitionId={card.definitionId} />
-				</div>
+				<CreatureImage
+					definitionId={card.definitionId}
+					className={classes.image}
+				/>
 			</div>
 
 			<div className={classes.info}>

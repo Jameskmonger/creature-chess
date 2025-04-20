@@ -41,13 +41,7 @@ const useStyles = createUseStyles({
 		padding: "2%",
 		background: "#797979",
 		height: "100%",
-	},
-	card: {
-		"height": "18%",
-
-		"&:not(:last-child)": {
-			marginBottom: "2%",
-		},
+		justifyContent: "space-between",
 	},
 	bottomBar: {
 		"display": "flex",
@@ -62,13 +56,17 @@ const useStyles = createUseStyles({
 		},
 	},
 	balance: {
-		flex: 1,
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		color: "#ffffff",
-		fontSize: "32px",
-		letterSpacing: "3px",
+		"flex": 1,
+		"display": "flex",
+		"justifyContent": "center",
+		"alignItems": "center",
+		"color": "#ffffff",
+		"fontSize": "32px",
+		"letterSpacing": "3px",
+
+		"@media (orientation: portrait) and (max-width: 376px)": {
+			fontSize: "24px",
+		},
 	},
 	balanceIcon: {
 		marginRight: "8px",
@@ -84,7 +82,7 @@ const useStyles = createUseStyles({
 		"fontOpticalSizing": "auto",
 		"fontWeight": 700,
 		"fontStyle": "normal",
-		"fontSize": "16px",
+		"fontSize": "24px",
 
 		"padding": "4% 6%",
 
@@ -102,6 +100,13 @@ const useStyles = createUseStyles({
 		"& > span": {
 			fontSize: "14px",
 			marginLeft: "6px",
+		},
+
+		"@media (orientation: portrait) and (max-width: 376px)": {
+			"fontSize": "16px",
+			"& > span": {
+				fontSize: "10px",
+			},
 		},
 	},
 });
@@ -122,9 +127,9 @@ export function CardShop({
 	return (
 		<div className={classes.shop}>
 			<div className={classes.cards}>
-				{cards.map((card, index) => (
-					<div className={classes.card} key={card ? card.id : `empty-${index}`}>
-						{card !== null && (
+				{cards.map(
+					(card, index) =>
+						card !== null && (
 							<Card
 								key={card!.id}
 								card={card}
@@ -132,9 +137,8 @@ export function CardShop({
 								owned={ownedDefinitionIds.includes(card.definitionId)}
 								onBuy={() => onBuy?.(index)}
 							/>
-						)}
-					</div>
-				))}
+						)
+				)}
 			</div>
 
 			<div className={classes.bottomBar}>
