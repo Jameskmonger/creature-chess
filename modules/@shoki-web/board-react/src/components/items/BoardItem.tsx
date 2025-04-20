@@ -2,11 +2,12 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
+import { useBoardState } from "../../context";
+
 type BoardItemProps = {
 	children: React.ReactNode;
 	x: number;
 	y: number;
-	tileSizePx: number;
 };
 
 const TILE_BASE_Z_INDEX = 50;
@@ -19,19 +20,20 @@ const useStyles = createUseStyles({
 });
 
 export const BoardItem = React.forwardRef<any, BoardItemProps>(
-	({ x, y, children, tileSizePx }, ref) => {
+	({ x, y, children }, ref) => {
 		const styles = useStyles();
+		const { size } = useBoardState();
 
 		return (
 			<div
 				ref={ref}
 				className={styles.boardItem}
 				style={{
-					width: `${tileSizePx}px`,
-					height: `${tileSizePx}px`,
+					left: `${(x / size.width) * 100}%`,
+					top: `${(y / size.height) * 100}%`,
 
-					left: `${x * tileSizePx}px`,
-					top: `${y * tileSizePx}px`,
+					width: `${(1 / size.width) * 100}%`,
+					height: `${(1 / size.height) * 100}%`,
 
 					zIndex: TILE_BASE_Z_INDEX + y + 1,
 				}}

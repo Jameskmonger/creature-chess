@@ -7,102 +7,86 @@ import { BoardState, PiecePosition } from "@shoki/board";
 
 import { BoardContextProvider, BoardContextValue } from "../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
-import { useElementSize } from "../useElementSize";
-import { BoardGridRows } from "./BoardGridRows";
+import { BoardTiles } from "./BoardTiles";
 import { BoardItems } from "./items/BoardItems";
 import { BoardItemRenderFn } from "./items/renderItem";
-import { useDefaultRenderer } from "./useDefaultRenderer";
 
 type BoardGridProps = {
 	state: BoardState;
-	containerClassName?: string;
-	boardClassName?: string;
 	renderItem: BoardItemRenderFn;
 	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;
 	dragDrop?: boolean;
 	children?: React.ReactNode;
+
+	className?: string;
+	lightTileClassName?: string;
+	darkTileClassName?: string;
 };
 
-const useStyles = createUseStyles({
-	boardContainer: {
+const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
+	root: {
 		position: "relative",
 		width: "100%",
 		height: "100%",
-		display: "flex",
-		justifyContent: "center",
+
+		containerName: "board",
+		containerType: "size",
 	},
-	board: {
+
+	board: ({ size }) => ({
 		position: "relative",
-	},
+		aspectRatio: `${size.width} / ${size.height}`,
+
+		// portrait
+		[`@container board (max-aspect-ratio: ${size.width} / ${size.height})`]: {
+			width: "100%",
+			height: "auto",
+		},
+
+		// landscape
+		[`@container board (min-aspect-ratio: ${size.width} / ${size.height})`]: {
+			width: "auto",
+			height: "100%",
+		},
+	}),
 });
 
-function useTileSize(
-	boardContainerSize: { width: number; height: number },
-	boardSize: { width: number; height: number }
-) {
-	const { width, height } = boardContainerSize;
-	const { width: columnCount, height: rowCount } = boardSize;
-
-	const tileWidth = width / columnCount;
-	const tileHeight = height / rowCount;
-
-	return Math.min(tileWidth, tileHeight);
-}
-
-export function BoardGrid(props: BoardGridProps) {
-	const {
-		state,
-		renderItem,
-		onDropItem,
-		onClickTile,
-		dragDrop = true,
-		children,
-	} = props;
-	const defaultRenderTileBackground = useDefaultRenderer();
-
+export function BoardGrid({
+	state,
+	renderItem,
+	onDropItem,
+	onClickTile,
+	dragDrop = true,
+	children,
+	renderTileBackground,
+	className,
+	lightTileClassName,
+	darkTileClassName,
+}: BoardGridProps) {
 	const boardContext: BoardContextValue = {
 		state,
-		tileBackgroundRenderer:
-			props.renderTileBackground || defaultRenderTileBackground,
+		tileBackgroundRenderer: renderTileBackground,
 	};
 
-	const styles = useStyles();
-	const { ref, size } = useElementSize();
-	const tileSize = useTileSize(size, state.size);
-
-	const containerClass = classNames(
-		styles.boardContainer,
-		props.containerClassName
-	);
-	const boardClass = classNames(styles.board, props.boardClassName);
+	const styles = useStyles({ size: state.size });
 
 	return (
-		<div className={containerClass} ref={ref}>
-			<div
-				className={boardClass}
-				style={{
-					width: `${tileSize * state.size.width}px`,
-					height: `${tileSize * state.size.height}px`,
-				}}
-			>
-				{children}
-				<BoardContextProvider value={boardContext}>
-					<BoardGridRows
-						onDropItem={onDropItem}
-						onClickTile={onClickTile}
-						tileSizePx={tileSize}
+		<div className={classNames(styles.root, className)}>
+			<BoardContextProvider value={boardContext}>
+				<div className={styles.board}>
+					{children}
+					<BoardTiles
+						lightTileClassName={lightTileClassName}
+						darkTileClassName={darkTileClassName}
 						dragDrop={dragDrop}
+						onClick={onClickTile}
+						onDrop={onDropItem}
 					/>
-
-					<BoardItems
-						render={renderItem}
-						tileSizePx={tileSize}
-						dragDrop={dragDrop}
-					/>
-				</BoardContextProvider>
-			</div>
+					<BoardItems render={renderItem} dragDrop={dragDrop} />
+				</div>
+			</BoardContextProvider>
 		</div>
 	);
 }

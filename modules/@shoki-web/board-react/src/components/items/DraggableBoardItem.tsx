@@ -9,7 +9,6 @@ type DraggableBoardItemProps = {
 	id: string;
 	x: number;
 	y: number;
-	tileSizePx: number;
 };
 
 export const DraggableBoardItem: React.FC<DraggableBoardItemProps> = ({
@@ -17,7 +16,6 @@ export const DraggableBoardItem: React.FC<DraggableBoardItemProps> = ({
 	id,
 	x,
 	y,
-	tileSizePx,
 }) => {
 	const [{}, drag] = useDrag<{ id: string }, void, {}>({
 		type: "BoardItem",
@@ -25,7 +23,7 @@ export const DraggableBoardItem: React.FC<DraggableBoardItemProps> = ({
 	});
 
 	return (
-		<BoardItem ref={drag} x={x} y={y} tileSizePx={tileSizePx}>
+		<BoardItem ref={drag} x={x} y={y}>
 			{children}
 		</BoardItem>
 	);

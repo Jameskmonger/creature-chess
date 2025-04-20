@@ -5,18 +5,19 @@ import { BoardItem } from "./BoardItem";
 import { DraggableBoardItem } from "./DraggableBoardItem";
 import { BoardItemRenderFn } from "./renderItem";
 
-const BoardItems: React.FC<{
+type Props = {
 	render: BoardItemRenderFn;
-	tileSizePx: number;
 	dragDrop?: boolean;
-}> = ({ render, tileSizePx, dragDrop }) => {
+};
+
+export function BoardItems({ render, dragDrop }: Props) {
 	const { pieces, piecePositions } = useBoardState();
 
 	const pieceElements: React.ReactNode[] = [];
 
 	// this weird code is needed so that React keeps the same DOM elements, thus preserving the CSS animations
 	const entries = Object.entries(piecePositions);
-	entries.sort(([aPosition, aId], [bPosition, bId]) => aId.localeCompare(bId));
+	entries.sort(([, aId], [, bId]) => aId.localeCompare(bId));
 
 	for (const [position, id] of entries) {
 		if (!id) {
@@ -29,19 +30,13 @@ const BoardItems: React.FC<{
 
 		if (dragDrop && draggable) {
 			pieceElements.push(
-				<DraggableBoardItem
-					key={id}
-					id={id}
-					x={x}
-					y={y}
-					tileSizePx={tileSizePx}
-				>
+				<DraggableBoardItem key={id} id={id} x={x} y={y}>
 					{item}
 				</DraggableBoardItem>
 			);
 		} else {
 			pieceElements.push(
-				<BoardItem key={id} x={x} y={y} tileSizePx={tileSizePx}>
+				<BoardItem key={id} x={x} y={y}>
 					{item}
 				</BoardItem>
 			);
@@ -49,6 +44,4 @@ const BoardItems: React.FC<{
 	}
 
 	return <>{pieceElements}</>;
-};
-
-export { BoardItems };
+}

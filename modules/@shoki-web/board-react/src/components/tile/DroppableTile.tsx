@@ -4,7 +4,6 @@ import { useDrop } from "react-dnd";
 
 import { useBelowPieceLimit, usePieces } from "../../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../../events";
-import { Tile } from "./Tile";
 
 type DroppableTileProps = {
 	x: number;

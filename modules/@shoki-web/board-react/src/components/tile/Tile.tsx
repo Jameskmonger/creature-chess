@@ -1,17 +1,19 @@
-import React, { useRef } from "react";
+import React from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { useTileBackgroundRenderer } from "../../context";
-import { ClickBoardTileEvent } from "../../events";
+import { useBoardState, useTileBackgroundRenderer } from "../../context";
+import { ClickBoardTileEvent, DropBoardItemEvent } from "../../events";
+import { DroppableTile } from "./DroppableTile";
 
 type TileProps = {
 	x: number;
 	y: number;
-	tileSizePx: number;
+	dragDrop: boolean;
 	onClick?: (event: ClickBoardTileEvent) => void;
-	children?: React.ReactNode;
+	onDrop?: (event: DropBoardItemEvent) => void;
+	className?: string;
 };
 
 const useStyles = createUseStyles({
@@ -24,27 +26,35 @@ const useStyles = createUseStyles({
 });
 
 export const Tile = React.forwardRef<any, TileProps>(
-	({ x, y, tileSizePx, children, onClick }, ref) => {
+	({ x, y, dragDrop, onClick, onDrop, className }, ref) => {
+		const { locked, piecePositions } = useBoardState();
+
 		const styles = useStyles();
 		const tileBackgroundRenderer = useTileBackgroundRenderer();
 
-		const handleClick = onClick ? () => onClick({ x, y }) : undefined;
+		const handleClick = React.useCallback(() => {
+			if (onClick) {
+				onClick({ x, y });
+			}
+		}, [onClick, x, y]);
 
-		const className = classNames(styles.tile, "tile");
+		const canDropPiece = React.useMemo(
+			() =>
+				dragDrop &&
+				Boolean(piecePositions[`${x},${y}`]) === false &&
+				locked === false,
+			[dragDrop, piecePositions, x, y, locked]
+		);
 
 		return (
 			<div
 				ref={ref}
-				className={className}
+				className={classNames(styles.tile, className)}
 				touch-action="none"
 				onPointerUp={handleClick}
-				style={{
-					width: `${tileSizePx}px`,
-					height: `${tileSizePx}px`,
-				}}
 			>
 				{tileBackgroundRenderer && tileBackgroundRenderer({ x, y })}
-				{children}
+				{canDropPiece && <DroppableTile x={x} y={y} onDrop={onDrop} />}
 			</div>
 		);
 	}

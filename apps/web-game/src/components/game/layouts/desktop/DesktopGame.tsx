@@ -37,7 +37,10 @@ const useStyles = createUseStyles({
 		gap: "16px",
 	},
 	board: {
-		flex: 2,
+		display: "flex",
+		flexDirection: "column",
+		gap: "16px",
+		flex: 3,
 	},
 	leftColumn: {
 		height: "100%",

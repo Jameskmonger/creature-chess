@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { HasId, PiecePosition } from "@shoki/board";
+import { BoardState, HasId, PiecePosition } from "@shoki/board";
 
 import {
 	BoardGrid,
@@ -12,8 +12,8 @@ import {
 
 import { PieceModel } from "@creature-chess/models";
 
-import { DynamicAspectRatioComponent } from "./DynamicAspectRatioComponent";
 import { useGameBoard } from "./GameBoardContext";
+import { ThemedBoard } from "./ThemedBoard";
 
 export type GameBoardLocation =
 	| {
@@ -140,45 +140,56 @@ function useRenderers({
 	return { boardPieceRenderer, benchPieceRenderer };
 }
 
-const useStyles = createUseStyles<string>({
-	gameBoard: {
-		"height": "100%",
-		"width": "100%",
+const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
+	root: {
+		height: "100%",
+		width: "auto",
 
-		"display": "flex",
-		"flexDirection": "column",
-		"justifyContent": "center",
-		"alignItems": "center",
+		containerName: "game-board",
+		containerType: "size",
 
-		"& .tile .dark": {
-			background: "#38b764",
-		},
-		"& .tile .light": {
-			background: "#a7f070",
-		},
-	},
-	board: {
 		display: "flex",
 		justifyContent: "center",
+	},
 
-		width: "100%",
-		height: "78%",
+	gameBoard: ({ size }) => ({
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+
+		// portrait
+		[`@container game-board (max-aspect-ratio: ${size.width} / ${size.height})`]:
+			{
+				width: "100%",
+				height: "auto",
+			},
+
+		// landscape
+		[`@container game-board (min-aspect-ratio: ${size.width} / ${size.height})`]:
+			{
+				width: "auto",
+				height: "100%",
+			},
+
+		aspectRatio: `${size.width} / ${size.height}`,
+	}),
+
+	board: {
+		position: "relative",
+		aspectRatio: ({ size }) => `${size.width} / ${size.height - 1}`,
 	},
 	bench: {
-		"position": "absolute",
-		"bottom": "0",
-
-		"width": "100%",
-		"height": "20%",
-
-		"& .tile": {
-			background: "#9e9e9e !important",
-			boxShadow: "inset 0 0 2px #404040",
-		},
+		aspectRatio: ({ size }) => `${size.width} / 1`,
 	},
 	benchBoard: {
-		position: "absolute",
-		bottom: "0",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "end",
+	},
+
+	benchTile: {
+		background: "#9e9e9e !important",
+		boxShadow: "inset 0 0 2px #404040",
 	},
 });
 
@@ -201,32 +212,27 @@ export function GameBoard({
 		onDropPiece,
 	});
 
-	const styles = useStyles();
+	const styles = useStyles({
+		size: {
+			width: board.size.width,
+			height: board.size.height + bench.size.height,
+		},
+	});
 
 	const ref = React.useRef<HTMLDivElement>(null);
 
-	/**
-	 * How much space, in tiles, to leave between the board and the bench.
-	 */
-	const SPACER_TILE_HEIGHT = 0.2;
-
-	const aspectRatio =
-		board.size.width /
-		(board.size.height + bench.size.height + SPACER_TILE_HEIGHT);
-
 	return (
-		<div className={styles.gameBoard} ref={ref}>
-			<DynamicAspectRatioComponent aspectRatio={aspectRatio} containerRef={ref}>
+		<div className={styles.root} ref={ref}>
+			<div className={styles.gameBoard}>
 				<div className={styles.board}>
-					<BoardGrid
+					<ThemedBoard
 						state={board}
 						onDropItem={onDropBoard}
 						onClickTile={onClickBoard}
 						renderItem={boardPieceRenderer}
 						renderTileBackground={renderTileBackground}
-					>
-						{children}
-					</BoardGrid>
+					/>
+					{children}
 				</div>
 
 				<div className={styles.bench}>
@@ -235,11 +241,12 @@ export function GameBoard({
 						onDropItem={onDropBench}
 						onClickTile={onClickBench}
 						renderItem={benchPieceRenderer}
-						boardClassName={styles.benchBoard}
-						renderTileBackground={() => null}
+						className={styles.benchBoard}
+						lightTileClassName={styles.benchTile}
+						darkTileClassName={styles.benchTile}
 					/>
 				</div>
-			</DynamicAspectRatioComponent>
+			</div>
 		</div>
 	);
 }

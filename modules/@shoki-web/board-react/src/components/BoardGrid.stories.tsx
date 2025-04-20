@@ -1,6 +1,7 @@
 import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
+import { createUseStyles } from "react-jss";
 
 import { BoardState } from "@shoki/board";
 
@@ -19,12 +20,23 @@ type ChessBoardStoryTemplateProps = {
 	containerHeightPx: number;
 };
 
+const useStyles = createUseStyles({
+	tileLight: {
+		backgroundColor: "#ffce9e",
+	},
+	tileDark: {
+		backgroundColor: "#d18b47",
+	},
+});
+
 function ChessBoardStoryTemplate({
 	board,
 	draggable,
 	containerWidthPx = 500,
 	containerHeightPx = 500,
 }: ChessBoardStoryTemplateProps) {
+	const styles = useStyles();
+
 	return (
 		<div
 			style={{
@@ -37,15 +49,17 @@ function ChessBoardStoryTemplate({
 			<DndProvider>
 				<BoardGrid
 					state={board}
+					lightTileClassName={styles.tileLight}
+					darkTileClassName={styles.tileDark}
 					renderItem={(item) => ({
 						item: <span style={{ background: "#FF0000" }}>{item.id}</span>,
 						draggable,
 					})}
 					onDropItem={(event: DropBoardItemEvent) => {
-						/* ... */
+						console.log("Dropped item", event);
 					}}
 					onClickTile={(event: ClickBoardTileEvent) => {
-						/* ... */
+						console.log("Clicked tile", event);
 					}}
 				/>
 			</DndProvider>

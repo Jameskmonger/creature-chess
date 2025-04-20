@@ -3,10 +3,9 @@ import React from "react";
 import { createUseStyles } from "react-jss";
 import { getRandomBoardState } from "~/utils/getRandomBoardState";
 
-import { BoardGrid } from "@shoki-web/board-react";
-
 import { PieceModel } from "@creature-chess/models";
 
+import { ThemedBoard } from "./game/board/ThemedBoard";
 import { PieceContextProvider, Piece } from "./game/board/piece";
 
 const useBackgroundStyles = createUseStyles({
@@ -19,13 +18,6 @@ const useBackgroundStyles = createUseStyles({
 		"zIndex": -1,
 		"transform": "rotate(-11deg)",
 		"filter": "saturate(1.2) blur(2px)",
-
-		"& .tile .dark": {
-			background: "#38b764",
-		},
-		"& .tile .light": {
-			background: "#a7f070",
-		},
 
 		// todo rework to use aspect ratio queries
 		"@media (orientation: landscape)": {
@@ -91,16 +83,16 @@ export function PageBoardBackground() {
 	return (
 		<div className={classes.root}>
 			<div className={classes.segment} style={{ top: 0, left: 0 }}>
-				<BoardGrid state={state1} renderItem={render1} dragDrop={false} />
+				<ThemedBoard state={state1} renderItem={render1} dragDrop={false} />
 			</div>
 			<div className={classes.segment} style={{ top: 0, right: 0 }}>
-				<BoardGrid state={state2} renderItem={render2} dragDrop={false} />
+				<ThemedBoard state={state2} renderItem={render2} dragDrop={false} />
 			</div>
 			<div className={classes.segment} style={{ bottom: 0, left: 0 }}>
-				<BoardGrid state={state3} renderItem={render3} dragDrop={false} />
+				<ThemedBoard state={state3} renderItem={render3} dragDrop={false} />
 			</div>
 			<div className={classes.segment} style={{ bottom: 0, right: 0 }}>
-				<BoardGrid state={state4} renderItem={render4} dragDrop={false} />
+				<ThemedBoard state={state4} renderItem={render4} dragDrop={false} />
 			</div>
 		</div>
 	);
