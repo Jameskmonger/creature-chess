@@ -16,7 +16,7 @@ import { PieceBattleStats } from "../../PieceBattleStats";
 import { SelectedPieceInfo } from "../../SelectedPieceInfo";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
-import { Controls } from "../../board/overlays";
+import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { useSelectedPiece } from "../../hooks/useSelectedPiece";
@@ -120,11 +120,11 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 
 				{!inPlayingOrReadyPhase && (
 					<>
-						{selectedPiece ? <SelectedPieceInfo /> : <PlayerGameProfile />}
-
 						<div style={{ height: "2em", paddingTop: "0.5em" }}>
-							<Controls />
+							<SellPieceButton />
 						</div>
+
+						{selectedPiece ? <SelectedPieceInfo /> : <PlayerGameProfile />}
 					</>
 				)}
 			</MobileContentPane>

@@ -17,7 +17,7 @@ interface Props {
 }
 
 const getPercentage = (current: number, max: number) =>
-	Math.floor((current / max) * 100) + "%";
+	Math.floor(Math.min((current / max) * 100, 100)) + "%";
 const getFillStyle = ({
 	vertical = false,
 	current,
@@ -29,7 +29,7 @@ const getFillStyle = ({
 
 const useStyles = createUseStyles({
 	container: {
-		width: "101%",
+		width: "100%",
 		height: "100%",
 		position: "relative",
 		background: "#636363",

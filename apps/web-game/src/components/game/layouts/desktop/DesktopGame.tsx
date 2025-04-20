@@ -16,7 +16,7 @@ import { PieceBattleStats } from "../../PieceBattleStats";
 import { SelectedPieceInfo } from "../../SelectedPieceInfo";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
-import { Controls } from "../../board/overlays";
+import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { useSelectedPiece } from "../../hooks/useSelectedPiece";
@@ -132,7 +132,7 @@ const DesktopGame: React.FunctionComponent = () => {
 				<CardShop />
 
 				<div className={styles.controls}>
-					<Controls />
+					<SellPieceButton />
 				</div>
 			</div>
 		</div>

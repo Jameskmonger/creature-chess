@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import classNames from "classnames";
+import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -18,7 +19,76 @@ import { AppState } from "../../../store";
 import { Layout } from "../../ui/layout";
 import { PlayerName } from "../../ui/player";
 import { ProgressBar } from "../../ui/progressBar";
-import { useStyles } from "./PlayerGameProfile.styles";
+import { ReadyUpButton } from "../board/overlays/controls/ReadyUpButton";
+
+const useStyles = createUseStyles({
+	profile: {
+		display: "flex",
+		flexDirection: "row",
+		color: "#fff",
+		background: "#566c86",
+		fontFamily: '"Roboto", sans-serif',
+		padding: "8px",
+		gap: "16px",
+	},
+	column: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		flex: "1",
+		gap: "16px",
+	},
+	item: {
+		flex: "1",
+	},
+	name: {
+		display: "flex",
+		alignItems: "center",
+		flexDirection: "column",
+	},
+	buyXpButton: {
+		width: "100%",
+		height: "32px",
+		boxSizing: "border-box",
+		padding: "0.5em 1em",
+		fontSize: "1em",
+		lineHeight: "1em",
+		color: "#000000",
+		cursor: "pointer",
+		background: "#38b764",
+		border: "none",
+	},
+	level: {
+		"flex": "1",
+		"width": "100%",
+		"display": "flex",
+		"justifyContent": "space-evenly",
+		"alignItems": "center",
+		"flexDirection": "row",
+		"fontWeight": "700",
+
+		"& > span": {
+			color: "#ffcd75",
+		},
+	},
+	ready: {
+		width: "100%",
+		height: "32px",
+	},
+	xpProgress: {
+		height: "32px",
+		background: "#636363",
+	},
+	xpProgressFill: {
+		background: "#ffcd75",
+	},
+	xpProgressContent: {
+		color: "#1a1c2c",
+	},
+	right: {
+		justifyContent: "flex-end",
+	},
+});
 
 const renderProgressBar = (current: number, max: number) =>
 	`${current} / ${max} xp`;
@@ -61,17 +131,19 @@ export function PlayerGameProfile() {
 
 	return (
 		<div className={styles.profile}>
-			<div className={styles.row}>
-				<Layout direction="column" className={styles.personal}>
-					<p className={classNames(styles.item, styles.level)}>
-						Level {level} <span>${money}</span>
-					</p>
+			<div className={styles.column}>
+				<div className={styles.name}>
+					<PlayerName name={name} position={position} isLocal />
+				</div>
+				<p className={classNames(styles.item, styles.level)}>
+					Level {level} <span>${money}</span>
+				</p>
+				<div className={styles.ready}>
+					<ReadyUpButton />
+				</div>
+			</div>
 
-					<div className={styles.name}>
-						<PlayerName name={name} position={position} isLocal />
-					</div>
-				</Layout>
-
+			<div className={classNames(styles.column, styles.right)}>
 				{level !== MAX_LEVEL && (
 					<ProgressBar
 						className={styles.xpProgress}
@@ -82,9 +154,7 @@ export function PlayerGameProfile() {
 						renderContents={renderProgressBar}
 					/>
 				)}
-			</div>
 
-			<div className={styles.row}>
 				{level !== MAX_LEVEL && (
 					<button className={styles.buyXpButton} onClick={onBuyXp}>
 						Buy {buyXpAmount} xp ($
