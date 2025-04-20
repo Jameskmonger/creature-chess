@@ -14,14 +14,13 @@ import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
 import { Layout } from "../../../ui/layout";
 import { PieceBattleStats } from "../../PieceBattleStats";
+import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { Controls, NowPlaying } from "../../board/overlays";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
-import { PhaseInfo } from "../../phaseInfo";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
-import { RoundIndicator } from "../../roundIndicator";
 import { QuitGameButton } from "../../settings";
 import { LandscapeGameScreen } from "../LandscapeGameScreen";
 
@@ -92,13 +91,15 @@ const DesktopGame: React.FunctionComponent = () => {
 		[inPreparingPhase, ownedPieces, stats, styles.helpContainer]
 	);
 
+	const round = useSelector<AppState, number | null>(
+		(state) => state.game.roundInfo.round
+	);
+
 	return (
 		<LandscapeGameScreen
 			leftColumnContent={
 				<div className={styles.leftColumn}>
-					<RoundIndicator />
-
-					<PhaseInfo />
+					<TopBar />
 
 					<NowPlaying />
 

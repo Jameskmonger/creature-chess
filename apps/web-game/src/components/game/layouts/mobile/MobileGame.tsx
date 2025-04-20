@@ -13,6 +13,7 @@ import { StatsState } from "../../../../store/game/stats/state";
 import { Overlay } from "../../../../store/game/ui";
 import { TabMenu } from "../../../ui/TabMenu";
 import { PieceBattleStats } from "../../PieceBattleStats";
+import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { Controls } from "../../board/overlays";
 import { CardShop } from "../../cardShop/cardShop";
@@ -22,7 +23,6 @@ import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
 import { MobileContentPane } from "./MobileContentPane";
 import { OverlayComponent } from "./OverlayComponent";
-import { TopBar } from "./TopBar";
 import { NavBar } from "./nav/NavBar";
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
@@ -142,11 +142,6 @@ const useStyles = createUseStyles({
 		flexDirection: "column",
 		gap: "8px",
 	},
-	topBar: {
-		height: "max(4%, 8px)",
-		width: "100%",
-		flex: 0,
-	},
 	content: {
 		flex: 1,
 		display: "flex",
@@ -161,9 +156,7 @@ export function MobileGame() {
 
 	return (
 		<div className={styles.game}>
-			<div className={styles.topBar}>
-				<TopBar />
-			</div>
+			<TopBar />
 			<div className={styles.content}>
 				<MobileGameContentPane />
 			</div>

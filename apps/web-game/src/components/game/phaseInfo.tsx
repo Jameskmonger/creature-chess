@@ -7,7 +7,6 @@ import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 
 import { AppState } from "../../store";
 import { Countdown } from "../ui/countdown";
-import { InfoChip } from "./InfoChip";
 
 const renderPhaseInfoCountdown = (secondsRemaining: number) => (
 	<span>({secondsRemaining})</span>
@@ -25,23 +24,23 @@ const PhaseInfo = () => {
 	);
 
 	if (isDead) {
-		return <InfoChip>You are dead</InfoChip>;
+		return <span>GAME OVER</span>;
 	}
 
-	if (!phase || !phaseStartedAtSeconds) {
+	if (phase === null || !phaseStartedAtSeconds) {
 		return null;
 	}
 
 	const phaseEndTime = GAME_PHASE_LENGTHS[phase] + phaseStartedAtSeconds;
 
 	return (
-		<InfoChip>
+		<span>
 			{GamePhase[phase]}{" "}
 			<Countdown
 				countdownToSeconds={phaseEndTime}
 				render={renderPhaseInfoCountdown}
 			/>
-		</InfoChip>
+		</span>
 	);
 };
 
