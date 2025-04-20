@@ -4,6 +4,8 @@ import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
+import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
+import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
 import { AppState } from "~/store";
 
@@ -126,9 +128,10 @@ export function PlayerGameProfile() {
 	return (
 		<div className={styles.profile}>
 			<div className={styles.column}>
-				<p className={classNames(styles.item, styles.level)}>
-					Level {level} <span>${money}</span>
-				</p>
+				<div className={classNames(styles.item, styles.level)}>
+					<LevelIcon amount={level} />
+					<BalanceIcon amount={money} />
+				</div>
 				<div className={styles.ready}>
 					<ReadyUpButton />
 				</div>
