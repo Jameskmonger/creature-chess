@@ -15,6 +15,7 @@ import {
 	NowPlaying,
 } from "./overlays";
 import { PieceCount } from "./overlays/PieceCount";
+import { ReadyButtonOverlay } from "./overlays/ReadyButtonOverlay";
 
 const useStyles = createUseStyles({
 	boardContainer: {
@@ -36,6 +37,7 @@ export function BoardContainer() {
 			<VictoryOverlay />
 			<MatchRewardsOverlay />
 			<ReconnectOverlay />
+			<ReadyButtonOverlay />
 		</>
 	);
 
