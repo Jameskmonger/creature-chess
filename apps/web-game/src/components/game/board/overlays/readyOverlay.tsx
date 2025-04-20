@@ -11,7 +11,6 @@ import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { Label } from "../../../ui/label";
 import { Title, PlayerHealthbar, PlayerAvatar } from "../../../ui/player";
 import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
