@@ -150,17 +150,20 @@ const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
 
 		display: "flex",
 		justifyContent: "center",
+		alignItems: "center",
 	},
 
 	gameBoard: ({ size }) => ({
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
+		overflow: "hidden",
+		boxSizing: "border-box",
 
 		// portrait
 		[`@container game-board (max-aspect-ratio: ${size.width} / ${size.height})`]:
 			{
-				width: "100%",
+				width: "calc(100% - 16px)",
 				height: "auto",
 			},
 
@@ -168,7 +171,7 @@ const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
 		[`@container game-board (min-aspect-ratio: ${size.width} / ${size.height})`]:
 			{
 				width: "auto",
-				height: "100%",
+				height: "calc(100% - 16px)",
 			},
 
 		aspectRatio: `${size.width} / ${size.height}`,
