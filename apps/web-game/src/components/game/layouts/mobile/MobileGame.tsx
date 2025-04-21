@@ -36,10 +36,9 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	);
 
 	const ownedPieces = useSelector<AppState, PieceModel[]>((state) =>
-		[
-			...BoardSelectors.getAllPieces(state.game.board),
-			...BoardSelectors.getAllPieces(state.game.bench),
-		].filter((p) => p.ownerId === localPlayerId)
+		[...BoardSelectors.getAllPieces(state.game.board)].filter(
+			(p) => p.ownerId === localPlayerId
+		)
 	);
 	const stats = useSelector<AppState, StatsState>((state) => state.game.stats);
 

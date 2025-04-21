@@ -72,9 +72,7 @@ export function PieceBattleStats(props: Props) {
 					<tr>
 						<td className={classes.headerCell} />
 						<td className={classes.headerCell}>Piece</td>
-						<td className={classes.headerCell}>d d</td>
-						<td className={classes.headerCell}>d t</td>
-						<td className={classes.headerCell}>t s</td>
+						<td className={classes.headerCell}>Damage Dealt</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -93,8 +91,6 @@ export function PieceBattleStats(props: Props) {
 									{getDefinitionById(piece.definitionId)?.name}
 								</td>
 								<td className={classes.cell}>{stats.damageDealt}</td>
-								<td className={classes.cell}>{stats.damageTaken}</td>
-								<td className={classes.cell}>{stats.turnsSurvived}</td>
 							</tr>
 						) : (
 							<tr key={piece.id}>
@@ -109,8 +105,6 @@ export function PieceBattleStats(props: Props) {
 								<td className={classes.cell}>
 									{getDefinitionById(piece.definitionId)?.name}
 								</td>
-								<td className={classes.cell}>-</td>
-								<td className={classes.cell}>-</td>
 								<td className={classes.cell}>-</td>
 							</tr>
 						)
