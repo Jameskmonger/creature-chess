@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { createUseStyles } from "react-jss";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "~/store";
 
@@ -10,7 +11,22 @@ import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
-import { useStyles } from "./styles";
+import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
+
+const useStyles = createUseStyles({
+	controlButton: {
+		"box-sizing": "border-box",
+		"font-size": "1rem",
+		"color": COLOR_READY_BUTTON_TEXT,
+		"cursor": "pointer",
+		"background": COLOR_READY_BUTTON,
+		"border": "none",
+		"letterSpacing": "2px",
+		"fontSize": "14px",
+		"fontWeight": "700",
+		"padding": "8px 8px",
+	},
+});
 
 export function SellPieceButton() {
 	const dispatch = useDispatch();

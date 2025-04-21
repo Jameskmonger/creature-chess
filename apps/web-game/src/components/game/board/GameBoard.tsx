@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { BoardState, HasId, PiecePosition } from "@shoki/board";
+import { HasId, PiecePosition } from "@shoki/board";
 
 import {
 	BoardGrid,
@@ -12,6 +12,7 @@ import {
 
 import { PieceModel } from "@creature-chess/models";
 
+import { BoardSpaceFiller } from "./BoardSpaceFiller";
 import { useGameBoard } from "./GameBoardContext";
 import { ThemedBoard } from "./ThemedBoard";
 
@@ -47,6 +48,8 @@ type GameBoardProps = {
 	onClick?: (event: GameBoardClickEvent) => void;
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
 	children?: React.ReactNode;
+
+	showFiller?: boolean;
 };
 
 function useEvents({
@@ -140,7 +143,13 @@ function useRenderers({
 	return { boardPieceRenderer, benchPieceRenderer };
 }
 
-const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
+type UseStylesProps = {
+	width: number;
+	totalHeight: number;
+	boardHalfHeight: number;
+};
+
+const useStyles = createUseStyles<string, UseStylesProps>({
 	root: {
 		height: "100%",
 		width: "auto",
@@ -151,9 +160,10 @@ const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
+		flexDirection: "column",
 	},
 
-	gameBoard: ({ size }) => ({
+	gameBoard: ({ width, totalHeight }) => ({
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
@@ -161,28 +171,27 @@ const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
 		boxSizing: "border-box",
 
 		// portrait
-		[`@container game-board (max-aspect-ratio: ${size.width} / ${size.height})`]:
-			{
-				width: "calc(100% - 16px)",
-				height: "auto",
-			},
+		[`@container game-board (max-aspect-ratio: ${width} / ${totalHeight})`]: {
+			width: "calc(100% - 16px)",
+			height: "auto",
+		},
 
 		// landscape
-		[`@container game-board (min-aspect-ratio: ${size.width} / ${size.height})`]:
-			{
-				width: "auto",
-				height: "calc(100% - 16px)",
-			},
+		[`@container game-board (min-aspect-ratio: ${width} / ${totalHeight})`]: {
+			width: "auto",
+			height: "calc(100% - 16px)",
+		},
 
-		aspectRatio: `${size.width} / ${size.height}`,
+		aspectRatio: `${width} / ${totalHeight}`,
 	}),
 
 	board: {
 		position: "relative",
-		aspectRatio: ({ size }) => `${size.width} / ${size.height - 1}`,
+		aspectRatio: ({ width, boardHalfHeight }) =>
+			`${width} / ${boardHalfHeight}`,
 	},
 	bench: {
-		aspectRatio: ({ size }) => `${size.width} / 1`,
+		aspectRatio: ({ width }) => `${width} / 1`,
 	},
 	benchBoard: {
 		display: "flex",
@@ -203,6 +212,7 @@ export function GameBoard({
 	onClick,
 	onDropPiece,
 	children,
+	showFiller = false,
 }: GameBoardProps) {
 	const { board, bench } = useGameBoard();
 
@@ -215,11 +225,14 @@ export function GameBoard({
 		onDropPiece,
 	});
 
+	const totalHeight =
+		bench.size.height +
+		(showFiller ? board.size.height * 2 : board.size.height);
+
 	const styles = useStyles({
-		size: {
-			width: board.size.width,
-			height: board.size.height + bench.size.height,
-		},
+		boardHalfHeight: board.size.height,
+		width: board.size.width,
+		totalHeight,
 	});
 
 	const ref = React.useRef<HTMLDivElement>(null);
@@ -227,6 +240,8 @@ export function GameBoard({
 	return (
 		<div className={styles.root} ref={ref}>
 			<div className={styles.gameBoard}>
+				{showFiller && <BoardSpaceFiller />}
+
 				<div className={styles.board}>
 					<ThemedBoard
 						state={board}
@@ -234,6 +249,7 @@ export function GameBoard({
 						onClickTile={onClickBoard}
 						renderItem={boardPieceRenderer}
 						renderTileBackground={renderTileBackground}
+						flipDarkLight={showFiller}
 					/>
 					{children}
 				</div>

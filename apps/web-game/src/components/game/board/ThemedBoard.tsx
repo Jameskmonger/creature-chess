@@ -23,6 +23,7 @@ type Props = {
 	dragDrop?: boolean;
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;
+	flipDarkLight?: boolean;
 };
 
 const useStyles = createUseStyles<string, Props>({
@@ -59,8 +60,12 @@ export function ThemedBoard(props: Props) {
 			dragDrop={props.dragDrop}
 			onDropItem={props.onDropItem}
 			onClickTile={props.onClickTile}
-			lightTileClassName={styles.lightTile}
-			darkTileClassName={styles.darkTile}
+			lightTileClassName={
+				props.flipDarkLight ? styles.darkTile : styles.lightTile
+			}
+			darkTileClassName={
+				props.flipDarkLight ? styles.lightTile : styles.darkTile
+			}
 		/>
 	);
 }

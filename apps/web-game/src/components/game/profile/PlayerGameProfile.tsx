@@ -19,7 +19,10 @@ import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { MAX_LEVEL } from "@creature-chess/models/config";
 
 import { ProgressBar } from "../../ui/progressBar";
-import { ReadyUpButton } from "../board/overlays/controls/ReadyUpButton";
+import {
+	COLOR_READY_BUTTON,
+	COLOR_READY_BUTTON_TEXT,
+} from "../board/overlays/controls/colors";
 
 const useStyles = createUseStyles({
 	profile: {
@@ -49,17 +52,28 @@ const useStyles = createUseStyles({
 		"width": "100%",
 		"height": "32px",
 		"boxSizing": "border-box",
-		"padding": "0.5em 1em",
-		"fontSize": "1em",
 		"lineHeight": "1em",
-		"color": "#000000",
 		"cursor": "pointer",
-		"background": "#38b764",
 		"border": "none",
 
 		"&:disabled": {
 			background: "#636363",
 			cursor: "not-allowed",
+		},
+
+		"background": COLOR_READY_BUTTON,
+		"color": COLOR_READY_BUTTON_TEXT,
+		"box-sizing": "border-box",
+
+		"fontSize": "16px",
+		"fontWeight": "700",
+		"padding": "8px 8px",
+		"letterSpacing": "2px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "12px",
+			padding: "4px",
+			letterSpacing: "1px",
 		},
 	},
 	level: {
@@ -74,10 +88,6 @@ const useStyles = createUseStyles({
 		"& > span": {
 			color: "#ffcd75",
 		},
-	},
-	ready: {
-		width: "100%",
-		height: "32px",
 	},
 	xpProgress: {
 		height: "32px",
@@ -131,9 +141,6 @@ export function PlayerGameProfile() {
 				<div className={classNames(styles.item, styles.level)}>
 					<LevelIcon amount={level} />
 					<BalanceIcon amount={money} />
-				</div>
-				<div className={styles.ready}>
-					<ReadyUpButton />
 				</div>
 			</div>
 

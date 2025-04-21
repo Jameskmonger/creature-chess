@@ -6,11 +6,14 @@ import { ReadyUpButton } from "./controls/ReadyUpButton";
 
 const useStyles = createUseStyles({
 	container: {
-		position: "absolute",
-		top: "-32px",
-		right: "4px",
-		padding: "4px 0",
-		width: "30%",
+		"position": "absolute",
+		"top": "-40px",
+		"right": "4px",
+		"width": "30%",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			top: "-28px",
+		},
 	},
 });
 

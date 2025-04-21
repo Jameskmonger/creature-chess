@@ -96,6 +96,7 @@ const Template: Story<any> = (args) => {
 						renderBenchPiece={renderPiece}
 						onClick={args.onClick}
 						onDropPiece={args.onDropPiece}
+						showFiller={args.showFiller}
 					/>
 				</GameBoardContextProvider>
 			</div>
@@ -108,6 +109,7 @@ Portrait_HalfBoard.args = {
 	width: "300px",
 	height: "500px",
 	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight,
+	showFiller: true,
 };
 
 export const Portrait_FullBoard = Template.bind({});
@@ -115,6 +117,7 @@ Portrait_FullBoard.args = {
 	width: "300px",
 	height: "500px",
 	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight * 2,
+	showFiller: false,
 };
 
 export const Landscape_HalfBoard = Template.bind({});
@@ -122,6 +125,7 @@ Landscape_HalfBoard.args = {
 	width: "500px",
 	height: "300px",
 	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight,
+	showFiller: true,
 };
 
 export const Landscape_FullBoard = Template.bind({});
@@ -129,6 +133,7 @@ Landscape_FullBoard.args = {
 	width: "500px",
 	height: "300px",
 	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight * 2,
+	showFiller: false,
 };
 
 export const Square_HalfBoard = Template.bind({});
@@ -136,6 +141,7 @@ Square_HalfBoard.args = {
 	width: "400px",
 	height: "400px",
 	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight,
+	showFiller: true,
 };
 
 export const Square_FullBoard = Template.bind({});
@@ -143,4 +149,5 @@ Square_FullBoard.args = {
 	width: "400px",
 	height: "400px",
 	boardHeight: GamemodeSettingsPresets["default"].boardHalfHeight * 2,
+	showFiller: false,
 };

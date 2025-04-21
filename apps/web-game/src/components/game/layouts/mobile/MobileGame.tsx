@@ -13,13 +13,10 @@ import { GamePhase, PieceModel } from "@creature-chess/models";
 
 import { TabMenu } from "../../../ui/TabMenu";
 import { PieceBattleStats } from "../../PieceBattleStats";
-import { SelectedPieceInfo } from "../../SelectedPieceInfo";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
-import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
-import { useSelectedPiece } from "../../hooks/useSelectedPiece";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
@@ -105,28 +102,12 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 		(state) => state.game.ui.currentOverlay
 	);
 
-	const inPlayingOrReadyPhase = useSelector<AppState, boolean>(
-		(state) =>
-			state.game.roundInfo.phase === GamePhase.PLAYING ||
-			state.game.roundInfo.phase === GamePhase.READY
-	);
-
-	const selectedPiece = useSelectedPiece();
-
 	if (currentOverlay === null) {
 		return (
 			<MobileContentPane>
 				<BoardContainer />
 
-				{!inPlayingOrReadyPhase && (
-					<>
-						<div style={{ height: "2em", paddingTop: "0.5em" }}>
-							<SellPieceButton />
-						</div>
-
-						{selectedPiece ? <SelectedPieceInfo /> : <PlayerGameProfile />}
-					</>
-				)}
+				<PlayerGameProfile />
 			</MobileContentPane>
 		);
 	}

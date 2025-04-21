@@ -13,13 +13,11 @@ import { GamePhase, PieceModel } from "@creature-chess/models";
 import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
 import { PieceBattleStats } from "../../PieceBattleStats";
-import { SelectedPieceInfo } from "../../SelectedPieceInfo";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
-import { useSelectedPiece } from "../../hooks/useSelectedPiece";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { QuitGameButton } from "../../settings";
@@ -116,15 +114,13 @@ const DesktopGame: React.FunctionComponent = () => {
 		[inPreparingPhase, ownedPieces, stats, styles.helpContainer]
 	);
 
-	const selectedPiece = useSelectedPiece();
-
 	return (
 		<div className={styles.game}>
 			<div className={styles.leftColumn}>
 				<TabMenu tabs={leftTabs} className={styles.tabMenu} />
 
 				<div className={styles.fixed}>
-					{selectedPiece ? <SelectedPieceInfo /> : <PlayerGameProfile />}
+					<PlayerGameProfile />
 				</div>
 			</div>
 			<div className={styles.board}>

@@ -1,12 +1,36 @@
 import * as React from "react";
 
+import { createUseStyles } from "react-jss";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "~/store";
 
 import { PlayerActions } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
-import { useStyles } from "./styles";
+import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
+
+const useStyles = createUseStyles({
+	button: {
+		"background": COLOR_READY_BUTTON,
+		"color": COLOR_READY_BUTTON_TEXT,
+		"box-sizing": "border-box",
+		"border": "none",
+		"cursor": "pointer",
+
+		"fontSize": "14px",
+		"fontWeight": "700",
+		"padding": "8px 8px",
+		"letterSpacing": "2px",
+
+		"width": "100%",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "10px",
+			padding: "4px",
+			letterSpacing: "1px",
+		},
+	},
+});
 
 export function ReadyUpButton() {
 	const dispatch = useDispatch();
@@ -38,7 +62,7 @@ export function ReadyUpButton() {
 	}
 
 	return (
-		<button className={styles.controlButton} onClick={onReadyUp}>
+		<button className={styles.button} onClick={onReadyUp}>
 			Ready
 		</button>
 	);

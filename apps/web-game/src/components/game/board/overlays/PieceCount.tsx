@@ -13,20 +13,27 @@ import { GamePhase } from "@creature-chess/models";
 
 const useStyles = createUseStyles({
 	pieceCount: {
-		fontSize: "14px",
-		fontStyle: "italic",
-		textAlign: "center",
-		width: "fit-content",
-		fontWeight: "700",
+		"fontSize": "14px",
+		"fontStyle": "italic",
+		"textAlign": "center",
+		"width": "fit-content",
+		"fontWeight": "700",
 
-		position: "absolute",
-		top: "-32px",
-		left: "4px",
-		padding: "4px 8px",
+		"position": "absolute",
+		"top": "-40px",
+		"left": "4px",
+		"padding": "8px",
 
-		zIndex: 400,
+		"zIndex": 400,
 
-		letterSpacing: "2px",
+		"letterSpacing": "2px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "10px",
+			padding: "4px",
+			top: "-28px",
+			letterSpacing: "1px",
+		},
 	},
 	pieceCountWarning: {
 		color: "#ff6464",
