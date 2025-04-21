@@ -30,7 +30,7 @@ export type GamemodeSettings = {
 
 export const GamemodeSettingsPresets: Record<"default", GamemodeSettings> = {
 	default: {
-		healthLostPerPiece: 3,
+		healthLostPerPiece: 2,
 		startingMoney: 3,
 		startingLevel: 1,
 		rerollCost: 2,
