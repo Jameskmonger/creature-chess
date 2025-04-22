@@ -26,19 +26,27 @@ import {
 
 const useStyles = createUseStyles({
 	profile: {
-		display: "flex",
-		flexDirection: "row",
-		color: "#fff",
-		background: "#566c86",
-		padding: "8px",
-		gap: "16px",
+		"display": "flex",
+		"flexDirection": "row",
+		"color": "#fff",
+		"background": "#566c86",
+		"padding": "8px",
+		"gap": "16px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			gap: "8px",
+		},
 	},
 	column: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		flex: "1",
-		gap: "16px",
+		"display": "flex",
+		"flexDirection": "column",
+		"alignItems": "center",
+		"flex": "1",
+		"gap": "16px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			gap: "8px",
+		},
 	},
 	item: {
 		flex: "1",
@@ -90,8 +98,12 @@ const useStyles = createUseStyles({
 		},
 	},
 	xpProgress: {
-		height: "32px",
-		background: "#636363",
+		"height": "32px",
+		"background": "#636363",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			height: "28px",
+		},
 	},
 	xpProgressFill: {
 		background: "#ffcd75",
