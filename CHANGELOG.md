@@ -21,3 +21,9 @@
 - cd737356 feat: rearrange ui for board filler
 - bc5aa0b3 feat: remove padding from overlays
 - 29851601 feat: tighten up profile padding on small screens
+
+### 0.7.2 (2025-04-22)
+
+- 06d7b51a fix: fix piece swapping
+- b47716d8 fix: fix winner display
+- fa75a4f2 feat: allow piece selection from stats screen
