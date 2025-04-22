@@ -2,6 +2,9 @@ import React, { useMemo } from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "~/store";
+import { UIActions, closeOverlay } from "~/store/game/ui";
 
 import { getDefinitionById } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
@@ -43,10 +46,19 @@ const useStyles = createUseStyles({
 		width: "32px",
 		height: "32px",
 	},
+	selected: {
+		boxSizing: "border-box",
+		border: "2px solid #ff5200",
+	},
 });
 
 export function PieceBattleStats(props: Props) {
+	const dispatch = useDispatch();
 	const classes = useStyles();
+
+	const selectedPieceId = useSelector<AppState, string | null>(
+		(state) => state.game.ui.selectedPieceId
+	);
 
 	const piecesWithStats = useMemo(
 		() =>
@@ -65,6 +77,15 @@ export function PieceBattleStats(props: Props) {
 		[piecesWithStats]
 	);
 
+	const onClickPiece = (pieceId: string) => {
+		if (pieceId !== selectedPieceId) {
+			dispatch(UIActions.selectPiece(pieceId));
+			dispatch(closeOverlay());
+		} else {
+			dispatch(UIActions.clearSelectedPiece());
+		}
+	};
+
 	return (
 		<div className={classes.container}>
 			<table className={classes.table}>
@@ -78,7 +99,11 @@ export function PieceBattleStats(props: Props) {
 				<tbody>
 					{sortedPieces.map(({ piece, stats }) =>
 						stats ? (
-							<tr key={piece.id}>
+							<tr
+								key={piece.id}
+								className={piece.id === selectedPieceId ? classes.selected : ""}
+								onClick={() => onClickPiece(piece.id)}
+							>
 								<td
 									className={classNames(classes.imageContainer, classes.cell)}
 								>
@@ -93,7 +118,11 @@ export function PieceBattleStats(props: Props) {
 								<td className={classes.cell}>{stats.damageDealt}</td>
 							</tr>
 						) : (
-							<tr key={piece.id}>
+							<tr
+								key={piece.id}
+								className={piece.id === selectedPieceId ? classes.selected : ""}
+								onClick={() => onClickPiece(piece.id)}
+							>
 								<td
 									className={classNames(classes.imageContainer, classes.cell)}
 								>

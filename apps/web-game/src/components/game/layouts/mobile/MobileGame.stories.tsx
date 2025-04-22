@@ -232,6 +232,13 @@ Tab_3_Stats_Overlay.args = {
 	overlay: Overlay.STATS,
 };
 
+export const Tab_3_Stats_Overlay_Piece_Selected = Template.bind({});
+Tab_3_Stats_Overlay_Piece_Selected.args = {
+	phase: GamePhase.PREPARING,
+	overlay: Overlay.STATS,
+	selectedPiece: true,
+};
+
 export const Tab_4_Options_Overlay = Template.bind({});
 Tab_4_Options_Overlay.args = {
 	phase: GamePhase.PREPARING,
