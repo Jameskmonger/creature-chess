@@ -8,7 +8,7 @@ export const finishGame = function* () {
 		GameEvents.gameFinishEvent.toString()
 	);
 
-	const winner = event.payload.players.find((p) => p.position === 0);
+	const winner = event.payload.players.find((p) => p.position === 1);
 
 	if (winner) {
 		yield put(setWinnerIdCommand({ winnerId: winner.id }));
