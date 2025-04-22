@@ -124,7 +124,6 @@ const useStyles = createUseStyles({
 		height: "100%",
 		width: "100%",
 		flexDirection: "column",
-		gap: "8px",
 	},
 	content: {
 		flex: 1,
