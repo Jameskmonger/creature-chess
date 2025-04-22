@@ -35,8 +35,8 @@ const preview: Preview = {
 				["pixel6"]: {
 					name: "Pixel 6",
 					styles: {
-						width: "412px",
-						height: "915px",
+						width: "411px",
+						height: "785px",
 					},
 					type: "mobile",
 				},

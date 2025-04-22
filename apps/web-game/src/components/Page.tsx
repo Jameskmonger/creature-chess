@@ -13,24 +13,28 @@ const useStyles = createUseStyles<string, Props>({
 	root: {
 		position: "relative",
 		overflow: "hidden",
-		height: "100vh",
-		width: "100vw",
+		height: "100%",
+		width: "100%",
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
 		flexDirection: "column",
+
+		containerName: "page",
+		containerType: "inline-size",
 	},
 	page: {
 		"zIndex": 1,
-		"containerType": "inline-size",
 		"display": "flex",
 		"justifyContent": "center",
 		"flexDirection": "column",
 		"width": "clamp(272px, 60%, 1000px)",
 		"height": "clamp(272px, 60%, 1000px)",
 		"boxSizing": "border-box",
-		"@container (min-width: 700px)": {
-			flexDirection: "row",
+
+		"@container page (min-width: 400px)": {
+			width: "clamp(300px, 60%, 1000px)",
+			height: "clamp(300px, 60%, 1000px)",
 		},
 	},
 	header: {

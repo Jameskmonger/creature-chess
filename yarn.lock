@@ -1733,7 +1733,6 @@ __metadata:
     html-webpack-plugin: "npm:^5.5.0"
     pepjs: "npm:^0.5.3"
     process: "npm:0.11.10"
-    react-div-100vh: "npm:^0.7.0"
     react-media: "npm:^1.10.0"
     react-redux: "npm:^9.1.0"
     react-use-error-boundary: "npm:^3.0.0"
@@ -14586,15 +14585,6 @@ __metadata:
   version: 0.2.5
   resolution: "react-display-name@npm:0.2.5"
   checksum: ba27778c975e09afea2bfb58c4052b9e12121329a5115391564085ec64293f2b54d3408b841ad04600142c37d40493442676bf1124d0cc0e68f2f1e02762812b
-  languageName: node
-  linkType: hard
-
-"react-div-100vh@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "react-div-100vh@npm:0.7.0"
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: 3adc7ac3a8363a6bcaa5b8b3b287f5c842ee64aff29d00ab8910d968dde0d130fbbd4d4d2cb5c9e35624df6bff28154e6dd577ef8ce9062821cca3d11b9b161e
   languageName: node
   linkType: hard
 
