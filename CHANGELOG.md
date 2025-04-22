@@ -14,3 +14,10 @@
   - Made board size stay consistent
   - Moved "Selected Piece" info above the board
   - Redesigned all overlays (pre-match, post-match, victory etc)
+
+### 0.7.1 (2025-04-22)
+
+- 5328c384 feat: move "buy xp" button to left side
+- cd737356 feat: rearrange ui for board filler
+- bc5aa0b3 feat: remove padding from overlays
+- 29851601 feat: tighten up profile padding on small screens
