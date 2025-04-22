@@ -138,13 +138,6 @@ export function PlayerGameProfile() {
 	return (
 		<div className={styles.profile}>
 			<div className={styles.column}>
-				<div className={classNames(styles.item, styles.level)}>
-					<LevelIcon amount={level} />
-					<BalanceIcon amount={money} />
-				</div>
-			</div>
-
-			<div className={classNames(styles.column, styles.right)}>
 				{level === MAX_LEVEL && <div>You are max level!</div>}
 
 				{level !== MAX_LEVEL && (
@@ -168,6 +161,13 @@ export function PlayerGameProfile() {
 						{buyXpCost})
 					</button>
 				)}
+			</div>
+
+			<div className={classNames(styles.column, styles.right)}>
+				<div className={classNames(styles.item, styles.level)}>
+					<LevelIcon amount={level} />
+					<BalanceIcon amount={money} />
+				</div>
 			</div>
 		</div>
 	);
