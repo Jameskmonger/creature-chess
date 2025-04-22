@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector, useDispatch } from "react-redux";
+import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { AppState } from "~/store";
 
 import { BoardSelectors } from "@shoki/board";
@@ -15,8 +16,12 @@ import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
 
 const useStyles = createUseStyles({
 	controlButton: {
+		"display": "flex",
+		"flexDirection": "row",
+		"justifyContent": "center",
+
 		"box-sizing": "border-box",
-		"font-size": "1rem",
+		"font-size": "14px",
 		"color": COLOR_READY_BUTTON_TEXT,
 		"cursor": "pointer",
 		"background": COLOR_READY_BUTTON,
@@ -25,6 +30,14 @@ const useStyles = createUseStyles({
 		"fontSize": "14px",
 		"fontWeight": "700",
 		"padding": "8px 8px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			padding: "4px 8px",
+			fontSize: "12px",
+		},
+	},
+	balanceIcon: {
+		color: COLOR_READY_BUTTON_TEXT,
 	},
 });
 
@@ -66,7 +79,11 @@ export function SellPieceButton() {
 
 	return (
 		<button className={styles.controlButton} onClick={onSell}>
-			Sell (${pieceCost * piecesUsed})
+			Sell&nbsp;-&nbsp;
+			<BalanceIcon
+				amount={pieceCost * piecesUsed}
+				className={styles.balanceIcon}
+			/>
 		</button>
 	);
 }

@@ -169,6 +169,7 @@ const useStyles = createUseStyles<string, UseStylesProps>({
 		justifyContent: "center",
 		overflow: "hidden",
 		boxSizing: "border-box",
+		flex: 1,
 
 		// portrait
 		[`@container game-board (max-aspect-ratio: ${width} / ${totalHeight})`]: {

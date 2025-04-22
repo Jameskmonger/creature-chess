@@ -25,7 +25,7 @@ const useStyles = createUseStyles({
 		"width": "100%",
 
 		"@media (orientation: portrait) and (max-width: 400px)": {
-			fontSize: "10px",
+			fontSize: "12px",
 			padding: "4px",
 			letterSpacing: "1px",
 		},

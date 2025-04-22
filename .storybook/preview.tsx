@@ -48,6 +48,14 @@ const preview: Preview = {
 					},
 					type: "mobile",
 				},
+				["davidbigbeastphone"]: {
+					name: "Davids Big Beast Boombox Phone",
+					styles: {
+						width: "360px",
+						height: "564px",
+					},
+					type: "mobile",
+				},
 			},
 		},
 	},

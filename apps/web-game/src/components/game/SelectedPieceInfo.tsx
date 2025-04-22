@@ -17,7 +17,11 @@ const useStyles = createUseStyles({
 
 		display: "flex",
 		flexDirection: "column",
+		justifyContent: "space-between",
+
 		gap: "8px",
+
+		flex: 1,
 	},
 	info: {
 		display: "flex",
@@ -33,8 +37,12 @@ const useStyles = createUseStyles({
 		visibility: "hidden",
 	},
 	name: {
-		fontFamily: '"Caveat Brush", cursive',
-		fontSize: "20px",
+		"fontFamily": '"Caveat Brush", cursive',
+		"fontSize": "20px",
+
+		"@media (orientation: portrait) and (max-width: 400px)": {
+			fontSize: "18px",
+		},
 	},
 	price: {
 		color: "#ffcd75",
@@ -60,11 +68,16 @@ const useStyles = createUseStyles({
 		"flexDirection": "row",
 
 		"& > *:not(:last-child)": {
-			marginRight: "0.25em",
+			marginRight: "8px",
 		},
 
 		"@media (orientation: portrait) and (max-width: 430px)": {
 			height: "32px",
+		},
+	},
+	balanceIcon: {
+		"@media (orientation: portrait) and (max-width: 430px)": {
+			fontSize: "12px",
 		},
 	},
 });
@@ -90,7 +103,10 @@ export function SelectedPieceInfo() {
 			<div className={styles.info}>
 				<div className={styles.nameContainer}>
 					<span className={styles.name}>{definition.name}</span>
-					<BalanceIcon amount={definition.cost} />
+					<BalanceIcon
+						amount={definition.cost}
+						className={styles.balanceIcon}
+					/>
 				</div>
 				<div className={styles.traits}>
 					{selectedPiece.traits.map((trait) => (

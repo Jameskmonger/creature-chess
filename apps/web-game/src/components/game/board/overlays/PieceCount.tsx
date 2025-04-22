@@ -19,19 +19,17 @@ const useStyles = createUseStyles({
 		"width": "fit-content",
 		"fontWeight": "700",
 
-		"position": "absolute",
-		"top": "-40px",
-		"left": "4px",
 		"padding": "8px",
 
-		"zIndex": 400,
-
 		"letterSpacing": "2px",
+
+		"color": "#fff",
+		"background": "#1d1d1d",
+		"border": "2px solid #121212",
 
 		"@media (orientation: portrait) and (max-width: 400px)": {
 			fontSize: "10px",
 			padding: "4px",
-			top: "-28px",
 			letterSpacing: "1px",
 		},
 	},
@@ -39,11 +37,6 @@ const useStyles = createUseStyles({
 		color: "#ff6464",
 		background: "#ffd2d2",
 		border: "2px solid #ff6464",
-	},
-	pieceCountStandard: {
-		color: "#fff",
-		background: "#1d1d1d",
-		border: "2px solid #121212",
 	},
 });
 
@@ -73,13 +66,13 @@ export function PieceCount() {
 	if (pieceCount < level) {
 		return (
 			<p className={classNames(styles.pieceCount, styles.pieceCountWarning)}>
-				{pieceCount} / {level} pieces (board not full!)
+				{pieceCount} / {level} pieces
 			</p>
 		);
 	}
 
 	return (
-		<p className={classNames(styles.pieceCount, styles.pieceCountStandard)}>
+		<p className={styles.pieceCount}>
 			{pieceCount} / {level} pieces
 		</p>
 	);
