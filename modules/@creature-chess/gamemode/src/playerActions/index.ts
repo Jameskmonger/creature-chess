@@ -50,6 +50,7 @@ export const PlayerActionTypesArray = [
 	spectatePlayerAction.toString(),
 	quickChatPlayerAction.toString(),
 	spectatePlayerAction.toString(),
+	swapPiecePlayerAction.toString(),
 ];
 
 export type PlayerAction =
