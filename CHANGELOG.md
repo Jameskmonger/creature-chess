@@ -27,3 +27,11 @@
 - 06d7b51a fix: fix piece swapping
 - b47716d8 fix: fix winner display
 - fa75a4f2 feat: allow piece selection from stats screen
+
+### 0.7.3 (2025-05-11)
+
+- b3e45e17 fix: make target selection deterministic when multiple pieces in range (#526)
+- e41dba67 feat: add quick chat to rewards screen (#525) (@jameshallam93)
+- def1855d feat(tools): add sliders to bot brain tester
+- a175fa86 feat: ping counter
+- 91bdf668 feat: put help on menu
