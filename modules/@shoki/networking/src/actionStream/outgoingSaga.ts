@@ -3,7 +3,7 @@ import { take } from "redux-saga/effects";
 
 import { OpcodesForPacket, PacketSet } from "../packet";
 import { OutgoingRegistry } from "../registry/outgoing";
-import { Action, ActionStreamPacket, ActionStreamPayload } from "./packet";
+import { Action, ActionStreamPacket } from "./packet";
 
 /**
  * Take a given action pattern and emit them to the registry under a given opcode
@@ -21,16 +21,9 @@ export const outgoingSaga = <
 	actions: ActionPattern
 ) =>
 	function* () {
-		let lastSentIndex = 0;
-
 		while (true) {
-			// todo make this send multiple at once, or remove that feature
 			const action: Action = yield take(actions);
 
-			const index = ++lastSentIndex;
-
-			const payload: ActionStreamPayload = { index, actions: [action] };
-
-			registry.send(opcode, payload);
+			registry.send(opcode, action);
 		}
 	};
