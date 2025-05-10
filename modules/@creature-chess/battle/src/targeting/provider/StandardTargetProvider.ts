@@ -19,9 +19,15 @@ export class StandardTargetProvider implements TargetProvider {
 	 * @inheritdoc
 	 */
 	public getTarget(
-		piece: PieceModel,
+		attackerId: string,
 		board: BoardState<PieceModel>
 	): string | null {
+		const piece = board.pieces[attackerId];
+
+		if (!piece) {
+			return null;
+		}
+
 		const attackRange = getStats(piece).attackType.range;
 
 		const enemies = getLivingEnemies(piece, board);

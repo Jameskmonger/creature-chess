@@ -22,6 +22,7 @@
 	},
 	"dependencies": {
 		"@creature-chess/models": "workspace:*",
+		"@creature-chess/utils": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
 		"@shoki/board": "workspace:*",
 		"@types/redux-saga": "^0.10.5",

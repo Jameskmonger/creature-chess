@@ -1811,6 +1811,7 @@ __metadata:
   resolution: "@creature-chess/battle@workspace:modules/@creature-chess/battle"
   dependencies:
     "@creature-chess/models": "workspace:*"
+    "@creature-chess/utils": "workspace:*"
     "@reduxjs/toolkit": "npm:^2.2.1"
     "@shoki/board": "workspace:*"
     "@types/redux-saga": "npm:^0.10.5"
@@ -1868,6 +1869,15 @@ __metadata:
 "@creature-chess/user@workspace:*, @creature-chess/user@workspace:modules/@creature-chess/user":
   version: 0.0.0-use.local
   resolution: "@creature-chess/user@workspace:modules/@creature-chess/user"
+  languageName: unknown
+  linkType: soft
+
+"@creature-chess/utils@workspace:*, @creature-chess/utils@workspace:modules/@creature-chess/utils":
+  version: 0.0.0-use.local
+  resolution: "@creature-chess/utils@workspace:modules/@creature-chess/utils"
+  dependencies:
+    "@creature-chess/models": "workspace:*"
+    "@shoki/board": "workspace:*"
   languageName: unknown
   linkType: soft
 

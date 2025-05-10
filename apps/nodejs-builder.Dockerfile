@@ -34,6 +34,7 @@ ADD modules/@creature-chess/gamemode/package.json ./modules/@creature-chess/game
 ADD modules/@creature-chess/models/package.json ./modules/@creature-chess/models/
 ADD modules/@creature-chess/networking/package.json ./modules/@creature-chess/networking/
 ADD modules/@creature-chess/user/package.json ./modules/@creature-chess/user/
+ADD modules/@creature-chess/utils/package.json ./modules/@creature-chess/models/
 
 ADD modules/@cc-server/auth/package.json ./modules/@cc-server/auth/
 ADD modules/@cc-server/bot/package.json ./modules/@cc-server/bot/

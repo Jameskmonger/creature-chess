@@ -2,6 +2,7 @@ import { BoardState } from "@shoki/board";
 
 import { CreatureDefinition, PieceModel } from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models/src/builders";
+import { rotateBoard } from "@creature-chess/utils/board";
 
 import { StandardTargetProvider } from "./StandardTargetProvider";
 
@@ -68,9 +69,21 @@ describe("StandardTargetProvider", () => {
 		});
 
 		it("returns the id of the enemy to the north", () => {
-			const targetId = subject.getTarget(attacker, board);
+			const targetId = subject.getTarget(attacker.id, board);
 
 			expect(targetId).toBe(northEnemy.id);
+		});
+
+		describe("when the board is rotated", () => {
+			beforeEach(() => {
+				board = rotateBoard(board);
+			});
+
+			it("returns the id of the enemy to the north", () => {
+				const targetId = subject.getTarget(attacker.id, board);
+
+				expect(targetId).toBe(northEnemy.id);
+			});
 		});
 
 		describe("when there are two enemies in range", () => {
@@ -94,9 +107,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the closest enemy to the attacker", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(northEnemy.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the closest enemy to the attacker", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(northEnemy.id);
+				});
 			});
 		});
 
@@ -106,9 +131,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the south enemy", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(southEnemy.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the id of the south enemy", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(southEnemy.id);
+				});
 			});
 		});
 	});
@@ -119,9 +156,21 @@ describe("StandardTargetProvider", () => {
 		});
 
 		it("returns the id of the enemy to the south", () => {
-			const targetId = subject.getTarget(attacker, board);
+			const targetId = subject.getTarget(attacker.id, board);
 
 			expect(targetId).toBe(southEnemy.id);
+		});
+
+		describe("when the board is rotated", () => {
+			beforeEach(() => {
+				board = rotateBoard(board);
+			});
+
+			it("returns the id of the blocker to the south", () => {
+				const targetId = subject.getTarget(attacker.id, board);
+
+				expect(targetId).toBe(southEnemy.id);
+			});
 		});
 
 		describe("when there are two enemies in range", () => {
@@ -145,9 +194,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the closest enemy to the attacker", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(southEnemy.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the closest enemy to the attacker", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(southEnemy.id);
+				});
 			});
 		});
 
@@ -157,9 +218,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the north enemy", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(northEnemy.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the id of the north enemy", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(northEnemy.id);
+				});
 			});
 		});
 	});
@@ -213,13 +286,21 @@ describe("StandardTargetProvider", () => {
 		});
 
 		it("chooses deterministically by ID when all else is equal", () => {
-			const targetId = subject.getTarget(attacker, board);
+			const targetId = subject.getTarget(attacker.id, board);
 
 			expect(targetId).toBe(eastEnemy.id);
+		});
 
-			for (let i = 0; i < 10; i++) {
-				expect(subject.getTarget(attacker, board)).toBe(eastEnemy.id);
-			}
+		describe("when the board is rotated", () => {
+			beforeEach(() => {
+				board = rotateBoard(board);
+			});
+
+			it("chooses deterministically by ID when all else is equal", () => {
+				const targetId = subject.getTarget(attacker.id, board);
+
+				expect(targetId).toBe(eastEnemy.id);
+			});
 		});
 
 		describe("when IDs are reversed", () => {
@@ -237,7 +318,17 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("respects ID ordering", () => {
-				expect(subject.getTarget(attacker, board)).toBe(westEnemy.id);
+				expect(subject.getTarget(attacker.id, board)).toBe(westEnemy.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("respects ID ordering", () => {
+					expect(subject.getTarget(attacker.id, board)).toBe(westEnemy.id);
+				});
 			});
 		});
 	});
@@ -320,9 +411,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the unblocked enemy", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(unblockedEnemy.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the id of the unblocked enemy", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(unblockedEnemy.id);
+				});
 			});
 		});
 
@@ -332,9 +435,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the unblocked enemy", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(unblockedEnemy.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the id of the unblocked enemy", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(unblockedEnemy.id);
+				});
 			});
 		});
 	});
@@ -401,9 +516,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the blocker to the north", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(blocker1.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the id of the blocker to the north", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(blocker1.id);
+				});
 			});
 		});
 
@@ -413,9 +540,21 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the blocker to the north", () => {
-				const targetId = subject.getTarget(attacker, board);
+				const targetId = subject.getTarget(attacker.id, board);
 
 				expect(targetId).toBe(blocker1.id);
+			});
+
+			describe("when the board is rotated", () => {
+				beforeEach(() => {
+					board = rotateBoard(board);
+				});
+
+				it("returns the id of the blocker to the north", () => {
+					const targetId = subject.getTarget(attacker.id, board);
+
+					expect(targetId).toBe(blocker1.id);
+				});
 			});
 		});
 	});
