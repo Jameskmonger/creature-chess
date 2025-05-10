@@ -338,4 +338,85 @@ describe("StandardTargetProvider", () => {
 			});
 		});
 	});
+
+	/**
+	 * This test covers the case where there is a piece on the board that has
+	 * no attackable tiles - this is to cover a bug.
+	 */
+	describe("when one piece is surrounded", () => {
+		let surroundedEnemy: PieceModel;
+		let blocker1: PieceModel;
+		let blocker2: PieceModel;
+		let blocker3: PieceModel;
+		let blocker4: PieceModel;
+
+		beforeEach(() => {
+			surroundedEnemy = buildPieceModel({
+				id: "surroundedEnemy",
+				ownerId: "enemy",
+				currentHealth: 100,
+			});
+			blocker1 = buildPieceModel({
+				id: "blocker1",
+				ownerId: "enemy",
+				currentHealth: 100,
+			});
+			blocker2 = buildPieceModel({
+				id: "blocker2",
+				ownerId: "enemy",
+				currentHealth: 100,
+			});
+			blocker3 = buildPieceModel({
+				id: "blocker3",
+				ownerId: "enemy",
+				currentHealth: 100,
+			});
+			blocker4 = buildPieceModel({
+				id: "blocker4",
+				ownerId: "enemy",
+				currentHealth: 100,
+			});
+
+			board.pieces = {
+				attacker,
+				surroundedEnemy,
+				blocker1,
+				blocker2,
+				blocker3,
+			};
+			board.piecePositions = {
+				["2,3"]: attacker.id,
+
+				["3,2"]: surroundedEnemy.id,
+				["3,1"]: blocker3.id,
+				["2,2"]: blocker1.id,
+				["4,2"]: blocker2.id,
+				["3,3"]: blocker4.id,
+			};
+		});
+
+		describe("when the attacker is facing south", () => {
+			beforeEach(() => {
+				attacker.facingAway = false;
+			});
+
+			it("returns the id of the blocker to the north", () => {
+				const targetId = subject.getTarget(attacker, board);
+
+				expect(targetId).toBe(blocker1.id);
+			});
+		});
+
+		describe("when the attacker is facing north", () => {
+			beforeEach(() => {
+				attacker.facingAway = true;
+			});
+
+			it("returns the id of the blocker to the north", () => {
+				const targetId = subject.getTarget(attacker, board);
+
+				expect(targetId).toBe(blocker1.id);
+			});
+		});
+	});
 });

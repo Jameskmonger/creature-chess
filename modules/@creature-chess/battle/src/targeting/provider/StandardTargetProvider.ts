@@ -78,6 +78,10 @@ export class StandardTargetProvider implements TargetProvider {
 				);
 			});
 
+			if (emptyPositions.length === 0) {
+				continue;
+			}
+
 			emptyPositions.sort((a, b) => {
 				const ax = a.x - attackerPosition.x;
 				const ay = a.y - attackerPosition.y;
