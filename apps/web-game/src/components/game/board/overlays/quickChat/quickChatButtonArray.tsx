@@ -1,8 +1,11 @@
 import React from "react";
 
 import { createUseStyles } from "react-jss";
+import { useSelector } from "react-redux";
+import { AppState } from "~/store";
 
-import { QuickChatOption } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
+import { getQuickChatOptions } from "@creature-chess/models/src/quickChat";
 
 import { QuickChatButton } from "./quickChatButton";
 
@@ -16,8 +19,7 @@ const useStyles = createUseStyles({
 		"background": "#1d1d1d",
 		"display": "flex",
 		"flexDirection": "row",
-		"gap": "16px",
-		"padding": "4px 8px",
+		"gap": "12px",
 
 		"@media (orientation: portrait) and (min-width: 431px)": {
 			gap: "32px",
@@ -28,13 +30,17 @@ const useStyles = createUseStyles({
 
 export function QuickChatButtonArray() {
 	const styles = useStyles();
-
+	const phase = useSelector<AppState, GamePhase | null>(
+		(state) => state.game.roundInfo.phase
+	);
+	const options = getQuickChatOptions(phase);
 	return (
 		<div className={styles.root}>
 			<div className={styles.buttons}>
-				{Object.values(QuickChatOption).map((chat) => (
-					<QuickChatButton chatOption={chat} key={chat} />
-				))}
+				{options &&
+					Object.values(options).map((chat) => (
+						<QuickChatButton chatOption={chat} key={chat} />
+					))}
 			</div>
 		</div>
 	);

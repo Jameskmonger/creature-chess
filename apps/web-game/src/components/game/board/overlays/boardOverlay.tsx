@@ -29,9 +29,13 @@ const useStyles = createUseStyles({
 		"color": "#fff",
 		"background": "#333c57",
 
-		"@media (orientation: portrait) and (max-width: 430px)": {
+		"@media (orientation: portrait) and (min-width: 400px) and (max-width: 430px)": {
 			width: "96%",
 			height: "96%",
+		},
+		"@media (orientation: portrait) and (max-width: 399px )": {
+			width: "100%",
+			height: "100%",
 		},
 	},
 });

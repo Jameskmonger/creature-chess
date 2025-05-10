@@ -126,6 +126,23 @@ Phase_2_Playing.args = {
 	phase: GamePhase.PLAYING,
 };
 
+export const Phase_3_MatchRewards_Won = Template.bind({});
+Phase_3_MatchRewards_Won.args = {
+	overlay: null,
+	phase: GamePhase.PLAYING,
+	matchRewards: {
+		damage: 0,
+		justDied: false,
+		rewardMoney: {
+			total: 6,
+			base: 3,
+			winBonus: 1,
+			streakBonus: 1,
+			interest: 1,
+		},
+	},
+};
+
 export const Phase_3_Victory = Template.bind({});
 Phase_3_Victory.args = {
 	phase: GamePhase.PLAYING,

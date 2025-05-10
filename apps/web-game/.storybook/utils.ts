@@ -6,7 +6,12 @@ import { StatsState } from "~/store/game/stats/state";
 import { BoardState, createInitialBoardState } from "@shoki/board";
 
 import { getDefinitionById } from "@creature-chess/gamemode";
-import { GamePhase, PieceModel, QuickChatOption } from "@creature-chess/models";
+import {
+	FinishedQuickChatOptions,
+	GamePhase,
+	PieceModel,
+	ReadyQuickChatOptions,
+} from "@creature-chess/models";
 import {
 	PlayerStatus,
 	inProgressBattle,
@@ -250,11 +255,11 @@ const createMockedState = (halfBoard: boolean): GameState => {
 		],
 		quickChat: {
 			["1234"]: {
-				value: QuickChatOption.HAPPY,
+				value: FinishedQuickChatOptions.HAPPY,
 				receivedAt: Date.now(),
 			},
 			["5678"]: {
-				value: QuickChatOption.ANGRY,
+				value: ReadyQuickChatOptions.ANGRY,
 				receivedAt: Date.now(),
 			},
 		},
