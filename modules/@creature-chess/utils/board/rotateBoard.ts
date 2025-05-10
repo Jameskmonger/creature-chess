@@ -7,7 +7,7 @@ export function rotateBoard(
 ): BoardState<PieceModel> {
 	const newBoard: BoardState<PieceModel> = {
 		...board,
-		piecePositions: rotatePiecesAboutCenter(board).piecePositions,
+		piecePositions: rotatePiecesAboutCenter(board.piecePositions, board.size),
 	};
 
 	for (const pieceId in newBoard.pieces) {

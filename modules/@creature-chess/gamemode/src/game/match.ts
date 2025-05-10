@@ -19,6 +19,7 @@ import {
 	BoardPiecesState,
 	BoardSlice,
 	BoardSelectors,
+	cloneBoard,
 } from "@shoki/board";
 
 import {
@@ -114,10 +115,10 @@ export class Match {
 		// rotate the board for the away player, so that their pieces are shown on their own side
 
 		if (playerId === this.away.id) {
-			return rotateBoard(board);
+			return rotateBoard(cloneBoard(board));
 		}
 
-		return board;
+		return cloneBoard(board);
 	}
 
 	public getTurn() {

@@ -1,14 +1,23 @@
 import { topToBottomMiddleSortPositions } from "./positionSort";
-import { BoardState, PiecePosition, SortPositionFn } from "./types";
+import {
+	BoardState,
+	PiecePosition,
+	PiecePositionsState,
+	SortPositionFn,
+} from "./types";
 
 // todo add a position-for-id lookup to the board state to improve this
 export const getPiecePosition = (
 	state: BoardState,
 	pieceId: string
+): PiecePosition | null =>
+	getPiecePositionFromPositionSet(state.piecePositions, pieceId);
+
+export const getPiecePositionFromPositionSet = (
+	state: PiecePositionsState,
+	pieceId: string
 ): PiecePosition | null => {
-	const entry = Object.entries(state.piecePositions).find(
-		([_, id]) => id === pieceId
-	);
+	const entry = Object.entries(state).find(([_, id]) => id === pieceId);
 
 	if (!entry) {
 		return null;

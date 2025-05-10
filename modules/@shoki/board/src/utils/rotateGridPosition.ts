@@ -1,5 +1,5 @@
-import { getPiecePosition } from "../selectors";
-import { BoardState, HasId, PiecePosition } from "../types";
+import { getPiecePositionFromPositionSet } from "../selectors";
+import { BoardSize, PiecePosition, PiecePositionsState } from "../types";
 
 export const rotateGridPosition = (
 	gridSize: { width: number; height: number },
@@ -9,35 +9,30 @@ export const rotateGridPosition = (
 	y: gridSize.height - 1 - position.y,
 });
 
-export const rotatePiecesAboutCenter = <
-	TPiece extends HasId,
-	TState extends BoardState<TPiece>,
->(
-	state: TState
-): TState => {
+export const rotatePiecesAboutCenter = (
+	state: PiecePositionsState,
+	size: BoardSize
+) => {
 	const newPositions: { pieceId: string; position: string }[] = [];
 
-	for (const [pieceId] of Object.entries(state.pieces)) {
-		const position = getPiecePosition(state, pieceId);
+	for (const pieceId of Object.values(state)) {
+		const position = getPiecePositionFromPositionSet(state, pieceId);
 
 		if (!position) {
 			continue;
 		}
 
-		const newPosition = rotateGridPosition(state.size, position);
+		const newPosition = rotateGridPosition(size, position);
 		const newPositionKey = `${newPosition.x},${newPosition.y}`;
 
 		newPositions.push({ pieceId, position: newPositionKey });
 	}
 
-	return {
-		...state,
-		piecePositions: newPositions.reduce<{ [position: string]: string }>(
-			(acc, { pieceId, position }) => ({
-				...acc,
-				[position]: pieceId,
-			}),
-			{}
-		),
-	};
+	return newPositions.reduce<{ [position: string]: string }>(
+		(acc, { pieceId, position }) => ({
+			...acc,
+			[position]: pieceId,
+		}),
+		{}
+	);
 };

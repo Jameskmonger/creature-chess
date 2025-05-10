@@ -171,7 +171,17 @@ describe("pathfinding", () => {
 			},
 		};
 
-		const rotated = rotateBoard(board);
+		const rotated = rotateBoard({
+			...board,
+			pieces: Object.fromEntries(
+				Object.entries(board.pieces).map(([key, piece]) => [
+					key,
+					{
+						...piece,
+					},
+				])
+			),
+		});
 
 		const pathfinder = new Pathfinder(board.size);
 

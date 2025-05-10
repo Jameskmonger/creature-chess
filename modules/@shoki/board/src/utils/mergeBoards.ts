@@ -49,17 +49,18 @@ export const mergeBoards = <
 	const expandedHome = expandBoard(home, newSize);
 	const expandedAway = expandBoard(away, newSize);
 
-	const rotatedAway = rotatePiecesAboutCenter(expandedAway);
-
 	return {
 		id,
 		pieces: {
 			...expandedHome.pieces,
-			...rotatedAway.pieces,
+			...expandedAway.pieces,
 		},
 		piecePositions: {
 			...expandedHome.piecePositions,
-			...rotatedAway.piecePositions,
+			...rotatePiecesAboutCenter(
+				expandedAway.piecePositions,
+				expandedAway.size
+			),
 		},
 		locked: true,
 		pieceLimit: null,

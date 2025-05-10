@@ -16,10 +16,12 @@ export type BoardState<TPiece = HasId> = {
 	piecePositions: PiecePositionsState;
 	locked: boolean;
 	pieceLimit: number | null;
-	size: {
-		width: number;
-		height: number;
-	};
+	size: BoardSize;
+};
+
+export type BoardSize = {
+	width: number;
+	height: number;
 };
 
 export type SortPositionFn = (a: PiecePosition, b: PiecePosition) => -1 | 1;

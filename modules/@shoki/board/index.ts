@@ -16,3 +16,4 @@ export {
 	topToBottomMiddleSortPositions,
 	topLeftToBottomRightSortPositions,
 } from "./src/positionSort";
+export { cloneBoard } from "./src/utils/cloneBoard";
