@@ -15,7 +15,6 @@ import { Logger } from "winston";
 import {
 	BoardState,
 	mergeBoards,
-	rotatePiecesAboutCenter,
 	createBoardSlice,
 	BoardPiecesState,
 	BoardSlice,
@@ -30,6 +29,7 @@ import {
 import { battleTurnEvent } from "@creature-chess/battle/src/events";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models/settings";
+import { rotateBoard } from "@creature-chess/utils/board";
 
 import { PlayerEntity } from "../entities";
 import { PlayerStateSelectors } from "../entities/player";
@@ -114,27 +114,7 @@ export class Match {
 		// rotate the board for the away player, so that their pieces are shown on their own side
 
 		if (playerId === this.away.id) {
-			const rotatedBoard = rotatePiecesAboutCenter(board);
-
-			// todo improve this
-
-			const newState: BoardState<PieceModel> = {
-				...rotatedBoard,
-				pieces: Object.entries(rotatedBoard.pieces).reduce<
-					BoardPiecesState<PieceModel>
-				>(
-					(acc, [id, piece]) => ({
-						...acc,
-						[id]: {
-							...piece,
-							facingAway: !piece.facingAway,
-						},
-					}),
-					{}
-				),
-			};
-
-			return newState;
+			return rotateBoard(board);
 		}
 
 		return board;

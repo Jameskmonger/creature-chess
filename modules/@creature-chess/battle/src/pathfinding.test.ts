@@ -1,39 +1,11 @@
-import {
-	BoardPiecesState,
-	BoardSelectors,
-	BoardState,
-	rotatePiecesAboutCenter,
-} from "@shoki/board";
+import { BoardSelectors, BoardState } from "@shoki/board";
 import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
 
 import { PieceModel, attackTypes } from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models/src/builders";
+import { rotateBoard } from "@creature-chess/utils/board";
 
 import { getNextPiecePosition, Pathfinder } from "./pathfinding";
-
-function rotateBoard(board: BoardState<PieceModel>) {
-	const rotatedBoard = rotatePiecesAboutCenter(board);
-
-	// todo improve this
-
-	const newState: BoardState<PieceModel> = {
-		...rotatedBoard,
-		pieces: Object.entries(rotatedBoard.pieces).reduce<
-			BoardPiecesState<PieceModel>
-		>(
-			(acc, [id, piece]) => ({
-				...acc,
-				[id]: {
-					...piece,
-					facingAway: !piece.facingAway,
-				},
-			}),
-			{}
-		),
-	};
-
-	return newState;
-}
 
 function getOpponentsForPiece(board: BoardState<PieceModel>, pieceId: string) {
 	const piece = board.pieces[pieceId];
