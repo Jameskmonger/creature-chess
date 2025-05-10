@@ -126,7 +126,6 @@ Phase_2_Playing.args = {
 	phase: GamePhase.PLAYING,
 };
 
-
 export const Phase_3_MatchRewards_Won = Template.bind({});
 Phase_3_MatchRewards_Won.args = {
 	overlay: null,

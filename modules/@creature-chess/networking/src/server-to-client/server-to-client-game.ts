@@ -25,7 +25,7 @@ type MatchBoardUpdatePacket = {
 	board: BoardUpdatePacket;
 };
 type QuickChatPacket = {
-	phrase: typeof QuickChatOption;
+	phrase: QuickChatOption;
 };
 
 export type PacketSet = {

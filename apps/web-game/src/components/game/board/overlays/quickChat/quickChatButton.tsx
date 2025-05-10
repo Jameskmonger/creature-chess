@@ -10,12 +10,18 @@ import { QuickChatOption } from "@creature-chess/models";
 
 const useStyles = createUseStyles({
 	button: {
-		fontSize: "1.5em",
+		"fontSize": "1em",
+
+		"@media (orientation: portrait) and (min-width: 431px)": {
+			gap: "32px",
+			padding: "12px 24px",
+			fontSize: "1.5em",
+		},
 	},
 });
 
 const QuickChatButton: React.FunctionComponent<{
-	chatOption: typeof QuickChatOption;
+	chatOption: QuickChatOption;
 }> = ({ chatOption }) => {
 	const styles = useStyles();
 	const dispatch = useDispatch();

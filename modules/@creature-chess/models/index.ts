@@ -22,6 +22,11 @@ export {
 	attackTypes,
 } from "./src/creatureDefinition";
 
-export { QuickChatOption, type QuickChatValue } from "./src/quickChat";
+export {
+	QuickChatOption,
+	type QuickChatValue,
+	ReadyQuickChatOptions,
+	FinishedQuickChatOptions,
+} from "./src/quickChat";
 
 export * as Builders from "./src/builders";

@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { useLocalPlayerId } from "~/auth/context";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PlayerAvatar, Title, PlayerHealthbar } from "~/components/ui/player";
@@ -15,7 +16,6 @@ import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
-import { useLocalPlayerId } from "~/auth/context";
 
 const useStyles = createUseStyles({
 	root: {
@@ -24,9 +24,15 @@ const useStyles = createUseStyles({
 		"justifyContent": "center",
 		"width": "100%",
 		"gap": "16px",
-
 		"@media (orientation: portrait) and (min-width: 431px)": {
 			gap: "32px",
+		},
+	},
+	desktopOnly: {
+		"display": "none",
+		"padding": "0px 20px",
+		"@media (orientation: portrait) and (max-width: 431px)": {
+			display: "inline"
 		},
 	},
 	wrapper: {
@@ -47,6 +53,7 @@ const useStyles = createUseStyles({
 
 		"@media (orientation: portrait) and (max-width: 430px)": {
 			padding: "2px 0",
+			display: "none"
 		},
 
 		"& > h2": {
@@ -112,7 +119,7 @@ const useStyles = createUseStyles({
 		"fontSize": "36px",
 
 		"@media (orientation: portrait) and (max-width: 430px)": {
-			fontSize: "24px",
+			fontSize: "16px",
 		},
 	},
 	income: {
@@ -186,14 +193,6 @@ const useStyles = createUseStyles({
 export function MatchRewardsOverlay() {
 	const styles = useStyles();
 
-	// TODO: implement quick chat box for player
-	// const playerId = useLocalPlayerId()
-
-	// const player = useSelector((state: AppState) => {
-	// 	const player = state.game.playerList.find((p) => p.id === playerId)
-	// 	return player
-	// })
-
 	const opponent = useSelector((state: AppState) => {
 		const id = state.game.playerInfo.opponentId;
 		return state.game.playerList.find((p) => p.id === id);
@@ -229,8 +228,10 @@ export function MatchRewardsOverlay() {
 		<BoardOverlay>
 			<div className={styles.root}>
 				<div className={styles.wrapper}>
-					<div className={styles.title}>{title}</div>
-					{opponent && opponentPosition && (
+					<div className={styles.title}>
+						{title} <div className={styles.desktopOnly}>vs</div>
+					</div>
+					{!justDied && opponent && opponentPosition && (
 						<>
 							<div className={styles.vsHeader}>vs.</div>
 							<div className={styles.opponent}>
@@ -287,7 +288,7 @@ export function MatchRewardsOverlay() {
 						)}
 					</div>
 				</div>
-				<QuickChatButtonArray />
+				{!justDied &&<QuickChatButtonArray />}
 			</div>
 		</BoardOverlay>
 	);
