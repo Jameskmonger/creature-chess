@@ -2,7 +2,7 @@ import { BoardSelectors, BoardState, PiecePosition } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
 
-import { getTargetAttackPositions } from "../../../utils/getTargetAttackPositions";
+import { getTargetAttackPositions } from "../../../targeting/utils/getTargetAttackPositions";
 import { Stores } from "../../types";
 import { MoveAction } from "../actions";
 import { findBestState } from "./findBestState";

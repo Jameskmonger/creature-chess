@@ -4,7 +4,7 @@ import { BoardState } from "@shoki/board";
 
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";
 
-import { getTargetAttackPositions } from "./utils/getTargetAttackPositions";
+import { getTargetAttackPositions } from "./targeting/utils/getTargetAttackPositions";
 
 const createEmptyWeightGrid = ({
 	width,
