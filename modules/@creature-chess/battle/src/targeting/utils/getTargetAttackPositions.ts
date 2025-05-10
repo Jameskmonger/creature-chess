@@ -41,6 +41,14 @@ export function findEnemyInAttackRange(
 	return null;
 }
 
+/**
+ * Finds all positions from which a piece can attack the given position.
+ *
+ * @param size The size of the board.
+ * @param position The position of the target piece.
+ * @param range The attack range of the attacking piece.
+ * @returns An array of positions from which the piece can attack the target position.
+ */
 export const getTargetAttackPositions = (
 	size: BoardState["size"],
 	{ x: positionX, y: positionY }: TileCoordinates,

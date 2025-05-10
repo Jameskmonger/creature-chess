@@ -3,8 +3,8 @@ import { BoardSelectors, BoardState, PiecePosition } from "@shoki/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { Pathfinder, getNextPiecePosition } from "../../../pathfinding";
+import { findEnemyInAttackRange } from "../../../targeting/utils/getTargetAttackPositions";
 import { getStats } from "../../../utils/getStats";
-import { findEnemyInAttackRange } from "../../../utils/getTargetAttackPositions";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { AttackState, StateResult } from "./types";
