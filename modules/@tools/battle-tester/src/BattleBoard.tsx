@@ -8,7 +8,7 @@ import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
 import { DndProvider } from "@shoki-web/board-react";
 
 import { Pathfinder, sortPaths } from "@creature-chess/battle/src/pathfinding";
-import { getTargetAttackPositions } from "@creature-chess/battle/src/utils/getTargetAttackPositions";
+import { getTargetAttackPositions } from "@creature-chess/battle/src/targeting/utils/getTargetAttackPositions";
 import { PieceModel, TileCoordinates } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { PlayerState } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
@@ -12,47 +12,56 @@ import { useAppSelector } from "../state";
 
 function useActions() {
 	const {
-		personality,
-		gamemodeSettings,
-		state: { health, money, level, xp, cards },
+		value: {
+			personality,
+			gamemodeSettings,
+			state: { health, money, level, xp, cards },
+		},
 	} = useBotBrain();
 	const board = useAppSelector((state) => state.board);
 	const bench = useAppSelector((state) => state.bench);
 
-	const playerState: PlayerState = {
-		board,
-		bench,
-		playerInfo: {
-			status: PlayerStatus.CONNECTED,
-			health,
-			streak: {
-				// TODO put in brain
-				amount: 1,
-				type: StreakType.WIN,
+	const playerState = useMemo(
+		(): PlayerState => ({
+			board,
+			bench,
+			playerInfo: {
+				status: PlayerStatus.CONNECTED,
+				health,
+				streak: {
+					// TODO put in brain
+					amount: 1,
+					type: StreakType.WIN,
+				},
+				battle: null,
+				matchRewards: null,
+				opponentId: null,
+				opponentIsClone: false,
+				money,
+				ready: false,
+				level,
+				xp,
 			},
-			battle: null,
-			matchRewards: null,
-			opponentId: null,
-			money,
-			ready: false,
-			level,
-			xp,
-		},
-		cardShop: {
-			cards,
-			locked: false,
-		},
-		roundInfo: {
-			phase: GamePhase.PREPARING,
-			round: 10, // TODO put in brain
-			phaseStartedAtSeconds: 0,
-		},
-		spectating: {
-			id: null,
-		},
-	};
+			cardShop: {
+				cards,
+				locked: false,
+			},
+			roundInfo: {
+				phase: GamePhase.PREPARING,
+				round: 10, // TODO put in brain
+				phaseStartedAtSeconds: 0,
+			},
+			spectating: {
+				id: null,
+			},
+		}),
+		[board, bench, health, money, level, xp, cards]
+	);
 
-	return getActions(playerState, personality, gamemodeSettings);
+	return useMemo(
+		() => getActions(playerState, personality, gamemodeSettings),
+		[playerState, personality, gamemodeSettings]
+	);
 }
 
 export function BotActions() {

@@ -66,15 +66,30 @@ const makeStore = (args: Args) => {
 const Template: Story<any> = (args: Args) => {
 	const store = makeStore(args);
 
+	const [personality, setPersonality] = React.useState<BotPersonality>(
+		args.personality
+	);
+
+	const [state, setState] = React.useState<BotBrainTesterContextValue["state"]>(
+		args.state
+	);
+
+	const context = React.useMemo(
+		() => ({
+			value: {
+				personality,
+				gamemodeSettings: GamemodeSettingsPresets["default"],
+				state,
+			},
+			setPersonality,
+			setState,
+		}),
+		[personality, state]
+	);
+
 	return (
 		<Provider store={store}>
-			<BotBrainTesterContextProvider
-				value={{
-					personality: args.personality,
-					gamemodeSettings: GamemodeSettingsPresets["default"],
-					state: args.state,
-				}}
-			>
+			<BotBrainTesterContextProvider value={context}>
 				<div style={{ display: "flex", width: "100%", height: "100%" }}>
 					<div
 						style={{ width: "60%", height: "100%", border: "2px solid grey" }}

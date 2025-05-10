@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { DndProvider } from "@shoki-web/board-react";
 
+import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { PieceModel } from "@creature-chess/models";
 
 import { GameBoard } from "@creature-chess-app/web-game/src/components/game/board/GameBoard";
@@ -32,7 +33,8 @@ const renderPiece = () => (piece: PieceModel) => (
 
 function BotMetaState() {
 	const {
-		state: { health, money, level, xp, cards },
+		value: { state },
+		setState,
 	} = useBotBrain();
 
 	return (
@@ -47,19 +49,79 @@ function BotMetaState() {
 				<tbody>
 					<tr>
 						<td>Health</td>
-						<td>{health}</td>
+						<td style={{ width: "32px" }}>{state.health}</td>
+						<td>
+							<input
+								type="range"
+								min="0"
+								max="100"
+								value={state.health}
+								onChange={(e) => {
+									const value = parseInt(e.target.value, 10);
+									setState({
+										...state,
+										health: value,
+									});
+								}}
+							/>
+						</td>
 					</tr>
 					<tr>
 						<td>Money</td>
-						<td>{money}</td>
+						<td>{state.money}</td>
+						<td>
+							<input
+								type="range"
+								min="0"
+								max="100"
+								value={state.money}
+								onChange={(e) => {
+									const value = parseInt(e.target.value, 10);
+									setState({
+										...state,
+										money: value,
+									});
+								}}
+							/>
+						</td>
 					</tr>
 					<tr>
 						<td>Level</td>
-						<td>{level}</td>
+						<td>{state.level}</td>
+						<td>
+							<input
+								type="range"
+								min="1"
+								max="10"
+								value={state.level}
+								onChange={(e) => {
+									const value = parseInt(e.target.value, 10);
+									setState({
+										...state,
+										level: value,
+									});
+								}}
+							/>
+						</td>
 					</tr>
 					<tr>
 						<td>XP</td>
-						<td>{xp}</td>
+						<td>{state.xp}</td>
+						<td>
+							<input
+								type="range"
+								min="0"
+								max={getXpToNextLevel(state.level)}
+								value={state.xp}
+								onChange={(e) => {
+									const value = parseInt(e.target.value, 10);
+									setState({
+										...state,
+										xp: value,
+									});
+								}}
+							/>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -72,7 +134,7 @@ function BotMetaState() {
 					</tr>
 				</thead>
 				<tbody>
-					{cards.map((card, index) => (
+					{state.cards.map((card, index) => (
 						<tr key={index}>
 							<td>{card.name}</td>
 							<td>${card.cost}</td>

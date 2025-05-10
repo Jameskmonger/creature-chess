@@ -17,7 +17,11 @@ export type BotBrainTesterContextValue = {
 	};
 };
 
-const BotBrainTesterContext = createContext<BotBrainTesterContextValue>(null!);
+const BotBrainTesterContext = createContext<{
+	value: BotBrainTesterContextValue;
+	setPersonality: (personality: BotPersonality) => void;
+	setState: (state: BotBrainTesterContextValue["state"]) => void;
+}>(null!);
 BotBrainTesterContext.displayName = "BotBrainTesterContext";
 
 export const BotBrainTesterContextProvider = BotBrainTesterContext.Provider;

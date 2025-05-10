@@ -21,7 +21,6 @@ export const makeCard = (id: string, definitionId: number): Card => ({
 	id,
 	definitionId,
 	cost: definitions[definitionId].cost,
-	class: definitions[definitionId].class,
+	traits: definitions[definitionId].traits,
 	name: definitions[definitionId].name,
-	type: definitions[definitionId].type,
 });
