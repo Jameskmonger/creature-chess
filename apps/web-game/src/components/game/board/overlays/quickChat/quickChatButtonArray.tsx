@@ -2,9 +2,12 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { QuickChatOption } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 
 import { QuickChatButton } from "./quickChatButton";
+import { useSelector } from "react-redux";
+import { AppState } from "~/store";
+import { getQuickChatOptions } from "@creature-chess/models/src/quickChat";
 
 const useStyles = createUseStyles({
 	root: {
@@ -28,11 +31,14 @@ const useStyles = createUseStyles({
 
 export function QuickChatButtonArray() {
 	const styles = useStyles();
-
+	const phase = useSelector<AppState, GamePhase | null>(
+		(state) => state.game.roundInfo.phase
+	);
+	const options = getQuickChatOptions(phase)
 	return (
 		<div className={styles.root}>
 			<div className={styles.buttons}>
-				{Object.values(QuickChatOption).map((chat) => (
+				{options && Object.values(options).map((chat) => (
 					<QuickChatButton chatOption={chat} key={chat} />
 				))}
 			</div>

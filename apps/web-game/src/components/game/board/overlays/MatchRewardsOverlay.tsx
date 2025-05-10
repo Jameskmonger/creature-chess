@@ -14,6 +14,8 @@ import { MatchIncomeReport } from "../../MatchIncomeReport";
 import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { QuickChatBox } from "./quickChat/quickChatBox";
+import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+import { useLocalPlayerId } from "~/auth/context";
 
 const useStyles = createUseStyles({
 	root: {
@@ -184,6 +186,14 @@ const useStyles = createUseStyles({
 export function MatchRewardsOverlay() {
 	const styles = useStyles();
 
+	// TODO: implement quick chat box for player
+	// const playerId = useLocalPlayerId()
+
+	// const player = useSelector((state: AppState) => {
+	// 	const player = state.game.playerList.find((p) => p.id === playerId)
+	// 	return player
+	// })
+
 	const opponent = useSelector((state: AppState) => {
 		const id = state.game.playerInfo.opponentId;
 		return state.game.playerList.find((p) => p.id === id);
@@ -277,6 +287,7 @@ export function MatchRewardsOverlay() {
 						)}
 					</div>
 				</div>
+				<QuickChatButtonArray />
 			</div>
 		</BoardOverlay>
 	);

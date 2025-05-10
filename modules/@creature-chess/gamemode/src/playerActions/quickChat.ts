@@ -13,7 +13,7 @@ export type QuickChatPlayerAction = ReturnType<typeof quickChatPlayerAction>;
 export const quickChatPlayerAction = createAction<
 	{
 		sendingPlayerId: string | null;
-		chatValue: QuickChatOption;
+		chatValue: typeof QuickChatOption;
 	},
 	"quickChatAction"
 >("quickChatAction");

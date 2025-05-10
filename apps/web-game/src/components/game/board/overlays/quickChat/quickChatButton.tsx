@@ -15,7 +15,7 @@ const useStyles = createUseStyles({
 });
 
 const QuickChatButton: React.FunctionComponent<{
-	chatOption: QuickChatOption;
+	chatOption: typeof QuickChatOption;
 }> = ({ chatOption }) => {
 	const styles = useStyles();
 	const dispatch = useDispatch();

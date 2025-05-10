@@ -35,7 +35,7 @@ export type PlayerReceiveQuickChatEvent = ReturnType<
 export const playerReceiveQuickChatEvent = createAction<
 	{
 		sendingPlayerId: string;
-		chatValue: QuickChatOption;
+		chatValue: typeof QuickChatOption;
 	},
 	"playerReceiveQuickChatEvent"
 >("playerReceiveQuickChatEvent");
