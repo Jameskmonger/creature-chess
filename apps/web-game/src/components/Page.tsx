@@ -28,8 +28,8 @@ const useStyles = createUseStyles<string, Props>({
 		"display": "flex",
 		"justifyContent": "center",
 		"flexDirection": "column",
-		"width": "clamp(272px, 60%, 1000px)",
-		"height": "clamp(272px, 60%, 1000px)",
+		"width": "clamp(272px, 80%, 1000px)",
+		"height": "clamp(272px, 80%, 1000px)",
 		"boxSizing": "border-box",
 
 		"@container page (min-width: 400px)": {
@@ -62,6 +62,7 @@ const useStyles = createUseStyles<string, Props>({
 		alignItems: "center",
 		boxSizing: "border-box",
 		width: "100%",
+		maxHeight: "100%",
 		flex: 1,
 		background: "#424e70",
 		borderColor: "#333c57",

@@ -26,7 +26,7 @@ const useStyles = createUseStyles({
 	},
 	tab: {
 		"flex": 1,
-		"padding": "10px 20px",
+		"padding": "6px 12px",
 		"cursor": "pointer",
 		"borderBottom": "2px solid transparent",
 
@@ -34,8 +34,13 @@ const useStyles = createUseStyles({
 		"fontOpticalSizing": "auto",
 		"fontWeight": 700,
 		"fontStyle": "normal",
-		"fontSize": "18px",
+		"fontSize": "14px",
 		"color": "#e8e8e8",
+
+		"@media (min-width: 400px)": {
+			padding: "10px 20px",
+			fontSize: "18px",
+		},
 
 		"&.active": {
 			background: "#797979",

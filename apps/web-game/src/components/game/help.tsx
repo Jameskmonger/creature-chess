@@ -19,9 +19,28 @@ const useStyles = createUseStyles({
 		"marginBottom": "1rem",
 		"marginLeft": "1.5rem",
 		"list-style-type": "disc",
+
+		"& > li": {
+			"fontSize": "12px",
+			"marginBottom": "8px",
+
+			"@media (min-width: 400px)": {
+				fontSize: "16px",
+				marginBottom: "12px",
+			},
+		},
 	},
 	help: {
 		color: "#fff",
+	},
+	helpText: {
+		"fontSize": "12px",
+		"marginBottom": "8px",
+
+		"@media (min-width: 400px)": {
+			fontSize: "16px",
+			marginBottom: "12px",
+		},
 	},
 });
 
@@ -34,32 +53,30 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({
 		<Layout direction="column" className={styles.help}>
 			<Group>
 				<Header2>The Game</Header2>
-				<p>
+				<p className={styles.helpText}>
 					Buy pieces and place them on the board. Your board then battles
 					another random player's board.
 				</p>
-				<br />
-				<p>
+				<p className={styles.helpText}>
 					If you lose, your health will decrease. If your health hits 0, you
 					will be knocked out.
 				</p>
-				<br />
-				<p>The winner is the last player remaining!</p>
+				<p className={styles.helpText}>
+					The winner is the last player remaining!
+				</p>
 			</Group>
 			<Group>
 				<Header2>Creatures</Header2>
-				<p>
+				<p className={styles.helpText}>
 					Three creatures (level 1) will combine to make a stronger creature
 					(level 2). Three level 2 creatures can then evolve into a level 3
 					creature.
 				</p>
-				<br />
-				<p>
+				<p className={styles.helpText}>
 					Each creature has a class and a type. Their class determines their
 					fighting style, and types give some boost/reduction to damage when
 					fighting other types.
 				</p>
-				<br />
 				<Header4>Classes</Header4>
 				<ul className={styles.list}>
 					<li>
@@ -87,37 +104,39 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean }> = ({
 						<div className={styles.pieceType}>
 							<TraitIcon trait="earth" />
 						</div>
-						Earth: Overcomes water.
+						Earth: Beats water.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
 							<TraitIcon trait="metal" />
 						</div>
-						Metal: Overcomes wood.
+						Metal: Beats wood.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
 							<TraitIcon trait="water" />
 						</div>
-						Water: Overcomes fire.
+						Water: Beats fire.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
 							<TraitIcon trait="wood" />
 						</div>
-						Wood: Overcomes earth.
+						Wood: Beats earth.
 					</li>
 					<li>
 						<div className={styles.pieceType}>
 							<TraitIcon trait="fire" />
 						</div>
-						Fire: Overcomes metal.
+						Fire: Beats metal.
 					</li>
 				</ul>
 			</Group>
 			<Group>
 				<Header2>Money</Header2>
-				<p>After each round you will receive some money:</p>
+				<p className={styles.helpText}>
+					After each round you will receive some money:
+				</p>
 				<ul className={styles.list}>
 					<li>Bonus for winning the round</li>
 					<li>10% interest</li>

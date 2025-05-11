@@ -4,9 +4,13 @@ import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
 	h2: {
-		fontSize: "1em",
-		fontWeight: "bolder",
-		marginBottom: "0.25em",
+		"fontSize": "12px",
+		"fontWeight": "bolder",
+		"marginBottom": "0.25em",
+
+		"@media (min-width: 400px)": {
+			fontSize: "18px",
+		},
 	},
 });
 
