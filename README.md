@@ -10,7 +10,7 @@ To try the game, head to [creaturechess.gg](https://creaturechess.gg), register 
 
 ### Prerequisites
 
-- Node.js 18
+- Node.js 22 or 24
 - Docker w/ docker-compose
 - Yarn (`npm i -g yarn && yarn set version 4.0.2`)
 
