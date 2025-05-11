@@ -20,7 +20,7 @@ import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
-import { QuitGameButton } from "../../settings";
+import { Settings } from "../../settings";
 
 const useStyles = createUseStyles({
 	helpContainer: {
@@ -103,8 +103,15 @@ const DesktopGame: React.FunctionComponent = () => {
 				label: "Help",
 				content: (
 					<div className={styles.helpContainer}>
-						<QuitGameButton />
 						<Help hideFooter />
+					</div>
+				),
+			},
+			{
+				label: "Settings",
+				content: (
+					<div className={styles.helpContainer}>
+						<Settings />
 						<Footer />
 					</div>
 				),

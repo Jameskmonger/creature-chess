@@ -35,6 +35,7 @@
 		"@shoki/board": "workspace:*",
 		"@shoki/networking": "workspace:*",
 		"@types/react-redux": "^7.1.33",
+		"@uidotdev/usehooks": "^2.4.1",
 		"delay": "^4.4.1",
 		"pepjs": "^0.5.3",
 		"process": "0.11.10",

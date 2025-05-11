@@ -3,3 +3,5 @@ export * as LobbyClientToServer from "./src/client-to-server-lobby";
 
 export * as LobbyServerToClient from "./src/server-to-client/server-to-client-lobby";
 export * as GameServerToClient from "./src/server-to-client/server-to-client-game";
+
+export { PingAction, pingAction } from "./src/ping-action";

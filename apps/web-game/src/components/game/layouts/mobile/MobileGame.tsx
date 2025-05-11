@@ -3,6 +3,7 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
+import { Footer } from "~/components/ui/Footer";
 import { AppState } from "~/store";
 import { StatsState } from "~/store/game/stats/state";
 import { Overlay } from "~/store/game/ui";
@@ -77,7 +78,12 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 						},
 						{
 							label: "Settings",
-							content: <Settings />,
+							content: (
+								<div>
+									<Settings />
+									<Footer />
+								</div>
+							),
 						},
 					]}
 				/>

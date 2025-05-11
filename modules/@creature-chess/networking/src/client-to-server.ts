@@ -10,7 +10,12 @@ export type PacketSet = {
 
 	sendPlayerActions: {
 		payload: ActionStream.ActionStreamPacket;
-		ack: never;
+		ack: () => void;
+	};
+
+	ping: {
+		payload: EmptyPacket;
+		ack: () => void;
 	};
 };
 

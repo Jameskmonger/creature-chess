@@ -40,6 +40,13 @@ export const incomingNetworking = function* () {
 				PlayerActionTypesArray
 			)
 		),
+		call(
+			ActionStream.incomingSaga<ClientToServer.PacketSet, "ping">(
+				registry,
+				"ping",
+				["ping"]
+			)
+		),
 		call(processFinishMatch),
 	]);
 };

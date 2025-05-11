@@ -15,6 +15,7 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { quickChatReducer, QuickChatState } from "./chat/state";
 import { matchReducer, MatchState } from "./match/state";
+import { networkReducer, NetworkState } from "./network";
 import { playerListReducer } from "./playerList/state";
 import { settingsReducer } from "./settings/state";
 import { StatsState, statsReducer } from "./stats/state";
@@ -36,6 +37,8 @@ export type GameState = PlayerState & {
 	quickChat: QuickChatState;
 
 	settings: GamemodeSettings;
+
+	network: NetworkState;
 };
 
 type Slices = {
@@ -59,4 +62,5 @@ export const createGameReducer = ({
 		ui: uiReducer,
 		quickChat: quickChatReducer,
 		settings: settingsReducer,
+		network: networkReducer,
 	});

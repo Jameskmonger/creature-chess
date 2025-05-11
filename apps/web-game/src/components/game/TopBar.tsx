@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
+import { useSetting } from "~/settings";
 import { AppState } from "~/store";
 
 import { getPlayerLevel, getPlayerMoney } from "@creature-chess/gamemode";
@@ -12,6 +13,7 @@ import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { LevelIcon } from "../ui/icon/LevelIcon";
 import { PlayerHealthbar } from "../ui/player";
 import { PositionChip } from "../ui/player/PositionChip";
+import { DebugBar } from "./DebugBar";
 import { PhaseTimer } from "./PhaseTimer";
 
 const useStyles = createUseStyles({
@@ -79,6 +81,7 @@ const useStyles = createUseStyles({
 
 export function TopBar() {
 	const styles = useStyles();
+	const showPing = useSetting("showPing");
 
 	const playerId = useLocalPlayerId();
 
@@ -128,6 +131,7 @@ export function TopBar() {
 				</div>
 			</div>
 			<PlayerHealthbar health={health} />
+			{showPing && <DebugBar />}
 		</div>
 	);
 }

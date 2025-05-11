@@ -1,6 +1,8 @@
 import { ActionPattern } from "@redux-saga/types";
-import { take } from "redux-saga/effects";
+import { SagaIterator, channel } from "redux-saga";
+import { all, call, cancelled, fork, put, take } from "redux-saga/effects";
 
+import { ResponseAction } from "../actions/ResponseAction";
 import { OpcodesForPacket, PacketSet } from "../packet";
 import { OutgoingRegistry } from "../registry/outgoing";
 import { Action, ActionStreamPacket } from "./packet";
@@ -20,10 +22,46 @@ export const outgoingSaga = <
 	opcode: TOpcode,
 	actions: ActionPattern
 ) =>
-	function* () {
-		while (true) {
-			const action: Action = yield take(actions);
+	function* outgoingSagaWorker(): SagaIterator {
+		/**
+		 * Creates a channel containing most recent ack times
+		 */
+		const pingChan = channel<number>();
 
-			registry.send(opcode, action);
+		/**
+		 * Sends the action to the registry and puts the ack time in the channel
+		 */
+		function* sender(): SagaIterator {
+			while (true) {
+				const action: Action = yield take(actions);
+
+				const sent = Date.now();
+				yield call([registry, registry.send], opcode, action, () => {
+					pingChan.put(Date.now() - sent);
+				});
+			}
+		}
+
+		/**
+		 * Emits the ping time to the Redux store
+		 */
+		function* pingEmitter(): SagaIterator {
+			while (true) {
+				const ping: number = yield take(pingChan);
+
+				const action: ResponseAction = {
+					type: "response",
+					payload: { pingMs: ping },
+				};
+				yield put(action);
+			}
+		}
+
+		try {
+			yield all([fork(sender), fork(pingEmitter)]);
+		} finally {
+			if (yield cancelled()) {
+				pingChan.close();
+			}
 		}
 	};

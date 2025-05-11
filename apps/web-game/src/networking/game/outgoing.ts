@@ -1,11 +1,16 @@
-import { call, takeEvery, all } from "redux-saga/effects";
+import { call, takeEvery, all, put, delay } from "redux-saga/effects";
 import { Socket } from "socket.io-client";
+import { setPing } from "~/store/game/network";
 
-import { ActionStream, OutgoingRegistry } from "@shoki/networking";
+import {
+	ActionStream,
+	OutgoingRegistry,
+	ResponseAction,
+} from "@shoki/networking";
 
 import { BattleEvents } from "@creature-chess/battle";
 import { PlayerActionTypesArray } from "@creature-chess/gamemode";
-import { ClientToServer } from "@creature-chess/networking";
+import { ClientToServer, pingAction } from "@creature-chess/networking";
 
 const writeActionsToPackets = function* (
 	registry: OutgoingRegistry<ClientToServer.PacketSet>
@@ -21,6 +26,22 @@ const writeActionsToPackets = function* (
 				PlayerActionTypesArray
 			)
 		),
+		takeEvery("response", function* (action: ResponseAction) {
+			yield put(setPing(action.payload.pingMs));
+		}),
+		call(
+			ActionStream.outgoingSaga<ClientToServer.PacketSet, "ping">(
+				registry,
+				"ping",
+				["ping"]
+			)
+		),
+		call(function* () {
+			while (true) {
+				yield delay(2500);
+				yield put(pingAction());
+			}
+		}),
 	]);
 };
 

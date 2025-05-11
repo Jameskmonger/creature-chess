@@ -2,7 +2,7 @@ import { eventChannel } from "redux-saga";
 import { put, take } from "redux-saga/effects";
 
 import { OpcodesForPacket, PacketSet } from "../packet";
-import { IncomingRegistry } from "../registry/incoming";
+import { HandlerFn, IncomingRegistry } from "../registry/incoming";
 import { Action, ActionStreamPacket } from "./packet";
 
 /**
@@ -22,7 +22,16 @@ export const incomingSaga = <
 ) =>
 	function* () {
 		const channel = eventChannel<ActionStreamPacket>((emit) => {
-			const onReceiveActions = (packet: ActionStreamPacket) => emit(packet);
+			const onReceiveActions: HandlerFn<TPacketSet[TOpcode]> = (
+				packet,
+				ack
+			) => {
+				emit(packet);
+
+				if (ack) {
+					ack();
+				}
+			};
 
 			registry.on(opcode, onReceiveActions);
 

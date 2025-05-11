@@ -1725,6 +1725,7 @@ __metadata:
     "@shoki/board": "workspace:*"
     "@shoki/networking": "workspace:*"
     "@types/react-redux": "npm:^7.1.33"
+    "@uidotdev/usehooks": "npm:^2.4.1"
     awesome-typescript-loader: "npm:^5.2.1"
     babel-loader: "npm:^8.2.3"
     circular-dependency-plugin: "npm:^5.2.2"
@@ -5560,6 +5561,16 @@ __metadata:
     "@typescript-eslint/types": "npm:7.1.0"
     eslint-visitor-keys: "npm:^3.4.1"
   checksum: c3e98ebf166fd1854adb0e9599dc108cdbbd95f6eb099d31deae2fd1d4df8fcd8dc9c24ad4f509b961ad900b474c246f6b4b228b5711cc504106c3e0f751a11c
+  languageName: node
+  linkType: hard
+
+"@uidotdev/usehooks@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "@uidotdev/usehooks@npm:2.4.1"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: 7f2e1dcfcaf654841150fde36556a257afb2240bca0145586b4e1e9385b85fea108a7dd17c2cbc4c2bd46d136126ffdf84267118933120fe54ad2e028c2dfa68
   languageName: node
   linkType: hard
 

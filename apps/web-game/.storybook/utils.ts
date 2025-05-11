@@ -266,6 +266,10 @@ const createMockedState = (halfBoard: boolean): GameState => {
 		spectating: {
 			id: null,
 		},
+		network: {
+			pingMs: 69,
+			lastPingTimestamp: Date.now(),
+		},
 	};
 };
 
