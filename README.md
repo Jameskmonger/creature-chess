@@ -12,7 +12,7 @@ To try the game, head to [creaturechess.gg](https://creaturechess.gg), register 
 
 - Node.js 22 or 24
 - Docker w/ docker-compose
-- Yarn (`npm i -g yarn && yarn set version 4.0.2`)
+- Yarn (`npm i -g yarn && yarn set version 4.9.1`)
 
 ### Environment variables
 

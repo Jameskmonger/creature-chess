@@ -12,7 +12,7 @@ FROM node:24-alpine3.20
 
 WORKDIR /code
 
-RUN yarn set version 4.0.2
+RUN yarn set version 4.9.1
 
 # By copying the package.json and yarn.lock files first, we can take advantage of
 # Docker's caching. This means that we don't have to re-run yarn install every
