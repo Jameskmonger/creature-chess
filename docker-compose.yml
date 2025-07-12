@@ -1,7 +1,11 @@
 networks:
   creature-chess:
     name: creature-chess
+    internal: true
+  creature-chess-db:
+    name: creature-chess-db
     external: true
+  public: {}
 
 services:
   # this is the base image for all nodejs-based apps
@@ -51,6 +55,7 @@ services:
       - 443:443
     networks:
       - creature-chess
+      - public
     depends_on:
       web-game-builder:
         condition: service_completed_successfully
@@ -82,6 +87,7 @@ services:
       - "3000"
     networks:
       - creature-chess
+      - creature-chess-db
     restart: always
     depends_on:
       nodejs-builder:
@@ -105,6 +111,7 @@ services:
       - "3000"
     networks:
       - creature-chess
+      - creature-chess-db
     restart: always
     depends_on:
       nodejs-builder:
