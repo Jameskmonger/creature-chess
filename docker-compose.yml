@@ -1,5 +1,3 @@
-version: "3.8"
-
 networks:
   creature-chess:
     name: creature-chess
