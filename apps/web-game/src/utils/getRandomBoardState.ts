@@ -4,12 +4,12 @@ import { getAllDefinitions } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models/src/builders";
 
-export function getRandomBoardState(id: string) {
+export function getRandomBoardState(id: string, minPieces = 3): BoardState<PieceModel> {
 	const homePieces: PieceModel[] = [];
 	const awayPieces: PieceModel[] = [];
 
-	const homePieceCount = Math.ceil(Math.random() * 4) + 3;
-	const awayPieceCount = Math.ceil(Math.random() * 4) + 3;
+	const homePieceCount = Math.ceil(Math.random() * 4) + minPieces;
+	const awayPieceCount = Math.ceil(Math.random() * 4) + minPieces;
 
 	const allDefinitions = getAllDefinitions();
 

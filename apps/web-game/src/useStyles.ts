@@ -9,7 +9,7 @@ type Theme = {
 
 export const DEFAULT_THEME: Theme = {
 	typography: {
-		primary: "'Roboto', sans-serif",
+		primary: "'Jersey 25', sans-serif",
 		accent: "'Caveat Brush', cursive",
 	},
 };

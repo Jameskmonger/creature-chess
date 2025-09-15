@@ -68,16 +68,16 @@ const renderItem = (boardId: string) => (piece: PieceModel) => ({
 export function PageBoardBackground() {
 	const classes = useBackgroundStyles();
 
-	const state1 = React.useMemo(() => getRandomBoardState("1"), []);
+	const state1 = React.useMemo(() => getRandomBoardState("1", 6), []);
 	const render1 = React.useMemo<any>(() => renderItem("1"), []);
 
-	const state2 = React.useMemo(() => getRandomBoardState("2"), []);
+	const state2 = React.useMemo(() => getRandomBoardState("2", 6), []);
 	const render2 = React.useMemo<any>(() => renderItem("2"), []);
 
-	const state3 = React.useMemo(() => getRandomBoardState("3"), []);
+	const state3 = React.useMemo(() => getRandomBoardState("3", 6), []);
 	const render3 = React.useMemo<any>(() => renderItem("3"), []);
 
-	const state4 = React.useMemo(() => getRandomBoardState("4"), []);
+	const state4 = React.useMemo(() => getRandomBoardState("4", 6), []);
 	const render4 = React.useMemo<any>(() => renderItem("4"), []);
 
 	return (
