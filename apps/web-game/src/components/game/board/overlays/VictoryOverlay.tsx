@@ -1,14 +1,14 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { Button } from "~/components/ui/Button";
 import { AppState } from "~/store";
 import { getPlayerById } from "~/store/selectors";
 
 import { BoardOverlay } from "./boardOverlay";
+import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	root: {
 		"display": "flex",
 		"flexDirection": "column",
@@ -29,12 +29,12 @@ const useStyles = createUseStyles({
 		background: "#566c86",
 		border: "2px solid #b13e53",
 
-		fontFamily: '"Roboto", sans-serif',
+		fontFamily: theme.typography.primary,
 	},
 	title: {
 		"textAlign": "left",
 		"padding": "4px 8px",
-		"fontFamily": '"Caveat Brush", cursive',
+		"fontFamily": theme.typography.accent,
 		"fontSize": "36px",
 		"borderBottom": "2px solid #b13e53",
 
@@ -76,7 +76,7 @@ const useStyles = createUseStyles({
 	discordIcon: {
 		height: "32px",
 	},
-});
+}));
 
 export function VictoryOverlay() {
 	const styles = useStyles();

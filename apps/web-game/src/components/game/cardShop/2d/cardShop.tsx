@@ -7,13 +7,13 @@ import {
 	faLockOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { createUseStyles } from "react-jss";
 import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
 
 import { Card as CardModel } from "@creature-chess/models";
 
 import { BalanceIcon } from "../../../ui/icon/BalanceIcon";
 import { Card2D as Card } from "./card";
+import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -25,7 +25,7 @@ type Props = {
 	onBuy?: (index: number) => void;
 };
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	shop: {
 		display: "flex",
 		flexDirection: "column",
@@ -76,7 +76,7 @@ const useStyles = createUseStyles({
 		"background": "#38b764",
 		"borderRadius": "4px",
 
-		"fontFamily": '"Roboto", "sans-serif"',
+		"fontFamily": theme.typography.primary,
 		"fontOpticalSizing": "auto",
 		"fontWeight": 700,
 		"fontStyle": "normal",
@@ -107,7 +107,7 @@ const useStyles = createUseStyles({
 			},
 		},
 	},
-});
+}));
 
 export function CardShop({
 	cards,

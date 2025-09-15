@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState, useRef } from "react";
 
-import { createUseStyles } from "react-jss";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PositionChip } from "~/components/ui/player/PositionChip";
@@ -10,10 +9,10 @@ import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside";
 import { Button } from "../../ui/Button";
-import { Label } from "../../ui/label";
 import { PlayerAvatar, PlayerHealthbar, Title } from "../../ui/player";
 import { BattleInfo } from "./battleInfo";
 import { StreakIndicator } from "./streakIndicator";
+import { createUseThemeStyles } from "~/useStyles";
 
 interface Props {
 	index: number;
@@ -34,8 +33,8 @@ const getDetailReadyColor = ({
 	showReadyIndicator = false,
 }: Props) => (ready && showReadyIndicator ? "#20b720" : "#ccc");
 
-const useStyles = createUseStyles({
-	container: (props: Props) => ({
+const useStyles = createUseThemeStyles<string, Props>(theme => ({
+	container: (props) => ({
 		"border": props.isOpponent ? "3px solid #b13e53" : "",
 		"boxSizing": "border-box",
 		"padding": "0.5rem",
@@ -48,7 +47,7 @@ const useStyles = createUseStyles({
 			marginBottom: "0.25em",
 		},
 	}),
-	details: (props: Props) => ({
+	details: (props) => ({
 		"flex": 1,
 		"paddingLeft": "0.5em",
 		"borderLeft": `5px solid ${getDetailReadyColor(props)}`,
@@ -89,7 +88,7 @@ const useStyles = createUseStyles({
 	},
 
 	name: {
-		"fontFamily": '"Roboto", sans-serif',
+		"fontFamily": theme.typography.primary,
 		"fontSize": "14px",
 		"fontWeight": 700,
 		"color": "#fff",
@@ -124,7 +123,7 @@ const useStyles = createUseStyles({
 			width: "32px",
 		},
 	},
-});
+}));
 
 const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 	const styles = useStyles(props);

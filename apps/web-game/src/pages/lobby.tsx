@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { Page } from "~/components/Page";
 import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
@@ -9,6 +8,7 @@ import { useOpenSettingsMenu } from "~/components/lobby/hooks/useOpenSettingsMen
 import { Footer } from "~/components/ui/Footer";
 import { Countdown } from "~/components/ui/countdown";
 import { AppState } from "~/store";
+import { createUseThemeStyles } from "~/useStyles";
 
 const padNumberToTwo = (val: number) => (val < 10 ? `0${val}` : val.toString());
 
@@ -27,14 +27,14 @@ const countdownRender =
 		);
 	};
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	lobbyInfo: {
 		"flex": 1,
 
 		"display": "flex",
 		"flexDirection": "column",
 		"textAlign": "center",
-		"fontFamily": '"Roboto", "sans-serif"',
+		"fontFamily": theme.typography.primary,
 		"color": "#fff",
 		"width": "100%",
 
@@ -84,7 +84,7 @@ const useStyles = createUseStyles({
 		display: "flex",
 		flexDirection: "column",
 	},
-});
+}));
 
 export function LobbyPage() {
 	const styles = useStyles();

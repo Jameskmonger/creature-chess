@@ -1,14 +1,13 @@
 import React from "react";
 
-import { createUseStyles } from "react-jss";
-
 import { Page } from "../Page";
+import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	message?: string;
 };
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	"loadingArea": {
 		display: "flex",
 		flexDirection: "column",
@@ -27,7 +26,7 @@ const useStyles = createUseStyles({
 		animation: "$spin 1.6s linear infinite",
 	},
 	"message": {
-		"fontFamily": '"Roboto", "sans-serif"',
+		"fontFamily": theme.typography.primary,
 		"fontSize": "1.5em",
 		"textTransform": "uppercase",
 		"letterSpacing": "4px",
@@ -43,7 +42,7 @@ const useStyles = createUseStyles({
 		from: { transform: "rotate(0deg)" },
 		to: { transform: "rotate(360deg)" },
 	},
-});
+}));
 
 export function LoadingScreen({ message }: Props) {
 	const classes = useStyles();

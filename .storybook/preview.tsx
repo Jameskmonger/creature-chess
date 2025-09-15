@@ -5,6 +5,8 @@ import type { Preview } from "@storybook/react";
 import { DecoratorFunction } from "@storybook/types";
 
 import webGamePreview from "../apps/web-game/.storybook/preview";
+import { ThemeProvider } from "react-jss";
+import { DEFAULT_THEME } from "../apps/web-game/src/useStyles";
 
 const viewports = Object.entries(INITIAL_VIEWPORTS)
 	.filter(([key]) =>
@@ -87,6 +89,9 @@ const preview: Preview = {
 
 			return <Story {...context} />; // ✅ Correctly render Story as a component
 		},
+		function withDefaultTheme(Story) {
+			return <ThemeProvider theme={DEFAULT_THEME}><Story /></ThemeProvider>;
+		}
 	],
 };
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import classNames from "classnames";
-import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	children: React.ReactNode;
@@ -14,7 +14,7 @@ type Props = {
 	center?: boolean;
 };
 
-const useStyles = createUseStyles<string, Props>({
+const useStyles = createUseThemeStyles<string, Props>(theme => ({
 	text: {
 		// todo tie into media queries and use pixels
 		fontSize: ({ size }) => {
@@ -32,10 +32,10 @@ const useStyles = createUseStyles<string, Props>({
 		fontFamily: ({ font }) => {
 			switch (font) {
 				case "cursive":
-					return '"Caveat Brush", cursive';
+					return theme.typography.accent;
 				case "standard":
 				default:
-					return '"Roboto", "sans-serif"';
+					return theme.typography.primary;
 			}
 		},
 		color: ({ light }) => {
@@ -48,7 +48,7 @@ const useStyles = createUseStyles<string, Props>({
 			tag === "p" && size !== "sm" ? "0.5em" : "0",
 		textAlign: ({ center }) => (center ? "center" : "left"),
 	},
-});
+}));
 
 export function Text(props: Props) {
 	const classes = useStyles(props);

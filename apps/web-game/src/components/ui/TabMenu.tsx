@@ -1,6 +1,6 @@
 import React from "react";
 
-import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
 
 type TabMenuProps = {
 	tabs: {
@@ -10,7 +10,7 @@ type TabMenuProps = {
 	className?: string;
 };
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	tabMenu: {
 		display: "flex",
 		flexDirection: "column",
@@ -30,7 +30,7 @@ const useStyles = createUseStyles({
 		"cursor": "pointer",
 		"borderBottom": "2px solid transparent",
 
-		"fontFamily": '"Roboto", "sans-serif"',
+		"fontFamily": theme.typography.primary,
 		"fontOpticalSizing": "auto",
 		"fontWeight": 700,
 		"fontStyle": "normal",
@@ -54,7 +54,7 @@ const useStyles = createUseStyles({
 		overflowY: "auto",
 		padding: "0.5em",
 	},
-});
+}));
 
 export function TabMenu({ tabs, className }: TabMenuProps) {
 	const classes = useStyles();

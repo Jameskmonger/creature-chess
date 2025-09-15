@@ -1,8 +1,6 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PlayerAvatar, Title, PlayerHealthbar } from "~/components/ui/player";
@@ -16,8 +14,9 @@ import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	root: {
 		"display": "flex",
 		"flexDirection": "column",
@@ -44,7 +43,7 @@ const useStyles = createUseStyles({
 		background: "#566c86",
 		border: "2px solid #b13e53",
 
-		fontFamily: '"Roboto", sans-serif',
+		fontFamily: theme.typography.primary,
 	},
 	vsHeader: {
 		"borderTop": "2px solid #b13e53",
@@ -115,7 +114,7 @@ const useStyles = createUseStyles({
 	title: {
 		"textAlign": "left",
 		"padding": "4px 8px",
-		"fontFamily": '"Caveat Brush", cursive',
+		"fontFamily": theme.typography.accent,
 		"fontSize": "36px",
 
 		"@media (orientation: portrait) and (max-width: 430px)": {
@@ -176,7 +175,7 @@ const useStyles = createUseStyles({
 	},
 	jkm: {
 		background: "#1d1d1d",
-		fontFamily: '"Caveat Brush", cursive',
+		fontFamily: theme.typography.accent,
 		padding: "4px 8px",
 		fontStyle: "italic",
 	},
@@ -188,7 +187,7 @@ const useStyles = createUseStyles({
 			fontSize: "10px",
 		},
 	},
-});
+}));
 
 export function MatchRewardsOverlay() {
 	const styles = useStyles();

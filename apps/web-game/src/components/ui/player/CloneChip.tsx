@@ -1,12 +1,12 @@
 import React from "react";
 
-import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	chip: {
 		"background": "#8fa3bd",
 		"padding": "4px 8px",
-		"fontFamily": '"Roboto", sans-serif',
+		"fontFamily": theme.typography.primary,
 		"fontWeight": 700,
 		"color": "#fff",
 		"fontStyle": "italic",
@@ -17,7 +17,7 @@ const useStyles = createUseStyles({
 			fontSize: "12px",
 		},
 	},
-});
+}));
 
 export function CloneChip() {
 	const classes = useStyles();

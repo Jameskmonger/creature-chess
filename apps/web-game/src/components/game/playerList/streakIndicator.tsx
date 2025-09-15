@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
-import { createUseStyles } from "react-jss";
-
 import { StreakType } from "@creature-chess/models/player";
+import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	type: StreakType | null;
@@ -12,7 +11,7 @@ type Props = {
 const getBackground = (type: StreakType | null) =>
 	type === StreakType.WIN ? "#38b764" : "#b13e53";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	indicator: (props: Props) => ({
 		"position": "relative",
 
@@ -46,7 +45,7 @@ const useStyles = createUseStyles({
 	amount: {
 		"position": "absolute",
 		"top": "52%",
-		"fontFamily": '"Roboto", sans-serif',
+		"fontFamily": theme.typography.primary,
 		"fontSize": "14px",
 		"lineHeight": 0,
 		"color": "#fff",
@@ -66,7 +65,7 @@ const useStyles = createUseStyles({
 		transform: "rotate(45deg)",
 		transition: "left 1s ease-in-out, top 1s ease-in-out",
 	},
-});
+}));
 
 export function StreakIndicator(props: Props) {
 	const classes = useStyles(props);

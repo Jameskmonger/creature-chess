@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
@@ -16,8 +15,9 @@ import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	root: {
 		"display": "flex",
 		"flexDirection": "column",
@@ -38,7 +38,7 @@ const useStyles = createUseStyles({
 		"background": "#566c86",
 		"border": "2px solid #b13e53",
 
-		"fontFamily": '"Roboto", sans-serif',
+		"fontFamily": theme.typography.primary,
 
 		"@media (orientation: portrait) and (min-width: 431px)": {
 			padding: "8px",
@@ -103,7 +103,7 @@ const useStyles = createUseStyles({
 		flexDirection: "row",
 		gap: "4px",
 	},
-});
+}));
 
 const ReadyOverlay: React.FunctionComponent = () => {
 	const styles = useStyles();

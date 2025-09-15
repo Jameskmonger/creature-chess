@@ -1,7 +1,17 @@
 import { createUseStyles } from "react-jss";
 
 type Theme = {
-	background: string;
+	typography: {
+		primary: string;
+		accent: string;
+	};
+};
+
+export const DEFAULT_THEME: Theme = {
+	typography: {
+		primary: "'Roboto', sans-serif",
+		accent: "'Caveat Brush', cursive",
+	},
 };
 
 export function createUseThemeStyles<

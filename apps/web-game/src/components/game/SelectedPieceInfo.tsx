@@ -1,14 +1,13 @@
 import React from "react";
 
-import { createUseStyles } from "react-jss";
-
 import { getDefinitionById } from "@creature-chess/gamemode";
 
 import { TraitIcon } from "../ui/TraitIcon";
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { useSelectedPiece } from "./hooks/useSelectedPiece";
+import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	root: {
 		border: "1px solid #fff",
 		borderRadius: "4px",
@@ -37,7 +36,7 @@ const useStyles = createUseStyles({
 		visibility: "hidden",
 	},
 	name: {
-		"fontFamily": '"Caveat Brush", cursive',
+		"fontFamily": theme.typography.accent,
 		"fontSize": "20px",
 
 		"@media (orientation: portrait) and (max-width: 400px)": {
@@ -80,7 +79,7 @@ const useStyles = createUseStyles({
 			fontSize: "12px",
 		},
 	},
-});
+}));
 
 export function SelectedPieceInfo() {
 	const styles = useStyles();

@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	overlay: {
 		position: "absolute",
 		top: "0",
@@ -25,7 +25,7 @@ const useStyles = createUseStyles({
 		"width": "80%",
 		"padding": "8px",
 		"outline": "none",
-		"fontFamily": '"Roboto", sans-serif',
+		"fontFamily": theme.typography.primary,
 		"color": "#fff",
 		"background": "#333c57",
 
@@ -38,7 +38,7 @@ const useStyles = createUseStyles({
 			height: "100%",
 		},
 	},
-});
+}));
 
 const BoardOverlay: React.FunctionComponent<{ children: React.ReactNode }> = ({
 	children,

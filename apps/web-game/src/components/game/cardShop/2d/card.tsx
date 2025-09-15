@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { createUseStyles } from "react-jss";
-
 import { Card } from "@creature-chess/models";
 
 import { TraitIcon } from "../../../ui/TraitIcon";
 import { CreatureImage } from "../../../ui/creatureImage";
+import { createUseThemeStyles } from "~/useStyles";
 
 type CardShopCardProps = {
 	card: Card | null;
@@ -14,7 +13,7 @@ type CardShopCardProps = {
 	onBuy?: () => void;
 };
 
-const useStyles = createUseStyles<string, CardShopCardProps>({
+const useStyles = createUseThemeStyles<string, CardShopCardProps>(theme => ({
 	card: {
 		display: "flex",
 		flexDirection: "row",
@@ -112,7 +111,7 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 	name: {
 		color: "#fff",
 
-		fontFamily: '"Caveat Brush", cursive',
+		fontFamily: theme.typography.accent,
 		fontWeight: 400,
 		fontStyle: "normal",
 		fontSize: "24px",
@@ -174,7 +173,7 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 		"background": "#38b764",
 		"borderRadius": "12.5%",
 
-		"fontFamily": '"Roboto", "sans-serif"',
+		"fontFamily": theme.typography.primary,
 		"fontOpticalSizing": "auto",
 		"fontWeight": 700,
 		"fontStyle": "normal",
@@ -196,7 +195,7 @@ const useStyles = createUseStyles<string, CardShopCardProps>({
 		width: "24px",
 		height: "24px",
 	},
-});
+}));
 
 export function Card2D(props: CardShopCardProps) {
 	const classes = useStyles(props);

@@ -1,13 +1,13 @@
-import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
 
-export const useStyles = createUseStyles({
+export const useStyles = createUseThemeStyles(theme => ({
 	register: {
 		"display": "flex",
 		"flexDirection": "column",
 		"height": "100%",
 		"padding": "1rem",
 		"marginTop": "1em",
-		"fontFamily": '"Roboto", sans-serif',
+		"fontFamily": theme.typography.primary,
 		"color": "#fff",
 		"alignItems": "center",
 		"justifyContent": "center",
@@ -32,4 +32,4 @@ export const useStyles = createUseStyles({
 		marginBottom: "1rem",
 		border: "2px solid #a01515",
 	},
-});
+}));

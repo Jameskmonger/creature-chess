@@ -1,4 +1,5 @@
 import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "./useStyles";
 
 const useResetStyles = createUseStyles({
 	"@global": {
@@ -39,7 +40,7 @@ const useResetStyles = createUseStyles({
 	},
 });
 
-const useGlobalGameStyles = createUseStyles({
+const useGlobalGameStyles = createUseThemeStyles(theme => ({
 	"@global": {
 		"*": {
 			userSelect: "none",
@@ -52,7 +53,7 @@ const useGlobalGameStyles = createUseStyles({
 		"tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure," +
 		"figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary," +
 		"time, mark, audio, video"]: {
-			fontFamily: '"Roboto", sans-serif',
+			fontFamily: theme.typography.primary,
 		},
 		".approot": {
 			position: "fixed",
@@ -63,7 +64,7 @@ const useGlobalGameStyles = createUseStyles({
 			background: "#333c57",
 		},
 	},
-});
+}));
 
 export const useGlobalStyles = () => {
 	useResetStyles();

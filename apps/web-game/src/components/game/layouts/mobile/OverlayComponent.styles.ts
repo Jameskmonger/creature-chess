@@ -1,6 +1,6 @@
-import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
 
-export const useStyles = createUseStyles({
+export const useStyles = createUseThemeStyles(theme => ({
 	overlay: {
 		flex: "1",
 		display: "flex",
@@ -17,7 +17,7 @@ export const useStyles = createUseStyles({
 
 		"& h2": {
 			"flex": "1",
-			"fontFamily": '"Roboto", sans-serif',
+			"fontFamily": theme.typography.primary,
 			"font-size": "1.5rem",
 			"color": "#fff",
 			"textAlign": "center",
@@ -36,4 +36,4 @@ export const useStyles = createUseStyles({
 		height: "100%",
 		boxSizing: "border-box",
 	},
-});
+}));

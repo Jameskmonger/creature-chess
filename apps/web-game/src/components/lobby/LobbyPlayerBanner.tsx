@@ -1,17 +1,17 @@
 import * as React from "react";
 
 import classNames from "classnames";
-import { createUseStyles } from "react-jss";
 
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 
 import { PlayerAvatar, Title } from "../ui/player";
+import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	player: LobbyPlayer | null;
 };
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(theme => ({
 	player: {
 		"padding": "4px 8px",
 
@@ -24,7 +24,7 @@ const useStyles = createUseStyles({
 		"fontWeight": "700",
 		"textAlign": "right",
 		"background": "#59616b",
-		"fontFamily": '"Roboto", sans-serif',
+		"fontFamily": theme.typography.primary,
 		"color": "#fff",
 		"userSelect": "none",
 
@@ -72,7 +72,7 @@ const useStyles = createUseStyles({
 		justifyContent: "space-between",
 		alignItems: "center",
 	},
-});
+}));
 
 const NO_PLAYER_IMAGE = `${APP_IMAGE_ROOT}/ui/no_player_img.png`;
 
