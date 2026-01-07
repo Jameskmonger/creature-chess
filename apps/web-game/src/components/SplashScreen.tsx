@@ -69,7 +69,6 @@ const useStyles = createUseThemeStyles(theme => ({
 		"cursor": "pointer",
 		"width": "100%",
 		"transition": "background 0.2s ease-in-out",
-		"marginBottom": "8px",
 		"&:hover": {
 			background: "#d84a62",
 		},
@@ -129,6 +128,13 @@ const useStyles = createUseThemeStyles(theme => ({
 		textAlign: "center",
 		color: "#bbb",
 	},
+	footer: {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center",
+		gap: "8px",
+	},
 }));
 
 export function SplashScreen({ onPlay }: Props) {
@@ -161,11 +167,12 @@ export function SplashScreen({ onPlay }: Props) {
 							<p>Players will battle against each other until only one player remains.</p>
 						</div>
 
-						<div>
+						<div className={classes.footer}>
 							<button className={classes.playButton} onClick={onPlay}>
 								Play Now
 							</button>
 							<p className={classes.withFriends}>More fun with friends! Press 'Play Now' at the same time to play together.</p>
+							<a href="https://discord.gg/acRdGQceWJ" className={classes.withFriends}>Join us on Discord</a>
 						</div>
 					</div>
 				</div>
