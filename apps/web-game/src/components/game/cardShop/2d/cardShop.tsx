@@ -74,6 +74,7 @@ const useStyles = createUseThemeStyles(theme => ({
 
 		"cursor": "pointer",
 		"background": "#38b764",
+		"color": "#101010",
 		"borderRadius": "4px",
 
 		"fontFamily": theme.typography.primary,
