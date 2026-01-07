@@ -1,9 +1,26 @@
 import { createUseStyles } from "react-jss";
 
-type Theme = {
+export type Theme = {
 	typography: {
 		primary: string;
 		accent: string;
+	};
+	palette: {
+		primary: {
+			neutral: string;
+			light: string;
+			dark: string;
+		};
+		secondary: {
+			neutral: string;
+			light: string;
+			dark: string;
+		};
+		accent: {
+			neutral: string;
+			light: string;
+			dark: string;
+		};
 	};
 };
 
@@ -12,6 +29,23 @@ export const DEFAULT_THEME: Theme = {
 		primary: "'Jersey 25', sans-serif",
 		accent: "'Caveat Brush', cursive",
 	},
+	palette: {
+		primary: {
+			neutral: "#691732",
+			light: "#ec465e",
+			dark: "#311a3c",
+		},
+		secondary: {
+			neutral: "#1f4158",
+			light: "#31596b",
+			dark: "#122b41",
+		},
+		accent: {
+			neutral: "#f5d742",
+			light: "#f5d742",
+			dark: "#f5d742",
+		}
+	}
 };
 
 export function createUseThemeStyles<
