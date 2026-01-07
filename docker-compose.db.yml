@@ -1,7 +1,7 @@
 networks:
   creature-chess-db:
     name: creature-chess-db
-    internal: true
+    external: true
 
 volumes:
   pgdata:

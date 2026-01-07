@@ -8,22 +8,48 @@ networks:
   public: {}
 
 services:
-  # this is the base image for all nodejs-based apps
-  nodejs-builder:
+  # Base image for all nodejs-based apps
+  nodejs-base:
     build:
       context: .
-      dockerfile: apps/nodejs-builder.Dockerfile
-    image: nodejs-builder
+      dockerfile: apps/nodejs-base.Dockerfile
+    image: local/nodejs-base
     networks:
       - creature-chess
-  # this image builds the web-game app
-  # TODO (James) we could extend this in local dev to also watch for changes
+
+  # Server base image with server-specific dependencies
+  server-base:
+    build:
+      context: .
+      dockerfile: apps/server-base.Dockerfile
+    image: local/server-base
+    networks:
+      - creature-chess
+      - creature-chess-db
+    depends_on:
+      nodejs-base:
+        condition: service_completed_successfully
+
+  # Web base image with web-specific dependencies
+  web-base:
+    build:
+      context: .
+      dockerfile: apps/web-base.Dockerfile
+    image: local/web-base:latest
+    networks:
+      - creature-chess
+    depends_on:
+      nodejs-base:
+        condition: service_completed_successfully
+
+  # Web game builder service
   web-game-builder:
     build:
       context: .
-      dockerfile: apps/web-builder.Dockerfile
+      dockerfile: apps/web.Dockerfile
       args:
-        - APP_DIR=web-game
+        APP_DIR: web-game
+    image: local/web-game:latest
     environment:
       - NODE_ENV
       - AUTH0_ENABLED
@@ -33,38 +59,21 @@ services:
       - CREATURE_CHESS_APP_URL
       - CREATURE_CHESS_IMAGE_URL
     volumes:
-      # TODO (James) consider whether we should use an actual volume here
-      #         rather than a bind mount
       - ./dist/web-game:/code/apps/web-game/dist
-    depends_on:
-      nodejs-builder:
-        condition: service_completed_successfully
-  # nginx is used to serve the web apps as well as proxy requests to the servers
-  # the web app contents are passed in the volumes
-  nginx:
-    build:
-      context: .
-      dockerfile: nginx/local-dev/Dockerfile
-    volumes:
-      - ./nginx/local-dev/nginx/error.log:/etc/nginx/error_log.log
-      - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
-      - ./images:/usr/share/nginx/html/images # images e.g. ui and creatures
-      - ./dist/web-game:/usr/share/nginx/html/web-game # web-game app
-    ports:
-      - 80:80
-      - 443:443
     networks:
       - creature-chess
-      - public
     depends_on:
-      web-game-builder:
+      web-base:
         condition: service_completed_successfully
-      server-game:
-        condition: service_started
-      server-info:
-        condition: service_started
-  # this is the nodejs websocket server for the game
+
+  # Game server
   server-game:
+    build:
+      context: .
+      dockerfile: apps/server.Dockerfile
+      args:
+        APP_DIR: server-game
+    image: local/server-game:latest
     environment:
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
@@ -78,11 +87,6 @@ services:
       - NODE_APP_INSTANCE
       - METRICS_USERNAME
       - METRICS_PASSWORD
-    build:
-      context: .
-      dockerfile: apps/server.Dockerfile
-      args:
-        - APP_DIR=server-game
     ports:
       - "3000"
     networks:
@@ -90,10 +94,17 @@ services:
       - creature-chess-db
     restart: always
     depends_on:
-      nodejs-builder:
+      server-base:
         condition: service_completed_successfully
-  # this is the API server
+
+  # Info API server
   server-info:
+    build:
+      context: .
+      dockerfile: apps/server.Dockerfile
+      args:
+        APP_DIR: server-info
+    image: local/server-info:latest
     environment:
       - AUTH0_DOMAIN
       - AUTH0_SPA_CLIENT_ID
@@ -102,11 +113,6 @@ services:
       - CREATURE_CHESS_APP_URL
       - NODE_ENV
       - DATABASE_URL
-    build:
-      context: .
-      dockerfile: apps/server.Dockerfile
-      args:
-        - APP_DIR=server-info
     ports:
       - "3000"
     networks:
@@ -114,5 +120,29 @@ services:
       - creature-chess-db
     restart: always
     depends_on:
-      nodejs-builder:
+      server-base:
         condition: service_completed_successfully
+
+  # Nginx reverse proxy and static file server
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/local-dev/Dockerfile
+    volumes:
+      - ./nginx/local-dev/nginx/error.log:/etc/nginx/error_log.log
+      - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
+      - ./images:/usr/share/nginx/html/images
+      - ./dist/web-game:/usr/share/nginx/html/web-game
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - creature-chess
+      - public
+    depends_on:
+      web-game-builder:
+        condition: service_completed_successfully
+      server-game:
+        condition: service_started
+      server-info:
+        condition: service_started
