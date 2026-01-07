@@ -9,7 +9,7 @@ type Props = {
 };
 
 const useStyles = createUseThemeStyles(theme => ({
-	"root": {
+	root: {
 		position: "relative",
 		overflow: "hidden",
 		height: "100%",
@@ -19,7 +19,7 @@ const useStyles = createUseThemeStyles(theme => ({
 		alignItems: "center",
 		boxSizing: "border-box",
 	},
-	"top": {
+	top: {
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
@@ -27,7 +27,7 @@ const useStyles = createUseThemeStyles(theme => ({
 		flex: "0 0 auto",
 		height: "40%",
 	},
-	"logoWrapper": {
+	logoWrapper: {
 		"width": "70%",
 		"maxWidth": "440px",
 		"& img": {
@@ -37,27 +37,19 @@ const useStyles = createUseThemeStyles(theme => ({
 			filter: "drop-shadow(0px 6px 4px #222)"
 		},
 	},
-	"@keyframes flash": {
-		from: {
-			background: "rgba(85, 85, 85, 0.8)",
-		},
-		to: {
-			background: "rgba(85, 85, 85, 1.0)",
-		}
-	},
-	"tagline": {
+	tagline: {
 		fontSize: 18,
 		color: "#fff",
 		padding: "0.25em 2em",
 		marginTop: "-0.25em",
 		zIndex: 1,
-		animation: "$flash 1s ease-in-out infinite alternate",
+		background: "rgba(85, 85, 85, 1.0)",
 	},
-	"highlight": {
+	highlight: {
 		color: "#f5d742",
 		fontFamily: theme.typography.accent,
 	},
-	"bottom": {
+	bottom: {
 		flex: "1 1 auto",
 		display: "flex",
 		alignItems: "center",
@@ -66,7 +58,7 @@ const useStyles = createUseThemeStyles(theme => ({
 		width: "100%",
 		padding: "16px",
 	},
-	"playButton": {
+	playButton: {
 		"padding": "14px 36px",
 		"fontSize": 20,
 		"fontWeight": "bold",
@@ -82,14 +74,14 @@ const useStyles = createUseThemeStyles(theme => ({
 			background: "#d84a62",
 		},
 	},
-	"pane": {
+	pane: {
 		height: "100%",
 		width: "calc(100% - 32px)",
 		background: "#333c57",
 		boxSizing: "border-box",
 		padding: "4px",
 	},
-	"paneInner": {
+	paneInner: {
 		height: "100%",
 		width: "100%",
 		border: "2px solid #424e70",
@@ -102,7 +94,7 @@ const useStyles = createUseThemeStyles(theme => ({
 		color: "#fff",
 		fontSize: "16px",
 	},
-	"creatures": {
+	creatures: {
 		"display": "flex",
 		"justifyContent": "center",
 		"gap": "8px",
@@ -116,22 +108,22 @@ const useStyles = createUseThemeStyles(theme => ({
 			}
 		},
 	},
-	"largeOnly": {
+	largeOnly: {
 		"@media (max-width: 360px)": {
 			display: "none",
 		},
 	},
-	"welcome": {
+	welcome: {
 		fontSize: "24px",
 		textAlign: "center",
 	},
-	"description": {
+	description: {
 		flex: "1 1 auto",
 		display: "flex",
 		flexDirection: "column",
 		gap: "16px",
 	},
-	"withFriends": {
+	withFriends: {
 		fontSize: "14px",
 		fontStyle: "italic",
 		textAlign: "center",

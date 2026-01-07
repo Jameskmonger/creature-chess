@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 
 import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
 
 type ButtonProps = {
 	children: React.ReactNode;
@@ -12,74 +13,35 @@ type ButtonProps = {
 	size?: "small" | "medium" | "large";
 };
 
-function getFontSize(size: ButtonProps["size"]) {
-	switch (size) {
-		case "small":
-			return "0.8rem";
-		case "large":
-			return "1rem";
-		default:
-		case "medium":
-			return "0.9rem";
-	}
-}
+const useStyles = createUseThemeStyles<string, ButtonProps>(theme => ({
+	button: {
+		background: theme.palette.primary.neutral,
+		borderRadius: "12px",
+		border: "none",
+		padding: "0",
+		cursor: (props) => (props.disabled ? "not-allowed" : "pointer"),
+		outlineOffset: "4px",
+		marginTop: "6px",
 
-function getPadding(size: ButtonProps["size"]) {
-	switch (size) {
-		case "small":
-			return "0.4em 0.8em";
-		case "large":
-			return "0.8em 1.6em";
-		default:
-		case "medium":
-			return "0.6em 1.2em";
-	}
-}
-
-function getBackgroundColor(type: ButtonProps["type"]) {
-	switch (type) {
-		case "secondary":
-			return "#e1cab9";
-		default:
-		case "primary":
-			return "#b13e53";
-	}
-}
-
-function getTextColor(type: ButtonProps["type"]) {
-	switch (type) {
-		case "secondary":
-			return "#393939";
-		default:
-		case "primary":
-			return "#fff";
-	}
-}
-
-const useStyles = createUseStyles<string, ButtonProps>({
-	button: (props) => ({
-		"padding": getPadding(props.size),
-		"marginBottom": "1rem",
-		"fontSize": getFontSize(props.size),
-		"cursor": "pointer",
-		"border": "none",
-		"borderRadius": "4px",
-		"color": getTextColor(props.type),
-		"background": getBackgroundColor(props.type),
-		"transition": `background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-			box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-			border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-			color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-			filter 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`,
-
-		"&:hover, &:focus": {
-			outline: "none",
-			filter: "brightness(1.1)",
-			boxShadow:
-				"0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
+		"&:active:not(:disabled) $front": {
+			transform: "translateY(-2px)",
 		},
-	}),
-});
+		"&:focus:not(:focus-visible)": {
+			outline: "none",
+		},
+	},
+	front: {
+		display: "block",
+		padding: "8px 16px",
+		borderRadius: "12px",
+		fontSize: "1.25rem",
+		background: theme.palette.primary.light,
+		color: theme.palette.primary.dark,
+		transform: "translateY(-6px)",
+		willChange: "transform",
+		transition: "transform 250ms",
+	},
+}));
 
 export function Button(props: ButtonProps) {
 	const styles = useStyles(props);
@@ -90,7 +52,9 @@ export function Button(props: ButtonProps) {
 			className={styles.button}
 			disabled={props.disabled}
 		>
-			{props.children}
+			<span className={styles.front}>
+				{props.children}
+			</span>
 		</button>
 	);
 }

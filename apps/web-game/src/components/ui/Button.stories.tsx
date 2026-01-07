@@ -25,3 +25,12 @@ export const Secondary: Story = {
 		type: "secondary",
 	},
 };
+
+export const Disabled: Story = {
+	args: {
+		children: "Button",
+		disabled: true,
+		size: "medium",
+		type: "primary",
+	},
+};

@@ -51,6 +51,7 @@ const useStyles = createUseStyles<string, Props>({
 	logo: {
 		"width": "65%",
 		"maxWidth": 320,
+		"aspectRatio": "1024 / 719",
 		"@container (min-width: 700px)": {
 			width: "50%",
 			maxWidth: 420,
@@ -81,15 +82,12 @@ export function Page(props: Props) {
 	return (
 		<div className={classes.root}>
 			{props.hasBackground && <PageBoardBackground />}
-
+			<img
+				src={`${APP_IMAGE_ROOT}/ui/logo.png`}
+				alt="Creature Chess"
+				className={classes.logo}
+			/>
 			<div className={classes.page}>
-				<div className={classes.header}>
-					<img
-						src={`${APP_IMAGE_ROOT}/ui/logo.png`}
-						alt="Creature Chess"
-						className={classes.logo}
-					/>
-				</div>
 				<div className={classes.content}>{props.children}</div>
 			</div>
 		</div>
