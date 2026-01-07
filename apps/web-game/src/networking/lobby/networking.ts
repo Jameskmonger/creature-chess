@@ -5,7 +5,6 @@ import { Socket } from "socket.io-client";
 import { all, call, cancelled, take, takeEvery } from "typed-redux-saga";
 import {
 	lobbyStartNowEvent,
-	lobbyUpdateSettingEvent,
 } from "~/store/lobby/actions";
 import { LobbyCommands } from "~/store/lobby/state";
 
@@ -55,12 +54,6 @@ const writeActionsToPackets = function* (
 	yield all([
 		takeEvery(lobbyStartNowEvent, function* () {
 			registry.send("startNow", { empty: true });
-		}),
-		takeEvery(lobbyUpdateSettingEvent, function* (action) {
-			registry.send("updateSetting", {
-				key: action.payload.key,
-				value: action.payload.value,
-			});
 		}),
 	]);
 };

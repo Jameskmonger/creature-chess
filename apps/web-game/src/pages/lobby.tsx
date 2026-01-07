@@ -1,13 +1,12 @@
 import * as React from "react";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Page } from "~/components/Page";
 import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
-import { SettingsMenu } from "~/components/lobby/SettingsMenu";
-import { useOpenSettingsMenu } from "~/components/lobby/hooks/useOpenSettingsMenu";
-import { Footer } from "~/components/ui/Footer";
+import { Button } from "~/components/ui/Button";
 import { Countdown } from "~/components/ui/countdown";
 import { AppState } from "~/store";
+import { lobbyStartNowEvent } from "~/store/lobby/actions";
 import { createUseThemeStyles } from "~/useStyles";
 
 const padNumberToTwo = (val: number) => (val < 10 ? `0${val}` : val.toString());
@@ -20,10 +19,10 @@ const countdownRender =
 		const time = `${minutesRemaining}:${padNumberToTwo(secondsRemaining)}`;
 
 		return (
-			<div className={styles.timeRemaining}>
-				Game starting in{" "}
+			<>
+				Starting in{" "}
 				<span className={styles.timeRemainingHighlight}>{time}</span>
-			</div>
+			</>
 		);
 	};
 
@@ -38,25 +37,19 @@ const useStyles = createUseThemeStyles(theme => ({
 		"color": "#fff",
 		"width": "100%",
 
-		"@media (orientation: portrait) and (max-width: 376px)": {
-			gap: "8px",
-			marginBottom: "8px",
-		},
-
-		"@media (orientation: portrait) and (min-width: 377px)": {
-			gap: "16px",
-			marginBottom: "16px",
-		},
-
-		"@media (orientation: landscape)": {
-			gap: "16px",
-			marginBottom: "16px",
-		},
+		gap: "8px",
+		marginBottom: "8px",
 	},
-	timeRemaining: {
-		padding: "0.5em 0.6em",
-		textTransform: "uppercase",
+	topBar: {
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
 		background: "#333",
+		padding: "8px",
+
+		"& > div": {
+			flex: 1,
+		}
 	},
 	timeRemainingHighlight: {
 		fontWeight: "700",
@@ -90,7 +83,11 @@ export function LobbyPage() {
 	const styles = useStyles();
 	const lobbyInfo = useSelector((state: AppState) => state.lobby);
 
-	const { targetRef: finalPlayerRef, menuOpen } = useOpenSettingsMenu();
+	const dispatch = useDispatch();
+
+	const onStartNow = React.useCallback(() => {
+		dispatch(lobbyStartNowEvent());
+	}, [dispatch]);
 
 	const playerItems = React.useMemo(() => {
 		if (!lobbyInfo) {
@@ -106,7 +103,6 @@ export function LobbyPage() {
 				<div
 					key={player ? player.id : i}
 					className={styles.playerWrapper}
-					ref={i === lobbyInfo.maxPlayers - 1 ? finalPlayerRef : undefined}
 				>
 					<LobbyPlayerBanner player={player ?? null} />
 				</div>
@@ -114,34 +110,33 @@ export function LobbyPage() {
 		}
 
 		return output;
-	}, [lobbyInfo, styles.playerWrapper, finalPlayerRef]);
+	}, [lobbyInfo, styles.playerWrapper]);
 
 	if (!lobbyInfo) {
 		return null;
 	}
 
-	const { startTimestamp, maxPlayers, lobbyWaitTimeSeconds } = lobbyInfo;
+	const { startTimestamp } = lobbyInfo;
 
 	return (
 		<Page hasBackground>
 			<div className={styles.lobbyInfo}>
-				{startTimestamp && (
-					<Countdown
-						countdownToSeconds={startTimestamp / 1000}
-						render={countdownRender(styles)}
-					/>
-				)}
+				<div className={styles.topBar}>
+					<div>
+						{startTimestamp && (
+							<Countdown
+								countdownToSeconds={startTimestamp / 1000}
+								render={countdownRender(styles)}
+							/>
+						)}
+					</div>
+					<div>
+						<Button onClick={onStartNow}>Start Now</Button>
+					</div>
+				</div>
 
 				<div className={styles.players}>{playerItems}</div>
-
-				<p>
-					The game will start immediately when there are {maxPlayers} players
-				</p>
-
-				{menuOpen && <SettingsMenu />}
 			</div>
-
-			<Footer />
 		</Page>
 	);
 }
