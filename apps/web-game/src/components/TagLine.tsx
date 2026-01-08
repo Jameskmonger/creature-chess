@@ -6,12 +6,12 @@ const useStyles = createUseThemeStyles(theme => ({
 	tagline: {
 		height: 18,
 		fontSize: 18,
-		color: "#fff",
-		padding: "0.25em 2em",
-		marginTop: "-16px",
+		color: theme.palette.light.neutral,
+		padding: "0.25em 1em",
 		zIndex: 1,
 		background: "rgba(85, 85, 85, 1.0)",
 		transition: "opacity 0.3s linear, height 0.6s linear, padding 0.6s linear",
+		cursor: "pointer",
 	},
 
 	highlight: {
@@ -23,8 +23,19 @@ const useStyles = createUseThemeStyles(theme => ({
 export function TagLine() {
 	const classes = useStyles();
 
+	function openTiberisoftWebsite() {
+		window.open("https://tiberisoft.dev", "_blank");
+	}
+
 	return (
-		<div className={classNames(classes.tagline)}>
+		<div
+			className={classes.tagline}
+			tabIndex={0}
+			role="button"
+			title="http://tiberisoft.dev"
+			onClick={openTiberisoftWebsite}
+			onKeyDown={(e) => { if (e.key === 'Enter') openTiberisoftWebsite(); }}
+		>
 			A <span className={classes.highlight}>'Tiberisoft'</span> Game
 		</div>
 	);
