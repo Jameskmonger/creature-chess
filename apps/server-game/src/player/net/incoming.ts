@@ -8,6 +8,7 @@ import { PlayerEvents, PlayerActionTypesArray } from "@creature-chess/gamemode";
 import { ClientToServer } from "@creature-chess/networking";
 
 import { getPacketRegistries } from "./registries";
+import { metricCollectorSaga } from "../../metrics/metricCollectorSaga";
 
 export const incomingNetworking = function* () {
 	const { incoming: registry } = yield* getPacketRegistries();
@@ -48,5 +49,6 @@ export const incomingNetworking = function* () {
 			)
 		),
 		call(processFinishMatch),
+		call(metricCollectorSaga),
 	]);
 };
