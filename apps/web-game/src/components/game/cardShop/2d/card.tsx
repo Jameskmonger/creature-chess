@@ -6,6 +6,7 @@ import { TraitIcon } from "../../../ui/TraitIcon";
 import { CreatureImage } from "../../../ui/creatureImage";
 import { createUseThemeStyles } from "~/useStyles";
 import { Button } from "~/components/ui";
+import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 
 type CardShopCardProps = {
 	card: Card | null;
@@ -265,7 +266,7 @@ export function Card2D(props: CardShopCardProps) {
 					color="secondary"
 					size="medium"
 				>
-					<div style={{ rotate: `${shuffleAmount}deg` }}>$ {card.cost}</div>
+					<div style={{ rotate: `${shuffleAmount}deg` }}>{card.cost} <CoinIcon /></div>
 				</Button>
 
 			</div>

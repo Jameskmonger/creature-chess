@@ -20,6 +20,7 @@ import { MAX_LEVEL } from "@creature-chess/models/config";
 
 import { ProgressBar } from "../../ui/progressBar";
 import { Button } from "~/components/ui";
+import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 
 const useStyles = createUseStyles({
 	profile: {
@@ -83,6 +84,9 @@ const useStyles = createUseStyles({
 	right: {
 		justifyContent: "flex-end",
 	},
+	coinIcon: {
+		color: "#ddc160",
+	},
 });
 
 const renderProgressBar = (current: number, max: number) =>
@@ -139,8 +143,7 @@ export function PlayerGameProfile() {
 						color="secondary"
 						size="small"
 					>
-						Buy {buyXpAmount} xp ($
-						{buyXpCost})
+						+{buyXpAmount} xp ({buyXpCost} <CoinIcon />)
 					</Button>
 				)}
 			</div>

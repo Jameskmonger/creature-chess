@@ -14,6 +14,7 @@ import { BalanceIcon } from "../../../ui/icon/BalanceIcon";
 import { Card2D as Card } from "./card";
 import { createUseThemeStyles } from "~/useStyles";
 import { Button } from "~/components/ui";
+import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -165,7 +166,7 @@ export function CardShop({
 						disabled={money < rerollCost}
 					>
 						<FontAwesomeIcon icon={faArrowsRotate} />&nbsp;
-						<span>${rerollCost}</span>
+						<span>{rerollCost} <CoinIcon /></span>
 					</Button>
 				</div>
 			</div>
