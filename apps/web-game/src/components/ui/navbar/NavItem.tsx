@@ -4,14 +4,12 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classnames from "classnames";
 import { createUseStyles } from "react-jss";
-import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "~/store";
-import { Overlay, closeOverlay, openOverlay } from "~/store/game/ui";
 
 type Props = {
-	overlay: Overlay;
+	isActive: boolean;
 	icon: IconDefinition;
 	children?: React.ReactNode;
+	onClick?: () => void;
 };
 
 const useStyles = createUseStyles({
@@ -42,32 +40,8 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function NavItem({ overlay, icon, children }: Props) {
+export function NavItem({ isActive, icon, children, onClick }: Props) {
 	const styles = useStyles();
-	const dispatch = useDispatch();
-	const isActive = useSelector<AppState, boolean>(
-		(state) => state.game.ui.currentOverlay === overlay
-	);
-	const canUseShop = useSelector<AppState, boolean>(
-		(state) => state.game.playerInfo.health !== 0
-	);
-	const isSpectating = useSelector<AppState, boolean>(
-		(state) => state.game.spectating.id !== null
-	);
-
-	const onClick = () => {
-		if (isActive) {
-			dispatch(closeOverlay());
-			return;
-		}
-		if (overlay === Overlay.SHOP) {
-			if (!canUseShop || isSpectating) {
-				return;
-			}
-		}
-
-		dispatch(openOverlay(overlay));
-	};
 
 	return (
 		<button

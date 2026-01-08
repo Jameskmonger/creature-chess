@@ -1,12 +1,8 @@
 import React from "react";
 
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { AppState } from "~/store";
-import { Overlay } from "~/store/game/ui";
-
-import { NavItem } from "./NavItem";
 
 const useStyles = createUseStyles({
 	chip: {
@@ -30,13 +26,13 @@ export function NavItemShop() {
 		(state) => state.game.cardShop.locked
 	);
 
+	if (shopLocked === false) {
+		return null;
+	}
+
 	return (
-		<NavItem overlay={Overlay.SHOP} icon={faShoppingCart}>
-			{shopLocked && (
-				<div className={styles.chip}>
-					<span className={styles.chipText}>LOCKED</span>
-				</div>
-			)}
-		</NavItem>
+		<div className={styles.chip}>
+			<span className={styles.chipText}>LOCKED</span>
+		</div>
 	);
 }

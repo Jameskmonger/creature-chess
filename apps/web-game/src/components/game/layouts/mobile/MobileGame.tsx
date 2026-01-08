@@ -23,7 +23,7 @@ import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
 import { MobileContentPane } from "./MobileContentPane";
 import { OverlayComponent } from "./OverlayComponent";
-import { NavBar } from "./nav/NavBar";
+import { GameNavBar } from "./nav/GameNavBar";
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	currentOverlay,
@@ -149,7 +149,7 @@ export function MobileGame() {
 			<div className={styles.content}>
 				<MobileGameContentPane />
 			</div>
-			<NavBar />
+			<GameNavBar />
 		</div>
 	);
 }
