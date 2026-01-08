@@ -31,9 +31,6 @@ export const SelectablePiece: React.FC = () => {
 	);
 
 	const onClick = () => {
-		console.log(
-			`[SelectablePiece] just clicked piece ${piece.id} , selected was: ${selectedPieceId}`
-		);
 		dispatch(playerClickPieceAction({ pieceId: piece.id }));
 	};
 

@@ -39,13 +39,11 @@ const listenForConnection = function* (socket: Socket, slices: BoardSlices) {
 		const onLobbyConnected = (
 			payload: LobbyServerToClient.LobbyConnectionPacket
 		) => {
-			console.log("Lobby connected");
 			emit({ type: "lobby", payload });
 		};
 		const onGameConnected = (
 			payload: GameServerToClient.GameConnectionPacket
 		) => {
-			console.log("Game connected");
 			emit({ type: "game", payload });
 		};
 
@@ -53,7 +51,6 @@ const listenForConnection = function* (socket: Socket, slices: BoardSlices) {
 		socket.on("gameConnected", onGameConnected);
 
 		return () => {
-			console.log("Cleaning up listeners");
 			socket.off("connected", onLobbyConnected);
 			socket.off("gameConnected", onGameConnected);
 		};
@@ -126,13 +123,11 @@ export const networkingSaga = function* (slices: BoardSlices) {
 	};
 
 	try {
-		console.log("Getting socket");
 		socket = yield* call(getSocket, request);
 	} catch (error) {
 		console.error("error getting socket", error);
 		return;
 	}
 
-	console.log("Listening for connection");
 	yield* call(listenForConnection, socket, slices);
 };
