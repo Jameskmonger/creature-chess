@@ -50,6 +50,10 @@ export class StandardTargetProvider implements TargetProvider {
 			attackRange
 		);
 
+		if (enemyDeltas.length === 0) {
+			return null;
+		}
+
 		return this.chooseTarget(enemyDeltas, piece.facingAway).id;
 	}
 
