@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	faChartColumn,
 	faQuestionCircle,
+	faShoppingCart,
 	faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { createUseStyles } from "react-jss";
@@ -22,7 +23,7 @@ const useStyles = createUseStyles({
 
 const navBarItems = [
 	{ key: "players", icon: faUsers },
-	{ key: "shop", icon: faChartColumn, children: <NavItemShop /> },
+	{ key: "shop", icon: faShoppingCart, children: <NavItemShop /> },
 	{ key: "stats", icon: faChartColumn },
 	{ key: "settings", icon: faQuestionCircle },
 ] as const;
