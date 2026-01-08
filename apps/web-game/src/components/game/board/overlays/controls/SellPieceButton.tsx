@@ -12,30 +12,10 @@ import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
-import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
+import { COLOR_READY_BUTTON_TEXT } from "./colors";
+import { Button } from "~/components/ui";
 
 const useStyles = createUseStyles({
-	controlButton: {
-		"display": "flex",
-		"flexDirection": "row",
-		"justifyContent": "center",
-
-		"box-sizing": "border-box",
-		"font-size": "14px",
-		"color": COLOR_READY_BUTTON_TEXT,
-		"cursor": "pointer",
-		"background": COLOR_READY_BUTTON,
-		"border": "none",
-		"letterSpacing": "2px",
-		"fontSize": "14px",
-		"fontWeight": "700",
-		"padding": "8px 8px",
-
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			padding: "4px 8px",
-			fontSize: "12px",
-		},
-	},
 	balanceIcon: {
 		color: COLOR_READY_BUTTON_TEXT,
 	},
@@ -78,12 +58,12 @@ export function SellPieceButton() {
 	const pieceCost = selectedPiece.definition.cost;
 
 	return (
-		<button className={styles.controlButton} onClick={onSell}>
+		<Button color="secondary" size="small" onClick={onSell}>
 			Sell&nbsp;-&nbsp;
 			<BalanceIcon
 				amount={pieceCost * piecesUsed}
 				className={styles.balanceIcon}
 			/>
-		</button>
+		</Button>
 	);
 }

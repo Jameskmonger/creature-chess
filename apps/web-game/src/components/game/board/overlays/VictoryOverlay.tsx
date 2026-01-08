@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui";
 import { AppState } from "~/store";
 import { getPlayerById } from "~/store/selectors";
 
@@ -116,7 +116,9 @@ export function VictoryOverlay() {
 								/>
 							</a>
 							<div className={styles.mainMenu}>
-								<Button onClick={onMenuClick}>Main Menu</Button>
+								<Button color="primary" size="medium" onClick={onMenuClick}>
+									Main Menu
+								</Button>
 							</div>
 						</div>
 					</div>

@@ -3,7 +3,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Page } from "~/components/Page";
 import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui";
 import { Countdown } from "~/components/ui/countdown";
 import { AppState } from "~/store";
 import { lobbyStartNowEvent } from "~/store/lobby/actions";
@@ -131,7 +131,9 @@ export function LobbyPage() {
 						)}
 					</div>
 					<div>
-						<Button onClick={onStartNow}>Start Now</Button>
+						<Button color="primary" size="medium" onClick={onStartNow}>
+							Start Now
+						</Button>
 					</div>
 				</div>
 

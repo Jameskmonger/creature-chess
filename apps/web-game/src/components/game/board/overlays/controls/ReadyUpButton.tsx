@@ -8,6 +8,7 @@ import { PlayerActions } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
+import { Button } from "~/components/ui";
 
 const useStyles = createUseStyles({
 	button: {
@@ -62,8 +63,8 @@ export function ReadyUpButton() {
 	}
 
 	return (
-		<button className={styles.button} onClick={onReadyUp}>
+		<Button color="secondary" size="small" onClick={onReadyUp}>
 			Ready
-		</button>
+		</Button>
 	);
 }

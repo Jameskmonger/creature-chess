@@ -92,7 +92,8 @@ export function CardShop({
 					justifyContent="space-between"
 				>
 					<Button
-						type="primary"
+						color="primary"
+						size="medium"
 						onClick={onReroll}
 						disabled={money < rerollCost}
 					>
@@ -104,7 +105,7 @@ export function CardShop({
 						<span>Purchase</span>
 					</div>
 
-					<Button type="primary" onClick={onToggleLock}>
+					<Button color="primary" size="medium" onClick={onToggleLock}>
 						{isLocked ? "Unlock" : "Lock"}
 					</Button>
 				</Layout>

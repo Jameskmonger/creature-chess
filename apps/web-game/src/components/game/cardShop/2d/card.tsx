@@ -5,6 +5,7 @@ import { Card } from "@creature-chess/models";
 import { TraitIcon } from "../../../ui/TraitIcon";
 import { CreatureImage } from "../../../ui/creatureImage";
 import { createUseThemeStyles } from "~/useStyles";
+import { Button } from "~/components/ui";
 
 type CardShopCardProps = {
 	card: Card | null;
@@ -258,13 +259,15 @@ export function Card2D(props: CardShopCardProps) {
 			</div>
 
 			<div className={classes.buyContainer}>
-				<button
-					className={classes.buy}
+				<Button
 					disabled={card.cost > money}
 					onClick={onBuy}
+					color="secondary"
+					size="medium"
 				>
 					<div style={{ rotate: `${shuffleAmount}deg` }}>$ {card.cost}</div>
-				</button>
+				</Button>
+
 			</div>
 		</div>
 	);

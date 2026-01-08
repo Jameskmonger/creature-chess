@@ -8,7 +8,7 @@ import { PositionChip } from "~/components/ui/player/PositionChip";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside";
-import { Button } from "../../ui/Button";
+import { Button } from "~/components/ui";
 import { PlayerAvatar, PlayerHealthbar, Title } from "../../ui/player";
 import { BattleInfo } from "./battleInfo";
 import { StreakIndicator } from "./streakIndicator";
@@ -173,8 +173,8 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 				<div className={styles.status}>
 					<PlayerHealthbar health={player.health} />
 					{currentlySpectating || isExpanded ? (
-						<Button onClick={onSpectateClick}>
-							{currentlySpectating ? "Stop spectating" : "Spectate"}
+						<Button color="primary" size="small" onClick={onSpectateClick}>
+							{currentlySpectating ? "Stop Spectating" : "Spectate"}
 						</Button>
 					) : (
 						<BattleInfo battle={player.battle} opponentName={opponentName} />

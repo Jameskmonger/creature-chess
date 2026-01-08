@@ -21,6 +21,13 @@ export type Theme = {
 			light: string;
 			dark: string;
 		};
+		dark: {
+			neutral: string;
+		};
+		light: {
+			neutral: string;
+		};
+		background: string;
 	};
 };
 
@@ -44,7 +51,14 @@ export const DEFAULT_THEME: Theme = {
 			neutral: "#f5d742",
 			light: "#f5d742",
 			dark: "#f5d742",
-		}
+		},
+		dark: {
+			neutral: "#1d1d1d",
+		},
+		light: {
+			neutral: "#f5f5f5",
+		},
+		background: "#424e70",
 	}
 };
 

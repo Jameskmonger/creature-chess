@@ -2,7 +2,6 @@ import React from "react";
 
 import {
 	faArrowsRotate,
-	faCoins,
 	faLock,
 	faLockOpen,
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +13,7 @@ import { Card as CardModel } from "@creature-chess/models";
 import { BalanceIcon } from "../../../ui/icon/BalanceIcon";
 import { Card2D as Card } from "./card";
 import { createUseThemeStyles } from "~/useStyles";
+import { Button } from "~/components/ui";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -144,25 +144,30 @@ export function CardShop({
 				<div className={classes.balance}>
 					<BalanceIcon className={classes.balanceIcon} amount={money} />
 				</div>
-				<button className={classes.control} onClick={onToggleLock}>
-					{isLocked ? (
-						<FontAwesomeIcon icon={faLockOpen} />
-					) : (
-						<>
-							<FontAwesomeIcon icon={faLock} />
-							<span>(1 turn)</span>
-						</>
-					)}
-				</button>
+				<div>
+					<Button color="secondary" size="medium" onClick={onToggleLock}>
+						{isLocked ? (
+							<FontAwesomeIcon icon={faLockOpen} />
+						) : (
+							<>
+								<FontAwesomeIcon icon={faLock} />&nbsp;
+								<span>(1 turn)</span>
+							</>
+						)}
+					</Button>
+				</div>
 
-				<button
-					className={classes.control}
-					onClick={onReroll}
-					disabled={money < rerollCost}
-				>
-					<FontAwesomeIcon icon={faArrowsRotate} />
-					<span>${rerollCost}</span>
-				</button>
+				<div>
+					<Button
+						color="secondary"
+						size="medium"
+						onClick={onReroll}
+						disabled={money < rerollCost}
+					>
+						<FontAwesomeIcon icon={faArrowsRotate} />&nbsp;
+						<span>${rerollCost}</span>
+					</Button>
+				</div>
 			</div>
 		</div>
 	);

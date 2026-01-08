@@ -141,6 +141,8 @@ const ColorPaletteDemo: React.FC = () => {
 					<PaletteGroup group="primary" />
 					<PaletteGroup group="secondary" />
 					<PaletteGroup group="accent" />
+					<PaletteGroup group="dark" />
+					<ColorSwatch name="background" value={DEFAULT_THEME.palette.background} />
 				</div>
 			</div>
 
