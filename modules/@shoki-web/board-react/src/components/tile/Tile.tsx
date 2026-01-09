@@ -27,7 +27,10 @@ const useStyles = createUseStyles({
 
 export const Tile = React.forwardRef<any, TileProps>(
 	({ x, y, dragDrop, onClick, onDrop, className }, ref) => {
-		const { locked, piecePositions } = useBoardState();
+		const board = useBoardState();
+
+		// todo
+		const locked = false;
 
 		const styles = useStyles();
 		const tileBackgroundRenderer = useTileBackgroundRenderer();
@@ -41,9 +44,9 @@ export const Tile = React.forwardRef<any, TileProps>(
 		const canDropPiece = React.useMemo(
 			() =>
 				dragDrop &&
-				Boolean(piecePositions[`${x},${y}`]) === false &&
+				board.getPieceIdAtPosition(x, y) === null &&
 				locked === false,
-			[dragDrop, piecePositions, x, y, locked]
+			[dragDrop, board, x, y, locked]
 		);
 
 		return (

@@ -1,78 +1,60 @@
-import { BoardSelectors, BoardSlice, BoardState } from "@shoki/board";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { PieceCombatState, PieceInfoStore } from "../state";
 import { getStats } from "../utils/getStats";
 import { simulatePiece } from "./piece/simulate";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 type Stores = { combatStore: PieceInfoStore<PieceCombatState> };
 
 export const simulateTurn = (
 	currentTurn: number,
-	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>,
+	board: Board,
+	pieceRegistry: PieceRegistry,
 	stores: Stores
 ) => {
-	const pieceEntries = Object.entries(board.pieces).map(
-		([pieceId, piece]) =>
-			[
-				pieceId,
-				{
-					...piece,
-					lastBattleStats: {
-						...piece.lastBattleStats!,
-						turnsSurvived: piece.lastBattleStats!.turnsSurvived + 1,
-					},
-				},
-			] as [string, PieceModel]
-	);
+	const pieceIds = board.getAllPieces()
+		.map(p => pieceRegistry.getPieceById(p.id))
+		.filter((p): p is PieceModel => p !== null);
 
-	pieceEntries.sort(([, aPiece], [, bPiece]) => {
+	pieceIds.sort((aPiece, bPiece) => {
 		const aStats = getStats(aPiece);
 		const bStats = getStats(bPiece);
 
 		return bStats.speed - aStats.speed;
 	});
 
-	return pieceEntries.reduce(
-		(b, [pieceId]) =>
-			takePieceTurn(currentTurn, pieceId, b, boardSlice, stores),
-		board
-	);
+	for (const piece of pieceIds) {
+		takePieceTurn(currentTurn, board, pieceRegistry, piece.id, stores);
+	}
 };
 
 const takePieceTurn = (
 	currentTurn: number,
-	pieceId: string,
-	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	pieceId: PieceModel["id"],
 	{ combatStore }: Stores
-): BoardState<PieceModel> => {
-	const piece = BoardSelectors.getPiece(board, pieceId);
+) => {
+	if (!board.containsPiece(pieceId)) {
+		return;
+	}
+
+	const piece = pieceRegistry.getPieceById(pieceId);
 
 	if (!piece) {
-		return board;
+		return;
 	}
 
-	const attacker: PieceModel = {
-		...piece,
-		attacking: null,
-		hit: null,
-	};
+	piece.attacking = null;
+	piece.hit = null;
 
-	const attackerPosition = BoardSelectors.getPiecePosition(board, pieceId);
-
-	if (!attackerPosition) {
-		return board;
-	}
-
-	return simulatePiece(
+	simulatePiece(
 		currentTurn,
 		board,
-		boardSlice,
-		attacker,
-		attackerPosition,
+		pieceRegistry,
+		pieceId,
 		{ combatStore }
 	);
 };

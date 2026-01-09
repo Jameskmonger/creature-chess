@@ -1,11 +1,11 @@
-import { BoardSelectors, BoardState } from "@shoki/board";
-
 import { PieceModel, TileCoordinates, getDelta } from "@creature-chess/models";
 
 import { getStats } from "../../utils/getStats";
 import { getLivingEnemies } from "../utils/getLivingEnemies";
 import { getTargetAttackPositions } from "../utils/getTargetAttackPositions";
 import { TargetProvider } from "./TargetProvider";
+import { Board, Position } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 type EnemyDelta = {
 	enemy: PieceModel;
@@ -19,10 +19,11 @@ export class StandardTargetProvider implements TargetProvider {
 	 * @inheritdoc
 	 */
 	public getTarget(
+		board: Board,
+		pieceRegistry: PieceRegistry,
 		attackerId: string,
-		board: BoardState<PieceModel>
 	): string | null {
-		const piece = board.pieces[attackerId];
+		const piece = pieceRegistry.getPieceById(attackerId);
 
 		if (!piece) {
 			return null;
@@ -30,13 +31,13 @@ export class StandardTargetProvider implements TargetProvider {
 
 		const attackRange = getStats(piece).attackType.range;
 
-		const enemies = getLivingEnemies(piece, board);
+		const enemies = getLivingEnemies(piece, board, pieceRegistry);
 
 		if (enemies.length === 0) {
 			return null;
 		}
 
-		const attackerPos = BoardSelectors.getPiecePosition(board, piece.id);
+		const attackerPos = board.getPiecePosition(piece.id);
 
 		if (!attackerPos) {
 			return null;
@@ -58,16 +59,16 @@ export class StandardTargetProvider implements TargetProvider {
 	}
 
 	private getEnemiesInAttackRange(
-		board: BoardState,
+		board: Board,
 		attackerId: string,
 		enemies: PieceModel[],
-		attackerPosition: TileCoordinates,
+		attackerPosition: Position,
 		attackRange: number
 	): EnemyDelta[] {
 		const enemyDeltas: EnemyDelta[] = [];
 
 		for (const enemy of enemies) {
-			const enemyPosition = BoardSelectors.getPiecePosition(board, enemy.id);
+			const enemyPosition = board.getPiecePosition(enemy.id);
 
 			if (!enemyPosition) {
 				continue;
@@ -75,17 +76,15 @@ export class StandardTargetProvider implements TargetProvider {
 
 			// find all positions from which we can attack
 			const attackPositions = getTargetAttackPositions(
-				board.size,
-				enemyPosition,
+				{ width: board.width, height: board.height },
+				{ x: enemyPosition[0], y: enemyPosition[1] },
 				attackRange
 			);
 
 			const emptyPositions = attackPositions.filter((position) => {
-				const key = `${position.x},${position.y}`;
+				const p = board.getPieceIdAtPosition(position.x, position.y);
 
-				return (
-					!board.piecePositions[key] || board.piecePositions[key] === attackerId
-				);
+				return p === null || p === attackerId;
 			});
 
 			if (emptyPositions.length === 0) {
@@ -93,19 +92,19 @@ export class StandardTargetProvider implements TargetProvider {
 			}
 
 			emptyPositions.sort((a, b) => {
-				const ax = a.x - attackerPosition.x;
-				const ay = a.y - attackerPosition.y;
-				const bx = b.x - attackerPosition.x;
-				const by = b.y - attackerPosition.y;
+				const ax = a.x - attackerPosition[0];
+				const ay = a.y - attackerPosition[1];
+				const bx = b.x - attackerPosition[0];
+				const by = b.y - attackerPosition[1];
 
 				return ax * ax + ay * ay - (bx * bx + by * by);
 			});
 
 			enemyDeltas.push({
 				enemy,
-				enemyPosition,
+				enemyPosition: { x: enemyPosition[0], y: enemyPosition[1] },
 				attackPosition: emptyPositions[0],
-				delta: getDelta(emptyPositions[0], attackerPosition),
+				delta: getDelta(emptyPositions[0], { x: attackerPosition[0], y: attackerPosition[1] }),
 			});
 		}
 

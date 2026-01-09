@@ -11,22 +11,16 @@ type Props = {
 };
 
 export function BoardItems({ render, dragDrop }: Props) {
-	const { pieces, piecePositions } = useBoardState();
+	const board = useBoardState();
 
 	const pieceElements: React.ReactNode[] = [];
 
-	// this weird code is needed so that React keeps the same DOM elements, thus preserving the CSS animations
-	const entries = Object.entries(piecePositions);
-	entries.sort(([, aId], [, bId]) => aId.localeCompare(bId));
-
-	for (const [position, id] of entries) {
+	for (const { id, x, y } of board.getAllPieces()) {
 		if (!id) {
 			continue;
 		}
 
-		const [x, y] = position.split(",").map((i) => parseInt(i, 10));
-
-		const { item, draggable = false } = render(pieces[id], x, y);
+		const { item, draggable = false } = render(id, x, y);
 
 		if (dragDrop && draggable) {
 			pieceElements.push(

@@ -1,4 +1,4 @@
-import { all, takeEvery, takeLatest, put } from "@redux-saga/core/effects";
+import { all, takeEvery } from "@redux-saga/core/effects";
 import {
 	Store,
 	Reducer,
@@ -15,11 +15,6 @@ import { Logger } from "winston";
 import {
 	BoardState,
 	mergeBoards,
-	createBoardSlice,
-	BoardPiecesState,
-	BoardSlice,
-	BoardSelectors,
-	cloneBoard,
 } from "@shoki/board";
 
 import {
@@ -33,11 +28,11 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 import { rotateBoard } from "@creature-chess/utils/board";
 
 import { PlayerEntity } from "../entities";
-import { PlayerStateSelectors } from "../entities/player";
 import { playerFinishMatchEvent } from "../entities/player/events";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 interface MatchState {
-	board: BoardState<PieceModel>;
 	turn: number;
 }
 
@@ -50,13 +45,14 @@ export class Match {
 	private store: Store<MatchState>;
 	private finalBoard!: BoardState<PieceModel>;
 	private boardId = uuid();
-	private board: BoardSlice<PieceModel>;
+	private board: Board;
 
 	private serverFinishedMatch = pDefer();
 	private clientFinishedMatchHome = pDefer();
 	private clientFinishedMatchAway = pDefer();
 
 	public constructor(
+		private readonly pieceRegistry: PieceRegistry,
 		public readonly home: PlayerEntity,
 		public readonly away: PlayerEntity,
 		public readonly awayIsClone: boolean,
@@ -64,36 +60,15 @@ export class Match {
 		settings: GamemodeSettings,
 		private onTurnComplete?: (timeMs: number) => void
 	) {
-		this.board = createBoardSlice<PieceModel>(this.boardId, {
-			width: settings.boardWidth,
-			height: settings.boardHalfHeight * 2,
-		});
+		this.board = mergeBoards(
+			this.boardId,
+			home.dependencies.boardSlices.boardSlice,
+			away.dependencies.boardSlices.boardSlice,
+		);
 
 		this.store = this.createStore(settings);
 
-		const mergedBoard = mergeBoards(
-			this.boardId,
-			home.select(PlayerStateSelectors.getPlayerBoard),
-			away.select(PlayerStateSelectors.getPlayerBoard)
-		);
-
-		const board: BoardState<PieceModel> = {
-			...mergedBoard,
-			pieces: Object.entries(mergedBoard.pieces).reduce<
-				BoardPiecesState<PieceModel>
-			>(
-				(acc, [id, piece]) => ({
-					...acc,
-					[id]: {
-						...piece,
-						facingAway: piece.ownerId === home.id,
-					},
-				}),
-				{}
-			),
-		};
-
-		this.store.dispatch(this.board.commands.setBoardPiecesCommand(board));
+		// todo set initial "facing away"
 
 		// auto-resolve the match from the "away" side if they are a clone
 		if (awayIsClone) {
@@ -109,16 +84,15 @@ export class Match {
 		}
 	}
 
-	public getBoardForPlayer(playerId: string): BoardState<PieceModel> {
-		const { board } = this.store.getState();
-
+	public getBoardForPlayer(playerId: string): Board {
 		// rotate the board for the away player, so that their pieces are shown on their own side
+		const clone = this.board.clone();
 
 		if (playerId === this.away.id) {
-			return rotateBoard(cloneBoard(board));
+			rotateBoard(clone);
 		}
 
-		return cloneBoard(board);
+		return this.board.clone();
 	}
 
 	public getTurn() {
@@ -143,11 +117,10 @@ export class Match {
 
 		await delay(500);
 
-		this.finalBoard = this.store.getState().board;
-
-		const survivingPieces = BoardSelectors.getAllPieces(this.finalBoard).filter(
-			(p) => p.currentHealth > 0
-		);
+		const survivingPieces = this.board.getAllPieces()
+			.map(p => this.pieceRegistry.getPieceById(p.id))
+			.filter((p): p is PieceModel => p !== null)
+			.filter(p => p.currentHealth > 0);
 
 		const surviving = {
 			home: survivingPieces.filter((p) => p.ownerId === this.home.id),
@@ -174,17 +147,17 @@ export class Match {
 		// required to preserve inside the generator
 		// eslint-disable-next-line no-underscore-dangle
 		const _this = this;
-		const rootSaga = function* () {
+		const rootSaga = function*() {
 			yield all([
 				call(
 					battleSaga,
-					(state: MatchState) => state.board,
 					settings,
-					_this.board
+					_this.board,
+					_this.pieceRegistry,
 				),
 				takeEvery<BattleEvents.BattleFinishEvent>(
 					BattleEvents.battleFinishEvent,
-					function* ({ payload: { turn } }) {
+					function*({ payload: { turn } }) {
 						_this.onServerFinishMatch();
 
 						_this.logger.debug("Battle finished", {
@@ -196,24 +169,6 @@ export class Match {
 						});
 					}
 				),
-				takeLatest<BattleEvents.BattleTurnEvent>(
-					BattleEvents.battleTurnEvent,
-					function* ({
-						payload: { board, timeMs },
-					}: BattleEvents.BattleTurnEvent) {
-						if (_this.onTurnComplete) {
-							_this.onTurnComplete(timeMs);
-						}
-
-						yield put(
-							_this.board.commands.setBoardPiecesCommand({
-								pieces: board.pieces,
-								piecePositions: board.piecePositions,
-								size: undefined, // todo improve this
-							})
-						);
-					}
-				),
 			]);
 		};
 
@@ -221,7 +176,6 @@ export class Match {
 
 		const store = configureStore<MatchState>({
 			reducer: {
-				board: this.board.boardReducer,
 				// TODO (jkm) remove cast
 				turn: turnReducer as Reducer<number, UnknownAction>,
 			},

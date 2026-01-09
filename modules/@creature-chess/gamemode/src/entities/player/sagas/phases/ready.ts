@@ -6,17 +6,15 @@ import {
 	playerRunReadyPhaseEvent,
 	PlayerRunReadyPhaseEvent,
 } from "../../../../game/events";
-import { getBoardSlice } from "../../selectors";
 import { playerInfoCommands } from "../../state/commands";
 import { fillBoardCommand } from "../fillBoard";
 
-export const playerReadyPhase = function* () {
+export const playerReadyPhase = function*() {
 	const playerId = yield* getContext<string>("id");
-	const boardSlice = yield* getBoardSlice();
 
 	yield takeEvery<PlayerRunReadyPhaseEvent>(
 		playerBeforeReadyPhaseEvent.toString(),
-		function* () {
+		function*() {
 			yield put(fillBoardCommand());
 			yield put(playerInfoCommands.updateReadyCommand(false));
 		}
@@ -24,9 +22,7 @@ export const playerReadyPhase = function* () {
 
 	yield takeEvery<PlayerRunReadyPhaseEvent>(
 		playerRunReadyPhaseEvent.toString(),
-		function* ({ payload: { match } }) {
-			yield put(boardSlice.commands.lockBoardCommand());
-
+		function*({ payload: { match } }) {
 			if (match.home.id === playerId) {
 				yield put(
 					playerInfoCommands.updateOpponentCommand({

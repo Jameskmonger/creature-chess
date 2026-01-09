@@ -2,8 +2,6 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import { createInitialBoardState } from "@shoki/board";
-
 import { DndProvider } from "@shoki-web/board-react";
 
 import { Builders, PieceModel } from "@creature-chess/models";
@@ -12,6 +10,8 @@ import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 import { GameBoard } from "./GameBoard";
 import { GameBoardContextProvider } from "./GameBoardContext";
 import { Piece, PieceContextProvider } from "./piece";
+import { SubscribableBoard } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 export default {
 	title: "@creature-chess / game / Board / GameBoard",
@@ -30,14 +30,15 @@ const renderPiece = (piece: PieceModel) => (
 
 const Template: Story<any> = (args) => {
 	const context = {
-		board: createInitialBoardState<PieceModel>("board", {
-			width: GamemodeSettingsPresets["default"].boardWidth,
-			height: args.boardHeight,
-		}),
-		bench: createInitialBoardState<PieceModel>("bench", {
-			width: GamemodeSettingsPresets["default"].benchSize,
-			height: 1,
-		}),
+		board: new SubscribableBoard(
+			GamemodeSettingsPresets["default"].boardWidth,
+			args.boardHeight,
+		),
+		bench: new SubscribableBoard(
+			GamemodeSettingsPresets["default"].benchSize,
+			1,
+		),
+		pieceRegistry: new PieceRegistry(),
 	};
 
 	const piece1 = Builders.buildPieceModel({ id: "1" });
@@ -46,40 +47,49 @@ const Template: Story<any> = (args) => {
 	const piece4 = Builders.buildPieceModel({ id: "4" });
 	const piece5 = Builders.buildPieceModel({ id: "5" });
 
-	context.board.pieces = {
-		[piece1.id]: piece1,
-		[piece2.id]: piece2,
-		[piece3.id]: piece3,
-		[piece4.id]: piece4,
-		[piece5.id]: piece5,
-	};
-
-	context.board.piecePositions = {
-		[`${GamemodeSettingsPresets["default"].boardWidth - 1},${
-			args.boardHeight - 1
-		}`]: piece1.id,
-		[`${GamemodeSettingsPresets["default"].boardWidth - 2},${
-			args.boardHeight - 1
-		}`]: piece2.id,
-		[`${GamemodeSettingsPresets["default"].boardWidth - 4},0`]: piece3.id,
-		[`${GamemodeSettingsPresets["default"].boardWidth - 4},${
-			args.boardHeight - 1
-		}`]: piece4.id,
-		["0,0"]: piece5.id,
-	};
+	context.board.setPieces([
+		{
+			id: piece1.id,
+			x: GamemodeSettingsPresets["default"].boardWidth - 1,
+			y: args.boardHeight - 1,
+		},
+		{
+			id: piece2.id,
+			x: GamemodeSettingsPresets["default"].boardWidth - 2,
+			y: args.boardHeight - 1,
+		},
+		{
+			id: piece3.id,
+			x: GamemodeSettingsPresets["default"].boardWidth - 4,
+			y: 0,
+		},
+		{
+			id: piece4.id,
+			x: GamemodeSettingsPresets["default"].boardWidth - 4,
+			y: args.boardHeight - 1,
+		},
+		{
+			id: piece5.id,
+			x: 0,
+			y: 0,
+		},
+	]);
 
 	const benchPiece1 = Builders.buildPieceModel({ id: "6" });
 	const benchPiece2 = Builders.buildPieceModel({ id: "6" });
 
-	context.bench.pieces = {
-		[benchPiece1.id]: benchPiece1,
-		[benchPiece2.id]: benchPiece2,
-	};
+	context.bench.setPieces([
+		{ id: benchPiece1.id, x: 0, y: 0 },
+		{ id: benchPiece2.id, x: GamemodeSettingsPresets["default"].benchSize - 1, y: 0 },
+	]);
 
-	context.bench.piecePositions = {
-		["0,0"]: benchPiece1.id,
-		[`${GamemodeSettingsPresets["default"].benchSize - 1},0`]: benchPiece2.id,
-	};
+	context.pieceRegistry.registerPiece(piece1);
+	context.pieceRegistry.registerPiece(piece2);
+	context.pieceRegistry.registerPiece(piece3);
+	context.pieceRegistry.registerPiece(piece4);
+	context.pieceRegistry.registerPiece(piece5);
+	context.pieceRegistry.registerPiece(benchPiece1);
+	context.pieceRegistry.registerPiece(benchPiece2);
 
 	return (
 		<DndProvider>

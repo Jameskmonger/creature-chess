@@ -22,19 +22,18 @@ const useStyles = createUseStyles({
 export const BoardItem = React.forwardRef<any, BoardItemProps>(
 	({ x, y, children }, ref) => {
 		const styles = useStyles();
-		const { size } = useBoardState();
+		const { width, height } = useBoardState();
 
 		return (
 			<div
 				ref={ref}
 				className={styles.boardItem}
 				style={{
-					left: `${(x / size.width) * 100}%`,
-					top: `${(y / size.height) * 100}%`,
+					left: `${(x / width) * 100}%`,
+					top: `${(y / height) * 100}%`,
 
-					width: `${(1 / size.width) * 100}%`,
-					height: `${(1 / size.height) * 100}%`,
-
+					width: `${(1 / width) * 100}%`,
+					height: `${(1 / height) * 100}%`,
 					zIndex: TILE_BASE_Z_INDEX + y + 1,
 				}}
 			>

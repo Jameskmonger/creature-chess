@@ -21,7 +21,9 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
+		"@creature-chess/board": "workspace:*",
 		"@creature-chess/models": "workspace:*",
+		"@creature-chess/utils": "workspace:*",
 		"@shoki/board": "workspace:*",
 		"@shoki/engine": "workspace:*",
 		"@types/redux-saga": "^0.10.5"

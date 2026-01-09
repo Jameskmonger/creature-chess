@@ -1,4 +1,4 @@
-import { BoardSelectors, BoardState } from "@shoki/board";
+import { BoardState } from "@shoki/board";
 import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
 
 import { PieceModel, attackTypes } from "@creature-chess/models";
@@ -6,18 +6,21 @@ import { buildPieceModel } from "@creature-chess/models/src/builders";
 import { rotateBoard } from "@creature-chess/utils/board";
 
 import { getNextPiecePosition, Pathfinder } from "./pathfinding";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
-function getOpponentsForPiece(board: BoardState<PieceModel>, pieceId: string) {
-	const piece = board.pieces[pieceId];
+function getOpponentsForPiece(board: Board, pieceRegistry: PieceRegistry, pieceId: string) {
+	const piece = pieceRegistry.getPieceById(pieceId)!;
 
-	return Object.values(board.pieces)
+	return board.getAllPieces()
+		.map((p) => pieceRegistry.getPieceById(p.id)!)
 		.filter((p) => p.ownerId !== piece.ownerId)
 		.map((p) => p.id);
 }
 
 describe("pathfinding", () => {
 	describe("when board is rotated", () => {
-		const board: BoardState<PieceModel> = {
+		const b: BoardState<PieceModel> = {
 			id: "away",
 			pieces: {
 				"18cc443d-807f-467e-a4b4-d554da2329fe": buildPieceModel({
@@ -171,33 +174,45 @@ describe("pathfinding", () => {
 			},
 		};
 
-		const rotated = rotateBoard({
-			...board,
-			pieces: Object.fromEntries(
-				Object.entries(board.pieces).map(([key, piece]) => [
-					key,
-					{
-						...piece,
-					},
-				])
-			),
-		});
+		const pieceRegistry = new PieceRegistry();
 
-		const pathfinder = new Pathfinder(board.size);
+		Object.values(b.pieces).forEach((p) => pieceRegistry.registerPiece(p));
+
+		const board = new Board(7, 6);
+
+		Object.entries(b.piecePositions)
+			.map(([pos, id]) => {
+				const [xStr, yStr] = pos.split(",");
+				const x = parseInt(xStr, 10);
+				const y = parseInt(yStr, 10);
+
+				return { id, x, y };
+			})
+			.forEach(({ id, x, y }) => {
+				board.setPiece(id, x, y);
+			});
+
+		const rotated = board.clone();
+		rotateBoard(rotated);
+
+		const pathfinder = new Pathfinder({ width: board.width, height: board.height });
 
 		test.each(
 			// test each piece against each opponent
-			Object.keys(board.pieces).flatMap((pieceId) => {
-				const opponents = getOpponentsForPiece(board, pieceId);
+			board.getAllPieces().flatMap(({ id: pieceId }) => {
+				const opponents = getOpponentsForPiece(board, pieceRegistry, pieceId);
 				return opponents.map((targetId) => [pieceId, targetId]);
 			})
 		)(
 			"it should move pieces to the correct positions (%s -> %s)",
 			(pieceId, targetId) => {
+				const homePosA = board.getPiecePosition(pieceId)!;
+				const homePosB = board.getPiecePosition(targetId)!;
+
 				const homePosition = getNextPiecePosition(
 					pathfinder,
-					BoardSelectors.getPiecePosition(board, pieceId)!,
-					BoardSelectors.getPiece(board, pieceId)!.facingAway,
+					{ x: homePosA[0], y: homePosA[1] },
+					pieceRegistry.getPieceById(pieceId)!.facingAway,
 					{
 						attackType: attackTypes.basic,
 						hp: 1,
@@ -205,14 +220,17 @@ describe("pathfinding", () => {
 						defense: 1,
 						speed: 1,
 					},
-					BoardSelectors.getPiecePosition(board, targetId)!,
+					{ x: homePosB[0], y: homePosB[1] },
 					board
 				);
 
+				const awayPosA = rotated.getPiecePosition(pieceId)!;
+				const awayPosB = rotated.getPiecePosition(targetId)!;
+
 				const awayPosition = getNextPiecePosition(
 					pathfinder,
-					BoardSelectors.getPiecePosition(rotated, pieceId)!,
-					BoardSelectors.getPiece(rotated, pieceId)!.facingAway,
+					{ x: awayPosA[0], y: awayPosA[1] },
+					pieceRegistry.getPieceById(pieceId)!.facingAway,
 					{
 						attackType: attackTypes.basic,
 						hp: 1,
@@ -220,12 +238,12 @@ describe("pathfinding", () => {
 						defense: 1,
 						speed: 1,
 					},
-					BoardSelectors.getPiecePosition(rotated, targetId)!,
+					{ x: awayPosB[0], y: awayPosB[1] },
 					rotated
 				);
 
 				const awayPositionCorrected = rotateGridPosition(
-					rotated.size,
+					{ width: board.width, height: board.height },
 					awayPosition!
 				);
 

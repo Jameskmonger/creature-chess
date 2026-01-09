@@ -18,14 +18,14 @@ import { ThemedBoard } from "./ThemedBoard";
 
 export type GameBoardLocation =
 	| {
-			locationType: "board";
-			x: number;
-			y: number;
-	  }
+		locationType: "board";
+		x: number;
+		y: number;
+	}
 	| {
-			locationType: "bench";
-			x: number;
-	  };
+		locationType: "bench";
+		x: number;
+	};
 
 type GameBoardClickEvent = { location: GameBoardLocation };
 type GameBoardDropPieceEvent = {
@@ -112,32 +112,36 @@ function useRenderers({
 	renderBoardPiece,
 	renderBenchPiece,
 }: Pick<GameBoardProps, "renderBoardPiece" | "renderBenchPiece">) {
-	const { board, bench } = useGameBoard();
+	const { board, bench, pieceRegistry } = useGameBoard();
+
+	// todo
+	const boardLocked = false;
+	const benchLocked = false;
 
 	const boardPieceRenderer = React.useMemo(
-		() => (item: HasId) => {
-			const piece = item as PieceModel;
-			const draggable = !board.locked;
+		() => (item: PieceModel["id"]) => {
+			const piece = pieceRegistry.getPieceById(item)!;
+			const draggable = !boardLocked;
 
 			return {
 				item: renderBoardPiece(piece),
 				draggable,
 			};
 		},
-		[board.locked, renderBoardPiece]
+		[boardLocked, renderBoardPiece]
 	);
 
 	const benchPieceRenderer = React.useMemo(
-		() => (item: HasId) => {
-			const piece = item as PieceModel;
-			const draggable = !bench.locked;
+		() => (item: PieceModel["id"]) => {
+			const piece = pieceRegistry.getPieceById(item)!;
+			const draggable = !benchLocked;
 
 			return {
 				item: renderBenchPiece(piece),
 				draggable,
 			};
 		},
-		[bench.locked, renderBenchPiece]
+		[benchLocked, renderBenchPiece]
 	);
 
 	return { boardPieceRenderer, benchPieceRenderer };
@@ -227,12 +231,12 @@ export function GameBoard({
 	});
 
 	const totalHeight =
-		bench.size.height +
-		(showFiller ? board.size.height * 2 : board.size.height);
+		bench.height +
+		(showFiller ? board.height * 2 : board.height);
 
 	const styles = useStyles({
-		boardHalfHeight: board.size.height,
-		width: board.size.width,
+		boardHalfHeight: board.height,
+		width: board.width,
 		totalHeight,
 	});
 

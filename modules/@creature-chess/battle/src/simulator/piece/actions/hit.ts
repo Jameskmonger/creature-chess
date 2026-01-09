@@ -1,11 +1,4 @@
 import {
-	BoardSelectors,
-	BoardSlice,
-	BoardState,
-	PiecePosition,
-} from "@shoki/board";
-
-import {
 	getDistance,
 	getRelativeDirection,
 	PieceModel,
@@ -18,49 +11,57 @@ import { getStats } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { HitAction } from "./types";
+import { PieceRegistry } from "@creature-chess/utils/piece";
+import { Board } from "@creature-chess/board";
 
 const ATTACK_TURN_DURATION = 2;
 const MOVE_TURN_DURATION = 2;
 
 export function doHit(
 	currentTurn: number,
-	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>,
-	attacker: PieceModel,
-	attackerPosition: PiecePosition,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	id: PieceModel["id"],
 	action: HitAction,
 	{ combatStore }: Stores
-): BoardState<PieceModel> {
-	const target = BoardSelectors.getPiece(board, action.payload.targetId);
-	const targetPosition = BoardSelectors.getPiecePosition(
-		board,
-		action.payload.targetId
-	);
+) {
+	const attacker = pieceRegistry.getPieceById(id);
+	const attackerPosition = board.getPiecePosition(id);
+
+	if (!attacker || !attackerPosition) {
+		return;
+	}
+
+	const target = pieceRegistry.getPieceById(action.payload.targetId);
+	const targetPosition = board.getPiecePosition(action.payload.targetId);
 
 	if (!target || !targetPosition) {
-		return board;
+		return;
 	}
 
 	const attackerStats = getStats(attacker);
 
 	const inRange = inAttackRange(
-		attackerPosition,
-		targetPosition,
+		{ x: attackerPosition[0], y: attackerPosition[1] },
+		{ x: targetPosition[0], y: targetPosition[1] },
 		attackerStats.attackType
 	);
 
 	if (!inRange) {
-		return board;
+		return;
 	}
 
 	const damage = getHitDamage(attacker, target);
 	const newDefenderHealth = Math.max(target.currentHealth - damage, 0);
 
 	const attackerDirection = getRelativeDirection(
-		attackerPosition,
-		targetPosition
+		{ x: attackerPosition[0], y: attackerPosition[1] },
+		{ x: targetPosition[0], y: targetPosition[1] }
 	);
-	const attackerDistance = getDistance(attackerPosition, targetPosition);
+	const attackerDistance = getDistance(
+		{ x: attackerPosition[0], y: attackerPosition[1] },
+		{ x: targetPosition[0], y: targetPosition[1] }
+	);
 	const attackerFacingAway = getNewAttackerFacingAway(
 		attacker.facingAway,
 		attackerDirection
@@ -101,7 +102,10 @@ export function doHit(
 		...target,
 		currentHealth: newDefenderHealth,
 		hit: {
-			direction: getRelativeDirection(targetPosition, attackerPosition),
+			direction: getRelativeDirection(
+				{ x: targetPosition[0], y: targetPosition[1] },
+				{ x: attackerPosition[0], y: attackerPosition[1] }
+			),
 			damage,
 		},
 		lastBattleStats: {
@@ -110,8 +114,6 @@ export function doHit(
 		},
 	};
 
-	return boardSlice.boardReducer(
-		board,
-		boardSlice.commands.updateBoardPiecesCommand([newAttacker, defender])
-	);
+	pieceRegistry.registerPiece(newAttacker);
+	pieceRegistry.registerPiece(defender);
 }

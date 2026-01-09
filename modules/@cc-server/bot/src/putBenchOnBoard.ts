@@ -4,6 +4,7 @@ import { BoardSelectors } from "@shoki/board";
 import { getVariable } from "@shoki/engine";
 
 import {
+	getPlayerEntityDependencies,
 	PlayerActions,
 	PlayerState,
 	PlayerStateSelectors,
@@ -13,54 +14,51 @@ import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 
 import { BOT_ACTION_TIME_MS } from "./constants";
 import { PREFERRED_LOCATIONS } from "./preferredLocations";
+import { Board } from "@creature-chess/board";
 
-// todo selector
-const getFirstBenchPiece = (state: PlayerState): PieceModel | null => {
-	for (let x = 0; x < state.bench.size.width; x++) {
-		if (state.bench.piecePositions[`${x},0`]) {
-			return state.bench.pieces[state.bench.piecePositions[`${x},0`]];
+const getFirstBenchPieceId = (bench: Board): PieceModel["id"] | null => {
+	for (let x = 0; x < bench.width; x++) {
+		const pieceId = bench.getPieceIdAtPosition(x, 0);
+
+		if (pieceId) {
+			return pieceId;
 		}
 	}
 
 	return null;
 };
 
-const getBenchSlotForPiece = (
-	state: PlayerState,
-	pieceId: string
-): number | null => {
-	for (let x = 0; x < state.bench.size.width; x++) {
-		if (state.bench.piecePositions[`${x},0`] === pieceId) {
-			return x;
-		}
-	}
-
-	return null;
-};
-
-export const putBenchOnBoard = function* () {
+export const putBenchOnBoard = function*() {
 	const name = yield* getVariable<PlayerVariables, string>((v) => v.name);
+	const {
+		boardSlices: { boardSlice, benchSlice },
+		gamemode: { pieceRegistry }
+	} = yield* getPlayerEntityDependencies();
 
 	while (true) {
 		const state: PlayerState = yield select();
-		const firstBenchPiece = getFirstBenchPiece(state);
+		const firstBenchPieceId = getFirstBenchPieceId(benchSlice);
 
-		if (firstBenchPiece === null) {
+		if (firstBenchPieceId === null) {
 			break;
 		}
 
-		const hasFreeSlot =
-			BoardSelectors.getAllPieces(state.board).length <
-			PlayerStateSelectors.getPlayerLevel(state);
+		const firstBenchPiece = pieceRegistry.getPieceById(firstBenchPieceId);
+
+		if (!firstBenchPiece) {
+			break;
+		}
+
+		const hasFreeSlot = boardSlice.getAllPieces().length < PlayerStateSelectors.getPlayerLevel(state);
 
 		if (!hasFreeSlot) {
 			break;
 		}
 
 		const firstEmptyPosition = BoardSelectors.getFirstEmptySlot(
-			state.board,
+			boardSlice,
 			PREFERRED_LOCATIONS[
-				firstBenchPiece.traits[1] as "arcane" | "valiant" | "cunning"
+			firstBenchPiece.traits[1] as "arcane" | "valiant" | "cunning"
 			]
 		);
 
@@ -73,7 +71,7 @@ export const putBenchOnBoard = function* () {
 			location: firstEmptyPosition,
 		};
 
-		const benchPieceSlot = getBenchSlotForPiece(state, firstBenchPiece.id);
+		const benchPieceSlot = benchSlice.getPiecePosition(firstBenchPiece.id);
 
 		if (benchPieceSlot === null) {
 			break;
@@ -82,7 +80,7 @@ export const putBenchOnBoard = function* () {
 		const benchPiecePosition: PlayerPieceLocation = {
 			type: "bench",
 			location: {
-				x: benchPieceSlot,
+				x: benchPieceSlot[0],
 				y: 0,
 			},
 		};

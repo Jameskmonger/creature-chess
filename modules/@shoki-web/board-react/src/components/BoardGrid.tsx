@@ -3,7 +3,8 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { BoardState, PiecePosition } from "@shoki/board";
+import { PiecePosition } from "@shoki/board";
+import { Board } from "@creature-chess/board";
 
 import { BoardContextProvider, BoardContextValue } from "../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
@@ -12,7 +13,7 @@ import { BoardItems } from "./items/BoardItems";
 import { BoardItemRenderFn } from "./items/renderItem";
 
 type BoardGridProps = {
-	state: BoardState;
+	state: Board;
 	renderItem: BoardItemRenderFn;
 	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
 	onDropItem?: (event: DropBoardItemEvent) => void;
@@ -25,7 +26,7 @@ type BoardGridProps = {
 	darkTileClassName?: string;
 };
 
-const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
+const useStyles = createUseStyles<string, { width: number; height: number }>({
 	root: {
 		position: "relative",
 		width: "100%",
@@ -35,18 +36,18 @@ const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
 		containerType: "size",
 	},
 
-	board: ({ size }) => ({
+	board: ({ width, height }) => ({
 		position: "relative",
-		aspectRatio: `${size.width} / ${size.height}`,
+		aspectRatio: `${width} / ${height}`,
 
 		// portrait
-		[`@container board (max-aspect-ratio: ${size.width} / ${size.height})`]: {
+		[`@container board (max-aspect-ratio: ${width} / ${height})`]: {
 			width: "100%",
 			height: "auto",
 		},
 
 		// landscape
-		[`@container board (min-aspect-ratio: ${size.width} / ${size.height})`]: {
+		[`@container board (min-aspect-ratio: ${width} / ${height})`]: {
 			width: "auto",
 			height: "100%",
 		},
@@ -70,7 +71,7 @@ export function BoardGrid({
 		tileBackgroundRenderer: renderTileBackground,
 	};
 
-	const styles = useStyles({ size: state.size });
+	const styles = useStyles({ width: state.width, height: state.height });
 
 	return (
 		<div className={classNames(styles.root, className)}>

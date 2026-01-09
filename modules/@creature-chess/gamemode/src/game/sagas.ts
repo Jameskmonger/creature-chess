@@ -8,6 +8,7 @@ import { PlayerEntity } from "../entities";
 import { gameFinishEvent } from "./events";
 import { gameLoopSaga } from "./gameLoop";
 import { GameState } from "./store";
+import { Gamemode } from "./gamemode";
 
 export type GetMatchupsFn = () => {
 	homeId: string;
@@ -16,6 +17,7 @@ export type GetMatchupsFn = () => {
 }[];
 
 export type GameSagaContext = {
+	gamemode: Gamemode;
 	getMatchups: GetMatchupsFn;
 	players: {
 		getAll: () => PlayerEntity[];
@@ -41,7 +43,7 @@ type Callbacks = {
 	onMatchEnd?: () => void;
 };
 
-export const gameSaga = function* (callbacks: Callbacks = {}) {
+export const gameSaga = function*(callbacks: Callbacks = {}) {
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const logger: Logger = yield getContext("logger");
 

@@ -27,18 +27,22 @@ import {
 	getPlayerCards,
 	getPlayerMoney,
 } from "../entities/player/state/selectors";
+import { addBenchPieceCommand, addBoardPieceCommand } from "../entities/player/state/board";
+import { Board } from "@creature-chess/board";
 
 const getCardDestination = (
 	state: PlayerState,
+	board: Board,
+	bench: Board,
 	playerId: string,
 	sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1
 ): PlayerPieceLocation | null => {
-	const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+	const belowPieceLimit = getPlayerBelowPieceLimit(state.playerInfo.level, board, bench);
 	const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
 	if (belowPieceLimit && inPreparingPhase) {
 		const boardSlot = BoardSelectors.getFirstEmptySlot(
-			state.board,
+			board,
 			sortPositions
 		);
 
@@ -51,7 +55,7 @@ const getCardDestination = (
 	}
 
 	const benchSlot = BoardSelectors.getFirstEmptySlot(
-		state.bench,
+		bench,
 		topLeftToBottomRightSortPositions
 	);
 
@@ -102,11 +106,11 @@ export const buyCardPlayerAction = createAction<
 	"buyCardPlayerAction"
 >("buyCardPlayerAction");
 
-export const buyCardPlayerActionSaga = function* () {
+export const buyCardPlayerActionSaga = function*() {
 	while (true) {
 		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
-		const { logger } = yield* getPlayerEntityDependencies();
+		const { logger, gamemode: { pieceRegistry } } = yield* getPlayerEntityDependencies();
 		const boardSlice = yield* getBoardSlice();
 		const benchSlice = yield* getBenchSlice();
 
@@ -145,7 +149,7 @@ export const buyCardPlayerActionSaga = function* () {
 		}
 
 		const destination = yield* select((state: PlayerState) =>
-			getCardDestination(state, playerId, sortPositions)
+			getCardDestination(state, boardSlice, benchSlice, playerId, sortPositions)
 		);
 
 		// no valid slots
@@ -163,17 +167,31 @@ export const buyCardPlayerActionSaga = function* () {
 			return;
 		}
 
+		pieceRegistry.registerPiece(piece);
+
 		const remainingCards = cards.map((c) => (c === card ? null : c));
 
 		if (destination.type === "board") {
 			const { x, y } = destination.location;
-			yield put(boardSlice.commands.addBoardPieceCommand({ piece, x, y }));
-		} else if (destination.type === "bench") {
+			logger.info("Buying card onto board", {
+				actor: { playerId, name },
+				details: { definitionId: card.definitionId, position: destination.location },
+			});
 			yield put(
-				benchSlice.commands.addBoardPieceCommand({
-					piece,
-					x: destination.location.x,
-					y: 0,
+				addBoardPieceCommand({
+					pieceId: piece.id,
+					position: { x, y },
+				})
+			);
+		} else if (destination.type === "bench") {
+			logger.info("Buying card onto bench", {
+				actor: { playerId, name },
+				details: { definitionId: card.definitionId, position: destination.location },
+			});
+			yield put(
+				addBenchPieceCommand({
+					pieceId: piece.id,
+					position: { x: destination.location.x },
 				})
 			);
 		}

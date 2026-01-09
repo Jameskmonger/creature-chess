@@ -1,69 +1,39 @@
-import { BoardState, HasId } from "../types";
-import { rotatePiecesAboutCenter } from "./rotateGridPosition";
+import { Board } from "@creature-chess/board";
+import { rotateGridPosition } from "./rotateGridPosition";
 
-const expandBoard = <TState extends BoardState>(
-	board: TState,
-	{ width, height }: { width: number; height: number }
-): TState => {
-	const differenceWidth = width - board.size.width;
-	const differenceHeight = height - board.size.height;
-
-	return {
-		...board,
-		size: { width, height },
-		piecePositions: Object.entries(board.piecePositions).reduce<{
-			[position: string]: string;
-		}>((newPiecePositions, [position, pieceId]) => {
-			const [x, y] = position.split(",").map((val) => parseInt(val, 10));
-
-			const newX = x + differenceWidth;
-			const newY = y + differenceHeight;
-
-			return {
-				...newPiecePositions,
-				[`${newX},${newY}`]: pieceId,
-			};
-		}, {}),
-	};
-};
-
-export const mergeBoards = <
-	TPiece extends HasId,
-	TState extends BoardState<TPiece>,
->(
+export const mergeBoards = (
 	id: string,
-	home: TState,
-	away: TState
-): TState => {
+	home: Board,
+	away: Board
+): Board => {
 	if (
-		home.size.width !== away.size.width ||
-		home.size.height !== away.size.height
+		home.width !== away.width ||
+		home.height !== away.height
 	) {
 		throw Error("Trying to merge odd-sized boards");
 	}
 
-	const newSize = {
-		width: home.size.width,
-		height: home.size.height * 2,
-	};
-	const expandedHome = expandBoard(home, newSize);
-	const expandedAway = expandBoard(away, newSize);
+	const newBoard = new Board(home.width, home.height * 2);
 
-	return {
-		id,
-		pieces: {
-			...expandedHome.pieces,
-			...expandedAway.pieces,
-		},
-		piecePositions: {
-			...expandedHome.piecePositions,
-			...rotatePiecesAboutCenter(
-				expandedAway.piecePositions,
-				expandedAway.size
-			),
-		},
-		locked: true,
-		pieceLimit: null,
-		size: newSize,
-	} as TState;
+	const differenceWidth = newBoard.width - home.width;
+	const differenceHeight = newBoard.height - home.height;
+
+	for (const piece of home.getAllPieces()) {
+		newBoard.setPiece(piece.id, piece.x + differenceWidth, piece.y + differenceHeight);
+	}
+
+	for (const piece of away.getAllPieces()) {
+		const newPos = rotateGridPosition(
+			{ width: newBoard.width, height: newBoard.height },
+			{ x: piece.x + differenceWidth, y: piece.y + differenceHeight }
+		);
+
+		newBoard.setPiece(
+			piece.id,
+			newPos.x,
+			newPos.y
+		);
+	}
+
+	return newBoard;
 };

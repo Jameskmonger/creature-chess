@@ -1,12 +1,10 @@
-import { BoardSelectors } from "@shoki/board";
-
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 
 import { PlayerState } from "..";
+import { GamePhase } from "@creature-chess/models";
+import { Board } from "@creature-chess/board";
 
-export const getPlayerBoard = (state: PlayerState) => state.board;
-export const isPlayerBoardLocked = (state: PlayerState) => state.board.locked;
-export const getPlayerBench = (state: PlayerState) => state.bench;
+export const isPlayerBoardLocked = (state: PlayerState) => state.roundInfo.phase !== GamePhase.PREPARING;
 
 export const getPlayerMoney = (state: PlayerState): number =>
 	state.playerInfo.money;
@@ -32,33 +30,12 @@ export const getPlayerCards = (state: PlayerState) => state.cardShop.cards;
 export const isPlayerShopLocked = (state: PlayerState): boolean =>
 	state.cardShop.locked;
 
-export const getAllPieceCount = (state: PlayerState) =>
-	[
-		...BoardSelectors.getAllPieces(state.board),
-		...BoardSelectors.getAllPieces(state.bench),
-	].length;
-
-// todo use piece limit from board, remove this
 export const getPlayerBelowPieceLimit = (
-	state: PlayerState,
-	playerId: string
+	level: number,
+	board: Board,
+	bench: Board,
 ): boolean => {
-	const ownedBoardPieceCount = BoardSelectors.getAllPieces(state.board).filter(
-		(p) => p.ownerId === playerId
-	).length;
-	const level = getPlayerLevel(state);
+	const ownedBoardPieceCount = board.pieceCount + bench.pieceCount;
 
 	return ownedBoardPieceCount < level;
-};
-
-export const getMostExpensiveBenchPiece = (state: PlayerState) => {
-	const benchPieces = Object.values(state.bench.pieces);
-
-	if (!benchPieces.length) {
-		return null;
-	}
-
-	benchPieces.sort((a, b) => b.definition.cost - a.definition.cost);
-
-	return benchPieces[0];
 };

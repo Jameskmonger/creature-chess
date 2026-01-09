@@ -1,5 +1,3 @@
-import { BoardSelectors, BoardState, PiecePosition } from "@shoki/board";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { Pathfinder, getNextPiecePosition } from "../../../pathfinding";
@@ -8,16 +6,18 @@ import { getStats } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { AttackState, StateResult } from "./types";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 export function doAttack(
 	currentTurn: number,
-	board: BoardState<PieceModel>,
 	state: AttackState,
-	piece: PieceModel,
-	piecePosition: PiecePosition,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	pieceId: PieceModel["id"],
 	{ combatStore }: Stores
 ): StateResult {
-	const combat = combatStore.getPiece(piece.id);
+	const combat = combatStore.getPiece(pieceId);
 	const otherCombat = combatStore.getPiece(state.payload.targetId);
 
 	if (
@@ -27,13 +27,17 @@ export function doAttack(
 		return [state];
 	}
 
+	const piece = pieceRegistry.getPieceById(pieceId);
+	const piecePosition = board.getPiecePosition(pieceId);
+
+	if (!piece || !piecePosition) {
+		return [state];
+	}
+
 	const attackerStats = getStats(piece);
 
-	const target = BoardSelectors.getPiece(board, state.payload.targetId);
-	const targetPosition = BoardSelectors.getPiecePosition(
-		board,
-		state.payload.targetId
-	);
+	const target = pieceRegistry.getPieceById(state.payload.targetId);
+	const targetPosition = board.getPiecePosition(state.payload.targetId);
 
 	const targetAlive = (target?.currentHealth || 0) > 0;
 
@@ -43,8 +47,8 @@ export function doAttack(
 	}
 
 	const inRange = inAttackRange(
-		piecePosition,
-		targetPosition,
+		{ x: piecePosition[0], y: piecePosition[1] },
+		{ x: targetPosition[0], y: targetPosition[1] },
 		attackerStats.attackType
 	);
 
@@ -58,8 +62,9 @@ export function doAttack(
 	// if we can't hit our target, is there a target immediately in range?
 	const otherEnemyInRange = findEnemyInAttackRange(
 		board,
+		pieceRegistry,
 		piece.ownerId,
-		piecePosition,
+		{ x: piecePosition[0], y: piecePosition[1] },
 		attackerStats.attackType.range
 	);
 
@@ -69,14 +74,14 @@ export function doAttack(
 		];
 	}
 
-	const pathfinder = new Pathfinder(board.size);
+	const pathfinder = new Pathfinder({ width: board.width, height: board.height });
 
 	const nextPosition = getNextPiecePosition(
 		pathfinder,
-		piecePosition,
+		{ x: piecePosition[0], y: piecePosition[1] },
 		piece.facingAway,
 		attackerStats,
-		targetPosition,
+		{ x: targetPosition[0], y: targetPosition[1] },
 		board
 	);
 

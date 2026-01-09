@@ -22,7 +22,6 @@
 		"modules/@cc-server/*",
 		"modules/@shoki/*",
 		"modules/@shoki-web/*",
-		"modules/@tools/*",
 		"apps/*"
 	],
 	"author": "",

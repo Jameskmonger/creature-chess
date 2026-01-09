@@ -21,6 +21,7 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
+		"@creature-chess/board": "workspace:*",
 		"@shoki/board": "workspace:*",
 		"rdndmb-html5-to-touch": "^8.0.3",
 		"react-dnd": "^16.0.1",

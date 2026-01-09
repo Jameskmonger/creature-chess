@@ -12,16 +12,18 @@ import {
 import { Match } from "../../match";
 import { RoundInfoCommands } from "../../roundInfo";
 import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
+import { Gamemode } from "../../gamemode";
 
 type Callbacks = {
 	onTurnComplete?: (timeMs: number) => void;
 };
 
-export const runReadyPhase = function* (callbacks: Callbacks = {}) {
+export const runReadyPhase = function*(callbacks: Callbacks = {}) {
 	const players: GameSagaContextPlayers = yield getContext("players");
 	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
 	const logger: Logger = yield getContext("logger");
 	const settings: GamemodeSettings = yield getContext("settings");
+	const gamemode: Gamemode = yield getContext("gamemode");
 
 	// todo turn this into a `call` so it waits for all players
 
@@ -41,6 +43,7 @@ export const runReadyPhase = function* (callbacks: Callbacks = {}) {
 		}
 
 		const match = new Match(
+			gamemode.pieceRegistry,
 			homePlayer,
 			awayPlayer,
 			awayIsClone,

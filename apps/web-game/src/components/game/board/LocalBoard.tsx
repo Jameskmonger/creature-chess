@@ -14,11 +14,13 @@ import {
 	useRenderBenchPiece,
 	useOnClickTile,
 	useOnDropPiece,
+	useGamePieceRegistry,
 } from "./hooks";
 
 export function LocalBoard({ children }: { children?: React.ReactNode }) {
 	const board = useGameBoard();
 	const bench = useGameBench();
+	const pieceRegistry = useGamePieceRegistry();
 
 	const renderBoardPiece = useRenderBoardPiece();
 	const renderBenchPiece = useRenderBenchPiece();
@@ -35,7 +37,7 @@ export function LocalBoard({ children }: { children?: React.ReactNode }) {
 	}
 
 	return (
-		<GameBoardContextProvider value={{ board, bench }}>
+		<GameBoardContextProvider value={{ board, bench, pieceRegistry }}>
 			<GameBoard
 				onClick={onClickTile}
 				onDropPiece={onDropPiece}

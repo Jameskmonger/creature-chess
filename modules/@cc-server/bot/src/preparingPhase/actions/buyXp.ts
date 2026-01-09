@@ -11,14 +11,16 @@ import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
 import { shouldBuyXp } from "../shouldBuyXp";
+import { Board } from "@creature-chess/board";
 
 // todo make this use values, rather than a flat "shouldBuyXp"
 export const createBuyXpAction = (
+	bench: Board,
 	state: PlayerState,
 	personality: BotPersonality,
 	settings: GamemodeSettings
 ): BrainAction | null => {
-	if (!shouldBuyXp(state, settings)) {
+	if (!shouldBuyXp(state, bench.getAllPieces().length, settings)) {
 		return null;
 	}
 

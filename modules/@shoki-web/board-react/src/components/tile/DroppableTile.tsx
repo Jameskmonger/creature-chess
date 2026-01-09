@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useDrop } from "react-dnd";
 
-import { useBelowPieceLimit, usePieces } from "../../context";
+import { useBelowPieceLimit, useBoardState } from "../../context";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "../../events";
 
 type DroppableTileProps = {
@@ -19,9 +19,9 @@ type DropTargetCollectProps = {
 
 export function DroppableTile({ x, y, onDrop, onClick }: DroppableTileProps) {
 	const belowPieceLimit = useBelowPieceLimit();
-	const pieces = usePieces();
+	const board = useBoardState();
 
-	const [{}, drop] = useDrop<{ id: string }, void, DropTargetCollectProps>({
+	const [{ }, drop] = useDrop<{ id: string }, void, DropTargetCollectProps>({
 		accept: "BoardItem",
 		drop: ({ id }, monitor: any) => {
 			if (!onDrop) {
@@ -31,7 +31,7 @@ export function DroppableTile({ x, y, onDrop, onClick }: DroppableTileProps) {
 			onDrop({ id, x, y });
 		},
 		canDrop: ({ id }) => {
-			const pieceIsFromSameBoard = Boolean(pieces[id]);
+			const pieceIsFromSameBoard = board.containsPiece(id);
 			return belowPieceLimit || pieceIsFromSameBoard;
 		},
 		collect: (monitor) => ({

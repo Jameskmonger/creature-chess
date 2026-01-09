@@ -7,32 +7,30 @@ import {
 	select,
 	delay,
 	getContext,
+	takeLatest,
 } from "typed-redux-saga";
 
-import { BoardState } from "@shoki/board";
 import { getDependency, getVariable } from "@shoki/engine";
 import { OutgoingRegistry } from "@shoki/networking";
 
 import {
 	PlayerVariables,
 	PlayerEntity,
-	PlayerEntitySelectors,
 	PlayerActions,
 	PlayerEntityDependencies,
-	PlayerStateSelectors,
 	PlayerState,
 	PlayerCommands,
 	GameEvents,
 	Match,
 	PlayerEvents,
+	getPlayerEntityDependencies,
 } from "@creature-chess/gamemode";
-import { PieceModel } from "@creature-chess/models";
-import { GameServerToClient } from "@creature-chess/networking";
+import { GameServerToClient, serialiseBoard } from "@creature-chess/networking";
 
 import { getPacketRegistries } from "../net/registries";
-import { subscribeToBoard } from "./subscribeToBoard";
+import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "@creature-chess/gamemode";
 
-const getSpectatingPlayer = function* () {
+const getSpectatingPlayer = function*() {
 	const spectatingId = yield* select(
 		(state: PlayerState) => state.spectating.id
 	);
@@ -50,26 +48,29 @@ const getSpectatingPlayer = function* () {
 const getMatch = () =>
 	getVariable<PlayerVariables, Match | null>((variables) => variables.match);
 
-const spectatePlayerBoard = function* (
+const spectatePlayerBoard = function*(
 	registry: OutgoingRegistry<GameServerToClient.PacketSet>
 ) {
 	const playerId = yield* getContext<string>("id");
-	const boardSlice = yield* PlayerEntitySelectors.getBoardSlice();
-	const benchSlice = yield* PlayerEntitySelectors.getBenchSlice();
+
+	const {
+		boardSlices: { boardSlice, benchSlice },
+		gamemode: { pieceRegistry },
+	} = yield* getPlayerEntityDependencies();
 
 	const initialMatch = yield* getMatch();
 
 	if (initialMatch) {
 		registry.send("matchBoardUpdate", {
 			turn: initialMatch.getTurn(),
-			board: initialMatch.getBoardForPlayer(playerId),
+			board: serialiseBoard(initialMatch.getBoardForPlayer(playerId), pieceRegistry),
 		});
 
 		// todo send opponentId
 	}
 
 	yield all([
-		call(function* () {
+		call(function*() {
 			while (true) {
 				yield take(GameEvents.playerRunReadyPhaseEvent.toString());
 
@@ -81,34 +82,48 @@ const spectatePlayerBoard = function* (
 				if (match) {
 					registry.send("matchBoardUpdate", {
 						turn: null,
-						board: match.getBoardForPlayer(playerId),
+						board: serialiseBoard(match.getBoardForPlayer(playerId), pieceRegistry),
 					});
 				}
 
 				yield take(PlayerEvents.playerFinishMatchEvent.toString());
 			}
 		}),
-		call(
-			subscribeToBoard,
-			boardSlice,
-			PlayerStateSelectors.getPlayerBoard,
-			(board: BoardState<PieceModel>) => registry.send("boardUpdate", board)
+		takeLatest(
+			[
+				addBoardPieceCommand,
+				moveBoardPieceCommand,
+				removeBoardPieceCommand,
+				swapBoardPiecesCommand,
+			],
+			function*() {
+				yield delay(50);
+
+				registry.send("boardUpdate", serialiseBoard(boardSlice, pieceRegistry));
+			}
 		),
-		call(
-			subscribeToBoard,
-			benchSlice,
-			PlayerStateSelectors.getPlayerBench,
-			(bench: BoardState<PieceModel>) => registry.send("benchUpdate", bench)
+		takeLatest(
+			[
+				addBenchPieceCommand,
+				moveBenchPieceCommand,
+				removeBenchPieceCommand,
+				swapBenchPiecesCommand,
+			],
+			function*() {
+				yield delay(50);
+
+				registry.send("benchUpdate", serialiseBoard(benchSlice, pieceRegistry));
+			}
 		),
 	]);
 };
 
-const spectateOtherPlayer = function* (player: PlayerEntity) {
+const spectateOtherPlayer = function*(player: PlayerEntity) {
 	const { outgoing: registry } = yield* getPacketRegistries();
 
 	let task: Task | null = null;
 	try {
-		task = player.runSaga(function* () {
+		task = player.runSaga(function*() {
 			yield call(spectatePlayerBoard, registry);
 		});
 
@@ -118,7 +133,7 @@ const spectateOtherPlayer = function* (player: PlayerEntity) {
 	}
 };
 
-const spectateLocalPlayer = function* () {
+const spectateLocalPlayer = function*() {
 	const { outgoing: registry } = yield* getPacketRegistries();
 	yield call(spectatePlayerBoard, registry);
 };
@@ -126,7 +141,7 @@ const spectateLocalPlayer = function* () {
 /**
  * Watch the local player board and bench, or that of the currently spectated player
  */
-export const playerBoard = function* () {
+export const playerBoard = function*() {
 	yield delay(200); // todo (#418) remove the need for this
 
 	let spectating = yield* call(getSpectatingPlayer);

@@ -5,6 +5,7 @@ import { BoardState } from "@shoki/board";
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./targeting/utils/getTargetAttackPositions";
+import { Board } from "@creature-chess/board";
 
 const createEmptyWeightGrid = ({
 	width,
@@ -42,14 +43,14 @@ export const getNextPiecePosition = (
 	attackerFacingUp: boolean,
 	attackerStats: CreatureStats,
 	targetPosition: TileCoordinates,
-	board: BoardState
+	board: Board
 ): TileCoordinates | null => {
 	const {
 		attackType: { range: attackRange },
 	} = attackerStats;
 
 	const targetTiles = getTargetAttackPositions(
-		board.size,
+		{ width: board.width, height: board.height },
 		targetPosition,
 		attackRange
 	);
@@ -108,7 +109,7 @@ export class Pathfinder {
 	}
 
 	public getFirstStep(
-		board: BoardState,
+		board: Board,
 		start: TileCoordinates,
 		end: TileCoordinates
 	): Path | null {
@@ -125,7 +126,7 @@ export class Pathfinder {
 	}
 
 	public getPath(
-		board: BoardState,
+		board: Board,
 		start: TileCoordinates,
 		end: TileCoordinates
 	): TileCoordinates[] | null {
@@ -154,10 +155,10 @@ export class Pathfinder {
 		return this.graph;
 	}
 
-	private setWeights(board: BoardState) {
+	private setWeights(board: Board) {
 		for (let x = 0; x < this.size.width; x++) {
 			for (let y = 0; y < this.size.height; y++) {
-				this.graph.grid[x][y].weight = board.piecePositions[`${x},${y}`]
+				this.graph.grid[x][y].weight = board.getPieceIdAtPosition(x, y) !== null
 					? 0
 					: 1;
 			}

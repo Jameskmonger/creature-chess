@@ -1,28 +1,50 @@
-import { BoardSelectors, BoardState, PiecePosition } from "@shoki/board";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "../../../targeting/utils/getTargetAttackPositions";
 import { Stores } from "../../types";
 import { MoveAction } from "../actions";
-import { findBestState } from "./findBestState";
-import { StateResult, WanderState } from "./types";
+import { PieceState, StateResult, WanderState } from "./types";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
+import { StandardTargetProvider } from "../../../targeting/provider/StandardTargetProvider";
+import { TargetProvider } from "../../../targeting/provider/TargetProvider";
+
+const targetProvider: TargetProvider = new StandardTargetProvider();
+
+function findBestState(
+	currentTurn: number,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	pieceId: PieceModel["id"],
+	{ combatStore }: Stores
+): PieceState {
+	const combatState = combatStore.getPiece(pieceId);
+
+	if (combatState.canAttackAtTurn <= currentTurn) {
+		const targetId = targetProvider.getTarget(board, pieceRegistry, pieceId);
+
+		if (targetId) {
+			return { type: "attacking", payload: { targetId } };
+		}
+	}
+
+	return { type: "wandering" };
+}
 
 export function doWander(
 	currentTurn: number,
-	board: BoardState<PieceModel>,
 	state: WanderState,
-	piece: PieceModel,
-	piecePosition: PiecePosition,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	pieceId: PieceModel["id"],
 	{ combatStore }: Stores
 ): StateResult {
 	// TODO search for a better state here and return early
 	const bestState = findBestState(
 		currentTurn,
 		board,
-		state,
-		piece,
-		piecePosition,
+		pieceRegistry,
+		pieceId,
 		{ combatStore }
 	);
 
@@ -30,16 +52,22 @@ export function doWander(
 		return [bestState];
 	}
 
-	const combatState = combatStore.getPiece(piece.id);
+	const combatState = combatStore.getPiece(pieceId);
 
 	// if the piece can't move yet, don't do anything
 	if ((combatState.canMoveAtTurn || 0) > currentTurn) {
 		return [state];
 	}
 
-	const adjacentPositions = getTargetAttackPositions(board.size, piecePosition);
+	const piecePosition = board.getPiecePosition(pieceId);
+
+	if (!piecePosition) {
+		return [state];
+	}
+
+	const adjacentPositions = getTargetAttackPositions({ width: board.width, height: board.height }, { x: piecePosition[0], y: piecePosition[1] });
 	const emptyPositions = adjacentPositions.filter(
-		(p) => BoardSelectors.getPieceForPosition(board, p.x, p.y) === null
+		(p) => board.getPieceIdAtPosition(p.x, p.y) === null
 	);
 
 	// no empty positions, so don't do anything

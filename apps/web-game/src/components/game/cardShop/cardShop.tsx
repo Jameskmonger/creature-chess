@@ -10,6 +10,7 @@ import { Card as CardModel } from "@creature-chess/models";
 
 import { CardShop as CardShop2D } from "./2d/cardShop";
 import { CardShop as CardShop3D } from "./3d/cardShop";
+import { useGameBoards } from "../board/state";
 
 const CARD_SHOP_TYPE: "2d" | "3d" = "2d" as "2d" | "3d";
 
@@ -32,14 +33,16 @@ export function CardShop() {
 		(state) => state.game.spectating.id !== null
 	);
 
-	const ownedDefinitionIds = useSelector<AppState, number[]>((state) => [
-		...BoardSelectors.getAllPieces(state.game.board).map(
-			(piece) => piece.definitionId
+	const { board, bench, pieceRegistry } = useGameBoards();
+
+	const ownedDefinitionIds = React.useMemo(() => [
+		...board.getAllPieces().map(
+			(piece) => pieceRegistry.getPieceById(piece.id)!.definitionId
 		),
-		...BoardSelectors.getAllPieces(state.game.bench).map(
-			(piece) => piece.definitionId
+		...bench.getAllPieces().map(
+			(piece) => pieceRegistry.getPieceById(piece.id)!.definitionId
 		),
-	]);
+	], [board, bench, pieceRegistry]);
 
 	if (cards === null || canUseShop === false || isSpectating) {
 		return null;

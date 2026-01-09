@@ -60,7 +60,7 @@ const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
 
 export function BoardSpaceFiller() {
 	const { board } = useGameBoard();
-	const styles = useStyles({ size: board.size });
+	const styles = useStyles({ size: { width: board.width, height: board.height } });
 
 	const selectedPiece = useSelectedPiece();
 

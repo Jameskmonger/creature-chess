@@ -1,7 +1,5 @@
-import { HasId } from "@shoki/board";
-
 export type BoardItemRenderFn = (
-	item: HasId,
+	itemId: string,
 	x: number,
 	y: number
 ) => {

@@ -1,3 +1,4 @@
+import { Board } from "@creature-chess/board";
 import { topToBottomMiddleSortPositions } from "./positionSort";
 import {
 	BoardState,
@@ -44,14 +45,14 @@ export const getPieceForPosition = <TPiece>(
 ): TPiece | null => state.pieces[state.piecePositions[`${x},${y}`]] || null;
 
 export const getFirstEmptySlot = (
-	state: BoardState,
+	state: Board,
 	sortPositions: SortPositionFn = topToBottomMiddleSortPositions
 ): PiecePosition | null => {
 	const emptyPositions: PiecePosition[] = [];
 
-	for (let y = 0; y < state.size.height; y++) {
-		for (let x = 0; x < state.size.width; x++) {
-			const boardPiece = getPieceForPosition(state, x, y);
+	for (let y = 0; y < state.height; y++) {
+		for (let x = 0; x < state.width; x++) {
+			const boardPiece = state.getPieceIdAtPosition(x, y);
 
 			if (!boardPiece) {
 				emptyPositions.push({ x, y });

@@ -6,26 +6,22 @@ import {
 	PlayerRunPreparingPhaseEvent,
 } from "../../../../game/events";
 import { afterRerollCardsEvent } from "../../events";
-import { getBoardSlice } from "../../selectors";
 import { PlayerState } from "../../state";
 import {
 	playerInfoCommands,
 	updateShopLockCommand,
 } from "../../state/commands";
 import {
-	getPlayerLevel,
 	getPlayerMoney,
 	isPlayerAlive,
 	isPlayerShopLocked,
 } from "../../state/selectors";
 import { addXpCommand } from "../xp";
 
-export const playerPreparingPhase = function* () {
-	const boardSlice = yield* getBoardSlice();
-
+export const playerPreparingPhase = function*() {
 	yield takeEvery<PlayerRunPreparingPhaseEvent>(
 		playerRunPreparingPhaseEvent.toString(),
-		function* () {
+		function*() {
 			const alive = yield* select(isPlayerAlive);
 
 			if (!alive) {
@@ -63,11 +59,6 @@ export const playerPreparingPhase = function* () {
 					})
 				);
 			}
-
-			const level = yield* select(getPlayerLevel);
-
-			yield put(boardSlice.commands.setPieceLimitCommand(level));
-			yield put(boardSlice.commands.unlockBoardCommand());
 		}
 	);
 };

@@ -28,7 +28,9 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 ADD tsconfig.json ./
 
 ADD modules/@shoki/ ./modules/@shoki/
-RUN yarn workspaces foreach --all --include "@shoki/*" run build
-
 ADD modules/@creature-chess/models/ ./modules/@creature-chess/models/
+ADD modules/@creature-chess/board/ ./modules/@creature-chess/board/
+
+RUN yarn workspaces foreach --all --include "@shoki/*" run build
 RUN yarn workspace @creature-chess/models run build
+RUN yarn workspace @creature-chess/board run build

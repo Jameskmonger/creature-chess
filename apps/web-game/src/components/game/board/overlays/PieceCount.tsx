@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
@@ -10,6 +10,7 @@ import { BoardSelectors } from "@shoki/board";
 
 import { getPlayerLevel } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
+import { useGameBoards } from "../state";
 
 const useStyles = createUseStyles({
 	pieceCount: {
@@ -43,13 +44,13 @@ const useStyles = createUseStyles({
 export function PieceCount() {
 	const styles = useStyles();
 
+	const { board, pieceRegistry } = useGameBoards();
+
 	const playerId = useLocalPlayerId();
 
-	const pieceCount = useSelector<AppState, number>(
-		(state) =>
-			BoardSelectors.getAllPieces(state.game.board).filter(
-				(p) => p.ownerId === playerId
-			).length
+	const pieceCount = useMemo(() =>
+		board.getAllPieces().filter((p) => pieceRegistry.getPieceById(p.id)?.ownerId === playerId).length,
+		[board, pieceRegistry, playerId]
 	);
 	const level = useSelector<AppState, number>((state) =>
 		getPlayerLevel(state.game)

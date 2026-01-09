@@ -8,26 +8,34 @@ import { afterSellPieceEvent } from "../entities/player/events";
 import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { getPiecesForStage } from "../game/evolution";
-import { getPiece } from "../player/pieceSelectors";
+import { removeBenchPieceCommand, removeBoardPieceCommand } from "../entities/player/state/board";
+import { getPlayerEntityDependencies } from "../entities/player/dependencies";
 
 export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;
 export const sellPiecePlayerAction = createAction<{ pieceId: string }>(
 	"sellPiecePlayerAction"
 );
 
-export const sellPiecePlayerActionSaga = function* () {
-	const boardSlice = yield* getBoardSlice();
-	const benchSlice = yield* getBenchSlice();
+export const sellPiecePlayerActionSaga = function*() {
+	const {
+		boardSlices: { boardSlice, benchSlice },
+		gamemode: { pieceRegistry }
+	} = yield* getPlayerEntityDependencies();
 
 	yield takeEvery<SellPiecePlayerAction>(
 		sellPiecePlayerAction.toString(),
-		function* ({ payload: { pieceId } }) {
-			const piece: PieceModel = yield select((state) =>
-				getPiece(state, pieceId)
-			);
+		function*({ payload: { pieceId } }) {
+			const ownsPiece = boardSlice.containsPiece(pieceId) || benchSlice.containsPiece(pieceId);
+
+			if (!ownsPiece) {
+				// console.log(`Attempted to sell piece with id ${pieceId} but did not own it`);
+				return;
+			}
+
+			const piece = pieceRegistry.getPieceById(pieceId);
 
 			if (!piece) {
-				// console.log(`Attempted to sell piece with id ${pieceId} but did not own it`);
+				// console.log(`Attempted to sell piece with id ${pieceId} but could not find it in registry`);
 				return;
 			}
 
@@ -45,8 +53,9 @@ export const sellPiecePlayerActionSaga = function* () {
 				)
 			);
 
-			yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
-			yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
+			// todo gross, only remove from one
+			yield put(removeBoardPieceCommand({ pieceId }));
+			yield put(removeBenchPieceCommand({ pieceId }));
 
 			yield put(afterSellPieceEvent({ piece }));
 		}

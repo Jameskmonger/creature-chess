@@ -21,7 +21,6 @@ export {
 export { type PlayerAction, PlayerActionTypesArray } from "./src/playerActions";
 export * as PlayerActions from "./src/playerActions";
 
-export { getPiece, getAllPieces } from "./src/player/pieceSelectors";
 export {
 	getPlayerLevel,
 	getPlayerMoney,
@@ -34,3 +33,5 @@ export * as GameEvents from "./src/game/events";
 export { getDefinitionById, getAllDefinitions } from "./src/definitions";
 
 export { Match } from "./src/game/match";
+
+export * from "./src/entities/player/state/board";

@@ -1,9 +1,10 @@
 import React, { createContext, useContext } from "react";
 
-import { BoardSelectors, BoardState, PiecePosition } from "@shoki/board";
+import { PiecePosition } from "@shoki/board";
+import { Board } from "@creature-chess/board";
 
 export type BoardContextValue = {
-	state: BoardState;
+	state: Board;
 
 	tileBackgroundRenderer?: (position: PiecePosition) => React.ReactNode;
 };
@@ -17,36 +18,8 @@ const useBoard = () => useContext(BoardContext);
 export const useBoardState = () => useBoard().state;
 
 export const useBelowPieceLimit = () => {
-	const boardState = useBoardState();
-
-	if (!boardState) {
-		return false;
-	}
-
-	return (
-		boardState.pieceLimit === null ||
-		BoardSelectors.isBelowPieceLimit(boardState)
-	);
-};
-
-export const usePieces = () => {
-	const boardState = useBoardState();
-
-	if (!boardState) {
-		return {};
-	}
-
-	return boardState.pieces;
-};
-
-export const usePiecePositions = () => {
-	const boardState = useBoardState();
-
-	if (!boardState) {
-		return {};
-	}
-
-	return boardState.piecePositions;
+	// todo
+	return true;
 };
 
 export function useTileBackgroundRenderer() {

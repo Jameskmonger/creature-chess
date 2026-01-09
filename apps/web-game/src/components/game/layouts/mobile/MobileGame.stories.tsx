@@ -33,9 +33,8 @@ const Template: Story<any> = (args) => {
 				connectionStatus: args.connectionStatus
 					? args.connectionStatus
 					: state.ui.connectionStatus,
-				selectedPieceId: args.selectedPiece
-					? Object.values(state.board.pieces)[0].id
-					: state.ui.selectedPieceId,
+				// todo
+				selectedPieceId: null,
 			},
 			roundInfo: {
 				...state.roundInfo,
@@ -59,19 +58,11 @@ const Template: Story<any> = (args) => {
 			},
 		};
 
-		if (args.selectedPieceStage && newState.ui.selectedPieceId) {
-			const piece =
-				newState.board.pieces[newState.ui.selectedPieceId as string];
-
-			piece.stage = args.selectedPieceStage;
-		}
-
 		return newState;
 	};
 
 	return (
 		<GameStateProvider
-			halfBoard={args.phase === GamePhase.PREPARING}
 			decorateState={decorateState}
 		>
 			<GamemodeSettingsContextProvider

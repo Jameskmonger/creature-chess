@@ -2,16 +2,15 @@ import { useDispatch } from "react-redux";
 import { clearSelectedPiece } from "~/store/game/ui";
 import { getLocationForPiece } from "~/utils/getLocationForPiece";
 
-import { BoardState } from "@shoki/board";
-
 import { PlayerActions } from "@creature-chess/gamemode";
-import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { GameBoardLocation } from "../GameBoard";
+import { Board } from "@creature-chess/board";
 
 export const useOnDropPiece = (
-	board: BoardState<PieceModel> | null,
-	bench: BoardState<PieceModel>
+	board: Board,
+	bench: Board,
 ) => {
 	const dispatch = useDispatch();
 

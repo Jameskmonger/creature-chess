@@ -21,6 +21,7 @@ import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
+import { useGameBoards } from "../../board/state";
 
 const useStyles = createUseStyles({
 	helpContainer: {
@@ -73,10 +74,13 @@ const DesktopGame: React.FunctionComponent = () => {
 
 	const localPlayerId = useLocalPlayerId();
 
-	const ownedPieces = useSelector<AppState, PieceModel[]>((state) =>
-		[...BoardSelectors.getAllPieces(state.game.board)].filter(
-			(p) => p.ownerId === localPlayerId
-		)
+	const { board, pieceRegistry } = useGameBoards();
+
+	const ownedPieces = React.useMemo(() =>
+		board.getAllPieces()
+			.filter((p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId)
+			.map((p) => pieceRegistry.getPieceById(p.id)!),
+		[board, pieceRegistry, localPlayerId]
 	);
 
 	const stats = useSelector<AppState, StatsState>((state) => state.game.stats);

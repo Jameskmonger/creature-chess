@@ -1,15 +1,16 @@
-import { BoardState } from "@shoki/board";
-
 import { CreatureDefinition, PieceModel } from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models/src/builders";
 import { rotateBoard } from "@creature-chess/utils/board";
 
 import { StandardTargetProvider } from "./StandardTargetProvider";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 describe("StandardTargetProvider", () => {
 	const subject = new StandardTargetProvider();
 
-	let board: BoardState<PieceModel>;
+	let pieceRegistry: PieceRegistry;
+	let board: Board;
 	let attacker: PieceModel;
 	let northEnemy: PieceModel;
 	let southEnemy: PieceModel;
@@ -31,25 +32,17 @@ describe("StandardTargetProvider", () => {
 			currentHealth: 100,
 		});
 
-		board = {
-			id: "board",
-			pieces: {
-				attacker,
-				northEnemy,
-				southEnemy,
-			},
-			piecePositions: {
-				["1,3"]: attacker.id,
-				["1,2"]: northEnemy.id,
-				["1,4"]: southEnemy.id,
-			},
-			pieceLimit: null,
-			locked: false,
-			size: {
-				width: 7,
-				height: 6,
-			},
-		};
+		board = new Board(7, 6);
+
+		board.setPiece(attacker.id, 1, 3);
+		board.setPiece(northEnemy.id, 1, 2);
+		board.setPiece(southEnemy.id, 1, 4);
+
+		pieceRegistry = new PieceRegistry();
+
+		pieceRegistry.registerPiece(attacker);
+		pieceRegistry.registerPiece(northEnemy);
+		pieceRegistry.registerPiece(southEnemy);
 
 		attacker.definition.stages[attacker.stage] = {
 			hp: 0,
@@ -69,18 +62,18 @@ describe("StandardTargetProvider", () => {
 		});
 
 		it("returns the id of the enemy to the north", () => {
-			const targetId = subject.getTarget(attacker.id, board);
+			const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 			expect(targetId).toBe(northEnemy.id);
 		});
 
 		describe("when the board is rotated", () => {
 			beforeEach(() => {
-				board = rotateBoard(board);
+				rotateBoard(board);
 			});
 
 			it("returns the id of the enemy to the north", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(northEnemy.id);
 			});
@@ -97,8 +90,8 @@ describe("StandardTargetProvider", () => {
 					currentHealth: 100,
 				});
 
-				board.pieces[northEnemyFar.id] = northEnemyFar;
-				board.piecePositions["1,1"] = northEnemyFar.id;
+				pieceRegistry.registerPiece(northEnemyFar);
+				board.setPiece(northEnemyFar.id, 1, 1);
 
 				attacker.definition.stages[attacker.stage].attackType = {
 					name: "test-ranged",
@@ -107,18 +100,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the closest enemy to the attacker", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(northEnemy.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the closest enemy to the attacker", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(northEnemy.id);
 				});
@@ -131,18 +124,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the south enemy", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(southEnemy.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the id of the south enemy", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(southEnemy.id);
 				});
@@ -156,18 +149,18 @@ describe("StandardTargetProvider", () => {
 		});
 
 		it("returns the id of the enemy to the south", () => {
-			const targetId = subject.getTarget(attacker.id, board);
+			const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 			expect(targetId).toBe(southEnemy.id);
 		});
 
 		describe("when the board is rotated", () => {
 			beforeEach(() => {
-				board = rotateBoard(board);
+				rotateBoard(board);
 			});
 
 			it("returns the id of the blocker to the south", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(southEnemy.id);
 			});
@@ -184,8 +177,8 @@ describe("StandardTargetProvider", () => {
 					currentHealth: 100,
 				});
 
-				board.pieces[southEnemyFar.id] = southEnemyFar;
-				board.piecePositions["1,5"] = southEnemyFar.id;
+				pieceRegistry.registerPiece(southEnemyFar);
+				board.setPiece(southEnemyFar.id, 1, 5);
 
 				attacker.definition.stages[attacker.stage].attackType = {
 					name: "test-ranged",
@@ -194,18 +187,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the closest enemy to the attacker", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(southEnemy.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the closest enemy to the attacker", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(southEnemy.id);
 				});
@@ -218,18 +211,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the north enemy", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(northEnemy.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the id of the north enemy", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(northEnemy.id);
 				});
@@ -259,25 +252,17 @@ describe("StandardTargetProvider", () => {
 				definition: { cost: 3 } as CreatureDefinition,
 			});
 
-			board = {
-				id: "board",
-				pieces: {
-					attacker,
-					eastEnemy,
-					westEnemy,
-				},
-				piecePositions: {
-					["1,3"]: attacker.id,
-					["2,2"]: eastEnemy.id,
-					["0,2"]: westEnemy.id,
-				},
-				pieceLimit: null,
-				locked: false,
-				size: {
-					width: 7,
-					height: 6,
-				},
-			};
+			board = new Board(7, 6);
+
+			board.setPiece(attacker.id, 1, 3);
+			board.setPiece(eastEnemy.id, 2, 2);
+			board.setPiece(westEnemy.id, 0, 2);
+
+			pieceRegistry = new PieceRegistry();
+
+			pieceRegistry.registerPiece(attacker);
+			pieceRegistry.registerPiece(eastEnemy);
+			pieceRegistry.registerPiece(westEnemy);
 
 			attacker.definition.stages[attacker.stage].attackType = {
 				name: "test-ranged",
@@ -286,18 +271,18 @@ describe("StandardTargetProvider", () => {
 		});
 
 		it("chooses deterministically by ID when all else is equal", () => {
-			const targetId = subject.getTarget(attacker.id, board);
+			const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 			expect(targetId).toBe(eastEnemy.id);
 		});
 
 		describe("when the board is rotated", () => {
 			beforeEach(() => {
-				board = rotateBoard(board);
+				rotateBoard(board);
 			});
 
 			it("chooses deterministically by ID when all else is equal", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(eastEnemy.id);
 			});
@@ -305,29 +290,30 @@ describe("StandardTargetProvider", () => {
 
 		describe("when IDs are reversed", () => {
 			beforeEach(() => {
-				delete board.pieces[eastEnemy.id];
-				delete board.pieces[westEnemy.id];
+				pieceRegistry.deregisterPiece(eastEnemy.id);
+				pieceRegistry.deregisterPiece(westEnemy.id);
 
 				eastEnemy.id = "z_eastEnemy";
 				westEnemy.id = "a_westEnemy";
 
-				board.pieces[eastEnemy.id] = eastEnemy;
-				board.pieces[westEnemy.id] = westEnemy;
-				board.piecePositions["2,3"] = eastEnemy.id;
-				board.piecePositions["0,3"] = westEnemy.id;
+				pieceRegistry.registerPiece(eastEnemy);
+				pieceRegistry.registerPiece(westEnemy);
+
+				board.setPiece(eastEnemy.id, 2, 3);
+				board.setPiece(westEnemy.id, 0, 3);
 			});
 
 			it("respects ID ordering", () => {
-				expect(subject.getTarget(attacker.id, board)).toBe(westEnemy.id);
+				expect(subject.getTarget(board, pieceRegistry, attacker.id)).toBe(westEnemy.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("respects ID ordering", () => {
-					expect(subject.getTarget(attacker.id, board)).toBe(westEnemy.id);
+					expect(subject.getTarget(board, pieceRegistry, attacker.id)).toBe(westEnemy.id);
 				});
 			});
 		});
@@ -378,31 +364,23 @@ describe("StandardTargetProvider", () => {
 				currentHealth: 100,
 			});
 
-			board = {
-				id: "board",
-				pieces: {
-					attacker,
-					blockedEnemy,
-					unblockedEnemy,
-					blocker1,
-					blocker2,
-					blocker3,
-				},
-				piecePositions: {
-					["3,3"]: attacker.id,
-					["3,1"]: blockedEnemy.id,
-					["3,5"]: unblockedEnemy.id,
-					["2,1"]: blocker1.id,
-					["3,2"]: blocker2.id,
-					["4,1"]: blocker3.id,
-				},
-				pieceLimit: null,
-				locked: false,
-				size: {
-					width: 7,
-					height: 6,
-				},
-			};
+			board = new Board(7, 6);
+
+			board.setPiece(attacker.id, 3, 3);
+			board.setPiece(blockedEnemy.id, 3, 1);
+			board.setPiece(unblockedEnemy.id, 3, 5);
+			board.setPiece(blocker1.id, 2, 1);
+			board.setPiece(blocker2.id, 3, 2);
+			board.setPiece(blocker3.id, 4, 1);
+
+			pieceRegistry = new PieceRegistry();
+
+			pieceRegistry.registerPiece(attacker);
+			pieceRegistry.registerPiece(blockedEnemy);
+			pieceRegistry.registerPiece(unblockedEnemy);
+			pieceRegistry.registerPiece(blocker1);
+			pieceRegistry.registerPiece(blocker2);
+			pieceRegistry.registerPiece(blocker3);
 		});
 
 		describe("when the attacker is facing south", () => {
@@ -411,18 +389,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the unblocked enemy", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(unblockedEnemy.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the id of the unblocked enemy", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(unblockedEnemy.id);
 				});
@@ -435,18 +413,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the unblocked enemy", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(unblockedEnemy.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the id of the unblocked enemy", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(unblockedEnemy.id);
 				});
@@ -492,22 +470,23 @@ describe("StandardTargetProvider", () => {
 				currentHealth: 100,
 			});
 
-			board.pieces = {
-				attacker,
-				surroundedEnemy,
-				blocker1,
-				blocker2,
-				blocker3,
-			};
-			board.piecePositions = {
-				["2,3"]: attacker.id,
+			board = new Board(7, 6);
 
-				["3,2"]: surroundedEnemy.id,
-				["3,1"]: blocker3.id,
-				["2,2"]: blocker1.id,
-				["4,2"]: blocker2.id,
-				["3,3"]: blocker4.id,
-			};
+			board.setPiece(attacker.id, 2, 3);
+			board.setPiece(surroundedEnemy.id, 3, 2);
+			board.setPiece(blocker3.id, 3, 1);
+			board.setPiece(blocker1.id, 2, 2);
+			board.setPiece(blocker2.id, 4, 2);
+			board.setPiece(blocker4.id, 3, 3);
+
+			pieceRegistry = new PieceRegistry();
+
+			pieceRegistry.registerPiece(attacker);
+			pieceRegistry.registerPiece(surroundedEnemy);
+			pieceRegistry.registerPiece(blocker1);
+			pieceRegistry.registerPiece(blocker2);
+			pieceRegistry.registerPiece(blocker3);
+			pieceRegistry.registerPiece(blocker4);
 		});
 
 		describe("when the attacker is facing south", () => {
@@ -516,18 +495,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the blocker to the north", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(blocker1.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the id of the blocker to the north", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(blocker1.id);
 				});
@@ -540,18 +519,18 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("returns the id of the blocker to the north", () => {
-				const targetId = subject.getTarget(attacker.id, board);
+				const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 				expect(targetId).toBe(blocker1.id);
 			});
 
 			describe("when the board is rotated", () => {
 				beforeEach(() => {
-					board = rotateBoard(board);
+					rotateBoard(board);
 				});
 
 				it("returns the id of the blocker to the north", () => {
-					const targetId = subject.getTarget(attacker.id, board);
+					const targetId = subject.getTarget(board, pieceRegistry, attacker.id);
 
 					expect(targetId).toBe(blocker1.id);
 				});

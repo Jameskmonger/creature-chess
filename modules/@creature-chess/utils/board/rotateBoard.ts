@@ -1,21 +1,22 @@
 import { BoardState, rotatePiecesAboutCenter } from "@shoki/board";
 
 import { PieceModel } from "@creature-chess/models";
+import { Board } from "@creature-chess/board";
+import { rotateGridPosition } from "@shoki/board/src/utils/rotateGridPosition";
 
 export function rotateBoard(
-	board: BoardState<PieceModel>
-): BoardState<PieceModel> {
-	const newBoard: BoardState<PieceModel> = {
-		...board,
-		piecePositions: rotatePiecesAboutCenter(board.piecePositions, board.size),
-	};
+	board: Board
+) {
+	const newPositions = board.getAllPieces()
+		.map(({ id, x, y }) => {
+			const newPos = rotateGridPosition({ width: board.width, height: board.height }, { x, y });
 
-	for (const pieceId in newBoard.pieces) {
-		if (newBoard.pieces.hasOwnProperty(pieceId)) {
-			newBoard.pieces[pieceId].facingAway =
-				!newBoard.pieces[pieceId].facingAway;
-		}
+			return { id, x: newPos.x, y: newPos.y };
+		});
+
+	board.clear();
+
+	for (const { id, x, y } of newPositions) {
+		board.setPiece(id, x, y);
 	}
-
-	return newBoard;
 }

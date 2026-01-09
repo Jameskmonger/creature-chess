@@ -8,16 +8,14 @@ import { createMockStore } from "./utils";
 
 export function GameStateProvider({
 	children,
-	halfBoard,
 	decorateState,
 }: {
 	children: React.ReactNode;
-	halfBoard?: boolean;
 	decorateState?: (state: GameState) => GameState;
 }) {
 	useGlobalStyles();
 
-	const store = createMockStore(halfBoard ?? false, decorateState);
+	const store = createMockStore(decorateState);
 
 	return <Provider store={store}>{children}</Provider>;
 }

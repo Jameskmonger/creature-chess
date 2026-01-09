@@ -1,6 +1,4 @@
-import { Reducer, Action, combineReducers } from "@reduxjs/toolkit";
-
-import { BoardSlice, BoardState } from "@shoki/board";
+import { combineReducers } from "@reduxjs/toolkit";
 
 import {
 	PlayerInfoState,
@@ -9,12 +7,11 @@ import {
 	PlayerState,
 	playerReducers,
 } from "@creature-chess/gamemode";
-import { PieceModel, RoundInfoState } from "@creature-chess/models";
+import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { quickChatReducer, QuickChatState } from "./chat/state";
-import { matchReducer, MatchState } from "./match/state";
 import { networkReducer, NetworkState } from "./network";
 import { playerListReducer } from "./playerList/state";
 import { settingsReducer } from "./settings/state";
@@ -25,10 +22,6 @@ export type GameState = PlayerState & {
 	ui: UiState;
 
 	roundInfo: RoundInfoState;
-	board: BoardState<PieceModel>;
-	bench: BoardState<PieceModel>;
-
-	match: MatchState;
 
 	stats: StatsState;
 
@@ -41,26 +34,14 @@ export type GameState = PlayerState & {
 	network: NetworkState;
 };
 
-type Slices = {
-	boardSlice: BoardSlice<PieceModel>;
-	benchSlice: BoardSlice<PieceModel>;
-};
-
-export const createGameReducer = ({
-	boardSlice,
-	benchSlice,
-}: Slices): Reducer<GameState, Action> =>
-	combineReducers({
-		...playerReducers,
-		roundInfo: roundInfoReducer,
-		board: boardSlice.boardReducer,
-		bench: benchSlice.boardReducer,
-		match: matchReducer,
-		stats: statsReducer,
-		playerList: playerListReducer,
-		playerInfo: playerInfoReducer,
-		ui: uiReducer,
-		quickChat: quickChatReducer,
-		settings: settingsReducer,
-		network: networkReducer,
-	});
+export const gameReducer = combineReducers({
+	...playerReducers,
+	roundInfo: roundInfoReducer,
+	stats: statsReducer,
+	playerList: playerListReducer,
+	playerInfo: playerInfoReducer,
+	ui: uiReducer,
+	quickChat: quickChatReducer,
+	settings: settingsReducer,
+	network: networkReducer,
+});

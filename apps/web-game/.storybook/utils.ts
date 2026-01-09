@@ -45,98 +45,7 @@ const createPlayer = (
 	battle: inProgressBattle(opponentId, opponentIsClone),
 });
 
-const createBoardState = (halfBoard: boolean): BoardState<PieceModel> => {
-	const state = createInitialBoardState<PieceModel>("local-board", {
-		width: 7,
-		height: halfBoard ? 3 : 6,
-	});
-
-	const definition1 = getDefinitionById(1)!;
-	const piece1: PieceModel = {
-		id: "piece-1-id",
-		ownerId: "1234",
-		definitionId: 1,
-		definition: definition1,
-		traits: definition1.traits,
-		facingAway: false,
-		maxHealth: definition1.stages[0].hp,
-		currentHealth: definition1.stages[0].hp,
-		stage: 0,
-		lastBattleStats: {
-			damageDealt: Math.floor(Math.random() * 100),
-			damageTaken: Math.floor(Math.random() * 100),
-			turnsSurvived: Math.floor(Math.random() * 10),
-		},
-	};
-
-	const definition2 = getDefinitionById(2)!;
-	const piece2: PieceModel = {
-		id: "piece-2-id",
-		ownerId: "1234",
-		definitionId: 2,
-		definition: definition2,
-		traits: definition2.traits,
-		facingAway: false,
-		maxHealth: definition2.stages[0].hp,
-		currentHealth: definition2.stages[0].hp,
-		stage: 0,
-		lastBattleStats: null,
-	};
-
-	return {
-		...state,
-		pieces: {
-			...state.pieces,
-			[piece1.id]: piece1,
-			[piece2.id]: piece2,
-		},
-		piecePositions: {
-			[halfBoard ? "3,0" : "3,3"]: piece1.id,
-			[halfBoard ? "4,0" : "4,3"]: piece2.id,
-		},
-	};
-};
-
-const createBenchState = (): BoardState<PieceModel> => {
-	const state = createInitialBoardState<PieceModel>("local-bench", {
-		width: GamemodeSettingsPresets["default"].benchSize,
-		height: 1,
-	});
-
-	const definition = getDefinitionById(5)!;
-	const piece: PieceModel = {
-		id: "bpiece-1-id",
-		ownerId: "1234",
-		definitionId: 5,
-		definition,
-		traits: definition.traits,
-		facingAway: false,
-		maxHealth: definition.stages[0].hp,
-		currentHealth: definition.stages[0].hp,
-		stage: 0,
-		lastBattleStats: {
-			damageDealt: Math.floor(Math.random() * 100),
-			damageTaken: Math.floor(Math.random() * 100),
-			turnsSurvived: Math.floor(Math.random() * 10),
-		},
-	};
-
-	return {
-		...state,
-		pieces: {
-			...state.pieces,
-			[piece.id]: piece,
-		},
-		piecePositions: {
-			["1,0"]: piece.id,
-		},
-	};
-};
-
-const createMockedState = (halfBoard: boolean): GameState => {
-	const board = createBoardState(halfBoard);
-	const bench = createBenchState();
-
+const createMockedState = (): GameState => {
 	return {
 		settings: GamemodeSettingsPresets["default"],
 		ui: {
@@ -151,8 +60,6 @@ const createMockedState = (halfBoard: boolean): GameState => {
 			phaseStartedAtSeconds: Date.now() / 1000,
 			round: 1,
 		},
-		board,
-		bench,
 		playerInfo: {
 			opponentId: "5678",
 			opponentIsClone: false,
@@ -209,20 +116,7 @@ const createMockedState = (halfBoard: boolean): GameState => {
 			],
 			locked: false,
 		},
-		match: {
-			board: null,
-		},
-		stats: [
-			...Object.values(board.pieces),
-			...Object.values(bench.pieces),
-		].reduce((acc, piece) => {
-			acc[piece.id] = {
-				damageDealt: Math.floor(Math.random() * 100),
-				damageTaken: Math.floor(Math.random() * 100),
-				turnsSurvived: Math.floor(Math.random() * 10),
-			};
-			return acc;
-		}, {} as StatsState),
+		stats: {},
 		playerList: [
 			createPlayer(
 				"1234",
@@ -274,7 +168,6 @@ const createMockedState = (halfBoard: boolean): GameState => {
 };
 
 export const createMockStore = (
-	halfBoard: boolean,
 	decorateState?: (state: GameState) => GameState
 ) =>
 	configureStore({
@@ -282,8 +175,8 @@ export const createMockStore = (
 			name: "mock slice",
 			initialState: {
 				game: decorateState
-					? decorateState(createMockedState(halfBoard))
-					: createMockedState(halfBoard),
+					? decorateState(createMockedState())
+					: createMockedState(),
 			},
 			reducers: {},
 		}).reducer,

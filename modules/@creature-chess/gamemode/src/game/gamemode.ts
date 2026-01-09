@@ -24,6 +24,7 @@ import { PlayerList } from "./playerList";
 import { sendPublicEventsSaga } from "./publicEvents";
 import { gameSaga, GameSagaContext } from "./sagas";
 import { createGameStore, GameState } from "./store";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -35,6 +36,7 @@ type GamemodeCallbacks = {
 
 export class Gamemode {
 	private opponentProvider: OpponentProvider = new OpponentProvider();
+	public readonly pieceRegistry: PieceRegistry = new PieceRegistry();
 	private playerList = new PlayerList();
 	private players: PlayerEntity[] = [];
 	private events = new EventEmitter();
@@ -52,6 +54,7 @@ export class Gamemode {
 		this.deck = new CardDeck(this.logger);
 
 		const { store, sagaMiddleware } = createGameStore({
+			gamemode: this,
 			getMatchups: this.opponentProvider.getMatchups,
 			players: {
 				getAll: this.getAllPlayers,
@@ -127,7 +130,7 @@ export class Gamemode {
 			(this.events as unknown as null) = null;
 		};
 
-		return function* () {
+		return function*() {
 			const event: GameFinishEvent = yield take(gameFinishEvent.toString());
 
 			broadcast(event);

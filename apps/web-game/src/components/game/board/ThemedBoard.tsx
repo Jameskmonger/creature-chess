@@ -2,7 +2,7 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { BoardState, HasId, PiecePosition } from "@shoki/board";
+import { HasId, PiecePosition } from "@shoki/board";
 
 import {
 	BoardGrid,
@@ -10,12 +10,13 @@ import {
 	DropBoardItemEvent,
 } from "@shoki-web/board-react";
 
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
 type Props = {
 	theme?: "default";
-	state: BoardState<PieceModel>;
-	renderItem: (piece: HasId) => {
+	state: Board;
+	renderItem: (piece: PieceModel["id"]) => {
 		item: React.ReactNode | React.ReactNode[];
 		draggable?: boolean;
 	};

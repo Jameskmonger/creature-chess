@@ -1,7 +1,5 @@
 export {
 	useBoardState,
-	usePieces,
-	usePiecePositions,
 	useBelowPieceLimit,
 } from "./src/context";
 

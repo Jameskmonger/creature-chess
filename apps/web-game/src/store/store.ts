@@ -2,42 +2,26 @@ import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import { networkingSaga } from "~/networking";
 
-import { createBoardSlice } from "@shoki/board";
 
-import { PieceModel } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { createGameReducer } from "./game/state";
+import { gameReducer } from "./game/state";
 import { lobbyReducer } from "./lobby/state";
 import { menuReducer } from "./menu/state";
 import { SagaContext } from "./sagaContext";
 import { AppState } from "./state";
+import { GameBoardState } from "~/components/game/board/state";
 
-export const createAppStore = () => {
-	const boardSlice = createBoardSlice<PieceModel>("local-board", {
-		width: GamemodeSettingsPresets["default"].boardWidth,
-		height: GamemodeSettingsPresets["default"].boardHalfHeight,
-	});
-	const benchSlice = createBoardSlice<PieceModel>("local-bench", {
-		width: GamemodeSettingsPresets["default"].benchSize,
-		height: 1,
-	});
-
+export const createAppStore = (gameBoard: GameBoardState) => {
 	const sagaMiddleware = createSagaMiddleware<SagaContext>({
 		context: {
-			slices: {
-				board: boardSlice,
-				bench: benchSlice,
-			},
+			slices: gameBoard,
 		},
 	});
-
-	const slices = { boardSlice, benchSlice };
 
 	const store = configureStore<AppState>({
 		reducer: {
 			lobby: lobbyReducer,
-			game: createGameReducer(slices),
+			game: gameReducer,
 			menu: menuReducer,
 		},
 		middleware: (getDefaultMiddleware) =>
@@ -51,7 +35,7 @@ export const createAppStore = () => {
 		},
 	});
 
-	sagaMiddleware.run(networkingSaga, slices);
+	sagaMiddleware.run(networkingSaga, gameBoard);
 
 	return store;
 };

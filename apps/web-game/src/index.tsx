@@ -8,9 +8,11 @@ import { App } from "~/app";
 import { createAppStore } from "./store";
 import { ThemeProvider } from "react-jss";
 import { DEFAULT_THEME } from "./useStyles";
+import { GameBoardProvider, useGameBoards } from "./components/game/board/state";
 
-const AppRoot = () => {
-	const store = createAppStore();
+function GameRoot() {
+	const gameBoard = useGameBoards();
+	const store = createAppStore(gameBoard);
 
 	return (
 		<ReduxProvider store={store}>
@@ -18,6 +20,14 @@ const AppRoot = () => {
 				<App />
 			</ThemeProvider>
 		</ReduxProvider>
+	);
+}
+
+const AppRoot = () => {
+	return (
+		<GameBoardProvider>
+			<GameRoot />
+		</GameBoardProvider>
 	);
 };
 

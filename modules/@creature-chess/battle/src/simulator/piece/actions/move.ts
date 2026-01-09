@@ -1,28 +1,39 @@
-import { BoardSlice, BoardState, PiecePosition } from "@shoki/board";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { getCooldownForSpeed } from "../../../utils/getCooldownForSpeed";
 import { getStats } from "../../../utils/getStats";
 import { Stores } from "../../types";
 import { MoveAction } from "../actions";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 const MOVE_TURN_DURATION = 2;
 
 export function doMove(
 	currentTurn: number,
-	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>,
-	piece: PieceModel,
-	piecePosition: PiecePosition,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	id: PieceModel["id"],
 	action: MoveAction,
 	{ combatStore }: Stores
-): BoardState<PieceModel> {
-	const combatState = combatStore.getPiece(piece.id);
+) {
+	const existingPosition = board.getPiecePosition(id);
+
+	if (!existingPosition) {
+		return;
+	}
+
+	const combatState = combatStore.getPiece(id);
 
 	// if the piece can't move yet, don't do anything
 	if ((combatState.canMoveAtTurn || 0) > currentTurn) {
-		return board;
+		return;
+	}
+
+	const piece = pieceRegistry.getPieceById(id);
+
+	if (!piece) {
+		return;
 	}
 
 	const stats = getStats(piece);
@@ -34,12 +45,5 @@ export function doMove(
 		canMoveAtTurn,
 	});
 
-	return boardSlice.boardReducer(
-		board,
-		boardSlice.commands.moveBoardPieceCommand({
-			pieceId: piece.id,
-			from: piecePosition,
-			to: action.payload,
-		})
-	);
+	board.setPiece(id, action.payload.x, action.payload.y);
 }

@@ -21,6 +21,7 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
+		"@creature-chess/board": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1"
 	}
 }

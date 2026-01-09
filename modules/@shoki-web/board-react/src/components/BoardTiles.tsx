@@ -37,13 +37,13 @@ export function BoardTiles({
 	onClick,
 	onDrop,
 }: Props) {
-	const { size } = useBoardState();
-	const styles = useBoardStyles({ size });
+	const board = useBoardState();
+	const styles = useBoardStyles({ size: { width: board.width, height: board.height } });
 
 	const tiles = React.useMemo(() => {
 		const t = [];
-		for (let y = 0; y < size.height; y++) {
-			for (let x = 0; x < size.width; x++) {
+		for (let y = 0; y < board.height; y++) {
+			for (let x = 0; x < board.width; x++) {
 				t.push(
 					<Tile
 						key={`tile-${x}-${y}`}
@@ -66,8 +66,8 @@ export function BoardTiles({
 		lightTileClassName,
 		onClick,
 		onDrop,
-		size.height,
-		size.width,
+		board.height,
+		board.width,
 	]);
 
 	return <div className={styles.board}>{tiles}</div>;

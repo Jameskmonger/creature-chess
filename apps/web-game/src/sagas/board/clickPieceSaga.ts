@@ -5,17 +5,18 @@ import { UIActions } from "~/store/game/ui";
 import { clearSelectedPiece } from "~/store/game/ui/actions";
 import { getLocationForPiece } from "~/utils/getLocationForPiece";
 
-import { BoardState, BoardSelectors } from "@shoki/board";
-
-import { getPiece, PlayerActions } from "@creature-chess/gamemode";
-import { PieceModel } from "@creature-chess/models";
+import { PlayerActions } from "@creature-chess/gamemode";
+import { GameBoardState } from "~/components/game/board/state";
+import { getContext } from "typed-redux-saga";
 
 export type PlayerClickPieceAction = ReturnType<typeof playerClickPieceAction>;
 export const playerClickPieceAction = createAction<{ pieceId: string }>(
 	"playerClickPieceAction"
 );
 
-export const clickPieceSaga = function* () {
+export const clickPieceSaga = function*() {
+	const slices = yield* getContext<GameBoardState>("slices");
+
 	while (true) {
 		const action: PlayerClickPieceAction = yield take(
 			playerClickPieceAction.toString()
@@ -23,38 +24,24 @@ export const clickPieceSaga = function* () {
 
 		const { pieceId } = action.payload;
 
-		const board: BoardState = yield select(
-			(state: AppState) => state.game.board
-		);
-		const bench: BoardState = yield select(
-			(state: AppState) => state.game.bench
-		);
+		const pieceLocation = getLocationForPiece(pieceId, slices.board, slices.bench);
 
-		const piece =
-			BoardSelectors.getPiece(board, pieceId) ||
-			BoardSelectors.getPiece(bench, pieceId) ||
-			null;
-
-		if (!piece) {
-			// piece doesn't exist should never happen
+		if (!pieceLocation) {
+			// couldnt find position
 			// todo maybe log it?
 			continue;
 		}
 
-		const pieceLocation = getLocationForPiece(pieceId, board, bench);
-
-		const selectedPiece: PieceModel = yield select((state: AppState) =>
+		const selectedPieceId: string | null = yield select((state: AppState) =>
 			state.game.ui.selectedPieceId
-				? getPiece(state.game, state.game.ui.selectedPieceId)
-				: null
 		);
 
 		// swap the pieces if there's one selected, otherwise select it
-		if (selectedPiece) {
+		if (selectedPieceId) {
 			const selectedPieceLocation = getLocationForPiece(
-				selectedPiece.id,
-				board,
-				bench
+				selectedPieceId,
+				slices.board,
+				slices.bench
 			);
 
 			if (!selectedPieceLocation) {
@@ -69,7 +56,7 @@ export const clickPieceSaga = function* () {
 
 			yield put(
 				PlayerActions.swapPiecePlayerAction({
-					pieceAId: selectedPiece.id,
+					pieceAId: selectedPieceId,
 					pieceALocation: selectedPieceLocation,
 					pieceBId: pieceId,
 					pieceBLocation: pieceLocation,
