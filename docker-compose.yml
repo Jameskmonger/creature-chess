@@ -73,6 +73,8 @@ services:
       dockerfile: apps/server.Dockerfile
       args:
         APP_DIR: server-game
+    volumes:
+      - ./metrics:/var/creature-chess/metrics:rw
     image: local/server-game:latest
     environment:
       - AUTH0_DOMAIN
