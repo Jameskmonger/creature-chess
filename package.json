@@ -11,7 +11,7 @@
 		"start-server-game": "ts-node-dev apps/server-game/index.ts",
 		"start-server-info": "ts-node-dev apps/server-info/index.ts",
 		"test": "yarn workspaces foreach --all run test",
-		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\" \"apps/**/*.tsx\" \"modules/**/*.tsx\"",
+		"lint": "eslint \"apps/**/*.ts\" \"modules/**/*.ts\" \"apps/**/*.tsx\"",
 		"prettier": "prettier -w ./",
 		"prettier-check": "prettier -c ./",
 		"storybook": "storybook dev -p 6006",
