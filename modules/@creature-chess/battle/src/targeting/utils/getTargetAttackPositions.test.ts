@@ -1,16 +1,9 @@
-import { BoardState } from "@shoki/board";
-
 import { createTileCoordinates } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./getTargetAttackPositions";
 
 describe("getTargetAttackPositions", () => {
-	const board: BoardState = {
-		id: "",
-		pieces: {},
-		piecePositions: {},
-		pieceLimit: null,
-		locked: false,
+	const board = {
 		size: {
 			width: 7,
 			height: 6,

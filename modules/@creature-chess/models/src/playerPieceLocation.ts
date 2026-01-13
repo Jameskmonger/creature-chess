@@ -1,4 +1,6 @@
+import { PackedPosition } from "@creature-chess/board";
+
 export type PlayerPieceLocation = {
 	type: "bench" | "board";
-	location: { x: number; y: number };
+	location: PackedPosition;
 };

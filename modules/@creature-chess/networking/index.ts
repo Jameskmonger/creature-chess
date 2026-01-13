@@ -5,3 +5,4 @@ export * as LobbyServerToClient from "./src/server-to-client/server-to-client-lo
 export * as GameServerToClient from "./src/server-to-client/server-to-client-game";
 
 export { PingAction, pingAction } from "./src/ping-action";
+export { serialiseBoard } from "./src/utils/serialiseBoard";

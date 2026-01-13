@@ -25,7 +25,6 @@
 		"@creature-chess/battle": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
-		"@shoki/board": "workspace:*",
 		"@shoki/card-deck": "workspace:*",
 		"@shoki/engine": "workspace:*",
 		"@types/lodash": "^4.14.178",

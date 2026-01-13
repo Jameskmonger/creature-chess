@@ -1,12 +1,13 @@
 import { createContext, useContext } from "react";
 
-import { BoardState } from "@shoki/board";
 
-import { PieceModel } from "@creature-chess/models";
+import { SubscribableBoard } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 export type GameBoardContext = {
-	board: BoardState<PieceModel>;
-	bench: BoardState<PieceModel>;
+	board: SubscribableBoard;
+	bench: SubscribableBoard;
+	pieceRegistry: PieceRegistry;
 };
 
 const GameBoardContext = createContext<GameBoardContext>(

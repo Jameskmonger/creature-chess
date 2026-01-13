@@ -1,12 +1,13 @@
 import { getContext } from "typed-redux-saga";
 
-import { BoardSlice } from "@shoki/board";
-
-import { PieceModel } from "@creature-chess/models";
+import { SubscribableBoard } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 type Slices = {
-	board: BoardSlice<PieceModel>;
-	bench: BoardSlice<PieceModel>;
+	board: SubscribableBoard;
+	bench: SubscribableBoard;
+	matchBoard: SubscribableBoard;
+	pieceRegistry: PieceRegistry;
 };
 
 export type SagaContext = {

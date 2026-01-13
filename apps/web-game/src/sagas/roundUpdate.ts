@@ -1,5 +1,4 @@
 import { takeLatest, put } from "@redux-saga/core/effects";
-import { getPlayerSlices } from "~/store/sagaContext";
 
 import {
 	GameEvents,
@@ -8,12 +7,10 @@ import {
 } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
-export const roundUpdateSaga = function* () {
-	const { board } = yield* getPlayerSlices();
-
+export const roundUpdateSaga = function*() {
 	yield takeLatest<GameEvents.GamePhaseStartedEvent>(
 		GameEvents.gamePhaseStartedEvent.toString(),
-		function* ({ payload: packet }) {
+		function*({ payload: packet }) {
 			const update = {
 				phase: packet.phase,
 				startedAt: packet.startedAt,
@@ -31,11 +28,6 @@ export const roundUpdateSaga = function* () {
 							id: null,
 						})
 					);
-					yield put(board.commands.unlockBoardCommand());
-					return;
-				}
-				case GamePhase.READY: {
-					yield put(board.commands.lockBoardCommand());
 					return;
 				}
 				default:

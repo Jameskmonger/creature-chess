@@ -9,8 +9,9 @@ import { healthSaga } from "./health";
 import { playerPhases } from "./phases";
 import { setStatusOnQuit } from "./setStatusOnQuit";
 import { playerXpSaga } from "./xp";
+import { boardApplySaga } from "./boardApply";
 
-export const playerRootSaga = function* () {
+export const playerRootSaga = function*() {
 	yield all([
 		call(playerPhases),
 		call(playerActionsSaga),
@@ -21,5 +22,6 @@ export const playerRootSaga = function* () {
 		call(setStatusOnQuit),
 		call(playerBattle),
 		call(featuresRootSaga),
+		call(boardApplySaga),
 	]);
 };

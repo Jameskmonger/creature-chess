@@ -1,16 +1,17 @@
-import { takeLatest, take, delay, put } from "@redux-saga/core/effects";
-import { select } from "typed-redux-saga";
+import { take, delay, put } from "@redux-saga/core/effects";
+import { select, takeLatest } from "typed-redux-saga";
 
-import { BoardSelectors } from "@shoki/board";
-
-import { PieceModel } from "@creature-chess/models";
+import { GamePhase, PieceModel } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
 import { getDefinitionById } from "../../../definitions";
-import * as pieceSelectors from "../../../player/pieceSelectors";
 import { getPlayerEntityDependencies } from "../dependencies";
-import { PlayerState } from "../state";
 import { isPlayerBoardLocked } from "../state/selectors";
+import { addBenchPieceCommand, addBoardPieceCommand, removeBenchPiecesCommand, removeBoardPiecesCommand } from "../state/board";
+import { GamePhaseStartedEvent, gamePhaseStartedEvent } from "../../../game/events";
+import { AnyAction } from "redux-saga";
+import { Board, packPosition } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 const pieceCanEvolve = (piece: PieceModel) => {
 	const definition = getDefinitionById(piece.definitionId);
@@ -22,22 +23,36 @@ const pieceCanEvolve = (piece: PieceModel) => {
 	return piece.stage < definition.stages.length - 1;
 };
 
-export const evolutionSaga = function* () {
+function getPiecesForDefinition(board: Board, pieceRegistry: PieceRegistry, definitionId: number) {
+	return board.getAllPieces()
+		.map(({ id }) => pieceRegistry.getPieceById(id))
+		.filter((p): p is NonNullable<typeof p> => p !== null)
+		.filter((p) => p.definitionId === definitionId);
+}
+
+const getCombinablePieces = (pieces: PieceModel[], targetStage: number) =>
+	pieces.filter((p) => p.stage === targetStage);
+
+export const evolutionSaga = function*() {
 	const {
-		boardSlices: { boardSlice, benchSlice },
+		boards: { board, bench },
+		gamemode: { pieceRegistry }
 	} = yield* getPlayerEntityDependencies();
 
-	yield takeLatest<
-		| ReturnType<typeof boardSlice.commands.addBoardPieceCommand>
-		| ReturnType<typeof benchSlice.commands.addBoardPieceCommand>
-	>(
+	yield takeLatest(
 		// need to check when bench/board pieces are added (could have come from shop)
 		// or when board piece is updated (could be due to a previous evolution)
 		[
-			boardSlice.commands.addBoardPieceCommand,
-			benchSlice.commands.addBoardPieceCommand,
+			addBoardPieceCommand,
+			addBenchPieceCommand,
 		],
-		function* ({ payload: { piece } }) {
+		function*({ payload: { pieceId } }) {
+			const piece = pieceRegistry.getPieceById(pieceId);
+
+			if (!piece) {
+				return;
+			}
+
 			if (!pieceCanEvolve(piece)) {
 				return;
 			}
@@ -48,25 +63,26 @@ export const evolutionSaga = function* () {
 			if (boardLocked) {
 				// todo check if we have 3 evolvable pieces on the bench and evolve those? maybe
 
-				yield take(boardSlice.commands.unlockBoardCommand);
+				// wait for preparing phase to begin
+				yield take((action: AnyAction) =>
+					action.type === gamePhaseStartedEvent.type
+					&& (action as GamePhaseStartedEvent).payload.phase === GamePhase.PREPARING
+				);
+
 				yield delay(500);
 			}
 
 			const targetDefinitionId = piece.definitionId;
 			const targetStage = piece.stage;
 
-			const getCombinablePieces = (pieces: PieceModel[]) =>
-				pieces.filter((p) => p.stage === targetStage);
-
-			const matchingBoardPieces = yield* select((state: PlayerState) =>
-				getCombinablePieces(
-					pieceSelectors.getPiecesForDefinition(state.board, targetDefinitionId)
-				)
+			const matchingBoardPieces = getCombinablePieces(
+				getPiecesForDefinition(board, pieceRegistry, targetDefinitionId),
+				targetStage
 			);
-			const matchingBenchPieces = yield* select((state: PlayerState) =>
-				getCombinablePieces(
-					pieceSelectors.getPiecesForDefinition(state.bench, targetDefinitionId)
-				)
+
+			const matchingBenchPieces = getCombinablePieces(
+				getPiecesForDefinition(bench, pieceRegistry, targetDefinitionId),
+				targetStage
 			);
 
 			const totalInstances =
@@ -80,37 +96,46 @@ export const evolutionSaga = function* () {
 				// replace a board piece if it exists
 				const pieceToReplace = matchingBoardPieces.pop()!;
 
-				const piecePosition = yield* select((s: PlayerState) =>
-					BoardSelectors.getPiecePosition(s.board, pieceToReplace.id)
-				);
+				const piecePosition = board.getPiecePosition(pieceToReplace.id);
 
 				if (!piecePosition) {
 					return;
 				}
 
-				const { x, y } = piecePosition;
+				const [x, y] = piecePosition;
 
 				// remove any remaining board pieces
 				const boardPieceIds = [...matchingBoardPieces, pieceToReplace].map(
 					(p) => p.id
 				);
-				yield put(boardSlice.commands.removeBoardPiecesCommand(boardPieceIds));
+				yield put(removeBoardPiecesCommand({ pieceIds: boardPieceIds }));
 
 				const benchPieceIds = matchingBenchPieces.map((p) => p.id);
 				yield put(
-					benchSlice.commands.removeBoardPiecesCommand([
-						...benchPieceIds,
-						piece.id,
-					])
+					removeBenchPiecesCommand({
+						pieceIds: [
+							...benchPieceIds,
+							piece.id,
+						]
+					})
 				);
+
+				for (const p of [...boardPieceIds, ...benchPieceIds, piece.id]) {
+					pieceRegistry.deregisterPiece(p);
+				}
 
 				const newPiece = {
 					...pieceToReplace,
 					stage: targetStage + 1,
 				};
 
+				pieceRegistry.registerPiece(newPiece);
+
 				yield put(
-					boardSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece })
+					addBoardPieceCommand({
+						pieceId: newPiece.id,
+						position: packPosition(x, y),
+					})
 				);
 			} else {
 				// otherwise replace the just-added bench piece
@@ -121,24 +146,27 @@ export const evolutionSaga = function* () {
 					stage: targetStage + 1,
 				};
 
-				const piecePosition = yield* select((s: PlayerState) =>
-					BoardSelectors.getPiecePosition(s.bench, piece.id)
-				);
+				const piecePosition = bench.getPiecePosition(piece.id);
 
 				if (!piecePosition) {
 					return;
 				}
 
-				const { x, y } = piecePosition;
+				const [x] = piecePosition;
 
 				yield put(
-					benchSlice.commands.removeBoardPiecesCommand([
-						...benchPieceIds,
-						piece.id,
-					])
+					removeBenchPiecesCommand({
+						pieceIds: [
+							...benchPieceIds,
+							piece.id,
+						]
+					})
 				);
 				yield put(
-					benchSlice.commands.addBoardPieceCommand({ x, y, piece: newPiece })
+					addBenchPieceCommand({
+						pieceId: newPiece.id,
+						position: { x },
+					})
 				);
 			}
 		}

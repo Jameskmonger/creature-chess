@@ -9,8 +9,9 @@ import {
 	UpdateVariablesFn,
 } from "./variablesStore";
 
-export type Entity<TState, TVariables> = {
+export type Entity<TState, TDependencies, TVariables> = {
 	readonly id: string;
+	readonly dependencies: TDependencies;
 	select: <T>(selector: (state: TState) => T) => T;
 	runSaga: <S extends Saga>(saga: S, ...args: Parameters<S>) => Task;
 	getVariable: GetVariableFn<TVariables>;
@@ -38,7 +39,7 @@ export const entity = <
 	id: string,
 	dependencies: TDependencies = {} as TDependencies,
 	initialVariables: TVariables = {} as TVariables
-): Entity<TState, TVariables> => {
+): Entity<TState, TDependencies, TVariables> => {
 	const variableStore = createVariableStore<TVariables>(initialVariables);
 
 	const sagaMiddleware = createSagaMiddleware<
@@ -67,6 +68,7 @@ export const entity = <
 
 	return {
 		id,
+		dependencies,
 		select: <T>(selector: (state: TState) => T) => selector(store.getState()),
 		getVariable: variableStore.getVariable,
 		runSaga: sagaMiddleware.run,
@@ -80,14 +82,14 @@ export const entityFactory =
 			| EntityStaticProperties<TState>
 			| ((dependencies: TDependencies) => EntityStaticProperties<TState>)
 	) =>
-	(
-		id: string,
-		dependencies: TDependencies = {} as TDependencies,
-		initialVariables: TVariables = {} as TVariables
-	) => {
-		if (typeof statics === "function") {
-			return entity(statics(dependencies), id, dependencies, initialVariables);
-		}
+		(
+			id: string,
+			dependencies: TDependencies = {} as TDependencies,
+			initialVariables: TVariables = {} as TVariables
+		) => {
+			if (typeof statics === "function") {
+				return entity(statics(dependencies), id, dependencies, initialVariables);
+			}
 
-		return entity(statics, id, dependencies, initialVariables);
-	};
+			return entity(statics, id, dependencies, initialVariables);
+		};

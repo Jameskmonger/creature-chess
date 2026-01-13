@@ -2,28 +2,29 @@ import { createAction } from "@reduxjs/toolkit";
 import { takeEvery, put } from "redux-saga/effects";
 import { select, getContext } from "typed-redux-saga";
 
-import { BoardSelectors } from "@shoki/board";
+import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 
-import { PlayerPieceLocation } from "@creature-chess/models";
-
-import { PlayerState } from "../entities/player";
-import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
+import { getPlayerEntityDependencies } from "../entities/player/dependencies";
+import { PlayerState } from "../entities/player/state";
+import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand } from "../entities/player/state/board";
+import { Board, unpackPosition, unpackX } from "@creature-chess/board";
 import { getPlayerBelowPieceLimit } from "../entities/player/state/selectors";
 
 export const findPiece = (
-	state: PlayerState,
+	board: Board,
+	bench: Board,
 	location: PlayerPieceLocation
 ) => {
 	if (location.type === "board") {
-		const { x, y } = location.location;
+		const [x, y] = unpackPosition(location.location);
 
-		return BoardSelectors.getPieceForPosition(state.board, x, y);
+		return board.getPieceIdAtPosition(x, y);
 	}
 
 	if (location.type === "bench") {
-		const { x } = location.location;
+		const x = unpackX(location.location);
 
-		return BoardSelectors.getPieceForPosition(state.bench, x, 0);
+		return bench.getPieceIdAtPosition(x, 0);
 	}
 
 	return null;
@@ -34,11 +35,11 @@ export const isLocationLocked = (
 	location: PlayerPieceLocation
 ) => {
 	if (location.type === "board") {
-		return state.board.locked;
+		return state.roundInfo.phase !== GamePhase.PREPARING;
 	}
 
 	if (location.type === "bench") {
-		return state.bench.locked;
+		return false;
 	}
 
 	return true;
@@ -51,37 +52,43 @@ export const dropPiecePlayerAction = createAction<{
 	from: PlayerPieceLocation;
 }>("dropPiecePlayerAction");
 
-export const dropPiecePlayerActionSaga = function* () {
-	const boardSlice = yield* getBoardSlice();
-	const benchSlice = yield* getBenchSlice();
+export const dropPiecePlayerActionSaga = function*() {
+	const name = yield* getContext<string>("playerName");
+	const { logger, boards: { board, bench } } = yield* getPlayerEntityDependencies();
 
 	yield takeEvery<DropPiecePlayerAction>(
 		dropPiecePlayerAction.toString(),
-		function* ({ payload: { from, pieceId, to } }) {
+		function*({ payload: { from, pieceId, to } }) {
 			const playerId = yield* getContext<string>("id");
 			const state = yield* select((s: PlayerState) => s);
 
-			if (isLocationLocked(state, from) || isLocationLocked(state, to)) {
-				// source or destination is locked
+			if (isLocationLocked(state, from)) {
 				return;
 			}
 
-			const fromPiece = findPiece(state, from);
-
-			if (fromPiece === null || fromPiece.id !== pieceId) {
-				// from piece not found or id wrong (position mismatch?)
+			if (isLocationLocked(state, to)) {
 				return;
 			}
 
-			const toPiece = findPiece(state, to);
+			const fromPieceId = findPiece(board, bench, from);
 
-			if (toPiece !== null) {
+			if (fromPieceId === null) {
+				return;
+			}
+
+			if (fromPieceId !== pieceId) {
+				return;
+			}
+
+			const toPieceId = findPiece(board, bench, to);
+
+			if (toPieceId !== null) {
 				// destination tile not empty
 				return;
 			}
 
 			if (to.type === "board" && from.type !== "board") {
-				const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+				const belowPieceLimit = getPlayerBelowPieceLimit(state.playerInfo.level, board);
 
 				if (!belowPieceLimit) {
 					return;
@@ -90,46 +97,37 @@ export const dropPiecePlayerActionSaga = function* () {
 
 			if (from.type === "board" && to.type === "board") {
 				yield put(
-					boardSlice.commands.moveBoardPieceCommand({
+					moveBoardPieceCommand({
 						pieceId,
 						from: from.location,
 						to: to.location,
 					})
 				);
 			} else if (from.type === "bench" && to.type === "bench") {
-				const fromBench = { x: from.location.x, y: 0 };
-				const toBench = { x: to.location.x, y: 0 };
+				const fromBench = { x: unpackX(from.location), y: 0 };
+				const toBench = { x: unpackX(to.location), y: 0 };
 
 				yield put(
-					benchSlice.commands.moveBoardPieceCommand({
+					moveBenchPieceCommand({
 						pieceId,
 						from: fromBench,
 						to: toBench,
 					})
 				);
 			} else if (from.type === "board" && to.type === "bench") {
-				yield put(boardSlice.commands.removeBoardPiecesCommand([pieceId]));
+				yield put(removeBoardPieceCommand({ pieceId }));
 				yield put(
-					benchSlice.commands.addBoardPieceCommand({
-						piece: {
-							...fromPiece,
-							facingAway: false,
-						},
-						x: to.location.x,
-						y: 0,
+					addBenchPieceCommand({
+						pieceId,
+						position: { x: unpackX(to.location) },
 					})
 				);
 			} else if (from.type === "bench" && to.type === "board") {
-				yield put(benchSlice.commands.removeBoardPiecesCommand([pieceId]));
-				const { x, y } = to.location;
+				yield put(removeBenchPieceCommand({ pieceId }));
 				yield put(
-					boardSlice.commands.addBoardPieceCommand({
-						piece: {
-							...fromPiece,
-							facingAway: true,
-						},
-						x,
-						y,
+					addBoardPieceCommand({
+						pieceId,
+						position: to.location,
 					})
 				);
 			}

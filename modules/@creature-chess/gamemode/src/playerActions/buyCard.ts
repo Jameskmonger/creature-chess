@@ -4,21 +4,15 @@ import { select, getContext } from "typed-redux-saga";
 import { v4 as uuid } from "uuid";
 
 import {
-	BoardSelectors,
-	topLeftToBottomRightSortPositions,
-} from "@shoki/board";
-
-import {
 	Card,
 	GamePhase,
 	PieceModel,
 	PlayerPieceLocation,
-	TileCoordinates,
 } from "@creature-chess/models";
 
 import { getDefinitionById } from "../definitions";
 import { getPlayerEntityDependencies } from "../entities/player/dependencies";
-import { getBenchSlice, getBoardSlice } from "../entities/player/selectors";
+import { getBench, getBoard } from "../entities/player/selectors";
 import { PlayerState } from "../entities/player/state";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
@@ -27,18 +21,22 @@ import {
 	getPlayerCards,
 	getPlayerMoney,
 } from "../entities/player/state/selectors";
+import { addBenchPieceCommand, addBoardPieceCommand } from "../entities/player/state/board";
+import { Board, getFirstEmptySlot, PackedPosition, topLeftToBottomRightSortPositions, unpackX } from "@creature-chess/board";
 
 const getCardDestination = (
 	state: PlayerState,
+	board: Board,
+	bench: Board,
 	playerId: string,
-	sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1
+	sortPositions?: (a: PackedPosition, b: PackedPosition) => -1 | 1
 ): PlayerPieceLocation | null => {
-	const belowPieceLimit = getPlayerBelowPieceLimit(state, playerId);
+	const belowPieceLimit = getPlayerBelowPieceLimit(state.playerInfo.level, board);
 	const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
 	if (belowPieceLimit && inPreparingPhase) {
-		const boardSlot = BoardSelectors.getFirstEmptySlot(
-			state.board,
+		const boardSlot = getFirstEmptySlot(
+			board,
 			sortPositions
 		);
 
@@ -50,8 +48,8 @@ const getCardDestination = (
 		}
 	}
 
-	const benchSlot = BoardSelectors.getFirstEmptySlot(
-		state.bench,
+	const benchSlot = getFirstEmptySlot(
+		bench,
 		topLeftToBottomRightSortPositions
 	);
 
@@ -97,18 +95,18 @@ export type BuyCardPlayerAction = ReturnType<typeof buyCardPlayerAction>;
 export const buyCardPlayerAction = createAction<
 	{
 		index: number;
-		sortPositions?: (a: TileCoordinates, b: TileCoordinates) => -1 | 1;
+		sortPositions?: (a: PackedPosition, b: PackedPosition) => -1 | 1;
 	},
 	"buyCardPlayerAction"
 >("buyCardPlayerAction");
 
-export const buyCardPlayerActionSaga = function* () {
+export const buyCardPlayerActionSaga = function*() {
 	while (true) {
 		const playerId = yield* getContext<string>("id");
 		const name = yield* getContext<string>("playerName");
-		const { logger } = yield* getPlayerEntityDependencies();
-		const boardSlice = yield* getBoardSlice();
-		const benchSlice = yield* getBenchSlice();
+		const { logger, gamemode: { pieceRegistry } } = yield* getPlayerEntityDependencies();
+		const board = yield* getBoard();
+		const bench = yield* getBench();
 
 		const action: BuyCardPlayerAction = yield take(
 			buyCardPlayerAction.toString()
@@ -145,7 +143,7 @@ export const buyCardPlayerActionSaga = function* () {
 		}
 
 		const destination = yield* select((state: PlayerState) =>
-			getCardDestination(state, playerId, sortPositions)
+			getCardDestination(state, board, bench, playerId, sortPositions)
 		);
 
 		// no valid slots
@@ -163,17 +161,22 @@ export const buyCardPlayerActionSaga = function* () {
 			return;
 		}
 
+		pieceRegistry.registerPiece(piece);
+
 		const remainingCards = cards.map((c) => (c === card ? null : c));
 
 		if (destination.type === "board") {
-			const { x, y } = destination.location;
-			yield put(boardSlice.commands.addBoardPieceCommand({ piece, x, y }));
+			yield put(
+				addBoardPieceCommand({
+					pieceId: piece.id,
+					position: destination.location,
+				})
+			);
 		} else if (destination.type === "bench") {
 			yield put(
-				benchSlice.commands.addBoardPieceCommand({
-					piece,
-					x: destination.location.x,
-					y: 0,
+				addBenchPieceCommand({
+					pieceId: piece.id,
+					position: { x: unpackX(destination.location) },
 				})
 			);
 		}

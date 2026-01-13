@@ -1,0 +1,23 @@
+{
+	"private": true,
+	"name": "@creature-chess/board",
+	"version": "0.0.1",
+	"description": "Board for Creature Chess",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	}
+}

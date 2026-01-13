@@ -5,9 +5,11 @@ import { select, take } from "typed-redux-saga";
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { PlayerState } from "../entities/player";
-import { getBoardSlice, getBenchSlice } from "../entities/player/selectors";
+import { getBoard, getBench } from "../entities/player/selectors";
 // todo move these into util functions
 import { findPiece, isLocationLocked } from "./dropPiece";
+import { addBenchPieceCommand, addBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "../entities/player/state/board";
+import { unpackX } from "@creature-chess/board";
 
 export type SwapPiecePlayerAction = ReturnType<typeof swapPiecePlayerAction>;
 export const swapPiecePlayerAction = createAction<{
@@ -17,9 +19,9 @@ export const swapPiecePlayerAction = createAction<{
 	pieceBLocation: PlayerPieceLocation;
 }>("swapPiecePlayerAction");
 
-export const swapPiecePlayerActionSaga = function* () {
-	const boardSlice = yield* getBoardSlice();
-	const benchSlice = yield* getBenchSlice();
+export const swapPiecePlayerActionSaga = function*() {
+	const board = yield* getBoard();
+	const bench = yield* getBench();
 
 	while (true) {
 		const {
@@ -36,89 +38,65 @@ export const swapPiecePlayerActionSaga = function* () {
 			continue;
 		}
 
-		const pieceA = findPiece(state, pieceALocation);
+		const foundPieceAId = findPiece(board, bench, pieceALocation);
 
-		if (!pieceA || pieceA.id !== pieceAId) {
+		if (!foundPieceAId || foundPieceAId !== pieceAId) {
 			// piece A not found or id wrong (position mismatch?)
 			// todo log
 			continue;
 		}
 
-		const pieceB = findPiece(state, pieceBLocation);
+		const foundPieceBId = findPiece(board, bench, pieceBLocation);
 
-		if (!pieceB || pieceB.id !== pieceBId) {
+		if (!foundPieceBId || foundPieceBId !== pieceBId) {
 			// piece B not found or id wrong (position mismatch?)
 			// todo log
 			continue;
 		}
 
 		if (pieceALocation.type === "board" && pieceBLocation.type === "board") {
-			yield put(
-				boardSlice.commands.swapPiecesCommand({ aId: pieceAId, bId: pieceBId })
-			);
+			yield put(swapBoardPiecesCommand({ pieceIdA: pieceAId, pieceIdB: pieceBId }));
 		} else if (
 			pieceALocation.type === "bench" &&
 			pieceBLocation.type === "bench"
 		) {
-			yield put(
-				benchSlice.commands.swapPiecesCommand({ aId: pieceAId, bId: pieceBId })
-			);
+			yield put(swapBenchPiecesCommand({ pieceIdA: pieceAId, pieceIdB: pieceBId }));
 		} else if (
 			pieceALocation.type === "board" &&
 			pieceBLocation.type === "bench"
 		) {
-			yield put(boardSlice.commands.removeBoardPiecesCommand([pieceAId]));
-			yield put(benchSlice.commands.removeBoardPiecesCommand([pieceBId]));
+			yield put(removeBoardPieceCommand({ pieceId: pieceAId }));
+			yield put(removeBenchPieceCommand({ pieceId: pieceBId }));
 
-			yield put(
-				boardSlice.commands.addBoardPieceCommand({
-					piece: {
-						...pieceB,
-						facingAway: false,
-					},
-					x: pieceALocation.location.x,
-					y: pieceALocation.location.y,
-				})
-			);
+			yield put(addBoardPieceCommand({
+				pieceId: pieceBId,
+				position: pieceALocation.location,
+			}));
 
-			yield put(
-				benchSlice.commands.addBoardPieceCommand({
-					piece: {
-						...pieceA,
-						facingAway: false,
-					},
-					x: pieceBLocation.location.x,
-					y: 0,
-				})
-			);
+			yield put(addBenchPieceCommand({
+				pieceId: pieceAId,
+				position: {
+					x: unpackX(pieceBLocation.location),
+				}
+			}));
 		} else if (
 			pieceALocation.type === "bench" &&
 			pieceBLocation.type === "board"
 		) {
-			yield put(boardSlice.commands.removeBoardPiecesCommand([pieceBId]));
-			yield put(benchSlice.commands.removeBoardPiecesCommand([pieceAId]));
+			yield put(removeBoardPieceCommand({ pieceId: pieceBId }));
+			yield put(removeBenchPieceCommand({ pieceId: pieceAId }));
 
-			yield put(
-				boardSlice.commands.addBoardPieceCommand({
-					piece: {
-						...pieceA,
-						facingAway: false,
-					},
-					x: pieceBLocation.location.x,
-					y: pieceBLocation.location.y,
-				})
-			);
+			yield put(addBoardPieceCommand({
+				pieceId: pieceAId,
+				position: pieceBLocation.location,
+			}));
 
-			yield put(
-				benchSlice.commands.addBoardPieceCommand({
-					piece: {
-						...pieceB,
-						facingAway: false,
-					},
-					x: pieceALocation.location.x,
-					y: 0,
-				})
-			);
+			yield put(addBenchPieceCommand({
+				pieceId: pieceBId,
+				position: {
+					x: unpackX(pieceALocation.location),
+				}
+			}));
 		}
 	}
 };

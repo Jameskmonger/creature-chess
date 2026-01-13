@@ -1,21 +1,17 @@
 import { getContext } from "typed-redux-saga";
 import { Logger } from "winston";
 
-import { BoardSlice } from "@shoki/board";
-
-import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { Gamemode } from "../../game";
-
-type PlayerBoardSlices = {
-	boardSlice: BoardSlice<PieceModel>;
-	benchSlice: BoardSlice<PieceModel>;
-};
+import { Board } from "@creature-chess/board";
 
 export type PlayerEntityDependencies = {
 	logger: Logger;
-	boardSlices: PlayerBoardSlices;
+	boards: {
+		board: Board;
+		bench: Board;
+	};
 	gamemode: Gamemode;
 	settings: GamemodeSettings;
 };

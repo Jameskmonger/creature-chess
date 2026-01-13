@@ -12,16 +12,14 @@ export const playerEntity = entityFactory<
 	PlayerState,
 	PlayerEntityDependencies,
 	PlayerVariables
->(({ boardSlices }) => ({
+>({
 	reducers: {
 		...playerReducers,
-		board: boardSlices.boardSlice.boardReducer,
-		bench: boardSlices.benchSlice.boardReducer,
 		roundInfo: roundInfoReducer,
 	},
 	*rootSaga() {
 		yield call(playerRootSaga);
 	},
-}));
+});
 
-export type PlayerEntity = Entity<PlayerState, PlayerVariables>;
+export type PlayerEntity = Entity<PlayerState, PlayerEntityDependencies, PlayerVariables>;

@@ -1,4 +1,3 @@
-import { BoardState } from "@shoki/board";
 import { protocol, ActionStream } from "@shoki/networking";
 
 import {
@@ -8,6 +7,7 @@ import {
 } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 import { GamemodeSettings } from "@creature-chess/models/settings";
+import { PositionKey } from "@creature-chess/board";
 
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];
@@ -19,7 +19,10 @@ export type AuthenticateResponse = {
 	error?: { type: "not_registered" } | { type: "authentication" };
 };
 
-type BoardUpdatePacket = BoardState<PieceModel>;
+export type BoardUpdatePacket = {
+	positions: Record<PositionKey, PieceModel["id"]>;
+	pieces: PieceModel[];
+};
 type MatchBoardUpdatePacket = {
 	turn: number | null;
 	board: BoardUpdatePacket;

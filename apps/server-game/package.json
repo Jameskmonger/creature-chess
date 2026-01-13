@@ -29,7 +29,6 @@
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/networking": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
-		"@shoki/board": "workspace:*",
 		"@shoki/engine": "workspace:*",
 		"@shoki/networking": "workspace:*",
 		"@types/auth0": "^2.34.9",

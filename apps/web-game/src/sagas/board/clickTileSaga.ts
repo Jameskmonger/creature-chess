@@ -4,17 +4,21 @@ import { AppState } from "~/store";
 import { clearSelectedPiece } from "~/store/game/ui";
 import { getLocationForPiece } from "~/utils/getLocationForPiece";
 
-import { BoardState } from "@shoki/board";
 
-import { getPiece, PlayerActions } from "@creature-chess/gamemode";
-import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+import { PlayerActions } from "@creature-chess/gamemode";
+import { PlayerPieceLocation } from "@creature-chess/models";
+import { getContext } from "typed-redux-saga";
+import { GameBoardState } from "~/components/game/board/state";
+import { unpackPosition } from "@creature-chess/board";
 
 export type PlayerClickTileAction = ReturnType<typeof playerClickTileAction>;
 export const playerClickTileAction = createAction<{
 	tile: PlayerPieceLocation;
 }>("playerClickTileAction");
 
-export const clickTileSaga = function* () {
+export const clickTileSaga = function*() {
+	const slices = yield* getContext<GameBoardState>("slices");
+
 	while (true) {
 		const action: PlayerClickTileAction = yield take(
 			playerClickTileAction.toString()
@@ -22,30 +26,24 @@ export const clickTileSaga = function* () {
 
 		const { tile } = action.payload;
 
-		const selectedPiece: PieceModel = yield select((state: AppState) =>
+		const selectedPieceId: string | null = yield select((state: AppState) =>
 			state.game.ui.selectedPieceId
-				? getPiece(state.game, state.game.ui.selectedPieceId)
-				: null
 		);
 
-		if (!selectedPiece) {
+		console.log(`currently selected piece id:`, selectedPieceId);
+
+		if (!selectedPieceId) {
 			continue;
 		}
 
 		let tileEmpty = false;
-		const board: BoardState = yield select(
-			(state: AppState) => state.game.board
-		);
-		const bench: BoardState = yield select(
-			(state: AppState) => state.game.bench
-		);
 
-		const piecePositionKey = `${tile.location.x},${tile.location.y}`;
+		const [x, y] = unpackPosition(tile.location);
 
 		if (tile.type === "bench") {
-			tileEmpty = !bench.piecePositions[piecePositionKey];
+			tileEmpty = slices.bench.getPieceIdAtPosition(x, y) === null;
 		} else if (tile.type === "board") {
-			tileEmpty = !board.piecePositions[piecePositionKey];
+			tileEmpty = slices.board.getPieceIdAtPosition(x, y) === null;
 		}
 
 		if (!tileEmpty) {
@@ -54,7 +52,9 @@ export const clickTileSaga = function* () {
 			continue;
 		}
 
-		const from = getLocationForPiece(selectedPiece.id, board, bench);
+		const from = getLocationForPiece(selectedPieceId, slices.board, slices.bench);
+
+		console.log(`from position for piece ${selectedPieceId}:`, from);
 
 		if (!from) {
 			// couldnt find position
@@ -64,7 +64,7 @@ export const clickTileSaga = function* () {
 
 		yield put(
 			PlayerActions.dropPiecePlayerAction({
-				pieceId: selectedPiece.id,
+				pieceId: selectedPieceId,
 				from,
 				to: tile,
 			})

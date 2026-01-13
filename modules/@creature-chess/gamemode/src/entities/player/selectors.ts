@@ -2,25 +2,25 @@ import { getDependency } from "@shoki/engine";
 
 import { PlayerEntityDependencies } from "./dependencies";
 
-const getBoardSlices = () =>
-	getDependency<PlayerEntityDependencies, "boardSlices">("boardSlices");
+const getBoards = () =>
+	getDependency<PlayerEntityDependencies, "boards">("boards");
 
-export const getBoardSlice = function* (): Generator<
+export const getBoard = function*(): Generator<
 	any,
-	PlayerEntityDependencies["boardSlices"]["boardSlice"],
+	PlayerEntityDependencies["boards"]["board"],
 	any
 > {
-	const { boardSlice } = yield* getBoardSlices();
+	const { board } = yield* getBoards();
 
-	return boardSlice;
+	return board;
 };
 
-export const getBenchSlice = function* (): Generator<
+export const getBench = function*(): Generator<
 	any,
-	PlayerEntityDependencies["boardSlices"]["benchSlice"],
+	PlayerEntityDependencies["boards"]["bench"],
 	any
 > {
-	const { benchSlice } = yield* getBoardSlices();
+	const { bench } = yield* getBoards();
 
-	return benchSlice;
+	return bench;
 };

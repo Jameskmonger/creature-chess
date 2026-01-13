@@ -1,5 +1,3 @@
-import { BoardSlice, BoardState, PiecePosition } from "@shoki/board";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { Stores } from "../types";
@@ -8,6 +6,8 @@ import { doAttack } from "./state/attack";
 import { doDying } from "./state/dying";
 import { PieceState, StateHandler } from "./state/types";
 import { doWander } from "./state/wander";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 const DYING_DURATION = 10;
 
@@ -50,20 +50,25 @@ function getPieceState(
  */
 export function simulatePiece(
 	currentTurn: number,
-	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>,
-	piece: PieceModel,
-	piecePosition: PiecePosition,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	pieceId: PieceModel["id"],
 	{ combatStore }: Stores
 ) {
+	const piece = pieceRegistry.getPieceById(pieceId);
+
+	if (!piece) {
+		return;
+	}
+
 	const state = getPieceState(currentTurn, piece, { combatStore });
 
 	const [newState, actions] = stateFunctions[state.type](
 		currentTurn,
-		board,
 		state,
-		piece,
-		piecePosition,
+		board,
+		pieceRegistry,
+		pieceId,
 		{
 			combatStore,
 		}
@@ -76,18 +81,15 @@ export function simulatePiece(
 
 	// process any actions
 	if (actions) {
-		board = doActions(
+		doActions(
 			currentTurn,
 			board,
-			boardSlice,
-			piece,
-			piecePosition,
+			pieceRegistry,
+			piece.id,
 			actions,
 			{
 				combatStore,
 			}
 		);
 	}
-
-	return board;
 }

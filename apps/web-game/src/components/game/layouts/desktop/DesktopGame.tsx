@@ -4,15 +4,11 @@ import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
 import { AppState } from "~/store";
-import { StatsState } from "~/store/game/stats/state";
 
-import { BoardSelectors } from "@shoki/board";
-
-import { GamePhase, PieceModel } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 
 import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
-import { PieceBattleStats } from "../../PieceBattleStats";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
@@ -21,6 +17,7 @@ import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
+import { useGameBoards } from "../../board/state";
 
 const useStyles = createUseStyles({
 	helpContainer: {
@@ -73,13 +70,14 @@ const DesktopGame: React.FunctionComponent = () => {
 
 	const localPlayerId = useLocalPlayerId();
 
-	const ownedPieces = useSelector<AppState, PieceModel[]>((state) =>
-		[...BoardSelectors.getAllPieces(state.game.board)].filter(
-			(p) => p.ownerId === localPlayerId
-		)
-	);
+	const { board, pieceRegistry } = useGameBoards();
 
-	const stats = useSelector<AppState, StatsState>((state) => state.game.stats);
+	const ownedPieces = React.useMemo(() =>
+		board.getAllPieces()
+			.filter((p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId)
+			.map((p) => pieceRegistry.getPieceById(p.id)!),
+		[board, pieceRegistry, localPlayerId]
+	);
 
 	const inPreparingPhase = useSelector<AppState, boolean>(
 		(state) => state.game.roundInfo.phase === GamePhase.PREPARING
@@ -93,11 +91,7 @@ const DesktopGame: React.FunctionComponent = () => {
 			},
 			{
 				label: "Stats",
-				content: inPreparingPhase ? (
-					<PieceBattleStats pieces={ownedPieces} stats={stats} />
-				) : (
-					<span>Stats are only available in preparing phase</span>
-				),
+				content: <span>coming back soon</span>
 			},
 			{
 				label: "Help",
@@ -117,7 +111,7 @@ const DesktopGame: React.FunctionComponent = () => {
 				),
 			},
 		],
-		[inPreparingPhase, ownedPieces, stats, styles.helpContainer]
+		[inPreparingPhase, ownedPieces, styles.helpContainer]
 	);
 
 	return (

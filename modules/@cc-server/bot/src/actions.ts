@@ -1,5 +1,3 @@
-import { BoardSelectors } from "@shoki/board";
-
 import { PlayerState } from "@creature-chess/gamemode";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
@@ -14,20 +12,23 @@ import {
 	createRerollCardsAction,
 	createSellBoardPieceAction,
 } from "./preparingPhase/actions";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 export const getActions = (
+	board: Board,
+	bench: Board,
+	pieceRegistry: PieceRegistry,
 	state: PlayerState,
 	personality: BotPersonality,
 	settings: GamemodeSettings
 ): BrainAction[] => {
 	const actions: (BrainAction | null)[] = [
-		createBuyXpAction(state, personality, settings),
+		createBuyXpAction(bench, state, personality, settings),
 		createRerollCardsAction(state, personality, settings),
 	];
 
 	const {
-		board,
-		bench,
 		cardShop: { cards },
 	} = state;
 
@@ -35,18 +36,18 @@ export const getActions = (
 	for (let index = 0; index < cards.length; index++) {
 		const card = cards[index];
 		actions.push(
-			createBuyCardAction(state, personality, settings, index, card)
+			createBuyCardAction(board, bench, pieceRegistry, state, personality, settings, index, card)
 		);
 	}
 
 	// create an action to sell all pieces on the bench
-	for (const piece of BoardSelectors.getAllPieces(bench)) {
-		actions.push(createSellPieceAction(state, personality, piece));
+	for (const { id } of bench.getAllPieces()) {
+		actions.push(createSellPieceAction(board, bench, pieceRegistry, state, personality, id));
 	}
 
 	// create an action to sell all pieces on the board
-	for (const piece of BoardSelectors.getAllPieces(board)) {
-		actions.push(createSellBoardPieceAction(state, personality, piece));
+	for (const { id } of board.getAllPieces()) {
+		actions.push(createSellBoardPieceAction(board, bench, pieceRegistry, state, personality, id));
 	}
 
 	const filtered = actions.filter(

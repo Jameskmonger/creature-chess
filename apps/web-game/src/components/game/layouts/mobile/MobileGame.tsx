@@ -5,15 +5,11 @@ import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
 import { Footer } from "~/components/ui/Footer";
 import { AppState } from "~/store";
-import { StatsState } from "~/store/game/stats/state";
 import { Overlay } from "~/store/game/ui";
 
-import { BoardSelectors } from "@shoki/board";
-
-import { GamePhase, PieceModel } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 
 import { TabMenu } from "../../../ui/TabMenu";
-import { PieceBattleStats } from "../../PieceBattleStats";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { CardShop } from "../../cardShop/cardShop";
@@ -24,6 +20,7 @@ import { Settings } from "../../settings";
 import { MobileContentPane } from "./MobileContentPane";
 import { OverlayComponent } from "./OverlayComponent";
 import { GameNavBar } from "./nav/GameNavBar";
+import { useGameBoards } from "../../board/state";
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	currentOverlay,
@@ -36,12 +33,13 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 			state.game.roundInfo.phase === GamePhase.READY
 	);
 
-	const ownedPieces = useSelector<AppState, PieceModel[]>((state) =>
-		[...BoardSelectors.getAllPieces(state.game.board)].filter(
-			(p) => p.ownerId === localPlayerId
-		)
+	const { board, pieceRegistry } = useGameBoards();
+	const ownedPieces = React.useMemo(() =>
+		board.getAllPieces()
+			.filter((p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId)
+			.map((p) => pieceRegistry.getPieceById(p.id)!),
+		[board, pieceRegistry, localPlayerId]
 	);
-	const stats = useSelector<AppState, StatsState>((state) => state.game.stats);
 
 	if (currentOverlay === Overlay.PLAYERS) {
 		return (
@@ -87,14 +85,6 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 						},
 					]}
 				/>
-			</OverlayComponent>
-		);
-	}
-
-	if (currentOverlay === Overlay.STATS) {
-		return (
-			<OverlayComponent title="Stats">
-				<PieceBattleStats pieces={ownedPieces} stats={stats} />
 			</OverlayComponent>
 		);
 	}

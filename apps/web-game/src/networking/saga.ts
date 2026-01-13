@@ -6,9 +6,6 @@ import { gameSaga } from "~/sagas";
 import { MenuCommands } from "~/store/menu/state";
 import { getCookieValue } from "~/utils/getCookieValue";
 
-import { BoardSlice } from "@shoki/board";
-
-import { PieceModel } from "@creature-chess/models";
 import {
 	LobbyServerToClient,
 	GameServerToClient,
@@ -18,23 +15,19 @@ import { HandshakeRequest } from "@creature-chess/networking/handshake";
 import { gameNetworking } from "./game";
 import { lobbyNetworking } from "./lobby/networking";
 import { getSocket } from "./socket";
+import { SagaContext } from "~/store/sagaContext";
 
 type ConnectionResult =
 	| {
-			type: "lobby";
-			payload: LobbyServerToClient.LobbyConnectionPacket;
-	  }
+		type: "lobby";
+		payload: LobbyServerToClient.LobbyConnectionPacket;
+	}
 	| {
-			type: "game";
-			payload: GameServerToClient.GameConnectionPacket;
-	  };
+		type: "game";
+		payload: GameServerToClient.GameConnectionPacket;
+	};
 
-type BoardSlices = {
-	boardSlice: BoardSlice<PieceModel>;
-	benchSlice: BoardSlice<PieceModel>;
-};
-
-const listenForConnection = function* (socket: Socket, slices: BoardSlices) {
+const listenForConnection = function*(socket: Socket, slices: SagaContext["slices"]) {
 	const channel = eventChannel<ConnectionResult>((emit) => {
 		const onLobbyConnected = (
 			payload: LobbyServerToClient.LobbyConnectionPacket
@@ -68,7 +61,7 @@ const listenForConnection = function* (socket: Socket, slices: BoardSlices) {
 			}
 			yield all([
 				call(gameNetworking, socket, connection.payload),
-				call(gameSaga, connection.payload, slices),
+				call(gameSaga, connection.payload),
 			]);
 		}
 	}
@@ -93,7 +86,7 @@ async function getGuestSession() {
 // todo: add auth0 back ?
 export const openConnection = createAction("openConnection");
 
-export const networkingSaga = function* (slices: BoardSlices) {
+export const networkingSaga = function*(slices: SagaContext["slices"]) {
 	yield* take(openConnection.toString());
 
 	yield put(MenuCommands.setLoadingMessage("Connecting..."));

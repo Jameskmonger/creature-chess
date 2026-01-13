@@ -5,15 +5,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { AppState } from "~/store";
 
-import { BoardSelectors } from "@shoki/board";
-
 import { PlayerActions } from "@creature-chess/gamemode";
 import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
-import { GamePhase, PieceModel } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
 import { COLOR_READY_BUTTON_TEXT } from "./colors";
 import { Button } from "~/components/ui";
+import { useGameBoards } from "../../state";
 
 const useStyles = createUseStyles({
 	balanceIcon: {
@@ -25,20 +24,23 @@ export function SellPieceButton() {
 	const dispatch = useDispatch();
 	const styles = useStyles();
 
-	const selectedPiece = useSelector<AppState, PieceModel | null>((state) => {
-		const inPreparingPhase = state.game.roundInfo.phase === GamePhase.PREPARING;
-		const id = state.game.ui.selectedPieceId;
+	const gamePhase = useSelector<AppState, GamePhase>(
+		(state) => state.game.roundInfo.phase
+	);
 
-		if (!inPreparingPhase || !id) {
+	const selectedPieceId = useSelector<AppState, string | null>(
+		(state) => state.game.ui.selectedPieceId
+	);
+
+	const { board, bench, pieceRegistry } = useGameBoards();
+
+	const selectedPiece = React.useMemo(() => {
+		if (gamePhase !== GamePhase.PREPARING || !selectedPieceId) {
 			return null;
 		}
 
-		return (
-			BoardSelectors.getPiece(state.game.board, id) ||
-			BoardSelectors.getPiece(state.game.bench, id) ||
-			null
-		);
-	});
+		return pieceRegistry.getPieceById(selectedPieceId);
+	}, [gamePhase, selectedPieceId, pieceRegistry]);
 
 	const onSell = React.useCallback(() => {
 		if (!selectedPiece) {

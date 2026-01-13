@@ -6,10 +6,10 @@ import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
 import { AppState } from "~/store";
 
-import { BoardSelectors } from "@shoki/board";
-
 import { getPlayerLevel } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
+import { useGameBoards } from "../state";
+import { useBoardSubscription } from "~/components/board/useBoard";
 
 const useStyles = createUseStyles({
 	pieceCount: {
@@ -43,14 +43,13 @@ const useStyles = createUseStyles({
 export function PieceCount() {
 	const styles = useStyles();
 
+	const { board, pieceRegistry } = useGameBoards();
+	const b = useBoardSubscription(board);
+
 	const playerId = useLocalPlayerId();
 
-	const pieceCount = useSelector<AppState, number>(
-		(state) =>
-			BoardSelectors.getAllPieces(state.game.board).filter(
-				(p) => p.ownerId === playerId
-			).length
-	);
+	const pieceCount = b.getAllPieces().filter((p) => pieceRegistry.getPieceById(p.id)?.ownerId === playerId).length;
+
 	const level = useSelector<AppState, number>((state) =>
 		getPlayerLevel(state.game)
 	);

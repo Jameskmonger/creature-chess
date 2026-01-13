@@ -17,7 +17,7 @@ export default {
 } as Meta;
 
 const Template: Story<ComponentProps<typeof PlayerGameProfile>> = (args) => {
-	const store = createMockStore(false);
+	const store = createMockStore();
 
 	return (
 		<Provider store={store}>

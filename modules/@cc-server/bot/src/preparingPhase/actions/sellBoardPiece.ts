@@ -1,11 +1,9 @@
-import { BoardSelectors } from "@shoki/board";
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
 import {
 	PlayerState,
 	PlayerStateSelectors,
 	PlayerActions,
-	getAllPieces,
 } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 
@@ -13,17 +11,34 @@ import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
 import { isStrategicPiece } from "./utils/creatureType";
+import { PieceRegistry } from "@creature-chess/utils/piece";
+import { Board } from "@creature-chess/board";
 
 export const createSellBoardPieceAction = (
+	board: Board,
+	bench: Board,
+	pieceRegistry: PieceRegistry,
 	state: PlayerState,
 	personality: BotPersonality,
-	piece: PieceModel
+	pieceId: PieceModel["id"]
 ): BrainAction | null => {
-	const pieceCount = PlayerStateSelectors.getAllPieceCount(state);
-	const allPieces = getAllPieces(state);
-	const benchPieces = BoardSelectors.getAllPieces(state.bench);
-	const hasMatchingPieceOnBench = benchPieces.some(
-		(p) => p.definitionId === piece.definitionId
+	const piece = pieceRegistry.getPieceById(pieceId);
+
+	if (!piece) {
+		return null;
+	}
+
+	const allBoardPieces = board.getAllPieces();
+	const allBenchPieces = bench.getAllPieces();
+
+	const pieceCount = allBoardPieces.length + allBenchPieces.length;
+
+	const hasMatchingPieceOnBench = allBenchPieces.some(
+		(p) => {
+			const other = pieceRegistry.getPieceById(p.id);
+
+			return other?.definitionId === piece.definitionId;
+		}
 	);
 
 	// to prevent mistakes, bots won't sell a piece if it will put them under their limit
@@ -31,15 +46,27 @@ export const createSellBoardPieceAction = (
 		return null;
 	}
 
-	const allTraits = allPieces.flatMap((p) => p.traits);
+	const allTraits = [
+		...allBoardPieces,
+		...allBenchPieces,
+	].flatMap((p) => {
+		const fullPiece = pieceRegistry.getPieceById(p.id);
+		return fullPiece ? fullPiece.traits : [];
+	});
 
 	// don't sell piece if it is a strategically sound piece
 	if (isStrategicPiece(piece.traits, allTraits)) {
-		const betterStrategicPieceOnBench = benchPieces.find((benchPiece) => {
+		const betterStrategicPieceOnBench = allBenchPieces.find((benchPiece) => {
+			const fullBenchPiece = pieceRegistry.getPieceById(benchPiece.id);
+
+			if (!fullBenchPiece) {
+				return false;
+			}
+
 			// TODO (James) this doesn't take piece evolution into account
 			const isBetter =
-				isStrategicPiece(benchPiece.traits, allTraits) &&
-				benchPiece.definition.cost > piece.definition.cost;
+				isStrategicPiece(fullBenchPiece.traits, allTraits) &&
+				fullBenchPiece.definition.cost > piece.definition.cost;
 			return isBetter;
 		});
 

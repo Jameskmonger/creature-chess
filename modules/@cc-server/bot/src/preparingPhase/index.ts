@@ -16,8 +16,12 @@ import { getActions } from "../actions";
 import { BOT_ACTION_TIME_MS } from "../constants";
 import { putBenchOnBoard } from "../putBenchOnBoard";
 
-export const preparingPhase = function* (personality: BotPersonality) {
-	const { settings } = yield* getPlayerEntityDependencies();
+export const preparingPhase = function*(personality: BotPersonality) {
+	const {
+		settings,
+		boards: { board, bench },
+		gamemode: { pieceRegistry },
+	} = yield* getPlayerEntityDependencies();
 	const name = yield* getVariable<PlayerVariables, string>((v) => v.name);
 
 	yield delay(BOT_ACTION_TIME_MS);
@@ -25,7 +29,7 @@ export const preparingPhase = function* (personality: BotPersonality) {
 	while (true) {
 		const state: PlayerState = yield select();
 
-		const actions = getActions(state, personality, settings);
+		const actions = getActions(board, bench, pieceRegistry, state, personality, settings);
 
 		if (actions.length === 0) {
 			break;

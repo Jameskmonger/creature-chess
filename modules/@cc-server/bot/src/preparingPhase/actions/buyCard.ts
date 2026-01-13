@@ -4,7 +4,6 @@ import {
 	PlayerState,
 	PlayerStateSelectors,
 	PlayerActions,
-	getAllPieces,
 } from "@creature-chess/gamemode";
 import { Card, PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models/settings";
@@ -14,6 +13,8 @@ import { BotPersonality } from "@cc-server/data";
 import { BrainAction } from "../../brain";
 import { PREFERRED_LOCATIONS } from "../../preferredLocations";
 import { isStrategicCard } from "./utils/creatureType";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 const getAverageCost = (pieces: PieceModel[]): number =>
 	pieces.reduce((acc, cur) => acc + cur.definition.cost, 0) / pieces.length;
@@ -35,22 +36,35 @@ const getBenchUsageForHealth = (health: number) => {
 };
 
 const shouldBuy = (
+	board: Board,
+	bench: Board,
+	pieceRegistry: PieceRegistry,
 	state: PlayerState,
 	card: Card,
 	settings: GamemodeSettings
 ) => {
-	const allPieces = getAllPieces(state);
+	const allBoardPieces = board.getAllPieces();
+	const allBenchPieces = bench.getAllPieces();
+
+	const pieceCount = allBoardPieces.length + allBenchPieces.length;
 
 	// don't buy a piece if we can't fit it anywhere
 	const maxPossiblePieces =
 		PlayerStateSelectors.getPlayerLevel(state) + settings.benchSize;
-	if (allPieces.length >= maxPossiblePieces) {
+	if (pieceCount >= maxPossiblePieces) {
 		return false;
 	}
 
 	// otherwise, if we already own the piece, always buy it
-	const alreadyOwnPiece = allPieces.some(
-		(p) => p.definitionId === card.definitionId
+	const alreadyOwnPiece = [
+		...allBoardPieces,
+		...allBenchPieces,
+	].some(
+		(p) => {
+			const other = pieceRegistry.getPieceById(p.id);
+
+			return other?.definitionId === card.definitionId;
+		}
 	);
 	if (alreadyOwnPiece) {
 		return true;
@@ -64,11 +78,19 @@ const shouldBuy = (
 	);
 
 	if (
-		allPieces.length >=
+		pieceCount >=
 		PlayerStateSelectors.getPlayerLevel(state) + healthBasedBenchSize
 	) {
 		return false;
 	}
+
+	const allPieces = [
+		...allBoardPieces,
+		...allBenchPieces,
+	].map((p) => pieceRegistry.getPieceById(p.id))
+		.filter((p): p is PieceModel => p !== null);
+
+	const allTraits = allPieces.flatMap((p) => p.traits);
 
 	const averageCost = getAverageCost(allPieces) || 0;
 	const improvesAverageCost = card.cost > averageCost;
@@ -78,12 +100,15 @@ const shouldBuy = (
 		improvesAverageCost ||
 		isStrategicCard(
 			card.traits,
-			allPieces.flatMap((p) => p.traits)
+			allTraits
 		)
 	);
 };
 
 export const createBuyCardAction = (
+	board: Board,
+	bench: Board,
+	pieceRegistry: PieceRegistry,
 	state: PlayerState,
 	personality: BotPersonality,
 	settings: GamemodeSettings,
@@ -92,7 +117,7 @@ export const createBuyCardAction = (
 ): BrainAction | null => {
 	const money = PlayerStateSelectors.getPlayerMoney(state);
 
-	if (card === null || money < card.cost || !shouldBuy(state, card, settings)) {
+	if (card === null || money < card.cost || !shouldBuy(board, bench, pieceRegistry, state, card, settings)) {
 		return null;
 	}
 
@@ -105,7 +130,7 @@ export const createBuyCardAction = (
 				index,
 				sortPositions:
 					PREFERRED_LOCATIONS[
-						card.traits[1] as "valiant" | "arcane" | "cunning"
+					card.traits[1] as "valiant" | "arcane" | "cunning"
 					],
 			}),
 		value: createUtilityValue([

@@ -1,37 +1,33 @@
-import { BoardSlice, BoardState, PiecePosition } from "@shoki/board";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { Stores } from "../types";
 import { actionFunctions, PieceAction } from "./actions";
+import { PieceRegistry } from "@creature-chess/utils/piece";
+import { Board } from "@creature-chess/board";
 
 /**
  * Execute a list of actions and return a new board state.
  */
 export function doActions(
 	currentTurn: number,
-	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>,
-	piece: PieceModel,
-	piecePosition: PiecePosition,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	id: PieceModel["id"],
 	actions: PieceAction[],
 	{ combatStore }: Stores
 ) {
 	for (const action of actions) {
 		const handler = actionFunctions[action.type];
 
-		board = handler(
+		handler(
 			currentTurn,
 			board,
-			boardSlice,
-			piece,
-			piecePosition,
+			pieceRegistry,
+			id,
 			action,
 			{
 				combatStore,
 			}
 		);
 	}
-
-	return board;
 }

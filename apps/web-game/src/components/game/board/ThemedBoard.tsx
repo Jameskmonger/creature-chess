@@ -2,24 +2,19 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { BoardState, HasId, PiecePosition } from "@shoki/board";
-
-import {
-	BoardGrid,
-	ClickBoardTileEvent,
-	DropBoardItemEvent,
-} from "@shoki-web/board-react";
-
+import { PackedPosition, SubscribableBoard } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { ClickBoardTileEvent, DropBoardItemEvent } from "~/components/board/events";
+import { BoardGrid } from "~/components/board";
 
 type Props = {
 	theme?: "default";
-	state: BoardState<PieceModel>;
-	renderItem: (piece: HasId) => {
+	state: SubscribableBoard;
+	renderItem: (piece: PieceModel["id"]) => {
 		item: React.ReactNode | React.ReactNode[];
 		draggable?: boolean;
 	};
-	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
+	renderTileBackground?: (position: PackedPosition) => React.ReactNode;
 	dragDrop?: boolean;
 	onDropItem?: (event: DropBoardItemEvent) => void;
 	onClickTile?: (event: ClickBoardTileEvent) => void;

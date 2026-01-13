@@ -1,21 +1,21 @@
-import { BoardSlice, BoardState, PiecePosition } from "@shoki/board";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { Stores } from "../../types";
 import { DeleteAction } from "./types";
+import { Board } from "@creature-chess/board";
+import { PieceRegistry } from "@creature-chess/utils/piece";
 
 export function doDelete(
 	currentTurn: number,
-	board: BoardState<PieceModel>,
-	boardSlice: BoardSlice<PieceModel>,
-	piece: PieceModel,
-	piecePosition: PiecePosition,
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	id: PieceModel["id"],
 	action: DeleteAction,
 	{ combatStore }: Stores
-): BoardState<PieceModel> {
-	return boardSlice.boardReducer(
-		board,
-		boardSlice.commands.removeBoardPiecesCommand([piece.id])
-	);
+) {
+	if (!board.containsPiece(id)) {
+		return;
+	}
+
+	board.removePiece(id);
 }

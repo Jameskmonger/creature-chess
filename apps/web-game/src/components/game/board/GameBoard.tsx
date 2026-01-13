@@ -2,30 +2,25 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { HasId, PiecePosition } from "@shoki/board";
-
-import {
-	BoardGrid,
-	ClickBoardTileEvent,
-	DropBoardItemEvent,
-} from "@shoki-web/board-react";
-
 import { PieceModel } from "@creature-chess/models";
 
 import { BoardSpaceFiller } from "./BoardSpaceFiller";
 import { useGameBoard } from "./GameBoardContext";
 import { ThemedBoard } from "./ThemedBoard";
+import { BoardGrid } from "~/components/board";
+import { ClickBoardTileEvent, DropBoardItemEvent } from "~/components/board/events";
+import { PackedPosition } from "@creature-chess/board";
 
 export type GameBoardLocation =
 	| {
-			locationType: "board";
-			x: number;
-			y: number;
-	  }
+		locationType: "board";
+		x: number;
+		y: number;
+	}
 	| {
-			locationType: "bench";
-			x: number;
-	  };
+		locationType: "bench";
+		x: number;
+	};
 
 type GameBoardClickEvent = { location: GameBoardLocation };
 type GameBoardDropPieceEvent = {
@@ -44,7 +39,7 @@ const createDropPieceEvent = (
 type GameBoardProps = {
 	renderBoardPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
 	renderBenchPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
-	renderTileBackground?: (position: PiecePosition) => React.ReactNode;
+	renderTileBackground?: (position: PackedPosition) => React.ReactNode;
 	onClick?: (event: GameBoardClickEvent) => void;
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
 	children?: React.ReactNode;
@@ -112,32 +107,36 @@ function useRenderers({
 	renderBoardPiece,
 	renderBenchPiece,
 }: Pick<GameBoardProps, "renderBoardPiece" | "renderBenchPiece">) {
-	const { board, bench } = useGameBoard();
+	const { board, bench, pieceRegistry } = useGameBoard();
+
+	// todo
+	const boardLocked = false;
+	const benchLocked = false;
 
 	const boardPieceRenderer = React.useMemo(
-		() => (item: HasId) => {
-			const piece = item as PieceModel;
-			const draggable = !board.locked;
+		() => (item: PieceModel["id"]) => {
+			const piece = pieceRegistry.getPieceById(item)!;
+			const draggable = !boardLocked;
 
 			return {
 				item: renderBoardPiece(piece),
 				draggable,
 			};
 		},
-		[board.locked, renderBoardPiece]
+		[boardLocked, renderBoardPiece]
 	);
 
 	const benchPieceRenderer = React.useMemo(
-		() => (item: HasId) => {
-			const piece = item as PieceModel;
-			const draggable = !bench.locked;
+		() => (item: PieceModel["id"]) => {
+			const piece = pieceRegistry.getPieceById(item)!;
+			const draggable = !benchLocked;
 
 			return {
 				item: renderBenchPiece(piece),
 				draggable,
 			};
 		},
-		[bench.locked, renderBenchPiece]
+		[benchLocked, renderBenchPiece]
 	);
 
 	return { boardPieceRenderer, benchPieceRenderer };
@@ -227,12 +226,12 @@ export function GameBoard({
 	});
 
 	const totalHeight =
-		bench.size.height +
-		(showFiller ? board.size.height * 2 : board.size.height);
+		bench.height +
+		(showFiller ? board.height * 2 : board.height);
 
 	const styles = useStyles({
-		boardHalfHeight: board.size.height,
-		width: board.size.width,
+		boardHalfHeight: board.height,
+		width: board.width,
 		totalHeight,
 	});
 

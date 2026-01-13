@@ -4,6 +4,7 @@ import { playerClickTileAction } from "~/sagas/board/clickTileSaga";
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { GameBoardLocation } from "../GameBoard";
+import { packPosition } from "@creature-chess/board";
 
 export const useOnClickTile = ({
 	canClickBoard = true,
@@ -17,10 +18,7 @@ export const useOnClickTile = ({
 
 		const tile: PlayerPieceLocation = {
 			type: location.locationType,
-			location: {
-				x: location.x,
-				y: (location as any).y || 0,
-			},
+			location: packPosition(location.x, (location as any).y || 0),
 		};
 
 		dispatch(playerClickTileAction({ tile }));

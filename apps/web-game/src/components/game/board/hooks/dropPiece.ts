@@ -2,16 +2,15 @@ import { useDispatch } from "react-redux";
 import { clearSelectedPiece } from "~/store/game/ui";
 import { getLocationForPiece } from "~/utils/getLocationForPiece";
 
-import { BoardState } from "@shoki/board";
-
 import { PlayerActions } from "@creature-chess/gamemode";
-import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
+import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { GameBoardLocation } from "../GameBoard";
+import { Board, packPosition } from "@creature-chess/board";
 
 export const useOnDropPiece = (
-	board: BoardState<PieceModel> | null,
-	bench: BoardState<PieceModel>
+	board: Board,
+	bench: Board,
 ) => {
 	const dispatch = useDispatch();
 
@@ -28,10 +27,7 @@ export const useOnDropPiece = (
 
 		const loc: PlayerPieceLocation = {
 			type: location.locationType,
-			location: {
-				x: location.x,
-				y: (location as any).y || 0,
-			},
+			location: packPosition(location.x, (location as any).y || 0),
 		};
 
 		// todo `from` is here as a safety check, is it needed?

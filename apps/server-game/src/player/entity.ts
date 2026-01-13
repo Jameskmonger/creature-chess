@@ -1,11 +1,9 @@
-import { createBoardSlice } from "@shoki/board";
-
 import { Gamemode, playerEntity } from "@creature-chess/gamemode";
-import { PieceModel } from "@creature-chess/models";
 import { PlayerProfile } from "@creature-chess/models/player";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { logger } from "../log";
+import { Board } from "@creature-chess/board";
 
 export const createPlayerEntity = (
 	gamemode: Gamemode,
@@ -14,20 +12,14 @@ export const createPlayerEntity = (
 	profile: PlayerProfile,
 	settings: GamemodeSettings
 ) => {
-	const boardSlices = {
-		boardSlice: createBoardSlice<PieceModel>(`player-${playerId}-board`, {
-			width: settings.boardWidth,
-			height: settings.boardHalfHeight,
-		}),
-		benchSlice: createBoardSlice<PieceModel>(`player-${playerId}-bench`, {
-			width: settings.benchSize,
-			height: 1,
-		}),
+	const boards = {
+		board: new Board(settings.boardWidth, settings.boardHalfHeight),
+		bench: new Board(settings.benchSize, 1),
 	};
 
 	return playerEntity(
 		playerId,
-		{ logger, gamemode, boardSlices, settings },
+		{ logger, gamemode, boards, settings },
 		{ match: null, name, profile, finishPosition: -1, finishRound: -1 }
 	);
 };

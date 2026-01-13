@@ -1,5 +1,3 @@
-import { BoardSelectors } from "@shoki/board";
-
 import { PlayerState } from "@creature-chess/gamemode";
 import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
 import { MAX_LEVEL } from "@creature-chess/models/config";
@@ -11,10 +9,10 @@ const MINIMUM_MONEY_IF_NEXT_LEVEL_PRACTICAL = 5;
 
 export const shouldBuyXp = (
 	state: PlayerState,
+	benchPieceCount: number,
 	settings: GamemodeSettings
 ): boolean => {
-	const benchPieces = BoardSelectors.getAllPieces(state.bench);
-	const hasPieceOnBench = benchPieces.length >= 1;
+	const hasPieceOnBench = benchPieceCount >= 1;
 	const {
 		playerInfo: { money, level, xp },
 	} = state;

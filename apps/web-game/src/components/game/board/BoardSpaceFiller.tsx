@@ -3,16 +3,15 @@ import React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { BoardState } from "@shoki/board";
-
 import { SelectedPieceInfo } from "../SelectedPieceInfo";
 import { useSelectedPiece } from "../hooks/useSelectedPiece";
 import { useGameBoard } from "./GameBoardContext";
 import { PieceCount } from "./overlays/PieceCount";
 import { ReadyUpButton } from "./overlays/controls/ReadyUpButton";
 import { SellPieceButton } from "./overlays/controls/SellPieceButton";
+import { BoardSize } from "@creature-chess/board";
 
-const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
+const useStyles = createUseStyles<string, { size: BoardSize }>({
 	filler: ({ size }) => ({
 		"aspectRatio": `${size.width} / ${size.height}`,
 		"display": "flex",
@@ -60,7 +59,7 @@ const useStyles = createUseStyles<string, { size: BoardState["size"] }>({
 
 export function BoardSpaceFiller() {
 	const { board } = useGameBoard();
-	const styles = useStyles({ size: board.size });
+	const styles = useStyles({ size: { width: board.width, height: board.height } });
 
 	const selectedPiece = useSelectedPiece();
 

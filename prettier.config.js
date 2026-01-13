@@ -6,7 +6,6 @@ module.exports = {
 		"^react$",
 		"<THIRD_PARTY_MODULES>",
 		"^@shoki/.+$",
-		"^@shoki-web/.+$",
 		"^@creature-chess/.+$",
 		"^@cc-server/.+$",
 		"^@creature-chess-app/.+$",

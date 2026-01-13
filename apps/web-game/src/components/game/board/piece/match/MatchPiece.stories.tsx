@@ -129,22 +129,22 @@ const createHandleReceiveHitClick =
 		setPiece: (value: React.SetStateAction<PieceModel>) => void,
 		damage: number
 	) =>
-	() => {
-		setPiece({
-			...piece,
-			hit: {
-				direction: Directions.UP,
-				damage,
-			},
-		});
-
-		setTimeout(() => {
+		() => {
 			setPiece({
 				...piece,
-				hit: null,
+				hit: {
+					direction: Directions.UP,
+					damage,
+				},
 			});
-		}, 200);
-	};
+
+			setTimeout(() => {
+				setPiece({
+					...piece,
+					hit: null,
+				});
+			}, 200);
+		};
 
 const Template: Story<any> = (args) => {
 	const styles = useStyles();

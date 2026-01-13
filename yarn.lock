@@ -1623,7 +1623,6 @@ __metadata:
     "@cc-server/data": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
-    "@shoki/board": "workspace:*"
     "@shoki/engine": "workspace:*"
     delay: "npm:^4.4.1"
   peerDependencies:
@@ -1668,7 +1667,6 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
     "@reduxjs/toolkit": "npm:^2.2.1"
-    "@shoki/board": "workspace:*"
     "@shoki/engine": "workspace:*"
     "@shoki/networking": "workspace:*"
     "@types/auth0": "npm:^2.34.9"
@@ -1708,12 +1706,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@creature-chess-app/web-game@workspace:*, @creature-chess-app/web-game@workspace:apps/web-game":
+"@creature-chess-app/web-game@workspace:apps/web-game":
   version: 0.0.0-use.local
   resolution: "@creature-chess-app/web-game@workspace:apps/web-game"
   dependencies:
     "@auth0/auth0-react": "npm:^1.10.2"
     "@creature-chess/battle": "workspace:*"
+    "@creature-chess/board": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
@@ -1721,8 +1720,6 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": "npm:^6.5.1"
     "@fortawesome/react-fontawesome": "npm:^0.2.0"
     "@reduxjs/toolkit": "npm:^2.2.1"
-    "@shoki-web/board-react": "workspace:*"
-    "@shoki/board": "workspace:*"
     "@shoki/networking": "workspace:*"
     "@types/react-redux": "npm:^7.1.33"
     "@uidotdev/usehooks": "npm:^2.4.1"
@@ -1734,6 +1731,9 @@ __metadata:
     html-webpack-plugin: "npm:^5.5.0"
     pepjs: "npm:^0.5.3"
     process: "npm:0.11.10"
+    rdndmb-html5-to-touch: "npm:^8.0.3"
+    react-dnd: "npm:^16.0.1"
+    react-dnd-multi-backend: "npm:^8.0.3"
     react-media: "npm:^1.10.0"
     react-redux: "npm:^9.1.0"
     react-use-error-boundary: "npm:^3.0.0"
@@ -1754,72 +1754,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@creature-chess-tools/battle-tester@workspace:modules/@tools/battle-tester":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess-tools/battle-tester@workspace:modules/@tools/battle-tester"
-  dependencies:
-    "@creature-chess-app/web-game": "workspace:*"
-    "@creature-chess/battle": "workspace:*"
-    "@creature-chess/gamemode": "workspace:*"
-    "@creature-chess/models": "workspace:*"
-    "@shoki/board": "workspace:*"
-    "@shoki/engine": "workspace:*"
-    "@types/redux-saga": "npm:^0.10.5"
-  peerDependencies:
-    redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess-tools/bot-analysis@workspace:modules/@tools/bot-analysis":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess-tools/bot-analysis@workspace:modules/@tools/bot-analysis"
-  dependencies:
-    "@cc-server/bot": "workspace:*"
-    "@creature-chess/battle": "workspace:*"
-    "@creature-chess/gamemode": "workspace:*"
-    "@creature-chess/models": "workspace:*"
-    "@shoki/board": "workspace:*"
-    "@shoki/engine": "workspace:*"
-    "@types/redux-saga": "npm:^0.10.5"
-    "@types/uuid": "npm:^8.3.3"
-    uuid: "npm:^8.3.2"
-    winston: "npm:^3.3.3"
-  peerDependencies:
-    redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
-"@creature-chess-tools/bot-brain-tester@workspace:modules/@tools/bot-brain-tester":
-  version: 0.0.0-use.local
-  resolution: "@creature-chess-tools/bot-brain-tester@workspace:modules/@tools/bot-brain-tester"
-  dependencies:
-    "@cc-server/bot": "workspace:*"
-    "@cc-server/data": "workspace:*"
-    "@creature-chess-app/web-game": "workspace:*"
-    "@creature-chess/battle": "workspace:*"
-    "@creature-chess/gamemode": "workspace:*"
-    "@creature-chess/models": "workspace:*"
-    "@shoki/board": "workspace:*"
-    "@shoki/engine": "workspace:*"
-    "@types/redux-saga": "npm:^0.10.5"
-  peerDependencies:
-    redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
 "@creature-chess/battle@workspace:*, @creature-chess/battle@workspace:modules/@creature-chess/battle":
   version: 0.0.0-use.local
   resolution: "@creature-chess/battle@workspace:modules/@creature-chess/battle"
   dependencies:
+    "@creature-chess/board": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/utils": "workspace:*"
     "@reduxjs/toolkit": "npm:^2.2.1"
-    "@shoki/board": "workspace:*"
     "@types/redux-saga": "npm:^0.10.5"
     javascript-astar: "npm:^0.4.1"
     present: "npm:^1.0.0"
   peerDependencies:
     redux-saga: ^1.1.3
+  languageName: unknown
+  linkType: soft
+
+"@creature-chess/board@workspace:*, @creature-chess/board@workspace:modules/@creature-chess/board":
+  version: 0.0.0-use.local
+  resolution: "@creature-chess/board@workspace:modules/@creature-chess/board"
   languageName: unknown
   linkType: soft
 
@@ -1830,7 +1783,6 @@ __metadata:
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@reduxjs/toolkit": "npm:^2.2.1"
-    "@shoki/board": "workspace:*"
     "@shoki/card-deck": "workspace:*"
     "@shoki/engine": "workspace:*"
     "@types/lodash": "npm:^4.14.178"
@@ -1851,6 +1803,8 @@ __metadata:
 "@creature-chess/models@workspace:*, @creature-chess/models@workspace:modules/@creature-chess/models":
   version: 0.0.0-use.local
   resolution: "@creature-chess/models@workspace:modules/@creature-chess/models"
+  dependencies:
+    "@creature-chess/board": "workspace:*"
   languageName: unknown
   linkType: soft
 
@@ -1858,8 +1812,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/networking@workspace:modules/@creature-chess/networking"
   dependencies:
+    "@creature-chess/board": "workspace:*"
     "@creature-chess/models": "workspace:*"
-    "@shoki/board": "workspace:*"
+    "@creature-chess/utils": "workspace:*"
     "@shoki/engine": "workspace:*"
     "@types/redux-saga": "npm:^0.10.5"
   peerDependencies:
@@ -1878,7 +1833,6 @@ __metadata:
   resolution: "@creature-chess/utils@workspace:modules/@creature-chess/utils"
   dependencies:
     "@creature-chess/models": "workspace:*"
-    "@shoki/board": "workspace:*"
   languageName: unknown
   linkType: soft
 
@@ -3469,29 +3423,6 @@ __metadata:
   checksum: 10/a9d6c921596c17eacafaf8aa649b405ca2833008d734028b7114456db87d465a6d88a5d28dc868132fabdd5d481ba9428ac86a20077ea568e8c61d0999ecbfb9
   languageName: node
   linkType: hard
-
-"@shoki-web/board-react@workspace:*, @shoki-web/board-react@workspace:modules/@shoki-web/board-react":
-  version: 0.0.0-use.local
-  resolution: "@shoki-web/board-react@workspace:modules/@shoki-web/board-react"
-  dependencies:
-    "@shoki/board": "workspace:*"
-    rdndmb-html5-to-touch: "npm:^8.0.3"
-    react-dnd: "npm:^16.0.1"
-    react-dnd-multi-backend: "npm:^8.0.3"
-  peerDependencies:
-    classnames: ^2.3.1
-    react: ^18.2.0
-    react-dom: ^18.2.0
-  languageName: unknown
-  linkType: soft
-
-"@shoki/board@workspace:*, @shoki/board@workspace:modules/@shoki/board":
-  version: 0.0.0-use.local
-  resolution: "@shoki/board@workspace:modules/@shoki/board"
-  dependencies:
-    "@reduxjs/toolkit": "npm:^2.2.1"
-  languageName: unknown
-  linkType: soft
 
 "@shoki/card-deck@workspace:*, @shoki/card-deck@workspace:modules/@shoki/card-deck":
   version: 0.0.0-use.local
@@ -8195,12 +8126,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dnd-multi-backend@npm:^8.0.3":
-  version: 8.0.3
-  resolution: "dnd-multi-backend@npm:8.0.3"
+"dnd-multi-backend@npm:^8.1.2":
+  version: 8.1.2
+  resolution: "dnd-multi-backend@npm:8.1.2"
   peerDependencies:
     dnd-core: ^16.0.1
-  checksum: 10/f4e07ec7a119962def2c23ee4680a48dcaad67f2e1685cb33c68d72218444fc8b993958b4764ca70a4e35a5d5d733a68df739dc32268423210ccf82769f21857
+  checksum: 10/456b0e51e53bbdb340b7afc414af0e63e964a5bbc54e24bf2304e2bc2c1dc5e053a34f1eaced8a013a8eff5e43958e5b2d55a66c3582395ffec5faa6a6eaf3e4
   languageName: node
   linkType: hard
 
@@ -14571,13 +14502,13 @@ __metadata:
   linkType: hard
 
 "rdndmb-html5-to-touch@npm:^8.0.3":
-  version: 8.0.3
-  resolution: "rdndmb-html5-to-touch@npm:8.0.3"
+  version: 8.1.2
+  resolution: "rdndmb-html5-to-touch@npm:8.1.2"
   dependencies:
-    dnd-multi-backend: "npm:^8.0.3"
+    dnd-multi-backend: "npm:^8.1.2"
     react-dnd-html5-backend: "npm:^16.0.1"
     react-dnd-touch-backend: "npm:^16.0.1"
-  checksum: 10/b245145cc3a59d8e7f629f7c681a1a49a9c2c6ef9a2622de715920cc409ecdb81119dc1745b0262859f4adf5becb4599f2effddbb87ec62e83e19d881b88f0c7
+  checksum: 10/411264f86449f7b5ee0a023ea1d9e191cc135efcaad627d01d5e2d606310aae0ae3d63fe05ce6d30a587545af58a020027c02c281985057be1f29925a0db72c1
   languageName: node
   linkType: hard
 
@@ -14619,27 +14550,27 @@ __metadata:
   linkType: hard
 
 "react-dnd-multi-backend@npm:^8.0.3":
-  version: 8.0.3
-  resolution: "react-dnd-multi-backend@npm:8.0.3"
+  version: 8.1.2
+  resolution: "react-dnd-multi-backend@npm:8.1.2"
   dependencies:
-    dnd-multi-backend: "npm:^8.0.3"
-    react-dnd-preview: "npm:^8.0.3"
+    dnd-multi-backend: "npm:^8.1.2"
+    react-dnd-preview: "npm:^8.1.2"
   peerDependencies:
     dnd-core: ^16.0.1
     react: ^16.14.0 || ^17.0.2 || ^18.0.0
     react-dnd: ^16.0.1
     react-dom: ^16.14.0 || ^17.0.2 || ^18.0.0
-  checksum: 10/90d6f418ebcf0f61c830f31301a8d6eb0dcd6ef5c893eb670593bc75a2a99ada9af5f0c73a9acae25bbb0d5e2118022f0071cd2baf0896ebc38002db6e1f58ea
+  checksum: 10/8166a0bf6f24881a02e91d3ed2e2d209f63c33de4fcadf3c00a8d0acd030f54bceb1e6b3db3e79e63659abc10027a0d9a44be2bc530085828354ce2b858065e2
   languageName: node
   linkType: hard
 
-"react-dnd-preview@npm:^8.0.3":
-  version: 8.0.3
-  resolution: "react-dnd-preview@npm:8.0.3"
+"react-dnd-preview@npm:^8.1.2":
+  version: 8.1.2
+  resolution: "react-dnd-preview@npm:8.1.2"
   peerDependencies:
     react: ^16.14.0 || ^17.0.2 || ^18.0.0
     react-dnd: ^16.0.1
-  checksum: 10/8ef662287d34a182f1d175078dcff383df6aecd3c63fc693031a04d0704ae395a421f7725d814083a02ffd369ad6fd384ef2ad41e571eebf2068cd2d16e89b4a
+  checksum: 10/bb266b75aa7cc4ff0e16b540b1c55be0bb1d6f0d11c5bde493f03e2e9525ee579a723145b902e3e0160772103ac75b447193496acbedb4a358f20d353687512a
   languageName: node
   linkType: hard
 

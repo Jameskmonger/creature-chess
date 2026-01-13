@@ -25,7 +25,6 @@
 		"@cc-server/data": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",
-		"@shoki/board": "workspace:*",
 		"@shoki/engine": "workspace:*",
 		"delay": "^4.4.1"
 	},

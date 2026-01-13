@@ -38,7 +38,7 @@ Modules are libraries that are used by the apps. They are grouped into a number 
 
   Contains reusable server code.
 
-- [`@shoki`](/modules/@shoki/) and [`@shoki-web`](/modules/@shoki-web/)
+- [`@shoki`](/modules/@shoki/)
 
   Contains shared code relating to the Shoki game engine.
 
