@@ -1,5 +1,3 @@
-import { protocol, ActionStream } from "@shoki/networking";
-
 import {
 	PieceModel,
 	QuickChatOption,
@@ -8,6 +6,11 @@ import {
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 import { PositionKey } from "@creature-chess/board";
+
+type ActionStreamPacket = {
+	type: string;
+	payload?: any;
+};
 
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];
@@ -23,7 +26,7 @@ export type BoardUpdatePacket = {
 	positions: Record<PositionKey, PieceModel["id"]>;
 	pieces: PieceModel[];
 };
-type MatchBoardUpdatePacket = {
+export type MatchBoardUpdatePacket = {
 	turn: number | null;
 	board: BoardUpdatePacket;
 };
@@ -31,31 +34,13 @@ type QuickChatPacket = {
 	phrase: QuickChatOption;
 };
 
-export type PacketSet = {
-	gameConnected: {
-		payload: GameConnectionPacket;
-		ack: never;
-	};
-	boardUpdate: {
-		payload: BoardUpdatePacket;
-		ack: never;
-	};
-	benchUpdate: {
-		payload: BoardUpdatePacket;
-		ack: never;
-	};
-	matchBoardUpdate: {
-		payload: MatchBoardUpdatePacket;
-		ack: never;
-	};
-	spectatingPlayerUpdate: {
-		payload: string | null;
-		ack: never;
-	};
-
-	sendGameEvents: ActionStream.ActionStreamPacket;
-	sendLocalPlayerEvents: ActionStream.ActionStreamPacket;
-	playerInfoUpdates: ActionStream.ActionStreamPacket;
+export type Events = {
+	gameConnected: (payload: GameConnectionPacket) => void;
+	boardUpdate: (payload: BoardUpdatePacket) => void;
+	benchUpdate: (payload: BoardUpdatePacket) => void;
+	matchBoardUpdate: (payload: MatchBoardUpdatePacket) => void;
+	spectatingPlayerUpdate: (payload: string | null) => void;
+	sendGameEvents: (payload: ActionStreamPacket) => void;
+	sendLocalPlayerEvents: (payload: ActionStreamPacket) => void;
+	playerInfoUpdates: (payload: ActionStreamPacket) => void;
 };
-
-export const { incoming, outgoing } = protocol<PacketSet>();

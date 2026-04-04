@@ -1,22 +1,12 @@
-import { ActionStream, protocol as shokiProtocol } from "@shoki/networking";
-
 import { EmptyPacket } from "./empty-packet";
 
-export type PacketSet = {
-	finishMatch: {
-		payload: EmptyPacket;
-		ack: never;
-	};
-
-	sendPlayerActions: {
-		payload: ActionStream.ActionStreamPacket;
-		ack: () => void;
-	};
-
-	ping: {
-		payload: EmptyPacket;
-		ack: () => void;
-	};
+type ActionStreamPacket = {
+	type: string;
+	payload?: any;
 };
 
-export const { incoming, outgoing } = shokiProtocol<PacketSet>();
+export type Events = {
+	finishMatch: (payload: EmptyPacket) => void;
+	sendPlayerActions: (payload: ActionStreamPacket, ack: () => void) => void;
+	ping: (payload: EmptyPacket, ack: () => void) => void;
+};

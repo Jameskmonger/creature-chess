@@ -25,7 +25,7 @@ import {
 import { logger } from "./log";
 import { playerNetworking } from "./player";
 import { createPlayerEntity } from "./player/entity";
-import { AuthenticatedSocket } from "./player/socket";
+import { AuthenticatedSocket, GameSocket, LobbySocket } from "./player/socket";
 
 type GameMember = {
 	type: "BOT" | "PLAYER";
@@ -36,7 +36,7 @@ type GameMember = {
 
 export type PlayerGameParticipant = {
 	player: LobbyPlayer;
-	socket: AuthenticatedSocket;
+	socket: LobbySocket;
 };
 
 export type BotGameParticipant = {
@@ -135,7 +135,7 @@ export class Game {
 
 		existing.networkingSaga?.cancel();
 
-		existing.networkingSaga = this.runPlayerNetworking(entity, socket);
+		existing.networkingSaga = this.runPlayerNetworking(entity, socket as unknown as GameSocket);
 	}
 
 	private registerPlayer(player: PlayerGameParticipant) {
@@ -160,7 +160,7 @@ export class Game {
 		this.members.push({
 			type: "PLAYER",
 			id: playerIdAsString,
-			networkingSaga: this.runPlayerNetworking(entity, socket),
+			networkingSaga: this.runPlayerNetworking(entity, socket as unknown as GameSocket),
 			entity,
 		});
 	}
@@ -213,7 +213,7 @@ export class Game {
 
 	private runPlayerNetworking(
 		entity: PlayerEntity,
-		socket: AuthenticatedSocket
+		socket: GameSocket
 	) {
 		return entity.runSaga(
 			playerNetworking,

@@ -1,42 +1,24 @@
-import { IncomingRegistry, OutgoingRegistry } from "@shoki/networking";
-
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 import { PlayerProfile } from "@creature-chess/models/player";
 import {
 	GamemodeSettings,
 	GamemodeSettingsPresets,
 } from "@creature-chess/models/settings";
-import {
-	LobbyClientToServer,
-	LobbyServerToClient,
-} from "@creature-chess/networking";
 
 import { logger } from "./log";
-import { AuthenticatedSocket } from "./player/socket";
+import { AuthenticatedSocket, LobbySocket } from "./player/socket";
 
 type LobbyMember = {
 	player: LobbyPlayer;
-	socket: AuthenticatedSocket;
-	incomingRegistry: IncomingRegistry<LobbyClientToServer.PacketSet> | null;
-	outgoingRegistry: OutgoingRegistry<LobbyServerToClient.PacketSet> | null;
+	socket: LobbySocket;
 };
-
-const createRegistry = (socket: AuthenticatedSocket) => ({
-	outgoing: LobbyServerToClient.outgoing((opcode, payload, ack) =>
-		socket.emit(opcode, payload, ack)
-	),
-	incoming: LobbyClientToServer.incoming(
-		(opcode, handler) => socket.on(opcode, handler as any),
-		(opcode, handler) => socket.off(opcode, handler as any)
-	),
-});
 
 type LobbyOptions = {
 	waitTimeS: number;
 	maxPlayers: number;
 	onStart: (
 		settings: GamemodeSettings,
-		members: { player: LobbyPlayer; socket: AuthenticatedSocket }[]
+		members: { player: LobbyPlayer; socket: LobbySocket }[]
 	) => void;
 };
 
@@ -82,17 +64,14 @@ export class Lobby {
 	}
 
 	public connect(socket: AuthenticatedSocket) {
-		const { incoming, outgoing } = createRegistry(socket);
-
+		const lobbySocket = socket as unknown as LobbySocket;
 		let member: LobbyMember;
 
-		const existing = this.members.find((m) => m.player.id === socket.data.id);
+		const existing = this.members.find((m) => m.player.id === lobbySocket.data.id);
 		if (existing) {
 			existing.socket?.disconnect(true);
 
-			existing.socket = socket;
-			existing.outgoingRegistry = outgoing;
-			existing.incomingRegistry = incoming;
+			existing.socket = lobbySocket;
 
 			member = existing;
 		} else {
@@ -102,20 +81,18 @@ export class Lobby {
 			};
 
 			const name =
-				socket.data.type === "guest"
+				lobbySocket.data.type === "guest"
 					? `Guest ${this.getGuestName()}`
-					: socket.data.nickname!;
+					: lobbySocket.data.nickname!;
 
 			const newMember = {
 				player: {
-					id: socket.data.id,
+					id: lobbySocket.data.id,
 					name,
-					profile: socket.data.profile ?? defaultProfile,
-					type: socket.data.type,
+					profile: lobbySocket.data.profile ?? defaultProfile,
+					type: lobbySocket.data.type,
 				},
-				socket,
-				incomingRegistry: incoming,
-				outgoingRegistry: outgoing,
+				socket: lobbySocket,
 			};
 
 			this.members.push(newMember);
@@ -124,20 +101,20 @@ export class Lobby {
 			member = newMember;
 		}
 
-		// delay the connected event to allow the client to set up the registry
+		// delay the connected event to allow the client to set up
 		setTimeout(() => {
-			this.sendConnected(outgoing);
+			this.sendConnected(lobbySocket);
 
 			if (this.members.length === this.options.maxPlayers) {
 				this.start();
 			}
 
-			incoming.on("startNow", () => {
+			lobbySocket.on("startNow", () => {
 				logger.info("Lobby start requested by player");
 				this.start();
 			});
 
-			incoming.on("updateSetting", ({ key, value }) => {
+			lobbySocket.on("updateSetting", ({ key, value }) => {
 				this.updateSetting(key, value);
 			});
 		}, 500);
@@ -166,16 +143,14 @@ export class Lobby {
 				continue;
 			}
 
-			other.outgoingRegistry?.send("lobbyUpdate", {
+			other.socket.emit("lobbyUpdate", {
 				players: this.getLobbyPlayers(),
 			});
 		}
 	}
 
-	private sendConnected(
-		registry: OutgoingRegistry<LobbyServerToClient.PacketSet>
-	) {
-		registry.send("connected", {
+	private sendConnected(socket: LobbySocket) {
+		socket.emit("connected", {
 			players: this.getLobbyPlayers(),
 			startTimestamp: this.gameStartTime!,
 
@@ -222,7 +197,7 @@ export class Lobby {
 		}
 
 		for (const member of this.members) {
-			member.outgoingRegistry?.send("settingsUpdate", {
+			member.socket.emit("settingsUpdate", {
 				settings: this.gamemodeSettings,
 			});
 		}

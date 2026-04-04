@@ -30,7 +30,6 @@
 		"@creature-chess/networking": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
 		"@shoki/engine": "workspace:*",
-		"@shoki/networking": "workspace:*",
 		"@types/auth0": "^2.34.9",
 		"@types/lodash": "^4.14.178",
 		"@types/uuid": "^8.3.3",

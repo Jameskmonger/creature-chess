@@ -1,51 +1,39 @@
-import { all, call } from "redux-saga/effects";
-
-import { ActionStream } from "@shoki/networking";
+import { all, call, takeEvery } from "redux-saga/effects";
 
 import {
 	GameEvents,
 	PlayerCommands,
 	PlayerEvents,
 } from "@creature-chess/gamemode";
-import { GameServerToClient } from "@creature-chess/networking";
 
-import { getPacketRegistries } from "../registries";
+import { getPlayerSocket } from "../registries";
 import { sendInitialState } from "./initialState";
 
 export const outgoingNetworking = function* () {
-	const { outgoing: registry } = yield* getPacketRegistries();
+	const socket = yield* getPlayerSocket();
 
 	yield all([
 		call(sendInitialState),
 
-		call(
-			ActionStream.outgoingSaga<GameServerToClient.PacketSet, "sendGameEvents">(
-				registry,
-				"sendGameEvents",
-				GameEvents.GameEventActionTypesArray
-			)
+		takeEvery(
+			GameEvents.GameEventActionTypesArray,
+			function* (action) {
+				socket.emit("sendGameEvents", action);
+			}
 		),
 
-		call(
-			ActionStream.outgoingSaga<
-				GameServerToClient.PacketSet,
-				"sendLocalPlayerEvents"
-			>(
-				registry,
-				"sendLocalPlayerEvents",
-				PlayerEvents.PlayerEventActionTypesArray
-			)
+		takeEvery(
+			PlayerEvents.PlayerEventActionTypesArray,
+			function* (action) {
+				socket.emit("sendLocalPlayerEvents", action);
+			}
 		),
 
-		call(
-			ActionStream.outgoingSaga<
-				GameServerToClient.PacketSet,
-				"playerInfoUpdates"
-			>(
-				registry,
-				"playerInfoUpdates",
-				PlayerCommands.PlayerInfoUpdateCommandActionTypesArray
-			)
+		takeEvery(
+			PlayerCommands.PlayerInfoUpdateCommandActionTypesArray,
+			function* (action) {
+				socket.emit("playerInfoUpdates", action);
+			}
 		),
 	]);
 };

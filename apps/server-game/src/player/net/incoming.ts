@@ -1,53 +1,89 @@
 import { eventChannel } from "redux-saga";
-import { takeEvery, put } from "redux-saga/effects";
+import { takeEvery, put, take } from "redux-saga/effects";
 import { all, call } from "typed-redux-saga";
 
-import { ActionStream } from "@shoki/networking";
-
 import { PlayerEvents, PlayerActionTypesArray } from "@creature-chess/gamemode";
-import { ClientToServer } from "@creature-chess/networking";
 
-import { getPacketRegistries } from "./registries";
+import { getPlayerSocket } from "./registries";
 import { metricCollectorSaga } from "../../metrics/metricCollectorSaga";
 
+const processPlayerActions = function* () {
+	const socket = yield* getPlayerSocket();
+
+	const channel = eventChannel<{ type: string; payload?: any }>((emit) => {
+		const handler = (action: { type: string; payload?: any }, ack?: () => void) => {
+			emit(action);
+			if (ack) {
+				ack();
+			}
+		};
+
+		socket.on("sendPlayerActions", handler);
+
+		return () => socket.off("sendPlayerActions", handler);
+	});
+
+	while (true) {
+		const action: { type: string } = yield take(channel);
+
+		if (!PlayerActionTypesArray.includes(action.type)) {
+			console.error(
+				`Unhandled action type: ${action.type} (for opcode sendPlayerActions)`
+			);
+			continue;
+		}
+
+		yield put(action);
+	}
+};
+
+const processPing = function* () {
+	const socket = yield* getPlayerSocket();
+
+	const channel = eventChannel<true>((emit) => {
+		const handler = (_payload: unknown, ack?: () => void) => {
+			emit(true);
+			if (ack) {
+				ack();
+			}
+		};
+
+		socket.on("ping", handler as any);
+
+		return () => socket.off("ping", handler as any);
+	});
+
+	while (true) {
+		yield take(channel);
+		yield put({ type: "ping" });
+	}
+};
+
+const processFinishMatch = function* () {
+	const socket = yield* getPlayerSocket();
+
+	const channel = eventChannel<PlayerEvents.ClientFinishMatchEvent>(
+		(emit) => {
+			const onFinishMatch = () => emit(PlayerEvents.clientFinishMatchEvent());
+
+			socket.on("finishMatch", onFinishMatch);
+
+			return () => socket.off("finishMatch", onFinishMatch);
+		}
+	);
+
+	yield takeEvery<PlayerEvents.ClientFinishMatchEvent>(
+		channel,
+		function* (action) {
+			yield put(action);
+		}
+	);
+};
+
 export const incomingNetworking = function* () {
-	const { incoming: registry } = yield* getPacketRegistries();
-
-	const processFinishMatch = function* () {
-		const channel = eventChannel<PlayerEvents.ClientFinishMatchEvent>(
-			(emit) => {
-				const onFinishMatch = () => emit(PlayerEvents.clientFinishMatchEvent());
-
-				registry.on("finishMatch", onFinishMatch);
-
-				return () => registry.off("finishMatch", onFinishMatch);
-			}
-		);
-
-		// take events from channel and put them directly
-		yield takeEvery<PlayerEvents.ClientFinishMatchEvent>(
-			channel,
-			function* (action) {
-				yield put(action);
-			}
-		);
-	};
-
 	yield* all([
-		call(
-			ActionStream.incomingSaga<ClientToServer.PacketSet, "sendPlayerActions">(
-				registry,
-				"sendPlayerActions",
-				PlayerActionTypesArray
-			)
-		),
-		call(
-			ActionStream.incomingSaga<ClientToServer.PacketSet, "ping">(
-				registry,
-				"ping",
-				["ping"]
-			)
-		),
+		call(processPlayerActions),
+		call(processPing),
 		call(processFinishMatch),
 		call(metricCollectorSaga),
 	]);

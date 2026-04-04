@@ -9,9 +9,7 @@ import {
 	getContext,
 	takeLatest,
 } from "typed-redux-saga";
-
 import { getDependency, getVariable } from "@shoki/engine";
-import { OutgoingRegistry } from "@shoki/networking";
 
 import {
 	PlayerVariables,
@@ -27,9 +25,10 @@ import {
 	removeBenchPiecesCommand,
 	removeBoardPiecesCommand,
 } from "@creature-chess/gamemode";
-import { GameServerToClient, serialiseBoard } from "@creature-chess/networking";
+import { serialiseBoard } from "@creature-chess/networking";
 
-import { getPacketRegistries } from "../net/registries";
+import { GameSocket } from "../socket";
+import { getPlayerSocket } from "../net/registries";
 import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "@creature-chess/gamemode";
 
 const getSpectatingPlayer = function*() {
@@ -51,7 +50,7 @@ const getMatch = () =>
 	getVariable<PlayerVariables, Match | null>((variables) => variables.match);
 
 const spectatePlayerBoard = function*(
-	registry: OutgoingRegistry<GameServerToClient.PacketSet>
+	socket: GameSocket
 ) {
 	const playerId = yield* getContext<string>("id");
 
@@ -62,15 +61,15 @@ const spectatePlayerBoard = function*(
 
 	// Send current board and bench state immediately so the client
 	// doesn't show stale data from a previous spectating target.
-	registry.send("boardUpdate", serialiseBoard(board, pieceRegistry));
-	registry.send("benchUpdate", serialiseBoard(bench, pieceRegistry));
+	socket.emit("boardUpdate", serialiseBoard(board, pieceRegistry));
+	socket.emit("benchUpdate", serialiseBoard(bench, pieceRegistry));
 
 	const initialMatch = yield* getMatch();
 
 	if (initialMatch) {
 		const matchBoard = initialMatch.getBoardForPlayer(playerId);
 
-		registry.send("matchBoardUpdate", {
+		socket.emit("matchBoardUpdate", {
 			turn: initialMatch.getTurn(),
 			board: serialiseBoard(matchBoard.board, pieceRegistry, matchBoard.isHome),
 		});
@@ -91,7 +90,7 @@ const spectatePlayerBoard = function*(
 				if (match) {
 					const board = match.getBoardForPlayer(playerId);
 
-					registry.send("matchBoardUpdate", {
+					socket.emit("matchBoardUpdate", {
 						turn: null,
 						board: serialiseBoard(board.board, pieceRegistry, board.isHome),
 					});
@@ -111,7 +110,7 @@ const spectatePlayerBoard = function*(
 			function*() {
 				yield delay(50);
 
-				registry.send("boardUpdate", serialiseBoard(board, pieceRegistry));
+				socket.emit("boardUpdate", serialiseBoard(board, pieceRegistry));
 			}
 		),
 		takeLatest(
@@ -125,19 +124,19 @@ const spectatePlayerBoard = function*(
 			function*() {
 				yield delay(50);
 
-				registry.send("benchUpdate", serialiseBoard(bench, pieceRegistry));
+				socket.emit("benchUpdate", serialiseBoard(bench, pieceRegistry));
 			}
 		),
 	]);
 };
 
 const spectateOtherPlayer = function*(player: PlayerEntity) {
-	const { outgoing: registry } = yield* getPacketRegistries();
+	const socket = yield* getPlayerSocket();
 
 	let task: Task | null = null;
 	try {
 		task = player.runSaga(function*() {
-			yield call(spectatePlayerBoard, registry);
+			yield call(spectatePlayerBoard, socket);
 		});
 
 		yield task.toPromise<void>();
@@ -147,8 +146,8 @@ const spectateOtherPlayer = function*(player: PlayerEntity) {
 };
 
 const spectateLocalPlayer = function*() {
-	const { outgoing: registry } = yield* getPacketRegistries();
-	yield call(spectatePlayerBoard, registry);
+	const socket = yield* getPlayerSocket();
+	yield call(spectatePlayerBoard, socket);
 };
 
 /**

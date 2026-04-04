@@ -24,10 +24,6 @@
 		"@creature-chess/board": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/utils": "workspace:*",
-		"@shoki/engine": "workspace:*",
-		"@types/redux-saga": "^0.10.5"
-	},
-	"peerDependencies": {
-		"redux-saga": "^1.1.3"
+		"@shoki/engine": "workspace:*"
 	}
 }
