@@ -49,7 +49,6 @@ export const PlayerActionTypesArray = [
 	dropPiecePlayerAction.toString(),
 	spectatePlayerAction.toString(),
 	quickChatPlayerAction.toString(),
-	spectatePlayerAction.toString(),
 	swapPiecePlayerAction.toString(),
 ];
 
