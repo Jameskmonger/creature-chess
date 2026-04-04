@@ -1,10 +1,9 @@
 import * as React from "react";
 
 import { createUseStyles } from "react-jss";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
-
-import { PlayerActions } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
@@ -34,7 +33,7 @@ const useStyles = createUseStyles({
 });
 
 export function ReadyUpButton() {
-	const dispatch = useDispatch();
+	const gameActions = useGameActions();
 	const styles = useStyles();
 
 	const isDead = useSelector<AppState, boolean>(
@@ -54,8 +53,8 @@ export function ReadyUpButton() {
 			return;
 		}
 
-		dispatch(PlayerActions.readyUpPlayerAction());
-	}, [canReadyUp, dispatch]);
+		gameActions.readyUp();
+	}, [canReadyUp, gameActions]);
 
 	if (!canReadyUp) {
 		// To keep the Sell button in the same place

@@ -1,11 +1,10 @@
 import * as React from "react";
 
 import { createUseStyles } from "react-jss";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
+import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
-
-import { PlayerActions } from "@creature-chess/gamemode";
 import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
 import { GamePhase } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
@@ -21,7 +20,7 @@ const useStyles = createUseStyles({
 });
 
 export function SellPieceButton() {
-	const dispatch = useDispatch();
+	const gameActions = useGameActions();
 	const styles = useStyles();
 
 	const gamePhase = useSelector<AppState, GamePhase>(
@@ -47,10 +46,8 @@ export function SellPieceButton() {
 			return;
 		}
 
-		dispatch(
-			PlayerActions.sellPiecePlayerAction({ pieceId: selectedPiece.id })
-		);
-	}, [dispatch, selectedPiece]);
+		gameActions.sellPiece(selectedPiece.id);
+	}, [gameActions, selectedPiece]);
 
 	if (!selectedPiece) {
 		return null;

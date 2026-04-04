@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { ConnectionStatus } from "~/networking/connection-status";
+import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 
 import {

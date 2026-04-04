@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { ConnectionStatus } from "~/networking/connection-status";
+import { ConnectionStatus } from "~/networking/types";
 
 import { Overlay } from "./overlay";
 

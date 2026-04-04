@@ -1720,7 +1720,6 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": "npm:^6.5.1"
     "@fortawesome/react-fontawesome": "npm:^0.2.0"
     "@reduxjs/toolkit": "npm:^2.2.1"
-    "@shoki/networking": "workspace:*"
     "@types/react-redux": "npm:^7.1.33"
     "@uidotdev/usehooks": "npm:^2.4.1"
     awesome-typescript-loader: "npm:^5.2.1"

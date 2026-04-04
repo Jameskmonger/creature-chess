@@ -1,10 +1,9 @@
 import * as React from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
+import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
-
-import { PlayerActions } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 import {
 	PlayerListPlayer,
@@ -41,7 +40,7 @@ const getOpponentName = (battle: PlayerBattle, players: PlayerListPlayer[]) => {
 };
 
 const PlayerList: React.FunctionComponent = () => {
-	const dispatch = useDispatch();
+	const gameActions = useGameActions();
 	const localPlayerId = useLocalPlayerId();
 	const players = useSelector<AppState, PlayerListPlayer[]>(
 		(state) => state.game.playerList
@@ -89,13 +88,11 @@ const PlayerList: React.FunctionComponent = () => {
 
 				const currentlySpectating = currentlySpectatingId === p.id;
 
-				const onSpectateClick = () => {
-					dispatch(
-						PlayerActions.spectatePlayerAction(
-							currentlySpectating ? { playerId: null } : { playerId: p.id }
-						)
+				const onSpectateClick = React.useCallback(() => {
+					gameActions.spectate(
+						currentlySpectating ? null : p.id
 					);
-				};
+				}, [ gameActions, currentlySpectating, p.id ]);
 
 				return (
 					<PlayerListItem

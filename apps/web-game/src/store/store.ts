@@ -1,8 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import { networkingSaga } from "~/networking";
 
-
+import { gameEntryPointSaga } from "~/sagas/gameSagaEntry";
 
 import { gameReducer } from "./game/state";
 import { lobbyReducer } from "./lobby/state";
@@ -35,7 +34,7 @@ export const createAppStore = (gameBoard: GameBoardState) => {
 		},
 	});
 
-	sagaMiddleware.run(networkingSaga, gameBoard);
+	sagaMiddleware.run(gameEntryPointSaga);
 
 	return store;
 };

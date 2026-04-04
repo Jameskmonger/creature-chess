@@ -1,12 +1,12 @@
 import * as React from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Page } from "~/components/Page";
 import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
 import { Button } from "~/components/ui";
 import { Countdown } from "~/components/ui/countdown";
+import { useLobbyConnection } from "~/networking";
 import { AppState } from "~/store";
-import { lobbyStartNowEvent } from "~/store/lobby/actions";
 import { createUseThemeStyles } from "~/useStyles";
 
 const padNumberToTwo = (val: number) => (val < 10 ? `0${val}` : val.toString());
@@ -83,11 +83,11 @@ export function LobbyPage() {
 	const styles = useStyles();
 	const lobbyInfo = useSelector((state: AppState) => state.lobby);
 
-	const dispatch = useDispatch();
+	const lobbyConnection = useLobbyConnection();
 
 	const onStartNow = React.useCallback(() => {
-		dispatch(lobbyStartNowEvent());
-	}, [dispatch]);
+		lobbyConnection?.sendStartNow();
+	}, [lobbyConnection]);
 
 	const playerItems = React.useMemo(() => {
 		if (!lobbyInfo) {

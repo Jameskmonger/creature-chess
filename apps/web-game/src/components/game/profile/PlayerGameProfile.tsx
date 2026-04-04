@@ -2,15 +2,15 @@ import * as React from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
+import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
 
 import {
-	PlayerActions,
 	getPlayerLevel,
 	getPlayerMoney,
 	getPlayerXp,
@@ -96,7 +96,7 @@ export function PlayerGameProfile() {
 	const styles = useStyles();
 	const { buyXpAmount, buyXpCost } = useGamemodeSettings();
 
-	const dispatch = useDispatch();
+	const gameActions = useGameActions();
 
 	const playerId = useLocalPlayerId();
 
@@ -113,8 +113,6 @@ export function PlayerGameProfile() {
 
 		return player?.health || null;
 	});
-
-	const onBuyXp = () => dispatch(PlayerActions.buyXpPlayerAction());
 
 	if (health === null) {
 		return null;
@@ -138,7 +136,7 @@ export function PlayerGameProfile() {
 
 				{level !== MAX_LEVEL && (
 					<Button
-						onClick={onBuyXp}
+						onClick={gameActions.buyXp}
 						disabled={money < buyXpCost}
 						color="secondary"
 						size="small"

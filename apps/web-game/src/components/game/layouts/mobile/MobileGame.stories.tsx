@@ -3,7 +3,7 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { LocalPlayerContextProvider } from "~/auth/context";
 import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
-import { ConnectionStatus } from "~/networking/connection-status";
+import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 import { Overlay } from "~/store/game/ui/overlay";
 

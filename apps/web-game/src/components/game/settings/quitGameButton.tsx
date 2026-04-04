@@ -1,21 +1,19 @@
 import * as React from "react";
 
-import { useDispatch } from "react-redux";
-
-import { PlayerActions } from "@creature-chess/gamemode";
+import { useGameActions } from "~/networking";
 import { Button } from "~/components/ui";
 
 export function QuitGameButton() {
-	const dispatch = useDispatch();
+	const gameActions = useGameActions();
 	const [areYouSure, setAreYouSure] = React.useState<boolean>(false);
 
-	const onClick = areYouSure
-		? () => {
-			dispatch(PlayerActions.quitGamePlayerAction());
-		}
-		: () => {
+	const onClick = React.useCallback(() => {
+		if (areYouSure) {
+			gameActions.quitGame();
+		} else {
 			setAreYouSure(true);
-		};
+		}
+	}, [areYouSure, gameActions]);
 
 	return (
 		<Button

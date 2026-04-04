@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
-import { ConnectionStatus } from "~/networking/connection-status";
+import { ConnectionStatus } from "~/networking";
 import { AppState } from "~/store";
 
 import { Group } from "../../../ui/layout";

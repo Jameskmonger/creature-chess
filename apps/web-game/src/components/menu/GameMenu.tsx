@@ -8,8 +8,7 @@ import { faPlay, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../ui";
 import { CreatureImage } from "../ui/creatureImage";
 import { Help } from "../game/help";
-import { useDispatch } from "react-redux";
-import { openConnection } from "~/networking";
+import { useSocketManager } from "~/networking";
 
 const useStyles = createUseThemeStyles(theme => ({
 	root: {
@@ -107,11 +106,11 @@ const useStyles = createUseThemeStyles(theme => ({
 
 export function GameMenu() {
 	const classes = useStyles();
-	const dispatch = useDispatch();
+	const socketManager = useSocketManager();
 
 	const onFindGameClick = React.useCallback(
-		() => dispatch(openConnection()),
-		[dispatch]
+		() => socketManager.connect(),
+		[socketManager]
 	);
 
 	const [view, setView] = React.useState<"help" | "home">("home");

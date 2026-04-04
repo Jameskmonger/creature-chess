@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { ConnectionStatus } from "~/networking/connection-status";
+import { ConnectionStatus } from "~/networking/types";
 
 import {
 	OpenOverlayAction,
