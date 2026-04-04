@@ -60,14 +60,19 @@ const spectatePlayerBoard = function*(
 		gamemode: { pieceRegistry },
 	} = yield* getPlayerEntityDependencies();
 
+	// Send current board and bench state immediately so the client
+	// doesn't show stale data from a previous spectating target.
+	registry.send("boardUpdate", serialiseBoard(board, pieceRegistry));
+	registry.send("benchUpdate", serialiseBoard(bench, pieceRegistry));
+
 	const initialMatch = yield* getMatch();
 
 	if (initialMatch) {
-		const board = initialMatch.getBoardForPlayer(playerId);
+		const matchBoard = initialMatch.getBoardForPlayer(playerId);
 
 		registry.send("matchBoardUpdate", {
 			turn: initialMatch.getTurn(),
-			board: serialiseBoard(board.board, pieceRegistry, board.isHome),
+			board: serialiseBoard(matchBoard.board, pieceRegistry, matchBoard.isHome),
 		});
 
 		// todo send opponentId
