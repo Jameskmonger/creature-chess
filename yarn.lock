@@ -3441,14 +3441,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@shoki/networking@workspace:modules/@shoki/networking":
-  version: 0.0.0-use.local
-  resolution: "@shoki/networking@workspace:modules/@shoki/networking"
-  peerDependencies:
-    redux-saga: ^1.1.3
-  languageName: unknown
-  linkType: soft
-
 "@sinclair/typebox@npm:^0.27.8":
   version: 0.27.8
   resolution: "@sinclair/typebox@npm:0.27.8"
