@@ -231,8 +231,13 @@ export function GameBoard({
 
 	const canDropOnBoard = React.useCallback(
 		(id: string, x: number, y: number) => {
-			if (board.getPieceIdAtPosition(x, y) !== null) {
+			const occupant = board.getPieceIdAtPosition(x, y);
+			if (occupant === id) {
 				return false;
+			}
+			if (occupant !== null) {
+				// swap — no net piece count change
+				return true;
 			}
 			if (board.containsPiece(id)) {
 				return true;
@@ -243,7 +248,7 @@ export function GameBoard({
 	);
 
 	const canDropOnBench = React.useCallback(
-		(id: string, x: number) => bench.getPieceIdAtPosition(x, 0) === null || bench.getPieceIdAtPosition(x, 0) === id,
+		(id: string, x: number) => bench.getPieceIdAtPosition(x, 0) !== id,
 		[bench]
 	);
 

@@ -25,19 +25,33 @@ export const useOnDropPiece = (
 			return;
 		}
 
-		const loc: PlayerPieceLocation = {
+		const toY = location.locationType === "board" ? location.y : 0;
+		const to: PlayerPieceLocation = {
 			type: location.locationType,
-			location: packPosition(location.x, (location as any).y || 0),
+			location: packPosition(location.x, toY),
 		};
 
-		// todo `from` is here as a safety check, is it needed?
-		dispatch(
-			PlayerActions.dropPiecePlayerAction({
-				pieceId: id,
-				from,
-				to: loc,
-			})
-		);
+		const targetBoard = location.locationType === "board" ? board : bench;
+		const occupantId = targetBoard.getPieceIdAtPosition(location.x, toY);
+
+		if (occupantId && occupantId !== id) {
+			dispatch(
+				PlayerActions.swapPiecePlayerAction({
+					pieceAId: id,
+					pieceALocation: from,
+					pieceBId: occupantId,
+					pieceBLocation: to,
+				})
+			);
+		} else {
+			dispatch(
+				PlayerActions.dropPiecePlayerAction({
+					pieceId: id,
+					from,
+					to,
+				})
+			);
+		}
 
 		dispatch(clearSelectedPiece());
 	};
