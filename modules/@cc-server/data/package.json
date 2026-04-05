@@ -17,7 +17,9 @@
 		"prisma-db-pull": "prisma db pull",
 		"prisma-migrate": "prisma migrate",
 		"prisma-generate": "prisma generate",
-		"build": "yarn run -T tsc -p ./tsconfig.json"
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests",
+		"lint": "yarn run -T eslint \"src/**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"

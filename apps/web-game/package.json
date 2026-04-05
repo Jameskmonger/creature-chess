@@ -15,7 +15,9 @@
 	},
 	"scripts": {
 		"build": "webpack",
-		"dev": "NODE_ENV=development webpack serve"
+		"dev": "NODE_ENV=development webpack serve",
+		"test": "yarn run -T jest --passWithNoTests",
+		"lint": "yarn run -T eslint \"src/**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"

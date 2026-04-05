@@ -19,7 +19,8 @@
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"scripts": {
 		"build": "yarn run -T tsc -p ./tsconfig.json",
-		"test": "yarn run -T jest --passWithNoTests"
+		"test": "yarn run -T jest --passWithNoTests",
+		"lint": "yarn run -T eslint \"src/**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
 	},
 	"dependencies": {
 		"@cc-server/auth": "workspace:*",

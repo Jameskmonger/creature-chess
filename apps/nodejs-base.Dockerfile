@@ -11,7 +11,7 @@ RUN yarn set version 4.9.1
 
 # Copy dependency files first for better layer caching
 # When dependencies don't change, this layer is reused
-ADD package.json yarn.lock .yarnrc.yml ./
+ADD package.json yarn.lock .yarnrc.yml nx.json ./
 ADD .yarn/plugins/ ./.yarn/plugins/
 ADD .yarn/releases/ ./.yarn/releases/
 
@@ -24,6 +24,9 @@ RUN --mount=type=bind,source=modules,target=/tmp/src/modules \
 # Install dependencies - this layer is cached unless package.json or yarn.lock changes
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 
+# Disable nx daemon in Docker (no persistent process needed)
+ENV NX_DAEMON=false
+
 # Copy source code
 ADD tsconfig.json ./
 
@@ -31,6 +34,5 @@ ADD modules/@shoki/ ./modules/@shoki/
 ADD modules/@creature-chess/models/ ./modules/@creature-chess/models/
 ADD modules/@creature-chess/board/ ./modules/@creature-chess/board/
 
-RUN yarn workspaces foreach --all --include "@shoki/*" run build
-RUN yarn workspace @creature-chess/models run build
-RUN yarn workspace @creature-chess/board run build
+# Build core packages in parallel via nx task graph
+RUN yarn nx run-many -t build --projects='@shoki/*,@creature-chess/models,@creature-chess/board'
