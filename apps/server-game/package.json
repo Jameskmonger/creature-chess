@@ -28,8 +28,6 @@
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/networking": "workspace:*",
-		"@reduxjs/toolkit": "^2.2.1",
-		"@shoki/engine": "workspace:*",
 		"@types/auth0": "^2.34.9",
 		"@types/lodash": "^4.14.178",
 		"@types/uuid": "^8.3.3",
@@ -44,8 +42,5 @@
 		"tslib": "^2.3.1",
 		"uuid": "^8.3.2",
 		"winston": "^3.3.3"
-	},
-	"peerDependencies": {
-		"redux": "^4.1.0"
 	}
 }

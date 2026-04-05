@@ -26,7 +26,6 @@
 		"@creature-chess/models": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
 		"@shoki/card-deck": "workspace:*",
-		"@shoki/engine": "workspace:*",
 		"@types/lodash": "^4.14.178",
 		"@types/uuid": "^8.3.3",
 		"delay": "^4.4.1",
@@ -34,8 +33,5 @@
 		"p-defer": "^2.1.0",
 		"uuid": "^8.3.2",
 		"winston": "^3.3.3"
-	},
-	"peerDependencies": {
-		"redux": "^4.1.0"
 	}
 }

@@ -1,13 +1,10 @@
 import delay from "delay";
-import { Store } from "@reduxjs/toolkit";
 import { Logger } from "winston";
 
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { PlayerEntity } from "../entities";
-import { gameFinishEvent } from "./events";
 import { gameLoop } from "./gameLoop";
-import { GameState } from "./store";
 import { Gamemode } from "./gamemode";
 
 export type GetMatchupsFn = () => {
@@ -43,8 +40,8 @@ type Callbacks = {
 	onMatchEnd?: () => void;
 };
 
-export const runGame = async (store: Store<GameState>, context: GameContext, callbacks: Callbacks = {}) => {
-	const { players, logger } = context;
+export const runGame = async (context: GameContext, callbacks: Callbacks = {}) => {
+	const { gamemode, players, logger } = context;
 
 	logger.info(
 		`Game started with ${players.getAll().length} players: ${players
@@ -59,13 +56,13 @@ export const runGame = async (store: Store<GameState>, context: GameContext, cal
 
 	const startTime = startStopwatch();
 
-	const gameResults = await gameLoop(store, context, callbacks);
+	const gameResults = await gameLoop(context, callbacks);
 
 	const duration = stopwatch(startTime);
 
-	const round = store.getState().roundInfo.round;
+	const round = gamemode.roundInfo.round;
 
 	logger.info(`Match complete in ${duration} ms (${round} rounds)`);
 
-	store.dispatch(gameFinishEvent({ players: gameResults }));
+	gamemode.finishGame({ players: gameResults });
 };

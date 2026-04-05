@@ -1,6 +1,3 @@
-import { AnyAction, Reducer, ReducersMapObject } from "@reduxjs/toolkit";
-
-
 import { RoundInfoState } from "@creature-chess/models";
 
 import { cardShopReducer, CardShopState } from "./cardShop";
@@ -16,10 +13,8 @@ export interface PlayerState {
 	spectating: SpectatingState;
 }
 
-export const playerReducers: ReducersMapObject<
-	Pick<PlayerState, "spectating" | "cardShop" | "playerInfo">
-> = {
+export const playerReducers = {
 	spectating: spectatingReducer,
 	cardShop: cardShopReducer,
-	playerInfo: playerInfoReducer as Reducer<PlayerInfoState, AnyAction>,
+	playerInfo: playerInfoReducer,
 };

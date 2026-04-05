@@ -23,7 +23,6 @@
 	"dependencies": {
 		"@creature-chess/board": "workspace:*",
 		"@creature-chess/models": "workspace:*",
-		"@creature-chess/utils": "workspace:*",
-		"@shoki/engine": "workspace:*"
+		"@creature-chess/utils": "workspace:*"
 	}
 }

@@ -1,20 +1,9 @@
-import {
-	Store,
-	Reducer,
-	UnknownAction,
-	configureStore,
-	createListenerMiddleware,
-} from "@reduxjs/toolkit";
 import delay from "delay";
 import pDefer from "p-defer";
 import { v4 as uuid } from "uuid";
 import { Logger } from "winston";
 
-import {
-	setupBattleListeners,
-	BattleEvents,
-	BattleCommands,
-} from "@creature-chess/battle";
+import { BattleRunner } from "@creature-chess/battle";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
@@ -23,17 +12,8 @@ import { playerFinishMatchEvent } from "../entities/player/events";
 import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils/piece";
 
-interface MatchState {
-	turn: number;
-}
-
-const turnReducer: Reducer<number, BattleEvents.BattleTurnEvent> = (
-	state = 0,
-	event
-) => (event.type === BattleEvents.battleTurnEvent.toString() ? event.payload.turn : state);
-
 export class Match {
-	private store: Store<MatchState>;
+	private runner: BattleRunner;
 	private boardId = uuid();
 	private board: Board;
 
@@ -78,7 +58,7 @@ export class Match {
 			}
 		}
 
-		this.store = this.createStore(settings);
+		this.runner = new BattleRunner(this.board, this.pieceRegistry, settings);
 
 		// auto-resolve the match from the "away" side if they are a clone
 		if (awayIsClone) {
@@ -109,16 +89,25 @@ export class Match {
 	}
 
 	public getTurn() {
-		return this.store.getState().turn;
+		return this.runner.getTurn();
 	}
 
 	public async fight(battleTimeout: Promise<void>) {
-		this.store.dispatch(BattleCommands.startBattleCommand({}));
+		const battlePromise = this.runner.run().then(({ turn }) => {
+			this.logger.debug("Battle finished", {
+				meta: {
+					home: this.home.getVariable((v) => v.name),
+					away: this.away.getVariable((v) => v.name),
+					turns: turn,
+				},
+			});
+			this.serverFinishedMatch.resolve();
+		});
 
 		await Promise.race([
 			battleTimeout,
 			Promise.all([
-				this.serverFinishedMatch.promise,
+				battlePromise,
 				this.clientFinishedMatchHome.promise,
 				this.clientFinishedMatchAway.promise,
 			]),
@@ -148,55 +137,5 @@ export class Match {
 				playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false })
 			);
 		}
-	}
-
-	private createStore(settings: GamemodeSettings) {
-		const _this = this;
-
-		const listenerMiddleware = createListenerMiddleware();
-
-		const store = configureStore({
-			reducer: {
-				// TODO (jkm) remove cast
-				turn: turnReducer as Reducer<number, UnknownAction>,
-			},
-			middleware: (getDefaultMiddleware) =>
-				getDefaultMiddleware({
-					thunk: false,
-					serializableCheck: false,
-				}).prepend(listenerMiddleware.middleware),
-		});
-
-		const startListening = listenerMiddleware.startListening;
-
-		// Set up battle listeners
-		setupBattleListeners(
-			startListening,
-			settings,
-			_this.board,
-			_this.pieceRegistry,
-		);
-
-		// Listen for battle finish
-		startListening({
-			actionCreator: BattleEvents.battleFinishEvent,
-			effect: async ({ payload: { turn } }) => {
-				_this.onServerFinishMatch();
-
-				_this.logger.debug("Battle finished", {
-					meta: {
-						home: _this.home.getVariable((v) => v.name),
-						away: _this.away.getVariable((v) => v.name),
-						turns: turn,
-					},
-				});
-			},
-		});
-
-		return store;
-	}
-
-	private onServerFinishMatch() {
-		this.serverFinishedMatch.resolve();
 	}
 }

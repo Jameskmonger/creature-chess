@@ -1,6 +1,5 @@
 import delay from "delay";
 import pDefer from "p-defer";
-import { Store } from "@reduxjs/toolkit";
 
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
@@ -10,16 +9,15 @@ import {
 } from "../../../entities/player/events";
 import { getMatches } from "../../../features/match/selectors";
 import { Match } from "../../match";
-import { RoundInfoCommands } from "../../roundInfo";
 import { GameContextPlayers } from "../../gameContext";
-import { GameState } from "../../store";
+import { Gamemode } from "../../gamemode";
 
 type Callbacks = {
 	onMatchStart?: () => void;
 	onMatchEnd?: () => void;
 };
 
-export const runPlayingPhase = async (store: Store<GameState>, players: GameContextPlayers, callbacks: Callbacks = {}) => {
+export const runPlayingPhase = async (gamemode: Gamemode, players: GameContextPlayers, callbacks: Callbacks = {}) => {
 	const battleTimeoutDeferred = pDefer<void>();
 
 	const phase = GamePhase.PLAYING;
@@ -29,7 +27,7 @@ export const runPlayingPhase = async (store: Store<GameState>, players: GameCont
 
 	const startedAt = Date.now() / 1000;
 
-	store.dispatch(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
+	gamemode.setRoundInfo({ phase, startedAt });
 
 	const livingPlayers = players.getLiving();
 

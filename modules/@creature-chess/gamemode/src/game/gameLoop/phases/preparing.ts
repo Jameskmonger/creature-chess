@@ -1,29 +1,24 @@
 import delay from "delay";
-import { Store } from "@reduxjs/toolkit";
 
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 
 import { playerRunPreparingPhaseEvent } from "../../events";
 import { readyNotifier } from "../../readyNotifier";
-import { RoundInfoCommands } from "../../roundInfo";
 import { GameContextPlayers } from "../../gameContext";
-import { GameState } from "../../store";
+import { Gamemode } from "../../gamemode";
 
-export const runPreparingPhase = async (store: Store<GameState>, players: GameContextPlayers) => {
-	const round = store.getState().roundInfo.round;
+export const runPreparingPhase = async (gamemode: Gamemode, players: GameContextPlayers) => {
+	const round = gamemode.roundInfo.round;
 
 	const phase = GamePhase.PREPARING;
 	const startedAt = Date.now() / 1000;
 
-	// todo put gamePhaseStartedEvent here?
-	store.dispatch(
-		RoundInfoCommands.setRoundInfoCommand({
-			phase,
-			startedAt,
-			round: round + 1,
-		})
-	);
+	gamemode.setRoundInfo({
+		phase,
+		startedAt,
+		round: round + 1,
+	});
 
 	players.getLiving().forEach((p) => p.put(playerRunPreparingPhaseEvent()));
 

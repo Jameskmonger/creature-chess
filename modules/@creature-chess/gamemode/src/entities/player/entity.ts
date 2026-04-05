@@ -1,4 +1,4 @@
-import { Entity, entityFactory } from "@shoki/engine";
+import { Entity, entityFactory } from "../entity";
 
 import { roundInfoReducer } from "../../game/roundInfo";
 import { PlayerEntityDependencies } from "./dependencies";

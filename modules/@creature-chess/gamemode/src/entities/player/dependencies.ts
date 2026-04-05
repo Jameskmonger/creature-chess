@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 
-import { EntityExtra, EntityListenerApi, EntityStartListening } from "@shoki/engine";
+import { EntityExtra, EntityListenerApi, EntityStartListening } from "../entity";
 
 import { GamemodeSettings } from "@creature-chess/models/settings";
 

@@ -1665,8 +1665,6 @@ __metadata:
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
-    "@reduxjs/toolkit": "npm:^2.2.1"
-    "@shoki/engine": "workspace:*"
     "@types/auth0": "npm:^2.34.9"
     "@types/lodash": "npm:^4.14.178"
     "@types/uuid": "npm:^8.3.3"
@@ -1681,8 +1679,6 @@ __metadata:
     tslib: "npm:^2.3.1"
     uuid: "npm:^8.3.2"
     winston: "npm:^3.3.3"
-  peerDependencies:
-    redux: ^4.1.0
   languageName: unknown
   linkType: soft
 
@@ -1774,7 +1770,6 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@reduxjs/toolkit": "npm:^2.2.1"
     "@shoki/card-deck": "workspace:*"
-    "@shoki/engine": "workspace:*"
     "@types/lodash": "npm:^4.14.178"
     "@types/uuid": "npm:^8.3.3"
     delay: "npm:^4.4.1"
@@ -1782,8 +1777,6 @@ __metadata:
     p-defer: "npm:^2.1.0"
     uuid: "npm:^8.3.2"
     winston: "npm:^3.3.3"
-  peerDependencies:
-    redux: ^4.1.0
   languageName: unknown
   linkType: soft
 
@@ -1802,7 +1795,6 @@ __metadata:
     "@creature-chess/board": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/utils": "workspace:*"
-    "@shoki/engine": "workspace:*"
   languageName: unknown
   linkType: soft
 
@@ -3367,9 +3359,6 @@ __metadata:
   resolution: "@shoki/engine@workspace:modules/@shoki/engine"
   dependencies:
     winston: "npm:^3.3.3"
-  peerDependencies:
-    "@reduxjs/toolkit": ^2.2.1
-    redux: ^4.1.0
   languageName: unknown
   linkType: soft
 

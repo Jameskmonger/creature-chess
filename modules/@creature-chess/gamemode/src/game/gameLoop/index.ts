@@ -1,9 +1,6 @@
-import { Store } from "@reduxjs/toolkit";
-
 import { PlayerVariables } from "../../entities/player";
 import { playerDeathEvent } from "../../entities/player/events";
 import { GameContext } from "../gameContext";
-import { GameState } from "../store";
 import { runPlayingPhase, runPreparingPhase, runReadyPhase } from "./phases";
 
 type Callbacks = {
@@ -12,8 +9,8 @@ type Callbacks = {
 	onMatchEnd?: () => void;
 };
 
-export const gameLoop = async (store: Store<GameState>, context: GameContext, callbacks: Callbacks = {}) => {
-	const { players } = context;
+export const gameLoop = async (context: GameContext, callbacks: Callbacks = {}) => {
+	const { gamemode, players } = context;
 
 	let currentLastPosition = players.getAll().length;
 	let currentRound = 0;
@@ -33,12 +30,12 @@ export const gameLoop = async (store: Store<GameState>, context: GameContext, ca
 	}
 
 	while (true) {
-		await runPreparingPhase(store, players);
+		await runPreparingPhase(gamemode, players);
 
-		currentRound = store.getState().roundInfo.round;
+		currentRound = gamemode.roundInfo.round;
 
-		await runReadyPhase(store, context, callbacks);
-		await runPlayingPhase(store, players, callbacks);
+		await runReadyPhase(context, callbacks);
+		await runPlayingPhase(gamemode, players, callbacks);
 
 		if (players.getLiving().length < 2) {
 			break;

@@ -1,5 +1,4 @@
 import delay from "delay";
-import { Store } from "@reduxjs/toolkit";
 
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
@@ -9,16 +8,14 @@ import {
 	playerRunReadyPhaseEvent,
 } from "../../events";
 import { Match } from "../../match";
-import { RoundInfoCommands } from "../../roundInfo";
 import { GameContext } from "../../gameContext";
-import { GameState } from "../../store";
 
 type Callbacks = {
 	onTurnComplete?: (timeMs: number) => void;
 };
 
-export const runReadyPhase = async (store: Store<GameState>, context: GameContext, callbacks: Callbacks = {}) => {
-	const { players, getMatchups, logger, settings, gamemode } = context;
+export const runReadyPhase = async (context: GameContext, callbacks: Callbacks = {}) => {
+	const { gamemode, players, getMatchups, logger, settings } = context;
 
 	// todo turn this into something that waits for all players
 	players.getAll().forEach((p) => p.put(playerBeforeReadyPhaseEvent()));
@@ -55,7 +52,7 @@ export const runReadyPhase = async (store: Store<GameState>, context: GameContex
 
 	const phase = GamePhase.READY;
 	const startedAt = Date.now() / 1000;
-	store.dispatch(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
+	gamemode.setRoundInfo({ phase, startedAt });
 
 	await delay(GAME_PHASE_LENGTHS[GamePhase.READY] * 1000);
 };

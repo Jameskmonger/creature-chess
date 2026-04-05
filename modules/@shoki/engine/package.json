@@ -28,9 +28,5 @@
 	},
 	"dependencies": {
 		"winston": "^3.3.3"
-	},
-	"peerDependencies": {
-		"@reduxjs/toolkit": "^2.2.1",
-		"redux": "^4.1.0"
 	}
 }
