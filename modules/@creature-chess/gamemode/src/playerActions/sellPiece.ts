@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { afterSellPieceEvent } from "../entities/player/events";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { getPiecesForStage } from "../game/evolution";
@@ -17,7 +17,7 @@ export const setupSellPieceListener = (startListening: PlayerStartListening) => 
 	startListening({
 		actionCreator: sellPiecePlayerAction,
 		effect: async ({ payload: { pieceId } }, api) => {
-			const { boards: { board, bench }, gamemode: { pieceRegistry } } = api.extra.dependencies;
+			const { board, bench, gamemode: { pieceRegistry } } = api.player;
 
 			const ownsPiece = board.containsPiece(pieceId) || bench.containsPiece(pieceId);
 

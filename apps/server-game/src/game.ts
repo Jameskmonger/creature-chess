@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import {
 	Gamemode,
 	PlayerCommands,
-	PlayerEntity,
+	Player,
 } from "@creature-chess/gamemode";
 import { GameFinishEvent } from "@creature-chess/gamemode/src/game/events";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
@@ -22,14 +22,14 @@ import {
 } from "./Metrics";
 import { logger } from "./log";
 import { playerNetworking } from "./player";
-import { createPlayerEntity } from "./player/entity";
+import { createPlayer } from "./player/entity";
 import { AuthenticatedSocket, GameSocket, LobbySocket } from "./player/socket";
 
 type GameMember = {
 	type: "BOT" | "PLAYER";
 	id: string;
 	networkingTeardown?: () => void;
-	entity: PlayerEntity;
+	entity: Player;
 };
 
 export type PlayerGameParticipant = {
@@ -127,7 +127,7 @@ export class Game {
 
 		if (!entity) {
 			throw Error(
-				`PlayerEntity couldn't be found when connecting to Game: ${socket.data.nickname}`
+				`Player couldn't be found when connecting to Game: ${socket.data.nickname}`
 			);
 		}
 
@@ -146,7 +146,7 @@ export class Game {
 		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
 		const playerIdAsString = id.toString();
 
-		const entity = createPlayerEntity(
+		const entity = createPlayer(
 			this.gamemode,
 			playerIdAsString,
 			name,
@@ -175,7 +175,7 @@ export class Game {
 		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
 		const playerIdAsString = id.toString();
 
-		const entity = createPlayerEntity(
+		const entity = createPlayer(
 			this.gamemode,
 			playerIdAsString,
 			name,
@@ -194,7 +194,7 @@ export class Game {
 		});
 	}
 
-	private initialisePlayer(entity: PlayerEntity) {
+	private initialisePlayer(entity: Player) {
 		const settings = this.settings;
 
 		entity.put(
@@ -211,7 +211,7 @@ export class Game {
 	}
 
 	private runPlayerNetworking(
-		entity: PlayerEntity,
+		entity: Player,
 		socket: GameSocket
 	) {
 		return playerNetworking(

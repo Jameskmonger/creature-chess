@@ -1,7 +1,7 @@
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { dropPiecePlayerAction } from "../../../playerActions";
-import { PlayerStartListening } from "../dependencies";
+import { PlayerStartListening } from "../player";
 import { PlayerState } from "../state";
 import {
 	isPlayerAlive,
@@ -36,7 +36,7 @@ export const setupFillBoardListener = (startListening: PlayerStartListening) => 
 	startListening({
 		type: FILL_BOARD_COMMAND,
 		effect: async (_action, api) => {
-			const { boards: { board, bench }, gamemode: { pieceRegistry } } = api.extra.dependencies;
+			const { board, bench, gamemode: { pieceRegistry } } = api.player;
 
 			if (!isPlayerAlive(api.getState())) {
 				return;

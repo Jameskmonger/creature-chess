@@ -1,7 +1,7 @@
 import delay from "delay";
 
 import { PlayerActions } from "@creature-chess/gamemode";
-import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/dependencies";
+import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/player";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -10,11 +10,7 @@ import { BOT_ACTION_TIME_MS } from "../constants";
 import { putBenchOnBoard } from "../putBenchOnBoard";
 
 export const preparingPhase = async (api: PlayerListenerApi, personality: BotPersonality) => {
-	const {
-		settings,
-		boards: { board, bench },
-		gamemode: { pieceRegistry },
-	} = api.extra.dependencies;
+	const { settings, board, bench, gamemode: { pieceRegistry } } = api.player;
 
 	await delay(BOT_ACTION_TIME_MS);
 

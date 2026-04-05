@@ -2,7 +2,7 @@ import {
 	playerRunPreparingPhaseEvent,
 } from "../../../../game/events";
 import { afterRerollCardsEvent } from "../../events";
-import { PlayerStartListening } from "../../dependencies";
+import { PlayerStartListening } from "../../player";
 import { PlayerState } from "../../state";
 import {
 	playerInfoCommands,

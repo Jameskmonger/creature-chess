@@ -5,7 +5,7 @@ import { GamePhase, RoundInfoState } from "@creature-chess/models";
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
-import { PlayerEntity } from "../entities";
+import { Player } from "../entities/player/player";
 import {
 	getPlayerStatus,
 	isPlayerAlive,
@@ -35,7 +35,7 @@ export class Gamemode {
 	private opponentProvider: OpponentProvider = new OpponentProvider();
 	public readonly pieceRegistry: PieceRegistry = new PieceRegistry();
 	private playerList = new PlayerList();
-	private players: PlayerEntity[] = [];
+	private players: Player[] = [];
 	private events = new EventEmitter();
 	private deck: CardDeck;
 
@@ -91,7 +91,7 @@ export class Gamemode {
 		(this.events as unknown as null) = null;
 	}
 
-	public start = (players: PlayerEntity[]) => {
+	public start = (players: Player[]) => {
 		players.forEach((player) => {
 			this.players.push(player);
 			this.playerList.addPlayer(player);

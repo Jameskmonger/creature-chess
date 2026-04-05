@@ -1,4 +1,4 @@
-import { PlayerEntity } from "../../entities";
+import { Player } from "../../entities/player/player";
 import {
 	isPlayerAlive,
 	isPlayerReady,
@@ -9,7 +9,7 @@ import {
 import { listenForPropertyUpdates } from "../playerPropertyUpdates";
 import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
 
-export const readyNotifier = (livingPlayers: PlayerEntity[]) => {
+export const readyNotifier = (livingPlayers: Player[]) => {
 	const queue = limitedQueue<string>(livingPlayers.length);
 
 	const disposePlayerFns = livingPlayers.map((player) => {

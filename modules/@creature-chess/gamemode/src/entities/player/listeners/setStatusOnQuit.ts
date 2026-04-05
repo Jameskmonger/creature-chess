@@ -3,7 +3,7 @@ import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import {
 	quitGamePlayerAction,
 } from "../../../playerActions";
-import { PlayerStartListening } from "../dependencies";
+import { PlayerStartListening } from "../player";
 import { playerInfoCommands } from "../state/commands";
 
 export const setupSetStatusOnQuitListener = (startListening: PlayerStartListening) => {

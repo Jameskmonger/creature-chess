@@ -2,13 +2,13 @@ import {
 	GameEvents,
 	PlayerCommands,
 	PlayerEvents,
-	PlayerEntity,
+	Player,
 } from "@creature-chess/gamemode";
 
 import { GameSocket } from "../../socket";
 import { sendInitialState } from "./initialState";
 
-export const setupOutgoingNetworking = (entity: PlayerEntity, socket: GameSocket) => {
+export const setupOutgoingNetworking = (entity: Player, socket: GameSocket) => {
 	const unsubscribes: (() => void)[] = [];
 
 	// Send initial state

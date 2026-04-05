@@ -1,11 +1,11 @@
-import { Gamemode, playerEntity } from "@creature-chess/gamemode";
+import { Gamemode, createPlayer as createPlayerBase } from "@creature-chess/gamemode";
 import { PlayerProfile } from "@creature-chess/models/player";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { logger } from "../log";
 import { Board } from "@creature-chess/board";
 
-export const createPlayerEntity = (
+export const createPlayer = (
 	gamemode: Gamemode,
 	playerId: string,
 	name: string,
@@ -17,7 +17,7 @@ export const createPlayerEntity = (
 		bench: new Board(settings.benchSize, 1),
 	};
 
-	return playerEntity(
+	return createPlayerBase(
 		playerId,
 		{ logger, gamemode, boards, settings },
 		{ match: null, name, profile, finishPosition: -1, finishRound: -1 }

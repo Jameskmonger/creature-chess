@@ -1,9 +1,7 @@
-import { PlayerEntity } from "../../entities";
+import { Player } from "../../entities/player/player";
 import { Match } from "../../game/match";
-import { PlayerVariables } from "./playerVariables";
 
-export const getMatch = (entity: PlayerEntity): Match | null =>
-	entity.getVariable((v: PlayerVariables) => v.match) as Match | null;
+export const getMatch = (entity: Player): Match | null => entity.match;
 
-export const getMatches = (players: PlayerEntity[]): Match[] =>
+export const getMatches = (players: Player[]): Match[] =>
 	players.map((p) => getMatch(p)).filter((m): m is Match => m !== null);

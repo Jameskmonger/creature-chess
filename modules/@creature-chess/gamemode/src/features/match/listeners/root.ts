@@ -1,4 +1,4 @@
-import { PlayerStartListening } from "../../../entities/player/dependencies";
+import { PlayerStartListening } from "../../../entities/player/player";
 import { setupClientFinishMatchListener } from "./clientFinishMatch";
 import { setupUpdateMatchVariableListeners } from "./updateMatchVariable";
 

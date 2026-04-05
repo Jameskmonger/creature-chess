@@ -1,4 +1,4 @@
-import { PlayerStartListening } from "../../dependencies";
+import { PlayerStartListening } from "../../player";
 import { setupPreparingPhaseListener } from "./preparing";
 import { setupReadyPhaseListeners } from "./ready";
 

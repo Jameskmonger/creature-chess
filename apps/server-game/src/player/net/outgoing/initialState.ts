@@ -1,7 +1,7 @@
 import delay from "delay";
 
 import { PlayerCommands, PlayerStateSelectors } from "@creature-chess/gamemode";
-import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/dependencies";
+import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/player";
 
 // send a command for each of the initial states so that networking sends it out
 // todo rethink this

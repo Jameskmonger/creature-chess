@@ -1,7 +1,7 @@
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { StreakType } from "@creature-chess/models/player";
 
-import { PlayerListenerApi, PlayerStartListening } from "../dependencies";
+import { PlayerListenerApi, PlayerStartListening } from "../player";
 import {
 	playerDeathEvent,
 	playerFinishMatchEvent,
@@ -64,7 +64,7 @@ export const setupMatchRewardsListener = (startListening: PlayerStartListening) 
 		effect: async ({ payload: { homeScore, awayScore, isHomePlayer } }, api) => {
 			api.cancelActiveListeners();
 
-			const { settings } = api.extra.dependencies;
+			const { settings } = api.player;
 
 			const win = isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
 

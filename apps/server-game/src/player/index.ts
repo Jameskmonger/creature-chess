@@ -4,7 +4,7 @@ import {
 	GameEvents,
 	PlayerActions,
 	PlayerCommands,
-	PlayerEntity,
+	Player,
 } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
@@ -23,7 +23,7 @@ type Parameters = {
 };
 
 export const playerNetworking = (
-	entity: PlayerEntity,
+	entity: Player,
 	socket: GameSocket,
 	{ getRoundInfo, getPlayers }: Parameters,
 	settings: GamemodeSettings

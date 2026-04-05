@@ -3,7 +3,7 @@ import { Logger } from "winston";
 
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
-import { PlayerEntity } from "../entities";
+import { Player } from "../entities/player/player";
 import { gameLoop } from "./gameLoop";
 import { Gamemode } from "./gamemode";
 
@@ -17,9 +17,9 @@ export type GameContext = {
 	gamemode: Gamemode;
 	getMatchups: GetMatchupsFn;
 	players: {
-		getAll: () => PlayerEntity[];
-		getLiving: () => PlayerEntity[];
-		getById: (id: string) => PlayerEntity | null;
+		getAll: () => Player[];
+		getLiving: () => Player[];
+		getById: (id: string) => Player | null;
 	};
 	logger: Logger;
 	settings: GamemodeSettings;
@@ -46,7 +46,7 @@ export const runGame = async (context: GameContext, callbacks: Callbacks = {}) =
 	logger.info(
 		`Game started with ${players.getAll().length} players: ${players
 			.getAll()
-			.map((p) => p.getVariable((v) => v.name))
+			.map((p) => p.name)
 			.join(", ")}`
 	);
 

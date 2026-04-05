@@ -1,4 +1,4 @@
-import { PlayerExtra, PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { setupBuyCardListener } from "./buyCard";
 import { setupBuyXpListener } from "./buyXp";
 import { setupDropPieceListener } from "./dropPiece";
@@ -10,7 +10,7 @@ import { setupSpectateListener } from "./spectate";
 import { setupSwapPieceListener } from "./swapPiece";
 import { setupToggleShopLockListener } from "./toggleShopLock";
 
-export const setupPlayerActionListeners = (startListening: PlayerStartListening, extra: PlayerExtra) => {
+export const setupPlayerActionListeners = (startListening: PlayerStartListening) => {
 	setupBuyXpListener(startListening);
 	setupBuyCardListener(startListening);
 	setupRerollCardsListener(startListening);

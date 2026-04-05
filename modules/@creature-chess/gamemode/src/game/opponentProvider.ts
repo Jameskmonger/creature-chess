@@ -2,7 +2,7 @@ import { shuffle } from "lodash";
 
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
 
-import { PlayerEntity } from "../entities";
+import { Player } from "../entities/player/player";
 import { PlayerStateSelectors } from "../entities/player";
 
 const randomFromArray = <T>(array: T[]) =>
@@ -16,9 +16,9 @@ export class OpponentProvider {
 	private lastOddMatchupHomeId: string | null = null;
 	private lastOddMatchupAwayId: string | null = null;
 
-	private players: PlayerEntity[] | null = null;
+	private players: Player[] | null = null;
 
-	public setPlayers(players: PlayerEntity[]) {
+	public setPlayers(players: Player[]) {
 		this.players = players;
 	}
 
@@ -59,7 +59,7 @@ export class OpponentProvider {
 		);
 	}
 
-	private getMatchupsEven(livingPlayers: PlayerEntity[]) {
+	private getMatchupsEven(livingPlayers: Player[]) {
 		const matchups: { homeId: string; awayId: string; awayIsClone: boolean }[] =
 			[];
 
@@ -91,7 +91,7 @@ export class OpponentProvider {
 		return matchups;
 	}
 
-	private getMatchupsOdd(livingPlayers: PlayerEntity[]) {
+	private getMatchupsOdd(livingPlayers: Player[]) {
 		const cloneMatchup = this.getOddCloneMatchup(livingPlayers);
 
 		const otherPlayers = livingPlayers.filter(
@@ -101,7 +101,7 @@ export class OpponentProvider {
 		return [cloneMatchup, ...this.getMatchupsEven(otherPlayers)];
 	}
 
-	private getOddCloneMatchup(livingPlayers: PlayerEntity[]) {
+	private getOddCloneMatchup(livingPlayers: Player[]) {
 		const potentialHomePlayers = livingPlayers.filter(
 			({ id }) =>
 				id !== this.lastOddMatchupHomeId || this.lastOddMatchupHomeId === null
@@ -125,7 +125,7 @@ export class OpponentProvider {
 		};
 	}
 
-	private generateRotations(livingPlayers: PlayerEntity[]) {
+	private generateRotations(livingPlayers: Player[]) {
 		const rotations = [];
 
 		// in head-to-head rotation,

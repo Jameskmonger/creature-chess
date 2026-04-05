@@ -3,7 +3,7 @@ import {
 	inProgressBattle,
 } from "@creature-chess/models/game/playerList";
 
-import { PlayerStartListening } from "../dependencies";
+import { PlayerStartListening } from "../player";
 import { playerFinishMatchEvent } from "../events";
 import { playerInfoCommands } from "../state/commands";
 import { getOpponentId, getOpponentIsClone } from "../state/selectors";

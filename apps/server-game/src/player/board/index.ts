@@ -1,11 +1,9 @@
 import delay from "delay";
 
 import {
-	PlayerVariables,
-	PlayerEntity,
+	Player,
 	PlayerCommands,
 	GameEvents,
-	Match,
 	PlayerEvents,
 	PlayerState,
 	removeBenchPiecesCommand,
@@ -33,21 +31,18 @@ const BENCH_CHANGE_ACTIONS = new Set([
 ]);
 
 const setupSpectateListeners = (
-	targetEntity: PlayerEntity,
+	targetEntity: Player,
 	localPlayerId: string,
 	socket: GameSocket,
 ) => {
-	const {
-		boards: { board, bench },
-		gamemode: { pieceRegistry },
-	} = targetEntity.dependencies;
+	const { board, bench, gamemode: { pieceRegistry } } = targetEntity;
 
 	// Send current board and bench state immediately so the client
 	// doesn't show stale data from a previous spectating target.
 	socket.emit("boardUpdate", serialiseBoard(board, pieceRegistry));
 	socket.emit("benchUpdate", serialiseBoard(bench, pieceRegistry));
 
-	const match = targetEntity.getVariable<Match | null>((v) => v.match);
+	const match = targetEntity.match;
 	if (match) {
 		const matchBoard = match.getBoardForPlayer(localPlayerId);
 		socket.emit("matchBoardUpdate", {
@@ -67,7 +62,7 @@ const setupSpectateListeners = (
 				// todo improve this, it's to allow the match variable to be set... maybe some `setMatchEvent`
 				await delay(100);
 
-				const currentMatch = api.extra.getVariable<Match | null>((v: PlayerVariables) => v.match);
+				const currentMatch = api.player.match;
 				if (currentMatch) {
 					const boardData = currentMatch.getBoardForPlayer(localPlayerId);
 					socket.emit("matchBoardUpdate", {
@@ -113,10 +108,10 @@ const setupSpectateListeners = (
  * Watch the local player board and bench, or that of the currently spectated player.
  * Registers a listener on the player entity for spectating changes.
  */
-export const setupPlayerBoard = (entity: PlayerEntity, socket: GameSocket) => {
+export const setupPlayerBoard = (entity: Player, socket: GameSocket) => {
 	let cleanupSpectate: (() => void) | null = null;
 
-	const startSpectating = (targetEntity: PlayerEntity) => {
+	const startSpectating = (targetEntity: Player) => {
 		cleanupSpectate?.();
 		cleanupSpectate = setupSpectateListeners(targetEntity, entity.id, socket);
 	};
@@ -126,7 +121,7 @@ export const setupPlayerBoard = (entity: PlayerEntity, socket: GameSocket) => {
 
 		const spectatingId = entity.select((state: PlayerState) => state.spectating.id);
 		const target = spectatingId
-			? entity.dependencies.gamemode.getPlayerById(spectatingId) || entity
+			? entity.gamemode.getPlayerById(spectatingId) || entity
 			: entity;
 
 		startSpectating(target);
@@ -137,7 +132,7 @@ export const setupPlayerBoard = (entity: PlayerEntity, socket: GameSocket) => {
 		effect: async (_action, api) => {
 			const spectatingId = api.getState().spectating.id;
 			const targetEntity = spectatingId
-				? api.extra.dependencies.gamemode.getPlayerById(spectatingId) || entity
+				? api.player.gamemode.getPlayerById(spectatingId) || entity
 				: entity;
 
 			startSpectating(targetEntity);

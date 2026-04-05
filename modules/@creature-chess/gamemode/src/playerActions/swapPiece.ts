@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { PlayerPieceLocation } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
 import { findPiece, isLocationLocked } from "./dropPiece";
 import { addBenchPieceCommand, addBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "../entities/player/state/board";
@@ -20,7 +20,7 @@ export const setupSwapPieceListener = (startListening: PlayerStartListening) => 
 	startListening({
 		actionCreator: swapPiecePlayerAction,
 		effect: async ({ payload: { pieceAId, pieceALocation, pieceBId, pieceBLocation } }, api) => {
-			const { boards: { board, bench } } = api.extra.dependencies;
+			const { board, bench } = api.player;
 			const state = api.getState();
 
 			if (

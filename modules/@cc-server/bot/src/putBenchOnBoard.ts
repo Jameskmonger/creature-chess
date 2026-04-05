@@ -1,7 +1,7 @@
 import delay from "delay";
 
 import { PlayerActions, PlayerStateSelectors } from "@creature-chess/gamemode";
-import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/dependencies";
+import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/player";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 
 import { BOT_ACTION_TIME_MS } from "./constants";
@@ -21,10 +21,7 @@ const getFirstBenchPieceId = (bench: Board): PieceModel["id"] | null => {
 };
 
 export const putBenchOnBoard = async (api: PlayerListenerApi) => {
-	const {
-		boards: { board, bench },
-		gamemode: { pieceRegistry }
-	} = api.extra.dependencies;
+	const { board, bench, gamemode: { pieceRegistry } } = api.player;
 
 	while (true) {
 		const state = api.getState();

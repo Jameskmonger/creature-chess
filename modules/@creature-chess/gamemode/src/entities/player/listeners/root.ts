@@ -1,4 +1,4 @@
-import { PlayerExtra, PlayerStartListening } from "../dependencies";
+import { PlayerStartListening } from "../player";
 import { setupFeaturesListeners } from "../../../features";
 import { setupPlayerActionListeners } from "../../../playerActions/listeners";
 import { setupPlayerBattleListeners } from "./battle";
@@ -9,9 +9,9 @@ import { setupSetStatusOnQuitListener } from "./setStatusOnQuit";
 import { setupXpListener } from "./xp";
 import { setupBoardApplyListeners } from "./boardApply";
 
-export const setupPlayerListeners = (startListening: PlayerStartListening, extra: PlayerExtra) => {
+export const setupPlayerListeners = (startListening: PlayerStartListening) => {
 	setupPlayerPhaseListeners(startListening);
-	setupPlayerActionListeners(startListening, extra);
+	setupPlayerActionListeners(startListening);
 	setupBoardApplyListeners(startListening);
 	setupEvolutionListener(startListening);
 	setupXpListener(startListening);

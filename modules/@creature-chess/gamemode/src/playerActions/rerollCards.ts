@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { afterRerollCardsEvent } from "../entities/player/events";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { isPlayerAlive } from "../entities/player/state/selectors";
@@ -14,7 +14,7 @@ export const setupRerollCardsListener = (startListening: PlayerStartListening) =
 	startListening({
 		actionCreator: rerollCardsPlayerAction,
 		effect: async (_action, api) => {
-			const { logger, settings } = api.extra.dependencies;
+			const { logger, settings } = api.player;
 
 			if (!isPlayerAlive(api.getState())) {
 				logger.info("Attempted to reroll, but dead");

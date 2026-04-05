@@ -1,4 +1,4 @@
-import { PlayerStartListening } from "../dependencies";
+import { PlayerStartListening } from "../player";
 import { getXpToNextLevel } from "../../../player/xp";
 import { playerInfoCommands } from "../state/commands";
 import { getPlayerLevel, getPlayerXp } from "../state/selectors";

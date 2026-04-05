@@ -1,4 +1,4 @@
-import { PlayerStartListening } from "../dependencies";
+import { PlayerStartListening } from "../player";
 import { addBenchPieceCommand, addBoardPieceCommand, clearBenchCommand, clearBoardCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, removeBoardPieceCommand, removeBoardPiecesCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "../state/board";
 import { unpackX, unpackY } from "@creature-chess/board";
 
@@ -8,20 +8,20 @@ import { unpackX, unpackY } from "@creature-chess/board";
  * Created to support migration away from board state being in Redux store.
  */
 export const setupBoardApplyListeners = (startListening: PlayerStartListening) => {
-	// We need the board/bench from dependencies, accessed via api.extra inside each listener
+	// Apply board/bench commands to the actual Board instances
 	// === board
 
 	startListening({
 		actionCreator: addBoardPieceCommand,
 		effect: async ({ payload: { pieceId, position } }, api) => {
-			api.extra.dependencies.boards.board.setPiece(pieceId, unpackX(position), unpackY(position));
+			api.player.board.setPiece(pieceId, unpackX(position), unpackY(position));
 		},
 	});
 
 	startListening({
 		actionCreator: removeBoardPieceCommand,
 		effect: async ({ payload: { pieceId } }, api) => {
-			api.extra.dependencies.boards.board.removePiece(pieceId);
+			api.player.board.removePiece(pieceId);
 		},
 	});
 
@@ -29,7 +29,7 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 		actionCreator: removeBoardPiecesCommand,
 		effect: async ({ payload: { pieceIds } }, api) => {
 			for (const pieceId of pieceIds) {
-				api.extra.dependencies.boards.board.removePiece(pieceId);
+				api.player.board.removePiece(pieceId);
 			}
 		},
 	});
@@ -37,14 +37,14 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 	startListening({
 		actionCreator: swapBoardPiecesCommand,
 		effect: async ({ payload: { pieceIdA, pieceIdB } }, api) => {
-			api.extra.dependencies.boards.board.swapPieces(pieceIdA, pieceIdB);
+			api.player.board.swapPieces(pieceIdA, pieceIdB);
 		},
 	});
 
 	startListening({
 		actionCreator: moveBoardPieceCommand,
 		effect: async ({ payload: { pieceId, from, to } }, api) => {
-			const board = api.extra.dependencies.boards.board;
+			const board = api.player.board;
 			const existingPosition = board.getPiecePosition(pieceId);
 
 			if (
@@ -62,7 +62,7 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 	startListening({
 		actionCreator: clearBoardCommand,
 		effect: async (_action, api) => {
-			api.extra.dependencies.boards.board.clear();
+			api.player.board.clear();
 		},
 	});
 
@@ -71,14 +71,14 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 	startListening({
 		actionCreator: addBenchPieceCommand,
 		effect: async ({ payload: { pieceId, position } }, api) => {
-			api.extra.dependencies.boards.bench.setPiece(pieceId, position.x, 0);
+			api.player.bench.setPiece(pieceId, position.x, 0);
 		},
 	});
 
 	startListening({
 		actionCreator: removeBenchPieceCommand,
 		effect: async ({ payload: { pieceId } }, api) => {
-			api.extra.dependencies.boards.bench.removePiece(pieceId);
+			api.player.bench.removePiece(pieceId);
 		},
 	});
 
@@ -86,7 +86,7 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 		actionCreator: removeBenchPiecesCommand,
 		effect: async ({ payload: { pieceIds } }, api) => {
 			for (const pieceId of pieceIds) {
-				api.extra.dependencies.boards.bench.removePiece(pieceId);
+				api.player.bench.removePiece(pieceId);
 			}
 		},
 	});
@@ -94,14 +94,14 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 	startListening({
 		actionCreator: swapBenchPiecesCommand,
 		effect: async ({ payload: { pieceIdA, pieceIdB } }, api) => {
-			api.extra.dependencies.boards.bench.swapPieces(pieceIdA, pieceIdB);
+			api.player.bench.swapPieces(pieceIdA, pieceIdB);
 		},
 	});
 
 	startListening({
 		actionCreator: moveBenchPieceCommand,
 		effect: async ({ payload: { pieceId, from, to } }, api) => {
-			const bench = api.extra.dependencies.boards.bench;
+			const bench = api.player.bench;
 			const existingPosition = bench.getPiecePosition(pieceId);
 
 			if (
@@ -118,7 +118,7 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 	startListening({
 		actionCreator: clearBenchCommand,
 		effect: async (_action, api) => {
-			api.extra.dependencies.boards.bench.clear();
+			api.player.bench.clear();
 		},
 	});
 };

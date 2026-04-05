@@ -2,7 +2,7 @@ import {
 	playerBeforeReadyPhaseEvent,
 	playerRunReadyPhaseEvent,
 } from "../../../../game/events";
-import { PlayerStartListening } from "../../dependencies";
+import { PlayerStartListening } from "../../player";
 import { playerInfoCommands } from "../../state/commands";
 import { fillBoardCommand } from "../fillBoard";
 
@@ -18,7 +18,7 @@ export const setupReadyPhaseListeners = (startListening: PlayerStartListening) =
 	startListening({
 		actionCreator: playerRunReadyPhaseEvent,
 		effect: async ({ payload: { match } }, api) => {
-			const playerId = api.extra.id;
+			const playerId = api.player.id;
 
 			if (match.home.id === playerId) {
 				api.dispatch(

@@ -4,11 +4,11 @@ import {
 } from "@creature-chess/models/game/playerList";
 import { PlayerStreak } from "@creature-chess/models/player";
 
-import { PlayerEntity } from "../entities";
+import { Player } from "../entities/player/player";
 import { PlayerCommands, PlayerStateSelectors } from "../entities/player";
 
 export const listenForPropertyUpdates = (
-	player: PlayerEntity,
+	player: Player,
 	{
 		health: emitHealth,
 		streak: emitStreak,

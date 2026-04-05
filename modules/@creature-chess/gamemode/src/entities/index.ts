@@ -1,1 +1,1 @@
-export { PlayerEntity, playerEntity } from "./player";
+export { Player, createPlayer } from "./player";

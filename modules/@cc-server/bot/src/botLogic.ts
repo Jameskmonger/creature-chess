@@ -1,7 +1,7 @@
 import delay from "delay";
 
 import {
-	PlayerEntity,
+	Player,
 	PlayerEvents,
 	GameEvents,
 } from "@creature-chess/gamemode";
@@ -12,7 +12,7 @@ import { BotPersonality } from "@cc-server/data";
 import { preparingPhase } from "./preparingPhase";
 import { putBenchOnBoard } from "./putBenchOnBoard";
 
-export const setupBotLogic = (entity: PlayerEntity, personality: BotPersonality) => {
+export const setupBotLogic = (entity: Player, personality: BotPersonality) => {
 	entity.addListener({
 		actionCreator: GameEvents.gamePhaseStartedEvent,
 		effect: async ({ payload: { phase } }, api) => {

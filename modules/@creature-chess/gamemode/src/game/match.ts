@@ -7,7 +7,7 @@ import { BattleRunner } from "@creature-chess/battle";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
-import { PlayerEntity } from "../entities";
+import { Player } from "../entities/player/player";
 import { playerFinishMatchEvent } from "../entities/player/events";
 import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils/piece";
@@ -23,8 +23,8 @@ export class Match {
 
 	public constructor(
 		private readonly pieceRegistry: PieceRegistry,
-		public readonly home: PlayerEntity,
-		public readonly away: PlayerEntity,
+		public readonly home: Player,
+		public readonly away: Player,
 		public readonly awayIsClone: boolean,
 		private logger: Logger,
 		settings: GamemodeSettings,
@@ -32,8 +32,8 @@ export class Match {
 	) {
 		this.board = mergeBoards(
 			this.boardId,
-			home.dependencies.boards.board,
-			away.dependencies.boards.board,
+			home.board,
+			away.board,
 		);
 
 		for (const piece of this.board.getAllPieces()) {
@@ -96,8 +96,8 @@ export class Match {
 		const battlePromise = this.runner.run().then(({ turn }) => {
 			this.logger.debug("Battle finished", {
 				meta: {
-					home: this.home.getVariable((v) => v.name),
-					away: this.away.getVariable((v) => v.name),
+					home: this.home.name,
+					away: this.away.name,
 					turns: turn,
 				},
 			});

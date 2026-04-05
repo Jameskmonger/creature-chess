@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { isPlayerAlive } from "../entities/player/state/selectors";
 import { setSpectatingIdCommand } from "../entities/player/state/spectating";
 
@@ -21,7 +21,7 @@ export const setupSpectateListener = (startListening: PlayerStartListening) => {
 				return;
 			}
 
-			const game = api.extra.dependencies.gamemode;
+			const game = api.player.gamemode;
 			const other = game.getPlayerById(playerId);
 
 			if (!other || !other.select(isPlayerAlive)) {

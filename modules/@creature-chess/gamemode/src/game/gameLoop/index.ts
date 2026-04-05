@@ -1,4 +1,3 @@
-import { PlayerVariables } from "../../entities/player";
 import { playerDeathEvent } from "../../entities/player/events";
 import { GameContext } from "../gameContext";
 import { runPlayingPhase, runPreparingPhase, runReadyPhase } from "./phases";
@@ -19,10 +18,8 @@ export const gameLoop = async (context: GameContext, callbacks: Callbacks = {}) 
 		player.addListener({
 			actionCreator: playerDeathEvent,
 			effect: async (_action, api) => {
-				api.extra.updateVariables({
-					finishPosition: currentLastPosition,
-					finishRound: currentRound,
-				} as Partial<PlayerVariables>);
+				api.player.finishPosition = currentLastPosition;
+				api.player.finishRound = currentRound;
 
 				currentLastPosition--;
 			},
@@ -47,20 +44,18 @@ export const gameLoop = async (context: GameContext, callbacks: Callbacks = {}) 
 
 		return players.getAll().map((p) => ({
 			id: p.id,
-			position: p.getVariable((v) => v.finishPosition),
-			finishRound: p.getVariable((v) => v.finishRound),
+			position: p.finishPosition,
+			finishRound: p.finishRound,
 		}));
 	}
 
 	const winner = players.getLiving()[0];
-	winner.updateVariables({
-		finishPosition: 1,
-		finishRound: currentRound,
-	} as Partial<PlayerVariables>);
+	winner.finishPosition = 1;
+	winner.finishRound = currentRound;
 
 	return players.getAll().map((p) => ({
 		id: p.id,
-		position: p.getVariable((v) => v.finishPosition),
-		finishRound: p.getVariable((v) => v.finishRound),
+		position: p.finishPosition,
+		finishRound: p.finishRound,
 	}));
 };

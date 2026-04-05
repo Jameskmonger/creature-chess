@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { MAX_LEVEL } from "@creature-chess/models/config";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { addXpCommand } from "../entities/player/listeners/xp";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { isPlayerAlive } from "../entities/player/state/selectors";
@@ -14,9 +14,9 @@ export const setupBuyXpListener = (startListening: PlayerStartListening) => {
 	startListening({
 		actionCreator: buyXpPlayerAction,
 		effect: async (_action, api) => {
-			const playerId = api.extra.id;
-			const name = api.extra.getVariable((v) => v.name);
-			const { logger, settings } = api.extra.dependencies;
+			const playerId = api.player.id;
+			const name = api.player.name;
+			const { logger, settings } = api.player;
 
 			if (!isPlayerAlive(api.getState())) {
 				logger.info("Player attempted to buy xp, but dead", {

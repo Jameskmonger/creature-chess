@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { QuickChatOption } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { playerReceiveQuickChatEvent } from "../entities/player/events";
 
 export type QuickChatPlayerAction = ReturnType<typeof quickChatPlayerAction>;
@@ -24,7 +24,7 @@ export const setupQuickChatListener = (startListening: PlayerStartListening) => 
 				return;
 			}
 
-			const game = api.extra.dependencies.gamemode;
+			const game = api.player.gamemode;
 			const player = game.getPlayerById(sendingPlayerId);
 			const opponentId = api.getState().playerInfo.opponentId;
 

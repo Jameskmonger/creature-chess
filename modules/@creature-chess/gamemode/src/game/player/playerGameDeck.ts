@@ -1,6 +1,6 @@
 import { Card, PieceModel } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../../entities/player/dependencies";
+import { PlayerStartListening } from "../../entities/player/player";
 import { PlayerState } from "../../entities/player/state";
 import {
 	playerDeathEvent,
@@ -40,7 +40,7 @@ export const setupPlayerGameDeckListeners = (
 	startListening({
 		actionCreator: playerDeathEvent,
 		effect: async (_action, api) => {
-			const { boards: { board, bench }, gamemode: { pieceRegistry } } = api.extra.dependencies;
+			const { board, bench, gamemode: { pieceRegistry } } = api.player;
 
 			const cards = getPlayerCards(api.getState());
 
@@ -70,7 +70,7 @@ export const setupPlayerGameDeckListeners = (
 	startListening({
 		actionCreator: afterRerollCardsEvent,
 		effect: async (_action, api) => {
-			const { boards: { board, bench }, gamemode: { pieceRegistry } } = api.extra.dependencies;
+			const { board, bench, gamemode: { pieceRegistry } } = api.player;
 
 			const state = api.getState() as PlayerState;
 

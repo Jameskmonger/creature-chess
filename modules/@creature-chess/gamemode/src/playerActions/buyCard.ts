@@ -9,7 +9,7 @@ import {
 } from "@creature-chess/models";
 
 import { getDefinitionById } from "../definitions";
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
@@ -101,9 +101,9 @@ export const setupBuyCardListener = (startListening: PlayerStartListening) => {
 	startListening({
 		actionCreator: buyCardPlayerAction,
 		effect: async (action, api) => {
-			const playerId = api.extra.id;
-			const name = api.extra.getVariable((v) => v.name);
-			const { logger, gamemode: { pieceRegistry }, boards: { board, bench } } = api.extra.dependencies;
+			const playerId = api.player.id;
+			const name = api.player.name;
+			const { logger, gamemode: { pieceRegistry }, board, bench } = api.player;
 
 			const index = action.payload.index;
 			const sortPositions = action.payload.sortPositions || undefined;

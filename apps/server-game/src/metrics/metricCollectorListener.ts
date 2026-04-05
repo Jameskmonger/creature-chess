@@ -1,5 +1,5 @@
 import { PlayerActionTypesArray, quickChatPlayerAction, quitGamePlayerAction, spectatePlayerAction } from "@creature-chess/gamemode/src/playerActions";
-import { PlayerEntity } from "@creature-chess/gamemode";
+import { Player } from "@creature-chess/gamemode";
 import { metricCollector } from "./metricCollector";
 
 const IGNORED_ACTIONS = [
@@ -14,11 +14,8 @@ const TRACKED_ACTIONS = new Set(
 	)
 );
 
-export const setupMetricCollector = (entity: PlayerEntity) => {
-	const {
-		boards: { bench, board },
-		gamemode: { pieceRegistry },
-	} = entity.dependencies;
+export const setupMetricCollector = (entity: Player) => {
+	const { bench, board, gamemode: { pieceRegistry } } = entity;
 
 	return entity.addListener({
 		predicate: (action) => TRACKED_ACTIONS.has(action.type),

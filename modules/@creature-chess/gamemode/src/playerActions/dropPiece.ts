@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
 import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand } from "../entities/player/state/board";
 import { Board, unpackPosition, unpackX } from "@creature-chess/board";
@@ -54,7 +54,7 @@ export const setupDropPieceListener = (startListening: PlayerStartListening) => 
 	startListening({
 		actionCreator: dropPiecePlayerAction,
 		effect: async ({ payload: { from, pieceId, to } }, api) => {
-			const { logger, boards: { board, bench } } = api.extra.dependencies;
+			const { logger, board, bench } = api.player;
 			const state = api.getState();
 
 			if (isLocationLocked(state, from)) {

@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { updateShopLockCommand } from "../entities/player/state/cardShop";
 import { isPlayerShopLocked } from "../entities/player/state/selectors";
 

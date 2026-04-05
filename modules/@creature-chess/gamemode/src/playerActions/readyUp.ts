@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/player";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import {
 	isPlayerAlive,
@@ -18,16 +18,13 @@ export const setupReadyUpListener = (startListening: PlayerStartListening) => {
 		effect: async (_action, api) => {
 			api.cancelActiveListeners();
 
-			const name = api.extra.getVariable((v) => v.name);
-			const logger = api.extra.dependencies.logger;
+			const { name, logger, gamemode: game } = api.player;
 			const state = api.getState();
 
 			if (!isPlayerAlive(state)) {
 				logger.info("Attempted to ready up, but dead", { actor: { name } });
 				return;
 			}
-
-			const game = api.extra.dependencies.gamemode;
 
 			if (game.getRoundInfo().phase !== GamePhase.PREPARING) {
 				logger.info("Attempted to ready up, but not in preparing phase", {

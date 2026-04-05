@@ -4,7 +4,7 @@ import { GamePhase, PieceModel } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
 
 import { getDefinitionById } from "../../../definitions";
-import { PlayerStartListening } from "../dependencies";
+import { PlayerStartListening } from "../player";
 import { isPlayerBoardLocked } from "../state/selectors";
 import { addBenchPieceCommand, addBoardPieceCommand, removeBenchPiecesCommand, removeBoardPiecesCommand } from "../state/board";
 import { gamePhaseStartedEvent, GamePhaseStartedEvent } from "../../../game/events";
@@ -37,10 +37,7 @@ export const setupEvolutionListener = (startListening: PlayerStartListening) => 
 		effect: async (action, api) => {
 			api.cancelActiveListeners();
 
-			const {
-				boards: { board, bench },
-				gamemode: { pieceRegistry }
-			} = api.extra.dependencies;
+			const { board, bench, gamemode: { pieceRegistry } } = api.player;
 
 			const { pieceId } = (action as ReturnType<typeof addBoardPieceCommand> | ReturnType<typeof addBenchPieceCommand>).payload;
 
