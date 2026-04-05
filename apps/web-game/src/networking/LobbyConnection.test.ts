@@ -1,12 +1,19 @@
+/* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
 import { LobbyConnection } from "./LobbyConnection";
 
 const createMockSocket = () => {
 	const handlers = new Map<string, Function>();
 	return {
-		on: jest.fn((event: string, handler: Function) => { handlers.set(event, handler); }),
-		off: jest.fn((event: string) => { handlers.delete(event); }),
+		on: jest.fn((event: string, handler: Function) => {
+ handlers.set(event, handler);
+}),
+		off: jest.fn((event: string) => {
+ handlers.delete(event);
+}),
 		emit: jest.fn(),
-		_trigger: (event: string, payload: any) => { handlers.get(event)?.(payload); },
+		_trigger: (event: string, payload: any) => {
+ handlers.get(event)?.(payload);
+},
 	};
 };
 

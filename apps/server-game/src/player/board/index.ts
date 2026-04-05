@@ -12,7 +12,16 @@ import {
 import { serialiseBoard } from "@creature-chess/networking";
 
 import { GameSocket } from "../socket";
-import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "@creature-chess/gamemode";
+import {
+	addBenchPieceCommand,
+	addBoardPieceCommand,
+	moveBenchPieceCommand,
+	moveBoardPieceCommand,
+	removeBenchPieceCommand,
+	removeBoardPieceCommand,
+	swapBenchPiecesCommand,
+	swapBoardPiecesCommand,
+} from "@creature-chess/gamemode";
 
 const BOARD_CHANGE_ACTIONS = new Set([
 	addBoardPieceCommand.type,

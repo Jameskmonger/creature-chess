@@ -10,7 +10,7 @@ export class GameBoardState {
 	public readonly matchBoard: SubscribableBoard;
 	public readonly pieceRegistry: PieceRegistry;
 
-	constructor() {
+	public constructor() {
 		this.board = new SubscribableBoard(
 			GamemodeSettingsPresets["default"].boardWidth,
 			GamemodeSettingsPresets["default"].boardHalfHeight

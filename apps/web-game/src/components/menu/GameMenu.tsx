@@ -19,16 +19,16 @@ const useStyles = createUseThemeStyles(theme => ({
 		flexDirection: "column",
 	},
 	brandBar: {
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		background: theme.palette.background,
-		borderBottom: "2px solid hsl(224 26% 24% / 1)",
-		padding: "0.25rem 1rem",
+		"display": "flex",
+		"flexDirection": "row",
+		"alignItems": "center",
+		"justifyContent": "space-between",
+		"background": theme.palette.background,
+		"borderBottom": "2px solid hsl(224 26% 24% / 1)",
+		"padding": "0.25rem 1rem",
 
 		"& img": {
-			"height": "5rem",
+			height: "5rem",
 			filter: "drop-shadow(0px 2px 2px #222)"
 		}
 	},
@@ -42,21 +42,21 @@ const useStyles = createUseThemeStyles(theme => ({
 		gap: "0.5rem",
 	},
 	social: {
-		display: "flex",
-		flexDirection: "row",
-		gap: "0.5rem",
+		"display": "flex",
+		"flexDirection": "row",
+		"gap": "0.5rem",
 
 		"& > :first-child": {
 			flex: 1,
 		},
 	},
 	profile: {
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		gap: "0.5rem",
-		fontSize: "1.5rem",
-		color: theme.palette.light.neutral,
+		"display": "flex",
+		"flexDirection": "row",
+		"alignItems": "center",
+		"gap": "0.5rem",
+		"fontSize": "1.5rem",
+		"color": theme.palette.light.neutral,
 
 		"& img": {
 			width: "32px",
@@ -66,7 +66,7 @@ const useStyles = createUseThemeStyles(theme => ({
 	friends: {
 		width: "32px",
 		height: "32px",
-		"filter": "saturate(0)",
+		filter: "saturate(0)",
 	},
 	main: {
 		flex: 1,
@@ -89,8 +89,8 @@ const useStyles = createUseThemeStyles(theme => ({
 		"justifyContent": "center",
 		"gap": "8px",
 		"& img": {
-			"height": "48px",
-			"width": "48px",
+			height: "48px",
+			width: "48px",
 		},
 	},
 	welcome: {

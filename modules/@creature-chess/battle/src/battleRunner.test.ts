@@ -83,7 +83,9 @@ describe("BattleRunner", () => {
 			// After first simulateTurn, kill p2's piece
 			mockSimulateTurn.mockImplementation(() => {
 				const p2Piece = registry.getPieceById("b") as any;
-				if (p2Piece) p2Piece.currentHealth = 0;
+				if (p2Piece) {
+p2Piece.currentHealth = 0;
+}
 			});
 
 			const runner = new BattleRunner(board, registry, defaultSettings);

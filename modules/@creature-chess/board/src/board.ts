@@ -9,9 +9,13 @@ export class Board {
 	private positionToPieceId: Map<PositionKey, PieceId> = new Map();
 	private pieceIdToPosition: Map<PieceId, Position> = new Map();
 
-	constructor(width: number, height: number) {
+	public constructor(width: number, height: number) {
 		this.width = width;
 		this.height = height;
+	}
+
+	public get pieceCount(): number {
+		return this.pieceIdToPosition.size;
 	}
 
 	public clear() {
@@ -27,10 +31,6 @@ export class Board {
 		}
 
 		return newBoard;
-	}
-
-	public get pieceCount(): number {
-		return this.pieceIdToPosition.size;
 	}
 
 	public containsPiece(pieceId: PieceId): boolean {

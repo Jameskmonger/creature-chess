@@ -34,7 +34,7 @@ export class GameConnection {
 	private cleanupFns: (() => void)[] = [];
 	private pingInterval: ReturnType<typeof setInterval> | null = null;
 
-	constructor(
+	public constructor(
 		private socket: Socket,
 		private dispatch: Dispatch,
 		private gameBoard: BoardSlices,
@@ -44,7 +44,7 @@ export class GameConnection {
 		this.startPingLoop();
 	}
 
-	handleConnected(payload: GameServerToClient.GameConnectionPacket) {
+	public handleConnected(payload: GameServerToClient.GameConnectionPacket) {
 		const { players, game: { phase, phaseStartedAtSeconds }, settings } = payload;
 
 		this.dispatch(PlayerListCommands.updatePlayerListCommand(players));
@@ -58,7 +58,7 @@ export class GameConnection {
 		this.eventBus.emit("connectionStatusChanged", ConnectionStatus.CONNECTED);
 	}
 
-	sendPlayerAction(action: { type: string; payload?: any }) {
+	public sendPlayerAction(action: { type: string; payload?: any }) {
 		if (!PlayerActionTypesArray.includes(action.type)) {
 			console.error(`Invalid player action type: ${action.type}`);
 			return;
@@ -71,11 +71,11 @@ export class GameConnection {
 		});
 	}
 
-	sendFinishMatch() {
+	public sendFinishMatch() {
 		this.socket.emit("finishMatch", { empty: true });
 	}
 
-	destroy() {
+	public destroy() {
 		this.stopPingLoop();
 
 		for (const cleanup of this.cleanupFns) {
@@ -133,7 +133,9 @@ export class GameConnection {
 		onAction?: (action: { type: string; payload?: any }) => void,
 	) {
 		this.setupSocketListener(event, (action: { type: string; payload?: any }, ack?: () => void) => {
-			if (ack) ack();
+			if (ack) {
+ack();
+}
 			if (!validTypes.includes(action.type)) {
 				console.error(`Unhandled ${event} type: ${action.type}`);
 				return;

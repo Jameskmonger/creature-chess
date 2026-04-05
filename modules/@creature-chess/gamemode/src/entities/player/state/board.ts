@@ -33,7 +33,7 @@ export const clearBoardCommand = createAction("board/clearBoard");
 
 export const addBenchPieceCommand = createAction<{
 	pieceId: string;
-	position: { x: number; }
+	position: { x: number };
 }>("bench/addPiece");
 
 export const removeBenchPieceCommand = createAction<{
@@ -51,8 +51,8 @@ export const swapBenchPiecesCommand = createAction<{
 
 export const moveBenchPieceCommand = createAction<{
 	pieceId: string;
-	from: { x: number; };
-	to: { x: number; };
+	from: { x: number };
+	to: { x: number };
 }>("bench/movePiece");
 
 export const clearBenchCommand = createAction("bench/clearBench");

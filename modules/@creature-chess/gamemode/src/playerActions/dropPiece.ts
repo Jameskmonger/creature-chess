@@ -4,7 +4,14 @@ import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 
 import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
-import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand } from "../entities/player/state/board";
+import {
+	addBenchPieceCommand,
+	addBoardPieceCommand,
+	moveBenchPieceCommand,
+	moveBoardPieceCommand,
+	removeBenchPieceCommand,
+	removeBoardPieceCommand,
+} from "../entities/player/state/board";
 import { Board, unpackPosition, unpackX } from "@creature-chess/board";
 import { getPlayerBelowPieceLimit } from "../entities/player/state/selectors";
 

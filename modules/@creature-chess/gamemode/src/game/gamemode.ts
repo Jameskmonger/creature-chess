@@ -32,18 +32,19 @@ type GamemodeCallbacks = {
 };
 
 export class Gamemode {
-	private opponentProvider: OpponentProvider = new OpponentProvider();
 	public readonly pieceRegistry: PieceRegistry = new PieceRegistry();
-	private playerList = new PlayerList();
-	private players: Player[] = [];
-	private events = new EventEmitter();
-	private deck: CardDeck;
 
 	public roundInfo: RoundInfoState = {
 		round: 1,
 		phase: GamePhase.PREPARING,
 		phaseStartedAtSeconds: 0,
 	};
+
+	private opponentProvider: OpponentProvider = new OpponentProvider();
+	private playerList = new PlayerList();
+	private players: Player[] = [];
+	private events = new EventEmitter();
+	private deck: CardDeck;
 
 	public constructor(
 		public readonly id: string,

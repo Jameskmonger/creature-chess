@@ -270,7 +270,7 @@ describe("createPlayer", () => {
 
 		test("matches by `predicate` with access to current and previous state", async () => {
 			const player = createSubject();
-			const seen: Array<{ current: boolean; previous: boolean }> = [];
+			const seen: { current: boolean; previous: boolean }[] = [];
 
 			player.addListener({
 				predicate: (_action, currentState, previousState) => {
@@ -280,7 +280,9 @@ describe("createPlayer", () => {
 					});
 					return true;
 				},
-				effect: async () => { },
+				effect: async () => {
+					// no-op
+				},
 			});
 
 			player.put(PlayerCommands.updateShopLockCommand(true));
@@ -365,7 +367,7 @@ describe("createPlayer", () => {
 
 		test("re-dispatch cancels the prior in-flight invocation of the same listener", async () => {
 			const player = createSubject();
-			const observations: Array<"completed" | "cancelled"> = [];
+			const observations: ("completed" | "cancelled")[] = [];
 
 			player.addListener({
 				actionCreator: PlayerCommands.updateShopLockCommand,

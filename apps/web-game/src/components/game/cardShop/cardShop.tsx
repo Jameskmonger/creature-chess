@@ -43,11 +43,11 @@ export function CardShop() {
 		),
 	], [board, bench, pieceRegistry]);
 
+	const onBuy = React.useCallback((index: number) => gameActions.buyCard(index), [ gameActions ]);
+
 	if (cards === null || canUseShop === false || isSpectating) {
 		return null;
 	}
-
-	const onBuy = React.useCallback((index: number) => gameActions.buyCard(index), [ gameActions ]);
 
 	const CardShopStyled = CARD_SHOP_TYPE === "3d" ? CardShop3D : CardShop2D;
 

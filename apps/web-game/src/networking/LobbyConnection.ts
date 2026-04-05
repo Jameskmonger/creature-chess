@@ -9,26 +9,26 @@ import type { Dispatch } from "./types";
 export class LobbyConnection {
 	private cleanupFns: (() => void)[] = [];
 
-	constructor(
+	public constructor(
 		private socket: Socket,
 		private dispatch: Dispatch,
 	) {
 		this.setupListeners();
 	}
 
-	handleConnected(payload: LobbyServerToClient.LobbyConnectionPacket) {
+	public handleConnected(payload: LobbyServerToClient.LobbyConnectionPacket) {
 		this.dispatch(LobbyCommands.connectToLobby(payload));
 	}
 
-	sendStartNow() {
+	public sendStartNow() {
 		this.socket.emit("startNow", { empty: true });
 	}
 
-	sendUpdateSetting(key: string, value: string) {
+	public sendUpdateSetting(key: string, value: string) {
 		this.socket.emit("updateSetting", { key, value });
 	}
 
-	destroy() {
+	public destroy() {
 		for (const cleanup of this.cleanupFns) {
 			cleanup();
 		}

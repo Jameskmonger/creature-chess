@@ -3,7 +3,7 @@ type Handler<T> = (payload: T) => void;
 export class TypedEventEmitter<TEvents extends Record<string, any>> {
 	private handlers = new Map<keyof TEvents, Set<Handler<any>>>();
 
-	on<K extends keyof TEvents>(event: K, handler: Handler<TEvents[K]>): () => void {
+	public on<K extends keyof TEvents>(event: K, handler: Handler<TEvents[K]>): () => void {
 		if (!this.handlers.has(event)) {
 			this.handlers.set(event, new Set());
 		}
@@ -15,7 +15,7 @@ export class TypedEventEmitter<TEvents extends Record<string, any>> {
 		};
 	}
 
-	once<K extends keyof TEvents>(event: K, handler: Handler<TEvents[K]>): () => void {
+	public once<K extends keyof TEvents>(event: K, handler: Handler<TEvents[K]>): () => void {
 		const wrapper: Handler<TEvents[K]> = (payload) => {
 			unsubscribe();
 			handler(payload);
@@ -25,16 +25,18 @@ export class TypedEventEmitter<TEvents extends Record<string, any>> {
 		return unsubscribe;
 	}
 
-	emit<K extends keyof TEvents>(event: K, ...args: TEvents[K] extends void ? [] : [TEvents[K]]): void {
+	public emit<K extends keyof TEvents>(event: K, ...args: TEvents[K] extends void ? [] : [TEvents[K]]): void {
 		const handlers = this.handlers.get(event);
-		if (!handlers) return;
+		if (!handlers) {
+			return;
+		}
 
 		for (const handler of handlers) {
 			handler(args[0]);
 		}
 	}
 
-	waitFor<K extends keyof TEvents>(
+	public waitFor<K extends keyof TEvents>(
 		event: K,
 		predicate?: (payload: TEvents[K]) => boolean,
 		signal?: AbortSignal
@@ -46,7 +48,9 @@ export class TypedEventEmitter<TEvents extends Record<string, any>> {
 			}
 
 			const unsubscribe = this.on(event, (payload) => {
-				if (predicate && !predicate(payload)) return;
+				if (predicate && !predicate(payload)) {
+					return;
+				}
 
 				cleanup();
 				resolve(payload);
@@ -66,7 +70,7 @@ export class TypedEventEmitter<TEvents extends Record<string, any>> {
 		});
 	}
 
-	removeAllListeners(): void {
+	public removeAllListeners(): void {
 		this.handlers.clear();
 	}
 }

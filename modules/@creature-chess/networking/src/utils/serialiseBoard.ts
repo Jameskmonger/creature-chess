@@ -24,7 +24,7 @@ export function serialiseBoard(
 			pieces.push({
 				...piece,
 				facingAway: !piece.facingAway,
-			})
+			});
 		}
 
 		positions[`${x},${y}`] = id;

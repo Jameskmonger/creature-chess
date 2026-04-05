@@ -1,7 +1,7 @@
 export class EventBus<TEventMap extends Record<string, any>> {
-	private listeners = new Map<keyof TEventMap, Set<Function>>();
+	private listeners = new Map<keyof TEventMap, Set<(data: any) => void>>();
 
-	on<K extends keyof TEventMap>(
+	public on<K extends keyof TEventMap>(
 		event: K,
 		handler: (data: TEventMap[K]) => void
 	): () => void {
@@ -16,9 +16,11 @@ export class EventBus<TEventMap extends Record<string, any>> {
 		};
 	}
 
-	emit<K extends keyof TEventMap>(event: K, data: TEventMap[K]): void {
+	public emit<K extends keyof TEventMap>(event: K, data: TEventMap[K]): void {
 		const handlers = this.listeners.get(event);
-		if (!handlers) return;
+		if (!handlers) {
+			return;
+		}
 
 		for (const handler of handlers) {
 			handler(data);

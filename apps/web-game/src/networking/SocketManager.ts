@@ -17,19 +17,19 @@ import {
 } from "./connectionRef";
 
 export class SocketManager {
+	public readonly eventBus = new EventBus<GameEventMap>();
+
 	private socket: Socket | null = null;
 	private lobbyConnection: LobbyConnection | null = null;
 	private gameConnection: GameConnection | null = null;
 	private cleanupConnectionListeners: (() => void) | null = null;
 
-	public readonly eventBus = new EventBus<GameEventMap>();
-
-	constructor(
+	public constructor(
 		private dispatch: Dispatch,
 		private gameBoard: BoardSlices,
 	) {}
 
-	async connect(): Promise<void> {
+	public async connect(): Promise<void> {
 		this.dispatch(MenuCommands.setLoadingMessage("Connecting..."));
 
 		const session = await this.getGuestSession();
@@ -60,7 +60,7 @@ export class SocketManager {
 		this.listenForConnection();
 	}
 
-	disconnect(): void {
+	public disconnect(): void {
 		this.cleanupConnectionListeners?.();
 		this.cleanupConnectionListeners = null;
 		this.destroyConnections();
@@ -98,7 +98,9 @@ export class SocketManager {
 
 	private listenForConnection() {
 		const socket = this.socket;
-		if (!socket) return;
+		if (!socket) {
+return;
+}
 
 		const onLobbyConnected = (payload: LobbyServerToClient.LobbyConnectionPacket) => {
 			this.destroyLobbyConnection();

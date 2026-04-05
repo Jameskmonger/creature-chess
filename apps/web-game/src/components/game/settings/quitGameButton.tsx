@@ -23,5 +23,5 @@ export function QuitGameButton() {
 		>
 			{areYouSure ? "Click again to quit" : "Quit Game"}
 		</Button>
-	)
+	);
 }

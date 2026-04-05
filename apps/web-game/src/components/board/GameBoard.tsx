@@ -65,7 +65,7 @@ function usePieceRegistry() {
 					return null;
 			}
 		}
-	}
+	};
 }
 
 function BoardPiece({ board, piece, renderPiece }: { board: SubscribableBoard; piece: PieceModel; renderPiece: (piece: PieceModel) => React.ReactNode }) {
@@ -126,10 +126,9 @@ export function GameBoard({
 		}
 
 		return t;
-	}, [b]);
+	}, [b, getTileClassName, styles.tile]);
 
-	const pieces = React.useMemo(() => {
-		return b.getAllPieces()
+	const pieces = React.useMemo(() => b.getAllPieces()
 			.map(({ id }) => {
 				const piece = pieceRegistry.getPiece(id);
 
@@ -139,13 +138,12 @@ export function GameBoard({
 
 				return <BoardPiece key={id} board={b} piece={piece} renderPiece={renderPiece} />;
 			})
-			.filter((p) => p !== null);
-	}, [b, pieceRegistry, renderPiece]);
+			.filter((p) => p !== null), [b, pieceRegistry, renderPiece]);
 
-	return <div className={classNames(styles.grid, boardClassName)}>
+	return (<div className={classNames(styles.grid, boardClassName)}>
 		{tiles}
 		<div className={styles.pieces}>
 			{pieces}
 		</div>
-	</div>;
+	</div>);
 }

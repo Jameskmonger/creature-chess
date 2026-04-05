@@ -34,7 +34,11 @@ export function TagLine() {
 			role="button"
 			title="http://tiberisoft.dev"
 			onClick={openTiberisoftWebsite}
-			onKeyDown={(e) => { if (e.key === 'Enter') openTiberisoftWebsite(); }}
+			onKeyDown={(e) => {
+ if (e.key === "Enter") {
+openTiberisoftWebsite();
+}
+}}
 		>
 			A <span className={classes.highlight}>'Tiberisoft'</span> Game
 		</div>

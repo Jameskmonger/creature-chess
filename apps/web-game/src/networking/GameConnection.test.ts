@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
 import { GameConnection, BoardSlices } from "./GameConnection";
 import { EventBus } from "./EventBus";
 import { ConnectionStatus, GameEventMap } from "./types";
@@ -31,15 +32,27 @@ const createMockSocket = () => {
 	const handlers = new Map<string, Function>();
 	const ioHandlers = new Map<string, Function>();
 	return {
-		on: jest.fn((event: string, handler: Function) => { handlers.set(event, handler); }),
-		off: jest.fn((event: string, handler: Function) => { handlers.delete(event); }),
+		on: jest.fn((event: string, handler: Function) => {
+ handlers.set(event, handler);
+}),
+		off: jest.fn((event: string, handler: Function) => {
+ handlers.delete(event);
+}),
 		emit: jest.fn(),
 		io: {
-			on: jest.fn((event: string, handler: Function) => { ioHandlers.set(event, handler); }),
-			off: jest.fn((event: string, handler: Function) => { ioHandlers.delete(event); }),
+			on: jest.fn((event: string, handler: Function) => {
+ ioHandlers.set(event, handler);
+}),
+			off: jest.fn((event: string, handler: Function) => {
+ ioHandlers.delete(event);
+}),
 		},
-		_trigger: (event: string, ...args: any[]) => { handlers.get(event)?.(...args); },
-		_triggerIo: (event: string, ...args: any[]) => { ioHandlers.get(event)?.(...args); },
+		_trigger: (event: string, ...args: any[]) => {
+ handlers.get(event)?.(...args);
+},
+		_triggerIo: (event: string, ...args: any[]) => {
+ ioHandlers.get(event)?.(...args);
+},
 	};
 };
 

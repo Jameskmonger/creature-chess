@@ -88,11 +88,11 @@ const PlayerList: React.FunctionComponent = () => {
 
 				const currentlySpectating = currentlySpectatingId === p.id;
 
-				const onSpectateClick = React.useCallback(() => {
+				const onSpectateClick = () => {
 					gameActions.spectate(
 						currentlySpectating ? null : p.id
 					);
-				}, [ gameActions, currentlySpectating, p.id ]);
+				};
 
 				return (
 					<PlayerListItem

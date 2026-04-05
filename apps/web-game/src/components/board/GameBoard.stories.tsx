@@ -21,14 +21,14 @@ board.setPieces([
 ]);
 
 setInterval(() => {
-	let newX = Math.floor(Math.random() * 5);
-	let newY = Math.floor(Math.random() * 6);
+	const newX = Math.floor(Math.random() * 5);
+	const newY = Math.floor(Math.random() * 6);
 
 	board.setPiece("piece-1", newX, newY);
 }, 1000);
 
 export const Default: Story = {
-	render: (args) => <>
+	render: (args) => (<>
 		<style>
 			{
 				`
@@ -48,7 +48,7 @@ export const Default: Story = {
 		</style>
 
 		<GameBoard {...args} />
-	</>,
+	</>),
 	args: {
 		board,
 		renderPiece: (piece: PieceModel): React.ReactNode => (
@@ -56,9 +56,7 @@ export const Default: Story = {
 				<MatchPiece />
 			</PieceContextProvider>
 		),
-		getTileClassName: (x: number, y: number) => {
-			return (x + y) % 2 === 0 ? "even-tile" : "odd-tile";
-		},
+		getTileClassName: (x: number, y: number) => (x + y) % 2 === 0 ? "even-tile" : "odd-tile",
 		boardClassName: "board",
 	},
 };

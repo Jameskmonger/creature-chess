@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
 import { SocketManager } from "./SocketManager";
 
 jest.mock("~/store/menu/state", () => ({
@@ -43,12 +44,16 @@ const mockedGetCookie = getCookieValue as jest.Mock;
 const createMockSocket = () => {
 	const handlers = new Map<string, Function>();
 	return {
-		on: jest.fn((event: string, handler: Function) => { handlers.set(event, handler); }),
+		on: jest.fn((event: string, handler: Function) => {
+ handlers.set(event, handler);
+}),
 		off: jest.fn(),
 		emit: jest.fn(),
 		disconnect: jest.fn(),
 		io: { on: jest.fn(), off: jest.fn() },
-		_trigger: (event: string, ...args: any[]) => { handlers.get(event)?.(...args); },
+		_trigger: (event: string, ...args: any[]) => {
+ handlers.get(event)?.(...args);
+},
 	};
 };
 

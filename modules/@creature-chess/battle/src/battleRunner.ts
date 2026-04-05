@@ -24,7 +24,7 @@ export class BattleRunner {
 	private controls = { paused: false };
 	private turn = 0;
 
-	constructor(
+	public constructor(
 		private board: Board,
 		private pieceRegistry: PieceRegistry,
 		private settings: GamemodeSettings,
@@ -33,19 +33,19 @@ export class BattleRunner {
 		this.turn = startingTurn;
 	}
 
-	getTurn() {
+	public getTurn() {
 		return this.turn;
 	}
 
-	pause() {
+	public pause() {
 		this.controls.paused = true;
 	}
 
-	resume() {
+	public resume() {
 		this.controls.paused = false;
 	}
 
-	async run(): Promise<{ turn: number }> {
+	public async run(): Promise<{ turn: number }> {
 		const combatStore = pieceInfoStore<PieceCombatState>({
 			state: { type: "wandering" },
 			canMoveAtTurn: 15,

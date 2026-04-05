@@ -26,13 +26,11 @@ function GameRoot() {
 	);
 }
 
-const AppRoot = () => {
-	return (
+const AppRoot = () => (
 		<GameBoardProvider>
 			<GameRoot />
 		</GameBoardProvider>
 	);
-};
 
 const container = document.getElementById("approot");
 const root = createRoot(container!);

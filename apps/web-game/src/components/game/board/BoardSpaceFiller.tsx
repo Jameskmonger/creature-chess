@@ -70,7 +70,7 @@ export function BoardSpaceFiller() {
 					{selectedPiece && <SelectedPieceInfo />}
 					{selectedPiece && <SellPieceButton />}
 				</div>
-				<div className={styles.half}></div>
+				<div className={styles.half} />
 			</div>
 			<div className={styles.row}>
 				<div className={styles.half}>

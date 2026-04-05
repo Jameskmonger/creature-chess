@@ -16,6 +16,27 @@ export class SubscribableBoard extends Board {
 
 	public getSnapshot = () => this.version;
 
+	public override setPieces(pieces: { id: PieceId; x: number; y: number }[]) {
+		super.setPieces(pieces);
+		// big change; paint now
+		this.markChanged({ immediate: true });
+	}
+
+	public override setPiece(pieceId: PieceId, x: number, y: number) {
+		super.setPiece(pieceId, x, y);
+		this.markChanged();
+	}
+
+	public override removePiece(pieceId: PieceId) {
+		super.removePiece(pieceId);
+		this.markChanged();
+	}
+
+	public override swapPieces(pieceIdA: PieceId, pieceIdB: PieceId) {
+		super.swapPieces(pieceIdA, pieceIdB);
+		this.markChanged();
+	}
+
 	protected markChanged(opts?: { immediate?: boolean }) {
 		this.version++;
 
@@ -47,27 +68,6 @@ export class SubscribableBoard extends Board {
 
 			this.notifyListeners();
 		});
-	}
-
-	public override setPieces(pieces: { id: PieceId; x: number; y: number }[]) {
-		super.setPieces(pieces);
-		// big change; paint now
-		this.markChanged({ immediate: true });
-	}
-
-	public override setPiece(pieceId: PieceId, x: number, y: number) {
-		super.setPiece(pieceId, x, y);
-		this.markChanged();
-	}
-
-	public override removePiece(pieceId: PieceId) {
-		super.removePiece(pieceId);
-		this.markChanged();
-	}
-
-	public override swapPieces(pieceIdA: PieceId, pieceIdB: PieceId) {
-		super.swapPieces(pieceIdA, pieceIdB);
-		this.markChanged();
 	}
 
 	private notifyListeners() {

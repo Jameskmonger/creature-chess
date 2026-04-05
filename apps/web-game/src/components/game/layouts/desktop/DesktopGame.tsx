@@ -111,7 +111,7 @@ const DesktopGame: React.FunctionComponent = () => {
 				),
 			},
 		],
-		[inPreparingPhase, ownedPieces, styles.helpContainer]
+		[styles.helpContainer]
 	);
 
 	return (

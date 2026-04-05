@@ -5,7 +5,14 @@ import { PlayerPieceLocation } from "@creature-chess/models";
 import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
 import { findPiece, isLocationLocked } from "./dropPiece";
-import { addBenchPieceCommand, addBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "../entities/player/state/board";
+import {
+	addBenchPieceCommand,
+	addBoardPieceCommand,
+	removeBenchPieceCommand,
+	removeBoardPieceCommand,
+	swapBenchPiecesCommand,
+	swapBoardPiecesCommand,
+} from "../entities/player/state/board";
 import { unpackX } from "@creature-chess/board";
 
 export type SwapPiecePlayerAction = ReturnType<typeof swapPiecePlayerAction>;

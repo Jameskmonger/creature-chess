@@ -22,7 +22,7 @@ type PlayerAction = {
 					stage: number;
 				};
 			};
-		}
+		};
 		cardShop: {
 			cards: ({
 				definitionId: number;
@@ -43,12 +43,12 @@ type PlayerAction = {
 			round: number;
 		};
 	};
-}
+};
 
 class MetricCollector {
 	private actions: PlayerAction[] = [];
 
-	constructor() {
+	public constructor() {
 		setInterval(() => this.flush(), 60000);
 	}
 

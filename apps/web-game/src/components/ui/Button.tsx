@@ -54,16 +54,16 @@ const useStyles = createUseThemeStyles<string, Props>(theme => ({
 			}
 		},
 
-		position: "relative",
-		border: "none",
-		background: "transparent",
-		padding: 0,
-		cursor: "pointer",
-		outlineOffset: "4px",
-		transition: "filter 250ms",
+		"position": "relative",
+		"border": "none",
+		"background": "transparent",
+		"padding": 0,
+		"cursor": "pointer",
+		"outlineOffset": "4px",
+		"transition": "filter 250ms",
 
 		"&:hover:not(:active):not(:disabled)": {
-			filter: "brightness(110%)",
+			"filter": "brightness(110%)",
 
 			"& $front": {
 				transform: "translateY(calc(var(--btn-3d-depth) * -1.5))",
@@ -150,5 +150,5 @@ export function Button(props: Props) {
 			<span className={classes.edge} />
 			<span className={classes.front}>{props.children}</span>
 		</button>
-	)
+	);
 }

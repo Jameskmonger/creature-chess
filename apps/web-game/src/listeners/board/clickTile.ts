@@ -21,7 +21,7 @@ export const setupClickTileListener = (startListening: ClientStartListening) => 
 
 			const selectedPieceId = (api.getState() as AppState).game.ui.selectedPieceId;
 
-			console.log(`currently selected piece id:`, selectedPieceId);
+			console.log("currently selected piece id:", selectedPieceId);
 
 			if (!selectedPieceId) {
 				return;

@@ -1,5 +1,5 @@
-export { Board, Position, PositionKey } from "./src/board"
-export { SubscribableBoard } from "./src/subscribableBoard"
+export { Board, Position, PositionKey } from "./src/board";
+export { SubscribableBoard } from "./src/subscribableBoard";
 export { rotateBoard } from "./src/rotateBoard";
 export { rotateGridPosition } from "./src/rotateGridPosition";
 export { mergeBoards } from "./src/mergeBoards";

@@ -59,9 +59,9 @@ export const setupEvolutionListener = (startListening: PlayerStartListening) => 
 
 				// wait for preparing phase to begin
 				await api.take(
-					(action) =>
-						action.type === gamePhaseStartedEvent.type
-						&& (action as GamePhaseStartedEvent).payload.phase === GamePhase.PREPARING
+					(a) =>
+						a.type === gamePhaseStartedEvent.type
+						&& (a as GamePhaseStartedEvent).payload.phase === GamePhase.PREPARING
 				);
 
 				await api.delay(500);

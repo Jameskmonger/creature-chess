@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 declare const PackedPositionBrand: unique symbol;
 
 export type PackedPosition =

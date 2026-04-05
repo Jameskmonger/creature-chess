@@ -28,24 +28,24 @@ const countdownRender =
 
 const useStyles = createUseThemeStyles(theme => ({
 	lobbyInfo: {
-		"flex": 1,
+		flex: 1,
 
-		"display": "flex",
-		"flexDirection": "column",
-		"textAlign": "center",
-		"fontFamily": theme.typography.primary,
-		"color": "#fff",
-		"width": "100%",
+		display: "flex",
+		flexDirection: "column",
+		textAlign: "center",
+		fontFamily: theme.typography.primary,
+		color: "#fff",
+		width: "100%",
 
 		gap: "8px",
 		marginBottom: "8px",
 	},
 	topBar: {
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		background: "#333",
-		padding: "8px",
+		"display": "flex",
+		"flexDirection": "row",
+		"alignItems": "center",
+		"background": "#333",
+		"padding": "8px",
 
 		"& > div": {
 			flex: 1,

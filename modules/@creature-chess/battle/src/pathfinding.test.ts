@@ -214,7 +214,7 @@ describe("pathfinding", () => {
 			rotateTestBoard(rotated, rotatedPieceRegistry);
 
 			pathfinder = new Pathfinder({ width: board.width, height: board.height });
-		})
+		});
 
 		test.each(
 			// test each piece against each opponent

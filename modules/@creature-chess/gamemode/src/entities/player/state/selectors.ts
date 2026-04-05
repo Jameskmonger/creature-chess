@@ -33,6 +33,4 @@ export const isPlayerShopLocked = (state: PlayerState): boolean =>
 export const getPlayerBelowPieceLimit = (
 	level: number,
 	board: Board,
-): boolean => {
-	return board.pieceCount < level;
-};
+): boolean => board.pieceCount < level;

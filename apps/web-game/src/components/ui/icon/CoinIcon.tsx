@@ -14,8 +14,8 @@ const useStyles = createUseStyles({
 export function CoinIcon() {
 	const styles = useStyles();
 
-	return <FontAwesomeIcon
+	return (<FontAwesomeIcon
 		icon={faCoins}
 		className={styles.coinIcon}
-	/>;
+	/>);
 }

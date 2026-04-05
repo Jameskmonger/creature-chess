@@ -42,8 +42,8 @@ type ListenerOptions = {
 export type PlayerStartListening = (options: ListenerOptions) => () => void;
 
 export type CancellableTask = {
-	cancel(): void;
 	promise: Promise<void>;
+	cancel(): void;
 };
 
 // ── Player type ──
@@ -93,7 +93,9 @@ type TakeWaiter = {
 };
 
 class CancelledError extends Error {
-	constructor() { super("cancelled"); }
+	public constructor() {
+		super("cancelled");
+	}
 }
 
 function combineReducersPlain<TState>(reducers: ReducersMapObject<TState>) {
@@ -148,14 +150,15 @@ export const createPlayer = (
 
 	const removeTakeWaiter = (waiter: TakeWaiter) => {
 		const i = takeWaiters.indexOf(waiter);
-		if (i !== -1) takeWaiters.splice(i, 1);
+		if (i !== -1) {
+takeWaiters.splice(i, 1);
+}
 	};
 
 	const createApi = (signal: AbortSignal): PlayerListenerApi => ({
 		getState: () => state,
 		dispatch: (action: Action) => put(action),
-		take: (predicate: (action: Action) => boolean) => {
-			return new Promise<Action>((resolve, reject) => {
+		take: (predicate: (action: Action) => boolean) => new Promise<Action>((resolve, reject) => {
 				if (signal.aborted) {
 					reject(new CancelledError());
 					return;
@@ -177,10 +180,8 @@ export const createPlayer = (
 				takeWaiters.push(waiter);
 
 				signal.addEventListener("abort", onAbort, { once: true });
-			});
-		},
-		delay: (ms: number) => {
-			return new Promise<void>((resolve, reject) => {
+			}),
+		delay: (ms: number) => new Promise<void>((resolve, reject) => {
 				if (signal.aborted) {
 					reject(new CancelledError());
 					return;
@@ -197,9 +198,10 @@ export const createPlayer = (
 				}, ms);
 
 				signal.addEventListener("abort", onAbort, { once: true });
-			});
+			}),
+		cancelActiveListeners: () => {
+			// no-op
 		},
-		cancelActiveListeners: () => { },
 		player,
 	});
 
@@ -225,7 +227,9 @@ export const createPlayer = (
 
 		return () => {
 			const index = listeners.indexOf(listener);
-			if (index !== -1) listeners.splice(index, 1);
+			if (index !== -1) {
+listeners.splice(index, 1);
+}
 		};
 	};
 
@@ -258,7 +262,9 @@ export const createPlayer = (
 				activeControllers.set(listener, controller);
 
 				const api = createApi(controller.signal);
-				listener.effect(action, api).catch(() => { });
+				listener.effect(action, api).catch(() => {
+					// ignore
+				});
 			}
 		}
 	};
@@ -281,7 +287,9 @@ export const createPlayer = (
 		});
 
 		return {
-			cancel: () => { controller.abort(); },
+			cancel: () => {
+ controller.abort();
+},
 			promise,
 		};
 	};

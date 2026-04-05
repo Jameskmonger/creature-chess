@@ -1,5 +1,18 @@
 import { PlayerStartListening } from "../player";
-import { addBenchPieceCommand, addBoardPieceCommand, clearBenchCommand, clearBoardCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, removeBoardPieceCommand, removeBoardPiecesCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "../state/board";
+import {
+	addBenchPieceCommand,
+	addBoardPieceCommand,
+	clearBenchCommand,
+	clearBoardCommand,
+	moveBenchPieceCommand,
+	moveBoardPieceCommand,
+	removeBenchPieceCommand,
+	removeBenchPiecesCommand,
+	removeBoardPieceCommand,
+	removeBoardPiecesCommand,
+	swapBenchPiecesCommand,
+	swapBoardPiecesCommand,
+} from "../state/board";
 import { unpackX, unpackY } from "@creature-chess/board";
 
 /**
