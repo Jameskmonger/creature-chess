@@ -15,7 +15,7 @@ import {
 import { useSelector } from "react-redux";
 import { GamePhase } from "@creature-chess/models";
 import { AppState } from "~/store";
-import { DndProvider } from "~/components/board/DndProvider";
+import { PieceDragContextProvider } from "~/components/board/drag/PieceDragContext";
 
 const useStyles = createUseStyles({
 	boardContainer: {
@@ -43,7 +43,7 @@ export function BoardContainer() {
 	);
 
 	return (
-		<DndProvider>
+		<PieceDragContextProvider>
 			<div className={styles.boardContainer}>
 				{phase !== GamePhase.PREPARING ? (
 					<MatchBoard>{children}</MatchBoard>
@@ -51,6 +51,6 @@ export function BoardContainer() {
 					<LocalBoard>{children}</LocalBoard>
 				)}
 			</div>
-		</DndProvider>
+		</PieceDragContextProvider>
 	);
 }

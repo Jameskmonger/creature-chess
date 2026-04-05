@@ -3,17 +3,14 @@ import React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { DroppableTile } from "./DroppableTile";
-import { useBoardState, useTileBackgroundRenderer } from "../context";
-import { ClickBoardTileEvent, DropBoardItemEvent } from "../events";
+import { useTileBackgroundRenderer } from "../context";
+import { ClickBoardTileEvent } from "../events";
 import { packPosition } from "@creature-chess/board";
 
 type TileProps = {
 	x: number;
 	y: number;
-	dragDrop: boolean;
 	onClick?: (event: ClickBoardTileEvent) => void;
-	onDrop?: (event: DropBoardItemEvent) => void;
 	className?: string;
 };
 
@@ -26,40 +23,22 @@ const useStyles = createUseStyles({
 	},
 });
 
-export const Tile = React.forwardRef<any, TileProps>(
-	({ x, y, dragDrop, onClick, onDrop, className }, ref) => {
-		const board = useBoardState();
+export function Tile({ x, y, onClick, className }: TileProps) {
+	const styles = useStyles();
+	const tileBackgroundRenderer = useTileBackgroundRenderer();
 
-		// todo
-		const locked = false;
+	const handleClick = React.useCallback(() => {
+		if (onClick) {
+			onClick({ x, y });
+		}
+	}, [onClick, x, y]);
 
-		const styles = useStyles();
-		const tileBackgroundRenderer = useTileBackgroundRenderer();
-
-		const handleClick = React.useCallback(() => {
-			if (onClick) {
-				onClick({ x, y });
-			}
-		}, [onClick, x, y]);
-
-		const canDropPiece = React.useMemo(
-			() =>
-				dragDrop &&
-				board.getPieceIdAtPosition(x, y) === null &&
-				locked === false,
-			[dragDrop, board, x, y, locked]
-		);
-
-		return (
-			<div
-				ref={ref}
-				className={classNames(styles.tile, className)}
-				touch-action="none"
-				onPointerUp={handleClick}
-			>
-				{tileBackgroundRenderer && tileBackgroundRenderer(packPosition(x, y))}
-				{canDropPiece && <DroppableTile x={x} y={y} onDrop={onDrop} />}
-			</div>
-		);
-	}
-);
+	return (
+		<div
+			className={classNames(styles.tile, className)}
+			onPointerUp={handleClick}
+		>
+			{tileBackgroundRenderer && tileBackgroundRenderer(packPosition(x, y))}
+		</div>
+	);
+}

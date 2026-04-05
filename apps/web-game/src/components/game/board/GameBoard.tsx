@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { createUseStyles } from "react-jss";
+import { useSelector } from "react-redux";
 
 import { PieceModel } from "@creature-chess/models";
 
@@ -10,6 +11,7 @@ import { ThemedBoard } from "./ThemedBoard";
 import { BoardGrid } from "~/components/board";
 import { ClickBoardTileEvent, DropBoardItemEvent } from "~/components/board/events";
 import { PackedPosition } from "@creature-chess/board";
+import { AppState } from "~/store";
 
 export type GameBoardLocation =
 	| {
@@ -225,6 +227,26 @@ export function GameBoard({
 		onDropPiece,
 	});
 
+	const level = useSelector((state: AppState) => state.game.playerInfo.level);
+
+	const canDropOnBoard = React.useCallback(
+		(id: string, x: number, y: number) => {
+			if (board.getPieceIdAtPosition(x, y) !== null) {
+				return false;
+			}
+			if (board.containsPiece(id)) {
+				return true;
+			}
+			return board.getAllPieces().length < level;
+		},
+		[board, level]
+	);
+
+	const canDropOnBench = React.useCallback(
+		(id: string, x: number) => bench.getPieceIdAtPosition(x, 0) === null || bench.getPieceIdAtPosition(x, 0) === id,
+		[bench]
+	);
+
 	const totalHeight =
 		bench.height +
 		(showFiller ? board.height * 2 : board.height);
@@ -247,6 +269,7 @@ export function GameBoard({
 						state={board}
 						onDropItem={onDropBoard}
 						onClickTile={onClickBoard}
+						canDropItem={canDropOnBoard}
 						renderItem={boardPieceRenderer}
 						renderTileBackground={renderTileBackground}
 						flipDarkLight={showFiller}
@@ -259,6 +282,7 @@ export function GameBoard({
 						state={bench}
 						onDropItem={onDropBench}
 						onClickTile={onClickBench}
+						canDropItem={(id, x) => canDropOnBench(id, x)}
 						renderItem={benchPieceRenderer}
 						className={styles.benchBoard}
 						lightTileClassName={styles.benchTile}

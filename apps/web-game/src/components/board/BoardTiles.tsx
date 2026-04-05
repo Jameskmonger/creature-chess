@@ -3,16 +3,14 @@ import React from "react";
 import { createUseStyles } from "react-jss";
 
 import { Tile } from "./tile/Tile";
-import { ClickBoardTileEvent, DropBoardItemEvent } from "./events";
+import { ClickBoardTileEvent } from "./events";
 import { useBoardState } from "./context";
 import { BoardSize } from "@creature-chess/board";
 
 type Props = {
 	lightTileClassName?: string;
 	darkTileClassName?: string;
-	dragDrop: boolean;
 	onClick?: (event: ClickBoardTileEvent) => void;
-	onDrop?: (event: DropBoardItemEvent) => void;
 };
 
 const useBoardStyles = createUseStyles<string, { size: BoardSize }>({
@@ -34,9 +32,7 @@ const isBoardTileDark = (x: number, y: number) => ((y ^ x) & 1) !== 0;
 export function BoardTiles({
 	lightTileClassName,
 	darkTileClassName,
-	dragDrop,
 	onClick,
-	onDrop,
 }: Props) {
 	const board = useBoardState();
 	const styles = useBoardStyles({ size: { width: board.width, height: board.height } });
@@ -50,9 +46,7 @@ export function BoardTiles({
 						key={`tile-${x}-${y}`}
 						x={x}
 						y={y}
-						dragDrop={dragDrop}
 						onClick={onClick}
-						onDrop={onDrop}
 						className={
 							isBoardTileDark(x, y) ? darkTileClassName : lightTileClassName
 						}
@@ -63,10 +57,8 @@ export function BoardTiles({
 		return t;
 	}, [
 		darkTileClassName,
-		dragDrop,
 		lightTileClassName,
 		onClick,
-		onDrop,
 		board.height,
 		board.width,
 	]);

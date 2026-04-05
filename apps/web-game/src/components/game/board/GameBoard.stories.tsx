@@ -10,7 +10,7 @@ import { GameBoardContextProvider } from "./GameBoardContext";
 import { Piece, PieceContextProvider } from "./piece";
 import { SubscribableBoard } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils/piece";
-import { DndProvider } from "~/components/board/DndProvider";
+import { PieceDragContextProvider } from "~/components/board/drag/PieceDragContext";
 
 export default {
 	title: "@creature-chess / game / Board / GameBoard",
@@ -91,7 +91,7 @@ const Template: Story<any> = (args) => {
 	context.pieceRegistry.registerPiece(benchPiece2);
 
 	return (
-		<DndProvider>
+		<PieceDragContextProvider>
 			<div
 				style={{
 					width: args.width,
@@ -109,7 +109,7 @@ const Template: Story<any> = (args) => {
 					/>
 				</GameBoardContextProvider>
 			</div>
-		</DndProvider>
+		</PieceDragContextProvider>
 	);
 };
 
