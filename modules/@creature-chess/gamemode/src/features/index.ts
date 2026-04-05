@@ -1,13 +1,12 @@
-import { all, call } from "redux-saga/effects";
-
+import { PlayerStartListening } from "../entities/player/dependencies";
 import {
-	matchRootSaga,
+	setupMatchListeners,
 	MatchPlayerVariables,
 	defaultMatchPlayerVariables,
 } from "./match";
 
-export const featuresRootSaga = function* () {
-	yield all([call(matchRootSaga)]);
+export const setupFeaturesListeners = (startListening: PlayerStartListening) => {
+	setupMatchListeners(startListening);
 };
 
 export type FeaturesPlayerVariables = MatchPlayerVariables;

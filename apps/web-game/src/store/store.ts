@@ -1,21 +1,20 @@
-import { configureStore } from "@reduxjs/toolkit";
-import createSagaMiddleware from "redux-saga";
+import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 
-import { gameEntryPointSaga } from "~/sagas/gameSagaEntry";
+import { setupGameListeners } from "~/listeners/gameListeners";
 
 import { gameReducer } from "./game/state";
 import { lobbyReducer } from "./lobby/state";
 import { menuReducer } from "./menu/state";
-import { SagaContext } from "./sagaContext";
+import { ClientExtra, ClientStartListening } from "./listenerContext";
 import { AppState } from "./state";
 import { GameBoardState } from "~/components/game/board/state";
 
 export const createAppStore = (gameBoard: GameBoardState) => {
-	const sagaMiddleware = createSagaMiddleware<SagaContext>({
-		context: {
-			slices: gameBoard,
-		},
-	});
+	const extra: ClientExtra = {
+		slices: gameBoard,
+	};
+
+	const listenerMiddleware = createListenerMiddleware({ extra });
 
 	const store = configureStore<AppState>({
 		reducer: {
@@ -27,14 +26,14 @@ export const createAppStore = (gameBoard: GameBoardState) => {
 			getDefaultMiddleware({
 				thunk: false,
 				serializableCheck: false,
-			}).concat(sagaMiddleware),
+			}).prepend(listenerMiddleware.middleware),
 		devTools: {
 			trace: true,
 			traceLimit: 20,
 		},
 	});
 
-	sagaMiddleware.run(gameEntryPointSaga);
+	setupGameListeners(listenerMiddleware.startListening as ClientStartListening);
 
 	return store;
 };

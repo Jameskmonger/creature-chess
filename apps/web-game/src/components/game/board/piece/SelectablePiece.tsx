@@ -3,7 +3,7 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
-import { playerClickPieceAction } from "~/sagas/board/clickPieceSaga";
+import { playerClickPieceAction } from "~/listeners/board/clickPiece";
 import { AppState } from "~/store";
 
 import { Piece } from "./Piece";

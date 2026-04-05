@@ -1,10 +1,8 @@
 import { createAction } from "@reduxjs/toolkit";
-import { takeEvery, put } from "redux-saga/effects";
-import { select, getContext } from "typed-redux-saga";
 
 import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 
-import { getPlayerEntityDependencies } from "../entities/player/dependencies";
+import { PlayerStartListening } from "../entities/player/dependencies";
 import { PlayerState } from "../entities/player/state";
 import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand } from "../entities/player/state/board";
 import { Board, unpackPosition, unpackX } from "@creature-chess/board";
@@ -52,15 +50,12 @@ export const dropPiecePlayerAction = createAction<{
 	from: PlayerPieceLocation;
 }>("dropPiecePlayerAction");
 
-export const dropPiecePlayerActionSaga = function*() {
-	const name = yield* getContext<string>("playerName");
-	const { logger, boards: { board, bench } } = yield* getPlayerEntityDependencies();
-
-	yield takeEvery<DropPiecePlayerAction>(
-		dropPiecePlayerAction.toString(),
-		function*({ payload: { from, pieceId, to } }) {
-			const playerId = yield* getContext<string>("id");
-			const state = yield* select((s: PlayerState) => s);
+export const setupDropPieceListener = (startListening: PlayerStartListening) => {
+	startListening({
+		actionCreator: dropPiecePlayerAction,
+		effect: async ({ payload: { from, pieceId, to } }, api) => {
+			const { logger, boards: { board, bench } } = api.extra.dependencies;
+			const state = api.getState();
 
 			if (isLocationLocked(state, from)) {
 				return;
@@ -83,7 +78,6 @@ export const dropPiecePlayerActionSaga = function*() {
 			const toPieceId = findPiece(board, bench, to);
 
 			if (toPieceId !== null) {
-				// destination tile not empty
 				return;
 			}
 
@@ -96,7 +90,7 @@ export const dropPiecePlayerActionSaga = function*() {
 			}
 
 			if (from.type === "board" && to.type === "board") {
-				yield put(
+				api.dispatch(
 					moveBoardPieceCommand({
 						pieceId,
 						from: from.location,
@@ -107,7 +101,7 @@ export const dropPiecePlayerActionSaga = function*() {
 				const fromBench = { x: unpackX(from.location), y: 0 };
 				const toBench = { x: unpackX(to.location), y: 0 };
 
-				yield put(
+				api.dispatch(
 					moveBenchPieceCommand({
 						pieceId,
 						from: fromBench,
@@ -115,22 +109,22 @@ export const dropPiecePlayerActionSaga = function*() {
 					})
 				);
 			} else if (from.type === "board" && to.type === "bench") {
-				yield put(removeBoardPieceCommand({ pieceId }));
-				yield put(
+				api.dispatch(removeBoardPieceCommand({ pieceId }));
+				api.dispatch(
 					addBenchPieceCommand({
 						pieceId,
 						position: { x: unpackX(to.location) },
 					})
 				);
 			} else if (from.type === "bench" && to.type === "board") {
-				yield put(removeBenchPieceCommand({ pieceId }));
-				yield put(
+				api.dispatch(removeBenchPieceCommand({ pieceId }));
+				api.dispatch(
 					addBoardPieceCommand({
 						pieceId,
 						position: to.location,
 					})
 				);
 			}
-		}
-	);
+		},
+	});
 };

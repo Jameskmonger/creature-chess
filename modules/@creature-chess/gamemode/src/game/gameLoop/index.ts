@@ -1,12 +1,8 @@
-import { call, getContext } from "@redux-saga/core/effects";
-import { select, takeEvery } from "typed-redux-saga";
-import { Logger } from "winston";
-
-import { updateVariables } from "@shoki/engine";
+import { Store } from "@reduxjs/toolkit";
 
 import { PlayerVariables } from "../../entities/player";
 import { playerDeathEvent } from "../../entities/player/events";
-import { GameSagaContextPlayers } from "../sagas";
+import { GameContext } from "../gameContext";
 import { GameState } from "../store";
 import { runPlayingPhase, runPreparingPhase, runReadyPhase } from "./phases";
 
@@ -16,33 +12,33 @@ type Callbacks = {
 	onMatchEnd?: () => void;
 };
 
-export const gameLoopSaga = function* (callbacks: Callbacks = {}) {
-	const players: GameSagaContextPlayers = yield getContext("players");
-	const logger: Logger = yield getContext("logger");
+export const gameLoop = async (store: Store<GameState>, context: GameContext, callbacks: Callbacks = {}) => {
+	const { players } = context;
 
 	let currentLastPosition = players.getAll().length;
 	let currentRound = 0;
 
 	for (const player of players.getAll()) {
-		player.runSaga(function* () {
-			yield takeEvery(playerDeathEvent, function* () {
-				yield updateVariables<PlayerVariables>({
+		player.addListener({
+			actionCreator: playerDeathEvent,
+			effect: async (_action, api) => {
+				api.extra.updateVariables({
 					finishPosition: currentLastPosition,
 					finishRound: currentRound,
-				});
+				} as Partial<PlayerVariables>);
 
 				currentLastPosition--;
-			});
+			},
 		});
 	}
 
 	while (true) {
-		yield call(runPreparingPhase);
+		await runPreparingPhase(store, players);
 
-		currentRound = yield* select((state: GameState) => state.roundInfo.round);
+		currentRound = store.getState().roundInfo.round;
 
-		yield call(runReadyPhase, callbacks);
-		yield call(runPlayingPhase, callbacks);
+		await runReadyPhase(store, context, callbacks);
+		await runPlayingPhase(store, players, callbacks);
 
 		if (players.getLiving().length < 2) {
 			break;
@@ -59,17 +55,11 @@ export const gameLoopSaga = function* (callbacks: Callbacks = {}) {
 		}));
 	}
 
-	yield call(function* () {
-		yield players
-			.getLiving()[0]
-			.runSaga(function* () {
-				yield updateVariables<PlayerVariables>({
-					finishPosition: 1,
-					finishRound: currentRound,
-				});
-			})
-			.toPromise();
-	});
+	const winner = players.getLiving()[0];
+	winner.updateVariables({
+		finishPosition: 1,
+		finishRound: currentRound,
+	} as Partial<PlayerVariables>);
 
 	return players.getAll().map((p) => ({
 		id: p.id,

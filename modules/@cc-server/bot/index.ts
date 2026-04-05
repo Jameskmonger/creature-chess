@@ -1,1 +1,1 @@
-export { botLogicSaga } from "./src/saga";
+export { setupBotLogic } from "./src/botLogic";

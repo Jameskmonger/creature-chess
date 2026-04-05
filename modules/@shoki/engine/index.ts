@@ -1,6 +1,12 @@
-export { getVariable, updateVariables } from "./src/entity/variablesStore";
-export { type Entity, entity, entityFactory } from "./src/entity/entity";
-export { getDependency } from "./src/entity/dependency";
+export {
+	type Entity,
+	type EntityExtra,
+	type EntityListenerApi,
+	type EntityStartListening,
+	entity,
+	entityFactory,
+} from "./src/entity/entity";
+export { type CancellableTask } from "./src/effects";
 
 export {
 	createUtilityValue,

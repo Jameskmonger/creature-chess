@@ -3,12 +3,10 @@ export { Gamemode } from "./src/game";
 export {
 	type PlayerEntity,
 	playerEntity,
-	PlayerEntitySelectors,
 	type PlayerState,
 	PlayerStateSelectors,
 	playerReducers,
 	PlayerCommands,
-	getPlayerEntityDependencies,
 	type PlayerEntityDependencies,
 	PlayerEvents,
 	type PlayerVariables,

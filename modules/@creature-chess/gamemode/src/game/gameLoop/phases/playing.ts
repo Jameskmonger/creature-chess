@@ -1,31 +1,25 @@
 import delay from "delay";
 import pDefer from "p-defer";
-import { call, take, put, getContext } from "typed-redux-saga";
+import { Store } from "@reduxjs/toolkit";
 
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 
 import {
-	PlayerFinishMatchEvent,
 	playerFinishMatchEvent,
 } from "../../../entities/player/events";
 import { getMatches } from "../../../features/match/selectors";
 import { Match } from "../../match";
 import { RoundInfoCommands } from "../../roundInfo";
-import { GameSagaContextPlayers } from "../../sagas";
-
-const waitForFinishMatchSaga = function* () {
-	yield* take<PlayerFinishMatchEvent>(playerFinishMatchEvent.toString());
-};
+import { GameContextPlayers } from "../../gameContext";
+import { GameState } from "../../store";
 
 type Callbacks = {
 	onMatchStart?: () => void;
 	onMatchEnd?: () => void;
 };
 
-export const runPlayingPhase = function* (callbacks: Callbacks = {}) {
-	const players = yield* getContext<GameSagaContextPlayers>("players");
-
+export const runPlayingPhase = async (store: Store<GameState>, players: GameContextPlayers, callbacks: Callbacks = {}) => {
 	const battleTimeoutDeferred = pDefer<void>();
 
 	const phase = GamePhase.PLAYING;
@@ -35,17 +29,20 @@ export const runPlayingPhase = function* (callbacks: Callbacks = {}) {
 
 	const startedAt = Date.now() / 1000;
 
-	yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
+	store.dispatch(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
 
 	const livingPlayers = players.getLiving();
 
-	const matches = yield* call(getMatches, livingPlayers);
+	const matches = getMatches(livingPlayers);
 
 	const uniqueMatches = [
 		...new Set(matches.filter((match): match is Match => match !== null)),
 	];
+
 	const finishMatchTasks = livingPlayers.map((p) =>
-		p.runSaga(waitForFinishMatchSaga)
+		p.runEffect(async (api) => {
+			await api.take((a) => a.type === playerFinishMatchEvent.type);
+		})
 	);
 
 	uniqueMatches.forEach((m) => {
@@ -60,9 +57,9 @@ export const runPlayingPhase = function* (callbacks: Callbacks = {}) {
 		});
 	});
 
-	yield Promise.all(finishMatchTasks.map((t) => t.toPromise()));
+	await Promise.all(finishMatchTasks.map((t) => t.promise));
 
 	// some battles go right up to the end, so it's nice to have a delay
 	// rather than jumping straight into the next phase
-	yield delay(5000);
+	await delay(5000);
 };

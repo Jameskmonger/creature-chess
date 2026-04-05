@@ -1,5 +1,3 @@
-import { Task } from "redux-saga";
-import { put } from "typed-redux-saga";
 import { v4 as uuid } from "uuid";
 
 import {
@@ -12,7 +10,7 @@ import { PlayerStatus } from "@creature-chess/models/game/playerList";
 import { LobbyPlayer } from "@creature-chess/models/lobby";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
-import { botLogicSaga } from "@cc-server/bot";
+import { setupBotLogic } from "@cc-server/bot";
 import { BotPersonality } from "@cc-server/data";
 
 import {
@@ -30,7 +28,7 @@ import { AuthenticatedSocket, GameSocket, LobbySocket } from "./player/socket";
 type GameMember = {
 	type: "BOT" | "PLAYER";
 	id: string;
-	networkingSaga?: Task;
+	networkingTeardown?: () => void;
 	entity: PlayerEntity;
 };
 
@@ -133,9 +131,10 @@ export class Game {
 			);
 		}
 
-		existing.networkingSaga?.cancel();
+		existing.networkingTeardown?.();
 
-		existing.networkingSaga = this.runPlayerNetworking(entity, socket as unknown as GameSocket);
+		const { teardown } = this.runPlayerNetworking(entity, socket as unknown as GameSocket);
+		existing.networkingTeardown = teardown;
 	}
 
 	private registerPlayer(player: PlayerGameParticipant) {
@@ -157,10 +156,12 @@ export class Game {
 
 		this.initialisePlayer(entity);
 
+		const { teardown } = this.runPlayerNetworking(entity, socket as unknown as GameSocket);
+
 		this.members.push({
 			type: "PLAYER",
 			id: playerIdAsString,
-			networkingSaga: this.runPlayerNetworking(entity, socket as unknown as GameSocket),
+			networkingTeardown: teardown,
 			entity,
 		});
 	}
@@ -184,7 +185,7 @@ export class Game {
 
 		this.initialisePlayer(entity);
 
-		entity.runSaga(botLogicSaga, personality);
+		setupBotLogic(entity, personality);
 
 		this.members.push({
 			type: "BOT",
@@ -196,27 +197,25 @@ export class Game {
 	private initialisePlayer(entity: PlayerEntity) {
 		const settings = this.settings;
 
-		entity.runSaga(function* () {
-			yield put(
-				PlayerCommands.playerInfoCommands.updateMoneyCommand(
-					settings.startingMoney
-				)
-			);
-			yield put(
-				PlayerCommands.playerInfoCommands.updateLevelCommand({
-					level: settings.startingLevel,
-					xp: 0,
-				})
-			);
-		});
+		entity.put(
+			PlayerCommands.playerInfoCommands.updateMoneyCommand(
+				settings.startingMoney
+			)
+		);
+		entity.put(
+			PlayerCommands.playerInfoCommands.updateLevelCommand({
+				level: settings.startingLevel,
+				xp: 0,
+			})
+		);
 	}
 
 	private runPlayerNetworking(
 		entity: PlayerEntity,
 		socket: GameSocket
 	) {
-		return entity.runSaga(
-			playerNetworking,
+		return playerNetworking(
+			entity,
 			socket,
 			{
 				getRoundInfo: this.gamemode.getRoundInfo,

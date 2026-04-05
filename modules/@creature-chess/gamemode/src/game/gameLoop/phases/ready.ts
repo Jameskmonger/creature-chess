@@ -1,9 +1,8 @@
-import { put, delay, getContext } from "redux-saga/effects";
-import { Logger } from "winston";
+import delay from "delay";
+import { Store } from "@reduxjs/toolkit";
 
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
-import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import {
 	playerBeforeReadyPhaseEvent,
@@ -11,25 +10,20 @@ import {
 } from "../../events";
 import { Match } from "../../match";
 import { RoundInfoCommands } from "../../roundInfo";
-import { GameSagaContextPlayers, GetMatchupsFn } from "../../sagas";
-import { Gamemode } from "../../gamemode";
+import { GameContext } from "../../gameContext";
+import { GameState } from "../../store";
 
 type Callbacks = {
 	onTurnComplete?: (timeMs: number) => void;
 };
 
-export const runReadyPhase = function*(callbacks: Callbacks = {}) {
-	const players: GameSagaContextPlayers = yield getContext("players");
-	const getMatchups: GetMatchupsFn = yield getContext("getMatchups");
-	const logger: Logger = yield getContext("logger");
-	const settings: GamemodeSettings = yield getContext("settings");
-	const gamemode: Gamemode = yield getContext("gamemode");
+export const runReadyPhase = async (store: Store<GameState>, context: GameContext, callbacks: Callbacks = {}) => {
+	const { players, getMatchups, logger, settings, gamemode } = context;
 
-	// todo turn this into a `call` so it waits for all players
-
+	// todo turn this into something that waits for all players
 	players.getAll().forEach((p) => p.put(playerBeforeReadyPhaseEvent()));
 
-	yield delay(500);
+	await delay(500);
 
 	const matchups = getMatchups();
 
@@ -61,7 +55,7 @@ export const runReadyPhase = function*(callbacks: Callbacks = {}) {
 
 	const phase = GamePhase.READY;
 	const startedAt = Date.now() / 1000;
-	yield put(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
+	store.dispatch(RoundInfoCommands.setRoundInfoCommand({ phase, startedAt }));
 
-	yield delay(GAME_PHASE_LENGTHS[GamePhase.READY] * 1000);
+	await delay(GAME_PHASE_LENGTHS[GamePhase.READY] * 1000);
 };

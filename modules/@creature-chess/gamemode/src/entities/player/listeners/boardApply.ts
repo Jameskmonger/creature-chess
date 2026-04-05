@@ -1,0 +1,124 @@
+import { PlayerStartListening } from "../dependencies";
+import { addBenchPieceCommand, addBoardPieceCommand, clearBenchCommand, clearBoardCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBenchPiecesCommand, removeBoardPieceCommand, removeBoardPiecesCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "../state/board";
+import { unpackX, unpackY } from "@creature-chess/board";
+
+/**
+ * Sets up listeners that apply board/bench commands to the actual Board instances.
+ *
+ * Created to support migration away from board state being in Redux store.
+ */
+export const setupBoardApplyListeners = (startListening: PlayerStartListening) => {
+	// We need the board/bench from dependencies, accessed via api.extra inside each listener
+	// === board
+
+	startListening({
+		actionCreator: addBoardPieceCommand,
+		effect: async ({ payload: { pieceId, position } }, api) => {
+			api.extra.dependencies.boards.board.setPiece(pieceId, unpackX(position), unpackY(position));
+		},
+	});
+
+	startListening({
+		actionCreator: removeBoardPieceCommand,
+		effect: async ({ payload: { pieceId } }, api) => {
+			api.extra.dependencies.boards.board.removePiece(pieceId);
+		},
+	});
+
+	startListening({
+		actionCreator: removeBoardPiecesCommand,
+		effect: async ({ payload: { pieceIds } }, api) => {
+			for (const pieceId of pieceIds) {
+				api.extra.dependencies.boards.board.removePiece(pieceId);
+			}
+		},
+	});
+
+	startListening({
+		actionCreator: swapBoardPiecesCommand,
+		effect: async ({ payload: { pieceIdA, pieceIdB } }, api) => {
+			api.extra.dependencies.boards.board.swapPieces(pieceIdA, pieceIdB);
+		},
+	});
+
+	startListening({
+		actionCreator: moveBoardPieceCommand,
+		effect: async ({ payload: { pieceId, from, to } }, api) => {
+			const board = api.extra.dependencies.boards.board;
+			const existingPosition = board.getPiecePosition(pieceId);
+
+			if (
+				!existingPosition ||
+				existingPosition[0] !== unpackX(from) ||
+				existingPosition[1] !== unpackY(from)
+			) {
+				return;
+			}
+
+			board.setPiece(pieceId, unpackX(to), unpackY(to));
+		},
+	});
+
+	startListening({
+		actionCreator: clearBoardCommand,
+		effect: async (_action, api) => {
+			api.extra.dependencies.boards.board.clear();
+		},
+	});
+
+	// === bench
+
+	startListening({
+		actionCreator: addBenchPieceCommand,
+		effect: async ({ payload: { pieceId, position } }, api) => {
+			api.extra.dependencies.boards.bench.setPiece(pieceId, position.x, 0);
+		},
+	});
+
+	startListening({
+		actionCreator: removeBenchPieceCommand,
+		effect: async ({ payload: { pieceId } }, api) => {
+			api.extra.dependencies.boards.bench.removePiece(pieceId);
+		},
+	});
+
+	startListening({
+		actionCreator: removeBenchPiecesCommand,
+		effect: async ({ payload: { pieceIds } }, api) => {
+			for (const pieceId of pieceIds) {
+				api.extra.dependencies.boards.bench.removePiece(pieceId);
+			}
+		},
+	});
+
+	startListening({
+		actionCreator: swapBenchPiecesCommand,
+		effect: async ({ payload: { pieceIdA, pieceIdB } }, api) => {
+			api.extra.dependencies.boards.bench.swapPieces(pieceIdA, pieceIdB);
+		},
+	});
+
+	startListening({
+		actionCreator: moveBenchPieceCommand,
+		effect: async ({ payload: { pieceId, from, to } }, api) => {
+			const bench = api.extra.dependencies.boards.bench;
+			const existingPosition = bench.getPiecePosition(pieceId);
+
+			if (
+				!existingPosition ||
+				existingPosition[0] !== from.x
+			) {
+				return;
+			}
+
+			bench.setPiece(pieceId, to.x, 0);
+		},
+	});
+
+	startListening({
+		actionCreator: clearBenchCommand,
+		effect: async (_action, api) => {
+			api.extra.dependencies.boards.bench.clear();
+		},
+	});
+};

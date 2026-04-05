@@ -1,1 +1,1 @@
-export { PlayerEntity, playerEntity, PlayerEntitySelectors } from "./player";
+export { PlayerEntity, playerEntity } from "./player";

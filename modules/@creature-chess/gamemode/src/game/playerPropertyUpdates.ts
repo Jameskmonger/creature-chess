@@ -1,5 +1,3 @@
-import { select, all, takeLatest } from "typed-redux-saga";
-
 import {
 	PlayerStatus,
 	PlayerBattle,
@@ -9,7 +7,6 @@ import { PlayerStreak } from "@creature-chess/models/player";
 import { PlayerEntity } from "../entities";
 import { PlayerCommands, PlayerStateSelectors } from "../entities/player";
 
-// todo use sagas properly here
 export const listenForPropertyUpdates = (
 	player: PlayerEntity,
 	{
@@ -26,81 +23,72 @@ export const listenForPropertyUpdates = (
 		ready?: (ready: boolean) => void;
 	}
 ) => {
-	const saga = player.runSaga(function* () {
-		const sagas = [];
+	const unsubscribes: (() => void)[] = [];
 
-		if (emitHealth) {
-			const initialHealth = yield* select(PlayerStateSelectors.getPlayerHealth);
-			emitHealth(initialHealth);
+	if (emitHealth) {
+		emitHealth(player.select(PlayerStateSelectors.getPlayerHealth));
 
-			sagas.push(
-				takeLatest(
-					PlayerCommands.playerInfoCommands.updateHealthCommand,
-					function* ({ payload: health }) {
-						emitHealth(health);
-					}
-				)
-			);
-		}
+		unsubscribes.push(
+			player.addListener({
+				actionCreator: PlayerCommands.playerInfoCommands.updateHealthCommand,
+				effect: async ({ payload: health }) => {
+					emitHealth(health);
+				},
+			})
+		);
+	}
 
-		if (emitStreak) {
-			const initialStreak = yield* select(PlayerStateSelectors.getPlayerStreak);
-			emitStreak(initialStreak);
+	if (emitStreak) {
+		emitStreak(player.select(PlayerStateSelectors.getPlayerStreak));
 
-			sagas.push(
-				takeLatest(
-					PlayerCommands.playerInfoCommands.updateStreakCommand,
-					function* ({ payload: streak }) {
-						emitStreak(streak);
-					}
-				)
-			);
-		}
+		unsubscribes.push(
+			player.addListener({
+				actionCreator: PlayerCommands.playerInfoCommands.updateStreakCommand,
+				effect: async ({ payload: streak }) => {
+					emitStreak(streak);
+				},
+			})
+		);
+	}
 
-		if (emitStatus) {
-			const initialStatus = yield* select(PlayerStateSelectors.getPlayerStatus);
-			emitStatus(initialStatus);
+	if (emitStatus) {
+		emitStatus(player.select(PlayerStateSelectors.getPlayerStatus));
 
-			sagas.push(
-				takeLatest(
-					PlayerCommands.playerInfoCommands.updateStatusCommand,
-					function* ({ payload: status }) {
-						emitStatus(status);
-					}
-				)
-			);
-		}
+		unsubscribes.push(
+			player.addListener({
+				actionCreator: PlayerCommands.playerInfoCommands.updateStatusCommand,
+				effect: async ({ payload: status }) => {
+					emitStatus(status);
+				},
+			})
+		);
+	}
 
-		if (emitBattle) {
-			const initialBattle = yield* select(PlayerStateSelectors.getPlayerBattle);
-			emitBattle(initialBattle);
+	if (emitBattle) {
+		emitBattle(player.select(PlayerStateSelectors.getPlayerBattle));
 
-			sagas.push(
-				takeLatest(
-					PlayerCommands.playerInfoCommands.updateBattleCommand,
-					function* ({ payload: battle }) {
-						emitBattle(battle);
-					}
-				)
-			);
-		}
+		unsubscribes.push(
+			player.addListener({
+				actionCreator: PlayerCommands.playerInfoCommands.updateBattleCommand,
+				effect: async ({ payload: battle }) => {
+					emitBattle(battle);
+				},
+			})
+		);
+	}
 
-		if (emitReady) {
-			const initialReady = yield* select(PlayerStateSelectors.isPlayerReady);
-			emitReady(initialReady);
+	if (emitReady) {
+		emitReady(player.select(PlayerStateSelectors.isPlayerReady));
 
-			sagas.push(
-				takeLatest(
-					PlayerCommands.playerInfoCommands.updateReadyCommand,
-					function* ({ payload: ready }) {
-						emitReady(ready);
-					}
-				)
-			);
-		}
+		unsubscribes.push(
+			player.addListener({
+				actionCreator: PlayerCommands.playerInfoCommands.updateReadyCommand,
+				effect: async ({ payload: ready }) => {
+					emitReady(ready);
+				},
+			})
+		);
+	}
 
-		yield all(sagas);
-	});
-
-	return () => saga.cancel();
+	return () => unsubscribes.forEach((fn) => fn());
 };

@@ -1,6 +1,4 @@
-import { take, put } from "@redux-saga/core/effects";
 import { createAction } from "@reduxjs/toolkit";
-import { select, getContext } from "typed-redux-saga";
 import { v4 as uuid } from "uuid";
 
 import {
@@ -11,8 +9,7 @@ import {
 } from "@creature-chess/models";
 
 import { getDefinitionById } from "../definitions";
-import { getPlayerEntityDependencies } from "../entities/player/dependencies";
-import { getBench, getBoard } from "../entities/player/selectors";
+import { PlayerStartListening } from "../entities/player/dependencies";
 import { PlayerState } from "../entities/player/state";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
@@ -100,88 +97,84 @@ export const buyCardPlayerAction = createAction<
 	"buyCardPlayerAction"
 >("buyCardPlayerAction");
 
-export const buyCardPlayerActionSaga = function*() {
-	while (true) {
-		const playerId = yield* getContext<string>("id");
-		const name = yield* getContext<string>("playerName");
-		const { logger, gamemode: { pieceRegistry } } = yield* getPlayerEntityDependencies();
-		const board = yield* getBoard();
-		const bench = yield* getBench();
+export const setupBuyCardListener = (startListening: PlayerStartListening) => {
+	startListening({
+		actionCreator: buyCardPlayerAction,
+		effect: async (action, api) => {
+			const playerId = api.extra.id;
+			const name = api.extra.getVariable((v) => v.name);
+			const { logger, gamemode: { pieceRegistry }, boards: { board, bench } } = api.extra.dependencies;
 
-		const action: BuyCardPlayerAction = yield take(
-			buyCardPlayerAction.toString()
-		);
-		const index = action.payload.index;
-		const sortPositions = action.payload.sortPositions || undefined;
+			const index = action.payload.index;
+			const sortPositions = action.payload.sortPositions || undefined;
 
-		const cards = yield* select(getPlayerCards);
-		const money = yield* select(getPlayerMoney);
+			const state = api.getState();
+			const cards = getPlayerCards(state);
+			const money = getPlayerMoney(state);
 
-		const card = cards[index];
+			const card = cards[index];
 
-		if (!card) {
-			logger.warn("Player attempted to buy null/undefined card", {
-				actor: { playerId, name },
-			});
+			if (!card) {
+				logger.warn("Player attempted to buy null/undefined card", {
+					actor: { playerId, name },
+				});
 
-			yield put(playerInfoCommands.updateMoneyCommand(money));
-			yield put(updateCardsCommand(cards));
+				api.dispatch(playerInfoCommands.updateMoneyCommand(money));
+				api.dispatch(updateCardsCommand(cards));
 
-			continue;
-		}
+				return;
+			}
 
-		if (money < card.cost) {
-			logger.warn("Not enough money to buy card", {
-				actor: { playerId, name },
-				details: { index },
-			});
+			if (money < card.cost) {
+				logger.warn("Not enough money to buy card", {
+					actor: { playerId, name },
+					details: { index },
+				});
 
-			yield put(playerInfoCommands.updateMoneyCommand(money));
-			yield put(updateCardsCommand(cards));
+				api.dispatch(playerInfoCommands.updateMoneyCommand(money));
+				api.dispatch(updateCardsCommand(cards));
 
-			continue;
-		}
+				return;
+			}
 
-		const destination = yield* select((state: PlayerState) =>
-			getCardDestination(state, board, bench, playerId, sortPositions)
-		);
+			const destination = getCardDestination(api.getState(), board, bench, playerId, sortPositions);
 
-		// no valid slots
-		if (destination === null) {
-			logger.warn(
-				"Player attempted to buy a card but has no available destination",
-				{ actor: { playerId, name } }
-			);
-			continue;
-		}
+			if (destination === null) {
+				logger.warn(
+					"Player attempted to buy a card but has no available destination",
+					{ actor: { playerId, name } }
+				);
+				return;
+			}
 
-		const piece = createPieceFromCard(playerId, card);
+			const piece = createPieceFromCard(playerId, card);
 
-		if (!piece) {
-			return;
-		}
+			if (!piece) {
+				return;
+			}
 
-		pieceRegistry.registerPiece(piece);
+			pieceRegistry.registerPiece(piece);
 
-		const remainingCards = cards.map((c) => (c === card ? null : c));
+			const remainingCards = cards.map((c) => (c === card ? null : c));
 
-		if (destination.type === "board") {
-			yield put(
-				addBoardPieceCommand({
-					pieceId: piece.id,
-					position: destination.location,
-				})
-			);
-		} else if (destination.type === "bench") {
-			yield put(
-				addBenchPieceCommand({
-					pieceId: piece.id,
-					position: { x: unpackX(destination.location) },
-				})
-			);
-		}
+			if (destination.type === "board") {
+				api.dispatch(
+					addBoardPieceCommand({
+						pieceId: piece.id,
+						position: destination.location,
+					})
+				);
+			} else if (destination.type === "bench") {
+				api.dispatch(
+					addBenchPieceCommand({
+						pieceId: piece.id,
+						position: { x: unpackX(destination.location) },
+					})
+				);
+			}
 
-		yield put(playerInfoCommands.updateMoneyCommand(money - card.cost));
-		yield put(updateCardsCommand(remainingCards));
-	}
+			api.dispatch(playerInfoCommands.updateMoneyCommand(money - card.cost));
+			api.dispatch(updateCardsCommand(remainingCards));
+		},
+	});
 };

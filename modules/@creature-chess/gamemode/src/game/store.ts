@@ -1,19 +1,18 @@
-import { configureStore } from "@reduxjs/toolkit";
-import createSagaMiddleware from "redux-saga";
+import { configureStore, createListenerMiddleware, Dispatch, TypedStartListening, UnknownAction } from "@reduxjs/toolkit";
 
 import { RoundInfoState } from "@creature-chess/models";
 
 import { roundInfoReducer } from "./roundInfo";
-import { GameSagaContext } from "./sagas";
+import { GameContext } from "./gameContext";
 
 export type GameState = {
 	roundInfo: RoundInfoState;
 };
 
-export const createGameStore = (context: GameSagaContext) => {
-	const sagaMiddleware = createSagaMiddleware({
-		context,
-	});
+export type GameStartListening = TypedStartListening<GameState, Dispatch<UnknownAction>, GameContext>;
+
+export const createGameStore = (context: GameContext) => {
+	const listenerMiddleware = createListenerMiddleware({ extra: context });
 
 	const store = configureStore<GameState>({
 		reducer: {
@@ -23,8 +22,11 @@ export const createGameStore = (context: GameSagaContext) => {
 			getDefaultMiddleware({
 				thunk: false,
 				serializableCheck: false,
-			}).concat(sagaMiddleware),
+			}).prepend(listenerMiddleware.middleware),
 	});
 
-	return { store, sagaMiddleware };
+	return {
+		store,
+		startListening: listenerMiddleware.startListening as GameStartListening,
+	};
 };

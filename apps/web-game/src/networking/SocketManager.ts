@@ -5,7 +5,7 @@ import { HandshakeRequest } from "@creature-chess/networking/handshake";
 
 import { MenuCommands } from "~/store/menu/state";
 import { getCookieValue } from "~/utils/getCookieValue";
-import { gameStartedAction } from "~/sagas/gameSagaEntry";
+import { gameStartedAction } from "~/listeners/gameStartedAction";
 
 import type { Dispatch, GameEventMap } from "./types";
 import { EventBus } from "./EventBus";

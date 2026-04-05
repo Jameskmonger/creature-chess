@@ -1,10 +1,10 @@
-import { take, delay, all, race, call, put } from "redux-saga/effects";
-import { cancelled } from "typed-redux-saga";
+import delay from "delay";
 
 import {
 	GameEvents,
 	PlayerActions,
 	PlayerCommands,
+	PlayerEntity,
 } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
@@ -12,68 +12,76 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { GameSocket } from "./socket";
 
-import { playerBoard } from "./board";
-import {
-	incomingNetworking,
-	outgoingNetworking,
-	setPlayerSocket,
-} from "./net";
+import { setupPlayerBoard } from "./board";
+import { setupIncomingNetworking } from "./net/incoming";
+import { setupOutgoingNetworking } from "./net/outgoing";
+import { setupMetricCollector } from "../metrics/metricCollectorListener";
 
 type Parameters = {
 	getRoundInfo: () => RoundInfoState;
 	getPlayers: () => PlayerListPlayer[];
 };
 
-export const playerNetworking = function* (
+export const playerNetworking = (
+	entity: PlayerEntity,
 	socket: GameSocket,
 	{ getRoundInfo, getPlayers }: Parameters,
 	settings: GamemodeSettings
-) {
-	yield* setPlayerSocket(socket);
+) => {
+	entity.put(PlayerCommands.setSpectatingIdCommand(null));
 
-	const teardown = function* () {
-		socket!.removeAllListeners();
-		socket!.disconnect();
+	const cleanups: (() => void)[] = [];
 
-		yield* setPlayerSocket(null);
+	const teardown = () => {
+		cleanups.forEach((fn) => fn());
+		socket.removeAllListeners();
+		socket.disconnect();
 	};
 
-	yield put(PlayerCommands.setSpectatingIdCommand(null));
+	cleanups.push(setupIncomingNetworking(socket, (action) => entity.put(action)));
 
-	yield delay(500);
+	cleanups.push(setupMetricCollector(entity));
 
-	socket.emit("gameConnected", {
-		game: getRoundInfo(),
-		players: getPlayers(),
-		settings,
+	const connectTask = entity.runEffect(async () => {
+		await delay(500);
+
+		socket.emit("gameConnected", {
+			game: getRoundInfo(),
+			players: getPlayers(),
+			settings,
+		});
+
+		// Now that the client has gameConnected and will set up its listeners,
+		// start forwarding outgoing events, send initial state, and set up board spectating.
+		const outgoingCleanup = setupOutgoingNetworking(entity, socket);
+		cleanups.push(outgoingCleanup);
+
+		const boardCleanup = setupPlayerBoard(entity, socket);
+		cleanups.push(boardCleanup);
 	});
 
-	try {
-		yield race({
-			never: all([
-				call(incomingNetworking),
-				call(outgoingNetworking),
-				call(playerBoard),
-			]),
-			quit: take<PlayerActions.QuitGamePlayerAction>(
-				PlayerActions.quitGamePlayerAction.toString()
-			),
-			finish: call(function* () {
-				yield take<GameEvents.GameFinishEvent>(
-					GameEvents.gameFinishEvent.toString()
-				);
+	cleanups.push(() => connectTask.cancel());
 
-				// wait 1 second before closing the networking
-				// to allow the game finish event to be sent
-				yield delay(1000);
-			}),
-		});
-		yield delay(100);
-	} finally {
-		if (yield* cancelled()) {
-			yield call(teardown);
-		}
-	}
+	// Listen for quit or game finish to tear down
+	const unsubQuit = entity.addListener({
+		actionCreator: PlayerActions.quitGamePlayerAction,
+		effect: async () => {
+			await delay(100);
+			teardown();
+		},
+	});
+	cleanups.push(unsubQuit);
 
-	yield call(teardown);
+	const unsubFinish = entity.addListener({
+		actionCreator: GameEvents.gameFinishEvent,
+		effect: async () => {
+			// wait 1 second before closing the networking
+			// to allow the game finish event to be sent
+			await delay(1000);
+			teardown();
+		},
+	});
+	cleanups.push(unsubFinish);
+
+	return { teardown };
 };

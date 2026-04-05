@@ -1,19 +1,17 @@
-import { all, takeEvery } from "@redux-saga/core/effects";
 import {
 	Store,
 	Reducer,
 	UnknownAction,
 	configureStore,
+	createListenerMiddleware,
 } from "@reduxjs/toolkit";
 import delay from "delay";
 import pDefer from "p-defer";
-import createSagaMiddleware from "redux-saga";
-import { call } from "redux-saga/effects";
 import { v4 as uuid } from "uuid";
 import { Logger } from "winston";
 
 import {
-	battleSaga,
+	setupBattleListeners,
 	BattleEvents,
 	BattleCommands,
 } from "@creature-chess/battle";
@@ -153,35 +151,9 @@ export class Match {
 	}
 
 	private createStore(settings: GamemodeSettings) {
-		// required to preserve inside the generator
-		// eslint-disable-next-line no-underscore-dangle
 		const _this = this;
-		const rootSaga = function*() {
-			yield all([
-				call(
-					battleSaga,
-					settings,
-					_this.board,
-					_this.pieceRegistry,
-				),
-				takeEvery<BattleEvents.BattleFinishEvent>(
-					BattleEvents.battleFinishEvent,
-					function*({ payload: { turn } }) {
-						_this.onServerFinishMatch();
 
-						_this.logger.debug("Battle finished", {
-							meta: {
-								home: _this.home.getVariable((v) => v.name),
-								away: _this.away.getVariable((v) => v.name),
-								turns: turn,
-							},
-						});
-					}
-				),
-			]);
-		};
-
-		const sagaMiddleware = createSagaMiddleware();
+		const listenerMiddleware = createListenerMiddleware();
 
 		const store = configureStore({
 			reducer: {
@@ -192,10 +164,34 @@ export class Match {
 				getDefaultMiddleware({
 					thunk: false,
 					serializableCheck: false,
-				}).concat(sagaMiddleware),
+				}).prepend(listenerMiddleware.middleware),
 		});
 
-		sagaMiddleware.run(rootSaga);
+		const startListening = listenerMiddleware.startListening;
+
+		// Set up battle listeners
+		setupBattleListeners(
+			startListening,
+			settings,
+			_this.board,
+			_this.pieceRegistry,
+		);
+
+		// Listen for battle finish
+		startListening({
+			actionCreator: BattleEvents.battleFinishEvent,
+			effect: async ({ payload: { turn } }) => {
+				_this.onServerFinishMatch();
+
+				_this.logger.debug("Battle finished", {
+					meta: {
+						home: _this.home.getVariable((v) => v.name),
+						away: _this.away.getVariable((v) => v.name),
+						turns: turn,
+					},
+				});
+			},
+		});
 
 		return store;
 	}

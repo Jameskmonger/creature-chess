@@ -1,14 +1,7 @@
-import { select, delay, put } from "redux-saga/effects";
+import delay from "delay";
 
-import { getVariable } from "@shoki/engine";
-
-import {
-	getPlayerEntityDependencies,
-	PlayerActions,
-	PlayerState,
-	PlayerStateSelectors,
-	PlayerVariables,
-} from "@creature-chess/gamemode";
+import { PlayerActions, PlayerStateSelectors } from "@creature-chess/gamemode";
+import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/dependencies";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 
 import { BOT_ACTION_TIME_MS } from "./constants";
@@ -27,15 +20,14 @@ const getFirstBenchPieceId = (bench: Board): PieceModel["id"] | null => {
 	return null;
 };
 
-export const putBenchOnBoard = function*() {
-	const name = yield* getVariable<PlayerVariables, string>((v) => v.name);
+export const putBenchOnBoard = async (api: PlayerListenerApi) => {
 	const {
 		boards: { board, bench },
 		gamemode: { pieceRegistry }
-	} = yield* getPlayerEntityDependencies();
+	} = api.extra.dependencies;
 
 	while (true) {
-		const state: PlayerState = yield select();
+		const state = api.getState();
 		const firstBenchPieceId = getFirstBenchPieceId(bench);
 
 		if (firstBenchPieceId === null) {
@@ -81,7 +73,7 @@ export const putBenchOnBoard = function*() {
 			location: packPosition(benchPieceSlot[0], 0),
 		};
 
-		yield put(
+		api.dispatch(
 			PlayerActions.dropPiecePlayerAction({
 				pieceId: firstBenchPiece.id,
 				from: benchPiecePosition,
@@ -89,6 +81,6 @@ export const putBenchOnBoard = function*() {
 			})
 		);
 
-		yield delay(BOT_ACTION_TIME_MS);
+		await delay(BOT_ACTION_TIME_MS);
 	}
 };

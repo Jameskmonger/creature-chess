@@ -1,10 +1,13 @@
-import { getContext } from "typed-redux-saga";
 import { Logger } from "winston";
+
+import { EntityExtra, EntityListenerApi, EntityStartListening } from "@shoki/engine";
 
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { Gamemode } from "../../game";
 import { Board } from "@creature-chess/board";
+import { PlayerState } from "./state";
+import { PlayerVariables } from "./variables";
 
 export type PlayerEntityDependencies = {
 	logger: Logger;
@@ -16,5 +19,6 @@ export type PlayerEntityDependencies = {
 	settings: GamemodeSettings;
 };
 
-export const getPlayerEntityDependencies = () =>
-	getContext<PlayerEntityDependencies>("dependencies");
+export type PlayerExtra = EntityExtra<PlayerEntityDependencies, PlayerVariables>;
+export type PlayerStartListening = EntityStartListening<PlayerState, PlayerEntityDependencies, PlayerVariables>;
+export type PlayerListenerApi = EntityListenerApi<PlayerState, PlayerEntityDependencies, PlayerVariables>;

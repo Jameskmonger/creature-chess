@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { playerClickTileAction } from "~/sagas/board/clickTileSaga";
+import { playerClickTileAction } from "~/listeners/board/clickTile";
 
 import { PlayerPieceLocation } from "@creature-chess/models";
 

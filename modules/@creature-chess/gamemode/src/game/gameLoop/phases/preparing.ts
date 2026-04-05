@@ -1,4 +1,5 @@
-import { select, race, put, delay, getContext } from "@redux-saga/core/effects";
+import delay from "delay";
+import { Store } from "@reduxjs/toolkit";
 
 import { GamePhase } from "@creature-chess/models";
 import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
@@ -6,18 +7,17 @@ import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 import { playerRunPreparingPhaseEvent } from "../../events";
 import { readyNotifier } from "../../readyNotifier";
 import { RoundInfoCommands } from "../../roundInfo";
-import { GameSagaContextPlayers } from "../../sagas";
+import { GameContextPlayers } from "../../gameContext";
+import { GameState } from "../../store";
 
-export const runPreparingPhase = function* () {
-	const players: GameSagaContextPlayers = yield getContext("players");
-
-	const round: number = yield select((state) => state.roundInfo.round);
+export const runPreparingPhase = async (store: Store<GameState>, players: GameContextPlayers) => {
+	const round = store.getState().roundInfo.round;
 
 	const phase = GamePhase.PREPARING;
 	const startedAt = Date.now() / 1000;
 
 	// todo put gamePhaseStartedEvent here?
-	yield put(
+	store.dispatch(
 		RoundInfoCommands.setRoundInfoCommand({
 			phase,
 			startedAt,
@@ -29,7 +29,7 @@ export const runPreparingPhase = function* () {
 
 	const notifier = readyNotifier(players.getLiving());
 
-	yield race([
+	await Promise.race([
 		notifier.promise,
 		delay(GAME_PHASE_LENGTHS[GamePhase.PREPARING] * 1000),
 	]);

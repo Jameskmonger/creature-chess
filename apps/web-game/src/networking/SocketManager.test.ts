@@ -8,7 +8,7 @@ jest.mock("~/store/menu/state", () => ({
 jest.mock("~/utils/getCookieValue", () => ({
 	getCookieValue: jest.fn(),
 }));
-jest.mock("~/sagas/gameSagaEntry", () => ({
+jest.mock("~/listeners/gameListeners", () => ({
 	gameStartedAction: () => ({ type: "gameStarted" }),
 }));
 jest.mock("./connectionRef", () => ({

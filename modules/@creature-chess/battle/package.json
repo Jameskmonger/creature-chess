@@ -25,11 +25,7 @@
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/utils": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
-		"@types/redux-saga": "^0.10.5",
 		"javascript-astar": "^0.4.1",
 		"present": "^1.0.0"
-	},
-	"peerDependencies": {
-		"redux-saga": "^1.1.3"
 	}
 }

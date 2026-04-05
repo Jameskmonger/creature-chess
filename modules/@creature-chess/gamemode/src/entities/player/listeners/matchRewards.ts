@@ -1,0 +1,105 @@
+import { PlayerStatus } from "@creature-chess/models/game/playerList";
+import { StreakType } from "@creature-chess/models/player";
+
+import { PlayerListenerApi, PlayerStartListening } from "../dependencies";
+import {
+	playerDeathEvent,
+	playerFinishMatchEvent,
+} from "../events";
+import { playerInfoCommands } from "../state/commands";
+import {
+	getPlayerHealth,
+	getPlayerMoney,
+	getPlayerStreak,
+} from "../state/selectors";
+
+const getStreakBonus = (streak: number) => {
+	if (streak >= 9) {
+		return 3;
+	}
+
+	if (streak >= 6) {
+		return 2;
+	}
+
+	if (streak >= 3) {
+		return 1;
+	}
+
+	return 0;
+};
+
+const getMoneyForMatch = (
+	currentMoney: number,
+	streak: number,
+	win: boolean
+) => {
+	const base = 3;
+	const winBonus = win ? 1 : 0;
+	const streakBonus = getStreakBonus(streak);
+
+	const interest = Math.min(Math.floor(currentMoney / 10), 5);
+
+	const total = base + winBonus + streakBonus + interest;
+
+	return { total, base, winBonus, streakBonus, interest };
+};
+
+const updateStreak = (api: PlayerListenerApi, win: boolean) => {
+	const type = win ? StreakType.WIN : StreakType.LOSS;
+
+	const existingStreak = getPlayerStreak(api.getState());
+
+	const newAmount =
+		type === existingStreak.type ? existingStreak.amount + 1 : 0;
+
+	api.dispatch(
+		playerInfoCommands.updateStreakCommand({ type, amount: newAmount })
+	);
+};
+
+export const setupMatchRewardsListener = (startListening: PlayerStartListening) => {
+	startListening({
+		actionCreator: playerFinishMatchEvent,
+		effect: async ({ payload: { homeScore, awayScore, isHomePlayer } }, api) => {
+			api.cancelActiveListeners();
+
+			const { settings } = api.extra.dependencies;
+
+			const win = isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
+
+			updateStreak(api, win);
+
+			const enemyPiecesRemaining = isHomePlayer ? awayScore : homeScore;
+			const damage = enemyPiecesRemaining * settings.healthLostPerPiece;
+
+			const oldValue = getPlayerHealth(api.getState());
+			const newValue = Math.max(0, oldValue - damage);
+
+			api.dispatch(playerInfoCommands.updateHealthCommand(newValue));
+
+			const justDied = newValue === 0 && oldValue !== 0;
+			if (justDied) {
+				api.dispatch(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
+				api.dispatch(playerDeathEvent());
+			}
+
+			const currentMoney = getPlayerMoney(api.getState());
+			const streak = getPlayerStreak(api.getState());
+
+			const { total, base, winBonus, streakBonus, interest } = getMoneyForMatch(
+				currentMoney,
+				streak.amount,
+				win
+			);
+
+			api.dispatch(
+				playerInfoCommands.playerMatchRewardsEvent({
+					damage,
+					justDied,
+					rewardMoney: { total, base, winBonus, streakBonus, interest },
+				})
+			);
+		},
+	});
+};

@@ -1,14 +1,7 @@
 import delay from "delay";
-import { select, put, call } from "redux-saga/effects";
 
-import { getVariable } from "@shoki/engine";
-
-import {
-	PlayerActions,
-	PlayerState,
-	PlayerVariables,
-	getPlayerEntityDependencies,
-} from "@creature-chess/gamemode";
+import { PlayerActions } from "@creature-chess/gamemode";
+import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/dependencies";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -16,18 +9,17 @@ import { getActions } from "../actions";
 import { BOT_ACTION_TIME_MS } from "../constants";
 import { putBenchOnBoard } from "../putBenchOnBoard";
 
-export const preparingPhase = function*(personality: BotPersonality) {
+export const preparingPhase = async (api: PlayerListenerApi, personality: BotPersonality) => {
 	const {
 		settings,
 		boards: { board, bench },
 		gamemode: { pieceRegistry },
-	} = yield* getPlayerEntityDependencies();
-	const name = yield* getVariable<PlayerVariables, string>((v) => v.name);
+	} = api.extra.dependencies;
 
-	yield delay(BOT_ACTION_TIME_MS);
+	await delay(BOT_ACTION_TIME_MS);
 
 	while (true) {
-		const state: PlayerState = yield select();
+		const state = api.getState();
 
 		const actions = getActions(board, bench, pieceRegistry, state, personality, settings);
 
@@ -37,16 +29,12 @@ export const preparingPhase = function*(personality: BotPersonality) {
 
 		const [mostValuable] = actions;
 
-		// console.log(`- ${name} executing '${mostValuable.name}'`);
+		api.dispatch(mostValuable.action());
 
-		yield put(mostValuable.action());
+		await delay(BOT_ACTION_TIME_MS);
 
-		yield delay(BOT_ACTION_TIME_MS);
-
-		yield call(putBenchOnBoard);
+		await putBenchOnBoard(api);
 	}
 
-	// console.log(`- ${name} finished actions`);
-
-	yield put(PlayerActions.readyUpPlayerAction());
+	api.dispatch(PlayerActions.readyUpPlayerAction());
 };

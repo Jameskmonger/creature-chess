@@ -1,179 +1,152 @@
-import { Task } from "redux-saga";
-import {
-	all,
-	call,
-	race,
-	take,
-	select,
-	delay,
-	getContext,
-	takeLatest,
-} from "typed-redux-saga";
-import { getDependency, getVariable } from "@shoki/engine";
+import delay from "delay";
 
 import {
 	PlayerVariables,
 	PlayerEntity,
-	PlayerActions,
-	PlayerEntityDependencies,
-	PlayerState,
 	PlayerCommands,
 	GameEvents,
 	Match,
 	PlayerEvents,
-	getPlayerEntityDependencies,
+	PlayerState,
 	removeBenchPiecesCommand,
 	removeBoardPiecesCommand,
 } from "@creature-chess/gamemode";
 import { serialiseBoard } from "@creature-chess/networking";
 
 import { GameSocket } from "../socket";
-import { getPlayerSocket } from "../net/registries";
 import { addBenchPieceCommand, addBoardPieceCommand, moveBenchPieceCommand, moveBoardPieceCommand, removeBenchPieceCommand, removeBoardPieceCommand, swapBenchPiecesCommand, swapBoardPiecesCommand } from "@creature-chess/gamemode";
 
-const getSpectatingPlayer = function*() {
-	const spectatingId = yield* select(
-		(state: PlayerState) => state.spectating.id
-	);
+const BOARD_CHANGE_ACTIONS = new Set([
+	addBoardPieceCommand.type,
+	moveBoardPieceCommand.type,
+	removeBoardPieceCommand.type,
+	removeBoardPiecesCommand.type,
+	swapBoardPiecesCommand.type,
+]);
 
-	if (!spectatingId) {
-		return null;
-	}
+const BENCH_CHANGE_ACTIONS = new Set([
+	addBenchPieceCommand.type,
+	moveBenchPieceCommand.type,
+	removeBenchPieceCommand.type,
+	removeBenchPiecesCommand.type,
+	swapBenchPiecesCommand.type,
+]);
 
-	const game = yield* getDependency<PlayerEntityDependencies, "gamemode">(
-		"gamemode"
-	);
-	return game.getPlayerById(spectatingId) || null;
-};
-
-const getMatch = () =>
-	getVariable<PlayerVariables, Match | null>((variables) => variables.match);
-
-const spectatePlayerBoard = function*(
-	socket: GameSocket
-) {
-	const playerId = yield* getContext<string>("id");
-
+const setupSpectateListeners = (
+	targetEntity: PlayerEntity,
+	localPlayerId: string,
+	socket: GameSocket,
+) => {
 	const {
 		boards: { board, bench },
 		gamemode: { pieceRegistry },
-	} = yield* getPlayerEntityDependencies();
+	} = targetEntity.dependencies;
 
 	// Send current board and bench state immediately so the client
 	// doesn't show stale data from a previous spectating target.
 	socket.emit("boardUpdate", serialiseBoard(board, pieceRegistry));
 	socket.emit("benchUpdate", serialiseBoard(bench, pieceRegistry));
 
-	const initialMatch = yield* getMatch();
-
-	if (initialMatch) {
-		const matchBoard = initialMatch.getBoardForPlayer(playerId);
-
+	const match = targetEntity.getVariable<Match | null>((v) => v.match);
+	if (match) {
+		const matchBoard = match.getBoardForPlayer(localPlayerId);
 		socket.emit("matchBoardUpdate", {
-			turn: initialMatch.getTurn(),
+			turn: match.getTurn(),
 			board: serialiseBoard(matchBoard.board, pieceRegistry, matchBoard.isHome),
 		});
 
 		// todo send opponentId
 	}
 
-	yield all([
-		call(function*() {
-			while (true) {
-				yield take(GameEvents.playerRunReadyPhaseEvent.toString());
+	const unsubscribes: (() => void)[] = [];
 
+	unsubscribes.push(
+		targetEntity.addListener({
+			actionCreator: GameEvents.playerRunReadyPhaseEvent,
+			effect: async (_action, api) => {
 				// todo improve this, it's to allow the match variable to be set... maybe some `setMatchEvent`
-				yield delay(100);
+				await delay(100);
 
-				const match = yield* getMatch();
-
-				if (match) {
-					const board = match.getBoardForPlayer(playerId);
-
+				const currentMatch = api.extra.getVariable<Match | null>((v: PlayerVariables) => v.match);
+				if (currentMatch) {
+					const boardData = currentMatch.getBoardForPlayer(localPlayerId);
 					socket.emit("matchBoardUpdate", {
 						turn: null,
-						board: serialiseBoard(board.board, pieceRegistry, board.isHome),
+						board: serialiseBoard(boardData.board, pieceRegistry, boardData.isHome),
 					});
 				}
 
-				yield take(PlayerEvents.playerFinishMatchEvent.toString());
-			}
-		}),
-		takeLatest(
-			[
-				addBoardPieceCommand,
-				moveBoardPieceCommand,
-				removeBoardPieceCommand,
-				removeBoardPiecesCommand,
-				swapBoardPiecesCommand,
-			],
-			function*() {
-				yield delay(50);
+				// Wait for finish match
+				await api.take((a) => a.type === PlayerEvents.playerFinishMatchEvent.type);
+			},
+		})
+	);
 
+	// Watch board changes
+	unsubscribes.push(
+		targetEntity.addListener({
+			predicate: (action) => BOARD_CHANGE_ACTIONS.has(action.type),
+			effect: async (_action, api) => {
+				api.cancelActiveListeners();
+				await delay(50);
 				socket.emit("boardUpdate", serialiseBoard(board, pieceRegistry));
-			}
-		),
-		takeLatest(
-			[
-				addBenchPieceCommand,
-				moveBenchPieceCommand,
-				removeBenchPieceCommand,
-				removeBenchPiecesCommand,
-				swapBenchPiecesCommand,
-			],
-			function*() {
-				yield delay(50);
+			},
+		})
+	);
 
+	// Watch bench changes
+	unsubscribes.push(
+		targetEntity.addListener({
+			predicate: (action) => BENCH_CHANGE_ACTIONS.has(action.type),
+			effect: async (_action, api) => {
+				api.cancelActiveListeners();
+				await delay(50);
 				socket.emit("benchUpdate", serialiseBoard(bench, pieceRegistry));
-			}
-		),
-	]);
-};
+			},
+		})
+	);
 
-const spectateOtherPlayer = function*(player: PlayerEntity) {
-	const socket = yield* getPlayerSocket();
-
-	let task: Task | null = null;
-	try {
-		task = player.runSaga(function*() {
-			yield call(spectatePlayerBoard, socket);
-		});
-
-		yield task.toPromise<void>();
-	} finally {
-		task?.cancel();
-	}
-};
-
-const spectateLocalPlayer = function*() {
-	const socket = yield* getPlayerSocket();
-	yield call(spectatePlayerBoard, socket);
+	return () => unsubscribes.forEach((fn) => fn());
 };
 
 /**
- * Watch the local player board and bench, or that of the currently spectated player
+ * Watch the local player board and bench, or that of the currently spectated player.
+ * Registers a listener on the player entity for spectating changes.
  */
-export const playerBoard = function*() {
-	yield delay(200); // todo (#418) remove the need for this
+export const setupPlayerBoard = (entity: PlayerEntity, socket: GameSocket) => {
+	let cleanupSpectate: (() => void) | null = null;
 
-	let spectating = yield* call(getSpectatingPlayer);
+	const startSpectating = (targetEntity: PlayerEntity) => {
+		cleanupSpectate?.();
+		cleanupSpectate = setupSpectateListeners(targetEntity, entity.id, socket);
+	};
 
-	while (true) {
-		const {
-			newSpectate,
-		}: { newSpectate?: PlayerActions.SpectatePlayerAction } = yield* race({
-			// todo strongly type this
-			newSpectate: take<any>(PlayerCommands.setSpectatingIdCommand.toString()),
+	const task = entity.runEffect(async () => {
+		await delay(200);
 
-			forever: spectating
-				? call(spectateOtherPlayer, spectating)
-				: call(spectateLocalPlayer),
-		});
+		const spectatingId = entity.select((state: PlayerState) => state.spectating.id);
+		const target = spectatingId
+			? entity.dependencies.gamemode.getPlayerById(spectatingId) || entity
+			: entity;
 
-		if (!newSpectate) {
-			return;
-		}
+		startSpectating(target);
+	});
 
-		spectating = yield* call(getSpectatingPlayer);
-	}
+	const unsubSpectateChange = entity.addListener({
+		actionCreator: PlayerCommands.setSpectatingIdCommand,
+		effect: async (_action, api) => {
+			const spectatingId = api.getState().spectating.id;
+			const targetEntity = spectatingId
+				? api.extra.dependencies.gamemode.getPlayerById(spectatingId) || entity
+				: entity;
+
+			startSpectating(targetEntity);
+		},
+	});
+
+	return () => {
+		cleanupSpectate?.();
+		task.cancel();
+		unsubSpectateChange();
+	};
 };

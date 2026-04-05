@@ -1,18 +1,44 @@
-import { expectSaga } from "redux-saga-test-plan";
-import { select } from "redux-saga/effects";
+import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 
-import { updateShopLockCommand } from "../entities/player/state/cardShop";
-import { isPlayerShopLocked } from "../entities/player/state/selectors";
+import { cardShopReducer } from "../entities/player/state/cardShop";
 import {
 	toggleShopLockPlayerAction,
-	toggleShopLockPlayerActionSaga,
+	setupToggleShopLockListener,
 } from "./toggleShopLock";
 
-describe("toggleShopLockPlayerActionSagaFactory", () => {
-	test("should toggle lock state", () =>
-		expectSaga(toggleShopLockPlayerActionSaga)
-			.provide([[select(isPlayerShopLocked), false]])
-			.put(updateShopLockCommand(true))
-			.dispatch(toggleShopLockPlayerAction())
-			.silentRun());
+const createTestStore = () => {
+	const listenerMiddleware = createListenerMiddleware();
+
+	setupToggleShopLockListener(listenerMiddleware.startListening as any);
+
+	return configureStore({
+		reducer: {
+			cardShop: cardShopReducer,
+		},
+		middleware: (getDefaultMiddleware) =>
+			getDefaultMiddleware({ thunk: false, serializableCheck: false })
+				.prepend(listenerMiddleware.middleware),
+	});
+};
+
+describe("setupToggleShopLockListener", () => {
+	test("should toggle lock state", async () => {
+		const store = createTestStore();
+
+		expect(store.getState().cardShop.locked).toBe(false);
+
+		store.dispatch(toggleShopLockPlayerAction());
+
+		// Allow listener to run
+		await new Promise((r) => setTimeout(r, 10));
+
+		expect(store.getState().cardShop.locked).toBe(true);
+
+		store.dispatch(toggleShopLockPlayerAction());
+
+		// Allow listener to run
+		await new Promise((r) => setTimeout(r, 10));
+
+		expect(store.getState().cardShop.locked).toBe(false);
+	});
 });

@@ -1,38 +1,38 @@
-import { put, delay } from "redux-saga/effects";
-import { select } from "typed-redux-saga";
+import delay from "delay";
 
 import { PlayerCommands, PlayerStateSelectors } from "@creature-chess/gamemode";
+import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/dependencies";
 
 // send a command for each of the initial states so that networking sends it out
 // todo rethink this
-export const sendInitialState = function* () {
+export const sendInitialState = async (api: PlayerListenerApi) => {
 	// give players time to initialise.. ugly but it works
 	// todo improve this
-	yield delay(200);
+	await delay(200);
 
-	const cards = yield* select(PlayerStateSelectors.getPlayerCards);
-	yield put(PlayerCommands.updateCardsCommand(cards));
+	const state = api.getState();
 
-	const locked = yield* select(PlayerStateSelectors.isPlayerShopLocked);
-	yield put(PlayerCommands.updateShopLockCommand(locked));
+	const cards = PlayerStateSelectors.getPlayerCards(state);
+	api.dispatch(PlayerCommands.updateCardsCommand(cards));
 
-	const money = yield* select(PlayerStateSelectors.getPlayerMoney);
-	yield put(PlayerCommands.playerInfoCommands.updateMoneyCommand(money));
+	const locked = PlayerStateSelectors.isPlayerShopLocked(state);
+	api.dispatch(PlayerCommands.updateShopLockCommand(locked));
 
-	const level = yield* select(PlayerStateSelectors.getPlayerLevel);
-	const xp = yield* select(PlayerStateSelectors.getPlayerXp);
-	yield put(
+	const money = PlayerStateSelectors.getPlayerMoney(state);
+	api.dispatch(PlayerCommands.playerInfoCommands.updateMoneyCommand(money));
+
+	const level = PlayerStateSelectors.getPlayerLevel(state);
+	const xp = PlayerStateSelectors.getPlayerXp(state);
+	api.dispatch(
 		PlayerCommands.playerInfoCommands.updateLevelCommand({ level, xp })
 	);
 
-	const health = yield* select(PlayerStateSelectors.getPlayerHealth);
-	yield put(PlayerCommands.playerInfoCommands.updateHealthCommand(health));
+	const health = PlayerStateSelectors.getPlayerHealth(state);
+	api.dispatch(PlayerCommands.playerInfoCommands.updateHealthCommand(health));
 
-	const opponentId = yield* select(PlayerStateSelectors.getOpponentId);
-	const opponentIsClone = yield* select(
-		PlayerStateSelectors.getOpponentIsClone
-	);
-	yield put(
+	const opponentId = PlayerStateSelectors.getOpponentId(state);
+	const opponentIsClone = PlayerStateSelectors.getOpponentIsClone(state);
+	api.dispatch(
 		PlayerCommands.playerInfoCommands.updateOpponentCommand({
 			id: opponentId,
 			isClone: opponentIsClone,

@@ -4,7 +4,7 @@ dist/
 test/
 /gh-pages/
 _metrics/
-metrics/
+/metrics/
 lib/
 bin/
 coverage/

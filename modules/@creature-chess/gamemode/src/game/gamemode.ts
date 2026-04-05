@@ -1,7 +1,5 @@
-import { take } from "@redux-saga/core/effects";
 import { Store } from "@reduxjs/toolkit";
 import { EventEmitter } from "events";
-import { SagaMiddleware } from "redux-saga";
 import { Logger } from "winston";
 
 import { PlayerStatus } from "@creature-chess/models/game/playerList";
@@ -19,11 +17,11 @@ import {
 	GameFinishEvent,
 } from "./events";
 import { OpponentProvider } from "./opponentProvider";
-import { playerGameDeckSagaFactory } from "./player/playerGameDeckSaga";
+import { setupPlayerGameDeckListeners } from "./player/playerGameDeck";
 import { PlayerList } from "./playerList";
-import { sendPublicEventsSaga } from "./publicEvents";
-import { gameSaga, GameSagaContext } from "./sagas";
-import { createGameStore, GameState } from "./store";
+import { setupPublicEventsListener } from "./publicEvents";
+import { runGame, GameContext } from "./gameContext";
+import { createGameStore, GameStartListening, GameState } from "./store";
 import { PieceRegistry } from "@creature-chess/utils/piece";
 
 const finishGameEventKey = "FINISH_GAME";
@@ -43,7 +41,7 @@ export class Gamemode {
 	private deck: CardDeck;
 
 	private store: Store<GameState>;
-	private sagaMiddleware: SagaMiddleware<GameSagaContext>;
+	private startListening: GameStartListening;
 
 	public constructor(
 		public readonly id: string,
@@ -53,7 +51,7 @@ export class Gamemode {
 	) {
 		this.deck = new CardDeck(this.logger);
 
-		const { store, sagaMiddleware } = createGameStore({
+		const context: GameContext = {
 			gamemode: this,
 			getMatchups: this.opponentProvider.getMatchups,
 			players: {
@@ -63,9 +61,11 @@ export class Gamemode {
 			},
 			logger: this.logger,
 			settings: this.settings,
-		});
+		};
+
+		const { store, startListening } = createGameStore(context);
 		this.store = store;
-		this.sagaMiddleware = sagaMiddleware;
+		this.startListening = startListening;
 	}
 
 	public start = (players: PlayerEntity[]) => {
@@ -73,8 +73,8 @@ export class Gamemode {
 			this.players.push(player);
 			this.playerList.addPlayer(player);
 
-			player.runSaga(
-				playerGameDeckSagaFactory,
+			setupPlayerGameDeckListeners(
+				player.addListener,
 				this.deck,
 				this.settings.rerollMultiplier
 			);
@@ -89,10 +89,41 @@ export class Gamemode {
 			});
 		});
 
-		// todo fix these ugly typings
-		this.sagaMiddleware.run(this.gameTeardownSagaFactory() as () => Generator);
-		this.sagaMiddleware.run(gameSaga as any, this.callbacks);
-		this.sagaMiddleware.run(sendPublicEventsSaga);
+		// Set up game teardown listener
+		this.startListening({
+			actionCreator: gameFinishEvent,
+			effect: async (event) => {
+				this.getConnectedPlayers().forEach((player) => {
+					player.put(event);
+				});
+
+				this.events.emit(finishGameEventKey, event.payload);
+
+				// teardown
+				(this.opponentProvider as unknown as null) = null;
+				(this.deck as unknown as null) = null;
+				this.playerList.deconstructor();
+				(this.playerList as unknown as null) = null;
+				this.events.removeAllListeners();
+				(this.events as unknown as null) = null;
+			},
+		});
+
+		// Set up public events listener
+		setupPublicEventsListener(this.startListening);
+
+		// Run the game (async, not blocking)
+		runGame(this.store, {
+			gamemode: this,
+			getMatchups: this.opponentProvider.getMatchups,
+			players: {
+				getAll: this.getAllPlayers,
+				getLiving: this.getLivingPlayers,
+				getById: this.getPlayerById,
+			},
+			logger: this.logger,
+			settings: this.settings,
+		}, this.callbacks);
 	};
 
 	public getPlayerById = (playerId: string) =>
@@ -110,33 +141,6 @@ export class Gamemode {
 
 	public getRoundInfo = () => this.store.getState().roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
-
-	private gameTeardownSagaFactory = () => {
-		const broadcast = (event: GameFinishEvent) => {
-			this.getConnectedPlayers().forEach((player) => {
-				player.put(event);
-			});
-
-			this.events.emit(finishGameEventKey, event.payload);
-		};
-
-		const teardown = () => {
-			// todo this is ugly
-			(this.opponentProvider as unknown as null) = null;
-			(this.deck as unknown as null) = null;
-			this.playerList.deconstructor();
-			(this.playerList as unknown as null) = null;
-			this.events.removeAllListeners();
-			(this.events as unknown as null) = null;
-		};
-
-		return function*() {
-			const event: GameFinishEvent = yield take(gameFinishEvent.toString());
-
-			broadcast(event);
-			teardown();
-		};
-	};
 
 	private getAllPlayers = () => this.players;
 

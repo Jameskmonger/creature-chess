@@ -1,39 +1,52 @@
-import { all, call, takeEvery } from "redux-saga/effects";
-
 import {
 	GameEvents,
 	PlayerCommands,
 	PlayerEvents,
+	PlayerEntity,
 } from "@creature-chess/gamemode";
 
-import { getPlayerSocket } from "../registries";
+import { GameSocket } from "../../socket";
 import { sendInitialState } from "./initialState";
 
-export const outgoingNetworking = function* () {
-	const socket = yield* getPlayerSocket();
+export const setupOutgoingNetworking = (entity: PlayerEntity, socket: GameSocket) => {
+	const unsubscribes: (() => void)[] = [];
 
-	yield all([
-		call(sendInitialState),
+	// Send initial state
+	const initialStateTask = entity.runEffect(async (api) => {
+		await sendInitialState(api);
+	});
 
-		takeEvery(
-			GameEvents.GameEventActionTypesArray,
-			function* (action) {
+	unsubscribes.push(() => initialStateTask.cancel());
+
+	// Forward game events
+	unsubscribes.push(
+		entity.addListener({
+			predicate: (action) => GameEvents.GameEventActionTypesArray.includes(action.type),
+			effect: async (action) => {
 				socket.emit("sendGameEvents", action);
-			}
-		),
+			},
+		})
+	);
 
-		takeEvery(
-			PlayerEvents.PlayerEventActionTypesArray,
-			function* (action) {
+	// Forward player events
+	unsubscribes.push(
+		entity.addListener({
+			predicate: (action) => PlayerEvents.PlayerEventActionTypesArray.includes(action.type),
+			effect: async (action) => {
 				socket.emit("sendLocalPlayerEvents", action);
-			}
-		),
+			},
+		})
+	);
 
-		takeEvery(
-			PlayerCommands.PlayerInfoUpdateCommandActionTypesArray,
-			function* (action) {
+	// Forward player info update commands
+	unsubscribes.push(
+		entity.addListener({
+			predicate: (action) => PlayerCommands.PlayerInfoUpdateCommandActionTypesArray.includes(action.type),
+			effect: async (action) => {
 				socket.emit("playerInfoUpdates", action);
-			}
-		),
-	]);
+			},
+		})
+	);
+
+	return () => unsubscribes.forEach((fn) => fn());
 };

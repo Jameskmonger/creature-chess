@@ -1,6 +1,3 @@
-import { take } from "redux-saga/effects";
-import { select } from "typed-redux-saga";
-
 import { PlayerEntity } from "../../entities";
 import {
 	isPlayerAlive,
@@ -8,7 +5,6 @@ import {
 } from "../../entities/player/state/selectors";
 import {
 	quitGamePlayerAction,
-	QuitGamePlayerAction,
 } from "../../playerActions";
 import { listenForPropertyUpdates } from "../playerPropertyUpdates";
 import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
@@ -25,20 +21,20 @@ export const readyNotifier = (livingPlayers: PlayerEntity[]) => {
 			},
 		});
 
-		const watchQuitTask = player.runSaga(function* () {
-			yield take<QuitGamePlayerAction>(quitGamePlayerAction.toString());
+		const unsubscribeQuit = player.addListener({
+			actionCreator: quitGamePlayerAction,
+			effect: async (_action, api) => {
+				const state = api.getState();
 
-			const isAlive = yield* select(isPlayerAlive);
-			const isReady = yield* select(isPlayerReady);
-
-			if (isAlive && !isReady) {
-				queue.add(player.id);
-			}
+				if (isPlayerAlive(state) && !isPlayerReady(state)) {
+					queue.add(player.id);
+				}
+			},
 		});
 
 		return () => {
 			disposeReady();
-			watchQuitTask.cancel();
+			unsubscribeQuit();
 		};
 	});
 
