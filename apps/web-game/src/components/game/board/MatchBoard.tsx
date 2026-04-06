@@ -2,6 +2,7 @@ import React from "react";
 
 import { GameBoard } from "./GameBoard";
 import { GameBoardContextProvider } from "./GameBoardContext";
+import { ProjectileCanvas } from "./projectiles/ProjectileCanvas";
 import {
 	useGameBench,
 	useGameMatchBoard,
@@ -35,6 +36,7 @@ export function MatchBoard({ children }: { children?: React.ReactNode }) {
 				renderBoardPiece={renderBoardPiece}
 				renderBenchPiece={renderBenchPiece}
 			>
+				<ProjectileCanvas />
 				{children}
 			</GameBoard>
 		</GameBoardContextProvider>

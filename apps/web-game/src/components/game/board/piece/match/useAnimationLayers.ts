@@ -5,11 +5,8 @@ import { BattleEvent, PieceAttackEvent, PieceHitEvent } from "@creature-chess/ba
 import {
 	AnimationLayer,
 	createAttackBasicLayer,
-	createProjectileAnimation,
 	createReceiveHitLayer,
-	ProjectileAnimation,
 	useAttackBasicStyles,
-	useAttackShootStyles,
 	useDyingStyles,
 	useReceiveHitStyles,
 } from "./animations";
@@ -21,17 +18,14 @@ export function useAnimationLayers(
 ) {
 	const attackBasicStyles = useAttackBasicStyles();
 	const receiveHitStyles = useReceiveHitStyles();
-	const attackShootStyles = useAttackShootStyles();
 	const dyingStyles = useDyingStyles();
 
 	const [layers, setLayers] = React.useState<AnimationLayer[]>([]);
 	const [isDying, setIsDying] = React.useState(false);
-	const [projectile, setProjectile] = React.useState<ProjectileAnimation | null>(null);
 
 	const processEvents = React.useCallback(
 		(events: BattleEvent[]) => {
 			const newLayers: AnimationLayer[] = [];
-			let newProjectile: ProjectileAnimation | null = null;
 
 			for (const event of events) {
 				switch (event.type) {
@@ -42,11 +36,6 @@ export function useAnimationLayers(
 									event as PieceAttackEvent,
 									attackBasicStyles.attackBasic
 								)
-							);
-						} else if (event.attackTypeName === "shoot") {
-							newProjectile = createProjectileAnimation(
-								event as PieceAttackEvent,
-								attackShootStyles.projectile
 							);
 						}
 						break;
@@ -80,14 +69,9 @@ export function useAnimationLayers(
 					return [...filtered, ...newLayers];
 				});
 			}
-
-			if (newProjectile) {
-				setProjectile(newProjectile);
-			}
 		},
 		[
 			attackBasicStyles.attackBasic,
-			attackShootStyles.projectile,
 			receiveHitStyles.receiveHit,
 		]
 	);
@@ -108,16 +92,10 @@ export function useAnimationLayers(
 		setLayers((prev) => prev.filter((l) => l.name !== name));
 	}, []);
 
-	const onProjectileAnimationEnd = React.useCallback(() => {
-		setProjectile(null);
-	}, []);
-
 	return {
 		layers,
 		isDying,
 		dyingClassName: dyingStyles.dying,
-		projectile,
 		onLayerAnimationEnd,
-		onProjectileAnimationEnd,
 	};
 }
