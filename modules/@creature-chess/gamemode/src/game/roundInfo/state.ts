@@ -2,10 +2,32 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
 
+import { gamePhaseStartedEvent } from "../events";
+
 const initialState: RoundInfoState = {
 	round: 1,
 	phase: GamePhase.PREPARING,
 	phaseStartedAtSeconds: 0,
+};
+
+const applyPhaseUpdate = (
+	state: RoundInfoState,
+	payload: { phase: GamePhase; startedAt: number; round?: number }
+): RoundInfoState => {
+	if (payload.round) {
+		return {
+			...state,
+			phase: payload.phase,
+			phaseStartedAtSeconds: Math.floor(payload.startedAt),
+			round: payload.round,
+		};
+	}
+
+	return {
+		...state,
+		phase: payload.phase,
+		phaseStartedAtSeconds: Math.floor(payload.startedAt),
+	};
 };
 
 export const {
@@ -22,22 +44,12 @@ export const {
 				startedAt: number;
 				round?: number;
 			}>
-		) => {
-			if (command.payload.round) {
-				return {
-					...state,
-					phase: command.payload.phase,
-					phaseStartedAtSeconds: Math.floor(command.payload.startedAt),
-					round: command.payload.round,
-				};
-			}
-
-			return {
-				...state,
-				phase: command.payload.phase,
-				phaseStartedAtSeconds: Math.floor(command.payload.startedAt),
-			};
-		},
+		) => applyPhaseUpdate(state, command.payload),
+	},
+	extraReducers: (builder) => {
+		builder.addCase(gamePhaseStartedEvent, (state, action) =>
+			applyPhaseUpdate(state, action.payload)
+		);
 	},
 });
 
