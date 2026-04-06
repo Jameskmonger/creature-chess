@@ -17,9 +17,15 @@ export const setupClientBattleListeners = (startListening: ClientStartListening)
 			api.cancelActiveListeners();
 
 			const settings = (api.getState() as AppState).game.settings;
-			const { matchBoard, pieceRegistry } = api.extra.slices;
+			const { matchBoard, pieceRegistry, animationEventStore } = api.extra.slices;
 
-			setupBattleListeners(startListening, settings, matchBoard, pieceRegistry);
+			setupBattleListeners(
+				startListening,
+				settings,
+				matchBoard,
+				pieceRegistry,
+				(events) => animationEventStore.pushEvents(events),
+			);
 		},
 	});
 

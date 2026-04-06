@@ -1,22 +1,5 @@
 import { TraitId } from "../gamemode/traits";
-import { AttackType, CreatureDefinition } from "./creatureDefinition";
-import { TileCoordinates } from "./position";
-
-export interface AttackDetails {
-	direction: TileCoordinates;
-	damage: number;
-	attackType: AttackType;
-	distance: number;
-}
-
-export interface HitDetails {
-	direction: TileCoordinates;
-	damage: number;
-}
-
-export interface MovementDetails {
-	direction: TileCoordinates;
-}
+import { CreatureDefinition } from "./creatureDefinition";
 
 export interface PieceModel {
 	id: string;
@@ -39,16 +22,6 @@ export interface PieceModel {
 	 * @deprecated State/position data should be stored separately from the core piece data.
 	 */
 	facingAway: boolean;
-
-	/**
-	 * @deprecated State/position data should be stored separately from the core piece data.
-	 */
-	attacking?: AttackDetails | null;
-
-	/**
-	 * @deprecated State/position data should be stored separately from the core piece data.
-	 */
-	hit?: HitDetails | null;
 
 	maxHealth: number;
 

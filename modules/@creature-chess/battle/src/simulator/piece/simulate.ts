@@ -25,7 +25,7 @@ const stateFunctions: { [key: string]: StateHandler } = {
 function getPieceState(
 	currentTurn: number,
 	piece: PieceModel,
-	{ combatStore }: Stores
+	{ combatStore, eventLog }: Stores
 ): PieceState {
 	const combatState = combatStore.getPiece(piece.id);
 
@@ -38,6 +38,10 @@ function getPieceState(
 		};
 
 		combatStore.updatePiecePartial(piece.id, { state: newState });
+
+		if (eventLog) {
+			eventLog.append({ type: "piece_dying", pieceId: piece.id });
+		}
 
 		return newState;
 	}
@@ -53,7 +57,7 @@ export function simulatePiece(
 	board: Board,
 	pieceRegistry: PieceRegistry,
 	pieceId: PieceModel["id"],
-	{ combatStore }: Stores
+	stores: Stores
 ) {
 	const piece = pieceRegistry.getPieceById(pieceId);
 
@@ -61,7 +65,7 @@ export function simulatePiece(
 		return;
 	}
 
-	const state = getPieceState(currentTurn, piece, { combatStore });
+	const state = getPieceState(currentTurn, piece, stores);
 
 	const [newState, actions] = stateFunctions[state.type](
 		currentTurn,
@@ -69,14 +73,12 @@ export function simulatePiece(
 		board,
 		pieceRegistry,
 		pieceId,
-		{
-			combatStore,
-		}
+		stores
 	);
 
 	// if there was a new state, set our piece to it
 	if (newState !== state) {
-		combatStore.updatePiecePartial(piece.id, { state: newState });
+		stores.combatStore.updatePiecePartial(piece.id, { state: newState });
 	}
 
 	// process any actions
@@ -87,9 +89,7 @@ export function simulatePiece(
 			pieceRegistry,
 			piece.id,
 			actions,
-			{
-				combatStore,
-			}
+			stores
 		);
 	}
 }

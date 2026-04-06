@@ -14,7 +14,7 @@ export function doActions(
 	pieceRegistry: PieceRegistry,
 	id: PieceModel["id"],
 	actions: PieceAction[],
-	{ combatStore }: Stores
+	stores: Stores
 ) {
 	for (const action of actions) {
 		const handler = actionFunctions[action.type];
@@ -25,9 +25,7 @@ export function doActions(
 			pieceRegistry,
 			id,
 			action,
-			{
-				combatStore,
-			}
+			stores
 		);
 	}
 }

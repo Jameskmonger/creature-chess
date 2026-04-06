@@ -1,5 +1,5 @@
 export type { Card } from "./src/card";
-export type { PieceModel, IndexedPieces, AttackDetails } from "./src/piece";
+export type { PieceModel, IndexedPieces } from "./src/piece";
 export type { PlayerPieceLocation } from "./src/playerPieceLocation";
 
 export { GamePhase } from "./src/game-phase";

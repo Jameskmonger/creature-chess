@@ -2,12 +2,12 @@ import {
 	Dispatch,
 	TypedStartListening,
 	UnknownAction,
-	isAnyOf,
 } from "@reduxjs/toolkit";
 
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models/settings";
 
+import { BattleEvent, BattleEventLog } from "./battleEventLog";
 import {
 	pauseBattleCommand,
 	resumeBattleCommand,
@@ -40,6 +40,7 @@ const runBattle = async (
 	startingTurn: number,
 	settings: GamemodeSettings,
 	dispatch: Dispatch,
+	onEvents?: (events: BattleEvent[]) => void,
 ) => {
 	let turnCount = startingTurn;
 
@@ -50,6 +51,8 @@ const runBattle = async (
 		canBeAttackedAtTurn: 0,
 		canAttackAtTurn: 15,
 	});
+
+	const eventLog = new BattleEventLog();
 
 	while (true) {
 		const shouldStop =
@@ -68,7 +71,12 @@ const runBattle = async (
 
 		const turnTimer = duration(settings.battleTurnDuration);
 
-		simulateTurn(++turnCount, board, pieceRegistry, { combatStore });
+		simulateTurn(++turnCount, board, pieceRegistry, { combatStore, eventLog });
+
+		const events = eventLog.consume();
+		if (events.length > 0 && onEvents) {
+			onEvents(events);
+		}
 
 		await turnTimer.remaining().promise;
 	}
@@ -79,6 +87,7 @@ export const setupBattleListeners = <TState>(
 	settings: GamemodeSettings,
 	board: Board,
 	pieceRegistry: PieceRegistry,
+	onEvents?: (events: BattleEvent[]) => void,
 ) => {
 	const controls = { paused: false };
 
@@ -102,7 +111,7 @@ export const setupBattleListeners = <TState>(
 			api.cancelActiveListeners();
 
 			controls.paused = false;
-			await runBattle(controls, board, pieceRegistry, action.payload.turn || 0, settings, api.dispatch);
+			await runBattle(controls, board, pieceRegistry, action.payload.turn || 0, settings, api.dispatch, onEvents);
 		},
 	});
 };

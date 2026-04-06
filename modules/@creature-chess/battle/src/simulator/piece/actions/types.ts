@@ -16,5 +16,5 @@ export type ActionHandler = (
 	pieceRegistry: PieceRegistry,
 	id: PieceModel["id"],
 	action: PieceAction,
-	{ combatStore }: Stores
+	stores: Stores
 ) => void;

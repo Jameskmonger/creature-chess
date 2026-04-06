@@ -2,6 +2,7 @@ import { Dispatch, TypedStartListening, UnknownAction } from "@reduxjs/toolkit";
 import { SubscribableBoard } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils/piece";
 
+import { PieceAnimationEventStore } from "~/components/game/board/piece/match/animationEventStore";
 import { AppState } from "./state";
 
 type Slices = {
@@ -9,6 +10,7 @@ type Slices = {
 	bench: SubscribableBoard;
 	matchBoard: SubscribableBoard;
 	pieceRegistry: PieceRegistry;
+	animationEventStore: PieceAnimationEventStore;
 };
 
 export type ClientExtra = {

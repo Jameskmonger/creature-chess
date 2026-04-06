@@ -4,11 +4,14 @@ import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 import React, { createContext, useRef } from "react";
 import { PieceRegistry } from "@creature-chess/utils/piece";
 
+import { PieceAnimationEventStore } from "./piece/match/animationEventStore";
+
 export class GameBoardState {
 	public readonly board: SubscribableBoard;
 	public readonly bench: SubscribableBoard;
 	public readonly matchBoard: SubscribableBoard;
 	public readonly pieceRegistry: PieceRegistry;
+	public readonly animationEventStore: PieceAnimationEventStore;
 
 	public constructor() {
 		this.board = new SubscribableBoard(
@@ -24,6 +27,7 @@ export class GameBoardState {
 			GamemodeSettingsPresets["default"].boardHalfHeight * 2,
 		);
 		this.pieceRegistry = new PieceRegistry();
+		this.animationEventStore = new PieceAnimationEventStore();
 	}
 }
 

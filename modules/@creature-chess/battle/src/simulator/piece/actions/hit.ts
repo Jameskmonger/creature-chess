@@ -23,7 +23,7 @@ export function doHit(
 	pieceRegistry: PieceRegistry,
 	id: PieceModel["id"],
 	action: HitAction,
-	{ combatStore }: Stores
+	{ combatStore, eventLog }: Stores
 ) {
 	const attacker = pieceRegistry.getPieceById(id);
 	const attackerPosition = board.getPiecePosition(id);
@@ -85,12 +85,6 @@ export function doHit(
 
 	const newAttacker: PieceModel = {
 		...attacker,
-		attacking: {
-			attackType: attackerStats.attackType,
-			distance: attackerDistance,
-			direction: attackerDirection,
-			damage,
-		},
 		facingAway: attackerFacingAway,
 		lastBattleStats: {
 			...attacker.lastBattleStats!,
@@ -101,13 +95,6 @@ export function doHit(
 	const defender: PieceModel = {
 		...target,
 		currentHealth: newDefenderHealth,
-		hit: {
-			direction: getRelativeDirection(
-				{ x: targetPosition[0], y: targetPosition[1] },
-				{ x: attackerPosition[0], y: attackerPosition[1] }
-			),
-			damage,
-		},
 		lastBattleStats: {
 			...target.lastBattleStats!,
 			damageTaken: target.lastBattleStats!.damageTaken + damage,
@@ -116,4 +103,25 @@ export function doHit(
 
 	pieceRegistry.registerPiece(newAttacker);
 	pieceRegistry.registerPiece(defender);
+
+	if (eventLog) {
+		eventLog.append({
+			type: "piece_attack",
+			pieceId: attacker.id,
+			targetId: target.id,
+			attackTypeName: attackerStats.attackType.name,
+			direction: attackerDirection,
+			distance: attackerDistance,
+			damage,
+		});
+		eventLog.append({
+			type: "piece_hit",
+			pieceId: target.id,
+			direction: getRelativeDirection(
+				{ x: targetPosition[0], y: targetPosition[1] },
+				{ x: attackerPosition[0], y: attackerPosition[1] }
+			),
+			damage,
+		});
+	}
 }

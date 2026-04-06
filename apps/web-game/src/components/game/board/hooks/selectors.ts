@@ -27,3 +27,9 @@ export function useGamePieceRegistry() {
 
 	return usePieceRegistrySubscription(pieceRegistry);
 }
+
+export function useGameAnimationEventStore() {
+	const { animationEventStore } = useGameBoards();
+
+	return animationEventStore;
+}

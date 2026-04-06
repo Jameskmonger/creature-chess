@@ -1,12 +1,10 @@
 import { PieceModel } from "@creature-chess/models";
 
-import { PieceCombatState, PieceInfoStore } from "../state";
 import { getStats } from "../utils/getStats";
 import { simulatePiece } from "./piece/simulate";
+import { Stores } from "./types";
 import { Board } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils/piece";
-
-type Stores = { combatStore: PieceInfoStore<PieceCombatState> };
 
 export const simulateTurn = (
 	currentTurn: number,
@@ -45,7 +43,7 @@ const takePieceTurn = (
 	board: Board,
 	pieceRegistry: PieceRegistry,
 	pieceId: PieceModel["id"],
-	{ combatStore }: Stores
+	stores: Stores
 ) => {
 	if (!board.containsPiece(pieceId)) {
 		return;
@@ -57,14 +55,11 @@ const takePieceTurn = (
 		return;
 	}
 
-	piece.attacking = null;
-	piece.hit = null;
-
 	simulatePiece(
 		currentTurn,
 		board,
 		pieceRegistry,
 		pieceId,
-		{ combatStore }
+		stores
 	);
 };

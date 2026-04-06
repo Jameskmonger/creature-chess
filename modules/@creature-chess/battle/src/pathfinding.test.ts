@@ -41,8 +41,7 @@ describe("pathfinding", () => {
 					facingAway: false,
 					maxHealth: 130,
 					currentHealth: 130,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"90c0ee33-aeae-4ebe-a985-23207f9facc0": buildPieceModel({
@@ -54,8 +53,7 @@ describe("pathfinding", () => {
 					facingAway: false,
 					maxHealth: 262,
 					currentHealth: 262,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"913d506f-3524-4481-904d-2106be40e825": buildPieceModel({
@@ -67,8 +65,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 34,
 					currentHealth: 34,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"9d4b15d9-03b6-4906-8af8-5a215e0d0792": buildPieceModel({
@@ -80,8 +77,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 46,
 					currentHealth: 46,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"4374fce7-8be7-433a-87d9-7568deb0dddc": buildPieceModel({
@@ -93,8 +89,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 640,
 					currentHealth: 640,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"7977b429-db02-4b5a-a576-5f9916497a24": buildPieceModel({
@@ -106,8 +101,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 34,
 					currentHealth: 34,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"5196ed28-794e-4db4-8653-8fd3340f5990": buildPieceModel({
@@ -119,8 +113,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 70,
 					currentHealth: 70,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"6434e4f9-5905-47b9-9840-d8364e2deb62": buildPieceModel({
@@ -132,8 +125,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 154,
 					currentHealth: 154,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"b3a0546c-4c1e-462f-99cd-6ae308819830": buildPieceModel({
@@ -145,8 +137,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 106,
 					currentHealth: 106,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 				"e297fa3c-5cbc-4003-bcc2-66ba521acd4d": buildPieceModel({
@@ -158,8 +149,7 @@ describe("pathfinding", () => {
 					facingAway: true,
 					maxHealth: 70,
 					currentHealth: 70,
-					attacking: null,
-					hit: null,
+
 					lastBattleStats: null,
 				}),
 			},

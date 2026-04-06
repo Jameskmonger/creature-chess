@@ -3,6 +3,7 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 import { Board } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils/piece";
 
+import { BattleEvent, BattleEventLog } from "./battleEventLog";
 import { simulateTurn } from "./simulator";
 import { PieceCombatState } from "./state/state";
 import { pieceInfoStore } from "./state/store";
@@ -23,12 +24,14 @@ const isATeamDefeated = (board: Board, pieceRegistry: PieceRegistry) => {
 export class BattleRunner {
 	private controls = { paused: false };
 	private turn = 0;
+	private eventLog = new BattleEventLog();
 
 	public constructor(
 		private board: Board,
 		private pieceRegistry: PieceRegistry,
 		private settings: GamemodeSettings,
 		startingTurn: number = 0,
+		private onEvents?: (events: BattleEvent[]) => void,
 	) {
 		this.turn = startingTurn;
 	}
@@ -68,7 +71,12 @@ export class BattleRunner {
 
 			const turnTimer = duration(this.settings.battleTurnDuration);
 
-			simulateTurn(++this.turn, this.board, this.pieceRegistry, { combatStore });
+			simulateTurn(++this.turn, this.board, this.pieceRegistry, { combatStore, eventLog: this.eventLog });
+
+			const events = this.eventLog.consume();
+			if (events.length > 0 && this.onEvents) {
+				this.onEvents(events);
+			}
 
 			await turnTimer.remaining().promise;
 		}
