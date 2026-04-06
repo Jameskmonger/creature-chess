@@ -8,14 +8,34 @@ type DropSurface = {
 	canDrop: (id: string, x: number, y: number) => boolean;
 };
 
-type PieceDragContextValue = {
-	register: (surface: DropSurface) => () => void;
-	drop: (id: string, clientX: number, clientY: number) => boolean;
+export type ActiveDrag = {
+	id: string;
+	clientX: number;
+	clientY: number;
+	width: number;
+	height: number;
+	offsetX: number;
+	offsetY: number;
 };
 
-const PieceDragContext = React.createContext<PieceDragContextValue | null>(
-	null
-);
+type DragActions = {
+	register: (surface: DropSurface) => () => void;
+	drop: (id: string, clientX: number, clientY: number) => boolean;
+	startDrag: (drag: ActiveDrag) => void;
+	moveDrag: (clientX: number, clientY: number) => void;
+	endDrag: () => void;
+};
+
+const ActionsContext = React.createContext<DragActions | null>(null);
+const ActiveDragContext = React.createContext<ActiveDrag | null>(null);
+
+const NOOP_ACTIONS: DragActions = {
+	register: () => () => undefined,
+	drop: () => false,
+	startDrag: () => undefined,
+	moveDrag: () => undefined,
+	endDrag: () => undefined,
+};
 
 export function PieceDragContextProvider({
 	children,
@@ -23,8 +43,9 @@ export function PieceDragContextProvider({
 	children: React.ReactNode;
 }) {
 	const surfaces = React.useRef<Set<DropSurface>>(new Set());
+	const [activeDrag, setActiveDrag] = React.useState<ActiveDrag | null>(null);
 
-	const value = React.useMemo<PieceDragContextValue>(
+	const actions = React.useMemo<DragActions>(
 		() => ({
 			register: (surface) => {
 				surfaces.current.add(surface);
@@ -60,36 +81,42 @@ export function PieceDragContextProvider({
 				}
 				return false;
 			},
+			startDrag: (drag) => setActiveDrag(drag),
+			moveDrag: (clientX, clientY) =>
+				setActiveDrag((prev) =>
+					prev ? { ...prev, clientX, clientY } : prev
+				),
+			endDrag: () => setActiveDrag(null),
 		}),
 		[]
 	);
 
 	return (
-		<PieceDragContext.Provider value={value}>
-			{children}
-		</PieceDragContext.Provider>
+		<ActionsContext.Provider value={actions}>
+			<ActiveDragContext.Provider value={activeDrag}>
+				{children}
+			</ActiveDragContext.Provider>
+		</ActionsContext.Provider>
 	);
 }
 
-const NOOP_CONTEXT: PieceDragContextValue = {
-	register: () => () => undefined,
-	drop: () => false,
-};
+function useActions(): DragActions {
+	return React.useContext(ActionsContext) ?? NOOP_ACTIONS;
+}
 
-function usePieceDragContext(): PieceDragContextValue {
-	return React.useContext(PieceDragContext) ?? NOOP_CONTEXT;
+export function useActiveDrag(): ActiveDrag | null {
+	return React.useContext(ActiveDragContext);
 }
 
 const DRAG_THRESHOLD_PX = 4;
 
 /**
  * Attach the returned handlers to a draggable piece element.
- * Uses pointer capture so move/up events always fire on the source element.
- * A "drag" only begins after the pointer has moved past a small threshold,
- * so small movements still fire the element's native click.
+ * Capture is acquired only once a drag actually starts (threshold crossed),
+ * so short taps/clicks still bubble naturally.
  */
 export function useDragPiece(id: string) {
-	const { drop } = usePieceDragContext();
+	const { drop, startDrag, moveDrag, endDrag } = useActions();
 
 	const state = React.useRef<{
 		pointerId: number;
@@ -109,21 +136,24 @@ export function useDragPiece(id: string) {
 				startY: e.clientY,
 				dragging: false,
 			};
-			// NOTE: do not capture here — capture redirects the synthetic
-			// `click` event to this element, which breaks click-to-select on
-			// child elements. Capture is acquired once a drag actually starts.
 		},
 		[]
 	);
 
 	const onPointerMove = React.useCallback(
 		(e: React.PointerEvent<HTMLElement>) => {
-			if (!state.current || state.current.dragging) {
+			if (!state.current) {
 				return;
 			}
-			const dx = e.clientX - state.current.startX;
-			const dy = e.clientY - state.current.startY;
-			if (dx * dx + dy * dy > DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX) {
+			if (!state.current.dragging) {
+				const dx = e.clientX - state.current.startX;
+				const dy = e.clientY - state.current.startY;
+				if (
+					dx * dx + dy * dy <=
+					DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX
+				) {
+					return;
+				}
 				state.current.dragging = true;
 				// capture now so pointermove/up keep firing on this element
 				// even when the pointer leaves the piece
@@ -132,9 +162,21 @@ export function useDragPiece(id: string) {
 				} catch {
 					// ignore
 				}
+				const rect = e.currentTarget.getBoundingClientRect();
+				startDrag({
+					id,
+					clientX: e.clientX,
+					clientY: e.clientY,
+					width: rect.width,
+					height: rect.height,
+					offsetX: e.clientX - rect.left,
+					offsetY: e.clientY - rect.top,
+				});
+				return;
 			}
+			moveDrag(e.clientX, e.clientY);
 		},
-		[]
+		[id, startDrag, moveDrag]
 	);
 
 	const onPointerUp = React.useCallback(
@@ -152,33 +194,33 @@ export function useDragPiece(id: string) {
 				return;
 			}
 
+			endDrag();
 			drop(id, e.clientX, e.clientY);
 			// suppress the synthetic click that would otherwise fire after pointerup
 			suppressNextClick();
 		},
-		[id, drop]
+		[id, drop, endDrag]
 	);
 
 	const onPointerCancel = React.useCallback(
 		(e: React.PointerEvent<HTMLElement>) => {
+			const s = state.current;
 			state.current = null;
 			try {
 				e.currentTarget.releasePointerCapture(e.pointerId);
 			} catch {
 				// ignore
 			}
+			if (s?.dragging) {
+				endDrag();
+			}
 		},
-		[]
+		[endDrag]
 	);
 
 	return React.useMemo(
 		() => ({ onPointerDown, onPointerMove, onPointerUp, onPointerCancel }),
-		[
-			onPointerDown,
-			onPointerMove,
-			onPointerUp,
-			onPointerCancel,
-		]
+		[onPointerDown, onPointerMove, onPointerUp, onPointerCancel]
 	);
 }
 
@@ -208,7 +250,7 @@ export function useDropSurface(
 	onDrop: (id: string, x: number, y: number) => void,
 	canDrop: (id: string, x: number, y: number) => boolean
 ) {
-	const { register } = usePieceDragContext();
+	const { register } = useActions();
 
 	// keep latest callbacks without re-registering
 	const latest = React.useRef({ onDrop, canDrop, width, height });
