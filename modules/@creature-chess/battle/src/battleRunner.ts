@@ -61,6 +61,25 @@ export class BattleRunner {
 				this.turn >= this.settings.battleTurnCount || isATeamDefeated(this.board, this.pieceRegistry);
 
 			if (shouldStop) {
+				// Emit dying events and remove any pieces that died on the final turn
+				const deadPieceIds: string[] = [];
+				for (const p of this.board.getAllPieces()) {
+					const piece = this.pieceRegistry.getPieceById(p.id);
+					if (piece && piece.currentHealth <= 0) {
+						this.eventLog.append({ type: "piece_dying", pieceId: p.id });
+						deadPieceIds.push(p.id);
+					}
+				}
+
+				const finalEvents = this.eventLog.consume();
+				if (finalEvents.length > 0 && this.onEvents) {
+					this.onEvents(finalEvents);
+				}
+
+				for (const id of deadPieceIds) {
+					this.board.removePiece(id);
+				}
+
 				await duration(1000).remaining().promise;
 				return { turn: this.turn };
 			}

@@ -59,6 +59,25 @@ const runBattle = async (
 			turnCount >= settings.battleTurnCount || isATeamDefeated(board, pieceRegistry);
 
 		if (shouldStop) {
+			// Emit dying events and remove any pieces that died on the final turn
+			const deadPieceIds: string[] = [];
+			for (const p of board.getAllPieces()) {
+				const piece = pieceRegistry.getPieceById(p.id);
+				if (piece && piece.currentHealth <= 0) {
+					eventLog.append({ type: "piece_dying", pieceId: p.id });
+					deadPieceIds.push(p.id);
+				}
+			}
+
+			const events = eventLog.consume();
+			if (events.length > 0 && onEvents) {
+				onEvents(events);
+			}
+
+			for (const id of deadPieceIds) {
+				board.removePiece(id);
+			}
+
 			await duration(1000).remaining().promise;
 
 			dispatch(battleFinishEvent({ turn: turnCount }));
