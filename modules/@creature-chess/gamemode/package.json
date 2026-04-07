@@ -6,6 +6,8 @@
 	"keywords": [],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"license": "ISC",
+	"main": "./dist/index.js",
+	"types": "./index.ts",
 	"publishConfig": {
 		"access": "public"
 	},

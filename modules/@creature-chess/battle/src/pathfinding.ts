@@ -1,3 +1,4 @@
+/// <reference path="../types/javascript-astar.d.ts" />
 import { astar, Graph } from "javascript-astar";
 
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";

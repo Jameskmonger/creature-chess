@@ -9,8 +9,6 @@ lib/
 bin/
 coverage/
 
-*.d.ts
-*.d.ts.map
 
 #yarn
 .pnp.*

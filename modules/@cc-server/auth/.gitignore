@@ -1,7 +1,0 @@
-*.d.ts
-lib/
-
-
-index.js
-src/*.js
-src/**/*.js
