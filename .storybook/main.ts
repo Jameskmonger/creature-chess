@@ -49,6 +49,11 @@ const config: StorybookConfig = {
 	`,
 	webpackFinal: (config) => ({
 		...config,
+		watchOptions: {
+			...config.watchOptions,
+			poll: 1000,
+			ignored: /[/\\]node_modules[/\\]/,
+		},
 		plugins: [
 			...(config.plugins ?? []),
 			new DefinePlugin({
@@ -59,9 +64,13 @@ const config: StorybookConfig = {
 			}),
 		],
 		resolve: {
-			alias: { "~": path.resolve(__dirname, "../apps/web-game/src") },
-			extensions: [".tsx", ".ts", ".js"],
+			...config.resolve,
+			alias: {
+				...(config.resolve?.alias ?? {}),
+				"~": path.resolve(__dirname, "../apps/web-game/src"),
+			},
 			fallback: {
+				...(config.resolve?.fallback ?? {}),
 				"process/browser": require.resolve("process/browser"),
 			},
 		},
