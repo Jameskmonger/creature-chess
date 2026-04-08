@@ -94,15 +94,25 @@ export function Piece(props: Props) {
 				/>
 			</div>
 
-			<div className={classes.stage}>
-				<PieceStageIndicator stage={piece.stage} />
-			</div>
+			{
+				piece.stage > 0
+				&& (
+					<div className={classes.stage}>
+						<PieceStageIndicator stage={piece.stage} />
+					</div>
+				)
+			}
 
-			<div className={classes.traits}>
-				{piece.traits.map((trait) => (
-					<TraitIcon key={trait} trait={trait} />
-				))}
-			</div>
+			{
+				piece.traits.length > 0
+				&& (
+					<div className={classes.traits}>
+						{piece.traits.map((trait) => (
+							<TraitIcon key={trait} trait={trait} />
+						))}
+					</div>
+				)
+			}
 
 			{children}
 		</div>
