@@ -22,7 +22,7 @@ const PieceStageIndicator: React.FunctionComponent<StageIndicatorProps> = ({
 	}
 
 	return (
-		<Layout grow direction="column" justifyContent="center" noSpacer>
+		<Layout grow direction="row" justifyContent="center" noSpacer>
 			{stars}
 		</Layout>
 	);

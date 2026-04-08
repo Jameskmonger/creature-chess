@@ -5,9 +5,9 @@ import { createUseStyles } from "react-jss";
 
 import { CreatureImage } from "../../../ui/creatureImage";
 import { usePiece } from "./PieceContext";
-import { PieceMeta } from "./meta";
 import { PieceHealthbar } from "./meta/PieceHealthbar";
 import { PieceStageIndicator } from "./meta/PieceStageIndicator";
+import { TraitIcon } from "~/components/ui/TraitIcon";
 
 interface Props {
 	healthbar: "none" | "friendly" | "enemy" | "spectating";
@@ -33,24 +33,6 @@ const useStyles = createUseStyles({
 		"containerName": "piece",
 		"containerType": "size",
 	},
-	metaContainer: {
-		"position": "absolute",
-		"top": 0,
-		"left": 0,
-		"display": "flex",
-		"flexDirection": "row",
-		"width": "35%",
-		"height": "100%",
-		"boxSizing": "border-box",
-
-		"padding": "2%",
-
-		"@container (max-width: 36px)": {
-			width: "44%",
-			paddingTop: "2px",
-			paddingLeft: "2px",
-		},
-	},
 	imageContainer: {
 		position: "absolute",
 		bottom: "0",
@@ -60,21 +42,31 @@ const useStyles = createUseStyles({
 	},
 	healthbarContainer: {
 		position: "absolute",
-		right: "4%",
 		top: "4%",
-		height: "92%",
-		width: "28%",
+		left: "4%",
+		height: "10%",
+		width: "92%",
 	},
 	stage: {
 		"position": "absolute",
-		"top": "10%",
-		"left": "7%",
-		"width": "86%",
-		"height": "80%",
+		"bottom": "4%",
+		"right": "4%",
+		"height": "8%",
+		"padding": "2px",
+		"background": "rgba(0, 0, 0, 0.5)",
 
 		"& > img": {
 			width: "100%",
 		},
+	},
+	traits: {
+		position: "absolute",
+		left: "4%",
+		bottom: "4%",
+		height: "12%",
+		display: "flex",
+		flexDirection: "row",
+		gap: "2px",
 	},
 });
 
@@ -83,30 +75,16 @@ export function Piece(props: Props) {
 	const { piece } = usePiece();
 	const { healthbar, children, className, onClick } = props;
 
-	const stageIndicator = (
-		<div className={classes.stage}>
-			<PieceStageIndicator stage={piece.stage} />
-		</div>
-	);
-
 	return (
 		<div className={classNames(classes.piece, className)} onClick={onClick}>
-			<div className={classes.metaContainer}>
-				<PieceMeta piece={piece} />
-			</div>
-
 			<div className={classes.healthbarContainer}>
 				{healthbar !== "none" && (
 					<PieceHealthbar
 						color={healthbar}
 						current={piece.currentHealth}
 						max={piece.maxHealth}
-					>
-						{stageIndicator}
-					</PieceHealthbar>
+					/>
 				)}
-
-				{healthbar === "none" && <>{stageIndicator}</>}
 			</div>
 
 			<div className={classes.imageContainer}>
@@ -114,6 +92,16 @@ export function Piece(props: Props) {
 					definitionId={piece.definitionId}
 					facing={piece.facingAway ? "back" : "front"}
 				/>
+			</div>
+
+			<div className={classes.stage}>
+				<PieceStageIndicator stage={piece.stage} />
+			</div>
+
+			<div className={classes.traits}>
+				{piece.traits.map((trait) => (
+					<TraitIcon key={trait} trait={trait} />
+				))}
 			</div>
 
 			{children}

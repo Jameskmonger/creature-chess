@@ -67,7 +67,7 @@ const createProps = (args: any) => ({
 		currentHealth: args.currentHealth || 50,
 		stage: args.stage || 0,
 		lastBattleStats: null,
-		traits: [],
+		traits: args.traits || [],
 	},
 });
 

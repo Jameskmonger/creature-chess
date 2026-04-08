@@ -55,7 +55,6 @@ const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
 			fillClassName={classes.fill}
 			current={props.current}
 			max={props.max}
-			vertical
 		>
 			{props.children}
 		</ProgressBar>
