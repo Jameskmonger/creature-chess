@@ -10,20 +10,19 @@ const ATTACK_MOVEMENT_MULTIPLIER_PX = 3;
 export const useAttackBasicStyles = createUseStyles({
 	"@keyframes piece-attack-basic-anim": {
 		"0%": {
-			top: "0",
-			left: "0",
+			transform: "translate(0, 0)",
 		},
 		"50%": {
-			top: `calc(calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower)) * var(--attackYDirection))`,
-			left: `calc(calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower)) * var(--attackXDirection))`,
+			transform: "translate("
+				+ `calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower) * var(--attackXDirection)), `
+				+ `calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower) * var(--attackYDirection))`
+				+ ")",
 		},
 		"100%": {
-			top: "0",
-			left: "0",
+			transform: "translate(0, 0)",
 		},
 	},
 	"attackBasic": {
-		position: "relative",
 		animationName: "$piece-attack-basic-anim",
 		animationDuration: `${ATTACK_DURATION_MS}ms`,
 	},
