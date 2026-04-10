@@ -1,9 +1,11 @@
+import { AppState } from "~/store";
 import { ClientStartListening } from "~/store/listenerContext";
 
 import { BattleEvents } from "@creature-chess/battle";
 import { PlayerActions } from "@creature-chess/gamemode";
 
 import { getGameConnectionRef } from "~/networking/connectionRef";
+import { clearSelectedPiece } from "~/store/game/ui/actions";
 
 import { setupClientBattleListeners } from "./battle";
 import { setupClickPieceListener } from "./board/clickPiece";
@@ -33,6 +35,18 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 			},
 		});
 	}
+
+	// Clear selection when the selected piece is sold
+	startListening({
+		actionCreator: PlayerActions.sellPiecePlayerAction,
+		effect: async ({ payload: { pieceId } }, api) => {
+			const selectedPieceId = (api.getState() as AppState).game.ui.selectedPieceId;
+
+			if (selectedPieceId === pieceId) {
+				api.dispatch(clearSelectedPiece());
+			}
+		},
+	});
 
 	// Set up all sub-listeners
 	setupPreventAccidentalCloseListener(startListening);
