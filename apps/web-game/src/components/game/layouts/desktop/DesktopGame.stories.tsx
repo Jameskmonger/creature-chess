@@ -1,15 +1,10 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { LocalPlayerContextProvider } from "~/auth/context";
-import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
-import { GameState } from "~/store/game/state";
 
 import { GamePhase } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
-import { GameStateProvider } from "../../../../../.storybook/GameStateProvider";
-import { useGlobalStyles } from "../../../../styles";
+import { GameLayoutStoryArgs, GameLayoutStoryWrapper } from "../GameLayoutStory";
 import { DesktopGame } from "./DesktopGame";
 
 export default {
@@ -18,66 +13,11 @@ export default {
 	argTypes: {},
 } as Meta;
 
-const Template: Story<any> = (args) => {
-	useGlobalStyles();
-
-	const decorateState = (state: GameState) => {
-		const newState = {
-			...state,
-			ui: {
-				...state.ui,
-				winnerId: args.winnerId ? args.winnerId : state.ui.winnerId,
-				connectionStatus: args.connectionStatus
-					? args.connectionStatus
-					: state.ui.connectionStatus,
-				// todo
-				selectedPieceId: null,
-			},
-			roundInfo: {
-				...state.roundInfo,
-				phase: args.phase,
-			},
-			playerInfo: {
-				...state.playerInfo,
-				matchRewards: args.matchRewards
-					? args.matchRewards
-					: state.playerInfo.matchRewards,
-				opponentId: args.opponentId
-					? args.opponentId
-					: state.playerInfo.opponentId,
-			},
-		};
-
-		return newState;
-	};
-
-	return (
-		<GameStateProvider
-			decorateState={decorateState}
-		>
-			<div style={{ width: "90%", height: "90%", border: "2px solid red" }}>
-				<GamemodeSettingsContextProvider
-					value={GamemodeSettingsPresets["default"]}
-				>
-					<LocalPlayerContextProvider
-						value={{
-							type: "user" as const,
-							id: "1234",
-							nickname: "jkm",
-							stats: {
-								wins: 0,
-								gamesPlayed: 0,
-							},
-							registered: true,
-						}}
-					>
-						<DesktopGame />
-					</LocalPlayerContextProvider>
-				</GamemodeSettingsContextProvider>
-			</div>
-		</GameStateProvider>
-	);
-};
+const Template: Story<GameLayoutStoryArgs> = (args) => (
+	<GameLayoutStoryWrapper args={args}>
+		<DesktopGame />
+	</GameLayoutStoryWrapper>
+);
 
 export const Phase_0_Preparing = Template.bind({});
 Phase_0_Preparing.args = {
