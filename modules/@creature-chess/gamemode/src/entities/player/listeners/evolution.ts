@@ -157,6 +157,13 @@ export const setupEvolutionListener = (startListening: PlayerStartListening) => 
 						]
 					})
 				);
+
+				for (const p of [...benchPieceIds, piece.id]) {
+					pieceRegistry.deregisterPiece(p);
+				}
+
+				pieceRegistry.registerPiece(newPiece);
+
 				api.dispatch(
 					addBenchPieceCommand({
 						pieceId: newPiece.id,
