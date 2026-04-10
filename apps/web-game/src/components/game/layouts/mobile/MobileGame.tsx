@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
@@ -93,23 +94,26 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 };
 
 const MobileGameContentPane: React.FunctionComponent = () => {
+	const styles = useStyles();
 	const currentOverlay = useSelector<AppState, Overlay | null>(
 		(state) => state.game.ui.currentOverlay
 	);
 
-	if (currentOverlay === null) {
-		return (
-			<MobileContentPane>
+	return (
+		<MobileContentPane>
+			<div
+				className={classNames(styles.boardSection, {
+					[styles.boardSectionHidden]: currentOverlay !== null,
+				})}
+			>
 				<BoardContainer />
 
 				<PlayerGameProfile />
-			</MobileContentPane>
-		);
-	}
+			</div>
 
-	return (
-		<MobileContentPane>
-			<GameOverlay currentOverlay={currentOverlay} />
+			{currentOverlay !== null && (
+				<GameOverlay currentOverlay={currentOverlay} />
+			)}
 		</MobileContentPane>
 	);
 };
@@ -127,6 +131,16 @@ const useStyles = createUseStyles({
 		flexDirection: "column",
 		justifyContent: "space-between",
 		overflow: "hidden",
+	},
+	boardSection: {
+		flex: 1,
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		minHeight: 0,
+	},
+	boardSectionHidden: {
+		display: "none",
 	},
 });
 
