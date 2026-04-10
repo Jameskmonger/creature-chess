@@ -4,10 +4,11 @@ import { TagLine } from "../TagLine";
 import { PageBoardBackground } from "../PageBackground";
 import { MenuCard } from "./MenuCard";
 import { NavBar } from "../ui/navbar/NavBar";
-import { faPlay, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faQuestionCircle, faBook } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../ui";
 import { CreatureImage } from "../ui/creatureImage";
 import { Help } from "../game/help";
+import { UpdateNotes } from "../game/UpdateNotes";
 import { useSocketManager } from "~/networking";
 
 const useStyles = createUseThemeStyles(theme => ({
@@ -113,7 +114,7 @@ export function GameMenu() {
 		[socketManager]
 	);
 
-	const [view, setView] = React.useState<"help" | "home">("home");
+	const [view, setView] = React.useState<"help" | "home" | "updates">("home");
 
 	// todo
 	const showSocial = false;
@@ -155,10 +156,13 @@ export function GameMenu() {
 									<CreatureImage definitionId={39} facing="front" />
 								</div>
 								<Button color="primary" size="large" onClick={onFindGameClick}>Start Game</Button>
+								<Button color="muted" size="medium" onClick={() => setView("help")}>How to Play</Button>
+								<Button color="muted" size="medium" onClick={() => setView("updates")}>Update Notes</Button>
 							</MenuCard>
 						</div>
 					}
-					{view === "help" && <MenuCard><Help /></MenuCard>}
+					{view === "help" && <MenuCard><Help onBack={() => setView("home")} /></MenuCard>}
+					{view === "updates" && <MenuCard><UpdateNotes onBack={() => setView("home")} /></MenuCard>}
 				</div>
 			</div>
 			<div>
@@ -172,6 +176,10 @@ export function GameMenu() {
 							key: "home",
 							icon: faPlay,
 						},
+						{
+							key: "updates",
+							icon: faBook,
+						}
 					] as const}
 					active={view}
 					onSelect={setView}
