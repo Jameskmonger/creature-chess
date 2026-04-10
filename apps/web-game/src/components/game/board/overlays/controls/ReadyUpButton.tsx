@@ -9,6 +9,11 @@ import { GamePhase } from "@creature-chess/models";
 import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
 import { Button } from "~/components/ui";
 
+// If the server hasn't confirmed our ready-up within this window, re-show the
+// button so the player can try again rather than being stuck staring at empty
+// space.
+const READY_CONFIRM_TIMEOUT_MS = 3000;
+
 const useStyles = createUseStyles({
 	button: {
 		"background": COLOR_READY_BUTTON,
@@ -47,14 +52,46 @@ export function ReadyUpButton() {
 		(state) => state.game.playerInfo.ready === false
 	);
 
-	const canReadyUp = inPreparingPhase && notReady && !isDead;
+	// Optimistic hide: flips true on click and back to false either when the
+	// server confirms (notReady -> false), the phase advances, or the timeout
+	// expires without confirmation.
+	const [pendingReady, setPendingReady] = React.useState(false);
+	const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	const clearPendingTimer = React.useCallback(() => {
+		if (timerRef.current !== null) {
+			clearTimeout(timerRef.current);
+			timerRef.current = null;
+		}
+	}, []);
+
+	// Drop the optimistic flag whenever the underlying conditions for showing
+	// the button no longer hold — server confirmed ready, phase moved on, or
+	// the player died. Without this the flag could leak across rounds.
+	React.useEffect(() => {
+		if (!inPreparingPhase || !notReady || isDead) {
+			clearPendingTimer();
+			setPendingReady(false);
+		}
+	}, [inPreparingPhase, notReady, isDead, clearPendingTimer]);
+
+	React.useEffect(() => clearPendingTimer, [clearPendingTimer]);
+
+	const canReadyUp = inPreparingPhase && notReady && !isDead && !pendingReady;
 	const onReadyUp = React.useCallback(() => {
 		if (!canReadyUp) {
 			return;
 		}
 
+		setPendingReady(true);
+		clearPendingTimer();
+		timerRef.current = setTimeout(() => {
+			timerRef.current = null;
+			setPendingReady(false);
+		}, READY_CONFIRM_TIMEOUT_MS);
+
 		gameActions.readyUp();
-	}, [canReadyUp, gameActions]);
+	}, [canReadyUp, clearPendingTimer, gameActions]);
 
 	if (!canReadyUp) {
 		// To keep the Sell button in the same place
