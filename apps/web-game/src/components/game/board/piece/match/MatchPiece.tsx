@@ -7,6 +7,7 @@ import { Piece } from "../Piece";
 import { usePiece } from "../PieceContext";
 import { AnimationLayerDiv } from "./AnimationLayerDiv";
 import { useGameAnimationEventStore } from "../../hooks/selectors";
+import { ANIMATION_LAYER_DEPTH } from "./constants";
 import { useAnimationLayers } from "./useAnimationLayers";
 
 const getHealthbar = (ownerId: string, viewingPlayerId: string) =>
@@ -33,12 +34,13 @@ export function MatchPiece() {
 		onLayerAnimationEnd,
 	} = useAnimationLayers(piece.id, animationEventStore);
 
-	// Nest animation layers around <Piece/> — each layer owns its own div/transform
+	// Always render a fixed number of wrapper divs so the DOM tree shape
+	// never changes — only className/style toggle when animations are active.
 	let content: React.ReactNode = (
 		<Piece healthbar={getHealthbar(piece.ownerId, viewingPlayerId)} />
 	);
 
-	for (let i = layers.length - 1; i >= 0; i--) {
+	for (let i = ANIMATION_LAYER_DEPTH - 1; i >= 0; i--) {
 		content = (
 			<AnimationLayerDiv
 				layer={layers[i]}

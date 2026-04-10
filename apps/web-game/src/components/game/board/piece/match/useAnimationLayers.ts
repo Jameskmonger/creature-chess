@@ -10,7 +10,43 @@ import {
 	useDyingStyles,
 	useReceiveHitStyles,
 } from "./animations";
+import { ANIMATION_LAYER_DEPTH } from "./constants";
 import { PieceAnimationEventStore } from "./animationEventStore";
+
+const EMPTY_LAYERS: (AnimationLayer | undefined)[] = new Array(ANIMATION_LAYER_DEPTH).fill(undefined);
+
+/**
+ * Assign each layer a stable slot index so animations don't jump between
+ * DOM nodes when other layers are added or removed.
+ */
+function assignLayer(
+	prev: (AnimationLayer | undefined)[],
+	layer: AnimationLayer
+): (AnimationLayer | undefined)[] {
+	const next = [...prev];
+
+	// replace existing layer with the same name (keeps its slot)
+	const existingIdx = next.findIndex((l) => l?.name === layer.name);
+	if (existingIdx !== -1) {
+		next[existingIdx] = layer;
+		return next;
+	}
+
+	// assign to first empty slot
+	const emptyIdx = next.findIndex((l) => l === undefined);
+	if (emptyIdx !== -1) {
+		next[emptyIdx] = layer;
+	}
+
+	return next;
+}
+
+function removeLayer(
+	prev: (AnimationLayer | undefined)[],
+	name: string
+): (AnimationLayer | undefined)[] {
+	return prev.map((l) => (l?.name === name ? undefined : l));
+}
 
 export function useAnimationLayers(
 	pieceId: string,
@@ -20,7 +56,7 @@ export function useAnimationLayers(
 	const receiveHitStyles = useReceiveHitStyles();
 	const dyingStyles = useDyingStyles();
 
-	const [layers, setLayers] = React.useState<AnimationLayer[]>([]);
+	const [layers, setLayers] = React.useState(EMPTY_LAYERS);
 	const [isDying, setIsDying] = React.useState(false);
 
 	const processEvents = React.useCallback(
@@ -62,11 +98,11 @@ export function useAnimationLayers(
 
 			if (newLayers.length > 0) {
 				setLayers((prev) => {
-					// replace layers with the same name, add new ones
-					const filtered = prev.filter(
-						(existing) => !newLayers.some((n) => n.name === existing.name)
-					);
-					return [...filtered, ...newLayers];
+					let next = prev;
+					for (const layer of newLayers) {
+						next = assignLayer(next, layer);
+					}
+					return next;
 				});
 			}
 		},
@@ -89,7 +125,7 @@ export function useAnimationLayers(
 	}, [pieceId, animationEventStore, processEvents]);
 
 	const onLayerAnimationEnd = React.useCallback((name: string) => {
-		setLayers((prev) => prev.filter((l) => l.name !== name));
+		setLayers((prev) => removeLayer(prev, name));
 	}, []);
 
 	return {
