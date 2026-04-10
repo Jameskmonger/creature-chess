@@ -1,0 +1,120 @@
+import { v4 as uuid } from "uuid";
+
+import { Board } from "@creature-chess/board";
+import {
+	Gamemode,
+	createPlayer,
+	PlayerCommands,
+} from "@creature-chess/gamemode";
+import {
+	GamemodeSettings,
+	GamemodeSettingsPresets,
+} from "@creature-chess/models/settings";
+
+import { setupBotLogic } from "@cc-server/bot";
+import { BotPersonality } from "@cc-server/data";
+
+import { logger } from "./log";
+
+export type BotUnderTest = {
+	id: string;
+	name: string;
+	personality: BotPersonality;
+};
+
+export type BotResult = {
+	id: string;
+	personality: BotPersonality;
+	finishPosition: number;
+	finishRound: number;
+};
+
+export type GameResult = {
+	gameId: string;
+	bots: BotResult[];
+};
+
+// All delay-related settings collapsed to zero so games run as fast as the
+// event loop can spin. battleTurnDuration: 0 matches the battleRunner.test
+// preset and is the dominant speed-up.
+const HARNESS_SETTINGS: GamemodeSettings = {
+	...GamemodeSettingsPresets.default,
+	battleTurnDuration: 0,
+	preparingPhaseLengthMs: 0,
+	readyPhaseSettleMs: 0,
+	readyPhaseLengthMs: 0,
+	playingPhaseMaxLengthMs: 0,
+	playingPhaseEndDelayMs: 0,
+	botInitialDelayMs: 0,
+	botActionDelayMs: 0,
+};
+
+export const runGame = (
+	gameId: string,
+	bots: BotUnderTest[]
+): Promise<GameResult> =>
+	new Promise<GameResult>((resolve) => {
+		const gamemode = new Gamemode(gameId, logger, HARNESS_SETTINGS);
+
+		gamemode.onFinish(({ players }) => {
+			resolve({
+				gameId,
+				bots: bots.map((bot) => {
+					const final = players.find((p) => p.id === bot.id);
+
+					return {
+						id: bot.id,
+						personality: bot.personality,
+						finishPosition: final?.position ?? -1,
+						finishRound: final?.finishRound ?? -1,
+					};
+				}),
+			});
+		});
+
+		const entities = bots.map((bot) => {
+			const entity = createPlayer(
+				bot.id,
+				{
+					logger,
+					gamemode,
+					boards: {
+						board: new Board(
+							HARNESS_SETTINGS.boardWidth,
+							HARNESS_SETTINGS.boardHalfHeight
+						),
+						bench: new Board(HARNESS_SETTINGS.benchSize, 1),
+					},
+					settings: HARNESS_SETTINGS,
+				},
+				{
+					match: null,
+					name: bot.name,
+					profile: { picture: 1, title: null },
+					finishPosition: -1,
+					finishRound: -1,
+				}
+			);
+
+			entity.put(
+				PlayerCommands.playerInfoCommands.updateMoneyCommand(
+					HARNESS_SETTINGS.startingMoney
+				)
+			);
+			entity.put(
+				PlayerCommands.playerInfoCommands.updateLevelCommand({
+					level: HARNESS_SETTINGS.startingLevel,
+					xp: 0,
+				})
+			);
+
+			setupBotLogic(entity, bot.personality);
+
+			return entity;
+		});
+
+		gamemode.start(entities);
+	});
+
+// Re-export for the harness so callers don't need a second import
+export const newBotId = () => uuid();

@@ -1,0 +1,26 @@
+{
+	"private": true,
+	"name": "@tools/bot-arena",
+	"version": "0.0.1",
+	"description": "Headless all-bot game harness for measuring bot personality vs game outcome",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"license": "MIT",
+	"scripts": {
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests",
+		"lint": "yarn run -T eslint \"src/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
+		"start": "yarn run -T ts-node --transpile-only src/harness.ts",
+		"correlate": "yarn run -T ts-node --transpile-only src/correlate.ts"
+	},
+	"dependencies": {
+		"@cc-server/bot": "workspace:*",
+		"@cc-server/data": "workspace:*",
+		"@creature-chess/board": "workspace:*",
+		"@creature-chess/gamemode": "workspace:*",
+		"@creature-chess/models": "workspace:*",
+		"@types/uuid": "^8.3.3",
+		"redux": "^5.0.1",
+		"uuid": "^8.3.2",
+		"winston": "^3.3.3"
+	}
+}

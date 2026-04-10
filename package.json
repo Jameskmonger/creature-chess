@@ -24,6 +24,7 @@
 		"modules/@creature-chess/*",
 		"modules/@cc-server/*",
 		"modules/@shoki/*",
+		"modules/@tools/*",
 		"apps/*"
 	],
 	"author": "",
