@@ -2,7 +2,8 @@ import { MAX_LEVEL } from "@creature-chess/models/config";
 
 // TODO jkm - make this configurable
 // XP used to be [1, 1, 2, 4, 8, 16, 24, 32, 40];
-const XP_TO_NEXT_LEVEL = [1, 1, 2, 4, 8, 13, 18, 24, 30];
+// then was [1, 1, 2, 4, 8, 13, 18, 24, 30]
+const XP_TO_NEXT_LEVEL = [1, 2, 5, 8, 10, 16, 22, 30, 40];
 
 export const getXpToNextLevel = (level: number) => {
 	if (level === MAX_LEVEL) {
