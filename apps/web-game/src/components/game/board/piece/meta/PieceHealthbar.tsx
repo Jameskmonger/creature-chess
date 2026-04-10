@@ -45,19 +45,34 @@ const useStyles = createUseStyles<string, HealthbarProps>({
 		borderStyle: "solid",
 		borderColor: getBorderColor,
 	},
+	bar: {
+		"border": "2px solid #4a4a4a",
+
+		"@container (max-width: 32px)": {
+			borderWidth: "1px",
+		},
+	},
+	container: {
+		containerType: "size",
+		width: "100%",
+		height: "100%",
+	}
 });
 
 const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
 	const classes = useStyles(props);
 
 	return (
+		<div className={classes.container}>
 		<ProgressBar
+				className={classes.bar}
 			fillClassName={classes.fill}
 			current={props.current}
 			max={props.max}
 		>
 			{props.children}
 		</ProgressBar>
+		</div>
 	);
 };
 

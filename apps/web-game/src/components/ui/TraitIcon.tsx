@@ -15,7 +15,7 @@ function getIconUrl(iconName: string) {
 	return `${APP_IMAGE_ROOT}/ui/${iconName}`;
 }
 
-const ICON_FOR_TRAIT: Record<TraitId, string> = {
+export const ICON_FOR_TRAIT: Record<TraitId, string> = {
 	["fire"]: getIconUrl("traits/trait-fire.svg"),
 	["earth"]: getIconUrl("traits/trait-earth.svg"),
 	["metal"]: getIconUrl("traits/trait-metal.svg"),

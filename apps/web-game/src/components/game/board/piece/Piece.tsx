@@ -6,8 +6,7 @@ import { createUseStyles } from "react-jss";
 import { CreatureImage } from "../../../ui/creatureImage";
 import { usePiece } from "./PieceContext";
 import { PieceHealthbar } from "./meta/PieceHealthbar";
-import { PieceStageIndicator } from "./meta/PieceStageIndicator";
-import { TraitIcon } from "~/components/ui/TraitIcon";
+import { ICON_FOR_TRAIT } from "~/components/ui/TraitIcon";
 
 interface Props {
 	healthbar: "none" | "friendly" | "enemy" | "spectating";
@@ -41,32 +40,43 @@ const useStyles = createUseStyles({
 		height: "80%",
 	},
 	healthbarContainer: {
-		position: "absolute",
-		top: "4%",
-		left: "4%",
-		height: "10%",
-		width: "92%",
-	},
-	stage: {
 		"position": "absolute",
-		"bottom": "4%",
-		"right": "4%",
-		"height": "8%",
-		"padding": "2px",
-		"background": "rgba(0, 0, 0, 0.5)",
+		"top": "4%",
+		"left": "4%",
+		"height": "10%",
+		"width": "70%",
 
-		"& > img": {
-			width: "100%",
+		"@container piece (max-width: 64px)": {
+			height: "18%",
+			width: "66%",
 		},
 	},
 	traits: {
-		position: "absolute",
-		left: "4%",
-		bottom: "4%",
-		height: "12%",
+		"display": "flex",
+		"flexDirection": "column",
+		"gap": "2px",
+		"position": "absolute",
+		"top": "4%",
+		"right": "4%",
+		"background": "rgb(49 54 56 / 50%)",
+		"width": "16%",
+		"padding": "2px",
+
+		"@container piece (max-width: 64px)": {
+			width: "14%",
+		}
+	},
+	stage: {
 		display: "flex",
 		flexDirection: "row",
 		gap: "2px",
+		position: "absolute",
+		bottom: "4%",
+		right: "4%",
+
+		background: "rgb(49 54 56 / 50%)",
+		height: "14%",
+		padding: "2px",
 	},
 });
 
@@ -98,7 +108,11 @@ export function Piece(props: Props) {
 				piece.stage > 0
 				&& (
 					<div className={classes.stage}>
-						<PieceStageIndicator stage={piece.stage} />
+						{
+							Array.from({ length: piece.stage + 1 }, (_, i) => (
+								<img key={i} src={`${APP_IMAGE_ROOT}/ui/star.svg`} />
+							))
+						}
 					</div>
 				)
 			}
@@ -108,7 +122,7 @@ export function Piece(props: Props) {
 				&& (
 					<div className={classes.traits}>
 						{piece.traits.map((trait) => (
-							<TraitIcon key={trait} trait={trait} />
+							<img key={trait} src={ICON_FOR_TRAIT[trait]} alt={`${trait} trait`} />
 						))}
 					</div>
 				)
