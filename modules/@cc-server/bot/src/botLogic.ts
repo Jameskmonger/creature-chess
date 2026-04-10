@@ -24,7 +24,7 @@ export const setupBotLogic = (entity: Player, personality: BotPersonality) => {
 				return;
 			}
 
-			await delay(1000);
+			await delay(api.player.settings.botInitialDelayMs);
 
 			if (phase === GamePhase.PREPARING) {
 				await putBenchOnBoard(api);

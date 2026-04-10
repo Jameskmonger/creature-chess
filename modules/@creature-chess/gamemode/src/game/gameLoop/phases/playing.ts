@@ -2,7 +2,7 @@ import delay from "delay";
 import pDefer from "p-defer";
 
 import { GamePhase } from "@creature-chess/models";
-import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import {
 	playerFinishMatchEvent,
@@ -17,11 +17,16 @@ type Callbacks = {
 	onMatchEnd?: () => void;
 };
 
-export const runPlayingPhase = async (gamemode: Gamemode, players: GameContextPlayers, callbacks: Callbacks = {}) => {
+export const runPlayingPhase = async (
+	gamemode: Gamemode,
+	players: GameContextPlayers,
+	settings: GamemodeSettings,
+	callbacks: Callbacks = {}
+) => {
 	const battleTimeoutDeferred = pDefer<void>();
 
 	const phase = GamePhase.PLAYING;
-	delay(GAME_PHASE_LENGTHS[GamePhase.PLAYING] * 1000).then(() =>
+	delay(settings.playingPhaseMaxLengthMs).then(() =>
 		battleTimeoutDeferred.resolve()
 	);
 
@@ -59,5 +64,5 @@ export const runPlayingPhase = async (gamemode: Gamemode, players: GameContextPl
 
 	// some battles go right up to the end, so it's nice to have a delay
 	// rather than jumping straight into the next phase
-	await delay(5000);
+	await delay(settings.playingPhaseEndDelayMs);
 };

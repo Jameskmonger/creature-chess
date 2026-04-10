@@ -4,7 +4,6 @@ import { PlayerActions, PlayerStateSelectors } from "@creature-chess/gamemode";
 import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/player";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 
-import { BOT_ACTION_TIME_MS } from "./constants";
 import { PREFERRED_LOCATIONS } from "./preferredLocations";
 import { Board, getFirstEmptySlot, packPosition } from "@creature-chess/board";
 
@@ -21,7 +20,7 @@ const getFirstBenchPieceId = (bench: Board): PieceModel["id"] | null => {
 };
 
 export const putBenchOnBoard = async (api: PlayerListenerApi) => {
-	const { board, bench, gamemode: { pieceRegistry } } = api.player;
+	const { board, bench, settings, gamemode: { pieceRegistry } } = api.player;
 
 	while (true) {
 		const state = api.getState();
@@ -78,6 +77,6 @@ export const putBenchOnBoard = async (api: PlayerListenerApi) => {
 			})
 		);
 
-		await delay(BOT_ACTION_TIME_MS);
+		await delay(settings.botActionDelayMs);
 	}
 };

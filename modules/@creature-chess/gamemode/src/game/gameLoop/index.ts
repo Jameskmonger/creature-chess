@@ -9,7 +9,7 @@ type Callbacks = {
 };
 
 export const gameLoop = async (context: GameContext, callbacks: Callbacks = {}) => {
-	const { gamemode, players } = context;
+	const { gamemode, players, settings } = context;
 
 	let currentLastPosition = players.getAll().length;
 	let currentRound = 0;
@@ -27,12 +27,12 @@ export const gameLoop = async (context: GameContext, callbacks: Callbacks = {}) 
 	}
 
 	while (true) {
-		await runPreparingPhase(gamemode, players);
+		await runPreparingPhase(gamemode, players, settings);
 
 		currentRound = gamemode.roundInfo.round;
 
 		await runReadyPhase(context, callbacks);
-		await runPlayingPhase(gamemode, players, callbacks);
+		await runPlayingPhase(gamemode, players, settings, callbacks);
 
 		if (players.getLiving().length < 2) {
 			break;

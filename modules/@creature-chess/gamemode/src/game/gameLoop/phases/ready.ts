@@ -1,7 +1,6 @@
 import delay from "delay";
 
 import { GamePhase } from "@creature-chess/models";
-import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
 
 import {
 	playerBeforeReadyPhaseEvent,
@@ -20,7 +19,7 @@ export const runReadyPhase = async (context: GameContext, callbacks: Callbacks =
 	// todo turn this into something that waits for all players
 	players.getAll().forEach((p) => p.put(playerBeforeReadyPhaseEvent()));
 
-	await delay(500);
+	await delay(settings.readyPhaseSettleMs);
 
 	const matchups = getMatchups();
 
@@ -54,5 +53,5 @@ export const runReadyPhase = async (context: GameContext, callbacks: Callbacks =
 	const startedAt = Date.now() / 1000;
 	gamemode.setRoundInfo({ phase, startedAt });
 
-	await delay(GAME_PHASE_LENGTHS[GamePhase.READY] * 1000);
+	await delay(settings.readyPhaseLengthMs);
 };

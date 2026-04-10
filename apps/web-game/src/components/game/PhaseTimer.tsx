@@ -4,9 +4,16 @@ import { useSelector } from "react-redux";
 import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
-import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
+import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
 
 import { Countdown } from "../ui/countdown";
+
+// todo wire this up to the gamemode settings instead of hardcoding the phase lengths
+const PHASE_LENGTHS_SECONDS: Record<GamePhase, number> = {
+	[GamePhase.PREPARING]: GamemodeSettingsPresets.default.preparingPhaseLengthMs / 1000,
+	[GamePhase.READY]: GamemodeSettingsPresets.default.readyPhaseLengthMs / 1000,
+	[GamePhase.PLAYING]: GamemodeSettingsPresets.default.playingPhaseMaxLengthMs / 1000,
+};
 
 const renderPhaseInfoCountdown = (secondsRemaining: number) => (
 	<span>({secondsRemaining})</span>
@@ -31,7 +38,7 @@ export function PhaseTimer() {
 		return null;
 	}
 
-	const phaseEndTime = GAME_PHASE_LENGTHS[phase] + phaseStartedAtSeconds;
+	const phaseEndTime = PHASE_LENGTHS_SECONDS[phase] + phaseStartedAtSeconds;
 
 	return (
 		<span>

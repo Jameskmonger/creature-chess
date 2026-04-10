@@ -1,14 +1,18 @@
 import delay from "delay";
 
 import { GamePhase } from "@creature-chess/models";
-import { GAME_PHASE_LENGTHS } from "@creature-chess/models/config";
+import { GamemodeSettings } from "@creature-chess/models/settings";
 
 import { playerRunPreparingPhaseEvent } from "../../events";
 import { readyNotifier } from "../../readyNotifier";
 import { GameContextPlayers } from "../../gameContext";
 import { Gamemode } from "../../gamemode";
 
-export const runPreparingPhase = async (gamemode: Gamemode, players: GameContextPlayers) => {
+export const runPreparingPhase = async (
+	gamemode: Gamemode,
+	players: GameContextPlayers,
+	settings: GamemodeSettings
+) => {
 	const round = gamemode.roundInfo.round;
 
 	const phase = GamePhase.PREPARING;
@@ -26,7 +30,7 @@ export const runPreparingPhase = async (gamemode: Gamemode, players: GameContext
 
 	await Promise.race([
 		notifier.promise,
-		delay(GAME_PHASE_LENGTHS[GamePhase.PREPARING] * 1000),
+		delay(settings.preparingPhaseLengthMs),
 	]);
 
 	notifier.dispose();
