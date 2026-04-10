@@ -13,6 +13,6 @@ export const getHitDamage = (
 	const attackBonus = getTypeAttackBonus(attacker.traits, defender.traits);
 
 	return Math.ceil(
-		(attackerStats.attack / defenderStats.defense) * attackBonus * 8
+		(attackerStats.attack / defenderStats.defense) * attackBonus * 4
 	);
 };
