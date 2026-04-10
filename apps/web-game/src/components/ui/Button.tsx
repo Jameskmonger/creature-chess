@@ -5,7 +5,7 @@ import { createUseThemeStyles } from "~/useStyles";
 type Props = React.PropsWithChildren<{
 	className?: string;
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
-	color: "primary" | "secondary";
+	color: "primary" | "secondary" | "muted";
 	size: "small" | "medium" | "large";
 	disabled?: boolean;
 }>;
@@ -17,6 +17,7 @@ const useStyles = createUseThemeStyles<string, Props>(theme => ({
 				case "primary": return theme.palette.primary.light;
 				// todo add to theme
 				case "secondary": return "#38b764";
+				case "muted": return "#949494";
 				default: return "hsl(345deg 100% 47%)";
 			}
 		},
@@ -24,6 +25,7 @@ const useStyles = createUseThemeStyles<string, Props>(theme => ({
 			switch (color) {
 				case "primary": return theme.palette.dark.neutral;
 				case "secondary": return theme.palette.dark.neutral;
+				case "muted": return theme.palette.dark.neutral;
 				default: return theme.palette.light.neutral;
 			}
 		},
