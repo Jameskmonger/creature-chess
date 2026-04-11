@@ -1,59 +1,76 @@
 // tslint:disable: no-console
 import { PrismaClient } from "@prisma/client";
 
-import { BotPersonalityValue } from "./databaseBot";
+import { BotPersonality, BotPersonalityValue } from "./databaseBot";
 
-const BOT_NAMES = [
-	"Aggie",
-	// "Bertie",
-	"Conan",
-	// "Dawn",
-	// "Eddy",
-	"Fox",
-	"Ghost",
-	"Hazuki",
-	// "Isaac",
-	"C.J.",
-	"Knuckle",
-	// "Lily",
-	// "Madison",
-	"Navi",
-	// "Oscar",
-	"Price",
-	// "Quiet",
-	"Rune",
-	"Smoke",
-	// "Tony",
-	"U.B.",
-	// "Venom",
-	// "Warp",
-	// "Xenon",
-	"Yew",
-	// "Zero"
+const HIGH: BotPersonalityValue = 180;
+const LOW: BotPersonalityValue = 20;
+
+type BotArchetype = {
+	nickname: string;
+	archetype: string;
+	personality: BotPersonality;
+};
+
+const BOT_ARCHETYPES: BotArchetype[] = [
+	{
+		nickname: "Fox",
+		archetype: "Mastermind",
+		personality: { ambition: HIGH, composure: HIGH, vision: HIGH },
+	},
+	{
+		nickname: "Conan",
+		archetype: "Brawler",
+		personality: { ambition: HIGH, composure: HIGH, vision: LOW },
+	},
+	{
+		nickname: "C.J.",
+		archetype: "Speculator",
+		personality: { ambition: HIGH, composure: LOW, vision: HIGH },
+	},
+	{
+		nickname: "Aggie",
+		archetype: "Gambler",
+		personality: { ambition: HIGH, composure: LOW, vision: LOW },
+	},
+	{
+		nickname: "Hazuki",
+		archetype: "Sage",
+		personality: { ambition: LOW, composure: HIGH, vision: HIGH },
+	},
+	{
+		nickname: "Ghost",
+		archetype: "Hermit",
+		personality: { ambition: LOW, composure: HIGH, vision: LOW },
+	},
+	{
+		nickname: "Knuckle",
+		archetype: "Survivor",
+		personality: { ambition: LOW, composure: LOW, vision: HIGH },
+	},
+	{
+		nickname: "Zero",
+		archetype: "Bottom-Barrel",
+		personality: { ambition: LOW, composure: LOW, vision: LOW },
+	}
 ];
-
-const randomPersonalityValue = () =>
-	(Math.floor(Math.random() * 10 + 1) * 20) as BotPersonalityValue;
 
 export const setupBotDatabase = async (
 	client: PrismaClient
 ): Promise<boolean> => {
 	const botCount = await client.bots.count();
-	// need at least 7 bots to play a game with one human
-	const shouldCreateBots = botCount < 7;
+	const shouldCreateBots = botCount < BOT_ARCHETYPES.length;
 
 	if (shouldCreateBots) {
-		for (const name of BOT_NAMES) {
+		for (const { nickname, archetype, personality } of BOT_ARCHETYPES) {
 			await client.bots.create({
 				data: {
-					nickname: name,
-					ambition: randomPersonalityValue(),
-					composure: randomPersonalityValue(),
-					vision: randomPersonalityValue(),
+					nickname,
+					...personality,
 				},
 			});
 
-			console.log(` - Created bot '${name}'`);
+			console.log(` - Created bot '${nickname}' (${archetype})`);
 		}
 	}
 
