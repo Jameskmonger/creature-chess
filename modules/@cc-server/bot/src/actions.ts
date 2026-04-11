@@ -8,6 +8,7 @@ import { BrainActionValue } from "./brain/action";
 import {
 	createBuyXpAction,
 	createBuyCardAction,
+	createPassAction,
 	createSellPieceAction,
 	createRerollCardsAction,
 } from "./preparingPhase/actions";
@@ -23,8 +24,9 @@ export const getActions = (
 	settings: GamemodeSettings
 ): BrainAction[] => {
 	const actions: (BrainAction | null)[] = [
+		createPassAction(board, bench, state, personality),
 		createBuyXpAction(bench, state, personality, settings),
-		createRerollCardsAction(state, personality, settings),
+		createRerollCardsAction(board, bench, pieceRegistry, state, personality, settings),
 	];
 
 	const {

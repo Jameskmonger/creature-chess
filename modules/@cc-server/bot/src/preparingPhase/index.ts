@@ -6,6 +6,7 @@ import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/
 import { BotPersonality } from "@cc-server/data";
 
 import { getActions } from "../actions";
+import { PASS_ACTION_NAME } from "./actions";
 import { putBenchOnBoard } from "../putBenchOnBoard";
 
 export const preparingPhase = async (api: PlayerListenerApi, personality: BotPersonality) => {
@@ -23,6 +24,11 @@ export const preparingPhase = async (api: PlayerListenerApi, personality: BotPer
 		}
 
 		const [mostValuable] = actions;
+
+		// Pass wins → bot is happy doing nothing for the rest of the phase.
+		if (mostValuable.name === PASS_ACTION_NAME) {
+			break;
+		}
 
 		api.dispatch(mostValuable.action());
 

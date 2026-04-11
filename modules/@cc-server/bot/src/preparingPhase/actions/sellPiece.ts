@@ -75,13 +75,24 @@ export const createSellPieceAction = (
 	).length;
 
 	const money = PlayerStateSelectors.getPlayerMoney(state);
+	const health = PlayerStateSelectors.getPlayerHealth(state);
 
 	return {
 		name: `sell piece [${piece.definition.name}]`,
 		action: () => PlayerActions.sellPiecePlayerAction({ pieceId: piece.id }),
 		value: createUtilityValue([
 			{
-				// Low money + low composure → panic sell.
+				// Low health + low composure → panic fire-sale.
+				value: health,
+				range: [1, 100],
+				direction: ScoringDirection.Low,
+				weighting: {
+					value: personality.composure,
+					direction: ScoringDirection.Low,
+				},
+			},
+			{
+				// Low money + low composure → another panic-sell signal.
 				value: money,
 				range: [1, 50],
 				direction: ScoringDirection.Low,
