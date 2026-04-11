@@ -19,6 +19,9 @@ import { BrainAction } from "../../brain";
 // todo move this to GamemodeSettings
 const MAX_XP_TO_NEXT_LEVEL = 40;
 
+// Next-turn interest payout. Matches the rule in `matchRewards.ts`.
+const getInterest = (money: number) => Math.min(Math.floor(money / 10), 5);
+
 export const createBuyXpAction = (
 	bench: Board,
 	state: PlayerState,
@@ -28,7 +31,7 @@ export const createBuyXpAction = (
 	const level = PlayerStateSelectors.getPlayerLevel(state);
 	const money = PlayerStateSelectors.getPlayerMoney(state);
 
-	// Legality only: must be able to afford and not maxed out.
+	// Legality: must be able to afford and not maxed out.
 	if (level >= MAX_LEVEL || money < settings.buyXpCost) {
 		return null;
 	}
@@ -38,6 +41,17 @@ export const createBuyXpAction = (
 	const xpToNextLevel = Math.max(1, getXpToNextLevel(level) - xp);
 	const round = state.roundInfo.round;
 	const benchPieceCount = bench.getAllPieces().length;
+
+	// Escape hatch: crossing the bracket is fine if this buy closes out a
+	// level. Matches the human "dip to 40g for something good" impulse.
+	const wouldLevelUp = settings.buyXpAmount >= xpToNextLevel;
+	const wouldLoseInterest =
+		getInterest(money - settings.buyXpCost) < getInterest(money);
+	const interestPreserved = wouldLoseInterest && !wouldLevelUp ? 0 : 1;
+
+	// Vision-scaled importance: noobs (low vision) barely feel the
+	// penalty, strategists (high vision) let it flip their decision.
+	const interestPreservationImportance = 6 * (personality.vision / 200);
 
 	const score = createUtilityValue([
 		{
@@ -50,6 +64,14 @@ export const createBuyXpAction = (
 				value: personality.ambition,
 				direction: ScoringDirection.High,
 			},
+		},
+		{
+			name: "interestBracketPreserved",
+			// Vision driver: strategists avoid burning an interest tier.
+			value: interestPreserved,
+			range: [0, 1],
+			direction: ScoringDirection.High,
+			importance: interestPreservationImportance,
 		},
 		{
 			name: "health",
