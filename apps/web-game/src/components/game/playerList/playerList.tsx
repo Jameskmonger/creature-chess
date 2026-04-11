@@ -9,7 +9,7 @@ import {
 	PlayerListPlayer,
 	PlayerStatus,
 	PlayerBattle,
-} from "@creature-chess/models/game/playerList";
+} from "@creature-chess/models";
 
 import { Layout } from "../../ui/layout";
 import { PlayerListItem } from "./playerListItem";

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import classNames from "classnames";
 
-import { LobbyPlayer } from "@creature-chess/models/lobby";
+import { LobbyPlayer } from "@creature-chess/models";
 
 import { PlayerAvatar, Title } from "../ui/player";
 import { createUseThemeStyles } from "~/useStyles";

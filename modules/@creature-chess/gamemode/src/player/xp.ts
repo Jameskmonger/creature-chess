@@ -1,4 +1,4 @@
-import { MAX_LEVEL } from "@creature-chess/models/config";
+import { MAX_LEVEL } from "@creature-chess/models";
 
 // TODO jkm - make this configurable
 // XP used to be [1, 1, 2, 4, 8, 16, 24, 32, 40];

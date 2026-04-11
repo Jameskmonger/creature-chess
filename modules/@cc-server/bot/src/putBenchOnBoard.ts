@@ -1,7 +1,7 @@
 import delay from "delay";
 
 import { PlayerActions, PlayerStateSelectors } from "@creature-chess/gamemode";
-import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/player";
+import { PlayerListenerApi } from "@creature-chess/gamemode";
 import { PieceModel, PlayerPieceLocation } from "@creature-chess/models";
 
 import { PREFERRED_LOCATIONS } from "./preferredLocations";

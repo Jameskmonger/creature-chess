@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import {
 	PlayerStatus,
 	PlayerListPlayer,
-} from "@creature-chess/models/game/playerList";
+} from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
 import { PlayerStateSelectors } from "../entities/player";

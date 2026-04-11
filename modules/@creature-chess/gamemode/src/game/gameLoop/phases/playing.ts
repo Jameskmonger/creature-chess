@@ -2,7 +2,7 @@ import delay from "delay";
 import pDefer from "p-defer";
 
 import { GamePhase } from "@creature-chess/models";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import {
 	playerFinishMatchEvent,

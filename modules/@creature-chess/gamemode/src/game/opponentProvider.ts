@@ -1,6 +1,6 @@
 import { shuffle } from "lodash";
 
-import { PlayerStatus } from "@creature-chess/models/game/playerList";
+import { PlayerStatus } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
 import { PlayerStateSelectors } from "../entities/player";

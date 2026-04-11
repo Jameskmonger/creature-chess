@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 
 import { GameServerToClient, LobbyServerToClient } from "@creature-chess/networking";
-import { HandshakeRequest } from "@creature-chess/networking/handshake";
+import { HandshakeRequest } from "@creature-chess/networking";
 
 import { MenuCommands } from "~/store/menu/state";
 import { getCookieValue } from "~/utils/getCookieValue";

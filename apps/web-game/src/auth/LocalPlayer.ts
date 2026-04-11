@@ -1,4 +1,4 @@
-import { UserDTO } from "@creature-chess/models/dto/user";
+import { UserDTO } from "@creature-chess/models";
 
 type Guest = {
 	type: "guest";

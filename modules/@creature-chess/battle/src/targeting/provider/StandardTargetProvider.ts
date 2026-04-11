@@ -5,7 +5,7 @@ import { getLivingEnemies } from "../utils/getLivingEnemies";
 import { getTargetAttackPositions } from "../utils/getTargetAttackPositions";
 import { TargetProvider } from "./TargetProvider";
 import { Board, Position } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 type EnemyDelta = {
 	enemy: PieceModel;

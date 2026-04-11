@@ -5,7 +5,7 @@ import { Stores } from "../../types";
 import { MoveAction } from "../actions";
 import { PieceState, StateResult, WanderState } from "./types";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 import { StandardTargetProvider } from "../../../targeting/provider/StandardTargetProvider";
 import { TargetProvider } from "../../../targeting/provider/TargetProvider";
 

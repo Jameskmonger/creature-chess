@@ -3,7 +3,7 @@ import { PieceModel } from "@creature-chess/models";
 import { Stores } from "../../types";
 import { DeleteAction } from "./types";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export function doDelete(
 	currentTurn: number,

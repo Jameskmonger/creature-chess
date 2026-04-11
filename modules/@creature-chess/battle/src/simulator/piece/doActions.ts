@@ -2,7 +2,7 @@ import { PieceModel } from "@creature-chess/models";
 
 import { Stores } from "../types";
 import { actionFunctions, PieceAction } from "./actions";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 import { Board } from "@creature-chess/board";
 
 /**

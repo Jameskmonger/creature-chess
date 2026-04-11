@@ -5,7 +5,7 @@ import { getStats } from "../../../utils/getStats";
 import { Stores } from "../../types";
 import { MoveAction } from "../actions";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 const MOVE_TURN_DURATION = 2;
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-import { StreakType } from "@creature-chess/models/player";
+import { StreakType } from "@creature-chess/models";
 import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {

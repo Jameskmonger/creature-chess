@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
-import { getQuickChatOptions } from "@creature-chess/models/src/quickChat";
+import { getQuickChatOptions } from "@creature-chess/models";
 
 import { QuickChatButton } from "./quickChatButton";
 

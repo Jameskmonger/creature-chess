@@ -2,7 +2,7 @@ import React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import { PlayerTitle } from "@creature-chess/models/player/title";
+import { PlayerTitle } from "@creature-chess/models";
 
 import { LobbyStateProvider } from "../../.storybook/LobbyStateProvider";
 import { LobbyPage } from "./lobby";

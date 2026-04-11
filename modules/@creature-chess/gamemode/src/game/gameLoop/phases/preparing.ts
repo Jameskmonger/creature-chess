@@ -1,7 +1,7 @@
 import delay from "delay";
 
 import { GamePhase } from "@creature-chess/models";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { playerRunPreparingPhaseEvent } from "../../events";
 import { readyNotifier } from "../../readyNotifier";

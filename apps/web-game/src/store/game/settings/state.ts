@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 const initialState: GamemodeSettings = null as unknown as GamemodeSettings;
 

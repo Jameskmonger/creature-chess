@@ -1,8 +1,8 @@
 import { Logger } from "winston";
 
 import { Board } from "@creature-chess/board";
-import { GamemodeSettings } from "@creature-chess/models/settings";
-import { PlayerProfile } from "@creature-chess/models/player";
+import { GamemodeSettings } from "@creature-chess/models";
+import { PlayerProfile } from "@creature-chess/models";
 
 import type { Gamemode } from "../../game";
 import type { Match } from "../../game/match";

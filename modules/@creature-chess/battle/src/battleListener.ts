@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import { PieceModel } from "@creature-chess/models";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { BattleEvent, BattleEventLog } from "./battleEventLog";
 import {
@@ -19,7 +19,7 @@ import { PieceCombatState } from "./state/state";
 import { pieceInfoStore } from "./state/store";
 import { duration } from "./utils/duration";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 const isATeamDefeated = (board: Board, pieceRegistry: PieceRegistry) => {
 	const survivingPieces = board.getAllPieces()

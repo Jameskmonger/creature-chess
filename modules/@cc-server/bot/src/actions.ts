@@ -1,5 +1,5 @@
 import { PlayerState } from "@creature-chess/gamemode";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -12,7 +12,7 @@ import {
 	createRerollCardsAction,
 } from "./preparingPhase/actions";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 /**
  * Soft termination threshold on the `[0, 1]` utility scale. Actions scoring

@@ -2,7 +2,7 @@ import delay from "delay";
 import { appendFileSync } from "fs";
 
 import { PlayerActions, PlayerStateSelectors } from "@creature-chess/gamemode";
-import { PlayerListenerApi } from "@creature-chess/gamemode/src/entities/player/player";
+import { PlayerListenerApi } from "@creature-chess/gamemode";
 
 import { BotPersonality } from "@cc-server/data";
 

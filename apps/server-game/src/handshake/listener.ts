@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 
-import { HandshakeRequest } from "@creature-chess/networking/handshake";
+import { HandshakeRequest } from "@creature-chess/networking";
 
 import { socketInBytes, socketOutBytes } from "../Metrics";
 import { logger } from "../log";

@@ -1,5 +1,5 @@
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export interface TargetProvider {
 	/**

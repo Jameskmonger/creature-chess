@@ -2,9 +2,9 @@ import { Logger } from "winston";
 
 import { Board } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
-import { PlayerStatus } from "@creature-chess/models/game/playerList";
-import { PlayerProfile } from "@creature-chess/models/player";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+import { PlayerStatus } from "@creature-chess/models";
+import { PlayerProfile } from "@creature-chess/models";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { Gamemode } from "../../game";
 import { createPlayer, Player } from "./player";

@@ -1,4 +1,4 @@
-import { PlayerProfile } from "@creature-chess/models/player";
+import { PlayerProfile } from "@creature-chess/models";
 
 import { DatabaseUser } from "@cc-server/data";
 

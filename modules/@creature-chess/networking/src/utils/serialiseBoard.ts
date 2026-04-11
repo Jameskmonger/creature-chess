@@ -1,5 +1,5 @@
 import { Board, PositionKey } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 import { BoardUpdatePacket } from "../server-to-client/server-to-client-game";
 import { PieceModel } from "@creature-chess/models";
 

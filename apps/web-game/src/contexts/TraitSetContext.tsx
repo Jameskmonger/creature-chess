@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TraitId, TraitSet } from "@creature-chess/models/gamemode/traits";
+import { TraitId, TraitSet } from "@creature-chess/models";
 
 import { useTraitDefinitions } from "./TraitDefinitionsContext";
 

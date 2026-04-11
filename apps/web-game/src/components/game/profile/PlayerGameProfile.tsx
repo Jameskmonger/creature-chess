@@ -15,8 +15,8 @@ import {
 	getPlayerMoney,
 	getPlayerXp,
 } from "@creature-chess/gamemode";
-import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
-import { MAX_LEVEL } from "@creature-chess/models/config";
+import { getXpToNextLevel } from "@creature-chess/gamemode";
+import { MAX_LEVEL } from "@creature-chess/models";
 
 import { ProgressBar } from "../../ui/progressBar";
 import { Button } from "~/components/ui";

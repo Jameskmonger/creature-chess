@@ -5,9 +5,9 @@ import { useSelector } from "react-redux";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
-import { getPiecesForStage } from "@creature-chess/gamemode/src/game/evolution";
+import { getPiecesForStage } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { COLOR_READY_BUTTON_TEXT } from "./colors";
 import { Button } from "~/components/ui";

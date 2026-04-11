@@ -10,10 +10,10 @@ import {
 import {
 	PlayerStatus,
 	inProgressBattle,
-} from "@creature-chess/models/game/playerList";
-import { StreakType } from "@creature-chess/models/player";
-import { PlayerTitle } from "@creature-chess/models/player/title";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+} from "@creature-chess/models";
+import { StreakType } from "@creature-chess/models";
+import { PlayerTitle } from "@creature-chess/models";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 const createPlayer = (
 	id: string,

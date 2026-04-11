@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { PlayerTitle } from "@creature-chess/models/player/title";
+import { PlayerTitle } from "@creature-chess/models";
 
 const useStyles = createUseStyles({
 	title: {

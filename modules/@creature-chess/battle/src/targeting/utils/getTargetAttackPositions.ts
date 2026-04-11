@@ -3,7 +3,7 @@ import {
 	TileCoordinates,
 } from "@creature-chess/models";
 import { Board, BoardSize } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 const isInsideGrid =
 	({ width, height }: { width: number; height: number }) =>

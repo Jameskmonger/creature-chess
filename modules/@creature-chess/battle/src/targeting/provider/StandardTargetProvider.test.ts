@@ -1,9 +1,9 @@
 import { CreatureDefinition, PieceModel } from "@creature-chess/models";
-import { buildPieceModel } from "@creature-chess/models/src/builders";
+import { buildPieceModel } from "@creature-chess/models";
 
 import { StandardTargetProvider } from "./StandardTargetProvider";
 import { Board, rotateBoard } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 /**
  * When the board is rotated, pieces also need to have their

@@ -5,7 +5,7 @@ import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 
-import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
+import { PlayerListPlayer } from "@creature-chess/models";
 
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside";
 import { Button } from "~/components/ui";

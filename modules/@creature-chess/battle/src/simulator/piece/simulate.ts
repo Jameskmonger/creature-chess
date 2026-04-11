@@ -7,7 +7,7 @@ import { doDying } from "./state/dying";
 import { PieceState, StateHandler } from "./state/types";
 import { doWander } from "./state/wander";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 const DYING_DURATION = 10;
 

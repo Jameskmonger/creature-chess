@@ -6,3 +6,5 @@ export * as GameServerToClient from "./src/server-to-client/server-to-client-gam
 
 export { PingAction, pingAction } from "./src/ping-action";
 export { serialiseBoard } from "./src/utils/serialiseBoard";
+
+export type { HandshakeRequest } from "./handshake";

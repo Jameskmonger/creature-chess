@@ -1,6 +1,6 @@
 import { Board } from "@creature-chess/board";
 import { Card, PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export const collectAllPieces = (
 	board: Board,

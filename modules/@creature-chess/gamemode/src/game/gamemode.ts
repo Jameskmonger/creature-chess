@@ -2,8 +2,8 @@ import { EventEmitter } from "events";
 import { Logger } from "winston";
 
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
-import { PlayerStatus } from "@creature-chess/models/game/playerList";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { PlayerStatus } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
 import {
@@ -21,7 +21,7 @@ import { OpponentProvider } from "./opponentProvider";
 import { setupPlayerGameDeckListeners } from "./player/playerGameDeck";
 import { PlayerList } from "./playerList";
 import { runGame, GameContext } from "./gameContext";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 const finishGameEventKey = "FINISH_GAME";
 

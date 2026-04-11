@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { MAX_LEVEL } from "@creature-chess/models/config";
+import { MAX_LEVEL } from "@creature-chess/models";
 
 import { PlayerStartListening } from "../entities/player/player";
 import { addXpCommand } from "../entities/player/listeners/xp";

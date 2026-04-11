@@ -1,4 +1,4 @@
-import { PlayerStatus } from "@creature-chess/models/game/playerList";
+import { PlayerStatus } from "@creature-chess/models";
 
 import { PlayerState } from "..";
 import { GamePhase } from "@creature-chess/models";

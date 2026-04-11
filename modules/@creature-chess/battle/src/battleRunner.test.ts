@@ -1,7 +1,7 @@
 import { BattleRunner } from "./battleRunner";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { PieceRegistry } from "@creature-chess/utils";
+import { GamemodeSettings } from "@creature-chess/models";
 
 jest.mock("./simulator", () => ({
 	simulateTurn: jest.fn(),

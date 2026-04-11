@@ -7,7 +7,7 @@ import { GameState } from "~/store/game/state";
 import { Overlay } from "~/store/game/ui/overlay";
 
 import { Builders, GamePhase } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 import { getDefinitionById } from "@creature-chess/gamemode";
 
 import { GameStateProvider } from "../../../../.storybook/GameStateProvider";

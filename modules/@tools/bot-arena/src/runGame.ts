@@ -9,7 +9,7 @@ import {
 import {
 	GamemodeSettings,
 	GamemodeSettingsPresets,
-} from "@creature-chess/models/settings";
+} from "@creature-chess/models";
 
 import { setupBotLogic } from "@cc-server/bot";
 import { BotPersonality } from "@cc-server/data";

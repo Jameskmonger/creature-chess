@@ -1,13 +1,13 @@
 import { Socket } from "socket.io";
 
-import { PlayerProfile } from "@creature-chess/models/player";
+import { PlayerProfile } from "@creature-chess/models";
 import {
 	ClientToServer,
 	GameServerToClient,
 	LobbyClientToServer,
 	LobbyServerToClient,
 } from "@creature-chess/networking";
-import { HandshakeRequest } from "@creature-chess/networking/handshake";
+import { HandshakeRequest } from "@creature-chess/networking";
 
 type GuestSocketData = {
 	type: "guest";

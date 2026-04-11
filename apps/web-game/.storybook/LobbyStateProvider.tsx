@@ -5,8 +5,8 @@ import { Provider } from "react-redux";
 import { LobbyState } from "~/store/lobby/state";
 import { useGlobalStyles } from "~/styles";
 
-import { LobbyPlayer } from "@creature-chess/models/lobby";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+import { LobbyPlayer } from "@creature-chess/models";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 export function LobbyStateProvider({
 	children,

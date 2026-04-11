@@ -3,7 +3,7 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import { TraitId } from "@creature-chess/models/gamemode/traits";
+import { TraitId } from "@creature-chess/models";
 
 interface Props {
 	trait: TraitId;

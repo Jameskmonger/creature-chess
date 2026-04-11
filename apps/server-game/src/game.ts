@@ -5,10 +5,10 @@ import {
 	PlayerCommands,
 	Player,
 } from "@creature-chess/gamemode";
-import { GameFinishEvent } from "@creature-chess/gamemode/src/game/events";
-import { PlayerStatus } from "@creature-chess/models/game/playerList";
-import { LobbyPlayer } from "@creature-chess/models/lobby";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GameFinishEvent } from "@creature-chess/gamemode";
+import { PlayerStatus } from "@creature-chess/models";
+import { LobbyPlayer } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { setupBotLogic } from "@cc-server/bot";
 import { BotPersonality } from "@cc-server/data";

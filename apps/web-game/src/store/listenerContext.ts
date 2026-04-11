@@ -1,6 +1,6 @@
 import { Dispatch, TypedStartListening, UnknownAction } from "@reduxjs/toolkit";
 import { SubscribableBoard } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { PieceAnimationEventStore } from "~/components/game/board/piece/match/animationEventStore";
 import { AppState } from "./state";

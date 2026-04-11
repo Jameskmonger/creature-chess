@@ -1,5 +1,5 @@
 import { CreatureStats, AttackType, attackTypes } from "@creature-chess/models";
-import { TraitId } from "@creature-chess/models/gamemode/traits";
+import { TraitId } from "@creature-chess/models";
 
 // each trait has points to assign
 // these are then used, along with piece cost and stage, to get stats

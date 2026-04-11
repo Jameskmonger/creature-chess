@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
+import { PlayerListPlayer } from "@creature-chess/models";
 
 const initialState: PlayerListPlayer[] = [];
 

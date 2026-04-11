@@ -1,4 +1,4 @@
-import { LobbyPlayer } from "@creature-chess/models/lobby";
+import { LobbyPlayer } from "@creature-chess/models";
 
 import {
 	BotPersonality,

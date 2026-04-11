@@ -1,8 +1,8 @@
 
 import { SubscribableBoard } from "@creature-chess/board";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 import React, { createContext, useRef } from "react";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { PieceAnimationEventStore } from "./piece/match/animationEventStore";
 

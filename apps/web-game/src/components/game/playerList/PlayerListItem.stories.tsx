@@ -8,8 +8,8 @@ import {
 	PlayerListPlayer,
 	inProgressBattle,
 	finishedBattle,
-} from "@creature-chess/models/game/playerList";
-import { StreakType } from "@creature-chess/models/player";
+} from "@creature-chess/models";
+import { StreakType } from "@creature-chess/models";
 
 import { PlayerListItem } from "./playerListItem";
 

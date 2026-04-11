@@ -4,7 +4,7 @@ import { getStats } from "../utils/getStats";
 import { simulatePiece } from "./piece/simulate";
 import { Stores } from "./types";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export const simulateTurn = (
 	currentTurn: number,

@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { LocalPlayerContextProvider } from "~/auth/context";
 import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
 
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { createMockStore } from "../../../../.storybook/utils";
 import { PlayerGameProfile } from "./PlayerGameProfile";

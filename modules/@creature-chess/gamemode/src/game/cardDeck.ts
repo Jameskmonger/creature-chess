@@ -4,7 +4,7 @@ import { Logger } from "winston";
 import { CardDeck as ShokiCardDeck } from "@shoki/card-deck";
 
 import { CreatureDefinition, Card, PieceModel } from "@creature-chess/models";
-import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { getAllDefinitions, getDefinitionById } from "../definitions";
 

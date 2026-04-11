@@ -1,6 +1,6 @@
 import { Gamemode, createPlayer as createPlayerBase } from "@creature-chess/gamemode";
-import { PlayerProfile } from "@creature-chess/models/player";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { PlayerProfile } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { logger } from "../log";
 import { Board } from "@creature-chess/board";

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { Countdown } from "../ui/countdown";
 

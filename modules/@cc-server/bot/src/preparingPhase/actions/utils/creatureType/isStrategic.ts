@@ -1,4 +1,4 @@
-import { TraitId } from "@creature-chess/models/gamemode/traits";
+import { TraitId } from "@creature-chess/models";
 
 export const isStrategicPiece = (
 	pieceTraits: TraitId[],

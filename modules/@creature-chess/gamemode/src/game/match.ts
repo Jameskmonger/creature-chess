@@ -5,12 +5,12 @@ import { Logger } from "winston";
 
 import { BattleRunner } from "@creature-chess/battle";
 import { PieceModel } from "@creature-chess/models";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
 import { playerFinishMatchEvent } from "../entities/player/events";
 import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export class Match {
 	private runner: BattleRunner;

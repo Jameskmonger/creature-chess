@@ -3,13 +3,13 @@ import React from "react";
 import { Meta, Story } from "@storybook/react";
 
 import { Builders, PieceModel } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models/settings";
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { GameBoard } from "./GameBoard";
 import { GameBoardContextProvider } from "./GameBoardContext";
 import { Piece, PieceContextProvider } from "./piece";
 import { SubscribableBoard } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 import { PieceDragContextProvider } from "~/components/board/drag/PieceDragContext";
 
 export default {

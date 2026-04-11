@@ -1,7 +1,7 @@
 import {
 	finishedBattle,
 	inProgressBattle,
-} from "@creature-chess/models/game/playerList";
+} from "@creature-chess/models";
 
 import { PlayerStartListening } from "../player";
 import { playerFinishMatchEvent } from "../events";

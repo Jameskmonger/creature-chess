@@ -8,7 +8,7 @@ import {
 	getPlayerBelowPieceLimit,
 } from "../state/selectors";
 import { Board, getFirstEmptySlot, packPosition } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
 type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;

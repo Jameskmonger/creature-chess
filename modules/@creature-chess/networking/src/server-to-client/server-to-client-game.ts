@@ -3,8 +3,8 @@ import {
 	QuickChatOption,
 	RoundInfoState,
 } from "@creature-chess/models";
-import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { PlayerListPlayer } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 import { PositionKey } from "@creature-chess/board";
 
 type ActionStreamPacket = {

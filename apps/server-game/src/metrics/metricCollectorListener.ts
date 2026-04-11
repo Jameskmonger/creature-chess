@@ -1,4 +1,4 @@
-import { PlayerActionTypesArray, quickChatPlayerAction, quitGamePlayerAction, spectatePlayerAction } from "@creature-chess/gamemode/src/playerActions";
+import { PlayerActionTypesArray, quickChatPlayerAction, quitGamePlayerAction, spectatePlayerAction } from "@creature-chess/gamemode";
 import { Player } from "@creature-chess/gamemode";
 import { metricCollector } from "./metricCollector";
 

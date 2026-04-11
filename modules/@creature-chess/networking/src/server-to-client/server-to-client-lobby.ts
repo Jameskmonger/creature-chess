@@ -1,5 +1,5 @@
-import { LobbyPlayer } from "@creature-chess/models/lobby";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { LobbyPlayer } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 
 export type LobbyConnectionPacket = {
 	players: LobbyPlayer[];

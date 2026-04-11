@@ -1,5 +1,5 @@
 import { GamePhase, QuickChatOption } from "@creature-chess/models";
-import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
+import { PlayerListPlayer } from "@creature-chess/models";
 
 export type Dispatch = (action: any) => void;
 

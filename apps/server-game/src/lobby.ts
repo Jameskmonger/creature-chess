@@ -1,9 +1,9 @@
-import { LobbyPlayer } from "@creature-chess/models/lobby";
-import { PlayerProfile } from "@creature-chess/models/player";
+import { LobbyPlayer } from "@creature-chess/models";
+import { PlayerProfile } from "@creature-chess/models";
 import {
 	GamemodeSettings,
 	GamemodeSettingsPresets,
-} from "@creature-chess/models/settings";
+} from "@creature-chess/models";
 
 import { logger } from "./log";
 import { AuthenticatedSocket, LobbySocket } from "./player/socket";

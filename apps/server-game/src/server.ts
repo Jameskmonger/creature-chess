@@ -1,7 +1,7 @@
 import { collectDefaultMetrics, register } from "prom-client";
 import { Server } from "socket.io";
 
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";
 

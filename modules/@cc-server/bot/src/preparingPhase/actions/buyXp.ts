@@ -5,9 +5,9 @@ import {
 	PlayerState,
 	PlayerStateSelectors,
 } from "@creature-chess/gamemode";
-import { getXpToNextLevel } from "@creature-chess/gamemode/src/player/xp";
-import { MAX_LEVEL } from "@creature-chess/models/config";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { getXpToNextLevel } from "@creature-chess/gamemode";
+import { MAX_LEVEL } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { BotPersonality } from "@cc-server/data";
 

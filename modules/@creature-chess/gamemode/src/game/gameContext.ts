@@ -1,7 +1,7 @@
 import delay from "delay";
 import { Logger } from "winston";
 
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
 import { gameLoop } from "./gameLoop";

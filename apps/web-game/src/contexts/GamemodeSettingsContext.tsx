@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 export const GamemodeSettingsContext = createContext<GamemodeSettings>(
 	null as unknown as GamemodeSettings

@@ -10,7 +10,7 @@ import {
 	PlayerActions,
 } from "@creature-chess/gamemode";
 import { Card } from "@creature-chess/models";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -22,7 +22,7 @@ import {
 	getTraitSynergyCount,
 } from "./utils/cardScoring";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export const createBuyCardAction = (
 	board: Board,

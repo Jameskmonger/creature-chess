@@ -1,4 +1,4 @@
-import { TraitId } from "@creature-chess/models/gamemode/traits";
+import { TraitId } from "@creature-chess/models";
 
 // overcome / generated are Tuxemon language
 export const typeInteractions: Partial<

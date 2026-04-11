@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { MAX_HEALTH } from "@creature-chess/models/config";
+import { MAX_HEALTH } from "@creature-chess/models";
 
 import { ProgressBar } from "../progressBar";
 

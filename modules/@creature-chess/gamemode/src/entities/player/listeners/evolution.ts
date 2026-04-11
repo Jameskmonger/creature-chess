@@ -1,7 +1,7 @@
 import { isAnyOf } from "@reduxjs/toolkit";
 
 import { GamePhase, PieceModel } from "@creature-chess/models";
-import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { getDefinitionById } from "../../../definitions";
 import { PlayerStartListening } from "../player";
@@ -9,7 +9,7 @@ import { isPlayerBoardLocked } from "../state/selectors";
 import { addBenchPieceCommand, addBoardPieceCommand, removeBenchPiecesCommand, removeBoardPiecesCommand } from "../state/board";
 import { gamePhaseStartedEvent, GamePhaseStartedEvent } from "../../../game/events";
 import { Board, packPosition } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 const pieceCanEvolve = (piece: PieceModel) => {
 	const definition = getDefinitionById(piece.definitionId);

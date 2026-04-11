@@ -4,7 +4,7 @@ import { logger as expressWinston } from "express-winston";
 import {
 	validateNicknameFormat,
 	AVAILABLE_PROFILE_PICTURES,
-} from "@creature-chess/user/profile";
+} from "@creature-chess/user";
 
 import { authenticate, convertDatabaseUserToUserModel } from "@cc-server/auth";
 import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";

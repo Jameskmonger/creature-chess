@@ -12,7 +12,7 @@ import { GamePhase } from "@creature-chess/models";
 import { GameServerToClient } from "@creature-chess/networking";
 
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { PlayerListCommands } from "~/store/game/playerList/state";
 import { SettingsCommands } from "~/store/game/settings/state";

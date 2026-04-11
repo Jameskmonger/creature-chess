@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { PlayerBattle } from "@creature-chess/models/game/playerList";
+import { PlayerBattle } from "@creature-chess/models";
 
 import { Label } from "../../ui/label";
 import { BattleInfo } from "./battleInfo";

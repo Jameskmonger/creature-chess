@@ -2,7 +2,7 @@ import { PieceModel } from "@creature-chess/models";
 
 import { Stores } from "../../types";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export type MoveAction = { type: "move"; payload: { x: number; y: number } };
 export type HitAction = { type: "hit"; payload: { targetId: string } };

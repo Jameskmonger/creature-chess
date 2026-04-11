@@ -1,5 +1,5 @@
 import { writeFile } from "fs";
-import { StreakType } from "@creature-chess/models/player";
+import { StreakType } from "@creature-chess/models";
 import { logger } from "../log";
 
 type PlayerAction = {

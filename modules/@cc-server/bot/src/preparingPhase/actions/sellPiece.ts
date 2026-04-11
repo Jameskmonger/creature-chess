@@ -11,7 +11,7 @@ import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 // Creates a "sell piece" action for any piece on the board OR bench.
 //

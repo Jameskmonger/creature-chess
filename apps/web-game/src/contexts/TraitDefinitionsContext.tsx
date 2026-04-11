@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode, useMemo } from "react";
 
-import { Trait, TraitId } from "@creature-chess/models/gamemode/traits";
+import { Trait, TraitId } from "@creature-chess/models";
 
 interface TraitDefinitionsContextType {
 	getTraitById: (id: TraitId) => Trait | undefined;

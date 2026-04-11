@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { PIECES_TO_EVOLVE } from "@creature-chess/models/config";
+import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { PlayerStartListening } from "../entities/player/player";
 import { afterSellPieceEvent } from "../entities/player/events";

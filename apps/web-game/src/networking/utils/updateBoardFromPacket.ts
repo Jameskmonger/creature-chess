@@ -1,6 +1,6 @@
 import { Board } from "@creature-chess/board";
 import { GameServerToClient } from "@creature-chess/networking";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 export function updateBoardFromPacket(
 	board: Board,

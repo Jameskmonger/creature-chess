@@ -1,9 +1,9 @@
 import { attackTypes, PieceModel } from "@creature-chess/models";
-import { buildPieceModel } from "@creature-chess/models/src/builders";
+import { buildPieceModel } from "@creature-chess/models";
 
 import { getNextPiecePosition, Pathfinder } from "./pathfinding";
 import { Board, packPosition, rotateBoard, rotateGridPosition, unpackX, unpackY } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils/piece";
+import { PieceRegistry } from "@creature-chess/utils";
 
 function getOpponentsForPiece(pieces: PieceModel[], pieceId: string) {
 	const piece = pieces.find((p) => p.id === pieceId)!;

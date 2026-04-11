@@ -1,4 +1,4 @@
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { EmptyPacket } from "./empty-packet";
 

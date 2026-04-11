@@ -1,6 +1,6 @@
 import { ManagementClient } from "auth0";
 
-import { AUTH0_ENABLED } from "@cc-server/auth/src/auth0";
+import { AUTH0_ENABLED } from "@cc-server/auth";
 
 export function getManagementClient() {
 	if (!AUTH0_ENABLED) {

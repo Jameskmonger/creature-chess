@@ -8,8 +8,8 @@ import {
 	playerReducers,
 } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
-import { PlayerListPlayer } from "@creature-chess/models/game/playerList";
-import { GamemodeSettings } from "@creature-chess/models/settings";
+import { PlayerListPlayer } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 
 import { quickChatReducer, QuickChatState } from "./chat/state";
 import { networkReducer, NetworkState } from "./network";
