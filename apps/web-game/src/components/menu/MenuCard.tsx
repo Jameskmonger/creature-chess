@@ -1,8 +1,9 @@
-import classNames from "classnames";
 import * as React from "react";
+
+import classNames from "classnames";
 import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	card: {
 		background: theme.palette.dark.neutral,
 		padding: "0.5rem",
@@ -10,12 +11,11 @@ const useStyles = createUseThemeStyles(theme => ({
 	},
 }));
 
-export function MenuCard({ children, className }: React.PropsWithChildren<{ className?: string }>) {
+export function MenuCard({
+	children,
+	className,
+}: React.PropsWithChildren<{ className?: string }>) {
 	const classes = useStyles();
 
-	return (
-		<div className={classNames(classes.card, className)}>
-			{children}
-		</div>
-	);
+	return <div className={classNames(classes.card, className)}>{children}</div>;
 }

@@ -1,8 +1,9 @@
+import { useMemo } from "react";
+
 import { useSelector } from "react-redux";
 import { AppState } from "~/store";
 
 import { useGameBoards } from "../board/state";
-import { useMemo } from "react";
 
 export function useSelectedPiece() {
 	const selectedPieceId = useSelector<AppState, string | null>(

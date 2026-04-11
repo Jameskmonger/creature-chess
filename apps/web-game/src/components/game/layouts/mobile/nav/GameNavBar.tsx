@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
 	faChartColumn,
 	faQuestionCircle,
@@ -7,10 +7,10 @@ import {
 	faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { createUseStyles } from "react-jss";
-
+import { useDispatch, useSelector } from "react-redux";
+import { NavBar } from "~/components/ui/navbar/NavBar";
 import { closeOverlay, openOverlay, Overlay } from "~/store/game/ui";
 import { AppState } from "~/store/state";
-import { NavBar } from "~/components/ui/navbar/NavBar";
 
 import { NavItemShop } from "./NavItemShop";
 
@@ -28,7 +28,9 @@ const navBarItems = [
 	{ key: "settings", icon: faQuestionCircle },
 ] as const;
 
-function getOverlayKey(overlay: Overlay | null): typeof navBarItems[number]["key"] | null {
+function getOverlayKey(
+	overlay: Overlay | null
+): (typeof navBarItems)[number]["key"] | null {
 	switch (overlay) {
 		case Overlay.PLAYERS:
 			return "players";
@@ -43,7 +45,9 @@ function getOverlayKey(overlay: Overlay | null): typeof navBarItems[number]["key
 	}
 }
 
-function getKeyOverlay(key: typeof navBarItems[number]["key"]): Overlay | null {
+function getKeyOverlay(
+	key: (typeof navBarItems)[number]["key"]
+): Overlay | null {
 	switch (key) {
 		case "players":
 			return Overlay.PLAYERS;
@@ -73,7 +77,7 @@ export function GameNavBar() {
 		(state) => state.game.spectating.id !== null
 	);
 
-	const onClick = (key: typeof navBarItems[number]["key"]) => {
+	const onClick = (key: (typeof navBarItems)[number]["key"]) => {
 		if (key === getOverlayKey(activeOverlay)) {
 			dispatch(closeOverlay());
 			return;
@@ -101,4 +105,4 @@ export function GameNavBar() {
 			onSelect={onClick}
 		/>
 	);
-};
+}

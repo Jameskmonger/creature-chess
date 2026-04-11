@@ -34,9 +34,7 @@ const findRunCsvs = (runId: string | null): string[] => {
 	if (runId !== null) {
 		const matches = files.filter((f) => f.name.startsWith(`${runId}`));
 		if (matches.length === 0) {
-			throw new Error(
-				`No CSV files found for run id "${runId}" in ${dataDir}`
-			);
+			throw new Error(`No CSV files found for run id "${runId}" in ${dataDir}`);
 		}
 		return matches.map((f) => f.path);
 	}
@@ -52,9 +50,7 @@ const findRunCsvs = (runId: string | null): string[] => {
 		return [latest.path];
 	}
 
-	return files
-		.filter((f) => f.name.startsWith(runIdPrefix))
-		.map((f) => f.path);
+	return files.filter((f) => f.name.startsWith(runIdPrefix)).map((f) => f.path);
 };
 
 const parseCsvFile = (path: string): Row[] => {
@@ -148,7 +144,8 @@ const buildBuckets = (
 
 	return Array.from({ length: bucketCount }, (_, i) => {
 		const lo = Math.round(min + i * step);
-		const hi = i === bucketCount - 1 ? max : Math.round(min + (i + 1) * step) - 1;
+		const hi =
+			i === bucketCount - 1 ? max : Math.round(min + (i + 1) * step) - 1;
 		return { label: `${lo}-${hi}`, min: lo, max: hi };
 	});
 };
@@ -214,9 +211,7 @@ const printPairwiseMatrices = (rows: Row[], bucketCount: number): void => {
 					inCell.reduce((a, r) => a + r.finishPosition, 0) / inCell.length;
 				return `${avg.toFixed(2)} (n=${inCell.length})`.padEnd(13);
 			});
-			console.log(
-				`${rowTrait[0]}:${rb.label.padEnd(7)} ${cells.join(" ")}`
-			);
+			console.log(`${rowTrait[0]}:${rb.label.padEnd(7)} ${cells.join(" ")}`);
 		}
 	}
 };

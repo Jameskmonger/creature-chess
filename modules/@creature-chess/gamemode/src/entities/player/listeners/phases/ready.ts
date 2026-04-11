@@ -6,7 +6,9 @@ import { PlayerStartListening } from "../../player";
 import { playerInfoCommands } from "../../state/commands";
 import { fillBoardCommand } from "../fillBoard";
 
-export const setupReadyPhaseListeners = (startListening: PlayerStartListening) => {
+export const setupReadyPhaseListeners = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: playerBeforeReadyPhaseEvent,
 		effect: async (_action, api) => {

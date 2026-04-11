@@ -1,7 +1,9 @@
-import { BattleRunner } from "./battleRunner";
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 import { GamemodeSettings } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
+
+import { BattleRunner } from "./battleRunner";
+import { simulateTurn } from "./simulator";
 
 jest.mock("./simulator", () => ({
 	simulateTurn: jest.fn(),
@@ -22,19 +24,26 @@ jest.mock("./state/store", () => ({
 	})),
 }));
 
-import { simulateTurn } from "./simulator";
-
 const mockSimulateTurn = simulateTurn as jest.Mock;
 
-function createMockBoard(pieces: { id: string; ownerId: string; health: number }[] = []) {
+function createMockBoard(
+	pieces: { id: string; ownerId: string; health: number }[] = []
+) {
 	return {
 		getAllPieces: jest.fn(() => pieces.map((p) => ({ id: p.id }))),
 		removePiece: jest.fn(),
 	} as unknown as Board;
 }
 
-function createMockPieceRegistry(pieces: { id: string; ownerId: string; health: number }[] = []) {
-	const map = new Map(pieces.map((p) => [p.id, { id: p.id, ownerId: p.ownerId, currentHealth: p.health }]));
+function createMockPieceRegistry(
+	pieces: { id: string; ownerId: string; health: number }[] = []
+) {
+	const map = new Map(
+		pieces.map((p) => [
+			p.id,
+			{ id: p.id, ownerId: p.ownerId, currentHealth: p.health },
+		])
+	);
 	return {
 		getPieceById: jest.fn((id: string) => map.get(id) ?? null),
 	} as unknown as PieceRegistry;
@@ -85,8 +94,8 @@ describe("BattleRunner", () => {
 			mockSimulateTurn.mockImplementation(() => {
 				const p2Piece = registry.getPieceById("b") as any;
 				if (p2Piece) {
-p2Piece.currentHealth = 0;
-}
+					p2Piece.currentHealth = 0;
+				}
 			});
 
 			const runner = new BattleRunner(board, registry, defaultSettings);

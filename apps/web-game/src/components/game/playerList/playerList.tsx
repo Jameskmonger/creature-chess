@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
+
 import { GamePhase } from "@creature-chess/models";
 import {
 	PlayerListPlayer,
@@ -89,9 +90,7 @@ const PlayerList: React.FunctionComponent = () => {
 				const currentlySpectating = currentlySpectatingId === p.id;
 
 				const onSpectateClick = () => {
-					gameActions.spectate(
-						currentlySpectating ? null : p.id
-					);
+					gameActions.spectate(currentlySpectating ? null : p.id);
 				};
 
 				return (

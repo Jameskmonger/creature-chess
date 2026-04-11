@@ -1,11 +1,15 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
-import { GameConnection, BoardSlices } from "./GameConnection";
 import { EventBus } from "./EventBus";
+import { GameConnection, BoardSlices } from "./GameConnection";
 import { ConnectionStatus, GameEventMap } from "./types";
+import { updateBoardFromPacket } from "./utils/updateBoardFromPacket";
 
 jest.mock("~/store/game/playerList/state", () => ({
 	PlayerListCommands: {
-		updatePlayerListCommand: (p: any) => ({ type: "playerList/update", payload: p }),
+		updatePlayerListCommand: (p: any) => ({
+			type: "playerList/update",
+			payload: p,
+		}),
 	},
 }));
 jest.mock("~/store/game/settings/state", () => ({
@@ -24,8 +28,6 @@ jest.mock("./utils/updateBoardFromPacket", () => ({
 	updateBoardFromPacket: jest.fn(),
 }));
 
-import { updateBoardFromPacket } from "./utils/updateBoardFromPacket";
-
 const mockedUpdateBoard = updateBoardFromPacket as jest.Mock;
 
 const createMockSocket = () => {
@@ -33,26 +35,26 @@ const createMockSocket = () => {
 	const ioHandlers = new Map<string, Function>();
 	return {
 		on: jest.fn((event: string, handler: Function) => {
- handlers.set(event, handler);
-}),
+			handlers.set(event, handler);
+		}),
 		off: jest.fn((event: string, handler: Function) => {
- handlers.delete(event);
-}),
+			handlers.delete(event);
+		}),
 		emit: jest.fn(),
 		io: {
 			on: jest.fn((event: string, handler: Function) => {
- ioHandlers.set(event, handler);
-}),
+				ioHandlers.set(event, handler);
+			}),
 			off: jest.fn((event: string, handler: Function) => {
- ioHandlers.delete(event);
-}),
+				ioHandlers.delete(event);
+			}),
 		},
 		_trigger: (event: string, ...args: any[]) => {
- handlers.get(event)?.(...args);
-},
+			handlers.get(event)?.(...args);
+		},
 		_triggerIo: (event: string, ...args: any[]) => {
- ioHandlers.get(event)?.(...args);
-},
+			ioHandlers.get(event)?.(...args);
+		},
 	};
 };
 

@@ -1,6 +1,5 @@
 import { createContext, useContext } from "react";
 
-
 import { SubscribableBoard } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils";
 

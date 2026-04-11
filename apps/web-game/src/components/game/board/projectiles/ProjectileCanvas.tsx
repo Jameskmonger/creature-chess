@@ -2,8 +2,8 @@ import React from "react";
 
 import { SubscribableBoard } from "@creature-chess/board";
 
-import { useGameBoards } from "../state";
 import { ProjectileEvent } from "../piece/match/animationEventStore";
+import { useGameBoards } from "../state";
 
 const PROJECTILE_DURATION_MS = 200;
 const FILL_COLOR = "#F5E687";
@@ -15,7 +15,12 @@ type ActiveProjectile = {
 	startY: number;
 	startTime: number;
 } & (
-	| { type: "piece"; targetPieceId: string; lastTargetX: number; lastTargetY: number }
+	| {
+			type: "piece";
+			targetPieceId: string;
+			lastTargetX: number;
+			lastTargetY: number;
+	  }
 	| { type: "location"; targetX: number; targetY: number }
 );
 
@@ -94,12 +99,10 @@ function renderProjectiles(
 		const [targetX, targetY] = resolveTargetPosition(p, matchBoard);
 
 		const cx =
-			((p.startX + 0.5 + (targetX - p.startX) * progress) /
-				matchBoard.width) *
+			((p.startX + 0.5 + (targetX - p.startX) * progress) / matchBoard.width) *
 			clientWidth;
 		const cy =
-			((p.startY + 0.5 + (targetY - p.startY) * progress) /
-				matchBoard.height) *
+			((p.startY + 0.5 + (targetY - p.startY) * progress) / matchBoard.height) *
 			clientHeight;
 
 		ctx.beginPath();
@@ -181,11 +184,7 @@ export function ProjectileCanvas() {
 
 			const now = performance.now();
 			for (const event of events) {
-				const active = createActiveProjectile(
-					event,
-					matchBoard,
-					now
-				);
+				const active = createActiveProjectile(event, matchBoard, now);
 				if (active) {
 					projectilesRef.current.push(active);
 				}

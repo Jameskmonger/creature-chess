@@ -1,11 +1,11 @@
+import { Board, Position } from "@creature-chess/board";
 import { PieceModel, TileCoordinates, getDelta } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { getStats } from "../../utils/getStats";
 import { getLivingEnemies } from "../utils/getLivingEnemies";
 import { getTargetAttackPositions } from "../utils/getTargetAttackPositions";
 import { TargetProvider } from "./TargetProvider";
-import { Board, Position } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 type EnemyDelta = {
 	enemy: PieceModel;
@@ -21,7 +21,7 @@ export class StandardTargetProvider implements TargetProvider {
 	public getTarget(
 		board: Board,
 		pieceRegistry: PieceRegistry,
-		attackerId: string,
+		attackerId: string
 	): string | null {
 		const piece = pieceRegistry.getPieceById(attackerId);
 
@@ -104,7 +104,10 @@ export class StandardTargetProvider implements TargetProvider {
 				enemy,
 				enemyPosition: { x: enemyPosition[0], y: enemyPosition[1] },
 				attackPosition: emptyPositions[0],
-				delta: getDelta(emptyPositions[0], { x: attackerPosition[0], y: attackerPosition[1] }),
+				delta: getDelta(emptyPositions[0], {
+					x: attackerPosition[0],
+					y: attackerPosition[1],
+				}),
 			});
 		}
 

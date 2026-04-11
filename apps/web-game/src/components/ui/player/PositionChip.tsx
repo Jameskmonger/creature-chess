@@ -6,7 +6,7 @@ type Props = {
 	position: number;
 };
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	chip: {
 		"background": "#333",
 		"padding": "4px 8px",

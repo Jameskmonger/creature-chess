@@ -67,7 +67,9 @@ export class Lobby {
 		const lobbySocket = socket as unknown as LobbySocket;
 		let member: LobbyMember;
 
-		const existing = this.members.find((m) => m.player.id === lobbySocket.data.id);
+		const existing = this.members.find(
+			(m) => m.player.id === lobbySocket.data.id
+		);
 		if (existing) {
 			existing.socket?.disconnect(true);
 

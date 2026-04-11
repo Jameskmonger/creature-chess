@@ -1,30 +1,30 @@
 import { AppState } from "~/store";
 import { ClientStartListening } from "~/store/listenerContext";
 
-import {
-	BattleCommands,
-	setupBattleListeners,
-} from "@creature-chess/battle";
+import { BattleCommands, setupBattleListeners } from "@creature-chess/battle";
 import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import { gameStartedAction } from "./gameStartedAction";
 
-export const setupClientBattleListeners = (startListening: ClientStartListening) => {
+export const setupClientBattleListeners = (
+	startListening: ClientStartListening
+) => {
 	startListening({
 		actionCreator: gameStartedAction,
 		effect: async (_action, api) => {
 			api.cancelActiveListeners();
 
 			const settings = (api.getState() as AppState).game.settings;
-			const { matchBoard, pieceRegistry, animationEventStore } = api.extra.slices;
+			const { matchBoard, pieceRegistry, animationEventStore } =
+				api.extra.slices;
 
 			setupBattleListeners(
 				startListening,
 				settings,
 				matchBoard,
 				pieceRegistry,
-				(events) => animationEventStore.pushEvents(events),
+				(events) => animationEventStore.pushEvents(events)
 			);
 		},
 	});

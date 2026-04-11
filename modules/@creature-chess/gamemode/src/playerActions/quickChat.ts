@@ -2,8 +2,8 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { QuickChatOption } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../entities/player/player";
 import { playerReceiveQuickChatEvent } from "../entities/player/events";
+import { PlayerStartListening } from "../entities/player/player";
 
 export type QuickChatPlayerAction = ReturnType<typeof quickChatPlayerAction>;
 export const quickChatPlayerAction = createAction<
@@ -14,7 +14,9 @@ export const quickChatPlayerAction = createAction<
 	"quickChatAction"
 >("quickChatAction");
 
-export const setupQuickChatListener = (startListening: PlayerStartListening) => {
+export const setupQuickChatListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: quickChatPlayerAction,
 		effect: async ({ payload: { sendingPlayerId, chatValue } }, api) => {

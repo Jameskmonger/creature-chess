@@ -7,9 +7,9 @@ import { AppState } from "~/store";
 import { getPlayerMoney } from "@creature-chess/gamemode";
 import { Card as CardModel } from "@creature-chess/models";
 
+import { useGameBoards } from "../board/state";
 import { CardShop as CardShop2D } from "./2d/cardShop";
 import { CardShop as CardShop3D } from "./3d/cardShop";
-import { useGameBoards } from "../board/state";
 
 const CARD_SHOP_TYPE: "2d" | "3d" = "2d" as "2d" | "3d";
 
@@ -34,16 +34,22 @@ export function CardShop() {
 
 	const { board, bench, pieceRegistry } = useGameBoards();
 
-	const ownedDefinitionIds = React.useMemo(() => [
-		...board.getAllPieces().map(
-			(piece) => pieceRegistry.getPieceById(piece.id)!.definitionId
-		),
-		...bench.getAllPieces().map(
-			(piece) => pieceRegistry.getPieceById(piece.id)!.definitionId
-		),
-	], [board, bench, pieceRegistry]);
+	const ownedDefinitionIds = React.useMemo(
+		() => [
+			...board
+				.getAllPieces()
+				.map((piece) => pieceRegistry.getPieceById(piece.id)!.definitionId),
+			...bench
+				.getAllPieces()
+				.map((piece) => pieceRegistry.getPieceById(piece.id)!.definitionId),
+		],
+		[board, bench, pieceRegistry]
+	);
 
-	const onBuy = React.useCallback((index: number) => gameActions.buyCard(index), [ gameActions ]);
+	const onBuy = React.useCallback(
+		(index: number) => gameActions.buyCard(index),
+		[gameActions]
+	);
 
 	if (cards === null || canUseShop === false || isSpectating) {
 		return null;

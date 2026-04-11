@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useRef } from "react";
-import { useDispatch } from "react-redux";
 
+import { useDispatch } from "react-redux";
 import { useGameBoards } from "~/components/game/board/state";
 
 import { SocketManager } from "./SocketManager";
@@ -26,7 +26,9 @@ export function SocketManagerProvider({ children }: React.PropsWithChildren) {
 export function useSocketManager(): SocketManager {
 	const context = useContext(SocketManagerContext);
 	if (!context) {
-		throw new Error("useSocketManager must be used within a SocketManagerProvider");
+		throw new Error(
+			"useSocketManager must be used within a SocketManagerProvider"
+		);
 	}
 	return context;
 }

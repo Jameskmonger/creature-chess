@@ -4,6 +4,7 @@ import { Logger } from "winston";
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
 import { PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { Player } from "../entities/player/player";
 import {
@@ -17,11 +18,10 @@ import {
 	playerListChangedEvent,
 	GameFinishEvent,
 } from "./events";
+import { runGame, GameContext } from "./gameContext";
 import { OpponentProvider } from "./opponentProvider";
 import { setupPlayerGameDeckListeners } from "./player/playerGameDeck";
 import { PlayerList } from "./playerList";
-import { runGame, GameContext } from "./gameContext";
-import { PieceRegistry } from "@creature-chess/utils";
 
 const finishGameEventKey = "FINISH_GAME";
 
@@ -55,7 +55,11 @@ export class Gamemode {
 		this.deck = new CardDeck(this.logger);
 	}
 
-	public setRoundInfo(payload: { phase: GamePhase; startedAt: number; round?: number }) {
+	public setRoundInfo(payload: {
+		phase: GamePhase;
+		startedAt: number;
+		round?: number;
+	}) {
 		if (payload.round) {
 			this.roundInfo = {
 				...this.roundInfo,

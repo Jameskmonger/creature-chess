@@ -1,7 +1,8 @@
 import React from "react";
+
 import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	logoWrapper: {
 		"width": "70%",
 		"maxWidth": "440px",
@@ -9,8 +10,8 @@ const useStyles = createUseThemeStyles(theme => ({
 			width: "100%",
 			height: "auto",
 			display: "block",
-			filter: "drop-shadow(0px 6px 4px #222)"
-		}
+			filter: "drop-shadow(0px 6px 4px #222)",
+		},
 	},
 }));
 

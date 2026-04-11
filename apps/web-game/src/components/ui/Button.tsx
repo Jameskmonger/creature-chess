@@ -1,5 +1,6 @@
-import classNames from "classnames";
 import React from "react";
+
+import classNames from "classnames";
 import { createUseThemeStyles } from "~/useStyles";
 
 type Props = React.PropsWithChildren<{
@@ -10,49 +11,69 @@ type Props = React.PropsWithChildren<{
 	disabled?: boolean;
 }>;
 
-const useStyles = createUseThemeStyles<string, Props>(theme => ({
+const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 	pushable: {
 		"--btn-bg": ({ color }) => {
 			switch (color) {
-				case "primary": return theme.palette.primary.light;
+				case "primary":
+					return theme.palette.primary.light;
 				// todo add to theme
-				case "secondary": return "#38b764";
-				case "muted": return "#949494";
-				default: return "hsl(345deg 100% 47%)";
+				case "secondary":
+					return "#38b764";
+				case "muted":
+					return "#949494";
+				default:
+					return "hsl(345deg 100% 47%)";
 			}
 		},
 		"--btn-text-color": ({ color }) => {
 			switch (color) {
-				case "primary": return theme.palette.dark.neutral;
-				case "secondary": return theme.palette.dark.neutral;
-				case "muted": return theme.palette.dark.neutral;
-				default: return theme.palette.light.neutral;
+				case "primary":
+					return theme.palette.dark.neutral;
+				case "secondary":
+					return theme.palette.dark.neutral;
+				case "muted":
+					return theme.palette.dark.neutral;
+				default:
+					return theme.palette.light.neutral;
 			}
 		},
 		"--btn-font-size": ({ size }) => {
 			switch (size) {
-				case "small": return "1rem";
-				case "medium": return "1.25rem";
-				case "large": return "1.5rem";
-				default: return "1.5rem";
+				case "small":
+					return "1rem";
+				case "medium":
+					return "1.25rem";
+				case "large":
+					return "1.5rem";
+				default:
+					return "1.5rem";
 			}
 		},
 
 		"--btn-border-radius": "4px",
 		"--btn-padding": ({ size }) => {
 			switch (size) {
-				case "small": return "4px 8px";
-				case "medium": return "8px";
-				case "large": return "12px 42px";
-				default: return "12px 42px";
+				case "small":
+					return "4px 8px";
+				case "medium":
+					return "8px";
+				case "large":
+					return "12px 42px";
+				default:
+					return "12px 42px";
 			}
 		},
 		"--btn-3d-depth": ({ size }) => {
 			switch (size) {
-				case "small": return "2px";
-				case "medium": return "3px";
-				case "large": return "4px";
-				default: return "4px";
+				case "small":
+					return "2px";
+				case "medium":
+					return "3px";
+				case "large":
+					return "4px";
+				default:
+					return "4px";
 			}
 		},
 

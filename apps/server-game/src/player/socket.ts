@@ -30,7 +30,9 @@ type HandshakeEvents = {
 };
 
 type AuthenticateResponseEvents = {
-	authenticate_response: (response: GameServerToClient.AuthenticateResponse) => void;
+	authenticate_response: (
+		response: GameServerToClient.AuthenticateResponse
+	) => void;
 };
 
 /**

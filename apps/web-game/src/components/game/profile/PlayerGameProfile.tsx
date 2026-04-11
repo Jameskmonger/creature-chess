@@ -4,7 +4,9 @@ import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useLocalPlayerId } from "~/auth/context";
+import { Button } from "~/components/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
+import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
 import { useGameActions } from "~/networking";
@@ -19,8 +21,6 @@ import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { MAX_LEVEL } from "@creature-chess/models";
 
 import { ProgressBar } from "../../ui/progressBar";
-import { Button } from "~/components/ui";
-import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 
 const useStyles = createUseStyles({
 	profile: {

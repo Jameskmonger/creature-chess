@@ -1,14 +1,11 @@
+import { Board, getFirstEmptySlot, packPosition } from "@creature-chess/board";
 import { PlayerPieceLocation } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { dropPiecePlayerAction } from "../../../playerActions";
 import { PlayerStartListening } from "../player";
 import { PlayerState } from "../state";
-import {
-	isPlayerAlive,
-	getPlayerBelowPieceLimit,
-} from "../state/selectors";
-import { Board, getFirstEmptySlot, packPosition } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
+import { isPlayerAlive, getPlayerBelowPieceLimit } from "../state/selectors";
 
 const FILL_BOARD_COMMAND = "FILL_BOARD_COMMAND";
 type FILL_BOARD_COMMAND = typeof FILL_BOARD_COMMAND;
@@ -19,7 +16,8 @@ export const fillBoardCommand = (): FillBoardCommand => ({
 });
 
 const getMostExpensiveBenchPiece = (bench: Board, pieces: PieceRegistry) => {
-	const benchPieces = bench.getAllPieces()
+	const benchPieces = bench
+		.getAllPieces()
 		.map(({ id }) => pieces.getPieceById(id))
 		.filter((piece): piece is NonNullable<typeof piece> => piece !== null);
 
@@ -32,11 +30,17 @@ const getMostExpensiveBenchPiece = (bench: Board, pieces: PieceRegistry) => {
 	return benchPieces[0];
 };
 
-export const setupFillBoardListener = (startListening: PlayerStartListening) => {
+export const setupFillBoardListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		type: FILL_BOARD_COMMAND,
 		effect: async (_action, api) => {
-			const { board, bench, gamemode: { pieceRegistry } } = api.player;
+			const {
+				board,
+				bench,
+				gamemode: { pieceRegistry },
+			} = api.player;
 
 			if (!isPlayerAlive(api.getState())) {
 				return;
@@ -44,7 +48,10 @@ export const setupFillBoardListener = (startListening: PlayerStartListening) => 
 
 			while (true) {
 				const state: PlayerState = api.getState();
-				const belowPieceLimit = getPlayerBelowPieceLimit(state.playerInfo.level, board);
+				const belowPieceLimit = getPlayerBelowPieceLimit(
+					state.playerInfo.level,
+					board
+				);
 
 				if (!belowPieceLimit) {
 					return;

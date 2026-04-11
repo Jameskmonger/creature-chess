@@ -41,8 +41,7 @@ export const getRangeValue = ({
 	const clampedPosition = clamp01(rawPosition);
 	const curved = applyCurve(clampedPosition, curve ?? { type: "linear" });
 
-	const directed =
-		direction === ScoringDirection.High ? curved : 1 - curved;
+	const directed = direction === ScoringDirection.High ? curved : 1 - curved;
 
 	return clamp01(directed);
 };

@@ -2,24 +2,34 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../entities/player/player";
 import { afterSellPieceEvent } from "../entities/player/events";
+import { PlayerStartListening } from "../entities/player/player";
+import {
+	removeBenchPieceCommand,
+	removeBoardPieceCommand,
+} from "../entities/player/state/board";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { getPiecesForStage } from "../game/evolution";
-import { removeBenchPieceCommand, removeBoardPieceCommand } from "../entities/player/state/board";
 
 export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;
 export const sellPiecePlayerAction = createAction<{ pieceId: string }>(
 	"sellPiecePlayerAction"
 );
 
-export const setupSellPieceListener = (startListening: PlayerStartListening) => {
+export const setupSellPieceListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: sellPiecePlayerAction,
 		effect: async ({ payload: { pieceId } }, api) => {
-			const { board, bench, gamemode: { pieceRegistry } } = api.player;
+			const {
+				board,
+				bench,
+				gamemode: { pieceRegistry },
+			} = api.player;
 
-			const ownsPiece = board.containsPiece(pieceId) || bench.containsPiece(pieceId);
+			const ownsPiece =
+				board.containsPiece(pieceId) || bench.containsPiece(pieceId);
 
 			if (!ownsPiece) {
 				return;

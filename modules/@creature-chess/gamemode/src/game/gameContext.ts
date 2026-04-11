@@ -40,7 +40,10 @@ type Callbacks = {
 	onMatchEnd?: () => void;
 };
 
-export const runGame = async (context: GameContext, callbacks: Callbacks = {}) => {
+export const runGame = async (
+	context: GameContext,
+	callbacks: Callbacks = {}
+) => {
 	const { gamemode, players, logger } = context;
 
 	logger.info(

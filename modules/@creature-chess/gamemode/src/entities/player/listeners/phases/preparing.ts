@@ -1,6 +1,4 @@
-import {
-	playerRunPreparingPhaseEvent,
-} from "../../../../game/events";
+import { playerRunPreparingPhaseEvent } from "../../../../game/events";
 import { afterRerollCardsEvent } from "../../events";
 import { PlayerStartListening } from "../../player";
 import { PlayerState } from "../../state";
@@ -15,7 +13,9 @@ import {
 } from "../../state/selectors";
 import { addXpCommand } from "../xp";
 
-export const setupPreparingPhaseListener = (startListening: PlayerStartListening) => {
+export const setupPreparingPhaseListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: playerRunPreparingPhaseEvent,
 		effect: async (_action, api) => {
@@ -23,7 +23,8 @@ export const setupPreparingPhaseListener = (startListening: PlayerStartListening
 				return;
 			}
 
-			const matchRewards = (api.getState() as PlayerState).playerInfo.matchRewards;
+			const matchRewards = (api.getState() as PlayerState).playerInfo
+				.matchRewards;
 
 			if (matchRewards) {
 				const currentMoney = getPlayerMoney(api.getState());

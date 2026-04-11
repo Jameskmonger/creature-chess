@@ -2,7 +2,7 @@ import React from "react";
 
 import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	chip: {
 		"background": "#8fa3bd",
 		"padding": "4px 8px",

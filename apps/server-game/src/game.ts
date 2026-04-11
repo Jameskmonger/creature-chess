@@ -1,10 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-import {
-	Gamemode,
-	PlayerCommands,
-	Player,
-} from "@creature-chess/gamemode";
+import { Gamemode, PlayerCommands, Player } from "@creature-chess/gamemode";
 import { GameFinishEvent } from "@creature-chess/gamemode";
 import { PlayerStatus } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
@@ -133,7 +129,10 @@ export class Game {
 
 		existing.networkingTeardown?.();
 
-		const { teardown } = this.runPlayerNetworking(entity, socket as unknown as GameSocket);
+		const { teardown } = this.runPlayerNetworking(
+			entity,
+			socket as unknown as GameSocket
+		);
 		existing.networkingTeardown = teardown;
 	}
 
@@ -156,7 +155,10 @@ export class Game {
 
 		this.initialisePlayer(entity);
 
-		const { teardown } = this.runPlayerNetworking(entity, socket as unknown as GameSocket);
+		const { teardown } = this.runPlayerNetworking(
+			entity,
+			socket as unknown as GameSocket
+		);
 
 		this.members.push({
 			type: "PLAYER",
@@ -210,10 +212,7 @@ export class Game {
 		);
 	}
 
-	private runPlayerNetworking(
-		entity: Player,
-		socket: GameSocket
-	) {
+	private runPlayerNetworking(entity: Player, socket: GameSocket) {
 		return playerNetworking(
 			entity,
 			socket,

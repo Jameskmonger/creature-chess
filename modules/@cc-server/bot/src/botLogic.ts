@@ -1,10 +1,6 @@
 import delay from "delay";
 
-import {
-	Player,
-	PlayerEvents,
-	GameEvents,
-} from "@creature-chess/gamemode";
+import { Player, PlayerEvents, GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import { BotPersonality } from "@cc-server/data";

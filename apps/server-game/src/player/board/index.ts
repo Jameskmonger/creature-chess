@@ -9,9 +9,6 @@ import {
 	removeBenchPiecesCommand,
 	removeBoardPiecesCommand,
 } from "@creature-chess/gamemode";
-import { serialiseBoard } from "@creature-chess/networking";
-
-import { GameSocket } from "../socket";
 import {
 	addBenchPieceCommand,
 	addBoardPieceCommand,
@@ -22,6 +19,9 @@ import {
 	swapBenchPiecesCommand,
 	swapBoardPiecesCommand,
 } from "@creature-chess/gamemode";
+import { serialiseBoard } from "@creature-chess/networking";
+
+import { GameSocket } from "../socket";
 
 const BOARD_CHANGE_ACTIONS = new Set([
 	addBoardPieceCommand.type,
@@ -42,9 +42,13 @@ const BENCH_CHANGE_ACTIONS = new Set([
 const setupSpectateListeners = (
 	targetEntity: Player,
 	localPlayerId: string,
-	socket: GameSocket,
+	socket: GameSocket
 ) => {
-	const { board, bench, gamemode: { pieceRegistry } } = targetEntity;
+	const {
+		board,
+		bench,
+		gamemode: { pieceRegistry },
+	} = targetEntity;
 
 	// Send current board and bench state immediately so the client
 	// doesn't show stale data from a previous spectating target.
@@ -76,12 +80,18 @@ const setupSpectateListeners = (
 					const boardData = currentMatch.getBoardForPlayer(localPlayerId);
 					socket.emit("matchBoardUpdate", {
 						turn: null,
-						board: serialiseBoard(boardData.board, pieceRegistry, boardData.isHome),
+						board: serialiseBoard(
+							boardData.board,
+							pieceRegistry,
+							boardData.isHome
+						),
 					});
 				}
 
 				// Wait for finish match
-				await api.take((a) => a.type === PlayerEvents.playerFinishMatchEvent.type);
+				await api.take(
+					(a) => a.type === PlayerEvents.playerFinishMatchEvent.type
+				);
 			},
 		})
 	);
@@ -128,7 +138,9 @@ export const setupPlayerBoard = (entity: Player, socket: GameSocket) => {
 	const task = entity.runEffect(async () => {
 		await delay(200);
 
-		const spectatingId = entity.select((state: PlayerState) => state.spectating.id);
+		const spectatingId = entity.select(
+			(state: PlayerState) => state.spectating.id
+		);
 		const target = spectatingId
 			? entity.gamemode.getPlayerById(spectatingId) || entity
 			: entity;

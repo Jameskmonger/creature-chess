@@ -3,9 +3,10 @@ import React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
+import { packPosition } from "@creature-chess/board";
+
 import { useTileBackgroundRenderer } from "../context";
 import { ClickBoardTileEvent } from "../events";
-import { packPosition } from "@creature-chess/board";
 
 type TileProps = {
 	x: number;

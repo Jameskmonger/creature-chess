@@ -1,20 +1,23 @@
 import { Card, PieceModel } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../../entities/player/player";
-import { PlayerState } from "../../entities/player/state";
+import { PlayerCommands } from "../../entities/player";
 import {
 	playerDeathEvent,
 	afterRerollCardsEvent,
 	afterSellPieceEvent,
 } from "../../entities/player/events";
+import { PlayerStartListening } from "../../entities/player/player";
+import { PlayerState } from "../../entities/player/state";
+import {
+	clearBenchCommand,
+	clearBoardCommand,
+} from "../../entities/player/state/board";
 import { updateCardsCommand } from "../../entities/player/state/cardShop";
 import {
 	getPlayerCards,
 	isPlayerAlive,
 } from "../../entities/player/state/selectors";
-import { PlayerCommands } from "../../entities/player";
 import { CardDeck } from "../cardDeck";
-import { clearBenchCommand, clearBoardCommand } from "../../entities/player/state/board";
 
 export const setupPlayerGameDeckListeners = (
 	startListening: PlayerStartListening,
@@ -40,14 +43,15 @@ export const setupPlayerGameDeckListeners = (
 	startListening({
 		actionCreator: playerDeathEvent,
 		effect: async (_action, api) => {
-			const { board, bench, gamemode: { pieceRegistry } } = api.player;
+			const {
+				board,
+				bench,
+				gamemode: { pieceRegistry },
+			} = api.player;
 
 			const cards = getPlayerCards(api.getState());
 
-			const allPieces = [
-				...board.getAllPieces(),
-				...bench.getAllPieces(),
-			]
+			const allPieces = [...board.getAllPieces(), ...bench.getAllPieces()]
 				.map((p) => pieceRegistry.getPieceById(p.id))
 				.filter((p): p is PieceModel => p !== null);
 
@@ -70,7 +74,11 @@ export const setupPlayerGameDeckListeners = (
 	startListening({
 		actionCreator: afterRerollCardsEvent,
 		effect: async (_action, api) => {
-			const { board, bench, gamemode: { pieceRegistry } } = api.player;
+			const {
+				board,
+				bench,
+				gamemode: { pieceRegistry },
+			} = api.player;
 
 			const state = api.getState() as PlayerState;
 
@@ -83,10 +91,7 @@ export const setupPlayerGameDeckListeners = (
 				playerInfo: { level },
 			} = state;
 
-			const allPieces = [
-				...board.getAllPieces(),
-				...bench.getAllPieces(),
-			]
+			const allPieces = [...board.getAllPieces(), ...bench.getAllPieces()]
 				.map((p) => pieceRegistry.getPieceById(p.id))
 				.filter((p): p is PieceModel => p !== null);
 

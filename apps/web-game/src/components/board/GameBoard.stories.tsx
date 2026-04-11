@@ -1,9 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { GameBoard } from "./GameBoard";
-import { SubscribableBoard } from "@creature-chess/board";
-import { MatchPiece, PieceContextProvider } from "../game/board/piece";
 import React from "react";
+
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { SubscribableBoard } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+
+import { MatchPiece, PieceContextProvider } from "../game/board/piece";
+import { GameBoard } from "./GameBoard";
 
 const meta: Meta<typeof GameBoard> = {
 	title: "@creature-chess / components / board / GameBoard",
@@ -28,10 +31,10 @@ setInterval(() => {
 }, 1000);
 
 export const Default: Story = {
-	render: (args) => (<>
-		<style>
-			{
-				`
+	render: (args) => (
+		<>
+			<style>
+				{`
 				.odd-tile {
 					background: #38b764;
 				}
@@ -43,12 +46,12 @@ export const Default: Story = {
 				.board {
 					border: 5px solid black;
 				}
-				`
-			}
-		</style>
+				`}
+			</style>
 
-		<GameBoard {...args} />
-	</>),
+			<GameBoard {...args} />
+		</>
+	),
 	args: {
 		board,
 		renderPiece: (piece: PieceModel): React.ReactNode => (
@@ -56,7 +59,8 @@ export const Default: Story = {
 				<MatchPiece />
 			</PieceContextProvider>
 		),
-		getTileClassName: (x: number, y: number) => (x + y) % 2 === 0 ? "even-tile" : "odd-tile",
+		getTileClassName: (x: number, y: number) =>
+			(x + y) % 2 === 0 ? "even-tile" : "odd-tile",
 		boardClassName: "board",
 	},
 };

@@ -1,7 +1,14 @@
 import * as React from "react";
+
+import {
+	faColumns,
+	faQuestionCircle,
+	faShoppingCart,
+	faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { NavBar } from "./NavBar";
-import { faColumns, faQuestionCircle, faShoppingCart, faUsers } from "@fortawesome/free-solid-svg-icons";
 
 const meta: Meta<typeof NavBar> = {
 	title: "@creature-chess / ui / navbar / NavBar",
@@ -30,7 +37,7 @@ export const Default: Story = {
 			{
 				key: "settings",
 				icon: faQuestionCircle,
-			}
+			},
 		],
 		active: "stats",
 	},

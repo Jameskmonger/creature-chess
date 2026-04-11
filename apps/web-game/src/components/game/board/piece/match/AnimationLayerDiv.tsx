@@ -45,7 +45,11 @@ export function AnimationLayerDiv({
 	return (
 		<div
 			className={layer?.className}
-			style={layer?.cssVariables ? getCssVariableStyle(layer.cssVariables) : BASE_STYLE}
+			style={
+				layer?.cssVariables
+					? getCssVariableStyle(layer.cssVariables)
+					: BASE_STYLE
+			}
 			onAnimationEnd={layer ? handleAnimationEnd : undefined}
 		>
 			{children}

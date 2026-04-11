@@ -1,5 +1,7 @@
 import { writeFile } from "fs";
+
 import { StreakType } from "@creature-chess/models";
+
 import { logger } from "../log";
 
 type PlayerAction = {
@@ -52,10 +54,13 @@ class MetricCollector {
 		setInterval(() => this.flush(), 60000);
 	}
 
-	public recordAction(action: PlayerAction["action"], state: PlayerAction["state"]) {
+	public recordAction(
+		action: PlayerAction["action"],
+		state: PlayerAction["state"]
+	) {
 		this.actions.push({
 			action,
-			state
+			state,
 		});
 	}
 
@@ -71,7 +76,9 @@ class MetricCollector {
 			JSON.stringify(this.actions),
 			() => {
 				this.actions = [];
-				logger.info("Flushed metrics", { file: `/var/creature-chess/metrics/${now}.json` });
+				logger.info("Flushed metrics", {
+					file: `/var/creature-chess/metrics/${now}.json`,
+				});
 			}
 		);
 	}

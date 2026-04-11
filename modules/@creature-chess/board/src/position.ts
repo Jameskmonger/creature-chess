@@ -1,8 +1,7 @@
 /* eslint-disable no-bitwise */
 declare const PackedPositionBrand: unique symbol;
 
-export type PackedPosition =
-	| number & { readonly [PackedPositionBrand]: true };
+export type PackedPosition = number & { readonly [PackedPositionBrand]: true };
 
 const X_BITS = 4;
 const Y_MASK = (1 << X_BITS) - 1;
@@ -19,6 +18,8 @@ export function unpackY(position: PackedPosition): number {
 	return position & Y_MASK;
 }
 
-export function unpackPosition(position: PackedPosition): readonly [number, number] {
+export function unpackPosition(
+	position: PackedPosition
+): readonly [number, number] {
 	return [unpackX(position), unpackY(position)];
 }

@@ -16,8 +16,9 @@ const createTestStore = () => {
 			cardShop: cardShopReducer,
 		},
 		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware({ thunk: false, serializableCheck: false })
-				.prepend(listenerMiddleware.middleware),
+			getDefaultMiddleware({ thunk: false, serializableCheck: false }).prepend(
+				listenerMiddleware.middleware
+			),
 	});
 };
 

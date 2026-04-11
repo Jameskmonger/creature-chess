@@ -1,17 +1,17 @@
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
+import { Board } from "@creature-chess/board";
 import {
 	PlayerState,
 	PlayerStateSelectors,
 	PlayerActions,
 } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 // Creates a "sell piece" action for any piece on the board OR bench.
 //

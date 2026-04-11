@@ -1,6 +1,7 @@
 import React, { createContext, useContext } from "react";
 
 import { PackedPosition, SubscribableBoard } from "@creature-chess/board";
+
 import { useBoardSubscription } from "./useBoard";
 
 export type BoardContextValue = {

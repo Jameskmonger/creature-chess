@@ -49,7 +49,7 @@ describe("connectionRef", () => {
 			useLobbyConnection();
 
 			const listener = jest.fn();
-			const unsub = subscribeFn!((listener));
+			const unsub = subscribeFn!(listener);
 
 			setLobbyConnectionRef({ destroy: jest.fn() } as any);
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -72,7 +72,7 @@ describe("connectionRef", () => {
 			useGameConnectionRef();
 
 			const listener = jest.fn();
-			const unsub = subscribeFn!((listener));
+			const unsub = subscribeFn!(listener);
 
 			setGameConnectionRef({ sendFinishMatch: jest.fn() } as any);
 			expect(listener).toHaveBeenCalledTimes(1);

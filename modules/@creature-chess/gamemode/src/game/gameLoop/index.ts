@@ -8,7 +8,10 @@ type Callbacks = {
 	onMatchEnd?: () => void;
 };
 
-export const gameLoop = async (context: GameContext, callbacks: Callbacks = {}) => {
+export const gameLoop = async (
+	context: GameContext,
+	callbacks: Callbacks = {}
+) => {
 	const { gamemode, players, settings } = context;
 
 	let currentLastPosition = players.getAll().length;

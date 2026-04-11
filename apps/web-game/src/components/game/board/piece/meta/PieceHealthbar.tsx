@@ -56,7 +56,7 @@ const useStyles = createUseStyles<string, HealthbarProps>({
 		containerType: "size",
 		width: "100%",
 		height: "100%",
-	}
+	},
 });
 
 const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
@@ -64,14 +64,14 @@ const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
 
 	return (
 		<div className={classes.container}>
-		<ProgressBar
+			<ProgressBar
 				className={classes.bar}
-			fillClassName={classes.fill}
-			current={props.current}
-			max={props.max}
-		>
-			{props.children}
-		</ProgressBar>
+				fillClassName={classes.fill}
+				current={props.current}
+				max={props.max}
+			>
+				{props.children}
+			</ProgressBar>
 		</div>
 	);
 };

@@ -6,5 +6,5 @@ export const rotateGridPosition = (
 ): PackedPosition =>
 	packPosition(
 		gridSize.width - 1 - unpackX(position),
-		gridSize.height - 1 - unpackY(position),
+		gridSize.height - 1 - unpackY(position)
 	);

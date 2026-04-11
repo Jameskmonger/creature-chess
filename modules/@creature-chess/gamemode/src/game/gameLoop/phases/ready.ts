@@ -6,14 +6,17 @@ import {
 	playerBeforeReadyPhaseEvent,
 	playerRunReadyPhaseEvent,
 } from "../../events";
-import { Match } from "../../match";
 import { GameContext } from "../../gameContext";
+import { Match } from "../../match";
 
 type Callbacks = {
 	onTurnComplete?: (timeMs: number) => void;
 };
 
-export const runReadyPhase = async (context: GameContext, callbacks: Callbacks = {}) => {
+export const runReadyPhase = async (
+	context: GameContext,
+	callbacks: Callbacks = {}
+) => {
 	const { gamemode, players, getMatchups, logger, settings } = context;
 
 	// todo turn this into something that waits for all players

@@ -26,5 +26,4 @@ export class EventBus<TEventMap extends Record<string, any>> {
 			handler(data);
 		}
 	}
-
 }

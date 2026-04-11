@@ -12,12 +12,12 @@ import { TabMenu } from "../../../ui/TabMenu";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
+import { useGameBoards } from "../../board/state";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
 import { PlayerGameProfile } from "../../profile";
 import { Settings } from "../../settings";
-import { useGameBoards } from "../../board/state";
 
 const useStyles = createUseStyles({
 	helpContainer: {
@@ -72,10 +72,14 @@ const DesktopGame: React.FunctionComponent = () => {
 
 	const { board, pieceRegistry } = useGameBoards();
 
-	const ownedPieces = React.useMemo(() =>
-		board.getAllPieces()
-			.filter((p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId)
-			.map((p) => pieceRegistry.getPieceById(p.id)!),
+	const ownedPieces = React.useMemo(
+		() =>
+			board
+				.getAllPieces()
+				.filter(
+					(p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId
+				)
+				.map((p) => pieceRegistry.getPieceById(p.id)!),
 		[board, pieceRegistry, localPlayerId]
 	);
 
@@ -91,7 +95,7 @@ const DesktopGame: React.FunctionComponent = () => {
 			},
 			{
 				label: "Stats",
-				content: <span>coming back soon</span>
+				content: <span>coming back soon</span>,
 			},
 			{
 				label: "Help",

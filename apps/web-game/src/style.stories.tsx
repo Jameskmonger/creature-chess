@@ -1,5 +1,7 @@
 import React from "react";
+
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { createUseThemeStyles, DEFAULT_THEME, Theme } from "./useStyles";
 
 const meta: Meta = {
@@ -10,7 +12,7 @@ export default meta;
 
 type Story = StoryObj;
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	container: {
 		padding: "24px",
 		maxWidth: "1200px",
@@ -85,21 +87,21 @@ function ColorSwatch({ name, value }: { name: string; value: string }) {
 				}}
 			/>
 			<div>
-				<div className={classes.swatchName}>
-					{name}
-				</div>
+				<div className={classes.swatchName}>{name}</div>
 			</div>
 		</div>
 	);
-};
+}
 
 function PaletteGroup({ group }: { group: keyof Theme["palette"] }) {
 	const classes = useStyles();
 
-	const colors = Object.entries(DEFAULT_THEME.palette[group]).map(([name, value]) => ({
-		name: `${group}.${name}`,
-		value,
-	}));
+	const colors = Object.entries(DEFAULT_THEME.palette[group]).map(
+		([name, value]) => ({
+			name: `${group}.${name}`,
+			value,
+		})
+	);
 
 	return (
 		<div className={classes.colorGrid}>
@@ -116,12 +118,13 @@ function FontSample({ fontFamily }: { fontFamily: keyof Theme["typography"] }) {
 
 	return (
 		<div>
-			<div className={classes.typographyExample} style={{ fontFamily: fontValue }}>
+			<div
+				className={classes.typographyExample}
+				style={{ fontFamily: fontValue }}
+			>
 				The quick brown fox jumps over the lazy dog.
 			</div>
-			<div className={classes.typographyLabel}>
-				typography.{fontFamily}
-			</div>
+			<div className={classes.typographyLabel}>typography.{fontFamily}</div>
 		</div>
 	);
 }
@@ -130,9 +133,7 @@ const ColorPaletteDemo: React.FC = () => {
 	const classes = useStyles();
 	return (
 		<div className={classes.container}>
-			<h1 className={classes.title}>
-				Theme
-			</h1>
+			<h1 className={classes.title}>Theme</h1>
 
 			<div>
 				<h3 className={classes.subtitle}>Palette</h3>
@@ -142,7 +143,10 @@ const ColorPaletteDemo: React.FC = () => {
 					<PaletteGroup group="secondary" />
 					<PaletteGroup group="accent" />
 					<PaletteGroup group="dark" />
-					<ColorSwatch name="background" value={DEFAULT_THEME.palette.background} />
+					<ColorSwatch
+						name="background"
+						value={DEFAULT_THEME.palette.background}
+					/>
 				</div>
 			</div>
 
@@ -153,7 +157,7 @@ const ColorPaletteDemo: React.FC = () => {
 					<FontSample fontFamily="accent" />
 				</div>
 			</div>
-		</div >
+		</div>
 	);
 };
 

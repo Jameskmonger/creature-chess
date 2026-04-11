@@ -2,16 +2,17 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { Button } from "~/components/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
+
 import { getPiecesForStage } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
-import { COLOR_READY_BUTTON_TEXT } from "./colors";
-import { Button } from "~/components/ui";
 import { useGameBoards } from "../../state";
+import { COLOR_READY_BUTTON_TEXT } from "./colors";
 
 const useStyles = createUseStyles({
 	balanceIcon: {

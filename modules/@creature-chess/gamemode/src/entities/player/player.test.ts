@@ -153,7 +153,9 @@ describe("createPlayer", () => {
 
 		test("returns the value produced by the selector", () => {
 			const player = createSubject();
-			expect(player.select((s) => s.playerInfo.status)).toBe(PlayerStatus.CONNECTED);
+			expect(player.select((s) => s.playerInfo.status)).toBe(
+				PlayerStatus.CONNECTED
+			);
 			expect(player.select((s) => s.playerInfo.ready)).toBe(false);
 			expect(player.select(() => 42)).toBe(42);
 		});

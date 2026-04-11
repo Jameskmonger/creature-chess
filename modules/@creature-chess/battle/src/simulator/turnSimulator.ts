@@ -1,10 +1,10 @@
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { getStats } from "../utils/getStats";
 import { simulatePiece } from "./piece/simulate";
 import { Stores } from "./types";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 export const simulateTurn = (
 	currentTurn: number,
@@ -12,8 +12,9 @@ export const simulateTurn = (
 	pieceRegistry: PieceRegistry,
 	stores: Stores
 ) => {
-	const pieces = board.getAllPieces()
-		.map(p => pieceRegistry.getPieceById(p.id))
+	const pieces = board
+		.getAllPieces()
+		.map((p) => pieceRegistry.getPieceById(p.id))
 		.filter((p): p is PieceModel => p !== null);
 
 	pieces.sort((aPiece, bPiece) => {
@@ -55,11 +56,5 @@ const takePieceTurn = (
 		return;
 	}
 
-	simulatePiece(
-		currentTurn,
-		board,
-		pieceRegistry,
-		pieceId,
-		stores
-	);
+	simulatePiece(currentTurn, board, pieceRegistry, pieceId, stores);
 };

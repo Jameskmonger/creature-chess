@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { Button } from "~/components/ui";
 import { AppState } from "~/store";
 import { getPlayerById } from "~/store/selectors";
-
-import { BoardOverlay } from "./boardOverlay";
 import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+import { BoardOverlay } from "./boardOverlay";
+
+const useStyles = createUseThemeStyles((theme) => ({
 	root: {
 		"display": "flex",
 		"flexDirection": "column",

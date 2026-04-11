@@ -1,4 +1,6 @@
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { Stores } from "../types";
 import { doActions } from "./doActions";
@@ -6,8 +8,6 @@ import { doAttack } from "./state/attack";
 import { doDying } from "./state/dying";
 import { PieceState, StateHandler } from "./state/types";
 import { doWander } from "./state/wander";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 const DYING_DURATION = 10;
 
@@ -83,13 +83,6 @@ export function simulatePiece(
 
 	// process any actions
 	if (actions) {
-		doActions(
-			currentTurn,
-			board,
-			pieceRegistry,
-			piece.id,
-			actions,
-			stores
-		);
+		doActions(currentTurn, board, pieceRegistry, piece.id, actions, stores);
 	}
 }

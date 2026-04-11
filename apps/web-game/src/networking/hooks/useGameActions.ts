@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+
 import { useDispatch } from "react-redux";
 
 import { PlayerActions, type PlayerAction } from "@creature-chess/gamemode";
@@ -15,7 +16,7 @@ export function useGameActions() {
 			dispatch(action);
 			gameConnection?.sendPlayerAction(action);
 		},
-		[dispatch, gameConnection],
+		[dispatch, gameConnection]
 	);
 
 	return useMemo(
@@ -33,8 +34,10 @@ export function useGameActions() {
 			spectate: (playerId: string | null) =>
 				sendAction(PlayerActions.spectatePlayerAction({ playerId })),
 			quickChat: (sendingPlayerId: string | null, chatValue: QuickChatOption) =>
-				sendAction(PlayerActions.quickChatPlayerAction({ sendingPlayerId, chatValue })),
+				sendAction(
+					PlayerActions.quickChatPlayerAction({ sendingPlayerId, chatValue })
+				),
 		}),
-		[sendAction],
+		[sendAction]
 	);
 }

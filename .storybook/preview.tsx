@@ -3,9 +3,9 @@ import React from "react";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import type { Preview } from "@storybook/react";
 import { DecoratorFunction } from "@storybook/types";
+import { ThemeProvider } from "react-jss";
 
 import webGamePreview from "../apps/web-game/.storybook/preview";
-import { ThemeProvider } from "react-jss";
 import { DEFAULT_THEME } from "../apps/web-game/src/useStyles";
 
 const viewports = Object.entries(INITIAL_VIEWPORTS)
@@ -90,8 +90,12 @@ const preview: Preview = {
 			return <Story {...context} />; // ✅ Correctly render Story as a component
 		},
 		function withDefaultTheme(Story) {
-			return <ThemeProvider theme={DEFAULT_THEME}><Story /></ThemeProvider>;
-		}
+			return (
+				<ThemeProvider theme={DEFAULT_THEME}>
+					<Story />
+				</ThemeProvider>
+			);
+		},
 	],
 };
 

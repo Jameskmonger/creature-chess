@@ -1,13 +1,14 @@
 import React from "react";
 
+import { createUseThemeStyles } from "~/useStyles";
+
 import { getDefinitionById } from "@creature-chess/gamemode";
 
 import { TraitIcon } from "../ui/TraitIcon";
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { useSelectedPiece } from "./hooks/useSelectedPiece";
-import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	root: {
 		border: "1px solid #fff",
 		borderRadius: "4px",

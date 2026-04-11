@@ -6,6 +6,7 @@ import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PlayerAvatar, Title, PlayerHealthbar } from "~/components/ui/player";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 import { AppState } from "~/store";
+import { createUseThemeStyles } from "~/useStyles";
 
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
 
@@ -14,9 +15,8 @@ import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
-import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	root: {
 		"display": "flex",
 		"flexDirection": "column",
@@ -31,7 +31,7 @@ const useStyles = createUseThemeStyles(theme => ({
 		"display": "none",
 		"padding": "0px 20px",
 		"@media (orientation: portrait) and (max-width: 431px)": {
-			display: "inline"
+			display: "inline",
 		},
 	},
 	wrapper: {
@@ -52,7 +52,7 @@ const useStyles = createUseThemeStyles(theme => ({
 
 		"@media (orientation: portrait) and (max-width: 430px)": {
 			padding: "2px 0",
-			display: "none"
+			display: "none",
 		},
 
 		"& > h2": {
@@ -287,7 +287,7 @@ export function MatchRewardsOverlay() {
 						)}
 					</div>
 				</div>
-				{!justDied &&<QuickChatButtonArray />}
+				{!justDied && <QuickChatButtonArray />}
 			</div>
 		</BoardOverlay>
 	);

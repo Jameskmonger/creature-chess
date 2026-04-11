@@ -1,10 +1,10 @@
 /// <reference path="../types/javascript-astar.d.ts" />
 import { astar, Graph } from "javascript-astar";
 
+import { Board, BoardSize } from "@creature-chess/board";
 import { TileCoordinates, CreatureStats } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./targeting/utils/getTargetAttackPositions";
-import { Board, BoardSize } from "@creature-chess/board";
 
 const createEmptyWeightGrid = ({
 	width,
@@ -157,9 +157,8 @@ export class Pathfinder {
 	private setWeights(board: Board) {
 		for (let x = 0; x < this.size.width; x++) {
 			for (let y = 0; y < this.size.height; y++) {
-				this.graph.grid[x][y].weight = board.getPieceIdAtPosition(x, y) !== null
-					? 0
-					: 1;
+				this.graph.grid[x][y].weight =
+					board.getPieceIdAtPosition(x, y) !== null ? 0 : 1;
 			}
 		}
 	}

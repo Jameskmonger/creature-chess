@@ -1,12 +1,9 @@
 import { EventEmitter } from "events";
 
-import {
-	PlayerStatus,
-	PlayerListPlayer,
-} from "@creature-chess/models";
+import { PlayerStatus, PlayerListPlayer } from "@creature-chess/models";
 
-import { Player } from "../entities/player/player";
 import { PlayerStateSelectors } from "../entities/player";
+import { Player } from "../entities/player/player";
 import { listenForPropertyUpdates } from "./playerPropertyUpdates";
 
 const debounce = (func: () => void, wait: number) => {

@@ -4,13 +4,13 @@ import { v4 as uuid } from "uuid";
 import { Logger } from "winston";
 
 import { BattleRunner } from "@creature-chess/battle";
+import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
-
-import { Player } from "../entities/player/player";
-import { playerFinishMatchEvent } from "../entities/player/events";
-import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils";
+
+import { playerFinishMatchEvent } from "../entities/player/events";
+import { Player } from "../entities/player/player";
 
 export class Match {
 	private runner: BattleRunner;
@@ -30,11 +30,7 @@ export class Match {
 		settings: GamemodeSettings,
 		private onTurnComplete?: (timeMs: number) => void
 	) {
-		this.board = mergeBoards(
-			this.boardId,
-			home.board,
-			away.board,
-		);
+		this.board = mergeBoards(this.boardId, home.board, away.board);
 
 		for (const piece of this.board.getAllPieces()) {
 			const pieceModel = this.pieceRegistry.getPieceById(piece.id);
@@ -115,10 +111,11 @@ export class Match {
 
 		await delay(500);
 
-		const survivingPieces = this.board.getAllPieces()
-			.map(p => this.pieceRegistry.getPieceById(p.id))
+		const survivingPieces = this.board
+			.getAllPieces()
+			.map((p) => this.pieceRegistry.getPieceById(p.id))
 			.filter((p): p is PieceModel => p !== null)
-			.filter(p => p.currentHealth > 0);
+			.filter((p) => p.currentHealth > 0);
 
 		const surviving = {
 			home: survivingPieces.filter((p) => p.ownerId === this.home.id),

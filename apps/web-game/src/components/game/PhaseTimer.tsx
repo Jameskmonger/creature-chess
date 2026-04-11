@@ -10,9 +10,11 @@ import { Countdown } from "../ui/countdown";
 
 // todo wire this up to the gamemode settings instead of hardcoding the phase lengths
 const PHASE_LENGTHS_SECONDS: Record<GamePhase, number> = {
-	[GamePhase.PREPARING]: GamemodeSettingsPresets.default.preparingPhaseLengthMs / 1000,
+	[GamePhase.PREPARING]:
+		GamemodeSettingsPresets.default.preparingPhaseLengthMs / 1000,
 	[GamePhase.READY]: GamemodeSettingsPresets.default.readyPhaseLengthMs / 1000,
-	[GamePhase.PLAYING]: GamemodeSettingsPresets.default.playingPhaseMaxLengthMs / 1000,
+	[GamePhase.PLAYING]:
+		GamemodeSettingsPresets.default.playingPhaseMaxLengthMs / 1000,
 };
 
 const renderPhaseInfoCountdown = (secondsRemaining: number) => (

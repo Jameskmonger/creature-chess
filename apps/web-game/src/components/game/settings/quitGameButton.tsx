@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { useGameActions } from "~/networking";
 import { Button } from "~/components/ui";
+import { useGameActions } from "~/networking";
 
 export function QuitGameButton() {
 	const gameActions = useGameActions();
@@ -16,11 +16,7 @@ export function QuitGameButton() {
 	}, [areYouSure, gameActions]);
 
 	return (
-		<Button
-			color="primary"
-			size="medium"
-			onClick={onClick}
-		>
+		<Button color="primary" size="medium" onClick={onClick}>
 			{areYouSure ? "Click again to quit" : "Quit Game"}
 		</Button>
 	);

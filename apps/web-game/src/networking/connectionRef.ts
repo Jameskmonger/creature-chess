@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 
-import { LobbyConnection } from "./LobbyConnection";
 import { GameConnection } from "./GameConnection";
+import { LobbyConnection } from "./LobbyConnection";
 
 let lobbyConnection: LobbyConnection | null = null;
 let gameConnection: GameConnection | null = null;

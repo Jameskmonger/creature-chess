@@ -1,5 +1,5 @@
-import { PlayerPieceLocation } from "@creature-chess/models";
 import { Board, packPosition } from "@creature-chess/board";
+import { PlayerPieceLocation } from "@creature-chess/models";
 
 export const getLocationForPiece = (
 	pieceId: string,

@@ -1,11 +1,8 @@
 import { PlayerStatus } from "@creature-chess/models";
 import { StreakType } from "@creature-chess/models";
 
+import { playerDeathEvent, playerFinishMatchEvent } from "../events";
 import { PlayerListenerApi, PlayerStartListening } from "../player";
-import {
-	playerDeathEvent,
-	playerFinishMatchEvent,
-} from "../events";
 import { playerInfoCommands } from "../state/commands";
 import {
 	getPlayerHealth,
@@ -58,10 +55,15 @@ const updateStreak = (api: PlayerListenerApi, win: boolean) => {
 	);
 };
 
-export const setupMatchRewardsListener = (startListening: PlayerStartListening) => {
+export const setupMatchRewardsListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: playerFinishMatchEvent,
-		effect: async ({ payload: { homeScore, awayScore, isHomePlayer } }, api) => {
+		effect: async (
+			{ payload: { homeScore, awayScore, isHomePlayer } },
+			api
+		) => {
 			api.cancelActiveListeners();
 
 			const { settings } = api.player;

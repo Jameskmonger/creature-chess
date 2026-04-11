@@ -1,7 +1,7 @@
+import React, { createContext, useRef } from "react";
 
 import { SubscribableBoard } from "@creature-chess/board";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
-import React, { createContext, useRef } from "react";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { PieceAnimationEventStore } from "./piece/match/animationEventStore";
@@ -24,7 +24,7 @@ export class GameBoardState {
 		);
 		this.matchBoard = new SubscribableBoard(
 			GamemodeSettingsPresets["default"].boardWidth,
-			GamemodeSettingsPresets["default"].boardHalfHeight * 2,
+			GamemodeSettingsPresets["default"].boardHalfHeight * 2
 		);
 		this.pieceRegistry = new PieceRegistry();
 		this.animationEventStore = new PieceAnimationEventStore();
@@ -51,9 +51,7 @@ export function useGameBoards() {
 	const context = React.useContext(GameBoardContext);
 
 	if (!context) {
-		throw new Error(
-			"useGameBoards must be used within a GameBoardProvider"
-		);
+		throw new Error("useGameBoards must be used within a GameBoardProvider");
 	}
 
 	return context;

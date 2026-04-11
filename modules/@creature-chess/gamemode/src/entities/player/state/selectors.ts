@@ -1,10 +1,11 @@
+import { Board } from "@creature-chess/board";
 import { PlayerStatus } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 
 import { PlayerState } from "..";
-import { GamePhase } from "@creature-chess/models";
-import { Board } from "@creature-chess/board";
 
-export const isPlayerBoardLocked = (state: PlayerState) => state.roundInfo.phase !== GamePhase.PREPARING;
+export const isPlayerBoardLocked = (state: PlayerState) =>
+	state.roundInfo.phase !== GamePhase.PREPARING;
 
 export const getPlayerMoney = (state: PlayerState): number =>
 	state.playerInfo.money;
@@ -32,5 +33,5 @@ export const isPlayerShopLocked = (state: PlayerState): boolean =>
 
 export const getPlayerBelowPieceLimit = (
 	level: number,
-	board: Board,
+	board: Board
 ): boolean => board.pieceCount < level;

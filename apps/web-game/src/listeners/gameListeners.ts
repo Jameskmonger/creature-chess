@@ -1,11 +1,10 @@
+import { getGameConnectionRef } from "~/networking/connectionRef";
 import { AppState } from "~/store";
+import { clearSelectedPiece } from "~/store/game/ui/actions";
 import { ClientStartListening } from "~/store/listenerContext";
 
 import { BattleEvents } from "@creature-chess/battle";
 import { PlayerActions } from "@creature-chess/gamemode";
-
-import { getGameConnectionRef } from "~/networking/connectionRef";
-import { clearSelectedPiece } from "~/store/game/ui/actions";
 
 import { setupClientBattleListeners } from "./battle";
 import { setupClickPieceListener } from "./board/clickPiece";
@@ -26,7 +25,10 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	});
 
 	// Bridge: forward board actions to network
-	for (const actionCreator of [PlayerActions.dropPiecePlayerAction, PlayerActions.swapPiecePlayerAction]) {
+	for (const actionCreator of [
+		PlayerActions.dropPiecePlayerAction,
+		PlayerActions.swapPiecePlayerAction,
+	]) {
 		startListening({
 			actionCreator,
 			effect: async (action) => {
@@ -40,7 +42,8 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	startListening({
 		actionCreator: PlayerActions.sellPiecePlayerAction,
 		effect: async ({ payload: { pieceId } }, api) => {
-			const selectedPieceId = (api.getState() as AppState).game.ui.selectedPieceId;
+			const selectedPieceId = (api.getState() as AppState).game.ui
+				.selectedPieceId;
 
 			if (selectedPieceId === pieceId) {
 				api.dispatch(clearSelectedPiece());

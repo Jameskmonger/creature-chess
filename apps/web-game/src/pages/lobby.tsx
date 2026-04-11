@@ -26,7 +26,7 @@ const countdownRender =
 		);
 	};
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	lobbyInfo: {
 		flex: 1,
 
@@ -49,7 +49,7 @@ const useStyles = createUseThemeStyles(theme => ({
 
 		"& > div": {
 			flex: 1,
-		}
+		},
 	},
 	timeRemainingHighlight: {
 		fontWeight: "700",
@@ -100,10 +100,7 @@ export function LobbyPage() {
 			const player = lobbyInfo.players[i];
 
 			output.push(
-				<div
-					key={player ? player.id : i}
-					className={styles.playerWrapper}
-				>
+				<div key={player ? player.id : i} className={styles.playerWrapper}>
 					<LobbyPlayerBanner player={player ?? null} />
 				</div>
 			);

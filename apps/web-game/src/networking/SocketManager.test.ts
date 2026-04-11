@@ -1,9 +1,17 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
+import { getCookieValue } from "~/utils/getCookieValue";
+
+import { GameConnection } from "./GameConnection";
+import { LobbyConnection } from "./LobbyConnection";
 import { SocketManager } from "./SocketManager";
+import { setLobbyConnectionRef, setGameConnectionRef } from "./connectionRef";
 
 jest.mock("~/store/menu/state", () => ({
 	MenuCommands: {
-		setLoadingMessage: (msg: string) => ({ type: "menu/setLoadingMessage", payload: msg }),
+		setLoadingMessage: (msg: string) => ({
+			type: "menu/setLoadingMessage",
+			payload: msg,
+		}),
 	},
 }));
 jest.mock("~/utils/getCookieValue", () => ({
@@ -34,30 +42,28 @@ jest.mock("socket.io-client", () => ({
 	io: (...args: any[]) => mockIo(...args),
 }));
 
-import { getCookieValue } from "~/utils/getCookieValue";
-import { setLobbyConnectionRef, setGameConnectionRef } from "./connectionRef";
-import { LobbyConnection } from "./LobbyConnection";
-import { GameConnection } from "./GameConnection";
-
 const mockedGetCookie = getCookieValue as jest.Mock;
 
 const createMockSocket = () => {
 	const handlers = new Map<string, Function>();
 	return {
 		on: jest.fn((event: string, handler: Function) => {
- handlers.set(event, handler);
-}),
+			handlers.set(event, handler);
+		}),
 		off: jest.fn(),
 		emit: jest.fn(),
 		disconnect: jest.fn(),
 		io: { on: jest.fn(), off: jest.fn() },
 		_trigger: (event: string, ...args: any[]) => {
- handlers.get(event)?.(...args);
-},
+			handlers.get(event)?.(...args);
+		},
 	};
 };
 
-async function connectManager(manager: SocketManager, mockSocket: ReturnType<typeof createMockSocket>) {
+async function connectManager(
+	manager: SocketManager,
+	mockSocket: ReturnType<typeof createMockSocket>
+) {
 	const connectPromise = manager.connect();
 
 	// Yield to let fetch resolve and connectSocket set up listeners
@@ -142,8 +148,14 @@ describe("SocketManager", () => {
 		it("should listen for lobby and game connections after auth", async () => {
 			await connectManager(manager, mockSocket);
 
-			expect(mockSocket.on).toHaveBeenCalledWith("connected", expect.any(Function));
-			expect(mockSocket.on).toHaveBeenCalledWith("gameConnected", expect.any(Function));
+			expect(mockSocket.on).toHaveBeenCalledWith(
+				"connected",
+				expect.any(Function)
+			);
+			expect(mockSocket.on).toHaveBeenCalledWith(
+				"gameConnected",
+				expect.any(Function)
+			);
 		});
 	});
 
@@ -188,7 +200,8 @@ describe("SocketManager", () => {
 			await connectManager(manager, mockSocket);
 
 			mockSocket._trigger("connected", { players: [] });
-			const lobbyInstance = (LobbyConnection as jest.Mock).mock.results[0].value;
+			const lobbyInstance = (LobbyConnection as jest.Mock).mock.results[0]
+				.value;
 
 			mockSocket._trigger("gameConnected", {
 				players: [],
@@ -215,8 +228,14 @@ describe("SocketManager", () => {
 
 			manager.disconnect();
 
-			expect(mockSocket.off).toHaveBeenCalledWith("connected", expect.any(Function));
-			expect(mockSocket.off).toHaveBeenCalledWith("gameConnected", expect.any(Function));
+			expect(mockSocket.off).toHaveBeenCalledWith(
+				"connected",
+				expect.any(Function)
+			);
+			expect(mockSocket.off).toHaveBeenCalledWith(
+				"gameConnected",
+				expect.any(Function)
+			);
 		});
 
 		it("should destroy active game connection", async () => {

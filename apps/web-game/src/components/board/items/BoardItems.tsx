@@ -1,8 +1,8 @@
 import * as React from "react";
 
+import { useBoardState } from "../context";
 import { BoardItem } from "./BoardItem";
 import { BoardItemRenderFn } from "./renderItem";
-import { useBoardState } from "../context";
 
 type Props = {
 	render: BoardItemRenderFn;

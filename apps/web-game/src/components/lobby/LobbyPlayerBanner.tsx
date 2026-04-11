@@ -1,17 +1,17 @@
 import * as React from "react";
 
 import classNames from "classnames";
+import { createUseThemeStyles } from "~/useStyles";
 
 import { LobbyPlayer } from "@creature-chess/models";
 
 import { PlayerAvatar, Title } from "../ui/player";
-import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	player: LobbyPlayer | null;
 };
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	player: {
 		"padding": "4px 8px",
 
@@ -45,16 +45,16 @@ const useStyles = createUseThemeStyles(theme => ({
 		"height": "16px",
 
 		"@media (orientation: portrait) and (min-width: 321px) and (max-width: 539px)":
-		{
-			width: "24px",
-			height: "24px",
-		},
+			{
+				width: "24px",
+				height: "24px",
+			},
 
 		"@media (orientation: portrait) and (min-width: 540px) and (max-width: 800px)":
-		{
-			width: "32px",
-			height: "32px",
-		},
+			{
+				width: "32px",
+				height: "32px",
+			},
 
 		"@media (orientation: portrait) and (min-width: 801px)": {
 			width: "48px",

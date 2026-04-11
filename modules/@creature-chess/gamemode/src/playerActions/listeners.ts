@@ -10,7 +10,9 @@ import { setupSpectateListener } from "./spectate";
 import { setupSwapPieceListener } from "./swapPiece";
 import { setupToggleShopLockListener } from "./toggleShopLock";
 
-export const setupPlayerActionListeners = (startListening: PlayerStartListening) => {
+export const setupPlayerActionListeners = (
+	startListening: PlayerStartListening
+) => {
 	setupBuyXpListener(startListening);
 	setupBuyCardListener(startListening);
 	setupRerollCardsListener(startListening);

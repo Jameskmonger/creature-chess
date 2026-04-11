@@ -1,5 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
+import { Board, unpackPosition, unpackX } from "@creature-chess/board";
 import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 
 import { PlayerStartListening } from "../entities/player/player";
@@ -12,7 +13,6 @@ import {
 	removeBenchPieceCommand,
 	removeBoardPieceCommand,
 } from "../entities/player/state/board";
-import { Board, unpackPosition, unpackX } from "@creature-chess/board";
 import { getPlayerBelowPieceLimit } from "../entities/player/state/selectors";
 
 export const findPiece = (
@@ -57,7 +57,9 @@ export const dropPiecePlayerAction = createAction<{
 	from: PlayerPieceLocation;
 }>("dropPiecePlayerAction");
 
-export const setupDropPieceListener = (startListening: PlayerStartListening) => {
+export const setupDropPieceListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: dropPiecePlayerAction,
 		effect: async ({ payload: { from, pieceId, to } }, api) => {
@@ -89,7 +91,10 @@ export const setupDropPieceListener = (startListening: PlayerStartListening) => 
 			}
 
 			if (to.type === "board" && from.type !== "board") {
-				const belowPieceLimit = getPlayerBelowPieceLimit(state.playerInfo.level, board);
+				const belowPieceLimit = getPlayerBelowPieceLimit(
+					state.playerInfo.level,
+					board
+				);
 
 				if (!belowPieceLimit) {
 					return;

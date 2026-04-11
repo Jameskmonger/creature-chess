@@ -1,9 +1,6 @@
 import * as React from "react";
 
-import {
-	MAX_NAME_LENGTH,
-	validateNicknameFormat,
-} from "@creature-chess/user";
+import { MAX_NAME_LENGTH, validateNicknameFormat } from "@creature-chess/user";
 
 import { useStyles } from "./RegistrationPage.styles";
 import { NicknameSelection } from "./input/NicknameSelection";

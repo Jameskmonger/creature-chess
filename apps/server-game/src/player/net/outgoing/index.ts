@@ -21,7 +21,8 @@ export const setupOutgoingNetworking = (entity: Player, socket: GameSocket) => {
 	// Forward game events
 	unsubscribes.push(
 		entity.addListener({
-			predicate: (action) => GameEvents.GameEventActionTypesArray.includes(action.type),
+			predicate: (action) =>
+				GameEvents.GameEventActionTypesArray.includes(action.type),
 			effect: async (action) => {
 				socket.emit("sendGameEvents", action);
 			},
@@ -31,7 +32,8 @@ export const setupOutgoingNetworking = (entity: Player, socket: GameSocket) => {
 	// Forward player events
 	unsubscribes.push(
 		entity.addListener({
-			predicate: (action) => PlayerEvents.PlayerEventActionTypesArray.includes(action.type),
+			predicate: (action) =>
+				PlayerEvents.PlayerEventActionTypesArray.includes(action.type),
 			effect: async (action) => {
 				socket.emit("sendLocalPlayerEvents", action);
 			},
@@ -41,7 +43,10 @@ export const setupOutgoingNetworking = (entity: Player, socket: GameSocket) => {
 	// Forward player info update commands
 	unsubscribes.push(
 		entity.addListener({
-			predicate: (action) => PlayerCommands.PlayerInfoUpdateCommandActionTypesArray.includes(action.type),
+			predicate: (action) =>
+				PlayerCommands.PlayerInfoUpdateCommandActionTypesArray.includes(
+					action.type
+				),
 			effect: async (action) => {
 				socket.emit("playerInfoUpdates", action);
 			},

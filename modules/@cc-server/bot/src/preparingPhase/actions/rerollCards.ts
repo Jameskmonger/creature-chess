@@ -1,18 +1,18 @@
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
+import { Board } from "@creature-chess/board";
 import {
 	PlayerActions,
 	PlayerState,
 	PlayerStateSelectors,
 } from "@creature-chess/gamemode";
 import { GamemodeSettings } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
 import { collectAllPieces, isCardWanted } from "./utils/cardScoring";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 export const createRerollCardsAction = (
 	board: Board,

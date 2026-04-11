@@ -1,16 +1,21 @@
+import {
+	Board,
+	packPosition,
+	rotateBoard,
+	rotateGridPosition,
+	unpackX,
+	unpackY,
+} from "@creature-chess/board";
 import { attackTypes, PieceModel } from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { getNextPiecePosition, Pathfinder } from "./pathfinding";
-import { Board, packPosition, rotateBoard, rotateGridPosition, unpackX, unpackY } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 function getOpponentsForPiece(pieces: PieceModel[], pieceId: string) {
 	const piece = pieces.find((p) => p.id === pieceId)!;
 
-	return pieces
-		.filter((p) => p.ownerId !== piece.ownerId)
-		.map((p) => p.id);
+	return pieces.filter((p) => p.ownerId !== piece.ownerId).map((p) => p.id);
 }
 
 /**
@@ -184,9 +189,13 @@ describe("pathfinding", () => {
 			rotatedPieceRegistry = new PieceRegistry();
 			board = new Board(7, 6);
 
-			Object.values(b.pieces).forEach((p) => pieceRegistry.registerPiece({ ...p }));
+			Object.values(b.pieces).forEach((p) =>
+				pieceRegistry.registerPiece({ ...p })
+			);
 
-			Object.values(b.pieces).forEach((p) => rotatedPieceRegistry.registerPiece({ ...p }));
+			Object.values(b.pieces).forEach((p) =>
+				rotatedPieceRegistry.registerPiece({ ...p })
+			);
 
 			Object.entries(b.piecePositions)
 				.map(([pos, id]) => {
@@ -209,7 +218,10 @@ describe("pathfinding", () => {
 		test.each(
 			// test each piece against each opponent
 			Object.values(b.pieces).flatMap(({ id: pieceId }) => {
-				const opponents = getOpponentsForPiece(Object.values(b.pieces), pieceId);
+				const opponents = getOpponentsForPiece(
+					Object.values(b.pieces),
+					pieceId
+				);
 				return opponents.map((targetId) => [pieceId, targetId]);
 			})
 		)(
@@ -253,7 +265,7 @@ describe("pathfinding", () => {
 
 				const awayPositionCorrected = rotateGridPosition(
 					{ width: board.width, height: board.height },
-					packPosition(awayPosition!.x, awayPosition!.y),
+					packPosition(awayPosition!.x, awayPosition!.y)
 				);
 
 				expect({

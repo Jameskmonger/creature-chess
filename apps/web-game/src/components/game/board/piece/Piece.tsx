@@ -2,11 +2,11 @@ import * as React from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
+import { ICON_FOR_TRAIT } from "~/components/ui/TraitIcon";
 
 import { CreatureImage } from "../../../ui/creatureImage";
 import { usePiece } from "./PieceContext";
 import { PieceHealthbar } from "./meta/PieceHealthbar";
-import { ICON_FOR_TRAIT } from "~/components/ui/TraitIcon";
 
 interface Props {
 	healthbar: "none" | "friendly" | "enemy" | "spectating";
@@ -64,7 +64,7 @@ const useStyles = createUseStyles({
 
 		"@container piece (max-width: 64px)": {
 			width: "14%",
-		}
+		},
 	},
 	stage: {
 		display: "flex",
@@ -104,29 +104,25 @@ export function Piece(props: Props) {
 				/>
 			</div>
 
-			{
-				piece.stage > 0
-				&& (
-					<div className={classes.stage}>
-						{
-							Array.from({ length: piece.stage + 1 }, (_, i) => (
-								<img key={i} src={`${APP_IMAGE_ROOT}/ui/star.svg`} />
-							))
-						}
-					</div>
-				)
-			}
+			{piece.stage > 0 && (
+				<div className={classes.stage}>
+					{Array.from({ length: piece.stage + 1 }, (_, i) => (
+						<img key={i} src={`${APP_IMAGE_ROOT}/ui/star.svg`} />
+					))}
+				</div>
+			)}
 
-			{
-				piece.traits.length > 0
-				&& (
-					<div className={classes.traits}>
-						{piece.traits.map((trait) => (
-							<img key={trait} src={ICON_FOR_TRAIT[trait]} alt={`${trait} trait`} />
-						))}
-					</div>
-				)
-			}
+			{piece.traits.length > 0 && (
+				<div className={classes.traits}>
+					{piece.traits.map((trait) => (
+						<img
+							key={trait}
+							src={ICON_FOR_TRAIT[trait]}
+							alt={`${trait} trait`}
+						/>
+					))}
+				</div>
+			)}
 
 			{children}
 		</div>

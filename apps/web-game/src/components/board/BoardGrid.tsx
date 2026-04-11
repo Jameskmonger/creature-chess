@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useMemo } from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
@@ -6,12 +7,11 @@ import { createUseStyles } from "react-jss";
 import { PackedPosition, SubscribableBoard } from "@creature-chess/board";
 
 import { BoardTiles } from "./BoardTiles";
-import { BoardItems } from "./items/BoardItems";
-import { BoardItemRenderFn } from "./items/renderItem";
-import { ClickBoardTileEvent, DropBoardItemEvent } from "./events";
 import { BoardContextProvider, BoardContextValue } from "./context";
 import { useDropSurface } from "./drag/PieceDragContext";
-import { useMemo } from "react";
+import { ClickBoardTileEvent, DropBoardItemEvent } from "./events";
+import { BoardItems } from "./items/BoardItems";
+import { BoardItemRenderFn } from "./items/renderItem";
 
 type BoardGridProps = {
 	state: SubscribableBoard;
@@ -70,10 +70,11 @@ export function BoardGrid({
 	darkTileClassName,
 }: BoardGridProps) {
 	const context = useMemo(
-		() => ({
-			state,
-			tileBackgroundRenderer: renderTileBackground,
-		} as BoardContextValue),
+		() =>
+			({
+				state,
+				tileBackgroundRenderer: renderTileBackground,
+			}) as BoardContextValue,
 		[state, renderTileBackground]
 	);
 

@@ -1,7 +1,12 @@
 import * as React from "react";
 
-import { BattleEvent, PieceAttackEvent, PieceHitEvent } from "@creature-chess/battle";
+import {
+	BattleEvent,
+	PieceAttackEvent,
+	PieceHitEvent,
+} from "@creature-chess/battle";
 
+import { PieceAnimationEventStore } from "./animationEventStore";
 import {
 	AnimationLayer,
 	createAttackBasicLayer,
@@ -11,9 +16,10 @@ import {
 	useReceiveHitStyles,
 } from "./animations";
 import { ANIMATION_LAYER_DEPTH } from "./constants";
-import { PieceAnimationEventStore } from "./animationEventStore";
 
-const EMPTY_LAYERS: (AnimationLayer | undefined)[] = new Array(ANIMATION_LAYER_DEPTH).fill(undefined);
+const EMPTY_LAYERS: (AnimationLayer | undefined)[] = new Array(
+	ANIMATION_LAYER_DEPTH
+).fill(undefined);
 
 /**
  * Assign each layer a stable slot index so animations don't jump between
@@ -106,10 +112,7 @@ export function useAnimationLayers(
 				});
 			}
 		},
-		[
-			attackBasicStyles.attackBasic,
-			receiveHitStyles.receiveHit,
-		]
+		[attackBasicStyles.attackBasic, receiveHitStyles.receiveHit]
 	);
 
 	// subscribe to the animation event store

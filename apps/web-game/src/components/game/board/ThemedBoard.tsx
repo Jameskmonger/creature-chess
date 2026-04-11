@@ -1,11 +1,14 @@
 import React from "react";
 
 import { createUseStyles } from "react-jss";
+import { BoardGrid } from "~/components/board";
+import {
+	ClickBoardTileEvent,
+	DropBoardItemEvent,
+} from "~/components/board/events";
 
 import { PackedPosition, SubscribableBoard } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { ClickBoardTileEvent, DropBoardItemEvent } from "~/components/board/events";
-import { BoardGrid } from "~/components/board";
 
 type Props = {
 	theme?: "default";

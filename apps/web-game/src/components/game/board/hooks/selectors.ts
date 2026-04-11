@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
-import { AppState } from "~/store";
-import { useGameBoards } from "../state";
 import { useBoardSubscription } from "~/components/board/useBoard";
 import { usePieceRegistrySubscription } from "~/components/board/usePieceRegistry";
+import { AppState } from "~/store";
+
+import { useGameBoards } from "../state";
 
 export function useGameBoard() {
 	const { board } = useGameBoards();

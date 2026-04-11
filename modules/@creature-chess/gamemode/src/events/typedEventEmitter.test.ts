@@ -111,8 +111,8 @@ describe("TypedEventEmitter", () => {
 		test("resolves only when predicate matches", async () => {
 			const promise = emitter.waitFor("count", (n) => n > 10);
 
-			emitter.emit("count", 5);   // doesn't match
-			emitter.emit("count", 15);  // matches
+			emitter.emit("count", 5); // doesn't match
+			emitter.emit("count", 15); // matches
 
 			await expect(promise).resolves.toBe(15);
 		});

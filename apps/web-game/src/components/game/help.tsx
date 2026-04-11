@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
+import { Button } from "../ui";
 import { Footer } from "../ui/Footer";
 import { TraitIcon } from "../ui/TraitIcon";
 import { Group, Layout } from "../ui/layout";
 import { Header2, Header4 } from "../ui/text";
-import { Button } from "../ui";
 
 const useStyles = createUseStyles({
 	pieceType: {
@@ -50,13 +50,13 @@ const useStyles = createUseStyles({
 		"& h2": {
 			flex: "1",
 		},
-	}
+	},
 });
 
-const Help: React.FunctionComponent<{ hideFooter?: boolean; onBack?: () => void }> = ({
-	hideFooter = false,
-	onBack,
-}) => {
+const Help: React.FunctionComponent<{
+	hideFooter?: boolean;
+	onBack?: () => void;
+}> = ({ hideFooter = false, onBack }) => {
 	const styles = useStyles();
 
 	return (
@@ -64,7 +64,11 @@ const Help: React.FunctionComponent<{ hideFooter?: boolean; onBack?: () => void 
 			<Group>
 				<div className={styles.header}>
 					<Header2>The Game</Header2>
-					{onBack && <Button color="muted" size="medium" onClick={onBack}>Back</Button>}
+					{onBack && (
+						<Button color="muted" size="medium" onClick={onBack}>
+							Back
+						</Button>
+					)}
 				</div>
 				<p className={styles.helpText}>
 					Buy pieces and place them on the board. Your board then battles

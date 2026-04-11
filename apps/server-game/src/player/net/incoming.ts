@@ -4,8 +4,14 @@ import { GameSocket } from "../socket";
 
 type DispatchFn = (action: { type: string; payload?: any }) => void;
 
-export const setupIncomingNetworking = (socket: GameSocket, dispatch: DispatchFn) => {
-	const onSendPlayerActions = (action: { type: string; payload?: any }, ack?: () => void) => {
+export const setupIncomingNetworking = (
+	socket: GameSocket,
+	dispatch: DispatchFn
+) => {
+	const onSendPlayerActions = (
+		action: { type: string; payload?: any },
+		ack?: () => void
+	) => {
 		if (!PlayerActionTypesArray.includes(action.type)) {
 			console.error(
 				`Unhandled action type: ${action.type} (for opcode sendPlayerActions)`

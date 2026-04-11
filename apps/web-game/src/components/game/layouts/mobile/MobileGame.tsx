@@ -13,6 +13,7 @@ import { GamePhase } from "@creature-chess/models";
 import { TabMenu } from "../../../ui/TabMenu";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
+import { useGameBoards } from "../../board/state";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
@@ -21,7 +22,6 @@ import { Settings } from "../../settings";
 import { MobileContentPane } from "./MobileContentPane";
 import { OverlayComponent } from "./OverlayComponent";
 import { GameNavBar } from "./nav/GameNavBar";
-import { useGameBoards } from "../../board/state";
 
 const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	currentOverlay,
@@ -35,10 +35,14 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	);
 
 	const { board, pieceRegistry } = useGameBoards();
-	const ownedPieces = React.useMemo(() =>
-		board.getAllPieces()
-			.filter((p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId)
-			.map((p) => pieceRegistry.getPieceById(p.id)!),
+	const ownedPieces = React.useMemo(
+		() =>
+			board
+				.getAllPieces()
+				.filter(
+					(p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId
+				)
+				.map((p) => pieceRegistry.getPieceById(p.id)!),
 		[board, pieceRegistry, localPlayerId]
 	);
 

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	overlay: {
 		position: "absolute",
 		top: "0",
@@ -29,10 +29,11 @@ const useStyles = createUseThemeStyles(theme => ({
 		"color": "#fff",
 		"background": "#333c57",
 
-		"@media (orientation: portrait) and (min-width: 400px) and (max-width: 430px)": {
-			width: "96%",
-			height: "96%",
-		},
+		"@media (orientation: portrait) and (min-width: 400px) and (max-width: 430px)":
+			{
+				width: "96%",
+				height: "96%",
+			},
 		"@media (orientation: portrait) and (max-width: 399px )": {
 			width: "100%",
 			height: "100%",

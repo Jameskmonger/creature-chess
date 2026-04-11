@@ -1,16 +1,16 @@
 import React from "react";
 
 import { Meta, Story } from "@storybook/react";
+import { PieceDragContextProvider } from "~/components/board/drag/PieceDragContext";
 
+import { SubscribableBoard } from "@creature-chess/board";
 import { Builders, PieceModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { GameBoard } from "./GameBoard";
 import { GameBoardContextProvider } from "./GameBoardContext";
 import { Piece, PieceContextProvider } from "./piece";
-import { SubscribableBoard } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
-import { PieceDragContextProvider } from "~/components/board/drag/PieceDragContext";
 
 export default {
 	title: "@creature-chess / game / Board / GameBoard",
@@ -31,11 +31,11 @@ const Template: Story<any> = (args) => {
 	const context = {
 		board: new SubscribableBoard(
 			GamemodeSettingsPresets["default"].boardWidth,
-			args.boardHeight,
+			args.boardHeight
 		),
 		bench: new SubscribableBoard(
 			GamemodeSettingsPresets["default"].benchSize,
-			1,
+			1
 		),
 		pieceRegistry: new PieceRegistry(),
 	};
@@ -79,7 +79,11 @@ const Template: Story<any> = (args) => {
 
 	context.bench.setPieces([
 		{ id: benchPiece1.id, x: 0, y: 0 },
-		{ id: benchPiece2.id, x: GamemodeSettingsPresets["default"].benchSize - 1, y: 0 },
+		{
+			id: benchPiece2.id,
+			x: GamemodeSettingsPresets["default"].benchSize - 1,
+			y: 0,
+		},
 	]);
 
 	context.pieceRegistry.registerPiece(piece1);

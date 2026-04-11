@@ -1,9 +1,9 @@
+import { clientFinishMatchEvent } from "../../../entities/player/events";
 import { PlayerStartListening } from "../../../entities/player/player";
-import {
-	clientFinishMatchEvent,
-} from "../../../entities/player/events";
 
-export const setupClientFinishMatchListener = (startListening: PlayerStartListening) => {
+export const setupClientFinishMatchListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: clientFinishMatchEvent,
 		effect: async (_action, api) => {

@@ -83,9 +83,7 @@ export function PieceDragContextProvider({
 			},
 			startDrag: (drag) => setActiveDrag(drag),
 			moveDrag: (clientX, clientY) =>
-				setActiveDrag((prev) =>
-					prev ? { ...prev, clientX, clientY } : prev
-				),
+				setActiveDrag((prev) => (prev ? { ...prev, clientX, clientY } : prev)),
 			endDrag: () => setActiveDrag(null),
 		}),
 		[]
@@ -148,10 +146,7 @@ export function useDragPiece(id: string) {
 			if (!state.current.dragging) {
 				const dx = e.clientX - state.current.startX;
 				const dy = e.clientY - state.current.startY;
-				if (
-					dx * dx + dy * dy <=
-					DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX
-				) {
+				if (dx * dx + dy * dy <= DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX) {
 					return;
 				}
 				state.current.dragging = true;

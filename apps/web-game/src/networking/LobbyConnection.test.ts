@@ -5,15 +5,15 @@ const createMockSocket = () => {
 	const handlers = new Map<string, Function>();
 	return {
 		on: jest.fn((event: string, handler: Function) => {
- handlers.set(event, handler);
-}),
+			handlers.set(event, handler);
+		}),
 		off: jest.fn((event: string) => {
- handlers.delete(event);
-}),
+			handlers.delete(event);
+		}),
 		emit: jest.fn(),
 		_trigger: (event: string, payload: any) => {
- handlers.get(event)?.(payload);
-},
+			handlers.get(event)?.(payload);
+		},
 	};
 };
 
@@ -42,7 +42,10 @@ describe("LobbyConnection", () => {
 
 	it("should register socket listeners on construction", () => {
 		expect(socket.on).toHaveBeenCalledWith("lobbyUpdate", expect.any(Function));
-		expect(socket.on).toHaveBeenCalledWith("settingsUpdate", expect.any(Function));
+		expect(socket.on).toHaveBeenCalledWith(
+			"settingsUpdate",
+			expect.any(Function)
+		);
 	});
 
 	describe("handleConnected", () => {
@@ -87,7 +90,10 @@ describe("LobbyConnection", () => {
 
 		it("sendUpdateSetting should emit updateSetting", () => {
 			conn.sendUpdateSetting("maxPlayers", "4");
-			expect(socket.emit).toHaveBeenCalledWith("updateSetting", { key: "maxPlayers", value: "4" });
+			expect(socket.emit).toHaveBeenCalledWith("updateSetting", {
+				key: "maxPlayers",
+				value: "4",
+			});
 		});
 	});
 
@@ -95,8 +101,14 @@ describe("LobbyConnection", () => {
 		it("should remove all socket listeners", () => {
 			conn.destroy();
 
-			expect(socket.off).toHaveBeenCalledWith("lobbyUpdate", expect.any(Function));
-			expect(socket.off).toHaveBeenCalledWith("settingsUpdate", expect.any(Function));
+			expect(socket.off).toHaveBeenCalledWith(
+				"lobbyUpdate",
+				expect.any(Function)
+			);
+			expect(socket.off).toHaveBeenCalledWith(
+				"settingsUpdate",
+				expect.any(Function)
+			);
 		});
 
 		it("should not dispatch after destroy", () => {

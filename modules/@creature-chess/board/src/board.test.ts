@@ -139,9 +139,7 @@ describe("board", () => {
 		])("should error when position (%i, %i) is out of bounds", (x, y) => {
 			const board = new Board(8, 8);
 
-			expect(() =>
-				board.setPieces([{ id: "piece1", x, y }])
-			).toThrowError();
+			expect(() => board.setPieces([{ id: "piece1", x, y }])).toThrowError();
 		});
 	});
 
@@ -219,7 +217,9 @@ describe("board", () => {
 
 			board.setPiece("piece2", 2, 2);
 
-			expect(() => board.swapPieces("nonExistentPiece", "piece2")).toThrowError();
+			expect(() =>
+				board.swapPieces("nonExistentPiece", "piece2")
+			).toThrowError();
 		});
 
 		it("should error when piece B does not exist", () => {
@@ -227,7 +227,9 @@ describe("board", () => {
 
 			board.setPiece("piece1", 1, 1);
 
-			expect(() => board.swapPieces("piece1", "nonExistentPiece")).toThrowError();
+			expect(() =>
+				board.swapPieces("piece1", "nonExistentPiece")
+			).toThrowError();
 		});
 	});
 

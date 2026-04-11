@@ -11,7 +11,9 @@ export const toggleShopLockPlayerAction = createAction(
 	"toggleShopLockPlayerAction"
 );
 
-export const setupToggleShopLockListener = (startListening: PlayerStartListening) => {
+export const setupToggleShopLockListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: toggleShopLockPlayerAction,
 		effect: async (_action, api) => {

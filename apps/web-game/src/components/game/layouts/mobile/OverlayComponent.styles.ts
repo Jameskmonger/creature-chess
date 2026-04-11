@@ -1,6 +1,6 @@
 import { createUseThemeStyles } from "~/useStyles";
 
-export const useStyles = createUseThemeStyles(theme => ({
+export const useStyles = createUseThemeStyles((theme) => ({
 	overlay: {
 		flex: "1",
 		display: "flex",

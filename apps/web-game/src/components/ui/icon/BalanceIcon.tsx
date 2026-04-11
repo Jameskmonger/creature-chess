@@ -2,6 +2,7 @@ import React from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
+
 import { CoinIcon } from "./CoinIcon";
 
 type Props = {

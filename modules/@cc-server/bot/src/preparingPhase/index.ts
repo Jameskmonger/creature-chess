@@ -8,8 +8,8 @@ import { BotPersonality } from "@cc-server/data";
 
 import { getActions } from "../actions";
 import { BrainAction } from "../brain";
-import { PASS_ACTION_NAME } from "./actions";
 import { putBenchOnBoard } from "../putBenchOnBoard";
+import { PASS_ACTION_NAME } from "./actions";
 
 /**
  * Emit a structured decision record to the debug sink when DEBUG_BOT=1.
@@ -47,8 +47,16 @@ const summariseAction = (action: BrainAction) => ({
 	value: action.value,
 });
 
-export const preparingPhase = async (api: PlayerListenerApi, personality: BotPersonality) => {
-	const { settings, board, bench, gamemode: { pieceRegistry } } = api.player;
+export const preparingPhase = async (
+	api: PlayerListenerApi,
+	personality: BotPersonality
+) => {
+	const {
+		settings,
+		board,
+		bench,
+		gamemode: { pieceRegistry },
+	} = api.player;
 
 	await delay(settings.botActionDelayMs);
 
@@ -66,7 +74,14 @@ export const preparingPhase = async (api: PlayerListenerApi, personality: BotPer
 			break;
 		}
 
-		const actions = getActions(board, bench, pieceRegistry, state, personality, settings);
+		const actions = getActions(
+			board,
+			bench,
+			pieceRegistry,
+			state,
+			personality,
+			settings
+		);
 
 		if (actions.length === 0) {
 			break;

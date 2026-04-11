@@ -4,7 +4,10 @@ import { Meta, Story } from "@storybook/react";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { GameLayoutStoryArgs, GameLayoutStoryWrapper } from "../GameLayoutStory";
+import {
+	GameLayoutStoryArgs,
+	GameLayoutStoryWrapper,
+} from "../GameLayoutStory";
 import { DesktopGame } from "./DesktopGame";
 
 export default {

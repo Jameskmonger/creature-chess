@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { PlayerStartListening } from "../entities/player/player";
 import { afterRerollCardsEvent } from "../entities/player/events";
+import { PlayerStartListening } from "../entities/player/player";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { isPlayerAlive } from "../entities/player/state/selectors";
 
@@ -10,7 +10,9 @@ export type RerollCardsPlayerAction = ReturnType<
 >;
 export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
 
-export const setupRerollCardsListener = (startListening: PlayerStartListening) => {
+export const setupRerollCardsListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: rerollCardsPlayerAction,
 		effect: async (_action, api) => {

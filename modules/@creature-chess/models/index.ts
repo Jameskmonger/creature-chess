@@ -31,17 +31,10 @@ export {
 } from "./src/quickChat";
 
 export * as Builders from "./src/builders";
-export {
-	buildDefinition,
-	buildPieceModel,
-	buildCard,
-} from "./src/builders";
+export { buildDefinition, buildPieceModel, buildCard } from "./src/builders";
 
 export { MAX_LEVEL, MAX_HEALTH, PIECES_TO_EVOLVE } from "./config";
-export {
-	type GamemodeSettings,
-	GamemodeSettingsPresets,
-} from "./settings";
+export { type GamemodeSettings, GamemodeSettingsPresets } from "./settings";
 export {
 	PlayerStatus,
 	PlayerBattleStatus,

@@ -7,6 +7,7 @@ import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { CloneChip } from "~/components/ui/player/CloneChip";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 import { AppState } from "~/store";
+import { createUseThemeStyles } from "~/useStyles";
 
 import { GamePhase } from "@creature-chess/models";
 
@@ -15,9 +16,8 @@ import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
 import { QuickChatBox } from "./quickChat/quickChatBox";
 import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
-import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	root: {
 		"display": "flex",
 		"flexDirection": "column",

@@ -1,14 +1,16 @@
 import React from "react";
+
 import { createUseStyles } from "react-jss";
+import { createUseThemeStyles } from "~/useStyles";
+
 import { PageBoardBackground } from "./PageBackground";
 import { CreatureImage } from "./ui/creatureImage";
-import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	onPlay: () => void;
 };
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	root: {
 		position: "relative",
 		overflow: "hidden",
@@ -34,7 +36,7 @@ const useStyles = createUseThemeStyles(theme => ({
 			width: "100%",
 			height: "auto",
 			display: "block",
-			filter: "drop-shadow(0px 6px 4px #222)"
+			filter: "drop-shadow(0px 6px 4px #222)",
 		},
 	},
 	tagline: {
@@ -104,7 +106,7 @@ const useStyles = createUseThemeStyles(theme => ({
 			"@media (max-width: 360px)": {
 				height: "32px",
 				width: "32px",
-			}
+			},
 		},
 	},
 	largeOnly: {
@@ -144,9 +146,14 @@ export function SplashScreen({ onPlay }: Props) {
 			<PageBoardBackground />
 			<div className={classes.top}>
 				<div className={classes.logoWrapper}>
-					<img src={`${APP_IMAGE_ROOT}/ui/logo.png`} alt="Creature Chess Logo" />
+					<img
+						src={`${APP_IMAGE_ROOT}/ui/logo.png`}
+						alt="Creature Chess Logo"
+					/>
 				</div>
-				<div className={classes.tagline}>A <span className={classes.highlight}>'Tiberisoft'</span> Game</div>
+				<div className={classes.tagline}>
+					A <span className={classes.highlight}>'Tiberisoft'</span> Game
+				</div>
 			</div>
 			<div className={classes.bottom}>
 				<div className={classes.pane}>
@@ -155,24 +162,55 @@ export function SplashScreen({ onPlay }: Props) {
 							<CreatureImage definitionId={33} facing="front" />
 							<CreatureImage definitionId={47} facing="front" />
 							<CreatureImage definitionId={39} facing="front" />
-							<CreatureImage definitionId={44} className={classes.largeOnly} facing="front" />
-							<CreatureImage definitionId={27} className={classes.largeOnly} facing="front" />
+							<CreatureImage
+								definitionId={44}
+								className={classes.largeOnly}
+								facing="front"
+							/>
+							<CreatureImage
+								definitionId={27}
+								className={classes.largeOnly}
+								facing="front"
+							/>
 						</div>
 
 						<div className={classes.description}>
-							<p className={classes.welcome}>Welcome to <span className={classes.highlight}>Creature Chess</span>!</p>
-							<p>This is a multiplayer strategy game where you configure creatures on a board.</p>
-							<p>Each round, your board is matched against an opponent's board. Defeat all their pieces to win the round.</p>
-							<p>Every loss decreases your health bar. When your health reaches zero, you're out!</p>
-							<p>Players will battle against each other until only one player remains.</p>
+							<p className={classes.welcome}>
+								Welcome to{" "}
+								<span className={classes.highlight}>Creature Chess</span>!
+							</p>
+							<p>
+								This is a multiplayer strategy game where you configure
+								creatures on a board.
+							</p>
+							<p>
+								Each round, your board is matched against an opponent's board.
+								Defeat all their pieces to win the round.
+							</p>
+							<p>
+								Every loss decreases your health bar. When your health reaches
+								zero, you're out!
+							</p>
+							<p>
+								Players will battle against each other until only one player
+								remains.
+							</p>
 						</div>
 
 						<div className={classes.footer}>
 							<button className={classes.playButton} onClick={onPlay}>
 								Play Now
 							</button>
-							<p className={classes.withFriends}>More fun with friends! Press 'Play Now' at the same time to play together.</p>
-							<a href="https://discord.gg/acRdGQceWJ" className={classes.withFriends}>Join us on Discord</a>
+							<p className={classes.withFriends}>
+								More fun with friends! Press 'Play Now' at the same time to play
+								together.
+							</p>
+							<a
+								href="https://discord.gg/acRdGQceWJ"
+								className={classes.withFriends}
+							>
+								Join us on Discord
+							</a>
 						</div>
 					</div>
 				</div>

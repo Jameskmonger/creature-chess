@@ -3,9 +3,7 @@ import {
 	isPlayerAlive,
 	isPlayerReady,
 } from "../../entities/player/state/selectors";
-import {
-	quitGamePlayerAction,
-} from "../../playerActions";
+import { quitGamePlayerAction } from "../../playerActions";
 import { listenForPropertyUpdates } from "../playerPropertyUpdates";
 import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
 

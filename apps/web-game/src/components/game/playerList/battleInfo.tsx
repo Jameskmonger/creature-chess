@@ -3,10 +3,7 @@ import * as React from "react";
 import classnames from "classnames";
 import { createUseStyles } from "react-jss";
 
-import {
-	PlayerBattle,
-	PlayerBattleStatus,
-} from "@creature-chess/models";
+import { PlayerBattle, PlayerBattleStatus } from "@creature-chess/models";
 
 type Props = { battle: PlayerBattle; opponentName?: string };
 

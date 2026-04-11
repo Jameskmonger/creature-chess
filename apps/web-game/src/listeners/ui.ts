@@ -1,11 +1,11 @@
 import { AppState } from "~/store";
-import { ClientStartListening } from "~/store/listenerContext";
 import {
 	clearSelectedPiece,
 	openOverlay,
 	closeOverlay,
 	Overlay,
 } from "~/store/game/ui";
+import { ClientStartListening } from "~/store/listenerContext";
 
 import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
@@ -17,7 +17,8 @@ export const setupUiListener = (startListening: ClientStartListening) => {
 			api.cancelActiveListeners();
 
 			if (phase === GamePhase.PREPARING) {
-				const isDead = (api.getState() as AppState).game.playerInfo.health === 0;
+				const isDead =
+					(api.getState() as AppState).game.playerInfo.health === 0;
 
 				if (!isDead) {
 					api.dispatch(openOverlay(Overlay.SHOP));

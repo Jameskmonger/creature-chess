@@ -1,5 +1,7 @@
+import { Board } from "@creature-chess/board";
 import { PlayerState } from "@creature-chess/gamemode";
 import { GamemodeSettings } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -11,8 +13,6 @@ import {
 	createSellPieceAction,
 	createRerollCardsAction,
 } from "./preparingPhase/actions";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 /**
  * Soft termination threshold on the `[0, 1]` utility scale. Actions scoring
@@ -90,7 +90,14 @@ export const getActions = (
 	const actions: (BrainAction | null)[] = [
 		createPassAction(board, bench, state, personality),
 		createBuyXpAction(bench, state, personality, settings),
-		createRerollCardsAction(board, bench, pieceRegistry, state, personality, settings),
+		createRerollCardsAction(
+			board,
+			bench,
+			pieceRegistry,
+			state,
+			personality,
+			settings
+		),
 	];
 
 	const {
@@ -101,7 +108,16 @@ export const getActions = (
 	for (let index = 0; index < cards.length; index++) {
 		const card = cards[index];
 		actions.push(
-			createBuyCardAction(board, bench, pieceRegistry, state, personality, settings, index, card)
+			createBuyCardAction(
+				board,
+				bench,
+				pieceRegistry,
+				state,
+				personality,
+				settings,
+				index,
+				card
+			)
 		);
 	}
 

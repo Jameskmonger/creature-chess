@@ -1,9 +1,9 @@
+import { Board, rotateBoard } from "@creature-chess/board";
 import { CreatureDefinition, PieceModel } from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { StandardTargetProvider } from "./StandardTargetProvider";
-import { Board, rotateBoard } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 /**
  * When the board is rotated, pieces also need to have their
@@ -319,7 +319,9 @@ describe("StandardTargetProvider", () => {
 			});
 
 			it("respects ID ordering", () => {
-				expect(subject.getTarget(board, pieceRegistry, attacker.id)).toBe(westEnemy.id);
+				expect(subject.getTarget(board, pieceRegistry, attacker.id)).toBe(
+					westEnemy.id
+				);
 			});
 
 			describe("when the board is rotated", () => {
@@ -328,7 +330,9 @@ describe("StandardTargetProvider", () => {
 				});
 
 				it("respects ID ordering", () => {
-					expect(subject.getTarget(board, pieceRegistry, attacker.id)).toBe(westEnemy.id);
+					expect(subject.getTarget(board, pieceRegistry, attacker.id)).toBe(
+						westEnemy.id
+					);
 				});
 			});
 		});

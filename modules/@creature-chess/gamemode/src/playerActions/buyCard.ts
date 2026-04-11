@@ -2,6 +2,13 @@ import { createAction } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
 
 import {
+	Board,
+	getFirstEmptySlot,
+	PackedPosition,
+	topLeftToBottomRightSortPositions,
+	unpackX,
+} from "@creature-chess/board";
+import {
 	Card,
 	GamePhase,
 	PieceModel,
@@ -11,6 +18,10 @@ import {
 import { getDefinitionById } from "../definitions";
 import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
+import {
+	addBenchPieceCommand,
+	addBoardPieceCommand,
+} from "../entities/player/state/board";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
 import {
@@ -18,8 +29,6 @@ import {
 	getPlayerCards,
 	getPlayerMoney,
 } from "../entities/player/state/selectors";
-import { addBenchPieceCommand, addBoardPieceCommand } from "../entities/player/state/board";
-import { Board, getFirstEmptySlot, PackedPosition, topLeftToBottomRightSortPositions, unpackX } from "@creature-chess/board";
 
 const getCardDestination = (
 	state: PlayerState,
@@ -28,14 +37,14 @@ const getCardDestination = (
 	playerId: string,
 	sortPositions?: (a: PackedPosition, b: PackedPosition) => -1 | 1
 ): PlayerPieceLocation | null => {
-	const belowPieceLimit = getPlayerBelowPieceLimit(state.playerInfo.level, board);
+	const belowPieceLimit = getPlayerBelowPieceLimit(
+		state.playerInfo.level,
+		board
+	);
 	const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
 	if (belowPieceLimit && inPreparingPhase) {
-		const boardSlot = getFirstEmptySlot(
-			board,
-			sortPositions
-		);
+		const boardSlot = getFirstEmptySlot(board, sortPositions);
 
 		if (boardSlot) {
 			return {
@@ -45,10 +54,7 @@ const getCardDestination = (
 		}
 	}
 
-	const benchSlot = getFirstEmptySlot(
-		bench,
-		topLeftToBottomRightSortPositions
-	);
+	const benchSlot = getFirstEmptySlot(bench, topLeftToBottomRightSortPositions);
 
 	if (benchSlot !== null) {
 		return {
@@ -103,7 +109,12 @@ export const setupBuyCardListener = (startListening: PlayerStartListening) => {
 		effect: async (action, api) => {
 			const playerId = api.player.id;
 			const name = api.player.name;
-			const { logger, gamemode: { pieceRegistry }, board, bench } = api.player;
+			const {
+				logger,
+				gamemode: { pieceRegistry },
+				board,
+				bench,
+			} = api.player;
 
 			const index = action.payload.index;
 			const sortPositions = action.payload.sortPositions || undefined;
@@ -137,7 +148,13 @@ export const setupBuyCardListener = (startListening: PlayerStartListening) => {
 				return;
 			}
 
-			const destination = getCardDestination(api.getState(), board, bench, playerId, sortPositions);
+			const destination = getCardDestination(
+				api.getState(),
+				board,
+				bench,
+				playerId,
+				sortPositions
+			);
 
 			if (destination === null) {
 				logger.warn(

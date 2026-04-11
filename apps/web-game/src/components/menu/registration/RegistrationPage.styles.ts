@@ -1,6 +1,6 @@
 import { createUseThemeStyles } from "~/useStyles";
 
-export const useStyles = createUseThemeStyles(theme => ({
+export const useStyles = createUseThemeStyles((theme) => ({
 	register: {
 		"display": "flex",
 		"flexDirection": "column",

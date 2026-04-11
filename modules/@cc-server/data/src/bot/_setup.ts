@@ -52,7 +52,7 @@ const BOT_ARCHETYPES: BotArchetype[] = [
 		nickname: "Zero",
 		archetype: "Bottom-Barrel",
 		personality: { ambition: LOW, composure: LOW, vision: LOW },
-	}
+	},
 ];
 
 export const setupBotDatabase = async (

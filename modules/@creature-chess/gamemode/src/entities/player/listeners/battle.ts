@@ -1,15 +1,14 @@
-import {
-	finishedBattle,
-	inProgressBattle,
-} from "@creature-chess/models";
+import { finishedBattle, inProgressBattle } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../player";
 import { playerFinishMatchEvent } from "../events";
+import { PlayerStartListening } from "../player";
 import { playerInfoCommands } from "../state/commands";
 import { getOpponentId, getOpponentIsClone } from "../state/selectors";
 import { setupMatchRewardsListener } from "./matchRewards";
 
-export const setupPlayerBattleListeners = (startListening: PlayerStartListening) => {
+export const setupPlayerBattleListeners = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		// todo make this listen to a playerStartMatchEvent
 		actionCreator: playerInfoCommands.updateOpponentCommand,
@@ -28,7 +27,10 @@ export const setupPlayerBattleListeners = (startListening: PlayerStartListening)
 
 	startListening({
 		actionCreator: playerFinishMatchEvent,
-		effect: async ({ payload: { isHomePlayer, homeScore, awayScore } }, api) => {
+		effect: async (
+			{ payload: { isHomePlayer, homeScore, awayScore } },
+			api
+		) => {
 			api.cancelActiveListeners();
 
 			const opponentId = getOpponentId(api.getState());

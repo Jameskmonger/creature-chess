@@ -20,9 +20,7 @@ import {
  * - Low  direction: 1.5 - value / 200  → [~1.495, 0.505]
  */
 const getWeightingValue = (value: number, direction: ScoringDirection) =>
-	direction === ScoringDirection.High
-		? 0.5 + value / 200
-		: 1.5 - value / 200;
+	direction === ScoringDirection.High ? 0.5 + value / 200 : 1.5 - value / 200;
 
 /**
  * Compute a utility score for a set of inputs and return both the final value

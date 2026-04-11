@@ -3,10 +3,10 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
+import { useGameAnimationEventStore } from "../../hooks/selectors";
 import { Piece } from "../Piece";
 import { usePiece } from "../PieceContext";
 import { AnimationLayerDiv } from "./AnimationLayerDiv";
-import { useGameAnimationEventStore } from "../../hooks/selectors";
 import { ANIMATION_LAYER_DEPTH } from "./constants";
 import { useAnimationLayers } from "./useAnimationLayers";
 
@@ -27,12 +27,8 @@ export function MatchPiece() {
 	const styles = useStyles();
 	const animationEventStore = useGameAnimationEventStore();
 
-	const {
-		layers,
-		isDying,
-		dyingClassName,
-		onLayerAnimationEnd,
-	} = useAnimationLayers(piece.id, animationEventStore);
+	const { layers, isDying, dyingClassName, onLayerAnimationEnd } =
+		useAnimationLayers(piece.id, animationEventStore);
 
 	// Always render a fixed number of wrapper divs so the DOM tree shape
 	// never changes — only className/style toggle when animations are active.
@@ -42,17 +38,16 @@ export function MatchPiece() {
 
 	for (let i = ANIMATION_LAYER_DEPTH - 1; i >= 0; i--) {
 		content = (
-			<AnimationLayerDiv
-				layer={layers[i]}
-				onEnd={onLayerAnimationEnd}
-			>
+			<AnimationLayerDiv layer={layers[i]} onEnd={onLayerAnimationEnd}>
 				{content}
 			</AnimationLayerDiv>
 		);
 	}
 
 	return (
-		<div className={classNames(styles.pieceContainer, isDying && dyingClassName)}>
+		<div
+			className={classNames(styles.pieceContainer, isDying && dyingClassName)}
+		>
 			{content}
 		</div>
 	);

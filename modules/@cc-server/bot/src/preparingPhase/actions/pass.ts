@@ -1,14 +1,11 @@
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
-import {
-	PlayerState,
-	PlayerStateSelectors,
-} from "@creature-chess/gamemode";
+import { Board } from "@creature-chess/board";
+import { PlayerState, PlayerStateSelectors } from "@creature-chess/gamemode";
 
 import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
-import { Board } from "@creature-chess/board";
 
 // Sentinel name the loop checks against to terminate the prep phase.
 export const PASS_ACTION_NAME = "pass";

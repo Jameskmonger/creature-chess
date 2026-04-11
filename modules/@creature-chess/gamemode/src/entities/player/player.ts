@@ -7,8 +7,8 @@ import { PlayerProfile } from "@creature-chess/models";
 import type { Gamemode } from "../../game";
 import type { Match } from "../../game/match";
 import { roundInfoReducer } from "../../game/roundInfo";
-import { PlayerState, playerReducers } from "./state";
 import { setupPlayerListeners } from "./listeners/root";
+import { PlayerState, playerReducers } from "./state";
 
 // ── Action types ──
 
@@ -34,7 +34,11 @@ export type PlayerListenerApi = {
 type ListenerOptions = {
 	actionCreator?: ActionCreatorWithType;
 	type?: string;
-	predicate?: (action: Action, currentState: PlayerState, previousState: PlayerState) => boolean;
+	predicate?: (
+		action: Action,
+		currentState: PlayerState,
+		previousState: PlayerState
+	) => boolean;
 	matcher?: (action: any) => boolean;
 	effect: (action: any, api: PlayerListenerApi) => Promise<void>;
 };
@@ -74,15 +78,21 @@ export type Player = {
 	) => CancellableTask;
 };
 
-
 // ── Internals ──
 
 type ReducersMapObject<TState> = {
-	[K in keyof TState]: (state: TState[K] | undefined, action: Action) => TState[K];
+	[K in keyof TState]: (
+		state: TState[K] | undefined,
+		action: Action
+	) => TState[K];
 };
 
 type Listener = {
-	matches: (action: Action, currentState: PlayerState, previousState: PlayerState) => boolean;
+	matches: (
+		action: Action,
+		currentState: PlayerState,
+		previousState: PlayerState
+	) => boolean;
 	effect: (action: any, api: PlayerListenerApi) => Promise<void>;
 };
 
@@ -115,7 +125,7 @@ function combineReducersPlain<TState>(reducers: ReducersMapObject<TState>) {
 			}
 		}
 
-		return (changed || !state) ? nextState : state;
+		return changed || !state ? nextState : state;
 	};
 }
 
@@ -151,14 +161,15 @@ export const createPlayer = (
 	const removeTakeWaiter = (waiter: TakeWaiter) => {
 		const i = takeWaiters.indexOf(waiter);
 		if (i !== -1) {
-takeWaiters.splice(i, 1);
-}
+			takeWaiters.splice(i, 1);
+		}
 	};
 
 	const createApi = (signal: AbortSignal): PlayerListenerApi => ({
 		getState: () => state,
 		dispatch: (action: Action) => put(action),
-		take: (predicate: (action: Action) => boolean) => new Promise<Action>((resolve, reject) => {
+		take: (predicate: (action: Action) => boolean) =>
+			new Promise<Action>((resolve, reject) => {
 				if (signal.aborted) {
 					reject(new CancelledError());
 					return;
@@ -181,7 +192,8 @@ takeWaiters.splice(i, 1);
 
 				signal.addEventListener("abort", onAbort, { once: true });
 			}),
-		delay: (ms: number) => new Promise<void>((resolve, reject) => {
+		delay: (ms: number) =>
+			new Promise<void>((resolve, reject) => {
 				if (signal.aborted) {
 					reject(new CancelledError());
 					return;
@@ -206,7 +218,11 @@ takeWaiters.splice(i, 1);
 	});
 
 	const addListener: PlayerStartListening = (options) => {
-		const matches = (action: Action, currentState: PlayerState, previousState: PlayerState): boolean => {
+		const matches = (
+			action: Action,
+			currentState: PlayerState,
+			previousState: PlayerState
+		): boolean => {
 			if (options.actionCreator) {
 				return action.type === options.actionCreator.type;
 			}
@@ -228,8 +244,8 @@ takeWaiters.splice(i, 1);
 		return () => {
 			const index = listeners.indexOf(listener);
 			if (index !== -1) {
-listeners.splice(index, 1);
-}
+				listeners.splice(index, 1);
+			}
 		};
 	};
 
@@ -277,19 +293,21 @@ listeners.splice(index, 1);
 		const promise = new Promise<void>((resolve, reject) => {
 			const api = createApi(controller.signal);
 
-			effect(api).then(resolve).catch((err) => {
-				if (err instanceof CancelledError) {
-					resolve();
-				} else {
-					reject(err);
-				}
-			});
+			effect(api)
+				.then(resolve)
+				.catch((err) => {
+					if (err instanceof CancelledError) {
+						resolve();
+					} else {
+						reject(err);
+					}
+				});
 		});
 
 		return {
 			cancel: () => {
- controller.abort();
-},
+				controller.abort();
+			},
 			promise,
 		};
 	};

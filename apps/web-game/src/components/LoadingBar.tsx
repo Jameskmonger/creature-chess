@@ -1,8 +1,9 @@
 import React from "react";
-import { createUseThemeStyles } from "~/useStyles";
-import classNames from "classnames";
 
-const useStyles = createUseThemeStyles(theme => ({
+import classNames from "classnames";
+import { createUseThemeStyles } from "~/useStyles";
+
+const useStyles = createUseThemeStyles((theme) => ({
 	"stage": {
 		"height": "32px",
 		"width": "100%",
@@ -17,7 +18,7 @@ const useStyles = createUseThemeStyles(theme => ({
 			bottom: "-4px",
 			left: "-4px",
 			right: "-4px",
-		}
+		},
 	},
 	"bar": {
 		position: "absolute",
@@ -55,7 +56,7 @@ const useStyles = createUseThemeStyles(theme => ({
 			right: "0%",
 			width: "0%",
 		},
-	}
+	},
 }));
 
 export function LoadingBar() {

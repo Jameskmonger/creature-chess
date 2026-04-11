@@ -3,7 +3,8 @@ import { SubscribableBoard } from "./subscribableBoard";
 function installRafMock() {
 	(globalThis as any).window = globalThis;
 	// default RAF mock calls immediately
-	(globalThis as any).requestAnimationFrame = (cb: FrameRequestCallback) => cb(performance.now());
+	(globalThis as any).requestAnimationFrame = (cb: FrameRequestCallback) =>
+		cb(performance.now());
 }
 
 function setRafMock(delayMs: number) {

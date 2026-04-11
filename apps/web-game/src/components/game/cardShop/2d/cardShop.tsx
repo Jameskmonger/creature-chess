@@ -6,15 +6,15 @@ import {
 	faLockOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button } from "~/components/ui";
+import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
+import { createUseThemeStyles } from "~/useStyles";
 
 import { Card as CardModel } from "@creature-chess/models";
 
 import { BalanceIcon } from "../../../ui/icon/BalanceIcon";
 import { Card2D as Card } from "./card";
-import { createUseThemeStyles } from "~/useStyles";
-import { Button } from "~/components/ui";
-import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 
 type Props = {
 	cards: (CardModel | null)[];
@@ -26,7 +26,7 @@ type Props = {
 	onBuy?: (index: number) => void;
 };
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	shop: {
 		display: "flex",
 		flexDirection: "column",
@@ -151,7 +151,8 @@ export function CardShop({
 							<FontAwesomeIcon icon={faLockOpen} />
 						) : (
 							<>
-								<FontAwesomeIcon icon={faLock} />&nbsp;
+								<FontAwesomeIcon icon={faLock} />
+								&nbsp;
 								<span>(1 turn)</span>
 							</>
 						)}
@@ -165,8 +166,11 @@ export function CardShop({
 						onClick={onReroll}
 						disabled={money < rerollCost}
 					>
-						<FontAwesomeIcon icon={faArrowsRotate} />&nbsp;
-						<span>{rerollCost} <CoinIcon /></span>
+						<FontAwesomeIcon icon={faArrowsRotate} />
+						&nbsp;
+						<span>
+							{rerollCost} <CoinIcon />
+						</span>
 					</Button>
 				</div>
 			</div>

@@ -14,7 +14,7 @@ type Props = {
 	center?: boolean;
 };
 
-const useStyles = createUseThemeStyles<string, Props>(theme => ({
+const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 	text: {
 		// todo tie into media queries and use pixels
 		fontSize: ({ size }) => {

@@ -1,9 +1,8 @@
 import * as React from "react";
 
-import { createUseStyles } from "react-jss";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
 	coinIcon: {
@@ -14,8 +13,5 @@ const useStyles = createUseStyles({
 export function CoinIcon() {
 	const styles = useStyles();
 
-	return (<FontAwesomeIcon
-		icon={faCoins}
-		className={styles.coinIcon}
-	/>);
+	return <FontAwesomeIcon icon={faCoins} className={styles.coinIcon} />;
 }

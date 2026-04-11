@@ -9,5 +9,9 @@ export interface TargetProvider {
 	 * @param pieceRegistry The registry containing piece models.
 	 * @param attackerId The ID of the attacking piece.
 	 */
-	getTarget(board: Board, pieceRegistry: PieceRegistry, attackerId: string): string | null;
+	getTarget(
+		board: Board,
+		pieceRegistry: PieceRegistry,
+		attackerId: string
+	): string | null;
 }

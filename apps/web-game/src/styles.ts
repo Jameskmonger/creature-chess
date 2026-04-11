@@ -1,4 +1,5 @@
 import { createUseStyles } from "react-jss";
+
 import { createUseThemeStyles } from "./useStyles";
 
 const useResetStyles = createUseStyles({
@@ -40,7 +41,7 @@ const useResetStyles = createUseStyles({
 	},
 });
 
-const useGlobalGameStyles = createUseThemeStyles(theme => ({
+const useGlobalGameStyles = createUseThemeStyles((theme) => ({
 	"@global": {
 		"*": {
 			userSelect: "none",

@@ -2,12 +2,13 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { Button } from "~/components/ui";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
+
 import { GamePhase } from "@creature-chess/models";
 
 import { COLOR_READY_BUTTON_TEXT, COLOR_READY_BUTTON } from "./colors";
-import { Button } from "~/components/ui";
 
 // If the server hasn't confirmed our ready-up within this window, re-show the
 // button so the player can try again rather than being stuck staring at empty

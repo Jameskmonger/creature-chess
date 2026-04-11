@@ -1,17 +1,14 @@
-import {
-	createTileCoordinates,
-	TileCoordinates,
-} from "@creature-chess/models";
 import { Board, BoardSize } from "@creature-chess/board";
+import { createTileCoordinates, TileCoordinates } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 const isInsideGrid =
 	({ width, height }: { width: number; height: number }) =>
-		(position: TileCoordinates) => {
-			const { x, y } = position;
+	(position: TileCoordinates) => {
+		const { x, y } = position;
 
-			return x >= 0 && y >= 0 && x < width && y < height;
-		};
+		return x >= 0 && y >= 0 && x < width && y < height;
+	};
 
 export function findEnemyInAttackRange(
 	board: Board,

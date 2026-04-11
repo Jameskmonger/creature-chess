@@ -1,15 +1,23 @@
 import { isAnyOf } from "@reduxjs/toolkit";
 
+import { Board, packPosition } from "@creature-chess/board";
 import { GamePhase, PieceModel } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { getDefinitionById } from "../../../definitions";
+import {
+	gamePhaseStartedEvent,
+	GamePhaseStartedEvent,
+} from "../../../game/events";
 import { PlayerStartListening } from "../player";
+import {
+	addBenchPieceCommand,
+	addBoardPieceCommand,
+	removeBenchPiecesCommand,
+	removeBoardPiecesCommand,
+} from "../state/board";
 import { isPlayerBoardLocked } from "../state/selectors";
-import { addBenchPieceCommand, addBoardPieceCommand, removeBenchPiecesCommand, removeBoardPiecesCommand } from "../state/board";
-import { gamePhaseStartedEvent, GamePhaseStartedEvent } from "../../../game/events";
-import { Board, packPosition } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 const pieceCanEvolve = (piece: PieceModel) => {
 	const definition = getDefinitionById(piece.definitionId);
@@ -21,8 +29,13 @@ const pieceCanEvolve = (piece: PieceModel) => {
 	return piece.stage < definition.stages.length - 1;
 };
 
-function getPiecesForDefinition(board: Board, pieceRegistry: PieceRegistry, definitionId: number) {
-	return board.getAllPieces()
+function getPiecesForDefinition(
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	definitionId: number
+) {
+	return board
+		.getAllPieces()
 		.map(({ id }) => pieceRegistry.getPieceById(id))
 		.filter((p): p is NonNullable<typeof p> => p !== null)
 		.filter((p) => p.definitionId === definitionId);
@@ -31,15 +44,25 @@ function getPiecesForDefinition(board: Board, pieceRegistry: PieceRegistry, defi
 const getCombinablePieces = (pieces: PieceModel[], targetStage: number) =>
 	pieces.filter((p) => p.stage === targetStage);
 
-export const setupEvolutionListener = (startListening: PlayerStartListening) => {
+export const setupEvolutionListener = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		matcher: isAnyOf(addBoardPieceCommand, addBenchPieceCommand),
 		effect: async (action, api) => {
 			api.cancelActiveListeners();
 
-			const { board, bench, gamemode: { pieceRegistry } } = api.player;
+			const {
+				board,
+				bench,
+				gamemode: { pieceRegistry },
+			} = api.player;
 
-			const { pieceId } = (action as ReturnType<typeof addBoardPieceCommand> | ReturnType<typeof addBenchPieceCommand>).payload;
+			const { pieceId } = (
+				action as
+					| ReturnType<typeof addBoardPieceCommand>
+					| ReturnType<typeof addBenchPieceCommand>
+			).payload;
 
 			const piece = pieceRegistry.getPieceById(pieceId);
 
@@ -60,8 +83,8 @@ export const setupEvolutionListener = (startListening: PlayerStartListening) => 
 				// wait for preparing phase to begin
 				await api.take(
 					(a) =>
-						a.type === gamePhaseStartedEvent.type
-						&& (a as GamePhaseStartedEvent).payload.phase === GamePhase.PREPARING
+						a.type === gamePhaseStartedEvent.type &&
+						(a as GamePhaseStartedEvent).payload.phase === GamePhase.PREPARING
 				);
 
 				await api.delay(500);
@@ -108,10 +131,7 @@ export const setupEvolutionListener = (startListening: PlayerStartListening) => 
 				const benchPieceIds = matchingBenchPieces.map((p) => p.id);
 				api.dispatch(
 					removeBenchPiecesCommand({
-						pieceIds: [
-							...benchPieceIds,
-							piece.id,
-						]
+						pieceIds: [...benchPieceIds, piece.id],
 					})
 				);
 
@@ -151,10 +171,7 @@ export const setupEvolutionListener = (startListening: PlayerStartListening) => 
 
 				api.dispatch(
 					removeBenchPiecesCommand({
-						pieceIds: [
-							...benchPieceIds,
-							piece.id,
-						]
+						pieceIds: [...benchPieceIds, piece.id],
 					})
 				);
 

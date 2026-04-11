@@ -1,7 +1,8 @@
 import { Board, PositionKey } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
-import { BoardUpdatePacket } from "../server-to-client/server-to-client-game";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
+
+import { BoardUpdatePacket } from "../server-to-client/server-to-client-game";
 
 export function serialiseBoard(
 	board: Board,

@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
 import { playerClickTileAction } from "~/listeners/board/clickTile";
 
+import { packPosition } from "@creature-chess/board";
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { GameBoardLocation } from "../GameBoard";
-import { packPosition } from "@creature-chess/board";
 
 export const useOnClickTile = ({
 	canClickBoard = true,

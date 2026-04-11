@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { Button } from "~/components/ui";
+import { CoinIcon } from "~/components/ui/icon/CoinIcon";
+import { createUseThemeStyles } from "~/useStyles";
+
 import { Card } from "@creature-chess/models";
 
 import { TraitIcon } from "../../../ui/TraitIcon";
 import { CreatureImage } from "../../../ui/creatureImage";
-import { createUseThemeStyles } from "~/useStyles";
-import { Button } from "~/components/ui";
-import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 
 type CardShopCardProps = {
 	card: Card | null;
@@ -15,7 +16,7 @@ type CardShopCardProps = {
 	onBuy?: () => void;
 };
 
-const useStyles = createUseThemeStyles<string, CardShopCardProps>(theme => ({
+const useStyles = createUseThemeStyles<string, CardShopCardProps>((theme) => ({
 	card: {
 		display: "flex",
 		flexDirection: "row",
@@ -27,7 +28,7 @@ const useStyles = createUseThemeStyles<string, CardShopCardProps>(theme => ({
 		containerName: "card",
 		background: (props) =>
 			["", "#696969", "#2e762e", "#2e89ff", "#931093", "#e09429"][
-			props.card!.cost
+				props.card!.cost
 			] || "#ff0000",
 	},
 	imageContainer: {
@@ -79,7 +80,8 @@ const useStyles = createUseThemeStyles<string, CardShopCardProps>(theme => ({
 		"borderRadius": "50%",
 
 		"filter": (props) =>
-			`blur(${["0px", "12px", "8px", "4px", "2px", "0px"][props.card!.cost] || "0px"
+			`blur(${
+				["0px", "12px", "8px", "4px", "2px", "0px"][props.card!.cost] || "0px"
 			})`,
 		"zIndex": 9,
 	},
@@ -103,9 +105,10 @@ const useStyles = createUseThemeStyles<string, CardShopCardProps>(theme => ({
 		"background": "#101010",
 		"zIndex": 11,
 		"borderBottom": (props) =>
-			`4px solid ${["", "#b4b4b4", "#4eba4e", "#0258d9", "#c94fbd", "#b86d05"][
-			props.card!.cost
-			] || "#ff0000"
+			`4px solid ${
+				["", "#b4b4b4", "#4eba4e", "#0258d9", "#c94fbd", "#b86d05"][
+					props.card!.cost
+				] || "#ff0000"
 			}`,
 	},
 	name: {
@@ -134,9 +137,9 @@ const useStyles = createUseThemeStyles<string, CardShopCardProps>(theme => ({
 		},
 
 		"@media (orientation: portrait) and (min-width: 375px) and (max-width: 429px)":
-		{
-			height: "48px",
-		},
+			{
+				height: "48px",
+			},
 
 		"@media (orientation: portrait) and (min-width: 430px)": {
 			height: "64px",
@@ -266,9 +269,10 @@ export function Card2D(props: CardShopCardProps) {
 					color="secondary"
 					size="medium"
 				>
-					<div style={{ rotate: `${shuffleAmount}deg` }}>{card.cost} <CoinIcon /></div>
+					<div style={{ rotate: `${shuffleAmount}deg` }}>
+						{card.cost} <CoinIcon />
+					</div>
 				</Button>
-
 			</div>
 		</div>
 	);

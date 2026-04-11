@@ -1,10 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { MAX_HEALTH } from "@creature-chess/models";
-import {
-	PlayerStatus,
-	PlayerBattle,
-} from "@creature-chess/models";
+import { PlayerStatus, PlayerBattle } from "@creature-chess/models";
 import { StreakType, PlayerStreak } from "@creature-chess/models";
 
 export type PlayerMatchRewards = {

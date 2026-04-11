@@ -97,7 +97,12 @@ export class Board {
 		this.pieceIdToPosition.clear();
 
 		for (const piece of pieces) {
-			if (piece.x < 0 || piece.x >= this.width || piece.y < 0 || piece.y >= this.height) {
+			if (
+				piece.x < 0 ||
+				piece.x >= this.width ||
+				piece.y < 0 ||
+				piece.y >= this.height
+			) {
 				throw new Error(
 					`Position out of bounds: (${piece.x}, ${piece.y}) on board size (${this.width}, ${this.height})`
 				);
@@ -122,7 +127,9 @@ export class Board {
 
 		const previousPosition = this.pieceIdToPosition.get(pieceId);
 		if (previousPosition) {
-			this.positionToPieceId.delete(`${previousPosition[0]},${previousPosition[1]}`);
+			this.positionToPieceId.delete(
+				`${previousPosition[0]},${previousPosition[1]}`
+			);
 		}
 
 		const key: PositionKey = `${x},${y}`;
@@ -155,13 +162,7 @@ export class Board {
 		this.pieceIdToPosition.set(pieceIdA, positionB);
 		this.pieceIdToPosition.set(pieceIdB, positionA);
 
-		this.positionToPieceId.set(
-			`${positionA[0]},${positionA[1]}`,
-			pieceIdB
-		);
-		this.positionToPieceId.set(
-			`${positionB[0]},${positionB[1]}`,
-			pieceIdA
-		);
+		this.positionToPieceId.set(`${positionA[0]},${positionA[1]}`, pieceIdB);
+		this.positionToPieceId.set(`${positionB[0]},${positionB[1]}`, pieceIdA);
 	}
 }

@@ -7,10 +7,7 @@ import {
 	GamePhase,
 	ReadyQuickChatOptions,
 } from "@creature-chess/models";
-import {
-	PlayerStatus,
-	inProgressBattle,
-} from "@creature-chess/models";
+import { PlayerStatus, inProgressBattle } from "@creature-chess/models";
 import { StreakType } from "@creature-chess/models";
 import { PlayerTitle } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";

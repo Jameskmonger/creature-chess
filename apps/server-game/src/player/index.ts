@@ -10,12 +10,11 @@ import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 
-import { GameSocket } from "./socket";
-
+import { setupMetricCollector } from "../metrics/metricCollectorListener";
 import { setupPlayerBoard } from "./board";
 import { setupIncomingNetworking } from "./net/incoming";
 import { setupOutgoingNetworking } from "./net/outgoing";
-import { setupMetricCollector } from "../metrics/metricCollectorListener";
+import { GameSocket } from "./socket";
 
 type Parameters = {
 	getRoundInfo: () => RoundInfoState;
@@ -38,7 +37,9 @@ export const playerNetworking = (
 		socket.disconnect();
 	};
 
-	cleanups.push(setupIncomingNetworking(socket, (action) => entity.put(action)));
+	cleanups.push(
+		setupIncomingNetworking(socket, (action) => entity.put(action))
+	);
 
 	cleanups.push(setupMetricCollector(entity));
 

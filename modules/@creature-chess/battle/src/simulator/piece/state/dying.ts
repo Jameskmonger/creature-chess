@@ -1,9 +1,9 @@
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { Stores } from "../../types";
 import { DyingState, StateResult } from "./types";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 export function doDying(
 	currentTurn: number,

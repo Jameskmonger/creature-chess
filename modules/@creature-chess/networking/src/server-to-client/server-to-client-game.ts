@@ -1,3 +1,4 @@
+import { PositionKey } from "@creature-chess/board";
 import {
 	PieceModel,
 	QuickChatOption,
@@ -5,7 +6,6 @@ import {
 } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
-import { PositionKey } from "@creature-chess/board";
 
 type ActionStreamPacket = {
 	type: string;

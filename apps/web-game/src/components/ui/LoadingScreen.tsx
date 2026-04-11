@@ -1,13 +1,14 @@
 import React from "react";
 
-import { Page } from "../Page";
 import { createUseThemeStyles } from "~/useStyles";
+
+import { Page } from "../Page";
 
 type Props = {
 	message?: string;
 };
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	"loadingArea": {
 		display: "flex",
 		flexDirection: "column",

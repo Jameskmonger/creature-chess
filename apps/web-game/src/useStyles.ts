@@ -59,7 +59,7 @@ export const DEFAULT_THEME: Theme = {
 			neutral: "#f5f5f5",
 		},
 		background: "#424e70",
-	}
+	},
 };
 
 export function createUseThemeStyles<

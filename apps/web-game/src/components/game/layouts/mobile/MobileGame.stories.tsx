@@ -6,7 +6,10 @@ import { Overlay } from "~/store/game/ui/overlay";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { GameLayoutStoryArgs, GameLayoutStoryWrapper } from "../GameLayoutStory";
+import {
+	GameLayoutStoryArgs,
+	GameLayoutStoryWrapper,
+} from "../GameLayoutStory";
 import { MobileGame } from "./MobileGame";
 
 export default {

@@ -1,11 +1,8 @@
-import {
-	PlayerStatus,
-	PlayerBattle,
-} from "@creature-chess/models";
+import { PlayerStatus, PlayerBattle } from "@creature-chess/models";
 import { PlayerStreak } from "@creature-chess/models";
 
-import { Player } from "../entities/player/player";
 import { PlayerCommands, PlayerStateSelectors } from "../entities/player";
+import { Player } from "../entities/player/player";
 
 export const listenForPropertyUpdates = (
 	player: Player,

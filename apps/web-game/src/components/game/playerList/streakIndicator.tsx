@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 
-import { StreakType } from "@creature-chess/models";
 import { createUseThemeStyles } from "~/useStyles";
+
+import { StreakType } from "@creature-chess/models";
 
 type Props = {
 	type: StreakType | null;
@@ -11,7 +12,7 @@ type Props = {
 const getBackground = (type: StreakType | null) =>
 	type === StreakType.WIN ? "#38b764" : "#b13e53";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	indicator: (props: Props) => ({
 		"position": "relative",
 

@@ -1,8 +1,7 @@
 import { Socket } from "socket.io-client";
+import { LobbyCommands } from "~/store/lobby/state";
 
 import { LobbyServerToClient } from "@creature-chess/networking";
-
-import { LobbyCommands } from "~/store/lobby/state";
 
 import type { Dispatch } from "./types";
 
@@ -11,7 +10,7 @@ export class LobbyConnection {
 
 	public constructor(
 		private socket: Socket,
-		private dispatch: Dispatch,
+		private dispatch: Dispatch
 	) {
 		this.setupListeners();
 	}
@@ -40,7 +39,9 @@ export class LobbyConnection {
 			this.dispatch(LobbyCommands.updatePlayers(payload));
 		};
 
-		const onSettingsUpdate = (payload: LobbyServerToClient.LobbySettingsUpdatePacket) => {
+		const onSettingsUpdate = (
+			payload: LobbyServerToClient.LobbySettingsUpdatePacket
+		) => {
 			this.dispatch(LobbyCommands.updateSettings(payload));
 		};
 
@@ -49,7 +50,7 @@ export class LobbyConnection {
 
 		this.cleanupFns.push(
 			() => this.socket.off("lobbyUpdate", onLobbyUpdate),
-			() => this.socket.off("settingsUpdate", onSettingsUpdate),
+			() => this.socket.off("settingsUpdate", onSettingsUpdate)
 		);
 	}
 }

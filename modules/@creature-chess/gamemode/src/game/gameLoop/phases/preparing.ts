@@ -4,9 +4,9 @@ import { GamePhase } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 
 import { playerRunPreparingPhaseEvent } from "../../events";
-import { readyNotifier } from "../../readyNotifier";
 import { GameContextPlayers } from "../../gameContext";
 import { Gamemode } from "../../gamemode";
+import { readyNotifier } from "../../readyNotifier";
 
 export const runPreparingPhase = async (
 	gamemode: Gamemode,

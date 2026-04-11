@@ -4,13 +4,11 @@ import pDefer from "p-defer";
 import { GamePhase } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 
-import {
-	playerFinishMatchEvent,
-} from "../../../entities/player/events";
+import { playerFinishMatchEvent } from "../../../entities/player/events";
 import { getMatches } from "../../../features/match/selectors";
-import { Match } from "../../match";
 import { GameContextPlayers } from "../../gameContext";
 import { Gamemode } from "../../gamemode";
+import { Match } from "../../match";
 
 type Callbacks = {
 	onMatchStart?: () => void;

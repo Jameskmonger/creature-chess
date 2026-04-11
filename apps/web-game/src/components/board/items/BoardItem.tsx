@@ -1,10 +1,11 @@
 import React from "react";
 
+import classNames from "classnames";
 import { createPortal } from "react-dom";
 import { createUseStyles } from "react-jss";
+
 import { useBoardState } from "../context";
 import { useActiveDrag, useDragPiece } from "../drag/PieceDragContext";
-import classNames from "classnames";
 
 type BoardItemProps = {
 	children: React.ReactNode;
@@ -78,12 +79,8 @@ export function BoardItem({ id, x, y, draggable, children }: BoardItemProps) {
 					<div
 						className={styles.preview}
 						style={{
-							left:
-								activeDrag.clientX -
-								activeDrag.offsetX * PREVIEW_SCALE,
-							top:
-								activeDrag.clientY -
-								activeDrag.offsetY * PREVIEW_SCALE,
+							left: activeDrag.clientX - activeDrag.offsetX * PREVIEW_SCALE,
+							top: activeDrag.clientY - activeDrag.offsetY * PREVIEW_SCALE,
 							width: activeDrag.width * PREVIEW_SCALE,
 							height: activeDrag.height * PREVIEW_SCALE,
 						}}

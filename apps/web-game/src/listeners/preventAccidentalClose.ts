@@ -6,7 +6,9 @@ import { gameStartedAction } from "./gameStartedAction";
 
 declare const APP_URL: string;
 
-export const setupPreventAccidentalCloseListener = (startListening: ClientStartListening) => {
+export const setupPreventAccidentalCloseListener = (
+	startListening: ClientStartListening
+) => {
 	startListening({
 		actionCreator: gameStartedAction,
 		effect: async (_action, api) => {

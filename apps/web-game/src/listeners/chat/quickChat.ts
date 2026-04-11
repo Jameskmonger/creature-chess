@@ -1,9 +1,11 @@
-import { ClientStartListening } from "~/store/listenerContext";
 import { QuickChatCommands } from "~/store/game/chat/state";
+import { ClientStartListening } from "~/store/listenerContext";
 
 import { PlayerEvents } from "@creature-chess/gamemode";
 
-export const setupQuickChatListener = (startListening: ClientStartListening) => {
+export const setupQuickChatListener = (
+	startListening: ClientStartListening
+) => {
 	startListening({
 		actionCreator: PlayerEvents.playerReceiveQuickChatEvent,
 		effect: async ({ payload: { sendingPlayerId, chatValue } }, api) => {
@@ -13,7 +15,9 @@ export const setupQuickChatListener = (startListening: ClientStartListening) => 
 				return;
 			}
 
-			api.dispatch(QuickChatCommands.setPlayerChat({ sendingPlayerId, chatValue }));
+			api.dispatch(
+				QuickChatCommands.setPlayerChat({ sendingPlayerId, chatValue })
+			);
 
 			// Wait 3 seconds then clear. If a new chat arrives, cancelActiveListeners()
 			// aborts this delay and the clear never happens.

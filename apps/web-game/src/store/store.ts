@@ -1,13 +1,12 @@
 import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
-
+import { GameBoardState } from "~/components/game/board/state";
 import { setupGameListeners } from "~/listeners/gameListeners";
 
 import { gameReducer } from "./game/state";
+import { ClientExtra, ClientStartListening } from "./listenerContext";
 import { lobbyReducer } from "./lobby/state";
 import { menuReducer } from "./menu/state";
-import { ClientExtra, ClientStartListening } from "./listenerContext";
 import { AppState } from "./state";
-import { GameBoardState } from "~/components/game/board/state";
 
 export const createAppStore = (gameBoard: GameBoardState) => {
 	const extra: ClientExtra = {

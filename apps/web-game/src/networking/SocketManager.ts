@@ -1,20 +1,19 @@
 import { io, Socket } from "socket.io-client";
-
-import { GameServerToClient, LobbyServerToClient } from "@creature-chess/networking";
-import { HandshakeRequest } from "@creature-chess/networking";
-
+import { gameStartedAction } from "~/listeners/gameStartedAction";
 import { MenuCommands } from "~/store/menu/state";
 import { getCookieValue } from "~/utils/getCookieValue";
-import { gameStartedAction } from "~/listeners/gameStartedAction";
 
-import type { Dispatch, GameEventMap } from "./types";
-import { EventBus } from "./EventBus";
-import { LobbyConnection } from "./LobbyConnection";
-import { GameConnection, BoardSlices } from "./GameConnection";
 import {
-	setLobbyConnectionRef,
-	setGameConnectionRef,
-} from "./connectionRef";
+	GameServerToClient,
+	LobbyServerToClient,
+} from "@creature-chess/networking";
+import { HandshakeRequest } from "@creature-chess/networking";
+
+import { EventBus } from "./EventBus";
+import { GameConnection, BoardSlices } from "./GameConnection";
+import { LobbyConnection } from "./LobbyConnection";
+import { setLobbyConnectionRef, setGameConnectionRef } from "./connectionRef";
+import type { Dispatch, GameEventMap } from "./types";
 
 export class SocketManager {
 	public readonly eventBus = new EventBus<GameEventMap>();
@@ -26,7 +25,7 @@ export class SocketManager {
 
 	public constructor(
 		private dispatch: Dispatch,
-		private gameBoard: BoardSlices,
+		private gameBoard: BoardSlices
 	) {}
 
 	public async connect(): Promise<void> {
@@ -36,7 +35,9 @@ export class SocketManager {
 		const token = getCookieValue("guest-token");
 
 		if (!session) {
-			this.dispatch(MenuCommands.setLoadingMessage("ERROR: Failed to open session!"));
+			this.dispatch(
+				MenuCommands.setLoadingMessage("ERROR: Failed to open session!")
+			);
 			return;
 		}
 
@@ -71,7 +72,7 @@ export class SocketManager {
 	private async connectSocket(request: HandshakeRequest): Promise<void> {
 		const socket = (io as any)(
 			{ path: "/game/socket.io" },
-			{ transports: ["websocket"] },
+			{ transports: ["websocket"] }
 		);
 
 		await new Promise<void>((resolve, reject) => {
@@ -79,7 +80,9 @@ export class SocketManager {
 				socket.emit("authenticate", request);
 			});
 
-			const onAuthenticated = ({ error }: GameServerToClient.AuthenticateResponse) => {
+			const onAuthenticated = ({
+				error,
+			}: GameServerToClient.AuthenticateResponse) => {
 				if (!error) {
 					socket.off("authenticate_response", onAuthenticated);
 					resolve();
@@ -99,24 +102,28 @@ export class SocketManager {
 	private listenForConnection() {
 		const socket = this.socket;
 		if (!socket) {
-return;
-}
+			return;
+		}
 
-		const onLobbyConnected = (payload: LobbyServerToClient.LobbyConnectionPacket) => {
+		const onLobbyConnected = (
+			payload: LobbyServerToClient.LobbyConnectionPacket
+		) => {
 			this.destroyLobbyConnection();
 			this.lobbyConnection = new LobbyConnection(socket, this.dispatch);
 			this.lobbyConnection.handleConnected(payload);
 			setLobbyConnectionRef(this.lobbyConnection);
 		};
 
-		const onGameConnected = (payload: GameServerToClient.GameConnectionPacket) => {
+		const onGameConnected = (
+			payload: GameServerToClient.GameConnectionPacket
+		) => {
 			this.destroyLobbyConnection();
 			this.destroyGameConnection();
 			this.gameConnection = new GameConnection(
 				socket,
 				this.dispatch,
 				this.gameBoard,
-				this.eventBus,
+				this.eventBus
 			);
 			this.gameConnection.handleConnected(payload);
 			setGameConnectionRef(this.gameConnection);

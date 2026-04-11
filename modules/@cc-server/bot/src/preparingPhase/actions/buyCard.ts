@@ -4,6 +4,7 @@ import {
 	UtilityInput,
 } from "@shoki/engine";
 
+import { Board } from "@creature-chess/board";
 import {
 	PlayerState,
 	PlayerStateSelectors,
@@ -11,6 +12,7 @@ import {
 } from "@creature-chess/gamemode";
 import { Card } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { BotPersonality } from "@cc-server/data";
 
@@ -21,8 +23,6 @@ import {
 	getCompletionProximity,
 	getTraitSynergyCount,
 } from "./utils/cardScoring";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 export const createBuyCardAction = (
 	board: Board,

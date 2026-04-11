@@ -1,5 +1,6 @@
 import { createUtilityValue, ScoringDirection } from "@shoki/engine";
 
+import { Board } from "@creature-chess/board";
 import {
 	PlayerActions,
 	PlayerState,
@@ -12,7 +13,6 @@ import { GamemodeSettings } from "@creature-chess/models";
 import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "../../brain";
-import { Board } from "@creature-chess/board";
 
 // Highest XP-to-next-level cost in the curve. Used as the upper end of the
 // "xp remaining" range so the input normalises sensibly.

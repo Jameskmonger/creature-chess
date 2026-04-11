@@ -14,7 +14,5 @@ export function MenuPage({ error }: { error?: string }) {
 		return <LoadingScreen message={loadingMessage} />;
 	}
 
-	return (
-		<GameMenu />
-	);
+	return <GameMenu />;
 }

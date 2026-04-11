@@ -1,13 +1,13 @@
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
+import { StandardTargetProvider } from "../../../targeting/provider/StandardTargetProvider";
+import { TargetProvider } from "../../../targeting/provider/TargetProvider";
 import { getTargetAttackPositions } from "../../../targeting/utils/getTargetAttackPositions";
 import { Stores } from "../../types";
 import { MoveAction } from "../actions";
 import { PieceState, StateResult, WanderState } from "./types";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
-import { StandardTargetProvider } from "../../../targeting/provider/StandardTargetProvider";
-import { TargetProvider } from "../../../targeting/provider/TargetProvider";
 
 const targetProvider: TargetProvider = new StandardTargetProvider();
 
@@ -40,13 +40,9 @@ export function doWander(
 	{ combatStore }: Stores
 ): StateResult {
 	// TODO search for a better state here and return early
-	const bestState = findBestState(
-		currentTurn,
-		board,
-		pieceRegistry,
-		pieceId,
-		{ combatStore }
-	);
+	const bestState = findBestState(currentTurn, board, pieceRegistry, pieceId, {
+		combatStore,
+	});
 
 	if (bestState.type !== "wandering") {
 		return [bestState];
@@ -65,7 +61,10 @@ export function doWander(
 		return [state];
 	}
 
-	const adjacentPositions = getTargetAttackPositions({ width: board.width, height: board.height }, { x: piecePosition[0], y: piecePosition[1] });
+	const adjacentPositions = getTargetAttackPositions(
+		{ width: board.width, height: board.height },
+		{ x: piecePosition[0], y: piecePosition[1] }
+	);
 	const emptyPositions = adjacentPositions.filter(
 		(p) => board.getPieceIdAtPosition(p.x, p.y) === null
 	);

@@ -1,18 +1,18 @@
 import * as React from "react";
 import { useState, useRef } from "react";
 
+import { Button } from "~/components/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PositionChip } from "~/components/ui/player/PositionChip";
+import { createUseThemeStyles } from "~/useStyles";
 
 import { PlayerListPlayer } from "@creature-chess/models";
 
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside";
-import { Button } from "~/components/ui";
 import { PlayerAvatar, PlayerHealthbar, Title } from "../../ui/player";
 import { BattleInfo } from "./battleInfo";
 import { StreakIndicator } from "./streakIndicator";
-import { createUseThemeStyles } from "~/useStyles";
 
 interface Props {
 	index: number;
@@ -33,7 +33,7 @@ const getDetailReadyColor = ({
 	showReadyIndicator = false,
 }: Props) => (ready && showReadyIndicator ? "#20b720" : "#ccc");
 
-const useStyles = createUseThemeStyles<string, Props>(theme => ({
+const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 	container: (props) => ({
 		"border": props.isOpponent ? "3px solid #b13e53" : "",
 		"boxSizing": "border-box",

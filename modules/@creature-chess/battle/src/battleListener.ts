@@ -1,11 +1,9 @@
-import {
-	Dispatch,
-	TypedStartListening,
-	UnknownAction,
-} from "@reduxjs/toolkit";
+import { Dispatch, TypedStartListening, UnknownAction } from "@reduxjs/toolkit";
 
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { BattleEvent, BattleEventLog } from "./battleEventLog";
 import {
@@ -18,17 +16,15 @@ import { simulateTurn } from "./simulator";
 import { PieceCombatState } from "./state/state";
 import { pieceInfoStore } from "./state/store";
 import { duration } from "./utils/duration";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 const isATeamDefeated = (board: Board, pieceRegistry: PieceRegistry) => {
-	const survivingPieces = board.getAllPieces()
-		.map(p => pieceRegistry.getPieceById(p.id))
+	const survivingPieces = board
+		.getAllPieces()
+		.map((p) => pieceRegistry.getPieceById(p.id))
 		.filter((p): p is PieceModel => p !== null)
-		.filter(p => p.currentHealth > 0);
+		.filter((p) => p.currentHealth > 0);
 
-	const pieceOwnerIds = survivingPieces
-		.map((p) => p.ownerId);
+	const pieceOwnerIds = survivingPieces.map((p) => p.ownerId);
 
 	return new Set(pieceOwnerIds).size <= 1;
 };
@@ -40,7 +36,7 @@ const runBattle = async (
 	startingTurn: number,
 	settings: GamemodeSettings,
 	dispatch: Dispatch,
-	onEvents?: (events: BattleEvent[]) => void,
+	onEvents?: (events: BattleEvent[]) => void
 ) => {
 	let turnCount = startingTurn;
 
@@ -56,7 +52,8 @@ const runBattle = async (
 
 	while (true) {
 		const shouldStop =
-			turnCount >= settings.battleTurnCount || isATeamDefeated(board, pieceRegistry);
+			turnCount >= settings.battleTurnCount ||
+			isATeamDefeated(board, pieceRegistry);
 
 		if (shouldStop) {
 			// Emit dying events and remove any pieces that died on the final turn
@@ -106,7 +103,7 @@ export const setupBattleListeners = <TState>(
 	settings: GamemodeSettings,
 	board: Board,
 	pieceRegistry: PieceRegistry,
-	onEvents?: (events: BattleEvent[]) => void,
+	onEvents?: (events: BattleEvent[]) => void
 ) => {
 	const controls = { paused: false };
 
@@ -130,7 +127,15 @@ export const setupBattleListeners = <TState>(
 			api.cancelActiveListeners();
 
 			controls.paused = false;
-			await runBattle(controls, board, pieceRegistry, action.payload.turn || 0, settings, api.dispatch, onEvents);
+			await runBattle(
+				controls,
+				board,
+				pieceRegistry,
+				action.payload.turn || 0,
+				settings,
+				api.dispatch,
+				onEvents
+			);
 		},
 	});
 };

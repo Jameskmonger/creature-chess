@@ -1,6 +1,6 @@
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
-import { Board } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { BattleEvent, BattleEventLog } from "./battleEventLog";
@@ -10,13 +10,13 @@ import { pieceInfoStore } from "./state/store";
 import { duration } from "./utils/duration";
 
 const isATeamDefeated = (board: Board, pieceRegistry: PieceRegistry) => {
-	const survivingPieces = board.getAllPieces()
-		.map(p => pieceRegistry.getPieceById(p.id))
+	const survivingPieces = board
+		.getAllPieces()
+		.map((p) => pieceRegistry.getPieceById(p.id))
 		.filter((p): p is PieceModel => p !== null)
-		.filter(p => p.currentHealth > 0);
+		.filter((p) => p.currentHealth > 0);
 
-	const pieceOwnerIds = survivingPieces
-		.map((p) => p.ownerId);
+	const pieceOwnerIds = survivingPieces.map((p) => p.ownerId);
 
 	return new Set(pieceOwnerIds).size <= 1;
 };
@@ -31,7 +31,7 @@ export class BattleRunner {
 		private pieceRegistry: PieceRegistry,
 		private settings: GamemodeSettings,
 		startingTurn: number = 0,
-		private onEvents?: (events: BattleEvent[]) => void,
+		private onEvents?: (events: BattleEvent[]) => void
 	) {
 		this.turn = startingTurn;
 	}
@@ -58,7 +58,8 @@ export class BattleRunner {
 
 		while (true) {
 			const shouldStop =
-				this.turn >= this.settings.battleTurnCount || isATeamDefeated(this.board, this.pieceRegistry);
+				this.turn >= this.settings.battleTurnCount ||
+				isATeamDefeated(this.board, this.pieceRegistry);
 
 			if (shouldStop) {
 				// Emit dying events and remove any pieces that died on the final turn
@@ -90,7 +91,10 @@ export class BattleRunner {
 
 			const turnTimer = duration(this.settings.battleTurnDuration);
 
-			simulateTurn(++this.turn, this.board, this.pieceRegistry, { combatStore, eventLog: this.eventLog });
+			simulateTurn(++this.turn, this.board, this.pieceRegistry, {
+				combatStore,
+				eventLog: this.eventLog,
+			});
 
 			const events = this.eventLog.consume();
 			if (events.length > 0 && this.onEvents) {

@@ -10,7 +10,7 @@ type TabMenuProps = {
 	className?: string;
 };
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	tabMenu: {
 		display: "flex",
 		flexDirection: "column",

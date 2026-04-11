@@ -1,17 +1,20 @@
-import { SubscribableBoard } from "@creature-chess/board";
 import * as React from "react";
-import { useBoardSubscription } from "./useBoard";
-import { createUseThemeStyles } from "~/useStyles";
-import { PieceModel } from "@creature-chess/models";
-import { getDefinitionById } from "@creature-chess/gamemode";
+
 import classNames from "classnames";
+import { createUseThemeStyles } from "~/useStyles";
+
+import { SubscribableBoard } from "@creature-chess/board";
+import { getDefinitionById } from "@creature-chess/gamemode";
+import { PieceModel } from "@creature-chess/models";
+
+import { useBoardSubscription } from "./useBoard";
 
 type StylesProps = {
 	width: number;
 	height: number;
 };
 
-const useStyles = createUseThemeStyles<string, StylesProps>(theme => ({
+const useStyles = createUseThemeStyles<string, StylesProps>((theme) => ({
 	grid: {
 		display: "grid",
 		gridTemplateColumns: (props) => `repeat(${props.width}, 1fr)`,
@@ -28,7 +31,7 @@ const useStyles = createUseThemeStyles<string, StylesProps>(theme => ({
 		left: 0,
 		width: "100%",
 		height: "100%",
-	}
+	},
 }));
 
 function usePieceRegistry() {
@@ -64,11 +67,19 @@ function usePieceRegistry() {
 				default:
 					return null;
 			}
-		}
+		},
 	};
 }
 
-function BoardPiece({ board, piece, renderPiece }: { board: SubscribableBoard; piece: PieceModel; renderPiece: (piece: PieceModel) => React.ReactNode }) {
+function BoardPiece({
+	board,
+	piece,
+	renderPiece,
+}: {
+	board: SubscribableBoard;
+	piece: PieceModel;
+	renderPiece: (piece: PieceModel) => React.ReactNode;
+}) {
 	const position = board.getPiecePosition(piece.id);
 
 	if (!position) {
@@ -77,19 +88,20 @@ function BoardPiece({ board, piece, renderPiece }: { board: SubscribableBoard; p
 
 	const [x, y] = position;
 
-	return (<div
-		style={{
-			position: "absolute",
-			width: `${100 / board.width}%`,
-			height: `${100 / board.height}%`,
-			left: `${(x / board.width) * 100}%`,
-			top: `${(y / board.height) * 100}%`,
-			transition: "left 100ms linear, top 100ms linear",
-			willChange: "left, top",
-		}}
-	>
-		{renderPiece(piece)}
-	</div>
+	return (
+		<div
+			style={{
+				position: "absolute",
+				width: `${100 / board.width}%`,
+				height: `${100 / board.height}%`,
+				left: `${(x / board.width) * 100}%`,
+				top: `${(y / board.height) * 100}%`,
+				transition: "left 100ms linear, top 100ms linear",
+				willChange: "left, top",
+			}}
+		>
+			{renderPiece(piece)}
+		</div>
 	);
 }
 
@@ -128,22 +140,34 @@ export function GameBoard({
 		return t;
 	}, [b, getTileClassName, styles.tile]);
 
-	const pieces = React.useMemo(() => b.getAllPieces()
-			.map(({ id }) => {
-				const piece = pieceRegistry.getPiece(id);
+	const pieces = React.useMemo(
+		() =>
+			b
+				.getAllPieces()
+				.map(({ id }) => {
+					const piece = pieceRegistry.getPiece(id);
 
-				if (!piece) {
-					return null;
-				}
+					if (!piece) {
+						return null;
+					}
 
-				return <BoardPiece key={id} board={b} piece={piece} renderPiece={renderPiece} />;
-			})
-			.filter((p) => p !== null), [b, pieceRegistry, renderPiece]);
+					return (
+						<BoardPiece
+							key={id}
+							board={b}
+							piece={piece}
+							renderPiece={renderPiece}
+						/>
+					);
+				})
+				.filter((p) => p !== null),
+		[b, pieceRegistry, renderPiece]
+	);
 
-	return (<div className={classNames(styles.grid, boardClassName)}>
-		{tiles}
-		<div className={styles.pieces}>
-			{pieces}
+	return (
+		<div className={classNames(styles.grid, boardClassName)}>
+			{tiles}
+			<div className={styles.pieces}>{pieces}</div>
 		</div>
-	</div>);
+	);
 }

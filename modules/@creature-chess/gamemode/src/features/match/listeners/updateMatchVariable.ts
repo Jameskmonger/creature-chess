@@ -1,12 +1,10 @@
+import { playerFinishMatchEvent } from "../../../entities/player/events";
 import { PlayerStartListening } from "../../../entities/player/player";
-import {
-	playerFinishMatchEvent,
-} from "../../../entities/player/events";
-import {
-	playerRunReadyPhaseEvent,
-} from "../../../game/events";
+import { playerRunReadyPhaseEvent } from "../../../game/events";
 
-export const setupUpdateMatchVariableListeners = (startListening: PlayerStartListening) => {
+export const setupUpdateMatchVariableListeners = (
+	startListening: PlayerStartListening
+) => {
 	startListening({
 		actionCreator: playerRunReadyPhaseEvent,
 		effect: async ({ payload: { match } }, api) => {

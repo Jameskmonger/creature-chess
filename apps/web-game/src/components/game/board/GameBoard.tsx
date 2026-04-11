@@ -2,27 +2,30 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { BoardGrid } from "~/components/board";
+import {
+	ClickBoardTileEvent,
+	DropBoardItemEvent,
+} from "~/components/board/events";
+import { AppState } from "~/store";
 
+import { PackedPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
 import { BoardSpaceFiller } from "./BoardSpaceFiller";
 import { useGameBoard } from "./GameBoardContext";
 import { ThemedBoard } from "./ThemedBoard";
-import { BoardGrid } from "~/components/board";
-import { ClickBoardTileEvent, DropBoardItemEvent } from "~/components/board/events";
-import { PackedPosition } from "@creature-chess/board";
-import { AppState } from "~/store";
 
 export type GameBoardLocation =
 	| {
-		locationType: "board";
-		x: number;
-		y: number;
-	}
+			locationType: "board";
+			x: number;
+			y: number;
+	  }
 	| {
-		locationType: "bench";
-		x: number;
-	};
+			locationType: "bench";
+			x: number;
+	  };
 
 type GameBoardClickEvent = { location: GameBoardLocation };
 type GameBoardDropPieceEvent = {
@@ -253,8 +256,7 @@ export function GameBoard({
 	);
 
 	const totalHeight =
-		bench.height +
-		(showFiller ? board.height * 2 : board.height);
+		bench.height + (showFiller ? board.height * 2 : board.height);
 
 	const styles = useStyles({
 		boardHalfHeight: board.height,

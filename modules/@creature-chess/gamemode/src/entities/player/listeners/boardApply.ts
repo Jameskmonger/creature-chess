@@ -1,3 +1,5 @@
+import { unpackX, unpackY } from "@creature-chess/board";
+
 import { PlayerStartListening } from "../player";
 import {
 	addBenchPieceCommand,
@@ -13,14 +15,15 @@ import {
 	swapBenchPiecesCommand,
 	swapBoardPiecesCommand,
 } from "../state/board";
-import { unpackX, unpackY } from "@creature-chess/board";
 
 /**
  * Sets up listeners that apply board/bench commands to the actual Board instances.
  *
  * Created to support migration away from board state being in Redux store.
  */
-export const setupBoardApplyListeners = (startListening: PlayerStartListening) => {
+export const setupBoardApplyListeners = (
+	startListening: PlayerStartListening
+) => {
 	// Apply board/bench commands to the actual Board instances
 	// === board
 
@@ -117,10 +120,7 @@ export const setupBoardApplyListeners = (startListening: PlayerStartListening) =
 			const bench = api.player.bench;
 			const existingPosition = bench.getPiecePosition(pieceId);
 
-			if (
-				!existingPosition ||
-				existingPosition[0] !== from.x
-			) {
+			if (!existingPosition || existingPosition[0] !== from.x) {
 				return;
 			}
 

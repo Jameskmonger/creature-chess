@@ -1,17 +1,23 @@
 import * as React from "react";
+
+import {
+	faPlay,
+	faQuestionCircle,
+	faBook,
+} from "@fortawesome/free-solid-svg-icons";
+import { useSocketManager } from "~/networking";
 import { createUseThemeStyles } from "~/useStyles";
-import { TagLine } from "../TagLine";
+
 import { PageBoardBackground } from "../PageBackground";
-import { MenuCard } from "./MenuCard";
-import { NavBar } from "../ui/navbar/NavBar";
-import { faPlay, faQuestionCircle, faBook } from "@fortawesome/free-solid-svg-icons";
+import { TagLine } from "../TagLine";
+import { UpdateNotes } from "../game/UpdateNotes";
+import { Help } from "../game/help";
 import { Button } from "../ui";
 import { CreatureImage } from "../ui/creatureImage";
-import { Help } from "../game/help";
-import { UpdateNotes } from "../game/UpdateNotes";
-import { useSocketManager } from "~/networking";
+import { NavBar } from "../ui/navbar/NavBar";
+import { MenuCard } from "./MenuCard";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	root: {
 		width: "100%",
 		height: "100%",
@@ -30,8 +36,8 @@ const useStyles = createUseThemeStyles(theme => ({
 
 		"& img": {
 			height: "5rem",
-			filter: "drop-shadow(0px 2px 2px #222)"
-		}
+			filter: "drop-shadow(0px 2px 2px #222)",
+		},
 	},
 	content: {
 		padding: "0.5rem",
@@ -127,27 +133,34 @@ export function GameMenu() {
 			</div>
 			<div className={classes.content}>
 				<PageBoardBackground />
-				{
-					showSocial && (
-						<div className={classes.social}>
-							<MenuCard>
-								<div className={classes.profile}>
-									<img src={`${APP_IMAGE_ROOT}/ui/guest.png`} alt="Guest Profile Icon" />
-									<span>Playing as Guest</span>
-								</div>
-							</MenuCard>
-							<MenuCard>
-								<img className={classes.friends} src={`${APP_IMAGE_ROOT}/ui/friends.png`} alt="Friends Profile Icon" />
-							</MenuCard>
-						</div>
-					)
-				}
+				{showSocial && (
+					<div className={classes.social}>
+						<MenuCard>
+							<div className={classes.profile}>
+								<img
+									src={`${APP_IMAGE_ROOT}/ui/guest.png`}
+									alt="Guest Profile Icon"
+								/>
+								<span>Playing as Guest</span>
+							</div>
+						</MenuCard>
+						<MenuCard>
+							<img
+								className={classes.friends}
+								src={`${APP_IMAGE_ROOT}/ui/friends.png`}
+								alt="Friends Profile Icon"
+							/>
+						</MenuCard>
+					</div>
+				)}
 				<div className={classes.main}>
-					{
-						view === "home"
-						&& <div className={classes.home}>
+					{view === "home" && (
+						<div className={classes.home}>
 							<MenuCard className={classes.homeCard}>
-								<p className={classes.welcome}>Welcome to <span className={classes.highlight}>Creature Chess</span>!</p>
+								<p className={classes.welcome}>
+									Welcome to{" "}
+									<span className={classes.highlight}>Creature Chess</span>!
+								</p>
 								<div className={classes.creatures}>
 									<CreatureImage definitionId={33} facing="front" />
 									<CreatureImage definitionId={44} facing="front" />
@@ -155,32 +168,56 @@ export function GameMenu() {
 									<CreatureImage definitionId={27} facing="front" />
 									<CreatureImage definitionId={39} facing="front" />
 								</div>
-								<Button color="primary" size="large" onClick={onFindGameClick}>Start Game</Button>
-								<Button color="muted" size="medium" onClick={() => setView("help")}>How to Play</Button>
-								<Button color="muted" size="medium" onClick={() => setView("updates")}>Update Notes</Button>
+								<Button color="primary" size="large" onClick={onFindGameClick}>
+									Start Game
+								</Button>
+								<Button
+									color="muted"
+									size="medium"
+									onClick={() => setView("help")}
+								>
+									How to Play
+								</Button>
+								<Button
+									color="muted"
+									size="medium"
+									onClick={() => setView("updates")}
+								>
+									Update Notes
+								</Button>
 							</MenuCard>
 						</div>
-					}
-					{view === "help" && <MenuCard><Help onBack={() => setView("home")} /></MenuCard>}
-					{view === "updates" && <MenuCard><UpdateNotes onBack={() => setView("home")} /></MenuCard>}
+					)}
+					{view === "help" && (
+						<MenuCard>
+							<Help onBack={() => setView("home")} />
+						</MenuCard>
+					)}
+					{view === "updates" && (
+						<MenuCard>
+							<UpdateNotes onBack={() => setView("home")} />
+						</MenuCard>
+					)}
 				</div>
 			</div>
 			<div>
 				<NavBar
-					items={[
-						{
-							key: "help",
-							icon: faQuestionCircle,
-						},
-						{
-							key: "home",
-							icon: faPlay,
-						},
-						{
-							key: "updates",
-							icon: faBook,
-						}
-					] as const}
+					items={
+						[
+							{
+								key: "help",
+								icon: faQuestionCircle,
+							},
+							{
+								key: "home",
+								icon: faPlay,
+							},
+							{
+								key: "updates",
+								icon: faBook,
+							},
+						] as const
+					}
 					active={view}
 					onSelect={setView}
 				/>

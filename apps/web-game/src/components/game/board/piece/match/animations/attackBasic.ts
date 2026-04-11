@@ -13,10 +13,11 @@ export const useAttackBasicStyles = createUseStyles({
 			transform: "translate(0, 0)",
 		},
 		"50%": {
-			transform: "translate("
-				+ `calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower) * var(--attackXDirection)), `
-				+ `calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower) * var(--attackYDirection))`
-				+ ")",
+			transform:
+				"translate(" +
+				`calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower) * var(--attackXDirection)), ` +
+				`calc(${ATTACK_MOVEMENT_MULTIPLIER_PX}px * var(--attackPower) * var(--attackYDirection))` +
+				")",
 		},
 		"100%": {
 			transform: "translate(0, 0)",

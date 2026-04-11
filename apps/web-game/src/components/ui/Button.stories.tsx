@@ -1,8 +1,10 @@
 import * as React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./Button";
+
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { Button } from "./Button";
 
 const meta: Meta<typeof Button> = {
 	title: "@creature-chess / ui / Button",
@@ -49,7 +51,11 @@ export const Large: Story = {
 
 export const WithIcon: Story = {
 	args: {
-		children: <>Hello! <FontAwesomeIcon icon={faUsers} /></>
+		children: (
+			<>
+				Hello! <FontAwesomeIcon icon={faUsers} />
+			</>
+		),
 	},
 };
 

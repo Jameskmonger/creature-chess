@@ -1,8 +1,10 @@
+import { Board } from "@creature-chess/board";
 import {
 	getDistance,
 	getRelativeDirection,
 	PieceModel,
 } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { getCooldownForSpeed } from "../../../utils/getCooldownForSpeed";
 import { getHitDamage } from "../../../utils/getHitDamage";
@@ -11,8 +13,6 @@ import { getStats } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { HitAction } from "./types";
-import { PieceRegistry } from "@creature-chess/utils";
-import { Board } from "@creature-chess/board";
 
 const ATTACK_TURN_DURATION = 2;
 const MOVE_TURN_DURATION = 2;

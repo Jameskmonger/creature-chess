@@ -2,15 +2,8 @@ import { Board } from "./board";
 import { packPosition, unpackX, unpackY } from "./position";
 import { rotateGridPosition } from "./rotateGridPosition";
 
-export const mergeBoards = (
-	id: string,
-	home: Board,
-	away: Board
-): Board => {
-	if (
-		home.width !== away.width ||
-		home.height !== away.height
-	) {
+export const mergeBoards = (id: string, home: Board, away: Board): Board => {
+	if (home.width !== away.width || home.height !== away.height) {
 		throw Error("Trying to merge odd-sized boards");
 	}
 
@@ -20,7 +13,11 @@ export const mergeBoards = (
 	const differenceHeight = newBoard.height - home.height;
 
 	for (const piece of home.getAllPieces()) {
-		newBoard.setPiece(piece.id, piece.x + differenceWidth, piece.y + differenceHeight);
+		newBoard.setPiece(
+			piece.id,
+			piece.x + differenceWidth,
+			piece.y + differenceHeight
+		);
 	}
 
 	for (const piece of away.getAllPieces()) {
@@ -34,11 +31,7 @@ export const mergeBoards = (
 			position
 		);
 
-		newBoard.setPiece(
-			piece.id,
-			unpackX(newPos),
-			unpackY(newPos)
-		);
+		newBoard.setPiece(piece.id, unpackX(newPos), unpackY(newPos));
 	}
 
 	return newBoard;

@@ -1,4 +1,6 @@
+import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { Pathfinder, getNextPiecePosition } from "../../../pathfinding";
 import { findEnemyInAttackRange } from "../../../targeting/utils/getTargetAttackPositions";
@@ -6,8 +8,6 @@ import { getStats } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { AttackState, StateResult } from "./types";
-import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
 
 export function doAttack(
 	currentTurn: number,
@@ -74,7 +74,10 @@ export function doAttack(
 		];
 	}
 
-	const pathfinder = new Pathfinder({ width: board.width, height: board.height });
+	const pathfinder = new Pathfinder({
+		width: board.width,
+		height: board.height,
+	});
 
 	const nextPosition = getNextPiecePosition(
 		pathfinder,

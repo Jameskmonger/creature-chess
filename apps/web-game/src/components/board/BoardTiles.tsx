@@ -2,10 +2,11 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Tile } from "./tile/Tile";
-import { ClickBoardTileEvent } from "./events";
-import { useBoardState } from "./context";
 import { BoardSize } from "@creature-chess/board";
+
+import { useBoardState } from "./context";
+import { ClickBoardTileEvent } from "./events";
+import { Tile } from "./tile/Tile";
 
 type Props = {
 	lightTileClassName?: string;
@@ -35,7 +36,9 @@ export function BoardTiles({
 	onClick,
 }: Props) {
 	const board = useBoardState();
-	const styles = useBoardStyles({ size: { width: board.width, height: board.height } });
+	const styles = useBoardStyles({
+		size: { width: board.width, height: board.height },
+	});
 
 	const tiles = React.useMemo(() => {
 		const t = [];

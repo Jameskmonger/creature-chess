@@ -1,8 +1,9 @@
-import classNames from "classnames";
 import React from "react";
+
+import classNames from "classnames";
 import { createUseThemeStyles } from "~/useStyles";
 
-const useStyles = createUseThemeStyles(theme => ({
+const useStyles = createUseThemeStyles((theme) => ({
 	tagline: {
 		height: 18,
 		fontSize: 18,
@@ -16,8 +17,8 @@ const useStyles = createUseThemeStyles(theme => ({
 
 	highlight: {
 		color: theme.palette.accent.neutral,
-		fontFamily: theme.typography.accent
-	}
+		fontFamily: theme.typography.accent,
+	},
 }));
 
 export function TagLine() {
@@ -35,10 +36,10 @@ export function TagLine() {
 			title="http://tiberisoft.dev"
 			onClick={openTiberisoftWebsite}
 			onKeyDown={(e) => {
- if (e.key === "Enter") {
-openTiberisoftWebsite();
-}
-}}
+				if (e.key === "Enter") {
+					openTiberisoftWebsite();
+				}
+			}}
 		>
 			A <span className={classes.highlight}>'Tiberisoft'</span> Game
 		</div>
