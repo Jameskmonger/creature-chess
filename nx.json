@@ -26,7 +26,11 @@
 			"cache": true
 		},
 		"lint": {
-			"inputs": ["default"],
+			"inputs": [
+				"default",
+				"{workspaceRoot}/.eslintignore",
+				"{workspaceRoot}/.eslintrc.js"
+			],
 			"cache": true
 		}
 	},
