@@ -61,7 +61,19 @@ export const getTraitSynergyCount = (
 /**
  * A card is "wanted" if it would either complete a 3-of-a-kind setup or share
  * at least one trait with a piece the player already owns.
+ *
+ * Bootstrap case: when the player owns no pieces, every card is "wanted" (any
+ * card can be the seed of a future comp). Without this, `isCardWanted` would
+ * be `false` for every card at game start, which saturates the reroll-cards
+ * "shop quality" signal at its maximum and traps bots in a reroll spiral
+ * before they've bought anything.
  */
-export const isCardWanted = (allPieces: PieceModel[], card: Card): boolean =>
-	getCompletionProximity(allPieces, card) > 0 ||
-	getTraitSynergyCount(allPieces, card) > 0;
+export const isCardWanted = (allPieces: PieceModel[], card: Card): boolean => {
+	if (allPieces.length === 0) {
+		return true;
+	}
+	return (
+		getCompletionProximity(allPieces, card) > 0 ||
+		getTraitSynergyCount(allPieces, card) > 0
+	);
+};

@@ -32,24 +32,29 @@ export const createRerollCardsAction = (
 	const health = PlayerStateSelectors.getPlayerHealth(state);
 	const cards = PlayerStateSelectors.getPlayerCards(state);
 
-	// Count cards in the shop the bot would actually want. Lower count = worse
-	// shop = more reason to reroll. High-vision bots care most about this.
+	// Does the shop have ANY card the bot wants? Reroll should only win when
+	// the answer is no. Previously this was `wantedCardCount` with a linear
+	// Low-direction mapping over [0, 5], which meant 1-2 wanted cards still
+	// scored the reroll at ~0.8 — dominating a 0.37 buy-card and sending bots
+	// into reroll loops. Reroll when there's nothing worth buying, not when
+	// there are *few* things worth buying.
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
-	const wantedCardCount = cards.filter(
+	const hasAnyWantedCard = cards.some(
 		(c) => c !== null && isCardWanted(allPieces, c)
-	).length;
+	);
 
 	const moneyRemaining = money - settings.rerollCost;
 
 	const score = createUtilityValue([
 		{
-			name: "wantedCardCount",
-			// Vision driver: bad shop = high reroll utility. Dominant
-			// signal — reroll should be primarily about "is the shop bad?",
-			// not secondary econ/panic factors.
+			name: "shopHasNothingWanted",
+			// Vision driver: dominant binary "is the shop worth keeping?" signal.
+			// `1` only when NO card in the shop is wanted; otherwise `0`. With
+			// a linear Low-direction mapping over [0, 1], that's exactly what
+			// we want — reroll fires only when there's nothing worth buying.
 			importance: 3,
-			value: wantedCardCount,
-			range: [0, 5],
+			value: hasAnyWantedCard ? 1 : 0,
+			range: [0, 1],
 			direction: ScoringDirection.Low,
 			weighting: {
 				value: personality.vision,
