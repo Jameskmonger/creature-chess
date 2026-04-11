@@ -7,3 +7,4 @@ packages/ui/stories
 
 .eslintignore
 .eslintrc.js
+dist/
