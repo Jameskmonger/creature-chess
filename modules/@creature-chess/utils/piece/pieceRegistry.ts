@@ -11,7 +11,7 @@ export class PieceRegistry {
 	private rafScheduled = false;
 	private pendingNotify = false;
 
-	constructor() {
+	public constructor() {
 		this.pieces = new Map();
 	}
 
@@ -21,6 +21,20 @@ export class PieceRegistry {
 	};
 
 	public getSnapshot = () => this.version;
+
+	public registerPiece(piece: PieceModel) {
+		this.pieces.set(piece.id, piece);
+		this.markChanged();
+	}
+
+	public deregisterPiece(pieceId: PieceModel["id"]) {
+		this.pieces.delete(pieceId);
+		this.markChanged();
+	}
+
+	public getPieceById(pieceId: PieceModel["id"]): PieceModel | null {
+		return this.pieces.get(pieceId) || null;
+	}
 
 	protected markChanged(opts?: { immediate?: boolean }) {
 		this.version++;
@@ -53,20 +67,6 @@ export class PieceRegistry {
 
 			this.notifyListeners();
 		});
-	}
-
-	registerPiece(piece: PieceModel) {
-		this.pieces.set(piece.id, piece);
-		this.markChanged();
-	}
-
-	deregisterPiece(pieceId: PieceModel["id"]) {
-		this.pieces.delete(pieceId);
-		this.markChanged();
-	}
-
-	getPieceById(pieceId: PieceModel["id"]): PieceModel | null {
-		return this.pieces.get(pieceId) || null;
 	}
 
 	private notifyListeners() {

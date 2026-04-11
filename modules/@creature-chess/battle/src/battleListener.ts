@@ -69,9 +69,9 @@ const runBattle = async (
 				}
 			}
 
-			const events = eventLog.consume();
-			if (events.length > 0 && onEvents) {
-				onEvents(events);
+			const finalEvents = eventLog.consume();
+			if (finalEvents.length > 0 && onEvents) {
+				onEvents(finalEvents);
 			}
 
 			for (const id of deadPieceIds) {
