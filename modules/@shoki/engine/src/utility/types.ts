@@ -212,6 +212,11 @@ export enum ScoringDirection {
 }
 
 export type UtilityInput = {
+	/**
+	 * Human-readable label, surfaced in the debug breakdown (e.g. "card.cost",
+	 * "completionProximity"). Optional; falls back to `input[N]` if omitted.
+	 */
+	name?: string;
 	value: number;
 	range: [number, number];
 	direction: ScoringDirection;
@@ -227,4 +232,38 @@ export type UtilityInput = {
 		value: UtilityNumberValue;
 		direction: ScoringDirection;
 	};
+};
+
+/**
+ * Per-input breakdown of a `createUtilityValue` computation. Populated on every
+ * call; consumers that don't need it can discard it. Used to answer "why did the
+ * bot choose this action?" by inspecting which input contributed most.
+ */
+export type ScoredInput = {
+	/** Input label, or `input[N]` if the input didn't supply a `name`. */
+	name: string;
+	/** `input.value` before any transformation. */
+	raw: number;
+	/** After `getRangeValue`: range-normalised and direction-flipped (1–200). */
+	directed: number;
+	/** Personality multiplier in `[0.5, 1.5]`, or `1` if no weighting was set. */
+	personalityMultiplier: number;
+	/** The raw `input.importance` value (defaults to 1). */
+	importance: number;
+	/**
+	 * This row's unnormalised contribution: `directed * personalityMultiplier *
+	 * importance`. Divide by `UtilityScore.totalImportance` to get the normalised
+	 * contribution to the final value. Unnormalised is stored to keep the
+	 * `Math.floor(sum / totalImportance) === value` invariant drift-free.
+	 */
+	weighted: number;
+};
+
+export type UtilityScore = {
+	/** Final score, clamped to `[1, 200]`. */
+	value: UtilityNumberValue;
+	/** Sum of all input importances, used to normalise the per-row `weighted`. */
+	totalImportance: number;
+	/** Per-input breakdown, one entry per `UtilityInput` in input order. */
+	inputs: ScoredInput[];
 };

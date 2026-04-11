@@ -1,5 +1,8 @@
 export {
 	createUtilityValue,
-	type UtilityNumberValue,
 	ScoringDirection,
+	type ScoredInput,
+	type UtilityInput,
+	type UtilityNumberValue,
+	type UtilityScore,
 } from "./src/utility";

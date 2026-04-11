@@ -52,6 +52,67 @@ export const createBuyCardAction = (
 	const traitSynergyCount = getTraitSynergyCount(allPieces, card);
 	const moneyRemaining = money - card.cost;
 
+	const score = createUtilityValue([
+		{
+			name: "card.cost",
+			// High-ambition bots prefer expensive cards.
+			value: card.cost,
+			range: [1, 5],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.ambition,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "completionProximity",
+			// Completing a 3-of-a-kind is the single biggest win a buy can
+			// deliver, so it should dominate the rest of the signals.
+			importance: 3,
+			value: completionProximity,
+			range: [0, 2],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.vision,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "traitSynergyCount",
+			// Trait synergy is the second-biggest structural win.
+			importance: 3,
+			value: traitSynergyCount,
+			range: [0, 3],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.vision,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "moneyRemaining",
+			// Low-ambition bots avoid emptying their wallet.
+			value: moneyRemaining,
+			range: [0, 30],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.ambition,
+				direction: ScoringDirection.Low,
+			},
+		},
+		{
+			name: "health",
+			// Low-composure bots panic-buy board fillers at low HP.
+			value: health,
+			range: [1, 100],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.composure,
+				direction: ScoringDirection.Low,
+			},
+		},
+	]);
+
 	return {
 		name: `buy card [${card.name}]`,
 		action: () =>
@@ -62,60 +123,7 @@ export const createBuyCardAction = (
 						card.traits[1] as "valiant" | "arcane" | "cunning"
 					],
 			}),
-		value: createUtilityValue([
-			{
-				// High-ambition bots prefer expensive cards.
-				value: card.cost,
-				range: [1, 5],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.ambition,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Completing a 3-of-a-kind is the single biggest win a buy can
-				// deliver, so it should dominate the rest of the signals.
-				importance: 3,
-				value: completionProximity,
-				range: [0, 2],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.vision,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Trait synergy is the second-biggest structural win.
-				importance: 3,
-				value: traitSynergyCount,
-				range: [0, 3],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.vision,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Low-ambition bots avoid emptying their wallet.
-				value: moneyRemaining,
-				range: [0, 30],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.ambition,
-					direction: ScoringDirection.Low,
-				},
-			},
-			{
-				// Low-composure bots panic-buy board fillers at low HP.
-				value: health,
-				range: [1, 100],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.composure,
-					direction: ScoringDirection.Low,
-				},
-			},
-		]),
+		value: score.value,
+		breakdown: score.inputs,
 	};
 };

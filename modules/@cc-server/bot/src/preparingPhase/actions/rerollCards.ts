@@ -41,54 +41,61 @@ export const createRerollCardsAction = (
 
 	const moneyRemaining = money - settings.rerollCost;
 
+	const score = createUtilityValue([
+		{
+			name: "wantedCardCount",
+			// Vision driver: bad shop = high reroll utility. Dominant
+			// signal — reroll should be primarily about "is the shop bad?",
+			// not secondary econ/panic factors.
+			importance: 3,
+			value: wantedCardCount,
+			range: [0, 5],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.vision,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "health",
+			// Composure driver: low health → panickers reroll.
+			value: health,
+			range: [1, 100],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.composure,
+				direction: ScoringDirection.Low,
+			},
+		},
+		{
+			name: "moneyRemaining",
+			// Ambition driver: more spare gold → burner rerolls aggressively.
+			value: moneyRemaining,
+			range: [0, 50],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.ambition,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "money",
+			// Soft anti-reroll: low-ambition bots care about preserving gold;
+			// when they have lots, the dampening pulls reroll utility down.
+			value: money,
+			range: [1, 50],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.ambition,
+				direction: ScoringDirection.Low,
+			},
+		},
+	]);
+
 	return {
 		name: "reroll cards",
 		action: PlayerActions.rerollCardsPlayerAction,
-		value: createUtilityValue([
-			{
-				// Vision driver: bad shop = high reroll utility. Dominant
-				// signal — reroll should be primarily about "is the shop bad?",
-				// not secondary econ/panic factors.
-				importance: 3,
-				value: wantedCardCount,
-				range: [0, 5],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.vision,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Composure driver: low health → panickers reroll.
-				value: health,
-				range: [1, 100],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.composure,
-					direction: ScoringDirection.Low,
-				},
-			},
-			{
-				// Ambition driver: more spare gold → burner rerolls aggressively.
-				value: moneyRemaining,
-				range: [0, 50],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.ambition,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Soft anti-reroll: low-ambition bots care about preserving gold;
-				// when they have lots, the dampening pulls reroll utility down.
-				value: money,
-				range: [1, 50],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.ambition,
-					direction: ScoringDirection.Low,
-				},
-			},
-		]),
+		value: score.value,
+		breakdown: score.inputs,
 	};
 };

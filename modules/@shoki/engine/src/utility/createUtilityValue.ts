@@ -1,6 +1,12 @@
 import { clampToUtilityNumber } from "./clamp";
 import { getRangeValue } from "./getRangeValue";
-import { UtilityInput, UtilityNumberValue, ScoringDirection } from "./types";
+import {
+	ScoredInput,
+	ScoringDirection,
+	UtilityInput,
+	UtilityNumberValue,
+	UtilityScore,
+} from "./types";
 
 /**
  * Map a personality value (1-200) to a multiplier in [0.5, 1.5].
@@ -22,33 +28,47 @@ const getWeightingValue = (
 		: 1.5 - value / 200;
 
 /**
- * Compute a utility score for a set of inputs.
+ * Compute a utility score for a set of inputs and return both the final value
+ * and a per-input breakdown explaining how it was reached.
  *
- * Each input contributes `directed * personalityMultiplier * importance`, and the
- * final score is `sum / totalImportance`. `importance` defaults to 1, so call sites
- * that don't supply it stay equal-weighted — mathematically identical to the
- * previous averaging behaviour (three inputs at 1 each average to `sum/3`; adding
- * a fourth drops everything to `sum/4`). The dilution penalty from adding inputs
+ * Each input contributes `directed * personalityMultiplier * importance` (stored
+ * per-input in `ScoredInput.weighted`), and the final score is
+ * `sum / totalImportance`. `importance` defaults to 1, so call sites that don't
+ * supply it stay equal-weighted — mathematically identical to the previous
+ * averaging behaviour (three inputs at 1 each average to `sum/3`; adding a
+ * fourth drops everything to `sum/4`). The dilution penalty from adding inputs
  * is fixed by intentional importance assignment at the call site, not by this
  * function alone. The division is deferred to the end so integer-aligned cases
  * don't drift through floating-point accumulation.
  */
-export const createUtilityValue = (
-	inputs: UtilityInput[]
-): UtilityNumberValue => {
+export const createUtilityValue = (inputs: UtilityInput[]): UtilityScore => {
+	const scored: ScoredInput[] = [];
 	let totalImportance = 0;
 	let totalValue = 0;
 
-	for (const input of inputs) {
+	for (let i = 0; i < inputs.length; i++) {
+		const input = inputs[i];
 		const directed = getRangeValue(input);
 		const personalityMultiplier = input.weighting
 			? getWeightingValue(input.weighting.value, input.weighting.direction)
 			: 1;
 		const importance = input.importance ?? 1;
+		const weighted = directed * personalityMultiplier * importance;
 
-		totalValue += directed * personalityMultiplier * importance;
+		scored.push({
+			name: input.name ?? `input[${i}]`,
+			raw: input.value,
+			directed,
+			personalityMultiplier,
+			importance,
+			weighted,
+		});
+
+		totalValue += weighted;
 		totalImportance += importance;
 	}
 
-	return clampToUtilityNumber(Math.floor(totalValue / totalImportance));
+	const value = clampToUtilityNumber(Math.floor(totalValue / totalImportance));
+
+	return { value, totalImportance, inputs: scored };
 };

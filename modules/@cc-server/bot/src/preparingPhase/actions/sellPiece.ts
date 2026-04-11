@@ -77,79 +77,88 @@ export const createSellPieceAction = (
 	const money = PlayerStateSelectors.getPlayerMoney(state);
 	const health = PlayerStateSelectors.getPlayerHealth(state);
 
+	const score = createUtilityValue([
+		{
+			name: "health",
+			// Low health + low composure → panic fire-sale.
+			value: health,
+			range: [1, 100],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.composure,
+				direction: ScoringDirection.Low,
+			},
+		},
+		{
+			name: "money",
+			// Low money + low composure → another panic-sell signal.
+			value: money,
+			range: [1, 50],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.composure,
+				direction: ScoringDirection.Low,
+			},
+		},
+		{
+			name: "piece.cost",
+			// Cheap pieces are more sellable; ambition pulls hardest toward
+			// dumping low-cost pieces in favour of (eventually) better ones.
+			value: piece.definition.cost,
+			range: [1, 5],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.ambition,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "sameDefinitionStage0Count",
+			// Vision protects 3-of-a-kind setups. More siblings = lower
+			// sell utility. Dominant signal: "is this piece part of a
+			// combo I'm building?" — should outweigh panic-sell pressure.
+			importance: 3,
+			value: sameDefinitionStage0Count,
+			range: [1, 3],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.vision,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "uniqueTraitCount",
+			// Vision also protects unique trait carriers — selling a piece
+			// that holds the only copy of a trait drops that trait entirely.
+			// Dominant signal: "is this the only piece holding a trait?"
+			importance: 3,
+			value: uniqueTraitCount,
+			range: [0, 3],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.vision,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "isOnBoard",
+			// Board pieces are actively fighting; selling one immediately
+			// weakens the team. Composure (plan-stability) protects them.
+			// `1` = on board, `0` = on bench.
+			value: isOnBoard ? 1 : 0,
+			range: [0, 1],
+			direction: ScoringDirection.Low,
+			weighting: {
+				value: personality.composure,
+				direction: ScoringDirection.High,
+			},
+		},
+	]);
+
 	return {
 		name: `sell piece [${piece.definition.name}]`,
 		action: () => PlayerActions.sellPiecePlayerAction({ pieceId: piece.id }),
-		value: createUtilityValue([
-			{
-				// Low health + low composure → panic fire-sale.
-				value: health,
-				range: [1, 100],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.composure,
-					direction: ScoringDirection.Low,
-				},
-			},
-			{
-				// Low money + low composure → another panic-sell signal.
-				value: money,
-				range: [1, 50],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.composure,
-					direction: ScoringDirection.Low,
-				},
-			},
-			{
-				// Cheap pieces are more sellable; ambition pulls hardest toward
-				// dumping low-cost pieces in favour of (eventually) better ones.
-				value: piece.definition.cost,
-				range: [1, 5],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.ambition,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Vision protects 3-of-a-kind setups. More siblings = lower
-				// sell utility. Dominant signal: "is this piece part of a
-				// combo I'm building?" — should outweigh panic-sell pressure.
-				importance: 3,
-				value: sameDefinitionStage0Count,
-				range: [1, 3],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.vision,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Vision also protects unique trait carriers — selling a piece
-				// that holds the only copy of a trait drops that trait entirely.
-				// Dominant signal: "is this the only piece holding a trait?"
-				importance: 3,
-				value: uniqueTraitCount,
-				range: [0, 3],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.vision,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Board pieces are actively fighting; selling one immediately
-				// weakens the team. Composure (plan-stability) protects them.
-				// `1` = on board, `0` = on bench.
-				value: isOnBoard ? 1 : 0,
-				range: [0, 1],
-				direction: ScoringDirection.Low,
-				weighting: {
-					value: personality.composure,
-					direction: ScoringDirection.High,
-				},
-			},
-		]),
+		value: score.value,
+		breakdown: score.inputs,
 	};
 };

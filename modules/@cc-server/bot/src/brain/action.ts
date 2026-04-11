@@ -1,9 +1,15 @@
 import { Action } from "redux";
 
+import { ScoredInput } from "@shoki/engine";
+
 export type BrainAction = {
 	name: string;
 	action: () => Action;
 	value: BrainActionValue;
+	/**
+	 * Per-input breakdown of the score.
+	 */
+	breakdown: ScoredInput[];
 };
 
 export enum BrainActionValue {

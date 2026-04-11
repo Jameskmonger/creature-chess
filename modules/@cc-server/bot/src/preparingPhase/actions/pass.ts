@@ -50,45 +50,51 @@ export const createPassAction = (
 	// Next-turn interest = floor(money / 10), capped at 5.
 	const expectedInterest = Math.min(Math.floor(money / 10), 5);
 
+	const score = createUtilityValue([
+		{
+			name: "expectedInterest",
+			// Vision driver: pass gets more attractive the more interest
+			// you'd earn next turn.
+			value: expectedInterest,
+			range: [0, 5],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.vision,
+				direction: ScoringDirection.High,
+			},
+		},
+		{
+			name: "hoarderBias",
+			// Ambition driver: low-ambition bots prefer to do nothing
+			// (hoarder archetype). Use a constant input weighted by ambition
+			// Low so the contribution is large for low-ambition bots.
+			value: 200,
+			range: [0, 200],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.ambition,
+				direction: ScoringDirection.Low,
+			},
+		},
+		{
+			name: "health",
+			// Composure driver: healthy bots are willing to pass; panicked
+			// (low-composure) low-HP bots will not.
+			value: health,
+			range: [1, 100],
+			direction: ScoringDirection.High,
+			weighting: {
+				value: personality.composure,
+				direction: ScoringDirection.High,
+			},
+		},
+	]);
+
 	return {
 		name: PASS_ACTION_NAME,
 		// No-op dispatch — the loop terminates before this is ever called.
 		action: () => ({ type: "@@bot/pass" }),
-		value: createUtilityValue([
-			{
-				// Vision driver: pass gets more attractive the more interest
-				// you'd earn next turn.
-				value: expectedInterest,
-				range: [0, 5],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.vision,
-					direction: ScoringDirection.High,
-				},
-			},
-			{
-				// Ambition driver: low-ambition bots prefer to do nothing
-				// (hoarder archetype). Use a constant input weighted by ambition
-				// Low so the contribution is large for low-ambition bots.
-				value: 200,
-				range: [0, 200],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.ambition,
-					direction: ScoringDirection.Low,
-				},
-			},
-			{
-				// Composure driver: healthy bots are willing to pass; panicked
-				// (low-composure) low-HP bots will not.
-				value: health,
-				range: [1, 100],
-				direction: ScoringDirection.High,
-				weighting: {
-					value: personality.composure,
-					direction: ScoringDirection.High,
-				},
-			},
-		]),
+		value: score.value,
+		breakdown: score.inputs,
 	};
 };

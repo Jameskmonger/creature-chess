@@ -16,7 +16,11 @@ const WORKER_COUNT = parseInt(
 );
 
 const RUN_ID = process.env.RUN_ID ?? String(Date.now());
+const DEBUG_BOT = process.env.DEBUG_BOT === "1";
 const dataDir = join(__dirname, "..", "data");
+
+const debugLogPath = (workerId: string | number) =>
+	join(dataDir, `${RUN_ID}-w${workerId}-debug.jsonl`);
 
 // Match production: multiples of 20 in [20, 200].
 // See modules/@cc-server/data/src/bot/_setup.ts
@@ -92,6 +96,13 @@ const runMaster = () => {
 			`→ ${dataDir}/${RUN_ID}-w*.csv`
 	);
 
+	if (DEBUG_BOT) {
+		console.log(
+			"DEBUG_BOT=1 → per-bot decisions will be dumped to " +
+				`${dataDir}/${RUN_ID}-w*-debug.jsonl`
+		);
+	}
+
 	let gamesDone = 0;
 	let workersDone = 0;
 
@@ -103,12 +114,20 @@ const runMaster = () => {
 			continue;
 		}
 
-		const worker = cluster.fork({
+		// Each worker gets its own debug file so appends from multiple workers
+		// don't interleave. DEBUG_BOT is only propagated when set on the master.
+		const workerEnv: Record<string, string> = {
 			RUN_ID,
 			WORKER_ID: String(i),
 			WORKER_GAMES: String(workerGames),
 			WORKER_START: String(start),
-		});
+		};
+		if (DEBUG_BOT) {
+			workerEnv.DEBUG_BOT = "1";
+			workerEnv.DEBUG_BOT_LOG_FILE = debugLogPath(i);
+		}
+
+		const worker = cluster.fork(workerEnv);
 
 		worker.on("message", (msg: { type: string }) => {
 			if (msg?.type === "game-done") {
