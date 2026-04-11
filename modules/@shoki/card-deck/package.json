@@ -25,7 +25,7 @@
 	"scripts": {
 		"build": "yarn run -T tsc -p ./tsconfig.json",
 		"test": "yarn run -T jest --passWithNoTests",
-		"lint": "yarn run -T eslint \"src/**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
+		"lint": "yarn run -T eslint \"src/**/*.{ts,tsx}\" \"**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
 	},
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
