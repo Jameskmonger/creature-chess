@@ -29,6 +29,7 @@ const mockSimulateTurn = simulateTurn as jest.Mock;
 function createMockBoard(pieces: { id: string; ownerId: string; health: number }[] = []) {
 	return {
 		getAllPieces: jest.fn(() => pieces.map((p) => ({ id: p.id }))),
+		removePiece: jest.fn(),
 	} as unknown as Board;
 }
 
