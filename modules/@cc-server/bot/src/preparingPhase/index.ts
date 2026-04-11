@@ -55,6 +55,17 @@ export const preparingPhase = async (api: PlayerListenerApi, personality: BotPer
 	while (true) {
 		const state = api.getState();
 
+		// If the bot has been eliminated mid-phase, stop acting. The RTK
+		// listener's abort signal only propagates through `api.delay` /
+		// `api.take`, and this loop awaits `delay` from the npm package, so
+		// cancellation never reaches it. Without this guard, a dead bot's
+		// loop keeps picking reroll → dispatch → loop forever until the
+		// next `gamePhaseStartedEvent` fires (which in the harness can be
+		// tens of rounds away) — burning cycles on the server for no effect.
+		if (PlayerStateSelectors.getPlayerHealth(state) <= 0) {
+			break;
+		}
+
 		const actions = getActions(board, bench, pieceRegistry, state, personality, settings);
 
 		if (actions.length === 0) {
