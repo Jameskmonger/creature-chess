@@ -8,10 +8,7 @@ import { getPlayerMoney } from "@creature-chess/gamemode";
 import { Card as CardModel } from "@creature-chess/models";
 
 import { useGameBoards } from "../board/state";
-import { CardShop as CardShop2D } from "./2d/cardShop";
-import { CardShop as CardShop3D } from "./3d/cardShop";
-
-const CARD_SHOP_TYPE: "2d" | "3d" = "2d" as "2d" | "3d";
+import { CardShopPresentation } from "./presentation/cardShop";
 
 export function CardShop() {
 	const gameActions = useGameActions();
@@ -55,10 +52,8 @@ export function CardShop() {
 		return null;
 	}
 
-	const CardShopStyled = CARD_SHOP_TYPE === "3d" ? CardShop3D : CardShop2D;
-
 	return (
-		<CardShopStyled
+		<CardShopPresentation
 			cards={cards}
 			ownedDefinitionIds={ownedDefinitionIds}
 			money={money}

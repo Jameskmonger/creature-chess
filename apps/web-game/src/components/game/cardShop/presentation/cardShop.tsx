@@ -111,7 +111,7 @@ const useStyles = createUseThemeStyles((theme) => ({
 	},
 }));
 
-export function CardShop({
+export function CardShopPresentation({
 	cards,
 	money,
 	ownedDefinitionIds,

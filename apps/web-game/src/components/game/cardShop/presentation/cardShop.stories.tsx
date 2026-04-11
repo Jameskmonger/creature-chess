@@ -6,12 +6,12 @@ import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsCont
 import { Card as CardModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
-import { CardShop } from "./cardShop";
+import { CardShopPresentation } from "./cardShop";
 import "./cardShop.stories.css";
 
 export default {
-	title: "@creature-chess / game / CardShop / 3d / CardShop",
-	component: CardShop,
+	title: "@creature-chess / game / CardShop",
+	component: CardShopPresentation,
 	argTypes: {
 		money: {
 			control: {
@@ -29,7 +29,7 @@ export default {
 const Template: Story<any> = (args) => (
 	<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
 		<div className="card-shop-story">
-			<CardShop {...args} />
+			<CardShopPresentation {...args} />
 		</div>
 	</GamemodeSettingsContextProvider>
 );
