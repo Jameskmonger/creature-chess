@@ -23,9 +23,7 @@ import { MobileContentPane } from "./MobileContentPane";
 import { OverlayComponent } from "./OverlayComponent";
 import { GameNavBar } from "./nav/GameNavBar";
 
-const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
-	currentOverlay,
-}) => {
+function GameOverlay({ currentOverlay }: { currentOverlay: Overlay }) {
 	const localPlayerId = useLocalPlayerId();
 
 	const inPlayingOrReadyPhase = useSelector<AppState, boolean>(
@@ -95,9 +93,9 @@ const GameOverlay: React.FunctionComponent<{ currentOverlay: Overlay }> = ({
 	}
 
 	return null;
-};
+}
 
-const MobileGameContentPane: React.FunctionComponent = () => {
+function MobileGameContentPane() {
 	const styles = useStyles();
 	const currentOverlay = useSelector<AppState, Overlay | null>(
 		(state) => state.game.ui.currentOverlay
@@ -120,7 +118,7 @@ const MobileGameContentPane: React.FunctionComponent = () => {
 			)}
 		</MobileContentPane>
 	);
-};
+}
 
 const useStyles = createUseStyles({
 	game: {

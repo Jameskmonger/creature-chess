@@ -15,10 +15,10 @@ const useStyles = createUseStyles({
 	},
 });
 
-const Label: React.FunctionComponent<Props> = (props) => {
+function Label(props: Props) {
 	const classes = useStyles(props);
 
 	return <span className={classes.label}>{props.children}</span>;
-};
+}
 
 export { Label };

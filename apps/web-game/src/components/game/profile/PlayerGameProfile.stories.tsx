@@ -1,6 +1,6 @@
-import React, { ComponentProps } from "react";
+import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { Provider } from "react-redux";
 import { LocalPlayerContextProvider } from "~/auth/context";
 import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
@@ -10,28 +10,30 @@ import { GamemodeSettingsPresets } from "@creature-chess/models";
 import { createMockStore } from "../../../../.storybook/utils";
 import { PlayerGameProfile } from "./PlayerGameProfile";
 
-export default {
+const meta: Meta<typeof PlayerGameProfile> = {
 	title: "@creature-chess / game / Profile / PlayerGameProfile",
 	component: PlayerGameProfile,
 	argTypes: {},
-} as Meta;
+	render: () => {
+		const store = createMockStore();
 
-const Template: Story<ComponentProps<typeof PlayerGameProfile>> = (args) => {
-	const store = createMockStore();
-
-	return (
-		<Provider store={store}>
-			<LocalPlayerContextProvider
-				value={{ type: "guest", id: "1234", nickname: "Guest" }}
-			>
-				<GamemodeSettingsContextProvider
-					value={GamemodeSettingsPresets["default"]}
+		return (
+			<Provider store={store}>
+				<LocalPlayerContextProvider
+					value={{ type: "guest", id: "1234", nickname: "Guest" }}
 				>
-					<PlayerGameProfile />
-				</GamemodeSettingsContextProvider>
-			</LocalPlayerContextProvider>
-		</Provider>
-	);
+					<GamemodeSettingsContextProvider
+						value={GamemodeSettingsPresets["default"]}
+					>
+						<PlayerGameProfile />
+					</GamemodeSettingsContextProvider>
+				</LocalPlayerContextProvider>
+			</Provider>
+		);
+	},
 };
-export const Default = Template.bind({});
-Default.args = {};
+export default meta;
+
+type Story = StoryObj<typeof PlayerGameProfile>;
+
+export const Default: Story = {};

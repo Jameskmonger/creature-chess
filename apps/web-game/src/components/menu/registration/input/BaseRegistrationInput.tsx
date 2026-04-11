@@ -15,11 +15,15 @@ const useStyles = createUseStyles({
 	},
 });
 
-const BaseRegistrationInput: React.FunctionComponent<{
+function BaseRegistrationInput({
+	heading,
+	info,
+	children,
+}: {
 	heading: string;
 	info: string;
 	children: React.ReactNode;
-}> = ({ heading, info, children }) => {
+}) {
 	const styles = useStyles();
 
 	return (
@@ -30,6 +34,6 @@ const BaseRegistrationInput: React.FunctionComponent<{
 			{children}
 		</div>
 	);
-};
+}
 
 export { BaseRegistrationInput };

@@ -1,20 +1,21 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Footer } from "./Footer";
 
-export default {
+const meta: Meta<typeof Footer> = {
 	title: "@creature-chess / ui / Footer",
 	component: Footer,
 	argTypes: {},
-} as Meta;
+	render: () => (
+		<div style={{ background: "grey", padding: "2em" }}>
+			<Footer />
+		</div>
+	),
+};
+export default meta;
 
-const Template: Story<any> = (args) => (
-	<div style={{ background: "grey", padding: "2em" }}>
-		<Footer />
-	</div>
-);
+type Story = StoryObj<typeof Footer>;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default: Story = {};

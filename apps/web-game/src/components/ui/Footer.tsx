@@ -13,7 +13,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-export const Footer: React.FunctionComponent = () => {
+export function Footer() {
 	const classes = useStyles();
 
 	return (
@@ -28,4 +28,4 @@ export const Footer: React.FunctionComponent = () => {
 			</a>
 		</div>
 	);
-};
+}

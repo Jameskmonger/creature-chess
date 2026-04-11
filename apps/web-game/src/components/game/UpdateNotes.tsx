@@ -30,10 +30,13 @@ const useStyles = createUseStyles({
 	},
 });
 
-const UpdateNotes: React.FunctionComponent<{
+function UpdateNotes({
+	hideFooter = false,
+	onBack,
+}: {
 	hideFooter?: boolean;
 	onBack: () => void;
-}> = ({ hideFooter = false, onBack }) => {
+}) {
 	const styles = useStyles();
 
 	return (
@@ -62,6 +65,6 @@ const UpdateNotes: React.FunctionComponent<{
 			{!hideFooter && <Footer />}
 		</Layout>
 	);
-};
+}
 
 export { UpdateNotes };

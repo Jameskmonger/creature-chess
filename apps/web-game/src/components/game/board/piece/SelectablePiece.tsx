@@ -20,7 +20,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-export const SelectablePiece: React.FC = () => {
+export function SelectablePiece() {
 	const styles = useStyles();
 
 	const { piece } = usePiece();
@@ -49,4 +49,4 @@ export const SelectablePiece: React.FC = () => {
 			<Piece healthbar="none" onClick={onClick} />
 		</div>
 	);
-};
+}

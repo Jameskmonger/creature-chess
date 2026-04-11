@@ -59,7 +59,7 @@ const useStyles = createUseStyles<string, HealthbarProps>({
 	},
 });
 
-const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
+function PieceHealthbar(props: HealthbarProps) {
 	const classes = useStyles(props);
 
 	return (
@@ -74,6 +74,6 @@ const PieceHealthbar: React.FunctionComponent<HealthbarProps> = (props) => {
 			</ProgressBar>
 		</div>
 	);
-};
+}
 
 export { PieceHealthbar };

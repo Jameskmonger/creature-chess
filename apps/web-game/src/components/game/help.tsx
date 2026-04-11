@@ -53,10 +53,13 @@ const useStyles = createUseStyles({
 	},
 });
 
-const Help: React.FunctionComponent<{
+function Help({
+	hideFooter = false,
+	onBack,
+}: {
 	hideFooter?: boolean;
 	onBack?: () => void;
-}> = ({ hideFooter = false, onBack }) => {
+}) {
 	const styles = useStyles();
 
 	return (
@@ -164,6 +167,6 @@ const Help: React.FunctionComponent<{
 			{!hideFooter && <Footer />}
 		</Layout>
 	);
-};
+}
 
 export { Help };

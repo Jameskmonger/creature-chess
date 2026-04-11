@@ -54,7 +54,7 @@ const useStyles = createUseStyles({
 	result: (props: Props) => ({ color: getResultColor(props) }),
 });
 
-const BattleInfo: React.FunctionComponent<Props> = (props) => {
+function BattleInfo(props: Props) {
 	const classes = useStyles(props);
 	const text = getBattleText(props.battle);
 
@@ -74,6 +74,6 @@ const BattleInfo: React.FunctionComponent<Props> = (props) => {
 			</div>
 		</div>
 	);
-};
+}
 
 export { BattleInfo };

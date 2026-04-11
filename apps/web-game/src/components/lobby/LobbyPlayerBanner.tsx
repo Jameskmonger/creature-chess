@@ -76,7 +76,7 @@ const useStyles = createUseThemeStyles((theme) => ({
 
 const NO_PLAYER_IMAGE = `${APP_IMAGE_ROOT}/ui/no_player_img.png`;
 
-const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
+function LobbyPlayerBanner({ player }: Props) {
 	const styles = useStyles();
 
 	if (!player) {
@@ -103,6 +103,6 @@ const LobbyPlayerBanner: React.FunctionComponent<Props> = ({ player }) => {
 			<Title title={player.profile?.title} />
 		</div>
 	);
-};
+}
 
 export { LobbyPlayerBanner };

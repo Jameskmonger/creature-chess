@@ -59,13 +59,13 @@ const useStyles = createUseStyles({
 	},
 });
 
-const StatusPlayerListItem: React.FunctionComponent<Props> = ({
+function StatusPlayerListItem({
 	name,
 	opponentName,
 	battle,
 	status,
 	subtitle,
-}) => {
+}: Props) {
 	const classes = useStyles();
 
 	return (
@@ -80,6 +80,6 @@ const StatusPlayerListItem: React.FunctionComponent<Props> = ({
 			</div>
 		</div>
 	);
-};
+}
 
 export { StatusPlayerListItem };

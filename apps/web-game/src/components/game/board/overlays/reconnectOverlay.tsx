@@ -7,7 +7,7 @@ import { AppState } from "~/store";
 import { Group } from "../../../ui/layout";
 import { BoardOverlay } from "./boardOverlay";
 
-const ReconnectOverlay: React.FunctionComponent = () => {
+function ReconnectOverlay() {
 	const connectionStatus = useSelector<AppState, ConnectionStatus>(
 		(state) => state.game.ui.connectionStatus
 	);
@@ -31,6 +31,6 @@ const ReconnectOverlay: React.FunctionComponent = () => {
 			</Group>
 		</BoardOverlay>
 	);
-};
+}
 
 export { ReconnectOverlay };

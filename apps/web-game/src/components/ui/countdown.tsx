@@ -5,10 +5,7 @@ interface Props {
 	render?: (secondsRemaining: number) => React.ReactElement;
 }
 
-const Countdown: React.FunctionComponent<Props> = ({
-	countdownToSeconds,
-	render,
-}) => {
+function Countdown({ countdownToSeconds, render }: Props) {
 	const [secondsRemaining, setSecondsRemaining] = React.useState<number | null>(
 		null
 	);
@@ -42,6 +39,6 @@ const Countdown: React.FunctionComponent<Props> = ({
 	}
 
 	return <span>{safeSecondsRemaining}</span>;
-};
+}
 
 export { Countdown };

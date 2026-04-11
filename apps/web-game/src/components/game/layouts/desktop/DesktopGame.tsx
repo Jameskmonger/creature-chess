@@ -65,7 +65,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-const DesktopGame: React.FunctionComponent = () => {
+function DesktopGame() {
 	const styles = useStyles();
 
 	const localPlayerId = useLocalPlayerId();
@@ -140,6 +140,6 @@ const DesktopGame: React.FunctionComponent = () => {
 			</div>
 		</div>
 	);
-};
+}
 
 export { DesktopGame };

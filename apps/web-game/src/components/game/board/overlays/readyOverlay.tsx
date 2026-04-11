@@ -105,7 +105,7 @@ const useStyles = createUseThemeStyles((theme) => ({
 	},
 }));
 
-const ReadyOverlay: React.FunctionComponent = () => {
+function ReadyOverlay() {
 	const styles = useStyles();
 	const inReadyPhase = useSelector<AppState, boolean>(
 		(state) => state.game.roundInfo.phase === GamePhase.READY
@@ -191,6 +191,6 @@ const ReadyOverlay: React.FunctionComponent = () => {
 			</div>
 		</BoardOverlay>
 	);
-};
+}
 
 export { ReadyOverlay };

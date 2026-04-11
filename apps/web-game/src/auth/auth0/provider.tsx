@@ -15,10 +15,7 @@ type Props = {
  *
  * This file should be conditionally imported based on whether or not auth0 is enabled
  */
-export const Auth0AuthProvider: React.FC<Props> = ({
-	children,
-	onRedirectCallback,
-}) => {
+export function Auth0AuthProvider({ children, onRedirectCallback }: Props) {
 	const { domain, clientID, redirectUri } = auth0Config;
 
 	if (!domain) {
@@ -47,4 +44,4 @@ export const Auth0AuthProvider: React.FC<Props> = ({
 			<Auth0LocalUserProvider>{children}</Auth0LocalUserProvider>
 		</Auth0Provider>
 	);
-};
+}

@@ -1,23 +1,25 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { LobbyPlayer } from "@creature-chess/models";
 import { PlayerTitle } from "@creature-chess/models";
 
 import { LobbyPlayerBanner } from "./LobbyPlayerBanner";
 
-export default {
+const meta: Meta<typeof LobbyPlayerBanner> = {
 	title: "@creature-chess / lobby / LobbyPlayerBanner",
 	component: LobbyPlayerBanner,
 	argTypes: {},
-} as Meta;
+	render: (args) => (
+		<div style={{ width: "320px", height: "80px" }}>
+			<LobbyPlayerBanner {...args} />
+		</div>
+	),
+};
+export default meta;
 
-const Template: Story<any> = (args) => (
-	<div style={{ width: "320px", height: "80px" }}>
-		<LobbyPlayerBanner {...args} />
-	</div>
-);
+type Story = StoryObj<typeof LobbyPlayerBanner>;
 
 const createLobbyPlayer = (
 	title: PlayerTitle | null,
@@ -38,27 +40,32 @@ const createLobbyPlayer = (
 	};
 };
 
-export const StandardPlayer = Template.bind({});
-StandardPlayer.args = {
-	player: createLobbyPlayer(null, false),
+export const StandardPlayer: Story = {
+	args: {
+		player: createLobbyPlayer(null, false),
+	},
 };
 
-export const Developer = Template.bind({});
-Developer.args = {
-	player: createLobbyPlayer({ color: 0x79ffe0, text: "Developer" }, false),
+export const Developer: Story = {
+	args: {
+		player: createLobbyPlayer({ color: 0x79ffe0, text: "Developer" }, false),
+	},
 };
 
-export const Contributor = Template.bind({});
-Contributor.args = {
-	player: createLobbyPlayer({ color: 0xe89292, text: "Contributor" }, false),
+export const Contributor: Story = {
+	args: {
+		player: createLobbyPlayer({ color: 0xe89292, text: "Contributor" }, false),
+	},
 };
 
-export const HallOfFame = Template.bind({});
-HallOfFame.args = {
-	player: createLobbyPlayer({ color: 0xf7ee85, text: "Hall of Fame" }, false),
+export const HallOfFame: Story = {
+	args: {
+		player: createLobbyPlayer({ color: 0xf7ee85, text: "Hall of Fame" }, false),
+	},
 };
 
-export const BotPlayer = Template.bind({});
-BotPlayer.args = {
-	player: createLobbyPlayer(null, true),
+export const BotPlayer: Story = {
+	args: {
+		player: createLobbyPlayer(null, true),
+	},
 };

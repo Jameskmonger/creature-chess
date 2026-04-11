@@ -11,8 +11,8 @@ import { createUseThemeStyles } from "~/useStyles";
 
 const padNumberToTwo = (val: number) => (val < 10 ? `0${val}` : val.toString());
 
-const countdownRender =
-	(styles: ReturnType<typeof useStyles>) => (totalSecondsRemaining: number) => {
+const countdownRender = (styles: ReturnType<typeof useStyles>) =>
+	function (totalSecondsRemaining: number) {
 		const minutesRemaining = Math.floor(totalSecondsRemaining / 60);
 		const secondsRemaining = Math.ceil(totalSecondsRemaining % 60);
 

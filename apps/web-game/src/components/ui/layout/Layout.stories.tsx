@@ -1,15 +1,11 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
 import { Half } from "./Half";
 import { Layout } from "./Layout";
-
-export default {
-	title: "@creature-chess / ui / Layout",
-} as Meta;
 
 const useStyles = createUseStyles({
 	layout: {
@@ -27,35 +23,39 @@ const useStyles = createUseStyles({
 	},
 });
 
-const Template: Story<any> = (args) => {
-	const classes = useStyles();
+const meta: Meta<any> = {
+	title: "@creature-chess / ui / Layout",
+	render: (args) => {
+		const classes = useStyles();
 
-	if (args.row) {
+		if (args.row) {
+			return (
+				<div className="layout-story">
+					<Layout direction="row" className={classes.layout}>
+						<Half className={classes.half}>Half A</Half>
+						<Half className={classes.half}>Half B</Half>
+					</Layout>
+				</div>
+			);
+		}
+
 		return (
 			<div className="layout-story">
-				<Layout direction="row" className={classes.layout}>
+				<Layout
+					direction="column"
+					className={classNames(classes.layout, classes.columnLayout)}
+				>
 					<Half className={classes.half}>Half A</Half>
 					<Half className={classes.half}>Half B</Half>
 				</Layout>
 			</div>
 		);
-	}
-
-	return (
-		<div className="layout-story">
-			<Layout
-				direction="column"
-				className={classNames(classes.layout, classes.columnLayout)}
-			>
-				<Half className={classes.half}>Half A</Half>
-				<Half className={classes.half}>Half B</Half>
-			</Layout>
-		</div>
-	);
+	},
 };
+export default meta;
 
-export const RowLayout = Template.bind({});
-RowLayout.args = { row: true };
+type Story = StoryObj<any>;
 
-export const ColumnLayout = Template.bind({});
-ColumnLayout.args = { row: false };
+export const RowLayout: Story = { args: { row: true } };
+
+export const ColumnLayout: Story = { args: { row: false } };

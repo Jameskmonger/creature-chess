@@ -20,9 +20,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-const QuickChatButton: React.FunctionComponent<{
-	chatOption: QuickChatOption;
-}> = ({ chatOption }) => {
+function QuickChatButton({ chatOption }: { chatOption: QuickChatOption }) {
 	const styles = useStyles();
 	const dispatch = useDispatch();
 
@@ -41,5 +39,5 @@ const QuickChatButton: React.FunctionComponent<{
 			{chatOption.toString()}
 		</button>
 	);
-};
+}
 export { QuickChatButton };

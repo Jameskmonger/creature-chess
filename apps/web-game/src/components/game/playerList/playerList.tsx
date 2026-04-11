@@ -40,7 +40,7 @@ const getOpponentName = (battle: PlayerBattle, players: PlayerListPlayer[]) => {
 	return players.find((p) => p.id === battle.opponentId)?.name || "";
 };
 
-const PlayerList: React.FunctionComponent = () => {
+function PlayerList() {
 	const gameActions = useGameActions();
 	const localPlayerId = useLocalPlayerId();
 	const players = useSelector<AppState, PlayerListPlayer[]>(
@@ -109,6 +109,6 @@ const PlayerList: React.FunctionComponent = () => {
 			})}
 		</Layout>
 	);
-};
+}
 
 export { PlayerList };

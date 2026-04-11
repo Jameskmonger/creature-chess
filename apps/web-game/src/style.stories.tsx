@@ -129,7 +129,7 @@ function FontSample({ fontFamily }: { fontFamily: keyof Theme["typography"] }) {
 	);
 }
 
-const ColorPaletteDemo: React.FC = () => {
+function ColorPaletteDemo() {
 	const classes = useStyles();
 	return (
 		<div className={classes.container}>
@@ -159,7 +159,7 @@ const ColorPaletteDemo: React.FC = () => {
 			</div>
 		</div>
 	);
-};
+}
 
 export const ThemeDemo: Story = {
 	render: () => <ColorPaletteDemo />,

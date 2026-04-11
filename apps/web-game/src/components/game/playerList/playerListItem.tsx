@@ -125,7 +125,7 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 	},
 }));
 
-const PlayerListItem: React.FunctionComponent<Props> = (props) => {
+function PlayerListItem(props: Props) {
 	const styles = useStyles(props);
 
 	const {
@@ -183,6 +183,6 @@ const PlayerListItem: React.FunctionComponent<Props> = (props) => {
 			</div>
 		</div>
 	);
-};
+}
 
 export { PlayerListItem };

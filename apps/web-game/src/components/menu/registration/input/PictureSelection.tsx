@@ -13,10 +13,13 @@ const useStyles = createUseStyles({
 	},
 });
 
-const PictureSelection: React.FunctionComponent<{
+function PictureSelection({
+	currentImage,
+	onChange,
+}: {
 	currentImage: number;
 	onChange: (picture: number) => void;
-}> = ({ currentImage, onChange }) => {
+}) {
 	const styles = useStyles();
 
 	return (
@@ -45,6 +48,6 @@ const PictureSelection: React.FunctionComponent<{
 			)}
 		</BaseRegistrationInput>
 	);
-};
+}
 
 export { PictureSelection };

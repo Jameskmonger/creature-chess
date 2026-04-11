@@ -10,12 +10,12 @@ type LoginPageProps = {
 	onPlayAsGuestClick?: () => void;
 };
 
-const LoginPage = ({
+function LoginPage({
 	auth0Enabled = false,
 	isLoading = false,
 	onSignInClick,
 	onPlayAsGuestClick,
-}: LoginPageProps) => {
+}: LoginPageProps) {
 	const styles = useStyles();
 	const [loadingSignIn, setLoadingSignIn] = React.useState<boolean>(false);
 
@@ -94,6 +94,6 @@ const LoginPage = ({
 			<Footer />
 		</div>
 	);
-};
+}
 
 export { LoginPage };

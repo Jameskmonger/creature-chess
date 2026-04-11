@@ -32,7 +32,7 @@ const useStyles = createUseStyles({
 
 const renderHealthbar = (current: number) => `${current} / ${MAX_HEALTH} hp`;
 
-const PlayerHealthbar: React.FunctionComponent<Props> = ({ health }) => {
+function PlayerHealthbar({ health }: Props) {
 	const classes = useStyles();
 
 	return (
@@ -45,6 +45,6 @@ const PlayerHealthbar: React.FunctionComponent<Props> = ({ health }) => {
 			renderContents={renderHealthbar}
 		/>
 	);
-};
+}
 
 export { PlayerHealthbar };

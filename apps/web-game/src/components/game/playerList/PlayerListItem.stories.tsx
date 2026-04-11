@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import {
 	PlayerStatus,
@@ -13,7 +13,7 @@ import { StreakType } from "@creature-chess/models";
 
 import { PlayerListItem } from "./playerListItem";
 
-export default {
+const meta: Meta<typeof PlayerListItem> = {
 	title: "@creature-chess / game / Player List / PlayerListItem",
 	component: PlayerListItem,
 	argTypes: {
@@ -28,13 +28,15 @@ export default {
 			},
 		},
 	},
-} as Meta;
+	render: (args) => (
+		<div style={{ maxWidth: "400px" }}>
+			<PlayerListItem {...args} />
+		</div>
+	),
+};
+export default meta;
 
-const Template: Story<any> = (args) => (
-	<div style={{ maxWidth: "400px" }}>
-		<PlayerListItem {...args} />
-	</div>
-);
+type Story = StoryObj<typeof PlayerListItem>;
 
 const createPlayer = (
 	battle: PlayerBattle,
@@ -60,123 +62,129 @@ const createPlayer = (
 	...others,
 });
 
-export const LocalNoBattle = Template.bind({});
-LocalNoBattle.args = {
-	index: 0,
+export const LocalNoBattle: Story = {
+	args: {
+		index: 0,
 
-	isOpponent: false,
-	isLocal: true,
+		isOpponent: false,
+		isLocal: true,
 
-	currentlySpectating: false,
-	showReadyIndicator: true,
+		currentlySpectating: false,
+		showReadyIndicator: true,
 
-	player: createPlayer(null, {
-		name: "Cool Mom227",
-		ready: true,
-		streakAmount: 0,
-		profile: { picture: 4, title: null },
-	}),
+		player: createPlayer(null, {
+			name: "Cool Mom227",
+			ready: true,
+			streakAmount: 0,
+			profile: { picture: 4, title: null },
+		}),
+	},
 };
 
-export const OpponentInProgressBattle = Template.bind({});
-OpponentInProgressBattle.args = {
-	index: 5,
+export const OpponentInProgressBattle: Story = {
+	args: {
+		index: 5,
 
-	isOpponent: true,
-	isLocal: false,
+		isOpponent: true,
+		isLocal: false,
 
-	opponentName: "[BOT] Lucky",
-	currentlySpectating: false,
-	showReadyIndicator: true,
+		opponentName: "[BOT] Lucky",
+		currentlySpectating: false,
+		showReadyIndicator: true,
 
-	player: createPlayer(inProgressBattle("5678", false), {
-		money: 4,
-		level: 9,
-		health: 4,
-	}),
+		player: createPlayer(inProgressBattle("5678", false), {
+			money: 4,
+			level: 9,
+			health: 4,
+		}),
+	},
 };
 
-export const OpponentInProgressBattleVsClone = Template.bind({});
-OpponentInProgressBattleVsClone.args = {
-	index: 5,
+export const OpponentInProgressBattleVsClone: Story = {
+	args: {
+		index: 5,
 
-	isOpponent: true,
-	isLocal: false,
+		isOpponent: true,
+		isLocal: false,
 
-	opponentName: "[BOT] Lucky",
-	currentlySpectating: false,
-	showReadyIndicator: true,
+		opponentName: "[BOT] Lucky",
+		currentlySpectating: false,
+		showReadyIndicator: true,
 
-	player: createPlayer(inProgressBattle("5678", true), {
-		money: 4,
-		level: 9,
-		health: 4,
-	}),
+		player: createPlayer(inProgressBattle("5678", true), {
+			money: 4,
+			level: 9,
+			health: 4,
+		}),
+	},
 };
 
-export const FinishedBattle = Template.bind({});
-FinishedBattle.args = {
-	index: 0,
+export const FinishedBattle: Story = {
+	args: {
+		index: 0,
 
-	isOpponent: false,
-	isLocal: false,
+		isOpponent: false,
+		isLocal: false,
 
-	opponentName: "Jeff",
-	currentlySpectating: false,
-	showReadyIndicator: true,
+		opponentName: "Jeff",
+		currentlySpectating: false,
+		showReadyIndicator: true,
 
-	player: createPlayer(finishedBattle("5678", false, false, 3, 0), {
-		name: "[BOT] Bicycle",
-		streakType: StreakType.LOSS,
-		profile: {
-			picture: 13,
-			title: {
-				color: 0xf7ee85,
-				text: "Hall of Fame",
+		player: createPlayer(finishedBattle("5678", false, false, 3, 0), {
+			name: "[BOT] Bicycle",
+			streakType: StreakType.LOSS,
+			profile: {
+				picture: 13,
+				title: {
+					color: 0xf7ee85,
+					text: "Hall of Fame",
+				},
 			},
-		},
-	}),
+		}),
+	},
 };
 
-export const FinishedBattleVsClone = Template.bind({});
-FinishedBattleVsClone.args = {
-	index: 0,
+export const FinishedBattleVsClone: Story = {
+	args: {
+		index: 0,
 
-	isOpponent: false,
-	isLocal: false,
+		isOpponent: false,
+		isLocal: false,
 
-	opponentName: "Jeff",
-	currentlySpectating: false,
-	showReadyIndicator: true,
+		opponentName: "Jeff",
+		currentlySpectating: false,
+		showReadyIndicator: true,
 
-	player: createPlayer(finishedBattle("5678", true, false, 3, 0), {
-		name: "[BOT] Bicycle",
-		streakType: StreakType.LOSS,
-		profile: {
-			picture: 13,
-			title: {
-				color: 0xf7ee85,
-				text: "Hall of Fame",
+		player: createPlayer(finishedBattle("5678", true, false, 3, 0), {
+			name: "[BOT] Bicycle",
+			streakType: StreakType.LOSS,
+			profile: {
+				picture: 13,
+				title: {
+					color: 0xf7ee85,
+					text: "Hall of Fame",
+				},
 			},
-		},
-	}),
+		}),
+	},
 };
 
-export const CurrentlySpectating = Template.bind({});
-CurrentlySpectating.args = {
-	index: 0,
+export const CurrentlySpectating: Story = {
+	args: {
+		index: 0,
 
-	isOpponent: false,
-	isLocal: false,
+		isOpponent: false,
+		isLocal: false,
 
-	opponentName: "[BOT] Lucky",
-	currentlySpectating: true,
-	showReadyIndicator: true,
+		opponentName: "[BOT] Lucky",
+		currentlySpectating: true,
+		showReadyIndicator: true,
 
-	player: createPlayer(null, {
-		name: "Purepker895",
-		ready: true,
-		streakAmount: 0,
-		profile: { picture: 20, title: null },
-	}),
+		player: createPlayer(null, {
+			name: "Purepker895",
+			ready: true,
+			streakAmount: 0,
+			profile: { picture: 20, title: null },
+		}),
+	},
 };

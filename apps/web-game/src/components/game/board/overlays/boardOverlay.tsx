@@ -41,9 +41,7 @@ const useStyles = createUseThemeStyles((theme) => ({
 	},
 }));
 
-const BoardOverlay: React.FunctionComponent<{ children: React.ReactNode }> = ({
-	children,
-}) => {
+function BoardOverlay({ children }: { children: React.ReactNode }) {
 	const styles = useStyles();
 
 	return (
@@ -51,6 +49,6 @@ const BoardOverlay: React.FunctionComponent<{ children: React.ReactNode }> = ({
 			<div className={styles.content}> {children}</div>
 		</div>
 	);
-};
+}
 
 export { BoardOverlay };

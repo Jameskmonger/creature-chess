@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { CreatureImage } from "./creatureImage";
 
-export default {
+const meta: Meta<typeof CreatureImage> = {
 	title: "@creature-chess / ui / CreatureImage",
 	component: CreatureImage,
 	argTypes: {
@@ -16,18 +16,21 @@ export default {
 			},
 		},
 	},
-} as Meta;
+};
+export default meta;
 
-const Template: Story<any> = (args) => <CreatureImage {...args} />;
+type Story = StoryObj<typeof CreatureImage>;
 
-export const Kirkanon = Template.bind({});
-Kirkanon.args = {
-	definitionId: 47,
-	facing: "front",
+export const Kirkanon: Story = {
+	args: {
+		definitionId: 47,
+		facing: "front",
+	},
 };
 
-export const CardilingFacingAway = Template.bind({});
-CardilingFacingAway.args = {
-	definitionId: 13,
-	facing: "back",
+export const CardilingFacingAway: Story = {
+	args: {
+		definitionId: 13,
+		facing: "back",
+	},
 };

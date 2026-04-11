@@ -6,11 +6,11 @@ import { useLocalUserDTO } from "./useLocalUserDto";
 /**
  * Provides the local user (from auth0) to the LocalPlayerContext
  */
-export const Auth0LocalUserProvider = ({
+export function Auth0LocalUserProvider({
 	children,
 }: {
 	children: React.ReactNode;
-}) => {
+}) {
 	const { user } = useLocalUserDTO();
 
 	if (!user) {
@@ -31,4 +31,4 @@ export const Auth0LocalUserProvider = ({
 			{children}
 		</LocalPlayerContextProvider>
 	);
-};
+}

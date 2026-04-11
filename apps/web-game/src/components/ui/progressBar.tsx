@@ -51,7 +51,7 @@ const useStyles = createUseStyles({
 	},
 });
 
-const ProgressBar: React.FC<Props> = (props) => {
+function ProgressBar(props: Props) {
 	const classes = useStyles(props);
 	const {
 		className,
@@ -75,6 +75,6 @@ const ProgressBar: React.FC<Props> = (props) => {
 			{children}
 		</div>
 	);
-};
+}
 
 export { ProgressBar };

@@ -1,18 +1,16 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { RegistrationPage } from "./RegistrationPage";
 
-export default {
+const meta: Meta<typeof RegistrationPage> = {
 	title: "@creature-chess / menu / RegistrationPage",
 	component: RegistrationPage,
 	argTypes: {},
-} as Meta;
+};
+export default meta;
 
-const Template: Story<React.ComponentProps<typeof RegistrationPage>> = (
-	args
-) => <RegistrationPage {...args} />;
+type Story = StoryObj<typeof RegistrationPage>;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default: Story = {};

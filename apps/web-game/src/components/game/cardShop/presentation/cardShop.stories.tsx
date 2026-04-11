@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
 
 import { Card as CardModel } from "@creature-chess/models";
@@ -9,7 +9,7 @@ import { GamemodeSettingsPresets } from "@creature-chess/models";
 import { CardShopPresentation } from "./cardShop";
 import "./cardShop.stories.css";
 
-export default {
+const meta: Meta<any> = {
 	title: "@creature-chess / game / CardShop",
 	component: CardShopPresentation,
 	argTypes: {
@@ -24,15 +24,17 @@ export default {
 			},
 		},
 	},
-} as Meta;
+	render: (args) => (
+		<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
+			<div className="card-shop-story">
+				<CardShopPresentation {...args} />
+			</div>
+		</GamemodeSettingsContextProvider>
+	),
+};
+export default meta;
 
-const Template: Story<any> = (args) => (
-	<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
-		<div className="card-shop-story">
-			<CardShopPresentation {...args} />
-		</div>
-	</GamemodeSettingsContextProvider>
-);
+type Story = StoryObj<any>;
 
 const cards: CardModel[] = [
 	{
@@ -72,18 +74,20 @@ const cards: CardModel[] = [
 	},
 ];
 
-export const Shop = Template.bind({});
-Shop.args = {
-	cards,
-	isLocked: false,
-	money: 14,
-	ownedDefinitionIds: [32],
+export const Shop: Story = {
+	args: {
+		cards,
+		isLocked: false,
+		money: 14,
+		ownedDefinitionIds: [32],
+	},
 };
 
-export const SomeMissing = Template.bind({});
-SomeMissing.args = {
-	cards: [...cards.map((card, index) => (index === 3 ? null : card))],
-	isLocked: false,
-	money: 14,
-	ownedDefinitionIds: [32],
+export const SomeMissing: Story = {
+	args: {
+		cards: [...cards.map((card, index) => (index === 3 ? null : card))],
+		isLocked: false,
+		money: 14,
+		ownedDefinitionIds: [32],
+	},
 };

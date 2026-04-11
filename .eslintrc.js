@@ -244,6 +244,13 @@ module.exports = {
 		],
 		"react/jsx-wrap-multilines": "error",
 		"react/self-closing-comp": "error",
+		"react/function-component-definition": [
+			"error",
+			{
+				namedComponents: "function-declaration",
+				unnamedComponents: "function-expression",
+			},
+		],
 		"space-before-function-paren": "off",
 		"spaced-comment": [
 			"error",

@@ -1,33 +1,37 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { BoardContainer } from "./BoardContainer";
 
-export default {
+const meta: Meta<any> = {
 	title: "@creature-chess / game / Board / BoardContainer",
 	component: BoardContainer,
 	argTypes: {},
-} as Meta;
+	render: () => (
+		<div
+			style={{
+				width: "500px",
+				height: "400px",
+				border: "2px solid red",
+			}}
+		>
+			<BoardContainer />
+		</div>
+	),
+};
+export default meta;
 
-const Template: Story<any> = (args) => (
-	<div
-		style={{
-			width: "500px",
-			height: "400px",
-			border: "2px solid red",
-		}}
-	>
-		<BoardContainer />
-	</div>
-);
+type Story = StoryObj<any>;
 
-export const Scale_Height = Template.bind({});
-Scale_Height.args = {
-	scaleMode: "height",
+export const Scale_Height: Story = {
+	args: {
+		scaleMode: "height",
+	},
 };
 
-export const Scale_Width = Template.bind({});
-Scale_Width.args = {
-	scaleMode: "width",
+export const Scale_Width: Story = {
+	args: {
+		scaleMode: "width",
+	},
 };

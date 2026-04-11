@@ -1,20 +1,21 @@
 import React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { MenuStateProvider } from "../../.storybook/MenuStateProvider";
 import { MenuPage } from "./menu";
 
-export default {
+const meta: Meta<typeof MenuPage> = {
 	title: "@creature-chess / menu / MenuPage",
 	component: MenuPage,
-} as Meta;
+	render: () => (
+		<MenuStateProvider>
+			<MenuPage />
+		</MenuStateProvider>
+	),
+};
+export default meta;
 
-const Template: Story = () => (
-	<MenuStateProvider>
-		<MenuPage />
-	</MenuStateProvider>
-);
+type Story = StoryObj<typeof MenuPage>;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default: Story = {};
