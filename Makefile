@@ -18,7 +18,13 @@ build:
 	&& docker compose -f docker-compose.yml build server-base web-base \
 	&& docker compose -f docker-compose.yml build server-game server-info web-game-builder
 
-db:
+# The `creature-chess-db` network is declared `external` in both compose files so
+# that the db stack and the app stack can share it. Create it up-front if missing.
+network:
+	@docker network inspect $(DB_PROJECT) >/dev/null 2>&1 \
+		|| (echo "Creating docker network $(DB_PROJECT)..." && docker network create $(DB_PROJECT))
+
+db: network
 	@echo "Setting up the database and running migrations..."
 	docker compose -p $(DB_PROJECT) -f docker-compose.db.yml up -d postgres
 # This step runs a server-base container because it contains the @cc-server/data package
@@ -42,7 +48,7 @@ down:
 # This step is used to create a new migration.
 # It creates a new nodejs-builder container, runs the migration command inside,
 # then copies the migration files to the local machine.
-add-migration:
+add-migration: network
 	@echo "Creating new migration"
 	read -p "Enter the migration name:  " MIGRATION_NAME; \
 	docker compose -p $(DB_PROJECT) -f docker-compose.db.yml up -d postgres; \
