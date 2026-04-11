@@ -10,7 +10,6 @@ import {
 	createBuyCardAction,
 	createSellPieceAction,
 	createRerollCardsAction,
-	createSellBoardPieceAction,
 } from "./preparingPhase/actions";
 import { Board } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils/piece";
@@ -40,14 +39,15 @@ export const getActions = (
 		);
 	}
 
-	// create an action to sell all pieces on the bench
-	for (const { id } of bench.getAllPieces()) {
-		actions.push(createSellPieceAction(board, bench, pieceRegistry, state, personality, id));
-	}
-
-	// create an action to sell all pieces on the board
-	for (const { id } of board.getAllPieces()) {
-		actions.push(createSellBoardPieceAction(board, bench, pieceRegistry, state, personality, id));
+	// create a sell action for every piece on the board OR bench
+	const allPieceIds = [
+		...board.getAllPieces().map((p) => p.id),
+		...bench.getAllPieces().map((p) => p.id),
+	];
+	for (const id of allPieceIds) {
+		actions.push(
+			createSellPieceAction(board, bench, pieceRegistry, state, personality, id)
+		);
 	}
 
 	const filtered = actions.filter(

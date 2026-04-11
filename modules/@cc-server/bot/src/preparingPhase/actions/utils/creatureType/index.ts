@@ -1,1 +1,1 @@
-export { isStrategicCard, isStrategicPiece } from "./isStrategic";
+export { isStrategicPiece } from "./isStrategic";

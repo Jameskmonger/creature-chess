@@ -42,38 +42,40 @@ describe("createUtilityValue", () => {
 			},
 		]);
 
-		// these calculations are applied due to the provided directions
-		const hV = (inputs.health - 1) / 99;
-		const cV = 1 - personality.composure / 200;
+		// position-in-range, then directed (Low inverts), then floored — matches getRangeValue
+		const healthDirected = Math.floor(200 - ((inputs.health - 1) / 99) * 200);
+		const moneyDirected = Math.floor(((inputs.money - 1) / 54) * 200);
 
-		const mV = (inputs.money - 1) / 54;
-		const aV = personality.ambition / 200;
+		// weighting maps personality [1,200] to multiplier [0.5, 1.5]
+		// Low direction:  1.5 - value/200
+		// High direction: 0.5 + value/200
+		const composureWeight = 1.5 - personality.composure / 200;
+		const ambitionWeight = 0.5 + personality.ambition / 200;
 
-		const healthValue = hV * 200 * cV;
-		const moneyValue = mV * 200 * aV;
+		const expected = Math.floor(
+			(healthDirected * composureWeight + moneyDirected * ambitionWeight) / 2
+		);
 
-		/*
-			health value = 0.5
-			composure value = 0.25
-
-			--
-
-			money value = 0.07
-			ambition value = 0.25
-
-			--
-
-			(health * 200) = 100
-				* composure = 25
-
-			(money * 200) = 14
-				* ambition = 3.5
-
-			(25 + 3.5) / 2 = 14.25
-		 */
-
-		// this should be 14 as above
-		const expected = Math.floor((healthValue + moneyValue) / 2);
 		expect(result).toEqual(expected);
+	});
+
+	test("low personality no longer mutes the input entirely", () => {
+		// Pre-fix: a value=1 personality with High direction → multiplier 0.005,
+		// effectively zeroing out the input. Post-fix: multiplier ≈ 0.505.
+		const result = createUtilityValue([
+			{
+				value: 100, // mid of range → directed value 100
+				range: [1, 200],
+				direction: ScoringDirection.High,
+				weighting: {
+					value: 1 as UtilityNumberValue,
+					direction: ScoringDirection.High,
+				},
+			},
+		]);
+
+		// directed = floor(99/199 * 200) = 99, weight = 0.5 + 1/200 = 0.505
+		// expected = floor(99 * 0.505) = 49 (well above the pre-fix ~0)
+		expect(result).toBeGreaterThan(40);
 	});
 });

@@ -48,7 +48,7 @@ export const createRerollCardsAction = (
 			},
 			{
 				value: money,
-				range: [1, 55],
+				range: [1, 50],
 
 				// utility score should be higher if money is high
 				direction: ScoringDirection.High,

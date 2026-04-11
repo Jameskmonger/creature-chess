@@ -33,7 +33,7 @@ export const createBuyXpAction = (
 		value: createUtilityValue([
 			{
 				value: money,
-				range: [1, 20],
+				range: [1, 50],
 
 				// utility score should be higher if money is high
 				direction: ScoringDirection.High,

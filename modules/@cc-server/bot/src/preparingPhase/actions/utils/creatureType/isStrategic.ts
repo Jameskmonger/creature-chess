@@ -1,9 +1,5 @@
 import { TraitId } from "@creature-chess/models/gamemode/traits";
 
-export function isStrategicCard(cardTraits: TraitId[], ownedTraits: TraitId[]) {
-	return cardTraits.some((t) => ownedTraits.includes(t) === false);
-}
-
 export const isStrategicPiece = (
 	pieceTraits: TraitId[],
 	ownedTraits: TraitId[]
