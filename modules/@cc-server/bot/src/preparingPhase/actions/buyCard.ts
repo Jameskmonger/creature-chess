@@ -1,4 +1,8 @@
-import { createUtilityValue, ScoringDirection } from "@shoki/engine";
+import {
+	createUtilityValue,
+	ScoringDirection,
+	UtilityInput,
+} from "@shoki/engine";
 
 import {
 	PlayerState,
@@ -52,7 +56,7 @@ export const createBuyCardAction = (
 	const traitSynergyCount = getTraitSynergyCount(allPieces, card);
 	const moneyRemaining = money - card.cost;
 
-	const score = createUtilityValue([
+	const scoreInputs: UtilityInput[] = [
 		{
 			name: "card.cost",
 			// High-ambition bots prefer expensive cards. Quadratic: a 5-cost
@@ -121,7 +125,33 @@ export const createBuyCardAction = (
 				direction: ScoringDirection.Low,
 			},
 		},
-	]);
+	];
+
+	// Seed action: when the bot owns nothing, `completionProximity` and
+	// `traitSynergyCount` are structurally 0 (nothing to complete, no traits
+	// to synergise with), which — combined with their `importance: 3` each —
+	// drags every buy card's score to essentially zero. That makes every
+	// first-piece buy indistinguishable from a useless action and gets them
+	// filtered by the soft-termination threshold, leaving bots in a
+	// reroll-and-quit loop that never fills the board.
+	//
+	// Adding a dominant "get your first piece on the board NOW" input with
+	// `importance: 5` makes empty-board buys score ~0.36–0.4 across the
+	// whole shop, which is comfortably above any meaningful threshold and
+	// comparable to a reroll for most personalities. Once the bot owns at
+	// least one piece this input is omitted entirely, so it has zero effect
+	// on normal-play scoring (no denominator dilution).
+	if (allPieces.length === 0) {
+		scoreInputs.push({
+			name: "emptyBoardSeedBonus",
+			value: 1,
+			range: [0, 1],
+			direction: ScoringDirection.High,
+			importance: 5,
+		});
+	}
+
+	const score = createUtilityValue(scoreInputs);
 
 	return {
 		name: `buy card [${card.name}]`,
