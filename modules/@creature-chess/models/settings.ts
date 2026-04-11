@@ -63,6 +63,21 @@ export type GamemodeSettings = {
 	 * Delay between successive bot actions, in milliseconds.
 	 */
 	botActionDelayMs: number;
+
+	/**
+	 * Softmax (Boltzmann) temperature for bot action selection, on the `[0, 1]`
+	 * utility scale.
+	 *
+	 * - `0` → deterministic top-1 (always pick the highest-scored legal
+	 * action; ties break by insertion order, same as pre-Stage-6 behaviour).
+	 * - Small positive (e.g. `0.025`–`0.05`) → weighted-random pick where the
+	 * top-scored action is most likely but close-runner-ups occasionally win.
+	 * Breaks ties properly and stops identically-personalitied bots from
+	 * making identical decisions across games.
+	 * - Larger values wash the personality signal out of the correlation
+	 * analysis and are rarely what you want in a game.
+	 */
+	botSelectionTemperature: number;
 };
 
 export const GamemodeSettingsPresets: Record<"default", GamemodeSettings> = {
@@ -86,5 +101,6 @@ export const GamemodeSettingsPresets: Record<"default", GamemodeSettings> = {
 		playingPhaseEndDelayMs: 5_000,
 		botInitialDelayMs: 1_000,
 		botActionDelayMs: 400,
+		botSelectionTemperature: 0.025,
 	},
 };

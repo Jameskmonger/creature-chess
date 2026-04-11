@@ -34,6 +34,26 @@ export type GameResult = {
 	bots: BotResult[];
 };
 
+// `BOT_SELECTION_TEMPERATURE` env var lets harness sweeps override the
+// Boltzmann temperature without editing code. Falls back to the preset
+// default (0.025) when unset. `0` explicitly means "deterministic top-1"
+// and is valid — it gives the pre-Stage-6 regression baseline.
+const parseTemperatureOverride = (): number | undefined => {
+	const raw = process.env.BOT_SELECTION_TEMPERATURE;
+	if (raw === undefined || raw === "") {
+		return undefined;
+	}
+	const parsed = Number(raw);
+	if (!Number.isFinite(parsed) || parsed < 0) {
+		throw new Error(
+			`BOT_SELECTION_TEMPERATURE must be a non-negative finite number, got "${raw}"`
+		);
+	}
+	return parsed;
+};
+
+const temperatureOverride = parseTemperatureOverride();
+
 // All delay-related settings collapsed to zero so games run as fast as the
 // event loop can spin. battleTurnDuration: 0 matches the battleRunner.test
 // preset and is the dominant speed-up.
@@ -47,6 +67,9 @@ const HARNESS_SETTINGS: GamemodeSettings = {
 	playingPhaseEndDelayMs: 0,
 	botInitialDelayMs: 0,
 	botActionDelayMs: 0,
+	...(temperatureOverride !== undefined
+		? { botSelectionTemperature: temperatureOverride }
+		: {}),
 };
 
 export const runGame = (
