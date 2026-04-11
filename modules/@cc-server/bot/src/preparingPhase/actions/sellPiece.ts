@@ -80,7 +80,10 @@ export const createSellPieceAction = (
 	const score = createUtilityValue([
 		{
 			name: "health",
-			// Low health + low composure → panic fire-sale.
+			// Low health + low composure → panic fire-sale. Sigmoid midpoint
+			// 0.3: panic pivots sharply around 30% HP. The ≈30.7% offset
+			// (range [1,100] → 30/99 ≈ 0.293) is intentional.
+			curve: { type: "sigmoid", midpoint: 0.3 },
 			value: health,
 			range: [1, 100],
 			direction: ScoringDirection.Low,

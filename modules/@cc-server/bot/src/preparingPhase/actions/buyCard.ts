@@ -55,7 +55,9 @@ export const createBuyCardAction = (
 	const score = createUtilityValue([
 		{
 			name: "card.cost",
-			// High-ambition bots prefer expensive cards.
+			// High-ambition bots prefer expensive cards. Quadratic: a 5-cost
+			// card is much more than 5× as attractive as a 1-cost filler.
+			curve: { type: "quadratic" },
 			value: card.cost,
 			range: [1, 5],
 			direction: ScoringDirection.High,
@@ -68,6 +70,9 @@ export const createBuyCardAction = (
 			name: "completionProximity",
 			// Completing a 3-of-a-kind is the single biggest win a buy can
 			// deliver, so it should dominate the rest of the signals.
+			// Quadratic: owning 2 is much more than 2× as valuable as owning 1,
+			// because the third copy unlocks the stage-1 upgrade.
+			curve: { type: "quadratic" },
 			importance: 3,
 			value: completionProximity,
 			range: [0, 2],
@@ -102,7 +107,12 @@ export const createBuyCardAction = (
 		},
 		{
 			name: "health",
-			// Low-composure bots panic-buy board fillers at low HP.
+			// Low-composure bots panic-buy board fillers at low HP. Sigmoid
+			// at midpoint 0.3: panic activates sharply around 30% HP. Note:
+			// `range: [1, 100]` means `health = 30` normalises to ≈ 0.293, so
+			// midpoint 0.3 corresponds to health ≈ 30.7. This is intentional —
+			// don't "correct" it to 29/99.
+			curve: { type: "sigmoid", midpoint: 0.3 },
 			value: health,
 			range: [1, 100],
 			direction: ScoringDirection.Low,

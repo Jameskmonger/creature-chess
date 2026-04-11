@@ -1,3 +1,5 @@
+import { Curve } from "./curves";
+
 /**
  * A range of 1-200, providing numeric constraints for the weighting and output utility values.
  */
@@ -220,6 +222,14 @@ export type UtilityInput = {
 	value: number;
 	range: [number, number];
 	direction: ScoringDirection;
+	/**
+	 * Optional response curve applied to the normalised position in range
+	 * (`t ∈ [0, 1]`) BEFORE the direction flip. Defaults to linear. Use
+	 * quadratic for "much more than N× as good" relationships, and sigmoid for
+	 * threshold behaviours (e.g. panic mode around 30% HP with
+	 * `{ type: "sigmoid", midpoint: 0.3 }`). See `./curves.ts`.
+	 */
+	curve?: Curve;
 	/**
 	 * Relative weight vs. sibling inputs in the same `createUtilityValue` call.
 	 * Defaults to 1. The engine normalises importances so siblings sum to 1, so

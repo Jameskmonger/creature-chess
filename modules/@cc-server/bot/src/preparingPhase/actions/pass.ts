@@ -79,7 +79,12 @@ export const createPassAction = (
 		{
 			name: "health",
 			// Composure driver: healthy bots are willing to pass; panicked
-			// (low-composure) low-HP bots will not.
+			// (low-composure) low-HP bots will not. Sigmoid midpoint 0.3:
+			// the willingness-to-pass threshold pivots sharply around 30% HP
+			// (curves are applied before direction flip, so the pivot is the
+			// same as for the panic cases in the other actions). The ≈30.7%
+			// offset is intentional.
+			curve: { type: "sigmoid", midpoint: 0.3 },
 			value: health,
 			range: [1, 100],
 			direction: ScoringDirection.High,
