@@ -1,6 +1,6 @@
-import { clampToUtilityNumber } from "./clamp";
+import { clamp01 } from "./clamp";
 import { applyCurve } from "./curves";
-import { UtilityNumberValue, UtilityInput, ScoringDirection } from "./types";
+import { UtilityInput, ScoringDirection } from "./types";
 
 /**
  * Get the distance of `input` within the range `min`-`max`
@@ -19,32 +19,30 @@ const getPositionInRange = (min: number, max: number, input: number) => {
 };
 
 /**
- * Compute the directed, curve-shaped output for a utility input.
+ * Compute the directed, curve-shaped output for a utility input, in `[0, 1]`.
  *
  * Pipeline:
  * 1. Normalise the raw value to its position in range (`t ∈ [0, 1]`).
- * 2. Clamp `t` to `[0, 1]` so out-of-range values saturate at the edges
- * (matches the old pre-curve behaviour where values above `max` clamped
- * to 200 / below `min` clamped to 1).
+ * 2. Clamp `t` to `[0, 1]` so out-of-range values saturate at the edges.
  * 3. Apply the response curve (linear by default).
- * 4. Flip based on `direction`: `High` maps curved → `curved * 200`, `Low`
- * maps to `200 - curved * 200`. Applying the curve BEFORE the flip means a
- * sigmoid centred at `0.3` always pivots around 30% of the range regardless
- * of direction.
- * 5. Floor and clamp the result to `[1, 200]`.
+ * 4. Flip based on `direction`: `High` returns `curved`, `Low` returns
+ * `1 - curved`. Applying the curve BEFORE the flip means a sigmoid centred
+ * at `0.3` always pivots around 30% of the range regardless of direction.
+ * 5. Clamp the result to `[0, 1]` (cheap safety net — standard curves are
+ * well-behaved, but custom curves could drift slightly out of range).
  */
 export const getRangeValue = ({
 	value,
 	range: [min, max],
 	direction,
 	curve,
-}: UtilityInput): UtilityNumberValue => {
+}: UtilityInput): number => {
 	const rawPosition = getPositionInRange(min, max, value);
-	const clampedPosition = Math.min(1, Math.max(0, rawPosition));
+	const clampedPosition = clamp01(rawPosition);
 	const curved = applyCurve(clampedPosition, curve ?? { type: "linear" });
 
-	const inputOutput =
-		direction === ScoringDirection.High ? curved * 200 : 200 - curved * 200;
+	const directed =
+		direction === ScoringDirection.High ? curved : 1 - curved;
 
-	return clampToUtilityNumber(Math.floor(inputOutput));
+	return clamp01(directed);
 };

@@ -1,5 +1,5 @@
 import { createUtilityValue } from "./createUtilityValue";
-import { ScoringDirection, UtilityNumberValue } from "./types";
+import { ScoringDirection } from "./types";
 
 describe("createUtilityValue", () => {
 	const inputs = {
@@ -8,8 +8,8 @@ describe("createUtilityValue", () => {
 	};
 
 	const personality = {
-		ambition: 50 as UtilityNumberValue,
-		composure: 150 as UtilityNumberValue,
+		ambition: 50,
+		composure: 150,
 	};
 
 	test("should return the correct value", () => {
@@ -42,21 +42,22 @@ describe("createUtilityValue", () => {
 			},
 		]);
 
-		// position-in-range, then directed (Low inverts), then floored — matches getRangeValue
-		const healthDirected = Math.floor(200 - ((inputs.health - 1) / 99) * 200);
-		const moneyDirected = Math.floor(((inputs.money - 1) / 54) * 200);
+		// Position-in-range, then directed (Low inverts) — matches getRangeValue.
+		// Values are now in [0, 1], no Math.floor.
+		const healthDirected = 1 - (inputs.health - 1) / 99;
+		const moneyDirected = (inputs.money - 1) / 54;
 
-		// weighting maps personality [1,200] to multiplier [0.5, 1.5]
+		// Weighting maps personality [1,200] to multiplier [0.5, 1.5]
 		// Low direction:  1.5 - value/200
 		// High direction: 0.5 + value/200
 		const composureWeight = 1.5 - personality.composure / 200;
 		const ambitionWeight = 0.5 + personality.ambition / 200;
 
-		const expected = Math.floor(
-			(healthDirected * composureWeight + moneyDirected * ambitionWeight) / 2
-		);
+		// Weighted average (default importance = 1 on both → divide by 2).
+		const expected =
+			(healthDirected * composureWeight + moneyDirected * ambitionWeight) / 2;
 
-		expect(result.value).toEqual(expected);
+		expect(result.value).toBeCloseTo(expected, 10);
 	});
 
 	test("low personality no longer mutes the input entirely", () => {
@@ -64,45 +65,44 @@ describe("createUtilityValue", () => {
 		// effectively zeroing out the input. Post-fix: multiplier ≈ 0.505.
 		const result = createUtilityValue([
 			{
-				value: 100, // mid of range → directed value 100
+				value: 100, // mid of range → directed ≈ 0.497
 				range: [1, 200],
 				direction: ScoringDirection.High,
 				weighting: {
-					value: 1 as UtilityNumberValue,
+					value: 1,
 					direction: ScoringDirection.High,
 				},
 			},
 		]);
 
-		// directed = floor(99/199 * 200) = 99, weight = 0.5 + 1/200 = 0.505
-		// expected = floor(99 * 0.505) = 49 (well above the pre-fix ~0)
-		expect(result.value).toBeGreaterThan(40);
+		// directed ≈ 99/199 ≈ 0.497, multiplier = 0.5 + 1/200 = 0.505
+		// expected ≈ 0.497 * 0.505 ≈ 0.25 — well above the pre-fix ~0.
+		expect(result.value).toBeGreaterThan(0.2);
 	});
 
 	test("default importance equals the old averaging behaviour", () => {
-		// Three inputs, none specifying `importance`, no weighting. Each should
-		// get a normalised importance of 1/3 → result is the floor of the mean.
+		// Three inputs at range midpoint, no weighting, default importance.
+		// Each contributes 0.5; mean is 0.5.
 		const result = createUtilityValue([
 			{ value: 50, range: [0, 100], direction: ScoringDirection.High },
 			{ value: 50, range: [0, 100], direction: ScoringDirection.High },
 			{ value: 50, range: [0, 100], direction: ScoringDirection.High },
 		]);
 
-		// Each input directs to 100, average = 100, floor = 100.
-		expect(result.value).toBe(100);
+		expect(result.value).toBeCloseTo(0.5, 10);
 	});
 
 	test("higher importance makes a sibling dominate", () => {
-		// One input pegged high (directed = 200), one pegged low (directed = 0).
-		// At equal importance, the mean is 100.
+		// One input pegged high (directed = 1), one pegged low (directed = 0).
+		// At equal importance, the mean is 0.5.
 		const equal = createUtilityValue([
 			{ value: 100, range: [0, 100], direction: ScoringDirection.High },
 			{ value: 0, range: [0, 100], direction: ScoringDirection.High },
 		]);
-		expect(equal.value).toBe(100);
+		expect(equal.value).toBeCloseTo(0.5, 10);
 
 		// With the high input given importance 9 vs. the low input's 1, the
-		// weighted sum is (200 * 0.9) + (0 * 0.1) = 180 — much closer to the
+		// weighted average is (1 * 0.9) + (0 * 0.1) = 0.9 — much closer to the
 		// high value.
 		const weighted = createUtilityValue([
 			{
@@ -118,7 +118,7 @@ describe("createUtilityValue", () => {
 				importance: 1,
 			},
 		]);
-		expect(weighted.value).toBe(180);
+		expect(weighted.value).toBeCloseTo(0.9, 10);
 	});
 
 	test("adding a neutral input no longer dilutes existing scores", () => {
@@ -153,16 +153,15 @@ describe("createUtilityValue", () => {
 			},
 		]);
 
-		// totalImportance = 31, 3 * (200 * 10/31) + (0 * 1/31)
-		//                 = 6000 / 31 ≈ 193.5 → floor 193
-		expect(withHeavyImportance.value).toBe(193);
+		// totalImportance = 31, value = (3 * 1 * 10 + 0 * 1) / 31 = 30/31 ≈ 0.968
+		expect(withHeavyImportance.value).toBeCloseTo(30 / 31, 10);
 	});
 
 	test("breakdown sum / totalImportance equals final value", () => {
-		// Invariant: the per-input `weighted` values, divided by `totalImportance`
-		// and floored, must reproduce `value` exactly — after clamping to [1, 200].
-		// This is the contract the debug breakdown relies on: if it ever fails,
-		// the engine's internal math and the breakdown have silently diverged.
+		// Invariant: the per-input `weighted` values, divided by `totalImportance`,
+		// must reproduce `value` exactly — after clamping to [0, 1]. This is the
+		// contract the debug breakdown relies on: if it ever fails, the engine's
+		// internal math and the breakdown have silently diverged.
 		const score = createUtilityValue([
 			{
 				name: "health",
@@ -171,7 +170,7 @@ describe("createUtilityValue", () => {
 				direction: ScoringDirection.Low,
 				importance: 3,
 				weighting: {
-					value: 150 as UtilityNumberValue,
+					value: 150,
 					direction: ScoringDirection.Low,
 				},
 			},
@@ -181,7 +180,7 @@ describe("createUtilityValue", () => {
 				range: [1, 55],
 				direction: ScoringDirection.High,
 				weighting: {
-					value: 50 as UtilityNumberValue,
+					value: 50,
 					direction: ScoringDirection.High,
 				},
 			},
@@ -194,11 +193,9 @@ describe("createUtilityValue", () => {
 		]);
 
 		const weightedSum = score.inputs.reduce((s, i) => s + i.weighted, 0);
-		const clamp = (n: number) => Math.min(200, Math.max(1, n));
-		const reconstructed = clamp(
-			Math.floor(weightedSum / score.totalImportance)
-		);
-		expect(reconstructed).toBe(score.value);
+		const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
+		const reconstructed = clamp01(weightedSum / score.totalImportance);
+		expect(reconstructed).toBeCloseTo(score.value, 10);
 
 		// And the per-input importance values must sum to totalImportance.
 		const importanceSum = score.inputs.reduce((s, i) => s + i.importance, 0);
@@ -206,8 +203,8 @@ describe("createUtilityValue", () => {
 	});
 
 	test("breakdown invariant holds across the clamp boundary", () => {
-		// When the unclamped result exceeds 200, `value` is clamped down but
-		// the breakdown stores the raw contributions. Consumers verifying the
+		// When the unclamped weighted-average exceeds 1, `value` is clamped down
+		// but the breakdown stores the raw contributions. Consumers verifying the
 		// invariant must apply the same clamp.
 		const score = createUtilityValue([
 			{
@@ -215,19 +212,19 @@ describe("createUtilityValue", () => {
 				value: 100,
 				range: [0, 100],
 				direction: ScoringDirection.High,
-				// A very high multiplier pushes the weighted sum past 200.
+				// A very high multiplier pushes the weighted sum past 1.
 				weighting: {
-					value: 200 as UtilityNumberValue,
+					value: 200,
 					direction: ScoringDirection.High,
 				},
 			},
 		]);
 
-		// directed = 200, personalityMultiplier = 1.5, weighted = 300.
-		// Raw (unclamped) value = 300, clamped final value = 200.
+		// directed = 1, personalityMultiplier = 1.5, weighted = 1.5.
+		// Raw (unclamped) value = 1.5, clamped final value = 1.
 		const weightedSum = score.inputs.reduce((s, i) => s + i.weighted, 0);
-		expect(Math.floor(weightedSum / score.totalImportance)).toBe(300);
-		expect(score.value).toBe(200);
+		expect(weightedSum / score.totalImportance).toBeCloseTo(1.5, 10);
+		expect(score.value).toBe(1);
 	});
 
 	test("breakdown preserves input names and shapes", () => {

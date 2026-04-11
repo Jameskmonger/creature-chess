@@ -1,15 +1,15 @@
-import { clampToUtilityNumber } from "./clamp";
+import { clamp01 } from "./clamp";
 import { getRangeValue } from "./getRangeValue";
 import {
 	ScoredInput,
 	ScoringDirection,
 	UtilityInput,
-	UtilityNumberValue,
 	UtilityScore,
 } from "./types";
 
 /**
- * Map a personality value (1-200) to a multiplier in [0.5, 1.5].
+ * Map a personality value (player-facing 1-200 domain) to a multiplier in
+ * `[0.5, 1.5]`.
  *
  * The previous mapping ([0, 1]) collapsed low-personality inputs to ~zero, which
  * effectively muted that dimension instead of just biasing it. The new mapping
@@ -19,10 +19,7 @@ import {
  * - High direction: 0.5 + value / 200  → [~0.505, 1.5]
  * - Low  direction: 1.5 - value / 200  → [~1.495, 0.505]
  */
-const getWeightingValue = (
-	value: UtilityNumberValue,
-	direction: ScoringDirection
-) =>
+const getWeightingValue = (value: number, direction: ScoringDirection) =>
 	direction === ScoringDirection.High
 		? 0.5 + value / 200
 		: 1.5 - value / 200;
@@ -68,7 +65,10 @@ export const createUtilityValue = (inputs: UtilityInput[]): UtilityScore => {
 		totalImportance += importance;
 	}
 
-	const value = clampToUtilityNumber(Math.floor(totalValue / totalImportance));
+	// Clamp to `[0, 1]`: the per-input personality multiplier can push the
+	// weighted sum above 1 (and a Low-direction multiplier can dip it below 0
+	// if a custom curve drifts slightly out of range). Clamp once at the end.
+	const value = clamp01(totalValue / totalImportance);
 
 	return { value, totalImportance, inputs: scored };
 };

@@ -4,7 +4,6 @@ import { GamemodeSettings } from "@creature-chess/models/settings";
 import { BotPersonality } from "@cc-server/data";
 
 import { BrainAction } from "./brain";
-import { BrainActionValue } from "./brain/action";
 import {
 	createBuyXpAction,
 	createBuyCardAction,
@@ -52,9 +51,13 @@ export const getActions = (
 		);
 	}
 
+	// `action.value > 0` is a cheap "any useful score" threshold on the new
+	// [0, 1] utility scale. Stage 5 replaces this with a proper soft-termination
+	// threshold and teaches the loop to stop when no action is meaningfully
+	// above it; for now this preserves the old "drop null + zero-value actions"
+	// behaviour under the post-Stage-4 scale.
 	const filtered = actions.filter(
-		(action): action is BrainAction =>
-			action !== null && action.value > BrainActionValue.USELESS
+		(action): action is BrainAction => action !== null && action.value > 0
 	);
 
 	filtered.sort((a, b) => b.value - a.value);

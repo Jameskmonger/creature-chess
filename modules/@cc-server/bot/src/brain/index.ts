@@ -1,1 +1,1 @@
-export { BrainAction, BrainActionValue } from "./action";
+export { BrainAction } from "./action";
