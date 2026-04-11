@@ -66,6 +66,8 @@ export const createBuyXpAction = (
 			{
 				// Close to leveling → ambition values the immediate payoff.
 				// Lower xpToNextLevel = higher utility, weighted by ambition High.
+				// Dominant signal: "is this XP purchase actually about to level me?"
+				importance: 3,
 				value: xpToNextLevel,
 				range: [1, MAX_XP_TO_NEXT_LEVEL],
 				direction: ScoringDirection.Low,
@@ -77,6 +79,8 @@ export const createBuyXpAction = (
 			{
 				// High vision → values leveling more in the mid/late game (where
 				// the upgraded board slot opens room for synergy comps).
+				// Dominant signal: timing in the game arc.
+				importance: 3,
 				value: round,
 				range: [1, 30],
 				direction: ScoringDirection.High,

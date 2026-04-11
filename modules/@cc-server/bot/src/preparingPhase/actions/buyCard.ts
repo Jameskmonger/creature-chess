@@ -74,7 +74,9 @@ export const createBuyCardAction = (
 				},
 			},
 			{
-				// High-vision bots heavily prefer 3-of-a-kind completion.
+				// Completing a 3-of-a-kind is the single biggest win a buy can
+				// deliver, so it should dominate the rest of the signals.
+				importance: 3,
 				value: completionProximity,
 				range: [0, 2],
 				direction: ScoringDirection.High,
@@ -84,7 +86,8 @@ export const createBuyCardAction = (
 				},
 			},
 			{
-				// High-vision bots prefer cards that match existing traits.
+				// Trait synergy is the second-biggest structural win.
+				importance: 3,
 				value: traitSynergyCount,
 				range: [0, 3],
 				direction: ScoringDirection.High,

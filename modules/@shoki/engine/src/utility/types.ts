@@ -215,6 +215,14 @@ export type UtilityInput = {
 	value: number;
 	range: [number, number];
 	direction: ScoringDirection;
+	/**
+	 * Relative weight vs. sibling inputs in the same `createUtilityValue` call.
+	 * Defaults to 1. The engine normalises importances so siblings sum to 1, so
+	 * setting all inputs to `1` (or omitting this field entirely) is equivalent
+	 * to the old averaging behaviour. Use values > 1 to make a consideration
+	 * dominate its siblings, independent of any personality bias.
+	 */
+	importance?: number;
 	weighting?: {
 		value: UtilityNumberValue;
 		direction: ScoringDirection;

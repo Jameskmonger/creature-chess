@@ -21,24 +21,34 @@ const getWeightingValue = (
 		? 0.5 + value / 200
 		: 1.5 - value / 200;
 
+/**
+ * Compute a utility score for a set of inputs.
+ *
+ * Each input contributes `directed * personalityMultiplier * importance`, and the
+ * final score is `sum / totalImportance`. `importance` defaults to 1, so call sites
+ * that don't supply it stay equal-weighted — mathematically identical to the
+ * previous averaging behaviour (three inputs at 1 each average to `sum/3`; adding
+ * a fourth drops everything to `sum/4`). The dilution penalty from adding inputs
+ * is fixed by intentional importance assignment at the call site, not by this
+ * function alone. The division is deferred to the end so integer-aligned cases
+ * don't drift through floating-point accumulation.
+ */
 export const createUtilityValue = (
 	inputs: UtilityInput[]
 ): UtilityNumberValue => {
+	let totalImportance = 0;
 	let totalValue = 0;
 
 	for (const input of inputs) {
-		const value = getRangeValue(input);
+		const directed = getRangeValue(input);
+		const personalityMultiplier = input.weighting
+			? getWeightingValue(input.weighting.value, input.weighting.direction)
+			: 1;
+		const importance = input.importance ?? 1;
 
-		const weighting = input.weighting;
-
-		if (!weighting) {
-			totalValue += value;
-			continue;
-		}
-
-		totalValue +=
-			value * getWeightingValue(weighting.value, weighting.direction);
+		totalValue += directed * personalityMultiplier * importance;
+		totalImportance += importance;
 	}
 
-	return clampToUtilityNumber(Math.floor(totalValue / inputs.length));
+	return clampToUtilityNumber(Math.floor(totalValue / totalImportance));
 };

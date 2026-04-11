@@ -46,7 +46,10 @@ export const createRerollCardsAction = (
 		action: PlayerActions.rerollCardsPlayerAction,
 		value: createUtilityValue([
 			{
-				// Vision driver: bad shop = high reroll utility.
+				// Vision driver: bad shop = high reroll utility. Dominant
+				// signal — reroll should be primarily about "is the shop bad?",
+				// not secondary econ/panic factors.
+				importance: 3,
 				value: wantedCardCount,
 				range: [0, 5],
 				direction: ScoringDirection.Low,

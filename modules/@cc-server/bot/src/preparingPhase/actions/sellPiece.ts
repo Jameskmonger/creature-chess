@@ -114,7 +114,9 @@ export const createSellPieceAction = (
 			},
 			{
 				// Vision protects 3-of-a-kind setups. More siblings = lower
-				// sell utility.
+				// sell utility. Dominant signal: "is this piece part of a
+				// combo I'm building?" — should outweigh panic-sell pressure.
+				importance: 3,
 				value: sameDefinitionStage0Count,
 				range: [1, 3],
 				direction: ScoringDirection.Low,
@@ -126,6 +128,8 @@ export const createSellPieceAction = (
 			{
 				// Vision also protects unique trait carriers — selling a piece
 				// that holds the only copy of a trait drops that trait entirely.
+				// Dominant signal: "is this the only piece holding a trait?"
+				importance: 3,
 				value: uniqueTraitCount,
 				range: [0, 3],
 				direction: ScoringDirection.Low,
