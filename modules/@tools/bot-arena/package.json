@@ -8,7 +8,7 @@
 	"scripts": {
 		"build": "yarn run -T tsc -p ./tsconfig.json",
 		"test": "yarn run -T jest --passWithNoTests",
-		"lint": "yarn run -T eslint \"src/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
+		"lint": "yarn run -T eslint --ignore-path ../../../.eslintignore \"src/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
 		"start": "yarn run -T ts-node --transpile-only src/harness.ts",
 		"correlate": "yarn run -T ts-node --transpile-only src/correlate.ts"
 	},
