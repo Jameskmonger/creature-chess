@@ -16,4 +16,5 @@ export {
 	unpackX,
 	unpackY,
 	unpackPosition,
+	getDelta,
 } from "./src/position";

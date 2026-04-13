@@ -1,11 +1,11 @@
-import { TileCoordinates } from "@creature-chess/models";
+import { Direction } from "./utils/direction";
 
 export type PieceAttackEvent = {
 	type: "piece_attack";
 	pieceId: string;
 	targetId: string;
 	attackTypeName: string;
-	direction: TileCoordinates;
+	direction: Direction;
 	distance: number;
 	damage: number;
 };
@@ -13,7 +13,7 @@ export type PieceAttackEvent = {
 export type PieceHitEvent = {
 	type: "piece_hit";
 	pieceId: string;
-	direction: TileCoordinates;
+	direction: Direction;
 	damage: number;
 };
 

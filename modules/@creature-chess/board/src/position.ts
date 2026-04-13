@@ -23,3 +23,13 @@ export function unpackPosition(
 ): readonly [number, number] {
 	return [unpackX(position), unpackY(position)];
 }
+
+export function getDelta(a: PackedPosition, b: PackedPosition): { x: number; y: number } {
+	const [ax, ay] = unpackPosition(a);
+	const [bx, by] = unpackPosition(b);
+
+	return {
+		x: Math.abs(ax - bx),
+		y: Math.abs(ay - by),
+	};
+}

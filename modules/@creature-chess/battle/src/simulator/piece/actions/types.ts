@@ -1,10 +1,10 @@
-import { Board } from "@creature-chess/board";
+import { Board, PackedPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { Stores } from "../../types";
 
-export type MoveAction = { type: "move"; payload: { x: number; y: number } };
+export type MoveAction = { type: "move"; payload: PackedPosition };
 export type HitAction = { type: "hit"; payload: { targetId: string } };
 export type DeleteAction = { type: "delete" };
 

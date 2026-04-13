@@ -1,5 +1,5 @@
-import { Board, Position } from "@creature-chess/board";
-import { PieceModel, TileCoordinates, getDelta } from "@creature-chess/models";
+import { Board, getDelta, PackedPosition, packPosition, Position, unpackX, unpackY } from "@creature-chess/board";
+import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { getStats } from "../../utils/getStats";
@@ -9,9 +9,9 @@ import { TargetProvider } from "./TargetProvider";
 
 type EnemyDelta = {
 	enemy: PieceModel;
-	enemyPosition: TileCoordinates;
-	attackPosition: TileCoordinates;
-	delta: TileCoordinates;
+	enemyPosition: PackedPosition;
+	attackPosition: PackedPosition;
+	delta: { x: number; y: number };
 };
 
 export class StandardTargetProvider implements TargetProvider {
@@ -77,12 +77,12 @@ export class StandardTargetProvider implements TargetProvider {
 			// find all positions from which we can attack
 			const attackPositions = getTargetAttackPositions(
 				{ width: board.width, height: board.height },
-				{ x: enemyPosition[0], y: enemyPosition[1] },
+				packPosition(enemyPosition[0], enemyPosition[1]),
 				attackRange
 			);
 
 			const emptyPositions = attackPositions.filter((position) => {
-				const p = board.getPieceIdAtPosition(position.x, position.y);
+				const p = board.getPieceIdAtPosition(unpackX(position), unpackY(position));
 
 				return p === null || p === attackerId;
 			});
@@ -92,22 +92,19 @@ export class StandardTargetProvider implements TargetProvider {
 			}
 
 			emptyPositions.sort((a, b) => {
-				const ax = a.x - attackerPosition[0];
-				const ay = a.y - attackerPosition[1];
-				const bx = b.x - attackerPosition[0];
-				const by = b.y - attackerPosition[1];
+				const ax = unpackX(a) - attackerPosition[0];
+				const ay = unpackY(a) - attackerPosition[1];
+				const bx = unpackX(b) - attackerPosition[0];
+				const by = unpackY(b) - attackerPosition[1];
 
 				return ax * ax + ay * ay - (bx * bx + by * by);
 			});
 
 			enemyDeltas.push({
 				enemy,
-				enemyPosition: { x: enemyPosition[0], y: enemyPosition[1] },
+				enemyPosition: packPosition(enemyPosition[0], enemyPosition[1]),
 				attackPosition: emptyPositions[0],
-				delta: getDelta(emptyPositions[0], {
-					x: attackerPosition[0],
-					y: attackerPosition[1],
-				}),
+				delta: getDelta(emptyPositions[0], packPosition(attackerPosition[0], attackerPosition[1])),
 			});
 		}
 
@@ -119,12 +116,12 @@ export class StandardTargetProvider implements TargetProvider {
 			throw new Error("No enemies provided to chooseTarget");
 		}
 
-		const getSquaredDistance = (delta: TileCoordinates) =>
+		const getSquaredDistance = (delta: { x: number; y: number }) =>
 			delta.x * delta.x + delta.y * delta.y;
 		const isInFacingDirection = (delta: EnemyDelta) =>
 			facingNorth
-				? delta.enemyPosition.y < delta.attackPosition.y
-				: delta.enemyPosition.y > delta.attackPosition.y;
+				? unpackY(delta.enemyPosition) < unpackY(delta.attackPosition)
+				: unpackY(delta.enemyPosition) > unpackY(delta.attackPosition);
 
 		enemies.sort((a, b) => {
 			// 1. Primary sort: Distance (closest first)

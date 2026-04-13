@@ -1,8 +1,8 @@
-import { Directions, TileCoordinates } from "@creature-chess/models";
+import { Directions } from "./direction";
 
 export const getNewAttackerFacingAway = (
 	oldFacingAway: boolean,
-	direction: TileCoordinates
+	direction: typeof Directions[keyof typeof Directions]
 ) => {
 	if (direction === Directions.LEFT || direction === Directions.RIGHT) {
 		// if it's left or right we don't need to change it

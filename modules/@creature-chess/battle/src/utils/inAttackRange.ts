@@ -1,8 +1,9 @@
-import { AttackType, getDelta, TileCoordinates } from "@creature-chess/models";
+import { AttackType } from "@creature-chess/models";
+import { getDelta, PackedPosition } from "@creature-chess/board";
 
 export const inAttackRange = (
-	attacker: TileCoordinates,
-	target: TileCoordinates,
+	attacker: PackedPosition,
+	target: PackedPosition,
 	attackType: AttackType
 ) => {
 	const { x: deltaX, y: deltaY } = getDelta(attacker, target);

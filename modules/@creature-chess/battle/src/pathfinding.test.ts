@@ -232,7 +232,7 @@ describe("pathfinding", () => {
 
 				const homePosition = getNextPiecePosition(
 					pathfinder,
-					{ x: homePosA[0], y: homePosA[1] },
+					packPosition(homePosA[0], homePosA[1]),
 					pieceRegistry.getPieceById(pieceId)!.facingAway,
 					{
 						attackType: attackTypes.basic,
@@ -241,7 +241,7 @@ describe("pathfinding", () => {
 						defense: 1,
 						speed: 1,
 					},
-					{ x: homePosB[0], y: homePosB[1] },
+					packPosition(homePosB[0], homePosB[1]),
 					board
 				);
 
@@ -250,7 +250,7 @@ describe("pathfinding", () => {
 
 				const awayPosition = getNextPiecePosition(
 					pathfinder,
-					{ x: awayPosA[0], y: awayPosA[1] },
+					packPosition(awayPosA[0], awayPosA[1]),
 					rotatedPieceRegistry.getPieceById(pieceId)!.facingAway,
 					{
 						attackType: attackTypes.basic,
@@ -259,21 +259,21 @@ describe("pathfinding", () => {
 						defense: 1,
 						speed: 1,
 					},
-					{ x: awayPosB[0], y: awayPosB[1] },
+					packPosition(awayPosB[0], awayPosB[1]),
 					rotated
 				);
 
 				const awayPositionCorrected = rotateGridPosition(
 					{ width: board.width, height: board.height },
-					packPosition(awayPosition!.x, awayPosition!.y)
+					awayPosition!
 				);
 
 				expect({
 					x: unpackX(awayPositionCorrected),
 					y: unpackY(awayPositionCorrected),
 				}).toEqual({
-					x: homePosition!.x,
-					y: homePosition!.y,
+					x: unpackX(homePosition!),
+					y: unpackY(homePosition!),
 				});
 			}
 		);

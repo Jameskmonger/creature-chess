@@ -1,9 +1,5 @@
-import { Board } from "@creature-chess/board";
-import {
-	getDistance,
-	getRelativeDirection,
-	PieceModel,
-} from "@creature-chess/models";
+import { Board, getDelta, packPosition } from "@creature-chess/board";
+import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { getCooldownForSpeed } from "../../../utils/getCooldownForSpeed";
@@ -13,6 +9,7 @@ import { getStats } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { HitAction } from "./types";
+import { getRelativeDirection } from "../../../utils/direction";
 
 const ATTACK_TURN_DURATION = 2;
 const MOVE_TURN_DURATION = 2;
@@ -42,8 +39,8 @@ export function doHit(
 	const attackerStats = getStats(attacker);
 
 	const inRange = inAttackRange(
-		{ x: attackerPosition[0], y: attackerPosition[1] },
-		{ x: targetPosition[0], y: targetPosition[1] },
+		packPosition(attackerPosition[0], attackerPosition[1]),
+		packPosition(targetPosition[0], targetPosition[1]),
 		attackerStats.attackType
 	);
 
@@ -55,13 +52,15 @@ export function doHit(
 	const newDefenderHealth = Math.max(target.currentHealth - damage, 0);
 
 	const attackerDirection = getRelativeDirection(
-		{ x: attackerPosition[0], y: attackerPosition[1] },
-		{ x: targetPosition[0], y: targetPosition[1] }
+		packPosition(attackerPosition[0], attackerPosition[1]),
+		packPosition(targetPosition[0], targetPosition[1])
 	);
-	const attackerDistance = getDistance(
-		{ x: attackerPosition[0], y: attackerPosition[1] },
-		{ x: targetPosition[0], y: targetPosition[1] }
+
+	const delta = getDelta(
+		packPosition(attackerPosition[0], attackerPosition[1]),
+		packPosition(targetPosition[0], targetPosition[1])
 	);
+	const attackerDistance = delta.x + delta.y;
 	const attackerFacingAway = getNewAttackerFacingAway(
 		attacker.facingAway,
 		attackerDirection
@@ -118,8 +117,8 @@ export function doHit(
 			type: "piece_hit",
 			pieceId: target.id,
 			direction: getRelativeDirection(
-				{ x: targetPosition[0], y: targetPosition[1] },
-				{ x: attackerPosition[0], y: attackerPosition[1] }
+				packPosition(targetPosition[0], targetPosition[1]),
+				packPosition(attackerPosition[0], attackerPosition[1])
 			),
 			damage,
 		});

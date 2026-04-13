@@ -6,16 +6,6 @@ export { GamePhase } from "./src/game-phase";
 export type { RoundInfoState } from "./src/roundInfoState";
 
 export {
-	TileType,
-	type TileCoordinates,
-	Directions,
-	type SlotLocation,
-	createTileCoordinates,
-	getDistance,
-	getDelta,
-	getRelativeDirection,
-} from "./src/position";
-export {
 	type CreatureDefinition,
 	type CreatureStats,
 	type AttackType,

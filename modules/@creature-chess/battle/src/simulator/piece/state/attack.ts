@@ -1,4 +1,4 @@
-import { Board } from "@creature-chess/board";
+import { Board, packPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -47,8 +47,8 @@ export function doAttack(
 	}
 
 	const inRange = inAttackRange(
-		{ x: piecePosition[0], y: piecePosition[1] },
-		{ x: targetPosition[0], y: targetPosition[1] },
+		packPosition(piecePosition[0], piecePosition[1]),
+		packPosition(targetPosition[0], targetPosition[1]),
 		attackerStats.attackType
 	);
 
@@ -64,7 +64,7 @@ export function doAttack(
 		board,
 		pieceRegistry,
 		piece.ownerId,
-		{ x: piecePosition[0], y: piecePosition[1] },
+		packPosition(piecePosition[0], piecePosition[1]),
 		attackerStats.attackType.range
 	);
 
@@ -81,10 +81,10 @@ export function doAttack(
 
 	const nextPosition = getNextPiecePosition(
 		pathfinder,
-		{ x: piecePosition[0], y: piecePosition[1] },
+		packPosition(piecePosition[0], piecePosition[1]),
 		piece.facingAway,
 		attackerStats,
-		{ x: targetPosition[0], y: targetPosition[1] },
+		packPosition(targetPosition[0], targetPosition[1]),
 		board
 	);
 

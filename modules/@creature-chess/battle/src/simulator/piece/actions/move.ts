@@ -1,4 +1,4 @@
-import { Board } from "@creature-chess/board";
+import { Board, unpackX, unpackY } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -45,5 +45,5 @@ export function doMove(
 		canMoveAtTurn,
 	});
 
-	board.setPiece(id, action.payload.x, action.payload.y);
+	board.setPiece(id, unpackX(action.payload), unpackY(action.payload));
 }

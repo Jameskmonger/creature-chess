@@ -1,11 +1,10 @@
-import { Board, BoardSize } from "@creature-chess/board";
-import { createTileCoordinates, TileCoordinates } from "@creature-chess/models";
+import { Board, BoardSize, PackedPosition, packPosition, unpackPosition } from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils";
 
 const isInsideGrid =
 	({ width, height }: { width: number; height: number }) =>
-	(position: TileCoordinates) => {
-		const { x, y } = position;
+	(position: PackedPosition) => {
+		const [x, y] = unpackPosition(position);
 
 		return x >= 0 && y >= 0 && x < width && y < height;
 	};
@@ -14,7 +13,7 @@ export function findEnemyInAttackRange(
 	board: Board,
 	pieceRegistry: PieceRegistry,
 	friendlyOwnerId: string,
-	piecePosition: TileCoordinates,
+	piecePosition: PackedPosition,
 	range = 1
 ) {
 	const attackPositions = getTargetAttackPositions(
@@ -24,7 +23,8 @@ export function findEnemyInAttackRange(
 	);
 
 	for (const position of attackPositions) {
-		const pieceId = board.getPieceIdAtPosition(position.x, position.y);
+		const [x, y] = unpackPosition(position);
+		const pieceId = board.getPieceIdAtPosition(x, y);
 
 		if (!pieceId) {
 			continue;
@@ -52,17 +52,19 @@ export function findEnemyInAttackRange(
  */
 export const getTargetAttackPositions = (
 	size: BoardSize,
-	{ x: positionX, y: positionY }: TileCoordinates,
+	position: PackedPosition,
 	range = 1
 ) => {
-	const positions: TileCoordinates[] = [];
+	const positions: PackedPosition[] = [];
+
+	const [positionX, positionY] = unpackPosition(position);
 
 	for (let x = positionX - range; x <= positionX + range; x++) {
 		if (x === positionX) {
 			continue;
 		}
 
-		positions.push(createTileCoordinates(x, positionY));
+		positions.push(packPosition(x, positionY));
 	}
 
 	for (let y = positionY - range; y <= positionY + range; y++) {
@@ -70,7 +72,7 @@ export const getTargetAttackPositions = (
 			continue;
 		}
 
-		positions.push(createTileCoordinates(positionX, y));
+		positions.push(packPosition(positionX, y));
 	}
 
 	// filter out any that are outside the grid

@@ -1,4 +1,4 @@
-import { Board } from "@creature-chess/board";
+import { Board, packPosition, unpackX, unpackY } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -63,10 +63,10 @@ export function doWander(
 
 	const adjacentPositions = getTargetAttackPositions(
 		{ width: board.width, height: board.height },
-		{ x: piecePosition[0], y: piecePosition[1] }
+		packPosition(piecePosition[0], piecePosition[1])
 	);
 	const emptyPositions = adjacentPositions.filter(
-		(p) => board.getPieceIdAtPosition(p.x, p.y) === null
+		(p) => board.getPieceIdAtPosition(unpackX(p), unpackY(p)) === null
 	);
 
 	// no empty positions, so don't do anything
@@ -76,10 +76,7 @@ export function doWander(
 
 	const moveAction: MoveAction = {
 		type: "move",
-		payload: {
-			x: emptyPositions[0].x,
-			y: emptyPositions[0].y,
-		},
+		payload: emptyPositions[0],
 	};
 
 	return [state, [moveAction]];

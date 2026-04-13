@@ -1,8 +1,8 @@
 /// <reference path="../types/javascript-astar.d.ts" />
 import { astar, Graph } from "javascript-astar";
 
-import { Board, BoardSize } from "@creature-chess/board";
-import { TileCoordinates, CreatureStats } from "@creature-chess/models";
+import { Board, BoardSize, PackedPosition, packPosition, unpackX, unpackY } from "@creature-chess/board";
+import { CreatureStats } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./targeting/utils/getTargetAttackPositions";
 
@@ -29,21 +29,21 @@ const createEmptyWeightGrid = ({
 	return grid;
 };
 
-export type Path = { stepCount: number; firstStep: TileCoordinates };
+export type Path = { stepCount: number; firstStep: PackedPosition };
 
 const pathNotNull = (path: Path | null): path is Path => path !== null;
 
 export const getNextPiecePosition = (
 	pathfinder: Pathfinder,
-	attackerPosition: TileCoordinates,
+	attackerPosition: PackedPosition,
 	/**
 	 * Is the attacker looking up the board? (i.e. facing negative y)
 	 */
 	attackerFacingUp: boolean,
 	attackerStats: CreatureStats,
-	targetPosition: TileCoordinates,
+	targetPosition: PackedPosition,
 	board: Board
-): TileCoordinates | null => {
+): PackedPosition | null => {
 	const {
 		attackType: { range: attackRange },
 	} = attackerStats;
@@ -64,7 +64,7 @@ export const getNextPiecePosition = (
 
 	sortPaths(paths, attackerPosition, attackerFacingUp);
 
-	if (paths[0].firstStep.x < 0 || paths[0].firstStep.y < 0) {
+	if (unpackX(paths[0].firstStep) < 0 || unpackY(paths[0].firstStep) < 0) {
 		throw new Error("Invalid path");
 	}
 
@@ -73,7 +73,7 @@ export const getNextPiecePosition = (
 
 export function sortPaths(
 	paths: Path[],
-	startPos: TileCoordinates,
+	startPos: PackedPosition,
 	facingNorth: boolean
 ) {
 	// Forward is negative y if facing upwards, otherwise positive y
@@ -85,9 +85,9 @@ export function sortPaths(
 		{ x: -forwardY, y: 0 }, // Left
 	];
 
-	const getPriority = (step: TileCoordinates) => {
-		const dx = step.x - startPos.x;
-		const dy = step.y - startPos.y;
+	const getPriority = (step: PackedPosition) => {
+		const dx = unpackX(step) - unpackX(startPos);
+		const dy = unpackY(step) - unpackY(startPos);
 		return directionPriority.findIndex((dir) => dir.x === dx && dir.y === dy);
 	};
 
@@ -109,8 +109,8 @@ export class Pathfinder {
 
 	public getFirstStep(
 		board: Board,
-		start: TileCoordinates,
-		end: TileCoordinates
+		start: PackedPosition,
+		end: PackedPosition
 	): Path | null {
 		const path = this.getPath(board, start, end);
 
@@ -126,16 +126,16 @@ export class Pathfinder {
 
 	public getPath(
 		board: Board,
-		start: TileCoordinates,
-		end: TileCoordinates
-	): TileCoordinates[] | null {
+		start: PackedPosition,
+		end: PackedPosition
+	): PackedPosition[] | null {
 		this.setWeights(board);
 
 		// mark the start as walkable
-		this.graph.grid[start.x][start.y].weight = 1;
+		this.graph.grid[unpackX(start)][unpackY(start)].weight = 1;
 
-		const startGraphItem = this.graph.grid[start.x][start.y];
-		const endGraphItem = this.graph.grid[end.x][end.y];
+		const startGraphItem = this.graph.grid[unpackX(start)][unpackY(start)];
+		const endGraphItem = this.graph.grid[unpackX(end)][unpackY(end)];
 
 		if (!startGraphItem || !endGraphItem) {
 			throw new Error("Invalid start or end");
@@ -147,7 +147,7 @@ export class Pathfinder {
 			return null;
 		}
 
-		return path;
+		return path.map((node) => packPosition(node.x, node.y));
 	}
 
 	public getGraph() {
