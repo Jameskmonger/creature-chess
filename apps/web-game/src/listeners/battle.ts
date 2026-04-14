@@ -1,7 +1,11 @@
 import { AppState } from "~/store";
 import { ClientStartListening } from "~/store/listenerContext";
 
-import { BattleCommands, setupBattleListeners } from "@creature-chess/battle";
+import {
+	BattleCommands,
+	seedCombatStore,
+	setupBattleListeners,
+} from "@creature-chess/battle";
 import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
@@ -16,7 +20,7 @@ export const setupClientBattleListeners = (
 			api.cancelActiveListeners();
 
 			const settings = (api.getState() as AppState).game.settings;
-			const { matchBoard, pieceRegistry, animationEventStore } =
+			const { matchBoard, pieceRegistry, animationEventStore, combatStore } =
 				api.extra.slices;
 
 			setupBattleListeners(
@@ -24,6 +28,7 @@ export const setupClientBattleListeners = (
 				settings,
 				matchBoard,
 				pieceRegistry,
+				combatStore,
 				(events) => animationEventStore.pushEvents(events)
 			);
 		},
@@ -34,14 +39,16 @@ export const setupClientBattleListeners = (
 		effect: async ({ payload: { phase } }, api) => {
 			api.cancelActiveListeners();
 
-			const { matchBoard } = api.extra.slices;
+			const { matchBoard, pieceRegistry, combatStore } = api.extra.slices;
 
 			if (phase === GamePhase.PLAYING) {
+				seedCombatStore(combatStore, matchBoard, pieceRegistry);
 				api.dispatch(BattleCommands.startBattleCommand({}));
 			}
 
 			if (phase === GamePhase.PREPARING) {
 				matchBoard.clear();
+				combatStore.clear();
 			}
 		},
 	});

@@ -29,7 +29,7 @@ function getPieceState(
 ): PieceState {
 	const combatState = combatStore.getPiece(piece.id);
 
-	if (piece.currentHealth === 0 && combatState.state.type !== "dying") {
+	if (combatState.currentHealth === 0 && combatState.state.type !== "dying") {
 		const dieAtTurn = currentTurn + DYING_DURATION;
 
 		const newState = {

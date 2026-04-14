@@ -21,7 +21,12 @@ function findBestState(
 	const combatState = combatStore.getPiece(pieceId);
 
 	if (combatState.canAttackAtTurn <= currentTurn) {
-		const targetId = targetProvider.getTarget(board, pieceRegistry, pieceId);
+		const targetId = targetProvider.getTarget(
+			board,
+			pieceRegistry,
+			combatStore,
+			pieceId
+		);
 
 		if (targetId) {
 			return { type: "attacking", payload: { targetId } };

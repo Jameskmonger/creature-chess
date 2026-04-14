@@ -1,7 +1,16 @@
-import { Board, getDelta, PackedPosition, packPosition, Position, unpackX, unpackY } from "@creature-chess/board";
+import {
+	Board,
+	getDelta,
+	PackedPosition,
+	packPosition,
+	Position,
+	unpackX,
+	unpackY,
+} from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
+import { PieceCombatState, PieceInfoStore } from "../../state";
 import { getStats } from "../../utils/getStats";
 import { getLivingEnemies } from "../utils/getLivingEnemies";
 import { getTargetAttackPositions } from "../utils/getTargetAttackPositions";
@@ -21,6 +30,7 @@ export class StandardTargetProvider implements TargetProvider {
 	public getTarget(
 		board: Board,
 		pieceRegistry: PieceRegistry,
+		combatStore: PieceInfoStore<PieceCombatState>,
 		attackerId: string
 	): string | null {
 		const piece = pieceRegistry.getPieceById(attackerId);
@@ -31,7 +41,7 @@ export class StandardTargetProvider implements TargetProvider {
 
 		const attackRange = getStats(piece).attackType.range;
 
-		const enemies = getLivingEnemies(piece, board, pieceRegistry);
+		const enemies = getLivingEnemies(piece, board, pieceRegistry, combatStore);
 
 		if (enemies.length === 0) {
 			return null;
@@ -55,7 +65,10 @@ export class StandardTargetProvider implements TargetProvider {
 			return null;
 		}
 
-		return this.chooseTarget(enemyDeltas, piece.facingAway).id;
+		return this.chooseTarget(
+			enemyDeltas,
+			combatStore.getPiece(piece.id).facingAway
+		).id;
 	}
 
 	private getEnemiesInAttackRange(
@@ -82,7 +95,10 @@ export class StandardTargetProvider implements TargetProvider {
 			);
 
 			const emptyPositions = attackPositions.filter((position) => {
-				const p = board.getPieceIdAtPosition(unpackX(position), unpackY(position));
+				const p = board.getPieceIdAtPosition(
+					unpackX(position),
+					unpackY(position)
+				);
 
 				return p === null || p === attackerId;
 			});
@@ -104,7 +120,10 @@ export class StandardTargetProvider implements TargetProvider {
 				enemy,
 				enemyPosition: packPosition(enemyPosition[0], enemyPosition[1]),
 				attackPosition: emptyPositions[0],
-				delta: getDelta(emptyPositions[0], packPosition(attackerPosition[0], attackerPosition[1])),
+				delta: getDelta(
+					emptyPositions[0],
+					packPosition(attackerPosition[0], attackerPosition[1])
+				),
 			});
 		}
 

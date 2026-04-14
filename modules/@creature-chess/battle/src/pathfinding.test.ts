@@ -18,22 +18,25 @@ function getOpponentsForPiece(pieces: PieceModel[], pieceId: string) {
 	return pieces.filter((p) => p.ownerId !== piece.ownerId).map((p) => p.id);
 }
 
-/**
- * When the board is rotated, pieces also need to have their
- * facing direction flipped. This is to mimic the actual game behavior.
- */
-function rotateTestBoard(board: Board, pieceRegistry: PieceRegistry) {
-	rotateBoard(board);
-
-	board.getAllPieces().forEach((piece) => {
-		const p = pieceRegistry.getPieceById(piece.id);
-
-		p!.facingAway = !p!.facingAway;
-	});
-}
-
 describe("pathfinding", () => {
 	describe("when board is rotated", () => {
+		const pieceFacings: Record<string, boolean> = {
+			"18cc443d-807f-467e-a4b4-d554da2329fe": false,
+			"90c0ee33-aeae-4ebe-a985-23207f9facc0": false,
+			"913d506f-3524-4481-904d-2106be40e825": true,
+			"9d4b15d9-03b6-4906-8af8-5a215e0d0792": true,
+			"4374fce7-8be7-433a-87d9-7568deb0dddc": true,
+			"7977b429-db02-4b5a-a576-5f9916497a24": true,
+			"5196ed28-794e-4db4-8653-8fd3340f5990": true,
+			"6434e4f9-5905-47b9-9840-d8364e2deb62": true,
+			"b3a0546c-4c1e-462f-99cd-6ae308819830": true,
+			"e297fa3c-5cbc-4003-bcc2-66ba521acd4d": true,
+		};
+
+		const rotatedPieceFacings: Record<string, boolean> = Object.fromEntries(
+			Object.entries(pieceFacings).map(([id, facing]) => [id, !facing])
+		);
+
 		const b = {
 			id: "away",
 			pieces: {
@@ -43,11 +46,7 @@ describe("pathfinding", () => {
 					definitionId: 47,
 					definition: null as any,
 					stage: 1,
-					facingAway: false,
 					maxHealth: 130,
-					currentHealth: 130,
-
-					lastBattleStats: null,
 				}),
 				"90c0ee33-aeae-4ebe-a985-23207f9facc0": buildPieceModel({
 					id: "90c0ee33-aeae-4ebe-a985-23207f9facc0",
@@ -55,11 +54,7 @@ describe("pathfinding", () => {
 					definitionId: 14,
 					definition: null as any,
 					stage: 2,
-					facingAway: false,
 					maxHealth: 262,
-					currentHealth: 262,
-
-					lastBattleStats: null,
 				}),
 				"913d506f-3524-4481-904d-2106be40e825": buildPieceModel({
 					id: "913d506f-3524-4481-904d-2106be40e825",
@@ -67,11 +62,7 @@ describe("pathfinding", () => {
 					definitionId: 13,
 					definition: null as any,
 					stage: 1,
-					facingAway: true,
 					maxHealth: 34,
-					currentHealth: 34,
-
-					lastBattleStats: null,
 				}),
 				"9d4b15d9-03b6-4906-8af8-5a215e0d0792": buildPieceModel({
 					id: "9d4b15d9-03b6-4906-8af8-5a215e0d0792",
@@ -79,11 +70,7 @@ describe("pathfinding", () => {
 					definitionId: 17,
 					definition: null as any,
 					stage: 1,
-					facingAway: true,
 					maxHealth: 46,
-					currentHealth: 46,
-
-					lastBattleStats: null,
 				}),
 				"4374fce7-8be7-433a-87d9-7568deb0dddc": buildPieceModel({
 					id: "4374fce7-8be7-433a-87d9-7568deb0dddc",
@@ -91,11 +78,7 @@ describe("pathfinding", () => {
 					definitionId: 37,
 					definition: null as any,
 					stage: 2,
-					facingAway: true,
 					maxHealth: 640,
-					currentHealth: 640,
-
-					lastBattleStats: null,
 				}),
 				"7977b429-db02-4b5a-a576-5f9916497a24": buildPieceModel({
 					id: "7977b429-db02-4b5a-a576-5f9916497a24",
@@ -103,11 +86,7 @@ describe("pathfinding", () => {
 					definitionId: 8,
 					definition: null as any,
 					stage: 1,
-					facingAway: true,
 					maxHealth: 34,
-					currentHealth: 34,
-
-					lastBattleStats: null,
 				}),
 				"5196ed28-794e-4db4-8653-8fd3340f5990": buildPieceModel({
 					id: "5196ed28-794e-4db4-8653-8fd3340f5990",
@@ -115,11 +94,7 @@ describe("pathfinding", () => {
 					definitionId: 46,
 					definition: null as any,
 					stage: 1,
-					facingAway: true,
 					maxHealth: 70,
-					currentHealth: 70,
-
-					lastBattleStats: null,
 				}),
 				"6434e4f9-5905-47b9-9840-d8364e2deb62": buildPieceModel({
 					id: "6434e4f9-5905-47b9-9840-d8364e2deb62",
@@ -127,11 +102,7 @@ describe("pathfinding", () => {
 					definitionId: 20,
 					definition: null as any,
 					stage: 1,
-					facingAway: true,
 					maxHealth: 154,
-					currentHealth: 154,
-
-					lastBattleStats: null,
 				}),
 				"b3a0546c-4c1e-462f-99cd-6ae308819830": buildPieceModel({
 					id: "b3a0546c-4c1e-462f-99cd-6ae308819830",
@@ -139,11 +110,7 @@ describe("pathfinding", () => {
 					definitionId: 14,
 					definition: null as any,
 					stage: 1,
-					facingAway: true,
 					maxHealth: 106,
-					currentHealth: 106,
-
-					lastBattleStats: null,
 				}),
 				"e297fa3c-5cbc-4003-bcc2-66ba521acd4d": buildPieceModel({
 					id: "e297fa3c-5cbc-4003-bcc2-66ba521acd4d",
@@ -151,11 +118,7 @@ describe("pathfinding", () => {
 					definitionId: 42,
 					definition: null as any,
 					stage: 1,
-					facingAway: true,
 					maxHealth: 70,
-					currentHealth: 70,
-
-					lastBattleStats: null,
 				}),
 			},
 			piecePositions: {
@@ -210,7 +173,7 @@ describe("pathfinding", () => {
 				});
 
 			rotated = board.clone();
-			rotateTestBoard(rotated, rotatedPieceRegistry);
+			rotateBoard(rotated);
 
 			pathfinder = new Pathfinder({ width: board.width, height: board.height });
 		});
@@ -233,7 +196,7 @@ describe("pathfinding", () => {
 				const homePosition = getNextPiecePosition(
 					pathfinder,
 					packPosition(homePosA[0], homePosA[1]),
-					pieceRegistry.getPieceById(pieceId)!.facingAway,
+					pieceFacings[pieceId],
 					{
 						attackType: attackTypes.basic,
 						hp: 1,
@@ -251,7 +214,7 @@ describe("pathfinding", () => {
 				const awayPosition = getNextPiecePosition(
 					pathfinder,
 					packPosition(awayPosA[0], awayPosA[1]),
-					rotatedPieceRegistry.getPieceById(pieceId)!.facingAway,
+					rotatedPieceFacings[pieceId],
 					{
 						attackType: attackTypes.basic,
 						hp: 1,

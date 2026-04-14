@@ -4,7 +4,11 @@ import { PlayerListCommands } from "~/store/game/playerList/state";
 import { SettingsCommands } from "~/store/game/settings/state";
 import { setInGameCommand, setWinnerIdCommand } from "~/store/game/ui/actions";
 
-import { BattleCommands } from "@creature-chess/battle";
+import {
+	BattleCommands,
+	PieceCombatState,
+	PieceInfoStore,
+} from "@creature-chess/battle";
 import { Board } from "@creature-chess/board";
 import {
 	GameEvents,
@@ -26,6 +30,7 @@ export type BoardSlices = {
 	bench: Board;
 	matchBoard: Board;
 	pieceRegistry: PieceRegistry;
+	combatStore: PieceInfoStore<PieceCombatState>;
 };
 
 export class GameConnection {

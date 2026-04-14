@@ -4,6 +4,7 @@ import { PieceRegistry } from "@creature-chess/utils";
 
 import { BattleRunner } from "./battleRunner";
 import { simulateTurn } from "./simulator";
+import { PieceCombatState, PieceInfoStore } from "./state";
 
 jest.mock("./simulator", () => ({
 	simulateTurn: jest.fn(),
@@ -15,20 +16,9 @@ jest.mock("./utils/duration", () => ({
 	})),
 }));
 
-jest.mock("./state/store", () => ({
-	pieceInfoStore: jest.fn(() => ({
-		getPiece: jest.fn(),
-		updatePiece: jest.fn(),
-		updatePiecePartial: jest.fn(),
-		_getMap: jest.fn(() => new Map()),
-	})),
-}));
-
 const mockSimulateTurn = simulateTurn as jest.Mock;
 
-function createMockBoard(
-	pieces: { id: string; ownerId: string; health: number }[] = []
-) {
+function createMockBoard(pieces: { id: string }[] = []) {
 	return {
 		getAllPieces: jest.fn(() => pieces.map((p) => ({ id: p.id }))),
 		removePiece: jest.fn(),
@@ -36,17 +26,38 @@ function createMockBoard(
 }
 
 function createMockPieceRegistry(
-	pieces: { id: string; ownerId: string; health: number }[] = []
+	pieces: { id: string; ownerId: string }[] = []
 ) {
 	const map = new Map(
-		pieces.map((p) => [
-			p.id,
-			{ id: p.id, ownerId: p.ownerId, currentHealth: p.health },
-		])
+		pieces.map((p) => [p.id, { id: p.id, ownerId: p.ownerId }])
 	);
 	return {
 		getPieceById: jest.fn((id: string) => map.get(id) ?? null),
 	} as unknown as PieceRegistry;
+}
+
+function createMockCombatStore(
+	pieces: { id: string; health: number }[] = []
+): PieceInfoStore<PieceCombatState> {
+	const map = new Map<string, { currentHealth: number }>();
+	for (const p of pieces) {
+		map.set(p.id, { currentHealth: p.health });
+	}
+	return {
+		seedPiece: jest.fn((id: string, state: PieceCombatState) => {
+			map.set(id, state as unknown as { currentHealth: number });
+		}),
+		clear: jest.fn(() => map.clear()),
+		getPiece: jest.fn(
+			(id: string) => map.get(id) as unknown as PieceCombatState
+		),
+		updatePiece: jest.fn(),
+		updatePiecePartial: jest.fn(),
+		subscribe: jest.fn(() => () => undefined),
+		getSnapshot: jest.fn(() => 0),
+		// eslint-disable-next-line @typescript-eslint/naming-convention
+		_getMap: jest.fn(() => map as unknown as Map<string, PieceCombatState>),
+	};
 }
 
 const defaultSettings: GamemodeSettings = {
@@ -64,6 +75,7 @@ describe("BattleRunner", () => {
 			const runner = new BattleRunner(
 				createMockBoard(),
 				createMockPieceRegistry(),
+				createMockCombatStore(),
 				defaultSettings
 			);
 			expect(runner.getTurn()).toBe(0);
@@ -73,6 +85,7 @@ describe("BattleRunner", () => {
 			const runner = new BattleRunner(
 				createMockBoard(),
 				createMockPieceRegistry(),
+				createMockCombatStore(),
 				defaultSettings,
 				10
 			);
@@ -89,16 +102,22 @@ describe("BattleRunner", () => {
 			];
 			const board = createMockBoard(pieces);
 			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
 
 			// After first simulateTurn, kill p2's piece
 			mockSimulateTurn.mockImplementation(() => {
-				const p2Piece = registry.getPieceById("b") as any;
-				if (p2Piece) {
-					p2Piece.currentHealth = 0;
+				const p2Combat = combatStore.getPiece("b") as any;
+				if (p2Combat) {
+					p2Combat.currentHealth = 0;
 				}
 			});
 
-			const runner = new BattleRunner(board, registry, defaultSettings);
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				defaultSettings
+			);
 			const result = await runner.run();
 
 			// Should have run 1 turn then stopped (after the turn, only p1's pieces survive)
@@ -113,9 +132,10 @@ describe("BattleRunner", () => {
 			];
 			const board = createMockBoard(pieces);
 			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
 
 			const settings = { ...defaultSettings, battleTurnCount: 3 };
-			const runner = new BattleRunner(board, registry, settings);
+			const runner = new BattleRunner(board, registry, combatStore, settings);
 			const result = await runner.run();
 
 			expect(result.turn).toBe(3);
@@ -125,8 +145,14 @@ describe("BattleRunner", () => {
 		test("stops immediately if no pieces on board", async () => {
 			const board = createMockBoard([]);
 			const registry = createMockPieceRegistry([]);
+			const combatStore = createMockCombatStore();
 
-			const runner = new BattleRunner(board, registry, defaultSettings);
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				defaultSettings
+			);
 			const result = await runner.run();
 
 			// No pieces means <= 1 unique owner ids, so isATeamDefeated is true at turn 0
@@ -141,9 +167,10 @@ describe("BattleRunner", () => {
 			];
 			const board = createMockBoard(pieces);
 			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
 
 			const settings = { ...defaultSettings, battleTurnCount: 5 };
-			const runner = new BattleRunner(board, registry, settings);
+			const runner = new BattleRunner(board, registry, combatStore, settings);
 
 			await runner.run();
 			expect(runner.getTurn()).toBe(5);
@@ -156,9 +183,10 @@ describe("BattleRunner", () => {
 			];
 			const board = createMockBoard(pieces);
 			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
 
 			const settings = { ...defaultSettings, battleTurnCount: 1 };
-			const runner = new BattleRunner(board, registry, settings);
+			const runner = new BattleRunner(board, registry, combatStore, settings);
 
 			await runner.run();
 
@@ -166,7 +194,7 @@ describe("BattleRunner", () => {
 				1,
 				board,
 				registry,
-				expect.objectContaining({ combatStore: expect.anything() })
+				expect.objectContaining({ combatStore })
 			);
 		});
 
@@ -177,10 +205,17 @@ describe("BattleRunner", () => {
 			];
 			const board = createMockBoard(pieces);
 			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
 
 			// battleTurnCount is 5, starting at turn 3, so only 2 more turns
 			const settings = { ...defaultSettings, battleTurnCount: 5 };
-			const runner = new BattleRunner(board, registry, settings, 3);
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				settings,
+				3
+			);
 
 			await runner.run();
 
@@ -194,6 +229,7 @@ describe("BattleRunner", () => {
 			const runner = new BattleRunner(
 				createMockBoard(),
 				createMockPieceRegistry(),
+				createMockCombatStore(),
 				defaultSettings
 			);
 

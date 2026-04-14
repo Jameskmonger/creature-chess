@@ -1,5 +1,10 @@
 import React, { createContext, useRef } from "react";
 
+import {
+	PieceCombatState,
+	PieceInfoStore,
+	pieceInfoStore,
+} from "@creature-chess/battle";
 import { SubscribableBoard } from "@creature-chess/board";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
@@ -12,6 +17,7 @@ export class GameBoardState {
 	public readonly matchBoard: SubscribableBoard;
 	public readonly pieceRegistry: PieceRegistry;
 	public readonly animationEventStore: PieceAnimationEventStore;
+	public readonly combatStore: PieceInfoStore<PieceCombatState>;
 
 	public constructor() {
 		this.board = new SubscribableBoard(
@@ -28,6 +34,7 @@ export class GameBoardState {
 		);
 		this.pieceRegistry = new PieceRegistry();
 		this.animationEventStore = new PieceAnimationEventStore();
+		this.combatStore = pieceInfoStore<PieceCombatState>();
 	}
 }
 

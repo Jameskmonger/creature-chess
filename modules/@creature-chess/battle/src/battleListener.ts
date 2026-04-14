@@ -1,7 +1,6 @@
 import { Dispatch, TypedStartListening, UnknownAction } from "@reduxjs/toolkit";
 
 import { Board } from "@creature-chess/board";
-import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -13,18 +12,21 @@ import {
 } from "./commands";
 import { battleFinishEvent } from "./events";
 import { simulateTurn } from "./simulator";
-import { PieceCombatState } from "./state/state";
-import { pieceInfoStore } from "./state/store";
+import { PieceCombatState, PieceInfoStore } from "./state";
 import { duration } from "./utils/duration";
 
-const isATeamDefeated = (board: Board, pieceRegistry: PieceRegistry) => {
+const isATeamDefeated = (
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	combatStore: PieceInfoStore<PieceCombatState>
+) => {
 	const survivingPieces = board
 		.getAllPieces()
 		.map((p) => pieceRegistry.getPieceById(p.id))
-		.filter((p): p is PieceModel => p !== null)
-		.filter((p) => p.currentHealth > 0);
+		.filter((p) => p !== null)
+		.filter((p) => combatStore.getPiece(p.id).currentHealth > 0);
 
-	const pieceOwnerIds = survivingPieces.map((p) => p.ownerId);
+	const pieceOwnerIds = survivingPieces.map((p) => p!.ownerId);
 
 	return new Set(pieceOwnerIds).size <= 1;
 };
@@ -33,6 +35,7 @@ const runBattle = async (
 	controls: { paused: boolean },
 	board: Board,
 	pieceRegistry: PieceRegistry,
+	combatStore: PieceInfoStore<PieceCombatState>,
 	startingTurn: number,
 	settings: GamemodeSettings,
 	dispatch: Dispatch,
@@ -40,27 +43,19 @@ const runBattle = async (
 ) => {
 	let turnCount = startingTurn;
 
-	const combatStore = pieceInfoStore<PieceCombatState>({
-		state: { type: "wandering" },
-
-		canMoveAtTurn: 15,
-		canBeAttackedAtTurn: 0,
-		canAttackAtTurn: 15,
-	});
-
 	const eventLog = new BattleEventLog();
 
 	while (true) {
 		const shouldStop =
 			turnCount >= settings.battleTurnCount ||
-			isATeamDefeated(board, pieceRegistry);
+			isATeamDefeated(board, pieceRegistry, combatStore);
 
 		if (shouldStop) {
 			// Emit dying events and remove any pieces that died on the final turn
 			const deadPieceIds: string[] = [];
 			for (const p of board.getAllPieces()) {
 				const piece = pieceRegistry.getPieceById(p.id);
-				if (piece && piece.currentHealth <= 0) {
+				if (piece && combatStore.getPiece(p.id).currentHealth <= 0) {
 					eventLog.append({ type: "piece_dying", pieceId: p.id });
 					deadPieceIds.push(p.id);
 				}
@@ -103,6 +98,7 @@ export const setupBattleListeners = <TState>(
 	settings: GamemodeSettings,
 	board: Board,
 	pieceRegistry: PieceRegistry,
+	combatStore: PieceInfoStore<PieceCombatState>,
 	onEvents?: (events: BattleEvent[]) => void
 ) => {
 	const controls = { paused: false };
@@ -131,6 +127,7 @@ export const setupBattleListeners = <TState>(
 				controls,
 				board,
 				pieceRegistry,
+				combatStore,
 				action.payload.turn || 0,
 				settings,
 				api.dispatch,

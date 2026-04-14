@@ -31,11 +31,8 @@ const createProps = (args: any) => ({
 			cost: args.creatureCost || 5,
 			stages: [],
 		},
-		facingAway: args.facingAway,
 		maxHealth: args.maxHealth || 100,
-		currentHealth: args.currentHealth || 50,
 		stage: args.stage || 0,
-		lastBattleStats: null,
 		traits: args.traits || [],
 	},
 });
@@ -79,10 +76,8 @@ export const Friendly: Story = {
 	args: {
 		healthbar: "friendly",
 		definitionId: 20,
-		currentHealth: 75,
 		maxHealth: 100,
 		stage: 1,
-		facingAway: false,
 		traits: ["earth", "valiant"],
 		creatureCost: 3,
 	},

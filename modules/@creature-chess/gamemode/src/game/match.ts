@@ -3,9 +3,14 @@ import pDefer from "p-defer";
 import { v4 as uuid } from "uuid";
 import { Logger } from "winston";
 
-import { BattleRunner } from "@creature-chess/battle";
+import {
+	BattleRunner,
+	PieceCombatState,
+	PieceInfoStore,
+	pieceInfoStore,
+	seedCombatStore,
+} from "@creature-chess/battle";
 import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
-import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -16,6 +21,7 @@ export class Match {
 	private runner: BattleRunner;
 	private boardId = uuid();
 	private board: Board;
+	private combatStore: PieceInfoStore<PieceCombatState>;
 
 	private serverFinishedMatch = pDefer();
 	private clientFinishedMatchHome = pDefer();
@@ -32,29 +38,15 @@ export class Match {
 	) {
 		this.board = mergeBoards(this.boardId, home.board, away.board);
 
-		for (const piece of this.board.getAllPieces()) {
-			const pieceModel = this.pieceRegistry.getPieceById(piece.id);
+		this.combatStore = pieceInfoStore<PieceCombatState>();
+		seedCombatStore(this.combatStore, this.board, this.pieceRegistry);
 
-			if (!pieceModel) {
-				continue;
-			}
-
-			pieceModel.lastBattleStats = {
-				damageDealt: 0,
-				damageTaken: 0,
-				turnsSurvived: 0,
-			};
-
-			pieceModel.currentHealth = pieceModel.maxHealth;
-
-			if (pieceModel.ownerId === this.home.id) {
-				pieceModel.facingAway = true;
-			} else {
-				pieceModel.facingAway = false;
-			}
-		}
-
-		this.runner = new BattleRunner(this.board, this.pieceRegistry, settings);
+		this.runner = new BattleRunner(
+			this.board,
+			this.pieceRegistry,
+			this.combatStore,
+			settings
+		);
 
 		// auto-resolve the match from the "away" side if they are a clone
 		if (awayIsClone) {
@@ -114,12 +106,12 @@ export class Match {
 		const survivingPieces = this.board
 			.getAllPieces()
 			.map((p) => this.pieceRegistry.getPieceById(p.id))
-			.filter((p): p is PieceModel => p !== null)
-			.filter((p) => p.currentHealth > 0);
+			.filter((p) => p !== null)
+			.filter((p) => this.combatStore.getPiece(p!.id).currentHealth > 0);
 
 		const surviving = {
-			home: survivingPieces.filter((p) => p.ownerId === this.home.id),
-			away: survivingPieces.filter((p) => p.ownerId === this.away.id),
+			home: survivingPieces.filter((p) => p!.ownerId === this.home.id),
+			away: survivingPieces.filter((p) => p!.ownerId === this.away.id),
 		};
 
 		const homeScore = surviving.home.length;

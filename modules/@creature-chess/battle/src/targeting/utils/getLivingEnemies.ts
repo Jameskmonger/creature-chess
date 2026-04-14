@@ -2,10 +2,13 @@ import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
+import { PieceCombatState, PieceInfoStore } from "../../state";
+
 export const getLivingEnemies = (
 	piece: PieceModel,
 	board: Board,
-	pieceRegistry: PieceRegistry
+	pieceRegistry: PieceRegistry,
+	combatStore: PieceInfoStore<PieceCombatState>
 ): PieceModel[] =>
 	board
 		.getAllPieces()
@@ -14,5 +17,5 @@ export const getLivingEnemies = (
 			(other): other is PieceModel =>
 				other !== null &&
 				other.ownerId !== piece.ownerId &&
-				other.currentHealth > 0
+				combatStore.getPiece(other.id).currentHealth > 0
 		);

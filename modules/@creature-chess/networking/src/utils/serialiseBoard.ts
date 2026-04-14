@@ -6,8 +6,7 @@ import { BoardUpdatePacket } from "../server-to-client/server-to-client-game";
 
 export function serialiseBoard(
 	board: Board,
-	pieceRegistry: PieceRegistry,
-	isHomePlayer: boolean = true
+	pieceRegistry: PieceRegistry
 ): BoardUpdatePacket {
 	const positions: Record<PositionKey, PieceModel["id"]> = {};
 	const pieces: PieceModel[] = [];
@@ -19,14 +18,7 @@ export function serialiseBoard(
 			continue;
 		}
 
-		if (isHomePlayer) {
-			pieces.push(piece);
-		} else {
-			pieces.push({
-				...piece,
-				facingAway: !piece.facingAway,
-			});
-		}
+		pieces.push(piece);
 
 		positions[`${x},${y}`] = id;
 	}

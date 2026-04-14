@@ -16,28 +16,7 @@ export interface PieceModel {
 
 	stage: number;
 
-	/**
-	 * Is the piece facing away from the viewer (i.e. looking "north")
-	 *
-	 * @deprecated State/position data should be stored separately from the core piece data.
-	 */
-	facingAway: boolean;
-
 	maxHealth: number;
-
-	/**
-	 * @deprecated State/position data should be stored separately from the core piece data.
-	 */
-	currentHealth: number;
-
-	/**
-	 * @deprecated State/position data should be stored separately from the core piece data.
-	 */
-	lastBattleStats: {
-		damageDealt: number;
-		damageTaken: number;
-		turnsSurvived: number;
-	} | null;
 }
 
 export type IndexedPieces = {

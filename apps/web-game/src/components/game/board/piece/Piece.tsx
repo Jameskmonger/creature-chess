@@ -7,6 +7,7 @@ import { ICON_FOR_TRAIT } from "~/components/ui/TraitIcon";
 import { CreatureImage } from "../../../ui/creatureImage";
 import { usePiece } from "./PieceContext";
 import { PieceHealthbar } from "./meta/PieceHealthbar";
+import { usePieceCombatState } from "./usePieceCombatState";
 
 interface Props {
 	healthbar: "none" | "friendly" | "enemy" | "spectating";
@@ -83,7 +84,11 @@ const useStyles = createUseStyles({
 export function Piece(props: Props) {
 	const classes = useStyles();
 	const { piece } = usePiece();
+	const combat = usePieceCombatState(piece.id);
 	const { healthbar, children, className, onClick } = props;
+
+	const currentHealth = combat?.currentHealth ?? piece.maxHealth;
+	const facingAway = combat?.facingAway ?? false;
 
 	return (
 		<div className={classNames(classes.piece, className)} onClick={onClick}>
@@ -91,7 +96,7 @@ export function Piece(props: Props) {
 				{healthbar !== "none" && (
 					<PieceHealthbar
 						color={healthbar}
-						current={piece.currentHealth}
+						current={currentHealth}
 						max={piece.maxHealth}
 					/>
 				)}
@@ -100,7 +105,7 @@ export function Piece(props: Props) {
 			<div className={classes.imageContainer}>
 				<CreatureImage
 					definitionId={piece.definitionId}
-					facing={piece.facingAway ? "back" : "front"}
+					facing={facingAway ? "back" : "front"}
 				/>
 			</div>
 

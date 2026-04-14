@@ -39,7 +39,7 @@ export function doAttack(
 	const target = pieceRegistry.getPieceById(state.payload.targetId);
 	const targetPosition = board.getPiecePosition(state.payload.targetId);
 
-	const targetAlive = (target?.currentHealth || 0) > 0;
+	const targetAlive = otherCombat.currentHealth > 0;
 
 	// some issue with this target
 	if (!target || !targetPosition || !targetAlive) {
@@ -82,7 +82,7 @@ export function doAttack(
 	const nextPosition = getNextPiecePosition(
 		pathfinder,
 		packPosition(piecePosition[0], piecePosition[1]),
-		piece.facingAway,
+		combat.facingAway,
 		attackerStats,
 		packPosition(targetPosition[0], targetPosition[1]),
 		board

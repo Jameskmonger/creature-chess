@@ -2,6 +2,7 @@ import { Board, getDelta, packPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
+import { getRelativeDirection } from "../../../utils/direction";
 import { getCooldownForSpeed } from "../../../utils/getCooldownForSpeed";
 import { getHitDamage } from "../../../utils/getHitDamage";
 import { getNewAttackerFacingAway } from "../../../utils/getNewAttackerFacingAway";
@@ -9,7 +10,6 @@ import { getStats } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { HitAction } from "./types";
-import { getRelativeDirection } from "../../../utils/direction";
 
 const ATTACK_TURN_DURATION = 2;
 const MOVE_TURN_DURATION = 2;
@@ -48,8 +48,11 @@ export function doHit(
 		return;
 	}
 
+	const attackerCombat = combatStore.getPiece(attacker.id);
+	const targetCombat = combatStore.getPiece(target.id);
+
 	const damage = getHitDamage(attacker, target);
-	const newDefenderHealth = Math.max(target.currentHealth - damage, 0);
+	const newDefenderHealth = Math.max(targetCombat.currentHealth - damage, 0);
 
 	const attackerDirection = getRelativeDirection(
 		packPosition(attackerPosition[0], attackerPosition[1]),
@@ -62,7 +65,7 @@ export function doHit(
 	);
 	const attackerDistance = delta.x + delta.y;
 	const attackerFacingAway = getNewAttackerFacingAway(
-		attacker.facingAway,
+		attackerCombat.facingAway,
 		attackerDirection
 	);
 
@@ -76,32 +79,23 @@ export function doHit(
 	combatStore.updatePiecePartial(attacker.id, {
 		canAttackAtTurn,
 		canMoveAtTurn,
+		facingAway: attackerFacingAway,
+		battleStats: {
+			...attackerCombat.battleStats,
+			damageDealt: attackerCombat.battleStats.damageDealt + damage,
+		},
 	});
 
 	const canBeAttackedAtTurn = currentTurn + MOVE_TURN_DURATION + 2;
 
-	combatStore.updatePiecePartial(target.id, { canBeAttackedAtTurn });
-
-	const newAttacker: PieceModel = {
-		...attacker,
-		facingAway: attackerFacingAway,
-		lastBattleStats: {
-			...attacker.lastBattleStats!,
-			damageDealt: attacker.lastBattleStats!.damageDealt + damage,
-		},
-	};
-
-	const defender: PieceModel = {
-		...target,
+	combatStore.updatePiecePartial(target.id, {
+		canBeAttackedAtTurn,
 		currentHealth: newDefenderHealth,
-		lastBattleStats: {
-			...target.lastBattleStats!,
-			damageTaken: target.lastBattleStats!.damageTaken + damage,
+		battleStats: {
+			...targetCombat.battleStats,
+			damageTaken: targetCombat.battleStats.damageTaken + damage,
 		},
-	};
-
-	pieceRegistry.registerPiece(newAttacker);
-	pieceRegistry.registerPiece(defender);
+	});
 
 	if (eventLog) {
 		eventLog.append({

@@ -24,7 +24,6 @@ const MOCK_PIECES = {
 			traits: getDefinitionById(1)!.traits,
 			stage: 1,
 			maxHealth: getDefinitionById(1)!.stages[1].hp,
-			currentHealth: getDefinitionById(1)!.stages[1].hp,
 		}),
 		Builders.buildPieceModel({
 			id: "board-2",
@@ -34,7 +33,6 @@ const MOCK_PIECES = {
 			traits: getDefinitionById(2)!.traits,
 			stage: 0,
 			maxHealth: getDefinitionById(2)!.stages[0].hp,
-			currentHealth: getDefinitionById(2)!.stages[0].hp,
 		}),
 		Builders.buildPieceModel({
 			id: "board-3",
@@ -44,7 +42,6 @@ const MOCK_PIECES = {
 			traits: getDefinitionById(3)!.traits,
 			stage: 2,
 			maxHealth: getDefinitionById(3)!.stages[2].hp,
-			currentHealth: getDefinitionById(3)!.stages[2].hp,
 		}),
 	],
 	bench: [
@@ -56,7 +53,6 @@ const MOCK_PIECES = {
 			traits: getDefinitionById(4)!.traits,
 			stage: 0,
 			maxHealth: getDefinitionById(4)!.stages[0].hp,
-			currentHealth: getDefinitionById(4)!.stages[0].hp,
 		}),
 		Builders.buildPieceModel({
 			id: "bench-2",
@@ -66,7 +62,6 @@ const MOCK_PIECES = {
 			traits: getDefinitionById(5)!.traits,
 			stage: 1,
 			maxHealth: getDefinitionById(5)!.stages[1].hp,
-			currentHealth: getDefinitionById(5)!.stages[1].hp,
 		}),
 	],
 };

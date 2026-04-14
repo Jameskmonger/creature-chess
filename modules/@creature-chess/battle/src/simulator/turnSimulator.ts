@@ -33,8 +33,14 @@ export const simulateTurn = (
 			continue;
 		}
 
-		if (piece.currentHealth > 0) {
-			piece.lastBattleStats!.turnsSurvived++;
+		const combat = stores.combatStore.getPiece(piece.id);
+		if (combat.currentHealth > 0) {
+			stores.combatStore.updatePiecePartial(piece.id, {
+				battleStats: {
+					...combat.battleStats,
+					turnsSurvived: combat.battleStats.turnsSurvived + 1,
+				},
+			});
 		}
 	}
 };

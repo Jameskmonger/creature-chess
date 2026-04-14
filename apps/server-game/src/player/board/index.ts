@@ -60,7 +60,7 @@ const setupSpectateListeners = (
 		const matchBoard = match.getBoardForPlayer(localPlayerId);
 		socket.emit("matchBoardUpdate", {
 			turn: match.getTurn(),
-			board: serialiseBoard(matchBoard.board, pieceRegistry, matchBoard.isHome),
+			board: serialiseBoard(matchBoard.board, pieceRegistry),
 		});
 
 		// todo send opponentId
@@ -80,11 +80,7 @@ const setupSpectateListeners = (
 					const boardData = currentMatch.getBoardForPlayer(localPlayerId);
 					socket.emit("matchBoardUpdate", {
 						turn: null,
-						board: serialiseBoard(
-							boardData.board,
-							pieceRegistry,
-							boardData.isHome
-						),
+						board: serialiseBoard(boardData.board, pieceRegistry),
 					});
 				}
 

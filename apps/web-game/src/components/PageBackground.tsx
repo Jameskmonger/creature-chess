@@ -51,9 +51,7 @@ const renderItem = (boardId: string) => (piece: PieceModel) => ({
 				piece: {
 					id: piece.id,
 					definitionId: piece.definitionId,
-					facingAway: piece.facingAway,
 					traits: piece.traits,
-					currentHealth: piece.currentHealth,
 					maxHealth: piece.maxHealth,
 				} as unknown as PieceModel,
 				viewingPlayerId: boardId,

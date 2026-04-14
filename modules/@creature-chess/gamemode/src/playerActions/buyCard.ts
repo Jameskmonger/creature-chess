@@ -85,12 +85,9 @@ const createPieceFromCard = (
 		ownerId,
 		definitionId,
 		definition,
-		facingAway: false,
 		maxHealth: stats.hp,
-		currentHealth: stats.hp,
 		traits: definition.traits,
 		stage: 0,
-		lastBattleStats: null,
 	};
 };
 

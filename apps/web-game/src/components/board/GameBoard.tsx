@@ -47,9 +47,6 @@ function usePieceRegistry() {
 						stage: 1,
 						traits: [],
 						maxHealth: 10,
-						currentHealth: 10,
-						facingAway: false,
-						lastBattleStats: {} as any,
 					};
 				case "piece-2":
 					return {
@@ -60,9 +57,6 @@ function usePieceRegistry() {
 						stage: 1,
 						traits: [],
 						maxHealth: 10,
-						currentHealth: 10,
-						facingAway: false,
-						lastBattleStats: {} as any,
 					};
 				default:
 					return null;

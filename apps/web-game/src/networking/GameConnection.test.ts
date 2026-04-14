@@ -63,6 +63,7 @@ const createMockBoardSlices = (): BoardSlices => ({
 	bench: {} as any,
 	matchBoard: {} as any,
 	pieceRegistry: {} as any,
+	combatStore: {} as any,
 });
 
 describe("GameConnection", () => {

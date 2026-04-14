@@ -20,11 +20,8 @@ export const buildPieceModel = (
 	ownerId: "abc",
 	definitionId: 1,
 	definition: buildDefinition(),
-	facingAway: false,
 	maxHealth: 100,
-	currentHealth: 100,
 	stage: 0,
-	lastBattleStats: null,
 	traits: [],
 	...piece,
 });

@@ -1,22 +1,24 @@
 import { Board } from "@creature-chess/board";
-import { PieceModel } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { BattleEvent, BattleEventLog } from "./battleEventLog";
 import { simulateTurn } from "./simulator";
-import { PieceCombatState } from "./state/state";
-import { pieceInfoStore } from "./state/store";
+import { PieceCombatState, PieceInfoStore } from "./state";
 import { duration } from "./utils/duration";
 
-const isATeamDefeated = (board: Board, pieceRegistry: PieceRegistry) => {
+const isATeamDefeated = (
+	board: Board,
+	pieceRegistry: PieceRegistry,
+	combatStore: PieceInfoStore<PieceCombatState>
+) => {
 	const survivingPieces = board
 		.getAllPieces()
 		.map((p) => pieceRegistry.getPieceById(p.id))
-		.filter((p): p is PieceModel => p !== null)
-		.filter((p) => p.currentHealth > 0);
+		.filter((p) => p !== null)
+		.filter((p) => combatStore.getPiece(p!.id).currentHealth > 0);
 
-	const pieceOwnerIds = survivingPieces.map((p) => p.ownerId);
+	const pieceOwnerIds = survivingPieces.map((p) => p!.ownerId);
 
 	return new Set(pieceOwnerIds).size <= 1;
 };
@@ -29,6 +31,7 @@ export class BattleRunner {
 	public constructor(
 		private board: Board,
 		private pieceRegistry: PieceRegistry,
+		private combatStore: PieceInfoStore<PieceCombatState>,
 		private settings: GamemodeSettings,
 		startingTurn: number = 0,
 		private onEvents?: (events: BattleEvent[]) => void
@@ -49,24 +52,17 @@ export class BattleRunner {
 	}
 
 	public async run(): Promise<{ turn: number }> {
-		const combatStore = pieceInfoStore<PieceCombatState>({
-			state: { type: "wandering" },
-			canMoveAtTurn: 15,
-			canBeAttackedAtTurn: 0,
-			canAttackAtTurn: 15,
-		});
-
 		while (true) {
 			const shouldStop =
 				this.turn >= this.settings.battleTurnCount ||
-				isATeamDefeated(this.board, this.pieceRegistry);
+				isATeamDefeated(this.board, this.pieceRegistry, this.combatStore);
 
 			if (shouldStop) {
 				// Emit dying events and remove any pieces that died on the final turn
 				const deadPieceIds: string[] = [];
 				for (const p of this.board.getAllPieces()) {
 					const piece = this.pieceRegistry.getPieceById(p.id);
-					if (piece && piece.currentHealth <= 0) {
+					if (piece && this.combatStore.getPiece(p.id).currentHealth <= 0) {
 						this.eventLog.append({ type: "piece_dying", pieceId: p.id });
 						deadPieceIds.push(p.id);
 					}
@@ -92,7 +88,7 @@ export class BattleRunner {
 			const turnTimer = duration(this.settings.battleTurnDuration);
 
 			simulateTurn(++this.turn, this.board, this.pieceRegistry, {
-				combatStore,
+				combatStore: this.combatStore,
 				eventLog: this.eventLog,
 			});
 
