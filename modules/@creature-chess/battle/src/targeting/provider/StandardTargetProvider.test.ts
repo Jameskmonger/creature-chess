@@ -1,10 +1,59 @@
 import { Board, rotateBoard } from "@creature-chess/board";
-import { CreatureDefinition, PieceModel } from "@creature-chess/models";
+import {
+	CreatureDefinition,
+	CreatureStats,
+	PieceModel,
+} from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { PieceCombatState, PieceInfoStore, pieceInfoStore } from "../../state";
 import { StandardTargetProvider } from "./StandardTargetProvider";
+
+const mockDefinitions: Record<number, CreatureDefinition> = {};
+
+jest.mock("@creature-chess/models", () => {
+	const actual = jest.requireActual("@creature-chess/models");
+	return {
+		__esModule: true,
+		...actual,
+		getDefinitionById: jest.fn((id: number) => mockDefinitions[id]),
+	};
+});
+
+const makeBaseStats = (): CreatureStats => ({
+	hp: 0,
+	attack: 0,
+	defense: 0,
+	speed: 0,
+	attackType: { name: "test-melee", range: 1 },
+});
+
+const makeMockDefinition = (id: number, cost = 1): CreatureDefinition => ({
+	id,
+	name: `test-${id}`,
+	cost,
+	traits: [],
+	stages: [makeBaseStats()],
+});
+
+const ATTACKER_DEF_ID = 1;
+const NORTH_ENEMY_DEF_ID = 2;
+const SOUTH_ENEMY_DEF_ID = 3;
+const NORTH_ENEMY_FAR_DEF_ID = 4;
+const SOUTH_ENEMY_FAR_DEF_ID = 5;
+const EAST_ENEMY_DEF_ID = 6;
+const WEST_ENEMY_DEF_ID = 7;
+const BLOCKED_ENEMY_DEF_ID = 8;
+const UNBLOCKED_ENEMY_DEF_ID = 9;
+const BLOCKER_A_1_DEF_ID = 10;
+const BLOCKER_A_2_DEF_ID = 11;
+const BLOCKER_A_3_DEF_ID = 12;
+const SURROUNDED_ENEMY_DEF_ID = 13;
+const BLOCKER_B_1_DEF_ID = 14;
+const BLOCKER_B_2_DEF_ID = 15;
+const BLOCKER_B_3_DEF_ID = 16;
+const BLOCKER_B_4_DEF_ID = 17;
 
 const makeInitialCombatState = (
 	overrides: Partial<PieceCombatState> = {}
@@ -62,17 +111,28 @@ describe("StandardTargetProvider", () => {
 	let southEnemy: PieceModel;
 
 	beforeEach(() => {
+		for (const key of Object.keys(mockDefinitions)) {
+			delete mockDefinitions[Number(key)];
+		}
+
+		mockDefinitions[ATTACKER_DEF_ID] = makeMockDefinition(ATTACKER_DEF_ID);
+		mockDefinitions[NORTH_ENEMY_DEF_ID] = makeMockDefinition(NORTH_ENEMY_DEF_ID);
+		mockDefinitions[SOUTH_ENEMY_DEF_ID] = makeMockDefinition(SOUTH_ENEMY_DEF_ID);
+
 		attacker = buildPieceModel({
 			id: "attacker",
 			ownerId: "attacker",
+			definitionId: ATTACKER_DEF_ID,
 		});
 		northEnemy = buildPieceModel({
 			id: "northEnemy",
 			ownerId: "enemy",
+			definitionId: NORTH_ENEMY_DEF_ID,
 		});
 		southEnemy = buildPieceModel({
 			id: "southEnemy",
 			ownerId: "enemy",
+			definitionId: SOUTH_ENEMY_DEF_ID,
 		});
 
 		board = new Board(7, 6);
@@ -89,17 +149,6 @@ describe("StandardTargetProvider", () => {
 
 		combatStore = pieceInfoStore<PieceCombatState>();
 		seedPieces(combatStore, [attacker, northEnemy, southEnemy]);
-
-		attacker.definition.stages[attacker.stage] = {
-			hp: 0,
-			attack: 0,
-			defense: 0,
-			speed: 0,
-			attackType: {
-				name: "test-melee",
-				range: 1,
-			},
-		};
 	});
 
 	describe("when piece facing north", () => {
@@ -140,16 +189,21 @@ describe("StandardTargetProvider", () => {
 
 			let northEnemyFar: PieceModel;
 			beforeEach(() => {
+				mockDefinitions[NORTH_ENEMY_FAR_DEF_ID] = makeMockDefinition(
+					NORTH_ENEMY_FAR_DEF_ID
+				);
+
 				northEnemyFar = buildPieceModel({
 					id: "northEnemyFar",
 					ownerId: "enemy",
+					definitionId: NORTH_ENEMY_FAR_DEF_ID,
 				});
 
 				pieceRegistry.registerPiece(northEnemyFar);
 				seedPieces(combatStore, [northEnemyFar]);
 				board.setPiece(northEnemyFar.id, 1, 1);
 
-				attacker.definition.stages[attacker.stage].attackType = {
+				mockDefinitions[ATTACKER_DEF_ID].stages[attacker.stage].attackType = {
 					name: "test-ranged",
 					range: attackRange,
 				};
@@ -186,7 +240,7 @@ describe("StandardTargetProvider", () => {
 
 		describe("when the south enemy has a higher cost", () => {
 			beforeEach(() => {
-				southEnemy.definition.cost = 5;
+				mockDefinitions[SOUTH_ENEMY_DEF_ID].cost = 5;
 			});
 
 			it("returns the id of the south enemy", () => {
@@ -257,16 +311,21 @@ describe("StandardTargetProvider", () => {
 
 			let southEnemyFar: PieceModel;
 			beforeEach(() => {
+				mockDefinitions[SOUTH_ENEMY_FAR_DEF_ID] = makeMockDefinition(
+					SOUTH_ENEMY_FAR_DEF_ID
+				);
+
 				southEnemyFar = buildPieceModel({
 					id: "southEnemyFar",
 					ownerId: "enemy",
+					definitionId: SOUTH_ENEMY_FAR_DEF_ID,
 				});
 
 				pieceRegistry.registerPiece(southEnemyFar);
 				seedPieces(combatStore, [southEnemyFar]);
 				board.setPiece(southEnemyFar.id, 1, 5);
 
-				attacker.definition.stages[attacker.stage].attackType = {
+				mockDefinitions[ATTACKER_DEF_ID].stages[attacker.stage].attackType = {
 					name: "test-ranged",
 					range: attackRange,
 				};
@@ -303,7 +362,7 @@ describe("StandardTargetProvider", () => {
 
 		describe("when the north enemy has a higher cost", () => {
 			beforeEach(() => {
-				northEnemy.definition.cost = 5;
+				mockDefinitions[NORTH_ENEMY_DEF_ID].cost = 5;
 			});
 
 			it("returns the id of the north enemy", () => {
@@ -345,15 +404,24 @@ describe("StandardTargetProvider", () => {
 		beforeEach(() => {
 			// Setup two enemies at equal distance in the same facing direction
 			// with same cost but different IDs
+			mockDefinitions[EAST_ENEMY_DEF_ID] = makeMockDefinition(
+				EAST_ENEMY_DEF_ID,
+				3
+			);
+			mockDefinitions[WEST_ENEMY_DEF_ID] = makeMockDefinition(
+				WEST_ENEMY_DEF_ID,
+				3
+			);
+
 			eastEnemy = buildPieceModel({
 				id: "eastEnemy",
 				ownerId: "enemy",
-				definition: { cost: 3 } as CreatureDefinition,
+				definitionId: EAST_ENEMY_DEF_ID,
 			});
 			westEnemy = buildPieceModel({
 				id: "westEnemy",
 				ownerId: "enemy",
-				definition: { cost: 3 } as CreatureDefinition,
+				definitionId: WEST_ENEMY_DEF_ID,
 			});
 
 			board = new Board(7, 6);
@@ -371,7 +439,7 @@ describe("StandardTargetProvider", () => {
 			combatStore = pieceInfoStore<PieceCombatState>();
 			seedPieces(combatStore, [attacker, eastEnemy, westEnemy]);
 
-			attacker.definition.stages[attacker.stage].attackType = {
+			mockDefinitions[ATTACKER_DEF_ID].stages[attacker.stage].attackType = {
 				name: "test-ranged",
 				range: attackRange,
 			};
@@ -461,26 +529,47 @@ describe("StandardTargetProvider", () => {
 			 * the unblocked enemy.
 			 */
 
+			mockDefinitions[BLOCKED_ENEMY_DEF_ID] = makeMockDefinition(
+				BLOCKED_ENEMY_DEF_ID
+			);
+			mockDefinitions[UNBLOCKED_ENEMY_DEF_ID] = makeMockDefinition(
+				UNBLOCKED_ENEMY_DEF_ID
+			);
+			mockDefinitions[BLOCKER_A_1_DEF_ID] = makeMockDefinition(
+				BLOCKER_A_1_DEF_ID
+			);
+			mockDefinitions[BLOCKER_A_2_DEF_ID] = makeMockDefinition(
+				BLOCKER_A_2_DEF_ID
+			);
+			mockDefinitions[BLOCKER_A_3_DEF_ID] = makeMockDefinition(
+				BLOCKER_A_3_DEF_ID
+			);
+
 			blockedEnemy = buildPieceModel({
 				id: "blockedEnemy",
 				ownerId: "enemy",
+				definitionId: BLOCKED_ENEMY_DEF_ID,
 			});
 			unblockedEnemy = buildPieceModel({
 				id: "unblockedEnemy",
 				ownerId: "enemy",
+				definitionId: UNBLOCKED_ENEMY_DEF_ID,
 			});
 
 			const blocker1 = buildPieceModel({
 				id: "blocker1",
 				ownerId: "attacker",
+				definitionId: BLOCKER_A_1_DEF_ID,
 			});
 			const blocker2 = buildPieceModel({
 				id: "blocker2",
 				ownerId: "attacker",
+				definitionId: BLOCKER_A_2_DEF_ID,
 			});
 			const blocker3 = buildPieceModel({
 				id: "blocker3",
 				ownerId: "attacker",
+				definitionId: BLOCKER_A_3_DEF_ID,
 			});
 
 			board = new Board(7, 6);
@@ -593,25 +682,46 @@ describe("StandardTargetProvider", () => {
 		let blocker4: PieceModel;
 
 		beforeEach(() => {
+			mockDefinitions[SURROUNDED_ENEMY_DEF_ID] = makeMockDefinition(
+				SURROUNDED_ENEMY_DEF_ID
+			);
+			mockDefinitions[BLOCKER_B_1_DEF_ID] = makeMockDefinition(
+				BLOCKER_B_1_DEF_ID
+			);
+			mockDefinitions[BLOCKER_B_2_DEF_ID] = makeMockDefinition(
+				BLOCKER_B_2_DEF_ID
+			);
+			mockDefinitions[BLOCKER_B_3_DEF_ID] = makeMockDefinition(
+				BLOCKER_B_3_DEF_ID
+			);
+			mockDefinitions[BLOCKER_B_4_DEF_ID] = makeMockDefinition(
+				BLOCKER_B_4_DEF_ID
+			);
+
 			surroundedEnemy = buildPieceModel({
 				id: "surroundedEnemy",
 				ownerId: "enemy",
+				definitionId: SURROUNDED_ENEMY_DEF_ID,
 			});
 			blocker1 = buildPieceModel({
 				id: "blocker1",
 				ownerId: "enemy",
+				definitionId: BLOCKER_B_1_DEF_ID,
 			});
 			blocker2 = buildPieceModel({
 				id: "blocker2",
 				ownerId: "enemy",
+				definitionId: BLOCKER_B_2_DEF_ID,
 			});
 			blocker3 = buildPieceModel({
 				id: "blocker3",
 				ownerId: "enemy",
+				definitionId: BLOCKER_B_3_DEF_ID,
 			});
 			blocker4 = buildPieceModel({
 				id: "blocker4",
 				ownerId: "enemy",
+				definitionId: BLOCKER_B_4_DEF_ID,
 			});
 
 			board = new Board(7, 6);

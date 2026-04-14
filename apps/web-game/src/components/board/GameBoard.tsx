@@ -4,7 +4,6 @@ import classNames from "classnames";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { SubscribableBoard } from "@creature-chess/board";
-import { getDefinitionById } from "@creature-chess/gamemode";
 import { PieceModel } from "@creature-chess/models";
 
 import { useBoardSubscription } from "./useBoard";
@@ -42,7 +41,6 @@ function usePieceRegistry() {
 					return {
 						id: "piece-1",
 						definitionId: 1,
-						definition: getDefinitionById(1)!,
 						ownerId: "player-1",
 						stage: 1,
 						traits: [],
@@ -52,7 +50,6 @@ function usePieceRegistry() {
 					return {
 						id: "piece-2",
 						definitionId: 2,
-						definition: getDefinitionById(2)!,
 						ownerId: "player-2",
 						stage: 1,
 						traits: [],

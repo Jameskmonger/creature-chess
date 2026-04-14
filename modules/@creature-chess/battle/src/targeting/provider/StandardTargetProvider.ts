@@ -7,7 +7,7 @@ import {
 	unpackX,
 	unpackY,
 } from "@creature-chess/board";
-import { PieceModel } from "@creature-chess/models";
+import { getDefinitionById, PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { PieceCombatState, PieceInfoStore } from "../../state";
@@ -142,6 +142,11 @@ export class StandardTargetProvider implements TargetProvider {
 				? unpackY(delta.enemyPosition) < unpackY(delta.attackPosition)
 				: unpackY(delta.enemyPosition) > unpackY(delta.attackPosition);
 
+		const costs = new Map<string, number>();
+		for (const { enemy } of enemies) {
+			costs.set(enemy.id, getDefinitionById(enemy.definitionId)?.cost ?? 0);
+		}
+
 		enemies.sort((a, b) => {
 			// 1. Primary sort: Distance (closest first)
 			const distanceDiff =
@@ -151,9 +156,7 @@ export class StandardTargetProvider implements TargetProvider {
 			}
 
 			// 2. Secondary sort: Cost (highest first)
-			const aCost = a.enemy.definition?.cost ?? 0;
-			const bCost = b.enemy.definition?.cost ?? 0;
-			const costDiff = bCost - aCost;
+			const costDiff = (costs.get(b.enemy.id) ?? 0) - (costs.get(a.enemy.id) ?? 0);
 			if (costDiff !== 0) {
 				return costDiff;
 			}

@@ -6,7 +6,7 @@ import {
 	PlayerStateSelectors,
 	PlayerActions,
 } from "@creature-chess/gamemode";
-import { PieceModel } from "@creature-chess/models";
+import { getDefinitionById, PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { BotPersonality } from "@cc-server/data";
@@ -36,6 +36,12 @@ export const createSellPieceAction = (
 	const piece = pieceRegistry.getPieceById(pieceId);
 
 	if (!piece) {
+		return null;
+	}
+
+	const definition = getDefinitionById(piece.definitionId);
+
+	if (!definition) {
 		return null;
 	}
 
@@ -107,7 +113,7 @@ export const createSellPieceAction = (
 			name: "piece.cost",
 			// Cheap pieces are more sellable; ambition pulls hardest toward
 			// dumping low-cost pieces in favour of (eventually) better ones.
-			value: piece.definition.cost,
+			value: definition.cost,
 			range: [1, 5],
 			direction: ScoringDirection.Low,
 			weighting: {
@@ -159,7 +165,7 @@ export const createSellPieceAction = (
 	]);
 
 	return {
-		name: `sell piece [${piece.definition.name}]`,
+		name: `sell piece [${definition.name}]`,
 		action: () => PlayerActions.sellPiecePlayerAction({ pieceId: piece.id }),
 		value: score.value,
 		breakdown: score.inputs,

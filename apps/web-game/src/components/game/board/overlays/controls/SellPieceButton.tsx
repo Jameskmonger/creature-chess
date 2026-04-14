@@ -8,7 +8,7 @@ import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
 
 import { getPiecesForStage } from "@creature-chess/gamemode";
-import { GamePhase } from "@creature-chess/models";
+import { GamePhase, getDefinitionById } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { useGameBoards } from "../../state";
@@ -55,7 +55,7 @@ export function SellPieceButton() {
 	}
 
 	const piecesUsed = getPiecesForStage(selectedPiece.stage, PIECES_TO_EVOLVE);
-	const pieceCost = selectedPiece.definition.cost;
+	const pieceCost = getDefinitionById(selectedPiece.definitionId)?.cost ?? 0;
 
 	return (
 		<Button color="secondary" size="small" onClick={onSell}>

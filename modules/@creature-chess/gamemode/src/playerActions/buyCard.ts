@@ -11,11 +11,11 @@ import {
 import {
 	Card,
 	GamePhase,
+	getDefinitionById,
 	PieceModel,
 	PlayerPieceLocation,
 } from "@creature-chess/models";
 
-import { getDefinitionById } from "../definitions";
 import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
 import {
@@ -84,7 +84,6 @@ const createPieceFromCard = (
 		id: id || uuid(),
 		ownerId,
 		definitionId,
-		definition,
 		maxHealth: stats.hp,
 		traits: definition.traits,
 		stage: 0,

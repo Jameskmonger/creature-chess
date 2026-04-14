@@ -1,5 +1,5 @@
 import { Board, getFirstEmptySlot, packPosition } from "@creature-chess/board";
-import { PlayerPieceLocation } from "@creature-chess/models";
+import { getDefinitionById, PlayerPieceLocation } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { dropPiecePlayerAction } from "../../../playerActions";
@@ -25,7 +25,11 @@ const getMostExpensiveBenchPiece = (bench: Board, pieces: PieceRegistry) => {
 		return null;
 	}
 
-	benchPieces.sort((a, b) => b.definition.cost - a.definition.cost);
+	benchPieces.sort(
+		(a, b) =>
+			(getDefinitionById(b.definitionId)?.cost ?? 0) -
+			(getDefinitionById(a.definitionId)?.cost ?? 0)
+	);
 
 	return benchPieces[0];
 };

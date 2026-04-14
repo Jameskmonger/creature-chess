@@ -6,8 +6,11 @@ import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 import { Overlay } from "~/store/game/ui/overlay";
 
-import { getDefinitionById } from "@creature-chess/gamemode";
-import { Builders, GamePhase } from "@creature-chess/models";
+import {
+	Builders,
+	GamePhase,
+	getDefinitionById,
+} from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { GameStateProvider } from "../../../../.storybook/GameStateProvider";
@@ -20,7 +23,6 @@ const MOCK_PIECES = {
 			id: "board-1",
 			ownerId: "1234",
 			definitionId: 1,
-			definition: getDefinitionById(1)!,
 			traits: getDefinitionById(1)!.traits,
 			stage: 1,
 			maxHealth: getDefinitionById(1)!.stages[1].hp,
@@ -29,7 +31,6 @@ const MOCK_PIECES = {
 			id: "board-2",
 			ownerId: "1234",
 			definitionId: 2,
-			definition: getDefinitionById(2)!,
 			traits: getDefinitionById(2)!.traits,
 			stage: 0,
 			maxHealth: getDefinitionById(2)!.stages[0].hp,
@@ -38,7 +39,6 @@ const MOCK_PIECES = {
 			id: "board-3",
 			ownerId: "1234",
 			definitionId: 3,
-			definition: getDefinitionById(3)!,
 			traits: getDefinitionById(3)!.traits,
 			stage: 2,
 			maxHealth: getDefinitionById(3)!.stages[2].hp,
@@ -49,7 +49,6 @@ const MOCK_PIECES = {
 			id: "bench-1",
 			ownerId: "1234",
 			definitionId: 4,
-			definition: getDefinitionById(4)!,
 			traits: getDefinitionById(4)!.traits,
 			stage: 0,
 			maxHealth: getDefinitionById(4)!.stages[0].hp,
@@ -58,7 +57,6 @@ const MOCK_PIECES = {
 			id: "bench-2",
 			ownerId: "1234",
 			definitionId: 5,
-			definition: getDefinitionById(5)!,
 			traits: getDefinitionById(5)!.traits,
 			stage: 1,
 			maxHealth: getDefinitionById(5)!.stages[1].hp,

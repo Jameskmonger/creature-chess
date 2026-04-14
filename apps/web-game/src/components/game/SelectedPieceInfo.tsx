@@ -2,7 +2,7 @@ import React from "react";
 
 import { createUseThemeStyles } from "~/useStyles";
 
-import { getDefinitionById } from "@creature-chess/gamemode";
+import { getDefinitionById } from "@creature-chess/models";
 
 import { TraitIcon } from "../ui/TraitIcon";
 import { BalanceIcon } from "../ui/icon/BalanceIcon";

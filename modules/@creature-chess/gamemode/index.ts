@@ -33,7 +33,6 @@ export {
 export { roundInfoReducer, RoundInfoCommands } from "./src/game/roundInfo";
 export * as GameEvents from "./src/game/events";
 export { type GameFinishEvent } from "./src/game/events";
-export { getDefinitionById, getAllDefinitions } from "./src/definitions";
 
 export { Match } from "./src/game/match";
 

@@ -1,4 +1,11 @@
-import { PieceModel } from "@creature-chess/models";
+import { getDefinitionById, PieceModel } from "@creature-chess/models";
 
-export const getStats = (piece: PieceModel) =>
-	piece.definition.stages[piece.stage];
+export const getStats = (piece: PieceModel) => {
+	const definition = getDefinitionById(piece.definitionId);
+
+	if (!definition) {
+		throw new Error(`Unknown definitionId: ${piece.definitionId}`);
+	}
+
+	return definition.stages[piece.stage];
+};

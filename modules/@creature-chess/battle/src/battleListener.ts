@@ -1,7 +1,7 @@
 import { Dispatch, TypedStartListening, UnknownAction } from "@reduxjs/toolkit";
 
 import { Board } from "@creature-chess/board";
-import { GamemodeSettings } from "@creature-chess/models";
+import { GamemodeSettings, PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { BattleEvent, BattleEventLog } from "./battleEventLog";
@@ -23,10 +23,10 @@ const isATeamDefeated = (
 	const survivingPieces = board
 		.getAllPieces()
 		.map((p) => pieceRegistry.getPieceById(p.id))
-		.filter((p) => p !== null)
+		.filter((p): p is PieceModel => p !== null)
 		.filter((p) => combatStore.getPiece(p.id).currentHealth > 0);
 
-	const pieceOwnerIds = survivingPieces.map((p) => p!.ownerId);
+	const pieceOwnerIds = survivingPieces.map((p) => p.ownerId);
 
 	return new Set(pieceOwnerIds).size <= 1;
 };

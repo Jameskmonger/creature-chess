@@ -1,11 +1,14 @@
 import { isAnyOf } from "@reduxjs/toolkit";
 
 import { Board, packPosition } from "@creature-chess/board";
-import { GamePhase, PieceModel } from "@creature-chess/models";
+import {
+	GamePhase,
+	getDefinitionById,
+	PieceModel,
+} from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import { getDefinitionById } from "../../../definitions";
 import {
 	gamePhaseStartedEvent,
 	GamePhaseStartedEvent,

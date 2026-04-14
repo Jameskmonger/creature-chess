@@ -19,7 +19,6 @@ export const buildPieceModel = (
 	id: "123",
 	ownerId: "abc",
 	definitionId: 1,
-	definition: buildDefinition(),
 	maxHealth: 100,
 	stage: 0,
 	traits: [],

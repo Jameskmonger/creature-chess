@@ -3,10 +3,14 @@ import { Logger } from "winston";
 
 import { CardDeck as ShokiCardDeck } from "@shoki/card-deck";
 
-import { CreatureDefinition, Card, PieceModel } from "@creature-chess/models";
+import {
+	CreatureDefinition,
+	Card,
+	getAllDefinitions,
+	getDefinitionById,
+	PieceModel,
+} from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
-
-import { getAllDefinitions, getDefinitionById } from "../definitions";
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [

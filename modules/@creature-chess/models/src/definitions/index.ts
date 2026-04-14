@@ -1,5 +1,5 @@
-import { CreatureDefinition } from "@creature-chess/models";
-import { TraitId } from "@creature-chess/models";
+import { CreatureDefinition } from "../creatureDefinition";
+import { TraitId } from "../../gamemode/traits";
 
 import { getStages } from "./definitionClass";
 

@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
-import { PIECES_TO_EVOLVE } from "@creature-chess/models";
+import { getDefinitionById, PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { afterSellPieceEvent } from "../entities/player/events";
 import { PlayerStartListening } from "../entities/player/player";
@@ -41,8 +41,14 @@ export const setupSellPieceListener = (
 				return;
 			}
 
+			const definition = getDefinitionById(piece.definitionId);
+
+			if (!definition) {
+				return;
+			}
+
 			const piecesUsed = getPiecesForStage(piece.stage, PIECES_TO_EVOLVE);
-			const pieceCost = piece.definition.cost;
+			const pieceCost = definition.cost;
 			const currentMoney = api.getState().playerInfo.money;
 
 			api.dispatch(

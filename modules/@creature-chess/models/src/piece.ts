@@ -1,16 +1,10 @@
 import { TraitId } from "../gamemode/traits";
-import { CreatureDefinition } from "./creatureDefinition";
 
 export interface PieceModel {
 	id: string;
 	ownerId: string;
 
 	definitionId: number;
-
-	/**
-	 * @deprecated The definition data should be instantiated onto the piece itself.
-	 */
-	definition: CreatureDefinition;
 
 	traits: TraitId[];
 

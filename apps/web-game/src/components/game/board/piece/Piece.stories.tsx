@@ -24,13 +24,6 @@ const createProps = (args: any) => ({
 		id: "123",
 		ownerId,
 		definitionId: args.definitionId || 10,
-		definition: {
-			id: args.definitionId || 10,
-			name: "",
-			traits: args.traits,
-			cost: args.creatureCost || 5,
-			stages: [],
-		},
 		maxHealth: args.maxHealth || 100,
 		stage: args.stage || 0,
 		traits: args.traits || [],
