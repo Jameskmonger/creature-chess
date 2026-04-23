@@ -77,7 +77,10 @@ export class BattleRunner {
 					this.board.removePiece(id);
 				}
 
-				await duration(1000).remaining().promise;
+				if (this.settings.postBattleSettleMs > 0) {
+					await duration(this.settings.postBattleSettleMs).remaining().promise;
+				}
+
 				return { turn: this.turn };
 			}
 
@@ -85,7 +88,9 @@ export class BattleRunner {
 				await duration(1000).remaining().promise;
 			}
 
-			const turnTimer = duration(this.settings.battleTurnDuration);
+			const turnTimer = this.settings.battleTurnDuration > 0
+				? duration(this.settings.battleTurnDuration)
+				: null;
 
 			simulateTurn(++this.turn, this.board, this.pieceRegistry, {
 				combatStore: this.combatStore,
@@ -97,7 +102,9 @@ export class BattleRunner {
 				this.onEvents(events);
 			}
 
-			await turnTimer.remaining().promise;
+			if (turnTimer !== null) {
+				await turnTimer.remaining().promise;
+			}
 		}
 	}
 }

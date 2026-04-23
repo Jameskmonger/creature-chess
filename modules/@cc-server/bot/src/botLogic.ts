@@ -20,7 +20,9 @@ export const setupBotLogic = (entity: Player, personality: BotPersonality) => {
 				return;
 			}
 
-			await delay(api.player.settings.botInitialDelayMs);
+			if (api.player.settings.botInitialDelayMs > 0) {
+				await delay(api.player.settings.botInitialDelayMs);
+			}
 
 			if (phase === GamePhase.PREPARING) {
 				await putBenchOnBoard(api);

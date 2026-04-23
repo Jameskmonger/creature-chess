@@ -55,6 +55,22 @@ export type GamemodeSettings = {
 	playingPhaseEndDelayMs: number;
 
 	/**
+	 * Time to wait after a battle finishes before emitting the battle outcome and moving
+	 * on to the next phase, in milliseconds.
+	 *
+	 * This is mainly to give the frontend time to play out any final animations.
+	 */
+	postBattleSettleMs: number;
+
+	/**
+	 * Time to wait after a match finished before moving to the next round.
+	 *
+	 * Some battles go right up to the end, so it's nice to have a
+	 * delay rather than jumping straight into the next phase.
+	 */
+	postMatchSettleMs: number;
+
+	/**
 	 * Initial delay before a bot starts taking actions in a phase, in milliseconds.
 	 */
 	botInitialDelayMs: number;
@@ -63,6 +79,13 @@ export type GamemodeSettings = {
 	 * Delay between successive bot actions, in milliseconds.
 	 */
 	botActionDelayMs: number;
+
+	/**
+	 * Initial settle delay at the very start of a game, before the game loop
+	 * begins. Gives the registered socket observers time to attach before
+	 * any dispatches.
+	 */
+	gameStartSettleMs: number;
 
 	/**
 	 * Softmax (Boltzmann) temperature for bot action selection, on the `[0, 1]`
@@ -99,8 +122,11 @@ export const GamemodeSettingsPresets: Record<"default", GamemodeSettings> = {
 		readyPhaseLengthMs: 6_000,
 		playingPhaseMaxLengthMs: 35_000,
 		playingPhaseEndDelayMs: 5_000,
+		postBattleSettleMs: 1_000,
+		postMatchSettleMs: 500,
 		botInitialDelayMs: 1_000,
 		botActionDelayMs: 400,
+		gameStartSettleMs: 100,
 		botSelectionTemperature: 0.025,
 	},
 };

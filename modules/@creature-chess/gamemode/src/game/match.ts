@@ -33,7 +33,7 @@ export class Match {
 		public readonly away: Player,
 		public readonly awayIsClone: boolean,
 		private logger: Logger,
-		settings: GamemodeSettings,
+		private settings: GamemodeSettings,
 		private onTurnComplete?: (timeMs: number) => void
 	) {
 		this.board = mergeBoards(this.boardId, home.board, away.board);
@@ -45,7 +45,7 @@ export class Match {
 			this.board,
 			this.pieceRegistry,
 			this.combatStore,
-			settings
+			this.settings
 		);
 
 		// auto-resolve the match from the "away" side if they are a clone
@@ -92,16 +92,20 @@ export class Match {
 			this.serverFinishedMatch.resolve();
 		});
 
+		// Always wait for the battle to finish on the server before proceeding to the outcome.
+		await battlePromise;
+
 		await Promise.race([
 			battleTimeout,
 			Promise.all([
-				battlePromise,
 				this.clientFinishedMatchHome.promise,
 				this.clientFinishedMatchAway.promise,
 			]),
 		]);
 
-		await delay(500);
+		if (this.settings.postMatchSettleMs > 0) {
+			await delay(this.settings.postMatchSettleMs);
+		}
 
 		const survivingPieces = this.board
 			.getAllPieces()

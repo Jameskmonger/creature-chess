@@ -22,7 +22,9 @@ export const runReadyPhase = async (
 	// todo turn this into something that waits for all players
 	players.getAll().forEach((p) => p.put(playerBeforeReadyPhaseEvent()));
 
-	await delay(settings.readyPhaseSettleMs);
+	if (settings.readyPhaseSettleMs > 0) {
+		await delay(settings.readyPhaseSettleMs);
+	}
 
 	const matchups = getMatchups();
 
@@ -56,5 +58,7 @@ export const runReadyPhase = async (
 	const startedAt = Date.now() / 1000;
 	gamemode.setRoundInfo({ phase, startedAt });
 
-	await delay(settings.readyPhaseLengthMs);
+	if (settings.readyPhaseLengthMs > 0) {
+		await delay(settings.readyPhaseLengthMs);
+	}
 };

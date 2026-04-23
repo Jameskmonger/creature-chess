@@ -70,7 +70,7 @@ const runBattle = async (
 				board.removePiece(id);
 			}
 
-			await duration(1000).remaining().promise;
+			await duration(settings.postBattleSettleMs).remaining().promise;
 
 			dispatch(battleFinishEvent({ turn: turnCount }));
 			break;
@@ -80,7 +80,9 @@ const runBattle = async (
 			await duration(1000).remaining().promise;
 		}
 
-		const turnTimer = duration(settings.battleTurnDuration);
+		const turnTimer = settings.battleTurnDuration > 0
+			? duration(settings.battleTurnDuration)
+			: null;
 
 		simulateTurn(++turnCount, board, pieceRegistry, { combatStore, eventLog });
 
@@ -89,7 +91,9 @@ const runBattle = async (
 			onEvents(events);
 		}
 
-		await turnTimer.remaining().promise;
+		if (turnTimer !== null) {
+			await turnTimer.remaining().promise;
+		}
 	}
 };
 

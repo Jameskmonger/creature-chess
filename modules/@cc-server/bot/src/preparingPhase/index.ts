@@ -58,7 +58,9 @@ export const preparingPhase = async (
 		gamemode: { pieceRegistry },
 	} = api.player;
 
-	await delay(settings.botActionDelayMs);
+	if (settings.botActionDelayMs > 0) {
+		await delay(settings.botActionDelayMs);
+	}
 
 	while (true) {
 		const state = api.getState();
@@ -113,7 +115,9 @@ export const preparingPhase = async (
 
 		api.dispatch(mostValuable.action());
 
-		await delay(settings.botActionDelayMs);
+		if (settings.botActionDelayMs > 0) {
+			await delay(settings.botActionDelayMs);
+		}
 
 		await putBenchOnBoard(api);
 	}

@@ -44,7 +44,7 @@ export const runGame = async (
 	context: GameContext,
 	callbacks: Callbacks = {}
 ) => {
-	const { gamemode, players, logger } = context;
+	const { gamemode, players, logger, settings } = context;
 
 	logger.info(
 		`Game started with ${players.getAll().length} players: ${players
@@ -53,9 +53,9 @@ export const runGame = async (
 			.join(", ")}`
 	);
 
-	// this is to wait for the end of the execution queue. without it, things go a bit weird with observers
-	// todo improve this
-	await delay(100);
+	if (settings.gameStartSettleMs > 0) {
+		await delay(settings.gameStartSettleMs);
+	}
 
 	const startTime = startStopwatch();
 

@@ -21,12 +21,21 @@ export const runPlayingPhase = async (
 	settings: GamemodeSettings,
 	callbacks: Callbacks = {}
 ) => {
-	const battleTimeoutDeferred = pDefer<void>();
-
 	const phase = GamePhase.PLAYING;
-	delay(settings.playingPhaseMaxLengthMs).then(() =>
-		battleTimeoutDeferred.resolve()
-	);
+
+	let battleTimeout: Promise<void>;
+
+	if (settings.playingPhaseMaxLengthMs > 0) {
+		const deferred = pDefer<void>();
+
+		battleTimeout = deferred.promise;
+
+		delay(settings.playingPhaseMaxLengthMs).then(() =>
+			deferred.resolve()
+		);
+	} else {
+		battleTimeout = Promise.resolve();
+	}
 
 	const startedAt = Date.now() / 1000;
 
@@ -51,7 +60,7 @@ export const runPlayingPhase = async (
 			callbacks.onMatchStart();
 		}
 
-		m.fight(battleTimeoutDeferred.promise).then(() => {
+		m.fight(battleTimeout).then(() => {
 			if (callbacks.onMatchEnd) {
 				callbacks.onMatchEnd();
 			}
@@ -62,5 +71,7 @@ export const runPlayingPhase = async (
 
 	// some battles go right up to the end, so it's nice to have a delay
 	// rather than jumping straight into the next phase
-	await delay(settings.playingPhaseEndDelayMs);
+	if (settings.playingPhaseEndDelayMs > 0) {
+		await delay(settings.playingPhaseEndDelayMs);
+	}
 };

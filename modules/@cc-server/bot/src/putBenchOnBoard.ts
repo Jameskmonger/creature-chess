@@ -83,6 +83,8 @@ export const putBenchOnBoard = async (api: PlayerListenerApi) => {
 			})
 		);
 
-		await delay(settings.botActionDelayMs);
+		if (settings.botActionDelayMs > 0) {
+			await delay(settings.botActionDelayMs);
+		}
 	}
 };
