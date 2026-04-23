@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import express from "express";
 import { logger as expressWinston } from "express-winston";
 
@@ -117,10 +118,7 @@ async function startServer() {
 		let token: string | null = null;
 
 		do {
-			// TODO make this secure
-			const newToken =
-				Math.random().toString(36).substring(2, 15) +
-				Math.random().toString(36).substring(2, 15);
+			const newToken = randomBytes(32).toString("base64url");
 
 			const existing = await database.prisma.guests.findFirst({
 				where: {
@@ -163,15 +161,14 @@ async function startServer() {
 	}
 
 	app.get("/guest/session", async (req, res) => {
-		const token = res.locals.cookie["guest-token"];
+		const existingToken = res.locals.cookie["guest-token"];
 
-		let account: { id: string } | null = null;
+		let account: { id: string; token: string } | null = null;
 
-		if (token) {
-			// check its valid
+		if (existingToken) {
 			account = await database.prisma.guests.findFirst({
 				where: {
-					token,
+					token: existingToken,
 					expires_at: {
 						gte: new Date(),
 					},
@@ -185,10 +182,8 @@ async function startServer() {
 			const id = await getNewGuestId();
 			const newToken = await getNewToken();
 
-			// expire in 1 hour
 			const expiryDate = new Date(Date.now() + 60 * 60 * 1000);
 
-			// create a new guest user
 			account = await database.prisma.guests.create({
 				data: {
 					id,
@@ -199,17 +194,15 @@ async function startServer() {
 				},
 			});
 
-			// set cookie "guest-token" to the token
 			res.cookie("guest-token", newToken, {
 				expires: expiryDate,
-
-				// TODO improve security here, this is a temporary solution as it's only for guests
-				httpOnly: false,
+				httpOnly: true,
 			});
 		}
 
 		res.status(200).json({
 			id: account.id,
+			token: account.token,
 		});
 	});
 

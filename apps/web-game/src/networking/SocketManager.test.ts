@@ -1,6 +1,4 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
-import { getCookieValue } from "~/utils/getCookieValue";
-
 import { GameConnection } from "./GameConnection";
 import { LobbyConnection } from "./LobbyConnection";
 import { SocketManager } from "./SocketManager";
@@ -13,9 +11,6 @@ jest.mock("~/store/menu/state", () => ({
 			payload: msg,
 		}),
 	},
-}));
-jest.mock("~/utils/getCookieValue", () => ({
-	getCookieValue: jest.fn(),
 }));
 jest.mock("~/listeners/gameListeners", () => ({
 	gameStartedAction: () => ({ type: "gameStarted" }),
@@ -41,8 +36,6 @@ const mockIo = jest.fn();
 jest.mock("socket.io-client", () => ({
 	io: (...args: any[]) => mockIo(...args),
 }));
-
-const mockedGetCookie = getCookieValue as jest.Mock;
 
 const createMockSocket = () => {
 	const handlers = new Map<string, Function>();
@@ -93,11 +86,10 @@ describe("SocketManager", () => {
 
 		global.fetch = jest.fn().mockResolvedValue({
 			ok: true,
-			json: () => Promise.resolve({ id: "session-123" }),
+			json: () =>
+				Promise.resolve({ id: "session-123", token: "guest-token-value" }),
 		}) as any;
 		(globalThis as any).APP_API_URL = "http://localhost";
-
-		mockedGetCookie.mockReturnValue("guest-token-value");
 
 		mockIo.mockReturnValue(mockSocket);
 	});
@@ -123,16 +115,6 @@ describe("SocketManager", () => {
 
 			expect(dispatch).toHaveBeenCalledWith(
 				expect.objectContaining({ payload: "ERROR: Failed to open session!" })
-			);
-		});
-
-		it("should show error when no guest token", async () => {
-			mockedGetCookie.mockReturnValue(null);
-
-			await manager.connect();
-
-			expect(dispatch).toHaveBeenCalledWith(
-				expect.objectContaining({ payload: "ERROR: No guest token!" })
 			);
 		});
 

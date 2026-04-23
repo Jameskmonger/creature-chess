@@ -1,7 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { gameStartedAction } from "~/listeners/gameStartedAction";
 import { MenuCommands } from "~/store/menu/state";
-import { getCookieValue } from "~/utils/getCookieValue";
 
 import {
 	GameServerToClient,
@@ -32,7 +31,6 @@ export class SocketManager {
 		this.dispatch(MenuCommands.setLoadingMessage("Connecting..."));
 
 		const session = await this.getGuestSession();
-		const token = getCookieValue("guest-token");
 
 		if (!session) {
 			this.dispatch(
@@ -41,14 +39,9 @@ export class SocketManager {
 			return;
 		}
 
-		if (!token) {
-			this.dispatch(MenuCommands.setLoadingMessage("ERROR: No guest token!"));
-			return;
-		}
-
 		const request: HandshakeRequest = {
 			type: "guest",
-			data: { accessToken: token },
+			data: { accessToken: session.token },
 		};
 
 		try {
@@ -160,7 +153,10 @@ export class SocketManager {
 		}
 	}
 
-	private async getGuestSession(): Promise<string | null> {
+	private async getGuestSession(): Promise<{
+		id: string;
+		token: string;
+	} | null> {
 		const response = await fetch(APP_API_URL + "/guest/session", {
 			headers: { "Content-Type": "application/json" },
 		});
@@ -169,7 +165,7 @@ export class SocketManager {
 			return null;
 		}
 
-		const { id } = await response.json();
-		return id as string;
+		const { id, token } = await response.json();
+		return { id, token } as { id: string; token: string };
 	}
 }
