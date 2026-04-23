@@ -1,21 +1,6 @@
-import { Reducer } from "redux";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ConnectionStatus } from "~/networking/types";
 
-import {
-	OpenOverlayAction,
-	CloseOverlayAction,
-	OPEN_OVERLAY,
-	CLOSE_OVERLAY,
-	UpdateConnectionStatusAction,
-	UPDATE_CONNECTION_STATUS,
-	SelectPieceAction,
-	ClearSelectedPieceAction,
-	SELECT_PIECE,
-	CLEAR_SELECTED_PIECE,
-	setWinnerIdCommand,
-	SetWinnerIdCommand,
-	SetInGameCommand,
-} from "./actions";
 import { Overlay } from "./overlay";
 
 export interface UiState {
@@ -34,63 +19,35 @@ const initialState: UiState = {
 	connectionStatus: ConnectionStatus.NOT_CONNECTED,
 };
 
-type UIAction =
-	| OpenOverlayAction
-	| CloseOverlayAction
-	| SelectPieceAction
-	| ClearSelectedPieceAction
-	| UpdateConnectionStatusAction
-	| SetWinnerIdCommand
-	| SetInGameCommand;
-
-// TODO convert to redux toolkit
-export const reducer = ((state: UiState = initialState, action: UIAction) => {
-	switch (action.type) {
-		case UPDATE_CONNECTION_STATUS:
-			return {
-				...state,
-				connectionStatus: action.payload.status,
-			};
-		case OPEN_OVERLAY: {
-			return {
-				...state,
-				currentOverlay: action.payload.overlay,
-			};
-		}
-		case CLOSE_OVERLAY: {
-			return {
-				...state,
-				currentOverlay: null,
-			};
-		}
-		case SELECT_PIECE: {
+export const uiSlice = createSlice({
+	name: "ui",
+	initialState,
+	reducers: {
+		openOverlay: (state, { payload }: PayloadAction<Overlay>) => {
+			state.currentOverlay = payload;
+		},
+		closeOverlay: (state) => {
+			state.currentOverlay = null;
+		},
+		selectPiece: (state, { payload: id }: PayloadAction<string>) => {
 			const isSamePiece =
-				state.selectedPieceId && state.selectedPieceId === action.payload.id;
+				state.selectedPieceId !== null && state.selectedPieceId === id;
 
-			return {
-				...state,
-				selectedPieceId: isSamePiece ? null : action.payload.id,
-			};
-		}
-		case CLEAR_SELECTED_PIECE: {
-			return {
-				...state,
-				selectedPieceId: null,
-			};
-		}
-		case "setWinnerIdCommand": {
-			return {
-				...state,
-				winnerId: action.payload.winnerId,
-			};
-		}
-		case "setInGameCommand": {
-			return {
-				...state,
-				inGame: true,
-			};
-		}
-		default:
-			return state;
-	}
-}) as Reducer<UiState>;
+			state.selectedPieceId = isSamePiece ? null : id;
+		},
+		clearSelectedPiece: (state) => {
+			state.selectedPieceId = null;
+		},
+		setWinnerIdCommand: (
+			state,
+			{ payload }: PayloadAction<{ winnerId: string }>
+		) => {
+			state.winnerId = payload.winnerId;
+		},
+		setInGameCommand: (state) => {
+			state.inGame = true;
+		},
+	},
+});
+
+export const { reducer } = uiSlice;
