@@ -28,7 +28,6 @@
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/utils": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
-		"javascript-astar": "^0.4.1",
 		"present": "^1.0.0"
 	}
 }

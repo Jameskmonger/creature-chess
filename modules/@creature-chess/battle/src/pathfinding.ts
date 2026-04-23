@@ -1,37 +1,109 @@
-/// <reference path="../types/javascript-astar.d.ts" />
-import { astar, Graph } from "javascript-astar";
-
 import { Board, BoardSize, PackedPosition, packPosition, unpackX, unpackY } from "@creature-chess/board";
 import { CreatureStats } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./targeting/utils/getTargetAttackPositions";
 
-const createEmptyWeightGrid = ({
-	width,
-	height,
-}: {
-	width: number;
-	height: number;
-}) => {
-	const grid: number[][] = [];
-
-	// todo this is a weird way round
-	for (let x = 0; x < width; x++) {
-		const column = [];
-
-		for (let y = 0; y < height; y++) {
-			column.push(1);
-		}
-
-		grid.push(column);
-	}
-
-	return grid;
-};
-
 export type Path = { stepCount: number; firstStep: PackedPosition };
 
-const pathNotNull = (path: Path | null): path is Path => path !== null;
+const findPathFirstStep = (
+	board: Board,
+	size: BoardSize,
+	start: PackedPosition,
+	goals: ReadonlySet<PackedPosition>,
+	facingNorth: boolean
+): Path | null => {
+	if (goals.size === 0) {
+		return null;
+	}
+
+	const forwardY = facingNorth ? -1 : 1;
+
+	/**
+	 * Forward, right, backward, left relative to the attacker's facing.
+	 */
+	const dx = [0, forwardY, 0, -forwardY];
+	const dy = [forwardY, 0, -forwardY, 0];
+
+	const width = size.width;
+	const height = size.height;
+	const visited = new Uint8Array(width * height);
+
+	const startX = unpackX(start);
+	const startY = unpackY(start);
+	visited[startY * width + startX] = 1;
+
+	/**
+	 * Parallel arrays for the BFS queue - cheaper than an array of objects.
+	 */
+	const queuePos: number[] = [];
+	const queueFirst: number[] = [];
+	const queueDist: number[] = [];
+
+	// Seed queue with start's neighbors. Each becomes its own firstStep.
+	for (let i = 0; i < 4; i += 1) {
+		const nx = startX + dx[i];
+		const ny = startY + dy[i];
+		if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
+			continue;
+		}
+
+		const cellIdx = ny * width + nx;
+		if (visited[cellIdx]) {
+			continue;
+		}
+
+		if (board.getPieceIdAtPosition(nx, ny) !== null) {
+			continue;
+		}
+
+		visited[cellIdx] = 1;
+
+		const packed = packPosition(nx, ny);
+		if (goals.has(packed)) {
+			return { stepCount: 1, firstStep: packed };
+		}
+
+		queuePos.push(packed);
+		queueFirst.push(packed);
+		queueDist.push(1);
+	}
+
+	let head = 0;
+	while (head < queuePos.length) {
+		const curPacked = queuePos[head];
+		const curFirst = queueFirst[head];
+		const curDist = queueDist[head];
+		head += 1;
+
+		const cx = unpackX(curPacked as PackedPosition);
+		const cy = unpackY(curPacked as PackedPosition);
+
+		for (let i = 0; i < 4; i += 1) {
+			const nx = cx + dx[i];
+			const ny = cy + dy[i];
+			if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
+				continue;
+			}
+			const cellIdx = ny * width + nx;
+			if (visited[cellIdx]) {
+				continue;
+			}
+			if (board.getPieceIdAtPosition(nx, ny) !== null) {
+				continue;
+			}
+			visited[cellIdx] = 1;
+			const packed = packPosition(nx, ny);
+			if (goals.has(packed)) {
+				return { stepCount: curDist + 1, firstStep: curFirst as PackedPosition };
+			}
+			queuePos.push(packed);
+			queueFirst.push(curFirst);
+			queueDist.push(curDist + 1);
+		}
+	}
+
+	return null;
+};
 
 export const getNextPiecePosition = (
 	pathfinder: Pathfinder,
@@ -48,63 +120,42 @@ export const getNextPiecePosition = (
 		attackType: { range: attackRange },
 	} = attackerStats;
 
-	const targetTiles = getTargetAttackPositions(
-		{ width: board.width, height: board.height },
+	const size = pathfinder.getSize();
+
+	const goalList = getTargetAttackPositions(
+		size,
 		targetPosition,
 		attackRange
 	);
+	const goals = new Set<PackedPosition>(goalList);
 
-	const paths = targetTiles
-		.map((pos) => pathfinder.getFirstStep(board, attackerPosition, pos))
-		.filter(pathNotNull);
+	const result = findPathFirstStep(
+		board,
+		size,
+		attackerPosition,
+		goals,
+		attackerFacingUp
+	);
 
-	if (paths.length === 0) {
+	if (!result) {
 		return null;
 	}
 
-	sortPaths(paths, attackerPosition, attackerFacingUp);
-
-	if (unpackX(paths[0].firstStep) < 0 || unpackY(paths[0].firstStep) < 0) {
+	if (unpackX(result.firstStep) < 0 || unpackY(result.firstStep) < 0) {
 		throw new Error("Invalid path");
 	}
 
-	return paths[0].firstStep;
+	return result.firstStep;
 };
 
-export function sortPaths(
-	paths: Path[],
-	startPos: PackedPosition,
-	facingNorth: boolean
-) {
-	// Forward is negative y if facing upwards, otherwise positive y
-	const forwardY = facingNorth ? -1 : 1;
-	const directionPriority = [
-		{ x: 0, y: forwardY }, // Forward
-		{ x: forwardY, y: 0 }, // Right
-		{ x: 0, y: -forwardY }, // Backward
-		{ x: -forwardY, y: 0 }, // Left
-	];
-
-	const getPriority = (step: PackedPosition) => {
-		const dx = unpackX(step) - unpackX(startPos);
-		const dy = unpackY(step) - unpackY(startPos);
-		return directionPriority.findIndex((dir) => dir.x === dx && dir.y === dy);
-	};
-
-	paths.sort((a, b) => {
-		if (a.stepCount !== b.stepCount) {
-			return a.stepCount - b.stepCount;
-		}
-		return getPriority(a.firstStep) - getPriority(b.firstStep);
-	});
-}
-
+/**
+ * @note preserved for API compatibility.
+ */
 export class Pathfinder {
-	private graph: Graph;
+	public constructor(private readonly size: BoardSize) {}
 
-	public constructor(private size: BoardSize) {
-		const weights = createEmptyWeightGrid(size);
-		this.graph = new Graph(weights);
+	public getSize(): BoardSize {
+		return this.size;
 	}
 
 	public getFirstStep(
@@ -112,54 +163,7 @@ export class Pathfinder {
 		start: PackedPosition,
 		end: PackedPosition
 	): Path | null {
-		const path = this.getPath(board, start, end);
-
-		if (!path) {
-			return null;
-		}
-
-		return {
-			stepCount: path.length,
-			firstStep: path[0],
-		};
-	}
-
-	public getPath(
-		board: Board,
-		start: PackedPosition,
-		end: PackedPosition
-	): PackedPosition[] | null {
-		this.setWeights(board);
-
-		// mark the start as walkable
-		this.graph.grid[unpackX(start)][unpackY(start)].weight = 1;
-
-		const startGraphItem = this.graph.grid[unpackX(start)][unpackY(start)];
-		const endGraphItem = this.graph.grid[unpackX(end)][unpackY(end)];
-
-		if (!startGraphItem || !endGraphItem) {
-			throw new Error("Invalid start or end");
-		}
-
-		const path = astar.search(this.graph, startGraphItem, endGraphItem);
-
-		if (path.length === 0) {
-			return null;
-		}
-
-		return path.map((node) => packPosition(node.x, node.y));
-	}
-
-	public getGraph() {
-		return this.graph;
-	}
-
-	private setWeights(board: Board) {
-		for (let x = 0; x < this.size.width; x++) {
-			for (let y = 0; y < this.size.height; y++) {
-				this.graph.grid[x][y].weight =
-					board.getPieceIdAtPosition(x, y) !== null ? 0 : 1;
-			}
-		}
+		const goals = new Set<PackedPosition>([end]);
+		return findPathFirstStep(board, this.size, start, goals, true);
 	}
 }
