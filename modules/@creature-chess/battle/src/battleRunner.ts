@@ -88,9 +88,10 @@ export class BattleRunner {
 				await duration(1000).remaining().promise;
 			}
 
-			const turnTimer = this.settings.battleTurnDuration > 0
-				? duration(this.settings.battleTurnDuration)
-				: null;
+			const turnTimer =
+				this.settings.battleTurnDuration > 0
+					? duration(this.settings.battleTurnDuration)
+					: null;
 
 			simulateTurn(++this.turn, this.board, this.pieceRegistry, {
 				combatStore: this.combatStore,

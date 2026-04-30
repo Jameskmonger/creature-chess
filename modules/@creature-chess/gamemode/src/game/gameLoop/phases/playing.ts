@@ -30,9 +30,7 @@ export const runPlayingPhase = async (
 
 		battleTimeout = deferred.promise;
 
-		delay(settings.playingPhaseMaxLengthMs).then(() =>
-			deferred.resolve()
-		);
+		delay(settings.playingPhaseMaxLengthMs).then(() => deferred.resolve());
 	} else {
 		battleTimeout = Promise.resolve();
 	}

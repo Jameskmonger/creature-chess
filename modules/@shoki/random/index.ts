@@ -1,5 +1,4 @@
 /* eslint-disable no-bitwise */
-
 import { ISAACGenerator } from "isaac-crypto";
 
 /**

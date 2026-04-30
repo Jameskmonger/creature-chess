@@ -64,7 +64,9 @@ export const setupBotDatabase = async (
 				data: { nickname, engine, meta },
 			});
 
-			console.log(` - Created bot '${nickname}' with engine '${engine}' and meta ${JSON.stringify(meta)}`);
+			console.log(
+				` - Created bot '${nickname}' with engine '${engine}' and meta ${JSON.stringify(meta)}`
+			);
 		}
 	}
 

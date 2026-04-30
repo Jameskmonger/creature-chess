@@ -1,6 +1,5 @@
-import { CreatureDefinition } from "../creatureDefinition";
 import { TraitId } from "../../gamemode/traits";
-
+import { CreatureDefinition } from "../creatureDefinition";
 import { getStages } from "./definitionClass";
 
 const createDefinition = (

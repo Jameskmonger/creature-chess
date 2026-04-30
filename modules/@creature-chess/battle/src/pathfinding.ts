@@ -1,4 +1,11 @@
-import { Board, BoardSize, PackedPosition, packPosition, unpackX, unpackY } from "@creature-chess/board";
+import {
+	Board,
+	BoardSize,
+	PackedPosition,
+	packPosition,
+	unpackX,
+	unpackY,
+} from "@creature-chess/board";
 import { CreatureStats } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./targeting/utils/getTargetAttackPositions";
@@ -94,7 +101,10 @@ const findPathFirstStep = (
 			visited[cellIdx] = 1;
 			const packed = packPosition(nx, ny);
 			if (goals.has(packed)) {
-				return { stepCount: curDist + 1, firstStep: curFirst as PackedPosition };
+				return {
+					stepCount: curDist + 1,
+					firstStep: curFirst as PackedPosition,
+				};
 			}
 			queuePos.push(packed);
 			queueFirst.push(curFirst);
@@ -122,11 +132,7 @@ export const getNextPiecePosition = (
 
 	const size = pathfinder.getSize();
 
-	const goalList = getTargetAttackPositions(
-		size,
-		targetPosition,
-		attackRange
-	);
+	const goalList = getTargetAttackPositions(size, targetPosition, attackRange);
 	const goals = new Set<PackedPosition>(goalList);
 
 	const result = findPathFirstStep(

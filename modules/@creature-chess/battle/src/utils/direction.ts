@@ -1,13 +1,16 @@
 import { PackedPosition, unpackPosition } from "@creature-chess/board";
 
-export const Directions: Record<"UP" | "RIGHT" | "DOWN" | "LEFT", { x: -1 | 0 | 1; y: -1 | 0 | 1 }> = {
+export const Directions: Record<
+	"UP" | "RIGHT" | "DOWN" | "LEFT",
+	{ x: -1 | 0 | 1; y: -1 | 0 | 1 }
+> = {
 	UP: { x: 0, y: -1 },
 	RIGHT: { x: 1, y: 0 },
 	DOWN: { x: 0, y: 1 },
 	LEFT: { x: -1, y: 0 },
 };
 
-export type Direction = typeof Directions[keyof typeof Directions];
+export type Direction = (typeof Directions)[keyof typeof Directions];
 
 /**
  * Returns the relative direction of position b from the perspective of position a

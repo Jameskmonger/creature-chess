@@ -1,4 +1,10 @@
-import { Board, BoardSize, PackedPosition, packPosition, unpackPosition } from "@creature-chess/board";
+import {
+	Board,
+	BoardSize,
+	PackedPosition,
+	packPosition,
+	unpackPosition,
+} from "@creature-chess/board";
 import { PieceRegistry } from "@creature-chess/utils";
 
 const isInsideGrid =

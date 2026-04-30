@@ -156,7 +156,8 @@ export class StandardTargetProvider implements TargetProvider {
 			}
 
 			// 2. Secondary sort: Cost (highest first)
-			const costDiff = (costs.get(b.enemy.id) ?? 0) - (costs.get(a.enemy.id) ?? 0);
+			const costDiff =
+				(costs.get(b.enemy.id) ?? 0) - (costs.get(a.enemy.id) ?? 0);
 			if (costDiff !== 0) {
 				return costDiff;
 			}

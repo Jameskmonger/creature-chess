@@ -1,5 +1,5 @@
-import { CreatureStats, AttackType, attackTypes } from "../creatureDefinition";
 import { TraitId } from "../../gamemode/traits";
+import { CreatureStats, AttackType, attackTypes } from "../creatureDefinition";
 
 // each trait has points to assign
 // these are then used, along with piece cost and stage, to get stats

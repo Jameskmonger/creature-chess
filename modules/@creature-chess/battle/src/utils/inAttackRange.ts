@@ -1,5 +1,5 @@
-import { AttackType } from "@creature-chess/models";
 import { getDelta, PackedPosition } from "@creature-chess/board";
+import { AttackType } from "@creature-chess/models";
 
 export const inAttackRange = (
 	attacker: PackedPosition,

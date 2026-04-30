@@ -1,5 +1,6 @@
-import { getTargetAttackPositions } from "./getTargetAttackPositions";
 import { packPosition } from "@creature-chess/board";
+
+import { getTargetAttackPositions } from "./getTargetAttackPositions";
 
 describe("getTargetAttackPositions", () => {
 	const board = {

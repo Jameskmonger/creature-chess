@@ -57,7 +57,11 @@ export class Board {
 		const pieces: { id: PieceId; x: number; y: number }[] = [];
 
 		for (const [pieceId, packed] of this.pieceIdToPosition.entries()) {
-			pieces.push({ id: pieceId, x: unpackX(packed), y: unpackY(packed) });
+			pieces.push({
+				id: pieceId,
+				x: unpackX(packed),
+				y: unpackY(packed),
+			});
 		}
 
 		return pieces;
@@ -86,7 +90,12 @@ export class Board {
 		let accumulator = initialValue;
 
 		for (const [pieceId, packed] of this.pieceIdToPosition.entries()) {
-			accumulator = callback(accumulator, pieceId, unpackX(packed), unpackY(packed));
+			accumulator = callback(
+				accumulator,
+				pieceId,
+				unpackX(packed),
+				unpackY(packed)
+			);
 		}
 
 		return accumulator;

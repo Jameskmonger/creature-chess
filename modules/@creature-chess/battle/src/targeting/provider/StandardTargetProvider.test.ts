@@ -116,8 +116,10 @@ describe("StandardTargetProvider", () => {
 		}
 
 		mockDefinitions[ATTACKER_DEF_ID] = makeMockDefinition(ATTACKER_DEF_ID);
-		mockDefinitions[NORTH_ENEMY_DEF_ID] = makeMockDefinition(NORTH_ENEMY_DEF_ID);
-		mockDefinitions[SOUTH_ENEMY_DEF_ID] = makeMockDefinition(SOUTH_ENEMY_DEF_ID);
+		mockDefinitions[NORTH_ENEMY_DEF_ID] =
+			makeMockDefinition(NORTH_ENEMY_DEF_ID);
+		mockDefinitions[SOUTH_ENEMY_DEF_ID] =
+			makeMockDefinition(SOUTH_ENEMY_DEF_ID);
 
 		attacker = buildPieceModel({
 			id: "attacker",
@@ -529,21 +531,17 @@ describe("StandardTargetProvider", () => {
 			 * the unblocked enemy.
 			 */
 
-			mockDefinitions[BLOCKED_ENEMY_DEF_ID] = makeMockDefinition(
-				BLOCKED_ENEMY_DEF_ID
-			);
+			mockDefinitions[BLOCKED_ENEMY_DEF_ID] =
+				makeMockDefinition(BLOCKED_ENEMY_DEF_ID);
 			mockDefinitions[UNBLOCKED_ENEMY_DEF_ID] = makeMockDefinition(
 				UNBLOCKED_ENEMY_DEF_ID
 			);
-			mockDefinitions[BLOCKER_A_1_DEF_ID] = makeMockDefinition(
-				BLOCKER_A_1_DEF_ID
-			);
-			mockDefinitions[BLOCKER_A_2_DEF_ID] = makeMockDefinition(
-				BLOCKER_A_2_DEF_ID
-			);
-			mockDefinitions[BLOCKER_A_3_DEF_ID] = makeMockDefinition(
-				BLOCKER_A_3_DEF_ID
-			);
+			mockDefinitions[BLOCKER_A_1_DEF_ID] =
+				makeMockDefinition(BLOCKER_A_1_DEF_ID);
+			mockDefinitions[BLOCKER_A_2_DEF_ID] =
+				makeMockDefinition(BLOCKER_A_2_DEF_ID);
+			mockDefinitions[BLOCKER_A_3_DEF_ID] =
+				makeMockDefinition(BLOCKER_A_3_DEF_ID);
 
 			blockedEnemy = buildPieceModel({
 				id: "blockedEnemy",
@@ -685,18 +683,14 @@ describe("StandardTargetProvider", () => {
 			mockDefinitions[SURROUNDED_ENEMY_DEF_ID] = makeMockDefinition(
 				SURROUNDED_ENEMY_DEF_ID
 			);
-			mockDefinitions[BLOCKER_B_1_DEF_ID] = makeMockDefinition(
-				BLOCKER_B_1_DEF_ID
-			);
-			mockDefinitions[BLOCKER_B_2_DEF_ID] = makeMockDefinition(
-				BLOCKER_B_2_DEF_ID
-			);
-			mockDefinitions[BLOCKER_B_3_DEF_ID] = makeMockDefinition(
-				BLOCKER_B_3_DEF_ID
-			);
-			mockDefinitions[BLOCKER_B_4_DEF_ID] = makeMockDefinition(
-				BLOCKER_B_4_DEF_ID
-			);
+			mockDefinitions[BLOCKER_B_1_DEF_ID] =
+				makeMockDefinition(BLOCKER_B_1_DEF_ID);
+			mockDefinitions[BLOCKER_B_2_DEF_ID] =
+				makeMockDefinition(BLOCKER_B_2_DEF_ID);
+			mockDefinitions[BLOCKER_B_3_DEF_ID] =
+				makeMockDefinition(BLOCKER_B_3_DEF_ID);
+			mockDefinitions[BLOCKER_B_4_DEF_ID] =
+				makeMockDefinition(BLOCKER_B_4_DEF_ID);
 
 			surroundedEnemy = buildPieceModel({
 				id: "surroundedEnemy",

@@ -6,11 +6,7 @@ import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 import { Overlay } from "~/store/game/ui/overlay";
 
-import {
-	Builders,
-	GamePhase,
-	getDefinitionById,
-} from "@creature-chess/models";
+import { Builders, GamePhase, getDefinitionById } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { GameStateProvider } from "../../../../.storybook/GameStateProvider";

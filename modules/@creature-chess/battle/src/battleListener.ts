@@ -80,9 +80,10 @@ const runBattle = async (
 			await duration(1000).remaining().promise;
 		}
 
-		const turnTimer = settings.battleTurnDuration > 0
-			? duration(settings.battleTurnDuration)
-			: null;
+		const turnTimer =
+			settings.battleTurnDuration > 0
+				? duration(settings.battleTurnDuration)
+				: null;
 
 		simulateTurn(++turnCount, board, pieceRegistry, { combatStore, eventLog });
 
