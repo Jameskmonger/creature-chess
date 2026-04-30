@@ -1,12 +1,9 @@
-import { shuffle } from "lodash";
+import { Rng, pickRandom, shuffleInPlace } from "@shoki/random";
 
 import { PlayerStatus } from "@creature-chess/models";
 
 import { PlayerStateSelectors } from "../entities/player";
 import { Player } from "../entities/player/player";
-
-const randomFromArray = <T>(array: T[]) =>
-	array[Math.floor(Math.random() * array.length)];
 
 export class OpponentProvider {
 	private remainingRotations: number[] | null = null;
@@ -17,6 +14,11 @@ export class OpponentProvider {
 	private lastOddMatchupAwayId: string | null = null;
 
 	private players: Player[] | null = null;
+	private rng: Rng;
+
+	public constructor(rng: Rng = Math.random) {
+		this.rng = rng;
+	}
 
 	public setPlayers(players: Player[]) {
 		this.players = players;
@@ -106,14 +108,14 @@ export class OpponentProvider {
 			({ id }) =>
 				id !== this.lastOddMatchupHomeId || this.lastOddMatchupHomeId === null
 		);
-		const home = randomFromArray(potentialHomePlayers);
+		const home = pickRandom(potentialHomePlayers, this.rng);
 
 		const potentialAwayPlayers = livingPlayers.filter(
 			({ id }) =>
 				id !== home.id &&
 				(id !== this.lastOddMatchupAwayId || this.lastOddMatchupAwayId === null)
 		);
-		const away = randomFromArray(potentialAwayPlayers);
+		const away = pickRandom(potentialAwayPlayers, this.rng);
 
 		this.lastOddMatchupHomeId = home.id;
 		this.lastOddMatchupAwayId = away.id;
@@ -134,7 +136,7 @@ export class OpponentProvider {
 			rotations.push(i);
 		}
 
-		this.remainingRotations = shuffle(rotations);
+		this.remainingRotations = shuffleInPlace(rotations, this.rng);
 
 		this.updateRotation();
 	}
@@ -144,7 +146,7 @@ export class OpponentProvider {
 			return;
 		}
 
-		const chosen = randomFromArray(this.remainingRotations);
+		const chosen = pickRandom(this.remainingRotations, this.rng);
 
 		this.remainingRotations = this.remainingRotations.filter(
 			(i) => i !== chosen

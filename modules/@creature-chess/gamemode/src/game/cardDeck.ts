@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { Logger } from "winston";
 
 import { CardDeck as ShokiCardDeck } from "@shoki/card-deck";
+import { Rng } from "@shoki/random";
 
 import {
 	CreatureDefinition,
@@ -24,6 +25,7 @@ const CARD_COST_CHANCES = [
 const CARD_LEVEL_QUANTITIES = [45, 30, 25, 15, 10];
 
 const canTakeCardAtCost = (
+	rng: Rng,
 	level: number,
 	cost: number,
 	multiplier: number
@@ -34,7 +36,7 @@ const canTakeCardAtCost = (
 		return false;
 	}
 
-	const roll = Math.floor(Math.random() * 100) * (multiplier / 100);
+	const roll = Math.floor(rng() * 100) * (multiplier / 100);
 
 	// roll is 0 - 100, but chance is out of 100
 	// so if chance is 30, roll must be under 30 to score
@@ -43,15 +45,20 @@ const canTakeCardAtCost = (
 
 export class CardDeck {
 	public decks: ShokiCardDeck<Card>[];
+	private rng: Rng;
 
-	public constructor(private logger: Logger) {
+	public constructor(
+		private logger: Logger,
+		rng: Rng = Math.random
+	) {
+		this.rng = rng;
 		// TODO (James) customisable number of decks
 		this.decks = [
-			new ShokiCardDeck<Card>(),
-			new ShokiCardDeck<Card>(),
-			new ShokiCardDeck<Card>(),
-			new ShokiCardDeck<Card>(),
-			new ShokiCardDeck<Card>(),
+			new ShokiCardDeck<Card>([], rng),
+			new ShokiCardDeck<Card>([], rng),
+			new ShokiCardDeck<Card>([], rng),
+			new ShokiCardDeck<Card>([], rng),
+			new ShokiCardDeck<Card>([], rng),
 		];
 
 		getAllDefinitions()
@@ -181,7 +188,7 @@ export class CardDeck {
 	) {
 		// start at 5 and work downwards
 		for (let cost = CARD_COST_CHANCES.length; cost >= 1; cost--) {
-			const roll = canTakeCardAtCost(level, cost, multiplier);
+			const roll = canTakeCardAtCost(this.rng, level, cost, multiplier);
 
 			if (!roll) {
 				continue;

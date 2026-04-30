@@ -1,14 +1,15 @@
 {
-	"name": "@shoki/card-deck",
+	"name": "@shoki/random",
 	"version": "1.0.0",
-	"description": "TypeScript deck of cards",
+	"description": "Seeded RNG and randomness utilities",
 	"keywords": [
 		"shoki",
 		"game",
 		"engine",
-		"cards",
-		"card deck",
-		"playing cards"
+		"random",
+		"rng",
+		"prng",
+		"isaac"
 	],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
@@ -31,6 +32,6 @@
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
 	"dependencies": {
-		"@shoki/random": "workspace:*"
+		"isaac-crypto": "^2.0.5"
 	}
 }

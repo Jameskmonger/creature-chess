@@ -1,6 +1,8 @@
 import { EventEmitter } from "events";
 import { Logger } from "winston";
 
+import { Rng, createRng } from "@shoki/random";
+
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
 import { PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
@@ -40,19 +42,27 @@ export class Gamemode {
 		phaseStartedAtSeconds: 0,
 	};
 
-	private opponentProvider: OpponentProvider = new OpponentProvider();
+	private opponentProvider: OpponentProvider;
 	private playerList = new PlayerList();
 	private players: Player[] = [];
 	private events = new EventEmitter();
 	private deck: CardDeck;
+	private rng: Rng;
 
 	public constructor(
 		public readonly id: string,
 		private logger: Logger,
 		private settings: GamemodeSettings,
-		private callbacks: GamemodeCallbacks = {}
+		private callbacks: GamemodeCallbacks = {},
+		// Optional seed for the shared ISAAC-backed rng. Same seed + same
+		// inputs = same game — the hook that makes training-on-scenarios
+		// and snapshot replay reproducible. When absent, falls back to
+		// `Math.random` so existing call sites are unaffected.
+		seed?: number | number[]
 	) {
-		this.deck = new CardDeck(this.logger);
+		this.rng = seed !== undefined ? createRng(seed) : Math.random;
+		this.opponentProvider = new OpponentProvider(this.rng);
+		this.deck = new CardDeck(this.logger, this.rng);
 	}
 
 	public setRoundInfo(payload: {

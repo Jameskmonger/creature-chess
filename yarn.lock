@@ -1781,6 +1781,7 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@reduxjs/toolkit": "npm:^2.2.1"
     "@shoki/card-deck": "workspace:*"
+    "@shoki/random": "workspace:*"
     "@types/lodash": "npm:^4.14.178"
     "@types/uuid": "npm:^8.3.3"
     delay: "npm:^4.4.1"
@@ -3448,8 +3449,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@shoki/card-deck@workspace:modules/@shoki/card-deck"
   dependencies:
-    "@types/lodash.shuffle": "npm:^4.2.7"
-    lodash.shuffle: "npm:^4.2.0"
+    "@shoki/random": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@shoki/random@workspace:*, @shoki/random@workspace:modules/@shoki/random":
+  version: 0.0.0-use.local
+  resolution: "@shoki/random@workspace:modules/@shoki/random"
+  dependencies:
+    isaac-crypto: "npm:^2.0.5"
   languageName: unknown
   linkType: soft
 
@@ -4987,16 +4995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.shuffle@npm:^4.2.7":
-  version: 4.2.9
-  resolution: "@types/lodash.shuffle@npm:4.2.9"
-  dependencies:
-    "@types/lodash": "npm:*"
-  checksum: 10/d9e25dc3550faabb2b85311e1f2da6f98aa089dc06a339aa8433004252a4a382adfbcde94bb0201c0edd6fd738d1d57e28840d210cf3f20040f1260783627cfe
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:*, @types/lodash@npm:^4.14.167, @types/lodash@npm:^4.14.178":
+"@types/lodash@npm:^4.14.167, @types/lodash@npm:^4.14.178":
   version: 4.14.202
   resolution: "@types/lodash@npm:4.14.202"
   checksum: 10/1bb9760a5b1dda120132c4b987330d67979c95dbc22612678682cd61b00302e190f4207228f3728580059cdab5582362262e3819aea59960c1017bd2b9fb26f6
@@ -11439,6 +11438,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isaac-crypto@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "isaac-crypto@npm:2.0.5"
+  checksum: 10/8b92f04b8e08a0a963e5b45ae9be885cd11c97cda88a07f9f59fcd3de4e01d627b6590756ec0780a5e9f8b9e2e7930900be47a42dbe814851c6261cd1bf25657
+  languageName: node
+  linkType: hard
+
 "isarray@npm:1.0.0, isarray@npm:~1.0.0":
   version: 1.0.0
   resolution: "isarray@npm:1.0.0"
@@ -12832,13 +12838,6 @@ __metadata:
   version: 4.1.1
   resolution: "lodash.once@npm:4.1.1"
   checksum: 10/202f2c8c3d45e401b148a96de228e50ea6951ee5a9315ca5e15733d5a07a6b1a02d9da1e7fdf6950679e17e8ca8f7190ec33cae47beb249b0c50019d753f38f3
-  languageName: node
-  linkType: hard
-
-"lodash.shuffle@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "lodash.shuffle@npm:4.2.0"
-  checksum: 10/06f0a00e7b06309dae8f773fd5752ba004a6a7f65d2e01d4a3906363c2fe26bccb5d3a7a3b33609e54e8194ec442f1e706f5d9388db9b46a6af74c23f57e6bb7
   languageName: node
   linkType: hard
 

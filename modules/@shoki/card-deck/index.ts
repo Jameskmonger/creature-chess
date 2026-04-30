@@ -1,7 +1,7 @@
-import shuffle from "lodash.shuffle";
+import { Rng, shuffleInPlace } from "@shoki/random";
 
 /**
- * A deck of cards
+ * A deck of cards using an optional RNG provider (defaults to Math.random if not provided)
  *
  * @template TCard The type of card
  *
@@ -9,9 +9,11 @@ import shuffle from "lodash.shuffle";
  */
 export class CardDeck<TCard> {
 	private deck: TCard[];
+	private rng: Rng;
 
-	public constructor(deck?: TCard[]) {
+	public constructor(deck?: TCard[], rng: Rng = Math.random) {
 		this.deck = deck || [];
+		this.rng = rng;
 	}
 
 	/**
@@ -54,9 +56,9 @@ export class CardDeck<TCard> {
 	}
 
 	/**
-	 * Shuffle the deck using lodash.shuffle (Fisher-Yates)
+	 * Shuffle the deck.
 	 */
 	public shuffle() {
-		this.deck = shuffle(this.deck);
+		shuffleInPlace(this.deck, this.rng);
 	}
 }
