@@ -4,7 +4,7 @@ const attackEvent: BattleEvent = {
 	type: "piece_attack",
 	pieceId: "attacker-1",
 	targetId: "target-1",
-	attackTypeName: "basic",
+	ranged: false,
 	direction: { x: 0, y: -1 },
 	distance: 1,
 	damage: 10,

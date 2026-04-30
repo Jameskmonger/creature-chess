@@ -4,7 +4,7 @@ import { PieceRegistry } from "@creature-chess/utils";
 
 import { Pathfinder, getNextPiecePosition } from "../../../pathfinding";
 import { findEnemyInAttackRange } from "../../../targeting/utils/getTargetAttackPositions";
-import { getStats } from "../../../utils/getStats";
+import { getAttackRange } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { AttackState, StateResult } from "./types";
@@ -34,7 +34,7 @@ export function doAttack(
 		return [state];
 	}
 
-	const attackerStats = getStats(piece);
+	const attackRange = getAttackRange(piece);
 
 	const target = pieceRegistry.getPieceById(state.payload.targetId);
 	const targetPosition = board.getPiecePosition(state.payload.targetId);
@@ -49,7 +49,7 @@ export function doAttack(
 	const inRange = inAttackRange(
 		packPosition(piecePosition[0], piecePosition[1]),
 		packPosition(targetPosition[0], targetPosition[1]),
-		attackerStats.attackType
+		attackRange
 	);
 
 	if (inRange) {
@@ -65,7 +65,7 @@ export function doAttack(
 		pieceRegistry,
 		piece.ownerId,
 		packPosition(piecePosition[0], piecePosition[1]),
-		attackerStats.attackType.range
+		attackRange
 	);
 
 	if (otherEnemyInRange) {
@@ -83,7 +83,7 @@ export function doAttack(
 		pathfinder,
 		packPosition(piecePosition[0], piecePosition[1]),
 		combat.facingAway,
-		attackerStats,
+		attackRange,
 		packPosition(targetPosition[0], targetPosition[1]),
 		board
 	);

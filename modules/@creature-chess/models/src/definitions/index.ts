@@ -12,6 +12,7 @@ const createDefinition = (
 	name,
 	traits,
 	cost,
+	attackRange: traits.includes("arcane") ? 2 : 1,
 	stages: getStages(traits, cost),
 });
 

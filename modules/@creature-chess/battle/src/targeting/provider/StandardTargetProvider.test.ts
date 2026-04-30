@@ -26,7 +26,6 @@ const makeBaseStats = (): CreatureStats => ({
 	attack: 0,
 	defense: 0,
 	speed: 0,
-	attackType: { name: "test-melee", range: 1 },
 });
 
 const makeMockDefinition = (id: number, cost = 1): CreatureDefinition => ({
@@ -34,6 +33,7 @@ const makeMockDefinition = (id: number, cost = 1): CreatureDefinition => ({
 	name: `test-${id}`,
 	cost,
 	traits: [],
+	attackRange: 1,
 	stages: [makeBaseStats()],
 });
 
@@ -205,10 +205,7 @@ describe("StandardTargetProvider", () => {
 				seedPieces(combatStore, [northEnemyFar]);
 				board.setPiece(northEnemyFar.id, 1, 1);
 
-				mockDefinitions[ATTACKER_DEF_ID].stages[attacker.stage].attackType = {
-					name: "test-ranged",
-					range: attackRange,
-				};
+				mockDefinitions[ATTACKER_DEF_ID].attackRange = attackRange;
 			});
 
 			it("returns the closest enemy to the attacker", () => {
@@ -327,10 +324,7 @@ describe("StandardTargetProvider", () => {
 				seedPieces(combatStore, [southEnemyFar]);
 				board.setPiece(southEnemyFar.id, 1, 5);
 
-				mockDefinitions[ATTACKER_DEF_ID].stages[attacker.stage].attackType = {
-					name: "test-ranged",
-					range: attackRange,
-				};
+				mockDefinitions[ATTACKER_DEF_ID].attackRange = attackRange;
 			});
 
 			it("returns the closest enemy to the attacker", () => {
@@ -441,10 +435,7 @@ describe("StandardTargetProvider", () => {
 			combatStore = pieceInfoStore<PieceCombatState>();
 			seedPieces(combatStore, [attacker, eastEnemy, westEnemy]);
 
-			mockDefinitions[ATTACKER_DEF_ID].stages[attacker.stage].attackType = {
-				name: "test-ranged",
-				range: attackRange,
-			};
+			mockDefinitions[ATTACKER_DEF_ID].attackRange = attackRange;
 		});
 
 		it("chooses deterministically by ID when all else is equal", () => {

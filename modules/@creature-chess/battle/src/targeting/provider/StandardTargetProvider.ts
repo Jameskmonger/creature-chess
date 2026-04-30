@@ -11,7 +11,7 @@ import { getDefinitionById, PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { PieceCombatState, PieceInfoStore } from "../../state";
-import { getStats } from "../../utils/getStats";
+import { getAttackRange } from "../../utils/getStats";
 import { getLivingEnemies } from "../utils/getLivingEnemies";
 import { getTargetAttackPositions } from "../utils/getTargetAttackPositions";
 import { TargetProvider } from "./TargetProvider";
@@ -39,7 +39,7 @@ export class StandardTargetProvider implements TargetProvider {
 			return null;
 		}
 
-		const attackRange = getStats(piece).attackType.range;
+		const attackRange = getAttackRange(piece);
 
 		const enemies = getLivingEnemies(piece, board, pieceRegistry, combatStore);
 

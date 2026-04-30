@@ -1,18 +1,12 @@
 import { TraitId } from "../gamemode/traits";
 
-export interface PieceModel {
+export type PieceModel = {
 	id: string;
 	ownerId: string;
-
 	definitionId: number;
-
 	traits: TraitId[];
-
 	stage: number;
-
 	maxHealth: number;
-}
-
-export type IndexedPieces = {
-	[pieceId: string]: PieceModel;
 };
+
+export type IndexedPieces = Record<string, PieceModel>;

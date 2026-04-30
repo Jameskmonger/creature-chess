@@ -6,7 +6,6 @@ import {
 	unpackX,
 	unpackY,
 } from "@creature-chess/board";
-import { CreatureStats } from "@creature-chess/models";
 
 import { getTargetAttackPositions } from "./targeting/utils/getTargetAttackPositions";
 
@@ -122,14 +121,10 @@ export const getNextPiecePosition = (
 	 * Is the attacker looking up the board? (i.e. facing negative y)
 	 */
 	attackerFacingUp: boolean,
-	attackerStats: CreatureStats,
+	attackRange: number,
 	targetPosition: PackedPosition,
 	board: Board
 ): PackedPosition | null => {
-	const {
-		attackType: { range: attackRange },
-	} = attackerStats;
-
 	const size = pathfinder.getSize();
 
 	const goalList = getTargetAttackPositions(size, targetPosition, attackRange);

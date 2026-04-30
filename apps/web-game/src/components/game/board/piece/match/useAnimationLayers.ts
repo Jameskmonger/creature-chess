@@ -72,7 +72,7 @@ export function useAnimationLayers(
 			for (const event of events) {
 				switch (event.type) {
 					case "piece_attack": {
-						if (event.attackTypeName === "basic") {
+						if (!event.ranged) {
 							newLayers.push(
 								createAttackBasicLayer(
 									event as PieceAttackEvent,

@@ -6,7 +6,7 @@ import { getRelativeDirection } from "../../../utils/direction";
 import { getCooldownForSpeed } from "../../../utils/getCooldownForSpeed";
 import { getHitDamage } from "../../../utils/getHitDamage";
 import { getNewAttackerFacingAway } from "../../../utils/getNewAttackerFacingAway";
-import { getStats } from "../../../utils/getStats";
+import { getAttackRange, getStats } from "../../../utils/getStats";
 import { inAttackRange } from "../../../utils/inAttackRange";
 import { Stores } from "../../types";
 import { HitAction } from "./types";
@@ -37,11 +37,12 @@ export function doHit(
 	}
 
 	const attackerStats = getStats(attacker);
+	const attackRange = getAttackRange(attacker);
 
 	const inRange = inAttackRange(
 		packPosition(attackerPosition[0], attackerPosition[1]),
 		packPosition(targetPosition[0], targetPosition[1]),
-		attackerStats.attackType
+		attackRange
 	);
 
 	if (!inRange) {
@@ -102,7 +103,7 @@ export function doHit(
 			type: "piece_attack",
 			pieceId: attacker.id,
 			targetId: target.id,
-			attackTypeName: attackerStats.attackType.name,
+			ranged: attackRange > 1,
 			direction: attackerDirection,
 			distance: attackerDistance,
 			damage,

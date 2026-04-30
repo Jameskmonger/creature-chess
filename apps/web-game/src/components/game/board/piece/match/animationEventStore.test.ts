@@ -6,7 +6,7 @@ const attackEvent: BattleEvent = {
 	type: "piece_attack",
 	pieceId: "piece-A",
 	targetId: "piece-B",
-	attackTypeName: "basic",
+	ranged: false,
 	direction: { x: 1, y: 0 },
 	distance: 1,
 	damage: 5,

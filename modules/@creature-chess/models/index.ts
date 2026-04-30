@@ -5,11 +5,9 @@ export type { PlayerPieceLocation } from "./src/playerPieceLocation";
 export { GamePhase } from "./src/game-phase";
 export type { RoundInfoState } from "./src/roundInfoState";
 
-export {
-	type CreatureDefinition,
-	type CreatureStats,
-	type AttackType,
-	attackTypes,
+export type {
+	CreatureDefinition,
+	CreatureStats,
 } from "./src/creatureDefinition";
 
 export {

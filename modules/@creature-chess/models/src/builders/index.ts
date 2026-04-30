@@ -9,6 +9,7 @@ export const buildDefinition = (
 	name: "Creature",
 	traits: ["earth", "arcane"],
 	cost: 1,
+	attackRange: 1,
 	stages: [],
 	...definition,
 });

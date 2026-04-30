@@ -4,7 +4,7 @@ export type PieceAttackEvent = {
 	type: "piece_attack";
 	pieceId: string;
 	targetId: string;
-	attackTypeName: string;
+	ranged: boolean;
 	direction: Direction;
 	distance: number;
 	damage: number;

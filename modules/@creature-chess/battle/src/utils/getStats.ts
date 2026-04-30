@@ -1,11 +1,17 @@
 import { getDefinitionById, PieceModel } from "@creature-chess/models";
 
-export const getStats = (piece: PieceModel) => {
+const getDefinition = (piece: PieceModel) => {
 	const definition = getDefinitionById(piece.definitionId);
 
 	if (!definition) {
 		throw new Error(`Unknown definitionId: ${piece.definitionId}`);
 	}
 
-	return definition.stages[piece.stage];
+	return definition;
 };
+
+export const getStats = (piece: PieceModel) =>
+	getDefinition(piece).stages[piece.stage];
+
+export const getAttackRange = (piece: PieceModel): number =>
+	getDefinition(piece).attackRange;

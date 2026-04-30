@@ -1,5 +1,5 @@
 import { TraitId } from "../../gamemode/traits";
-import { CreatureStats, AttackType, attackTypes } from "../creatureDefinition";
+import { CreatureStats } from "../creatureDefinition";
 
 // each trait has points to assign
 // these are then used, along with piece cost and stage, to get stats
@@ -25,7 +25,7 @@ const traitBuilds: Partial<Record<TraitId, ReturnType<typeof getBaseStats>>> = {
 	},
 };
 
-const getBaseStats = (): Omit<CreatureStats, "attackType"> => ({
+const getBaseStats = (): CreatureStats => ({
 	hp: 10,
 	attack: 10,
 	defense: 10,
@@ -74,15 +74,11 @@ const getStats = (
 		speed: 0.01,
 	};
 
-	const attackType: AttackType =
-		combatTrait === "arcane" ? attackTypes.shoot : attackTypes.basic;
-
 	return {
 		hp: getStat(baseStats.hp, build.hp, availablePoints),
 		attack: getStat(baseStats.attack, build.attack, availablePoints),
 		defense: getStat(baseStats.defense, build.defense, availablePoints),
 		speed: getStat(baseStats.speed, build.speed, availablePoints),
-		attackType,
 	};
 };
 

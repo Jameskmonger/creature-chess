@@ -1,16 +1,14 @@
 import { getDelta, PackedPosition } from "@creature-chess/board";
-import { AttackType } from "@creature-chess/models";
 
 export const inAttackRange = (
 	attacker: PackedPosition,
 	target: PackedPosition,
-	attackType: AttackType
+	attackRange: number
 ) => {
 	const { x: deltaX, y: deltaY } = getDelta(attacker, target);
 
 	// Pieces cannot attack diagonally
 	const result =
-		Math.min(deltaX, deltaY) === 0 &&
-		Math.max(deltaX, deltaY) <= attackType.range;
+		Math.min(deltaX, deltaY) === 0 && Math.max(deltaX, deltaY) <= attackRange;
 	return result;
 };

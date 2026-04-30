@@ -6,7 +6,7 @@ import {
 	unpackX,
 	unpackY,
 } from "@creature-chess/board";
-import { attackTypes, PieceModel } from "@creature-chess/models";
+import { PieceModel } from "@creature-chess/models";
 import { buildPieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -187,13 +187,7 @@ describe("pathfinding", () => {
 					pathfinder,
 					packPosition(homePosA[0], homePosA[1]),
 					pieceFacings[pieceId],
-					{
-						attackType: attackTypes.basic,
-						hp: 1,
-						attack: 1,
-						defense: 1,
-						speed: 1,
-					},
+					1,
 					packPosition(homePosB[0], homePosB[1]),
 					board
 				);
@@ -205,13 +199,7 @@ describe("pathfinding", () => {
 					pathfinder,
 					packPosition(awayPosA[0], awayPosA[1]),
 					rotatedPieceFacings[pieceId],
-					{
-						attackType: attackTypes.basic,
-						hp: 1,
-						attack: 1,
-						defense: 1,
-						speed: 1,
-					},
+					1,
 					packPosition(awayPosB[0], awayPosB[1]),
 					rotated
 				);
