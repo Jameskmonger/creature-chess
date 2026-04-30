@@ -32,12 +32,10 @@ export const setupPlayerGameDeckListeners = (
 	) => deck.reroll(oldCards, 5, level, rerollMultiplier, excludeIds);
 
 	// when a player dies, add their cards and pieces back to the deck
+	// addPieces shuffles the affected decks, so no need to shuffle here after adding cards
 	const addToDeck = (pieces: PieceModel[], cards: Card[]) => {
-		for (const piece of pieces) {
-			deck.addPiece(piece);
-		}
+		deck.addPieces(pieces);
 		deck.addCards(cards);
-		deck.shuffleAllDecks();
 	};
 
 	startListening({
@@ -111,8 +109,8 @@ export const setupPlayerGameDeckListeners = (
 		actionCreator: afterSellPieceEvent,
 		effect: async ({ payload: { piece } }) => {
 			// when a player sells a piece, add it back to the deck
+			// addPiece shuffles the piece's cost-deck, so no need to shuffle here
 			deck.addPiece(piece);
-			deck.shuffleAllDecks();
 		},
 	});
 };

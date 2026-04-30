@@ -76,20 +76,27 @@ export class CardDeck {
 		multiplier: number,
 		excludeCards: number[] = []
 	) {
+		// addCards shuffles affected decks, so no need to explicitly shuffle
 		this.addCards(input);
-		this.shuffleAllDecks();
 
 		return this.take(count, level, multiplier, excludeCards);
 	}
 
 	public addCards(cards: Card[]) {
-		const cardsToAdd = cards.filter((card) => card !== null);
+		const affected = new Set<number>();
 
-		for (const card of cardsToAdd) {
+		for (const card of cards) {
+			if (card === null) {
+				continue;
+			}
+
 			this.getDeckForCost(card.cost).addCards(card, false);
+			affected.add(card.cost - 1);
 		}
 
-		this.shuffleAllDecks();
+		for (const idx of affected) {
+			this.decks[idx].shuffle();
+		}
 	}
 
 	public addPiece(piece: PieceModel) {
@@ -105,12 +112,30 @@ export class CardDeck {
 			this.addDefinition(definition);
 		}
 
-		this.shuffleAllDecks();
+		this.decks[definition.cost - 1].shuffle();
 	}
 
 	public addPieces(pieces: PieceModel[]) {
+		const affected = new Set<number>();
+
 		for (const piece of pieces) {
-			this.addPiece(piece);
+			const definition = getDefinitionById(piece.definitionId);
+
+			if (!definition) {
+				continue;
+			}
+
+			const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
+
+			for (let i = 0; i < cardCount; i++) {
+				this.addDefinition(definition);
+			}
+
+			affected.add(definition.cost - 1);
+		}
+
+		for (const idx of affected) {
+			this.decks[idx].shuffle();
 		}
 	}
 
@@ -122,6 +147,10 @@ export class CardDeck {
 
 	private getDeckForCost(cost: number) {
 		return this.decks[cost - 1];
+	}
+
+	private returnExcludedCard(card: Card) {
+		this.getDeckForCost(card.cost).addCards(card, false);
 	}
 
 	private take(
@@ -168,7 +197,7 @@ export class CardDeck {
 						return card;
 					}
 
-					this.addCards([card]);
+					this.returnExcludedCard(card);
 				}
 			}
 		}
@@ -185,7 +214,7 @@ export class CardDeck {
 						return card;
 					}
 
-					this.addCards([card]);
+					this.returnExcludedCard(card);
 				}
 			}
 		}
