@@ -108,6 +108,46 @@ class CancelledError extends Error {
 	}
 }
 
+/**
+ * A lightweight replacement for AbortController.
+ *
+ * AbortController allocates a DOMException when cancelled, which
+ * can be expensive if cancellations are frequent.
+ */
+type CancelToken = {
+	readonly aborted: boolean;
+	onAbort: (fn: () => void) => () => void;
+	cancel: () => void;
+};
+
+const createCancelToken = (): CancelToken => {
+	let aborted = false;
+	const handlers = new Set<() => void>();
+	return {
+		get aborted() {
+			return aborted;
+		},
+		onAbort: (fn) => {
+			if (aborted) {
+				fn();
+				return () => undefined;
+			}
+			handlers.add(fn);
+			return () => handlers.delete(fn);
+		},
+		cancel: () => {
+			if (aborted) {
+				return;
+			}
+			aborted = true;
+			for (const fn of handlers) {
+				fn();
+			}
+			handlers.clear();
+		},
+	};
+};
+
 function combineReducersPlain<TState>(reducers: ReducersMapObject<TState>) {
 	const keys = Object.keys(reducers) as (keyof TState)[];
 
@@ -165,51 +205,49 @@ export const createPlayer = (
 		}
 	};
 
-	const createApi = (signal: AbortSignal): PlayerListenerApi => ({
+	const createApi = (token: CancelToken): PlayerListenerApi => ({
 		getState: () => state,
 		dispatch: (action: Action) => put(action),
 		take: (predicate: (action: Action) => boolean) =>
 			new Promise<Action>((resolve, reject) => {
-				if (signal.aborted) {
+				if (token.aborted) {
 					reject(new CancelledError());
 					return;
 				}
 
-				const onAbort = () => {
-					removeTakeWaiter(waiter);
-					reject(new CancelledError());
-				};
-
+				let unsubscribe: () => void = () => undefined;
 				const waiter: TakeWaiter = {
 					predicate,
 					resolve: (action) => {
-						signal.removeEventListener("abort", onAbort);
+						unsubscribe();
 						resolve(action);
 					},
 					reject,
 				};
 				takeWaiters.push(waiter);
 
-				signal.addEventListener("abort", onAbort, { once: true });
+				unsubscribe = token.onAbort(() => {
+					removeTakeWaiter(waiter);
+					reject(new CancelledError());
+				});
 			}),
 		delay: (ms: number) =>
 			new Promise<void>((resolve, reject) => {
-				if (signal.aborted) {
+				if (token.aborted) {
 					reject(new CancelledError());
 					return;
 				}
 
-				const onAbort = () => {
-					clearTimeout(timer);
-					reject(new CancelledError());
-				};
-
+				let unsubscribe: () => void = () => undefined;
 				const timer = setTimeout(() => {
-					signal.removeEventListener("abort", onAbort);
+					unsubscribe();
 					resolve();
 				}, ms);
 
-				signal.addEventListener("abort", onAbort, { once: true });
+				unsubscribe = token.onAbort(() => {
+					clearTimeout(timer);
+					reject(new CancelledError());
+				});
 			}),
 		cancelActiveListeners: () => {
 			// no-op
@@ -249,8 +287,8 @@ export const createPlayer = (
 		};
 	};
 
-	// Track one active AbortController per listener registration
-	const activeControllers = new Map<Listener, AbortController>();
+	// Track one active CancelToken per listener registration
+	const activeTokens = new Map<Listener, CancelToken>();
 
 	const put = (action: Action) => {
 		const previousState = state;
@@ -269,15 +307,15 @@ export const createPlayer = (
 		const currentListeners = [...listeners];
 		for (const listener of currentListeners) {
 			if (listener.matches(action, state, previousState)) {
-				const prevController = activeControllers.get(listener);
-				if (prevController) {
-					prevController.abort();
+				const prevToken = activeTokens.get(listener);
+				if (prevToken) {
+					prevToken.cancel();
 				}
 
-				const controller = new AbortController();
-				activeControllers.set(listener, controller);
+				const token = createCancelToken();
+				activeTokens.set(listener, token);
 
-				const api = createApi(controller.signal);
+				const api = createApi(token);
 				listener.effect(action, api).catch(() => {
 					// ignore
 				});
@@ -288,10 +326,10 @@ export const createPlayer = (
 	const runEffect = (
 		effect: (api: PlayerListenerApi) => Promise<void>
 	): CancellableTask => {
-		const controller = new AbortController();
+		const token = createCancelToken();
 
 		const promise = new Promise<void>((resolve, reject) => {
-			const api = createApi(controller.signal);
+			const api = createApi(token);
 
 			effect(api)
 				.then(resolve)
@@ -306,7 +344,7 @@ export const createPlayer = (
 
 		return {
 			cancel: () => {
-				controller.abort();
+				token.cancel();
 			},
 			promise,
 		};
