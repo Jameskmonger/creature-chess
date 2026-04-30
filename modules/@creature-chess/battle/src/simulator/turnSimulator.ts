@@ -6,36 +6,35 @@ import { getStats } from "../utils/getStats";
 import { simulatePiece } from "./piece/simulate";
 import { Stores } from "./types";
 
+type TurnEntry = { piece: PieceModel; speed: number };
+
 export const simulateTurn = (
 	currentTurn: number,
 	board: Board,
 	pieceRegistry: PieceRegistry,
 	stores: Stores
 ) => {
-	const pieces = board
-		.getAllPieces()
-		.map((p) => pieceRegistry.getPieceById(p.id))
-		.filter((p): p is PieceModel => p !== null);
+	const pieces: TurnEntry[] = [];
 
-	pieces.sort((aPiece, bPiece) => {
-		const aStats = getStats(aPiece);
-		const bStats = getStats(bPiece);
-
-		return bStats.speed - aStats.speed;
+	board.forEachPiece((id) => {
+		const piece = pieceRegistry.getPieceById(id);
+		if (piece === null) {
+			return;
+		}
+		pieces.push({ piece, speed: getStats(piece).speed });
 	});
 
-	for (const piece of pieces) {
-		takePieceTurn(currentTurn, board, pieceRegistry, piece.id, stores);
+	pieces.sort((a, b) => b.speed - a.speed);
+
+	for (const entry of pieces) {
+		takePieceTurn(currentTurn, board, pieceRegistry, entry.piece.id, stores);
 	}
 
-	for (const piece of pieces) {
-		if (!piece) {
-			continue;
-		}
+	for (const entry of pieces) {
+		const combat = stores.combatStore.getPiece(entry.piece.id);
 
-		const combat = stores.combatStore.getPiece(piece.id);
 		if (combat.currentHealth > 0) {
-			stores.combatStore.updatePiecePartial(piece.id, {
+			stores.combatStore.updatePiecePartial(entry.piece.id, {
 				battleStats: {
 					...combat.battleStats,
 					turnsSurvived: combat.battleStats.turnsSurvived + 1,
