@@ -5,13 +5,17 @@ import { PlayerStatus } from "@creature-chess/models";
 import { PlayerStateSelectors } from "../entities/player";
 import { Player } from "../entities/player/player";
 
+type Matchup = { homeId: string; awayId: string; awayIsClone: boolean };
+
 export class OpponentProvider {
 	private remainingRotations: number[] | null = null;
-	private rotation: number = 0;
-
 	private lastLivingPlayerCount: number = 0;
-	private lastOddMatchupHomeId: string | null = null;
-	private lastOddMatchupAwayId: string | null = null;
+
+	private ghostRecipientCount: Map<string, number> = new Map();
+	private ghostSourceCount: Map<string, number> = new Map();
+	private lastOpponent: Map<string, string> = new Map();
+	private lastGhostRecipientId: string | null = null;
+	private lastGhostSourceId: string | null = null;
 
 	private players: Player[] | null = null;
 	private rng: Rng;
@@ -24,7 +28,7 @@ export class OpponentProvider {
 		this.players = players;
 	}
 
-	public getMatchups = () => {
+	public getMatchups = (): Matchup[] => {
 		const livingPlayers = this.getLivingPlayers();
 		const livingPlayerCount = livingPlayers.length;
 
@@ -33,22 +37,113 @@ export class OpponentProvider {
 			this.remainingRotations = null;
 		}
 
+		if (livingPlayerCount < 2) {
+			return [];
+		}
+
+		const isOdd = livingPlayers.length % 2 !== 0;
+		let cloneMatchup: Matchup | null = null;
+		let innerPlayers = livingPlayers;
+
+		if (isOdd) {
+			const recipient = this.pickGhostRecipient(livingPlayers);
+			innerPlayers = livingPlayers.filter((p) => p.id !== recipient.id);
+			const source = this.pickGhostSource(recipient, innerPlayers);
+
+			this.ghostRecipientCount.set(
+				recipient.id,
+				(this.ghostRecipientCount.get(recipient.id) ?? 0) + 1
+			);
+			this.ghostSourceCount.set(
+				source.id,
+				(this.ghostSourceCount.get(source.id) ?? 0) + 1
+			);
+			this.lastGhostRecipientId = recipient.id;
+			this.lastGhostSourceId = source.id;
+
+			cloneMatchup = {
+				homeId: recipient.id,
+				awayId: source.id,
+				awayIsClone: true,
+			};
+		}
+
+		const rotation = isOdd
+			? this.pickBestRotationFreely(innerPlayers)
+			: this.takeRotationFromPool(innerPlayers);
+		const innerMatchups = this.getMatchupsEven(innerPlayers, rotation);
+
+		const matchups = cloneMatchup
+			? [cloneMatchup, ...innerMatchups]
+			: innerMatchups;
+
+		this.recordLastOpponents(matchups);
+
+		return matchups;
+	};
+
+	private takeRotationFromPool(innerPlayers: Player[]): number {
 		if (
 			this.remainingRotations === null ||
 			this.remainingRotations.length === 0
 		) {
-			this.generateRotations(livingPlayers);
+			this.generateRotations(innerPlayers);
 		}
+		const pool = this.remainingRotations!;
+		let bestIdx = 0;
+		let bestScore = Infinity;
+		for (let i = 0; i < pool.length; i++) {
+			const score = this.countRepeats(innerPlayers, pool[i]);
+			if (score < bestScore) {
+				bestScore = score;
+				bestIdx = i;
+				if (score === 0) {
+					break;
+				}
+			}
+		}
+		return pool.splice(bestIdx, 1)[0];
+	}
 
-		const isEven = livingPlayers.length % 2 === 0;
-		const output = isEven
-			? this.getMatchupsEven(livingPlayers)
-			: this.getMatchupsOdd(livingPlayers);
+	private pickBestRotationFreely(innerPlayers: Player[]): number {
+		const ringSize = Math.max(1, innerPlayers.length - 1);
+		const candidates: number[] = [];
+		for (let i = 0; i < ringSize; i++) {
+			candidates.push(i);
+		}
+		shuffleInPlace(candidates, this.rng);
 
-		this.updateRotation();
+		let best = candidates[0];
+		let bestScore = Infinity;
+		for (const r of candidates) {
+			const score = this.countRepeats(innerPlayers, r);
+			if (score < bestScore) {
+				bestScore = score;
+				best = r;
+				if (score === 0) {
+					break;
+				}
+			}
+		}
+		return best;
+	}
 
-		return output;
-	};
+	private countRepeats(players: Player[], rotation: number): number {
+		if (players.length < 2) {
+			return 0;
+		}
+		const pairings = this.circlePairings(players, rotation);
+		let count = 0;
+		for (const { a, b } of pairings) {
+			if (this.lastOpponent.get(a.id) === b.id) {
+				count += 1;
+			}
+			if (this.lastOpponent.get(b.id) === a.id) {
+				count += 1;
+			}
+		}
+		return count;
+	}
 
 	private getLivingPlayers() {
 		if (!this.players) {
@@ -61,97 +156,94 @@ export class OpponentProvider {
 		);
 	}
 
-	private getMatchupsEven(livingPlayers: Player[]) {
-		const matchups: { homeId: string; awayId: string; awayIsClone: boolean }[] =
-			[];
-
-		let remainingPlayerIds = livingPlayers.map((p) => p.id);
-		while (remainingPlayerIds.length > 0) {
-			// increment rotation by 1 if it would pick player 0
-			const rotation =
-				this.rotation % remainingPlayerIds.length === 0
-					? this.rotation + 1
-					: this.rotation;
-
-			const playerA = remainingPlayerIds[0];
-			const playerB = remainingPlayerIds[rotation % remainingPlayerIds.length];
-
-			remainingPlayerIds = remainingPlayerIds.filter(
-				(id) => id !== playerA && id !== playerB
-			);
-
-			// dice roll
-			const playerAIsHome = Math.floor(Math.random() * Math.floor(2)) === 0;
-
-			if (playerAIsHome) {
-				matchups.push({ homeId: playerA, awayId: playerB, awayIsClone: false });
-			} else {
-				matchups.push({ homeId: playerB, awayId: playerA, awayIsClone: false });
-			}
-		}
-
-		return matchups;
-	}
-
-	private getMatchupsOdd(livingPlayers: Player[]) {
-		const cloneMatchup = this.getOddCloneMatchup(livingPlayers);
-
-		const otherPlayers = livingPlayers.filter(
-			({ id }) => id !== cloneMatchup.homeId
-		);
-
-		return [cloneMatchup, ...this.getMatchupsEven(otherPlayers)];
-	}
-
-	private getOddCloneMatchup(livingPlayers: Player[]) {
-		const potentialHomePlayers = livingPlayers.filter(
-			({ id }) =>
-				id !== this.lastOddMatchupHomeId || this.lastOddMatchupHomeId === null
-		);
-		const home = pickRandom(potentialHomePlayers, this.rng);
-
-		const potentialAwayPlayers = livingPlayers.filter(
-			({ id }) =>
-				id !== home.id &&
-				(id !== this.lastOddMatchupAwayId || this.lastOddMatchupAwayId === null)
-		);
-		const away = pickRandom(potentialAwayPlayers, this.rng);
-
-		this.lastOddMatchupHomeId = home.id;
-		this.lastOddMatchupAwayId = away.id;
-
-		return {
-			homeId: home.id,
-			awayId: away.id,
-			awayIsClone: true,
-		};
-	}
-
 	private generateRotations(livingPlayers: Player[]) {
-		const rotations = [];
-
-		// in head-to-head rotation,
-		// a 3 player game will have rotations: [ 1, 2 ]
-		for (let i = 1; i < livingPlayers.length; i++) {
+		const rotations: number[] = [];
+		for (let i = 0; i < livingPlayers.length - 1; i++) {
 			rotations.push(i);
 		}
-
 		this.remainingRotations = shuffleInPlace(rotations, this.rng);
-
-		this.updateRotation();
 	}
 
-	private updateRotation() {
-		if (!this.remainingRotations) {
-			return;
-		}
-
-		const chosen = pickRandom(this.remainingRotations, this.rng);
-
-		this.remainingRotations = this.remainingRotations.filter(
-			(i) => i !== chosen
+	private getMatchupsEven(players: Player[], rotation: number): Matchup[] {
+		return this.circlePairings(players, rotation).map(({ a, b }) =>
+			this.toMatchup(a, b)
 		);
+	}
 
-		this.rotation = chosen;
+	// Circle-method round-robin: fix the last player, rotate the rest.
+	private circlePairings(
+		players: Player[],
+		rotation: number
+	): { a: Player; b: Player }[] {
+		const n = players.length;
+		const ringSize = n - 1;
+		const fixed = players[ringSize];
+		const r = ((rotation % ringSize) + ringSize) % ringSize;
+
+		const pairings: { a: Player; b: Player }[] = [{ a: fixed, b: players[r] }];
+		for (let i = 1; i < n / 2; i++) {
+			const aIdx = (r + i) % ringSize;
+			const bIdx = (((r - i) % ringSize) + ringSize) % ringSize;
+			pairings.push({ a: players[aIdx], b: players[bIdx] });
+		}
+		return pairings;
+	}
+
+	private toMatchup(a: Player, b: Player): Matchup {
+		const aIsHome = Math.floor(this.rng() * 2) === 0;
+		return aIsHome
+			? { homeId: a.id, awayId: b.id, awayIsClone: false }
+			: { homeId: b.id, awayId: a.id, awayIsClone: false };
+	}
+
+	private pickGhostRecipient(candidates: Player[]): Player {
+		// Re-picking the prior recipient freezes the inner set, forcing pair repeats.
+		const filtered = candidates.filter(
+			(p) => p.id !== this.lastGhostRecipientId
+		);
+		const pool = filtered.length > 0 ? filtered : candidates;
+		return this.pickWithLowestCount(pool, this.ghostRecipientCount);
+	}
+
+	private pickGhostSource(recipient: Player, candidates: Player[]): Player {
+		const recipientLast = this.lastOpponent.get(recipient.id);
+		const blockers = new Set<string>();
+		if (recipientLast !== undefined) {
+			blockers.add(recipientLast);
+		}
+		if (this.lastGhostSourceId !== null) {
+			blockers.add(this.lastGhostSourceId);
+		}
+		const filtered = candidates.filter((p) => !blockers.has(p.id));
+		const pool = filtered.length > 0 ? filtered : candidates;
+		return this.pickWithLowestCount(pool, this.ghostSourceCount);
+	}
+
+	private pickWithLowestCount(
+		candidates: Player[],
+		counts: Map<string, number>
+	): Player {
+		let lowest = Infinity;
+		const tied: Player[] = [];
+		for (const p of candidates) {
+			const c = counts.get(p.id) ?? 0;
+			if (c < lowest) {
+				lowest = c;
+				tied.length = 0;
+				tied.push(p);
+			} else if (c === lowest) {
+				tied.push(p);
+			}
+		}
+		return pickRandom(tied, this.rng);
+	}
+
+	private recordLastOpponents(matchups: Matchup[]) {
+		for (const m of matchups) {
+			this.lastOpponent.set(m.homeId, m.awayId);
+			if (!m.awayIsClone) {
+				this.lastOpponent.set(m.awayId, m.homeId);
+			}
+		}
 	}
 }
