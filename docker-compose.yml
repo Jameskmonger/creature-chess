@@ -52,9 +52,6 @@ services:
     image: local/web-game:latest
     environment:
       - NODE_ENV
-      - AUTH0_ENABLED
-      - AUTH0_DOMAIN
-      - AUTH0_SPA_CLIENT_ID
       - API_INFO_URL
       - CREATURE_CHESS_APP_URL
       - CREATURE_CHESS_IMAGE_URL
@@ -77,10 +74,6 @@ services:
       - ./metrics:/var/creature-chess/metrics:rw
     image: local/server-game:latest
     environment:
-      - AUTH0_DOMAIN
-      - AUTH0_SPA_CLIENT_ID
-      - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
-      - AUTH0_MANAGEMENT_CLIENT_SECRET
       - CREATURE_CHESS_APP_URL
       - API_INFO_URL
       - CREATURE_CHESS_IMAGE_URL
@@ -108,10 +101,6 @@ services:
         APP_DIR: server-info
     image: local/server-info:latest
     environment:
-      - AUTH0_DOMAIN
-      - AUTH0_SPA_CLIENT_ID
-      - AUTH0_MACHINE_TO_MACHINE_CLIENT_ID
-      - AUTH0_MANAGEMENT_CLIENT_SECRET
       - CREATURE_CHESS_APP_URL
       - NODE_ENV
       - DATABASE_URL

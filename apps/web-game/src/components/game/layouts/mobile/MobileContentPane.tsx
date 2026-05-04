@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import { AppState } from "@auth0/auth0-react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { Overlay } from "~/store/game/ui";
+import { AppState } from "~/store";
 
 const useStyles = createUseStyles({
 	contentPane: {

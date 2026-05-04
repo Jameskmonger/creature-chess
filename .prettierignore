@@ -4,4 +4,3 @@ dist/
 apps/**/lib/
 yarn.lock
 *.tfstate
-.auth0

@@ -13,7 +13,6 @@ import {
 	socketInBytes,
 	socketOutBytes,
 } from "./Metrics";
-import { createManagementClient } from "./external/auth0";
 import { getBots } from "./external/bots";
 import { Game, PlayerGameParticipant } from "./game";
 import { onHandshakeSuccess } from "./handshake";
@@ -66,7 +65,6 @@ const startGame = async (
 
 export const startServer = async ({ io }: { io: Server }) => {
 	logger.info("Starting server...");
-	const authClient = createManagementClient();
 	const database = await createDatabaseConnection(logger);
 	logger.info("Database connection created");
 
@@ -136,5 +134,5 @@ export const startServer = async ({ io }: { io: Server }) => {
 		lobby.connect(socket);
 	};
 
-	onHandshakeSuccess({ io, authClient, database }, matchmaking);
+	onHandshakeSuccess({ io, database }, matchmaking);
 };

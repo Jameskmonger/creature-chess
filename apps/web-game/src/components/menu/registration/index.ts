@@ -1,1 +1,0 @@
-export { RegistrationPage } from "./RegistrationPage";

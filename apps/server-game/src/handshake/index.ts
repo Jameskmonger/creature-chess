@@ -1,5 +1,3 @@
-import { authenticate } from "@cc-server/auth";
-
 import { logger } from "../log";
 import { AuthenticatedSocket } from "../player/socket";
 import { handshakeListener } from "./listener";
@@ -15,7 +13,7 @@ export const onHandshakeSuccess = (
 	deps: HandshakeListenerDependencies,
 	onReceive: (socket: AuthenticatedSocket) => void
 ) => {
-	const { authClient, database } = deps;
+	const { database } = deps;
 
 	handshakeListener(deps, async (socket, request) => {
 		try {
@@ -55,34 +53,9 @@ export const onHandshakeSuccess = (
 				return;
 			}
 
-			const user = await authenticate(
-				authClient,
-				database,
-				request.data.accessToken
-			);
+			failHandshake(socket, { error: { type: "not_registered" } });
 
-			if (!user.registered) {
-				failHandshake(socket, { error: { type: "not_registered" } });
-
-				return;
-			}
-
-			logger.info(
-				`[socket ${socket.id}] Handshake successful for '${user.nickname}'`
-			);
-
-			successHandshake(socket);
-
-			const authenticatedSocket = socket as AuthenticatedSocket;
-
-			authenticatedSocket.data = {
-				type: "player",
-				id: user.id,
-				nickname: user.nickname,
-				profile: user.profile,
-			};
-
-			onReceive(authenticatedSocket);
+			return;
 		} catch (e) {
 			logger.error(`[socket ${socket.id}] Handshake failed`, { error: e });
 			failHandshake(socket, { error: { type: "authentication" } });
