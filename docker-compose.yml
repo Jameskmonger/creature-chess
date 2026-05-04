@@ -45,14 +45,14 @@ services:
       dockerfile: apps/web.Dockerfile
       args:
         APP_DIR: web-game
+        # Webpack bakes these into the bundle at build time, so they must be build args.
+        NODE_ENV: ${NODE_ENV}
+        API_INFO_URL: ${API_INFO_URL}
+        CREATURE_CHESS_APP_URL: ${CREATURE_CHESS_APP_URL}
+        CREATURE_CHESS_IMAGE_URL: ${CREATURE_CHESS_IMAGE_URL}
     image: local/web-game:latest
-    environment:
-      - NODE_ENV
-      - API_INFO_URL
-      - CREATURE_CHESS_APP_URL
-      - CREATURE_CHESS_IMAGE_URL
     volumes:
-      - ./dist/web-game:/code/apps/web-game/dist
+      - ./dist/web-game:/output
     networks:
       - creature-chess
     depends_on:

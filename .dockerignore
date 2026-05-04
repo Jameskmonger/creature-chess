@@ -1,8 +1,18 @@
-node_modules
-npm-debug.log
+**/node_modules
+**/dist
+**/coverage
+**/*.tsbuildinfo
+
+.nx/
+.git/
+.github/
+.vscode/
 .faunadb/
 ./images/
-.nx/
+metrics/
+
+npm-debug.log
+*.log
 
 **/*.md
 
@@ -10,7 +20,3 @@ npm-debug.log
 **/*.Dockerfile
 **/docker-compose.yml
 **/docker-compose.*.yml
-
-apps/**/dist/
-
-modules/**/*.js
