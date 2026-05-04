@@ -1,17 +1,11 @@
 {
 	"private": true,
-	"name": "@shoki/engine",
+	"name": "@cc-bot/utility",
 	"version": "0.0.1",
-	"description": "Shoki game engine",
-	"keywords": [
-		"shoki",
-		"game",
-		"engine",
-		"redux"
-	],
+	"description": "Utility/personality-driven bot implementation for Creature Chess",
+	"keywords": [],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
-	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
-	"license": "MIT",
+	"license": "ISC",
 	"main": "./dist/index.js",
 	"types": "./index.ts",
 	"publishConfig": {
@@ -29,7 +23,15 @@
 	"bugs": {
 		"url": "https://github.com/Jameskmonger/creature-chess/issues"
 	},
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"winston": "^3.3.3"
+		"@cc-server/bot": "workspace:*",
+		"@creature-chess/board": "workspace:*",
+		"@creature-chess/gamemode": "workspace:*",
+		"@creature-chess/models": "workspace:*",
+		"@creature-chess/utils": "workspace:*"
+	},
+	"peerDependencies": {
+		"redux": "^4.1.0"
 	}
 }

@@ -1,21 +1,35 @@
 import delay from "delay";
 
-import { Player, PlayerEvents, GameEvents } from "@creature-chess/gamemode";
+import { GameEvents, Player, PlayerEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
-import { BotPersonality } from "@cc-server/data";
+import {
+	InternalLifecycleHooks,
+	runPreparingPhase,
+} from "./preparingPhaseLoop";
+import { BotImplementation, SetupBotLogicOptions } from "./types";
 
-import { preparingPhase } from "./preparingPhase";
-import { putBenchOnBoard } from "./putBenchOnBoard";
+export const setupBotLogic = (
+	entity: Player,
+	implementation: BotImplementation,
+	options: SetupBotLogicOptions = {}
+) => setupBotLogicInternal(entity, implementation, options, {});
 
-export const setupBotLogic = (entity: Player, personality: BotPersonality) => {
+/** Lifecycle entry point with telemetry hooks; for harness/tooling use only. */
+export const setupBotLogicInternal = (
+	entity: Player,
+	implementation: BotImplementation,
+	options: SetupBotLogicOptions,
+	hooks: InternalLifecycleHooks
+) => {
+	implementation.onGameStart?.(entity.id);
+
 	entity.addListener({
 		actionCreator: GameEvents.gamePhaseStartedEvent,
 		effect: async ({ payload: { phase } }, api) => {
 			api.cancelActiveListeners();
 
 			const state = api.getState();
-
 			if (state.playerInfo.health <= 0) {
 				return;
 			}
@@ -25,8 +39,7 @@ export const setupBotLogic = (entity: Player, personality: BotPersonality) => {
 			}
 
 			if (phase === GamePhase.PREPARING) {
-				await putBenchOnBoard(api);
-				await preparingPhase(api, personality);
+				await runPreparingPhase(api, implementation, options, hooks);
 			} else if (phase === GamePhase.PLAYING) {
 				api.dispatch(PlayerEvents.clientFinishMatchEvent());
 			}

@@ -13,8 +13,8 @@
 		"correlate": "yarn run -T ts-node --transpile-only src/correlate.ts"
 	},
 	"dependencies": {
+		"@cc-bot/utility": "workspace:*",
 		"@cc-server/bot": "workspace:*",
-		"@cc-server/data": "workspace:*",
 		"@creature-chess/board": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",

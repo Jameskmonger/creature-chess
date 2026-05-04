@@ -14,3 +14,7 @@ RUN yarn nx run-many -t build --projects='@creature-chess/*'
 # Build remaining @cc-server packages (nx caches data)
 ADD modules/@cc-server/ ./modules/@cc-server/
 RUN yarn nx run-many -t build --projects='@cc-server/*'
+
+# server-game depends on @cc-bot/*
+ADD modules/@cc-bot/ ./modules/@cc-bot/
+RUN yarn nx run-many -t build --projects='@cc-bot/*'

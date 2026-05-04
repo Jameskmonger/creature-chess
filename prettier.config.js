@@ -8,6 +8,7 @@ module.exports = {
 		"^@shoki/.+$",
 		"^@creature-chess/.+$",
 		"^@cc-server/.+$",
+		"^@cc-bot/.+$",
 		"^@creature-chess-app/.+$",
 		"^[./]",
 	],

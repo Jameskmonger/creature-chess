@@ -12,9 +12,12 @@ model bots {
   nickname     String @db.VarChar(20)
   games_played Int    @default(0)
   wins         Int    @default(0)
-  ambition     Int
-  composure    Int
-  vision       Int
+
+  // Discriminator. Matches a registered `BotEngine.id` (e.g. "utility").
+  engine String @db.VarChar(64)
+  // Engine-specific config. The bot implementation parses and validates
+  // this — the server does not interpret it.
+  meta   Json
 }
 
 model users {

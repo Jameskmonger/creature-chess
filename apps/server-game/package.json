@@ -23,6 +23,7 @@
 		"lint": "yarn run -T eslint --ignore-path ../../.eslintignore \"src/**/*.{ts,tsx}\" \"**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
 	},
 	"dependencies": {
+		"@cc-bot/utility": "workspace:*",
 		"@cc-server/auth": "workspace:*",
 		"@cc-server/bot": "workspace:*",
 		"@cc-server/data": "workspace:*",

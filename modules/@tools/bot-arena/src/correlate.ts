@@ -1,18 +1,32 @@
 import { readdirSync, readFileSync, statSync } from "fs";
 import { join } from "path";
 
+type Level = "low" | "high";
+
 type Row = {
 	gameId: string;
 	botId: string;
-	ambition: number;
-	composure: number;
-	vision: number;
+	ambition: Level;
+	composure: Level;
+	vision: Level;
 	finishPosition: number;
 	finishRound: number;
 };
 
 const TRAITS = ["ambition", "composure", "vision"] as const;
 type Trait = (typeof TRAITS)[number];
+
+const LEVELS: Level[] = ["low", "high"];
+
+const parseLevel = (raw: string): Level => {
+	if (raw !== "low" && raw !== "high") {
+		throw new Error(`Expected "low" or "high", got "${raw}"`);
+	}
+	return raw;
+};
+
+// Map low→0, high→1 so Pearson stays meaningful on categorical traits.
+const levelToNumber = (l: Level): number => (l === "high" ? 1 : 0);
 
 const dataDir = join(__dirname, "..", "data");
 
@@ -71,9 +85,9 @@ const parseCsvFile = (path: string): Row[] => {
 		return {
 			gameId,
 			botId,
-			ambition: Number(ambition),
-			composure: Number(composure),
-			vision: Number(vision),
+			ambition: parseLevel(ambition),
+			composure: parseLevel(composure),
+			vision: parseLevel(vision),
 			finishPosition: Number(finishPosition),
 			finishRound: Number(finishRound),
 		};
@@ -122,7 +136,7 @@ const printPearsonTable = (rows: Row[]): void => {
 		"            vs finishPosition (lower=better)   vs finishRound (higher=better)"
 	);
 	for (const trait of TRAITS) {
-		const traitValues = rows.map((r) => r[trait]);
+		const traitValues = rows.map((r) => levelToNumber(r[trait]));
 		const positions = rows.map((r) => r.finishPosition);
 		const rounds = rows.map((r) => r.finishRound);
 		const rPos = pearson(traitValues, positions);
@@ -133,52 +147,28 @@ const printPearsonTable = (rows: Row[]): void => {
 	}
 };
 
-const buildBuckets = (
-	bucketCount: number
-): { label: string; min: number; max: number }[] => {
-	// Personality is in [20, 200] (multiples of 20)
-	const min = 20;
-	const max = 200;
-	const range = max - min;
-	const step = range / bucketCount;
-
-	return Array.from({ length: bucketCount }, (_, i) => {
-		const lo = Math.round(min + i * step);
-		const hi =
-			i === bucketCount - 1 ? max : Math.round(min + (i + 1) * step) - 1;
-		return { label: `${lo}-${hi}`, min: lo, max: hi };
-	});
-};
-
-const printBucketTable = (rows: Row[], bucketCount: number): void => {
-	const buckets = buildBuckets(bucketCount);
+const printLevelTable = (rows: Row[]): void => {
 	console.log(
-		"\n=== View 2: Bucketed average finishPosition (lower=better) ==="
+		"\n=== View 2: Average finishPosition by level (lower=better) ==="
 	);
-	const header = ["          "].concat(
-		buckets.map((b) => `bucket(${b.label})`.padEnd(16))
-	);
+	const header = ["          "].concat(LEVELS.map((l) => l.padEnd(16)));
 	console.log(header.join(" "));
 
 	for (const trait of TRAITS) {
-		const cells = buckets.map((b) => {
-			const inBucket = rows.filter(
-				(r) => r[trait] >= b.min && r[trait] <= b.max
-			);
-			if (inBucket.length === 0) {
+		const cells = LEVELS.map((level) => {
+			const inGroup = rows.filter((r) => r[trait] === level);
+			if (inGroup.length === 0) {
 				return "    n/a    ".padEnd(16);
 			}
 			const avg =
-				inBucket.reduce((a, r) => a + r.finishPosition, 0) / inBucket.length;
-			return `${avg.toFixed(2)}  (n=${inBucket.length})`.padEnd(16);
+				inGroup.reduce((a, r) => a + r.finishPosition, 0) / inGroup.length;
+			return `${avg.toFixed(2)}  (n=${inGroup.length})`.padEnd(16);
 		});
 		console.log(`${trait.padEnd(10)} ${cells.join(" ")}`);
 	}
 };
 
-const printPairwiseMatrices = (rows: Row[], bucketCount: number): void => {
-	const buckets = buildBuckets(bucketCount);
-
+const printPairwiseMatrices = (rows: Row[]): void => {
 	console.log("\n=== View 3: Pairwise interaction (avg finishPosition) ===");
 
 	const pairs: [Trait, Trait][] = [
@@ -191,18 +181,14 @@ const printPairwiseMatrices = (rows: Row[], bucketCount: number): void => {
 		console.log(`\n${rowTrait} × ${colTrait}:`);
 
 		const header = ["         "].concat(
-			buckets.map((b) => `${colTrait[0]}:${b.label}`.padEnd(13))
+			LEVELS.map((l) => `${colTrait[0]}:${l}`.padEnd(13))
 		);
 		console.log(header.join(" "));
 
-		for (const rb of buckets) {
-			const cells = buckets.map((cb) => {
+		for (const rl of LEVELS) {
+			const cells = LEVELS.map((cl) => {
 				const inCell = rows.filter(
-					(r) =>
-						r[rowTrait] >= rb.min &&
-						r[rowTrait] <= rb.max &&
-						r[colTrait] >= cb.min &&
-						r[colTrait] <= cb.max
+					(r) => r[rowTrait] === rl && r[colTrait] === cl
 				);
 				if (inCell.length === 0) {
 					return "   n/a    ".padEnd(13);
@@ -211,17 +197,13 @@ const printPairwiseMatrices = (rows: Row[], bucketCount: number): void => {
 					inCell.reduce((a, r) => a + r.finishPosition, 0) / inCell.length;
 				return `${avg.toFixed(2)} (n=${inCell.length})`.padEnd(13);
 			});
-			console.log(`${rowTrait[0]}:${rb.label.padEnd(7)} ${cells.join(" ")}`);
+			console.log(`${rowTrait[0]}:${rl.padEnd(4)} ${cells.join(" ")}`);
 		}
 	}
 };
 
 const main = (): void => {
 	const args = process.argv.slice(2);
-
-	const bucketArgIndex = args.indexOf("--buckets");
-	const bucketCount =
-		bucketArgIndex >= 0 ? parseInt(args[bucketArgIndex + 1] ?? "3", 10) : 3;
 
 	const runArgIndex = args.indexOf("--run");
 	const runId = runArgIndex >= 0 ? args[runArgIndex + 1] ?? null : null;
@@ -247,8 +229,8 @@ const main = (): void => {
 	);
 
 	printPearsonTable(rows);
-	printBucketTable(rows, bucketCount);
-	printPairwiseMatrices(rows, bucketCount);
+	printLevelTable(rows);
+	printPairwiseMatrices(rows);
 };
 
 main();

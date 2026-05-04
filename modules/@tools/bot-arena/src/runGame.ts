@@ -11,20 +11,21 @@ import {
 	GamemodeSettingsPresets,
 } from "@creature-chess/models";
 
-import { setupBotLogic } from "@cc-server/bot";
-import { BotPersonality } from "@cc-server/data";
+import { BotImplementation, setupBotLogic } from "@cc-server/bot";
+import { Personality } from "@cc-bot/utility";
 
 import { logger } from "./log";
 
 export type BotUnderTest = {
 	id: string;
 	name: string;
-	personality: BotPersonality;
+	personality: Personality;
+	implementation: BotImplementation;
 };
 
 export type BotResult = {
 	id: string;
-	personality: BotPersonality;
+	personality: Personality;
 	finishPosition: number;
 	finishRound: number;
 };
@@ -131,7 +132,7 @@ export const runGame = (
 				})
 			);
 
-			setupBotLogic(entity, bot.personality);
+			setupBotLogic(entity, bot.implementation);
 
 			return entity;
 		});

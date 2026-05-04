@@ -23,6 +23,7 @@
 	"workspaces": [
 		"modules/@creature-chess/*",
 		"modules/@cc-server/*",
+		"modules/@cc-bot/*",
 		"modules/@shoki/*",
 		"modules/@tools/*",
 		"apps/*"

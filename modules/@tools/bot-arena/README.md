@@ -31,11 +31,9 @@ yarn nx run @tools/bot-arena:correlate -- modules/@tools/bot-arena/data/12345678
 
 The script prints three views:
 
-1. **Pearson correlation** between each personality trait and `finishPosition` / `finishRound`
-2. **Bucketed averages** — average finish position per personality bucket (looks for goldilocks shape)
-3. **Pairwise interaction matrices** — 3×3 grids for each pair of traits (looks for clashes / synergies)
-
-Use `--buckets 5` for finer-grained buckets when sample sizes are large.
+1. **Pearson correlation** between each personality trait (`low`→0, `high`→1) and `finishPosition` / `finishRound`
+2. **Per-level averages** — average finish position grouped by `low` vs `high` for each trait
+3. **Pairwise interaction matrices** — 2×2 grids for each pair of traits (looks for clashes / synergies)
 
 ## Notes
 

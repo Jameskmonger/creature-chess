@@ -1,0 +1,111 @@
+import delay from "delay";
+import { Action } from "redux";
+
+import {
+	PlayerActions,
+	PlayerListenerApi,
+	PlayerStateSelectors,
+} from "@creature-chess/gamemode";
+
+import {
+	BotImplementation,
+	PreparingPhaseContext,
+	SetupBotLogicOptions,
+} from "./types";
+
+const DEFAULT_ACTION_BUDGET = 200;
+
+export type InternalLifecycleHooks = {
+	actionBudgetSpec?: { multiplier: number; min: number; max: number };
+	onActionDispatched?: (action: Action) => void;
+	onPhaseEnded?: (info: PhaseEndInfo) => void;
+};
+
+export type PhaseEndInfo = {
+	actionsTaken: number;
+	actionBudget: number;
+	terminationReason: "readyUp" | "budget" | "dead";
+};
+
+function getActionBudget(
+	totalPieces: number,
+	options: SetupBotLogicOptions,
+	hooks: InternalLifecycleHooks
+): number {
+	if (!hooks.actionBudgetSpec) {
+		return options.actionBudget ?? DEFAULT_ACTION_BUDGET;
+	}
+
+	return Math.min(
+		hooks.actionBudgetSpec.max,
+		Math.max(
+			hooks.actionBudgetSpec.min,
+			totalPieces * hooks.actionBudgetSpec.multiplier
+		)
+	);
+}
+
+export const runPreparingPhase = async (
+	api: PlayerListenerApi,
+	implementation: BotImplementation,
+	options: SetupBotLogicOptions,
+	hooks: InternalLifecycleHooks
+): Promise<void> => {
+	const {
+		settings,
+		board,
+		bench,
+		gamemode: { pieceRegistry },
+	} = api.player;
+
+	const rng = options.rng ?? Math.random;
+	const actionBudget = getActionBudget(
+		board.getAllPieces().length + bench.getAllPieces().length,
+		options,
+		hooks
+	);
+
+	if (settings.botActionDelayMs > 0) {
+		await delay(settings.botActionDelayMs);
+	}
+
+	let actionsTaken = 0;
+	let terminationReason: PhaseEndInfo["terminationReason"] = "budget";
+
+	while (actionsTaken < actionBudget) {
+		const state = api.getState();
+
+		if (PlayerStateSelectors.getPlayerHealth(state) <= 0) {
+			terminationReason = "dead";
+			break;
+		}
+
+		const ctx: PreparingPhaseContext = {
+			board,
+			bench,
+			pieceRegistry,
+			state,
+			settings,
+			rng,
+		};
+
+		const action = implementation.decidePreparingAction(ctx);
+
+		if (action === null) {
+			terminationReason = "readyUp";
+			break;
+		}
+
+		api.dispatch(action);
+		hooks.onActionDispatched?.(action);
+		actionsTaken += 1;
+
+		if (settings.botActionDelayMs > 0) {
+			await delay(settings.botActionDelayMs);
+		}
+	}
+
+	hooks.onPhaseEnded?.({ actionsTaken, actionBudget, terminationReason });
+
+	api.dispatch(PlayerActions.readyUpPlayerAction());
+};

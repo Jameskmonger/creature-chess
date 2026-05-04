@@ -23,8 +23,4 @@ export const botDatabase = (
 });
 
 export { setupBotDatabase } from "./_setup";
-export {
-	DatabaseBot,
-	BotPersonality,
-	BotPersonalityValue,
-} from "./databaseBot";
+export { DatabaseBot } from "./databaseBot";

@@ -1,46 +1,47 @@
 import { LobbyPlayer } from "@creature-chess/models";
 
 import {
-	BotPersonality,
-	BotPersonalityValue,
-	DatabaseConnection,
-} from "@cc-server/data";
+	BotImplementation,
+	createBotEngineRegistry,
+} from "@cc-server/bot";
+import { DatabaseConnection } from "@cc-server/data";
+
+import { utilityBotEngine } from "@cc-bot/utility";
+
+const botEngines = createBotEngineRegistry();
+botEngines.register(utilityBotEngine);
+
+const randomPicture = () => Math.floor(Math.random() * 20) + 1;
+
+export type BotParticipant = {
+	player: LobbyPlayer;
+	implementation: BotImplementation;
+};
 
 export const getBots = async (database: DatabaseConnection, count: number) => {
-	const output: { player: LobbyPlayer; personality: BotPersonality }[] = [];
-
-	const bots = await database.prisma.bots.findMany({
+	const dbRows = await database.prisma.bots.findMany({
 		take: count,
 		orderBy: {
 			games_played: "asc",
 		},
 	});
 
-	for (const { id, nickname, ambition, composure, vision } of bots) {
-		// get a random picture from one to 20 - temporary
-		const picture = Math.floor(Math.random() * 20) + 1;
-
-		const player = {
-			id: "bot-" + id,
-			name: `[BOT] ${nickname}`,
-			profile: {
-				title: null,
-				picture,
+	const dbBots: BotParticipant[] = dbRows.map(
+		({ id, nickname, engine, meta }) => ({
+			player: {
+				id: "bot-" + id,
+				name: `[BOT] ${nickname}`,
+				profile: {
+					title: null,
+					picture: randomPicture(),
+				},
+				type: "bot" as const,
 			},
-			type: "bot" as const,
-		};
+			implementation: botEngines.build(engine, meta),
+		})
+	);
 
-		await database.bot.addGamePlayed(id);
+	await Promise.all(dbRows.map(({ id }) => database.bot.addGamePlayed(id)));
 
-		output.push({
-			player,
-			personality: {
-				ambition: ambition as BotPersonalityValue,
-				composure: composure as BotPersonalityValue,
-				vision: vision as BotPersonalityValue,
-			},
-		});
-	}
-
-	return output;
+	return dbBots;
 };

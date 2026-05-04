@@ -4,7 +4,7 @@ import { cpus } from "os";
 import { join } from "path";
 import { v4 as uuid } from "uuid";
 
-import { BotPersonality, BotPersonalityValue } from "@cc-server/data";
+import { createUtilityBot, Personality, PersonalityLevel } from "@cc-bot/utility";
 
 import { runGame, BotUnderTest } from "./runGame";
 
@@ -22,11 +22,10 @@ const dataDir = join(__dirname, "..", "data");
 const debugLogPath = (workerId: string | number) =>
 	join(dataDir, `${RUN_ID}-w${workerId}-debug.jsonl`);
 
-// Match production: multiples of 20 in [20, 200].
+// Match production: each trait is "low" or "high".
 // See modules/@cc-server/data/src/bot/_setup.ts
-const makePersonality = (): BotPersonality => {
-	const value = (): BotPersonalityValue =>
-		((Math.floor(Math.random() * 10) + 1) * 20) as BotPersonalityValue;
+const makePersonality = (): Personality => {
+	const value = (): PersonalityLevel => (Math.random() < 0.5 ? "low" : "high");
 
 	return {
 		ambition: value(),
@@ -37,10 +36,12 @@ const makePersonality = (): BotPersonality => {
 
 const makeBot = (index: number): BotUnderTest => {
 	const id = uuid();
+	const personality = makePersonality();
 	return {
 		id,
 		name: `Bot${index}-${id.slice(0, 6)}`,
-		personality: makePersonality(),
+		personality,
+		implementation: createUtilityBot(personality),
 	};
 };
 

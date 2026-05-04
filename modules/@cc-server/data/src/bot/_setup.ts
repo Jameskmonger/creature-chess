@@ -1,57 +1,54 @@
 // tslint:disable: no-console
 import { PrismaClient } from "@prisma/client";
 
-import { BotPersonality, BotPersonalityValue } from "./databaseBot";
-
-const HIGH: BotPersonalityValue = 180;
-const LOW: BotPersonalityValue = 20;
+type Level = "low" | "high";
 
 type BotArchetype = {
 	nickname: string;
-	archetype: string;
-	personality: BotPersonality;
+	engine: string;
+	meta: { ambition: Level; composure: Level; vision: Level };
 };
 
 const BOT_ARCHETYPES: BotArchetype[] = [
 	{
 		nickname: "Fox",
-		archetype: "Mastermind",
-		personality: { ambition: HIGH, composure: HIGH, vision: HIGH },
+		engine: "utility",
+		meta: { ambition: "high", composure: "high", vision: "high" },
 	},
 	{
 		nickname: "Conan",
-		archetype: "Brawler",
-		personality: { ambition: HIGH, composure: HIGH, vision: LOW },
+		engine: "utility",
+		meta: { ambition: "high", composure: "high", vision: "low" },
 	},
 	{
 		nickname: "C.J.",
-		archetype: "Speculator",
-		personality: { ambition: HIGH, composure: LOW, vision: HIGH },
+		engine: "utility",
+		meta: { ambition: "high", composure: "low", vision: "high" },
 	},
 	{
 		nickname: "Aggie",
-		archetype: "Gambler",
-		personality: { ambition: HIGH, composure: LOW, vision: LOW },
+		engine: "utility",
+		meta: { ambition: "high", composure: "low", vision: "low" },
 	},
 	{
 		nickname: "Hazuki",
-		archetype: "Sage",
-		personality: { ambition: LOW, composure: HIGH, vision: HIGH },
+		engine: "utility",
+		meta: { ambition: "low", composure: "high", vision: "high" },
 	},
 	{
 		nickname: "Ghost",
-		archetype: "Hermit",
-		personality: { ambition: LOW, composure: HIGH, vision: LOW },
+		engine: "utility",
+		meta: { ambition: "low", composure: "high", vision: "low" },
 	},
 	{
 		nickname: "Knuckle",
-		archetype: "Survivor",
-		personality: { ambition: LOW, composure: LOW, vision: HIGH },
+		engine: "utility",
+		meta: { ambition: "low", composure: "low", vision: "high" },
 	},
 	{
 		nickname: "Zero",
-		archetype: "Bottom-Barrel",
-		personality: { ambition: LOW, composure: LOW, vision: LOW },
+		engine: "utility",
+		meta: { ambition: "low", composure: "low", vision: "low" },
 	},
 ];
 
@@ -62,15 +59,12 @@ export const setupBotDatabase = async (
 	const shouldCreateBots = botCount < BOT_ARCHETYPES.length;
 
 	if (shouldCreateBots) {
-		for (const { nickname, archetype, personality } of BOT_ARCHETYPES) {
+		for (const { nickname, engine, meta } of BOT_ARCHETYPES) {
 			await client.bots.create({
-				data: {
-					nickname,
-					...personality,
-				},
+				data: { nickname, engine, meta },
 			});
 
-			console.log(` - Created bot '${nickname}' (${archetype})`);
+			console.log(` - Created bot '${nickname}' with engine '${engine}' and meta ${JSON.stringify(meta)}`);
 		}
 	}
 

@@ -6,8 +6,7 @@ import { PlayerStatus } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 
-import { setupBotLogic } from "@cc-server/bot";
-import { BotPersonality } from "@cc-server/data";
+import { BotImplementation, setupBotLogic } from "@cc-server/bot";
 
 import {
 	activeBattles,
@@ -35,7 +34,7 @@ export type PlayerGameParticipant = {
 
 export type BotGameParticipant = {
 	player: LobbyPlayer;
-	personality: BotPersonality;
+	implementation: BotImplementation;
 };
 
 type Participants = {
@@ -171,7 +170,7 @@ export class Game {
 	private registerBot(player: BotGameParticipant) {
 		const {
 			player: { id, name, profile },
-			personality,
+			implementation,
 		} = player;
 
 		// TODO (James) id is a string but we need a number to preserve old Faunadb id type, convert in future
@@ -187,7 +186,7 @@ export class Game {
 
 		this.initialisePlayer(entity);
 
-		setupBotLogic(entity, personality);
+		setupBotLogic(entity, implementation);
 
 		this.members.push({
 			type: "BOT",

@@ -8,6 +8,16 @@
 	"license": "ISC",
 	"main": "./dist/index.js",
 	"types": "./index.ts",
+	"exports": {
+		".": {
+			"types": "./index.ts",
+			"default": "./dist/index.js"
+		},
+		"./internal": {
+			"types": "./internal.ts",
+			"default": "./dist/internal.js"
+		}
+	},
 	"publishConfig": {
 		"access": "public"
 	},
@@ -25,10 +35,10 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"@cc-server/data": "workspace:*",
+		"@creature-chess/board": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",
-		"@shoki/engine": "workspace:*",
+		"@creature-chess/utils": "workspace:*",
 		"delay": "^4.4.1"
 	},
 	"peerDependencies": {
