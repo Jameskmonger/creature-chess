@@ -25,10 +25,10 @@
 	"dependencies": {
 		"@cc-bot/utility": "workspace:*",
 		"@cc-server/bot": "workspace:*",
-		"@cc-server/data": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/networking": "workspace:*",
+		"@shoki/random": "workspace:*",
 		"@types/lodash": "^4.14.178",
 		"@types/uuid": "^8.3.3",
 		"delay": "^4.4.1",

@@ -1603,17 +1603,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cc-server/data@workspace:*, @cc-server/data@workspace:modules/@cc-server/data":
-  version: 0.0.0-use.local
-  resolution: "@cc-server/data@workspace:modules/@cc-server/data"
-  dependencies:
-    "@creature-chess/models": "workspace:*"
-    "@prisma/client": "npm:^4.11.0"
-    prisma: "npm:^4.11.0"
-    winston: "npm:^3.3.3"
-  languageName: unknown
-  linkType: soft
-
 "@colors/colors@npm:1.5.0":
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
@@ -1634,10 +1623,10 @@ __metadata:
   dependencies:
     "@cc-bot/utility": "workspace:*"
     "@cc-server/bot": "workspace:*"
-    "@cc-server/data": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
+    "@shoki/random": "workspace:*"
     "@types/lodash": "npm:^4.14.178"
     "@types/uuid": "npm:^8.3.3"
     delay: "npm:^4.4.1"
@@ -1657,7 +1646,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess-app/server-info@workspace:apps/server-info"
   dependencies:
-    "@cc-server/data": "workspace:*"
     "@creature-chess/models": "workspace:*"
     express: "npm:^4.17.2"
     express-winston: "npm:^4.2.0"
@@ -2764,34 +2752,6 @@ __metadata:
     webpack-plugin-serve:
       optional: true
   checksum: 10/ee7eff63ef930c8ec37b341d12f180598a5173938a5b8d1d7c53306eab10b3f3f23adcba4824e5a93ddcd0cf185a90baa0b6f483f27a320dd86ad61941940eb6
-  languageName: node
-  linkType: hard
-
-"@prisma/client@npm:^4.11.0":
-  version: 4.16.2
-  resolution: "@prisma/client@npm:4.16.2"
-  dependencies:
-    "@prisma/engines-version": "npm:4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81"
-  peerDependencies:
-    prisma: "*"
-  peerDependenciesMeta:
-    prisma:
-      optional: true
-  checksum: 10/18d8dfc2fbe3b13be8ec4049aafde135e908b06f3b739e142ffb93d78a0c04bb52b38062dc48881db7a9ef44c9b67ef2ad0ec013e0d4f01904a237f631964c62
-  languageName: node
-  linkType: hard
-
-"@prisma/engines-version@npm:4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81":
-  version: 4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81
-  resolution: "@prisma/engines-version@npm:4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81"
-  checksum: 10/aaa11d1ec9b86481a080c5802ef2a716bf14d32adab6675c16892d96ee92d09abab7c46590f6b6706eb3df520ab16502fd1ec1dae9bfae4da552dbd760a22875
-  languageName: node
-  linkType: hard
-
-"@prisma/engines@npm:4.16.2":
-  version: 4.16.2
-  resolution: "@prisma/engines@npm:4.16.2"
-  checksum: 10/3ce9176c44d7516e7c324e96e2225a5adf4cee610e740f51199c608dce48ba6ca0160d5ff4a65354c45baedbac3279aec328990b7a42bccfcf0d89ab23af6a7a
   languageName: node
   linkType: hard
 
@@ -14004,18 +13964,6 @@ __metadata:
     opusscript:
       optional: true
   checksum: 10/a4e7e3cbb0b818e58926091e4c41a7032b16ff13beed052036e06915db8ed8bf6de67aabb98c2bcf7729df68eee84ae7f9970ed1efb49f805f6c5a02884e563d
-  languageName: node
-  linkType: hard
-
-"prisma@npm:^4.11.0":
-  version: 4.16.2
-  resolution: "prisma@npm:4.16.2"
-  dependencies:
-    "@prisma/engines": "npm:4.16.2"
-  bin:
-    prisma: build/index.js
-    prisma2: build/index.js
-  checksum: 10/8eefe4d21ca86357dd76dc308da94f7a4b6b17b3e54a10e2a0a73304f0026d7642a1dfaa8018723e3fbf4fa7490d40d518c9581252af745ac1299e1be9afb360
   languageName: node
   linkType: hard
 

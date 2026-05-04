@@ -23,7 +23,6 @@ const debugLogPath = (workerId: string | number) =>
 	join(dataDir, `${RUN_ID}-w${workerId}-debug.jsonl`);
 
 // Match production: each trait is "low" or "high".
-// See modules/@cc-server/data/src/bot/_setup.ts
 const makePersonality = (): Personality => {
 	const value = (): PersonalityLevel => (Math.random() < 0.5 ? "low" : "high");
 

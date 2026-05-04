@@ -2,9 +2,6 @@ networks:
   creature-chess:
     name: creature-chess
     internal: true
-  creature-chess-db:
-    name: creature-chess-db
-    external: true
   public: {}
 
 services:
@@ -25,7 +22,6 @@ services:
     image: local/server-base
     networks:
       - creature-chess
-      - creature-chess-db
     depends_on:
       nodejs-base:
         condition: service_completed_successfully
@@ -76,9 +72,9 @@ services:
     environment:
       - CREATURE_CHESS_APP_URL
       - API_INFO_URL
+      - INFO_API_INTERNAL_URL
       - CREATURE_CHESS_IMAGE_URL
       - NODE_ENV
-      - DATABASE_URL
       - NODE_APP_INSTANCE
       - METRICS_USERNAME
       - METRICS_PASSWORD
@@ -86,7 +82,6 @@ services:
       - "3000"
     networks:
       - creature-chess
-      - creature-chess-db
     restart: always
     depends_on:
       server-base:
@@ -103,12 +98,10 @@ services:
     environment:
       - CREATURE_CHESS_APP_URL
       - NODE_ENV
-      - DATABASE_URL
     ports:
       - "3000"
     networks:
       - creature-chess
-      - creature-chess-db
     restart: always
     depends_on:
       server-base:

@@ -3,8 +3,6 @@ import { Server } from "socket.io";
 
 import { GamemodeSettings } from "@creature-chess/models";
 
-import { createDatabaseConnection, DatabaseConnection } from "@cc-server/data";
-
 import {
 	activeBattles,
 	activeGames,
@@ -31,22 +29,13 @@ const MAX_PLAYERS = 8;
 const LOBBY_WAIT_TIME = 60;
 
 const startGame = async (
-	database: DatabaseConnection,
 	settings: GamemodeSettings,
 	players: PlayerGameParticipant[],
 	onFinish: () => void
 ) => {
 	const botsRequired = MAX_PLAYERS - players.length;
 
-	const bots = await getBots(database, botsRequired);
-
-	for (const {
-		player: { id, type },
-	} of players) {
-		if (type === "player") {
-			await database.user.addGamePlayed(id);
-		}
-	}
+	const bots = await getBots(botsRequired);
 
 	const game = new Game(
 		settings,
@@ -65,8 +54,6 @@ const startGame = async (
 
 export const startServer = async ({ io }: { io: Server }) => {
 	logger.info("Starting server...");
-	const database = await createDatabaseConnection(logger);
-	logger.info("Database connection created");
 
 	let lobbies: Lobby[] = [];
 	let games: Game[] = [];
@@ -119,7 +106,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 			onStart: async (settings, players) => {
 				lobbies = lobbies.filter((other) => other !== lobby);
 
-				const game = await startGame(database, settings, players, () => {
+				const game = await startGame(settings, players, () => {
 					games = games.filter((other) => other !== game);
 				});
 
@@ -134,5 +121,5 @@ export const startServer = async ({ io }: { io: Server }) => {
 		lobby.connect(socket);
 	};
 
-	onHandshakeSuccess({ io, database }, matchmaking);
+	onHandshakeSuccess({ io }, matchmaking);
 };
