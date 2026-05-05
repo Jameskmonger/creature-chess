@@ -8,13 +8,8 @@ import { OpponentProvider } from "./opponentProvider";
 const stubPlayer = (id: string, alive = true): Player =>
 	({
 		id,
-		select: (selector: (state: any) => any) =>
-			selector({
-				playerInfo: {
-					status: alive ? PlayerStatus.CONNECTED : PlayerStatus.DEAD,
-					health: alive ? 100 : 0,
-				},
-			}),
+		status: alive ? PlayerStatus.CONNECTED : PlayerStatus.DEAD,
+		alive,
 	}) as unknown as Player;
 
 const makeProvider = (ids: string[], seed = 1) => {

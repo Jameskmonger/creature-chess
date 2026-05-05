@@ -16,28 +16,18 @@ import {
 	PlayerPieceLocation,
 } from "@creature-chess/models";
 
-import { PlayerState } from "../entities/player/state";
-import { updateCardsCommand } from "../entities/player/state/cardShop";
-import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
-import {
-	getPlayerBelowPieceLimit,
-	getPlayerCards,
-	getPlayerMoney,
-} from "../entities/player/state/selectors";
+import { Player } from "../entities/player/player";
 import { definePlayerAction } from "./registry";
 
 const getCardDestination = (
-	state: PlayerState,
+	player: Player,
 	board: Board,
 	bench: Board
 ): PlayerPieceLocation | null => {
-	const belowPieceLimit = getPlayerBelowPieceLimit(
-		state.playerInfo.level,
-		board
-	);
-	const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
+	const inPreparingPhase =
+		player.gamemode.getRoundInfo().phase === GamePhase.PREPARING;
 
-	if (belowPieceLimit && inPreparingPhase) {
+	if (player.belowPieceLimit && inPreparingPhase) {
 		const boardSlot = getFirstEmptySlot(board);
 
 		if (boardSlot) {
@@ -96,31 +86,29 @@ export const buyCardDef = definePlayerAction({
 			board,
 			bench,
 		} = player;
-		const state = player.select((s) => s);
-		const cards = getPlayerCards(state);
-		const money = getPlayerMoney(state);
+		const cards = player.cards;
 		const card = cards[index];
 
 		if (!card) {
 			logger.warn("Player attempted to buy null/undefined card", {
 				actor: { playerId, name },
 			});
-			player.put(playerInfoCommands.updateMoneyCommand(money));
-			player.put(updateCardsCommand(cards));
+			player.setMoney(player.money);
+			player.setCards(cards);
 			return;
 		}
 
-		if (money < card.cost) {
+		if (player.money < card.cost) {
 			logger.warn("Not enough money to buy card", {
 				actor: { playerId, name },
 				details: { index },
 			});
-			player.put(playerInfoCommands.updateMoneyCommand(money));
-			player.put(updateCardsCommand(cards));
+			player.setMoney(player.money);
+			player.setCards(cards);
 			return;
 		}
 
-		const destination = getCardDestination(state, board, bench);
+		const destination = getCardDestination(player, board, bench);
 
 		if (destination === null) {
 			logger.warn(
@@ -150,7 +138,7 @@ export const buyCardDef = definePlayerAction({
 			});
 		}
 
-		player.put(playerInfoCommands.updateMoneyCommand(money - card.cost));
-		player.put(updateCardsCommand(remainingCards));
+		player.reduceMoney(card.cost);
+		player.setCards(remainingCards);
 	},
 });

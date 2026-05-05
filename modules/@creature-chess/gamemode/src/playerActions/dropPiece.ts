@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { unpackX } from "@creature-chess/board";
 
-import { getPlayerBelowPieceLimit } from "../entities/player/state/selectors";
 import {
 	findPiece,
 	isLocationLocked,
@@ -27,9 +26,11 @@ export const dropPieceDef = definePlayerAction({
 	schema: dropPieceSchema,
 	handler: (player, { from, pieceId, to }) => {
 		const { board, bench } = player;
-		const state = player.select((s) => s);
 
-		if (isLocationLocked(state, from) || isLocationLocked(state, to)) {
+		if (
+			isLocationLocked(player.boardLocked, from) ||
+			isLocationLocked(player.boardLocked, to)
+		) {
 			return;
 		}
 
@@ -44,11 +45,7 @@ export const dropPieceDef = definePlayerAction({
 		}
 
 		if (to.type === "board" && from.type !== "board") {
-			const belowPieceLimit = getPlayerBelowPieceLimit(
-				state.playerInfo.level,
-				board
-			);
-			if (!belowPieceLimit) {
+			if (!player.belowPieceLimit) {
 				return;
 			}
 		}

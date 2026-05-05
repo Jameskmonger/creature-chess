@@ -5,7 +5,6 @@ import {
 	dispatchTrustedPlayerAction,
 	PlayerActions,
 	PlayerListenerApi,
-	PlayerStateSelectors,
 } from "@creature-chess/gamemode";
 
 import {
@@ -74,9 +73,7 @@ export const runPreparingPhase = async (
 	let terminationReason: PhaseEndInfo["terminationReason"] = "budget";
 
 	while (actionsTaken < actionBudget) {
-		const state = api.getState();
-
-		if (PlayerStateSelectors.getPlayerHealth(state) <= 0) {
+		if (!api.player.alive) {
 			terminationReason = "dead";
 			break;
 		}
@@ -85,7 +82,7 @@ export const runPreparingPhase = async (
 			board,
 			bench,
 			pieceRegistry,
-			state,
+			state: api.getState(),
 			settings,
 			rng,
 		};

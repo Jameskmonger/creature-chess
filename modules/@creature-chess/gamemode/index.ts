@@ -5,7 +5,6 @@ export {
 	createPlayer,
 	type PlayerListenerApi,
 	type PlayerState,
-	PlayerStateSelectors,
 	playerReducers,
 	PlayerCommands,
 	PlayerEvents,
@@ -27,13 +26,6 @@ export {
 	quitGamePlayerAction,
 	spectatePlayerAction,
 } from "./src/playerActions";
-
-export {
-	getPlayerLevel,
-	getPlayerMoney,
-	getPlayerXp,
-	isPlayerAlive,
-} from "./src/entities/player/state/selectors";
 
 export { roundInfoReducer, RoundInfoCommands } from "./src/game/roundInfo";
 export * as GameEvents from "./src/game/events";

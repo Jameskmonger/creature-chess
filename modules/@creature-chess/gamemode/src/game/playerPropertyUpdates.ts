@@ -1,88 +1,68 @@
-import { PlayerStatus, PlayerBattle } from "@creature-chess/models";
-import { PlayerStreak } from "@creature-chess/models";
+import { PlayerBattle, PlayerStatus, PlayerStreak } from "@creature-chess/models";
 
-import { PlayerCommands, PlayerStateSelectors } from "../entities/player";
 import { Player } from "../entities/player/player";
+import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
+
+type PropertyEmitters = {
+	health?: (health: number) => void;
+	streak?: (streak: PlayerStreak) => void;
+	status?: (status: PlayerStatus) => void;
+	battle?: (battle: PlayerBattle | null) => void;
+	ready?: (ready: boolean) => void;
+};
 
 export const listenForPropertyUpdates = (
 	player: Player,
-	{
-		health: emitHealth,
-		streak: emitStreak,
-		status: emitStatus,
-		battle: emitBattle,
-		ready: emitReady,
-	}: {
-		health?: (health: number) => void;
-		streak?: (streak: PlayerStreak) => void;
-		status?: (status: PlayerStatus) => void;
-		battle?: (battle: PlayerBattle) => void;
-		ready?: (ready: boolean) => void;
-	}
+	{ health, streak, status, battle, ready }: PropertyEmitters
 ) => {
 	const unsubscribes: (() => void)[] = [];
 
-	if (emitHealth) {
-		emitHealth(player.select(PlayerStateSelectors.getPlayerHealth));
-
+	if (health) {
+		health(player.health);
 		unsubscribes.push(
 			player.addListener({
-				actionCreator: PlayerCommands.playerInfoCommands.updateHealthCommand,
-				effect: async ({ payload: health }) => {
-					emitHealth(health);
-				},
+				actionCreator: playerInfoCommands.updateHealthCommand,
+				effect: async ({ payload }) => health(payload),
 			})
 		);
 	}
 
-	if (emitStreak) {
-		emitStreak(player.select(PlayerStateSelectors.getPlayerStreak));
-
+	if (streak) {
+		streak(player.streak);
 		unsubscribes.push(
 			player.addListener({
-				actionCreator: PlayerCommands.playerInfoCommands.updateStreakCommand,
-				effect: async ({ payload: streak }) => {
-					emitStreak(streak);
-				},
+				actionCreator: playerInfoCommands.updateStreakCommand,
+				effect: async ({ payload }) => streak(payload),
 			})
 		);
 	}
 
-	if (emitStatus) {
-		emitStatus(player.select(PlayerStateSelectors.getPlayerStatus));
-
+	if (status) {
+		status(player.status);
 		unsubscribes.push(
 			player.addListener({
-				actionCreator: PlayerCommands.playerInfoCommands.updateStatusCommand,
-				effect: async ({ payload: status }) => {
-					emitStatus(status);
-				},
+				actionCreator: playerInfoCommands.updateStatusCommand,
+				effect: async ({ payload }) => status(payload),
 			})
 		);
 	}
 
-	if (emitBattle) {
-		emitBattle(player.select(PlayerStateSelectors.getPlayerBattle));
-
+	if (battle) {
+		battle(player.battle);
 		unsubscribes.push(
 			player.addListener({
-				actionCreator: PlayerCommands.playerInfoCommands.updateBattleCommand,
-				effect: async ({ payload: battle }) => {
-					emitBattle(battle);
-				},
+				actionCreator: playerInfoCommands.updateBattleCommand,
+				effect: async ({ payload }) => battle(payload),
 			})
 		);
 	}
 
-	if (emitReady) {
-		emitReady(player.select(PlayerStateSelectors.isPlayerReady));
-
+	if (ready) {
+		ready(player.ready);
 		unsubscribes.push(
 			player.addListener({
-				actionCreator: PlayerCommands.playerInfoCommands.updateReadyCommand,
-				effect: async ({ payload: ready }) => {
-					emitReady(ready);
-				},
+				actionCreator: playerInfoCommands.updateReadyCommand,
+				effect: async ({ payload }) => ready(payload),
 			})
 		);
 	}

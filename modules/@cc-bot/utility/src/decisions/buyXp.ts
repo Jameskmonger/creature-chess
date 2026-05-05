@@ -1,9 +1,6 @@
 import { Action } from "redux";
 
-import {
-	getXpToNextLevel,
-	PlayerStateSelectors,
-} from "@creature-chess/gamemode";
+import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { MAX_LEVEL } from "@creature-chess/models";
 
 import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
@@ -22,8 +19,8 @@ export const decideBuyXp = (
 	personality: Personality
 ): Action | null => {
 	const { state, settings } = ctx;
-	const level = PlayerStateSelectors.getPlayerLevel(state);
-	const money = PlayerStateSelectors.getPlayerMoney(state);
+	const level = state.playerInfo.level;
+	const money = state.playerInfo.money;
 
 	if (level >= MAX_LEVEL) {
 		return null;
@@ -37,7 +34,7 @@ export const decideBuyXp = (
 
 	const xpRemaining = Math.max(
 		1,
-		getXpToNextLevel(level) - PlayerStateSelectors.getPlayerXp(state)
+		getXpToNextLevel(level) - state.playerInfo.xp
 	);
 	// Closing out a level is always worth it — the extra board slot pays for itself.
 	if (settings.buyXpAmount >= xpRemaining) {

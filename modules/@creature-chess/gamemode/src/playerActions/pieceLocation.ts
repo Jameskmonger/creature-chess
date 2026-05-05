@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 import { Board, PackedPosition, unpackPosition, unpackX } from "@creature-chess/board";
-import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
-
-import { PlayerState } from "../entities/player/state";
+import { PlayerPieceLocation } from "@creature-chess/models";
 
 /**
  * Wire schema for {@link PlayerPieceLocation}. Validates the plain number
@@ -32,11 +30,6 @@ export const findPiece = (
 };
 
 export const isLocationLocked = (
-	state: PlayerState,
+	boardLocked: boolean,
 	location: PlayerPieceLocation
-) => {
-	if (location.type === "board") {
-		return state.roundInfo.phase !== GamePhase.PREPARING;
-	}
-	return false;
-};
+) => location.type === "board" && boardLocked;

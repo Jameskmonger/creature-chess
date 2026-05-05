@@ -2,7 +2,6 @@ import { Rng, pickRandom, shuffleInPlace } from "@shoki/random";
 
 import { PlayerStatus } from "@creature-chess/models";
 
-import { PlayerStateSelectors } from "../entities/player";
 import { Player } from "../entities/player/player";
 
 type Matchup = { homeId: string; awayId: string; awayIsClone: boolean };
@@ -150,9 +149,7 @@ export class OpponentProvider {
 			return [];
 		}
 		return this.players.filter(
-			(p) =>
-				p.select(PlayerStateSelectors.getPlayerStatus) !== PlayerStatus.QUIT &&
-				p.select(PlayerStateSelectors.isPlayerAlive)
+			(p) => p.status !== PlayerStatus.QUIT && p.alive
 		);
 	}
 

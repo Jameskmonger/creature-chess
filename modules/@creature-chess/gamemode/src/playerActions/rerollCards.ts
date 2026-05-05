@@ -1,9 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
-import { afterRerollCardsEvent } from "../entities/player/events";
-import { playerInfoCommands } from "../entities/player/state/commands";
-import { isPlayerAlive } from "../entities/player/state/selectors";
 import { definePlayerAction } from "./registry";
 
 export type RerollCardsPlayerAction = ReturnType<
@@ -16,23 +13,20 @@ export const rerollCardsDef = definePlayerAction({
 	schema: z.undefined(),
 	handler: (player) => {
 		const { logger, settings } = player;
-		const state = player.select((s) => s);
 
-		if (!isPlayerAlive(state)) {
+		if (!player.alive) {
 			logger.info("Attempted to reroll, but dead");
 			return;
 		}
 
-		const money = state.playerInfo.money;
-
-		if (money < settings.rerollCost) {
+		if (player.money < settings.rerollCost) {
 			logger.info(
-				`Attempted to reroll costing $${settings.rerollCost} but only had $${money}`
+				`Attempted to reroll costing $${settings.rerollCost} but only had $${player.money}`
 			);
 			return;
 		}
 
-		player.put(playerInfoCommands.updateMoneyCommand(money - settings.rerollCost));
-		player.put(afterRerollCardsEvent());
+		player.reduceMoney(settings.rerollCost);
+		player.emitRerollCards();
 	},
 });

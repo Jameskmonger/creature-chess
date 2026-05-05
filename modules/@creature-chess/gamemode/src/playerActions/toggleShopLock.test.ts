@@ -1,18 +1,17 @@
 import { createTestPlayer } from "../entities/player/testUtils";
-import { isPlayerShopLocked } from "../entities/player/state/selectors";
 import { dispatchIncomingPlayerAction } from "./index";
 import { toggleShopLockPlayerAction } from "./toggleShopLock";
 
 describe("toggleShopLockPlayerAction", () => {
 	test("toggles the shop lock state via the registry", () => {
 		const player = createTestPlayer();
-		expect(isPlayerShopLocked(player.select((s) => s))).toBe(false);
+		expect(player.shopLocked).toBe(false);
 
 		dispatchIncomingPlayerAction(player, toggleShopLockPlayerAction());
-		expect(isPlayerShopLocked(player.select((s) => s))).toBe(true);
+		expect(player.shopLocked).toBe(true);
 
 		dispatchIncomingPlayerAction(player, toggleShopLockPlayerAction());
-		expect(isPlayerShopLocked(player.select((s) => s))).toBe(false);
+		expect(player.shopLocked).toBe(false);
 	});
 
 	test("rejects payloads for void-payload actions", () => {
@@ -23,7 +22,7 @@ describe("toggleShopLockPlayerAction", () => {
 		});
 
 		expect(result.ok).toBe(false);
-		expect(isPlayerShopLocked(player.select((s) => s))).toBe(false);
+		expect(player.shopLocked).toBe(false);
 	});
 
 	test("rejects unknown action types", () => {

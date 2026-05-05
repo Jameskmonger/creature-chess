@@ -1,31 +1,8 @@
-import {
-	finishedBattle,
-	inProgressBattle,
-	PlayerStatus,
-	StreakType,
-} from "@creature-chess/models";
+import { finishedBattle, inProgressBattle, StreakType } from "@creature-chess/models";
 
-import {
-	afterRerollCardsEvent,
-	playerDeathEvent,
-} from "../../entities/player/events";
 import { drainPendingEvolutionChecks } from "../../entities/player/operations/evolution";
 import { fillBoard } from "../../entities/player/operations/fillBoard";
-import { addXp } from "../../entities/player/operations/xp";
 import { Player } from "../../entities/player/player";
-import {
-	playerInfoCommands,
-	updateShopLockCommand,
-} from "../../entities/player/state/commands";
-import {
-	getOpponentId,
-	getOpponentIsClone,
-	getPlayerHealth,
-	getPlayerMoney,
-	getPlayerStreak,
-	isPlayerAlive,
-	isPlayerShopLocked,
-} from "../../entities/player/state/selectors";
 import { Match } from "../match";
 
 /**
@@ -73,41 +50,34 @@ const getMoneyForMatch = (
 
 export const phaseRules: PhaseRules = {
 	onPreparingPhaseStart(player) {
-		if (!isPlayerAlive(player.select((s) => s))) {
+		if (!player.alive) {
 			return;
 		}
 
 		drainPendingEvolutionChecks(player);
 
-		const matchRewards = player.select((s) => s.playerInfo.matchRewards);
+		const matchRewards = player.matchRewards;
 
 		if (matchRewards) {
-			const currentMoney = getPlayerMoney(player.select((s) => s));
-			player.put(
-				playerInfoCommands.updateMoneyCommand(
-					currentMoney + matchRewards.rewardMoney.total
-				)
-			);
-			addXp(player, 1);
+			player.addMoney(matchRewards.rewardMoney.total);
+			player.addXp(1);
 		}
 
-		const locked = isPlayerShopLocked(player.select((s) => s));
-
-		if (!locked) {
-			player.put(afterRerollCardsEvent());
+		if (!player.shopLocked) {
+			player.emitRerollCards();
 		}
 
-		player.put(updateShopLockCommand(false));
+		player.setShopLocked(false);
 
 		if (matchRewards) {
-			player.put(playerInfoCommands.playerMatchRewardsEvent(null));
-			player.put(playerInfoCommands.updateOpponentCommand({ id: null }));
+			player.setMatchRewards(null);
+			player.setOpponent({ id: null });
 		}
 	},
 
 	onBeforeReadyPhaseStart(player) {
 		fillBoard(player);
-		player.put(playerInfoCommands.updateReadyCommand(false));
+		player.setReady(false);
 	},
 
 	onReadyPhaseStart(player, match) {
@@ -117,73 +87,48 @@ export const phaseRules: PhaseRules = {
 		const opponentId = isHomePlayer ? match.away.id : match.home.id;
 		const opponentIsClone = isHomePlayer ? match.awayIsClone : false;
 
-		player.put(
-			playerInfoCommands.updateOpponentCommand({
-				id: opponentId,
-				isClone: opponentIsClone,
-			})
-		);
-		player.put(
-			playerInfoCommands.updateBattleCommand(
-				inProgressBattle(opponentId, opponentIsClone ?? false)
-			)
-		);
+		player.setOpponent({ id: opponentId, isClone: opponentIsClone });
+		player.setBattle(inProgressBattle(opponentId, opponentIsClone));
 	},
 
 	onMatchSettled(player, { homeScore, awayScore, isHomePlayer }) {
 		player.match = null;
 
-		const opponentId = getOpponentId(player.select((s) => s));
-		const opponentIsClone = getOpponentIsClone(player.select((s) => s));
+		const opponentId = player.opponentId;
+		const opponentIsClone = player.opponentIsClone;
 
-		player.put(
-			playerInfoCommands.updateBattleCommand(
-				finishedBattle(
-					opponentId!,
-					opponentIsClone,
-					isHomePlayer,
-					homeScore,
-					awayScore
-				)
+		player.setBattle(
+			finishedBattle(
+				opponentId!,
+				opponentIsClone,
+				isHomePlayer,
+				homeScore,
+				awayScore
 			)
 		);
 
 		const win = isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
 
-		const existingStreak = getPlayerStreak(player.select((s) => s));
+		const existingStreak = player.streak;
 		const streakType = win ? StreakType.WIN : StreakType.LOSS;
 		const streakAmount =
 			streakType === existingStreak.type ? existingStreak.amount + 1 : 0;
-		player.put(
-			playerInfoCommands.updateStreakCommand({
-				type: streakType,
-				amount: streakAmount,
-			})
-		);
+		player.setStreak({ type: streakType, amount: streakAmount });
 
 		const enemyPiecesRemaining = isHomePlayer ? awayScore : homeScore;
 		const damage = enemyPiecesRemaining * player.settings.healthLostPerPiece;
 
-		const oldHealth = getPlayerHealth(player.select((s) => s));
-		const newHealth = Math.max(0, oldHealth - damage);
-		player.put(playerInfoCommands.updateHealthCommand(newHealth));
-
-		const justDied = newHealth === 0 && oldHealth !== 0;
+		const justDied = player.reduceHealth(damage);
 		if (justDied) {
-			player.put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
-			player.put(playerDeathEvent());
+			player.eliminate();
 		}
 
-		const currentMoney = getPlayerMoney(player.select((s) => s));
-		const streak = getPlayerStreak(player.select((s) => s));
-		const rewardMoney = getMoneyForMatch(currentMoney, streak.amount, win);
+		const rewardMoney = getMoneyForMatch(player.money, player.streak.amount, win);
 
-		player.put(
-			playerInfoCommands.playerMatchRewardsEvent({
-				damage,
-				justDied,
-				rewardMoney,
-			})
-		);
+		player.setMatchRewards({
+			damage,
+			justDied,
+			rewardMoney,
+		});
 	},
 };

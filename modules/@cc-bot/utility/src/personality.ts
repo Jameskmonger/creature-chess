@@ -1,4 +1,4 @@
-import { PlayerState, PlayerStateSelectors } from "@creature-chess/gamemode";
+import { PlayerState } from "@creature-chess/gamemode";
 
 export type PersonalityLevel = "low" | "high";
 
@@ -15,7 +15,7 @@ export const isInPanicMode = (
 	personality: Personality
 ): boolean =>
 	personality.composure === "low" &&
-	PlayerStateSelectors.getPlayerHealth(state) <= PANIC_HP_THRESHOLD;
+	state.playerInfo.health <= PANIC_HP_THRESHOLD;
 
 /** Panic mode promotes any ambition to "high". */
 export const effectiveAmbition = (

@@ -1,6 +1,5 @@
 import { Action } from "redux";
 
-import { PlayerStateSelectors } from "@creature-chess/gamemode";
 import { getDefinitionById, PieceModel } from "@creature-chess/models";
 
 import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
@@ -14,7 +13,7 @@ export const decideSellPiece = (
 ): Action | null => {
 	const { board, bench, pieceRegistry, state, settings } = ctx;
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
-	const level = PlayerStateSelectors.getPlayerLevel(state);
+	const level = state.playerInfo.level;
 	const maxPieces = level + settings.benchSize;
 
 	// Only sell to free room when board+bench is full.

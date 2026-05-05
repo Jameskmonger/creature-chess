@@ -1,23 +1,11 @@
 import { packPosition } from "@creature-chess/board";
-import {
-	GamePhase,
-	PlayerStatus,
-	StreakType,
-} from "@creature-chess/models";
+import { GamePhase, PlayerStatus, StreakType } from "@creature-chess/models";
 
-import { Player } from "../../entities/player/player";
-import {
-	getOpponentId,
-	getPlayerHealth,
-	getPlayerStreak,
-	getPlayerStatus,
-	getPlayerMoney,
-} from "../../entities/player/state/selectors";
-import { phaseRules } from ".";
-import { playerInfoCommands } from "../../entities/player/state/commands";
 import { drainPendingEvolutionChecks } from "../../entities/player/operations/evolution";
+import { Player } from "../../entities/player/player";
 import { createTestPlayer } from "../../entities/player/testUtils";
 import { gamePhaseStartedEvent } from "../events";
+import { phaseRules } from ".";
 
 const lockBoard = (player: Player) => {
 	player.put(
@@ -54,7 +42,6 @@ describe("PhaseRules — evolution invariant", () => {
 		player.addBenchPiece({ pieceId: "b", position: { x: 1 } });
 		player.addBenchPiece({ pieceId: "c", position: { x: 2 } });
 
-		// the 3rd add triggered evolution; the bench now has 1 piece at stage+1
 		const benchPieces = player.bench.getAllPieces();
 		expect(benchPieces).toHaveLength(1);
 
@@ -76,11 +63,9 @@ describe("PhaseRules — evolution invariant", () => {
 		player.addBenchPiece({ pieceId: "b", position: { x: 1 } });
 		player.addBenchPiece({ pieceId: "c", position: { x: 2 } });
 
-		// while locked, no evolution happens
 		expect(player.bench.getAllPieces()).toHaveLength(3);
 		expect(player.pendingEvolutionChecks.has(`${definitionId}:0`)).toBe(true);
 
-		// unlock and drain (what onPreparingPhaseStart does)
 		unlockBoard(player);
 		drainPendingEvolutionChecks(player);
 
@@ -97,12 +82,10 @@ describe("PhaseRules — evolution invariant", () => {
 			pieceRegistry.registerPiece(makePiece(pid, 0))
 		);
 
-		// 2 on board, 1 on bench
 		player.addBoardPiece({ pieceId: "a", position: packPosition(0, 0) });
 		player.addBoardPiece({ pieceId: "b", position: packPosition(1, 0) });
 		player.addBenchPiece({ pieceId: "c", position: { x: 0 } });
 
-		// the 3rd add (bench) triggered evolution; should evolve onto the board
 		expect(player.board.getAllPieces()).toHaveLength(1);
 		expect(player.bench.getAllPieces()).toHaveLength(0);
 
@@ -116,7 +99,7 @@ describe("PhaseRules — evolution invariant", () => {
 describe("PhaseRules — onMatchSettled", () => {
 	test("home player loss: takes damage equal to enemy pieces remaining * healthLostPerPiece", () => {
 		const player = createTestPlayer();
-		const startingHealth = getPlayerHealth(player.select((s) => s));
+		const startingHealth = player.health;
 
 		phaseRules.onMatchSettled(player, {
 			homeScore: 0,
@@ -125,12 +108,12 @@ describe("PhaseRules — onMatchSettled", () => {
 		});
 
 		const expected = startingHealth - 4 * player.settings.healthLostPerPiece;
-		expect(getPlayerHealth(player.select((s) => s))).toBe(expected);
+		expect(player.health).toBe(expected);
 	});
 
 	test("away player win: home took damage but this player did not", () => {
 		const player = createTestPlayer();
-		const startingHealth = getPlayerHealth(player.select((s) => s));
+		const startingHealth = player.health;
 
 		phaseRules.onMatchSettled(player, {
 			homeScore: 0,
@@ -138,14 +121,12 @@ describe("PhaseRules — onMatchSettled", () => {
 			isHomePlayer: false,
 		});
 
-		// no enemy pieces remained for this (away) player; home took damage instead
-		expect(getPlayerHealth(player.select((s) => s))).toBe(startingHealth);
+		expect(player.health).toBe(startingHealth);
 	});
 
 	test("damage that reduces health to zero marks the player dead", () => {
 		const player = createTestPlayer();
-		// drop health to 1 so a single enemy piece kills
-		player.put(playerInfoCommands.updateHealthCommand(1));
+		player.setHealth(1);
 
 		phaseRules.onMatchSettled(player, {
 			homeScore: 0,
@@ -153,8 +134,8 @@ describe("PhaseRules — onMatchSettled", () => {
 			isHomePlayer: true,
 		});
 
-		expect(getPlayerHealth(player.select((s) => s))).toBe(0);
-		expect(getPlayerStatus(player.select((s) => s))).toBe(PlayerStatus.DEAD);
+		expect(player.health).toBe(0);
+		expect(player.status).toBe(PlayerStatus.DEAD);
 	});
 
 	test("consecutive wins increment WIN streak; loss resets to zero with type=LOSS", () => {
@@ -171,9 +152,8 @@ describe("PhaseRules — onMatchSettled", () => {
 			isHomePlayer: true,
 		});
 
-		const streakAfterTwoWins = getPlayerStreak(player.select((s) => s));
-		expect(streakAfterTwoWins.type).toBe(StreakType.WIN);
-		expect(streakAfterTwoWins.amount).toBe(2);
+		expect(player.streak.type).toBe(StreakType.WIN);
+		expect(player.streak.amount).toBe(2);
 
 		phaseRules.onMatchSettled(player, {
 			homeScore: 0,
@@ -181,9 +161,8 @@ describe("PhaseRules — onMatchSettled", () => {
 			isHomePlayer: true,
 		});
 
-		const streakAfterLoss = getPlayerStreak(player.select((s) => s));
-		expect(streakAfterLoss.type).toBe(StreakType.LOSS);
-		expect(streakAfterLoss.amount).toBe(0);
+		expect(player.streak.type).toBe(StreakType.LOSS);
+		expect(player.streak.amount).toBe(0);
 	});
 });
 
@@ -192,43 +171,35 @@ describe("PhaseRules — onPreparingPhaseStart", () => {
 		const player = createTestPlayer();
 		unlockBoard(player);
 
-		// simulate post-match state
-		player.put(
-			playerInfoCommands.playerMatchRewardsEvent({
-				damage: 0,
-				justDied: false,
-				rewardMoney: {
-					total: 5,
-					base: 3,
-					winBonus: 1,
-					streakBonus: 0,
-					interest: 1,
-				},
-			})
-		);
-		player.put(
-			playerInfoCommands.updateOpponentCommand({
-				id: "opponent-id",
-				isClone: false,
-			})
-		);
-		const moneyBefore = getPlayerMoney(player.select((s) => s));
+		player.setMatchRewards({
+			damage: 0,
+			justDied: false,
+			rewardMoney: {
+				total: 5,
+				base: 3,
+				winBonus: 1,
+				streakBonus: 0,
+				interest: 1,
+			},
+		});
+		player.setOpponent({ id: "opponent-id", isClone: false });
+		const moneyBefore = player.money;
 
 		phaseRules.onPreparingPhaseStart(player);
 
-		expect(getPlayerMoney(player.select((s) => s))).toBe(moneyBefore + 5);
-		expect(getOpponentId(player.select((s) => s))).toBeNull();
-		expect(player.select((s) => s.playerInfo.matchRewards)).toBeNull();
+		expect(player.money).toBe(moneyBefore + 5);
+		expect(player.opponentId).toBeNull();
+		expect(player.matchRewards).toBeNull();
 	});
 
 	test("does nothing for a dead player", () => {
 		const player = createTestPlayer();
-		player.put(playerInfoCommands.updateHealthCommand(0));
-		player.put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
-		const moneyBefore = getPlayerMoney(player.select((s) => s));
+		player.setHealth(0);
+		player.setStatus(PlayerStatus.DEAD);
+		const moneyBefore = player.money;
 
 		phaseRules.onPreparingPhaseStart(player);
 
-		expect(getPlayerMoney(player.select((s) => s))).toBe(moneyBefore);
+		expect(player.money).toBe(moneyBefore);
 	});
 });

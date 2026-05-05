@@ -1,12 +1,34 @@
 import { Logger } from "winston";
 
 import { Board, PackedPosition, unpackX, unpackY } from "@creature-chess/board";
-import { GamemodeSettings } from "@creature-chess/models";
-import { PlayerProfile } from "@creature-chess/models";
+import {
+	Card,
+	GamePhase,
+	GamemodeSettings,
+	MAX_HEALTH,
+	PieceModel,
+	PlayerBattle,
+	PlayerProfile,
+	PlayerStatus,
+	PlayerStreak,
+	QuickChatOption,
+} from "@creature-chess/models";
 
 import type { Gamemode } from "../../game";
+import { GameEvent, GameEventActionTypesArray } from "../../game/events";
 import type { Match } from "../../game/match";
 import { roundInfoReducer } from "../../game/roundInfo";
+import { getXpToNextLevel } from "../../player/xp";
+import {
+	PlayerEvent,
+	PlayerEventActionTypesArray,
+	afterRerollCardsEvent,
+	afterSellPieceEvent,
+	clientFinishMatchEvent,
+	playerDeathEvent,
+	playerFinishMatchEvent,
+	playerReceiveQuickChatEvent,
+} from "./events";
 import { setupPlayerListeners } from "./listeners/root";
 import { PlayerState, playerReducers } from "./state";
 import {
@@ -23,8 +45,14 @@ import {
 	swapBenchPiecesCommand,
 	swapBoardPiecesCommand,
 } from "./state/board";
-
-// ── Action types ──
+import { updateCardsCommand, updateShopLockCommand } from "./state/cardShop";
+import {
+	PlayerInfoUpdateCommand,
+	PlayerInfoUpdateCommandActionTypesArray,
+} from "./state/commands";
+import { PlayerMatchRewards } from "./state/playerInfo";
+import { playerInfoCommands } from "./state/playerInfo/reducer";
+import { setSpectatingIdCommand } from "./state/spectating";
 
 type Action = { type: string; payload?: any };
 
@@ -33,8 +61,6 @@ type ActionCreatorWithType = ((...args: any[]) => Action) & {
 	toString(): string;
 	match(action: any): boolean;
 };
-
-// ── Listener types ──
 
 export type PlayerListenerApi = {
 	getState: () => PlayerState;
@@ -64,7 +90,11 @@ export type CancellableTask = {
 	cancel(): void;
 };
 
-// ── Player type ──
+export type PlayerEventsApi = {
+	onInfoUpdate(fn: (action: PlayerInfoUpdateCommand) => void): () => void;
+	onPlayerEvent(fn: (action: PlayerEvent) => void): () => void;
+	onGameEvent(fn: (action: GameEvent) => void): () => void;
+};
 
 export type Player = {
 	readonly id: string;
@@ -91,13 +121,35 @@ export type Player = {
 	 */
 	readonly pendingEvolutionChecks: Set<string>;
 
-	// State management
+	/**
+	 * Internal escape hatches. Prefer the typed mutators / getters / events
+	 * below. These remain available for the gamemode's internal listener
+	 * plumbing and a small number of legacy call sites.
+	 */
 	select: <T>(selector: (state: PlayerState) => T) => T;
 	put: (action: Action) => void;
 	addListener: PlayerStartListening;
 	runEffect: (
 		effect: (api: PlayerListenerApi) => Promise<void>
 	) => CancellableTask;
+
+	readonly money: number;
+	readonly health: number;
+	readonly xp: number;
+	readonly level: number;
+	readonly streak: PlayerStreak;
+	readonly status: PlayerStatus;
+	readonly ready: boolean;
+	readonly shopLocked: boolean;
+	readonly opponentId: string | null;
+	readonly opponentIsClone: boolean;
+	readonly battle: PlayerBattle | null;
+	readonly cards: (Card | null)[];
+	readonly matchRewards: PlayerMatchRewards | null;
+	readonly alive: boolean;
+	readonly boardLocked: boolean;
+	readonly belowPieceLimit: boolean;
+	readonly spectatingId: string | null;
 
 	addBoardPiece: (payload: { pieceId: string; position: PackedPosition }) => void;
 	removeBoardPiece: (payload: { pieceId: string }) => void;
@@ -120,9 +172,47 @@ export type Player = {
 		to: { x: number };
 	}) => void;
 	clearBench: () => void;
-};
 
-// ── Internals ──
+	setMoney: (amount: number) => void;
+	addMoney: (amount: number) => void;
+	reduceMoney: (amount: number) => void;
+
+	setHealth: (amount: number) => void;
+	addHealth: (amount: number) => void;
+	/** Returns true if the reduction killed the player (newly reached zero). */
+	reduceHealth: (amount: number) => boolean;
+
+	setLevel: (payload: { level: number; xp: number }) => void;
+	addXp: (amount: number) => void;
+
+	setReady: (ready: boolean) => void;
+	setShopLocked: (locked: boolean) => void;
+	setOpponent: (payload: { id: string | null; isClone?: boolean }) => void;
+	setBattle: (battle: PlayerBattle | null) => void;
+	setStreak: (streak: PlayerStreak) => void;
+	setStatus: (status: PlayerStatus) => void;
+	setSpectatingId: (id: string | null) => void;
+	setMatchRewards: (rewards: PlayerMatchRewards | null) => void;
+	setCards: (cards: (Card | null)[]) => void;
+
+	/** Mark the player as eliminated. Sets status to DEAD and emits death event. */
+	eliminate: () => void;
+
+	emitRerollCards: () => void;
+	emitSellPiece: (piece: PieceModel) => void;
+	emitFinishMatch: (payload: {
+		homeScore: number;
+		awayScore: number;
+		isHomePlayer: boolean;
+	}) => void;
+	emitReceiveQuickChat: (payload: {
+		sendingPlayerId: string;
+		chatValue: QuickChatOption;
+	}) => void;
+	emitClientFinishMatch: () => void;
+
+	events: PlayerEventsApi;
+};
 
 type ReducersMapObject<TState> = {
 	[K in keyof TState]: (
@@ -213,7 +303,9 @@ function combineReducersPlain<TState>(reducers: ReducersMapObject<TState>) {
 	};
 }
 
-// ── Factory ──
+const PLAYER_EVENT_TYPES = new Set(PlayerEventActionTypesArray);
+const GAME_EVENT_TYPES = new Set(GameEventActionTypesArray);
+const INFO_UPDATE_TYPES = new Set(PlayerInfoUpdateCommandActionTypesArray);
 
 export const createPlayer = (
 	id: string,
@@ -397,6 +489,24 @@ export const createPlayer = (
 	const board = dependencies.boards.board;
 	const bench = dependencies.boards.bench;
 
+	const events: PlayerEventsApi = {
+		onInfoUpdate: (fn) =>
+			addListener({
+				predicate: (a) => INFO_UPDATE_TYPES.has(a.type),
+				effect: async (a) => fn(a as PlayerInfoUpdateCommand),
+			}),
+		onPlayerEvent: (fn) =>
+			addListener({
+				predicate: (a) => PLAYER_EVENT_TYPES.has(a.type),
+				effect: async (a) => fn(a as PlayerEvent),
+			}),
+		onGameEvent: (fn) =>
+			addListener({
+				predicate: (a) => GAME_EVENT_TYPES.has(a.type),
+				effect: async (a) => fn(a as GameEvent),
+			}),
+	};
+
 	const player: Player = {
 		id,
 		logger: dependencies.logger,
@@ -414,6 +524,58 @@ export const createPlayer = (
 		put,
 		addListener,
 		runEffect,
+
+		get money() {
+			return state.playerInfo.money;
+		},
+		get health() {
+			return state.playerInfo.health;
+		},
+		get xp() {
+			return state.playerInfo.xp;
+		},
+		get level() {
+			return state.playerInfo.level;
+		},
+		get streak() {
+			return state.playerInfo.streak;
+		},
+		get status() {
+			return state.playerInfo.status;
+		},
+		get ready() {
+			return state.playerInfo.ready;
+		},
+		get shopLocked() {
+			return state.cardShop.locked;
+		},
+		get opponentId() {
+			return state.playerInfo.opponentId;
+		},
+		get opponentIsClone() {
+			return state.playerInfo.opponentIsClone;
+		},
+		get battle() {
+			return state.playerInfo.battle;
+		},
+		get cards() {
+			return state.cardShop.cards;
+		},
+		get matchRewards() {
+			return state.playerInfo.matchRewards;
+		},
+		get alive() {
+			return state.playerInfo.health > 0;
+		},
+		get boardLocked() {
+			return state.roundInfo.phase !== GamePhase.PREPARING;
+		},
+		get belowPieceLimit() {
+			return board.pieceCount < state.playerInfo.level;
+		},
+		get spectatingId() {
+			return state.spectating.id;
+		},
 
 		addBoardPiece: (payload) => {
 			board.setPiece(
@@ -488,6 +650,79 @@ export const createPlayer = (
 			bench.clear();
 			put(clearBenchCommand());
 		},
+
+		setMoney: (amount) => put(playerInfoCommands.updateMoneyCommand(amount)),
+		addMoney: (amount) =>
+			put(playerInfoCommands.updateMoneyCommand(state.playerInfo.money + amount)),
+		reduceMoney: (amount) =>
+			put(playerInfoCommands.updateMoneyCommand(state.playerInfo.money - amount)),
+
+		setHealth: (amount) =>
+			put(playerInfoCommands.updateHealthCommand(amount)),
+		addHealth: (amount) =>
+			put(
+				playerInfoCommands.updateHealthCommand(
+					Math.min(MAX_HEALTH, state.playerInfo.health + amount)
+				)
+			),
+		reduceHealth: (amount) => {
+			const oldHealth = state.playerInfo.health;
+			const newHealth = Math.max(0, oldHealth - amount);
+			put(playerInfoCommands.updateHealthCommand(newHealth));
+			return newHealth === 0 && oldHealth !== 0;
+		},
+
+		setLevel: (payload) =>
+			put(playerInfoCommands.updateLevelCommand(payload)),
+		addXp: (amount) => {
+			let level = state.playerInfo.level;
+			let xp = state.playerInfo.xp;
+
+			for (let i = 0; i < amount; i++) {
+				const toNextLevel = getXpToNextLevel(level);
+				const newXp = xp + 1;
+
+				if (newXp === toNextLevel) {
+					xp = 0;
+					level++;
+				} else {
+					xp = newXp;
+				}
+			}
+
+			put(playerInfoCommands.updateLevelCommand({ level, xp }));
+		},
+
+		setReady: (ready) =>
+			put(playerInfoCommands.updateReadyCommand(ready)),
+		setShopLocked: (locked) => put(updateShopLockCommand(locked)),
+		setOpponent: (payload) =>
+			put(playerInfoCommands.updateOpponentCommand(payload)),
+		setBattle: (battle) =>
+			put(playerInfoCommands.updateBattleCommand(battle)),
+		setStreak: (streak) =>
+			put(playerInfoCommands.updateStreakCommand(streak)),
+		setStatus: (status) =>
+			put(playerInfoCommands.updateStatusCommand(status)),
+		setSpectatingId: (spectatingId) =>
+			put(setSpectatingIdCommand(spectatingId)),
+		setMatchRewards: (rewards) =>
+			put(playerInfoCommands.playerMatchRewardsEvent(rewards)),
+		setCards: (cards) => put(updateCardsCommand(cards)),
+
+		eliminate: () => {
+			put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
+			put(playerDeathEvent());
+		},
+
+		emitRerollCards: () => put(afterRerollCardsEvent()),
+		emitSellPiece: (piece) => put(afterSellPieceEvent({ piece })),
+		emitFinishMatch: (payload) => put(playerFinishMatchEvent(payload)),
+		emitReceiveQuickChat: (payload) =>
+			put(playerReceiveQuickChatEvent(payload)),
+		emitClientFinishMatch: () => put(clientFinishMatchEvent()),
+
+		events,
 	};
 
 	setupPlayerListeners(player.addListener);

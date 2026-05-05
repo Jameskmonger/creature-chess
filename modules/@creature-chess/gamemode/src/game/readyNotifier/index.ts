@@ -1,8 +1,4 @@
 import { Player } from "../../entities/player/player";
-import {
-	isPlayerAlive,
-	isPlayerReady,
-} from "../../entities/player/state/selectors";
 import { quitGamePlayerAction } from "../../playerActions";
 import { listenForPropertyUpdates } from "../playerPropertyUpdates";
 import { deferLimitedQueue, limitedQueue } from "./limitedQueue";
@@ -21,10 +17,8 @@ export const readyNotifier = (livingPlayers: Player[]) => {
 
 		const unsubscribeQuit = player.addListener({
 			actionCreator: quitGamePlayerAction,
-			effect: async (_action, api) => {
-				const state = api.getState();
-
-				if (isPlayerAlive(state) && !isPlayerReady(state)) {
+			effect: async () => {
+				if (player.alive && !player.ready) {
 					queue.add(player.id);
 				}
 			},

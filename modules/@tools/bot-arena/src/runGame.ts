@@ -1,11 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { Board } from "@creature-chess/board";
-import {
-	Gamemode,
-	createPlayer,
-	PlayerCommands,
-} from "@creature-chess/gamemode";
+import { Gamemode, createPlayer } from "@creature-chess/gamemode";
 import {
 	GamemodeSettings,
 	GamemodeSettingsPresets,
@@ -120,17 +116,8 @@ export const runGame = (
 				}
 			);
 
-			entity.put(
-				PlayerCommands.playerInfoCommands.updateMoneyCommand(
-					HARNESS_SETTINGS.startingMoney
-				)
-			);
-			entity.put(
-				PlayerCommands.playerInfoCommands.updateLevelCommand({
-					level: HARNESS_SETTINGS.startingLevel,
-					xp: 0,
-				})
-			);
+			entity.setMoney(HARNESS_SETTINGS.startingMoney);
+			entity.setLevel({ level: HARNESS_SETTINGS.startingLevel, xp: 0 });
 
 			setupBotLogic(entity, bot.implementation);
 

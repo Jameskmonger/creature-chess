@@ -7,7 +7,6 @@ import { useLocalPlayerId } from "~/auth/context";
 import { useBoardSubscription } from "~/components/board/useBoard";
 import { AppState } from "~/store";
 
-import { getPlayerLevel } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import { useGameBoards } from "../state";
@@ -55,8 +54,8 @@ export function PieceCount() {
 			(p) => pieceRegistry.getPieceById(p.id)?.ownerId === playerId
 		).length;
 
-	const level = useSelector<AppState, number>((state) =>
-		getPlayerLevel(state.game)
+	const level = useSelector<AppState, number>(
+		(state) => state.game.playerInfo.level
 	);
 
 	const inPreparingPhase = useSelector<AppState, boolean>(

@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
 
-import { getPlayerMoney } from "@creature-chess/gamemode";
 import { Card as CardModel } from "@creature-chess/models";
 
 import { useGameBoards } from "../board/state";
@@ -16,8 +15,8 @@ export function CardShop() {
 	const cards = useSelector<AppState, (CardModel | null)[]>(
 		(state) => state.game.cardShop.cards
 	);
-	const money = useSelector<AppState, number>((state) =>
-		getPlayerMoney(state.game)
+	const money = useSelector<AppState, number>(
+		(state) => state.game.playerInfo.money
 	);
 	const canUseShop = useSelector<AppState, boolean>(
 		(state) => state.game.playerInfo.health > 0

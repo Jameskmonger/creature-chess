@@ -27,9 +27,7 @@ export const setupMetricCollector = (entity: Player) => {
 
 	return entity.addListener({
 		predicate: (action) => TRACKED_ACTIONS.has(action.type),
-		effect: async (action, api) => {
-			const s = api.getState();
-
+		effect: async (action) => {
 			metricCollector.recordAction(action, {
 				bench: {
 					piecePositions: bench.reducePieces(
@@ -84,27 +82,27 @@ export const setupMetricCollector = (entity: Player) => {
 					),
 				},
 				cardShop: {
-					cards: s.cardShop.cards.map((card) =>
+					cards: entity.cards.map((card) =>
 						card === null
 							? null
 							: {
 									definitionId: card.definitionId,
 								}
 					),
-					locked: s.cardShop.locked,
+					locked: entity.shopLocked,
 				},
 				playerInfo: {
-					health: s.playerInfo.health,
-					money: s.playerInfo.money,
-					level: s.playerInfo.level,
-					xp: s.playerInfo.xp,
+					health: entity.health,
+					money: entity.money,
+					level: entity.level,
+					xp: entity.xp,
 					streak: {
-						amount: s.playerInfo.streak.amount,
-						type: s.playerInfo.streak.type,
+						amount: entity.streak.amount,
+						type: entity.streak.type,
 					},
 				},
 				roundInfo: {
-					round: s.roundInfo.round,
+					round: entity.gamemode.getRoundInfo().round,
 				},
 			});
 		},

@@ -1,7 +1,6 @@
 import {
 	dispatchIncomingPlayerAction,
 	Player,
-	PlayerEvents,
 } from "@creature-chess/gamemode";
 
 import { GameSocket } from "../socket";
@@ -24,7 +23,7 @@ export const setupIncomingNetworking = (socket: GameSocket, player: Player) => {
 	};
 
 	const onFinishMatch = () => {
-		player.put(PlayerEvents.clientFinishMatchEvent());
+		player.emitClientFinishMatch();
 	};
 
 	socket.on("sendPlayerActions", onSendPlayerActions);

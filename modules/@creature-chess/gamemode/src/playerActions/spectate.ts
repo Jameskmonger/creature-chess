@@ -1,8 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
-import { isPlayerAlive } from "../entities/player/state/selectors";
-import { setSpectatingIdCommand } from "../entities/player/state/spectating";
 import { definePlayerAction } from "./registry";
 
 const spectateSchema = z.object({
@@ -20,15 +18,15 @@ export const spectateDef = definePlayerAction({
 	schema: spectateSchema,
 	handler: (player, { playerId }) => {
 		if (playerId === null) {
-			player.put(setSpectatingIdCommand(null));
+			player.setSpectatingId(null);
 			return;
 		}
 
 		const other = player.gamemode.getPlayerById(playerId);
-		if (!other || !other.select(isPlayerAlive)) {
+		if (!other || !other.alive) {
 			return;
 		}
 
-		player.put(setSpectatingIdCommand(playerId));
+		player.setSpectatingId(playerId);
 	},
 });

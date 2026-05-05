@@ -12,11 +12,6 @@ import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
 
-import {
-	getPlayerLevel,
-	getPlayerMoney,
-	getPlayerXp,
-} from "@creature-chess/gamemode";
 import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { MAX_LEVEL } from "@creature-chess/models";
 
@@ -100,12 +95,14 @@ export function PlayerGameProfile() {
 
 	const playerId = useLocalPlayerId();
 
-	const level = useSelector<AppState, number>((state) =>
-		getPlayerLevel(state.game)
+	const level = useSelector<AppState, number>(
+		(state) => state.game.playerInfo.level
 	);
-	const xp = useSelector<AppState, number>((state) => getPlayerXp(state.game));
-	const money = useSelector<AppState, number>((state) =>
-		getPlayerMoney(state.game)
+	const xp = useSelector<AppState, number>(
+		(state) => state.game.playerInfo.xp
+	);
+	const money = useSelector<AppState, number>(
+		(state) => state.game.playerInfo.money
 	);
 	// todo reselect
 	const health = useSelector<AppState, number | null>((state) => {

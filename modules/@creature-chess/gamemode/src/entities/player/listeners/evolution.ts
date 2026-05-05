@@ -10,7 +10,6 @@ import {
 	addBenchPieceCommand,
 	addBoardPieceCommand,
 } from "../state/board";
-import { isPlayerBoardLocked } from "../state/selectors";
 
 export const setupEvolutionListener = (
 	startListening: PlayerStartListening
@@ -29,7 +28,7 @@ export const setupEvolutionListener = (
 				return;
 			}
 
-			if (isPlayerBoardLocked(api.getState())) {
+			if (api.player.boardLocked) {
 				queueEvolutionCheck(api.player, piece.definitionId, piece.stage);
 				return;
 			}

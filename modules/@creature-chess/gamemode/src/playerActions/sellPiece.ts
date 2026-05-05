@@ -3,8 +3,6 @@ import { z } from "zod";
 
 import { getDefinitionById, PIECES_TO_EVOLVE } from "@creature-chess/models";
 
-import { afterSellPieceEvent } from "../entities/player/events";
-import { playerInfoCommands } from "../entities/player/state/commands";
 import { getPiecesForStage } from "../game/evolution";
 import { definePlayerAction } from "./registry";
 
@@ -44,17 +42,12 @@ export const sellPieceDef = definePlayerAction({
 		}
 
 		const piecesUsed = getPiecesForStage(piece.stage, PIECES_TO_EVOLVE);
-		const pieceCost = definition.cost;
-		const currentMoney = player.select((s) => s.playerInfo.money);
-
-		player.put(
-			playerInfoCommands.updateMoneyCommand(currentMoney + pieceCost * piecesUsed)
-		);
+		player.addMoney(definition.cost * piecesUsed);
 
 		// todo gross, only remove from one
 		player.removeBoardPiece({ pieceId });
 		player.removeBenchPiece({ pieceId });
 
-		player.put(afterSellPieceEvent({ piece }));
+		player.emitSellPiece(piece);
 	},
 });

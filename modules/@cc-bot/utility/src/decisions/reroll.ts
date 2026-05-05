@@ -1,7 +1,5 @@
 import { Action } from "redux";
 
-import { PlayerStateSelectors } from "@creature-chess/gamemode";
-
 import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 import { collectAllPieces, completionProgress, sharesTrait } from "../cards";
@@ -18,13 +16,13 @@ export const decideReroll = (
 	personality: Personality
 ): Action | null => {
 	const { board, bench, pieceRegistry, state, settings } = ctx;
-	const money = PlayerStateSelectors.getPlayerMoney(state);
+	const money = state.playerInfo.money;
 
 	if (money < settings.rerollCost) {
 		return null;
 	}
 
-	const cards = PlayerStateSelectors.getPlayerCards(state);
+	const cards = state.cardShop.cards;
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
 
 	const shopHasWantedCard = cards.some(

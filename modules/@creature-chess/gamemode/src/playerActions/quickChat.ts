@@ -7,7 +7,6 @@ import {
 	ReadyQuickChatOptions,
 } from "@creature-chess/models";
 
-import { playerReceiveQuickChatEvent } from "../entities/player/events";
 import { definePlayerAction } from "./registry";
 
 const quickChatOptions = new Set<QuickChatOption>([
@@ -39,7 +38,7 @@ export const quickChatDef = definePlayerAction({
 
 		const game = player.gamemode;
 		const sender = game.getPlayerById(sendingPlayerId);
-		const opponentId = player.select((s) => s.playerInfo.opponentId);
+		const opponentId = player.opponentId;
 		if (!opponentId) {
 			return;
 		}
@@ -50,7 +49,7 @@ export const quickChatDef = definePlayerAction({
 		}
 
 		const event = { sendingPlayerId, chatValue };
-		opponent.put(playerReceiveQuickChatEvent(event));
-		sender.put(playerReceiveQuickChatEvent(event));
+		opponent.emitReceiveQuickChat(event);
+		sender.emitReceiveQuickChat(event);
 	},
 });

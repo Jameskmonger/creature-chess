@@ -1,5 +1,3 @@
-import { PlayerStateSelectors } from "@creature-chess/gamemode";
-
 import { BotImplementation, PreparingPhaseContext } from "@cc-server/bot";
 
 import { decideBuyCard } from "./decisions/buyCard";
@@ -51,10 +49,8 @@ export const createUtilityBot = (
 const mustKeepActing = (ctx: PreparingPhaseContext): boolean => {
 	const { board, bench, state } = ctx;
 
-	const level = PlayerStateSelectors.getPlayerLevel(state);
-
 	const totalPieces =
 		board.getAllPieces().length + bench.getAllPieces().length;
 
-	return totalPieces < level;
+	return totalPieces < state.playerInfo.level;
 };

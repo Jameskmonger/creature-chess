@@ -3,7 +3,6 @@ import delay from "delay";
 import {
 	GameEvents,
 	PlayerActions,
-	PlayerCommands,
 	Player,
 } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
@@ -27,7 +26,7 @@ export const playerNetworking = (
 	{ getRoundInfo, getPlayers }: Parameters,
 	settings: GamemodeSettings
 ) => {
-	entity.put(PlayerCommands.setSpectatingIdCommand(null));
+	entity.setSpectatingId(null);
 
 	const cleanups: (() => void)[] = [];
 

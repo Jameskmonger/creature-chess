@@ -7,7 +7,6 @@ import {
 	PlayerCommands,
 	GameEvents,
 	PlayerEvents,
-	PlayerState,
 	removeBenchPiecesCommand,
 	removeBoardPiecesCommand,
 } from "@creature-chess/gamemode";
@@ -137,11 +136,8 @@ export const setupPlayerBoard = (entity: Player, socket: GameSocket) => {
 	const task = entity.runEffect(async () => {
 		await delay(200);
 
-		const spectatingId = entity.select(
-			(state: PlayerState) => state.spectating.id
-		);
-		const target = spectatingId
-			? entity.gamemode.getPlayerById(spectatingId) || entity
+		const target = entity.spectatingId
+			? entity.gamemode.getPlayerById(entity.spectatingId) || entity
 			: entity;
 
 		startSpectating(target);
@@ -150,9 +146,8 @@ export const setupPlayerBoard = (entity: Player, socket: GameSocket) => {
 	const unsubSpectateChange = entity.addListener({
 		actionCreator: PlayerCommands.setSpectatingIdCommand,
 		effect: async (_action, api) => {
-			const spectatingId = api.getState().spectating.id;
-			const targetEntity = spectatingId
-				? api.player.gamemode.getPlayerById(spectatingId) || entity
+			const targetEntity = api.player.spectatingId
+				? api.player.gamemode.getPlayerById(api.player.spectatingId) || entity
 				: entity;
 
 			startSpectating(targetEntity);

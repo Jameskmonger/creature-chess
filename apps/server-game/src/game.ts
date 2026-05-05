@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-import { Gamemode, PlayerCommands, Player } from "@creature-chess/gamemode";
+import { Gamemode, Player } from "@creature-chess/gamemode";
 import { GameFinishEvent } from "@creature-chess/gamemode";
 import { PlayerStatus } from "@creature-chess/models";
 import { LobbyPlayer } from "@creature-chess/models";
@@ -100,11 +100,7 @@ export class Game {
 			return false;
 		}
 
-		return existing.select(
-			(state) =>
-				state.playerInfo.health > 0 &&
-				state.playerInfo.status === PlayerStatus.CONNECTED
-		);
+		return existing.alive && existing.status === PlayerStatus.CONNECTED;
 	}
 
 	public connect(socket: AuthenticatedSocket) {
@@ -198,17 +194,8 @@ export class Game {
 	private initialisePlayer(entity: Player) {
 		const settings = this.settings;
 
-		entity.put(
-			PlayerCommands.playerInfoCommands.updateMoneyCommand(
-				settings.startingMoney
-			)
-		);
-		entity.put(
-			PlayerCommands.playerInfoCommands.updateLevelCommand({
-				level: settings.startingLevel,
-				xp: 0,
-			})
-		);
+		entity.setMoney(settings.startingMoney);
+		entity.setLevel({ level: settings.startingLevel, xp: 0 });
 	}
 
 	private runPlayerNetworking(entity: Player, socket: GameSocket) {

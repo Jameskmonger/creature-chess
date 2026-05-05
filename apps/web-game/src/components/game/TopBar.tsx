@@ -7,8 +7,6 @@ import { useLocalPlayerId } from "~/auth/context";
 import { useSetting } from "~/settings";
 import { AppState } from "~/store";
 
-import { getPlayerLevel, getPlayerMoney } from "@creature-chess/gamemode";
-
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { LevelIcon } from "../ui/icon/LevelIcon";
 import { PlayerHealthbar } from "../ui/player";
@@ -88,11 +86,11 @@ export function TopBar() {
 	const round = useSelector<AppState, number | null>(
 		(state) => state.game.roundInfo.round
 	);
-	const money = useSelector<AppState, number>((state) =>
-		getPlayerMoney(state.game)
+	const money = useSelector<AppState, number>(
+		(state) => state.game.playerInfo.money
 	);
-	const level = useSelector<AppState, number>((state) =>
-		getPlayerLevel(state.game)
+	const level = useSelector<AppState, number>(
+		(state) => state.game.playerInfo.level
 	);
 
 	// todo reselect

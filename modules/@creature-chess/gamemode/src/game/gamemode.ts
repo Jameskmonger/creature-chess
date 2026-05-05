@@ -9,10 +9,6 @@ import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { Player } from "../entities/player/player";
-import {
-	getPlayerStatus,
-	isPlayerAlive,
-} from "../entities/player/state/selectors";
 import { CardDeck } from "./cardDeck";
 import {
 	gameFinishEvent,
@@ -147,8 +143,7 @@ export class Gamemode {
 
 	public getPlayerById = (playerId: string) =>
 		this.players.find(
-			(p) =>
-				p.select(getPlayerStatus) !== PlayerStatus.QUIT && p.id === playerId
+			(p) => p.status !== PlayerStatus.QUIT && p.id === playerId
 		) || null;
 
 	public onFinish(fn: (event: GameFinishEvent["payload"]) => void) {
@@ -156,7 +151,7 @@ export class Gamemode {
 	}
 
 	public getConnectedPlayers = () =>
-		this.players.filter((p) => p.select(getPlayerStatus) !== PlayerStatus.QUIT);
+		this.players.filter((p) => p.status !== PlayerStatus.QUIT);
 
 	public getRoundInfo = () => this.roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
@@ -164,9 +159,5 @@ export class Gamemode {
 	private getAllPlayers = () => this.players;
 
 	private getLivingPlayers = () =>
-		this.players.filter(
-			(p) =>
-				p.select(getPlayerStatus) !== PlayerStatus.QUIT &&
-				p.select(isPlayerAlive)
-		);
+		this.players.filter((p) => p.status !== PlayerStatus.QUIT && p.alive);
 }

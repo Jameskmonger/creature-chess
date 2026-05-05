@@ -2,7 +2,6 @@ import { EventEmitter } from "events";
 
 import { PlayerStatus, PlayerListPlayer } from "@creature-chess/models";
 
-import { PlayerStateSelectors } from "../entities/player";
 import { Player } from "../entities/player/player";
 import { listenForPropertyUpdates } from "./playerPropertyUpdates";
 
@@ -103,19 +102,17 @@ export class PlayerList {
 	public getValue = (): PlayerListPlayer[] =>
 		this.players.map(({ id }) => {
 			const player = this.gamePlayers[id];
-
-			const streak = player.select(PlayerStateSelectors.getPlayerStreak);
 			return {
 				id: player.id,
 				name: player.name,
-				health: player.select(PlayerStateSelectors.getPlayerHealth),
-				ready: player.select(PlayerStateSelectors.isPlayerReady),
-				level: player.select(PlayerStateSelectors.getPlayerLevel),
-				money: player.select(PlayerStateSelectors.getPlayerMoney),
-				streakType: streak.type,
-				streakAmount: streak.amount,
-				battle: player.select(PlayerStateSelectors.getPlayerBattle),
-				status: player.select(PlayerStateSelectors.getPlayerStatus),
+				health: player.health,
+				ready: player.ready,
+				level: player.level,
+				money: player.money,
+				streakType: player.streak.type,
+				streakAmount: player.streak.amount,
+				battle: player.battle,
+				status: player.status,
 				profile: player.profile,
 			};
 		});
@@ -125,10 +122,8 @@ export class PlayerList {
 			id: player.id,
 			position: null,
 			sortValues: {
-				health: player.select(PlayerStateSelectors.getPlayerHealth),
-				hasQuit:
-					player.select(PlayerStateSelectors.getPlayerStatus) ===
-					PlayerStatus.QUIT,
+				health: player.health,
+				hasQuit: player.status === PlayerStatus.QUIT,
 			},
 		});
 

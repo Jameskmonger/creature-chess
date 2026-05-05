@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { PlayerStatus } from "@creature-chess/models";
 
-import { playerInfoCommands } from "../entities/player/state/commands";
 import { definePlayerAction } from "./registry";
 
 export type QuitGamePlayerAction = ReturnType<typeof quitGamePlayerAction>;
@@ -16,6 +15,6 @@ export const quitGameDef = definePlayerAction({
 		// Server-side observers (socket teardown, readyNotifier) listen for the
 		// action via Player listeners; dispatch it for them.
 		player.put(quitGamePlayerAction());
-		player.put(playerInfoCommands.updateStatusCommand(PlayerStatus.QUIT));
+		player.setStatus(PlayerStatus.QUIT);
 	},
 });

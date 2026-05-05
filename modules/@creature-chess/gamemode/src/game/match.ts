@@ -14,7 +14,6 @@ import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import { playerFinishMatchEvent } from "../entities/player/events";
 import { Player } from "../entities/player/player";
 
 export class Match {
@@ -124,13 +123,9 @@ export class Match {
 		const awayScore = surviving.away.length;
 
 		// Notify spectators that the match has finished.
-		this.home.put(
-			playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true })
-		);
+		this.home.emitFinishMatch({ homeScore, awayScore, isHomePlayer: true });
 		if (!this.awayIsClone) {
-			this.away.put(
-				playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false })
-			);
+			this.away.emitFinishMatch({ homeScore, awayScore, isHomePlayer: false });
 		}
 
 		return { homeScore, awayScore };

@@ -30,11 +30,10 @@ export const swapPieceDef = definePlayerAction({
 		{ pieceAId, pieceALocation, pieceBId, pieceBLocation }
 	) => {
 		const { board, bench } = player;
-		const state = player.select((s) => s);
 
 		if (
-			isLocationLocked(state, pieceALocation) ||
-			isLocationLocked(state, pieceBLocation)
+			isLocationLocked(player.boardLocked, pieceALocation) ||
+			isLocationLocked(player.boardLocked, pieceBLocation)
 		) {
 			return;
 		}

@@ -1,10 +1,8 @@
-import { Board, getFirstEmptySlot, packPosition } from "@creature-chess/board";
-import { getDefinitionById, PlayerPieceLocation } from "@creature-chess/models";
+import { Board, getFirstEmptySlot } from "@creature-chess/board";
+import { getDefinitionById } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import { dropPiecePlayerAction } from "../../../playerActions";
 import { Player } from "../player";
-import { isPlayerAlive, getPlayerBelowPieceLimit } from "../state/selectors";
 
 const getMostExpensiveBenchPiece = (bench: Board, pieces: PieceRegistry) => {
 	const benchPieces = bench
@@ -29,18 +27,12 @@ export const fillBoard = (player: Player): void => {
 	const { board, bench, gamemode } = player;
 	const { pieceRegistry } = gamemode;
 
-	if (!isPlayerAlive(player.select((s) => s))) {
+	if (!player.alive) {
 		return;
 	}
 
 	while (true) {
-		const state = player.select((s) => s);
-		const belowPieceLimit = getPlayerBelowPieceLimit(
-			state.playerInfo.level,
-			board
-		);
-
-		if (!belowPieceLimit) {
+		if (!player.belowPieceLimit) {
 			return;
 		}
 
@@ -56,28 +48,7 @@ export const fillBoard = (player: Player): void => {
 			return;
 		}
 
-		const benchPiecePosition = bench.getPiecePosition(benchPiece.id);
-
-		if (!benchPiecePosition) {
-			return;
-		}
-
-		const fromLocation: PlayerPieceLocation = {
-			type: "bench",
-			location: packPosition(benchPiecePosition[0], 0),
-		};
-
-		const toLocation: PlayerPieceLocation = {
-			type: "board",
-			location: destination,
-		};
-
-		player.put(
-			dropPiecePlayerAction({
-				pieceId: benchPiece.id,
-				from: fromLocation,
-				to: toLocation,
-			})
-		);
+		player.removeBenchPiece({ pieceId: benchPiece.id });
+		player.addBoardPiece({ pieceId: benchPiece.id, position: destination });
 	}
 };

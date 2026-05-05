@@ -1,7 +1,6 @@
 import { Action } from "redux";
 
 import { Board } from "@creature-chess/board";
-import { PlayerStateSelectors } from "@creature-chess/gamemode";
 import { getDefinitionById } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -12,7 +11,7 @@ export const nextPlacementAction = (
 	ctx: PreparingPhaseContext
 ): Action | null => {
 	const { board, bench, pieceRegistry, state } = ctx;
-	const level = PlayerStateSelectors.getPlayerLevel(state);
+	const level = state.playerInfo.level;
 
 	const benchPieces = bench.getAllPieces();
 	const boardPieces = board.getAllPieces();
