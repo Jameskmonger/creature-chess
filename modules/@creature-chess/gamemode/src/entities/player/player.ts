@@ -35,6 +35,11 @@ import {
 	playerReceiveQuickChatEvent,
 } from "./events";
 import { setupPlayerListeners } from "./listeners/root";
+import {
+	evolvePieces,
+	pieceCanEvolve,
+	queueEvolutionCheck,
+} from "./operations/evolution";
 import { PlayerState, playerReducers } from "./state";
 import {
 	addBenchPieceCommand,
@@ -669,6 +674,7 @@ export const createPlayer = (
 				unpackY(payload.position)
 			);
 			put(addBoardPieceCommand(payload));
+			checkEvolution(payload.pieceId);
 		},
 		removeBoardPiece: (payload) => {
 			board.removePiece(payload.pieceId);
@@ -708,6 +714,7 @@ export const createPlayer = (
 		addBenchPiece: (payload) => {
 			bench.setPiece(payload.pieceId, payload.position.x, 0);
 			put(addBenchPieceCommand(payload));
+			checkEvolution(payload.pieceId);
 		},
 		removeBenchPiece: (payload) => {
 			bench.removePiece(payload.pieceId);
@@ -808,6 +815,21 @@ export const createPlayer = (
 		emitClientFinishMatch: () => put(clientFinishMatchEvent()),
 
 		events,
+	};
+
+	const checkEvolution = (pieceId: string) => {
+		const piece = dependencies.gamemode.pieceRegistry.getPieceById(pieceId);
+
+		if (!piece || !pieceCanEvolve(piece)) {
+			return;
+		}
+
+		if (player.boardLocked) {
+			queueEvolutionCheck(player, piece.definitionId, piece.stage);
+			return;
+		}
+
+		evolvePieces(player, piece.definitionId, piece.stage);
 	};
 
 	setupPlayerListeners(player.addListener);
