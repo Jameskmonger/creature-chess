@@ -5,7 +5,6 @@ import { GamePhase } from "@creature-chess/models";
 import { Player } from "../../entities/player/player";
 import { GameContext } from "../gameContext";
 import { Match } from "../match";
-import { readyNotifier } from "../readyNotifier";
 
 export type RoundCallbacks = {
 	onTurnComplete?: (timeMs: number) => void;
@@ -42,16 +41,69 @@ export class Round {
 			round: this.roundNumber,
 		});
 
-		players.getLiving().forEach((p) => phaseRules.onPreparingPhaseStart(p));
+		const living = players.getLiving();
+		living.forEach((p) => phaseRules.onPreparingPhaseStart(p));
 
-		const notifier = readyNotifier(players.getLiving());
+		const wait = this.waitForAllReady(living);
+		const timeout = delay(settings.preparingPhaseLengthMs);
 
-		await Promise.race([
-			notifier.promise,
-			delay(settings.preparingPhaseLengthMs),
-		]);
+		await Promise.race([wait.promise, timeout]);
 
-		notifier.dispose();
+		wait.dispose();
+		timeout.clear();
+	}
+
+	private waitForAllReady(players: Player[]): {
+		promise: Promise<void>;
+		dispose: () => void;
+	} {
+		if (players.length === 0) {
+			return { promise: Promise.resolve(), dispose: () => undefined };
+		}
+
+		const readied = new Set<string>();
+		const unsubs: (() => void)[] = [];
+		let resolve!: () => void;
+		const promise = new Promise<void>((r) => {
+			resolve = r;
+		});
+
+		const dispose = () => {
+			unsubs.forEach((fn) => fn());
+			unsubs.length = 0;
+		};
+
+		const markReady = (playerId: string) => {
+			readied.add(playerId);
+			if (readied.size === players.length) {
+				dispose();
+				resolve();
+			}
+		};
+
+		for (const player of players) {
+			unsubs.push(
+				player.events.onInfoUpdate(
+					"ready",
+					(ready) => {
+						if (ready) {
+							markReady(player.id);
+						}
+					},
+					{ emitInitial: false }
+				)
+			);
+
+			unsubs.push(
+				player.events.onQuit(() => {
+					if (player.alive) {
+						markReady(player.id);
+					}
+				})
+			);
+		}
+
+		return { promise, dispose };
 	}
 
 	private async runReady(): Promise<Match[]> {

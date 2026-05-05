@@ -2,7 +2,6 @@ import delay from "delay";
 
 import {
 	GameEvents,
-	PlayerActions,
 	Player,
 } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
@@ -60,12 +59,9 @@ export const playerNetworking = (
 	cleanups.push(() => connectTask.cancel());
 
 	// Listen for quit or game finish to tear down
-	const unsubQuit = entity.addListener({
-		actionCreator: PlayerActions.quitGamePlayerAction,
-		effect: async () => {
-			await delay(100);
-			teardown();
-		},
+	const unsubQuit = entity.events.onQuit(async () => {
+		await delay(100);
+		teardown();
 	});
 	cleanups.push(unsubQuit);
 

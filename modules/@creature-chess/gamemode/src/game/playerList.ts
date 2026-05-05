@@ -3,7 +3,6 @@ import { EventEmitter } from "events";
 import { PlayerStatus, PlayerListPlayer } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
-import { listenForPropertyUpdates } from "./playerPropertyUpdates";
 
 const debounce = (func: () => void, wait: number) => {
 	let timeout: any;
@@ -129,16 +128,17 @@ export class PlayerList {
 
 		this.gamePlayers[player.id] = player;
 
-		listenForPropertyUpdates(player, {
-			health: (health) => this.updateSortedValue(player.id, { health }),
-			status: (status) =>
-				this.updateSortedValue(player.id, {
-					hasQuit: status === PlayerStatus.QUIT,
-				}),
-			streak: this.emitUpdate,
-			battle: this.emitUpdate,
-			ready: this.emitUpdate,
-		});
+		player.events.onInfoUpdate("health", (health) =>
+			this.updateSortedValue(player.id, { health })
+		);
+		player.events.onInfoUpdate("status", (status) =>
+			this.updateSortedValue(player.id, {
+				hasQuit: status === PlayerStatus.QUIT,
+			})
+		);
+		player.events.onInfoUpdate("streak", this.emitUpdate);
+		player.events.onInfoUpdate("battle", this.emitUpdate);
+		player.events.onInfoUpdate("ready", this.emitUpdate);
 	}
 
 	private updateSortedValue(id: string, patch: Partial<SortablePlayerValues>) {

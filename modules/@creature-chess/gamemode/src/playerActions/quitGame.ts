@@ -12,9 +12,6 @@ export const quitGameDef = definePlayerAction({
 	type: quitGamePlayerAction.type,
 	schema: z.undefined(),
 	handler: (player) => {
-		// Server-side observers (socket teardown, readyNotifier) listen for the
-		// action via Player listeners; dispatch it for them.
-		player.put(quitGamePlayerAction());
 		player.setStatus(PlayerStatus.QUIT);
 	},
 });

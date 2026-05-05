@@ -90,10 +90,24 @@ export type CancellableTask = {
 	cancel(): void;
 };
 
+export type PlayerInfoFieldMap = {
+	health: number;
+	streak: PlayerStreak;
+	status: PlayerStatus;
+	battle: PlayerBattle | null;
+	ready: boolean;
+};
+
 export type PlayerEventsApi = {
 	onInfoUpdate(fn: (action: PlayerInfoUpdateCommand) => void): () => void;
+	onInfoUpdate<K extends keyof PlayerInfoFieldMap>(
+		field: K,
+		fn: (value: PlayerInfoFieldMap[K]) => void,
+		opts?: { emitInitial?: boolean }
+	): () => void;
 	onPlayerEvent(fn: (action: PlayerEvent) => void): () => void;
 	onGameEvent(fn: (action: GameEvent) => void): () => void;
+	onQuit(fn: () => void): () => void;
 };
 
 export type Player = {
@@ -489,12 +503,69 @@ export const createPlayer = (
 	const board = dependencies.boards.board;
 	const bench = dependencies.boards.bench;
 
-	const events: PlayerEventsApi = {
-		onInfoUpdate: (fn) =>
-			addListener({
+	const infoFieldDefs: {
+		[K in keyof PlayerInfoFieldMap]: {
+			actionType: string;
+			getCurrent: () => PlayerInfoFieldMap[K];
+		};
+	} = {
+		health: {
+			actionType: playerInfoCommands.updateHealthCommand.type,
+			getCurrent: () => state.playerInfo.health,
+		},
+		streak: {
+			actionType: playerInfoCommands.updateStreakCommand.type,
+			getCurrent: () => state.playerInfo.streak,
+		},
+		status: {
+			actionType: playerInfoCommands.updateStatusCommand.type,
+			getCurrent: () => state.playerInfo.status,
+		},
+		battle: {
+			actionType: playerInfoCommands.updateBattleCommand.type,
+			getCurrent: () => state.playerInfo.battle,
+		},
+		ready: {
+			actionType: playerInfoCommands.updateReadyCommand.type,
+			getCurrent: () => state.playerInfo.ready,
+		},
+	};
+
+	function onInfoUpdate(
+		fn: (action: PlayerInfoUpdateCommand) => void
+	): () => void;
+	function onInfoUpdate<K extends keyof PlayerInfoFieldMap>(
+		field: K,
+		fn: (value: PlayerInfoFieldMap[K]) => void,
+		opts?: { emitInitial?: boolean }
+	): () => void;
+	function onInfoUpdate(
+		fieldOrFn: keyof PlayerInfoFieldMap | ((action: any) => void),
+		maybeFn?: (value: any) => void,
+		opts?: { emitInitial?: boolean }
+	): () => void {
+		if (typeof fieldOrFn === "function") {
+			const unionFn = fieldOrFn;
+			return addListener({
 				predicate: (a) => INFO_UPDATE_TYPES.has(a.type),
-				effect: async (a) => fn(a as PlayerInfoUpdateCommand),
-			}),
+				effect: async (a) => unionFn(a as PlayerInfoUpdateCommand),
+			});
+		}
+
+		const field = fieldOrFn;
+		const fn = maybeFn!;
+		const def = infoFieldDefs[field];
+		if (opts?.emitInitial !== false) {
+			fn(def.getCurrent());
+		}
+		return addListener({
+			type: def.actionType,
+			effect: async (action) => fn(action.payload),
+		});
+	}
+
+	const events: PlayerEventsApi = {
+		onInfoUpdate,
 		onPlayerEvent: (fn) =>
 			addListener({
 				predicate: (a) => PLAYER_EVENT_TYPES.has(a.type),
@@ -504,6 +575,15 @@ export const createPlayer = (
 			addListener({
 				predicate: (a) => GAME_EVENT_TYPES.has(a.type),
 				effect: async (a) => fn(a as GameEvent),
+			}),
+		onQuit: (fn) =>
+			addListener({
+				type: playerInfoCommands.updateStatusCommand.type,
+				effect: async (action) => {
+					if (action.payload === PlayerStatus.QUIT) {
+						fn();
+					}
+				},
 			}),
 	};
 

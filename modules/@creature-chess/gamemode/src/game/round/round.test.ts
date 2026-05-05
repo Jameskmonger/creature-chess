@@ -2,6 +2,7 @@ import {
 	GamePhase,
 	GamemodeSettings,
 	GamemodeSettingsPresets,
+	PlayerStatus,
 } from "@creature-chess/models";
 
 import { Player } from "../../entities/player/player";
@@ -161,6 +162,42 @@ describe("Round", () => {
 			GamePhase.READY,
 			GamePhase.PLAYING,
 		]);
+	});
+
+	test("preparing phase exits early when all living players ready up", async () => {
+		const { rules } = createRecordingPhaseRules();
+		const { context, p1, p2 } = buildContext(rules);
+
+		// Long timeout — the test must exit via the all-ready path.
+		context.settings.preparingPhaseLengthMs = 60000;
+
+		const startedAt = Date.now();
+		const runPromise = new Round(1, context).run();
+
+		// Yield once so Round registers its ready/quit listeners.
+		await Promise.resolve();
+		p1.setReady(true);
+		p2.setReady(true);
+
+		await runPromise;
+		expect(Date.now() - startedAt).toBeLessThan(1000);
+	});
+
+	test("preparing phase exits early when a living player quits if all other living players are ready", async () => {
+		const { rules } = createRecordingPhaseRules();
+		const { context, p1, p2 } = buildContext(rules);
+
+		context.settings.preparingPhaseLengthMs = 60000;
+
+		const startedAt = Date.now();
+		const runPromise = new Round(1, context).run();
+
+		await Promise.resolve();
+		p1.setReady(true);
+		p2.setStatus(PlayerStatus.QUIT);
+
+		await runPromise;
+		expect(Date.now() - startedAt).toBeLessThan(1000);
 	});
 
 	test("with awayIsClone=true, only the home player gets onReadyPhaseStart and onMatchSettled", async () => {
