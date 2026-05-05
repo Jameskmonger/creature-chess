@@ -9,7 +9,6 @@ import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 
-import { setupMetricCollector } from "../metrics/metricCollectorListener";
 import { setupPlayerBoard } from "./board";
 import { setupIncomingNetworking } from "./net/incoming";
 import { setupOutgoingNetworking } from "./net/outgoing";
@@ -39,8 +38,6 @@ export const playerNetworking = (
 	cleanups.push(
 		setupIncomingNetworking(socket, entity)
 	);
-
-	cleanups.push(setupMetricCollector(entity));
 
 	const connectTask = entity.runEffect(async () => {
 		await delay(500);
