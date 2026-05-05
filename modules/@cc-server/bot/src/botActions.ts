@@ -1,6 +1,6 @@
 import { Action } from "redux";
 
-import { PackedPosition, packPosition } from "@creature-chess/board";
+import { packPosition } from "@creature-chess/board";
 import { PlayerActions } from "@creature-chess/gamemode";
 
 const boardLocation = (x: number, y: number) => ({
@@ -18,14 +18,11 @@ export const BotActions = {
 	 * Buy a card from the shop at the specified index.
 	 *
 	 * @param index The index of the card in the shop to buy.
-	 * @param sortPositions Optional function to determine the position of the new card on the board.
 	 *
 	 * @returns The action to perform the buy.
 	 */
-	buyCard: (
-		index: number,
-		sortPositions?: (a: PackedPosition, b: PackedPosition) => -1 | 1
-	): Action => PlayerActions.buyCardPlayerAction({ index, sortPositions }),
+	buyCard: (index: number): Action =>
+		PlayerActions.buyCardPlayerAction({ index }),
 
 	/**
 	 * Buy one set of XP.

@@ -15,7 +15,12 @@ export {
 	playerInfoReducer,
 	type PlayerMatchRewards,
 } from "./src/entities/player/state/playerInfo";
-export { type PlayerAction, PlayerActionTypesArray } from "./src/playerActions";
+export {
+	type PlayerAction,
+	PlayerActionTypesArray,
+	dispatchIncomingPlayerAction,
+	dispatchTrustedPlayerAction,
+} from "./src/playerActions";
 export * as PlayerActions from "./src/playerActions";
 export {
 	quickChatPlayerAction,

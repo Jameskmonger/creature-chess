@@ -1,56 +1,83 @@
-import { type BuyCardPlayerAction, buyCardPlayerAction } from "./buyCard";
-import { type BuyXpPlayerAction, buyXpPlayerAction } from "./buyXp";
-import { type DropPiecePlayerAction, dropPiecePlayerAction } from "./dropPiece";
-import { type QuickChatPlayerAction, quickChatPlayerAction } from "./quickChat";
-import { type QuitGamePlayerAction, quitGamePlayerAction } from "./quitGame";
-import { type ReadyUpPlayerAction, readyUpPlayerAction } from "./readyUp";
+import { type BuyCardPlayerAction, buyCardDef, buyCardPlayerAction } from "./buyCard";
+import { type BuyXpPlayerAction, buyXpDef, buyXpPlayerAction } from "./buyXp";
+import {
+	type DropPiecePlayerAction,
+	dropPieceDef,
+	dropPiecePlayerAction,
+} from "./dropPiece";
+import {
+	type QuickChatPlayerAction,
+	quickChatDef,
+	quickChatPlayerAction,
+} from "./quickChat";
+import {
+	type QuitGamePlayerAction,
+	quitGameDef,
+	quitGamePlayerAction,
+} from "./quitGame";
+import {
+	type ReadyUpPlayerAction,
+	readyUpDef,
+	readyUpPlayerAction,
+} from "./readyUp";
+import { buildPlayerActionRegistry } from "./registry";
 import {
 	type RerollCardsPlayerAction,
+	rerollCardsDef,
 	rerollCardsPlayerAction,
 } from "./rerollCards";
-import { type SellPiecePlayerAction, sellPiecePlayerAction } from "./sellPiece";
-import { type SpectatePlayerAction, spectatePlayerAction } from "./spectate";
-import { type SwapPiecePlayerAction, swapPiecePlayerAction } from "./swapPiece";
+import {
+	type SellPiecePlayerAction,
+	sellPieceDef,
+	sellPiecePlayerAction,
+} from "./sellPiece";
+import {
+	type SpectatePlayerAction,
+	spectateDef,
+	spectatePlayerAction,
+} from "./spectate";
+import {
+	type SwapPiecePlayerAction,
+	swapPieceDef,
+	swapPiecePlayerAction,
+} from "./swapPiece";
 import {
 	type ToggleShopLockPlayerAction,
+	toggleShopLockDef,
 	toggleShopLockPlayerAction,
 } from "./toggleShopLock";
 
 export { BuyCardPlayerAction, buyCardPlayerAction };
-
 export { BuyXpPlayerAction, buyXpPlayerAction };
-
 export { RerollCardsPlayerAction, rerollCardsPlayerAction };
-
 export { ToggleShopLockPlayerAction, toggleShopLockPlayerAction };
-
 export { SellPiecePlayerAction, sellPiecePlayerAction };
-
 export { ReadyUpPlayerAction, readyUpPlayerAction };
-
 export { QuitGamePlayerAction, quitGamePlayerAction };
-
 export { DropPiecePlayerAction, dropPiecePlayerAction };
-
 export { SwapPiecePlayerAction, swapPiecePlayerAction };
-
 export { SpectatePlayerAction, spectatePlayerAction };
-
 export { QuickChatPlayerAction, quickChatPlayerAction };
 
-export const PlayerActionTypesArray = [
-	buyXpPlayerAction.toString(),
-	buyCardPlayerAction.toString(),
-	rerollCardsPlayerAction.toString(),
-	toggleShopLockPlayerAction.toString(),
-	sellPiecePlayerAction.toString(),
-	readyUpPlayerAction.toString(),
-	quitGamePlayerAction.toString(),
-	dropPiecePlayerAction.toString(),
-	spectatePlayerAction.toString(),
-	quickChatPlayerAction.toString(),
-	swapPiecePlayerAction.toString(),
-];
+const playerActionDefs = [
+	buyXpDef,
+	buyCardDef,
+	rerollCardsDef,
+	toggleShopLockDef,
+	sellPieceDef,
+	readyUpDef,
+	quitGameDef,
+	dropPieceDef,
+	spectateDef,
+	quickChatDef,
+	swapPieceDef,
+] as const;
+
+const registry = buildPlayerActionRegistry(playerActionDefs);
+
+export const PlayerActionTypesArray = registry.types;
+export const dispatchIncomingPlayerAction = registry.dispatchIncoming;
+export const dispatchTrustedPlayerAction = registry.dispatchTrusted;
 
 export type PlayerAction =
 	| BuyXpPlayerAction

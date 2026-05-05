@@ -1,45 +1,41 @@
-import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
+import { createTestPlayer } from "../entities/player/testUtils";
+import { isPlayerShopLocked } from "../entities/player/state/selectors";
+import { dispatchIncomingPlayerAction } from "./index";
+import { toggleShopLockPlayerAction } from "./toggleShopLock";
 
-import { cardShopReducer } from "../entities/player/state/cardShop";
-import {
-	toggleShopLockPlayerAction,
-	setupToggleShopLockListener,
-} from "./toggleShopLock";
+describe("toggleShopLockPlayerAction", () => {
+	test("toggles the shop lock state via the registry", () => {
+		const player = createTestPlayer();
+		expect(isPlayerShopLocked(player.select((s) => s))).toBe(false);
 
-const createTestStore = () => {
-	const listenerMiddleware = createListenerMiddleware();
+		dispatchIncomingPlayerAction(player, toggleShopLockPlayerAction());
+		expect(isPlayerShopLocked(player.select((s) => s))).toBe(true);
 
-	setupToggleShopLockListener(listenerMiddleware.startListening as any);
-
-	return configureStore({
-		reducer: {
-			cardShop: cardShopReducer,
-		},
-		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware({ thunk: false, serializableCheck: false }).prepend(
-				listenerMiddleware.middleware
-			),
+		dispatchIncomingPlayerAction(player, toggleShopLockPlayerAction());
+		expect(isPlayerShopLocked(player.select((s) => s))).toBe(false);
 	});
-};
 
-describe("setupToggleShopLockListener", () => {
-	test("should toggle lock state", async () => {
-		const store = createTestStore();
+	test("rejects payloads for void-payload actions", () => {
+		const player = createTestPlayer();
+		const result = dispatchIncomingPlayerAction(player, {
+			type: toggleShopLockPlayerAction.type,
+			payload: { malicious: true },
+		});
 
-		expect(store.getState().cardShop.locked).toBe(false);
+		expect(result.ok).toBe(false);
+		expect(isPlayerShopLocked(player.select((s) => s))).toBe(false);
+	});
 
-		store.dispatch(toggleShopLockPlayerAction());
+	test("rejects unknown action types", () => {
+		const player = createTestPlayer();
+		const result = dispatchIncomingPlayerAction(player, {
+			type: "notAnAction",
+			payload: undefined,
+		});
 
-		// Allow listener to run
-		await new Promise((r) => setTimeout(r, 10));
-
-		expect(store.getState().cardShop.locked).toBe(true);
-
-		store.dispatch(toggleShopLockPlayerAction());
-
-		// Allow listener to run
-		await new Promise((r) => setTimeout(r, 10));
-
-		expect(store.getState().cardShop.locked).toBe(false);
+		expect(result.ok).toBe(false);
+		if (!result.ok) {
+			expect(result.reason).toMatch(/unknown action type/);
+		}
 	});
 });

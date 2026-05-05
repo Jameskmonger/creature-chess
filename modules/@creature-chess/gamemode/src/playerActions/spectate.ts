@@ -1,34 +1,34 @@
 import { createAction } from "@reduxjs/toolkit";
+import { z } from "zod";
 
-import { PlayerStartListening } from "../entities/player/player";
 import { isPlayerAlive } from "../entities/player/state/selectors";
 import { setSpectatingIdCommand } from "../entities/player/state/spectating";
+import { definePlayerAction } from "./registry";
+
+const spectateSchema = z.object({
+	playerId: z.string().nullable(),
+});
 
 export type SpectatePlayerAction = ReturnType<typeof spectatePlayerAction>;
 export const spectatePlayerAction = createAction<
-	{ playerId: string | null },
+	z.infer<typeof spectateSchema>,
 	"spectatePlayerAction"
 >("spectatePlayerAction");
 
-export const setupSpectateListener = (startListening: PlayerStartListening) => {
-	startListening({
-		actionCreator: spectatePlayerAction,
-		effect: async ({ payload: { playerId } }, api) => {
-			api.cancelActiveListeners();
+export const spectateDef = definePlayerAction({
+	type: spectatePlayerAction.type,
+	schema: spectateSchema,
+	handler: (player, { playerId }) => {
+		if (playerId === null) {
+			player.put(setSpectatingIdCommand(null));
+			return;
+		}
 
-			if (playerId === null) {
-				api.dispatch(setSpectatingIdCommand(null));
-				return;
-			}
+		const other = player.gamemode.getPlayerById(playerId);
+		if (!other || !other.select(isPlayerAlive)) {
+			return;
+		}
 
-			const game = api.player.gamemode;
-			const other = game.getPlayerById(playerId);
-
-			if (!other || !other.select(isPlayerAlive)) {
-				return;
-			}
-
-			api.dispatch(setSpectatingIdCommand(playerId));
-		},
-	});
-};
+		player.put(setSpectatingIdCommand(playerId));
+	},
+});

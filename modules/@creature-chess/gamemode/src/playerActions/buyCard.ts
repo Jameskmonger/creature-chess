@@ -1,10 +1,10 @@
 import { createAction } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
 import {
 	Board,
 	getFirstEmptySlot,
-	PackedPosition,
 	topLeftToBottomRightSortPositions,
 	unpackX,
 } from "@creature-chess/board";
@@ -16,7 +16,6 @@ import {
 	PlayerPieceLocation,
 } from "@creature-chess/models";
 
-import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
@@ -25,13 +24,12 @@ import {
 	getPlayerCards,
 	getPlayerMoney,
 } from "../entities/player/state/selectors";
+import { definePlayerAction } from "./registry";
 
 const getCardDestination = (
 	state: PlayerState,
 	board: Board,
-	bench: Board,
-	playerId: string,
-	sortPositions?: (a: PackedPosition, b: PackedPosition) => -1 | 1
+	bench: Board
 ): PlayerPieceLocation | null => {
 	const belowPieceLimit = getPlayerBelowPieceLimit(
 		state.playerInfo.level,
@@ -40,23 +38,17 @@ const getCardDestination = (
 	const inPreparingPhase = state.roundInfo.phase === GamePhase.PREPARING;
 
 	if (belowPieceLimit && inPreparingPhase) {
-		const boardSlot = getFirstEmptySlot(board, sortPositions);
+		const boardSlot = getFirstEmptySlot(board);
 
 		if (boardSlot) {
-			return {
-				type: "board",
-				location: boardSlot,
-			};
+			return { type: "board", location: boardSlot };
 		}
 	}
 
 	const benchSlot = getFirstEmptySlot(bench, topLeftToBottomRightSortPositions);
 
 	if (benchSlot !== null) {
-		return {
-			type: "bench",
-			location: benchSlot,
-		};
+		return { type: "bench", location: benchSlot };
 	}
 
 	return null;
@@ -67,15 +59,11 @@ const createPieceFromCard = (
 	card: Card
 ): PieceModel | null => {
 	const { id, definitionId } = card;
-
 	const definition = getDefinitionById(definitionId);
-
 	if (!definition) {
 		return null;
 	}
-
 	const stats = definition.stages[0];
-
 	return {
 		id: id || uuid(),
 		ownerId,
@@ -86,100 +74,83 @@ const createPieceFromCard = (
 	};
 };
 
+const buyCardSchema = z.object({
+	index: z.number().int().nonnegative(),
+});
+
 export type BuyCardPlayerAction = ReturnType<typeof buyCardPlayerAction>;
 export const buyCardPlayerAction = createAction<
-	{
-		index: number;
-		sortPositions?: (a: PackedPosition, b: PackedPosition) => -1 | 1;
-	},
+	z.infer<typeof buyCardSchema>,
 	"buyCardPlayerAction"
 >("buyCardPlayerAction");
 
-export const setupBuyCardListener = (startListening: PlayerStartListening) => {
-	startListening({
-		actionCreator: buyCardPlayerAction,
-		effect: async (action, api) => {
-			const playerId = api.player.id;
-			const name = api.player.name;
-			const {
-				logger,
-				gamemode: { pieceRegistry },
-				board,
-				bench,
-			} = api.player;
+export const buyCardDef = definePlayerAction({
+	type: buyCardPlayerAction.type,
+	schema: buyCardSchema,
+	handler: (player, { index }) => {
+		const {
+			id: playerId,
+			name,
+			logger,
+			gamemode: { pieceRegistry },
+			board,
+			bench,
+		} = player;
+		const state = player.select((s) => s);
+		const cards = getPlayerCards(state);
+		const money = getPlayerMoney(state);
+		const card = cards[index];
 
-			const index = action.payload.index;
-			const sortPositions = action.payload.sortPositions || undefined;
+		if (!card) {
+			logger.warn("Player attempted to buy null/undefined card", {
+				actor: { playerId, name },
+			});
+			player.put(playerInfoCommands.updateMoneyCommand(money));
+			player.put(updateCardsCommand(cards));
+			return;
+		}
 
-			const state = api.getState();
-			const cards = getPlayerCards(state);
-			const money = getPlayerMoney(state);
+		if (money < card.cost) {
+			logger.warn("Not enough money to buy card", {
+				actor: { playerId, name },
+				details: { index },
+			});
+			player.put(playerInfoCommands.updateMoneyCommand(money));
+			player.put(updateCardsCommand(cards));
+			return;
+		}
 
-			const card = cards[index];
+		const destination = getCardDestination(state, board, bench);
 
-			if (!card) {
-				logger.warn("Player attempted to buy null/undefined card", {
-					actor: { playerId, name },
-				});
-
-				api.dispatch(playerInfoCommands.updateMoneyCommand(money));
-				api.dispatch(updateCardsCommand(cards));
-
-				return;
-			}
-
-			if (money < card.cost) {
-				logger.warn("Not enough money to buy card", {
-					actor: { playerId, name },
-					details: { index },
-				});
-
-				api.dispatch(playerInfoCommands.updateMoneyCommand(money));
-				api.dispatch(updateCardsCommand(cards));
-
-				return;
-			}
-
-			const destination = getCardDestination(
-				api.getState(),
-				board,
-				bench,
-				playerId,
-				sortPositions
+		if (destination === null) {
+			logger.warn(
+				"Player attempted to buy a card but has no available destination",
+				{ actor: { playerId, name } }
 			);
+			return;
+		}
 
-			if (destination === null) {
-				logger.warn(
-					"Player attempted to buy a card but has no available destination",
-					{ actor: { playerId, name } }
-				);
-				return;
-			}
+		const piece = createPieceFromCard(playerId, card);
+		if (!piece) {
+			return;
+		}
+		pieceRegistry.registerPiece(piece);
 
-			const piece = createPieceFromCard(playerId, card);
+		const remainingCards = cards.map((c) => (c === card ? null : c));
 
-			if (!piece) {
-				return;
-			}
+		if (destination.type === "board") {
+			player.addBoardPiece({
+				pieceId: piece.id,
+				position: destination.location,
+			});
+		} else {
+			player.addBenchPiece({
+				pieceId: piece.id,
+				position: { x: unpackX(destination.location) },
+			});
+		}
 
-			pieceRegistry.registerPiece(piece);
-
-			const remainingCards = cards.map((c) => (c === card ? null : c));
-
-			if (destination.type === "board") {
-				api.player.addBoardPiece({
-					pieceId: piece.id,
-					position: destination.location,
-				});
-			} else if (destination.type === "bench") {
-				api.player.addBenchPiece({
-					pieceId: piece.id,
-					position: { x: unpackX(destination.location) },
-				});
-			}
-
-			api.dispatch(playerInfoCommands.updateMoneyCommand(money - card.cost));
-			api.dispatch(updateCardsCommand(remainingCards));
-		},
-	});
-};
+		player.put(playerInfoCommands.updateMoneyCommand(money - card.cost));
+		player.put(updateCardsCommand(remainingCards));
+	},
+});

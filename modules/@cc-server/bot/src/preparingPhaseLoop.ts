@@ -2,6 +2,7 @@ import delay from "delay";
 import { Action } from "redux";
 
 import {
+	dispatchTrustedPlayerAction,
 	PlayerActions,
 	PlayerListenerApi,
 	PlayerStateSelectors,
@@ -96,7 +97,7 @@ export const runPreparingPhase = async (
 			break;
 		}
 
-		api.dispatch(action);
+		dispatchTrustedPlayerAction(api.player, action);
 		hooks.onActionDispatched?.(action);
 		actionsTaken += 1;
 
@@ -107,5 +108,5 @@ export const runPreparingPhase = async (
 
 	hooks.onPhaseEnded?.({ actionsTaken, actionBudget, terminationReason });
 
-	api.dispatch(PlayerActions.readyUpPlayerAction());
+	dispatchTrustedPlayerAction(api.player, PlayerActions.readyUpPlayerAction());
 };

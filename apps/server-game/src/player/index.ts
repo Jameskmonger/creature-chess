@@ -38,7 +38,7 @@ export const playerNetworking = (
 	};
 
 	cleanups.push(
-		setupIncomingNetworking(socket, (action) => entity.put(action))
+		setupIncomingNetworking(socket, entity)
 	);
 
 	cleanups.push(setupMetricCollector(entity));

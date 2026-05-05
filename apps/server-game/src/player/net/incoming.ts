@@ -1,39 +1,30 @@
-import { PlayerEvents, PlayerActionTypesArray } from "@creature-chess/gamemode";
+import {
+	dispatchIncomingPlayerAction,
+	Player,
+	PlayerEvents,
+} from "@creature-chess/gamemode";
 
 import { GameSocket } from "../socket";
 
-type DispatchFn = (action: { type: string; payload?: any }) => void;
-
-export const setupIncomingNetworking = (
-	socket: GameSocket,
-	dispatch: DispatchFn
-) => {
+export const setupIncomingNetworking = (socket: GameSocket, player: Player) => {
 	const onSendPlayerActions = (
-		action: { type: string; payload?: any },
+		raw: { type?: unknown; payload?: unknown },
 		ack?: () => void
 	) => {
-		if (!PlayerActionTypesArray.includes(action.type)) {
-			console.error(
-				`Unhandled action type: ${action.type} (for opcode sendPlayerActions)`
-			);
-		} else {
-			dispatch(action);
+		const result = dispatchIncomingPlayerAction(player, raw);
+		if (!result.ok) {
+			console.warn(`PlayerAction rejected for ${player.id}: ${result.reason}`);
 		}
-
-		if (ack) {
-			ack();
-		}
+		ack?.();
 	};
 
 	const onPing = (_payload: unknown, ack?: () => void) => {
-		dispatch({ type: "ping" });
-		if (ack) {
-			ack();
-		}
+		player.put({ type: "ping" });
+		ack?.();
 	};
 
 	const onFinishMatch = () => {
-		dispatch(PlayerEvents.clientFinishMatchEvent());
+		player.put(PlayerEvents.clientFinishMatchEvent());
 	};
 
 	socket.on("sendPlayerActions", onSendPlayerActions);
