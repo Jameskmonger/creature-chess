@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 
-import { Board } from "@creature-chess/board";
+import { SubscribableBoard } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
 import { PlayerStatus } from "@creature-chess/models";
 import { PlayerProfile } from "@creature-chess/models";
@@ -36,8 +36,8 @@ const createSubject = (overrides?: {
 		{
 			logger,
 			boards: {
-				board: new Board(settings.boardWidth, settings.boardHalfHeight),
-				bench: new Board(settings.benchSize, 1),
+				board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
+				bench: new SubscribableBoard(settings.benchSize, 1),
 			},
 			gamemode,
 			settings,
@@ -63,8 +63,8 @@ describe("createPlayer", () => {
 			const settings = GamemodeSettingsPresets.default;
 			const logger = createMockLogger();
 			const gamemode = new Gamemode("g1", logger, settings);
-			const board = new Board(settings.boardWidth, settings.boardHalfHeight);
-			const bench = new Board(settings.benchSize, 1);
+			const board = new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight);
+			const bench = new SubscribableBoard(settings.benchSize, 1);
 
 			const player = createPlayer(
 				"p1",

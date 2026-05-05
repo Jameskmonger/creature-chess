@@ -93,6 +93,18 @@ describe("SubscribableBoard", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
+	test("clear notifies subscribers", () => {
+		const board = new SubscribableBoard(3, 3);
+		board.setPiece("a", 0, 0);
+
+		const listener = jest.fn();
+		board.subscribe(listener);
+
+		board.clear();
+
+		expect(listener).toHaveBeenCalledTimes(1);
+	});
+
 	test("notifications are coalesced to requestAnimationFrame", () => {
 		jest.useFakeTimers();
 

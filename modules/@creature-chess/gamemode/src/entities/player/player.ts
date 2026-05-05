@@ -1,6 +1,11 @@
 import { Logger } from "winston";
 
-import { Board, PackedPosition, unpackX, unpackY } from "@creature-chess/board";
+import {
+	PackedPosition,
+	SubscribableBoard,
+	unpackX,
+	unpackY,
+} from "@creature-chess/board";
 import {
 	Card,
 	GamePhase,
@@ -115,8 +120,8 @@ export type Player = {
 
 	// Was "dependencies"
 	readonly logger: Logger;
-	readonly board: Board;
-	readonly bench: Board;
+	readonly board: SubscribableBoard;
+	readonly bench: SubscribableBoard;
 	readonly gamemode: Gamemode;
 	readonly settings: GamemodeSettings;
 
@@ -325,7 +330,7 @@ export const createPlayer = (
 	id: string,
 	dependencies: {
 		logger: Logger;
-		boards: { board: Board; bench: Board };
+		boards: { board: SubscribableBoard; bench: SubscribableBoard };
 		gamemode: Gamemode;
 		settings: GamemodeSettings;
 	},

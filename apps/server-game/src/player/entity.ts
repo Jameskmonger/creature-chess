@@ -1,4 +1,4 @@
-import { Board } from "@creature-chess/board";
+import { SubscribableBoard } from "@creature-chess/board";
 import {
 	Gamemode,
 	createPlayer as createPlayerBase,
@@ -16,8 +16,8 @@ export const createPlayer = (
 	settings: GamemodeSettings
 ) => {
 	const boards = {
-		board: new Board(settings.boardWidth, settings.boardHalfHeight),
-		bench: new Board(settings.benchSize, 1),
+		board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
+		bench: new SubscribableBoard(settings.benchSize, 1),
 	};
 
 	return createPlayerBase(

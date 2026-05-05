@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 
-import { Board } from "@creature-chess/board";
+import { SubscribableBoard } from "@creature-chess/board";
 import { GamemodeSettings, GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { Gamemode } from "../../game";
@@ -31,8 +31,8 @@ export const createTestPlayer = (
 		{
 			logger,
 			boards: {
-				board: new Board(settings.boardWidth, settings.boardHalfHeight),
-				bench: new Board(settings.benchSize, 1),
+				board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
+				bench: new SubscribableBoard(settings.benchSize, 1),
 			},
 			gamemode,
 			settings,

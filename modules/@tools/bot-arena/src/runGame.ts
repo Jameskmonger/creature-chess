@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-import { Board } from "@creature-chess/board";
+import { SubscribableBoard } from "@creature-chess/board";
 import { Gamemode, createPlayer } from "@creature-chess/gamemode";
 import {
 	GamemodeSettings,
@@ -99,11 +99,11 @@ export const runGame = (
 					logger,
 					gamemode,
 					boards: {
-						board: new Board(
+						board: new SubscribableBoard(
 							HARNESS_SETTINGS.boardWidth,
 							HARNESS_SETTINGS.boardHalfHeight
 						),
-						bench: new Board(HARNESS_SETTINGS.benchSize, 1),
+						bench: new SubscribableBoard(HARNESS_SETTINGS.benchSize, 1),
 					},
 					settings: HARNESS_SETTINGS,
 				},

@@ -1,5 +1,6 @@
 import delay from "delay";
 
+import { SubscribableBoard } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
 
 import {
@@ -7,38 +8,43 @@ import {
 	PlayerCommands,
 	GameEvents,
 	PlayerEvents,
-	removeBenchPiecesCommand,
-	removeBoardPiecesCommand,
-} from "@creature-chess/gamemode";
-import {
-	addBenchPieceCommand,
-	addBoardPieceCommand,
-	moveBenchPieceCommand,
-	moveBoardPieceCommand,
-	removeBenchPieceCommand,
-	removeBoardPieceCommand,
-	swapBenchPiecesCommand,
-	swapBoardPiecesCommand,
 } from "@creature-chess/gamemode";
 import { serialiseBoard } from "@creature-chess/networking";
 
 import { GameSocket } from "../socket";
 
-const BOARD_CHANGE_ACTIONS = new Set([
-	addBoardPieceCommand.type,
-	moveBoardPieceCommand.type,
-	removeBoardPieceCommand.type,
-	removeBoardPiecesCommand.type,
-	swapBoardPiecesCommand.type,
-]);
+const SPECTATE_EMIT_DEBOUNCE_MS = 50;
 
-const BENCH_CHANGE_ACTIONS = new Set([
-	addBenchPieceCommand.type,
-	moveBenchPieceCommand.type,
-	removeBenchPieceCommand.type,
-	removeBenchPiecesCommand.type,
-	swapBenchPiecesCommand.type,
-]);
+const subscribeBoardEmit = (
+	subscribable: SubscribableBoard,
+	pieceRegistry: Player["gamemode"]["pieceRegistry"],
+	socket: GameSocket,
+	socketEvent: "boardUpdate" | "benchUpdate"
+) => {
+	const emit = () =>
+		socket.emit(socketEvent, serialiseBoard(subscribable, pieceRegistry));
+
+	// Fresh snapshot on subscribe — needed when spectating target switches.
+	emit();
+
+	let timer: ReturnType<typeof setTimeout> | null = null;
+	const unsub = subscribable.subscribe(() => {
+		if (timer) {
+			clearTimeout(timer);
+		}
+		timer = setTimeout(() => {
+			timer = null;
+			emit();
+		}, SPECTATE_EMIT_DEBOUNCE_MS);
+	});
+
+	return () => {
+		if (timer) {
+			clearTimeout(timer);
+		}
+		unsub();
+	};
+};
 
 const setupSpectateListeners = (
 	targetEntity: Player,
@@ -50,11 +56,6 @@ const setupSpectateListeners = (
 		bench,
 		gamemode: { pieceRegistry },
 	} = targetEntity;
-
-	// Send current board and bench state immediately so the client
-	// doesn't show stale data from a previous spectating target.
-	socket.emit("boardUpdate", serialiseBoard(board, pieceRegistry));
-	socket.emit("benchUpdate", serialiseBoard(bench, pieceRegistry));
 
 	const match = targetEntity.match;
 	if (match) {
@@ -86,7 +87,6 @@ const setupSpectateListeners = (
 					});
 				}
 
-				// Wait for finish match
 				await api.take(
 					(a) => a.type === PlayerEvents.playerFinishMatchEvent.type
 				);
@@ -94,37 +94,12 @@ const setupSpectateListeners = (
 		})
 	);
 
-	// Watch board changes
-	unsubscribes.push(
-		targetEntity.addListener({
-			predicate: (action) => BOARD_CHANGE_ACTIONS.has(action.type),
-			effect: async (_action, api) => {
-				api.cancelActiveListeners();
-				await delay(50);
-				socket.emit("boardUpdate", serialiseBoard(board, pieceRegistry));
-			},
-		})
-	);
-
-	// Watch bench changes
-	unsubscribes.push(
-		targetEntity.addListener({
-			predicate: (action) => BENCH_CHANGE_ACTIONS.has(action.type),
-			effect: async (_action, api) => {
-				api.cancelActiveListeners();
-				await delay(50);
-				socket.emit("benchUpdate", serialiseBoard(bench, pieceRegistry));
-			},
-		})
-	);
+	unsubscribes.push(subscribeBoardEmit(board, pieceRegistry, socket, "boardUpdate"));
+	unsubscribes.push(subscribeBoardEmit(bench, pieceRegistry, socket, "benchUpdate"));
 
 	return () => unsubscribes.forEach((fn) => fn());
 };
 
-/**
- * Watch the local player board and bench, or that of the currently spectated player.
- * Registers a listener on the player entity for spectating changes.
- */
 export const setupPlayerBoard = (entity: Player, socket: GameSocket) => {
 	let cleanupSpectate: (() => void) | null = null;
 

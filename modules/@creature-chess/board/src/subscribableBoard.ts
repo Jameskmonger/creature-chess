@@ -37,6 +37,12 @@ export class SubscribableBoard extends Board {
 		this.markChanged();
 	}
 
+	public override clear() {
+		super.clear();
+		// bulk change; paint now
+		this.markChanged({ immediate: true });
+	}
+
 	protected markChanged(opts?: { immediate?: boolean }) {
 		this.version++;
 
