@@ -11,6 +11,7 @@ import { GamemodeSettings } from "@creature-chess/models";
 import { setupPlayerBoard } from "./board";
 import { setupIncomingNetworking } from "./net/incoming";
 import { setupOutgoingNetworking } from "./net/outgoing";
+import { buildSnapshot } from "./net/outgoing/snapshot";
 import { GameSocket } from "./socket";
 
 type Parameters = {
@@ -47,8 +48,10 @@ export const playerNetworking = (
 			settings,
 		});
 
-		// Now that the client has gameConnected and will set up its listeners,
-		// start forwarding outgoing events, send initial state, and set up board spectating.
+		// Client constructs GameConnection synchronously on gameConnected — its
+		// listeners are live by the time subsequent emits land.
+		socket.emit("snapshot", buildSnapshot(entity));
+
 		const outgoingCleanup = setupOutgoingNetworking(entity, socket);
 		cleanups.push(outgoingCleanup);
 

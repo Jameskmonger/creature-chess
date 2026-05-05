@@ -113,6 +113,22 @@ export class GameConnection {
 			"playerInfoUpdates",
 			PlayerCommands.PlayerInfoUpdateCommandActionTypesArray
 		);
+		this.setupSocketListener(
+			"snapshot",
+			(actions: { type: string; payload?: any }[]) => {
+				for (const action of actions) {
+					if (
+						!PlayerCommands.PlayerInfoUpdateCommandActionTypesArray.includes(
+							action.type
+						)
+					) {
+						console.error(`Unhandled snapshot action type: ${action.type}`);
+						continue;
+					}
+					this.dispatch(action);
+				}
+			}
+		);
 		// reconnect_failed/reconnect_error are Manager-level events in socket.io v4
 		const onDisconnected = () => {
 			this.eventBus.emit(

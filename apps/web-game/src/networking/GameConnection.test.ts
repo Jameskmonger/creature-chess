@@ -1,4 +1,6 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
+import { PlayerCommands } from "@creature-chess/gamemode";
+
 import { EventBus } from "./EventBus";
 import { GameConnection, BoardSlices } from "./GameConnection";
 import { ConnectionStatus, GameEventMap } from "./types";
@@ -329,6 +331,29 @@ describe("GameConnection", () => {
 			});
 
 			expect(handler).toHaveBeenCalledWith(undefined);
+		});
+	});
+
+	describe("snapshot listener", () => {
+		it("should dispatch each action in the snapshot", () => {
+			const actions = [
+				PlayerCommands.playerInfoCommands.updateMoneyCommand(5),
+				PlayerCommands.updateShopLockCommand(true),
+			];
+			socket._trigger("snapshot", actions);
+
+			expect(dispatch).toHaveBeenCalledWith(actions[0]);
+			expect(dispatch).toHaveBeenCalledWith(actions[1]);
+		});
+
+		it("should reject unknown action types", () => {
+			const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+			socket._trigger("snapshot", [{ type: "bogusEvent" }]);
+
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.stringContaining("Unhandled snapshot action type")
+			);
+			consoleSpy.mockRestore();
 		});
 	});
 

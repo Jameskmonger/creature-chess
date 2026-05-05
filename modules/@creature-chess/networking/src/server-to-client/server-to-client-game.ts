@@ -36,6 +36,7 @@ type QuickChatPacket = {
 
 export type Events = {
 	gameConnected: (payload: GameConnectionPacket) => void;
+	snapshot: (payload: ActionStreamPacket[]) => void;
 	boardUpdate: (payload: BoardUpdatePacket) => void;
 	benchUpdate: (payload: BoardUpdatePacket) => void;
 	matchBoardUpdate: (payload: MatchBoardUpdatePacket) => void;
