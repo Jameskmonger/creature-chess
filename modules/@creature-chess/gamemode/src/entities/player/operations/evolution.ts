@@ -1,11 +1,14 @@
 import { Board, packPosition } from "@creature-chess/board";
-import { getDefinitionById, PieceModel } from "@creature-chess/models";
-import { PIECES_TO_EVOLVE } from "@creature-chess/models";
+import {
+	PIECES_TO_EVOLVE,
+	PieceModel,
+	getDefinitionById,
+} from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import { Player } from "../player";
+import type { Player } from "../player";
 
-export const pieceCanEvolve = (piece: PieceModel) => {
+const pieceCanEvolve = (piece: PieceModel) => {
 	const definition = getDefinitionById(piece.definitionId);
 	if (!definition) {
 		return false;
@@ -13,128 +16,112 @@ export const pieceCanEvolve = (piece: PieceModel) => {
 	return piece.stage < definition.stages.length - 1;
 };
 
-const getPiecesForDefinition = (
-	board: Board,
-	pieceRegistry: PieceRegistry,
-	definitionId: number
-) =>
+const getRegisteredPieces = (board: Board, registry: PieceRegistry) =>
 	board
 		.getAllPieces()
-		.map(({ id }) => pieceRegistry.getPieceById(id))
-		.filter((p): p is NonNullable<typeof p> => p !== null)
-		.filter((p) => p.definitionId === definitionId);
+		.map(({ id }) => registry.getPieceById(id))
+		.filter((p): p is NonNullable<typeof p> => p !== null);
 
-const getCombinablePieces = (pieces: PieceModel[], targetStage: number) =>
-	pieces.filter((p) => p.stage === targetStage);
+type EvolvableGroup = { definitionId: number; stage: number };
 
-/**
- * If the player has at least PIECES_TO_EVOLVE pieces of the given definition
- * and stage across board+bench, combine them into one piece at the next stage.
- *
- * Caller is responsible for ensuring the board is unlocked — this routine
- * mutates the board.
- */
-export const evolvePieces = (
-	player: Player,
-	definitionId: number,
-	stage: number
-): void => {
+const findEvolvableGroup = (pieces: PieceModel[]): EvolvableGroup | null => {
+	const counts = new Map<string, number>();
+	for (const piece of pieces) {
+		if (!pieceCanEvolve(piece)) {
+			continue;
+		}
+		const key = `${piece.definitionId}:${piece.stage}`;
+		counts.set(key, (counts.get(key) ?? 0) + 1);
+	}
+	for (const [key, count] of counts) {
+		if (count >= PIECES_TO_EVOLVE) {
+			const [definitionId, stage] = key.split(":").map(Number);
+			return { definitionId, stage };
+		}
+	}
+	return null;
+};
+
+const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 	const {
 		board,
 		bench,
 		gamemode: { pieceRegistry },
 	} = player;
 
-	const matchingBoardPieces = getCombinablePieces(
-		getPiecesForDefinition(board, pieceRegistry, definitionId),
-		stage
+	const matchesGroup = (p: PieceModel) =>
+		p.definitionId === group.definitionId && p.stage === group.stage;
+
+	const matchingBoard = getRegisteredPieces(board, pieceRegistry).filter(
+		matchesGroup
 	);
-	const matchingBenchPieces = getCombinablePieces(
-		getPiecesForDefinition(bench, pieceRegistry, definitionId),
-		stage
+	const matchingBench = getRegisteredPieces(bench, pieceRegistry).filter(
+		matchesGroup
 	);
 
-	const totalInstances =
-		matchingBoardPieces.length + matchingBenchPieces.length;
-
-	if (totalInstances < PIECES_TO_EVOLVE) {
-		return;
-	}
-
-	if (matchingBoardPieces.length > 0) {
-		// replace a board piece if one exists
-		const boardPieceToReplace = matchingBoardPieces.pop()!;
-		const piecePosition = board.getPiecePosition(boardPieceToReplace.id);
+	if (matchingBoard.length > 0) {
+		const target = matchingBoard.pop()!;
+		const piecePosition = board.getPiecePosition(target.id);
 		if (!piecePosition) {
 			return;
 		}
 		const [x, y] = piecePosition;
 
-		const targetBoardPieceIds = [
-			...matchingBoardPieces,
-			boardPieceToReplace,
-		].map((p) => p.id);
-		player.removeBoardPieces({ pieceIds: targetBoardPieceIds });
-
-		const targetBenchPieceIds = matchingBenchPieces.map((p) => p.id);
-		player.removeBenchPieces({ pieceIds: targetBenchPieceIds });
-
-		for (const pid of [...targetBoardPieceIds, ...targetBenchPieceIds]) {
-			pieceRegistry.deregisterPiece(pid);
+		const boardIds = [...matchingBoard, target].map((p) => p.id);
+		const benchIds = matchingBench.map((p) => p.id);
+		player.removeBoardPieces({ pieceIds: boardIds });
+		player.removeBenchPieces({ pieceIds: benchIds });
+		for (const id of [...boardIds, ...benchIds]) {
+			pieceRegistry.deregisterPiece(id);
 		}
 
-		const evolved = { ...boardPieceToReplace, stage: stage + 1 };
+		const evolved = { ...target, stage: group.stage + 1 };
 		pieceRegistry.registerPiece(evolved);
-
 		player.addBoardPiece({
 			pieceId: evolved.id,
 			position: packPosition(x, y),
 		});
-		return;
+	} else {
+		const target = matchingBench.pop()!;
+		const benchPosition = bench.getPiecePosition(target.id);
+		if (!benchPosition) {
+			return;
+		}
+		const [x] = benchPosition;
+
+		const benchIds = [...matchingBench, target].map((p) => p.id);
+		player.removeBenchPieces({ pieceIds: benchIds });
+		for (const id of benchIds) {
+			pieceRegistry.deregisterPiece(id);
+		}
+
+		const evolved = { ...target, stage: group.stage + 1 };
+		pieceRegistry.registerPiece(evolved);
+		player.addBenchPiece({
+			pieceId: evolved.id,
+			position: { x },
+		});
 	}
-
-	// otherwise replace one of the bench pieces
-	const pieceToReplace = matchingBenchPieces.pop()!;
-	const benchPiecePosition = bench.getPiecePosition(pieceToReplace.id);
-	if (!benchPiecePosition) {
-		return;
-	}
-	const [bx] = benchPiecePosition;
-
-	const benchPieceIds = [...matchingBenchPieces, pieceToReplace].map(
-		(p) => p.id
-	);
-	player.removeBenchPieces({ pieceIds: benchPieceIds });
-
-	for (const id of benchPieceIds) {
-		pieceRegistry.deregisterPiece(id);
-	}
-
-	const newPiece = { ...pieceToReplace, stage: stage + 1 };
-	pieceRegistry.registerPiece(newPiece);
-
-	player.addBenchPiece({
-		pieceId: newPiece.id,
-		position: { x: bx },
-	});
 };
 
-export const queueEvolutionCheck = (
-	player: Player,
-	definitionId: number,
-	stage: number
-): void => {
-	player.pendingEvolutionChecks.add(`${definitionId}:${stage}`);
-};
-
-/**
- * Run evolution checks queued during a locked phase. Called from
- * PhaseRules.onPreparingPhaseStart, after the board has unlocked.
- */
-export const drainPendingEvolutionChecks = (player: Player): void => {
-	for (const key of player.pendingEvolutionChecks) {
-		const [definitionId, stage] = key.split(":").map(Number);
-		evolvePieces(player, definitionId, stage);
+// Handles one group per call; chain evolutions cascade via the addBoardPiece /
+// addBenchPiece mutators re-entering on the placed evolved piece.
+export const runEvolutions = (player: Player): void => {
+	if (player.boardLocked) {
+		return;
 	}
-	player.pendingEvolutionChecks.clear();
+	const {
+		board,
+		bench,
+		gamemode: { pieceRegistry },
+	} = player;
+	const allPieces = [
+		...getRegisteredPieces(board, pieceRegistry),
+		...getRegisteredPieces(bench, pieceRegistry),
+	];
+	const group = findEvolvableGroup(allPieces);
+	if (!group) {
+		return;
+	}
+	applyEvolution(player, group);
 };

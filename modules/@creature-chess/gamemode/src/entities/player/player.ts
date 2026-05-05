@@ -34,12 +34,8 @@ import {
 	playerFinishMatchEvent,
 	playerReceiveQuickChatEvent,
 } from "./events";
+import { runEvolutions } from "./operations/evolution";
 import { setupPlayerListeners } from "./listeners/root";
-import {
-	evolvePieces,
-	pieceCanEvolve,
-	queueEvolutionCheck,
-} from "./operations/evolution";
 import { PlayerState, playerReducers } from "./state";
 import {
 	addBenchPieceCommand,
@@ -136,14 +132,6 @@ export type Player = {
 	finishPosition: number;
 	finishRound: number;
 	match: Match | null;
-
-	/**
-	 * A set of pending evolution checks, encoded as `{definitionId}:{stage}`.
-	 *
-	 * This is used when an evolution would involve a piece on a locked board,
-	 * to delay the evolution until the board unlocks.
-	 */
-	readonly pendingEvolutionChecks: Set<string>;
 
 	/**
 	 * Internal escape hatches. Prefer the typed mutators / getters / events
@@ -609,7 +597,6 @@ export const createPlayer = (
 		finishPosition: initialVars.finishPosition,
 		finishRound: initialVars.finishRound,
 		match: initialVars.match,
-		pendingEvolutionChecks: new Set(),
 		select: <T>(selector: (state: PlayerState) => T) => selector(state),
 		put,
 		addListener,
@@ -674,7 +661,7 @@ export const createPlayer = (
 				unpackY(payload.position)
 			);
 			put(addBoardPieceCommand(payload));
-			checkEvolution(payload.pieceId);
+			runEvolutions(player);
 		},
 		removeBoardPiece: (payload) => {
 			board.removePiece(payload.pieceId);
@@ -714,7 +701,7 @@ export const createPlayer = (
 		addBenchPiece: (payload) => {
 			bench.setPiece(payload.pieceId, payload.position.x, 0);
 			put(addBenchPieceCommand(payload));
-			checkEvolution(payload.pieceId);
+			runEvolutions(player);
 		},
 		removeBenchPiece: (payload) => {
 			bench.removePiece(payload.pieceId);
@@ -815,21 +802,6 @@ export const createPlayer = (
 		emitClientFinishMatch: () => put(clientFinishMatchEvent()),
 
 		events,
-	};
-
-	const checkEvolution = (pieceId: string) => {
-		const piece = dependencies.gamemode.pieceRegistry.getPieceById(pieceId);
-
-		if (!piece || !pieceCanEvolve(piece)) {
-			return;
-		}
-
-		if (player.boardLocked) {
-			queueEvolutionCheck(player, piece.definitionId, piece.stage);
-			return;
-		}
-
-		evolvePieces(player, piece.definitionId, piece.stage);
 	};
 
 	setupPlayerListeners(player.addListener);

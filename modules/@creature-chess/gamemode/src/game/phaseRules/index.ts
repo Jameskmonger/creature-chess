@@ -1,6 +1,6 @@
 import { finishedBattle, inProgressBattle, StreakType } from "@creature-chess/models";
 
-import { drainPendingEvolutionChecks } from "../../entities/player/operations/evolution";
+import { runEvolutions } from "../../entities/player/operations/evolution";
 import { fillBoard } from "../../entities/player/operations/fillBoard";
 import { Player } from "../../entities/player/player";
 import { Match } from "../match";
@@ -54,7 +54,7 @@ export const phaseRules: PhaseRules = {
 			return;
 		}
 
-		drainPendingEvolutionChecks(player);
+		runEvolutions(player);
 
 		const matchRewards = player.matchRewards;
 

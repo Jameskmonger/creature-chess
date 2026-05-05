@@ -1,7 +1,7 @@
 import { packPosition } from "@creature-chess/board";
 import { GamePhase, PlayerStatus, StreakType } from "@creature-chess/models";
 
-import { drainPendingEvolutionChecks } from "../../entities/player/operations/evolution";
+import { runEvolutions } from "../../entities/player/operations/evolution";
 import { Player } from "../../entities/player/player";
 import { createTestPlayer } from "../../entities/player/testUtils";
 import { gamePhaseStartedEvent } from "../events";
@@ -50,7 +50,7 @@ describe("PhaseRules — evolution invariant", () => {
 		expect(evolved.stage).toBe(1);
 	});
 
-	test("adding pieces while board locked defers — drain on preparing-phase start combines them", () => {
+	test("adding pieces while board locked defers — runEvolutions on unlock combines them", () => {
 		const player = createTestPlayer();
 		lockBoard(player);
 
@@ -64,13 +64,11 @@ describe("PhaseRules — evolution invariant", () => {
 		player.addBenchPiece({ pieceId: "c", position: { x: 2 } });
 
 		expect(player.bench.getAllPieces()).toHaveLength(3);
-		expect(player.pendingEvolutionChecks.has(`${definitionId}:0`)).toBe(true);
 
 		unlockBoard(player);
-		drainPendingEvolutionChecks(player);
+		runEvolutions(player);
 
 		expect(player.bench.getAllPieces()).toHaveLength(1);
-		expect(player.pendingEvolutionChecks.size).toBe(0);
 	});
 
 	test("evolution combines pieces split across board+bench when sufficient total", () => {
