@@ -8,10 +8,6 @@ import {
 } from "../../entities/player/events";
 import { PlayerStartListening } from "../../entities/player/player";
 import { PlayerState } from "../../entities/player/state";
-import {
-	clearBenchCommand,
-	clearBoardCommand,
-} from "../../entities/player/state/board";
 import { updateCardsCommand } from "../../entities/player/state/cardShop";
 import {
 	getPlayerCards,
@@ -58,8 +54,8 @@ export const setupPlayerGameDeckListeners = (
 			);
 
 			api.dispatch(updateCardsCommand([]));
-			api.dispatch(clearBoardCommand());
-			api.dispatch(clearBenchCommand());
+			api.player.clearBoard();
+			api.player.clearBench();
 
 			for (const piece of allPieces) {
 				pieceRegistry.deregisterPiece(piece.id);

@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { MAX_LEVEL } from "@creature-chess/models";
 
-import { addXpCommand } from "../entities/player/listeners/xp";
+import { addXp } from "../entities/player/operations/xp";
 import { PlayerStartListening } from "../entities/player/player";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { isPlayerAlive } from "../entities/player/state/selectors";
@@ -48,7 +48,7 @@ export const setupBuyXpListener = (startListening: PlayerStartListening) => {
 				return;
 			}
 
-			api.dispatch(addXpCommand(settings.buyXpAmount));
+			addXp(api.player, settings.buyXpAmount);
 			api.dispatch(
 				playerInfoCommands.updateMoneyCommand(money - settings.buyXpCost)
 			);

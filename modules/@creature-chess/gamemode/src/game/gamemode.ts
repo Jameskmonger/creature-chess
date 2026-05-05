@@ -22,6 +22,7 @@ import {
 } from "./events";
 import { runGame, GameContext } from "./gameContext";
 import { OpponentProvider } from "./opponentProvider";
+import { phaseRules } from "./phaseRules";
 import { setupPlayerGameDeckListeners } from "./player/playerGameDeck";
 import { PlayerList } from "./playerList";
 
@@ -137,6 +138,7 @@ export class Gamemode {
 			},
 			logger: this.logger,
 			settings: this.settings,
+			phaseRules,
 		};
 
 		// Run the game (async, not blocking)

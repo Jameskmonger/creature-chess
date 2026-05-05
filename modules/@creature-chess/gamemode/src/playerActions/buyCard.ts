@@ -18,10 +18,6 @@ import {
 
 import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
-import {
-	addBenchPieceCommand,
-	addBoardPieceCommand,
-} from "../entities/player/state/board";
 import { updateCardsCommand } from "../entities/player/state/cardShop";
 import { playerInfoCommands } from "../entities/player/state/playerInfo/reducer";
 import {
@@ -171,19 +167,15 @@ export const setupBuyCardListener = (startListening: PlayerStartListening) => {
 			const remainingCards = cards.map((c) => (c === card ? null : c));
 
 			if (destination.type === "board") {
-				api.dispatch(
-					addBoardPieceCommand({
-						pieceId: piece.id,
-						position: destination.location,
-					})
-				);
+				api.player.addBoardPiece({
+					pieceId: piece.id,
+					position: destination.location,
+				});
 			} else if (destination.type === "bench") {
-				api.dispatch(
-					addBenchPieceCommand({
-						pieceId: piece.id,
-						position: { x: unpackX(destination.location) },
-					})
-				);
+				api.player.addBenchPiece({
+					pieceId: piece.id,
+					position: { x: unpackX(destination.location) },
+				});
 			}
 
 			api.dispatch(playerInfoCommands.updateMoneyCommand(money - card.cost));

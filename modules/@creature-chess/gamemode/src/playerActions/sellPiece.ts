@@ -4,10 +4,6 @@ import { getDefinitionById, PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { afterSellPieceEvent } from "../entities/player/events";
 import { PlayerStartListening } from "../entities/player/player";
-import {
-	removeBenchPieceCommand,
-	removeBoardPieceCommand,
-} from "../entities/player/state/board";
 import { playerInfoCommands } from "../entities/player/state/commands";
 import { getPiecesForStage } from "../game/evolution";
 
@@ -58,8 +54,8 @@ export const setupSellPieceListener = (
 			);
 
 			// todo gross, only remove from one
-			api.dispatch(removeBoardPieceCommand({ pieceId }));
-			api.dispatch(removeBenchPieceCommand({ pieceId }));
+			api.player.removeBoardPiece({ pieceId });
+			api.player.removeBenchPiece({ pieceId });
 
 			api.dispatch(afterSellPieceEvent({ piece }));
 		},

@@ -80,7 +80,9 @@ export class Match {
 		return this.runner.getTurn();
 	}
 
-	public async fight(battleTimeout: Promise<void>) {
+	public async fight(
+		battleTimeout: Promise<void>
+	): Promise<{ homeScore: number; awayScore: number }> {
 		const battlePromise = this.runner.run().then(({ turn }) => {
 			this.logger.debug("Battle finished", {
 				meta: {
@@ -121,14 +123,16 @@ export class Match {
 		const homeScore = surviving.home.length;
 		const awayScore = surviving.away.length;
 
+		// Notify spectators that the match has finished.
 		this.home.put(
 			playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: true })
 		);
-
 		if (!this.awayIsClone) {
 			this.away.put(
 				playerFinishMatchEvent({ homeScore, awayScore, isHomePlayer: false })
 			);
 		}
+
+		return { homeScore, awayScore };
 	}
 }

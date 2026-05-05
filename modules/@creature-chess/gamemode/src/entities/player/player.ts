@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 
-import { Board } from "@creature-chess/board";
+import { Board, PackedPosition, unpackX, unpackY } from "@creature-chess/board";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PlayerProfile } from "@creature-chess/models";
 
@@ -9,6 +9,20 @@ import type { Match } from "../../game/match";
 import { roundInfoReducer } from "../../game/roundInfo";
 import { setupPlayerListeners } from "./listeners/root";
 import { PlayerState, playerReducers } from "./state";
+import {
+	addBenchPieceCommand,
+	addBoardPieceCommand,
+	clearBenchCommand,
+	clearBoardCommand,
+	moveBenchPieceCommand,
+	moveBoardPieceCommand,
+	removeBenchPieceCommand,
+	removeBenchPiecesCommand,
+	removeBoardPieceCommand,
+	removeBoardPiecesCommand,
+	swapBenchPiecesCommand,
+	swapBoardPiecesCommand,
+} from "./state/board";
 
 // ── Action types ──
 
@@ -69,6 +83,14 @@ export type Player = {
 	finishRound: number;
 	match: Match | null;
 
+	/**
+	 * A set of pending evolution checks, encoded as `{definitionId}:{stage}`.
+	 *
+	 * This is used when an evolution would involve a piece on a locked board,
+	 * to delay the evolution until the board unlocks.
+	 */
+	readonly pendingEvolutionChecks: Set<string>;
+
 	// State management
 	select: <T>(selector: (state: PlayerState) => T) => T;
 	put: (action: Action) => void;
@@ -76,6 +98,28 @@ export type Player = {
 	runEffect: (
 		effect: (api: PlayerListenerApi) => Promise<void>
 	) => CancellableTask;
+
+	addBoardPiece: (payload: { pieceId: string; position: PackedPosition }) => void;
+	removeBoardPiece: (payload: { pieceId: string }) => void;
+	removeBoardPieces: (payload: { pieceIds: string[] }) => void;
+	swapBoardPieces: (payload: { pieceIdA: string; pieceIdB: string }) => void;
+	moveBoardPiece: (payload: {
+		pieceId: string;
+		from: PackedPosition;
+		to: PackedPosition;
+	}) => void;
+	clearBoard: () => void;
+
+	addBenchPiece: (payload: { pieceId: string; position: { x: number } }) => void;
+	removeBenchPiece: (payload: { pieceId: string }) => void;
+	removeBenchPieces: (payload: { pieceIds: string[] }) => void;
+	swapBenchPieces: (payload: { pieceIdA: string; pieceIdB: string }) => void;
+	moveBenchPiece: (payload: {
+		pieceId: string;
+		from: { x: number };
+		to: { x: number };
+	}) => void;
+	clearBench: () => void;
 };
 
 // ── Internals ──
@@ -350,11 +394,14 @@ export const createPlayer = (
 		};
 	};
 
+	const board = dependencies.boards.board;
+	const bench = dependencies.boards.bench;
+
 	const player: Player = {
 		id,
 		logger: dependencies.logger,
-		board: dependencies.boards.board,
-		bench: dependencies.boards.bench,
+		board,
+		bench,
 		gamemode: dependencies.gamemode,
 		settings: dependencies.settings,
 		name: initialVars.name,
@@ -362,10 +409,85 @@ export const createPlayer = (
 		finishPosition: initialVars.finishPosition,
 		finishRound: initialVars.finishRound,
 		match: initialVars.match,
+		pendingEvolutionChecks: new Set(),
 		select: <T>(selector: (state: PlayerState) => T) => selector(state),
 		put,
 		addListener,
 		runEffect,
+
+		addBoardPiece: (payload) => {
+			board.setPiece(
+				payload.pieceId,
+				unpackX(payload.position),
+				unpackY(payload.position)
+			);
+			put(addBoardPieceCommand(payload));
+		},
+		removeBoardPiece: (payload) => {
+			board.removePiece(payload.pieceId);
+			put(removeBoardPieceCommand(payload));
+		},
+		removeBoardPieces: (payload) => {
+			for (const pid of payload.pieceIds) {
+				board.removePiece(pid);
+			}
+			put(removeBoardPiecesCommand(payload));
+		},
+		swapBoardPieces: (payload) => {
+			board.swapPieces(payload.pieceIdA, payload.pieceIdB);
+			put(swapBoardPiecesCommand(payload));
+		},
+		moveBoardPiece: (payload) => {
+			const existing = board.getPiecePosition(payload.pieceId);
+			if (
+				!existing ||
+				existing[0] !== unpackX(payload.from) ||
+				existing[1] !== unpackY(payload.from)
+			) {
+				return;
+			}
+			board.setPiece(
+				payload.pieceId,
+				unpackX(payload.to),
+				unpackY(payload.to)
+			);
+			put(moveBoardPieceCommand(payload));
+		},
+		clearBoard: () => {
+			board.clear();
+			put(clearBoardCommand());
+		},
+
+		addBenchPiece: (payload) => {
+			bench.setPiece(payload.pieceId, payload.position.x, 0);
+			put(addBenchPieceCommand(payload));
+		},
+		removeBenchPiece: (payload) => {
+			bench.removePiece(payload.pieceId);
+			put(removeBenchPieceCommand(payload));
+		},
+		removeBenchPieces: (payload) => {
+			for (const pid of payload.pieceIds) {
+				bench.removePiece(pid);
+			}
+			put(removeBenchPiecesCommand(payload));
+		},
+		swapBenchPieces: (payload) => {
+			bench.swapPieces(payload.pieceIdA, payload.pieceIdB);
+			put(swapBenchPiecesCommand(payload));
+		},
+		moveBenchPiece: (payload) => {
+			const existing = bench.getPiecePosition(payload.pieceId);
+			if (!existing || existing[0] !== payload.from.x) {
+				return;
+			}
+			bench.setPiece(payload.pieceId, payload.to.x, 0);
+			put(moveBenchPieceCommand(payload));
+		},
+		clearBench: () => {
+			bench.clear();
+			put(clearBenchCommand());
+		},
 	};
 
 	setupPlayerListeners(player.addListener);

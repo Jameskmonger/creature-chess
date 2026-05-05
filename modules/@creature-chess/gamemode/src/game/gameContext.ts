@@ -3,9 +3,11 @@ import { Logger } from "winston";
 
 import { GamemodeSettings } from "@creature-chess/models";
 
+import { playerDeathEvent } from "../entities/player/events";
 import { Player } from "../entities/player/player";
-import { gameLoop } from "./gameLoop";
 import { Gamemode } from "./gamemode";
+import { PhaseRules } from "./phaseRules";
+import { Round, RoundCallbacks } from "./round";
 
 export type GetMatchupsFn = () => {
 	homeId: string;
@@ -23,6 +25,7 @@ export type GameContext = {
 	};
 	logger: Logger;
 	settings: GamemodeSettings;
+	phaseRules: PhaseRules;
 };
 
 export type GameContextPlayers = GameContext["players"];
@@ -34,15 +37,59 @@ const stopwatch = (start: [number, number]) => {
 	return Math.round(end[0] * 1000 + end[1] / 1000000);
 };
 
-type Callbacks = {
-	onTurnComplete?: (timeMs: number) => void;
-	onMatchStart?: () => void;
-	onMatchEnd?: () => void;
+const runGameLoop = async (
+	context: GameContext,
+	callbacks: RoundCallbacks = {}
+) => {
+	const { gamemode, players } = context;
+
+	let currentLastPosition = players.getAll().length;
+	let currentRoundNumber = gamemode.roundInfo.round;
+
+	for (const player of players.getAll()) {
+		player.addListener({
+			actionCreator: playerDeathEvent,
+			effect: async (_action, api) => {
+				api.player.finishPosition = currentLastPosition;
+				api.player.finishRound = currentRoundNumber;
+				currentLastPosition--;
+			},
+		});
+	}
+
+	while (true) {
+		currentRoundNumber++;
+		const round = new Round(currentRoundNumber, context, callbacks);
+		await round.run();
+
+		if (players.getLiving().length < 2) {
+			break;
+		}
+	}
+
+	if (players.getLiving().length === 0) {
+		console.log("Game finished, no winners");
+		return players.getAll().map((p) => ({
+			id: p.id,
+			position: p.finishPosition,
+			finishRound: p.finishRound,
+		}));
+	}
+
+	const winner = players.getLiving()[0];
+	winner.finishPosition = 1;
+	winner.finishRound = currentRoundNumber;
+
+	return players.getAll().map((p) => ({
+		id: p.id,
+		position: p.finishPosition,
+		finishRound: p.finishRound,
+	}));
 };
 
 export const runGame = async (
 	context: GameContext,
-	callbacks: Callbacks = {}
+	callbacks: RoundCallbacks = {}
 ) => {
 	const { gamemode, players, logger, settings } = context;
 
@@ -59,7 +106,7 @@ export const runGame = async (
 
 	const startTime = startStopwatch();
 
-	const gameResults = await gameLoop(context, callbacks);
+	const gameResults = await runGameLoop(context, callbacks);
 
 	const duration = stopwatch(startTime);
 

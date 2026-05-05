@@ -1,5 +1,7 @@
 import delay from "delay";
 
+import { GamePhase } from "@creature-chess/models";
+
 import {
 	Player,
 	PlayerCommands,
@@ -70,10 +72,11 @@ const setupSpectateListeners = (
 
 	unsubscribes.push(
 		targetEntity.addListener({
-			actionCreator: GameEvents.playerRunReadyPhaseEvent,
-			effect: async (_action, api) => {
-				// todo improve this, it's to allow the match variable to be set... maybe some `setMatchEvent`
-				await delay(100);
+			actionCreator: GameEvents.gamePhaseStartedEvent,
+			effect: async ({ payload: { phase } }, api) => {
+				if (phase !== GamePhase.READY) {
+					return;
+				}
 
 				const currentMatch = api.player.match;
 				if (currentMatch) {

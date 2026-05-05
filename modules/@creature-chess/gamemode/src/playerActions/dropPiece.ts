@@ -5,14 +5,6 @@ import { GamePhase, PlayerPieceLocation } from "@creature-chess/models";
 
 import { PlayerStartListening } from "../entities/player/player";
 import { PlayerState } from "../entities/player/state";
-import {
-	addBenchPieceCommand,
-	addBoardPieceCommand,
-	moveBenchPieceCommand,
-	moveBoardPieceCommand,
-	removeBenchPieceCommand,
-	removeBoardPieceCommand,
-} from "../entities/player/state/board";
 import { getPlayerBelowPieceLimit } from "../entities/player/state/selectors";
 
 export const findPiece = (
@@ -102,40 +94,29 @@ export const setupDropPieceListener = (
 			}
 
 			if (from.type === "board" && to.type === "board") {
-				api.dispatch(
-					moveBoardPieceCommand({
-						pieceId,
-						from: from.location,
-						to: to.location,
-					})
-				);
+				api.player.moveBoardPiece({
+					pieceId,
+					from: from.location,
+					to: to.location,
+				});
 			} else if (from.type === "bench" && to.type === "bench") {
-				const fromBench = { x: unpackX(from.location), y: 0 };
-				const toBench = { x: unpackX(to.location), y: 0 };
-
-				api.dispatch(
-					moveBenchPieceCommand({
-						pieceId,
-						from: fromBench,
-						to: toBench,
-					})
-				);
+				api.player.moveBenchPiece({
+					pieceId,
+					from: { x: unpackX(from.location) },
+					to: { x: unpackX(to.location) },
+				});
 			} else if (from.type === "board" && to.type === "bench") {
-				api.dispatch(removeBoardPieceCommand({ pieceId }));
-				api.dispatch(
-					addBenchPieceCommand({
-						pieceId,
-						position: { x: unpackX(to.location) },
-					})
-				);
+				api.player.removeBoardPiece({ pieceId });
+				api.player.addBenchPiece({
+					pieceId,
+					position: { x: unpackX(to.location) },
+				});
 			} else if (from.type === "bench" && to.type === "board") {
-				api.dispatch(removeBenchPieceCommand({ pieceId }));
-				api.dispatch(
-					addBoardPieceCommand({
-						pieceId,
-						position: to.location,
-					})
-				);
+				api.player.removeBenchPiece({ pieceId });
+				api.player.addBoardPiece({
+					pieceId,
+					position: to.location,
+				});
 			}
 		},
 	});
