@@ -52,8 +52,6 @@ export const BotActions = {
 	 * Create an action to move a piece from one board location to another, optionally swapping with an existing piece.
 	 *
 	 * @param srcPieceId The ID of the piece to move.
-	 * @param srcX The X coordinate of the source location.
-	 * @param srcY The Y coordinate of the source location.
 	 * @param destX The X coordinate of the destination location.
 	 * @param destY The Y coordinate of the destination location.
 	 * @param destPieceId The ID of the piece at the destination location, if any (for swapping).
@@ -62,33 +60,24 @@ export const BotActions = {
 	 */
 	boardToBoard: (
 		srcPieceId: string,
-		srcX: number,
-		srcY: number,
 		destX: number,
 		destY: number,
 		destPieceId?: string
-	): Action => {
-		const from = boardLocation(srcX, srcY);
-		const to = boardLocation(destX, destY);
-		return destPieceId
+	): Action =>
+		destPieceId
 			? PlayerActions.swapPiecePlayerAction({
 					pieceAId: srcPieceId,
-					pieceALocation: from,
 					pieceBId: destPieceId,
-					pieceBLocation: to,
 				})
 			: PlayerActions.dropPiecePlayerAction({
 					pieceId: srcPieceId,
-					from,
-					to,
-				});
-	},
+					to: boardLocation(destX, destY),
+				}),
 
 	/**
 	 * Move a piece from the bench to the board, optionally swapping with an existing piece.
 	 *
 	 * @param srcPieceId The ID of the piece to move.
-	 * @param srcX The X coordinate of the source location on the bench.
 	 * @param destX The X coordinate of the destination location on the board.
 	 * @param destY The Y coordinate of the destination location on the board.
 	 * @param destPieceId The ID of the piece at the destination location, if any (for swapping).
@@ -97,46 +86,31 @@ export const BotActions = {
 	 */
 	benchToBoard: (
 		srcPieceId: string,
-		srcX: number,
 		destX: number,
 		destY: number,
 		destPieceId?: string
-	): Action => {
-		const from = benchLocation(srcX);
-		const to = boardLocation(destX, destY);
-		return destPieceId
+	): Action =>
+		destPieceId
 			? PlayerActions.swapPiecePlayerAction({
 					pieceAId: srcPieceId,
-					pieceALocation: from,
 					pieceBId: destPieceId,
-					pieceBLocation: to,
 				})
 			: PlayerActions.dropPiecePlayerAction({
 					pieceId: srcPieceId,
-					from,
-					to,
-				});
-	},
+					to: boardLocation(destX, destY),
+				}),
 
 	/**
 	 * Move a piece from the board to an empty spot on the bench.
 	 *
 	 * @param srcPieceId The ID of the piece to move.
-	 * @param srcX The X coordinate of the source location on the board.
-	 * @param srcY The Y coordinate of the source location on the board.
 	 * @param benchX The X coordinate of the destination location on the bench.
 	 *
 	 * @returns The action to perform the move.
 	 */
-	boardToBench: (
-		srcPieceId: string,
-		srcX: number,
-		srcY: number,
-		benchX: number
-	): Action =>
+	boardToBench: (srcPieceId: string, benchX: number): Action =>
 		PlayerActions.dropPiecePlayerAction({
 			pieceId: srcPieceId,
-			from: boardLocation(srcX, srcY),
 			to: benchLocation(benchX),
 		}),
 };

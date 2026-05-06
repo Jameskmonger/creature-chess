@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import { clearSelectedPiece } from "~/store/game/ui";
-import { getLocationForPiece } from "~/utils/getLocationForPiece";
 
 import { Board, packPosition } from "@creature-chess/board";
 import { PlayerActions } from "@creature-chess/gamemode";
@@ -13,12 +12,6 @@ export const useOnDropPiece = (board: Board, bench: Board) => {
 
 	return ({ id, location }: { id: string; location: GameBoardLocation }) => {
 		if (!board) {
-			return;
-		}
-
-		const from = getLocationForPiece(id, board, bench);
-
-		if (!from) {
 			return;
 		}
 
@@ -35,16 +28,13 @@ export const useOnDropPiece = (board: Board, bench: Board) => {
 			dispatch(
 				PlayerActions.swapPiecePlayerAction({
 					pieceAId: id,
-					pieceALocation: from,
 					pieceBId: occupantId,
-					pieceBLocation: to,
 				})
 			);
 		} else {
 			dispatch(
 				PlayerActions.dropPiecePlayerAction({
 					pieceId: id,
-					from,
 					to,
 				})
 			);

@@ -34,5 +34,3 @@ export { Match } from "./src/game/match";
 
 export { getXpToNextLevel } from "./src/player/xp";
 export { getPiecesForStage } from "./src/game/evolution";
-
-export * from "./src/entities/player/state/board";

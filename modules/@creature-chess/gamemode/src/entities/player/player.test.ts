@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 
-import { SubscribableBoard } from "@creature-chess/board";
+import { SubscribableBoard, packPosition } from "@creature-chess/board";
 import { PlayerProfile, PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
@@ -145,6 +145,58 @@ describe("createPlayer", () => {
 			expect(player.reduceHealth(7)).toBe(true);
 			// Already dead — further reductions do not re-trigger
 			expect(player.reduceHealth(1)).toBe(false);
+		});
+	});
+
+	describe("swapPieces", () => {
+		const makePiece = (id: string, definitionId: number) => ({
+			id,
+			ownerId: "player-1",
+			definitionId,
+			stage: 0,
+			traits: [],
+			maxHealth: 100,
+		});
+
+		test("cross-side swap sends each piece to the other's prior side and slot", () => {
+			const player = createSubject();
+			player.addPiece(makePiece("a", 1), {
+				type: "board",
+				location: packPosition(2, 1),
+			});
+			player.addPiece(makePiece("b", 2), {
+				type: "bench",
+				location: packPosition(4, 0),
+			});
+
+			player.swapPieces("a", "b");
+
+			expect(player.bench.containsPiece("a")).toBe(true);
+			expect(player.bench.getPiecePosition("a")).toEqual([4, 0]);
+			expect(player.board.containsPiece("b")).toBe(true);
+			expect(player.board.getPiecePosition("b")).toEqual([2, 1]);
+		});
+
+		test("cross-side swap does not throw when bench-piece's x collides with a board piece in row 0", () => {
+			const player = createSubject();
+			// Decoy on board at (3, 0) — same x as the bench piece, row 0.
+			player.addPiece(makePiece("decoy", 3), {
+				type: "board",
+				location: packPosition(3, 0),
+			});
+			player.addPiece(makePiece("a", 1), {
+				type: "board",
+				location: packPosition(2, 1),
+			});
+			player.addPiece(makePiece("b", 2), {
+				type: "bench",
+				location: packPosition(3, 0),
+			});
+
+			expect(() => player.swapPieces("a", "b")).not.toThrow();
+			expect(player.bench.getPiecePosition("a")).toEqual([3, 0]);
+			expect(player.board.getPiecePosition("b")).toEqual([2, 1]);
+			expect(player.board.getPiecePosition("decoy")).toEqual([3, 0]);
 		});
 	});
 

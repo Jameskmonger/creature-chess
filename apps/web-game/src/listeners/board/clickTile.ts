@@ -2,7 +2,6 @@ import { createAction } from "@reduxjs/toolkit";
 import { AppState } from "~/store";
 import { clearSelectedPiece } from "~/store/game/ui";
 import { ClientStartListening } from "~/store/listenerContext";
-import { getLocationForPiece } from "~/utils/getLocationForPiece";
 
 import { unpackPosition } from "@creature-chess/board";
 import { PlayerActions } from "@creature-chess/gamemode";
@@ -24,42 +23,23 @@ export const setupClickTileListener = (
 			const selectedPieceId = (api.getState() as AppState).game.ui
 				.selectedPieceId;
 
-			console.log("currently selected piece id:", selectedPieceId);
-
 			if (!selectedPieceId) {
 				return;
 			}
 
-			let tileEmpty = false;
-
 			const [x, y] = unpackPosition(tile.location);
-
-			if (tile.type === "bench") {
-				tileEmpty = slices.bench.getPieceIdAtPosition(x, y) === null;
-			} else if (tile.type === "board") {
-				tileEmpty = slices.board.getPieceIdAtPosition(x, y) === null;
-			}
+			const tileEmpty =
+				tile.type === "bench"
+					? slices.bench.getPieceIdAtPosition(x, y) === null
+					: slices.board.getPieceIdAtPosition(x, y) === null;
 
 			if (!tileEmpty) {
-				return;
-			}
-
-			const from = getLocationForPiece(
-				selectedPieceId,
-				slices.board,
-				slices.bench
-			);
-
-			console.log(`from position for piece ${selectedPieceId}:`, from);
-
-			if (!from) {
 				return;
 			}
 
 			api.dispatch(
 				PlayerActions.dropPiecePlayerAction({
 					pieceId: selectedPieceId,
-					from,
 					to: tile,
 				})
 			);

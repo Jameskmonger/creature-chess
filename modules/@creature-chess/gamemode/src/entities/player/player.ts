@@ -1,10 +1,9 @@
 import { Logger } from "winston";
 
 import {
-	PackedPosition,
 	SubscribableBoard,
+	unpackPosition,
 	unpackX,
-	unpackY,
 } from "@creature-chess/board";
 import {
 	Card,
@@ -13,6 +12,7 @@ import {
 	MAX_HEALTH,
 	PieceModel,
 	PlayerBattle,
+	PlayerPieceLocation,
 	PlayerProfile,
 	PlayerStatus,
 	PlayerStreak,
@@ -36,20 +36,6 @@ import {
 } from "./events";
 import { runEvolutions } from "./operations/evolution";
 import { PlayerState, playerReducers } from "./state";
-import {
-	addBenchPieceCommand,
-	addBoardPieceCommand,
-	clearBenchCommand,
-	clearBoardCommand,
-	moveBenchPieceCommand,
-	moveBoardPieceCommand,
-	removeBenchPieceCommand,
-	removeBenchPiecesCommand,
-	removeBoardPieceCommand,
-	removeBoardPiecesCommand,
-	swapBenchPiecesCommand,
-	swapBoardPiecesCommand,
-} from "./state/board";
 import { updateCardsCommand, updateShopLockCommand } from "./state/cardShop";
 import {
 	PlayerInfoUpdateCommand,
@@ -120,27 +106,11 @@ export type Player = {
 	readonly belowPieceLimit: boolean;
 	readonly spectatingId: string | null;
 
-	addBoardPiece: (payload: { pieceId: string; position: PackedPosition }) => void;
-	removeBoardPiece: (payload: { pieceId: string }) => void;
-	removeBoardPieces: (payload: { pieceIds: string[] }) => void;
-	swapBoardPieces: (payload: { pieceIdA: string; pieceIdB: string }) => void;
-	moveBoardPiece: (payload: {
-		pieceId: string;
-		from: PackedPosition;
-		to: PackedPosition;
-	}) => void;
-	clearBoard: () => void;
-
-	addBenchPiece: (payload: { pieceId: string; position: { x: number } }) => void;
-	removeBenchPiece: (payload: { pieceId: string }) => void;
-	removeBenchPieces: (payload: { pieceIds: string[] }) => void;
-	swapBenchPieces: (payload: { pieceIdA: string; pieceIdB: string }) => void;
-	moveBenchPiece: (payload: {
-		pieceId: string;
-		from: { x: number };
-		to: { x: number };
-	}) => void;
-	clearBench: () => void;
+	addPiece: (pieceId: string, at: PlayerPieceLocation) => void;
+	relocatePiece: (pieceId: string, to: PlayerPieceLocation) => void;
+	swapPieces: (pieceAId: string, pieceBId: string) => void;
+	removePiece: (pieceId: string) => void;
+	removePieces: (pieceIds: string[]) => void;
 
 	setMoney: (amount: number) => void;
 	addMoney: (amount: number) => void;
@@ -437,80 +407,95 @@ export const createPlayer = (
 			return state.spectating.id;
 		},
 
-		addBoardPiece: (payload) => {
-			board.setPiece(
-				payload.pieceId,
-				unpackX(payload.position),
-				unpackY(payload.position)
-			);
-			put(addBoardPieceCommand(payload));
+		addPiece: (pieceId, at) => {
+			if (at.type === "board") {
+				if (player.boardLocked) {
+					return;
+				}
+				const [x, y] = unpackPosition(at.location);
+				board.setPiece(pieceId, x, y);
+			} else {
+				bench.setPiece(pieceId, unpackX(at.location), 0);
+			}
 			runEvolutions(player);
-		},
-		removeBoardPiece: (payload) => {
-			board.removePiece(payload.pieceId);
-			put(removeBoardPieceCommand(payload));
-		},
-		removeBoardPieces: (payload) => {
-			for (const pid of payload.pieceIds) {
-				board.removePiece(pid);
-			}
-			put(removeBoardPiecesCommand(payload));
-		},
-		swapBoardPieces: (payload) => {
-			board.swapPieces(payload.pieceIdA, payload.pieceIdB);
-			put(swapBoardPiecesCommand(payload));
-		},
-		moveBoardPiece: (payload) => {
-			const existing = board.getPiecePosition(payload.pieceId);
-			if (
-				!existing ||
-				existing[0] !== unpackX(payload.from) ||
-				existing[1] !== unpackY(payload.from)
-			) {
-				return;
-			}
-			board.setPiece(
-				payload.pieceId,
-				unpackX(payload.to),
-				unpackY(payload.to)
-			);
-			put(moveBoardPieceCommand(payload));
-		},
-		clearBoard: () => {
-			board.clear();
-			put(clearBoardCommand());
 		},
 
-		addBenchPiece: (payload) => {
-			bench.setPiece(payload.pieceId, payload.position.x, 0);
-			put(addBenchPieceCommand(payload));
-			runEvolutions(player);
-		},
-		removeBenchPiece: (payload) => {
-			bench.removePiece(payload.pieceId);
-			put(removeBenchPieceCommand(payload));
-		},
-		removeBenchPieces: (payload) => {
-			for (const pid of payload.pieceIds) {
-				bench.removePiece(pid);
-			}
-			put(removeBenchPiecesCommand(payload));
-		},
-		swapBenchPieces: (payload) => {
-			bench.swapPieces(payload.pieceIdA, payload.pieceIdB);
-			put(swapBenchPiecesCommand(payload));
-		},
-		moveBenchPiece: (payload) => {
-			const existing = bench.getPiecePosition(payload.pieceId);
-			if (!existing || existing[0] !== payload.from.x) {
+		relocatePiece: (pieceId, to) => {
+			const onBoard = board.containsPiece(pieceId);
+			const onBench = bench.containsPiece(pieceId);
+			if (!onBoard && !onBench) {
 				return;
 			}
-			bench.setPiece(payload.pieceId, payload.to.x, 0);
-			put(moveBenchPieceCommand(payload));
+			// Lock check: any board endpoint is forbidden while locked.
+			if ((onBoard || to.type === "board") && player.boardLocked) {
+				return;
+			}
+			// Piece-limit check applies only when bench → board (board count grows).
+			if (onBench && to.type === "board" && !player.belowPieceLimit) {
+				return;
+			}
+
+			if (onBoard) {
+				board.removePiece(pieceId);
+			} else {
+				bench.removePiece(pieceId);
+			}
+
+			if (to.type === "board") {
+				const [x, y] = unpackPosition(to.location);
+				board.setPiece(pieceId, x, y);
+			} else {
+				bench.setPiece(pieceId, unpackX(to.location), 0);
+			}
+
+			runEvolutions(player);
 		},
-		clearBench: () => {
-			bench.clear();
-			put(clearBenchCommand());
+
+		swapPieces: (pieceAId, pieceBId) => {
+			const aOnBoard = board.containsPiece(pieceAId);
+			const aOnBench = bench.containsPiece(pieceAId);
+			const bOnBoard = board.containsPiece(pieceBId);
+			const bOnBench = bench.containsPiece(pieceBId);
+			if (!(aOnBoard || aOnBench) || !(bOnBoard || bOnBench)) {
+				return;
+			}
+			if ((aOnBoard || bOnBoard) && player.boardLocked) {
+				return;
+			}
+
+			if (aOnBoard && bOnBoard) {
+				board.swapPieces(pieceAId, pieceBId);
+				return;
+			}
+			if (aOnBench && bOnBench) {
+				bench.swapPieces(pieceAId, pieceBId);
+				return;
+			}
+			// Cross-side: A and B trade locations.
+			const aPos = (aOnBoard ? board : bench).getPiecePosition(pieceAId)!;
+			const bPos = (bOnBoard ? board : bench).getPiecePosition(pieceBId)!;
+			(aOnBoard ? board : bench).removePiece(pieceAId);
+			(bOnBoard ? board : bench).removePiece(pieceBId);
+			(bOnBoard ? board : bench).setPiece(pieceAId, bPos[0], bPos[1]);
+			(aOnBoard ? board : bench).setPiece(pieceBId, aPos[0], aPos[1]);
+		},
+
+		removePiece: (pieceId) => {
+			if (board.containsPiece(pieceId)) {
+				board.removePiece(pieceId);
+			} else if (bench.containsPiece(pieceId)) {
+				bench.removePiece(pieceId);
+			}
+		},
+
+		removePieces: (pieceIds) => {
+			for (const pid of pieceIds) {
+				if (board.containsPiece(pid)) {
+					board.removePiece(pid);
+				} else if (bench.containsPiece(pid)) {
+					bench.removePiece(pid);
+				}
+			}
 		},
 
 		setMoney: (amount) => put(playerInfoCommands.updateMoneyCommand(amount)),
@@ -585,8 +570,7 @@ export const createPlayer = (
 			);
 
 			player.setCards([]);
-			player.clearBoard();
-			player.clearBench();
+			player.removePieces(allPieces.map((p) => p.id));
 			for (const piece of allPieces) {
 				pieceRegistry.deregisterPiece(piece.id);
 			}

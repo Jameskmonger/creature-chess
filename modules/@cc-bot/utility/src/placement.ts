@@ -22,15 +22,9 @@ export const nextPlacementAction = (
 
 	if (boardPieces.length < level) {
 		const leftmost = benchPieces[0];
-		const benchSlot = bench.getPiecePosition(leftmost.id);
 		const emptySlot = findFirstEmptyBoardSlot(board);
-		if (benchSlot && emptySlot) {
-			return BotActions.benchToBoard(
-				leftmost.id,
-				benchSlot[0],
-				emptySlot.x,
-				emptySlot.y
-			);
+		if (emptySlot) {
+			return BotActions.benchToBoard(leftmost.id, emptySlot.x, emptySlot.y);
 		}
 	}
 
@@ -42,12 +36,10 @@ export const nextPlacementAction = (
 		strength(strongestBench.id, pieceRegistry) >
 			strength(weakestBoard.id, pieceRegistry)
 	) {
-		const benchSlot = bench.getPiecePosition(strongestBench.id);
 		const boardSlot = board.getPiecePosition(weakestBoard.id);
-		if (benchSlot && boardSlot) {
+		if (boardSlot) {
 			return BotActions.benchToBoard(
 				strongestBench.id,
-				benchSlot[0],
 				boardSlot[0],
 				boardSlot[1],
 				weakestBoard.id

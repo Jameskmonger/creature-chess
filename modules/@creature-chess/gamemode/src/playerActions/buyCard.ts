@@ -6,7 +6,6 @@ import {
 	Board,
 	getFirstEmptySlot,
 	topLeftToBottomRightSortPositions,
-	unpackX,
 } from "@creature-chess/board";
 import {
 	Card,
@@ -126,17 +125,7 @@ export const buyCardDef = definePlayerAction({
 
 		const remainingCards = cards.map((c) => (c === card ? null : c));
 
-		if (destination.type === "board") {
-			player.addBoardPiece({
-				pieceId: piece.id,
-				position: destination.location,
-			});
-		} else {
-			player.addBenchPiece({
-				pieceId: piece.id,
-				position: { x: unpackX(destination.location) },
-			});
-		}
+		player.addPiece(piece.id, destination);
 
 		player.reduceMoney(card.cost);
 		player.setCards(remainingCards);

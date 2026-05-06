@@ -1,18 +1,11 @@
 import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
-import { unpackX } from "@creature-chess/board";
-
-import {
-	findPiece,
-	isLocationLocked,
-	pieceLocationSchema,
-} from "./pieceLocation";
 import { definePlayerAction } from "./registry";
+import { pieceLocationSchema } from "./pieceLocation";
 
 const dropPieceSchema = z.object({
 	pieceId: z.string(),
-	from: pieceLocationSchema,
 	to: pieceLocationSchema,
 });
 
@@ -24,49 +17,7 @@ export const dropPiecePlayerAction = createAction<
 export const dropPieceDef = definePlayerAction({
 	type: dropPiecePlayerAction.type,
 	schema: dropPieceSchema,
-	handler: (player, { from, pieceId, to }) => {
-		const { board, bench } = player;
-
-		if (
-			isLocationLocked(player.boardLocked, from) ||
-			isLocationLocked(player.boardLocked, to)
-		) {
-			return;
-		}
-
-		const fromPieceId = findPiece(board, bench, from);
-		if (fromPieceId !== pieceId) {
-			return;
-		}
-
-		const toPieceId = findPiece(board, bench, to);
-		if (toPieceId !== null) {
-			return;
-		}
-
-		if (to.type === "board" && from.type !== "board") {
-			if (!player.belowPieceLimit) {
-				return;
-			}
-		}
-
-		if (from.type === "board" && to.type === "board") {
-			player.moveBoardPiece({ pieceId, from: from.location, to: to.location });
-		} else if (from.type === "bench" && to.type === "bench") {
-			player.moveBenchPiece({
-				pieceId,
-				from: { x: unpackX(from.location) },
-				to: { x: unpackX(to.location) },
-			});
-		} else if (from.type === "board" && to.type === "bench") {
-			player.removeBoardPiece({ pieceId });
-			player.addBenchPiece({
-				pieceId,
-				position: { x: unpackX(to.location) },
-			});
-		} else if (from.type === "bench" && to.type === "board") {
-			player.removeBenchPiece({ pieceId });
-			player.addBoardPiece({ pieceId, position: to.location });
-		}
+	handler: (player, { pieceId, to }) => {
+		player.relocatePiece(pieceId, to);
 	},
 });

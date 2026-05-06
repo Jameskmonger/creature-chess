@@ -33,9 +33,9 @@ describe("PhaseRules — evolution invariant", () => {
 		const pieces = ["a", "b", "c"].map((pid) => makePiece(pid, 0));
 		pieces.forEach((p) => pieceRegistry.registerPiece(p));
 
-		player.addBenchPiece({ pieceId: "a", position: { x: 0 } });
-		player.addBenchPiece({ pieceId: "b", position: { x: 1 } });
-		player.addBenchPiece({ pieceId: "c", position: { x: 2 } });
+		player.addPiece("a", { type: "bench", location: packPosition(0, 0) });
+		player.addPiece("b", { type: "bench", location: packPosition(1, 0) });
+		player.addPiece("c", { type: "bench", location: packPosition(2, 0) });
 
 		const benchPieces = player.bench.getAllPieces();
 		expect(benchPieces).toHaveLength(1);
@@ -54,9 +54,9 @@ describe("PhaseRules — evolution invariant", () => {
 			pieceRegistry.registerPiece(makePiece(pid, 0))
 		);
 
-		player.addBenchPiece({ pieceId: "a", position: { x: 0 } });
-		player.addBenchPiece({ pieceId: "b", position: { x: 1 } });
-		player.addBenchPiece({ pieceId: "c", position: { x: 2 } });
+		player.addPiece("a", { type: "bench", location: packPosition(0, 0) });
+		player.addPiece("b", { type: "bench", location: packPosition(1, 0) });
+		player.addPiece("c", { type: "bench", location: packPosition(2, 0) });
 
 		expect(player.bench.getAllPieces()).toHaveLength(3);
 
@@ -75,9 +75,9 @@ describe("PhaseRules — evolution invariant", () => {
 			pieceRegistry.registerPiece(makePiece(pid, 0))
 		);
 
-		player.addBoardPiece({ pieceId: "a", position: packPosition(0, 0) });
-		player.addBoardPiece({ pieceId: "b", position: packPosition(1, 0) });
-		player.addBenchPiece({ pieceId: "c", position: { x: 0 } });
+		player.addPiece("a", { type: "board", location: packPosition(0, 0) });
+		player.addPiece("b", { type: "board", location: packPosition(1, 0) });
+		player.addPiece("c", { type: "bench", location: packPosition(0, 0) });
 
 		expect(player.board.getAllPieces()).toHaveLength(1);
 		expect(player.bench.getAllPieces()).toHaveLength(0);

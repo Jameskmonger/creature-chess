@@ -129,7 +129,6 @@ describe("PlayerAction registry — payload validation", () => {
 	describe("dropPiecePlayerAction", () => {
 		const validPayload = {
 			pieceId: "p1",
-			from: { type: "bench" as const, location: packPosition(0, 0) },
 			to: { type: "board" as const, location: packPosition(0, 0) },
 		};
 
@@ -142,7 +141,7 @@ describe("PlayerAction registry — payload validation", () => {
 			expect(result.ok).toBe(true);
 		});
 
-		test("rejects missing from/to", () => {
+		test("rejects missing to", () => {
 			const player = createTestPlayer();
 			const result = dispatchIncomingPlayerAction(player, {
 				type: dropPiecePlayerAction.type,
@@ -157,7 +156,7 @@ describe("PlayerAction registry — payload validation", () => {
 				type: dropPiecePlayerAction.type,
 				payload: {
 					...validPayload,
-					from: { type: "elsewhere", location: 0 },
+					to: { type: "elsewhere", location: 0 },
 				},
 			});
 			expect(result.ok).toBe(false);
@@ -188,9 +187,7 @@ describe("PlayerAction registry — payload validation", () => {
 	describe("swapPiecePlayerAction", () => {
 		const validPayload = {
 			pieceAId: "a",
-			pieceALocation: { type: "board" as const, location: packPosition(0, 0) },
 			pieceBId: "b",
-			pieceBLocation: { type: "board" as const, location: packPosition(1, 0) },
 		};
 
 		test("accepts a well-formed payload", () => {
@@ -202,11 +199,11 @@ describe("PlayerAction registry — payload validation", () => {
 			expect(result.ok).toBe(true);
 		});
 
-		test("rejects malformed pieceALocation", () => {
+		test("rejects missing pieceBId", () => {
 			const player = createTestPlayer();
 			const result = dispatchIncomingPlayerAction(player, {
 				type: swapPiecePlayerAction.type,
-				payload: { ...validPayload, pieceALocation: "board:0,0" },
+				payload: { pieceAId: "a" },
 			});
 			expect(result.ok).toBe(false);
 		});

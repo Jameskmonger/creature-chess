@@ -69,17 +69,16 @@ const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 
 		const boardIds = [...matchingBoard, target].map((p) => p.id);
 		const benchIds = matchingBench.map((p) => p.id);
-		player.removeBoardPieces({ pieceIds: boardIds });
-		player.removeBenchPieces({ pieceIds: benchIds });
+		player.removePieces([...boardIds, ...benchIds]);
 		for (const id of [...boardIds, ...benchIds]) {
 			pieceRegistry.deregisterPiece(id);
 		}
 
 		const evolved = { ...target, stage: group.stage + 1 };
 		pieceRegistry.registerPiece(evolved);
-		player.addBoardPiece({
-			pieceId: evolved.id,
-			position: packPosition(x, y),
+		player.addPiece(evolved.id, {
+			type: "board",
+			location: packPosition(x, y),
 		});
 	} else {
 		const target = matchingBench.pop()!;
@@ -90,16 +89,16 @@ const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 		const [x] = benchPosition;
 
 		const benchIds = [...matchingBench, target].map((p) => p.id);
-		player.removeBenchPieces({ pieceIds: benchIds });
+		player.removePieces(benchIds);
 		for (const id of benchIds) {
 			pieceRegistry.deregisterPiece(id);
 		}
 
 		const evolved = { ...target, stage: group.stage + 1 };
 		pieceRegistry.registerPiece(evolved);
-		player.addBenchPiece({
-			pieceId: evolved.id,
-			position: { x },
+		player.addPiece(evolved.id, {
+			type: "bench",
+			location: packPosition(x, 0),
 		});
 	}
 };

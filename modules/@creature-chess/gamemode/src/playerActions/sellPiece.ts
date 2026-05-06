@@ -44,9 +44,7 @@ export const sellPieceDef = definePlayerAction({
 		const piecesUsed = getPiecesForStage(piece.stage, PIECES_TO_EVOLVE);
 		player.addMoney(definition.cost * piecesUsed);
 
-		// todo gross, only remove from one
-		player.removeBoardPiece({ pieceId });
-		player.removeBenchPiece({ pieceId });
+		player.removePiece(pieceId);
 
 		player.emitSellPiece(piece);
 	},

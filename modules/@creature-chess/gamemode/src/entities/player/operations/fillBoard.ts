@@ -48,7 +48,6 @@ export const fillBoard = (player: Player): void => {
 			return;
 		}
 
-		player.removeBenchPiece({ pieceId: benchPiece.id });
-		player.addBoardPiece({ pieceId: benchPiece.id, position: destination });
+		player.relocatePiece(benchPiece.id, { type: "board", location: destination });
 	}
 };
