@@ -138,13 +138,19 @@ describe("createPlayer", () => {
 			expect(player.money).toBe(before + 5);
 		});
 
-		test("reduceHealth returns true on the killing blow only", () => {
+		test("reduceHealth auto-eliminates on the killing blow", () => {
 			const player = createSubject();
 			player.setHealth(10);
-			expect(player.reduceHealth(3)).toBe(false);
-			expect(player.reduceHealth(7)).toBe(true);
-			// Already dead — further reductions do not re-trigger
-			expect(player.reduceHealth(1)).toBe(false);
+
+			player.reduceHealth(3);
+			expect(player.health).toBe(7);
+			expect(player.alive).toBe(true);
+			expect(player.status).toBe(PlayerStatus.CONNECTED);
+
+			player.reduceHealth(7);
+			expect(player.health).toBe(0);
+			expect(player.alive).toBe(false);
+			expect(player.status).toBe(PlayerStatus.DEAD);
 		});
 	});
 
@@ -259,7 +265,7 @@ describe("createPlayer", () => {
 			player.events.onPlayerEvent("afterRerollCards", () =>
 				calls.push("reroll")
 			);
-			player.eliminate();
+			player.reduceHealth(player.health);
 			expect(calls).toEqual(["death"]);
 		});
 
@@ -268,7 +274,7 @@ describe("createPlayer", () => {
 			const seen: string[] = [];
 			player.events.onPlayerEvent((a) => seen.push(a.type));
 			// playerDeath is on the wire, afterReroll is internal-only
-			player.eliminate();
+			player.reduceHealth(player.health);
 			player.emitRerollCards();
 			expect(seen).toEqual(["playerDeathEvent"]);
 		});

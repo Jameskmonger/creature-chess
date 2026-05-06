@@ -67,19 +67,16 @@ const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 		}
 		const [x, y] = piecePosition;
 
-		const boardIds = [...matchingBoard, target].map((p) => p.id);
-		const benchIds = matchingBench.map((p) => p.id);
-		player.removePieces([...boardIds, ...benchIds]);
-		for (const id of [...boardIds, ...benchIds]) {
-			pieceRegistry.deregisterPiece(id);
-		}
+		const consumedIds = [...matchingBoard, target, ...matchingBench].map(
+			(p) => p.id
+		);
+		// Don't return to the deck as we are evolving them into a new piece.
+		player.removePieces(consumedIds, { returnToDeck: false });
 
-		const evolved = { ...target, stage: group.stage + 1 };
-		pieceRegistry.registerPiece(evolved);
-		player.addPiece(evolved.id, {
-			type: "board",
-			location: packPosition(x, y),
-		});
+		player.addPiece(
+			{ ...target, stage: group.stage + 1 },
+			{ type: "board", location: packPosition(x, y) }
+		);
 	} else {
 		const target = matchingBench.pop()!;
 		const benchPosition = bench.getPiecePosition(target.id);
@@ -88,18 +85,13 @@ const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 		}
 		const [x] = benchPosition;
 
-		const benchIds = [...matchingBench, target].map((p) => p.id);
-		player.removePieces(benchIds);
-		for (const id of benchIds) {
-			pieceRegistry.deregisterPiece(id);
-		}
+		const consumedIds = [...matchingBench, target].map((p) => p.id);
+		player.removePieces(consumedIds, { returnToDeck: false });
 
-		const evolved = { ...target, stage: group.stage + 1 };
-		pieceRegistry.registerPiece(evolved);
-		player.addPiece(evolved.id, {
-			type: "bench",
-			location: packPosition(x, 0),
-		});
+		player.addPiece(
+			{ ...target, stage: group.stage + 1 },
+			{ type: "bench", location: packPosition(x, 0) }
+		);
 	}
 };
 

@@ -106,11 +106,13 @@ export type Player = {
 	readonly belowPieceLimit: boolean;
 	readonly spectatingId: string | null;
 
-	addPiece: (pieceId: string, at: PlayerPieceLocation) => void;
+	/** Introduce a fresh piece into the player's possession. */
+	addPiece: (piece: PieceModel, at: PlayerPieceLocation) => void;
 	relocatePiece: (pieceId: string, to: PlayerPieceLocation) => void;
 	swapPieces: (pieceAId: string, pieceBId: string) => void;
-	removePiece: (pieceId: string) => void;
-	removePieces: (pieceIds: string[]) => void;
+	/** Remove a piece from the player's possession. Returns it to the deck unless opted out. */
+	removePiece: (pieceId: string, options?: { returnToDeck?: boolean }) => void;
+	removePieces: (pieceIds: string[], options?: { returnToDeck?: boolean }) => void;
 
 	setMoney: (amount: number) => void;
 	addMoney: (amount: number) => void;
@@ -118,8 +120,8 @@ export type Player = {
 
 	setHealth: (amount: number) => void;
 	addHealth: (amount: number) => void;
-	/** Returns true if the reduction killed the player (newly reached zero). */
-	reduceHealth: (amount: number) => boolean;
+	/** Apply damage. Auto-eliminates on health reaching zero from non-zero. */
+	reduceHealth: (amount: number) => void;
 
 	setLevel: (payload: { level: number; xp: number }) => void;
 	addXp: (amount: number) => void;
@@ -133,9 +135,6 @@ export type Player = {
 	setSpectatingId: (id: string | null) => void;
 	setMatchRewards: (rewards: PlayerMatchRewards | null) => void;
 	setCards: (cards: (Card | null)[]) => void;
-
-	/** Mark the player as eliminated. Sets status to DEAD and emits death event. */
-	eliminate: () => void;
 
 	setFinishStanding: (payload: { position: number; round: number }) => void;
 
@@ -342,6 +341,23 @@ export const createPlayer = (
 		onQuit,
 	};
 
+	const eliminate = () => {
+		put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
+		put(playerDeathEvent());
+
+		const remainingCards = state.cardShop.cards.filter(
+			(c): c is Card => c !== null
+		);
+		const allPieceIds = [
+			...board.getAllPieces(),
+			...bench.getAllPieces(),
+		].map((p) => p.id);
+
+		player.setCards([]);
+		player.removePieces(allPieceIds);
+		dependencies.gamemode.getDeck().addCards(remainingCards);
+	};
+
 	const player: Player = {
 		id,
 		logger: dependencies.logger,
@@ -407,15 +423,16 @@ export const createPlayer = (
 			return state.spectating.id;
 		},
 
-		addPiece: (pieceId, at) => {
+		addPiece: (piece, at) => {
+			if (at.type === "board" && player.boardLocked) {
+				return;
+			}
+			dependencies.gamemode.pieceRegistry.registerPiece(piece);
 			if (at.type === "board") {
-				if (player.boardLocked) {
-					return;
-				}
 				const [x, y] = unpackPosition(at.location);
-				board.setPiece(pieceId, x, y);
+				board.setPiece(piece.id, x, y);
 			} else {
-				bench.setPiece(pieceId, unpackX(at.location), 0);
+				bench.setPiece(piece.id, unpackX(at.location), 0);
 			}
 			runEvolutions(player);
 		},
@@ -480,21 +497,32 @@ export const createPlayer = (
 			(aOnBoard ? board : bench).setPiece(pieceBId, aPos[0], aPos[1]);
 		},
 
-		removePiece: (pieceId) => {
-			if (board.containsPiece(pieceId)) {
-				board.removePiece(pieceId);
-			} else if (bench.containsPiece(pieceId)) {
-				bench.removePiece(pieceId);
-			}
+		removePiece: (pieceId, options) => {
+			player.removePieces([pieceId], options);
 		},
 
-		removePieces: (pieceIds) => {
+		removePieces: (pieceIds, options) => {
+			const { pieceRegistry } = dependencies.gamemode;
+			const removed: PieceModel[] = [];
 			for (const pid of pieceIds) {
-				if (board.containsPiece(pid)) {
+				const onBoard = board.containsPiece(pid);
+				const onBench = bench.containsPiece(pid);
+				if (!onBoard && !onBench) {
+					continue;
+				}
+				if (onBoard) {
 					board.removePiece(pid);
-				} else if (bench.containsPiece(pid)) {
+				} else {
 					bench.removePiece(pid);
 				}
+				const piece = pieceRegistry.getPieceById(pid);
+				if (piece) {
+					removed.push(piece);
+				}
+				pieceRegistry.deregisterPiece(pid);
+			}
+			if (options?.returnToDeck !== false && removed.length > 0) {
+				dependencies.gamemode.getDeck().addPieces(removed);
 			}
 		},
 
@@ -516,7 +544,9 @@ export const createPlayer = (
 			const oldHealth = state.playerInfo.health;
 			const newHealth = Math.max(0, oldHealth - amount);
 			put(playerInfoCommands.updateHealthCommand(newHealth));
-			return newHealth === 0 && oldHealth !== 0;
+			if (newHealth === 0 && oldHealth !== 0) {
+				eliminate();
+			}
 		},
 
 		setLevel: (payload) =>
@@ -557,29 +587,6 @@ export const createPlayer = (
 			put(playerInfoCommands.playerMatchRewardsEvent(rewards)),
 		setCards: (cards) => put(updateCardsCommand(cards)),
 
-		eliminate: () => {
-			put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
-			put(playerDeathEvent());
-
-			const { pieceRegistry } = dependencies.gamemode;
-			const allPieces = [...board.getAllPieces(), ...bench.getAllPieces()]
-				.map((piece) => pieceRegistry.getPieceById(piece.id))
-				.filter((p): p is PieceModel => p !== null);
-			const remainingCards = state.cardShop.cards.filter(
-				(c): c is Card => c !== null
-			);
-
-			player.setCards([]);
-			player.removePieces(allPieces.map((p) => p.id));
-			for (const piece of allPieces) {
-				pieceRegistry.deregisterPiece(piece.id);
-			}
-
-			const deck = dependencies.gamemode.getDeck();
-			deck.addPieces(allPieces);
-			deck.addCards(remainingCards);
-		},
-
 		setFinishStanding: ({ position, round }) => {
 			(player as { finishPosition: number }).finishPosition = position;
 			(player as { finishRound: number }).finishRound = round;
@@ -613,7 +620,6 @@ export const createPlayer = (
 			put(afterRerollCardsEvent());
 		},
 		emitSellPiece: (piece) => {
-			dependencies.gamemode.getDeck().addPiece(piece);
 			put(afterSellPieceEvent({ piece }));
 		},
 		emitFinishMatch: (payload) => put(playerFinishMatchEvent(payload)),

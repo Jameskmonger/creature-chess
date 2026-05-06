@@ -81,7 +81,6 @@ export const buyCardDef = definePlayerAction({
 			id: playerId,
 			name,
 			logger,
-			gamemode: { pieceRegistry },
 			board,
 			bench,
 		} = player;
@@ -121,11 +120,10 @@ export const buyCardDef = definePlayerAction({
 		if (!piece) {
 			return;
 		}
-		pieceRegistry.registerPiece(piece);
 
 		const remainingCards = cards.map((c) => (c === card ? null : c));
 
-		player.addPiece(piece.id, destination);
+		player.addPiece(piece, destination);
 
 		player.reduceMoney(card.cost);
 		player.setCards(remainingCards);

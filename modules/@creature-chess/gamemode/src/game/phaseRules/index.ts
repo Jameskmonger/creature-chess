@@ -118,10 +118,9 @@ export const phaseRules: PhaseRules = {
 		const enemyPiecesRemaining = isHomePlayer ? awayScore : homeScore;
 		const damage = enemyPiecesRemaining * player.settings.healthLostPerPiece;
 
-		const justDied = player.reduceHealth(damage);
-		if (justDied) {
-			player.eliminate();
-		}
+		const wasAlive = player.alive;
+		player.reduceHealth(damage);
+		const justDied = wasAlive && !player.alive;
 
 		const rewardMoney = getMoneyForMatch(player.money, player.streak.amount, win);
 

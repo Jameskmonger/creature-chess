@@ -13,6 +13,8 @@ import {
 } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
+import { getPiecesForStage } from "./evolution";
+
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [
 	[100, 70, 60, 50, 40, 33, 30, 24, 22, 19],
@@ -106,22 +108,6 @@ export class CardDeck {
 		}
 	}
 
-	public addPiece(piece: PieceModel) {
-		const definition = getDefinitionById(piece.definitionId);
-
-		if (!definition) {
-			return;
-		}
-
-		const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
-
-		for (let i = 0; i < cardCount; i++) {
-			this.addDefinition(definition);
-		}
-
-		this.decks[definition.cost - 1].shuffle();
-	}
-
 	public addPieces(pieces: PieceModel[]) {
 		const affected = new Set<number>();
 
@@ -132,7 +118,7 @@ export class CardDeck {
 				continue;
 			}
 
-			const cardCount = (piece.stage + 1) * PIECES_TO_EVOLVE;
+			const cardCount = getPiecesForStage(piece.stage, PIECES_TO_EVOLVE);
 
 			for (let i = 0; i < cardCount; i++) {
 				this.addDefinition(definition);
