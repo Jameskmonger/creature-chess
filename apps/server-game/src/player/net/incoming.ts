@@ -18,7 +18,6 @@ export const setupIncomingNetworking = (socket: GameSocket, player: Player) => {
 	};
 
 	const onPing = (_payload: unknown, ack?: () => void) => {
-		player.put({ type: "ping" });
 		ack?.();
 	};
 

@@ -2,8 +2,6 @@ import { createAction } from "@reduxjs/toolkit";
 
 import { PieceModel, QuickChatOption } from "@creature-chess/models";
 
-import { playerInfoCommands } from "./state/playerInfo/reducer";
-
 export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;
 export const afterSellPieceEvent = createAction<
 	{ piece: PieceModel },
@@ -40,6 +38,41 @@ export const playerReceiveQuickChatEvent = createAction<
 	"playerReceiveQuickChatEvent"
 >("playerReceiveQuickChatEvent");
 
+/**
+ * Keyed map of every Player event — the surface for the keyed
+ * `player.events.onPlayerEvent(type, fn)` channel. Includes both
+ * wire-forwarded events and server-internal events.
+ */
+export type PlayerEventByType = {
+	afterSellPiece: AfterSellPieceEvent;
+	afterRerollCards: AfterRerollCardsEvent;
+	clientFinishMatch: ClientFinishMatchEvent;
+	playerDeath: PlayerDeathEvent;
+	playerFinishMatch: PlayerFinishMatchEvent;
+	playerReceiveQuickChat: PlayerReceiveQuickChatEvent;
+};
+
+const playerEventActionCreators: {
+	[K in keyof PlayerEventByType]: { type: string };
+} = {
+	afterSellPiece: afterSellPieceEvent,
+	afterRerollCards: afterRerollCardsEvent,
+	clientFinishMatch: clientFinishMatchEvent,
+	playerDeath: playerDeathEvent,
+	playerFinishMatch: playerFinishMatchEvent,
+	playerReceiveQuickChat: playerReceiveQuickChatEvent,
+};
+
+export const PlayerEventTypeByActionType: Record<string, keyof PlayerEventByType> =
+	Object.fromEntries(
+		(Object.keys(playerEventActionCreators) as (keyof PlayerEventByType)[]).map(
+			(key) => [playerEventActionCreators[key].type, key]
+		)
+	);
+
+// Wire-shape subset: events the server forwards to the client over
+// `sendLocalPlayerEvents`. The firehose `player.events.onPlayerEvent(fn)`
+// fires only for these. Internal events go through the keyed channel.
 export const PlayerEventActionTypesArray = [
 	playerDeathEvent.toString(),
 	playerReceiveQuickChatEvent.toString(),

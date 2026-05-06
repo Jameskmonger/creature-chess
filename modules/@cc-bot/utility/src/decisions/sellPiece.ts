@@ -11,9 +11,9 @@ export const decideSellPiece = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
 ): Action | null => {
-	const { board, bench, pieceRegistry, state, settings } = ctx;
+	const { board, bench, pieceRegistry, player, settings } = ctx;
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
-	const level = state.playerInfo.level;
+	const level = player.level;
 	const maxPieces = level + settings.benchSize;
 
 	// Only sell to free room when board+bench is full.

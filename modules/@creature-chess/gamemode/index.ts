@@ -3,7 +3,6 @@ export { Gamemode } from "./src/game";
 export {
 	type Player,
 	createPlayer,
-	type PlayerListenerApi,
 	type PlayerState,
 	playerReducers,
 	PlayerCommands,

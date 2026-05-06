@@ -3,8 +3,8 @@ import { Action } from "redux";
 
 import {
 	dispatchTrustedPlayerAction,
+	Player,
 	PlayerActions,
-	PlayerListenerApi,
 } from "@creature-chess/gamemode";
 
 import {
@@ -24,7 +24,7 @@ export type InternalLifecycleHooks = {
 export type PhaseEndInfo = {
 	actionsTaken: number;
 	actionBudget: number;
-	terminationReason: "readyUp" | "budget" | "dead";
+	terminationReason: "readyUp" | "budget" | "dead" | "cancelled";
 };
 
 function getActionBudget(
@@ -46,7 +46,8 @@ function getActionBudget(
 }
 
 export const runPreparingPhase = async (
-	api: PlayerListenerApi,
+	player: Player,
+	signal: AbortSignal,
 	implementation: BotImplementation,
 	options: SetupBotLogicOptions,
 	hooks: InternalLifecycleHooks
@@ -56,7 +57,7 @@ export const runPreparingPhase = async (
 		board,
 		bench,
 		gamemode: { pieceRegistry },
-	} = api.player;
+	} = player;
 
 	const rng = options.rng ?? Math.random;
 	const actionBudget = getActionBudget(
@@ -67,13 +68,21 @@ export const runPreparingPhase = async (
 
 	if (settings.botActionDelayMs > 0) {
 		await delay(settings.botActionDelayMs);
+		if (signal.aborted) {
+			hooks.onPhaseEnded?.({ actionsTaken: 0, actionBudget, terminationReason: "cancelled" });
+			return;
+		}
 	}
 
 	let actionsTaken = 0;
 	let terminationReason: PhaseEndInfo["terminationReason"] = "budget";
 
 	while (actionsTaken < actionBudget) {
-		if (!api.player.alive) {
+		if (signal.aborted) {
+			terminationReason = "cancelled";
+			break;
+		}
+		if (!player.alive) {
 			terminationReason = "dead";
 			break;
 		}
@@ -82,7 +91,7 @@ export const runPreparingPhase = async (
 			board,
 			bench,
 			pieceRegistry,
-			state: api.getState(),
+			player,
 			settings,
 			rng,
 		};
@@ -94,7 +103,7 @@ export const runPreparingPhase = async (
 			break;
 		}
 
-		dispatchTrustedPlayerAction(api.player, action);
+		dispatchTrustedPlayerAction(player, action);
 		hooks.onActionDispatched?.(action);
 		actionsTaken += 1;
 
@@ -105,5 +114,9 @@ export const runPreparingPhase = async (
 
 	hooks.onPhaseEnded?.({ actionsTaken, actionBudget, terminationReason });
 
-	dispatchTrustedPlayerAction(api.player, PlayerActions.readyUpPlayerAction());
+	if (terminationReason === "cancelled") {
+		return;
+	}
+
+	dispatchTrustedPlayerAction(player, PlayerActions.readyUpPlayerAction());
 };

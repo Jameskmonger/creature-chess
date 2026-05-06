@@ -20,13 +20,13 @@ import {
 } from "@creature-chess/models";
 
 import type { Gamemode } from "../../game";
-import { GameEvent, GameEventActionTypesArray } from "../../game/events";
 import type { Match } from "../../game/match";
-import { roundInfoReducer } from "../../game/roundInfo";
 import { getXpToNextLevel } from "../../player/xp";
 import {
 	PlayerEvent,
 	PlayerEventActionTypesArray,
+	PlayerEventByType,
+	PlayerEventTypeByActionType,
 	afterRerollCardsEvent,
 	afterSellPieceEvent,
 	clientFinishMatchEvent,
@@ -35,7 +35,6 @@ import {
 	playerReceiveQuickChatEvent,
 } from "./events";
 import { runEvolutions } from "./operations/evolution";
-import { setupPlayerListeners } from "./listeners/root";
 import { PlayerState, playerReducers } from "./state";
 import {
 	addBenchPieceCommand,
@@ -62,40 +61,6 @@ import { setSpectatingIdCommand } from "./state/spectating";
 
 type Action = { type: string; payload?: any };
 
-type ActionCreatorWithType = ((...args: any[]) => Action) & {
-	type: string;
-	toString(): string;
-	match(action: any): boolean;
-};
-
-export type PlayerListenerApi = {
-	getState: () => PlayerState;
-	dispatch: (action: Action) => void;
-	take: (predicate: (action: Action) => boolean) => Promise<Action>;
-	delay: (ms: number) => Promise<void>;
-	cancelActiveListeners: () => void;
-	player: Player;
-};
-
-type ListenerOptions = {
-	actionCreator?: ActionCreatorWithType;
-	type?: string;
-	predicate?: (
-		action: Action,
-		currentState: PlayerState,
-		previousState: PlayerState
-	) => boolean;
-	matcher?: (action: any) => boolean;
-	effect: (action: any, api: PlayerListenerApi) => Promise<void>;
-};
-
-export type PlayerStartListening = (options: ListenerOptions) => () => void;
-
-export type CancellableTask = {
-	promise: Promise<void>;
-	cancel(): void;
-};
-
 export type PlayerInfoFieldMap = {
 	health: number;
 	streak: PlayerStreak;
@@ -111,39 +76,31 @@ export type PlayerEventsApi = {
 		fn: (value: PlayerInfoFieldMap[K]) => void,
 		opts?: { emitInitial?: boolean }
 	): () => void;
+	/** Firehose: every wire-shape Player event. Used by outgoing-networking to forward over the socket. */
 	onPlayerEvent(fn: (action: PlayerEvent) => void): () => void;
-	onGameEvent(fn: (action: GameEvent) => void): () => void;
+	/** Keyed: subscribe to one Player event type. Internal events not forwarded to the wire are reachable here. */
+	onPlayerEvent<K extends keyof PlayerEventByType>(
+		type: K,
+		fn: (action: PlayerEventByType[K]) => void
+	): () => void;
+	onSpectatingChange(fn: (id: string | null) => void): () => void;
 	onQuit(fn: () => void): () => void;
 };
 
 export type Player = {
 	readonly id: string;
 
-	// Was "dependencies"
 	readonly logger: Logger;
 	readonly board: SubscribableBoard;
 	readonly bench: SubscribableBoard;
 	readonly gamemode: Gamemode;
 	readonly settings: GamemodeSettings;
 
-	// Was "variables"
 	name: string;
 	profile: PlayerProfile;
-	finishPosition: number;
-	finishRound: number;
+	readonly finishPosition: number;
+	readonly finishRound: number;
 	match: Match | null;
-
-	/**
-	 * Internal escape hatches. Prefer the typed mutators / getters / events
-	 * below. These remain available for the gamemode's internal listener
-	 * plumbing and a small number of legacy call sites.
-	 */
-	select: <T>(selector: (state: PlayerState) => T) => T;
-	put: (action: Action) => void;
-	addListener: PlayerStartListening;
-	runEffect: (
-		effect: (api: PlayerListenerApi) => Promise<void>
-	) => CancellableTask;
 
 	readonly money: number;
 	readonly health: number;
@@ -210,6 +167,8 @@ export type Player = {
 	/** Mark the player as eliminated. Sets status to DEAD and emits death event. */
 	eliminate: () => void;
 
+	setFinishStanding: (payload: { position: number; round: number }) => void;
+
 	emitRerollCards: () => void;
 	emitSellPiece: (piece: PieceModel) => void;
 	emitFinishMatch: (payload: {
@@ -233,67 +192,6 @@ type ReducersMapObject<TState> = {
 	) => TState[K];
 };
 
-type Listener = {
-	matches: (
-		action: Action,
-		currentState: PlayerState,
-		previousState: PlayerState
-	) => boolean;
-	effect: (action: any, api: PlayerListenerApi) => Promise<void>;
-};
-
-type TakeWaiter = {
-	predicate: (action: Action) => boolean;
-	resolve: (action: Action) => void;
-	reject: (err: Error) => void;
-};
-
-class CancelledError extends Error {
-	public constructor() {
-		super("cancelled");
-	}
-}
-
-/**
- * A lightweight replacement for AbortController.
- *
- * AbortController allocates a DOMException when cancelled, which
- * can be expensive if cancellations are frequent.
- */
-type CancelToken = {
-	readonly aborted: boolean;
-	onAbort: (fn: () => void) => () => void;
-	cancel: () => void;
-};
-
-const createCancelToken = (): CancelToken => {
-	let aborted = false;
-	const handlers = new Set<() => void>();
-	return {
-		get aborted() {
-			return aborted;
-		},
-		onAbort: (fn) => {
-			if (aborted) {
-				fn();
-				return () => undefined;
-			}
-			handlers.add(fn);
-			return () => handlers.delete(fn);
-		},
-		cancel: () => {
-			if (aborted) {
-				return;
-			}
-			aborted = true;
-			for (const fn of handlers) {
-				fn();
-			}
-			handlers.clear();
-		},
-	};
-};
-
 function combineReducersPlain<TState>(reducers: ReducersMapObject<TState>) {
 	const keys = Object.keys(reducers) as (keyof TState)[];
 
@@ -315,8 +213,7 @@ function combineReducersPlain<TState>(reducers: ReducersMapObject<TState>) {
 	};
 }
 
-const PLAYER_EVENT_TYPES = new Set(PlayerEventActionTypesArray);
-const GAME_EVENT_TYPES = new Set(GameEventActionTypesArray);
+const WIRE_PLAYER_EVENT_TYPES = new Set(PlayerEventActionTypesArray);
 const INFO_UPDATE_TYPES = new Set(PlayerInfoUpdateCommandActionTypesArray);
 
 export const createPlayer = (
@@ -335,166 +232,25 @@ export const createPlayer = (
 		match: Match | null;
 	}
 ): Player => {
-	// Initialize state
-	const rootReducer = combineReducersPlain<PlayerState>({
-		...playerReducers,
-		roundInfo: roundInfoReducer,
-	});
+	const rootReducer = combineReducersPlain<PlayerState>(playerReducers);
 	let state: PlayerState = rootReducer(undefined, { type: "@@INIT" });
 
-	// Listener registry
-	const listeners: Listener[] = [];
-	const takeWaiters: TakeWaiter[] = [];
-
-	const removeTakeWaiter = (waiter: TakeWaiter) => {
-		const i = takeWaiters.indexOf(waiter);
-		if (i !== -1) {
-			takeWaiters.splice(i, 1);
-		}
-	};
-
-	const createApi = (token: CancelToken): PlayerListenerApi => ({
-		getState: () => state,
-		dispatch: (action: Action) => put(action),
-		take: (predicate: (action: Action) => boolean) =>
-			new Promise<Action>((resolve, reject) => {
-				if (token.aborted) {
-					reject(new CancelledError());
-					return;
-				}
-
-				let unsubscribe: () => void = () => undefined;
-				const waiter: TakeWaiter = {
-					predicate,
-					resolve: (action) => {
-						unsubscribe();
-						resolve(action);
-					},
-					reject,
-				};
-				takeWaiters.push(waiter);
-
-				unsubscribe = token.onAbort(() => {
-					removeTakeWaiter(waiter);
-					reject(new CancelledError());
-				});
-			}),
-		delay: (ms: number) =>
-			new Promise<void>((resolve, reject) => {
-				if (token.aborted) {
-					reject(new CancelledError());
-					return;
-				}
-
-				let unsubscribe: () => void = () => undefined;
-				const timer = setTimeout(() => {
-					unsubscribe();
-					resolve();
-				}, ms);
-
-				unsubscribe = token.onAbort(() => {
-					clearTimeout(timer);
-					reject(new CancelledError());
-				});
-			}),
-		cancelActiveListeners: () => {
-			// no-op
-		},
-		player,
-	});
-
-	const addListener: PlayerStartListening = (options) => {
-		const matches = (
-			action: Action,
-			currentState: PlayerState,
-			previousState: PlayerState
-		): boolean => {
-			if (options.actionCreator) {
-				return action.type === options.actionCreator.type;
-			}
-			if (options.type) {
-				return action.type === options.type;
-			}
-			if (options.matcher) {
-				return options.matcher(action);
-			}
-			if (options.predicate) {
-				return options.predicate(action, currentState, previousState);
-			}
-			return false;
-		};
-
-		const listener: Listener = { matches, effect: options.effect };
-		listeners.push(listener);
-
-		return () => {
-			const index = listeners.indexOf(listener);
-			if (index !== -1) {
-				listeners.splice(index, 1);
-			}
-		};
-	};
-
-	// Track one active CancelToken per listener registration
-	const activeTokens = new Map<Listener, CancelToken>();
+	const subscribers = new Set<(action: Action) => void>();
 
 	const put = (action: Action) => {
-		const previousState = state;
 		state = rootReducer(state, action);
-
-		// Notify take waiters
-		for (let i = takeWaiters.length - 1; i >= 0; i--) {
-			const waiter = takeWaiters[i];
-			if (waiter.predicate(action)) {
-				takeWaiters.splice(i, 1);
-				waiter.resolve(action);
-			}
-		}
-
-		// Run matching listeners
-		const currentListeners = [...listeners];
-		for (const listener of currentListeners) {
-			if (listener.matches(action, state, previousState)) {
-				const prevToken = activeTokens.get(listener);
-				if (prevToken) {
-					prevToken.cancel();
-				}
-
-				const token = createCancelToken();
-				activeTokens.set(listener, token);
-
-				const api = createApi(token);
-				listener.effect(action, api).catch(() => {
-					// ignore
-				});
-			}
+		// Snapshot the set so subscribers added/removed during dispatch don't
+		// affect the current notification round.
+		const snapshot = [...subscribers];
+		for (const fn of snapshot) {
+			fn(action);
 		}
 	};
 
-	const runEffect = (
-		effect: (api: PlayerListenerApi) => Promise<void>
-	): CancellableTask => {
-		const token = createCancelToken();
-
-		const promise = new Promise<void>((resolve, reject) => {
-			const api = createApi(token);
-
-			effect(api)
-				.then(resolve)
-				.catch((err) => {
-					if (err instanceof CancelledError) {
-						resolve();
-					} else {
-						reject(err);
-					}
-				});
-		});
-
-		return {
-			cancel: () => {
-				token.cancel();
-			},
-			promise,
+	const subscribe = (fn: (action: Action) => void): (() => void) => {
+		subscribers.add(fn);
+		return () => {
+			subscribers.delete(fn);
 		};
 	};
 
@@ -544,9 +300,10 @@ export const createPlayer = (
 	): () => void {
 		if (typeof fieldOrFn === "function") {
 			const unionFn = fieldOrFn;
-			return addListener({
-				predicate: (a) => INFO_UPDATE_TYPES.has(a.type),
-				effect: async (a) => unionFn(a as PlayerInfoUpdateCommand),
+			return subscribe((a) => {
+				if (INFO_UPDATE_TYPES.has(a.type)) {
+					unionFn(a as PlayerInfoUpdateCommand);
+				}
 			});
 		}
 
@@ -556,33 +313,63 @@ export const createPlayer = (
 		if (opts?.emitInitial !== false) {
 			fn(def.getCurrent());
 		}
-		return addListener({
-			type: def.actionType,
-			effect: async (action) => fn(action.payload),
+		return subscribe((a) => {
+			if (a.type === def.actionType) {
+				fn(a.payload);
+			}
 		});
 	}
 
+	function onPlayerEvent(fn: (action: PlayerEvent) => void): () => void;
+	function onPlayerEvent<K extends keyof PlayerEventByType>(
+		type: K,
+		fn: (action: PlayerEventByType[K]) => void
+	): () => void;
+	function onPlayerEvent(
+		typeOrFn:
+			| keyof PlayerEventByType
+			| ((action: PlayerEvent) => void),
+		maybeFn?: (action: any) => void
+	): () => void {
+		if (typeof typeOrFn === "function") {
+			const firehoseFn = typeOrFn;
+			return subscribe((a) => {
+				if (WIRE_PLAYER_EVENT_TYPES.has(a.type)) {
+					firehoseFn(a as PlayerEvent);
+				}
+			});
+		}
+		const targetKey = typeOrFn;
+		const keyedFn = maybeFn!;
+		return subscribe((a) => {
+			if (PlayerEventTypeByActionType[a.type] === targetKey) {
+				keyedFn(a);
+			}
+		});
+	}
+
+	const onSpectatingChange = (fn: (id: string | null) => void): (() => void) =>
+		subscribe((a) => {
+			if (a.type === setSpectatingIdCommand.type) {
+				fn(a.payload as string | null);
+			}
+		});
+
+	const onQuit = (fn: () => void): (() => void) =>
+		subscribe((a) => {
+			if (
+				a.type === playerInfoCommands.updateStatusCommand.type &&
+				a.payload === PlayerStatus.QUIT
+			) {
+				fn();
+			}
+		});
+
 	const events: PlayerEventsApi = {
 		onInfoUpdate,
-		onPlayerEvent: (fn) =>
-			addListener({
-				predicate: (a) => PLAYER_EVENT_TYPES.has(a.type),
-				effect: async (a) => fn(a as PlayerEvent),
-			}),
-		onGameEvent: (fn) =>
-			addListener({
-				predicate: (a) => GAME_EVENT_TYPES.has(a.type),
-				effect: async (a) => fn(a as GameEvent),
-			}),
-		onQuit: (fn) =>
-			addListener({
-				type: playerInfoCommands.updateStatusCommand.type,
-				effect: async (action) => {
-					if (action.payload === PlayerStatus.QUIT) {
-						fn();
-					}
-				},
-			}),
+		onPlayerEvent,
+		onSpectatingChange,
+		onQuit,
 	};
 
 	const player: Player = {
@@ -597,10 +384,6 @@ export const createPlayer = (
 		finishPosition: initialVars.finishPosition,
 		finishRound: initialVars.finishRound,
 		match: initialVars.match,
-		select: <T>(selector: (state: PlayerState) => T) => selector(state),
-		put,
-		addListener,
-		runEffect,
 
 		get money() {
 			return state.playerInfo.money;
@@ -645,7 +428,7 @@ export const createPlayer = (
 			return state.playerInfo.health > 0;
 		},
 		get boardLocked() {
-			return state.roundInfo.phase !== GamePhase.PREPARING;
+			return dependencies.gamemode.getRoundInfo().phase !== GamePhase.PREPARING;
 		},
 		get belowPieceLimit() {
 			return board.pieceCount < state.playerInfo.level;
@@ -792,19 +575,73 @@ export const createPlayer = (
 		eliminate: () => {
 			put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
 			put(playerDeathEvent());
+
+			const { pieceRegistry } = dependencies.gamemode;
+			const allPieces = [...board.getAllPieces(), ...bench.getAllPieces()]
+				.map((piece) => pieceRegistry.getPieceById(piece.id))
+				.filter((p): p is PieceModel => p !== null);
+			const remainingCards = state.cardShop.cards.filter(
+				(c): c is Card => c !== null
+			);
+
+			player.setCards([]);
+			player.clearBoard();
+			player.clearBench();
+			for (const piece of allPieces) {
+				pieceRegistry.deregisterPiece(piece.id);
+			}
+
+			const deck = dependencies.gamemode.getDeck();
+			deck.addPieces(allPieces);
+			deck.addCards(remainingCards);
 		},
 
-		emitRerollCards: () => put(afterRerollCardsEvent()),
-		emitSellPiece: (piece) => put(afterSellPieceEvent({ piece })),
+		setFinishStanding: ({ position, round }) => {
+			(player as { finishPosition: number }).finishPosition = position;
+			(player as { finishRound: number }).finishRound = round;
+		},
+
+		emitRerollCards: () => {
+			if (player.alive) {
+				const { pieceRegistry } = dependencies.gamemode;
+				const allPieces = [...board.getAllPieces(), ...bench.getAllPieces()]
+					.map((p) => pieceRegistry.getPieceById(p.id))
+					.filter((p): p is PieceModel => p !== null);
+				const excludeIds = allPieces
+					.filter((p) => p.stage === 2)
+					.map((p) => p.definitionId);
+				const remainingCards = state.cardShop.cards.filter(
+					(c): c is Card => c !== null
+				);
+
+				const newCards = dependencies.gamemode
+					.getDeck()
+					.reroll(
+						remainingCards,
+						5,
+						player.level,
+						dependencies.settings.rerollMultiplier,
+						excludeIds
+					);
+
+				player.setCards(newCards);
+			}
+			put(afterRerollCardsEvent());
+		},
+		emitSellPiece: (piece) => {
+			dependencies.gamemode.getDeck().addPiece(piece);
+			put(afterSellPieceEvent({ piece }));
+		},
 		emitFinishMatch: (payload) => put(playerFinishMatchEvent(payload)),
 		emitReceiveQuickChat: (payload) =>
 			put(playerReceiveQuickChatEvent(payload)),
-		emitClientFinishMatch: () => put(clientFinishMatchEvent()),
+		emitClientFinishMatch: () => {
+			player.match?.onClientFinishMatch(player.id);
+			put(clientFinishMatchEvent());
+		},
 
 		events,
 	};
-
-	setupPlayerListeners(player.addListener);
 
 	return player;
 };

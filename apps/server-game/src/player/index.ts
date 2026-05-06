@@ -1,9 +1,4 @@
-import delay from "delay";
-
-import {
-	GameEvents,
-	Player,
-} from "@creature-chess/gamemode";
+import { Player } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
@@ -19,6 +14,26 @@ type Parameters = {
 	getPlayers: () => PlayerListPlayer[];
 };
 
+const cancellableDelay = (
+	ms: number,
+	signal: AbortSignal
+): Promise<{ cancelled: boolean }> =>
+	new Promise((resolve) => {
+		if (signal.aborted) {
+			resolve({ cancelled: true });
+			return;
+		}
+		const timer = setTimeout(() => {
+			signal.removeEventListener("abort", onAbort);
+			resolve({ cancelled: false });
+		}, ms);
+		const onAbort = () => {
+			clearTimeout(timer);
+			resolve({ cancelled: true });
+		};
+		signal.addEventListener("abort", onAbort, { once: true });
+	});
+
 export const playerNetworking = (
 	entity: Player,
 	socket: GameSocket,
@@ -28,19 +43,22 @@ export const playerNetworking = (
 	entity.setSpectatingId(null);
 
 	const cleanups: (() => void)[] = [];
+	const teardownAbort = new AbortController();
 
 	const teardown = () => {
+		teardownAbort.abort();
 		cleanups.forEach((fn) => fn());
 		socket.removeAllListeners();
 		socket.disconnect();
 	};
 
-	cleanups.push(
-		setupIncomingNetworking(socket, entity)
-	);
+	cleanups.push(setupIncomingNetworking(socket, entity));
 
-	const connectTask = entity.runEffect(async () => {
-		await delay(500);
+	(async () => {
+		const initial = await cancellableDelay(500, teardownAbort.signal);
+		if (initial.cancelled) {
+			return;
+		}
 
 		socket.emit("gameConnected", {
 			game: getRoundInfo(),
@@ -52,32 +70,28 @@ export const playerNetworking = (
 		// listeners are live by the time subsequent emits land.
 		socket.emit("snapshot", buildSnapshot(entity));
 
-		const outgoingCleanup = setupOutgoingNetworking(entity, socket);
-		cleanups.push(outgoingCleanup);
+		cleanups.push(setupOutgoingNetworking(entity, socket));
+		cleanups.push(setupPlayerBoard(entity, socket));
+	})();
 
-		const boardCleanup = setupPlayerBoard(entity, socket);
-		cleanups.push(boardCleanup);
-	});
+	cleanups.push(
+		entity.events.onQuit(async () => {
+			const r = await cancellableDelay(100, teardownAbort.signal);
+			if (!r.cancelled) {
+				teardown();
+			}
+		})
+	);
 
-	cleanups.push(() => connectTask.cancel());
-
-	// Listen for quit or game finish to tear down
-	const unsubQuit = entity.events.onQuit(async () => {
-		await delay(100);
-		teardown();
-	});
-	cleanups.push(unsubQuit);
-
-	const unsubFinish = entity.addListener({
-		actionCreator: GameEvents.gameFinishEvent,
-		effect: async () => {
-			// wait 1 second before closing the networking
-			// to allow the game finish event to be sent
-			await delay(1000);
-			teardown();
-		},
-	});
-	cleanups.push(unsubFinish);
+	cleanups.push(
+		entity.gamemode.events.onAnyEvent("finish", async () => {
+			// allow the game finish event to be sent before closing the networking
+			const r = await cancellableDelay(1000, teardownAbort.signal);
+			if (!r.cancelled) {
+				teardown();
+			}
+		})
+	);
 
 	return { teardown };
 };

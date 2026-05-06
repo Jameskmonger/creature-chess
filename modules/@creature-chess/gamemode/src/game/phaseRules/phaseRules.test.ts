@@ -4,19 +4,14 @@ import { GamePhase, PlayerStatus, StreakType } from "@creature-chess/models";
 import { runEvolutions } from "../../entities/player/operations/evolution";
 import { Player } from "../../entities/player/player";
 import { createTestPlayer } from "../../entities/player/testUtils";
-import { gamePhaseStartedEvent } from "../events";
 import { phaseRules } from ".";
 
 const lockBoard = (player: Player) => {
-	player.put(
-		gamePhaseStartedEvent({ phase: GamePhase.PLAYING, startedAt: 0 })
-	);
+	player.gamemode.setRoundInfo({ phase: GamePhase.PLAYING, startedAt: 0 });
 };
 
 const unlockBoard = (player: Player) => {
-	player.put(
-		gamePhaseStartedEvent({ phase: GamePhase.PREPARING, startedAt: 0 })
-	);
+	player.gamemode.setRoundInfo({ phase: GamePhase.PREPARING, startedAt: 0 });
 };
 
 const definitionId = 1; // Budaye, has 3 stages

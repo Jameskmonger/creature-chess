@@ -1,14 +1,11 @@
 import { Logger } from "winston";
 
 import { SubscribableBoard } from "@creature-chess/board";
-import { GamePhase } from "@creature-chess/models";
-import { PlayerStatus } from "@creature-chess/models";
-import { PlayerProfile } from "@creature-chess/models";
+import { PlayerProfile, PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { Gamemode } from "../../game";
 import { createPlayer, Player } from "./player";
-import { PlayerCommands } from "./state";
 
 const createMockLogger = (): Logger => {
 	const noop = () => undefined;
@@ -55,15 +52,17 @@ const createSubject = (overrides?: {
 describe("createPlayer", () => {
 	describe("construction", () => {
 		test("sets id from argument", () => {
-			const player = createSubject({ id: "abc-123" });
-			expect(player.id).toBe("abc-123");
+			expect(createSubject({ id: "abc-123" }).id).toBe("abc-123");
 		});
 
 		test("exposes dependencies as direct properties", () => {
 			const settings = GamemodeSettingsPresets.default;
 			const logger = createMockLogger();
 			const gamemode = new Gamemode("g1", logger, settings);
-			const board = new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight);
+			const board = new SubscribableBoard(
+				settings.boardWidth,
+				settings.boardHalfHeight
+			);
 			const bench = new SubscribableBoard(settings.benchSize, 1);
 
 			const player = createPlayer(
@@ -100,524 +99,155 @@ describe("createPlayer", () => {
 			expect(player.finishRound).toBe(12);
 			expect(player.match).toBeNull();
 		});
-	});
 
-	describe("mutable properties", () => {
-		test("name can be reassigned", () => {
-			const player = createSubject({ name: "Alice" });
-			player.name = "Charlie";
-			expect(player.name).toBe("Charlie");
-		});
-
-		test("profile can be reassigned", () => {
+		test("initial typed getters expose default state", () => {
 			const player = createSubject();
-			const newProfile: PlayerProfile = { title: null, picture: 42 };
-			player.profile = newProfile;
-			expect(player.profile).toBe(newProfile);
-		});
-
-		test("finishPosition can be reassigned", () => {
-			const player = createSubject();
-			player.finishPosition = 1;
-			expect(player.finishPosition).toBe(1);
-		});
-
-		test("finishRound can be reassigned", () => {
-			const player = createSubject();
-			player.finishRound = 25;
-			expect(player.finishRound).toBe(25);
-		});
-
-		test("match can be reassigned", () => {
-			const player = createSubject();
-			const fakeMatch = { foo: "bar" } as any;
-			player.match = fakeMatch;
-			expect(player.match).toBe(fakeMatch);
+			expect(player.shopLocked).toBe(false);
+			expect(player.spectatingId).toBeNull();
+			expect(player.status).toBe(PlayerStatus.CONNECTED);
+			expect(player.ready).toBe(false);
 		});
 	});
 
-	describe("select", () => {
-		test("returns the initial state produced by the reducers", () => {
+	describe("typed mutators", () => {
+		test("setShopLocked toggles shopLocked getter", () => {
 			const player = createSubject();
-
-			const cardShop = player.select((s) => s.cardShop);
-			expect(cardShop).toEqual({ cards: [], locked: false });
-
-			const spectating = player.select((s) => s.spectating);
-			expect(spectating).toEqual({ id: null });
-
-			const roundInfo = player.select((s) => s.roundInfo);
-			expect(roundInfo.round).toBe(1);
-			expect(roundInfo.phase).toBe(GamePhase.PREPARING);
+			player.setShopLocked(true);
+			expect(player.shopLocked).toBe(true);
+			player.setShopLocked(false);
+			expect(player.shopLocked).toBe(false);
 		});
 
-		test("returns the value produced by the selector", () => {
+		test("setSpectatingId updates spectatingId getter", () => {
 			const player = createSubject();
-			expect(player.select((s) => s.playerInfo.status)).toBe(
-				PlayerStatus.CONNECTED
+			player.setSpectatingId("other-player");
+			expect(player.spectatingId).toBe("other-player");
+		});
+
+		test("setFinishStanding writes to readonly fields", () => {
+			const player = createSubject();
+			player.setFinishStanding({ position: 4, round: 7 });
+			expect(player.finishPosition).toBe(4);
+			expect(player.finishRound).toBe(7);
+		});
+
+		test("addMoney accumulates", () => {
+			const player = createSubject();
+			const before = player.money;
+			player.addMoney(5);
+			expect(player.money).toBe(before + 5);
+		});
+
+		test("reduceHealth returns true on the killing blow only", () => {
+			const player = createSubject();
+			player.setHealth(10);
+			expect(player.reduceHealth(3)).toBe(false);
+			expect(player.reduceHealth(7)).toBe(true);
+			// Already dead — further reductions do not re-trigger
+			expect(player.reduceHealth(1)).toBe(false);
+		});
+	});
+
+	describe("events.onInfoUpdate", () => {
+		test("keyed subscription fires the initial value by default", () => {
+			const player = createSubject();
+			const seen: number[] = [];
+			player.events.onInfoUpdate("health", (h) => seen.push(h));
+			expect(seen).toEqual([player.health]);
+		});
+
+		test("keyed subscription respects emitInitial: false", () => {
+			const player = createSubject();
+			const seen: number[] = [];
+			player.events.onInfoUpdate("health", (h) => seen.push(h), {
+				emitInitial: false,
+			});
+			expect(seen).toEqual([]);
+		});
+
+		test("keyed subscription fires on subsequent updates", () => {
+			const player = createSubject();
+			const seen: boolean[] = [];
+			player.events.onInfoUpdate("ready", (r) => seen.push(r), {
+				emitInitial: false,
+			});
+			player.setReady(true);
+			player.setReady(false);
+			expect(seen).toEqual([true, false]);
+		});
+
+		test("firehose receives the underlying action", () => {
+			const player = createSubject();
+			const seen: string[] = [];
+			player.events.onInfoUpdate((a) => seen.push(a.type));
+			player.setReady(true);
+			expect(seen.length).toBe(1);
+		});
+
+		test("unsubscribe stops future invocations", () => {
+			const player = createSubject();
+			const seen: boolean[] = [];
+			const unsub = player.events.onInfoUpdate("ready", (r) => seen.push(r), {
+				emitInitial: false,
+			});
+			player.setReady(true);
+			unsub();
+			player.setReady(false);
+			expect(seen).toEqual([true]);
+		});
+	});
+
+	describe("events.onPlayerEvent", () => {
+		test("keyed subscription fires on the matching event only", () => {
+			const player = createSubject();
+			const calls: string[] = [];
+			player.events.onPlayerEvent("playerDeath", () =>
+				calls.push("death")
 			);
-			expect(player.select((s) => s.playerInfo.ready)).toBe(false);
-			expect(player.select(() => 42)).toBe(42);
+			player.events.onPlayerEvent("afterRerollCards", () =>
+				calls.push("reroll")
+			);
+			player.eliminate();
+			expect(calls).toEqual(["death"]);
+		});
+
+		test("firehose fires only for wire-shape events", () => {
+			const player = createSubject();
+			const seen: string[] = [];
+			player.events.onPlayerEvent((a) => seen.push(a.type));
+			// playerDeath is on the wire, afterReroll is internal-only
+			player.eliminate();
+			player.emitRerollCards();
+			expect(seen).toEqual(["playerDeathEvent"]);
 		});
 	});
 
-	describe("put", () => {
-		test("dispatches action through reducers to update state", () => {
+	describe("events.onSpectatingChange", () => {
+		test("fires with the new id on setSpectatingId", () => {
 			const player = createSubject();
-
-			player.put(PlayerCommands.setSpectatingIdCommand("other-player"));
-
-			expect(player.select((s) => s.spectating.id)).toBe("other-player");
-		});
-
-		test("supports multiple sequential dispatches", () => {
-			const player = createSubject();
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			expect(player.select((s) => s.cardShop.locked)).toBe(true);
-
-			player.put(PlayerCommands.updateShopLockCommand(false));
-			expect(player.select((s) => s.cardShop.locked)).toBe(false);
-		});
-
-		test("ignores actions with unknown types", () => {
-			const player = createSubject();
-			const before = player.select((s) => s);
-
-			player.put({ type: "UNKNOWN/action", payload: 123 });
-
-			const after = player.select((s) => s);
-			expect(after).toBe(before);
-		});
-
-		test("state is immutably replaced when a reducer handles the action", () => {
-			const player = createSubject();
-			const before = player.select((s) => s.cardShop);
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-
-			const after = player.select((s) => s.cardShop);
-			expect(after).not.toBe(before);
-			expect(before.locked).toBe(false);
-			expect(after.locked).toBe(true);
+			const seen: (string | null)[] = [];
+			player.events.onSpectatingChange((id) => seen.push(id));
+			player.setSpectatingId("other");
+			player.setSpectatingId(null);
+			expect(seen).toEqual(["other", null]);
 		});
 	});
 
-	describe("addListener", () => {
-		test("effect fires when actionCreator matches dispatched action", async () => {
+	describe("events.onQuit", () => {
+		test("fires once when status changes to QUIT", () => {
 			const player = createSubject();
-			const effect = jest.fn().mockResolvedValue(undefined);
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect,
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-
-			expect(effect).toHaveBeenCalledTimes(1);
-			expect(effect.mock.calls[0][0]).toMatchObject({
-				type: PlayerCommands.updateShopLockCommand.type,
-				payload: true,
-			});
+			const fn = jest.fn();
+			player.events.onQuit(fn);
+			player.setStatus(PlayerStatus.QUIT);
+			expect(fn).toHaveBeenCalledTimes(1);
 		});
 
-		test("effect does not fire when action type does not match", async () => {
+		test("does not fire for other status changes", () => {
 			const player = createSubject();
-			const effect = jest.fn().mockResolvedValue(undefined);
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect,
-			});
-
-			player.put(PlayerCommands.setSpectatingIdCommand("x"));
-			await flush();
-
-			expect(effect).not.toHaveBeenCalled();
-		});
-
-		test("matches by literal `type` string", async () => {
-			const player = createSubject();
-			const effect = jest.fn().mockResolvedValue(undefined);
-
-			player.addListener({
-				type: PlayerCommands.updateShopLockCommand.type,
-				effect,
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(false));
-			await flush();
-
-			expect(effect).toHaveBeenCalledTimes(1);
-		});
-
-		test("matches by `matcher` function", async () => {
-			const player = createSubject();
-			const effect = jest.fn().mockResolvedValue(undefined);
-
-			player.addListener({
-				matcher: (action) => action.payload === "target",
-				effect,
-			});
-
-			player.put(PlayerCommands.setSpectatingIdCommand("nope"));
-			player.put(PlayerCommands.setSpectatingIdCommand("target"));
-			await flush();
-
-			expect(effect).toHaveBeenCalledTimes(1);
-			expect(effect.mock.calls[0][0].payload).toBe("target");
-		});
-
-		test("matches by `predicate` with access to current and previous state", async () => {
-			const player = createSubject();
-			const seen: { current: boolean; previous: boolean }[] = [];
-
-			player.addListener({
-				predicate: (_action, currentState, previousState) => {
-					seen.push({
-						current: currentState.cardShop.locked,
-						previous: previousState.cardShop.locked,
-					});
-					return true;
-				},
-				effect: async () => {
-					// no-op
-				},
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-
-			expect(seen).toEqual([{ current: true, previous: false }]);
-		});
-
-		test("returns an unsubscribe function that stops future invocations", async () => {
-			const player = createSubject();
-			const effect = jest.fn().mockResolvedValue(undefined);
-
-			const unsubscribe = player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect,
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-			expect(effect).toHaveBeenCalledTimes(1);
-
-			unsubscribe();
-
-			player.put(PlayerCommands.updateShopLockCommand(false));
-			await flush();
-			expect(effect).toHaveBeenCalledTimes(1);
-		});
-
-		test("unsubscribe is safe to call multiple times", async () => {
-			const player = createSubject();
-			const effect = jest.fn().mockResolvedValue(undefined);
-
-			const unsubscribe = player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect,
-			});
-
-			unsubscribe();
-			expect(() => unsubscribe()).not.toThrow();
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-			expect(effect).not.toHaveBeenCalled();
-		});
-
-		test("multiple listeners on the same action all fire", async () => {
-			const player = createSubject();
-			const a = jest.fn().mockResolvedValue(undefined);
-			const b = jest.fn().mockResolvedValue(undefined);
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect: a,
-			});
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect: b,
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-
-			expect(a).toHaveBeenCalledTimes(1);
-			expect(b).toHaveBeenCalledTimes(1);
-		});
-
-		test("effect rejection does not break subsequent dispatches", async () => {
-			const player = createSubject();
-			const effect = jest.fn().mockRejectedValue(new Error("boom"));
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect,
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			player.put(PlayerCommands.updateShopLockCommand(false));
-			await flush();
-
-			expect(effect).toHaveBeenCalledTimes(2);
-		});
-
-		test("re-dispatch cancels the prior in-flight invocation of the same listener", async () => {
-			const player = createSubject();
-			const observations: ("completed" | "cancelled")[] = [];
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect: async (_action, api) => {
-					try {
-						await api.delay(50);
-						observations.push("completed");
-					} catch {
-						observations.push("cancelled");
-					}
-				},
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			// Dispatch again before the first delay resolves — should abort the first
-			player.put(PlayerCommands.updateShopLockCommand(false));
-
-			await new Promise((r) => setTimeout(r, 100));
-
-			expect(observations).toEqual(["cancelled", "completed"]);
-		});
-	});
-
-	describe("listener api", () => {
-		test("api.getState reflects the current state", async () => {
-			const player = createSubject();
-			let observed: boolean | undefined;
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect: async (_action, api) => {
-					observed = api.getState().cardShop.locked;
-				},
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-
-			expect(observed).toBe(true);
-		});
-
-		test("api.dispatch forwards to put and updates state", async () => {
-			const player = createSubject();
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect: async (_action, api) => {
-					api.dispatch(PlayerCommands.setSpectatingIdCommand("from-listener"));
-				},
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-
-			expect(player.select((s) => s.spectating.id)).toBe("from-listener");
-		});
-
-		test("api.player is the player itself", async () => {
-			const player = createSubject();
-			let captured: unknown;
-
-			player.addListener({
-				actionCreator: PlayerCommands.updateShopLockCommand,
-				effect: async (_action, api) => {
-					captured = api.player;
-				},
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-
-			expect(captured).toBe(player);
-		});
-	});
-
-	describe("take", () => {
-		test("resolves with the next action matching the predicate", async () => {
-			const player = createSubject();
-			let resolved: any;
-
-			const task = player.runEffect(async (api) => {
-				resolved = await api.take(
-					(action) => action.type === PlayerCommands.updateShopLockCommand.type
-				);
-			});
-
-			await flush();
-
-			player.put(PlayerCommands.setSpectatingIdCommand("ignored"));
-			player.put(PlayerCommands.updateShopLockCommand(true));
-
-			await task.promise;
-
-			expect(resolved).toMatchObject({
-				type: PlayerCommands.updateShopLockCommand.type,
-				payload: true,
-			});
-		});
-
-		test("does not resolve for non-matching actions", async () => {
-			const player = createSubject();
-			const onResolve = jest.fn();
-
-			player.runEffect(async (api) => {
-				const action = await api.take(() => false);
-				onResolve(action);
-			});
-
-			player.put(PlayerCommands.updateShopLockCommand(true));
-			await flush();
-
-			expect(onResolve).not.toHaveBeenCalled();
-		});
-
-		test("rejects (cancelled) when the task is cancelled while waiting", async () => {
-			const player = createSubject();
-			let caught: unknown;
-
-			const task = player.runEffect(async (api) => {
-				try {
-					await api.take(() => false);
-				} catch (err) {
-					caught = err;
-					throw err;
-				}
-			});
-
-			await flush();
-			task.cancel();
-			await task.promise;
-
-			expect(caught).toBeInstanceOf(Error);
-			expect((caught as Error).message).toBe("cancelled");
-		});
-
-		test("rejects immediately if the task is already cancelled", async () => {
-			const player = createSubject();
-			let caught: unknown;
-
-			const task = player.runEffect(async (api) => {
-				try {
-					await api.take(() => true);
-				} catch (err) {
-					caught = err;
-					throw err;
-				}
-			});
-
-			task.cancel();
-			await task.promise;
-
-			expect(caught).toBeInstanceOf(Error);
-			expect((caught as Error).message).toBe("cancelled");
-		});
-	});
-
-	describe("delay", () => {
-		test("resolves after the specified duration", async () => {
-			const player = createSubject();
-			const start = Date.now();
-
-			const task = player.runEffect(async (api) => {
-				await api.delay(30);
-			});
-
-			await task.promise;
-			const elapsed = Date.now() - start;
-
-			expect(elapsed).toBeGreaterThanOrEqual(25);
-		});
-
-		test("rejects (cancelled) if the task is cancelled while delaying", async () => {
-			const player = createSubject();
-			let caught: unknown;
-
-			const task = player.runEffect(async (api) => {
-				try {
-					await api.delay(1000);
-				} catch (err) {
-					caught = err;
-					throw err;
-				}
-			});
-
-			await flush();
-			task.cancel();
-			await task.promise;
-
-			expect(caught).toBeInstanceOf(Error);
-			expect((caught as Error).message).toBe("cancelled");
-		});
-
-		test("rejects immediately if the task is already cancelled", async () => {
-			const player = createSubject();
-			let caught: unknown;
-
-			const task = player.runEffect(async (api) => {
-				try {
-					await api.delay(1000);
-				} catch (err) {
-					caught = err;
-					throw err;
-				}
-			});
-
-			task.cancel();
-			await task.promise;
-
-			expect(caught).toBeInstanceOf(Error);
-			expect((caught as Error).message).toBe("cancelled");
-		});
-	});
-
-	describe("runEffect", () => {
-		test("invokes the effect and resolves its promise when the effect completes", async () => {
-			const player = createSubject();
-			const effect = jest.fn().mockResolvedValue(undefined);
-
-			const task = player.runEffect(effect);
-			await task.promise;
-
-			expect(effect).toHaveBeenCalledTimes(1);
-		});
-
-		test("promise resolves (does not reject) when cancelled via CancelledError", async () => {
-			const player = createSubject();
-
-			const task = player.runEffect(async (api) => {
-				await api.delay(1000);
-			});
-
-			task.cancel();
-
-			// A propagated CancelledError should resolve the task cleanly
-			await expect(task.promise).resolves.toBeUndefined();
-		});
-
-		test("promise rejects when the effect throws a non-CancelledError", async () => {
-			const player = createSubject();
-
-			const task = player.runEffect(async () => {
-				throw new Error("other");
-			});
-
-			await expect(task.promise).rejects.toThrow("other");
+			const fn = jest.fn();
+			player.events.onQuit(fn);
+			player.setStatus(PlayerStatus.DEAD);
+			expect(fn).not.toHaveBeenCalled();
 		});
 	});
 });
-
-// Let all scheduled microtasks/timers run
-const flush = () => new Promise((r) => setTimeout(r, 0));

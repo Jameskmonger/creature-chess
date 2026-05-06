@@ -6,7 +6,7 @@ export const setupOutgoingNetworking = (entity: Player, socket: GameSocket) => {
 	const unsubscribes: (() => void)[] = [];
 
 	unsubscribes.push(
-		entity.events.onGameEvent((action) => {
+		entity.gamemode.events.onAnyEvent((action) => {
 			socket.emit("sendGameEvents", action);
 		})
 	);

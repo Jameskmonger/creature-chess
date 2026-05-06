@@ -3,7 +3,6 @@ import { Logger } from "winston";
 
 import { GamemodeSettings } from "@creature-chess/models";
 
-import { playerDeathEvent } from "../entities/player/events";
 import { Player } from "../entities/player/player";
 import { Gamemode } from "./gamemode";
 import { PhaseRules } from "./phaseRules";
@@ -47,13 +46,12 @@ const runGameLoop = async (
 	let currentRoundNumber = gamemode.roundInfo.round;
 
 	for (const player of players.getAll()) {
-		player.addListener({
-			actionCreator: playerDeathEvent,
-			effect: async (_action, api) => {
-				api.player.finishPosition = currentLastPosition;
-				api.player.finishRound = currentRoundNumber;
-				currentLastPosition--;
-			},
+		player.events.onPlayerEvent("playerDeath", () => {
+			player.setFinishStanding({
+				position: currentLastPosition,
+				round: currentRoundNumber,
+			});
+			currentLastPosition--;
 		});
 	}
 
@@ -77,8 +75,7 @@ const runGameLoop = async (
 	}
 
 	const winner = players.getLiving()[0];
-	winner.finishPosition = 1;
-	winner.finishRound = currentRoundNumber;
+	winner.setFinishStanding({ position: 1, round: currentRoundNumber });
 
 	return players.getAll().map((p) => ({
 		id: p.id,

@@ -18,9 +18,9 @@ export const decideBuyXp = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
 ): Action | null => {
-	const { state, settings } = ctx;
-	const level = state.playerInfo.level;
-	const money = state.playerInfo.money;
+	const { player, settings } = ctx;
+	const level = player.level;
+	const money = player.money;
 
 	if (level >= MAX_LEVEL) {
 		return null;
@@ -28,24 +28,21 @@ export const decideBuyXp = (
 	if (money < settings.buyXpCost) {
 		return null;
 	}
-	if (state.roundInfo.round < ROUND_FLOOR) {
+	if (player.gamemode.getRoundInfo().round < ROUND_FLOOR) {
 		return null;
 	}
 
-	const xpRemaining = Math.max(
-		1,
-		getXpToNextLevel(level) - state.playerInfo.xp
-	);
+	const xpRemaining = Math.max(1, getXpToNextLevel(level) - player.xp);
 	// Closing out a level is always worth it — the extra board slot pays for itself.
 	if (settings.buyXpAmount >= xpRemaining) {
 		return BotActions.buyXp();
 	}
 
 	const moneyAfter = money - settings.buyXpCost;
-	const floor = isInPanicMode(state, personality) ? 0 : MONEY_FLOOR;
+	const floor = isInPanicMode(player, personality) ? 0 : MONEY_FLOOR;
 
 	if (
-		effectiveAmbition(state, personality) === "high" &&
+		effectiveAmbition(player, personality) === "high" &&
 		moneyAfter >= floor
 	) {
 		return BotActions.buyXp();

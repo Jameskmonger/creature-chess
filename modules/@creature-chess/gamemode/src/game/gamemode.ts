@@ -1,4 +1,3 @@
-import { EventEmitter } from "events";
 import { Logger } from "winston";
 
 import { Rng, createRng } from "@shoki/random";
@@ -10,19 +9,16 @@ import { PieceRegistry } from "@creature-chess/utils";
 
 import { Player } from "../entities/player/player";
 import { CardDeck } from "./cardDeck";
+import { GameFinishEvent } from "./events";
 import {
-	gameFinishEvent,
-	gamePhaseStartedEvent,
-	playerListChangedEvent,
-	GameFinishEvent,
-} from "./events";
+	GamemodeEventsApi,
+	GamemodeEventsEmitter,
+	createGamemodeEvents,
+} from "./gamemodeEvents";
 import { runGame, GameContext } from "./gameContext";
 import { OpponentProvider } from "./opponentProvider";
 import { phaseRules } from "./phaseRules";
-import { setupPlayerGameDeckListeners } from "./player/playerGameDeck";
 import { PlayerList } from "./playerList";
-
-const finishGameEventKey = "FINISH_GAME";
 
 type GamemodeCallbacks = {
 	onTurnComplete?: (timeMs: number) => void;
@@ -42,9 +38,12 @@ export class Gamemode {
 	private opponentProvider: OpponentProvider;
 	private playerList = new PlayerList();
 	private players: Player[] = [];
-	private events = new EventEmitter();
 	private deck: CardDeck;
 	private rng: Rng;
+	private eventsEmitter: GamemodeEventsEmitter = createGamemodeEvents();
+
+	// eslint-disable-next-line @typescript-eslint/member-ordering
+	public readonly events: GamemodeEventsApi = this.eventsEmitter;
 
 	public constructor(
 		public readonly id: string,
@@ -61,6 +60,8 @@ export class Gamemode {
 		this.opponentProvider = new OpponentProvider(this.rng);
 		this.deck = new CardDeck(this.logger, this.rng);
 	}
+
+	public getDeck = () => this.deck;
 
 	public setRoundInfo(payload: {
 		phase: GamePhase;
@@ -82,46 +83,30 @@ export class Gamemode {
 			};
 		}
 
-		this.getConnectedPlayers().forEach((player) => {
-			player.put(gamePhaseStartedEvent(payload));
-		});
+		this.eventsEmitter.emitPhaseStart(payload);
 	}
 
 	public finishGame(payload: GameFinishEvent["payload"]) {
-		this.getConnectedPlayers().forEach((player) => {
-			player.put(gameFinishEvent(payload));
-		});
-
-		this.events.emit(finishGameEventKey, payload);
+		this.eventsEmitter.emitFinish(payload);
 
 		// teardown
 		(this.opponentProvider as unknown as null) = null;
 		(this.deck as unknown as null) = null;
 		this.playerList.deconstructor();
 		(this.playerList as unknown as null) = null;
-		this.events.removeAllListeners();
-		(this.events as unknown as null) = null;
+		this.eventsEmitter.dispose();
 	}
 
 	public start = (players: Player[]) => {
 		players.forEach((player) => {
 			this.players.push(player);
 			this.playerList.addPlayer(player);
-
-			setupPlayerGameDeckListeners(
-				player.addListener,
-				this.deck,
-				this.settings.rerollMultiplier
-			);
 		});
 
 		this.opponentProvider.setPlayers(players);
 
-		// todo this is ugly
 		this.playerList.onUpdate((newPlayers) => {
-			this.getConnectedPlayers().forEach((player) => {
-				player.put(playerListChangedEvent({ players: newPlayers }));
-			});
+			this.eventsEmitter.emitPlayerListChange({ players: newPlayers });
 		});
 
 		const context: GameContext = {
@@ -147,7 +132,7 @@ export class Gamemode {
 		) || null;
 
 	public onFinish(fn: (event: GameFinishEvent["payload"]) => void) {
-		this.events.on(finishGameEventKey, fn);
+		this.events.onAnyEvent("finish", (action) => fn(action.payload));
 	}
 
 	public getConnectedPlayers = () =>

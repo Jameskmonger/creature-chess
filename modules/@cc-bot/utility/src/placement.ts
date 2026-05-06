@@ -10,8 +10,8 @@ import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
 export const nextPlacementAction = (
 	ctx: PreparingPhaseContext
 ): Action | null => {
-	const { board, bench, pieceRegistry, state } = ctx;
-	const level = state.playerInfo.level;
+	const { board, bench, pieceRegistry, player } = ctx;
+	const level = player.level;
 
 	const benchPieces = bench.getAllPieces();
 	const boardPieces = board.getAllPieces();

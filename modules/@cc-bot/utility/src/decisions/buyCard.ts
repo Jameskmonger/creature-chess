@@ -1,6 +1,6 @@
 import { Action } from "redux";
 
-import { PlayerState } from "@creature-chess/gamemode";
+import { Player } from "@creature-chess/gamemode";
 import { Card, PieceModel } from "@creature-chess/models";
 
 import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
@@ -40,13 +40,13 @@ const scoreCard = (allPieces: PieceModel[], card: Card): CardQuality => {
 const willBuy = (
 	quality: CardQuality,
 	personality: Personality,
-	state: PlayerState,
+	player: Player,
 	shortOnPieces: boolean
 ): boolean => {
 	if (quality === "completion") {
 		return true;
 	}
-	if (effectiveAmbition(state, personality) === "high") {
+	if (effectiveAmbition(player, personality) === "high") {
 		return true;
 	}
 	// Readying up with a half-empty board is a guaranteed loss.
@@ -65,17 +65,17 @@ const willBuy = (
 const passesMoneyFloor = (
 	quality: CardQuality,
 	personality: Personality,
-	state: PlayerState,
+	player: Player,
 	shortOnPieces: boolean,
 	moneyAfter: number
 ): boolean => {
 	if (quality === "completion" || shortOnPieces) {
 		return true;
 	}
-	if (effectiveAmbition(state, personality) === "high") {
+	if (effectiveAmbition(player, personality) === "high") {
 		return true;
 	}
-	if (isInPanicMode(state, personality)) {
+	if (isInPanicMode(player, personality)) {
 		return true;
 	}
 	return moneyAfter >= MONEY_FLOOR;
@@ -85,10 +85,10 @@ export const decideBuyCard = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
 ): Action | null => {
-	const { board, bench, pieceRegistry, state, settings } = ctx;
-	const money = state.playerInfo.money;
-	const level = state.playerInfo.level;
-	const cards = state.cardShop.cards;
+	const { board, bench, pieceRegistry, player, settings } = ctx;
+	const money = player.money;
+	const level = player.level;
+	const cards = player.cards;
 
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
 	const totalPieces = allPieces.length;
@@ -113,7 +113,7 @@ export const decideBuyCard = (
 		.sort((a, b) => QUALITY_RANK[b.quality] - QUALITY_RANK[a.quality]);
 
 	for (const { card, index, quality } of ranked) {
-		if (!willBuy(quality, personality, state, shortOnPieces)) {
+		if (!willBuy(quality, personality, player, shortOnPieces)) {
 			continue;
 		}
 		const moneyAfter = money - card.cost;
@@ -121,7 +121,7 @@ export const decideBuyCard = (
 			!passesMoneyFloor(
 				quality,
 				personality,
-				state,
+				player,
 				shortOnPieces,
 				moneyAfter
 			)

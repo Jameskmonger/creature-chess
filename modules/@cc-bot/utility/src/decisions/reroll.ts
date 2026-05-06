@@ -15,14 +15,14 @@ export const decideReroll = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
 ): Action | null => {
-	const { board, bench, pieceRegistry, state, settings } = ctx;
-	const money = state.playerInfo.money;
+	const { board, bench, pieceRegistry, player, settings } = ctx;
+	const money = player.money;
 
 	if (money < settings.rerollCost) {
 		return null;
 	}
 
-	const cards = state.cardShop.cards;
+	const cards = player.cards;
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
 
 	const shopHasWantedCard = cards.some(
@@ -37,10 +37,10 @@ export const decideReroll = (
 	}
 
 	const moneyAfter = money - settings.rerollCost;
-	const floor = isInPanicMode(state, personality) ? 0 : MONEY_FLOOR;
+	const floor = isInPanicMode(player, personality) ? 0 : MONEY_FLOOR;
 
 	if (
-		effectiveAmbition(state, personality) === "high" &&
+		effectiveAmbition(player, personality) === "high" &&
 		moneyAfter >= floor
 	) {
 		return BotActions.rerollCards();

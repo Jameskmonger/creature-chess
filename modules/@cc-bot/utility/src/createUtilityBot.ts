@@ -47,10 +47,10 @@ export const createUtilityBot = (
 });
 
 const mustKeepActing = (ctx: PreparingPhaseContext): boolean => {
-	const { board, bench, state } = ctx;
+	const { board, bench, player } = ctx;
 
 	const totalPieces =
 		board.getAllPieces().length + bench.getAllPieces().length;
 
-	return totalPieces < state.playerInfo.level;
+	return totalPieces < player.level;
 };

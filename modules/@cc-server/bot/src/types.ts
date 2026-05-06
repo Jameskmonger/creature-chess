@@ -1,7 +1,7 @@
 import { Action } from "redux";
 
 import { Board } from "@creature-chess/board";
-import { PlayerState } from "@creature-chess/gamemode";
+import { Player } from "@creature-chess/gamemode";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -9,7 +9,7 @@ export type PreparingPhaseContext = {
 	board: Board;
 	bench: Board;
 	pieceRegistry: PieceRegistry;
-	state: PlayerState;
+	player: Player;
 	settings: GamemodeSettings;
 	/** Uniform `[0, 1)`. Use this instead of `Math.random` for reproducible runs. */
 	rng: () => number;

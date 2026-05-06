@@ -1,6 +1,6 @@
 import delay from "delay";
 
-import { GameEvents, Player, PlayerEvents } from "@creature-chess/gamemode";
+import { Player } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import {
@@ -24,25 +24,35 @@ export const setupBotLogicInternal = (
 ) => {
 	implementation.onGameStart?.(entity.id);
 
-	entity.addListener({
-		actionCreator: GameEvents.gamePhaseStartedEvent,
-		effect: async ({ payload: { phase } }, api) => {
-			api.cancelActiveListeners();
+	let currentAbort: AbortController | null = null;
 
-			const state = api.getState();
-			if (state.playerInfo.health <= 0) {
+	return entity.gamemode.events.onAnyEvent("phaseStart", async (action) => {
+		currentAbort?.abort();
+		const ac = new AbortController();
+		currentAbort = ac;
+
+		if (!entity.alive) {
+			return;
+		}
+
+		if (entity.settings.botInitialDelayMs > 0) {
+			await delay(entity.settings.botInitialDelayMs);
+			if (ac.signal.aborted) {
 				return;
 			}
+		}
 
-			if (api.player.settings.botInitialDelayMs > 0) {
-				await delay(api.player.settings.botInitialDelayMs);
-			}
-
-			if (phase === GamePhase.PREPARING) {
-				await runPreparingPhase(api, implementation, options, hooks);
-			} else if (phase === GamePhase.PLAYING) {
-				api.dispatch(PlayerEvents.clientFinishMatchEvent());
-			}
-		},
+		const { phase } = action.payload;
+		if (phase === GamePhase.PREPARING) {
+			await runPreparingPhase(
+				entity,
+				ac.signal,
+				implementation,
+				options,
+				hooks
+			);
+		} else if (phase === GamePhase.PLAYING) {
+			entity.emitClientFinishMatch();
+		}
 	});
 };

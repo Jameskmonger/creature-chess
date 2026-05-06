@@ -1,14 +1,6 @@
-import delay from "delay";
-
 import { SubscribableBoard } from "@creature-chess/board";
+import { Player } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
-
-import {
-	Player,
-	PlayerCommands,
-	GameEvents,
-	PlayerEvents,
-} from "@creature-chess/gamemode";
 import { serialiseBoard } from "@creature-chess/networking";
 
 import { GameSocket } from "../socket";
@@ -64,33 +56,20 @@ const setupSpectateListeners = (
 			turn: match.getTurn(),
 			board: serialiseBoard(matchBoard.board, pieceRegistry),
 		});
-
-		// todo send opponentId
 	}
 
 	const unsubscribes: (() => void)[] = [];
 
 	unsubscribes.push(
-		targetEntity.addListener({
-			actionCreator: GameEvents.gamePhaseStartedEvent,
-			effect: async ({ payload: { phase } }, api) => {
-				if (phase !== GamePhase.READY) {
-					return;
-				}
-
-				const currentMatch = api.player.match;
-				if (currentMatch) {
-					const boardData = currentMatch.getBoardForPlayer(localPlayerId);
-					socket.emit("matchBoardUpdate", {
-						turn: null,
-						board: serialiseBoard(boardData.board, pieceRegistry),
-					});
-				}
-
-				await api.take(
-					(a) => a.type === PlayerEvents.playerFinishMatchEvent.type
-				);
-			},
+		targetEntity.gamemode.events.onPhaseStart(GamePhase.READY, () => {
+			const currentMatch = targetEntity.match;
+			if (currentMatch) {
+				const boardData = currentMatch.getBoardForPlayer(localPlayerId);
+				socket.emit("matchBoardUpdate", {
+					turn: null,
+					board: serialiseBoard(boardData.board, pieceRegistry),
+				});
+			}
 		})
 	);
 
@@ -108,30 +87,42 @@ export const setupPlayerBoard = (entity: Player, socket: GameSocket) => {
 		cleanupSpectate = setupSpectateListeners(targetEntity, entity.id, socket);
 	};
 
-	const task = entity.runEffect(async () => {
-		await delay(200);
+	const teardownAbort = new AbortController();
+
+	(async () => {
+		await new Promise<void>((resolve) => {
+			const timer = setTimeout(() => {
+				teardownAbort.signal.removeEventListener("abort", onAbort);
+				resolve();
+			}, 200);
+			const onAbort = () => {
+				clearTimeout(timer);
+				resolve();
+			};
+			teardownAbort.signal.addEventListener("abort", onAbort, { once: true });
+		});
+		if (teardownAbort.signal.aborted) {
+			return;
+		}
 
 		const target = entity.spectatingId
 			? entity.gamemode.getPlayerById(entity.spectatingId) || entity
 			: entity;
 
 		startSpectating(target);
-	});
+	})();
 
-	const unsubSpectateChange = entity.addListener({
-		actionCreator: PlayerCommands.setSpectatingIdCommand,
-		effect: async (_action, api) => {
-			const targetEntity = api.player.spectatingId
-				? api.player.gamemode.getPlayerById(api.player.spectatingId) || entity
-				: entity;
+	const unsubSpectateChange = entity.events.onSpectatingChange((id) => {
+		const targetEntity = id
+			? entity.gamemode.getPlayerById(id) || entity
+			: entity;
 
-			startSpectating(targetEntity);
-		},
+		startSpectating(targetEntity);
 	});
 
 	return () => {
+		teardownAbort.abort();
 		cleanupSpectate?.();
-		task.cancel();
 		unsubSpectateChange();
 	};
 };
