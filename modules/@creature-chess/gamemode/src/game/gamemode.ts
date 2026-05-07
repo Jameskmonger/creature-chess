@@ -17,7 +17,7 @@ import {
 } from "./gamemodeEvents";
 import { runGame, GameContext } from "./gameContext";
 import { OpponentProvider } from "./opponentProvider";
-import { phaseRules } from "./phaseRules";
+import { playerRound } from "./playerRound";
 import { PlayerList } from "./playerList";
 
 type GamemodeCallbacks = {
@@ -111,7 +111,7 @@ export class Gamemode {
 			},
 			logger: this.logger,
 			settings: this.settings,
-			phaseRules,
+			playerRound,
 		};
 
 		// Run the game (async, not blocking)

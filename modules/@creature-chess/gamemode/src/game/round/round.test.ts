@@ -13,44 +13,47 @@ import {
 import { GameContext } from "../gameContext";
 import { Gamemode } from "../gamemode";
 import { Match } from "../match";
-import { PhaseRules } from "../phaseRules";
+import { PlayerRound } from "../playerRound";
 import { Round } from ".";
 
 type Call =
-	| { fn: "onPreparingPhaseStart"; playerId: string }
-	| { fn: "onBeforeReadyPhaseStart"; playerId: string }
-	| { fn: "onReadyPhaseStart"; playerId: string; opponentId: string }
+	| { fn: "prepare"; playerId: string }
+	| { fn: "deploy"; playerId: string }
+	| { fn: "engage"; playerId: string; opponentId: string }
 	| {
-			fn: "onMatchSettled";
+			fn: "settle";
 			playerId: string;
 			isHomePlayer: boolean;
 			homeScore: number;
 			awayScore: number;
 	  };
 
-const createRecordingPhaseRules = (): { rules: PhaseRules; calls: Call[] } => {
+const createRecordingPlayerRound = (): {
+	playerRound: PlayerRound;
+	calls: Call[];
+} => {
 	const calls: Call[] = [];
-	const rules: PhaseRules = {
-		onPreparingPhaseStart: (player) => {
-			calls.push({ fn: "onPreparingPhaseStart", playerId: player.id });
+	const playerRound: PlayerRound = {
+		prepare: (player) => {
+			calls.push({ fn: "prepare", playerId: player.id });
 		},
-		onBeforeReadyPhaseStart: (player) => {
-			calls.push({ fn: "onBeforeReadyPhaseStart", playerId: player.id });
+		deploy: (player) => {
+			calls.push({ fn: "deploy", playerId: player.id });
 		},
-		onReadyPhaseStart: (player, match) => {
+		engage: (player, match) => {
 			player.match = match;
 			const opponent =
 				match.home.id === player.id ? match.away : match.home;
 			calls.push({
-				fn: "onReadyPhaseStart",
+				fn: "engage",
 				playerId: player.id,
 				opponentId: opponent.id,
 			});
 		},
-		onMatchSettled: (player, payload) => {
+		settle: (player, payload) => {
 			player.match = null;
 			calls.push({
-				fn: "onMatchSettled",
+				fn: "settle",
 				playerId: player.id,
 				isHomePlayer: payload.isHomePlayer,
 				homeScore: payload.homeScore,
@@ -58,7 +61,7 @@ const createRecordingPhaseRules = (): { rules: PhaseRules; calls: Call[] } => {
 			});
 		},
 	};
-	return { rules, calls };
+	return { playerRound, calls };
 };
 
 const fastSettings = (): GamemodeSettings => ({
@@ -73,7 +76,7 @@ const fastSettings = (): GamemodeSettings => ({
 	postBattleSettleMs: 0,
 });
 
-const buildContext = (rules: PhaseRules) => {
+const buildContext = (playerRound: PlayerRound) => {
 	const settings = fastSettings();
 	const logger = createMockLogger();
 	const gamemode = new Gamemode("test-game", logger, settings);
@@ -90,45 +93,42 @@ const buildContext = (rules: PhaseRules) => {
 		},
 		logger,
 		settings,
-		phaseRules: rules,
+		playerRound,
 	};
 
 	return { context, p1, p2, gamemode };
 };
 
 describe("Round", () => {
-	test("drives PhaseRules in preparing → beforeReady → readyStart → matchSettled order", async () => {
-		const { rules, calls } = createRecordingPhaseRules();
-		const { context } = buildContext(rules);
+	test("drives PlayerRound in prepare → deploy → engage → settle order", async () => {
+		const { playerRound, calls } = createRecordingPlayerRound();
+		const { context } = buildContext(playerRound);
 
 		const round = new Round(1, context);
 		await round.run();
 
-		// First: both players get onPreparingPhaseStart
+		// First: both players get prepare
 		expect(calls.slice(0, 2)).toEqual([
-			{ fn: "onPreparingPhaseStart", playerId: "p1" },
-			{ fn: "onPreparingPhaseStart", playerId: "p2" },
+			{ fn: "prepare", playerId: "p1" },
+			{ fn: "prepare", playerId: "p2" },
 		]);
 
-		// Then: both players get onBeforeReadyPhaseStart (all players, not just living)
+		// Then: both players get deploy (all players, not just living)
 		expect(calls.slice(2, 4)).toEqual([
-			{ fn: "onBeforeReadyPhaseStart", playerId: "p1" },
-			{ fn: "onBeforeReadyPhaseStart", playerId: "p2" },
+			{ fn: "deploy", playerId: "p1" },
+			{ fn: "deploy", playerId: "p2" },
 		]);
 
-		// Then: onReadyPhaseStart for both sides of the match (awayIsClone=false)
+		// Then: engage for both sides of the match (awayIsClone=false)
 		expect(calls.slice(4, 6)).toEqual([
-			{ fn: "onReadyPhaseStart", playerId: "p1", opponentId: "p2" },
-			{ fn: "onReadyPhaseStart", playerId: "p2", opponentId: "p1" },
+			{ fn: "engage", playerId: "p1", opponentId: "p2" },
+			{ fn: "engage", playerId: "p2", opponentId: "p1" },
 		]);
 
-		// Last: both players get onMatchSettled after the battle resolves
+		// Last: both players get settle after the battle resolves
 		const settled = calls.slice(6);
 		expect(settled).toHaveLength(2);
-		expect(settled.map((c) => c.fn)).toEqual([
-			"onMatchSettled",
-			"onMatchSettled",
-		]);
+		expect(settled.map((c) => c.fn)).toEqual(["settle", "settle"]);
 		expect(settled.map((c) => (c as { playerId: string }).playerId).sort()).toEqual([
 			"p1",
 			"p2",
@@ -136,8 +136,8 @@ describe("Round", () => {
 	});
 
 	test("broadcasts the round number as the round-info round during preparing phase", async () => {
-		const { rules } = createRecordingPhaseRules();
-		const { context, gamemode } = buildContext(rules);
+		const { playerRound } = createRecordingPlayerRound();
+		const { context, gamemode } = buildContext(playerRound);
 
 		await new Round(7, context).run();
 
@@ -145,8 +145,8 @@ describe("Round", () => {
 	});
 
 	test("setRoundInfo broadcasts the right phase sequence to the gamemode", async () => {
-		const { rules } = createRecordingPhaseRules();
-		const { context, gamemode } = buildContext(rules);
+		const { playerRound } = createRecordingPlayerRound();
+		const { context, gamemode } = buildContext(playerRound);
 
 		const phasesSeen: GamePhase[] = [];
 		const originalSetRoundInfo = gamemode.setRoundInfo.bind(gamemode);
@@ -165,8 +165,8 @@ describe("Round", () => {
 	});
 
 	test("preparing phase exits early when all living players ready up", async () => {
-		const { rules } = createRecordingPhaseRules();
-		const { context, p1, p2 } = buildContext(rules);
+		const { playerRound } = createRecordingPlayerRound();
+		const { context, p1, p2 } = buildContext(playerRound);
 
 		// Long timeout — the test must exit via the all-ready path.
 		context.settings.preparingPhaseLengthMs = 60000;
@@ -184,8 +184,8 @@ describe("Round", () => {
 	});
 
 	test("preparing phase exits early when a living player quits if all other living players are ready", async () => {
-		const { rules } = createRecordingPhaseRules();
-		const { context, p1, p2 } = buildContext(rules);
+		const { playerRound } = createRecordingPlayerRound();
+		const { context, p1, p2 } = buildContext(playerRound);
 
 		context.settings.preparingPhaseLengthMs = 60000;
 
@@ -200,9 +200,9 @@ describe("Round", () => {
 		expect(Date.now() - startedAt).toBeLessThan(1000);
 	});
 
-	test("with awayIsClone=true, only the home player gets onReadyPhaseStart and onMatchSettled", async () => {
-		const { rules, calls } = createRecordingPhaseRules();
-		const { context, p1 } = buildContext(rules);
+	test("with awayIsClone=true, only the home player gets engage and settle", async () => {
+		const { playerRound, calls } = createRecordingPlayerRound();
+		const { context, p1 } = buildContext(playerRound);
 		context.getMatchups = () => [
 			{ homeId: "p1", awayId: "p2", awayIsClone: true },
 		];
@@ -214,18 +214,18 @@ describe("Round", () => {
 
 		await new Round(1, context).run();
 
-		const readyCalls = calls.filter((c) => c.fn === "onReadyPhaseStart");
-		expect(readyCalls).toHaveLength(1);
-		expect(readyCalls[0]).toEqual({
-			fn: "onReadyPhaseStart",
+		const engageCalls = calls.filter((c) => c.fn === "engage");
+		expect(engageCalls).toHaveLength(1);
+		expect(engageCalls[0]).toEqual({
+			fn: "engage",
 			playerId: "p1",
 			opponentId: "p2",
 		});
 
-		// Only the home player gets onMatchSettled — Match.fight() doesn't fire
+		// Only the home player gets settle — Match.fight() doesn't fire
 		// playerFinishMatchEvent on the cloned-away side.
-		const settledCalls = calls.filter((c) => c.fn === "onMatchSettled");
-		expect(settledCalls).toHaveLength(1);
-		expect((settledCalls[0] as { playerId: string }).playerId).toBe("p1");
+		const settleCalls = calls.filter((c) => c.fn === "settle");
+		expect(settleCalls).toHaveLength(1);
+		expect((settleCalls[0] as { playerId: string }).playerId).toBe("p1");
 	});
 });

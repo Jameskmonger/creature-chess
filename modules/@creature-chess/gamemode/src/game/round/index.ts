@@ -14,10 +14,6 @@ export type RoundCallbacks = {
 
 /**
  * One iteration of the game's outer loop: preparing → ready → playing.
- *
- * Round owns phase orchestration: timing, cross-player coordination, match
- * fan-out. What each phase *does* to a player lives in PhaseRules — Round
- * calls into it.
  */
 export class Round {
 	public constructor(
@@ -33,7 +29,7 @@ export class Round {
 	}
 
 	private async runPreparing(): Promise<void> {
-		const { gamemode, players, settings, phaseRules } = this.context;
+		const { gamemode, players, settings, playerRound } = this.context;
 
 		gamemode.setRoundInfo({
 			phase: GamePhase.PREPARING,
@@ -42,7 +38,7 @@ export class Round {
 		});
 
 		const living = players.getLiving();
-		living.forEach((p) => phaseRules.onPreparingPhaseStart(p));
+		living.forEach((p) => playerRound.prepare(p));
 
 		const wait = this.waitForAllReady(living);
 		const timeout = delay(settings.preparingPhaseLengthMs);
@@ -107,10 +103,10 @@ export class Round {
 	}
 
 	private async runReady(): Promise<Match[]> {
-		const { gamemode, players, getMatchups, logger, settings, phaseRules } =
+		const { gamemode, players, getMatchups, logger, settings, playerRound } =
 			this.context;
 
-		players.getAll().forEach((p) => phaseRules.onBeforeReadyPhaseStart(p));
+		players.getAll().forEach((p) => playerRound.deploy(p));
 
 		if (settings.readyPhaseSettleMs > 0) {
 			await delay(settings.readyPhaseSettleMs);
@@ -138,9 +134,9 @@ export class Round {
 			);
 			matches.push(match);
 
-			phaseRules.onReadyPhaseStart(homePlayer, match);
+			playerRound.engage(homePlayer, match);
 			if (!awayIsClone) {
-				phaseRules.onReadyPhaseStart(awayPlayer, match);
+				playerRound.engage(awayPlayer, match);
 			}
 		});
 
@@ -157,7 +153,7 @@ export class Round {
 	}
 
 	private async runPlaying(matches: Match[]): Promise<void> {
-		const { gamemode, settings, phaseRules } = this.context;
+		const { gamemode, settings, playerRound } = this.context;
 
 		const battleTimeout =
 			settings.playingPhaseMaxLengthMs > 0
@@ -176,7 +172,7 @@ export class Round {
 				this.callbacks.onMatchEnd?.();
 
 				const settle = (player: Player, isHomePlayer: boolean) =>
-					phaseRules.onMatchSettled(player, {
+					playerRound.settle(player, {
 						homeScore,
 						awayScore,
 						isHomePlayer,

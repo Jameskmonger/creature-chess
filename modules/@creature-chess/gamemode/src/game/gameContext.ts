@@ -5,7 +5,7 @@ import { GamemodeSettings } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
 import { Gamemode } from "./gamemode";
-import { PhaseRules } from "./phaseRules";
+import { PlayerRound } from "./playerRound";
 import { Round, RoundCallbacks } from "./round";
 
 export type GetMatchupsFn = () => {
@@ -24,7 +24,7 @@ export type GameContext = {
 	};
 	logger: Logger;
 	settings: GamemodeSettings;
-	phaseRules: PhaseRules;
+	playerRound: PlayerRound;
 };
 
 export type GameContextPlayers = GameContext["players"];
