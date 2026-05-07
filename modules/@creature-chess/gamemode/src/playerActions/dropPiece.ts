@@ -1,6 +1,6 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 import { pieceLocationSchema } from "./pieceLocation";
 
@@ -10,7 +10,7 @@ const dropPieceSchema = z.object({
 });
 
 export type DropPiecePlayerAction = ReturnType<typeof dropPiecePlayerAction>;
-export const dropPiecePlayerAction = createAction<
+export const dropPiecePlayerAction = networkedAction<
 	z.infer<typeof dropPieceSchema>
 >("dropPiecePlayerAction");
 

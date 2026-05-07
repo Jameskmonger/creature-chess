@@ -2,9 +2,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 
 import {
 	PlayerInfoState,
-	playerInfoReducer,
 	PlayerState,
-	playerReducers,
 	GameEvents,
 } from "@creature-chess/gamemode";
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
@@ -14,6 +12,7 @@ import { GamemodeSettings } from "@creature-chess/models";
 import { quickChatReducer, QuickChatState } from "./chat/state";
 import { networkReducer, NetworkState } from "./network";
 import { playerListReducer } from "./playerList/state";
+import { playerInfoReducer, playerReducers } from "./playerReducers";
 import { settingsReducer } from "./settings/state";
 import { UiState, uiReducer } from "./ui";
 

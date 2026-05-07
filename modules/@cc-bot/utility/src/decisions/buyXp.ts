@@ -1,9 +1,7 @@
-import { Action } from "redux";
-
 import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { MAX_LEVEL } from "@creature-chess/models";
 
-import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
+import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 import {
 	effectiveAmbition,
@@ -17,7 +15,7 @@ const ROUND_FLOOR = 4;
 export const decideBuyXp = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
-): Action | null => {
+): BotAction | null => {
 	const { player, settings } = ctx;
 	const level = player.level;
 	const money = player.money;

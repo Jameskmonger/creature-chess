@@ -1,4 +1,3 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
 import {
@@ -7,6 +6,7 @@ import {
 	ReadyQuickChatOptions,
 } from "@creature-chess/models";
 
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 
 const quickChatOptions = new Set<QuickChatOption>([
@@ -23,7 +23,7 @@ const quickChatSchema = z.object({
 });
 
 export type QuickChatPlayerAction = ReturnType<typeof quickChatPlayerAction>;
-export const quickChatPlayerAction = createAction<
+export const quickChatPlayerAction = networkedAction<
 	z.infer<typeof quickChatSchema>,
 	"quickChatAction"
 >("quickChatAction");

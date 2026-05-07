@@ -1,9 +1,9 @@
-import { Action } from "redux";
-
 import { Board } from "@creature-chess/board";
 import { Player } from "@creature-chess/gamemode";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
+
+export type BotAction = { type: string; payload?: unknown };
 
 export type PreparingPhaseContext = {
 	board: Board;
@@ -18,7 +18,7 @@ export type PreparingPhaseContext = {
 export type BotImplementation = {
 	onGameStart?: (playerId: string) => void;
 	/** Return `null` to ready up. */
-	decidePreparingAction: (ctx: PreparingPhaseContext) => Action | null;
+	decidePreparingAction: (ctx: PreparingPhaseContext) => BotAction | null;
 };
 
 export type SetupBotLogicOptions = {

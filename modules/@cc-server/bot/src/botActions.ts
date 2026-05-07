@@ -1,7 +1,7 @@
-import { Action } from "redux";
-
 import { packPosition } from "@creature-chess/board";
 import { PlayerActions } from "@creature-chess/gamemode";
+
+import { BotAction } from "./types";
 
 const boardLocation = (x: number, y: number) => ({
 	type: "board" as const,
@@ -21,7 +21,7 @@ export const BotActions = {
 	 *
 	 * @returns The action to perform the buy.
 	 */
-	buyCard: (index: number): Action =>
+	buyCard: (index: number): BotAction =>
 		PlayerActions.buyCardPlayerAction({ index }),
 
 	/**
@@ -29,14 +29,14 @@ export const BotActions = {
 	 *
 	 * @returns The action to perform the XP purchase.
 	 */
-	buyXp: (): Action => PlayerActions.buyXpPlayerAction(),
+	buyXp: (): BotAction => PlayerActions.buyXpPlayerAction(),
 
 	/**
 	 * Reroll the shop cards.
 	 *
 	 * @returns The action to perform the reroll.
 	 */
-	rerollCards: (): Action => PlayerActions.rerollCardsPlayerAction(),
+	rerollCards: (): BotAction => PlayerActions.rerollCardsPlayerAction(),
 
 	/**
 	 * Sell a piece from the board or bench.
@@ -45,7 +45,7 @@ export const BotActions = {
 	 *
 	 * @returns The action to perform the sell.
 	 */
-	sellPiece: (pieceId: string): Action =>
+	sellPiece: (pieceId: string): BotAction =>
 		PlayerActions.sellPiecePlayerAction({ pieceId }),
 
 	/**
@@ -63,7 +63,7 @@ export const BotActions = {
 		destX: number,
 		destY: number,
 		destPieceId?: string
-	): Action =>
+	): BotAction =>
 		destPieceId
 			? PlayerActions.swapPiecePlayerAction({
 					pieceAId: srcPieceId,
@@ -89,7 +89,7 @@ export const BotActions = {
 		destX: number,
 		destY: number,
 		destPieceId?: string
-	): Action =>
+	): BotAction =>
 		destPieceId
 			? PlayerActions.swapPiecePlayerAction({
 					pieceAId: srcPieceId,
@@ -108,7 +108,7 @@ export const BotActions = {
 	 *
 	 * @returns The action to perform the move.
 	 */
-	boardToBench: (srcPieceId: string, benchX: number): Action =>
+	boardToBench: (srcPieceId: string, benchX: number): BotAction =>
 		PlayerActions.dropPiecePlayerAction({
 			pieceId: srcPieceId,
 			to: benchLocation(benchX),

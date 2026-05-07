@@ -1,15 +1,13 @@
-import { Action } from "redux";
-
 import { Board } from "@creature-chess/board";
 import { getDefinitionById } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
+import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 /** Fill empty board slots from bench, then upgrade weakest-board with strongest-bench. */
 export const nextPlacementAction = (
 	ctx: PreparingPhaseContext
-): Action | null => {
+): BotAction | null => {
 	const { board, bench, pieceRegistry, player } = ctx;
 	const level = player.level;
 

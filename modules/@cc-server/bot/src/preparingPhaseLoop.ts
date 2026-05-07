@@ -1,5 +1,4 @@
 import delay from "delay";
-import { Action } from "redux";
 
 import {
 	dispatchTrustedPlayerAction,
@@ -8,6 +7,7 @@ import {
 } from "@creature-chess/gamemode";
 
 import {
+	BotAction,
 	BotImplementation,
 	PreparingPhaseContext,
 	SetupBotLogicOptions,
@@ -17,7 +17,7 @@ const DEFAULT_ACTION_BUDGET = 200;
 
 export type InternalLifecycleHooks = {
 	actionBudgetSpec?: { multiplier: number; min: number; max: number };
-	onActionDispatched?: (action: Action) => void;
+	onActionDispatched?: (action: BotAction) => void;
 	onPhaseEnded?: (info: PhaseEndInfo) => void;
 };
 

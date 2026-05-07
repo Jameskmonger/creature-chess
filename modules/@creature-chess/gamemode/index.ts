@@ -4,16 +4,24 @@ export {
 	type Player,
 	createPlayer,
 	type PlayerState,
-	playerReducers,
+	initialPlayerState,
 	PlayerCommands,
 	PlayerEvents,
 } from "./src/entities/player";
 export { buildPlayerSnapshot } from "./src/entities/player/state/wireFields";
 export {
 	type PlayerInfoState,
-	playerInfoReducer,
+	initialPlayerInfoState,
 	type PlayerMatchRewards,
 } from "./src/entities/player/state/playerInfo";
+export {
+	type CardShopState,
+	initialCardShopState,
+} from "./src/entities/player/state/cardShop";
+export {
+	type SpectatingState,
+	initialSpectatingState,
+} from "./src/entities/player/state/spectating";
 export {
 	type PlayerAction,
 	PlayerActionTypesArray,

@@ -1,8 +1,6 @@
-import { Action } from "redux";
-
 import { getDefinitionById, PieceModel } from "@creature-chess/models";
 
-import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
+import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 import { collectAllPieces } from "../cards";
 import { Personality } from "../personality";
@@ -10,7 +8,7 @@ import { Personality } from "../personality";
 export const decideSellPiece = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
-): Action | null => {
+): BotAction | null => {
 	const { board, bench, pieceRegistry, player, settings } = ctx;
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
 	const level = player.level;

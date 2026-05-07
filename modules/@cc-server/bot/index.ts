@@ -6,6 +6,7 @@ export {
 	type BotEngineRegistry,
 } from "./src/registry";
 export type {
+	BotAction,
 	BotImplementation,
 	PreparingPhaseContext,
 	SetupBotLogicOptions,

@@ -27,7 +27,6 @@
 		"@creature-chess/board": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/utils": "workspace:*",
-		"@reduxjs/toolkit": "^2.2.1",
 		"present": "^1.0.0"
 	}
 }

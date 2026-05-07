@@ -1,12 +1,12 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
 import { GamePhase } from "@creature-chess/models";
 
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 
 export type ReadyUpPlayerAction = ReturnType<typeof readyUpPlayerAction>;
-export const readyUpPlayerAction = createAction("readyUpPlayerAction");
+export const readyUpPlayerAction = networkedAction("readyUpPlayerAction");
 
 export const readyUpDef = definePlayerAction({
 	type: readyUpPlayerAction.type,

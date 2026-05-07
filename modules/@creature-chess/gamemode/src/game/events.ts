@@ -1,16 +1,16 @@
-import { createAction } from "@reduxjs/toolkit";
-
 import { GamePhase } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 
+import { networkedAction } from "../events/networkedAction";
+
 export type GamePhaseStartedEvent = ReturnType<typeof gamePhaseStartedEvent>;
-export const gamePhaseStartedEvent = createAction<
+export const gamePhaseStartedEvent = networkedAction<
 	{ phase: GamePhase; startedAt: number; round?: number },
 	"gamePhaseStartedEvent"
 >("gamePhaseStartedEvent");
 
 export type GameFinishEvent = ReturnType<typeof gameFinishEvent>;
-export const gameFinishEvent = createAction<
+export const gameFinishEvent = networkedAction<
 	{
 		players: {
 			id: string;
@@ -22,7 +22,7 @@ export const gameFinishEvent = createAction<
 >("gameFinishEvent");
 
 export type PlayerListChangedEvent = ReturnType<typeof playerListChangedEvent>;
-export const playerListChangedEvent = createAction<
+export const playerListChangedEvent = networkedAction<
 	{ players: PlayerListPlayer[] },
 	"playerListChangedEvent"
 >("playerListChangedEvent");
@@ -34,7 +34,7 @@ export type GamemodeEventByType = {
 	playerListChange: PlayerListChangedEvent;
 };
 
-export const GameEventActionTypesArray = [
+export const GameEventActionTypesArray: string[] = [
 	gameFinishEvent.toString(),
 	gamePhaseStartedEvent.toString(),
 	playerListChangedEvent.toString(),

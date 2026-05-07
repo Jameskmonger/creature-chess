@@ -1,6 +1,6 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 
 const swapPieceSchema = z.object({
@@ -9,7 +9,7 @@ const swapPieceSchema = z.object({
 });
 
 export type SwapPiecePlayerAction = ReturnType<typeof swapPiecePlayerAction>;
-export const swapPiecePlayerAction = createAction<
+export const swapPiecePlayerAction = networkedAction<
 	z.infer<typeof swapPieceSchema>
 >("swapPiecePlayerAction");
 

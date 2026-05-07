@@ -35,7 +35,7 @@ import {
 	playerReceiveQuickChatEvent,
 } from "./events";
 import { runEvolutions } from "./operations/evolution";
-import { PlayerState, playerReducers } from "./state";
+import { PlayerState, initialPlayerState } from "./state";
 import { updateCardsCommand, updateShopLockCommand } from "./state/cardShop";
 import {
 	PlayerInfoUpdateCommand,
@@ -154,36 +154,14 @@ export type Player = {
 	events: PlayerEventsApi;
 };
 
-type ReducersMapObject<TState> = {
-	[K in keyof TState]: (
-		state: TState[K] | undefined,
-		action: Action
-	) => TState[K];
-};
-
-function combineReducersPlain<TState>(reducers: ReducersMapObject<TState>) {
-	const keys = Object.keys(reducers) as (keyof TState)[];
-
-	return (state: TState | undefined, action: Action): TState => {
-		let changed = false;
-		const nextState = {} as TState;
-
-		for (const key of keys) {
-			const reducer = reducers[key] as (state: any, action: Action) => any;
-			const prev = state ? state[key] : undefined;
-			const next = reducer(prev, action);
-			nextState[key] = next;
-			if (next !== prev) {
-				changed = true;
-			}
-		}
-
-		return changed || !state ? nextState : state;
-	};
-}
-
 const WIRE_PLAYER_EVENT_TYPES = new Set(PlayerEventActionTypesArray);
 const INFO_UPDATE_TYPES = new Set(PlayerInfoUpdateCommandActionTypesArray);
+
+const cloneInitialState = (): PlayerState => ({
+	cardShop: { ...initialPlayerState.cardShop, cards: [] },
+	playerInfo: { ...initialPlayerState.playerInfo, streak: { ...initialPlayerState.playerInfo.streak } },
+	spectating: { ...initialPlayerState.spectating },
+});
 
 export const createPlayer = (
 	id: string,
@@ -201,13 +179,11 @@ export const createPlayer = (
 		match: Match | null;
 	}
 ): Player => {
-	const rootReducer = combineReducersPlain<PlayerState>(playerReducers);
-	let state: PlayerState = rootReducer(undefined, { type: "@@INIT" });
+	const state: PlayerState = cloneInitialState();
 
 	const subscribers = new Set<(action: Action) => void>();
 
-	const put = (action: Action) => {
-		state = rootReducer(state, action);
+	const emit = (action: Action) => {
 		// Snapshot the set so subscribers added/removed during dispatch don't
 		// affect the current notification round.
 		const snapshot = [...subscribers];
@@ -342,8 +318,9 @@ export const createPlayer = (
 	};
 
 	const eliminate = () => {
-		put(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
-		put(playerDeathEvent());
+		state.playerInfo.status = PlayerStatus.DEAD;
+		emit(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
+		emit(playerDeathEvent());
 
 		const remainingCards = state.cardShop.cards.filter(
 			(c): c is Card => c !== null
@@ -526,31 +503,43 @@ export const createPlayer = (
 			}
 		},
 
-		setMoney: (amount) => put(playerInfoCommands.updateMoneyCommand(amount)),
-		addMoney: (amount) =>
-			put(playerInfoCommands.updateMoneyCommand(state.playerInfo.money + amount)),
-		reduceMoney: (amount) =>
-			put(playerInfoCommands.updateMoneyCommand(state.playerInfo.money - amount)),
+		setMoney: (amount) => {
+			state.playerInfo.money = amount;
+			emit(playerInfoCommands.updateMoneyCommand(amount));
+		},
+		addMoney: (amount) => {
+			state.playerInfo.money += amount;
+			emit(playerInfoCommands.updateMoneyCommand(state.playerInfo.money));
+		},
+		reduceMoney: (amount) => {
+			state.playerInfo.money -= amount;
+			emit(playerInfoCommands.updateMoneyCommand(state.playerInfo.money));
+		},
 
-		setHealth: (amount) =>
-			put(playerInfoCommands.updateHealthCommand(amount)),
-		addHealth: (amount) =>
-			put(
-				playerInfoCommands.updateHealthCommand(
-					Math.min(MAX_HEALTH, state.playerInfo.health + amount)
-				)
-			),
+		setHealth: (amount) => {
+			state.playerInfo.health = amount;
+			emit(playerInfoCommands.updateHealthCommand(amount));
+		},
+		addHealth: (amount) => {
+			const next = Math.min(MAX_HEALTH, state.playerInfo.health + amount);
+			state.playerInfo.health = next;
+			emit(playerInfoCommands.updateHealthCommand(next));
+		},
 		reduceHealth: (amount) => {
 			const oldHealth = state.playerInfo.health;
 			const newHealth = Math.max(0, oldHealth - amount);
-			put(playerInfoCommands.updateHealthCommand(newHealth));
+			state.playerInfo.health = newHealth;
+			emit(playerInfoCommands.updateHealthCommand(newHealth));
 			if (newHealth === 0 && oldHealth !== 0) {
 				eliminate();
 			}
 		},
 
-		setLevel: (payload) =>
-			put(playerInfoCommands.updateLevelCommand(payload)),
+		setLevel: (payload) => {
+			state.playerInfo.level = payload.level;
+			state.playerInfo.xp = payload.xp;
+			emit(playerInfoCommands.updateLevelCommand(payload));
+		},
 		addXp: (amount) => {
 			let level = state.playerInfo.level;
 			let xp = state.playerInfo.xp;
@@ -567,25 +556,48 @@ export const createPlayer = (
 				}
 			}
 
-			put(playerInfoCommands.updateLevelCommand({ level, xp }));
+			state.playerInfo.level = level;
+			state.playerInfo.xp = xp;
+			emit(playerInfoCommands.updateLevelCommand({ level, xp }));
 		},
 
-		setReady: (ready) =>
-			put(playerInfoCommands.updateReadyCommand(ready)),
-		setShopLocked: (locked) => put(updateShopLockCommand(locked)),
-		setOpponent: (payload) =>
-			put(playerInfoCommands.updateOpponentCommand(payload)),
-		setBattle: (battle) =>
-			put(playerInfoCommands.updateBattleCommand(battle)),
-		setStreak: (streak) =>
-			put(playerInfoCommands.updateStreakCommand(streak)),
-		setStatus: (status) =>
-			put(playerInfoCommands.updateStatusCommand(status)),
-		setSpectatingId: (spectatingId) =>
-			put(setSpectatingIdCommand(spectatingId)),
-		setMatchRewards: (rewards) =>
-			put(playerInfoCommands.playerMatchRewardsEvent(rewards)),
-		setCards: (cards) => put(updateCardsCommand(cards)),
+		setReady: (ready) => {
+			state.playerInfo.ready = ready;
+			emit(playerInfoCommands.updateReadyCommand(ready));
+		},
+		setShopLocked: (locked) => {
+			state.cardShop.locked = locked;
+			emit(updateShopLockCommand(locked));
+		},
+		setOpponent: (payload) => {
+			state.playerInfo.opponentId = payload.id;
+			state.playerInfo.opponentIsClone = payload.isClone ?? false;
+			emit(playerInfoCommands.updateOpponentCommand(payload));
+		},
+		setBattle: (battle) => {
+			state.playerInfo.battle = battle;
+			emit(playerInfoCommands.updateBattleCommand(battle));
+		},
+		setStreak: (streak) => {
+			state.playerInfo.streak = streak;
+			emit(playerInfoCommands.updateStreakCommand(streak));
+		},
+		setStatus: (status) => {
+			state.playerInfo.status = status;
+			emit(playerInfoCommands.updateStatusCommand(status));
+		},
+		setSpectatingId: (spectatingId) => {
+			state.spectating.id = spectatingId;
+			emit(setSpectatingIdCommand(spectatingId));
+		},
+		setMatchRewards: (rewards) => {
+			state.playerInfo.matchRewards = rewards;
+			emit(playerInfoCommands.playerMatchRewardsEvent(rewards));
+		},
+		setCards: (cards) => {
+			state.cardShop.cards = cards;
+			emit(updateCardsCommand(cards));
+		},
 
 		setFinishStanding: ({ position, round }) => {
 			(player as { finishPosition: number }).finishPosition = position;
@@ -617,17 +629,17 @@ export const createPlayer = (
 
 				player.setCards(newCards);
 			}
-			put(afterRerollCardsEvent());
+			emit(afterRerollCardsEvent());
 		},
 		emitSellPiece: (piece) => {
-			put(afterSellPieceEvent({ piece }));
+			emit(afterSellPieceEvent({ piece }));
 		},
-		emitFinishMatch: (payload) => put(playerFinishMatchEvent(payload)),
+		emitFinishMatch: (payload) => emit(playerFinishMatchEvent(payload)),
 		emitReceiveQuickChat: (payload) =>
-			put(playerReceiveQuickChatEvent(payload)),
+			emit(playerReceiveQuickChatEvent(payload)),
 		emitClientFinishMatch: () => {
 			player.match?.onClientFinishMatch(player.id);
-			put(clientFinishMatchEvent());
+			emit(clientFinishMatchEvent());
 		},
 
 		events,

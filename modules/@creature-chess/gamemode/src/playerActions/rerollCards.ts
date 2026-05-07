@@ -1,12 +1,12 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 
 export type RerollCardsPlayerAction = ReturnType<
 	typeof rerollCardsPlayerAction
 >;
-export const rerollCardsPlayerAction = createAction("rerollCardsPlayerAction");
+export const rerollCardsPlayerAction = networkedAction("rerollCardsPlayerAction");
 
 export const rerollCardsDef = definePlayerAction({
 	type: rerollCardsPlayerAction.type,

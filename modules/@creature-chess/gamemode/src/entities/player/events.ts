@@ -1,24 +1,24 @@
-import { createAction } from "@reduxjs/toolkit";
-
 import { PieceModel, QuickChatOption } from "@creature-chess/models";
 
+import { networkedAction } from "../../events/networkedAction";
+
 export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;
-export const afterSellPieceEvent = createAction<
+export const afterSellPieceEvent = networkedAction<
 	{ piece: PieceModel },
 	"afterSellPieceEvent"
 >("afterSellPieceEvent");
 
 export type AfterRerollCardsEvent = ReturnType<typeof afterRerollCardsEvent>;
-export const afterRerollCardsEvent = createAction("afterRerollCardsEvent");
+export const afterRerollCardsEvent = networkedAction("afterRerollCardsEvent");
 
 export type ClientFinishMatchEvent = ReturnType<typeof clientFinishMatchEvent>;
-export const clientFinishMatchEvent = createAction("clientFinishMatchEvent");
+export const clientFinishMatchEvent = networkedAction("clientFinishMatchEvent");
 
 export type PlayerDeathEvent = ReturnType<typeof playerDeathEvent>;
-export const playerDeathEvent = createAction("playerDeathEvent");
+export const playerDeathEvent = networkedAction("playerDeathEvent");
 
 export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
-export const playerFinishMatchEvent = createAction<
+export const playerFinishMatchEvent = networkedAction<
 	{
 		homeScore: number;
 		awayScore: number;
@@ -30,7 +30,7 @@ export const playerFinishMatchEvent = createAction<
 export type PlayerReceiveQuickChatEvent = ReturnType<
 	typeof playerReceiveQuickChatEvent
 >;
-export const playerReceiveQuickChatEvent = createAction<
+export const playerReceiveQuickChatEvent = networkedAction<
 	{
 		sendingPlayerId: string;
 		chatValue: QuickChatOption;
@@ -73,7 +73,7 @@ export const PlayerEventTypeByActionType: Record<string, keyof PlayerEventByType
 // Wire-shape subset: events the server forwards to the client over
 // `sendLocalPlayerEvents`. The firehose `player.events.onPlayerEvent(fn)`
 // fires only for these. Internal events go through the keyed channel.
-export const PlayerEventActionTypesArray = [
+export const PlayerEventActionTypesArray: string[] = [
 	playerDeathEvent.toString(),
 	playerReceiveQuickChatEvent.toString(),
 ];

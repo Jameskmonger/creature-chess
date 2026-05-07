@@ -3,7 +3,8 @@ import { AppState } from "~/store";
 import { clearSelectedPiece } from "~/store/game/ui/actions";
 import { ClientStartListening } from "~/store/listenerContext";
 
-import { BattleEvents } from "@creature-chess/battle";
+import * as BattleEvents from "~/store/battle/events";
+
 import { PlayerActions } from "@creature-chess/gamemode";
 
 import { setupClientBattleListeners } from "./battle";

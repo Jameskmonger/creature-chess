@@ -4,8 +4,9 @@ import { PlayerListCommands } from "~/store/game/playerList/state";
 import { SettingsCommands } from "~/store/game/settings/state";
 import { setInGameCommand, setWinnerIdCommand } from "~/store/game/ui/actions";
 
+import * as BattleCommands from "~/store/battle/commands";
+
 import {
-	BattleCommands,
 	PieceCombatState,
 	PieceInfoStore,
 } from "@creature-chess/battle";

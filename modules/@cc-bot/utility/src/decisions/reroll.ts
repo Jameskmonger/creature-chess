@@ -1,6 +1,4 @@
-import { Action } from "redux";
-
-import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
+import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 import { collectAllPieces, completionProgress, sharesTrait } from "../cards";
 import {
@@ -14,7 +12,7 @@ const MONEY_FLOOR = 10;
 export const decideReroll = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
-): Action | null => {
+): BotAction | null => {
 	const { board, bench, pieceRegistry, player, settings } = ctx;
 	const money = player.money;
 

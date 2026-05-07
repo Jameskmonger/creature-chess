@@ -1,4 +1,3 @@
-import { createAction } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
@@ -16,6 +15,7 @@ import {
 } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 import { resyncPlayer } from "./resync";
 
@@ -69,7 +69,7 @@ const buyCardSchema = z.object({
 });
 
 export type BuyCardPlayerAction = ReturnType<typeof buyCardPlayerAction>;
-export const buyCardPlayerAction = createAction<
+export const buyCardPlayerAction = networkedAction<
 	z.infer<typeof buyCardSchema>,
 	"buyCardPlayerAction"
 >("buyCardPlayerAction");

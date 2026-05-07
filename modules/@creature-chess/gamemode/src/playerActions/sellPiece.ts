@@ -1,8 +1,8 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
 import { getDefinitionById, PIECES_TO_EVOLVE } from "@creature-chess/models";
 
+import { networkedAction } from "../events/networkedAction";
 import { getPiecesForStage } from "../game/evolution";
 import { definePlayerAction } from "./registry";
 
@@ -11,7 +11,7 @@ const sellPieceSchema = z.object({
 });
 
 export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;
-export const sellPiecePlayerAction = createAction<
+export const sellPiecePlayerAction = networkedAction<
 	z.infer<typeof sellPieceSchema>
 >("sellPiecePlayerAction");
 

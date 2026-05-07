@@ -30,8 +30,5 @@
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/utils": "workspace:*"
-	},
-	"peerDependencies": {
-		"redux": "^4.1.0"
 	}
 }

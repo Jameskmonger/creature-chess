@@ -1,6 +1,15 @@
-import { cardShopReducer, CardShopState } from "./cardShop";
-import { playerInfoReducer, PlayerInfoState } from "./playerInfo";
-import { spectatingReducer, SpectatingState } from "./spectating";
+import {
+	CardShopState,
+	initialCardShopState,
+} from "./cardShop";
+import {
+	PlayerInfoState,
+	initialPlayerInfoState,
+} from "./playerInfo";
+import {
+	SpectatingState,
+	initialSpectatingState,
+} from "./spectating";
 
 export * as PlayerCommands from "./commands";
 
@@ -10,8 +19,8 @@ export interface PlayerState {
 	spectating: SpectatingState;
 }
 
-export const playerReducers = {
-	spectating: spectatingReducer,
-	cardShop: cardShopReducer,
-	playerInfo: playerInfoReducer,
+export const initialPlayerState: PlayerState = {
+	cardShop: initialCardShopState,
+	playerInfo: initialPlayerInfoState,
+	spectating: initialSpectatingState,
 };

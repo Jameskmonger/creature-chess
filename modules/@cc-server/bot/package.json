@@ -40,8 +40,5 @@
 		"@creature-chess/models": "workspace:*",
 		"@creature-chess/utils": "workspace:*",
 		"delay": "^4.4.1"
-	},
-	"peerDependencies": {
-		"redux": "^4.1.0"
 	}
 }

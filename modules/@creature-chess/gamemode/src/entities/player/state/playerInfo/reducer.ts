@@ -1,8 +1,8 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
 import { MAX_HEALTH } from "@creature-chess/models";
 import { PlayerStatus, PlayerBattle } from "@creature-chess/models";
 import { StreakType, PlayerStreak } from "@creature-chess/models";
+
+import { networkedAction } from "../../../../events/networkedAction";
 
 export type PlayerMatchRewards = {
 	damage: number;
@@ -31,7 +31,7 @@ export interface PlayerInfoState {
 	xp: number;
 }
 
-const initialState: PlayerInfoState = {
+export const initialPlayerInfoState: PlayerInfoState = {
 	status: PlayerStatus.CONNECTED,
 	health: MAX_HEALTH,
 	streak: {
@@ -48,56 +48,38 @@ const initialState: PlayerInfoState = {
 	xp: 0,
 };
 
-const playerInfoSlice = createSlice({
-	name: "playerInfo",
-	initialState,
-	reducers: {
-		playerMatchRewardsEvent: (
-			state,
-			action: PayloadAction<PlayerMatchRewards | null>
-		) => {
-			state.matchRewards = action.payload;
-		},
-		updateStatusCommand: (state, action: PayloadAction<PlayerStatus>) => {
-			state.status = action.payload;
-		},
-		updateReadyCommand: (state, action: PayloadAction<boolean>) => {
-			state.ready = action.payload;
-		},
-		updateOpponentCommand: (
-			state,
-			action: PayloadAction<{
-				id: string | null;
-				isClone?: boolean;
-			}>
-		) => {
-			state.opponentId = action.payload.id;
-			state.opponentIsClone = action.payload.isClone ?? false;
-		},
-		updateBattleCommand: (
-			state,
-			action: PayloadAction<PlayerBattle | null>
-		) => {
-			state.battle = action.payload;
-		},
-		updateHealthCommand: (state, action: PayloadAction<number>) => {
-			state.health = action.payload;
-		},
-		updateStreakCommand: (state, action: PayloadAction<PlayerStreak>) => {
-			state.streak = action.payload;
-		},
-		updateLevelCommand: (
-			state,
-			action: PayloadAction<{ level: number; xp: number }>
-		) => {
-			state.level = action.payload.level;
-			state.xp = action.payload.xp;
-		},
-		updateMoneyCommand: (state, action: PayloadAction<number>) => {
-			state.money = action.payload;
-		},
-	},
-});
-
-export const playerInfoReducer = playerInfoSlice.reducer;
-export const playerInfoCommands = playerInfoSlice.actions;
+export const playerInfoCommands = {
+	playerMatchRewardsEvent: networkedAction<
+		PlayerMatchRewards | null,
+		"playerInfo/playerMatchRewardsEvent"
+	>("playerInfo/playerMatchRewardsEvent"),
+	updateStatusCommand: networkedAction<
+		PlayerStatus,
+		"playerInfo/updateStatusCommand"
+	>("playerInfo/updateStatusCommand"),
+	updateReadyCommand: networkedAction<boolean, "playerInfo/updateReadyCommand">(
+		"playerInfo/updateReadyCommand"
+	),
+	updateOpponentCommand: networkedAction<
+		{ id: string | null; isClone?: boolean },
+		"playerInfo/updateOpponentCommand"
+	>("playerInfo/updateOpponentCommand"),
+	updateBattleCommand: networkedAction<
+		PlayerBattle | null,
+		"playerInfo/updateBattleCommand"
+	>("playerInfo/updateBattleCommand"),
+	updateHealthCommand: networkedAction<number, "playerInfo/updateHealthCommand">(
+		"playerInfo/updateHealthCommand"
+	),
+	updateStreakCommand: networkedAction<
+		PlayerStreak,
+		"playerInfo/updateStreakCommand"
+	>("playerInfo/updateStreakCommand"),
+	updateLevelCommand: networkedAction<
+		{ level: number; xp: number },
+		"playerInfo/updateLevelCommand"
+	>("playerInfo/updateLevelCommand"),
+	updateMoneyCommand: networkedAction<number, "playerInfo/updateMoneyCommand">(
+		"playerInfo/updateMoneyCommand"
+	),
+};

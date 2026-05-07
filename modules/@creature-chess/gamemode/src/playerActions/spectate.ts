@@ -1,6 +1,6 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 
 const spectateSchema = z.object({
@@ -8,7 +8,7 @@ const spectateSchema = z.object({
 });
 
 export type SpectatePlayerAction = ReturnType<typeof spectatePlayerAction>;
-export const spectatePlayerAction = createAction<
+export const spectatePlayerAction = networkedAction<
 	z.infer<typeof spectateSchema>,
 	"spectatePlayerAction"
 >("spectatePlayerAction");

@@ -1,9 +1,7 @@
-import { Action } from "redux";
-
 import { Player } from "@creature-chess/gamemode";
 import { Card, PieceModel } from "@creature-chess/models";
 
-import { BotActions, PreparingPhaseContext } from "@cc-server/bot";
+import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 import { collectAllPieces, completionProgress, sharesTrait } from "../cards";
 import {
@@ -84,7 +82,7 @@ const passesMoneyFloor = (
 export const decideBuyCard = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
-): Action | null => {
+): BotAction | null => {
 	const { board, bench, pieceRegistry, player, settings } = ctx;
 	const money = player.money;
 	const level = player.level;

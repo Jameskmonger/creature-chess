@@ -1,12 +1,12 @@
-import { createAction } from "@reduxjs/toolkit";
 import { z } from "zod";
 
+import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 
 export type ToggleShopLockPlayerAction = ReturnType<
 	typeof toggleShopLockPlayerAction
 >;
-export const toggleShopLockPlayerAction = createAction(
+export const toggleShopLockPlayerAction = networkedAction(
 	"toggleShopLockPlayerAction"
 );
 

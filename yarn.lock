@@ -1584,8 +1584,6 @@ __metadata:
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/utils": "workspace:*"
-  peerDependencies:
-    redux: ^4.1.0
   languageName: unknown
   linkType: soft
 
@@ -1598,8 +1596,6 @@ __metadata:
     "@creature-chess/models": "workspace:*"
     "@creature-chess/utils": "workspace:*"
     delay: "npm:^4.4.1"
-  peerDependencies:
-    redux: ^4.1.0
   languageName: unknown
   linkType: soft
 
@@ -1701,7 +1697,6 @@ __metadata:
     "@creature-chess/board": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/utils": "workspace:*"
-    "@reduxjs/toolkit": "npm:^2.2.1"
     present: "npm:^1.0.0"
   languageName: unknown
   linkType: soft

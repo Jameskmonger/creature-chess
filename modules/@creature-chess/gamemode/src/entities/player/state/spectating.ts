@@ -1,27 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { networkedAction } from "../../../events/networkedAction";
 
 export type SpectatingState = {
 	id: string | null;
 };
 
-const initialState: SpectatingState = {
+export const initialSpectatingState: SpectatingState = {
 	id: null,
 };
 
-const { actions, reducer: spectatingReducer } = createSlice({
-	name: "spectating",
-	initialState,
-	reducers: {
-		setSpectatingIdCommand: (
-			state,
-			{ payload: id }: PayloadAction<string | null>
-		) => ({
-			...state,
-			id,
-		}),
-	},
-});
-
-export const setSpectatingIdCommand = actions.setSpectatingIdCommand;
-
-export { spectatingReducer };
+export const setSpectatingIdCommand = networkedAction<
+	string | null,
+	"spectating/setSpectatingIdCommand"
+>("spectating/setSpectatingIdCommand");
