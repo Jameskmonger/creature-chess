@@ -3,11 +3,11 @@ import { combineReducers } from "@reduxjs/toolkit";
 import {
 	PlayerInfoState,
 	playerInfoReducer,
-	roundInfoReducer,
 	PlayerState,
 	playerReducers,
+	GameEvents,
 } from "@creature-chess/gamemode";
-import { RoundInfoState } from "@creature-chess/models";
+import { GamePhase, RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 
@@ -16,6 +16,28 @@ import { networkReducer, NetworkState } from "./network";
 import { playerListReducer } from "./playerList/state";
 import { settingsReducer } from "./settings/state";
 import { UiState, uiReducer } from "./ui";
+
+const initialRoundInfo: RoundInfoState = {
+	round: 1,
+	phase: GamePhase.PREPARING,
+	phaseStartedAtSeconds: 0,
+};
+
+const roundInfoReducer = (
+	state: RoundInfoState = initialRoundInfo,
+	action: { type: string; payload?: { phase: GamePhase; startedAt: number; round?: number } }
+): RoundInfoState => {
+	if (action.type !== GameEvents.gamePhaseStartedEvent.type || !action.payload) {
+		return state;
+	}
+	const { phase, startedAt, round } = action.payload;
+	return {
+		...state,
+		phase,
+		phaseStartedAtSeconds: Math.floor(startedAt),
+		...(round ? { round } : {}),
+	};
+};
 
 export type GameState = PlayerState & {
 	ui: UiState;

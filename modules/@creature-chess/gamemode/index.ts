@@ -26,7 +26,6 @@ export {
 	spectatePlayerAction,
 } from "./src/playerActions";
 
-export { roundInfoReducer, RoundInfoCommands } from "./src/game/roundInfo";
 export * as GameEvents from "./src/game/events";
 export { type GameFinishEvent } from "./src/game/events";
 

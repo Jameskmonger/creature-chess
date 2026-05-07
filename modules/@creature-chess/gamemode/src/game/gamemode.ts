@@ -68,20 +68,12 @@ export class Gamemode {
 		startedAt: number;
 		round?: number;
 	}) {
-		if (payload.round) {
-			this.roundInfo = {
-				...this.roundInfo,
-				phase: payload.phase,
-				phaseStartedAtSeconds: Math.floor(payload.startedAt),
-				round: payload.round,
-			};
-		} else {
-			this.roundInfo = {
-				...this.roundInfo,
-				phase: payload.phase,
-				phaseStartedAtSeconds: Math.floor(payload.startedAt),
-			};
-		}
+		this.roundInfo = {
+			...this.roundInfo,
+			phase: payload.phase,
+			phaseStartedAtSeconds: Math.floor(payload.startedAt),
+			...(payload.round ? { round: payload.round } : {}),
+		};
 
 		this.eventsEmitter.emitPhaseStart(payload);
 	}

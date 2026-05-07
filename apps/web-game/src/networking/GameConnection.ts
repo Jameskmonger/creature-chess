@@ -14,7 +14,6 @@ import {
 	GameEvents,
 	PlayerEvents,
 	PlayerCommands,
-	RoundInfoCommands,
 	PlayerActionTypesArray,
 } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
@@ -50,15 +49,16 @@ export class GameConnection {
 	public handleConnected(payload: GameServerToClient.GameConnectionPacket) {
 		const {
 			players,
-			game: { phase, phaseStartedAtSeconds },
+			game: { phase, phaseStartedAtSeconds, round },
 			settings,
 		} = payload;
 
 		this.dispatch(PlayerListCommands.updatePlayerListCommand(players));
 		this.dispatch(
-			RoundInfoCommands.setRoundInfoCommand({
+			GameEvents.gamePhaseStartedEvent({
 				phase,
 				startedAt: phaseStartedAtSeconds,
+				round,
 			})
 		);
 		this.dispatch(SettingsCommands.setSettingsCommand(settings));
@@ -206,14 +206,7 @@ export class GameConnection {
 
 	private routeGameEvent(action: { type: string; payload?: any }) {
 		if (action.type === GameEvents.gamePhaseStartedEvent.toString()) {
-			const { phase, startedAt, round } = action.payload;
-			this.dispatch(
-				RoundInfoCommands.setRoundInfoCommand({
-					phase,
-					startedAt,
-					...(phase === GamePhase.PREPARING ? { round } : undefined),
-				})
-			);
+			const { phase } = action.payload;
 			if (phase === GamePhase.PREPARING) {
 				this.dispatch(
 					PlayerCommands.playerInfoCommands.updateOpponentCommand({ id: null })
