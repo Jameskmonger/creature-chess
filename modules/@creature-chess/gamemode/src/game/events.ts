@@ -27,10 +27,7 @@ export const playerListChangedEvent = createAction<
 	"playerListChangedEvent"
 >("playerListChangedEvent");
 
-/**
- * Keyed map of every Game-level event Gamemode emits — the surface for
- * the keyed `gamemode.events.onAnyEvent(type, fn)` channel.
- */
+/** Keyed map of every Game-level event Gamemode emits. */
 export type GamemodeEventByType = {
 	phaseStart: GamePhaseStartedEvent;
 	finish: GameFinishEvent;

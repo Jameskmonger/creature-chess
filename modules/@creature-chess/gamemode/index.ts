@@ -8,6 +8,7 @@ export {
 	PlayerCommands,
 	PlayerEvents,
 } from "./src/entities/player";
+export { buildPlayerSnapshot } from "./src/entities/player/state/wireFields";
 export {
 	type PlayerInfoState,
 	playerInfoReducer,

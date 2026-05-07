@@ -1,4 +1,4 @@
-import { Player } from "@creature-chess/gamemode";
+import { buildPlayerSnapshot, Player } from "@creature-chess/gamemode";
 import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
@@ -6,7 +6,6 @@ import { GamemodeSettings } from "@creature-chess/models";
 import { setupPlayerBoard } from "./board";
 import { setupIncomingNetworking } from "./net/incoming";
 import { setupOutgoingNetworking } from "./net/outgoing";
-import { buildSnapshot } from "./net/outgoing/snapshot";
 import { GameSocket } from "./socket";
 
 type Parameters = {
@@ -68,7 +67,7 @@ export const playerNetworking = (
 
 		// Client constructs GameConnection synchronously on gameConnected — its
 		// listeners are live by the time subsequent emits land.
-		socket.emit("snapshot", buildSnapshot(entity));
+		socket.emit("snapshot", buildPlayerSnapshot(entity));
 
 		cleanups.push(setupOutgoingNetworking(entity, socket));
 		cleanups.push(setupPlayerBoard(entity, socket));
@@ -84,7 +83,7 @@ export const playerNetworking = (
 	);
 
 	cleanups.push(
-		entity.gamemode.events.onAnyEvent("finish", async () => {
+		entity.gamemode.events.onFinish(async () => {
 			// allow the game finish event to be sent before closing the networking
 			const r = await cancellableDelay(1000, teardownAbort.signal);
 			if (!r.cancelled) {

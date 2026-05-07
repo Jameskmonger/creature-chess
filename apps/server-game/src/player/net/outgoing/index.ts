@@ -1,14 +1,17 @@
-import { Player } from "@creature-chess/gamemode";
+import { GameEvents, Player } from "@creature-chess/gamemode";
 
 import { GameSocket } from "../../socket";
 
 export const setupOutgoingNetworking = (entity: Player, socket: GameSocket) => {
 	const unsubscribes: (() => void)[] = [];
 
+	const forwardGameEvent = (action: GameEvents.GameEvent) => {
+		socket.emit("sendGameEvents", action);
+	};
+	unsubscribes.push(entity.gamemode.events.onPhaseStart(forwardGameEvent));
+	unsubscribes.push(entity.gamemode.events.onFinish(forwardGameEvent));
 	unsubscribes.push(
-		entity.gamemode.events.onAnyEvent((action) => {
-			socket.emit("sendGameEvents", action);
-		})
+		entity.gamemode.events.onPlayerListChange(forwardGameEvent)
 	);
 
 	unsubscribes.push(

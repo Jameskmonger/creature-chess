@@ -26,7 +26,7 @@ export const setupBotLogicInternal = (
 
 	let currentAbort: AbortController | null = null;
 
-	return entity.gamemode.events.onAnyEvent("phaseStart", async (action) => {
+	return entity.gamemode.events.onPhaseStart(async (action) => {
 		currentAbort?.abort();
 		const ac = new AbortController();
 		currentAbort = ac;

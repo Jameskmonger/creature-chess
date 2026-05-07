@@ -17,6 +17,7 @@ import {
 
 import { Player } from "../entities/player/player";
 import { definePlayerAction } from "./registry";
+import { resyncPlayer } from "./resync";
 
 const getCardDestination = (
 	player: Player,
@@ -91,8 +92,7 @@ export const buyCardDef = definePlayerAction({
 			logger.warn("Player attempted to buy null/undefined card", {
 				actor: { playerId, name },
 			});
-			player.setMoney(player.money);
-			player.setCards(cards);
+			resyncPlayer(player, "money", "cards");
 			return;
 		}
 
@@ -101,8 +101,7 @@ export const buyCardDef = definePlayerAction({
 				actor: { playerId, name },
 				details: { index },
 			});
-			player.setMoney(player.money);
-			player.setCards(cards);
+			resyncPlayer(player, "money", "cards");
 			return;
 		}
 

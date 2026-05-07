@@ -4,6 +4,7 @@ import { z } from "zod";
 import { MAX_LEVEL } from "@creature-chess/models";
 
 import { definePlayerAction } from "./registry";
+import { resyncPlayer } from "./resync";
 
 export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
 export const buyXpPlayerAction = createAction("buyXpPlayerAction");
@@ -33,7 +34,7 @@ export const buyXpDef = definePlayerAction({
 				actor: { playerId: id, name },
 				details: { money: player.money, cost: settings.buyXpCost },
 			});
-			player.setMoney(player.money);
+			resyncPlayer(player, "money");
 			return;
 		}
 

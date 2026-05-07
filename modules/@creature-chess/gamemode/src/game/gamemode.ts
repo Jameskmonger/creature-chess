@@ -84,7 +84,7 @@ export class Gamemode {
 		// teardown
 		(this.opponentProvider as unknown as null) = null;
 		(this.deck as unknown as null) = null;
-		this.playerList.deconstructor();
+		this.playerList.dispose();
 		(this.playerList as unknown as null) = null;
 		this.eventsEmitter.dispose();
 	}
@@ -124,7 +124,7 @@ export class Gamemode {
 		) || null;
 
 	public onFinish(fn: (event: GameFinishEvent["payload"]) => void) {
-		this.events.onAnyEvent("finish", (action) => fn(action.payload));
+		this.events.onFinish((action) => fn(action.payload));
 	}
 
 	public getConnectedPlayers = () =>
