@@ -2,7 +2,11 @@ import { PieceModel } from "@creature-chess/models";
 
 type Listener = () => void;
 
-export class PieceRegistry {
+export interface ReadablePieceRegistry {
+	getPieceById(pieceId: PieceModel["id"]): PieceModel | null;
+}
+
+export class PieceRegistry implements ReadablePieceRegistry {
 	private readonly pieces: Map<PieceModel["id"], PieceModel>;
 
 	private listeners = new Set<Listener>();

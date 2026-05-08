@@ -1,12 +1,12 @@
 import { Board, PositionKey } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { BoardUpdatePacket } from "../server-to-client/server-to-client-game";
 
 export function serialiseBoard(
 	board: Board,
-	pieceRegistry: PieceRegistry
+	pieceRegistry: ReadablePieceRegistry
 ): BoardUpdatePacket {
 	const positions: Record<PositionKey, PieceModel["id"]> = {};
 	const pieces: PieceModel[] = [];

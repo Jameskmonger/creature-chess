@@ -1,13 +1,13 @@
 import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { PieceCombatState, PieceInfoStore } from "../../state";
 
 export const getLivingEnemies = (
 	piece: PieceModel,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	combatStore: PieceInfoStore<PieceCombatState>
 ): PieceModel[] =>
 	board

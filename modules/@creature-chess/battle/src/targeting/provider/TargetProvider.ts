@@ -1,5 +1,5 @@
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { PieceCombatState, PieceInfoStore } from "../../state";
 
@@ -14,7 +14,7 @@ export interface TargetProvider {
 	 */
 	getTarget(
 		board: Board,
-		pieceRegistry: PieceRegistry,
+		pieceRegistry: ReadablePieceRegistry,
 		combatStore: PieceInfoStore<PieceCombatState>,
 		attackerId: string
 	): string | null;

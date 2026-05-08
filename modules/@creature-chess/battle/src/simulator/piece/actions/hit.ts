@@ -1,6 +1,6 @@
 import { Board, getDelta, packPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { getRelativeDirection } from "../../../utils/direction";
 import { getCooldownForSpeed } from "../../../utils/getCooldownForSpeed";
@@ -17,7 +17,7 @@ const MOVE_TURN_DURATION = 2;
 export function doHit(
 	currentTurn: number,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	id: PieceModel["id"],
 	action: HitAction,
 	{ combatStore, eventLog }: Stores

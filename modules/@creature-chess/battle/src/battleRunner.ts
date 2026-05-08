@@ -1,6 +1,6 @@
 import { Board } from "@creature-chess/board";
 import { GamemodeSettings } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { BattleEvent, BattleEventLog } from "./battleEventLog";
 import { simulateTurn } from "./simulator";
@@ -9,7 +9,7 @@ import { duration } from "./utils/duration";
 
 const isATeamDefeated = (
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	combatStore: PieceInfoStore<PieceCombatState>
 ) => {
 	const survivingPieces = board
@@ -30,7 +30,7 @@ export class BattleRunner {
 
 	public constructor(
 		private board: Board,
-		private pieceRegistry: PieceRegistry,
+		private pieceRegistry: ReadablePieceRegistry,
 		private combatStore: PieceInfoStore<PieceCombatState>,
 		private settings: GamemodeSettings,
 		startingTurn: number = 0,

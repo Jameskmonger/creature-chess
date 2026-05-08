@@ -1,6 +1,6 @@
 import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { Stores } from "../types";
 import { doActions } from "./doActions";
@@ -55,7 +55,7 @@ function getPieceState(
 export function simulatePiece(
 	currentTurn: number,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
 	stores: Stores
 ) {

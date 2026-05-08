@@ -18,6 +18,7 @@ import {
 	PlayerStreak,
 	QuickChatOption,
 } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import type { Gamemode } from "../../game";
 import type { Match } from "../../game/match";
@@ -169,6 +170,7 @@ export const createPlayer = (
 		logger: Logger;
 		boards: { board: SubscribableBoard; bench: SubscribableBoard };
 		gamemode: Gamemode;
+		pieceRegistry: PieceRegistry;
 		settings: GamemodeSettings;
 	},
 	initialVars: {
@@ -404,7 +406,7 @@ export const createPlayer = (
 			if (at.type === "board" && player.boardLocked) {
 				return;
 			}
-			dependencies.gamemode.pieceRegistry.registerPiece(piece);
+			dependencies.pieceRegistry.registerPiece(piece);
 			if (at.type === "board") {
 				const [x, y] = unpackPosition(at.location);
 				board.setPiece(piece.id, x, y);
@@ -479,7 +481,7 @@ export const createPlayer = (
 		},
 
 		removePieces: (pieceIds, options) => {
-			const { pieceRegistry } = dependencies.gamemode;
+			const { pieceRegistry } = dependencies;
 			const removed: PieceModel[] = [];
 			for (const pid of pieceIds) {
 				const onBoard = board.containsPiece(pid);
@@ -606,7 +608,7 @@ export const createPlayer = (
 
 		emitRerollCards: () => {
 			if (player.alive) {
-				const { pieceRegistry } = dependencies.gamemode;
+				const { pieceRegistry } = dependencies;
 				const allPieces = [...board.getAllPieces(), ...bench.getAllPieces()]
 					.map((p) => pieceRegistry.getPieceById(p.id))
 					.filter((p): p is PieceModel => p !== null);

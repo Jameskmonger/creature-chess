@@ -1,1 +1,4 @@
-export { PieceRegistry } from "./piece/pieceRegistry";
+export {
+	PieceRegistry,
+	type ReadablePieceRegistry,
+} from "./piece/pieceRegistry";

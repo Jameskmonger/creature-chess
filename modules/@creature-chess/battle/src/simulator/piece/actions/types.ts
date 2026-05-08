@@ -1,6 +1,6 @@
 import { Board, PackedPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { Stores } from "../../types";
 
@@ -13,7 +13,7 @@ export type PieceAction = MoveAction | HitAction | DeleteAction;
 export type ActionHandler = (
 	currentTurn: number,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	id: PieceModel["id"],
 	action: PieceAction,
 	stores: Stores

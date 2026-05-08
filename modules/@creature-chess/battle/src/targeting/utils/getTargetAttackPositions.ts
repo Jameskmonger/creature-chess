@@ -5,7 +5,7 @@ import {
 	packPosition,
 	unpackPosition,
 } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 const isInsideGrid =
 	({ width, height }: { width: number; height: number }) =>
@@ -17,7 +17,7 @@ const isInsideGrid =
 
 export function findEnemyInAttackRange(
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	friendlyOwnerId: string,
 	piecePosition: PackedPosition,
 	range = 1

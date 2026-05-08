@@ -4,7 +4,7 @@ import {
 	PieceModel,
 	getDefinitionById,
 } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import type { Player } from "../player";
 
@@ -16,7 +16,7 @@ const pieceCanEvolve = (piece: PieceModel) => {
 	return piece.stage < definition.stages.length - 1;
 };
 
-const getRegisteredPieces = (board: Board, registry: PieceRegistry) =>
+const getRegisteredPieces = (board: Board, registry: ReadablePieceRegistry) =>
 	board
 		.getAllPieces()
 		.map(({ id }) => registry.getPieceById(id))

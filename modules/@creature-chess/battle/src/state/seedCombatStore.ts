@@ -1,5 +1,5 @@
 import { Board } from "@creature-chess/board";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { PieceCombatState } from "./state";
 import { PieceInfoStore } from "./store";
@@ -10,7 +10,7 @@ const INITIAL_CAN_ATTACK_AT_TURN = 15;
 export function seedCombatStore(
 	combatStore: PieceInfoStore<PieceCombatState>,
 	board: Board,
-	pieceRegistry: PieceRegistry
+	pieceRegistry: ReadablePieceRegistry
 ) {
 	const halfHeight = board.height / 2;
 

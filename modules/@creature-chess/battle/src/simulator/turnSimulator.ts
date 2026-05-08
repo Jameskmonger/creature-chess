@@ -1,6 +1,6 @@
 import { Board } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { getStats } from "../utils/getStats";
 import { simulatePiece } from "./piece/simulate";
@@ -11,7 +11,7 @@ type TurnEntry = { piece: PieceModel; speed: number };
 export const simulateTurn = (
 	currentTurn: number,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	stores: Stores
 ) => {
 	const pieces: TurnEntry[] = [];
@@ -47,7 +47,7 @@ export const simulateTurn = (
 const takePieceTurn = (
 	currentTurn: number,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
 	stores: Stores
 ) => {

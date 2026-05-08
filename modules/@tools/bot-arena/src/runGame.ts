@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { SubscribableBoard } from "@creature-chess/board";
-import { Gamemode, createPlayer } from "@creature-chess/gamemode";
+import { Gamemode } from "@creature-chess/gamemode";
 import {
 	GamemodeSettings,
 	GamemodeSettingsPresets,
@@ -93,28 +93,20 @@ export const runGame = (
 		});
 
 		const entities = bots.map((bot) => {
-			const entity = createPlayer(
-				bot.id,
-				{
-					logger,
-					gamemode,
-					boards: {
-						board: new SubscribableBoard(
-							HARNESS_SETTINGS.boardWidth,
-							HARNESS_SETTINGS.boardHalfHeight
-						),
-						bench: new SubscribableBoard(HARNESS_SETTINGS.benchSize, 1),
-					},
-					settings: HARNESS_SETTINGS,
+			const entity = gamemode.createPlayer(bot.id, {
+				boards: {
+					board: new SubscribableBoard(
+						HARNESS_SETTINGS.boardWidth,
+						HARNESS_SETTINGS.boardHalfHeight
+					),
+					bench: new SubscribableBoard(HARNESS_SETTINGS.benchSize, 1),
 				},
-				{
-					match: null,
-					name: bot.name,
-					profile: { picture: 1, title: null },
-					finishPosition: -1,
-					finishRound: -1,
-				}
-			);
+				match: null,
+				name: bot.name,
+				profile: { picture: 1, title: null },
+				finishPosition: -1,
+				finishRound: -1,
+			});
 
 			entity.setMoney(HARNESS_SETTINGS.startingMoney);
 			entity.setLevel({ level: HARNESS_SETTINGS.startingLevel, xp: 0 });

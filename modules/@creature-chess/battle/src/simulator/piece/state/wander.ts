@@ -1,6 +1,6 @@
 import { Board, packPosition, unpackX, unpackY } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { StandardTargetProvider } from "../../../targeting/provider/StandardTargetProvider";
 import { TargetProvider } from "../../../targeting/provider/TargetProvider";
@@ -14,7 +14,7 @@ const targetProvider: TargetProvider = new StandardTargetProvider();
 function findBestState(
 	currentTurn: number,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
 	{ combatStore }: Stores
 ): PieceState {
@@ -40,7 +40,7 @@ export function doWander(
 	currentTurn: number,
 	state: WanderState,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
 	{ combatStore }: Stores
 ): StateResult {

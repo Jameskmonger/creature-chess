@@ -12,7 +12,7 @@ import {
 } from "@creature-chess/battle";
 import { Board, mergeBoards, rotateBoard } from "@creature-chess/board";
 import { GamemodeSettings } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { Player } from "../entities/player/player";
 
@@ -27,7 +27,7 @@ export class Match {
 	private clientFinishedMatchAway = pDefer();
 
 	public constructor(
-		private readonly pieceRegistry: PieceRegistry,
+		private readonly pieceRegistry: ReadablePieceRegistry,
 		public readonly home: Player,
 		public readonly away: Player,
 		public readonly awayIsClone: boolean,

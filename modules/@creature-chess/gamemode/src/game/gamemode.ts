@@ -1,14 +1,16 @@
 import { Logger } from "winston";
 
+import { SubscribableBoard } from "@creature-chess/board";
 import { Rng, createRng } from "@shoki/random";
 
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
-import { PlayerStatus } from "@creature-chess/models";
+import { PlayerProfile, PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { PieceRegistry, ReadablePieceRegistry } from "@creature-chess/utils";
 
-import { Player } from "../entities/player/player";
+import { Player, createPlayer } from "../entities/player/player";
 import { CardDeck } from "./cardDeck";
+import { Match } from "./match";
 import { GameFinishEvent } from "./events";
 import {
 	GamemodeEventsApi,
@@ -27,14 +29,13 @@ type GamemodeCallbacks = {
 };
 
 export class Gamemode {
-	public readonly pieceRegistry: PieceRegistry = new PieceRegistry();
-
 	public roundInfo: RoundInfoState = {
 		round: 1,
 		phase: GamePhase.PREPARING,
 		phaseStartedAtSeconds: 0,
 	};
 
+	private readonly pieceRegistryImpl: PieceRegistry = new PieceRegistry();
 	private opponentProvider: OpponentProvider;
 	private playerList = new PlayerList();
 	private players: Player[] = [];
@@ -42,6 +43,8 @@ export class Gamemode {
 	private rng: Rng;
 	private eventsEmitter: GamemodeEventsEmitter = createGamemodeEvents();
 
+	// eslint-disable-next-line @typescript-eslint/member-ordering
+	public readonly pieceRegistry: ReadablePieceRegistry = this.pieceRegistryImpl;
 	// eslint-disable-next-line @typescript-eslint/member-ordering
 	public readonly events: GamemodeEventsApi = this.eventsEmitter;
 
@@ -62,6 +65,40 @@ export class Gamemode {
 	}
 
 	public getDeck = () => this.deck;
+
+	// Sole path to constructing a Player — this is where the writable
+	// PieceRegistry crosses into Player. Sealed because piece registration
+	// joins ownership, placement, and evolution; Player owns those, the
+	// registry doesn't.
+	public createPlayer(
+		id: string,
+		args: {
+			boards: { board: SubscribableBoard; bench: SubscribableBoard };
+			name: string;
+			profile: PlayerProfile;
+			finishPosition: number;
+			finishRound: number;
+			match: Match | null;
+		}
+	): Player {
+		return createPlayer(
+			id,
+			{
+				logger: this.logger,
+				boards: args.boards,
+				gamemode: this,
+				pieceRegistry: this.pieceRegistryImpl,
+				settings: this.settings,
+			},
+			{
+				name: args.name,
+				profile: args.profile,
+				finishPosition: args.finishPosition,
+				finishRound: args.finishRound,
+				match: args.match,
+			}
+		);
+	}
 
 	public setRoundInfo(payload: {
 		phase: GamePhase;

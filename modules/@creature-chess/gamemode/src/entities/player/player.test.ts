@@ -5,7 +5,7 @@ import { PlayerProfile, PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { Gamemode } from "../../game";
-import { createPlayer, Player } from "./player";
+import { Player } from "./player";
 
 const createMockLogger = (): Logger => {
 	const noop = () => undefined;
@@ -28,28 +28,20 @@ const createSubject = (overrides?: {
 	const logger = createMockLogger();
 	const gamemode = new Gamemode("test-game", logger, settings);
 
-	return createPlayer(
-		overrides?.id ?? "player-1",
-		{
-			logger,
-			boards: {
-				board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
-				bench: new SubscribableBoard(settings.benchSize, 1),
-			},
-			gamemode,
-			settings,
+	return gamemode.createPlayer(overrides?.id ?? "player-1", {
+		boards: {
+			board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
+			bench: new SubscribableBoard(settings.benchSize, 1),
 		},
-		{
-			name: overrides?.name ?? "Alice",
-			profile: overrides?.profile ?? { title: null, picture: null },
-			finishPosition: overrides?.finishPosition ?? -1,
-			finishRound: overrides?.finishRound ?? -1,
-			match: null,
-		}
-	);
+		name: overrides?.name ?? "Alice",
+		profile: overrides?.profile ?? { title: null, picture: null },
+		finishPosition: overrides?.finishPosition ?? -1,
+		finishRound: overrides?.finishRound ?? -1,
+		match: null,
+	});
 };
 
-describe("createPlayer", () => {
+describe("Gamemode.createPlayer", () => {
 	describe("construction", () => {
 		test("sets id from argument", () => {
 			expect(createSubject({ id: "abc-123" }).id).toBe("abc-123");
@@ -65,17 +57,14 @@ describe("createPlayer", () => {
 			);
 			const bench = new SubscribableBoard(settings.benchSize, 1);
 
-			const player = createPlayer(
-				"p1",
-				{ logger, boards: { board, bench }, gamemode, settings },
-				{
-					name: "n",
-					profile: { title: null, picture: null },
-					finishPosition: -1,
-					finishRound: -1,
-					match: null,
-				}
-			);
+			const player = gamemode.createPlayer("p1", {
+				boards: { board, bench },
+				name: "n",
+				profile: { title: null, picture: null },
+				finishPosition: -1,
+				finishRound: -1,
+				match: null,
+			});
 
 			expect(player.logger).toBe(logger);
 			expect(player.board).toBe(board);

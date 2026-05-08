@@ -1,6 +1,6 @@
 import { Board, packPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { Pathfinder, getNextPiecePosition } from "../../../pathfinding";
 import { findEnemyInAttackRange } from "../../../targeting/utils/getTargetAttackPositions";
@@ -13,7 +13,7 @@ export function doAttack(
 	currentTurn: number,
 	state: AttackState,
 	board: Board,
-	pieceRegistry: PieceRegistry,
+	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
 	{ combatStore }: Stores
 ): StateResult {

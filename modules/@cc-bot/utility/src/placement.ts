@@ -1,6 +1,6 @@
 import { Board } from "@creature-chess/board";
 import { getDefinitionById } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
@@ -62,7 +62,7 @@ const findFirstEmptyBoardSlot = (
 };
 
 // stage * 10 + cost: a 2★ piece always outranks any 1★, cost breaks ties within a stage.
-const strength = (pieceId: string, pieceRegistry: PieceRegistry): number => {
+const strength = (pieceId: string, pieceRegistry: ReadablePieceRegistry): number => {
 	const piece = pieceRegistry.getPieceById(pieceId);
 	if (!piece) {
 		return 0;
@@ -73,7 +73,7 @@ const strength = (pieceId: string, pieceRegistry: PieceRegistry): number => {
 
 const strongestPiece = <T extends { id: string }>(
 	pieces: readonly T[],
-	pieceRegistry: PieceRegistry
+	pieceRegistry: ReadablePieceRegistry
 ): T | null =>
 	pieces.reduce<T | null>((best, p) => {
 		if (!best) {
@@ -86,7 +86,7 @@ const strongestPiece = <T extends { id: string }>(
 
 const weakestPiece = <T extends { id: string }>(
 	pieces: readonly T[],
-	pieceRegistry: PieceRegistry
+	pieceRegistry: ReadablePieceRegistry
 ): T | null =>
 	pieces.reduce<T | null>((worst, p) => {
 		if (!worst) {

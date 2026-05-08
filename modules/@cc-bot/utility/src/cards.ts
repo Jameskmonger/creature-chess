@@ -1,11 +1,11 @@
 import { Board } from "@creature-chess/board";
 import { Card, PieceModel } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 export const collectAllPieces = (
 	board: Board,
 	bench: Board,
-	pieceRegistry: PieceRegistry
+	pieceRegistry: ReadablePieceRegistry
 ): PieceModel[] =>
 	[...board.getAllPieces(), ...bench.getAllPieces()]
 		.map((p) => pieceRegistry.getPieceById(p.id))

@@ -1,10 +1,10 @@
 import { Board, getFirstEmptySlot } from "@creature-chess/board";
 import { getDefinitionById } from "@creature-chess/models";
-import { PieceRegistry } from "@creature-chess/utils";
+import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { Player } from "../player";
 
-const getMostExpensiveBenchPiece = (bench: Board, pieces: PieceRegistry) => {
+const getMostExpensiveBenchPiece = (bench: Board, pieces: ReadablePieceRegistry) => {
 	const benchPieces = bench
 		.getAllPieces()
 		.map(({ id }) => pieces.getPieceById(id))

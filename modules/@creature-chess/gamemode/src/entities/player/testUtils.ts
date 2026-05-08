@@ -4,7 +4,7 @@ import { SubscribableBoard } from "@creature-chess/board";
 import { GamemodeSettings, GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { Gamemode } from "../../game";
-import { Player, createPlayer } from "./player";
+import { Player } from "./player";
 
 export const createMockLogger = (): Logger =>
 	({
@@ -26,23 +26,15 @@ export const createTestPlayer = (
 	const gamemode =
 		overrides?.gamemode ?? new Gamemode(`game-${id}`, logger, settings);
 
-	return createPlayer(
-		id,
-		{
-			logger,
-			boards: {
-				board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
-				bench: new SubscribableBoard(settings.benchSize, 1),
-			},
-			gamemode,
-			settings,
+	return gamemode.createPlayer(id, {
+		boards: {
+			board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
+			bench: new SubscribableBoard(settings.benchSize, 1),
 		},
-		{
-			name: id,
-			profile: { title: null, picture: null },
-			finishPosition: -1,
-			finishRound: -1,
-			match: null,
-		}
-	);
+		name: id,
+		profile: { title: null, picture: null },
+		finishPosition: -1,
+		finishRound: -1,
+		match: null,
+	});
 };
