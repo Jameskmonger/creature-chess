@@ -2,10 +2,10 @@ import * as React from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
-import { useDispatch, useSelector } from "react-redux";
-import { playerClickPieceAction } from "~/listeners/board/clickPiece";
+import { useSelector } from "react-redux";
 import { AppState } from "~/store";
 
+import { useOnClickPiece } from "../hooks/clickPiece";
 import { Piece } from "./Piece";
 import { usePiece } from "./PieceContext";
 
@@ -25,13 +25,13 @@ export function SelectablePiece() {
 
 	const { piece } = usePiece();
 
-	const dispatch = useDispatch();
+	const onClickPiece = useOnClickPiece();
 	const selectedPieceId = useSelector<AppState, string | null>(
 		(state) => state.game.ui.selectedPieceId
 	);
 
 	const onClick = () => {
-		dispatch(playerClickPieceAction({ pieceId: piece.id }));
+		onClickPiece(piece.id);
 	};
 
 	const isSelected = selectedPieceId === piece.id;

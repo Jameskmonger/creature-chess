@@ -25,7 +25,7 @@ export function LocalBoard({ children }: { children?: React.ReactNode }) {
 	const renderBoardPiece = useRenderBoardPiece();
 	const renderBenchPiece = useRenderBenchPiece();
 
-	const onClickTile = useOnClickTile();
+	const onClickTile = useOnClickTile(board, bench);
 	const onDropPiece = useOnDropPiece(board, bench);
 
 	const isPreparing = useSelector<AppState, boolean>(

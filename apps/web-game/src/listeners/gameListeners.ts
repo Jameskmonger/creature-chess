@@ -8,8 +8,6 @@ import * as BattleEvents from "~/store/battle/events";
 import { PlayerActions } from "@creature-chess/gamemode";
 
 import { setupClientBattleListeners } from "./battle";
-import { setupClickPieceListener } from "./board/clickPiece";
-import { setupClickTileListener } from "./board/clickTile";
 import { setupQuickChatListener } from "./chat/quickChat";
 import { setupCloseShopOnFirstBuyListener } from "./closeShopOnFirstBuy";
 import { setupPreventAccidentalCloseListener } from "./preventAccidentalClose";
@@ -55,8 +53,6 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	// Set up all sub-listeners
 	setupPreventAccidentalCloseListener(startListening);
 	setupCloseShopOnFirstBuyListener(startListening);
-	setupClickTileListener(startListening);
-	setupClickPieceListener(startListening);
 	setupClientBattleListeners(startListening);
 	setupUiListener(startListening);
 	setupQuickChatListener(startListening);

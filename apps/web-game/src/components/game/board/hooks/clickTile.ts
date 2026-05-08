@@ -1,26 +1,45 @@
-import { useDispatch } from "react-redux";
-import { playerClickTileAction } from "~/listeners/board/clickTile";
+import { useDispatch, useStore } from "react-redux";
+import { AppState } from "~/store";
+import { clearSelectedPiece } from "~/store/game/ui";
 
-import { packPosition } from "@creature-chess/board";
+import { Board, packPosition } from "@creature-chess/board";
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { GameBoardLocation } from "../GameBoard";
+import { resolvePiecePlacement } from "../resolvePiecePlacement";
 
-export const useOnClickTile = ({
-	canClickBoard = true,
-}: { canClickBoard?: boolean } = {}) => {
+export const useOnClickTile = (
+	board: Board,
+	bench: Board,
+	{ canClickBoard = true }: { canClickBoard?: boolean } = {}
+) => {
 	const dispatch = useDispatch();
+	const store = useStore<AppState>();
 
 	return ({ location }: { location: GameBoardLocation }) => {
 		if (location.locationType === "board" && !canClickBoard) {
 			return;
 		}
 
-		const tile: PlayerPieceLocation = {
+		const selectedPieceId = store.getState().game.ui.selectedPieceId;
+		if (!selectedPieceId) {
+			return;
+		}
+
+		const toY = location.locationType === "board" ? location.y : 0;
+		const target: PlayerPieceLocation = {
 			type: location.locationType,
-			location: packPosition(location.x, (location as any).y || 0),
+			location: packPosition(location.x, toY),
 		};
 
-		dispatch(playerClickTileAction({ tile }));
+		const result = resolvePiecePlacement(selectedPieceId, target, board, bench);
+
+		// Clicks deliberately don't swap — drag is the swap gesture.
+		if (result.kind !== "drop") {
+			return;
+		}
+
+		dispatch(result.action);
+		dispatch(clearSelectedPiece());
 	};
 };

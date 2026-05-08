@@ -21,7 +21,7 @@ export function MatchBoard({ children }: { children?: React.ReactNode }) {
 	const renderBoardPiece = useRenderMatchBoardPiece();
 	const renderBenchPiece = useRenderBenchPiece();
 
-	const onClickTile = useOnClickTile({ canClickBoard: false });
+	const onClickTile = useOnClickTile(board, bench, { canClickBoard: false });
 	const onDropPiece = useOnDropPiece(board, bench);
 
 	if (!board) {
