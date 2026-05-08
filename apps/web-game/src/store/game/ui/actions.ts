@@ -6,8 +6,7 @@ export const {
 	selectPiece,
 	clearSelectedPiece,
 	setInGameCommand,
-	setWinnerIdCommand,
+	setConnectionStatusCommand,
 } = uiSlice.actions;
 
 export type SetInGameCommand = ReturnType<typeof setInGameCommand>;
-export type SetWinnerIdCommand = ReturnType<typeof setWinnerIdCommand>;

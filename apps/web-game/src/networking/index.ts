@@ -1,4 +1,3 @@
-export { EventBus } from "./EventBus";
 export { SocketManager } from "./SocketManager";
 export { LobbyConnection } from "./LobbyConnection";
 export { GameConnection } from "./GameConnection";
@@ -10,4 +9,3 @@ export {
 } from "./connectionRef";
 export { useGameActions } from "./hooks/useGameActions";
 export { ConnectionStatus } from "./types";
-export type { GameEventMap } from "./types";

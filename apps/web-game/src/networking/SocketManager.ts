@@ -8,15 +8,12 @@ import {
 } from "@creature-chess/networking";
 import { HandshakeRequest } from "@creature-chess/networking";
 
-import { EventBus } from "./EventBus";
 import { GameConnection, BoardSlices } from "./GameConnection";
 import { LobbyConnection } from "./LobbyConnection";
 import { setLobbyConnectionRef, setGameConnectionRef } from "./connectionRef";
-import type { Dispatch, GameEventMap } from "./types";
+import type { Dispatch } from "./types";
 
 export class SocketManager {
-	public readonly eventBus = new EventBus<GameEventMap>();
-
 	private socket: Socket | null = null;
 	private lobbyConnection: LobbyConnection | null = null;
 	private gameConnection: GameConnection | null = null;
@@ -115,8 +112,7 @@ export class SocketManager {
 			this.gameConnection = new GameConnection(
 				socket,
 				this.dispatch,
-				this.gameBoard,
-				this.eventBus
+				this.gameBoard
 			);
 			this.gameConnection.handleConnected(payload);
 			setGameConnectionRef(this.gameConnection);

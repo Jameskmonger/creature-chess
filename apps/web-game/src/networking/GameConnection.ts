@@ -1,8 +1,10 @@
 import { Socket } from "socket.io-client";
 import { setPing } from "~/store/game/network";
-import { PlayerListCommands } from "~/store/game/playerList/state";
 import { SettingsCommands } from "~/store/game/settings/state";
-import { setInGameCommand, setWinnerIdCommand } from "~/store/game/ui/actions";
+import {
+	setConnectionStatusCommand,
+	setInGameCommand,
+} from "~/store/game/ui/actions";
 
 import * as BattleCommands from "~/store/battle/commands";
 
@@ -17,12 +19,10 @@ import {
 	PlayerCommands,
 	PlayerActionTypesArray,
 } from "@creature-chess/gamemode";
-import { GamePhase } from "@creature-chess/models";
 import { GameServerToClient } from "@creature-chess/networking";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import { EventBus } from "./EventBus";
-import { ConnectionStatus, GameEventMap, Dispatch } from "./types";
+import { ConnectionStatus, Dispatch } from "./types";
 import { updateBoardFromPacket } from "./utils/updateBoardFromPacket";
 
 export type BoardSlices = {
@@ -40,8 +40,7 @@ export class GameConnection {
 	public constructor(
 		private socket: Socket,
 		private dispatch: Dispatch,
-		private gameBoard: BoardSlices,
-		private eventBus: EventBus<GameEventMap>
+		private gameBoard: BoardSlices
 	) {
 		this.setupListeners();
 		this.startPingLoop();
@@ -54,7 +53,7 @@ export class GameConnection {
 			settings,
 		} = payload;
 
-		this.dispatch(PlayerListCommands.updatePlayerListCommand(players));
+		this.dispatch(GameEvents.playerListChangedEvent({ players }));
 		this.dispatch(
 			GameEvents.gamePhaseStartedEvent({
 				phase,
@@ -64,8 +63,7 @@ export class GameConnection {
 		);
 		this.dispatch(SettingsCommands.setSettingsCommand(settings));
 		this.dispatch(setInGameCommand());
-
-		this.eventBus.emit("connectionStatusChanged", ConnectionStatus.CONNECTED);
+		this.dispatch(setConnectionStatusCommand(ConnectionStatus.CONNECTED));
 	}
 
 	public sendPlayerAction(action: { type: string; payload?: any }) {
@@ -98,17 +96,11 @@ export class GameConnection {
 		this.setupBoardListeners();
 		this.setupActionListener(
 			"sendGameEvents",
-			GameEvents.GameEventActionTypesArray,
-			(action) => {
-				this.routeGameEvent(action);
-			}
+			GameEvents.GameEventActionTypesArray
 		);
 		this.setupActionListener(
 			"sendLocalPlayerEvents",
-			PlayerEvents.PlayerEventActionTypesArray,
-			(action) => {
-				this.routePlayerEvent(action);
-			}
+			PlayerEvents.PlayerEventActionTypesArray
 		);
 		this.setupActionListener(
 			"playerInfoUpdates",
@@ -132,10 +124,7 @@ export class GameConnection {
 		);
 		// reconnect_failed/reconnect_error are Manager-level events in socket.io v4
 		const onDisconnected = () => {
-			this.eventBus.emit(
-				"connectionStatusChanged",
-				ConnectionStatus.DISCONNECTED
-			);
+			this.dispatch(setConnectionStatusCommand(ConnectionStatus.DISCONNECTED));
 		};
 		this.socket.io.on("reconnect_failed", onDisconnected);
 		this.socket.io.on("reconnect_error", onDisconnected);
@@ -184,11 +173,7 @@ export class GameConnection {
 		this.cleanupFns.push(() => this.socket.off(event, handler));
 	}
 
-	private setupActionListener(
-		event: string,
-		validTypes: string[],
-		onAction?: (action: { type: string; payload?: any }) => void
-	) {
+	private setupActionListener(event: string, validTypes: string[]) {
 		this.setupSocketListener(
 			event,
 			(action: { type: string; payload?: any }, ack?: () => void) => {
@@ -200,47 +185,8 @@ export class GameConnection {
 					return;
 				}
 				this.dispatch(action);
-				onAction?.(action);
 			}
 		);
-	}
-
-	private routeGameEvent(action: { type: string; payload?: any }) {
-		if (action.type === GameEvents.gamePhaseStartedEvent.toString()) {
-			const { phase } = action.payload;
-			if (phase === GamePhase.PREPARING) {
-				this.dispatch(
-					PlayerCommands.playerInfoCommands.updateOpponentCommand({ id: null })
-				);
-			}
-			this.eventBus.emit("phaseChanged", action.payload);
-		}
-
-		if (action.type === GameEvents.gameFinishEvent.toString()) {
-			const winner = action.payload.players.find(
-				(p: { position: number }) => p.position === 1
-			);
-			if (winner) {
-				this.dispatch(setWinnerIdCommand({ winnerId: winner.id }));
-			}
-			this.eventBus.emit("gameFinished", action.payload);
-		}
-
-		if (action.type === GameEvents.playerListChangedEvent.toString()) {
-			this.dispatch(
-				PlayerListCommands.updatePlayerListCommand(action.payload.players)
-			);
-			this.eventBus.emit("playerListChanged", action.payload);
-		}
-	}
-
-	private routePlayerEvent(action: { type: string; payload?: any }) {
-		if (action.type === PlayerEvents.playerReceiveQuickChatEvent.toString()) {
-			this.eventBus.emit("quickChat", action.payload);
-		}
-		if (action.type === PlayerEvents.playerDeathEvent.toString()) {
-			this.eventBus.emit("playerDeath", undefined);
-		}
 	}
 
 	private startPingLoop() {

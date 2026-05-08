@@ -1,19 +1,10 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
-import { PlayerCommands } from "@creature-chess/gamemode";
+import { GameEvents, PlayerCommands } from "@creature-chess/gamemode";
 
-import { EventBus } from "./EventBus";
 import { GameConnection, BoardSlices } from "./GameConnection";
-import { ConnectionStatus, GameEventMap } from "./types";
+import { ConnectionStatus } from "./types";
 import { updateBoardFromPacket } from "./utils/updateBoardFromPacket";
 
-jest.mock("~/store/game/playerList/state", () => ({
-	PlayerListCommands: {
-		updatePlayerListCommand: (p: any) => ({
-			type: "playerList/update",
-			payload: p,
-		}),
-	},
-}));
 jest.mock("~/store/game/settings/state", () => ({
 	SettingsCommands: {
 		setSettingsCommand: (p: any) => ({ type: "settings/set", payload: p }),
@@ -21,7 +12,10 @@ jest.mock("~/store/game/settings/state", () => ({
 }));
 jest.mock("~/store/game/ui/actions", () => ({
 	setInGameCommand: () => ({ type: "ui/setInGame" }),
-	setWinnerIdCommand: (p: any) => ({ type: "ui/setWinnerId", payload: p }),
+	setConnectionStatusCommand: (p: any) => ({
+		type: "ui/setConnectionStatus",
+		payload: p,
+	}),
 }));
 jest.mock("~/store/game/network", () => ({
 	setPing: (ms: number) => ({ type: "network/setPing", payload: ms }),
@@ -71,7 +65,6 @@ const createMockBoardSlices = (): BoardSlices => ({
 describe("GameConnection", () => {
 	let socket: ReturnType<typeof createMockSocket>;
 	let dispatch: jest.Mock;
-	let eventBus: EventBus<GameEventMap>;
 	let boardSlices: BoardSlices;
 	let conn: GameConnection;
 
@@ -79,9 +72,8 @@ describe("GameConnection", () => {
 		jest.useFakeTimers();
 		socket = createMockSocket();
 		dispatch = jest.fn();
-		eventBus = new EventBus();
 		boardSlices = createMockBoardSlices();
-		conn = new GameConnection(socket as any, dispatch, boardSlices, eventBus);
+		conn = new GameConnection(socket as any, dispatch, boardSlices);
 	});
 
 	afterEach(() => {
@@ -96,11 +88,19 @@ describe("GameConnection", () => {
 			settings: { maxPlayers: 8 },
 		};
 
-		it("should dispatch initial state", () => {
+		it("should seed the store by replaying connection-packet contents as wire events", () => {
 			conn.handleConnected(payload as any);
 
 			expect(dispatch).toHaveBeenCalledWith(
-				expect.objectContaining({ type: "playerList/update" })
+				expect.objectContaining({
+					type: GameEvents.playerListChangedEvent.type,
+					payload: { players: payload.players },
+				})
+			);
+			expect(dispatch).toHaveBeenCalledWith(
+				expect.objectContaining({
+					type: GameEvents.gamePhaseStartedEvent.type,
+				})
 			);
 			expect(dispatch).toHaveBeenCalledWith(
 				expect.objectContaining({ type: "settings/set" })
@@ -110,13 +110,13 @@ describe("GameConnection", () => {
 			);
 		});
 
-		it("should emit connectionStatusChanged CONNECTED on eventBus", () => {
-			const handler = jest.fn();
-			eventBus.on("connectionStatusChanged", handler);
-
+		it("should dispatch CONNECTED status", () => {
 			conn.handleConnected(payload as any);
 
-			expect(handler).toHaveBeenCalledWith(ConnectionStatus.CONNECTED);
+			expect(dispatch).toHaveBeenCalledWith({
+				type: "ui/setConnectionStatus",
+				payload: ConnectionStatus.CONNECTED,
+			});
 		});
 	});
 
@@ -228,7 +228,7 @@ describe("GameConnection", () => {
 	});
 
 	describe("game event listeners", () => {
-		it("should dispatch valid game events and call ack", () => {
+		it("should dispatch valid game events verbatim and call ack", () => {
 			const ack = jest.fn();
 			const action = {
 				type: "gamePhaseStartedEvent",
@@ -250,87 +250,51 @@ describe("GameConnection", () => {
 			consoleSpy.mockRestore();
 		});
 
-		it("should emit phaseChanged on gamePhaseStartedEvent", () => {
-			const handler = jest.fn();
-			eventBus.on("phaseChanged", handler);
-
-			const payload = { phase: 1, startedAt: 1000, round: 1 };
-			socket._trigger("sendGameEvents", {
-				type: "gamePhaseStartedEvent",
-				payload,
-			});
-
-			expect(handler).toHaveBeenCalledWith(payload);
-		});
-
-		it("should dispatch setWinnerIdCommand on gameFinishEvent with a winner", () => {
-			const payload = {
-				players: [
-					{ id: "p1", position: 1, finishRound: 10 },
-					{ id: "p2", position: 2, finishRound: 8 },
-				],
+		it("should dispatch gameFinishEvent verbatim", () => {
+			const action = {
+				type: "gameFinishEvent",
+				payload: {
+					players: [
+						{ id: "p1", position: 1, finishRound: 10 },
+						{ id: "p2", position: 2, finishRound: 8 },
+					],
+				},
 			};
-			socket._trigger("sendGameEvents", {
-				type: "gameFinishEvent",
-				payload,
-			});
+			socket._trigger("sendGameEvents", action);
 
-			expect(dispatch).toHaveBeenCalledWith({
-				type: "ui/setWinnerId",
-				payload: { winnerId: "p1" },
-			});
+			expect(dispatch).toHaveBeenCalledWith(action);
 		});
 
-		it("should emit gameFinished on gameFinishEvent", () => {
-			const handler = jest.fn();
-			eventBus.on("gameFinished", handler);
-
-			const payload = { players: [{ id: "p1", position: 1, finishRound: 10 }] };
-			socket._trigger("sendGameEvents", {
-				type: "gameFinishEvent",
-				payload,
-			});
-
-			expect(handler).toHaveBeenCalledWith(payload);
-		});
-
-		it("should dispatch updatePlayerListCommand on playerListChangedEvent", () => {
-			const players = [{ id: "p1" }];
-			socket._trigger("sendGameEvents", {
+		it("should dispatch playerListChangedEvent verbatim", () => {
+			const action = {
 				type: "playerListChangedEvent",
-				payload: { players },
-			});
+				payload: { players: [{ id: "p1" }] },
+			};
+			socket._trigger("sendGameEvents", action);
 
-			expect(dispatch).toHaveBeenCalledWith({
-				type: "playerList/update",
-				payload: players,
-			});
+			expect(dispatch).toHaveBeenCalledWith(action);
 		});
 	});
 
 	describe("player event listeners", () => {
-		it("should emit quickChat on playerReceiveQuickChatEvent", () => {
-			const handler = jest.fn();
-			eventBus.on("quickChat", handler);
-
-			const payload = { sendingPlayerId: "p1", chatValue: 0 };
-			socket._trigger("sendLocalPlayerEvents", {
+		it("should dispatch valid player events verbatim", () => {
+			const action = {
 				type: "playerReceiveQuickChatEvent",
-				payload,
-			});
+				payload: { sendingPlayerId: "p1", chatValue: 0 },
+			};
+			socket._trigger("sendLocalPlayerEvents", action);
 
-			expect(handler).toHaveBeenCalledWith(payload);
+			expect(dispatch).toHaveBeenCalledWith(action);
 		});
 
-		it("should emit playerDeath on playerDeathEvent", () => {
-			const handler = jest.fn();
-			eventBus.on("playerDeath", handler);
+		it("should reject invalid player event types", () => {
+			const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+			socket._trigger("sendLocalPlayerEvents", { type: "bogusEvent" });
 
-			socket._trigger("sendLocalPlayerEvents", {
-				type: "playerDeathEvent",
-			});
-
-			expect(handler).toHaveBeenCalledWith(undefined);
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.stringContaining("Unhandled sendLocalPlayerEvents type")
+			);
+			consoleSpy.mockRestore();
 		});
 	});
 
@@ -357,23 +321,23 @@ describe("GameConnection", () => {
 		});
 	});
 
-	describe("connection listeners", () => {
-		it("should emit DISCONNECTED on reconnect_failed", () => {
-			const handler = jest.fn();
-			eventBus.on("connectionStatusChanged", handler);
-
+	describe("connection status", () => {
+		it("should dispatch DISCONNECTED on reconnect_failed", () => {
 			socket._triggerIo("reconnect_failed");
 
-			expect(handler).toHaveBeenCalledWith(ConnectionStatus.DISCONNECTED);
+			expect(dispatch).toHaveBeenCalledWith({
+				type: "ui/setConnectionStatus",
+				payload: ConnectionStatus.DISCONNECTED,
+			});
 		});
 
-		it("should emit DISCONNECTED on reconnect_error", () => {
-			const handler = jest.fn();
-			eventBus.on("connectionStatusChanged", handler);
-
+		it("should dispatch DISCONNECTED on reconnect_error", () => {
 			socket._triggerIo("reconnect_error");
 
-			expect(handler).toHaveBeenCalledWith(ConnectionStatus.DISCONNECTED);
+			expect(dispatch).toHaveBeenCalledWith({
+				type: "ui/setConnectionStatus",
+				payload: ConnectionStatus.DISCONNECTED,
+			});
 		});
 	});
 

@@ -4,11 +4,13 @@ import {
 	type CardShopState,
 	type PlayerInfoState,
 	type SpectatingState,
+	GameEvents,
 	initialCardShopState,
 	initialPlayerInfoState,
 	initialSpectatingState,
 	PlayerCommands,
 } from "@creature-chess/gamemode";
+import { GamePhase } from "@creature-chess/models";
 
 export const playerInfoReducer = createReducer<PlayerInfoState>(
 	initialPlayerInfoState,
@@ -42,6 +44,12 @@ export const playerInfoReducer = createReducer<PlayerInfoState>(
 			})
 			.addCase(PlayerCommands.playerInfoCommands.updateMoneyCommand, (state, action) => {
 				state.money = action.payload;
+			})
+			.addCase(GameEvents.gamePhaseStartedEvent, (state, action) => {
+				if (action.payload.phase === GamePhase.PREPARING) {
+					state.opponentId = null;
+					state.opponentIsClone = false;
+				}
 			});
 	}
 );

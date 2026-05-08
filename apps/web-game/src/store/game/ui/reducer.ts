@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ConnectionStatus } from "~/networking/types";
 
+import { GameEvents } from "@creature-chess/gamemode";
+
 import { Overlay } from "./overlay";
 
 export interface UiState {
@@ -38,15 +40,23 @@ export const uiSlice = createSlice({
 		clearSelectedPiece: (state) => {
 			state.selectedPieceId = null;
 		},
-		setWinnerIdCommand: (
-			state,
-			{ payload }: PayloadAction<{ winnerId: string }>
-		) => {
-			state.winnerId = payload.winnerId;
-		},
 		setInGameCommand: (state) => {
 			state.inGame = true;
 		},
+		setConnectionStatusCommand: (
+			state,
+			{ payload }: PayloadAction<ConnectionStatus>
+		) => {
+			state.connectionStatus = payload;
+		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(GameEvents.gameFinishEvent, (state, action) => {
+			const winner = action.payload.players.find((p) => p.position === 1);
+			if (winner) {
+				state.winnerId = winner.id;
+			}
+		});
 	},
 });
 
