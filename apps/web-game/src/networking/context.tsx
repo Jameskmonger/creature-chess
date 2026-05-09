@@ -1,32 +1,72 @@
-import React, { createContext, useContext, useRef } from "react";
+import React, { createContext, useContext, useRef, useSyncExternalStore } from "react";
 
 import { useDispatch } from "react-redux";
 
+import { Holder } from "~/utils/Holder";
+
+import { GameConnection } from "./GameConnection";
+import { LobbyConnection } from "./LobbyConnection";
 import { SocketManager } from "./SocketManager";
 
-const SocketManagerContext = createContext<SocketManager | null>(null);
+type NetworkingContextValue = {
+	socketManager: SocketManager;
+	gameConnectionHolder: Holder<GameConnection>;
+	lobbyConnectionHolder: Holder<LobbyConnection>;
+};
 
-export function SocketManagerProvider({ children }: React.PropsWithChildren) {
+const NetworkingContext = createContext<NetworkingContextValue | null>(null);
+
+type ProviderProps = React.PropsWithChildren<{
+	gameConnectionHolder: Holder<GameConnection>;
+	lobbyConnectionHolder: Holder<LobbyConnection>;
+}>;
+
+export function SocketManagerProvider({
+	children,
+	gameConnectionHolder,
+	lobbyConnectionHolder,
+}: ProviderProps) {
 	const dispatch = useDispatch();
-	const ref = useRef<SocketManager | null>(null);
+	const ref = useRef<NetworkingContextValue | null>(null);
 
 	if (ref.current === null) {
-		ref.current = new SocketManager(dispatch);
+		ref.current = {
+			socketManager: new SocketManager(
+				dispatch,
+				gameConnectionHolder,
+				lobbyConnectionHolder
+			),
+			gameConnectionHolder,
+			lobbyConnectionHolder,
+		};
 	}
 
 	return (
-		<SocketManagerContext.Provider value={ref.current}>
+		<NetworkingContext.Provider value={ref.current}>
 			{children}
-		</SocketManagerContext.Provider>
+		</NetworkingContext.Provider>
 	);
 }
 
-export function useSocketManager(): SocketManager {
-	const context = useContext(SocketManagerContext);
+function useNetworking(): NetworkingContextValue {
+	const context = useContext(NetworkingContext);
 	if (!context) {
 		throw new Error(
-			"useSocketManager must be used within a SocketManagerProvider"
+			"useSocketManager / useLobbyConnection must be used within a SocketManagerProvider"
 		);
 	}
 	return context;
+}
+
+export function useSocketManager(): SocketManager {
+	return useNetworking().socketManager;
+}
+
+export function useLobbyConnection(): LobbyConnection | null {
+	const { lobbyConnectionHolder } = useNetworking();
+	useSyncExternalStore(
+		lobbyConnectionHolder.subscribe,
+		lobbyConnectionHolder.getSnapshot
+	);
+	return lobbyConnectionHolder.peek();
 }

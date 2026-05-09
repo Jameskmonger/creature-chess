@@ -5,6 +5,9 @@ import {
 } from "@reduxjs/toolkit";
 import { GameSession } from "~/game/GameSession";
 import { GameSessionHolder } from "~/game/GameSessionHolder";
+import { GameConnection } from "~/networking/GameConnection";
+import { LobbyConnection } from "~/networking/LobbyConnection";
+import { Holder } from "~/utils/Holder";
 import { ClientExtra } from "~/store/listenerContext";
 
 import { GamemodeSettingsPresets } from "@creature-chess/models";
@@ -20,7 +23,11 @@ import {
 const buildStore = () => {
 	const sessionHolder = new GameSessionHolder();
 	sessionHolder.set(new GameSession(GamemodeSettingsPresets.default));
-	const extra: ClientExtra = { sessionHolder };
+	const extra: ClientExtra = {
+		sessionHolder,
+		gameConnectionHolder: new Holder<GameConnection>("GameConnection"),
+		lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
+	};
 
 	const seen: { type: string; payload?: unknown }[] = [];
 	const recorder = createSlice({

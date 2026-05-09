@@ -1,8 +1,9 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
+import { Holder } from "~/utils/Holder";
+
 import { GameConnection } from "./GameConnection";
 import { LobbyConnection } from "./LobbyConnection";
 import { SocketManager } from "./SocketManager";
-import { setLobbyConnectionRef, setGameConnectionRef } from "./connectionRef";
 
 jest.mock("~/store/menu/state", () => ({
 	MenuCommands: {
@@ -12,12 +13,8 @@ jest.mock("~/store/menu/state", () => ({
 		}),
 	},
 }));
-jest.mock("~/listeners/gameListeners", () => ({
+jest.mock("~/listeners/gameStartedAction", () => ({
 	gameStartedAction: () => ({ type: "gameStarted" }),
-}));
-jest.mock("./connectionRef", () => ({
-	setLobbyConnectionRef: jest.fn(),
-	setGameConnectionRef: jest.fn(),
 }));
 jest.mock("./LobbyConnection", () => ({
 	LobbyConnection: jest.fn().mockImplementation(() => ({
@@ -76,10 +73,26 @@ describe("SocketManager", () => {
 	let dispatch: jest.Mock;
 	let manager: SocketManager;
 	let mockSocket: ReturnType<typeof createMockSocket>;
+	let gameConnectionHolder: Holder<GameConnection>;
+	let lobbyConnectionHolder: Holder<LobbyConnection>;
+	let gameSetSpy: jest.SpyInstance;
+	let gameClearSpy: jest.SpyInstance;
+	let lobbySetSpy: jest.SpyInstance;
+	let lobbyClearSpy: jest.SpyInstance;
 
 	beforeEach(() => {
 		dispatch = jest.fn();
-		manager = new SocketManager(dispatch);
+		gameConnectionHolder = new Holder<GameConnection>("GameConnection");
+		lobbyConnectionHolder = new Holder<LobbyConnection>("LobbyConnection");
+		gameSetSpy = jest.spyOn(gameConnectionHolder, "set");
+		gameClearSpy = jest.spyOn(gameConnectionHolder, "clear");
+		lobbySetSpy = jest.spyOn(lobbyConnectionHolder, "set");
+		lobbyClearSpy = jest.spyOn(lobbyConnectionHolder, "clear");
+		manager = new SocketManager(
+			dispatch,
+			gameConnectionHolder,
+			lobbyConnectionHolder
+		);
 		mockSocket = createMockSocket();
 
 		global.fetch = jest.fn().mockResolvedValue({
@@ -146,7 +159,8 @@ describe("SocketManager", () => {
 			mockSocket._trigger("connected", { players: [] });
 
 			expect(LobbyConnection).toHaveBeenCalled();
-			expect(setLobbyConnectionRef).toHaveBeenCalledWith(expect.any(Object));
+			expect(lobbySetSpy).toHaveBeenCalledWith(expect.any(Object));
+			expect(lobbyConnectionHolder.peek()).not.toBeNull();
 		});
 	});
 
@@ -161,7 +175,8 @@ describe("SocketManager", () => {
 			});
 
 			expect(GameConnection).toHaveBeenCalled();
-			expect(setGameConnectionRef).toHaveBeenCalledWith(expect.any(Object));
+			expect(gameSetSpy).toHaveBeenCalledWith(expect.any(Object));
+			expect(gameConnectionHolder.peek()).not.toBeNull();
 		});
 
 		it("should dispatch gameStartedAction on game connection", async () => {
@@ -190,7 +205,8 @@ describe("SocketManager", () => {
 			});
 
 			expect(lobbyInstance.destroy).toHaveBeenCalled();
-			expect(setLobbyConnectionRef).toHaveBeenCalledWith(null);
+			expect(lobbyClearSpy).toHaveBeenCalled();
+			expect(lobbyConnectionHolder.peek()).toBeNull();
 		});
 	});
 
@@ -231,7 +247,8 @@ describe("SocketManager", () => {
 			manager.disconnect();
 
 			expect(gameInstance.destroy).toHaveBeenCalled();
-			expect(setGameConnectionRef).toHaveBeenCalledWith(null);
+			expect(gameClearSpy).toHaveBeenCalled();
+			expect(gameConnectionHolder.peek()).toBeNull();
 		});
 	});
 });

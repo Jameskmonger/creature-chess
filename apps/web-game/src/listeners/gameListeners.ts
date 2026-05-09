@@ -1,4 +1,3 @@
-import { getGameConnectionRef } from "~/networking/connectionRef";
 import { AppState } from "~/store";
 import { setupBoardSyncListeners } from "~/store/board/sync";
 import { clearSelectedPiece } from "~/store/game/ui/actions";
@@ -20,9 +19,8 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	// Bridge: forward battle finish to network
 	startListening({
 		actionCreator: BattleEvents.battleFinishEvent,
-		effect: async () => {
-			const gameConnection = getGameConnectionRef();
-			gameConnection?.sendFinishMatch();
+		effect: async (_action, api) => {
+			api.extra.gameConnectionHolder.peek()?.sendFinishMatch();
 		},
 	});
 

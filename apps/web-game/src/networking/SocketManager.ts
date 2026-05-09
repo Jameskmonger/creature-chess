@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { gameStartedAction } from "~/listeners/gameStartedAction";
 import { MenuCommands } from "~/store/menu/state";
+import { Holder } from "~/utils/Holder";
 
 import {
 	GameServerToClient,
@@ -10,16 +11,17 @@ import { HandshakeRequest } from "@creature-chess/networking";
 
 import { GameConnection } from "./GameConnection";
 import { LobbyConnection } from "./LobbyConnection";
-import { setLobbyConnectionRef, setGameConnectionRef } from "./connectionRef";
 import type { Dispatch } from "./types";
 
 export class SocketManager {
 	private socket: Socket | null = null;
-	private lobbyConnection: LobbyConnection | null = null;
-	private gameConnection: GameConnection | null = null;
 	private cleanupConnectionListeners: (() => void) | null = null;
 
-	public constructor(private dispatch: Dispatch) {}
+	public constructor(
+		private dispatch: Dispatch,
+		private gameConnectionHolder: Holder<GameConnection>,
+		private lobbyConnectionHolder: Holder<LobbyConnection>
+	) {}
 
 	public async connect(): Promise<void> {
 		this.dispatch(MenuCommands.setLoadingMessage("Connecting..."));
@@ -96,9 +98,9 @@ export class SocketManager {
 			payload: LobbyServerToClient.LobbyConnectionPacket
 		) => {
 			this.destroyLobbyConnection();
-			this.lobbyConnection = new LobbyConnection(socket, this.dispatch);
-			this.lobbyConnection.handleConnected(payload);
-			setLobbyConnectionRef(this.lobbyConnection);
+			const lobbyConnection = new LobbyConnection(socket, this.dispatch);
+			lobbyConnection.handleConnected(payload);
+			this.lobbyConnectionHolder.set(lobbyConnection);
 		};
 
 		const onGameConnected = (
@@ -106,9 +108,9 @@ export class SocketManager {
 		) => {
 			this.destroyLobbyConnection();
 			this.destroyGameConnection();
-			this.gameConnection = new GameConnection(socket, this.dispatch);
-			this.gameConnection.handleConnected(payload);
-			setGameConnectionRef(this.gameConnection);
+			const gameConnection = new GameConnection(socket, this.dispatch);
+			gameConnection.handleConnected(payload);
+			this.gameConnectionHolder.set(gameConnection);
 			this.dispatch(gameStartedAction());
 		};
 
@@ -127,18 +129,18 @@ export class SocketManager {
 	}
 
 	private destroyLobbyConnection() {
-		if (this.lobbyConnection) {
-			this.lobbyConnection.destroy();
-			this.lobbyConnection = null;
-			setLobbyConnectionRef(null);
+		const existing = this.lobbyConnectionHolder.peek();
+		if (existing) {
+			existing.destroy();
+			this.lobbyConnectionHolder.clear();
 		}
 	}
 
 	private destroyGameConnection() {
-		if (this.gameConnection) {
-			this.gameConnection.destroy();
-			this.gameConnection = null;
-			setGameConnectionRef(null);
+		const existing = this.gameConnectionHolder.peek();
+		if (existing) {
+			existing.destroy();
+			this.gameConnectionHolder.clear();
 		}
 	}
 

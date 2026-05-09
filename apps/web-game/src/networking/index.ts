@@ -1,11 +1,10 @@
 export { SocketManager } from "./SocketManager";
 export { LobbyConnection } from "./LobbyConnection";
 export { GameConnection } from "./GameConnection";
-export { SocketManagerProvider, useSocketManager } from "./context";
 export {
+	SocketManagerProvider,
+	useSocketManager,
 	useLobbyConnection,
-	useGameConnectionRef,
-	getGameConnectionRef,
-} from "./connectionRef";
+} from "./context";
 export { useGameActions } from "./hooks/useGameActions";
 export { ConnectionStatus } from "./types";

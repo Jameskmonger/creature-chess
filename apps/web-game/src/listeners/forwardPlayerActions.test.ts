@@ -4,17 +4,17 @@ import {
 	createSlice,
 } from "@reduxjs/toolkit";
 
+import { GameSessionHolder } from "~/game/GameSessionHolder";
+import { GameConnection } from "~/networking/GameConnection";
+import { LobbyConnection } from "~/networking/LobbyConnection";
+import { ClientExtra } from "~/store/listenerContext";
+import { Holder } from "~/utils/Holder";
+
 import { PlayerActions } from "@creature-chess/gamemode";
 
 import { setupForwardPlayerActions } from "./forwardPlayerActions";
 
 const sendPlayerAction = jest.fn();
-
-jest.mock("~/networking/connectionRef", () => ({
-	getGameConnectionRef: () => ({
-		sendPlayerAction: (action: any) => sendPlayerAction(action),
-	}),
-}));
 
 const noopSlice = createSlice({
 	name: "noop",
@@ -25,7 +25,18 @@ const noopSlice = createSlice({
 });
 
 const buildStore = () => {
-	const middleware = createListenerMiddleware();
+	const gameConnectionHolder = new Holder<GameConnection>("GameConnection");
+	gameConnectionHolder.set({
+		sendPlayerAction: (action: any) => sendPlayerAction(action),
+	} as unknown as GameConnection);
+
+	const extra: ClientExtra = {
+		sessionHolder: new GameSessionHolder(),
+		gameConnectionHolder,
+		lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
+	};
+
+	const middleware = createListenerMiddleware({ extra });
 	const store = configureStore({
 		reducer: { noop: noopSlice.reducer },
 		middleware: (getDefaultMiddleware) =>
@@ -80,6 +91,28 @@ describe("forwardPlayerActions", () => {
 		store.dispatch({ type: "ui/clearSelectedPiece" });
 		store.dispatch({ type: "setSettingsAction", payload: {} });
 
+		await Promise.resolve();
+
+		expect(sendPlayerAction).not.toHaveBeenCalled();
+	});
+
+	it("does nothing when no game connection is set", async () => {
+		const gameConnectionHolder = new Holder<GameConnection>("GameConnection");
+		const extra: ClientExtra = {
+			sessionHolder: new GameSessionHolder(),
+			gameConnectionHolder,
+			lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
+		};
+
+		const middleware = createListenerMiddleware({ extra });
+		const store = configureStore({
+			reducer: { noop: noopSlice.reducer },
+			middleware: (getDefaultMiddleware) =>
+				getDefaultMiddleware().prepend(middleware.middleware),
+		});
+		setupForwardPlayerActions(middleware.startListening as any);
+
+		store.dispatch(PlayerActions.buyCardPlayerAction({ index: 0 }));
 		await Promise.resolve();
 
 		expect(sendPlayerAction).not.toHaveBeenCalled();
