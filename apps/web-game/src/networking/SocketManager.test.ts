@@ -74,14 +74,12 @@ function flushMicrotasks() {
 
 describe("SocketManager", () => {
 	let dispatch: jest.Mock;
-	let boardSlices: any;
 	let manager: SocketManager;
 	let mockSocket: ReturnType<typeof createMockSocket>;
 
 	beforeEach(() => {
 		dispatch = jest.fn();
-		boardSlices = { board: {}, bench: {}, matchBoard: {}, pieceRegistry: {} };
-		manager = new SocketManager(dispatch, boardSlices);
+		manager = new SocketManager(dispatch);
 		mockSocket = createMockSocket();
 
 		global.fetch = jest.fn().mockResolvedValue({

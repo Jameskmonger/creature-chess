@@ -1,5 +1,6 @@
 import { getGameConnectionRef } from "~/networking/connectionRef";
 import { AppState } from "~/store";
+import { setupBoardSyncListeners } from "~/store/board/sync";
 import { clearSelectedPiece } from "~/store/game/ui/actions";
 import { ClientStartListening } from "~/store/listenerContext";
 
@@ -43,4 +44,5 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	setupClientBattleListeners(startListening);
 	setupUiListener(startListening);
 	setupQuickChatListener(startListening);
+	setupBoardSyncListeners(startListening);
 };

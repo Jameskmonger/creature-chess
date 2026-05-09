@@ -1,9 +1,8 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
 import { GameEvents, PlayerCommands } from "@creature-chess/gamemode";
 
-import { GameConnection, BoardSlices } from "./GameConnection";
+import { GameConnection } from "./GameConnection";
 import { ConnectionStatus } from "./types";
-import { updateBoardFromPacket } from "./utils/updateBoardFromPacket";
 
 jest.mock("~/store/game/settings/state", () => ({
 	SettingsCommands: {
@@ -20,11 +19,20 @@ jest.mock("~/store/game/ui/actions", () => ({
 jest.mock("~/store/game/network", () => ({
 	setPing: (ms: number) => ({ type: "network/setPing", payload: ms }),
 }));
-jest.mock("./utils/updateBoardFromPacket", () => ({
-	updateBoardFromPacket: jest.fn(),
+jest.mock("~/store/board/sync", () => ({
+	boardUpdateAction: Object.assign(
+		(payload: any) => ({ type: "boardUpdateAction", payload }),
+		{ type: "boardUpdateAction" }
+	),
+	benchUpdateAction: Object.assign(
+		(payload: any) => ({ type: "benchUpdateAction", payload }),
+		{ type: "benchUpdateAction" }
+	),
+	matchBoardUpdateAction: Object.assign(
+		(payload: any) => ({ type: "matchBoardUpdateAction", payload }),
+		{ type: "matchBoardUpdateAction" }
+	),
 }));
-
-const mockedUpdateBoard = updateBoardFromPacket as jest.Mock;
 
 const createMockSocket = () => {
 	const handlers = new Map<string, Function>();
@@ -54,26 +62,16 @@ const createMockSocket = () => {
 	};
 };
 
-const createMockBoardSlices = (): BoardSlices => ({
-	board: {} as any,
-	bench: {} as any,
-	matchBoard: {} as any,
-	pieceRegistry: {} as any,
-	combatStore: {} as any,
-});
-
 describe("GameConnection", () => {
 	let socket: ReturnType<typeof createMockSocket>;
 	let dispatch: jest.Mock;
-	let boardSlices: BoardSlices;
 	let conn: GameConnection;
 
 	beforeEach(() => {
 		jest.useFakeTimers();
 		socket = createMockSocket();
 		dispatch = jest.fn();
-		boardSlices = createMockBoardSlices();
-		conn = new GameConnection(socket as any, dispatch, boardSlices);
+		conn = new GameConnection(socket as any, dispatch);
 	});
 
 	afterEach(() => {
@@ -170,60 +168,34 @@ describe("GameConnection", () => {
 	});
 
 	describe("board listeners", () => {
-		it("should call updateBoardFromPacket on boardUpdate", () => {
+		it("should dispatch boardUpdateAction with packet payload", () => {
 			const packet = { positions: {}, pieces: [] };
 			socket._trigger("boardUpdate", packet);
 
-			expect(mockedUpdateBoard).toHaveBeenCalledWith(
-				boardSlices.board,
-				boardSlices.pieceRegistry,
-				packet
-			);
+			expect(dispatch).toHaveBeenCalledWith({
+				type: "boardUpdateAction",
+				payload: packet,
+			});
 		});
 
-		it("should call updateBoardFromPacket on benchUpdate", () => {
+		it("should dispatch benchUpdateAction with packet payload", () => {
 			const packet = { positions: {}, pieces: [] };
 			socket._trigger("benchUpdate", packet);
 
-			expect(mockedUpdateBoard).toHaveBeenCalledWith(
-				boardSlices.bench,
-				boardSlices.pieceRegistry,
-				packet
-			);
+			expect(dispatch).toHaveBeenCalledWith({
+				type: "benchUpdateAction",
+				payload: packet,
+			});
 		});
 
-		it("should handle matchBoardUpdate with turn", () => {
+		it("should dispatch matchBoardUpdateAction with packet payload", () => {
 			const board = { positions: {}, pieces: [] };
 			socket._trigger("matchBoardUpdate", { turn: 3, board });
 
-			expect(mockedUpdateBoard).toHaveBeenCalledWith(
-				boardSlices.matchBoard,
-				boardSlices.pieceRegistry,
-				board
-			);
-			expect(dispatch).toHaveBeenCalledWith(
-				expect.objectContaining({ payload: { turn: 3 } })
-			);
-		});
-
-		it("should handle matchBoardUpdate with turn 0", () => {
-			const board = { positions: {}, pieces: [] };
-			socket._trigger("matchBoardUpdate", { turn: 0, board });
-
-			expect(dispatch).toHaveBeenCalledWith(
-				expect.objectContaining({ payload: { turn: 0 } })
-			);
-		});
-
-		it("should not dispatch battle command when turn is null", () => {
-			dispatch.mockClear();
-			const board = { positions: {}, pieces: [] };
-			socket._trigger("matchBoardUpdate", { turn: null, board });
-
-			const battleDispatches = dispatch.mock.calls.filter(
-				([action]: any[]) => action.payload?.turn !== undefined
-			);
-			expect(battleDispatches).toHaveLength(0);
+			expect(dispatch).toHaveBeenCalledWith({
+				type: "matchBoardUpdateAction",
+				payload: { turn: 3, board },
+			});
 		});
 	});
 

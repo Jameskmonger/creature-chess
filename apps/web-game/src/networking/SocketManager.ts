@@ -8,7 +8,7 @@ import {
 } from "@creature-chess/networking";
 import { HandshakeRequest } from "@creature-chess/networking";
 
-import { GameConnection, BoardSlices } from "./GameConnection";
+import { GameConnection } from "./GameConnection";
 import { LobbyConnection } from "./LobbyConnection";
 import { setLobbyConnectionRef, setGameConnectionRef } from "./connectionRef";
 import type { Dispatch } from "./types";
@@ -19,10 +19,7 @@ export class SocketManager {
 	private gameConnection: GameConnection | null = null;
 	private cleanupConnectionListeners: (() => void) | null = null;
 
-	public constructor(
-		private dispatch: Dispatch,
-		private gameBoard: BoardSlices
-	) {}
+	public constructor(private dispatch: Dispatch) {}
 
 	public async connect(): Promise<void> {
 		this.dispatch(MenuCommands.setLoadingMessage("Connecting..."));
@@ -109,11 +106,7 @@ export class SocketManager {
 		) => {
 			this.destroyLobbyConnection();
 			this.destroyGameConnection();
-			this.gameConnection = new GameConnection(
-				socket,
-				this.dispatch,
-				this.gameBoard
-			);
+			this.gameConnection = new GameConnection(socket, this.dispatch);
 			this.gameConnection.handleConnected(payload);
 			setGameConnectionRef(this.gameConnection);
 			this.dispatch(gameStartedAction());

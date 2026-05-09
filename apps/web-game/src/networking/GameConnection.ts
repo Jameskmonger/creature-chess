@@ -6,13 +6,12 @@ import {
 	setInGameCommand,
 } from "~/store/game/ui/actions";
 
-import * as BattleCommands from "~/store/battle/commands";
-
 import {
-	PieceCombatState,
-	PieceInfoStore,
-} from "@creature-chess/battle";
-import { Board } from "@creature-chess/board";
+	boardUpdateAction,
+	benchUpdateAction,
+	matchBoardUpdateAction,
+} from "~/store/board/sync";
+
 import {
 	GameEvents,
 	PlayerEvents,
@@ -20,18 +19,8 @@ import {
 	PlayerActionTypesArray,
 } from "@creature-chess/gamemode";
 import { GameServerToClient } from "@creature-chess/networking";
-import { PieceRegistry } from "@creature-chess/utils";
 
 import { ConnectionStatus, Dispatch } from "./types";
-import { updateBoardFromPacket } from "./utils/updateBoardFromPacket";
-
-export type BoardSlices = {
-	board: Board;
-	bench: Board;
-	matchBoard: Board;
-	pieceRegistry: PieceRegistry;
-	combatStore: PieceInfoStore<PieceCombatState>;
-};
 
 export class GameConnection {
 	private cleanupFns: (() => void)[] = [];
@@ -39,8 +28,7 @@ export class GameConnection {
 
 	public constructor(
 		private socket: Socket,
-		private dispatch: Dispatch,
-		private gameBoard: BoardSlices
+		private dispatch: Dispatch
 	) {
 		this.setupListeners();
 		this.startPingLoop();
@@ -93,7 +81,24 @@ export class GameConnection {
 	}
 
 	private setupListeners() {
-		this.setupBoardListeners();
+		this.setupSocketListener(
+			"boardUpdate",
+			(packet: GameServerToClient.BoardUpdatePacket) => {
+				this.dispatch(boardUpdateAction(packet));
+			}
+		);
+		this.setupSocketListener(
+			"benchUpdate",
+			(packet: GameServerToClient.BoardUpdatePacket) => {
+				this.dispatch(benchUpdateAction(packet));
+			}
+		);
+		this.setupSocketListener(
+			"matchBoardUpdate",
+			(packet: GameServerToClient.MatchBoardUpdatePacket) => {
+				this.dispatch(matchBoardUpdateAction(packet));
+			}
+		);
 		this.setupActionListener(
 			"sendGameEvents",
 			GameEvents.GameEventActionTypesArray
@@ -131,37 +136,6 @@ export class GameConnection {
 		this.cleanupFns.push(
 			() => this.socket.io.off("reconnect_failed", onDisconnected),
 			() => this.socket.io.off("reconnect_error", onDisconnected)
-		);
-	}
-
-	private setupBoardListeners() {
-		const { board, bench, matchBoard, pieceRegistry } = this.gameBoard;
-
-		this.setupSocketListener(
-			"boardUpdate",
-			(packet: GameServerToClient.BoardUpdatePacket) => {
-				updateBoardFromPacket(board, pieceRegistry, packet);
-			}
-		);
-		this.setupSocketListener(
-			"benchUpdate",
-			(packet: GameServerToClient.BoardUpdatePacket) => {
-				updateBoardFromPacket(bench, pieceRegistry, packet);
-			}
-		);
-		this.setupSocketListener(
-			"matchBoardUpdate",
-			(packet: {
-				turn: number | null;
-				board: GameServerToClient.BoardUpdatePacket;
-			}) => {
-				updateBoardFromPacket(matchBoard, pieceRegistry, packet.board);
-				if (packet.turn !== null) {
-					this.dispatch(
-						BattleCommands.startBattleCommand({ turn: packet.turn })
-					);
-				}
-			}
 		);
 	}
 
