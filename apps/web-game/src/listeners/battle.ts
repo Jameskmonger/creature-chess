@@ -1,56 +1,65 @@
-import * as BattleCommands from "~/store/battle/commands";
-import { setupBattleListeners } from "~/store/battle/listener";
+import {
+	pauseBattleCommand,
+	resumeBattleCommand,
+	startBattleCommand,
+} from "~/store/battle/commands";
+import { battleFinishEvent } from "~/store/battle/events";
 import { ClientStartListening } from "~/store/listenerContext";
 
 import { seedCombatStore } from "@creature-chess/battle";
 import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
-import { gameStartedAction } from "./gameStartedAction";
-
 export const setupClientBattleListeners = (
 	startListening: ClientStartListening
 ) => {
 	startListening({
-		actionCreator: gameStartedAction,
-		effect: async (_action, api) => {
+		actionCreator: pauseBattleCommand,
+		effect: (_action, api) => {
+			api.extra.sessionHolder.peek()?.battle.pause();
+		},
+	});
+
+	startListening({
+		actionCreator: resumeBattleCommand,
+		effect: (_action, api) => {
+			api.extra.sessionHolder.peek()?.battle.resume();
+		},
+	});
+
+	startListening({
+		actionCreator: startBattleCommand,
+		effect: async (action, api) => {
 			api.cancelActiveListeners();
 
-			const {
-				settings,
-				matchBoard,
-				pieceRegistry,
-				animationEventStore,
-				combatStore,
-			} = api.extra.sessionHolder.get();
+			const session = api.extra.sessionHolder.get();
+			const { turn } = await session.battle.start(action.payload.turn ?? 0);
 
-			setupBattleListeners(
-				startListening,
-				settings,
-				matchBoard,
-				pieceRegistry,
-				combatStore,
-				(events) => animationEventStore.pushEvents(events)
-			);
+			// A newer startBattleCommand cancelled this listener instance while we
+			// were awaiting the runner; the superseding instance owns the dispatch.
+			if (api.signal.aborted) {
+				return;
+			}
+
+			api.dispatch(battleFinishEvent({ turn }));
 		},
 	});
 
 	startListening({
 		actionCreator: GameEvents.gamePhaseStartedEvent,
-		effect: async ({ payload: { phase } }, api) => {
+		effect: ({ payload: { phase } }, api) => {
 			api.cancelActiveListeners();
 
-			const { matchBoard, pieceRegistry, combatStore } =
-				api.extra.sessionHolder.get();
+			const { battle, pieceRegistry } = api.extra.sessionHolder.get();
 
 			if (phase === GamePhase.PLAYING) {
-				seedCombatStore(combatStore, matchBoard, pieceRegistry);
-				api.dispatch(BattleCommands.startBattleCommand({}));
+				seedCombatStore(battle.combatStore, battle.board, pieceRegistry);
+				api.dispatch(startBattleCommand({}));
 			}
 
 			if (phase === GamePhase.PREPARING) {
-				matchBoard.clear();
-				combatStore.clear();
+				battle.board.clear();
+				battle.combatStore.clear();
 			}
 		},
 	});

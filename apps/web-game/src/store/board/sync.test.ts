@@ -134,7 +134,7 @@ describe("setupBoardSyncListeners", () => {
 			);
 			await flush();
 
-			expect(session.matchBoard.getPieceIdAtPosition(0, 0)).toBe("piece-1");
+			expect(session.battle.board.getPieceIdAtPosition(0, 0)).toBe("piece-1");
 		});
 
 		it("dispatches startBattleCommand when turn is non-null", async () => {
@@ -155,7 +155,7 @@ describe("setupBoardSyncListeners", () => {
 				type: startBattleCommand.type,
 				payload: { turn: 3 },
 			});
-			expect(session.matchBoard.getPieceIdAtPosition(0, 0)).toBe("piece-1");
+			expect(session.battle.board.getPieceIdAtPosition(0, 0)).toBe("piece-1");
 		});
 
 		it("dispatches startBattleCommand for turn 0", async () => {

@@ -38,8 +38,8 @@ export const setupBoardSyncListeners = (
 		actionCreator: matchBoardUpdateAction,
 		// Mutation must complete before startBattleCommand fires.
 		effect: ({ payload }, api) => {
-			const { matchBoard, pieceRegistry } = api.extra.sessionHolder.get();
-			updateBoardFromPacket(matchBoard, pieceRegistry, payload.board);
+			const { battle, pieceRegistry } = api.extra.sessionHolder.get();
+			updateBoardFromPacket(battle.board, pieceRegistry, payload.board);
 
 			if (payload.turn !== null) {
 				api.dispatch(startBattleCommand({ turn: payload.turn }));

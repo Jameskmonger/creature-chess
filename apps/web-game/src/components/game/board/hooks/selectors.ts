@@ -15,9 +15,9 @@ export function useGameBench() {
 }
 
 export function useGameMatchBoard() {
-	const { matchBoard } = useGameSession();
+	const { battle } = useGameSession();
 
-	return useBoardSubscription(matchBoard);
+	return useBoardSubscription(battle.board);
 }
 
 export function useGamePieceRegistry() {
@@ -27,7 +27,7 @@ export function useGamePieceRegistry() {
 }
 
 export function useGameAnimationEventStore() {
-	const { animationEventStore } = useGameSession();
+	const { battle } = useGameSession();
 
-	return animationEventStore;
+	return battle.animationEventStore;
 }

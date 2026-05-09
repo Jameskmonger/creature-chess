@@ -24,7 +24,7 @@ const isATeamDefeated = (
 };
 
 export class BattleRunner {
-	private controls = { paused: false };
+	private controls = { paused: false, stopped: false };
 	private turn = 0;
 	private eventLog = new BattleEventLog();
 
@@ -51,8 +51,16 @@ export class BattleRunner {
 		this.controls.paused = false;
 	}
 
+	public stop() {
+		this.controls.stopped = true;
+	}
+
 	public async run(): Promise<{ turn: number }> {
 		while (true) {
+			if (this.controls.stopped) {
+				return { turn: this.turn };
+			}
+
 			const shouldStop =
 				this.turn >= this.settings.battleTurnCount ||
 				isATeamDefeated(this.board, this.pieceRegistry, this.combatStore);
@@ -85,6 +93,9 @@ export class BattleRunner {
 			}
 
 			while (this.controls.paused) {
+				if (this.controls.stopped) {
+					return { turn: this.turn };
+				}
 				await duration(1000).remaining().promise;
 			}
 

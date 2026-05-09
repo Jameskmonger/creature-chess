@@ -120,7 +120,8 @@ function renderProjectiles(
 }
 
 export function ProjectileCanvas() {
-	const { matchBoard, animationEventStore } = useGameSession();
+	const { battle } = useGameSession();
+	const { board: matchBoard, animationEventStore } = battle;
 	const canvasRef = React.useRef<HTMLCanvasElement>(null);
 	const projectilesRef = React.useRef<ActiveProjectile[]>([]);
 	const rafRef = React.useRef<number | null>(null);

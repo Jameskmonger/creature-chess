@@ -238,4 +238,88 @@ describe("BattleRunner", () => {
 			runner.resume();
 		});
 	});
+
+	describe("stop", () => {
+		test("stop before run() returns immediately at turn 0", async () => {
+			const pieces = [
+				{ id: "a", ownerId: "p1", health: 100 },
+				{ id: "b", ownerId: "p2", health: 100 },
+			];
+			const board = createMockBoard(pieces);
+			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
+
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				defaultSettings
+			);
+			runner.stop();
+			const result = await runner.run();
+
+			expect(result.turn).toBe(0);
+			expect(mockSimulateTurn).not.toHaveBeenCalled();
+		});
+
+		test("stop mid-run halts further onEvents emissions", async () => {
+			const pieces = [
+				{ id: "a", ownerId: "p1", health: 100 },
+				{ id: "b", ownerId: "p2", health: 100 },
+			];
+			const board = createMockBoard(pieces);
+			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
+
+			const onEvents = jest.fn();
+			const settings = { ...defaultSettings, battleTurnCount: 100 };
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				settings,
+				0,
+				onEvents
+			);
+
+			// Stop after 3 simulated turns by checking the call count
+			let stopAfter = 3;
+			mockSimulateTurn.mockImplementation(() => {
+				stopAfter--;
+				if (stopAfter <= 0) {
+					runner.stop();
+				}
+			});
+
+			const result = await runner.run();
+
+			// Loop ran 3 turns then stop took effect at the next iteration
+			expect(result.turn).toBe(3);
+			expect(mockSimulateTurn).toHaveBeenCalledTimes(3);
+		});
+
+		test("stop while paused returns without further iterations", async () => {
+			const pieces = [
+				{ id: "a", ownerId: "p1", health: 100 },
+				{ id: "b", ownerId: "p2", health: 100 },
+			];
+			const board = createMockBoard(pieces);
+			const registry = createMockPieceRegistry(pieces);
+			const combatStore = createMockCombatStore(pieces);
+
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				defaultSettings
+			);
+
+			runner.pause();
+			runner.stop();
+			const result = await runner.run();
+
+			expect(result.turn).toBe(0);
+			expect(mockSimulateTurn).not.toHaveBeenCalled();
+		});
+	});
 });
