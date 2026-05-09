@@ -10,6 +10,7 @@ import { PlayerActions } from "@creature-chess/gamemode";
 import { setupClientBattleListeners } from "./battle";
 import { setupQuickChatListener } from "./chat/quickChat";
 import { setupCloseShopOnFirstBuyListener } from "./closeShopOnFirstBuy";
+import { setupForwardPlayerActions } from "./forwardPlayerActions";
 import { setupPreventAccidentalCloseListener } from "./preventAccidentalClose";
 import { setupUiListener } from "./ui";
 
@@ -22,20 +23,6 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 			gameConnection?.sendFinishMatch();
 		},
 	});
-
-	// Bridge: forward board actions to network
-	for (const actionCreator of [
-		PlayerActions.dropPiecePlayerAction,
-		PlayerActions.swapPiecePlayerAction,
-	]) {
-		startListening({
-			actionCreator,
-			effect: async (action) => {
-				const gameConnection = getGameConnectionRef();
-				gameConnection?.sendPlayerAction(action);
-			},
-		});
-	}
 
 	// Clear selection when the selected piece is sold
 	startListening({
@@ -50,7 +37,7 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 		},
 	});
 
-	// Set up all sub-listeners
+	setupForwardPlayerActions(startListening);
 	setupPreventAccidentalCloseListener(startListening);
 	setupCloseShopOnFirstBuyListener(startListening);
 	setupClientBattleListeners(startListening);
