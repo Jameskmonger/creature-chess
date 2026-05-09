@@ -1,10 +1,10 @@
 import { Socket } from "socket.io-client";
 import { setPing } from "~/store/game/network";
-import { SettingsCommands } from "~/store/game/settings/state";
 import {
 	setConnectionStatusCommand,
 	setInGameCommand,
 } from "~/store/game/ui/actions";
+import { setSettingsAction } from "~/store/settings/sync";
 
 import {
 	boardUpdateAction,
@@ -49,7 +49,7 @@ export class GameConnection {
 				round,
 			})
 		);
-		this.dispatch(SettingsCommands.setSettingsCommand(settings));
+		this.dispatch(setSettingsAction(settings));
 		this.dispatch(setInGameCommand());
 		this.dispatch(setConnectionStatusCommand(ConnectionStatus.CONNECTED));
 	}

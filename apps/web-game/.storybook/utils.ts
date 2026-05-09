@@ -10,7 +10,6 @@ import {
 import { PlayerStatus, inProgressBattle } from "@creature-chess/models";
 import { StreakType } from "@creature-chess/models";
 import { PlayerTitle } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 const createPlayer = (
 	id: string,
@@ -39,7 +38,6 @@ const createPlayer = (
 
 const createMockedState = (): GameState => {
 	return {
-		settings: GamemodeSettingsPresets["default"],
 		ui: {
 			connectionStatus: ConnectionStatus.CONNECTED,
 			currentOverlay: null,

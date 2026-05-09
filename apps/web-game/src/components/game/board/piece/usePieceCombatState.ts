@@ -2,12 +2,12 @@ import { useCallback, useSyncExternalStore } from "react";
 
 import { PieceCombatState } from "@creature-chess/battle";
 
-import { useGameBoards } from "../state";
+import { useGameSession } from "~/game/sessionContext";
 
 export const usePieceCombatState = (
 	pieceId: string
 ): PieceCombatState | null => {
-	const { combatStore } = useGameBoards();
+	const { combatStore } = useGameSession();
 
 	const getSnapshot = useCallback((): PieceCombatState | null => {
 		try {

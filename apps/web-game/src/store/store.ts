@@ -1,5 +1,5 @@
 import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
-import { GameBoardState } from "~/components/game/board/state";
+import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { setupGameListeners } from "~/listeners/gameListeners";
 
 import { gameReducer } from "./game/state";
@@ -8,10 +8,8 @@ import { lobbyReducer } from "./lobby/state";
 import { menuReducer } from "./menu/state";
 import { AppState } from "./state";
 
-export const createAppStore = (gameBoard: GameBoardState) => {
-	const extra: ClientExtra = {
-		slices: gameBoard,
-	};
+export const createAppStore = (sessionHolder: GameSessionHolder) => {
+	const extra: ClientExtra = { sessionHolder };
 
 	const listenerMiddleware = createListenerMiddleware({ extra });
 

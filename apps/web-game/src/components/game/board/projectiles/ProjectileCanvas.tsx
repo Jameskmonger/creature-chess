@@ -3,7 +3,7 @@ import React from "react";
 import { SubscribableBoard } from "@creature-chess/board";
 
 import { ProjectileEvent } from "../piece/match/animationEventStore";
-import { useGameBoards } from "../state";
+import { useGameSession } from "~/game/sessionContext";
 
 const PROJECTILE_DURATION_MS = 200;
 const FILL_COLOR = "#F5E687";
@@ -120,7 +120,7 @@ function renderProjectiles(
 }
 
 export function ProjectileCanvas() {
-	const { matchBoard, animationEventStore } = useGameBoards();
+	const { matchBoard, animationEventStore } = useGameSession();
 	const canvasRef = React.useRef<HTMLCanvasElement>(null);
 	const projectilesRef = React.useRef<ActiveProjectile[]>([]);
 	const rafRef = React.useRef<number | null>(null);

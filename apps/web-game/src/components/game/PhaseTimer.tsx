@@ -1,27 +1,19 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
+import { useGamemodeSettings } from "~/game/sessionContext";
 import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
-import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { Countdown } from "../ui/countdown";
-
-// todo wire this up to the gamemode settings instead of hardcoding the phase lengths
-const PHASE_LENGTHS_SECONDS: Record<GamePhase, number> = {
-	[GamePhase.PREPARING]:
-		GamemodeSettingsPresets.default.preparingPhaseLengthMs / 1000,
-	[GamePhase.READY]: GamemodeSettingsPresets.default.readyPhaseLengthMs / 1000,
-	[GamePhase.PLAYING]:
-		GamemodeSettingsPresets.default.playingPhaseMaxLengthMs / 1000,
-};
 
 const renderPhaseInfoCountdown = (secondsRemaining: number) => (
 	<span>({secondsRemaining})</span>
 );
 
 export function PhaseTimer() {
+	const settings = useGamemodeSettings();
 	const phase = useSelector<AppState, GamePhase | null>(
 		(state) => state.game.roundInfo.phase
 	);
@@ -40,7 +32,13 @@ export function PhaseTimer() {
 		return null;
 	}
 
-	const phaseEndTime = PHASE_LENGTHS_SECONDS[phase] + phaseStartedAtSeconds;
+	const phaseLengthMs: Record<GamePhase, number> = {
+		[GamePhase.PREPARING]: settings.preparingPhaseLengthMs,
+		[GamePhase.READY]: settings.readyPhaseLengthMs,
+		[GamePhase.PLAYING]: settings.playingPhaseMaxLengthMs,
+	};
+
+	const phaseEndTime = phaseLengthMs[phase] / 1000 + phaseStartedAtSeconds;
 
 	return (
 		<span>

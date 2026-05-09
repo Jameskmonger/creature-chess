@@ -4,10 +4,11 @@ import { GameEvents, PlayerCommands } from "@creature-chess/gamemode";
 import { GameConnection } from "./GameConnection";
 import { ConnectionStatus } from "./types";
 
-jest.mock("~/store/game/settings/state", () => ({
-	SettingsCommands: {
-		setSettingsCommand: (p: any) => ({ type: "settings/set", payload: p }),
-	},
+jest.mock("~/store/settings/sync", () => ({
+	setSettingsAction: Object.assign(
+		(p: any) => ({ type: "setSettingsAction", payload: p }),
+		{ type: "setSettingsAction" }
+	),
 }));
 jest.mock("~/store/game/ui/actions", () => ({
 	setInGameCommand: () => ({ type: "ui/setInGame" }),
@@ -101,7 +102,7 @@ describe("GameConnection", () => {
 				})
 			);
 			expect(dispatch).toHaveBeenCalledWith(
-				expect.objectContaining({ type: "settings/set" })
+				expect.objectContaining({ type: "setSettingsAction" })
 			);
 			expect(dispatch).toHaveBeenCalledWith(
 				expect.objectContaining({ type: "ui/setInGame" })

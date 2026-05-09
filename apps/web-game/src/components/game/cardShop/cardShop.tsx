@@ -6,7 +6,7 @@ import { AppState } from "~/store";
 
 import { Card as CardModel } from "@creature-chess/models";
 
-import { useGameBoards } from "../board/state";
+import { useGameSession } from "~/game/sessionContext";
 import { CardShopPresentation } from "./presentation/cardShop";
 
 export function CardShop() {
@@ -28,7 +28,7 @@ export function CardShop() {
 		(state) => state.game.spectating.id !== null
 	);
 
-	const { board, bench, pieceRegistry } = useGameBoards();
+	const { board, bench, pieceRegistry } = useGameSession();
 
 	const ownedDefinitionIds = React.useMemo(
 		() => [

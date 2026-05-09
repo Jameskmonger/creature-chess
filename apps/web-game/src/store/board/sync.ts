@@ -1,5 +1,4 @@
 import { createAction } from "@reduxjs/toolkit";
-import { GameBoardState } from "~/components/game/board/state";
 import { updateBoardFromPacket } from "~/networking/utils/updateBoardFromPacket";
 import { ClientStartListening } from "~/store/listenerContext";
 
@@ -21,16 +20,16 @@ export const setupBoardSyncListeners = (
 ) => {
 	startListening({
 		actionCreator: boardUpdateAction,
-		effect: async ({ payload }, api) => {
-			const { board, pieceRegistry } = api.extra.slices as GameBoardState;
+		effect: ({ payload }, api) => {
+			const { board, pieceRegistry } = api.extra.sessionHolder.get();
 			updateBoardFromPacket(board, pieceRegistry, payload);
 		},
 	});
 
 	startListening({
 		actionCreator: benchUpdateAction,
-		effect: async ({ payload }, api) => {
-			const { bench, pieceRegistry } = api.extra.slices as GameBoardState;
+		effect: ({ payload }, api) => {
+			const { bench, pieceRegistry } = api.extra.sessionHolder.get();
 			updateBoardFromPacket(bench, pieceRegistry, payload);
 		},
 	});
@@ -38,8 +37,8 @@ export const setupBoardSyncListeners = (
 	startListening({
 		actionCreator: matchBoardUpdateAction,
 		// Mutation must complete before startBattleCommand fires.
-		effect: async ({ payload }, api) => {
-			const { matchBoard, pieceRegistry } = api.extra.slices as GameBoardState;
+		effect: ({ payload }, api) => {
+			const { matchBoard, pieceRegistry } = api.extra.sessionHolder.get();
 			updateBoardFromPacket(matchBoard, pieceRegistry, payload.board);
 
 			if (payload.turn !== null) {

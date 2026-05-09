@@ -1,10 +1,10 @@
 import { Dispatch, TypedStartListening, UnknownAction } from "@reduxjs/toolkit";
-import { GameBoardState } from "~/components/game/board/state";
+import { GameSessionHolder } from "~/game/GameSessionHolder";
 
 import { AppState } from "./state";
 
 export type ClientExtra = {
-	slices: GameBoardState;
+	sessionHolder: GameSessionHolder;
 };
 
 export type ClientStartListening = TypedStartListening<

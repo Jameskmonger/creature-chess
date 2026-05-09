@@ -11,7 +11,7 @@ import { getPiecesForStage } from "@creature-chess/gamemode";
 import { GamePhase, getDefinitionById } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
-import { useGameBoards } from "../../state";
+import { useGameSession } from "~/game/sessionContext";
 import { COLOR_READY_BUTTON_TEXT } from "./colors";
 
 const useStyles = createUseStyles({
@@ -32,7 +32,7 @@ export function SellPieceButton() {
 		(state) => state.game.ui.selectedPieceId
 	);
 
-	const { board, bench, pieceRegistry } = useGameBoards();
+	const { pieceRegistry } = useGameSession();
 
 	const selectedPiece = React.useMemo(() => {
 		if (gamePhase !== GamePhase.PREPARING || !selectedPieceId) {

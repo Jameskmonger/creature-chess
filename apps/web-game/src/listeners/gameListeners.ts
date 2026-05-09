@@ -3,6 +3,7 @@ import { AppState } from "~/store";
 import { setupBoardSyncListeners } from "~/store/board/sync";
 import { clearSelectedPiece } from "~/store/game/ui/actions";
 import { ClientStartListening } from "~/store/listenerContext";
+import { setupSettingsListener } from "~/store/settings/sync";
 
 import * as BattleEvents from "~/store/battle/events";
 
@@ -37,6 +38,9 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 			}
 		},
 	});
+
+	// Session must be set before any other listener tries to read it.
+	setupSettingsListener(startListening);
 
 	setupForwardPlayerActions(startListening);
 	setupPreventAccidentalCloseListener(startListening);

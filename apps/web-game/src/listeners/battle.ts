@@ -1,4 +1,3 @@
-import { AppState } from "~/store";
 import * as BattleCommands from "~/store/battle/commands";
 import { setupBattleListeners } from "~/store/battle/listener";
 import { ClientStartListening } from "~/store/listenerContext";
@@ -17,9 +16,13 @@ export const setupClientBattleListeners = (
 		effect: async (_action, api) => {
 			api.cancelActiveListeners();
 
-			const settings = (api.getState() as AppState).game.settings;
-			const { matchBoard, pieceRegistry, animationEventStore, combatStore } =
-				api.extra.slices;
+			const {
+				settings,
+				matchBoard,
+				pieceRegistry,
+				animationEventStore,
+				combatStore,
+			} = api.extra.sessionHolder.get();
 
 			setupBattleListeners(
 				startListening,
@@ -37,7 +40,8 @@ export const setupClientBattleListeners = (
 		effect: async ({ payload: { phase } }, api) => {
 			api.cancelActiveListeners();
 
-			const { matchBoard, pieceRegistry, combatStore } = api.extra.slices;
+			const { matchBoard, pieceRegistry, combatStore } =
+				api.extra.sessionHolder.get();
 
 			if (phase === GamePhase.PLAYING) {
 				seedCombatStore(combatStore, matchBoard, pieceRegistry);

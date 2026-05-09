@@ -3,8 +3,11 @@ import {
 	createListenerMiddleware,
 	createSlice,
 } from "@reduxjs/toolkit";
-import { GameBoardState } from "~/components/game/board/GameBoardState";
+import { GameSession } from "~/game/GameSession";
+import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { ClientExtra } from "~/store/listenerContext";
+
+import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { startBattleCommand } from "../battle/commands";
 import {
@@ -15,8 +18,9 @@ import {
 } from "./sync";
 
 const buildStore = () => {
-	const slices = new GameBoardState();
-	const extra: ClientExtra = { slices };
+	const sessionHolder = new GameSessionHolder();
+	sessionHolder.set(new GameSession(GamemodeSettingsPresets.default));
+	const extra: ClientExtra = { sessionHolder };
 
 	const seen: { type: string; payload?: unknown }[] = [];
 	const recorder = createSlice({
@@ -40,7 +44,7 @@ const buildStore = () => {
 			),
 	});
 	setupBoardSyncListeners(middleware.startListening as any);
-	return { store, slices, seen };
+	return { store, session: sessionHolder.get(), seen };
 };
 
 const flush = () => Promise.resolve();
@@ -59,7 +63,7 @@ const piece = (id: string, ownerId = "p1") =>
 describe("setupBoardSyncListeners", () => {
 	describe("boardUpdateAction", () => {
 		it("populates the board and registers pieces", async () => {
-			const { store, slices } = buildStore();
+			const { store, session } = buildStore();
 
 			store.dispatch(
 				boardUpdateAction({
@@ -69,13 +73,13 @@ describe("setupBoardSyncListeners", () => {
 			);
 			await flush();
 
-			expect(slices.board.getPieceIdAtPosition(0, 0)).toBe("piece-1");
-			expect(slices.board.getPieceIdAtPosition(1, 2)).toBe("piece-2");
-			expect(slices.pieceRegistry.getPieceById("piece-1")).toBeDefined();
+			expect(session.board.getPieceIdAtPosition(0, 0)).toBe("piece-1");
+			expect(session.board.getPieceIdAtPosition(1, 2)).toBe("piece-2");
+			expect(session.pieceRegistry.getPieceById("piece-1")).toBeDefined();
 		});
 
 		it("clears prior board state on each update", async () => {
-			const { store, slices } = buildStore();
+			const { store, session } = buildStore();
 
 			store.dispatch(
 				boardUpdateAction({
@@ -93,14 +97,14 @@ describe("setupBoardSyncListeners", () => {
 			);
 			await flush();
 
-			expect(slices.board.getPieceIdAtPosition(0, 0)).toBeNull();
-			expect(slices.board.getPieceIdAtPosition(1, 1)).toBe("piece-2");
+			expect(session.board.getPieceIdAtPosition(0, 0)).toBeNull();
+			expect(session.board.getPieceIdAtPosition(1, 1)).toBe("piece-2");
 		});
 	});
 
 	describe("benchUpdateAction", () => {
 		it("populates the bench rather than the board", async () => {
-			const { store, slices } = buildStore();
+			const { store, session } = buildStore();
 
 			store.dispatch(
 				benchUpdateAction({
@@ -110,14 +114,14 @@ describe("setupBoardSyncListeners", () => {
 			);
 			await flush();
 
-			expect(slices.bench.getPieceIdAtPosition(0, 0)).toBe("piece-1");
-			expect(slices.board.getPieceIdAtPosition(0, 0)).toBeNull();
+			expect(session.bench.getPieceIdAtPosition(0, 0)).toBe("piece-1");
+			expect(session.board.getPieceIdAtPosition(0, 0)).toBeNull();
 		});
 	});
 
 	describe("matchBoardUpdateAction", () => {
 		it("populates the matchBoard", async () => {
-			const { store, slices } = buildStore();
+			const { store, session } = buildStore();
 
 			store.dispatch(
 				matchBoardUpdateAction({
@@ -130,11 +134,11 @@ describe("setupBoardSyncListeners", () => {
 			);
 			await flush();
 
-			expect(slices.matchBoard.getPieceIdAtPosition(0, 0)).toBe("piece-1");
+			expect(session.matchBoard.getPieceIdAtPosition(0, 0)).toBe("piece-1");
 		});
 
 		it("dispatches startBattleCommand when turn is non-null", async () => {
-			const { store, slices, seen } = buildStore();
+			const { store, session, seen } = buildStore();
 
 			store.dispatch(
 				matchBoardUpdateAction({
@@ -151,7 +155,7 @@ describe("setupBoardSyncListeners", () => {
 				type: startBattleCommand.type,
 				payload: { turn: 3 },
 			});
-			expect(slices.matchBoard.getPieceIdAtPosition(0, 0)).toBe("piece-1");
+			expect(session.matchBoard.getPieceIdAtPosition(0, 0)).toBe("piece-1");
 		});
 
 		it("dispatches startBattleCommand for turn 0", async () => {

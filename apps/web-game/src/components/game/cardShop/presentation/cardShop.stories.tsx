@@ -1,13 +1,21 @@
 import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
-import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
+import { GameSession } from "~/game/GameSession";
+import { GameSessionHolder } from "~/game/GameSessionHolder";
+import { GameSessionProvider } from "~/game/sessionContext";
 
 import { Card as CardModel } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { CardShopPresentation } from "./cardShop";
 import "./cardShop.stories.css";
+
+function createDefaultHolder(): GameSessionHolder {
+	const holder = new GameSessionHolder();
+	holder.set(new GameSession(GamemodeSettingsPresets.default));
+	return holder;
+}
 
 const meta: Meta<any> = {
 	title: "@creature-chess / game / CardShop",
@@ -25,11 +33,11 @@ const meta: Meta<any> = {
 		},
 	},
 	render: (args) => (
-		<GamemodeSettingsContextProvider value={GamemodeSettingsPresets["default"]}>
+		<GameSessionProvider holder={createDefaultHolder()}>
 			<div className="card-shop-story">
 				<CardShopPresentation {...args} />
 			</div>
-		</GamemodeSettingsContextProvider>
+		</GameSessionProvider>
 	),
 };
 export default meta;

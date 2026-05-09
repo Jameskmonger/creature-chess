@@ -9,7 +9,7 @@ import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
 
-import { useGameBoards } from "../state";
+import { useGameSession } from "~/game/sessionContext";
 
 const useStyles = createUseStyles({
 	pieceCount: {
@@ -43,7 +43,7 @@ const useStyles = createUseStyles({
 export function PieceCount() {
 	const styles = useStyles();
 
-	const { board, pieceRegistry } = useGameBoards();
+	const { board, pieceRegistry } = useGameSession();
 	const b = useBoardSubscription(board);
 
 	const playerId = useLocalPlayerId();

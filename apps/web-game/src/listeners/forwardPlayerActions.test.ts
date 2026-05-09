@@ -78,7 +78,7 @@ describe("forwardPlayerActions", () => {
 
 		store.dispatch(noopSlice.actions.other());
 		store.dispatch({ type: "ui/clearSelectedPiece" });
-		store.dispatch({ type: "settings/setSettingsCommand", payload: {} });
+		store.dispatch({ type: "setSettingsAction", payload: {} });
 
 		await Promise.resolve();
 

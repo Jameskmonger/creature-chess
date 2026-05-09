@@ -8,7 +8,7 @@ import { Button } from "~/components/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
-import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
+import { useGamemodeSettings } from "~/game/sessionContext";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
 

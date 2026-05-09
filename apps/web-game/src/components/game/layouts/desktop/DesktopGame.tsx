@@ -1,18 +1,12 @@
 import * as React from "react";
 
 import { createUseStyles } from "react-jss";
-import { useSelector } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
-import { AppState } from "~/store";
-
-import { GamePhase } from "@creature-chess/models";
 
 import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
-import { useGameBoards } from "../../board/state";
 import { CardShop } from "../../cardShop/cardShop";
 import { Help } from "../../help";
 import { PlayerList } from "../../playerList/playerList";
@@ -67,25 +61,6 @@ const useStyles = createUseStyles({
 
 function DesktopGame() {
 	const styles = useStyles();
-
-	const localPlayerId = useLocalPlayerId();
-
-	const { board, pieceRegistry } = useGameBoards();
-
-	const ownedPieces = React.useMemo(
-		() =>
-			board
-				.getAllPieces()
-				.filter(
-					(p) => pieceRegistry.getPieceById(p.id)?.ownerId === localPlayerId
-				)
-				.map((p) => pieceRegistry.getPieceById(p.id)!),
-		[board, pieceRegistry, localPlayerId]
-	);
-
-	const inPreparingPhase = useSelector<AppState, boolean>(
-		(state) => state.game.roundInfo.phase === GamePhase.PREPARING
-	);
 
 	const leftTabs = React.useMemo(
 		() => [

@@ -4,12 +4,13 @@ import {
 	pieceInfoStore,
 } from "@creature-chess/battle";
 import { SubscribableBoard } from "@creature-chess/board";
-import { GamemodeSettingsPresets } from "@creature-chess/models";
+import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import { PieceAnimationEventStore } from "./piece/match/animationEventStore";
+import { PieceAnimationEventStore } from "../components/game/board/piece/match/animationEventStore";
 
-export class GameBoardState {
+export class GameSession {
+	public readonly settings: GamemodeSettings;
 	public readonly board: SubscribableBoard;
 	public readonly bench: SubscribableBoard;
 	public readonly matchBoard: SubscribableBoard;
@@ -17,18 +18,16 @@ export class GameBoardState {
 	public readonly animationEventStore: PieceAnimationEventStore;
 	public readonly combatStore: PieceInfoStore<PieceCombatState>;
 
-	public constructor() {
+	public constructor(settings: GamemodeSettings) {
+		this.settings = settings;
 		this.board = new SubscribableBoard(
-			GamemodeSettingsPresets["default"].boardWidth,
-			GamemodeSettingsPresets["default"].boardHalfHeight
+			settings.boardWidth,
+			settings.boardHalfHeight
 		);
-		this.bench = new SubscribableBoard(
-			GamemodeSettingsPresets["default"].benchSize,
-			1
-		);
+		this.bench = new SubscribableBoard(settings.benchSize, 1);
 		this.matchBoard = new SubscribableBoard(
-			GamemodeSettingsPresets["default"].boardWidth,
-			GamemodeSettingsPresets["default"].boardHalfHeight * 2
+			settings.boardWidth,
+			settings.boardHalfHeight * 2
 		);
 		this.pieceRegistry = new PieceRegistry();
 		this.animationEventStore = new PieceAnimationEventStore();

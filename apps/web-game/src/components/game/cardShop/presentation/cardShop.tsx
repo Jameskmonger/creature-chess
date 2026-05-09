@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "~/components/ui";
 import { CoinIcon } from "~/components/ui/icon/CoinIcon";
-import { useGamemodeSettings } from "~/contexts/GamemodeSettingsContext";
+import { useGamemodeSettings } from "~/game/sessionContext";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { Card as CardModel } from "@creature-chess/models";

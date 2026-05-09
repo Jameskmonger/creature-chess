@@ -1,7 +1,9 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import { LocalPlayerContextProvider } from "~/auth/context";
-import { GamemodeSettingsContextProvider } from "~/contexts/GamemodeSettingsContext";
+import { GameSession } from "~/game/GameSession";
+import { GameSessionHolder } from "~/game/GameSessionHolder";
+import { GameSessionProvider, useGameSession } from "~/game/sessionContext";
 import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 import { Overlay } from "~/store/game/ui/overlay";
@@ -11,7 +13,6 @@ import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { GameStateProvider } from "../../../../.storybook/GameStateProvider";
 import { useGlobalStyles } from "../../../styles";
-import { GameBoardProvider, useGameBoards } from "../board/state";
 
 const MOCK_PIECES = {
 	board: [
@@ -61,7 +62,7 @@ const MOCK_PIECES = {
 };
 
 function MockPieceSetup({ children }: React.PropsWithChildren) {
-	const { board, bench, pieceRegistry } = useGameBoards();
+	const { board, bench, pieceRegistry } = useGameSession();
 	const initialized = useRef(false);
 
 	if (!initialized.current) {
@@ -108,6 +109,12 @@ export function GameLayoutStoryWrapper({
 }) {
 	useGlobalStyles();
 
+	const holder = useMemo(() => {
+		const h = new GameSessionHolder();
+		h.set(new GameSession(GamemodeSettingsPresets.default));
+		return h;
+	}, []);
+
 	const decorateState = (state: GameState): GameState => ({
 		...state,
 		ui: {
@@ -143,29 +150,25 @@ export function GameLayoutStoryWrapper({
 	});
 
 	return (
-		<GameBoardProvider>
+		<GameSessionProvider holder={holder}>
 			<MockPieceSetup>
 				<GameStateProvider decorateState={decorateState}>
-					<GamemodeSettingsContextProvider
-						value={GamemodeSettingsPresets["default"]}
+					<LocalPlayerContextProvider
+						value={{
+							type: "user" as const,
+							id: "1234",
+							nickname: "jkm",
+							stats: {
+								wins: 0,
+								gamesPlayed: 0,
+							},
+							registered: true,
+						}}
 					>
-						<LocalPlayerContextProvider
-							value={{
-								type: "user" as const,
-								id: "1234",
-								nickname: "jkm",
-								stats: {
-									wins: 0,
-									gamesPlayed: 0,
-								},
-								registered: true,
-							}}
-						>
-							{children}
-						</LocalPlayerContextProvider>
-					</GamemodeSettingsContextProvider>
+						{children}
+					</LocalPlayerContextProvider>
 				</GameStateProvider>
 			</MockPieceSetup>
-		</GameBoardProvider>
+		</GameSessionProvider>
 	);
 }

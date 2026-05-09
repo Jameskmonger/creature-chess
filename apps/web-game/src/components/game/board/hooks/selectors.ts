@@ -1,36 +1,33 @@
-import { useSelector } from "react-redux";
 import { useBoardSubscription } from "~/components/board/useBoard";
 import { usePieceRegistrySubscription } from "~/components/board/usePieceRegistry";
-import { AppState } from "~/store";
-
-import { useGameBoards } from "../state";
+import { useGameSession } from "~/game/sessionContext";
 
 export function useGameBoard() {
-	const { board } = useGameBoards();
+	const { board } = useGameSession();
 
 	return useBoardSubscription(board);
 }
 
 export function useGameBench() {
-	const { bench } = useGameBoards();
+	const { bench } = useGameSession();
 
 	return useBoardSubscription(bench);
 }
 
 export function useGameMatchBoard() {
-	const { matchBoard } = useGameBoards();
+	const { matchBoard } = useGameSession();
 
 	return useBoardSubscription(matchBoard);
 }
 
 export function useGamePieceRegistry() {
-	const { pieceRegistry } = useGameBoards();
+	const { pieceRegistry } = useGameSession();
 
 	return usePieceRegistrySubscription(pieceRegistry);
 }
 
 export function useGameAnimationEventStore() {
-	const { animationEventStore } = useGameBoards();
+	const { animationEventStore } = useGameSession();
 
 	return animationEventStore;
 }
