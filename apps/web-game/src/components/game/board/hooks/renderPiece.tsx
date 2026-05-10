@@ -4,9 +4,9 @@ import { useAccountId } from "~/auth/context";
 
 import { PieceModel } from "@creature-chess/models";
 
-import { MatchPiece, PieceContextProvider, SelectablePiece } from "../piece";
+import { MatchPiece, Piece, PieceContextProvider, SelectablePiece } from "../piece";
 
-const useRenderSelectablePiece = () => {
+export const useRenderSelectablePiece = () => {
 	const viewingPlayerId = useAccountId();
 
 	return function (piece: PieceModel): React.ReactNode {
@@ -18,16 +18,25 @@ const useRenderSelectablePiece = () => {
 	};
 };
 
-export const useRenderBoardPiece = useRenderSelectablePiece;
-export const useRenderBenchPiece = useRenderSelectablePiece;
-
-export const useRenderMatchBoardPiece = () => {
+export const useRenderMatchPiece = () => {
 	const viewingPlayerId = useAccountId();
 
 	return function (piece: PieceModel): React.ReactNode {
 		return (
 			<PieceContextProvider value={{ piece, viewingPlayerId }}>
 				<MatchPiece />
+			</PieceContextProvider>
+		);
+	};
+};
+
+export const useRenderReadOnlyPiece = () => {
+	const viewingPlayerId = useAccountId();
+
+	return function (piece: PieceModel): React.ReactNode {
+		return (
+			<PieceContextProvider value={{ piece, viewingPlayerId }}>
+				<Piece healthbar="none" />
 			</PieceContextProvider>
 		);
 	};

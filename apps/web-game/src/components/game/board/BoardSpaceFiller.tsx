@@ -7,7 +7,6 @@ import { BoardSize } from "@creature-chess/board";
 
 import { SelectedPieceInfo } from "../SelectedPieceInfo";
 import { useSelectedPiece } from "../hooks/useSelectedPiece";
-import { useGameBoard } from "./GameBoardContext";
 import { PieceCount } from "./overlays/PieceCount";
 import { ReadyUpButton } from "./overlays/controls/ReadyUpButton";
 import { SellPieceButton } from "./overlays/controls/SellPieceButton";
@@ -58,10 +57,15 @@ const useStyles = createUseStyles<string, { size: BoardSize }>({
 	},
 });
 
-export function BoardSpaceFiller() {
-	const { board } = useGameBoard();
+export function BoardSpaceFiller({
+	width,
+	height,
+}: {
+	width: number;
+	height: number;
+}) {
 	const styles = useStyles({
-		size: { width: board.width, height: board.height },
+		size: { width, height },
 	});
 
 	const selectedPiece = useSelectedPiece();

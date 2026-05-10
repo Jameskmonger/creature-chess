@@ -8,11 +8,11 @@ import {
 } from "~/components/board/events";
 import { useLocalPlayer } from "~/store/game/players";
 
-import { PackedPosition } from "@creature-chess/board";
+import { PackedPosition, SubscribableBoard } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
+import { PieceRegistry } from "@creature-chess/utils";
 
 import { BoardSpaceFiller } from "./BoardSpaceFiller";
-import { useGameBoard } from "./GameBoardContext";
 import { ThemedBoard } from "./ThemedBoard";
 
 export type GameBoardLocation =
@@ -41,6 +41,9 @@ const createDropPieceEvent = (
 ): GameBoardDropPieceEvent => ({ id, location });
 
 type GameBoardProps = {
+	board: SubscribableBoard;
+	bench: SubscribableBoard;
+	pieceRegistry: PieceRegistry;
 	renderBoardPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
 	renderBenchPiece: (piece: PieceModel) => React.ReactNode | React.ReactNode[];
 	renderTileBackground?: (position: PackedPosition) => React.ReactNode;
@@ -107,12 +110,11 @@ function useEvents({
 	};
 }
 
-function useRenderers({
-	renderBoardPiece,
-	renderBenchPiece,
-}: Pick<GameBoardProps, "renderBoardPiece" | "renderBenchPiece">) {
-	const { board, bench, pieceRegistry } = useGameBoard();
-
+function useRenderers(
+	pieceRegistry: PieceRegistry,
+	renderBoardPiece: GameBoardProps["renderBoardPiece"],
+	renderBenchPiece: GameBoardProps["renderBenchPiece"]
+) {
 	// todo
 	const boardLocked = false;
 	const benchLocked = false;
@@ -210,6 +212,9 @@ const useStyles = createUseStyles<string, UseStylesProps>({
 });
 
 export function GameBoard({
+	board,
+	bench,
+	pieceRegistry,
 	renderBoardPiece,
 	renderBenchPiece,
 	renderTileBackground,
@@ -218,12 +223,11 @@ export function GameBoard({
 	children,
 	showFiller = false,
 }: GameBoardProps) {
-	const { board, bench } = useGameBoard();
-
-	const { boardPieceRenderer, benchPieceRenderer } = useRenderers({
+	const { boardPieceRenderer, benchPieceRenderer } = useRenderers(
+		pieceRegistry,
 		renderBoardPiece,
-		renderBenchPiece,
-	});
+		renderBenchPiece
+	);
 	const { onClickBoard, onClickBench, onDropBoard, onDropBench } = useEvents({
 		onClick,
 		onDropPiece,
@@ -268,7 +272,9 @@ export function GameBoard({
 	return (
 		<div className={styles.root} ref={ref}>
 			<div className={styles.gameBoard}>
-				{showFiller && <BoardSpaceFiller />}
+				{showFiller && (
+					<BoardSpaceFiller width={board.width} height={board.height} />
+				)}
 
 				<div className={styles.board}>
 					<ThemedBoard

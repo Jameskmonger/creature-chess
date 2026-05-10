@@ -9,7 +9,6 @@ import { GamemodeSettingsPresets } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { GameBoard } from "./GameBoard";
-import { GameBoardContextProvider } from "./GameBoardContext";
 import { Piece, PieceContextProvider } from "./piece";
 
 const renderPiece = (piece: PieceModel) => (
@@ -26,17 +25,15 @@ const meta: Meta<any> = {
 		onDropPiece: { action: "onDropPiece" },
 	},
 	render: (args) => {
-		const context = {
-			board: new SubscribableBoard(
-				GamemodeSettingsPresets["default"].boardWidth,
-				args.boardHeight
-			),
-			bench: new SubscribableBoard(
-				GamemodeSettingsPresets["default"].benchSize,
-				1
-			),
-			pieceRegistry: new PieceRegistry(),
-		};
+		const board = new SubscribableBoard(
+			GamemodeSettingsPresets["default"].boardWidth,
+			args.boardHeight
+		);
+		const bench = new SubscribableBoard(
+			GamemodeSettingsPresets["default"].benchSize,
+			1
+		);
+		const pieceRegistry = new PieceRegistry();
 
 		const piece1 = Builders.buildPieceModel({ id: "1" });
 		const piece2 = Builders.buildPieceModel({ id: "2" });
@@ -44,7 +41,7 @@ const meta: Meta<any> = {
 		const piece4 = Builders.buildPieceModel({ id: "4" });
 		const piece5 = Builders.buildPieceModel({ id: "5" });
 
-		context.board.setPieces([
+		board.setPieces([
 			{
 				id: piece1.id,
 				x: GamemodeSettingsPresets["default"].boardWidth - 1,
@@ -75,7 +72,7 @@ const meta: Meta<any> = {
 		const benchPiece1 = Builders.buildPieceModel({ id: "6" });
 		const benchPiece2 = Builders.buildPieceModel({ id: "6" });
 
-		context.bench.setPieces([
+		bench.setPieces([
 			{ id: benchPiece1.id, x: 0, y: 0 },
 			{
 				id: benchPiece2.id,
@@ -84,13 +81,13 @@ const meta: Meta<any> = {
 			},
 		]);
 
-		context.pieceRegistry.registerPiece(piece1);
-		context.pieceRegistry.registerPiece(piece2);
-		context.pieceRegistry.registerPiece(piece3);
-		context.pieceRegistry.registerPiece(piece4);
-		context.pieceRegistry.registerPiece(piece5);
-		context.pieceRegistry.registerPiece(benchPiece1);
-		context.pieceRegistry.registerPiece(benchPiece2);
+		pieceRegistry.registerPiece(piece1);
+		pieceRegistry.registerPiece(piece2);
+		pieceRegistry.registerPiece(piece3);
+		pieceRegistry.registerPiece(piece4);
+		pieceRegistry.registerPiece(piece5);
+		pieceRegistry.registerPiece(benchPiece1);
+		pieceRegistry.registerPiece(benchPiece2);
 
 		return (
 			<PieceDragContextProvider>
@@ -101,15 +98,16 @@ const meta: Meta<any> = {
 						border: "2px solid red",
 					}}
 				>
-					<GameBoardContextProvider value={context}>
-						<GameBoard
-							renderBoardPiece={renderPiece}
-							renderBenchPiece={renderPiece}
-							onClick={args.onClick}
-							onDropPiece={args.onDropPiece}
-							showFiller={args.showFiller}
-						/>
-					</GameBoardContextProvider>
+					<GameBoard
+						board={board}
+						bench={bench}
+						pieceRegistry={pieceRegistry}
+						renderBoardPiece={renderPiece}
+						renderBenchPiece={renderPiece}
+						onClick={args.onClick}
+						onDropPiece={args.onDropPiece}
+						showFiller={args.showFiller}
+					/>
 				</div>
 			</PieceDragContextProvider>
 		);
