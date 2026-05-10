@@ -5,9 +5,10 @@ import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { AppState } from "~/store";
 
+import { PieceModel } from "@creature-chess/models";
+
 import { useOnClickPiece } from "../hooks/clickPiece";
 import { Piece } from "./Piece";
-import { usePiece } from "./PieceContext";
 
 const useStyles = createUseStyles({
 	selectablePiece: {
@@ -20,10 +21,8 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function SelectablePiece() {
+export function SelectablePiece({ piece }: { piece: PieceModel }) {
 	const styles = useStyles();
-
-	const { piece } = usePiece();
 
 	const onClickPiece = useOnClickPiece();
 	const selectedPieceId = useSelector<AppState, string | null>(
@@ -36,17 +35,13 @@ export function SelectablePiece() {
 
 	const isSelected = selectedPieceId === piece.id;
 
-	if (!piece) {
-		return null;
-	}
-
 	const className = classNames(styles.selectablePiece, {
 		[styles.selected]: isSelected,
 	});
 
 	return (
 		<div className={className}>
-			<Piece healthbar="none" onClick={onClick} />
+			<Piece piece={piece} onClick={onClick} />
 		</div>
 	);
 }

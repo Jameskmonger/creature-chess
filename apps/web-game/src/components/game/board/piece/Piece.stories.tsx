@@ -4,7 +4,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Piece } from "./Piece";
 import "./Piece.stories.css";
-import { PieceContextProvider } from "./PieceContext";
 
 function PieceTile({
 	color,
@@ -37,13 +36,16 @@ const meta: Meta<any> = {
 	render: (args) => {
 		const { healthbar, piece } = createProps(args);
 
+		const healthbarProp =
+			healthbar && healthbar !== "none"
+				? { color: healthbar, current: piece.maxHealth }
+				: undefined;
+
 		return (
 			<div className="piece-story-tiles">
 				<PieceTile color="light" />
 				<PieceTile color="dark">
-					<PieceContextProvider value={{ piece, viewingPlayerId: ownerId }}>
-						<Piece healthbar={healthbar} />
-					</PieceContextProvider>
+					<Piece piece={piece} healthbar={healthbarProp} />
 				</PieceTile>
 				<PieceTile color="light" />
 				<PieceTile color="dark" />
@@ -52,9 +54,7 @@ const meta: Meta<any> = {
 				<PieceTile color="light" />
 				<PieceTile color="dark" />
 				<PieceTile color="light">
-					<PieceContextProvider value={{ piece, viewingPlayerId: "123" }}>
-						<Piece healthbar={healthbar} />
-					</PieceContextProvider>
+					<Piece piece={piece} healthbar={healthbarProp} />
 				</PieceTile>
 				<PieceTile color="dark" />
 			</div>

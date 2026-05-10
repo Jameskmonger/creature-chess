@@ -6,7 +6,7 @@ import { getRandomBoardState } from "~/utils/getRandomBoardState";
 import { PieceModel } from "@creature-chess/models";
 
 import { ThemedBoard } from "./game/board/ThemedBoard";
-import { PieceContextProvider, Piece } from "./game/board/piece";
+import { Piece } from "./game/board/piece";
 
 const useBackgroundStyles = createUseStyles({
 	root: {
@@ -44,21 +44,15 @@ const useBackgroundStyles = createUseStyles({
 	},
 });
 
-const renderItem = (boardId: string) => (piece: PieceModel) => ({
+const renderItem = (_boardId: string) => (piece: PieceModel) => ({
 	item: (
-		<PieceContextProvider
-			value={{
-				piece: {
-					id: piece.id,
-					definitionId: piece.definitionId,
-					traits: piece.traits,
-					maxHealth: piece.maxHealth,
-				} as unknown as PieceModel,
-				viewingPlayerId: boardId,
+		<Piece
+			piece={piece}
+			healthbar={{
+				color: piece.ownerId === "home" ? "friendly" : "enemy",
+				current: piece.maxHealth,
 			}}
-		>
-			<Piece healthbar={piece.ownerId === "home" ? "friendly" : "enemy"} />
-		</PieceContextProvider>
+		/>
 	),
 	draggable: false,
 });

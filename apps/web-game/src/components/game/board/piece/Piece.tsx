@@ -4,13 +4,15 @@ import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { ICON_FOR_TRAIT } from "~/components/ui/TraitIcon";
 
+import { PieceModel } from "@creature-chess/models";
+
 import { CreatureImage } from "../../../ui/creatureImage";
-import { usePiece } from "./PieceContext";
 import { PieceHealthbar } from "./meta/PieceHealthbar";
-import { usePieceCombatState } from "./usePieceCombatState";
 
 interface Props {
-	healthbar: "none" | "friendly" | "enemy" | "spectating";
+	piece: PieceModel;
+	healthbar?: { color: "friendly" | "enemy"; current: number };
+	facing?: "front" | "back";
 
 	className?: string;
 	children?: React.ReactNode | React.ReactNode[];
@@ -81,22 +83,23 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function Piece(props: Props) {
+export function Piece({
+	piece,
+	healthbar,
+	facing = "front",
+	className,
+	children,
+	onClick,
+}: Props) {
 	const classes = useStyles();
-	const { piece } = usePiece();
-	const combat = usePieceCombatState(piece.id);
-	const { healthbar, children, className, onClick } = props;
-
-	const currentHealth = combat?.currentHealth ?? piece.maxHealth;
-	const facingAway = combat?.facingAway ?? false;
 
 	return (
 		<div className={classNames(classes.piece, className)} onClick={onClick}>
 			<div className={classes.healthbarContainer}>
-				{healthbar !== "none" && (
+				{healthbar && (
 					<PieceHealthbar
-						color={healthbar}
-						current={currentHealth}
+						color={healthbar.color}
+						current={healthbar.current}
 						max={piece.maxHealth}
 					/>
 				)}
@@ -105,7 +108,7 @@ export function Piece(props: Props) {
 			<div className={classes.imageContainer}>
 				<CreatureImage
 					definitionId={piece.definitionId}
-					facing={facingAway ? "back" : "front"}
+					facing={facing === "back" ? "back" : "front"}
 				/>
 			</div>
 

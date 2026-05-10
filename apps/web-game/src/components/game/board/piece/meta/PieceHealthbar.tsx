@@ -5,36 +5,18 @@ import { createUseStyles } from "react-jss";
 import { ProgressBar } from "../../../../ui/progressBar";
 
 interface HealthbarProps {
-	color: "friendly" | "enemy" | "spectating";
+	color: "friendly" | "enemy";
 	current: number;
 	max: number;
 
 	children?: React.ReactNode | React.ReactNode[];
 }
 
-const getFillBackground = ({ color }: HealthbarProps) => {
-	if (color === "spectating") {
-		return "#601a4a";
-	}
+const getFillBackground = ({ color }: HealthbarProps) =>
+	color === "enemy" ? "#e03c71" : "#3887ca";
 
-	if (color === "enemy") {
-		return "#e03c71";
-	}
-
-	return "#3887ca";
-};
-
-const getBorderColor = ({ color }: HealthbarProps) => {
-	if (color === "spectating") {
-		return "#491338";
-	}
-
-	if (color === "enemy") {
-		return "#a81a47";
-	}
-
-	return "#296599";
-};
+const getBorderColor = ({ color }: HealthbarProps) =>
+	color === "enemy" ? "#a81a47" : "#296599";
 
 const useStyles = createUseStyles<string, HealthbarProps>({
 	fill: {

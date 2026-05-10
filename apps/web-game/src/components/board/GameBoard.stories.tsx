@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SubscribableBoard } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 
-import { MatchPiece, PieceContextProvider } from "../game/board/piece";
+import { MatchPiece } from "../game/board/piece";
 import { GameBoard } from "./GameBoard";
 
 const meta: Meta<typeof GameBoard> = {
@@ -55,9 +55,7 @@ export const Default: Story = {
 	args: {
 		board,
 		renderPiece: (piece: PieceModel): React.ReactNode => (
-			<PieceContextProvider value={{ piece, viewingPlayerId: "player-1" }}>
-				<MatchPiece />
-			</PieceContextProvider>
+			<MatchPiece piece={piece} viewingPlayerId="player-1" />
 		),
 		getTileClassName: (x: number, y: number) =>
 			(x + y) % 2 === 0 ? "even-tile" : "odd-tile",

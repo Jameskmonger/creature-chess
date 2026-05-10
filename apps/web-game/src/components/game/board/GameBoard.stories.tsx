@@ -9,13 +9,9 @@ import { GamemodeSettingsPresets } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { GameBoard } from "./GameBoard";
-import { Piece, PieceContextProvider } from "./piece";
+import { Piece } from "./piece";
 
-const renderPiece = (piece: PieceModel) => (
-	<PieceContextProvider value={{ piece, viewingPlayerId: piece.ownerId }}>
-		<Piece healthbar="none" />
-	</PieceContextProvider>
-);
+const renderPiece = (piece: PieceModel) => <Piece piece={piece} />;
 
 const meta: Meta<any> = {
 	title: "@creature-chess / game / Board / GameBoard",
@@ -106,6 +102,8 @@ const meta: Meta<any> = {
 						renderBenchPiece={renderPiece}
 						onClick={args.onClick}
 						onDropPiece={args.onDropPiece}
+						boardDraggable
+						benchDraggable
 						showFiller={args.showFiller}
 					/>
 				</div>

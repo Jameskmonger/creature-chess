@@ -6,7 +6,7 @@ describe("getBoardSurfaceConfig", () => {
 	const SPECTATED = "other-player";
 
 	describe("not spectating", () => {
-		it("PREPARING is preparing + interactive (no match)", () => {
+		it("PREPARING is preparing + interactive, both surfaces draggable", () => {
 			expect(
 				getBoardSurfaceConfig({
 					phase: GamePhase.PREPARING,
@@ -16,42 +16,50 @@ describe("getBoardSurfaceConfig", () => {
 				isMatch: false,
 				isPreparing: true,
 				isInteractive: true,
+				boardDraggable: true,
+				benchDraggable: true,
 			});
 		});
 
-		it("READY is match + interactive", () => {
+		it("READY is match + interactive, board locked but bench still draggable", () => {
 			expect(
 				getBoardSurfaceConfig({ phase: GamePhase.READY, spectatingId: null })
 			).toEqual({
 				isMatch: true,
 				isPreparing: false,
 				isInteractive: true,
+				boardDraggable: false,
+				benchDraggable: true,
 			});
 		});
 
-		it("PLAYING is match + interactive", () => {
+		it("PLAYING is match + interactive, board locked but bench still draggable", () => {
 			expect(
 				getBoardSurfaceConfig({ phase: GamePhase.PLAYING, spectatingId: null })
 			).toEqual({
 				isMatch: true,
 				isPreparing: false,
 				isInteractive: true,
+				boardDraggable: false,
+				benchDraggable: true,
 			});
 		});
 
-		it("null phase is preparing + interactive (pre-first-round seed)", () => {
+		it("null phase is preparing + interactive, both surfaces draggable", () => {
 			expect(
 				getBoardSurfaceConfig({ phase: null, spectatingId: null })
 			).toEqual({
 				isMatch: false,
 				isPreparing: true,
 				isInteractive: true,
+				boardDraggable: true,
+				benchDraggable: true,
 			});
 		});
 	});
 
 	describe("spectating", () => {
-		it("PREPARING shows the spectated half-board, read-only", () => {
+		it("PREPARING shows the spectated half-board, nothing draggable", () => {
 			expect(
 				getBoardSurfaceConfig({
 					phase: GamePhase.PREPARING,
@@ -61,10 +69,12 @@ describe("getBoardSurfaceConfig", () => {
 				isMatch: false,
 				isPreparing: true,
 				isInteractive: false,
+				boardDraggable: false,
+				benchDraggable: false,
 			});
 		});
 
-		it("READY shows the spectated full match-board, read-only", () => {
+		it("READY shows the spectated full match-board, nothing draggable", () => {
 			expect(
 				getBoardSurfaceConfig({
 					phase: GamePhase.READY,
@@ -74,10 +84,12 @@ describe("getBoardSurfaceConfig", () => {
 				isMatch: true,
 				isPreparing: false,
 				isInteractive: false,
+				boardDraggable: false,
+				benchDraggable: false,
 			});
 		});
 
-		it("PLAYING shows the spectated full match-board, read-only", () => {
+		it("PLAYING shows the spectated full match-board, nothing draggable", () => {
 			expect(
 				getBoardSurfaceConfig({
 					phase: GamePhase.PLAYING,
@@ -87,6 +99,8 @@ describe("getBoardSurfaceConfig", () => {
 				isMatch: true,
 				isPreparing: false,
 				isInteractive: false,
+				boardDraggable: false,
+				benchDraggable: false,
 			});
 		});
 	});
@@ -106,5 +120,16 @@ describe("getBoardSurfaceConfig", () => {
 				expect(config.isMatch).toBe(!config.isPreparing);
 			}
 		}
+	});
+
+	it.each([
+		[null],
+		[GamePhase.PREPARING],
+		[GamePhase.READY],
+		[GamePhase.PLAYING],
+	])("board and bench are not draggable when spectating, regardless of phase (%s)", (phase) => {
+		const config = getBoardSurfaceConfig({ phase, spectatingId: SPECTATED });
+		expect(config.boardDraggable).toBe(false);
+		expect(config.benchDraggable).toBe(false);
 	});
 });

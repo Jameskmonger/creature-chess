@@ -4,6 +4,8 @@ export type BoardSurfaceConfig = {
 	isMatch: boolean;
 	isPreparing: boolean;
 	isInteractive: boolean;
+	boardDraggable: boolean;
+	benchDraggable: boolean;
 };
 
 export function getBoardSurfaceConfig(input: {
@@ -12,10 +14,13 @@ export function getBoardSurfaceConfig(input: {
 }): BoardSurfaceConfig {
 	const isMatch =
 		input.phase === GamePhase.READY || input.phase === GamePhase.PLAYING;
+	const isInteractive = input.spectatingId === null;
 
 	return {
 		isMatch,
 		isPreparing: !isMatch,
-		isInteractive: input.spectatingId === null,
+		isInteractive,
+		boardDraggable: isInteractive && !isMatch,
+		benchDraggable: isInteractive,
 	};
 }

@@ -57,6 +57,8 @@ export function BoardSurface({ children }: { children?: React.ReactNode }) {
 			renderBenchPiece={renderBenchPiece}
 			onClick={config.isInteractive ? onClickTile : undefined}
 			onDropPiece={config.isInteractive ? onDropPiece : undefined}
+			boardDraggable={config.boardDraggable}
+			benchDraggable={config.benchDraggable}
 			showFiller={config.isPreparing}
 		>
 			{config.isMatch && <ProjectileCanvas />}

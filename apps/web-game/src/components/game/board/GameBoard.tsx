@@ -49,6 +49,8 @@ type GameBoardProps = {
 	renderTileBackground?: (position: PackedPosition) => React.ReactNode;
 	onClick?: (event: GameBoardClickEvent) => void;
 	onDropPiece?: (event: GameBoardDropPieceEvent) => void;
+	boardDraggable: boolean;
+	benchDraggable: boolean;
 	children?: React.ReactNode;
 
 	showFiller?: boolean;
@@ -113,36 +115,32 @@ function useEvents({
 function useRenderers(
 	pieceRegistry: PieceRegistry,
 	renderBoardPiece: GameBoardProps["renderBoardPiece"],
-	renderBenchPiece: GameBoardProps["renderBenchPiece"]
+	renderBenchPiece: GameBoardProps["renderBenchPiece"],
+	boardDraggable: boolean,
+	benchDraggable: boolean
 ) {
-	// todo
-	const boardLocked = false;
-	const benchLocked = false;
-
 	const boardPieceRenderer = React.useMemo(
 		() => (item: PieceModel["id"]) => {
 			const piece = pieceRegistry.getPieceById(item)!;
-			const draggable = !boardLocked;
 
 			return {
 				item: renderBoardPiece(piece),
-				draggable,
+				draggable: boardDraggable,
 			};
 		},
-		[boardLocked, renderBoardPiece, pieceRegistry]
+		[boardDraggable, renderBoardPiece, pieceRegistry]
 	);
 
 	const benchPieceRenderer = React.useMemo(
 		() => (item: PieceModel["id"]) => {
 			const piece = pieceRegistry.getPieceById(item)!;
-			const draggable = !benchLocked;
 
 			return {
 				item: renderBenchPiece(piece),
-				draggable,
+				draggable: benchDraggable,
 			};
 		},
-		[benchLocked, renderBenchPiece, pieceRegistry]
+		[benchDraggable, renderBenchPiece, pieceRegistry]
 	);
 
 	return { boardPieceRenderer, benchPieceRenderer };
@@ -220,13 +218,17 @@ export function GameBoard({
 	renderTileBackground,
 	onClick,
 	onDropPiece,
+	boardDraggable,
+	benchDraggable,
 	children,
 	showFiller = false,
 }: GameBoardProps) {
 	const { boardPieceRenderer, benchPieceRenderer } = useRenderers(
 		pieceRegistry,
 		renderBoardPiece,
-		renderBenchPiece
+		renderBenchPiece,
+		boardDraggable,
+		benchDraggable
 	);
 	const { onClickBoard, onClickBench, onDropBoard, onDropBench } = useEvents({
 		onClick,

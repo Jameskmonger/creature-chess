@@ -3,15 +3,19 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
+import { PieceModel } from "@creature-chess/models";
+
 import { useGameAnimationEventStore } from "../../hooks/selectors";
 import { Piece } from "../Piece";
-import { usePiece } from "../PieceContext";
+import { usePieceCombatState } from "../usePieceCombatState";
 import { AnimationLayerDiv } from "./AnimationLayerDiv";
 import { ANIMATION_LAYER_DEPTH } from "./constants";
 import { useAnimationLayers } from "./useAnimationLayers";
 
-const getHealthbar = (ownerId: string, viewingPlayerId: string) =>
-	ownerId === viewingPlayerId ? "friendly" : "enemy";
+type Props = {
+	piece: PieceModel;
+	viewingPlayerId: string;
+};
 
 const useStyles = createUseStyles({
 	pieceContainer: {
@@ -22,18 +26,26 @@ const useStyles = createUseStyles({
 	},
 });
 
-export function MatchPiece() {
-	const { piece, viewingPlayerId } = usePiece();
+export function MatchPiece({ piece, viewingPlayerId }: Props) {
 	const styles = useStyles();
 	const animationEventStore = useGameAnimationEventStore();
+	const combat = usePieceCombatState(piece.id);
 
 	const { layers, isDying, dyingClassName, onLayerAnimationEnd } =
 		useAnimationLayers(piece.id, animationEventStore);
 
+	const color = piece.ownerId === viewingPlayerId ? "friendly" : "enemy";
+	const currentHealth = combat?.currentHealth ?? piece.maxHealth;
+	const facing = combat?.facingAway ? "back" : "front";
+
 	// Always render a fixed number of wrapper divs so the DOM tree shape
 	// never changes — only className/style toggle when animations are active.
 	let content: React.ReactNode = (
-		<Piece healthbar={getHealthbar(piece.ownerId, viewingPlayerId)} />
+		<Piece
+			piece={piece}
+			healthbar={{ color, current: currentHealth }}
+			facing={facing}
+		/>
 	);
 
 	for (let i = ANIMATION_LAYER_DEPTH - 1; i >= 0; i--) {

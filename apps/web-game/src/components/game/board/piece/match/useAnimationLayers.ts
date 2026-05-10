@@ -15,44 +15,11 @@ import {
 	useDyingStyles,
 	useReceiveHitStyles,
 } from "./animations";
-import { ANIMATION_LAYER_DEPTH } from "./constants";
-
-const EMPTY_LAYERS: (AnimationLayer | undefined)[] = new Array(
-	ANIMATION_LAYER_DEPTH
-).fill(undefined);
-
-/**
- * Assign each layer a stable slot index so animations don't jump between
- * DOM nodes when other layers are added or removed.
- */
-function assignLayer(
-	prev: (AnimationLayer | undefined)[],
-	layer: AnimationLayer
-): (AnimationLayer | undefined)[] {
-	const next = [...prev];
-
-	// replace existing layer with the same name (keeps its slot)
-	const existingIdx = next.findIndex((l) => l?.name === layer.name);
-	if (existingIdx !== -1) {
-		next[existingIdx] = layer;
-		return next;
-	}
-
-	// assign to first empty slot
-	const emptyIdx = next.findIndex((l) => l === undefined);
-	if (emptyIdx !== -1) {
-		next[emptyIdx] = layer;
-	}
-
-	return next;
-}
-
-function removeLayer(
-	prev: (AnimationLayer | undefined)[],
-	name: string
-): (AnimationLayer | undefined)[] {
-	return prev.map((l) => (l?.name === name ? undefined : l));
-}
+import {
+	EMPTY_LAYER_SLOTS,
+	assignLayer,
+	removeLayer,
+} from "./animationLayerSlots";
 
 export function useAnimationLayers(
 	pieceId: string,
@@ -62,7 +29,7 @@ export function useAnimationLayers(
 	const receiveHitStyles = useReceiveHitStyles();
 	const dyingStyles = useDyingStyles();
 
-	const [layers, setLayers] = React.useState(EMPTY_LAYERS);
+	const [layers, setLayers] = React.useState(EMPTY_LAYER_SLOTS);
 	const [isDying, setIsDying] = React.useState(false);
 
 	const processEvents = React.useCallback(
