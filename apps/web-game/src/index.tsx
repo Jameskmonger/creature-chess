@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "react-jss";
 import { Provider as ReduxProvider } from "react-redux";
 import { App } from "~/app";
+import { AccountIdHolderProvider } from "~/auth/context";
 import { Holder } from "~/utils/Holder";
 
 import { GameSessionHolder } from "./game/GameSessionHolder";
@@ -36,27 +37,35 @@ function AppRoot() {
 		);
 	}
 
+	const accountIdHolderRef = useRef<Holder<string> | null>(null);
+	if (accountIdHolderRef.current === null) {
+		accountIdHolderRef.current = new Holder<string>("AccountId");
+	}
+
 	const storeRef = useRef<ReturnType<typeof createAppStore> | null>(null);
 	if (storeRef.current === null) {
 		storeRef.current = createAppStore({
 			sessionHolder: sessionHolderRef.current,
 			gameConnectionHolder: gameConnectionHolderRef.current,
 			lobbyConnectionHolder: lobbyConnectionHolderRef.current,
+			accountIdHolder: accountIdHolderRef.current,
 		});
 	}
 
 	return (
 		<ReduxProvider store={storeRef.current}>
-			<GameSessionProvider holder={sessionHolderRef.current}>
-				<SocketManagerProvider
-					gameConnectionHolder={gameConnectionHolderRef.current}
-					lobbyConnectionHolder={lobbyConnectionHolderRef.current}
-				>
-					<ThemeProvider theme={DEFAULT_THEME}>
-						<App />
-					</ThemeProvider>
-				</SocketManagerProvider>
-			</GameSessionProvider>
+			<AccountIdHolderProvider value={accountIdHolderRef.current}>
+				<GameSessionProvider holder={sessionHolderRef.current}>
+					<SocketManagerProvider
+						gameConnectionHolder={gameConnectionHolderRef.current}
+						lobbyConnectionHolder={lobbyConnectionHolderRef.current}
+					>
+						<ThemeProvider theme={DEFAULT_THEME}>
+							<App />
+						</ThemeProvider>
+					</SocketManagerProvider>
+				</GameSessionProvider>
+			</AccountIdHolderProvider>
 		</ReduxProvider>
 	);
 }

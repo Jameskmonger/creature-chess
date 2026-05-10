@@ -17,8 +17,11 @@ export const setupUiListener = (startListening: ClientStartListening) => {
 			api.cancelActiveListeners();
 
 			if (phase === GamePhase.PREPARING) {
-				const isDead =
-					(api.getState() as AppState).game.playerInfo.health === 0;
+				const accountId = api.extra.accountIdHolder.peek();
+				const localPlayer = (api.getState() as AppState).game.players.find(
+					(p) => p.id === accountId
+				);
+				const isDead = localPlayer?.health === 0;
 
 				if (!isDead) {
 					api.dispatch(openOverlay(Overlay.SHOP));

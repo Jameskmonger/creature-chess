@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from "react";
 
-import { LocalPlayerContextProvider } from "~/auth/context";
+import { AccountContextProvider } from "~/auth/context";
 import { GameSession } from "~/game/GameSession";
 import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { GameSessionProvider, useGameSession } from "~/game/sessionContext";
@@ -94,7 +94,7 @@ export type GameLayoutStoryArgs = {
 	connectionStatus?: ConnectionStatus;
 	opponentId?: string;
 	opponentIsClone?: boolean;
-	matchRewards?: GameState["playerInfo"]["matchRewards"];
+	matchRewards?: GameState["localPlayer"]["matchRewards"];
 	cardShop?: Partial<GameState["cardShop"]>;
 	selectedPiece?: boolean;
 	selectedPieceStage?: number;
@@ -131,17 +131,17 @@ export function GameLayoutStoryWrapper({
 			...state.roundInfo,
 			phase: args.phase,
 		},
-		playerInfo: {
-			...state.playerInfo,
+		localPlayer: {
+			...state.localPlayer,
 			matchRewards: args.matchRewards
 				? args.matchRewards
-				: state.playerInfo.matchRewards,
+				: state.localPlayer.matchRewards,
 			opponentId: args.opponentId
 				? args.opponentId
-				: state.playerInfo.opponentId,
+				: state.localPlayer.opponentId,
 			opponentIsClone: args.opponentIsClone
 				? args.opponentIsClone
-				: state.playerInfo.opponentIsClone,
+				: state.localPlayer.opponentIsClone,
 		},
 		cardShop: {
 			...state.cardShop,
@@ -153,20 +153,15 @@ export function GameLayoutStoryWrapper({
 		<GameSessionProvider holder={holder}>
 			<MockPieceSetup>
 				<GameStateProvider decorateState={decorateState}>
-					<LocalPlayerContextProvider
+					<AccountContextProvider
 						value={{
-							type: "user" as const,
+							type: "guest",
 							id: "1234",
 							nickname: "jkm",
-							stats: {
-								wins: 0,
-								gamesPlayed: 0,
-							},
-							registered: true,
 						}}
 					>
 						{children}
-					</LocalPlayerContextProvider>
+					</AccountContextProvider>
 				</GameStateProvider>
 			</MockPieceSetup>
 		</GameSessionProvider>

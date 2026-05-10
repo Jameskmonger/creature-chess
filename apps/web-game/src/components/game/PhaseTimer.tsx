@@ -3,6 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { useGamemodeSettings } from "~/game/sessionContext";
 import { AppState } from "~/store";
+import { useLocalPlayer } from "~/store/game/players";
 
 import { GamePhase } from "@creature-chess/models";
 
@@ -20,9 +21,7 @@ export function PhaseTimer() {
 	const phaseStartedAtSeconds = useSelector<AppState, number | null>(
 		(state) => state.game.roundInfo.phaseStartedAtSeconds
 	);
-	const isDead = useSelector<AppState, boolean>(
-		(state) => state.game.playerInfo.health === 0
-	);
+	const isDead = useLocalPlayer()?.health === 0;
 
 	if (isDead) {
 		return <span>GAME OVER</span>;

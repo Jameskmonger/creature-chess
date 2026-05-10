@@ -1,5 +1,6 @@
 import { AppState } from "~/store";
 import { setupBoardSyncListeners } from "~/store/board/sync";
+import { setupPlayersSyncListeners } from "~/store/game/players/sync";
 import { clearSelectedPiece } from "~/store/game/ui/actions";
 import { ClientStartListening } from "~/store/listenerContext";
 import { setupSettingsListener } from "~/store/settings/sync";
@@ -47,4 +48,5 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	setupUiListener(startListening);
 	setupQuickChatListener(startListening);
 	setupBoardSyncListeners(startListening);
+	setupPlayersSyncListeners(startListening);
 };

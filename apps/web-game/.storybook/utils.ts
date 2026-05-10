@@ -50,21 +50,11 @@ const createMockedState = (): GameState => {
 			phaseStartedAtSeconds: Date.now() / 1000,
 			round: 1,
 		},
-		playerInfo: {
+		localPlayer: {
 			opponentId: "5678",
 			opponentIsClone: false,
-			battle: null,
-			health: 100,
-			level: 3,
 			xp: 2,
 			matchRewards: null,
-			money: 5,
-			ready: false,
-			status: PlayerStatus.CONNECTED,
-			streak: {
-				amount: 1,
-				type: StreakType.WIN,
-			},
 		},
 		cardShop: {
 			cards: [
@@ -106,7 +96,7 @@ const createMockedState = (): GameState => {
 			],
 			locked: false,
 		},
-		playerList: [
+		players: [
 			createPlayer(
 				"1234",
 				"jkm",

@@ -27,6 +27,7 @@ const buildStore = () => {
 		sessionHolder,
 		gameConnectionHolder: new Holder<GameConnection>("GameConnection"),
 		lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
+		accountIdHolder: new Holder<string>("AccountId"),
 	};
 
 	const seen: { type: string; payload?: unknown }[] = [];

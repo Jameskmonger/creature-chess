@@ -1,11 +1,26 @@
 import { createContext, useContext } from "react";
 
-import { LocalPlayer } from "./LocalPlayer";
+import { Holder } from "~/utils/Holder";
 
-export const LocalPlayerContext = createContext<LocalPlayer | null>(null);
-LocalPlayerContext.displayName = "LocalPlayerContext";
+import { Account } from "./Account";
 
-export const LocalPlayerContextProvider = LocalPlayerContext.Provider;
+export const AccountContext = createContext<Account | null>(null);
+AccountContext.displayName = "AccountContext";
 
-export const useLocalPlayer = () => useContext(LocalPlayerContext);
-export const useLocalPlayerId = () => useLocalPlayer()?.id || "";
+export const AccountContextProvider = AccountContext.Provider;
+
+export const useAccount = () => useContext(AccountContext);
+export const useAccountId = () => useAccount()?.id || "";
+
+export const AccountIdHolderContext = createContext<Holder<string> | null>(null);
+AccountIdHolderContext.displayName = "AccountIdHolderContext";
+
+export const AccountIdHolderProvider = AccountIdHolderContext.Provider;
+
+export const useAccountIdHolder = (): Holder<string> => {
+	const holder = useContext(AccountIdHolderContext);
+	if (!holder) {
+		throw new Error("useAccountIdHolder must be used inside AccountIdHolderProvider");
+	}
+	return holder;
+};

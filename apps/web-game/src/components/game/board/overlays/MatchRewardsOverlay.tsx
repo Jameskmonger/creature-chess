@@ -6,6 +6,7 @@ import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PlayerAvatar, Title, PlayerHealthbar } from "~/components/ui/player";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 import { AppState } from "~/store";
+import { useOpponentPlayer, usePlayerRank } from "~/store/game/players";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { PlayerMatchRewards } from "@creature-chess/gamemode";
@@ -192,23 +193,17 @@ const useStyles = createUseThemeStyles((theme) => ({
 export function MatchRewardsOverlay() {
 	const styles = useStyles();
 
-	const opponent = useSelector((state: AppState) => {
-		const id = state.game.playerInfo.opponentId;
-		return state.game.playerList.find((p) => p.id === id);
-	});
+	const opponent = useOpponentPlayer();
+	const opponentPosition = usePlayerRank(opponent?.id ?? "") || null;
 
 	const matchRewards = useSelector<AppState, PlayerMatchRewards | null>(
-		(state) => state.game.playerInfo.matchRewards
+		(state) => state.game.localPlayer.matchRewards
 	);
 	const victoryOverlayShowing = useSelector<AppState, boolean>(
 		(state) => state.game.ui.winnerId !== null
 	);
 	const spectatingPlayer = useSelector<AppState, boolean>(
 		(state) => state.game.spectating.id !== null
-	);
-
-	const opponentPosition = useSelector((state: AppState) =>
-		opponent ? state.game.playerList.indexOf(opponent) + 1 : null
 	);
 
 	if (!matchRewards || victoryOverlayShowing || spectatingPlayer) {

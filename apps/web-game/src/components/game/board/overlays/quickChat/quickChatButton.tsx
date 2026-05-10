@@ -3,7 +3,7 @@ import React from "react";
 
 import { createUseStyles } from "react-jss";
 import { useDispatch } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
+import { useAccountId } from "~/auth/context";
 
 import { PlayerActions } from "@creature-chess/gamemode";
 import { QuickChatOption } from "@creature-chess/models";
@@ -24,7 +24,7 @@ function QuickChatButton({ chatOption }: { chatOption: QuickChatOption }) {
 	const styles = useStyles();
 	const dispatch = useDispatch();
 
-	const sendingPlayerId = useLocalPlayerId();
+	const sendingPlayerId = useAccountId();
 
 	const onClick = () => {
 		dispatch(

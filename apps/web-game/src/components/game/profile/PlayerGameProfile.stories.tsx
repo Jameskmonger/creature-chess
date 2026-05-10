@@ -2,7 +2,7 @@ import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
 import { Provider } from "react-redux";
-import { LocalPlayerContextProvider } from "~/auth/context";
+import { AccountContextProvider } from "~/auth/context";
 import { GameSession } from "~/game/GameSession";
 import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { GameSessionProvider } from "~/game/sessionContext";
@@ -27,13 +27,13 @@ const meta: Meta<typeof PlayerGameProfile> = {
 
 		return (
 			<Provider store={store}>
-				<LocalPlayerContextProvider
+				<AccountContextProvider
 					value={{ type: "guest", id: "1234", nickname: "Guest" }}
 				>
 					<GameSessionProvider holder={createDefaultHolder()}>
 						<PlayerGameProfile />
 					</GameSessionProvider>
-				</LocalPlayerContextProvider>
+				</AccountContextProvider>
 			</Provider>
 		);
 	},

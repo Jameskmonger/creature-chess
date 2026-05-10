@@ -1,16 +1,13 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
+import { useAccountId } from "~/auth/context";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
+import { Player } from "~/store/game/players";
 
 import { GamePhase } from "@creature-chess/models";
-import {
-	PlayerListPlayer,
-	PlayerStatus,
-	PlayerBattle,
-} from "@creature-chess/models";
+import { PlayerStatus, PlayerBattle } from "@creature-chess/models";
 
 import { Layout } from "../../ui/layout";
 import { PlayerListItem } from "./playerListItem";
@@ -32,7 +29,7 @@ const getOrdinalSuffix = (i: number) => {
 	return i + "th";
 };
 
-const getOpponentName = (battle: PlayerBattle, players: PlayerListPlayer[]) => {
+const getOpponentName = (battle: PlayerBattle, players: Player[]) => {
 	if (!battle) {
 		return "";
 	}
@@ -42,12 +39,12 @@ const getOpponentName = (battle: PlayerBattle, players: PlayerListPlayer[]) => {
 
 function PlayerList() {
 	const gameActions = useGameActions();
-	const localPlayerId = useLocalPlayerId();
-	const players = useSelector<AppState, PlayerListPlayer[]>(
-		(state) => state.game.playerList
+	const accountId = useAccountId();
+	const players = useSelector<AppState, Player[]>(
+		(state) => state.game.players
 	);
 	const opponentId = useSelector<AppState, string | null>(
-		(state) => state.game.playerInfo.opponentId
+		(state) => state.game.localPlayer.opponentId
 	);
 	const showReadyIndicators = useSelector<AppState, boolean>(
 		(state) => state.game.roundInfo.phase === GamePhase.PREPARING
@@ -99,7 +96,7 @@ function PlayerList() {
 						index={index}
 						player={p}
 						isOpponent={p.id === opponentId}
-						isLocal={p.id === localPlayerId}
+						isLocal={p.id === accountId}
 						onSpectateClick={onSpectateClick}
 						opponentName={opponentName}
 						currentlySpectating={currentlySpectating}

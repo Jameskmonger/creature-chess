@@ -1,13 +1,12 @@
 import * as React from "react";
 
 import { createUseStyles } from "react-jss";
-import { useSelector } from "react-redux";
 import { BoardGrid } from "~/components/board";
 import {
 	ClickBoardTileEvent,
 	DropBoardItemEvent,
 } from "~/components/board/events";
-import { AppState } from "~/store";
+import { useLocalPlayer } from "~/store/game/players";
 
 import { PackedPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
@@ -230,7 +229,7 @@ export function GameBoard({
 		onDropPiece,
 	});
 
-	const level = useSelector((state: AppState) => state.game.playerInfo.level);
+	const level = useLocalPlayer()?.level ?? 0;
 
 	const canDropOnBoard = React.useCallback(
 		(id: string, x: number, y: number) => {

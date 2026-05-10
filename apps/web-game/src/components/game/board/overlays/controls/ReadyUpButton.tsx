@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Button } from "~/components/ui";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
+import { useLocalPlayer } from "~/store/game/players";
 
 import { GamePhase } from "@creature-chess/models";
 
@@ -42,15 +43,12 @@ export function ReadyUpButton() {
 	const gameActions = useGameActions();
 	const styles = useStyles();
 
-	const isDead = useSelector<AppState, boolean>(
-		(state) => state.game.playerInfo.health === 0
-	);
+	const localPlayer = useLocalPlayer();
+	const isDead = localPlayer?.health === 0;
+	const notReady = localPlayer?.ready === false;
 
 	const inPreparingPhase = useSelector<AppState, boolean>(
 		(state) => state.game.roundInfo.phase === GamePhase.PREPARING
-	);
-	const notReady = useSelector<AppState, boolean>(
-		(state) => state.game.playerInfo.ready === false
 	);
 
 	// Optimistic hide: flips true on click and back to false either when the

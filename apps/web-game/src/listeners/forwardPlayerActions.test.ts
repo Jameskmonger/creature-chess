@@ -34,6 +34,7 @@ const buildStore = () => {
 		sessionHolder: new GameSessionHolder(),
 		gameConnectionHolder,
 		lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
+		accountIdHolder: new Holder<string>("AccountId"),
 	};
 
 	const middleware = createListenerMiddleware({ extra });
@@ -102,6 +103,7 @@ describe("forwardPlayerActions", () => {
 			sessionHolder: new GameSessionHolder(),
 			gameConnectionHolder,
 			lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
+			accountIdHolder: new Holder<string>("AccountId"),
 		};
 
 		const middleware = createListenerMiddleware({ extra });

@@ -3,6 +3,7 @@ import * as React from "react";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { AppState } from "~/store";
+import { useOpponentPlayer } from "~/store/game/players";
 
 import { GamePhase } from "@creature-chess/models";
 
@@ -20,24 +21,20 @@ const useStyles = createUseStyles({
 	},
 });
 
-const getOpponentName = (state: AppState) =>
-	state.game.playerList.find((p) => p.id === state.game.playerInfo.opponentId)
-		?.name || null;
-
 export function NowPlaying() {
 	const styles = useStyles();
 	const phase = useSelector<AppState, GamePhase | null>(
 		(state) => state.game.roundInfo.phase
 	);
-	const opponentName = useSelector<AppState, string | null>(getOpponentName);
+	const opponent = useOpponentPlayer();
 
 	if (phase !== GamePhase.READY && phase !== GamePhase.PLAYING) {
 		return null;
 	}
 
-	if (!opponentName) {
+	if (!opponent) {
 		return null;
 	}
 
-	return <div className={styles.nowPlaying}>Now Playing: {opponentName}</div>;
+	return <div className={styles.nowPlaying}>Now Playing: {opponent.name}</div>;
 }

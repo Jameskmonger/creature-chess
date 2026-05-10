@@ -1,12 +1,16 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { CloneChip } from "~/components/ui/player/CloneChip";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 import { AppState } from "~/store";
+import {
+	useLocalPlayer,
+	useOpponentPlayer,
+	usePlayerRank,
+} from "~/store/game/players";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { GamePhase } from "@creature-chess/models";
@@ -111,19 +115,10 @@ function ReadyOverlay() {
 		(state) => state.game.roundInfo.phase === GamePhase.READY
 	);
 
-	const playerList = useSelector((state: AppState) => state.game.playerList);
-
-	const localId = useLocalPlayerId();
-	const localPlayer = playerList.find((p) => p.id === localId);
-
-	const opponent = useSelector((state: AppState) => {
-		const id = state.game.playerInfo.opponentId;
-		return state.game.playerList.find((p) => p.id === id);
-	});
-
-	const opponentIsClone = useSelector(
-		(state: AppState) => state.game.playerInfo.opponentIsClone
-	);
+	const localPlayer = useLocalPlayer();
+	const opponent = useOpponentPlayer();
+	const localRank = usePlayerRank(localPlayer?.id ?? "");
+	const opponentRank = usePlayerRank(opponent?.id ?? "");
 
 	const spectatingPlayer = useSelector<AppState, boolean>(
 		(state) => state.game.spectating.id !== null
@@ -133,6 +128,8 @@ function ReadyOverlay() {
 		return null;
 	}
 
+	const opponentIsClone = localPlayer.opponentIsClone;
+
 	return (
 		<BoardOverlay>
 			<div className={styles.root}>
@@ -141,7 +138,7 @@ function ReadyOverlay() {
 						<div className={styles.playerDetails}>
 							<div className={styles.nameWrapper}>
 								<span className={styles.playerName}>{localPlayer.name}</span>
-								<PositionChip position={playerList.indexOf(localPlayer) + 1} />
+								<PositionChip position={localRank} />
 							</div>
 							<Title title={localPlayer.profile?.title || null} />
 							<PlayerHealthbar health={localPlayer.health} />
@@ -156,7 +153,7 @@ function ReadyOverlay() {
 						</div>
 						<div className={styles.playerAvatar}>
 							<PlayerAvatar player={localPlayer} />
-							<QuickChatBox sendingPlayerId={localId} />
+							<QuickChatBox sendingPlayerId={localPlayer.id} />
 						</div>
 					</div>
 					<div className={styles.vsHeader}>vs.</div>
@@ -169,7 +166,7 @@ function ReadyOverlay() {
 							<div className={styles.nameWrapper}>
 								<span className={styles.playerName}>{opponent.name}</span>
 								<div className={styles.tags}>
-									<PositionChip position={playerList.indexOf(opponent) + 1} />
+									<PositionChip position={opponentRank} />
 									{opponentIsClone && <CloneChip />}
 								</div>
 							</div>

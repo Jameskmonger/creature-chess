@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { LocalPlayer } from "../LocalPlayer";
-import { LocalPlayerContextProvider } from "../context";
+import { Account } from "../Account";
+import { AccountContextProvider, useAccountIdHolder } from "../context";
 
 /**
  * Load a guest session from the server
@@ -44,8 +44,9 @@ function useGuestSession() {
 
 export function GuestAuthProvider({ children }: { children: React.ReactNode }) {
 	const { session, loading, error } = useGuestSession();
+	const accountIdHolder = useAccountIdHolder();
 
-	const player: LocalPlayer = useMemo(
+	const account: Account = useMemo(
 		() => ({
 			type: "guest",
 			id: session?.id || "",
@@ -54,13 +55,21 @@ export function GuestAuthProvider({ children }: { children: React.ReactNode }) {
 		[session]
 	);
 
+	useEffect(() => {
+		if (!account.id) {
+			return;
+		}
+		accountIdHolder.set(account.id);
+		return () => accountIdHolder.clear();
+	}, [account.id, accountIdHolder]);
+
 	if (error || loading || !session) {
 		return null;
 	}
 
 	return (
-		<LocalPlayerContextProvider value={player}>
+		<AccountContextProvider value={account}>
 			{children}
-		</LocalPlayerContextProvider>
+		</AccountContextProvider>
 	);
 }

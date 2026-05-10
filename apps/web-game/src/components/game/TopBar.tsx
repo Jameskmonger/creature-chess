@@ -3,9 +3,9 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
 import { useSetting } from "~/settings";
 import { AppState } from "~/store";
+import { useLocalPlayer, usePlayerRank } from "~/store/game/players";
 
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
 import { LevelIcon } from "../ui/icon/LevelIcon";
@@ -81,32 +81,17 @@ export function TopBar() {
 	const styles = useStyles();
 	const showPing = useSetting("showPing");
 
-	const playerId = useLocalPlayerId();
+	const localPlayer = useLocalPlayer();
+	const position = usePlayerRank(localPlayer?.id ?? "");
 
 	const round = useSelector<AppState, number | null>(
 		(state) => state.game.roundInfo.round
 	);
-	const money = useSelector<AppState, number>(
-		(state) => state.game.playerInfo.money
-	);
-	const level = useSelector<AppState, number>(
-		(state) => state.game.playerInfo.level
-	);
 
-	// todo reselect
-	const health = useSelector<AppState, number>((state) => {
-		const player = state.game.playerList.find((p) => p.id === playerId);
-
-		return player?.health ?? 0;
-	});
-
-	const name = useSelector<AppState, string>(
-		(state) => state.game.playerList.find((p) => p.id === playerId)?.name || ""
-	);
-
-	const position = useSelector<AppState, number>(
-		(state) => state.game.playerList.findIndex((p) => p.id === playerId) + 1
-	);
+	const health = localPlayer?.health ?? 0;
+	const money = localPlayer?.money ?? 0;
+	const level = localPlayer?.level ?? 0;
+	const name = localPlayer?.name ?? "";
 
 	return (
 		<div className={styles.container}>

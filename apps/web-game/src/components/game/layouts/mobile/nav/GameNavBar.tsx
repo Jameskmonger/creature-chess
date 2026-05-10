@@ -9,6 +9,7 @@ import {
 import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 import { NavBar } from "~/components/ui/navbar/NavBar";
+import { useLocalPlayer } from "~/store/game/players";
 import { closeOverlay, openOverlay, Overlay } from "~/store/game/ui";
 import { AppState } from "~/store/state";
 
@@ -70,9 +71,7 @@ export function GameNavBar() {
 		(state) => state.game.ui.currentOverlay
 	);
 
-	const canUseShop = useSelector<AppState, boolean>(
-		(state) => state.game.playerInfo.health !== 0
-	);
+	const canUseShop = useLocalPlayer()?.health !== 0;
 	const isSpectating = useSelector<AppState, boolean>(
 		(state) => state.game.spectating.id !== null
 	);

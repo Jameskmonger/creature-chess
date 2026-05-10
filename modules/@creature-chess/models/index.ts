@@ -47,4 +47,3 @@ export {
 	allTraits,
 	allTraitsMap,
 } from "./gamemode/traits";
-export type { UserDTO } from "./dto/user";

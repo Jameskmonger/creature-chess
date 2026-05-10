@@ -2,15 +2,13 @@ import * as React from "react";
 
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
-import { useSelector } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
 import { Button } from "~/components/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { useGamemodeSettings } from "~/game/sessionContext";
 import { useGameActions } from "~/networking";
-import { AppState } from "~/store";
+import { useLocalPlayer } from "~/store/game/players";
 
 import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { MAX_LEVEL } from "@creature-chess/models";
@@ -93,27 +91,13 @@ export function PlayerGameProfile() {
 
 	const gameActions = useGameActions();
 
-	const playerId = useLocalPlayerId();
+	const localPlayer = useLocalPlayer();
 
-	const level = useSelector<AppState, number>(
-		(state) => state.game.playerInfo.level
-	);
-	const xp = useSelector<AppState, number>(
-		(state) => state.game.playerInfo.xp
-	);
-	const money = useSelector<AppState, number>(
-		(state) => state.game.playerInfo.money
-	);
-	// todo reselect
-	const health = useSelector<AppState, number | null>((state) => {
-		const player = state.game.playerList.find((p) => p.id === playerId);
-
-		return player?.health || null;
-	});
-
-	if (health === null) {
+	if (!localPlayer) {
 		return null;
 	}
+
+	const { level, xp, money } = localPlayer;
 
 	return (
 		<div className={styles.profile}>

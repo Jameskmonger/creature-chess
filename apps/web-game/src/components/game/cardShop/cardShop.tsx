@@ -3,6 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
+import { useLocalPlayer } from "~/store/game/players";
 
 import { Card as CardModel } from "@creature-chess/models";
 
@@ -15,12 +16,9 @@ export function CardShop() {
 	const cards = useSelector<AppState, (CardModel | null)[]>(
 		(state) => state.game.cardShop.cards
 	);
-	const money = useSelector<AppState, number>(
-		(state) => state.game.playerInfo.money
-	);
-	const canUseShop = useSelector<AppState, boolean>(
-		(state) => state.game.playerInfo.health > 0
-	);
+	const localPlayer = useLocalPlayer();
+	const money = localPlayer?.money ?? 0;
+	const canUseShop = (localPlayer?.health ?? 0) > 0;
 	const shopLocked = useSelector<AppState, boolean>(
 		(state) => state.game.cardShop.locked
 	);

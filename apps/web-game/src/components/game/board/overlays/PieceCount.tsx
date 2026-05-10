@@ -3,9 +3,10 @@ import React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
-import { useLocalPlayerId } from "~/auth/context";
+import { useAccountId } from "~/auth/context";
 import { useBoardSubscription } from "~/components/board/useBoard";
 import { AppState } from "~/store";
+import { useLocalPlayer } from "~/store/game/players";
 
 import { GamePhase } from "@creature-chess/models";
 
@@ -46,7 +47,7 @@ export function PieceCount() {
 	const { board, pieceRegistry } = useGameSession();
 	const b = useBoardSubscription(board);
 
-	const playerId = useLocalPlayerId();
+	const playerId = useAccountId();
 
 	const pieceCount = b
 		.getAllPieces()
@@ -54,9 +55,7 @@ export function PieceCount() {
 			(p) => pieceRegistry.getPieceById(p.id)?.ownerId === playerId
 		).length;
 
-	const level = useSelector<AppState, number>(
-		(state) => state.game.playerInfo.level
-	);
+	const level = useLocalPlayer()?.level ?? 0;
 
 	const inPreparingPhase = useSelector<AppState, boolean>(
 		(state) => state.game.roundInfo.phase === GamePhase.PREPARING

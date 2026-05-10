@@ -1,17 +1,17 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
 import {
-	PlayerInfoState,
-	PlayerState,
+	type CardShopState,
+	type SpectatingState,
 	GameEvents,
 } from "@creature-chess/gamemode";
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
-import { PlayerListPlayer } from "@creature-chess/models";
 
 import { quickChatReducer, QuickChatState } from "./chat/state";
+import { LocalPlayerState, localPlayerReducer } from "./localPlayer";
 import { networkReducer, NetworkState } from "./network";
-import { playerListReducer } from "./playerList/state";
-import { playerInfoReducer, playerReducers } from "./playerReducers";
+import { playerReducers } from "./playerReducers";
+import { Player, playersReducer } from "./players/state";
 import { UiState, uiReducer } from "./ui";
 
 const initialRoundInfo: RoundInfoState = {
@@ -36,13 +36,16 @@ const roundInfoReducer = (
 	};
 };
 
-export type GameState = PlayerState & {
+export type GameState = {
+	cardShop: CardShopState;
+	spectating: SpectatingState;
+	localPlayer: LocalPlayerState;
+
 	ui: UiState;
 
 	roundInfo: RoundInfoState;
 
-	playerInfo: PlayerInfoState;
-	playerList: PlayerListPlayer[];
+	players: Player[];
 	quickChat: QuickChatState;
 
 	network: NetworkState;
@@ -50,9 +53,9 @@ export type GameState = PlayerState & {
 
 export const gameReducer = combineReducers({
 	...playerReducers,
+	localPlayer: localPlayerReducer,
 	roundInfo: roundInfoReducer,
-	playerList: playerListReducer,
-	playerInfo: playerInfoReducer,
+	players: playersReducer,
 	ui: uiReducer,
 	quickChat: quickChatReducer,
 	network: networkReducer,

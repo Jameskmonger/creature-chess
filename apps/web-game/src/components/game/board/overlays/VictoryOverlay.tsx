@@ -3,7 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { Button } from "~/components/ui";
 import { AppState } from "~/store";
-import { getPlayerById } from "~/store/selectors";
+import { useGamePlayer } from "~/store/game/players";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { BoardOverlay } from "./boardOverlay";
@@ -81,22 +81,18 @@ const useStyles = createUseThemeStyles((theme) => ({
 export function VictoryOverlay() {
 	const styles = useStyles();
 
-	const winnerName = useSelector<AppState, string | null>((state) => {
-		const { winnerId } = state.game.ui;
-
-		if (!winnerId) {
-			return null;
-		}
-
-		// todo fix this selector
-		return getPlayerById(winnerId)(state)?.name || null;
-	});
+	const winnerId = useSelector<AppState, string | null>(
+		(state) => state.game.ui.winnerId
+	);
+	const winner = useGamePlayer(winnerId);
 
 	const onMenuClick = () => (window.location.href = APP_URL);
 
-	if (!winnerName) {
+	if (!winner) {
 		return null;
 	}
+
+	const winnerName = winner.name;
 
 	return (
 		<BoardOverlay>

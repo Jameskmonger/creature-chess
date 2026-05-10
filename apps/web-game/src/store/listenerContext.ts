@@ -10,6 +10,7 @@ export type ClientExtra = {
 	sessionHolder: GameSessionHolder;
 	gameConnectionHolder: Holder<GameConnection>;
 	lobbyConnectionHolder: Holder<LobbyConnection>;
+	accountIdHolder: Holder<string>;
 };
 
 export type ClientStartListening = TypedStartListening<
