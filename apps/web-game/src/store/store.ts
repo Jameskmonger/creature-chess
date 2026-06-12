@@ -1,7 +1,7 @@
 import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 import { setupGameListeners } from "~/listeners/gameListeners";
 
-import { gameReducer } from "./game/state";
+import { createGameReducer } from "./game/state";
 import { ClientExtra, ClientStartListening } from "./listenerContext";
 import { lobbyReducer } from "./lobby/state";
 import { menuReducer } from "./menu/state";
@@ -13,7 +13,7 @@ export const createAppStore = (extra: ClientExtra) => {
 	const store = configureStore<AppState>({
 		reducer: {
 			lobby: lobbyReducer,
-			game: gameReducer,
+			game: createGameReducer(),
 			menu: menuReducer,
 		},
 		middleware: (getDefaultMiddleware) =>

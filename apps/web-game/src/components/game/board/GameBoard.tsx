@@ -6,9 +6,10 @@ import {
 	ClickBoardTileEvent,
 	DropBoardItemEvent,
 } from "~/components/board/events";
+import { Region } from "~/plugins";
 import { useLocalPlayer } from "~/store/game/players";
 
-import { PackedPosition, SubscribableBoard } from "@creature-chess/board";
+import { PackedPosition, SubscribableBoard, packPosition } from "@creature-chess/board";
 import { PieceModel } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
@@ -120,11 +121,25 @@ function useRenderers(
 	benchDraggable: boolean
 ) {
 	const boardPieceRenderer = React.useMemo(
-		() => (item: PieceModel["id"]) => {
+		() => (item: PieceModel["id"], x: number, y: number) => {
 			const piece = pieceRegistry.getPieceById(item)!;
 
 			return {
-				item: renderBoardPiece(piece),
+				item: (
+					<Region
+						cls="player-piece-tile"
+						id={`board.${x}.${y}`}
+						ctx={{
+							pieceId: piece.id,
+							ownerId: piece.ownerId,
+							definitionId: piece.definitionId,
+							stage: piece.stage,
+							location: { type: "board", location: packPosition(x, y) },
+						}}
+					>
+						{renderBoardPiece(piece)}
+					</Region>
+				),
 				draggable: boardDraggable,
 			};
 		},
@@ -132,11 +147,25 @@ function useRenderers(
 	);
 
 	const benchPieceRenderer = React.useMemo(
-		() => (item: PieceModel["id"]) => {
+		() => (item: PieceModel["id"], x: number, _y: number) => {
 			const piece = pieceRegistry.getPieceById(item)!;
 
 			return {
-				item: renderBenchPiece(piece),
+				item: (
+					<Region
+						cls="player-piece-tile"
+						id={`bench.${x}`}
+						ctx={{
+							pieceId: piece.id,
+							ownerId: piece.ownerId,
+							definitionId: piece.definitionId,
+							stage: piece.stage,
+							location: { type: "bench", location: packPosition(x, 0) },
+						}}
+					>
+						{renderBenchPiece(piece)}
+					</Region>
+				),
 				draggable: benchDraggable,
 			};
 		},
@@ -244,7 +273,7 @@ export function GameBoard({
 				return false;
 			}
 			if (occupant !== null) {
-				// swap — no net piece count change
+				// swap - no net piece count change
 				return true;
 			}
 			if (board.containsPiece(id)) {

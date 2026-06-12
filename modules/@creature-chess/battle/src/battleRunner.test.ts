@@ -1,5 +1,5 @@
 import { Board } from "@creature-chess/board";
-import { GamemodeSettings } from "@creature-chess/models";
+import { CreatureLookup, GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { BattleRunner } from "./battleRunner";
@@ -65,6 +65,11 @@ const defaultSettings: GamemodeSettings = {
 	battleTurnDuration: 0,
 } as GamemodeSettings;
 
+const createMockCreatures = (): CreatureLookup => ({
+	get: () => undefined,
+	has: () => false,
+});
+
 describe("BattleRunner", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -76,6 +81,7 @@ describe("BattleRunner", () => {
 				createMockBoard(),
 				createMockPieceRegistry(),
 				createMockCombatStore(),
+				createMockCreatures(),
 				defaultSettings
 			);
 			expect(runner.getTurn()).toBe(0);
@@ -86,6 +92,7 @@ describe("BattleRunner", () => {
 				createMockBoard(),
 				createMockPieceRegistry(),
 				createMockCombatStore(),
+				createMockCreatures(),
 				defaultSettings,
 				10
 			);
@@ -116,6 +123,7 @@ describe("BattleRunner", () => {
 				board,
 				registry,
 				combatStore,
+				createMockCreatures(),
 				defaultSettings
 			);
 			const result = await runner.run();
@@ -135,7 +143,13 @@ describe("BattleRunner", () => {
 			const combatStore = createMockCombatStore(pieces);
 
 			const settings = { ...defaultSettings, battleTurnCount: 3 };
-			const runner = new BattleRunner(board, registry, combatStore, settings);
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				createMockCreatures(),
+				settings
+			);
 			const result = await runner.run();
 
 			expect(result.turn).toBe(3);
@@ -151,6 +165,7 @@ describe("BattleRunner", () => {
 				board,
 				registry,
 				combatStore,
+				createMockCreatures(),
 				defaultSettings
 			);
 			const result = await runner.run();
@@ -170,7 +185,13 @@ describe("BattleRunner", () => {
 			const combatStore = createMockCombatStore(pieces);
 
 			const settings = { ...defaultSettings, battleTurnCount: 5 };
-			const runner = new BattleRunner(board, registry, combatStore, settings);
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				createMockCreatures(),
+				settings
+			);
 
 			await runner.run();
 			expect(runner.getTurn()).toBe(5);
@@ -186,7 +207,13 @@ describe("BattleRunner", () => {
 			const combatStore = createMockCombatStore(pieces);
 
 			const settings = { ...defaultSettings, battleTurnCount: 1 };
-			const runner = new BattleRunner(board, registry, combatStore, settings);
+			const runner = new BattleRunner(
+				board,
+				registry,
+				combatStore,
+				createMockCreatures(),
+				settings
+			);
 
 			await runner.run();
 
@@ -213,6 +240,7 @@ describe("BattleRunner", () => {
 				board,
 				registry,
 				combatStore,
+				createMockCreatures(),
 				settings,
 				3
 			);
@@ -230,6 +258,7 @@ describe("BattleRunner", () => {
 				createMockBoard(),
 				createMockPieceRegistry(),
 				createMockCombatStore(),
+				createMockCreatures(),
 				defaultSettings
 			);
 
@@ -253,6 +282,7 @@ describe("BattleRunner", () => {
 				board,
 				registry,
 				combatStore,
+				createMockCreatures(),
 				defaultSettings
 			);
 			runner.stop();
@@ -277,6 +307,7 @@ describe("BattleRunner", () => {
 				board,
 				registry,
 				combatStore,
+				createMockCreatures(),
 				settings,
 				0,
 				onEvents
@@ -311,6 +342,7 @@ describe("BattleRunner", () => {
 				board,
 				registry,
 				combatStore,
+				createMockCreatures(),
 				defaultSettings
 			);
 

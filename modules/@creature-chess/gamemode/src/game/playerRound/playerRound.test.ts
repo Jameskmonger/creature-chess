@@ -1,7 +1,7 @@
 import { GamePhase, PlayerStatus, StreakType } from "@creature-chess/models";
 
-import { createTestPlayer } from "../../entities/player/testUtils";
 import { playerRound } from ".";
+import { createTestPlayer } from "../../entities/player/testUtils";
 
 describe("playerRound.settle", () => {
 	test("home player loss: takes damage equal to enemy pieces remaining * healthLostPerPiece", () => {

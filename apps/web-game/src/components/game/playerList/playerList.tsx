@@ -3,6 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { useAccountId } from "~/auth/context";
 import { useGameActions } from "~/networking";
+import { Region } from "~/plugins";
 import { AppState } from "~/store";
 import { Player } from "~/store/game/players";
 
@@ -58,50 +59,48 @@ function PlayerList() {
 		<Layout direction="column">
 			{players.map((p, index) => {
 				const opponentName = getOpponentName(p.battle, players);
-
-				if (p.status === PlayerStatus.QUIT) {
-					return (
+				const position = index + 1;
+				const inner =
+					p.status === PlayerStatus.QUIT ? (
 						<StatusPlayerListItem
-							key={p.id}
 							name={p.name}
 							opponentName={opponentName}
 							battle={p.battle}
 							status="Quit"
 						/>
-					);
-				}
-
-				if (p.status === PlayerStatus.DEAD) {
-					return (
+					) : p.status === PlayerStatus.DEAD ? (
 						<StatusPlayerListItem
-							key={p.id}
 							name={p.name}
 							opponentName={opponentName}
 							battle={p.battle}
 							status="Dead"
-							subtitle={`${getOrdinalSuffix(index + 1)} place`}
+							subtitle={`${getOrdinalSuffix(position)} place`}
+						/>
+					) : (
+						<PlayerListItem
+							index={index}
+							player={p}
+							isOpponent={p.id === opponentId}
+							isLocal={p.id === accountId}
+							onSpectateClick={() =>
+								gameActions.spectate(
+									currentlySpectatingId === p.id ? null : p.id
+								)
+							}
+							opponentName={opponentName}
+							currentlySpectating={currentlySpectatingId === p.id}
+							showReadyIndicator={showReadyIndicators}
 						/>
 					);
-				}
-
-				const currentlySpectating = currentlySpectatingId === p.id;
-
-				const onSpectateClick = () => {
-					gameActions.spectate(currentlySpectating ? null : p.id);
-				};
-
 				return (
-					<PlayerListItem
+					<Region
 						key={p.id}
-						index={index}
-						player={p}
-						isOpponent={p.id === opponentId}
-						isLocal={p.id === accountId}
-						onSpectateClick={onSpectateClick}
-						opponentName={opponentName}
-						currentlySpectating={currentlySpectating}
-						showReadyIndicator={showReadyIndicators}
-					/>
+						cls="player-list-row"
+						id={`player-list.row.${p.id}`}
+						ctx={{ playerId: p.id, position }}
+					>
+						{inner}
+					</Region>
 				);
 			})}
 		</Layout>

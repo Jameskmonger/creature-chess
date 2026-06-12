@@ -15,7 +15,7 @@ export function doAttack(
 	board: Board,
 	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
-	{ combatStore }: Stores
+	{ combatStore, creatures }: Stores
 ): StateResult {
 	const combat = combatStore.getPiece(pieceId);
 	const otherCombat = combatStore.getPiece(state.payload.targetId);
@@ -34,7 +34,7 @@ export function doAttack(
 		return [state];
 	}
 
-	const attackRange = getAttackRange(piece);
+	const attackRange = getAttackRange(piece, creatures);
 
 	const target = pieceRegistry.getPieceById(state.payload.targetId);
 	const targetPosition = board.getPiecePosition(state.payload.targetId);

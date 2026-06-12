@@ -1,8 +1,8 @@
 import { useCallback, useSyncExternalStore } from "react";
 
-import { PieceCombatState } from "@creature-chess/battle";
-
 import { useGameSession } from "~/game/sessionContext";
+
+import { PieceCombatState } from "@creature-chess/battle";
 
 export const usePieceCombatState = (
 	pieceId: string

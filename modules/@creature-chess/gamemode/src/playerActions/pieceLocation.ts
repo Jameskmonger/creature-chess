@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-import { Board, PackedPosition, unpackPosition, unpackX } from "@creature-chess/board";
+import {
+	Board,
+	PackedPosition,
+	unpackPosition,
+	unpackX,
+} from "@creature-chess/board";
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 /**

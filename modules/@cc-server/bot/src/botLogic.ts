@@ -1,6 +1,6 @@
+import { Player } from "@creature-chess/gamemode";
 import delay from "delay";
 
-import { Player } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 import {

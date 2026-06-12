@@ -1,7 +1,8 @@
+import { TypedEventEmitter } from "@cc-engine/kernel";
+
 import { PlayerListPlayer } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
-import { TypedEventEmitter } from "../events/typedEventEmitter";
 import { PlayerRanking } from "./playerRanking";
 
 const EMIT_DEBOUNCE_MS = 500;

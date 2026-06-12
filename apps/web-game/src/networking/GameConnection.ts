@@ -1,4 +1,11 @@
+import { GameEvents } from "@creature-chess/models";
 import { Socket } from "socket.io-client";
+import { InboundChannel, wireProtocol } from "~/plugins/wireProtocol";
+import {
+	boardUpdateAction,
+	benchUpdateAction,
+	matchBoardUpdateAction,
+} from "~/store/board/sync";
 import { setPing } from "~/store/game/network";
 import {
 	setConnectionStatusCommand,
@@ -6,20 +13,9 @@ import {
 } from "~/store/game/ui/actions";
 import { setSettingsAction } from "~/store/settings/sync";
 
-import {
-	boardUpdateAction,
-	benchUpdateAction,
-	matchBoardUpdateAction,
-} from "~/store/board/sync";
-
-import {
-	GameEvents,
-	PlayerEvents,
-	PlayerCommands,
-	PlayerActionTypesArray,
-} from "@creature-chess/gamemode";
 import { GameServerToClient } from "@creature-chess/networking";
 
+import { setCreatureDefinitions } from "./creatureDefinitions";
 import { ConnectionStatus, Dispatch } from "./types";
 
 export class GameConnection {
@@ -39,8 +35,13 @@ export class GameConnection {
 			players,
 			game: { phase, phaseStartedAtSeconds, round },
 			settings,
+			creatures,
 		} = payload;
 
+		setCreatureDefinitions(creatures);
+
+		// setSettingsAction must be first, as the listener creates the GameSession.
+		this.dispatch(setSettingsAction(settings));
 		this.dispatch(GameEvents.playerListChangedEvent({ players }));
 		this.dispatch(
 			GameEvents.gamePhaseStartedEvent({
@@ -49,13 +50,12 @@ export class GameConnection {
 				round,
 			})
 		);
-		this.dispatch(setSettingsAction(settings));
 		this.dispatch(setInGameCommand());
 		this.dispatch(setConnectionStatusCommand(ConnectionStatus.CONNECTED));
 	}
 
 	public sendPlayerAction(action: { type: string; payload?: any }) {
-		if (!PlayerActionTypesArray.includes(action.type)) {
+		if (!wireProtocol.acceptsOutbound(action.type)) {
 			console.error(`Invalid player action type: ${action.type}`);
 			return;
 		}
@@ -99,27 +99,14 @@ export class GameConnection {
 				this.dispatch(matchBoardUpdateAction(packet));
 			}
 		);
-		this.setupActionListener(
-			"sendGameEvents",
-			GameEvents.GameEventActionTypesArray
-		);
-		this.setupActionListener(
-			"sendLocalPlayerEvents",
-			PlayerEvents.PlayerEventActionTypesArray
-		);
-		this.setupActionListener(
-			"playerInfoUpdates",
-			PlayerCommands.PlayerInfoUpdateCommandActionTypesArray
-		);
+		this.setupActionListener("sendGameEvents", "gameEvents");
+		this.setupActionListener("sendLocalPlayerEvents", "playerEvents");
+		this.setupActionListener("playerInfoUpdates", "playerInfoUpdates");
 		this.setupSocketListener(
 			"snapshot",
 			(actions: { type: string; payload?: any }[]) => {
 				for (const action of actions) {
-					if (
-						!PlayerCommands.PlayerInfoUpdateCommandActionTypesArray.includes(
-							action.type
-						)
-					) {
+					if (!wireProtocol.acceptsInbound("playerInfoUpdates", action.type)) {
 						console.error(`Unhandled snapshot action type: ${action.type}`);
 						continue;
 					}
@@ -147,18 +134,27 @@ export class GameConnection {
 		this.cleanupFns.push(() => this.socket.off(event, handler));
 	}
 
-	private setupActionListener(event: string, validTypes: string[]) {
+	private setupActionListener(socketEvent: string, channel: InboundChannel) {
 		this.setupSocketListener(
-			event,
+			socketEvent,
 			(action: { type: string; payload?: any }, ack?: () => void) => {
 				if (ack) {
 					ack();
 				}
-				if (!validTypes.includes(action.type)) {
-					console.error(`Unhandled ${event} type: ${action.type}`);
+				const validation = wireProtocol.validateInbound(
+					channel,
+					action.type,
+					action.payload
+				);
+
+				if (!validation.ok) {
+					console.error(
+						`Rejected ${socketEvent} of type "${action.type}": ${validation.reason}`
+					);
 					return;
 				}
-				this.dispatch(action);
+
+				this.dispatch({ ...action, payload: validation.payload });
 			}
 		);
 	}

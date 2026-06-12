@@ -1,7 +1,6 @@
-// Jest configuration for api
 const base = require("../../../jest.config.base.js");
 
 module.exports = {
 	...base,
-	displayName: "@creature-chess/gamemode",
+	displayName: "@cc-plugins/core",
 };

@@ -1,3 +1,17 @@
+// Add the operator-overlay mods dir to NODE_PATH before any plugin
+// require runs, so plugins can require each other by package name.
+if (process.env.CC_MODS_DIR) {
+	process.env.NODE_PATH = [process.env.CC_MODS_DIR, process.env.NODE_PATH]
+		.filter(Boolean)
+		.join(":");
+
+	// `Module._initPaths()` is undocumented but stable since Node 0.x -
+	// it's the only way to make NODE_PATH take effect after a process
+	// has already loaded `module`. Public API doesn't expose it.
+	// eslint-disable-next-line @typescript-eslint/no-var-requires, no-underscore-dangle
+	require("module").Module._initPaths();
+}
+
 import express from "express";
 import { logger as expressWinston } from "express-winston";
 import { createServer } from "http";

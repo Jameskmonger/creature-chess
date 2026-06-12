@@ -1,5 +1,6 @@
-import { SubscribableBoard } from "@creature-chess/board";
 import { Player } from "@creature-chess/gamemode";
+
+import { SubscribableBoard } from "@creature-chess/board";
 import { GamePhase } from "@creature-chess/models";
 import { serialiseBoard } from "@creature-chess/networking";
 
@@ -16,7 +17,7 @@ const subscribeBoardEmit = (
 	const emit = () =>
 		socket.emit(socketEvent, serialiseBoard(subscribable, pieceRegistry));
 
-	// Fresh snapshot on subscribe — needed when spectating target switches.
+	// Fresh snapshot on subscribe - needed when spectating target switches.
 	emit();
 
 	let timer: ReturnType<typeof setTimeout> | null = null;
@@ -73,8 +74,12 @@ const setupSpectateListeners = (
 		})
 	);
 
-	unsubscribes.push(subscribeBoardEmit(board, pieceRegistry, socket, "boardUpdate"));
-	unsubscribes.push(subscribeBoardEmit(bench, pieceRegistry, socket, "benchUpdate"));
+	unsubscribes.push(
+		subscribeBoardEmit(board, pieceRegistry, socket, "boardUpdate")
+	);
+	unsubscribes.push(
+		subscribeBoardEmit(bench, pieceRegistry, socket, "benchUpdate")
+	);
 
 	return () => unsubscribes.forEach((fn) => fn());
 };

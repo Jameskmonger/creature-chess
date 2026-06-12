@@ -27,25 +27,45 @@ describe("evolution", () => {
 		const player = createTestPlayer();
 		unlockBoard(player);
 
-		player.addPiece(makePiece("a", 0), { type: "bench", location: packPosition(0, 0) });
-		player.addPiece(makePiece("b", 0), { type: "bench", location: packPosition(1, 0) });
-		player.addPiece(makePiece("c", 0), { type: "bench", location: packPosition(2, 0) });
+		player.addPiece(makePiece("a", 0), {
+			type: "bench",
+			location: packPosition(0, 0),
+		});
+		player.addPiece(makePiece("b", 0), {
+			type: "bench",
+			location: packPosition(1, 0),
+		});
+		player.addPiece(makePiece("c", 0), {
+			type: "bench",
+			location: packPosition(2, 0),
+		});
 
 		const benchPieces = player.bench.getAllPieces();
 		expect(benchPieces).toHaveLength(1);
 
-		const evolved = player.gamemode.pieceRegistry.getPieceById(benchPieces[0].id)!;
+		const evolved = player.gamemode.pieceRegistry.getPieceById(
+			benchPieces[0].id
+		)!;
 		expect(evolved.definitionId).toBe(definitionId);
 		expect(evolved.stage).toBe(1);
 	});
 
-	test("adding pieces while board locked defers — runEvolutions on unlock combines them", () => {
+	test("adding pieces while board locked defers - runEvolutions on unlock combines them", () => {
 		const player = createTestPlayer();
 		lockBoard(player);
 
-		player.addPiece(makePiece("a", 0), { type: "bench", location: packPosition(0, 0) });
-		player.addPiece(makePiece("b", 0), { type: "bench", location: packPosition(1, 0) });
-		player.addPiece(makePiece("c", 0), { type: "bench", location: packPosition(2, 0) });
+		player.addPiece(makePiece("a", 0), {
+			type: "bench",
+			location: packPosition(0, 0),
+		});
+		player.addPiece(makePiece("b", 0), {
+			type: "bench",
+			location: packPosition(1, 0),
+		});
+		player.addPiece(makePiece("c", 0), {
+			type: "bench",
+			location: packPosition(2, 0),
+		});
 
 		expect(player.bench.getAllPieces()).toHaveLength(3);
 
@@ -59,9 +79,18 @@ describe("evolution", () => {
 		const player = createTestPlayer();
 		unlockBoard(player);
 
-		player.addPiece(makePiece("a", 0), { type: "board", location: packPosition(0, 0) });
-		player.addPiece(makePiece("b", 0), { type: "board", location: packPosition(1, 0) });
-		player.addPiece(makePiece("c", 0), { type: "bench", location: packPosition(0, 0) });
+		player.addPiece(makePiece("a", 0), {
+			type: "board",
+			location: packPosition(0, 0),
+		});
+		player.addPiece(makePiece("b", 0), {
+			type: "board",
+			location: packPosition(1, 0),
+		});
+		player.addPiece(makePiece("c", 0), {
+			type: "bench",
+			location: packPosition(0, 0),
+		});
 
 		expect(player.board.getAllPieces()).toHaveLength(1);
 		expect(player.bench.getAllPieces()).toHaveLength(0);

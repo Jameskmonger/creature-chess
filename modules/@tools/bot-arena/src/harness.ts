@@ -4,7 +4,11 @@ import { cpus } from "os";
 import { join } from "path";
 import { v4 as uuid } from "uuid";
 
-import { createUtilityBot, Personality, PersonalityLevel } from "@cc-bot/utility";
+import {
+	createUtilityBot,
+	Personality,
+	PersonalityLevel,
+} from "@cc-bot/utility";
 
 import { runGame, BotUnderTest } from "./runGame";
 
@@ -93,12 +97,12 @@ const runMaster = () => {
 	console.log(
 		`Running ${TOTAL_GAMES} games × ${BOTS_PER_GAME} bots ` +
 			`across ${WORKER_COUNT} workers (${gamesPerWorker}/worker) ` +
-			`→ ${dataDir}/${RUN_ID}-w*.csv`
+			`-> ${dataDir}/${RUN_ID}-w*.csv`
 	);
 
 	if (DEBUG_BOT) {
 		console.log(
-			"DEBUG_BOT=1 → per-bot decisions will be dumped to " +
+			"DEBUG_BOT=1 -> per-bot decisions will be dumped to " +
 				`${dataDir}/${RUN_ID}-w*-debug.jsonl`
 		);
 	}

@@ -1,10 +1,6 @@
+import { Player } from "@creature-chess/gamemode";
+import { PlayerActions } from "@creature-chess/models";
 import delay from "delay";
-
-import {
-	dispatchTrustedPlayerAction,
-	Player,
-	PlayerActions,
-} from "@creature-chess/gamemode";
 
 import {
 	BotAction,
@@ -56,7 +52,7 @@ export const runPreparingPhase = async (
 		settings,
 		board,
 		bench,
-		gamemode: { pieceRegistry },
+		gamemode: { pieceRegistry, creatures },
 	} = player;
 
 	const rng = options.rng ?? Math.random;
@@ -69,7 +65,11 @@ export const runPreparingPhase = async (
 	if (settings.botActionDelayMs > 0) {
 		await delay(settings.botActionDelayMs);
 		if (signal.aborted) {
-			hooks.onPhaseEnded?.({ actionsTaken: 0, actionBudget, terminationReason: "cancelled" });
+			hooks.onPhaseEnded?.({
+				actionsTaken: 0,
+				actionBudget,
+				terminationReason: "cancelled",
+			});
 			return;
 		}
 	}
@@ -91,6 +91,7 @@ export const runPreparingPhase = async (
 			board,
 			bench,
 			pieceRegistry,
+			creatures,
 			player,
 			settings,
 			rng,
@@ -103,7 +104,7 @@ export const runPreparingPhase = async (
 			break;
 		}
 
-		dispatchTrustedPlayerAction(player, action);
+		player.gamemode.playerActions.dispatchTrusted(player, action);
 		hooks.onActionDispatched?.(action);
 		actionsTaken += 1;
 
@@ -118,5 +119,8 @@ export const runPreparingPhase = async (
 		return;
 	}
 
-	dispatchTrustedPlayerAction(player, PlayerActions.readyUpPlayerAction());
+	player.gamemode.playerActions.dispatchTrusted(
+		player,
+		PlayerActions.readyUpPlayerAction()
+	);
 };

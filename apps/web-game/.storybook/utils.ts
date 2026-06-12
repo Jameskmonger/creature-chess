@@ -2,9 +2,9 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 
+import { GamePhase } from "@creature-chess/models";
 import {
 	FinishedQuickChatOptions,
-	GamePhase,
 	ReadyQuickChatOptions,
 } from "@creature-chess/models";
 import { PlayerStatus, inProgressBattle } from "@creature-chess/models";
@@ -136,6 +136,7 @@ const createMockedState = (): GameState => {
 				receivedAt: Date.now(),
 			},
 		},
+		plugins: {},
 		spectating: {
 			id: null,
 		},

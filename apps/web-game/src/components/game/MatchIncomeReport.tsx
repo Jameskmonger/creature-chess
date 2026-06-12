@@ -1,10 +1,9 @@
 import * as React from "react";
 
+import { PlayerMatchRewards } from "@creature-chess/models";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
-
-import { PlayerMatchRewards } from "@creature-chess/gamemode";
 
 type Props = {
 	rewards: PlayerMatchRewards;

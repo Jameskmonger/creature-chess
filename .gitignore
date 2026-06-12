@@ -28,3 +28,8 @@ coverage/
 
 .nx/cache
 .nx/workspace-data
+
+# Operator-overlay plugin directory.
+/mods/*
+!/mods/.gitkeep
+!/mods/README.md

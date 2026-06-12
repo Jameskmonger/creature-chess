@@ -7,7 +7,7 @@ import {
 	unpackX,
 	unpackY,
 } from "@creature-chess/board";
-import { getDefinitionById, PieceModel } from "@creature-chess/models";
+import { CreatureLookup, PieceModel } from "@creature-chess/models";
 import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { PieceCombatState, PieceInfoStore } from "../../state";
@@ -31,6 +31,7 @@ export class StandardTargetProvider implements TargetProvider {
 		board: Board,
 		pieceRegistry: ReadablePieceRegistry,
 		combatStore: PieceInfoStore<PieceCombatState>,
+		creatures: CreatureLookup,
 		attackerId: string
 	): string | null {
 		const piece = pieceRegistry.getPieceById(attackerId);
@@ -39,7 +40,7 @@ export class StandardTargetProvider implements TargetProvider {
 			return null;
 		}
 
-		const attackRange = getAttackRange(piece);
+		const attackRange = getAttackRange(piece, creatures);
 
 		const enemies = getLivingEnemies(piece, board, pieceRegistry, combatStore);
 
@@ -67,7 +68,8 @@ export class StandardTargetProvider implements TargetProvider {
 
 		return this.chooseTarget(
 			enemyDeltas,
-			combatStore.getPiece(piece.id).facingAway
+			combatStore.getPiece(piece.id).facingAway,
+			creatures
 		).id;
 	}
 
@@ -130,7 +132,11 @@ export class StandardTargetProvider implements TargetProvider {
 		return enemyDeltas;
 	}
 
-	private chooseTarget(enemies: EnemyDelta[], facingNorth: boolean) {
+	private chooseTarget(
+		enemies: EnemyDelta[],
+		facingNorth: boolean,
+		creatures: CreatureLookup
+	) {
 		if (enemies.length === 0) {
 			throw new Error("No enemies provided to chooseTarget");
 		}
@@ -144,7 +150,7 @@ export class StandardTargetProvider implements TargetProvider {
 
 		const costs = new Map<string, number>();
 		for (const { enemy } of enemies) {
-			costs.set(enemy.id, getDefinitionById(enemy.definitionId)?.cost ?? 0);
+			costs.set(enemy.id, creatures.get(enemy.definitionId)?.cost ?? 0);
 		}
 
 		enemies.sort((a, b) => {

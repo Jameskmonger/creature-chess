@@ -5,16 +5,15 @@ import {
 	PlayerStatus,
 } from "@creature-chess/models";
 
-import { Player } from "../../entities/player/player";
+import { Round } from ".";
+import { createDefaultGamemodeContext } from "../../coreBootstrap";
 import {
 	createMockLogger,
 	createTestPlayer,
 } from "../../entities/player/testUtils";
 import { GameContext } from "../gameContext";
 import { Gamemode } from "../gamemode";
-import { Match } from "../match";
 import { PlayerRound } from "../playerRound";
-import { Round } from ".";
 
 type Call =
 	| { fn: "prepare"; playerId: string }
@@ -42,8 +41,7 @@ const createRecordingPlayerRound = (): {
 		},
 		engage: (player, match) => {
 			player.match = match;
-			const opponent =
-				match.home.id === player.id ? match.away : match.home;
+			const opponent = match.home.id === player.id ? match.away : match.home;
 			calls.push({
 				fn: "engage",
 				playerId: player.id,
@@ -79,7 +77,12 @@ const fastSettings = (): GamemodeSettings => ({
 const buildContext = (playerRound: PlayerRound) => {
 	const settings = fastSettings();
 	const logger = createMockLogger();
-	const gamemode = new Gamemode("test-game", logger, settings);
+	const gamemode = new Gamemode({
+		id: "test-game",
+		logger,
+		settings,
+		context: createDefaultGamemodeContext(),
+	});
 	const p1 = createTestPlayer("p1", { settings, gamemode });
 	const p2 = createTestPlayer("p2", { settings, gamemode });
 
@@ -100,7 +103,7 @@ const buildContext = (playerRound: PlayerRound) => {
 };
 
 describe("Round", () => {
-	test("drives PlayerRound in prepare → deploy → engage → settle order", async () => {
+	test("drives PlayerRound in prepare -> deploy -> engage -> settle order", async () => {
 		const { playerRound, calls } = createRecordingPlayerRound();
 		const { context } = buildContext(playerRound);
 
@@ -129,10 +132,9 @@ describe("Round", () => {
 		const settled = calls.slice(6);
 		expect(settled).toHaveLength(2);
 		expect(settled.map((c) => c.fn)).toEqual(["settle", "settle"]);
-		expect(settled.map((c) => (c as { playerId: string }).playerId).sort()).toEqual([
-			"p1",
-			"p2",
-		]);
+		expect(
+			settled.map((c) => (c as { playerId: string }).playerId).sort()
+		).toEqual(["p1", "p2"]);
 	});
 
 	test("broadcasts the round number as the round-info round during preparing phase", async () => {
@@ -168,7 +170,7 @@ describe("Round", () => {
 		const { playerRound } = createRecordingPlayerRound();
 		const { context, p1, p2 } = buildContext(playerRound);
 
-		// Long timeout — the test must exit via the all-ready path.
+		// Long timeout - the test must exit via the all-ready path.
 		context.settings.preparingPhaseLengthMs = 60000;
 
 		const startedAt = Date.now();
@@ -222,7 +224,7 @@ describe("Round", () => {
 			opponentId: "p2",
 		});
 
-		// Only the home player gets settle — Match.fight() doesn't fire
+		// Only the home player gets settle - Match.fight() doesn't fire
 		// playerFinishMatchEvent on the cloned-away side.
 		const settleCalls = calls.filter((c) => c.fn === "settle");
 		expect(settleCalls).toHaveLength(1);

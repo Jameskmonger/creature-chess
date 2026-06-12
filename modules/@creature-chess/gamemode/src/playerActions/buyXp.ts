@@ -1,17 +1,11 @@
-import { z } from "zod";
-
 import { MAX_LEVEL } from "@creature-chess/models";
 
-import { networkedAction } from "../events/networkedAction";
+import { buyXpPlayerAction } from "./creators";
 import { definePlayerAction } from "./registry";
 import { resyncPlayer } from "./resync";
 
-export type BuyXpPlayerAction = ReturnType<typeof buyXpPlayerAction>;
-export const buyXpPlayerAction = networkedAction("buyXpPlayerAction");
-
 export const buyXpDef = definePlayerAction({
-	type: buyXpPlayerAction.type,
-	schema: z.undefined(),
+	creator: buyXpPlayerAction,
 	handler: (player) => {
 		const { logger, settings, id, name } = player;
 

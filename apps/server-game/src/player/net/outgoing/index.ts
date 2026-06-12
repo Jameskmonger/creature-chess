@@ -1,4 +1,5 @@
-import { GameEvents, Player } from "@creature-chess/gamemode";
+import { Player } from "@creature-chess/gamemode";
+import { GameEvents } from "@creature-chess/models";
 
 import { GameSocket } from "../../socket";
 

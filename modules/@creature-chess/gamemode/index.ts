@@ -1,43 +1,53 @@
-export { Gamemode } from "./src/game";
+// Side-effect: ambient client region-class declaration-merge.
+import "./src/clientRegions";
 
+export type {
+	GameplayEvents,
+	GameplayEventsBus,
+	CreatureRegistry,
+	GamemodeInit,
+	GamemodeContext,
+} from "./src/factory";
+export { createGamemode } from "./src/factory";
+export {
+	WireProtocol,
+	type OutboundChannel,
+	type ValidatePayloadResult,
+} from "./src/wireProtocol";
+export {
+	createCreatureRegistry,
+	createDefaultGamemodeContext,
+	createDefines,
+	createGameplayEventsBus,
+	createBuiltInPlayerActionRegistry,
+	createBuiltInWireProtocol,
+	seedCoreWire,
+	resolveSettings,
+	seedDefines,
+} from "./src/coreBootstrap";
+
+export {
+	Gamemode,
+	type GamemodeApi,
+	type GamemodeCallbacks,
+} from "./src/game/gamemode";
 export {
 	type Player,
 	type PlayerState,
 	initialPlayerState,
-	PlayerCommands,
-	PlayerEvents,
 } from "./src/entities/player";
 export { buildPlayerSnapshot } from "./src/entities/player/state/wireFields";
 export {
 	type PlayerInfoState,
 	initialPlayerInfoState,
-	type PlayerMatchRewards,
 } from "./src/entities/player/state/playerInfo";
 export {
-	type CardShopState,
-	initialCardShopState,
-} from "./src/entities/player/state/cardShop";
-export {
-	type SpectatingState,
-	initialSpectatingState,
-} from "./src/entities/player/state/spectating";
-export {
-	type PlayerAction,
-	PlayerActionTypesArray,
-	dispatchIncomingPlayerAction,
-	dispatchTrustedPlayerAction,
-} from "./src/playerActions";
-export * as PlayerActions from "./src/playerActions";
-export {
-	quickChatPlayerAction,
-	quitGamePlayerAction,
-	spectatePlayerAction,
-} from "./src/playerActions";
-
-export * as GameEvents from "./src/game/events";
-export { type GameFinishEvent } from "./src/game/events";
+	type PlayerActionDef,
+	type PlayerActionRegistry,
+	type DispatchResult,
+	definePlayerAction,
+	createPlayerActionRegistry,
+} from "./src/playerActions/registry";
+export { registerCorePlayerActions } from "./src/playerActions";
 
 export { Match } from "./src/game/match";
-
-export { getXpToNextLevel } from "./src/player/xp";
-export { getPiecesForStage } from "./src/game/evolution";

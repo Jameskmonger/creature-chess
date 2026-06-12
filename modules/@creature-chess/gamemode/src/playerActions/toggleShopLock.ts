@@ -1,18 +1,8 @@
-import { z } from "zod";
-
-import { networkedAction } from "../events/networkedAction";
+import { toggleShopLockPlayerAction } from "./creators";
 import { definePlayerAction } from "./registry";
 
-export type ToggleShopLockPlayerAction = ReturnType<
-	typeof toggleShopLockPlayerAction
->;
-export const toggleShopLockPlayerAction = networkedAction(
-	"toggleShopLockPlayerAction"
-);
-
 export const toggleShopLockDef = definePlayerAction({
-	type: toggleShopLockPlayerAction.type,
-	schema: z.undefined(),
+	creator: toggleShopLockPlayerAction,
 	handler: (player) => {
 		player.setShopLocked(!player.shopLocked);
 	},

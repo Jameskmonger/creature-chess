@@ -1,22 +1,21 @@
 import { createTestPlayer } from "../entities/player/testUtils";
-import { dispatchIncomingPlayerAction } from "./index";
-import { toggleShopLockPlayerAction } from "./toggleShopLock";
+import { toggleShopLockPlayerAction } from "./creators";
 
 describe("toggleShopLockPlayerAction", () => {
 	test("toggles the shop lock state via the registry", () => {
 		const player = createTestPlayer();
 		expect(player.shopLocked).toBe(false);
 
-		dispatchIncomingPlayerAction(player, toggleShopLockPlayerAction());
+		player.gamemode.playerActions.dispatchIncoming(player, toggleShopLockPlayerAction());
 		expect(player.shopLocked).toBe(true);
 
-		dispatchIncomingPlayerAction(player, toggleShopLockPlayerAction());
+		player.gamemode.playerActions.dispatchIncoming(player, toggleShopLockPlayerAction());
 		expect(player.shopLocked).toBe(false);
 	});
 
 	test("rejects payloads for void-payload actions", () => {
 		const player = createTestPlayer();
-		const result = dispatchIncomingPlayerAction(player, {
+		const result = player.gamemode.playerActions.dispatchIncoming(player, {
 			type: toggleShopLockPlayerAction.type,
 			payload: { malicious: true },
 		});
@@ -27,7 +26,7 @@ describe("toggleShopLockPlayerAction", () => {
 
 	test("rejects unknown action types", () => {
 		const player = createTestPlayer();
-		const result = dispatchIncomingPlayerAction(player, {
+		const result = player.gamemode.playerActions.dispatchIncoming(player, {
 			type: "notAnAction",
 			payload: undefined,
 		});

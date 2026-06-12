@@ -1,18 +1,11 @@
-import {
-	configureStore,
-	createListenerMiddleware,
-} from "@reduxjs/toolkit";
-
+import { GameEvents, PlayerCommands } from "@creature-chess/models";
+import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { GameConnection } from "~/networking/GameConnection";
 import { LobbyConnection } from "~/networking/LobbyConnection";
 import { ClientExtra, ClientStartListening } from "~/store/listenerContext";
 import { Holder } from "~/utils/Holder";
 
-import {
-	GameEvents,
-	PlayerCommands,
-} from "@creature-chess/gamemode";
 import {
 	PlayerStatus,
 	StreakType,
@@ -67,8 +60,9 @@ const buildStore = (options: { accountId?: string | null } = {}) => {
 	return { store, seed, accountIdHolder };
 };
 
-const localPlayer = (state: ReturnType<ReturnType<typeof buildStore>["store"]["getState"]>) =>
-	state.players.find((p) => p.id === LOCAL_ID);
+const localPlayer = (
+	state: ReturnType<ReturnType<typeof buildStore>["store"]["getState"]>
+) => state.players.find((p) => p.id === LOCAL_ID);
 
 describe("players sync listeners", () => {
 	it("routes updateHealthCommand into the local Player entry", async () => {
@@ -80,9 +74,9 @@ describe("players sync listeners", () => {
 		await Promise.resolve();
 
 		expect(localPlayer(store.getState())?.health).toBe(75);
-		expect(
-			store.getState().players.find((p) => p.id === "other")?.health
-		).toBe(100);
+		expect(store.getState().players.find((p) => p.id === "other")?.health).toBe(
+			100
+		);
 	});
 
 	it("routes updateMoneyCommand into the local Player entry", async () => {
@@ -143,14 +137,18 @@ describe("players sync listeners", () => {
 		seed([buildPlayer({})]);
 
 		const battle = inProgressBattle("opp", false);
-		store.dispatch(PlayerCommands.playerInfoCommands.updateBattleCommand(battle));
+		store.dispatch(
+			PlayerCommands.playerInfoCommands.updateBattleCommand(battle)
+		);
 
 		await Promise.resolve();
 
 		expect(localPlayer(store.getState())?.battle).toEqual(battle);
 
 		const finished = finishedBattle("opp", false, true, 2, 0);
-		store.dispatch(PlayerCommands.playerInfoCommands.updateBattleCommand(finished));
+		store.dispatch(
+			PlayerCommands.playerInfoCommands.updateBattleCommand(finished)
+		);
 
 		await Promise.resolve();
 

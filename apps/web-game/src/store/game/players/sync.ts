@@ -1,4 +1,4 @@
-import { PlayerCommands } from "@creature-chess/gamemode";
+import { PlayerCommands } from "@creature-chess/models";
 
 import { ClientStartListening } from "../../listenerContext";
 import { playersActions } from "./state";

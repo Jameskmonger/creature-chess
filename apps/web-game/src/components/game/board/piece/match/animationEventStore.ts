@@ -21,10 +21,7 @@ export class PieceAnimationEventStore {
 				this.eventsByPiece.set(pieceId, [event]);
 			}
 
-			if (
-				event.type === "piece_attack" &&
-				(event as PieceAttackEvent).ranged
-			) {
+			if (event.type === "piece_attack" && (event as PieceAttackEvent).ranged) {
 				const attackEvent = event as PieceAttackEvent;
 				this.projectileEvents.push({
 					type: "piece",

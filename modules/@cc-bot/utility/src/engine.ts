@@ -3,7 +3,8 @@ import { BotEngine } from "@cc-server/bot";
 import { createUtilityBot } from "./createUtilityBot";
 import { Personality, PersonalityLevel } from "./personality";
 
-const isLevel = (v: unknown): v is PersonalityLevel => v === "low" || v === "high";
+const isLevel = (v: unknown): v is PersonalityLevel =>
+	v === "low" || v === "high";
 
 const parseMeta = (meta: unknown): Personality => {
 	if (typeof meta !== "object" || meta === null) {

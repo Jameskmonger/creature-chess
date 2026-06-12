@@ -8,6 +8,11 @@ import {
 
 import { PieceAnimationEventStore } from "./animationEventStore";
 import {
+	EMPTY_LAYER_SLOTS,
+	assignLayer,
+	removeLayer,
+} from "./animationLayerSlots";
+import {
 	AnimationLayer,
 	createAttackBasicLayer,
 	createReceiveHitLayer,
@@ -15,11 +20,6 @@ import {
 	useDyingStyles,
 	useReceiveHitStyles,
 } from "./animations";
-import {
-	EMPTY_LAYER_SLOTS,
-	assignLayer,
-	removeLayer,
-} from "./animationLayerSlots";
 
 export function useAnimationLayers(
 	pieceId: string,

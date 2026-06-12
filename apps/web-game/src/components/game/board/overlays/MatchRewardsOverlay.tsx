@@ -1,21 +1,24 @@
 import * as React from "react";
 
+import { PlayerMatchRewards } from "@creature-chess/models";
 import { useSelector } from "react-redux";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PlayerAvatar, Title, PlayerHealthbar } from "~/components/ui/player";
 import { PositionChip } from "~/components/ui/player/PositionChip";
+import { Region } from "~/plugins";
 import { AppState } from "~/store";
-import { useOpponentPlayer, usePlayerRank } from "~/store/game/players";
+import {
+	useLocalPlayer,
+	useOpponentPlayer,
+	usePlayerRank,
+} from "~/store/game/players";
 import { createUseThemeStyles } from "~/useStyles";
-
-import { PlayerMatchRewards } from "@creature-chess/gamemode";
 
 import { MatchIncomeReport } from "../../MatchIncomeReport";
 import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
-import { QuickChatBox } from "./quickChat/quickChatBox";
-import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+import { QuickChatBox, QuickChatButtonArray } from "./quickChat";
 
 const useStyles = createUseThemeStyles((theme) => ({
 	root: {
@@ -194,6 +197,7 @@ export function MatchRewardsOverlay() {
 	const styles = useStyles();
 
 	const opponent = useOpponentPlayer();
+	const localPlayer = useLocalPlayer();
 	const opponentPosition = usePlayerRank(opponent?.id ?? "") || null;
 
 	const matchRewards = useSelector<AppState, PlayerMatchRewards | null>(
@@ -218,57 +222,13 @@ export function MatchRewardsOverlay() {
 			? "Match Lost!"
 			: "Match Won!";
 
-	return (
-		<BoardOverlay>
-			<div className={styles.root}>
-				<div className={styles.wrapper}>
-					<div className={styles.title}>
-						{title} <div className={styles.desktopOnly}>vs</div>
-					</div>
-					{!justDied && opponent && opponentPosition && (
-						<>
-							<div className={styles.vsHeader}>vs.</div>
-							<div className={styles.opponent}>
-								<div className={styles.playerAvatar}>
-									<PlayerAvatar player={opponent} />
-									<QuickChatBox sendingPlayerId={opponent.id} />
-								</div>
-								<div className={styles.playerDetails}>
-									<div className={styles.nameWrapper}>
-										<span className={styles.playerName}>{opponent.name}</span>
-										<div className={styles.tags}>
-											<PositionChip position={opponentPosition} />
-										</div>
-									</div>
-									<Title title={opponent.profile?.title || null} />
-									<PlayerHealthbar health={opponent.health} />
-									<div className={styles.badges}>
-										<StreakIndicator
-											type={opponent.streakType}
-											amount={opponent.streakAmount}
-										/>
-										<BalanceIcon amount={opponent.money} />
-										<LevelIcon amount={opponent.level} />
-									</div>
-								</div>
-							</div>
-						</>
-					)}
-					<div className={styles.outcomes}>
-						{!justDied && (
-							<>
-								{damage > 0 && (
-									<div className={styles.damage}>
-										<span>{damage} health lost!</span>
-									</div>
-								)}
-								<MatchIncomeReport
-									rewards={matchRewards}
-									className={styles.income}
-								/>
-							</>
-						)}
-						{justDied && (
+	if (justDied) {
+		return (
+			<BoardOverlay>
+				<div className={styles.root}>
+					<div className={styles.wrapper}>
+						<div className={styles.title}>{title}</div>
+						<div className={styles.outcomes}>
 							<div className={styles.deathMessage}>
 								<p>You have been knocked out of this game.</p>
 								<p>
@@ -279,10 +239,82 @@ export function MatchRewardsOverlay() {
 									Open the Player List and click a name to continue spectating.
 								</p>
 							</div>
-						)}
+						</div>
 					</div>
 				</div>
-				{!justDied && <QuickChatButtonArray />}
+			</BoardOverlay>
+		);
+	}
+
+	return (
+		<BoardOverlay>
+			<div className={styles.root}>
+				<Region
+					cls="overlay-content"
+					id="overlay.content"
+					ctx={{ localPlayerId: localPlayer?.id }}
+				>
+					<div className={styles.wrapper}>
+						<div className={styles.title}>
+							{title} <div className={styles.desktopOnly}>vs</div>
+						</div>
+						{opponent && opponentPosition && (
+							<>
+								<div className={styles.vsHeader}>vs.</div>
+								<div className={styles.opponent}>
+									<div className={styles.playerAvatar}>
+										<Region
+											cls="player-avatar"
+											id="player.avatar.opponent"
+											ctx={{ playerId: opponent.id }}
+										>
+											<PlayerAvatar player={opponent} />
+										</Region>
+										<QuickChatBox playerId={opponent.id} />
+									</div>
+									<div className={styles.playerDetails}>
+										<div className={styles.nameWrapper}>
+											<span className={styles.playerName}>{opponent.name}</span>
+											<div className={styles.tags}>
+												<PositionChip position={opponentPosition} />
+											</div>
+										</div>
+										<Title title={opponent.profile?.title || null} />
+										<PlayerHealthbar health={opponent.health} />
+										<div className={styles.badges}>
+											<StreakIndicator
+												type={opponent.streakType}
+												amount={opponent.streakAmount}
+											/>
+											<BalanceIcon amount={opponent.money} />
+											<LevelIcon amount={opponent.level} />
+										</div>
+									</div>
+								</div>
+							</>
+						)}
+						<div className={styles.outcomes}>
+							{damage > 0 && (
+								<div className={styles.damage}>
+									<span>{damage} health lost!</span>
+								</div>
+							)}
+							<Region
+								cls="match-rewards-summary"
+								id="match-rewards.summary"
+								ctx={{ rewards: matchRewards }}
+							>
+								<MatchIncomeReport
+									rewards={matchRewards}
+									className={styles.income}
+								/>
+							</Region>
+						</div>
+					</div>
+				</Region>
+				{localPlayer && (
+					<QuickChatButtonArray playerId={localPlayer.id} />
+				)}
 			</div>
 		</BoardOverlay>
 	);

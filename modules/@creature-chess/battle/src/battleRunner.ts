@@ -1,5 +1,5 @@
 import { Board } from "@creature-chess/board";
-import { GamemodeSettings } from "@creature-chess/models";
+import { CreatureLookup, GamemodeSettings } from "@creature-chess/models";
 import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { BattleEvent, BattleEventLog } from "./battleEventLog";
@@ -32,6 +32,7 @@ export class BattleRunner {
 		private board: Board,
 		private pieceRegistry: ReadablePieceRegistry,
 		private combatStore: PieceInfoStore<PieceCombatState>,
+		private creatures: CreatureLookup,
 		private settings: GamemodeSettings,
 		startingTurn: number = 0,
 		private onEvents?: (events: BattleEvent[]) => void
@@ -106,6 +107,7 @@ export class BattleRunner {
 
 			simulateTurn(++this.turn, this.board, this.pieceRegistry, {
 				combatStore: this.combatStore,
+				creatures: this.creatures,
 				eventLog: this.eventLog,
 			});
 

@@ -6,14 +6,14 @@ import { GameServerToClient } from "@creature-chess/networking";
 
 import { startBattleCommand } from "../battle/commands";
 
-export const boardUpdateAction = createAction<GameServerToClient.BoardUpdatePacket>(
-	"boardUpdateAction"
-);
-export const benchUpdateAction = createAction<GameServerToClient.BoardUpdatePacket>(
-	"benchUpdateAction"
-);
+export const boardUpdateAction =
+	createAction<GameServerToClient.BoardUpdatePacket>("boardUpdateAction");
+export const benchUpdateAction =
+	createAction<GameServerToClient.BoardUpdatePacket>("benchUpdateAction");
 export const matchBoardUpdateAction =
-	createAction<GameServerToClient.MatchBoardUpdatePacket>("matchBoardUpdateAction");
+	createAction<GameServerToClient.MatchBoardUpdatePacket>(
+		"matchBoardUpdateAction"
+	);
 
 export const setupBoardSyncListeners = (
 	startListening: ClientStartListening

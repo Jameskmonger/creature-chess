@@ -1,6 +1,1 @@
-export enum Overlay {
-	PLAYERS,
-	SHOP,
-	SETTINGS,
-	STATS,
-}
+export { Overlay } from "@creature-chess/models";

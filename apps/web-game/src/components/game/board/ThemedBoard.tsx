@@ -13,7 +13,7 @@ import { PieceModel } from "@creature-chess/models";
 type Props = {
 	theme?: "default";
 	state: SubscribableBoard;
-	renderItem: (piece: PieceModel["id"]) => {
+	renderItem: (piece: PieceModel["id"], x: number, y: number) => {
 		item: React.ReactNode | React.ReactNode[];
 		draggable?: boolean;
 	};

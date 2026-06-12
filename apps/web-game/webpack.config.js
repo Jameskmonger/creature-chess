@@ -59,6 +59,10 @@ module.exports = {
 			APP_URL: JSON.stringify(process.env.CREATURE_CHESS_APP_URL),
 			APP_API_URL: JSON.stringify(process.env.API_INFO_URL),
 			APP_IMAGE_ROOT: JSON.stringify(process.env.CREATURE_CHESS_IMAGE_URL),
+			APP_PLUGIN_MANIFEST_URL: JSON.stringify(
+				process.env.CREATURE_CHESS_PLUGIN_MANIFEST_URL ||
+					"/plugins/manifest.json"
+			),
 		}),
 		new HtmlWebpackPlugin({
 			scriptLoading: "blocking",

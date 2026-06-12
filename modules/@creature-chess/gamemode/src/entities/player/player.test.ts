@@ -1,9 +1,10 @@
-import { Logger } from "winston";
+import { Logger } from "@cc-engine/kernel";
 
 import { SubscribableBoard, packPosition } from "@creature-chess/board";
 import { PlayerProfile, PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
+import { createDefaultGamemodeContext } from "../../coreBootstrap";
 import { Gamemode } from "../../game";
 import { Player } from "./player";
 
@@ -26,11 +27,19 @@ const createSubject = (overrides?: {
 }): Player => {
 	const settings = GamemodeSettingsPresets.default;
 	const logger = createMockLogger();
-	const gamemode = new Gamemode("test-game", logger, settings);
+	const gamemode = new Gamemode({
+		id: "test-game",
+		logger,
+		settings,
+		context: createDefaultGamemodeContext(),
+	});
 
 	return gamemode.createPlayer(overrides?.id ?? "player-1", {
 		boards: {
-			board: new SubscribableBoard(settings.boardWidth, settings.boardHalfHeight),
+			board: new SubscribableBoard(
+				settings.boardWidth,
+				settings.boardHalfHeight
+			),
 			bench: new SubscribableBoard(settings.benchSize, 1),
 		},
 		name: overrides?.name ?? "Alice",
@@ -50,7 +59,12 @@ describe("Gamemode.createPlayer", () => {
 		test("exposes dependencies as direct properties", () => {
 			const settings = GamemodeSettingsPresets.default;
 			const logger = createMockLogger();
-			const gamemode = new Gamemode("g1", logger, settings);
+			const gamemode = new Gamemode({
+				id: "g1",
+				logger,
+				settings,
+				context: createDefaultGamemodeContext(),
+			});
 			const board = new SubscribableBoard(
 				settings.boardWidth,
 				settings.boardHalfHeight
@@ -174,7 +188,7 @@ describe("Gamemode.createPlayer", () => {
 
 		test("cross-side swap does not throw when bench-piece's x collides with a board piece in row 0", () => {
 			const player = createSubject();
-			// Decoy on board at (3, 0) — same x as the bench piece, row 0.
+			// Decoy on board at (3, 0) - same x as the bench piece, row 0.
 			player.addPiece(makePiece("decoy", 3), {
 				type: "board",
 				location: packPosition(3, 0),
@@ -248,9 +262,7 @@ describe("Gamemode.createPlayer", () => {
 		test("keyed subscription fires on the matching event only", () => {
 			const player = createSubject();
 			const calls: string[] = [];
-			player.events.onPlayerEvent("playerDeath", () =>
-				calls.push("death")
-			);
+			player.events.onPlayerEvent("playerDeath", () => calls.push("death"));
 			player.events.onPlayerEvent("afterRerollCards", () =>
 				calls.push("reroll")
 			);

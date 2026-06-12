@@ -1,13 +1,10 @@
-import { getXpToNextLevel } from "@creature-chess/gamemode";
+import { getXpToNextLevel } from "@creature-chess/models";
+
 import { MAX_LEVEL } from "@creature-chess/models";
 
 import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
-import {
-	effectiveAmbition,
-	isInPanicMode,
-	Personality,
-} from "../personality";
+import { effectiveAmbition, isInPanicMode, Personality } from "../personality";
 
 const MONEY_FLOOR = 10;
 const ROUND_FLOOR = 4;
@@ -31,7 +28,7 @@ export const decideBuyXp = (
 	}
 
 	const xpRemaining = Math.max(1, getXpToNextLevel(level) - player.xp);
-	// Closing out a level is always worth it — the extra board slot pays for itself.
+	// Closing out a level is always worth it - the extra board slot pays for itself.
 	if (settings.buyXpAmount >= xpRemaining) {
 		return BotActions.buyXp();
 	}

@@ -1,4 +1,4 @@
-import { getDefinitionById, PieceModel } from "@creature-chess/models";
+import { CreatureLookup, PieceModel } from "@creature-chess/models";
 
 import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
@@ -9,7 +9,7 @@ export const decideSellPiece = (
 	ctx: PreparingPhaseContext,
 	personality: Personality
 ): BotAction | null => {
-	const { board, bench, pieceRegistry, player, settings } = ctx;
+	const { board, bench, pieceRegistry, creatures, player, settings } = ctx;
 	const allPieces = collectAllPieces(board, bench, pieceRegistry);
 	const level = player.level;
 	const maxPieces = level + settings.benchSize;
@@ -46,7 +46,7 @@ export const decideSellPiece = (
 		return null;
 	}
 
-	const cheapest = pickCheapest(sellable);
+	const cheapest = pickCheapest(sellable, creatures);
 	if (!cheapest) {
 		return null;
 	}
@@ -64,11 +64,14 @@ const countTraits = (pieces: PieceModel[]): Map<string, number> => {
 	return counts;
 };
 
-const pickCheapest = (pieces: PieceModel[]): PieceModel | null => {
+const pickCheapest = (
+	pieces: PieceModel[],
+	creatures: CreatureLookup
+): PieceModel | null => {
 	let best: PieceModel | null = null;
 	let bestCost = Infinity;
 	for (const p of pieces) {
-		const def = getDefinitionById(p.definitionId);
+		const def = creatures.get(p.definitionId);
 		const cost = def?.cost ?? 0;
 		if (cost < bestCost) {
 			best = p;

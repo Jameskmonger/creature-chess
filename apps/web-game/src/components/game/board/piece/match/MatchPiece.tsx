@@ -39,7 +39,7 @@ export function MatchPiece({ piece, viewingPlayerId }: Props) {
 	const facing = combat?.facingAway ? "back" : "front";
 
 	// Always render a fixed number of wrapper divs so the DOM tree shape
-	// never changes — only className/style toggle when animations are active.
+	// never changes - only className/style toggle when animations are active.
 	let content: React.ReactNode = (
 		<Piece
 			piece={piece}

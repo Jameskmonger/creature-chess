@@ -1,16 +1,16 @@
+import { PlayerActions } from "@creature-chess/models";
+import { setupPluginListeners } from "~/plugins/redux";
+import { pluginRegistry } from "~/plugins/registry";
 import { AppState } from "~/store";
+import * as BattleEvents from "~/store/battle/events";
 import { setupBoardSyncListeners } from "~/store/board/sync";
 import { setupPlayersSyncListeners } from "~/store/game/players/sync";
+import { setupQuickChatListener } from "~/store/game/quickChat";
 import { clearSelectedPiece } from "~/store/game/ui/actions";
 import { ClientStartListening } from "~/store/listenerContext";
 import { setupSettingsListener } from "~/store/settings/sync";
 
-import * as BattleEvents from "~/store/battle/events";
-
-import { PlayerActions } from "@creature-chess/gamemode";
-
 import { setupClientBattleListeners } from "./battle";
-import { setupQuickChatListener } from "./chat/quickChat";
 import { setupCloseShopOnFirstBuyListener } from "./closeShopOnFirstBuy";
 import { setupForwardPlayerActions } from "./forwardPlayerActions";
 import { setupPreventAccidentalCloseListener } from "./preventAccidentalClose";
@@ -42,11 +42,13 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	setupSettingsListener(startListening);
 
 	setupForwardPlayerActions(startListening);
-	setupPreventAccidentalCloseListener(startListening);
-	setupCloseShopOnFirstBuyListener(startListening);
 	setupClientBattleListeners(startListening);
 	setupUiListener(startListening);
-	setupQuickChatListener(startListening);
 	setupBoardSyncListeners(startListening);
 	setupPlayersSyncListeners(startListening);
+	setupQuickChatListener(startListening);
+	setupCloseShopOnFirstBuyListener(startListening);
+	setupPreventAccidentalCloseListener(startListening);
+
+	setupPluginListeners(pluginRegistry, startListening);
 };

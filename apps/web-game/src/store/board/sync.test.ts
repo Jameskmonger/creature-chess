@@ -7,8 +7,8 @@ import { GameSession } from "~/game/GameSession";
 import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { GameConnection } from "~/networking/GameConnection";
 import { LobbyConnection } from "~/networking/LobbyConnection";
-import { Holder } from "~/utils/Holder";
 import { ClientExtra } from "~/store/listenerContext";
+import { Holder } from "~/utils/Holder";
 
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 

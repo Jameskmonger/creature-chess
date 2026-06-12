@@ -1,10 +1,18 @@
+import {
+	Gamemode,
+	GamemodeContext,
+	Player,
+	createGamemode,
+	resolveSettings,
+} from "@creature-chess/gamemode";
 import { v4 as uuid } from "uuid";
 
-import { Gamemode, Player } from "@creature-chess/gamemode";
-import { GameFinishEvent } from "@creature-chess/gamemode";
-import { PlayerStatus } from "@creature-chess/models";
-import { LobbyPlayer } from "@creature-chess/models";
-import { GamemodeSettings } from "@creature-chess/models";
+import {
+	GameFinishEvent,
+	GamemodeSettings,
+	LobbyPlayer,
+	PlayerStatus,
+} from "@creature-chess/models";
 
 import { BotImplementation, setupBotLogic } from "@cc-server/bot";
 
@@ -43,6 +51,7 @@ type Participants = {
 };
 
 type GameOptions = {
+	context: GamemodeContext;
 	onFinish: (event: GameFinishEvent["payload"]) => void;
 };
 
@@ -54,21 +63,27 @@ export class Game {
 	public constructor(
 		_settings: GamemodeSettings,
 		{ players, bots }: Participants,
-		{ onFinish }: GameOptions
+		{ context, onFinish }: GameOptions
 	) {
-		this.settings = _settings;
+		this.settings = resolveSettings(_settings, context.defines);
 
 		const gameId = uuid();
-		this.gamemode = new Gamemode(gameId, logger, _settings, {
-			onTurnComplete(timeMs) {
-				turnDurationMs.observe(timeMs);
-			},
-			onMatchStart() {
-				activeBattles.inc();
-				battlesStarted.inc();
-			},
-			onMatchEnd() {
-				activeBattles.dec();
+		this.gamemode = createGamemode({
+			id: gameId,
+			logger,
+			settings: this.settings,
+			context,
+			callbacks: {
+				onTurnComplete(timeMs) {
+					turnDurationMs.observe(timeMs);
+				},
+				onMatchStart() {
+					activeBattles.inc();
+					battlesStarted.inc();
+				},
+				onMatchEnd() {
+					activeBattles.dec();
+				},
 			},
 		});
 

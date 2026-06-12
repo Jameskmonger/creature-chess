@@ -1,5 +1,6 @@
-import { SubscribableBoard } from "@creature-chess/board";
 import { Gamemode } from "@creature-chess/gamemode";
+
+import { SubscribableBoard } from "@creature-chess/board";
 import { PlayerProfile } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 

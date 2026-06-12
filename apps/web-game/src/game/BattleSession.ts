@@ -9,6 +9,7 @@ import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
 import { PieceAnimationEventStore } from "../components/game/board/piece/match/animationEventStore";
+import { getCreatureLookup } from "../networking/creatureDefinitions";
 
 export class BattleSession {
 	public readonly board: SubscribableBoard;
@@ -36,6 +37,7 @@ export class BattleSession {
 			this.board,
 			this.pieceRegistry,
 			this.combatStore,
+			getCreatureLookup(),
 			this.settings,
 			turn,
 			(events) => this.animationEventStore.pushEvents(events)

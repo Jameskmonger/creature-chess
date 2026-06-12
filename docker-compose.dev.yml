@@ -1,0 +1,14 @@
+services:
+  server-game:
+    environment:
+      - CREATURE_CHESS_MANIFEST=creature-chess.dev.json
+
+  manifest-builder:
+    environment:
+      - CREATURE_CHESS_MANIFEST=creature-chess.dev.json
+    volumes:
+      - ./modules:/code/modules:ro
+
+  nginx:
+    volumes:
+      - ./modules:/workspace-builtin:ro

@@ -51,8 +51,7 @@ const wireRunnerQueue = (queue: RunnerInstance[]) => {
 
 const settings = GamemodeSettingsPresets.default;
 
-const buildSession = () =>
-	new BattleSession(new PieceRegistry(), settings);
+const buildSession = () => new BattleSession(new PieceRegistry(), settings);
 
 describe("BattleSession", () => {
 	beforeEach(() => {
@@ -81,7 +80,7 @@ describe("BattleSession", () => {
 
 		expect(await promise).toEqual({ turn: 12 });
 		expect(MockBattleRunner).toHaveBeenCalledTimes(1);
-		const [board, , combatStore, passedSettings, startingTurn] =
+		const [board, , combatStore, , passedSettings, startingTurn] =
 			runner.constructorArgs;
 		expect(board).toBe(session.board);
 		expect(combatStore).toBe(session.combatStore);
@@ -98,7 +97,7 @@ describe("BattleSession", () => {
 
 		session.start();
 
-		const onEvents = runner.constructorArgs[5] as (events: unknown[]) => void;
+		const onEvents = runner.constructorArgs[6] as (events: unknown[]) => void;
 		const events = [{ type: "piece_dying", pieceId: "p1" }];
 		onEvents(events);
 
@@ -116,7 +115,7 @@ describe("BattleSession", () => {
 		runner.resolveRun(0);
 		await promise;
 
-		expect(runner.constructorArgs[4]).toBe(0);
+		expect(runner.constructorArgs[5]).toBe(0);
 	});
 
 	test("calling start() again stops the previous runner before constructing the new one", async () => {

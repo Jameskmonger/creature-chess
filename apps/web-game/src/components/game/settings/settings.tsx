@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { createUseStyles } from "react-jss";
+import { Region } from "~/plugins";
 import { useSetSetting, useSetting } from "~/settings";
 
 import { QuitGameButton } from "./quitGameButton";
@@ -22,20 +23,22 @@ export function Settings() {
 	const setShowPing = useSetSetting("showPing");
 
 	return (
-		<div className={styles.settings}>
-			<div>
-				<QuitGameButton />
-			</div>
+		<Region cls="settings-section" id="settings.root" ctx={{}}>
+			<div className={styles.settings}>
+				<div>
+					<QuitGameButton />
+				</div>
 
-			<div>
-				<input
-					type="checkbox"
-					checked={showPing}
-					onChange={() => setShowPing(!showPing)}
-				/>
+				<div>
+					<input
+						type="checkbox"
+						checked={showPing}
+						onChange={() => setShowPing(!showPing)}
+					/>
 
-				<label>Show ping</label>
+					<label>Show ping</label>
+				</div>
 			</div>
-		</div>
+		</Region>
 	);
 }

@@ -1,17 +1,21 @@
 import { packPosition } from "@creature-chess/board";
 
+import { Player } from "../entities/player/player";
 import { createTestPlayer } from "../entities/player/testUtils";
 import {
 	buyCardPlayerAction,
-	dispatchIncomingPlayerAction,
 	dropPiecePlayerAction,
-	quickChatPlayerAction,
 	sellPiecePlayerAction,
 	spectatePlayerAction,
 	swapPiecePlayerAction,
 } from "./index";
 
-describe("PlayerAction registry — payload validation", () => {
+const dispatchIncomingPlayerAction = (
+	player: Player,
+	raw: { type?: unknown; payload?: unknown }
+) => player.gamemode.playerActions.dispatchIncoming(player, raw);
+
+describe("PlayerAction registry - payload validation", () => {
 	describe("buyCardPlayerAction", () => {
 		test("accepts a non-negative integer index", () => {
 			const player = createTestPlayer();
@@ -209,32 +213,55 @@ describe("PlayerAction registry — payload validation", () => {
 		});
 	});
 
-	describe("quickChatPlayerAction", () => {
-		test("accepts a valid chat option", () => {
+	describe("wrap", () => {
+		test("composes wrappers around the core handler, earliest outermost", () => {
 			const player = createTestPlayer();
-			const result = dispatchIncomingPlayerAction(player, {
-				type: quickChatPlayerAction.type,
-				payload: { sendingPlayerId: "p1", chatValue: "GL" },
+			const calls: string[] = [];
+			const { playerActions } = player.gamemode;
+
+			playerActions.wrap(sellPiecePlayerAction.type, (next) => {
+				calls.push("outer-before");
+				next();
+				calls.push("outer-after");
 			});
-			expect(result.ok).toBe(true);
+			playerActions.wrap(sellPiecePlayerAction.type, (next) => {
+				calls.push("inner-before");
+				next();
+				calls.push("inner-after");
+			});
+
+			dispatchIncomingPlayerAction(
+				player,
+				sellPiecePlayerAction({ pieceId: "abc" })
+			);
+
+			expect(calls).toEqual([
+				"outer-before",
+				"inner-before",
+				"inner-after",
+				"outer-after",
+			]);
 		});
 
-		test("rejects unknown chat option", () => {
+		test("a wrapper that skips next() vetoes inner wrappers and the handler", () => {
 			const player = createTestPlayer();
-			const result = dispatchIncomingPlayerAction(player, {
-				type: quickChatPlayerAction.type,
-				payload: { sendingPlayerId: "p1", chatValue: "haxx" },
-			});
-			expect(result.ok).toBe(false);
-		});
+			const calls: string[] = [];
+			const { playerActions } = player.gamemode;
 
-		test("rejects missing chatValue", () => {
-			const player = createTestPlayer();
-			const result = dispatchIncomingPlayerAction(player, {
-				type: quickChatPlayerAction.type,
-				payload: { sendingPlayerId: "p1" },
+			playerActions.wrap(sellPiecePlayerAction.type, () => {
+				calls.push("veto");
 			});
-			expect(result.ok).toBe(false);
+			playerActions.wrap(sellPiecePlayerAction.type, (next) => {
+				calls.push("inner");
+				next();
+			});
+
+			dispatchIncomingPlayerAction(
+				player,
+				sellPiecePlayerAction({ pieceId: "abc" })
+			);
+
+			expect(calls).toEqual(["veto"]);
 		});
 	});
 

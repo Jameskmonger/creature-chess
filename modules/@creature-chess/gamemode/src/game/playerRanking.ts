@@ -1,7 +1,8 @@
+import { TypedEventEmitter } from "@cc-engine/kernel";
+
 import { PlayerStatus } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
-import { TypedEventEmitter } from "../events/typedEventEmitter";
 
 type Entry = {
 	id: string;
@@ -82,7 +83,10 @@ export class PlayerRanking {
 		this.entries = [];
 	}
 
-	private update(id: string, patch: Partial<Pick<Entry, "health" | "hasQuit">>) {
+	private update(
+		id: string,
+		patch: Partial<Pick<Entry, "health" | "hasQuit">>
+	) {
 		const index = this.entries.findIndex((e) => e.id === id);
 		if (index === -1) {
 			return;

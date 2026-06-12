@@ -6,8 +6,21 @@ import { withErrorBoundary, useErrorBoundary } from "react-use-error-boundary";
 import { GamePage } from "./pages/game";
 import { LobbyPage } from "./pages/lobby";
 import { MenuPage } from "./pages/menu";
+import { Region } from "./plugins";
 import { AppState } from "./store";
 import { useGlobalStyles } from "./styles";
+
+/**
+ * Top-level extension surface for mods that want to render persistent
+ * UI without targeting an existing host region.
+ */
+function AppExtensionSurface() {
+	return (
+		<Region cls="app-extension" ctx={{}}>
+			{null}
+		</Region>
+	);
+}
 
 export const App = withErrorBoundary(() => {
 	const [error, resetError] = useErrorBoundary();
@@ -29,13 +42,10 @@ export const App = withErrorBoundary(() => {
 		);
 	}
 
-	if (isInGame) {
-		return <GamePage />;
-	}
-
-	if (isInLobby) {
-		return <LobbyPage />;
-	}
-
-	return <MenuPage />;
+	return (
+		<>
+			{isInGame ? <GamePage /> : isInLobby ? <LobbyPage /> : <MenuPage />}
+			<AppExtensionSurface />
+		</>
+	);
 });

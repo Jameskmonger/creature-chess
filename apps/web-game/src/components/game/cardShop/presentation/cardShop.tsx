@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "~/components/ui";
 import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { useGamemodeSettings } from "~/game/sessionContext";
+import { Region } from "~/plugins";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { Card as CardModel } from "@creature-chess/models";
@@ -127,18 +128,23 @@ export function CardShopPresentation({
 	return (
 		<div className={classes.shop}>
 			<div className={classes.cards}>
-				{cards.map(
-					(card, index) =>
-						card !== null && (
+				{cards.map((card, index) => (
+					<Region
+						key={index}
+						cls="card-shop-card"
+						id={`shop.card.${index}`}
+						ctx={{ cardIndex: index, card }}
+					>
+						{card !== null && (
 							<Card
-								key={card!.id}
 								card={card}
 								money={money}
 								owned={ownedDefinitionIds.includes(card.definitionId)}
 								onBuy={() => onBuy?.(index)}
 							/>
-						)
-				)}
+						)}
+					</Region>
+				))}
 			</div>
 
 			<div className={classes.bottomBar}>

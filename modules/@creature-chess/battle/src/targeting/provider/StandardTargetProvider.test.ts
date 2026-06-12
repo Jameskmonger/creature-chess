@@ -1,6 +1,7 @@
 import { Board, rotateBoard } from "@creature-chess/board";
 import {
 	CreatureDefinition,
+	CreatureLookup,
 	CreatureStats,
 	PieceModel,
 } from "@creature-chess/models";
@@ -11,15 +12,10 @@ import { PieceCombatState, PieceInfoStore, pieceInfoStore } from "../../state";
 import { StandardTargetProvider } from "./StandardTargetProvider";
 
 const mockDefinitions: Record<number, CreatureDefinition> = {};
-
-jest.mock("@creature-chess/models", () => {
-	const actual = jest.requireActual("@creature-chess/models");
-	return {
-		__esModule: true,
-		...actual,
-		getDefinitionById: jest.fn((id: number) => mockDefinitions[id]),
-	};
-});
+const creatures: CreatureLookup = {
+	get: (id: number) => mockDefinitions[id],
+	has: (id: number) => id in mockDefinitions,
+};
 
 const makeBaseStats = (): CreatureStats => ({
 	hp: 0,
@@ -163,6 +159,7 @@ describe("StandardTargetProvider", () => {
 				board,
 				pieceRegistry,
 				combatStore,
+				creatures,
 				attacker.id
 			);
 
@@ -179,6 +176,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -213,6 +211,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -229,6 +228,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 
@@ -247,6 +247,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -263,6 +264,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 
@@ -282,6 +284,7 @@ describe("StandardTargetProvider", () => {
 				board,
 				pieceRegistry,
 				combatStore,
+				creatures,
 				attacker.id
 			);
 
@@ -298,6 +301,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -332,6 +336,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -348,6 +353,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 
@@ -366,6 +372,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -382,6 +389,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 
@@ -443,6 +451,7 @@ describe("StandardTargetProvider", () => {
 				board,
 				pieceRegistry,
 				combatStore,
+				creatures,
 				attacker.id
 			);
 
@@ -459,6 +468,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -486,7 +496,7 @@ describe("StandardTargetProvider", () => {
 
 			it("respects ID ordering", () => {
 				expect(
-					subject.getTarget(board, pieceRegistry, combatStore, attacker.id)
+					subject.getTarget(board, pieceRegistry, combatStore, creatures, attacker.id)
 				).toBe(westEnemy.id);
 			});
 
@@ -497,7 +507,7 @@ describe("StandardTargetProvider", () => {
 
 				it("respects ID ordering", () => {
 					expect(
-						subject.getTarget(board, pieceRegistry, combatStore, attacker.id)
+						subject.getTarget(board, pieceRegistry, combatStore, creatures, attacker.id)
 					).toBe(westEnemy.id);
 				});
 			});
@@ -600,6 +610,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -616,6 +627,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 
@@ -634,6 +646,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -650,6 +663,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 
@@ -748,6 +762,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -764,6 +779,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 
@@ -782,6 +798,7 @@ describe("StandardTargetProvider", () => {
 					board,
 					pieceRegistry,
 					combatStore,
+					creatures,
 					attacker.id
 				);
 
@@ -798,6 +815,7 @@ describe("StandardTargetProvider", () => {
 						board,
 						pieceRegistry,
 						combatStore,
+						creatures,
 						attacker.id
 					);
 

@@ -20,7 +20,7 @@ export function doHit(
 	pieceRegistry: ReadablePieceRegistry,
 	id: PieceModel["id"],
 	action: HitAction,
-	{ combatStore, eventLog }: Stores
+	{ combatStore, creatures, eventLog }: Stores
 ) {
 	const attacker = pieceRegistry.getPieceById(id);
 	const attackerPosition = board.getPiecePosition(id);
@@ -36,8 +36,8 @@ export function doHit(
 		return;
 	}
 
-	const attackerStats = getStats(attacker);
-	const attackRange = getAttackRange(attacker);
+	const attackerStats = getStats(attacker, creatures);
+	const attackRange = getAttackRange(attacker, creatures);
 
 	const inRange = inAttackRange(
 		packPosition(attackerPosition[0], attackerPosition[1]),
@@ -52,7 +52,7 @@ export function doHit(
 	const attackerCombat = combatStore.getPiece(attacker.id);
 	const targetCombat = combatStore.getPiece(target.id);
 
-	const damage = getHitDamage(attacker, target);
+	const damage = getHitDamage(attacker, target, creatures);
 	const newDefenderHealth = Math.max(targetCombat.currentHealth - damage, 0);
 
 	const attackerDirection = getRelativeDirection(

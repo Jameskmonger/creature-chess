@@ -1,87 +1,16 @@
-import { PieceModel, QuickChatOption } from "@creature-chess/models";
-
-import { networkedAction } from "../../events/networkedAction";
-
-export type AfterSellPieceEvent = ReturnType<typeof afterSellPieceEvent>;
-export const afterSellPieceEvent = networkedAction<
-	{ piece: PieceModel },
-	"afterSellPieceEvent"
->("afterSellPieceEvent");
-
-export type AfterRerollCardsEvent = ReturnType<typeof afterRerollCardsEvent>;
-export const afterRerollCardsEvent = networkedAction("afterRerollCardsEvent");
-
-export type ClientFinishMatchEvent = ReturnType<typeof clientFinishMatchEvent>;
-export const clientFinishMatchEvent = networkedAction("clientFinishMatchEvent");
-
-export type PlayerDeathEvent = ReturnType<typeof playerDeathEvent>;
-export const playerDeathEvent = networkedAction("playerDeathEvent");
-
-export type PlayerFinishMatchEvent = ReturnType<typeof playerFinishMatchEvent>;
-export const playerFinishMatchEvent = networkedAction<
-	{
-		homeScore: number;
-		awayScore: number;
-		isHomePlayer: boolean;
-	},
-	"playerFinishMatchEvent"
->("playerFinishMatchEvent");
-
-export type PlayerReceiveQuickChatEvent = ReturnType<
-	typeof playerReceiveQuickChatEvent
->;
-export const playerReceiveQuickChatEvent = networkedAction<
-	{
-		sendingPlayerId: string;
-		chatValue: QuickChatOption;
-	},
-	"playerReceiveQuickChatEvent"
->("playerReceiveQuickChatEvent");
-
-/**
- * Keyed map of every Player event — the surface for the keyed
- * `player.events.onPlayerEvent(type, fn)` channel. Includes both
- * wire-forwarded events and server-internal events.
- */
-export type PlayerEventByType = {
-	afterSellPiece: AfterSellPieceEvent;
-	afterRerollCards: AfterRerollCardsEvent;
-	clientFinishMatch: ClientFinishMatchEvent;
-	playerDeath: PlayerDeathEvent;
-	playerFinishMatch: PlayerFinishMatchEvent;
-	playerReceiveQuickChat: PlayerReceiveQuickChatEvent;
-};
-
-const playerEventActionCreators: {
-	[K in keyof PlayerEventByType]: { type: string };
-} = {
-	afterSellPiece: afterSellPieceEvent,
-	afterRerollCards: afterRerollCardsEvent,
-	clientFinishMatch: clientFinishMatchEvent,
-	playerDeath: playerDeathEvent,
-	playerFinishMatch: playerFinishMatchEvent,
-	playerReceiveQuickChat: playerReceiveQuickChatEvent,
-};
-
-export const PlayerEventTypeByActionType: Record<string, keyof PlayerEventByType> =
-	Object.fromEntries(
-		(Object.keys(playerEventActionCreators) as (keyof PlayerEventByType)[]).map(
-			(key) => [playerEventActionCreators[key].type, key]
-		)
-	);
-
-// Wire-shape subset: events the server forwards to the client over
-// `sendLocalPlayerEvents`. The firehose `player.events.onPlayerEvent(fn)`
-// fires only for these. Internal events go through the keyed channel.
-export const PlayerEventActionTypesArray: string[] = [
-	playerDeathEvent.toString(),
-	playerReceiveQuickChatEvent.toString(),
-];
-
-export type PlayerEvent =
-	| AfterSellPieceEvent
-	| AfterRerollCardsEvent
-	| ClientFinishMatchEvent
-	| PlayerDeathEvent
-	| PlayerFinishMatchEvent
-	| PlayerReceiveQuickChatEvent;
+export {
+	afterSellPieceEvent,
+	type AfterSellPieceEvent,
+	afterRerollCardsEvent,
+	type AfterRerollCardsEvent,
+	clientFinishMatchEvent,
+	type ClientFinishMatchEvent,
+	playerDeathEvent,
+	type PlayerDeathEvent,
+	playerFinishMatchEvent,
+	type PlayerFinishMatchEvent,
+	type PlayerEventByType,
+	PlayerEventTypeByActionType,
+	PlayerEventActionTypesArray,
+	type PlayerEvent,
+} from "@creature-chess/models";

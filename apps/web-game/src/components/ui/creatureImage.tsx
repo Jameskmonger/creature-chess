@@ -3,8 +3,9 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 
+import { getCreatureImageUrl } from "~/networking/creatureDefinitions";
+
 interface Props {
-	baseUrl?: string;
 	definitionId: number;
 	facing?: "front" | "back";
 	className?: string;
@@ -36,15 +37,11 @@ const useStyles = createUseStyles({
 	},
 });
 
-function getCreatureUrl(facing: "front" | "back", definitionId: number) {
-	return `${APP_IMAGE_ROOT}/creatures/${facing}/${definitionId}.png`;
-}
-
 export function CreatureImage({ facing, definitionId, className }: Props) {
-	return (
-		<img
-			className={classNames(useStyles().image, className)}
-			src={getCreatureUrl(facing || "front", definitionId)}
-		/>
-	);
+	const classes = useStyles();
+	const src = getCreatureImageUrl(definitionId, facing || "front");
+	if (!src) {
+		return null;
+	}
+	return <img className={classNames(classes.image, className)} src={src} />;
 }

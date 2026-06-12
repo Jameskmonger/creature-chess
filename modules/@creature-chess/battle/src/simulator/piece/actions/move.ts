@@ -15,7 +15,7 @@ export function doMove(
 	pieceRegistry: ReadablePieceRegistry,
 	id: PieceModel["id"],
 	action: MoveAction,
-	{ combatStore }: Stores
+	{ combatStore, creatures }: Stores
 ) {
 	const existingPosition = board.getPiecePosition(id);
 
@@ -36,7 +36,7 @@ export function doMove(
 		return;
 	}
 
-	const stats = getStats(piece);
+	const stats = getStats(piece, creatures);
 
 	const canMoveAtTurn =
 		currentTurn + MOVE_TURN_DURATION + getCooldownForSpeed(stats.speed);

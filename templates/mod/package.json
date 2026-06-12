@@ -1,0 +1,26 @@
+{
+	"private": true,
+	"name": "@your-handle/your-mod",
+	"version": "0.0.1",
+	"description": "Short one-line description of what your mod does.",
+	"author": "Your Name",
+	"license": "ISC",
+	"main": "./dist/client.js",
+	"types": "./client.ts",
+	"exports": {
+		"./client": {
+			"types": "./client.ts",
+			"default": "./dist/client.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"build:web": "webpack -c ./webpack.config.js"
+	},
+	"peerDependencies": {
+		"@cc-engine/kernel": "*",
+		"@cc-plugins/api": "*",
+		"@creature-chess/gamemode": "*"
+	}
+}

@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/ban-types */
-import { GameEvents, PlayerCommands } from "@creature-chess/gamemode";
+import { GameEvents, PlayerCommands } from "@creature-chess/models";
 
 import { GameConnection } from "./GameConnection";
 import { ConnectionStatus } from "./types";
@@ -85,6 +85,7 @@ describe("GameConnection", () => {
 			players: [{ id: "p1", name: "Alice" }],
 			game: { phase: 1, phaseStartedAtSeconds: 1000 },
 			settings: { maxPlayers: 8 },
+			creatures: [],
 		};
 
 		it("should seed the store by replaying connection-packet contents as wire events", () => {
@@ -218,7 +219,9 @@ describe("GameConnection", () => {
 			socket._trigger("sendGameEvents", { type: "bogusEvent" });
 
 			expect(consoleSpy).toHaveBeenCalledWith(
-				expect.stringContaining("Unhandled sendGameEvents type")
+				expect.stringContaining(
+					"Rejected sendGameEvents of type \"bogusEvent\""
+				)
 			);
 			consoleSpy.mockRestore();
 		});
@@ -252,8 +255,8 @@ describe("GameConnection", () => {
 	describe("player event listeners", () => {
 		it("should dispatch valid player events verbatim", () => {
 			const action = {
-				type: "playerReceiveQuickChatEvent",
-				payload: { sendingPlayerId: "p1", chatValue: 0 },
+				type: "playerDeathEvent",
+				payload: {},
 			};
 			socket._trigger("sendLocalPlayerEvents", action);
 
@@ -265,7 +268,9 @@ describe("GameConnection", () => {
 			socket._trigger("sendLocalPlayerEvents", { type: "bogusEvent" });
 
 			expect(consoleSpy).toHaveBeenCalledWith(
-				expect.stringContaining("Unhandled sendLocalPlayerEvents type")
+				expect.stringContaining(
+					"Rejected sendLocalPlayerEvents of type \"bogusEvent\""
+				)
 			);
 			consoleSpy.mockRestore();
 		});

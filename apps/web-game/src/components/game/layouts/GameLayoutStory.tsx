@@ -8,7 +8,7 @@ import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 import { Overlay } from "~/store/game/ui/overlay";
 
-import { Builders, GamePhase, getDefinitionById } from "@creature-chess/models";
+import { Builders, GamePhase } from "@creature-chess/models";
 import { GamemodeSettingsPresets } from "@creature-chess/models";
 
 import { GameStateProvider } from "../../../../.storybook/GameStateProvider";
@@ -20,25 +20,25 @@ const MOCK_PIECES = {
 			id: "board-1",
 			ownerId: "1234",
 			definitionId: 1,
-			traits: getDefinitionById(1)!.traits,
+			traits: ["wood", "valiant"],
 			stage: 1,
-			maxHealth: getDefinitionById(1)!.stages[1].hp,
+			maxHealth: 60,
 		}),
 		Builders.buildPieceModel({
 			id: "board-2",
 			ownerId: "1234",
 			definitionId: 2,
-			traits: getDefinitionById(2)!.traits,
+			traits: ["wood", "cunning"],
 			stage: 0,
-			maxHealth: getDefinitionById(2)!.stages[0].hp,
+			maxHealth: 30,
 		}),
 		Builders.buildPieceModel({
 			id: "board-3",
 			ownerId: "1234",
 			definitionId: 3,
-			traits: getDefinitionById(3)!.traits,
+			traits: ["earth", "valiant"],
 			stage: 2,
-			maxHealth: getDefinitionById(3)!.stages[2].hp,
+			maxHealth: 120,
 		}),
 	],
 	bench: [
@@ -46,17 +46,17 @@ const MOCK_PIECES = {
 			id: "bench-1",
 			ownerId: "1234",
 			definitionId: 4,
-			traits: getDefinitionById(4)!.traits,
+			traits: ["earth", "cunning"],
 			stage: 0,
-			maxHealth: getDefinitionById(4)!.stages[0].hp,
+			maxHealth: 30,
 		}),
 		Builders.buildPieceModel({
 			id: "bench-2",
 			ownerId: "1234",
 			definitionId: 5,
-			traits: getDefinitionById(5)!.traits,
+			traits: ["metal", "valiant"],
 			stage: 1,
-			maxHealth: getDefinitionById(5)!.stages[1].hp,
+			maxHealth: 60,
 		}),
 	],
 };

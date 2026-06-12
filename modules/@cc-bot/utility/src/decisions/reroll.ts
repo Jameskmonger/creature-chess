@@ -1,11 +1,7 @@
 import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 import { collectAllPieces, completionProgress, sharesTrait } from "../cards";
-import {
-	effectiveAmbition,
-	isInPanicMode,
-	Personality,
-} from "../personality";
+import { effectiveAmbition, isInPanicMode, Personality } from "../personality";
 
 const MONEY_FLOOR = 10;
 

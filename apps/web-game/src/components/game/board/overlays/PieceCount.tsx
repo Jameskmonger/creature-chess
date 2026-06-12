@@ -5,12 +5,11 @@ import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useAccountId } from "~/auth/context";
 import { useBoardSubscription } from "~/components/board/useBoard";
+import { useGameSession } from "~/game/sessionContext";
 import { AppState } from "~/store";
 import { useLocalPlayer } from "~/store/game/players";
 
 import { GamePhase } from "@creature-chess/models";
-
-import { useGameSession } from "~/game/sessionContext";
 
 const useStyles = createUseStyles({
 	pieceCount: {

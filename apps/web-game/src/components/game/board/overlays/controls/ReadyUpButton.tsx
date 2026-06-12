@@ -65,7 +65,7 @@ export function ReadyUpButton() {
 	}, []);
 
 	// Drop the optimistic flag whenever the underlying conditions for showing
-	// the button no longer hold — server confirmed ready, phase moved on, or
+	// the button no longer hold - server confirmed ready, phase moved on, or
 	// the player died. Without this the flag could leak across rounds.
 	React.useEffect(() => {
 		if (!inPreparingPhase || !notReady || isDead) {

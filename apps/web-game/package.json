@@ -24,6 +24,7 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
+		"@cc-plugins/api": "workspace:*",
 		"@creature-chess/battle": "workspace:*",
 		"@creature-chess/board": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",

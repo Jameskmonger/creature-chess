@@ -1,7 +1,7 @@
+import { Logger } from "@cc-engine/kernel";
 import delay from "delay";
 import pDefer from "p-defer";
 import { v4 as uuid } from "uuid";
-import { Logger } from "winston";
 
 import {
 	BattleRunner,
@@ -15,6 +15,7 @@ import { GamemodeSettings } from "@creature-chess/models";
 import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { Player } from "../entities/player/player";
+import { CreatureRegistry, GameplayEventsBus } from "../factory";
 
 export class Match {
 	private runner: BattleRunner;
@@ -27,12 +28,15 @@ export class Match {
 	private clientFinishedMatchAway = pDefer();
 
 	public constructor(
+		private readonly gameId: string,
 		private readonly pieceRegistry: ReadablePieceRegistry,
 		public readonly home: Player,
 		public readonly away: Player,
 		public readonly awayIsClone: boolean,
 		private logger: Logger,
 		private settings: GamemodeSettings,
+		private pluginEvents: GameplayEventsBus,
+		private creatures: CreatureRegistry,
 		private onTurnComplete?: (timeMs: number) => void
 	) {
 		this.board = mergeBoards(this.boardId, home.board, away.board);
@@ -44,7 +48,25 @@ export class Match {
 			this.board,
 			this.pieceRegistry,
 			this.combatStore,
-			this.settings
+			this.creatures,
+			this.settings,
+			undefined,
+			(events) => {
+				for (const event of events) {
+					if (event.type !== "piece_dying") {
+						continue;
+					}
+					const piece = this.pieceRegistry.getPieceById(event.pieceId);
+					if (!piece) {
+						continue;
+					}
+					this.pluginEvents.emit("pieceDeath", {
+						gameId: this.gameId,
+						pieceId: event.pieceId,
+						ownerId: piece.ownerId,
+					});
+				}
+			}
 		);
 
 		// auto-resolve the match from the "away" side if they are a clone

@@ -13,7 +13,7 @@ export type RoundCallbacks = {
 };
 
 /**
- * One iteration of the game's outer loop: preparing → ready → playing.
+ * One iteration of the game's outer loop: preparing -> ready -> playing.
  */
 export class Round {
 	public constructor(
@@ -35,6 +35,13 @@ export class Round {
 			phase: GamePhase.PREPARING,
 			startedAt: Date.now() / 1000,
 			round: this.roundNumber,
+		});
+
+		gamemode.pluginEvents.emit("roundPhaseChange", {
+			gameId: gamemode.id,
+			roundNumber: this.roundNumber,
+			from: null,
+			to: "preparing",
 		});
 
 		const living = players.getLiving();
@@ -124,12 +131,15 @@ export class Round {
 			}
 
 			const match = new Match(
+				gamemode.id,
 				gamemode.pieceRegistry,
 				homePlayer,
 				awayPlayer,
 				awayIsClone,
 				logger,
 				settings,
+				gamemode.pluginEvents,
+				gamemode.creatures,
 				this.callbacks.onTurnComplete
 			);
 			matches.push(match);
@@ -143,6 +153,13 @@ export class Round {
 		gamemode.setRoundInfo({
 			phase: GamePhase.READY,
 			startedAt: Date.now() / 1000,
+		});
+
+		gamemode.pluginEvents.emit("roundPhaseChange", {
+			gameId: gamemode.id,
+			roundNumber: this.roundNumber,
+			from: "preparing",
+			to: "ready",
 		});
 
 		if (settings.readyPhaseLengthMs > 0) {
@@ -165,6 +182,13 @@ export class Round {
 			startedAt: Date.now() / 1000,
 		});
 
+		gamemode.pluginEvents.emit("roundPhaseChange", {
+			gameId: gamemode.id,
+			roundNumber: this.roundNumber,
+			from: "ready",
+			to: "playing",
+		});
+
 		await Promise.all(
 			matches.map(async (match) => {
 				this.callbacks.onMatchStart?.();
@@ -181,6 +205,26 @@ export class Round {
 				if (!match.awayIsClone) {
 					settle(match.away, false);
 				}
+
+				const winnerId =
+					homeScore > awayScore
+						? match.home.id
+						: awayScore > homeScore
+							? match.away.id
+							: null;
+				const damageToLoser =
+					winnerId === null
+						? 0
+						: winnerId === match.home.id
+							? homeScore
+							: awayScore;
+				gamemode.pluginEvents.emit("matchSettled", {
+					gameId: gamemode.id,
+					homeId: match.home.id,
+					awayId: match.away.id,
+					winnerId,
+					damageToLoser,
+				});
 			})
 		);
 

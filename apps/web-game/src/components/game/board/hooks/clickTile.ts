@@ -34,7 +34,7 @@ export const useOnClickTile = (
 
 		const result = resolvePiecePlacement(selectedPieceId, target, board, bench);
 
-		// Clicks deliberately don't swap — drag is the swap gesture.
+		// Clicks deliberately don't swap - drag is the swap gesture.
 		if (result.kind !== "drop") {
 			return;
 		}

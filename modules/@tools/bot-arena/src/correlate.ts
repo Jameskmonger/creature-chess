@@ -25,7 +25,7 @@ const parseLevel = (raw: string): Level => {
 	return raw;
 };
 
-// Map low→0, high→1 so Pearson stays meaningful on categorical traits.
+// Map low->0, high->1 so Pearson stays meaningful on categorical traits.
 const levelToNumber = (l: Level): number => (l === "high" ? 1 : 0);
 
 const dataDir = join(__dirname, "..", "data");
@@ -216,7 +216,7 @@ const main = (): void => {
 
 	console.log(
 		runId
-			? `Run id: ${runId} — reading ${csvPaths.length} file(s):`
+			? `Run id: ${runId} - reading ${csvPaths.length} file(s):`
 			: `Reading ${csvPaths.length} file(s) (latest run):`
 	);
 	for (const p of csvPaths) {

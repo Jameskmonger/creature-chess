@@ -1,7 +1,7 @@
 import * as React from "react";
+import { useRef } from "react";
 
 import "pepjs";
-import { useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "react-jss";
 import { Provider as ReduxProvider } from "react-redux";
@@ -11,9 +11,15 @@ import { Holder } from "~/utils/Holder";
 
 import { GameSessionHolder } from "./game/GameSessionHolder";
 import { GameSessionProvider } from "./game/sessionContext";
+import { loadCreatureCatalog } from "./networking/creatureDefinitions";
 import { GameConnection } from "./networking/GameConnection";
 import { LobbyConnection } from "./networking/LobbyConnection";
 import { SocketManagerProvider } from "./networking/context";
+import {
+	installPluginRuntime,
+	loadClientPlugins,
+	wirePluginHostState,
+} from "./plugins";
 import { createAppStore } from "./store";
 import { DEFAULT_THEME } from "./useStyles";
 
@@ -50,6 +56,11 @@ function AppRoot() {
 			lobbyConnectionHolder: lobbyConnectionHolderRef.current,
 			accountIdHolder: accountIdHolderRef.current,
 		});
+
+		wirePluginHostState({
+			store: storeRef.current,
+			getLocalPlayerId: () => accountIdHolderRef.current?.peek() ?? null,
+		});
 	}
 
 	return (
@@ -70,7 +81,34 @@ function AppRoot() {
 	);
 }
 
-const container = document.getElementById("approot");
-const root = createRoot(container!);
+async function bootstrap() {
+	installPluginRuntime();
+	// Pre-game surfaces (menu, lobby) need creature art before any connection.
+	const catalogUrl = APP_PLUGIN_MANIFEST_URL.replace(
+		/manifest\.json$/,
+		"creatures.json"
+	);
+	await Promise.all([
+		loadCreatureCatalog(catalogUrl),
+		loadClientPlugins(APP_PLUGIN_MANIFEST_URL),
+	]);
 
-root.render(<AppRoot />);
+	const container = document.getElementById("approot");
+	const root = createRoot(container!);
+	root.render(<AppRoot />);
+}
+
+bootstrap().catch((error) => {
+	// eslint-disable-next-line no-console
+	console.error("[bootstrap] failed before render", error);
+	const container = document.getElementById("approot");
+	if (container) {
+		const root = createRoot(container);
+		root.render(
+			<div style={{ padding: 24, fontFamily: "sans-serif" }}>
+				Something went wrong while starting the game. Please refresh to try
+				again.
+			</div>
+		);
+	}
+});

@@ -1,14 +1,15 @@
-import { PieceModel } from "@creature-chess/models";
+import { CreatureLookup, PieceModel } from "@creature-chess/models";
 
 import { getStats } from "./getStats";
 import { getTypeAttackBonus } from "./typeRelations";
 
 export const getHitDamage = (
 	attacker: PieceModel,
-	defender: PieceModel
+	defender: PieceModel,
+	creatures: CreatureLookup
 ): number => {
-	const attackerStats = getStats(attacker);
-	const defenderStats = getStats(defender);
+	const attackerStats = getStats(attacker, creatures);
+	const defenderStats = getStats(defender, creatures);
 
 	const attackBonus = getTypeAttackBonus(attacker.traits, defender.traits);
 

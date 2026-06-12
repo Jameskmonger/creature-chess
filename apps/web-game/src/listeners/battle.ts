@@ -1,3 +1,4 @@
+import { GameEvents } from "@creature-chess/models";
 import {
 	pauseBattleCommand,
 	resumeBattleCommand,
@@ -7,7 +8,6 @@ import { battleFinishEvent } from "~/store/battle/events";
 import { ClientStartListening } from "~/store/listenerContext";
 
 import { seedCombatStore } from "@creature-chess/battle";
-import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 export const setupClientBattleListeners = (

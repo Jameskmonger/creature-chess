@@ -1,7 +1,4 @@
-import {
-	dispatchIncomingPlayerAction,
-	Player,
-} from "@creature-chess/gamemode";
+import { Player } from "@creature-chess/gamemode";
 
 import { GameSocket } from "../socket";
 
@@ -10,7 +7,7 @@ export const setupIncomingNetworking = (socket: GameSocket, player: Player) => {
 		raw: { type?: unknown; payload?: unknown },
 		ack?: () => void
 	) => {
-		const result = dispatchIncomingPlayerAction(player, raw);
+		const result = player.gamemode.playerActions.dispatchIncoming(player, raw);
 		if (!result.ok) {
 			console.warn(`PlayerAction rejected for ${player.id}: ${result.reason}`);
 		}

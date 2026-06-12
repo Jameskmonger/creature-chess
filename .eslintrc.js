@@ -35,6 +35,31 @@ module.exports = {
 				"import/no-default-export": "off",
 			},
 		},
+		{
+			files: [
+				"apps/**/*.{ts,tsx}",
+				"modules/@cc-engine/**/*.{ts,tsx}",
+				"modules/@cc-bot/**/*.{ts,tsx}",
+				"modules/@cc-server/**/*.{ts,tsx}",
+				"modules/@creature-chess/**/*.{ts,tsx}",
+				"modules/@tools/**/*.{ts,tsx}",
+				"templates/**/*.{ts,tsx}",
+			],
+			rules: {
+				"no-restricted-imports": [
+					"error",
+					{
+						patterns: [
+							{
+								group: ["@cc-plugins/*", "!@cc-plugins/api", "!@cc-plugins/api/*"],
+								message:
+									"Core must not import from a specific plugin.",
+							},
+						],
+					},
+				],
+			},
+		},
 	],
 	rules: {
 		"@typescript-eslint/adjacent-overload-signatures": "error",

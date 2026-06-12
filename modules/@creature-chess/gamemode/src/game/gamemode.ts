@@ -1,75 +1,115 @@
-import { Logger } from "winston";
+import { DefinesApi, Logger } from "@cc-engine/kernel";
 
-import { SubscribableBoard } from "@creature-chess/board";
 import { Rng, createRng } from "@shoki/random";
 
+import { SubscribableBoard } from "@creature-chess/board";
 import { GamePhase, RoundInfoState } from "@creature-chess/models";
 import { PlayerProfile, PlayerStatus } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
 import { PieceRegistry, ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { Player, createPlayer } from "../entities/player/player";
+import {
+	GameplayEventsBus,
+	CreatureRegistry,
+	GamemodeInit,
+} from "../factory";
+import { PlayerActionRegistry } from "../playerActions/registry";
+import { WireProtocol } from "../wireProtocol";
 import { CardDeck } from "./cardDeck";
-import { Match } from "./match";
 import { GameFinishEvent } from "./events";
+import { runGame, GameContext } from "./gameContext";
 import {
 	GamemodeEventsApi,
 	GamemodeEventsEmitter,
 	createGamemodeEvents,
 } from "./gamemodeEvents";
-import { runGame, GameContext } from "./gameContext";
+import { Match } from "./match";
 import { OpponentProvider } from "./opponentProvider";
-import { playerRound } from "./playerRound";
 import { PlayerList } from "./playerList";
+import { playerRound } from "./playerRound";
 
-type GamemodeCallbacks = {
+export type GamemodeCallbacks = {
 	onTurnComplete?: (timeMs: number) => void;
 	onMatchStart?: () => void;
 	onMatchEnd?: () => void;
 };
 
-export class Gamemode {
+export type GamemodeApi = {
+	readonly id: string;
+	readonly defines: DefinesApi;
+	readonly creatures: CreatureRegistry;
+	readonly pluginEvents: GameplayEventsBus;
+	readonly playerActions: PlayerActionRegistry;
+	readonly wire: WireProtocol;
+	readonly pieceRegistry: ReadablePieceRegistry;
+	readonly events: GamemodeEventsApi;
+	roundInfo: RoundInfoState;
+	getDeck(): CardDeck;
+	getPlayerById(playerId: string): Player | null;
+	getRoundInfo(): RoundInfoState;
+	getConnectedPlayers(): Player[];
+	getPlayerListPlayers(): ReturnType<PlayerList["getValue"]>;
+	setRoundInfo(payload: {
+		phase: GamePhase;
+		startedAt: number;
+		round?: number;
+	}): void;
+	onFinish(fn: (event: GameFinishEvent["payload"]) => void): void;
+};
+
+export class Gamemode implements GamemodeApi {
 	public roundInfo: RoundInfoState = {
 		round: 1,
 		phase: GamePhase.PREPARING,
 		phaseStartedAtSeconds: 0,
 	};
 
-	private readonly pieceRegistryImpl: PieceRegistry = new PieceRegistry();
-	private opponentProvider: OpponentProvider;
-	private playerList = new PlayerList();
-	private players: Player[] = [];
-	private deck: CardDeck;
-	private rng: Rng;
-	private eventsEmitter: GamemodeEventsEmitter = createGamemodeEvents();
+	public readonly id: string;
+	public readonly defines: DefinesApi;
+	public readonly creatures: CreatureRegistry;
+	public readonly pluginEvents: GameplayEventsBus;
+	public readonly playerActions: PlayerActionRegistry;
+	public readonly wire: WireProtocol;
 
+	private readonly logger: Logger;
+	private readonly settings: GamemodeSettings;
+	private readonly callbacks: GamemodeCallbacks;
+
+	private readonly pieceRegistryImpl: PieceRegistry = new PieceRegistry();
 	// eslint-disable-next-line @typescript-eslint/member-ordering
 	public readonly pieceRegistry: ReadablePieceRegistry = this.pieceRegistryImpl;
+
+	private playerList = new PlayerList();
+	private players: Player[] = [];
+	private opponentProvider: OpponentProvider;
+	private deck: CardDeck;
+	private rng: Rng;
+
+	private eventsEmitter: GamemodeEventsEmitter = createGamemodeEvents();
 	// eslint-disable-next-line @typescript-eslint/member-ordering
 	public readonly events: GamemodeEventsApi = this.eventsEmitter;
 
-	public constructor(
-		public readonly id: string,
-		private logger: Logger,
-		private settings: GamemodeSettings,
-		private callbacks: GamemodeCallbacks = {},
-		// Optional seed for the shared ISAAC-backed rng. Same seed + same
-		// inputs = same game — the hook that makes training-on-scenarios
-		// and snapshot replay reproducible. When absent, falls back to
-		// `Math.random` so existing call sites are unaffected.
-		seed?: number | number[]
-	) {
-		this.rng = seed !== undefined ? createRng(seed) : Math.random;
+	public constructor(init: GamemodeInit) {
+		this.id = init.id;
+		this.logger = init.logger;
+		this.settings = init.settings;
+		this.callbacks = init.callbacks ?? {};
+
+		const { context } = init;
+		this.defines = context.defines;
+		this.creatures = context.creatures;
+		this.pluginEvents = context.events;
+		this.playerActions = context.playerActions;
+		this.wire = context.wire;
+
+		this.rng = init.seed !== undefined ? createRng(init.seed) : Math.random;
 		this.opponentProvider = new OpponentProvider(this.rng);
-		this.deck = new CardDeck(this.logger, this.rng);
+		this.deck = new CardDeck(this.logger, this.creatures, this.rng);
 	}
 
 	public getDeck = () => this.deck;
 
-	// Sole path to constructing a Player — this is where the writable
-	// PieceRegistry crosses into Player. Sealed because piece registration
-	// joins ownership, placement, and evolution; Player owns those, the
-	// registry doesn't.
 	public createPlayer(
 		id: string,
 		args: {

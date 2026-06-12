@@ -3,8 +3,8 @@ import * as React from "react";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
-import { Overlay } from "~/store/game/ui";
 import { AppState } from "~/store";
+import { Overlay } from "~/store/game/ui";
 
 const useStyles = createUseStyles({
 	contentPane: {

@@ -1,4 +1,5 @@
 import { buildPlayerSnapshot, Player } from "@creature-chess/gamemode";
+
 import { RoundInfoState } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
 import { GamemodeSettings } from "@creature-chess/models";
@@ -59,13 +60,20 @@ export const playerNetworking = (
 			return;
 		}
 
+		const wireCreatures = [
+			...entity.gamemode.creatures.entriesWithOrigin(),
+		].map(({ definition, origin }) => ({
+			definition,
+			ownerPluginId: origin.plugin,
+		}));
 		socket.emit("gameConnected", {
 			game: getRoundInfo(),
 			players: getPlayers(),
 			settings,
+			creatures: wireCreatures,
 		});
 
-		// Client constructs GameConnection synchronously on gameConnected — its
+		// Client constructs GameConnection synchronously on gameConnected - its
 		// listeners are live by the time subsequent emits land.
 		socket.emit("snapshot", buildPlayerSnapshot(entity));
 

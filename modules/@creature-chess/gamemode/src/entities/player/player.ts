@@ -1,4 +1,4 @@
-import { Logger } from "winston";
+import { Logger } from "@cc-engine/kernel";
 
 import {
 	SubscribableBoard,
@@ -16,16 +16,14 @@ import {
 	PlayerProfile,
 	PlayerStatus,
 	PlayerStreak,
-	QuickChatOption,
+	getXpToNextLevel,
 } from "@creature-chess/models";
 import { PieceRegistry } from "@creature-chess/utils";
 
-import type { Gamemode } from "../../game";
+import type { GamemodeApi } from "../../game/gamemode";
 import type { Match } from "../../game/match";
-import { getXpToNextLevel } from "../../player/xp";
 import {
 	PlayerEvent,
-	PlayerEventActionTypesArray,
 	PlayerEventByType,
 	PlayerEventTypeByActionType,
 	afterRerollCardsEvent,
@@ -33,7 +31,6 @@ import {
 	clientFinishMatchEvent,
 	playerDeathEvent,
 	playerFinishMatchEvent,
-	playerReceiveQuickChatEvent,
 } from "./events";
 import { runEvolutions } from "./operations/evolution";
 import { PlayerState, initialPlayerState } from "./state";
@@ -80,7 +77,7 @@ export type Player = {
 	readonly logger: Logger;
 	readonly board: SubscribableBoard;
 	readonly bench: SubscribableBoard;
-	readonly gamemode: Gamemode;
+	readonly gamemode: GamemodeApi;
 	readonly settings: GamemodeSettings;
 
 	name: string;
@@ -113,7 +110,10 @@ export type Player = {
 	swapPieces: (pieceAId: string, pieceBId: string) => void;
 	/** Remove a piece from the player's possession. Returns it to the deck unless opted out. */
 	removePiece: (pieceId: string, options?: { returnToDeck?: boolean }) => void;
-	removePieces: (pieceIds: string[], options?: { returnToDeck?: boolean }) => void;
+	removePieces: (
+		pieceIds: string[],
+		options?: { returnToDeck?: boolean }
+	) => void;
 
 	setMoney: (amount: number) => void;
 	addMoney: (amount: number) => void;
@@ -146,21 +146,24 @@ export type Player = {
 		awayScore: number;
 		isHomePlayer: boolean;
 	}) => void;
-	emitReceiveQuickChat: (payload: {
-		sendingPlayerId: string;
-		chatValue: QuickChatOption;
-	}) => void;
+	/**
+	 * Emit an arbitrary networked event on this player. Forwarded over the
+	 * wire only if `ctx.playerEvents` contains the event's type.
+	 */
+	emitNetworkedEvent: (action: { type: string; payload?: unknown }) => void;
 	emitClientFinishMatch: () => void;
 
 	events: PlayerEventsApi;
 };
 
-const WIRE_PLAYER_EVENT_TYPES = new Set(PlayerEventActionTypesArray);
 const INFO_UPDATE_TYPES = new Set(PlayerInfoUpdateCommandActionTypesArray);
 
 const cloneInitialState = (): PlayerState => ({
 	cardShop: { ...initialPlayerState.cardShop, cards: [] },
-	playerInfo: { ...initialPlayerState.playerInfo, streak: { ...initialPlayerState.playerInfo.streak } },
+	playerInfo: {
+		...initialPlayerState.playerInfo,
+		streak: { ...initialPlayerState.playerInfo.streak },
+	},
 	spectating: { ...initialPlayerState.spectating },
 });
 
@@ -169,7 +172,7 @@ export const createPlayer = (
 	dependencies: {
 		logger: Logger;
 		boards: { board: SubscribableBoard; bench: SubscribableBoard };
-		gamemode: Gamemode;
+		gamemode: GamemodeApi;
 		pieceRegistry: PieceRegistry;
 		settings: GamemodeSettings;
 	},
@@ -273,15 +276,13 @@ export const createPlayer = (
 		fn: (action: PlayerEventByType[K]) => void
 	): () => void;
 	function onPlayerEvent(
-		typeOrFn:
-			| keyof PlayerEventByType
-			| ((action: PlayerEvent) => void),
+		typeOrFn: keyof PlayerEventByType | ((action: PlayerEvent) => void),
 		maybeFn?: (action: any) => void
 	): () => void {
 		if (typeof typeOrFn === "function") {
 			const firehoseFn = typeOrFn;
 			return subscribe((a) => {
-				if (WIRE_PLAYER_EVENT_TYPES.has(a.type)) {
+				if (dependencies.gamemode.wire.acceptsOutbound("playerEvents", a.type)) {
 					firehoseFn(a as PlayerEvent);
 				}
 			});
@@ -327,10 +328,9 @@ export const createPlayer = (
 		const remainingCards = state.cardShop.cards.filter(
 			(c): c is Card => c !== null
 		);
-		const allPieceIds = [
-			...board.getAllPieces(),
-			...bench.getAllPieces(),
-		].map((p) => p.id);
+		const allPieceIds = [...board.getAllPieces(), ...bench.getAllPieces()].map(
+			(p) => p.id
+		);
 
 		player.setCards([]);
 		player.removePieces(allPieceIds);
@@ -426,7 +426,7 @@ export const createPlayer = (
 			if ((onBoard || to.type === "board") && player.boardLocked) {
 				return;
 			}
-			// Piece-limit check applies only when bench → board (board count grows).
+			// Piece-limit check applies only when bench -> board (board count grows).
 			if (onBench && to.type === "board" && !player.belowPieceLimit) {
 				return;
 			}
@@ -637,8 +637,7 @@ export const createPlayer = (
 			emit(afterSellPieceEvent({ piece }));
 		},
 		emitFinishMatch: (payload) => emit(playerFinishMatchEvent(payload)),
-		emitReceiveQuickChat: (payload) =>
-			emit(playerReceiveQuickChatEvent(payload)),
+		emitNetworkedEvent: (action) => emit(action as Parameters<typeof emit>[0]),
 		emitClientFinishMatch: () => {
 			player.match?.onClientFinishMatch(player.id);
 			emit(clientFinishMatchEvent());

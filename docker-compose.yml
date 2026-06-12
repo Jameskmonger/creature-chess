@@ -59,7 +59,25 @@ services:
       web-base:
         condition: service_completed_successfully
 
-  # Game server
+  manifest-builder:
+    build:
+      context: .
+      dockerfile: apps/manifest-builder.Dockerfile
+    image: local/manifest-builder:latest
+    environment:
+      - CREATURE_CHESS_MANIFEST
+      - CC_MODS_DIR=/mods
+    volumes:
+      - ./dist/manifest:/output
+      - ./mods:/mods:ro
+      - ./creature-chess.json:/code/creature-chess.json:ro
+      - ./creature-chess.dev.json:/code/creature-chess.dev.json:ro
+    networks:
+      - creature-chess
+    depends_on:
+      web-base:
+        condition: service_completed_successfully
+
   server-game:
     build:
       context: .
@@ -76,6 +94,12 @@ services:
       - NODE_APP_INSTANCE
       - METRICS_USERNAME
       - METRICS_PASSWORD
+      - CREATURE_CHESS_MANIFEST
+      - CC_MODS_DIR=/mods
+    volumes:
+      - ./creature-chess.json:/code/creature-chess.json:ro
+      - ./creature-chess.dev.json:/code/creature-chess.dev.json:ro
+      - ./mods:/mods:ro
     ports:
       - "3000"
     networks:
@@ -115,6 +139,8 @@ services:
       - ./nginx/local-dev/nginx/access.log:/etc/nginx/access_log.log
       - ./images:/usr/share/nginx/html/images
       - ./dist/web-game:/usr/share/nginx/html/web-game
+      - ./mods:/mods:ro
+      - ./dist/manifest:/usr/share/nginx/html/web-game/plugins:ro
     ports:
       - 80:80
       - 443:443
@@ -123,6 +149,8 @@ services:
       - public
     depends_on:
       web-game-builder:
+        condition: service_completed_successfully
+      manifest-builder:
         condition: service_completed_successfully
       server-game:
         condition: service_started

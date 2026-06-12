@@ -1,5 +1,5 @@
 import { Board } from "@creature-chess/board";
-import { getDefinitionById } from "@creature-chess/models";
+import { CreatureLookup } from "@creature-chess/models";
 import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
@@ -8,7 +8,7 @@ import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 export const nextPlacementAction = (
 	ctx: PreparingPhaseContext
 ): BotAction | null => {
-	const { board, bench, pieceRegistry, player } = ctx;
+	const { board, bench, pieceRegistry, creatures, player } = ctx;
 	const level = player.level;
 
 	const benchPieces = bench.getAllPieces();
@@ -26,13 +26,13 @@ export const nextPlacementAction = (
 		}
 	}
 
-	const strongestBench = strongestPiece(benchPieces, pieceRegistry);
-	const weakestBoard = weakestPiece(boardPieces, pieceRegistry);
+	const strongestBench = strongestPiece(benchPieces, pieceRegistry, creatures);
+	const weakestBoard = weakestPiece(boardPieces, pieceRegistry, creatures);
 	if (
 		strongestBench &&
 		weakestBoard &&
-		strength(strongestBench.id, pieceRegistry) >
-			strength(weakestBoard.id, pieceRegistry)
+		strength(strongestBench.id, pieceRegistry, creatures) >
+			strength(weakestBoard.id, pieceRegistry, creatures)
 	) {
 		const boardSlot = board.getPiecePosition(weakestBoard.id);
 		if (boardSlot) {
@@ -62,37 +62,45 @@ const findFirstEmptyBoardSlot = (
 };
 
 // stage * 10 + cost: a 2★ piece always outranks any 1★, cost breaks ties within a stage.
-const strength = (pieceId: string, pieceRegistry: ReadablePieceRegistry): number => {
+const strength = (
+	pieceId: string,
+	pieceRegistry: ReadablePieceRegistry,
+	creatures: CreatureLookup
+): number => {
 	const piece = pieceRegistry.getPieceById(pieceId);
 	if (!piece) {
 		return 0;
 	}
-	const def = getDefinitionById(piece.definitionId);
+	const def = creatures.get(piece.definitionId);
 	return piece.stage * 10 + (def?.cost ?? 0);
 };
 
 const strongestPiece = <T extends { id: string }>(
 	pieces: readonly T[],
-	pieceRegistry: ReadablePieceRegistry
+	pieceRegistry: ReadablePieceRegistry,
+	creatures: CreatureLookup
 ): T | null =>
 	pieces.reduce<T | null>((best, p) => {
 		if (!best) {
 			return p;
 		}
-		return strength(p.id, pieceRegistry) > strength(best.id, pieceRegistry)
+		return strength(p.id, pieceRegistry, creatures) >
+			strength(best.id, pieceRegistry, creatures)
 			? p
 			: best;
 	}, null);
 
 const weakestPiece = <T extends { id: string }>(
 	pieces: readonly T[],
-	pieceRegistry: ReadablePieceRegistry
+	pieceRegistry: ReadablePieceRegistry,
+	creatures: CreatureLookup
 ): T | null =>
 	pieces.reduce<T | null>((worst, p) => {
 		if (!worst) {
 			return p;
 		}
-		return strength(p.id, pieceRegistry) < strength(worst.id, pieceRegistry)
+		return strength(p.id, pieceRegistry, creatures) <
+			strength(worst.id, pieceRegistry, creatures)
 			? p
 			: worst;
 	}, null);

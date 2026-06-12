@@ -127,9 +127,12 @@ describe("getBoardSurfaceConfig", () => {
 		[GamePhase.PREPARING],
 		[GamePhase.READY],
 		[GamePhase.PLAYING],
-	])("board and bench are not draggable when spectating, regardless of phase (%s)", (phase) => {
-		const config = getBoardSurfaceConfig({ phase, spectatingId: SPECTATED });
-		expect(config.boardDraggable).toBe(false);
-		expect(config.benchDraggable).toBe(false);
-	});
+	])(
+		"board and bench are not draggable when spectating, regardless of phase (%s)",
+		(phase) => {
+			const config = getBoardSurfaceConfig({ phase, spectatingId: SPECTATED });
+			expect(config.boardDraggable).toBe(false);
+			expect(config.benchDraggable).toBe(false);
+		}
+	);
 });

@@ -1,5 +1,6 @@
+import { PlayerActions } from "@creature-chess/models";
+
 import { packPosition } from "@creature-chess/board";
-import { PlayerActions } from "@creature-chess/gamemode";
 
 import { BotAction } from "./types";
 

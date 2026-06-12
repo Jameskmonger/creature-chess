@@ -1,7 +1,7 @@
+import { GameEvents, PlayerCommands } from "@creature-chess/models";
+import { type PlayerMatchRewards } from "@creature-chess/models";
 import { createReducer } from "@reduxjs/toolkit";
 
-import { GameEvents, PlayerCommands } from "@creature-chess/gamemode";
-import { type PlayerMatchRewards } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 /**

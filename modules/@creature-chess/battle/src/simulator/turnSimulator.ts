@@ -21,7 +21,7 @@ export const simulateTurn = (
 		if (piece === null) {
 			return;
 		}
-		pieces.push({ piece, speed: getStats(piece).speed });
+		pieces.push({ piece, speed: getStats(piece, stores.creatures).speed });
 	});
 
 	pieces.sort((a, b) => b.speed - a.speed);

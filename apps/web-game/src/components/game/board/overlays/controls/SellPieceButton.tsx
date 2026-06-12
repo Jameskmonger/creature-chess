@@ -1,17 +1,18 @@
 import * as React from "react";
 
+import { getPiecesForStage } from "@creature-chess/models";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { Button } from "~/components/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
+import { useGameSession } from "~/game/sessionContext";
 import { useGameActions } from "~/networking";
+import { getCreatureDefinitionById } from "~/networking/creatureDefinitions";
 import { AppState } from "~/store";
 
-import { getPiecesForStage } from "@creature-chess/gamemode";
-import { GamePhase, getDefinitionById } from "@creature-chess/models";
+import { GamePhase } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
-import { useGameSession } from "~/game/sessionContext";
 import { COLOR_READY_BUTTON_TEXT } from "./colors";
 
 const useStyles = createUseStyles({
@@ -55,7 +56,8 @@ export function SellPieceButton() {
 	}
 
 	const piecesUsed = getPiecesForStage(selectedPiece.stage, PIECES_TO_EVOLVE);
-	const pieceCost = getDefinitionById(selectedPiece.definitionId)?.cost ?? 0;
+	const pieceCost =
+		getCreatureDefinitionById(selectedPiece.definitionId)?.cost ?? 0;
 
 	return (
 		<Button color="secondary" size="small" onClick={onSell}>

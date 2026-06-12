@@ -1,2 +1,1 @@
-export type HandshakeRequest =
-	| { type: "guest"; data: { accessToken: string } };
+export type HandshakeRequest = { type: "guest"; data: { accessToken: string } };

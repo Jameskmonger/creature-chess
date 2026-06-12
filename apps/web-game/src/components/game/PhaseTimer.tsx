@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { useSelector } from "react-redux";
 import { useGamemodeSettings } from "~/game/sessionContext";
+import { Region } from "~/plugins";
 import { AppState } from "~/store";
 import { useLocalPlayer } from "~/store/game/players";
 
@@ -21,15 +22,7 @@ export function PhaseTimer() {
 	const phaseStartedAtSeconds = useSelector<AppState, number | null>(
 		(state) => state.game.roundInfo.phaseStartedAtSeconds
 	);
-	const isDead = useLocalPlayer()?.health === 0;
-
-	if (isDead) {
-		return <span>GAME OVER</span>;
-	}
-
-	if (phase === null || !phaseStartedAtSeconds) {
-		return null;
-	}
+	const gameOver = useLocalPlayer()?.health === 0;
 
 	const phaseLengthMs: Record<GamePhase, number> = {
 		[GamePhase.PREPARING]: settings.preparingPhaseLengthMs,
@@ -37,14 +30,35 @@ export function PhaseTimer() {
 		[GamePhase.PLAYING]: settings.playingPhaseMaxLengthMs,
 	};
 
-	const phaseEndTime = phaseLengthMs[phase] / 1000 + phaseStartedAtSeconds;
+	const phaseDurationSeconds =
+		phase === null || !phaseStartedAtSeconds
+			? null
+			: phaseLengthMs[phase] / 1000;
+	const phaseEndTimeSeconds =
+		phase === null || !phaseStartedAtSeconds || phaseDurationSeconds === null
+			? null
+			: phaseDurationSeconds + phaseStartedAtSeconds;
+
+	let content: React.ReactNode = null;
+	if (gameOver) {
+		content = <span>GAME OVER</span>;
+	} else if (phaseEndTimeSeconds !== null) {
+		content = (
+			<span>
+				<Countdown
+					countdownToSeconds={phaseEndTimeSeconds}
+					render={renderPhaseInfoCountdown}
+				/>
+			</span>
+		);
+	}
 
 	return (
-		<span>
-			<Countdown
-				countdownToSeconds={phaseEndTime}
-				render={renderPhaseInfoCountdown}
-			/>
-		</span>
+		<Region
+			cls="phase-timer"
+			ctx={{ phaseEndTimeSeconds, phaseDurationSeconds, gameOver }}
+		>
+			{content}
+		</Region>
 	);
 }

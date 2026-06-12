@@ -1,15 +1,6 @@
-import {
-	CardShopState,
-	initialCardShopState,
-} from "./cardShop";
-import {
-	PlayerInfoState,
-	initialPlayerInfoState,
-} from "./playerInfo";
-import {
-	SpectatingState,
-	initialSpectatingState,
-} from "./spectating";
+import { CardShopState, initialCardShopState } from "./cardShop";
+import { PlayerInfoState, initialPlayerInfoState } from "./playerInfo";
+import { SpectatingState, initialSpectatingState } from "./spectating";
 
 export * as PlayerCommands from "./commands";
 

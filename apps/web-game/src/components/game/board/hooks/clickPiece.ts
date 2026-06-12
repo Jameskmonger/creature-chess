@@ -1,8 +1,7 @@
+import { PlayerActions } from "@creature-chess/models";
 import { useDispatch, useStore } from "react-redux";
 import { AppState } from "~/store";
 import { clearSelectedPiece, UIActions } from "~/store/game/ui";
-
-import { PlayerActions } from "@creature-chess/gamemode";
 
 export const useOnClickPiece = () => {
 	const dispatch = useDispatch();

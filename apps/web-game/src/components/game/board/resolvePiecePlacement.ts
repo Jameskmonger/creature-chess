@@ -1,5 +1,6 @@
+import { PlayerActions } from "@creature-chess/models";
+
 import { Board, unpackPosition } from "@creature-chess/board";
-import { PlayerActions } from "@creature-chess/gamemode";
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 export type Placement =

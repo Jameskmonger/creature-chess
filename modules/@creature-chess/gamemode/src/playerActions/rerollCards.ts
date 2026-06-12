@@ -1,16 +1,8 @@
-import { z } from "zod";
-
-import { networkedAction } from "../events/networkedAction";
+import { rerollCardsPlayerAction } from "./creators";
 import { definePlayerAction } from "./registry";
 
-export type RerollCardsPlayerAction = ReturnType<
-	typeof rerollCardsPlayerAction
->;
-export const rerollCardsPlayerAction = networkedAction("rerollCardsPlayerAction");
-
 export const rerollCardsDef = definePlayerAction({
-	type: rerollCardsPlayerAction.type,
-	schema: z.undefined(),
+	creator: rerollCardsPlayerAction,
 	handler: (player) => {
 		const { logger, settings } = player;
 

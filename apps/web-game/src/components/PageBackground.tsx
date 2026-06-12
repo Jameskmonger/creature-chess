@@ -44,47 +44,67 @@ const useBackgroundStyles = createUseStyles({
 	},
 });
 
-const renderItem = (_boardId: string) => (piece: PieceModel) => ({
-	item: (
-		<Piece
-			piece={piece}
-			healthbar={{
-				color: piece.ownerId === "home" ? "friendly" : "enemy",
-				current: piece.maxHealth,
-			}}
-		/>
-	),
-	draggable: false,
-});
+const makeRenderItem =
+	(pieces: Record<string, PieceModel>) => (pieceId: PieceModel["id"]) => {
+		const piece = pieces[pieceId];
+		return {
+			item: piece ? (
+				<Piece
+					piece={piece}
+					healthbar={{
+						color: piece.ownerId === "home" ? "friendly" : "enemy",
+						current: piece.maxHealth,
+					}}
+				/>
+			) : null,
+			draggable: false,
+		};
+	};
 
 export function PageBoardBackground() {
 	const classes = useBackgroundStyles();
 
 	const state1 = React.useMemo(() => getRandomBoardState("1", 6), []);
-	const render1 = React.useMemo<any>(() => renderItem("1"), []);
+	const render1 = React.useMemo(() => makeRenderItem(state1.pieces), [state1]);
 
 	const state2 = React.useMemo(() => getRandomBoardState("2", 6), []);
-	const render2 = React.useMemo<any>(() => renderItem("2"), []);
+	const render2 = React.useMemo(() => makeRenderItem(state2.pieces), [state2]);
 
 	const state3 = React.useMemo(() => getRandomBoardState("3", 6), []);
-	const render3 = React.useMemo<any>(() => renderItem("3"), []);
+	const render3 = React.useMemo(() => makeRenderItem(state3.pieces), [state3]);
 
 	const state4 = React.useMemo(() => getRandomBoardState("4", 6), []);
-	const render4 = React.useMemo<any>(() => renderItem("4"), []);
+	const render4 = React.useMemo(() => makeRenderItem(state4.pieces), [state4]);
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.segment} style={{ top: 0, left: 0 }}>
-				<ThemedBoard state={state1} renderItem={render1} dragDrop={false} />
+				<ThemedBoard
+					state={state1.board}
+					renderItem={render1}
+					dragDrop={false}
+				/>
 			</div>
 			<div className={classes.segment} style={{ top: 0, right: 0 }}>
-				<ThemedBoard state={state2} renderItem={render2} dragDrop={false} />
+				<ThemedBoard
+					state={state2.board}
+					renderItem={render2}
+					dragDrop={false}
+				/>
 			</div>
 			<div className={classes.segment} style={{ bottom: 0, left: 0 }}>
-				<ThemedBoard state={state3} renderItem={render3} dragDrop={false} />
+				<ThemedBoard
+					state={state3.board}
+					renderItem={render3}
+					dragDrop={false}
+				/>
 			</div>
 			<div className={classes.segment} style={{ bottom: 0, right: 0 }}>
-				<ThemedBoard state={state4} renderItem={render4} dragDrop={false} />
+				<ThemedBoard
+					state={state4.board}
+					renderItem={render4}
+					dragDrop={false}
+				/>
 			</div>
 		</div>
 	);

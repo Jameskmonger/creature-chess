@@ -1,7 +1,7 @@
 import { PositionKey } from "@creature-chess/board";
 import {
+	CreatureDefinition,
 	PieceModel,
-	QuickChatOption,
 	RoundInfoState,
 } from "@creature-chess/models";
 import { PlayerListPlayer } from "@creature-chess/models";
@@ -12,10 +12,23 @@ type ActionStreamPacket = {
 	payload?: any;
 };
 
+/**
+ * One creature catalog entry over the wire.
+ */
+export type WireCreatureEntry = {
+	definition: CreatureDefinition;
+	/**
+	 * The plugin that registered this creature.
+	 */
+	ownerPluginId: string;
+};
+
 export type GameConnectionPacket = {
 	players: PlayerListPlayer[];
 	game: RoundInfoState;
 	settings: GamemodeSettings;
+	/** Snapshot of the server's creature registry at game start. */
+	creatures: WireCreatureEntry[];
 };
 
 export type AuthenticateResponse = {
@@ -30,10 +43,6 @@ export type MatchBoardUpdatePacket = {
 	turn: number | null;
 	board: BoardUpdatePacket;
 };
-type QuickChatPacket = {
-	phrase: QuickChatOption;
-};
-
 export type Events = {
 	gameConnected: (payload: GameConnectionPacket) => void;
 	snapshot: (payload: ActionStreamPacket[]) => void;

@@ -1,5 +1,5 @@
+import { Logger } from "@cc-engine/kernel";
 import { v4 as uuid } from "uuid";
-import { Logger } from "winston";
 
 import { CardDeck as ShokiCardDeck } from "@shoki/card-deck";
 import { Rng } from "@shoki/random";
@@ -7,13 +7,12 @@ import { Rng } from "@shoki/random";
 import {
 	CreatureDefinition,
 	Card,
-	getAllDefinitions,
-	getDefinitionById,
 	PieceModel,
+	PIECES_TO_EVOLVE,
+	getPiecesForStage,
 } from "@creature-chess/models";
-import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
-import { getPiecesForStage } from "./evolution";
+import { CreatureRegistry } from "../factory";
 
 // CARD_COST_CHANCES[2][5] gives the chance (/100) to roll a level 3 piece at level 6
 const CARD_COST_CHANCES = [
@@ -51,6 +50,7 @@ export class CardDeck {
 
 	public constructor(
 		private logger: Logger,
+		private creatures: CreatureRegistry,
 		rng: Rng = Math.random
 	) {
 		this.rng = rng;
@@ -63,17 +63,18 @@ export class CardDeck {
 			new ShokiCardDeck<Card>([], rng),
 		];
 
-		getAllDefinitions()
-			.filter((d) => d.cost)
-			.forEach((d) => {
-				for (
-					let count = 0;
-					count < CARD_LEVEL_QUANTITIES[d.cost - 1];
-					count++
-				) {
-					this.addDefinition(d);
-				}
-			});
+		for (const definition of this.creatures.values()) {
+			if (!definition.cost) {
+				continue;
+			}
+			for (
+				let count = 0;
+				count < CARD_LEVEL_QUANTITIES[definition.cost - 1];
+				count++
+			) {
+				this.addDefinition(definition);
+			}
+		}
 
 		this.shuffleAllDecks();
 	}
@@ -112,7 +113,7 @@ export class CardDeck {
 		const affected = new Set<number>();
 
 		for (const piece of pieces) {
-			const definition = getDefinitionById(piece.definitionId);
+			const definition = this.creatures.get(piece.definitionId);
 
 			if (!definition) {
 				continue;

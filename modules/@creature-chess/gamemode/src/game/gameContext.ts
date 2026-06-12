@@ -1,5 +1,5 @@
+import { Logger } from "@cc-engine/kernel";
 import delay from "delay";
-import { Logger } from "winston";
 
 import { GamemodeSettings } from "@creature-chess/models";
 

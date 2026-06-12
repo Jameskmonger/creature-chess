@@ -68,8 +68,6 @@ export function GuestAuthProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	return (
-		<AccountContextProvider value={account}>
-			{children}
-		</AccountContextProvider>
+		<AccountContextProvider value={account}>{children}</AccountContextProvider>
 	);
 }

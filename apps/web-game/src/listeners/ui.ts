@@ -1,3 +1,4 @@
+import { GameEvents } from "@creature-chess/models";
 import { AppState } from "~/store";
 import {
 	clearSelectedPiece,
@@ -7,7 +8,6 @@ import {
 } from "~/store/game/ui";
 import { ClientStartListening } from "~/store/listenerContext";
 
-import { GameEvents } from "@creature-chess/gamemode";
 import { GamePhase } from "@creature-chess/models";
 
 export const setupUiListener = (startListening: ClientStartListening) => {

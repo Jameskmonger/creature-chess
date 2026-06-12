@@ -1,17 +1,19 @@
-import { combineReducers } from "@reduxjs/toolkit";
-
 import {
 	type CardShopState,
 	type SpectatingState,
 	GameEvents,
-} from "@creature-chess/gamemode";
-import { GamePhase, RoundInfoState } from "@creature-chess/models";
+	GamePhase,
+	RoundInfoState,
+} from "@creature-chess/models";
+import { combineReducers } from "@reduxjs/toolkit";
+import { buildPluginsReducer } from "~/plugins/redux";
+import { pluginRegistry } from "~/plugins/registry";
 
-import { quickChatReducer, QuickChatState } from "./chat/state";
 import { LocalPlayerState, localPlayerReducer } from "./localPlayer";
 import { networkReducer, NetworkState } from "./network";
 import { playerReducers } from "./playerReducers";
 import { Player, playersReducer } from "./players/state";
+import { quickChatReducer, type QuickChatState } from "./quickChat";
 import { UiState, uiReducer } from "./ui";
 
 const initialRoundInfo: RoundInfoState = {
@@ -22,9 +24,15 @@ const initialRoundInfo: RoundInfoState = {
 
 const roundInfoReducer = (
 	state: RoundInfoState = initialRoundInfo,
-	action: { type: string; payload?: { phase: GamePhase; startedAt: number; round?: number } }
+	action: {
+		type: string;
+		payload?: { phase: GamePhase; startedAt: number; round?: number };
+	}
 ): RoundInfoState => {
-	if (action.type !== GameEvents.gamePhaseStartedEvent.type || !action.payload) {
+	if (
+		action.type !== GameEvents.gamePhaseStartedEvent.type ||
+		!action.payload
+	) {
 		return state;
 	}
 	const { phase, startedAt, round } = action.payload;
@@ -46,17 +54,23 @@ export type GameState = {
 	roundInfo: RoundInfoState;
 
 	players: Player[];
+
 	quickChat: QuickChatState;
+
+	/** Per-plugin Redux state, mounted by id. */
+	plugins: { [sliceName: string]: unknown };
 
 	network: NetworkState;
 };
 
-export const gameReducer = combineReducers({
-	...playerReducers,
-	localPlayer: localPlayerReducer,
-	roundInfo: roundInfoReducer,
-	players: playersReducer,
-	ui: uiReducer,
-	quickChat: quickChatReducer,
-	network: networkReducer,
-});
+export const createGameReducer = () =>
+	combineReducers({
+		...playerReducers,
+		localPlayer: localPlayerReducer,
+		roundInfo: roundInfoReducer,
+		players: playersReducer,
+		quickChat: quickChatReducer,
+		ui: uiReducer,
+		plugins: buildPluginsReducer(pluginRegistry),
+		network: networkReducer,
+	});

@@ -1,6 +1,7 @@
-import { Board } from "@creature-chess/board";
 import { Player } from "@creature-chess/gamemode";
-import { GamemodeSettings } from "@creature-chess/models";
+
+import { Board } from "@creature-chess/board";
+import { CreatureLookup, GamemodeSettings } from "@creature-chess/models";
 import { ReadablePieceRegistry } from "@creature-chess/utils";
 
 export type BotAction = { type: string; payload?: unknown };
@@ -9,6 +10,7 @@ export type PreparingPhaseContext = {
 	board: Board;
 	bench: Board;
 	pieceRegistry: ReadablePieceRegistry;
+	creatures: CreatureLookup;
 	player: Player;
 	settings: GamemodeSettings;
 	/** Uniform `[0, 1)`. Use this instead of `Math.random` for reproducible runs. */

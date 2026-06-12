@@ -1,65 +1,20 @@
-import { type BuyCardPlayerAction, buyCardDef, buyCardPlayerAction } from "./buyCard";
-import { type BuyXpPlayerAction, buyXpDef, buyXpPlayerAction } from "./buyXp";
-import {
-	type DropPiecePlayerAction,
-	dropPieceDef,
-	dropPiecePlayerAction,
-} from "./dropPiece";
-import {
-	type QuickChatPlayerAction,
-	quickChatDef,
-	quickChatPlayerAction,
-} from "./quickChat";
-import {
-	type QuitGamePlayerAction,
-	quitGameDef,
-	quitGamePlayerAction,
-} from "./quitGame";
-import {
-	type ReadyUpPlayerAction,
-	readyUpDef,
-	readyUpPlayerAction,
-} from "./readyUp";
-import { buildPlayerActionRegistry } from "./registry";
-import {
-	type RerollCardsPlayerAction,
-	rerollCardsDef,
-	rerollCardsPlayerAction,
-} from "./rerollCards";
-import {
-	type SellPiecePlayerAction,
-	sellPieceDef,
-	sellPiecePlayerAction,
-} from "./sellPiece";
-import {
-	type SpectatePlayerAction,
-	spectateDef,
-	spectatePlayerAction,
-} from "./spectate";
-import {
-	type SwapPiecePlayerAction,
-	swapPieceDef,
-	swapPiecePlayerAction,
-} from "./swapPiece";
-import {
-	type ToggleShopLockPlayerAction,
-	toggleShopLockDef,
-	toggleShopLockPlayerAction,
-} from "./toggleShopLock";
+import { buyCardDef } from "./buyCard";
+import { buyXpDef } from "./buyXp";
+import { dropPieceDef } from "./dropPiece";
+import { quickChatDef } from "./quickChat";
+import { quitGameDef } from "./quitGame";
+import { readyUpDef } from "./readyUp";
+import { PlayerActionRegistry } from "./registry";
+import { rerollCardsDef } from "./rerollCards";
+import { sellPieceDef } from "./sellPiece";
+import { spectateDef } from "./spectate";
+import { swapPieceDef } from "./swapPiece";
+import { toggleShopLockDef } from "./toggleShopLock";
 
-export { BuyCardPlayerAction, buyCardPlayerAction };
-export { BuyXpPlayerAction, buyXpPlayerAction };
-export { RerollCardsPlayerAction, rerollCardsPlayerAction };
-export { ToggleShopLockPlayerAction, toggleShopLockPlayerAction };
-export { SellPiecePlayerAction, sellPiecePlayerAction };
-export { ReadyUpPlayerAction, readyUpPlayerAction };
-export { QuitGamePlayerAction, quitGamePlayerAction };
-export { DropPiecePlayerAction, dropPiecePlayerAction };
-export { SwapPiecePlayerAction, swapPiecePlayerAction };
-export { SpectatePlayerAction, spectatePlayerAction };
-export { QuickChatPlayerAction, quickChatPlayerAction };
+export * from "./creators";
 
-const playerActionDefs = [
+/** The gamemode's built-in player actions. */
+const corePlayerActionDefs = [
 	buyXpDef,
 	buyCardDef,
 	rerollCardsDef,
@@ -69,25 +24,19 @@ const playerActionDefs = [
 	quitGameDef,
 	dropPieceDef,
 	spectateDef,
-	quickChatDef,
 	swapPieceDef,
+	quickChatDef,
 ] as const;
 
-const registry = buildPlayerActionRegistry(playerActionDefs);
+export const registerCorePlayerActions = (
+	registry: PlayerActionRegistry
+): void => {
+	for (const def of corePlayerActionDefs) {
+		registry.register(def);
+	}
+};
 
-export const PlayerActionTypesArray = registry.types;
-export const dispatchIncomingPlayerAction = registry.dispatchIncoming;
-export const dispatchTrustedPlayerAction = registry.dispatchTrusted;
-
-export type PlayerAction =
-	| BuyXpPlayerAction
-	| BuyCardPlayerAction
-	| RerollCardsPlayerAction
-	| ToggleShopLockPlayerAction
-	| SellPiecePlayerAction
-	| ReadyUpPlayerAction
-	| QuitGamePlayerAction
-	| DropPiecePlayerAction
-	| QuickChatPlayerAction
-	| SwapPiecePlayerAction
-	| SpectatePlayerAction;
+export {
+	PlayerActionTypesArray,
+	type PlayerAction,
+} from "@creature-chess/models";

@@ -9,12 +9,15 @@ export const EMPTY_LAYER_SLOTS: LayerSlots = new Array(
 
 /**
  * Place a layer in the slots array. If a layer with the same name already
- * occupies a slot, replace it in-place — that keeps the slot stable so the
+ * occupies a slot, replace it in-place - that keeps the slot stable so the
  * animation doesn't jump between DOM nodes when other layers come and go.
  * Otherwise the layer takes the first empty slot. If every slot is full the
  * layer is dropped.
  */
-export function assignLayer(prev: LayerSlots, layer: AnimationLayer): LayerSlots {
+export function assignLayer(
+	prev: LayerSlots,
+	layer: AnimationLayer
+): LayerSlots {
 	const next = [...prev];
 
 	const existingIdx = next.findIndex((l) => l?.name === layer.name);

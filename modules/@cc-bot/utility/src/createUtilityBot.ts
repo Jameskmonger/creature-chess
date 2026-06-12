@@ -36,7 +36,7 @@ export const createUtilityBot = (
 			return sell;
 		}
 
-		// Don't ready up with a half-empty board — force a forgiving
+		// Don't ready up with a half-empty board - force a forgiving
 		// buyCard pass so we field at least `level` pieces.
 		if (mustKeepActing(ctx)) {
 			return decideBuyCard(ctx, { ...personality, ambition: "high" });
@@ -49,8 +49,7 @@ export const createUtilityBot = (
 const mustKeepActing = (ctx: PreparingPhaseContext): boolean => {
 	const { board, bench, player } = ctx;
 
-	const totalPieces =
-		board.getAllPieces().length + bench.getAllPieces().length;
+	const totalPieces = board.getAllPieces().length + bench.getAllPieces().length;
 
 	return totalPieces < player.level;
 };

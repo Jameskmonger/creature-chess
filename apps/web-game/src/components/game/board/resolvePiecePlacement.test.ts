@@ -1,5 +1,6 @@
+import { PlayerActions } from "@creature-chess/models";
+
 import { Board, packPosition } from "@creature-chess/board";
-import { PlayerActions } from "@creature-chess/gamemode";
 import { PlayerPieceLocation } from "@creature-chess/models";
 
 import { resolvePiecePlacement } from "./resolvePiecePlacement";
@@ -27,9 +28,7 @@ describe("resolvePiecePlacement", () => {
 
 		expect(result.kind).toBe("drop");
 		if (result.kind === "drop") {
-			expect(result.action.type).toBe(
-				PlayerActions.dropPiecePlayerAction.type
-			);
+			expect(result.action.type).toBe(PlayerActions.dropPiecePlayerAction.type);
 			expect(result.action.payload).toEqual({
 				pieceId: "piece1",
 				to: at("board", 2, 3),
@@ -47,9 +46,7 @@ describe("resolvePiecePlacement", () => {
 
 		expect(result.kind).toBe("swap");
 		if (result.kind === "swap") {
-			expect(result.action.type).toBe(
-				PlayerActions.swapPiecePlayerAction.type
-			);
+			expect(result.action.type).toBe(PlayerActions.swapPiecePlayerAction.type);
 			expect(result.action.payload).toEqual({
 				pieceAId: "piece1",
 				pieceBId: "piece2",

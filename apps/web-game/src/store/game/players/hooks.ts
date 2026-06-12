@@ -1,12 +1,11 @@
-import { useSelector } from "react-redux";
+import { useMemo } from "react";
 
+import { type PlayerMatchRewards } from "@creature-chess/models";
+import { useSelector } from "react-redux";
 import { useAccountId } from "~/auth/context";
 import { AppState } from "~/store";
 
-import { type PlayerMatchRewards } from "@creature-chess/gamemode";
-
 import { Player } from "./state";
-import { useMemo } from "react";
 
 export function useGamePlayer(id: string | null): Player | undefined {
 	return useSelector((state: AppState) =>
@@ -16,8 +15,7 @@ export function useGamePlayer(id: string | null): Player | undefined {
 
 export function usePlayerRank(id: string): number {
 	return useSelector(
-		(state: AppState) =>
-			state.game.players.findIndex((p) => p.id === id) + 1
+		(state: AppState) => state.game.players.findIndex((p) => p.id === id) + 1
 	);
 }
 

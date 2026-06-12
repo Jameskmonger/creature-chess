@@ -1,14 +1,11 @@
 import { Player } from "@creature-chess/gamemode";
+
 import { Card, PieceModel } from "@creature-chess/models";
 
 import { BotAction, BotActions, PreparingPhaseContext } from "@cc-server/bot";
 
 import { collectAllPieces, completionProgress, sharesTrait } from "../cards";
-import {
-	effectiveAmbition,
-	isInPanicMode,
-	Personality,
-} from "../personality";
+import { effectiveAmbition, isInPanicMode, Personality } from "../personality";
 
 const MONEY_FLOOR = 10;
 
@@ -116,13 +113,7 @@ export const decideBuyCard = (
 		}
 		const moneyAfter = money - card.cost;
 		if (
-			!passesMoneyFloor(
-				quality,
-				personality,
-				player,
-				shortOnPieces,
-				moneyAfter
-			)
+			!passesMoneyFloor(quality, personality, player, shortOnPieces, moneyAfter)
 		) {
 			continue;
 		}

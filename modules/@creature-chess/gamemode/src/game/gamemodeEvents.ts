@@ -1,6 +1,7 @@
+import { TypedEventEmitter } from "@cc-engine/kernel";
+
 import { GamePhase } from "@creature-chess/models";
 
-import { TypedEventEmitter } from "../events/typedEventEmitter";
 import {
 	GameFinishEvent,
 	GamePhaseStartedEvent,
@@ -18,9 +19,7 @@ export type GamemodeEventsApi = {
 		fn: (action: GamePhaseStartedEvent) => void
 	): () => void;
 	onFinish(fn: (action: GameFinishEvent) => void): () => void;
-	onPlayerListChange(
-		fn: (action: PlayerListChangedEvent) => void
-	): () => void;
+	onPlayerListChange(fn: (action: PlayerListChangedEvent) => void): () => void;
 };
 
 export type GamemodeEventsEmitter = GamemodeEventsApi & {

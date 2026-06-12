@@ -1,10 +1,14 @@
 import { Board, getFirstEmptySlot } from "@creature-chess/board";
-import { getDefinitionById } from "@creature-chess/models";
 import { ReadablePieceRegistry } from "@creature-chess/utils";
 
+import { CreatureRegistry } from "../../../factory";
 import { Player } from "../player";
 
-const getMostExpensiveBenchPiece = (bench: Board, pieces: ReadablePieceRegistry) => {
+const getMostExpensiveBenchPiece = (
+	bench: Board,
+	pieces: ReadablePieceRegistry,
+	creatures: CreatureRegistry
+) => {
 	const benchPieces = bench
 		.getAllPieces()
 		.map(({ id }) => pieces.getPieceById(id))
@@ -16,8 +20,8 @@ const getMostExpensiveBenchPiece = (bench: Board, pieces: ReadablePieceRegistry)
 
 	benchPieces.sort(
 		(a, b) =>
-			(getDefinitionById(b.definitionId)?.cost ?? 0) -
-			(getDefinitionById(a.definitionId)?.cost ?? 0)
+			(creatures.get(b.definitionId)?.cost ?? 0) -
+			(creatures.get(a.definitionId)?.cost ?? 0)
 	);
 
 	return benchPieces[0];
@@ -25,7 +29,7 @@ const getMostExpensiveBenchPiece = (bench: Board, pieces: ReadablePieceRegistry)
 
 export const fillBoard = (player: Player): void => {
 	const { board, bench, gamemode } = player;
-	const { pieceRegistry } = gamemode;
+	const { pieceRegistry, creatures } = gamemode;
 
 	if (!player.alive) {
 		return;
@@ -36,7 +40,11 @@ export const fillBoard = (player: Player): void => {
 			return;
 		}
 
-		const benchPiece = getMostExpensiveBenchPiece(bench, pieceRegistry);
+		const benchPiece = getMostExpensiveBenchPiece(
+			bench,
+			pieceRegistry,
+			creatures
+		);
 
 		if (!benchPiece) {
 			return;
@@ -48,6 +56,9 @@ export const fillBoard = (player: Player): void => {
 			return;
 		}
 
-		player.relocatePiece(benchPiece.id, { type: "board", location: destination });
+		player.relocatePiece(benchPiece.id, {
+			type: "board",
+			location: destination,
+		});
 	}
 };

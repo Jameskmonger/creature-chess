@@ -5,15 +5,13 @@ import { createUseStyles } from "react-jss";
 
 import { PlayerListPlayer } from "@creature-chess/models";
 
+import { getCreatureImageUrl } from "~/networking/creatureDefinitions";
+
 const useStyles = createUseStyles({
 	image: {
 		height: "64px",
 	},
 });
-
-function getCreatureUrl(definitionId: number) {
-	return `${APP_IMAGE_ROOT}/creatures/front/${definitionId}.png`;
-}
 
 export function PlayerAvatar({
 	player,
@@ -27,11 +25,15 @@ export function PlayerAvatar({
 	if (!player || !player.profile?.picture) {
 		return null;
 	}
+	const src = getCreatureImageUrl(player.profile.picture, "front");
+	if (!src) {
+		return null;
+	}
 
 	return (
 		<img
 			className={classnames(classes.image, "avatar", className)}
-			src={getCreatureUrl(player.profile.picture)}
+			src={src}
 		/>
 	);
 }

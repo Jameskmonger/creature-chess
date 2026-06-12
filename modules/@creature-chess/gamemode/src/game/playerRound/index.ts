@@ -11,12 +11,6 @@ import { Player } from "../../entities/player/player";
 import { PlayerMatchRewards } from "../../entities/player/state/playerInfo";
 import { Match } from "../match";
 
-/**
- * The Round-side of a Player: the work the Round commands at each phase
- * boundary.
- *
- * The Round calls them in the following order: `prepare`, `deploy`, `engage`, `settle`.
- */
 export interface PlayerRound {
 	prepare(player: Player): void;
 	deploy(player: Player): void;

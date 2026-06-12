@@ -31,7 +31,9 @@ ENV NX_DAEMON=false
 ADD tsconfig.json ./
 
 ADD modules/@shoki/ ./modules/@shoki/
+ADD modules/@cc-engine/kernel/ ./modules/@cc-engine/kernel/
+ADD modules/@cc-plugins/api/ ./modules/@cc-plugins/api/
 ADD modules/@creature-chess/models/ ./modules/@creature-chess/models/
 ADD modules/@creature-chess/board/ ./modules/@creature-chess/board/
 
-RUN yarn nx run-many -t build --projects='@shoki/*,@creature-chess/models,@creature-chess/board'
+RUN yarn nx run-many -t build --projects='@shoki/*,@cc-engine/kernel,@cc-plugins/api,@creature-chess/models,@creature-chess/board'

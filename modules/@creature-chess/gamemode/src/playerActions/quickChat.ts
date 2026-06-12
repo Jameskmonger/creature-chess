@@ -1,36 +1,12 @@
-import { z } from "zod";
-
 import {
-	FinishedQuickChatOptions,
-	QuickChatOption,
-	ReadyQuickChatOptions,
+	playerReceiveQuickChatEvent,
+	quickChatPlayerAction,
 } from "@creature-chess/models";
 
-import { networkedAction } from "../events/networkedAction";
 import { definePlayerAction } from "./registry";
 
-const quickChatOptions = new Set<QuickChatOption>([
-	...Object.values(ReadyQuickChatOptions),
-	...Object.values(FinishedQuickChatOptions),
-]);
-
-const quickChatSchema = z.object({
-	sendingPlayerId: z.string().nullable(),
-	chatValue: z.custom<QuickChatOption>(
-		(v) => typeof v === "string" && quickChatOptions.has(v as QuickChatOption),
-		{ message: "invalid chat value" }
-	),
-});
-
-export type QuickChatPlayerAction = ReturnType<typeof quickChatPlayerAction>;
-export const quickChatPlayerAction = networkedAction<
-	z.infer<typeof quickChatSchema>,
-	"quickChatAction"
->("quickChatAction");
-
 export const quickChatDef = definePlayerAction({
-	type: quickChatPlayerAction.type,
-	schema: quickChatSchema,
+	creator: quickChatPlayerAction,
 	handler: (player, { sendingPlayerId, chatValue }) => {
 		if (sendingPlayerId === null) {
 			return;
@@ -48,8 +24,8 @@ export const quickChatDef = definePlayerAction({
 			return;
 		}
 
-		const event = { sendingPlayerId, chatValue };
-		opponent.emitReceiveQuickChat(event);
-		sender.emitReceiveQuickChat(event);
+		const event = playerReceiveQuickChatEvent({ sendingPlayerId, chatValue });
+		opponent.emitNetworkedEvent(event);
+		sender.emitNetworkedEvent(event);
 	},
 });

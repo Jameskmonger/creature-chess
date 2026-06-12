@@ -1,0 +1,44 @@
+{
+	"private": true,
+	"name": "@cc-engine/kernel",
+	"version": "0.0.1",
+	"description": "Main plugin kernel for Creature Chess.",
+	"keywords": [],
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"license": "ISC",
+	"main": "./dist/index.js",
+	"types": "./index.ts",
+	"exports": {
+		".": {
+			"types": "./index.ts",
+			"default": "./dist/index.js"
+		},
+		"./loader": {
+			"types": "./loader.ts",
+			"default": "./dist/loader.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Jameskmonger/creature-chess.git"
+	},
+	"scripts": {
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests",
+		"lint": "yarn run -T eslint --ignore-path ../../../.eslintignore \"src/**/*.{ts,tsx}\" \"**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
+	},
+	"bugs": {
+		"url": "https://github.com/Jameskmonger/creature-chess/issues"
+	},
+	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
+	"dependencies": {
+		"semver": "^7.6.0"
+	},
+	"devDependencies": {
+		"@types/semver": "^7.5.0"
+	}
+}

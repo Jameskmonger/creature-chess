@@ -1,5 +1,5 @@
+import { ClientUi } from "@creature-chess/models";
 import { io, Socket } from "socket.io-client";
-import { gameStartedAction } from "~/listeners/gameStartedAction";
 import { MenuCommands } from "~/store/menu/state";
 import { Holder } from "~/utils/Holder";
 
@@ -111,7 +111,7 @@ export class SocketManager {
 			const gameConnection = new GameConnection(socket, this.dispatch);
 			gameConnection.handleConnected(payload);
 			this.gameConnectionHolder.set(gameConnection);
-			this.dispatch(gameStartedAction());
+			this.dispatch(ClientUi.gameStartedCommand());
 		};
 
 		socket.on("connected", onLobbyConnected);

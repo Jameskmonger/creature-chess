@@ -1,16 +1,10 @@
-import { z } from "zod";
-
 import { GamePhase } from "@creature-chess/models";
 
-import { networkedAction } from "../events/networkedAction";
+import { readyUpPlayerAction } from "./creators";
 import { definePlayerAction } from "./registry";
 
-export type ReadyUpPlayerAction = ReturnType<typeof readyUpPlayerAction>;
-export const readyUpPlayerAction = networkedAction("readyUpPlayerAction");
-
 export const readyUpDef = definePlayerAction({
-	type: readyUpPlayerAction.type,
-	schema: z.undefined(),
+	creator: readyUpPlayerAction,
 	handler: (player) => {
 		const { name, logger, gamemode } = player;
 

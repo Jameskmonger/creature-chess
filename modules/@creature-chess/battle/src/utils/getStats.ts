@@ -1,7 +1,7 @@
-import { getDefinitionById, PieceModel } from "@creature-chess/models";
+import { CreatureLookup, PieceModel } from "@creature-chess/models";
 
-const getDefinition = (piece: PieceModel) => {
-	const definition = getDefinitionById(piece.definitionId);
+const getDefinition = (piece: PieceModel, creatures: CreatureLookup) => {
+	const definition = creatures.get(piece.definitionId);
 
 	if (!definition) {
 		throw new Error(`Unknown definitionId: ${piece.definitionId}`);
@@ -10,8 +10,10 @@ const getDefinition = (piece: PieceModel) => {
 	return definition;
 };
 
-export const getStats = (piece: PieceModel) =>
-	getDefinition(piece).stages[piece.stage];
+export const getStats = (piece: PieceModel, creatures: CreatureLookup) =>
+	getDefinition(piece, creatures).stages[piece.stage];
 
-export const getAttackRange = (piece: PieceModel): number =>
-	getDefinition(piece).attackRange;
+export const getAttackRange = (
+	piece: PieceModel,
+	creatures: CreatureLookup
+): number => getDefinition(piece, creatures).attackRange;

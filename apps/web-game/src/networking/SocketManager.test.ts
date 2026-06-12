@@ -13,9 +13,6 @@ jest.mock("~/store/menu/state", () => ({
 		}),
 	},
 }));
-jest.mock("~/listeners/gameStartedAction", () => ({
-	gameStartedAction: () => ({ type: "gameStarted" }),
-}));
 jest.mock("./LobbyConnection", () => ({
 	LobbyConnection: jest.fn().mockImplementation(() => ({
 		handleConnected: jest.fn(),
@@ -179,7 +176,7 @@ describe("SocketManager", () => {
 			expect(gameConnectionHolder.peek()).not.toBeNull();
 		});
 
-		it("should dispatch gameStartedAction on game connection", async () => {
+		it("should dispatch gameStartedCommand on game connection", async () => {
 			await connectManager(manager, mockSocket);
 
 			mockSocket._trigger("gameConnected", {

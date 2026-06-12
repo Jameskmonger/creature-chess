@@ -1,9 +1,7 @@
 import { useMemo } from "react";
 
+import { PlayerActions } from "@creature-chess/models";
 import { useDispatch } from "react-redux";
-
-import { PlayerActions } from "@creature-chess/gamemode";
-import { QuickChatOption } from "@creature-chess/models";
 
 export function useGameActions() {
 	const dispatch = useDispatch();
@@ -22,10 +20,6 @@ export function useGameActions() {
 			quitGame: () => dispatch(PlayerActions.quitGamePlayerAction()),
 			spectate: (playerId: string | null) =>
 				dispatch(PlayerActions.spectatePlayerAction({ playerId })),
-			quickChat: (sendingPlayerId: string | null, chatValue: QuickChatOption) =>
-				dispatch(
-					PlayerActions.quickChatPlayerAction({ sendingPlayerId, chatValue })
-				),
 		}),
 		[dispatch]
 	);

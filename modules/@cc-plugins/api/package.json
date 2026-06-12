@@ -1,0 +1,32 @@
+{
+	"private": true,
+	"name": "@cc-plugins/api",
+	"version": "0.0.1",
+	"description": "Shared plugin contract - the types a client/server plugin and the host both compile against. Depends on neither web-game nor the kernel.",
+	"author": "James Monger <jameskmonger@hotmail.co.uk>",
+	"license": "ISC",
+	"main": "./dist/index.js",
+	"types": "./index.ts",
+	"exports": {
+		".": {
+			"types": "./index.ts",
+			"default": "./dist/index.js"
+		},
+		"./build": "./build.js",
+		"./test": {
+			"types": "./test.ts",
+			"default": "./dist/test.js"
+		},
+		"./webEntry.js": "./webEntry.js",
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"build": "yarn run -T tsc -p ./tsconfig.json",
+		"test": "yarn run -T jest --passWithNoTests",
+		"lint": "yarn run -T eslint --ignore-path ../../../.eslintignore \"src/**/*.{ts,tsx}\" \"**/*.{ts,tsx}\" \"*.{ts,tsx}\" --no-error-on-unmatched-pattern"
+	},
+	"dependencies": {
+		"@reduxjs/toolkit": "^2.2.1",
+		"react": "^18.2.0"
+	}
+}

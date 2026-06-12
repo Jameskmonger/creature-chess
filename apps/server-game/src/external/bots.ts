@@ -1,12 +1,10 @@
+import { pickRandom } from "@shoki/random";
+
 import { LobbyPlayer } from "@creature-chess/models";
 
-import {
-	BotImplementation,
-	createBotEngineRegistry,
-} from "@cc-server/bot";
+import { BotImplementation, createBotEngineRegistry } from "@cc-server/bot";
 
 import { utilityBotEngine } from "@cc-bot/utility";
-import { pickRandom } from "@shoki/random";
 
 const botEngines = createBotEngineRegistry();
 botEngines.register(utilityBotEngine);
@@ -87,7 +85,7 @@ export const getBots = async (count: number) => {
 				type: "bot" as const,
 			},
 			implementation,
-		 });
+		});
 	}
 
 	return participants;

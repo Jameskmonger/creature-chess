@@ -4,13 +4,10 @@ import { ClientStartListening } from "~/store/listenerContext";
 
 import { GamemodeSettings } from "@creature-chess/models";
 
-export const setSettingsAction = createAction<GamemodeSettings>(
-	"setSettingsAction"
-);
+export const setSettingsAction =
+	createAction<GamemodeSettings>("setSettingsAction");
 
-export const setupSettingsListener = (
-	startListening: ClientStartListening
-) => {
+export const setupSettingsListener = (startListening: ClientStartListening) => {
 	startListening({
 		actionCreator: setSettingsAction,
 		effect: ({ payload }, api) => {

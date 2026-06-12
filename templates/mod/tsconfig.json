@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ES2019",
+		"module": "commonjs",
+		"jsx": "react",
+		"declaration": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"moduleResolution": "node",
+		"outDir": "./dist",
+		"rootDir": "."
+	},
+	"include": ["./src/**/*", "./client.ts"]
+}

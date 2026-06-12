@@ -24,6 +24,8 @@
 		"modules/@creature-chess/*",
 		"modules/@cc-server/*",
 		"modules/@cc-bot/*",
+		"modules/@cc-engine/*",
+		"modules/@cc-plugins/*",
 		"modules/@shoki/*",
 		"modules/@tools/*",
 		"apps/*"

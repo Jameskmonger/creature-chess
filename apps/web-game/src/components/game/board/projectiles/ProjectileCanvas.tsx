@@ -1,9 +1,10 @@
 import React from "react";
 
+import { useGameSession } from "~/game/sessionContext";
+
 import { SubscribableBoard } from "@creature-chess/board";
 
 import { ProjectileEvent } from "../piece/match/animationEventStore";
-import { useGameSession } from "~/game/sessionContext";
 
 const PROJECTILE_DURATION_MS = 200;
 const FILL_COLOR = "#F5E687";

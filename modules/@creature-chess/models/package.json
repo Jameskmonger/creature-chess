@@ -25,6 +25,9 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
-		"@creature-chess/board": "workspace:*"
+		"@cc-plugins/api": "workspace:*",
+		"@creature-chess/board": "workspace:*",
+		"@reduxjs/toolkit": "^2.2.1",
+		"zod": "^3.22.4"
 	}
 }

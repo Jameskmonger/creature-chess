@@ -1,27 +1,23 @@
-import { MAX_HEALTH } from "@creature-chess/models";
-import { PlayerStatus, PlayerBattle } from "@creature-chess/models";
-import { StreakType, PlayerStreak } from "@creature-chess/models";
+export {
+	playerInfoCommands,
+	type PlayerMatchRewards,
+} from "@creature-chess/models";
 
-import { networkedAction } from "../../../../events/networkedAction";
-
-export type PlayerMatchRewards = {
-	damage: number;
-	justDied: boolean;
-	rewardMoney: {
-		total: number;
-		base: number;
-		winBonus: number;
-		streakBonus: number;
-		interest: number;
-	};
-};
+import {
+	MAX_HEALTH,
+	type PlayerBattle,
+	type PlayerMatchRewards as PlayerMatchRewardsT,
+	PlayerStatus,
+	type PlayerStreak,
+	StreakType,
+} from "@creature-chess/models";
 
 export interface PlayerInfoState {
 	status: PlayerStatus;
 	health: number;
 	streak: PlayerStreak;
 	battle: PlayerBattle | null;
-	matchRewards: PlayerMatchRewards | null;
+	matchRewards: PlayerMatchRewardsT | null;
 
 	opponentId: string | null;
 	opponentIsClone: boolean;
@@ -46,40 +42,4 @@ export const initialPlayerInfoState: PlayerInfoState = {
 	ready: false,
 	level: 0,
 	xp: 0,
-};
-
-export const playerInfoCommands = {
-	playerMatchRewardsEvent: networkedAction<
-		PlayerMatchRewards | null,
-		"playerInfo/playerMatchRewardsEvent"
-	>("playerInfo/playerMatchRewardsEvent"),
-	updateStatusCommand: networkedAction<
-		PlayerStatus,
-		"playerInfo/updateStatusCommand"
-	>("playerInfo/updateStatusCommand"),
-	updateReadyCommand: networkedAction<boolean, "playerInfo/updateReadyCommand">(
-		"playerInfo/updateReadyCommand"
-	),
-	updateOpponentCommand: networkedAction<
-		{ id: string | null; isClone?: boolean },
-		"playerInfo/updateOpponentCommand"
-	>("playerInfo/updateOpponentCommand"),
-	updateBattleCommand: networkedAction<
-		PlayerBattle | null,
-		"playerInfo/updateBattleCommand"
-	>("playerInfo/updateBattleCommand"),
-	updateHealthCommand: networkedAction<number, "playerInfo/updateHealthCommand">(
-		"playerInfo/updateHealthCommand"
-	),
-	updateStreakCommand: networkedAction<
-		PlayerStreak,
-		"playerInfo/updateStreakCommand"
-	>("playerInfo/updateStreakCommand"),
-	updateLevelCommand: networkedAction<
-		{ level: number; xp: number },
-		"playerInfo/updateLevelCommand"
-	>("playerInfo/updateLevelCommand"),
-	updateMoneyCommand: networkedAction<number, "playerInfo/updateMoneyCommand">(
-		"playerInfo/updateMoneyCommand"
-	),
 };

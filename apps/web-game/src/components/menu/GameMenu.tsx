@@ -6,6 +6,8 @@ import {
 	faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSocketManager } from "~/networking";
+import { getAvailableCreatureIds } from "~/networking/creatureDefinitions";
+import { Region } from "~/plugins";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { PageBoardBackground } from "../PageBackground";
@@ -111,9 +113,25 @@ const useStyles = createUseThemeStyles((theme) => ({
 	},
 }));
 
+const WELCOME_CREATURE_COUNT = 5;
+
+const pickRandomCreatureIds = (count: number): number[] => {
+	const pool = getAvailableCreatureIds();
+	for (let i = pool.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[pool[i], pool[j]] = [pool[j], pool[i]];
+	}
+	return pool.slice(0, count);
+};
+
 export function GameMenu() {
 	const classes = useStyles();
 	const socketManager = useSocketManager();
+
+	const welcomeCreatures = React.useMemo(
+		() => pickRandomCreatureIds(WELCOME_CREATURE_COUNT),
+		[]
+	);
 
 	const onFindGameClick = React.useCallback(
 		() => socketManager.connect(),
@@ -156,36 +174,44 @@ export function GameMenu() {
 				<div className={classes.main}>
 					{view === "home" && (
 						<div className={classes.home}>
-							<MenuCard className={classes.homeCard}>
-								<p className={classes.welcome}>
-									Welcome to{" "}
-									<span className={classes.highlight}>Creature Chess</span>!
-								</p>
-								<div className={classes.creatures}>
-									<CreatureImage definitionId={33} facing="front" />
-									<CreatureImage definitionId={44} facing="front" />
-									<CreatureImage definitionId={47} facing="front" />
-									<CreatureImage definitionId={27} facing="front" />
-									<CreatureImage definitionId={39} facing="front" />
-								</div>
-								<Button color="primary" size="large" onClick={onFindGameClick}>
-									Start Game
-								</Button>
-								<Button
-									color="muted"
-									size="medium"
-									onClick={() => setView("help")}
-								>
-									How to Play
-								</Button>
-								<Button
-									color="muted"
-									size="medium"
-									onClick={() => setView("updates")}
-								>
-									Update Notes
-								</Button>
-							</MenuCard>
+							<Region cls="main-menu" ctx={{}}>
+								<MenuCard className={classes.homeCard}>
+									<p className={classes.welcome}>
+										Welcome to{" "}
+										<span className={classes.highlight}>Creature Chess</span>!
+									</p>
+									<div className={classes.creatures}>
+										{welcomeCreatures.map((id) => (
+											<CreatureImage
+												key={id}
+												definitionId={id}
+												facing="front"
+											/>
+										))}
+									</div>
+									<Button
+										color="primary"
+										size="large"
+										onClick={onFindGameClick}
+									>
+										Start Game
+									</Button>
+									<Button
+										color="muted"
+										size="medium"
+										onClick={() => setView("help")}
+									>
+										How to Play
+									</Button>
+									<Button
+										color="muted"
+										size="medium"
+										onClick={() => setView("updates")}
+									>
+										Update Notes
+									</Button>
+								</MenuCard>
+							</Region>
 						</div>
 					)}
 					{view === "help" && (

@@ -2,6 +2,7 @@ import React from "react";
 
 import { useSelector } from "react-redux";
 import { useGameSession } from "~/game/sessionContext";
+import { Region } from "~/plugins";
 import { AppState } from "~/store";
 
 import { GamePhase } from "@creature-chess/models";
@@ -49,20 +50,25 @@ export function BoardSurface({ children }: { children?: React.ReactNode }) {
 	const onDropPiece = useOnDropPiece(surfaceBoard, bench);
 
 	return (
-		<GameBoard
-			board={surfaceBoard}
-			bench={bench}
-			pieceRegistry={pieceRegistry}
-			renderBoardPiece={renderBoardPiece}
-			renderBenchPiece={renderBenchPiece}
-			onClick={config.isInteractive ? onClickTile : undefined}
-			onDropPiece={config.isInteractive ? onDropPiece : undefined}
-			boardDraggable={config.boardDraggable}
-			benchDraggable={config.benchDraggable}
-			showFiller={config.isPreparing}
+		<Region
+			cls="board-surface"
+			ctx={{ isMatch: config.isMatch, isPreparing: config.isPreparing }}
 		>
-			{config.isMatch && <ProjectileCanvas />}
-			{children}
-		</GameBoard>
+			<GameBoard
+				board={surfaceBoard}
+				bench={bench}
+				pieceRegistry={pieceRegistry}
+				renderBoardPiece={renderBoardPiece}
+				renderBenchPiece={renderBenchPiece}
+				onClick={config.isInteractive ? onClickTile : undefined}
+				onDropPiece={config.isInteractive ? onDropPiece : undefined}
+				boardDraggable={config.boardDraggable}
+				benchDraggable={config.benchDraggable}
+				showFiller={config.isPreparing}
+			>
+				{config.isMatch && <ProjectileCanvas />}
+				{children}
+			</GameBoard>
+		</Region>
 	);
 }

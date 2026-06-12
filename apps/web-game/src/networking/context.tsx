@@ -1,7 +1,11 @@
-import React, { createContext, useContext, useRef, useSyncExternalStore } from "react";
+import React, {
+	createContext,
+	useContext,
+	useRef,
+	useSyncExternalStore,
+} from "react";
 
 import { useDispatch } from "react-redux";
-
 import { Holder } from "~/utils/Holder";
 
 import { GameConnection } from "./GameConnection";

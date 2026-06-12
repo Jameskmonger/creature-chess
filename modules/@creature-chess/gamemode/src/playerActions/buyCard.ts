@@ -1,5 +1,4 @@
 import { v4 as uuid } from "uuid";
-import { z } from "zod";
 
 import {
 	Board,
@@ -9,13 +8,13 @@ import {
 import {
 	Card,
 	GamePhase,
-	getDefinitionById,
 	PieceModel,
 	PlayerPieceLocation,
 } from "@creature-chess/models";
 
 import { Player } from "../entities/player/player";
-import { networkedAction } from "../events/networkedAction";
+import { CreatureRegistry } from "../factory";
+import { buyCardPlayerAction } from "./creators";
 import { definePlayerAction } from "./registry";
 import { resyncPlayer } from "./resync";
 
@@ -46,10 +45,11 @@ const getCardDestination = (
 
 const createPieceFromCard = (
 	ownerId: string,
-	card: Card
+	card: Card,
+	creatures: CreatureRegistry
 ): PieceModel | null => {
 	const { id, definitionId } = card;
-	const definition = getDefinitionById(definitionId);
+	const definition = creatures.get(definitionId);
 	if (!definition) {
 		return null;
 	}
@@ -64,27 +64,10 @@ const createPieceFromCard = (
 	};
 };
 
-const buyCardSchema = z.object({
-	index: z.number().int().nonnegative(),
-});
-
-export type BuyCardPlayerAction = ReturnType<typeof buyCardPlayerAction>;
-export const buyCardPlayerAction = networkedAction<
-	z.infer<typeof buyCardSchema>,
-	"buyCardPlayerAction"
->("buyCardPlayerAction");
-
 export const buyCardDef = definePlayerAction({
-	type: buyCardPlayerAction.type,
-	schema: buyCardSchema,
+	creator: buyCardPlayerAction,
 	handler: (player, { index }) => {
-		const {
-			id: playerId,
-			name,
-			logger,
-			board,
-			bench,
-		} = player;
+		const { id: playerId, name, logger, board, bench } = player;
 		const cards = player.cards;
 		const card = cards[index];
 
@@ -115,8 +98,17 @@ export const buyCardDef = definePlayerAction({
 			return;
 		}
 
-		const piece = createPieceFromCard(playerId, card);
+		const piece = createPieceFromCard(
+			playerId,
+			card,
+			player.gamemode.creatures
+		);
 		if (!piece) {
+			logger.warn("Player attempted to buy card with unregistered definition", {
+				actor: { playerId, name },
+				details: { definitionId: card.definitionId },
+			});
+			resyncPlayer(player, "money", "cards");
 			return;
 		}
 

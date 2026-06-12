@@ -1,8 +1,7 @@
 import React from "react";
 
+import { getCreatureDefinitionById } from "~/networking/creatureDefinitions";
 import { createUseThemeStyles } from "~/useStyles";
-
-import { getDefinitionById } from "@creature-chess/models";
 
 import { TraitIcon } from "../ui/TraitIcon";
 import { BalanceIcon } from "../ui/icon/BalanceIcon";
@@ -90,7 +89,7 @@ export function SelectedPieceInfo() {
 		return null;
 	}
 
-	const definition = getDefinitionById(selectedPiece.definitionId);
+	const definition = getCreatureDefinitionById(selectedPiece.definitionId);
 
 	if (!definition) {
 		return null;

@@ -16,7 +16,7 @@ function findBestState(
 	board: Board,
 	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
-	{ combatStore }: Stores
+	{ combatStore, creatures }: Stores
 ): PieceState {
 	const combatState = combatStore.getPiece(pieceId);
 
@@ -25,6 +25,7 @@ function findBestState(
 			board,
 			pieceRegistry,
 			combatStore,
+			creatures,
 			pieceId
 		);
 
@@ -42,12 +43,18 @@ export function doWander(
 	board: Board,
 	pieceRegistry: ReadablePieceRegistry,
 	pieceId: PieceModel["id"],
-	{ combatStore }: Stores
+	stores: Stores
 ): StateResult {
 	// TODO search for a better state here and return early
-	const bestState = findBestState(currentTurn, board, pieceRegistry, pieceId, {
-		combatStore,
-	});
+	const bestState = findBestState(
+		currentTurn,
+		board,
+		pieceRegistry,
+		pieceId,
+		stores
+	);
+
+	const { combatStore } = stores;
 
 	if (bestState.type !== "wandering") {
 		return [bestState];

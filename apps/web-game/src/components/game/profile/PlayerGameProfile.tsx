@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { getXpToNextLevel } from "@creature-chess/models";
 import classNames from "classnames";
 import { createUseStyles } from "react-jss";
 import { Button } from "~/components/ui";
@@ -8,9 +9,9 @@ import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { useGamemodeSettings } from "~/game/sessionContext";
 import { useGameActions } from "~/networking";
+import { Region } from "~/plugins";
 import { useLocalPlayer } from "~/store/game/players";
 
-import { getXpToNextLevel } from "@creature-chess/gamemode";
 import { MAX_LEVEL } from "@creature-chess/models";
 
 import { ProgressBar } from "../../ui/progressBar";
@@ -100,39 +101,41 @@ export function PlayerGameProfile() {
 	const { level, xp, money } = localPlayer;
 
 	return (
-		<div className={styles.profile}>
-			<div className={styles.column}>
-				{level === MAX_LEVEL && <div>You are max level!</div>}
+		<Region cls="player-profile-bar" ctx={{ level, xp, money }}>
+			<div className={styles.profile}>
+				<div className={styles.column}>
+					{level === MAX_LEVEL && <div>You are max level!</div>}
 
-				{level !== MAX_LEVEL && (
-					<ProgressBar
-						className={styles.xpProgress}
-						fillClassName={styles.xpProgressFill}
-						contentClassName={styles.xpProgressContent}
-						current={xp}
-						max={getXpToNextLevel(level)}
-						renderContents={renderProgressBar}
-					/>
-				)}
+					{level !== MAX_LEVEL && (
+						<ProgressBar
+							className={styles.xpProgress}
+							fillClassName={styles.xpProgressFill}
+							contentClassName={styles.xpProgressContent}
+							current={xp}
+							max={getXpToNextLevel(level)}
+							renderContents={renderProgressBar}
+						/>
+					)}
 
-				{level !== MAX_LEVEL && (
-					<Button
-						onClick={gameActions.buyXp}
-						disabled={money < buyXpCost}
-						color="secondary"
-						size="small"
-					>
-						+{buyXpAmount} xp ({buyXpCost} <CoinIcon />)
-					</Button>
-				)}
-			</div>
+					{level !== MAX_LEVEL && (
+						<Button
+							onClick={gameActions.buyXp}
+							disabled={money < buyXpCost}
+							color="secondary"
+							size="small"
+						>
+							+{buyXpAmount} xp ({buyXpCost} <CoinIcon />)
+						</Button>
+					)}
+				</div>
 
-			<div className={classNames(styles.column, styles.right)}>
-				<div className={classNames(styles.item, styles.level)}>
-					<LevelIcon amount={level} />
-					<BalanceIcon amount={money} />
+				<div className={classNames(styles.column, styles.right)}>
+					<div className={classNames(styles.item, styles.level)}>
+						<LevelIcon amount={level} />
+						<BalanceIcon amount={money} />
+					</div>
 				</div>
 			</div>
-		</div>
+		</Region>
 	);
 }

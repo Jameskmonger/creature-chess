@@ -6,6 +6,7 @@ import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
 import { Button } from "~/components/ui";
 import { Countdown } from "~/components/ui/countdown";
 import { useLobbyConnection } from "~/networking";
+import { Region } from "~/plugins";
 import { AppState } from "~/store";
 import { createUseThemeStyles } from "~/useStyles";
 
@@ -97,11 +98,17 @@ export function LobbyPage() {
 		const output: React.ReactNode[] = [];
 
 		for (let i = 0; i < lobbyInfo.maxPlayers; i++) {
-			const player = lobbyInfo.players[i];
+			const player = lobbyInfo.players[i] ?? null;
 
 			output.push(
 				<div key={player ? player.id : i} className={styles.playerWrapper}>
-					<LobbyPlayerBanner player={player ?? null} />
+					<Region
+						cls="lobby-player-slot"
+						id={`lobby.slot.${i}`}
+						ctx={{ slotIndex: i, player }}
+					>
+						<LobbyPlayerBanner player={player} />
+					</Region>
 				</div>
 			);
 		}

@@ -1,28 +1,15 @@
-import { z } from "zod";
+import { PIECES_TO_EVOLVE, getPiecesForStage } from "@creature-chess/models";
 
-import { getDefinitionById, PIECES_TO_EVOLVE } from "@creature-chess/models";
-
-import { networkedAction } from "../events/networkedAction";
-import { getPiecesForStage } from "../game/evolution";
+import { sellPiecePlayerAction } from "./creators";
 import { definePlayerAction } from "./registry";
 
-const sellPieceSchema = z.object({
-	pieceId: z.string(),
-});
-
-export type SellPiecePlayerAction = ReturnType<typeof sellPiecePlayerAction>;
-export const sellPiecePlayerAction = networkedAction<
-	z.infer<typeof sellPieceSchema>
->("sellPiecePlayerAction");
-
 export const sellPieceDef = definePlayerAction({
-	type: sellPiecePlayerAction.type,
-	schema: sellPieceSchema,
+	creator: sellPiecePlayerAction,
 	handler: (player, { pieceId }) => {
 		const {
 			board,
 			bench,
-			gamemode: { pieceRegistry },
+			gamemode: { pieceRegistry, creatures },
 		} = player;
 
 		const ownsPiece =
@@ -36,7 +23,7 @@ export const sellPieceDef = definePlayerAction({
 			return;
 		}
 
-		const definition = getDefinitionById(piece.definitionId);
+		const definition = creatures.get(piece.definitionId);
 		if (!definition) {
 			return;
 		}

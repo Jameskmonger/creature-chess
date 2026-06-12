@@ -1,6 +1,6 @@
+import { GameEvents } from "@creature-chess/models";
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
-import { GameEvents } from "@creature-chess/gamemode";
 import {
 	PlayerBattle,
 	PlayerListPlayer,
@@ -52,45 +52,48 @@ export const playersActions = {
 	),
 };
 
-export const playersReducer = createReducer<Player[]>(initialState, (builder) => {
-	builder
-		.addCase(GameEvents.playerListChangedEvent, (_state, action) => [
-			...action.payload.players,
-		])
-		.addCase(playersActions.setLocalHealth, (state, action) => {
-			updateLocalPlayer(state, action.payload.id, (p) => {
-				p.health = action.payload.health;
+export const playersReducer = createReducer<Player[]>(
+	initialState,
+	(builder) => {
+		builder
+			.addCase(GameEvents.playerListChangedEvent, (_state, action) => [
+				...action.payload.players,
+			])
+			.addCase(playersActions.setLocalHealth, (state, action) => {
+				updateLocalPlayer(state, action.payload.id, (p) => {
+					p.health = action.payload.health;
+				});
+			})
+			.addCase(playersActions.setLocalMoney, (state, action) => {
+				updateLocalPlayer(state, action.payload.id, (p) => {
+					p.money = action.payload.money;
+				});
+			})
+			.addCase(playersActions.setLocalLevel, (state, action) => {
+				updateLocalPlayer(state, action.payload.id, (p) => {
+					p.level = action.payload.level;
+				});
+			})
+			.addCase(playersActions.setLocalReady, (state, action) => {
+				updateLocalPlayer(state, action.payload.id, (p) => {
+					p.ready = action.payload.ready;
+				});
+			})
+			.addCase(playersActions.setLocalStreak, (state, action) => {
+				updateLocalPlayer(state, action.payload.id, (p) => {
+					p.streakType = action.payload.streakType;
+					p.streakAmount = action.payload.streakAmount;
+				});
+			})
+			.addCase(playersActions.setLocalBattle, (state, action) => {
+				updateLocalPlayer(state, action.payload.id, (p) => {
+					p.battle = action.payload.battle;
+				});
+			})
+			.addCase(playersActions.setLocalStatus, (state, action) => {
+				updateLocalPlayer(state, action.payload.id, (p) => {
+					p.status = action.payload.status;
+				});
 			});
-		})
-		.addCase(playersActions.setLocalMoney, (state, action) => {
-			updateLocalPlayer(state, action.payload.id, (p) => {
-				p.money = action.payload.money;
-			});
-		})
-		.addCase(playersActions.setLocalLevel, (state, action) => {
-			updateLocalPlayer(state, action.payload.id, (p) => {
-				p.level = action.payload.level;
-			});
-		})
-		.addCase(playersActions.setLocalReady, (state, action) => {
-			updateLocalPlayer(state, action.payload.id, (p) => {
-				p.ready = action.payload.ready;
-			});
-		})
-		.addCase(playersActions.setLocalStreak, (state, action) => {
-			updateLocalPlayer(state, action.payload.id, (p) => {
-				p.streakType = action.payload.streakType;
-				p.streakAmount = action.payload.streakAmount;
-			});
-		})
-		.addCase(playersActions.setLocalBattle, (state, action) => {
-			updateLocalPlayer(state, action.payload.id, (p) => {
-				p.battle = action.payload.battle;
-			});
-		})
-		.addCase(playersActions.setLocalStatus, (state, action) => {
-			updateLocalPlayer(state, action.payload.id, (p) => {
-				p.status = action.payload.status;
-			});
-		});
-});
+	}
+);

@@ -7,10 +7,7 @@ const RESYNC_HANDLERS = {
 
 export type ResyncField = keyof typeof RESYNC_HANDLERS;
 
-/**
- * Re-emit the current value for each field so the wire-shape update reaches
- * the client.
- */
+/** Re-emits the current value of each field to push it to the client. */
 export const resyncPlayer = (
 	player: Player,
 	...fields: ResyncField[]

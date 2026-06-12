@@ -24,6 +24,7 @@
 	},
 	"dependencies": {
 		"@cc-bot/utility": "workspace:*",
+		"@cc-engine/kernel": "workspace:*",
 		"@cc-server/bot": "workspace:*",
 		"@creature-chess/gamemode": "workspace:*",
 		"@creature-chess/models": "workspace:*",

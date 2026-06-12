@@ -1,15 +1,12 @@
 import { Board, packPosition } from "@creature-chess/board";
-import {
-	PIECES_TO_EVOLVE,
-	PieceModel,
-	getDefinitionById,
-} from "@creature-chess/models";
+import { PIECES_TO_EVOLVE, PieceModel } from "@creature-chess/models";
 import { ReadablePieceRegistry } from "@creature-chess/utils";
 
+import { CreatureRegistry } from "../../../factory";
 import type { Player } from "../player";
 
-const pieceCanEvolve = (piece: PieceModel) => {
-	const definition = getDefinitionById(piece.definitionId);
+const pieceCanEvolve = (piece: PieceModel, creatures: CreatureRegistry) => {
+	const definition = creatures.get(piece.definitionId);
 	if (!definition) {
 		return false;
 	}
@@ -24,10 +21,13 @@ const getRegisteredPieces = (board: Board, registry: ReadablePieceRegistry) =>
 
 type EvolvableGroup = { definitionId: number; stage: number };
 
-const findEvolvableGroup = (pieces: PieceModel[]): EvolvableGroup | null => {
+const findEvolvableGroup = (
+	pieces: PieceModel[],
+	creatures: CreatureRegistry
+): EvolvableGroup | null => {
 	const counts = new Map<string, number>();
 	for (const piece of pieces) {
-		if (!pieceCanEvolve(piece)) {
+		if (!pieceCanEvolve(piece, creatures)) {
 			continue;
 		}
 		const key = `${piece.definitionId}:${piece.stage}`;
@@ -95,8 +95,8 @@ const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 	}
 };
 
-// Handles one group per call; chain evolutions cascade via the addBoardPiece /
-// addBenchPiece mutators re-entering on the placed evolved piece.
+// One group per call - chain evolutions cascade when the placed evolved
+// piece re-enters via `addPiece`.
 export const runEvolutions = (player: Player): void => {
 	if (player.boardLocked) {
 		return;
@@ -104,13 +104,13 @@ export const runEvolutions = (player: Player): void => {
 	const {
 		board,
 		bench,
-		gamemode: { pieceRegistry },
+		gamemode: { pieceRegistry, creatures },
 	} = player;
 	const allPieces = [
 		...getRegisteredPieces(board, pieceRegistry),
 		...getRegisteredPieces(bench, pieceRegistry),
 	];
-	const group = findEvolvableGroup(allPieces);
+	const group = findEvolvableGroup(allPieces, creatures);
 	if (!group) {
 		return;
 	}

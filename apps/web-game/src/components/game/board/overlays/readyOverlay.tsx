@@ -5,6 +5,7 @@ import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { CloneChip } from "~/components/ui/player/CloneChip";
 import { PositionChip } from "~/components/ui/player/PositionChip";
+import { Region } from "~/plugins";
 import { AppState } from "~/store";
 import {
 	useLocalPlayer,
@@ -18,8 +19,7 @@ import { GamePhase } from "@creature-chess/models";
 import { Title, PlayerHealthbar, PlayerAvatar } from "../../../ui/player";
 import { StreakIndicator } from "../../playerList";
 import { BoardOverlay } from "./boardOverlay";
-import { QuickChatBox } from "./quickChat/quickChatBox";
-import { QuickChatButtonArray } from "./quickChat/quickChatButtonArray";
+import { QuickChatBox, QuickChatButtonArray } from "./quickChat";
 
 const useStyles = createUseThemeStyles((theme) => ({
 	root: {
@@ -133,58 +133,75 @@ function ReadyOverlay() {
 	return (
 		<BoardOverlay>
 			<div className={styles.root}>
-				<div className={styles.wrapper}>
-					<div className={styles.player}>
-						<div className={styles.playerDetails}>
-							<div className={styles.nameWrapper}>
-								<span className={styles.playerName}>{localPlayer.name}</span>
-								<PositionChip position={localRank} />
-							</div>
-							<Title title={localPlayer.profile?.title || null} />
-							<PlayerHealthbar health={localPlayer.health} />
-							<div className={styles.badges}>
-								<StreakIndicator
-									type={localPlayer.streakType}
-									amount={localPlayer.streakAmount}
-								/>
-								<BalanceIcon amount={localPlayer.money} />
-								<LevelIcon amount={localPlayer.level} />
-							</div>
-						</div>
-						<div className={styles.playerAvatar}>
-							<PlayerAvatar player={localPlayer} />
-							<QuickChatBox sendingPlayerId={localPlayer.id} />
-						</div>
-					</div>
-					<div className={styles.vsHeader}>vs.</div>
-					<div className={styles.player}>
-						<div className={styles.playerAvatar}>
-							<PlayerAvatar player={opponent} />
-							<QuickChatBox sendingPlayerId={opponent.id} />
-						</div>
-						<div className={styles.playerDetails}>
-							<div className={styles.nameWrapper}>
-								<span className={styles.playerName}>{opponent.name}</span>
-								<div className={styles.tags}>
-									<PositionChip position={opponentRank} />
-									{opponentIsClone && <CloneChip />}
+				<Region
+					cls="overlay-content"
+					id="overlay.content"
+					ctx={{ localPlayerId: localPlayer.id }}
+				>
+					<div className={styles.wrapper}>
+						<div className={styles.player}>
+							<div className={styles.playerDetails}>
+								<div className={styles.nameWrapper}>
+									<span className={styles.playerName}>{localPlayer.name}</span>
+									<PositionChip position={localRank} />
+								</div>
+								<Title title={localPlayer.profile?.title || null} />
+								<PlayerHealthbar health={localPlayer.health} />
+								<div className={styles.badges}>
+									<StreakIndicator
+										type={localPlayer.streakType}
+										amount={localPlayer.streakAmount}
+									/>
+									<BalanceIcon amount={localPlayer.money} />
+									<LevelIcon amount={localPlayer.level} />
 								</div>
 							</div>
-							<Title title={opponent.profile?.title || null} />
-							<PlayerHealthbar health={opponent.health} />
-							<div className={styles.badges}>
-								<StreakIndicator
-									type={opponent.streakType}
-									amount={opponent.streakAmount}
-								/>
-								<BalanceIcon amount={opponent.money} />
-								<LevelIcon amount={opponent.level} />
+							<div className={styles.playerAvatar}>
+								<Region
+									cls="player-avatar"
+									id="player.avatar.local"
+									ctx={{ playerId: localPlayer.id }}
+								>
+									<PlayerAvatar player={localPlayer} />
+								</Region>
+								<QuickChatBox playerId={localPlayer.id} />
+							</div>
+						</div>
+						<div className={styles.vsHeader}>vs.</div>
+						<div className={styles.player}>
+							<div className={styles.playerAvatar}>
+								<Region
+									cls="player-avatar"
+									id="player.avatar.opponent"
+									ctx={{ playerId: opponent.id }}
+								>
+									<PlayerAvatar player={opponent} />
+								</Region>
+								<QuickChatBox playerId={opponent.id} />
+							</div>
+							<div className={styles.playerDetails}>
+								<div className={styles.nameWrapper}>
+									<span className={styles.playerName}>{opponent.name}</span>
+									<div className={styles.tags}>
+										<PositionChip position={opponentRank} />
+										{opponentIsClone && <CloneChip />}
+									</div>
+								</div>
+								<Title title={opponent.profile?.title || null} />
+								<PlayerHealthbar health={opponent.health} />
+								<div className={styles.badges}>
+									<StreakIndicator
+										type={opponent.streakType}
+										amount={opponent.streakAmount}
+									/>
+									<BalanceIcon amount={opponent.money} />
+									<LevelIcon amount={opponent.level} />
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-
-				<QuickChatButtonArray />
+				</Region>
+				<QuickChatButtonArray playerId={localPlayer.id} />
 			</div>
 		</BoardOverlay>
 	);

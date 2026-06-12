@@ -1,10 +1,10 @@
-import { AnimationLayer } from "./animations";
 import {
 	EMPTY_LAYER_SLOTS,
 	LayerSlots,
 	assignLayer,
 	removeLayer,
 } from "./animationLayerSlots";
+import { AnimationLayer } from "./animations";
 
 const layer = (name: string, className = `cls-${name}`): AnimationLayer => ({
 	name,
@@ -37,7 +37,7 @@ describe("animationLayerSlots", () => {
 			expect(result[1]).toEqual(layer("hit"));
 		});
 
-		it("preserves slot order when replacing — name keeps its slot index", () => {
+		it("preserves slot order when replacing - name keeps its slot index", () => {
 			const initial: LayerSlots = [layer("hit"), layer("attack", "old")];
 
 			const result = assignLayer(initial, layer("attack", "new"));
@@ -54,7 +54,7 @@ describe("animationLayerSlots", () => {
 			expect(result).toEqual(initial);
 		});
 
-		it("returns a new array — does not mutate the input", () => {
+		it("returns a new array - does not mutate the input", () => {
 			const initial: LayerSlots = [...EMPTY_LAYER_SLOTS];
 
 			const result = assignLayer(initial, layer("attack"));
@@ -82,7 +82,7 @@ describe("animationLayerSlots", () => {
 			expect(result).toEqual(initial);
 		});
 
-		it("returns a new array — does not mutate the input", () => {
+		it("returns a new array - does not mutate the input", () => {
 			const initial: LayerSlots = [layer("attack"), layer("hit")];
 
 			const result = removeLayer(initial, "attack");

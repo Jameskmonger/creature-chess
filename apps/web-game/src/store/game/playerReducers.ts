@@ -1,12 +1,11 @@
-import { createReducer } from "@reduxjs/toolkit";
-
 import {
 	type CardShopState,
 	type SpectatingState,
 	initialCardShopState,
 	initialSpectatingState,
 	PlayerCommands,
-} from "@creature-chess/gamemode";
+} from "@creature-chess/models";
+import { createReducer } from "@reduxjs/toolkit";
 
 export const cardShopReducer = createReducer<CardShopState>(
 	initialCardShopState,
@@ -24,12 +23,9 @@ export const cardShopReducer = createReducer<CardShopState>(
 export const spectatingReducer = createReducer<SpectatingState>(
 	initialSpectatingState,
 	(builder) => {
-		builder.addCase(
-			PlayerCommands.setSpectatingIdCommand,
-			(state, action) => {
-				state.id = action.payload;
-			}
-		);
+		builder.addCase(PlayerCommands.setSpectatingIdCommand, (state, action) => {
+			state.id = action.payload;
+		});
 	}
 );
 

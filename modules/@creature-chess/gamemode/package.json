@@ -2,12 +2,23 @@
 	"private": true,
 	"name": "@creature-chess/gamemode",
 	"version": "0.0.1",
-	"description": "Creature Chess gamemode",
+	"description": "The Creature Chess gamemode implementation.",
 	"keywords": [],
 	"author": "James Monger <jameskmonger@hotmail.co.uk>",
 	"license": "ISC",
 	"main": "./dist/index.js",
 	"types": "./index.ts",
+	"exports": {
+		".": {
+			"types": "./index.ts",
+			"default": "./dist/index.js"
+		},
+		"./client": {
+			"types": "./client.ts",
+			"default": "./dist/client.js"
+		},
+		"./package.json": "./package.json"
+	},
 	"publishConfig": {
 		"access": "public"
 	},
@@ -25,6 +36,8 @@
 	},
 	"homepage": "https://github.com/Jameskmonger/creature-chess#readme",
 	"dependencies": {
+		"@cc-engine/kernel": "workspace:*",
+		"@cc-plugins/api": "workspace:*",
 		"@creature-chess/battle": "workspace:*",
 		"@creature-chess/models": "workspace:*",
 		"@reduxjs/toolkit": "^2.2.1",
@@ -36,7 +49,6 @@
 		"lodash": "^4.17.21",
 		"p-defer": "^2.1.0",
 		"uuid": "^8.3.2",
-		"winston": "^3.3.3",
 		"zod": "^4"
 	}
 }

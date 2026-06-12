@@ -1,3 +1,4 @@
+import { GamemodeContext } from "@creature-chess/gamemode";
 import { collectDefaultMetrics, register } from "prom-client";
 import { Server } from "socket.io";
 
@@ -17,6 +18,7 @@ import { onHandshakeSuccess } from "./handshake";
 import { Lobby } from "./lobby";
 import { logger } from "./log";
 import { AuthenticatedSocket } from "./player/socket";
+import { loadGamemodeAndMods } from "./plugins";
 
 register.setDefaultLabels({
 	nodeId: process.env.NODE_APP_INSTANCE || "default",
@@ -29,6 +31,7 @@ const MAX_PLAYERS = 8;
 const LOBBY_WAIT_TIME = 60;
 
 const startGame = async (
+	context: GamemodeContext,
 	settings: GamemodeSettings,
 	players: PlayerGameParticipant[],
 	onFinish: () => void
@@ -41,6 +44,7 @@ const startGame = async (
 		settings,
 		{ players, bots },
 		{
+			context,
 			onFinish: () => {
 				logger.info("Game finished");
 
@@ -54,6 +58,8 @@ const startGame = async (
 
 export const startServer = async ({ io }: { io: Server }) => {
 	logger.info("Starting server...");
+
+	const context = await loadGamemodeAndMods();
 
 	let lobbies: Lobby[] = [];
 	let games: Game[] = [];
@@ -106,9 +112,14 @@ export const startServer = async ({ io }: { io: Server }) => {
 			onStart: async (settings, players) => {
 				lobbies = lobbies.filter((other) => other !== lobby);
 
-				const game = await startGame(settings, players, () => {
-					games = games.filter((other) => other !== game);
-				});
+				const game = await startGame(
+					context,
+					settings,
+					players,
+					() => {
+						games = games.filter((other) => other !== game);
+					}
+				);
 
 				games.push(game);
 			},

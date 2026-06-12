@@ -1,13 +1,13 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
+import { useGameSession } from "~/game/sessionContext";
 import { useGameActions } from "~/networking";
 import { AppState } from "~/store";
 import { useLocalPlayer } from "~/store/game/players";
 
 import { Card as CardModel } from "@creature-chess/models";
 
-import { useGameSession } from "~/game/sessionContext";
 import { CardShopPresentation } from "./presentation/cardShop";
 
 export function CardShop() {

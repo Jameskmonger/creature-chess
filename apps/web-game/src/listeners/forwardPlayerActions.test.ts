@@ -1,16 +1,14 @@
+import { PlayerActions } from "@creature-chess/models";
 import {
 	configureStore,
 	createListenerMiddleware,
 	createSlice,
 } from "@reduxjs/toolkit";
-
 import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { GameConnection } from "~/networking/GameConnection";
 import { LobbyConnection } from "~/networking/LobbyConnection";
 import { ClientExtra } from "~/store/listenerContext";
 import { Holder } from "~/utils/Holder";
-
-import { PlayerActions } from "@creature-chess/gamemode";
 
 import { setupForwardPlayerActions } from "./forwardPlayerActions";
 

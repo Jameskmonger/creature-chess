@@ -1,7 +1,6 @@
+import { ClientUi, GameEvents } from "@creature-chess/models";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ConnectionStatus } from "~/networking/types";
-
-import { GameEvents } from "@creature-chess/gamemode";
 
 import { Overlay } from "./overlay";
 
@@ -25,12 +24,6 @@ export const uiSlice = createSlice({
 	name: "ui",
 	initialState,
 	reducers: {
-		openOverlay: (state, { payload }: PayloadAction<Overlay>) => {
-			state.currentOverlay = payload;
-		},
-		closeOverlay: (state) => {
-			state.currentOverlay = null;
-		},
 		selectPiece: (state, { payload: id }: PayloadAction<string>) => {
 			const isSamePiece =
 				state.selectedPieceId !== null && state.selectedPieceId === id;
@@ -51,6 +44,14 @@ export const uiSlice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
+		builder.addCase(ClientUi.openOverlayCommand, (state, { payload }) => {
+			state.currentOverlay = payload;
+		});
+		builder.addCase(ClientUi.closeOverlayCommand, (state, { payload }) => {
+			if (payload === undefined || state.currentOverlay === payload) {
+				state.currentOverlay = null;
+			}
+		});
 		builder.addCase(GameEvents.gameFinishEvent, (state, action) => {
 			const winner = action.payload.players.find((p) => p.position === 1);
 			if (winner) {
