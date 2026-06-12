@@ -6,14 +6,38 @@ import { Button } from "../ui";
 import { Footer } from "../ui/Footer";
 import { Group, Layout } from "../ui/layout";
 import { Header2 } from "../ui/text";
+import { updateNotes } from "./updateNotesData";
 
 const useStyles = createUseStyles({
 	updateNotes: {
 		color: "#fff",
 	},
-	helpText: {
+	version: {
+		"fontSize": "16px",
+		"fontWeight": "bold",
+		"margin": "12px 0 4px",
+
+		"@media (min-width: 400px)": {
+			fontSize: "20px",
+		},
+	},
+	sectionTitle: {
+		"fontSize": "13px",
+		"fontWeight": "bold",
+		"margin": "10px 0 2px",
+
+		"@media (min-width: 400px)": {
+			fontSize: "16px",
+		},
+	},
+	list: {
 		"fontSize": "12px",
-		"marginBottom": "8px",
+		"margin": "0 0 8px",
+		"paddingLeft": "18px",
+
+		"& li": {
+			marginBottom: "2px",
+		},
 
 		"@media (min-width: 400px)": {
 			fontSize: "16px",
@@ -48,18 +72,22 @@ function UpdateNotes({
 						Back
 					</Button>
 				</div>
-				<p className={styles.helpText}>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-					eiusmod tempor incididunt ut labore et dolore magna aliqua.
-				</p>
-				<p className={styles.helpText}>
-					Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-					nisi ut aliquip ex ea commodo consequat.
-				</p>
-				<p className={styles.helpText}>
-					Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-					dolore eu fugiat nulla pariatur.
-				</p>
+				{updateNotes.map((release) => (
+					<React.Fragment key={release.version}>
+						<p className={styles.version}>Version {release.version}</p>
+
+						{release.sections.map((section) => (
+							<React.Fragment key={section.title}>
+								<p className={styles.sectionTitle}>{section.title}</p>
+								<ul className={styles.list}>
+									{section.items.map((item, i) => (
+										<li key={i}>{item}</li>
+									))}
+								</ul>
+							</React.Fragment>
+						))}
+					</React.Fragment>
+				))}
 			</Group>
 
 			{!hideFooter && <Footer />}

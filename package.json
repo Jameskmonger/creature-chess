@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "creature-chess",
-	"version": "0.7.4-beta",
+	"version": "0.8.0",
 	"description": "Creature Chess",
 	"scripts": {
 		"build": "nx run-many -t build",
