@@ -1587,6 +1587,44 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@cc-engine/kernel@workspace:*, @cc-engine/kernel@workspace:modules/@cc-engine/kernel":
+  version: 0.0.0-use.local
+  resolution: "@cc-engine/kernel@workspace:modules/@cc-engine/kernel"
+  dependencies:
+    "@types/semver": "npm:^7.5.0"
+    semver: "npm:^7.6.0"
+  languageName: unknown
+  linkType: soft
+
+"@cc-plugins/api@workspace:*, @cc-plugins/api@workspace:modules/@cc-plugins/api":
+  version: 0.0.0-use.local
+  resolution: "@cc-plugins/api@workspace:modules/@cc-plugins/api"
+  dependencies:
+    "@reduxjs/toolkit": "npm:^2.2.1"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
+"@cc-plugins/creatures-vanilla@workspace:*, @cc-plugins/creatures-vanilla@workspace:modules/@cc-plugins/creatures-vanilla":
+  version: 0.0.0-use.local
+  resolution: "@cc-plugins/creatures-vanilla@workspace:modules/@cc-plugins/creatures-vanilla"
+  dependencies:
+    "@cc-engine/kernel": "workspace:*"
+    "@creature-chess/gamemode": "workspace:*"
+    "@creature-chess/models": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@cc-plugins/debug-ui@workspace:modules/@cc-plugins/debug-ui":
+  version: 0.0.0-use.local
+  resolution: "@cc-plugins/debug-ui@workspace:modules/@cc-plugins/debug-ui"
+  dependencies:
+    "@cc-plugins/api": "workspace:*"
+    "@creature-chess/gamemode": "workspace:*"
+    react: "npm:^18.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@cc-server/bot@workspace:*, @cc-server/bot@workspace:modules/@cc-server/bot":
   version: 0.0.0-use.local
   resolution: "@cc-server/bot@workspace:modules/@cc-server/bot"
@@ -1618,6 +1656,7 @@ __metadata:
   resolution: "@creature-chess-app/server-game@workspace:apps/server-game"
   dependencies:
     "@cc-bot/utility": "workspace:*"
+    "@cc-engine/kernel": "workspace:*"
     "@cc-server/bot": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
@@ -1653,6 +1692,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess-app/web-game@workspace:apps/web-game"
   dependencies:
+    "@cc-plugins/api": "workspace:*"
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/board": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
@@ -1711,6 +1751,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/gamemode@workspace:modules/@creature-chess/gamemode"
   dependencies:
+    "@cc-engine/kernel": "workspace:*"
+    "@cc-plugins/api": "workspace:*"
     "@creature-chess/battle": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@reduxjs/toolkit": "npm:^2.2.1"
@@ -1722,7 +1764,6 @@ __metadata:
     lodash: "npm:^4.17.21"
     p-defer: "npm:^2.1.0"
     uuid: "npm:^8.3.2"
-    winston: "npm:^3.3.3"
     zod: "npm:^4"
   languageName: unknown
   linkType: soft
@@ -1731,7 +1772,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@creature-chess/models@workspace:modules/@creature-chess/models"
   dependencies:
+    "@cc-plugins/api": "workspace:*"
     "@creature-chess/board": "workspace:*"
+    "@reduxjs/toolkit": "npm:^2.2.1"
+    zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
 
@@ -4456,6 +4500,8 @@ __metadata:
   resolution: "@tools/bot-arena@workspace:modules/@tools/bot-arena"
   dependencies:
     "@cc-bot/utility": "workspace:*"
+    "@cc-engine/kernel": "workspace:*"
+    "@cc-plugins/creatures-vanilla": "workspace:*"
     "@cc-server/bot": "workspace:*"
     "@creature-chess/board": "workspace:*"
     "@creature-chess/gamemode": "workspace:*"
@@ -17620,6 +17666,13 @@ __metadata:
   version: 1.0.0
   resolution: "yocto-queue@npm:1.0.0"
   checksum: 10/2cac84540f65c64ccc1683c267edce396b26b1e931aa429660aefac8fbe0188167b7aee815a3c22fa59a28a58d898d1a2b1825048f834d8d629f4c2a5d443801
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.22.4":
+  version: 3.25.76
+  resolution: "zod@npm:3.25.76"
+  checksum: 10/f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995
   languageName: node
   linkType: hard
 

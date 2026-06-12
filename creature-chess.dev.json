@@ -1,5 +1,6 @@
 {
 	"plugins": [
-		"@cc-plugins/creatures-vanilla"
+		"@cc-plugins/creatures-vanilla",
+		"@cc-plugins/debug-ui"
 	]
 }
