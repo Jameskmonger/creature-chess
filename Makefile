@@ -7,7 +7,7 @@ rebuild: build server
 
 install:
 	@echo "Setting up the project..."
-	yarn
+	yarn install --immutable
 
 build:
 	@echo "Building the docker images..."
