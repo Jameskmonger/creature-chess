@@ -107,7 +107,7 @@ export function VictoryOverlay() {
 								className={styles.discordButton}
 							>
 								<img
-									src="https://i.imgur.com/OBo2QRd.png"
+									src="/images/ui/discord.png"
 									className={styles.discordIcon}
 								/>
 							</a>
