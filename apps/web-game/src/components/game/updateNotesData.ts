@@ -10,6 +10,17 @@ export type Release = {
 
 export const updateNotes: Release[] = [
 	{
+		version: "0.8.1",
+		sections: [
+			{
+				title: "Bugs",
+				items: [
+					"Fix Discord icon not showing up.",
+				],
+			},
+		],
+	},
+	{
 		version: "0.8.0",
 		sections: [
 			{
