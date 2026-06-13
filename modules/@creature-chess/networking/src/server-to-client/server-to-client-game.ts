@@ -32,7 +32,11 @@ export type GameConnectionPacket = {
 };
 
 export type AuthenticateResponse = {
-	error?: { type: "not_registered" } | { type: "authentication" };
+	error?: { type: "authentication" };
+	/**
+	 * The resolved identity ID of the connecting player, if the handshake succeeded.
+	 */
+	id?: string;
 };
 
 export type BoardUpdatePacket = {

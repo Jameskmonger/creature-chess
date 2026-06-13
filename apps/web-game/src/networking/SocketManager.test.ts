@@ -88,7 +88,8 @@ describe("SocketManager", () => {
 		manager = new SocketManager(
 			dispatch,
 			gameConnectionHolder,
-			lobbyConnectionHolder
+			lobbyConnectionHolder,
+			new Holder<string>("AccountId")
 		);
 		mockSocket = createMockSocket();
 

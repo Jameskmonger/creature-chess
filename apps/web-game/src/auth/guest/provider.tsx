@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { Account } from "../Account";
-import { AccountContextProvider, useAccountIdHolder } from "../context";
+import { AccountContextProvider } from "../context";
 
 /**
  * Load a guest session from the server
@@ -44,7 +44,6 @@ function useGuestSession() {
 
 export function GuestAuthProvider({ children }: { children: React.ReactNode }) {
 	const { session, loading, error } = useGuestSession();
-	const accountIdHolder = useAccountIdHolder();
 
 	const account: Account = useMemo(
 		() => ({
@@ -55,13 +54,6 @@ export function GuestAuthProvider({ children }: { children: React.ReactNode }) {
 		[session]
 	);
 
-	useEffect(() => {
-		if (!account.id) {
-			return;
-		}
-		accountIdHolder.set(account.id);
-		return () => accountIdHolder.clear();
-	}, [account.id, accountIdHolder]);
 
 	if (error || loading || !session) {
 		return null;

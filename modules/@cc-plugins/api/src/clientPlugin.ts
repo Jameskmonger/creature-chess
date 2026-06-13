@@ -14,6 +14,22 @@ export type PluginStartListening = TypedStartListening<
 	unknown
 >;
 
+export type SessionHandshake = { type: string; data: unknown };
+
+/**
+ * Supplies the handshake the client sends when connecting.
+ */
+export type SessionSource = {
+	/** Stable id, conventionally the handshake `type` it emits. */
+	id: string;
+	/** Higher runs first. */
+	priority?: number;
+	/** Whether this source can currently provide a session (e.g. logged in). */
+	isAvailable(): boolean;
+	/** Build the handshake (may fetch a token). Return null to fall through. */
+	createHandshake(): Promise<SessionHandshake | null>;
+};
+
 /**
  * The client side of a plugin.
  */
@@ -46,4 +62,9 @@ export type ClientPlugin = {
 	 * `transformForClass` for the escape case.
 	 */
 	ui?: UiOperation[];
+
+	/**
+	 * Session sources that supply the handshake on connect.
+	 */
+	sessionSources?: readonly SessionSource[];
 };

@@ -49,5 +49,12 @@ export {
 	createPlayerActionRegistry,
 } from "./src/playerActions/registry";
 export { registerCorePlayerActions } from "./src/playerActions";
+export {
+	type IdentityProvider,
+	type IdentityProviderRegistry,
+	type IdentityResolution,
+	type ResolvedIdentity,
+	createIdentityProviderRegistry,
+} from "./src/identity/registry";
 
 export { Match } from "./src/game/match";

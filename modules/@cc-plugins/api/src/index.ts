@@ -25,7 +25,12 @@ export {
 	type NetworkedActionFactory,
 	networkedAction,
 } from "./networkedAction";
-export { type ClientPlugin, type PluginStartListening } from "./clientPlugin";
+export {
+	type ClientPlugin,
+	type PluginStartListening,
+	type SessionSource,
+	type SessionHandshake,
+} from "./clientPlugin";
 export {
 	type ClientPluginPackageJson,
 	defineClientPlugin,

@@ -72,14 +72,13 @@ export const startServer = async ({ io }: { io: Server }) => {
 	socketOutBytes.reset();
 
 	const matchmaking = (socket: AuthenticatedSocket) => {
-		logger.info(
-			`[Matchmaking (${socket.data.nickname})] Beginning matchmaking`
-		);
+		const socketLabel = socket.data.nickname ?? socket.data.id;
+		logger.info(`[Matchmaking (${socketLabel})] Beginning matchmaking`);
 
 		const matchingLobby = lobbies.find((l) => l.isInLobby(socket.data.id));
 
 		if (matchingLobby) {
-			logger.info(`[Matchmaking (${socket.data.nickname})] Lobby found`);
+			logger.info(`[Matchmaking (${socketLabel})] Lobby found`);
 
 			matchingLobby.connect(socket);
 			return;
@@ -88,7 +87,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 		const matchingGame = games.find((l) => l.canJoinGame(socket.data.id));
 
 		if (matchingGame) {
-			logger.info(`[Matchmaking (${socket.data.nickname})] Game found`);
+			logger.info(`[Matchmaking (${socketLabel})] Game found`);
 
 			matchingGame.connect(socket);
 			return;
@@ -97,9 +96,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 		const openLobby = lobbies.find((l) => l.getFreeSlotCount() > 0);
 
 		if (openLobby) {
-			logger.info(
-				`[Matchmaking (${socket.data.nickname})] Joined existing lobby`
-			);
+			logger.info(`[Matchmaking (${socketLabel})] Joined existing lobby`);
 
 			openLobby.connect(socket);
 
@@ -127,10 +124,10 @@ export const startServer = async ({ io }: { io: Server }) => {
 
 		lobbies.push(lobby);
 
-		logger.info(`[Matchmaking (${socket.data.nickname})] New lobby created`);
+		logger.info(`[Matchmaking (${socketLabel})] New lobby created`);
 		// discordApi.startLobby();
 		lobby.connect(socket);
 	};
 
-	onHandshakeSuccess({ io }, matchmaking);
+	onHandshakeSuccess({ io }, context.identity, matchmaking);
 };

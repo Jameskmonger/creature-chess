@@ -70,6 +70,7 @@ function AppRoot() {
 					<SocketManagerProvider
 						gameConnectionHolder={gameConnectionHolderRef.current}
 						lobbyConnectionHolder={lobbyConnectionHolderRef.current}
+						accountIdHolder={accountIdHolderRef.current}
 					>
 						<ThemeProvider theme={DEFAULT_THEME}>
 							<App />

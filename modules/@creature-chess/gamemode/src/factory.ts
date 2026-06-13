@@ -3,6 +3,7 @@ import { DefinesApi, Logger, TypedEventEmitter } from "@cc-engine/kernel";
 import { CreatureRegistry, GamemodeSettings } from "@creature-chess/models";
 
 import { Gamemode, GamemodeCallbacks } from "./game/gamemode";
+import { IdentityProviderRegistry } from "./identity/registry";
 import { PlayerActionRegistry } from "./playerActions/registry";
 import { WireProtocol } from "./wireProtocol";
 
@@ -33,6 +34,7 @@ export type GamemodeContext = {
 	events: GameplayEventsBus;
 	playerActions: PlayerActionRegistry;
 	wire: WireProtocol;
+	identity: IdentityProviderRegistry;
 };
 
 export type GamemodeInit = {
@@ -52,6 +54,7 @@ declare module "@cc-engine/kernel" {
 		events: GameplayEventsBus;
 		playerActions: PlayerActionRegistry;
 		wire: WireProtocol;
+		identity: IdentityProviderRegistry;
 	}
 
 	interface Defines {

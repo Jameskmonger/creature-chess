@@ -11,6 +11,7 @@ import { HandshakeRequest } from "@creature-chess/networking";
 
 import { GameConnection } from "./GameConnection";
 import { LobbyConnection } from "./LobbyConnection";
+import { resolveHandshake } from "./sessionSources";
 import type { Dispatch } from "./types";
 
 export class SocketManager {
@@ -20,25 +21,21 @@ export class SocketManager {
 	public constructor(
 		private dispatch: Dispatch,
 		private gameConnectionHolder: Holder<GameConnection>,
-		private lobbyConnectionHolder: Holder<LobbyConnection>
+		private lobbyConnectionHolder: Holder<LobbyConnection>,
+		private accountIdHolder: Holder<string>
 	) {}
 
 	public async connect(): Promise<void> {
 		this.dispatch(MenuCommands.setLoadingMessage("Connecting..."));
 
-		const session = await this.getGuestSession();
+		const request = await resolveHandshake();
 
-		if (!session) {
+		if (!request) {
 			this.dispatch(
 				MenuCommands.setLoadingMessage("ERROR: Failed to open session!")
 			);
 			return;
 		}
-
-		const request: HandshakeRequest = {
-			type: "guest",
-			data: { accessToken: session.token },
-		};
 
 		try {
 			await this.connectSocket(request);
@@ -56,6 +53,7 @@ export class SocketManager {
 		this.destroyConnections();
 		this.socket?.disconnect();
 		this.socket = null;
+		this.accountIdHolder.clear();
 	}
 
 	private async connectSocket(request: HandshakeRequest): Promise<void> {
@@ -71,8 +69,12 @@ export class SocketManager {
 
 			const onAuthenticated = ({
 				error,
+				id,
 			}: GameServerToClient.AuthenticateResponse) => {
 				if (!error) {
+					if (id) {
+						this.accountIdHolder.set(id);
+					}
 					socket.off("authenticate_response", onAuthenticated);
 					resolve();
 					return;
@@ -142,21 +144,5 @@ export class SocketManager {
 			existing.destroy();
 			this.gameConnectionHolder.clear();
 		}
-	}
-
-	private async getGuestSession(): Promise<{
-		id: string;
-		token: string;
-	} | null> {
-		const response = await fetch(APP_API_URL + "/guest/session", {
-			headers: { "Content-Type": "application/json" },
-		});
-
-		if (!response.ok) {
-			return null;
-		}
-
-		const { id, token } = await response.json();
-		return { id, token } as { id: string; token: string };
 	}
 }

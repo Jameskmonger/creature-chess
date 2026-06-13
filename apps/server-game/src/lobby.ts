@@ -83,9 +83,7 @@ export class Lobby {
 			};
 
 			const name =
-				lobbySocket.data.type === "guest"
-					? `Guest ${this.getGuestName()}`
-					: lobbySocket.data.nickname!;
+				lobbySocket.data.nickname ?? `Guest ${this.getGuestName()}`;
 
 			const newMember = {
 				player: {

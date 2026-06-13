@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 
-import { PlayerProfile } from "@creature-chess/models";
+import { ResolvedIdentity } from "@creature-chess/gamemode";
 import {
 	ClientToServer,
 	GameServerToClient,
@@ -9,21 +9,8 @@ import {
 } from "@creature-chess/networking";
 import { HandshakeRequest } from "@creature-chess/networking";
 
-type GuestSocketData = {
-	type: "guest";
-	id: string;
-	nickname: string;
-	profile: PlayerProfile;
-};
 
-type PlayerSocketData = {
-	type: "player";
-	id: string;
-	nickname: string | null;
-	profile: PlayerProfile | null;
-};
-
-type AuthenticatedSocketData = GuestSocketData | PlayerSocketData;
+type AuthenticatedSocketData = ResolvedIdentity;
 
 type HandshakeEvents = {
 	authenticate: (request: HandshakeRequest) => void;

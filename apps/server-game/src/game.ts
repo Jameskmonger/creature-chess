@@ -125,7 +125,7 @@ export class Game {
 
 		if (!existing) {
 			throw Error(
-				`GameMember couldn't be found when connecting to Game: ${socket.data.nickname}`
+				`GameMember couldn't be found when connecting to Game: ${socketIdAsString}`
 			);
 		}
 
@@ -133,7 +133,7 @@ export class Game {
 
 		if (!entity) {
 			throw Error(
-				`Player couldn't be found when connecting to Game: ${socket.data.nickname}`
+				`Player couldn't be found when connecting to Game: ${socketIdAsString}`
 			);
 		}
 

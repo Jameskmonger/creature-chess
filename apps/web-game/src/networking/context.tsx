@@ -23,12 +23,14 @@ const NetworkingContext = createContext<NetworkingContextValue | null>(null);
 type ProviderProps = React.PropsWithChildren<{
 	gameConnectionHolder: Holder<GameConnection>;
 	lobbyConnectionHolder: Holder<LobbyConnection>;
+	accountIdHolder: Holder<string>;
 }>;
 
 export function SocketManagerProvider({
 	children,
 	gameConnectionHolder,
 	lobbyConnectionHolder,
+	accountIdHolder,
 }: ProviderProps) {
 	const dispatch = useDispatch();
 	const ref = useRef<NetworkingContextValue | null>(null);
@@ -38,7 +40,8 @@ export function SocketManagerProvider({
 			socketManager: new SocketManager(
 				dispatch,
 				gameConnectionHolder,
-				lobbyConnectionHolder
+				lobbyConnectionHolder,
+				accountIdHolder
 			),
 			gameConnectionHolder,
 			lobbyConnectionHolder,

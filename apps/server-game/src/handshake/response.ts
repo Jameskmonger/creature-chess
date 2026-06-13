@@ -11,7 +11,7 @@ export const failHandshake = (
 	socket.disconnect();
 };
 
-export const successHandshake = (socket: Socket) => {
+export const successHandshake = (socket: Socket, id: string) => {
 	socket.removeAllListeners("authenticate");
-	socket.emit("authenticate_response", { error: null });
+	socket.emit("authenticate_response", { error: null, id });
 };

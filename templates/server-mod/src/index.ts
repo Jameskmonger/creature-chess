@@ -1,5 +1,7 @@
 import { definePluginFromPackage } from "@cc-engine/kernel";
 
+import "@creature-chess/gamemode";
+
 import pkg from "../package.json";
 
 export default definePluginFromPackage(pkg, {

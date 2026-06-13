@@ -14,6 +14,7 @@ import {
 	GameplayEventsBus,
 	GamemodeContext,
 } from "./factory";
+import { createIdentityProviderRegistry } from "./identity/registry";
 import { registerCorePlayerActions } from "./playerActions";
 import {
 	PlayerActionRegistry,
@@ -102,5 +103,6 @@ export const createDefaultGamemodeContext = (): GamemodeContext => {
 		events: createGameplayEventsBus(),
 		playerActions,
 		wire,
+		identity: createIdentityProviderRegistry(),
 	};
 };

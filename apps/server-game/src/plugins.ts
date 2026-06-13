@@ -6,10 +6,12 @@ import {
 	createGameplayEventsBus,
 	createBuiltInPlayerActionRegistry,
 	createBuiltInWireProtocol,
+	createIdentityProviderRegistry,
 } from "@creature-chess/gamemode";
 import { readFileSync } from "fs";
 import { join } from "path";
 
+import { createGuestIdentityProvider } from "./handshake/guestProvider";
 import { logger } from "./log";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -42,12 +44,16 @@ export const loadGamemodeAndMods = async (): Promise<GamemodeContext> => {
 	const wire = createBuiltInWireProtocol();
 	const playerActions = createBuiltInPlayerActionRegistry(wire);
 
+	const identity = createIdentityProviderRegistry();
+	identity.register(createGuestIdentityProvider());
+
 	const context: GamemodeContext = {
 		defines: createDefines(),
 		creatures: createCreatureRegistry(),
 		events: createGameplayEventsBus(),
 		playerActions,
 		wire,
+		identity,
 	};
 
 	const modIds = manifest.plugins.filter((id) => {
