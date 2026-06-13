@@ -1,5 +1,5 @@
 import { LobbyPlayer } from "@creature-chess/models";
-import { PlayerProfile } from "@creature-chess/models";
+import { PlayerProfile, creaturePicture } from "@creature-chess/models";
 import {
 	GamemodeSettings,
 	GamemodeSettingsPresets,
@@ -78,7 +78,7 @@ export class Lobby {
 			member = existing;
 		} else {
 			const defaultProfile: PlayerProfile = {
-				picture: 1,
+				picture: creaturePicture(1),
 				title: null,
 			};
 

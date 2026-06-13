@@ -1,6 +1,6 @@
 import { pickRandom } from "@shoki/random";
 
-import { LobbyPlayer } from "@creature-chess/models";
+import { LobbyPlayer, creaturePicture } from "@creature-chess/models";
 
 import { BotImplementation, createBotEngineRegistry } from "@cc-server/bot";
 
@@ -9,7 +9,7 @@ import { utilityBotEngine } from "@cc-bot/utility";
 const botEngines = createBotEngineRegistry();
 botEngines.register(utilityBotEngine);
 
-const randomPicture = () => Math.floor(Math.random() * 20) + 1;
+const randomPicture = () => creaturePicture(Math.floor(Math.random() * 20) + 1);
 
 export type BotParticipant = {
 	player: LobbyPlayer;

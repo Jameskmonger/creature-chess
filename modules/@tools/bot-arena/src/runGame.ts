@@ -134,7 +134,7 @@ export const runGame = async (
 				},
 				match: null,
 				name: bot.name,
-				profile: { picture: 1, title: null },
+				profile: { picture: "creature:1", title: null },
 				finishPosition: -1,
 				finishRound: -1,
 			});

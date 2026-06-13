@@ -1,4 +1,5 @@
 import { IdentityProvider } from "@creature-chess/gamemode";
+import { creaturePicture } from "@creature-chess/models";
 
 import { logger } from "../log";
 
@@ -53,7 +54,7 @@ export const createGuestIdentityProvider = (): IdentityProvider => ({
 				id: guest.id,
 				// Guests don't have nicknames, they are set by the lobby.
 				nickname: null,
-				profile: { picture: guest.profilePicture, title: null },
+				profile: { picture: creaturePicture(guest.profilePicture), title: null },
 			},
 		};
 	},

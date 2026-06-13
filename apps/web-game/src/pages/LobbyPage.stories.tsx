@@ -28,7 +28,7 @@ export const Default: Story = {
 				id: "1234",
 				name: "Jeff",
 				profile: {
-					picture: 20,
+					picture: "creature:20",
 					title: null,
 				},
 			},
@@ -36,7 +36,7 @@ export const Default: Story = {
 				id: "1234",
 				name: "William Pickle",
 				profile: {
-					picture: 37,
+					picture: "creature:37",
 					title: {
 						color: 0xf7ee85,
 						text: "Hall of Fame",

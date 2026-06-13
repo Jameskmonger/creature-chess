@@ -7,7 +7,7 @@ import {
 	FinishedQuickChatOptions,
 	ReadyQuickChatOptions,
 } from "@creature-chess/models";
-import { PlayerStatus, inProgressBattle } from "@creature-chess/models";
+import { PlayerStatus, creaturePicture, inProgressBattle } from "@creature-chess/models";
 import { StreakType } from "@creature-chess/models";
 import { PlayerTitle } from "@creature-chess/models";
 
@@ -30,7 +30,7 @@ const createPlayer = (
 	money: 20,
 	level: 4,
 	profile: {
-		picture,
+		picture: creaturePicture(picture),
 		title,
 	},
 	battle: inProgressBattle(opponentId, opponentIsClone),

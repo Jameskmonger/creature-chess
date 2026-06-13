@@ -52,7 +52,7 @@ const createPlayer = (
 	money: 20,
 	level: 4,
 	profile: {
-		picture: 1,
+		picture: "creature:1",
 		title: {
 			color: 0xe89292,
 			text: "Contributor",
@@ -76,7 +76,7 @@ export const LocalNoBattle: Story = {
 			name: "Cool Mom227",
 			ready: true,
 			streakAmount: 0,
-			profile: { picture: 4, title: null },
+			profile: { picture: "creature:4", title: null },
 		}),
 	},
 };
@@ -134,7 +134,7 @@ export const FinishedBattle: Story = {
 			name: "[BOT] Bicycle",
 			streakType: StreakType.LOSS,
 			profile: {
-				picture: 13,
+				picture: "creature:13",
 				title: {
 					color: 0xf7ee85,
 					text: "Hall of Fame",
@@ -159,7 +159,7 @@ export const FinishedBattleVsClone: Story = {
 			name: "[BOT] Bicycle",
 			streakType: StreakType.LOSS,
 			profile: {
-				picture: 13,
+				picture: "creature:13",
 				title: {
 					color: 0xf7ee85,
 					text: "Hall of Fame",
@@ -184,7 +184,7 @@ export const CurrentlySpectating: Story = {
 			name: "Purepker895",
 			ready: true,
 			streakAmount: 0,
-			profile: { picture: 20, title: null },
+			profile: { picture: "creature:20", title: null },
 		}),
 	},
 };

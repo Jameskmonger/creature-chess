@@ -88,7 +88,7 @@ describe("Gamemode.createPlayer", () => {
 		});
 
 		test("sets initial mutable properties", () => {
-			const profile: PlayerProfile = { title: null, picture: 7 };
+			const profile: PlayerProfile = { title: null, picture: "creature:7" };
 			const player = createSubject({
 				name: "Bob",
 				profile,

@@ -35,7 +35,7 @@ const createLobbyPlayer = (
 		type: "player",
 		profile: {
 			title,
-			picture: 5,
+			picture: "creature:5",
 		},
 	};
 };

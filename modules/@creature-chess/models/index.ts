@@ -29,6 +29,8 @@ export {
 export type { LobbyPlayer } from "./lobby/player";
 export {
 	type PlayerProfile,
+	CREATURE_PICTURE_PREFIX,
+	creaturePicture,
 	type PlayerStreak,
 	StreakType,
 	type PlayerTitle,
