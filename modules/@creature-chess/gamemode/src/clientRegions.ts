@@ -53,6 +53,8 @@ declare module "@cc-plugins/api" {
 		};
 		/** The main-menu home card body. */
 		"main-menu": Record<string, never>;
+		/** Strip at the top of the menu, above the main card. */
+		"menu-header": Record<string, never>;
 		/** A section in the settings overlay. */
 		"settings-section": Record<string, never>;
 

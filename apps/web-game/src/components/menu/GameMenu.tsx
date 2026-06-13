@@ -50,33 +50,6 @@ const useStyles = createUseThemeStyles((theme) => ({
 		overflow: "hidden",
 		gap: "0.5rem",
 	},
-	social: {
-		"display": "flex",
-		"flexDirection": "row",
-		"gap": "0.5rem",
-
-		"& > :first-child": {
-			flex: 1,
-		},
-	},
-	profile: {
-		"display": "flex",
-		"flexDirection": "row",
-		"alignItems": "center",
-		"gap": "0.5rem",
-		"fontSize": "1.5rem",
-		"color": theme.palette.light.neutral,
-
-		"& img": {
-			width: "32px",
-			height: "32px",
-		},
-	},
-	friends: {
-		width: "32px",
-		height: "32px",
-		filter: "saturate(0)",
-	},
 	main: {
 		flex: 1,
 		overflow: "auto",
@@ -140,9 +113,6 @@ export function GameMenu() {
 
 	const [view, setView] = React.useState<"help" | "home" | "updates">("home");
 
-	// todo
-	const showSocial = false;
-
 	return (
 		<div className={classes.root}>
 			<div className={classes.brandBar}>
@@ -151,26 +121,7 @@ export function GameMenu() {
 			</div>
 			<div className={classes.content}>
 				<PageBoardBackground />
-				{showSocial && (
-					<div className={classes.social}>
-						<MenuCard>
-							<div className={classes.profile}>
-								<img
-									src={`${APP_IMAGE_ROOT}/ui/guest.png`}
-									alt="Guest Profile Icon"
-								/>
-								<span>Playing as Guest</span>
-							</div>
-						</MenuCard>
-						<MenuCard>
-							<img
-								className={classes.friends}
-								src={`${APP_IMAGE_ROOT}/ui/friends.png`}
-								alt="Friends Profile Icon"
-							/>
-						</MenuCard>
-					</div>
-				)}
+				<Region cls="menu-header" ctx={{}} />
 				<div className={classes.main}>
 					{view === "home" && (
 						<div className={classes.home}>

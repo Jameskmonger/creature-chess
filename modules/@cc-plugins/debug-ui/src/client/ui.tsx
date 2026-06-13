@@ -40,6 +40,7 @@ const ALL_CLASSES = [
 	"board-surface",
 	"lobby-player-slot",
 	"main-menu",
+	"menu-header",
 	"settings-section",
 	"app-extension",
 ] as const satisfies readonly (keyof RegionContexts)[];
