@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Button } from "~/components/ui";
+import { Button } from "@creature-chess/ui";
 import { useGameActions } from "~/networking";
 
 export function QuitGameButton() {

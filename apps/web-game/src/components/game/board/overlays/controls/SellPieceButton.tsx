@@ -3,7 +3,6 @@ import * as React from "react";
 import { getPiecesForStage } from "@creature-chess/models";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
-import { Button } from "~/components/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { useGameSession } from "~/game/sessionContext";
 import { useGameActions } from "~/networking";
@@ -14,6 +13,7 @@ import { GamePhase } from "@creature-chess/models";
 import { PIECES_TO_EVOLVE } from "@creature-chess/models";
 
 import { COLOR_READY_BUTTON_TEXT } from "./colors";
+import { Button } from "@creature-chess/ui";
 
 const useStyles = createUseStyles({
 	balanceIcon: {

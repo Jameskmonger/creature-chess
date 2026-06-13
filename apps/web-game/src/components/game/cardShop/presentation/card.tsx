@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { Button } from "~/components/ui";
+import { Button } from "@creature-chess/ui";
 import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { createUseThemeStyles } from "~/useStyles";
 

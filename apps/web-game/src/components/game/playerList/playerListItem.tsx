@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useRef } from "react";
 
-import { Button } from "~/components/ui";
+import { Button } from "@creature-chess/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PositionChip } from "~/components/ui/player/PositionChip";

@@ -17,7 +17,7 @@ import { Help } from "../game/help";
 import { Button } from "../ui";
 import { CreatureImage } from "../ui/creatureImage";
 import { NavBar } from "../ui/navbar/NavBar";
-import { MenuCard } from "./MenuCard";
+import { Panel } from "@creature-chess/ui";
 
 const useStyles = createUseThemeStyles((theme) => ({
 	root: {
@@ -126,7 +126,7 @@ export function GameMenu() {
 					{view === "home" && (
 						<div className={classes.home}>
 							<Region cls="main-menu" ctx={{}}>
-								<MenuCard className={classes.homeCard}>
+								<Panel className={classes.homeCard}>
 									<p className={classes.welcome}>
 										Welcome to{" "}
 										<span className={classes.highlight}>Creature Chess</span>!
@@ -161,19 +161,19 @@ export function GameMenu() {
 									>
 										Update Notes
 									</Button>
-								</MenuCard>
+								</Panel>
 							</Region>
 						</div>
 					)}
 					{view === "help" && (
-						<MenuCard>
+						<Panel>
 							<Help onBack={() => setView("home")} />
-						</MenuCard>
+						</Panel>
 					)}
 					{view === "updates" && (
-						<MenuCard>
+						<Panel>
 							<UpdateNotes onBack={() => setView("home")} />
-						</MenuCard>
+						</Panel>
 					)}
 				</div>
 			</div>

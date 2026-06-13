@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { useSelector } from "react-redux";
-import { Button } from "~/components/ui";
+import { Button } from "@creature-chess/ui";
 import { AppState } from "~/store";
 import { useGamePlayer } from "~/store/game/players";
 import { createUseThemeStyles } from "~/useStyles";

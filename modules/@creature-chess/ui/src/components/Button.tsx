@@ -1,7 +1,8 @@
 import React from "react";
 
 import classNames from "classnames";
-import { createUseThemeStyles } from "~/useStyles";
+
+import { createUseThemeStyles } from "../styles";
 
 type Props = React.PropsWithChildren<{
 	className?: string;

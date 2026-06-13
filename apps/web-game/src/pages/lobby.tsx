@@ -3,7 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { Page } from "~/components/Page";
 import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
-import { Button } from "~/components/ui";
+import { Button } from "@creature-chess/ui";
 import { Countdown } from "~/components/ui/countdown";
 import { useLobbyConnection } from "~/networking";
 import { Region } from "~/plugins";

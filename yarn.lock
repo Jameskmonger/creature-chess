@@ -1698,6 +1698,7 @@ __metadata:
     "@creature-chess/gamemode": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/networking": "workspace:*"
+    "@creature-chess/ui": "workspace:*"
     "@fortawesome/fontawesome-svg-core": "npm:^6.5.1"
     "@fortawesome/free-solid-svg-icons": "npm:^6.5.1"
     "@fortawesome/react-fontawesome": "npm:^0.2.0"
@@ -1786,6 +1787,17 @@ __metadata:
     "@creature-chess/board": "workspace:*"
     "@creature-chess/models": "workspace:*"
     "@creature-chess/utils": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@creature-chess/ui@workspace:*, @creature-chess/ui@workspace:modules/@creature-chess/ui":
+  version: 0.0.0-use.local
+  resolution: "@creature-chess/ui@workspace:modules/@creature-chess/ui"
+  dependencies:
+    classnames: "npm:^2.3.2"
+  peerDependencies:
+    react: "*"
+    react-jss: "*"
   languageName: unknown
   linkType: soft
 
@@ -6978,7 +6990,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.3.1":
+"classnames@npm:^2.3.1, classnames@npm:^2.3.2":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
   checksum: 10/58eb394e8817021b153bb6e7d782cfb667e4ab390cb2e9dac2fc7c6b979d1cc2b2a733093955fc5c94aa79ef5c8c89f11ab77780894509be6afbb91dddd79d15

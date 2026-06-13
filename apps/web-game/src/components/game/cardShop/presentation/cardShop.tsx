@@ -6,7 +6,7 @@ import {
 	faLockOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "~/components/ui";
+import { Button } from "@creature-chess/ui";
 import { CoinIcon } from "~/components/ui/icon/CoinIcon";
 import { useGamemodeSettings } from "~/game/sessionContext";
 import { Region } from "~/plugins";
