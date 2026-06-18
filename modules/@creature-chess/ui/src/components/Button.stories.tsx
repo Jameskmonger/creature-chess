@@ -31,6 +31,14 @@ export const Secondary: Story = {
 	},
 };
 
+export const Outline: Story = {
+	args: {
+		color: "secondary",
+		outline: true,
+		children: "Create account",
+	},
+};
+
 export const Small: Story = {
 	args: {
 		size: "small",

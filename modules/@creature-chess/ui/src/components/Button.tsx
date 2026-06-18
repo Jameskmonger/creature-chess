@@ -9,6 +9,8 @@ type Props = React.PropsWithChildren<{
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	color: "primary" | "secondary" | "muted";
 	size: "small" | "medium" | "large";
+	/** Flat hollow button: coloured border and text, transparent face. */
+	outline?: boolean;
 	disabled?: boolean;
 }>;
 
@@ -154,7 +156,9 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		borderRadius: "var(--btn-border-radius)",
 		fontSize: "var(--btn-font-size)",
 		color: "var(--btn-text-color)",
-		background: "var(--btn-bg)",
+		background: ({ outline }) => (outline ? "#949494" : "var(--btn-bg)"),
+		boxShadow: ({ outline }) =>
+			outline ? "inset 0 0 0 2px var(--btn-bg)" : "none",
 		willChange: "transform",
 		transform: "translateY(calc(var(--btn-3d-depth) * -1))",
 		transition: "transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1)",
