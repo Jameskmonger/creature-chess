@@ -89,6 +89,9 @@ const useStyles = createUseThemeStyles((theme) => ({
 	"foregroundEntering": {
 		// Fades in once the splash logo has finished fading out.
 		animation: `$menuFadeIn ${BOOT_MENU_FADE_MS}ms ease ${BOOT_MENU_FADE_DELAY_MS}ms both`,
+		// Invisible-but-mounted during the boot entrance: block clicks so the
+		// hidden "Quick play" button can't be hit through the splash.
+		pointerEvents: "none",
 	},
 	"@keyframes menuFadeIn": {
 		from: { opacity: 0 },
