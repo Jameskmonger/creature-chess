@@ -41,6 +41,7 @@ const ALL_CLASSES = [
 	"lobby-player-slot",
 	"menu-account",
 	"menu-card-body",
+	"menu-updates",
 	"menu-profile",
 	"settings-section",
 	"app-extension",

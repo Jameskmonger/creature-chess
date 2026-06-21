@@ -28,7 +28,6 @@ import { Region } from "~/plugins";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { PageBoardBackground } from "../PageBackground";
-import { UpdateNotes } from "../game/UpdateNotes";
 import { Help } from "../game/help";
 import { CreatureStrip } from "./CreatureStrip";
 import { MenuSettings } from "./MenuSettings";
@@ -258,7 +257,12 @@ export function GameMenu() {
 			case "updates":
 				return (
 					<Panel>
-						<UpdateNotes onBack={() => goTo("home")} />
+						<Region
+							cls="menu-updates"
+							ctx={{ onBack: () => goTo("home") }}
+						>
+							<div className={classes.placeholder}>No update notes.</div>
+						</Region>
 					</Panel>
 				);
 			case "settings":

@@ -65,6 +65,8 @@ declare module "@cc-plugins/api" {
 		};
 		/** Body of the menu's profile tab. */
 		"menu-profile": Record<string, never>;
+		/** Body of the menu's update-notes view. `onBack` returns to home. */
+		"menu-updates": { onBack: () => void };
 		/** A section in the settings overlay. */
 		"settings-section": Record<string, never>;
 
