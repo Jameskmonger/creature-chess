@@ -16,8 +16,17 @@ export type PluginStartListening = TypedStartListening<
 
 export type SessionHandshake = { type: string; data: unknown };
 
+export type SessionIdentity = {
+	/** Stable id (e.g. account id), empty for an anonymous guest. */
+	id: string;
+	/** Display name shown in menus. */
+	name: string;
+	/** Absolute profile-picture URL, or null for none. */
+	picture: string | null;
+};
+
 /**
- * Supplies the handshake the client sends when connecting.
+ * A pluggable identity provider. Supplies the handshake sent on connect.
  */
 export type SessionSource = {
 	/** Stable id, conventionally the handshake `type` it emits. */
@@ -28,6 +37,10 @@ export type SessionSource = {
 	isAvailable(): boolean;
 	/** Build the handshake (may fetch a token). Return null to fall through. */
 	createHandshake(): Promise<SessionHandshake | null>;
+	/** The current display identity, or null when this source has none. */
+	getIdentity?(): SessionIdentity | null;
+	/** Subscribe to identity changes (login/logout). Returns an unsubscribe. */
+	subscribe?(listener: () => void): () => void;
 };
 
 /**

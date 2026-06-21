@@ -1,5 +1,7 @@
 import "@cc-plugins/api";
 
+import type { SessionIdentity } from "@cc-plugins/api";
+
 import type {
 	Card,
 	GamePhase,
@@ -51,10 +53,18 @@ declare module "@cc-plugins/api" {
 			slotIndex: number;
 			player: LobbyPlayer | null;
 		};
-		/** The main-menu home card body. */
-		"main-menu": Record<string, never>;
-		/** Strip at the top of the menu, above the main card. */
-		"menu-header": Record<string, never>;
+		/** The identity pill in the menu header. */
+		"menu-account": Record<string, never>;
+		/**
+		 * The menu card body below the creature strip.
+		 */
+		"menu-card-body": {
+			onPlay: () => void;
+			onShowUpdates: () => void;
+			version: string;
+		};
+		/** Body of the menu's profile tab. */
+		"menu-profile": Record<string, never>;
 		/** A section in the settings overlay. */
 		"settings-section": Record<string, never>;
 
@@ -76,5 +86,9 @@ declare module "@cc-plugins/api" {
 		getLocalPlayerId(): string | null;
 		/** The active phase, or null outside a game. */
 		getCurrentPhase(): GamePhase | null;
+		/** The active display identity (guest or signed-in). */
+		getSession(): SessionIdentity | null;
+		/** Subscribe to active-session changes. Returns an unsubscribe. */
+		subscribeSession(listener: () => void): () => void;
 	}
 }

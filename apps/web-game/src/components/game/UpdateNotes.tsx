@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { createUseStyles } from "react-jss";
 
-import { Button } from "../ui";
 import { Footer } from "../ui/Footer";
 import { Group, Layout } from "../ui/layout";
 import { Header2 } from "../ui/text";
 import { updateNotes } from "./updateNotesData";
+import { Button } from "@creature-chess/ui";
 
 const useStyles = createUseStyles({
 	updateNotes: {

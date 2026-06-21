@@ -39,8 +39,9 @@ const ALL_CLASSES = [
 	"phase-timer",
 	"board-surface",
 	"lobby-player-slot",
-	"main-menu",
-	"menu-header",
+	"menu-account",
+	"menu-card-body",
+	"menu-profile",
 	"settings-section",
 	"app-extension",
 ] as const satisfies readonly (keyof RegionContexts)[];

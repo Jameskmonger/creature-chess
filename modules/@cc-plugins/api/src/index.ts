@@ -30,6 +30,7 @@ export {
 	type PluginStartListening,
 	type SessionSource,
 	type SessionHandshake,
+	type SessionIdentity,
 } from "./clientPlugin";
 export {
 	type ClientPluginPackageJson,

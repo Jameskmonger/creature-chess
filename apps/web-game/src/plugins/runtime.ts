@@ -12,6 +12,7 @@ import * as ReduxToolkit from "@reduxjs/toolkit";
 import * as ReactJss from "react-jss";
 import * as ReactRedux from "react-redux";
 
+import { getCurrentSession, subscribeSession } from "~/networking/sessionSources";
 import { AppState } from "~/store";
 
 import { createReadyQueue } from "./readyQueue";
@@ -37,6 +38,8 @@ const requireWired = (): {
 const hostSelectors: ClientPluginHostSelectors = {
 	getLocalPlayerId: () => requireWired().getLocalPlayerId(),
 	getCurrentPhase: () => requireWired().store.getState().game.roundInfo.phase,
+	getSession: () => getCurrentSession(),
+	subscribeSession: (listener) => subscribeSession(listener),
 };
 
 export const wirePluginHostState = (params: {

@@ -1,4 +1,6 @@
-import { SessionSource } from "@cc-plugins/api";
+import { useSyncExternalStore } from "react";
+
+import { SessionIdentity, SessionSource } from "@cc-plugins/api";
 
 import { HandshakeRequest } from "@creature-chess/networking";
 
@@ -31,17 +33,19 @@ const guestSource: SessionSource = {
 		}
 		return { type: "guest", data: { accessToken: session.token } };
 	},
+	getIdentity: () => ({ id: "", name: "Guest", picture: null }),
 };
 
 const pluginSources = (): SessionSource[] =>
 	pluginRegistry.list().flatMap((plugin) => [...(plugin.sessionSources ?? [])]);
 
-export const resolveHandshake = async (): Promise<HandshakeRequest | null> => {
-	const ordered = [...pluginSources(), guestSource].sort(
+const orderedSources = (): SessionSource[] =>
+	[...pluginSources(), guestSource].sort(
 		(a, b) => (b.priority ?? 0) - (a.priority ?? 0)
 	);
 
-	for (const source of ordered) {
+export const resolveHandshake = async (): Promise<HandshakeRequest | null> => {
+	for (const source of orderedSources()) {
 		if (!source.isAvailable()) {
 			continue;
 		}
@@ -53,3 +57,61 @@ export const resolveHandshake = async (): Promise<HandshakeRequest | null> => {
 
 	return null;
 };
+
+const sameIdentity = (
+	a: SessionIdentity | null,
+	b: SessionIdentity | null
+): boolean =>
+	a === b ||
+	(!!a && !!b && a.id === b.id && a.name === b.name && a.picture === b.picture);
+
+const computeSession = (): SessionIdentity | null => {
+	for (const source of orderedSources()) {
+		if (!source.isAvailable()) {
+			continue;
+		}
+		const identity = source.getIdentity?.();
+		if (identity) {
+			return identity;
+		}
+	}
+	return null;
+};
+
+const sessionListeners = new Set<() => void>();
+let cachedSession: SessionIdentity | null = computeSession();
+let sourceUnsubs: (() => void)[] = [];
+
+const recomputeSession = (): void => {
+	const next = computeSession();
+	// Keep the reference stable when unchanged so getSnapshot is loop-safe.
+	if (!sameIdentity(cachedSession, next)) {
+		cachedSession = next;
+		sessionListeners.forEach((fn) => fn());
+	}
+};
+
+const resubscribeSources = (): void => {
+	sourceUnsubs.forEach((unsub) => unsub());
+	sourceUnsubs = orderedSources()
+		.map((source) => source.subscribe?.(recomputeSession))
+		.filter((unsub): unsub is () => void => !!unsub);
+};
+
+// A newly-registered plugin can add a source, so re-bind and recompute.
+pluginRegistry.onChange(() => {
+	resubscribeSources();
+	recomputeSession();
+});
+resubscribeSources();
+
+export const getCurrentSession = (): SessionIdentity | null => cachedSession;
+
+export const subscribeSession = (listener: () => void): (() => void) => {
+	sessionListeners.add(listener);
+	return () => sessionListeners.delete(listener);
+};
+
+/** Reactive active display identity for menu UI. */
+export const useSession = (): SessionIdentity | null =>
+	useSyncExternalStore(subscribeSession, getCurrentSession, getCurrentSession);

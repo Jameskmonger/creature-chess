@@ -1,219 +1,135 @@
-import React from "react";
+import * as React from "react";
 
-import { createUseStyles } from "react-jss";
+import { Spinner } from "@creature-chess/ui";
+import classNames from "classnames";
+
 import { createUseThemeStyles } from "~/useStyles";
 
-import { PageBoardBackground } from "./PageBackground";
-import { CreatureImage } from "./ui/creatureImage";
+import {
+	BOOT_BG_FADE_MS,
+	BOOT_LOGO_FADE_DELAY_MS,
+	BOOT_LOGO_FADE_MS,
+	BOOT_SHEEN_MS,
+} from "./menu/bootEntrance";
 
-type Props = {
-	onPlay: () => void;
-};
+const LOGO_SRC = `${APP_IMAGE_ROOT}/ui/logo.png`;
 
 const useStyles = createUseThemeStyles((theme) => ({
-	root: {
+	"overlay": {
+		position: "fixed",
+		inset: 0,
+		zIndex: 1000,
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		pointerEvents: "none",
+	},
+	"blue": {
+		position: "absolute",
+		inset: 0,
+		background: theme.palette.background,
+	},
+	"blueOut": {
+		animation: `$bgFade ${BOOT_BG_FADE_MS}ms ease forwards`,
+	},
+	"content": {
 		position: "relative",
-		overflow: "hidden",
-		height: "100%",
-		width: "100%",
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		boxSizing: "border-box",
-	},
-	top: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		justifyContent: "end",
-		flex: "0 0 auto",
-		height: "40%",
-	},
-	logoWrapper: {
-		"width": "70%",
-		"maxWidth": "440px",
-		"& img": {
-			width: "100%",
-			height: "auto",
-			display: "block",
-			filter: "drop-shadow(0px 6px 4px #222)",
-		},
-	},
-	tagline: {
-		fontSize: 18,
-		color: "#fff",
-		padding: "0.25em 2em",
-		marginTop: "-0.25em",
 		zIndex: 1,
-		background: "rgba(85, 85, 85, 1.0)",
-	},
-	highlight: {
-		color: "#f5d742",
-		fontFamily: theme.typography.accent,
-	},
-	bottom: {
-		flex: "1 1 auto",
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-		boxSizing: "border-box",
-		width: "100%",
-		padding: "16px",
-	},
-	playButton: {
-		"padding": "14px 36px",
-		"fontSize": 20,
-		"fontWeight": "bold",
-		"background": "#b13e53",
-		"border": "none",
-		"borderRadius": 14,
-		"color": "#fff",
-		"cursor": "pointer",
-		"width": "100%",
-		"transition": "background 0.2s ease-in-out",
-		"&:hover": {
-			background: "#d84a62",
-		},
-	},
-	pane: {
-		height: "100%",
-		width: "calc(100% - 32px)",
-		background: "#333c57",
-		boxSizing: "border-box",
-		padding: "4px",
-	},
-	paneInner: {
-		height: "100%",
-		width: "100%",
-		border: "2px solid #424e70",
-		boxSizing: "border-box",
-		padding: "8px",
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
-		gap: "16px",
-		color: "#fff",
-		fontSize: "16px",
+		gap: "2.5rem",
 	},
-	creatures: {
-		"display": "flex",
-		"justifyContent": "center",
-		"gap": "8px",
-		"& img": {
-			"height": "48px",
-			"width": "48px",
-
-			"@media (max-width: 360px)": {
-				height: "32px",
-				width: "32px",
-			},
-		},
+	"contentOut": {
+		// Waits for the background fade and the logo sheen, then fades out; the
+		// menu fades in afterwards (see GameMenu).
+		animation: `$bgFade ${BOOT_LOGO_FADE_MS}ms ease ${BOOT_LOGO_FADE_DELAY_MS}ms both`,
 	},
-	largeOnly: {
-		"@media (max-width: 360px)": {
-			display: "none",
-		},
+	"logoWrap": {
+		position: "relative",
+		display: "inline-block",
+		lineHeight: 0,
 	},
-	welcome: {
-		fontSize: "24px",
+	"logo": {
+		display: "block",
+		width: "min(60vw, 360px)",
+		height: "auto",
+		filter: "drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.45))",
+	},
+	"sheen": {
+		position: "absolute",
+		inset: 0,
+		pointerEvents: "none",
+		// Bright diagonal band, clipped to the logo's shape via the mask.
+		background:
+			"linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.85) 50%, transparent 60%)",
+		backgroundSize: "300% 100%",
+		backgroundRepeat: "no-repeat",
+		backgroundPosition: "100% 0",
+		WebkitMaskImage: `url(${LOGO_SRC})`,
+		maskImage: `url(${LOGO_SRC})`,
+		WebkitMaskSize: "100% 100%",
+		maskSize: "100% 100%",
+		WebkitMaskRepeat: "no-repeat",
+		maskRepeat: "no-repeat",
+	},
+	"sheenAnim": {
+		// Sweeps once, after the background fade, before the crossfade.
+		animation: `$logoSheen ${BOOT_SHEEN_MS}ms ease ${BOOT_BG_FADE_MS}ms both`,
+	},
+	"spinnerOut": {
+		animation: `$bgFade ${BOOT_BG_FADE_MS}ms ease forwards`,
+	},
+	"footer": {
+		position: "absolute",
+		bottom: "1rem",
+		left: 0,
+		right: 0,
+		zIndex: 1,
 		textAlign: "center",
+		fontFamily: theme.typography.primary,
+		fontSize: "0.85rem",
+		color: theme.palette.light.neutral,
 	},
-	description: {
-		flex: "1 1 auto",
-		display: "flex",
-		flexDirection: "column",
-		gap: "16px",
+	"@keyframes bgFade": {
+		from: { opacity: 1 },
+		to: { opacity: 0 },
 	},
-	withFriends: {
-		fontSize: "14px",
-		fontStyle: "italic",
-		textAlign: "center",
-		color: "#bbb",
-	},
-	footer: {
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "center",
-		alignItems: "center",
-		gap: "8px",
+	"@keyframes logoSheen": {
+		from: { backgroundPosition: "100% 0" },
+		to: { backgroundPosition: "0% 0" },
 	},
 }));
 
-export function SplashScreen({ onPlay }: Props) {
+export function SplashScreen({ entering }: { entering?: boolean }) {
 	const classes = useStyles();
+
 	return (
-		<div className={classes.root}>
-			<PageBoardBackground />
-			<div className={classes.top}>
-				<div className={classes.logoWrapper}>
-					<img
-						src={`${APP_IMAGE_ROOT}/ui/logo.png`}
-						alt="Creature Chess Logo"
+		<div className={classes.overlay}>
+			<div
+				className={classNames(classes.blue, { [classes.blueOut]: entering })}
+			/>
+			<div
+				className={classNames(classes.content, {
+					[classes.contentOut]: entering,
+				})}
+			>
+				<div className={classes.logoWrap}>
+					<img className={classes.logo} src={LOGO_SRC} alt="Creature Chess" />
+					<div
+						className={classNames(classes.sheen, {
+							[classes.sheenAnim]: entering,
+						})}
 					/>
 				</div>
-				<div className={classes.tagline}>
-					A <span className={classes.highlight}>'Tiberisoft'</span> Game
+				<div className={classNames({ [classes.spinnerOut]: entering })}>
+					<Spinner size={56} />
 				</div>
 			</div>
-			<div className={classes.bottom}>
-				<div className={classes.pane}>
-					<div className={classes.paneInner}>
-						<div className={classes.creatures}>
-							<CreatureImage definitionId={33} facing="front" />
-							<CreatureImage definitionId={47} facing="front" />
-							<CreatureImage definitionId={39} facing="front" />
-							<CreatureImage
-								definitionId={44}
-								className={classes.largeOnly}
-								facing="front"
-							/>
-							<CreatureImage
-								definitionId={27}
-								className={classes.largeOnly}
-								facing="front"
-							/>
-						</div>
-
-						<div className={classes.description}>
-							<p className={classes.welcome}>
-								Welcome to{" "}
-								<span className={classes.highlight}>Creature Chess</span>!
-							</p>
-							<p>
-								This is a multiplayer strategy game where you configure
-								creatures on a board.
-							</p>
-							<p>
-								Each round, your board is matched against an opponent's board.
-								Defeat all their pieces to win the round.
-							</p>
-							<p>
-								Every loss decreases your health bar. When your health reaches
-								zero, you're out!
-							</p>
-							<p>
-								Players will battle against each other until only one player
-								remains.
-							</p>
-						</div>
-
-						<div className={classes.footer}>
-							<button className={classes.playButton} onClick={onPlay}>
-								Play Now
-							</button>
-							<p className={classes.withFriends}>
-								More fun with friends! Press 'Play Now' at the same time to play
-								together.
-							</p>
-							<a
-								href="https://discord.gg/acRdGQceWJ"
-								className={classes.withFriends}
-							>
-								Join us on Discord
-							</a>
-						</div>
-					</div>
-				</div>
+			<div
+				className={classNames(classes.footer, { [classes.blueOut]: entering })}
+			>
+				© Tiberisoft 2026
 			</div>
 		</div>
 	);
