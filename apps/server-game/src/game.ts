@@ -60,12 +60,21 @@ export class Game {
 	private gamemode: Gamemode;
 	private settings: GamemodeSettings;
 
+	/**
+	 * Identity-provider kind per player id.
+	 */
+	private typesById = new Map<string, string>();
+
 	public constructor(
 		_settings: GamemodeSettings,
 		{ players, bots }: Participants,
 		{ context, onFinish }: GameOptions
 	) {
 		this.settings = resolveSettings(_settings, context.defines);
+
+		for (const { player } of [...players, ...bots]) {
+			this.typesById.set(player.id.toString(), player.type);
+		}
 
 		const gameId = uuid();
 		this.gamemode = createGamemode({
@@ -97,6 +106,15 @@ export class Game {
 
 		this.gamemode.onFinish((event) => {
 			activeGames.dec();
+
+			context.events.emit("gameFinished", {
+				gameId,
+				standings: event.players.map((p) => ({
+					playerId: p.id,
+					type: this.typesById.get(p.id) ?? "unknown",
+					position: p.position,
+				})),
+			});
 
 			onFinish(event);
 		});

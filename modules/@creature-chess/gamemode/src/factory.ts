@@ -24,6 +24,16 @@ export interface GameplayEvents {
 		winnerId: string | null;
 		damageToLoser: number;
 	};
+	gameFinished: {
+		gameId: string;
+		standings: {
+			playerId: string;
+			/** Identity-provider kind. */
+			type: string;
+			/** Final placement, 1 = winner. */
+			position: number;
+		}[];
+	};
 }
 
 export type GameplayEventsBus = TypedEventEmitter<GameplayEvents>;
