@@ -24,6 +24,7 @@ export const Guest: Story = {
 export const SignedIn: Story = {
 	args: {
 		name: "jkm",
+		rank: "Gold II",
 		avatar: <img src="/images/ui/logo.png" alt="avatar" />,
 	},
 };
@@ -31,6 +32,7 @@ export const SignedIn: Story = {
 export const LongName: Story = {
 	args: {
 		name: "averyverylongnickname",
+		rank: "Bronze I",
 		icon: <FontAwesomeIcon icon={faUser} />,
 	},
 };

@@ -10,6 +10,10 @@ type Props = {
 	avatar?: React.ReactNode;
 	/** Leading icon, shown when there is no avatar. */
 	icon?: React.ReactNode;
+	/** Rank label, e.g. "Gold II". */
+	rank?: string;
+	/** Colour for the rank label; defaults to the success token. */
+	rankColor?: string;
 	onClick?: () => void;
 	className?: string;
 };
@@ -60,12 +64,21 @@ const useStyles = createUseThemeStyles((theme) => ({
 		textOverflow: "ellipsis",
 		whiteSpace: "nowrap",
 	},
+	separator: {
+		color: theme.palette.muted,
+	},
+	rank: {
+		whiteSpace: "nowrap",
+		color: theme.palette.success.light,
+	},
 }));
 
 export function AccountPill({
 	name,
 	avatar,
 	icon,
+	rank,
+	rankColor,
 	onClick,
 	className,
 }: Props) {
@@ -82,6 +95,14 @@ export function AccountPill({
 				</span>
 			)}
 			<span className={classes.name}>{name}</span>
+			{rank && (
+				<>
+					<span className={classes.separator}>·</span>
+					<span className={classes.rank} style={rankColor ? { color: rankColor } : undefined}>
+						{rank}
+					</span>
+				</>
+			)}
 		</>
 	);
 

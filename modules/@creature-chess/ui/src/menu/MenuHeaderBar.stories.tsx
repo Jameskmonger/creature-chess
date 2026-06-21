@@ -40,6 +40,7 @@ export const SignedIn: Story = {
 		account: (
 			<AccountPill
 				name="jkm"
+				rank="Gold II"
 				avatar={<img src="/images/ui/logo.png" alt="avatar" />}
 			/>
 		),
