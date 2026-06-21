@@ -31,6 +31,8 @@ export {
 	type PlayerProfile,
 	CREATURE_PICTURE_PREFIX,
 	creaturePicture,
+	ASSET_PICTURE_PREFIX,
+	assetPicture,
 	type PlayerStreak,
 	StreakType,
 	type PlayerTitle,

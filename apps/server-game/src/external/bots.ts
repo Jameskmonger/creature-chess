@@ -1,6 +1,6 @@
 import { pickRandom } from "@shoki/random";
 
-import { LobbyPlayer, creaturePicture } from "@creature-chess/models";
+import { LobbyPlayer, assetPicture } from "@creature-chess/models";
 
 import { BotImplementation, createBotEngineRegistry } from "@cc-server/bot";
 
@@ -9,7 +9,9 @@ import { utilityBotEngine } from "@cc-bot/utility";
 const botEngines = createBotEngineRegistry();
 botEngines.register(utilityBotEngine);
 
-const randomPicture = () => creaturePicture(Math.floor(Math.random() * 20) + 1);
+const ROBOT_AVATAR_COUNT = 9;
+const botAvatar = (index: number): string =>
+	assetPicture(`bots/robot-${String((index % ROBOT_AVATAR_COUNT) + 1).padStart(3, "0")}.png`);
 
 export type BotParticipant = {
 	player: LobbyPlayer;
@@ -80,7 +82,7 @@ export const getBots = async (count: number) => {
 				name: `[BOT] ${botInfo.nickname}`,
 				profile: {
 					title: null,
-					picture: randomPicture(),
+					picture: botAvatar(BOTS.indexOf(botInfo)),
 				},
 				type: "bot" as const,
 			},
