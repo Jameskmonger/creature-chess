@@ -10,6 +10,20 @@ export type Release = {
 
 export const updateNotes: Release[] = [
 	{
+		version: "0.9.0",
+		sections: [
+			{
+				title: "Features",
+				items: [
+					"Added Account system with unlockable avatars and titles.",
+					"Added skill rating and ranking system.",
+					"Bots now have their own custom avatars.",
+					"Refreshed menu and profile layout.",
+				],
+			},
+		],
+	},
+	{
 		version: "0.8.1",
 		sections: [
 			{
