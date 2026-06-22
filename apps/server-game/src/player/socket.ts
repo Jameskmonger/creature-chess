@@ -16,10 +16,21 @@ type HandshakeEvents = {
 	authenticate: (request: HandshakeRequest) => void;
 };
 
+/**
+ * Matchmaking commands issued by the client once authenticated.
+ * - `play` finds, reconnects to, or creates a game.
+ * - `reconnect` only rejoins an existing game/lobby.
+ */
+type MatchmakingEvents = {
+	play: () => void;
+	reconnect: () => void;
+};
+
 type AuthenticateResponseEvents = {
 	authenticate_response: (
 		response: GameServerToClient.AuthenticateResponse
 	) => void;
+	noGame: () => void;
 };
 
 /**
@@ -49,7 +60,7 @@ export type GameSocket = Socket<
  * Used during handshake.
  */
 export type AuthenticatedSocket = Socket<
-	HandshakeEvents,
+	HandshakeEvents & MatchmakingEvents,
 	AuthenticateResponseEvents,
 	Record<string, never>,
 	AuthenticatedSocketData

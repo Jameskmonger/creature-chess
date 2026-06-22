@@ -22,7 +22,18 @@ const useStyles = createUseThemeStyles((theme) => ({
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
-		pointerEvents: "none",
+		// Covers the app while booting/reconnecting; blocks clicks from reaching
+		// the menu mounted behind it until the splash unmounts.
+		pointerEvents: "auto",
+	},
+	"contentGameOut": {
+		// Reconnecting into a game/lobby: the logo fades out first, while the
+		// background still hides the game behind it.
+		animation: `$bgFade ${BOOT_LOGO_FADE_MS}ms ease forwards`,
+	},
+	"blueGameOut": {
+		// ...then the background fades, revealing the game only once the logo's gone.
+		animation: `$bgFade ${BOOT_BG_FADE_MS}ms ease ${BOOT_LOGO_FADE_MS}ms both`,
 	},
 	"blue": {
 		position: "absolute",
@@ -101,33 +112,51 @@ const useStyles = createUseThemeStyles((theme) => ({
 	},
 }));
 
-export function SplashScreen({ entering }: { entering?: boolean }) {
+export function SplashScreen({
+	entering,
+	mode = "menu",
+}: {
+	entering?: boolean;
+	mode?: "menu" | "game";
+}) {
 	const classes = useStyles();
+
+	// The menu choreography crossfades the logo into the menu; the game path has
+	// no menu behind it, so the whole splash fades out as one.
+	const menuEntering = entering && mode === "menu";
+	const gameFade = entering && mode === "game";
 
 	return (
 		<div className={classes.overlay}>
 			<div
-				className={classNames(classes.blue, { [classes.blueOut]: entering })}
+				className={classNames(classes.blue, {
+					[classes.blueOut]: menuEntering,
+					[classes.blueGameOut]: gameFade,
+				})}
 			/>
 			<div
 				className={classNames(classes.content, {
-					[classes.contentOut]: entering,
+					[classes.contentOut]: menuEntering,
+					[classes.contentGameOut]: gameFade,
 				})}
 			>
 				<div className={classes.logoWrap}>
 					<img className={classes.logo} src={LOGO_SRC} alt="Creature Chess" />
 					<div
 						className={classNames(classes.sheen, {
-							[classes.sheenAnim]: entering,
+							[classes.sheenAnim]: menuEntering,
 						})}
 					/>
 				</div>
-				<div className={classNames({ [classes.spinnerOut]: entering })}>
+				<div className={classNames({ [classes.spinnerOut]: menuEntering })}>
 					<Spinner size={56} />
 				</div>
 			</div>
 			<div
-				className={classNames(classes.footer, { [classes.blueOut]: entering })}
+				className={classNames(classes.footer, {
+					[classes.blueOut]: menuEntering,
+					[classes.contentGameOut]: gameFade,
+				})}
 			>
 				© Tiberisoft 2026
 			</div>

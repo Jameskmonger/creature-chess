@@ -14,6 +14,10 @@ import { LobbyConnection } from "./LobbyConnection";
 import { resolveHandshake } from "./sessionSources";
 import type { Dispatch } from "./types";
 
+// How long to wait for the server's reconnect verdict before giving up and
+// falling through to the menu.
+const RECONNECT_TIMEOUT_MS = 5000;
+
 export class SocketManager {
 	private socket: Socket | null = null;
 	private cleanupConnectionListeners: (() => void) | null = null;
@@ -45,6 +49,62 @@ export class SocketManager {
 		}
 
 		this.listenForConnection();
+		this.socket?.emit("play");
+	}
+
+	/**
+	 * Silently authenticate and rejoin an existing game/lobby if the player has
+	 * one. Resolves true once reconnected, or false (tearing the socket down) if
+	 * the server reports no game, the handshake fails, or the check times out.
+	 */
+	public async reconnectToExistingGame(): Promise<boolean> {
+		const request = await resolveHandshake();
+
+		if (!request) {
+			return false;
+		}
+
+		try {
+			await this.connectSocket(request);
+		} catch (error) {
+			console.error("error getting socket", error);
+			return false;
+		}
+
+		this.listenForConnection();
+
+		const socket = this.socket;
+		if (!socket) {
+			return false;
+		}
+
+		return new Promise<boolean>((resolve) => {
+			let settled = false;
+
+			const finish = (found: boolean) => {
+				if (settled) {
+					return;
+				}
+				settled = true;
+				socket.off("connected", onFound);
+				socket.off("gameConnected", onFound);
+				socket.off("noGame", onNone);
+				clearTimeout(timer);
+				if (!found) {
+					this.disconnect();
+				}
+				resolve(found);
+			};
+
+			const onFound = () => finish(true);
+			const onNone = () => finish(false);
+			const timer = setTimeout(() => finish(false), RECONNECT_TIMEOUT_MS);
+
+			socket.on("connected", onFound);
+			socket.on("gameConnected", onFound);
+			socket.on("noGame", onNone);
+			socket.emit("reconnect");
+		});
 	}
 
 	public disconnect(): void {

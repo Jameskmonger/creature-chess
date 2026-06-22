@@ -71,9 +71,12 @@ export const startServer = async ({ io }: { io: Server }) => {
 	socketInBytes.reset();
 	socketOutBytes.reset();
 
-	const matchmaking = (socket: AuthenticatedSocket) => {
+	/**
+	 * Rejoin an existing lobby or game for this player, if one exists.
+	 * Returns whether the socket was connected to anything.
+	 */
+	const reconnect = (socket: AuthenticatedSocket): boolean => {
 		const socketLabel = socket.data.nickname ?? socket.data.id;
-		logger.info(`[Matchmaking (${socketLabel})] Beginning matchmaking`);
 
 		const matchingLobby = lobbies.find((l) => l.isInLobby(socket.data.id));
 
@@ -81,7 +84,7 @@ export const startServer = async ({ io }: { io: Server }) => {
 			logger.info(`[Matchmaking (${socketLabel})] Lobby found`);
 
 			matchingLobby.connect(socket);
-			return;
+			return true;
 		}
 
 		const matchingGame = games.find((l) => l.canJoinGame(socket.data.id));
@@ -90,6 +93,17 @@ export const startServer = async ({ io }: { io: Server }) => {
 			logger.info(`[Matchmaking (${socketLabel})] Game found`);
 
 			matchingGame.connect(socket);
+			return true;
+		}
+
+		return false;
+	};
+
+	const matchmaking = (socket: AuthenticatedSocket) => {
+		const socketLabel = socket.data.nickname ?? socket.data.id;
+		logger.info(`[Matchmaking (${socketLabel})] Beginning matchmaking`);
+
+		if (reconnect(socket)) {
 			return;
 		}
 
@@ -129,5 +143,12 @@ export const startServer = async ({ io }: { io: Server }) => {
 		lobby.connect(socket);
 	};
 
-	onHandshakeSuccess({ io }, context.identity, matchmaking);
+	onHandshakeSuccess({ io }, context.identity, (socket) => {
+		socket.on("play", () => matchmaking(socket));
+		socket.on("reconnect", () => {
+			if (!reconnect(socket)) {
+				socket.emit("noGame");
+			}
+		});
+	});
 };

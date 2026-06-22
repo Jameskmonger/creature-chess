@@ -21,3 +21,7 @@ export const BOOT_MENU_FADE_DELAY_MS =
 // Whole entrance, from the start of the transition to the menu fully shown.
 export const BOOT_TRANSITION_TOTAL_MS =
 	BOOT_MENU_FADE_DELAY_MS + BOOT_MENU_FADE_MS;
+
+// When reconnecting straight into a game/lobby there's no menu to crossfade
+// into: the logo fades out first, then the background fades to reveal the game.
+export const BOOT_GAME_FADE_MS = BOOT_LOGO_FADE_MS + BOOT_BG_FADE_MS;

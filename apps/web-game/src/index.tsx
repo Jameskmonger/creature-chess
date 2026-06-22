@@ -14,7 +14,7 @@ import { GameSessionProvider } from "./game/sessionContext";
 import { loadCreatureCatalog } from "./networking/creatureDefinitions";
 import { GameConnection } from "./networking/GameConnection";
 import { LobbyConnection } from "./networking/LobbyConnection";
-import { SocketManagerProvider } from "./networking/context";
+import { SocketManagerProvider, useSocketManager } from "./networking/context";
 import {
 	installPluginRuntime,
 	loadClientPlugins,
@@ -22,13 +22,38 @@ import {
 } from "./plugins";
 import { SplashScreen } from "./components/SplashScreen";
 import {
+	BOOT_GAME_FADE_MS,
 	BOOT_TRANSITION_TOTAL_MS,
 	BootEntranceContext,
 } from "./components/menu/bootEntrance";
 import { createAppStore } from "./store";
 import { DEFAULT_THEME } from "./useStyles";
 
-function AppRoot() {
+/**
+ * Runs once while the splash is still covering the app: rejoins an existing
+ * game/lobby if the player has one, then signals the boot sequence to reveal
+ * whatever surface the store now points at (game, lobby, or menu).
+ */
+function BootReconnect({ onReady }: { onReady: (foundGame: boolean) => void }) {
+	const socketManager = useSocketManager();
+	const startedRef = useRef(false);
+
+	useEffect(() => {
+		if (startedRef.current) {
+			return;
+		}
+		startedRef.current = true;
+
+		socketManager.reconnectToExistingGame().then(
+			(found) => onReady(found),
+			() => onReady(false)
+		);
+	}, [socketManager, onReady]);
+
+	return null;
+}
+
+function AppRoot({ onReady }: { onReady?: (foundGame: boolean) => void }) {
 	const sessionHolderRef = useRef<GameSessionHolder | null>(null);
 	if (sessionHolderRef.current === null) {
 		sessionHolderRef.current = new GameSessionHolder();
@@ -78,6 +103,7 @@ function AppRoot() {
 						accountIdHolder={accountIdHolderRef.current}
 					>
 						<ThemeProvider theme={DEFAULT_THEME}>
+							{onReady && <BootReconnect onReady={onReady} />}
 							<App />
 						</ThemeProvider>
 					</SocketManagerProvider>
@@ -91,8 +117,11 @@ const MIN_SPLASH_MS = 1200;
 
 function Boot() {
 	const [phase, setPhase] = useState<
-		"loading" | "entering" | "done" | "error"
+		"loading" | "reconnecting" | "entering" | "done" | "error"
 	>("loading");
+	// True when the reconnect check dropped us straight into a game/lobby, so the
+	// splash fades out wholesale instead of crossfading into the menu.
+	const [reconnected, setReconnected] = useState(false);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -114,7 +143,7 @@ function Boot() {
 		load()
 			.then(() => {
 				if (!cancelled) {
-					setPhase("entering");
+					setPhase("reconnecting");
 				}
 			})
 			.catch((error) => {
@@ -134,9 +163,15 @@ function Boot() {
 		if (phase !== "entering") {
 			return;
 		}
-		const timer = setTimeout(() => setPhase("done"), BOOT_TRANSITION_TOTAL_MS);
+		const total = reconnected ? BOOT_GAME_FADE_MS : BOOT_TRANSITION_TOTAL_MS;
+		const timer = setTimeout(() => setPhase("done"), total);
 		return () => clearTimeout(timer);
-	}, [phase]);
+	}, [phase, reconnected]);
+
+	const onReconnectChecked = React.useCallback((foundGame: boolean) => {
+		setReconnected(foundGame);
+		setPhase((current) => (current === "reconnecting" ? "entering" : current));
+	}, []);
 
 	if (phase === "error") {
 		return (
@@ -152,10 +187,19 @@ function Boot() {
 		<ThemeProvider theme={DEFAULT_THEME}>
 			{phase !== "loading" && (
 				<BootEntranceContext.Provider value={phase === "entering"}>
-					<AppRoot />
+					<AppRoot
+						onReady={
+							phase === "reconnecting" ? onReconnectChecked : undefined
+						}
+					/>
 				</BootEntranceContext.Provider>
 			)}
-			{phase !== "done" && <SplashScreen entering={phase === "entering"} />}
+			{phase !== "done" && (
+				<SplashScreen
+					entering={phase === "entering"}
+					mode={reconnected ? "game" : "menu"}
+				/>
+			)}
 		</ThemeProvider>
 	);
 }
