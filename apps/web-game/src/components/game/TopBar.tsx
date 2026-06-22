@@ -29,6 +29,7 @@ const useStyles = createUseStyles({
 		},
 	},
 	segment: {
+		flex: 1,
 		color: "#fff",
 		textAlign: "center",
 		textTransform: "uppercase",
@@ -52,20 +53,12 @@ const useStyles = createUseStyles({
 		justifyContent: "end",
 		fontSize: "16px",
 	},
+	middle: {
+		flex: 2,
+	},
 	container: {
 		display: "flex",
 		flexDirection: "column",
-	},
-	name: {
-		"display": "flex",
-		"flexDirection": "row",
-		"gap": "8px",
-		"alignItems": "center",
-		"justifyContent": "center",
-
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			gap: "4px",
-		},
 	},
 	levelIcon: {
 		"letterSpacing": 0,
@@ -89,9 +82,6 @@ export function TopBar() {
 	);
 
 	const health = localPlayer?.health ?? 0;
-	const money = localPlayer?.money ?? 0;
-	const level = localPlayer?.level ?? 0;
-	const name = localPlayer?.name ?? "";
 
 	return (
 		<div className={styles.container}>
@@ -101,19 +91,14 @@ export function TopBar() {
 					<PhaseTimer />
 				</div>
 
-				<PositionChip position={position} />
-
-				<div className={classNames(styles.segment, styles.name)}>
-					<span>{name}</span>
+				<div className={classNames(styles.segment, styles.middle)}>
+					<PlayerHealthbar health={health} />
 				</div>
-
-				<LevelIcon amount={level} className={styles.levelIcon} />
 
 				<div className={classNames(styles.segment, styles.right)}>
-					<BalanceIcon amount={money} />
+					<PositionChip position={position} />
 				</div>
 			</div>
-			<PlayerHealthbar health={health} />
 			{showPing && <DebugBar />}
 		</div>
 	);
