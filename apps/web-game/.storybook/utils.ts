@@ -7,9 +7,14 @@ import {
 	FinishedQuickChatOptions,
 	ReadyQuickChatOptions,
 } from "@creature-chess/models";
-import { PlayerStatus, creaturePicture, inProgressBattle } from "@creature-chess/models";
+import { PlayerStatus, assetPicture, inProgressBattle } from "@creature-chess/models";
 import { StreakType } from "@creature-chess/models";
 import { PlayerTitle } from "@creature-chess/models";
+
+// Mirror the bot avatar scheme so storybook players show a real (servable)
+// avatar image; creature pictures resolve to null without a creature registry.
+const robotAvatar = (index: number): string =>
+	assetPicture(`bots/robot-${String((index % 9) + 1).padStart(3, "0")}.png`);
 
 const createPlayer = (
 	id: string,
@@ -30,7 +35,7 @@ const createPlayer = (
 	money: 20,
 	level: 4,
 	profile: {
-		picture: creaturePicture(picture),
+		picture: robotAvatar(picture),
 		title,
 	},
 	battle: inProgressBattle(opponentId, opponentIsClone),
@@ -100,28 +105,28 @@ const createMockedState = (): GameState => {
 			createPlayer(
 				"1234",
 				"jkm",
-				1,
+				0,
 				{ color: 0x79ffe0, text: "Developer" },
 				"5678",
 				false,
 				{ type: StreakType.WIN, amount: 6 }
 			),
-			createPlayer("5678", "Jeff", 12, null, "1234"),
-			createPlayer("abcd", "Bob the Cat", 12, null, "ab99"),
-			createPlayer("ab99", "Derek the Dog", 20, null, "abcd"),
+			createPlayer("5678", "Jeff", 1, null, "1234"),
+			createPlayer("abcd", "Bob the Cat", 2, null, "ab99"),
+			createPlayer("ab99", "Derek the Dog", 3, null, "abcd"),
 			createPlayer(
 				"1235",
 				"Eric123",
-				1,
+				4,
 				{ color: 0xe89292, text: "Contributor" },
 				"5678"
 			),
-			createPlayer("5679", "Ignius_Rex", 12, null, "1234"),
-			createPlayer("abce", "AlfaCenTauri", 12, null, "ab99", false, {
+			createPlayer("5679", "Ignius_Rex", 5, null, "1234"),
+			createPlayer("abce", "AlfaCenTauri", 6, null, "ab99", false, {
 				type: StreakType.WIN,
 				amount: 3,
 			}),
-			createPlayer("ab90", "what this game", 20, null, "abcd", false, {
+			createPlayer("ab90", "what this game", 7, null, "abcd", false, {
 				type: StreakType.LOSS,
 				amount: 2,
 			}),
