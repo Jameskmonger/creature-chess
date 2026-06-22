@@ -1,3 +1,5 @@
+import { setTimeoutUnthrottled } from "./unthrottledTimer";
+
 // no typings so this needs a standard require
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const present = require("present");
@@ -5,8 +7,10 @@ const present = require("present");
 /**
  * Start a timer, and allow for the creation of a promise at-will to wait until that timer has ended.
  *
+ * Uses an unthrottled (worker-backed) timer so battles keep progressing when the
+ * browser tab is inactive.
+ *
  * @param ms the number of milliseconds to wait
- * @returns {{remaining: () => Promise<void>}} A promise that resolves when the timer has ended.
  */
 export const duration = (ms: number) => {
 	const startTime = present();
@@ -24,7 +28,7 @@ export const duration = (ms: number) => {
 					return;
 				}
 
-				setTimeout(() => resolve(), remaining);
+				setTimeoutUnthrottled(() => resolve(), remaining);
 			});
 
 			return {
