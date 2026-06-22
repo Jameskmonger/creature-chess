@@ -7,6 +7,7 @@ import { createUseStyles } from "react-jss";
 
 type Props = {
 	amount: number;
+	label?: boolean;
 	className?: string;
 	iconClassName?: string;
 };
@@ -33,11 +34,15 @@ const useStyles = createUseStyles<string, Props>({
 
 export function LevelIcon(props: Props) {
 	const classes = useStyles(props);
-	const { amount, className, iconClassName } = props;
+	const { amount, className, iconClassName, label = true } = props;
 
 	return (
 		<div className={classNames(classes.wrapper, className)}>
-			<span>lvl {amount}</span>
+			{
+				label
+				? <span>lvl {amount}</span>
+				: <span>{amount}</span>
+			}
 			<FontAwesomeIcon
 				icon={faSquareCaretUp}
 				className={classNames(classes.icon, iconClassName)}
