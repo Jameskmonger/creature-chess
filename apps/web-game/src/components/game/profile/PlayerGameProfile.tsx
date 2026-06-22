@@ -1,8 +1,6 @@
 import * as React from "react";
 
-import { getXpToNextLevel } from "@creature-chess/models";
-import classNames from "classnames";
-import { createUseStyles } from "react-jss";
+import { getXpToNextLevel, MAX_LEVEL } from "@creature-chess/models";
 import { Button } from "@creature-chess/ui";
 import { BalanceIcon } from "~/components/ui/icon/BalanceIcon";
 import { CoinIcon } from "~/components/ui/icon/CoinIcon";
@@ -11,80 +9,59 @@ import { useGamemodeSettings } from "~/game/sessionContext";
 import { useGameActions } from "~/networking";
 import { Region } from "~/plugins";
 import { useLocalPlayer } from "~/store/game/players";
-
-import { MAX_LEVEL } from "@creature-chess/models";
+import { createUseThemeStyles } from "~/useStyles";
 
 import { ProgressBar } from "../../ui/progressBar";
 
-const useStyles = createUseStyles({
+const useStyles = createUseThemeStyles(() => ({
 	profile: {
 		"display": "flex",
 		"flexDirection": "row",
+		"alignItems": "center",
 		"color": "#fff",
 		"background": "#566c86",
-		"padding": "8px",
-		"gap": "16px",
+		"margin": "8px",
+		"padding": "8px 12px",
+		"gap": "12px",
 
 		"@media (orientation: portrait) and (max-width: 400px)": {
-			gap: "8px",
+			margin: "6px",
+			padding: "6px 10px",
+			gap: "10px",
 		},
 	},
-	column: {
-		"display": "flex",
-		"flexDirection": "column",
-		"alignItems": "center",
-		"flex": "1",
-		"gap": "16px",
-
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			gap: "8px",
-		},
-	},
-	item: {
-		flex: "1",
-	},
-	name: {
+	xpColumn: {
 		display: "flex",
-		alignItems: "center",
 		flexDirection: "column",
+		flex: "1",
+		minWidth: 0,
+		gap: "4px",
 	},
-	level: {
-		"flex": "1",
-		"width": "100%",
-		"display": "flex",
-		"justifyContent": "space-evenly",
-		"alignItems": "center",
-		"flexDirection": "row",
-		"fontWeight": "700",
-
-		"& > span": {
-			color: "#ffcd75",
-		},
+	xpHeader: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		fontSize: "0.8rem",
+	},
+	xpCount: {
+		color: "#cdd7e3",
 	},
 	xpProgress: {
-		"height": "32px",
-		"background": "#636363",
-
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			height: "28px",
-		},
+		height: "10px",
+		background: "#38465e",
+		borderRadius: "3px",
+		overflow: "hidden",
 	},
 	xpProgressFill: {
-		background: "#ffcd75",
+		background: "#ddc160",
 	},
-	xpProgressContent: {
-		color: "#1a1c2c",
+	maxLevel: {
+		flex: "1",
+		textAlign: "center",
+		fontWeight: 700,
 	},
-	right: {
-		justifyContent: "flex-end",
-	},
-	coinIcon: {
-		color: "#ddc160",
-	},
-});
-
-const renderProgressBar = (current: number, max: number) =>
-	`${current} / ${max} xp`;
+}));
 
 export function PlayerGameProfile() {
 	const styles = useStyles();
@@ -99,42 +76,46 @@ export function PlayerGameProfile() {
 	}
 
 	const { level, xp, money } = localPlayer;
+	const isMaxLevel = level === MAX_LEVEL;
+	const canAfford = money >= buyXpCost;
 
 	return (
 		<Region cls="player-profile-bar" ctx={{ level, xp, money }}>
 			<div className={styles.profile}>
-				<div className={styles.column}>
-					{level === MAX_LEVEL && <div>You are max level!</div>}
+				<BalanceIcon amount={money} />
 
-					{level !== MAX_LEVEL && (
-						<ProgressBar
-							className={styles.xpProgress}
-							fillClassName={styles.xpProgressFill}
-							contentClassName={styles.xpProgressContent}
-							current={xp}
-							max={getXpToNextLevel(level)}
-							renderContents={renderProgressBar}
-						/>
-					)}
+				{isMaxLevel ? (
+					<div className={styles.maxLevel}>
+						<LevelIcon amount={level} /> Max level!
+					</div>
+				) : (
+					<>
+						<div className={styles.xpColumn}>
+							<div className={styles.xpHeader}>
+								<LevelIcon amount={level} />
+								<span className={styles.xpCount}>
+									{xp}/{getXpToNextLevel(level)} XP
+								</span>
+							</div>
 
-					{level !== MAX_LEVEL && (
+							<ProgressBar
+								className={styles.xpProgress}
+								fillClassName={styles.xpProgressFill}
+								current={xp}
+								max={getXpToNextLevel(level)}
+							/>
+						</div>
+
 						<Button
 							onClick={gameActions.buyXp}
-							disabled={money < buyXpCost}
+							disabled={!canAfford}
 							color="secondary"
 							size="small"
 						>
-							+{buyXpAmount} xp ({buyXpCost} <CoinIcon />)
+							Buy {buyXpAmount} XP ({buyXpCost} <CoinIcon />)
 						</Button>
-					)}
-				</div>
-
-				<div className={classNames(styles.column, styles.right)}>
-					<div className={classNames(styles.item, styles.level)}>
-						<LevelIcon amount={level} />
-						<BalanceIcon amount={money} />
-					</div>
-				</div>
+					</>
+				)}
 			</div>
 		</Region>
 	);

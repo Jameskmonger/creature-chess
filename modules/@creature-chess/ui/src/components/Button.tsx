@@ -120,6 +120,8 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 
 		"&:disabled": {
 			cursor: "not-allowed",
+			filter: "grayscale(70%)",
+			opacity: 0.5,
 		},
 	},
 	shadow: {
