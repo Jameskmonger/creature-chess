@@ -3,10 +3,12 @@ import React, { useEffect, useRef } from "react";
 import { createUseThemeStyles } from "~/useStyles";
 
 import { StreakType } from "@creature-chess/models";
+import classNames from "classnames";
 
 type Props = {
 	type: StreakType | null;
 	amount: number | null;
+	className?: string;
 };
 
 const getBackground = (type: StreakType | null) =>
@@ -105,7 +107,7 @@ export function StreakIndicator(props: Props) {
 	}
 
 	return (
-		<div className={classes.indicator}>
+		<div className={classNames(classes.indicator, props.className)}>
 			<div className={classes.sheen} ref={sheenRef} />
 			<span className={classes.amount}>{props.amount}</span>
 		</div>
