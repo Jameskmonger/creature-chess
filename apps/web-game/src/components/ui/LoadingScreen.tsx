@@ -1,47 +1,59 @@
 import React from "react";
 
+import { Spinner } from "@creature-chess/ui";
+
 import { createUseThemeStyles } from "~/useStyles";
 
-import { Page } from "../Page";
+import { PageBoardBackground } from "../PageBackground";
 
 type Props = {
 	message?: string;
 };
 
 const useStyles = createUseThemeStyles((theme) => ({
-	"loadingArea": {
+	root: {
+		position: "relative",
+		overflow: "hidden",
+		width: "100%",
+		height: "100%",
+		boxSizing: "border-box",
+	},
+	foreground: {
+		position: "absolute",
+		inset: 0,
+		boxSizing: "border-box",
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
 		justifyContent: "center",
-		gap: "32px",
+		gap: "clamp(1rem, 5vw, 1.75rem)",
+		padding: "0.5rem",
+	},
+	logo: {
+		width: "auto",
+		height: "clamp(3.5rem, 16vw, 5.5rem)",
+	},
+	card: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		gap: "clamp(1rem, 5vw, 1.5rem)",
 		width: "100%",
-		height: "100%",
+		maxWidth: "460px",
+		padding: "clamp(1.5rem, 7vw, 2.5rem)",
+		boxSizing: "border-box",
+		background: theme.palette.surface,
+		borderRadius: "0.9rem",
 	},
-	"spinner": {
-		width: 48,
-		height: 48,
-		border: "8px solid #b13e53",
-		borderTopColor: "#555",
-		borderRadius: "50%",
-		animation: "$spin 1.6s linear infinite",
-	},
-	"message": {
-		"fontFamily": theme.typography.primary,
-		"fontSize": "1.5em",
-		"textTransform": "uppercase",
-		"letterSpacing": "4px",
-		"color": "#fff",
-		"fontWeight": 700,
-		"textAlign": "center",
-
-		"@media (orientation: portrait) and (max-width: 412px)": {
-			fontSize: "1.2em",
-		},
-	},
-	"@keyframes spin": {
-		from: { transform: "rotate(0deg)" },
-		to: { transform: "rotate(360deg)" },
+	message: {
+		margin: 0,
+		fontFamily: theme.typography.primary,
+		fontSize: "clamp(1.1rem, 5vw, 1.5rem)",
+		textTransform: "uppercase",
+		letterSpacing: "0.25em",
+		color: theme.palette.light.neutral,
+		fontWeight: 700,
+		textAlign: "center",
 	},
 }));
 
@@ -49,11 +61,21 @@ export function LoadingScreen({ message }: Props) {
 	const classes = useStyles();
 
 	return (
-		<Page hasBackground>
-			<div className={classes.loadingArea}>
-				<div className={classes.spinner} />
-				{message && <p className={classes.message}>{message}</p>}
+		<div className={classes.root}>
+			<PageBoardBackground />
+
+			<div className={classes.foreground}>
+				<img
+					src={`${APP_IMAGE_ROOT}/ui/logo.png`}
+					alt="Creature Chess"
+					className={classes.logo}
+				/>
+
+				<div className={classes.card}>
+					<Spinner size="clamp(2.5rem, 12vw, 3.5rem)" />
+					{message && <p className={classes.message}>{message}</p>}
+				</div>
 			</div>
-		</Page>
+		</div>
 	);
 }

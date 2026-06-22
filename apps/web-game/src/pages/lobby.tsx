@@ -1,9 +1,16 @@
 import * as React from "react";
 
+import { faPlay, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import { useSelector } from "react-redux";
-import { Page } from "~/components/Page";
+import {
+	AccountPill,
+	MenuHeaderBar,
+	MenuPlayButton,
+} from "@creature-chess/ui";
+import { PageBoardBackground } from "~/components/PageBackground";
 import { LobbyPlayerBanner } from "~/components/lobby/LobbyPlayerBanner";
-import { Button } from "@creature-chess/ui";
 import { Countdown } from "~/components/ui/countdown";
 import { useLobbyConnection } from "~/networking";
 import { Region } from "~/plugins";
@@ -12,73 +19,104 @@ import { createUseThemeStyles } from "~/useStyles";
 
 const padNumberToTwo = (val: number) => (val < 10 ? `0${val}` : val.toString());
 
-const countdownRender = (styles: ReturnType<typeof useStyles>) =>
-	function (totalSecondsRemaining: number) {
-		const minutesRemaining = Math.floor(totalSecondsRemaining / 60);
-		const secondsRemaining = Math.ceil(totalSecondsRemaining % 60);
+const renderTime = (totalSecondsRemaining: number) => {
+	const minutesRemaining = Math.floor(totalSecondsRemaining / 60);
+	const secondsRemaining = Math.ceil(totalSecondsRemaining % 60);
 
-		const time = `${minutesRemaining}:${padNumberToTwo(secondsRemaining)}`;
-
-		return (
-			<>
-				Starting in{" "}
-				<span className={styles.timeRemainingHighlight}>{time}</span>
-			</>
-		);
-	};
+	return <>{`${minutesRemaining}:${padNumberToTwo(secondsRemaining)}`}</>;
+};
 
 const useStyles = createUseThemeStyles((theme) => ({
-	lobbyInfo: {
-		flex: 1,
-
+	root: {
+		position: "relative",
+		overflow: "hidden",
+		width: "100%",
+		height: "100%",
+		boxSizing: "border-box",
+		containerName: "lobby",
+		containerType: "inline-size",
+	},
+	foreground: {
+		position: "absolute",
+		inset: 0,
+		boxSizing: "border-box",
 		display: "flex",
 		flexDirection: "column",
+		gap: "0.5rem",
+		padding: "0.5rem",
+	},
+	scroll: {
+		flex: 1,
+		minHeight: 0,
+		overflowY: "auto",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+	},
+	card: {
+		display: "flex",
+		flexDirection: "column",
+		gap: "clamp(0.85rem, 4vw, 1.25rem)",
+		width: "100%",
+		maxWidth: "520px",
+		margin: "0 auto",
+		padding: "clamp(0.85rem, 4vw, 1.25rem)",
+		boxSizing: "border-box",
+		background: theme.palette.surface,
+		borderRadius: "0.9rem",
+	},
+	status: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		gap: "0.1rem",
 		textAlign: "center",
 		fontFamily: theme.typography.primary,
-		color: "#fff",
-		width: "100%",
-
-		gap: "8px",
-		marginBottom: "8px",
+		color: theme.palette.light.neutral,
 	},
-	topBar: {
-		"display": "flex",
-		"flexDirection": "row",
-		"alignItems": "center",
-		"background": "#333",
-		"padding": "8px",
-
-		"& > div": {
-			flex: 1,
-		},
+	statusLabel: {
+		color: theme.palette.muted,
+		fontSize: "0.9rem",
+		textTransform: "uppercase",
+		letterSpacing: "0.08em",
 	},
-	timeRemainingHighlight: {
-		fontWeight: "700",
+	statusValue: {
+		fontWeight: 700,
+		lineHeight: 1,
+		fontSize: "clamp(2.4rem, 13vw, 3.25rem)",
+		color: theme.palette.accent.neutral,
+	},
+	statusValueIdle: {
+		color: theme.palette.light.neutral,
+		fontSize: "clamp(1.6rem, 8vw, 2.25rem)",
 	},
 	players: {
-		"flex": 1,
-
 		"display": "grid",
-		"gridTemplateColumns": "repeat(2, 1fr)",
-		"gridTemplateRows": "repeat(4, auto)",
-
-		"@media (orientation: portrait) and (max-width: 376px)": {
-			gap: "8px",
-		},
-
-		"@media (orientation: portrait) and (min-width: 377px)": {
-			gap: "12px",
-		},
+		"gridTemplateColumns": "repeat(2, minmax(0, 1fr))",
+		"gap": "clamp(0.4rem, 2.5vw, 0.7rem)",
 
 		"@media (orientation: landscape)": {
-			gap: "12px",
+			gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
 		},
 	},
-	playerWrapper: {
-		display: "flex",
-		flexDirection: "column",
+	footer: {
+		width: "100%",
+		maxWidth: "520px",
+		margin: "0 auto",
+	},
+	startButton: {
+		width: "100%",
 	},
 }));
+
+function PlayerCountPill({ filled, total }: { filled: number; total: number }) {
+	return (
+		<AccountPill
+			name={`${filled} / ${total}`}
+			icon={<FontAwesomeIcon icon={faUsers} />}
+		/>
+	);
+}
 
 export function LobbyPage() {
 	const styles = useStyles();
@@ -101,48 +139,85 @@ export function LobbyPage() {
 			const player = lobbyInfo.players[i] ?? null;
 
 			output.push(
-				<div key={player ? player.id : i} className={styles.playerWrapper}>
-					<Region
-						cls="lobby-player-slot"
-						id={`lobby.slot.${i}`}
-						ctx={{ slotIndex: i, player }}
-					>
-						<LobbyPlayerBanner player={player} />
-					</Region>
-				</div>
+				<Region
+					key={player ? player.id : i}
+					cls="lobby-player-slot"
+					id={`lobby.slot.${i}`}
+					ctx={{ slotIndex: i, player }}
+				>
+					<LobbyPlayerBanner player={player} />
+				</Region>
 			);
 		}
 
 		return output;
-	}, [lobbyInfo, styles.playerWrapper]);
+	}, [lobbyInfo]);
 
 	if (!lobbyInfo) {
 		return null;
 	}
 
-	const { startTimestamp } = lobbyInfo;
+	const { startTimestamp, maxPlayers } = lobbyInfo;
+	const filledCount = lobbyInfo.players.filter(Boolean).length;
 
 	return (
-		<Page hasBackground>
-			<div className={styles.lobbyInfo}>
-				<div className={styles.topBar}>
-					<div>
-						{startTimestamp && (
-							<Countdown
-								countdownToSeconds={startTimestamp / 1000}
-								render={countdownRender(styles)}
-							/>
-						)}
-					</div>
-					<div>
-						<Button color="primary" size="medium" onClick={onStartNow}>
-							Start Now
-						</Button>
+		<div className={styles.root}>
+			<PageBoardBackground />
+
+			<div className={styles.foreground}>
+				<MenuHeaderBar
+					brand={
+						<img
+							src={`${APP_IMAGE_ROOT}/ui/logo.png`}
+							alt="Creature Chess"
+						/>
+					}
+					account={
+						<PlayerCountPill filled={filledCount} total={maxPlayers} />
+					}
+				/>
+
+				<div className={styles.scroll}>
+					<div className={styles.card}>
+						<div className={styles.status}>
+							{startTimestamp ? (
+								<>
+									<span className={styles.statusLabel}>
+										Game starting in
+									</span>
+									<span className={styles.statusValue}>
+										<Countdown
+											countdownToSeconds={startTimestamp / 1000}
+											render={renderTime}
+										/>
+									</span>
+								</>
+							) : (
+								<>
+									<span className={classNames(styles.statusValue, styles.statusValueIdle)}>
+										Waiting for players
+									</span>
+									<span className={styles.statusLabel}>
+										The match begins once the lobby fills
+									</span>
+								</>
+							)}
+						</div>
+
+						<div className={styles.players}>{playerItems}</div>
 					</div>
 				</div>
 
-				<div className={styles.players}>{playerItems}</div>
+				<div className={styles.footer}>
+					<MenuPlayButton
+						className={styles.startButton}
+						icon={<FontAwesomeIcon icon={faPlay} />}
+						title="Start now"
+						subtitle="Skip the countdown and begin"
+						onClick={onStartNow}
+					/>
+				</div>
 			</div>
-		</Page>
+		</div>
 	);
 }
