@@ -1,31 +1,26 @@
+import classNames from "classnames";
 import React from "react";
 
 import { createUseThemeStyles } from "~/useStyles";
 
 type Props = {
 	position: number;
+	className?: string;
 };
 
 const useStyles = createUseThemeStyles((theme) => ({
 	chip: {
-		"background": "#333",
-		"padding": "4px 8px",
-		"fontFamily": theme.typography.primary,
-		"fontWeight": 700,
-		"color": "#fff",
-		"fontStyle": "italic",
-		"letterSpacing": "2px",
-		"fontSize": "16px",
-
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			padding: "4px",
-			fontSize: "12px",
-		},
+		background: "#333",
+		padding: "2px 4px",
+		fontFamily: "ui-monospace, monospace",
+		fontWeight: 500,
+		color: "#fff",
+		fontSize: "12px",
 	},
 }));
 
-export function PositionChip({ position }: Props) {
+export function PositionChip({ position, className }: Props) {
 	const classes = useStyles();
 
-	return <div className={classes.chip}>#{position}</div>;
+	return <div className={classNames(classes.chip, className)}>#{position}</div>;
 }
