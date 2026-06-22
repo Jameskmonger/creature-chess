@@ -3,6 +3,7 @@ import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { GameConnection } from "~/networking/GameConnection";
 import { LobbyConnection } from "~/networking/LobbyConnection";
+import { SocketManager } from "~/networking/SocketManager";
 import { ClientExtra, ClientStartListening } from "~/store/listenerContext";
 import { Holder } from "~/utils/Holder";
 
@@ -44,6 +45,7 @@ const buildStore = (options: { accountId?: string | null } = {}) => {
 		gameConnectionHolder: new Holder<GameConnection>("GameConnection"),
 		lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
 		accountIdHolder,
+		socketManagerHolder: new Holder<SocketManager>("SocketManager"),
 	};
 
 	const middleware = createListenerMiddleware({ extra });

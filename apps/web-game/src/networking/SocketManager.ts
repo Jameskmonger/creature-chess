@@ -116,6 +116,17 @@ export class SocketManager {
 		this.accountIdHolder.clear();
 	}
 
+	/**
+	 * Close the socket once a game has ended.
+	 */
+	public endSession(): void {
+		this.cleanupConnectionListeners?.();
+		this.cleanupConnectionListeners = null;
+		this.destroyConnections();
+		this.socket?.disconnect();
+		this.socket = null;
+	}
+
 	private async connectSocket(request: HandshakeRequest): Promise<void> {
 		const socket = (io as any)(
 			{ path: "/game/socket.io" },

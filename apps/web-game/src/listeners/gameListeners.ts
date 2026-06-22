@@ -12,6 +12,7 @@ import { setupSettingsListener } from "~/store/settings/sync";
 
 import { setupClientBattleListeners } from "./battle";
 import { setupCloseShopOnFirstBuyListener } from "./closeShopOnFirstBuy";
+import { setupEndSessionOnGameFinishListener } from "./endSessionOnGameFinish";
 import { setupForwardPlayerActions } from "./forwardPlayerActions";
 import { setupPreventAccidentalCloseListener } from "./preventAccidentalClose";
 import { setupUiListener } from "./ui";
@@ -48,6 +49,7 @@ export const setupGameListeners = (startListening: ClientStartListening) => {
 	setupPlayersSyncListeners(startListening);
 	setupQuickChatListener(startListening);
 	setupCloseShopOnFirstBuyListener(startListening);
+	setupEndSessionOnGameFinishListener(startListening);
 	setupPreventAccidentalCloseListener(startListening);
 
 	setupPluginListeners(pluginRegistry, startListening);

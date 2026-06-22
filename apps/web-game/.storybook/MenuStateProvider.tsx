@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { GameConnection } from "~/networking/GameConnection";
 import { LobbyConnection } from "~/networking/LobbyConnection";
 import { SocketManagerProvider } from "~/networking/context";
+import { SocketManager } from "~/networking/SocketManager";
 import { MenuState } from "~/store/menu/state";
 import { useGlobalStyles } from "~/styles";
 import { Holder } from "~/utils/Holder";
@@ -28,6 +29,7 @@ export function MenuStateProvider({ children }: { children: React.ReactNode }) {
 	const gameHolder = useRef(new Holder<GameConnection>("GameConnection"));
 	const lobbyHolder = useRef(new Holder<LobbyConnection>("LobbyConnection"));
 	const accountHolder = useRef(new Holder<string>("AccountId"));
+	const socketManagerHolder = useRef(new Holder<SocketManager>("SocketManager"));
 
 	return (
 		<Provider store={store}>
@@ -35,6 +37,7 @@ export function MenuStateProvider({ children }: { children: React.ReactNode }) {
 				gameConnectionHolder={gameHolder.current}
 				lobbyConnectionHolder={lobbyHolder.current}
 				accountIdHolder={accountHolder.current}
+				socketManagerHolder={socketManagerHolder.current}
 			>
 				{children}
 			</SocketManagerProvider>

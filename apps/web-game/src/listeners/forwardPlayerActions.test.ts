@@ -7,6 +7,7 @@ import {
 import { GameSessionHolder } from "~/game/GameSessionHolder";
 import { GameConnection } from "~/networking/GameConnection";
 import { LobbyConnection } from "~/networking/LobbyConnection";
+import { SocketManager } from "~/networking/SocketManager";
 import { ClientExtra } from "~/store/listenerContext";
 import { Holder } from "~/utils/Holder";
 
@@ -33,6 +34,7 @@ const buildStore = () => {
 		gameConnectionHolder,
 		lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
 		accountIdHolder: new Holder<string>("AccountId"),
+		socketManagerHolder: new Holder<SocketManager>("SocketManager"),
 	};
 
 	const middleware = createListenerMiddleware({ extra });
@@ -102,6 +104,7 @@ describe("forwardPlayerActions", () => {
 			gameConnectionHolder,
 			lobbyConnectionHolder: new Holder<LobbyConnection>("LobbyConnection"),
 			accountIdHolder: new Holder<string>("AccountId"),
+			socketManagerHolder: new Holder<SocketManager>("SocketManager"),
 		};
 
 		const middleware = createListenerMiddleware({ extra });

@@ -14,6 +14,7 @@ import { GameSessionProvider } from "./game/sessionContext";
 import { loadCreatureCatalog } from "./networking/creatureDefinitions";
 import { GameConnection } from "./networking/GameConnection";
 import { LobbyConnection } from "./networking/LobbyConnection";
+import { SocketManager } from "./networking/SocketManager";
 import { SocketManagerProvider, useSocketManager } from "./networking/context";
 import {
 	installPluginRuntime,
@@ -78,6 +79,11 @@ function AppRoot({ onReady }: { onReady?: (foundGame: boolean) => void }) {
 		accountIdHolderRef.current = new Holder<string>("AccountId");
 	}
 
+	const socketManagerHolderRef = useRef<Holder<SocketManager> | null>(null);
+	if (socketManagerHolderRef.current === null) {
+		socketManagerHolderRef.current = new Holder<SocketManager>("SocketManager");
+	}
+
 	const storeRef = useRef<ReturnType<typeof createAppStore> | null>(null);
 	if (storeRef.current === null) {
 		storeRef.current = createAppStore({
@@ -85,6 +91,7 @@ function AppRoot({ onReady }: { onReady?: (foundGame: boolean) => void }) {
 			gameConnectionHolder: gameConnectionHolderRef.current,
 			lobbyConnectionHolder: lobbyConnectionHolderRef.current,
 			accountIdHolder: accountIdHolderRef.current,
+			socketManagerHolder: socketManagerHolderRef.current,
 		});
 
 		wirePluginHostState({
@@ -101,6 +108,7 @@ function AppRoot({ onReady }: { onReady?: (foundGame: boolean) => void }) {
 						gameConnectionHolder={gameConnectionHolderRef.current}
 						lobbyConnectionHolder={lobbyConnectionHolderRef.current}
 						accountIdHolder={accountIdHolderRef.current}
+						socketManagerHolder={socketManagerHolderRef.current}
 					>
 						<ThemeProvider theme={DEFAULT_THEME}>
 							{onReady && <BootReconnect onReady={onReady} />}
