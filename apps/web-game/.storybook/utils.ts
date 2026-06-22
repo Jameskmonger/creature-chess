@@ -2,7 +2,7 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { ConnectionStatus } from "~/networking";
 import { GameState } from "~/store/game/state";
 
-import { GamePhase } from "@creature-chess/models";
+import { finishedBattle, GamePhase } from "@creature-chess/models";
 import {
 	FinishedQuickChatOptions,
 	ReadyQuickChatOptions,
@@ -28,7 +28,7 @@ const createPlayer = (
 	id,
 	name,
 	health: 100,
-	ready: false,
+	ready: true,
 	status: PlayerStatus.CONNECTED,
 	streakType: streak ? streak.type : null,
 	streakAmount: streak ? streak.amount : null,
@@ -111,16 +111,22 @@ const createMockedState = (): GameState => {
 				false,
 				{ type: StreakType.WIN, amount: 6 }
 			),
-			createPlayer("5678", "Jeff", 1, null, "1234"),
+			{
+				...createPlayer("5678", "Jeff", 1, null, "1234"),
+				battle: finishedBattle("1235", false, false, 2, 1),
+			},
 			createPlayer("abcd", "Bob the Cat", 2, null, "ab99"),
 			createPlayer("ab99", "Derek the Dog", 3, null, "abcd"),
-			createPlayer(
-				"1235",
-				"Eric123",
-				4,
-				{ color: 0xe89292, text: "Contributor" },
-				"5678"
-			),
+			{
+				...createPlayer(
+					"1235",
+					"Eric123",
+					4,
+					{ color: 0xe89292, text: "Contributor" },
+					"5678"
+				),
+				battle: finishedBattle("5678", false, true, 2, 1),
+			},
 			createPlayer("5679", "Ignius_Rex", 5, null, "1234"),
 			createPlayer("abce", "AlfaCenTauri", 6, null, "ab99", false, {
 				type: StreakType.WIN,
