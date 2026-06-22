@@ -161,18 +161,7 @@ export class Lobby {
 	}
 
 	private getLobbyPlayers(): LobbyPlayer[] {
-		return this.members.map(
-			({
-				socket: {
-					data: { id, nickname, profile, type },
-				},
-			}) => ({
-				id,
-				name: nickname as string,
-				profile: profile as PlayerProfile,
-				type,
-			})
-		);
+		return this.members.map(({ player }) => ({ ...player }));
 	}
 
 	private updateSetting(key: keyof GamemodeSettings, value: string) {
