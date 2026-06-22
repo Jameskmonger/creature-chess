@@ -8,7 +8,7 @@ type Props = React.PropsWithChildren<{
 	className?: string;
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	color: "primary" | "secondary" | "muted";
-	size: "small" | "medium" | "large";
+	size: "xsmall" | "small" | "medium" | "large";
 	/** Flat hollow button: coloured border and text, transparent face. */
 	outline?: boolean;
 	disabled?: boolean;
@@ -43,6 +43,8 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		},
 		"--btn-font-size": ({ size }) => {
 			switch (size) {
+				case "xsmall":
+					return "0.75rem";
 				case "small":
 					return "1rem";
 				case "medium":
@@ -57,6 +59,8 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		"--btn-border-radius": "4px",
 		"--btn-padding": ({ size }) => {
 			switch (size) {
+				case "xsmall":
+					return "2px 8px";
 				case "small":
 					return "4px 8px";
 				case "medium":
@@ -69,6 +73,8 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		},
 		"--btn-3d-depth": ({ size }) => {
 			switch (size) {
+				case "xsmall":
+					return "1px";
 				case "small":
 					return "2px";
 				case "medium":
