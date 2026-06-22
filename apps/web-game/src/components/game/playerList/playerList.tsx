@@ -42,8 +42,9 @@ const useStyles = createUseStyles({
 	list: {
 		display: "flex",
 		flexDirection: "column",
-		justifyContent: "space-between",
-		padding: "0.25em",
+		gap: "6px",
+		padding: "10px",
+		background: "#1d1d1d",
 	},
 });
 

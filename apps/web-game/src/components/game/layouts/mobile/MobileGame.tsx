@@ -30,7 +30,7 @@ function GameOverlay({ currentOverlay }: { currentOverlay: Overlay }) {
 
 	if (currentOverlay === Overlay.PLAYERS) {
 		return (
-			<OverlayComponent title="Players">
+			<OverlayComponent title="Players" fullscreen>
 				<PlayerList />
 			</OverlayComponent>
 		);

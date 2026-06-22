@@ -7,11 +7,10 @@ import { LevelIcon } from "~/components/ui/icon/LevelIcon";
 import { PositionChip } from "~/components/ui/player/PositionChip";
 import { createUseThemeStyles } from "~/useStyles";
 
-import { PlayerListPlayer } from "@creature-chess/models";
+import { PlayerBattleStatus, PlayerListPlayer } from "@creature-chess/models";
 
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside";
 import { PlayerAvatar, PlayerHealthbar, Title } from "../../ui/player";
-import { BattleInfo } from "./battleInfo";
 import { StreakIndicator } from "./streakIndicator";
 
 interface Props {
@@ -28,102 +27,209 @@ interface Props {
 	showReadyIndicator?: boolean;
 }
 
-const getDetailReadyColor = ({
-	player: { ready },
-	showReadyIndicator = false,
-}: Props) => (ready && showReadyIndicator ? "#20b720" : "#ccc");
+function getBattleWin(battle: PlayerListPlayer["battle"]) {
+	if (!battle) {
+		return false;
+	}
+
+	if (battle.status !== PlayerBattleStatus.FINISHED) {
+		return false;
+	}
+
+	const { isHomePlayer, homeScore, awayScore } = battle;
+	return isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
+}
 
 const useStyles = createUseThemeStyles<string, Props>((theme) => ({
-	container: (props) => ({
-		"border": props.isOpponent ? "3px solid #b13e53" : "",
-		"boxSizing": "border-box",
-		"padding": "0.5rem",
-		"background": "#566c86",
-
-		"display": "flex",
-		"flexDirection": "row",
-
-		"&:not(:last-child)": {
-			marginBottom: "0.25em",
-		},
-	}),
-	details: (props) => ({
-		"flex": 1,
-		"paddingLeft": "0.5em",
-		"borderLeft": `5px solid ${getDetailReadyColor(props)}`,
-		"display": "flex",
-		"flexDirection": "row",
-		"alignItems": "flex-start",
-
-		"gap": "16px",
-
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			gap: "4px",
-		},
-	}),
-	grow: {
-		flex: 1,
-	},
-	battleContainer: {
-		width: "100%",
-	},
-	badges: {
+	container: {
 		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		padding: "0 0.25em",
-		boxSizing: "border-box",
 		alignItems: "center",
-	},
-
-	// new ...
-
-	profile: {
-		display: "flex",
-		flexDirection: "column",
-		height: "100%",
-		justifyContent: "space-between",
-
-		flex: 4,
-	},
-
-	name: {
-		"fontFamily": theme.typography.primary,
-		"fontSize": "14px",
-		"fontWeight": 700,
-		"color": "#fff",
-		"textTransform": "uppercase",
-
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			fontSize: "10px",
+		gap: "6px",
+		background: "#343c4e",
+		padding: "6px 8px 6px 6px",
+		borderStyle: "solid",
+		borderRadius: "10px",
+		borderColor({ isLocal, isOpponent, currentlySpectating }) {
+			return isLocal
+				? "#ec5d6e"
+				: (
+					isOpponent
+					? "#f0a23a"
+					: (
+						currentlySpectating
+						? "#4ee1eb"
+						: "rgba(255, 255, 255, 0.05)"
+					)
+				);
+		},
+		borderWidth({ isLocal, isOpponent, currentlySpectating }) {
+			return (isLocal || isOpponent || currentlySpectating) ? "2px" : "1px";
+		},
+		borderLeftWidth({ isLocal, isOpponent, currentlySpectating }) {
+			return (isLocal || isOpponent || currentlySpectating)  ? "4px" : "1px";
+		},
+		boxShadow({ isOpponent }) {
+			return isOpponent ? "0 0 0 1px rgba(240,162,58,.25),0 0 12px rgba(240,162,58,.16)" : "none";
 		},
 	},
-
-	status: {
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "space-between",
-		height: "100%",
-
-		flex: 5,
-		gap: "8px",
-	},
-
-	stats: {
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		gap: "8px",
-	},
-
 	avatar: {
-		"@media (orientation: portrait) and (max-width: 400px)": {
-			height: "32px",
-			width: "32px",
+		width: "38px",
+		height: "38px",
+	},
+	readyIndicator: {
+		width: "5px",
+		// would be nice to use height: "100%" here, but it doesn't work with flexbox
+		height: "38px",
+		borderRadius: "3px",
+		background ({ player: { ready }, showReadyIndicator = false }) {
+			return (ready && showReadyIndicator ? "#46c45a" : "#495267");
+		},
+		boxShadow ({ player: { ready }, showReadyIndicator = false }) {
+			return (ready && showReadyIndicator ? "0 0 6px rgba(70,196,90,.55)" : "none");
+		}
+	},
+	details: {
+		"flex": 1,
+		"display": "flex",
+		"flexDirection": "column",
+		"gap": "4px",
+
+		"& > div": {
+			display: "flex",
+			alignItems: "center",
+			gap: "6px",
+			height: "1em",
 		},
 	},
+	name: {
+		flex: 3,
+		color: theme.palette.light.neutral,
+	},
+	healthbar: {
+		flex: 2,
+	},
+	stats: {
+		"display": "flex",
+		"alignItems": "center",
+		"flexShrink": 0,
+		"gap": "6px",
+
+		"& > div": {
+			display: "flex",
+		},
+	},
+	battle: {
+		"flex": 1,
+		"display": "flex",
+		"justifyContent": "flex-end",
+		"alignItems": "center",
+
+		"& > span": {
+			fontSize: "12px",
+			color ({ player: { battle }}) {
+				if (!battle) {
+					return "#ccc";
+				}
+
+				if (battle.status === PlayerBattleStatus.IN_PROGRESS) {
+					return "#ffcd74";
+				}
+
+				return getBattleWin(battle) ? "#38b764" : "#b13e53";
+			},
+			display: "flex",
+			alignItems: "center",
+			gap: "2px",
+			background: "rgb(51, 51, 51)",
+			padding: "2px 4px",
+		},
+	},
+	position: {
+		fontSize: "10px",
+	},
+	levelIcon: {
+		gap: "2px",
+		padding: "2px 4px",
+	},
+	balanceIcon: {
+		gap: "2px",
+		letterSpacing: "1px",
+		fontSize: "12px",
+	},
+	streakIndicator: {
+		height: "1em",
+		width: "1em",
+		boxShadow: "none",
+	}
 }));
+
+function BattleText({ battle, opponentName }: { battle: PlayerListPlayer["battle"]; opponentName?: string }) {
+	if (!battle) {
+		return null;
+	}
+
+	if (battle.status === PlayerBattleStatus.IN_PROGRESS) {
+		return (
+			<span>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="12"
+					height="12"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M21 3v5l-11 9l-4 4l-3 -3l4 -4l9 -11l5 0" />
+					<path d="M5 13l6 6" />
+					<path d="M14.32 17.32l3.68 3.68l3 -3l-3.365 -3.365" />
+					<path d="M10 5.5l-2 -2.5h-5v5l3 2.5" />
+				</svg>
+				{opponentName}
+			</span>
+		);
+	}
+
+	if (battle.status === PlayerBattleStatus.FINISHED) {
+		const win = getBattleWin(battle);
+
+		return (
+			<span>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="12"
+					height="12"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					{
+						win
+						? (
+							<>
+								<path d="M17 7l-10 10" />
+								<path d="M8 7l9 0l0 9" />
+							</>
+						) : (
+							<>
+								<path d="M7 7l10 10" />
+								<path d="M17 8l0 9l-9 0" />
+							</>
+						)
+					}
+				</svg>
+				{opponentName} ({battle.homeScore} - {battle.awayScore})
+			</span>
+		);
+	}
+
+	return null;
+}
 
 function PlayerListItem(props: Props) {
 	const styles = useStyles(props);
@@ -152,33 +258,59 @@ function PlayerListItem(props: Props) {
 
 	return (
 		<div className={styles.container} onClick={toggleExpanded} ref={ref}>
+			<PositionChip position={index + 1} className={styles.position} />
 			<PlayerAvatar player={player} className={styles.avatar} />
+			<div className={styles.readyIndicator} />
 			<div className={styles.details}>
-				<PositionChip position={index + 1} />
-
-				<div className={styles.profile}>
-					<span className={styles.name}>{player.name}</span>
-					<Title title={player.profile?.title || null} />
-
-					<div className={styles.stats}>
-						<StreakIndicator
-							type={player.streakType}
-							amount={player.streakAmount}
-						/>
-						<BalanceIcon amount={player.money} />
-						<LevelIcon amount={player.level} />
+				<div>
+					<div className={styles.name}>
+						<span>{player.name}</span>
+					</div>
+					<div className={styles.healthbar}>
+						<PlayerHealthbar health={player.health} />
 					</div>
 				</div>
-
-				<div className={styles.status}>
-					<PlayerHealthbar health={player.health} />
-					{currentlySpectating || isExpanded ? (
-						<Button color="primary" size="small" onClick={onSpectateClick}>
-							{currentlySpectating ? "Stop Spectating" : "Spectate"}
-						</Button>
-					) : (
-						<BattleInfo battle={player.battle} opponentName={opponentName} />
-					)}
+				{
+					player.profile?.title && (
+						<div>
+							<Title title={player.profile?.title || null} />
+						</div>
+					)
+				}
+				<div>
+					<div className={styles.stats}>
+						<div>
+							<BalanceIcon amount={player.money} className={styles.balanceIcon} />
+						</div>
+						<div>
+							<LevelIcon amount={player.level} className={styles.levelIcon} label={false} />
+						</div>
+						{
+							player.streakType !== null
+							&& player.streakAmount !== null
+							&& player.streakAmount > 1
+							&& (
+								<div>
+									<StreakIndicator
+										type={player.streakType}
+										amount={player.streakAmount}
+										className={styles.streakIndicator}
+									/>
+								</div>
+							)
+						}
+					</div>
+					<div className={styles.battle}>
+						{
+							(currentlySpectating || isExpanded)
+							? (
+								<Button color="primary" size="xsmall" onClick={onSpectateClick}>
+									{currentlySpectating ? "Stop Spectating" : "Spectate"}
+								</Button>
+							)
+							: <BattleText battle={player.battle} opponentName={opponentName} />
+						}
+					</div>
 				</div>
 			</div>
 		</div>
