@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { ConnectionStatus } from "~/networking";
 import { AppState } from "~/store";
 
-import { Group } from "../../../ui/layout";
 import { BoardOverlay } from "./boardOverlay";
 
 function ReconnectOverlay() {
@@ -21,14 +20,14 @@ function ReconnectOverlay() {
 
 	return (
 		<BoardOverlay>
-			<Group>
+			<div>
 				{connectionStatus === ConnectionStatus.DISCONNECTED && (
 					<>
 						<p>You've been disconnected - but you can get back in!</p>
 						<p>Please refresh the page to rejoin</p>
 					</>
 				)}
-			</Group>
+			</div>
 		</BoardOverlay>
 	);
 }

@@ -4,7 +4,6 @@ import { createUseStyles } from "react-jss";
 
 import { Footer } from "../ui/Footer";
 import { TraitIcon } from "../ui/TraitIcon";
-import { Group, Layout } from "../ui/layout";
 import { Header2, Header4 } from "../ui/text";
 import { Button } from "@creature-chess/ui";
 
@@ -32,6 +31,10 @@ const useStyles = createUseStyles({
 		},
 	},
 	help: {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		padding: "0.25em",
 		color: "#fff",
 	},
 	helpText: {
@@ -63,8 +66,8 @@ function Help({
 	const styles = useStyles();
 
 	return (
-		<Layout direction="column" className={styles.help}>
-			<Group>
+		<div className={styles.help}>
+			<div>
 				<div className={styles.header}>
 					<Header2>The Game</Header2>
 					{onBack && (
@@ -84,8 +87,8 @@ function Help({
 				<p className={styles.helpText}>
 					The winner is the last player remaining!
 				</p>
-			</Group>
-			<Group>
+			</div>
+			<div>
 				<Header2>Creatures</Header2>
 				<p className={styles.helpText}>
 					Three creatures (level 1) will combine to make a stronger creature
@@ -151,8 +154,8 @@ function Help({
 						Fire: Beats metal.
 					</li>
 				</ul>
-			</Group>
-			<Group>
+			</div>
+			<div>
 				<Header2>Money</Header2>
 				<p className={styles.helpText}>
 					After each round you will receive some money:
@@ -162,10 +165,10 @@ function Help({
 					<li>10% interest</li>
 					<li>Win / loss streak bonus</li>
 				</ul>
-			</Group>
+			</div>
 
 			{!hideFooter && <Footer />}
-		</Layout>
+		</div>
 	);
 }
 

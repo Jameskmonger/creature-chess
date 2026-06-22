@@ -10,9 +10,9 @@ import { Player } from "~/store/game/players";
 import { GamePhase } from "@creature-chess/models";
 import { PlayerStatus, PlayerBattle } from "@creature-chess/models";
 
-import { Layout } from "../../ui/layout";
 import { PlayerListItem } from "./playerListItem";
 import { StatusPlayerListItem } from "./statusPlayerListItem";
+import { createUseStyles } from "react-jss";
 
 // todo move this
 const getOrdinalSuffix = (i: number) => {
@@ -38,7 +38,18 @@ const getOpponentName = (battle: PlayerBattle, players: Player[]) => {
 	return players.find((p) => p.id === battle.opponentId)?.name || "";
 };
 
+const useStyles = createUseStyles({
+	list: {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		padding: "0.25em",
+	},
+});
+
 function PlayerList() {
+	const styles = useStyles();
+
 	const gameActions = useGameActions();
 	const accountId = useAccountId();
 	const players = useSelector<AppState, Player[]>(
@@ -56,7 +67,7 @@ function PlayerList() {
 	);
 
 	return (
-		<Layout direction="column">
+		<div className={styles.list}>
 			{players.map((p, index) => {
 				const opponentName = getOpponentName(p.battle, players);
 				const position = index + 1;
@@ -103,7 +114,7 @@ function PlayerList() {
 					</Region>
 				);
 			})}
-		</Layout>
+		</div>
 	);
 }
 
