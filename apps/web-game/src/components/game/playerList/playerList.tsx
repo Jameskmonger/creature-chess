@@ -45,7 +45,7 @@ const useStyles = createUseStyles({
 		gap: "6px",
 		padding: "10px",
 		background: "#1d1d1d",
-		height: "100%",
+		minHeight: "100%",
 		boxSizing: "border-box",
 	},
 });
