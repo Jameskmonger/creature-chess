@@ -102,21 +102,31 @@ const createMockedState = (): GameState => {
 			locked: false,
 		},
 		players: [
-			createPlayer(
-				"1234",
-				"jkm",
-				0,
-				{ color: 0x79ffe0, text: "Developer" },
-				"5678",
-				false,
-				{ type: StreakType.WIN, amount: 6 }
-			),
+			{
+				...createPlayer(
+					"1234",
+					"jkm",
+					0,
+					{ color: 0x79ffe0, text: "Developer" },
+					"5678",
+					false,
+					{ type: StreakType.WIN, amount: 6 }
+				),
+				health: 100,
+			},
 			{
 				...createPlayer("5678", "Jeff", 1, null, "1234"),
 				battle: finishedBattle("1235", false, false, 2, 1),
+				health: 85,
 			},
-			createPlayer("abcd", "Bob the Cat", 2, null, "ab99"),
-			createPlayer("ab99", "Derek the Dog", 3, null, "abcd"),
+			{
+				...createPlayer("abcd", "Bob the Cat", 2, null, "ab99"),
+				health: 70,
+			},
+			{
+				...createPlayer("ab99", "Derek the Dog", 3, null, "abcd"),
+				health: 50,
+			},
 			{
 				...createPlayer(
 					"1235",
@@ -126,16 +136,26 @@ const createMockedState = (): GameState => {
 					"5678"
 				),
 				battle: finishedBattle("5678", false, true, 2, 1),
+				health: 40,
 			},
-			createPlayer("5679", "Ignius_Rex", 5, null, "1234"),
-			createPlayer("abce", "AlfaCenTauri", 6, null, "ab99", false, {
-				type: StreakType.WIN,
-				amount: 3,
-			}),
-			createPlayer("ab90", "what this game", 7, null, "abcd", false, {
-				type: StreakType.LOSS,
-				amount: 2,
-			}),
+			{
+				...createPlayer("5679", "Ignius_Rex", 5, null, "1234"),
+				health: 30,
+			},
+			{
+				...createPlayer("abce", "AlfaCenTauri", 6, null, "ab99", false, {
+					type: StreakType.WIN,
+					amount: 3,
+				}),
+				health: 20,
+			},
+			{
+				...createPlayer("ab90", "what this game", 7, null, "abcd", false, {
+					type: StreakType.LOSS,
+					amount: 2,
+				}),
+				health: 10,
+			},
 		],
 		quickChat: {
 			["1234"]: {
