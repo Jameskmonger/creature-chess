@@ -42,6 +42,8 @@ function getBattleWin(battle: PlayerListPlayer["battle"]) {
 
 const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 	container: {
+		containerName: "player-list-item",
+		containerType: "inline-size",
 		display: "flex",
 		alignItems: "center",
 		gap: "6px",
@@ -73,8 +75,13 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		},
 	},
 	avatar: {
-		width: "38px",
-		height: "38px",
+		"width": "38px",
+		"height": "38px",
+
+		"@container player-list-item (min-width: 360px)": {
+			width: "48px",
+			height: "48px",
+		},
 	},
 	readyIndicator: {
 		width: "5px",
@@ -102,8 +109,13 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		},
 	},
 	name: {
-		flex: 3,
-		color: theme.palette.light.neutral,
+		"flex": 3,
+		"color": theme.palette.light.neutral,
+		"fontSize": "16px",
+
+		"@container player-list-item (min-width: 360px)": {
+			fontSize: "18px",
+		},
 	},
 	healthbar: {
 		flex: 2,
@@ -125,7 +137,7 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		"alignItems": "center",
 
 		"& > span": {
-			fontSize: "12px",
+			"fontSize": "12px",
 			color ({ player: { battle }}) {
 				if (!battle) {
 					return "#ccc";
@@ -137,29 +149,46 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 
 				return getBattleWin(battle) ? "#38b764" : "#b13e53";
 			},
-			display: "flex",
-			alignItems: "center",
-			gap: "2px",
-			background: "rgb(51, 51, 51)",
-			padding: "2px 4px",
+			"display": "flex",
+			"alignItems": "center",
+			"gap": "2px",
+			"background": "rgb(51, 51, 51)",
+			"padding": "2px 4px",
+
+			"@container player-list-item (min-width: 360px)": {
+				fontSize: "16px",
+			}
 		},
 	},
 	position: {
 		fontSize: "10px",
 	},
 	levelIcon: {
-		gap: "2px",
-		padding: "2px 4px",
+		"gap": "2px",
+		"padding": "2px 4px",
+		"fontSize": "12px",
+
+		"@container player-list-item (min-width: 360px)": {
+			fontSize: "14px",
+		},
 	},
 	balanceIcon: {
-		gap: "2px",
-		letterSpacing: "1px",
-		fontSize: "12px",
+		"gap": "2px",
+		"letterSpacing": "1px",
+		"fontSize": "12px",
+
+		"@container player-list-item (min-width: 360px)": {
+			fontSize: "14px",
+		},
 	},
 	streakIndicator: {
-		height: "1em",
-		width: "1em",
-		boxShadow: "none",
+		"width": "16px",
+
+		"@container player-list-item (min-width: 360px)": {
+			width: "18px",
+		},
+
+		"boxShadow": "none",
 	}
 }));
 
