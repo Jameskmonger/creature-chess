@@ -11,8 +11,13 @@
 
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const { categorisePlugin } = require("./resolvePlugin.js");
+
+// Content-hash a bundle so the client can cache-bust on change.
+const bundleVersion = (file) =>
+	crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex").slice(0, 8);
 
 // Maps the unified categoriser's `kind` to the stderr label the operator
 // has been seeing - keeps the projector's diagnostic vocabulary stable
@@ -44,7 +49,9 @@ const ships = reports.filter((r) => r.clientBundle !== null);
 const serverOnly = reports.filter((r) => r.kind === "server-only");
 const missing = reports.filter((r) => r.kind === "not-found");
 
-const projection = { plugins: ships.map((r) => r.id) };
+const projection = {
+	plugins: ships.map((r) => ({ id: r.id, version: bundleVersion(r.clientBundle) })),
+};
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, JSON.stringify(projection, null, 2) + "\n");
 

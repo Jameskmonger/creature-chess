@@ -84,10 +84,13 @@ export const installPluginRuntime = (): void => {
 	(globalThis as Record<string, unknown>)[CLIENT_PLUGIN_RUNTIME_KEY] = runtime;
 };
 
-type PluginManifest = { plugins: string[] };
+type PluginManifestEntry = { id: string; version: string };
+type PluginManifest = { plugins: PluginManifestEntry[] };
 
-// `index.js` lets webpack's `publicPath: "auto"` derive the chunk base URL at load time.
-const bundleUrlFor = (id: string) => `/plugins/${id}/index.js`;
+// `index.js` lets webpack's `publicPath: "auto"` derive the chunk base URL at load
+// time; the `?v=` content hash busts browser/CDN caches when the bundle changes.
+const bundleUrlFor = ({ id, version }: PluginManifestEntry): string =>
+	`/plugins/${id}/index.js?v=${version}`;
 
 const BUNDLE_LOAD_TIMEOUT_MS = 15_000;
 
@@ -145,21 +148,23 @@ export const loadClientPlugins = async (manifestUrl: string): Promise<void> => {
 		return;
 	}
 
-	const ids = manifest.plugins ?? [];
-	console.info(`[plugins] manifest lists ${ids.length}: ${ids.join(", ")}`);
+	const entries = manifest.plugins ?? [];
+	console.info(
+		`[plugins] manifest lists ${entries.length}: ${entries.map((e) => e.id).join(", ")}`
+	);
 
 	const settled = await Promise.allSettled(
-		ids.map((id) =>
-			loadScript(bundleUrlFor(id), BUNDLE_LOAD_TIMEOUT_MS).catch((error) => {
+		entries.map((entry) =>
+			loadScript(bundleUrlFor(entry), BUNDLE_LOAD_TIMEOUT_MS).catch((error) => {
 				// Mark failed at the moment of rejection so a timed-out bundle that
 				// still executes can't half-activate via a late register().
-				markPluginFailed(id);
+				markPluginFailed(entry.id);
 				throw error;
 			})
 		)
 	);
 	settled.forEach((result, i) => {
-		const id = ids[i];
+		const id = entries[i].id;
 		if (result.status === "fulfilled") {
 			console.info(`[plugins] loaded bundle for "${id}"`);
 		} else {

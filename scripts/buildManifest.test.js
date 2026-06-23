@@ -9,9 +9,15 @@ const assert = require("node:assert");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 
 const SCRIPT = path.resolve(__dirname, "buildManifest.js");
+
+const stubBundle = (id) => `// stub bundle ${id}`;
+const versionOf = (id) =>
+	crypto.createHash("sha256").update(stubBundle(id)).digest("hex").slice(0, 8);
+const bundled = (id) => ({ id, version: versionOf(id) });
 
 // Build a fake mods tree on disk so resolvePlugin's CC_MODS_DIR path
 // is exercised end-to-end (no mocking of fs / require.resolve).
@@ -29,7 +35,7 @@ function makeFixture({ plugins, bundles = {} }) {
 		if (bundles[id]) {
 			const webDir = path.join(pkgDir, "dist/web");
 			fs.mkdirSync(webDir, { recursive: true });
-			fs.writeFileSync(path.join(webDir, "index.js"), "// stub bundle");
+			fs.writeFileSync(path.join(webDir, "index.js"), stubBundle(id));
 		}
 	}
 
@@ -65,7 +71,7 @@ test("happy path: a bundled plugin is emitted", () => {
 	const r = runScript(fx);
 	assert.strictEqual(r.status, 0, r.stderr);
 	assert.deepStrictEqual(JSON.parse(fs.readFileSync(fx.outputPath, "utf8")), {
-		plugins: ["@me/bundled"],
+		plugins: [bundled("@me/bundled")],
 	});
 	assert.match(r.stderr, /bundled\s+@me\/bundled/);
 });
@@ -134,7 +140,7 @@ test("mixed manifest: bundled + server-only + missing in one run", () => {
 	const r = runScript(fx);
 	assert.strictEqual(r.status, 0);
 	assert.deepStrictEqual(JSON.parse(fs.readFileSync(fx.outputPath, "utf8")), {
-		plugins: ["@me/has-bundle"],
+		plugins: [bundled("@me/has-bundle")],
 	});
 	assert.match(r.stderr, /1 bundled, 1 server-only, 1 not-found/);
 });
@@ -149,7 +155,7 @@ test("preserves manifest plugin order in the projection", () => {
 	const r = runScript(fx);
 	assert.strictEqual(r.status, 0);
 	assert.deepStrictEqual(JSON.parse(fs.readFileSync(fx.outputPath, "utf8")), {
-		plugins: ["@c/three", "@a/one", "@b/two"],
+		plugins: [bundled("@c/three"), bundled("@a/one"), bundled("@b/two")],
 	});
 });
 
