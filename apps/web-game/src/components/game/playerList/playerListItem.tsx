@@ -99,7 +99,24 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 		"flex": 1,
 		"display": "flex",
 		"flexDirection": "column",
-		"gap": "4px",
+
+		// tighten up the gap if the player has a title. also, increase the gap for larger screens
+		gap({ player }) {
+			if (player.profile?.title) {
+				return "2px";
+			}
+
+			return "4px";
+		},
+		"@container player-list-item (min-width: 360px)": {
+			gap({ player }) {
+				if (player.profile?.title) {
+					return "2px";
+				}
+
+				return "8px";
+			},
+		},
 
 		"& > div": {
 			display: "flex",
@@ -119,6 +136,9 @@ const useStyles = createUseThemeStyles<string, Props>((theme) => ({
 	},
 	healthbar: {
 		flex: 2,
+	},
+	titleContainer: {
+		marginTop: "-2px",
 	},
 	stats: {
 		"display": "flex",
@@ -301,7 +321,7 @@ function PlayerListItem(props: Props) {
 				</div>
 				{
 					player.profile?.title && (
-						<div>
+						<div className={styles.titleContainer}>
 							<Title title={player.profile?.title || null} />
 						</div>
 					)
