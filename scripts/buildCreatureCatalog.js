@@ -13,6 +13,19 @@
 const fs = require("fs");
 const path = require("path");
 
+// This is a discovery load, not a serving one: we enable plugins only to
+// harvest the creatures they register.
+process.env.CC_PLUGIN_DISCOVERY = "1";
+
+// Resolve mod plugins by package name the same way server-game does.
+if (process.env.CC_MODS_DIR) {
+	process.env.NODE_PATH = [process.env.CC_MODS_DIR, process.env.NODE_PATH]
+		.filter(Boolean)
+		.join(path.delimiter);
+	// eslint-disable-next-line no-underscore-dangle
+	require("module").Module._initPaths();
+}
+
 const { PluginLoader } = require("@cc-engine/kernel/loader");
 const { createDefaultGamemodeContext } = require("@creature-chess/gamemode");
 const { categorisePlugin } = require("./resolvePlugin.js");
