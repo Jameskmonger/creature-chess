@@ -9,6 +9,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { buildPluginsReducer } from "~/plugins/redux";
 import { pluginRegistry } from "~/plugins/registry";
 
+import { Announcement, announcementsReducer } from "./announcements";
 import { LocalPlayerState, localPlayerReducer } from "./localPlayer";
 import { networkReducer, NetworkState } from "./network";
 import { playerReducers } from "./playerReducers";
@@ -57,6 +58,8 @@ export type GameState = {
 
 	quickChat: QuickChatState;
 
+	announcements: { items: Announcement[]; nextId: number };
+
 	/** Per-plugin Redux state, mounted by id. */
 	plugins: { [sliceName: string]: unknown };
 
@@ -70,6 +73,7 @@ export const createGameReducer = () =>
 		roundInfo: roundInfoReducer,
 		players: playersReducer,
 		quickChat: quickChatReducer,
+		announcements: announcementsReducer,
 		ui: uiReducer,
 		plugins: buildPluginsReducer(pluginRegistry),
 		network: networkReducer,

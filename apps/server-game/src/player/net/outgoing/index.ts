@@ -14,6 +14,10 @@ export const setupOutgoingNetworking = (entity: Player, socket: GameSocket) => {
 	unsubscribes.push(
 		entity.gamemode.events.onPlayerListChange(forwardGameEvent)
 	);
+	unsubscribes.push(entity.gamemode.events.onPieceUpgraded(forwardGameEvent));
+	unsubscribes.push(entity.gamemode.events.onPlayerLevelUp(forwardGameEvent));
+	unsubscribes.push(entity.gamemode.events.onPlayerStreak(forwardGameEvent));
+	unsubscribes.push(entity.gamemode.events.onPlayerEliminated(forwardGameEvent));
 
 	unsubscribes.push(
 		entity.events.onPlayerEvent((action) => {

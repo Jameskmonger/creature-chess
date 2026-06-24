@@ -42,6 +42,14 @@ const findEvolvableGroup = (
 	return null;
 };
 
+const announceUpgrade = (player: Player, group: EvolvableGroup): void => {
+	player.gamemode.emitPieceUpgraded({
+		playerId: player.id,
+		definitionId: group.definitionId,
+		stage: group.stage + 1,
+	});
+};
+
 const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 	const {
 		board,
@@ -93,6 +101,8 @@ const applyEvolution = (player: Player, group: EvolvableGroup): void => {
 			{ type: "bench", location: packPosition(x, 0) }
 		);
 	}
+
+	announceUpgrade(player, group);
 };
 
 // One group per call - chain evolutions cascade when the placed evolved

@@ -17,7 +17,13 @@ import {
 import { PlayerActionRegistry } from "../playerActions/registry";
 import { WireProtocol } from "../wireProtocol";
 import { CardDeck } from "./cardDeck";
-import { GameFinishEvent } from "./events";
+import {
+	GameFinishEvent,
+	PieceUpgradedEvent,
+	PlayerEliminatedEvent,
+	PlayerLevelUpEvent,
+	PlayerStreakEvent,
+} from "./events";
 import { runGame, GameContext } from "./gameContext";
 import {
 	GamemodeEventsApi,
@@ -55,6 +61,10 @@ export type GamemodeApi = {
 		startedAt: number;
 		round?: number;
 	}): void;
+	emitPieceUpgraded(payload: PieceUpgradedEvent["payload"]): void;
+	emitPlayerLevelUp(payload: PlayerLevelUpEvent["payload"]): void;
+	emitPlayerStreak(payload: PlayerStreakEvent["payload"]): void;
+	emitPlayerEliminated(payload: PlayerEliminatedEvent["payload"]): void;
 	onFinish(fn: (event: GameFinishEvent["payload"]) => void): void;
 };
 
@@ -153,6 +163,22 @@ export class Gamemode implements GamemodeApi {
 		};
 
 		this.eventsEmitter.emitPhaseStart(payload);
+	}
+
+	public emitPieceUpgraded(payload: PieceUpgradedEvent["payload"]) {
+		this.eventsEmitter.emitPieceUpgraded(payload);
+	}
+
+	public emitPlayerLevelUp(payload: PlayerLevelUpEvent["payload"]) {
+		this.eventsEmitter.emitPlayerLevelUp(payload);
+	}
+
+	public emitPlayerStreak(payload: PlayerStreakEvent["payload"]) {
+		this.eventsEmitter.emitPlayerStreak(payload);
+	}
+
+	public emitPlayerEliminated(payload: PlayerEliminatedEvent["payload"]) {
+		this.eventsEmitter.emitPlayerEliminated(payload);
 	}
 
 	public finishGame(payload: GameFinishEvent["payload"]) {

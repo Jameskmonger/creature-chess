@@ -4,6 +4,7 @@ import { createUseStyles } from "react-jss";
 
 import { Footer } from "../../../ui/Footer";
 import { TabMenu } from "../../../ui/TabMenu";
+import { AnnouncementsBanner } from "../../AnnouncementsBanner";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { SellPieceButton } from "../../board/overlays/controls/SellPieceButton";
@@ -104,6 +105,7 @@ function DesktopGame() {
 			</div>
 			<div className={styles.board}>
 				<TopBar />
+				<AnnouncementsBanner />
 				<BoardContainer />
 			</div>
 			<div className={styles.rightColumn}>

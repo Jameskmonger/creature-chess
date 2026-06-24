@@ -324,6 +324,7 @@ export const createPlayer = (
 		state.playerInfo.status = PlayerStatus.DEAD;
 		emit(playerInfoCommands.updateStatusCommand(PlayerStatus.DEAD));
 		emit(playerDeathEvent());
+		dependencies.gamemode.emitPlayerEliminated({ playerId: id });
 
 		const remainingCards = state.cardShop.cards.filter(
 			(c): c is Card => c !== null
@@ -553,6 +554,7 @@ export const createPlayer = (
 				if (newXp === toNextLevel) {
 					xp = 0;
 					level++;
+					dependencies.gamemode.emitPlayerLevelUp({ playerId: id, level });
 				} else {
 					xp = newXp;
 				}
@@ -581,8 +583,18 @@ export const createPlayer = (
 			emit(playerInfoCommands.updateBattleCommand(battle));
 		},
 		setStreak: (streak) => {
+			const prev = state.playerInfo.streak;
+			const changed =
+				streak.type !== prev.type || streak.amount !== prev.amount;
 			state.playerInfo.streak = streak;
 			emit(playerInfoCommands.updateStreakCommand(streak));
+			if (changed) {
+				dependencies.gamemode.emitPlayerStreak({
+					playerId: id,
+					streakType: streak.type,
+					streakAmount: streak.amount,
+				});
+			}
 		},
 		setStatus: (status) => {
 			state.playerInfo.status = status;

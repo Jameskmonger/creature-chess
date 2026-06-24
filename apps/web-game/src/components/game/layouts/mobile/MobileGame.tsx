@@ -10,6 +10,7 @@ import { Overlay } from "~/store/game/ui";
 import { GamePhase } from "@creature-chess/models";
 
 import { TabMenu } from "../../../ui/TabMenu";
+import { AnnouncementsBanner } from "../../AnnouncementsBanner";
 import { TopBar } from "../../TopBar";
 import { BoardContainer } from "../../board";
 import { CardShop } from "../../cardShop/cardShop";
@@ -136,6 +137,7 @@ export function MobileGame() {
 	return (
 		<div className={styles.game}>
 			<TopBar />
+			<AnnouncementsBanner />
 			<div className={styles.content}>
 				<MobileGameContentPane />
 			</div>

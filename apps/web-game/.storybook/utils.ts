@@ -167,6 +167,34 @@ const createMockedState = (): GameState => {
 				receivedAt: Date.now(),
 			},
 		},
+		announcements: {
+			items: [
+				{
+					id: 0,
+					kind: "upgrade",
+					playerId: "1234",
+					definitionId: 47,
+					stage: 2,
+				},
+				{ id: 1, kind: "levelUp", playerId: "5678", level: 5 },
+				{
+					id: 2,
+					kind: "upgrade",
+					playerId: "1235",
+					definitionId: 32,
+					stage: 3,
+				},
+				{
+					id: 3,
+					kind: "streak",
+					playerId: "abcd",
+					streakType: StreakType.WIN,
+					streakAmount: 5,
+				},
+				{ id: 4, kind: "eliminated", playerId: "ab99" },
+			],
+			nextId: 5,
+		},
 		plugins: {},
 		spectating: {
 			id: null,
