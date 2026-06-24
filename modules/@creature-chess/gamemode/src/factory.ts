@@ -26,15 +26,32 @@ export interface GameplayEvents {
 	};
 	gameFinished: {
 		gameId: string;
-		standings: {
-			playerId: string;
-			/** Identity-provider kind. */
-			type: string;
-			/** Final placement, 1 = winner. */
-			position: number;
-		}[];
+		standings: GameStanding[];
+	};
+	/**
+	 * Fired the moment a player's placement is locked — i.e. they are knocked
+	 * out or quit.
+	 */
+	playerFinished: {
+		gameId: string;
+		/** The player who was just eliminated. */
+		playerId: string;
+		standings: GameStanding[];
 	};
 }
+
+export type GameStanding = {
+	playerId: string;
+	/** Identity-provider kind. */
+	type: string;
+	/**
+	 * Finishing position. 1 = winner.
+	 * Null while the player is still in the game.
+	 */
+	position: number | null;
+	/** Whether the player left voluntarily (placed + rated, but earns no rewards). */
+	quit: boolean;
+};
 
 export type GameplayEventsBus = TypedEventEmitter<GameplayEvents>;
 

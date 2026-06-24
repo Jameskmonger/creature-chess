@@ -4,6 +4,7 @@ import "./src/clientRegions";
 export type {
 	GameplayEvents,
 	GameplayEventsBus,
+	GameStanding,
 	CreatureRegistry,
 	GamemodeInit,
 	GamemodeContext,

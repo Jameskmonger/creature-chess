@@ -45,13 +45,24 @@ const runGameLoop = async (
 	let currentLastPosition = players.getAll().length;
 	let currentRoundNumber = gamemode.roundInfo.round;
 
+	const takeLastPlace = (player: Player) => {
+		player.setFinishStanding({
+			position: currentLastPosition,
+			round: currentRoundNumber,
+		});
+		currentLastPosition--;
+	};
+
 	for (const player of players.getAll()) {
-		player.events.onPlayerEvent("playerDeath", () => {
-			player.setFinishStanding({
-				position: currentLastPosition,
-				round: currentRoundNumber,
-			});
-			currentLastPosition--;
+		player.events.onPlayerEvent("playerDeath", () => takeLastPlace(player));
+
+		// Quitting is a forfeit: the player takes the current last place, exactly
+		// as if knocked out there — unless they were already knocked out, in which
+		// case that placement stands.
+		player.events.onQuit(() => {
+			if (player.finishPosition <= 0) {
+				takeLastPlace(player);
+			}
 		});
 	}
 

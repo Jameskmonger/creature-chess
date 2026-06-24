@@ -1,4 +1,5 @@
 import {
+	GameStanding,
 	Gamemode,
 	GamemodeContext,
 	Player,
@@ -104,16 +105,22 @@ export class Game {
 			this.registerBot(bot);
 		}
 
+		// A player's placement locks the instant they're knocked out, so settle
+		// them immediately (the winner is conveyed by `gameFinished` instead).
+		this.gamemode.events.onPlayerEliminated(({ payload: { playerId } }) => {
+			context.events.emit("playerFinished", {
+				gameId,
+				playerId,
+				standings: this.buildStandings(),
+			});
+		});
+
 		this.gamemode.onFinish((event) => {
 			activeGames.dec();
 
 			context.events.emit("gameFinished", {
 				gameId,
-				standings: event.players.map((p) => ({
-					playerId: p.id,
-					type: this.typesById.get(p.id) ?? "unknown",
-					position: p.position,
-				})),
+				standings: this.buildStandings(),
 			});
 
 			onFinish(event);
@@ -221,6 +228,20 @@ export class Game {
 			type: "BOT",
 			id: playerIdAsString,
 			entity,
+		});
+	}
+
+	/** The full roster with each player's placement (null = not yet placed). */
+	private buildStandings(): GameStanding[] {
+		return this.members.map((m) => {
+			const entity = this.gamemode.getPlayerById(m.id);
+			const position = entity?.finishPosition ?? -1;
+			return {
+				playerId: m.id,
+				type: this.typesById.get(m.id) ?? "unknown",
+				position: position > 0 ? position : null,
+				quit: entity?.status === PlayerStatus.QUIT,
+			};
 		});
 	}
 
