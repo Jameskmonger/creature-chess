@@ -15,25 +15,7 @@ const useStyles = createUseStyles({
 	image: {
 		width: "100%",
 		height: "100%",
-		imageRendering: "pixelated",
-		fallbacks: [
-			{
-				imageRendering: "optimize-contrast",
-			},
-			{
-				imageRendering: "-webkit-optimize-contrast",
-			},
-			{
-				imageRendering: "-o-crisp-edges",
-			},
-			{
-				imageRendering: "-moz-crisp-edges",
-			},
-			{
-				imageRendering: "optimizeSpeed",
-			},
-		] as any,
-		msInterpolationMode: "nearest-neighbor",
+		imageRendering: "auto",
 	},
 });
 
