@@ -32,6 +32,7 @@ import {
 } from "./gamemodeEvents";
 import { Match } from "./match";
 import { OpponentProvider } from "./opponentProvider";
+import type { GamemodeSnapshot } from "./snapshot";
 import { PlayerList } from "./playerList";
 import { playerRound } from "./playerRound";
 
@@ -149,6 +150,60 @@ export class Gamemode implements GamemodeApi {
 			}
 		);
 	}
+
+	/**
+	 * Build players from a snapshot — the inverse of `captureSnapshot`. Stashes
+	 * round at `snapshot.round - 1` because the preparing phase increments by 1
+	 * before running, so the first played round lands exactly on
+	 * `snapshot.round`.
+	 *
+	 * Pieces are installed directly on the board (not via `addPiece`) to bypass
+	 * the evolution listener — three-of-a-kind in a snapshot must stay as three
+	 * pieces.
+	 */
+	public hydrate = (snapshot: GamemodeSnapshot): Player[] => {
+		this.roundInfo = {
+			...this.roundInfo,
+			phase: GamePhase.PREPARING,
+			round: Math.max(0, snapshot.round - 1),
+			phaseStartedAtSeconds: 0,
+		};
+
+		return snapshot.players.map((snap) => {
+			const board = new SubscribableBoard(
+				this.settings.boardWidth,
+				this.settings.boardHalfHeight
+			);
+			const bench = new SubscribableBoard(this.settings.benchSize, 1);
+
+			const player = this.createPlayer(snap.id, {
+				boards: { board, bench },
+				name: snap.name,
+				profile: snap.profile ?? { title: null, picture: null },
+				finishPosition: -1,
+				finishRound: -1,
+				match: null,
+			});
+
+			player.setHealth(snap.health);
+			player.setMoney(snap.money);
+			player.setLevel({ level: snap.level, xp: snap.xp });
+			player.setStreak(snap.streak);
+			player.setCards(snap.shop.cards);
+			player.setShopLocked(snap.shop.locked ?? false);
+
+			for (const { piece, x, y } of snap.board) {
+				this.pieceRegistryImpl.registerPiece(piece);
+				board.setPiece(piece.id, x, y);
+			}
+			for (const { piece, x } of snap.bench) {
+				this.pieceRegistryImpl.registerPiece(piece);
+				bench.setPiece(piece.id, x, 0);
+			}
+
+			return player;
+		});
+	};
 
 	public setRoundInfo(payload: {
 		phase: GamePhase;

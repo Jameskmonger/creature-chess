@@ -33,6 +33,11 @@ export {
 	type GamemodeCallbacks,
 } from "./src/game/gamemode";
 export {
+	type GamemodeSnapshot,
+	type PlayerSnapshot,
+	captureSnapshot,
+} from "./src/game/snapshot";
+export {
 	type Player,
 	type PlayerState,
 	initialPlayerState,
