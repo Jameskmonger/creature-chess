@@ -10,6 +10,7 @@ export type RoundCallbacks = {
 	onTurnComplete?: (timeMs: number) => void;
 	onMatchStart?: () => void;
 	onMatchEnd?: () => void;
+	onPreparingPhaseEnd?: (players: Player[]) => void;
 };
 
 /**
@@ -24,6 +25,10 @@ export class Round {
 
 	public async run(): Promise<void> {
 		await this.runPreparing();
+		this.callbacks.onPreparingPhaseEnd?.(this.context.players.getLiving());
+		if (this.context.gamemode.isAborted()) {
+			return;
+		}
 		const matches = await this.runReady();
 		await this.runPlaying(matches);
 	}

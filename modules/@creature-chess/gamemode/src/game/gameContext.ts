@@ -71,6 +71,10 @@ const runGameLoop = async (
 		const round = new Round(currentRoundNumber, context, callbacks);
 		await round.run();
 
+		if (gamemode.isAborted()) {
+			return null;
+		}
+
 		if (players.getLiving().length < 2) {
 			break;
 		}
@@ -115,6 +119,11 @@ export const runGame = async (
 	const startTime = startStopwatch();
 
 	const gameResults = await runGameLoop(context, callbacks);
+
+	// Aborted (headless layout-only driver): no standings, skip teardown/finish.
+	if (gameResults === null) {
+		return;
+	}
 
 	const duration = stopwatch(startTime);
 

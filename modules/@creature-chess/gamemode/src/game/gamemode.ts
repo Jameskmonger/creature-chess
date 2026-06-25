@@ -40,6 +40,7 @@ export type GamemodeCallbacks = {
 	onTurnComplete?: (timeMs: number) => void;
 	onMatchStart?: () => void;
 	onMatchEnd?: () => void;
+	onPreparingPhaseEnd?: (players: Player[]) => void;
 };
 
 export type GamemodeApi = {
@@ -93,6 +94,7 @@ export class Gamemode implements GamemodeApi {
 
 	private playerList = new PlayerList();
 	private players: Player[] = [];
+	private aborted = false;
 	private opponentProvider: OpponentProvider;
 	private deck: CardDeck;
 	private rng: Rng;
@@ -290,6 +292,14 @@ export class Gamemode implements GamemodeApi {
 
 	public getRoundInfo = () => this.roundInfo;
 	public getPlayerListPlayers = () => this.playerList.getValue();
+
+	/** Stop the game loop at the next phase boundary (after the current
+	 * preparing phase). Used by headless drivers that only want the layout
+	 * phase, not combat. */
+	public abortGame = () => {
+		this.aborted = true;
+	};
+	public isAborted = () => this.aborted;
 
 	private getAllPlayers = () => this.players;
 
