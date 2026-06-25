@@ -31,6 +31,23 @@ describe("playerRound.settle", () => {
 		expect(player.health).toBe(startingHealth);
 	});
 
+	test("0-0 draw: both sides take a flat 5 damage despite no surviving pieces", () => {
+		const home = createTestPlayer("home");
+		const away = createTestPlayer("away");
+		const homeStart = home.health;
+		const awayStart = away.health;
+
+		playerRound.settle(home, { homeScore: 0, awayScore: 0, isHomePlayer: true });
+		playerRound.settle(away, {
+			homeScore: 0,
+			awayScore: 0,
+			isHomePlayer: false,
+		});
+
+		expect(home.health).toBe(homeStart - 5);
+		expect(away.health).toBe(awayStart - 5);
+	});
+
 	test("damage that reduces health to zero marks the player dead", () => {
 		const player = createTestPlayer();
 		player.setHealth(1);

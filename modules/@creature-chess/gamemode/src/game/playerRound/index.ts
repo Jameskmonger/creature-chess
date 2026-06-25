@@ -24,6 +24,11 @@ export type MatchOutcome = {
 	isHomePlayer: boolean;
 };
 
+// A 0-0 draw (both boards wiped) leaves each side with zero surviving enemy
+// pieces, so the per-piece damage formula yields no damage. Apply a flat hit to
+// both players instead, so mutual destruction still has a cost.
+const DRAW_DAMAGE = 5;
+
 const advanceStreak = (current: PlayerStreak, win: boolean): PlayerStreak => {
 	const type = win ? StreakType.WIN : StreakType.LOSS;
 	return {
@@ -105,8 +110,11 @@ export const playerRound: PlayerRound = {
 
 	settle(player, { homeScore, awayScore, isHomePlayer }) {
 		const win = isHomePlayer ? homeScore > awayScore : awayScore > homeScore;
+		const isScorelessDraw = homeScore === 0 && awayScore === 0;
 		const enemyPiecesRemaining = isHomePlayer ? awayScore : homeScore;
-		const damage = enemyPiecesRemaining * player.settings.healthLostPerPiece;
+		const damage = isScorelessDraw
+			? DRAW_DAMAGE
+			: enemyPiecesRemaining * player.settings.healthLostPerPiece;
 
 		player.match = null;
 		player.setBattle(
